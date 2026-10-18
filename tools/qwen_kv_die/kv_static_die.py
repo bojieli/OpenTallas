@@ -53,7 +53,7 @@ CORE_CK = ('ck', 'return_ck')
 HBM_CK = ('hck', 'pll_hbm', 'pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_hbm_obs', 'cal_hck', 'front_hck', 'return_hck')
 RESETS = ('rst_n', 'rsi', 'hrst_n', 'hrst', 'cal_rst_n')
 HBM_RST = ('hrst_n', 'hrst', 'cal_rst_n')
-KIND_MASTER = dict(grp='qkd_kvs_grp', pc='qkd_kvs_pc', pc_h='qkd_kvs_pc_h', ctl='qkd_kvs_ctl', attn='qkd_kvs_attn',
+KIND_MASTER = dict(fan='qkd_kvs_fan', grp='qkd_kvs_grp', pc='qkd_kvs_pc', pc_h='qkd_kvs_pc_h', ctl='qkd_kvs_ctl', attn='qkd_kvs_attn',
                    emb='qkd_kvs_emb')
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
@@ -62,7 +62,7 @@ GRP_LOCAL = dict(slg='slg', lcal='lcal', fcal='fcal', phase='phase', drain='drai
 # superseded die instances (0db) by name prefix
 SUPERSEDED = ('ctrl_', 'cdc_', 'land_', 'wctl_', 'wleaf_', 'kvnc', 'lprg')
 # per-tile frames (um, ASSUMED until kits close): see place()
-FRAME = dict(attn=(302.4, 302.4), emb=(388.8, 302.4), ctl=(648.0, 518.4))
+FRAME = dict(fan=(302.4, 302.4), attn=(302.4, 302.4), emb=(388.8, 302.4), ctl=(1123.2, 172.8))
 # Special bundles (die-port order = the existing master's binding order, LSB first)
 VREQ = [('vreq_valid', 1), ('vreq_t', 14)]                                         # qkd_pv16_vport vq<p>
 RSP = ['rsp_valid', 'rsp_v', 'rsp_t', 'rsp_epoch', 'rsp_data']                    # qkd_pv16_vport i<p> (R6)
@@ -163,6 +163,8 @@ def kind_of(die_inst):
         return 'pc_h' if die_inst.endswith('_0') else 'pc'
     if die_inst.startswith('slg_'):
         return 'grp'
+    if die_inst.startswith('kvs_fan_'):  # noqa
+        return 'fan'
     return dict(kvs_ctl='ctl', kvs_attn='attn', kvs_emb='emb').get(die_inst)
 
 
@@ -338,9 +340,11 @@ def tile(die_inst):
                 tgt = (cd, p) if ckind == 'd2d' else (cd, ('sig', (src, it['port'], lo, w)))
                 if tgt not in outs[pn][2]:
                     outs[pn][2].append(tgt)
+    die_x = set()
     for (lp, p), (pn, w) in DIE_EXPORTS.get(kind, {}).items():
         expr = rsp_expr(lp, p) if isinstance(p, (list, tuple)) else f'w_{lp}__{p}'
         outs.setdefault(pn, (expr, w, []))
+        die_x.add(pn)
     if kind == 'emb':                      # the D2D RESULT proxy for the PCs (via their groups)
         for key in PASSES:
             nm, up_, uw, ilo, iw, expr = pc_pass(*key)
@@ -354,7 +358,7 @@ def tile(die_inst):
             add_port(f'x__{nm.split("__")[0]}', dir='input', width=uw, cls='sig', src=up_)
             outs[f'y__{nm}'] = (f'x__{nm.split("__")[0]}' + ('' if (ilo == 0 and iw == uw) else f'[{ilo + iw - 1}:{ilo}]'), iw, [])
     for pn, (expr, w, cons) in outs.items():
-        add_port(pn, dir='output', width=w, cls='export', expr=expr, consumers=cons)
+        add_port(pn, dir='output', width=w, cls='export', expr=expr, consumers=cons, die=pn in die_x)
     return dict(inst=die_inst, kind=kind, ports=ports, wires=wires, body=body, members=mem, loc=loc)
 
 
@@ -535,7 +539,7 @@ def pack(tiles):
                 continue
             if v['dir'] == 'output':
                 rest = [c for c in v['consumers'] if not (isinstance(c[1], tuple) and c[1][0] == 'sig')]
-                if rest or not v['consumers']:
+                if rest or not v['consumers'] or v.get('die'):
                     new[pn] = dict(v, consumers=rest)
                 continue
             new[pn] = v
@@ -547,22 +551,102 @@ def pack(tiles):
                 off += w
             if name in new:
                 raise ValueError(f'kv_static_die: {T} bundle {name} twice')
-            new[name] = dict(dir='input', width=off, cls='bundle', peer=S)
+            new[name] = dict(dir='input', width=off, cls='bundle', peer=S, layout=lst)
         outs_ = sorted(((rel(T, C), C, lst) for (C, S), lst in layout.items() if S == T))
         for r, C, lst in outs_:
             name = f'o_{r}'
             if name in new:
                 raise ValueError(f'kv_static_die: {T} bundle {name} twice')
             new[name] = dict(dir='output', width=sum(w for _, w, _ in lst), cls='bundle', peer=C,
-                             peer_port=f'i_{rel(C, T)}', consumers=[],
+                             peer_port=f'i_{rel(C, T)}', consumers=[], layout=lst,
                              expr='{' + ', '.join(reversed([keyexpr[key] for _, _, key in lst])) + '}')
-        t['ports'], t['packed'] = new, packed
+        t['ports'], t['packed'], t['keyexpr'] = new, packed, keyexpr
+    return tiles
+
+
+SIDES = {st: (st,) for st in STACKS}       # one fan per stack, in the stack's group column middle
+
+
+def add_fans(tiles):
+    """per die side one wires-only FAN tile between the control tile and that side's 16 groups / 16 ECTL frames: the
+    control traffic crosses the centre column as ONE word each way (the PV pairs / HOST row leave a single narrow
+    crossing), and the 16 group words leave the fan in that side's free band.  Broadcast bits ride the crossing once."""
+    ctl = tiles['kvs_ctl']
+    for side, stks in SIDES.items():
+        fname = f'kvs_fan_{side}'
+        grps = [f'slg_{st}_{g}' for st in stks for g in range(8)]
+        ects = [f'ectl_{st}_{g}' for st in stks for g in range(8)]
+        fports, fpacked = OrderedDict(), []
+        # ---- down: CTL -> groups (+ ECTL kg / cfg)
+        union, uexpr, uw = [], {}, {}
+        for k, gd in enumerate(grps):
+            op = ctl['ports'].pop(f'o_{gd}')
+            for _pn, w, key in op['layout']:
+                if key not in uexpr:
+                    union.append(key)
+                    uexpr[key], uw[key] = ctl['keyexpr'][key], w
+        kg = ctl['ports']['kg']
+        kg['consumers'] = [c for c in kg['consumers'] if c[0] not in ects]
+        union.append(('KG',))
+        uexpr[('KG',)], uw[('KG',)] = kg['expr'], 23
+        cfgs = []
+        for pn in list(ctl['ports']):
+            v = ctl['ports'][pn]
+            if pn.startswith('dcfg__ectl_a_cfg__') and v['consumers'] and v['consumers'][0][0] in ects:
+                key = ('CFG', ects.index(v['consumers'][0][0]))
+                union.append(key)
+                uexpr[key], uw[key] = v['expr'], v['width']
+                cfgs.append(key)
+                del ctl['ports'][pn]
+        if not kg['consumers']:
+            pass
+        off, uoff = 0, {}
+        for key in union:
+            uoff[key] = off
+            off += uw[key]
+        ctl['ports'][f'o_fan_{side}'] = dict(dir='output', width=off, cls='bundle', peer=fname, peer_port='i_ctl',
+                                            consumers=[], expr='{' + ', '.join(reversed([uexpr[k_] for k_ in union])) + '}')
+        fports['i_ctl'] = dict(dir='input', width=off, cls='bundle', peer='kvs_ctl')
+        sl = lambda key: f'i_ctl[{uoff[key] + uw[key] - 1}:{uoff[key]}]'      # noqa: E731
+        for k, gd in enumerate(grps):
+            gp = tiles[gd]['ports']['i_ctl']
+            fports[f'o_g{k}'] = dict(dir='output', width=gp['width'], cls='bundle', peer=gd, peer_port='i_ctl', consumers=[],
+                                     expr='{' + ', '.join(reversed([sl(key) for _pn, _w, key in gp['layout']])) + '}')
+            gp['peer'] = fname
+        fports['o_kg'] = dict(dir='output', width=23, cls='export', expr=sl(('KG',)), consumers=[(e, 'kg') for e in ects])
+        for key in cfgs:
+            fports[f'o_c{key[1]}'] = dict(dir='output', width=uw[key], cls='export', expr=sl(key),
+                                          consumers=[(ects[key[1]], 'cfg')])
+        # ---- up: groups -> CTL (gathers), concatenated in group order
+        uoff2, total = [], 0
+        for k, gd in enumerate(grps):
+            op = tiles[gd]['ports']['o_ctl']
+            fports[f'i_g{k}'] = dict(dir='input', width=op['width'], cls='bundle', peer=gd)
+            op['peer'], op['peer_port'] = fname, f'i_g{k}'
+            uoff2.append(total)
+            total += op['width']
+        fports['o_ctl'] = dict(dir='output', width=total, cls='bundle', peer='kvs_ctl', peer_port=f'i_fan_{side}',
+                               consumers=[], expr='{' + ', '.join(f'i_g{k}' for k in reversed(range(len(grps)))) + '}')
+        newp = []
+        for pn, w, bname, o in ctl['packed']:
+            if bname.startswith('i_slg_') and bname[2:] in grps:
+                k = grps.index(bname[2:])
+                newp.append((pn, w, f'i_fan_{side}', uoff2[k] + o))
+            else:
+                newp.append((pn, w, bname, o))
+        ctl['packed'] = newp
+        for gd in grps:
+            ctl['ports'].pop(f'i_{gd}')
+        ctl['ports'][f'i_fan_{side}'] = dict(dir='input', width=total, cls='bundle', peer=fname)
+        # fan port order: inputs first, then outputs (stable across sides)
+        tiles[fname] = dict(inst=fname, kind='fan', ports=OrderedDict(sorted(fports.items(), key=lambda kv: (kv[1]['dir'] != 'input', kv[0]))),
+                            wires=[], body=[], members=[], loc={}, packed=[], keyexpr={})
     return tiles
 
 
 def all_tiles():
     if 'tiles' not in _G:
-        _G['tiles'] = pack({d: tile(d) for d in members()})
+        _G['tiles'] = add_fans(pack({d: tile(d) for d in members()}))
     return _G['tiles']
 
 
@@ -631,6 +715,7 @@ def inject(m, K):
     B = m['buses']
     by = {i.name: i for i in m['insts']}
     rec = m.setdefault('static_die', dict(dropped_endpoints=[], dropped_buses=[], opens=[], die_joins=[], notes=[]))
+    m['geo']['relay_half_grid'] = bool(m['geo'].get('kv_wq_leaf_s'))   # the relay planner's grid stays as planned
     for k_ in ('kv_wq_leaves', 'kv_wq_binary', 'kv_wq_leaf_s', 'kv_wq_head', 'kv_wq_wide', 'kv_wq_mirror'):
         m['geo'][k_] = False             # the write queue is superseded (static writer -> PC es)
     m.pop('wq_straps', None)
@@ -725,7 +810,7 @@ def inject(m, K):
             gd = f'slg_{st}_{g}'
             vp, par = f'vport_{st}_{g // 2}', g % 2
             add((f'pvvq_{st}_{g // 2}_{par}', 'kv_oneway', 15, [(vp, f'vq{par}'), (gd, 'vreq')]))
-            add((f'kreq_{st}_{g}', 'kv_oneway', 38, [(f'ectl_{st}_{g}', 'rq'), (gd, 'kreq')]))
+            add((f'krq_{st}_{g}', 'kv_oneway', 38, [(f'ectl_{st}_{g}', 'rq'), (gd, 'kreq')]))
     seen_buses = {b_[0] for b_ in B}
     fk = m.setdefault('forks', {})
     for (dinst, dport), loads in nets.items():
@@ -736,7 +821,7 @@ def inject(m, K):
             continue
         if dport == 'krsp':
             for (cd, cp) in loads:
-                add((f'krsp_{cd[5:]}', 'kv_oneway', 1062, [(dinst, 'krsp'), (cd, 'rs')]))
+                add((f'krs_{cd[5:]}', 'kv_oneway', 1062, [(dinst, 'krsp'), (cd, 'rs')]))
             continue
         bits = widths.get((dinst, dport))
         if dinst == 'd2d_kv' and dport in ('svc', 'srx'):
@@ -925,7 +1010,7 @@ def place(m, K, geo, F):
     GX, GY = K.GX, K.GY
     up = K.up
     SH = K.SHAVE
-    pcw, pch = 432.0, 302.4
+    pcw, pch = 270.0, 302.4
     gap = 21.6
     for st in STACKS:
         cx, cy, cw, ch, co, cm = geo[st]['ctrl']
@@ -950,21 +1035,23 @@ def place(m, K, geo, F):
         # group tiles: from the slice column to the V port channel
         vps = [by[f'vport_{st}_{k}'] for k in range(4)]
         ects = [by[f'ectl_{st}_{e}'] for e in range(8)]
+        # inner edge = the old landing strip's inner edge: the landing <-> V port / engine relay channel stays as planned
         if west:
-            x_g = up(x_hs + hs[0].w + gap, GX)
-            x_e = min(v.x for v in vps) - 86.4
-            gw = round(x_e - x_g, 4)
+            x_g = up(max(x_hs + hs[0].w + gap, lx + lw - 369.0), GX)    # W of the groups: a control channel
+            gw = round(lx + lw - 60.0 - x_g, 4)                       # E of them: the K / V channel widened by 60 um
         else:
-            x_e = max(v.x + v.w for v in vps) + 86.4
-            x_end = up(x_hs - gap, GX) - GX
-            x_g = up(x_e, GX)
-            gw = round(x_hs - gap - x_g, 4)
+            x_g = lx + 60.0
+            gw = round(min(x_hs - gap - x_g, 309.0), 4)
+        GH = 1188.0                 # group tile height: 324-um gaps between groups (relay spots + the stack fan slot)
         for g in range(8):
             idx = ORDER.index(g)
-            y0 = up(cy + PC_PITCH * 4 * idx + gap / 2, GY)
-            gh = PC_PITCH * 4 - gap
-            m['insts'].append(F.Inst(f'slg_{st}_{g}', 'qkd_kvs_grp', round(x_g, 4), round(y0, 4), gw - SH, gh - SH,
+            y0 = up(cy + PC_PITCH * 4 * idx + (PC_PITCH * 4 - GH) / 2, GY)
+            m['insts'].append(F.Inst(f'slg_{st}_{g}', 'qkd_kvs_grp', round(x_g, 4), round(y0, 4), gw - SH, GH - SH,
                                      'R0' if west else 'MY', kind='static', region='strip', domain='hbm'))
+        fh = 172.8                  # the stack fan: between groups at slots 3 and 4 (the stack middle)
+        yf = up(cy + PC_PITCH * 16 - fh / 2, GY)
+        m['insts'].append(F.Inst(f'kvs_fan_{st}', 'qkd_kvs_fan', round(x_g, 4), round(yf, 4), gw - SH, fh - SH,
+                                 'R0' if west else 'MY', kind='static', region='strip', domain='core'))
         # kc head at the strip's outer end (S stacks: below PC 0; N stacks: above PC 31), on the PC column
         kw, kh = 64.8, 43.2
         ky = cy - kh - 10.8 if st[1] == 'S' else cy + PC_PITCH * NPC + 10.8
@@ -974,8 +1061,12 @@ def place(m, K, geo, F):
     d2d = by['d2d_kv']
     host = by['host']
     pv = by.get('pvw_1')
-    anchors = dict(kvs_ctl=(host.x - 40.0, host.y + host.h / 2), kvs_emb=(d2d.x - 40.0, d2d.y + d2d.h / 2),
-                   kvs_attn=((pv.x + pv.w / 2) if pv else d2d.x, (pv.y + pv.h) if pv else d2d.y - 400.0))
+    # the control tile sits in the free top-left band (room for its 32 group chains' first relays), W of the HOST row
+    # the control tile spans the centre column between the sequencer and the HOST root: both die sides leave it without
+    # crossing the PV / HOST column (the only W <-> E crossings up there are narrow)
+    sq = by['seq']
+    anchors = dict(kvs_ctl=(host.x + host.w / 2, (sq.y + sq.h + host.y) / 2), kvs_emb=(d2d.x - 40.0, d2d.y + d2d.h / 2),
+                   kvs_attn=((pv.x - 500.0) if pv else d2d.x, (pv.y + pv.h - 200.0) if pv else d2d.y - 400.0))   # W of the N pair's top: the pair-top gap stays a crossing
     for nm, kind in (('kvs_ctl', 'ctl'), ('kvs_emb', 'emb'), ('kvs_attn', 'attn')):
         w, h = FRAME[kind]
         x, y = free_spot(m, w, h, anchors[nm], GX, GY)
@@ -983,7 +1074,7 @@ def place(m, K, geo, F):
                                  region='io', domain='core'))
 
 
-def free_spot(m, w, h, anchor, GX, GY, halo=43.2, rmax=4000.0):
+def free_spot(m, w, h, anchor, GX, GY, halo=21.6, rmax=4000.0):
     """the on-grid w x h spot nearest (Manhattan, centre) to anchor that keeps a halo to every frame / keep-out"""
     ax, ay = anchor
     W, H = m['die']['w'], m['die']['h']
@@ -1009,6 +1100,26 @@ def free_spot(m, w, h, anchor, GX, GY, halo=43.2, rmax=4000.0):
     raise ValueError(f'kv_static_die: no free {w}x{h} spot within {rmax} um of {anchor}')
 
 
+_ECTL_FACE = {'si': 'E', 'so': 'E', 't0': 'S', 'e0': 'S', 'e1': 'S', 's0': 'S', 's1': 'S', 't1': 'N', 'e2': 'N', 'e3': 'N',
+              's2': 'N', 's3': 'N'}
+
+
+def pin_face(master, port):
+    """canonical (R0) face of a static tile's port, or None (auto): the K / V words on the group's engine-side face (the
+    landing <-> V port / ECTL channel), every control word (fan, PC bundles) on its PHY-side face (the control channel
+    between the HOST slices and the groups), so the control traffic never takes the K / V channel's relay spots"""
+    if master == 'qkd_ectlk':
+        return _ECTL_FACE.get(port, 'W')
+    if master == 'qkd_kvs_grp':
+        if port in ('krsp', 'kreq', 'rsp', 'vreq'):
+            return 'E'
+        if port.startswith(('i_', 'o_')):
+            return 'W'
+    if master == 'qkd_kvs_fan':
+        return 'W'
+    return None
+
+
 # ------------------------------------------------------------------------------------------------ record / report
 def record(m):
     """plan record: tiles, bus count, relay stages of the static buses, open inputs with owners"""
@@ -1021,7 +1132,7 @@ def record(m):
                 r.update(master=KIND_MASTER[tt['kind']], port=pn, width=v['width'], owner=v.get('owner'))
                 r['instances'] += 1
     st = m.get('relay_stages', {})
-    ks = {b: s for b, s in st.items() if b.startswith(('ks_', 'pvvq_', 'pvrs_', 'kreq_', 'krsp_', 'kck_', 'kcf_', 'hes_',
+    ks = {b: s for b, s in st.items() if b.startswith(('ks_', 'pvvq_', 'pvrs_', 'krq_', 'krs_', 'kck_', 'kcf_', 'hes_',
                                                         'ler_', 'hcv_', 'hcw_')) or '__f' in b and b.split('__f')[0].startswith('ks_')}
     return dict(schema='opentallas.qwen_kv.static_die.v1', rtl=RTL_FILE,
                 rtl_sha256=hashlib.sha256((ROOT / RTL_FILE).read_bytes()).hexdigest() if (ROOT / RTL_FILE).exists() else None,
@@ -1038,7 +1149,7 @@ def response_lat(m):
     out = {}
     for s in STACKS:
         for g in range(8):
-            out[f'ectl_{s}_{g}'] = dict(RESPONSE_LAT=8 + st.get(f'kreq_{s}_{g}', 0) + st.get(f'krsp_{s}_{g}', 0),
+            out[f'ectl_{s}_{g}'] = dict(RESPONSE_LAT=8 + st.get(f'krq_{s}_{g}', 0) + st.get(f'krs_{s}_{g}', 0),
                                         QK_ISSUE_AGE=ins()[f'ectl_a_{s}_{g}']['parameters']['QK_ISSUE_AGE'])
     return out
 

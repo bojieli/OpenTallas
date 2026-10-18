@@ -36,652 +36,564 @@ module qkd_kvs_ctl (
     output wire [0:0] oobs__kv_flush_local,
     output wire [0:0] oobs__kv_active_local,
     output wire [22:0] kg,
-    output wire [4:0] dcfg__ectl_a_cfg__0_5,
-    output wire [4:0] dcfg__ectl_a_cfg__5_5,
-    output wire [4:0] dcfg__ectl_a_cfg__10_5,
-    output wire [4:0] dcfg__ectl_a_cfg__15_5,
-    output wire [4:0] dcfg__ectl_a_cfg__20_5,
-    output wire [4:0] dcfg__ectl_a_cfg__25_5,
-    output wire [4:0] dcfg__ectl_a_cfg__30_5,
-    output wire [4:0] dcfg__ectl_a_cfg__35_5,
-    output wire [4:0] dcfg__ectl_a_cfg__40_5,
-    output wire [4:0] dcfg__ectl_a_cfg__45_5,
-    output wire [4:0] dcfg__ectl_a_cfg__50_5,
-    output wire [4:0] dcfg__ectl_a_cfg__55_5,
-    output wire [4:0] dcfg__ectl_a_cfg__60_5,
-    output wire [4:0] dcfg__ectl_a_cfg__65_5,
-    output wire [4:0] dcfg__ectl_a_cfg__70_5,
-    output wire [4:0] dcfg__ectl_a_cfg__75_5,
-    output wire [4:0] dcfg__ectl_a_cfg__80_5,
-    output wire [4:0] dcfg__ectl_a_cfg__85_5,
-    output wire [4:0] dcfg__ectl_a_cfg__90_5,
-    output wire [4:0] dcfg__ectl_a_cfg__95_5,
-    output wire [4:0] dcfg__ectl_a_cfg__100_5,
-    output wire [4:0] dcfg__ectl_a_cfg__105_5,
-    output wire [4:0] dcfg__ectl_a_cfg__110_5,
-    output wire [4:0] dcfg__ectl_a_cfg__115_5,
-    output wire [4:0] dcfg__ectl_a_cfg__120_5,
-    output wire [4:0] dcfg__ectl_a_cfg__125_5,
-    output wire [4:0] dcfg__ectl_a_cfg__130_5,
-    output wire [4:0] dcfg__ectl_a_cfg__135_5,
-    output wire [4:0] dcfg__ectl_a_cfg__140_5,
-    output wire [4:0] dcfg__ectl_a_cfg__145_5,
-    output wire [4:0] dcfg__ectl_a_cfg__150_5,
-    output wire [4:0] dcfg__ectl_a_cfg__155_5,
     output wire [20:0] lp,
     output wire [0:0] boot__setup_ready,
     output wire [0:0] own__native_reserved,
     output wire [0:0] own__ownership_valid,
-    input wire [16:0] i_slg_EN_0,
-    input wire [16:0] i_slg_EN_1,
-    input wire [16:0] i_slg_EN_2,
-    input wire [16:0] i_slg_EN_3,
-    input wire [16:0] i_slg_EN_4,
-    input wire [16:0] i_slg_EN_5,
-    input wire [16:0] i_slg_EN_6,
-    input wire [16:0] i_slg_EN_7,
-    input wire [16:0] i_slg_ES_0,
-    input wire [16:0] i_slg_ES_1,
-    input wire [16:0] i_slg_ES_2,
-    input wire [16:0] i_slg_ES_3,
-    input wire [16:0] i_slg_ES_4,
-    input wire [16:0] i_slg_ES_5,
-    input wire [16:0] i_slg_ES_6,
-    input wire [16:0] i_slg_ES_7,
-    input wire [16:0] i_slg_WN_0,
-    input wire [16:0] i_slg_WN_1,
-    input wire [16:0] i_slg_WN_2,
-    input wire [16:0] i_slg_WN_3,
-    input wire [16:0] i_slg_WN_4,
-    input wire [16:0] i_slg_WN_5,
-    input wire [16:0] i_slg_WN_6,
-    input wire [16:0] i_slg_WN_7,
-    input wire [16:0] i_slg_WS_0,
-    input wire [16:0] i_slg_WS_1,
-    input wire [16:0] i_slg_WS_2,
-    input wire [16:0] i_slg_WS_3,
-    input wire [16:0] i_slg_WS_4,
-    input wire [16:0] i_slg_WS_5,
-    input wire [16:0] i_slg_WS_6,
-    input wire [16:0] i_slg_WS_7,
     output wire [60:0] o_attn,
-    output wire [193:0] o_slg_EN_0,
-    output wire [193:0] o_slg_EN_1,
-    output wire [193:0] o_slg_EN_2,
-    output wire [193:0] o_slg_EN_3,
-    output wire [193:0] o_slg_EN_4,
-    output wire [193:0] o_slg_EN_5,
-    output wire [193:0] o_slg_EN_6,
-    output wire [193:0] o_slg_EN_7,
-    output wire [193:0] o_slg_ES_0,
-    output wire [193:0] o_slg_ES_1,
-    output wire [193:0] o_slg_ES_2,
-    output wire [193:0] o_slg_ES_3,
-    output wire [193:0] o_slg_ES_4,
-    output wire [193:0] o_slg_ES_5,
-    output wire [193:0] o_slg_ES_6,
-    output wire [193:0] o_slg_ES_7,
-    output wire [193:0] o_slg_WN_0,
-    output wire [193:0] o_slg_WN_1,
-    output wire [193:0] o_slg_WN_2,
-    output wire [193:0] o_slg_WN_3,
-    output wire [193:0] o_slg_WN_4,
-    output wire [193:0] o_slg_WN_5,
-    output wire [193:0] o_slg_WN_6,
-    output wire [193:0] o_slg_WN_7,
-    output wire [193:0] o_slg_WS_0,
-    output wire [193:0] o_slg_WS_1,
-    output wire [193:0] o_slg_WS_2,
-    output wire [193:0] o_slg_WS_3,
-    output wire [193:0] o_slg_WS_4,
-    output wire [193:0] o_slg_WS_5,
-    output wire [193:0] o_slg_WS_6,
-    output wire [193:0] o_slg_WS_7
+    output wire [333:0] o_fan_WS,
+    input wire [135:0] i_fan_WS,
+    output wire [333:0] o_fan_WN,
+    input wire [135:0] i_fan_WN,
+    output wire [333:0] o_fan_ES,
+    input wire [135:0] i_fan_ES,
+    output wire [333:0] o_fan_EN,
+    input wire [135:0] i_fan_EN
 );
-    wire [0:0] bobs__applied_hbm__23 = i_slg_EN_0[0:0];
-    wire [0:0] bobs__fault_leaf_core__23 = i_slg_EN_0[1:1];
-    wire [0:0] bobs__fault_hbm__23 = i_slg_EN_0[2:2];
-    wire [0:0] bobs__applied_hbm__22 = i_slg_EN_0[3:3];
-    wire [0:0] bobs__fault_leaf_core__22 = i_slg_EN_0[4:4];
-    wire [0:0] bobs__fault_hbm__22 = i_slg_EN_0[5:5];
-    wire [0:0] bobs__applied_hbm__21 = i_slg_EN_0[6:6];
-    wire [0:0] bobs__fault_leaf_core__21 = i_slg_EN_0[7:7];
-    wire [0:0] bobs__fault_hbm__21 = i_slg_EN_0[8:8];
-    wire [0:0] bobs__applied_hbm__20 = i_slg_EN_0[9:9];
-    wire [0:0] bobs__fault_leaf_core__20 = i_slg_EN_0[10:10];
-    wire [0:0] bobs__fault_hbm__20 = i_slg_EN_0[11:11];
-    wire [0:0] bobs__applied_hbm__135 = i_slg_EN_0[12:12];
-    wire [0:0] bobs__fault_leaf_core__135 = i_slg_EN_0[13:13];
-    wire [0:0] bobs__fault_hbm__135 = i_slg_EN_0[14:14];
-    wire [0:0] oobs__group_drained__7 = i_slg_EN_0[15:15];
-    wire [0:0] oobs__group_fault__7 = i_slg_EN_0[16:16];
-    wire [0:0] bobs__applied_hbm__19 = i_slg_EN_1[0:0];
-    wire [0:0] bobs__fault_leaf_core__19 = i_slg_EN_1[1:1];
-    wire [0:0] bobs__fault_hbm__19 = i_slg_EN_1[2:2];
-    wire [0:0] bobs__applied_hbm__18 = i_slg_EN_1[3:3];
-    wire [0:0] bobs__fault_leaf_core__18 = i_slg_EN_1[4:4];
-    wire [0:0] bobs__fault_hbm__18 = i_slg_EN_1[5:5];
-    wire [0:0] bobs__applied_hbm__17 = i_slg_EN_1[6:6];
-    wire [0:0] bobs__fault_leaf_core__17 = i_slg_EN_1[7:7];
-    wire [0:0] bobs__fault_hbm__17 = i_slg_EN_1[8:8];
-    wire [0:0] bobs__applied_hbm__16 = i_slg_EN_1[9:9];
-    wire [0:0] bobs__fault_leaf_core__16 = i_slg_EN_1[10:10];
-    wire [0:0] bobs__fault_hbm__16 = i_slg_EN_1[11:11];
-    wire [0:0] bobs__applied_hbm__134 = i_slg_EN_1[12:12];
-    wire [0:0] bobs__fault_leaf_core__134 = i_slg_EN_1[13:13];
-    wire [0:0] bobs__fault_hbm__134 = i_slg_EN_1[14:14];
-    wire [0:0] oobs__group_drained__6 = i_slg_EN_1[15:15];
-    wire [0:0] oobs__group_fault__6 = i_slg_EN_1[16:16];
-    wire [0:0] bobs__applied_hbm__15 = i_slg_EN_2[0:0];
-    wire [0:0] bobs__fault_leaf_core__15 = i_slg_EN_2[1:1];
-    wire [0:0] bobs__fault_hbm__15 = i_slg_EN_2[2:2];
-    wire [0:0] bobs__applied_hbm__14 = i_slg_EN_2[3:3];
-    wire [0:0] bobs__fault_leaf_core__14 = i_slg_EN_2[4:4];
-    wire [0:0] bobs__fault_hbm__14 = i_slg_EN_2[5:5];
-    wire [0:0] bobs__applied_hbm__13 = i_slg_EN_2[6:6];
-    wire [0:0] bobs__fault_leaf_core__13 = i_slg_EN_2[7:7];
-    wire [0:0] bobs__fault_hbm__13 = i_slg_EN_2[8:8];
-    wire [0:0] bobs__applied_hbm__12 = i_slg_EN_2[9:9];
-    wire [0:0] bobs__fault_leaf_core__12 = i_slg_EN_2[10:10];
-    wire [0:0] bobs__fault_hbm__12 = i_slg_EN_2[11:11];
-    wire [0:0] bobs__applied_hbm__133 = i_slg_EN_2[12:12];
-    wire [0:0] bobs__fault_leaf_core__133 = i_slg_EN_2[13:13];
-    wire [0:0] bobs__fault_hbm__133 = i_slg_EN_2[14:14];
-    wire [0:0] oobs__group_drained__5 = i_slg_EN_2[15:15];
-    wire [0:0] oobs__group_fault__5 = i_slg_EN_2[16:16];
-    wire [0:0] bobs__applied_hbm__11 = i_slg_EN_3[0:0];
-    wire [0:0] bobs__fault_leaf_core__11 = i_slg_EN_3[1:1];
-    wire [0:0] bobs__fault_hbm__11 = i_slg_EN_3[2:2];
-    wire [0:0] bobs__applied_hbm__10 = i_slg_EN_3[3:3];
-    wire [0:0] bobs__fault_leaf_core__10 = i_slg_EN_3[4:4];
-    wire [0:0] bobs__fault_hbm__10 = i_slg_EN_3[5:5];
-    wire [0:0] bobs__applied_hbm__9 = i_slg_EN_3[6:6];
-    wire [0:0] bobs__fault_leaf_core__9 = i_slg_EN_3[7:7];
-    wire [0:0] bobs__fault_hbm__9 = i_slg_EN_3[8:8];
-    wire [0:0] bobs__applied_hbm__8 = i_slg_EN_3[9:9];
-    wire [0:0] bobs__fault_leaf_core__8 = i_slg_EN_3[10:10];
-    wire [0:0] bobs__fault_hbm__8 = i_slg_EN_3[11:11];
-    wire [0:0] bobs__applied_hbm__132 = i_slg_EN_3[12:12];
-    wire [0:0] bobs__fault_leaf_core__132 = i_slg_EN_3[13:13];
-    wire [0:0] bobs__fault_hbm__132 = i_slg_EN_3[14:14];
-    wire [0:0] oobs__group_drained__4 = i_slg_EN_3[15:15];
-    wire [0:0] oobs__group_fault__4 = i_slg_EN_3[16:16];
-    wire [0:0] bobs__applied_hbm__31 = i_slg_EN_4[0:0];
-    wire [0:0] bobs__fault_leaf_core__31 = i_slg_EN_4[1:1];
-    wire [0:0] bobs__fault_hbm__31 = i_slg_EN_4[2:2];
-    wire [0:0] bobs__applied_hbm__30 = i_slg_EN_4[3:3];
-    wire [0:0] bobs__fault_leaf_core__30 = i_slg_EN_4[4:4];
-    wire [0:0] bobs__fault_hbm__30 = i_slg_EN_4[5:5];
-    wire [0:0] bobs__applied_hbm__29 = i_slg_EN_4[6:6];
-    wire [0:0] bobs__fault_leaf_core__29 = i_slg_EN_4[7:7];
-    wire [0:0] bobs__fault_hbm__29 = i_slg_EN_4[8:8];
-    wire [0:0] bobs__applied_hbm__28 = i_slg_EN_4[9:9];
-    wire [0:0] bobs__fault_leaf_core__28 = i_slg_EN_4[10:10];
-    wire [0:0] bobs__fault_hbm__28 = i_slg_EN_4[11:11];
-    wire [0:0] bobs__applied_hbm__131 = i_slg_EN_4[12:12];
-    wire [0:0] bobs__fault_leaf_core__131 = i_slg_EN_4[13:13];
-    wire [0:0] bobs__fault_hbm__131 = i_slg_EN_4[14:14];
-    wire [0:0] oobs__group_drained__3 = i_slg_EN_4[15:15];
-    wire [0:0] oobs__group_fault__3 = i_slg_EN_4[16:16];
-    wire [0:0] bobs__applied_hbm__27 = i_slg_EN_5[0:0];
-    wire [0:0] bobs__fault_leaf_core__27 = i_slg_EN_5[1:1];
-    wire [0:0] bobs__fault_hbm__27 = i_slg_EN_5[2:2];
-    wire [0:0] bobs__applied_hbm__26 = i_slg_EN_5[3:3];
-    wire [0:0] bobs__fault_leaf_core__26 = i_slg_EN_5[4:4];
-    wire [0:0] bobs__fault_hbm__26 = i_slg_EN_5[5:5];
-    wire [0:0] bobs__applied_hbm__25 = i_slg_EN_5[6:6];
-    wire [0:0] bobs__fault_leaf_core__25 = i_slg_EN_5[7:7];
-    wire [0:0] bobs__fault_hbm__25 = i_slg_EN_5[8:8];
-    wire [0:0] bobs__applied_hbm__24 = i_slg_EN_5[9:9];
-    wire [0:0] bobs__fault_leaf_core__24 = i_slg_EN_5[10:10];
-    wire [0:0] bobs__fault_hbm__24 = i_slg_EN_5[11:11];
-    wire [0:0] bobs__applied_hbm__130 = i_slg_EN_5[12:12];
-    wire [0:0] bobs__fault_leaf_core__130 = i_slg_EN_5[13:13];
-    wire [0:0] bobs__fault_hbm__130 = i_slg_EN_5[14:14];
-    wire [0:0] oobs__group_drained__2 = i_slg_EN_5[15:15];
-    wire [0:0] oobs__group_fault__2 = i_slg_EN_5[16:16];
-    wire [0:0] bobs__applied_hbm__7 = i_slg_EN_6[0:0];
-    wire [0:0] bobs__fault_leaf_core__7 = i_slg_EN_6[1:1];
-    wire [0:0] bobs__fault_hbm__7 = i_slg_EN_6[2:2];
-    wire [0:0] bobs__applied_hbm__6 = i_slg_EN_6[3:3];
-    wire [0:0] bobs__fault_leaf_core__6 = i_slg_EN_6[4:4];
-    wire [0:0] bobs__fault_hbm__6 = i_slg_EN_6[5:5];
-    wire [0:0] bobs__applied_hbm__5 = i_slg_EN_6[6:6];
-    wire [0:0] bobs__fault_leaf_core__5 = i_slg_EN_6[7:7];
-    wire [0:0] bobs__fault_hbm__5 = i_slg_EN_6[8:8];
-    wire [0:0] bobs__applied_hbm__4 = i_slg_EN_6[9:9];
-    wire [0:0] bobs__fault_leaf_core__4 = i_slg_EN_6[10:10];
-    wire [0:0] bobs__fault_hbm__4 = i_slg_EN_6[11:11];
-    wire [0:0] bobs__applied_hbm__129 = i_slg_EN_6[12:12];
-    wire [0:0] bobs__fault_leaf_core__129 = i_slg_EN_6[13:13];
-    wire [0:0] bobs__fault_hbm__129 = i_slg_EN_6[14:14];
-    wire [0:0] oobs__group_drained__1 = i_slg_EN_6[15:15];
-    wire [0:0] oobs__group_fault__1 = i_slg_EN_6[16:16];
-    wire [0:0] bobs__applied_hbm__3 = i_slg_EN_7[0:0];
-    wire [0:0] bobs__fault_leaf_core__3 = i_slg_EN_7[1:1];
-    wire [0:0] bobs__fault_hbm__3 = i_slg_EN_7[2:2];
-    wire [0:0] bobs__applied_hbm__2 = i_slg_EN_7[3:3];
-    wire [0:0] bobs__fault_leaf_core__2 = i_slg_EN_7[4:4];
-    wire [0:0] bobs__fault_hbm__2 = i_slg_EN_7[5:5];
-    wire [0:0] bobs__applied_hbm__1 = i_slg_EN_7[6:6];
-    wire [0:0] bobs__fault_leaf_core__1 = i_slg_EN_7[7:7];
-    wire [0:0] bobs__fault_hbm__1 = i_slg_EN_7[8:8];
-    wire [0:0] bobs__applied_hbm__0 = i_slg_EN_7[9:9];
-    wire [0:0] bobs__fault_leaf_core__0 = i_slg_EN_7[10:10];
-    wire [0:0] bobs__fault_hbm__0 = i_slg_EN_7[11:11];
-    wire [0:0] bobs__applied_hbm__128 = i_slg_EN_7[12:12];
-    wire [0:0] bobs__fault_leaf_core__128 = i_slg_EN_7[13:13];
-    wire [0:0] bobs__fault_hbm__128 = i_slg_EN_7[14:14];
-    wire [0:0] oobs__group_drained__0 = i_slg_EN_7[15:15];
-    wire [0:0] oobs__group_fault__0 = i_slg_EN_7[16:16];
-    wire [0:0] bobs__applied_hbm__55 = i_slg_ES_0[0:0];
-    wire [0:0] bobs__fault_leaf_core__55 = i_slg_ES_0[1:1];
-    wire [0:0] bobs__fault_hbm__55 = i_slg_ES_0[2:2];
-    wire [0:0] bobs__applied_hbm__54 = i_slg_ES_0[3:3];
-    wire [0:0] bobs__fault_leaf_core__54 = i_slg_ES_0[4:4];
-    wire [0:0] bobs__fault_hbm__54 = i_slg_ES_0[5:5];
-    wire [0:0] bobs__applied_hbm__53 = i_slg_ES_0[6:6];
-    wire [0:0] bobs__fault_leaf_core__53 = i_slg_ES_0[7:7];
-    wire [0:0] bobs__fault_hbm__53 = i_slg_ES_0[8:8];
-    wire [0:0] bobs__applied_hbm__52 = i_slg_ES_0[9:9];
-    wire [0:0] bobs__fault_leaf_core__52 = i_slg_ES_0[10:10];
-    wire [0:0] bobs__fault_hbm__52 = i_slg_ES_0[11:11];
-    wire [0:0] bobs__applied_hbm__143 = i_slg_ES_0[12:12];
-    wire [0:0] bobs__fault_leaf_core__143 = i_slg_ES_0[13:13];
-    wire [0:0] bobs__fault_hbm__143 = i_slg_ES_0[14:14];
-    wire [0:0] oobs__group_drained__15 = i_slg_ES_0[15:15];
-    wire [0:0] oobs__group_fault__15 = i_slg_ES_0[16:16];
-    wire [0:0] bobs__applied_hbm__51 = i_slg_ES_1[0:0];
-    wire [0:0] bobs__fault_leaf_core__51 = i_slg_ES_1[1:1];
-    wire [0:0] bobs__fault_hbm__51 = i_slg_ES_1[2:2];
-    wire [0:0] bobs__applied_hbm__50 = i_slg_ES_1[3:3];
-    wire [0:0] bobs__fault_leaf_core__50 = i_slg_ES_1[4:4];
-    wire [0:0] bobs__fault_hbm__50 = i_slg_ES_1[5:5];
-    wire [0:0] bobs__applied_hbm__49 = i_slg_ES_1[6:6];
-    wire [0:0] bobs__fault_leaf_core__49 = i_slg_ES_1[7:7];
-    wire [0:0] bobs__fault_hbm__49 = i_slg_ES_1[8:8];
-    wire [0:0] bobs__applied_hbm__48 = i_slg_ES_1[9:9];
-    wire [0:0] bobs__fault_leaf_core__48 = i_slg_ES_1[10:10];
-    wire [0:0] bobs__fault_hbm__48 = i_slg_ES_1[11:11];
-    wire [0:0] bobs__applied_hbm__142 = i_slg_ES_1[12:12];
-    wire [0:0] bobs__fault_leaf_core__142 = i_slg_ES_1[13:13];
-    wire [0:0] bobs__fault_hbm__142 = i_slg_ES_1[14:14];
-    wire [0:0] oobs__group_drained__14 = i_slg_ES_1[15:15];
-    wire [0:0] oobs__group_fault__14 = i_slg_ES_1[16:16];
-    wire [0:0] bobs__applied_hbm__47 = i_slg_ES_2[0:0];
-    wire [0:0] bobs__fault_leaf_core__47 = i_slg_ES_2[1:1];
-    wire [0:0] bobs__fault_hbm__47 = i_slg_ES_2[2:2];
-    wire [0:0] bobs__applied_hbm__46 = i_slg_ES_2[3:3];
-    wire [0:0] bobs__fault_leaf_core__46 = i_slg_ES_2[4:4];
-    wire [0:0] bobs__fault_hbm__46 = i_slg_ES_2[5:5];
-    wire [0:0] bobs__applied_hbm__45 = i_slg_ES_2[6:6];
-    wire [0:0] bobs__fault_leaf_core__45 = i_slg_ES_2[7:7];
-    wire [0:0] bobs__fault_hbm__45 = i_slg_ES_2[8:8];
-    wire [0:0] bobs__applied_hbm__44 = i_slg_ES_2[9:9];
-    wire [0:0] bobs__fault_leaf_core__44 = i_slg_ES_2[10:10];
-    wire [0:0] bobs__fault_hbm__44 = i_slg_ES_2[11:11];
-    wire [0:0] bobs__applied_hbm__141 = i_slg_ES_2[12:12];
-    wire [0:0] bobs__fault_leaf_core__141 = i_slg_ES_2[13:13];
-    wire [0:0] bobs__fault_hbm__141 = i_slg_ES_2[14:14];
-    wire [0:0] oobs__group_drained__13 = i_slg_ES_2[15:15];
-    wire [0:0] oobs__group_fault__13 = i_slg_ES_2[16:16];
-    wire [0:0] bobs__applied_hbm__43 = i_slg_ES_3[0:0];
-    wire [0:0] bobs__fault_leaf_core__43 = i_slg_ES_3[1:1];
-    wire [0:0] bobs__fault_hbm__43 = i_slg_ES_3[2:2];
-    wire [0:0] bobs__applied_hbm__42 = i_slg_ES_3[3:3];
-    wire [0:0] bobs__fault_leaf_core__42 = i_slg_ES_3[4:4];
-    wire [0:0] bobs__fault_hbm__42 = i_slg_ES_3[5:5];
-    wire [0:0] bobs__applied_hbm__41 = i_slg_ES_3[6:6];
-    wire [0:0] bobs__fault_leaf_core__41 = i_slg_ES_3[7:7];
-    wire [0:0] bobs__fault_hbm__41 = i_slg_ES_3[8:8];
-    wire [0:0] bobs__applied_hbm__40 = i_slg_ES_3[9:9];
-    wire [0:0] bobs__fault_leaf_core__40 = i_slg_ES_3[10:10];
-    wire [0:0] bobs__fault_hbm__40 = i_slg_ES_3[11:11];
-    wire [0:0] bobs__applied_hbm__140 = i_slg_ES_3[12:12];
-    wire [0:0] bobs__fault_leaf_core__140 = i_slg_ES_3[13:13];
-    wire [0:0] bobs__fault_hbm__140 = i_slg_ES_3[14:14];
-    wire [0:0] oobs__group_drained__12 = i_slg_ES_3[15:15];
-    wire [0:0] oobs__group_fault__12 = i_slg_ES_3[16:16];
-    wire [0:0] bobs__applied_hbm__63 = i_slg_ES_4[0:0];
-    wire [0:0] bobs__fault_leaf_core__63 = i_slg_ES_4[1:1];
-    wire [0:0] bobs__fault_hbm__63 = i_slg_ES_4[2:2];
-    wire [0:0] bobs__applied_hbm__62 = i_slg_ES_4[3:3];
-    wire [0:0] bobs__fault_leaf_core__62 = i_slg_ES_4[4:4];
-    wire [0:0] bobs__fault_hbm__62 = i_slg_ES_4[5:5];
-    wire [0:0] bobs__applied_hbm__61 = i_slg_ES_4[6:6];
-    wire [0:0] bobs__fault_leaf_core__61 = i_slg_ES_4[7:7];
-    wire [0:0] bobs__fault_hbm__61 = i_slg_ES_4[8:8];
-    wire [0:0] bobs__applied_hbm__60 = i_slg_ES_4[9:9];
-    wire [0:0] bobs__fault_leaf_core__60 = i_slg_ES_4[10:10];
-    wire [0:0] bobs__fault_hbm__60 = i_slg_ES_4[11:11];
-    wire [0:0] bobs__applied_hbm__139 = i_slg_ES_4[12:12];
-    wire [0:0] bobs__fault_leaf_core__139 = i_slg_ES_4[13:13];
-    wire [0:0] bobs__fault_hbm__139 = i_slg_ES_4[14:14];
-    wire [0:0] oobs__group_drained__11 = i_slg_ES_4[15:15];
-    wire [0:0] oobs__group_fault__11 = i_slg_ES_4[16:16];
-    wire [0:0] bobs__applied_hbm__59 = i_slg_ES_5[0:0];
-    wire [0:0] bobs__fault_leaf_core__59 = i_slg_ES_5[1:1];
-    wire [0:0] bobs__fault_hbm__59 = i_slg_ES_5[2:2];
-    wire [0:0] bobs__applied_hbm__58 = i_slg_ES_5[3:3];
-    wire [0:0] bobs__fault_leaf_core__58 = i_slg_ES_5[4:4];
-    wire [0:0] bobs__fault_hbm__58 = i_slg_ES_5[5:5];
-    wire [0:0] bobs__applied_hbm__57 = i_slg_ES_5[6:6];
-    wire [0:0] bobs__fault_leaf_core__57 = i_slg_ES_5[7:7];
-    wire [0:0] bobs__fault_hbm__57 = i_slg_ES_5[8:8];
-    wire [0:0] bobs__applied_hbm__56 = i_slg_ES_5[9:9];
-    wire [0:0] bobs__fault_leaf_core__56 = i_slg_ES_5[10:10];
-    wire [0:0] bobs__fault_hbm__56 = i_slg_ES_5[11:11];
-    wire [0:0] bobs__applied_hbm__138 = i_slg_ES_5[12:12];
-    wire [0:0] bobs__fault_leaf_core__138 = i_slg_ES_5[13:13];
-    wire [0:0] bobs__fault_hbm__138 = i_slg_ES_5[14:14];
-    wire [0:0] oobs__group_drained__10 = i_slg_ES_5[15:15];
-    wire [0:0] oobs__group_fault__10 = i_slg_ES_5[16:16];
-    wire [0:0] bobs__applied_hbm__39 = i_slg_ES_6[0:0];
-    wire [0:0] bobs__fault_leaf_core__39 = i_slg_ES_6[1:1];
-    wire [0:0] bobs__fault_hbm__39 = i_slg_ES_6[2:2];
-    wire [0:0] bobs__applied_hbm__38 = i_slg_ES_6[3:3];
-    wire [0:0] bobs__fault_leaf_core__38 = i_slg_ES_6[4:4];
-    wire [0:0] bobs__fault_hbm__38 = i_slg_ES_6[5:5];
-    wire [0:0] bobs__applied_hbm__37 = i_slg_ES_6[6:6];
-    wire [0:0] bobs__fault_leaf_core__37 = i_slg_ES_6[7:7];
-    wire [0:0] bobs__fault_hbm__37 = i_slg_ES_6[8:8];
-    wire [0:0] bobs__applied_hbm__36 = i_slg_ES_6[9:9];
-    wire [0:0] bobs__fault_leaf_core__36 = i_slg_ES_6[10:10];
-    wire [0:0] bobs__fault_hbm__36 = i_slg_ES_6[11:11];
-    wire [0:0] bobs__applied_hbm__137 = i_slg_ES_6[12:12];
-    wire [0:0] bobs__fault_leaf_core__137 = i_slg_ES_6[13:13];
-    wire [0:0] bobs__fault_hbm__137 = i_slg_ES_6[14:14];
-    wire [0:0] oobs__group_drained__9 = i_slg_ES_6[15:15];
-    wire [0:0] oobs__group_fault__9 = i_slg_ES_6[16:16];
-    wire [0:0] bobs__applied_hbm__35 = i_slg_ES_7[0:0];
-    wire [0:0] bobs__fault_leaf_core__35 = i_slg_ES_7[1:1];
-    wire [0:0] bobs__fault_hbm__35 = i_slg_ES_7[2:2];
-    wire [0:0] bobs__applied_hbm__34 = i_slg_ES_7[3:3];
-    wire [0:0] bobs__fault_leaf_core__34 = i_slg_ES_7[4:4];
-    wire [0:0] bobs__fault_hbm__34 = i_slg_ES_7[5:5];
-    wire [0:0] bobs__applied_hbm__33 = i_slg_ES_7[6:6];
-    wire [0:0] bobs__fault_leaf_core__33 = i_slg_ES_7[7:7];
-    wire [0:0] bobs__fault_hbm__33 = i_slg_ES_7[8:8];
-    wire [0:0] bobs__applied_hbm__32 = i_slg_ES_7[9:9];
-    wire [0:0] bobs__fault_leaf_core__32 = i_slg_ES_7[10:10];
-    wire [0:0] bobs__fault_hbm__32 = i_slg_ES_7[11:11];
-    wire [0:0] bobs__applied_hbm__136 = i_slg_ES_7[12:12];
-    wire [0:0] bobs__fault_leaf_core__136 = i_slg_ES_7[13:13];
-    wire [0:0] bobs__fault_hbm__136 = i_slg_ES_7[14:14];
-    wire [0:0] oobs__group_drained__8 = i_slg_ES_7[15:15];
-    wire [0:0] oobs__group_fault__8 = i_slg_ES_7[16:16];
-    wire [0:0] bobs__applied_hbm__87 = i_slg_WN_0[0:0];
-    wire [0:0] bobs__fault_leaf_core__87 = i_slg_WN_0[1:1];
-    wire [0:0] bobs__fault_hbm__87 = i_slg_WN_0[2:2];
-    wire [0:0] bobs__applied_hbm__86 = i_slg_WN_0[3:3];
-    wire [0:0] bobs__fault_leaf_core__86 = i_slg_WN_0[4:4];
-    wire [0:0] bobs__fault_hbm__86 = i_slg_WN_0[5:5];
-    wire [0:0] bobs__applied_hbm__85 = i_slg_WN_0[6:6];
-    wire [0:0] bobs__fault_leaf_core__85 = i_slg_WN_0[7:7];
-    wire [0:0] bobs__fault_hbm__85 = i_slg_WN_0[8:8];
-    wire [0:0] bobs__applied_hbm__84 = i_slg_WN_0[9:9];
-    wire [0:0] bobs__fault_leaf_core__84 = i_slg_WN_0[10:10];
-    wire [0:0] bobs__fault_hbm__84 = i_slg_WN_0[11:11];
-    wire [0:0] bobs__applied_hbm__151 = i_slg_WN_0[12:12];
-    wire [0:0] bobs__fault_leaf_core__151 = i_slg_WN_0[13:13];
-    wire [0:0] bobs__fault_hbm__151 = i_slg_WN_0[14:14];
-    wire [0:0] oobs__group_drained__23 = i_slg_WN_0[15:15];
-    wire [0:0] oobs__group_fault__23 = i_slg_WN_0[16:16];
-    wire [0:0] bobs__applied_hbm__83 = i_slg_WN_1[0:0];
-    wire [0:0] bobs__fault_leaf_core__83 = i_slg_WN_1[1:1];
-    wire [0:0] bobs__fault_hbm__83 = i_slg_WN_1[2:2];
-    wire [0:0] bobs__applied_hbm__82 = i_slg_WN_1[3:3];
-    wire [0:0] bobs__fault_leaf_core__82 = i_slg_WN_1[4:4];
-    wire [0:0] bobs__fault_hbm__82 = i_slg_WN_1[5:5];
-    wire [0:0] bobs__applied_hbm__81 = i_slg_WN_1[6:6];
-    wire [0:0] bobs__fault_leaf_core__81 = i_slg_WN_1[7:7];
-    wire [0:0] bobs__fault_hbm__81 = i_slg_WN_1[8:8];
-    wire [0:0] bobs__applied_hbm__80 = i_slg_WN_1[9:9];
-    wire [0:0] bobs__fault_leaf_core__80 = i_slg_WN_1[10:10];
-    wire [0:0] bobs__fault_hbm__80 = i_slg_WN_1[11:11];
-    wire [0:0] bobs__applied_hbm__150 = i_slg_WN_1[12:12];
-    wire [0:0] bobs__fault_leaf_core__150 = i_slg_WN_1[13:13];
-    wire [0:0] bobs__fault_hbm__150 = i_slg_WN_1[14:14];
-    wire [0:0] oobs__group_drained__22 = i_slg_WN_1[15:15];
-    wire [0:0] oobs__group_fault__22 = i_slg_WN_1[16:16];
-    wire [0:0] bobs__applied_hbm__79 = i_slg_WN_2[0:0];
-    wire [0:0] bobs__fault_leaf_core__79 = i_slg_WN_2[1:1];
-    wire [0:0] bobs__fault_hbm__79 = i_slg_WN_2[2:2];
-    wire [0:0] bobs__applied_hbm__78 = i_slg_WN_2[3:3];
-    wire [0:0] bobs__fault_leaf_core__78 = i_slg_WN_2[4:4];
-    wire [0:0] bobs__fault_hbm__78 = i_slg_WN_2[5:5];
-    wire [0:0] bobs__applied_hbm__77 = i_slg_WN_2[6:6];
-    wire [0:0] bobs__fault_leaf_core__77 = i_slg_WN_2[7:7];
-    wire [0:0] bobs__fault_hbm__77 = i_slg_WN_2[8:8];
-    wire [0:0] bobs__applied_hbm__76 = i_slg_WN_2[9:9];
-    wire [0:0] bobs__fault_leaf_core__76 = i_slg_WN_2[10:10];
-    wire [0:0] bobs__fault_hbm__76 = i_slg_WN_2[11:11];
-    wire [0:0] bobs__applied_hbm__149 = i_slg_WN_2[12:12];
-    wire [0:0] bobs__fault_leaf_core__149 = i_slg_WN_2[13:13];
-    wire [0:0] bobs__fault_hbm__149 = i_slg_WN_2[14:14];
-    wire [0:0] oobs__group_drained__21 = i_slg_WN_2[15:15];
-    wire [0:0] oobs__group_fault__21 = i_slg_WN_2[16:16];
-    wire [0:0] bobs__applied_hbm__75 = i_slg_WN_3[0:0];
-    wire [0:0] bobs__fault_leaf_core__75 = i_slg_WN_3[1:1];
-    wire [0:0] bobs__fault_hbm__75 = i_slg_WN_3[2:2];
-    wire [0:0] bobs__applied_hbm__74 = i_slg_WN_3[3:3];
-    wire [0:0] bobs__fault_leaf_core__74 = i_slg_WN_3[4:4];
-    wire [0:0] bobs__fault_hbm__74 = i_slg_WN_3[5:5];
-    wire [0:0] bobs__applied_hbm__73 = i_slg_WN_3[6:6];
-    wire [0:0] bobs__fault_leaf_core__73 = i_slg_WN_3[7:7];
-    wire [0:0] bobs__fault_hbm__73 = i_slg_WN_3[8:8];
-    wire [0:0] bobs__applied_hbm__72 = i_slg_WN_3[9:9];
-    wire [0:0] bobs__fault_leaf_core__72 = i_slg_WN_3[10:10];
-    wire [0:0] bobs__fault_hbm__72 = i_slg_WN_3[11:11];
-    wire [0:0] bobs__applied_hbm__148 = i_slg_WN_3[12:12];
-    wire [0:0] bobs__fault_leaf_core__148 = i_slg_WN_3[13:13];
-    wire [0:0] bobs__fault_hbm__148 = i_slg_WN_3[14:14];
-    wire [0:0] oobs__group_drained__20 = i_slg_WN_3[15:15];
-    wire [0:0] oobs__group_fault__20 = i_slg_WN_3[16:16];
-    wire [0:0] bobs__applied_hbm__95 = i_slg_WN_4[0:0];
-    wire [0:0] bobs__fault_leaf_core__95 = i_slg_WN_4[1:1];
-    wire [0:0] bobs__fault_hbm__95 = i_slg_WN_4[2:2];
-    wire [0:0] bobs__applied_hbm__94 = i_slg_WN_4[3:3];
-    wire [0:0] bobs__fault_leaf_core__94 = i_slg_WN_4[4:4];
-    wire [0:0] bobs__fault_hbm__94 = i_slg_WN_4[5:5];
-    wire [0:0] bobs__applied_hbm__93 = i_slg_WN_4[6:6];
-    wire [0:0] bobs__fault_leaf_core__93 = i_slg_WN_4[7:7];
-    wire [0:0] bobs__fault_hbm__93 = i_slg_WN_4[8:8];
-    wire [0:0] bobs__applied_hbm__92 = i_slg_WN_4[9:9];
-    wire [0:0] bobs__fault_leaf_core__92 = i_slg_WN_4[10:10];
-    wire [0:0] bobs__fault_hbm__92 = i_slg_WN_4[11:11];
-    wire [0:0] bobs__applied_hbm__147 = i_slg_WN_4[12:12];
-    wire [0:0] bobs__fault_leaf_core__147 = i_slg_WN_4[13:13];
-    wire [0:0] bobs__fault_hbm__147 = i_slg_WN_4[14:14];
-    wire [0:0] oobs__group_drained__19 = i_slg_WN_4[15:15];
-    wire [0:0] oobs__group_fault__19 = i_slg_WN_4[16:16];
-    wire [0:0] bobs__applied_hbm__91 = i_slg_WN_5[0:0];
-    wire [0:0] bobs__fault_leaf_core__91 = i_slg_WN_5[1:1];
-    wire [0:0] bobs__fault_hbm__91 = i_slg_WN_5[2:2];
-    wire [0:0] bobs__applied_hbm__90 = i_slg_WN_5[3:3];
-    wire [0:0] bobs__fault_leaf_core__90 = i_slg_WN_5[4:4];
-    wire [0:0] bobs__fault_hbm__90 = i_slg_WN_5[5:5];
-    wire [0:0] bobs__applied_hbm__89 = i_slg_WN_5[6:6];
-    wire [0:0] bobs__fault_leaf_core__89 = i_slg_WN_5[7:7];
-    wire [0:0] bobs__fault_hbm__89 = i_slg_WN_5[8:8];
-    wire [0:0] bobs__applied_hbm__88 = i_slg_WN_5[9:9];
-    wire [0:0] bobs__fault_leaf_core__88 = i_slg_WN_5[10:10];
-    wire [0:0] bobs__fault_hbm__88 = i_slg_WN_5[11:11];
-    wire [0:0] bobs__applied_hbm__146 = i_slg_WN_5[12:12];
-    wire [0:0] bobs__fault_leaf_core__146 = i_slg_WN_5[13:13];
-    wire [0:0] bobs__fault_hbm__146 = i_slg_WN_5[14:14];
-    wire [0:0] oobs__group_drained__18 = i_slg_WN_5[15:15];
-    wire [0:0] oobs__group_fault__18 = i_slg_WN_5[16:16];
-    wire [0:0] bobs__applied_hbm__71 = i_slg_WN_6[0:0];
-    wire [0:0] bobs__fault_leaf_core__71 = i_slg_WN_6[1:1];
-    wire [0:0] bobs__fault_hbm__71 = i_slg_WN_6[2:2];
-    wire [0:0] bobs__applied_hbm__70 = i_slg_WN_6[3:3];
-    wire [0:0] bobs__fault_leaf_core__70 = i_slg_WN_6[4:4];
-    wire [0:0] bobs__fault_hbm__70 = i_slg_WN_6[5:5];
-    wire [0:0] bobs__applied_hbm__69 = i_slg_WN_6[6:6];
-    wire [0:0] bobs__fault_leaf_core__69 = i_slg_WN_6[7:7];
-    wire [0:0] bobs__fault_hbm__69 = i_slg_WN_6[8:8];
-    wire [0:0] bobs__applied_hbm__68 = i_slg_WN_6[9:9];
-    wire [0:0] bobs__fault_leaf_core__68 = i_slg_WN_6[10:10];
-    wire [0:0] bobs__fault_hbm__68 = i_slg_WN_6[11:11];
-    wire [0:0] bobs__applied_hbm__145 = i_slg_WN_6[12:12];
-    wire [0:0] bobs__fault_leaf_core__145 = i_slg_WN_6[13:13];
-    wire [0:0] bobs__fault_hbm__145 = i_slg_WN_6[14:14];
-    wire [0:0] oobs__group_drained__17 = i_slg_WN_6[15:15];
-    wire [0:0] oobs__group_fault__17 = i_slg_WN_6[16:16];
-    wire [0:0] bobs__applied_hbm__67 = i_slg_WN_7[0:0];
-    wire [0:0] bobs__fault_leaf_core__67 = i_slg_WN_7[1:1];
-    wire [0:0] bobs__fault_hbm__67 = i_slg_WN_7[2:2];
-    wire [0:0] bobs__applied_hbm__66 = i_slg_WN_7[3:3];
-    wire [0:0] bobs__fault_leaf_core__66 = i_slg_WN_7[4:4];
-    wire [0:0] bobs__fault_hbm__66 = i_slg_WN_7[5:5];
-    wire [0:0] bobs__applied_hbm__65 = i_slg_WN_7[6:6];
-    wire [0:0] bobs__fault_leaf_core__65 = i_slg_WN_7[7:7];
-    wire [0:0] bobs__fault_hbm__65 = i_slg_WN_7[8:8];
-    wire [0:0] bobs__applied_hbm__64 = i_slg_WN_7[9:9];
-    wire [0:0] bobs__fault_leaf_core__64 = i_slg_WN_7[10:10];
-    wire [0:0] bobs__fault_hbm__64 = i_slg_WN_7[11:11];
-    wire [0:0] bobs__applied_hbm__144 = i_slg_WN_7[12:12];
-    wire [0:0] bobs__fault_leaf_core__144 = i_slg_WN_7[13:13];
-    wire [0:0] bobs__fault_hbm__144 = i_slg_WN_7[14:14];
-    wire [0:0] oobs__group_drained__16 = i_slg_WN_7[15:15];
-    wire [0:0] oobs__group_fault__16 = i_slg_WN_7[16:16];
-    wire [0:0] bobs__applied_hbm__119 = i_slg_WS_0[0:0];
-    wire [0:0] bobs__fault_leaf_core__119 = i_slg_WS_0[1:1];
-    wire [0:0] bobs__fault_hbm__119 = i_slg_WS_0[2:2];
-    wire [0:0] bobs__applied_hbm__118 = i_slg_WS_0[3:3];
-    wire [0:0] bobs__fault_leaf_core__118 = i_slg_WS_0[4:4];
-    wire [0:0] bobs__fault_hbm__118 = i_slg_WS_0[5:5];
-    wire [0:0] bobs__applied_hbm__117 = i_slg_WS_0[6:6];
-    wire [0:0] bobs__fault_leaf_core__117 = i_slg_WS_0[7:7];
-    wire [0:0] bobs__fault_hbm__117 = i_slg_WS_0[8:8];
-    wire [0:0] bobs__applied_hbm__116 = i_slg_WS_0[9:9];
-    wire [0:0] bobs__fault_leaf_core__116 = i_slg_WS_0[10:10];
-    wire [0:0] bobs__fault_hbm__116 = i_slg_WS_0[11:11];
-    wire [0:0] bobs__applied_hbm__159 = i_slg_WS_0[12:12];
-    wire [0:0] bobs__fault_leaf_core__159 = i_slg_WS_0[13:13];
-    wire [0:0] bobs__fault_hbm__159 = i_slg_WS_0[14:14];
-    wire [0:0] oobs__group_drained__31 = i_slg_WS_0[15:15];
-    wire [0:0] oobs__group_fault__31 = i_slg_WS_0[16:16];
-    wire [0:0] bobs__applied_hbm__115 = i_slg_WS_1[0:0];
-    wire [0:0] bobs__fault_leaf_core__115 = i_slg_WS_1[1:1];
-    wire [0:0] bobs__fault_hbm__115 = i_slg_WS_1[2:2];
-    wire [0:0] bobs__applied_hbm__114 = i_slg_WS_1[3:3];
-    wire [0:0] bobs__fault_leaf_core__114 = i_slg_WS_1[4:4];
-    wire [0:0] bobs__fault_hbm__114 = i_slg_WS_1[5:5];
-    wire [0:0] bobs__applied_hbm__113 = i_slg_WS_1[6:6];
-    wire [0:0] bobs__fault_leaf_core__113 = i_slg_WS_1[7:7];
-    wire [0:0] bobs__fault_hbm__113 = i_slg_WS_1[8:8];
-    wire [0:0] bobs__applied_hbm__112 = i_slg_WS_1[9:9];
-    wire [0:0] bobs__fault_leaf_core__112 = i_slg_WS_1[10:10];
-    wire [0:0] bobs__fault_hbm__112 = i_slg_WS_1[11:11];
-    wire [0:0] bobs__applied_hbm__158 = i_slg_WS_1[12:12];
-    wire [0:0] bobs__fault_leaf_core__158 = i_slg_WS_1[13:13];
-    wire [0:0] bobs__fault_hbm__158 = i_slg_WS_1[14:14];
-    wire [0:0] oobs__group_drained__30 = i_slg_WS_1[15:15];
-    wire [0:0] oobs__group_fault__30 = i_slg_WS_1[16:16];
-    wire [0:0] bobs__applied_hbm__111 = i_slg_WS_2[0:0];
-    wire [0:0] bobs__fault_leaf_core__111 = i_slg_WS_2[1:1];
-    wire [0:0] bobs__fault_hbm__111 = i_slg_WS_2[2:2];
-    wire [0:0] bobs__applied_hbm__110 = i_slg_WS_2[3:3];
-    wire [0:0] bobs__fault_leaf_core__110 = i_slg_WS_2[4:4];
-    wire [0:0] bobs__fault_hbm__110 = i_slg_WS_2[5:5];
-    wire [0:0] bobs__applied_hbm__109 = i_slg_WS_2[6:6];
-    wire [0:0] bobs__fault_leaf_core__109 = i_slg_WS_2[7:7];
-    wire [0:0] bobs__fault_hbm__109 = i_slg_WS_2[8:8];
-    wire [0:0] bobs__applied_hbm__108 = i_slg_WS_2[9:9];
-    wire [0:0] bobs__fault_leaf_core__108 = i_slg_WS_2[10:10];
-    wire [0:0] bobs__fault_hbm__108 = i_slg_WS_2[11:11];
-    wire [0:0] bobs__applied_hbm__157 = i_slg_WS_2[12:12];
-    wire [0:0] bobs__fault_leaf_core__157 = i_slg_WS_2[13:13];
-    wire [0:0] bobs__fault_hbm__157 = i_slg_WS_2[14:14];
-    wire [0:0] oobs__group_drained__29 = i_slg_WS_2[15:15];
-    wire [0:0] oobs__group_fault__29 = i_slg_WS_2[16:16];
-    wire [0:0] bobs__applied_hbm__107 = i_slg_WS_3[0:0];
-    wire [0:0] bobs__fault_leaf_core__107 = i_slg_WS_3[1:1];
-    wire [0:0] bobs__fault_hbm__107 = i_slg_WS_3[2:2];
-    wire [0:0] bobs__applied_hbm__106 = i_slg_WS_3[3:3];
-    wire [0:0] bobs__fault_leaf_core__106 = i_slg_WS_3[4:4];
-    wire [0:0] bobs__fault_hbm__106 = i_slg_WS_3[5:5];
-    wire [0:0] bobs__applied_hbm__105 = i_slg_WS_3[6:6];
-    wire [0:0] bobs__fault_leaf_core__105 = i_slg_WS_3[7:7];
-    wire [0:0] bobs__fault_hbm__105 = i_slg_WS_3[8:8];
-    wire [0:0] bobs__applied_hbm__104 = i_slg_WS_3[9:9];
-    wire [0:0] bobs__fault_leaf_core__104 = i_slg_WS_3[10:10];
-    wire [0:0] bobs__fault_hbm__104 = i_slg_WS_3[11:11];
-    wire [0:0] bobs__applied_hbm__156 = i_slg_WS_3[12:12];
-    wire [0:0] bobs__fault_leaf_core__156 = i_slg_WS_3[13:13];
-    wire [0:0] bobs__fault_hbm__156 = i_slg_WS_3[14:14];
-    wire [0:0] oobs__group_drained__28 = i_slg_WS_3[15:15];
-    wire [0:0] oobs__group_fault__28 = i_slg_WS_3[16:16];
-    wire [0:0] bobs__applied_hbm__127 = i_slg_WS_4[0:0];
-    wire [0:0] bobs__fault_leaf_core__127 = i_slg_WS_4[1:1];
-    wire [0:0] bobs__fault_hbm__127 = i_slg_WS_4[2:2];
-    wire [0:0] bobs__applied_hbm__126 = i_slg_WS_4[3:3];
-    wire [0:0] bobs__fault_leaf_core__126 = i_slg_WS_4[4:4];
-    wire [0:0] bobs__fault_hbm__126 = i_slg_WS_4[5:5];
-    wire [0:0] bobs__applied_hbm__125 = i_slg_WS_4[6:6];
-    wire [0:0] bobs__fault_leaf_core__125 = i_slg_WS_4[7:7];
-    wire [0:0] bobs__fault_hbm__125 = i_slg_WS_4[8:8];
-    wire [0:0] bobs__applied_hbm__124 = i_slg_WS_4[9:9];
-    wire [0:0] bobs__fault_leaf_core__124 = i_slg_WS_4[10:10];
-    wire [0:0] bobs__fault_hbm__124 = i_slg_WS_4[11:11];
-    wire [0:0] bobs__applied_hbm__155 = i_slg_WS_4[12:12];
-    wire [0:0] bobs__fault_leaf_core__155 = i_slg_WS_4[13:13];
-    wire [0:0] bobs__fault_hbm__155 = i_slg_WS_4[14:14];
-    wire [0:0] oobs__group_drained__27 = i_slg_WS_4[15:15];
-    wire [0:0] oobs__group_fault__27 = i_slg_WS_4[16:16];
-    wire [0:0] bobs__applied_hbm__123 = i_slg_WS_5[0:0];
-    wire [0:0] bobs__fault_leaf_core__123 = i_slg_WS_5[1:1];
-    wire [0:0] bobs__fault_hbm__123 = i_slg_WS_5[2:2];
-    wire [0:0] bobs__applied_hbm__122 = i_slg_WS_5[3:3];
-    wire [0:0] bobs__fault_leaf_core__122 = i_slg_WS_5[4:4];
-    wire [0:0] bobs__fault_hbm__122 = i_slg_WS_5[5:5];
-    wire [0:0] bobs__applied_hbm__121 = i_slg_WS_5[6:6];
-    wire [0:0] bobs__fault_leaf_core__121 = i_slg_WS_5[7:7];
-    wire [0:0] bobs__fault_hbm__121 = i_slg_WS_5[8:8];
-    wire [0:0] bobs__applied_hbm__120 = i_slg_WS_5[9:9];
-    wire [0:0] bobs__fault_leaf_core__120 = i_slg_WS_5[10:10];
-    wire [0:0] bobs__fault_hbm__120 = i_slg_WS_5[11:11];
-    wire [0:0] bobs__applied_hbm__154 = i_slg_WS_5[12:12];
-    wire [0:0] bobs__fault_leaf_core__154 = i_slg_WS_5[13:13];
-    wire [0:0] bobs__fault_hbm__154 = i_slg_WS_5[14:14];
-    wire [0:0] oobs__group_drained__26 = i_slg_WS_5[15:15];
-    wire [0:0] oobs__group_fault__26 = i_slg_WS_5[16:16];
-    wire [0:0] bobs__applied_hbm__103 = i_slg_WS_6[0:0];
-    wire [0:0] bobs__fault_leaf_core__103 = i_slg_WS_6[1:1];
-    wire [0:0] bobs__fault_hbm__103 = i_slg_WS_6[2:2];
-    wire [0:0] bobs__applied_hbm__102 = i_slg_WS_6[3:3];
-    wire [0:0] bobs__fault_leaf_core__102 = i_slg_WS_6[4:4];
-    wire [0:0] bobs__fault_hbm__102 = i_slg_WS_6[5:5];
-    wire [0:0] bobs__applied_hbm__101 = i_slg_WS_6[6:6];
-    wire [0:0] bobs__fault_leaf_core__101 = i_slg_WS_6[7:7];
-    wire [0:0] bobs__fault_hbm__101 = i_slg_WS_6[8:8];
-    wire [0:0] bobs__applied_hbm__100 = i_slg_WS_6[9:9];
-    wire [0:0] bobs__fault_leaf_core__100 = i_slg_WS_6[10:10];
-    wire [0:0] bobs__fault_hbm__100 = i_slg_WS_6[11:11];
-    wire [0:0] bobs__applied_hbm__153 = i_slg_WS_6[12:12];
-    wire [0:0] bobs__fault_leaf_core__153 = i_slg_WS_6[13:13];
-    wire [0:0] bobs__fault_hbm__153 = i_slg_WS_6[14:14];
-    wire [0:0] oobs__group_drained__25 = i_slg_WS_6[15:15];
-    wire [0:0] oobs__group_fault__25 = i_slg_WS_6[16:16];
-    wire [0:0] bobs__applied_hbm__99 = i_slg_WS_7[0:0];
-    wire [0:0] bobs__fault_leaf_core__99 = i_slg_WS_7[1:1];
-    wire [0:0] bobs__fault_hbm__99 = i_slg_WS_7[2:2];
-    wire [0:0] bobs__applied_hbm__98 = i_slg_WS_7[3:3];
-    wire [0:0] bobs__fault_leaf_core__98 = i_slg_WS_7[4:4];
-    wire [0:0] bobs__fault_hbm__98 = i_slg_WS_7[5:5];
-    wire [0:0] bobs__applied_hbm__97 = i_slg_WS_7[6:6];
-    wire [0:0] bobs__fault_leaf_core__97 = i_slg_WS_7[7:7];
-    wire [0:0] bobs__fault_hbm__97 = i_slg_WS_7[8:8];
-    wire [0:0] bobs__applied_hbm__96 = i_slg_WS_7[9:9];
-    wire [0:0] bobs__fault_leaf_core__96 = i_slg_WS_7[10:10];
-    wire [0:0] bobs__fault_hbm__96 = i_slg_WS_7[11:11];
-    wire [0:0] bobs__applied_hbm__152 = i_slg_WS_7[12:12];
-    wire [0:0] bobs__fault_leaf_core__152 = i_slg_WS_7[13:13];
-    wire [0:0] bobs__fault_hbm__152 = i_slg_WS_7[14:14];
-    wire [0:0] oobs__group_drained__24 = i_slg_WS_7[15:15];
-    wire [0:0] oobs__group_fault__24 = i_slg_WS_7[16:16];
+    wire [0:0] bobs__applied_hbm__23 = i_fan_EN[0:0];
+    wire [0:0] bobs__fault_leaf_core__23 = i_fan_EN[1:1];
+    wire [0:0] bobs__fault_hbm__23 = i_fan_EN[2:2];
+    wire [0:0] bobs__applied_hbm__22 = i_fan_EN[3:3];
+    wire [0:0] bobs__fault_leaf_core__22 = i_fan_EN[4:4];
+    wire [0:0] bobs__fault_hbm__22 = i_fan_EN[5:5];
+    wire [0:0] bobs__applied_hbm__21 = i_fan_EN[6:6];
+    wire [0:0] bobs__fault_leaf_core__21 = i_fan_EN[7:7];
+    wire [0:0] bobs__fault_hbm__21 = i_fan_EN[8:8];
+    wire [0:0] bobs__applied_hbm__20 = i_fan_EN[9:9];
+    wire [0:0] bobs__fault_leaf_core__20 = i_fan_EN[10:10];
+    wire [0:0] bobs__fault_hbm__20 = i_fan_EN[11:11];
+    wire [0:0] bobs__applied_hbm__135 = i_fan_EN[12:12];
+    wire [0:0] bobs__fault_leaf_core__135 = i_fan_EN[13:13];
+    wire [0:0] bobs__fault_hbm__135 = i_fan_EN[14:14];
+    wire [0:0] oobs__group_drained__7 = i_fan_EN[15:15];
+    wire [0:0] oobs__group_fault__7 = i_fan_EN[16:16];
+    wire [0:0] bobs__applied_hbm__19 = i_fan_EN[17:17];
+    wire [0:0] bobs__fault_leaf_core__19 = i_fan_EN[18:18];
+    wire [0:0] bobs__fault_hbm__19 = i_fan_EN[19:19];
+    wire [0:0] bobs__applied_hbm__18 = i_fan_EN[20:20];
+    wire [0:0] bobs__fault_leaf_core__18 = i_fan_EN[21:21];
+    wire [0:0] bobs__fault_hbm__18 = i_fan_EN[22:22];
+    wire [0:0] bobs__applied_hbm__17 = i_fan_EN[23:23];
+    wire [0:0] bobs__fault_leaf_core__17 = i_fan_EN[24:24];
+    wire [0:0] bobs__fault_hbm__17 = i_fan_EN[25:25];
+    wire [0:0] bobs__applied_hbm__16 = i_fan_EN[26:26];
+    wire [0:0] bobs__fault_leaf_core__16 = i_fan_EN[27:27];
+    wire [0:0] bobs__fault_hbm__16 = i_fan_EN[28:28];
+    wire [0:0] bobs__applied_hbm__134 = i_fan_EN[29:29];
+    wire [0:0] bobs__fault_leaf_core__134 = i_fan_EN[30:30];
+    wire [0:0] bobs__fault_hbm__134 = i_fan_EN[31:31];
+    wire [0:0] oobs__group_drained__6 = i_fan_EN[32:32];
+    wire [0:0] oobs__group_fault__6 = i_fan_EN[33:33];
+    wire [0:0] bobs__applied_hbm__15 = i_fan_EN[34:34];
+    wire [0:0] bobs__fault_leaf_core__15 = i_fan_EN[35:35];
+    wire [0:0] bobs__fault_hbm__15 = i_fan_EN[36:36];
+    wire [0:0] bobs__applied_hbm__14 = i_fan_EN[37:37];
+    wire [0:0] bobs__fault_leaf_core__14 = i_fan_EN[38:38];
+    wire [0:0] bobs__fault_hbm__14 = i_fan_EN[39:39];
+    wire [0:0] bobs__applied_hbm__13 = i_fan_EN[40:40];
+    wire [0:0] bobs__fault_leaf_core__13 = i_fan_EN[41:41];
+    wire [0:0] bobs__fault_hbm__13 = i_fan_EN[42:42];
+    wire [0:0] bobs__applied_hbm__12 = i_fan_EN[43:43];
+    wire [0:0] bobs__fault_leaf_core__12 = i_fan_EN[44:44];
+    wire [0:0] bobs__fault_hbm__12 = i_fan_EN[45:45];
+    wire [0:0] bobs__applied_hbm__133 = i_fan_EN[46:46];
+    wire [0:0] bobs__fault_leaf_core__133 = i_fan_EN[47:47];
+    wire [0:0] bobs__fault_hbm__133 = i_fan_EN[48:48];
+    wire [0:0] oobs__group_drained__5 = i_fan_EN[49:49];
+    wire [0:0] oobs__group_fault__5 = i_fan_EN[50:50];
+    wire [0:0] bobs__applied_hbm__11 = i_fan_EN[51:51];
+    wire [0:0] bobs__fault_leaf_core__11 = i_fan_EN[52:52];
+    wire [0:0] bobs__fault_hbm__11 = i_fan_EN[53:53];
+    wire [0:0] bobs__applied_hbm__10 = i_fan_EN[54:54];
+    wire [0:0] bobs__fault_leaf_core__10 = i_fan_EN[55:55];
+    wire [0:0] bobs__fault_hbm__10 = i_fan_EN[56:56];
+    wire [0:0] bobs__applied_hbm__9 = i_fan_EN[57:57];
+    wire [0:0] bobs__fault_leaf_core__9 = i_fan_EN[58:58];
+    wire [0:0] bobs__fault_hbm__9 = i_fan_EN[59:59];
+    wire [0:0] bobs__applied_hbm__8 = i_fan_EN[60:60];
+    wire [0:0] bobs__fault_leaf_core__8 = i_fan_EN[61:61];
+    wire [0:0] bobs__fault_hbm__8 = i_fan_EN[62:62];
+    wire [0:0] bobs__applied_hbm__132 = i_fan_EN[63:63];
+    wire [0:0] bobs__fault_leaf_core__132 = i_fan_EN[64:64];
+    wire [0:0] bobs__fault_hbm__132 = i_fan_EN[65:65];
+    wire [0:0] oobs__group_drained__4 = i_fan_EN[66:66];
+    wire [0:0] oobs__group_fault__4 = i_fan_EN[67:67];
+    wire [0:0] bobs__applied_hbm__31 = i_fan_EN[68:68];
+    wire [0:0] bobs__fault_leaf_core__31 = i_fan_EN[69:69];
+    wire [0:0] bobs__fault_hbm__31 = i_fan_EN[70:70];
+    wire [0:0] bobs__applied_hbm__30 = i_fan_EN[71:71];
+    wire [0:0] bobs__fault_leaf_core__30 = i_fan_EN[72:72];
+    wire [0:0] bobs__fault_hbm__30 = i_fan_EN[73:73];
+    wire [0:0] bobs__applied_hbm__29 = i_fan_EN[74:74];
+    wire [0:0] bobs__fault_leaf_core__29 = i_fan_EN[75:75];
+    wire [0:0] bobs__fault_hbm__29 = i_fan_EN[76:76];
+    wire [0:0] bobs__applied_hbm__28 = i_fan_EN[77:77];
+    wire [0:0] bobs__fault_leaf_core__28 = i_fan_EN[78:78];
+    wire [0:0] bobs__fault_hbm__28 = i_fan_EN[79:79];
+    wire [0:0] bobs__applied_hbm__131 = i_fan_EN[80:80];
+    wire [0:0] bobs__fault_leaf_core__131 = i_fan_EN[81:81];
+    wire [0:0] bobs__fault_hbm__131 = i_fan_EN[82:82];
+    wire [0:0] oobs__group_drained__3 = i_fan_EN[83:83];
+    wire [0:0] oobs__group_fault__3 = i_fan_EN[84:84];
+    wire [0:0] bobs__applied_hbm__27 = i_fan_EN[85:85];
+    wire [0:0] bobs__fault_leaf_core__27 = i_fan_EN[86:86];
+    wire [0:0] bobs__fault_hbm__27 = i_fan_EN[87:87];
+    wire [0:0] bobs__applied_hbm__26 = i_fan_EN[88:88];
+    wire [0:0] bobs__fault_leaf_core__26 = i_fan_EN[89:89];
+    wire [0:0] bobs__fault_hbm__26 = i_fan_EN[90:90];
+    wire [0:0] bobs__applied_hbm__25 = i_fan_EN[91:91];
+    wire [0:0] bobs__fault_leaf_core__25 = i_fan_EN[92:92];
+    wire [0:0] bobs__fault_hbm__25 = i_fan_EN[93:93];
+    wire [0:0] bobs__applied_hbm__24 = i_fan_EN[94:94];
+    wire [0:0] bobs__fault_leaf_core__24 = i_fan_EN[95:95];
+    wire [0:0] bobs__fault_hbm__24 = i_fan_EN[96:96];
+    wire [0:0] bobs__applied_hbm__130 = i_fan_EN[97:97];
+    wire [0:0] bobs__fault_leaf_core__130 = i_fan_EN[98:98];
+    wire [0:0] bobs__fault_hbm__130 = i_fan_EN[99:99];
+    wire [0:0] oobs__group_drained__2 = i_fan_EN[100:100];
+    wire [0:0] oobs__group_fault__2 = i_fan_EN[101:101];
+    wire [0:0] bobs__applied_hbm__7 = i_fan_EN[102:102];
+    wire [0:0] bobs__fault_leaf_core__7 = i_fan_EN[103:103];
+    wire [0:0] bobs__fault_hbm__7 = i_fan_EN[104:104];
+    wire [0:0] bobs__applied_hbm__6 = i_fan_EN[105:105];
+    wire [0:0] bobs__fault_leaf_core__6 = i_fan_EN[106:106];
+    wire [0:0] bobs__fault_hbm__6 = i_fan_EN[107:107];
+    wire [0:0] bobs__applied_hbm__5 = i_fan_EN[108:108];
+    wire [0:0] bobs__fault_leaf_core__5 = i_fan_EN[109:109];
+    wire [0:0] bobs__fault_hbm__5 = i_fan_EN[110:110];
+    wire [0:0] bobs__applied_hbm__4 = i_fan_EN[111:111];
+    wire [0:0] bobs__fault_leaf_core__4 = i_fan_EN[112:112];
+    wire [0:0] bobs__fault_hbm__4 = i_fan_EN[113:113];
+    wire [0:0] bobs__applied_hbm__129 = i_fan_EN[114:114];
+    wire [0:0] bobs__fault_leaf_core__129 = i_fan_EN[115:115];
+    wire [0:0] bobs__fault_hbm__129 = i_fan_EN[116:116];
+    wire [0:0] oobs__group_drained__1 = i_fan_EN[117:117];
+    wire [0:0] oobs__group_fault__1 = i_fan_EN[118:118];
+    wire [0:0] bobs__applied_hbm__3 = i_fan_EN[119:119];
+    wire [0:0] bobs__fault_leaf_core__3 = i_fan_EN[120:120];
+    wire [0:0] bobs__fault_hbm__3 = i_fan_EN[121:121];
+    wire [0:0] bobs__applied_hbm__2 = i_fan_EN[122:122];
+    wire [0:0] bobs__fault_leaf_core__2 = i_fan_EN[123:123];
+    wire [0:0] bobs__fault_hbm__2 = i_fan_EN[124:124];
+    wire [0:0] bobs__applied_hbm__1 = i_fan_EN[125:125];
+    wire [0:0] bobs__fault_leaf_core__1 = i_fan_EN[126:126];
+    wire [0:0] bobs__fault_hbm__1 = i_fan_EN[127:127];
+    wire [0:0] bobs__applied_hbm__0 = i_fan_EN[128:128];
+    wire [0:0] bobs__fault_leaf_core__0 = i_fan_EN[129:129];
+    wire [0:0] bobs__fault_hbm__0 = i_fan_EN[130:130];
+    wire [0:0] bobs__applied_hbm__128 = i_fan_EN[131:131];
+    wire [0:0] bobs__fault_leaf_core__128 = i_fan_EN[132:132];
+    wire [0:0] bobs__fault_hbm__128 = i_fan_EN[133:133];
+    wire [0:0] oobs__group_drained__0 = i_fan_EN[134:134];
+    wire [0:0] oobs__group_fault__0 = i_fan_EN[135:135];
+    wire [0:0] bobs__applied_hbm__55 = i_fan_ES[0:0];
+    wire [0:0] bobs__fault_leaf_core__55 = i_fan_ES[1:1];
+    wire [0:0] bobs__fault_hbm__55 = i_fan_ES[2:2];
+    wire [0:0] bobs__applied_hbm__54 = i_fan_ES[3:3];
+    wire [0:0] bobs__fault_leaf_core__54 = i_fan_ES[4:4];
+    wire [0:0] bobs__fault_hbm__54 = i_fan_ES[5:5];
+    wire [0:0] bobs__applied_hbm__53 = i_fan_ES[6:6];
+    wire [0:0] bobs__fault_leaf_core__53 = i_fan_ES[7:7];
+    wire [0:0] bobs__fault_hbm__53 = i_fan_ES[8:8];
+    wire [0:0] bobs__applied_hbm__52 = i_fan_ES[9:9];
+    wire [0:0] bobs__fault_leaf_core__52 = i_fan_ES[10:10];
+    wire [0:0] bobs__fault_hbm__52 = i_fan_ES[11:11];
+    wire [0:0] bobs__applied_hbm__143 = i_fan_ES[12:12];
+    wire [0:0] bobs__fault_leaf_core__143 = i_fan_ES[13:13];
+    wire [0:0] bobs__fault_hbm__143 = i_fan_ES[14:14];
+    wire [0:0] oobs__group_drained__15 = i_fan_ES[15:15];
+    wire [0:0] oobs__group_fault__15 = i_fan_ES[16:16];
+    wire [0:0] bobs__applied_hbm__51 = i_fan_ES[17:17];
+    wire [0:0] bobs__fault_leaf_core__51 = i_fan_ES[18:18];
+    wire [0:0] bobs__fault_hbm__51 = i_fan_ES[19:19];
+    wire [0:0] bobs__applied_hbm__50 = i_fan_ES[20:20];
+    wire [0:0] bobs__fault_leaf_core__50 = i_fan_ES[21:21];
+    wire [0:0] bobs__fault_hbm__50 = i_fan_ES[22:22];
+    wire [0:0] bobs__applied_hbm__49 = i_fan_ES[23:23];
+    wire [0:0] bobs__fault_leaf_core__49 = i_fan_ES[24:24];
+    wire [0:0] bobs__fault_hbm__49 = i_fan_ES[25:25];
+    wire [0:0] bobs__applied_hbm__48 = i_fan_ES[26:26];
+    wire [0:0] bobs__fault_leaf_core__48 = i_fan_ES[27:27];
+    wire [0:0] bobs__fault_hbm__48 = i_fan_ES[28:28];
+    wire [0:0] bobs__applied_hbm__142 = i_fan_ES[29:29];
+    wire [0:0] bobs__fault_leaf_core__142 = i_fan_ES[30:30];
+    wire [0:0] bobs__fault_hbm__142 = i_fan_ES[31:31];
+    wire [0:0] oobs__group_drained__14 = i_fan_ES[32:32];
+    wire [0:0] oobs__group_fault__14 = i_fan_ES[33:33];
+    wire [0:0] bobs__applied_hbm__47 = i_fan_ES[34:34];
+    wire [0:0] bobs__fault_leaf_core__47 = i_fan_ES[35:35];
+    wire [0:0] bobs__fault_hbm__47 = i_fan_ES[36:36];
+    wire [0:0] bobs__applied_hbm__46 = i_fan_ES[37:37];
+    wire [0:0] bobs__fault_leaf_core__46 = i_fan_ES[38:38];
+    wire [0:0] bobs__fault_hbm__46 = i_fan_ES[39:39];
+    wire [0:0] bobs__applied_hbm__45 = i_fan_ES[40:40];
+    wire [0:0] bobs__fault_leaf_core__45 = i_fan_ES[41:41];
+    wire [0:0] bobs__fault_hbm__45 = i_fan_ES[42:42];
+    wire [0:0] bobs__applied_hbm__44 = i_fan_ES[43:43];
+    wire [0:0] bobs__fault_leaf_core__44 = i_fan_ES[44:44];
+    wire [0:0] bobs__fault_hbm__44 = i_fan_ES[45:45];
+    wire [0:0] bobs__applied_hbm__141 = i_fan_ES[46:46];
+    wire [0:0] bobs__fault_leaf_core__141 = i_fan_ES[47:47];
+    wire [0:0] bobs__fault_hbm__141 = i_fan_ES[48:48];
+    wire [0:0] oobs__group_drained__13 = i_fan_ES[49:49];
+    wire [0:0] oobs__group_fault__13 = i_fan_ES[50:50];
+    wire [0:0] bobs__applied_hbm__43 = i_fan_ES[51:51];
+    wire [0:0] bobs__fault_leaf_core__43 = i_fan_ES[52:52];
+    wire [0:0] bobs__fault_hbm__43 = i_fan_ES[53:53];
+    wire [0:0] bobs__applied_hbm__42 = i_fan_ES[54:54];
+    wire [0:0] bobs__fault_leaf_core__42 = i_fan_ES[55:55];
+    wire [0:0] bobs__fault_hbm__42 = i_fan_ES[56:56];
+    wire [0:0] bobs__applied_hbm__41 = i_fan_ES[57:57];
+    wire [0:0] bobs__fault_leaf_core__41 = i_fan_ES[58:58];
+    wire [0:0] bobs__fault_hbm__41 = i_fan_ES[59:59];
+    wire [0:0] bobs__applied_hbm__40 = i_fan_ES[60:60];
+    wire [0:0] bobs__fault_leaf_core__40 = i_fan_ES[61:61];
+    wire [0:0] bobs__fault_hbm__40 = i_fan_ES[62:62];
+    wire [0:0] bobs__applied_hbm__140 = i_fan_ES[63:63];
+    wire [0:0] bobs__fault_leaf_core__140 = i_fan_ES[64:64];
+    wire [0:0] bobs__fault_hbm__140 = i_fan_ES[65:65];
+    wire [0:0] oobs__group_drained__12 = i_fan_ES[66:66];
+    wire [0:0] oobs__group_fault__12 = i_fan_ES[67:67];
+    wire [0:0] bobs__applied_hbm__63 = i_fan_ES[68:68];
+    wire [0:0] bobs__fault_leaf_core__63 = i_fan_ES[69:69];
+    wire [0:0] bobs__fault_hbm__63 = i_fan_ES[70:70];
+    wire [0:0] bobs__applied_hbm__62 = i_fan_ES[71:71];
+    wire [0:0] bobs__fault_leaf_core__62 = i_fan_ES[72:72];
+    wire [0:0] bobs__fault_hbm__62 = i_fan_ES[73:73];
+    wire [0:0] bobs__applied_hbm__61 = i_fan_ES[74:74];
+    wire [0:0] bobs__fault_leaf_core__61 = i_fan_ES[75:75];
+    wire [0:0] bobs__fault_hbm__61 = i_fan_ES[76:76];
+    wire [0:0] bobs__applied_hbm__60 = i_fan_ES[77:77];
+    wire [0:0] bobs__fault_leaf_core__60 = i_fan_ES[78:78];
+    wire [0:0] bobs__fault_hbm__60 = i_fan_ES[79:79];
+    wire [0:0] bobs__applied_hbm__139 = i_fan_ES[80:80];
+    wire [0:0] bobs__fault_leaf_core__139 = i_fan_ES[81:81];
+    wire [0:0] bobs__fault_hbm__139 = i_fan_ES[82:82];
+    wire [0:0] oobs__group_drained__11 = i_fan_ES[83:83];
+    wire [0:0] oobs__group_fault__11 = i_fan_ES[84:84];
+    wire [0:0] bobs__applied_hbm__59 = i_fan_ES[85:85];
+    wire [0:0] bobs__fault_leaf_core__59 = i_fan_ES[86:86];
+    wire [0:0] bobs__fault_hbm__59 = i_fan_ES[87:87];
+    wire [0:0] bobs__applied_hbm__58 = i_fan_ES[88:88];
+    wire [0:0] bobs__fault_leaf_core__58 = i_fan_ES[89:89];
+    wire [0:0] bobs__fault_hbm__58 = i_fan_ES[90:90];
+    wire [0:0] bobs__applied_hbm__57 = i_fan_ES[91:91];
+    wire [0:0] bobs__fault_leaf_core__57 = i_fan_ES[92:92];
+    wire [0:0] bobs__fault_hbm__57 = i_fan_ES[93:93];
+    wire [0:0] bobs__applied_hbm__56 = i_fan_ES[94:94];
+    wire [0:0] bobs__fault_leaf_core__56 = i_fan_ES[95:95];
+    wire [0:0] bobs__fault_hbm__56 = i_fan_ES[96:96];
+    wire [0:0] bobs__applied_hbm__138 = i_fan_ES[97:97];
+    wire [0:0] bobs__fault_leaf_core__138 = i_fan_ES[98:98];
+    wire [0:0] bobs__fault_hbm__138 = i_fan_ES[99:99];
+    wire [0:0] oobs__group_drained__10 = i_fan_ES[100:100];
+    wire [0:0] oobs__group_fault__10 = i_fan_ES[101:101];
+    wire [0:0] bobs__applied_hbm__39 = i_fan_ES[102:102];
+    wire [0:0] bobs__fault_leaf_core__39 = i_fan_ES[103:103];
+    wire [0:0] bobs__fault_hbm__39 = i_fan_ES[104:104];
+    wire [0:0] bobs__applied_hbm__38 = i_fan_ES[105:105];
+    wire [0:0] bobs__fault_leaf_core__38 = i_fan_ES[106:106];
+    wire [0:0] bobs__fault_hbm__38 = i_fan_ES[107:107];
+    wire [0:0] bobs__applied_hbm__37 = i_fan_ES[108:108];
+    wire [0:0] bobs__fault_leaf_core__37 = i_fan_ES[109:109];
+    wire [0:0] bobs__fault_hbm__37 = i_fan_ES[110:110];
+    wire [0:0] bobs__applied_hbm__36 = i_fan_ES[111:111];
+    wire [0:0] bobs__fault_leaf_core__36 = i_fan_ES[112:112];
+    wire [0:0] bobs__fault_hbm__36 = i_fan_ES[113:113];
+    wire [0:0] bobs__applied_hbm__137 = i_fan_ES[114:114];
+    wire [0:0] bobs__fault_leaf_core__137 = i_fan_ES[115:115];
+    wire [0:0] bobs__fault_hbm__137 = i_fan_ES[116:116];
+    wire [0:0] oobs__group_drained__9 = i_fan_ES[117:117];
+    wire [0:0] oobs__group_fault__9 = i_fan_ES[118:118];
+    wire [0:0] bobs__applied_hbm__35 = i_fan_ES[119:119];
+    wire [0:0] bobs__fault_leaf_core__35 = i_fan_ES[120:120];
+    wire [0:0] bobs__fault_hbm__35 = i_fan_ES[121:121];
+    wire [0:0] bobs__applied_hbm__34 = i_fan_ES[122:122];
+    wire [0:0] bobs__fault_leaf_core__34 = i_fan_ES[123:123];
+    wire [0:0] bobs__fault_hbm__34 = i_fan_ES[124:124];
+    wire [0:0] bobs__applied_hbm__33 = i_fan_ES[125:125];
+    wire [0:0] bobs__fault_leaf_core__33 = i_fan_ES[126:126];
+    wire [0:0] bobs__fault_hbm__33 = i_fan_ES[127:127];
+    wire [0:0] bobs__applied_hbm__32 = i_fan_ES[128:128];
+    wire [0:0] bobs__fault_leaf_core__32 = i_fan_ES[129:129];
+    wire [0:0] bobs__fault_hbm__32 = i_fan_ES[130:130];
+    wire [0:0] bobs__applied_hbm__136 = i_fan_ES[131:131];
+    wire [0:0] bobs__fault_leaf_core__136 = i_fan_ES[132:132];
+    wire [0:0] bobs__fault_hbm__136 = i_fan_ES[133:133];
+    wire [0:0] oobs__group_drained__8 = i_fan_ES[134:134];
+    wire [0:0] oobs__group_fault__8 = i_fan_ES[135:135];
+    wire [0:0] bobs__applied_hbm__87 = i_fan_WN[0:0];
+    wire [0:0] bobs__fault_leaf_core__87 = i_fan_WN[1:1];
+    wire [0:0] bobs__fault_hbm__87 = i_fan_WN[2:2];
+    wire [0:0] bobs__applied_hbm__86 = i_fan_WN[3:3];
+    wire [0:0] bobs__fault_leaf_core__86 = i_fan_WN[4:4];
+    wire [0:0] bobs__fault_hbm__86 = i_fan_WN[5:5];
+    wire [0:0] bobs__applied_hbm__85 = i_fan_WN[6:6];
+    wire [0:0] bobs__fault_leaf_core__85 = i_fan_WN[7:7];
+    wire [0:0] bobs__fault_hbm__85 = i_fan_WN[8:8];
+    wire [0:0] bobs__applied_hbm__84 = i_fan_WN[9:9];
+    wire [0:0] bobs__fault_leaf_core__84 = i_fan_WN[10:10];
+    wire [0:0] bobs__fault_hbm__84 = i_fan_WN[11:11];
+    wire [0:0] bobs__applied_hbm__151 = i_fan_WN[12:12];
+    wire [0:0] bobs__fault_leaf_core__151 = i_fan_WN[13:13];
+    wire [0:0] bobs__fault_hbm__151 = i_fan_WN[14:14];
+    wire [0:0] oobs__group_drained__23 = i_fan_WN[15:15];
+    wire [0:0] oobs__group_fault__23 = i_fan_WN[16:16];
+    wire [0:0] bobs__applied_hbm__83 = i_fan_WN[17:17];
+    wire [0:0] bobs__fault_leaf_core__83 = i_fan_WN[18:18];
+    wire [0:0] bobs__fault_hbm__83 = i_fan_WN[19:19];
+    wire [0:0] bobs__applied_hbm__82 = i_fan_WN[20:20];
+    wire [0:0] bobs__fault_leaf_core__82 = i_fan_WN[21:21];
+    wire [0:0] bobs__fault_hbm__82 = i_fan_WN[22:22];
+    wire [0:0] bobs__applied_hbm__81 = i_fan_WN[23:23];
+    wire [0:0] bobs__fault_leaf_core__81 = i_fan_WN[24:24];
+    wire [0:0] bobs__fault_hbm__81 = i_fan_WN[25:25];
+    wire [0:0] bobs__applied_hbm__80 = i_fan_WN[26:26];
+    wire [0:0] bobs__fault_leaf_core__80 = i_fan_WN[27:27];
+    wire [0:0] bobs__fault_hbm__80 = i_fan_WN[28:28];
+    wire [0:0] bobs__applied_hbm__150 = i_fan_WN[29:29];
+    wire [0:0] bobs__fault_leaf_core__150 = i_fan_WN[30:30];
+    wire [0:0] bobs__fault_hbm__150 = i_fan_WN[31:31];
+    wire [0:0] oobs__group_drained__22 = i_fan_WN[32:32];
+    wire [0:0] oobs__group_fault__22 = i_fan_WN[33:33];
+    wire [0:0] bobs__applied_hbm__79 = i_fan_WN[34:34];
+    wire [0:0] bobs__fault_leaf_core__79 = i_fan_WN[35:35];
+    wire [0:0] bobs__fault_hbm__79 = i_fan_WN[36:36];
+    wire [0:0] bobs__applied_hbm__78 = i_fan_WN[37:37];
+    wire [0:0] bobs__fault_leaf_core__78 = i_fan_WN[38:38];
+    wire [0:0] bobs__fault_hbm__78 = i_fan_WN[39:39];
+    wire [0:0] bobs__applied_hbm__77 = i_fan_WN[40:40];
+    wire [0:0] bobs__fault_leaf_core__77 = i_fan_WN[41:41];
+    wire [0:0] bobs__fault_hbm__77 = i_fan_WN[42:42];
+    wire [0:0] bobs__applied_hbm__76 = i_fan_WN[43:43];
+    wire [0:0] bobs__fault_leaf_core__76 = i_fan_WN[44:44];
+    wire [0:0] bobs__fault_hbm__76 = i_fan_WN[45:45];
+    wire [0:0] bobs__applied_hbm__149 = i_fan_WN[46:46];
+    wire [0:0] bobs__fault_leaf_core__149 = i_fan_WN[47:47];
+    wire [0:0] bobs__fault_hbm__149 = i_fan_WN[48:48];
+    wire [0:0] oobs__group_drained__21 = i_fan_WN[49:49];
+    wire [0:0] oobs__group_fault__21 = i_fan_WN[50:50];
+    wire [0:0] bobs__applied_hbm__75 = i_fan_WN[51:51];
+    wire [0:0] bobs__fault_leaf_core__75 = i_fan_WN[52:52];
+    wire [0:0] bobs__fault_hbm__75 = i_fan_WN[53:53];
+    wire [0:0] bobs__applied_hbm__74 = i_fan_WN[54:54];
+    wire [0:0] bobs__fault_leaf_core__74 = i_fan_WN[55:55];
+    wire [0:0] bobs__fault_hbm__74 = i_fan_WN[56:56];
+    wire [0:0] bobs__applied_hbm__73 = i_fan_WN[57:57];
+    wire [0:0] bobs__fault_leaf_core__73 = i_fan_WN[58:58];
+    wire [0:0] bobs__fault_hbm__73 = i_fan_WN[59:59];
+    wire [0:0] bobs__applied_hbm__72 = i_fan_WN[60:60];
+    wire [0:0] bobs__fault_leaf_core__72 = i_fan_WN[61:61];
+    wire [0:0] bobs__fault_hbm__72 = i_fan_WN[62:62];
+    wire [0:0] bobs__applied_hbm__148 = i_fan_WN[63:63];
+    wire [0:0] bobs__fault_leaf_core__148 = i_fan_WN[64:64];
+    wire [0:0] bobs__fault_hbm__148 = i_fan_WN[65:65];
+    wire [0:0] oobs__group_drained__20 = i_fan_WN[66:66];
+    wire [0:0] oobs__group_fault__20 = i_fan_WN[67:67];
+    wire [0:0] bobs__applied_hbm__95 = i_fan_WN[68:68];
+    wire [0:0] bobs__fault_leaf_core__95 = i_fan_WN[69:69];
+    wire [0:0] bobs__fault_hbm__95 = i_fan_WN[70:70];
+    wire [0:0] bobs__applied_hbm__94 = i_fan_WN[71:71];
+    wire [0:0] bobs__fault_leaf_core__94 = i_fan_WN[72:72];
+    wire [0:0] bobs__fault_hbm__94 = i_fan_WN[73:73];
+    wire [0:0] bobs__applied_hbm__93 = i_fan_WN[74:74];
+    wire [0:0] bobs__fault_leaf_core__93 = i_fan_WN[75:75];
+    wire [0:0] bobs__fault_hbm__93 = i_fan_WN[76:76];
+    wire [0:0] bobs__applied_hbm__92 = i_fan_WN[77:77];
+    wire [0:0] bobs__fault_leaf_core__92 = i_fan_WN[78:78];
+    wire [0:0] bobs__fault_hbm__92 = i_fan_WN[79:79];
+    wire [0:0] bobs__applied_hbm__147 = i_fan_WN[80:80];
+    wire [0:0] bobs__fault_leaf_core__147 = i_fan_WN[81:81];
+    wire [0:0] bobs__fault_hbm__147 = i_fan_WN[82:82];
+    wire [0:0] oobs__group_drained__19 = i_fan_WN[83:83];
+    wire [0:0] oobs__group_fault__19 = i_fan_WN[84:84];
+    wire [0:0] bobs__applied_hbm__91 = i_fan_WN[85:85];
+    wire [0:0] bobs__fault_leaf_core__91 = i_fan_WN[86:86];
+    wire [0:0] bobs__fault_hbm__91 = i_fan_WN[87:87];
+    wire [0:0] bobs__applied_hbm__90 = i_fan_WN[88:88];
+    wire [0:0] bobs__fault_leaf_core__90 = i_fan_WN[89:89];
+    wire [0:0] bobs__fault_hbm__90 = i_fan_WN[90:90];
+    wire [0:0] bobs__applied_hbm__89 = i_fan_WN[91:91];
+    wire [0:0] bobs__fault_leaf_core__89 = i_fan_WN[92:92];
+    wire [0:0] bobs__fault_hbm__89 = i_fan_WN[93:93];
+    wire [0:0] bobs__applied_hbm__88 = i_fan_WN[94:94];
+    wire [0:0] bobs__fault_leaf_core__88 = i_fan_WN[95:95];
+    wire [0:0] bobs__fault_hbm__88 = i_fan_WN[96:96];
+    wire [0:0] bobs__applied_hbm__146 = i_fan_WN[97:97];
+    wire [0:0] bobs__fault_leaf_core__146 = i_fan_WN[98:98];
+    wire [0:0] bobs__fault_hbm__146 = i_fan_WN[99:99];
+    wire [0:0] oobs__group_drained__18 = i_fan_WN[100:100];
+    wire [0:0] oobs__group_fault__18 = i_fan_WN[101:101];
+    wire [0:0] bobs__applied_hbm__71 = i_fan_WN[102:102];
+    wire [0:0] bobs__fault_leaf_core__71 = i_fan_WN[103:103];
+    wire [0:0] bobs__fault_hbm__71 = i_fan_WN[104:104];
+    wire [0:0] bobs__applied_hbm__70 = i_fan_WN[105:105];
+    wire [0:0] bobs__fault_leaf_core__70 = i_fan_WN[106:106];
+    wire [0:0] bobs__fault_hbm__70 = i_fan_WN[107:107];
+    wire [0:0] bobs__applied_hbm__69 = i_fan_WN[108:108];
+    wire [0:0] bobs__fault_leaf_core__69 = i_fan_WN[109:109];
+    wire [0:0] bobs__fault_hbm__69 = i_fan_WN[110:110];
+    wire [0:0] bobs__applied_hbm__68 = i_fan_WN[111:111];
+    wire [0:0] bobs__fault_leaf_core__68 = i_fan_WN[112:112];
+    wire [0:0] bobs__fault_hbm__68 = i_fan_WN[113:113];
+    wire [0:0] bobs__applied_hbm__145 = i_fan_WN[114:114];
+    wire [0:0] bobs__fault_leaf_core__145 = i_fan_WN[115:115];
+    wire [0:0] bobs__fault_hbm__145 = i_fan_WN[116:116];
+    wire [0:0] oobs__group_drained__17 = i_fan_WN[117:117];
+    wire [0:0] oobs__group_fault__17 = i_fan_WN[118:118];
+    wire [0:0] bobs__applied_hbm__67 = i_fan_WN[119:119];
+    wire [0:0] bobs__fault_leaf_core__67 = i_fan_WN[120:120];
+    wire [0:0] bobs__fault_hbm__67 = i_fan_WN[121:121];
+    wire [0:0] bobs__applied_hbm__66 = i_fan_WN[122:122];
+    wire [0:0] bobs__fault_leaf_core__66 = i_fan_WN[123:123];
+    wire [0:0] bobs__fault_hbm__66 = i_fan_WN[124:124];
+    wire [0:0] bobs__applied_hbm__65 = i_fan_WN[125:125];
+    wire [0:0] bobs__fault_leaf_core__65 = i_fan_WN[126:126];
+    wire [0:0] bobs__fault_hbm__65 = i_fan_WN[127:127];
+    wire [0:0] bobs__applied_hbm__64 = i_fan_WN[128:128];
+    wire [0:0] bobs__fault_leaf_core__64 = i_fan_WN[129:129];
+    wire [0:0] bobs__fault_hbm__64 = i_fan_WN[130:130];
+    wire [0:0] bobs__applied_hbm__144 = i_fan_WN[131:131];
+    wire [0:0] bobs__fault_leaf_core__144 = i_fan_WN[132:132];
+    wire [0:0] bobs__fault_hbm__144 = i_fan_WN[133:133];
+    wire [0:0] oobs__group_drained__16 = i_fan_WN[134:134];
+    wire [0:0] oobs__group_fault__16 = i_fan_WN[135:135];
+    wire [0:0] bobs__applied_hbm__119 = i_fan_WS[0:0];
+    wire [0:0] bobs__fault_leaf_core__119 = i_fan_WS[1:1];
+    wire [0:0] bobs__fault_hbm__119 = i_fan_WS[2:2];
+    wire [0:0] bobs__applied_hbm__118 = i_fan_WS[3:3];
+    wire [0:0] bobs__fault_leaf_core__118 = i_fan_WS[4:4];
+    wire [0:0] bobs__fault_hbm__118 = i_fan_WS[5:5];
+    wire [0:0] bobs__applied_hbm__117 = i_fan_WS[6:6];
+    wire [0:0] bobs__fault_leaf_core__117 = i_fan_WS[7:7];
+    wire [0:0] bobs__fault_hbm__117 = i_fan_WS[8:8];
+    wire [0:0] bobs__applied_hbm__116 = i_fan_WS[9:9];
+    wire [0:0] bobs__fault_leaf_core__116 = i_fan_WS[10:10];
+    wire [0:0] bobs__fault_hbm__116 = i_fan_WS[11:11];
+    wire [0:0] bobs__applied_hbm__159 = i_fan_WS[12:12];
+    wire [0:0] bobs__fault_leaf_core__159 = i_fan_WS[13:13];
+    wire [0:0] bobs__fault_hbm__159 = i_fan_WS[14:14];
+    wire [0:0] oobs__group_drained__31 = i_fan_WS[15:15];
+    wire [0:0] oobs__group_fault__31 = i_fan_WS[16:16];
+    wire [0:0] bobs__applied_hbm__115 = i_fan_WS[17:17];
+    wire [0:0] bobs__fault_leaf_core__115 = i_fan_WS[18:18];
+    wire [0:0] bobs__fault_hbm__115 = i_fan_WS[19:19];
+    wire [0:0] bobs__applied_hbm__114 = i_fan_WS[20:20];
+    wire [0:0] bobs__fault_leaf_core__114 = i_fan_WS[21:21];
+    wire [0:0] bobs__fault_hbm__114 = i_fan_WS[22:22];
+    wire [0:0] bobs__applied_hbm__113 = i_fan_WS[23:23];
+    wire [0:0] bobs__fault_leaf_core__113 = i_fan_WS[24:24];
+    wire [0:0] bobs__fault_hbm__113 = i_fan_WS[25:25];
+    wire [0:0] bobs__applied_hbm__112 = i_fan_WS[26:26];
+    wire [0:0] bobs__fault_leaf_core__112 = i_fan_WS[27:27];
+    wire [0:0] bobs__fault_hbm__112 = i_fan_WS[28:28];
+    wire [0:0] bobs__applied_hbm__158 = i_fan_WS[29:29];
+    wire [0:0] bobs__fault_leaf_core__158 = i_fan_WS[30:30];
+    wire [0:0] bobs__fault_hbm__158 = i_fan_WS[31:31];
+    wire [0:0] oobs__group_drained__30 = i_fan_WS[32:32];
+    wire [0:0] oobs__group_fault__30 = i_fan_WS[33:33];
+    wire [0:0] bobs__applied_hbm__111 = i_fan_WS[34:34];
+    wire [0:0] bobs__fault_leaf_core__111 = i_fan_WS[35:35];
+    wire [0:0] bobs__fault_hbm__111 = i_fan_WS[36:36];
+    wire [0:0] bobs__applied_hbm__110 = i_fan_WS[37:37];
+    wire [0:0] bobs__fault_leaf_core__110 = i_fan_WS[38:38];
+    wire [0:0] bobs__fault_hbm__110 = i_fan_WS[39:39];
+    wire [0:0] bobs__applied_hbm__109 = i_fan_WS[40:40];
+    wire [0:0] bobs__fault_leaf_core__109 = i_fan_WS[41:41];
+    wire [0:0] bobs__fault_hbm__109 = i_fan_WS[42:42];
+    wire [0:0] bobs__applied_hbm__108 = i_fan_WS[43:43];
+    wire [0:0] bobs__fault_leaf_core__108 = i_fan_WS[44:44];
+    wire [0:0] bobs__fault_hbm__108 = i_fan_WS[45:45];
+    wire [0:0] bobs__applied_hbm__157 = i_fan_WS[46:46];
+    wire [0:0] bobs__fault_leaf_core__157 = i_fan_WS[47:47];
+    wire [0:0] bobs__fault_hbm__157 = i_fan_WS[48:48];
+    wire [0:0] oobs__group_drained__29 = i_fan_WS[49:49];
+    wire [0:0] oobs__group_fault__29 = i_fan_WS[50:50];
+    wire [0:0] bobs__applied_hbm__107 = i_fan_WS[51:51];
+    wire [0:0] bobs__fault_leaf_core__107 = i_fan_WS[52:52];
+    wire [0:0] bobs__fault_hbm__107 = i_fan_WS[53:53];
+    wire [0:0] bobs__applied_hbm__106 = i_fan_WS[54:54];
+    wire [0:0] bobs__fault_leaf_core__106 = i_fan_WS[55:55];
+    wire [0:0] bobs__fault_hbm__106 = i_fan_WS[56:56];
+    wire [0:0] bobs__applied_hbm__105 = i_fan_WS[57:57];
+    wire [0:0] bobs__fault_leaf_core__105 = i_fan_WS[58:58];
+    wire [0:0] bobs__fault_hbm__105 = i_fan_WS[59:59];
+    wire [0:0] bobs__applied_hbm__104 = i_fan_WS[60:60];
+    wire [0:0] bobs__fault_leaf_core__104 = i_fan_WS[61:61];
+    wire [0:0] bobs__fault_hbm__104 = i_fan_WS[62:62];
+    wire [0:0] bobs__applied_hbm__156 = i_fan_WS[63:63];
+    wire [0:0] bobs__fault_leaf_core__156 = i_fan_WS[64:64];
+    wire [0:0] bobs__fault_hbm__156 = i_fan_WS[65:65];
+    wire [0:0] oobs__group_drained__28 = i_fan_WS[66:66];
+    wire [0:0] oobs__group_fault__28 = i_fan_WS[67:67];
+    wire [0:0] bobs__applied_hbm__127 = i_fan_WS[68:68];
+    wire [0:0] bobs__fault_leaf_core__127 = i_fan_WS[69:69];
+    wire [0:0] bobs__fault_hbm__127 = i_fan_WS[70:70];
+    wire [0:0] bobs__applied_hbm__126 = i_fan_WS[71:71];
+    wire [0:0] bobs__fault_leaf_core__126 = i_fan_WS[72:72];
+    wire [0:0] bobs__fault_hbm__126 = i_fan_WS[73:73];
+    wire [0:0] bobs__applied_hbm__125 = i_fan_WS[74:74];
+    wire [0:0] bobs__fault_leaf_core__125 = i_fan_WS[75:75];
+    wire [0:0] bobs__fault_hbm__125 = i_fan_WS[76:76];
+    wire [0:0] bobs__applied_hbm__124 = i_fan_WS[77:77];
+    wire [0:0] bobs__fault_leaf_core__124 = i_fan_WS[78:78];
+    wire [0:0] bobs__fault_hbm__124 = i_fan_WS[79:79];
+    wire [0:0] bobs__applied_hbm__155 = i_fan_WS[80:80];
+    wire [0:0] bobs__fault_leaf_core__155 = i_fan_WS[81:81];
+    wire [0:0] bobs__fault_hbm__155 = i_fan_WS[82:82];
+    wire [0:0] oobs__group_drained__27 = i_fan_WS[83:83];
+    wire [0:0] oobs__group_fault__27 = i_fan_WS[84:84];
+    wire [0:0] bobs__applied_hbm__123 = i_fan_WS[85:85];
+    wire [0:0] bobs__fault_leaf_core__123 = i_fan_WS[86:86];
+    wire [0:0] bobs__fault_hbm__123 = i_fan_WS[87:87];
+    wire [0:0] bobs__applied_hbm__122 = i_fan_WS[88:88];
+    wire [0:0] bobs__fault_leaf_core__122 = i_fan_WS[89:89];
+    wire [0:0] bobs__fault_hbm__122 = i_fan_WS[90:90];
+    wire [0:0] bobs__applied_hbm__121 = i_fan_WS[91:91];
+    wire [0:0] bobs__fault_leaf_core__121 = i_fan_WS[92:92];
+    wire [0:0] bobs__fault_hbm__121 = i_fan_WS[93:93];
+    wire [0:0] bobs__applied_hbm__120 = i_fan_WS[94:94];
+    wire [0:0] bobs__fault_leaf_core__120 = i_fan_WS[95:95];
+    wire [0:0] bobs__fault_hbm__120 = i_fan_WS[96:96];
+    wire [0:0] bobs__applied_hbm__154 = i_fan_WS[97:97];
+    wire [0:0] bobs__fault_leaf_core__154 = i_fan_WS[98:98];
+    wire [0:0] bobs__fault_hbm__154 = i_fan_WS[99:99];
+    wire [0:0] oobs__group_drained__26 = i_fan_WS[100:100];
+    wire [0:0] oobs__group_fault__26 = i_fan_WS[101:101];
+    wire [0:0] bobs__applied_hbm__103 = i_fan_WS[102:102];
+    wire [0:0] bobs__fault_leaf_core__103 = i_fan_WS[103:103];
+    wire [0:0] bobs__fault_hbm__103 = i_fan_WS[104:104];
+    wire [0:0] bobs__applied_hbm__102 = i_fan_WS[105:105];
+    wire [0:0] bobs__fault_leaf_core__102 = i_fan_WS[106:106];
+    wire [0:0] bobs__fault_hbm__102 = i_fan_WS[107:107];
+    wire [0:0] bobs__applied_hbm__101 = i_fan_WS[108:108];
+    wire [0:0] bobs__fault_leaf_core__101 = i_fan_WS[109:109];
+    wire [0:0] bobs__fault_hbm__101 = i_fan_WS[110:110];
+    wire [0:0] bobs__applied_hbm__100 = i_fan_WS[111:111];
+    wire [0:0] bobs__fault_leaf_core__100 = i_fan_WS[112:112];
+    wire [0:0] bobs__fault_hbm__100 = i_fan_WS[113:113];
+    wire [0:0] bobs__applied_hbm__153 = i_fan_WS[114:114];
+    wire [0:0] bobs__fault_leaf_core__153 = i_fan_WS[115:115];
+    wire [0:0] bobs__fault_hbm__153 = i_fan_WS[116:116];
+    wire [0:0] oobs__group_drained__25 = i_fan_WS[117:117];
+    wire [0:0] oobs__group_fault__25 = i_fan_WS[118:118];
+    wire [0:0] bobs__applied_hbm__99 = i_fan_WS[119:119];
+    wire [0:0] bobs__fault_leaf_core__99 = i_fan_WS[120:120];
+    wire [0:0] bobs__fault_hbm__99 = i_fan_WS[121:121];
+    wire [0:0] bobs__applied_hbm__98 = i_fan_WS[122:122];
+    wire [0:0] bobs__fault_leaf_core__98 = i_fan_WS[123:123];
+    wire [0:0] bobs__fault_hbm__98 = i_fan_WS[124:124];
+    wire [0:0] bobs__applied_hbm__97 = i_fan_WS[125:125];
+    wire [0:0] bobs__fault_leaf_core__97 = i_fan_WS[126:126];
+    wire [0:0] bobs__fault_hbm__97 = i_fan_WS[127:127];
+    wire [0:0] bobs__applied_hbm__96 = i_fan_WS[128:128];
+    wire [0:0] bobs__fault_leaf_core__96 = i_fan_WS[129:129];
+    wire [0:0] bobs__fault_hbm__96 = i_fan_WS[130:130];
+    wire [0:0] bobs__applied_hbm__152 = i_fan_WS[131:131];
+    wire [0:0] bobs__fault_leaf_core__152 = i_fan_WS[132:132];
+    wire [0:0] bobs__fault_hbm__152 = i_fan_WS[133:133];
+    wire [0:0] oobs__group_drained__24 = i_fan_WS[134:134];
+    wire [0:0] oobs__group_fault__24 = i_fan_WS[135:135];
     wire [159:0] w_bobs__applied_core;
     wire [0:0] w_bobs__fault_core;
     wire [0:0] w_boot__layer_we;
@@ -798,75 +710,15 @@ module qkd_kvs_ctl (
     assign oobs__kv_flush_local = w_oobs__kv_flush_local;
     assign oobs__kv_active_local = w_oobs__kv_active_local;
     assign kg = {w_lprg__layer, w_lprg__epoch, w_lprg__kgo};
-    assign dcfg__ectl_a_cfg__0_5 = w_dcfg__ectl_a_cfg[4:0];
-    assign dcfg__ectl_a_cfg__5_5 = w_dcfg__ectl_a_cfg[9:5];
-    assign dcfg__ectl_a_cfg__10_5 = w_dcfg__ectl_a_cfg[14:10];
-    assign dcfg__ectl_a_cfg__15_5 = w_dcfg__ectl_a_cfg[19:15];
-    assign dcfg__ectl_a_cfg__20_5 = w_dcfg__ectl_a_cfg[24:20];
-    assign dcfg__ectl_a_cfg__25_5 = w_dcfg__ectl_a_cfg[29:25];
-    assign dcfg__ectl_a_cfg__30_5 = w_dcfg__ectl_a_cfg[34:30];
-    assign dcfg__ectl_a_cfg__35_5 = w_dcfg__ectl_a_cfg[39:35];
-    assign dcfg__ectl_a_cfg__40_5 = w_dcfg__ectl_a_cfg[44:40];
-    assign dcfg__ectl_a_cfg__45_5 = w_dcfg__ectl_a_cfg[49:45];
-    assign dcfg__ectl_a_cfg__50_5 = w_dcfg__ectl_a_cfg[54:50];
-    assign dcfg__ectl_a_cfg__55_5 = w_dcfg__ectl_a_cfg[59:55];
-    assign dcfg__ectl_a_cfg__60_5 = w_dcfg__ectl_a_cfg[64:60];
-    assign dcfg__ectl_a_cfg__65_5 = w_dcfg__ectl_a_cfg[69:65];
-    assign dcfg__ectl_a_cfg__70_5 = w_dcfg__ectl_a_cfg[74:70];
-    assign dcfg__ectl_a_cfg__75_5 = w_dcfg__ectl_a_cfg[79:75];
-    assign dcfg__ectl_a_cfg__80_5 = w_dcfg__ectl_a_cfg[84:80];
-    assign dcfg__ectl_a_cfg__85_5 = w_dcfg__ectl_a_cfg[89:85];
-    assign dcfg__ectl_a_cfg__90_5 = w_dcfg__ectl_a_cfg[94:90];
-    assign dcfg__ectl_a_cfg__95_5 = w_dcfg__ectl_a_cfg[99:95];
-    assign dcfg__ectl_a_cfg__100_5 = w_dcfg__ectl_a_cfg[104:100];
-    assign dcfg__ectl_a_cfg__105_5 = w_dcfg__ectl_a_cfg[109:105];
-    assign dcfg__ectl_a_cfg__110_5 = w_dcfg__ectl_a_cfg[114:110];
-    assign dcfg__ectl_a_cfg__115_5 = w_dcfg__ectl_a_cfg[119:115];
-    assign dcfg__ectl_a_cfg__120_5 = w_dcfg__ectl_a_cfg[124:120];
-    assign dcfg__ectl_a_cfg__125_5 = w_dcfg__ectl_a_cfg[129:125];
-    assign dcfg__ectl_a_cfg__130_5 = w_dcfg__ectl_a_cfg[134:130];
-    assign dcfg__ectl_a_cfg__135_5 = w_dcfg__ectl_a_cfg[139:135];
-    assign dcfg__ectl_a_cfg__140_5 = w_dcfg__ectl_a_cfg[144:140];
-    assign dcfg__ectl_a_cfg__145_5 = w_dcfg__ectl_a_cfg[149:145];
-    assign dcfg__ectl_a_cfg__150_5 = w_dcfg__ectl_a_cfg[154:150];
-    assign dcfg__ectl_a_cfg__155_5 = w_dcfg__ectl_a_cfg[159:155];
     assign lp = {w_lprg__ctx_t, w_lprg__layer, w_lprg__attention_run};
     assign boot__setup_ready = w_boot__setup_ready;
     assign own__native_reserved = w_own__native_reserved;
     assign own__ownership_valid = w_own__ownership_valid;
     assign o_attn = {w_lprg__token, w_lprg__stage, w_lprg__position, w_lprg__epoch, w_lprg__attention_run, w_lprg__attention_issue, w_lprg__active};
-    assign o_slg_EN_0 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[24:24], w_boot__group_data, w_boot__group_addr, w_boot__front_we[24:24], w_boot__front_last[24:24], w_boot__controller_we[107:107], w_boot__controller_we[106:106], w_boot__controller_we[105:105], w_boot__controller_we[104:104], w_boot__controller_last[107:107], w_boot__controller_last[106:106], w_boot__controller_last[105:105], w_boot__controller_last[104:104], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_EN_1 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[25:25], w_boot__group_data, w_boot__group_addr, w_boot__front_we[25:25], w_boot__front_last[25:25], w_boot__controller_we[111:111], w_boot__controller_we[110:110], w_boot__controller_we[109:109], w_boot__controller_we[108:108], w_boot__controller_last[111:111], w_boot__controller_last[110:110], w_boot__controller_last[109:109], w_boot__controller_last[108:108], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_EN_2 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[26:26], w_boot__group_data, w_boot__group_addr, w_boot__front_we[26:26], w_boot__front_last[26:26], w_boot__controller_we[115:115], w_boot__controller_we[114:114], w_boot__controller_we[113:113], w_boot__controller_we[112:112], w_boot__controller_last[115:115], w_boot__controller_last[114:114], w_boot__controller_last[113:113], w_boot__controller_last[112:112], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_EN_3 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[27:27], w_boot__group_data, w_boot__group_addr, w_boot__front_we[27:27], w_boot__front_last[27:27], w_boot__controller_we[119:119], w_boot__controller_we[118:118], w_boot__controller_we[117:117], w_boot__controller_we[116:116], w_boot__controller_last[119:119], w_boot__controller_last[118:118], w_boot__controller_last[117:117], w_boot__controller_last[116:116], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_EN_4 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[28:28], w_boot__group_data, w_boot__group_addr, w_boot__front_we[28:28], w_boot__front_last[28:28], w_boot__controller_we[99:99], w_boot__controller_we[98:98], w_boot__controller_we[97:97], w_boot__controller_we[96:96], w_boot__controller_last[99:99], w_boot__controller_last[98:98], w_boot__controller_last[97:97], w_boot__controller_last[96:96], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_EN_5 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[29:29], w_boot__group_data, w_boot__group_addr, w_boot__front_we[29:29], w_boot__front_last[29:29], w_boot__controller_we[103:103], w_boot__controller_we[102:102], w_boot__controller_we[101:101], w_boot__controller_we[100:100], w_boot__controller_last[103:103], w_boot__controller_last[102:102], w_boot__controller_last[101:101], w_boot__controller_last[100:100], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_EN_6 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[30:30], w_boot__group_data, w_boot__group_addr, w_boot__front_we[30:30], w_boot__front_last[30:30], w_boot__controller_we[123:123], w_boot__controller_we[122:122], w_boot__controller_we[121:121], w_boot__controller_we[120:120], w_boot__controller_last[123:123], w_boot__controller_last[122:122], w_boot__controller_last[121:121], w_boot__controller_last[120:120], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_EN_7 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[31:31], w_boot__group_data, w_boot__group_addr, w_boot__front_we[31:31], w_boot__front_last[31:31], w_boot__controller_we[127:127], w_boot__controller_we[126:126], w_boot__controller_we[125:125], w_boot__controller_we[124:124], w_boot__controller_last[127:127], w_boot__controller_last[126:126], w_boot__controller_last[125:125], w_boot__controller_last[124:124], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_ES_0 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[16:16], w_boot__group_data, w_boot__group_addr, w_boot__front_we[16:16], w_boot__front_last[16:16], w_boot__controller_we[75:75], w_boot__controller_we[74:74], w_boot__controller_we[73:73], w_boot__controller_we[72:72], w_boot__controller_last[75:75], w_boot__controller_last[74:74], w_boot__controller_last[73:73], w_boot__controller_last[72:72], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_ES_1 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[17:17], w_boot__group_data, w_boot__group_addr, w_boot__front_we[17:17], w_boot__front_last[17:17], w_boot__controller_we[79:79], w_boot__controller_we[78:78], w_boot__controller_we[77:77], w_boot__controller_we[76:76], w_boot__controller_last[79:79], w_boot__controller_last[78:78], w_boot__controller_last[77:77], w_boot__controller_last[76:76], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_ES_2 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[18:18], w_boot__group_data, w_boot__group_addr, w_boot__front_we[18:18], w_boot__front_last[18:18], w_boot__controller_we[83:83], w_boot__controller_we[82:82], w_boot__controller_we[81:81], w_boot__controller_we[80:80], w_boot__controller_last[83:83], w_boot__controller_last[82:82], w_boot__controller_last[81:81], w_boot__controller_last[80:80], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_ES_3 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[19:19], w_boot__group_data, w_boot__group_addr, w_boot__front_we[19:19], w_boot__front_last[19:19], w_boot__controller_we[87:87], w_boot__controller_we[86:86], w_boot__controller_we[85:85], w_boot__controller_we[84:84], w_boot__controller_last[87:87], w_boot__controller_last[86:86], w_boot__controller_last[85:85], w_boot__controller_last[84:84], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_ES_4 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[20:20], w_boot__group_data, w_boot__group_addr, w_boot__front_we[20:20], w_boot__front_last[20:20], w_boot__controller_we[67:67], w_boot__controller_we[66:66], w_boot__controller_we[65:65], w_boot__controller_we[64:64], w_boot__controller_last[67:67], w_boot__controller_last[66:66], w_boot__controller_last[65:65], w_boot__controller_last[64:64], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_ES_5 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[21:21], w_boot__group_data, w_boot__group_addr, w_boot__front_we[21:21], w_boot__front_last[21:21], w_boot__controller_we[71:71], w_boot__controller_we[70:70], w_boot__controller_we[69:69], w_boot__controller_we[68:68], w_boot__controller_last[71:71], w_boot__controller_last[70:70], w_boot__controller_last[69:69], w_boot__controller_last[68:68], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_ES_6 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[22:22], w_boot__group_data, w_boot__group_addr, w_boot__front_we[22:22], w_boot__front_last[22:22], w_boot__controller_we[91:91], w_boot__controller_we[90:90], w_boot__controller_we[89:89], w_boot__controller_we[88:88], w_boot__controller_last[91:91], w_boot__controller_last[90:90], w_boot__controller_last[89:89], w_boot__controller_last[88:88], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_ES_7 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[23:23], w_boot__group_data, w_boot__group_addr, w_boot__front_we[23:23], w_boot__front_last[23:23], w_boot__controller_we[95:95], w_boot__controller_we[94:94], w_boot__controller_we[93:93], w_boot__controller_we[92:92], w_boot__controller_last[95:95], w_boot__controller_last[94:94], w_boot__controller_last[93:93], w_boot__controller_last[92:92], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WN_0 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[8:8], w_boot__group_data, w_boot__group_addr, w_boot__front_we[8:8], w_boot__front_last[8:8], w_boot__controller_we[43:43], w_boot__controller_we[42:42], w_boot__controller_we[41:41], w_boot__controller_we[40:40], w_boot__controller_last[43:43], w_boot__controller_last[42:42], w_boot__controller_last[41:41], w_boot__controller_last[40:40], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WN_1 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[9:9], w_boot__group_data, w_boot__group_addr, w_boot__front_we[9:9], w_boot__front_last[9:9], w_boot__controller_we[47:47], w_boot__controller_we[46:46], w_boot__controller_we[45:45], w_boot__controller_we[44:44], w_boot__controller_last[47:47], w_boot__controller_last[46:46], w_boot__controller_last[45:45], w_boot__controller_last[44:44], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WN_2 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[10:10], w_boot__group_data, w_boot__group_addr, w_boot__front_we[10:10], w_boot__front_last[10:10], w_boot__controller_we[51:51], w_boot__controller_we[50:50], w_boot__controller_we[49:49], w_boot__controller_we[48:48], w_boot__controller_last[51:51], w_boot__controller_last[50:50], w_boot__controller_last[49:49], w_boot__controller_last[48:48], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WN_3 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[11:11], w_boot__group_data, w_boot__group_addr, w_boot__front_we[11:11], w_boot__front_last[11:11], w_boot__controller_we[55:55], w_boot__controller_we[54:54], w_boot__controller_we[53:53], w_boot__controller_we[52:52], w_boot__controller_last[55:55], w_boot__controller_last[54:54], w_boot__controller_last[53:53], w_boot__controller_last[52:52], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WN_4 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[12:12], w_boot__group_data, w_boot__group_addr, w_boot__front_we[12:12], w_boot__front_last[12:12], w_boot__controller_we[35:35], w_boot__controller_we[34:34], w_boot__controller_we[33:33], w_boot__controller_we[32:32], w_boot__controller_last[35:35], w_boot__controller_last[34:34], w_boot__controller_last[33:33], w_boot__controller_last[32:32], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WN_5 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[13:13], w_boot__group_data, w_boot__group_addr, w_boot__front_we[13:13], w_boot__front_last[13:13], w_boot__controller_we[39:39], w_boot__controller_we[38:38], w_boot__controller_we[37:37], w_boot__controller_we[36:36], w_boot__controller_last[39:39], w_boot__controller_last[38:38], w_boot__controller_last[37:37], w_boot__controller_last[36:36], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WN_6 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[14:14], w_boot__group_data, w_boot__group_addr, w_boot__front_we[14:14], w_boot__front_last[14:14], w_boot__controller_we[59:59], w_boot__controller_we[58:58], w_boot__controller_we[57:57], w_boot__controller_we[56:56], w_boot__controller_last[59:59], w_boot__controller_last[58:58], w_boot__controller_last[57:57], w_boot__controller_last[56:56], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WN_7 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[15:15], w_boot__group_data, w_boot__group_addr, w_boot__front_we[15:15], w_boot__front_last[15:15], w_boot__controller_we[63:63], w_boot__controller_we[62:62], w_boot__controller_we[61:61], w_boot__controller_we[60:60], w_boot__controller_last[63:63], w_boot__controller_last[62:62], w_boot__controller_last[61:61], w_boot__controller_last[60:60], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WS_0 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[0:0], w_boot__group_data, w_boot__group_addr, w_boot__front_we[0:0], w_boot__front_last[0:0], w_boot__controller_we[11:11], w_boot__controller_we[10:10], w_boot__controller_we[9:9], w_boot__controller_we[8:8], w_boot__controller_last[11:11], w_boot__controller_last[10:10], w_boot__controller_last[9:9], w_boot__controller_last[8:8], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WS_1 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[1:1], w_boot__group_data, w_boot__group_addr, w_boot__front_we[1:1], w_boot__front_last[1:1], w_boot__controller_we[15:15], w_boot__controller_we[14:14], w_boot__controller_we[13:13], w_boot__controller_we[12:12], w_boot__controller_last[15:15], w_boot__controller_last[14:14], w_boot__controller_last[13:13], w_boot__controller_last[12:12], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WS_2 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[2:2], w_boot__group_data, w_boot__group_addr, w_boot__front_we[2:2], w_boot__front_last[2:2], w_boot__controller_we[19:19], w_boot__controller_we[18:18], w_boot__controller_we[17:17], w_boot__controller_we[16:16], w_boot__controller_last[19:19], w_boot__controller_last[18:18], w_boot__controller_last[17:17], w_boot__controller_last[16:16], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WS_3 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[3:3], w_boot__group_data, w_boot__group_addr, w_boot__front_we[3:3], w_boot__front_last[3:3], w_boot__controller_we[23:23], w_boot__controller_we[22:22], w_boot__controller_we[21:21], w_boot__controller_we[20:20], w_boot__controller_last[23:23], w_boot__controller_last[22:22], w_boot__controller_last[21:21], w_boot__controller_last[20:20], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WS_4 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[4:4], w_boot__group_data, w_boot__group_addr, w_boot__front_we[4:4], w_boot__front_last[4:4], w_boot__controller_we[3:3], w_boot__controller_we[2:2], w_boot__controller_we[1:1], w_boot__controller_we[0:0], w_boot__controller_last[3:3], w_boot__controller_last[2:2], w_boot__controller_last[1:1], w_boot__controller_last[0:0], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WS_5 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[5:5], w_boot__group_data, w_boot__group_addr, w_boot__front_we[5:5], w_boot__front_last[5:5], w_boot__controller_we[7:7], w_boot__controller_we[6:6], w_boot__controller_we[5:5], w_boot__controller_we[4:4], w_boot__controller_last[7:7], w_boot__controller_last[6:6], w_boot__controller_last[5:5], w_boot__controller_last[4:4], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WS_6 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[6:6], w_boot__group_data, w_boot__group_addr, w_boot__front_we[6:6], w_boot__front_last[6:6], w_boot__controller_we[27:27], w_boot__controller_we[26:26], w_boot__controller_we[25:25], w_boot__controller_we[24:24], w_boot__controller_last[27:27], w_boot__controller_last[26:26], w_boot__controller_last[25:25], w_boot__controller_last[24:24], w_boot__controller_data, w_boot__controller_addr};
-    assign o_slg_WS_7 = {w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[7:7], w_boot__group_data, w_boot__group_addr, w_boot__front_we[7:7], w_boot__front_last[7:7], w_boot__controller_we[31:31], w_boot__controller_we[30:30], w_boot__controller_we[29:29], w_boot__controller_we[28:28], w_boot__controller_last[31:31], w_boot__controller_last[30:30], w_boot__controller_last[29:29], w_boot__controller_last[28:28], w_boot__controller_data, w_boot__controller_addr};
+    assign o_fan_WS = {w_dcfg__ectl_a_cfg[39:35], w_dcfg__ectl_a_cfg[34:30], w_dcfg__ectl_a_cfg[29:25], w_dcfg__ectl_a_cfg[24:20], w_dcfg__ectl_a_cfg[19:15], w_dcfg__ectl_a_cfg[14:10], w_dcfg__ectl_a_cfg[9:5], w_dcfg__ectl_a_cfg[4:0], {w_lprg__layer, w_lprg__epoch, w_lprg__kgo}, w_boot__landing_we[7:7], w_boot__front_we[7:7], w_boot__front_last[7:7], w_boot__controller_we[31:31], w_boot__controller_we[30:30], w_boot__controller_we[29:29], w_boot__controller_we[28:28], w_boot__controller_last[31:31], w_boot__controller_last[30:30], w_boot__controller_last[29:29], w_boot__controller_last[28:28], w_boot__landing_we[6:6], w_boot__front_we[6:6], w_boot__front_last[6:6], w_boot__controller_we[27:27], w_boot__controller_we[26:26], w_boot__controller_we[25:25], w_boot__controller_we[24:24], w_boot__controller_last[27:27], w_boot__controller_last[26:26], w_boot__controller_last[25:25], w_boot__controller_last[24:24], w_boot__landing_we[5:5], w_boot__front_we[5:5], w_boot__front_last[5:5], w_boot__controller_we[7:7], w_boot__controller_we[6:6], w_boot__controller_we[5:5], w_boot__controller_we[4:4], w_boot__controller_last[7:7], w_boot__controller_last[6:6], w_boot__controller_last[5:5], w_boot__controller_last[4:4], w_boot__landing_we[4:4], w_boot__front_we[4:4], w_boot__front_last[4:4], w_boot__controller_we[3:3], w_boot__controller_we[2:2], w_boot__controller_we[1:1], w_boot__controller_we[0:0], w_boot__controller_last[3:3], w_boot__controller_last[2:2], w_boot__controller_last[1:1], w_boot__controller_last[0:0], w_boot__landing_we[3:3], w_boot__front_we[3:3], w_boot__front_last[3:3], w_boot__controller_we[23:23], w_boot__controller_we[22:22], w_boot__controller_we[21:21], w_boot__controller_we[20:20], w_boot__controller_last[23:23], w_boot__controller_last[22:22], w_boot__controller_last[21:21], w_boot__controller_last[20:20], w_boot__landing_we[2:2], w_boot__front_we[2:2], w_boot__front_last[2:2], w_boot__controller_we[19:19], w_boot__controller_we[18:18], w_boot__controller_we[17:17], w_boot__controller_we[16:16], w_boot__controller_last[19:19], w_boot__controller_last[18:18], w_boot__controller_last[17:17], w_boot__controller_last[16:16], w_boot__landing_we[1:1], w_boot__front_we[1:1], w_boot__front_last[1:1], w_boot__controller_we[15:15], w_boot__controller_we[14:14], w_boot__controller_we[13:13], w_boot__controller_we[12:12], w_boot__controller_last[15:15], w_boot__controller_last[14:14], w_boot__controller_last[13:13], w_boot__controller_last[12:12], w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[0:0], w_boot__group_data, w_boot__group_addr, w_boot__front_we[0:0], w_boot__front_last[0:0], w_boot__controller_we[11:11], w_boot__controller_we[10:10], w_boot__controller_we[9:9], w_boot__controller_we[8:8], w_boot__controller_last[11:11], w_boot__controller_last[10:10], w_boot__controller_last[9:9], w_boot__controller_last[8:8], w_boot__controller_data, w_boot__controller_addr};
+    assign o_fan_WN = {w_dcfg__ectl_a_cfg[79:75], w_dcfg__ectl_a_cfg[74:70], w_dcfg__ectl_a_cfg[69:65], w_dcfg__ectl_a_cfg[64:60], w_dcfg__ectl_a_cfg[59:55], w_dcfg__ectl_a_cfg[54:50], w_dcfg__ectl_a_cfg[49:45], w_dcfg__ectl_a_cfg[44:40], {w_lprg__layer, w_lprg__epoch, w_lprg__kgo}, w_boot__landing_we[15:15], w_boot__front_we[15:15], w_boot__front_last[15:15], w_boot__controller_we[63:63], w_boot__controller_we[62:62], w_boot__controller_we[61:61], w_boot__controller_we[60:60], w_boot__controller_last[63:63], w_boot__controller_last[62:62], w_boot__controller_last[61:61], w_boot__controller_last[60:60], w_boot__landing_we[14:14], w_boot__front_we[14:14], w_boot__front_last[14:14], w_boot__controller_we[59:59], w_boot__controller_we[58:58], w_boot__controller_we[57:57], w_boot__controller_we[56:56], w_boot__controller_last[59:59], w_boot__controller_last[58:58], w_boot__controller_last[57:57], w_boot__controller_last[56:56], w_boot__landing_we[13:13], w_boot__front_we[13:13], w_boot__front_last[13:13], w_boot__controller_we[39:39], w_boot__controller_we[38:38], w_boot__controller_we[37:37], w_boot__controller_we[36:36], w_boot__controller_last[39:39], w_boot__controller_last[38:38], w_boot__controller_last[37:37], w_boot__controller_last[36:36], w_boot__landing_we[12:12], w_boot__front_we[12:12], w_boot__front_last[12:12], w_boot__controller_we[35:35], w_boot__controller_we[34:34], w_boot__controller_we[33:33], w_boot__controller_we[32:32], w_boot__controller_last[35:35], w_boot__controller_last[34:34], w_boot__controller_last[33:33], w_boot__controller_last[32:32], w_boot__landing_we[11:11], w_boot__front_we[11:11], w_boot__front_last[11:11], w_boot__controller_we[55:55], w_boot__controller_we[54:54], w_boot__controller_we[53:53], w_boot__controller_we[52:52], w_boot__controller_last[55:55], w_boot__controller_last[54:54], w_boot__controller_last[53:53], w_boot__controller_last[52:52], w_boot__landing_we[10:10], w_boot__front_we[10:10], w_boot__front_last[10:10], w_boot__controller_we[51:51], w_boot__controller_we[50:50], w_boot__controller_we[49:49], w_boot__controller_we[48:48], w_boot__controller_last[51:51], w_boot__controller_last[50:50], w_boot__controller_last[49:49], w_boot__controller_last[48:48], w_boot__landing_we[9:9], w_boot__front_we[9:9], w_boot__front_last[9:9], w_boot__controller_we[47:47], w_boot__controller_we[46:46], w_boot__controller_we[45:45], w_boot__controller_we[44:44], w_boot__controller_last[47:47], w_boot__controller_last[46:46], w_boot__controller_last[45:45], w_boot__controller_last[44:44], w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[8:8], w_boot__group_data, w_boot__group_addr, w_boot__front_we[8:8], w_boot__front_last[8:8], w_boot__controller_we[43:43], w_boot__controller_we[42:42], w_boot__controller_we[41:41], w_boot__controller_we[40:40], w_boot__controller_last[43:43], w_boot__controller_last[42:42], w_boot__controller_last[41:41], w_boot__controller_last[40:40], w_boot__controller_data, w_boot__controller_addr};
+    assign o_fan_ES = {w_dcfg__ectl_a_cfg[119:115], w_dcfg__ectl_a_cfg[114:110], w_dcfg__ectl_a_cfg[109:105], w_dcfg__ectl_a_cfg[104:100], w_dcfg__ectl_a_cfg[99:95], w_dcfg__ectl_a_cfg[94:90], w_dcfg__ectl_a_cfg[89:85], w_dcfg__ectl_a_cfg[84:80], {w_lprg__layer, w_lprg__epoch, w_lprg__kgo}, w_boot__landing_we[23:23], w_boot__front_we[23:23], w_boot__front_last[23:23], w_boot__controller_we[95:95], w_boot__controller_we[94:94], w_boot__controller_we[93:93], w_boot__controller_we[92:92], w_boot__controller_last[95:95], w_boot__controller_last[94:94], w_boot__controller_last[93:93], w_boot__controller_last[92:92], w_boot__landing_we[22:22], w_boot__front_we[22:22], w_boot__front_last[22:22], w_boot__controller_we[91:91], w_boot__controller_we[90:90], w_boot__controller_we[89:89], w_boot__controller_we[88:88], w_boot__controller_last[91:91], w_boot__controller_last[90:90], w_boot__controller_last[89:89], w_boot__controller_last[88:88], w_boot__landing_we[21:21], w_boot__front_we[21:21], w_boot__front_last[21:21], w_boot__controller_we[71:71], w_boot__controller_we[70:70], w_boot__controller_we[69:69], w_boot__controller_we[68:68], w_boot__controller_last[71:71], w_boot__controller_last[70:70], w_boot__controller_last[69:69], w_boot__controller_last[68:68], w_boot__landing_we[20:20], w_boot__front_we[20:20], w_boot__front_last[20:20], w_boot__controller_we[67:67], w_boot__controller_we[66:66], w_boot__controller_we[65:65], w_boot__controller_we[64:64], w_boot__controller_last[67:67], w_boot__controller_last[66:66], w_boot__controller_last[65:65], w_boot__controller_last[64:64], w_boot__landing_we[19:19], w_boot__front_we[19:19], w_boot__front_last[19:19], w_boot__controller_we[87:87], w_boot__controller_we[86:86], w_boot__controller_we[85:85], w_boot__controller_we[84:84], w_boot__controller_last[87:87], w_boot__controller_last[86:86], w_boot__controller_last[85:85], w_boot__controller_last[84:84], w_boot__landing_we[18:18], w_boot__front_we[18:18], w_boot__front_last[18:18], w_boot__controller_we[83:83], w_boot__controller_we[82:82], w_boot__controller_we[81:81], w_boot__controller_we[80:80], w_boot__controller_last[83:83], w_boot__controller_last[82:82], w_boot__controller_last[81:81], w_boot__controller_last[80:80], w_boot__landing_we[17:17], w_boot__front_we[17:17], w_boot__front_last[17:17], w_boot__controller_we[79:79], w_boot__controller_we[78:78], w_boot__controller_we[77:77], w_boot__controller_we[76:76], w_boot__controller_last[79:79], w_boot__controller_last[78:78], w_boot__controller_last[77:77], w_boot__controller_last[76:76], w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[16:16], w_boot__group_data, w_boot__group_addr, w_boot__front_we[16:16], w_boot__front_last[16:16], w_boot__controller_we[75:75], w_boot__controller_we[74:74], w_boot__controller_we[73:73], w_boot__controller_we[72:72], w_boot__controller_last[75:75], w_boot__controller_last[74:74], w_boot__controller_last[73:73], w_boot__controller_last[72:72], w_boot__controller_data, w_boot__controller_addr};
+    assign o_fan_EN = {w_dcfg__ectl_a_cfg[159:155], w_dcfg__ectl_a_cfg[154:150], w_dcfg__ectl_a_cfg[149:145], w_dcfg__ectl_a_cfg[144:140], w_dcfg__ectl_a_cfg[139:135], w_dcfg__ectl_a_cfg[134:130], w_dcfg__ectl_a_cfg[129:125], w_dcfg__ectl_a_cfg[124:120], {w_lprg__layer, w_lprg__epoch, w_lprg__kgo}, w_boot__landing_we[31:31], w_boot__front_we[31:31], w_boot__front_last[31:31], w_boot__controller_we[127:127], w_boot__controller_we[126:126], w_boot__controller_we[125:125], w_boot__controller_we[124:124], w_boot__controller_last[127:127], w_boot__controller_last[126:126], w_boot__controller_last[125:125], w_boot__controller_last[124:124], w_boot__landing_we[30:30], w_boot__front_we[30:30], w_boot__front_last[30:30], w_boot__controller_we[123:123], w_boot__controller_we[122:122], w_boot__controller_we[121:121], w_boot__controller_we[120:120], w_boot__controller_last[123:123], w_boot__controller_last[122:122], w_boot__controller_last[121:121], w_boot__controller_last[120:120], w_boot__landing_we[29:29], w_boot__front_we[29:29], w_boot__front_last[29:29], w_boot__controller_we[103:103], w_boot__controller_we[102:102], w_boot__controller_we[101:101], w_boot__controller_we[100:100], w_boot__controller_last[103:103], w_boot__controller_last[102:102], w_boot__controller_last[101:101], w_boot__controller_last[100:100], w_boot__landing_we[28:28], w_boot__front_we[28:28], w_boot__front_last[28:28], w_boot__controller_we[99:99], w_boot__controller_we[98:98], w_boot__controller_we[97:97], w_boot__controller_we[96:96], w_boot__controller_last[99:99], w_boot__controller_last[98:98], w_boot__controller_last[97:97], w_boot__controller_last[96:96], w_boot__landing_we[27:27], w_boot__front_we[27:27], w_boot__front_last[27:27], w_boot__controller_we[119:119], w_boot__controller_we[118:118], w_boot__controller_we[117:117], w_boot__controller_we[116:116], w_boot__controller_last[119:119], w_boot__controller_last[118:118], w_boot__controller_last[117:117], w_boot__controller_last[116:116], w_boot__landing_we[26:26], w_boot__front_we[26:26], w_boot__front_last[26:26], w_boot__controller_we[115:115], w_boot__controller_we[114:114], w_boot__controller_we[113:113], w_boot__controller_we[112:112], w_boot__controller_last[115:115], w_boot__controller_last[114:114], w_boot__controller_last[113:113], w_boot__controller_last[112:112], w_boot__landing_we[25:25], w_boot__front_we[25:25], w_boot__front_last[25:25], w_boot__controller_we[111:111], w_boot__controller_we[110:110], w_boot__controller_we[109:109], w_boot__controller_we[108:108], w_boot__controller_last[111:111], w_boot__controller_last[110:110], w_boot__controller_last[109:109], w_boot__controller_last[108:108], w_lprg__vgo, w_lprg__layer, w_lprg__kgo, w_lprg__epoch, w_lprg__ctx_t, w_lprg__ctrl_go, w_boot__landing_we[24:24], w_boot__group_data, w_boot__group_addr, w_boot__front_we[24:24], w_boot__front_last[24:24], w_boot__controller_we[107:107], w_boot__controller_we[106:106], w_boot__controller_we[105:105], w_boot__controller_we[104:104], w_boot__controller_last[107:107], w_boot__controller_last[106:106], w_boot__controller_last[105:105], w_boot__controller_last[104:104], w_boot__controller_data, w_boot__controller_addr};
 endmodule
 
 // qkd_kvs_attn: GENERATED by tools/qwen_kv_die/kv_static_die.py (wires-only parent of the static join; do not edit)
@@ -1197,6 +1049,7 @@ module qkd_kvs_pc (
     input wire [0:0] pc__emb_scale,
     input wire [15:0] x__tep,
     input wire [0:0] pc__emb_return_slot,
+    output wire [0:0] pc__fo,
     output wire [260:0] pc__er,
     output wire [32:0] pc__ko,
     output wire [327:0] pc__po,
@@ -1266,6 +1119,7 @@ module qkd_kvs_pc (
     wire [0:0] w_pc__es_merge_fault;
     qkd_embedding_static_return_hop u_embr (.ck(embr__ck), .rst_n(rst_n), .capture_slot(embr__capture_slot), .capture_v(w_pc__emb_beat_v[0:0]), .capture_record({w_pc__emb_beat_epoch[15:0], w_pc__emb_beat_scale[0:0], w_pc__emb_beat_half[0:0], w_pc__emb_beat_word[5:0], w_pc__emb_beat_token[17:0], w_pc__emb_beat_data[255:0]}), .transfer_slot(embr__transfer_slot), .upi(embr__upi), .upo(w_embr__upo), .fault(w_embr__fault));
     qkd_static_kv_pc_path_emb u_pc (.pll_hbm(pc__pll_hbm), .pll_hbm_port(pc__pll_hbm_port), .pll_hbm_ecc(pc__pll_hbm_ecc), .pll_hbm_cdc(pc__pll_hbm_cdc), .pll_hbm_obs(pc__pll_hbm_obs), .hrst(hrst_n), .ck(pc__ck), .rsi(rst_n), .pc(pc__pc), .ci(pc__ci), .wes(pc__wes), .er(w_pc__er), .po(w_pc__po), .pi(pc__pi), .ki(pc__ki), .ko(w_pc__ko), .fi(pc__fi), .fo(w_pc__fo), .cfg_stack(pc__cfg_stack), .es_context(pc__es_context), .es_expected_valid(pc__es_expected_valid), .es_expected_identity(pc__es_expected_identity), .es_expected_address(pc__es_expected_address), .es_expected_pc(pc__es_expected_pc), .es_expected_stack(pc__es_expected_stack), .native_commit_valid(w_pc__native_commit_valid), .native_commit_identity(w_pc__native_commit_identity), .native_commit_address(w_pc__native_commit_address), .completion_v(w_pc__completion_v), .completion_we(w_pc__completion_we), .completion_fault(w_pc__completion_fault), .idle_core(w_pc__idle_core), .idle_hbm(w_pc__idle_hbm), .drain_fault_core(w_pc__drain_fault_core), .drain_fault_hbm(w_pc__drain_fault_hbm), .cal_hck(pc__cal_hck), .cal_rst_n(hrst_n), .cal_cfg_we(pc__cal_cfg_we), .cal_cfg_addr(pc__cal_cfg_addr), .cal_cfg_data(pc__cal_cfg_data), .cal_seal(pc__cal_seal), .cal_go(pc__cal_go), .cal_epoch(pc__cal_epoch), .cal_layer(pc__cal_layer), .cal_fault_hbm(w_pc__cal_fault_hbm), .cal_idle_hbm(w_pc__cal_idle_hbm), .front_hck(pc__front_hck), .front_hbm_data(pc__front_hbm_data), .front_blk_go(pc__front_blk_go), .front_blk_freed(w_pc__front_blk_freed), .front_hold(w_pc__front_hold), .front_stall_edges(w_pc__front_stall_edges), .front_occupancy(w_pc__front_occupancy), .front_idle_hbm(w_pc__front_idle_hbm), .front_fault_overflow_hbm(w_pc__front_fault_overflow_hbm), .front_fault_go_hbm(w_pc__front_fault_go_hbm), .return_hck(pc__return_hck), .return_ck(pc__return_ck), .return_hbm_data(pc__return_hbm_data), .expected_put(pc__expected_put), .expected_sector(pc__expected_sector), .expected_epoch(pc__expected_epoch), .expected_layer(pc__expected_layer), .actual_valid(w_pc__actual_valid), .actual_sector(w_pc__actual_sector), .actual_epoch(w_pc__actual_epoch), .actual_layer(w_pc__actual_layer), .actual_data(w_pc__actual_data), .return_fault_hbm(w_pc__return_fault_hbm), .return_fault_core(w_pc__return_fault_core), .return_idle_hbm(w_pc__return_idle_hbm), .return_idle_core(w_pc__return_idle_core), .emb_boot_ready(x__est__0_1), .emb_issue_v(pc__emb_issue_v), .emb_token(x__tok), .emb_word_index(pc__emb_word_index), .emb_half(pc__emb_half), .emb_scale(pc__emb_scale), .emb_epoch(x__tep), .emb_return_slot(pc__emb_return_slot), .emb_beat_v(w_pc__emb_beat_v), .emb_beat_data(w_pc__emb_beat_data), .emb_beat_token(w_pc__emb_beat_token), .emb_beat_word(w_pc__emb_beat_word), .emb_beat_half(w_pc__emb_beat_half), .emb_beat_scale(w_pc__emb_beat_scale), .emb_beat_epoch(w_pc__emb_beat_epoch), .emb_corrected(w_pc__emb_corrected), .emb_outstanding(w_pc__emb_outstanding), .es_merge_fault(w_pc__es_merge_fault));
+    assign pc__fo = w_pc__fo;
     assign pc__er = w_pc__er;
     assign pc__ko = w_pc__ko;
     assign pc__po = w_pc__po;
@@ -1315,6 +1169,7 @@ module qkd_kvs_pc_h (
     input wire [0:0] pc__emb_scale,
     input wire [15:0] x__tep,
     input wire [0:0] pc__emb_return_slot,
+    output wire [0:0] pc__fo,
     output wire [260:0] pc__er,
     output wire [32:0] pc__ko,
     output wire [327:0] pc__po,
@@ -1382,6 +1237,7 @@ module qkd_kvs_pc_h (
     wire [0:0] w_pc__es_merge_fault;
     qkd_embedding_static_return_head #(.MUT(0)) u_embr (.ck(embr__ck), .rst_n(rst_n), .capture_slot(embr__capture_slot), .capture_v(w_pc__emb_beat_v[0:0]), .capture_record({w_pc__emb_beat_epoch[15:0], w_pc__emb_beat_scale[0:0], w_pc__emb_beat_half[0:0], w_pc__emb_beat_word[5:0], w_pc__emb_beat_token[17:0], w_pc__emb_beat_data[255:0]}), .transfer_slot(embr__transfer_slot), .upo(w_embr__upo), .fault(w_embr__fault));
     qkd_static_kv_pc_path_emb u_pc (.pll_hbm(pc__pll_hbm), .pll_hbm_port(pc__pll_hbm_port), .pll_hbm_ecc(pc__pll_hbm_ecc), .pll_hbm_cdc(pc__pll_hbm_cdc), .pll_hbm_obs(pc__pll_hbm_obs), .hrst(hrst_n), .ck(pc__ck), .rsi(rst_n), .pc(pc__pc), .ci(pc__ci), .wes(pc__wes), .er(w_pc__er), .po(w_pc__po), .pi(pc__pi), .ki(pc__ki), .ko(w_pc__ko), .fi(pc__fi), .fo(w_pc__fo), .cfg_stack(pc__cfg_stack), .es_context(pc__es_context), .es_expected_valid(pc__es_expected_valid), .es_expected_identity(pc__es_expected_identity), .es_expected_address(pc__es_expected_address), .es_expected_pc(pc__es_expected_pc), .es_expected_stack(pc__es_expected_stack), .native_commit_valid(w_pc__native_commit_valid), .native_commit_identity(w_pc__native_commit_identity), .native_commit_address(w_pc__native_commit_address), .completion_v(w_pc__completion_v), .completion_we(w_pc__completion_we), .completion_fault(w_pc__completion_fault), .idle_core(w_pc__idle_core), .idle_hbm(w_pc__idle_hbm), .drain_fault_core(w_pc__drain_fault_core), .drain_fault_hbm(w_pc__drain_fault_hbm), .cal_hck(pc__cal_hck), .cal_rst_n(hrst_n), .cal_cfg_we(pc__cal_cfg_we), .cal_cfg_addr(pc__cal_cfg_addr), .cal_cfg_data(pc__cal_cfg_data), .cal_seal(pc__cal_seal), .cal_go(pc__cal_go), .cal_epoch(pc__cal_epoch), .cal_layer(pc__cal_layer), .cal_fault_hbm(w_pc__cal_fault_hbm), .cal_idle_hbm(w_pc__cal_idle_hbm), .front_hck(pc__front_hck), .front_hbm_data(pc__front_hbm_data), .front_blk_go(pc__front_blk_go), .front_blk_freed(w_pc__front_blk_freed), .front_hold(w_pc__front_hold), .front_stall_edges(w_pc__front_stall_edges), .front_occupancy(w_pc__front_occupancy), .front_idle_hbm(w_pc__front_idle_hbm), .front_fault_overflow_hbm(w_pc__front_fault_overflow_hbm), .front_fault_go_hbm(w_pc__front_fault_go_hbm), .return_hck(pc__return_hck), .return_ck(pc__return_ck), .return_hbm_data(pc__return_hbm_data), .expected_put(pc__expected_put), .expected_sector(pc__expected_sector), .expected_epoch(pc__expected_epoch), .expected_layer(pc__expected_layer), .actual_valid(w_pc__actual_valid), .actual_sector(w_pc__actual_sector), .actual_epoch(w_pc__actual_epoch), .actual_layer(w_pc__actual_layer), .actual_data(w_pc__actual_data), .return_fault_hbm(w_pc__return_fault_hbm), .return_fault_core(w_pc__return_fault_core), .return_idle_hbm(w_pc__return_idle_hbm), .return_idle_core(w_pc__return_idle_core), .emb_boot_ready(x__est__0_1), .emb_issue_v(pc__emb_issue_v), .emb_token(x__tok), .emb_word_index(pc__emb_word_index), .emb_half(pc__emb_half), .emb_scale(pc__emb_scale), .emb_epoch(x__tep), .emb_return_slot(pc__emb_return_slot), .emb_beat_v(w_pc__emb_beat_v), .emb_beat_data(w_pc__emb_beat_data), .emb_beat_token(w_pc__emb_beat_token), .emb_beat_word(w_pc__emb_beat_word), .emb_beat_half(w_pc__emb_beat_half), .emb_beat_scale(w_pc__emb_beat_scale), .emb_beat_epoch(w_pc__emb_beat_epoch), .emb_corrected(w_pc__emb_corrected), .emb_outstanding(w_pc__emb_outstanding), .es_merge_fault(w_pc__es_merge_fault));
+    assign pc__fo = w_pc__fo;
     assign pc__er = w_pc__er;
     assign pc__ko = w_pc__ko;
     assign pc__po = w_pc__po;
@@ -1429,4 +1285,54 @@ module qkd_kvs_emb (
     assign rowtx__emb_tx_payload = w_rowtx__emb_tx_payload;
     assign px_tok = d2d__svc[109:92];
     assign px_tep = d2d__svc[89:74];
+endmodule
+
+// qkd_kvs_fan: GENERATED by tools/qwen_kv_die/kv_static_die.py (wires-only parent of the static join; do not edit)
+module qkd_kvs_fan (
+    input wire [333:0] i_ctl,
+    input wire [16:0] i_g0,
+    input wire [16:0] i_g1,
+    input wire [16:0] i_g2,
+    input wire [16:0] i_g3,
+    input wire [16:0] i_g4,
+    input wire [16:0] i_g5,
+    input wire [16:0] i_g6,
+    input wire [16:0] i_g7,
+    output wire [4:0] o_c0,
+    output wire [4:0] o_c1,
+    output wire [4:0] o_c2,
+    output wire [4:0] o_c3,
+    output wire [4:0] o_c4,
+    output wire [4:0] o_c5,
+    output wire [4:0] o_c6,
+    output wire [4:0] o_c7,
+    output wire [135:0] o_ctl,
+    output wire [193:0] o_g0,
+    output wire [193:0] o_g1,
+    output wire [193:0] o_g2,
+    output wire [193:0] o_g3,
+    output wire [193:0] o_g4,
+    output wire [193:0] o_g5,
+    output wire [193:0] o_g6,
+    output wire [193:0] o_g7,
+    output wire [22:0] o_kg
+);
+    assign o_c0 = i_ctl[298:294];
+    assign o_c1 = i_ctl[303:299];
+    assign o_c2 = i_ctl[308:304];
+    assign o_c3 = i_ctl[313:309];
+    assign o_c4 = i_ctl[318:314];
+    assign o_c5 = i_ctl[323:319];
+    assign o_c6 = i_ctl[328:324];
+    assign o_c7 = i_ctl[333:329];
+    assign o_ctl = {i_g7, i_g6, i_g5, i_g4, i_g3, i_g2, i_g1, i_g0};
+    assign o_g0 = {i_ctl[193:193], i_ctl[192:187], i_ctl[186:186], i_ctl[185:170], i_ctl[169:156], i_ctl[155:155], i_ctl[154:154], i_ctl[153:90], i_ctl[89:82], i_ctl[81:81], i_ctl[80:80], i_ctl[79:79], i_ctl[78:78], i_ctl[77:77], i_ctl[76:76], i_ctl[75:75], i_ctl[74:74], i_ctl[73:73], i_ctl[72:72], i_ctl[71:8], i_ctl[7:0]};
+    assign o_g1 = {i_ctl[193:193], i_ctl[192:187], i_ctl[186:186], i_ctl[185:170], i_ctl[169:156], i_ctl[155:155], i_ctl[204:204], i_ctl[153:90], i_ctl[89:82], i_ctl[203:203], i_ctl[202:202], i_ctl[201:201], i_ctl[200:200], i_ctl[199:199], i_ctl[198:198], i_ctl[197:197], i_ctl[196:196], i_ctl[195:195], i_ctl[194:194], i_ctl[71:8], i_ctl[7:0]};
+    assign o_g2 = {i_ctl[193:193], i_ctl[192:187], i_ctl[186:186], i_ctl[185:170], i_ctl[169:156], i_ctl[155:155], i_ctl[215:215], i_ctl[153:90], i_ctl[89:82], i_ctl[214:214], i_ctl[213:213], i_ctl[212:212], i_ctl[211:211], i_ctl[210:210], i_ctl[209:209], i_ctl[208:208], i_ctl[207:207], i_ctl[206:206], i_ctl[205:205], i_ctl[71:8], i_ctl[7:0]};
+    assign o_g3 = {i_ctl[193:193], i_ctl[192:187], i_ctl[186:186], i_ctl[185:170], i_ctl[169:156], i_ctl[155:155], i_ctl[226:226], i_ctl[153:90], i_ctl[89:82], i_ctl[225:225], i_ctl[224:224], i_ctl[223:223], i_ctl[222:222], i_ctl[221:221], i_ctl[220:220], i_ctl[219:219], i_ctl[218:218], i_ctl[217:217], i_ctl[216:216], i_ctl[71:8], i_ctl[7:0]};
+    assign o_g4 = {i_ctl[193:193], i_ctl[192:187], i_ctl[186:186], i_ctl[185:170], i_ctl[169:156], i_ctl[155:155], i_ctl[237:237], i_ctl[153:90], i_ctl[89:82], i_ctl[236:236], i_ctl[235:235], i_ctl[234:234], i_ctl[233:233], i_ctl[232:232], i_ctl[231:231], i_ctl[230:230], i_ctl[229:229], i_ctl[228:228], i_ctl[227:227], i_ctl[71:8], i_ctl[7:0]};
+    assign o_g5 = {i_ctl[193:193], i_ctl[192:187], i_ctl[186:186], i_ctl[185:170], i_ctl[169:156], i_ctl[155:155], i_ctl[248:248], i_ctl[153:90], i_ctl[89:82], i_ctl[247:247], i_ctl[246:246], i_ctl[245:245], i_ctl[244:244], i_ctl[243:243], i_ctl[242:242], i_ctl[241:241], i_ctl[240:240], i_ctl[239:239], i_ctl[238:238], i_ctl[71:8], i_ctl[7:0]};
+    assign o_g6 = {i_ctl[193:193], i_ctl[192:187], i_ctl[186:186], i_ctl[185:170], i_ctl[169:156], i_ctl[155:155], i_ctl[259:259], i_ctl[153:90], i_ctl[89:82], i_ctl[258:258], i_ctl[257:257], i_ctl[256:256], i_ctl[255:255], i_ctl[254:254], i_ctl[253:253], i_ctl[252:252], i_ctl[251:251], i_ctl[250:250], i_ctl[249:249], i_ctl[71:8], i_ctl[7:0]};
+    assign o_g7 = {i_ctl[193:193], i_ctl[192:187], i_ctl[186:186], i_ctl[185:170], i_ctl[169:156], i_ctl[155:155], i_ctl[270:270], i_ctl[153:90], i_ctl[89:82], i_ctl[269:269], i_ctl[268:268], i_ctl[267:267], i_ctl[266:266], i_ctl[265:265], i_ctl[264:264], i_ctl[263:263], i_ctl[262:262], i_ctl[261:261], i_ctl[260:260], i_ctl[71:8], i_ctl[7:0]};
+    assign o_kg = i_ctl[293:271];
 endmodule

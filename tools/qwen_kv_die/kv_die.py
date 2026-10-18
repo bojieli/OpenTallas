@@ -2304,7 +2304,7 @@ def _relays(m):
     # The south-face leaf fits inside the CDC-column gap.  A43.2um occupancy
     # cell falsely merges that gap with the adjacent control tile; half-grid
     # routing represents its actual free channels without moving a pin.
-    G = GRID/2 if m['geo'].get('kv_wq_leaf_s') else GRID
+    G = GRID/2 if (m['geo'].get('kv_wq_leaf_s') or m['geo'].get('relay_half_grid')) else GRID   # KVJ-G2: static die keeps the half grid
     nx, ny = int(Wd // G) + 1, int(Hd // G) + 1
     owner = {}
     for it in m['insts']:
@@ -2751,7 +2751,7 @@ def _relays(m):
             it_ = by[inst]
             return near_d((pt[0], pt[1], pt[0], pt[1]), rect(it_))
         prev_pt, prev_ep, k, idx0 = None, (a, pa), 0, 0
-        offs = [(0, 0)] + [(i * G, j * G) for r_ in (range(1,7) if m['geo'].get('kv_wq_leaf_s') else (1,2,3)) for i in range(-r_, r_ + 1) for j in range(-r_, r_ + 1)
+        offs = [(0, 0)] + [(i * G, j * G) for r_ in (range(1,7) if (m['geo'].get('kv_wq_leaf_s') or m['geo'].get('relay_half_grid')) else (1,2,3)) for i in range(-r_, r_ + 1) for j in range(-r_, r_ + 1)
                            if max(abs(i), abs(j)) == r_]
 
         def remaining():
@@ -3316,6 +3316,8 @@ def masters(m, k=1, port_bits=None):
                 face = 'S' if p in ('ti_a', 'e_a') else 'N' if p in ('ti_b', 'e_b') else 'W'
             if mst == 'qkd_hss':
                 face = 'W' if p == 's_a' else 'E' if p == 's_b' else 'S'
+            if KSD.ON and KSD.pin_face(mst, p):
+                face = KSD.pin_face(mst, p)     # KVJ-G2: static tile faces (K / V channel vs control channel)
             if HOP and mst in ('qkd_d2d', 'qkd_d2ds') and face in _covered_faces(m, inst0, peer=pe):
                 # OT_KV_HOP: a face covered by an abutting block (the UCIe PHY on the D2D frame's N face) has no die
                 # routing: the fwd_epoch / fwd_link_rst_n words were drawn there, 1,208 um from their first relay
