@@ -1,0 +1,349 @@
+{
+ "layer": "L14",
+ "slice": "u_s_0S",
+ "sid": 0,
+ "leaf": 0,
+ "G": 0,
+ "mutant": null,
+ "base": 600,
+ "first_issue": 6991,
+ "beats": [
+  {
+   "op": "attn.q_rope",
+   "issue": 6991,
+   "bench_edge": 600,
+   "target": 0,
+   "body": "000000000000000000000000000002201000200c",
+   "what": "vs attn.q_rope QR n=16 leaves 11111",
+   "model_dur": 57
+  },
+  {
+   "op": "attn.z_quant",
+   "issue": 18084,
+   "bench_edge": 11693,
+   "target": 0,
+   "body": "0000000000000000000000000000100008002309",
+   "what": "vs attn.z_quant QB n=8 leaves 00001",
+   "model_dur": 19
+  },
+  {
+   "op": "ffn.softplus_sqrt",
+   "issue": 22168,
+   "bench_edge": 15777,
+   "target": 0,
+   "body": "000000000000000000000000000002420600240a",
+   "what": "vs ffn.softplus_sqrt RA n=6 leaves 00001",
+   "model_dur": 147
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22770,
+   "bench_edge": 16379,
+   "target": 5,
+   "body": "0000104ee682d04ede50d04e4ee5d04e842afe45",
+   "what": "vs ffn.bias target-5 bias row 0 leaf 0",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22771,
+   "bench_edge": 16380,
+   "target": 5,
+   "body": "0000104ed61ed04ea6ff504edc44504ee682fe47",
+   "what": "vs ffn.bias target-5 bias row 1 leaf 0",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22772,
+   "bench_edge": 16381,
+   "target": 5,
+   "body": "0000104e9ab4504ec7c7504efaffd04ed61efe49",
+   "what": "vs ffn.bias target-5 bias row 2 leaf 0",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22773,
+   "bench_edge": 16382,
+   "target": 5,
+   "body": "0000104ee476504ec1a1d04ed82b504ee682fe4b",
+   "what": "vs ffn.bias target-5 bias row 3 leaf 0",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22774,
+   "bench_edge": 16383,
+   "target": 5,
+   "body": "0000104ee05d504ee88f504ee476504e98a7fe4d",
+   "what": "vs ffn.bias target-5 bias row 4 leaf 0",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22775,
+   "bench_edge": 16384,
+   "target": 5,
+   "body": "0000104ee05d504e2c11504e23df504ed61efe4f",
+   "what": "vs ffn.bias target-5 bias row 5 leaf 0",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22776,
+   "bench_edge": 16385,
+   "target": 0,
+   "body": "000000000000000000000000000002500600244b",
+   "what": "vs ffn.bias RB n=6 leaves 00001",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.swiglu",
+   "issue": 24886,
+   "bench_edge": 18495,
+   "target": 0,
+   "body": "3e5bfdc83e5bfdc84120000000001e7810002588",
+   "what": "vs ffn.swiglu SW n=16 leaves 00001",
+   "model_dur": 191
+  }
+ ],
+ "checks": [
+  {
+   "op": "attn.q_rope",
+   "base": 544,
+   "rows": 16
+  },
+  {
+   "op": "ffn.softplus_sqrt",
+   "base": 578,
+   "rows": 2
+  },
+  {
+   "op": "ffn.bias",
+   "base": 592,
+   "rows": 6
+  },
+  {
+   "op": "ffn.swiglu",
+   "base": 632,
+   "rows": 16
+  }
+ ],
+ "check_names": [
+  "attn.q_rope",
+  "ffn.bias",
+  "ffn.softplus_sqrt",
+  "ffn.swiglu"
+ ],
+ "xq": 2,
+ "lowered": {
+  "attn.q_rope": {
+   "status": "PARTIAL",
+   "rows": 1,
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "QR operand rows a0 + 2 s + 1 ({cos, sin, cos', sin'})",
+    "missing": "cos / sin of the token position are runtime rows (32 FP32 per position, all heads); no lowered producer writes them into the QR leaves (seq_host context splice / host row write not emitted); the bench proves QR with the golden rope_cs rows",
+    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:22-23"
+   },
+   "leaves": {
+    "0": {
+     "cmd": 6991,
+     "op": "QR",
+     "n": 16,
+     "dur": 57,
+     "end": 7048
+    },
+    "1": {
+     "cmd": 6991,
+     "op": "QR",
+     "n": 16,
+     "dur": 57,
+     "end": 7048
+    },
+    "2": {
+     "cmd": 6991,
+     "op": "QR",
+     "n": 16,
+     "dur": 57,
+     "end": 7048
+    },
+    "3": {
+     "cmd": 6991,
+     "op": "QR",
+     "n": 16,
+     "dur": 57,
+     "end": 7048
+    },
+    "4": {
+     "cmd": 6991,
+     "op": "QR",
+     "n": 16,
+     "dur": 57,
+     "end": 7048
+    }
+   },
+   "fused_into": null
+  },
+  "attn.z_quant": {
+   "status": "LOWERED",
+   "rows": 5,
+   "gap": null,
+   "leaves": {
+    "0": {
+     "cmd": 18084,
+     "op": "QB",
+     "n": 8,
+     "dur": 19,
+     "end": 18103
+    },
+    "1": {
+     "cmd": 18085,
+     "op": "QB",
+     "n": 8,
+     "dur": 19,
+     "end": 18104
+    },
+    "2": {
+     "cmd": 18086,
+     "op": "QB",
+     "n": 8,
+     "dur": 19,
+     "end": 18105
+    },
+    "3": {
+     "cmd": 18087,
+     "op": "QB",
+     "n": 8,
+     "dur": 19,
+     "end": 18106
+    },
+    "4": {
+     "cmd": 18088,
+     "op": "QB",
+     "n": 8,
+     "dur": 19,
+     "end": 18107
+    }
+   },
+   "fused_into": null
+  },
+  "ffn.softplus_sqrt": {
+   "status": "LOWERED",
+   "rows": 1,
+   "gap": null,
+   "leaves": {
+    "0": {
+     "cmd": 22168,
+     "op": "RA",
+     "n": 6,
+     "dur": 147,
+     "end": 22315
+    }
+   },
+   "fused_into": null
+  },
+  "ffn.bias": {
+   "status": "LOWERED",
+   "rows": 7,
+   "gap": null,
+   "leaves": {
+    "0": {
+     "cmd": 22776,
+     "op": "RB",
+     "n": 6,
+     "dur": 25,
+     "end": 22801
+    }
+   },
+   "fused_into": null
+  },
+  "ffn.shared_swiglu": {
+   "status": "LOWERED",
+   "rows": 0,
+   "gap": null,
+   "leaves": {},
+   "fused_into": null
+  },
+  "ffn.shared_quant": {
+   "status": "LOWERED",
+   "rows": 0,
+   "gap": null,
+   "leaves": {},
+   "fused_into": "ffn.shared_swiglu"
+  },
+  "ffn.swiglu": {
+   "status": "PARTIAL",
+   "rows": 5,
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "s_d imm[95:64] / imm[127:96] (SW w0 / w1)",
+    "missing": "the routing weights are runtime (gunit router, delivered as leaf-store rows by CTL target 5); SW takes w only from the command immediate (ot_s81sl_vs.sv:171), so a boot-loaded CTL template cannot carry them (the bench proves the SW / vq path with the fixture weights)",
+    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:171"
+   },
+   "leaves": {
+    "0": {
+     "cmd": 24886,
+     "op": "SW",
+     "n": 16,
+     "dur": 191,
+     "end": 25077
+    },
+    "1": {
+     "cmd": 24887,
+     "op": "SW",
+     "n": 16,
+     "dur": 191,
+     "end": 25078
+    },
+    "2": {
+     "cmd": 24888,
+     "op": "SW",
+     "n": 16,
+     "dur": 191,
+     "end": 25079
+    },
+    "3": {
+     "cmd": 24889,
+     "op": "SW",
+     "n": 16,
+     "dur": 191,
+     "end": 25080
+    },
+    "4": {
+     "cmd": 24890,
+     "op": "SW",
+     "n": 16,
+     "dur": 191,
+     "end": 25081
+    }
+   },
+   "fused_into": null
+  },
+  "ffn.route_w": {
+   "status": "PARTIAL",
+   "rows": 0,
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "s_d imm[95:64] / imm[127:96] (SW w0 / w1)",
+    "missing": "the routing weights are runtime (gunit router, delivered as leaf-store rows by CTL target 5); SW takes w only from the command immediate (ot_s81sl_vs.sv:171), so a boot-loaded CTL template cannot carry them (the bench proves the SW / vq path with the fixture weights)",
+    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:171"
+   },
+   "leaves": {},
+   "fused_into": "ffn.swiglu"
+  },
+  "ffn.quant2": {
+   "status": "PARTIAL",
+   "rows": 0,
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "s_d imm[95:64] / imm[127:96] (SW w0 / w1)",
+    "missing": "the routing weights are runtime (gunit router, delivered as leaf-store rows by CTL target 5); SW takes w only from the command immediate (ot_s81sl_vs.sv:171), so a boot-loaded CTL template cannot carry them (the bench proves the SW / vq path with the fixture weights)",
+    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:171"
+   },
+   "leaves": {},
+   "fused_into": "ffn.swiglu"
+  }
+ }
+}
