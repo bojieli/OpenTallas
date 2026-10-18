@@ -40,8 +40,10 @@ else
   done
   pids=()
   for m in "${MUTS[@]}"; do
+    # the flat TB makes one ~235k-line nba function: without --output-split-cfuncs g++ -Os sat >16 min on one file
     # 2-state is fine here: every check starts after the bus latency (cyc > lat), so no X compare is ever made
     cmd="rm -rf vl_$m && $VL --binary --timing -Wno-fatal -Wno-lint -Wno-style --x-assign fast --x-initial fast \
+--output-split 20000 --output-split-cfuncs 2000 -MAKEFLAGS OPT_FAST=-O1 -MAKEFLAGS OPT_SLOW=-O0 \
 --top-module tb_relay_lockstep -j 16 --Mdir vl_$m -o sim ${src[*]} $m/tb_relay_lockstep.sv > vl_$m.build.log 2>&1 \
 || { tail -20 vl_$m.build.log; exit 3; }; timeout 3000 ./vl_$m/sim; rc=\$?; rm -rf vl_$m; exit \$rc"
     ( $OTRUN --mem 48 --threads 16 --hosts "$HOSTS" --dir "$R" --priority die -- bash -c "$cmd" > "$OUT/$m.run.log" 2>&1
