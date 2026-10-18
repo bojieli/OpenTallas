@@ -34,7 +34,15 @@ def ports(text, mod):
 
 def wrapper(mod, params, plist, core_params):
     hdr = ',\n    '.join(f"{'input ' if d == 'input' else 'output'} wire {w + ' ' if w else ''}{n}" for d, w, n in plist)
-    L = [f'module {mod} #({params}, parameter integer PR = 1) (\n    {hdr}\n);']
+    L = [f'module {mod} #({params}, parameter integer PR = 1, parameter [31:0] TXDP = 32\'d0) (\n    {hdr}\n);',
+         '    // TXDP = the compiler\'s per-TX-port producer capture latency (port p = byte p, 1..255 edges), set by the die GEN',
+         '    // from d2d_cal_image.svh (D2D_TXDP_C / D2D_TXDP_K, tools/qwen_split/d2d_cal_seq_image.py) or txdp.svh',
+         '    // (tools/qwen_split/d2d_link_calendar.py).  No production default exists: PR = 1 with an uncompiled (zero) port',
+         '    // byte does not elaborate (QXF-LINK 2026-10-18, TOKEN-XDIE-QWEN F4; the r4..r9 masters hard-wired the',
+         '    // component-bench codec latencies).',
+         '    generate if (PR != 0 && (TXDP[7:0] == 8\'d0 || TXDP[15:8] == 8\'d0 || TXDP[23:16] == 8\'d0 || TXDP[31:24] == 8\'d0)) begin : g_txdp_uncompiled',
+         '        D2D_TXDP_NOT_COMPILED__set_TXDP_from_the_compiler u_txdp_uncompiled ();',
+         '    end endgenerate']
     conn = []
     for d, w, n in plist:
         if n in NOREG:
@@ -70,11 +78,11 @@ def main():
     _, pk = ports(t, 'qkd_d2d_static_core')
     w = [begin,
          '// Pin-registered die masters: every functional port has one flop at its pin (PR = 1, production).  The core',
-         '// producer capture latency is +2 per EXTERNAL port (slot out + payload in); the compute STATUS codec\n// (port 2) is inside the core and keeps 1; see the generator docstring for the cost.',
+         '// producer capture latency is +2 per EXTERNAL port (slot out + payload in); the compute STATUS codec\n// (port 2) is inside the core and keeps 1; see the generator docstring for the cost.  TXDP (PR = 1) is a REQUIRED\n// parameter: the compiler emits it with the die seam stages (the producers sit behind die relays / landings).',
          wrapper('qfd_d2d_static', 'parameter integer MUT = 0', pc,
-                 ".MUT(MUT), .TXDP(PR ? {8'd4, 8'd1, 8'd3, 8'd3} : {8'd2, 8'd1, 8'd2, 8'd1})"),
+                 ".MUT(MUT), .TXDP(PR ? TXDP : {8'd2, 8'd1, 8'd2, 8'd1})"),
          wrapper('qkd_d2d_static', 'parameter integer MUT = 0, parameter integer NL = 2', pk,
-                 ".MUT(MUT), .NL(NL), .TXDP(PR ? {8'd3, 8'd3, 8'd4, 8'd3} : {8'd1, 8'd1, 8'd2, 8'd1})")]
+                 ".MUT(MUT), .NL(NL), .TXDP(PR ? TXDP : {8'd1, 8'd1, 8'd2, 8'd1})")]
     SRC.write_text(t + '\n' + '\n\n'.join(w) + '\n')
     print('pinreg wrappers:', len(pc), 'compute ports,', len(pk), 'KV ports')
 
