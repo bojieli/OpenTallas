@@ -549,6 +549,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         rec['port_bind_rc'] = r.returncode
         rec['port_bind_cmd'] = cmd
     (out / 'bind_case.json').write_text(json.dumps(rec, indent=1))
+    # S81-DIE7 (10-18): placement hints for the real-view physical case (dv_rvcase.py): reset stations of the regional
+    # reset tree (street cells + lane companions at the station points), the root synchroniser point and the block reset
+    # pin points (top-down pin assignment); landings / relays / forward cells are placed from the plan by dv_rvcase
+    (out / 'place_hints.json').write_text(json.dumps(dict(
+        schema='opentallas.s81_dv.place_hints.v1', reset_place=rst['place'], reset_root_xy=rst['summary']['root_xy'],
+        block_rst_pin={b: [round(x, 3), round(y, 3)] for b, (x, y) in rst['block_pin'].items()},
+        landings=[dict(inst=f'ld_{r["link"]}', link=r['link'], dst=r['inst'], master=r['master'], bits=r['bits'], D=r['D'])
+                  for r in land_rows]), indent=1))
     return rec
 
 

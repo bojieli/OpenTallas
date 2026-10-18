@@ -99,6 +99,31 @@ def face_of(b, x, y):
     return min(d, key=d.get)
 
 
+def die_repair_tcl(out, dieflow_ref, skip=('n*_lck\\[*\\]',)):
+    """DIE-FLOW shared repeater step (claude/dieflow-1017 -> main): files materialised from dieflow_ref, the step tcl
+    written to out/die_repeaters_step.tcl; returns the run.tcl fragment that sources it"""
+    a = argparse.Namespace(dieflow_ref=dieflow_ref)
+    import subprocess, tempfile
+    tmp = Path(tempfile.mkdtemp(prefix='dvrep_'))
+    (tmp / 'tools/die_repeaters').mkdir(parents=True)
+    names = subprocess.run(['git', '-C', GITDIR, 'ls-tree', '--name-only', a.dieflow_ref, 'tools/die_repeaters/'],
+                           capture_output=True, text=True, check=True).stdout.split()
+    for f in (Path(n).name for n in names):
+        (tmp / 'tools/die_repeaters' / f).write_bytes(subprocess.run(['git', '-C', GITDIR, 'show', f'{a.dieflow_ref}:tools/die_repeaters/{f}'],
+                                                                    capture_output=True, check=True).stdout)
+    (tmp / 'tools/die_cluster').mkdir(); shutil.copy(ROOT / 'tools/die_cluster/cluster_bounds.tcl', tmp / 'tools/die_cluster/')
+    for f in ('die_reach.py',):
+        shutil.copy(ROOT / 'tools' / f, tmp / 'tools' / f)
+    (tmp / 'results/arch').mkdir(parents=True); shutil.copy(ROOT / 'results/arch/die_reach_1016.json', tmp / 'results/arch/')
+    subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'copy', str(out)], check=True)
+    libs = [f'{PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', f'{PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib']
+    t = subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'tcl', '--design', 's81', '--report',
+                        '/work/die_repeaters.json', '--legalize', 'snap',
+                        '--repeat-nets', 'n*_fck*', '--fclk-globs', 'n*_fck*', '--fclk-policy', 'fail', *[x for g in skip for x in ('--skip', g)], '--libs', *libs], capture_output=True, text=True, check=True).stdout
+    (out / 'die_repeaters_step.tcl').write_text(t)
+    return f'# DIE-FLOW repeater step ({dieflow_ref})\nsource /work/die_repeaters_step.tcl\n'
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--plan', required=True)
@@ -315,26 +340,7 @@ def main():
     (out / 'place.tcl').write_text('\n'.join(pl) + '\n')
     repair = '# no die repair (pure GRT diagnostic)\n'
     if a.die_repair:
-        # DIE-FLOW shared step (claude/dieflow-1017, pending ROOT merge): files materialised from that branch
-        import subprocess, tempfile
-        tmp = Path(tempfile.mkdtemp(prefix='dvrep_'))
-        (tmp / 'tools/die_repeaters').mkdir(parents=True)
-        names = subprocess.run(['git', '-C', GITDIR, 'ls-tree', '--name-only', a.dieflow_ref, 'tools/die_repeaters/'],
-                               capture_output=True, text=True, check=True).stdout.split()
-        for f in (Path(n).name for n in names):
-            (tmp / 'tools/die_repeaters' / f).write_bytes(subprocess.run(['git', '-C', GITDIR, 'show', f'{a.dieflow_ref}:tools/die_repeaters/{f}'],
-                                                                        capture_output=True, check=True).stdout)
-        (tmp / 'tools/die_cluster').mkdir(); shutil.copy(ROOT / 'tools/die_cluster/cluster_bounds.tcl', tmp / 'tools/die_cluster/')
-        for f in ('die_reach.py',):
-            shutil.copy(ROOT / 'tools' / f, tmp / 'tools' / f)
-        (tmp / 'results/arch').mkdir(parents=True); shutil.copy(ROOT / 'results/arch/die_reach_1016.json', tmp / 'results/arch/')
-        subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'copy', str(out)], check=True)
-        libs = [f'{PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', f'{PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib']
-        t = subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'tcl', '--design', 's81', '--report',
-                            '/work/die_repeaters.json', '--legalize', 'snap',
-                            '--repeat-nets', 'n*_fck*', '--fclk-globs', 'n*_fck*', '--fclk-policy', 'fail', '--skip', 'n*_lck\\[*\\]', '--libs', *libs], capture_output=True, text=True, check=True).stdout
-        (out / 'die_repeaters_step.tcl').write_text(t)
-        repair = f'# DIE-FLOW repeater step ({a.dieflow_ref})\nsource /work/die_repeaters_step.tcl\n'
+        repair = die_repair_tcl(out, a.dieflow_ref)
     post = ('estimate_parasitics -global_routing\n'
             'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
             if a.die_repair else 'estimate_parasitics -global_routing\n')
