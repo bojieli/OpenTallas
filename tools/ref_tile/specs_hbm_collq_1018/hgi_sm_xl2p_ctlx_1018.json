@@ -97,6 +97,15 @@
     "pin": "clk",
     "reference": "raw_liberty_clock_pin"
    }
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u_w.u_ctl.u_eb",
+   "at": [
+    259.2,
+    302.4
+   ]
   }
  ],
  "clock": "hybrid_entries",
@@ -211,11 +220,11 @@
   "reason": "cl2 rule (owner 19:50, 10-15): ctlw RTL registers every leaf pin (issuer cfg/desc pin flops, raw rr capture rr_c, flop-driven rq/c_*/r_*/l_d_o/q*/bsel/lane_en/eg_* outputs); ot_pin_regs would add a second edge per port"
  },
  "floorplan_note": "HBM-B 10-17 ctlx: d4f binds ctlw with EGRESS_SPLIT 1, so xw_*/x_done/rwq/bq_d (5,121 of 10,920 pin bits) are open/undriven; ctlx drops them (5,799 pins). Faces follow the d4f neighbours: N rr/rq from the VM banks (vmb_<q>0..7 north of xl_<q>_ctl), E l_d_o to the two quantisers (xl_<q>_aqlo/aqhi east), W the x-store/BD/egress pair bundles, S the host F20 cfg/status + clocks. 388.8^2 (9 x 43.2): N 2,192 pins 5.6/um, E 2,055 5.3/um, W 1,224 3.1/um, S 337. Calendar SRAM SW corner beside its cfg pins and the clk_cal entry; clk entry S mid. | HBM-COLLQ/X 10-18 cl2p: +6 E pins (pv/po/pf) beside q*; same geometry.",
- "structural_change": "cl2p ctlx = main's ctlx (hgi_sm_xl2_ctlx, ot_hgi_sm_xload_cl2_ctlx, same 388.8^2 outline, faces, SRAM, clock entries) + x_fmt 3 (PRE-QUANTISED): 16-word exponent preload buffer, fmt 3 address stage, pv_lo/pv_hi bypass valids out and po/pf in on the E face beside qv/qo/qf; fmt 0/1/2 cycle-identical (bench +SAME=1). New master name; die swap xl_<q>_ctl -> cl2p_ctlx (xload_preq_binding.json).",
+ "structural_change": "cl2p ctlx = main's ctlx (hgi_sm_xl2_ctlx, ot_hgi_sm_xload_cl2_ctlx, same 388.8^2 outline, faces, SRAM, clock entries) + x_fmt 3 (PRE-QUANTISED): 16-word exponent preload buffer, fmt 3 address stage, pv_lo/pv_hi bypass valids out and po/pf in on the E face beside qv/qo/qf; fmt 0/1/2 cycle-identical (bench +SAME=1). New master name; die swap xl_<q>_ctl -> cl2p_ctlx (xload_preq_binding.json). | r2 (HBM-COLLQ3 10-18): exponent preload buffer = 1R1W SRAM macro u_w.u_ctl.u_eb on the core clock (p1 gate: 4,096 buffer flops -> 14,262 sinks, TT/FF spread 96.2/88.3 > 80, 4,097-load read select); same edges",
  "job": {
   "owner": "Claude:HBM-COLLQ",
   "branch": "claude/hbm-collq-1018",
-  "tag": "p1",
+  "tag": "p2",
   "purpose": "x-load ctl die master with the PRE-QUANTISED fmt 3 (QBG consumers: expert_intermediate->w2, o-group->wo_b, engram rows->wkv); successor of hgi_sm_xl2_ctlx",
   "structural_change": "cl2p ctlx = main's ctlx (hgi_sm_xl2_ctlx, ot_hgi_sm_xload_cl2_ctlx, same 388.8^2 outline, faces, SRAM, clock entries) + x_fmt 3 (PRE-QUANTISED): 16-word exponent preload buffer, fmt 3 address stage, pv_lo/pv_hi bypass valids out and po/pf in on the E face beside qv/qo/qf; fmt 0/1/2 cycle-identical (bench +SAME=1). New master name; die swap xl_<q>_ctl -> cl2p_ctlx (xload_preq_binding.json).",
   "extra_paths": [

@@ -40,7 +40,7 @@ XLOAD_PREQ case 7 beat 5: A edge 1284 B edge 1291 (D 7) meta 1100/1100 data DIFF
 XLOAD_PREQ case 7 K 2304 P 1 Bs 18 S 4 Es 1 kind 6: beats 48/48 done +7 (D 7) mismatches 24
 XLOAD_PREQ reads A 4864 B 5344 (bank-lane reads)
 XLOAD_PREQ FAIL 8
-- rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_preq.sv:80: Verilog $finish
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_preq.sv:84: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 0.142 s; speed 9.717 us/s
-- Verilator: cpu 0.142 s on 1 threads; allocated 23 MB
+- Verilator: $finish at 1us; walltime 0.135 s; speed 10.206 us/s
+- Verilator: cpu 0.135 s on 1 threads; allocated 23 MB

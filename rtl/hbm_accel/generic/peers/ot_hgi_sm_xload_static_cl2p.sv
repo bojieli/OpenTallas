@@ -266,8 +266,13 @@ module ot_hgi_sm_xload_cl2p_ctl #(
         for (integer d = 3; d <= RD_LAT + 1; d = d + 1) begin pb_ei[d] <= pb_ei[d-1]; pb_r[d] <= pb_r[d-1]; end
     end
     wire m_pl = pb_pl[RD_LAT+1], m_cd = pb_cd[RD_LAT+1];
-    reg [255:0] ebuf [0:NEB-1];
-    reg l0_pl, l0_cd, l_pl; reg [3:0] l0_ei; reg [4:0] l0_r; reg [255:0] l0_ew;
+    // HBM-COLLQ3 10-18: the 16 x 256 exponent preload buffer is a 1R1W SRAM macro (same ot_sram_1r1w_128x256 as the
+    // issuer table; rows 0..NEB-1 used), not 4,096 flops: the hgi_sm_xl2p_ctlx_1018 gate (75cdef3c4) measured 14,262
+    // sinks and TT/FF pin-flop spread 96.2/88.3 ps (> 80; main's ctlx without the buffer: 9,486 sinks, 79.8/74.6) and a
+    // 4,097-load read select.  Same edges: registered read (address pb_ei at M, word at L0 = l0_ew), write at L0 from
+    // l0_d; the macro is read-before-write like the flop array.  Macro clock = core clk (as cl2 ctlw's u_m banks).
+    wire [255:0] l0_ew;
+    reg l0_pl, l0_cd, l_pl; reg [3:0] l0_ei; reg [4:0] l0_r;
     // raw rr pin registers (valid bits reset)
     reg [8*257-1:0] rr_c;
     always @(posedge clk or negedge rn)
@@ -283,6 +288,9 @@ module ot_hgi_sm_xload_cl2p_ctl #(
     // registers / the C stage).  + 1 edge on EVERY xw beat and x_done of both formats (LAND 3 -> 4, quantiser valids
     // and the BD tag line follow L1); rq unchanged.
     reg l0_v; reg [3:0] l0_g; reg [2:0] l0_p, l0_wq; reg [6:0] l0_rem; reg [8*256-1:0] l0_d;
+    ot_sram_1r1w_128x256_m1_r2c2 u_eb (.clk(clk), .r_ce_in(m_v && m_cd), .r_addr_in({3'd0, pb_ei[RD_LAT+1]}), .rd_out(l0_ew),
+        .w_ce_in(l0_pl), .w_addr_in({3'd0, l0_ei}), .wd_in(l0_d[255:0]), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     reg l_v; reg [3:0] l_g; reg [2:0] l_p, l_wq; reg [6:0] l_rem; reg [8*256-1:0] l_d;
     wire [2:0] s0r [0:NR-1];
     generate if (SEL_KEEP != 0) begin : g_s0k
@@ -308,8 +316,7 @@ module ot_hgi_sm_xload_cl2p_ctl #(
             l0_d[k*RB +: RB] <= rr_c[(3'(s0r[k] + 3'((k*RB) / 256) + ((MUT == 1) ? 3'd1 : 3'd0)))*257 + (k*RB) % 256 +: RB];
         {l_g, l_p, l_wq} <= {l0_g, l0_p, l0_wq}; l_rem <= l0_rem;
         // PRE: exponent word selected at L0, bytes at L1; code waves land as {e byte, codes} per block, rest 0
-        l0_ei <= pb_ei[RD_LAT+1]; l0_r <= pb_r[RD_LAT+1]; l0_ew <= ebuf[pb_ei[RD_LAT+1]];
-        if (l0_pl) ebuf[l0_ei] <= l0_d[255:0];
+        l0_ei <= pb_ei[RD_LAT+1]; l0_r <= pb_r[RD_LAT+1];
         if (l0_cd) l_d <= {760'd0, l0_ew[8*(l0_r+5'd1) +: 8], l0_d[511:256], 760'd0, l0_ew[8*l0_r +: 8], l0_d[255:0]};
         else l_d <= l0_d;
     end

@@ -31,5 +31,8 @@ set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {u_w.u_tab}]
 $i setOrient R0; $i setLocation [expr {round(30.24 * $dbu)}] [expr {round(30.24 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 30.24 30.24 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {u_w.u_ctl.u_eb}]
+$i setOrient R0; $i setLocation [expr {round(259.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 259.2 302.4 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
-if {$nb != 1} { error "ref_tile place: expected 1 macros, netlist has $nb" }
+if {$nb != 2} { error "ref_tile place: expected 2 macros, netlist has $nb" }
