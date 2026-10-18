@@ -129,8 +129,13 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 CLK_SPREAD_MAX_PS) with unchanged RTL / outline / pin faces (pin positions may move along the same
 #                 faces): "source" (a COMMITTED native audit receipt that the gate reads: a record of "cell"), "cell",
 #                 and "fix" (what the new kit changes: input pin flops / clock entry / insertion / boundary registers)
+#   native_spread (ROOT-0745 2026-10-18) as native_capture, for a view whose committed receipt FAILS on the TT / FF
+#                 pin-flop spread (> CLK_SPREAD_MAX_PS).  For native_launch / native_capture / native_spread an RTL
+#                 difference from the closed commit no longer refuses when "source" is a COMMITTED receipt (a path on the
+#                 job's commit / origin/main, not an absolute local file) that records the closed view's FAIL: such a
+#                 view cannot bind into the die, so the re-route is not a repeat (Gate-Rule: relaxing, submit lint only).
 CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register",
-                       "native_launch", "native_capture")
+                       "native_launch", "native_capture", "native_spread")
 DIE_WINDOW_CUT_MIN = 0.6
 PIN_LAUNCH_MAX_PS = 220.0             # tile defect: first-load launch beyond phi - R (header 10-13 die clock rule)
 PIN_CAPTURE_MAX_PS = 190.0            # tile defect: setup at the pin plus R
@@ -145,7 +150,9 @@ CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it ag
                          "\"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ "
                          "\"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > "
                          "683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; "
-                         "tools/ref_tile/rekit_native_launch.py)}")
+                         "tools/ref_tile/rekit_native_launch.py) | \"native_capture\" / \"native_spread\" (+ "
+                         "\"source\" COMMITTED native audit receipt recording the closed view's FAIL, \"cell\", "
+                         "\"fix\")}")
 
 
 def _num(x):
