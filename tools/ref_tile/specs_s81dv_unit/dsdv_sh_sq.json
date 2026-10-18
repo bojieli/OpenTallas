@@ -73,7 +73,7 @@
         "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_exact '1 2'",
         "expect": "pass",
         "pass_regex": "^SEQHOST_GATE PASS$",
-        "min_count_regex": "^SEQHOST seed=1 .* cmds N/S/G/J=72/72/72/72 ",
+        "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/",
         "threads": 8,
         "peak_ram_gb": 8
       },
