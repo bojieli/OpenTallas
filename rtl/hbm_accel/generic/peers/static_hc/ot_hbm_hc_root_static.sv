@@ -20,6 +20,8 @@
 // STATIC: no ready, credit or backpressure.  New fault: a quarter subtree sum not on its due edge (ps_v != expected).
 // Pin registers: every input lands in a pin flop, every output is a flop; rst_n through ot_rst_relay.
 // MUT (bench): 2 = tail pre-sigmoid eps dropped (unit 0).
+// ELEM-GAPS/HBMB 2026-10-18: every runtime-indexed part-select replaced by decoded constant-index slices (gate synthesis
+// stalled in yosys SHARE); function and cycles unchanged.
 module ot_hbm_hc_root_static #(
     parameter integer K    = 20480,
     parameter [31:0]  NF   = 32'h46a00000,       // binary32(K)
@@ -141,9 +143,10 @@ module ot_hbm_hc_root_static #(
     // ------------------------------------------------------------------ ingest event -> quarter e_ingq (out flops)
     always @(posedge clk or negedge rst_c)
         if (!rst_c) qi_v <= 4'd0; else qi_v <= e_ing ? (4'd1 << e_ingq) : 4'd0;
-    always @(posedge clk) if (e_ing) begin
-        qi_kind[e_ingq] <= e_kind; qi_slot[e_ingq*2 +: 2] <= e_slot; qi_lo[e_ingq*5 +: 5] <= e_lo;
-        qi_w[e_ingq*5 +: 5] <= e_w[4:0]; qi_cnt[e_ingq*12 +: 12] <= e_cnt; qi_word[e_ingq*10 +: 10] <= e_word;
+    // decoded constant-index destinations (no runtime part-selects: yosys SHARE stall class)
+    always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) if (e_ing && e_ingq == 2'(q)) begin
+        qi_kind[q] <= e_kind; qi_slot[q*2 +: 2] <= e_slot; qi_lo[q*5 +: 5] <= e_lo;
+        qi_w[q*5 +: 5] <= e_w[4:0]; qi_cnt[q*12 +: 12] <= e_cnt; qi_word[q*10 +: 10] <= e_word;
     end
     reg ev_fault;
     always @(posedge clk or negedge rst_c)
@@ -183,17 +186,24 @@ module ot_hbm_hc_root_static #(
         else begin
             if (e_clear) have <= 0;
             if (e_gm) gm_open[e_gmq] <= e_gmo;
-            if (o_valid) begin
-                if (o_idx >= 5'd24) mix_fault <= 1'b1;
-                else begin mixes[(o_pos*24 + o_idx)*32 +: 32] <= o_data; have[o_pos*24 + o_idx] <= 1'b1; end
+            if (o_valid && o_idx >= 5'd24) mix_fault <= 1'b1;
+            for (integer q = 0; q < 4; q = q + 1)
+                if (gv_q[q] && (!gm_open[q] || gr_q[q*5 +: 5] >= 5'd24)) mix_fault <= 1'b1;
+            // decoded slot writes (slot = pos * 24 + row); same priority as before: core word, then quadrants 0..3
+            for (integer p = 0; p < 8; p = p + 1) for (integer r = 0; r < 24; r = r + 1) begin
+                if (o_valid && o_pos == 3'(p) && o_idx == 5'(r)) have[p*24 + r] <= 1'b1;
+                for (integer q = 0; q < 4; q = q + 1)
+                    if (gv_q[q] && gm_open[q] && gp_q[q*3 +: 3] == 3'(p) && gr_q[q*5 +: 5] == 5'(r))
+                        have[p*24 + r] <= 1'b1;
             end
-            for (integer q = 0; q < 4; q = q + 1) if (gv_q[q]) begin
-                if (!gm_open[q] || gr_q[q*5 +: 5] >= 5'd24) mix_fault <= 1'b1;
-                else begin
-                    mixes[(gp_q[q*3 +: 3]*24 + gr_q[q*5 +: 5])*32 +: 32] <= gd_q[q*32 +: 32];
-                    have[gp_q[q*3 +: 3]*24 + gr_q[q*5 +: 5]] <= 1'b1;
-                end
-            end
+        end
+    end
+    always @(posedge clk) begin
+        for (integer p = 0; p < 8; p = p + 1) for (integer r = 0; r < 24; r = r + 1) begin
+            if (o_valid && o_pos == 3'(p) && o_idx == 5'(r)) mixes[(p*24 + r)*32 +: 32] <= o_data;
+            for (integer q = 0; q < 4; q = q + 1)
+                if (gv_q[q] && gm_open[q] && gp_q[q*3 +: 3] == 3'(p) && gr_q[q*5 +: 5] == 5'(r))
+                    mixes[(p*24 + r)*32 +: 32] <= gd_q[q*32 +: 32];
         end
     end
 
@@ -214,17 +224,27 @@ module ot_hbm_hc_root_static #(
             if (tbl_we_q && seq_active) tbl_fault <= 1'b1;
         end
     end
-    always @(posedge clk) if (tf_rd_q) hold[tf_row_q*224 +: 224] <= tbl_rd[223:0];   // row payload (F20 header off)
+    always @(posedge clk) for (integer r = 0; r < 4; r = r + 1)
+        if (tf_rd_q && tf_row_q == 2'(r)) hold[r*224 +: 224] <= tbl_rd[223:0];   // row payload (F20 header off)
     // set layout: base i = row i/7 word i%7 = hold word i (i < 24); scale j = row 3 word 3 + j = hold word 24 + j
     wire [767:0] t_bases = hold[767:0]; wire [95:0] t_scales = hold[863:768];
 
     // ------------------------------------------------------------------ tail units
     wire [1:0] tv, tfl; wire [1535:0] tres; reg [2:0] tpos [0:1]; reg [1:0] tready; reg tail_fault;
+    // position e_tpos of the mix store / have map: decoded AND-OR select (no runtime part-select)
+    reg [767:0] mix_at; reg [23:0] have_at;
+    always @* begin
+        mix_at = 768'd0; have_at = 24'd0;
+        for (integer p = 0; p < 8; p = p + 1) if (e_tpos == 3'(p)) begin
+            mix_at = mix_at | mixes[p*768 +: 768]; have_at = have_at | have[p*24 +: 24];
+        end
+    end
+    wire [767:0] tres_e = e_eunit ? tres[1535:768] : tres[767:0];
     genvar gu;
     for (gu = 0; gu < 2; gu = gu + 1) begin : g_tail
         wire go = e_tl && e_tunit == gu;
         ot_hbm_hc_tail_unit_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0)) u_t (.clk(clk), .rst_n(rst_c),
-            .launch(go), .mixes(mixes[e_tpos*768 +: 768]), .bases(t_bases), .scales(t_scales),
+            .launch(go), .mixes(mix_at), .bases(t_bases), .scales(t_scales),
             .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
     end
     always @(posedge clk or negedge rst_c) begin
@@ -234,7 +254,7 @@ module ot_hbm_hc_root_static #(
                 if (tv[u]) tready[u] <= 1'b1;
                 if (e_tl && e_tunit == u) begin tready[u] <= 1'b0; tpos[u] <= e_tpos; end
             end
-            if (e_tl && have[e_tpos*24 +: 24] != 24'hffffff) tail_fault <= 1'b1;
+            if (e_tl && have_at != 24'hffffff) tail_fault <= 1'b1;
             if (e_emit && !tready[e_eunit]) tail_fault <= 1'b1;
         end
     end
@@ -245,7 +265,7 @@ module ot_hbm_hc_root_static #(
         else result_v <= e_emit ? e_qmask : 4'd0;
     end
     always @(posedge clk) if (e_emit) for (integer q = 0; q < 4; q = q + 1) if (e_qmask[q]) begin
-        result_position[q*3 +: 3] <= tpos[e_eunit]; result[q*768 +: 768] <= tres[e_eunit*768 +: 768];
+        result_position[q*3 +: 3] <= tpos[e_eunit]; result[q*768 +: 768] <= tres_e;
     end
 
     // ------------------------------------------------------------------ status
