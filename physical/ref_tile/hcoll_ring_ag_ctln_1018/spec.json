@@ -32,9 +32,10 @@
    "ccw_i"
   ],
   "N": [
+   "carry_write0",
+   "rx_slot0",
    "pin0_q",
    "state_tx",
-   "carry_write",
    "acc_we",
    "acc_tag",
    "cmd_lp_we_o",
@@ -53,7 +54,9 @@
    "clk",
    "av",
    "acc_rr",
-   "pin1_q"
+   "pin1_q",
+   "rx_slot1",
+   "carry_write1"
   ],
   "S": [
    "ag_d",
@@ -82,7 +85,6 @@
    "tx_acc",
    "tx_gather",
    "tx_ttl",
-   "rx_slot",
    "rx_kind",
    "rx_src",
    "rx_tag",
@@ -112,8 +114,8 @@
  "job": {
   "owner": "Claude:ELEM-GAPS/HBMN1",
   "branch": "claude/eg-hbmn1-1018",
-  "tag": "n1",
-  "purpose": "NATIVE successor of hcoll_ring_ag_ctl_1017 (rc1-2d4d79dd8 CLOSED but native FAIL launch 360/capture 483/2 comb pins): ot_hgi_coll_ring_ag_ctln = the unchanged closed control body behind pure pin flops (commands lead 1, tx-read group lead 2, state_tx/av pin flops, dedicated pin0_q/pin1_q/acc/lane-command output flops, carry_write registered one edge ahead, rst relay); compiler record results/rtl/eg_hbmn1_1018/ring_ag_n_latency_record.json",
+  "tag": "r2",
+  "purpose": "NATIVE successor of hcoll_ring_ag_ctl_1017 (rc1-2d4d79dd8 CLOSED but native FAIL launch 360/capture 483/2 comb pins): ot_hgi_coll_ring_ag_ctln = the unchanged closed control body behind pure pin flops (commands lead 1, tx-read group lead 2, state_tx/av pin flops, dedicated pin0_q/pin1_q/acc/lane-command output flops, carry_write registered one edge ahead, rst relay); compiler record results/rtl/eg_hbmn1_1018/ring_ag_n_latency_record.json | r2: pin0_q/pin1_q copies = keep_hierarchy leaves (n1 merged them into the core pin_p register: launch 286) fixed at the cw_i/ccw_i -> pin0_q/pin1_q midpoint (cp_mid.tcl); carry_write/rx_slot split per direction at the N corners (n1 capture rx_slot 254)",
   "benches": [
    {
     "name": "ring_ag_n_exact",
@@ -200,16 +202,12 @@
    126.6
   ],
   "pin0_q": [
-   3.0,
+   4.2,
    54.73
   ],
   "state_tx": [
    54.73,
    102.026
-  ],
-  "carry_write": [
-   102.026,
-   102.642
   ],
   "acc_we": [
    102.642,
@@ -233,7 +231,7 @@
   ],
   "pin1_q": [
    161.27,
-   213.0
+   211.8
   ],
   "ag_d": [
    3.0,
@@ -339,10 +337,6 @@
    140.559,
    141.518
   ],
-  "rx_slot": [
-   141.518,
-   142.101
-  ],
   "rx_kind": [
    142.101,
    143.06
@@ -442,6 +436,22 @@
   "rn_o": [
    111.264,
    111.88
+  ],
+  "carry_write0": [
+   3.0,
+   3.6
+  ],
+  "rx_slot0": [
+   3.6,
+   4.2
+  ],
+  "rx_slot1": [
+   211.8,
+   212.4
+  ],
+  "carry_write1": [
+   212.4,
+   213.0
   ]
  },
  "params": {},
@@ -456,5 +466,11 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "pin_hook_before_flops": [
+  "physical/ref_tile/hcoll_ring_ag_ctln_1018/cp_mid.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/ref_tile/hcoll_ring_ag_ctln_1018/cp_mid_release.tcl"
+ ]
 }

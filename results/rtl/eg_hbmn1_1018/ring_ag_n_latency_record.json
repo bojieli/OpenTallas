@@ -13,14 +13,31 @@
   "control semantics: the closed control body ot_hgi_coll_ring_ag_ctl is instantiated unchanged (u_core)"
  ],
  "compiler_changes": [
-  {"ports": "lp_we, lp_tag, state_read_add, state_read_rr, state_add_tag, state_add_src, state_add_rhs_acc, state_rr_tag, add_v, add_tag, add_src, add_rhs_acc, tx_inject, tx_forward, tx_tag, tx_dst, tx_result, tx_acc, tx_gather, tx_ttl, rx_slot, rx_kind, rx_src, rx_tag, rr_local, rr_local_tag",
-   "edges": -1, "rule": "issue every command ONE edge before its v1 effect edge (lead 1); equivalently, issuer->effect latency +1 edge if the issuer cannot lead"},
-  {"ports": "state_read_tx, state_tx_tag, state_tx_acc",
-   "edges": -2, "rule": "issue the tx-read group TWO edges before its v1 edge (= inject-4); the state lanes read at inject-3 (v1: inject-2)"},
-  {"rule": "legality: the tx tag's lane state must be stable from inject-3: local tx: lp write of the tag <= inject-4 (lp-write -> inject >= 4 edges, v1: 3); acc tx: acc write (add issue + LAT) of the tag != inject-3", "edges": 1,
-   "cost": "+1 edge on the lp-write -> gather-inject chain only (pipelined, no throughput change; measured: ring all-gather bench F=224 timeline unchanged within the greedy schedule)"},
-  {"ports": "fault", "edges": 1, "rule": "sticky fault output flop: +1 edge (av-vs-acc_we check +2); observational only"},
-  {"ports": "rst_n", "edges": 3, "rule": "release through ot_rst_relay (2 sync + 1 tree); first command issue >= release + 3 - lead; rn_o resets the add lanes with the same release"}
+  {
+   "ports": "lp_we, lp_tag, state_read_add, state_read_rr, state_add_tag, state_add_src, state_add_rhs_acc, state_rr_tag, add_v, add_tag, add_src, add_rhs_acc, tx_inject, tx_forward, tx_tag, tx_dst, tx_result, tx_acc, tx_gather, tx_ttl, rx_slot, rx_kind, rx_src, rx_tag, rr_local, rr_local_tag",
+   "edges": -1,
+   "rule": "issue every command ONE edge before its v1 effect edge (lead 1); equivalently, issuer->effect latency +1 edge if the issuer cannot lead"
+  },
+  {
+   "ports": "state_read_tx, state_tx_tag, state_tx_acc",
+   "edges": -2,
+   "rule": "issue the tx-read group TWO edges before its v1 edge (= inject-4); the state lanes read at inject-3 (v1: inject-2)"
+  },
+  {
+   "rule": "legality: the tx tag's lane state must be stable from inject-3: local tx: lp write of the tag <= inject-4 (lp-write -> inject >= 4 edges, v1: 3); acc tx: acc write (add issue + LAT) of the tag != inject-3",
+   "edges": 1,
+   "cost": "+1 edge on the lp-write -> gather-inject chain only (pipelined, no throughput change; measured: ring all-gather bench F=224 timeline unchanged within the greedy schedule)"
+  },
+  {
+   "ports": "fault",
+   "edges": 1,
+   "rule": "sticky fault output flop: +1 edge (av-vs-acc_we check +2); observational only"
+  },
+  {
+   "ports": "rst_n",
+   "edges": 3,
+   "rule": "release through ot_rst_relay (2 sync + 1 tree); first command issue >= release + 3 - lead; rn_o resets the add lanes with the same release"
+  }
  ],
  "stop_parent_changes": "state-capture lanes and add lanes take their commands from the ctl's registered copies cmd_*_o (and rn_o) instead of the stop inputs; carry_write/pin0_q/pin1_q/acc_we/acc_tag are dedicated flops. ot_hgi_coll_ring_ag_n is the wires-only stop. Parents (HBM-COLLQ v8g/v8x, PL-COLLQ hcoll_q2_lp) swap ot_hgi_coll_ring_ag -> ot_hgi_coll_ring_ag_n and shift the ring command issue per above (ISA ring-A constants: +1 edge, gather tx-read: +2).",
  "proof": {
@@ -28,5 +45,6 @@
   "lockstep": "tb_hgi_coll_ring_ag_n_lock.sv: native stop vs v1 stop, dense random traffic on every port, 3 seeds x 6000 edges: every functional output equal at every edge, fault_native(t) == fault_v1(t-1)",
   "ring": "tb_hgi_coll_ring_ag_n.sv: 4 native stops, all-gather F=224/112 MODE 0/1 bit-exact at the compiled edges; 8 fault traces x 2 modes (incl. new trace 8: lp write at the lane read edge)",
   "mutants": "txlead, cw, hz, ttl, src, tag all REJECTED"
- }
+ },
+ "r2_port_split": "r2 (10-18): ctln ports rx_slot[1:0] -> rx_slot0 (cw) / rx_slot1 (ccw) and carry_write[1:0] -> carry_write0 / carry_write1 (N-face corners); same values and edges as n1, stop ot_hgi_coll_ring_ag_n ports unchanged. pin0_q/pin1_q copies are keep_hierarchy leaves ot_hgi_coll_ring_cp_ff (no edge change)."
 }

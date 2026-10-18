@@ -14,6 +14,11 @@
 //   * the state / add lanes take their commands from dedicated registered copies (cmd_*_o), at the v1 lane timing;
 //   * pin0_q / pin1_q / acc_we / acc_tag are dedicated output flops (same values as v1, no internal fanout);
 //   * carry_write is a flop computed one edge ahead from rx_slot (lead input) and the arriving ring word;
+//   r2 (10-18): pin0_q/pin1_q copies are ot_hgi_coll_ring_cp_ff leaves (keep_hierarchy): in n1 yosys opt_merge folded
+//     each copy into the core's pin_p register of the same D, so pin0_q/pin1_q again left from the shared stop register
+//     (CTS probe launch 286).  carry_write / rx_slot are split per ring direction (carry_write0/rx_slot0 = cw at the NW
+//     corner beside cw_i's kind bits, carry_write1/rx_slot1 = ccw at the NE corner) -- n1 capture 254 was rx_slot on
+//     the S face -> carry flop on the N face.  Same values, same edges as n1 (port split only; the stop _n is unchanged).
 //   * av (add lanes' valid_out) is pin-flopped; its check moves one edge later; fault is an output flop (+1 edge);
 //   * rst_n drives only ot_rst_relay (release +3 edges); rn_o resets the add lanes with the same release.
 // Ring ports cw_i/ccw_i/cw_o/ccw_o, lp_data, rr_*, ag_* keep their v1 absolute timing (hop = 2 edges).
@@ -43,14 +48,14 @@ module ot_hgi_coll_ring_ag_ctln #(
     input wire tx_result, tx_acc,
     input wire tx_gather,
     input wire [3:0] tx_ttl,
-    input wire [1:0] rx_slot,
+    input wire rx_slot0, rx_slot1,
     input wire [3:0] rx_kind, rx_src,
     input wire [5:0] rx_tag,
     input wire rr_local,
     input wire [2:0] rr_local_tag,
     // lane faces (state-capture lanes + add lanes)
-    output reg [279:0] pin0_q, pin1_q,
-    output reg [1:0] carry_write,
+    output wire [279:0] pin0_q, pin1_q,
+    output reg carry_write0, carry_write1,
     output wire acc_we,
     output wire [2:0] acc_tag,
     input wire [255:0] state_tx, acc_rr,
@@ -100,7 +105,7 @@ module ot_hgi_coll_ring_ag_ctln #(
         rd_tx_q<=rd_tx_l;tx_tag_rq<=tx_tag_l;tx_acc_rq<=tx_acc_l;
         add_v_q<=add_v;add_tag_q<=add_tag;add_src_q<=add_src;add_rhs_q<=add_rhs_acc;
         inj_q<=tx_inject;fwd_q<=tx_forward;txt_q<=tx_tag;dst_q<=tx_dst;res_q<=tx_result;txacc_q<=tx_acc;gath_q<=tx_gather;ttl_q<=tx_ttl;
-        rx_q<=rx_slot;kind_q<=rx_kind;src_q<=rx_src;rxtag_q<=rx_tag;
+        rx_q<={rx_slot1,rx_slot0};kind_q<=rx_kind;src_q<=rx_src;rxtag_q<=rx_tag;
         rrl_q<=rr_local;rrlt_q<=rr_local_tag;
         st_q<=state_tx;
         av_q<=av;
@@ -111,11 +116,18 @@ module ot_hgi_coll_ring_ag_ctln #(
         if(MUT_TXLEAD!=0)begin cmd_read_tx_o<=rd_tx_l;cmd_tx_tag_o<=tx_tag_l;cmd_tx_acc_o<=tx_acc_l;end
         else begin cmd_read_tx_o<=state_read_tx;cmd_tx_tag_o<=state_tx_tag;cmd_tx_acc_o<=state_tx_acc;end
         cmd_add_v_o<=add_v;
-        pin0_q<=cw_i;pin1_q<=ccw_i;
-        for(integer d=0;d<2;d=d+1)begin
-            if(MUT_CW!=0)carry_write[d]<=rx_q[d] && pin0_q[278:277]==1 && pin0_q[274:273]==qid_q;
-            else carry_write[d]<=rx_slot[d] && (d==0?cw_i[278:277]:ccw_i[278:277])==1 && (d==0?cw_i[274:273]:ccw_i[274:273])==qid_q;
+        if(MUT_CW!=0)begin
+            carry_write0<=rx_q[0] && pin0_q[278:277]==1 && pin0_q[274:273]==qid_q;
+            carry_write1<=rx_q[1] && pin1_q[278:277]==1 && pin1_q[274:273]==qid_q;
+        end else begin
+            carry_write0<=rx_slot0 && cw_i[278:277]==1 && cw_i[274:273]==qid_q;
+            carry_write1<=rx_slot1 && ccw_i[278:277]==1 && ccw_i[274:273]==qid_q;
         end
+    end
+    // ring pin-word copies: one keep_hierarchy leaf per bit (never merged with the core's pin_p register)
+    for(genvar b=0;b<280;b=b+1)begin:g_cp
+        ot_hgi_coll_ring_cp_ff u_p0(.clk(clk),.d(cw_i[b]),.q(pin0_q[b]));
+        ot_hgi_coll_ring_cp_ff u_p1(.clk(clk),.d(ccw_i[b]),.q(pin1_q[b]));
     end
     // acc write timeline (dedicated copy of the core's pv/pt shift: v1 acc_we/acc_tag values)
     (* keep = "true" *) reg [LAT-1:0] aw;
@@ -209,9 +221,9 @@ module ot_hgi_coll_ring_ag_n #(
         .state_add_src(state_add_src),.state_add_rhs_acc(state_add_rhs_acc),.state_tx_acc(state_tx_acc),
         .add_v(add_v),.add_tag(add_tag),.add_src(add_src),.add_rhs_acc(add_rhs_acc),
         .tx_inject(tx_inject),.tx_forward(tx_forward),.tx_tag(tx_tag),.tx_dst(tx_dst),.tx_result(tx_result),.tx_acc(tx_acc),
-        .tx_gather(tx_gather),.tx_ttl(tx_ttl),.rx_slot(rx_slot),.rx_kind(rx_kind),.rx_src(rx_src),.rx_tag(rx_tag),
+        .tx_gather(tx_gather),.tx_ttl(tx_ttl),.rx_slot0(rx_slot[0]),.rx_slot1(rx_slot[1]),.rx_kind(rx_kind),.rx_src(rx_src),.rx_tag(rx_tag),
         .rr_local(rr_local),.rr_local_tag(rr_local_tag),
-        .pin0_q(pin0),.pin1_q(pin1),.carry_write(carry_write),.acc_we(acc_we),.acc_tag(acc_tag),
+        .pin0_q(pin0),.pin1_q(pin1),.carry_write0(carry_write[0]),.carry_write1(carry_write[1]),.acc_we(acc_we),.acc_tag(acc_tag),
         .state_tx(state_tx),.acc_rr(acc_rr),.av(av),
         .cmd_lp_we_o(c_lp_we),.cmd_lp_tag_o(c_lp_tag),.cmd_read_add_o(c_rd_add),.cmd_read_tx_o(c_rd_tx),.cmd_read_rr_o(c_rd_rr),
         .cmd_add_tag_o(c_add_tag),.cmd_tx_tag_o(c_tx_tag),.cmd_rr_tag_o(c_rr_tag),.cmd_add_src_o(c_add_src),
@@ -234,5 +246,12 @@ module ot_hgi_coll_ring_ag_n #(
             .clk(SPLIT_CLOCKS?clk_add[l]:clk),.rst_n(rn),.valid_in(c_add_v),
             .a(aa[l*32+:32]),.b(rhs_add[l*32+:32]),.y(ay[l*32+:32]),.valid_out(av[l]));
     end
+endmodule
+
+// One ring-word copy flop (r2).  keep_hierarchy: opt_merge cannot fold it into another register with the same D (the
+// core's pin_p); not parameterised, so the module name survives elaboration.
+(* keep_hierarchy *)
+module ot_hgi_coll_ring_cp_ff(input wire clk, input wire d, output reg q);
+    always @(posedge clk) q<=d;
 endmodule
 `default_nettype wire
