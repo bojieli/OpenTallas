@@ -4013,6 +4013,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         print(f'relay collision diagnostic failed: {diagnostic_error}', file=sys.stderr)
                 raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
             add_rect(rr)
+    _lc_bids = {r_['bid'] for r_ in (m.get('land_cross') or {}).get('rows', ())}
     pad_done = {}
     pad_hop_centre = {}
     if tpads:
@@ -4050,7 +4051,30 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 # previous pad to Q (consecutive pads stay together; the walk ends next to Q)
                 fr = 1.0 / (npad - j + 1)
                 qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
-                sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None else None
+                sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None and bid not in _lc_bids else None
+                if sp is None and bid in _lc_bids:
+                    # Q-DIE12 LAND_CROSS: the landing station takes the free site that minimises its LONGER hop
+                    # (source -> station, station -> sink), not the site nearest the midpoint (first try: 17 hops > 405)
+                    best_ = None
+                    W_, H_ = w + v.SHAVE, h + v.SHAVE
+                    for ring in range(0, int(_os.environ.get('OT_SPLIT_LAND_CROSS_RINGS', '150'))):
+                        st = ring * 4 * v.GY
+                        if best_ is not None and st > best_[0]:
+                            break
+                        cands = [(0, 0)] if ring == 0 else \
+                            [(dx, dy) for dx in (-st, st) for dy in [i * 4 * v.GY for i in range(-ring, ring + 1)]] + \
+                            [(dx, dy) for dy in (-st, st) for dx in [i * 4 * v.GY for i in range(-ring + 1, ring)]]
+                        for dx, dy in cands:
+                            x0, y0 = v.dn(qx - W_ / 2 + dx, v.GX), v.dn(qy - H_ / 2 + dy, v.GY)
+                            cx_, cy_ = x0 + W_ / 2, y0 + H_ / 2
+                            sc_ = max(abs(cx_ - Q[0]) + abs(cy_ - Q[1]), abs(cx_ - x1) + abs(cy_ - y1))
+                            if best_ is not None and sc_ >= best_[0]:
+                                continue
+                            if in_field(cx_, cy_) and corr_of(cx_) is None and not contains_frame(legal_row_gaps, y0, H_):
+                                continue
+                            if y0 >= g['y0'] and y0 + H_ <= die_top and free((x0, y0, x0 + W_, y0 + H_)):
+                                best_ = (sc_, (x0, y0))
+                    sp = best_[1] if best_ else None
                 if sp is None and cc is None and not sink_in_field:
                     sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, None)
                 if sp is None and cc is None and sink_in_field:
