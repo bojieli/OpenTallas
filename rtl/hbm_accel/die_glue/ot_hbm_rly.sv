@@ -5,9 +5,15 @@
 // several masters side by side along the flow.
 // Function: r <= i on posedge ck, asynchronous active-low clear rs.  Physical contract: scalar ck / rs, M5 cap, the
 // data flop is the only logic, flops at the pins, minimum output delay built at the output pin by the kit (outhold).
+// RS_RELAY (NATIVE-FIX3 2026-10-18, default 0 = unchanged): 1 puts the registered reset relay (rtl/lib/ot_rst_relay.sv)
+// on rs at ANY width, so the rs pin drives 3 relay flops beside its face instead of the async clear of all W stage
+// flops (hbfd_rly_136 NS/SN routed native capture 194-211 ps on rs, NATIVE-3).  Cost: the stage release is 3 clock
+// edges later than rs (the > 256 b classes already behave this way); assert stays asynchronous and immediate.
+// OT_HBM_RLY_MUT_NORR (bench only): the relay is bypassed (rn = rs), the release-latency check must FAIL.
 `default_nettype none
 module ot_hbm_rly #(
-    parameter int W = 136
+    parameter int W = 136,
+    parameter int RS_RELAY = 0
 ) (
     input  wire         ck,
     input  wire         rs,
@@ -19,8 +25,12 @@ module ot_hbm_rly #(
     localparam int G = (W + 255) / 256;
     wire [G-1:0] rn;
     generate
-        if (W > 256) begin : g_rr
+        if (W > 256 || RS_RELAY != 0) begin : g_rr
+`ifdef OT_HBM_RLY_MUT_NORR
+            assign rn = {G{rs}};   // bench mutant: reset relay bypassed
+`else
             ot_rst_relay #(.REGIONS(G), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst (.clk(ck), .rst_n_in(rs), .rst_n(rn));
+`endif
         end else begin : g_nr
             assign rn = rs;
         end
