@@ -25,6 +25,10 @@ VIEW = "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
 SRC = "rtl/hbm_accel/generic/adapters/static_su/programme/"
 MH, LAT = 41.04, 43.2
 BENCH = "tools/hbm_static/su_programme_pgcol_run.sh"
+RELAY = "rtl/lib/ot_rst_relay.sv"
+# NATIVE-FIX3/pgs 10-18: committed mutant FAIL witnesses (fleet run of the bench at the fix commit)
+WIT = "results/rtl/nf3_pgs_1018/bench"
+AUDIT = "results/arch/native_3_1017/native_3_audit.json"
 
 
 def bench(name, only=None):
@@ -34,12 +38,14 @@ def bench(name, only=None):
                  min_count_regex="SU_PROGRAMME_PGCOL PASS edges=(\\d+)")
     else:
         b.update(cmd=f"OUT={{RUN}}/bench/{only} ONLY={only} bash {BENCH}", expect="fail",
-                 fail_regex="SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]")
+                 fail_regex="SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]", fail_witness=f"{WIT}/run_{only}_q0.log")
     return b
 
 
 BENCHES = [bench("pgcol_equiv_7111_q0123"), bench("pgcol_mut_cfg", "cfg"), bench("pgcol_mut_phase", "phase"),
-           bench("pgcol_mut_cfgany", "cfgany"), bench("pgcol_mut_stale", "stale")]
+           bench("pgcol_mut_cfgany", "cfgany"), bench("pgcol_mut_stale", "stale"),
+           bench("pgcol_mut_rstrelay", "rstrelay"), bench("pgcol_mut_cpin", "cpin"), bench("pgcol_mut_oreg", "oreg"),
+           bench("pgcol_mut_freg", "freg")]
 
 
 def stack(kind, banks, x, orient, y0=LAT):
@@ -67,7 +73,7 @@ def leaf(s4, name, top, w, h, macros, why):
     s = json.loads(json.dumps(s4))
     s["name"] = name
     s["top"] = top
-    s["sources"] = [SRC + "ot_hbm_su_programme.sv", SRC + "ot_hbm_su_programme_pgcol.sv",
+    s["sources"] = [RELAY, SRC + "ot_hbm_su_programme.sv", SRC + "ot_hbm_su_programme_pgcol.sv",
                     VIEW + "/ot_sram_1r1w_128x256_m1_r2c2_bb.v"]
     s["outline"] = {"w": w, "h": h, "exact": True}
     s["macros"] = macros
@@ -86,12 +92,12 @@ def leaf(s4, name, top, w, h, macros, why):
     s["route"] = dict(s["route"], threads=8, peak_ram_gb=24, pin_group_max=1,
                       pin_balance={"group_max": 1, "h": "M4", "v": "M3 M5"})
     s["pin_regs"] = {"enable": False, "reason": (
-        "ot_hbm_su_programme_pgcol registers start/length at the pin (the pslice STAGES 1 stage); cfg_* arrive from the "
-        "head leaf's registered configuration stage (= the pslice c_* stage) and land on the PIPE 2 per-bank write "
-        "enable / config copy registers; every output is a register (command, busy_q, valid, done, edge_index, "
-        "fault_d). A kit flop stage would add an edge the start-advance contract (DEPTH+4) does not price.")}
+        "ot_hbm_su_programme_pgcol registers every input in RTL: start/length at the pin (the pslice STAGES 1 stage), "
+        "cfg_we/cfg_any/cfg_bank/cfg_row/cfg_data on the CPIN 1 pin stage (NATIVE-FIX3 10-18, +1 configuration edge), "
+        "rst_n only into ot_rst_relay; every output is a register (command, busy_q, valid, done, edge_index, fault_d). "
+        "A kit flop stage would add an edge the start-advance contract (DEPTH+4) does not price.")}
     s["structural_change"] = why
-    s["job"] = dict(s["job"], tag="r5", purpose=f"SU programme cluster leaf {top} (HBM-SU r5 per-column split)",
+    s["job"] = dict(s["job"], tag="r5", branch="claude/nf3-pgs-1018", owner="Claude:NATIVE-FIX3/pgs", purpose=f"SU programme cluster leaf {top} (HBM-SU r5 per-column split)",
                     views_to=f"physical/ref_tile/{name}/views", record_to=f"results/rtl/ref_tile/{name}",
                     benches=BENCHES)
     return s
@@ -106,25 +112,54 @@ WHY = ("SUCCESSOR of the flat per-quarter SU programme tile (hbm_su_pslice_r3_10
        "results/rtl/hbm_su_lane_1017/r5_pgcol). Start advance unchanged DEPTH+4. ")
 
 
+NF3 = (" NATIVE-FIX3/pgs 10-18 (NATIVE-3 audit, claude/native-3-1017 73adc87ea, lanes/NATIVE-3.md): pin registers in "
+       "RTL -- leaf: ot_rst_relay at rst_n (release +3 edges) and a pin stage on every cfg input (CPIN 1); head: export "
+       "registers on every output (o_we decoded into one flop per column, OREG 1) and l_fault pin registers (FREG 1, "
+       "leaves report fault FADV 2 edges early so the cluster fault edge is unchanged). Cluster configuration latency "
+       "+2 edges (compile-scheduled: the host configures while idle, 2 edges earlier; a write on pin edge e pairs with a "
+       "start on edge e+2 for the reject rule); start advance DEPTH+4, command/valid/done/busy/fault edges unchanged. "
+       "Bench: lockstep vs r4 on all 4 quarters PASS with the cluster writes driven 2 edges ahead + reset-release check "
+       "(3 edges); mutants cfg/phase/cfgany/stale/rstrelay/cpin/oreg/freg FAIL (results/rtl/nf3_pgs_1018).")
+
+
 def main():
     s4 = json.loads(R4.read_text())
     ms = stack("ix", range(4), LAT, "MY") + stack("dt", range(3), 4 * LAT, "R0")
     s = leaf(s4, "hbm_su_pgcol_s_r5", "ot_hbm_su_programme_pgcol_s", 302.4, 259.2, ms, WHY + (
         "THIS leaf: S master (7 per quarter): 4 index + 3 dictionary SRAMs, 302.4 x 259.2, index stack MY x 43.2 and "
-        "dictionary stack R0 x 172.8 facing one 34.8 um channel, S band = 256 command flops, ~1.3k flops one root."))
+        "dictionary stack R0 x 172.8 facing one 34.8 um channel, S band = 256 command flops, ~1.3k flops one root.") + NF3)
+    s["reroute_reason"] = {
+        "kind": "pin_register", "source": AUDIT, "cell": "ot_hbm_su_programme_pgcol_s", "capture_ps": 414.2,
+        "launch_ps": 109.2, "closed_job": "hbm_su_pgcol_s_r5-r5-9e33ce295",
+        "why": ("NATIVE-3 audit (claude/native-3-1017 73adc87ea, lanes/NATIVE-3.md): capture rst_n 414.2, cfg_we 390.6, "
+                "cfg_any 388.4, cfg_bank[0..4] 284.4..303.9 ps > 190 (R 271.4; spread TT 50.3 / FF 46.7 OK) -> "
+                "ot_rst_relay at rst_n + pin registers on cfg_we/cfg_any/cfg_bank/cfg_row/cfg_data (native_capture class; "
+                "RTL changed, so kind pin_register)"),
+        "fix": ("RTL pin registers: rst_n drives only ot_rst_relay (2 sync + 1 relay, 2 regions); every cfg input lands "
+                "on a pin flop (CPIN 1, +1 configuration edge, compile-scheduled); head export stage +1")}
     (OUT / "hbm_su_pgcol_s_r5.json").write_text(json.dumps(s, indent=1) + "\n")
     ml = (stack("dt", range(5), LAT, "MY") + stack("ix", range(4), LAT, "MY", LAT + 5 * MH)
           + stack("dt", range(5, 13), 4 * LAT, "R0"))
     s = leaf(s4, "hbm_su_pgcol_l_r5", "ot_hbm_su_programme_pgcol_l", 302.4, 453.6, ml, WHY + (
         "THIS leaf: L master (3 per quarter): 4 index + 13 dictionary SRAMs, 302.4 x 453.6, MY stack dictionary 0..4 + "
-        "index 0..3, R0 stack dictionary 5..12, one 34.8 um channel, N cfg band 41 um, S band = 256 command flops, ~3.3k flops one root."))
+        "index 0..3, R0 stack dictionary 5..12, one 34.8 um channel, N cfg band 41 um, S band = 256 command flops, ~3.3k flops one root.") + NF3)
     # gate e8c5e2cf6: GPL-0305 RePlAce diverged (3.2k flops in 41k um2 placeable at PD 0.5) -> lower target density
     s["route"]["pd"] = 0.3
     (OUT / "hbm_su_pgcol_l_r5.json").write_text(json.dumps(s, indent=1) + "\n")
     h = leaf(s4, "hbm_su_pghead_r5", "ot_hbm_su_programme_pghead", 86.4, 86.4, [], WHY + (
         "THIS leaf: head (1 per quarter): cfg pin stage + column decode (bank[15:5] = column) + sticky fault OR of the "
-        "10 leaves + leaf-valid lockstep check; pin-bound register tile, inputs W / outputs E (placeholder faces)."))
-    h["sources"] = [SRC + "ot_hbm_su_programme_pgcol.sv"]
+        "10 leaves + leaf-valid lockstep check; pin-bound register tile, inputs W / outputs E (placeholder faces).") + NF3)
+    h["reroute_reason"] = {
+        "kind": "pin_register", "source": AUDIT, "cell": "ot_hbm_su_programme_pghead", "launch_ps": 225.6,
+        "capture_ps": 204.5, "closed_job": "hbm_su_pghead_r5-r5-114508f65",
+        "why": ("NATIVE-3 audit (claude/native-3-1017 73adc87ea, lanes/NATIVE-3.md): launch o_we[0..9] 221.1..225.6 ps > "
+                "220 and capture l_fault[1,4,5,6] 199.3..204.5 ps > 190 (R 101.8); relative re-audit vs pgcol_s / lgtap "
+                "fails (launch and capture together) -> o_we from export flops, l_fault into pin flops (native_launch "
+                "class; RTL changed, so kind pin_register)"),
+        "fix": ("RTL: every output leaves from an export register (o_we decoded into one flop per column, OREG 1; "
+                "+1 configuration edge); l_fault lands on pin registers (FREG 1; leaves FADV 2 keep the cluster fault "
+                "edge); head out-of-range fault delayed CLAT 2")}
+    h["sources"] = [RELAY, SRC + "ot_hbm_su_programme_pgcol.sv"]
     h["pins"] = {"W": ["clk", "rst_n", "cfg_we", "cfg_bank", "cfg_row", "cfg_data", "l_fault", "l_valid"],
                  "E": ["o_we", "o_any", "o_bank", "o_row", "o_data", "fault"]}
     h["pin_ranges"] = dict(ranges(86.4, [("cfg_data", 256), ("clk", 1), ("cfg_bank", 16), ("cfg_row", 7),
@@ -135,9 +170,9 @@ def main():
     h.pop("macro_halo_um", None)
     h["pin_regs"] = {"enable": False, "reason": (
         "ot_hbm_su_programme_pghead is itself the configuration pin stage of the cluster (= the pslice c_* stage): "
-        "cfg inputs land on c_we/c_bank/o_row/o_data registers, l_fault on the fault OR register, l_valid on the sticky "
-        "check; outputs are register outputs except o_we/o_any/o_bank (one 11-bit compare after c_bank/c_we). A kit flop "
-        "stage would add an edge the leaf timing contract does not price.")}
+        "cfg inputs land on c_we/c_bank/c_row/c_data registers, l_fault on FREG 1 pin registers, l_valid on the sticky "
+        "check; every output leaves from an OREG 1 export register (o_we decoded into one flop per column) or the "
+        "fault register (NATIVE-FIX3 10-18). A kit flop stage would add an edge the leaf timing contract does not price.")}
     (OUT / "hbm_su_pghead_r5.json").write_text(json.dumps(h, indent=1) + "\n")
     for n in ("s", "l"):
         print(n, len(json.loads((OUT / f"hbm_su_pgcol_{n}_r5.json").read_text())["macros"]), "macros")

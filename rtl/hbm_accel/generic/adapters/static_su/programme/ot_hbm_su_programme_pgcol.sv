@@ -17,10 +17,23 @@
 // -> leaf producer, as before. fault: leaf reports FADV 1 edge early, head OR register restores the r4 edge.
 // Config bank numbering inside a quarter: 32 x column + local bank (local 0..3 index, 4.. dictionary), so the root's
 // per-part range is 32 x columns (SMACROS 320 for 10 columns).
+// NATIVE-FIX3/pgs 2026-10-18 (NATIVE-3 audit, claude/native-3-1017 73adc87ea: pgcol_s capture rst_n 414.2 / cfg_we 390.6
+// / cfg_any 388.4 / cfg_bank 284..304 ps > 190; pghead launch o_we 221..226 > 220, capture l_fault 199..205 > 190):
+//   * leaf (CPIN 1): every configuration pin (cfg_we, cfg_any, cfg_bank, cfg_row, cfg_data) lands on a pin register;
+//     (RRLY 1) rst_n drives only an ot_rst_relay (release +3 edges: SYNC 2 + TREE 1, assert async/immediate).
+//   * head (OREG 1): o_we/o_any/o_bank/o_row/o_data leave from export registers (o_we decoded into its own flop per
+//     column); (FREG 1) l_fault lands on pin registers and the leaves report fault FADV 2 edges early (was 1), so the
+//     cluster fault edge is unchanged; the head's own out-of-range fault is delayed CLAT 2 edges to stay on it.
+//   Cluster timing: configuration pin -> leaf producer is +2 edges (head export +1, leaf pin +1): the host's
+//   configuration (load-time, while idle) is issued 2 edges earlier / the start comes >= 2 edges later after the last
+//   write; the write-on-start-edge rejection pairs a write on pin edge e with a start on pin edge e+2. Start advance
+//   (DEPTH+4), command/valid/done/edge_index/busy/fault edges unchanged. Leaf reset release is 3 edges after the port:
+//   the host waits >= 3 edges after reset release before configuring or starting.
 
 // one command column: packed index (INDEX_PACK 16) + DB dictionary banks + 256 command bits
 module ot_hbm_su_programme_pgcol #(
-  parameter integer DB=3, EDGES=7111, CFGR=1, MUT=0, PMUT=0
+  parameter integer DB=3, EDGES=7111, CFGR=1, MUT=0, PMUT=0,
+  parameter integer CPIN=0, RRLY=0, FADV=1   // NATIVE-FIX3 (S/L masters: 1, 1, 2); defaults = the r5 leaf
 )(input logic clk, rst_n,
   input logic cfg_we, cfg_any, input logic [4:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
@@ -28,21 +41,39 @@ module ot_hbm_su_programme_pgcol #(
   localparam integer IB=(EDGES+2047)/2048;
   localparam integer MAC=IB+DB;
   initial if(MAC>31) $fatal(1,"pgcol: local bank space is 5 bits (31 = reject)");
+  // reset: RRLY 1 = the port drives only the relay; region 0 = pin stages, region 1 = the producer
+  wire [1:0] rl;
+  generate if(RRLY!=0) begin:g_rr
+    ot_rst_relay #(.REGIONS(2),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rl));
+  end else begin:g_nrr
+    assign rl={2{rst_n}};
+  end endgenerate
+  wire rst_c=rl[0];
+  // configuration pin stage (CPIN 1, +1 configuration edge)
+  logic q_we, q_any; logic [4:0] q_bank; logic [6:0] q_row; logic [255:0] q_data;
+  generate if(CPIN!=0) begin:g_cp
+    always_ff @(posedge clk) begin
+      if(!rst_c) begin q_we<=0; q_any<=0; end else begin q_we<=cfg_we; q_any<=cfg_any; end
+      q_bank<=cfg_bank; q_row<=cfg_row; q_data<=cfg_data;
+    end
+  end else begin:g_ncp
+    assign q_we=cfg_we; assign q_any=cfg_any; assign q_bank=cfg_bank; assign q_row=cfg_row; assign q_data=cfg_data;
+  end endgenerate
   // start/length pin stage (the pslice STAGES 1 stage); PMUT 1 (bench phase mutant): one extra start stage
   logic [1:0] s_q; logic [31:0] l_q;
   always_ff @(posedge clk) begin
-    if(!rst_n) s_q<='0; else s_q<={s_q[0],start};
+    if(!rst_c) s_q<='0; else s_q<={s_q[0],start};
     l_q<={l_q[15:0],length};
   end
   wire s_in=(PMUT==1)?s_q[1]:s_q[0];
   wire [15:0] l_in=(PMUT==1)?l_q[31:16]:l_q[15:0];
   // a configuration write to ANY column on the edge start is accepted rejects the start in every column (the r4
   // single-producer rule): present it to this producer as an out-of-range write (sets fault, writes nothing)
-  wire p_we=cfg_we | (cfg_any & s_in);
-  wire [15:0] p_bank=cfg_we ? {11'd0,cfg_bank} : 16'hffff;
+  wire p_we=q_we | (q_any & s_in);
+  wire [15:0] p_bank=q_we ? {11'd0,q_bank} : 16'hffff;
   ot_hbm_su_programme #(.LINE_BITS(256),.EDGES(EDGES),.COLS(1),.INDEX_PACK(16),.DICT_BANKS(DB),.MACROS(MAC),
-    .PIPE(2),.CFGR(CFGR),.FADV(1),.MUT(MUT)) u_p(
-    .clk(clk),.rst_n(rst_n),.clk_macro({MAC{clk}}),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
+    .PIPE(2),.CFGR(CFGR),.FADV(FADV),.MUT(MUT)) u_p(
+    .clk(clk),.rst_n(rl[1]),.clk_macro({MAC{clk}}),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(q_row),.cfg_data(q_data),
     .start(s_in),.length(l_in),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),
     .command(command));
 endmodule
@@ -53,44 +84,72 @@ module ot_hbm_su_programme_pgcol_s(
   input logic cfg_we, cfg_any, input logic [4:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
   output logic busy, valid, done, fault, output logic [15:0] edge_index, output logic [255:0] command);
-  ot_hbm_su_programme_pgcol #(.DB(3),.CFGR(1)) u_c(.*);
+  ot_hbm_su_programme_pgcol #(.DB(3),.CFGR(1),.CPIN(1),.RRLY(1),.FADV(2)) u_c(.*);
 endmodule
 module ot_hbm_su_programme_pgcol_l(
   input logic clk, rst_n,
   input logic cfg_we, cfg_any, input logic [4:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
   output logic busy, valid, done, fault, output logic [15:0] edge_index, output logic [255:0] command);
-  ot_hbm_su_programme_pgcol #(.DB(13),.CFGR(2)) u_c(.*);
+  ot_hbm_su_programme_pgcol #(.DB(13),.CFGR(2),.CPIN(1),.RRLY(1),.FADV(2)) u_c(.*);
 endmodule
 
 // head: configuration pin stage + column decode, sticky fault OR (+ leaf valid lockstep check)
+// NATIVE-FIX3 10-18: OREG 1 = export registers on every output (o_we decoded into its own flop), FREG 1 = l_fault pin
+// registers (leaves FADV 2), CLAT = configuration edges from the head's pin stage to the leaf producer beyond the
+// first (OREG + leaf CPIN = 2) -- the head's own out-of-range fault is delayed by it. OREG 0 / FREG 0 / CLAT 0 = r5.
 module ot_hbm_su_programme_pghead #(
-  parameter integer NC=10, XP=4, MUT=0
+  parameter integer NC=10, XP=4, MUT=0, OREG=1, FREG=1, CLAT=2
 )(input logic clk, rst_n,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic [NC-1:0] l_fault, l_valid,
   output logic [NC-1:0] o_we, output logic o_any, output logic [4:0] o_bank, output logic [6:0] o_row,
   output logic [255:0] o_data, output logic fault);
-  logic c_we; logic [15:0] c_bank;
+  logic c_we; logic [15:0] c_bank; logic [6:0] c_row; logic [255:0] c_data;
   always_ff @(posedge clk) begin
     if(!rst_n) c_we<=0; else c_we<=cfg_we;
-    c_bank<=cfg_bank; o_row<=cfg_row; o_data<=cfg_data;
+    c_bank<=cfg_bank; c_row<=cfg_row; c_data<=cfg_data;
   end
+  wire [NC-1:0] d_we;
   genvar c;
   for(c=0;c<NC;c=c+1) begin:dec
-    assign o_we[c]=c_we && c_bank[15:5]==11'(c);
+    assign d_we[c]=c_we && c_bank[15:5]==11'(c);
   end
   // MUT 1 (bench): cfg_any not driven (a write to another column on the start edge no longer rejects the start)
-  assign o_any=(MUT==1)?1'b0:c_we;
-  assign o_bank=c_bank[4:0];
+  wire d_any=(MUT==1)?1'b0:c_we;
+  wire d_oor=c_we && c_bank[15:5]>=11'(NC);
+  generate if(OREG!=0) begin:g_or
+    always_ff @(posedge clk) begin
+      if(!rst_n) begin o_we<='0; o_any<=0; end else begin o_we<=d_we; o_any<=d_any; end
+      o_bank<=c_bank[4:0]; o_row<=c_row; o_data<=c_data;
+    end
+  end else begin:g_nor
+    assign o_we=d_we; assign o_any=d_any; assign o_bank=c_bank[4:0]; assign o_row=c_row; assign o_data=c_data;
+  end endgenerate
+  // out-of-range term delayed CLAT edges (it lands with the leaves' view of the write)
+  wire oor;
+  generate if(CLAT>0) begin:g_cl
+    logic [CLAT-1:0] oor_d;
+    always_ff @(posedge clk) if(!rst_n) oor_d<='0; else oor_d<={oor_d,d_oor};
+    assign oor=oor_d[CLAT-1];
+  end else begin:g_ncl
+    assign oor=d_oor;
+  end endgenerate
+  // leaf fault pin registers (FREG 1)
+  logic [NC-1:0] lf;
+  generate if(FREG!=0) begin:g_fr
+    always_ff @(posedge clk) if(!rst_n) lf<='0; else lf<=l_fault;
+  end else begin:g_nfr
+    assign lf=l_fault;
+  end endgenerate
   // own sticky fault: write to no column (as the r4 producer's bank >= capacity), or leaf valids out of lockstep;
-  // delayed XP-1 edges so it lands on the r4 producer's fault edge; leaf faults arrive FADV 1 early -> OR register
+  // delayed XP-1 edges so it lands on the r4 producer's fault edge; leaf faults arrive FADV (1 + FREG) early -> OR reg
   logic hf; logic [XP-2:0] hf_d;
   always_ff @(posedge clk) if(!rst_n) begin hf<=0; hf_d<='0; fault<=0; end
     else begin
-      if((c_we && c_bank[15:5]>=11'(NC)) || (|(l_valid ^ {NC{l_valid[0]}}))) hf<=1;
+      if(oor || (|(l_valid ^ {NC{l_valid[0]}}))) hf<=1;
       hf_d<={hf_d,hf};
-      fault<=hf_d[XP-2] | (|l_fault);
+      fault<=hf_d[XP-2] | (|lf);
     end
 endmodule
 
@@ -100,13 +159,15 @@ module ot_hbm_su_programme_pslice_c5 #(
   parameter integer SB=2422, NC=(SB+255)/256,
   parameter [32*NC-1:0] DICT_CAP={32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3},
   parameter integer MUT=0, MUT_COL=1
+  // MUT (bench) 4: leaf reset relay bypassed; 5: leaf configuration pin stage dropped; 6: head export registers
+  // dropped (o_we combinational); 7: head l_fault pin registers dropped
 )(input logic clk, rst_n,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
   output logic busy, valid, done, fault, output logic [15:0] edge_index, output logic [SB-1:0] command);
   wire [NC-1:0] we, l_busy, l_valid, l_done, l_fault; wire any; wire [4:0] bank; wire [6:0] row; wire [255:0] data;
   wire [16*NC-1:0] l_edge; wire [256*NC-1:0] cmd;
-  ot_hbm_su_programme_pghead #(.NC(NC),.MUT(MUT==2)) u_h(.clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_bank(cfg_bank),
+  ot_hbm_su_programme_pghead #(.NC(NC),.MUT(MUT==2),.OREG(MUT!=6),.FREG(MUT!=7),.CLAT(2)) u_h(.clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_bank(cfg_bank),
     .cfg_row(cfg_row),.cfg_data(cfg_data),.l_fault(l_fault),.l_valid(l_valid),.o_we(we),.o_any(any),.o_bank(bank),
     .o_row(row),.o_data(data),.fault(fault));
   genvar c;
@@ -114,7 +175,9 @@ module ot_hbm_su_programme_pslice_c5 #(
     localparam integer CAP=DICT_CAP[32*c+:32];
     initial if(CAP>13) $fatal(1,"pslice_c5: column dictionary over the L leaf (13 banks)");
     // MUT 1: column MUT_COL one start edge late (phase); MUT 3: that column's final dictionary mux on the live hit
+    // CPIN/RRLY/FADV = the S/L leaf masters' values
     ot_hbm_su_programme_pgcol #(.DB((CAP<=3)?3:13),.CFGR((CAP<=3)?1:2),.PMUT(MUT==1 && c==MUT_COL),
+      .CPIN(MUT!=5),.RRLY(MUT!=4),.FADV(2),
       .MUT((MUT==3 && c==MUT_COL)?1:0)) u_c(
       .clk(clk),.rst_n(rst_n),.cfg_we(we[c]),.cfg_any(any),.cfg_bank(bank),.cfg_row(row),.cfg_data(data),
       .start(start),.length(length),.busy(l_busy[c]),.valid(l_valid[c]),.done(l_done[c]),.fault(l_fault[c]),

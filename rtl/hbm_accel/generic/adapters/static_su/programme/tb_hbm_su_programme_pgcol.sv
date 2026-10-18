@@ -9,11 +9,18 @@
 // Mutants (must FAIL): +MUT_CFG (config_mut.mem: column 3 index one edge off = PC offset, column 2 dictionary word
 // flipped), -GMUT=1 (column MUT_COL start one edge late = phase), -GMUT=2 (head cfg_any not driven), -GMUT=3 (column
 // MUT_COL final dictionary mux on the live hit = stale select).
+// NATIVE-FIX3/pgs 2026-10-18: the cluster's configuration path is CL=2 edges longer than the r4 producer's (head export
+// register + leaf pin register): every directed cluster write is driven CL edges before the reference write (the host
+// issues configuration 2 edges earlier); the leaves' reset is released RREL=3 edges after the port (ot_rst_relay), checked
+// on every reset; do_reset waits 8 edges. New mutants: -GMUT=4 (leaf reset relay bypassed: release check), -GMUT=5 (leaf
+// cfg pin stage dropped), -GMUT=6 (head export registers dropped), -GMUT=7 (head l_fault pin registers dropped): the
+// fault cases land 1 edge early -> lockstep mismatch.
 module tb_hbm_su_programme_pgcol;
 `include "ref/programme_params.svh"
 `include "cols_params.svh"
 localparam integer B=CL_SB, N=CL_EDGES, WM=REF_WRITES, WP=CL_WRITES;
 parameter integer MUT=0;
+localparam integer CL=2, RREL=3;
 logic clk=0; always #5 clk=~clk;
 logic rst_n=0;
 logic m_we=0, p_we=0, start=0;
@@ -50,8 +57,20 @@ task automatic execute;
  @(negedge clk); start=1; tick(); @(negedge clk); start=0;
  for(integer e=0;e<N+10;e=e+1) tick();
 endtask
+// leaf reset release: edges from the port release until column 0 / MUT_COL column leave reset (region 0 and 1)
+task automatic rel_check;
+ integer r0, r1;
+ r0=-1; r1=-1;
+ for(integer k=1;k<=8;k=k+1) begin
+   tick();
+   if(r0<0 && u_cl.g_c[0].u_c.rl===2'b11) r0=k;
+   if(r1<0 && u_cl.g_c[1].u_c.rl===2'b11) r1=k;
+ end
+ if(r0!=RREL || r1!=RREL) begin mism=mism+1;
+   $display("SU_PROGRAMME_PGCOL reset release col0=%0d col1=%0d edges (expected %0d)",r0,r1,RREL); end
+endtask
 task automatic do_reset;
- @(negedge clk); rst_n=0; tick(); tick(); @(negedge clk); rst_n=1; tick(); tick();
+ @(negedge clk); rst_n=0; tick(); tick(); @(negedge clk); rst_n=1; rel_check();
 endtask
 integer f_before;
 initial begin
@@ -60,7 +79,7 @@ initial begin
  $readmemh({dir,"/ref/config.mem"},m_cfg);
  if($test$plusargs("MUT_CFG")) $readmemh({dir,"/config_mut.mem"},p_cfg); else $readmemh({dir,"/config.mem"},p_cfg);
  $readmemh({dir,"/expected.mem"},golden);
- tick(); @(negedge clk); rst_n=1;
+ tick(); @(negedge clk); rst_n=1; rel_check(); @(negedge clk);
  for(integer i=0;i<WM;i=i+1) begin
    m_we=1; m_bank=m_cfg[i][279:264]; m_row=m_cfg[i][262:256]; m_data=m_cfg[i][255:0]; tick(); @(negedge clk);
  end
@@ -68,29 +87,34 @@ initial begin
  for(integer i=0;i<WP;i=i+1) begin
    p_we=1; p_bank=p_cfg[i][279:264]; p_row=p_cfg[i][262:256]; p_data=p_cfg[i][255:0]; tick(); @(negedge clk);
  end
- p_we=0; for(integer i=0;i<4;i=i+1) tick();
+ p_we=0; for(integer i=0;i<4+CL;i=i+1) tick();
  checked=0;
  execute(); execute();
  if(m_fault || p_fault) begin mism=mism+1; $display("SU_PROGRAMME_PGCOL unexpected fault m=%b p=%b",m_fault,p_fault); end
  if(active!=2*N) begin mism=mism+1; $display("SU_PROGRAMME_PGCOL active=%0d of %0d",active,2*N); end
  // (c) write while busy (rejected, sticky fault on the same edge): ref bank 0 / cluster column 0 bank 0
  @(negedge clk); start=1; tick(); @(negedge clk); start=0;
- for(integer e=0;e<100;e=e+1) tick();
- @(negedge clk); m_we=1; m_bank=0; m_row=5; m_data='1; p_we=1; p_bank=0; p_row=5; p_data='1; tick();
- @(negedge clk); m_we=0; p_we=0; for(integer e=0;e<N;e=e+1) tick();
+ for(integer e=0;e<100-CL;e=e+1) tick();
+ @(negedge clk); p_we=1; p_bank=0; p_row=5; p_data='1; tick();
+ @(negedge clk); p_we=0; for(integer e=1;e<CL;e=e+1) tick();
+ @(negedge clk); m_we=1; m_bank=0; m_row=5; m_data='1; tick();
+ @(negedge clk); m_we=0; for(integer e=0;e<N;e=e+1) tick();
  f_before=faults_seen; if(f_before==0) begin mism=mism+1; $display("SU_PROGRAMME_PGCOL case c: no fault"); end
  // (a) write on the start edge: start rejected everywhere; ref bank 1 / cluster column 3 bank 0
  do_reset();
- @(negedge clk); start=1; m_we=1; m_bank=1; m_row=0; m_data=m_cfg[128][255:0];
-   p_we=1; p_bank=16'(32*3); p_row=0; p_data=p_cfg[0][255:0]; tick();
- @(negedge clk); start=0; m_we=0; p_we=0; for(integer e=0;e<40;e=e+1) tick();
+ @(negedge clk); p_we=1; p_bank=16'(32*3); p_row=0; p_data=p_cfg[0][255:0]; tick();
+ @(negedge clk); p_we=0; for(integer e=1;e<CL;e=e+1) tick();
+ @(negedge clk); start=1; m_we=1; m_bank=1; m_row=0; m_data=m_cfg[128][255:0]; tick();
+ @(negedge clk); start=0; m_we=0; for(integer e=0;e<40;e=e+1) tick();
  if(faults_seen==f_before) begin mism=mism+1; $display("SU_PROGRAMME_PGCOL case a: no fault"); end
  if(m_busy || p_busy) begin mism=mism+1; $display("SU_PROGRAMME_PGCOL case a: busy"); end
  f_before=faults_seen;
  // (b) write to no column (out of range)
  do_reset();
- @(negedge clk); m_we=1; m_bank=16'hffff; p_we=1; p_bank=16'hffff; tick();
- @(negedge clk); m_we=0; p_we=0; for(integer e=0;e<40;e=e+1) tick();
+ @(negedge clk); p_we=1; p_bank=16'hffff; tick();
+ @(negedge clk); p_we=0; for(integer e=1;e<CL;e=e+1) tick();
+ @(negedge clk); m_we=1; m_bank=16'hffff; tick();
+ @(negedge clk); m_we=0; for(integer e=0;e<40;e=e+1) tick();
  if(faults_seen==f_before) begin mism=mism+1; $display("SU_PROGRAMME_PGCOL case b: no fault"); end
  if(mism!=0) $fatal(1,"SU_PROGRAMME_PGCOL FAIL mismatches=%0d active=%0d checked=%0d",mism,active,checked);
  $display("SU_PROGRAMME_PGCOL PASS edges=%0d active=%0d checked=%0d cols=%0d ref_macros=%0d fault_cases=3",
