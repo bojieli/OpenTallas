@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_d2d_static_r7t",
+ "reviewer": "coordinator (2026-10-18 ~08:50)",
+ "verdict": "APPROVED",
+ "time": "2026-10-18T08:50:00-07:00",
+ "gate_commit": "5984021c8",
+ "checklist": {
+  "lattice": "PASS: 4 SRAMs 64x512 in a regular 2x2 grid with equal channels",
+  "std_cell_band": "PASS: logic in the centre cross and along the pin faces; fill 0.447; small hot spots at the N pin cluster",
+  "pin_spread": "ACCEPT: partial-face clusters (N left, S left/centre, W, E): set by the D2D lane order; 5,045 pins",
+  "clock_entry": "PASS: E face middle; pin-flop spread 63.1 TT / 57.5 FF (<=80), tighter CTS clustering",
+  "shape": "PASS: 475.2x280.8 (1.7:1), same geometry as r7q; GRT overflow 0"
+ },
+ "notes": "NTX=3 + boundary hold margin 30->10 ps + clustered CTS (ELEM-GAPS/KV). r7q's spread grew 14 ps from gate to route; if the routed spread passes 80, use a regional root for the late branch (as qfd_d2d). The KV die binds .NTX(3).",
+ "geometry_sha256": "4f2141bedfbebf7277d0baf5063e406a9f2065e064b2fbce5170688fadaf0e21"
+}
