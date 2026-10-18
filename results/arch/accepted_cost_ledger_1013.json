@@ -1981,11 +1981,13 @@
      "blocking": true
     },
     "qwen_ar": {
-     "model": "d4g_2ring_qbg priced vs plan (b) model",
+     "model": "d4g8 compiled TP8 programme (tools/hgi_sim/qwen_compiler.py Geometry(tp=8), landed half-cycle; tools/hbm_qwen_layer/qwen_d4g_price.py) vs plan (b) model",
      "base_tok_s": 955.2,
-     "tok_s": 946.2,
-     "e2e_loss_pct": 0.94,
-     "blocking": true
+     "tok_s": 948.8,
+     "e2e_loss_pct": 0.67,
+     "blocking": true,
+     "tok_s_previous": 946.2,
+     "evidence": "results/rtl/hbm_qwen_layer_tput_1018/price_per_layer.json"
     },
     "ds_mtp": {
      "model": "d4g_2ring_qbg priced vs plan (b) model",
@@ -2001,7 +2003,32 @@
    "evidence_grade": "interim_log",
    "date": "2026-10-18",
    "status": "proposed",
-   "note": "d4g_2ring_qbg (price_rtl3c, claude/hbm-price5-1018 b98e4492e; results/arch/hbm_d4g_price_1017/price.json) vs b_plan (plan (b) model without d4g adders): DS AR 1905.4 vs 1978.4 (-3.69 %), DS MTP 3258.7 vs 3370.7 (-3.32 %), Qwen 946.2 vs 955.2 (-0.94 %). Owner rule: MTP is recorded but not blocking (binding = DS AR). Priced model, not a bench: interim grade until die runs measure it. ROOT-0510 2026-10-18."
+   "note": "d4g_2ring_qbg (price_rtl3c, claude/hbm-price5-1018 b98e4492e; results/arch/hbm_d4g_price_1017/price.json) vs b_plan (plan (b) model without d4g adders): DS AR 1905.4 vs 1978.4 (-3.69 %), DS MTP 3258.7 vs 3370.7 (-3.32 %), Qwen 946.2 vs 955.2 (-0.94 %). Owner rule: MTP is recorded but not blocking (binding = DS AR). Priced model, not a bench: interim grade until die runs measure it. ROOT-0510 2026-10-18.  RE-BASE 2026-10-18 (coordinator 0he): HBM-Qwen price of record = 948.8 tok/s, the real compiled 8-die D4G8 programme with landed half-cycle hops (was 946.2 = TP-4 programme under a split transform). D4G8 down_proj = whole TP-4 slice-j partial per row half after the SwiGLU ALL_GATHER + GROUP_REDUCE_MCAST s4 in j order: bit-identical to the qwen_r25 golden. An EVEN 8-way down_proj K split (1,536/die) is NOT ALLOWED: it changes the golden rounding (1,899/4,096 down and 1,077/4,096 x_out elements of L0 differ, proof_L0.json numerics_witness); any Qwen d4g RTL/compiler work must use D4G8."
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM-Qwen TP8 all-reduce form on the 5 d4g die links (hypercube, kept by coordinator 0hd)",
+   "group": "HBM.QWEN_TP8_AR_FORM",
+   "measured": 1688.0,
+   "price": 1394.5,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.2105,
+   "e2e_loss_pct": 1.61,
+   "binding_workload": "qwen_ar",
+   "per_workload": {
+    "qwen_ar": {
+     "model": "token_compose_xdie T = sum n_l C_die + sum n_l sum_x max(0,E-O) at measured E",
+     "base_tok_s": 946.2,
+     "tok_s": 930.9,
+     "e2e_loss_pct": 1.61
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/token_path_1018/README.md",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-18",
+   "status": "proposed",
+   "note": "TOKEN-COMPOSE 10-18: the realisable hypercube TP8 all-reduce measures 1,688 vs 1,394.5 priced cycles per instance (5 die links: direct form impossible) -> HBM-Qwen AR 930.9 vs 946.2 (-1.61 %). Coordinator 0hd 10-18 ~09:15 DECISION: keep the all-reduce form the 5 die links carry (small loss, closure first); no topology change. Base 946.2 predates the 948.8 re-base; re-compose against 948.8 when the layer bench lands."
   },
   {
    "design": "r25gq",
@@ -2461,11 +2488,11 @@
   },
   "r25gq": {
    "accepted_pct": 0.895,
-   "proposed_pct": 117.727,
-   "accepted_plus_proposed_pct": 118.622,
+   "proposed_pct": 119.337,
+   "accepted_plus_proposed_pct": 120.232,
    "limit_pct": 15.0,
    "accepted_rows": 1,
-   "proposed_rows": 23,
+   "proposed_rows": 24,
    "headroom_pct": 14.105,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
