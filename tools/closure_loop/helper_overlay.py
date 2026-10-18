@@ -125,64 +125,263 @@ FLEET_RUN = ("tools/closure_loop/tt_overlay.py",)
 LINT_ONLY = ("tools/textbook_lint.py",)
 
 
-# RELAXING-ONLY RULE CHANGES (ROOT-0040 2026-10-18, owner 10-17: "rules exist to close the die ASAP, never to delay it").
-# A gate executed with an older overlay / gate tool stays valid when EVERY commit that changed the file between the
-# gate's blob and today's blob is listed here: each one only relaxed a rule (a FAIL became a WARN), so a gate that met
-# the old rule meets the new one too.  The tile must still meet the relaxed rule's own condition ("requires"), judged
-# from the existing gate report (source_binding.relaxed_rule_requirement).  Full commit shas only.  Add an entry only
-# for a change that relaxes and never tightens: any tightening needs a re-gate.
-RELAXING_RULE_COMMITS = {
+# RULE-COMMIT CLASSIFICATION (GATE-FRICTION 2026-10-18, owner 0eg; generalises ROOT-0040's relaxing-only allowlist,
+# owner 10-17: "rules exist to close the die ASAP, never to delay it").  A gate executed with an older overlay / gate tool
+# stays valid unless a commit that changed the file since is STRICTER for this tile.  Every commit on the file's blob
+# chain (gate blob -> today's blob) is classified, first match wins:
+#   1. RULE_COMMITS below (full sha): kind "relaxing" (a FAIL became a WARN / a limit loosened), "neutral" (no gate
+#      verdict can change: refactor, report text, WARN-only check, submit-only constants) or "tightening" (a new FAIL /
+#      stricter limit).  Optional: requires=<condition judged from the existing gate report>, applies_to=(tile/kit/top
+#      name prefixes; a tightening outside them does not touch this tile).
+#   2. a "Gate-Rule:" trailer in the commit message, same vocabulary:
+#        Gate-Rule: relaxing requires=clock_pin_spread
+#        Gate-Rule: neutral
+#        Gate-Rule: tightening applies-to=qfd_,hbm_sfu_
+#   3. automatic: the change is comments / docstrings / blank lines only (.py by AST; .tcl/.sdc/.sh/.json by lines), or a
+#      LINT_ONLY path's submit-only constants -> neutral.
+#   4. anything else is UNCLASSIFIED and keeps the strict refusal (named, with how to classify it).
+# relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
+# met by the gate report.  Add an entry only with a reason a reviewer can check.
+RULE_COMMITS = {
     "ef6a3af26513c90c8af5d553c7238276df905848": dict(
-        rule="0dq", requires="clock_pin_spread",
+        kind="relaxing", rule="0dq", requires="clock_pin_spread",
         what="clock rule 0dq (owner 10-17): insertion > 300 ps / > 15k sinks FAIL -> WARN; FAIL only on pin-flop "
              "spread > 80 ps at TT or FF"),
+    "58a346a8ef042c634b3f368b265ddd96ae6004be": dict(
+        kind="neutral", rule="util-density",
+        what="textbook_lint util_channel is WARN-only (not in REFUSE_CHECKS/HARD_CHECKS): std-cell density over the "
+             "placeable area for macro kits changes WARN text, never a gate FAIL; no-macro kits unchanged"),
+    "98474c45ee3474d9198f521060af91e2c2bc416d": dict(
+        kind="neutral", rule="closed-stands-native-capture",
+        what="CLOSED_STANDS native_capture admission: submit-time CLOSED-STANDS lint only, never read by the pre-route gate"),
+    "2c5779073788dca0d09b65bc8150f0006d9326c6": dict(
+        kind="neutral", rule="closed-stands-native-capture",
+        what="CLOSED_STANDS reroute kind native_capture: submit-time lint only"),
+    # ROOT-0330 10-18: KV die planner changes without a trailer (inputs of ~180 gates).  Only kv_die.py and
+    # kv_pin_repair.py are classified (paths=): the same commits' pv_trunk_gen.py / kv_static_die.py / kv_expand.py
+    # changes are not.  With every new switch at its default the plan is byte-identical for every kit that built before.
+    "76f68cefa8ae97296b8c1f07eab9801c47aaac70": dict(
+        kind="neutral", rule="kv-die-opt-in", paths=("tools/qwen_kv_die/kv_die.py", "tools/qwen_kv_die/kv_pin_repair.py"),
+        what="KV-PLAN3: OT_KV_CTL_BAND (default 0 = old sy), OT_KV_FAIL_JSON (dump on the raise path only), "
+             "KSD.face_order only under OT_KV_STATIC_DIE=1, pin_reach report gains an 'all' list (report text); "
+             "kv_pin_repair attempt 0 = the old loop verbatim, attempt 1 runs only for a hop the old code left "
+             "unresolved, which made the old build raise (default OT_KV_HOP=0) -> every previously built plan unchanged"),
+    "8a83ec822056192aa6c6c49940974ebe062e734b": dict(
+        kind="neutral", rule="kv-die-opt-in", paths=("tools/qwen_kv_die/kv_die.py",),
+        what="KV-RTRUNK: PV_RS = OT_KV_PV_T=1 (default 0) AND a pv_trunk_t plan carrying result_trunk; only then the "
+             "qkd_pvw_* masters gain port bundle pr and its strip-face pin (the plan.json is its own bound input)"),
+    "3dd60bc0f0617cfaae3db5f77870c267195e76a8": dict(
+        kind="tightening", rule="pin-geometry",
+        what="fp_margin_lint: actual pin rectangles inside the die with track data (new FAIL)"),
+    "53efc860bda4dc258b0ec9f229d1b6a9b89d05ff": dict(
+        kind="tightening", rule="pin-track-access",
+        what="fp_margin_lint: IO pins without actual routing-track access FAIL"),
 }
+# ROOT-0040 name, kept for callers / tests: the relaxing entries
+RELAXING_RULE_COMMITS = {c: e for c, e in RULE_COMMITS.items() if e.get("kind") == "relaxing"}
+RULE_KINDS = ("relaxing", "neutral", "tightening")
+TRAILER_RE = re.compile(r"^Gate-Rule:\s*(relaxing|neutral|tightening)\b(.*)$", re.M | re.I)
 
 
-def relaxing_only_span(repo, rel, old_blob, new_blob, heads, allow=None, max_steps=64):
-    """(ok, commits): walk rel's blob history back from new_blob to old_blob over the commits reachable from heads
-    (origin/main plus the route commit).  ok only when the chain exists and every commit on it is in allow (default
-    RELAXING_RULE_COMMITS) or, for a LINT_ONLY path, changes only comments / submit-only constants.  commits: the shas
-    on the chain, newest first ([] when old_blob == new_blob)."""
-    allow = RELAXING_RULE_COMMITS if allow is None else allow
+def parse_rule_trailer(message):
+    """{"kind", "requires"?, "applies_to"?} from a commit message's Gate-Rule trailer, else None"""
+    m = TRAILER_RE.search(message or "")
+    if not m:
+        return None
+    out = dict(kind=m.group(1).lower(), rule="trailer", what=m.group(0).strip()[:200])
+    for k, v in re.findall(r"([\w-]+)=(\S+)", m.group(2)):
+        k = k.lower().replace("-", "_")
+        if k == "requires":
+            out["requires"] = v
+        elif k == "applies_to":
+            out["applies_to"] = tuple(x for x in v.split(",") if x)
+        elif k == "rule":
+            out["rule"] = v
+    return out
+
+
+def change_is_comment_only(rel, old, new):
+    """True when two versions of a tool file differ only in comments / docstrings / blank lines / trailing spaces"""
+    import ast
+    if old == new:
+        return True
+    try:
+        a, b = (x.decode() if isinstance(x, bytes) else x for x in (old, new))
+    except UnicodeDecodeError:
+        return False
+    if rel.endswith(".py"):
+        def norm(t):
+            tree = ast.parse(t)
+            for node in ast.walk(tree):
+                body = getattr(node, "body", None)
+                if isinstance(body, list) and body and isinstance(body[0], ast.Expr) \
+                        and isinstance(getattr(body[0], "value", None), ast.Constant) and isinstance(body[0].value.value, str):
+                    node.body = body[1:] or [ast.Pass()]
+            return ast.dump(tree, include_attributes=False)
+        try:
+            return norm(a) == norm(b)
+        except (SyntaxError, ValueError):
+            return False
+    if rel.endswith((".tcl", ".sdc", ".sh")):
+        def lines(t):
+            return [ln.rstrip() for ln in t.splitlines() if ln.strip() and not ln.lstrip().startswith("#")]
+        return lines(a) == lines(b)
+    if rel.endswith(".json"):
+        try:
+            return json.loads(a) == json.loads(b)
+        except ValueError:
+            return False
+    return False
+
+
+def tile_matches(applies_to, tile):
+    if not applies_to:
+        return True                        # no scope: applies to every tile
+    names = [t for t in (tile or ()) if t]
+    if not names:
+        return True                        # unknown tile: assume it applies (strict)
+    return any(str(n).startswith(p) for n in names for p in applies_to)
+
+
+def _blob(repo, sha):
+    p = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", sha], capture_output=True, timeout=60)
+    return None if p.returncode else p.stdout
+
+
+def classify_commit(repo, commit, rel, pre, post, registry=None, cache=None):
+    """{"commit", "kind" (relaxing|neutral|tightening|unclassified), "source" (registry|trailer|auto), ...}"""
+    if registry is None:
+        reg = {**{c: dict(e, kind=e.get("kind", "relaxing")) for c, e in RELAXING_RULE_COMMITS.items()}, **RULE_COMMITS}
+    else:
+        reg = registry
+    if commit in reg and (not reg[commit].get("paths") or rel in reg[commit]["paths"]):
+        # optional "paths": the entry classifies only those files of the commit (its other files fall through)
+        return dict(reg[commit], commit=commit, source="registry")
+    cache = {} if cache is None else cache
+    if ("msg", commit) not in cache:
+        p = subprocess.run(["git", "-C", str(repo), "log", "-1", "--format=%B", commit], capture_output=True, text=True,
+                           timeout=60)
+        cache[("msg", commit)] = p.stdout if not p.returncode else ""
+    t = parse_rule_trailer(cache[("msg", commit)])
+    if t:
+        return dict(t, commit=commit, source="trailer")
+    a, b = _blob(repo, pre), _blob(repo, post)
+    if a is not None and b is not None:
+        if change_is_comment_only(rel, a, b):
+            return dict(kind="neutral", rule="comment-only", what="comments / docstrings only", commit=commit, source="auto")
+        if rel in LINT_ONLY and lint_change_is_submit_only(a, b):
+            return dict(kind="neutral", rule="submit-only-lint", what="submit-only lint constants", commit=commit,
+                        source="auto")
+    return dict(kind="unclassified", commit=commit, source="none",
+                what="no RULE_COMMITS entry, no 'Gate-Rule:' trailer, not comment-only")
+
+
+def _merge_is_clean(repo, rel, parents, result_blob, cache):
+    """(ok, parent_blobs, base_blob): a two-parent merge whose rel is exactly git merge-file's conflict-free merge of
+    the parents' blobs over their merge base's blob -- the merge adds nothing beyond its parents' commits."""
+    if len(parents) != 2:
+        return False, [], None
+    def rp(rev):
+        q = subprocess.run(["git", "-C", str(repo), "rev-parse", "--verify", "-q", f"{rev}:{rel}"], capture_output=True,
+                           text=True, timeout=60)
+        return q.stdout.strip() if not q.returncode else None
+    mb = subprocess.run(["git", "-C", str(repo), "merge-base", *parents], capture_output=True, text=True, timeout=120)
+    if mb.returncode:
+        return False, [], None
+    pb, base = [rp(x) for x in parents], rp(mb.stdout.split()[0])
+    if None in pb or base is None:
+        return False, pb, base
+    datas = [_blob(repo, b) for b in (pb[0], base, pb[1])]
+    if any(d is None for d in datas):
+        return False, pb, base
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        fs = []
+        for k, d in zip(("ours", "base", "theirs"), datas):
+            f = Path(td) / k
+            f.write_bytes(d)
+            fs.append(str(f))
+        q = subprocess.run(["git", "merge-file", "-p", "-q", *fs], capture_output=True, timeout=120)
+    return (q.returncode == 0 and q.stdout == _blob(repo, result_blob)), pb, base
+
+
+def rule_span(repo, rel, old_blob, new_blob, heads, tile=None, registry=None, max_steps=64):
+    """(ok, rows, why): classify every commit that changed rel between the gate's revision (the commits whose rel blob
+    is old_blob) and the current one (commits whose rel blob is new_blob), all reachable from heads (origin/main plus the
+    route commit).  ok when no commit is stricter for the tile: every row is relaxing / neutral, or a tightening outside
+    the tile's scope, or a tightening whose "requires" the caller then judges.  rows newest first, each with "applies"
+    (bool).  why: the first blocking commit, else None.
+    ROOT-0330 10-18: commit-set walk (git rev-list NEW ^OLD -- rel), not a single blob chain, so a file changed on two
+    branches and merged (kv_die.py 76f68cefa || 8a83ec822 -> bb834a0fb) is classified: every non-merge commit on either
+    side is classified, and a merge that changed rel against EVERY parent must be clean (git merge-file of its parents
+    over their merge base reproduces it byte-exactly), i.e. it adds nothing of its own."""
     if not old_blob or not new_blob:
-        return False, []
+        return False, [], "blob unknown"
     if old_blob == new_blob:
-        return True, []
+        return True, [], None
     heads = [h for h in heads if h]
     if not heads:
-        return False, []
-    p = subprocess.run(["git", "-C", str(repo), "log", "--format=C %H", "--raw", "--no-abbrev", "--no-renames", *heads,
-                        "--", rel], capture_output=True, text=True, timeout=180)
+        return False, [], "no history head"
+    p = subprocess.run(["git", "-C", str(repo), "log", "-m", "--format=C %H %P", "--raw", "--no-abbrev", "--no-renames",
+                        *heads, "--", rel], capture_output=True, text=True, timeout=180)
     if p.returncode:
-        return False, []
-    trans, cur = [], None          # (commit, pre_blob, post_blob), newest first
+        return False, [], "git log failed"
+    info, cur = {}, None            # commit -> dict(parents, pre=[blobs], post)
     for ln in p.stdout.splitlines():
         if ln.startswith("C "):
-            cur = ln[2:].strip()
+            f = ln[2:].split()
+            cur = f[0] if f else None
+            if cur:
+                info.setdefault(cur, dict(parents=f[1:], pre=[], post=None))
         elif ln.startswith(":") and cur:
             f = ln.split()
             if len(f) >= 5:
-                trans.append((cur, f[2], f[3]))
-    chain, blob, seen = [], new_blob, set()
-    for _ in range(max_steps):
-        if blob == old_blob:
-            return True, chain
-        step = next((t for t in trans if t[2] == blob and t[0] not in seen), None)
-        if step is None:
-            return False, chain
-        c, pre, post = step
-        seen.add(c)
-        ok = c in allow
-        if not ok and rel in LINT_ONLY:
-            a = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", pre], capture_output=True, timeout=60)
-            b = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", post], capture_output=True, timeout=60)
-            ok = not a.returncode and not b.returncode and lint_change_is_submit_only(a.stdout, b.stdout)
-        if not ok:
-            return False, chain + [c]
-        chain.append(c)
-        blob = pre
-    return False, chain
+                info[cur]["pre"].append(f[2])
+                info[cur]["post"] = f[3]
+    olds = [c for c, e in info.items() if e["post"] == old_blob]
+    news = [c for c, e in info.items() if e["post"] == new_blob]
+    gate_ref = f"{rel}: gate blob {old_blob[:9]} is not an ancestor revision of {new_blob[:9]} on main"
+    if not olds or not news:
+        return False, [], gate_ref
+    if not any(subprocess.run(["git", "-C", str(repo), "merge-base", "--is-ancestor", o, n], capture_output=True,
+                              timeout=60).returncode == 0 for o in olds for n in news):
+        return False, [], gate_ref
+    q = subprocess.run(["git", "-C", str(repo), "rev-list", "--full-history", *news, *[f"^{o}" for o in olds], "--", rel],
+                       capture_output=True, text=True, timeout=180)
+    if q.returncode:
+        return False, [], "git rev-list failed"
+    span = [c for c in q.stdout.split() if c in info]
+    rows, cache = [], {}
+    for c in span:
+        e = info[c]
+        if len(e["parents"]) > 1:
+            if len(e["pre"]) < len(e["parents"]):
+                continue                 # rel equals one parent's: the merge adds nothing to that parent's commits
+            clean, _, _ = _merge_is_clean(repo, rel, e["parents"], e["post"], cache)
+            if not clean:
+                rows.append(dict(kind="unclassified", commit=c, source="none", applies=False,
+                                 what="merge with its own changes to the file (not a clean merge of its parents)"))
+                return False, rows, (f"{rel}: merge {c[:9]} is not a clean merge of its parents (classify it with a "
+                                     f"helper_overlay.RULE_COMMITS entry)")
+            continue                     # clean merges are not listed: their parents' commits are
+        if len(rows) >= max_steps:
+            return False, rows, f"{rel}: blob chain longer than {max_steps} commits"
+        r = classify_commit(repo, c, rel, e["pre"][0] if e["pre"] else None, e["post"], registry, cache)
+        r["applies"] = r["kind"] == "tightening" and tile_matches(r.get("applies_to"), tile)
+        rows.append(r)
+        if r["kind"] == "unclassified":
+            return False, rows, (f"{rel}: commit {c[:9]} is not a relaxing-only rule change (unclassified: add a "
+                                 f"'Gate-Rule: relaxing|neutral|tightening' trailer or a helper_overlay.RULE_COMMITS entry)")
+        if r["applies"] and not r.get("requires"):
+            return False, rows, f"{rel}: commit {c[:9]} TIGHTENS rule {r.get('rule')} for this tile ({r.get('what', '')[:120]})"
+    return True, rows, None
+
+
+def relaxing_only_span(repo, rel, old_blob, new_blob, heads, allow=None, max_steps=64):
+    """ROOT-0040 interface: (ok, commits) -- rule_span with no tile scope; commits newest first, the blocking one last."""
+    reg = None if allow is None else {c: dict(e, kind=e.get("kind", "relaxing")) for c, e in allow.items()}
+    ok, rows, _ = rule_span(repo, rel, old_blob, new_blob, heads, registry=reg, max_steps=max_steps)
+    return ok, [r["commit"] for r in rows]
 
 
 # SUBMIT-ONLY lint names (ROOT 2026-10-16, coordinator): constants of tools/textbook_lint.py read only by the submit-time
