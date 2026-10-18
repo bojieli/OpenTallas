@@ -177,12 +177,15 @@ def consumed_record(paths, entries, basis):
             "digest": canonical_digest(paths)}
 
 
-def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_recovery=False, clock=None):
+def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_recovery=False, clock=None, tile=None):
     """Match immutable staged contents against the requested route source and current tool overlay.
 
     clock: the gate result's "clock" record.  With it, drift made only by RELAXING-ONLY rule commits
     (helper_overlay.RELAXING_RULE_COMMITS) is tolerated when the gate report meets the relaxed rule's requirement; the
-    use is recorded in binding["relaxing_rule_allowlist"] (the caller copies it into the job)."""
+    use is recorded in binding["relaxing_rule_allowlist"] (the caller copies it into the job).
+    GATE-FRICTION 2026-10-18: every commit on the chain is classified (helper_overlay.rule_span: relaxing / neutral /
+    tightening / unclassified); only a tightening that applies to `tile` (kit / top / block names), or an unclassified
+    change, keeps the strict refusal."""
     if not isinstance(binding, dict) or binding.get("schema") != SCHEMA:
         return False, "missing immutable source snapshot; legacy result is unqualified"
     if frozen_recovery and not route_overlay:
@@ -311,13 +314,16 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
     # gate valid, provided the existing gate report meets the relaxed rule (pin-flop spread <= 80 ps at TT; FF when
     # reported, else left to the routed audit).  Without the gate's clock record the strict verdict stands.
     relaxed, relax_why = [], None
-    if (overlay_diff or source_diff) and not missing and not frozen_recovery and clock is not None:
+    # rule classification applies to tool / flow files only (a kit or RTL edit is a design change: re-gate)
+    rule_files = [q for q in overlay_diff + source_diff
+                  if q in overlay_diff or q.startswith(("tools/", "physical/common_flow/"))]
+    if rule_files and len(rule_files) == len(overlay_diff) + len(source_diff) and not missing and not frozen_recovery:
         try:
             HO_ = overlay_module()
             heads = [HO_.main_head(root), commit]
             by = {e["path"]: e for e in entries}
             rows = []
-            for q in overlay_diff + source_diff:
+            for q in rule_files:
                 if q in overlay_diff and route_overlay:
                     now = HO_.blob_id(effective[q]) if q in effective else None
                 elif q in overlay_diff:
@@ -326,18 +332,26 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                     now = tree.get(q)
                 else:
                     now = blob_hash((root / q).read_bytes())
-                ok_, chain = HO_.relaxing_only_span(root, q, by[q]["git_blob"], now, heads)
+                if hasattr(HO_, "rule_span"):
+                    ok_, crow, why_ = HO_.rule_span(root, q, by[q]["git_blob"], now, heads, tile=tile)
+                else:                                                   # pre-GATE-FRICTION daemon helper_overlay
+                    ok_, chain = HO_.relaxing_only_span(root, q, by[q]["git_blob"], now, heads)
+                    crow = [dict(commit=c, kind="relaxing", **HO_.RELAXING_RULE_COMMITS.get(c, {})) for c in chain]
+                    why_ = f"{q}: commit {chain[-1][:9]} is not a relaxing-only rule change" if chain else None
                 if not ok_:
                     rows = None
-                    if chain:
-                        relax_why = f"{q}: commit {chain[-1][:9]} is not a relaxing-only rule change"
+                    relax_why = why_
                     break
-                rows.append(dict(path=q, gate_git_blob=by[q]["git_blob"], current_git_blob=now, commits=chain,
-                                 rules=sorted({HO_.RELAXING_RULE_COMMITS[c]["rule"] for c in chain
-                                               if c in HO_.RELAXING_RULE_COMMITS})))
+                rows.append(dict(path=q, gate_git_blob=by[q]["git_blob"], current_git_blob=now,
+                                 commits=[r["commit"] for r in crow],
+                                 classes=[dict(commit=r["commit"], kind=r["kind"], source=r.get("source"),
+                                               rule=r.get("rule"), requires=r.get("requires"), applies=r.get("applies"))
+                                          for r in crow],
+                                 rules=sorted({str(r.get("rule")) for r in crow if r.get("rule")}),
+                                 needs=sorted({r["requires"] for r in crow if r.get("requires")
+                                               and (r["kind"] == "relaxing" or r.get("applies"))})))
             if rows:
-                needs = sorted({HO_.RELAXING_RULE_COMMITS[c].get("requires") for r in rows for c in r["commits"]
-                                if c in HO_.RELAXING_RULE_COMMITS} - {None})
+                needs = sorted({n for r in rows for n in r.pop("needs")})
                 req_ok, req = relaxed_rule_requirement(needs, clock)
                 if req_ok:
                     relaxed = rows
