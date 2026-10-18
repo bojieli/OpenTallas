@@ -170,6 +170,19 @@ RULE_COMMITS = {
         kind="neutral", rule="kv-die-opt-in", paths=("tools/qwen_kv_die/kv_die.py",),
         what="KV-RTRUNK: PV_RS = OT_KV_PV_T=1 (default 0) AND a pv_trunk_t plan carrying result_trunk; only then the "
              "qkd_pvw_* masters gain port bundle pr and its strip-face pin (the plan.json is its own bound input)"),
+    # ROOT-0615 10-18: dcd8111e5 (SM-RP4 CHILD-FLOP, coordinator 0gd) had no trailer.  ck_insertion now adds a per-corner
+    # child_flop {boundary, all} record (a block-master clock pin counted at arrival + R, R = that view's insertion.json
+    # boundary mean, else its lib max_clock_tree_path, else 0) and pre_route_gate.corner_spreads judges it.  Verdict-
+    # neutral for: wires-only parents (with_child_flops overwrites the record; child_pair basis), kits with no macros,
+    # and kits whose macros carry no R (plain SRAM / ROM libs: R = 0, identical stats).  It CAN change the pin-flop
+    # spread either way for (a) clusters whose boundary also holds glue registers, with hard children that have
+    # insertion.json / max_clock_tree_path, and (b) leaf tiles using a macro lib with max_clock_tree_path
+    # (ot_rom_4096x266_m8_skew*, any ETM view used as a macro).  requires= judges that from the kit (source_binding).
+    "dcd8111e54a033d01ffd6e3d58ec91b6f070bb27": dict(
+        kind="tightening", rule="child-flop-basis", requires="child_flop_basis",
+        what="ck_insertion/pre_route_gate CHILD-FLOP: hard-child / referenced-macro clock pins judged at arrival + R; "
+             "applies to clusters with glue boundary registers + referenced children, and tiles with "
+             "max_clock_tree_path macros; wires-only parents and R-less macro kits unchanged"),
     "3dd60bc0f0617cfaae3db5f77870c267195e76a8": dict(
         kind="tightening", rule="pin-geometry",
         what="fp_margin_lint: actual pin rectangles inside the die with track data (new FAIL)"),
