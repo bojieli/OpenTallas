@@ -481,7 +481,7 @@ def apply_dv(v, m):
     if ovl:
         raise ValueError(f'dv: {len(ovl)} overlapping instances {ovl[:8]}')
     # ---- buses
-    out, dropped = [], {}
+    out, dropped, partial = [], {}, []
     slices = sorted(n for n in names if n.startswith('dvs_'))
     for bid, cl, bits, eps in m['buses']:
         if cl in ('clock_trunk', 'reset'):
@@ -507,8 +507,8 @@ def apply_dv(v, m):
             # its inputs to the producer's existing net (ng_embed_fault_0 = embed_prov.fault -> sp_su64_sfu, sys_face);
             # the DV case removes sp_su64_sfu, which dropped the whole net.  Keep the net on its surviving endpoints when
             # the driver stays and a sys_face input is among them (every sys_face input is mandatory).
-            out.append((bid, cl, bits, kept))
-            m.setdefault('dv_partial_buses', []).append(dict(bus=bid, removed=[list(e) for e in eps if e[0] not in names]))
+            # added at the end only for sys_face inputs no other net feeds (the dv face rebinds some, e.g. io_cmd_free)
+            partial.append((bid, cl, bits, kept, [list(e) for e in eps if e[0] not in names]))
             continue
         dropped[cl] = dropped.get(cl, 0) + 1
     for bid, cl, bits, eps in rehome:
@@ -655,6 +655,21 @@ def apply_dv(v, m):
         if n.startswith('c16_') and n not in fed:
             m['ties'].append((n, 'rs_i', 514, 0))
     m['ties'][:] = [t for t in m['ties'] if t[0] in names]
+    conn = {tuple(e) for b in out for e in b[3]}
+    for bid, cl, bits, kept, gone in partial:
+        sf_ = [e for e in kept[1:] if e[0] == 'sys_face' and tuple(e) not in conn]
+        if not sf_:
+            dropped[cl] = dropped.get(cl, 0) + 1
+            continue
+        kept2 = [kept[0]] + [e for e in kept[1:] if tuple(e) not in conn]
+        j_ = next((j for j, b in enumerate(out) if tuple(b[3][0]) == tuple(kept[0])), None)
+        if j_ is not None:       # the driver already drives a net: the sys_face inputs join it (one net per port)
+            b0, c0, n0, e0 = out[j_]
+            out[j_] = (b0, c0, n0, e0 + kept2[1:])
+        else:
+            out.append((bid, cl, bits, kept2))
+        conn.update(tuple(e) for e in kept2)
+        m.setdefault('dv_partial_buses', []).append(dict(bus=bid, endpoints=[list(e) for e in kept2], removed=gone))
     m['buses'] = out
     # relay routing on the dv array (b3r2 _poly0): field-to-field links stay in their band gap / the W|E seam
     m['dv_gap_route'] = True
