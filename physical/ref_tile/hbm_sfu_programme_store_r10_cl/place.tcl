@@ -29,37 +29,37 @@ proc ot_ref_pick {by master pat} {
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_hgi_sfu_store_stripe_leaf_r10 {*g_leaf?0?.u_leaf}]
-$i setOrient R0; $i setLocation [expr {round(633.312 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 633.312 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(734.4 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 734.4 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_hgi_sfu_store_stripe_leaf_r10 {*g_leaf?1?.u_leaf}]
-$i setOrient R0; $i setLocation [expr {round(327.888 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 327.888 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(388.8 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 388.8 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_hgi_sfu_store_stripe_leaf_r10 {*g_leaf?2?.u_leaf}]
-$i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 22.464 43.2 R0"
+$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 43.2 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_hgi_sfu_store_stripe_leaf_r10 {*g_leaf?3?.u_leaf}]
-$i setOrient R0; $i setLocation [expr {round(633.312 * $dbu)}] [expr {round(691.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 633.312 691.2 R0"
+$i setOrient R0; $i setLocation [expr {round(734.4 * $dbu)}] [expr {round(691.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 734.4 691.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_hgi_sfu_store_stripe_leaf_r10 {*g_leaf?4?.u_leaf}]
-$i setOrient R0; $i setLocation [expr {round(327.888 * $dbu)}] [expr {round(691.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 327.888 691.2 R0"
+$i setOrient R0; $i setLocation [expr {round(388.8 * $dbu)}] [expr {round(691.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 388.8 691.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_hgi_sfu_store_stripe_leaf_r10 {*g_leaf?5?.u_leaf}]
-$i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(691.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 22.464 691.2 R0"
+$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(691.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 43.2 691.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_hgi_sfu_store_stripe_leaf_r10 {*g_leaf?6?.u_leaf}]
-$i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(259.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 22.464 259.2 R0"
+$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(259.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 43.2 259.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_hgi_sfu_store_stripe_leaf_r10 {*g_leaf?7?.u_leaf}]
-$i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 22.464 475.2 R0"
+$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 43.2 475.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_hgi_sfu_store_stripe_leaf_r10 {*g_leaf?8?.u_leaf}]
-$i setOrient R0; $i setLocation [expr {round(633.312 * $dbu)}] [expr {round(259.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 633.312 259.2 R0"
+$i setOrient R0; $i setLocation [expr {round(734.4 * $dbu)}] [expr {round(259.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 734.4 259.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_hgi_sfu_store_stripe_leaf_r10 {*g_leaf?9?.u_leaf}]
-$i setOrient R0; $i setLocation [expr {round(633.312 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 633.312 475.2 R0"
+$i setOrient R0; $i setLocation [expr {round(734.4 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 734.4 475.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_hgi_sfu_store_stripe_leaf_r10 {*g_leaf?10?.u_leaf}]
-$i setOrient R0; $i setLocation [expr {round(327.888 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 327.888 475.2 R0"
+$i setOrient R0; $i setLocation [expr {round(388.8 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_hgi_sfu_store_stripe_leaf_r10 at 388.8 475.2 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 11} { error "ref_tile place: expected 11 macros, netlist has $nb" }
