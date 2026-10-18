@@ -448,6 +448,11 @@ def main(argv=None):
         res = preflight(spec, root, a.daemon_tree)
         v, msg = res.get("verdict"), res.get("message", "")
         print(f"daemon submit check at {commit[:9]}: {v}: {msg[:1500]}")
+        rr = res.get("relaxing_rule_allowlist")
+        if isinstance(rr, dict):
+            print("RELAXING-RULE ALLOWLIST used (recorded in the job at intake): commits "
+                  + ", ".join(c[:9] for c in rr.get("commits") or []) + "; "
+                  + "; ".join(x.get("text", "") for x in rr.get("requirements") or []))
         if v != "REFUSE":
             break
         kit = kit_of(spec)
