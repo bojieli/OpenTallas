@@ -30,6 +30,20 @@ Method (same machinery as the ledger, tools/throughput/accepted_cost.py + tools/
        h_xfer_ring       2 x worst slice -> nearest end slice (out and back);  hbm_ctrl_rt  worst hrq + hrd pair
      --half-cycle: half-cycle hops (ck_o = ~ck), each relay station costs T/2: the same paths also credit
      -stations/2, and E comes from the half-cycle pilot's land_plan.json.
+  6. HOST PLANE (p4l, S81-DIE7/PRICE; --land-plan): the kit start f_ks {start, user, token, pos} and the kit done t_kd
+     {done, next_token} ride the cross-die link's host plane at end slice s_7N and reach dsdv_seq_host over the
+     dedicated lanes hf_7N_l0..2 (in) / ht_7N (out).  The hub DAG has no such lane (the kit sat at the link), and no
+     rule above routes through seqhost, so the lanes are priced here, one traversal =
+        stations (T/2 each with --half-cycle, else T) + 1 block flop [+ 1 + E when landed]
+     + the seq_host fixed latencies (tb_dsdv_seq_host: f_ks capture -> issuer +3, command register +1, V command ->
+       vo pin +7 = 11 in;  issuer KIT -> t_kd pin +3 out).
+     Serial classes (scenarios):
+       host_token  once per token (per MTP wave): the embed stage's start carries the sampled token (in) and the
+                   head stage's done carries next_token (out) -> + in on 'embed', + out on 'head.argmax_merge'.
+       host_stage  sensitivity only: every stage's start waits for its f_ks AFTER the h message has landed (+ in on
+                   every substage_hop / head.hop).  The built protocol hides it: the upstream kit emits its done
+                   before the hop op completes (dsfd_stage_seq_c8 KDX 7: the hop is the kit's hidden hand-off), so the
+                   downstream f_ks travels beside the 40,976-B h message (652 serialization cycles) and lands first.
 """
 import argparse
 import json
@@ -72,7 +86,7 @@ def hop_only(stages):
     return {wl: t * 1e6 / (t * 1e6 / a + add) for wl, (a, t) in ANCHOR.items()}
 
 
-def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0, hbm_rt=False):
+def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0, hbm_rt=False, host=()):
     """per-node delta (cycles) and a per-rule audit"""
     st = lambda um: math.ceil(um / g['hop_um'])
     xchg = g['scalar_exchange_stages']
@@ -163,7 +177,30 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0, hbm_rt=False):
                 add(nid, 'tier_cross', 4 + math.ceil(173 / g['tier_w']) - 1)   # partial flit + unit stops
         if re.search(r'(substage_hop\d+|head\.hop)$', nid):
             add(nid, 'h_xfer_ring', 2 * st(g['worst_slice_to_edge_um']))
+        HP = g.get('host_plane')
+        if HP and 'token' in host and op == 'embed':
+            add(nid, 'host_token_in', HP['in_cycles'])
+        if HP and 'token' in host and op == 'head.argmax_merge':
+            add(nid, 'host_token_out', HP['out_cycles'])
+        if HP and 'stage' in host and re.search(r'(substage_hop\d+|head\.hop)$', nid):
+            add(nid, 'host_stage_in', HP['in_cycles'])
     return d, rules
+
+
+def host_terms(plan, land, half=False, landed=True):
+    """one traversal of the host plane in / out (worst lane), cycles (module docstring item 6)"""
+    E = {l['link']: l['E'] for l in land['links']}
+    lanes = {l['i'].replace('-', '_'): l['s'] for l in plan['links'] if l['i'].startswith(('hf_', 'ht_'))}
+    if not lanes:
+        return None
+    one = lambda nm: (lanes[nm] / 2 if half else lanes[nm]) + 1 + ((1 + E[nm]) if landed else 0)
+    fin = max((nm for nm in lanes if nm.startswith('hf_')), key=one)
+    fout = max((nm for nm in lanes if nm.startswith('ht_')), key=one)
+    SEQ_IN, SEQ_OUT = 3 + 1 + 7, 3
+    return dict(landed=landed, half_cycle=half, in_link=fin, in_stations=lanes[fin], in_E=E[fin],
+                out_link=fout, out_stations=lanes[fout], out_E=E[fout], seq_in=SEQ_IN, seq_out=SEQ_OUT,
+                in_cycles=one(fin) + SEQ_IN, out_cycles=one(fout) + SEQ_OUT,
+                in_landing_cycles=(1 + E[fin]) if landed else 0, out_landing_cycles=(1 + E[fout]) if landed else 0)
 
 
 def land_terms(plan, land, half=False):
@@ -275,7 +312,7 @@ def ledger_split(path=LEDGER, drop=None):
     return kept, dropped, rows
 
 
-def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=None, basis_scale=1.0, hbm_rt=False):
+def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=None, basis_scale=1.0, hbm_rt=False, host=()):
     kept, dropped, rows = ledger_split(drop=drop if drop is not None else DROP)
     st_eff = stages * 128 / frames if frames != 128 else stages
     ho = hop_only(89)
@@ -284,7 +321,7 @@ def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=None, basis_sca
                ledger_kept_pct=kept, ledger_dropped_pct=dropped, workloads={})
     for wl, name in (('ar', 'ds_rom'), ('mtp', 'ds_rom_mtp')):
         doc = json.loads((TP / f'{name}.json').read_text())
-        delta, rules = dv_deltas(doc, g, pinreg, su_scale, basis_scale, hbm_rt)
+        delta, rules = dv_deltas(doc, g, pinreg, su_scale, basis_scale, hbm_rt, host)
         base, new = solve_with_wave(doc, delta)
         dv_loss = ac.loss_pct(base, new)
         cur = ho[wl] * (1 - (kept[wl] + dropped[wl]) / 100)
@@ -365,6 +402,25 @@ def main():
                                 landing_cycles={r: v for r, v in b1[wl]['rules'].items() if r.startswith('land_')})
                        for wl in ('ar', 'mtp')}
         res['landing_vs_no_landing'] = cmp_
+        land = json.loads(Path(a.land_plan).read_text())
+        hp = host_terms(plan, land, a.half_cycle, landed=True)
+        if hp:
+            hp0 = host_terms(plan, land, a.half_cycle, landed=False)
+            g['host_plane'] = hp
+            gu = dict(g, host_plane=hp0)                              # host lanes unlanded (geometry only)
+            g0h = dict(g0, host_plane=hp0)                            # nothing landed, host lanes geometric
+            ref = res['scenarios']['dv_base']['workloads']
+            hs = {}
+            for k, gg, kw in (('host_token', g, dict(host=('token',))),
+                              ('host_token_stage_serial', g, dict(host=('token', 'stage'))),
+                              ('host_token_unlanded', gu, dict(host=('token',))),
+                              ('no_landing_host_token_unlanded', g0h, dict(host=('token',)))):
+                res['scenarios'][k] = price(gg, stages=st, **kw)
+                w = res['scenarios'][k]['workloads']
+                hs[k] = {wl: dict(tok_s=w[wl]['dv_tok_s'], vs_dv_base_landed_pct=round(100 * (w[wl]['dv_tok_s'] / ref[wl]['dv_tok_s'] - 1), 3),
+                                  host_cycles={r: v for r, v in w[wl]['rules'].items() if r.startswith('host_')})
+                         for wl in ('ar', 'mtp')}
+            res['host_plane'] = dict(terms=hp, terms_unlanded=hp0, scenarios=hs)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(res, indent=1))
     for k, s in res['scenarios'].items():
