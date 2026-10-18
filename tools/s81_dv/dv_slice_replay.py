@@ -12,8 +12,9 @@ tb_ports.json (dv_slice_tb.py) and the die.v sid straps.  Supported event kinds 
                                rstop 2), so the replay drives the neighbour's <line>_src lanes (beat[276 l +: 276] on
                                lane l) for ONE cycle at e - 2 - max lane age, as the neighbour's output register would.
   check: forwarded CTL         the slice forwards the beat on its other side with hops - 1 at line-out edge e; the beat
-                               lands at the next neighbour's landing output (inside the cut) at e + that link's lane age:
-                               every lane is checked at that cycle (lane-age skew is a fault, not a re-alignment).
+                               lands at the next neighbour's landing outputs (inside the cut) at e + the bundle's max lane
+                               age: every lane is checked at that ONE cycle (a lane with a smaller E lands earlier and
+                               tears the beat: a schedule fault, the receiving ring stop has no lane re-alignment).
 Cycles are offset by --t0 (bench cycles after reset release).  Plan-only events (NX / XQ fixture payloads) are listed
 in replay.json as unchecked until the fixtures fork supplies the golden words.
 Usage: dv_slice_replay.py --prog DIR --ports tb_ports.json --die-v die.v --slice u_s_3S --out DIR [--t0 100]
@@ -84,15 +85,19 @@ def main(argv=None):
         fwd = (wire & ~(0x1F << 4)) | ((hops - 1) & 0x1F) << 4
         chk = []
         if hops - 1 > 0 and 0 <= fw_col <= 7:
-            for k in lanes(sl, fw_port, fw):
+            L_out = lanes(sl, fw_port, fw)
+            age_out = max(links[k]['age_edges'] for k in L_out) if L_out else 0
+            for k in L_out:
                 l = int(k.split('_l')[-1])
                 pn = f'o__w_{k}_lnd'
                 if pn not in ports:
                     continue
-                tc = int(round(e['cycle'] + links[k]['age_edges'])) + a.t0
+                # the beat is whole when its slowest lane lands (the compiler's line model): every lane is checked
+                # at that ONE cycle -- a lane landing earlier (smaller E) tears the beat and fails here
+                tc = int(round(e['cycle'] + age_out)) + a.t0
                 word = (fwd >> (LANE * l)) & ((1 << LANE) - 1)
                 outs.append((tc, ports[pn]['index'], (1 << LANE) - 1, word, k))
-                chk.append(dict(lane=k, port=pn, cycle=tc))
+                chk.append(dict(lane=k, port=pn, cycle=tc, lane_age=links[k]['age_edges'], lane_E=links[k]['E']))
         rec.append(dict(tag=e['tag'], plan_cycle=e['cycle'], template=ti, from_=nb, lanes_in=L_in, age_in=age_in,
                         inject_cycle=t_inj, hops=hops, src_sid=sid[nb], forward_checks=chk))
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)

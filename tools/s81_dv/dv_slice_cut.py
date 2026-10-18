@@ -84,6 +84,10 @@ def main(argv=None):
     ap.add_argument('--name', default='slice_top')
     ap.add_argument('--top', default='dv_die')
     ap.add_argument('--no-grow', action='store_true')
+    ap.add_argument('--land-plan', help='p4l land_plan.json: back-annotate every landing input (ck_f and i together) with '
+                    'the lane flight time dL = -S1 at --corner (the landing contract window is defined against it; RTL '
+                    'relays are zero-delay, so without it every lane with E > 1 violates its window)')
+    ap.add_argument('--corner', default='tt', choices=['tt', 'ff'])
     ap.add_argument('--rom-instance', action='store_true',
                     help='give every instance of a master with a string INSTANCE parameter (the frames: their ROM macros '
                          'load <OT_ROM_DIR>/<INSTANCE>_cX_Y.viamap.hex) .INSTANCE("<instance name>") -- die.v passes none, so '
@@ -249,10 +253,31 @@ def main(argv=None):
                     ln = re.sub(r'^(\s*\S+)\s+', lambda m: f'{m.group(1)} #(.INSTANCE("{i}")) ', ln, count=1)
                 lines[i] = ln
                 rom_inst.append(i)
+    lane_dl = {}
+    if a.land_plan:
+        LP = {r['link']: r for r in json.loads(Path(a.land_plan).read_text())['links']}
+        for i in sorted(lines):
+            if not byname[i][0].startswith('dsfd_dvland'):
+                continue
+            r = LP.get(i[3:] if i.startswith('ld_') else i)
+            if r is None:
+                raise SystemExit(f'dv_slice_cut: landing {i} has no land-plan row')
+            dl = max(0.0, -float(r['s1'][a.corner]))
+            cm = byname[i][3]
+            ln = lines[i]
+            ln = ln.replace(f'.ck_f({cm["ck_f"]})', f'.ck_f({i}__ckf_d)', 1).replace(f'.i({cm["i"]})', f'.i({i}__i_d)', 1)
+            w = nets[re.match(r'[\w\\]+', cm['i']).group(0)][0] if re.fullmatch(r'[\w\\]+', cm['i'].strip()) else None
+            if w is None:
+                raise SystemExit(f'dv_slice_cut: landing {i} data is not a whole net: {cm["i"][:60]}')
+            body.append(f'  wire {i}__ckf_d; wire [{w - 1}:0] {i}__i_d;   // lane flight time {dl:.1f} ps ({a.corner}, land plan S1)')
+            body.append(f'  assign #({dl / 1000.0:.4f}) {i}__ckf_d = {cm["ck_f"]};')
+            body.append(f'  assign #({dl / 1000.0:.4f}) {i}__i_d = {cm["i"]};')
+            lines[i] = ln
+            lane_dl[i] = dict(dl_ps=round(dl, 1), E=r['E'], K=r['K'], corner=a.corner)
     lost = sorted(S - set(lines))
     if lost:
         raise SystemExit(f'dv_slice_cut: instance line not found verbatim for {lost[:5]}')
-    hdr = f'// {a.name}: cut by tools/s81_dv/dv_slice_cut.py from {Path(a.die_v).name} ({a.top}); {len(S)} instances, ' \
+    hdr = '`timescale 1ns/1ps\n' + f'// {a.name}: cut by tools/s81_dv/dv_slice_cut.py from {Path(a.die_v).name} ({a.top}); {len(S)} instances, ' \
           f'{len(ports)} ports -- instance lines verbatim from the die netlist\nmodule {a.name} (\n' + \
           ',\n'.join(f'  {p}' for p in ports) + '\n);'
     sv = [hdr] + decl + body + [lines[i] for i in sorted(S, key=lambda x: list(byname).index(x))] + ['endmodule', '']
@@ -261,7 +286,7 @@ def main(argv=None):
                                                           die_v=a.die_v, ports=ports), indent=1) + '\n')
     cnt = Counter(byname[i][0] for i in S)
     (out / 'slice_insts.json').write_text(json.dumps(dict(instances=len(S), by_master=dict(sorted(cnt.items())),
-                                                          how={i: how[i] for i in sorted(S)}, rom_instance_param=rom_inst), indent=1) + '\n')
+                                                          how={i: how[i] for i in sorted(S)}, rom_instance_param=rom_inst, lane_flight_time=lane_dl), indent=1) + '\n')
     nin = sum(sum(h - l + 1 for h, l in p['bits']) for p in ports.values() if p['dir'] == 'input')
     nout = sum(sum(h - l + 1 for h, l in p['bits']) for p in ports.values() if p['dir'] == 'output')
     print(f'dv_slice_cut: {len(S)} instances {dict(sorted(cnt.items()))}; ports {len(ports)} '
