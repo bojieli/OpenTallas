@@ -1,17 +1,3 @@
-{
- "schema": "opentallas.tile_visual_review.v1",
- "tile": "s81engm_lkp_static14",
- "block": "dsfd_engram_lkp_static14 (st8)",
- "reviewer": "coordinator (2026-10-17 ~09:35)",
- "verdict": "APPROVED",
- "gate_commit": "c5e580b7b",
- "checklist": {
-  "lattice": "n/a no macros",
-  "std_cell_band": "PASS: uniform ~0.5 fill",
-  "pins": "PASS: N/S bus faces; hot spots only under the pin buses",
-  "clock_entry": "WATCH: core root 8,638 sinks, all-sink spread 114, boundary spread 80.7; st9 regional split runs in parallel",
-  "shape": "PASS"
- },
- "notes": "Option A route approved for data and a possible close. TT reg->reg -14.8; FF core->rows hold -104.7 pre-repair is left to flow repair. Bind st8 or st9, whichever passes native.",
- "images": ["gate_layout/floorplan.png", "gate_layout/density.png"]
-}
+{"schema":"opentallas.tile_visual_review.v1","tile":"s81engm_lkp_static14","reviewer":"coordinator (2026-10-18 ~01:00)","verdict":"APPROVED","time":"2026-10-18T01:00:00-07:00","gate_commit":"2026-10-17T20:10:41-0700",
+ "checklist":{"lattice":"n/a (no macros)","std_cell_band":"PASS: one region, fill 0.50","pin_spread":"PASS: 797 pins on 324x216, low density; N/S buses partial-face but well under 6/um","clock_entry":"PASS: regional clock entries on N/S/W; ck_seed all-flop spread 86.8 -> the pin-flop spread <=80 at TT/FF is enforced by the gate (rule 0dq)","shape":"PASS 324x216"},
+ "notes":"Engram st10 lookup (S81-TILES6). Submit once the pin-flop spread check passes."}
