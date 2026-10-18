@@ -847,7 +847,7 @@ if [ "{CTS}" = 1 ]; then
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
   python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --raw-source --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
-  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
+  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
   ot_layout $NB/4_1_cts.odb placed
@@ -1479,6 +1479,7 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
         root = (rec["root"] or "").removeprefix("port:")
         matched = [d for d in domains if d.get("source") == root or d.get("clock") == root]
         if cts and len(matched) == 1:
+            matched[0] = with_child_flops(matched[0], spec)
             corner_spreads(rec, matched[0])
             if rec["tt_insertion_ps"] is not None:
                 rec["measured_clock"] = matched[0].get("clock")
@@ -1538,6 +1539,43 @@ def upgrade_clock_record(ev: dict | None) -> dict | None:
     return dict(ev, **add, pin_spread_from_gate_report=True) if add else ev
 
 
+def with_child_flops(domain: dict, spec: dict | None) -> dict:
+    """S81-DEC2 2026-10-18 (owner 10-17 0dq: "spread at the CHILD flops for a cluster"): for a cluster whose every
+    boundary register clock pin is a hard child's clock pin (a wires-only parent), the pin-flop arrival is the child's
+    clock-pin arrival PLUS that child's own boundary-register insertion (views/<child>/insertion.json <corner>.boundary
+    min..max).  The raw child clock-pin spread is the parent compensation, not skew: s81lk_kp4_dec taps ddly 144 ps
+    later than dsyn because ddly's own tree is 107 ps shorter.  Adds domain[c]["child_flop"] {n, min, max, pins};
+    unchanged when the spec has no children, a child pin has no record, or glue registers share the boundary."""
+    import fnmatch
+    kids = [ch for ch in (spec or {}).get("children") or [] if isinstance(ch, dict) and ch.get("view") and ch.get("inst")]
+    if (spec or {}).get("kind") != "cluster" or not kids:
+        return domain
+    out = dict(domain)
+    for c in ("tt", "ff"):
+        cr = domain.get(c) or {}
+        pins = ((cr.get("macros") or {}).get("pins")) or []
+        bd = cr.get("boundary") or {}
+        if not pins or bd.get("n") != len(pins):
+            continue                                    # glue registers on the boundary too: keep the measured record
+        rows = []
+        for x in pins:
+            inst = str(x.get("pin", "")).rsplit("/", 1)[0]
+            kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
+                        or fnmatch.fnmatchcase(inst, ch["inst"])), None)
+            ij = ROOT / kid["view"] / "insertion.json" if kid else None
+            try:
+                b = json.loads(ij.read_text())[c]["boundary"]
+                lo, hi = float(x["arr"]) + float(b["min"]), float(x["arr"]) + float(b["max"])
+            except (AttributeError, OSError, ValueError, KeyError, TypeError):
+                rows = None
+                break
+            rows.append(dict(pin=x["pin"], arr=x["arr"], child_min=round(lo, 1), child_max=round(hi, 1)))
+        if rows:
+            out[c] = dict(cr, child_flop=dict(n=len(rows), min=min(r["child_min"] for r in rows),
+                                              max=max(r["child_max"] for r in rows), pins=rows))
+    return out
+
+
 def corner_spreads(rec: dict, domain: dict) -> dict:
     """TT and FF insertion (latest register arrival), all-register leaf spread and pin-flop (boundary register) spread
     of one ck_insertion clock record (owner 10-17 0dq: the rule is the pin-flop spread at TT AND FF)."""
@@ -1547,7 +1585,11 @@ def corner_spreads(rec: dict, domain: dict) -> dict:
         if al.get("min") is not None and al.get("max") is not None:
             lo, hi = float(al["min"]), float(al["max"])
             rec[f"{c}_insertion_ps"], rec[f"{c}_spread_ps"] = hi, round(hi - lo, 1)
-        if bd.get("min") is not None and bd.get("max") is not None:
+        cf = cr.get("child_flop") or {}
+        if cf.get("min") is not None and cf.get("max") is not None:   # wires-only cluster: the child pin flops
+            rec[f"{c}_pin_spread_ps"] = round(float(cf["max"]) - float(cf["min"]), 1)
+            rec[f"{c}_pin_spread_basis"] = "child_flop"
+        elif bd.get("min") is not None and bd.get("max") is not None:
             rec[f"{c}_pin_spread_ps"] = round(float(bd["max"]) - float(bd["min"]), 1)
     return rec
 
