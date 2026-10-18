@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "dsdv_sh_vc",
  "verdict": "WARN",
- "generated": "2026-10-17T19:50:04-0700",
+ "generated": "2026-10-17T20:01:14-0700",
  "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "80e8e783d47a029c49d76fada2b5c558df997447",
+  "start_commit": "34038e4247590e1f9ff374967fdbac62764b9379",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "846a38ae72d22256ef5c50756f89ae0a70db151001d570056f80db2b013ca4b0",
-  "manifest_sha256": "3f7318cd3e7214fc89983eef473c31e5045cfa08d3d5a18bcc8857bfc8037eac",
+  "archive_sha256": "eb5634d0c3a00c81d26776dff5a7dc5d42c7ae5e3a7489cafd34c89ee8831570",
+  "manifest_sha256": "4610b75db0bb86755a8b2b28418202a4e60fbd6b2d2ed3bdab08ccd87f2f6f77",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -17827,16 +17827,16 @@
    {
     "path": "physical/ref_tile/dsdv_sh_vc/job.json",
     "kind": "file",
-    "sha256": "387f6552721fa743d7ff4712b54947dcbc55e6f69b9100c00e6649d2f5bfcb32",
-    "git_blob": "e5d61df9869e8791cbcac9228091851c1cb7098d",
+    "sha256": "f476f6648139d38c80f7da8354e60e2f8de84d099a48abbf69c18d3f413157a8",
+    "git_blob": "b2a72fa235a37301ddf88d00202659d9e79a3894",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/dsdv_sh_vc/kit.env",
     "kind": "file",
-    "sha256": "4a79bb565262e16e49d843b71cd7e62e7025620728be3836b240160b3563b4b4",
-    "git_blob": "de00d64ee6346512cd1887ae2801ca48fd43e1e8",
+    "sha256": "a4cb54c1ff18256ef97a9179eacae9e307b008958c8d086ba9d83ad769a6d9e6",
+    "git_blob": "1e27b107f5b6360ca1840976664f9cef686968e3",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17947,8 +17947,8 @@
    {
     "path": "physical/ref_tile/dsdv_sh_vc/spec.json",
     "kind": "file",
-    "sha256": "f94fed13df48892cda2c5779b41cb13376f107cce525d9cf884deb5493d4d78d",
-    "git_blob": "0b1714b07d12ea980240390d92729b8354c87b74",
+    "sha256": "6442a9c919408f8571054e3491972516308eaadb9f25ef171365624927ff3abe",
+    "git_blob": "563602c1b60124c2aa20dbd6ba1ebfbc40e1bf96",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -132787,8 +132787,8 @@
    {
     "path": "tools/ref_tile/specs_s81dv_unit/dsdv_sh_vc.json",
     "kind": "file",
-    "sha256": "ce2fadec8ba66bf6992c4a17356ed5950d5a28bf77cb3100e45bbc7bc44d33b7",
-    "git_blob": "e1df785d7a40c5a0303d20e763a5b6ac0629c730",
+    "sha256": "e0be60b7584ba0749a0134d7808cb0ebd6fb3f8023ebe7dbcf4730bebb985dfd",
+    "git_blob": "8bab788e377cc37a350bcbcbf25307490ac3ef1e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -162043,7 +162043,7 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 145691297,
+   "archive_bytes": 145691863,
    "unpacked_bytes": 910565376,
    "pick_gb": 22,
    "runtime_gb": 22
@@ -162562,7 +162562,7 @@
     "physical/qwen_die_masters/sram_edge_guard.tcl": "99c528dfa06f28b7bdde5b807832a3614949c527fa38b0fcc58071d9e5fa14a2",
     "physical/ref_tile/dsdv_sh_vc/clock.sdc": "6acdd888247d85523235c546931867c5d044296877b68d281e04d313362c30f0",
     "physical/ref_tile/dsdv_sh_vc/floorplan.json": "dec4dc93237749506b04fd67969a9fbe0cd18c3cc7b72f3d64ac8795cb2a27f0",
-    "physical/ref_tile/dsdv_sh_vc/kit.env": "4a79bb565262e16e49d843b71cd7e62e7025620728be3836b240160b3563b4b4",
+    "physical/ref_tile/dsdv_sh_vc/kit.env": "a4cb54c1ff18256ef97a9179eacae9e307b008958c8d086ba9d83ad769a6d9e6",
     "physical/ref_tile/dsdv_sh_vc/pdn.tcl": "0e8dc2cd533b8f417268800516089b402d110de8a7c68c7f2f29e867ac5e9811",
     "physical/ref_tile/dsdv_sh_vc/pin_regs.json": "897cd05f4258418270155116b4131daafa10768a5606bcbd027316d2835549c4",
     "physical/ref_tile/dsdv_sh_vc/place.tcl": "1a3e9c07d3249f34359f3c43a25a874c591cbe7394438d24c937458731867ddf",
@@ -162576,7 +162576,7 @@
     "physical/ref_tile/dsdv_sh_vc/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
     "physical/ref_tile/dsdv_sh_vc/signoff.sdc": "f376c139f49bddeb8f36a88f6f73171393e448b0a945c638c2e7da22228016c0",
     "physical/ref_tile/dsdv_sh_vc/signoff_ffrepair.sdc": "c082533c76d3c80693bf0ee6b34ee6aa46b01bd445d17e1d0857e20785f7b1a4",
-    "physical/ref_tile/dsdv_sh_vc/spec.json": "f94fed13df48892cda2c5779b41cb13376f107cce525d9cf884deb5493d4d78d",
+    "physical/ref_tile/dsdv_sh_vc/spec.json": "6442a9c919408f8571054e3491972516308eaadb9f25ef171365624927ff3abe",
     "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv": "bd2f616a40529ada568b3875a5f51a98df69e13e34585ffd40204d38141463c2",
     "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv": "92181a7a235ab409a2bc3217a46714ea7803404f6e94ec41db79d12cb7eeb614",
@@ -162621,16 +162621,16 @@
    },
    "digest": "d43dbd0c870ed5a0d534c85149c904559a43c1ea8e26ea51adf271d527eb822c"
   },
-  "captured": "2026-10-17T19:44:13-0700",
+  "captured": "2026-10-17T19:55:36-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/dsdv_sh_vc/signoff_ffrepair.sdc"
   },
-  "remote_script_sha256": "63929551fa3f446b3676b19d940123410d97886e5bc2e5cc1d9da8c8b4c39044",
+  "remote_script_sha256": "5867be46e07cdeeaf201261e8224b822efcdcf52eb69e5d123a617be95afdbb6",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_vc-20261017-194215",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_vc-20261017-195250",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
