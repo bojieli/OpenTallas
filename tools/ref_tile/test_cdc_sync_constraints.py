@@ -79,6 +79,39 @@ class Fixture(unittest.TestCase):
         self.tmp.cleanup()
 
 
+HIER = r'''
+module cdc_hier_stage (input ck, input d, output reg q);
+  always @(posedge ck) q <= d;
+endmodule
+module cdc_hier (input ck_a, input ck_b, input rst_n, input d_in, output reg q_out);
+  reg rc; reg [1:0] rs;
+  always @(posedge ck_b) rc <= rst_n;
+  always @(posedge ck_a) rs <= {rs[0], rc};
+  wire pd;
+  cdc_hier_stage u_s (.ck(ck_a), .d(d_in), .q(pd));   // a submodule: flatten leaves a $scopeinfo cell
+  always @(posedge ck_a or negedge rs[1]) if (!rs[1]) q_out <= 0; else q_out <= pd;
+endmodule
+'''
+
+
+class Hierarchy(unittest.TestCase):
+    def test_flattened_submodule_admitted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'cdc_hier.sv').write_text(HIER)
+            s = dict(name='cdc_hier', top='cdc_hier', kind='tile', sources=['cdc_hier.sv'], params={},
+                     clock='multiple_cts_roots', clock_port='ck_a', clock_ports=['ck_a', 'ck_b'],
+                     clock_data_paths='related_pll_ratio',
+                     clock_relationship=dict(kind='same_pll_fixed_phase', ratio=[4, 3], phase_ps=0),
+                     clock_entry_domains=dict(
+                         core=dict(ratio=[1, 1], ports=['ck_a'], inputs=['d_in'], outputs=['q_out']),
+                         serial=dict(ratio=[4, 3], ports=['ck_b'], inputs=['rst_n'], outputs=[])),
+                     cdc_synchronizers=[dict(name='reset', src_domain='serial', dst_domain='core', source='rc',
+                                             chain=['rs[0]', 'rs[1]'], sync_max_delay_ps=250)])
+            record = S.lint(s, root)
+            self.assertEqual(record['counts'], dict(source=1, sync1=1, payload=0, capture=0))
+
+
 class Lint(Fixture):
     def test_admitted_and_bounded_only(self):
         record = S.lint(spec(), self.root)
