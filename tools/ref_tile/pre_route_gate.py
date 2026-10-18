@@ -53,6 +53,7 @@ import child_lint  # noqa: E402
 import textbook_lint as TL  # noqa: E402
 import pin_fit as PF  # noqa: E402
 import source_binding as SB  # noqa: E402
+import keep_module_audit as KA  # noqa: E402
 HO = SB.overlay_module()
 
 DEFAULT_SRC_PATHS = ("tools", "rtl", "physical", "Makefile")
@@ -617,6 +618,54 @@ def check_memory_ff(g: Gate, out: str):
           "(e.g. (* rom_style = \"logic\" *) on the table / (* keep *) on the register) and re-gate")
 
 
+def _kit_env(kd: Path) -> str | None:
+    try:
+        return (kd / "kit.env").read_text()
+    except OSError:
+        return None
+
+
+def check_keep_static(g: Gate, kd: Path, spec: dict):
+    """KEEP-MODULE AUDIT, static half (ROOT-KEEP 10-18): a keep entry the RTL instantiates with #(...) elaborates as
+    $paramod\\NAME\\..., which ORFS SYNTH_KEEP_MODULES ("NAME" / "NAME\\$*") never matches under the verilog frontend."""
+    env = _kit_env(kd)
+    entries = KA.keep_entries(env, spec)
+    if not entries:
+        return
+    try:
+        from kit_orfs_vars import parse
+        frontend = parse(env or "").get("SYNTH_HDL_FRONTEND", "")
+    except ValueError:
+        frontend = ""
+    if frontend == "slang":
+        g.add("INFO", "keep_modules", f"{len(entries)} keep entries under the slang frontend (NAME$<n> names match)")
+        return
+    hits = KA.parameterised_instances(entries, spec.get("sources"), ROOT)
+    for e, where in sorted(hits.items()):
+        g.add("FAIL", "keep_modules", f"keep entry {e} is instantiated with a #(...) parameter override ({', '.join(where[:4])}"
+              f"{' ...' if len(where) > 4 else ''}): yosys elaborates it as $paramod\\{e}\\..., SYNTH_KEEP_MODULES matches "
+              "nothing and the copy is flattened / merged back (HBM lgtap r2, 6a79110b8)",
+              "unparameterise the kept module (lgtap LGTAP2) or put (* keep_hierarchy *) on its module definition")
+
+
+def check_keep_modules(g: Gate, kd: Path, spec: dict, out: str):
+    """KEEP-MODULE AUDIT, post-synthesis half: every keep entry must match a surviving module or cell type."""
+    entries = KA.keep_entries(_kit_env(kd), spec)
+    if not entries:
+        return
+    m = re.search(r"^GATE_KEEP_NETLIST (.*)$", out, re.M)
+    summary = None
+    if m:
+        try:
+            summary = json.loads(m.group(1))
+        except ValueError:
+            summary = None
+    warns = re.findall(r"^GATE_KEEPWARN (.*)$", out, re.M)
+    for sev, msg in KA.judge(entries, summary, warns):
+        g.add(sev, "keep_modules", msg, "unparameterise the kept module or put (* keep_hierarchy *) on its definition; "
+              "check the entry names a module the top actually instantiates" if sev == "FAIL" else "")
+
+
 def check_kit_shell(g: Gate, kd: Path):
     syntax = subprocess.run(["bash", "-n", str(kd / "kit.env")], capture_output=True, text=True)
     if syntax.returncode or syntax.stderr.strip():
@@ -719,6 +768,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     files = [str(ROOT / f) for f in spec["sources"] if (ROOT / f).exists()]
     hard = sorted({RT.view_name(c["view"]) for c in spec["children"]})
     r = TL.rtl_lint(files, hard, spec.get("hard_define"), top=spec["top"])
+    check_keep_static(g, kd, spec)
     for k, v in r["findings"].items():
         sev = "FAIL" if k == "hard_child_params" else "WARN"
         fix = ("decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)"
@@ -836,6 +886,10 @@ grep -h "Chip area\|chip area" $C/reports/asap7/*/base/synth_stat.txt 2>/dev/nul
 # MEMORY-FF LINT (ROOT 2026-10-17, S-ELEM static14 TT -57.9): yosys PROC_ROM / MEMORY_BMUX2ROM turn a case table into a
 # $mem ROM and MEMORY_DFF then folds the neighbouring register into its read port; the register vanishes from the netlist
 grep -h "merging output FF to cell\|merged .*FF to cell\|merging .*FF to cell\|^Converted [0-9]* switch" $C/logs/asap7/*/base/1_*yosys*.log 2>/dev/null | head -60 | sed 's/^/GATE_MEMFF /'
+# KEEP-MODULE AUDIT (ROOT-KEEP 10-18, HBM lgtap 6a79110b8): every kit keep entry must survive synthesis as hierarchy; a
+# $paramod-renamed module is missed by SYNTH_KEEP_MODULES (yosys only warns) and its replicated copies get merged back
+grep -h "did not match any module" $C/logs/asap7/*/base/1_*yosys*.log 2>/dev/null | sort -u | head -40 | sed 's/^/GATE_KEEPWARN /'
+python3 tools/ref_tile/keep_module_audit.py netlist $B/1_2_yosys.v {TOP}
 # PORT-LATENCY (ROOT 2215): the elaborated pin-register table + wrapper of this synthesis (ot_pin_regs.tcl) come back for
 # tools/ref_tile/port_latency.py; the closure loop records the same export from the route at CLOSE for the compilers
 [ -s $B/ot_pin_regs.tsv ] && [ -s $B/ot_pin_regs_wrapper.v ] && python3 -c "import zlib,base64,sys;print('GATE_PIN_REGS_B64 '+' '.join(base64.b64encode(zlib.compress(open(f,'rb').read(),9)).decode() for f in sys.argv[1:]))" $B/ot_pin_regs.tsv $B/ot_pin_regs_wrapper.v
@@ -855,10 +909,12 @@ fi
 # TRIAL ROUTE (owner rule 20:45 10-15; every kit since ROOT-0330-GRT 10-18, was parent / cluster kits only): place +
 # global-route here (no detailed route): overflow, per-layer usage and the congestion hotspots come back; overflow > 0
 # refuses the kit.  Single tiles (HBM qcore r5, S81 bk g2, KV landh0_548, Qwen h16b) passed the gate and failed GRT hours
-# into the route; the trial costs minutes.
+# into the route; the trial costs minutes.  ROOT-0630 (coordinator HANDOFF 0gi, 10-18): a SINGLE-tile kit's trial is a
+# congestion screen and runs SKIP_INCREMENTAL_REPAIR=1 (first GRT only, no post-GRT repair_design / repair_timing /
+# incremental re-route: ~2 min instead of ~25); parent / cluster kits keep the full trial.
 if [ "{TRIAL}" = 1 ]; then
   GT0=$(date +%s)
-  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
+  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 {GRTX}grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
   GL=$(ls $C/logs/asap7/*/base/5_1_grt.log 2>/dev/null | head -1)
   [ -n "$GL" ] && grep -E "^(M[0-9]+|Total) +[0-9]+ +[0-9]+ +[0-9.]+%" $GL | tail -12 | sed 's/^/GATE_GRT_LAYER /'
   [ -n "$GL" ] && grep -hE "GRT-0116|Total overflow|overflow" $GL | tail -3 | sed 's/^/GATE_GRT_NOTE /'
@@ -1092,7 +1148,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
-                          TRIAL=1, CLKS=",".join(RT.declared_clock_ports(spec)),
+                          TRIAL=1, GRTX=trial_grt_make_args(spec), CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     if textbook_reset_args(spec):
         tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
@@ -1179,6 +1235,12 @@ FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 10-15 (parent / cl
 def is_parent_kit(spec: dict) -> bool:
     """a parent / cluster kit: kind cluster, hardened children, or >= 4 hard macros"""
     return spec.get("kind") == "cluster" or bool(spec.get("children")) or len(spec.get("macros") or []) >= 4
+
+
+def trial_grt_make_args(spec: dict) -> str:
+    """extra ORFS make variables of the gate's trial GRT (ROOT-0630, HANDOFF 0gi): a single tile skips the post-GRT
+    incremental repair (a congestion screen; overflow > 0 still FAILs); a parent / cluster kit runs the full trial"""
+    return "" if is_parent_kit(spec) else "SKIP_INCREMENTAL_REPAIR=1 "
 
 
 def pin_demand(d: dict) -> list:
@@ -1276,6 +1338,7 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
             hot["worst_overflow_layer"] = [wovf[0], int(wovf[6])]
         secs = re.search(r"GATE_GRT_S=(\d+)", out)
         g.trial_route = dict(schema="opentallas.ref_tile.trial_route.v1", overflow=ovf, kind="parent" if parent else "tile",
+                             skip_incremental_repair=not parent,
                              rc=re.search(r"GATE_GRT_RC=(\S+)", out).group(1), grt_s=int(secs.group(1)) if secs else None,
                              layers=[dict(layer=r[0], capacity=int(r[1]), usage=int(r[2]), pct=float(r[3]),
                                           overflow=int(r[6])) for r in lay],
@@ -1405,6 +1468,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
               f"set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO" else "")
     check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
     check_memory_ff(g, out)
+    check_keep_modules(g, kd, spec, out)
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):
         if line.startswith("TEXTBOOK_LINT:"):
             continue
@@ -1766,6 +1830,12 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
         tile = [kd.name, d.get("kit")]
+        try:     # S81-DEC5 10-18: the kit job's recorded clock_rule_waiver also judges the relaxing-rule requirement
+            w = json.loads((kd / "job.json").read_text()).get("clock_rule_waiver")
+            if isinstance(w, dict) and isinstance(d.get("clock"), dict):
+                d = {**d, "clock": {**d["clock"], "clock_rule_waiver": w}}
+        except (OSError, ValueError, AttributeError):
+            pass
         try:
             ks = json.loads((kd / "spec.json").read_text())
             tile += [ks.get("name"), ks.get("top")]
