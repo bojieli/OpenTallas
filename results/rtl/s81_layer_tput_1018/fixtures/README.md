@@ -39,7 +39,7 @@ exactly the golden selection.
 | L14 | Engram + ratio 2 + compressor + indexer | 129 | 217 | 26 29 114 155 334 352 | 279 MB | 94 s |
 | L20 | ratio 1 + compressor + indexer + candidates | 121 | 203 | 41 65 158 164 259 266 | 398 MB | 156 s |
 | HEAD | final hc_pre + norm + lm_head + argmax | 9 | 14 | next token 21946 | 317 MB | 55 s |
-| MTP draft | — | — | — | **GAP** (below) | — | — |
+| MTP | DSpark draft: stages mtp.0..2 over the 5 block rows + draft head / Markov chain | 572 | 905 | per stage 15 (5 rows x top-3); draft tokens 108193 8674 71 95391 12184 | 804 MB | 9 min |
 
 The committed manifests are `<layer>.sha256.json`. Each one lists every file's sha256 and every op's shape, dtype and
 sha256, plus the checks and the command.
@@ -65,17 +65,21 @@ Test (pure python, no checkpoint): `python3 tools/s81_dv/test_dv_layer_fixtures.
 
 ## Gaps (recorded, not filled)
 
-1. **MTP draft layer: no fixture.**
-   - The checkpoint has the DSpark stages (2,401 `mtp.*` tensors), and `hdc_golden_v41.Model.draft` / `dspark_stage` define the arithmetic.
-   - What is missing is the stage's *state*: the per-stage window caches `state["dsk"]` of the 128 positions before the anchor. Each row is `dspark_row(main_x(pos))`, built from the main-model hidden rows of earlier positions.
-   - `synthetic_state` builds no `dsk`. The w17 shard has no draft stage. `w19_v41_mtp_golden.py` is the verify pass (main layers over 6 positions), not the draft.
-   - A golden-consistent synthetic DSpark window state, for example 127 rows drawn like the main window rows with the stage's kv_norm gain, is a new state rule. It needs a coordinator decision before the MTP draft fixture can be pinned.
+1. **MTP draft layer: CLOSED 10-18 (LB2-S81/MTP).** Coordinator 0hq(2): the DSpark window state is the golden
+   reference's state snapshot at the token, carried exactly. `gen_mtp` rebuilds it as `tools/dsrom_1m_draft_blocks.py`
+   `build_state` does (anchor row real: `dspark_seed` of `main_hidden_part(h_in L37|L38|L39)`; 127 older rows the
+   reference's convention `default_rng([seed, ctx, 4, stage])`) and checks the three stage hashes against
+   `results/rtl/dsrom_1m_allmeasured_20261004/draft_blocks.json` `golden.state.sha256`. All 16 checks true: state per
+   stage, each recorded stage == `Model.dspark_stage` and == the reference stage output hash and experts, draft tokens
+   and logit rows == `Model.draft`. 202 of the 206 draft-phase DAG nodes carry a value; `draft.fixed` and the `mc.*`
+   block charges have no datapath value. The draft dies are not in the p4l netlist (manifest `binding`), so no slice
+   bench can run this layer yet.
 2. **Frame ROM images per bind9 frame instance are not emitted.** The row → frame placement belongs to the layer compiler (LB-S81-CC: each matrix's output rows sit in the frames of the owning slice). This fixture provides:
    - the rank's raw weight slices (`weights/`);
    - each matvec's golden input and output (`ops/`).
 
    From these, `v41_die_images_w17w10.add_phase` / `frame_bench.py` write the ROM / cfg7 images once a placement exists.
-3. **Campaign packer bug.** `rtl_v41_fullshape_layer_campaign.pack_fp8_ue8m0` maps −0 and +0 to one E4M3 code (it uses `np.unique`), so its round-trip assert fails on the L2 window rows. This tool packs from the sign bit instead (`pack_fp8_exact`, code 0x80 for −0). `images()` in the campaign is still affected.
+3. **Campaign packer bug (fixed).** `rtl_v41_fullshape_layer_campaign.pack_fp8_ue8m0` maps −0 and +0 to one E4M3 code (it uses `np.unique`), so its round-trip assert failed on the L2 window rows. FIXED 10-18 (LB2-S81/MTP): the campaign packer now takes the magnitude code from the E4M3 table and the sign from the sign bit (−0 = 0x80), the same as this tool's `pack_fp8_exact`; `test_dv_layer_fixtures.py` checks both agree.
 4. **Indexer and candidate set.**
    - `attn.idx.topk_local` / `topk_merge` are the TP4 rank decomposition, checked equal to the golden selection.
    - The golden itself has a single top-k.
