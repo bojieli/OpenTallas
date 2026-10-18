@@ -1,0 +1,13 @@
+{
+ "reviewer": "RTL-BUILD-HBM/sfus (non-critical self-review, coordinator not required: not on critical_tiles.txt, no earlier routes)",
+ "time": "2026-10-18T00:55-07:00",
+ "gate_commit": "c9050b54a",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "no macros; outline 12.96 x 12.96 (smallest with >= 2 M5 PG stripes spanning >= 50%: 8.64 / 10.8 fail pg_spread)",
+  "std_cell_band": "28 cells / 9 flops in one cluster; util 7% WARN is the PDN/pin floor of a 5 um2 leaf",
+  "pin_spread": "W rst_n/prog_busy/clk_serial, E clk_stream/rst_stream_n/bridge_rst_n/fault (7 pins)",
+  "clock_entry": "clk_stream E (8 sinks, TT ins 37.7 / spread 0.5, FF 27.7 / 0.3), clk_serial W beside b_s (1 sink)",
+  "shape": "square"
+ }
+}
