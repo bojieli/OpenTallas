@@ -206,6 +206,55 @@ def clock_rule_eval(max_sinks, evidence=None):
     return "PASS", head + (f" (spread <= {CLK_SPREAD_MAX_PS:.0f} ps)" if sp else "")
 
 
+CLOCK_WAIVER_MAX_PS = 2.0     # HANDOFF 0ga 2026-10-18: largest recorded per-pair excess over CLK_SPREAD_MAX_PS
+
+
+def clock_waiver_eval(evidence, waiver):
+    """HANDOFF 0ga 2026-10-18 (s81lk_kp4_dec syn-dly 80.5 FF vs 80): a coordinator-recorded per-pair excess, the job
+    spec's "clock_rule_waiver" {"pair": "a-b", "ff_ps"|"tt_ps": measured, "limit_ps", "by"}.  Applies only when every
+    over-limit corner spread of the evidence is <= limit + CLOCK_WAIVER_MAX_PS, <= the recorded value, and (child-pair
+    basis) comes from the named pair alone.  One rule for pre_route_gate and the in-flow textbook_lint.
+    Returns (applied, note, why): note is the printable waiver, why the reasons it was not applied."""
+    if not isinstance(waiver, dict):
+        return False, "", ["no clock_rule_waiver"]
+    ev = evidence if isinstance(evidence, dict) else {}
+    lim = CLK_SPREAD_MAX_PS
+    pair = {x.strip().removeprefix("u_") for x in str(waiver.get("pair", "")).split("-") if x.strip()}
+    why = []
+    if not str(waiver.get("by", "")).strip():
+        why.append("no 'by'")
+    if not _num(waiver.get("limit_ps")) or float(waiver["limit_ps"]) != lim:
+        why.append(f"limit_ps must be {lim:.0f}")
+
+    def named(p):     # waiver tokens name the child instance (u_dly / dly) or its block suffix (s81lk_kp4_ddly / ddly)
+        inst = [str(p.get(k, "")).removeprefix("u_") for k in ("a", "b")]
+        return len(pair) == 2 and all(any(t.endswith(x) for t in pair) for x in inst) \
+            and all(any(t.endswith(x) for x in inst) for t in pair)
+    over = 0
+    for c, (v, basis) in clock_spreads(ev).items():
+        if v <= lim:
+            continue
+        over += 1
+        rec_ps = waiver.get(f"{c}_ps")
+        if not _num(rec_ps) or v > float(rec_ps) + 1e-6:
+            why.append(f"{c.upper()} {v:.1f} ps not recorded in the waiver ({c}_ps={rec_ps})")
+        if v > lim + CLOCK_WAIVER_MAX_PS:
+            why.append(f"{c.upper()} {v:.1f} ps exceeds limit + {CLOCK_WAIVER_MAX_PS:.0f}")
+        if basis == "pin-flop" and ev.get(f"{c}_pin_spread_basis") == "child_pair":
+            bad = [p for p in ev.get("child_pairs") or () if p.get("corner") == c and float(p.get("ps", 0)) > lim
+                   and not named(p)]
+            if bad:
+                why.append(f"{c.upper()} pair(s) {', '.join(b['a'] + '-' + b['b'] for b in bad)} over {lim:.0f} too")
+    if not over:
+        why.append("no over-limit spread in the evidence")
+    if why:
+        return False, "", why
+    note = (f"clock_rule_waiver by {waiver['by']}: pair {waiver.get('pair')} "
+            + ", ".join(f"{c}_ps {waiver[c + '_ps']}" for c in ("tt", "ff") if f"{c}_ps" in waiver)
+            + f" vs limit {lim:.0f}")
+    return True, note, []
+
+
 def clock_rule(max_sinks, evidence=None):
     """(ok, text): ok is False only on the FAIL of clock_rule_eval (spread > 80 ps at TT or FF); WARN is ok."""
     level, text = clock_rule_eval(max_sinks, evidence)
@@ -223,6 +272,34 @@ TIE_RE = re.compile(r"^TIE(HI|LO)", re.I)
 PHYS_RE = re.compile(r"TAPCELL|FILL|DECAP|ENDCAP|WELLTAP|ANTENNA", re.I)
 CLKPIN_RE = re.compile(r"^(clk|ck|clock|CLK|CK)(_?[a-z0-9]*)?$", re.I)
 RST_RE = re.compile(r"(^|[\s_.\\/])(p?a?rst|reset|rsv?)(_?n|_ni|_i|_[a-z0-9]+)?($|[\s_\[.$/])", re.I)
+
+
+def declared_resets(T):
+    """GATE-FRICTION 2026-10-18 (KV core_peer por_n, 5,344 async loads, refused as a DATA port > 2,048): the kit spec's
+    reset_ports (passed as --set reset_ports=a,b or cfg set) are resets whatever their name; plus power-on-reset names
+    (por, por_n, poweron_rst ...)."""
+    v = (T or {}).get("reset_ports") or ()
+    names = [x.strip() for x in (v.split(",") if isinstance(v, str) else v) if str(x).strip()]
+    return {re.sub(r"\[.*$", "", str(n)) for n in names}
+
+
+POR_RE = re.compile(r"(^|[\s_.\\/])(por|poweron|power_on)(_?n|_ni|_i|_[a-z0-9]+)?($|[\s_\[.$/])", re.I)
+
+
+def is_reset_net(label, net, T=None, port=True):
+    """reset-named (RST_RE) nets as before; a power-on-reset name or a declared reset_ports entry counts only for a
+    PORT-driven net (so the change only ever relaxes: a data-port limit 2,048 -> the reset limit 8,000)."""
+    if RST_RE.search(label) or RST_RE.search(net):
+        return True
+    if not port:
+        return False
+    if POR_RE.search(label) or POR_RE.search(net):
+        return True
+    decl = declared_resets(T)
+    if not decl:
+        return False
+    base = re.sub(r"\[.*$", "", re.sub(r"^port\s+", "", str(label)).strip())
+    return base in decl or re.sub(r"\[.*$", "", str(net)) in decl
 SEQ_CLK_PINS = {"CLK"}
 ASYNC_PINS = {"RESET", "SET", "RESETN", "SETN"}
 
@@ -776,7 +853,7 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
         d = driver[x]
         lab = net_label(g, A, x)
         is_port = d[0] < 0
-        is_rst = bool(RST_RE.search(lab)) or bool(RST_RE.search(g.net_name[x]))
+        is_rst = is_reset_net(lab, g.net_name[x], T, port=is_port)
         cat = "hf_max_reset" if is_rst else ("hf_max_port" if is_port else "hf_max_net")
         M[cat] = max(M[cat], tot)
         lim = T["hf_report"] if (is_port or is_rst) else T["hf_max"]
@@ -806,7 +883,7 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
 
     # ---- 3. boundary: forward from input ports (levels), stop at sequential / macro
     data_in = {x for b, (dd, x) in g.ports.items() if dd == "input" and x not in clk}
-    rst_in = {x for b, (dd, x) in g.ports.items() if dd == "input" and RST_RE.search(b)}
+    rst_in = {x for b, (dd, x) in g.ports.items() if dd == "input" and is_reset_net(b, b, T)}
     in_lv = {x: (0, A["driver"][x][1]) for x in data_in}       # net -> (levels from a data input port, port)
     q_ps = {}                                                   # net -> (ps from a flop / macro output, start)
     for ci in range(ncell):
@@ -1171,6 +1248,13 @@ def verdict(res, mode="warn", waive=(), refuse_checks=REFUSE_CHECKS, clock=None)
     clock = clock or {}
     n = res.get("metrics", {}).get("clock_max_root_sinks")
     ok, text = clock_rule(n, clock.get("evidence"))
+    if not ok and clock.get("waiver"):
+        # the pre_route_gate's recorded per-pair waiver (HANDOFF 0ga), judged on the same evidence by the same rule
+        applied, note, why = clock_waiver_eval(clock.get("evidence"), clock.get("waiver"))
+        if applied:
+            ok, text = True, f"{text}; WARN: WAIVED: {note}"
+        else:
+            text += f" (clock_rule_waiver NOT applied: {'; '.join(why)})"
     res["clock_rule"] = dict(max_root_sinks=n, root=res.get("metrics", {}).get("clock_max_root"), ok=ok, text=text,
                              enforce=bool(clock.get("enforce")), closed_stands=bool(clock.get("closed_stands")),
                              limits=dict(sinks=CLK_ROOT_SINKS_MAX, insertion_ps=CLK_INSERTION_MAX_PS,

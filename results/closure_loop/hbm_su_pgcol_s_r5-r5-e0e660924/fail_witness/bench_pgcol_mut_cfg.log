@@ -1,0 +1,9 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbm_su_pgcol_s_r5-r5-e0e660924 bench bench_pgcol_mut_cfg host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hbm_su_pgcol_s_r5-r5-e0e660924 log cl/bench_pgcol_mut_cfg.a1b1.log captured 2026-10-18T01:46:05-07:00
+# fail_regex 'SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]'
+[cfg q0] SU_PROGRAMME_PGCOL_MISMATCH t=201507000 valid=1/1 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg q0] SU_PROGRAMME_PGCOL_MISMATCH t=211897000 valid=1/1 edge=1039/1039 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg q0] SU_PROGRAMME_PGCOL_MISMATCH t=211987000 valid=1/1 edge=1048/1048 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg q0] SU_PROGRAMME_PGCOL_MISMATCH t=211997000 valid=1/1 edge=1049/1049 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[cfg q0] [417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=6342 active=21333 checked=21558
+[cfg q0] rc=1

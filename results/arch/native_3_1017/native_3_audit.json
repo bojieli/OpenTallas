@@ -1,0 +1,3051 @@
+{
+ "schema": "native_3_1017",
+ "launch_ps": 220.0,
+ "capture_ps": 190.0,
+ "spread_ps": 80,
+ "rule": "owner 0dq 10-17: relative pin-flop arrival + TT/FF boundary spread; insertion/sinks guidance",
+ "records": [
+  {
+   "cell": "dsdv_gunit_l0",
+   "view": "physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0",
+   "lib_cell": "dsdv_gunit_l0",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 286.1,
+   "spread_ps": 58.2,
+   "outputs": 1869,
+   "inputs": 1845,
+   "launch_ps": 122.9,
+   "launch_pin": "wr_bd[107]",
+   "capture_ps": 111.8,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 36.6,
+   "ff_hold_need_ps": 3.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "dsdv_gunit_l0-g3-30d12242b",
+   "record_commit": "a0777a13b3cb303fe205c00189693c712e4f2215",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 286.1,
+     "spread": 58.2
+    },
+    "core_clk/ff": {
+     "mean": 235.4,
+     "spread": 55.6
+    }
+   },
+   "spread_tt_ps": 58.2,
+   "spread_ff_ps": 55.6,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsdv_gunit_l0r",
+   "view": "physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r",
+   "lib_cell": "dsdv_gunit_l0r",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 236.3,
+   "spread_ps": 12.5,
+   "outputs": 331,
+   "inputs": 405,
+   "launch_ps": 109.9,
+   "launch_pin": "r_f",
+   "capture_ps": 72.0,
+   "capture_pin": "wr_bd[100]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 52.6,
+   "ff_hold_need_ps": -11.2,
+   "pass": true,
+   "fail_why": "",
+   "job": "dsdv_gunit_l0r-g3-30d12242b",
+   "record_commit": "e496e2be6cbf64216db471d6ee49da025e83e0c9",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 236.3,
+     "spread": 12.5
+    },
+    "core_clk/ff": {
+     "mean": 193.2,
+     "spread": 12.6
+    }
+   },
+   "spread_tt_ps": 12.5,
+   "spread_ff_ps": 12.6,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsdv_gunit_l2",
+   "view": "physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2",
+   "lib_cell": "dsdv_gunit_l2",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 276.7,
+   "spread_ps": 48.9,
+   "outputs": 2203,
+   "inputs": 1380,
+   "launch_ps": 174.5,
+   "launch_pin": "dl_b[177]",
+   "capture_ps": 84.2,
+   "capture_pin": "hct_b[251]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 39.9,
+   "ff_hold_need_ps": 4.0,
+   "pass": true,
+   "fail_why": "",
+   "job": "dsdv_gunit_l2-n3-4ad138b2f",
+   "record_commit": "3d574cfebf35916ab3fc1c1cd57420f78b434130",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 276.7,
+     "spread": 48.9
+    },
+    "core_clk/ff": {
+     "mean": 226.9,
+     "spread": 47.3
+    }
+   },
+   "spread_tt_ps": 48.9,
+   "spread_ff_ps": 47.3,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsdv_gunit_l3",
+   "view": "physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3",
+   "lib_cell": "dsdv_gunit_l3",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 257.6,
+   "spread_ps": 61.0,
+   "outputs": 724,
+   "inputs": 1135,
+   "launch_ps": 122.1,
+   "launch_pin": "vo_s[0]",
+   "capture_ps": 99.7,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 32.5,
+   "ff_hold_need_ps": -0.8,
+   "pass": true,
+   "fail_why": "",
+   "job": "dsdv_gunit_l3-n3-4970bda9a",
+   "record_commit": "adff3accc5b01a2a2685e66a77583caba4837937",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 257.6,
+     "spread": 61.0
+    },
+    "core_clk/ff": {
+     "mean": 212.6,
+     "spread": 58.5
+    }
+   },
+   "spread_tt_ps": 61.0,
+   "spread_ff_ps": 58.5,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsdv_gunit_l4",
+   "view": "physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4",
+   "lib_cell": "dsdv_gunit_l4",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 295.7,
+   "spread_ps": 56.8,
+   "outputs": 1240,
+   "inputs": 1500,
+   "launch_ps": 236.3,
+   "launch_pin": "rn_o[122]",
+   "capture_ps": 197.8,
+   "capture_pin": "rn_i[215]",
+   "launch_over": 2,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 31.8,
+   "ff_hold_need_ps": 7.4,
+   "pass": false,
+   "fail_why": "launch 236.33534 > 220 (2 pins); capture 197.80709 > 190 (1 pins)",
+   "job": "dsdv_gunit_l4-g3-30d12242b",
+   "record_commit": "66d0cc15cbefb23508e8e29f5ba94f7256087965",
+   "die": "S81",
+   "launch_fail_pins": [
+    [
+     "rn_o[122]",
+     236.3
+    ],
+    [
+     "fault",
+     224.1
+    ]
+   ],
+   "capture_fail_pins": [
+    [
+     "rn_i[215]",
+     197.8
+    ]
+   ],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 295.7,
+     "spread": 56.8
+    },
+    "core_clk/ff": {
+     "mean": 246.3,
+     "spread": 55.5
+    }
+   },
+   "spread_tt_ps": 56.8,
+   "spread_ff_ps": 55.5,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "dsdv_gunit_l4r",
+   "view": "physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r",
+   "lib_cell": "dsdv_gunit_l4r",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 190.6,
+   "spread_ps": 10.6,
+   "outputs": 34,
+   "inputs": 66,
+   "launch_ps": 176.5,
+   "launch_pin": "r_f",
+   "capture_ps": 75.9,
+   "capture_pin": "ss_v",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 56.5,
+   "ff_hold_need_ps": -13.4,
+   "pass": true,
+   "fail_why": "",
+   "job": "dsdv_gunit_l4r-g3-0d82e340b",
+   "record_commit": "8fd519a7a5ed135f3ec69af65fec500c2fa39901",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 190.6,
+     "spread": 10.6
+    },
+    "core_clk/ff": {
+     "mean": 157.0,
+     "spread": 10.1
+    }
+   },
+   "spread_tt_ps": 10.6,
+   "spread_ff_ps": 10.1,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsdv_gunit_l5f",
+   "view": "physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f",
+   "lib_cell": "dsdv_gunit_l5f",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 205.4,
+   "spread_ps": 11.4,
+   "outputs": 68,
+   "inputs": 67,
+   "launch_ps": 95.2,
+   "launch_pin": "yd_v",
+   "capture_ps": 71.8,
+   "capture_pin": "xe_v",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 57.3,
+   "ff_hold_need_ps": -16.4,
+   "pass": true,
+   "fail_why": "",
+   "job": "dsdv_gunit_l5f-g3-0d82e340b",
+   "record_commit": "079134245c37fcc9dad280a5b7fd11833bc17fc3",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 205.4,
+     "spread": 11.4
+    },
+    "core_clk/ff": {
+     "mean": 167.6,
+     "spread": 11.0
+    }
+   },
+   "spread_tt_ps": 11.4,
+   "spread_ff_ps": 11.0,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsdv_sh_vc",
+   "view": "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc",
+   "lib_cell": "dsdv_sh_vc",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 274.3,
+   "spread_ps": 105.7,
+   "outputs": 847,
+   "inputs": 1223,
+   "launch_ps": 167.9,
+   "launch_pin": "vo_n[103]",
+   "capture_ps": 123.4,
+   "capture_pin": "sink_k[5]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 48.0,
+   "ff_hold_need_ps": -18.5,
+   "pass": true,
+   "fail_why": "boundary spread tt 105.7 ff 98.7 > 80",
+   "job": "dsdv_sh_vc-dsdv_sh_vc-7d488e37d",
+   "record_commit": "41a733d85ebf62b6cb4fb350bf13c2f2ad8592d5",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 274.3,
+     "spread": 105.7
+    },
+    "core_clk/ff": {
+     "mean": 228.0,
+     "spread": 98.7
+    }
+   },
+   "spread_tt_ps": 105.7,
+   "spread_ff_ps": 98.7,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "ot_s81_kp4_dsyn",
+   "view": "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn",
+   "lib_cell": "ot_s81_kp4_dsyn",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 275.1,
+   "spread_ps": 51.0,
+   "outputs": 897,
+   "inputs": 546,
+   "launch_ps": 202.1,
+   "launch_pin": "x_q[5]",
+   "capture_ps": 80.5,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 32.8,
+   "ff_hold_need_ps": -8.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81lk_kp4_dsyn-t2-e3dea7351",
+   "record_commit": "b497d3ac7ef6aa317bdffac329e5561a001beefd",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 275.1,
+     "spread": 51.0
+    },
+    "core_clk/ff": {
+     "mean": 227.7,
+     "spread": 46.6
+    }
+   },
+   "spread_tt_ps": 51.0,
+   "spread_ff_ps": 46.6,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "ot_s81_kp4_dchn",
+   "view": "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn",
+   "lib_cell": "ot_s81_kp4_dchn",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 262.8,
+   "spread_ps": 52.5,
+   "outputs": 623,
+   "inputs": 321,
+   "launch_ps": 156.0,
+   "launch_pin": "cw_q[288]",
+   "capture_ps": 96.0,
+   "capture_pin": "k_any",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 64.9,
+   "ff_hold_need_ps": -1.2,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81lk_kp4_dchn-t2-5f0b4a343",
+   "record_commit": "0ad0e5a7de08f94beb3ec9d033b8db7700d97107",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 262.8,
+     "spread": 52.5
+    },
+    "core_clk/ff": {
+     "mean": 216.9,
+     "spread": 49.6
+    }
+   },
+   "spread_tt_ps": 52.5,
+   "spread_ff_ps": 49.6,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "ot_s81sl_cap_tr",
+   "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+   "lib_cell": "ot_s81sl_cap_tr",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 140.7,
+   "spread_ps": 24.8,
+   "outputs": 67,
+   "inputs": 273,
+   "launch_ps": 174.1,
+   "launch_pin": "fault",
+   "capture_ps": 99.4,
+   "capture_pin": "rt[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 56.4,
+   "ff_hold_need_ps": -15.6,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81sl_cap_tr-s81sl_cap_tr-0ecc0c258",
+   "record_commit": "300f93f9870b40f880870f119058fc3aaa409d83",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 140.7,
+     "spread": 24.8
+    },
+    "core_clk/ff": {
+     "mean": 113.6,
+     "spread": 23.2
+    }
+   },
+   "spread_tt_ps": 24.8,
+   "spread_ff_ps": 23.2,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsdv_svc_sx_hrow",
+   "view": "physical/ref_tile/dsdv_svc_sx_hrow/views/dsdv_svc_sx_hrow",
+   "lib_cell": "dsdv_svc_sx_hrow",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 211.0,
+   "spread_ps": 39.0,
+   "outputs": 1942,
+   "inputs": 1908,
+   "launch_ps": 107.5,
+   "launch_pin": "fault",
+   "capture_ps": 82.6,
+   "capture_pin": "si_s[137]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 34.1,
+   "ff_hold_need_ps": -6.7,
+   "pass": true,
+   "fail_why": "",
+   "job": "dsdv_svc_sx_hrow-dsdv_svc_sx_hrow-c5a8d5b10",
+   "record_commit": "13802cf6a44378510ebbe0aef0b9a0ccc5de49d8",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 211.0,
+     "spread": 39.0
+    },
+    "core_clk/ff": {
+     "mean": 177.9,
+     "spread": 37.9
+    }
+   },
+   "spread_tt_ps": 39.0,
+   "spread_ff_ps": 37.9,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_70_NS",
+   "view": "physical/ref_tile/s81dv_rlyh_70_ns/views/dsfd_dvrlyh_70_NS",
+   "lib_cell": "dsfd_dvrlyh_70_NS",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 63.1,
+   "spread_ps": 2.0,
+   "outputs": 70,
+   "inputs": 71,
+   "launch_ps": 112.3,
+   "launch_pin": "o[49]",
+   "capture_ps": 64.2,
+   "capture_pin": "i[65]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 65.7,
+   "ff_hold_need_ps": -7.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_70_ns-h1-41e90080d",
+   "record_commit": "752982f8cf37a1fd52875742691133cdffe5f8e2",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 63.1,
+     "spread": 2.0
+    },
+    "core_clk/ff": {
+     "mean": 47.1,
+     "spread": 1.9
+    }
+   },
+   "spread_tt_ps": 2.0,
+   "spread_ff_ps": 1.9,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_70_SN",
+   "view": "physical/ref_tile/s81dv_rlyh_70_sn/views/dsfd_dvrlyh_70_SN",
+   "lib_cell": "dsfd_dvrlyh_70_SN",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 61.4,
+   "spread_ps": 2.5,
+   "outputs": 70,
+   "inputs": 71,
+   "launch_ps": 109.3,
+   "launch_pin": "o[45]",
+   "capture_ps": 63.4,
+   "capture_pin": "i[63]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 65.2,
+   "ff_hold_need_ps": -7.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_70_sn-h1-41e90080d",
+   "record_commit": "6cbf7e8a5d7cf14fffface4e7ef70e179649f51f",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 61.4,
+     "spread": 2.5
+    },
+    "core_clk/ff": {
+     "mean": 45.7,
+     "spread": 2.2
+    }
+   },
+   "spread_tt_ps": 2.5,
+   "spread_ff_ps": 2.2,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_682_WE",
+   "view": "physical/ref_tile/s81dv_rlyh_682_we/views/dsfd_dvrlyh_682_WE",
+   "lib_cell": "dsfd_dvrlyh_682_WE",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 89.6,
+   "spread_ps": 9.5,
+   "outputs": 682,
+   "inputs": 683,
+   "launch_ps": 111.2,
+   "launch_pin": "o[348]",
+   "capture_ps": 69.2,
+   "capture_pin": "i[154]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 58.9,
+   "ff_hold_need_ps": -4.4,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_682_we-h1-41e90080d",
+   "record_commit": "d6ba74a38a5e231ba790d6d2d3ed6ed1e5bac0ec",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 89.6,
+     "spread": 9.5
+    },
+    "core_clk/ff": {
+     "mean": 71.5,
+     "spread": 9.9
+    }
+   },
+   "spread_tt_ps": 9.5,
+   "spread_ff_ps": 9.9,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_512_WE",
+   "view": "physical/ref_tile/s81dv_rlyh_512_we/views/dsfd_dvrlyh_512_WE",
+   "lib_cell": "dsfd_dvrlyh_512_WE",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 81.4,
+   "spread_ps": 7.2,
+   "outputs": 512,
+   "inputs": 513,
+   "launch_ps": 106.7,
+   "launch_pin": "o[4]",
+   "capture_ps": 69.2,
+   "capture_pin": "i[317]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 60.4,
+   "ff_hold_need_ps": -2.1,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_512_we-h1-41e90080d",
+   "record_commit": "19a6e46458b5ca602d1d8d49abe3cf00a4effae5",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 81.4,
+     "spread": 7.2
+    },
+    "core_clk/ff": {
+     "mean": 64.9,
+     "spread": 6.7
+    }
+   },
+   "spread_tt_ps": 7.2,
+   "spread_ff_ps": 6.7,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_562_EW",
+   "view": "physical/ref_tile/s81dv_rlyh_562_ew/views/dsfd_dvrlyh_562_EW",
+   "lib_cell": "dsfd_dvrlyh_562_EW",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 85.6,
+   "spread_ps": 8.7,
+   "outputs": 562,
+   "inputs": 563,
+   "launch_ps": 111.9,
+   "launch_pin": "o[496]",
+   "capture_ps": 71.4,
+   "capture_pin": "i[131]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 61.0,
+   "ff_hold_need_ps": -6.9,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_562_ew-h1-41e90080d",
+   "record_commit": "881695b130d05957d38e767262f7d33ae5a3ff9c",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 85.6,
+     "spread": 8.7
+    },
+    "core_clk/ff": {
+     "mean": 68.4,
+     "spread": 8.9
+    }
+   },
+   "spread_tt_ps": 8.7,
+   "spread_ff_ps": 8.9,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_682_NS",
+   "view": "physical/ref_tile/s81dv_rlyh_682_ns/views/dsfd_dvrlyh_682_NS",
+   "lib_cell": "dsfd_dvrlyh_682_NS",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 90.5,
+   "spread_ps": 12.7,
+   "outputs": 682,
+   "inputs": 683,
+   "launch_ps": 118.9,
+   "launch_pin": "o[607]",
+   "capture_ps": 70.3,
+   "capture_pin": "i[226]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 59.9,
+   "ff_hold_need_ps": -8.9,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_682_ns-h1-41e90080d",
+   "record_commit": "5044cc091791dc341abad25b8afa95a12347b5c4",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 90.5,
+     "spread": 12.7
+    },
+    "core_clk/ff": {
+     "mean": 72.4,
+     "spread": 12.8
+    }
+   },
+   "spread_tt_ps": 12.7,
+   "spread_ff_ps": 12.8,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_682_EW",
+   "view": "physical/ref_tile/s81dv_rlyh_682_ew/views/dsfd_dvrlyh_682_EW",
+   "lib_cell": "dsfd_dvrlyh_682_EW",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 88.6,
+   "spread_ps": 7.0,
+   "outputs": 682,
+   "inputs": 683,
+   "launch_ps": 109.9,
+   "launch_pin": "o[360]",
+   "capture_ps": 69.8,
+   "capture_pin": "i[494]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 62.0,
+   "ff_hold_need_ps": -7.4,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_682_ew-h1-41e90080d",
+   "record_commit": "819a4cf49705f5138ec0bec0a5a82a33c28d6c30",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 88.6,
+     "spread": 7.0
+    },
+    "core_clk/ff": {
+     "mean": 70.7,
+     "spread": 7.1
+    }
+   },
+   "spread_tt_ps": 7.0,
+   "spread_ff_ps": 7.1,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_562_SN",
+   "view": "physical/ref_tile/s81dv_rlyh_562_sn/views/dsfd_dvrlyh_562_SN",
+   "lib_cell": "dsfd_dvrlyh_562_SN",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 87.5,
+   "spread_ps": 8.3,
+   "outputs": 562,
+   "inputs": 563,
+   "launch_ps": 152.7,
+   "launch_pin": "o[321]",
+   "capture_ps": 71.0,
+   "capture_pin": "i[370]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 59.4,
+   "ff_hold_need_ps": -12.5,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_562_sn-h1-41e90080d",
+   "record_commit": "d4b42e0c7933ccb19d1a7051204ed48749849489",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 87.5,
+     "spread": 8.3
+    },
+    "core_clk/ff": {
+     "mean": 69.9,
+     "spread": 8.7
+    }
+   },
+   "spread_tt_ps": 8.3,
+   "spread_ff_ps": 8.7,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_562_WE",
+   "view": "physical/ref_tile/s81dv_rlyh_562_we/views/dsfd_dvrlyh_562_WE",
+   "lib_cell": "dsfd_dvrlyh_562_WE",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 83.2,
+   "spread_ps": 7.6,
+   "outputs": 562,
+   "inputs": 563,
+   "launch_ps": 109.7,
+   "launch_pin": "o[432]",
+   "capture_ps": 71.9,
+   "capture_pin": "i[361]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 59.2,
+   "ff_hold_need_ps": -6.4,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_562_we-h1-41e90080d",
+   "record_commit": "0005921873a0e234789b085ee9ddab86cfeaaf39",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 83.2,
+     "spread": 7.6
+    },
+    "core_clk/ff": {
+     "mean": 66.2,
+     "spread": 7.8
+    }
+   },
+   "spread_tt_ps": 7.6,
+   "spread_ff_ps": 7.8,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_276_EW",
+   "view": "physical/ref_tile/s81dv_rlyh_276_ew/views/dsfd_dvrlyh_276_EW",
+   "lib_cell": "dsfd_dvrlyh_276_EW",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 81.1,
+   "spread_ps": 5.4,
+   "outputs": 276,
+   "inputs": 277,
+   "launch_ps": 113.9,
+   "launch_pin": "o[240]",
+   "capture_ps": 68.7,
+   "capture_pin": "i[251]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 66.0,
+   "ff_hold_need_ps": -5.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_276_ew-h1-41e90080d",
+   "record_commit": "9774a119fd0305b1c2fe07d293fefbf7187d4634",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 81.1,
+     "spread": 5.4
+    },
+    "core_clk/ff": {
+     "mean": 62.2,
+     "spread": 5.6
+    }
+   },
+   "spread_tt_ps": 5.4,
+   "spread_ff_ps": 5.6,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_276_NS",
+   "view": "physical/ref_tile/s81dv_rlyh_276_ns/views/dsfd_dvrlyh_276_NS",
+   "lib_cell": "dsfd_dvrlyh_276_NS",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 105.7,
+   "spread_ps": 7.1,
+   "outputs": 276,
+   "inputs": 277,
+   "launch_ps": 133.7,
+   "launch_pin": "o[116]",
+   "capture_ps": 72.6,
+   "capture_pin": "i[145]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 62.0,
+   "ff_hold_need_ps": -13.8,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_276_ns-h1-41e90080d",
+   "record_commit": "9741b11cacc2833c9e9dd2dd32a0709e458edd1f",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 105.7,
+     "spread": 7.1
+    },
+    "core_clk/ff": {
+     "mean": 78.5,
+     "spread": 6.5
+    }
+   },
+   "spread_tt_ps": 7.1,
+   "spread_ff_ps": 6.5,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_512_EW",
+   "view": "physical/ref_tile/s81dv_rlyh_512_ew/views/dsfd_dvrlyh_512_EW",
+   "lib_cell": "dsfd_dvrlyh_512_EW",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 82.9,
+   "spread_ps": 8.7,
+   "outputs": 512,
+   "inputs": 513,
+   "launch_ps": 109.6,
+   "launch_pin": "o[12]",
+   "capture_ps": 69.3,
+   "capture_pin": "i[330]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 61.3,
+   "ff_hold_need_ps": -4.8,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_512_ew-h1-41e90080d",
+   "record_commit": "d1e0a6f0307f1a25644f9de6bf0ec118f7e6cbfd",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 82.9,
+     "spread": 8.7
+    },
+    "core_clk/ff": {
+     "mean": 66.2,
+     "spread": 8.7
+    }
+   },
+   "spread_tt_ps": 8.7,
+   "spread_ff_ps": 8.7,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_276_WE",
+   "view": "physical/ref_tile/s81dv_rlyh_276_we/views/dsfd_dvrlyh_276_WE",
+   "lib_cell": "dsfd_dvrlyh_276_WE",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 79.3,
+   "spread_ps": 4.5,
+   "outputs": 276,
+   "inputs": 277,
+   "launch_ps": 107.3,
+   "launch_pin": "o[4]",
+   "capture_ps": 66.7,
+   "capture_pin": "i[219]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 64.2,
+   "ff_hold_need_ps": -4.8,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_276_we-h1-41e90080d",
+   "record_commit": "39a624bdffd3340a0149381cdcfb9c194c954b9e",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 79.3,
+     "spread": 4.5
+    },
+    "core_clk/ff": {
+     "mean": 60.6,
+     "spread": 4.3
+    }
+   },
+   "spread_tt_ps": 4.5,
+   "spread_ff_ps": 4.3,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "dsfd_dvrlyh_276_SN",
+   "view": "physical/ref_tile/s81dv_rlyh_276_sn/views/dsfd_dvrlyh_276_SN",
+   "lib_cell": "dsfd_dvrlyh_276_SN",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 108.3,
+   "spread_ps": 5.2,
+   "outputs": 276,
+   "inputs": 277,
+   "launch_ps": 136.1,
+   "launch_pin": "o[100]",
+   "capture_ps": 75.3,
+   "capture_pin": "i[144]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 64.8,
+   "ff_hold_need_ps": -8.9,
+   "pass": true,
+   "fail_why": "",
+   "job": "s81dv_rlyh_276_sn-h1-41e90080d",
+   "record_commit": "5df5abcb070908334668102c8ecd398f92da5016",
+   "die": "S81",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 108.3,
+     "spread": 5.2
+    },
+    "core_clk/ff": {
+     "mean": 80.1,
+     "spread": 4.8
+    }
+   },
+   "spread_tt_ps": 5.2,
+   "spread_ff_ps": 4.8,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "qkd_host_pc_slice_die",
+   "view": "physical/ref_tile/qkd_hslice/views/qkd_host_pc_slice_die",
+   "lib_cell": "qkd_host_pc_slice_die",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 235.7,
+   "spread_ps": 41.9,
+   "outputs": 1034,
+   "inputs": 1043,
+   "launch_ps": 121.1,
+   "launch_pin": "co[21]",
+   "capture_ps": 112.7,
+   "capture_pin": "land_es[271]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 55.3,
+   "ff_hold_need_ps": -16.0,
+   "pass": true,
+   "fail_why": "",
+   "job": "qkd_hslice-es2-3ba5662d3",
+   "record_commit": "7fe3e06676901563b154a454434c16c7de7a817d",
+   "die": "KV",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 235.7,
+     "spread": 41.9
+    },
+    "core_clk/ff": {
+     "mean": 193.4,
+     "spread": 38.9
+    }
+   },
+   "spread_tt_ps": 41.9,
+   "spread_ff_ps": 38.9,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "qkd_host_pc_slice_die",
+   "view": "physical/ref_tile/qkd_hslice_dn/views/qkd_host_pc_slice_die",
+   "lib_cell": "qkd_host_pc_slice_die",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 234.6,
+   "spread_ps": 56.3,
+   "outputs": 1034,
+   "inputs": 1043,
+   "launch_ps": 130.7,
+   "launch_pin": "ctrl_es[15]",
+   "capture_ps": 82.3,
+   "capture_pin": "fi[277]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 42.8,
+   "ff_hold_need_ps": -6.7,
+   "pass": true,
+   "fail_why": "",
+   "job": "qkd_hslice_dn-es2-3ba5662d3",
+   "record_commit": "adcd89b477300504a5f1c73677b1e599767efdfd",
+   "die": "KV",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 234.6,
+     "spread": 56.3
+    },
+    "core_clk/ff": {
+     "mean": 192.6,
+     "spread": 52.2
+    }
+   },
+   "spread_tt_ps": 56.3,
+   "spread_ff_ps": 52.2,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "qkd_hr_core_tx",
+   "view": "physical/ref_tile/qkd_hr_core_tx/views/qkd_hr_core_tx",
+   "lib_cell": "qkd_hr_core_tx",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 190.2,
+   "spread_ps": 40.4,
+   "outputs": 520,
+   "inputs": 1142,
+   "launch_ps": 100.2,
+   "launch_pin": "u_rank__tx_d[509]",
+   "capture_ps": 298.4,
+   "capture_pin": "host_rst_n",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 47.3,
+   "ff_hold_need_ps": -1.9,
+   "pass": false,
+   "fail_why": "capture 298.43652 > 190 (1 pins)",
+   "job": "qkd_hr_core_tx-r2-c372bf6fe",
+   "record_commit": "73ee53989bf468d9ba6a893df055404b06abaf4a",
+   "die": "KV",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "host_rst_n",
+     298.4
+    ]
+   ],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 190.2,
+     "spread": 40.4
+    },
+    "core_clk/ff": {
+     "mean": 156.9,
+     "spread": 38.7
+    }
+   },
+   "spread_tt_ps": 40.4,
+   "spread_ff_ps": 38.7,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "qkd_host_rx_pad5",
+   "view": "physical/ref_tile/qkd_hr_phy_pad/views/qkd_host_rx_pad5",
+   "lib_cell": "qkd_host_rx_pad5",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 175.8,
+   "spread_ps": 17.8,
+   "outputs": 531,
+   "inputs": 1027,
+   "launch_ps": 90.1,
+   "launch_pin": "in_cr",
+   "capture_ps": 103.2,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 48.4,
+   "ff_hold_need_ps": -14.8,
+   "pass": true,
+   "fail_why": "",
+   "job": "qkd_hr_phy_pad-b1-0705b4562",
+   "record_commit": "2d16d1870a5f0684d8be01e2e20194f26f6e4293",
+   "die": "KV",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 175.8,
+     "spread": 17.8
+    },
+    "core_clk/ff": {
+     "mean": 143.6,
+     "spread": 16.8
+    }
+   },
+   "spread_tt_ps": 17.8,
+   "spread_ff_ps": 16.8,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "qkd_host_rx_class_admission",
+   "view": "physical/ref_tile/qkd_hr_core_rx/views/qkd_host_rx_class_admission",
+   "lib_cell": "qkd_host_rx_class_admission",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 216.4,
+   "spread_ps": 30.6,
+   "outputs": 1577,
+   "inputs": 542,
+   "launch_ps": 95.1,
+   "launch_pin": "ctrl_d[54]",
+   "capture_ps": 256.6,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 46.5,
+   "ff_hold_need_ps": -7.9,
+   "pass": false,
+   "fail_why": "capture 256.5915 > 190 (1 pins)",
+   "job": "qkd_hr_core_rx-b1-161e15878",
+   "record_commit": "6edde47214cffbe95d9289fc78110f42dbfd848b",
+   "die": "KV",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "rst_n",
+     256.6
+    ]
+   ],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 216.4,
+     "spread": 30.6
+    },
+    "core_clk/ff": {
+     "mean": 177.3,
+     "spread": 29.6
+    }
+   },
+   "spread_tt_ps": 30.6,
+   "spread_ff_ps": 29.6,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "ot_hbm_su_static_pg_lg_tap",
+   "view": "physical/ref_tile/hbm_su_pg_lgtap_1017/views/ot_hbm_su_static_pg_lg_tap",
+   "lib_cell": "ot_hbm_su_static_pg_lg_tap",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 222.2,
+   "spread_ps": 67.9,
+   "outputs": 1629,
+   "inputs": 1713,
+   "launch_ps": 319.2,
+   "launch_pin": "local_rr[490]",
+   "capture_ps": 236.3,
+   "capture_pin": "local_rq[16]",
+   "launch_over": 154,
+   "capture_over": 3,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 43.5,
+   "ff_hold_need_ps": -21.1,
+   "pass": false,
+   "fail_why": "launch 319.17213 > 220 (154 pins); capture 236.34643 > 190 (3 pins)",
+   "job": "hbm_su_pg_lgtap_1017-r1-139da60d3",
+   "record_commit": "f7388bdeba696b507c914d04a154fb931a6822be",
+   "die": "HBM",
+   "launch_fail_pins": [
+    [
+     "local_rr[490]",
+     319.2
+    ],
+    [
+     "local_rr[492]",
+     305.6
+    ],
+    [
+     "local_rr[481]",
+     296.9
+    ],
+    [
+     "local_rr[477]",
+     296.4
+    ],
+    [
+     "local_rr[496]",
+     296.3
+    ],
+    [
+     "local_rr[488]",
+     293.6
+    ],
+    [
+     "local_rr[498]",
+     293.2
+    ],
+    [
+     "local_rr[468]",
+     293.1
+    ],
+    [
+     "local_rr[504]",
+     293.0
+    ],
+    [
+     "local_rr[502]",
+     293.0
+    ],
+    [
+     "local_rr[484]",
+     291.3
+    ],
+    [
+     "local_rr[506]",
+     289.7
+    ],
+    [
+     "local_rr[460]",
+     288.8
+    ],
+    [
+     "local_rr[482]",
+     287.4
+    ],
+    [
+     "local_rr[512]",
+     285.8
+    ],
+    [
+     "local_rr[501]",
+     285.0
+    ],
+    [
+     "local_rr[505]",
+     284.0
+    ],
+    [
+     "local_rr[465]",
+     283.4
+    ],
+    [
+     "local_rr[469]",
+     282.6
+    ],
+    [
+     "local_rr[494]",
+     280.9
+    ],
+    [
+     "local_rr[480]",
+     279.1
+    ],
+    [
+     "local_rr[473]",
+     278.7
+    ],
+    [
+     "local_rr[497]",
+     277.7
+    ],
+    [
+     "local_rr[456]",
+     277.1
+    ],
+    [
+     "local_rr[479]",
+     277.0
+    ],
+    [
+     "local_rr[489]",
+     276.7
+    ],
+    [
+     "local_rr[461]",
+     276.6
+    ],
+    [
+     "local_rr[483]",
+     276.4
+    ],
+    [
+     "local_rr[503]",
+     276.2
+    ],
+    [
+     "local_rr[493]",
+     276.2
+    ],
+    [
+     "local_rr[495]",
+     275.2
+    ],
+    [
+     "local_rr[470]",
+     274.4
+    ],
+    [
+     "local_rr[507]",
+     274.2
+    ],
+    [
+     "local_rr[486]",
+     274.2
+    ],
+    [
+     "local_rr[487]",
+     273.8
+    ],
+    [
+     "local_rr[500]",
+     271.8
+    ],
+    [
+     "local_rr[508]",
+     271.4
+    ],
+    [
+     "local_rr[485]",
+     270.8
+    ],
+    [
+     "local_rr[464]",
+     270.8
+    ],
+    [
+     "local_rr[472]",
+     268.8
+    ],
+    [
+     "local_rr[510]",
+     267.2
+    ],
+    [
+     "local_rr[509]",
+     266.0
+    ],
+    [
+     "local_rr[511]",
+     265.8
+    ],
+    [
+     "local_rr[474]",
+     265.4
+    ],
+    [
+     "local_rr[476]",
+     264.1
+    ],
+    [
+     "local_rr[471]",
+     262.5
+    ],
+    [
+     "local_rr[499]",
+     261.6
+    ],
+    [
+     "local_rr[457]",
+     261.6
+    ],
+    [
+     "local_rr[475]",
+     259.9
+    ],
+    [
+     "local_rr[431]",
+     259.3
+    ],
+    [
+     "local_rr[462]",
+     259.1
+    ],
+    [
+     "local_rr[478]",
+     258.8
+    ],
+    [
+     "local_rr[454]",
+     258.6
+    ],
+    [
+     "local_rr[491]",
+     256.6
+    ],
+    [
+     "local_rr[428]",
+     256.2
+    ],
+    [
+     "local_rr[433]",
+     254.5
+    ],
+    [
+     "local_rr[381]",
+     254.0
+    ],
+    [
+     "local_rr[435]",
+     253.4
+    ],
+    [
+     "local_rr[424]",
+     252.0
+    ],
+    [
+     "local_rr[390]",
+     250.2
+    ],
+    [
+     "local_rr[400]",
+     249.8
+    ],
+    [
+     "local_rr[430]",
+     249.0
+    ],
+    [
+     "local_rr[444]",
+     247.8
+    ],
+    [
+     "local_rr[450]",
+     247.6
+    ],
+    [
+     "local_rr[467]",
+     246.7
+    ],
+    [
+     "local_rr[436]",
+     246.4
+    ],
+    [
+     "local_rr[439]",
+     245.5
+    ],
+    [
+     "local_rr[411]",
+     245.1
+    ],
+    [
+     "local_rr[359]",
+     244.7
+    ],
+    [
+     "local_rr[438]",
+     244.3
+    ],
+    [
+     "local_rr[452]",
+     244.2
+    ],
+    [
+     "local_rr[442]",
+     244.1
+    ],
+    [
+     "local_rr[310]",
+     244.1
+    ],
+    [
+     "local_rr[372]",
+     243.8
+    ],
+    [
+     "local_rr[156]",
+     243.4
+    ],
+    [
+     "local_rr[299]",
+     242.7
+    ],
+    [
+     "local_rr[451]",
+     241.6
+    ],
+    [
+     "local_rr[398]",
+     241.6
+    ],
+    [
+     "local_rr[375]",
+     241.5
+    ],
+    [
+     "local_rr[333]",
+     240.0
+    ],
+    [
+     "local_rr[448]",
+     239.8
+    ],
+    [
+     "local_rr[434]",
+     239.8
+    ],
+    [
+     "local_rr[449]",
+     238.3
+    ],
+    [
+     "local_rr[453]",
+     237.0
+    ],
+    [
+     "local_rr[325]",
+     236.9
+    ],
+    [
+     "local_rr[458]",
+     236.4
+    ],
+    [
+     "local_rr[445]",
+     236.2
+    ],
+    [
+     "local_rr[161]",
+     235.5
+    ],
+    [
+     "local_rr[342]",
+     235.4
+    ],
+    [
+     "local_rr[348]",
+     234.8
+    ],
+    [
+     "local_rr[426]",
+     234.6
+    ],
+    [
+     "local_rr[355]",
+     234.4
+    ],
+    [
+     "local_rr[365]",
+     233.4
+    ],
+    [
+     "local_rr[440]",
+     233.2
+    ],
+    [
+     "local_rr[264]",
+     233.1
+    ],
+    [
+     "local_rr[163]",
+     233.0
+    ],
+    [
+     "local_rr[420]",
+     232.7
+    ],
+    [
+     "local_rr[304]",
+     232.6
+    ],
+    [
+     "local_rr[459]",
+     232.1
+    ],
+    [
+     "local_rr[443]",
+     232.1
+    ],
+    [
+     "local_rr[416]",
+     231.5
+    ],
+    [
+     "local_rr[330]",
+     231.3
+    ],
+    [
+     "local_rr[401]",
+     230.9
+    ],
+    [
+     "local_rr[389]",
+     230.9
+    ],
+    [
+     "local_rr[358]",
+     230.5
+    ],
+    [
+     "local_rr[441]",
+     230.4
+    ],
+    [
+     "local_rr[303]",
+     230.2
+    ],
+    [
+     "local_rr[429]",
+     230.1
+    ],
+    [
+     "local_rr[352]",
+     230.0
+    ],
+    [
+     "local_rr[165]",
+     229.9
+    ],
+    [
+     "local_rr[166]",
+     229.6
+    ],
+    [
+     "local_rr[404]",
+     229.5
+    ],
+    [
+     "local_rr[410]",
+     229.3
+    ],
+    [
+     "local_rr[287]",
+     229.1
+    ],
+    [
+     "local_rr[300]",
+     228.7
+    ],
+    [
+     "local_rr[277]",
+     228.6
+    ],
+    [
+     "local_rr[427]",
+     228.3
+    ],
+    [
+     "local_rr[374]",
+     228.0
+    ],
+    [
+     "local_rr[446]",
+     227.9
+    ],
+    [
+     "local_rr[371]",
+     227.3
+    ],
+    [
+     "local_rr[294]",
+     227.1
+    ],
+    [
+     "local_rr[409]",
+     226.8
+    ],
+    [
+     "local_rr[396]",
+     226.6
+    ],
+    [
+     "local_rr[391]",
+     226.2
+    ],
+    [
+     "local_rr[324]",
+     225.9
+    ],
+    [
+     "local_rr[370]",
+     225.4
+    ],
+    [
+     "local_rr[318]",
+     225.3
+    ],
+    [
+     "local_rr[405]",
+     225.0
+    ],
+    [
+     "local_rr[447]",
+     224.8
+    ],
+    [
+     "local_rr[328]",
+     224.7
+    ],
+    [
+     "local_rr[387]",
+     224.6
+    ],
+    [
+     "local_rr[319]",
+     224.5
+    ],
+    [
+     "local_rr[395]",
+     224.2
+    ],
+    [
+     "local_rr[366]",
+     224.1
+    ],
+    [
+     "local_rr[362]",
+     224.1
+    ],
+    [
+     "local_rr[336]",
+     223.9
+    ],
+    [
+     "local_rr[306]",
+     223.6
+    ],
+    [
+     "local_rr[250]",
+     223.6
+    ],
+    [
+     "local_rr[314]",
+     223.5
+    ],
+    [
+     "local_rr[418]",
+     223.0
+    ],
+    [
+     "local_rr[421]",
+     222.8
+    ],
+    [
+     "local_rr[399]",
+     222.6
+    ],
+    [
+     "local_rr[357]",
+     222.6
+    ],
+    [
+     "local_rr[338]",
+     222.5
+    ],
+    [
+     "local_rr[388]",
+     222.4
+    ],
+    [
+     "local_rr[423]",
+     222.2
+    ],
+    [
+     "local_rr[158]",
+     221.6
+    ],
+    [
+     "local_rr[379]",
+     220.8
+    ],
+    [
+     "local_rr[315]",
+     220.8
+    ],
+    [
+     "local_rr[308]",
+     220.6
+    ],
+    [
+     "local_rr[386]",
+     220.5
+    ],
+    [
+     "local_rr[382]",
+     220.4
+    ],
+    [
+     "local_rr[392]",
+     220.3
+    ],
+    [
+     "local_rr[286]",
+     220.0
+    ]
+   ],
+   "capture_fail_pins": [
+    [
+     "local_rq[16]",
+     236.3
+    ],
+    [
+     "local_rq[33]",
+     225.9
+    ],
+    [
+     "local_wq[561]",
+     219.1
+    ]
+   ],
+   "corner_boundary": {
+    "ot_entry_0/tt": {
+     "mean": 222.2,
+     "spread": 67.9
+    },
+    "ot_entry_0/ff": {
+     "mean": 185.1,
+     "spread": 64.8
+    }
+   },
+   "spread_tt_ps": 67.9,
+   "spread_ff_ps": 64.8,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "ot_hbm_su_programme_pgcol_s",
+   "view": "physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s",
+   "lib_cell": "ot_hbm_su_programme_pgcol_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 271.4,
+   "spread_ps": 50.3,
+   "outputs": 276,
+   "inputs": 288,
+   "launch_ps": 109.2,
+   "launch_pin": "edge_index[15]",
+   "capture_ps": 414.2,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 8,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 48.6,
+   "ff_hold_need_ps": -10.3,
+   "pass": false,
+   "fail_why": "capture 414.15323 > 190 (8 pins)",
+   "job": "hbm_su_pgcol_s_r5-r5-9e33ce295",
+   "record_commit": "28a63c6e08f57daaba1c3c8438524ffcfdb5d74b",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "rst_n",
+     414.2
+    ],
+    [
+     "cfg_we",
+     390.6
+    ],
+    [
+     "cfg_any",
+     388.4
+    ],
+    [
+     "cfg_bank[2]",
+     303.9
+    ],
+    [
+     "cfg_bank[1]",
+     297.7
+    ],
+    [
+     "cfg_bank[0]",
+     295.3
+    ],
+    [
+     "cfg_bank[4]",
+     291.4
+    ],
+    [
+     "cfg_bank[3]",
+     284.4
+    ]
+   ],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 271.4,
+     "spread": 50.3
+    },
+    "core_clk/ff": {
+     "mean": 222.8,
+     "spread": 46.7
+    }
+   },
+   "spread_tt_ps": 50.3,
+   "spread_ff_ps": 46.7,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "ot_hbm_su_programme_pghead",
+   "view": "physical/ref_tile/hbm_su_pghead_r5/views/ot_hbm_su_programme_pghead",
+   "lib_cell": "ot_hbm_su_programme_pghead",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 101.8,
+   "spread_ps": 11.4,
+   "outputs": 280,
+   "inputs": 301,
+   "launch_ps": 225.6,
+   "launch_pin": "o_we[7]",
+   "capture_ps": 204.5,
+   "capture_pin": "l_fault[1]",
+   "launch_over": 7,
+   "capture_over": 4,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 47.4,
+   "ff_hold_need_ps": -20.3,
+   "pass": false,
+   "fail_why": "launch 225.57683 > 220 (7 pins); capture 204.47265 > 190 (4 pins)",
+   "job": "hbm_su_pghead_r5-r5-114508f65",
+   "record_commit": "f3e83fc3b9f88e1b8828f4d0c5609929a1fd9160",
+   "die": "HBM",
+   "launch_fail_pins": [
+    [
+     "o_we[7]",
+     225.6
+    ],
+    [
+     "o_we[4]",
+     224.0
+    ],
+    [
+     "o_we[6]",
+     223.3
+    ],
+    [
+     "o_we[5]",
+     222.5
+    ],
+    [
+     "o_we[0]",
+     222.4
+    ],
+    [
+     "o_we[1]",
+     221.4
+    ],
+    [
+     "o_we[9]",
+     221.1
+    ]
+   ],
+   "capture_fail_pins": [
+    [
+     "l_fault[1]",
+     204.5
+    ],
+    [
+     "l_fault[5]",
+     203.7
+    ],
+    [
+     "l_fault[4]",
+     202.3
+    ],
+    [
+     "l_fault[6]",
+     199.3
+    ]
+   ],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 101.8,
+     "spread": 11.4
+    },
+    "core_clk/ff": {
+     "mean": 85.7,
+     "spread": 11.2
+    }
+   },
+   "spread_tt_ps": 11.4,
+   "spread_ff_ps": 11.2,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "ot_hbm_host_cfg_leaf2",
+   "view": "physical/ref_tile/hdie_host_cfg_leaf_r1/views/ot_hbm_host_cfg_leaf2",
+   "lib_cell": "ot_hbm_host_cfg_leaf2",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 106.5,
+   "spread_ps": 15.0,
+   "outputs": 712,
+   "inputs": 393,
+   "launch_ps": 94.6,
+   "launch_pin": "s_active[12]",
+   "capture_ps": 74.7,
+   "capture_pin": "t_ready[12]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 49.8,
+   "ff_hold_need_ps": -19.7,
+   "pass": true,
+   "fail_why": "",
+   "job": "hdie_host_cfg_leaf_r1-r1-5828f1128",
+   "record_commit": "442a973fe899cd807525e424fa09e58977b6b3da",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 106.5,
+     "spread": 15.0
+    },
+    "core_clk/ff": {
+     "mean": 87.1,
+     "spread": 15.2
+    }
+   },
+   "spread_tt_ps": 15.0,
+   "spread_ff_ps": 15.2,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "ot_hbm_su_stree_leaf",
+   "view": "physical/ref_tile/hbm_su_stree_leaf_1017/views/ot_hbm_su_stree_leaf",
+   "lib_cell": "ot_hbm_su_stree_leaf",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 86.4,
+   "spread_ps": 7.3,
+   "outputs": 205,
+   "inputs": 206,
+   "launch_ps": 120.9,
+   "launch_pin": "rf_wv[2]",
+   "capture_ps": 69.2,
+   "capture_pin": "dn_i[163]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 64.3,
+   "ff_hold_need_ps": -13.7,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbm_su_stree_leaf_1017-t1-81eb10546",
+   "record_commit": "e829f1a24f4b30c4f9e05d548f31bf06925b948b",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 86.4,
+     "spread": 7.3
+    },
+    "core_clk/ff": {
+     "mean": 66.6,
+     "spread": 7.3
+    }
+   },
+   "spread_tt_ps": 7.3,
+   "spread_ff_ps": 7.3,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "ot_hbm_su_stree_root",
+   "view": "physical/ref_tile/hbm_su_stree_root_1017/views/ot_hbm_su_stree_root",
+   "lib_cell": "ot_hbm_su_stree_root",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 104.1,
+   "spread_ps": 12.5,
+   "outputs": 656,
+   "inputs": 165,
+   "launch_ps": 92.4,
+   "launch_pin": "dn0_o[159]",
+   "capture_ps": 67.5,
+   "capture_pin": "up3_i[40]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 47.5,
+   "ff_hold_need_ps": -8.1,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbm_su_stree_root_1017-t1-81eb10546",
+   "record_commit": "c1e9046e21bc9e8431b5a8d3e93b421f25e112f4",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 104.1,
+     "spread": 12.5
+    },
+    "core_clk/ff": {
+     "mean": 81.1,
+     "spread": 13.4
+    }
+   },
+   "spread_tt_ps": 12.5,
+   "spread_ff_ps": 13.4,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "hbfd_rly_136_WE_fc_f4",
+   "view": "physical/ref_tile/hbfd_rly_136_we_fc_f4/views/hbfd_rly_136_WE_fc_f4",
+   "lib_cell": "hbfd_rly_136_WE_fc_f4",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 74.2,
+   "spread_ps": 2.5,
+   "outputs": 544,
+   "inputs": 137,
+   "launch_ps": 188.2,
+   "launch_pin": "o3[8]",
+   "capture_ps": 132.2,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 105.9,
+   "ff_hold_need_ps": -61.2,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbfd_rly_136_we_fc_f4-ff1-02fc2ee56",
+   "record_commit": "580165a014b3634a3a4047ac8d5600afff27467c",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 74.2,
+     "spread": 2.5
+    },
+    "core_clk/ff": {
+     "mean": 58.7,
+     "spread": 2.5
+    }
+   },
+   "spread_tt_ps": 2.5,
+   "spread_ff_ps": 2.5,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "hbfd_rly_136_SN_fc_f4",
+   "view": "physical/ref_tile/hbfd_rly_136_sn_fc_f4/views/hbfd_rly_136_SN_fc_f4",
+   "lib_cell": "hbfd_rly_136_SN_fc_f4",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 74.1,
+   "spread_ps": 3.8,
+   "outputs": 544,
+   "inputs": 137,
+   "launch_ps": 195.9,
+   "launch_pin": "o3[28]",
+   "capture_ps": 194.1,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 110.0,
+   "ff_hold_need_ps": -59.4,
+   "pass": false,
+   "fail_why": "capture 194.14025 > 190 (1 pins)",
+   "job": "hbfd_rly_136_sn_fc_f4-ff1-02fc2ee56",
+   "record_commit": "ba483806e3089bfaac5942465353dbc3a3ecfd9a",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "rs",
+     194.1
+    ]
+   ],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 74.1,
+     "spread": 3.8
+    },
+    "core_clk/ff": {
+     "mean": 58.5,
+     "spread": 4.0
+    }
+   },
+   "spread_tt_ps": 3.8,
+   "spread_ff_ps": 4.0,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "hbfd_rly_136_WE_fc_f3",
+   "view": "physical/ref_tile/hbfd_rly_136_we_fc_f3/views/hbfd_rly_136_WE_fc_f3",
+   "lib_cell": "hbfd_rly_136_WE_fc_f3",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 65.0,
+   "spread_ps": 3.5,
+   "outputs": 408,
+   "inputs": 137,
+   "launch_ps": 165.2,
+   "launch_pin": "o2[27]",
+   "capture_ps": 133.5,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 101.8,
+   "ff_hold_need_ps": -51.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbfd_rly_136_we_fc_f3-ff1-02fc2ee56",
+   "record_commit": "431e483d2c1d9430199c59fa5cd1a9e9c21b1966",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 65.0,
+     "spread": 3.5
+    },
+    "core_clk/ff": {
+     "mean": 51.1,
+     "spread": 3.7
+    }
+   },
+   "spread_tt_ps": 3.5,
+   "spread_ff_ps": 3.7,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "hbfd_rly_136_NS_fc_f4",
+   "view": "physical/ref_tile/hbfd_rly_136_ns_fc_f4/views/hbfd_rly_136_NS_fc_f4",
+   "lib_cell": "hbfd_rly_136_NS_fc_f4",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 74.3,
+   "spread_ps": 2.7,
+   "outputs": 544,
+   "inputs": 137,
+   "launch_ps": 193.4,
+   "launch_pin": "o3[25]",
+   "capture_ps": 180.6,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 111.2,
+   "ff_hold_need_ps": -56.1,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbfd_rly_136_ns_fc_f4-ff1-02fc2ee56",
+   "record_commit": "2a5503ead6500af0592cc65e11f26fb60673809b",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 74.3,
+     "spread": 2.7
+    },
+    "core_clk/ff": {
+     "mean": 58.7,
+     "spread": 2.5
+    }
+   },
+   "spread_tt_ps": 2.7,
+   "spread_ff_ps": 2.5,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "hbfd_rly_136_EW_fc_f4",
+   "view": "physical/ref_tile/hbfd_rly_136_ew_fc_f4/views/hbfd_rly_136_EW_fc_f4",
+   "lib_cell": "hbfd_rly_136_EW_fc_f4",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 75.3,
+   "spread_ps": 2.3,
+   "outputs": 544,
+   "inputs": 137,
+   "launch_ps": 191.8,
+   "launch_pin": "o3[4]",
+   "capture_ps": 132.1,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 109.5,
+   "ff_hold_need_ps": -61.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbfd_rly_136_ew_fc_f4-ff1-02fc2ee56",
+   "record_commit": "2fa74ecc0691f57e389bb474061f162a7cd4a01b",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 75.3,
+     "spread": 2.3
+    },
+    "core_clk/ff": {
+     "mean": 59.9,
+     "spread": 2.4
+    }
+   },
+   "spread_tt_ps": 2.3,
+   "spread_ff_ps": 2.4,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "hbfd_rly_136_WE_fc_f2",
+   "view": "physical/ref_tile/hbfd_rly_136_we_fc_f2/views/hbfd_rly_136_WE_fc_f2",
+   "lib_cell": "hbfd_rly_136_WE_fc_f2",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 67.7,
+   "spread_ps": 5.8,
+   "outputs": 272,
+   "inputs": 137,
+   "launch_ps": 163.9,
+   "launch_pin": "o1[0]",
+   "capture_ps": 137.5,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 94.6,
+   "ff_hold_need_ps": -58.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbfd_rly_136_we_fc_f2-ff1-02fc2ee56",
+   "record_commit": "71498b97aa1a322188d70b5ddf0a4104364e6419",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 67.7,
+     "spread": 5.8
+    },
+    "core_clk/ff": {
+     "mean": 54.1,
+     "spread": 6.5
+    }
+   },
+   "spread_tt_ps": 5.8,
+   "spread_ff_ps": 6.5,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "hbfd_rly_136_SN_fc_f3",
+   "view": "physical/ref_tile/hbfd_rly_136_sn_fc_f3/views/hbfd_rly_136_SN_fc_f3",
+   "lib_cell": "hbfd_rly_136_SN_fc_f3",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 65.5,
+   "spread_ps": 5.3,
+   "outputs": 408,
+   "inputs": 137,
+   "launch_ps": 173.5,
+   "launch_pin": "o1[120]",
+   "capture_ps": 181.8,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 103.1,
+   "ff_hold_need_ps": -51.4,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbfd_rly_136_sn_fc_f3-ff1-02fc2ee56",
+   "record_commit": "86a9f142d009175469130638fc7507fe125a0e02",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 65.5,
+     "spread": 5.3
+    },
+    "core_clk/ff": {
+     "mean": 51.6,
+     "spread": 5.5
+    }
+   },
+   "spread_tt_ps": 5.3,
+   "spread_ff_ps": 5.5,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "hbfd_rly_136_NS_fc_f3",
+   "view": "physical/ref_tile/hbfd_rly_136_ns_fc_f3/views/hbfd_rly_136_NS_fc_f3",
+   "lib_cell": "hbfd_rly_136_NS_fc_f3",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 67.6,
+   "spread_ps": 6.1,
+   "outputs": 408,
+   "inputs": 137,
+   "launch_ps": 175.7,
+   "launch_pin": "o1[61]",
+   "capture_ps": 193.7,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 102.5,
+   "ff_hold_need_ps": -53.5,
+   "pass": false,
+   "fail_why": "capture 193.68691 > 190 (1 pins)",
+   "job": "hbfd_rly_136_ns_fc_f3-ff1-02fc2ee56",
+   "record_commit": "ced1a2447790842d5ae1abf38fa8f8ed9c28b3d5",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "rs",
+     193.7
+    ]
+   ],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 67.6,
+     "spread": 6.1
+    },
+    "core_clk/ff": {
+     "mean": 53.7,
+     "spread": 6.7
+    }
+   },
+   "spread_tt_ps": 6.1,
+   "spread_ff_ps": 6.7,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "hbfd_rly_136_SN_fc_f2",
+   "view": "physical/ref_tile/hbfd_rly_136_sn_fc_f2/views/hbfd_rly_136_SN_fc_f2",
+   "lib_cell": "hbfd_rly_136_SN_fc_f2",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 65.2,
+   "spread_ps": 7.0,
+   "outputs": 272,
+   "inputs": 137,
+   "launch_ps": 164.8,
+   "launch_pin": "o0[133]",
+   "capture_ps": 195.2,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 96.5,
+   "ff_hold_need_ps": -57.3,
+   "pass": false,
+   "fail_why": "capture 195.24204 > 190 (1 pins)",
+   "job": "hbfd_rly_136_sn_fc_f2-ff1-02fc2ee56",
+   "record_commit": "ea9b8823d27d5fbfe314ed641eebff3a86d938e0",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "rs",
+     195.2
+    ]
+   ],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 65.2,
+     "spread": 7.0
+    },
+    "core_clk/ff": {
+     "mean": 51.3,
+     "spread": 7.7
+    }
+   },
+   "spread_tt_ps": 7.0,
+   "spread_ff_ps": 7.7,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "hbfd_rly_136_EW_fc_f3",
+   "view": "physical/ref_tile/hbfd_rly_136_ew_fc_f3/views/hbfd_rly_136_EW_fc_f3",
+   "lib_cell": "hbfd_rly_136_EW_fc_f3",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 66.3,
+   "spread_ps": 5.9,
+   "outputs": 408,
+   "inputs": 137,
+   "launch_ps": 167.7,
+   "launch_pin": "o1[100]",
+   "capture_ps": 133.2,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 101.7,
+   "ff_hold_need_ps": -52.9,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbfd_rly_136_ew_fc_f3-ff1-02fc2ee56",
+   "record_commit": "91a2a55be52b252e5f9dd2dde9b4f0b3ad86ff80",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 66.3,
+     "spread": 5.9
+    },
+    "core_clk/ff": {
+     "mean": 52.5,
+     "spread": 6.4
+    }
+   },
+   "spread_tt_ps": 5.9,
+   "spread_ff_ps": 6.4,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "hbfd_rly_136_NS_fc_f2",
+   "view": "physical/ref_tile/hbfd_rly_136_ns_fc_f2/views/hbfd_rly_136_NS_fc_f2",
+   "lib_cell": "hbfd_rly_136_NS_fc_f2",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 65.6,
+   "spread_ps": 8.8,
+   "outputs": 272,
+   "inputs": 137,
+   "launch_ps": 162.5,
+   "launch_pin": "o0[128]",
+   "capture_ps": 211.1,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 95.0,
+   "ff_hold_need_ps": -51.8,
+   "pass": false,
+   "fail_why": "capture 211.09203 > 190 (1 pins)",
+   "job": "hbfd_rly_136_ns_fc_f2-ff1-02fc2ee56",
+   "record_commit": "4959912dea749fad6d5308a814c1baf452ca9871",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "rs",
+     211.1
+    ]
+   ],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 65.6,
+     "spread": 8.8
+    },
+    "core_clk/ff": {
+     "mean": 52.0,
+     "spread": 9.7
+    }
+   },
+   "spread_tt_ps": 8.8,
+   "spread_ff_ps": 9.7,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "hbfd_rly_136_WE_fc",
+   "view": "physical/ref_tile/hbfd_rly_136_we_fc/views/hbfd_rly_136_WE_fc",
+   "lib_cell": "hbfd_rly_136_WE_fc",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 76.5,
+   "spread_ps": 3.3,
+   "outputs": 136,
+   "inputs": 137,
+   "launch_ps": 139.0,
+   "launch_pin": "o[124]",
+   "capture_ps": 134.1,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 88.0,
+   "ff_hold_need_ps": -58.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbfd_rly_136_we_fc-fc2-02fc2ee56",
+   "record_commit": "a041403f26e0c3257791f13058c63d1d1faf2e8e",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 76.5,
+     "spread": 3.3
+    },
+    "core_clk/ff": {
+     "mean": 58.0,
+     "spread": 3.5
+    }
+   },
+   "spread_tt_ps": 3.3,
+   "spread_ff_ps": 3.5,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "hbfd_rly_136_SN_fc",
+   "view": "physical/ref_tile/hbfd_rly_136_sn_fc/views/hbfd_rly_136_SN_fc",
+   "lib_cell": "hbfd_rly_136_SN_fc",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 77.0,
+   "spread_ps": 4.7,
+   "outputs": 136,
+   "inputs": 137,
+   "launch_ps": 140.0,
+   "launch_pin": "o[51]",
+   "capture_ps": 198.8,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 88.9,
+   "ff_hold_need_ps": -59.1,
+   "pass": false,
+   "fail_why": "capture 198.7578 > 190 (1 pins)",
+   "job": "hbfd_rly_136_sn_fc-fc2-02fc2ee56",
+   "record_commit": "d9e404d12648caa0f0c24280ade5196a009c251e",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "rs",
+     198.8
+    ]
+   ],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 77.0,
+     "spread": 4.7
+    },
+    "core_clk/ff": {
+     "mean": 58.2,
+     "spread": 4.9
+    }
+   },
+   "spread_tt_ps": 4.7,
+   "spread_ff_ps": 4.9,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "hbfd_rly_136_NS_fc",
+   "view": "physical/ref_tile/hbfd_rly_136_ns_fc/views/hbfd_rly_136_NS_fc",
+   "lib_cell": "hbfd_rly_136_NS_fc",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 77.2,
+   "spread_ps": 4.6,
+   "outputs": 136,
+   "inputs": 137,
+   "launch_ps": 141.0,
+   "launch_pin": "o[14]",
+   "capture_ps": 193.9,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 89.3,
+   "ff_hold_need_ps": -59.3,
+   "pass": false,
+   "fail_why": "capture 193.87712 > 190 (1 pins)",
+   "job": "hbfd_rly_136_ns_fc-fc2-02fc2ee56",
+   "record_commit": "7183b01ede35894c6755c2da723fbcd0b2b35121",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "rs",
+     193.9
+    ]
+   ],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 77.2,
+     "spread": 4.6
+    },
+    "core_clk/ff": {
+     "mean": 58.3,
+     "spread": 4.9
+    }
+   },
+   "spread_tt_ps": 4.6,
+   "spread_ff_ps": 4.9,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "hbfd_rly_136_EW_fc_f2",
+   "view": "physical/ref_tile/hbfd_rly_136_ew_fc_f2/views/hbfd_rly_136_EW_fc_f2",
+   "lib_cell": "hbfd_rly_136_EW_fc_f2",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 66.3,
+   "spread_ps": 4.0,
+   "outputs": 272,
+   "inputs": 137,
+   "launch_ps": 169.7,
+   "launch_pin": "o1[4]",
+   "capture_ps": 136.4,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 100.0,
+   "ff_hold_need_ps": -59.5,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbfd_rly_136_ew_fc_f2-ff1-02fc2ee56",
+   "record_commit": "8873439b5164db561209cb4b4829cf94a3486d1d",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 66.3,
+     "spread": 4.0
+    },
+    "core_clk/ff": {
+     "mean": 52.5,
+     "spread": 4.5
+    }
+   },
+   "spread_tt_ps": 4.0,
+   "spread_ff_ps": 4.5,
+   "verdict": "BINDABLE"
+  },
+  {
+   "cell": "hbfd_rly_136_EW_fc",
+   "view": "physical/ref_tile/hbfd_rly_136_ew_fc/views/hbfd_rly_136_EW_fc",
+   "lib_cell": "hbfd_rly_136_EW_fc",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 76.2,
+   "spread_ps": 2.5,
+   "outputs": 136,
+   "inputs": 137,
+   "launch_ps": 141.2,
+   "launch_pin": "o[13]",
+   "capture_ps": 135.1,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 89.3,
+   "ff_hold_need_ps": -59.6,
+   "pass": true,
+   "fail_why": "",
+   "job": "hbfd_rly_136_ew_fc-fc2-02fc2ee56",
+   "record_commit": "332f230512d82f6f34234a631e810615c73cf3b6",
+   "die": "HBM",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "corner_boundary": {
+    "core_clk/tt": {
+     "mean": 76.2,
+     "spread": 2.5
+    },
+    "core_clk/ff": {
+     "mean": 57.7,
+     "spread": 2.6
+    }
+   },
+   "spread_tt_ps": 2.5,
+   "spread_ff_ps": 2.6,
+   "verdict": "BINDABLE"
+  }
+ ]
+}

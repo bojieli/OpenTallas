@@ -1,0 +1,8 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbm_su_pghead_r5-r5-6035ab683 bench bench_pgcol_mut_rstrelay host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hbm_su_pghead_r5-r5-6035ab683 log cl/bench_pgcol_mut_rstrelay.a1b1.log captured 2026-10-18T01:47:08-07:00
+# fail_regex 'SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]'
+[rstrelay q0] SU_PROGRAMME_PGCOL reset release col0=1 col1=1 head=3 edges (expected 3)
+[rstrelay q0] SU_PROGRAMME_PGCOL reset release col0=1 col1=1 head=3 edges (expected 3)
+[rstrelay q0] SU_PROGRAMME_PGCOL reset release col0=1 col1=1 head=3 edges (expected 3)
+[rstrelay q0] [417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=3 active=21333 checked=21558
+[rstrelay q0] rc=1

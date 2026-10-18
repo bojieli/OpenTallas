@@ -83,6 +83,19 @@ def paramods(log):
     return out
 
 
+def apply_wraps(txt, wraps, strict=True):
+    """member instance type <m> -> <wrapper> (instance lines only: `<m> #(...) u_x (` or `<m> u_x (`)"""
+    for wv in wraps:
+        m = re.fullmatch(r'(\w+)=(\w+)', wv)
+        if not m:
+            raise SystemExit(f'bad --wrap {wv}')
+        pat = re.compile(r'^(\s*)' + m.group(1) + r'(?=\s+(?:#\(|\\?[A-Za-z_]))', re.M)
+        txt, n = pat.subn(lambda x: x.group(1) + m.group(2), txt)
+        if strict and not n:
+            raise SystemExit(f'--wrap {wv}: no instance of {m.group(1)}')
+    return txt
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--partition', required=True)
@@ -92,9 +105,22 @@ def main():
     ap.add_argument('--reuse', action='store_true', help='reuse the work dir yosys passes 1-2')
     ap.add_argument('--mutant', action='append', default=[],
                     help='bench mutant: invert child INPUT bit u_<child>.<port>[i] at the parent (the output must FAIL)')
+    ap.add_argument('--wrap', action='append', default=[],
+                    help='member wrapper <member module>=<wrapper module> (same ports and parameters; e.g. '
+                         'qkd_host_tx_class=qkd_host_tx_class_rr, the NATIVE-FIX3 reset-relay wrappers)')
+    ap.add_argument('--wrap-only', default=None,
+                    help='apply --wrap to the already generated qkd_hr_*.v files in this dir and exit (no yosys)')
     ap.add_argument('--param', action='append', default=[],
                     help='member parameter override <member module>.<PARAM>=<int> (e.g. qkd_host_rx_class_admission.IR_REPL=1)')
     a = ap.parse_args()
+    if a.wrap_only:
+        for f in sorted(Path(a.wrap_only).glob('qkd_hr_*.v')):
+            t = f.read_text()
+            w = apply_wraps(t, a.wrap, strict=False)
+            if w != t:
+                f.write_text(w)
+                print(f'wrapped {f}')
+        return
     part = json.load(open(a.partition))
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -362,6 +388,7 @@ def main():
         if not n0:
             raise SystemExit(f'--param {pv}: no instance of {m.group(1)}')
         txt = re.sub(r'\b(' + m.group(1) + r') #\(', lambda x: f'{x.group(1)} #(.{m.group(2)}({m.group(3)}), ', txt)
+    txt = apply_wraps(txt, a.wrap)
     # escaped flattened names (\u_root.u_rank.u_phy.tx_d ) -> plain identifiers (u_rank__u_phy__tx_d); collisions refused
     plain = set(re.findall(r'(?<![\\\w$])[A-Za-z_][A-Za-z0-9_$]*', re.sub(r'\\\S+ ', ' ', txt)))
     esc = sorted(set(re.findall(r'\\(u_root\.\S+) ', txt)))
