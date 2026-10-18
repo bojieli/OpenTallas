@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.slot_request.v1",
+ "from": "Claude H-NETLIST 1315 (H-ELEM)",
+ "to": "H-DIE",
+ "date": "2026-10-16",
+ "kind": "slot_change (outline shrink) + pin faces/clock entry move",
+ "contract": "results/arch/hier_contract_1015/hbm_v15.json",
+ "master": "ot_hbm_idx_vm_query_static",
+ "kit": "physical/ref_tile/hidx_op_pr2",
+ "kit_commit": "ed77b82a3",
+ "slot_outline_um": {
+  "w": 360.72,
+  "h": 317.52
+ },
+ "requested_outline_um": {
+  "w": 216.0,
+  "h": 108.0
+ },
+ "requested_pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "sid",
+   "weight_slot",
+   "query_slot",
+   "query_index",
+   "weight_sector",
+   "query_sector",
+   "block_v",
+   "block_head",
+   "block_number",
+   "block_data",
+   "head_weight",
+   "fault"
+  ],
+  "S": [
+   "vm_rq",
+   "vm_rr"
+  ]
+ },
+ "clock_entry_face": "N",
+ "slot_fit_mismatches": [
+  "outline 216 x 108 != slot 360.72 x 317.52",
+  "2 pins off their slot face: clk N (slot W); rst_n N (slot W)",
+  "clock clk on N (slot clock_entry W)",
+  "pin_align: clk planned at 107.976..108.072 um lies up to 50.7 um outside its slot span 158.664..158.76 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: rst_n planned at 108.072..108.168 um lies up to 50.7 um outside its slot span 158.76..158.856 um on W (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: sid planned at 1.56..1.752 um lies up to 104.8 um outside its slot span 106.344..106.536 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: weight_slot planned at 1.752..1.848 um lies up to 104.8 um outside its slot span 106.536..106.632 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: query_slot planned at 1.848..1.944 um lies up to 104.8 um outside its slot span 106.632..106.728 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: query_index planned at 1.944..2.616 um lies up to 104.8 um outside its slot span 106.728..107.4 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: weight_sector planned at 2.616..4.152 um lies up to 104.8 um outside its slot span 107.4..108.936 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: query_sector planned at 4.152..5.688 um lies up to 104.8 um outside its slot span 108.936..110.472 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: block_v planned at 5.688..5.784 um lies up to 104.8 um outside its slot span 110.472..110.568 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: block_head planned at 5.784..6.264 um lies up to 104.8 um outside its slot span 110.568..111.048 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: block_number planned at 6.264..6.456 um lies up to 104.8 um outside its slot span 111.048..111.24 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: block_data planned at 6.456..104.76 um lies up to 104.8 um outside its slot span 111.24..209.544 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: head_weight planned at 104.76..106.296 um lies up to 104.8 um outside its slot span 209.544..211.08 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: fault planned at 106.296..106.392 um lies up to 104.8 um outside its slot span 211.08..211.176 um on E (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: vm_rq planned at 2.76..15.816 um lies up to 72.4 um outside its slot span 75.144..88.2 um on S (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)",
+  "pin_align: vm_rr planned at 15.816..213.192 um lies up to 72.4 um outside its slot span 88.2..285.576 um on S (> 36 um: the jog alone fills a 20-um channel past the 0.60 cut rule)"
+ ],
+ "why": "v8 slot was sized for the old op (util 5%: std 5,264 in 360x317, TT ins 412.5 sp92.8, rst_n 4,708 loads). Successor e34380087 (rst relay, reset-free data) gated pin-bound at 216x108: CTS gate WARN util only, TT ins 179.3-221.7 sp42.4, reg->reg +119.0, hold +40, native probe PASS L202.6/C154.1/sp36 (ed77b82a3).",
+ "status": "BLOCKER: submit_exact refuses slot_fit until the contract is revised"
+}

@@ -43,7 +43,9 @@ module tb_qfd_embedding_word_provider;
   endtask
   task automatic edge_; begin @(negedge ck); end endtask
   task automatic do_reset;
-    begin idle; rst_n = 0; repeat (3) edge_; rst_n = 1; edge_; end
+    // rr1 2026-10-17: the tile's regional reset relay releases its regions 3 edges after the port (initialisation only),
+    // so the first operation is presented after that release edge
+    begin idle; rst_n = 0; repeat (3) edge_; rst_n = 1; repeat (3) edge_; end
   endtask
   // one row word on one edge: actual D2D word + coincident compiler slot (identity may be corrupted by the caller)
   task automatic put_word(input integer idx, input bit is_scale, input [17:0] atok, input bit slot);
