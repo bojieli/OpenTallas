@@ -52,7 +52,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "physical/ref_tile/qfd_sys_face/bench_witness/sys_face_t_late_mut.log"
    },
    {
     "name": "sys_face_emb_index_mutant",
@@ -63,7 +64,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_witness": "physical/ref_tile/qfd_sys_face/bench_witness/sys_face_emb_index_mut.log"
    }
   ],
   "calibrate": {
