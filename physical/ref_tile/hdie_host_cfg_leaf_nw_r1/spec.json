@@ -93,12 +93,13 @@
   "tag": "r1",
   "purpose": "HBM d4g (plan b) PHY-side host configuration/status leaf hleaf_NW: ot_hbm_host_cfg_leaf_nw = ot_hbm_host_cfg_leaf2 at the EXACT NW widths NT 19 / NF 29 (every status input driven by a real target/source, no tied pins; owner/coordinator 0ds: one variant per quadrant). F20 bundle pin flop -> 2 equal-age copy groups (A W face, B E face) CFG_LAT 2; per-target ready/active/fault pin flop -> output flop ST_LAT 2; synced rst_n. Lockstep of the 4 d4g variants vs d4f direct ingress->targets + NW-leaf mutants.",
   "extra_paths": [
+   "results/arch/hbm_b_rtl1_host_1017/witness",
    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
-   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_cfg_leaf_lockstep.sv",
-   "rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh",
    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
-   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv",
    "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv",
+   "rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_cfg_leaf_lockstep.sv",
    "rtl/lib/ot_rst_relay.sv"
   ],
   "benches": [
@@ -111,7 +112,8 @@
     "needs": [
      "iverilog"
     ],
-    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS"
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "pass_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_d4g_pos_s7.log"
    },
    {
     "name": "leaf_d4g_lockstep_s11",
@@ -122,7 +124,8 @@
     "needs": [
      "iverilog"
     ],
-    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS"
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "pass_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_d4g_pos_s11.log"
    },
    {
     "name": "leaf_nw_mut1",
@@ -135,7 +138,8 @@
     ],
     "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
     "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
-    "note": "NW leaf only: copy B drops cfg_data bit 0"
+    "note": "NW leaf only: copy B drops cfg_data bit 0",
+    "fail_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_nw_mut1.log"
    },
    {
     "name": "leaf_nw_mut2",
@@ -148,7 +152,8 @@
     ],
     "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
     "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
-    "note": "NW leaf only: copy B one stage short"
+    "note": "NW leaf only: copy B one stage short",
+    "fail_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_nw_mut2.log"
    },
    {
     "name": "leaf_nw_mut3",
@@ -161,7 +166,8 @@
     ],
     "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
     "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
-    "note": "NW leaf only: status ready bits 0/1 swapped"
+    "note": "NW leaf only: status ready bits 0/1 swapped",
+    "fail_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_nw_mut3.log"
    },
    {
     "name": "leaf_nw_mut4",
@@ -174,7 +180,8 @@
     ],
     "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
     "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
-    "note": "NW leaf only: status fault bit 0 dropped"
+    "note": "NW leaf only: status fault bit 0 dropped",
+    "fail_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_nw_mut4.log"
    }
   ],
   "views_to": "physical/ref_tile/hdie_host_cfg_leaf_nw_r1/views",

@@ -10,12 +10,13 @@
   "branch": "claude/hbm-b-rtl1-host-1017",
   "commit": "COMMIT",
   "extra_paths": [
+   "results/arch/hbm_b_rtl1_host_1017/witness",
    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
-   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_cfg_leaf_lockstep.sv",
-   "rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh",
    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
-   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv",
    "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv",
+   "rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_cfg_leaf_lockstep.sv",
    "rtl/lib/ot_rst_relay.sv"
   ]
  },
@@ -40,7 +41,8 @@
     "needs": [
      "iverilog"
     ],
-    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS"
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "pass_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_d4g_pos_s7.log"
    },
    {
     "name": "leaf_d4g_lockstep_s11",
@@ -51,7 +53,8 @@
     "needs": [
      "iverilog"
     ],
-    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS"
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "pass_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_d4g_pos_s11.log"
    },
    {
     "name": "leaf_sw_mut1",
@@ -64,7 +67,8 @@
     ],
     "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
     "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
-    "note": "SW leaf only: copy B drops cfg_data bit 0"
+    "note": "SW leaf only: copy B drops cfg_data bit 0",
+    "fail_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_sw_mut1.log"
    },
    {
     "name": "leaf_sw_mut2",
@@ -77,7 +81,8 @@
     ],
     "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
     "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
-    "note": "SW leaf only: copy B one stage short"
+    "note": "SW leaf only: copy B one stage short",
+    "fail_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_sw_mut2.log"
    },
    {
     "name": "leaf_sw_mut3",
@@ -90,7 +95,8 @@
     ],
     "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
     "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
-    "note": "SW leaf only: status ready bits 0/1 swapped"
+    "note": "SW leaf only: status ready bits 0/1 swapped",
+    "fail_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_sw_mut3.log"
    },
    {
     "name": "leaf_sw_mut4",
@@ -103,7 +109,8 @@
     ],
     "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
     "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
-    "note": "SW leaf only: status fault bit 0 dropped"
+    "note": "SW leaf only: status fault bit 0 dropped",
+    "fail_witness": "results/arch/hbm_b_rtl1_host_1017/witness/leaf_sw_mut4.log"
    }
   ],
   "calibrate": {
