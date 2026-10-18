@@ -127,7 +127,8 @@
     ],
     "pass_regex": "PASS collar",
     "fail_regex": "FAIL errors=\\d+",
-    "note": "sequential install check skipped"
+    "note": "sequential install check skipped",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_collar_mut1.log"
    },
    {
     "name": "collar_mut2",
@@ -140,7 +141,8 @@
     ],
     "pass_regex": "PASS collar",
     "fail_regex": "FAIL errors=\\d+",
-    "note": "ready ignores need"
+    "note": "ready ignores need",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_collar_mut2.log"
    },
    {
     "name": "collar_mut3",
@@ -153,7 +155,8 @@
     ],
     "pass_regex": "PASS collar",
     "fail_regex": "FAIL errors=\\d+",
-    "note": "go one edge early"
+    "note": "go one edge early",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_collar_mut3.log"
    },
    {
     "name": "collar_mut4",
@@ -166,7 +169,8 @@
     ],
     "pass_regex": "PASS collar",
     "fail_regex": "FAIL errors=\\d+",
-    "note": "XSER event sequence check off"
+    "note": "XSER event sequence check off",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_collar_mut4.log"
    },
    {
     "name": "rsync_lockstep",

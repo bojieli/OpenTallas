@@ -134,7 +134,8 @@
     ],
     "pass_regex": "TB_STATIC_CMD_TARGET PASS",
     "fail_regex": "TB_STATIC_CMD_TARGET FAIL mut=1",
-    "note": "fires one cycle late"
+    "note": "fires one cycle late",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_cmd_mut1.log"
    },
    {
     "name": "cmd_mut2",
@@ -147,7 +148,8 @@
     ],
     "pass_regex": "TB_STATIC_CMD_TARGET PASS",
     "fail_regex": "TB_STATIC_CMD_TARGET FAIL mut=2",
-    "note": "target id ignored"
+    "note": "target id ignored",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_cmd_mut2.log"
    },
    {
     "name": "rsync_lockstep",
