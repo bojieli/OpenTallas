@@ -1,5 +1,5 @@
 {
- "name": "qfd_rst_rep-a1-COMMIT",
+ "name": "qfd_rst_rep-a1-c62643728",
  "block": "qfd_rst_rep",
  "ref_tile": true,
  "owner": "Claude:ELEM-GAPS/QC",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 4,
  "source": {
   "branch": "claude/eg-qc-1018",
-  "commit": "COMMIT",
+  "commit": "c62643728",
   "extra_paths": [
    "rtl/qwen_sys/reset_tree_20261013",
    "physical/qwen_rst_rep",
@@ -113,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_rst_rep/qfd_rst_rep-a1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_rst_rep/qfd_rst_rep-a1-c62643728"
   }
  ],
  "cycles_added": 0,
