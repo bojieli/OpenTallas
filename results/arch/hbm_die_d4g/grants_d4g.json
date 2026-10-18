@@ -16946,14 +16946,38 @@
    "rtl_owner": "H-SU: ot_hgi_sfu_core_split3 (k9 kit hbm_sfucore_k9, claude/hsu-corekit-0700 c3aeb5ce8; 1598.4 x 1771.2, N/S lane buses allowed)",
    "faces": {
     "W": "local_rq/rr/wq/w_done, lane clocks/resets, clk_pw, lanes 0-3",
-    "E": "io_word/compiler_control/fault, clk_pe, lanes 8-11",
-    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7",
+    "E": "clk_pe, lanes 8-11",
+    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7; io_word/compiler_control/fault at core-local x 1040-1598.4 (~2,284 pins, ~4.1/um) facing sfup_SW S-face output end",
     "S": "lanes 12-15"
    },
-   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
+   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50) | SFUPLAN 10-18 (HANDOFF 0gj): orient R0 (= sfup_SW); io_word/compiler_control/fault E -> N face core-local x 1040-1598.4 (k9_pin_grant_0gj)",
    "pins": [],
    "pin_status": "FACES_ONLY",
-   "plan_block": "sfucore_SW"
+   "plan_block": "sfucore_SW",
+   "k9_pin_grant_0gj": {
+    "face": "N",
+    "core_local_x": [
+     1040.0,
+     1598.4
+    ],
+    "pins": 2284,
+    "density_per_um": 4.09,
+    "signals": [
+     "io_word",
+     "compiler_control",
+     "fault"
+    ],
+    "peer": "sfup_SW",
+    "orient": "R0",
+    "die_face": "N",
+    "die_x": [
+     7176.56,
+     7734.96
+    ],
+    "die_y": 10982.304,
+    "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
+    "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+   }
   },
   {
    "name": "sfucore_SE",
@@ -16967,7 +16991,7 @@
    "origin": {
     "x": 12464.928,
     "y": 9211.104,
-    "orient": "R0"
+    "orient": "MY"
    },
    "clock_entry": {
     "pin": "clk",
@@ -16988,14 +17012,38 @@
    "rtl_owner": "H-SU: ot_hgi_sfu_core_split3 (k9 kit hbm_sfucore_k9, claude/hsu-corekit-0700 c3aeb5ce8; 1598.4 x 1771.2, N/S lane buses allowed)",
    "faces": {
     "W": "local_rq/rr/wq/w_done, lane clocks/resets, clk_pw, lanes 0-3",
-    "E": "io_word/compiler_control/fault, clk_pe, lanes 8-11",
-    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7",
+    "E": "clk_pe, lanes 8-11",
+    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7; io_word/compiler_control/fault at core-local x 1040-1598.4 (~2,284 pins, ~4.1/um) facing sfup_SE S-face output end",
     "S": "lanes 12-15"
    },
-   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
+   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50) | SFUPLAN 10-18 (HANDOFF 0gj): orient MY (= sfup_SE); io_word/compiler_control/fault E -> N face core-local x 1040-1598.4 (k9_pin_grant_0gj)",
    "pins": [],
    "pin_status": "FACES_ONLY",
-   "plan_block": "sfucore_SE"
+   "plan_block": "sfucore_SE",
+   "k9_pin_grant_0gj": {
+    "face": "N",
+    "core_local_x": [
+     1040.0,
+     1598.4
+    ],
+    "pins": 2284,
+    "density_per_um": 4.09,
+    "signals": [
+     "io_word",
+     "compiler_control",
+     "fault"
+    ],
+    "peer": "sfup_SE",
+    "orient": "MY",
+    "die_face": "N",
+    "die_x": [
+     12464.928,
+     13023.328
+    ],
+    "die_y": 10982.304,
+    "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
+    "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+   }
   },
   {
    "name": "sfucore_NW",
@@ -17009,7 +17057,7 @@
    "origin": {
     "x": 6325.776,
     "y": 20791.08,
-    "orient": "R0"
+    "orient": "MX"
    },
    "clock_entry": {
     "pin": "clk",
@@ -17030,14 +17078,38 @@
    "rtl_owner": "H-SU: ot_hgi_sfu_core_split3 (k9 kit hbm_sfucore_k9, claude/hsu-corekit-0700 c3aeb5ce8; 1598.4 x 1771.2, N/S lane buses allowed)",
    "faces": {
     "W": "local_rq/rr/wq/w_done, lane clocks/resets, clk_pw, lanes 0-3",
-    "E": "io_word/compiler_control/fault, clk_pe, lanes 8-11",
-    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7",
+    "E": "clk_pe, lanes 8-11",
+    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7; io_word/compiler_control/fault at core-local x 1040-1598.4 (~2,284 pins, ~4.1/um) facing sfup_NW S-face output end",
     "S": "lanes 12-15"
    },
-   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
+   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50) | SFUPLAN 10-18 (HANDOFF 0gj): orient MX (= sfup_NW); io_word/compiler_control/fault E -> N face core-local x 1040-1598.4 (k9_pin_grant_0gj)",
    "pins": [],
    "pin_status": "FACES_ONLY",
-   "plan_block": "sfucore_NW"
+   "plan_block": "sfucore_NW",
+   "k9_pin_grant_0gj": {
+    "face": "N",
+    "core_local_x": [
+     1040.0,
+     1598.4
+    ],
+    "pins": 2284,
+    "density_per_um": 4.09,
+    "signals": [
+     "io_word",
+     "compiler_control",
+     "fault"
+    ],
+    "peer": "sfup_NW",
+    "orient": "MX",
+    "die_face": "S",
+    "die_x": [
+     7365.776,
+     7924.176
+    ],
+    "die_y": 20791.08,
+    "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
+    "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+   }
   },
   {
    "name": "sfucore_NE",
@@ -17051,7 +17123,7 @@
    "origin": {
     "x": 12464.928,
     "y": 20791.08,
-    "orient": "R0"
+    "orient": "R180"
    },
    "clock_entry": {
     "pin": "clk",
@@ -17072,14 +17144,38 @@
    "rtl_owner": "H-SU: ot_hgi_sfu_core_split3 (k9 kit hbm_sfucore_k9, claude/hsu-corekit-0700 c3aeb5ce8; 1598.4 x 1771.2, N/S lane buses allowed)",
    "faces": {
     "W": "local_rq/rr/wq/w_done, lane clocks/resets, clk_pw, lanes 0-3",
-    "E": "io_word/compiler_control/fault, clk_pe, lanes 8-11",
-    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7",
+    "E": "clk_pe, lanes 8-11",
+    "N": "clk (x 798.1-800.3) + rst_n/clk_lg/rst_lg_n, lanes 4-7; io_word/compiler_control/fault at core-local x 1040-1598.4 (~2,284 pins, ~4.1/um) facing sfup_NE S-face output end",
     "S": "lanes 12-15"
    },
-   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50)",
+   "notes": "SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; LG path R_padded 23; every pin registered (owner rule 19:50) | SFUPLAN 10-18 (HANDOFF 0gj): orient R180 (= sfup_NE); io_word/compiler_control/fault E -> N face core-local x 1040-1598.4 (k9_pin_grant_0gj)",
    "pins": [],
    "pin_status": "FACES_ONLY",
-   "plan_block": "sfucore_NE"
+   "plan_block": "sfucore_NE",
+   "k9_pin_grant_0gj": {
+    "face": "N",
+    "core_local_x": [
+     1040.0,
+     1598.4
+    ],
+    "pins": 2284,
+    "density_per_um": 4.09,
+    "signals": [
+     "io_word",
+     "compiler_control",
+     "fault"
+    ],
+    "peer": "sfup_NE",
+    "orient": "R180",
+    "die_face": "S",
+    "die_x": [
+     12464.928,
+     13023.328
+    ],
+    "die_y": 20791.08,
+    "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
+    "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+   }
   },
   {
    "name": "cij_SW",
@@ -17091,7 +17187,7 @@
     "h": 432.0
    },
    "origin": {
-    "x": 8148.168,
+    "x": 8286.968,
     "y": 10840.392,
     "orient": "R0"
    },
@@ -17117,7 +17213,7 @@
     "E": "coll_SW inject / RED_CARRY / delivery",
     "W": "sucore_SW (sucx_SW) inject inj_d 1,024 b, COLL->SU 194 b"
    },
-   "notes": "COLL inject/IDX join leaf in the 21.6 + 43.2 + 21.6 um channel between sucore and COLL: COLL<->SU 0 relay stages | H-DIE-R8b 10-17: CLOSED cij rg 216x432 (2 regional roots), abuts coll_SW W face (was [16597.36, 9405.6, 16640.56, 9543.84])",
+   "notes": "COLL inject/IDX join leaf in the 21.6 + 43.2 + 21.6 um channel between sucore and COLL: COLL<->SU 0 relay stages | H-DIE-R8b 10-17: CLOSED cij rg 216x432 (2 regional roots), abuts coll_SW W face (was [16597.36, 9405.6, 16640.56, 9543.84]) | SFUPLAN 10-18 (HANDOFF 0gj): moved (8148.168, 10840.392) -> (8286.968, 10840.392)",
    "pins": [],
    "pin_status": "FACES_ONLY"
   },
@@ -17131,8 +17227,8 @@
     "h": 138.24
    },
    "origin": {
-    "x": 12321.72,
-    "y": 11043.648,
+    "x": 12384.92,
+    "y": 10845.36,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17157,7 +17253,7 @@
     "E": "coll_SE inject / RED_CARRY / delivery",
     "W": "sucore_SE (sucx_SE) inject inj_d 1,024 b, COLL->SU 194 b"
    },
-   "notes": "COLL inject/IDX join leaf in the 21.6 + 43.2 + 21.6 um channel between sucore and COLL: COLL<->SU 0 relay stages",
+   "notes": "COLL inject/IDX join leaf in the 21.6 + 43.2 + 21.6 um channel between sucore and COLL: COLL<->SU 0 relay stages | SFUPLAN 10-18 (HANDOFF 0gj): moved (12321.72, 11043.648) -> (12384.92, 10845.36)",
    "pins": [],
    "pin_status": "FACES_ONLY"
   },
@@ -17172,7 +17268,7 @@
    },
    "origin": {
     "x": 7959.384,
-    "y": 20751.552,
+    "y": 20791.08,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17197,7 +17293,7 @@
     "E": "coll_NW inject / RED_CARRY / delivery",
     "W": "sucore_NW (sucx_NW) inject inj_d 1,024 b, COLL->SU 194 b"
    },
-   "notes": "COLL inject/IDX join leaf in the 21.6 + 43.2 + 21.6 um channel between sucore and COLL: COLL<->SU 0 relay stages",
+   "notes": "COLL inject/IDX join leaf in the 21.6 + 43.2 + 21.6 um channel between sucore and COLL: COLL<->SU 0 relay stages | SFUPLAN 10-18 (HANDOFF 0gj): moved (7959.384, 20751.552) -> (7959.384, 20791.08)",
    "pins": [],
    "pin_status": "FACES_ONLY"
   },
@@ -17211,8 +17307,8 @@
     "h": 138.24
    },
    "origin": {
-    "x": 12321.72,
-    "y": 20591.496,
+    "x": 12384.92,
+    "y": 20789.784,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17237,7 +17333,7 @@
     "E": "coll_NE inject / RED_CARRY / delivery",
     "W": "sucore_NE (sucx_NE) inject inj_d 1,024 b, COLL->SU 194 b"
    },
-   "notes": "COLL inject/IDX join leaf in the 21.6 + 43.2 + 21.6 um channel between sucore and COLL: COLL<->SU 0 relay stages",
+   "notes": "COLL inject/IDX join leaf in the 21.6 + 43.2 + 21.6 um channel between sucore and COLL: COLL<->SU 0 relay stages | SFUPLAN 10-18 (HANDOFF 0gj): moved (12321.72, 20591.496) -> (12384.92, 20789.784)",
    "pins": [],
    "pin_status": "FACES_ONLY"
   },
@@ -19189,18 +19285,18 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 950.4,
+    "w": 1080.0,
     "h": 950.4
    },
    "origin": {
-    "x": 7178.328,
-    "y": 11082.312,
+    "x": 7184.96,
+    "y": 11002.304,
     "orient": "R0"
    },
    "pins": [],
    "pin_status": "FACES_ONLY",
    "grant": "d4g_sfu_store_quadrant_1017",
-   "notes": "H-D4G2 10-17: one SFU programme store cluster per quadrant (4 SMs), master hbm_sfu_programme_store_r10_cl (941.76 x 950.4, 11 r10n stripe leaves 285.12 x 194.4, hardened once, replicated 4x by orientation); S face (store outputs + clk) faces its sfucore_<q> (gap ~100-220 um, one hop inside 405 reach), E face (cfg) faces the die centre column. old origin {\"x\": 7178.328, \"y\": 10805.832, \"orient\": \"R0\"}",
+   "notes": "H-D4G2 10-17: one SFU programme store cluster per quadrant (4 SMs), master hbm_sfu_programme_store_r10_cl (941.76 x 950.4, 11 r10n stripe leaves 285.12 x 194.4, hardened once, replicated 4x by orientation); S face (store outputs + clk) faces its sfucore_<q> (gap ~100-220 um, one hop inside 405 reach), E face (cfg) faces the die centre column. old origin {\"x\": 7178.328, \"y\": 10805.832, \"orient\": \"R0\"} | SFUPLAN 10-18 (HANDOFF 0gj): moved (7178.328, 11082.312) -> (7184.96, 11002.304) outline 1080 x 950.4 (r10 cluster kit)",
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
     "moved_um": 0.0
@@ -19212,18 +19308,18 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 950.4,
+    "w": 1080.0,
     "h": 950.4
    },
    "origin": {
-    "x": 12072.96,
-    "y": 11201.88,
+    "x": 11934.928,
+    "y": 11003.6,
     "orient": "MY"
    },
    "pins": [],
    "pin_status": "FACES_ONLY",
    "grant": "d4g_sfu_store_quadrant_1017",
-   "notes": "H-D4G2 10-17: one SFU programme store cluster per quadrant (4 SMs), master hbm_sfu_programme_store_r10_cl (941.76 x 950.4, 11 r10n stripe leaves 285.12 x 194.4, hardened once, replicated 4x by orientation); S face (store outputs + clk) faces its sfucore_<q> (gap ~100-220 um, one hop inside 405 reach), E face (cfg) faces the die centre column. old origin {\"x\": 13134.528, \"y\": 12242.232, \"orient\": \"R0\"}",
+   "notes": "H-D4G2 10-17: one SFU programme store cluster per quadrant (4 SMs), master hbm_sfu_programme_store_r10_cl (941.76 x 950.4, 11 r10n stripe leaves 285.12 x 194.4, hardened once, replicated 4x by orientation); S face (store outputs + clk) faces its sfucore_<q> (gap ~100-220 um, one hop inside 405 reach), E face (cfg) faces the die centre column. old origin {\"x\": 13134.528, \"y\": 12242.232, \"orient\": \"R0\"} | SFUPLAN 10-18 (HANDOFF 0gj): moved (12072.96, 11201.88) -> (11934.928, 11003.6) outline 1080 x 950.4 (r10 cluster kit)",
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
     "moved_um": 0.0
@@ -19235,18 +19331,18 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 950.4,
+    "w": 1080.0,
     "h": 950.4
    },
    "origin": {
-    "x": 12072.96,
-    "y": 19621.08,
+    "x": 11934.928,
+    "y": 19819.384,
     "orient": "R180"
    },
    "pins": [],
    "pin_status": "FACES_ONLY",
    "grant": "d4g_sfu_store_quadrant_1017",
-   "notes": "H-D4G2 10-17: one SFU programme store cluster per quadrant (4 SMs), master hbm_sfu_programme_store_r10_cl (941.76 x 950.4, 11 r10n stripe leaves 285.12 x 194.4, hardened once, replicated 4x by orientation); S face (store outputs + clk) faces its sfucore_<q> (gap ~100-220 um, one hop inside 405 reach), E face (cfg) faces the die centre column. old origin {\"x\": 13134.528, \"y\": 18030.6, \"orient\": \"R0\"}",
+   "notes": "H-D4G2 10-17: one SFU programme store cluster per quadrant (4 SMs), master hbm_sfu_programme_store_r10_cl (941.76 x 950.4, 11 r10n stripe leaves 285.12 x 194.4, hardened once, replicated 4x by orientation); S face (store outputs + clk) faces its sfucore_<q> (gap ~100-220 um, one hop inside 405 reach), E face (cfg) faces the die centre column. old origin {\"x\": 13134.528, \"y\": 18030.6, \"orient\": \"R0\"} | SFUPLAN 10-18 (HANDOFF 0gj): moved (12072.96, 19621.08) -> (11934.928, 19819.384) outline 1080 x 950.4 (r10 cluster kit)",
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
     "moved_um": 0.0
@@ -19258,18 +19354,18 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 950.4,
+    "w": 1080.0,
     "h": 950.4
    },
    "origin": {
-    "x": 7367.328,
-    "y": 19734.408,
+    "x": 7374.176,
+    "y": 19820.68,
     "orient": "MX"
    },
    "pins": [],
    "pin_status": "FACES_ONLY",
    "grant": "d4g_sfu_store_quadrant_1017",
-   "notes": "H-D4G2 10-17: one SFU programme store cluster per quadrant (4 SMs), master hbm_sfu_programme_store_r10_cl (941.76 x 950.4, 11 r10n stripe leaves 285.12 x 194.4, hardened once, replicated 4x by orientation); S face (store outputs + clk) faces its sfucore_<q> (gap ~100-220 um, one hop inside 405 reach), E face (cfg) faces the die centre column. old origin {\"x\": 7367.328, \"y\": 19457.928, \"orient\": \"R0\"}",
+   "notes": "H-D4G2 10-17: one SFU programme store cluster per quadrant (4 SMs), master hbm_sfu_programme_store_r10_cl (941.76 x 950.4, 11 r10n stripe leaves 285.12 x 194.4, hardened once, replicated 4x by orientation); S face (store outputs + clk) faces its sfucore_<q> (gap ~100-220 um, one hop inside 405 reach), E face (cfg) faces the die centre column. old origin {\"x\": 7367.328, \"y\": 19457.928, \"orient\": \"R0\"} | SFUPLAN 10-18 (HANDOFF 0gj): moved (7367.328, 19734.408) -> (7374.176, 19820.68) outline 1080 x 950.4 (r10 cluster kit)",
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
     "moved_um": 0.0
@@ -28477,8 +28573,8 @@
        "orient": "R0"
       },
       "new": {
-       "x": 7178.328,
-       "y": 11082.312,
+       "x": 7184.96,
+       "y": 11002.304,
        "orient": "R0"
       }
      },
@@ -28490,8 +28586,8 @@
        "orient": "R0"
       },
       "new": {
-       "x": 12072.96,
-       "y": 11201.88,
+       "x": 11934.928,
+       "y": 11003.6,
        "orient": "MY"
       }
      },
@@ -28503,8 +28599,8 @@
        "orient": "R0"
       },
       "new": {
-       "x": 7367.328,
-       "y": 19734.408,
+       "x": 7374.176,
+       "y": 19820.68,
        "orient": "MX"
       }
      },
@@ -28516,14 +28612,15 @@
        "orient": "R0"
       },
       "new": {
-       "x": 12072.96,
-       "y": 19621.08,
+       "x": 11934.928,
+       "y": 19819.384,
        "orient": "R180"
       }
      }
     ],
     "effect": "SE/NE store->sfucore gap 1,536/1,534 um (4 relay stages at 405) -> 220 um (0 stages); SW/NW unchanged (100/106 um)",
-    "caveat": "MY/R180 orientations go straight to place_inst; check compact-pin centroids honour orient in GEN1"
+    "caveat": "MY/R180 orientations go straight to place_inst; check compact-pin centroids honour orient in GEN1",
+    "sfuplan_0gj": "SFUPLAN 10-18 (HANDOFF 0gj): store r10 cluster 1080 x 950.4 over the core N-face centre-side corner (550 um overlap), gap ~20 um in every quadrant (HBM-CRIT 350/250/100/250); cores take the store orientation; cij_<q> moved (d4g_sfuplan.py)"
    }
   }
  }

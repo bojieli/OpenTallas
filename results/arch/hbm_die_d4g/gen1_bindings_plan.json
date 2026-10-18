@@ -138,8 +138,8 @@
      "orient": "R0"
     },
     "new": {
-     "x": 7178.328,
-     "y": 11082.312,
+     "x": 7184.96,
+     "y": 11002.304,
      "orient": "R0"
     }
    },
@@ -151,8 +151,8 @@
      "orient": "R0"
     },
     "new": {
-     "x": 12072.96,
-     "y": 11201.88,
+     "x": 11934.928,
+     "y": 11003.6,
      "orient": "MY"
     }
    },
@@ -164,8 +164,8 @@
      "orient": "R0"
     },
     "new": {
-     "x": 7367.328,
-     "y": 19734.408,
+     "x": 7374.176,
+     "y": 19820.68,
      "orient": "MX"
     }
    },
@@ -177,13 +177,14 @@
      "orient": "R0"
     },
     "new": {
-     "x": 12072.96,
-     "y": 19621.08,
+     "x": 11934.928,
+     "y": 19819.384,
      "orient": "R180"
     }
    }
   ],
   "effect": "SE/NE store->sfucore gap 1,536/1,534 um (4 relay stages at 405) -> 220 um (0 stages); SW/NW unchanged (100/106 um)",
-  "caveat": "MY/R180 orientations go straight to place_inst; check compact-pin centroids honour orient in GEN1"
+  "caveat": "MY/R180 orientations go straight to place_inst; check compact-pin centroids honour orient in GEN1",
+  "sfuplan_0gj": "SFUPLAN 10-18 (HANDOFF 0gj): store r10 cluster 1080 x 950.4 over the core N-face centre-side corner (550 um overlap), gap ~20 um in every quadrant (HBM-CRIT 350/250/100/250); cores take the store orientation; cij_<q> moved (d4g_sfuplan.py)"
  }
 }

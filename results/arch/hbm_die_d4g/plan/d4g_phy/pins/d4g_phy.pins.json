@@ -3929,7 +3929,27 @@
    "h": 1771.2,
    "kind": "SFU core grant sfucore_<q> (H-SU accepted 10-16)",
    "orient": "R0",
-   "faces": {}
+   "faces": {
+    "N": {
+     "face_len_um": 1598.4,
+     "bits": 2284,
+     "utilisation": 0.143,
+     "pins": [
+      {
+       "link": "sfup_SW>sfucore_SW:SFU_PROG",
+       "cls": "SFU_PROG",
+       "peer": "sfup_SW",
+       "dir": "in",
+       "bits": 2284,
+       "offset_um": 1040.0,
+       "span_um": 558.4,
+       "x": 7455.8,
+       "y": 10982.304,
+       "note": "SFUPLAN 10-18 (HANDOFF 0gj): k9 io_word/compiler_control/fault, core-local N face (die N after R0)"
+      }
+     ]
+    }
+   }
   },
   "sfus_SW": {
    "x": 6136.6,
@@ -6525,8 +6545,28 @@
    "w": 1598.4,
    "h": 1771.2,
    "kind": "SFU core grant sfucore_<q> (H-SU accepted 10-16)",
-   "orient": "R0",
-   "faces": {}
+   "orient": "MY",
+   "faces": {
+    "N": {
+     "face_len_um": 1598.4,
+     "bits": 2284,
+     "utilisation": 0.143,
+     "pins": [
+      {
+       "link": "sfup_SE>sfucore_SE:SFU_PROG",
+       "cls": "SFU_PROG",
+       "peer": "sfup_SE",
+       "dir": "in",
+       "bits": 2284,
+       "offset_um": 1040.0,
+       "span_um": 558.4,
+       "x": 12744.1,
+       "y": 10982.304,
+       "note": "SFUPLAN 10-18 (HANDOFF 0gj): k9 io_word/compiler_control/fault, core-local N face (die N after MY)"
+      }
+     ]
+    }
+   }
   },
   "sfus_SE": {
    "x": 13043.4,
@@ -11464,8 +11504,28 @@
    "w": 1598.4,
    "h": 1771.2,
    "kind": "SFU core grant sfucore_<q> (H-SU accepted 10-16)",
-   "orient": "R0",
-   "faces": {}
+   "orient": "MX",
+   "faces": {
+    "S": {
+     "face_len_um": 1598.4,
+     "bits": 2284,
+     "utilisation": 0.143,
+     "pins": [
+      {
+       "link": "sfup_NW>sfucore_NW:SFU_PROG",
+       "cls": "SFU_PROG",
+       "peer": "sfup_NW",
+       "dir": "in",
+       "bits": 2284,
+       "offset_um": 1040.0,
+       "span_um": 558.4,
+       "x": 7645.0,
+       "y": 20791.08,
+       "note": "SFUPLAN 10-18 (HANDOFF 0gj): k9 io_word/compiler_control/fault, core-local N face (die S after MX)"
+      }
+     ]
+    }
+   }
   },
   "sfus_NW": {
    "x": 6325.7,
@@ -14050,8 +14110,28 @@
    "w": 1598.4,
    "h": 1771.2,
    "kind": "SFU core grant sfucore_<q> (H-SU accepted 10-16)",
-   "orient": "R0",
-   "faces": {}
+   "orient": "R180",
+   "faces": {
+    "S": {
+     "face_len_um": 1598.4,
+     "bits": 2284,
+     "utilisation": 0.143,
+     "pins": [
+      {
+       "link": "sfup_NE>sfucore_NE:SFU_PROG",
+       "cls": "SFU_PROG",
+       "peer": "sfup_NE",
+       "dir": "in",
+       "bits": 2284,
+       "offset_um": 1040.0,
+       "span_um": 558.4,
+       "x": 12744.1,
+       "y": 20791.08,
+       "note": "SFUPLAN 10-18 (HANDOFF 0gj): k9 io_word/compiler_control/fault, core-local N face (die S after R180)"
+      }
+     ]
+    }
+   }
   },
   "sfus_NE": {
    "x": 13043.4,
