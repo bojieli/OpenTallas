@@ -1264,10 +1264,16 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
         # hotspot (worst gcell / layer / bbox from the congestion report) and the congestion PNG
         rows = re.findall(r"^GATE_GRT_LAYER (\S+) +(\d+) +(\d+) +([\d.]+)%\s+(\d+) */ *(\d+) */ *(\d+)", out, re.M)
         tot = [r for r in rows if r[0] == "Total"]
-        lay = [r for r in rows if r[0] != "Total"]
+        # 5_1_grt.log prints the table after the first route AND after the incremental re-route: judge the LAST one
+        ends = [i for i, r in enumerate(rows) if r[0] == "Total"]
+        lay = [r for r in rows[(ends[-2] + 1 if len(ends) > 1 else 0):(ends[-1] if ends else len(rows))] if r[0] != "Total"]
         worst = max(lay, key=lambda r: float(r[3]), default=None)
         ovf = int(tot[-1][6]) if tot else None
         hot = LP.congestion_hotspots(rpt) if rpt is not None else None
+        wovf = max(lay, key=lambda r: int(r[6]), default=None)
+        if hot and hot.get("markers") and wovf is not None and int(wovf[6]) > 0:
+            # the congestion report is 2D ("on Layer -"): the layer comes from the per-layer overflow table
+            hot["worst_overflow_layer"] = [wovf[0], int(wovf[6])]
         secs = re.search(r"GATE_GRT_S=(\d+)", out)
         g.trial_route = dict(schema="opentallas.ref_tile.trial_route.v1", overflow=ovf, kind="parent" if parent else "tile",
                              rc=re.search(r"GATE_GRT_RC=(\S+)", out).group(1), grt_s=int(secs.group(1)) if secs else None,
@@ -1276,6 +1282,7 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
                              worst_layer_usage=worst and [worst[0], float(worst[3])], hotspot=hot,
                              congestion_png=imgs.get("congestion"))
         note = (f"trial GRT: total overflow {ovf}" + (f"; worst layer {worst[0]} {worst[3]}% used" if worst else "")
+                + (f"; worst-overflow layer {wovf[0]} ({wovf[6]})" if ovf and wovf is not None else "")
                 + (f"; {LP.hotspot_text(hot)}" if ovf and hot is not None else
                    "; no congestion report came back" if ovf else "")
                 + (f"; congestion map {imgs.get('congestion')}" if imgs.get("congestion") else "")

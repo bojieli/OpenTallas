@@ -301,10 +301,11 @@ def hotspot_text(h):
     if not h or not h.get("markers"):
         return "no congestion markers in the report"
     w, b = h["worst"], h["bbox"]
-    return (f"worst gcell {w['layer']} {w['direction']} overflow {w['overflow']} (cap {w['capacity']} use {w['usage']}) at "
-            f"({w['bbox'][0]:g},{w['bbox'][1]:g})-({w['bbox'][2]:g},{w['bbox'][3]:g}) um; worst layer {h['worst_layer']} "
-            f"({h['layers'][h['worst_layer']]['markers']} markers); {h['markers']} markers span "
-            f"({b[0]:g},{b[1]:g})-({b[2]:g},{b[3]:g}) um")
+    two_d = w["layer"] in ("-", "?")          # ORFS 5_1_grt congestion.rpt is 2D: "on Layer -"
+    return (f"worst gcell {'' if two_d else w['layer'] + ' '}{w['direction']} overflow {w['overflow']} (cap "
+            f"{w['capacity']} use {w['usage']}) at ({w['bbox'][0]:g},{w['bbox'][1]:g})-({w['bbox'][2]:g},{w['bbox'][3]:g}) um"
+            + ("" if two_d else f"; worst layer {h['worst_layer']} ({h['layers'][h['worst_layer']]['markers']} markers)")
+            + f"; {h['markers']} markers span ({b[0]:g},{b[1]:g})-({b[2]:g},{b[3]:g}) um")
 
 
 def render_tile(dump, outdir, rpt=None, title=""):
