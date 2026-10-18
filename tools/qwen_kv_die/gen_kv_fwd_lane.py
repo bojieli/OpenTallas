@@ -24,6 +24,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 STD = {1: (12.96, 12.96), 36: (12.96, 12.96), 296: (21.6, 47.52), 528: (21.6, 82.08)}
+# KV-LANEKITS 10-18 gate f1: a landing (5S + 14 flops + read mux) does not fit its station frame: GPL utilisation 181 % (36),
+# 128 % (296 / landsh0_296), 126 % (528); landsh0_1 fits (WARN 0 fail).  Landing frames, same height (W/E faces kept),
+# ~2.3-3.3x the station area for ~55 % util: the die plan must reserve these at a crossing chain's last stage
+LAND = {1: (12.96, 12.96), 36: (25.92, 21.6), 296: (51.84, 47.52), 528: (51.84, 82.08)}
 FWD = {'qkd_rlysh0_': ('ck', 'en', 'a', 'b', 'eb', 'ck_o'), 'qkd_rlysh_': ('ckf', 'ea', 'a', 'b', 'eb', 'ck_o'),
        'qkd_landsh_': ('ckf', 'ea', 'a', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'b', 'fault'),
        'qkd_landsh0_': ('ck_s', 'en', 'a', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'b', 'fault')}
@@ -73,13 +77,14 @@ def rtl():
 
 
 def spec(fam, S, a):
-    w, h = STD[S]
+    land = fam.startswith('qkd_landsh')
+    w, h = (LAND if land else STD)[S]
     std = json.loads((ROOT / f'physical/ref_tile/qkd_rlys_{S}/spec.json').read_text())
     name = f'{fam}{S}'
     ins = [p for p in FWD[fam] if p not in ('a', 'b') and p not in FWD_OUT]
     outs = [p for p in FWD[fam] if p not in ('a', 'b') and p in FWD_OUT]
     pins = {'W': ['a'], 'E': ['b'], 'S': ins, 'N': outs}
-    rng = {k: v for k, v in std.get('pin_ranges', {}).items() if k in ('a', 'b')}
+    rng = {k: v for k, v in std.get('pin_ranges', {}).items() if k in ('a', 'b') and (w, h) == STD[S]}
     benches = [dict(name='lint', cmd=(f"mkdir -p {{RUN}} && printf '%s\\n' 'module ot_lint_top; {name} u_top (); endmodule' > "
                                       f"{{RUN}}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style "
                                       f"-Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top "
@@ -92,7 +97,6 @@ def spec(fam, S, a):
         benches.append(dict(name=f'{mu}_mutant', cmd=f'bash tools/qwen_kv_die/bench_kv_fwd_lane.sh {mu} {{RUN}}/bench_{mu} {S}',
                             expect='fail', fail_regex='FWD_BENCH FAIL', fail_witness=f'{WIT}/w{S}_{mu}.log',
                             threads=2, peak_ram_gb=4, needs=['verilator']))
-    land = fam.startswith('qkd_landsh')
     return dict(
         name=name, top=name, kind='tile', sources=LANE_RTL, params={}, clock_port=CLOCK[fam],
         reset_ports=['rs'] if land else [],
@@ -108,7 +112,7 @@ def spec(fam, S, a):
         route=dict(pd=0.45, threads=2, peak_ram_gb=6, pin_h='M4', pin_v='M3 M5', m5_pg_pitch=2.7, pin_min_tracks=3,
                    hold_margin_ns=0.03, io_hold_margin_ns=0.0, macro_halo_um=5.4),
         structural_change=(f'KV-CLOCK/LANEKITS 10-18 (landed-regions standard, LANDING-CONTRACT): {S}-b forwarded-clock lane '
-                           f'frame {name}: {KIND[fam]} (rtl/qwen_split/qfd_fwd_lane.sv via {RTL}); replaces the qkd_rlys_{S} '
+                           f'frame {name} ({w} x {h}): {KIND[fam]} (rtl/qwen_split/qfd_fwd_lane.sv via {RTL}); replaces the qkd_rlys_{S} '
                            'replica of the same frame on KV die relay chains that cross clock regions. Recipe 4 flop-first, '
                            'hold_budget die, M5 cap.'),
         job=dict(owner=a.owner, branch=a.branch, tag=a.tag,

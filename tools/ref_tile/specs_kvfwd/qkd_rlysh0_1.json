@@ -84,7 +84,7 @@
   "io_hold_margin_ns": 0.0,
   "macro_halo_um": 5.4
  },
- "structural_change": "KV-CLOCK/LANEKITS 10-18 (landed-regions standard, LANDING-CONTRACT): 1-b forwarded-clock lane frame qkd_rlysh0_1: hop-0 station (ICG on the source root, rising capture, inverted ck_o) (rtl/qwen_split/qfd_fwd_lane.sv via rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv); replaces the qkd_rlys_1 replica of the same frame on KV die relay chains that cross clock regions. Recipe 4 flop-first, hold_budget die, M5 cap.",
+ "structural_change": "KV-CLOCK/LANEKITS 10-18 (landed-regions standard, LANDING-CONTRACT): 1-b forwarded-clock lane frame qkd_rlysh0_1 (12.96 x 12.96): hop-0 station (ICG on the source root, rising capture, inverted ck_o) (rtl/qwen_split/qfd_fwd_lane.sv via rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv); replaces the qkd_rlys_1 replica of the same frame on KV die relay chains that cross clock regions. Recipe 4 flop-first, hold_budget die, M5 cap.",
  "job": {
   "owner": "Claude:KV-CLOCK/LANEKITS",
   "branch": "claude/kv-lanekits-1018",
