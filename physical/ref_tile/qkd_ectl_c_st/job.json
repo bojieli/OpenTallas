@@ -1,5 +1,5 @@
 {
- "name": "qkd_ectl_c_st-v1-COMMIT",
+ "name": "qkd_ectl_c_st-v1-f7a9a03ed",
  "block": "qkd_ectl_c_st",
  "ref_tile": true,
  "owner": "claude:RTL-BUILD-KV/ASTK",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/rtl-build-kv-astk-1018",
-  "commit": "COMMIT",
+  "commit": "f7a9a03ed1e3925b737b380f6c3f59b1beb0a364",
   "extra_paths": [
    "rtl/test/qwen_static_kv",
    "rtl/qwen_sys",
@@ -119,7 +119,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ectl_c_st/qkd_ectl_c_st-v1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ectl_c_st/qkd_ectl_c_st-v1-f7a9a03ed"
   }
  ],
  "cycles_added": 0,
