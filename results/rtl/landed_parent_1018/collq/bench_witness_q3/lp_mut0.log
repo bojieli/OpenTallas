@@ -1,0 +1,6 @@
+LP_ACTIVITY del_valid_cycles=4 vm_kq_changes=892 rr_v_cycles=1757 tx_v_cycles=0 fault=1 cause=0604
+LP_LOCKSTEP PASS MUT=0 compared=131146 cycles=2890 warm=38 stimulus=q3_v5prog_vm_writer_tkw_ring_random
+- rtl/hbm_accel/generic/collective/p2p/landed/tb_ot_hfd_coll_q3_lp.sv:329: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 3us; walltime 0.233 s; speed 12.368 us/s
+- Verilator: cpu 0.234 s on 1 threads; alloced 1020 MB

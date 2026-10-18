@@ -11,12 +11,15 @@ Hard children = the CLOSED views (fj_q2, ctl_v5_q2, qcap, qso_q2_b32 / b1, vmwri
 upipe / vmasm register slices, the 8 ring add lanes, the landing rings / reads and reset runs.  Outline 1296 x 1036.8 (exact): the 1080 x 880
 d4g slot cannot hold these children with 20-um channels on the 43.2 lattice (lattice footprint ~0.65 mm2 hard + soft).
 
-  python3 tools/hbm_coll_static/gen_coll_q2_lp_kit.py  -> tools/ref_tile/specs_hbm_d4g/hcoll_q2_lp_1018.json
+  python3 tools/hbm_coll_static/gen_coll_q2_lp_kit.py [q2|q3]  -> tools/ref_tile/specs_hbm_d4g/hcoll_<v>_lp_1018.json
+  q3 (SW, ot_hfd_coll_q3_hard_v8x #(NLINK 2, TP 192)): n2s1 ctl / fj / qso views, capture leaf 9 + TP192 argmax E of
+  the ring row, TKM interface pins (tkx_* out on N, tkx_w_* into the writer on W).
 """
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+VARIANT = "q2"
 LP = json.loads((ROOT / "results/arch/landed_parent_1018/collq/spec_q2.json").read_text())
 V = {
     "fj": "physical/ref_tile/hcoll_v5_fj2/views/ot_hgi_coll_fj_q2",
@@ -29,6 +32,17 @@ V = {
     "rst": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
     "radd": "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_static_add_lane",
 }
+V3 = dict(V, **{   # q3 (SW, SOLO 1, NLINK 2, TP 192): the n2s1 masters + the TP192 argmax leaf
+    "fj": "physical/ref_tile/hcoll_v5_fj3/views/ot_hgi_coll_fj_n2s1",
+    "ctl": "physical/ref_tile/hcoll_v5_ctl3/views/ot_hgi_coll_ctl_v5_n2s1",
+    "qo32": "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+    "qo1": "physical/ref_tile/hcoll_v5_qso3n/views/ot_hgi_coll_qso_n2s1_b1",
+    "arg": "physical/ref_tile/hcoll_v7_arg_tp192/views/ot_hgi_coll_argmax_m_tp192",
+})
+TKX_OUT = ["tkx_start", "tkx_arg_mode", "tkx_cfg_n", "tkx_cfg_k", "tkx_cfg_nout", "tkx_cfg_g", "tkx_cfg_gbase", "tkx_cfg_pf",
+           "tkx_cfg_obase", "tkx_cfg_rbase", "tkx_cfg_has_r", "tkx_del_slot", "tkx_del_valid", "tkx_del_flit",
+           "tkx_busy", "tkx_done", "tkx_fault"]
+TKX_W = ["tkx_w_v", "tkx_w_addr", "tkx_w_mask", "tkx_w_data"]
 SRAM = "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
 G = 43.2
 
@@ -39,7 +53,8 @@ def lat(i):
 
 def children():
     c = []
-    add = lambda v, inst, x, y: c.append({"view": V[v], "count": 1, "inst": inst, "at": [lat(x), lat(y)]})
+    VV = V3 if VARIANT == "q3" else V
+    add = lambda v, inst, x, y: c.append({"view": VV[v], "count": 1, "inst": inst, "at": [lat(x), lat(y)]})
     # sw: switch register mass in the middle; control + fj beside the S host face
     add("ctl", "u_control", 4, 1)                         # 172.8, 43.2 (108 x 280.8)
     add("fj", "u_fj", 8, 1)                               # 345.6, 43.2
@@ -60,6 +75,11 @@ def children():
     for l in range(8):
         add("rst", f"u_rst{l}", 4 + 2 * l, 18)            # row y 777.6 (64.8^2)
     add("rctl", "u_rctl", 13, 20)                         # 561.6, 864 (216 x 129.6)
+    if VARIANT == "q3":
+        # argmax (reads switch sinks 10-13, its result is capture source 9) + capture leaf 9, E of the ring row, below
+        # the E switch slices (qo9-11 end at y 667.4)
+        add("arg", "u_arg", 24, 16)                       # 1036.8, 691.2 (95.04 x 47.52)
+        add("qc", "u_qc9", 27, 16)                        # 1166.4, 691.2 (25.92 x 129.6)
     # the 8 ring add lanes stay SOFT: their closed view (hgi_coll_ring_add_r1) is also the master of the 16 add lanes
     # inside the soft reduce_static, which instantiates it with #(.LAT(8)) (a hard view takes no overrides)
     return c
@@ -76,9 +96,10 @@ def spec():
           "ra_tx_tag", "ra_tx_dst", "ra_tx_result", "ra_tx_acc", "ra_tx_gather", "ra_tx_ttl", "ra_rx_slot", "ra_rx_kind",
           "ra_rx_src", "ra_rx_tag", "ra_rr_local", "ra_rr_local_tag"]
     pins = {
-        "W": ["vm_rq", "vm_rr", "ck_wr", "vm_kq"],
+        "W": ["vm_rq", "vm_rr", "ck_wr", "vm_kq"] + (TKX_W if VARIANT == "q3" else []),
         "N": ["pr_cw_i", "pr_ccw_o", "isa_ring", "isa_lp_data", "rc_v", "rc_tag", "rc_d"] + ra[:15] + ["ck_rg"] + ra[15:]
-             + ["rr_v", "rr_tag", "rr_d", "ag_v", "ag_src", "ag_tag", "ag_d", "pr_ccw_i", "pr_cw_o"],
+             + ["rr_v", "rr_tag", "rr_d", "ag_v", "ag_src", "ag_tag", "ag_d", "pr_ccw_i", "pr_cw_o"]
+             + (TKX_OUT if VARIANT == "q3" else []),
         "E": ["inj_rd", "inj_idx", "hgi_inj_addr", "inj_d", "del_valid", "del_flit", "hgi_del_obase"],
         "S": ["cfg_v", "cfg_target", "cfg_addr", "cfg_data", "desc_v", "desc_base", "desc_limit", "desc_loops", "launch_v",
               "program_configured", "program_init_busy", "program_fault", "rst_n", "qid", "ck_sw", "hgi_busy", "hgi_done",
@@ -135,7 +156,23 @@ def spec():
     }
 
 
+def spec_q3():
+    """q3 (SW) kit = the q2 kit with the q3 lp outputs, the n2s1 / TP192 views, capture leaf 9 + argmax, TKM pins"""
+    t = json.dumps(spec())
+    for a, b in (("ot_hfd_coll_q2_lp", "ot_hfd_coll_q3_lp"), ("run_q2_lp_all", "run_q3_lp_all"), ("q2lp", "q3lp"),
+                 ("hcoll_q2_lp_1018", "hcoll_q3_lp_1018"), ("ot_hfd_coll_q2_hard_v8g", "ot_hfd_coll_q3_hard_v8x"),
+                 ("COLL q2 quadrant parent", "COLL q3 (SW, NLINK 2, TP 192) quadrant parent"),
+                 ("COLL q2 quadrant engine parent (SE/NW/NE)", "COLL q3 quadrant engine parent (SW, TP 192)"),
+                 ("ot_hgi_coll_ctl_v5_q2 leaf", "ot_hgi_coll_ctl_v5_n2s1 leaf")):
+        t = t.replace(a, b)
+    return json.loads(t)
+
+
 if __name__ == "__main__":
-    out = ROOT / "tools/ref_tile/specs_hbm_d4g/hcoll_q2_lp_1018.json"
-    out.write_text(json.dumps(spec(), indent=1) + "\n")
-    print("wrote", out)
+    import sys
+    for v in (sys.argv[1:] or ["q2", "q3"]):
+        VARIANT = v
+        LP = json.loads((ROOT / f"results/arch/landed_parent_1018/collq/spec_{v}.json").read_text())
+        out = ROOT / f"tools/ref_tile/specs_hbm_d4g/hcoll_{v}_lp_1018.json"
+        out.write_text(json.dumps(spec() if v == "q2" else spec_q3(), indent=1) + "\n")
+        print("wrote", out)
