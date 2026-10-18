@@ -3,7 +3,8 @@
 // S81-SLICE (stream 0cm, 2026-10-17): the DV vector slice, one hardened CLUSTER (p4c-lanes; contract
 // results/rtl/s81_slice_1017/SLICE_CONTRACT.md).  Wires and registered relay stages only; every function is in a hardened
 // sub-leaf with its own clock root:
-//   beat leaves k = 0..4 (0.95 x 0.92 mm each, N -> S stacked; k = 2 is the centre): ot_s81sl_vn + ot_s81sl_vq + ot_s81sl_vp
+//   beat leaves k = 0..4 (0.95 x 0.92 mm each, N -> S stacked; k = 2 is the centre): ot_s81sl_leaf = ot_s81sl_vp + _vn +
+//           _vq + _vs + _vsw + the hub RA lane pair (dsfd_su_t_rxsf / _rxsb)
 //   centre: ot_s81sl_xg (ring stop + x streamer), ot_s81sl_xr1 / _xr3 (control plane), ot_s81sl_cap (capture root),
 //           ot_s81dv_xfin (S81-DV: norm exchange + replicated finish)
 // Glue: ot_s81sl_rly relay stages (registers only, <= 405 um a stage by the floorplan) on every leaf <-> centre link, EQUAL
@@ -24,11 +25,83 @@ module ot_s81sl_rly #(parameter integer W = 1, parameter integer D = 1) (
     end endgenerate
 endmodule
 
+// ---------------------------------------------------------------------------------------------------------------------
+// One BEAT leaf (S81-TILES5 10-17): the hardened sub-leaves and their point-to-point seams, every port bound (no tie-off):
+//   vp (leaf store + command port) -> vn (h / norm), vq (act-quant, first input y from vn, gather mode m_* from vp NORM)
+//   vp vs seam (ops 8..15, leaf-store extension port) <-> vs (SU lane engine) -> vq second input u / um
+//   vs <-> vsw (one hub SwiGLU lane) and vs <-> the closed hub RA lane pair dsfd_su_t_rxsf -> dsfd_su_t_rxsb.
+// Each sub-leaf registers its pins on both sides, so the seams are wires.  AQ_XMEM is vq's wait-line build (kit: 2).
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_s81sl_leaf #(
+    parameter integer AQ_XMEM = 2,
+    parameter integer VS_MUT = 0       // bench negative controls only (ot_s81sl_vs MUT); 0 in every build
+) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [3:0]    sid,
+    input  wire [2:0]    k,
+    input  wire          c_v,
+    input  wire [159:0]  c_d,
+    input  wire          sw_v,
+    input  wire [9:0]    sw_a,
+    input  wire [7:0]    sw_m,
+    input  wire [255:0]  sw_d,
+    input  wire [1:0]    cw_v,
+    input  wire [23:0]   cw_a,
+    input  wire [63:0]   cw_d,
+    output wire          lo_v,
+    output wire [255:0]  lo_d,
+    input  wire          rb_v,
+    input  wire [31:0]   rb_d,
+    output wire          p_v,
+    output wire [31:0]   p_d,
+    output wire          xf_v,
+    output wire          xf_s,
+    output wire [275:0]  xf,
+    output wire          fault
+);
+    wire hw_v, hw_hf, hr_v, hr_hf, hq_v, n_go, m_v, m_q, m_b, wl_v, y_v;
+    wire [2:0] hw_j, hr_j, wl_i, y_i; wire [255:0] hw_d, hq_d, wl_d, y; wire [127:0] n_pre; wire [7:0] m_i;
+    wire s_v; wire [159:0] s_d; wire x_rv, x_qv, x_wv; wire [9:0] x_ra, x_wa; wire [7:0] x_wm; wire [255:0] x_qd, x_wd;
+    wire u_v, um_v, um_q, um_b; wire [2:0] u_i; wire [255:0] u; wire [7:0] um_i;
+    wire swv, swvi, swfi; wire [255:0] swd; wire [31:0] sww, swl; wire [63:0] swri;
+    wire rav, ravi, rafi, rfv, rff; wire [31:0] rax, rari, rfu, rfu2, rfmx;
+    wire f_vp, f_vn, f_vq, f_vs;
+    ot_s81sl_vp u_vp (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
+        .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d), .lo_v(lo_v), .lo_d(lo_d),
+        .s_v(s_v), .s_d(s_d), .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd),
+        .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
+        .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d), .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf),
+        .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
+        .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(f_vp));
+    ot_s81sl_vn u_vn (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
+        .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
+        .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d),
+        .p_v(p_v), .p_d(p_d), .y_v(y_v), .y_i(y_i), .y(y), .fault(f_vn));
+    ot_s81sl_vs #(.MUT(VS_MUT)) u_vs (.clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d(s_d),
+        .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
+        .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
+        .sw_v(swv), .sw_d(swd), .sw_w(sww), .sw_lim(swl), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),
+        .ra_v(rav), .ra_x(rax), .ra_vi(ravi), .ra_ri(rari), .ra_fi(rafi), .fault(f_vs));
+    ot_s81sl_vsw u_vsw (.clk(clk), .rst_n(rst_n), .i_v(swv), .i_d(swd), .i_w(sww), .i_lim(swl),
+        .o_v(swvi), .o_d(swri), .o_f(swfi));
+    dsfd_su_t_rxsf u_rxsf (.ck(clk), .rst(rst_n), .i_v(rav), .i_x(rax), .o_v(rfv), .o_u(rfu), .o_u2(rfu2), .o_mx(rfmx),
+        .o_f(rff));
+    dsfd_su_t_rxsb u_rxsb (.ck(clk), .rst(rst_n), .i_v(rfv), .i_u(rfu), .i_u2(rfu2), .i_mx(rfmx), .i_f(rff),
+        .o_v(ravi), .o_r(rari), .o_f(rafi));
+    ot_s81sl_vq #(.AQ_XMEM(AQ_XMEM)) u_vq (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y),
+        .u_v(u_v), .u_i(u_i), .u(u), .sid(sid), .k(k), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
+        .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(f_vq));
+    // vsw / RA lane faults are sticky in their leaves and reach vs (sw_fi / ra_fi -> vs fault)
+    assign fault = f_vp | f_vn | f_vq | f_vs;
+endmodule
+
 module ot_s81sl_slice #(
     parameter integer HB = 0,
     parameter integer DL = 4,        // leaf <-> centre relay stages (equal for every leaf: the farthest leaf, 1.84 mm)
     parameter integer DR = 6,        // frame return lanes -> capture root (worst entry face to the centre, 2.3 mm)
-    parameter integer DX = 6         // x streamer -> x-chain heads (centre to the bottom face)
+    parameter integer DX = 6,        // x streamer -> x-chain heads (centre to the bottom face)
+    parameter integer VQ_XMEM = 2    // vq's x wait line: 2 = the one-macro sub-beat SRAM ring (the s81sl_vq kit), 0 = flops
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -56,25 +129,16 @@ module ot_s81sl_slice #(
     wire [1279:0] lo_d_l, lo_d_x; wire [159:0] p_d_l, p_d_x, rb_d_x, rb_d_l;
     wire [9:0] cw_v_x, cw_v_l; wire [119:0] cw_a_x, cw_a_l; wire [319:0] cw_d_x, cw_d_l;
     wire [4:0] xfv_l, xfv_x, xfs_l, xfs_x; wire [5*276-1:0] xf_l, xf_x;
-    wire [4:0] f_vn, f_vq, f_vp;
+    wire [4:0] f_lf;
     genvar k;
     generate for (k = 0; k < 5; k = k + 1) begin : lf
-        wire hw_v, hw_hf, hr_v, hr_hf, hq_v, n_go, m_v, m_q, m_b, wl_v, y_v;
-        wire [2:0] hw_j, hr_j, wl_i, y_i; wire [255:0] hw_d, hq_d, wl_d, y; wire [127:0] n_pre;
-        ot_s81sl_vp u_vp (.clk(clk), .rst_n(rst_n), .c_v(c_v_l[k]), .c_d(c_d_l[160 * k +: 160]),
+        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
+            .c_v(c_v_l[k]), .c_d(c_d_l[160 * k +: 160]),
             .sw_v(sw_v_l[k]), .sw_a(sw_a_l[10 * k +: 10]), .sw_m(sw_m_l[8 * k +: 8]), .sw_d(sw_d_l[256 * k +: 256]),
             .cw_v(cw_v_l[2 * k +: 2]), .cw_a(cw_a_l[24 * k +: 24]), .cw_d(cw_d_l[64 * k +: 64]),
-            .lo_v(lo_v_l[k]), .lo_d(lo_d_l[256 * k +: 256]),
-            .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d), .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf),
-            .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b),
-            .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(f_vp[k]));
-        ot_s81sl_vn u_vn (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
-            .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
-            .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v_l[k]), .rb_d(rb_d_l[32 * k +: 32]),
-            .p_v(p_v_l[k]), .p_d(p_d_l[32 * k +: 32]), .y_v(y_v), .y_i(y_i), .y(y), .fault(f_vn[k]));
-        ot_s81sl_vq u_vq (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y), .sid(sid), .k(k[2:0]), .m_v(m_v),
-            .m_q(m_q), .m_b(m_b), .xf_v(xfv_l[k]), .xf_s(xfs_l[k]), .xf(xf_l[276 * k +: 276]),
-            .fault(f_vq[k]));
+            .lo_v(lo_v_l[k]), .lo_d(lo_d_l[256 * k +: 256]), .rb_v(rb_v_l[k]), .rb_d(rb_d_l[32 * k +: 32]),
+            .p_v(p_v_l[k]), .p_d(p_d_l[32 * k +: 32]), .xf_v(xfv_l[k]), .xf_s(xfs_l[k]), .xf(xf_l[276 * k +: 276]),
+            .fault(f_lf[k]));
         // leaf <-> centre glue: equal depth for every leaf
         ot_s81sl_rly #(.W(1 + 160 + 1 + 10 + 8 + 256 + 2 + 24 + 64 + 1 + 32), .D(DL)) u_dn (.clk(clk),
             .d({c_v_x[k], c_d_x[160 * k +: 160], sw_v_x[k], sw_a_x[10 * k +: 10], sw_m_x[8 * k +: 8], sw_d_x[256 * k +: 256],
@@ -118,8 +182,11 @@ module ot_s81sl_slice #(
     // capture root: return lanes through DR relay stages
     wire [8*70-1:0] rt_q;
     ot_s81sl_rly #(.W(8 * 70), .D(DR)) u_rt (.clk(clk), .d(rt), .q(rt_q));
-    ot_s81sl_cap u_cap (.clk(clk), .rst_n(rst_n), .rt(rt_q), .cfg_v(cfg_v), .cfg_d(cfg_d),
-        .cw_v(cw_v_x), .cw_a(cw_a_x), .cw_d(cw_d_x), .fault(f_cap));
+    // cap ports (e979ee6a7): rt_w = lanes 0..3 (W frame column), rt_e = lanes 4..7; capture writes to leaves 0..2 on its
+    // S face and leaves 3, 4 on its N face, 2 ports a leaf (leaf-major, as cw_*_x)
+    ot_s81sl_cap u_cap (.clk(clk), .rst_n(rst_n), .rt_w(rt_q[279:0]), .rt_e(rt_q[559:280]), .cfg_v(cfg_v), .cfg_d(cfg_d),
+        .cw_s_v(cw_v_x[5:0]), .cw_s_a(cw_a_x[71:0]), .cw_s_d(cw_d_x[191:0]),
+        .cw_n_v(cw_v_x[9:6]), .cw_n_a(cw_a_x[119:72]), .cw_n_d(cw_d_x[319:192]), .fault(f_cap));
     // x chains: the frame cfifo ingress word (dsfd_cfifo_crs): xd = {record xw[564:0], marker} (566 b, lanes 0..2),
     // xd2 = {record xw[1100:565], valid copy xw[0], marker} (538 b); marker = the slice's released reset (the forwarded
     // epoch marker of ot_s81_static_column_ingress_hr), from a registered relay of rst_n
@@ -132,6 +199,6 @@ module ot_s81sl_slice #(
     end endgenerate
     // slice fault (sticky in every sub-leaf), registered
     reg flt;
-    always @(posedge clk) flt <= (|f_vn) | (|f_vq) | (|f_vp) | f_xg | f_xr | f_cap | f_xf;
+    always @(posedge clk) flt <= (|f_lf) | f_xg | f_xr | f_cap | f_xf;
     assign fault = flt;
 endmodule
