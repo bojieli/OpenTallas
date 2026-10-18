@@ -43,6 +43,7 @@
    "stages": null
   },
   "gen_gates": "HARD (relay, per-bit reach 405)",
-  "strict_bind": "PASS 113 masters / 716 instances (8 ck pins bound)"
+  "strict_bind": "PASS 113 masters / 716 instances (8 ck pins bound)",
+  "pdn": "PASS (r8 + relay grids: 574 instances in 12 M8 macro grids); OT_PGCHECK VDD PASS / VSS PASS (18:04 PDT) -- first PG-clean Qwen compute DV die"
  }
 }
