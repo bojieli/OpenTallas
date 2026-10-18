@@ -460,6 +460,8 @@ def pvt_plan():
 
 if PV_T:
     PVW = tuple(pvt_plan()['frame_um'])
+# KV-RTRUNK 10-17: the trunked pair's plan carries the 512-b result trunks (pv_trunk_gen default): port bundle pr (534 b)
+PV_RS = PV_T and 'result_trunk' in pvt_plan()
 PV_CLEAR = 21.6                                   # envelope <-> hub / gateway / SerDes clearance (sliver rule >= 20 um)
 PV_GRANT_Y0 = 1844.346                            # pv_wide_grant.json pvw_0 (kept when the full height fits under the hub)
 # element owner screen (results/arch/qwen_attention_rate_1015/pv_parent_2330/screen.json, gap 21.6): bank l -> (x, y, orient)
@@ -718,7 +720,9 @@ for _mn, _pair in (('qkd_pvw_s', 0), ('qkd_pvw_n', 1)):
             ports=dict(ck_c0=['col_clk'], rst_n=['rst_n'], st=['start', 'context_len', 'epoch'], ie=['in_e'],
                        **{f'vh{k}': [f'vh{k}'] for k in range(8)}, **{f'vrq{k}': [f'vrq{k}'] for k in range(8)},
                        **{f'vc{k}_{g}': [f'vc{k}_{g}'] for k in range(8) for g in range(8)},
-                       po=['out_valid', 'out_leaf', 'out_epoch'], pf=['fault', 'busy', 'out_age']),
+                       po=['out_valid', 'out_leaf', 'out_epoch'], pf=['fault', 'busy', 'out_age'],
+                       # KV-RTRUNK 10-17: the pair's 534-b result beat stream (two result trunks -> header) -> pvfin.p0 / p1
+                       **(dict(pr=['rs_valid', 'rs_beat', 'rs_epoch', 'rs_data']) if PV_RS else {})),
             sliced={f'ck_c{s}': 'ck_c0' for s in range(1, 33)}, classed={})
 # v1.4.4 PV16 V ports (Q-VMWB r5 = the V ISSUER, kit physical/ref_tile/qkd_pv16_vport_r5): pr = the pair's request for this
 # port, vq0 / vq1 = V gets to static landing groups {k, 0} / {k, 1}, i0 / i1 = those groups' rsp words, vo -> the pair.
@@ -3616,6 +3620,8 @@ def _split_pins(M, m=None):
             for p_, dx_ in top.items():
                 if p_ in hm.ports:
                     hm.ports[p_] = ('face', hm.ports[p_][1], 'N', 'M5', round(ctx_ + dx_, 3), 1)
+            if 'pr' in hm.ports and 'result_trunk' in P_:      # KV-RTRUNK: over the trunks' header in the strip
+                hm.ports['pr'] = ('face', hm.ports['pr'][1], 'N', 'M5', P_['result_trunk']['face_pin']['x'], 1)
             for k_ in range(8):          # header / request: strip N face over the control tile (PVT_HDR_CTL) / side face
                 hx_ = pvt_hdr_pin(k_)[0]
                 yh_ = fh_ - PVT_HDR_Y0 - PVT_PIN_DY * (k_ % 4)
