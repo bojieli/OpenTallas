@@ -582,10 +582,11 @@ AIG_GATES = {
 }
 
 
-def _aig_of(net, aig, bit, fresh, memo):
+def _aig_of(net, aig, bit, fresh, memo, valid=0):
     """Literal of a netlist bit. Leaves (flop Q, input port, macro output) are shared variables, except the storage
-    bits in `fresh` (the miter's second copy). A Yosys 'x' gate pin is one free variable per gate pin, shared by both
-    copies, so the proof holds for every value synthesis may choose for it."""
+    bits s in `fresh` (the miter's second copy), which read valid ? s : s' with s' a fresh variable. A Yosys 'x' gate
+    pin is one free variable per gate pin, shared by both copies, so the proof holds for every value synthesis may
+    choose for it."""
     stack = [bit]
     while stack:
         b = stack[-1]
@@ -606,7 +607,8 @@ def _aig_of(net, aig, bit, fresh, memo):
         if drv is None:
             raise GrayFifoError(f'reviewed_gray_fifos undriven bit {b} in a storage-gating cone')
         if drv[0] in ('flop', 'port', 'macro'):
-            memo[b] = aig.inp(('fresh', b) if fresh and b in fresh else ('leaf', b))
+            leaf = aig.inp(('leaf', b))
+            memo[b] = aig.mux(valid, aig.inp(('fresh', b)), leaf) if fresh and b in fresh else leaf
             stack.pop()
             continue
         if drv[0] == 'unsupported':
@@ -637,18 +639,39 @@ def _unsat(aig, po, abc):
     with tempfile.TemporaryDirectory(prefix='ot-gray-fifo-miter-') as tmp:
         path = Path(tmp) / 'miter.blif'
         path.write_text(aig.blif(po))
-        run = subprocess.run([abc, '-q', f'read_blif {path}; strash; iprove'], capture_output=True, text=True)
+        # fraig first: the second copy merges with the first at every gating point (seconds on the real design);
+        # iprove decides whatever remains
+        run = subprocess.run([abc, '-q', f'read_blif {path}; strash; &get; &fraig -x; &put; iprove'],
+                             capture_output=True, text=True)
     verdicts = re.findall(r'^\s*(UNSATISFIABLE|SATISFIABLE)\b', run.stdout + run.stderr, re.M)
     if run.returncode or len(verdicts) != 1:
         raise GrayFifoError('reviewed_gray_fifos storage-gating SAT miter undecided: ' + (run.stdout + run.stderr)[-800:])
     return verdicts[0] == 'UNSATISFIABLE'
 
 
+def _valid_lit(net, aig, fifo, memo):
+    kind, terms = fifo['valid']
+    if kind == 'neq':
+        valid = 0
+        for a, b in terms:
+            valid = aig.or_(valid, aig.xor(_aig_of(net, aig, a, None, memo),
+                                           _aig_of(net, aig, b, None, memo)))
+        return valid
+    valid = 1
+    for b, polarity in terms:
+        x = _aig_of(net, aig, b, None, memo)
+        valid = aig.and_(valid, x if polarity else x ^ 1)
+    return valid
+
+
 def _miter_storage_proof(net, consumers, fifos):
     """For every FIFO f and every consumer q reading f's storage S_f: no assignment with f's read-valid false makes
     D_q(X, S_f) differ from D_q(X, S_f') (S_f' a fresh copy, every other leaf shared). Equivalent to the per-bit
     BDD obligation (D|s=0 xor D|s=1) & !valid_f == 0 for every s in S_f (a function independent of each bit of a set
-    under a condition that does not read the set is independent of the set). Exact: proved UNSAT by ABC iprove."""
+    under a condition that does not read the set is independent of the set). The second copy reads
+    s'' = valid_f ? s : s', so the obligation is the unconditional equivalence D(X, S) == D(X, S'') (identical while
+    valid; S'' = S' free while invalid) and the copies merge at every gating point under fraiging. Exact: the miter
+    OR_q D_q xor D_q'' is proved UNSAT by ABC (&fraig -x, then iprove)."""
     abc, aig, base = _abc(), Aig(), {}
     by_fifo = {}
     for q, owners in consumers.items():
@@ -656,25 +679,16 @@ def _miter_storage_proof(net, consumers, fifos):
             by_fifo.setdefault(fid, []).append(q)
     for fid, qs in sorted(by_fifo.items()):
         fifo = fifos[fid]
-        kind, terms = fifo['valid']
-        if kind == 'neq':
-            valid = 0
-            for a, b in terms:
-                valid = aig.or_(valid, aig.xor(_aig_of(net, aig, a, None, base), _aig_of(net, aig, b, None, base)))
-        else:
-            valid = 1
-            for b, polarity in terms:
-                x = _aig_of(net, aig, b, None, base)
-                valid = aig.and_(valid, x if polarity else x ^ 1)
+        valid = _valid_lit(net, aig, fifo, base)
         fresh, memo = frozenset(fifo['storage']), {'base': base}
         diffs = [(q, aig.xor(_aig_of(net, aig, net.flops[q]['d'], None, base),
-                             _aig_of(net, aig, net.flops[q]['d'], fresh, memo))) for q in sorted(qs)]
+                             _aig_of(net, aig, net.flops[q]['d'], fresh, memo, valid))) for q in sorted(qs)]
 
         def po(items):
             d = 0
             for _, x in items:
                 d = aig.or_(d, x)
-            return aig.and_(valid ^ 1, d)
+            return d
         if _unsat(aig, po(diffs), abc):
             continue
         while len(diffs) > 1:        # name one actual failing consumer
