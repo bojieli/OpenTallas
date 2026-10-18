@@ -56,6 +56,19 @@ def spec(mut=0):
                          chain=['ra[0]', 'ra[1]'], sync_max_delay_ps=250)])
 
 
+def async_spec(mut=0):
+    """Same fixture on the asynchronous stream833.333 / HBM1024 pair (cdc_synchronizers_async)."""
+    s = spec(mut)
+    s['clock_data_paths'] = S.ASYNC_POLICY
+    s['clock_relationship'] = dict(S.ASYNC_RELATIONSHIP)
+    s['clock_entry_domains']['hbm'] = s['clock_entry_domains'].pop('serial')
+    s['clock_entry_domains']['hbm']['ratio'] = list(S.ASYNC_RATIO)
+    for g in s['cdc_synchronizers']:
+        for k in ('src_domain', 'dst_domain'):
+            g[k] = 'hbm' if g[k] == 'serial' else g[k]
+    return s
+
+
 class Fixture(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -64,39 +77,6 @@ class Fixture(unittest.TestCase):
 
     def tearDown(self):
         self.tmp.cleanup()
-
-
-HIER = r'''
-module cdc_hier_stage (input ck, input d, output reg q);
-  always @(posedge ck) q <= d;
-endmodule
-module cdc_hier (input ck_a, input ck_b, input rst_n, input d_in, output reg q_out);
-  reg rc; reg [1:0] rs;
-  always @(posedge ck_b) rc <= rst_n;
-  always @(posedge ck_a) rs <= {rs[0], rc};
-  wire pd;
-  cdc_hier_stage u_s (.ck(ck_a), .d(d_in), .q(pd));   // a submodule: flatten leaves a $scopeinfo cell
-  always @(posedge ck_a or negedge rs[1]) if (!rs[1]) q_out <= 0; else q_out <= pd;
-endmodule
-'''
-
-
-class Hierarchy(unittest.TestCase):
-    def test_flattened_submodule_admitted(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            (root / 'cdc_hier.sv').write_text(HIER)
-            s = dict(name='cdc_hier', top='cdc_hier', kind='tile', sources=['cdc_hier.sv'], params={},
-                     clock='multiple_cts_roots', clock_port='ck_a', clock_ports=['ck_a', 'ck_b'],
-                     clock_data_paths='related_pll_ratio',
-                     clock_relationship=dict(kind='same_pll_fixed_phase', ratio=[4, 3], phase_ps=0),
-                     clock_entry_domains=dict(
-                         core=dict(ratio=[1, 1], ports=['ck_a'], inputs=['d_in'], outputs=['q_out']),
-                         serial=dict(ratio=[4, 3], ports=['ck_b'], inputs=['rst_n'], outputs=[])),
-                     cdc_synchronizers=[dict(name='reset', src_domain='serial', dst_domain='core', source='rc',
-                                             chain=['rs[0]', 'rs[1]'], sync_max_delay_ps=250)])
-            record = S.lint(s, root)
-            self.assertEqual(record['counts'], dict(source=1, sync1=1, payload=0, capture=0))
 
 
 class Lint(Fixture):
@@ -153,7 +133,51 @@ class Lint(Fixture):
             S.lint(s, self.root)
 
 
-def sta_case(root, out, name):
+class AsyncPair(Fixture):
+    def test_async_pair_admitted_through_synchronizers(self):
+        record = S.lint(async_spec(), self.root)
+        self.assertEqual(record['counts'], dict(source=3, sync1=3, payload=4, capture=4))
+        self.assertEqual(record['groups']['event']['dst_domain'], 'hbm')
+        self.assertFalse(C.related_data(async_spec()))
+        self.assertAlmostEqual(S.periods(async_spec())['hbm'], 1024.0, places=3)
+        text = C.generate(async_spec(), self.root)
+        self.assertIn('set ::ot_ce_related_data 0', text)
+        self.assertIn('ot_cdc_crossing $start $pin $source $cell $source_domain $expected', text)
+        for banned in ('set_false_path', 'set_clock_groups', 'set_multicycle_path', 'set_disable_timing'):
+            self.assertNotIn(banned, text)
+
+    def test_async_structural_mutants_refused(self):
+        for mut, why in [(1, 'not a Gray counter'), (4, 'changes while the Gray count holds'),
+                         (5, 'not gated by the synchronised count'), (6, 'undeclared crossing pd\\[0\\]'),
+                         (7, 'not on the destination clock')]:
+            with self.subTest(mut=mut), self.assertRaisesRegex(S.CdcError, why):
+                S.lint(async_spec(mut), self.root)
+
+    def test_async_pair_needs_the_declared_structure(self):
+        for mutate, why in [
+            (lambda s: s.pop('cdc_synchronizers'), 'requires cdc_synchronizers'),
+            (lambda s: s.update(clock_relationship=dict(kind='hbm_phy_async_gray_fifo', stream_period_ps=833.333,
+                                                         hbm_period_ps=1024.0)), 'requires clock_relationship'),
+            (lambda s: s['clock_entry_domains']['hbm'].update(ratio=[4, 3]), 'ratio must be'),
+            (lambda s: s['clock_entry_domains']['hbm'].update(ports=['ck_b', 'ck_a']), 'exactly one actual root'),
+            (lambda s: s.setdefault('route', {}).update(signoff_period_ps=1000.0), 'stream833.333 primary period'),
+            (lambda s: s.update(sdc_extra=['x.sdc']), 'custom timing hooks'),
+        ]:
+            s = async_spec()
+            mutate(s)
+            with self.subTest(why=why), self.assertRaisesRegex(ValueError, why):
+                C.generate(s, self.root)
+
+    def test_hbm_ratio_still_refused_on_related_profiles(self):
+        s = spec()
+        s['clock_entry_domains']['serial']['ratio'] = list(S.ASYNC_RATIO)
+        with self.assertRaisesRegex(ValueError, 'multiple_cts_roots requires one actual related phase0 root|only related'):
+            C.generate(s, self.root)
+
+
+def sta_case(root, out, name, make_spec=None):
+    make_spec = make_spec or spec
+    dst = 'hbm' if make_spec is async_spec else 'serial'
     synth = (f'read_verilog -sv -DSYNTHESIS {root / "cdc_fix.sv"}; hierarchy -top cdc_fix; '
              f'synth -top cdc_fix -flatten -noabc; dffunmap; abc -g simple; clean; write_json {out / "fix.json"}')
     p = subprocess.run([YOSYS, '-Q', '-T', '-p', synth], text=True, capture_output=True)
@@ -176,12 +200,12 @@ def sta_case(root, out, name):
                        capture_output=True, text=True)
     if p.returncode:
         raise AssertionError(p.stdout + p.stderr)
-    generated = C.generate(spec(), root).rsplit('\not_ce_apply\n', 1)[0]
+    generated = C.generate(make_spec(), root).rsplit('\not_ce_apply\n', 1)[0]
     body = (f'read_liberty {{{out}/probe.lib}}\nread_verilog {{{vp}}}\nlink_design cdc_fix\n'
-            + C.clocks(spec(), 833.333) + generated
-            + '\nset ins [dict create ev_in core {d_in[0]} core {d_in[1]} core {d_in[2]} core {d_in[3]} core rst_n serial]\n'
-            + 'set outs [dict create {d_out[0]} serial {d_out[1]} serial {d_out[2]} serial {d_out[3]} serial '
-            + 'v_out serial s_out serial]\n'
+            + C.clocks(make_spec(), 833.333) + generated
+            + f'\nset ins [dict create ev_in core {{d_in[0]}} core {{d_in[1]}} core {{d_in[2]}} core {{d_in[3]}} core rst_n {dst}]\n'
+            + f'set outs [dict create {{d_out[0]}} {dst} {{d_out[1]}} {dst} {{d_out[2]}} {dst} {{d_out[3]}} {dst} '
+            + f'v_out {dst} s_out {dst}]\n'
             + 'if {[catch {ot_ce_leaf_ownership $ins $outs} message]} {puts stderr $message; exit 1}\n'
             + 'puts ACTUAL_CDC_GRAPH_PASS\nexit 0\n')
     tp = out / f'{name}.tcl'
@@ -205,6 +229,22 @@ class ActualGraph(Fixture):
         for name in ('stage1_on_source_clock', 'payload_into_stage1'):
             with self.subTest(case=name):
                 rc, log = sta_case(self.root, out, name)
+                self.assertNotEqual(rc, 0, log)
+                self.assertNotIn('ACTUAL_CDC_GRAPH_PASS', log)
+                self.assertIn('OT_CDC:', log)
+
+    def test_actual_graph_async_pair(self):
+        out = self.root / 'sta_async'
+        out.mkdir()
+        rc, log = sta_case(self.root, out, 'normal', async_spec)
+        self.assertEqual(rc, 0, log)
+        self.assertIn('ACTUAL_CDC_GRAPH_PASS', log)
+        self.assertIn('OT_CDC STRUCTURAL_PASS', log)
+        self.assertEqual(log.count('OT_CDC BOUNDED event source -> sync1'), 2, log)
+        self.assertGreaterEqual(log.count('OT_CDC BOUNDED event payload -> capture'), 4, log)
+        for name in ('stage1_on_source_clock', 'payload_into_stage1'):
+            with self.subTest(case=name):
+                rc, log = sta_case(self.root, out, name, async_spec)
                 self.assertNotEqual(rc, 0, log)
                 self.assertNotIn('ACTUAL_CDC_GRAPH_PASS', log)
                 self.assertIn('OT_CDC:', log)

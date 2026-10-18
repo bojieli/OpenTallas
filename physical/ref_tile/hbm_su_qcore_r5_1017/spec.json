@@ -20,12 +20,12 @@
   "rst_n"
  ],
  "outline": {
-  "w": 216.0,
-  "h": 216.0,
+  "w": 280.8,
+  "h": 280.8,
   "exact": true
  },
  "std_area_um2": 16500,
- "slot_change_request": "HBM-SU3 10-17 -> H-DIE: sucore_<q> r5 is 216x216 (was 330.48^2): ~10k flops instead of ~77k; faces unchanged (W slice, E channel, N clocks); clk_rf[63:0] entries removed",
+ "slot_change_request": "HBM-SU3 10-17 -> H-DIE: sucore_<q> r5 is 216x216 (was 330.48^2): ~10k flops instead of ~77k; faces unchanged (W slice, E channel, N clocks); clk_rf[63:0] entries removed; HBM-QCORE6 10-18: 280.8^2 (route r5-ff9f9da83 EARLY_FAIL_CONGESTION: GRT 20,000 markers flat; H overflow in the channels between/under the two SRAMs (no H layer over a macro: M2-M4 OBS, M6 zero), V over the macro rows; the 8 kept per-sector writer copies clump at the E face and each spans the die because the sector banks are spread); PD 0.32 so the cells use the area; SRAM B moved to (86.4,172.8) -> 88.6 um middle channel; pin ranges scaled x1.3 (<=2.6 pins/um), clk/rst at the N centre",
  "layer_cap": "M5",
  "recipe": 3,
  "macros": [
@@ -43,7 +43,7 @@
    "count": 1,
    "at": [
     86.4,
-    129.6
+    172.8
    ],
    "inst": "u_red.mb"
   }
@@ -81,88 +81,88 @@
  },
  "pin_ranges": {
   "rf_bword": [
-   6.0,
-   42.819
+   7.8,
+   55.665
   ],
   "rf_bcmd": [
-   44.019,
-   54.374
+   57.225,
+   70.686
   ],
   "rf_dsec": [
-   55.574,
-   129.212
+   72.246,
+   167.976
   ],
   "slice_x": [
-   130.412,
-   167.231
+   169.536,
+   217.4
   ],
   "rf_drain_cmd": [
-   168.431,
-   169.006
+   218.96,
+   219.708
   ],
   "rf_rd_cmd": [
-   170.206,
-   185.739
+   221.268,
+   241.461
   ],
   "red_cmd": [
-   186.939,
-   208.225
+   243.021,
+   270.692
   ],
   "fault": [
-   209.425,
-   210.0
+   272.252,
+   273.0
   ],
   "rf_wv": [
-   6.0,
-   7.457
+   7.8,
+   9.694
   ],
   "rf_wa": [
-   8.657,
-   20.316
+   11.254,
+   26.411
   ],
   "rf_wd": [
-   21.516,
-   68.15
+   27.971,
+   88.595
   ],
   "red_sv": [
-   69.35,
-   70.078
+   90.155,
+   91.101
   ],
   "red_tag": [
-   71.278,
-   82.937
+   92.661,
+   107.818
   ],
   "red_x": [
-   84.137,
-   95.795
+   109.378,
+   124.534
   ],
   "red_rf_v": [
-   96.995,
-   97.724
+   126.094,
+   127.041
   ],
   "rr_wv": [
-   98.924,
-   99.652
+   128.601,
+   129.548
   ],
   "rr_wa": [
-   100.852,
-   102.674
+   131.108,
+   133.476
   ],
   "rr_wd": [
-   103.874,
-   197.142
+   135.036,
+   256.285
   ],
   "sfu_x": [
-   198.342,
-   210.0
+   257.845,
+   273.0
   ],
   "clk_ctl": [
-   100.0,
-   107.7
+   136.0,
+   144.0
   ],
   "rst_n": [
-   108.3,
-   116.0
+   145.0,
+   153.0
   ]
  },
  "io_flop_at_pins": {
@@ -181,7 +181,7 @@
   "reason": "The RF read commands, relay writers and COLL writer are captured raw at the pins (the hub bank rung moved to the pin); reducer command, slice/SFU operands and drain decode land in clk_ctl registers; every output is a flop. A wrapper stage would add an edge to the fixed n+1 commit / n+3 read / E+11 scalar calendar."
  },
  "route": {
-  "pd": 0.52,
+  "pd": 0.32,
   "threads": 8,
   "peak_ram_gb": 32,
   "period_ps": 1111.111,
