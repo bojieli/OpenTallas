@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_pvr_inj",
+ "enable": false,
+ "reason": "the data path is ONE register stage pin to pin (a / ya / yb -> 3:1 mux -> flop b, the relay-standard \"flop = pin register\" form, priced as 1 trunk stage by pv_trunk_gen); the 1-b y_valid pins and rst_n are registered at the pin in RTL; dla / dlb / ida / idb are die-top constants"
+}

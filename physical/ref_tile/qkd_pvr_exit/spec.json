@@ -1,0 +1,113 @@
+{
+ "name": "qkd_pvr_exit",
+ "top": "qkd_pvr_exit",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/kv_rly_std_20261016/qkd_pvr_trunk.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 108.0,
+  "h": 108.0
+ },
+ "macros": [],
+ "pins": {
+  "E": [
+   "t",
+   "epoch"
+  ],
+  "N": [
+   "p_valid",
+   "p_beat",
+   "p_epoch",
+   "p_data"
+  ],
+  "S": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {},
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ONE register stage pin to pin (t -> flop p_*, epoch -> 2:1 latch mux -> flop): the flop is the pin register; priced as 1 trunk stage by pv_trunk_gen; rst_n registered at the pin in RTL"
+ },
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "pin_min_tracks": 3,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "orfs_vars": {
+  "OT_OFLOP_PORT_RE": "^p_"
+ },
+ "job": {
+  "owner": "Claude:RTL-BUILD-KV/PVTRUNK",
+  "branch": "claude/rtl-build-kv-pvtrunk-1018",
+  "tag": "v1",
+  "purpose": "PV pair RESULT TRUNK exit stage (RTL-BUILD-KV/PVTRUNK, x1 per pair at the strip W corner facing pvfin): the 534-b pvfin p word {valid, beat, epoch, data} = the trunk word registered + the control-tile epoch latched on beat 0; trunk in on E, p out on N; 108 x 108 pin-limited square (<= 6 pins / um on every face)",
+  "benches": [
+   {
+    "name": "exact_unit",
+    "cmd": "bash rtl/qwen_sys/kv_rly_std_20261016/test/bench_pvr.sh pass qkd_pvr_exit {RUN}/bench_p",
+    "expect": "pass",
+    "pass_regex": "PVR_BENCH PASS 0 errors in 20000 cycles",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/ref_tile/qkd_pvr_trunk/bench_witness_1018/u_qkd_pvr_exit_pass.log"
+   },
+   {
+    "name": "neg_mutant",
+    "cmd": "bash rtl/qwen_sys/kv_rly_std_20261016/test/bench_pvr.sh mut qkd_pvr_exit {RUN}/bench_m",
+    "expect": "fail",
+    "fail_regex": "PVR_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "OT_QKD_PVR_MUT: no beat-0 epoch latch -> an epoch change mid-stream relabels the beats",
+    "fail_witness": "results/rtl/ref_tile/qkd_pvr_trunk/bench_witness_1018/u_qkd_pvr_exit_mut.log"
+   },
+   {
+    "name": "pair_trunk_exact",
+    "cmd": "env PVRT=1 PVRM=0 JOBS=4 bash tools/qwen_kv_die/pv_trunk_bench.sh {RUN}/pair 0 0 \"100 4097\"",
+    "expect": "pass",
+    "pass_regex": "PV_PAIR_T PASS T=4097",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "note": "the PV pair qkd_pvw_die_r with the 16 inject stages + exit: 32 beats at out_age + RES_D + b, each = the reference po slice and the golden",
+    "pass_witness": "results/rtl/ref_tile/qkd_pvr_trunk/bench_witness_1018/pos.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_pvr_exit/views",
+  "record_to": "results/rtl/ref_tile/qkd_pvr_exit"
+ }
+}

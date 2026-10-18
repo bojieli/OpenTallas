@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_pvr_exit",
+ "enable": false,
+ "reason": "ONE register stage pin to pin (t -> flop p_*, epoch -> 2:1 latch mux -> flop): the flop is the pin register; priced as 1 trunk stage by pv_trunk_gen; rst_n registered at the pin in RTL"
+}

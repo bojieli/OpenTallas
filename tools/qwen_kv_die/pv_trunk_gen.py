@@ -45,7 +45,10 @@ B, TILE = 561.6, 172.8
 PV_BANK = {0: (0.0, 0.0, 'R0'), 1: (194.4, 0.0, 'R0'), 2: (0.0, 194.4, 'MX'), 3: (0.0, 388.8, 'MX'),
            4: (194.4, 388.8, 'MX'), 5: (388.8, 388.8, 'MX'), 6: (388.8, 0.0, 'R0'), 7: (388.8, 194.4, 'R0')}
 PV_JOIN = (194.4, 194.4, 'R0')
-STD = {1: (12.96, 12.96), 36: (12.96, 12.96), 296: (21.6, 47.52)}
+STD = {1: (12.96, 12.96), 36: (12.96, 12.96), 296: (21.6, 47.52), 528: (21.6, 82.08)}
+# --result-trunk leaves (rtl/qwen_sys/kv_rly_std_20261016/qkd_pvr_trunk.sv; no hardened view yet: footprints are the
+# placement reservation, pins taken at the centre for the hop check)
+RT_FOOT = {'inj': (108.0, 108.0), 'exit': (108.0, 108.0)}   # pin-limited squares (~2,060 / 1,070 pins at <= 6 / um)
 LEAF_LEF = dict(
     ot_qwen_tp8_pv_slice_t=RT / 'qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t/ot_qwen_tp8_pv_slice_t.lef',
     # KVPLAN3 0230: the PV join re-pin successor qkd_pv_join_sfe_r6 (CLOSED TT +57.72 / FF +14.85, native PASS 214.2 / 167.4):
@@ -208,21 +211,21 @@ class Gen:
             out += [296] if n > 3 * 36 else [36] * math.ceil(n / 36)
         return out
 
-    def station(self, name, keys, src, target, ck, region, depth_check=True, align=None, lanes=None, prio=5):
+    def station(self, name, keys, src, target, ck, region, depth_check=True, align=None, lanes=None, prio=5, sizes=None):
         """one registered stage of keys; src: parent station name / None (root) or dict key -> parent.  Placement is
         deferred (place_all, by prio then creation order): lanes = CT lane indices for replica j (vertical chains),
         align = station whose replica j this one's replica j lines up with, else nearest free spot to target in region"""
         if name in self.st:
             raise ValueError(f'duplicate station {name}')
         par = (lambda k: src.get(k)) if isinstance(src, dict) else (lambda k: src)
-        reps = self.replicas(len(keys))
+        reps = sizes or self.replicas(len(keys))
         depths = set()
         for k in keys:
             p = par(k)
             depths.add(0 if p is None else self.st[p]['depth'])
         if depth_check and len(depths) != 1:
             raise ValueError(f'{name}: inputs at different depths {sorted(depths)}')
-        self.wires.append((f'w_{name}', sum(reps)))
+        self.wires.append((f'w_{name}', len(keys) if sizes and sizes[0] in RT_FOOT else sum(reps)))
         self.st[name] = dict(keys=list(keys), idx={k: i for i, k in enumerate(keys)}, wire=f'w_{name}', reps=None,
                              sizes=reps, depth=max(depths) + 1, par={k: par(k) for k in keys}, ck=ck, target=target,
                              region=region, align=align, lanes=lanes, prio=prio, order=len(self.st))
@@ -241,7 +244,7 @@ class Gen:
             if d['align'] and al is None:
                 raise ValueError(f'{name}: aligned to unplaced {d["align"]}')
             for j, s in enumerate(d['sizes']):
-                w, h = STD[s]
+                w, h = STD[s] if s in STD else RT_FOOT[s]
                 region = d['region']
                 tx_, ty_ = tx, ty
                 if d.get('rep_targets'):
@@ -283,6 +286,8 @@ class Gen:
     def emit_insts(self):
         self.inst = []
         for name, d in sorted(self.st.items(), key=lambda kv: kv[1]['order']):
+            if d['sizes'][0] in RT_FOOT:     # result-trunk leaf: emitted by emit_rt
+                continue
             off = 0
             for j, (s, (x, y)) in enumerate(d['reps']):
                 rn = f'u_{name}_r{j}'
@@ -576,6 +581,74 @@ class Gen:
             prev = self.station(f'FU{r}', keys, prev, (ctx, self.hy(r)), rowclk(r), CTR, lanes=['f1'], prio=0)
             self.flag_chain.append(prev)
         self.flag_top = prev
+        # 6. RTL-BUILD-KV/PVTRUNK (--result-trunk): the 512-b registered RESULT TRUNK to pvfin.  Column s's held y (+ its
+        #    y_valid) leaves the join's E face up the 21.6-um gap to channel r+1: Y<s>a there (block column 1 adds Y<s>m on the
+        #    way to CT), then the row's inject stage RU<r+1> (qkd_pvr_inj) in CT at that crossing.  The trunk runs UP the CT
+        #    (one 528 relay between two crossings: 2 stages per 734-um row pitch), along channel h_16 to the W corner (RX0)
+        #    and ends in the exit stage (qkd_pvr_exit, beside the strip's W corner) whose 534-b word = pvfin p0 / p1.
+        if getattr(self.a, 'result_trunk', False):
+            TK = [('T', b) for b in range(518)]
+            YSZ = [296, 296]
+            self.rt = dict(y_last={}, dY={}, leaf_of={}, chain=[])
+            for r in range(16):
+                for c in range(2):
+                    s = col_of(c, r)
+                    jx, jy = self.tpin(f'u_s{s}_j', 'y[256]')
+                    for b in range(512):
+                        self.root[('Y', s, b)] = f'out_leaf[{512 * s + b}]'
+                        self.rootpin[('Y', s, b)] = self.tpin(f'u_s{s}_j', f'y[{b}]')
+                    self.root[('YV', s)] = f'yv_w[{s}]'
+                    self.rootpin[('YV', s)] = self.tpin(f'u_s{s}_j', 'y_valid')
+                    yk = [('Y', s, b) for b in range(512)] + [('YV', s)]
+                    gx = self.bx(c) + PV_JOIN[0] + TILE + 10.8          # the gap E of the join
+                    p = self.station(f'Y{s}a', yk, None, (gx, self.hy(r + 1)), f'col_clk[{s}]', self.chan(r + 1), prio=6,
+                                     sizes=YSZ)
+                    self.st[p]['xstep'] = 25.92 if c == 0 else -25.92
+                    n = 1
+                    if c == 1:          # 550 um of channel to CT: two more stations (column 1 has slack: free in latency)
+                        for nm_, x_ in (('m', gx - 150.0), ('n', self.bx(1) - 21.6)):
+                            p = self.station(f'Y{s}{nm_}', yk, p, (x_, self.hy(r + 1)), f'col_clk[{s}]', self.chan(r + 1), prio=6,
+                                             sizes=YSZ)
+                            self.st[p]['rep_targets'] = [(x_, self.hy(r + 1) - 25.0), (x_, self.hy(r + 1) + 25.0)]
+                        n = 3
+                    self.rt['y_last'][s], self.rt['dY'][s] = p, n
+            prev = None
+            for k in range(1, 17):
+                for i in range(1, NS if k > 1 else 1):      # NS - 1 relays between two crossings (as every CT trunk)
+                    prev = self.station(f'RUm{k - 1}_{i}', TK, prev, (ctx, midy(k - 1, NS - i)), rowclk(k - 1), CTR,
+                                        prio=5, sizes=[528])
+                    self.rt['chain'].append(prev)
+                nm = f'RU{k}'
+                self.st[nm] = dict(keys=list(TK), idx={kk: i for i, kk in enumerate(TK)}, wire=f'w_{nm}', reps=None,
+                                   sizes=['inj'], depth=0, par={kk: prev for kk in TK}, ck=rowclk(k), target=(ctx, self.hy(k)),
+                                   region=CTR, align=None, lanes=None, prio=5, order=len(self.st), row_r=k - 1,
+                                   rst=self.expr(('R',), X[(k, 0)]))
+                self.wires.append((f'w_{nm}', 518))
+                for c in range(2):
+                    self.rt['leaf_of'][col_of(c, k - 1)] = nm
+                prev = nm
+                self.rt['chain'].append(nm)
+            for i, x_ in enumerate((ctx - 260.0, ctx - 500.0)):
+                prev = self.station(f'RX{i}', TK, prev, (x_, self.hy(16)), rowclk(16), self.chan(16), prio=5, sizes=[528])
+                self.rt['chain'].append(prev)
+            rr = self.station('RR0', [('R',)], X[(16, 0)], (ctx - 400.0, self.hy(16)), rowclk(16), self.chan(16), prio=5)
+            # the exit stage sits IN the strip's W corner (the strip holds only the control tile at CT and the N-face pins):
+            # release that corner of the strip reservation and let the 108-um square overhang channel h_16
+            cx1 = 216.0
+            self.free.occ[:int(cx1 / Free.STEP), int((self.FH - self.STRIP) / Free.STEP):] = 0
+            self.st['RXE'] = dict(keys=list(TK), idx={kk: i for i, kk in enumerate(TK)}, wire='w_RXE', reps=None,
+                                  sizes=['exit'], depth=0, par={kk: prev for kk in TK}, ck=rowclk(16),
+                                  target=(60.0, self.FH - 60.0), region=(0.0, self.ylo[16], cx1, self.FH),
+                                  align=None, lanes=None, prio=5, order=len(self.st),
+                                  rst=self.expr(('R',), rr))
+            self.rt['chain'].append('RXE')
+            # the control tile's out_epoch to the exit stage (static during a command: two 36 relays along h_16)
+            ek = [('OE', b) for b in range(16)]
+            for b in range(16):
+                self.root[('OE', b)] = f'out_epoch[{b}]'
+                self.rootpin[('OE', b)] = self.tpin('u_ctl', f'out_epoch[{b}]')
+            e0 = self.station('EP0', ek, None, (ctx - 180.0, self.hy(16)), rowclk(16), self.chan(16), prio=5)
+            self.rt['ep'] = self.station('EP1', ek, e0, (ctx - 560.0, self.hy(16)), rowclk(16), self.chan(16), prio=5)
         # 5. sf[6]: KVPLAN3 0230 -- the r6 join takes sf[7:4] on its E face (bank 6 fault -> join 214 um): a direct wire, no
         #    stations (the r5 join's W-face sf[6] needed two stations in the channel below, 455-475 um)
         for k in ctl_keys:
@@ -609,12 +682,66 @@ class Gen:
             vdep[g] = vd
         return Dcol, Rcol
 
+    def rt_timing(self, Dcol):
+        """result trunk schedule (edges relative to column 0's y_valid edge A_0; A_s = A_0 + COL_D[s] - COL_D[0]): column s
+        injects on edge A_s + dY_s + 3 + dl_s (y relays, inject pin register, counter load, counter = 0) and leaves the exit
+        stage post_s edges later; beat b must leave on X0 + b.  X0 = the smallest that keeps every dl_s >= 0."""
+        ch = self.rt['chain']
+        post = {s: len(ch) - 1 - ch.index(self.rt['leaf_of'][s]) for s in range(32)}
+        A = {s: Dcol[s] - Dcol[0] for s in range(32)}
+        early = {s: A[s] + self.rt['dY'][s] + 3 + post[s] for s in range(32)}
+        x0 = max(early[s] - s for s in range(32))
+        dl = {s: x0 + s - early[s] for s in range(32)}
+        assert min(dl.values()) >= 0 and max(dl.values()) < 256
+        return dict(res_d=x0, dl=dl, post=post, beat31_after_last_y=x0 + 31 - max(A.values()),
+                    trunk_stages=len(ch), crit_col=max(range(32), key=lambda s: early[s] - s))
+
+    def emit_rt(self, rtt):
+        """instances of the result-trunk leaves (the relay stations are in self.inst)"""
+        mut = self.a.rt_mut_cols           # (wrong-slot column, swapped leaf, dropped column)
+        L = []
+        for name in self.rt['chain']:
+            d = self.st[name]
+            if d['sizes'][0] not in RT_FOOT:
+                continue
+            (sz, (x, y)), = d['reps']
+            w, h = RT_FOOT[sz]
+            mod = 'qkd_pvr_inj' if sz == 'inj' else 'qkd_pvr_exit'
+            self.cells[f'u_{name}'] = (mod, x, y, w, h, 'R0')
+            par = d['par'][('T', 0)]
+            a = "518'd0" if par is None else f'{self.st[par]["wire"]}[517:0]'
+            if sz == 'exit':
+                L.append(f' qkd_pvr_exit u_{name}(.ck({d["ck"]}),.rst_n({d["rst"]}),.t({a}),'
+                         f'.epoch({self.st[self.rt["ep"]]["wire"]}[15:0]),.p_valid(p_valid),.p_beat(p_beat),.p_epoch(p_epoch),'
+                         f'.p_data(p_data));')
+                continue
+            r = d['row_r']
+            sa, sb = col_of(0, r), col_of(1, r)
+            ya, yb = (self.st[self.rt['y_last'][x_]]['wire'] for x_ in (sa, sb))
+            dsel = lambda s_: (f"(RES_MUT==1)?8'd{rtt['dl'][s_] + 1}:8'd{rtt['dl'][s_]}" if s_ == mut[0]   # noqa: E731
+                               else f"8'd{rtt['dl'][s_]}")
+            vsel = lambda s_, w_: (f"(RES_MUT==3)?1'b0:{w_}[512]" if s_ == mut[2] else f'{w_}[512]')   # noqa: E731
+            if name == mut[1]:
+                yae, ybe = f'(RES_MUT==2)?{yb}[511:0]:{ya}[511:0]', f'(RES_MUT==2)?{ya}[511:0]:{yb}[511:0]'
+            else:
+                yae, ybe = f'{ya}[511:0]', f'{yb}[511:0]'
+            L.append(f' qkd_pvr_inj #(.DW(8)) u_{name}(.ck({d["ck"]}),.rst_n({d["rst"]}),.a({a}),.ya({yae}),.yb({ybe}),'
+                     f'.yva({vsel(sa, ya)}),.yvb({vsel(sb, yb)}),.ida(5\'d{sa}),.idb(5\'d{sb}),.dla({dsel(sa)}),.dlb({dsel(sb)}),'
+                     f'.b({d["wire"]}));')
+        return L
+
     # ---- hop check ----------------------------------------------------------------------------------------------------
     def verify(self):
         pin = {s: self.views[f'qkd_rlys_{s}'][1] for s in STD}
         ain, bout = {}, {}
         for name, d in self.st.items():
             off = 0
+            if d['sizes'][0] in RT_FOOT:      # result-trunk leaf: pins at its centre (no hardened view yet)
+                (sz, (x, y)), = d['reps']
+                cxy = (x + RT_FOOT[sz][0] / 2, y + RT_FOOT[sz][1] / 2)
+                for key in d['keys']:
+                    ain[(name, key)] = bout[(name, key)] = cxy
+                continue
             for s, (x, y) in d['reps']:
                 for i in range(s):
                     k = off + i
@@ -653,22 +780,45 @@ class Gen:
                                  f's{s}b{l_}->j', 'ts'))
             for key, pn in ((('FV', s), 'col_valid'), (('FF', s), 'col_fault')):
                 hops.append((_d(bout[(self.flag_top, key)], self.tpin('u_ctl', f'{pn}[{s}]')), f'{self.flag_top}->ctl', pn))
+        if getattr(self.a, 'result_trunk', False):
+            for s in range(32):
+                leaf = self.rt['leaf_of'][s]
+                yl = self.rt['y_last'][s]
+                for key in (('Y', s, 0), ('Y', s, 511), ('YV', s)):
+                    hops.append((_d(bout[(yl, key)], ain[(leaf, ('T', 0))]), f'{yl}->{leaf}', str(key)))
+            for name in self.rt['chain']:
+                if 'rst' in self.st[name]:
+                    xs = [n_ for n_ in self.st if self.st[name]['rst'].startswith(f'{self.st[n_]["wire"]}[')]
+                    hops.append((_d(bout[(xs[0], ('R',))], ain[(name, ('T', 0))]), f'{xs[0]}->{name}', 'rst_n'))
+            for key in (('OE', 0), ('OE', 15)):
+                hops.append((_d(bout[(self.rt['ep'], key)], ain[('RXE', ('T', 0))]), f'{self.rt["ep"]}->RXE', str(key)))
+            for px in self.rt_pins():
+                hops.append((_d(ain[('RXE', ('T', 0))], (px, self.FH)), 'RXE->face', 'p'))
         hops.sort(reverse=True)
         return hops
 
+    def rt_pins(self):
+        """the 534 p pins on the strip's N face at the W corner (<= 6 / um: 0.2-um pitch from x = 4.32)"""
+        return [4.32 + 0.2 * i for i in range(534)]
+
     # ---- emit -------------------------------------------------------------------------------------------------------------
-    def emit(self, out_sv, Dcol, trunk_d, flag_d, delta):
+    def emit(self, out_sv, Dcol, trunk_d, flag_d, delta, rtt=None):
         L = ['`timescale 1ns/1ps',
              '// GENERATED by tools/qwen_kv_die/pv_trunk_gen.py (KVPLAN 1815) -- do not edit; re-run the generator.',
              f'// Frame {self.FW:.3f} x {self.FH:.3f} um (lanes {self.SW}, CT {self.CT}, channels {self.a.ch} / {self.a.ch_even}); '
              f'{sum(len(d["reps"]) for d in self.st.values())} relay-standard replicas, {sum(len(d["keys"]) for d in self.st.values())} station flops.',
              '// Column s: command AND data COL_D[s] extra edges after the old pair -> its y / y_valid at out_age + COL_D[s] - COL_D[0].',
              '// V chunk vc<k>_<g> must arrive DELTA[g] edges after the header vh<k> (the die relay chains are padded to it).',
-             'module qkd_pvw_die_t #(',
+             *([f'// RESULT TRUNK (--result-trunk, RTL-BUILD-KV/PVTRUNK): beat b = column b\'s y on p_* at out_age + RES_D + b '
+                f'({rtt["res_d"]} + b edges after column 0\'s y; {rtt["trunk_stages"]} trunk stages); RES_DLY[8s+:8] = column s\'s '
+                'compiled inject delay.'] if rtt else []),
+             'module qkd_pvw_die_r #(' if rtt else 'module qkd_pvw_die_t #(',
              ' parameter integer PAIR=0, parameter integer CTL_RESET_PIN=1, parameter integer LEAF_RESET_PIN=1,',
              ' parameter integer FIRST_INPUT_AGE=20, parameter integer MUT=0,',
              ' parameter integer TRUNK_MUT=0,  // bench negative control: 1 = one control station of group 0 is a wire',
-             ' parameter integer FLAG_D_ADJ=0  // bench negative control: control-tile flag slot moved by this many edges',
+             ' parameter integer FLAG_D_ADJ=0' + (',' if rtt else '') + '  // bench negative control: control-tile flag slot moved by this many edges',
+             *([' parameter integer RES_MUT=0     // bench negative control: 1 = one column one edge late, 2 = two columns swapped, 3 = one column dropped']
+               if rtt else []),
              ')(',
              ' input wire rst_n,start,input wire[32:0] col_clk,input wire[13:0] context_len,input wire[15:0] epoch,',
              ' input wire[30:0] vh0,vh1,vh2,vh3,vh4,vh5,vh6,vh7,',
@@ -676,13 +826,20 @@ class Gen:
              ' input wire[511:0] in_e,',
              ' output wire[14:0] vrq0,vrq1,vrq2,vrq3,vrq4,vrq5,vrq6,vrq7,',
              ' output wire out_valid,output wire[16383:0] out_leaf,output wire[15:0] out_epoch,',
-             ' output wire fault,output wire busy,output wire[15:0] out_age',
+             ' output wire fault,output wire busy,output wire[15:0] out_age' + (',' if rtt else ''),
+             *([' output wire p_valid,output wire[4:0] p_beat,output wire[15:0] p_epoch,output wire[511:0] p_data   // -> pvfin p0 / p1']
+               if rtt else []),
              ');',
              f' localparam integer TRUNK_D={trunk_d}, FLAG_D={flag_d};',
              ' localparam [255:0] COL_D={' + ', '.join(f"8'd{Dcol[s]}" for s in range(31, -1, -1)) + '};   // column s: COL_D[8s+:8]',
              ' localparam [63:0] DELTA={' + ', '.join(f"8'd{delta[g]}" for g in range(7, -1, -1)) + '};   // group g: DELTA[8g+:8]',
              ' wire[7:0] in_valid,req_valid; wire[111:0] in_t,req_t; wire[127:0] in_epoch; wire[59:0] cmd_w;',
              ' wire[31:0] yv_w,jf_w,cv_w,cf_w;']
+        if rtt:
+            L.insert(L.index(' wire[31:0] yv_w,jf_w,cv_w,cf_w;'),
+                     f' localparam integer RES_D={rtt["res_d"]};   // beat b leaves at out_age + RES_D + b')
+            L.insert(L.index(' wire[31:0] yv_w,jf_w,cv_w,cf_w;'),
+                     ' localparam [255:0] RES_DLY={' + ', '.join(f"8'd{rtt['dl'][s]}" for s in range(31, -1, -1)) + '};')
         for k in range(8):
             L.append(f' assign in_valid[{k}]=vh{k}[0]; assign in_t[{14 * k + 13}:{14 * k}]=vh{k}[14:1]; '
                      f'assign in_epoch[{16 * k + 15}:{16 * k}]=vh{k}[30:15]; assign vrq{k}={{req_t[{14 * k + 13}:{14 * k}],req_valid[{k}]}};')
@@ -721,6 +878,8 @@ class Gen:
             body[ln] = (f' generate if(TRUNK_MUT==1)begin:g_mut assign {m.group(5)}={m.group(4)}; end else begin:g_ok\n'
                         f'  {m.group(1)} {m.group(2)} (.ck({m.group(3)}), .a({m.group(4)}), .b({m.group(5)}));\n end endgenerate')
         L += body
+        if rtt:
+            L += self.emit_rt(rtt)
         L.append('endmodule')
         Path(out_sv).write_text('\n'.join(L) + '\n')
 
@@ -738,9 +897,14 @@ def main(argv=None):
     ap.add_argument('--halo-tile', type=float, default=21.6)
     ap.add_argument('--mut-station', default='K1c0g0', help='the station TRUNK_MUT=1 replaces by a wire (bench negative control)')
     ap.add_argument('--no-place', action='store_true', help='structure only: emit the RTL, skip placement / hop checks')
+    ap.add_argument('--result-trunk', action='store_true', help='RTL-BUILD-KV/PVTRUNK: add the 512-b result trunk to pvfin '
+                    '(module qkd_pvw_die_r); default off = today\'s qkd_pvw_die_t byte-identical')
+    ap.add_argument('--rt-mut-cols', default='5,RU2,13', help='RES_MUT sites: wrong-slot column, swapped leaf, dropped column')
     ap.add_argument('--out-sv', required=True)
     ap.add_argument('--out-plan', required=True)
     a = ap.parse_args(argv)
+    m_ = a.rt_mut_cols.split(',')
+    a.rt_mut_cols = (int(m_[0]), m_[1], int(m_[2]))
     g = Gen(a)
     g.build()
     Dcol, Rcol = g.timing()
@@ -757,7 +921,8 @@ def main(argv=None):
             raise ValueError(f'group {gg}: DELTA {delta[gg]} < 0 (the chunk would have to arrive before the header)')
     trunk_d, flag_d = Dcol[0], tot[0] - Dcol[0]
     hops = [] if a.no_place else g.verify()
-    g.emit(a.out_sv, Dcol, trunk_d, flag_d, delta)
+    rtt = g.rt_timing(Dcol) if a.result_trunk else None
+    g.emit(a.out_sv, Dcol, trunk_d, flag_d, delta, rtt)
     flops = sum(len(d['keys']) for d in g.st.values())
     reps = defaultdict(int)
     for d in g.st.values():
@@ -771,7 +936,8 @@ def main(argv=None):
                 col_extra_edges=Dcol, col_flag_return=Rcol, trunk_d=trunk_d, flag_d=flag_d, chunk_delta_vs_header=delta,
                 col_age_delta_vs_col0={s: Dcol[s] - Dcol[0] for s in range(32)}, age_spread_edges=spread,
                 station_flops=flops, replicas=dict(reps),
-                replica_area_mm2=round(sum(n * STD[s][0] * STD[s][1] for s, n in reps.items()) / 1e6, 4),
+                replica_area_mm2=round(sum(n * (STD[s] if s in STD else RT_FOOT[s])[0] * (STD[s] if s in STD else RT_FOOT[s])[1]
+                                     for s, n in reps.items()) / 1e6, 4),
                 deskew_alternative=dict(output_pad_flops=deskew, note='balancing all 32 column outputs at one face instead '
                                         'of per-column static ages: every 512-b y padded to the deepest group'),
                 face_pins=dict(vc={f'vc{k}_{gg}': ['W' if k < 4 else 'E', round(g.hy(2 * gg + 1), 3)] for k in range(8) for gg in range(8)},
@@ -779,6 +945,21 @@ def main(argv=None):
                                                                                            'context_len', 'epoch'])),
                 worst_hops=[dict(um=round(h[0], 1), hop=h[1], key=h[2]) for h in hops[:40]],
                 hops_over_400=sum(h[0] > 400 for h in hops), hops_total=len(hops))
+    if rtt:
+        rf = sum(len(d['keys']) for n_, d in g.st.items() if n_.startswith(('Y', 'RU', 'RX', 'EP', 'RR')))
+        plan['result_trunk'] = dict(
+            module='qkd_pvw_die_r', leaves='rtl/qwen_sys/kv_rly_std_20261016/qkd_pvr_trunk.sv (qkd_pvr_inj x16, qkd_pvr_exit)',
+            word='p_* = pvfin p0 / p1 (534 b: valid, beat, epoch, data)', res_d=rtt['res_d'],
+            beat_edge='out_age + RES_D + b (out_age = column 0 y edge, ctl out_age)', inject_delay=rtt['dl'],
+            post_stages=rtt['post'], trunk_stages=rtt['trunk_stages'], critical_column=rtt['crit_col'],
+            latency_last_y_to_beat31_at_pair_port=rtt['beat31_after_last_y'],
+            latency_note='edges from the last column y (columns GS 0, COL_D max) to beat 31 leaving the pair; at pvfin add '
+                         'the die relay stages pair corner -> pvfin + pvfin pin register (1): pvfin cal P = out_age + RES_D + relay',
+            added_flops=rf + 16 * (1 + 1 + 2 * 8 + 2) + 534 + 16,
+            exit_face=dict(face='N (strip)', corner='W', x_um=[round(min(g.rt_pins()), 3), round(max(g.rt_pins()), 3)],
+                           pins=534, per_um=5.0))
+        print(json.dumps({k: plan['result_trunk'][k] for k in ('res_d', 'trunk_stages', 'critical_column',
+                                                               'latency_last_y_to_beat31_at_pair_port', 'added_flops')}))
     Path(a.out_plan).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out_plan).write_text(json.dumps(plan, indent=1) + '\n')
     print(json.dumps({k: plan[k] for k in ('frame_um', 'trunk_d', 'flag_d', 'chunk_delta_vs_header', 'age_spread_edges',
