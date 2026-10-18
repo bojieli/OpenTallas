@@ -55,6 +55,16 @@ HUB_VM_TO_SVC_STAGES = 50    # c26l sp_vm centre -> svc_SW centre ~20 mm at 405 
 FINISH_SEQ_EXTRA = 234 - 171
 LEAF_PARTIAL_EXTRA = (112 + 4 + 5) - 100
 LEAF_SCALE_EXTRA = (59 + 4 * 4 + 4) - 76
+# RTL-BUILD-S81 (owner 0dv 10-18): mix4_half deleted; the Engram mix is the in-slice op ENG (ve beat sub-leaf + xfin ENG
+# + ot_s81sl_eg scalar finish; results/arch/s81_dv_1016/p4j/engram_mix_verdict.json build_plan.cycle_estimate).  With
+# --eng-slice the eng.* chain nodes are REPLACED (absolute, not a hub delta) by the slice-op terms; ESTIMATES except
+# ve reduce 129 / add 44 (measured tb_s81sl_ve) until the slice composition bench measures them:
+#   eng.hh   = ve reduce 129 (meas.) + partial -> xfin DL 4 + collector 5           = 138
+#   eng.dot  = 0: dd = csum((h*w)*k) is summed in the same ve reduce pass as hh / kk
+#   eng.gate = exchange 111 + finish 270 + scalar chain 175 + gate -> leaves 8      = 564 (est.)
+#   eng.add  = ve add 44 (meas.) + write-back 11                                    = 55
+ENG_SLICE_EST = {'eng.hh': 138.0, 'eng.dot': 0.0, 'eng.gate': 564.0, 'eng.add': 55.0}
+ENG_SLICE = False
 
 
 def hop_only(stages):
@@ -78,6 +88,9 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0, hbm_rt=False):
     for n in doc['nodes']:
         note = n.get('src', {}).get('note', '') or ''
         op, nid, cls = n.get('op', ''), n['id'], n.get('cls')
+        if ENG_SLICE and op in ENG_SLICE_EST:
+            add(nid, 'eng_slice_est', ENG_SLICE_EST[op] - n['cycles'])
+            continue
         if cls == 'su':
             if 'hub in 33 / out 23' in note:
                 add(nid, 'hub_in_out', -56 + pinreg)
@@ -245,7 +258,8 @@ def solve_with_wave(doc, delta):
     return base, new
 
 
-def ledger_split(path=LEDGER, drop=DROP):
+def ledger_split(path=LEDGER, drop=None):
+    drop = drop if drop is not None else DROP
     led = json.loads(Path(path).read_text())
     kept, dropped = {'ar': 0.0, 'mtp': 0.0}, {'ar': 0.0, 'mtp': 0.0}
     rows = []
@@ -261,8 +275,8 @@ def ledger_split(path=LEDGER, drop=DROP):
     return kept, dropped, rows
 
 
-def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=DROP, basis_scale=1.0, hbm_rt=False):
-    kept, dropped, rows = ledger_split(drop=drop)
+def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=None, basis_scale=1.0, hbm_rt=False):
+    kept, dropped, rows = ledger_split(drop=drop if drop is not None else DROP)
     st_eff = stages * 128 / frames if frames != 128 else stages
     ho = hop_only(89)
     ho_dv = hop_only(math.ceil(st_eff))
@@ -289,7 +303,12 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--land-plan', default=None, help='dv_land_pilot land_plan.json: price N + 2 + E per landed lane')
     ap.add_argument('--half-cycle', action='store_true', help='half-cycle hops (stations cost T/2); use the half-cycle land plan')
+    ap.add_argument('--eng-slice', action='store_true', help='0dv: Engram mix = slice op ENG (ENG_SLICE_EST replaces the eng.* chain; MIX4.* ledger rows dropped: the units are deleted)')
     a = ap.parse_args()
+    global ENG_SLICE, DROP
+    if a.eng_slice:
+        ENG_SLICE = True
+        DROP = re.compile(DROP.pattern + r'|^MIX4\.')
     plan = json.loads(Path(a.plan).read_text())
     f = plan['facts']
     B = {b['name']: b for b in plan['blocks']}

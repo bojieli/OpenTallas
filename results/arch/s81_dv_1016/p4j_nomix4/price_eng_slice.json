@@ -1,0 +1,3014 @@
+{
+ "schema": "opentallas.s81_dv.price.v1",
+ "geometry": {
+  "cluster_pitch_um": 3891.0640000000003,
+  "slice_column_um": 1000.0,
+  "frame_top_um": 24619.44,
+  "die_um": [
+   31728.5,
+   25000.0
+  ],
+  "die_mm2": 793.2,
+  "reticle_margin_um": [
+   635.7,
+   500.0
+  ],
+  "rom_slots": 1130,
+  "rom_slots_c26l": 1220,
+  "rsv": {
+   "n": 16,
+   "um": [
+    1222.0,
+    1337.8
+   ],
+   "aspect": 1.09,
+   "mm2": 1.635,
+   "need_mm2": 1.491,
+   "fit": 1.097,
+   "region_um": [
+    10536.4,
+    1650.0,
+    21192.2,
+    4365.7
+   ],
+   "frames_dropped": [
+    "f_2R00",
+    "f_3L00",
+    "f_3R00",
+    "f_4L00",
+    "f_4R00",
+    "f_5L00"
+   ],
+   "gap_um": [
+    110.0,
+    110.0,
+    110.0,
+    110.0,
+    220.0,
+    110.0,
+    110.0
+   ],
+   "content": "svc 1/16 (13.43 mm2 estimate, no RTL) + ot_s81_su_sm 1/16 (8 tiles 10.42 mm2): scores / P stay inside",
+   "upper_gap_of_column": {
+    "0": 1,
+    "1": 2,
+    "2": 3,
+    "3": 4,
+    "4": 5,
+    "5": 5,
+    "6": 6,
+    "7": 7
+   }
+  },
+  "void_free_um": {
+   "1": 6552,
+   "2": 6552,
+   "3": 6552,
+   "4": 6552,
+   "5": 6552
+  },
+  "tier_w": 276,
+  "svc_chain": {
+   "lane_bits": 512,
+   "master": "dsdv_svc_rs",
+   "fold": [
+    "rsv_07",
+    "rsv_09"
+   ],
+   "reduction_order": "per half: each column folds lower -> upper, then the upper row toward the centre (W half cols 0 -> 3, E half cols 7 -> 4), then W + E at the centre fold; fixed, compiler-visible; S81U-1 must match the golden head-dim reduction order (open item 3)",
+   "order": {
+    "W": {
+     "outward_upper_row": [
+      "rsv_07",
+      "rsv_05",
+      "rsv_03",
+      "rsv_01"
+     ],
+     "column_folds": [
+      [
+       "rsv_06",
+       "rsv_07"
+      ],
+      [
+       "rsv_04",
+       "rsv_05"
+      ],
+      [
+       "rsv_02",
+       "rsv_03"
+      ],
+      [
+       "rsv_00",
+       "rsv_01"
+      ]
+     ]
+    },
+    "E": {
+     "outward_upper_row": [
+      "rsv_09",
+      "rsv_11",
+      "rsv_13",
+      "rsv_15"
+     ],
+     "column_folds": [
+      [
+       "rsv_08",
+       "rsv_09"
+      ],
+      [
+       "rsv_10",
+       "rsv_11"
+      ],
+      [
+       "rsv_12",
+       "rsv_13"
+      ],
+      [
+       "rsv_14",
+       "rsv_15"
+      ]
+     ]
+    }
+   },
+   "qpv_entry": {
+    "W": "rsv_05",
+    "E": "rsv_11"
+   },
+   "entry_note": "p4j: q / P.V enter at the slice under the slice-column void (W rsv_05, E rsv_11) -- the centre roots rsv_07 / rsv_09 sit under frames f_3R01 / f_4L01, so a direct q/P.V lane crosses a frame body (p4i). q broadcasts outward from the entry (incl. entry -> root); partials run toward the root (entry -> root on tp); the folded result returns root -> entry on tr (512 b), then pv to the slice. Same reduction order as p4i."
+  },
+  "rsv_tree": {
+   "W": {
+    "entry": "rsv_05",
+    "edges": [
+     [
+      "rsv_03",
+      "rsv_01"
+     ],
+     [
+      "rsv_05",
+      "rsv_03"
+     ],
+     [
+      "rsv_05",
+      "rsv_07"
+     ],
+     [
+      "rsv_01",
+      "rsv_00"
+     ],
+     [
+      "rsv_03",
+      "rsv_02"
+     ],
+     [
+      "rsv_05",
+      "rsv_04"
+     ],
+     [
+      "rsv_07",
+      "rsv_06"
+     ]
+    ],
+    "root": "rsv_07"
+   },
+   "E": {
+    "entry": "rsv_11",
+    "edges": [
+     [
+      "rsv_11",
+      "rsv_09"
+     ],
+     [
+      "rsv_11",
+      "rsv_13"
+     ],
+     [
+      "rsv_13",
+      "rsv_15"
+     ],
+     [
+      "rsv_09",
+      "rsv_08"
+     ],
+     [
+      "rsv_11",
+      "rsv_10"
+     ],
+     [
+      "rsv_13",
+      "rsv_12"
+     ],
+     [
+      "rsv_15",
+      "rsv_14"
+     ]
+    ],
+    "root": "rsv_09"
+   }
+  },
+  "worst_allgather_slice_to_frame_um": 44934,
+  "worst_local_return_um": 3150,
+  "worst_slice_to_slice_um": 38690,
+  "phase_path_um": 48084,
+  "phase_path_stages": 119,
+  "scalar_exchange_stages": 96,
+  "worst_slice_to_attention_um": 24306,
+  "rsv_tree_deepest_um": 1180,
+  "worst_attention_to_frame_um": 29704,
+  "host_job": {
+   "decision": "TDM on existing registered links (column-4 void is enclosed; no lane beside a slice)",
+   "host_in": {
+    "links": [
+     "lr_lk_WN0",
+     "xrE_0N",
+     "xrE_1N",
+     "xrE_2N",
+     "xrE_3N",
+     "tvS_s_4N"
+    ],
+    "stations": 31,
+    "stops": [
+     "s_0N",
+     "s_1N",
+     "s_2N",
+     "s_3N",
+     "s_4N"
+    ],
+    "cycles": 47
+   },
+   "job_out": {
+    "far_E": {
+     "links": [
+      "tvS_seqhost",
+      "tvS_bk_sel",
+      "q_E",
+      "tq_11_13",
+      "tq_13_15",
+      "tq_15_14"
+     ],
+     "stations": 3,
+     "stops": [
+      "bk_sel",
+      "s_4S",
+      "rsv_11",
+      "rsv_13",
+      "rsv_15"
+     ],
+     "cycles": 19
+    },
+    "far_W": {
+     "links": [
+      "tvS_seqhost",
+      "tvS_bk_sel",
+      "q_E",
+      "tq_11_09",
+      "fc_09_07",
+      "tr_07_05",
+      "tq_05_03",
+      "tq_03_01",
+      "tq_01_00"
+     ],
+     "stations": 3,
+     "stops": [
+      "bk_sel",
+      "s_4S",
+      "rsv_11",
+      "rsv_09",
+      "rsv_07",
+      "rsv_05",
+      "rsv_03",
+      "rsv_01"
+     ],
+     "cycles": 28
+    }
+   },
+   "hc_back": {
+    "links": [
+     "tp_00_01",
+     "tp_01_03",
+     "tp_03_05",
+     "tp_05_07",
+     "fc_07_09",
+     "tr_09_11",
+     "pv_E",
+     "tvN_s_4S",
+     "tvN_bk_sel"
+    ],
+    "stations": 3,
+    "stops": [
+     "rsv_01",
+     "rsv_03",
+     "rsv_05",
+     "rsv_07",
+     "rsv_09",
+     "rsv_11",
+     "s_4S",
+     "bk_sel"
+    ],
+    "cycles": 28
+   },
+   "widths": {
+    "host_word": 276,
+    "job_j": 33,
+    "window_hw": 292,
+    "hc": 9
+   },
+   "critical_path": "off the token critical path: jobs are issued ahead by the static schedule (boot program load + per-token start); priced as the dispatch lead only"
+  },
+  "slice_protocol": {
+   "kinds": {
+    "0": "CTL",
+    "1": "XQ",
+    "2": "XB",
+    "3": "NX",
+    "4": "RD",
+    "5": "SC",
+    "6": "CL",
+    "7": "HP"
+   },
+   "HP": "HC projection partial (golden-subtree roots of the 24 HC coefficients), single beat, slice -> tier line -> column-3 V rung -> gunit (vstop tap + sink kind 7); same route and cost class as SC (router scores)",
+   "rtl_owed": "S81-SLICE: K_HP = 3'd7 in ot_s81sl_xr (relay to V like SC) and ot_s81sl_rstop (deliver as CS); S81U-1: vstop strap tap_k/sink_k[7] at gunit"
+  },
+  "end_slice_lep": {
+   "s_0S": {
+    "master": "dsdv_slice_lep",
+    "tx": [
+     "lt_lk_WS0",
+     "lt_lk_WS1"
+    ],
+    "rx": [
+     "lr_lk_WS0",
+     "lr_lk_WS1"
+    ],
+    "lane_bits": 512,
+    "rtl_owed": "S81-SLICE: end-slice variant with 2 x 512-b link tx/rx ports (ot_s81ph_link_ep / ot_s81ph_coll_lane reuse); fold (p0+p1)+(p2+p3) stays in the slice"
+   },
+   "s_0N": {
+    "master": "dsdv_slice_lep",
+    "tx": [
+     "lt_lk_WN0",
+     "lt_lk_WN1"
+    ],
+    "rx": [
+     "lr_lk_WN0",
+     "lr_lk_WN1"
+    ],
+    "lane_bits": 512,
+    "rtl_owed": "S81-SLICE: end-slice variant with 2 x 512-b link tx/rx ports (ot_s81ph_link_ep / ot_s81ph_coll_lane reuse); fold (p0+p1)+(p2+p3) stays in the slice"
+   },
+   "s_7S": {
+    "master": "dsdv_slice_lep",
+    "tx": [
+     "lt_lk_ES0",
+     "lt_lk_ES1"
+    ],
+    "rx": [
+     "lr_lk_ES0",
+     "lr_lk_ES1"
+    ],
+    "lane_bits": 512,
+    "rtl_owed": "S81-SLICE: end-slice variant with 2 x 512-b link tx/rx ports (ot_s81ph_link_ep / ot_s81ph_coll_lane reuse); fold (p0+p1)+(p2+p3) stays in the slice"
+   },
+   "s_7N": {
+    "master": "dsdv_slice_lep",
+    "tx": [
+     "lt_lk_EN0",
+     "lt_lk_EN1"
+    ],
+    "rx": [
+     "lr_lk_EN0",
+     "lr_lk_EN1"
+    ],
+    "lane_bits": 512,
+    "rtl_owed": "S81-SLICE: end-slice variant with 2 x 512-b link tx/rx ports (ot_s81ph_link_ep / ot_s81ph_coll_lane reuse); fold (p0+p1)+(p2+p3) stays in the slice"
+   }
+  },
+  "coll_edge": "deleted (coordinator 0cj ~15:00 (a)): columns 0 / 7 tier rung = relay stations s_cS <-> s_cN",
+  "lane_over_block_um": {
+   "total": 0,
+   "top": {}
+  },
+  "whitespace_before": {
+   "grid_um": 50.0,
+   "channel_um": 450.0,
+   "die_mm2": 793.2,
+   "white_pct": 20.4,
+   "white_mm2": 161.9,
+   "largest_empty": {
+    "x": 0.0,
+    "y": 0.0,
+    "w": 11600.0,
+    "h": 1650.0
+   },
+   "over_channel_mm2": 117.5
+  },
+  "hop_um": 405.0,
+  "slice_leaves": 5,
+  "leaf_um": [
+   950.0,
+   920.0
+  ],
+  "worst_cut": 0.4537,
+  "over_reach_bits": 0,
+  "relays": 2371,
+  "relay_bit_stages": 635038,
+  "bit_mm": 301315,
+  "cut_windows_over_limit": 0,
+  "slice_area_mm2": 4.37,
+  "n_frames": 122,
+  "worst_slice_to_gunit_um": 21907.98305882353,
+  "worst_slice_to_edge_um": 11673.192000000003,
+  "hbm_rt_stages": 10,
+  "stages_from_slots": 97
+ },
+ "status": "COMPOSED_NOT_NATIVE",
+ "scenarios": {
+  "dv_base": {
+   "stages": 97,
+   "dv_stages": 97,
+   "frames": 128,
+   "pinreg": 8,
+   "su_contingency": 0.0,
+   "ledger_kept_pct": {
+    "ar": 0.871,
+    "mtp": 0.903
+   },
+   "ledger_dropped_pct": {
+    "ar": 24.435,
+    "mtp": 20.429000000000002
+   },
+   "workloads": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "dv_cycles": 836216.8,
+     "dv_dag_loss_pct": 0.879,
+     "hop_only": 1433.8,
+     "current_tok_s": 1070.9,
+     "dv_tok_s": 1395.3,
+     "change_vs_current_pct": 30.28,
+     "rules": {
+      "hub_in_out": {
+       "nodes": 240,
+       "cycles": -11520.0
+      },
+      "norm_tree_full": {
+       "nodes": 160,
+       "cycles": 12480.0
+      },
+      "norm_finish_seq": {
+       "nodes": 160,
+       "cycles": 10080.0
+      },
+      "leaf_measured": {
+       "nodes": 160,
+       "cycles": 3840.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 484,
+       "cycles": 16320.0
+      },
+      "tier_cross": {
+       "nodes": 404,
+       "cycles": 3264.0
+      },
+      "field_phase_wire": {
+       "nodes": 324,
+       "cycles": -14347.2
+      },
+      "norm_tree_q": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "hub_wired": {
+       "nodes": 664,
+       "cycles": -19256.0
+      },
+      "hub_slab": {
+       "nodes": 872,
+       "cycles": -3128.0
+      },
+      "attn_q_path": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "router_tree": {
+       "nodes": 40,
+       "cycles": 2200.0
+      },
+      "eng_slice_est": {
+       "nodes": 8,
+       "cycles": -708.2
+      },
+      "norm_tree_kv": {
+       "nodes": 40,
+       "cycles": -320.0
+      }
+     }
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "dv_cycles": 1184670.3,
+     "dv_dag_loss_pct": 0.604,
+     "hop_only": 4209.6,
+     "current_tok_s": 3311.6,
+     "dv_tok_s": 4118.2,
+     "change_vs_current_pct": 24.36,
+     "rules": {
+      "norm_tree_full": {
+       "nodes": 86,
+       "cycles": 6708.0
+      },
+      "norm_finish_seq": {
+       "nodes": 86,
+       "cycles": 5418.0
+      },
+      "leaf_measured": {
+       "nodes": 86,
+       "cycles": 2064.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 409,
+       "cycles": 15130.0
+      },
+      "tier_cross": {
+       "nodes": 366,
+       "cycles": 3112.0
+      },
+      "norm_tree_q": {
+       "nodes": 43,
+       "cycles": 473.0
+      },
+      "attn_q_path": {
+       "nodes": 35,
+       "cycles": 385.0
+      },
+      "router_tree": {
+       "nodes": 43,
+       "cycles": 2365.0
+      },
+      "hub_in_out": {
+       "nodes": 200,
+       "cycles": -9600.0
+      },
+      "field_phase_wire": {
+       "nodes": 280,
+       "cycles": -13497.4
+      },
+      "hub_wired": {
+       "nodes": 272,
+       "cycles": -7888.0
+      },
+      "hub_slab": {
+       "nodes": 352,
+       "cycles": -1168.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "eng_slice_est": {
+       "nodes": 6,
+       "cycles": -504.4
+      }
+     }
+    }
+   },
+   "ledger_rows": [
+    {
+     "group": "BF.COL_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.105,
+     "mtp": 0.09
+    },
+    {
+     "group": "CAPT.CD_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.07,
+     "mtp": 0.06
+    },
+    {
+     "group": "ENGRAM.LKP_STATIC14_ST6",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "ENGRAM.LKP_WRITE_POSEDGE",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "FIELD.CFG7_SEQ_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.14,
+     "mtp": 0.119
+    },
+    {
+     "group": "FIELD.RETURN_NODE_R2",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.626,
+     "mtp": 0.535
+    },
+    {
+     "group": "HC.COEF",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.164,
+     "mtp": 0.138
+    },
+    {
+     "group": "HC.CTR_COLUMN_YBEAT",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.029,
+     "mtp": 0.025
+    },
+    {
+     "group": "HC.H_MAT_ENGRAM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.174,
+     "mtp": null
+    },
+    {
+     "group": "HC.H_XFER",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.202,
+     "mtp": 0.931
+    },
+    {
+     "group": "HC.RETCOL_A4_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.464,
+     "mtp": 0.392
+    },
+    {
+     "group": "HC.RETCOL_YCS_LAG1",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.019,
+     "mtp": 0.016
+    },
+    {
+     "group": "MIX4.BANDED_COPY",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MIX4.RQ_DESC_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MTP.p2.core_transaction",
+     "status": "accepted",
+     "dropped": false,
+     "ar": null,
+     "mtp": 0.159
+    },
+    {
+     "group": "SU.HC_POST",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.653,
+     "mtp": 1.313
+    },
+    {
+     "group": "SU.HC_PRE_NORM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 3.566,
+     "mtp": 3.029
+    },
+    {
+     "group": "SU.QB",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.418,
+     "mtp": 0.331
+    },
+    {
+     "group": "SU.SO",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.28,
+     "mtp": 0.222
+    },
+    {
+     "group": "SU.SW",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.776,
+     "mtp": 0.615
+    },
+    {
+     "group": "VM.A2_COMMIT_REMAINDER",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.621,
+     "mtp": 0.544
+    },
+    {
+     "group": "VM.READ",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 9.093,
+     "mtp": 7.556
+    },
+    {
+     "group": "VM.RELAY",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 5.906,
+     "mtp": 5.257
+    }
+   ]
+  },
+  "dv_pinreg16": {
+   "stages": 97,
+   "dv_stages": 97,
+   "frames": 128,
+   "pinreg": 16,
+   "su_contingency": 0.0,
+   "ledger_kept_pct": {
+    "ar": 0.871,
+    "mtp": 0.903
+   },
+   "ledger_dropped_pct": {
+    "ar": 24.435,
+    "mtp": 20.429000000000002
+   },
+   "workloads": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "dv_cycles": 839384.8,
+     "dv_dag_loss_pct": 1.253,
+     "hop_only": 1433.8,
+     "current_tok_s": 1070.9,
+     "dv_tok_s": 1390.0,
+     "change_vs_current_pct": 29.79,
+     "rules": {
+      "hub_in_out": {
+       "nodes": 240,
+       "cycles": -9600.0
+      },
+      "norm_tree_full": {
+       "nodes": 160,
+       "cycles": 12480.0
+      },
+      "norm_finish_seq": {
+       "nodes": 160,
+       "cycles": 10080.0
+      },
+      "leaf_measured": {
+       "nodes": 160,
+       "cycles": 3840.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 484,
+       "cycles": 16320.0
+      },
+      "tier_cross": {
+       "nodes": 404,
+       "cycles": 3264.0
+      },
+      "field_phase_wire": {
+       "nodes": 324,
+       "cycles": -14347.2
+      },
+      "norm_tree_q": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "hub_wired": {
+       "nodes": 664,
+       "cycles": -13944.0
+      },
+      "hub_slab": {
+       "nodes": 872,
+       "cycles": -3128.0
+      },
+      "attn_q_path": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "router_tree": {
+       "nodes": 40,
+       "cycles": 2200.0
+      },
+      "eng_slice_est": {
+       "nodes": 8,
+       "cycles": -708.2
+      },
+      "norm_tree_kv": {
+       "nodes": 40,
+       "cycles": -320.0
+      }
+     }
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "dv_cycles": 1188886.3,
+     "dv_dag_loss_pct": 0.956,
+     "hop_only": 4209.6,
+     "current_tok_s": 3311.6,
+     "dv_tok_s": 4103.5,
+     "change_vs_current_pct": 23.91,
+     "rules": {
+      "norm_tree_full": {
+       "nodes": 86,
+       "cycles": 6708.0
+      },
+      "norm_finish_seq": {
+       "nodes": 86,
+       "cycles": 5418.0
+      },
+      "leaf_measured": {
+       "nodes": 86,
+       "cycles": 2064.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 409,
+       "cycles": 15130.0
+      },
+      "tier_cross": {
+       "nodes": 366,
+       "cycles": 3112.0
+      },
+      "norm_tree_q": {
+       "nodes": 43,
+       "cycles": 473.0
+      },
+      "attn_q_path": {
+       "nodes": 35,
+       "cycles": 385.0
+      },
+      "router_tree": {
+       "nodes": 43,
+       "cycles": 2365.0
+      },
+      "hub_in_out": {
+       "nodes": 200,
+       "cycles": -8000.0
+      },
+      "field_phase_wire": {
+       "nodes": 280,
+       "cycles": -13497.4
+      },
+      "hub_wired": {
+       "nodes": 272,
+       "cycles": -5712.0
+      },
+      "hub_slab": {
+       "nodes": 352,
+       "cycles": -1168.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "eng_slice_est": {
+       "nodes": 6,
+       "cycles": -504.4
+      }
+     }
+    }
+   },
+   "ledger_rows": [
+    {
+     "group": "BF.COL_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.105,
+     "mtp": 0.09
+    },
+    {
+     "group": "CAPT.CD_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.07,
+     "mtp": 0.06
+    },
+    {
+     "group": "ENGRAM.LKP_STATIC14_ST6",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "ENGRAM.LKP_WRITE_POSEDGE",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "FIELD.CFG7_SEQ_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.14,
+     "mtp": 0.119
+    },
+    {
+     "group": "FIELD.RETURN_NODE_R2",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.626,
+     "mtp": 0.535
+    },
+    {
+     "group": "HC.COEF",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.164,
+     "mtp": 0.138
+    },
+    {
+     "group": "HC.CTR_COLUMN_YBEAT",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.029,
+     "mtp": 0.025
+    },
+    {
+     "group": "HC.H_MAT_ENGRAM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.174,
+     "mtp": null
+    },
+    {
+     "group": "HC.H_XFER",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.202,
+     "mtp": 0.931
+    },
+    {
+     "group": "HC.RETCOL_A4_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.464,
+     "mtp": 0.392
+    },
+    {
+     "group": "HC.RETCOL_YCS_LAG1",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.019,
+     "mtp": 0.016
+    },
+    {
+     "group": "MIX4.BANDED_COPY",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MIX4.RQ_DESC_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MTP.p2.core_transaction",
+     "status": "accepted",
+     "dropped": false,
+     "ar": null,
+     "mtp": 0.159
+    },
+    {
+     "group": "SU.HC_POST",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.653,
+     "mtp": 1.313
+    },
+    {
+     "group": "SU.HC_PRE_NORM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 3.566,
+     "mtp": 3.029
+    },
+    {
+     "group": "SU.QB",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.418,
+     "mtp": 0.331
+    },
+    {
+     "group": "SU.SO",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.28,
+     "mtp": 0.222
+    },
+    {
+     "group": "SU.SW",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.776,
+     "mtp": 0.615
+    },
+    {
+     "group": "VM.A2_COMMIT_REMAINDER",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.621,
+     "mtp": 0.544
+    },
+    {
+     "group": "VM.READ",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 9.093,
+     "mtp": 7.556
+    },
+    {
+     "group": "VM.RELAY",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 5.906,
+     "mtp": 5.257
+    }
+   ]
+  },
+  "dv_su_plus10pct": {
+   "stages": 97,
+   "dv_stages": 97,
+   "frames": 128,
+   "pinreg": 8,
+   "su_contingency": 0.1,
+   "ledger_kept_pct": {
+    "ar": 0.871,
+    "mtp": 0.903
+   },
+   "ledger_dropped_pct": {
+    "ar": 24.435,
+    "mtp": 20.429000000000002
+   },
+   "workloads": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "dv_cycles": 846632.4,
+     "dv_dag_loss_pct": 2.098,
+     "hop_only": 1433.8,
+     "current_tok_s": 1070.9,
+     "dv_tok_s": 1378.0,
+     "change_vs_current_pct": 28.67,
+     "rules": {
+      "su_contingency": {
+       "nodes": 1842,
+       "cycles": 28238.8
+      },
+      "hub_in_out": {
+       "nodes": 240,
+       "cycles": -11520.0
+      },
+      "norm_tree_full": {
+       "nodes": 160,
+       "cycles": 12480.0
+      },
+      "norm_finish_seq": {
+       "nodes": 160,
+       "cycles": 10080.0
+      },
+      "leaf_measured": {
+       "nodes": 160,
+       "cycles": 3840.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 484,
+       "cycles": 16320.0
+      },
+      "tier_cross": {
+       "nodes": 404,
+       "cycles": 3264.0
+      },
+      "field_phase_wire": {
+       "nodes": 324,
+       "cycles": -14347.2
+      },
+      "norm_tree_q": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "hub_wired": {
+       "nodes": 664,
+       "cycles": -19256.0
+      },
+      "hub_slab": {
+       "nodes": 872,
+       "cycles": -3128.0
+      },
+      "attn_q_path": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "router_tree": {
+       "nodes": 40,
+       "cycles": 2200.0
+      },
+      "eng_slice_est": {
+       "nodes": 8,
+       "cycles": -708.2
+      },
+      "norm_tree_kv": {
+       "nodes": 40,
+       "cycles": -320.0
+      }
+     }
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "dv_cycles": 1200901.9,
+     "dv_dag_loss_pct": 1.947,
+     "hop_only": 4209.6,
+     "current_tok_s": 3311.6,
+     "dv_tok_s": 4062.1,
+     "change_vs_current_pct": 22.66,
+     "rules": {
+      "su_contingency": {
+       "nodes": 1213,
+       "cycles": 14839.1
+      },
+      "norm_tree_full": {
+       "nodes": 86,
+       "cycles": 6708.0
+      },
+      "norm_finish_seq": {
+       "nodes": 86,
+       "cycles": 5418.0
+      },
+      "leaf_measured": {
+       "nodes": 86,
+       "cycles": 2064.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 409,
+       "cycles": 15130.0
+      },
+      "tier_cross": {
+       "nodes": 366,
+       "cycles": 3112.0
+      },
+      "norm_tree_q": {
+       "nodes": 43,
+       "cycles": 473.0
+      },
+      "attn_q_path": {
+       "nodes": 35,
+       "cycles": 385.0
+      },
+      "router_tree": {
+       "nodes": 43,
+       "cycles": 2365.0
+      },
+      "hub_in_out": {
+       "nodes": 200,
+       "cycles": -9600.0
+      },
+      "field_phase_wire": {
+       "nodes": 280,
+       "cycles": -13497.4
+      },
+      "hub_wired": {
+       "nodes": 272,
+       "cycles": -7888.0
+      },
+      "hub_slab": {
+       "nodes": 352,
+       "cycles": -1168.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "eng_slice_est": {
+       "nodes": 6,
+       "cycles": -504.4
+      }
+     }
+    }
+   },
+   "ledger_rows": [
+    {
+     "group": "BF.COL_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.105,
+     "mtp": 0.09
+    },
+    {
+     "group": "CAPT.CD_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.07,
+     "mtp": 0.06
+    },
+    {
+     "group": "ENGRAM.LKP_STATIC14_ST6",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "ENGRAM.LKP_WRITE_POSEDGE",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "FIELD.CFG7_SEQ_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.14,
+     "mtp": 0.119
+    },
+    {
+     "group": "FIELD.RETURN_NODE_R2",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.626,
+     "mtp": 0.535
+    },
+    {
+     "group": "HC.COEF",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.164,
+     "mtp": 0.138
+    },
+    {
+     "group": "HC.CTR_COLUMN_YBEAT",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.029,
+     "mtp": 0.025
+    },
+    {
+     "group": "HC.H_MAT_ENGRAM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.174,
+     "mtp": null
+    },
+    {
+     "group": "HC.H_XFER",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.202,
+     "mtp": 0.931
+    },
+    {
+     "group": "HC.RETCOL_A4_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.464,
+     "mtp": 0.392
+    },
+    {
+     "group": "HC.RETCOL_YCS_LAG1",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.019,
+     "mtp": 0.016
+    },
+    {
+     "group": "MIX4.BANDED_COPY",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MIX4.RQ_DESC_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MTP.p2.core_transaction",
+     "status": "accepted",
+     "dropped": false,
+     "ar": null,
+     "mtp": 0.159
+    },
+    {
+     "group": "SU.HC_POST",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.653,
+     "mtp": 1.313
+    },
+    {
+     "group": "SU.HC_PRE_NORM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 3.566,
+     "mtp": 3.029
+    },
+    {
+     "group": "SU.QB",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.418,
+     "mtp": 0.331
+    },
+    {
+     "group": "SU.SO",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.28,
+     "mtp": 0.222
+    },
+    {
+     "group": "SU.SW",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.776,
+     "mtp": 0.615
+    },
+    {
+     "group": "VM.A2_COMMIT_REMAINDER",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.621,
+     "mtp": 0.544
+    },
+    {
+     "group": "VM.READ",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 9.093,
+     "mtp": 7.556
+    },
+    {
+     "group": "VM.RELAY",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 5.906,
+     "mtp": 5.257
+    }
+   ]
+  },
+  "dv_su_plus25pct_pinreg16": {
+   "stages": 97,
+   "dv_stages": 97,
+   "frames": 128,
+   "pinreg": 16,
+   "su_contingency": 0.25,
+   "ledger_kept_pct": {
+    "ar": 0.871,
+    "mtp": 0.903
+   },
+   "ledger_dropped_pct": {
+    "ar": 24.435,
+    "mtp": 20.429000000000002
+   },
+   "workloads": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "dv_cycles": 866681.6,
+     "dv_dag_loss_pct": 4.363,
+     "hop_only": 1433.8,
+     "current_tok_s": 1070.9,
+     "dv_tok_s": 1345.8,
+     "change_vs_current_pct": 25.66,
+     "rules": {
+      "su_contingency": {
+       "nodes": 1842,
+       "cycles": 70597.1
+      },
+      "hub_in_out": {
+       "nodes": 240,
+       "cycles": -9600.0
+      },
+      "norm_tree_full": {
+       "nodes": 160,
+       "cycles": 12480.0
+      },
+      "norm_finish_seq": {
+       "nodes": 160,
+       "cycles": 10080.0
+      },
+      "leaf_measured": {
+       "nodes": 160,
+       "cycles": 3840.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 484,
+       "cycles": 16320.0
+      },
+      "tier_cross": {
+       "nodes": 404,
+       "cycles": 3264.0
+      },
+      "field_phase_wire": {
+       "nodes": 324,
+       "cycles": -14347.2
+      },
+      "norm_tree_q": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "hub_wired": {
+       "nodes": 664,
+       "cycles": -13944.0
+      },
+      "hub_slab": {
+       "nodes": 872,
+       "cycles": -3128.0
+      },
+      "attn_q_path": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "router_tree": {
+       "nodes": 40,
+       "cycles": 2200.0
+      },
+      "eng_slice_est": {
+       "nodes": 8,
+       "cycles": -708.2
+      },
+      "norm_tree_kv": {
+       "nodes": 40,
+       "cycles": -320.0
+      }
+     }
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "dv_cycles": 1229465.3,
+     "dv_dag_loss_pct": 4.225,
+     "hop_only": 4209.6,
+     "current_tok_s": 3311.6,
+     "dv_tok_s": 3966.8,
+     "change_vs_current_pct": 19.78,
+     "rules": {
+      "su_contingency": {
+       "nodes": 1213,
+       "cycles": 37097.9
+      },
+      "norm_tree_full": {
+       "nodes": 86,
+       "cycles": 6708.0
+      },
+      "norm_finish_seq": {
+       "nodes": 86,
+       "cycles": 5418.0
+      },
+      "leaf_measured": {
+       "nodes": 86,
+       "cycles": 2064.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 409,
+       "cycles": 15130.0
+      },
+      "tier_cross": {
+       "nodes": 366,
+       "cycles": 3112.0
+      },
+      "norm_tree_q": {
+       "nodes": 43,
+       "cycles": 473.0
+      },
+      "attn_q_path": {
+       "nodes": 35,
+       "cycles": 385.0
+      },
+      "router_tree": {
+       "nodes": 43,
+       "cycles": 2365.0
+      },
+      "hub_in_out": {
+       "nodes": 200,
+       "cycles": -8000.0
+      },
+      "field_phase_wire": {
+       "nodes": 280,
+       "cycles": -13497.4
+      },
+      "hub_wired": {
+       "nodes": 272,
+       "cycles": -5712.0
+      },
+      "hub_slab": {
+       "nodes": 352,
+       "cycles": -1168.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "eng_slice_est": {
+       "nodes": 6,
+       "cycles": -504.4
+      }
+     }
+    }
+   },
+   "ledger_rows": [
+    {
+     "group": "BF.COL_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.105,
+     "mtp": 0.09
+    },
+    {
+     "group": "CAPT.CD_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.07,
+     "mtp": 0.06
+    },
+    {
+     "group": "ENGRAM.LKP_STATIC14_ST6",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "ENGRAM.LKP_WRITE_POSEDGE",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "FIELD.CFG7_SEQ_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.14,
+     "mtp": 0.119
+    },
+    {
+     "group": "FIELD.RETURN_NODE_R2",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.626,
+     "mtp": 0.535
+    },
+    {
+     "group": "HC.COEF",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.164,
+     "mtp": 0.138
+    },
+    {
+     "group": "HC.CTR_COLUMN_YBEAT",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.029,
+     "mtp": 0.025
+    },
+    {
+     "group": "HC.H_MAT_ENGRAM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.174,
+     "mtp": null
+    },
+    {
+     "group": "HC.H_XFER",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.202,
+     "mtp": 0.931
+    },
+    {
+     "group": "HC.RETCOL_A4_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.464,
+     "mtp": 0.392
+    },
+    {
+     "group": "HC.RETCOL_YCS_LAG1",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.019,
+     "mtp": 0.016
+    },
+    {
+     "group": "MIX4.BANDED_COPY",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MIX4.RQ_DESC_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MTP.p2.core_transaction",
+     "status": "accepted",
+     "dropped": false,
+     "ar": null,
+     "mtp": 0.159
+    },
+    {
+     "group": "SU.HC_POST",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.653,
+     "mtp": 1.313
+    },
+    {
+     "group": "SU.HC_PRE_NORM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 3.566,
+     "mtp": 3.029
+    },
+    {
+     "group": "SU.QB",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.418,
+     "mtp": 0.331
+    },
+    {
+     "group": "SU.SO",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.28,
+     "mtp": 0.222
+    },
+    {
+     "group": "SU.SW",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.776,
+     "mtp": 0.615
+    },
+    {
+     "group": "VM.A2_COMMIT_REMAINDER",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.621,
+     "mtp": 0.544
+    },
+    {
+     "group": "VM.READ",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 9.093,
+     "mtp": 7.556
+    },
+    {
+     "group": "VM.RELAY",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 5.906,
+     "mtp": 5.257
+    }
+   ]
+  },
+  "pessimistic_keep_SU_HC_rows": {
+   "stages": 97,
+   "dv_stages": 97,
+   "frames": 128,
+   "pinreg": 16,
+   "su_contingency": 0.0,
+   "ledger_kept_pct": {
+    "ar": 9.615999999999998,
+    "mtp": 7.915000000000001
+   },
+   "ledger_dropped_pct": {
+    "ar": 15.690000000000001,
+    "mtp": 13.417
+   },
+   "workloads": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "dv_cycles": 839384.8,
+     "dv_dag_loss_pct": 1.253,
+     "hop_only": 1433.8,
+     "current_tok_s": 1070.9,
+     "dv_tok_s": 1265.8,
+     "change_vs_current_pct": 18.19,
+     "rules": {
+      "hub_in_out": {
+       "nodes": 240,
+       "cycles": -9600.0
+      },
+      "norm_tree_full": {
+       "nodes": 160,
+       "cycles": 12480.0
+      },
+      "norm_finish_seq": {
+       "nodes": 160,
+       "cycles": 10080.0
+      },
+      "leaf_measured": {
+       "nodes": 160,
+       "cycles": 3840.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 484,
+       "cycles": 16320.0
+      },
+      "tier_cross": {
+       "nodes": 404,
+       "cycles": 3264.0
+      },
+      "field_phase_wire": {
+       "nodes": 324,
+       "cycles": -14347.2
+      },
+      "norm_tree_q": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "hub_wired": {
+       "nodes": 664,
+       "cycles": -13944.0
+      },
+      "hub_slab": {
+       "nodes": 872,
+       "cycles": -3128.0
+      },
+      "attn_q_path": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "router_tree": {
+       "nodes": 40,
+       "cycles": 2200.0
+      },
+      "eng_slice_est": {
+       "nodes": 8,
+       "cycles": -708.2
+      },
+      "norm_tree_kv": {
+       "nodes": 40,
+       "cycles": -320.0
+      }
+     }
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "dv_cycles": 1188886.3,
+     "dv_dag_loss_pct": 0.956,
+     "hop_only": 4209.6,
+     "current_tok_s": 3311.6,
+     "dv_tok_s": 3810.3,
+     "change_vs_current_pct": 15.06,
+     "rules": {
+      "norm_tree_full": {
+       "nodes": 86,
+       "cycles": 6708.0
+      },
+      "norm_finish_seq": {
+       "nodes": 86,
+       "cycles": 5418.0
+      },
+      "leaf_measured": {
+       "nodes": 86,
+       "cycles": 2064.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 409,
+       "cycles": 15130.0
+      },
+      "tier_cross": {
+       "nodes": 366,
+       "cycles": 3112.0
+      },
+      "norm_tree_q": {
+       "nodes": 43,
+       "cycles": 473.0
+      },
+      "attn_q_path": {
+       "nodes": 35,
+       "cycles": 385.0
+      },
+      "router_tree": {
+       "nodes": 43,
+       "cycles": 2365.0
+      },
+      "hub_in_out": {
+       "nodes": 200,
+       "cycles": -8000.0
+      },
+      "field_phase_wire": {
+       "nodes": 280,
+       "cycles": -13497.4
+      },
+      "hub_wired": {
+       "nodes": 272,
+       "cycles": -5712.0
+      },
+      "hub_slab": {
+       "nodes": 352,
+       "cycles": -1168.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "eng_slice_est": {
+       "nodes": 6,
+       "cycles": -504.4
+      }
+     }
+    }
+   },
+   "ledger_rows": [
+    {
+     "group": "BF.COL_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.105,
+     "mtp": 0.09
+    },
+    {
+     "group": "CAPT.CD_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.07,
+     "mtp": 0.06
+    },
+    {
+     "group": "ENGRAM.LKP_STATIC14_ST6",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "ENGRAM.LKP_WRITE_POSEDGE",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "FIELD.CFG7_SEQ_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.14,
+     "mtp": 0.119
+    },
+    {
+     "group": "FIELD.RETURN_NODE_R2",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.626,
+     "mtp": 0.535
+    },
+    {
+     "group": "HC.COEF",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 0.164,
+     "mtp": 0.138
+    },
+    {
+     "group": "HC.CTR_COLUMN_YBEAT",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.029,
+     "mtp": 0.025
+    },
+    {
+     "group": "HC.H_MAT_ENGRAM",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 0.174,
+     "mtp": null
+    },
+    {
+     "group": "HC.H_XFER",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 1.202,
+     "mtp": 0.931
+    },
+    {
+     "group": "HC.RETCOL_A4_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.464,
+     "mtp": 0.392
+    },
+    {
+     "group": "HC.RETCOL_YCS_LAG1",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.019,
+     "mtp": 0.016
+    },
+    {
+     "group": "MIX4.BANDED_COPY",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MIX4.RQ_DESC_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MTP.p2.core_transaction",
+     "status": "accepted",
+     "dropped": false,
+     "ar": null,
+     "mtp": 0.159
+    },
+    {
+     "group": "SU.HC_POST",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 1.653,
+     "mtp": 1.313
+    },
+    {
+     "group": "SU.HC_PRE_NORM",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 3.566,
+     "mtp": 3.029
+    },
+    {
+     "group": "SU.QB",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 0.418,
+     "mtp": 0.331
+    },
+    {
+     "group": "SU.SO",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 0.28,
+     "mtp": 0.222
+    },
+    {
+     "group": "SU.SW",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 0.776,
+     "mtp": 0.615
+    },
+    {
+     "group": "VM.A2_COMMIT_REMAINDER",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.621,
+     "mtp": 0.544
+    },
+    {
+     "group": "VM.READ",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 9.093,
+     "mtp": 7.556
+    },
+    {
+     "group": "VM.RELAY",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 5.906,
+     "mtp": 5.257
+    }
+   ]
+  },
+  "pessimistic_plus_su25": {
+   "stages": 97,
+   "dv_stages": 97,
+   "frames": 128,
+   "pinreg": 16,
+   "su_contingency": 0.25,
+   "ledger_kept_pct": {
+    "ar": 9.615999999999998,
+    "mtp": 7.915000000000001
+   },
+   "ledger_dropped_pct": {
+    "ar": 15.690000000000001,
+    "mtp": 13.417
+   },
+   "workloads": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "dv_cycles": 866681.6,
+     "dv_dag_loss_pct": 4.363,
+     "hop_only": 1433.8,
+     "current_tok_s": 1070.9,
+     "dv_tok_s": 1221.6,
+     "change_vs_current_pct": 14.07,
+     "rules": {
+      "su_contingency": {
+       "nodes": 1842,
+       "cycles": 70597.1
+      },
+      "hub_in_out": {
+       "nodes": 240,
+       "cycles": -9600.0
+      },
+      "norm_tree_full": {
+       "nodes": 160,
+       "cycles": 12480.0
+      },
+      "norm_finish_seq": {
+       "nodes": 160,
+       "cycles": 10080.0
+      },
+      "leaf_measured": {
+       "nodes": 160,
+       "cycles": 3840.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 484,
+       "cycles": 16320.0
+      },
+      "tier_cross": {
+       "nodes": 404,
+       "cycles": 3264.0
+      },
+      "field_phase_wire": {
+       "nodes": 324,
+       "cycles": -14347.2
+      },
+      "norm_tree_q": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "hub_wired": {
+       "nodes": 664,
+       "cycles": -13944.0
+      },
+      "hub_slab": {
+       "nodes": 872,
+       "cycles": -3128.0
+      },
+      "attn_q_path": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "router_tree": {
+       "nodes": 40,
+       "cycles": 2200.0
+      },
+      "eng_slice_est": {
+       "nodes": 8,
+       "cycles": -708.2
+      },
+      "norm_tree_kv": {
+       "nodes": 40,
+       "cycles": -320.0
+      }
+     }
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "dv_cycles": 1229465.3,
+     "dv_dag_loss_pct": 4.225,
+     "hop_only": 4209.6,
+     "current_tok_s": 3311.6,
+     "dv_tok_s": 3673.6,
+     "change_vs_current_pct": 10.93,
+     "rules": {
+      "su_contingency": {
+       "nodes": 1213,
+       "cycles": 37097.9
+      },
+      "norm_tree_full": {
+       "nodes": 86,
+       "cycles": 6708.0
+      },
+      "norm_finish_seq": {
+       "nodes": 86,
+       "cycles": 5418.0
+      },
+      "leaf_measured": {
+       "nodes": 86,
+       "cycles": 2064.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 409,
+       "cycles": 15130.0
+      },
+      "tier_cross": {
+       "nodes": 366,
+       "cycles": 3112.0
+      },
+      "norm_tree_q": {
+       "nodes": 43,
+       "cycles": 473.0
+      },
+      "attn_q_path": {
+       "nodes": 35,
+       "cycles": 385.0
+      },
+      "router_tree": {
+       "nodes": 43,
+       "cycles": 2365.0
+      },
+      "hub_in_out": {
+       "nodes": 200,
+       "cycles": -8000.0
+      },
+      "field_phase_wire": {
+       "nodes": 280,
+       "cycles": -13497.4
+      },
+      "hub_wired": {
+       "nodes": 272,
+       "cycles": -5712.0
+      },
+      "hub_slab": {
+       "nodes": 352,
+       "cycles": -1168.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "eng_slice_est": {
+       "nodes": 6,
+       "cycles": -504.4
+      }
+     }
+    }
+   },
+   "ledger_rows": [
+    {
+     "group": "BF.COL_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.105,
+     "mtp": 0.09
+    },
+    {
+     "group": "CAPT.CD_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.07,
+     "mtp": 0.06
+    },
+    {
+     "group": "ENGRAM.LKP_STATIC14_ST6",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "ENGRAM.LKP_WRITE_POSEDGE",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "FIELD.CFG7_SEQ_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.14,
+     "mtp": 0.119
+    },
+    {
+     "group": "FIELD.RETURN_NODE_R2",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.626,
+     "mtp": 0.535
+    },
+    {
+     "group": "HC.COEF",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 0.164,
+     "mtp": 0.138
+    },
+    {
+     "group": "HC.CTR_COLUMN_YBEAT",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.029,
+     "mtp": 0.025
+    },
+    {
+     "group": "HC.H_MAT_ENGRAM",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 0.174,
+     "mtp": null
+    },
+    {
+     "group": "HC.H_XFER",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 1.202,
+     "mtp": 0.931
+    },
+    {
+     "group": "HC.RETCOL_A4_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.464,
+     "mtp": 0.392
+    },
+    {
+     "group": "HC.RETCOL_YCS_LAG1",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.019,
+     "mtp": 0.016
+    },
+    {
+     "group": "MIX4.BANDED_COPY",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MIX4.RQ_DESC_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MTP.p2.core_transaction",
+     "status": "accepted",
+     "dropped": false,
+     "ar": null,
+     "mtp": 0.159
+    },
+    {
+     "group": "SU.HC_POST",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 1.653,
+     "mtp": 1.313
+    },
+    {
+     "group": "SU.HC_PRE_NORM",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 3.566,
+     "mtp": 3.029
+    },
+    {
+     "group": "SU.QB",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 0.418,
+     "mtp": 0.331
+    },
+    {
+     "group": "SU.SO",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 0.28,
+     "mtp": 0.222
+    },
+    {
+     "group": "SU.SW",
+     "status": "accepted",
+     "dropped": false,
+     "ar": 0.776,
+     "mtp": 0.615
+    },
+    {
+     "group": "VM.A2_COMMIT_REMAINDER",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.621,
+     "mtp": 0.544
+    },
+    {
+     "group": "VM.READ",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 9.093,
+     "mtp": 7.556
+    },
+    {
+     "group": "VM.RELAY",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 5.906,
+     "mtp": 5.257
+    }
+   ]
+  },
+  "cfg7_pinreg0_binding": {
+   "stages": 97,
+   "dv_stages": 97,
+   "frames": 128,
+   "pinreg": 8,
+   "su_contingency": 0.0,
+   "ledger_kept_pct": {
+    "ar": 0.731,
+    "mtp": 0.784
+   },
+   "ledger_dropped_pct": {
+    "ar": 24.575,
+    "mtp": 20.548000000000002
+   },
+   "workloads": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "dv_cycles": 836216.8,
+     "dv_dag_loss_pct": 0.879,
+     "hop_only": 1433.8,
+     "current_tok_s": 1070.9,
+     "dv_tok_s": 1397.3,
+     "change_vs_current_pct": 30.47,
+     "rules": {
+      "hub_in_out": {
+       "nodes": 240,
+       "cycles": -11520.0
+      },
+      "norm_tree_full": {
+       "nodes": 160,
+       "cycles": 12480.0
+      },
+      "norm_finish_seq": {
+       "nodes": 160,
+       "cycles": 10080.0
+      },
+      "leaf_measured": {
+       "nodes": 160,
+       "cycles": 3840.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 484,
+       "cycles": 16320.0
+      },
+      "tier_cross": {
+       "nodes": 404,
+       "cycles": 3264.0
+      },
+      "field_phase_wire": {
+       "nodes": 324,
+       "cycles": -14347.2
+      },
+      "norm_tree_q": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "hub_wired": {
+       "nodes": 664,
+       "cycles": -19256.0
+      },
+      "hub_slab": {
+       "nodes": 872,
+       "cycles": -3128.0
+      },
+      "attn_q_path": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "router_tree": {
+       "nodes": 40,
+       "cycles": 2200.0
+      },
+      "eng_slice_est": {
+       "nodes": 8,
+       "cycles": -708.2
+      },
+      "norm_tree_kv": {
+       "nodes": 40,
+       "cycles": -320.0
+      }
+     }
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "dv_cycles": 1184670.3,
+     "dv_dag_loss_pct": 0.604,
+     "hop_only": 4209.6,
+     "current_tok_s": 3311.6,
+     "dv_tok_s": 4123.2,
+     "change_vs_current_pct": 24.51,
+     "rules": {
+      "norm_tree_full": {
+       "nodes": 86,
+       "cycles": 6708.0
+      },
+      "norm_finish_seq": {
+       "nodes": 86,
+       "cycles": 5418.0
+      },
+      "leaf_measured": {
+       "nodes": 86,
+       "cycles": 2064.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 409,
+       "cycles": 15130.0
+      },
+      "tier_cross": {
+       "nodes": 366,
+       "cycles": 3112.0
+      },
+      "norm_tree_q": {
+       "nodes": 43,
+       "cycles": 473.0
+      },
+      "attn_q_path": {
+       "nodes": 35,
+       "cycles": 385.0
+      },
+      "router_tree": {
+       "nodes": 43,
+       "cycles": 2365.0
+      },
+      "hub_in_out": {
+       "nodes": 200,
+       "cycles": -9600.0
+      },
+      "field_phase_wire": {
+       "nodes": 280,
+       "cycles": -13497.4
+      },
+      "hub_wired": {
+       "nodes": 272,
+       "cycles": -7888.0
+      },
+      "hub_slab": {
+       "nodes": 352,
+       "cycles": -1168.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "eng_slice_est": {
+       "nodes": 6,
+       "cycles": -504.4
+      }
+     }
+    }
+   },
+   "ledger_rows": [
+    {
+     "group": "BF.COL_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.105,
+     "mtp": 0.09
+    },
+    {
+     "group": "CAPT.CD_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.07,
+     "mtp": 0.06
+    },
+    {
+     "group": "ENGRAM.LKP_STATIC14_ST6",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "ENGRAM.LKP_WRITE_POSEDGE",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "FIELD.CFG7_SEQ_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.14,
+     "mtp": 0.119
+    },
+    {
+     "group": "FIELD.RETURN_NODE_R2",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.626,
+     "mtp": 0.535
+    },
+    {
+     "group": "HC.COEF",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.164,
+     "mtp": 0.138
+    },
+    {
+     "group": "HC.CTR_COLUMN_YBEAT",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.029,
+     "mtp": 0.025
+    },
+    {
+     "group": "HC.H_MAT_ENGRAM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.174,
+     "mtp": null
+    },
+    {
+     "group": "HC.H_XFER",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.202,
+     "mtp": 0.931
+    },
+    {
+     "group": "HC.RETCOL_A4_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.464,
+     "mtp": 0.392
+    },
+    {
+     "group": "HC.RETCOL_YCS_LAG1",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.019,
+     "mtp": 0.016
+    },
+    {
+     "group": "MIX4.BANDED_COPY",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MIX4.RQ_DESC_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MTP.p2.core_transaction",
+     "status": "accepted",
+     "dropped": false,
+     "ar": null,
+     "mtp": 0.159
+    },
+    {
+     "group": "SU.HC_POST",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.653,
+     "mtp": 1.313
+    },
+    {
+     "group": "SU.HC_PRE_NORM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 3.566,
+     "mtp": 3.029
+    },
+    {
+     "group": "SU.QB",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.418,
+     "mtp": 0.331
+    },
+    {
+     "group": "SU.SO",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.28,
+     "mtp": 0.222
+    },
+    {
+     "group": "SU.SW",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.776,
+     "mtp": 0.615
+    },
+    {
+     "group": "VM.A2_COMMIT_REMAINDER",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.621,
+     "mtp": 0.544
+    },
+    {
+     "group": "VM.READ",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 9.093,
+     "mtp": 7.556
+    },
+    {
+     "group": "VM.RELAY",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 5.906,
+     "mtp": 5.257
+    }
+   ]
+  },
+  "dv_hbm_rt_unhidden": {
+   "stages": 97,
+   "dv_stages": 97,
+   "frames": 128,
+   "pinreg": 8,
+   "su_contingency": 0.0,
+   "ledger_kept_pct": {
+    "ar": 0.871,
+    "mtp": 0.903
+   },
+   "ledger_dropped_pct": {
+    "ar": 24.435,
+    "mtp": 20.429000000000002
+   },
+   "workloads": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "dv_cycles": 836536.8,
+     "dv_dag_loss_pct": 0.917,
+     "hop_only": 1433.8,
+     "current_tok_s": 1070.9,
+     "dv_tok_s": 1394.7,
+     "change_vs_current_pct": 30.23,
+     "rules": {
+      "hub_in_out": {
+       "nodes": 240,
+       "cycles": -11520.0
+      },
+      "norm_tree_full": {
+       "nodes": 160,
+       "cycles": 12480.0
+      },
+      "norm_finish_seq": {
+       "nodes": 160,
+       "cycles": 10080.0
+      },
+      "leaf_measured": {
+       "nodes": 160,
+       "cycles": 3840.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 484,
+       "cycles": 16320.0
+      },
+      "tier_cross": {
+       "nodes": 404,
+       "cycles": 3264.0
+      },
+      "field_phase_wire": {
+       "nodes": 324,
+       "cycles": -14347.2
+      },
+      "norm_tree_q": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "hub_wired": {
+       "nodes": 664,
+       "cycles": -19256.0
+      },
+      "hub_slab": {
+       "nodes": 872,
+       "cycles": -3128.0
+      },
+      "attn_q_path": {
+       "nodes": 40,
+       "cycles": 440.0
+      },
+      "hbm_ctrl_rt": {
+       "nodes": 40,
+       "cycles": 400.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "router_tree": {
+       "nodes": 40,
+       "cycles": 2200.0
+      },
+      "eng_slice_est": {
+       "nodes": 8,
+       "cycles": -708.2
+      },
+      "norm_tree_kv": {
+       "nodes": 40,
+       "cycles": -320.0
+      }
+     }
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "dv_cycles": 1185020.3,
+     "dv_dag_loss_pct": 0.633,
+     "hop_only": 4209.6,
+     "current_tok_s": 3311.6,
+     "dv_tok_s": 4117.0,
+     "change_vs_current_pct": 24.32,
+     "rules": {
+      "norm_tree_full": {
+       "nodes": 86,
+       "cycles": 6708.0
+      },
+      "norm_finish_seq": {
+       "nodes": 86,
+       "cycles": 5418.0
+      },
+      "leaf_measured": {
+       "nodes": 86,
+       "cycles": 2064.0
+      },
+      "intra_slice_leaf": {
+       "nodes": 409,
+       "cycles": 15130.0
+      },
+      "tier_cross": {
+       "nodes": 366,
+       "cycles": 3112.0
+      },
+      "norm_tree_q": {
+       "nodes": 43,
+       "cycles": 473.0
+      },
+      "attn_q_path": {
+       "nodes": 35,
+       "cycles": 385.0
+      },
+      "hbm_ctrl_rt": {
+       "nodes": 35,
+       "cycles": 350.0
+      },
+      "router_tree": {
+       "nodes": 43,
+       "cycles": 2365.0
+      },
+      "hub_in_out": {
+       "nodes": 200,
+       "cycles": -9600.0
+      },
+      "field_phase_wire": {
+       "nodes": 280,
+       "cycles": -13497.4
+      },
+      "hub_wired": {
+       "nodes": 272,
+       "cycles": -7888.0
+      },
+      "hub_slab": {
+       "nodes": 352,
+       "cycles": -1168.0
+      },
+      "h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 3364.0
+      },
+      "eng_slice_est": {
+       "nodes": 6,
+       "cycles": -504.4
+      }
+     }
+    }
+   },
+   "ledger_rows": [
+    {
+     "group": "BF.COL_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.105,
+     "mtp": 0.09
+    },
+    {
+     "group": "CAPT.CD_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.07,
+     "mtp": 0.06
+    },
+    {
+     "group": "ENGRAM.LKP_STATIC14_ST6",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "ENGRAM.LKP_WRITE_POSEDGE",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.0,
+     "mtp": null
+    },
+    {
+     "group": "FIELD.CFG7_SEQ_PINREG",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.14,
+     "mtp": 0.119
+    },
+    {
+     "group": "FIELD.RETURN_NODE_R2",
+     "status": "proposed",
+     "dropped": false,
+     "ar": 0.626,
+     "mtp": 0.535
+    },
+    {
+     "group": "HC.COEF",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.164,
+     "mtp": 0.138
+    },
+    {
+     "group": "HC.CTR_COLUMN_YBEAT",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.029,
+     "mtp": 0.025
+    },
+    {
+     "group": "HC.H_MAT_ENGRAM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.174,
+     "mtp": null
+    },
+    {
+     "group": "HC.H_XFER",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.202,
+     "mtp": 0.931
+    },
+    {
+     "group": "HC.RETCOL_A4_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.464,
+     "mtp": 0.392
+    },
+    {
+     "group": "HC.RETCOL_YCS_LAG1",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.019,
+     "mtp": 0.016
+    },
+    {
+     "group": "MIX4.BANDED_COPY",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MIX4.RQ_DESC_PINREG",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.0,
+     "mtp": 0.0
+    },
+    {
+     "group": "MTP.p2.core_transaction",
+     "status": "accepted",
+     "dropped": false,
+     "ar": null,
+     "mtp": 0.159
+    },
+    {
+     "group": "SU.HC_POST",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 1.653,
+     "mtp": 1.313
+    },
+    {
+     "group": "SU.HC_PRE_NORM",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 3.566,
+     "mtp": 3.029
+    },
+    {
+     "group": "SU.QB",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.418,
+     "mtp": 0.331
+    },
+    {
+     "group": "SU.SO",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.28,
+     "mtp": 0.222
+    },
+    {
+     "group": "SU.SW",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 0.776,
+     "mtp": 0.615
+    },
+    {
+     "group": "VM.A2_COMMIT_REMAINDER",
+     "status": "proposed",
+     "dropped": true,
+     "ar": 0.621,
+     "mtp": 0.544
+    },
+    {
+     "group": "VM.READ",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 9.093,
+     "mtp": 7.556
+    },
+    {
+     "group": "VM.RELAY",
+     "status": "accepted",
+     "dropped": true,
+     "ar": 5.906,
+     "mtp": 5.257
+    }
+   ]
+  }
+ },
+ "cfg7_binding": {
+  "master": "ot_s81_cfg7_seq_bfp",
+  "params": {
+   "LAYOUT": 1,
+   "PINREG": 1
+  },
+  "view": "s81coll_cfg7_seq_bfp_pr-pr1-ef2866774 (CLOSED TT +244.3 / FF +23.9; native PASS 191.9/137.1/14.4)",
+  "ledger_row": "FIELD.CFG7_SEQ_PINREG",
+  "ledger_row_kept": true,
+  "edges": "lc->a/ce +2, lc->cfg/go_e +4, st +5 vs PINREG 0; charged +4 per FIELD matrix job"
+ }
+}

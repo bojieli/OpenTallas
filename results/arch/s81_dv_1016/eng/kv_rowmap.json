@@ -1,0 +1,10472 @@
+{
+ "schema": "opentallas.s81_dv.eng_rowmap.v1",
+ "lane": "RTL-BUILD-S81",
+ "date": "2026-10-18",
+ "decision": "HANDOFF 0dv (owner 10-18): mix4_half deleted, Engram mix = in-slice op ENG",
+ "wkv_rows": "K copy j element e -> row 5120 j + e; V element e -> row 20480 + e (golden engram_layer kv split)",
+ "owner": "element e -> slice e // 320, leaf (e % 320) // 64, element-in-beat e % 64 (= the h owner)",
+ "leaf_layout": {
+  "row_off": {
+   "K0": 0,
+   "K1": 16,
+   "K2": 32,
+   "K3": 48,
+   "V": 128
+  },
+  "w_row_off": [
+   64,
+   80,
+   96,
+   112
+  ],
+  "region_rows": 144,
+  "word_of_element": "(e % 64) % 4",
+  "row_of_element": "A0 + off + (e % 64) // 4"
+ },
+ "vs_op14_contract": "vs op 14 ENG: a0 = A0 (command [13:4]); reduce copy j reads row pairs K_j (A0 + 16 j + 2 i, +1) and W_j (A0 + 64 + 16 j + 2 i, +1), i = 0..7 (8 elements a pair) with h from vn; add reads V row pairs A0 + 128 + 2 i once per sub-beat, shared by the 4 copies",
+ "capture": "5 phases per slice per Engram layer: fmt 1 (FP32), np 0, rcnt 320, rbase = row of element 320 g",
+ "layers": {
+  "L1": {
+   "A0": 704,
+   "slices": [
+    {
+     "slice": 0,
+     "h_beats": [
+      0,
+      4
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 0,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28000008000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 5120,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28028008000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 10240,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28050008000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 15360,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28078008000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 20480,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280a0008000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        0,
+        63
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        64,
+        127
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        128,
+        191
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        192,
+        255
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        256,
+        319
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        0,
+        63
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        64,
+        127
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        128,
+        191
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        192,
+        255
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        256,
+        319
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        0,
+        63
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        64,
+        127
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        128,
+        191
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        192,
+        255
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        256,
+        319
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        0,
+        63
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        64,
+        127
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        128,
+        191
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        192,
+        255
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        256,
+        319
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 1,
+     "h_beats": [
+      5,
+      9
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 320,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28002808000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 5440,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2802a808000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 10560,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28052808000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 15680,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2807a808000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 20800,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280a2808000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        320,
+        383
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        384,
+        447
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        448,
+        511
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        512,
+        575
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        576,
+        639
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        320,
+        383
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        384,
+        447
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        448,
+        511
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        512,
+        575
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        576,
+        639
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        320,
+        383
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        384,
+        447
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        448,
+        511
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        512,
+        575
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        576,
+        639
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        320,
+        383
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        384,
+        447
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        448,
+        511
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        512,
+        575
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        576,
+        639
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 2,
+     "h_beats": [
+      10,
+      14
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 640,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28005008000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 5760,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2802d008000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 10880,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28055008000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 16000,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2807d008000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 21120,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280a5008000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        640,
+        703
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        704,
+        767
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        768,
+        831
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        832,
+        895
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        896,
+        959
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        640,
+        703
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        704,
+        767
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        768,
+        831
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        832,
+        895
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        896,
+        959
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        640,
+        703
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        704,
+        767
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        768,
+        831
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        832,
+        895
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        896,
+        959
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        640,
+        703
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        704,
+        767
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        768,
+        831
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        832,
+        895
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        896,
+        959
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 3,
+     "h_beats": [
+      15,
+      19
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 960,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28007808000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 6080,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2802f808000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 11200,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28057808000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 16320,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2807f808000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 21440,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280a7808000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        960,
+        1023
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1024,
+        1087
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1088,
+        1151
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1152,
+        1215
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1216,
+        1279
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        960,
+        1023
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1024,
+        1087
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1088,
+        1151
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1152,
+        1215
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1216,
+        1279
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        960,
+        1023
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1024,
+        1087
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1088,
+        1151
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1152,
+        1215
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1216,
+        1279
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        960,
+        1023
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1024,
+        1087
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1088,
+        1151
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1152,
+        1215
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1216,
+        1279
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 4,
+     "h_beats": [
+      20,
+      24
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 1280,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2800a008000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 6400,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28032008000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 11520,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2805a008000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 16640,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28082008000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 21760,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280aa008000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1280,
+        1343
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1344,
+        1407
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1408,
+        1471
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1472,
+        1535
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1536,
+        1599
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1280,
+        1343
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1344,
+        1407
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1408,
+        1471
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1472,
+        1535
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1536,
+        1599
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1280,
+        1343
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1344,
+        1407
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1408,
+        1471
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1472,
+        1535
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1536,
+        1599
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1280,
+        1343
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1344,
+        1407
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1408,
+        1471
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1472,
+        1535
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1536,
+        1599
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 5,
+     "h_beats": [
+      25,
+      29
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 1600,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2800c808000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 6720,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28034808000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 11840,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2805c808000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 16960,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28084808000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 22080,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280ac808000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1600,
+        1663
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1664,
+        1727
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1728,
+        1791
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1792,
+        1855
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1856,
+        1919
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1600,
+        1663
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1664,
+        1727
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1728,
+        1791
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1792,
+        1855
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1856,
+        1919
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1600,
+        1663
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1664,
+        1727
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1728,
+        1791
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1792,
+        1855
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1856,
+        1919
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1600,
+        1663
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1664,
+        1727
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1728,
+        1791
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1792,
+        1855
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1856,
+        1919
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 6,
+     "h_beats": [
+      30,
+      34
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 1920,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2800f008000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 7040,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28037008000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 12160,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2805f008000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 17280,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28087008000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 22400,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280af008000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1920,
+        1983
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        1984,
+        2047
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2048,
+        2111
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2112,
+        2175
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2176,
+        2239
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1920,
+        1983
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        1984,
+        2047
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2048,
+        2111
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2112,
+        2175
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2176,
+        2239
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1920,
+        1983
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        1984,
+        2047
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2048,
+        2111
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2112,
+        2175
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2176,
+        2239
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1920,
+        1983
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        1984,
+        2047
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2048,
+        2111
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2112,
+        2175
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2176,
+        2239
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 7,
+     "h_beats": [
+      35,
+      39
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 2240,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28011808000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 7360,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28039808000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 12480,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28061808000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 17600,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28089808000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 22720,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280b1808000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2240,
+        2303
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2304,
+        2367
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2368,
+        2431
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2432,
+        2495
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2496,
+        2559
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2240,
+        2303
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2304,
+        2367
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2368,
+        2431
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2432,
+        2495
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2496,
+        2559
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2240,
+        2303
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2304,
+        2367
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2368,
+        2431
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2432,
+        2495
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2496,
+        2559
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2240,
+        2303
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2304,
+        2367
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2368,
+        2431
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2432,
+        2495
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2496,
+        2559
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 8,
+     "h_beats": [
+      40,
+      44
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 2560,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28014008000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 7680,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2803c008000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 12800,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28064008000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 17920,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2808c008000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 23040,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280b4008000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2560,
+        2623
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2624,
+        2687
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2688,
+        2751
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2752,
+        2815
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2816,
+        2879
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2560,
+        2623
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2624,
+        2687
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2688,
+        2751
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2752,
+        2815
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2816,
+        2879
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2560,
+        2623
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2624,
+        2687
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2688,
+        2751
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2752,
+        2815
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2816,
+        2879
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2560,
+        2623
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2624,
+        2687
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2688,
+        2751
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2752,
+        2815
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2816,
+        2879
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 9,
+     "h_beats": [
+      45,
+      49
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 2880,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28016808000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 8000,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2803e808000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 13120,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28066808000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 18240,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2808e808000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 23360,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280b6808000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2880,
+        2943
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        2944,
+        3007
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3008,
+        3071
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3072,
+        3135
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3136,
+        3199
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2880,
+        2943
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        2944,
+        3007
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3008,
+        3071
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3072,
+        3135
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3136,
+        3199
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2880,
+        2943
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        2944,
+        3007
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3008,
+        3071
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3072,
+        3135
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3136,
+        3199
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2880,
+        2943
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        2944,
+        3007
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3008,
+        3071
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3072,
+        3135
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3136,
+        3199
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 10,
+     "h_beats": [
+      50,
+      54
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 3200,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28019008000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 8320,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28041008000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 13440,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28069008000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 18560,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28091008000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 23680,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280b9008000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3200,
+        3263
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3264,
+        3327
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3328,
+        3391
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3392,
+        3455
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3456,
+        3519
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3200,
+        3263
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3264,
+        3327
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3328,
+        3391
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3392,
+        3455
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3456,
+        3519
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3200,
+        3263
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3264,
+        3327
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3328,
+        3391
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3392,
+        3455
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3456,
+        3519
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3200,
+        3263
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3264,
+        3327
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3328,
+        3391
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3392,
+        3455
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3456,
+        3519
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 11,
+     "h_beats": [
+      55,
+      59
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 3520,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2801b808000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 8640,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28043808000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 13760,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2806b808000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 18880,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28093808000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 24000,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280bb808000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3520,
+        3583
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3584,
+        3647
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3648,
+        3711
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3712,
+        3775
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3776,
+        3839
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3520,
+        3583
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3584,
+        3647
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3648,
+        3711
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3712,
+        3775
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3776,
+        3839
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3520,
+        3583
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3584,
+        3647
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3648,
+        3711
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3712,
+        3775
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3776,
+        3839
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3520,
+        3583
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3584,
+        3647
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3648,
+        3711
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3712,
+        3775
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3776,
+        3839
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 12,
+     "h_beats": [
+      60,
+      64
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 3840,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2801e008000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 8960,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28046008000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 14080,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2806e008000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 19200,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28096008000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 24320,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280be008000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3840,
+        3903
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3904,
+        3967
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        3968,
+        4031
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4032,
+        4095
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4096,
+        4159
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3840,
+        3903
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3904,
+        3967
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        3968,
+        4031
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4032,
+        4095
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4096,
+        4159
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3840,
+        3903
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3904,
+        3967
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        3968,
+        4031
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4032,
+        4095
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4096,
+        4159
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3840,
+        3903
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3904,
+        3967
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        3968,
+        4031
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4032,
+        4095
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4096,
+        4159
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 13,
+     "h_beats": [
+      65,
+      69
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 4160,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28020808000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 9280,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28048808000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 14400,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28070808000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 19520,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28098808000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 24640,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280c0808000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4160,
+        4223
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4224,
+        4287
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4288,
+        4351
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4352,
+        4415
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4416,
+        4479
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4160,
+        4223
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4224,
+        4287
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4288,
+        4351
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4352,
+        4415
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4416,
+        4479
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4160,
+        4223
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4224,
+        4287
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4288,
+        4351
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4352,
+        4415
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4416,
+        4479
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4160,
+        4223
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4224,
+        4287
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4288,
+        4351
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4352,
+        4415
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4416,
+        4479
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 14,
+     "h_beats": [
+      70,
+      74
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 4480,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28023008000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 9600,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2804b008000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 14720,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28073008000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 19840,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2809b008000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 24960,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280c3008000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4480,
+        4543
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4544,
+        4607
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4608,
+        4671
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4672,
+        4735
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4736,
+        4799
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4480,
+        4543
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4544,
+        4607
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4608,
+        4671
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4672,
+        4735
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4736,
+        4799
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4480,
+        4543
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4544,
+        4607
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4608,
+        4671
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4672,
+        4735
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4736,
+        4799
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4480,
+        4543
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4544,
+        4607
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4608,
+        4671
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4672,
+        4735
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4736,
+        4799
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 15,
+     "h_beats": [
+      75,
+      79
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 2816,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 4800,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28025808000b00"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 2880,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 9920,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2804d808000b40"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 2944,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 15040,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28075808000b80"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3008,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 20160,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2809d808000bc0"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3328,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 25280,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280c5808000d00"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4800,
+        4863
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4864,
+        4927
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4928,
+        4991
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        4992,
+        5055
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        768,
+        783
+       ],
+       "elements": [
+        5056,
+        5119
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4800,
+        4863
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4864,
+        4927
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4928,
+        4991
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        4992,
+        5055
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        784,
+        799
+       ],
+       "elements": [
+        5056,
+        5119
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4800,
+        4863
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4864,
+        4927
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4928,
+        4991
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        4992,
+        5055
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        800,
+        815
+       ],
+       "elements": [
+        5056,
+        5119
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4800,
+        4863
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4864,
+        4927
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4928,
+        4991
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        4992,
+        5055
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        816,
+        831
+       ],
+       "elements": [
+        5056,
+        5119
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "L14": {
+   "A0": 848,
+   "slices": [
+    {
+     "slice": 0,
+     "h_beats": [
+      0,
+      4
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 0,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28000008000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 5120,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28028008000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 10240,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28050008000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 15360,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28078008000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 20480,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280a0008000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        0,
+        63
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        64,
+        127
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        128,
+        191
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        192,
+        255
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        256,
+        319
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        0,
+        63
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        64,
+        127
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        128,
+        191
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        192,
+        255
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        256,
+        319
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        0,
+        63
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        64,
+        127
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        128,
+        191
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        192,
+        255
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        256,
+        319
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        0,
+        63
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        64,
+        127
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        128,
+        191
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        192,
+        255
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        256,
+        319
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 1,
+     "h_beats": [
+      5,
+      9
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 320,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28002808000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 5440,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2802a808000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 10560,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28052808000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 15680,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2807a808000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 20800,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280a2808000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        320,
+        383
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        384,
+        447
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        448,
+        511
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        512,
+        575
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        576,
+        639
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        320,
+        383
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        384,
+        447
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        448,
+        511
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        512,
+        575
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        576,
+        639
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        320,
+        383
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        384,
+        447
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        448,
+        511
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        512,
+        575
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        576,
+        639
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        320,
+        383
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        384,
+        447
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        448,
+        511
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        512,
+        575
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        576,
+        639
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 2,
+     "h_beats": [
+      10,
+      14
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 640,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28005008000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 5760,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2802d008000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 10880,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28055008000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 16000,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2807d008000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 21120,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280a5008000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        640,
+        703
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        704,
+        767
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        768,
+        831
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        832,
+        895
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        896,
+        959
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        640,
+        703
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        704,
+        767
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        768,
+        831
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        832,
+        895
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        896,
+        959
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        640,
+        703
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        704,
+        767
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        768,
+        831
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        832,
+        895
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        896,
+        959
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        640,
+        703
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        704,
+        767
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        768,
+        831
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        832,
+        895
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        896,
+        959
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 3,
+     "h_beats": [
+      15,
+      19
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 960,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28007808000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 6080,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2802f808000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 11200,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28057808000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 16320,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2807f808000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 21440,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280a7808000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        960,
+        1023
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1024,
+        1087
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1088,
+        1151
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1152,
+        1215
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1216,
+        1279
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        960,
+        1023
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1024,
+        1087
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1088,
+        1151
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1152,
+        1215
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1216,
+        1279
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        960,
+        1023
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1024,
+        1087
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1088,
+        1151
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1152,
+        1215
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1216,
+        1279
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        960,
+        1023
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1024,
+        1087
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1088,
+        1151
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1152,
+        1215
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1216,
+        1279
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 4,
+     "h_beats": [
+      20,
+      24
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 1280,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2800a008000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 6400,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28032008000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 11520,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2805a008000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 16640,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28082008000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 21760,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280aa008000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1280,
+        1343
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1344,
+        1407
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1408,
+        1471
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1472,
+        1535
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1536,
+        1599
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1280,
+        1343
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1344,
+        1407
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1408,
+        1471
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1472,
+        1535
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1536,
+        1599
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1280,
+        1343
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1344,
+        1407
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1408,
+        1471
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1472,
+        1535
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1536,
+        1599
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1280,
+        1343
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1344,
+        1407
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1408,
+        1471
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1472,
+        1535
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1536,
+        1599
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 5,
+     "h_beats": [
+      25,
+      29
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 1600,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2800c808000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 6720,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28034808000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 11840,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2805c808000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 16960,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28084808000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 22080,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280ac808000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1600,
+        1663
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1664,
+        1727
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1728,
+        1791
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1792,
+        1855
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1856,
+        1919
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1600,
+        1663
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1664,
+        1727
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1728,
+        1791
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1792,
+        1855
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1856,
+        1919
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1600,
+        1663
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1664,
+        1727
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1728,
+        1791
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1792,
+        1855
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1856,
+        1919
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1600,
+        1663
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1664,
+        1727
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1728,
+        1791
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1792,
+        1855
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1856,
+        1919
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 6,
+     "h_beats": [
+      30,
+      34
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 1920,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2800f008000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 7040,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28037008000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 12160,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2805f008000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 17280,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28087008000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 22400,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280af008000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1920,
+        1983
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        1984,
+        2047
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2048,
+        2111
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2112,
+        2175
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2176,
+        2239
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1920,
+        1983
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        1984,
+        2047
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2048,
+        2111
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2112,
+        2175
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2176,
+        2239
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1920,
+        1983
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        1984,
+        2047
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2048,
+        2111
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2112,
+        2175
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2176,
+        2239
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1920,
+        1983
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        1984,
+        2047
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2048,
+        2111
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2112,
+        2175
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2176,
+        2239
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 7,
+     "h_beats": [
+      35,
+      39
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 2240,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28011808000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 7360,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28039808000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 12480,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28061808000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 17600,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28089808000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 22720,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280b1808000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2240,
+        2303
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2304,
+        2367
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2368,
+        2431
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2432,
+        2495
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2496,
+        2559
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2240,
+        2303
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2304,
+        2367
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2368,
+        2431
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2432,
+        2495
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2496,
+        2559
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2240,
+        2303
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2304,
+        2367
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2368,
+        2431
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2432,
+        2495
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2496,
+        2559
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2240,
+        2303
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2304,
+        2367
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2368,
+        2431
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2432,
+        2495
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2496,
+        2559
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 8,
+     "h_beats": [
+      40,
+      44
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 2560,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28014008000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 7680,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2803c008000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 12800,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28064008000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 17920,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2808c008000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 23040,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280b4008000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2560,
+        2623
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2624,
+        2687
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2688,
+        2751
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2752,
+        2815
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2816,
+        2879
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2560,
+        2623
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2624,
+        2687
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2688,
+        2751
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2752,
+        2815
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2816,
+        2879
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2560,
+        2623
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2624,
+        2687
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2688,
+        2751
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2752,
+        2815
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2816,
+        2879
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2560,
+        2623
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2624,
+        2687
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2688,
+        2751
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2752,
+        2815
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2816,
+        2879
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 9,
+     "h_beats": [
+      45,
+      49
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 2880,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28016808000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 8000,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2803e808000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 13120,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28066808000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 18240,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2808e808000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 23360,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280b6808000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2880,
+        2943
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        2944,
+        3007
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3008,
+        3071
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3072,
+        3135
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3136,
+        3199
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2880,
+        2943
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        2944,
+        3007
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3008,
+        3071
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3072,
+        3135
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3136,
+        3199
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2880,
+        2943
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        2944,
+        3007
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3008,
+        3071
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3072,
+        3135
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3136,
+        3199
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2880,
+        2943
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        2944,
+        3007
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3008,
+        3071
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3072,
+        3135
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3136,
+        3199
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 10,
+     "h_beats": [
+      50,
+      54
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 3200,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28019008000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 8320,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28041008000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 13440,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28069008000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 18560,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28091008000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 23680,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280b9008000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3200,
+        3263
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3264,
+        3327
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3328,
+        3391
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3392,
+        3455
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3456,
+        3519
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3200,
+        3263
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3264,
+        3327
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3328,
+        3391
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3392,
+        3455
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3456,
+        3519
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3200,
+        3263
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3264,
+        3327
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3328,
+        3391
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3392,
+        3455
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3456,
+        3519
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3200,
+        3263
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3264,
+        3327
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3328,
+        3391
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3392,
+        3455
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3456,
+        3519
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 11,
+     "h_beats": [
+      55,
+      59
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 3520,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2801b808000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 8640,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28043808000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 13760,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2806b808000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 18880,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28093808000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 24000,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280bb808000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3520,
+        3583
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3584,
+        3647
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3648,
+        3711
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3712,
+        3775
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3776,
+        3839
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3520,
+        3583
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3584,
+        3647
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3648,
+        3711
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3712,
+        3775
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3776,
+        3839
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3520,
+        3583
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3584,
+        3647
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3648,
+        3711
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3712,
+        3775
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3776,
+        3839
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3520,
+        3583
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3584,
+        3647
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3648,
+        3711
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3712,
+        3775
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3776,
+        3839
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 12,
+     "h_beats": [
+      60,
+      64
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 3840,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2801e008000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 8960,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28046008000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 14080,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2806e008000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 19200,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28096008000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 24320,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280be008000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3840,
+        3903
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3904,
+        3967
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        3968,
+        4031
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4032,
+        4095
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4096,
+        4159
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3840,
+        3903
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3904,
+        3967
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        3968,
+        4031
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4032,
+        4095
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4096,
+        4159
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3840,
+        3903
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3904,
+        3967
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        3968,
+        4031
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4032,
+        4095
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4096,
+        4159
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3840,
+        3903
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3904,
+        3967
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        3968,
+        4031
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4032,
+        4095
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4096,
+        4159
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 13,
+     "h_beats": [
+      65,
+      69
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 4160,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28020808000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 9280,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28048808000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 14400,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28070808000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 19520,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28098808000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 24640,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280c0808000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4160,
+        4223
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4224,
+        4287
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4288,
+        4351
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4352,
+        4415
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4416,
+        4479
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4160,
+        4223
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4224,
+        4287
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4288,
+        4351
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4352,
+        4415
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4416,
+        4479
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4160,
+        4223
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4224,
+        4287
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4288,
+        4351
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4352,
+        4415
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4416,
+        4479
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4160,
+        4223
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4224,
+        4287
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4288,
+        4351
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4352,
+        4415
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4416,
+        4479
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 14,
+     "h_beats": [
+      70,
+      74
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 4480,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28023008000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 9600,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2804b008000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 14720,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28073008000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 19840,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2809b008000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 24960,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280c3008000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4480,
+        4543
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4544,
+        4607
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4608,
+        4671
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4672,
+        4735
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4736,
+        4799
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4480,
+        4543
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4544,
+        4607
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4608,
+        4671
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4672,
+        4735
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4736,
+        4799
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4480,
+        4543
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4544,
+        4607
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4608,
+        4671
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4672,
+        4735
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4736,
+        4799
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4480,
+        4543
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4544,
+        4607
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4608,
+        4671
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4672,
+        4735
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4736,
+        4799
+       ]
+      }
+     ]
+    },
+    {
+     "slice": 15,
+     "h_beats": [
+      75,
+      79
+     ],
+     "capture_phases": [
+      {
+       "vector": "K0",
+       "cfg": {
+        "obase": 3392,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 4800,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28025808000d40"
+      },
+      {
+       "vector": "K1",
+       "cfg": {
+        "obase": 3456,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 9920,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2804d808000d80"
+      },
+      {
+       "vector": "K2",
+       "cfg": {
+        "obase": 3520,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 15040,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x28075808000dc0"
+      },
+      {
+       "vector": "K3",
+       "cfg": {
+        "obase": 3584,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 20160,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x2809d808000e00"
+      },
+      {
+       "vector": "V",
+       "cfg": {
+        "obase": 3904,
+        "ops": 0,
+        "np": 0,
+        "fmt": 1,
+        "rbase": 25280,
+        "rcnt": 320,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+       },
+       "cfg_d": "0x280c5808000f40"
+      }
+     ],
+     "w_row_writes": [
+      {
+       "copy": 0,
+       "leaf": 0,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4800,
+        4863
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 1,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4864,
+        4927
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 2,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4928,
+        4991
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 3,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        4992,
+        5055
+       ]
+      },
+      {
+       "copy": 0,
+       "leaf": 4,
+       "rows": [
+        912,
+        927
+       ],
+       "elements": [
+        5056,
+        5119
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 0,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4800,
+        4863
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 1,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4864,
+        4927
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 2,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4928,
+        4991
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 3,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        4992,
+        5055
+       ]
+      },
+      {
+       "copy": 1,
+       "leaf": 4,
+       "rows": [
+        928,
+        943
+       ],
+       "elements": [
+        5056,
+        5119
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 0,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4800,
+        4863
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 1,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4864,
+        4927
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 2,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4928,
+        4991
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 3,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        4992,
+        5055
+       ]
+      },
+      {
+       "copy": 2,
+       "leaf": 4,
+       "rows": [
+        944,
+        959
+       ],
+       "elements": [
+        5056,
+        5119
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 0,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4800,
+        4863
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 1,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4864,
+        4927
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 2,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4928,
+        4991
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 3,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        4992,
+        5055
+       ]
+      },
+      {
+       "copy": 3,
+       "leaf": 4,
+       "rows": [
+        960,
+        975
+       ],
+       "elements": [
+        5056,
+        5119
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
