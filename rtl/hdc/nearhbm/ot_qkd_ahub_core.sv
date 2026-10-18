@@ -482,11 +482,15 @@ module ot_qkd_ahub_die #(
     ot_qkd_drly #(.W(181), .N(SI_RLY)) u_si (.clk(ck_sir),
         .d({start, si_valid, si_type, si_g, si_hh, si_k, si_any, si_data, pi_valid, pi_g}),
         .q({c_start, c_si_valid, c_si_type, c_si_g, c_si_hh, c_si_k, c_si_any, c_si_data, c_pi_valid, c_pi_g}));
+`ifdef QKD_AHUB_ONE_CK
+    qkd_ahub_core u_core (      // hard child (hp4 kit): hardened defaults, no #() on a hard view
+`else
 `ifdef QKD_AHUB_RLY_CLK
     qkd_ahub_core u_core (      // hard child: its hardened defaults = this module's defaults (no #() on a hard view)
 `else
     qkd_ahub_core #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .ZW_RLY(ZW_RLY), .ZR_RLY(ZR_RLY),
                     .RA_RLY(RA_RLY), .SR_RLY(SR_RLY), .PV_RLY(PV_RLY), .Y_RLY(Y_RLY)) u_core (
+`endif
 `endif
         .clk(ck_core), .rst_n(rr[0]), .start(c_start), .si_valid(c_si_valid), .si_type(c_si_type), .si_g(c_si_g),
         .si_hh(c_si_hh), .si_k(c_si_k), .si_any(c_si_any), .si_data(c_si_data), .pi_valid(c_pi_valid), .pi_g(c_pi_g),
