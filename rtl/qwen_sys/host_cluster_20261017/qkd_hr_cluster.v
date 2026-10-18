@@ -1478,7 +1478,7 @@ module qkd_hr_cluster(ck_core, ck_host, ck_ingest, ck_phy_fam, ck_phy, host_upst
     .tx_up(phy_up),
     .tx_v(u_rank__u_adapter__tv[7])
   );
-  qkd_host_rx_class_admission #(.IR_REPL(1), .STRAPPED(1))  u_rank__u_control__u_packet__u_rx  (
+  qkd_host_rx_class_admission_rr #(.IR_REPL(1), .STRAPPED(1))  u_rank__u_control__u_packet__u_rx  (
     .admission_open(host_admission_open),
     .ck(ck_core),
     .credit_return(u_rank__u_control__u_packet__credit_return),

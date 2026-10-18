@@ -142,7 +142,7 @@ module qkd_hr_core_tx(ck_core, irq, host_rst_n, service_faults, u_rank__done_cr,
   wire u_rank__u_phy__rst_n;
   wire u_rank__u_phy__rx_rck;
   wire u_rank__u_phy__tx_wck;
-  qkd_host_tx_class u_rank__u_control__u_packet__u_tx  (
+  qkd_host_tx_class_rr u_rank__u_control__u_packet__u_tx  (
     .ck(ck_core),
     .credit_return(u_rank__u_control__u_packet__credit_return),
     .ctrl_cr(u_rank__u_control__u_packet__ctc),

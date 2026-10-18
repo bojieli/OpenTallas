@@ -1,0 +1,130 @@
+{
+ "name": "hcoll_ring_ag_ctl_1017-rc1-COMMIT",
+ "block": "ot_hgi_coll_ring_ag_ctl",
+ "ref_tile": true,
+ "owner": "Claude:HBM-B-RTL3",
+ "purpose": "d4g plan (b) COLL ring stop control root with the on-die ALL-GATHER (GATHER kind 3, per-direction publish ports); successor of the ring_v5 control (AG=0 identical); new element, no closed view; rc1 (review 0dr): pins spread over full faces (per-port pin_ranges + pin_balance, <=5.2/um), async reset on control registers only",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/hbm-b-rtl3-1017",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_ring_ag_ctl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ring_ag_exact",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh {RUN}/bench/ring_ag",
+    "expect": "pass",
+    "min_count_regex": "RING_AG BENCH PASS mutants_rejected=(4)",
+    "threads": 6,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ring_ag_mut_ttl",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh {RUN}/bench/mut_ttl ttl; rc=$?; grep -h '^RING_AG FAIL' {RUN}/bench/mut_ttl/mut_ttl.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "RING_AG FAIL errors=",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctl_1017/bench_witness/ring_ag_mut_ttl.log"
+   },
+   {
+    "name": "ring_ag_mut_src",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh {RUN}/bench/mut_src src; rc=$?; grep -h '^RING_AG FAIL' {RUN}/bench/mut_src/mut_src.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "RING_AG FAIL errors=",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctl_1017/bench_witness/ring_ag_mut_src.log"
+   },
+   {
+    "name": "ring_ag_mut_ag0",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh {RUN}/bench/mut_ag0 ag0; rc=$?; grep -h '^RING_AG FAIL' {RUN}/bench/mut_ag0/mut_ag0.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "RING_AG FAIL errors=",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctl_1017/bench_witness/ring_ag_mut_ag0.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_ring_ag_ctl_1017/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_ring_ag_ctl_1017/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hcoll_ring_ag_ctl_1017 --out {RUN}/record/views/ot_hgi_coll_ring_ag_ctl  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hcoll_ring_ag_ctl_1017/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hcoll_ring_ag_ctl_1017/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/arch/hbm_d4g_coll_ag_1017/route/hcoll_ring_ag_ctl_1017-rc1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

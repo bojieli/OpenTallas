@@ -31,10 +31,10 @@ module hbfd_rly_136_EW_fc (input wire clk_in, input wire rs, input wire [135:0] 
     ot_hbm_rly_fc #(.W(136)) u (.clk_in(clk_in), .rs(rs), .i(i), .o(o), .clk_out(clk_out));
 endmodule
 module hbfd_rly_136_SN_fc (input wire clk_in, input wire rs, input wire [135:0] i, output wire [135:0] o, output wire clk_out);
-    ot_hbm_rly_fc #(.W(136)) u (.clk_in(clk_in), .rs(rs), .i(i), .o(o), .clk_out(clk_out));
+    ot_hbm_rly_fc #(.W(136), .RS_RELAY(1)) u (.clk_in(clk_in), .rs(rs), .i(i), .o(o), .clk_out(clk_out));
 endmodule
 module hbfd_rly_136_NS_fc (input wire clk_in, input wire rs, input wire [135:0] i, output wire [135:0] o, output wire clk_out);
-    ot_hbm_rly_fc #(.W(136)) u (.clk_in(clk_in), .rs(rs), .i(i), .o(o), .clk_out(clk_out));
+    ot_hbm_rly_fc #(.W(136), .RS_RELAY(1)) u (.clk_in(clk_in), .rs(rs), .i(i), .o(o), .clk_out(clk_out));
 endmodule
 module hbfd_rly_304_WE_fc (input wire clk_in, input wire rs, input wire [303:0] i, output wire [303:0] o, output wire clk_out);
     ot_hbm_rly_fc #(.W(304)) u (.clk_in(clk_in), .rs(rs), .i(i), .o(o), .clk_out(clk_out));
