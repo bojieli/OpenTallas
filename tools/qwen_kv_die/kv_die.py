@@ -1803,7 +1803,14 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             raise ValueError(f'v1.4.4 PV envelope does not fit: south {s_lo:.1f}..{s_hi:.1f}, north {n_lo:.1f}..{n_hi:.1f}, '
                              f'need {PVW[1]} (state {V144S})')
         add('pvw_0', 'qkd_pvw_s', x_, y_s, PVW[0] - SHAVE, PVW[1] - SHAVE, 'R0', 'pv_pair', 'attn')
-        add('pvw_1', 'qkd_pvw_n', x_, y_n, PVW[0] - SHAVE, PVW[1] - SHAVE, 'MX', 'pv_pair', 'attn')
+        # KV-PLAN4 10-18 (kvs14b real case: 'qkd_pvw_n MX y: site grid (0 + k*270) never meets the legal residues mod
+        # 240'): the pair carries M4 face pins (off 12 / 48 nm) and M8 area clock pins (off 116 / 80 nm, the 33 ck_c
+        # entries).  An MX origin on the 270-nm row grid then needs H = 0 mod 6 (M4) and H = 2 mod 10 (M8), i.e. H = 12
+        # mod 30 nm; PVW[1] - SHAVE is GY-lattice - 24 nm = 6 mod 30.  The N pair's frame takes the next legal height
+        # (+6 nm, inside the PVW[1] envelope checked above); its R0 twin pvw_0 is unchanged.
+        h_n = PVW[1] - SHAVE
+        h_n = round(h_n + ((12 - round(h_n * 1000)) % 30) / 1000.0, 3)
+        add('pvw_1', 'qkd_pvw_n', x_, y_n, PVW[0] - SHAVE, h_n, 'MX', 'pv_pair', 'attn')
         lft = max(i.x + i.w for i in ins if i.x + i.w < xc - PVW[0] / 2 and i.y < Hk - 2000 and i.y > 2000
                   and not i.name.startswith(('pvw', 'ahub')))
         rgt = min(i.x for i in ins if i.x > xc + PVW[0] / 2 and i.y < Hk - 2000 and i.y > 2000
@@ -4679,9 +4686,14 @@ def main(argv=None):
         return 0
     if a.static_graph:
         ap.error('--static-graph requires explicit OT_KV_STATIC=1')
-    if KSD.ON and a.mode == 'case' and os.environ.get('OT_KV_STATIC_DIE_DIAGNOSTIC', '0') != '1':
+    if (KSD.ON and a.mode == 'case' and os.environ.get('OT_KV_STATIC_DIE_DIAGNOSTIC', '0') != '1'
+            and os.environ.get('OT_KV_STATIC_DIE_STRICT', '0') != '1'):
         # KVJ-G2 10-17: the static-die case stays HELD until the strict port bind is clean (0 unconnected functional inputs,
-        # 0 undriven, 0 functional ties); a diagnostic GEN (routing evidence of the static floorplan) must say so
+        # 0 undriven, 0 functional ties); a diagnostic GEN (routing evidence of the static floorplan) must say so.
+        # KV-PLAN4 10-18: OT_KV_STATIC_DIE_STRICT=1 lifts the hold for a REAL (non-diagnostic) GEN whose die chain runs the
+        # strict bind as a gate (die_chain.sh without OT_BIND_DIAGNOSTIC: bind_launch --strict + port_bind_v2 fail the run).
+        # KV-WIRE2 strict bind kvw2-6ad1dbb84/port_bind_v2_b PASS 0/0/0.  The record's open_tile_inputs (pc__*, ctl boot__* /
+        # oobs__*) are tile ports joined at die level (plan static_die.die_joins), not die opens.
         ap.error('static die case held: strict port bind not clean (kv_static_die record open_tile_inputs); set '
                  'OT_KV_STATIC_DIE_DIAGNOSTIC=1 for a DIAGNOSTIC (not a die result) GEN')
     if a.host_v14:
