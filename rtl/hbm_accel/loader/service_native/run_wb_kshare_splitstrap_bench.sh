@@ -17,12 +17,18 @@ cases=("${@:2}")
 if ((${#cases[@]}==0)); then cases=(baseline streamstrap hbmstrap); fi
 for c in "${cases[@]}"; do
  args=()
+ # raw_<case> (HBMA-SVC 10-17): build the mutant <case> but judge it as a baseline, so a mutant bench exits non-zero
+ # (closure-loop "expect": "fail") and prints its assertion line
+ raw=0; if [[ "$c" == raw_* ]]; then raw=1; c=${c#raw_}; fi
  case "$c" in streamstrap) args=(-GKSMUT=6);; hbmstrap) args=(-GKSMUT=7);; overlap) args=(-GKSMUT=3);; address) args=(-GKSMUT=4);; premature) args=(-GWBMUT=1);; esac
  "$vl" --binary --timing -j "${JOBS:-8}" -O1 -Wno-fatal -Wno-lint -Wno-style \
   --top-module tb_hbm_svc_wb_kshare_splitstrap_q --Mdir "$out/obj-$c" -o sim "${args[@]}" "${src[@]}" > "$out/build-$c.log" 2>&1
  rc=0
  "$out/obj-$c/sim" > "$out/$c.log" 2>&1 || rc=$?
- if [[ "$c" == baseline ]]; then
+ if ((raw)); then
+  echo "RAW $c rc=$rc"; grep -E 'WB_INTEGRITY|^PASS' "$out/$c.log" | head -3 || true
+  if [[ "$rc" != 0 ]] || ! grep -q '^PASS tb_hbm_svc_wb_kshare_splitstrap_q' "$out/$c.log"; then echo "RAW_FAIL $c"; rm -rf "$out/obj-$c"; exit 1; fi
+ elif [[ "$c" == baseline ]]; then
   test "$rc" = 0 && grep -q '^PASS tb_hbm_svc_wb_kshare_splitstrap_q' "$out/$c.log"
  else
   test "$rc" != 0 && grep -q 'WB_INTEGRITY' "$out/$c.log"

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_stack_fault",
+ "enable": false,
+ "reason": "RTL registers every pin: row_v/pc_fault/owner_fault land in hbm pin flops rv_q/pf_q/of_q, svg/share/del/cal faults in stream pin flops; fault/status leave from stream flops; each reset pin lands on one ot_reset_sync. A kit pin-register stage cannot be applied across the two clock domains of the async_gray_fifo profile and would add an unpriced edge"
+}

@@ -1,0 +1,260 @@
+{
+ "name": "hdie_svc_vm_kshare",
+ "top": "ot_hbm_svc_vm_kshare_splitstrap",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "stream_clk",
+ "clock_ports": [
+  "stream_clk",
+  "hbm_clk"
+ ],
+ "reset_ports": [
+  "stream_rst_n",
+  "hbm_rst_n"
+ ],
+ "clock_data_paths": "async_gray_fifo",
+ "clock_relationship": {
+  "kind": "hbm_phy_async_gray_fifo",
+  "stream_period_ps": 833.333,
+  "hbm_period_ps": 1024.0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "stream_clk"
+   ],
+   "inputs": [
+    "stream_rst_n",
+    "sm_stream",
+    "vm_v",
+    "vm_bank",
+    "vm_epoch",
+    "vm_row",
+    "vm_col",
+    "wbw_v",
+    "wbw_base",
+    "wbw_total"
+   ],
+   "outputs": [
+    "fill_v",
+    "fill_bank",
+    "fill_slot",
+    "fill_epoch",
+    "fill_data",
+    "fault"
+   ]
+  },
+  "hbm": {
+   "ratio": [
+    3072000,
+    2499999
+   ],
+   "ports": [
+    "hbm_clk"
+   ],
+   "inputs": [
+    "hbm_rst_n",
+    "sm_hbm",
+    "g_k_v",
+    "g_k_addr",
+    "g_k_len",
+    "g_k_tag",
+    "g_k_we",
+    "g_k_wdata",
+    "g_k_wstrb",
+    "g_kr_rdy",
+    "c_k_rdy",
+    "c_k_wr_done",
+    "c_kr_v",
+    "c_kr_tag",
+    "c_kr_beat",
+    "c_kr_data",
+    "w_k_v",
+    "w_k_addr",
+    "w_k_wdata"
+   ],
+   "outputs": [
+    "g_k_rdy",
+    "g_k_wr_done",
+    "g_kr_v",
+    "g_kr_tag",
+    "g_kr_beat",
+    "g_kr_data",
+    "c_k_v",
+    "c_k_addr",
+    "c_k_len",
+    "c_k_tag",
+    "c_k_we",
+    "c_k_wdata",
+    "c_k_wstrb",
+    "c_kr_rdy",
+    "w_k_rdy",
+    "w_k_wr_done"
+   ]
+  }
+ },
+ "pins": {
+  "E": [
+   "g_k_v",
+   "g_k_rdy",
+   "g_k_addr",
+   "g_k_len",
+   "g_k_tag",
+   "g_k_we",
+   "g_k_wdata",
+   "g_k_wstrb",
+   "g_k_wr_done",
+   "g_kr_v",
+   "g_kr_rdy"
+  ],
+  "N": [
+   "g_kr_tag",
+   "g_kr_beat",
+   "g_kr_data",
+   "vm_v",
+   "vm_bank",
+   "vm_epoch",
+   "vm_row",
+   "vm_col",
+   "wbw_v",
+   "wbw_base",
+   "wbw_total",
+   "fill_v",
+   "fill_bank",
+   "fill_slot",
+   "fill_epoch",
+   "fill_data",
+   "fault",
+   "sm_stream",
+   "sm_hbm",
+   "stream_clk",
+   "stream_rst_n",
+   "hbm_clk",
+   "hbm_rst_n"
+  ],
+  "S": [
+   "c_k_v",
+   "c_k_rdy",
+   "c_k_addr",
+   "c_k_len",
+   "c_k_tag",
+   "c_k_we",
+   "c_k_wdata",
+   "c_k_wstrb",
+   "c_k_wr_done",
+   "c_kr_v",
+   "c_kr_rdy",
+   "c_kr_tag",
+   "c_kr_beat",
+   "c_kr_data"
+  ],
+  "W": [
+   "w_k_v",
+   "w_k_rdy",
+   "w_k_addr",
+   "w_k_wdata",
+   "w_k_wr_done"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "tile",
+ "hold_budget_reason": "CDC leaf (hbm/stream async_gray_fifo profile: cmd/wcmd/fill Gray FIFOs + fault_cdc)",
+ "inhold": false,
+ "outhold": false,
+ "outline": {
+  "w": 432.0,
+  "h": 388.8
+ },
+ "slot_change_request": "HBMA-SVC 10-17: d4f slot 146.88 x 146.88 holds 7,346 signal pins at 12.5 pins/um; pin-derived outline 432 x 388.8 (10 x 9 lattice cells): E svg K request 1,380 b (3.5/um), S controller K 2,488 b (5.8/um), N svg K response + long-haul VM/WB command + fills 2,319 b (5.4/um), W WB K port 1,156 b (3.0/um). vmks_NW* must be placed MX (controllers north of the NW band). Top = ot_hbm_svc_vm_kshare_splitstrap (strap sm -> sm_stream + sm_hbm, both tied to the SM index): die.v rebind needed.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every K pin in 2-entry pin skids (ot_hbm_svc_pin_skid2: valid/data/ready flops; out_v/out_data/in_r leave from flops), k_wr_done outputs and inputs are re-timed by flops, VM/WB commands land in stream pin flops, fills/fault leave from stream flops, straps land in one flop per domain. A kit pin stage cannot span the two async_gray_fifo domains and would add unpriced K-port latency."
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:HBMA-SVC",
+  "branch": "claude/hbma-svc-1017",
+  "tag": "hbmasvc-vmks",
+  "purpose": "HBM d4f K-port share leaf vmks_<q><k> (x16): first kit. Pin-bound: 7,346 pins cannot sit on the 146.88 slot (12.5/um); outline 432 x 388.8 from the pin demand per face toward die peers (svg E, controllers S, long-haul N/W). Split-strap source (sm_stream/sm_hbm, a87f66d6d) for the async_gray_fifo shared-input rule.",
+  "record_to": "results/rtl/ref_tile/hdie_svc_vm_kshare",
+  "benches": [
+   {
+    "name": "vmks_exact",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh {RUN}/bench/exact baseline",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "QUALIFIED baseline expected_exit=0",
+    "min_count_regex": "PASS tb_hbm_svc_wb_kshare_splitstrap_q .*group_req=(\\d+)",
+    "pass_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/vmks_baseline.log"
+   },
+   {
+    "name": "vmks_mut_hbmstrap",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh {RUN}/bench/hbmstrap raw_hbmstrap",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_splitstrap_q",
+    "fail_regex": "WB_INTEGRITY",
+    "note": "KSMUT=7: hbm-domain strap ignored",
+    "fail_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/vmks_raw_hbmstrap.log"
+   },
+   {
+    "name": "vmks_mut_overlap",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh {RUN}/bench/overlap raw_overlap",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_splitstrap_q",
+    "fail_regex": "WB_INTEGRITY",
+    "note": "KSMUT=3: WB window does not wait for outstanding group writes",
+    "fail_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/vmks_raw_overlap.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_splitstrap_q.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv",
+   "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "results/rtl/ref_tile/hbmasvc_witness_1017/"
+  ]
+ }
+}
