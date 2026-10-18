@@ -56,6 +56,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("spec")
     ap.add_argument("--inset", type=float, default=6.48)
+    # --range-clock: the clock / reset ports also get a (minimum-width) range at their place in the face order, so a
+    # clock listed between two equal halves of a face enters at the face centre (s81sl_xr1 XR3 10-18: the unranged clk
+    # pin landed near one end of the S face, pin-flop spread 113 ps)
+    ap.add_argument("--range-clock", action="store_true")
     a = ap.parse_args()
     sp = json.load(open(a.spec))
     fp = json.load(open(ROOT / "physical/ref_tile" / sp["name"] / "floorplan.json"))
@@ -66,8 +70,8 @@ def main():
     rng = {}
     for face, ports in sp["pins"].items():
         L = W if face in ("N", "S") else H
-        sig = [p for p in ports if p not in clk]
-        tot = sum(widths[p] for p in sig) or 1
+        sig = [p for p in ports if p not in clk or a.range_clock]
+        tot = sum(widths[p] for p in sig if p not in clk) or 1
         span = L - 2 * a.inset
         mn = 2.16                                   # a port range never shorter than one 2.16-um row pitch
         free = span - mn * len(sig)
@@ -75,7 +79,7 @@ def main():
             raise SystemExit(f"face {face}: {len(sig)} ports do not fit {span:.2f} um at {mn} um each")
         pos = a.inset
         for p in sig:
-            seg = mn + free * widths[p] / tot
+            seg = mn + (0 if p in clk else free * widths[p] / tot)
             rng[p] = [round(pos, 3), round(pos + seg, 3)]
             pos += seg
     sp["pin_ranges"] = rng
