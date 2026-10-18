@@ -1,5 +1,5 @@
 #!/bin/bash
-# HBM-B-RTL1 2026-10-17: lockstep bench of the plan (b) quadrant writers ot_hbm_sm_vm_wr_q_t_lanes4 (LB 0 / LB 4) against
+# HBM-B-RTL1 2026-10-17: lockstep bench of the plan (b) quadrant writers ot_hbm_sm_vm_wr_q_t_lanes4 (lbase 0 / 1) against
 # the d4f stack writer ot_hbm_sm_vm_wr_q_t_lanes (tb_hbm_sm_vm_wr_q_t_lanes4_lockstep.sv).  Positive must PASS; mutants of
 # the E writer 1 (row) / 2 (phase) / 3 (quad strap) / 4 (calendar late) / 6 (bank base) must FAIL.
 set -uo pipefail

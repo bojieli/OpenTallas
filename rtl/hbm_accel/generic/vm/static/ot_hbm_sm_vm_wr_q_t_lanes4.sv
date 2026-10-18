@@ -1,8 +1,9 @@
 `timescale 1ns/1ps
 `default_nettype none
 // HBM-B-RTL1 2026-10-17 (plan (b) d4g): the QUADRANT SM result -> VM writer smw_<Q> = ot_hbm_sm_vm_wr_q_t_lanes with the
-// writer core ot_hbm_sm_vm_wr_q_lanes_n #(NL 4, LB): the quadrant's 4 SMs (ports s0..s3 = SM LB+0..LB+3 of the stack;
-// d4f stack index) write banks LB+k (half 0, wq_s<k> -> vmb_<Q>{LB+k}.wq1) or (LB+k+4)%8 (half 1, wq_t<k>) of the
+// writer core ot_hbm_sm_vm_wr_q_lanes_n #(NL 4, LBPIN 1, NB2 2): the quadrant's 4 SMs (ports s0..s3 = SM LB+0..LB+3 of the stack;
+// d4f stack index) write banks LB+k (half 0, wq_s<k> -> vmb_<Q>{LB+k}.wq1) or (LB+k+4)%8 (half 1, wq_t<k>), LB = 4*lbase (strap pin: ONE
+// master for all four quadrant writers), of the
 // quadrant's own VM slice, per descriptor bit cmd[26] (calendar entry {cmd27, at32}; d4f entries are {cmd26, at32}).  W quadrants
 // LB 0, E quadrants LB 4 (the same bank index as the d4f stack writer; only the quad strap changes to the SM's quadrant).
 // Calendar target, descriptor ABI, table SRAM, timing (calendar fire edge C_launch + 2 + LEAD + at; rv(t) -> wq slot 0 at
@@ -18,12 +19,13 @@
 // smf_s<k> = sm_fault[k], sms_s<k> = sm_sched_fault[k], wq_s<k> = wq[281k+:281] (bank k write group).  clk, clk_cal and
 // clk_l0..7 are the same PLL output at phase 0 (die: pll_stream); benches tie them together.
 // MUT: 1/2/3 pass to the writer (wrong row / late phase / quad strap ignored); 4 = calendar fires one edge late.
-module ot_hbm_sm_vm_wr_q_t_lanes4 #(parameter integer DEPTH = 4, parameter integer LB = 0, parameter integer MUT = 0) (
+module ot_hbm_sm_vm_wr_q_t_lanes4 #(parameter integer DEPTH = 4, parameter integer MUT = 0) (
     input  wire          clk,
     input  wire          clk_cal,
     input  wire          rst_n,
     input  wire [7:0]    tgt,
     input  wire [1:0]    quad,
+    input  wire          lbase,     // bank-base strap: 0 = W quadrant (half 0 = banks 0-3), 1 = E (half 0 = banks 4-7)
     input  wire          cfg_v,
     input  wire [7:0]    cfg_target,
     input  wire [11:0]   cfg_addr,
@@ -76,8 +78,8 @@ module ot_hbm_sm_vm_wr_q_t_lanes4 #(parameter integer DEPTH = 4, parameter integ
     ot_sram_1r1w_128x256_m1_r2c2 u_tab(.clk(clk_cal), .r_ce_in(t_rce), .r_addr_in(t_ra), .rd_out(t_rd),
         .w_ce_in(t_wce[0]), .w_addr_in(t_wa), .wd_in(t_wd), .w_mask_in({256{1'b1}}),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    ot_hbm_sm_vm_wr_q_lanes_n #(.DEPTH(DEPTH), .NL(4), .LB(LB), .NB2(2), .MUT(((MUT >= 1 && MUT <= 3) || MUT == 6) ? MUT : 0)) u_wrq (
-        .clk(clk), .clk_l({clk_l3,clk_l2,clk_l1,clk_l0}), .rst_n(rst_q), .quad(quad),
+    ot_hbm_sm_vm_wr_q_lanes_n #(.DEPTH(DEPTH), .NL(4), .LB(0), .LBPIN(1), .NB2(2), .MUT(((MUT >= 1 && MUT <= 3) || MUT == 6) ? MUT : 0)) u_wrq (
+        .clk(clk), .clk_l({clk_l3,clk_l2,clk_l1,clk_l0}), .rst_n(rst_q), .quad(quad), .lbase(lbase),
         .rv({rv_s3,rv_s2,rv_s1,rv_s0}), .rrow({rrow_s3,rrow_s2,rrow_s1,rrow_s0}),
         .rdata({rdata_s3,rdata_s2,rdata_s1,rdata_s0}),
         .cmd_v(cmd_v), .cmd(cmd), .sm_fault({smf_s3,smf_s2,smf_s1,smf_s0}), .sm_sched_fault({sms_s3,sms_s2,sms_s1,sms_s0}),

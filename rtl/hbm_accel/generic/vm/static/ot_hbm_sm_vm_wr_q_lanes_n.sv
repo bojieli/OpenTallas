@@ -35,6 +35,7 @@ module ot_hbm_sm_vm_wr_q_lanes_n #(
     parameter integer DEPTH = 4,
     parameter integer NL    = 8,     // SM lanes (plan (b) quadrant writer: 4)
     parameter integer LB    = 0,     // bank base: lane k writes bank LB+k (half 0)
+    parameter integer LBPIN = 0,     // 1: the bank base is the strap pin lbase (0 -> LB 0, 1 -> LB 4; one master for W and E)
     parameter integer NB2   = 1,     // 2: each lane also drives bank (LB+k+4)%8 (half 1), chosen per descriptor by cmd[26]
     parameter integer MUT   = 0      // 1 wrong row (stride ignored), 2 wrong phase (one edge late), 3 quad strap ignored, 6 bank base ignored
 ) (
@@ -42,6 +43,7 @@ module ot_hbm_sm_vm_wr_q_lanes_n #(
     input  wire [NL-1:0] clk_l,             // lane k root (SM k)
     input  wire          rst_n,
     input  wire [1:0]    quad,
+    input  wire          lbase,             // LBPIN 1: bank-base strap (die constant; pin flop on the core root)
     input  wire [NL-1:0] rv,
     input  wire [12*NL-1:0]  rrow,
     input  wire [256*NL-1:0] rdata,
@@ -77,6 +79,9 @@ module ot_hbm_sm_vm_wr_q_lanes_n #(
     always @(posedge hclk) rs2 <= rst_n;
     reg [1:0] quad_q;                                   // N-face strap pin flop (core root)
     always @(posedge clk) quad_q <= quad;
+    reg lb_q;                                           // N-face bank-base strap pin flop (core root)
+    always @(posedge clk) lb_q <= lbase;
+    wire [2:0] lbv = (LBPIN != 0) ? {lb_q, 2'b00} : 3'(LB);
     reg cv_q; reg [25+NB2-1:0] cmd_q;
     always @(posedge hclk) cmd_q <= cmd;
     always @(posedge hclk) if (!rs2) cv_q <= 1'b0; else cv_q <= cmd_v;
@@ -166,11 +171,11 @@ module ot_hbm_sm_vm_wr_q_lanes_n #(
                 end else if (i == 0 && emit) q[255:0] <= {q[31:0], q[255:32]};
         end
         always @(posedge lclk) begin
-            o_sec <= {d_mir, d_mir ? 2'b00 : ((MUT == 3) ? 2'b00 : quad_q), row[9:0], 3'((MUT == 6) ? k : LB + k)};
+            o_sec <= {d_mir, d_mir ? 2'b00 : ((MUT == 3) ? 2'b00 : quad_q), row[9:0], ((MUT == 6) ? 3'(k) : lbv + 3'(k))};
             o_wr <= {8{rb(col, d_fmt)}};
             o_m <= 8'd1 << hr[2:0];
             l_sec <= o_sec; l_wr <= o_wr; l_m <= o_m;
-            o2_sec <= {d_mir, d_mir ? 2'b00 : ((MUT == 3) ? 2'b00 : quad_q), row[9:0], 3'(((MUT == 6) ? k : LB + k) + 4)};
+            o2_sec <= {d_mir, d_mir ? 2'b00 : ((MUT == 3) ? 2'b00 : quad_q), row[9:0], ((MUT == 6) ? 3'(k) : lbv + 3'(k)) + 3'd4};
             o2_wr <= {8{rb(col, d_fmt)}};
             o2_m <= 8'd1 << hr[2:0];
             l2_sec <= o2_sec; l2_wr <= o2_wr; l2_m <= o2_m;

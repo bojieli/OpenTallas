@@ -2,7 +2,7 @@
 `default_nettype none
 // HBM-B-RTL1 2026-10-17 (plan (b) d4g): LOCKSTEP of the two quadrant writers against the d4f stack writer.
 //   ref = ot_hbm_sm_vm_wr_q_t_lanes (d4f smw_<stack>, 8 SMs, quad QW)
-//   w   = ot_hbm_sm_vm_wr_q_t_lanes4 #(LB 0) quad QW  <- SMs 0-3      e = ot_hbm_sm_vm_wr_q_t_lanes4 #(LB 4) quad QE <- SMs 4-7
+//   w   = ot_hbm_sm_vm_wr_q_t_lanes4 lbase 0, quad QW <- SMs 0-3      e = ot_hbm_sm_vm_wr_q_t_lanes4 lbase 1, quad QE <- SMs 4-7
 // All three take the SAME host programme (writer descriptors as command-calendar entries through the real host ingress,
 // tgt 160) and the SAME SM result streams (the schedule of tb_hbm_sm_vm_wr_q_t_lanes: SUB=4 bursts, K gaps, 5 descriptors
 // incl. BF16 rounding, mirror, P 1..8; ops 1 and 3 select bank half 1 via calendar bit cmd[26], which the 26-bit d4f
@@ -40,9 +40,9 @@ module tb_hbm_sm_vm_wr_q_t_lanes4_lockstep;
         `SM(0,0,0,wq_ref), `SM(1,1,1,wq_ref), `SM(2,2,2,wq_ref), `SM(3,3,3,wq_ref),
         `SM(4,4,4,wq_ref), `SM(5,5,5,wq_ref), `SM(6,6,6,wq_ref), `SM(7,7,7,wq_ref),
         .configured(c_ref), .fault(f_ref), .active(a_ref));
-    ot_hbm_sm_vm_wr_q_t_lanes4 #(.DEPTH(4), .LB(0), .MUT(0)) u_w(`HOST, .quad(2'(QW)),
+    ot_hbm_sm_vm_wr_q_t_lanes4 #(.DEPTH(4), .MUT(0)) u_w(`HOST, .quad(2'(QW)), .lbase(1'b0),
         `SM(0,0,0,wq_w), `SM(1,1,1,wq_w), `SM(2,2,2,wq_w), `SM(3,3,3,wq_w), `SMT(0,0,wq_w), `SMT(1,1,wq_w), `SMT(2,2,wq_w), `SMT(3,3,wq_w), .configured(c_w), .fault(f_w), .active(a_w));
-    ot_hbm_sm_vm_wr_q_t_lanes4 #(.DEPTH(4), .LB(4), .MUT(`MUT)) u_e(`HOST, .quad(2'(QE)),
+    ot_hbm_sm_vm_wr_q_t_lanes4 #(.DEPTH(4), .MUT(`MUT)) u_e(`HOST, .quad(2'(QE)), .lbase(1'b1),
         `SM(0,4,0,wq_e), `SM(1,5,1,wq_e), `SM(2,6,2,wq_e), `SM(3,7,3,wq_e), `SMT(0,0,wq_e), `SMT(1,1,wq_e), `SMT(2,2,wq_e), `SMT(3,3,wq_e), .configured(c_e), .fault(f_e), .active(a_e));
     integer axerr = 0;
     task automatic axw(input [11:0] a, input [31:0] d);
