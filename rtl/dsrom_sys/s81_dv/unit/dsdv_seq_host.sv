@@ -37,14 +37,14 @@
 // the ingest's receive FIFO, whose overflow faults).
 // Every leaf input lands in a flop, every leaf output leaves a flop.  Single clock ck (stream); per-leaf ot_rst_relay.
 // Fixed latencies in edges, counted from the edge that captures an input pin (asserted by tb_dsdv_seq_host): rung
-// vi -> vo 6 each way (L0 1, L1 1, vstop 2, L3 1, L4 1); f_ks captured at t -> issuer samples job_v at t + 3 -> the
-// command of calendar age a leaves the issuer register at t + 4 + a; V command register -> vo pin + 7; gunit job -> cw
+// vi -> vo 6 + RL each way (L0 1 + RL, L1 1, vstop 2, L3 1, L4 1; RL 1 default = L0 rung landed at both faces); f_ks captured at t -> issuer samples job_v at t + 3 -> the
+// command of calendar age a leaves the issuer register at t + 4 + a; V command register -> vo_n pin + 7, vo_s pin + 7 + RL; gunit job -> cw
 // pin + 3, host 0x14 word captured at e -> cw pin e + 6; svc command
 // register -> s_j pin + 2; issuer KIT -> t_kd pin + 3.  Calendar done rows: V / gunit command = issue + 5 (posted);
 // svc command = issue + 5 + LS, LS = s_j pin edge -> s_jd capture edge of the svc chain (compiler-priced, p4i).
 // MUT (bench negative controls): 1 context splice dropped, 2 svc tag {slot, op} -> {slot, op + 1}, 3 L4 rung hop
 // missing (latency 5), 4 V completion one edge late, 5 W svc half dropped from the job-done / status merge, 6 host
-// writes routed by the wrong PC bit.
+// writes routed by the wrong PC bit, 9 L0 rung landing stage dropped (latency 6 + RL - 1).
 // Two svc halves (RTL-BUILD-S81 10-18, residual bind5 (b)/(c)): s_j is broadcast to both entries (W rsv_05, E rsv_11);
 // s_jd_w / s_jd_e merge in L0 (done when both halves reported, at the later half's edge; same pin -> jd_o edge count as
 // the one-half unit), s_hw_w / s_hw_e + s_hc_w / s_hc_e are dsfd_host_sd's two stacks (sector -> the half owning its PC,
@@ -61,7 +61,7 @@ module dsdv_sh_ft #(parameter integer V = 276) (
 endmodule
 
 // ---------------------------------------------------------------- L0: link leaf
-module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0) (
+module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parameter integer RL = 1) (
     input  wire          ck,
     input  wire          ck_ih,           // host ingest RX root (ingest clk_h), same stream clock as ck, own CTS root
     input  wire          ck_ic,           // host ingest core root (ingest clk_i), same stream clock as ck, own CTS root
@@ -93,17 +93,30 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0) (
     input  wire          vf_i             // L2 fault (via L1)
 );
     wire [0:0] rr; ot_rst_relay #(.REGIONS(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
-    // ---- rung hop
-    always @(posedge ck) begin rn_o <= vi_s; vo_s <= rs_i; end
+    // ---- rung hop.  RL 1 (S81-SHLK2 10-18, default): LANDED at both faces -- each direction is two flops, the capture flop
+    // beside its input pin and the launch flop beside its output pin (vi_s -> vi_q (S face) -> rn_o (N face); rs_i -> rs_q
+    // (N face) -> vo_s (S face)), +1 edge each way.  RL 0 = the single-flop hop of the APIPE-6 view 743e0021b, whose one
+    // flop could sit at only ONE of the two faces 136 um apart: io_flop_at_pins put both rows at N (y 131-134), so vo_s
+    // carried 136 um of output wire (native launch 254.9 > 220, vo_s[251]) and vi_s 136 um of input wire (capture 188.2).
+    // MUT 9: the landing stage dropped (RL 0 behaviour under an RL 1 bench: rung latency one edge short).
+    generate if (RL != 0 && MUT != 9) begin : g_rl
+        reg [V-1:0] vi_q, rs_q;
+        always @(posedge ck) begin vi_q <= vi_s; rn_o <= vi_q; rs_q <= rs_i; vo_s <= rs_q; end
+    end else begin : g_r1
+        always @(posedge ck) begin rn_o <= vi_s; vo_s <= rs_i; end
+    end endgenerate
     // ---- pin flops
-    reg [514:0] fi; reg [52:0] ks_q; reg [1:0] jdw_q, jde_q, rg_q; reg [3:0] lf_q; reg [53:0] kd_q; reg [32:0] j_q;
+    reg [514:0] fi; reg [52:0] ks_q; reg [1:0] jdw_q, jde_q, rg_q, rgw_l, rge_l; reg [3:0] lf_q; reg [53:0] kd_q; reg [32:0] j_q;
     reg [5:0] sq_q; reg vf_q;
     // valid / event bits gated by the relayed reset, payload bits not (S81U-SEQ3: 891 reset loads at gate 8940e10e9)
     always @(posedge ck) begin
         fi <= {f_host[514:1], rn & f_host[0]};
         ks_q <= {rn & f_ks[52], f_ks[51:0]}; jdw_q <= {2{rn}} & s_jd_w; jde_q <= {2{rn}} & s_jd_e; lf_q <= f_lf;
-        // region status of both halves: fault = OR, live = AND (MUT 5: the W half is dropped)
-        rg_q <= {2{rn}} & ((MUT == 5) ? st_rg_e : {st_rg_w[1] | st_rg_e[1], st_rg_w[0] & st_rg_e[0]});
+        // region status of both halves: each pin lands in its own flop beside its pin (st_rg_w NE corner of the E face,
+        // st_rg_e SE corner of the S face: one folding flop between them sat 130 um from st_rg_e, capture 201.0 > 190 in
+        // the APIPE-6 view; S81-SHLK2 10-18, +1 edge on the status fold), then fault = OR, live = AND (MUT 5: W dropped)
+        rgw_l <= st_rg_w; rge_l <= st_rg_e;
+        rg_q <= {2{rn}} & ((MUT == 5) ? rge_l : {rgw_l[1] | rge_l[1], rgw_l[0] & rge_l[0]});
         kd_q <= {rn & kd_i[53], kd_i[52:0]}; j_q <= {rn & j_i[32], j_i[31:0]}; sq_q <= sq_i; vf_q <= vf_i;
     end
     // ---- to / from L1 and the unit pins (flop-last)
@@ -354,7 +367,7 @@ module dsdv_sh_vc #(parameter integer V = 276, parameter integer MUT = 0) (
 endmodule
 
 // ---------------------------------------------------------------- the unit
-module dsdv_seq_host #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0) (
+module dsdv_seq_host #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0, parameter integer RL = 1) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [7:0]    tap_k, sink_k,   // vstop straps (captured pins); seqhost: 0 / 0
@@ -370,7 +383,7 @@ module dsdv_seq_host #(parameter integer V = 276, parameter integer STAGE = 0, p
     wire [V-1:0] n01, s10, n12, s21, n23, s32, n34, s43;
     wire [35:0] pw01; wire [8:0] pl01; wire [193:0] tw01, tw12; wire [52:0] ks01; wire [53:0] kd10; wire [32:0] j10;
     wire [1:0] jd01; wire [5:0] sq10; wire vf10, vf21; wire [84:0] cn12, cs12, cg12; wire [26:0] dn21; wire [266:0] cf01, cf12;
-    dsdv_sh_lk #(.V(V), .MUT(MUT)) u_l0 (.ck(ck), .ck_ih(ck), .ck_ic(ck), .rst_n(rst_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(t_kd),
+    dsdv_sh_lk #(.V(V), .MUT(MUT), .RL(RL)) u_l0 (.ck(ck), .ck_ih(ck), .ck_ic(ck), .rst_n(rst_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(t_kd),
         .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w),
         .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .vi_s(vi_s), .vo_s(vo_s),
         .rn_o(n01), .rs_i(s10), .pw_o(pw01), .pl_o(pl01), .tw_o(tw01), .cf_o(cf01), .ks_o(ks01), .kd_i(kd10), .j_i(j10), .jd_o(jd01),

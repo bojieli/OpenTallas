@@ -11,7 +11,7 @@
 //                expected unit output: engine 0 / 1 -> CTL beat on vo_n / vo_s (template + context splice, independent
 //                model) at +D+LVO, engine 2 -> cw (gunit job) at +D+LCW, engine 2 -> cw (gunit job) at +D+LCW, engine 4 -> s_j {1, arg, slot, op} at +D+LJ; host 0x14 rows -> cw at +LCF; host 0x14 rows -> cw at +LCF; KIT -> t_kd at +D+LKD.
 //   rung         random traffic both ways (single beats, XQ / XB 4-fragment beats) only in slots the compiled program
-//                leaves free; expected vo = arrival 6 edges later or the injected beat.
+//                leaves free; expected vo = arrival LR = 6 + RL edges later or the injected beat (V south at +D+LVS, LVS = LVO + RL).
 //   svc chain    a fixed-latency model per half (RTL-BUILD-S81 10-18): s_jd_w done LS edges after each s_j (the W half is
 //                the far one), s_jd_e done LS - LSD edges after it; the unit's merged done must land at LS (calendar
 //                row unchanged).  s_hw_w / s_hw_e must each equal the golden's hw on the cycles the golden sector routes
@@ -22,7 +22,9 @@
 // contexts live), one KIT, one END; 6 jobs.  +collide=1: one rung arrival is placed on an injection slot of the last
 // job and the unit's status fault must rise (wf[0]).  PASS line "SEQHOST PASS".
 module tb_dsdv_seq_host;
-    localparam integer V = 276, D = 20, LVO = 7, LJ = 2, LKD = 3, LR = 6, LS = 9, LCW = 3, LCF = 6;
+    // S81-SHLK2 10-18: RL = the unit's L0 rung landing (default 1): rung vi -> vo 6 + RL each way, V south 7 + RL
+    localparam integer RL = 1;
+    localparam integer V = 276, D = 20, LVO = 7, LVS = LVO + RL, LJ = 2, LKD = 3, LR = 6 + RL, LS = 9, LCW = 3, LCF = 6;
     localparam integer DV_V = 5, DV_S = LS + 5, LSD = 3;
 `ifdef TB_HSH
     localparam integer HSH = `TB_HSH;
@@ -44,7 +46,7 @@ module tb_dsdv_seq_host;
     wire cw_v; wire [9:0] cw_a; wire [255:0] cw_d;
     wire [32:0] s_j; reg [1:0] s_jd_w = 0, s_jd_e = 0; wire [291:0] s_hw_w, s_hw_e; reg [8:0] s_hc_w = 0, s_hc_e = 0;
     reg [1:0] st_rg_w = 2'b01, st_rg_e = 2'b01; integer stdrop, nhw_w = 0, nhw_e = 0, nmk = 0;
-    dsdv_seq_host #(.V(V), .MUT(MUT)) dut (.ck(ck), .rst_n(rst_n), .tap_k(8'h00), .sink_k(8'h00), .vi_s(vi_s), .vo_s(vo_s),
+    dsdv_seq_host #(.V(V), .MUT(MUT), .RL(RL)) dut (.ck(ck), .rst_n(rst_n), .tap_k(8'h00), .sink_k(8'h00), .vi_s(vi_s), .vo_s(vo_s),
         .vi_n(vi_n), .vo_n(vo_n), .f_host(f_host), .t_host(t_host), .f_lf(4'b0101), .f_ks(f_ks), .t_kd(t_kd),
         .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e),
         .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d));
@@ -169,7 +171,7 @@ module tb_dsdv_seq_host;
             c = g_cd[84 * e +: 84];
             if (e == 0) begin EN[cyc + D + LVO] = beat(T[c[13:7]], c); RN[cyc + D + LVO] = 1; ncmd_n = ncmd_n + 1;
                 GDV[cyc + DV_V][0] = 1; GDT[cyc + DV_V][0 +: 8] = {c[83], c[6:0]}; end
-            if (e == 1) begin ES[cyc + D + LVO] = beat(T[c[13:7]], c); RS[cyc + D + LVO] = 1; ncmd_s = ncmd_s + 1;
+            if (e == 1) begin ES[cyc + D + LVS] = beat(T[c[13:7]], c); RS[cyc + D + LVS] = 1; ncmd_s = ncmd_s + 1;
                 GDV[cyc + DV_V][1] = 1; GDT[cyc + DV_V][8 +: 8] = {c[83], c[6:0]}; end
             if (e == 2) begin ECW[cyc + D + LCW] = {1'b1, 2'b10, 7'd0, c[14], 214'd0, T[c[13:7]][41:0]}; ncmd_g = ncmd_g + 1;
                 GDV[cyc + DV_V][2] = 1; GDT[cyc + DV_V][16 +: 8] = {c[83], c[6:0]}; end
