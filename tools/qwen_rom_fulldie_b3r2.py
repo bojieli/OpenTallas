@@ -26,6 +26,7 @@ and adds, in this file:
          spine: 35,840 vertical bits cross y = 8.8 mm in the spine against 2,112 link bits (cut census below).
 """
 import argparse
+import collections
 import hashlib
 import importlib.util
 import json
@@ -1938,6 +1939,18 @@ P2P_REACH = _os_r.environ.get('OT_RELAY_P2P', '1') != '0'
 # (OT_RELAY_P2P_WORST_BIT=0 restores the centroid measure)
 P2P_WORST_BIT = _os_r.environ.get('OT_RELAY_P2P_WORST_BIT', '1') != '0'
 RELAY_NEVER = ('clock_trunk', 'reset')
+# Q-DIE11-RLY 10-18 (OT_SPLIT_FWD_LANES): reset pins a forwarded lane's hop-0 gate / landing reads (preference order),
+# the reset-lane sink pattern (those chains stay reset relays), and source masters with no clock (pad bumps)
+FWD_RST_PORTS = ('rst_n', 'rs', 'rs_n', 'rst', 'por_n')
+FWD_RST_RX = r'(^|_)(a?rst|rs|por)(_n)?$|rst_n$'
+FWD_NO_ROOT_SRC = ('qfd_sigbump',)
+
+
+def fwd_e_est(n):
+    """handoff E of an n-frame forwarded half-cycle lane before the die STA: the S81 p4j half-cycle pilot measured
+    E = ceil(N/2) + 1 for N stations ahead of the landed pin (results/arch/s81_dv_1016/landing/p4j_land2/land_plan.json:
+    N 1..7, 16 -> E 2..9); here the landing is the n-th capture, N = n - 1; at least 2 (the pilot minimum)."""
+    return max(2, math.ceil((n - 1) / 2) + 1)
 # Q-DIEPLAN3 10-17 (coordinator: pass-2 repair = one-by-one BFS over up to 400k sites per chain; q3h GENs > 5 h): the
 # per-search site budget (OT_RELAY_BFS_MAX, default the historical 400,000); a smaller budget fails a hopeless tier
 # fast and moves on to the next tier / rip-up instead of exhausting the die
@@ -4035,9 +4048,78 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         centre_hops_over_reach=sorted(b_ for b_, h_ in pad_hop_centre.items() if h_ > RELAY_REACH_OK))
     # ---- emit relays and hops
     from qwen_split.relay_clock import assigned_clock, collective_core_clock
+    # Q-DIE11-RLY 2026-10-18 (coordinator HANDOFF 0ea item 1, lanes/LANDING-CONTRACT.md): OT_SPLIT_FWD_LANES=1 turns every
+    # relay chain of n >= 1 frames into a FORWARDED-CLOCK HALF-CYCLE lane (rtl/qwen_split/qfd_fwd_lane.sv): frame 0 =
+    # hop-0 station (inverting ICG on the SOURCE root, opened by the source's released reset), frames 1..n-2 = half-cycle
+    # stations on the lane's own clock (n_fck_* nets, ck_o = ~ckf), frame n-1 = the LANDING (ring D 4 on the lane clock,
+    # read on the RECEIVING block's root at (rc - K) mod 8, K from the instance's own tie cells).  No relay is clocked by a
+    # far regional root any more: only hop-0 stations (beside the source) and landings (beside the sink) touch a root.
+    # The placement, the frames and the data hops are the plain plan's (byte-identical geometry); default off.
+    FWDL = _os_r.environ.get('OT_SPLIT_FWD_LANES', '0') == '1'
+    fwd_kind, fwd_attach, fwd_rows, fwd_skip, fwd_reclass = {}, [], [], [], set()
+    if FWDL:
+        _ckof, _rstof = {}, {}
+        for bid_, cl_, bits_, eps_ in m['buses']:
+            if cl_ == 'clock_trunk':
+                for i_, p_ in eps_:
+                    _ckof.setdefault(i_, []).append((bid_, p_.lstrip('*')))
+            elif bits_ == 1:
+                for i_, p_ in eps_[1:]:
+                    if p_.lstrip('*') in FWD_RST_PORTS:
+                        _rstof.setdefault(i_, {})[p_.lstrip('*')] = bid_
+        _fdi = _os_r.environ.get('OT_SPLIT_FWD_LANES_FDI', '0') == '1'
+        _lp = json.loads(Path(_os_r.environ['OT_SPLIT_LAND_PLAN']).read_text()) if _os_r.environ.get('OT_SPLIT_LAND_PLAN') else {}
+        _lpE = {r_['bid']: r_ for r_ in _lp.get('links', [])}
+
+        def _fwd_clock(inst):
+            c_ = _ckof.get(inst, [])
+            return next((b_ for b_, p_ in c_ if p_ == 'ck'), None) or next((b_ for b_, p_ in c_ if p_ == 'clk'), None) or \
+                (c_[0][0] if c_ else None)
+
+        def _fwd_rst(inst):
+            r_ = _rstof.get(inst, {})
+            return next((p_ for p_ in FWD_RST_PORTS if p_ in r_), None)
+
+        def _fwd_ok(pl_):
+            bid_, cl_, eps_ = pl_['bid'], pl_['cl'], pl_['eps']
+            if not pl_['frames']:
+                return 'zero-stage link (plain neighbour root -> root hop)'
+            if cl_ in ('link_spine', 'link_channel') or bid_ in pair:
+                return 'link / ready-pair family'
+            if cl_ == 'coll_fdi' and not _fdi:
+                return 'coll_fdi: PHY FDI side, clocked by the PHY (Q-DIE11-COLL owns the face clocks; OT_SPLIT_FWD_LANES_FDI=1 converts)'
+            if len(eps_) != 2:
+                return f'{len(eps_)} endpoints'
+            (si_, sp_), (di_, dp_) = eps_
+            if re.search(FWD_RST_RX, dp_.lstrip('*')) or re.match(r'(a?rst|rs_)', bid_) or '_rst' in bid_ or 'lrst' in bid_:
+                return 'reset lane (stays a reset relay chain; the reset tree / calendar owns it)'
+            if by[si_].master in FWD_NO_ROOT_SRC:
+                return f'source {by[si_].master} has no clock (pad bump): no source root to forward'
+            if _fwd_clock(si_) is None or _fwd_clock(di_) is None:
+                return 'source or sink without a clock trunk'
+            if _fwd_rst(si_) is None or _fwd_rst(di_) is None:
+                return f'source / sink reset pin not found (src {_fwd_rst(si_)}, dst {_fwd_rst(di_)})'
+            return None
     for idx, pl in sorted(plans.items()):
         bid, cl, bits, eps = pl['bid'], pl['cl'], pl['bits'], pl['eps']
         link = cl in ('link_spine', 'link_channel')
+        fwd = None
+        if FWDL and pl['frames']:
+            why_ = _fwd_ok(pl)
+            if why_ is None:
+                n_ = len(pl['frames'])
+                (si_, _), (di_, _) = eps
+                e_ = _lpE.get(bid, {}).get('E') or fwd_e_est(n_)
+                k_ = _lpE.get(bid, {}).get('K')
+                k_ = (e_ % 8) if k_ is None else int(k_)
+                fwd = dict(bid=bid, cl=cl, bits=bits, n=n_, src=si_, dst=di_, src_ck=_fwd_clock(si_), dst_ck=_fwd_clock(di_),
+                           src_rst=[si_, _fwd_rst(si_)], dst_rst=[di_, _fwd_rst(di_)], E=e_, K=k_,
+                           E_basis='land plan (die STA)' if bid in _lpE else 'estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA',
+                           K_basis='land plan' if _lpE.get(bid, {}).get('K') is not None else 'E mod 8 (assumes G = R0); re-derive with the reset calendar',
+                           stations=[], landing=None)
+                fwd_rows.append(fwd)
+            else:
+                fwd_skip.append(dict(bid=bid, cl=cl, bits=bits, n=len(pl['frames']), reason=why_))
         dom = next((by[x].domain for x, _ in eps if by[x].domain != 'cdc'), 'stream_1p2')
         assigned_ck = assigned_clock(m, bid, cl)
         if assigned_ck is None and not link and dom == 'serial_0p9' and (TP8 or {}).get('split') == 'compute':
@@ -4050,6 +4132,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             fi, fo, _fp = frame_faces(pts, k, (x0, y0, w, h), bits)       # the one face rule (pin_pts draws the same)
             pr_ = bid in pair
             mn = f'qfd_rly{"f" if link else ("p" if pr_ else "")}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
+            if fwd is not None:
+                n_ = fwd['n']
+                kind_ = ('landh0' if n_ == 1 else 'rlyh0') if k == 0 else ('landh' if k == n_ - 1 else 'rlyh')
+                mn = f'qfd_{kind_}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
+                fwd_kind[mn] = kind_
             masters_needed[mn] = (bits, fi, fo, w, h, link, pr_)
             nm = f'rly_{bid}_{k}'
             ccx, ccy = x0 + w / 2, y0 + h / 2
@@ -4064,7 +4151,30 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 rhop = pair[bid] if k == 0 else f'{pair[bid]}__r{k}'
                 rprev = (prev[0], prev[1][:-2] + '_r') if prev[1].endswith('_d') else (prev[0], prev[1] + '_r')
                 rhops.append((rhop, cl, 1, [(nm, 'a_r'), rprev]))
-            if link:
+            if fwd is not None:
+                kind_ = fwd_kind[mn]
+                if k == 0:
+                    # hop 0: the source block's own root at the hop-0 gate; the gate enable / lane epoch = the source's
+                    # released reset (attached to the source's reset net after the plan: the reset tree reaches it)
+                    ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck' if kind_ == 'rlyh0' else 'ck_s'))
+                    fwd_attach.append((nm, 'en', *fwd['src_rst']))
+                else:
+                    fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
+                    hops.append((f'fep_{bid}__r{k}', cl, 1, [(prev[0], 'eb'), (nm, 'ea')]))
+                if kind_ in ('landh', 'landh0'):
+                    # the landing reads on the RECEIVING block's root, from its regional reset; K strap from own ties
+                    ck_add.setdefault(fwd['dst_ck'], []).append((nm, 'ck'))
+                    fwd_attach.append((nm, 'rs', *fwd['dst_rst']))
+                    hi_ = [(nm, f'k{b_}') for b_ in range(3) if (fwd['K'] >> b_) & 1]
+                    lo_ = [(nm, f'k{b_}') for b_ in range(3) if not (fwd['K'] >> b_) & 1]
+                    if hi_:
+                        hops.append((f'ftk_{bid}_hi', 'constant', 1, [(nm, 'tie_hi')] + hi_))
+                    if lo_:
+                        hops.append((f'ftk_{bid}_lo', 'constant', 1, [(nm, 'tie_lo')] + lo_))
+                    fwd['landing'] = nm
+                else:
+                    fwd['stations'].append(nm)
+            elif link:
                 fck_new.append((f'fck_{hop}', 'clock_trunk', 1, [(prev[0], f'fck_{prev[1]}'), (nm, 'fck_a')]))
             elif assigned_ck is not None:
                 ck_add.setdefault(assigned_ck, []).append((nm, 'ck'))
@@ -4108,8 +4218,32 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if root_ is not None:
             B.append((key, 'clock_trunk', 1, [(root_, 'pll_' + key[4:])] + ck_add.pop(key)))
     missing = sorted(ck_add)
+    if fwd_attach:
+        # Q-DIE11-RLY: hop-0 gate enables on the SOURCE's reset net, landing rs on the RECEIVING block's reset net (the
+        # final hop that reaches the block's reset pin).  A relayed reset hop that gains these sinks becomes class
+        # 'reset', so the registered reset tree (_reset_tree, after the relays) builds it within reach, equal depth,
+        # synchronous to its sinks' root -- the landing rs releases on the block root at a fixed edge (R0).
+        where = {}
+        for j_, (b_, c_, n_, e_) in enumerate(B):
+            if n_ == 1:
+                for i_, p_ in e_[1:]:
+                    where.setdefault((i_, p_.lstrip('*')), j_)
+        for nm_, port_, inst_, rp_ in fwd_attach:
+            j_ = where.get((inst_, rp_))
+            if j_ is None:
+                raise ValueError(f'forwarded lanes: no reset net reaches {inst_}.{rp_} for {nm_}.{port_}')
+            b_, c_, n_, e_ = B[j_]
+            B[j_] = (b_, 'reset', n_, e_ + [(nm_, port_)])
+            if c_ != 'reset':
+                fwd_reclass.add(b_)
     m['buses'] = B + fck_new
     m['r21_stage_of'] = stage_of
+    if FWDL:
+        m['fwd_lanes'] = dict(schema='opentallas.qwen_split.fwd_lanes.v1', contract='lanes/LANDING-CONTRACT.md (Q-DIE11-RLY 10-18)',
+                              D=4, lanes=fwd_rows, skipped=fwd_skip, reclassed_reset_hops=sorted(fwd_reclass),
+                              masters=dict(collections.Counter(fwd_kind.values())),
+                              stations=sum(len(r_['stations']) for r_ in fwd_rows), landings=len(fwd_rows),
+                              plain_relays_left=sum(r_['n'] for r_ in fwd_skip))
     # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
@@ -4123,6 +4257,26 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
         for mn, (bits, fi, fo, w, h, link, pr_) in masters_needed.items():
+            kind_ = fwd_kind.get(mn)
+            if kind_:
+                # Q-DIE11-RLY forwarded half-cycle lane frame: data a / b on the faces as every relay, the lane epoch bit
+                # beside them (ea in / eb out), clocks / strap / tie / reset as area pins at the frame centre
+                M = v.Master(mn, w, h, 3, f'die forwarded-clock lane frame ({kind_}, rtl/qwen_split/qfd_fwd_lane.sv): '
+                             f'{bits}-b half-cycle stage, standard cells M1-M3, in {fi} out {fo}')
+                for port, f in (('a', fi), ('b', fo)):
+                    along = w if f in 'NS' else h
+                    pitch_tr = 2 if (bits + 2) * 0.096 + 2.0 <= along else 1
+                    M.face(port, bits, f, 'M5' if f in 'NS' else 'M4', along / 2, pitch_tr)
+                    ep_ = {'a': 'ea', 'b': 'eb'}[port]
+                    if (ep_ == 'ea' and kind_ in ('rlyh', 'landh')) or (ep_ == 'eb' and kind_ in ('rlyh0', 'rlyh')):
+                        M.face(ep_, 1, f, 'M5' if f in 'NS' else 'M4', along / 2 + (bits / 2 + 2) * 0.048 * pitch_tr, pitch_tr)
+                area_ = {'rlyh0': ('ck', 'en', 'ck_o'), 'rlyh': ('ckf', 'ck_o'),
+                         'landh': ('ckf', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault'),
+                         'landh0': ('ck_s', 'en', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault')}[kind_]
+                for j_, p_ in enumerate(area_):
+                    M.area(p_, 1, w / 2 + (-0.8 if j_ % 2 == 0 else 0.8), h / 2 + 1.62 * (j_ // 2) - 1.62 * ((len(area_) - 1) // 4), 1)
+                o[mn] = M
+                continue
             M = v.Master(mn, w, h, 3, f'die relay: one registered {bits}-b hop (ot_qwen_die_station TAP=0 family), '
                          f'standard cells M1-M3, in {fi} out {fo}' + (' + the 1-b ready hop against the flow' if pr_ else ''))
             for port, f in (('a', fi), ('b', fo)):
