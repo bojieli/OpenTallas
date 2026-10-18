@@ -18,6 +18,7 @@
 if {![info exists ::ot_mb_depth]}  { set ::ot_mb_depth 3 }
 if {![info exists ::ot_mb_rep_um]} { set ::ot_mb_rep_um 80 }
 if {![info exists ::ot_mb_pad]}    { set ::ot_mb_pad 1 }
+if {![info exists ::ot_mb_trunk_gap_um]} { set ::ot_mb_trunk_gap_um 6 }
 if {![info exists ::ot_mb_master]} { set ::ot_mb_master BUFx24_ASAP7_75t_R }
 
 proc ot_mb_legal {x y} {
@@ -51,7 +52,11 @@ proc ot_mb_build {sinks depth} {
   set bi [expr {$n / 2}]
   set l [ot_mb_build [lrange $srt 0 [expr {$bi - 1}]] [expr {$depth - 1}]]
   set r [ot_mb_build [lrange $srt $bi end] [expr {$depth - 1}]]
-  lassign [ot_mb_legal [expr {([lindex $l 1] + [lindex $r 1]) / 2}] [expr {([lindex $l 2] + [lindex $r 2]) / 2}]] x y
+  set ny [expr {([lindex $l 2] + [lindex $r 2]) / 2}]
+  # a split across macro columns sits on the trunk below the array: the SRAMs obstruct M1..M4, so (with the M5 layer
+  # cap) no horizontal clock wire can cross a column; only the vertical (M3/M5) column feeds run up the channels
+  if {$ax == 1} { set ny $::ot_mb_trunk_y }
+  lassign [ot_mb_legal [expr {([lindex $l 1] + [lindex $r 1]) / 2}] $ny] x y
   return [list node $x $y $l $r]
 }
 
@@ -66,6 +71,23 @@ proc ot_mb_buf {x y} {
 }
 
 proc ot_mb_wire {pnet px py x y} {
+  if {abs($x - $px) > 2000 && abs($y - $py) > 2000} {
+    lassign [ot_mb_seg $pnet $px $py $x $py] pnet k1
+    lassign [ot_mb_buf $x $py] b net; [$b findITerm A] connect $pnet
+    lassign [ot_mb_seg $net $x $py $x $y] pnet k2
+    return [list $pnet [expr {$k1 + 1 + $k2}]]
+  }
+  return [ot_mb_seg $pnet $px $py $x $y]
+}
+proc ot_mb_nrep {px py x y} {
+  set d [expr {abs($x - $px) + abs($y - $py)}]
+  return [expr {max(0, int(ceil($d / ($::ot_mb_rep_um * 1000.0))) - 1)}]
+}
+proc ot_mb_wstages {px py x y} {
+  if {abs($x - $px) > 2000 && abs($y - $py) > 2000} { return [expr {[ot_mb_nrep $px $py $x $py] + 1 + [ot_mb_nrep $x $py $x $y]}] }
+  return [ot_mb_nrep $px $py $x $y]
+}
+proc ot_mb_seg {pnet px py x y} {
   set d [expr {abs($x - $px) + abs($y - $py)}]
   set k [expr {int(ceil($d / ($::ot_mb_rep_um * 1000.0))) - 1}]
   for {set i 1} {$i <= $k} {incr i} {
@@ -78,8 +100,7 @@ proc ot_mb_wire {pnet px py x y} {
 
 proc ot_mb_stages {t px py} {
   lassign $t kind x y
-  set d [expr {abs($x - $px) + abs($y - $py)}]
-  set k [expr {max(0, int(ceil($d / ($::ot_mb_rep_um * 1000.0))) - 1)}]
+  set k [ot_mb_wstages $px $py $x $y]
   if {$kind eq "leaf"} { return $k }
   return [expr {$k + max([ot_mb_stages [lindex $t 3] $x $y], [ot_mb_stages [lindex $t 4] $x $y])}]
 }
@@ -143,6 +164,9 @@ proc ot_mb_tree {port} {
     }
   }
   if {![llength $sinks]} { error "OT_MB: no macro clock pins found" }
+  if {![info exists ::ot_mb_trunk_y]} {
+    set ::ot_mb_trunk_y [expr {[tcl::mathfunc::min {*}[lmap bb $::ot_mb_macros {lindex $bb 1}]] - int($::ot_mb_trunk_gap_um * 1000)}]
+  }
   set bt [$block findBTerm $port]; set pnet [$bt getNet]
   set bb [[lindex [$bt getBPins] 0] getBBox]
   lassign [ot_mb_legal [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]] tx ty
@@ -173,3 +197,11 @@ if {![info exists ::ot_mb_probe]} {
 #   pad 1 (default) puts the SRAM pins ~15 ps before the pin-flop mean (368.8; registers 346.8..432.0): early launch for
 #   rd_out -> rd_cap setup, early capture for the pin-flop -> SRAM hold.  Every tree wire <= 80 um, so routing cannot
 #   repeat the 200+ ps detour of the CTS column leaf.
+# GATE 1 of this tree (cbb750936, no trunk): at placement RC 336..366 TT, but after global route 495..702: the SRAMs
+#   obstruct M1..M4 and the layer cap is M5 (vertical), so every horizontal tree wire across a column detoured
+#   (clknet_mbr_4 342 um routed for ~130 um HPWL; same root cause as the r1/r2 CTS macro tree lateness).
+# Trunk fix (now): every split across columns sits on a trunk OT_MB_TRUNK_GAP_UM (6) below the array, wires are
+#   Manhattan with a corner buffer (horizontal at the parent's y, then vertical), so only vertical column feeds enter the
+#   channels.  Global-route probe on the r2 CTS placement (pad 1): SRAM clk TT 388.3..405.2 (spread 16.9) vs pin flops
+#   407.6..510.2 (mean 440.7); FF 323.8..346.3 (22.5) vs 337.0..428.5 (367.6).  rd_out -> rd_cap TT setup +123.3 (r2
+#   route -28.6); wa_pin -> w_addr_in FF hold +43.0 (r2 route -66.1).
