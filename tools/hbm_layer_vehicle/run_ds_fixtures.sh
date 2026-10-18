@@ -18,7 +18,9 @@ PATHS="tools compiler/models docs/HBM_GENERIC_INTERFACE.md results/abi3/deepseek
   results/rtl/w17_v41_1m_reference_token.json results/rtl/w19_hbm_tp96_isa.json results/rtl/dshbm_baseline_measured_20261004
   results/rtl/hbm_ds_layer_tput_1018/priced_layers.json results/arch/hbm_generic_iface_20261009"
 for p in $PATHS; do [ -n "$(git -C "$WT" ls-tree -r --name-only "$SHA" -- "$p" | head -1)" ] || { echo "MISSING_AT_REV $p"; exit 2; }; done
-git -C "$WT" archive "$SHA" $PATHS | ssh "$HOST" "tar -x -C $ROOT/src" || { echo "ARCHIVE_FAIL"; exit 2; }
+# plus every top-level file of results/rtl, results/abi3, results/arch (~66 MB): ds_native reads several (w19_sm_real_ops.json ...)
+TOP=$(git -C "$WT" ls-tree --name-only "$SHA" results/rtl/ results/abi3/ results/arch/ | while read -r f; do [ "$(git -C "$WT" cat-file -t "$SHA:$f")" = blob ] && echo "$f"; done)
+git -C "$WT" archive "$SHA" $PATHS $TOP | ssh "$HOST" "tar -x -C $ROOT/src" || { echo "ARCHIVE_FAIL"; exit 2; }
 ssh "$HOST" "test -f $ROOT/src/tools/hbm_layer_vehicle/ds_layer_fixtures.py && test -d $ROOT/refs && test -d $ROOT/ckpt" || { echo "SRC_OR_INPUTS_MISSING on $HOST"; exit 2; }
 echo "$SHA" | ssh "$HOST" "cat > $ROOT/src/REV"
 NOAVX="AVX512F AVX512CD AVX512_KNL AVX512_KNM AVX512_SKX AVX512_CLX AVX512_CNL AVX512_ICL AVX512_SPR AVX512_SPR"
