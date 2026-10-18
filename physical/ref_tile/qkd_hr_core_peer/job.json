@@ -2,12 +2,12 @@
  "name": "qkd_hr_core_peer-r2-COMMIT",
  "block": "qkd_hr_core_peer",
  "ref_tile": true,
- "owner": "Claude:KV-HOSTCL",
+ "owner": "Claude:KV-CDC2",
  "purpose": "HOST root cluster r2 child qkd_hr_core_peer (pre-route gate + route; parent qkd_host_root is CRITICAL)",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/kvj-a3-1017",
+  "branch": "claude/kv-cdc2-peer-1018",
   "commit": "COMMIT"
  },
  "stages": {

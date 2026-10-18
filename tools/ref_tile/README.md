@@ -130,14 +130,17 @@ that lacks it (`SUBMIT_LINT BENCH_REQUIRED`) before any compute. The auto `lint`
 default `refuse`) / `"bench_other"` (every other job, default `warn`). Jobs ingested before the gate, and auto-react
 successors of those, are not refused.
 
-## Measured clock rule and structure-repeat limit (owner 2026-10-13)
+## Clock rule (owner 2026-10-17 0dq) and structure-repeat limit (owner 2026-10-13)
 
-**Clock rule.** Up to 15,000 sinks on one clock root pass. A larger root is allowed only with pre-route clock-tree
-evidence measured by `pre_route_gate.py <kit> --remote <host> --cts` on that kit: TT insertion delay at most 300 ps and
-leaf arrival spread at most 80 ps. The three numbers are constants in `tools/textbook_lint.py`
-(`CLK_ROOT_SINKS_MAX`, `CLK_INSERTION_MAX_PS`, `CLK_SPREAD_MAX_PS`). Sinks are counted on the synthesized netlist: flops
-plus one per hard-child or macro clock pin. A declared spine does not waive the rule and there is no spec waiver; the fix
-is hardened leaves with their own roots. CLOSED tiles are not re-judged.
+**Clock rule.** The check is the pin-flop spread (child flops for a cluster) at most 80 ps at BOTH TT and FF, measured
+by `pre_route_gate.py <kit> --remote <host> --cts` (ck_insertion boundary registers; the all-register leaf spread stands
+in for older records), plus a boundary matched to the neighbours by parent compensation or a landed link. More than
+15,000 sinks on one root or TT insertion over 300 ps is a WARN (guidance), never a FAIL. The three numbers are constants
+in `tools/textbook_lint.py` (`CLK_ROOT_SINKS_MAX`, `CLK_INSERTION_MAX_PS`, `CLK_SPREAD_MAX_PS`). A declared spine does not
+waive a spread FAIL and there is no spec waiver. CLOSED tiles are not re-judged. The boundary match is measured by
+`tools/hier_contract/native_pin_audit.py --view V --relative-to C` (and `cts_native_probe.py --relative-to C` on a CTS
+gate): C is the parent compensation in ps (`tt=..,ff=..`) or a neighbour view whose boundary mean the link lands on;
+launch is O - C, capture S + C, and every pin flop must arrive within 80 ps of C.
 
 - The gate prints a `clock_rule` item for every kit, with the measured insertion and spread when `--cts` ran, and a
   `--remote` run writes `<kit>/gate_result.json` v2. Commit that file with the kit: the submit gate reads it.
