@@ -246,5 +246,9 @@
    "^qfd_",
    "qfwd_"
   ]
- ]
+ ],
+ "bound_views": {
+  "_doc": "cell -> the view a current die binds when it is not the best-slack closed job's view; elements.py takes that view's native verdict (ELEM-GAPS/KV 10-18).",
+  "ot_qkh_lane8": {"design": "qwen_kvsys", "view": "physical/ref_tile/ot_qkh_lane8_m5/views/ot_qkh_lane8", "evidence": "origin/claude/kv-clock-1018 kv_expand.py:44 (kvs14b/kvs14c bind the _m5 view); native PASS launch 168.5 / capture 140.8 / spread TT 15.1 FF 14.7"}
+ }
 }
