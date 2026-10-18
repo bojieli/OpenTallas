@@ -264,7 +264,9 @@ class Module:
         generate-for / function-driven assign, or an instance of another known module."""
         if self._kind is not None:
             return self._kind
-        b = self.body
+        # a macro between master and instance name (`child `MUTP u_x (...)`, e.g. dsdv_gunit's `DSDV_GU_MUT) hid real
+        # instances from the regex below (S81-BIND3 10-17: dsdv_gunit reported STUB) -> drop `macro tokens first
+        b = re.sub(r'`\w+', ' ', self.body)
         if re.search(r'\balways(_ff|_comb|_latch)?\b', b) or re.search(r'\binitial\b[^;]*\$readmem', b):
             self._kind = 'real'; return 'real'
         for m in re.finditer(r'\bassign\b([^;]*)=([^;]*);', b):
