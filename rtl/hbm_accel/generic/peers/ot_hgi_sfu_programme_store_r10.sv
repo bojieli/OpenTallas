@@ -9,13 +9,27 @@
 // per-leaf registered hop: no 256-bit hop registers in the head; (3) the relay and the control_v-gated output
 // registers live in each leaf's S band, so the head holds no 2,213-bit register mass; (4) chain depth 0 leaves see
 // configuration on the r7c edge (no +1 hop).
-// PRICED CYCLES vs r7c: io_word / compiler_control D = 4, status 2, reset release 4 edges -- unchanged (lockstep).
+// PRICED CYCLES vs r7c: io_word D = 4, IO status 2, reset release 4 edges -- unchanged; programme calendar (compiler_control,
+// programme status) starts +1 edge after IO2 bit 26 (decision B below), absorbed by the compile schedule (0 cycles/token).
 // Configuration write path: chain depth k (0..2) lands k edges after r7c. Host contract: the first start
 // (io_start_v) must be sampled >= 4 edges after the last configuration write (r7c >= 1, r9 >= 2); programme load is
 // once per calendar load, so the per-token cost is 0 cycles.
-// Exactness: identical to r9/r7c on every edge (narrow-W check, ordinal agreement vs stripe 0, valid/active/done
+// Exactness (before decision B): identical to r9/r7c on every edge (narrow-W check, ordinal agreement vs stripe 0, valid/active/done
 // agreement, sticky faults, control_v gate); bench = tb_sfu_store_r10_lockstep (r7c vs r10, every output every edge)
 // + the canonical tb_hgi_sfu_split_equiv with STORE10=1.
+// DECISION B (coordinator 10-17 ~20:40, SFU-PS-3; leaf RTL unchanged): the r7c all-stripe agreement was leaf -> head ->
+// leaf COMBINATIONAL (up to ~1.58 mm in one cycle in any 11-leaf floorplan). Two changes remove every cross-leaf
+// one-cycle path:
+//  (1) each leaf gates its outputs on its OWN stripe status: in_cv[l] = calendar_v[l] & !fault[l] (stripe 7 / IO 2 also
+//      include their own narrow-W check). Exact in legal operation (all stripes lockstep); on a fault the faulting
+//      stripe's outputs are zeroed locally and the sticky store fault still raises `fault` (the host must not launch
+//      again); the not-yet-faulted stripes' words are not zeroed (fault-mode exception of the lockstep bench).
+//  (2) the programme start is REGISTERED in the head: p_sv_q <= rb & io_cv & IO2.calendar[26] -> the programme calendar
+//      starts ONE edge later than r7c relative to the IO calendar. compiler_control and programme_active/done/ordinal
+//      are r7c + 1 edge for the same IO image. COMPILE SCHEDULE: the HBM compiler places arith_start (io_word[470])
+//      ONE IO row earlier (ARITH_START_ADVANCE=1, tools/hbm_static/make_qswiglu_io_calendar.py io_store_r10.hex) so the
+//      core sees compiler_control on the r7c edge; io_word itself is unchanged (the core ignores bit 470).
+// Remaining head paths are single registered legs: leaf status -> head flop (agreement/fault/status), head flop -> leaf pin.
 module ot_hgi_sfu_programme_store_r10 #(
  parameter integer PAGE_AW=1, AW=10+PAGE_AW
 )(
@@ -111,7 +125,9 @@ module ot_hgi_sfu_programme_store_r10 #(
  wire [NL-1:0] lv,la,ld,lf,b26;
  wire [1:0] hz[0:NL-1];
  wire [31:0] ord[0:NL-1];
- wire p_cv,io_cv,p_sv;
+ wire [NL-1:0] own_cv;                          // decision B: per-leaf output gate = its own stripe status
+ wire io_cv,p_sv;
+ reg p_sv_q;
  for(genvar l=0;l<NL;l=l+1)begin:g_leaf
   localparam integer PR=pred(l);
   wire io=(l>=8);
@@ -128,7 +144,7 @@ module ot_hgi_sfu_programme_store_r10 #(
    .in_addr(a_in),.in_data(d_in),.out_addr(c_addr[l]),.out_data(c_data[l]),
    .in_start_v((l>=8)?io_sv:p_sv),.in_start_base((l>=8)?p_io_start_base:p_start_base),.in_legal((l>=8)?io_legal:p_legal),
    .in_span((l>=8)?io_span:p_span),.in_loops((l>=8)?p_io_start_loops:p_start_loops),.in_loops_one((l>=8)?io_lone:p_lone),
-   .in_cv((l>=8)?io_cv:p_cv),.out_cal(cal[l]),.out_v(lv[l]),.out_active(la[l]),.out_done(ld[l]),.out_fault(lf[l]),
+   .in_cv(own_cv[l]),.out_cal(cal[l]),.out_v(lv[l]),.out_active(la[l]),.out_done(ld[l]),.out_fault(lf[l]),
    .out_ord(ord[l]),.out_hz(hz[l]),.out_b26(b26[l]));
  end
  // ---- narrow-stripe W check (programme stripe 7: W=188; IO stripe 2: W=27), exactly as r9
@@ -144,9 +160,16 @@ module ot_hgi_sfu_programme_store_r10 #(
  wire [7:0] pf={lf[7]|(rbd1&&nb7_now)|nb7_s,lf[6:0]};
  wire [2:0] vio=lv[10:8],aio=la[10:8],dio=ld[10:8];
  wire [2:0] iof={lf[10]|(rbd1&&nbio_now)|nbio_s,lf[9:8]};
- assign p_cv=(&pv) && !(|pf);
- assign io_cv=(&vio) && !(|iof);
- assign p_sv=rb[2] && io_cv && b26[10];          // r7c: rb(stripe) & io[470]
+ assign own_cv[7:0]=pv & ~pf;                     // decision B: no cross-leaf AND on the output gate
+ assign own_cv[10:8]=vio & ~iof;
+ assign io_cv=(&vio) && !(|iof);                  // all-IO agreement: only into the registered programme start
+`ifdef OT_SFU_PSTORE10B_MUT_NOSHIFT
+ // MUTANT: programme start left combinational (r7c timing) -> must mismatch the +1 lockstep
+ always @(*)p_sv_q=rb[2] && io_cv && b26[10];
+`else
+ always @(posedge clk)p_sv_q<=rb[2] && io_cv && b26[10];   // r7c: rb(stripe) & io[470], +1 edge (decision B)
+`endif
+ assign p_sv=p_sv_q;
  wire [7:0] pmm;
  assign pmm[0]=1'b0;
  for(genvar s=1;s<8;s=s+1)begin:g_pmm assign pmm[s]=ord[s]!=ord[0]; end
