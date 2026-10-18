@@ -31,7 +31,7 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
     // ENG ports (RTL-BUILD-S81 10-18): idle here (the ENG collector is covered by tb_s81sl_slice_eng); x_mode / x_scale are
     // checked on every x_go; g_v must stay 0.
     reg [4:0] e_v = 0; reg [9:0] e_c = 0; reg [479:0] e_d = 0; reg eg_v = 0; reg [1:0] eg_c = 0; reg [31:0] eg_d = 0;
-    wire g_v; wire [1:0] g_c; wire [31:0] g_d;   // XR3: one copy (slice glue fan-out) wire x_mode; wire [31:0] x_scale;
+    wire g_v; wire [1:0] g_c; wire [31:0] g_d; wire x_mode; wire [31:0] x_scale;   // XR3: g_* one copy (slice glue fan-out)
     generate if (HB != 0) begin : g3
         ot_s81sl_xr3 u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo), .c_v(c_v), .c_d(c_d),
