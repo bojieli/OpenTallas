@@ -66,6 +66,31 @@ def load_index(bind, src, maps):
     idx, amb = dpb.rtl_index([r for r in roots if Path(r).exists()], [f for f in files if Path(f).exists()],
                              defines, files)
     missing = [f for f in files if not Path(f).exists()]
+    # AMBIGUOUS child modules (several different headers: e.g. ot_hdc_qadd in rtl/hdc/ot_hdc_fastfp.sv with #(L) and
+    # parameterless copies in rtl/chip/physical/*): rtl_index keeps the first path in sort order.  Re-pick the canonical
+    # definition: a bind rtl_file, then rtl/hdc, then the main rtl tree, then everything else (ref_tile kit copies last).
+    def rank(path):
+        q = str(path)
+        if q in files:
+            return 0
+        if '/rtl/hdc/' in q and '/physical/' not in q:
+            return 1
+        if '/rtl/' in q and '/rtl/chip/' not in q and '/physical/' not in q and '/test/' not in q:
+            return 2
+        if '/physical/ref_tile/' in q:
+            return 4
+        return 3
+    repicked = {}
+    for name, paths in amb.items():
+        best = sorted(paths, key=lambda q: (rank(q), q))[0]
+        if best != idx[name].path:
+            t = dpb.preprocess(dpb.strip_comments(Path(best).read_text(errors='replace')), defines)
+            for mod in dpb.parse_modules(t, best):
+                if mod.name == name:
+                    idx[name] = mod
+                    repicked[name] = best
+    load_index.repicked = repicked
+    load_index.rank = rank
     return idx, amb, files, roots, missing
 
 
@@ -305,8 +330,33 @@ def emit(args, nets, insts, pins, drv, loads, sel, idx, files, roots, bind, die_
     (od / f'{top}.sv').write_text('\n'.join(out) + '\n')
     masters = sorted({pins[i][0] for i in sel})
     always = [f for f in files if Path(f).exists()]
-    flist, unres, mods = closure_files(idx, masters, [])
+    defs = {d: '1' for d in bind.get('defines', [])}
+    rank = load_index.rank
+    for _ in range(6):
+        flist, unres, mods = closure_files(idx, masters, [])
+        moved = False
+        for f in flist:                      # same-header duplicates (rtl_index does not flag them): canonical wins
+            t = dpb.preprocess(dpb.strip_comments(Path(f).read_text(errors='replace')), defs)
+            for mod in dpb.parse_modules(t, f):
+                cur = idx.get(mod.name)
+                if cur is not None and cur.path != f and cur.path in flist and (rank(f), f) < (rank(cur.path), cur.path):
+                    idx[mod.name] = mod
+                    load_index.repicked[mod.name] = f
+                    moved = True
+        if not moved:
+            break
     # bind rtl_files that define a module of the closure (die glue, macro models) are already in flist through idx
+    # a file brought in for one module may define another module whose chosen definition is elsewhere: list them
+    conflicts = {}
+    for f in flist:
+        try:
+            t = dpb.preprocess(dpb.strip_comments(Path(f).read_text(errors='replace')), {d: '1' for d in bind.get('defines', [])})
+        except Exception:
+            continue
+        for mod in dpb.parse_modules(t, f):
+            if mod.name in idx and idx[mod.name].path != f and idx[mod.name].path in flist:
+                conflicts[mod.name] = [idx[mod.name].path, f]
+    emit.conflicts = conflicts
     pk = package_files(flist, roots)
     allf = pk + [f for f in flist if f not in pk]
     incd = sorted({str(Path(f).parent) for f in allf})
@@ -329,6 +379,8 @@ def emit(args, nets, insts, pins, drv, loads, sel, idx, files, roots, bind, die_
         'n_out_bits': sum(p['width'] for p in meta_ports if p['dir'] == 'output'),
         'die_undriven': {n: runs(b) for n, b in sorted(undriven.items())},
         'rtl_unresolved_children': unres, 'modules': len(mods), 'files': len(allf),
+        'ambiguous_repicked': getattr(load_index, 'repicked', {}),
+        'module_conflicts': conflicts,
     }
     (od / 'slice.json').write_text(json.dumps(rec, indent=1) + '\n')
     return rec
@@ -387,7 +439,8 @@ def main(argv=None):
     print(f"slice_cut: {a.top}: {rec['instances']} instances (+{added} grown), {len(rec['masters'])} masters, "
           f"in {rec['n_in_bits']} bits / out {rec['n_out_bits']} bits, {rec['files']} files, "
           f"die_undriven {sum(len(v) for v in rec['die_undriven'].values())} runs, unparsed {len(badsel)}, "
-          f"unresolved {len(rec['rtl_unresolved_children'])}")
+          f"unresolved {len(rec['rtl_unresolved_children'])}, repicked {len(rec['ambiguous_repicked'])}, "
+          f"conflicts {len(rec['module_conflicts'])}")
     return 0 if not badsel else 3
 
 
