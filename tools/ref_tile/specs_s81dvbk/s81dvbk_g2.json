@@ -15,7 +15,7 @@
  ],
  "outline": {
   "w": 172.8,
-  "h": 259.2
+  "h": 172.8
  },
  "pins": {
   "S": [
@@ -25,12 +25,12 @@
    "vo_s"
   ],
   "N": [
+   "vd",
    "vi_n",
    "vo_n"
   ],
   "W": [
    "ln0",
-   "vd",
    "ln2"
   ],
   "E": [
@@ -62,61 +62,61 @@
    90,
    168.8
   ],
-  "vi_n": [
+  "vd": [
    4,
-   84
+   87
+  ],
+  "vi_n": [
+   87,
+   128
   ],
   "vo_n": [
-   88.8,
+   128,
    168.8
   ],
   "ln0": [
    4,
    86.4
   ],
-  "vd": [
-   86.4,
-   172.8
-  ],
   "ln2": [
-   172.8,
-   255.2
+   86.4,
+   168.8
   ],
   "ln1": [
    4,
-   118
+   80
   ],
   "tap_k": [
-   118,
-   121
+   80,
+   83
   ],
   "sink_k": [
-   121,
-   124
+   83,
+   86
   ],
   "ik": [
-   124,
-   126
+   86,
+   88
   ],
   "ek": [
-   126,
-   128
+   88,
+   90
   ],
   "uid": [
-   128,
-   131
+   90,
+   93
   ],
   "eg_n": [
-   131,
-   133
+   93,
+   94.5
   ],
   "fault": [
-   133,
-   135
+   94.5,
+   96
   ],
   "ln3": [
-   137,
-   255.2
+   97,
+   168.8
   ]
  },
  "macros": [
@@ -144,7 +144,7 @@
    "v": "M3 M5"
   }
  },
- "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Glue: rung on S / N (clock centred on S), W face ln0 / vd / ln2 (merger or control W of it), E face ln1 / straps / ln3. The S81U-BK2 kit s81dvbk_g (259.2 x 216, clock pin in the SW corner) measured TT insertion 457.3 / spread 128.2 ps.",
+ "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Glue (square 172.8): rung on S / N (clock centred on S), vd on the W part of the N face (from the merger / control W of it), W face ln0 / ln2, E face ln1 / straps / ln3. The 172.8 x 259.2 trial (g2 gate 1) measured TT insertion 370.6 / spread 125.3 ps at 11% util. The S81U-BK2 kit s81dvbk_g (259.2 x 216, clock pin in the SW corner) measured TT insertion 457.3 / spread 128.2 ps.",
  "job": {
   "owner": "Claude:S81U-BK3",
   "branch": "claude/s81u2-bk-1017",
@@ -172,7 +172,7 @@
     ],
     "expect": "fail",
     "fail_regex": "^DSDV_BK_COL FAIL mut=3$",
-    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk2/col_mut3.txt"
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk3/col_mut3.txt"
    },
    {
     "name": "dsdv_bk_sel_exact",
@@ -195,7 +195,7 @@
     ],
     "expect": "fail",
     "fail_regex": "^DSDV_BK_SEL FAIL mut=3$",
-    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk2/sel_mut3.txt"
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk3/sel_mut3.txt"
    }
   ],
   "extra_paths": [

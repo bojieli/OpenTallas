@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  259.2,
-  216.0
+  220.32,
+  151.2
  ],
  "core": [
   2.16,
   2.16,
-  257.03999999999996,
-  213.84
+  218.16,
+  149.04
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -46,8 +46,8 @@
    "master": "ot_sram_1r1w_256x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 43.2,
-   "y": 56.16,
+   "x": 23.76,
+   "y": 23.76,
    "w": 172.824,
    "h": 41.064,
    "orient": "R0",
@@ -58,9 +58,9 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
    "master": "ot_sram_1r1w_256x256_m2_r2c2",
    "inst": null,
-   "idx": 1,
-   "x": 43.2,
-   "y": 118.8,
+   "idx": 0,
+   "x": 23.76,
+   "y": 86.4,
    "w": 172.824,
    "h": 41.064,
    "orient": "R0",
@@ -100,6 +100,10 @@
   "physical/common_flow/macro_edge_via_guard.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ss.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ss.lib",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib",

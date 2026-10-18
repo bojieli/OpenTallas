@@ -15,7 +15,7 @@
  ],
  "outline": {
   "w": 216.0,
-  "h": 172.8
+  "h": 108.0
  },
  "pins": {
   "S": [
@@ -60,16 +60,16 @@
    212
   ],
   "vd": [
-   43.2,
-   129.6
+   4,
+   96
   ],
   "ck": [
-   131,
-   134
+   97,
+   100
   ],
   "rst": [
-   134,
-   137
+   100,
+   103
   ]
  },
  "macros": [],
@@ -93,7 +93,7 @@
   },
   "io_hold_margin_ns": 0.0
  },
- "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Merger: S face lanes 0 / 1, N face lanes 2 / 3, E face vd (to the glue's W face) + clock.",
+ "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Merger (216 x 108, util ~0.5: the 216 x 172.8 trial measured 19,547 sinks TT 286.1 / spread 20.0 ps at util 31%): S face lanes 0 / 1, N face lanes 2 / 3, E face vd (to the glue's N face) + clock.",
  "job": {
   "owner": "Claude:S81U-BK3",
   "branch": "claude/s81u2-bk-1017",
@@ -121,7 +121,7 @@
     ],
     "expect": "fail",
     "fail_regex": "^DSDV_BK_COL FAIL mut=3$",
-    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk2/col_mut3.txt"
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk3/col_mut3.txt"
    }
   ],
   "extra_paths": [

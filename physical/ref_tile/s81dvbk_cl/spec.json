@@ -15,8 +15,8 @@
   "rst"
  ],
  "outline": {
-  "w": 259.2,
-  "h": 216.0
+  "w": 220.32,
+  "h": 151.2
  },
  "pins": {
   "N": [
@@ -31,33 +31,45 @@
  "pin_ranges": {
   "t_w": [
    4,
-   118
+   100
   ],
   "t_f": [
-   118,
-   121
+   100,
+   103
   ],
   "f_cr": [
-   121,
-   123
+   103,
+   105
   ],
   "ck": [
-   124,
-   127
+   106,
+   109
   ],
   "rst": [
-   127,
-   130
+   109,
+   112
   ],
   "c_in": [
-   134,
-   255.2
+   115,
+   216.3
   ]
  },
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
-   "count": 2
+   "count": 1,
+   "at": [
+    23.76,
+    23.76
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    23.76,
+    86.4
+   ]
   }
  ],
  "layer_cap": "M5",
@@ -80,7 +92,7 @@
   },
   "io_hold_margin_ns": 0.0
  },
- "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Lane: one master for all 4 lanes (S row R0, N row MX): t_w on the W half of the N face (to the merger), c_in on the E half (from the glue).",
+ "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Lane (220.32 x 151.2: the 259.2 x 216 trial measured TT 354.3 / spread 112.7 ps at 6% util): one master for all 4 lanes (S row R0, N row MX): t_w on the W half of the N face (to the merger), c_in on the E half (from the glue).",
  "job": {
   "owner": "Claude:S81U-BK3",
   "branch": "claude/s81u2-bk-1017",
@@ -108,7 +120,7 @@
     ],
     "expect": "fail",
     "fail_regex": "^DSDV_BK_COL FAIL mut=3$",
-    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk2/col_mut3.txt"
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk3/col_mut3.txt"
    }
   ],
   "extra_paths": [
