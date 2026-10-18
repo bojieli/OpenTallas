@@ -1,0 +1,9 @@
+SVG_FG1 GOGAP=100
+SVG_FG1 REPORT_IDENTICAL lines=9
+SM_GROUPS_ISSUED PASS fixed_go=1 go0=400 gogap=100 stack=0 rows=64 epochs=8 lbanks=4 first_done_ps=391251.843000 last_done_ps=974584.943000 steady_epoch_ps=83333.300000 bytes_per_epoch_per_SM=8704 tb_issue=0
+SVG_FG1 MUTANT_REJECTED msm1: SM_STACK actualPC mapping
+SVG_FG1 MUTANT_REJECTED msm4: SM_STACK actualPC mapping
+SVG_FG1 MUTANT_REJECTED mst: SM_STACK DUT fault cycle173 maskff
+SVG_FG1 MUTANT_REJECTED skew: SM_STACK go skew sm3 cycle576
+SVG_FG1 MUTANT_REJECTED earlygo: SM_STACK DUT fault cycle346 maskf9
+SVG_FG1_GATE PASS stack=0 gogap=100
