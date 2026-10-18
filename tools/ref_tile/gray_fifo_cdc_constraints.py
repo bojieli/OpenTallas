@@ -40,6 +40,7 @@ pointer bit crossing must be seen in the mapped graph. Not a physical-closure or
 import hashlib
 import json
 import re
+import shutil
 import subprocess
 import tempfile
 from fractions import Fraction
@@ -51,7 +52,8 @@ import cdc_sync_constraints as S
 POLICY = 'reviewed_gray_fifos'
 RELATIONSHIP_KIND = 'independent_clock_families'
 CORE_PERIOD_PS = 833.333
-FAMILIES = {'core': 833.333, 'host': 1000.0, 'ingest': 1666.667, 'phy': 1043.0}
+FAMILIES = {'core': 833.333, 'host': 1000.0, 'ingest': 1666.667, 'phy': 1043.0,
+            'hbm': 1024.0}    # HBM PHY CK/2 (RBH-STK 2026-10-18; cdc_sync_constraints ASYNC_RELATIONSHIP hbm_period_ps)
 SETUP_UNCERTAINTY_PS = 60.0
 RESET_SYNC = ('ot_reset_sync', 'rtl/lib/ot_reset_sync.sv',
               ('489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd',))
@@ -80,6 +82,17 @@ REVIEWED = {
                 ('wonl', 'wr_online', ('wr_online_r1', 'wr_online_r2'), 'w2r'),
                 ('ronl', 'rd_online', ('rd_online_w1', 'rd_online_w2'), 'r2w')),
         valid='conditioned', read_stage=None),
+    # ROOT-0330-CDC review 2026-10-18: binary wbin/rbin, Gray wgray/rgray registered from the next binary value on
+    # the pointer's own edge; async_reg 2-flop synchronisers wgray -> wg_r1 -> wg_r2 (read side), rgray -> rg_w1 ->
+    # rg_w2 (write side); storage written at wbin under we && !full on the same edge as the Gray update (a word is
+    # stable before its pointer is visible); full = (wgray == {~rg_w2[AW:AW-1], rg_w2[AW-2:0]}), empty = (rgray ==
+    # wg_r2), rdata = mem[rbin] combinational (FWFT): read-valid = rgray != wg_r2, the ot_link_afifo 'link' form.
+    # rd_freed is write-side (rg_w2 decode). AW >= 2 for the full encoding.
+    'ot_hbm_accel_cdc_fifo': dict(
+        path='rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv',
+        sha256=('6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b',),
+        chains=(('wptr', 'wgray', ('wg_r1', 'wg_r2'), 'w2r'), ('rptr', 'rgray', ('rg_w1', 'rg_w2'), 'r2w')),
+        valid='link', read_stage=None, min_ptr_bits=3),
 }
 STORAGE = re.compile(r'mem\[\d+\](?:\[\d+\])?')
 RESERVED_ATTRIBUTE = re.compile(rb'\b(?:src|hdlname|module\w*|cell_\w*|keep_hierarchy)\s*=')
@@ -105,7 +118,8 @@ def relationship(spec):
         raise GrayFifoError('reviewed_gray_fifos owns all clock/crossing constraints; custom timing hooks are unsupported')
     if spec.get('cdc_synchronizers') is not None:
         raise GrayFifoError('reviewed_gray_fifos cannot be combined with cdc_synchronizers')
-    if spec.get('children') or spec.get('macros'):
+    ext = extensions(spec)
+    if spec.get('children') or (spec.get('macros') and ext is None):
         raise GrayFifoError('reviewed_gray_fifos supports soft native leaves only; no hard children/macros')
     declared = spec.get('clock_entry_domains')
     if not isinstance(declared, dict) or 'core' not in declared or len(declared) < 2 or set(declared) - set(FAMILIES):
@@ -118,6 +132,107 @@ def relationship(spec):
     for name, d in declared.items():
         if not isinstance(d, dict) or d.get('ratio') != family_ratio(name):
             raise GrayFifoError(f'reviewed_gray_fifos {name} ratio must be {family_ratio(name)} ({FAMILIES[name]} ps family period)')
+
+
+EXTENSIONS = 'reviewed_gray_fifo_extensions'
+NAME = re.compile(r'[A-Za-z][A-Za-z0-9_]*')
+REF = re.compile(r'[A-Za-z_][A-Za-z0-9_.$\[\]]*')
+
+
+def extensions(spec):
+    """Opt-in extension mode (ROOT-0330-CDC 2026-10-18), absent = the original policy unchanged:
+
+        "reviewed_gray_fifo_extensions": {
+            "level_synchronizers": [{"name": "hbm_fault", "source": "u_wb.hbm_sticky", "chain": ["u_wb.hf1", "u_wb.hf2"]}],
+            "die_constant_inputs": ["quad"],
+            "why": "..."}
+
+    enables (1) declared hard macros (spec.macros) clocked by exactly one declared root, every input cone in that
+    family, outputs leaves of that family; (2) literal bus-bit clock roots; (3) declared 1-bit level synchronisers;
+    (4) declared die-constant strap inputs bounded into every family; (5) storage consumers mixing several FIFOs or
+    holding another role, each storage bit proved against its own FIFO's read-valid by an exact SAT miter."""
+    ext = spec.get(EXTENSIONS)
+    if ext is None:
+        return None
+    if not isinstance(ext, dict) or set(ext) - {'level_synchronizers', 'die_constant_inputs', 'why'}:
+        raise GrayFifoError(f'reviewed_gray_fifos {EXTENSIONS} must be an object with level_synchronizers / '
+                            'die_constant_inputs / why only (no false paths, groups or waivers)')
+    levels = ext.get('level_synchronizers', [])
+    if not isinstance(levels, list):
+        raise GrayFifoError('reviewed_gray_fifos level_synchronizers must be a list')
+    names, refs = set(), set()
+    for g in levels:
+        if not isinstance(g, dict) or set(g) - {'name', 'source', 'chain', 'why'}:
+            raise GrayFifoError('reviewed_gray_fifos level synchroniser entries are {name, source, chain[, why]}')
+        if not isinstance(g.get('name'), str) or not NAME.fullmatch(g['name']) or g['name'] in names:
+            raise GrayFifoError('reviewed_gray_fifos level synchroniser names must be distinct identifiers')
+        names.add(g['name'])
+        chain = g.get('chain')
+        if not isinstance(chain, list) or len(chain) < 2:
+            raise GrayFifoError(f'reviewed_gray_fifos level synchroniser {g["name"]} needs >= 2 destination stages')
+        for r in [g.get('source')] + chain:
+            if not isinstance(r, str) or not REF.fullmatch(r) or r in refs:
+                raise GrayFifoError(f'reviewed_gray_fifos level synchroniser {g["name"]}: register references are '
+                                    f'distinct literal names: {r!r}')
+            refs.add(r)
+    straps = ext.get('die_constant_inputs', [])
+    if not isinstance(straps, list) or len(set(straps)) != len(straps) or \
+            any(not isinstance(x, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', x) for x in straps):
+        raise GrayFifoError('reviewed_gray_fifos die_constant_inputs must be distinct literal input port names')
+    return ext
+
+
+def _macro_clock_pins(spec, root):
+    """{master: clock pin} of the declared hard macros from their actual Liberty views: exactly one `clock : true`
+    pin, every timing arc related to it, identical in every corner present."""
+    out = {}
+    root = Path(root).resolve()
+    for item in spec.get('macros', []):
+        if not isinstance(item, dict) or not isinstance(item.get('view'), str) or \
+                not re.fullmatch(r'[A-Za-z0-9_./+-]+', item['view']):
+            raise GrayFifoError('reviewed_gray_fifos macros need a literal view path')
+        view = (root / item['view']).resolve()
+        if not view.is_relative_to(root):
+            raise GrayFifoError('reviewed_gray_fifos macro view outside the source root')
+        master = view.name
+        if f'{item["view"]}/{master}_bb.v' not in spec['sources']:
+            raise GrayFifoError(f'reviewed_gray_fifos macro {master}: its blackbox {master}_bb.v must be a listed source')
+        found = set()
+        libs = sorted(view.glob(f'{master}_*.lib'))
+        if not libs:
+            raise GrayFifoError(f'reviewed_gray_fifos macro {master} has no Liberty view')
+        for lib in libs:
+            found.add(_liberty_clock(lib.read_text(), master))
+        if len(found) != 1:
+            raise GrayFifoError(f'reviewed_gray_fifos macro {master} clock pin differs between corners')
+        out[master] = found.pop()
+    return out
+
+
+def _liberty_clock(text, master):
+    text = re.sub(r'/\*.*?\*/', '', text, flags=re.S).replace('\\\n', ' ')
+    stack, clocks, related, in_cell = [], set(), set(), False
+    for tok in re.finditer(r'(\w+)\s*\(([^()]*)\)\s*\{|\}|(\w+)\s*:\s*("[^"]*"|[^;{}]+);', text):
+        if tok.group(1):
+            stack.append((tok.group(1), tok.group(2).strip().strip('"')))
+            continue
+        if tok.group(0) == '}':
+            if stack:
+                stack.pop()
+            continue
+        groups = [g for g, _ in stack]
+        if len(stack) < 2 or stack[1] != ('cell', master):
+            continue
+        pin = next((a for g, a in reversed(stack) if g in ('pin', 'bus')), None)
+        key, value = tok.group(3), tok.group(4).strip().strip('"')
+        if key == 'clock' and value == 'true' and pin is not None and groups[-1] in ('pin', 'bus'):
+            clocks.add(pin)
+        if key == 'related_pin' and 'timing' in groups:
+            related.update(value.split())
+    if len(clocks) != 1 or related - clocks:
+        raise GrayFifoError(f'reviewed_gray_fifos macro {master} must have exactly one Liberty clock pin relating '
+                            f'every arc (clocks {sorted(clocks)}, related {sorted(related)})')
+    return next(iter(clocks))
 
 
 def _elaborate_sources(spec, root):
@@ -304,8 +419,10 @@ def _yosys():
         raise GrayFifoError(str(e).replace('cdc_synchronizers', 'reviewed_gray_fifos')) from None
 
 
-def _netlist(document, spec):
+def _netlist(document, spec, macros=None, extended=False):
     try:
+        if extended:
+            return S.Netlist(document, spec['top'], spec, macros=macros, extended=True)
         return S.Netlist(document, spec['top'], spec)
     except S.CdcError as e:
         raise GrayFifoError(str(e).replace('cdc_synchronizers', 'reviewed_gray_fifos')) from None
@@ -336,6 +453,251 @@ def _scopes(document, spec, reviewed_files):
     return out
 
 
+def _extension_leaves(spec, ext, net, module, port_domain):
+    """Extension mode: (macro cell -> family, strap input bit -> port name), after proving every declared hard macro is
+    clocked directly by one declared root and every one of its input cones is in that family (or constant)."""
+    declared = {}
+    for item in spec.get('macros', []):
+        n = item.get('count', 1)
+        if type(n) is not int or n < 1:
+            raise GrayFifoError('reviewed_gray_fifos macro count must be a positive integer')
+        declared[Path(item['view']).name] = declared.get(Path(item['view']).name, 0) + n
+    actual = {}
+    for mc in net.macros.values():
+        actual[mc['type']] = actual.get(mc['type'], 0) + 1
+    if actual != declared:
+        raise GrayFifoError(f'reviewed_gray_fifos elaborated macros {actual} differ from the declared macros {declared}')
+    macro_domain = {}
+    for cname, mc in sorted(net.macros.items()):
+        name = cname.lstrip('\\')
+        ck = mc['conn'].get(mc['clock'], [])
+        if mc['dirs'].get(mc['clock']) != 'input' or len(ck) != 1 or ck[0] not in net.clock_domain:
+            raise GrayFifoError(f'reviewed_gray_fifos macro {name} clock pin {mc["clock"]} is not tied directly to one '
+                                'declared clock root')
+        fam = macro_domain[cname] = net.clock_domain[ck[0]]
+        for pin, bits in sorted(mc['conn'].items()):
+            if pin == mc['clock'] or mc['dirs'][pin] != 'input':
+                continue
+            for b in bits:
+                for leaf in net.cone(b):
+                    if leaf in net.flops:
+                        ldom = net.domain(leaf)
+                    elif net.driver.get(leaf, ('',))[0] == 'macro':
+                        ldom = net.clock_domain.get(net.macros[net.driver[leaf][1]]['conn'][
+                            net.macros[net.driver[leaf][1]]['clock']][0])
+                    else:
+                        ldom = port_domain.get(leaf)
+                    if ldom != fam:
+                        what = net.key(leaf) if leaf in net.flops else (net.driver.get(leaf) or ('', str(leaf)))[1]
+                        raise GrayFifoError(f'reviewed_gray_fifos macro {name} ({fam}) input {pin} reads {what} '
+                                            f'({ldom}); a macro must sit in one clock family')
+    straps = {}
+    for p in ext.get('die_constant_inputs', []):
+        if p not in module['ports'] or module['ports'][p]['direction'] != 'input':
+            raise GrayFifoError(f'reviewed_gray_fifos die-constant input {p} is not an actual input port')
+        bits = module['ports'][p]['bits']
+        if any(b not in port_domain for b in bits):
+            raise GrayFifoError(f'reviewed_gray_fifos die-constant input {p} must be a declared input of exactly one '
+                                'family (its IO budget) and not a clock')
+        for b in bits:
+            straps[b] = p
+    return macro_domain, straps
+
+
+class Aig:
+    """Structurally hashed and-inverter graph; literal 0/1 are constants, var v has literals 2v / 2v+1."""
+
+    def __init__(self):
+        self.nvars, self.ands, self.hash, self.inputs = 0, {}, {}, {}
+
+    def inp(self, key):
+        if key not in self.inputs:
+            self.nvars += 1
+            self.inputs[key] = 2 * self.nvars
+        return self.inputs[key]
+
+    def and_(self, a, b):
+        if a == 0 or b == 0 or a == b ^ 1:
+            return 0
+        if a == 1 or a == b:
+            return b
+        if b == 1:
+            return a
+        if a < b:
+            a, b = b, a
+        lit = self.hash.get((a, b))
+        if lit is None:
+            self.nvars += 1
+            lit = self.hash[(a, b)] = 2 * self.nvars
+            self.ands[self.nvars] = (a, b)
+        return lit
+
+    def or_(self, a, b):
+        return self.and_(a ^ 1, b ^ 1) ^ 1
+
+    def xor(self, a, b):
+        return self.or_(self.and_(a, b ^ 1), self.and_(a ^ 1, b))
+
+    def mux(self, s, a, b):          # s ? b : a
+        return self.or_(self.and_(s, b), self.and_(s ^ 1, a))
+
+    def blif(self, po):
+        """BLIF text of the cone of literal po (po not constant)."""
+        seen, order, stack = set(), [], [po >> 1]
+        while stack:
+            v = stack[-1]
+            if v in seen:
+                stack.pop()
+                continue
+            if v in self.ands:
+                kids = [x >> 1 for x in self.ands[v] if (x >> 1) not in seen]
+                if kids:
+                    stack.extend(kids)
+                    continue
+            seen.add(v)
+            order.append(v)
+            stack.pop()
+        ins = [v for v in order if v not in self.ands]
+        lines = ['.model miter', '.inputs ' + ' \\\n  '.join(' '.join(f'n{v}' for v in ins[i:i + 32])
+                                                           for i in range(0, len(ins), 32)), '.outputs po']
+        for v in order:
+            if v in self.ands:
+                a, b = self.ands[v]
+                lines += [f'.names n{a >> 1} n{b >> 1} n{v}', f'{1 - (a & 1)}{1 - (b & 1)} 1']
+        lines += [f'.names n{po >> 1} po', f'{1 - (po & 1)} 1', '.end', '']
+        return '\n'.join(lines)
+
+
+AIG_GATES = {
+    '$_BUF_': lambda g, p: p['A'], '$_NOT_': lambda g, p: p['A'] ^ 1,
+    '$_AND_': lambda g, p: g.and_(p['A'], p['B']), '$_NAND_': lambda g, p: g.and_(p['A'], p['B']) ^ 1,
+    '$_OR_': lambda g, p: g.or_(p['A'], p['B']), '$_NOR_': lambda g, p: g.or_(p['A'], p['B']) ^ 1,
+    '$_XOR_': lambda g, p: g.xor(p['A'], p['B']), '$_XNOR_': lambda g, p: g.xor(p['A'], p['B']) ^ 1,
+    '$_ANDNOT_': lambda g, p: g.and_(p['A'], p['B'] ^ 1), '$_ORNOT_': lambda g, p: g.or_(p['A'], p['B'] ^ 1),
+    '$_MUX_': lambda g, p: g.mux(p['S'], p['A'], p['B']), '$_NMUX_': lambda g, p: g.mux(p['S'], p['A'], p['B']) ^ 1,
+    '$_AOI3_': lambda g, p: g.or_(g.and_(p['A'], p['B']), p['C']) ^ 1,
+    '$_OAI3_': lambda g, p: g.and_(g.or_(p['A'], p['B']), p['C']) ^ 1,
+    '$_AOI4_': lambda g, p: g.or_(g.and_(p['A'], p['B']), g.and_(p['C'], p['D'])) ^ 1,
+    '$_OAI4_': lambda g, p: g.and_(g.or_(p['A'], p['B']), g.or_(p['C'], p['D'])) ^ 1,
+}
+
+
+def _aig_of(net, aig, bit, fresh, memo, valid=0):
+    """Literal of a netlist bit. Leaves (flop Q, input port, macro output) are shared variables, except the storage
+    bits s in `fresh` (the miter's second copy), which read valid ? s : s' with s' a fresh variable. A Yosys 'x' gate
+    pin is one free variable per gate pin, shared by both copies, so the proof holds for every value synthesis may
+    choose for it."""
+    stack = [bit]
+    while stack:
+        b = stack[-1]
+        if not isinstance(b, int):
+            if b not in ('0', '1'):
+                raise GrayFifoError(f'reviewed_gray_fifos undefined constant {b!r} in a storage-gating cone')
+            memo[b] = int(b)
+            stack.pop()
+            continue
+        if b in memo:
+            stack.pop()
+            continue
+        if fresh and fresh.isdisjoint(net.cone(b)):
+            memo[b] = _aig_of(net, aig, b, None, memo.setdefault('base', {}))
+            stack.pop()
+            continue
+        drv = net.driver.get(b)
+        if drv is None:
+            raise GrayFifoError(f'reviewed_gray_fifos undriven bit {b} in a storage-gating cone')
+        if drv[0] in ('flop', 'port', 'macro'):
+            leaf = aig.inp(('leaf', b))
+            memo[b] = aig.mux(valid, aig.inp(('fresh', b)), leaf) if fresh and b in fresh else leaf
+            stack.pop()
+            continue
+        if drv[0] == 'unsupported':
+            raise GrayFifoError(f'reviewed_gray_fifos unsupported cell {drv[2]} in a storage-gating cone')
+        missing = [x for x in drv[3].values() if x != 'x' and x not in memo]
+        if missing:
+            stack.extend(missing)
+            continue
+        memo[b] = AIG_GATES[drv[2]](aig, {k: aig.inp(('x', drv[1], k)) if x == 'x' else memo[x]
+                                          for k, x in drv[3].items()})
+        stack.pop()
+    return memo[bit]
+
+
+def _abc():
+    y = Path(_yosys())
+    for c in (y.with_name('yosys-abc'), shutil.which('yosys-abc')):
+        if c and Path(c).exists():
+            return str(c)
+    raise GrayFifoError('reviewed_gray_fifos extension storage proof requires yosys-abc next to Yosys')
+
+
+def _unsat(aig, po, abc):
+    if po == 0:
+        return True
+    if po == 1:
+        return False
+    with tempfile.TemporaryDirectory(prefix='ot-gray-fifo-miter-') as tmp:
+        path = Path(tmp) / 'miter.blif'
+        path.write_text(aig.blif(po))
+        # fraig first: the second copy merges with the first at every gating point (seconds on the real design);
+        # iprove decides whatever remains
+        run = subprocess.run([abc, '-q', f'read_blif {path}; strash; &get; &fraig -x; &put; iprove'],
+                             capture_output=True, text=True)
+    verdicts = re.findall(r'^\s*(UNSATISFIABLE|SATISFIABLE)\b', run.stdout + run.stderr, re.M)
+    if run.returncode or len(verdicts) != 1:
+        raise GrayFifoError('reviewed_gray_fifos storage-gating SAT miter undecided: ' + (run.stdout + run.stderr)[-800:])
+    return verdicts[0] == 'UNSATISFIABLE'
+
+
+def _valid_lit(net, aig, fifo, memo):
+    kind, terms = fifo['valid']
+    if kind == 'neq':
+        valid = 0
+        for a, b in terms:
+            valid = aig.or_(valid, aig.xor(_aig_of(net, aig, a, None, memo),
+                                           _aig_of(net, aig, b, None, memo)))
+        return valid
+    valid = 1
+    for b, polarity in terms:
+        x = _aig_of(net, aig, b, None, memo)
+        valid = aig.and_(valid, x if polarity else x ^ 1)
+    return valid
+
+
+def _miter_storage_proof(net, consumers, fifos):
+    """For every FIFO f and every consumer q reading f's storage S_f: no assignment with f's read-valid false makes
+    D_q(X, S_f) differ from D_q(X, S_f') (S_f' a fresh copy, every other leaf shared). Equivalent to the per-bit
+    BDD obligation (D|s=0 xor D|s=1) & !valid_f == 0 for every s in S_f (a function independent of each bit of a set
+    under a condition that does not read the set is independent of the set). The second copy reads
+    s'' = valid_f ? s : s', so the obligation is the unconditional equivalence D(X, S) == D(X, S'') (identical while
+    valid; S'' = S' free while invalid) and the copies merge at every gating point under fraiging. Exact: the miter
+    OR_q D_q xor D_q'' is proved UNSAT by ABC (&fraig -x, then iprove)."""
+    abc, aig, base = _abc(), Aig(), {}
+    by_fifo = {}
+    for q, owners in consumers.items():
+        for fid in owners:
+            by_fifo.setdefault(fid, []).append(q)
+    for fid, qs in sorted(by_fifo.items()):
+        fifo = fifos[fid]
+        valid = _valid_lit(net, aig, fifo, base)
+        fresh, memo = frozenset(fifo['storage']), {'base': base}
+        diffs = [(q, aig.xor(_aig_of(net, aig, net.flops[q]['d'], None, base),
+                             _aig_of(net, aig, net.flops[q]['d'], fresh, memo, valid))) for q in sorted(qs)]
+
+        def po(items):
+            d = 0
+            for _, x in items:
+                d = aig.or_(d, x)
+            return d
+        if _unsat(aig, po(diffs), abc):
+            continue
+        while len(diffs) > 1:        # name one actual failing consumer
+            half = diffs[:len(diffs) // 2]
+            diffs = diffs[len(diffs) // 2:] if _unsat(aig, po(half), abc) else half
+        raise GrayFifoError(f'reviewed_gray_fifos consumer {net.key(diffs[0][0])} loads FIFO {fifo["scope"] or "<top>"} '
+                            'storage while the FIFO read-valid is false (read not gated by the FIFO; exact SAT miter)')
+
+
 def lint(spec, root):
     try:
         return _lint(spec, root)
@@ -345,10 +707,11 @@ def lint(spec, root):
 
 def _lint(spec, root):
     relationship(spec)
+    ext = extensions(spec)
     hashes, reviewed_files = _elaborate_sources(spec, root)
     document = elaborate(str(Path(root).resolve()), spec['top'], hashes,
                          tuple(sorted(spec.get('params', {}).items())), _yosys())
-    net = _netlist(document, spec)
+    net = _netlist(document, spec, _macro_clock_pins(spec, root), True) if ext is not None else _netlist(document, spec)
     ds = spec['clock_entry_domains']
     period = {n: FAMILIES[n] for n in ds}
     port_domain = {}
@@ -361,6 +724,17 @@ def _lint(spec, root):
                 port_domain[b] = name
     for b in net.clock_domain:
         port_domain.pop(b, None)
+    macro_domain, strap_bits = {}, {}
+    if ext is not None:
+        macro_domain, strap_bits = _extension_leaves(spec, ext, net, m, port_domain)
+
+    def leaf_domain(leaf):
+        if leaf in net.flops:
+            return net.domain(leaf)
+        drv = net.driver.get(leaf)
+        if drv and drv[0] == 'macro':
+            return macro_domain[drv[1]]
+        return port_domain.get(leaf)
 
     def bits_of(scope, reg):
         prefix = scope + '.' if scope else ''
@@ -415,6 +789,9 @@ def _lint(spec, root):
             st = [bits_of(scope, s) for s in names]
             if not src:
                 raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} ({base}) lost its {src_reg} publication register')
+            if len(src) < r.get('min_ptr_bits', 1):
+                raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} ({base}) {cname} pointer has {len(src)} bits; '
+                                    f'the reviewed source needs >= {r["min_ptr_bits"]}')
             if len(st) < 2 or any(len(s) != len(src) for s in st):
                 raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} ({base}) {cname} synchroniser has '
                                     f'{len(st)} full-width stage(s); >= 2 destination stages are required')
@@ -488,6 +865,33 @@ def _lint(spec, root):
     if not fifos:
         raise GrayFifoError('reviewed_gray_fifos requires at least one actual reviewed FIFO instance')
     storage_owner = {q: fid for fid, f in fifos.items() for q in f['storage']}
+    levels = {}
+    for g in (ext or {}).get('level_synchronizers', []):
+        lid = f'l{len(levels)}'
+        src, st = bits_of('', g['source']), [bits_of('', r) for r in g['chain']]
+        if len(src) != 1 or any(len(x) != 1 for x in st):
+            raise GrayFifoError(f'reviewed_gray_fifos level synchroniser {g["name"]}: source and every stage must be '
+                                'one actual flop bit')
+        src, st = src[0], [x[0] for x in st]
+        sd, dds = net.domain(src), {net.domain(q) for q in st}
+        if len(dds) != 1 or not all(net.flops[q]['pos'] for q in st):
+            raise GrayFifoError(f'reviewed_gray_fifos level synchroniser {g["name"]} stages are not one posedge family')
+        dd = dds.pop()
+        if dd == sd:
+            raise GrayFifoError(f'reviewed_gray_fifos level synchroniser {g["name"]} is a same-family path ({sd})')
+        for j, q in enumerate(st):
+            if net.flops[q]['d'] != (src if j == 0 else st[j - 1]):
+                raise GrayFifoError(f'reviewed_gray_fifos level synchroniser {g["name"]} stage {j + 1} {net.key(q)} is '
+                                    'not a direct flop of the previous stage (logic or bypass in the synchroniser)')
+        if net.consumers.get(st[0], []) != [(net.flops[st[1]]['cell'], 'D')]:
+            raise GrayFifoError(f'reviewed_gray_fifos level synchroniser {g["name"]} stage 1 {net.key(st[0])} drives '
+                                'more than stage 2; a metastable stage must not be consumed')
+        tag(src, ('lsrc', lid, 'lvl', 0))
+        for j, q in enumerate(st):
+            tag(q, ('lsync1' if j == 0 else 'lstage', lid, 'lvl', j))
+        levels[lid] = dict(name=g['name'], src=sd, dst=dd, stages=len(st),
+                           max_delay_ps=round(min(period[sd], period[dd]) - SETUP_UNCERTAINTY_PS, 3))
+    straps_used = set()
 
     # Census of every actual cross-family dependence (flop D and asynchronous control, and output ports).
     consumers = {}
@@ -499,6 +903,8 @@ def _lint(spec, root):
                     ldom = net.domain(leaf)
                 elif leaf in port_domain:
                     ldom = port_domain[leaf]
+                elif net.driver.get(leaf, ('',))[0] == 'macro':
+                    ldom = macro_domain[net.driver[leaf][1]]
                 else:
                     raise GrayFifoError(f'reviewed_gray_fifos {net.key(q)} {pin} reads an undeclared input or a clock '
                                         f'as data (bit {leaf})')
@@ -514,9 +920,17 @@ def _lint(spec, root):
                         continue
                     raise GrayFifoError(f'reviewed_gray_fifos cross-family asynchronous control {lname} ({ldom}) -> '
                                         f'{net.key(q)} ({dom}); only an ot_reset_sync pipe may take it')
-                if leaf not in net.flops:
+                if leaf in strap_bits:
+                    straps_used.add((strap_bits[leaf], dom))
+                    continue
+                if leaf not in net.flops and leaf in port_domain:
                     raise GrayFifoError(f'reviewed_gray_fifos input {lname} ({ldom}) drives {net.key(q)} ({dom})')
+                if leaf not in net.flops:
+                    raise GrayFifoError(f'reviewed_gray_fifos macro output {lname} ({ldom}) drives {net.key(q)} ({dom}); '
+                                        'a hard macro is a leaf of its own clock family')
                 if lr and qr and lr[0] == 'src' and qr[0] == 'sync1' and lr[1:] == qr[1:]:
+                    continue
+                if lr and qr and lr[0] == 'lsrc' and qr[0] == 'lsync1' and lr[1] == qr[1]:
                     continue
                 if lr and lr[0] == 'mem':
                     fifo = fifos[lr[1]]
@@ -524,7 +938,7 @@ def _lint(spec, root):
                         raise GrayFifoError(f'reviewed_gray_fifos storage {lname} read on {dom}, not reader {fifo["reader"]}')
                     if qr and qr[0] == 'rstage' and qr[1] == lr[1]:
                         continue
-                    if qr is None or qr[0] == 'consumer':
+                    if qr is None or qr[0] == 'consumer' or ext is not None:
                         consumers.setdefault(q, set()).add(lr[1])
                         continue
                 raise GrayFifoError(f'reviewed_gray_fifos unapproved crossing {lname} ({ldom}) -> {net.key(q)} ({dom})'
@@ -536,11 +950,21 @@ def _lint(spec, root):
                 raise GrayFifoError(f'reviewed_gray_fifos declared output {p} is not an actual output port')
             for b in m['ports'][p]['bits']:
                 for leaf in net.cone(b):
-                    ldom = net.domain(leaf) if leaf in net.flops else port_domain.get(leaf)
+                    ldom = leaf_domain(leaf)
                     if ldom != name:
                         raise GrayFifoError(f'reviewed_gray_fifos output {p} ({name}) is combinational from '
                                             f'{net.key(leaf) if leaf in net.flops else leaf} ({ldom}); register it on {name}')
             outputs[p] = name
+    gated = {}
+    if ext is not None:
+        # (b) storage gating, extension mode: every storage bit against ITS OWN FIFO's read-valid, exact SAT miter.
+        _miter_storage_proof(net, consumers, fifos)
+        for q, owners in sorted(consumers.items()):
+            if q not in role and len(owners) == 1:
+                tag(q, ('consumer', next(iter(owners)), 'mem', 0))
+            else:
+                gated[q] = sorted(owners)
+        consumers = {}
     # (b) storage gating: exact BDD proof over the actual cone.
     bdd, cache = Bdd(), {}
     level = lambda b: (1 << 40) + b if b in storage_owner else b
@@ -585,6 +1009,21 @@ def _lint(spec, root):
             record['roles'].setdefault(cell, list(r))
     record['counts'] = {k: sum(1 for x in role.values() if x[0] == k)
                         for k in ('src', 'sync1', 'stage', 'mem', 'rstage', 'consumer', 'rst')}
+    if ext is not None:
+        for fid, f in record['fifos'].items():
+            f['storage_read'] = f['storage_read'] or any(fid in o for o in gated.values())
+        record['levels'] = levels
+        record['gated'] = {}
+        for q, owners in gated.items():
+            for k in net.names.get(q, []):
+                record['gated'][k] = owners
+            cell = net.flops[q]['cell'].lstrip('\\')
+            if not cell.startswith('$'):
+                record['gated'].setdefault(cell, owners)
+        record['straps'] = sorted({p for p, _ in straps_used})
+        record['strap_crossings'] = sorted(f'{p}->{d}' for p, d in straps_used)
+        record['macros'] = {c.lstrip('\\'): macro_domain[c] for c in sorted(macro_domain)}
+        record['counts'].update(gated=len(gated), lsrc=len(levels), macro=len(macro_domain))
     return record
 
 
@@ -602,8 +1041,16 @@ def bindings(record):
                      + ' '.join(f'{c} {n}' for c, n in sorted(f['chains'].items())) + '}}'
                      for fid, f in sorted(record['fifos'].items()))
     periods = ' '.join(f'{n} {p!r}' for n, p in sorted(record['periods_ps'].items()))
-    return (f'set ::ot_gf_roles [dict create {roles}]\nset ::ot_gf_fifos [dict create {fifos}]\n'
+    text = (f'set ::ot_gf_roles [dict create {roles}]\nset ::ot_gf_fifos [dict create {fifos}]\n'
             f'set ::ot_gf_periods [dict create {periods}]\nset ::ot_gf_uncertainty {SETUP_UNCERTAINTY_PS!r}\n')
+    if 'levels' not in record:
+        return text
+    levels = ' '.join('{' + lid + '} {src ' + v['src'] + ' dst ' + v['dst'] + ' bound ' + repr(v['max_delay_ps']) + '}'
+                      for lid, v in sorted(record['levels'].items()))
+    gated = ' '.join(_word(k) + ' {' + ' '.join(v) + '}' for k, v in sorted(record['gated'].items()))
+    straps = ' '.join('{' + p + '} 1' for p in record['straps'])
+    return text + (f'set ::ot_gf_levels [dict create {levels}]\nset ::ot_gf_gated [dict create {gated}]\n'
+                   f'set ::ot_gf_straps [dict create {straps}]\n')
 
 
 ASYNC_GUARD = '    if {[dict exists $async_pins [get_full_name $pin]]} continue'
@@ -617,7 +1064,103 @@ def extend(body, spec, root):
                                     '          continue\n')
     body = body.replace(ASYNC_GUARD, '    if {[dict exists $async_pins [get_full_name $pin]]} {ot_gf_async $pin $cells $inputs; continue}')
     body = body.replace(S.MARKER, '  ot_gf_complete $cells\n' + S.MARKER)
-    return bindings(record) + TCL + '\n' + body
+    if 'levels' not in record:
+        return bindings(record) + TCL + '\n' + body
+    if body.count(STRAP_GUARD) != 1:
+        raise GrayFifoError('reviewed_gray_fifos multi-root input ownership check changed; revalidate extension')
+    body = body.replace(STRAP_GUARD, STRAP_GUARD.replace(
+        '        set name [get_full_name $start]\n',
+        '        set name [get_full_name $start]\n        if {[ot_gf_strap $start $pin $name $expected $inputs]} continue\n'))
+    return bindings(record) + ext_tcl() + '\n' + body
+
+
+STRAP_GUARD = ('        set name [get_full_name $start]\n'
+               '        if {![dict exists $inputs $name] || [dict get $inputs $name] ne $expected} {\n')
+EXT_SUBSTITUTIONS = (
+    ('  if {$sk eq "" || $sf ne $tf || ![dict exists $::ot_gf_fifos $sf]} {\n',
+     '  if {[ot_gf_ext_crossing $start $pin $source $target $source_domain $target_domain $sk $sf $tk $tf]} return\n'
+     '  if {$sk eq "" || $sf ne $tf || ![dict exists $::ot_gf_fifos $sf]} {\n'),
+    ('    lassign [ot_gf_role $cell] k f c i\n',
+     '    lassign [ot_gf_role $cell] k f c i\n    if {[ot_gf_ext_complete $cell $domain $k $f]} continue\n'),
+    ('  puts "OT_GF STRUCTURAL_PASS',
+     '  ot_gf_ext_final\n  puts "OT_GF STRUCTURAL_PASS'),
+)
+
+
+def ext_tcl():
+    """TCL of the extension mode: the original procs with three hooks, plus the extension procs."""
+    text = TCL
+    for old, new in EXT_SUBSTITUTIONS:
+        if text.count(old) != 1:
+            raise GrayFifoError('reviewed_gray_fifos crossing TCL changed; revalidate extension')
+        text = text.replace(old, new)
+    return text + TCL_EXT
+
+
+TCL_EXT = r'''
+# OT_GF extension mode (ROOT-0330-CDC 2026-10-18): declared 1-bit level synchronisers, storage consumers proved gated by
+# each storage bit's own FIFO read-valid (several FIFOs, or a register with another role), die-constant strap inputs.
+proc ot_gf_gated_fifos {cell} {
+  set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  set names [list $full]
+  if {[regexp {^([^$]+)\$} $full -> base]} {lappend names $base}
+  foreach p [get_pins -quiet -of_objects [get_cells $cell]] {
+    if {[get_property $p direction] ne "output"} continue
+    foreach net [get_nets -quiet -of_objects $p] {lappend names [string map {\\ {}} [get_full_name $net]]}
+  }
+  set out {}
+  foreach n $names {if {[dict exists $::ot_gf_gated $n]} {foreach f [dict get $::ot_gf_gated $n] {dict set out $f 1}}}
+  return [dict keys $out]
+}
+proc ot_gf_ext_crossing {start pin source target source_domain target_domain sk sf tk tf} {
+  if {$sk eq "lsrc" && $tk eq "lsync1" && $sf eq $tf && [dict exists $::ot_gf_levels $sf]} {
+    set l [dict get $::ot_gf_levels $sf]
+    if {[list $source_domain $target_domain] ne [list [dict get $l src] [dict get $l dst]]} {
+      error "OT_GF: level crossing $source -> $target is $source_domain -> $target_domain, reviewed [dict get $l src] -> [dict get $l dst]"
+    }
+    ot_gf_bound $start $pin [dict get $l bound]
+    dict incr ::ot_gf_seen [list $sf lsrc lvl 0]
+    puts "OT_GF BOUNDED level $sf $source -> $target"
+    return 1
+  }
+  if {$sk eq "mem" && [dict exists $::ot_gf_fifos $sf] && $sf in [ot_gf_gated_fifos $target]} {
+    set f [dict get $::ot_gf_fifos $sf]
+    if {$source_domain ne [dict get $f writer] || $target_domain ne [dict get $f reader]} {
+      error "OT_GF: storage crossing $source -> $target is $source_domain -> $target_domain, reviewed [dict get $f writer] -> [dict get $f reader]"
+    }
+    ot_gf_bound $start $pin [dict get $f store]
+    dict incr ::ot_gf_seen [list $sf mem mem 0]
+    puts "OT_GF BOUNDED $sf mem mem -> gated $source -> $target"
+    return 1
+  }
+  return 0
+}
+proc ot_gf_ext_complete {cell domain k f} {
+  if {$k ni {lsrc lsync1 lstage}} {return 0}
+  set l [dict get $::ot_gf_levels $f]
+  set want [expr {$k eq "lsrc" ? [dict get $l src] : [dict get $l dst]}]
+  if {$domain ne $want} {error "OT_GF: level synchroniser register $cell ($f $k) is in $domain, reviewed $want"}
+  return 1
+}
+proc ot_gf_strap {start pin name expected inputs} {
+  set base $name
+  regexp {^([^\[]+)\[} $name -> base
+  if {![dict exists $::ot_gf_straps $base]} {return 0}
+  if {![dict exists $inputs $name]} {error "OT_GF: die-constant input $name has no declared IO family"}
+  if {[dict get $inputs $name] eq $expected} {return 0}
+  # (OpenSTA re-parses the calling command as a list: keep the bound a plain variable)
+  set bound [expr {[dict get $::ot_gf_periods $expected] - $::ot_gf_uncertainty}]
+  ot_gf_bound $start $pin $bound
+  dict incr ::ot_gf_seen [list strap $name $expected]
+  puts "OT_GF BOUNDED strap $name -> [get_full_name $pin] ($expected)"
+  return 1
+}
+proc ot_gf_ext_final {} {
+  dict for {l info} $::ot_gf_levels {
+    if {![dict exists $::ot_gf_seen [list $l lsrc lvl 0]]} {error "OT_GF: missing actual level synchroniser crossing $l"}
+  }
+}
+'''
 
 
 TCL = r'''
