@@ -146,6 +146,10 @@ module tb_hgi_coll_gq;
     integer r_str [0:NR-1] = '{72, 24, 24, 16, 56, 8};
     string r_vec [0:NR-1] = '{"", "", "expert_intermediate", "o_group", "engram_rows", ""};
     reg [255:0] srcw [0:NR-1][0:3][0:191]; reg [255:0] recw [0:NR-1][0:3][0:63];
+    // $readmemh staging (ROOT-0745 10-18): Verilator 5.050 (the closure loop's pinned simulator) rejects $readmemh into
+    // a slice of a multi-dimensional unpacked array ("loading non-variable"); 5.032 accepted it.  Load whole 1-D arrays,
+    // then copy the same words.
+    reg [255:0] ld_src [0:191]; reg [255:0] ld_rec [0:63];
     function automatic [15:0] sec(input integer q, input integer w); return {1'b0, 2'(q), 13'(w)}; endfunction
     task automatic frame_cfg(input integer q, input integer row, input [223:0] payload);
         @(negedge clk); cfg_v = 1; cfg_target = 8'hb0 + 8'(q); cfg_addr = 12'(row); cfg_data = {16'hc7a1, 4'b0, 12'(row), payload};
@@ -210,8 +214,10 @@ module tb_hgi_coll_gq;
         // source data
         for (integer row = 0; row < NR; row = row + 1) for (integer q = 0; q < 4; q = q + 1) begin
             if (r_qbg[row]) begin
-                $readmemh({VEC, "/", r_vec[row], "_q", $sformatf("%0d", q), "_src.hex"}, srcw[row][q], 0, 4 * r_bs[row] - 1);
-                $readmemh({VEC, "/", r_vec[row], "_q", $sformatf("%0d", q), "_rec.hex"}, recw[row][q], 0, r_f[row] - 1);
+                $readmemh({VEC, "/", r_vec[row], "_q", $sformatf("%0d", q), "_src.hex"}, ld_src, 0, 4 * r_bs[row] - 1);
+                $readmemh({VEC, "/", r_vec[row], "_q", $sformatf("%0d", q), "_rec.hex"}, ld_rec, 0, r_f[row] - 1);
+                for (integer w = 0; w < 4 * r_bs[row]; w = w + 1) srcw[row][q][w] = ld_src[w];
+                for (integer w = 0; w < r_f[row]; w = w + 1) recw[row][q][w] = ld_rec[w];
                 for (integer w = 0; w < 4 * r_bs[row]; w = w + 1) mem[q][r_src[row] + w] = srcw[row][q][w];
             end else for (integer w = 0; w < r_f[row]; w = w + 1) mem[q][r_src[row] + w] = payload(q, 100 * row + w);
         end
