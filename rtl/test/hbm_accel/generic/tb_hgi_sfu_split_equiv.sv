@@ -21,7 +21,7 @@ reg io_cfg_we=0,io_start_v=0;
  reg [10:0] io_cfg_addr=0;
  reg [255:0] io_cfg_data=0;
  reg [470:0] io_rows[0:IO_ROWS-1];
- // store-under-test IO image: = io.hex, except r10 decision B (SFU-PS-3): arith_start 1 row earlier (io_store_r10.hex)
+ // store-under-test IO image: = io.hex, except r10 (decision B + SFU-PS-4 relays): arith_start 2 rows earlier (io_store_r10.hex)
  reg [255:0] s_io_cfg_data=0;
  reg [470:0] s_io_rows[0:IO_ROWS-1];
  wire io_done;
@@ -104,7 +104,7 @@ reg io_cfg_we=0,io_start_v=0;
 `ifdef SFU_PSTORE_R7B
  localparam integer D=10;  // r7b store: r7 + SRAM pipelining: every calendar +3, programme started by the IO word -> +6
 `elsif SFU_PSTORE_R10
- localparam integer D=4;   // r10 store: 11 one-stripe spine leaves + head; datapath unchanged (cfg chain depth only); decision B programme start +1 absorbed by io_store_r10.hex (arith_start 1 row earlier)
+ localparam integer D=5;   // r10 store (SFU-PS-4 relays): io_word +1 output relay; programme start +2 (decision B + row launch relay) absorbed by io_store_r10.hex (arith_start 2 rows earlier) + output relay -> D=5, status 3 [was D=4 before the relays; old text: arith_start 1 row earlier)
 `elsif SFU_PSTORE_R9
  localparam integer D=4;   // r9 store: 4 hardened bank leaves; datapath unchanged (cfg write +1 only)
 `elsif SFU_PSTORE_R7D
@@ -181,6 +181,8 @@ reg io_cfg_we=0,io_start_v=0;
  reg [OW-1:0] ref_od[0:D-1];
 `ifdef SFU_PSTORE_R7B
  localparam integer DS=8;  // status outputs: r6 2 + 6
+`elsif SFU_PSTORE_R10
+ localparam integer DS=3;  // r10 relays (SFU-PS-4): per-row status pre-combine +1
 `else
  localparam integer DS=2;
 `endif
