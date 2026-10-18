@@ -8,6 +8,9 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../../../../.." && pwd);cd "$ROOT"
 OUT=$(realpath -m "${1:?out}");mkdir -p "$OUT"
 OPENBLAS_NUM_THREADS=1 python3 tools/hgi_coll_tkm_tp192_vectors.py --out "$OUT/vec" > "$OUT/vectors.log"
+# Verilator 5.050 hier makefile: "e86.sv e86.mk: ..." is a two-target rule; make -j runs its verilation TWICE at once
+# (PCH race: "one or more PCH files were found, but they were invalid").  Serialise hier_build's prerequisites only.
+export MAKEFLAGS="${MAKEFLAGS:+$MAKEFLAGS }--eval=.NOTPARALLEL: hier_build"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 C=rtl/hbm_accel/generic/collective
 common=("$C/tkm/tkm_tp192_hier.vlt" "$C/tkm/tb_hgi_coll_tkm_m_tp192_seg.sv" "$C/tkm/ot_hgi_coll_tkm_ctl.sv" "$C/tkm/ot_hgi_coll_tkm_static.sv" "$C/tkm/ot_hgi_coll_tkm.sv" "$C/tkm/ot_hgi_coll_tkm_buffer.sv" rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/common/landed_parent/ot_pl_land.sv)
