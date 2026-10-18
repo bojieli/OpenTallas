@@ -1,3 +1,27 @@
-{"schema":"opentallas.tile_visual_review.v1","tile":"qkd_d2d_static_r7q","reviewer":"coordinator (2026-10-18 ~01:40)","verdict":"APPROVED","time":"2026-10-18T01:40:00-07:00","gate_commit":"2026-10-16T14:02:30-0700",
- "checklist":{"lattice":"PASS: four 64x512 SRAMs in a 2x2 grid with logic channels","std_cell_band":"PASS: channels and margins form one connected region","pin_spread":"PASS: W face full; N/S buses partial-face but under 6/um; 5,045 pins","clock_entry":"PASS: E-face centre; pin-flop spread 69.4 TT (insertion 535.6 is guidance under 0dq)","shape":"PASS 475.2x280.8"},
- "notes":"Resubmit after the STUCKSCAN fix (main 32eb93e2d): the previous EARLY_FAIL_HOLD was a false stuck-scanner kill inside the first repair call."}
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_d2d_static_r7q",
+ "reviewer": "coordinator (2026-10-18 ~01:40)",
+ "verdict": "APPROVED",
+ "time": "2026-10-18T01:40:00-07:00",
+ "gate_commit": "2026-10-16T14:02:30-0700",
+ "checklist": {
+  "lattice": "PASS: four 64x512 SRAMs in a 2x2 grid with logic channels",
+  "std_cell_band": "PASS: channels and margins form one connected region",
+  "pin_spread": "PASS: W face full; N/S buses partial-face but under 6/um; 5,045 pins",
+  "clock_entry": "PASS: E-face centre; pin-flop spread 69.4 TT (insertion 535.6 is guidance under 0dq)",
+  "shape": "PASS 475.2x280.8"
+ },
+ "notes": "Resubmit after the STUCKSCAN fix (main 32eb93e2d): the previous EARLY_FAIL_HOLD was a false stuck-scanner kill inside the first repair call. | 10-18 KV-INTEG2: geometry_sha256 stamped (unchanged f0ac0660cd75); r7q-drc re-gate only adds OT_MEG_DEPTH_UM=2.4 (macro-edge route guard, no outline/pin/macro change).",
+ "geometry_sha256": "f0ac0660cd75ed19baec2e70962f71cf3b38f4d7c856fc78b38891a3dd1fa846",
+ "geometry": {
+  "schema": "opentallas.ref_tile.review_geometry.v1",
+  "sha256": "f0ac0660cd75ed19baec2e70962f71cf3b38f4d7c856fc78b38891a3dd1fa846",
+  "components": {
+   "outline": "8dc559b89cb02306b658db481f7467da7aac199e499edb4dea1bb8fecc3f18a0",
+   "macros": "9a92c1ba638501743ae2ad677f32eae404e16f1f0bd8b5ee541d7af061574654",
+   "pins": "1803304800ae78da25d47aa1e27ae9210b36464a8bdf5e27a9e41c3756d51ba6",
+   "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
+  }
+ }
+}
