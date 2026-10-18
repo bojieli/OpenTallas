@@ -179,7 +179,7 @@
   ]
  },
  "route": {
-  "pd": 0.5,
+  "pd": 0.35,
   "threads": 16,
   "peak_ram_gb": 64,
   "pin_balance": {
@@ -189,7 +189,7 @@
   },
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "io_hold_margin_ns": 0.01,
+  "io_hold_margin_ns": 0.025,
   "cts_sink": {
    "extra": "-sink_clustering_levels 2 -distance_between_buffers 40 -no_obstruction_aware",
    "why": "S-KVASTK 10-18: st1 gate (default H-tree, obstruction-aware around the SRAM column) TT 270.8..396.3 / FF 211.4..329.5 ps (pin-flop spread 118.5 / 106 ps > 80); the late E-face pin flops (qq, leaf wire 108 ps) made reg->reg -85.4 ps. 7-variant re-CTS sweep on the st1 3_place.odb (ORFS cts, ck_insertion.py): this setting TT all 279.6..350.4 (pin-flop 283.7..344.8 = 61.1), FF all 224.1..289.3 (pin-flop 56.6), reg->reg worst -55.0 (382 eps, placement RC); default 125.5; -no_obstruction_aware alone 87.2 / 82.7; levels2+dbb40 alone 102; size 30/60 levels2 dbb100 unbalance 0.5 206 (+noobs 128); size16/30 balance_levels 119; unclustered 100."
@@ -201,7 +201,7 @@
  "job": {
   "owner": "Claude:KVE-2-ASTK 10-17",
   "branch": "claude/kve2-astk-1017",
-  "tag": "st3",
+  "tag": "st3a",
   "purpose": "KVE-2-ASTK credit-free, lane-free successor of qkd_astk_ep (owner static-cycle rule, HANDOFF 0db): the selected static calendar slice qkd_astk_ep_cal (STATIC 1, HEADS 1) without the P.V-tree lanes (2,716 pass-through pins / flops), the node credit cr (si[633] = engine nb_cr) and the unread so[423:412]; per-slice EXP offset strap eo.  4,365 pins, every pin a register in RTL.",
   "extra_paths": [
    "configs/hardware",
@@ -278,7 +278,7 @@
    }
   ]
  },
- "structural_change": "st1 (KVE-2-ASTK 10-17): new master qkd_astk_ep_s replaces qkd_astk_ep (ks1 HOLD / ks3 HOLD / ks4 CONGESTION / ks2 NEEDS_RTL): static calendar logic of qkd_astk_ep_cal, no lanes (S / N faces now carry zi / zo only), no credit; recipe 4 flop-first pins, die hold budget; clock on the W face at mid-height (the W-face pin-flop band and the E-face band sit either side of the macro column). || st3 (S-KVASTK 10-18, route st2-71ef7d71e TT -76.5 / FF -2.94 classified on the routed netlist): 0-cycle physical retiming in gen_astk_static.py -- join operand register stage (T compare / bf16 / slot mux / adder operands off the S-face zq and E-face eq wires; u_row one stage shorter, adder y / valid_out are the zo pin registers), running-max compare on Kogge-Stone carry chains (xq -> xo: 13-cell ripple + 192 ps W->E wire), T - 1 - S x 128 and gmax registered (qkd_astk_seq_s), adder ot_hdc_fp32_add_lat_nr (data stages unreset); boundary FF repair 10 ps inside the die budget. Geometry, pins and macros unchanged.",
+ "structural_change": "st1 (KVE-2-ASTK 10-17): new master qkd_astk_ep_s replaces qkd_astk_ep (ks1 HOLD / ks3 HOLD / ks4 CONGESTION / ks2 NEEDS_RTL): static calendar logic of qkd_astk_ep_cal, no lanes (S / N faces now carry zi / zo only), no credit; recipe 4 flop-first pins, die hold budget; clock on the W face at mid-height (the W-face pin-flop band and the E-face band sit either side of the macro column). || st3 (S-KVASTK 10-18, route st2-71ef7d71e TT -76.5 / FF -2.94 classified on the routed netlist): 0-cycle physical retiming in gen_astk_static.py -- join operand register stage (T compare / bf16 / slot mux / adder operands off the S-face zq and E-face eq wires; u_row one stage shorter, adder y / valid_out are the zo pin registers), running-max compare on Kogge-Stone carry chains (xq -> xo: 13-cell ripple + 192 ps W->E wire), T - 1 - S x 128 and gmax registered (qkd_astk_seq_s), adder ot_hdc_fp32_add_lat_nr (data stages unreset); boundary FF repair 10 ps inside the die budget. Geometry, pins and macros unchanged. || st3a (S-KVASTK 10-18, coord): st3 --cts gate died in routability-driven GPL (GPL-0305, ~18% overflowed tiles, overflow ~4,300; fill 27%) -> same geometry, route.pd 0.5 -> 0.35, GPL_ROUTABILITY_DRIVEN 0; route.io_hold_margin_ns 0.01 -> 0.025 (kit rule >= 25 ps: ~22 ps lost route repair -> sign-off, KV d2d r7t).",
  "children": [],
  "inter": [],
  "io_flop_at_pins": {
@@ -295,5 +295,8 @@
  },
  "fill_reason": {
   "pin_bound": "S-KVASTK 10-18 (gate st1 0abab233e): the perimeter, not the area, sets the outline. E face 1,791 pins over 338.8 of 345.6 um (98%, 5.3/um; >= 299 um even at the 6/um cap), W 1,374 over 311.8 um (90%), N/S 651 over 158.8 of 162 um (98%). The six-SRAM column (e0..e3 64x128 at the 43.2 lattice pitch, sc0/sc1 256x128) spans y 23.8..301.3 um plus 20 um margins, and the strip slot (KVE-2: same 162 x 345.6 outline as qkd_astk_ep, abutting ex_s / zn neighbours) fixes the faces. Fill 27% = macros 9,771 + std 5,392 um2."
+ },
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0"
  }
 }
