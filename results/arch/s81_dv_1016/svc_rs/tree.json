@@ -1,0 +1,137 @@
+{
+ "generator": "tools/s81_dv/svc_rs/svc_rs_tree.py",
+ "hop": 5,
+ "g0": 1,
+ "dmax": 5,
+ "root": 9,
+ "slices": {
+  "0": {
+   "tile": 12,
+   "parent": 1,
+   "children": 0,
+   "depth": 5,
+   "gd": 6,
+   "sx_off": 5
+  },
+  "1": {
+   "tile": 13,
+   "parent": 2,
+   "children": 4,
+   "depth": 4,
+   "gd": 16,
+   "sx_off": 10
+  },
+  "2": {
+   "tile": 15,
+   "parent": 1,
+   "children": 0,
+   "depth": 4,
+   "gd": 16,
+   "sx_off": 10
+  },
+  "3": {
+   "tile": 14,
+   "parent": 2,
+   "children": 12,
+   "depth": 3,
+   "gd": 16,
+   "sx_off": 5
+  },
+  "4": {
+   "tile": 8,
+   "parent": 1,
+   "children": 0,
+   "depth": 3,
+   "gd": 16,
+   "sx_off": 5
+  },
+  "5": {
+   "tile": 9,
+   "parent": 2,
+   "children": 12,
+   "depth": 2,
+   "gd": 16,
+   "sx_off": 0
+  },
+  "6": {
+   "tile": 11,
+   "parent": 1,
+   "children": 0,
+   "depth": 2,
+   "gd": 16,
+   "sx_off": 0
+  },
+  "7": {
+   "tile": 10,
+   "parent": 2,
+   "children": 12,
+   "depth": 1,
+   "gd": 26,
+   "sx_off": 5
+  },
+  "8": {
+   "tile": 2,
+   "parent": 1,
+   "children": 0,
+   "depth": 1,
+   "gd": 36,
+   "sx_off": 15
+  },
+  "9": {
+   "tile": 3,
+   "parent": 0,
+   "children": 14,
+   "depth": 0,
+   "gd": 36,
+   "sx_off": 10
+  },
+  "10": {
+   "tile": 0,
+   "parent": 1,
+   "children": 0,
+   "depth": 2,
+   "gd": 26,
+   "sx_off": 10
+  },
+  "11": {
+   "tile": 4,
+   "parent": 4,
+   "children": 6,
+   "depth": 1,
+   "gd": 26,
+   "sx_off": 5
+  },
+  "12": {
+   "tile": 1,
+   "parent": 1,
+   "children": 0,
+   "depth": 3,
+   "gd": 26,
+   "sx_off": 15
+  },
+  "13": {
+   "tile": 5,
+   "parent": 4,
+   "children": 6,
+   "depth": 2,
+   "gd": 26,
+   "sx_off": 10
+  },
+  "14": {
+   "tile": 6,
+   "parent": 1,
+   "children": 0,
+   "depth": 4,
+   "gd": 16,
+   "sx_off": 10
+  },
+  "15": {
+   "tile": 7,
+   "parent": 4,
+   "children": 4,
+   "depth": 3,
+   "gd": 16,
+   "sx_off": 5
+  }
+ }
+}
