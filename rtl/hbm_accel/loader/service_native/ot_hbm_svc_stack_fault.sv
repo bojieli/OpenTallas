@@ -9,7 +9,7 @@
 //   stream_clk   : svg_fault[7:0] (ot_hbm_svc_sm_group.fault), share_fault[7:0] (ot_hbm_svc_vm_kshare.fault),
 //                  del_fault[7:0] (ot_hbm_svc_vmdel_lane.fault), cal_fault (fill calendar) -> pin registers -> sticky
 //                  (svg_fault is the group's feed||issuer OR across its hbm/stream domains: one extra synchroniser flop);
-//   the hbm sticky bits enter the stream domain through two synchroniser flops (sticky levels: no handshake needed).
+//   the hbm sticky bits enter the stream domain through one ot_hbm_svc_fault_cdc each (HBMA-SVC 10-17, was two flops).
 // Outputs (stream_clk, registers): fault (any), status[6:0] = {cal, del, share, svg, owner, pc, ca}.  The ca check sees
 // row_v one edge after the controller (pin register), same pair rule as the parent.  MUT=1 checks pairs (2c, 2c+2).
 // OWN_W (H-NETLIST 1815, PC H8 adoption): owner fault bits per controller (H8 ot_hbm_svc_pc_ctrl_leaf_cfg_h8 exports six
@@ -42,11 +42,9 @@ module ot_hbm_svc_stack_fault #(parameter integer MUT=0, parameter integer OWN_W
  always @(posedge stream_clk or negedge stream_rst_n)begin
   if(!stream_rst_n)begin sg_q<=0;sg_q2<=0;sh_q<=0;dl_q<=0;cl_q<=0;h1<=0;h2<=0;sg<=0;sh<=0;dl<=0;cl<=0;fault<=0;status<=0;end
   else begin
-   sg_q<=svg_fault;sg_q2<=sg_q;sh_q<=share_fault;dl_q<=del_fault;cl_q<=cal_fault;
-   h1<={ow,pc,ca};h2<=h1;
    if(|sg_q2)sg<=1;if(|sh_q)sh<=1;if(|dl_q)dl<=1;if(cl_q)cl<=1;
-   status<={cl,dl,sh,sg,h2};
-   fault<=cl||dl||sh||sg||(|h2);
+   status<={cl,dl,sh,sg,ow_s,pc_s,ca_s};
+   fault<=cl||dl||sh||sg||ow_s||pc_s||ca_s;
   end
  end
 endmodule
