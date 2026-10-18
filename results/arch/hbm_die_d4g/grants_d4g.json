@@ -455,12 +455,12 @@
   },
   {
    "name": "hb_dbk_SW",
-   "cell": "ot_hgi_dma_back_static_vp4_banks",
+   "cell": "ot_hgi_dma_back_static_vp4_banks_cp",
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 604.8,
-    "h": 540.0
+    "w": 606.96,
+    "h": 542.16
    },
    "origin": {
     "x": 7790.256,
@@ -866,16 +866,22 @@
     "moved_um": 550.0
    },
    "note_r7": "H-DIE-R7 10-17 coordinator 0dc+ 15:50: 604.8x540 (DMA collar leaf successor; grown toward SW, E/N edges kept)",
-   "pins_d4f_dropped": 29
+   "pins_d4f_dropped": 29,
+   "faces": {
+    "S": "wd banks 0-3",
+    "N": "wd banks 4-7",
+    "E": "clk"
+   },
+   "notes": "GEN2 SET2 (HANDOFF 0gl): outline 606.96 x 542.16 (kit hv16_dbk_cpl, OWNERS-HBM/STK); wd banks 0-3 S / 4-7 N (wires only, 0 cycles)"
   },
   {
    "name": "hb_dbk_NW",
-   "cell": "ot_hgi_dma_back_static_vp4_banks",
+   "cell": "ot_hgi_dma_back_static_vp4_banks_cp",
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 604.8,
-    "h": 540.0
+    "w": 606.96,
+    "h": 542.16
    },
    "origin": {
     "x": 7979.256,
@@ -1281,7 +1287,13 @@
     "moved_um": 430.0
    },
    "note_r7": "H-DIE-R7 10-17 coordinator 0dc+ 15:50: 604.8x540 (DMA collar leaf successor; grown toward SW, E/N edges kept)",
-   "pins_d4f_dropped": 29
+   "pins_d4f_dropped": 29,
+   "faces": {
+    "S": "wd banks 0-3",
+    "N": "wd banks 4-7",
+    "E": "clk"
+   },
+   "notes": "GEN2 SET2 (HANDOFF 0gl): outline 606.96 x 542.16 (kit hv16_dbk_cpl, OWNERS-HBM/STK); wd banks 0-3 S / 4-7 N (wires only, 0 cycles)"
   },
   {
    "name": "svc_SW_s0",
@@ -4311,7 +4323,7 @@
     "pin": "clk_ctl",
     "face": "E",
     "layer": "M4",
-    "offset": 581.304
+    "offset": 225.0
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -4331,7 +4343,33 @@
    "plan_block": "idx_sel",
    "pin_status": "FACES_ONLY",
    "grant": "d4f_idx_soft_1017",
-   "notes": "IDX soft-hierarchy child (contract 50de1fe73)"
+   "notes": "IDX soft-hierarchy child (contract 50de1fe73) | GEN2 SET2 (HANDOFF 0gl): clock clk_ctl E mid-face (stale offset 581.304 was outside the 450-um face); faces = kit hidx_sel_g4",
+   "faces": {
+    "W": "op, pass, addr, k, in_line, out_v, threshold_observe, selected_v, selected_observe, fault",
+    "E": "clk_ctl, clk_q, clk_mem, rst_n, selected_line",
+    "S": "out_line"
+   },
+   "synth_pin_bind": {
+    "source": "kit hidx_sel_g4 floorplan.json pins (claude/hbm-idx-small-1018)",
+    "faces": {
+     "op": "W",
+     "pass": "W",
+     "addr": "W",
+     "k": "W",
+     "in_line": "W",
+     "out_v": "W",
+     "threshold_observe": "W",
+     "selected_v": "W",
+     "selected_observe": "W",
+     "fault": "W",
+     "clk_ctl": "E",
+     "clk_q": "E",
+     "clk_mem": "E",
+     "rst_n": "E",
+     "selected_line": "E",
+     "out_line": "S"
+    }
+   }
   },
   {
    "name": "idx_link",
@@ -4397,9 +4435,9 @@
    },
    "clock_entry": {
     "pin": "clk",
-    "face": "E",
+    "face": "W",
     "layer": "M4",
-    "offset": 224.304
+    "offset": 130.0
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -4425,7 +4463,10 @@
    "plan_block": "idx_q",
    "pin_status": "FACES_ONLY",
    "grant": "d4f_idx_soft_1017",
-   "notes": "IDX soft-hierarchy child (contract 50de1fe73)"
+   "notes": "IDX soft-hierarchy child (contract 50de1fe73) | GEN2 SET2 (HANDOFF 0gl): clock W face (kit hidx_q_r4 has every pin incl. clk on W; was E offset 224.3)",
+   "faces": {
+    "W": "all pins (kit hidx_q_r4)"
+   }
   },
   {
    "name": "idx_op",
@@ -16977,6 +17018,74 @@
     "die_y": 10982.304,
     "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
     "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+   },
+   "synth_pin_bind": {
+    "source": "SFU-K9PIN kit hbm_sfucore_k9 claude/sfuk9-1018 bfa778f2e floorplan.json pins",
+    "faces": {
+     "clk": "N",
+     "clk_lane": "W",
+     "clk_lg": "N",
+     "clk_map": "W",
+     "clk_pe": "E",
+     "clk_pw": "W",
+     "compiler_control": "N",
+     "fault": "N",
+     "io_word": "N",
+     "kv_waddr_e": "E",
+     "kv_waddr_n": "N",
+     "kv_waddr_s": "S",
+     "kv_waddr_w": "W",
+     "kv_wdata_e": "E",
+     "kv_wdata_n": "N",
+     "kv_wdata_s": "S",
+     "kv_wdata_w": "W",
+     "kv_we_e": "E",
+     "kv_we_n": "N",
+     "kv_we_s": "S",
+     "kv_we_w": "W",
+     "local_rq": "W",
+     "local_rr": "W",
+     "local_w_done": "W",
+     "local_wq": "W",
+     "ro_v_e": "E",
+     "ro_v_n": "N",
+     "ro_v_s": "S",
+     "ro_v_w": "W",
+     "ro_x_e": "E",
+     "ro_x_n": "N",
+     "ro_x_s": "S",
+     "ro_x_w": "W",
+     "rst_lane_n": "W",
+     "rst_lg_n": "N",
+     "rst_map_n": "W",
+     "rst_n": "N",
+     "vi_addr_e": "E",
+     "vi_addr_n": "N",
+     "vi_addr_s": "S",
+     "vi_addr_w": "W",
+     "vi_q_e": "E",
+     "vi_q_n": "N",
+     "vi_q_s": "S",
+     "vi_q_w": "W",
+     "vi_re_e": "E",
+     "vi_re_n": "N",
+     "vi_re_s": "S",
+     "vi_re_w": "W"
+    },
+    "windows": [
+     {
+      "ports": [
+       "io_word",
+       "compiler_control",
+       "fault"
+      ],
+      "face": "N",
+      "local_um": [
+       1040.4,
+       1576.8
+      ]
+     }
+    ]
    }
   },
   {
@@ -17043,6 +17152,74 @@
     "die_y": 10982.304,
     "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
     "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+   },
+   "synth_pin_bind": {
+    "source": "SFU-K9PIN kit hbm_sfucore_k9 claude/sfuk9-1018 bfa778f2e floorplan.json pins",
+    "faces": {
+     "clk": "N",
+     "clk_lane": "W",
+     "clk_lg": "N",
+     "clk_map": "W",
+     "clk_pe": "E",
+     "clk_pw": "W",
+     "compiler_control": "N",
+     "fault": "N",
+     "io_word": "N",
+     "kv_waddr_e": "E",
+     "kv_waddr_n": "N",
+     "kv_waddr_s": "S",
+     "kv_waddr_w": "W",
+     "kv_wdata_e": "E",
+     "kv_wdata_n": "N",
+     "kv_wdata_s": "S",
+     "kv_wdata_w": "W",
+     "kv_we_e": "E",
+     "kv_we_n": "N",
+     "kv_we_s": "S",
+     "kv_we_w": "W",
+     "local_rq": "W",
+     "local_rr": "W",
+     "local_w_done": "W",
+     "local_wq": "W",
+     "ro_v_e": "E",
+     "ro_v_n": "N",
+     "ro_v_s": "S",
+     "ro_v_w": "W",
+     "ro_x_e": "E",
+     "ro_x_n": "N",
+     "ro_x_s": "S",
+     "ro_x_w": "W",
+     "rst_lane_n": "W",
+     "rst_lg_n": "N",
+     "rst_map_n": "W",
+     "rst_n": "N",
+     "vi_addr_e": "E",
+     "vi_addr_n": "N",
+     "vi_addr_s": "S",
+     "vi_addr_w": "W",
+     "vi_q_e": "E",
+     "vi_q_n": "N",
+     "vi_q_s": "S",
+     "vi_q_w": "W",
+     "vi_re_e": "E",
+     "vi_re_n": "N",
+     "vi_re_s": "S",
+     "vi_re_w": "W"
+    },
+    "windows": [
+     {
+      "ports": [
+       "io_word",
+       "compiler_control",
+       "fault"
+      ],
+      "face": "N",
+      "local_um": [
+       1040.4,
+       1576.8
+      ]
+     }
+    ]
    }
   },
   {
@@ -17109,6 +17286,74 @@
     "die_y": 20791.08,
     "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
     "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+   },
+   "synth_pin_bind": {
+    "source": "SFU-K9PIN kit hbm_sfucore_k9 claude/sfuk9-1018 bfa778f2e floorplan.json pins",
+    "faces": {
+     "clk": "N",
+     "clk_lane": "W",
+     "clk_lg": "N",
+     "clk_map": "W",
+     "clk_pe": "E",
+     "clk_pw": "W",
+     "compiler_control": "N",
+     "fault": "N",
+     "io_word": "N",
+     "kv_waddr_e": "E",
+     "kv_waddr_n": "N",
+     "kv_waddr_s": "S",
+     "kv_waddr_w": "W",
+     "kv_wdata_e": "E",
+     "kv_wdata_n": "N",
+     "kv_wdata_s": "S",
+     "kv_wdata_w": "W",
+     "kv_we_e": "E",
+     "kv_we_n": "N",
+     "kv_we_s": "S",
+     "kv_we_w": "W",
+     "local_rq": "W",
+     "local_rr": "W",
+     "local_w_done": "W",
+     "local_wq": "W",
+     "ro_v_e": "E",
+     "ro_v_n": "N",
+     "ro_v_s": "S",
+     "ro_v_w": "W",
+     "ro_x_e": "E",
+     "ro_x_n": "N",
+     "ro_x_s": "S",
+     "ro_x_w": "W",
+     "rst_lane_n": "W",
+     "rst_lg_n": "N",
+     "rst_map_n": "W",
+     "rst_n": "N",
+     "vi_addr_e": "E",
+     "vi_addr_n": "N",
+     "vi_addr_s": "S",
+     "vi_addr_w": "W",
+     "vi_q_e": "E",
+     "vi_q_n": "N",
+     "vi_q_s": "S",
+     "vi_q_w": "W",
+     "vi_re_e": "E",
+     "vi_re_n": "N",
+     "vi_re_s": "S",
+     "vi_re_w": "W"
+    },
+    "windows": [
+     {
+      "ports": [
+       "io_word",
+       "compiler_control",
+       "fault"
+      ],
+      "face": "N",
+      "local_um": [
+       1040.4,
+       1576.8
+      ]
+     }
+    ]
    }
   },
   {
@@ -17175,6 +17420,74 @@
     "die_y": 20791.08,
     "status": "PLAN GRANT (HANDOFF 0gj); kit SFU-K9PIN not committed at write time: the k9 kit pin regions must match this window",
     "was": "E face (k9 kit hbm_sfucore_k9 15beb5d90)"
+   },
+   "synth_pin_bind": {
+    "source": "SFU-K9PIN kit hbm_sfucore_k9 claude/sfuk9-1018 bfa778f2e floorplan.json pins",
+    "faces": {
+     "clk": "N",
+     "clk_lane": "W",
+     "clk_lg": "N",
+     "clk_map": "W",
+     "clk_pe": "E",
+     "clk_pw": "W",
+     "compiler_control": "N",
+     "fault": "N",
+     "io_word": "N",
+     "kv_waddr_e": "E",
+     "kv_waddr_n": "N",
+     "kv_waddr_s": "S",
+     "kv_waddr_w": "W",
+     "kv_wdata_e": "E",
+     "kv_wdata_n": "N",
+     "kv_wdata_s": "S",
+     "kv_wdata_w": "W",
+     "kv_we_e": "E",
+     "kv_we_n": "N",
+     "kv_we_s": "S",
+     "kv_we_w": "W",
+     "local_rq": "W",
+     "local_rr": "W",
+     "local_w_done": "W",
+     "local_wq": "W",
+     "ro_v_e": "E",
+     "ro_v_n": "N",
+     "ro_v_s": "S",
+     "ro_v_w": "W",
+     "ro_x_e": "E",
+     "ro_x_n": "N",
+     "ro_x_s": "S",
+     "ro_x_w": "W",
+     "rst_lane_n": "W",
+     "rst_lg_n": "N",
+     "rst_map_n": "W",
+     "rst_n": "N",
+     "vi_addr_e": "E",
+     "vi_addr_n": "N",
+     "vi_addr_s": "S",
+     "vi_addr_w": "W",
+     "vi_q_e": "E",
+     "vi_q_n": "N",
+     "vi_q_s": "S",
+     "vi_q_w": "W",
+     "vi_re_e": "E",
+     "vi_re_n": "N",
+     "vi_re_s": "S",
+     "vi_re_w": "W"
+    },
+    "windows": [
+     {
+      "ports": [
+       "io_word",
+       "compiler_control",
+       "fault"
+      ],
+      "face": "N",
+      "local_um": [
+       1040.4,
+       1576.8
+      ]
+     }
+    ]
    }
   },
   {
@@ -20033,6 +20346,866 @@
    "layer_cap": "M5",
    "grant": "H-DIE-R8 fault-tree leaf slot",
    "home_rule": "E of hb_coll_NW (run6 placement; checked free of every run6 instance with a 2 um halo)"
+  },
+  {
+   "name": "vmh_SW",
+   "cell": "hfd_hgi_vms_glue_sw_t",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 777.6,
+    "h": 1555.2
+   },
+   "origin": {
+    "x": 8756.592,
+    "y": 10033.6,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4",
+    "offset": 777.6
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "version": 1,
+   "faces": {
+    "E": "ring face 8,896 b toward the centre channel; clock mid-face",
+    "W": "banks 0-3 (far face)",
+    "N": "banks 4,5 + cq",
+    "S": "banks 6,7 + cr / control"
+   },
+   "notes": "GEN2 SET2 (HANDOFF 0gl): VM-GLUE quadrant VM tile (hb_vms_SW rebound in GEN1 l5); kit outline from vms_glue_kit_specs.py; W edge = vmh plan block W edge",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "rtl_owner": "VM-GLUE (claude/vm-glue-1018)"
+  },
+  {
+   "name": "vmh_NW",
+   "cell": "hfd_hgi_vms_glue_nw_t",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 777.6,
+    "h": 1555.2
+   },
+   "origin": {
+    "x": 8945.712,
+    "y": 19561.464,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4",
+    "offset": 777.6
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "version": 1,
+   "faces": {
+    "E": "ring face 8,896 b toward the centre channel; clock mid-face",
+    "W": "banks 0-3 (far face)",
+    "N": "banks 4,5 + cq",
+    "S": "banks 6,7 + cr / control"
+   },
+   "notes": "GEN2 SET2 (HANDOFF 0gl): VM-GLUE quadrant VM tile (hb_vms_NW rebound in GEN1 l5); kit outline from vms_glue_kit_specs.py; W edge = vmh plan block W edge",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "rtl_owner": "VM-GLUE (claude/vm-glue-1018)"
+  },
+  {
+   "name": "quant_NW_dec",
+   "cell": null,
+   "kind": "cluster",
+   "parent": "die",
+   "outline": {
+    "w": 414.72,
+    "h": 129.6
+   },
+   "origin": {
+    "x": 4042.224,
+    "y": 20071.496,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "S",
+    "layer": "M5"
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "version": 1,
+   "faces": {
+    "S": "dec_x 1024 b out / y 512 b back to quant_NW_xp (N face of the transport)"
+   },
+   "notes": "GEN2 SET2 (HANDOFF 0gl): qdq decoders u_dxl/u_dbq/u_daq (closed views qw_{dxl,dbq,daq}_ref) inside hb_quant_NW (soft split); planning home: N face of quant_NW_xp at its E end (E face is 21.6 um from su_NW1); not consumed by die_case (one soft instance)",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "collgi_SW",
+   "cell": "ot_hgi_coll_gq_issue",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "origin": {
+    "x": 6546.96,
+    "y": 15083.296,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 118.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_gq_issue_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collgl_SW",
+   "cell": "ot_hgi_coll_gq_land",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "origin": {
+    "x": 6546.96,
+    "y": 15342.496,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 118.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_gq_land_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collb_SW",
+   "cell": "ot_hgi_coll_ring_b_stop",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 129.6,
+    "h": 129.6
+   },
+   "origin": {
+    "x": 6806.16,
+    "y": 15148.096,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 64.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_ring_b_stop_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collrs_SW",
+   "cell": "ot_hbm_idx_vm_share2_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 345.6,
+    "h": 345.6
+   },
+   "origin": {
+    "x": 6179.76,
+    "y": 15083.296,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 172.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": null,
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collks_SW",
+   "cell": "ot_hgi_coll_kq_share2",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 345.6,
+    "h": 345.6
+   },
+   "origin": {
+    "x": 7238.16,
+    "y": 14224.896,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 172.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": null,
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collgi_SE",
+   "cell": "ot_hgi_coll_gq_issue",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "origin": {
+    "x": 13436.928,
+    "y": 15083.368,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 118.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_gq_issue_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collgl_SE",
+   "cell": "ot_hgi_coll_gq_land",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "origin": {
+    "x": 13436.928,
+    "y": 15342.568,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 118.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_gq_land_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collb_SE",
+   "cell": "ot_hgi_coll_ring_b_stop",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 129.6,
+    "h": 129.6
+   },
+   "origin": {
+    "x": 13696.128,
+    "y": 15148.168,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 64.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_ring_b_stop_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collrs_SE",
+   "cell": "ot_hbm_idx_vm_share2_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 345.6,
+    "h": 345.6
+   },
+   "origin": {
+    "x": 12616.128,
+    "y": 14487.768,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 172.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": null,
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collks_SE",
+   "cell": "ot_hgi_coll_kq_share2",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 345.6,
+    "h": 345.6
+   },
+   "origin": {
+    "x": 13847.328,
+    "y": 15083.368,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 172.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": null,
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collgi_NW",
+   "cell": "ot_hgi_coll_gq_issue",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "origin": {
+    "x": 6736.176,
+    "y": 16452.504,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 118.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_gq_issue_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collgl_NW",
+   "cell": "ot_hgi_coll_gq_land",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "origin": {
+    "x": 6995.376,
+    "y": 16452.504,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 118.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_gq_land_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collb_NW",
+   "cell": "ot_hgi_coll_ring_b_stop",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 129.6,
+    "h": 129.6
+   },
+   "origin": {
+    "x": 6800.976,
+    "y": 16301.304,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 64.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_ring_b_stop_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collrs_NW",
+   "cell": "ot_hbm_idx_vm_share2_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 345.6,
+    "h": 345.6
+   },
+   "origin": {
+    "x": 6368.976,
+    "y": 16344.504,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 172.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": null,
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collks_NW",
+   "cell": "ot_hgi_coll_kq_share2",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 345.6,
+    "h": 345.6
+   },
+   "origin": {
+    "x": 7427.376,
+    "y": 17143.704,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 172.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": null,
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collgi_NE",
+   "cell": "ot_hgi_coll_gq_issue",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "origin": {
+    "x": 13393.728,
+    "y": 16452.504,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 118.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_gq_issue_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collgl_NE",
+   "cell": "ot_hgi_coll_gq_land",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 237.6,
+    "h": 237.6
+   },
+   "origin": {
+    "x": 13134.528,
+    "y": 16452.504,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 118.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_gq_land_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collb_NE",
+   "cell": "ot_hgi_coll_ring_b_stop",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 129.6,
+    "h": 129.6
+   },
+   "origin": {
+    "x": 13264.128,
+    "y": 16301.304,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 64.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": "physical/ref_tile/hcoll_ring_b_stop_1018",
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collrs_NE",
+   "cell": "ot_hbm_idx_vm_share2_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 345.6,
+    "h": 345.6
+   },
+   "origin": {
+    "x": 12616.128,
+    "y": 16927.704,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 172.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": null,
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "collks_NE",
+   "cell": "ot_hgi_coll_kq_share2",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 345.6,
+    "h": 345.6
+   },
+   "origin": {
+    "x": 13652.928,
+    "y": 16344.504,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 172.8
+   },
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M7",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2_collq_1018",
+   "rtl_owner": "HBM-COLLQ / HBM-RTL4",
+   "kit": null,
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+  },
+  {
+   "name": "host_cp_rxs",
+   "parent": "die",
+   "version": 1,
+   "cell": "ot_hbm_host_cp_rxs",
+   "kind": "tile",
+   "outline": {
+    "w": 434.72,
+    "h": 432.0
+   },
+   "origin": {
+    "x": 12243.872,
+    "y": 15499.8,
+    "orient": "R0"
+   },
+   "notes": "HOSTEP (4ec71b108): host control-plane tile, kit hdie_host_cprxs_r1 (gate WARN, SYNTH until closed); N face abutted to host_ep S face pin-for-pin; same reset level as host_ep",
+   "grant": "gen2_hostep_0gd",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "host_ep",
+   "parent": "die",
+   "version": 1,
+   "cell": "hfd_ep_static",
+   "kind": "tile",
+   "outline": {
+    "w": 434.72,
+    "h": 315.36
+   },
+   "origin": {
+    "x": 12243.872,
+    "y": 15931.8,
+    "orient": "R0"
+   },
+   "notes": "HOSTEP: CLOSED hfd_ep_static (hep_static_w5f_1016); W face sd_tx/sd_rx/sd_st -> host_N (18.9 um); S face abutted to host_cp_rxs",
+   "grant": "gen2_hostep_0gd",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
   }
  ],
  "sub_layouts": {

@@ -66,11 +66,11 @@ def run(c, rep):
     assert sorted(hf) == [0, 1, 2, 3, 4, 5], sorted(hf)
     for n in OLD:
         l5.drop_inst(n)
-    l5.inst('host_ep', 'hfd_ep_static', {}, 'host_cp',
+    l5.inst('host_ep', 'hfd_ep_static', {}, 'host_ep',
             'host link endpoint (static): 613-b frame <-> 512-b UCIe beat gearbox (4 slots / 5 beats, marker + IDLE), RX '
             'marker hunt, off-die elastic RX pingpong; = the COLL SerDes endpoint master (CLOSED hep_static_w5f_1016-w5f-00f041029, '
             'native PASS); sd_* straight to host_N', OWN)
-    l5.inst('host_cp_rxs', 'ot_hbm_host_cp_rxs', {}, 'host_cp',
+    l5.inst('host_cp_rxs', 'ot_hbm_host_cp_rxs', {}, 'host_cp_rxs',
             'host control-plane tile on the static endpoint: slot-calendar TX / one-frame RX pingpong sequencer, host link '
             'sequence / CRC-32 / store / epoch abort, landing256 + credit-free packet controller (no on-die credit loop)', OWN)
     for n in ('host_ep', 'host_cp_rxs'):

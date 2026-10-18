@@ -22,6 +22,18 @@ for b in a.box:
     n, v = b.split('='); boxes[n] = tuple(float(x) for x in v.split(','))
 out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
 hl = re.compile(a.hl)
+SL = {s['name']: s for s in g['slots']}
+
+
+def absxy(s):
+    """die coordinates of a slot: child slots (parent != die) carry parent-local origins (R0 parents only)"""
+    x, y = s['origin']['x'], s['origin']['y']
+    p = SL.get(s.get('parent') or 'die')
+    while p is not None and p['kind'] != 'die':
+        x += p['origin']['x']; y += p['origin']['y']; p = SL.get(p.get('parent') or 'die')
+    return x, y
+
+
 for name, (x0, y0, x1, y1) in boxes.items():
     fig, ax = plt.subplots(figsize=(9, 9 * (y1 - y0) / (x1 - x0) if name != 'die' else 13), dpi=170)
     for n, r in P.items():
@@ -36,7 +48,7 @@ for name, (x0, y0, x1, y1) in boxes.items():
         o, w = s.get('origin'), s.get('outline')
         if not o or not w or s['kind'] == 'die':
             continue
-        x, y, ww, hh = o['x'], o['y'], w['w'], w['h']
+        x, y, ww, hh = absxy(s)[0], absxy(s)[1], w['w'], w['h']
         if x > x1 or x + ww < x0 or y > y1 or y + hh < y0:
             continue
         h_ = bool(hl.search(s['name']))

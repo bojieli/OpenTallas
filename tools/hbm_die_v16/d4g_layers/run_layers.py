@@ -11,6 +11,8 @@ LAYERS = ['l3_vm_hc_coll.py', 'l1_host_xload_stack.py', 'l2_su_sfu.py',  # l1 re
           'l4_idx_quad.py',  # HBM-RTL4 10-18 (e0c0120fd): IDX quad client; addresses l3's SE/NE banks + l1/l2 output
           'l5_rebind.py']  # H-D4G5/REBIND 10-18: port-identical rebinds (qdq split, fs wrappers, kshare splitstrap, VM SW/NW tiles, pg r5)
 LAYERS += ['l5_host_ep.py']  # H-D4G5/HOSTEP 10-18 (0gd): host_cp endpoint -> hfd_ep_static (retires lk_ep / face / phy_adapt)
+LAYERS += ['l5b_cij4.py']  # H-D4G GEN2 10-18 (0gl): cij in all 4 quadrants (IDX tx 4-sink fork tree) + SET 2 VM tile slots
+LAYERS += ['l6_collq.py']  # H-D4G GEN2 10-18: COLL gather master (HBM-COLLQ) + ring B stops (HBM-RTL4), from the committed binding records
 ap = argparse.ArgumentParser(); ap.add_argument('inp'); ap.add_argument('out'); ap.add_argument('--report-dir', required=True)
 a = ap.parse_args()
 R = Path(a.report_dir); R.mkdir(parents=True, exist_ok=True)
