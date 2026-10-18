@@ -1,0 +1,14 @@
+  [0] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+  [2] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+  [3] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+  [4] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+  [6] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+  [7] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+  [8] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+  [9] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+  [11] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+  [12] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+  [13] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+  [14] FRAME_BENCH FAIL col_h10 errors=8 words=0 rows=4
+FRAME_SET col_h10 MUT=xlane set=each pass=0 fail=12
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xlane col_h10

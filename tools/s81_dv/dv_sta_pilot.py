@@ -25,6 +25,7 @@ half-cycle hops cko is the INVERTED clock (the hop-0 forward cell inverts like e
 import argparse, re, subprocess
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
+GITDIR = __import__('os').environ.get('OT_GIT_DIR', str(ROOT))   # S81-BIND3: sources from a git archive, refs from the repo
 RLY = ('EW', 'WE', 'NS', 'SN')
 PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
 STD = dict(tt=('SEQ_RVT_TT_nldm_220123.lib', 'INVBUF_RVT_TT_nldm_220122.lib.gz', 'SIMPLE_RVT_TT_nldm_211120.lib.gz'),
@@ -162,6 +163,61 @@ def standin_contract(lib, data_ps, cko_ps, invert):
     return ''.join(out).replace('/* STAND-IN:', f'/* S81-LAND2 hop-0 source contract: data {data_ps:g} / cko {cko_ps:g}{" inverted" if invert else ""} | STAND-IN:', 1)
 
 
+def _timings(seg):
+    """-> [(timing_type, body)] of the timing() groups of one liberty pin group"""
+    out = []
+    for t in re.finditer(r'timing\(\)\s*\{', seg):
+        body = seg[t.start():_group(seg, t.start())]
+        tt = re.search(r'timing_type\s*:\s*(\w+)', body)
+        out.append((tt.group(1) if tt else 'combinational', body))
+    return out
+
+
+def _first(body, name, allv=False):
+    m = re.search(name + r'\(\w*\)\s*\{(.*?)\}', body, re.S)
+    if not m:
+        return []
+    v = re.search(r'values\(([^)]*)\)', m.group(1))
+    nums = [float(x) for x in re.findall(r'-?\d+(?:\.\d+)?(?:e-?\d+)?', v.group(1))] if v else []
+    return nums if allv else nums[:1]
+
+
+def leaf_pin_arcs(lib, cell, spec_path, corner):
+    """S81-BIND3: replace the stand-in scalar arcs of the pins listed in spec for this stand-in cell by the worst arc of
+    the CLOSED leaf view pin that owns it: inputs setup = max setup_rising, hold = max hold_rising (whole tables);
+    outputs clk -> q = max (tt: setup side) / min (ff: hold side) of the lightest-load entry.  The cluster above the
+    leaf is not hardened: its glue and clock insertion are 0 here (labelled in the lib)."""
+    import json
+    spec = [s for s in json.load(open(spec_path)) if f"dv_{s['inst']}" == cell]
+    for s in spec:
+        p = f"{s['view_dir']}/{s['cell']}_{corner}.lib"
+        leaf = subprocess.run(['git', '-C', GITDIR, 'show', f"{s['view_ref']}:{p}"], capture_output=True, text=True, check=True).stdout
+        segs = [leaf[m.start():_group(leaf, m.start())] for m in re.finditer(r'pin\("' + re.escape(s['leaf_pin']) + r'\[\d+\]"\)\s*\{', leaf)]
+        if not segs:
+            raise SystemExit(f"leaf pin {s['leaf_pin']} not in {p}")
+        m = re.search(r'\n    bus \(' + re.escape(s['pin']) + r'\) \{.*?\n    \}', lib, re.S)
+        blk = m.group(0)
+        ts = [t for g in segs for t in _timings(g)]
+        if 'direction : input' in blk:
+            su = max(x for tt, b in ts if tt == 'setup_rising' for k in ('rise_constraint', 'fall_constraint') for x in _first(b, k, True))
+            ho = max(x for tt, b in ts if tt == 'hold_rising' for k in ('rise_constraint', 'fall_constraint') for x in _first(b, k, True))
+            nb = re.sub(r'(setup_rising ; rise_constraint \(scalar\) \{ values \(")[^"]*("\) ; \} fall_constraint \(scalar\) \{ values \(")[^"]*',
+                        lambda g: f'{g.group(1)}{su:.1f}{g.group(2)}{su:.1f}', blk)
+            nb = re.sub(r'(hold_rising ; rise_constraint \(scalar\) \{ values \(")[^"]*("\) ; \} fall_constraint \(scalar\) \{ values \(")[^"]*',
+                        lambda g: f'{g.group(1)}{ho:.1f}{g.group(2)}{ho:.1f}', nb)
+            note = f'setup {su:.1f} / hold {ho:.1f}'
+        else:
+            col = [x for tt, b in ts if tt == 'rising_edge' for k in ('cell_rise', 'cell_fall') for x in _first(b, k)]
+            dq = max(col) if corner == 'tt' else min(col)
+            nb = re.sub(r'(rising_edge ; cell_rise \(scalar\) \{ values \(")[^"]*("\) ; \} cell_fall \(scalar\) \{ values \(")[^"]*',
+                        lambda g: f'{g.group(1)}{dq:.1f}{g.group(2)}{dq:.1f}', blk)
+            note = f'clk->q {dq:.1f}'
+        tag = f"/* S81-BIND3 CLOSED leaf {s['cell']}.{s['leaf_pin']} @{s['view_ref']} {corner}: {note}; cluster glue / insertion 0 */"
+        lib = lib.replace(blk, nb.replace(f"bus ({s['pin']}) {{", f"bus ({s['pin']}) {{ {tag}", 1))
+        print(f"leaf-pin {cell}.{s['pin']} {corner}: {note}")
+    return lib
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--case-remote', required=True, help='routed DV die case dir on the run host (has out/grt.odb, views/)')
@@ -174,6 +230,12 @@ def main():
     ap.add_argument('--station-report', action='store_true',
                     help='per relay station: worst setup / hold to its i[*] pins (out/<corner>_station.rpt): every hop, '
                     'not only the worst 200k endpoints')
+    ap.add_argument('--relay-kind', choices=('rly', 'rlyh'), default='rly',
+                    help='rlyh (S81-BIND3): the CLOSED half-cycle dsfd_dvrlyh_* views (ck -> ck_o negative unate, ETM tables '
+                    'kept: cell_rise / cell_fall are the ck_o output edges); implies the inverted hop-0 source contract')
+    ap.add_argument('--leaf-pins', type=Path, default=None,
+                    help='JSON [{inst, pin, view_ref, view_dir, cell, leaf_pin}]: a stand-in block pin takes the boundary '
+                    'arc of the CLOSED leaf view that owns it (S81-BIND3; cluster glue / cluster clock insertion = 0, labelled)')
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--relay-ref', default='origin/main')
     ap.add_argument('--corners', nargs='+', default=['tt', 'ff'])
@@ -183,12 +245,18 @@ def main():
     for b in a.relay_widths:
         for d in RLY:
             for c in a.corners:
-                p = f'physical/ref_tile/s81dv_rly_{b}_{d.lower()}/views/dsfd_dvrly_{b}_{d}/dsfd_dvrly_{b}_{d}_{c}.lib'
-                r = subprocess.run(['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{p}'], capture_output=True, text=True)
+                rk = a.relay_kind
+                p = f'physical/ref_tile/s81dv_{rk}_{b}_{d.lower()}/views/dsfd_dv{rk}_{b}_{d}/dsfd_dv{rk}_{b}_{d}_{c}.lib'
+                r = subprocess.run(['git', '-C', GITDIR, 'show', f'{a.relay_ref}:{p}'], capture_output=True, text=True)
                 if r.returncode:
                     continue
                 lib = patch_ck_o(r.stdout)
-                if a.hop_fix == 'half':
+                if rk == 'rlyh':
+                    i_ = lib.index('S81-DIE4 STA pilot: ETM self-related')
+                    j_ = lib.rindex('timing_sense : positive_unate', 0, i_)
+                    lib = lib[:j_] + 'timing_sense : negative_unate' + lib[j_ + len('timing_sense : positive_unate'):]
+                    lib = lib.replace('/* S81-DIE4 STA pilot:', '/* S81-BIND3: CLOSED half-cycle view, ck_o = ~ck | S81-DIE4 STA pilot:', 1)
+                elif a.hop_fix == 'half':
                     lib = LP._swap_ck_o(lib)
                 elif a.hop_fix == 'outhold':
                     lib = LP._outhold(lib, a.outhold_ps)
@@ -196,8 +264,12 @@ def main():
     sta = STA
     if a.standin_views:
         for f in sorted(a.standin_views.glob('dv_*.lib')):
-            (a.out / 'libs' / f.name).write_text(standin_contract(f.read_text(), a.src_data_ps, a.src_cko_ps, a.hop_fix == 'half'))
-        sta = sta.replace('[glob $C/views/dv_*.lib]', '[glob /pilot/libs/dv_*.lib]')
+            for c in a.corners:
+                txt = standin_contract(f.read_text(), a.src_data_ps, a.src_cko_ps, a.hop_fix == 'half' or a.relay_kind == 'rlyh')
+                if a.leaf_pins:
+                    txt = leaf_pin_arcs(txt, f.stem, a.leaf_pins, c)
+                (a.out / 'libs' / f'{f.stem}_{c}.lib').write_text(txt)
+        sta = sta.replace('[glob $C/views/dv_*.lib]', '[glob /pilot/libs/dv_*_{corner}.lib]')
     if a.station_report:
         sta = sta.replace('puts OT_STA_DONE', STATION_RPT + 'puts OT_STA_DONE')
     for c in a.corners:

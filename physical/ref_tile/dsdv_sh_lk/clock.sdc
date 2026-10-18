@@ -23,7 +23,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {f_host} {f_lf} {f_ks} {s_jd} {s_hc} {st_rg} {vi_s} {rs_i} {kd_i} {j_i} {sq_i} {vf_i}} outputs {{t_host} {t_kd} {s_j} {s_hw} {vo_s} {rn_o} {pw_o} {pl_o} {tw_o} {cf_o} {ks_o} {jd_o}}} {ingest_host} {clock ot_io_ingest_host io_budget_ps 166.667 inputs {} outputs {}} {ingest_core} {clock ot_io_ingest_core io_budget_ps 166.667 inputs {} outputs {}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {f_host} {f_lf} {f_ks} {vi_s} {rs_i} {kd_i} {j_i} {sq_i} {vf_i} {s_jd_w} {s_jd_e} {s_hc_w} {s_hc_e} {st_rg_w} {st_rg_e}} outputs {{t_host} {t_kd} {s_j} {vo_s} {rn_o} {pw_o} {pl_o} {tw_o} {cf_o} {ks_o} {jd_o} {s_hw_w} {s_hw_e}}} {ingest_host} {clock ot_io_ingest_host io_budget_ps 166.667 inputs {} outputs {}} {ingest_core} {clock ot_io_ingest_core io_budget_ps 166.667 inputs {} outputs {}}]
 set ::ot_ce_source_domains [dict create {ck} {core} {ck_ih} {ingest_host} {ck_ic} {ingest_core}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck} {ck_ih} {ck_ic}}

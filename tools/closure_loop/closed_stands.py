@@ -157,6 +157,9 @@ def route_recipe(spec, show):
         return None
 
 
+ACTIVE_STATES = ("READY", "RUNNING", "SYNC", "MIGRATING", "QUEUED", "PENDING")  # a job still in the loop has not failed
+
+
 def published(j):
     p = j.get("publish") if isinstance(j.get("publish"), dict) else {}
     return bool(p.get("branch_commit") or p.get("merge_commit"))
@@ -549,6 +552,27 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
                           f"closed {last['name']} (a moved outline / pin face is slot_change)")
         return admit(f"{rr['cell']} native audit FAIL: {'; '.join(over)} (receipt {rr['source']}); {rtl_note}, "
                      f"same outline, {pins_note}; fix: {rr['fix'].strip()[:200]}")
+    if kind == "flow_failure":
+        # (ROOT-0945 2026-10-18, relaxing, submit-time) the retry of an ADMITTED re-route that failed in the harness /
+        # flow (earlyoom kill, crash): it inherits the failed job's admission, so the failed job must be on record.
+        fj = rr.get("failed_job")
+        if not txt("failed_job", 3):
+            return refuse("flow_failure needs \"failed_job\": the id of the failed job this re-route retries")
+        fj = fj.strip()
+        prev = by_name.get(fj)
+        if prev is None:
+            return refuse(f"flow_failure: failed_job {fj!r} is not a job of {blk} in the loop's history")
+        st = str(prev.get("status") or "")
+        if st == "CLOSED":
+            return refuse(f"flow_failure: failed_job {fj} is CLOSED, not failed")
+        if st in ACTIVE_STATES:
+            return refuse(f"flow_failure: failed_job {fj} is still {st}; retry it only after it has failed")
+        prr = (prev.get("spec_submitted") or prev.get("spec") or {}).get("reroute_reason")
+        if not isinstance(prr, dict) or prr.get("kind") not in TL.CLOSED_STANDS_KINDS:
+            return refuse(f"flow_failure: failed_job {fj} carried no valid \"reroute_reason\" (it was never admitted "
+                          f"as a re-route of the closed view, so its failure admits none)")
+        what = rr["failure"].strip()[:200] if txt("failure", 3) else st
+        return admit(f"retry of {fj} ({st}; admitted as {prr['kind']}) after a flow failure: {what}")
     # evidence_gap
     if not txt("why_route", 20):
         return refuse("evidence_gap needs \"why_route\": why a ROUTE is needed (a missing bench is bound to the closed "

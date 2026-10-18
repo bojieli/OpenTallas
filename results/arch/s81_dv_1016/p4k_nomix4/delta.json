@@ -1,0 +1,40 @@
+{
+ "schema": "s81dv_p4k_nomix4_delta_v1",
+ "lane": "RTL-BUILD-S81 fork F",
+ "date": "2026-10-18",
+ "base": "claude/s81-die5-1017 @450e0b1c7 tools/s81_dv/dv_plan.py (p4k; base regen byte-identical to results/arch/s81_dv_1016/p4k/plan.json)",
+ "cmd": "dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4k --p4h-drop 6 --no-mix4",
+ "patch": "nomix4_p4k.patch (= claude/rtl-build-s81-1018-map 86c602426 --no-mix4, argparse hunks re-based onto p4k)",
+ "blocks_removed": [
+  "mix4_w",
+  "mix4_e"
+ ],
+ "links_removed": [
+  "tvN_mix4_e",
+  "tvN_mix4_w",
+  "tvS_mix4_e",
+  "tvS_mix4_w"
+ ],
+ "die_mm2": [
+  799.2,
+  799.2
+ ],
+ "relays": [
+  2532,
+  2568
+ ],
+ "bit_mm": [
+  328983,
+  333119
+ ],
+ "worst_cut": [
+  0.5357,
+  0.5357
+ ],
+ "cut_windows_over_limit": [
+  0,
+  0
+ ],
+ "bind_change": "bind_table_p4k: drop master dsfd_engram_mix4_half (instances mix4_w / mix4_e); removes unbound 1 and the 1,104 undriven bits w_tv{N,S}_mix4_{w,e}_src",
+ "status": "APPLY WHEN fork D (claude/rtl-build-s81-1018-int) in-slice Engram path (vs op14 + ve + xfin ENG + eg) lands with its composition bench; not applied to S81-DIE5 branch"
+}

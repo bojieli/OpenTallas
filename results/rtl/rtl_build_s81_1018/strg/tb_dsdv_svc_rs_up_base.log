@@ -1,0 +1,5 @@
+PASS dsdv_svc_rs_up 16-slice tree: 800 entry checks (298 live-down, 299 fault halves) bit exact
+- rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_rs_up.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 0.010 s; speed 1.713 ms/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 7 MB

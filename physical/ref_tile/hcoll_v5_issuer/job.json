@@ -1,13 +1,13 @@
 {
- "name": "hcoll_v5_issuer-c1045-COMMIT",
+ "name": "hcoll_v5_issuer-ciss-COMMIT",
  "block": "ot_hgi_coll_issuer_m",
  "ref_tile": true,
- "owner": "Claude:H-NETLIST/COLL-CTL-1045",
- "purpose": "H-NETLIST/COLL hard_v6 leaf ot_hgi_coll_issuer_m: ot_hgi_coll_static_issuer_v6 (pre-decoded per-row loop counts: successor load = one 64:1 read; registered current-row fields; decision = one 32b flop compare) with 3 x ot_sram_1r1w_64x512_m1_r2c2, uop_v mask, ONE 1,536-b output bank (d1; d2/d3 in ot_hgi_coll_uop_pipe). Every-edge miter vs the original issuer (PASS 3.72M checks, programme constraint: no start on the edge after a meta write), q2 lockstep (SH=4).",
+ "owner": "Claude:H-D4G5/COLLPIN",
+ "purpose": "OWNERS-HBM/COLL-ISS + H-D4G5/COLLPIN 10-18: input pin registers (cfg/start/start_pc, +1 issue edge, SH 5; exported busy covers the pin edge); d4g COLL engine hard child ot_hgi_coll_issuer_m (q2_hard_v5 x3, q3_hard_v7x x1; never routed): V6b issuer (3 x ot_sram_1r1w_64x512_m1_r2c2 + one 1,536-b d1 bank), rst_n -> one synchroniser flop; 302.4 square, abutted SRAM stack on the 43.2 lattice, one std-cell band, full W face for the 1,536-b stream. H-NETLIST/COLL hard_v6 leaf ot_hgi_coll_issuer_m: ot_hgi_coll_static_issuer_v6 (pre-decoded per-row loop counts: successor load = one 64:1 read; registered current-row fields; decision = one 32b flop compare) with 3 x ot_sram_1r1w_64x512_m1_r2c2, uop_v mask, ONE 1,536-b output bank (d1; d2/d3 in ot_hgi_coll_uop_pipe). Every-edge miter vs the original issuer (PASS 3.72M checks, programme constraint: no start on the edge after a meta write), q2 lockstep (SH=5) incl. scen8 occupancy edge.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/hnl-coll-ctl-1045",
+  "branch": "claude/hd4g5-collpin",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
@@ -51,7 +51,33 @@
     "peak_ram_gb": 24,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "HCOLL_Q_HARD_V5_MUTANT_REJECTED nomask",
+    "fail_witness": "results/rtl/ref_tile/hcoll_v5_issuer/witness_1018/mut_nomask.log"
+   },
+   {
+    "name": "hard_v5_q2_mut_issnopin",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_issnopin q2 issnopin",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HCOLL_Q_HARD_V5_MUTANT_REJECTED issnopin",
+    "fail_witness": "results/rtl/ref_tile/hcoll_v5_issuer/witness_1018/mut_issnopin.log"
+   },
+   {
+    "name": "hard_v5_q2_mut_issnohold",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_issnohold q2 issnohold",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HCOLL_Q_HARD_V5_MUTANT_REJECTED issnohold",
+    "fail_witness": "results/rtl/ref_tile/hcoll_v5_issuer/witness_1018/mut_issnohold.log"
    },
    {
     "name": "issuer_v6_miter_pos",
@@ -74,7 +100,8 @@
     "peak_ram_gb": 12,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/hcoll_v5_issuer/witness_1018/miter_reload.log"
    }
   ],
   "calibrate": {
@@ -127,7 +154,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hcoll_v5_issuer/hcoll_v5_issuer-c1045-COMMIT"
+   "to": "results/rtl/ref_tile/hcoll_v5_issuer/hcoll_v5_issuer-ciss-COMMIT"
   }
  ],
  "cycles_added": 0,
