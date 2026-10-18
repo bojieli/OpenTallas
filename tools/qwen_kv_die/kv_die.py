@@ -1007,14 +1007,15 @@ def _astk_frame(e):
     _astk_engine(0)
     return KSD.ectl_frame(e)
 # KV-WIRE2 SEQ (KSD.SEQ_S): qkd_seq_static_s reads only {kvn_word_valid, kvn_word_tag} of the old srx word: they get their
-# own d2d bundle skw (trunk seqst_kw -> seq); srx keeps the attention RX word for kvs_attn; kvn_word_data has no consumer
+# own d2d bundle skw (trunk seqst_kw -> seq); srx keeps the attention RX word + kvn_word_data for kvs_attn / kvs_ctl
 SEQST_KW = []
 if KSD.SEQ_S:
-    SEQST_RX[:] = ['att_rx_v', 'att_rx_kind', 'att_rx_beat']
+    # srx keeps kvn_word_data (the writer's KVN word, kvs_ctl: a fork branch as before; as its own 512-b identity word
+    # its first hop from the d2d end found no relay spot under OT_KV_TILE_KITS, plan k1)
+    SEQST_RX[:] = ['att_rx_v', 'att_rx_kind', 'att_rx_beat', 'kvn_word_data']
     SEQST_KW[:] = ['kvn_word_valid', 'kvn_word_tag']
     BINDINGS['qkd_d2ds']['ports']['srx'] = list(SEQST_RX)
     BINDINGS['qkd_d2ds']['ports']['skw'] = list(SEQST_KW)
-    BINDINGS['qkd_d2ds']['ports']['kvn_word_data'] = ['kvn_word_data']     # the writer's KVN word (kvs_ctl), identity port
     RTL.update(qkd_seq_st=KSD.SEQ_S_FILE)
 KSD.D2D_LISTS = (D2DS_SVC, SEQST_RX, SEQST_KW)
 # KV-WIRE2 ASTK (KSD.ASTK_ST): engine faces 413 / 633 b (qkd_ectl3_kiss_st), heads without the node beat (r4_s / r4_ft_s:
