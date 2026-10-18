@@ -125,37 +125,159 @@ FLEET_RUN = ("tools/closure_loop/tt_overlay.py",)
 LINT_ONLY = ("tools/textbook_lint.py",)
 
 
-# RELAXING-ONLY RULE CHANGES (ROOT-0040 2026-10-18, owner 10-17: "rules exist to close the die ASAP, never to delay it").
-# A gate executed with an older overlay / gate tool stays valid when EVERY commit that changed the file between the
-# gate's blob and today's blob is listed here: each one only relaxed a rule (a FAIL became a WARN), so a gate that met
-# the old rule meets the new one too.  The tile must still meet the relaxed rule's own condition ("requires"), judged
-# from the existing gate report (source_binding.relaxed_rule_requirement).  Full commit shas only.  Add an entry only
-# for a change that relaxes and never tightens: any tightening needs a re-gate.
-RELAXING_RULE_COMMITS = {
+# RULE-COMMIT CLASSIFICATION (GATE-FRICTION 2026-10-18, owner 0eg; generalises ROOT-0040's relaxing-only allowlist,
+# owner 10-17: "rules exist to close the die ASAP, never to delay it").  A gate executed with an older overlay / gate tool
+# stays valid unless a commit that changed the file since is STRICTER for this tile.  Every commit on the file's blob
+# chain (gate blob -> today's blob) is classified, first match wins:
+#   1. RULE_COMMITS below (full sha): kind "relaxing" (a FAIL became a WARN / a limit loosened), "neutral" (no gate
+#      verdict can change: refactor, report text, WARN-only check, submit-only constants) or "tightening" (a new FAIL /
+#      stricter limit).  Optional: requires=<condition judged from the existing gate report>, applies_to=(tile/kit/top
+#      name prefixes; a tightening outside them does not touch this tile).
+#   2. a "Gate-Rule:" trailer in the commit message, same vocabulary:
+#        Gate-Rule: relaxing requires=clock_pin_spread
+#        Gate-Rule: neutral
+#        Gate-Rule: tightening applies-to=qfd_,hbm_sfu_
+#   3. automatic: the change is comments / docstrings / blank lines only (.py by AST; .tcl/.sdc/.sh/.json by lines), or a
+#      LINT_ONLY path's submit-only constants -> neutral.
+#   4. anything else is UNCLASSIFIED and keeps the strict refusal (named, with how to classify it).
+# relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
+# met by the gate report.  Add an entry only with a reason a reviewer can check.
+RULE_COMMITS = {
     "ef6a3af26513c90c8af5d553c7238276df905848": dict(
-        rule="0dq", requires="clock_pin_spread",
+        kind="relaxing", rule="0dq", requires="clock_pin_spread",
         what="clock rule 0dq (owner 10-17): insertion > 300 ps / > 15k sinks FAIL -> WARN; FAIL only on pin-flop "
              "spread > 80 ps at TT or FF"),
+    "58a346a8ef042c634b3f368b265ddd96ae6004be": dict(
+        kind="neutral", rule="util-density",
+        what="textbook_lint util_channel is WARN-only (not in REFUSE_CHECKS/HARD_CHECKS): std-cell density over the "
+             "placeable area for macro kits changes WARN text, never a gate FAIL; no-macro kits unchanged"),
+    "98474c45ee3474d9198f521060af91e2c2bc416d": dict(
+        kind="neutral", rule="closed-stands-native-capture",
+        what="CLOSED_STANDS native_capture admission: submit-time CLOSED-STANDS lint only, never read by the pre-route gate"),
+    "2c5779073788dca0d09b65bc8150f0006d9326c6": dict(
+        kind="neutral", rule="closed-stands-native-capture",
+        what="CLOSED_STANDS reroute kind native_capture: submit-time lint only"),
+    "3dd60bc0f0617cfaae3db5f77870c267195e76a8": dict(
+        kind="tightening", rule="pin-geometry",
+        what="fp_margin_lint: actual pin rectangles inside the die with track data (new FAIL)"),
+    "53efc860bda4dc258b0ec9f229d1b6a9b89d05ff": dict(
+        kind="tightening", rule="pin-track-access",
+        what="fp_margin_lint: IO pins without actual routing-track access FAIL"),
 }
+# ROOT-0040 name, kept for callers / tests: the relaxing entries
+RELAXING_RULE_COMMITS = {c: e for c, e in RULE_COMMITS.items() if e.get("kind") == "relaxing"}
+RULE_KINDS = ("relaxing", "neutral", "tightening")
+TRAILER_RE = re.compile(r"^Gate-Rule:\s*(relaxing|neutral|tightening)\b(.*)$", re.M | re.I)
 
 
-def relaxing_only_span(repo, rel, old_blob, new_blob, heads, allow=None, max_steps=64):
-    """(ok, commits): walk rel's blob history back from new_blob to old_blob over the commits reachable from heads
-    (origin/main plus the route commit).  ok only when the chain exists and every commit on it is in allow (default
-    RELAXING_RULE_COMMITS) or, for a LINT_ONLY path, changes only comments / submit-only constants.  commits: the shas
-    on the chain, newest first ([] when old_blob == new_blob)."""
-    allow = RELAXING_RULE_COMMITS if allow is None else allow
+def parse_rule_trailer(message):
+    """{"kind", "requires"?, "applies_to"?} from a commit message's Gate-Rule trailer, else None"""
+    m = TRAILER_RE.search(message or "")
+    if not m:
+        return None
+    out = dict(kind=m.group(1).lower(), rule="trailer", what=m.group(0).strip()[:200])
+    for k, v in re.findall(r"([\w-]+)=(\S+)", m.group(2)):
+        k = k.lower().replace("-", "_")
+        if k == "requires":
+            out["requires"] = v
+        elif k == "applies_to":
+            out["applies_to"] = tuple(x for x in v.split(",") if x)
+        elif k == "rule":
+            out["rule"] = v
+    return out
+
+
+def change_is_comment_only(rel, old, new):
+    """True when two versions of a tool file differ only in comments / docstrings / blank lines / trailing spaces"""
+    import ast
+    if old == new:
+        return True
+    try:
+        a, b = (x.decode() if isinstance(x, bytes) else x for x in (old, new))
+    except UnicodeDecodeError:
+        return False
+    if rel.endswith(".py"):
+        def norm(t):
+            tree = ast.parse(t)
+            for node in ast.walk(tree):
+                body = getattr(node, "body", None)
+                if isinstance(body, list) and body and isinstance(body[0], ast.Expr) \
+                        and isinstance(getattr(body[0], "value", None), ast.Constant) and isinstance(body[0].value.value, str):
+                    node.body = body[1:] or [ast.Pass()]
+            return ast.dump(tree, include_attributes=False)
+        try:
+            return norm(a) == norm(b)
+        except (SyntaxError, ValueError):
+            return False
+    if rel.endswith((".tcl", ".sdc", ".sh")):
+        def lines(t):
+            return [ln.rstrip() for ln in t.splitlines() if ln.strip() and not ln.lstrip().startswith("#")]
+        return lines(a) == lines(b)
+    if rel.endswith(".json"):
+        try:
+            return json.loads(a) == json.loads(b)
+        except ValueError:
+            return False
+    return False
+
+
+def tile_matches(applies_to, tile):
+    if not applies_to:
+        return True                        # no scope: applies to every tile
+    names = [t for t in (tile or ()) if t]
+    if not names:
+        return True                        # unknown tile: assume it applies (strict)
+    return any(str(n).startswith(p) for n in names for p in applies_to)
+
+
+def _blob(repo, sha):
+    p = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", sha], capture_output=True, timeout=60)
+    return None if p.returncode else p.stdout
+
+
+def classify_commit(repo, commit, rel, pre, post, registry=None, cache=None):
+    """{"commit", "kind" (relaxing|neutral|tightening|unclassified), "source" (registry|trailer|auto), ...}"""
+    if registry is None:
+        reg = {**{c: dict(e, kind=e.get("kind", "relaxing")) for c, e in RELAXING_RULE_COMMITS.items()}, **RULE_COMMITS}
+    else:
+        reg = registry
+    if commit in reg:
+        return dict(reg[commit], commit=commit, source="registry")
+    cache = {} if cache is None else cache
+    if ("msg", commit) not in cache:
+        p = subprocess.run(["git", "-C", str(repo), "log", "-1", "--format=%B", commit], capture_output=True, text=True,
+                           timeout=60)
+        cache[("msg", commit)] = p.stdout if not p.returncode else ""
+    t = parse_rule_trailer(cache[("msg", commit)])
+    if t:
+        return dict(t, commit=commit, source="trailer")
+    a, b = _blob(repo, pre), _blob(repo, post)
+    if a is not None and b is not None:
+        if change_is_comment_only(rel, a, b):
+            return dict(kind="neutral", rule="comment-only", what="comments / docstrings only", commit=commit, source="auto")
+        if rel in LINT_ONLY and lint_change_is_submit_only(a, b):
+            return dict(kind="neutral", rule="submit-only-lint", what="submit-only lint constants", commit=commit,
+                        source="auto")
+    return dict(kind="unclassified", commit=commit, source="none",
+                what="no RULE_COMMITS entry, no 'Gate-Rule:' trailer, not comment-only")
+
+
+def rule_span(repo, rel, old_blob, new_blob, heads, tile=None, registry=None, max_steps=64):
+    """(ok, rows, why): classify every commit on rel's blob chain from new_blob back to old_blob (commits reachable
+    from heads: origin/main plus the route commit).  ok when the chain exists and no commit is stricter for the tile:
+    every row is relaxing / neutral, or a tightening outside the tile's scope, or a tightening whose "requires" the
+    caller then judges.  rows newest first, each with "applies" (bool).  why: the first blocking commit, else None."""
     if not old_blob or not new_blob:
-        return False, []
+        return False, [], "blob unknown"
     if old_blob == new_blob:
-        return True, []
+        return True, [], None
     heads = [h for h in heads if h]
     if not heads:
-        return False, []
+        return False, [], "no history head"
     p = subprocess.run(["git", "-C", str(repo), "log", "--format=C %H", "--raw", "--no-abbrev", "--no-renames", *heads,
                         "--", rel], capture_output=True, text=True, timeout=180)
     if p.returncode:
-        return False, []
+        return False, [], "git log failed"
     trans, cur = [], None          # (commit, pre_blob, post_blob), newest first
     for ln in p.stdout.splitlines():
         if ln.startswith("C "):
@@ -164,25 +286,32 @@ def relaxing_only_span(repo, rel, old_blob, new_blob, heads, allow=None, max_ste
             f = ln.split()
             if len(f) >= 5:
                 trans.append((cur, f[2], f[3]))
-    chain, blob, seen = [], new_blob, set()
+    rows, blob, seen, cache = [], new_blob, set(), {}
     for _ in range(max_steps):
         if blob == old_blob:
-            return True, chain
+            return True, rows, None
         step = next((t for t in trans if t[2] == blob and t[0] not in seen), None)
         if step is None:
-            return False, chain
+            return False, rows, f"{rel}: gate blob {old_blob[:9]} is not an ancestor revision of {new_blob[:9]} on main"
         c, pre, post = step
         seen.add(c)
-        ok = c in allow
-        if not ok and rel in LINT_ONLY:
-            a = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", pre], capture_output=True, timeout=60)
-            b = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", post], capture_output=True, timeout=60)
-            ok = not a.returncode and not b.returncode and lint_change_is_submit_only(a.stdout, b.stdout)
-        if not ok:
-            return False, chain + [c]
-        chain.append(c)
+        r = classify_commit(repo, c, rel, pre, post, registry, cache)
+        r["applies"] = r["kind"] == "tightening" and tile_matches(r.get("applies_to"), tile)
+        rows.append(r)
+        if r["kind"] == "unclassified":
+            return False, rows, (f"{rel}: commit {c[:9]} is not a relaxing-only rule change (unclassified: add a "
+                                 f"'Gate-Rule: relaxing|neutral|tightening' trailer or a helper_overlay.RULE_COMMITS entry)")
+        if r["applies"] and not r.get("requires"):
+            return False, rows, f"{rel}: commit {c[:9]} TIGHTENS rule {r.get('rule')} for this tile ({r.get('what', '')[:120]})"
         blob = pre
-    return False, chain
+    return False, rows, f"{rel}: blob chain longer than {max_steps} commits"
+
+
+def relaxing_only_span(repo, rel, old_blob, new_blob, heads, allow=None, max_steps=64):
+    """ROOT-0040 interface: (ok, commits) -- rule_span with no tile scope; commits newest first, the blocking one last."""
+    reg = None if allow is None else {c: dict(e, kind=e.get("kind", "relaxing")) for c, e in allow.items()}
+    ok, rows, _ = rule_span(repo, rel, old_blob, new_blob, heads, registry=reg, max_steps=max_steps)
+    return ok, [r["commit"] for r in rows]
 
 
 # SUBMIT-ONLY lint names (ROOT 2026-10-16, coordinator): constants of tools/textbook_lint.py read only by the submit-time
