@@ -1,0 +1,546 @@
+{
+ "name": "qfd_tt_head_static_h12",
+ "top": "ot_qfd_tt_ctlm_static_hr",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv",
+  "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+  "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv",
+  "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv"
+ ],
+ "params": {
+  "CMDREG": 2
+ },
+ "clock_port": "ck_head",
+ "clock_ports": [
+  "ck_head",
+  "ck_pm0",
+  "ck_pm1"
+ ],
+ "clock": "hybrid_entries",
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_head"
+   ],
+   "inputs": [
+    "cp_active",
+    "native_ret",
+    "h_start",
+    "token",
+    "pos",
+    "prog_base",
+    "pw_v",
+    "pw_addr",
+    "pw_data",
+    "x_oacc",
+    "x_oidle",
+    "x_oprog",
+    "x_orows",
+    "kv_ok",
+    "kv_write_drained",
+    "me_mem_ok",
+    "rom_ret_i",
+    "rst_n"
+   ],
+   "outputs": [
+    "me_image_ready",
+    "cp",
+    "program_obs",
+    "layer_context_v",
+    "native_tok",
+    "native_pos",
+    "command_stage",
+    "native_cmd",
+    "m_fin_o",
+    "m_fidx_o",
+    "m_fval_o",
+    "c_fault",
+    "rom_cmd",
+    "me_observe",
+    "me_clk_en",
+    "kvd_v",
+    "kvd_wbase",
+    "kvd_ts",
+    "kvd_ks",
+    "kvd_js",
+    "kvd_wcs",
+    "kvd_split",
+    "kvd_jsh",
+    "kvd_tiles",
+    "kvd_k",
+    "kvd_nout",
+    "kvd_kindk",
+    "kvd_pos"
+   ]
+  },
+  "pm0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_pm0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "pm1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_pm1"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 259.2
+ },
+ "recipe": 2,
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    22.176
+   ],
+   "orient": "R0",
+   "inst": "*u_head*g_m?0?*u_pm",
+   "clock_entry": {
+    "port": "ck_pm0",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    99.984
+   ],
+   "orient": "R0",
+   "inst": "*u_head*g_m?1?*u_pm",
+   "clock_entry": {
+    "port": "ck_pm1",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "E": [
+   "cp_active",
+   "cp",
+   "me_image_ready",
+   "program_obs",
+   "layer_context_v",
+   "native_tok",
+   "native_pos",
+   "command_stage",
+   "native_cmd",
+   "native_ret",
+   "h_start",
+   "token",
+   "pos",
+   "prog_base",
+   "pw_v",
+   "pw_addr",
+   "pw_data",
+   "x_oacc",
+   "x_oidle",
+   "x_oprog",
+   "x_orows",
+   "kv_ok",
+   "kv_write_drained",
+   "me_mem_ok",
+   "m_fin_o",
+   "m_fidx_o",
+   "m_fval_o",
+   "c_fault",
+   "kvd_v",
+   "kvd_wbase",
+   "kvd_ts",
+   "kvd_ks",
+   "kvd_js",
+   "kvd_wcs",
+   "kvd_split",
+   "kvd_jsh",
+   "kvd_tiles",
+   "kvd_k",
+   "kvd_nout",
+   "kvd_kindk",
+   "kvd_pos"
+  ],
+  "W": [
+   "rom_cmd",
+   "rom_ret_i",
+   "me_observe",
+   "me_clk_en",
+   "ck_pm0",
+   "ck_pm1"
+  ],
+  "N": [
+   "ck_head",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware"
+  },
+  "pin_balance": {
+   "group_max": 1
+  },
+  "pin_min_tracks": 1
+ },
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+  "POST_RESIZE_TCL": "physical/common_flow/post_resize_relocate.tcl",
+  "OT_CHANNEL_BLOCK_UM": "20",
+  "OT_ROW_MIN_UM": "6",
+  "OT_OFLOP_GAP": "4.5"
+ },
+ "structural_change": "h12 (Q-IO-1815 TTH 2026-10-17): h11c + CMDREG=2 (second ROM-tree command register: h11c worst = relocation adder kvd field -> code_sum + E->W crossing to rom_cmd_q, -208.7 @770; +1 edge per ROM-tree command, ledger TT.ROMCMD2). | h11 (Q-IO-1815 TTH 2026-10-16): h10 RTL (RSTREP) + f10 macro placement (both program SRAMs abutted at the S edge, x 43.2) + EVERY W/E data pin banded to y 60-255 (PPL ordered groups failed PPL-0086 in 19-um sections at 105-255 and 60-255; balanced placer, disjoint per-bus ranges proportional to width, 1-track minimum: E 1,089 pins need >=105 um at 1 track / 209 um at 2) beside the N logic band (E 1,089 M4 pins = 7.3/um, W 494 = 3.3/um); ck_head/rst_n stay N. f10 failed (-514) because its pins stayed at y 3-173 beside the SRAMs while the logic sat N; h10 (centred SRAMs) is a thin ring (-223). Pin registers per the owner rule (recipe-3 ot_pin_regs, clock ck_head): +1 edge on every port not already registered at its pin (per-port table ot_pin_regs.tsv; compiler schedule absorbs; die/ledger to be told). | h10 (Q-IO-1815 TTH 2026-10-16): h9b + RSTREP=1: the reset station flop drove 481 async clears (380 = rom_cmd_q, W face; gate high_fanout warn, recovery -154..-197 ps); three kept station copies of the identical function (rsl ~120 loads, rom_cmd_q halves 190 each), release unchanged, 0 edges (m0 REGROUP_PASS 65120 identical, OT_DPRE_MUT FAIL 19964). Control for the h10k two-root measurement. | h9 (Q-ELEM 1315): h8 gate worst moved to controller decode h_rd_c -> ir mux -> F(BASE)+dyn[F(D)] -> me_obase/xbase (-565.5). DPRE=1: the 10 base+DYN adds are computed per FIFO head word (hq, hq1) from flops and selected by h_rd copies after the add; exact, 0 edges. h8 (Q-ELEM 1315): h7 gate placement TT reg->reg -470.7 ps over 2,648 flops: u_issue.cycle -> 32-bit cycle==head compare (~410 ps OR tree) -> controller fan-out (~650 ps incl. cross-tile buffering) -> kvd fields / pin regs. Fix: SREG=1 (ot_qwen_fixed_issue): 'scheduled' is a register loaded with the exact next-state value; bit-identical every cycle (sim self-check + regroup bench vs ref), 0 edges. h3 (Q-COMPUTE-ELEM r14): h2 CTS refused by the strict multiple-CTS profile (ck_head drove 4,831 std FF + 2 raw SRAM clock pins: mixed source). The two program SRAMs now take explicit raw-macro clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk, derived by tools/qwen_split/derive_tt_head_rawck.py; shared source unchanged), W-face pins at the SRAM clk heights; std roots ck_head / ck_me_sched unchanged (clock hybrid_entries, flow 891a5f188). Parent delivers ck_pm0/1 from the same PLL phase as ck_head (same_pll_fixed_phase 0 ps). Logic, edges and outline unchanged. NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
+ "job": {
+  "owner": "Claude:Q-ELEM-TTH",
+  "branch": "claude/qelem-tth-1016",
+  "tag": "h12",
+  "purpose": "Static TT head-side leaf, raw SRAM clock entries (h3) for the qfd_tt_ctlm_static_s cluster",
+  "extra_paths": [
+   "physical/qwen_tt_static_cluster_1015",
+   "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan"
+  ],
+  "benches": [
+   {
+    "name": "bench_tt_regroup_m0",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m0 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "REGROUP_PASS"
+   },
+   {
+    "name": "bench_tt_regroup_m1",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m1 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 1 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL"
+   },
+   {
+    "name": "bench_tt_regroup_m2",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m2 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 2 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL"
+   },
+   {
+    "name": "bench_tt_regroup_rawrst",
+    "cmd": "RG_OBJ={RUN}/bench/rg_r0 RG_DEFS=-DTB_RSTN=0 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL"
+   },
+   {
+    "name": "bench_tt_sreg_mut",
+    "cmd": "RG_OBJ={RUN}/bench/rg_sm RG_DEFS=-DOT_SREG_MUT bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "OT_SREG_MISMATCH"
+   },
+   {
+    "name": "bench_tt_dpre_mut",
+    "cmd": "RG_OBJ={RUN}/bench/rg_dm RG_DEFS=-DOT_DPRE_MUT bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL"
+   }
+  ],
+  "structural_change": "h10 (Q-IO-1815 TTH 2026-10-16): h9b + RSTREP=1: the reset station flop drove 481 async clears (380 = rom_cmd_q, W face; gate high_fanout warn, recovery -154..-197 ps); three kept station copies of the identical function (rsl ~120 loads, rom_cmd_q halves 190 each), release unchanged, 0 edges (m0 REGROUP_PASS 65120 identical, OT_DPRE_MUT FAIL 19964). Control for the h10k two-root measurement. | h9 (Q-ELEM 1315): h8 gate worst moved to controller decode h_rd_c -> ir mux -> F(BASE)+dyn[F(D)] -> me_obase/xbase (-565.5). DPRE=1: the 10 base+DYN adds are computed per FIFO head word (hq, hq1) from flops and selected by h_rd copies after the add; exact, 0 edges. h8 (Q-ELEM 1315): h7 gate placement TT reg->reg -470.7 ps over 2,648 flops: u_issue.cycle -> 32-bit cycle==head compare (~410 ps OR tree) -> controller fan-out (~650 ps incl. cross-tile buffering) -> kvd fields / pin regs. Fix: SREG=1 (ot_qwen_fixed_issue): 'scheduled' is a register loaded with the exact next-state value; bit-identical every cycle (sim self-check + regroup bench vs ref), 0 edges. h7 (Q-ELEM-TTH 2026-10-16) after h6 gate (c20527ec4 receipt): ck_head boundary spread 73.7 ps OK with -no_obstruction_aware, but placement TT setup sched->core -429 ps / core->sched -301 ps: separate std entries carry the die-skew reserve (setup 150/210, hold 100) on every hop between them (210 because ck_head mean 303 > 300), and the die already feeds ck_me_sched and ck_head from one tap. ck_me_sched entry merged into ck_head (one standard-cell root, 5,402+877 sinks < 15k); hr port ck_me_sched removed (parent port retained until the die netlist drops it, as Q-ELEM-TTP 1c99b5f52). Raw program-SRAM entries ck_pm0/ck_pm1 unchanged (coordinator requirement). Logic, edges, outline, macros unchanged. Keeps h6: reset station (RSTN=1, release +1 edge, 0 token cycles) and -no_obstruction_aware.",
+  "cycles_added": 1
+ },
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock_cts_roots": [
+  "ck_head"
+ ],
+ "pin_ranges": {
+  "ck_pm0": [
+   20.976,
+   24.976
+  ],
+  "ck_pm1": [
+   98.784,
+   102.784
+  ],
+  "cp_active": [
+   60.0,
+   60.192
+  ],
+  "cp": [
+   60.384,
+   70.017
+  ],
+  "me_image_ready": [
+   70.209,
+   70.401
+  ],
+  "program_obs": [
+   70.593,
+   83.665
+  ],
+  "layer_context_v": [
+   83.857,
+   84.049
+  ],
+  "native_tok": [
+   84.241,
+   87.338
+  ],
+  "native_pos": [
+   87.53,
+   90.626
+  ],
+  "command_stage": [
+   90.818,
+   91.85
+  ],
+  "native_cmd": [
+   92.042,
+   157.406
+  ],
+  "native_ret": [
+   157.598,
+   173.939
+  ],
+  "h_start": [
+   174.131,
+   174.323
+  ],
+  "token": [
+   174.515,
+   177.611
+  ],
+  "pos": [
+   177.803,
+   180.9
+  ],
+  "prog_base": [
+   181.092,
+   183.156
+  ],
+  "pw_v": [
+   183.348,
+   183.54
+  ],
+  "pw_addr": [
+   183.732,
+   185.452
+  ],
+  "pw_data": [
+   185.644,
+   196.652
+  ],
+  "x_oacc": [
+   196.844,
+   200.973
+  ],
+  "x_oidle": [
+   201.165,
+   201.357
+  ],
+  "x_oprog": [
+   201.549,
+   204.301
+  ],
+  "x_orows": [
+   204.493,
+   207.245
+  ],
+  "kv_ok": [
+   207.437,
+   207.629
+  ],
+  "kv_write_drained": [
+   207.821,
+   208.013
+  ],
+  "me_mem_ok": [
+   208.205,
+   208.397
+  ],
+  "m_fin_o": [
+   208.589,
+   208.781
+  ],
+  "m_fidx_o": [
+   208.973,
+   212.069
+  ],
+  "m_fval_o": [
+   212.261,
+   217.766
+  ],
+  "c_fault": [
+   217.958,
+   218.15
+  ],
+  "kvd_v": [
+   218.342,
+   218.534
+  ],
+  "kvd_wbase": [
+   218.726,
+   222.854
+  ],
+  "kvd_ts": [
+   223.046,
+   227.174
+  ],
+  "kvd_ks": [
+   227.366,
+   231.494
+  ],
+  "kvd_js": [
+   231.686,
+   235.815
+  ],
+  "kvd_wcs": [
+   236.007,
+   240.135
+  ],
+  "kvd_split": [
+   240.327,
+   241.015
+  ],
+  "kvd_jsh": [
+   241.207,
+   241.723
+  ],
+  "kvd_tiles": [
+   241.915,
+   245.011
+  ],
+  "kvd_k": [
+   245.203,
+   248.299
+  ],
+  "kvd_nout": [
+   248.491,
+   251.588
+  ],
+  "kvd_kindk": [
+   251.78,
+   251.972
+  ],
+  "kvd_pos": [
+   252.164,
+   255.26
+  ],
+  "rom_cmd": [
+   60.0,
+   210.165
+  ],
+  "rom_ret_i": [
+   210.357,
+   247.898
+  ],
+  "me_observe": [
+   248.09,
+   254.413
+  ],
+  "me_clk_en": [
+   254.605,
+   255.0
+  ]
+ },
+ "pin_regs": {
+  "enable": true,
+  "clock": "ck_head"
+ }
+}
