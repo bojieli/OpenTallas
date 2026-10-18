@@ -2,26 +2,26 @@
 // HBM-RTL5 2026-10-18: WHOLE SU programme path, r5 vs r4, on the full 7111-edge su_top_compile image (all 4 quarters).
 //   REF (previous behaviour, the d4f/d4g GEN0 composition): ot_hbm_su_programme_part PARTS 4 DEPTH 2 PIPE 2 = root
 //       ot_hbm_su_programme_root FREG 1 (= root_h, 4 x 98 banks) + 4 x pslice STAGES 1 PIPE 2 (= pslice_q4).
-//   DUT (d4g GEN1): ot_hbm_su_programme_root5 (root_h5: SMACROS 4 x 320, SDLY 2, RRLY 1) -> 4 x ot_hbm_su_programme_
+//   DUT (d4g GEN1): ot_hbm_su_programme_root5 (root_h5: SMACROS 4 x 320, SDLY 3, RRLY 1, CPIN 1) -> 4 x ot_hbm_su_programme_
 //       pslice_c5 (pghead + 10 pgcol S/L leaves with the NATIVE-FIX3 pin/reset stages), wired as the die wires su_pgr ->
 //       pgp_<q> (r_start/r_len shared, r_we[k]/r_bank[k], r_row/r_data shared, p_fault[k] <- pgp_<k>.fault,
 //       busy/valid/done/edge_index from pgp_0).
 // ONE host stimulus drives both on the SAME edges (configuration image, start, directed fault writes); each side gets
 // its own compiled image (ref: --partition 4; DUT: --root5, bank = 320 part + 32 column + local), written in separate
 // idle windows. Check on EVERY edge (outside reset windows): every DUT output (9,688-b command, valid, done,
-// edge_index, busy, fault) == the REF output SD=2 edges earlier (the documented root_h5 latency shift), REF command ==
+// edge_index, busy, fault) == the REF output SD=3 edges earlier (the documented root_h5 latency shift; PG5 CPIN 1 + SDLY 3), REF command ==
 // golden line. Two executions, then directed cases on identical host edges: (c) write while busy (part 0), (d) write
 // while busy (part 3), reset, (a) write on the start edge (start rejected everywhere), reset, (b) write to no part.
 // Reset: the DUT root and the cluster head/leaves of every part leave reset RREL=3 edges after the port (checked).
 // Mutants (must FAIL): -GMUT=1 root SDLY 0 (old root timing with the r5 clusters), 2 root decode 4 x 98, 3 root reset
-// relay bypassed, 4 root out-of-range fault not delayed; -GCMUT=5 cluster leaf cfg pin stage dropped (old leaves);
+// relay bypassed, 4 root out-of-range fault not delayed, 5 root cfg pin stage dropped (PG5); -GCMUT=5 cluster leaf cfg pin stage dropped (old leaves);
 // +MUT_CFG (quarter 2 column 3 index one edge off + column 2 dictionary word flipped).
 module tb_hbm_su_programme_root5;
 `include "ref4/part_params.svh"
 `include "root5_params.svh"
 localparam integer B=PART_SB*PART_N, N=PART_EDGES, WM=PART_WRITES, WP=R5_WRITES, P=R5_PARTS, SB=R5_SB;
 parameter integer MUT=0, CMUT=0;
-localparam integer SD=2, RREL=3;
+localparam integer SD=3, RREL=3;   // PG5: root_h5 SDLY 3 (CPIN 1)
 logic clk=0; always #5 clk=~clk;
 logic rst_n=0;
 logic m_we=0, p_we=0, start=0;
@@ -39,7 +39,7 @@ ot_hbm_su_programme_part #(.LINE_BITS(B),.EDGES(N),.PARTS(PART_N),.DEPTH(PART_DE
 // DUT
 wire r_start; wire [15:0] r_len; wire [P-1:0] r_we, q_fault, q_busy, q_valid, q_done; wire [16*P-1:0] r_bank, q_edge;
 wire [6:0] r_row; wire [255:0] r_data;
-ot_hbm_su_programme_root5 #(.PARTS(P),.SMACROS({P{32'(R5_PART_BANKS)}}),.SDLY(2),.RRLY(1),.MUT(MUT)) u_root(
+ot_hbm_su_programme_root5 #(.PARTS(P),.SMACROS({P{32'(R5_PART_BANKS)}}),.SDLY(3),.RRLY(1),.CPIN(1),.MUT(MUT)) u_root(
  .clk(clk),.rst_n(rst_n),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(p_row),.cfg_data(p_data),.start(start),
  .length(16'(N)),.p_fault(q_fault),.r_start(r_start),.r_len(r_len),.r_we(r_we),.r_bank(r_bank),.r_row(r_row),
  .r_data(r_data),.fault(p_fault));

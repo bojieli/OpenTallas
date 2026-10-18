@@ -270,7 +270,10 @@ def lower_root5(source, out, parts=4, line_bits=9688, part_banks=320, col_bits=3
              bank_numbering=f'{part_banks} x part + {col_bits} x column + local bank',leaves=leaves[0],
              dictionary_caps_per_quarter=caps,config_transactions=len(lines),
              reference=dict(parts=ref['parts'],slice_macros=ref['slice_macros'],config_transactions=ref['config_transactions']),
-             mut_q=mut_q)
+             mut_q=mut_q,
+             # root_h5 (PG5 10-18): CPIN 1 + SDLY 3 -> every programme output = r4 + 3 edges; config rules unchanged
+             timing=dict(root_sdly=3,root_cpin=1,start_issue_advance_edges=start_depth+4+3,output_shift_vs_r4_edges=3,
+                         reset_wait_edges=3))
     (out/'root5_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
     return man
 

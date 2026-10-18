@@ -10,23 +10,32 @@
 //   * SMACROS 4 x 320: per-part bank space = 32 x column (10 columns) + local bank (su_programme_compile.py --root5);
 //     a bank >= 4 x 320 sets the sticky configuration fault (a bank inside a part but on no column / no local bank is
 //     rejected by the cluster head / leaf, as before).
-//   * SDLY 2: start/length are delayed SDLY extra edges (configuration is NOT), so the configuration reaches every
+//   * SDLY (2 before PG5, now 3 = cluster 2 + CPIN 1): start/length are delayed SDLY extra edges (configuration is NOT), so the configuration reaches every
 //     cluster leaf producer on the same edge relative to the start as in r4 (= the +2 cluster configuration edges);
 //     the root's own out-of-range fault is delayed SDLY edges with it (lands on the shifted r4 fault edge).
 //   * RRLY 1: rst_n drives only an ot_rst_relay (SYNC 2 + TREE 1, release +3, assert immediate) = the same release as
 //     every pghead / pgcol leaf, so root and clusters leave reset on one edge; a host write or start in the 3 edges
 //     after the port release is dropped everywhere (the host waits >= 3 edges, as the leaves require).
 // Compiler (HBM SU programme): start -> command line 0 at the consumer is DEPTH + 4 + SDLY edges (r4: DEPTH + 4), i.e.
-// start advance DEPTH + 6 with SDLY 2; configuration writes unchanged (any edge while idle, >= 0 edges before start, the
+// start advance DEPTH + 4 + SDLY (DEPTH + 7 with SDLY 3); configuration writes unchanged (any edge while idle, >= 0 edges before start, the
 // write-on-start-edge rejection unchanged); reset: wait >= 3 edges after rst_n release; config image numbering
 // 320 x part + 32 x column + local (su_programme_compile.py --root5). SDLY 0 = configuration lowered 2 edges earlier
 // by the compiler instead (no start cost; write-on-start pairing then at e/e+2).
+// HBM-NATIVE5/PG5 2026-10-18 (owners_hbm_native_audit, hbm_su_pgroot_1017-g2-5c926051a: root_h capture cfg_bank[*]
+// 191..262 ps x15 + rst_n 200 ps > 190 -- the part-range compare/subtract decoded cfg_bank before the flops):
+//   * CPIN 1: cfg_we/cfg_bank/cfg_row/cfg_data land on pin registers first (no logic before the flop); the part
+//     decode (r_we/r_bank/out-of-range) runs from the pin registers. +1 configuration edge in the root, so SDLY 2 -> 3
+//     keeps the start aligned with the configuration at every cluster leaf (cluster +2 + root CPIN 1 = 3), and the
+//     own out-of-range fault delay is SDLY - CPIN = 2 (same fault edge as the shifted r4 one). Host contract unchanged
+//     (write-on-start pairing at e/e, config up to the edge before start); every output = r4 + SDLY = r4 + 3 edges ->
+//     COMPILER: start advance DEPTH + 4 + 3 = DEPTH + 7 (was DEPTH + 6 with root_h5 SDLY 2); reset wait >= 3 edges.
+//   * rst_n already drives only the ot_rst_relay (RRLY 1, 3 flops).
 // MUT (bench only): 1 SDLY forced 0 (old root timing with the r5 clusters), 2 SMACROS 4 x 98 (r4 decode), 3 RRLY 0
-// (reset relay bypassed), 4 root out-of-range fault not delayed.
+// (reset relay bypassed), 4 root out-of-range fault not delayed, 5 CPIN forced 0 (pin stage dropped, SDLY 3 kept).
 module ot_hbm_su_programme_root5 #(
   parameter integer PARTS=4,
   parameter [32*PARTS-1:0] SMACROS={PARTS{32'd320}},
-  parameter integer SDLY=2, RRLY=1, MUT=0
+  parameter integer SDLY=3, RRLY=1, CPIN=1, MUT=0
 )(input logic clk, rst_n,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
@@ -37,7 +46,8 @@ module ot_hbm_su_programme_root5 #(
   output logic fault);
   localparam [32*PARTS-1:0] SM=(MUT==2)?{PARTS{32'd98}}:SMACROS;
   localparam integer SD=(MUT==1)?0:SDLY;
-  localparam integer FD=(MUT==4)?0:SD;
+  localparam integer CP=(MUT==5)?0:CPIN;
+  localparam integer FD=(MUT==4)?0:((SD>CP)?SD-CP:0);
   function automatic integer mbase(input integer k);
     integer v,i; begin v=0; for(i=0;i<k;i=i+1) v=v+SM[32*i+:32]; mbase=v; end
   endfunction
@@ -59,17 +69,27 @@ module ot_hbm_su_programme_root5 #(
   end else begin:g_nsd
     assign s_in=start; assign l_in=length;
   end endgenerate
+  // configuration pin stage (CPIN 1): every cfg pin lands on a flop, the decode runs from these
+  logic q_we; logic [15:0] q_bank; logic [6:0] q_row; logic [255:0] q_data;
+  generate if(CP!=0) begin:g_cp
+    always_ff @(posedge clk) begin
+      if(!rr) q_we<=0; else q_we<=cfg_we;
+      q_bank<=cfg_bank; q_row<=cfg_row; q_data<=cfg_data;
+    end
+  end else begin:g_ncp
+    assign q_we=cfg_we; assign q_bank=cfg_bank; assign q_row=cfg_row; assign q_data=cfg_data;
+  end endgenerate
   logic cfg_oor;
   integer i;
   always_ff @(posedge clk) begin
     if(!rr) begin r_start<=0; r_len<=0; r_we<='0; cfg_oor<=0; end
     else begin
       r_start<=s_in; r_len<=l_in;
-      for(i=0;i<PARTS;i=i+1) r_we[i]<=cfg_we && cfg_bank>=mbase(i) && cfg_bank<mbase(i+1);
-      cfg_oor<=cfg_we && cfg_bank>=mbase(PARTS);
+      for(i=0;i<PARTS;i=i+1) r_we[i]<=q_we && q_bank>=mbase(i) && q_bank<mbase(i+1);
+      cfg_oor<=q_we && q_bank>=mbase(PARTS);
     end
-    for(i=0;i<PARTS;i=i+1) r_bank[16*i+:16]<=cfg_bank-16'(mbase(i));
-    r_row<=cfg_row; r_data<=cfg_data;
+    for(i=0;i<PARTS;i=i+1) r_bank[16*i+:16]<=q_bank-16'(mbase(i));
+    r_row<=q_row; r_data<=q_data;
   end
   // own out-of-range term delayed FD edges, then sticky; fault = registered OR (FREG 1 as root_h)
   wire oor_d;
@@ -95,5 +115,5 @@ module ot_hbm_su_programme_root_h5 (
   output logic [3:0] r_we, output logic [63:0] r_bank,
   output logic [6:0] r_row, output logic [255:0] r_data,
   output logic fault);
-  ot_hbm_su_programme_root5 #(.PARTS(4),.SMACROS({4{32'd320}}),.SDLY(2),.RRLY(1)) u_root(.*);
+  ot_hbm_su_programme_root5 #(.PARTS(4),.SMACROS({4{32'd320}}),.SDLY(3),.RRLY(1),.CPIN(1)) u_root(.*);
 endmodule

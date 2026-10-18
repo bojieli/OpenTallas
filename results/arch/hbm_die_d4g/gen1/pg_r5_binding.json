@@ -10,7 +10,7 @@
    "master": "ot_hbm_su_programme_root_h5",
    "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root_h5.sv",
    "deps": ["rtl/lib/ot_rst_relay.sv"],
-   "params": {"PARTS": 4, "SMACROS": "4 x 320", "SDLY": 2, "RRLY": 1},
+   "params": {"PARTS": 4, "SMACROS": "4 x 320", "SDLY": 3, "RRLY": 1, "CPIN": 1},
    "view": "hbm_su_pgroot_r5 (kit physical/ref_tile/hbm_su_pgroot_r5; job hbm_su_pgroot_r5-r5-<commit>, see lanes/HBM-RTL5.md); bind SYNTH until it closes",
    "ports": "identical to root_h (same pin faces as hbm_su_pgroot_1017)"
   },
@@ -32,14 +32,14 @@
   "script": "tools/hbm_static/su_programme_root5_run.sh",
   "tb": "rtl/hbm_accel/generic/adapters/static_su/programme/tb_hbm_su_programme_root5.sv",
   "reference": "ot_hbm_su_programme_part PARTS 4 DEPTH 2 PIPE 2 (= root_h FREG 1 + 4 x pslice_q4), the previous behaviour",
-  "check": "one host stimulus, every DUT output (9,688-b command, valid, done, edge_index, busy, fault) == REF 2 edges earlier on every edge, REF == golden; 2 executions + 4 directed fault cases; root + cluster reset release = 3 edges",
+  "check": "one host stimulus, every DUT output (9,688-b command, valid, done, edge_index, busy, fault) == REF 3 edges earlier on every edge, REF == golden; 2 executions + 4 directed fault cases; root + cluster reset release = 3 edges",
   "results": "results/rtl/hbm_rtl5_pg_1018/bench/"
  },
  "compiler_latency_rules": {
-  "start_advance": "start -> command line 0 at the consumer = DEPTH + 4 + 2 edges (r4: DEPTH + 4): issue start 2 edges earlier than r4 (DEPTH + 6 with DEPTH 2). busy/valid/done/edge_index/fault: all +2 edges vs r4 relative to the host start.",
-  "configuration": "unchanged at the host pins: writes only while idle, the last write may be on the edge before start; a write on the start edge rejects the start (sticky fault) exactly as r4. The cluster's +2 configuration edges are absorbed by the root's SDLY 2 start delay.",
-  "config_image": "bank = 320 x quarter + 32 x column + local bank (local 0..IB-1 packed index, IB.. dictionary); su_programme_compile.py --root5 (replaces --partition 4); bank >= 1280 = sticky out-of-range fault (2 edges later than r4, with the rest)",
+  "start_advance": "start -> command line 0 at the consumer = DEPTH + 4 + 3 edges (r4: DEPTH + 4; PG5 10-18: root CPIN 1 -> SDLY 3): issue start 3 edges earlier than r4 (DEPTH + 7 with DEPTH 2). busy/valid/done/edge_index/fault: all +3 edges vs r4 relative to the host start.",
+  "configuration": "unchanged at the host pins: writes only while idle, the last write may be on the edge before start; a write on the start edge rejects the start (sticky fault) exactly as r4. The cluster's +2 and the root's CPIN +1 configuration edges are absorbed by the root's SDLY 3 start delay.",
+  "config_image": "bank = 320 x quarter + 32 x column + local bank (local 0..IB-1 packed index, IB.. dictionary); su_programme_compile.py --root5 (replaces --partition 4); bank >= 1280 = sticky out-of-range fault (3 edges later than r4, with the rest)",
   "reset": "root, head and leaves release 3 edges after rst_n (ot_rst_relay): host waits >= 3 edges after reset release before configuring or starting",
-  "faults": "fault edges = r4 + 2 (shifted with everything)"
+  "faults": "fault edges = r4 + 3 (shifted with everything)"
  }
 }

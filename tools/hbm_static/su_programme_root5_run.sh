@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# HBM-RTL5 2026-10-18: whole SU programme path r5 (ot_hbm_su_programme_root_h5 = root5 SMACROS 4x320 SDLY 2 RRLY 1 ->
+# HBM-RTL5 2026-10-18: whole SU programme path r5 (ot_hbm_su_programme_root_h5 = root5 SMACROS 4x320 SDLY 3 RRLY 1 CPIN 1 (PG5) ->
 # 4 x ot_hbm_su_programme_pslice_c5 with the NATIVE-FIX3 leaves) vs r4 (root_h + 4 x pslice_q4 = programme_part PIPE 2)
-# on the full 7111-edge su_top_compile image, one host stimulus, DUT == REF shifted 2 edges on every edge
-# (tb_hbm_su_programme_root5.sv), + 6 mutants that must FAIL.
-# Usage (repo root or export, via ot-run): OUT=dir [ONLY=cfg|sdly0|decode98|rrly0|oorfd0|oldleaf] $0
+# on the full 7111-edge su_top_compile image, one host stimulus, DUT == REF shifted 3 edges on every edge
+# (tb_hbm_su_programme_root5.sv), + 7 mutants that must FAIL.
+# Usage (repo root or export, via ot-run): OUT=dir [ONLY=cfg|sdly0|decode98|rrly0|oorfd0|oldleaf|cpin0] $0
 set -euo pipefail
 ulimit -c 0
 OUT=$(mkdir -p "${OUT:?OUT required}" && realpath "$OUT")
@@ -21,7 +21,7 @@ build(){ "$vl" --binary --timing -O1 -j "${JOBS:-8}" -Wno-fatal -Wno-WIDTHTRUNC 
   || { tail -20 "$OUT/build$1_$2.log"; echo "SU_PROGRAMME_ROOT5 BUILD_FAIL MUT=$1 CMUT=$2"; exit 2; }; }
 run(){ set +e; "$OUT/obj$1_$2/Vtb_hbm_su_programme_root5" +DIR="$OUT/img" $3 > "$OUT/run_$4.log" 2>&1; local rc=$?; set -e
   grep -h "SU_PROGRAMME_ROOT5" "$OUT/run_$4.log" | head -6 | sed "s/^/[$4] /"; echo "[$4] rc=$rc"; return $rc; }
-MUTS=("0 0 +MUT_CFG cfg" "1 0 _ sdly0" "2 0 _ decode98" "3 0 _ rrly0" "4 0 _ oorfd0" "0 5 _ oldleaf")
+MUTS=("0 0 +MUT_CFG cfg" "1 0 _ sdly0" "2 0 _ decode98" "3 0 _ rrly0" "4 0 _ oorfd0" "0 5 _ oldleaf" "5 0 _ cpin0")
 if [ -n "${ONLY:-}" ]; then   # closure-loop expect=fail bench: one mutant, exits 1 after its verdict
   for c in "${MUTS[@]}"; do set -- $c; [ "$4" = "$ONLY" ] || continue; a=$3; [ "$a" = _ ] && a=""
     build $1 $2; run $1 $2 "$a" "$4" || true; exit 1; done
