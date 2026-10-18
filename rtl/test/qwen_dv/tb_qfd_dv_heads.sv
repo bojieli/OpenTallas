@@ -8,7 +8,7 @@
 // first go.  Ops: the production TP8 shapes (qkv k 8 S 512, o_proj k 2 S 256 x3, gate_up k 32 S 128, down k 6 S 256 x3)
 // with random x images.  Prints PASS / FAIL.
 module tb_qfd_dv_heads;
-    parameter integer MUT = 0, SID = 5, NOPS = 4, GAPC = 1500;
+    parameter integer MUT = 0, SID = 5, NOPS = 4, GAPC = 1500, HD_W130 = 0;
     localparam integer NW = 18, AW = 24, XCW = 12, NH = 8, TG = 4, IL = 8, NCOL = 48;
     localparam integer IBW = 3 * NW + 13 * AW + 13, CW = 1 + IBW + 128 + 8;
     reg clk = 0, rst_n = 0;
@@ -61,7 +61,7 @@ module tb_qfd_dv_heads;
     wire [4*CW-1:0] n_d, s_d;
     wire [69:0] st;
     wire [1087:0] swi = sw_v ? {1'b1, 3'd0, 4'hF, 4'hE, sw_a, 28'd0, sw_bf} : 1088'd0;
-    qfd_dv_slice #(.MUT(MUT)) u_dut (.ck(clk), .rst_n(rst_n), .sid(4'(SID)), .cmd(116'd0), .cw0(514'd0), .cw1(514'd0),
+    qfd_dv_slice #(.MUT(MUT), .HD_W130(HD_W130)) u_dut (.ck(clk), .rst_n(rst_n), .sid(4'(SID)), .cmd(116'd0), .cw0(514'd0), .cw1(514'd0),
         .nb9_i(514'd0), .nb9_o(), .sw_i(swi), .so_e(), .se_i(1088'd0), .so_w(), .sc_i(96'd0), .sc_o(),
         .ar_o(), .ar_i(518'd0), .dd_o(), .dd_i(520'd0), .hr_i({go, ib, xpf}), .hr_o(), .n_d(n_d), .s_d(s_d), .st(st));
     function automatic integer tid(input integer c, input integer r);

@@ -1,0 +1,158 @@
+{
+ "name": "qfd_dv_slice2_w",
+ "top": "qfd_dv_slice2_w",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+  "rtl/qwen_dv/qfd_dv_slice2.sv",
+  "rtl/qwen_dv/qfd_dv_redstn2.sv",
+  "rtl/qwen_dv/qfd_dv_scalar2.sv",
+  "rtl/qwen_dv/qfd_dv_vm.sv",
+  "rtl/qwen_dv/qfd_dv_stream.sv",
+  "rtl/qwen_dv/qfd_dv_su8_entries.sv",
+  "rtl/qwen_dv/qfd_dv_heads.sv",
+  "rtl/hdc/ot_hdc_vstream_lane.sv",
+  "rtl/hdc/ot_hdc_vreduce.sv",
+  "rtl/physical/ot_hdc_vred_pending_guard.sv",
+  "rtl/hdc/ot_hdc_sfu_q.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/lib/ot_rst_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 2462.376,
+  "h": 2591.976,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "ck",
+   "rst_n",
+   "rs_n0",
+   "rs_n1",
+   "cw_n0",
+   "cw_n1",
+   "cw_n2",
+   "cw_n3"
+  ],
+  "S": [
+   "rs_s0",
+   "rs_s1",
+   "cw_s0",
+   "cw_s1",
+   "cw_s2",
+   "cw_s3"
+  ],
+  "E": [
+   "cmd_eo",
+   "hr_eo",
+   "st_eo",
+   "st_ei",
+   "sc_eo",
+   "sc_ei",
+   "arv_ei",
+   "art_ei",
+   "arm_ei",
+   "arl_ei",
+   "ard_ei",
+   "dd_ei",
+   "rv_eo",
+   "re_eo",
+   "rr_eo",
+   "rl_eo",
+   "rd_eo",
+   "dr_eo",
+   "ag_ei",
+   "l9_eo"
+  ],
+  "W": [
+   "cmd_wi",
+   "hr_wi",
+   "st_wo",
+   "st_wi",
+   "sc_wo",
+   "sc_wi",
+   "arv_wo",
+   "art_wo",
+   "arm_wo",
+   "arl_wo",
+   "ard_wo",
+   "dd_wo",
+   "rv_wi",
+   "re_wi",
+   "rr_wi",
+   "rl_wi",
+   "rd_wi",
+   "dr_wi",
+   "ag_wo",
+   "ss_wo",
+   "ccv_wo",
+   "ccm_wo",
+   "ccw_wo",
+   "cct_wo",
+   "l9_wi"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 10
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 16
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 4
+  }
+ ],
+ "recipe": 3,
+ "route": {
+  "pd": 0.45,
+  "threads": 32,
+  "peak_ram_gb": 192,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "inter": [],
+ "structural_change": "Pathfinding gate (S-QSLICE 10-18, CRITICAL, no submit): the slice2_w master FLAT under the current die abstract (dv_case OT_SPLIT_DV_SLICE_OBS_TOP=5: M1-M5 inside, M5 cap), default RTL configuration (SU_LT 0, HD_W130 0), 30 SRAM macros, slot 2462.376 x 2591.976.",
+ "job": {
+  "owner": "Claude:S-QSLICE",
+  "branch": "claude/qslice2-hard-1018",
+  "tag": "sw0",
+  "purpose": "S-QSLICE pathfinding gate of qfd_dv_slice2_w (CRITICAL: no REVIEW.json, no submit).",
+  "benches": [],
+  "no_bench_reason": "pathfinding gate only",
+  "views_to": "physical/ref_tile/qfd_dv_slice2_w/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_slice2_w"
+ },
+ "children": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "pin_regs": {
+  "enable": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

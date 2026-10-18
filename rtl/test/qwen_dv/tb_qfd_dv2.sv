@@ -12,7 +12,7 @@
 // Log: S0AR / S0DD (W5 edge), S<k>SU / S<k>SD (scalar words leaving slice k up / down), S<N-1>E (up-end stream),
 // S<k>TOK (status token), S<k>ST at the end.
 module tb_qfd_dv2 (input wire ck);
-    parameter integer MUT = 0, N = 2;
+    parameter integer MUT = 0, N = 2, SU_LT = 0, HD_W130 = 0;
     reg rst_n = 1'b0;
     reg  [115:0]  cmd0;
     reg  [452:0]  hr0;
@@ -34,7 +34,7 @@ module tb_qfd_dv2 (input wire ck);
     genvar k;
     generate for (k = 0; k < N; k = k + 1) begin : g_s
         wire [513:0] l9i = (k % 2 == 0) ? ((k + 1 < N) ? l9o[k+1] : 514'd0) : l9o[k-1];
-        qfd_dv_slice2 #(.MUT(MUT)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmdc[k]), .cmd_o(cmdc[k+1]),
+        qfd_dv_slice2 #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmdc[k]), .cmd_o(cmdc[k+1]),
             .hr_i(hrc[k]), .hr_o(hrc[k+1]), .rs_s(rss[k]), .rs_n(rsn[k]), .l9_i(l9i), .l9_o(l9o[k]),
             .st_up_i(stu[k]), .st_up_o(stu[k+1]), .st_dn_i(std_[k+1]), .st_dn_o(std_[k]),
             .sc_up_i(scu[k]), .sc_up_o(scu[k+1]), .sc_dn_i(scd[k+1]), .sc_dn_o(scd[k]),

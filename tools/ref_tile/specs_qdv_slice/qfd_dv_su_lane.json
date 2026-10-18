@@ -1,0 +1,230 @@
+{
+ "name": "qfd_dv_su_lane",
+ "top": "qfd_dv_su_lane",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_su_lane.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 362.88,
+  "h": 371.52
+ },
+ "child_lattice_um": 8.64,
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_dv_lane_h/views/qfd_dv_lane_h",
+   "count": 1,
+   "at": [
+    25.92,
+    25.92
+   ],
+   "orient": "R0",
+   "inst": "u_head"
+  },
+  {
+   "view": "physical/ref_tile/qfd_su_sfu_rcp/views/ot_hdc_sfu_rcp_t",
+   "count": 1,
+   "at": [
+    224.64,
+    25.92
+   ],
+   "orient": "R0",
+   "inst": "u_rcp"
+  },
+  {
+   "view": "physical/ref_tile/qfd_su_sfu_exp/views/ot_hdc_sfu_exp_t",
+   "count": 1,
+   "at": [
+    25.92,
+    190.08
+   ],
+   "orient": "R0",
+   "inst": "u_exp"
+  },
+  {
+   "view": "physical/ref_tile/qfd_su_sfu_rsq/views/ot_hdc_sfu_rsq_t",
+   "count": 1,
+   "at": [
+    181.44,
+    190.08
+   ],
+   "orient": "R0",
+   "inst": "u_rsq"
+  }
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "emit0",
+   "live",
+   "i",
+   "fin_th",
+   "i_last_r",
+   "cura0",
+   "curb0",
+   "curc0",
+   "curd0",
+   "rrow",
+   "asi",
+   "bsi",
+   "csi",
+   "dsi",
+   "asrc",
+   "bsrc",
+   "csrc",
+   "mc",
+   "md",
+   "redsq",
+   "ma",
+   "mb",
+   "dst",
+   "red",
+   "ad",
+   "imm1",
+   "imm2",
+   "cls",
+   "accept",
+   "i_sfu"
+  ],
+  "S": [
+   "va_re",
+   "va_addr",
+   "vb_re",
+   "vb_addr",
+   "vc_re",
+   "vc_addr",
+   "wrom_re",
+   "wrom_addr",
+   "crom_re",
+   "crom_addr",
+   "va_q",
+   "vb_q",
+   "vc_q",
+   "wrom_q",
+   "crom_q"
+  ],
+  "E": [
+   "vm_we",
+   "vm_waddr",
+   "vm_wdata",
+   "kv_we",
+   "kv_waddr",
+   "kv_wdata",
+   "l_ov",
+   "l_out",
+   "l_red",
+   "l_redsq",
+   "l_raddr",
+   "l_last",
+   "retire",
+   "l_fault"
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 12,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "orfs_vars": {
+  "OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R",
+  "OT_INHOLD_DRV": "BUFx2_ASAP7_75t_R"
+ },
+ "recipe": 2,
+ "job": {
+  "owner": "Claude:S-QSLICE",
+  "branch": "claude/qslice2-hard-1018",
+  "tag": "dsl1",
+  "purpose": "S-QSLICE 10-18: Q-DV slice SU lane tile qfd_dv_su_lane (x8 per slice): pin-registered cluster of qfd_dv_lane_h + closed SFU exp/rcp/rsq leaves. GATE ONLY AFTER qfd_dv_lane_h CLOSES (its view is a child).",
+  "benches": [
+   {
+    "name": "slice2_su_lt",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g i j --work {RUN}/slice2_su_lt --vflags \"-GSU_LT=1 -GHD_W130=1\"",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^bench2 \\(j\\) MUT=0: PASS"
+   },
+   {
+    "name": "slice2_su_lt_loff_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_loff_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_loff_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_LOFF_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL"
+   },
+   {
+    "name": "slice2_su_lt_tls_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_tls_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_tls_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_TLS_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL"
+   },
+   {
+    "name": "slice2_su_lt_loreg_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_loreg_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_loreg_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_LOREG_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL"
+   },
+   {
+    "name": "slice2_su_lt_ireg_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_ireg_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_ireg_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_IREG_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL"
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_dv",
+   "rtl/test/qwen_dv",
+   "rtl/qwen_sys/dvm_20261014",
+   "rtl/test/full_sm_service",
+   "rtl/test/hbm_rf_visibility",
+   "rtl/lib",
+   "rtl/physical",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_su_lane/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_su_lane"
+ },
+ "hard_define": "OT_DV_SU_LANE_HARD",
+ "structural_change": "New cluster: the slice SU lane tile = the closed qfd_su_lane_t_io structure (IREG 1 / OREG 1, four hard leaves on one clock) with the ML 1 head qfd_dv_lane_h; SFU leaves are the CLOSED ot_hdc_sfu_{exp,rcp,rsq}_t views.",
+ "macros": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "defines": [
+  "OT_DV_SU_LANE_HARD"
+ ]
+}

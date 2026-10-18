@@ -94,6 +94,12 @@ def conv48(w):
     return (1 << 95) | (k1 << 92) | (idx << 64) | val
 
 
+VFLAGS: list[str] = []          # S-QSLICE 10-18: --vflags (e.g. -GSU_LT=1 -GHD_W130=1); empty = the original build
+XSRCS = ["rtl/qwen_dv/qfd_dv_su_lane.sv", "rtl/hdc/ot_hdc_vstream_lane_t.sv", "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+         "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+         "rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv"]
+
+
 def run_sim2(name, ev, work, mut, ncyc, n=2):
     work.mkdir(parents=True, exist_ok=True)
     evf, lgf = work / f"{name}.ev", work / f"{name}.log"
@@ -104,7 +110,7 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
         cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-j", "16", "-Wno-fatal", "-Wno-lint", "-Wno-style",
                "-Wno-TIMESCALEMOD", "--x-assign", "0", "--x-initial", "0", "--top-module", "tb_qfd_dv2",
                "--prefix", "Vtb", f"-GMUT={mut}", f"-GN={n}", "-Mdir", str(obj), str(HERE / "main2.cpp")] + \
-              [str(ROOT / s) for s in SRCS2]
+              VFLAGS + [str(ROOT / s) for s in SRCS2 + (XSRCS if VFLAGS else [])]
         subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     subprocess.run([str(exe), f"+EV={evf}", f"+LOG={lgf}", f"+NCYC={ncyc}"], check=True, stdout=subprocess.DEVNULL)
     out = {}
@@ -439,7 +445,9 @@ def main():
     ap.add_argument("benches", nargs="*", default=list("abcdefghij"))
     ap.add_argument("--mut", type=int, default=0)
     ap.add_argument("--work", default="/tmp/qdv_bench2v")
+    ap.add_argument("--vflags", default="", help="extra Verilator flags (use a separate --work: objects are cached)")
     a = ap.parse_args()
+    VFLAGS[:] = a.vflags.split()
     install()
     allpass = True
     for b in a.benches:
