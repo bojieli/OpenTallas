@@ -3516,9 +3516,14 @@ ECTL_CK_X = (127.44, 382.32, 578.88)   # leaf A / B / C centres (254.88 | 254.88
 
 
 def _split_pins(M, m=None):
-    if 'qkd_ectl' in M:
-        mm = M['qkd_ectl']
-        exo = up((HEAD[0] - ECTL[0]) / 2, GX)
+    # KV-CASE 10-18: the static die re-binds every ECTL frame to qkd_ectlk (kv_static_die: ECTL A + static K issuer, same
+    # 648 x 129.6 frame, same t / e / s faces).  This block was keyed on 'qkd_ectl' only, so with OT_KV_STATIC_DIE=1 the
+    # ECTL t / e / s pins AND every head / feed-through head pin below fell back to the auto face spread (head ft_e_a at
+    # x 38 instead of over the T1 leaf: 576 stack-local hops up to 966 um, kvs14a case).  Both ECTL masters take the
+    # die-assigned positions; the head frames take theirs whenever either ECTL master is present.
+    ectls_ = [n_ for n_ in ('qkd_ectl', 'qkd_ectlk') if n_ in M]
+    for ectl_ in ectls_:
+        mm = M[ectl_]
         for f, (tp, es) in (('S', ('t0', (('e0', 'e1'), ('s0', 's1')))), ('N', ('t1', (('e2', 'e3'), ('s2', 's3'))))):
             if tp in mm.ports:
                 mm.ports[tp] = ('face', mm.ports[tp][1], f, 'M5', ECTL_T_CX, 6)
@@ -3531,6 +3536,8 @@ def _split_pins(M, m=None):
                 mm.ports[x_] = ('area', 1, c_, ECTL[1] / 2, 1)
         if 'rst_n' in mm.ports:
             mm.ports['rst_n'] = ('area', 1, ECTL[0] / 2, ECTL[1] / 2 + 8.0, 1)
+    if ectls_:
+        exo = up((HEAD[0] - ECTL[0]) / 2, GX)
         if 'qkd_rhead' in M:
             hm = M['qkd_rhead']
             for p_, x_, pt_ in (('ti', exo + ECTL_T_CX, 6), ('e', exo + sum(ECTL_E_X) / 2, 2), ('s', exo + sum(ECTL_S_X) / 2, 2)):
@@ -4455,6 +4462,9 @@ def case(m, work):
         raise ValueError('per-PC leaf candidate is plan-only until encoder/pin/context gates pass')
     if m['geo'].get('split'):
         assigned = stack_local_reach(m, masters(m, 1))
+        lg_ = check(m)                       # KV-CASE2: the case-step record (reach + legality) in case.log
+        print(f"kv die: case stack-local exact pin-bit reach {assigned['violations']} overreach / {assigned['unmeasured']} "
+              f"unmeasured; legality {lg_['overlaps']} overlaps / {lg_['outside']} outside", file=sys.stderr)
         if assigned['violations'] or assigned['unmeasured']:
             raise ValueError(f"stack-local exact pin-bit reach failed: {assigned['violations']} overreach, "
                              f"{assigned['unmeasured']} unmeasured: {assigned['worst'][:3]}")
