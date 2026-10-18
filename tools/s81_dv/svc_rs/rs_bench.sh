@@ -8,7 +8,7 @@
 set -euo pipefail
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 O=$1; VEC=$2; V=$3; shift 3
-SEEDS=${SEEDS:-"1 2"}; DIE=${DIE:-0}; ST=${ST:-0}; ENGDEF=${ENGDEF-SVCQ_ENG_FG3}; JOBS=${JOBS:-16}
+SEEDS=${SEEDS:-"1 2"}; DIE=${DIE:-0}; ST=${ST:-0}; ENGDEF=${ENGDEF-SVCQ_ENG_FG3}; JOBS=${JOBS:-6}
 source tools/s81_dv/svc_rs/rs_files.sh
 DEF=()
 case "$V" in
