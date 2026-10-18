@@ -104,6 +104,7 @@
   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv",
+  "physical/ref_tile/dsdv_gunit_l4/chain_pull.tcl",
   "physical/ref_tile/dsdv_gunit_l4/kit.env",
   "physical/ref_tile/dsdv_gunit_l4/clock.sdc",
   "physical/ref_tile/dsdv_gunit_l4/signoff.sdc",
@@ -127,6 +128,9 @@
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/ref_tile/dsdv_gunit_l4/pre_gpl.tcl",
+  "physical/ref_tile/dsdv_gunit_l4/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }
