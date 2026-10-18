@@ -558,8 +558,8 @@ def host_lanes(P, facts, colx, streets):
     L = {l['i']: l for l in P.links}
     facts['host_lanes'] = {n: dict(bits=L[n]['b'], stations=L[n]['s'], um=L[n]['L']) for n in ('hf_7N_l0', 'hf_7N_l1', 'hf_7N_l2', 'ht_7N', 'jd_W')}
     facts['host_plane'] = dict(endpoint=f's_{NCOL - 1}N', why='end slice nearest the seqhost; the other three endpoints '
-                               'carry no host plane (t_host / t_kd tied 0 as declared pads: no THOST / TKD frames, the '
-                               'compiler addresses the host-side die only through s_7N)')
+                               'carry no host plane (S81-LEPV: host-less masters dsdv_slice_lepw / dsdv_slice_lepe_nh, HOST_EN 0, no '
+                               'host ports, no tied pads; the compiler addresses the host-side die only through s_7N)')
 
 
 def build():
@@ -606,7 +606,9 @@ def build():
             ym = streets[t] + STREET / 2
             sm_ = 'dsdv_slice_lep' if P4I and c in (0, NCOL - 1) else 'dsdv_slice'   # p4i: end slices = link endpoint variant
             if P4L and c in (0, NCOL - 1):
-                sm_ = 'dsdv_slice_lepw' if c == 0 else 'dsdv_slice_lepe'
+                # S81-LEPV (10-18): the host plane is served by s_7N only -> s_7S binds the host-less E master
+                # dsdv_slice_lepe_nh (HOST_EN 0, no host ports); both W ends: dsdv_slice_lepw (host-less)
+                sm_ = 'dsdv_slice_lepw' if c == 0 else ('dsdv_slice_lepe' if t == 1 else 'dsdv_slice_lepe_nh')
             P.block(f's_{c}{"SN"[t]}', sm_, 'slice', f'cl{c}{"SN"[t]}', colx(c) + (scol_w - SLICE_W) / 2, ym - SLICE_H / 2, SLICE_W, SLICE_H)
     # ---------------------------------------------------------------- south band: [SM_W x4][svc_W][PHY+ctrl][svc_E][SM_E x4]
     # the HBM service halves abut the PHY; each attention softmax group (SU SM tiles) abuts its service half, so the
