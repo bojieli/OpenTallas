@@ -65,7 +65,7 @@ RULES = dict(
          'fixed K strap, write epoch = first forwarded edge, read epoch = block regional reset); the compiler charges '
          'N + 1 + E + 1 per lane; die STA checks the L5 window at TT and FF with one E per link',
     CLK='regional clocks: one region set per quadrant (SM regions, PC half, core band <= 4 mm boxes, IDX corner) + strip '
-        'regions; communicating pairs <= 405 um merge; neighbour-skew gate (TT skew <= 80 ps on pairs <= 405 um) in run.sh',
+        'regions; communicating pairs <= 405 um merge; neighbour-skew gate (TT AND FF skew <= 80 ps on pairs <= 405 um; landed pairs judged by the landing window, LANDING-CONTRACT L5) in run.sh',
     RST='regional synchronous reset forest per quadrant (reset_forest_layer --zones quadrant); die_case reset reachability '
         'gate FAILS on any unreachable reset sink/driver (OT_RESET_GATE=diag continues, recorded FAIL_DIAG)',
 )
