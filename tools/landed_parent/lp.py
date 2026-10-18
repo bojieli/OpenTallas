@@ -50,7 +50,7 @@ SPEC (JSON; paths relative to the repo root):
                  bench.reset_cycles) with a real programme instead of random words and ends with lp_finish("<name>")
   mut_child      child whose reset run MUT 4 makes one stage long (default: the first child with a reset pin)
   sticky_outputs {port: max_lag} outputs fed through loose nets, compared in the bench as sticky (monotone) flags:
-                 landed(c) subset of flat(c) and flat(c - max_lag) subset of landed(c), both after the port offset.
+                 landed(c) subset of flat(c) and (flat(c - max_lag) & flat(c)) subset of landed(c) (a reset clears).
 Child clock pins wider than one bit (a child with several entry clocks in one region) get {W{ck_<r>}}.
 """
 from __future__ import annotations
@@ -732,7 +732,7 @@ class Parent:
             ref = f"dlo_{n}[{off - 1}]" if off > 0 else f"fo_{n}"
             if n in sticky:
                 lagref = f"dlo_{n}[{off + sticky[n] - 1}]" if off + sticky[n] > 0 else f"fo_{n}"
-                L.append(f"                nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
+                L.append(f"                nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & {ref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
                          f"if (bad <= 5) $display(\"LP_MISMATCH sticky port={n} cycle=%0d flat=%h landed=%h\", cyc, {ref}, lo_{n}); end")
                 continue
             L.append(f"                nc = nc + 1; if (lo_{n} !== {ref}) begin bad = bad + 1; "
@@ -760,7 +760,7 @@ class Parent:
             ref = f"dlo_{n}[{off - 1}]" if off > 0 else f"fo_{n}"
             if n in sticky:
                 lagref = f"dlo_{n}[{off + sticky[n] - 1}]" if off + sticky[n] > 0 else f"fo_{n}"
-                L.append(f"            nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
+                L.append(f"            nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & {ref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
                          f"if (bad <= 5) $display(\"LP_MISMATCH sticky port={n} cycle=%0d flat=%h landed=%h\", cyc, {ref}, lo_{n}); end")
             else:
                 L.append(f"            nc = nc + 1; if (lo_{n} !== {ref}) begin bad = bad + 1; "
