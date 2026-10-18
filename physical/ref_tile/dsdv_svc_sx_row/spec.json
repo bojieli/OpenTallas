@@ -68,6 +68,12 @@
   "macro_halo_um": 5.4,
   "pin_balance": {
    "group_max": 1
+  },
+  "cts_sink": {
+   "size": 30,
+   "diameter_um": 60,
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 80 -clustering_unbalance_ratio 0.8",
+   "why": "S81U-SVCX3 10-17: gate 2 default H-tree (32/44 clusters, 8 levels to 17 um regions, 11 BUFx24/path) gave TT 401..543 ps, a 207-flop SW-corner gather pin-flop group hung on 150 um return wires from far taps (+120 ps). Measured on the gate-2 placement (re-CTS, TT, placement RC): this setting 329..401 ps (spread 72), no corner outliers; default 401..546; unclustered 437..535 / dbb>=80 unclustered diverges."
   }
  },
  "structural_change": "S81U-SVCX (S81-DV p4h regional service slice, owner-approved DV plan): the score exchange dsdv_svc_sx (monolith 6,420 lane pins per face, unkittable) split into 4 x this hardened-once centre leaf (one score ROW: 16 qaddf node + gather/scatter crossbars, every pin registered) + closed dsfd_dvrly_276 relay stations on every face lane; bit-identical, zero added cycles.",

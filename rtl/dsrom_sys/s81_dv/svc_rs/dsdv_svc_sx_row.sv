@@ -49,8 +49,12 @@ module dsdv_svc_sx_row #(
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
+    // S81U-SVCX3: the sid strap lands in a pin flop first (gate 2: sid -> role ROM was 4 levels from the port); the
+    // strap is static and sid_q settles during the 2-cycle reset synchroniser, so role is unchanged from rn release.
+    reg [3:0] sid_q;
+    always @(posedge ck) sid_q <= sid;
     reg [43:0] role;
-    always @(posedge ck or negedge rn) if (!rn) role <= '0; else role <= sx_role(sid);
+    always @(posedge ck or negedge rn) if (!rn) role <= '0; else role <= sx_role(sid_q);
     wire [2:0] r_ga = role[2:0], r_gb = role[5:3];
     wire [2:0] r_go [0:3];
     assign r_go[0] = role[8:6]; assign r_go[1] = role[11:9]; assign r_go[2] = role[14:12]; assign r_go[3] = role[17:15];
@@ -181,5 +185,9 @@ module dsdv_svc_sx_row #(
     wire node = r_ga != 3'd0;
     wire mis = node && (a_v != b_v || (a_v && a_d[W-1 -: TW] != b_d[W-1 -: TW]));
     wire stray = |(gc_v & ~g_used) || |(sc_v & ~s_used);
-    always @(posedge ck or negedge rn) if (!rn) fault <= 1'b0; else if (mis || stray) fault <= 1'b1;
+    // S81U-SVCX3: the check is registered once beside the node (gate 2: face pin flop -> 5:1 operand mux -> tag compare
+    // -> the S-face fault pin flop was the worst reg->reg path, -64.7 ps); the sticky fault reports one cycle later.
+    reg chk;
+    always @(posedge ck or negedge rn) if (!rn) chk <= 1'b0; else chk <= mis || stray;
+    always @(posedge ck or negedge rn) if (!rn) fault <= 1'b0; else if (chk) fault <= 1'b1;
 endmodule
