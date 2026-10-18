@@ -10,6 +10,16 @@
 //     accumulates the row's checks into scan_* (one row an edge, as before), F evaluates the closing check from the
 //     registered totals: the seal (or fault code 3, sticky) lands 2 edges after the original.  A PW word while any
 //     stage is live faults (code 1) as one during the scan did.
+// S81U-SEQ4 (gate4 @df8031f2c: scan_index[1] 10,119 loads = the 128:1 x 79-b row read as a $shiftx barrel; age ->
+// fault_code 41 levels ~1,457 ps, TT -879 ps):
+//   * S0 reads the row through a one-hot row pointer sc_oh (shifted one row an edge; AND-OR, ~79 loads a bit);
+//   * completion compare registered one edge ahead: dm_q[s][i] = (row i's done cycle == age[s]) captured at t is
+//     exactly the original's (mem[i].done == age[s]-1 && age[s] != 0) at t+1 while s stays active (age counts every
+//     active edge; rows / length only change while idle); pending clears and the completion check use it;
+//   * run-time fault detection (codes 6..10) registered: the flags are captured into rf_q and run_fault / fault_code
+//     land one edge later (status only: no issue / KIT / END / command edge depends on run_fault).  Same-edge code
+//     priority 6 > 10 > 9 > 8 > 7 (the original's last-statement order, rows folded); duplicate issue per engine
+//     (code 9) by a two-hot tree over the engine's row matches instead of the seen_cmd row chain.
 // Native S81 command ABI: {slot,user10,pos21,tok21,arg24,op7}.
 // Each calendar row is {done24,issue24,engine4,arg24}. Engine14=KIT,
 // engine15=END. Three26-bit PW payloads load one actual76-bit storage row.
@@ -50,10 +60,17 @@ module ot_dsdv_fixed_issue #(
  assign busy=|active;assign job_rdy=!active[next_slot];
  assign fault=cfg_fault|run_fault;assign phase=phase_q;
  integer i,s,e,n,op,slot,issued,max_done,end_count,kit_count;
- reg bad;reg[23:0]end_cycle,kit_cycle;reg[NENG-1:0]seen_cmd;
+ reg bad;reg[23:0]end_cycle,kit_cycle;
  reg[3:0]eng;reg[7:0]tag;
  reg[NENG-1:0]legit_done;
  reg sc_v,sc_last,sc_in,sc_fin;reg[75:0]sc_row;reg[2:0]sc_ld;reg[8:0]dsel_r;
+ reg[NOPS-1:0]sc_oh;reg[75:0]rd_row;reg[2:0]rd_ld;
+ reg[NOPS-1:0]dm_q[0:1];reg[4:0]rf_q;reg f6,f7,f8,f9,f10;wire[NENG-1:0]dup;
+ function automatic two_hot(input [255:0] v);
+  reg[255:0]a,t;integer w,k;begin a=v;t=0;
+   for(w=256;w>1;w=w/2)for(k=0;k<w/2;k=k+1)begin t[k]=t[2*k]|t[2*k+1]|(a[2*k]&a[2*k+1]);a[k]=a[2*k]|a[2*k+1];end
+   two_hot=t[0];end
+ endfunction
  function automatic [8:0] dsel(input [3:0] e,input [NENG-1:0] v,input [NENG*8-1:0] t);
   integer k;begin dsel=9'd0;for(k=0;k<NENG;k=k+1)dsel=dsel|({9{e==4'(k)}}&{v[k],t[8*k+:8]});end
  endfunction
@@ -68,10 +85,10 @@ module ot_dsdv_fixed_issue #(
    validating<=0;scan_index<=0;scan_native<=0;scan_bad<=0;scan_ends<=0;scan_kits<=0;scan_max_done<=0;scan_end_cycle<=0;scan_kit_cycle<=0;
    active<=0;next_slot<=0;has_kit<=0;job_done<=0;job_kdone<=0;done_slot<=0;kit_tok<=0;
    fault_code<=0;st_jobs<=0;st_cmds<=0;dv_q<=0;dt_q<=0;
-   sc_v<=0;sc_last<=0;sc_in<=0;sc_fin<=0;
+   sc_v<=0;sc_last<=0;sc_in<=0;sc_fin<=0;rf_q<=0;
   end else begin
    phase_q<=phase_q+1'b1;dv_q<=dn_v;dt_q<=dn_tag;
-   job_done<=0;job_kdone<=0;seen_cmd=0;legit_done=0;issued=0;
+   job_done<=0;job_kdone<=0;legit_done=0;issued=0;
    for(e=0;e<NENG;e=e+1)if(cmd_v[e])issued=issued+1;
    if(pw_v)begin
     if(busy||validating||sc_v||sc_fin)begin cfg_fault<=1;if(fault_code==0)fault_code<=1;end
@@ -134,25 +151,27 @@ module ot_dsdv_fixed_issue #(
    end
    // Completions are verified against fixed rows below; no dynamic
    // op-indexed program read or completion-driven scheduling is required.
+   // run-time faults: flags registered (rf_q), applied one edge later
+   f6=0;f7=0;f8=0;f9=|dup;f10=0;
+   if(|rf_q)begin run_fault<=1;if(fault_code==0)fault_code<=rf_q[0]?4'd6:rf_q[4]?4'd10:rf_q[3]?4'd9:rf_q[2]?4'd8:4'd7;end
    for(s=0;s<2;s=s+1)if(active[s])begin
-    if(age[s]==24'hffffff)begin run_fault<=1;if(fault_code==0)fault_code<=7;end
-    for(i=0;i<NOPS;i=i+1)if(i<length_q)begin
+    if(age[s]==24'hffffff)f7=1;
+    for(i=0;i<NOPS;i=i+1)begin
      eng=mem[i][27:24];
-     if(eng<14&&age[s]!=0&&mem[i][75:52]==age[s]-1'b1)begin
-      dsel_r=dsel(eng,dv_q,dt_q);if(!dsel_r[8]||dsel_r[7:0]!={1'(s),7'(i+OP_BASE)}||!pending[s][i])begin run_fault<=1;if(fault_code==0)fault_code<=8;end
+     if(dm_q[s][i])begin
+      dsel_r=dsel(eng,dv_q,dt_q);if(!dsel_r[8]||dsel_r[7:0]!={1'(s),7'(i+OP_BASE)}||!pending[s][i])f8=1;
       else legit_done[eng]=1;
      end
-     if(age[s]==mem[i][51:28]+((MUT==1&&eng<14)?24'd1:24'd0))begin
+     if(i<length_q&&age[s]==mem[i][51:28]+((MUT==1&&eng<14)?24'd1:24'd0))begin
       if(eng==15)begin active[s]<=0;job_done<=1;done_slot<=1'(s);if(!has_kit)begin job_kdone<=1;kit_tok<=tokens[s];end end
       else if(eng==14)begin job_kdone<=1;kit_tok<=tokens[s];end
-      else if(eng<NENG&&ENG_PRESENT[eng])begin
-       if(seen_cmd[eng]||!engine_available[eng])begin run_fault<=1;if(fault_code==0)fault_code<=9;end
-       seen_cmd[eng]=1;
-      end else begin run_fault<=1;if(fault_code==0)fault_code<=10;end
+      else if(eng<NENG&&ENG_PRESENT[eng])begin if(!engine_available[eng])f9=1;end
+      else f10=1;
      end
     end
    end
-   if(|(dv_q&~legit_done))begin run_fault<=1;if(fault_code==0)fault_code<=6;end
+   f6=|(dv_q&~legit_done);
+   rf_q<={f10,f9,f8,f7,f6};
    st_cmds<=st_cmds+issued;
   end
  end
@@ -165,6 +184,9 @@ module ot_dsdv_fixed_issue #(
  wire pw_hdr_bad=pw_a!=0||pw_d[24:17]!=0||pw_d[6:0]!=7'(STAGE)||pw_d[16:9]==0||pw_d[16:9]>NOPS;
  wire do_begin=pw_v&&!pw_busy&&pw_d[27:26]==3&&!pw_hdr_bad&&!pw_d[25];
  wire do_write=pw_v&&!pw_busy&&pw_d[27:26]!=3&&begun&&pw_a<NOPS;
+ wire do_seal=pw_v&&!pw_busy&&pw_d[27:26]==3&&!pw_hdr_bad&&pw_d[25];
+ integer i3;
+ always @*begin rd_row=0;rd_ld=0;for(i3=0;i3<NOPS;i3=i3+1)begin rd_row=rd_row|({76{sc_oh[i3]}}&mem[i3]);rd_ld=rd_ld|({3{sc_oh[i3]}}&loaded[i3]);end end
  wire do_accept=job_v&&!(!sealed||cfg_fault||active[next_slot]||prog_len!=length_q||((phase_q+2'd1)!=start_phase_q));
  integer i2,s2;reg[3:0]eng2;reg[8:0]d2;
  always @(posedge clk)begin
@@ -178,7 +200,10 @@ module ot_dsdv_fixed_issue #(
    endcase
    loaded[pw_a][pw_d[27:26]]<=1'b1;
   end
-  if(validating)begin sc_row<=mem[scan_index];sc_ld<=loaded[scan_index];end
+  if(do_seal)sc_oh<={{(NOPS-1){1'b0}},1'b1};else if(validating)sc_oh<=sc_oh<<1;
+  if(validating)begin sc_row<=rd_row;sc_ld<=rd_ld;end
+  for(s2=0;s2<2;s2=s2+1)for(i2=0;i2<NOPS;i2=i2+1)
+   dm_q[s2][i2]<=active[s2]&&age[s2]!=24'hffffff&&i2<length_q&&mem[i2][27:24]<14&&mem[i2][75:52]==age[s2];
   if(do_accept)begin
    age[next_slot]<=0;pending[next_slot]<=0;
    users[next_slot]<=job_user;positions[next_slot]<=job_pos;tokens[next_slot]<=job_tok;
@@ -187,7 +212,7 @@ module ot_dsdv_fixed_issue #(
    age[s2]<=age[s2]+1'b1;
    for(i2=0;i2<NOPS;i2=i2+1)if(i2<length_q)begin
     eng2=mem[i2][27:24];
-    if(eng2<14&&age[s2]!=0&&mem[i2][75:52]==age[s2]-1'b1)begin
+    if(dm_q[s2][i2])begin
      d2=dsel(eng2,dv_q,dt_q);
      if(d2[8]&&d2[7:0]=={1'(s2),7'(i2+OP_BASE)}&&pending[s2][i2])pending[s2][i2]<=0;
     end
@@ -200,14 +225,15 @@ module ot_dsdv_fixed_issue #(
  // resulting payload is invalid and must be discarded with the job fault.
  genvar ge;
  generate for(ge=0;ge<NENG;ge=ge+1)begin:g_command
-  reg[30:0]a0,a1;reg h0,h1,m0,m1;integer j;
+  reg[30:0]a0,a1;reg h0,h1,m0,m1;reg[255:0]mv;integer j;
+  assign dup[ge]=two_hot(mv);
   always @*begin
    a0=0;a1=0;h0=0;h1=0;
-   m0=0;m1=0;
+   m0=0;m1=0;mv=0;
    for(j=0;j<NOPS;j=j+1)begin
     m0=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[0]&&age[0]==mem[j][51:28]+(MUT==1?24'd1:24'd0);
     m1=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[1]&&age[1]==mem[j][51:28]+(MUT==1?24'd1:24'd0);
-    h0=h0|m0;h1=h1|m1;
+    h0=h0|m0;h1=h1|m1;mv[j]=m0;mv[NOPS+j]=m1;
     a0=a0|({31{m0}}&{mem[j][23:0],7'(j+OP_BASE)});a1=a1|({31{m1}}&{mem[j][23:0],7'(j+OP_BASE)});
    end
   end

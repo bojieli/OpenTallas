@@ -20,7 +20,8 @@
       "at": [
         22.464,
         23.76
-      ]
+      ],
+      "orient": "MY"
     },
     {
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -75,9 +76,14 @@
     "pd": 0.5,
     "threads": 8,
     "peak_ram_gb": 24,
-    "hold_margin_ns": 0.03
+    "hold_margin_ns": 0.03,
+    "cts_sink": {
+      "size": 16,
+      "diameter_um": 16,
+      "extra": "-distance_between_buffers 20 -macro_clustering_size 1 -macro_clustering_max_diameter 16"
+    }
   },
-  "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L2 middle leaf of dsdv_seq_host: ot_dsdv_vstop (shared V-rung stop) + CTL packer with the 128 x 186 template table in three 1R1W 128x256 SRAM macros (one per read port N / S / gunit; was 23.8k flops > 15k sinks) + the gunit cw port; flop-first / flop-last pins, die hold budget. S81U-SEQ3: compact 2 + 1 SRAM packing (H 151.2) for clock insertion; pin-flop payloads off the reset net (1,263 loads).",
+  "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L2 middle leaf of dsdv_seq_host: ot_dsdv_vstop (shared V-rung stop) + CTL packer with the 128 x 186 template table in three 1R1W 128x256 SRAM macros (one per read port N / S / gunit; was 23.8k flops > 15k sinks) + the gunit cw port; flop-first / flop-last pins, die hold budget. S81U-SEQ3: compact 2 + 1 SRAM packing (H 151.2) for clock insertion; pin-flop payloads off the reset net (1,263 loads). S81U-SEQ4 (gate4 df8031f2c: TT ins 338.2 / spread 136.7: CTS hung the three SRAM clk pins directly on the level-1 trunk nets clknet_1_{0,1}__leaf_ck, slew 240 ps, u_ttn 201.5 vs flops 233..338; u_tts R0 put its clk pin on its far W edge at x 22): u_tts mirrored (MY) so all three SRAM clk pins sit in the x 117..138 centre column under the N clock pin, and each SRAM clk pin gets its own leaf cluster (macro_clustering_size 1, 16-um register clusters, buffers every 20 um).",
   "job": {
     "owner": "Claude:S81U-SEQ",
     "branch": "claude/s81u-seq-1017",

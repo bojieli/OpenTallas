@@ -118,8 +118,9 @@ module dsdv_sh_lk #(parameter integer V = 276) (
     reg tcr_l;
     // three CTS roots (as dsfd_host_c DSFD_HOST_PQ_BOOT ck_ingest): the ingest's own Gray-FIFO domains clk_h / clk_i
     // get the leaf roots ck_ih / ck_ic (S81U-SEQ3: 24,085 sinks on one root at gate 8940e10e9); APIPE 4 registers the
-    // engine's row pitch product (26-level ap1_local -> ap_raddr stage), same values as APIPE 3.
-    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(4)) u_h (.rst_n(rn), .clk_h(ck_ih), .h_v(to_ing), .h_cls(hcl),
+    // engine's row pitch product (26-level ap1_local -> ap_raddr stage), same values as APIPE 3; APIPE 5 (S81U-SEQ4)
+    // also forms the stack x stride partial products in stage A0 (ap1_rbase TT -70 ps at gate4), same values again.
+    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(5)) u_h (.rst_n(rn), .clk_h(ck_ih), .h_v(to_ing), .h_cls(hcl),
         .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr_l), .clk_i(ck_ic), .ck(ck), .o_v(ov), .o_we(owe), .o_addr(oa),
         .o_d(od), .o_cr(ocr), .i_rv(1'b0), .i_rd(256'd0), .host_ack_n(ack), .fault(hf));
     dsfd_host_sd #(.NS(1), .KVS(1), .ENG(-1), .STATIC(1)) u_sd (.ck(ck), .rst_n(rn), .o_v(ov), .o_we(owe), .o_addr(oa),

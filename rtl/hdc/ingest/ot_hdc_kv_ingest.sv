@@ -81,6 +81,11 @@ module ot_hdc_kv_ingest #(
     //           levels ~922 ps): as 3, with the local * pitch product registered in stage A1 (ap1_lp, captured with
     //           ap1_local / ap1_pitch under the same enable, so ap1_lp == ap1_local * ap1_pitch whenever read) and stage B
     //           = ap1_rbase + ap1_lp.  Same three bubble edges a row and the same values as APIPE 3, edge for edge.
+    //   APIPE = 5 (S81U-SEQ4 2026-10-17, dsdv_sh_lk gate4 df8031f2c: ap0_stk * ap0_stride + base -> ap1_rbase TT -70 ps):
+    //           as 4, with the stack x stride partial products formed in stage A0 (ap0_pp{0,1,2} = stride << k when
+    //           stack bit k is set and the segment is unringed, captured with the other ap0 fields), so stage A1 is a
+    //           four-operand add ap1_rbase = base + pp0 + pp1 + pp2 (= base + stk * stride mod 2^32, stk < 8).  Same
+    //           bubble edges and values as APIPE 4, edge for edge.
     parameter integer QKV    = 1,
     parameter integer APIPE  = 0,
     // QPIPE = 1 (qwen-1010/c 2026-10-10; 0 = unchanged): qfd_io_host preroute -1.2 .. -2.3 ns at clk_i (135 k of 139 k
@@ -646,6 +651,7 @@ module ot_hdc_kv_ingest #(
     reg  [2:0]  ap0_stk;
     reg  [4:0]  ap0_pitch;
     reg         ap0_mine, ap0_ringz;
+    reg  [31:0] ap0_pp0, ap0_pp1, ap0_pp2;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) ap_ok0 <= 1'b0;
         else if (ap_inval) ap_ok0 <= 1'b0;
@@ -654,6 +660,11 @@ module ot_hdc_kv_ingest #(
     always @(posedge clk) if (!ap_ok0) begin
         ap0_base <= st_d[47:16]; ap0_stride <= st_d[79:48]; ap0_ringz <= (s_ring == 0); ap0_stk <= s_stk;
         ap0_local <= s_local; ap0_gs <= s_gs; ap0_row <= st_row; ap0_pitch <= s_pitch; ap0_mine <= s_mine;
+        if (APIPE >= 5) begin
+            ap0_pp0 <= (s_ring == 0 && s_stk[0]) ? st_d[79:48]        : 32'd0;
+            ap0_pp1 <= (s_ring == 0 && s_stk[1]) ? st_d[79:48] << 1   : 32'd0;
+            ap0_pp2 <= (s_ring == 0 && s_stk[2]) ? st_d[79:48] << 2   : 32'd0;
+        end
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) ap_ok1 <= 1'b0;
@@ -666,7 +677,8 @@ module ot_hdc_kv_ingest #(
     end
     always @(posedge clk) if (!ap_ok1) begin
         if (APIPE >= 3) begin
-            ap1_rbase <= ap0_base + (ap0_ringz ? ap0_stk * ap0_stride : 32'd0); ap1_local <= ap0_local; ap1_gs <= ap0_gs;
+            ap1_rbase <= (APIPE >= 5) ? ap0_base + ap0_pp0 + ap0_pp1 + ap0_pp2
+                                      : ap0_base + (ap0_ringz ? ap0_stk * ap0_stride : 32'd0); ap1_local <= ap0_local; ap1_gs <= ap0_gs;
             ap1_row <= ap0_row; ap1_pitch <= ap0_pitch; ap1_mine <= ap0_mine;
             if (APIPE >= 4) ap1_lp <= ap0_local * ap0_pitch;
         end else begin
