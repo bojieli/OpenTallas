@@ -51,7 +51,9 @@ for t in range(length):
 # REGISTERS the programme start (io_word[470] -> +1 edge -> programme calendar), so the compile schedule places
 # arith_start ARITH_START_ADVANCE_R10=1 IO row EARLIER for that store; compiler_control then reaches the core on the
 # same edge as with r7c. Every other IO field is unchanged (the core ignores bit 470). io.hex stays the reference image.
-ARITH_START_ADVANCE_R10=1
+# SFU-PS-4 relays (10-17): + one per-row launch relay in front of the programme leaves -> the programme start is 2 edges
+# after IO2 bit 26, so the advance is 2 (io_word and status each +1 by the output relay / status pre-combine: D=5, status 3).
+ARITH_START_ADVANCE_R10=2
 assert arith_edge-ARITH_START_ADVANCE_R10>=0
 bit=470
 rows_r10=[(w&~(1<<bit)) for w in rows]
