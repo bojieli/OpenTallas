@@ -195,13 +195,45 @@ def apply(graph, ages):
     return left
 
 
+def lane_bid(station):
+    """the die bus id of a lane's station (rly_<bid>_<k>__s<j>; pin-repair chains rly_pinfix_<bid>_r<i>_<k>)"""
+    import re
+    n = re.sub(r'__s\d+$', '', station)
+    n = re.sub(r'^rly_', '', n).rsplit('_', 1)[0]
+    return re.sub(r'_r\d+$', '', re.sub(r'^pinfix_', '', n))
+
+
+def fwd_overlay(src, fl):
+    """KV-CLOCK: stage counts of the landed buses -> their landed latency (static: a fixed number of core edges)"""
+    import copy
+    worst = {}
+    for L in fl['lanes']:
+        b = lane_bid(L['stations'][-1])
+        lat = math.ceil(L['landed'] - 1)             # landed counts the block flop; a plan stage count does not
+        worst[b] = max(worst.get(b, 0), lat)
+    out, landed = copy.deepcopy(src), {}
+    for b in out['buses']:
+        if b['bid'] in worst and worst[b['bid']] > b['stages']:
+            landed[b['bid']] = (b['stages'], worst[b['bid']])
+            b['stages'] = worst[b['bid']]
+    return out, landed
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--source', type=Path, default=ROOT / SOURCE)
     ap.add_argument('--out', type=Path, default=ROOT / OUT_DIR / 'die_ages.json')
     ap.add_argument('--template-out', type=Path, help='also write the priced static-join template here')
+    ap.add_argument('--fwd-lanes', type=Path, help='KV-CLOCK 10-18: RUN/fwd_lanes.json (kv_fwd_lanes.py); every landed bus '
+                    'takes its landed latency (worst lane of the bus: 1 + (n-2)/2 + 1 + E stages, the block flop excluded)')
     a = ap.parse_args()
-    ages = derive(json.loads(a.source.read_text()))
+    src = json.loads(a.source.read_text())
+    if a.fwd_lanes:
+        src, landed = fwd_overlay(src, json.loads(a.fwd_lanes.read_text()))
+        print(json.dumps(dict(fwd_landed_buses=len(landed), added_stages=sum(v[1] - v[0] for v in landed.values()))))
+    ages = derive(src)
+    if a.fwd_lanes:
+        ages['fwd_landed'] = {k: dict(stages_relay=v[0], stages_landed=v[1]) for k, v in sorted(landed.items())}
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(ages, indent=1) + '\n')
     if a.template_out:

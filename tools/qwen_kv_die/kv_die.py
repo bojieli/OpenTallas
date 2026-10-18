@@ -3701,6 +3701,8 @@ def _split_pins(M, m=None):
                              1 if dp_ in ('ck_c', 'rst_n') else 2)
     # v1.4.4: the PV pair's 33 clock entries sit on their children (ck_c<s>: column s's join centre, ck_c32: the control
     # tile), rst_n on the control tile (canonical R0 frame, strip at the top; the die places pvw_1 MX)
+    if 'qkd_pvw_n' in M and PV_T and os.environ.get('OT_KV_PVWN_MX_PINS', '1') == '1':
+        F.MX_AREA.add('qkd_pvw_n')      # KV-CLOCK 10-18: pvw_1 is placed MX (its ck_c* M8 area pins on the mirrored grid)
     for mn in ('qkd_pvw_s', 'qkd_pvw_n'):
         if mn in M and PV_T:
             # KVPLAN 1815: the trunked pair's face pins from its plan (canonical R0: strip / control tile at the top)
