@@ -1,0 +1,373 @@
+{
+ "top": "ot_hgi_coll_tkm_m_tp192_seg",
+ "top_lp": "ot_hgi_coll_tkm_m_tp192_lp",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_m_tp192_seg.sv"
+ ],
+ "child_sources": [
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_ctl.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_buffer.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
+ ],
+ "out_dir": "rtl/hbm_accel/generic/collective/tkm/lp",
+ "record_dir": "results/arch/pl_tp192_1018",
+ "params": {},
+ "clock_ports": [
+  "clk",
+  "tile_clk",
+  "buffer_clk"
+ ],
+ "clock_pins": [
+  "clk",
+  "clk_r0",
+  "clk_r1",
+  "clk_r2",
+  "clk_r3"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "regions": [
+  {
+   "name": "SW",
+   "insts": [
+    "u_ctl",
+    "u_buffer",
+    "u_t0",
+    "u_t1",
+    "u_t8",
+    "u_t9",
+    "u_t10",
+    "u_t11"
+   ],
+   "centre": [
+    421.2,
+    421.2
+   ]
+  },
+  {
+   "name": "NW",
+   "insts": [
+    "u_t2",
+    "u_t3",
+    "u_t4",
+    "u_t5",
+    "u_t6",
+    "u_t7",
+    "u_t12",
+    "u_t13",
+    "u_t14"
+   ],
+   "centre": [
+    421.2,
+    1263.6
+   ]
+  },
+  {
+   "name": "NE",
+   "insts": [
+    "u_t15",
+    "u_t16",
+    "u_t17",
+    "u_t24",
+    "u_t25",
+    "u_t26",
+    "u_t27",
+    "u_t28",
+    "u_t29"
+   ],
+   "centre": [
+    1263.6,
+    1263.6
+   ]
+  },
+  {
+   "name": "SE",
+   "insts": [
+    "u_t18",
+    "u_t19",
+    "u_t20",
+    "u_t21",
+    "u_t22",
+    "u_t23",
+    "u_t30",
+    "u_t31"
+   ],
+   "centre": [
+    1263.6,
+    421.2
+   ]
+  }
+ ],
+ "bench": {
+  "cycles": 7000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "drive": {
+   "start": "((cyc >= 16 && cyc < 80) || (($urandom % 64) == 0)) ? 1'b1 : 1'b0",
+   "arg_mode": "1'b0",
+   "cfg_n": "12'd128",
+   "cfg_pf": "16'd16",
+   "cfg_g": "8'd16",
+   "cfg_gbase": "8'd0",
+   "cfg_k": "13'd2048",
+   "cfg_nout": "13'd2048",
+   "cfg_obase": "40'd0",
+   "cfg_rbase": "40'h10000",
+   "cfg_has_r": "1'b1"
+  }
+ },
+ "plan": {
+  "sites": {
+   "u_t0": [
+    0,
+    1
+   ],
+   "u_t1": [
+    0,
+    2
+   ],
+   "u_t2": [
+    0,
+    3
+   ],
+   "u_t3": [
+    0,
+    4
+   ],
+   "u_t4": [
+    0,
+    5
+   ],
+   "u_t5": [
+    1,
+    5
+   ],
+   "u_t6": [
+    1,
+    4
+   ],
+   "u_t7": [
+    1,
+    3
+   ],
+   "u_t8": [
+    1,
+    2
+   ],
+   "u_t9": [
+    1,
+    1
+   ],
+   "u_t10": [
+    2,
+    1
+   ],
+   "u_t11": [
+    2,
+    2
+   ],
+   "u_t12": [
+    2,
+    3
+   ],
+   "u_t13": [
+    2,
+    4
+   ],
+   "u_t14": [
+    2,
+    5
+   ],
+   "u_t15": [
+    3,
+    5
+   ],
+   "u_t16": [
+    3,
+    4
+   ],
+   "u_t17": [
+    3,
+    3
+   ],
+   "u_t18": [
+    3,
+    2
+   ],
+   "u_t19": [
+    3,
+    1
+   ],
+   "u_t20": [
+    3,
+    0
+   ],
+   "u_t21": [
+    4,
+    0
+   ],
+   "u_t22": [
+    4,
+    1
+   ],
+   "u_t23": [
+    4,
+    2
+   ],
+   "u_t24": [
+    4,
+    3
+   ],
+   "u_t25": [
+    4,
+    4
+   ],
+   "u_t26": [
+    4,
+    5
+   ],
+   "u_t27": [
+    5,
+    5
+   ],
+   "u_t28": [
+    5,
+    4
+   ],
+   "u_t29": [
+    5,
+    3
+   ],
+   "u_t30": [
+    5,
+    2
+   ],
+   "u_t31": [
+    5,
+    1
+   ]
+  },
+  "ctl_sites": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ]
+  ],
+  "buffer_site": [
+   2,
+   0
+  ],
+  "pitch_um": 280.8,
+  "tile_um": 259.2,
+  "segments": [
+   [
+    0,
+    1
+   ],
+   [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   [
+    8,
+    9,
+    10,
+    11
+   ],
+   [
+    12,
+    13,
+    14
+   ],
+   [
+    15,
+    16,
+    17
+   ],
+   [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   [
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+   ],
+   [
+    30,
+    31
+   ]
+  ],
+  "seams": [
+   {
+    "seam": 0,
+    "from_tile": 1,
+    "to_tile": 2,
+    "down_bits": 353,
+    "up_bits": 344
+   },
+   {
+    "seam": 1,
+    "from_tile": 7,
+    "to_tile": 8,
+    "down_bits": 352,
+    "up_bits": 344
+   },
+   {
+    "seam": 2,
+    "from_tile": 11,
+    "to_tile": 12,
+    "down_bits": 351,
+    "up_bits": 344
+   },
+   {
+    "seam": 3,
+    "from_tile": 14,
+    "to_tile": 15,
+    "down_bits": 350,
+    "up_bits": 344
+   },
+   {
+    "seam": 4,
+    "from_tile": 17,
+    "to_tile": 18,
+    "down_bits": 349,
+    "up_bits": 344
+   },
+   {
+    "seam": 5,
+    "from_tile": 23,
+    "to_tile": 24,
+    "down_bits": 348,
+    "up_bits": 344
+   },
+   {
+    "seam": 6,
+    "from_tile": 29,
+    "to_tile": 30,
+    "down_bits": 347,
+    "up_bits": 344
+   }
+  ]
+ }
+}
