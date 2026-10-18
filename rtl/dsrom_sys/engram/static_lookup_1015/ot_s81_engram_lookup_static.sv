@@ -276,8 +276,6 @@ module ot_s81_engram_lookup_static #(
                     begin
                         if (icnt < CPR[2:0]) begin
                             hq_valid <= 1'b1;
-                            hq_atom <= baddr[icnt][ABW-1:5];
-                            hq_tag <= icnt;
                             icnt <= icnt + 1'b1;
                         end else begin
                             hq_valid <= 1'b0;
@@ -293,6 +291,13 @@ module ot_s81_engram_lookup_static #(
                 default: st <= S_IDLE;
             endcase
         end
+    end
+    // st10b: the unreset request payload lives in a plain clocked block (it sat in the async-reset block, so yosys put
+    // rst_n on its enable: OT_MULTI_ROOT 'rst_n wrong domain' once clk_ctl became ck_s).  Same enable, same cycle:
+    // while rst_n is low st is S_IDLE, so the payload holds exactly as before.
+    always @(posedge clk_ctl) if (st == S_ISSUE && icnt < CPR[2:0]) begin
+        hq_atom <= baddr[icnt][ABW-1:5];
+        hq_tag  <= icnt;
     end
     always @(posedge clk_ctl) if (st == S_ADDR && acnt == 2'd1)
         for (j = 0; j < CPR; j = j + 1) roff[j] <= r8[j][4:3];   // byte address mod 32 / 8 (r256 is 0 mod 256)
