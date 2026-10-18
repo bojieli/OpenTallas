@@ -39,7 +39,13 @@ module ot_hgi_sm_xload_cl2_ctl #(
     parameter integer EGRESS_SPLIT = 0,  // XQL (H-SM 10-16): 1 = export the egress controls (eg_*) to pair-egress leaves
     // SEL_KEEP=1 (HBM-B 10-17, ctlx): the NR rotation-select replicas are (* keep *) flops, so synthesis keeps NR copies
     // (ctlw f20a: opt_merge folded them, u_ctl.s0r[26][*] drove 5,045 loads).  Same function, same edges.
-    parameter integer SEL_KEEP = 0
+    parameter integer SEL_KEEP = 0,
+    // PIN_NATIVE=1 (ELEM-GAPS/HBMN1 10-18, ctlx native audit of CLOSED q1-7af6f4406: l_d_o launch 403 ps on 580 pins):
+    // l_d_o leaves from a dedicated (* keep *) pin register copy of L1 (D = l0_d, same edge as l_d), so the l_d_o
+    // pin flops sit at the E face while l_d feeds the C stage on the W side.  Same function, same edges.
+    parameter integer PIN_NATIVE = 0,
+    // RST_PRE=1: rst_n is already a relayed, synchronous reset (ctlx pin relay); rn = rst_n (no second relay).
+    parameter integer RST_PRE = 0
 ) (
     input  wire               clk,
     input  wire               clk_eg,    // egress root (rw / BD-beat pin capture, beat select, xw pins): related phase 0
@@ -97,8 +103,14 @@ module ot_hgi_sm_xload_cl2_ctl #(
     localparam integer RDP = 7;            // + 1: rw captured at the ctl pins (egress edge)
     localparam integer RB = 2048 / NR;     // data bits per select replica
     // ---- local reset relay
-    reg rs1, rs2, rn;
-    always @(posedge clk or negedge rst_n) if (!rst_n) {rs1, rs2, rn} <= 3'b000; else {rs1, rs2, rn} <= {1'b1, rs1, rs2};
+    wire rn;
+    generate if (RST_PRE != 0) begin : g_rpre
+        assign rn = rst_n;
+    end else begin : g_rrel
+        reg rs1, rs2, rnq;
+        always @(posedge clk or negedge rst_n) if (!rst_n) {rs1, rs2, rnq} <= 3'b000; else {rs1, rs2, rnq} <= {1'b1, rs1, rs2};
+        assign rn = rnq;
+    end endgenerate
     assign rn_o = rn;
     function automatic [15:0] bf16(input [31:0] x);
         reg [31:0] r;
@@ -250,7 +262,13 @@ module ot_hgi_sm_xload_cl2_ctl #(
             l0_d[k*RB +: RB] <= rr_c[(3'(s0r[k] + 3'((k*RB) / 256) + ((MUT == 1) ? 3'd1 : 3'd0)))*257 + (k*RB) % 256 +: RB];
         {l_g, l_p, l_wq} <= {l0_g, l0_p, l0_wq}; l_rem <= l0_rem; l_d <= l0_d;
     end
-    assign l_d_o = l_d;
+    generate if (PIN_NATIVE != 0) begin : g_ldo
+        (* keep = 1 *) reg [8*256-1:0] l_dpo;
+        always @(posedge clk) l_dpo <= l0_d;
+        assign l_d_o = l_dpo;
+    end else begin : g_ldw
+        assign l_d_o = l_d;
+    end endgenerate
     // quantiser valids registered with L1 (= l_v && bdm && l_wq[2] / [1] of cl)
     reg qv0_lo, qv0_hi;
     always @(posedge clk or negedge rn)
@@ -549,7 +567,9 @@ module ot_hgi_sm_xload_cl2_ctlw #(
     parameter integer NR     = 32,
     parameter integer LEAD   = 8,
     parameter integer EGRESS_SPLIT = 0,  // XQL: export the egress controls (eg_*), see ot_hgi_sm_xload_static_xql
-    parameter integer SEL_KEEP = 0       // kept rotation-select replicas (ot_hgi_sm_xload_cl2_ctl SEL_KEEP)
+    parameter integer SEL_KEEP = 0,      // kept rotation-select replicas (ot_hgi_sm_xload_cl2_ctl SEL_KEEP)
+    parameter integer PIN_NATIVE = 0,    // ot_hgi_sm_xload_cl2_ctl PIN_NATIVE (l_d_o pin register copy)
+    parameter integer RST_PRE = 0        // rst_n already relayed (ctlx pin relay); see ot_hgi_sm_xload_cl2_ctl
 ) (
     input  wire               clk,
     input  wire               clk_eg,
@@ -613,7 +633,8 @@ module ot_hgi_sm_xload_cl2_ctlw #(
         .w_ce_in(t_wce[0]), .w_addr_in(t_waddr), .wd_in(t_wdata), .w_mask_in({256{1'b1}}),
         .rr_en(2'b0), .rr_addr(12'b0), .cr_en(2'b0), .cr_sel(16'b0));
     // cmd = {x_xb7, x_fmt2, x_space2, x_stride32, x_p4, x_n21, x_base40} (die contract v16 cp1_194..201)
-    ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT((MUT <= 5) ? MUT : 0), .NR(NR), .EGRESS_SPLIT(EGRESS_SPLIT), .SEL_KEEP(SEL_KEEP)) u_ctl (
+    ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT((MUT <= 5) ? MUT : 0), .NR(NR), .EGRESS_SPLIT(EGRESS_SPLIT), .SEL_KEEP(SEL_KEEP),
+                            .PIN_NATIVE(PIN_NATIVE), .RST_PRE(RST_PRE)) u_ctl (
         .clk(clk), .clk_eg(clk_eg), .rst_n(rst_n), .x_v(x_v), .x_base(xc[39:0]), .x_n(xc[60:40]), .x_p(xc[64:61]),
         .x_stride(xc[96:65]), .x_space(xc[98:97]), .x_fmt(xc[100:99]), .x_xb(xc[107:101]),
         .x_busy(x_busy), .x_done(x_done), .x_fault(x_fault), .xw_en(xw_en), .xw_last(xw_last), .xw_addr(xw_addr),
@@ -678,8 +699,19 @@ module ot_hgi_sm_xload_cl2_ctlx #(
     output wire               eg_bqv, eg_bqlast,
     output wire [6:0]         eg_bqaddr, eg_bqb
 );
-    ot_hgi_sm_xload_cl2_ctlw #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT), .NR(NR), .LEAD(LEAD), .EGRESS_SPLIT(1), .SEL_KEEP(1)) u_w (
-        .clk(clk), .clk_eg(clk), .clk_cal(clk_cal), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target),
+    // ELEM-GAPS/HBMN1 10-18 (native audit of CLOSED q1-7af6f4406: rst_n capture 455.7 ps): rst_n was the async clear
+    // of the issuer (ot_static_cmd_target_core) flops and the ctl relay, i.e. a pin net across the tile.  Now the pin
+    // drives ONE flop: rp1 (* keep *, async clear, D = 1) at the S face; rp2 / rq_n are plain flops (2-flop release
+    // synchroniser behind rp1, no port load); rq_n is the tile's reset: issuer and ctl body (RST_PRE: no second relay).
+    // Edges: assert reaches the issuer / ctl body 2 edges after rst_n falls (was 0 / 0); release 3 edges after rst_n
+    // rises for both (was 0 issuer / 3 ctl body; rn_o unchanged at 3).  Data / command edges unchanged.
+    (* keep = 1 *) reg rp1;
+    (* keep = 1 *) reg rp2, rq_n;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rp1 <= 1'b0; else rp1 <= 1'b1;
+    always @(posedge clk) begin rp2 <= rp1; rq_n <= rp2; end
+    ot_hgi_sm_xload_cl2_ctlw #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT), .NR(NR), .LEAD(LEAD), .EGRESS_SPLIT(1), .SEL_KEEP(1),
+                               .PIN_NATIVE(1), .RST_PRE(1)) u_w (
+        .clk(clk), .clk_eg(clk), .clk_cal(clk_cal), .rst_n(rq_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target),
         .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit),
         .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured), .fault(fault), .active(active),
         .x_done(), .xw_en(), .xw_last(), .xw_addr(), .xw_grp(), .xw_data(), .rq(rq), .rr(rr), .rn_o(rn_o),
