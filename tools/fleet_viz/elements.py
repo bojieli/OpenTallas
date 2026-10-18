@@ -52,7 +52,8 @@ FAIL = REDESIGN | {'NEEDS_HUMAN', 'INVALID', 'REFUSED'}
 CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first trial in flight', 'failed, re-running',
         'revoked, re-running', 'revoked (no live job)', 'needs redesign (no live job)', 'flow failure (no live job)',
         'cancelled only', 'superseded', 'implementation recorded (no physical job)', 'not started (open)',
-        'closed, thin margin (watch)', 'closed, not die-bindable (native)']
+        'closed, thin margin (watch)', 'closed, not die-bindable (native)',
+        'kit prepared, no route job', 'parent open, leaves under way']
 # DIE-BINDABLE (coordinator, owner safe margins, 2026-10-16; standard REVISED by the owner the same evening): a CLOSED view
 # binds into a die with native PASS (launch <= 220 / capture <= 190 / boundary spread <= 80 ps, no combinational pin arc,
 # insertion.json present).  TT >= +25 / FF >= +10 ps is a WATCH LIST only, never a binding blocker.  Closure is never
@@ -64,10 +65,18 @@ NOT_BINDABLE = 'closed, not die-bindable (native)'
 MARGIN_FILE = 'results/arch/margin_thin_1016.json'
 BIND_TT_PS, BIND_FF_PS = 25.0, 10.0
 NOT_STARTED = 'not started (open)'   # registry-sync 10-15: a current die-contract element with no physical job yet
+# FLEETVIZ-ELEM 10-18: 'not started' is kept strictly for a die element with no job, no alias and no supersession at all.
+# A die element with a committed ref_tile kit but no closure-loop job yet, and a die parent whose own job does not exist
+# but whose contract leaves have jobs, get their own (open) categories.  Live inputs: {state}/die_contracts_live.json
+# (die_contract_sync.py) and {state}/margin_live.json (native_sync.py), both rebuilt hourly by fleet-viz-elem-sync.timer.
+KIT_ONLY = 'kit prepared, no route job'
+PARENT_OPEN = 'parent open, leaves under way'
+MARGIN_LIVE = 'margin_live.json'
 # per-design count buckets (fleet header): every non-superseded category is closed, in flight, failed or not started
 BUCKET = {'first trial in flight': 'in_flight', 'failed, re-running': 'in_flight', 'revoked, re-running': 'in_flight',
           'revoked (no live job)': 'failed', 'needs redesign (no live job)': 'failed', 'flow failure (no live job)': 'failed',
-          'cancelled only': 'failed', 'implementation recorded (no physical job)': 'not_started', NOT_STARTED: 'not_started'}
+          'cancelled only': 'failed', 'implementation recorded (no physical job)': 'not_started', NOT_STARTED: 'not_started',
+          KIT_ONLY: 'in_flight', PARENT_OPEN: 'in_flight'}
 TARGETS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other']
 
 # ---------------------------------------------------------------- naming
@@ -593,8 +602,27 @@ class Elements:
 
     # ---- top-down: current die contracts (die_contracts.py, results/fleet_viz/die_contracts.json)
     def margin_audit(self):
-        """per-view native verdicts from MARGIN_FILE (origin/main; cached by blob id)"""
+        """per-view native verdicts: {state}/margin_live.json (native_sync.py, hourly), else MARGIN_FILE on origin/main"""
         repo = self.contracts.repo if hasattr(self, 'contracts') else None
+        live = pathlib.Path(getattr(self, 'state', None) or os.path.expanduser('~/.local/state/fleet-viz')) / MARGIN_LIVE
+        try:
+            mt = live.stat().st_mtime if hasattr(self, 'contracts') else None   # unit fixtures: no live file
+        except OSError:
+            mt = None
+        if mt is not None:
+            if getattr(self, '_margin', (None,))[0] == ('live', mt):
+                return self._margin[1]
+            d = {}
+            try:
+                for v in json.loads(live.read_text()).get('views', []):
+                    # one view per job; a cell maps to its first PASS view (else the first view)
+                    if v.get('job'): d.setdefault(v['job'], v)
+                    c = v.get('cell')
+                    if c and (c not in d or (d[c].get('native') != 'PASS' and v.get('native') == 'PASS')): d[c] = v
+                self._margin = (('live', mt), d)
+                return d
+            except Exception as e:  # noqa: BLE001
+                self.log('elements: %s: %s' % (live, e))
         try:
             blob = subprocess.run(['git', '-C', str(self.repo), 'rev-parse', 'origin/main:' + MARGIN_FILE],
                                   capture_output=True, text=True, timeout=20).stdout.strip()
@@ -662,10 +690,33 @@ class Elements:
         by_name = {}
         for r in rows:
             for n in [r['element']] + r['variants']: by_name.setdefault(n, r)
+        # FLEETVIZ-ELEM 10-18: a contract element implemented by job blocks of another name (die_contract_sync.py
+        # 'aliases': audited view cell, bind-table view job, kit record / lint top) is represented by the best of
+        # those rows (closed first, then live) -- one row per element, so die counts are not inflated.
+        aliases = ct.get('aliases') or {}; kits = ct.get('kits') or {}
+        def rank(r):
+            return (not r['category'].startswith('closed'), not r.get('live'), CATS.index(r['category']) if r['category'] in CATS else 99)
+        rep_of, displaced = {}, {}
+        for e, bl in aliases.items():
+            if e not in E: continue
+            cands = [by_name[b] for b in bl if b in by_name and by_name[b]['category'] != 'superseded'] or \
+                    [by_name[b] for b in bl if b in by_name]
+            if not cands: continue
+            rr = min(cands, key=rank); r0 = by_name.get(e)
+            if r0 is not None and (r0 is rr or rank(r0) <= rank(rr)): continue
+            if r0 is not None: displaced[id(r0)] = (e, rr['element'])
+            rep_of.setdefault(id(rr), []).append(e); by_name[e] = rr
         for r in rows:
             names = [r['element']] + r['variants']
             r['dies'] = None; r['owner_stream'] = None; r['native'] = None; r['contract'] = None
-            mem = next(((n, E[n]) for n in names if n in E), None)
+            mem = next(((n, E[n]) for n in names if n in E and by_name.get(n) is r), None)
+            if id(r) in displaced:   # the element is represented by a better (e.g. closed) row of another job block
+                r['contract'] = 'die element %s is represented by row %s' % displaced[id(r)]
+            if mem is None and id(r) in rep_of:
+                n = rep_of[id(r)][0]; mem = (n, E[n])
+                r['implements'] = rep_of[id(r)]
+                for n in rep_of[id(r)]:
+                    if n not in r['variants']: r['variants'].append(n)
             leaf = next(((n, L[n]) for n in names if n in L), None)
             if mem:
                 n, x = mem
@@ -731,16 +782,23 @@ class Elements:
             kids += [by_name[k] for k, y in L.items() if k in by_name and e in y['parents']]
             nk = len(kids); nc = sum(1 for k in kids if k['category'].startswith('closed'))
             stream = die_contracts.Contracts.stream(designs, d0, e, x['stream'])
-            rows.append(dict(element=e, target=dz[d0]['target'], variants=[], category=NOT_STARTED,
-                             via=('%d of %d contract leaves closed' % (nc, nk)) if nk else 'no closure-loop job yet',
+            nj = sum(1 for k in kids if k.get('jobs') or k.get('live'))
+            if kits.get(e):
+                cat, via = KIT_ONLY, 'kit %s committed, no closure-loop job yet' % ', '.join(kits[e][:3])
+            elif nj:
+                cat, via = PARENT_OPEN, 'parent not hardened; %d of %d contract leaves have jobs, %d closed' % (nj, nk, nc)
+            else:
+                cat, via = NOT_STARTED, ('%d of %d contract leaves closed' % (nc, nk)) if nk else 'no closure-loop job yet'
+            rows.append(dict(element=e, target=dz[d0]['target'], variants=[], category=cat,
+                             via=via,
                              purpose=self.desc.get(e, [e], []) or ('%s %s of %s' % (dz[d0]['label'], x['roles'].get(d0), ', '.join(x['evidence'][:2]))),
                              **self.desc.info(e), jobs=0, live=0, failed=0, closed_jobs=0,
                              best=dict(tt=None, ff=None, ss=None, drc=None, job=None, corner=None, source_commit=None),
                              area=None, revoked=None, latest=None, closed_t=None, owner=stream or '', owner_orig='',
                              evidence_history=[], qualification=None, superseded=None, supersession_source_evidence_missing=None,
-                             throughput=None, gate=gate_text(NOT_STARTED, None), _host=None, _base=None,
+                             throughput=None, gate=gate_text(cat, None), _host=None, _base=None,
                              dies=die_rows(x, x['designs']), owner_stream=stream, native=native(x), contract='in current contract'))
-            added += 1
+            added += cat == NOT_STARTED
         dsum = {}
         for d in designs:
             c = collections.Counter()
