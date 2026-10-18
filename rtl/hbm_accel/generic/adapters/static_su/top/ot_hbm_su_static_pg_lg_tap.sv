@@ -14,7 +14,13 @@
 // RSYNC_MUT (bench only, must FAIL): 1 = the r8b structure (one pg_clk flop of the raw rst_n, no serial source flop).
 module ot_hbm_su_static_pg_lg_tap #(
  parameter integer READ_RETURN=10,WRITE_RETURN=7,
- parameter integer RSYNC_MUT=0
+ parameter integer RSYNC_MUT=0,
+ // NATIVE-FIX3/lgtap 10-18 (NATIVE-3: local_rr launch 319.2 ps = one return register shared by the S local_rr and W far_rr
+ // faces; local_rq/local_wq valid capture 236.3 ps = valid pin -> pin register + calendar AND beside the S local_read pins):
+ // LOCAL_SPLIT=1 gives local_rr its own return register and fills the calendars from the pin registers. 0 added edges,
+ // all outputs bit-identical to LOCAL_SPLIT=0 on every edge (lockstep bench). SPLIT_MUT: bench only, must FAIL.
+ parameter integer LOCAL_SPLIT=1,
+ parameter integer SPLIT_MUT=0
 )(
  input  wire clk_ctl,             // serial root (source flop of the reset synchroniser only)
  input  wire pg_clk,              // stream root (the slice's VM bank leaf clock): every tap flop
@@ -40,7 +46,7 @@ module ot_hbm_su_static_pg_lg_tap #(
   always @(posedge pg_clk) rs <= {rs[0], rc};
   assign tap_rst_n = rs[1];
  end
- ot_hbm_vm_lg_pair_tap #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_tap(
+ ot_hbm_vm_lg_pair_tap #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.LOCAL_SPLIT(LOCAL_SPLIT),.SPLIT_MUT(SPLIT_MUT)) u_tap(
   .clk(pg_clk),.rst_n(tap_rst_n),.local_rq(local_rq),.far_rq(far_rq),.local_wq(local_wq),.far_wq(far_wq),
   .local_read(local_read),.local_write(local_write),.near_rq(near_rq),.near_wq(near_wq),.near_rr(near_rr),
   .near_w_done(near_w_done),.local_rr(local_rr),.far_rr(far_rr),.local_w_done(local_w_done),.far_w_done(far_w_done),

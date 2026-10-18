@@ -8,7 +8,9 @@
 module ot_hbm_vm_lg_pair_tap #(
     parameter integer READ_RETURN=10,
     parameter integer WRITE_RETURN=7,
-    parameter integer MUT=0          // 1: bank-1 write payload mux selects far despite the local calendar
+    parameter integer MUT=0,         // 1: bank-1 write payload mux selects far despite the local calendar
+    parameter integer LOCAL_SPLIT=0, // 1: per-face return registers + pin-register-fed calendars (ot_hbm_vm_lg_static_bank)
+    parameter integer SPLIT_MUT=0    // bench only (bank 1): see ot_hbm_vm_lg_static_bank
 )(
     input  wire clk,rst_n,
     input  wire [33:0]  local_rq,far_rq,
@@ -24,7 +26,7 @@ module ot_hbm_vm_lg_pair_tap #(
 );
     wire [1:0] f;
     for(genvar b=0;b<2;b=b+1)begin:g_bank
-        ot_hbm_vm_lg_static_bank #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(b==1?MUT:0),.RET_PIN(0)) u_tap(
+        ot_hbm_vm_lg_static_bank #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(b==1?MUT:0),.RET_PIN(0),.LOCAL_SPLIT(LOCAL_SPLIT),.SPLIT_MUT(b==1?SPLIT_MUT:0)) u_tap(
             .clk(clk),.rst_n(rst_n),.rret(5'd0),.wret(5'd0),
             .local_rq(local_rq[b*17+:17]),.far_rq(far_rq[b*17+:17]),
             .local_wq(local_wq[b*281+:281]),.far_wq(far_wq[b*281+:281]),
