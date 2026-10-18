@@ -43,6 +43,7 @@ R = {
     ('hfd_hgi_vm_calendar_f20', 'client_seq'): ('OBS', 'sequence observe'),
     ('hfd_hgi_vm_calendar_f20', 'response_seq'): ('OBS', 'sequence observe'),
     ('ot_vms_status4_static', 'vmstat'): ('OBS', 'VM status word observe (faults also leave on the fault path)'),
+    ('ot_hbm_status_join_fa', 'a_cause'): ('OBS', 'HBM-FAULT region cause register (sticky, cleared with the fault); the fault itself reaches the host as die_fault + block_ready low; host read map (ingress 0xf34) is a follow-up'),
     # completion pulses / busy of statically scheduled engines (the compiler fixes when they occur)
     **{(m, p): ('OBS', 'completion / busy pulse of a statically scheduled engine; programme activity reaches the host through the collar/target active/ready')
        for m, p in [('hfd_hgi_vm_calendar_f20', 'done'), ('hfd_hgi_vm_calendar_f20', 'calendar_v'),
