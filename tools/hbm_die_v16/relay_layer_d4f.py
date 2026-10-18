@@ -30,8 +30,11 @@ LANDING mode (--land, HBM-LANDING 10-18, lanes/LANDING-CONTRACT.md sections 2/3/
     0-station forwarded sink gets hbfd_land0_<W>_<dir> (ck_s / en = source root / source reset); the remaining
     equal-age pad stages after it are PLAIN root-clocked hbfd_rly_<W>_WE (ck / rs on the sink root).
   * K strap per link (= bus row x sink, all lanes share it) from --land-plan {links: [{link: '<driver row>-><sink>', E,
-    K?}]}: K given, else K = (ceil(N/2) + E) mod 8 (source and sink regional resets released on the same root edge;
-    0 encodes 8); no plan entry -> E = 1 (the ideal-clock value) placeholder, listed NO_E in the report.
+    K?, stations?}]}: K = (ceil(N/2) + E) mod 8 with the layer's REAL N (source and sink regional resets released on the
+    same root edge; 0 encodes 8); a plan K is used only when the entry's 'stations' equals the real N (a K is valid for
+    one N only: the DCC pilot plan's K uses its model N); no plan entry -> E = 1 (the ideal-clock value) placeholder,
+    listed NO_E in the report.  Checked on RTL 2e482a69f (non-inverting hop 0): relay lockstep 120 buses / 230 landings
+    PASS at E = 1 for both parities of N (results/arch/hbm_die_d4g/landing/chain_smoke/lockstep120_rtl2e48).
   * fault: --land-fault pins (default) puts every landing fault on a die status pin <landing>__fault (contract
     die_pins, as S81 dv_bind land_fault); aggregation into the regional fault tree is gap G-D4G-LAND-FAULT.
   * compiler constants per sink (half-cycle): ceil(N/2) + 1 + E + pads edges from the driver pin to the sink pin, N = lane
@@ -328,7 +331,8 @@ def main():
                 # K: the read offset counts from the common reset release; the lane epoch reaches the ring ceil(N/2)
                 # edges later (half-cycle stations), so K = ceil(N/2) + E (mod 8, 0 encodes 8) -- bench-calibrated
                 # (relay_lockstep_bench.py: ideal clocks give E = 1, latency ceil(N/2) + 2 at the sink pin)
-                K_ = pe['K'] if pe and pe.get('K') is not None else ((-(-N_ // 2) + (E_ if E_ is not None else 1)) % 8)
+                K_ = (pe['K'] % 8) if (pe and pe.get('K') is not None and pe.get('stations') == N_) \
+                    else ((-(-N_ // 2) + (E_ if E_ is not None else 1)) % 8)
                 if src is None:
                     sx = cen(di) or xy
                     dx, dy = xy[0] - sx[0], xy[1] - sx[1]

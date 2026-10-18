@@ -18,18 +18,23 @@ Clock model (ASSUMPTIONS, stated; the die STA re-derives E at GEN2 -- K is a str
   * die clock tree to each region root: BUFx24 M8 repeater model of tools/hbm_die_v15/die_clock_tree.py (stage_ps,
       ~176 ps / 420 um TT) along the Manhattan path from the hb_ckgen pin (grants_d4g.json slot) to the region site;
       FF = 0.76 x TT.  Region-local trees are equal on both ends and cancel.
-  * dL = L_src_root + N h - L_sink_root  (the lane clock at the ring vs the sink root, same logical edge).  With
-      half-cycle stations the N inverting forwards move the ring write by N T/2: floor(N/2) whole cycles go to the
-      station term and an odd N adds T/2 to dL.
-LANDING-CONTRACT L5 with D = 4, ONE E per link (all lanes of the bundle; the same at TT and FF):
-      E = max over corners of max(1, ceil((dL + t_cq + t_su + U_setup) / T))       (= 1 + ceil(-S1 / T))
-      window: (E - D) T + t_hold + U_hold < dL_c < E T - t_cq - t_su - U_setup   at TT AND FF
+  * dL = L_src_root + N h - L_sink_root  (the lane clock at the ring vs the sink root, same logical edge).
+  * RTL (2e482a69f, hbm_lane_bench): hop 0 = NON-inverting ICG on the source root (one full cycle), then N - 1 half-cycle
+      stations, so the ring write is (N + 2)/2 cycles after the launch edge (+ dL); the landing output register reads at
+      launch + ceil(N/2) + 1 + E.  Read-after-write margin m = E + (N odd ? 1/2 : 0) - dL/T, i.e. an ODD N gives the
+      handoff T/2 of slack:  dL' = dL - (N odd ? T/2 : 0)  (the old inverting-hop-0 model added T/2 for odd N: wrong
+      for this RTL; checked by the relay lockstep at E = 1, K = ceil(N/2) + 1, both parities).
+LANDING-CONTRACT L5 with D = 4, ONE E per link (all lanes of the bundle; the same at TT and FF), CHAIN convention
+(relay_layer_d4f.py --land, relay_lockstep_bench.py):
+      E = max over corners of max(1, ceil((dL' + t_cq + t_su + U_setup) / T))
+      window: (E - D) T + t_hold + U_hold < dL'_c < E T - t_cq - t_su - U_setup   at TT AND FF
       t_cq 45, t_su 25, U_setup 60, t_hold 15, U_hold 25 ps (ASAP7 DFF, die uncertainty policy).
-      K (Qwen in-band epoch form, ot_qfd_land: write epoch = lane epoch, read epoch = sink reset R0; the land plan
-      assumes G = R0, so K = E mod 2D, 0 -> 2D; the binder re-derives K = (E + G - R0) mod 2D from the reset calendar).
-Latency charged per traversal (L4): half-cycle  floor(N/2) + 1 (ring) + E (+1 block flop, already in the base price)
+      K = (ceil(N/2) + E) mod 2D (sources and sinks released on the same root edge, G = R0; the binder re-derives
+      K = (ceil(N/2) + E + G - R0) mod 2D).  K here uses the MODEL N; relay_layer_d4f.py recomputes K from E and the
+      layer's real N unless the entry's 'stations' equals it.
+Latency charged per traversal (L4): half-cycle  ceil(N/2) + 1 (ring) + E (+1 block flop, already in the base price)
                                     full-cycle  N + 1 + E
-  vs today's N  ->  delta_half = 1 + E_h - ceil(N/2),  delta_full = 1 + E_f.
+  vs today's N  ->  delta_half = 1 + E_h - floor(N/2),  delta_full = 1 + E_f.
 Per class the pricer stage count gets the bits-weighted mean delta over the class's links (unlanded links 0).
 
     d4g_land_plan.py [--out results/arch/hbm_die_d4g/landing]
@@ -115,7 +120,7 @@ def main():
         res = {}
         for corner, f in (('tt', 1.0), ('ff', FF_RATIO)):
             base = (Lroot[rs] + n * hop_ps(hop) - Lroot[rd]) * f
-            res[corner] = dict(full=base, half=base + (T / 2 if n % 2 else 0.0))
+            res[corner] = dict(full=base, half=base - (T / 2 if n % 2 else 0.0))   # RTL 2e482a69f: odd N = T/2 slack
         out = {}
         for mode in ('half', 'full'):
             E = max(e_of(res['tt'][mode], T), e_of(res['ff'][mode], T))
@@ -126,12 +131,12 @@ def main():
                 ok = ((E - Dn) * T + TH + UH < min(res['tt'][mode], res['ff'][mode]))
             out[mode] = dict(E=E, D=Dn, window_ok=ok)
         Eh, Ef = out['half']['E'], out['full']['E']
-        K = Eh % (2 * D) or 2 * D
-        dh = 1 + Eh - math.ceil(n / 2); df = 1 + Ef
+        K = (math.ceil(n / 2) + Eh) % (2 * D)
+        dh = 1 + Eh - n // 2; df = 1 + Ef
         row.update(E=Eh, K=K, D=out['half']['D'], window_ok=out['half']['window_ok'],
                    dL_tt=round(res['tt']['half'], 1), dL_ff=round(res['ff']['half'], 1),
                    E_full_cycle=Ef, dL_tt_full=round(res['tt']['full'], 1), dL_ff_full=round(res['ff']['full'], 1),
-                   latency_half=math.floor(n / 2) + 1 + Eh, latency_full=n + 1 + Ef, latency_now=n,
+                   latency_half=math.ceil(n / 2) + 1 + Eh, latency_full=n + 1 + Ef, latency_now=n,
                    delta_half=dh, delta_full=df)
         acc['landed'] += 1; acc['landed_bits'] += l['bits']; acc['dh'] += l['bits'] * dh; acc['df'] += l['bits'] * df
         rows.append(row)
