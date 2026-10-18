@@ -16,7 +16,7 @@
   257.03999999999996
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": null,
+ "std_area_um2": 8437.0,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -139,6 +139,8 @@
   "physical/common_flow/macro_edge_via_guard.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/ref_tile/hidx_rootctl_am_1018/spine_ins.tcl",
   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ss.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib",

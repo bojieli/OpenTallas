@@ -14,6 +14,7 @@
  ],
  "params": {},
  "clock_port": "clk",
+ "clock": "spine",
  "reset_ports": [
   "rst_n"
  ],
@@ -122,7 +123,7 @@
  "job": {
   "owner": "Claude:HBM-IDXAM",
   "branch": "claude/hbm-idxam-1018",
-  "tag": "r1",
+  "tag": "r2",
   "purpose": "d4g argmax r2 binding (coordinator 0gl (3), lane HBM-IDXAM 10-18): ot_hbm_idx_rootctl_static with the share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-edge equal-latency OR chain in the 4 bank-pair leaves): argmax face 2,056 b -> one 264-b word {lane valid8, data256} for ot_hbm_argmax_static_sw_vm_r2 (closed r3). One clock pin (the 8 IDX ctl clock nets were the same stream clock; tile < 0.5 mm), rst_n -> ot_rst_relay 3 regions. First hardening of idx_ctl (no view existed: GEN0/GEN1 bound SYNTH). Slot change for H-D4G-GEN2: 300x260 -> 475.2x259.2 (N index face 2,192 pins and S VM face 2,192 pins at 4.6/um; E argmax 400 + cq/cr 614 at 3.9/um; W control/TOPK 478).",
   "extra_paths": [
    "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh",
@@ -219,5 +220,6 @@
     ]
    }
   ]
- }
+ },
+ "floorplan_note": "HBM-IDXAM r2 10-18: gate r1 FAIL pin-flop spread TT 94.1 / FF 87.7 ps (> 80) with the default CTS tree over 10.5k flops across 475 um from the W clock pin -> clock 'spine' (balanced spine, leaf targets equalised; the KV hub's spine measured 25/60 ps)."
 }
