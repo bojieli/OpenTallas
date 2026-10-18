@@ -13,7 +13,7 @@ SRC="rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu
  rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_divc.sv rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv
  rtl/hdc/v41/ot_hdc_select_tree.sv rtl/hdc/v41x/ot_dsrom_su_bias_select.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
  rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_sinkhorn.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv
- rtl/hdc/ot_hdc_cg.sv rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv
+ rtl/hdc/ot_hdc_cg.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l3.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv

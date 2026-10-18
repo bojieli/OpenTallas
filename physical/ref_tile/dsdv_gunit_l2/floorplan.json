@@ -30,8 +30,8 @@
  },
  "pins": {
   "N": [
-   "rn_i",
    "rn_o",
+   "rn_i",
    "hp_av",
    "hp_a",
    "hp_bv",
@@ -73,6 +73,7 @@
  "blocks": [],
  "findings": [],
  "referenced": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv",

@@ -3,6 +3,7 @@
  "top": "dsdv_gunit_l3",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
@@ -65,11 +66,11 @@
   "io_hold_margin_ns": 0.0,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81U-GUNIT2 (10-17): new leaf L3 of the six-leaf dsdv_gunit (S81-DV column-3 G-unit): routing weights (ot_s81_su_rw) + weight CTL rows, s_3S rung face (bottom). Every input lands in a flop, every output leaves a flop; carried buses cross in 2 edges (dsdv_gunit_pass); no ready / credit (static schedule, contract checks are faults).",
+ "structural_change": "S81-NATIVE3 (10-17, NATIVE-2 routed native audit FAIL on the CLOSED view 7fb5554c1 / job dsdv_gunit_l3-g1-7205fead6: rst_n 447.5 capture): rst_n -> local reset relay (ot_rst_relay, 4 regions; release +3 edges); data path unchanged (equivalence vs the closed RTL every edge, run_gunit_native_eq.sh). Previous: S81U-GUNIT2 (10-17): new leaf L3 of the six-leaf dsdv_gunit (S81-DV column-3 G-unit): routing weights (ot_s81_su_rw) + weight CTL rows, s_3S rung face (bottom). Every input lands in a flop, every output leaves a flop; carried buses cross in 2 edges (dsdv_gunit_pass); no ready / credit (static schedule, contract checks are faults).",
  "job": {
-  "owner": "Claude:S81U-GUNIT2",
-  "branch": "claude/s81u1-1017",
-  "tag": "g1",
+  "owner": "Claude:S81-NATIVE3",
+  "branch": "claude/s81-native3-gunit-1017",
+  "tag": "n3",
   "purpose": "S81-DV G-unit leaf L3 to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
@@ -113,5 +114,9 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why_route": "S81-NATIVE3: the CLOSED view (7fb5554c1, job dsdv_gunit_l3-g1-7205fead6) FAILs the routed native pin audit results/arch/native_2_1017/native_2_audit.json on claude/native-2-1017 3fd032e8e (lanes/NATIVE-2.md): rst_n 447.5 capture (raw async fan-out to every flop). RTL: rst_n -> ot_rst_relay (4 regions, release +3 edges); equivalence vs the closed RTL every edge + mutant FAIL."
+ }
 }

@@ -12,7 +12,8 @@
 //            inject flops; both on one edge is a sticky fault (the compiler never schedules it; no arbitration).
 //   cw / sid E-face input flops, then one output flop per face (S: L1, N: L0).
 //   fault    output flop: vstop | L1 | L0 | collision.
-// Every input lands in a flop; every output leaves a flop.  MUT (bench only): 9 = the CTL rows injected northbound only.
+// Every input lands in a flop; every output leaves a flop.  MUT (bench only): 9 = the CTL rows injected northbound only;
+// 10 = the raw hct_b pin ORed into the S-side inject (skips its pin flop; native pin-register equivalence bench).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l2 #(
     parameter integer MUT = 0
@@ -35,30 +36,42 @@ module dsdv_gunit_l2 #(
     output reg           fault
 );
     localparam [7:0] KSC = 8'h20, KHP = 8'h80;
-    wire f_vs, in_v = rct_v | hct_v; wire [275:0] in_b = rct_b | hct_b;
+    // S81-NATIVE3 (10-17, NATIVE-2 audit: rst_n 394.4 / hct_b 283.9 capture, cws_d 236 launch): rst_n drives only a
+    // local reset relay (2 sync + 1 tree stage per region: release +3 edges); hct_* and rct_* land in their own pin flops
+    // (N / S face) and are ORed AFTER those flops, straight into the vstop's inject port (JREG 0: these flops ARE the
+    // inject flops), so the inject slot and every rung edge are unchanged (reg(a | b) = reg(a) | reg(b)).
+    wire [2:0] rsv;
+    ot_rst_relay #(.REGIONS(3), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
+    wire rs_v = rsv[0], rs_n = rsv[1], rs_s = rsv[2];      // vstop / N-face (L0) / S-face (L1) regions
+    reg hct_vq, rct_vq; reg [275:0] hct_bq, rct_bq;
+    always @(posedge clk or negedge rs_n) if (!rs_n) hct_vq <= 1'b0; else hct_vq <= hct_v;
+    always @(posedge clk or negedge rs_s) if (!rs_s) rct_vq <= 1'b0; else rct_vq <= rct_v;
+    always @(posedge clk) begin hct_bq <= hct_b; rct_bq <= rct_b; end
+    wire f_vs, in_v = rct_vq | hct_vq; wire [275:0] in_b = rct_bq | hct_bq;
     // rung: vi_s = northbound arrivals (from L1), vo_n = toward L0; vi_n = southbound arrivals (from L0), vo_s = toward L1
-    ot_dsdv_vstop #(.V(276)) u_vs (.clk(clk), .rst_n(rst_n), .tap_k(KSC | KHP), .sink_k(KSC | KHP),
+    ot_dsdv_vstop #(.V(276), .JREG(0)) u_vs (.clk(clk), .rst_n(rs_v), .tap_k(KSC | KHP), .sink_k(KSC | KHP),
         .vi_s(rs_i), .vo_n(rn_o), .vi_n(rn_i), .vo_s(rs_o), .dl_nv(dl_av), .dl_n(dl_a), .dl_sv(dl_bv), .dl_s(dl_b),
-        .in_nv(in_v), .in_n(in_b), .in_sv(MUT == 9 ? 1'b0 : in_v), .in_s(MUT == 9 ? 276'd0 : in_b), .fault(f_vs));
+        .in_nv(in_v), .in_n(in_b), .in_sv(MUT == 9 ? 1'b0 : in_v), .in_s(MUT == 9 ? 276'd0 : MUT == 10 ? (rct_bq | hct_b) : in_b), .fault(f_vs));
     // HP copy for L0 (kind 7)
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin hp_av <= 1'b0; hp_bv <= 1'b0; end
+    always @(posedge clk or negedge rs_n)
+        if (!rs_n) begin hp_av <= 1'b0; hp_bv <= 1'b0; end
         else begin hp_av <= dl_av && dl_a[3:1] == 3'd7; hp_bv <= dl_bv && dl_b[3:1] == 3'd7; end
     always @(posedge clk) begin hp_a <= dl_a; hp_b <= dl_b; end
     // cw / sid: E input flop, then one output flop per face
     wire [270:0] cw_q;
-    dsdv_gunit_pass #(.W(271), .N(1)) u_cwi (.clk(clk), .rst_n(rst_n), .d({cw_d, cw_a, cw_v}), .q(cw_q));
-    dsdv_gunit_pass #(.W(271), .N(1)) u_cwn (.clk(clk), .rst_n(rst_n), .d(cw_q), .q({cwn_d, cwn_a, cwn_v}));
-    dsdv_gunit_pass #(.W(271), .N(1)) u_cws (.clk(clk), .rst_n(rst_n), .d(cw_q), .q({cws_d, cws_a, cws_v}));
+    dsdv_gunit_pass #(.W(271), .N(1)) u_cwi (.clk(clk), .rst_n(rs_v), .d({cw_d, cw_a, cw_v}), .q(cw_q));
+    dsdv_gunit_pass #(.W(271), .N(1)) u_cwn (.clk(clk), .rst_n(rs_n), .d(cw_q), .q({cwn_d, cwn_a, cwn_v}));
+    dsdv_gunit_pass #(.W(271), .N(1)) u_cws (.clk(clk), .rst_n(rs_s), .d(cw_q), .q({cws_d, cws_a, cws_v}));
     reg [3:0] sid_q, sn_q, ss_q;
     always @(posedge clk) begin sid_q <= sid; sn_q <= sid_q; ss_q <= sid_q; end
     assign sidn = sn_q; assign sids = ss_q;
     // collision + fault
     reg col, rf_q, hf_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin col <= 1'b0; rf_q <= 1'b0; hf_q <= 1'b0; fault <= 1'b0; end
+    // col reads the pin flops; fault ORs their AND directly, so a collision reaches fault on the same edge as before
+    always @(posedge clk or negedge rs_v)
+        if (!rs_v) begin col <= 1'b0; rf_q <= 1'b0; hf_q <= 1'b0; fault <= 1'b0; end
         else begin
-            col <= col | (rct_v & hct_v); rf_q <= rf; hf_q <= hf;
-            fault <= f_vs | rf_q | hf_q | col;
+            col <= col | (rct_vq & hct_vq); rf_q <= rf; hf_q <= hf;
+            fault <= f_vs | rf_q | hf_q | col | (rct_vq & hct_vq);
         end
 endmodule
