@@ -15,8 +15,13 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from host_cluster.gen_cluster import family, FAM_PORT, TOP  # noqa: E402
+# kv_die.HOST_CLK_FAMILY + HOST_CLK_INFERRED, frozen next to the bench (regenerate when kv_die changes) so the loop
+# bench needs no kv_die import chain
+FAMILY = json.load(open(Path(__file__).resolve().parent / 'clock_family.json'))
+
+
+def family():
+    return FAMILY
 
 FIDX = dict(core=0, host=1, ingest=2, phy=3)
 

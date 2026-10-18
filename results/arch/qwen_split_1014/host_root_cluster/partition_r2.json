@@ -6,7 +6,8 @@
   "qkd_hr_phy_pad": {
    "members": [
     "top/u_rank/u_phy/u_pad"
-   ]
+   ],
+   "direct": "hardened as the member module itself (kit top = member); no wrapper"
   },
   "qkd_hr_cdc_pc": {
    "members": [
@@ -17,7 +18,8 @@
   "qkd_hr_core_rx": {
    "members": [
     "top/u_rank/u_control/u_packet/u_rx"
-   ]
+   ],
+   "direct": "hardened as the member module itself (kit top = member); no wrapper"
   },
   "qkd_hr_core_tx": {
    "members": [

@@ -1921,32 +1921,6 @@ module qkd_hr_cluster(ck_core, ck_host, ck_ingest, ck_phy_fam, ck_phy, host_upst
     .u_rank__u_bridge__qd(u_rank__u_bridge__qd),
     .u_rank__u_bridge__qv(u_rank__u_bridge__qv)
   );
-  qkd_hr_core_rx u_core_rx (
-    .ck_core(ck_core),
-    .die_id(die_id),
-    .host_admission_open(host_admission_open),
-    .host_deferred(host_deferred),
-    .host_launch_quiet(host_launch_quiet),
-    .host_rst_n(host_rst_n),
-    .native_reserved(native_reserved),
-    .ownership_valid(ownership_valid),
-    .service_faults(service_faults[20]),
-    .u_rank__ing_cls(u_rank__u_control__u_packet__ing_cls),
-    .u_rank__ing_crn(u_rank__u_control__u_packet__ing_crn),
-    .u_rank__ing_d(u_rank__u_control__u_packet__ing_d),
-    .u_rank__ing_v(u_rank__u_control__u_packet__ing_v),
-    .u_rank__rx_cr(u_rank__u_control__u_packet__rx_cr),
-    .u_rank__rx_d(u_rank__u_control__u_packet__rx_d),
-    .u_rank__rx_v(u_rank__u_control__u_packet__rx_v),
-    .u_rank__u_control__u_packet__cd(u_rank__u_control__u_packet__cd),
-    .u_rank__u_control__u_packet__cr(u_rank__u_control__u_packet__cr),
-    .u_rank__u_control__u_packet__credit_return(u_rank__u_control__u_packet__credit_return),
-    .u_rank__u_control__u_packet__cv(u_rank__u_control__u_packet__cv),
-    .u_rank__u_control__u_packet__hd(u_rank__u_control__u_packet__hd),
-    .u_rank__u_control__u_packet__hr(u_rank__u_control__u_packet__hr),
-    .u_rank__u_control__u_packet__hv(u_rank__u_control__u_packet__hv),
-    .u_rank__u_control__u_packet__peer_credit(u_rank__u_control__u_packet__peer_credit)
-  );
   qkd_hr_core_tx u_core_tx (
     .ck_core(ck_core),
     .host_rst_n(host_rst_n),
@@ -1986,17 +1960,6 @@ module qkd_hr_cluster(ck_core, ck_host, ck_ingest, ck_phy_fam, ck_phy, host_upst
     .u_rank__qm_t_d(u_rank__qm_t_d),
     .u_rank__qm_t_v(u_rank__qm_t_v),
     .u_rank__qm_v(u_rank__u_bridge__qm_v)
-  );
-  qkd_hr_phy_pad u_phy_pad (
-    .ck_phy_fam(ck_phy_fam),
-    .host_rst_n(host_rst_n),
-    .service_faults(service_faults[1]),
-    .u_rank__d_rcr(u_rank__u_phy__phy_rx_cr),
-    .u_rank__d_rd(u_rank__u_phy__phy_rx_d),
-    .u_rank__d_rv(u_rank__u_phy__phy_rx_v),
-    .u_rank__u_phy__pad_cr(u_rank__u_phy__pad_cr),
-    .u_rank__u_phy__pad_d(u_rank__u_phy__pad_d),
-    .u_rank__u_phy__pad_v(u_rank__u_phy__pad_v)
   );
   qfd_link_adp128 #(.MUT(0))  u_rank__u_adapter__g_slice_0___u_slice  (
     .c_cr(u_rank__u_phy__phy_tx_cr),
@@ -2125,6 +2088,43 @@ module qkd_hr_cluster(ck_core, ck_host, ck_ingest, ck_phy_fam, ck_phy, host_upst
     .tx_flit(u_rank__u_adapter__g_slice_7___tf),
     .tx_up(phy_up),
     .tx_v(u_rank__u_adapter__tv[7])
+  );
+  qkd_host_rx_class_admission #(.IR_REPL(1), .STRAPPED(1))  u_rank__u_control__u_packet__u_rx  (
+    .admission_open(host_admission_open),
+    .ck(ck_core),
+    .credit_return(u_rank__u_control__u_packet__credit_return),
+    .ctrl_cr(u_rank__u_control__u_packet__cr),
+    .ctrl_d(u_rank__u_control__u_packet__cd),
+    .ctrl_v(u_rank__u_control__u_packet__cv),
+    .deferred(host_deferred),
+    .die_id(die_id),
+    .fault(service_faults[20]),
+    .host_cr(u_rank__u_control__u_packet__hr),
+    .host_d(u_rank__u_control__u_packet__hd),
+    .host_v(u_rank__u_control__u_packet__hv),
+    .ing_cls(u_rank__u_control__u_packet__ing_cls),
+    .ing_crn(u_rank__u_control__u_packet__ing_crn),
+    .ing_d(u_rank__u_control__u_packet__ing_d),
+    .ing_v(u_rank__u_control__u_packet__ing_v),
+    .launch_quiet(host_launch_quiet),
+    .native_reserved(native_reserved),
+    .ownership_valid(ownership_valid),
+    .peer_credit(u_rank__u_control__u_packet__peer_credit),
+    .rst_n(host_rst_n),
+    .rx_cr(u_rank__u_control__u_packet__rx_cr),
+    .rx_d(u_rank__u_control__u_packet__rx_d),
+    .rx_v(u_rank__u_control__u_packet__rx_v)
+  );
+  qkd_host_rx_pad5 #(.MUT(0))  u_rank__u_phy__u_pad  (
+    .clk(ck_phy_fam),
+    .fault(service_faults[1]),
+    .in_cr(u_rank__u_phy__phy_rx_cr),
+    .in_d(u_rank__u_phy__phy_rx_d),
+    .in_v(u_rank__u_phy__phy_rx_v),
+    .out_cr(u_rank__u_phy__pad_cr),
+    .out_d(u_rank__u_phy__pad_d),
+    .out_v(u_rank__u_phy__pad_v),
+    .rst_n(host_rst_n)
   );
   assign native_recovery_clear = host_recovery_clear;
   assign u_rank__fault_src = fault_src;
@@ -6418,328 +6418,6 @@ module qkd_hr_core_queue(ck_core, host_upstream_quiet, ingest_permission, host_r
   assign u_rank__u_phy__tx_wck = ck_core;
 endmodule
 
-module qkd_hr_core_rx(ck_core, native_reserved, ownership_valid, host_admission_open, host_launch_quiet, host_deferred, die_id, host_rst_n, service_faults, u_rank__ing_cls, u_rank__ing_crn, u_rank__ing_d, u_rank__ing_v, u_rank__u_control__u_packet__hr, u_rank__u_control__u_packet__hd, u_rank__u_control__u_packet__hv, u_rank__u_control__u_packet__cr, u_rank__u_control__u_packet__cd, u_rank__u_control__u_packet__cv, u_rank__u_control__u_packet__credit_return, u_rank__u_control__u_packet__peer_credit
-, u_rank__rx_cr, u_rank__rx_d, u_rank__rx_v);
-  input ck_core;
-  wire ck_core;
-  input native_reserved;
-  wire native_reserved;
-  input ownership_valid;
-  wire ownership_valid;
-  output host_admission_open;
-  wire host_admission_open;
-  output host_launch_quiet;
-  wire host_launch_quiet;
-  output host_deferred;
-  wire host_deferred;
-  input [2:0] die_id;
-  wire [2:0] die_id;
-  input host_rst_n;
-  wire host_rst_n;
-  output service_faults;
-  wire service_faults;
-  output [1:0] u_rank__ing_cls;
-  wire [1:0] u_rank__ing_cls;
-  input [4:0] u_rank__ing_crn;
-  wire [4:0] u_rank__ing_crn;
-  output [511:0] u_rank__ing_d;
-  wire [511:0] u_rank__ing_d;
-  output u_rank__ing_v;
-  wire u_rank__ing_v;
-  input u_rank__u_control__u_packet__hr;
-  wire u_rank__u_control__u_packet__hr;
-  output [511:0] u_rank__u_control__u_packet__hd;
-  wire [511:0] u_rank__u_control__u_packet__hd;
-  output u_rank__u_control__u_packet__hv;
-  wire u_rank__u_control__u_packet__hv;
-  input u_rank__u_control__u_packet__cr;
-  wire u_rank__u_control__u_packet__cr;
-  output [511:0] u_rank__u_control__u_packet__cd;
-  wire [511:0] u_rank__u_control__u_packet__cd;
-  output u_rank__u_control__u_packet__cv;
-  wire u_rank__u_control__u_packet__cv;
-  output [23:0] u_rank__u_control__u_packet__credit_return;
-  wire [23:0] u_rank__u_control__u_packet__credit_return;
-  output [23:0] u_rank__u_control__u_packet__peer_credit;
-  wire [23:0] u_rank__u_control__u_packet__peer_credit;
-  output u_rank__rx_cr;
-  wire u_rank__rx_cr;
-  input [527:0] u_rank__rx_d;
-  wire [527:0] u_rank__rx_d;
-  input u_rank__rx_v;
-  wire u_rank__rx_v;
-  wire ck_axi;
-  wire ck_bootbarrier;
-  wire ck_coordinator_codec;
-  wire ck_coordinator_lifecycle;
-  wire ck_coordinator_post;
-  wire ck_csr;
-  wire ck_ctl;
-  wire ck_ctrl;
-  wire ck_dispatch;
-  wire ck_fence_core;
-  wire ck_guard;
-  wire ck_hc;
-  wire ck_host;
-  wire ck_map;
-  wire ck_native;
-  wire ck_order;
-  wire ck_peer;
-  wire ck_phy_rx_r;
-  wire ck_phy_tx_w;
-  wire ck_program_loader;
-  wire ck_program_rx;
-  wire ck_prompt;
-  wire ck_qm_core;
-  wire ck_qm_done_r;
-  wire ck_qm_ing_w;
-  wire ck_qm_queue;
-  wire ck_records;
-  wire ck_retire;
-  wire ck_root_mux;
-  wire ck_rst;
-  wire ck_rx;
-  wire ck_sum;
-  wire ck_tx;
-  wire u_rank__ck_axi;
-  wire u_rank__ck_bootbarrier;
-  wire u_rank__ck_csr;
-  wire u_rank__ck_ctl;
-  wire u_rank__ck_ctrl;
-  wire u_rank__ck_dispatch;
-  wire u_rank__ck_fence_core;
-  wire u_rank__ck_guard;
-  wire u_rank__ck_hc;
-  wire u_rank__ck_host;
-  wire u_rank__ck_map;
-  wire u_rank__ck_native;
-  wire u_rank__ck_order;
-  wire u_rank__ck_peer;
-  wire u_rank__ck_phy_rx_r;
-  wire u_rank__ck_phy_tx_w;
-  wire u_rank__ck_program_loader;
-  wire u_rank__ck_program_rx;
-  wire u_rank__ck_prompt;
-  wire u_rank__ck_qm_core;
-  wire u_rank__ck_qm_done_r;
-  wire u_rank__ck_qm_ing_w;
-  wire u_rank__ck_qm_queue;
-  wire u_rank__ck_retire;
-  wire u_rank__ck_rst;
-  wire u_rank__ck_rx;
-  wire u_rank__ck_sum;
-  wire u_rank__ck_tx;
-  wire [2:0] u_rank__die_id;
-  wire u_rank__host_admission_open;
-  wire u_rank__host_deferred;
-  wire u_rank__host_launch_quiet;
-  wire u_rank__host_rst_n;
-  wire u_rank__native_reserved;
-  wire u_rank__ownership_valid;
-  wire u_rank__u_adapter__rst_n;
-  wire u_rank__u_bridge__ccr;
-  wire u_rank__u_bridge__cq;
-  wire [1:0] u_rank__u_bridge__ing_cls;
-  wire [4:0] u_rank__u_bridge__ing_crn;
-  wire [511:0] u_rank__u_bridge__ing_d;
-  wire u_rank__u_bridge__ing_v;
-  wire u_rank__u_bridge__qw;
-  wire u_rank__u_bridge__rst_n;
-  wire u_rank__u_control__ck_axi;
-  wire u_rank__u_control__ck_csr;
-  wire u_rank__u_control__ck_ctl;
-  wire u_rank__u_control__ck_ctrl;
-  wire u_rank__u_control__ck_hc;
-  wire u_rank__u_control__ck_host;
-  wire u_rank__u_control__ck_prompt;
-  wire u_rank__u_control__ck_rst;
-  wire u_rank__u_control__ck_rx;
-  wire u_rank__u_control__ck_tx;
-  wire [2:0] u_rank__u_control__die_id;
-  wire u_rank__u_control__host_admission_open;
-  wire u_rank__u_control__host_deferred;
-  wire u_rank__u_control__host_launch_quiet;
-  wire u_rank__u_control__host_rst_n;
-  wire [1:0] u_rank__u_control__ing_cls;
-  wire [4:0] u_rank__u_control__ing_crn;
-  wire [511:0] u_rank__u_control__ing_d;
-  wire u_rank__u_control__ing_v;
-  wire u_rank__u_control__native_reserved;
-  wire u_rank__u_control__ownership_valid;
-  wire u_rank__u_control__rx_cr;
-  wire [527:0] u_rank__u_control__rx_d;
-  wire u_rank__u_control__rx_v;
-  wire u_rank__u_control__u_packet__ck_axi;
-  wire u_rank__u_control__u_packet__ck_ctrl;
-  wire u_rank__u_control__u_packet__ck_rx;
-  wire u_rank__u_control__u_packet__ck_tx;
-  wire [2:0] u_rank__u_control__u_packet__die_id;
-  wire u_rank__u_control__u_packet__host_admission_open;
-  wire u_rank__u_control__u_packet__host_deferred;
-  wire u_rank__u_control__u_packet__host_launch_quiet;
-  wire [1:0] u_rank__u_control__u_packet__ing_cls;
-  wire [4:0] u_rank__u_control__u_packet__ing_crn;
-  wire [511:0] u_rank__u_control__u_packet__ing_d;
-  wire u_rank__u_control__u_packet__ing_v;
-  wire u_rank__u_control__u_packet__native_reserved;
-  wire u_rank__u_control__u_packet__ownership_valid;
-  wire u_rank__u_control__u_packet__rst_n;
-  wire u_rank__u_control__u_packet__rx_cr;
-  wire [527:0] u_rank__u_control__u_packet__rx_d;
-  wire u_rank__u_control__u_packet__rx_v;
-  wire u_rank__u_phy__rst_n;
-  wire u_rank__u_phy__rx_rck;
-  wire u_rank__u_phy__tx_wck;
-  qkd_host_rx_class_admission #(.STRAPPED(1))  u_rank__u_control__u_packet__u_rx  (
-    .admission_open(host_admission_open),
-    .ck(ck_core),
-    .credit_return(u_rank__u_control__u_packet__credit_return),
-    .ctrl_cr(u_rank__u_control__u_packet__cr),
-    .ctrl_d(u_rank__u_control__u_packet__cd),
-    .ctrl_v(u_rank__u_control__u_packet__cv),
-    .deferred(host_deferred),
-    .die_id(die_id),
-    .fault(service_faults),
-    .host_cr(u_rank__u_control__u_packet__hr),
-    .host_d(u_rank__u_control__u_packet__hd),
-    .host_v(u_rank__u_control__u_packet__hv),
-    .ing_cls(u_rank__ing_cls),
-    .ing_crn(u_rank__ing_crn),
-    .ing_d(u_rank__ing_d),
-    .ing_v(u_rank__ing_v),
-    .launch_quiet(host_launch_quiet),
-    .native_reserved(native_reserved),
-    .ownership_valid(ownership_valid),
-    .peer_credit(u_rank__u_control__u_packet__peer_credit),
-    .rst_n(host_rst_n),
-    .rx_cr(u_rank__rx_cr),
-    .rx_d(u_rank__rx_d),
-    .rx_v(u_rank__rx_v)
-  );
-  assign ck_axi = ck_core;
-  assign ck_bootbarrier = ck_core;
-  assign ck_coordinator_codec = ck_core;
-  assign ck_coordinator_lifecycle = ck_core;
-  assign ck_coordinator_post = ck_core;
-  assign ck_csr = ck_core;
-  assign ck_ctl = ck_core;
-  assign ck_ctrl = ck_core;
-  assign ck_dispatch = ck_core;
-  assign ck_fence_core = ck_core;
-  assign ck_guard = ck_core;
-  assign ck_hc = ck_core;
-  assign ck_host = ck_core;
-  assign ck_map = ck_core;
-  assign ck_native = ck_core;
-  assign ck_order = ck_core;
-  assign ck_peer = ck_core;
-  assign ck_phy_rx_r = ck_core;
-  assign ck_phy_tx_w = ck_core;
-  assign ck_program_loader = ck_core;
-  assign ck_program_rx = ck_core;
-  assign ck_prompt = ck_core;
-  assign ck_qm_core = ck_core;
-  assign ck_qm_done_r = ck_core;
-  assign ck_qm_ing_w = ck_core;
-  assign ck_qm_queue = ck_core;
-  assign ck_records = ck_core;
-  assign ck_retire = ck_core;
-  assign ck_root_mux = ck_core;
-  assign ck_rst = ck_core;
-  assign ck_rx = ck_core;
-  assign ck_sum = ck_core;
-  assign ck_tx = ck_core;
-  assign u_rank__ck_axi = ck_core;
-  assign u_rank__ck_bootbarrier = ck_core;
-  assign u_rank__ck_csr = ck_core;
-  assign u_rank__ck_ctl = ck_core;
-  assign u_rank__ck_ctrl = ck_core;
-  assign u_rank__ck_dispatch = ck_core;
-  assign u_rank__ck_fence_core = ck_core;
-  assign u_rank__ck_guard = ck_core;
-  assign u_rank__ck_hc = ck_core;
-  assign u_rank__ck_host = ck_core;
-  assign u_rank__ck_map = ck_core;
-  assign u_rank__ck_native = ck_core;
-  assign u_rank__ck_order = ck_core;
-  assign u_rank__ck_peer = ck_core;
-  assign u_rank__ck_phy_rx_r = ck_core;
-  assign u_rank__ck_phy_tx_w = ck_core;
-  assign u_rank__ck_program_loader = ck_core;
-  assign u_rank__ck_program_rx = ck_core;
-  assign u_rank__ck_prompt = ck_core;
-  assign u_rank__ck_qm_core = ck_core;
-  assign u_rank__ck_qm_done_r = ck_core;
-  assign u_rank__ck_qm_ing_w = ck_core;
-  assign u_rank__ck_qm_queue = ck_core;
-  assign u_rank__ck_retire = ck_core;
-  assign u_rank__ck_rst = ck_core;
-  assign u_rank__ck_rx = ck_core;
-  assign u_rank__ck_sum = ck_core;
-  assign u_rank__ck_tx = ck_core;
-  assign u_rank__die_id = die_id;
-  assign u_rank__host_admission_open = host_admission_open;
-  assign u_rank__host_deferred = host_deferred;
-  assign u_rank__host_launch_quiet = host_launch_quiet;
-  assign u_rank__host_rst_n = host_rst_n;
-  assign u_rank__native_reserved = native_reserved;
-  assign u_rank__ownership_valid = ownership_valid;
-  assign u_rank__u_adapter__rst_n = host_rst_n;
-  assign u_rank__u_bridge__ccr = ck_core;
-  assign u_rank__u_bridge__cq = ck_core;
-  assign u_rank__u_bridge__ing_cls = u_rank__ing_cls;
-  assign u_rank__u_bridge__ing_crn = u_rank__ing_crn;
-  assign u_rank__u_bridge__ing_d = u_rank__ing_d;
-  assign u_rank__u_bridge__ing_v = u_rank__ing_v;
-  assign u_rank__u_bridge__qw = ck_core;
-  assign u_rank__u_bridge__rst_n = host_rst_n;
-  assign u_rank__u_control__ck_axi = ck_core;
-  assign u_rank__u_control__ck_csr = ck_core;
-  assign u_rank__u_control__ck_ctl = ck_core;
-  assign u_rank__u_control__ck_ctrl = ck_core;
-  assign u_rank__u_control__ck_hc = ck_core;
-  assign u_rank__u_control__ck_host = ck_core;
-  assign u_rank__u_control__ck_prompt = ck_core;
-  assign u_rank__u_control__ck_rst = ck_core;
-  assign u_rank__u_control__ck_rx = ck_core;
-  assign u_rank__u_control__ck_tx = ck_core;
-  assign u_rank__u_control__die_id = die_id;
-  assign u_rank__u_control__host_admission_open = host_admission_open;
-  assign u_rank__u_control__host_deferred = host_deferred;
-  assign u_rank__u_control__host_launch_quiet = host_launch_quiet;
-  assign u_rank__u_control__host_rst_n = host_rst_n;
-  assign u_rank__u_control__ing_cls = u_rank__ing_cls;
-  assign u_rank__u_control__ing_crn = u_rank__ing_crn;
-  assign u_rank__u_control__ing_d = u_rank__ing_d;
-  assign u_rank__u_control__ing_v = u_rank__ing_v;
-  assign u_rank__u_control__native_reserved = native_reserved;
-  assign u_rank__u_control__ownership_valid = ownership_valid;
-  assign u_rank__u_control__rx_cr = u_rank__rx_cr;
-  assign u_rank__u_control__rx_d = u_rank__rx_d;
-  assign u_rank__u_control__rx_v = u_rank__rx_v;
-  assign u_rank__u_control__u_packet__ck_axi = ck_core;
-  assign u_rank__u_control__u_packet__ck_ctrl = ck_core;
-  assign u_rank__u_control__u_packet__ck_rx = ck_core;
-  assign u_rank__u_control__u_packet__ck_tx = ck_core;
-  assign u_rank__u_control__u_packet__die_id = die_id;
-  assign u_rank__u_control__u_packet__host_admission_open = host_admission_open;
-  assign u_rank__u_control__u_packet__host_deferred = host_deferred;
-  assign u_rank__u_control__u_packet__host_launch_quiet = host_launch_quiet;
-  assign u_rank__u_control__u_packet__ing_cls = u_rank__ing_cls;
-  assign u_rank__u_control__u_packet__ing_crn = u_rank__ing_crn;
-  assign u_rank__u_control__u_packet__ing_d = u_rank__ing_d;
-  assign u_rank__u_control__u_packet__ing_v = u_rank__ing_v;
-  assign u_rank__u_control__u_packet__native_reserved = native_reserved;
-  assign u_rank__u_control__u_packet__ownership_valid = ownership_valid;
-  assign u_rank__u_control__u_packet__rst_n = host_rst_n;
-  assign u_rank__u_control__u_packet__rx_cr = u_rank__rx_cr;
-  assign u_rank__u_control__u_packet__rx_d = u_rank__rx_d;
-  assign u_rank__u_control__u_packet__rx_v = u_rank__rx_v;
-  assign u_rank__u_phy__rst_n = host_rst_n;
-  assign u_rank__u_phy__rx_rck = ck_core;
-  assign u_rank__u_phy__tx_wck = ck_core;
-endmodule
-
 module qkd_hr_core_tx(ck_core, irq, host_rst_n, service_faults, u_rank__done_cr, u_rank__done_d, u_rank__done_v, u_rank__u_control__u_packet__htc, u_rank__u_control__u_packet__htd, u_rank__u_control__u_packet__ht, u_rank__u_control__u_packet__ctc, u_rank__u_control__u_packet__ctd, u_rank__u_control__u_packet__ct, u_rank__u_control__u_packet__credit_return, u_rank__u_control__u_packet__peer_credit, u_rank__tx_cr, u_rank__tx_d, u_rank__tx_v);
   input ck_core;
   wire ck_core;
@@ -7288,78 +6966,4 @@ module qkd_hr_ingest_qm(ck_core, ck_host, ck_ingest, host_upstream_quiet, host_r
   assign u_rank__u_phy__rst_n = host_rst_n;
   assign u_rank__u_phy__rx_rck = ck_core;
   assign u_rank__u_phy__tx_wck = ck_core;
-endmodule
-
-module qkd_hr_phy_pad(ck_phy_fam, host_rst_n, service_faults, u_rank__d_rcr, u_rank__d_rd, u_rank__d_rv, u_rank__u_phy__pad_cr, u_rank__u_phy__pad_d, u_rank__u_phy__pad_v);
-  input ck_phy_fam;
-  wire ck_phy_fam;
-  input host_rst_n;
-  wire host_rst_n;
-  output service_faults;
-  wire service_faults;
-  output u_rank__d_rcr;
-  wire u_rank__d_rcr;
-  input [1023:0] u_rank__d_rd;
-  wire [1023:0] u_rank__d_rd;
-  input u_rank__d_rv;
-  wire u_rank__d_rv;
-  input u_rank__u_phy__pad_cr;
-  wire u_rank__u_phy__pad_cr;
-  output [545:0] u_rank__u_phy__pad_d;
-  wire [545:0] u_rank__u_phy__pad_d;
-  output u_rank__u_phy__pad_v;
-  wire u_rank__u_phy__pad_v;
-  wire ck_pad;
-  wire ck_phy_rx_w;
-  wire ck_phy_tx_r;
-  wire u_rank__ck_pad;
-  wire u_rank__ck_phy_rx_w;
-  wire u_rank__ck_phy_tx_r;
-  wire u_rank__host_rst_n;
-  wire u_rank__u_adapter__r_cr;
-  wire [1023:0] u_rank__u_adapter__r_d;
-  wire u_rank__u_adapter__r_v;
-  wire u_rank__u_adapter__rst_n;
-  wire u_rank__u_bridge__rst_n;
-  wire u_rank__u_control__host_rst_n;
-  wire u_rank__u_control__u_packet__rst_n;
-  wire u_rank__u_phy__ck_pad;
-  wire u_rank__u_phy__phy_rx_cr;
-  wire [1023:0] u_rank__u_phy__phy_rx_d;
-  wire u_rank__u_phy__phy_rx_v;
-  wire u_rank__u_phy__rst_n;
-  wire u_rank__u_phy__rx_wck;
-  wire u_rank__u_phy__tx_rck;
-  qkd_host_rx_pad5 #(.MUT(0))  u_rank__u_phy__u_pad  (
-    .clk(ck_phy_fam),
-    .fault(service_faults),
-    .in_cr(u_rank__d_rcr),
-    .in_d(u_rank__d_rd),
-    .in_v(u_rank__d_rv),
-    .out_cr(u_rank__u_phy__pad_cr),
-    .out_d(u_rank__u_phy__pad_d),
-    .out_v(u_rank__u_phy__pad_v),
-    .rst_n(host_rst_n)
-  );
-  assign ck_pad = ck_phy_fam;
-  assign ck_phy_rx_w = ck_phy_fam;
-  assign ck_phy_tx_r = ck_phy_fam;
-  assign u_rank__ck_pad = ck_phy_fam;
-  assign u_rank__ck_phy_rx_w = ck_phy_fam;
-  assign u_rank__ck_phy_tx_r = ck_phy_fam;
-  assign u_rank__host_rst_n = host_rst_n;
-  assign u_rank__u_adapter__r_cr = u_rank__d_rcr;
-  assign u_rank__u_adapter__r_d = u_rank__d_rd;
-  assign u_rank__u_adapter__r_v = u_rank__d_rv;
-  assign u_rank__u_adapter__rst_n = host_rst_n;
-  assign u_rank__u_bridge__rst_n = host_rst_n;
-  assign u_rank__u_control__host_rst_n = host_rst_n;
-  assign u_rank__u_control__u_packet__rst_n = host_rst_n;
-  assign u_rank__u_phy__ck_pad = ck_phy_fam;
-  assign u_rank__u_phy__phy_rx_cr = u_rank__d_rcr;
-  assign u_rank__u_phy__phy_rx_d = u_rank__d_rd;
-  assign u_rank__u_phy__phy_rx_v = u_rank__d_rv;
-  assign u_rank__u_phy__rst_n = host_rst_n;
-  assign u_rank__u_phy__rx_wck = ck_phy_fam;
-  assign u_rank__u_phy__tx_rck = ck_phy_fam;
 endmodule
