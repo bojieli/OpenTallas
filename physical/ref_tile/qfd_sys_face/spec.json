@@ -21,8 +21,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 302.4,
-  "h": 216.0,
+  "w": 259.2,
+  "h": 129.6,
   "exact": true
  },
  "layer_cap": "M5",
@@ -31,8 +31,8 @@
    "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
    "count": 1,
    "at": [
-    190.08,
-    129.6
+    172.8,
+    43.2
    ],
    "orient": "R0"
   }
@@ -147,12 +147,12 @@
   "macro_halo_um": 5.4,
   "io_hold_margin_ns": 0.0
  },
- "structural_change": "SUCCESSOR rs2 (Q-STUB 10-17) = rs1 + the Q-CTLM G8 DV re-port (crom_fault_code / res_issue_fault inputs dropped: their producers left the die) + emb_prov_fault input (qfd_embedding_word_provider.fault was an open output on dv2f11; registered, sticky, joins face_fault in the rst_emb region). pin_reg_split off (current ref_tile gen rejects it without the recipe-2 pin hook; rs1's kit.env never carried it). Re-close needed because the bound view @4458091af carries the 2 dropped pins. rs1 text follows: SUCCESSOR rs1 of qfd_sys_face rr1 (7473dff29, EARLY_FAIL_HOLD at 4_1_cts: FF hold -40.35 -> -28.5 after 10.5k hold buffers, every worst endpoint an N-face input pin flop rx_payload__ot_q[*] behind the recipe-3 input hold pad; CTS 8 bufs / 10 levels, pin-flop arrival 313-404 ps) and of rq1 (CLOSED, native pin audit FAIL rst_n capture 461.9 > 190). STRUCTURAL: (1) recipe 4 / hold_budget die (owner-approved FLOW-HOLD 10-16): flop-first pins, NO input/output hold pads, boundary hold is the die budget at the relay stations; every data pin lands in / launches from a pin register (recipe-3 pin_regs). (2) RTL regional reset rs1: 14 relay flops, each <= 256 loads (rr1 lint: rst_rec 1,153 / rst_out 303 / rst_boot 278); record port reset per sub-block (rtl/qwen_split/qfd_sys_face_record_port.sv, logic identical to qfd_program_record_port), boot control vs PW/DW payload, outputs split events / emb RX / STATUS; same release edge, bench bit-exact (MUT0 1,512 events, MUT1-4 FAIL). (3) Pins re-faced to the die neighbours of Qwen dv2r8f7 (sys_face x 1101.6-1404.0, y 22496.0-22712.0): N = D2D (d2d_rom NW, rs_bump/fwd_epoch bumps N), W = native59 (directly W, full height) + tt_ctlm (SW): host context / native slots / TT faces, S = embed_prov (directly S) + io_collective (far S): embedding provider + io faults, E (was empty) = SU / sequencer observer faces seq_* (no dv2r8f7 bus; E is the compute columns and DV lane relays). Each face spread end to end by bit count. (4) ck at the N-face centre between the two 548-bit record buses (prog_tx_record W of it, rx_payload E of it) = the register mass (~1,300 N pin flops + the record port they feed).",
- "slot_change_request": "none: CONTRACT.md v1.4 frame 302.4 x 216 (die dv2r8f7 slot unchanged); pin faces re-assigned to die neighbours (die pin plan update owed: W<->S swap, seq_* to E).",
+ "structural_change": "SUCCESSOR rs3 (Q-SYSFACE3 10-18, coordinator 0ea CHANGES REQUESTED on rs2: ROM x 190.08 off the 43.2-um lattice, all-sink spread 94.5 TT / 96.2 FF > 80, util 12%): same RTL as rs2 (emb_prov_fault port + G8 re-port kept), same face assignment (S-face emb_* pins kept); outline 302.4x216 -> 259.2x129.6 (pin-limited by the N face: 1,322 bits now at uniform ~5.5 b/um end to end, every face spread by bit count), ROM on the 43.2 lattice at (172.8, 43.2) R0, a shorter clock tree over half the area for the pin-flop spread. rs2 text follows: SUCCESSOR rs2 (Q-STUB 10-17) = rs1 + the Q-CTLM G8 DV re-port (crom_fault_code / res_issue_fault inputs dropped: their producers left the die) + emb_prov_fault input (qfd_embedding_word_provider.fault was an open output on dv2f11; registered, sticky, joins face_fault in the rst_emb region). pin_reg_split off (current ref_tile gen rejects it without the recipe-2 pin hook; rs1's kit.env never carried it). Re-close needed because the bound view @4458091af carries the 2 dropped pins. rs1 text follows: SUCCESSOR rs1 of qfd_sys_face rr1 (7473dff29, EARLY_FAIL_HOLD at 4_1_cts: FF hold -40.35 -> -28.5 after 10.5k hold buffers, every worst endpoint an N-face input pin flop rx_payload__ot_q[*] behind the recipe-3 input hold pad; CTS 8 bufs / 10 levels, pin-flop arrival 313-404 ps) and of rq1 (CLOSED, native pin audit FAIL rst_n capture 461.9 > 190). STRUCTURAL: (1) recipe 4 / hold_budget die (owner-approved FLOW-HOLD 10-16): flop-first pins, NO input/output hold pads, boundary hold is the die budget at the relay stations; every data pin lands in / launches from a pin register (recipe-3 pin_regs). (2) RTL regional reset rs1: 14 relay flops, each <= 256 loads (rr1 lint: rst_rec 1,153 / rst_out 303 / rst_boot 278); record port reset per sub-block (rtl/qwen_split/qfd_sys_face_record_port.sv, logic identical to qfd_program_record_port), boot control vs PW/DW payload, outputs split events / emb RX / STATUS; same release edge, bench bit-exact (MUT0 1,512 events, MUT1-4 FAIL). (3) Pins re-faced to the die neighbours of Qwen dv2r8f7 (sys_face x 1101.6-1404.0, y 22496.0-22712.0): N = D2D (d2d_rom NW, rs_bump/fwd_epoch bumps N), W = native59 (directly W, full height) + tt_ctlm (SW): host context / native slots / TT faces, S = embed_prov (directly S) + io_collective (far S): embedding provider + io faults, E (was empty) = SU / sequencer observer faces seq_* (no dv2r8f7 bus; E is the compute columns and DV lane relays). Each face spread end to end by bit count. (4) ck at the N-face centre between the two 548-bit record buses (prog_tx_record W of it, rx_payload E of it) = the register mass (~1,300 N pin flops + the record port they feed).",
+ "slot_change_request": "Q-SYSFACE3 rs3: outline 302.4 x 216 -> 259.2 x 129.6 (die slot shrinks; pins keep their faces N=D2D, W=native59/tt_ctlm, S=embed_prov/io_collective, E=seq_*; die pin plan update owed by the die lead)",
  "job": {
-  "owner": "Claude:Q-STUB",
-  "branch": "claude/q-stub-1017",
-  "tag": "rs2",
+  "owner": "Claude:Q-SYSFACE3",
+  "branch": "claude/q-sysface3-1018",
+  "tag": "rs3",
   "cycles_added": 2,
   "purpose": "Compute-die system face leaf, never kitted before (census 10-16). Bench = Q-NETLIST tb_qfd_sys_face on the production 36-layer START table (boot 54 records, PW 1024 / DW 8, 1,512 events exact, embedding row 64 + scale exact) with mutants 1-4 (T events late / embedding word index / PW replay skip / ...) that must FAIL.",
   "extra_paths": [
@@ -204,335 +204,335 @@
  "pin_ranges": {
   "fwd_epoch": [
    4.32,
-   5.4
+   4.86
   ],
   "d2d_fault": [
-   6.26,
-   7.34
+   5.29,
+   5.83
   ],
   "d2d_epoch_abort": [
-   8.2,
-   9.28
+   6.26,
+   6.8
   ],
   "cfg_tx_we": [
-   10.14,
-   11.22
+   7.23,
+   7.77
   ],
   "cfg_rx_we": [
-   12.08,
-   13.16
+   8.2,
+   8.74
   ],
   "cfg_addr": [
-   14.02,
-   15.115
+   9.17,
+   10.196
   ],
   "cfg_data": [
-   15.975,
-   21.814
+   10.626,
+   16.099
   ],
   "cal_start": [
-   22.674,
-   23.754
+   16.529,
+   17.069
   ],
   "cal_seg": [
-   24.614,
-   25.694
+   17.499,
+   18.039
   ],
   "prog_rx_v": [
-   26.554,
-   27.634
+   18.469,
+   19.009
   ],
   "prog_witness_slot": [
-   28.494,
-   29.574
+   19.439,
+   19.979
   ],
   "prog_auth_slot": [
-   30.434,
-   31.514
+   20.409,
+   20.949
   ],
   "prog_context_slot": [
-   32.374,
-   33.454
+   21.379,
+   21.919
   ],
   "prog_tx_observed_v": [
-   34.314,
-   35.394
+   22.349,
+   22.889
   ],
   "prog_tx_record": [
-   36.254,
-   136.246
+   23.319,
+   117.037
   ],
   "ck": [
-   137.106,
-   138.186
+   117.467,
+   118.007
   ],
   "rst_n": [
-   139.046,
-   140.126
+   118.437,
+   118.977
   ],
   "rx_payload": [
-   140.986,
-   240.978
+   119.407,
+   213.126
   ],
   "emb_rx_v": [
-   241.838,
-   242.918
+   213.556,
+   214.096
   ],
   "emb_rx_slot": [
-   243.778,
-   244.858
+   214.526,
+   215.066
   ],
   "status_epoch16": [
-   245.718,
-   248.637
+   215.496,
+   218.232
   ],
   "vm_drained": [
-   249.497,
-   250.577
+   218.662,
+   219.202
   ],
   "collective_drained": [
-   251.437,
-   252.517
+   219.632,
+   220.172
   ],
   "collective_busy": [
-   253.377,
-   254.457
+   220.602,
+   221.142
   ],
   "crom_fault": [
-   255.317,
-   256.397
+   221.572,
+   222.112
   ],
   "execution_active": [
-   257.257,
-   258.337
+   222.542,
+   223.082
   ],
   "admit_ready": [
-   259.197,
-   260.277
+   223.512,
+   224.052
   ],
   "result_v": [
-   261.137,
-   262.217
+   224.482,
+   225.022
   ],
   "result_done": [
-   263.077,
-   264.157
+   225.452,
+   225.992
   ],
   "result_fault": [
-   265.017,
-   266.097
+   226.422,
+   226.962
   ],
   "result_cause": [
-   266.957,
-   267.687
+   227.392,
+   228.076
   ],
   "result_tag": [
-   268.547,
-   279.313
+   228.506,
+   238.596
   ],
   "result_gen": [
-   280.173,
-   280.538
+   239.026,
+   239.566
   ],
   "result_token": [
-   281.398,
-   284.682
+   239.996,
+   243.075
   ],
   "result_value": [
-   285.542,
-   291.381
+   243.505,
+   248.977
   ],
   "result_cycles": [
-   292.241,
-   298.08
+   249.407,
+   254.88
   ],
   "tt_pw": [
    4.32,
-   51.54
+   32.871
   ],
   "tt_program_obs": [
-   52.4,
-   100.25
+   33.301,
+   62.234
   ],
   "tt_control_stores_ready": [
-   101.11,
-   102.19
+   62.664,
+   63.204
   ],
   "tt_kok": [
-   103.05,
-   104.13
+   63.634,
+   64.174
   ],
   "tt_kwd": [
-   104.99,
-   106.07
+   64.604,
+   65.144
   ],
   "tt_fab": [
-   106.93,
-   108.01
+   65.574,
+   66.114
   ],
   "tt_layer_context_v": [
-   108.87,
-   109.95
+   66.544,
+   67.084
   ],
   "tt_command_stage": [
-   110.81,
-   114.588
+   67.514,
+   69.798
   ],
   "tt_native_tok": [
-   115.448,
-   126.781
+   70.228,
+   77.08
   ],
   "tt_native_pos": [
-   127.641,
-   138.973
+   77.51,
+   84.362
   ],
   "native_fault": [
-   141.773,
-   142.853
+   84.792,
+   85.332
   ],
   "q_slot": [
-   143.713,
-   144.793
+   85.762,
+   86.302
   ],
   "q_slot_beat": [
-   145.653,
-   148.801
+   86.732,
+   88.636
   ],
   "kv_word_slot": [
-   149.661,
-   150.741
+   89.066,
+   89.606
   ],
   "kv_word_index": [
-   151.601,
-   152.861
+   90.036,
+   90.797
   ],
   "visibility_slot": [
-   153.721,
-   154.801
+   91.227,
+   91.767
   ],
   "complete_slot": [
-   155.661,
-   156.741
+   92.197,
+   92.737
   ],
   "host_epoch_valid": [
-   157.601,
-   158.681
+   93.167,
+   93.707
   ],
   "host_fused_capability": [
-   159.541,
-   160.621
+   94.137,
+   94.677
   ],
   "host_epoch": [
-   161.481,
-   171.554
+   95.107,
+   101.198
   ],
   "host_tag": [
-   172.414,
-   209.561
+   101.628,
+   124.089
   ],
   "host_generation": [
-   210.421,
-   211.68
+   124.519,
+   125.28
   ],
   "emb_word_v": [
    4.32,
-   5.4
+   4.86
   ],
   "emb_word_data": [
-   6.26,
-   214.562
+   5.29,
+   194.291
   ],
   "emb_word_token": [
-   215.422,
-   222.745
+   194.721,
+   201.366
   ],
   "emb_word_index": [
-   223.605,
-   226.046
+   201.796,
+   204.011
   ],
   "emb_word_scale": [
-   226.906,
-   227.986
+   204.441,
+   204.981
   ],
   "emb_word_epoch": [
-   228.846,
-   235.355
+   205.411,
+   211.317
   ],
   "emb_expected_slot": [
-   236.215,
-   237.295
+   211.747,
+   212.287
   ],
   "emb_expected_token": [
-   238.155,
-   245.478
+   212.717,
+   219.362
   ],
   "emb_expected_word": [
-   246.338,
-   248.779
+   219.792,
+   222.007
   ],
   "emb_expected_scale": [
-   249.639,
-   250.719
+   222.437,
+   222.977
   ],
   "emb_expected_epoch": [
-   251.579,
-   258.089
+   223.407,
+   229.313
   ],
   "emb_fill_begin": [
-   258.949,
-   260.029
+   229.743,
+   230.283
   ],
   "emb_fill_token": [
-   260.889,
-   268.212
+   230.713,
+   237.357
   ],
   "emb_fill_epoch": [
-   269.072,
-   275.581
+   237.787,
+   243.694
   ],
   "emb_core_epoch": [
-   276.441,
-   282.951
+   244.124,
+   250.03
   ],
   "emb_prov_fault": [
-   283.811,
-   284.891
+   250.46,
+   251.0
   ],
   "io_cmd_free": [
-   291.18,
-   292.26
+   251.43,
+   251.97
   ],
   "io_fault": [
-   293.12,
-   294.2
+   252.4,
+   252.94
   ],
   "io_shared_fault": [
-   295.06,
-   296.14
+   253.37,
+   253.91
   ],
   "fault": [
-   297.0,
-   298.08
+   254.34,
+   254.88
   ],
   "seq_cfg_image_ready": [
    4.32,
-   5.4
+   4.86
   ],
   "seq_dc": [
-   6.26,
-   35.536
+   5.29,
+   22.422
   ],
   "seq_program_obs": [
-   36.396,
-   76.127
+   22.852,
+   46.102
   ],
   "seq_descriptor_obs": [
-   76.987,
-   113.059
+   46.532,
+   67.641
   ],
   "seq_dh": [
-   113.919,
-   211.68
+   68.071,
+   125.28
   ]
  },
  "children": [],
