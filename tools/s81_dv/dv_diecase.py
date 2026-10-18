@@ -23,6 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from die_cluster import boundary as CB   # noqa: E402
 
 PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
@@ -107,6 +108,11 @@ def main():
     ap.add_argument('--dieflow-ref', default='origin/main')
     ap.add_argument('--relay-ref', default=None, help='git ref holding the closed dsfd_dvrly_276_{EW,WE,NS,SN} views '
                     '(276-b lane stations become real relay macros; other widths stay DFF stand-ins)')
+    ap.add_argument('--bind', choices=('standin', 'real'), default='standin',
+                    help='real: S81-BIND real-view mode (tools/s81_dv/dv_bind.py) -- every plan master binds its RTL by the '
+                    'bind table, real F1 relay masters on every link, regional reset relay tree, sourced forwarded clocks; '
+                    'writes <out>/bind/ and runs the STRICT die_port_bind')
+    ap.add_argument('--bind-table', default=str(ROOT / 'results/arch/s81_dv_1016/bind/bind_table.json'))
     a = ap.parse_args()
     plan = load(a.plan)
     out = Path(a.out); (out / 'views').mkdir(parents=True, exist_ok=True); (out / 'out').mkdir(exist_ok=True)
@@ -124,6 +130,7 @@ def main():
     pins = collections.defaultdict(list)          # inst -> [(port, dir, bits, x, y, face)]
     nets, flops, chains = [], [], []
     fsrc, sdir = {}, {}
+    chain_pts = {}
     nbits = 0
     used = collections.Counter()
     for l in plan['links']:
@@ -142,7 +149,7 @@ def main():
         else:              # older plans: stage k at the end of hop k
             pts = [(h[2] - ox, h[3] - oy) for h in hops[:-1]]
         st = len(pts)
-        prev = [f'{n0}/{po}'] * 0
+        chain_pts[nm] = pts
         chains.append(dict(link=l['i'], cls=l['c'], bits=b, stages=st, src=f'{n0}.{po}', dst=f'{n1}.{pi}', hop_um=round(max(abs(h[2] - h[0]) + abs(h[3] - h[1]) for h in hops), 1)))
         for k, (px, py) in enumerate(pts):
             flops.append((nm, k, b, px, py))
@@ -151,6 +158,13 @@ def main():
         fsrc[nm] = (x0_ - ox, y0_ - oy)
         nbits += b
         used[l['c']] += b
+    if a.bind == 'real':
+        if a.region:
+            raise SystemExit('dv_diecase: --bind real is a full-die netlist (no --region)')
+        import dv_bind
+        rec = dv_bind.emit(plan, out / 'bind', Path(a.bind_table), sdir, chain_pts)
+        print(json.dumps({k: v for k, v in rec.items() if k in ('relay_masters', 'clock_forward_cells', 'reset', 'port_bind_rc')}, indent=1))
+        return
     # ------------------------------------------------------------------ abstracts (one master per kept instance)
     for i in sorted(keep):
         bl = blocks[i]
