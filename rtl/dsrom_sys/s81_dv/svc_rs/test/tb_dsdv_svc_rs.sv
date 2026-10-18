@@ -355,6 +355,9 @@ module tb_dsdv_svc_rs;
     localparam integer PVH = (ST >= 2) ? 0 : 1;      // the half whose entry carries quarter ST's P.V (tiles 4 ST .. 4 ST + 3)
     always @(posedge ck) begin
         cyc <= cyc + 1;
+`ifdef RS_PROG
+        if (cyc % 500 == 0) begin $display("SVCRS_PROG cyc=%0d qi=%0d done=%0d/%0d rt_beats=%0d pv_n=%0d rfx=%0h sflt=%04x jd=%0d%0d", cyc, qi, n_done_x[0], n_done_x[1], rt_beats, pv_n, rfx, sflt, jdx[0][1], jdx[1][1]); $fflush; end
+`endif
         if (cyc == 3) rst <= 1;
         jcmd <= 0;
         if (cyc == 1) build_frames();
