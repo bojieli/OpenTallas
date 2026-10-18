@@ -81,7 +81,10 @@ def leaf(s4, name, top, w, h, macros, why):
     pr.update({"command": [4.0, 148.0], "clk": [150.8, 151.4], "busy": [154.0, 156.0], "valid": [156.5, 158.5],
                "done": [159.0, 161.0], "fault": [161.5, 163.5], "edge_index": [164.0, round(w - 4.0, 3)]})
     s["pin_ranges"] = pr
-    s["route"] = dict(s["route"], threads=8, peak_ram_gb=24)
+    # gate e8c5e2cf6: PPL packed each port into a fraction of its range (S 293 pins on 38 um, head cfg_data on ~25 um):
+    # the balanced placer spreads every port uniformly over its own range
+    s["route"] = dict(s["route"], threads=8, peak_ram_gb=24, pin_group_max=1,
+                      pin_balance={"group_max": 1, "h": "M4", "v": "M3 M5"})
     s["pin_regs"] = {"enable": False, "reason": (
         "ot_hbm_su_programme_pgcol registers start/length at the pin (the pslice STAGES 1 stage); cfg_* arrive from the "
         "head leaf's registered configuration stage (= the pslice c_* stage) and land on the PIPE 2 per-bank write "
@@ -115,6 +118,8 @@ def main():
     s = leaf(s4, "hbm_su_pgcol_l_r5", "ot_hbm_su_programme_pgcol_l", 302.4, 453.6, ml, WHY + (
         "THIS leaf: L master (3 per quarter): 4 index + 13 dictionary SRAMs, 302.4 x 453.6, MY stack dictionary 0..4 + "
         "index 0..3, R0 stack dictionary 5..12, one 34.8 um channel, N cfg band 41 um, S band = 256 command flops, ~3.3k flops one root."))
+    # gate e8c5e2cf6: GPL-0305 RePlAce diverged (3.2k flops in 41k um2 placeable at PD 0.5) -> lower target density
+    s["route"]["pd"] = 0.3
     (OUT / "hbm_su_pgcol_l_r5.json").write_text(json.dumps(s, indent=1) + "\n")
     h = leaf(s4, "hbm_su_pghead_r5", "ot_hbm_su_programme_pghead", 86.4, 86.4, [], WHY + (
         "THIS leaf: head (1 per quarter): cfg pin stage + column decode (bank[15:5] = column) + sticky fault OR of the "
