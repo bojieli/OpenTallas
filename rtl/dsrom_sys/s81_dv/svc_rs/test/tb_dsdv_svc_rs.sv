@@ -25,6 +25,18 @@
 `ifndef RS_OBS
 `define RS_OBS
 `endif
+// S81U-SVC6: RS_PL = the slices are pre-built Verilator protect-libs (rs_bench_pl.sh; MUT / DIE_ID / ST and the RS_MUT_*
+// defines are baked into the libs), so the top build sees only the wrappers -- the --hierarchical top re-elaborated the full
+// slice hierarchy in V3Param (> 4 h single-thread at 66 GB, never finished)
+`ifdef RS_PL
+`define RS_ENT_MOD dsdv_svc_rs_entry_pl
+`define RS_SL_MOD dsdv_svc_rs_pl
+`define RS_PRM
+`else
+`define RS_ENT_MOD dsdv_svc_rs_entry
+`define RS_SL_MOD dsdv_svc_rs
+`define RS_PRM #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST))
+`endif
 module tb_dsdv_svc_rs;
     parameter integer DIE = 0;
     parameter integer ST = 0;
@@ -147,7 +159,7 @@ module tb_dsdv_svc_rs;
         end
         if (gs == RS_ENTRY_W || gs == RS_ENTRY_E) begin : g_r
             localparam integer HX = (gs == RS_ENTRY_E) ? 1 : 0;
-            dsdv_svc_rs_entry #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST)) u (.ck(ck), .rst(rst), .sid(4'(gs)),
+            `RS_ENT_MOD `RS_PRM u (.ck(ck), .rst(rst), .sid(4'(gs)),
                 .j(jcmd), .jd(jdx[HX]), .q({1'b0, 1'b1, q_d, q_v}), .hw(hwx[HX]), .hc(hcx[HX]), .fault(rfx[HX]),
                 .dn_i(dn_i[gs]), .dn_o(dn_o[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]), .ri(ri[gs]), .ro(ro[gs]),
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
@@ -156,7 +168,7 @@ module tb_dsdv_svc_rs;
                 .r_beat(r_beat[gs]), .hs(2'b01), .pv_v(pv_v[gs]), .pv_d(pv_d[gs]),
                 .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]), .obs(obs[gs]));
         end else begin : g_n
-            dsdv_svc_rs #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST)) u (.ck(ck), .rst(rst), .sid(4'(gs)),
+            `RS_SL_MOD `RS_PRM u (.ck(ck), .rst(rst), .sid(4'(gs)),
                 .dn_i(dn_i[gs]), .dn_o(dn_o[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]), .ri(ri[gs]), .ro(ro[gs]),
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
                 .si_v(si_v[gs]), .si_d(si_d[gs]), .so_v(so_v[gs]), .so_d(so_d[gs]),
