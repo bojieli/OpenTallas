@@ -4,9 +4,10 @@
 // write/read; codec controller plus four SRAM banks. Related roots must retain
 // the measured mesochronous phase used by the compiler. This wrapper adds no
 // stage beyond the source-bound calendar/CDC/codec composition.
-// TOK_REG (Q-DIE11-COLL 10-18, opt-in, default 0 = byte-identical behaviour): one pin register per face input in
-// the root that owns it (tx_slot/tx_valid/tx_data on tx_wck, peer_slot on cal_ck) and a cal_ck register on the
-// cdc_fault output, so every face pin has exactly one capture/launch root (hardened leaf qfd_coll_face_*).  The
+// TOK_REG (Q-DIE11-COLL 10-18, opt-in, default 0 = byte-identical behaviour): one core-side pin register per face
+// input (tx_slot/tx_valid/tx_data/peer_slot on cal_ck) and a cal_ck register on the cdc_fault output, so every face
+// pin has exactly one capture/launch root and the CDC roots tx_wck/tx_rck/rx_wck/rx_rck and codec_ck[1..4] clock only
+// their hard children (static CDC channels, codec banks): hardened face cluster qfd_coll_face_*.  The
 // calendar's crossing delays are shortened by the same one edge (KC-1, L-1), so every compiled slot, the CDC
 // read/write slots, the PHY frame and rx_valid keep their exact cycles (tb_coll_static_face: latency L).
 module qfd_coll_static_face #(
@@ -25,8 +26,7 @@ module qfd_coll_static_face #(
  wire tx_slot_i,peer_slot_i,tx_valid_i;wire[FW-1:0]tx_data_i;wire[3:0]cdc_fault_i;
  if(TOK_REG)begin:g_tok_reg
   reg ts_q,tv_q,ps_q;reg[FW-1:0]td_q;reg[3:0]cf_q;
-  always @(posedge tx_wck)begin ts_q<=tx_slot;tv_q<=tx_valid;td_q<=tx_data;end
-  always @(posedge cal_ck)ps_q<=peer_slot;
+  always @(posedge cal_ck)begin ts_q<=tx_slot;tv_q<=tx_valid;td_q<=tx_data;ps_q<=peer_slot;end
   always @(posedge cal_ck)cf_q<=cdc_fault_i;
   assign {tx_slot_i,tx_valid_i,tx_data_i,peer_slot_i}={ts_q,tv_q,td_q,ps_q};assign cdc_fault=cf_q;
  end else begin:g_tok_direct
