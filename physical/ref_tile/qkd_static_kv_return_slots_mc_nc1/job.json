@@ -1,0 +1,124 @@
+{
+ "name": "qkd_static_kv_return_slots_mc_nc1-nc1-COMMIT",
+ "block": "qkd_static_kv_return_slots_mc_nc",
+ "ref_tile": true,
+ "owner": "Claude:KV-NCKITS",
+ "purpose": "KV-NCKITS 10-17 (coordinator decision 3, KV-PLAN-CI 2e2d12f42): ci-less successor of the closed qkd_static_kv_return_slots_mc_r5 (qkd_static_kv_return_slots_mc): controller_co shrinks 294 -> 282 b (the legacy pass-through fields are gone); logic otherwise identical to r5. Same outline, faces, recipe and pin rules as qkd_static_kv_return_slots_mc_r5; every pin stays registered at the pin (flop-first in/out, hrst captured by a pin flop); 0 normal-cycle delta (lockstep vs the original with ci held 0).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kvplan-nckits-1017",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/qwen_kv_die_native_static_pins",
+   "results/arch/qwen_split_1014/kvsys_v1_3_candidate/static_io",
+   "results/arch/qwen_split_1014/kvsys_v1_4_3_design/static_io",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "results/arch/qwen_split_1014/static_memory_mc_grant_2330",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots.sv",
+   "rtl/lib",
+   "rtl/qwen_sys/emb_hbm_20261008",
+   "rtl/qwen_sys/host_20261013",
+   "rtl/qwen_sys/kv_die_20261009",
+   "rtl/qwen_sys/q5_20261009",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "tools/qwen_kv_die",
+   "results/arch/qwen_kv_static_programme_1017/die"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_static_kv_return_slots_mc_nc #(.DEPTH(64)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "kvplan_ci_nc_lockstep_vs_original",
+    "cmd": "VERILATOR=verilator bash tools/qwen_kv_die/kvplan_ci_nc_gate.sh {RUN}/bench/nc",
+    "expect": "pass",
+    "pass_regex": "^PASS KVPLAN_CI_NC_LOCKSTEP_EXACT",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "kvplan_ci_nc_mutant3_ring_data_shifted",
+    "cmd": "VERILATOR=verilator bash tools/qwen_kv_die/kvplan_ci_nc_mutant.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "fail_regex": "^FAIL LOCKSTEP",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_static_kv_return_slots_mc_nc1/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_static_kv_return_slots_mc_nc1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_static_kv_return_slots_mc_nc1 --out {RUN}/record/views/qkd_static_kv_return_slots_mc_nc  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_static_kv_return_slots_mc_nc1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_static_kv_return_slots_mc_nc1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_static_kv_return_slots_mc_nc1/qkd_static_kv_return_slots_mc_nc1-nc1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KV-NCKITS 10-17 (coordinator decision 3, KV-PLAN-CI 2e2d12f42): ci-less successor of the closed qkd_static_kv_return_slots_mc_r5 (qkd_static_kv_return_slots_mc): controller_co shrinks 294 -> 282 b (the legacy pass-through fields are gone); logic otherwise identical to r5. Same outline, faces, recipe and pin rules as qkd_static_kv_return_slots_mc_r5; every pin stays registered at the pin (flop-first in/out, hrst captured by a pin flop); 0 normal-cycle delta (lockstep vs the original with ci held 0)."
+}

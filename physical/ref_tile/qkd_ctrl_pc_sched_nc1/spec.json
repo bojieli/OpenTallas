@@ -1,0 +1,176 @@
+{
+ "top": "qkd_ctrl_pc_sched_nc",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv",
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv",
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv",
+  "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_children.sv",
+  "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv",
+  "rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv"
+ ],
+ "params": {
+  "PROFILE": 0,
+  "ELASTIC": 1,
+  "RAW_WD": 256,
+  "TQD": 64,
+  "DRAIN_PIPE": 1,
+  "STRAP_CDC": 1
+ },
+ "clock_port": "pll_hbm",
+ "reset_ports": [],
+ "outline": {
+  "w": 116.64,
+  "h": 108.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "hrst",
+   "pc",
+   "static_cmd_owner",
+   "static_cmd",
+   "reserved_rd",
+   "reserved_static_col",
+   "reserved_write_col",
+   "static_epoch",
+   "expected_raw_valid",
+   "corrected_epoch",
+   "idle_hbm",
+   "drain_fault_hbm"
+  ],
+  "E": [
+   "p_w_d",
+   "p_wd",
+   "p_col_v",
+   "p_col_we",
+   "p_col_sr",
+   "p_w_v",
+   "p_kv_v",
+   "p_em_v",
+   "p_fault",
+   "e_sec",
+   "e_row",
+   "e_l_v",
+   "e_fault",
+   "pi_v"
+  ],
+  "S": [
+   "po",
+   "ko",
+   "fi"
+  ],
+  "N": [
+   "pll_hbm",
+   "ki",
+   "fo",
+   "pc_q",
+   "s_cr_o",
+   "c_v",
+   "c_d",
+   "c_context",
+   "f_ecdc",
+   "physical_context",
+   "physical_col_sr",
+   "expected_sr",
+   "obs_commit_valid",
+   "native_commit_valid",
+   "native_observer_fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every seam/pin explicitly (children: input pin flops or the wrapped module's first stage; outputs flop-driven). No extra wrapper edges."
+ },
+ "std_area_um2": 6000,
+ "pin_ranges": {
+  "pll_hbm": [
+   57.0,
+   59.4
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "name": "qkd_ctrl_pc_sched_nc1",
+ "structural_change": "KV-NCKITS 10-17 (coordinator decision 3, KV-PLAN-CI 2e2d12f42): ci-less successor of the closed qkd_ctrl_pc_sched_s7b (qkd_ctrl_pc_sched): the W-face ci_c (63 b) / co_c (12 b) pins and their pin flops, the legacy w_pend / w_go write command, HOFF hold, LATE watchdog, h_wcon / f_wmis completion check, write-done av_s / at_s and hf are removed logic (no producer of ci on the static die). Same outline, faces, recipe and pin rules as qkd_ctrl_pc_sched_s7b; every pin stays registered at the pin (flop-first in/out, hrst captured by a pin flop); 0 normal-cycle delta (lockstep vs the original with ci held 0).",
+ "slot_change_request": "Drop-in for qkd_ctrl_pc_sched_s7b: same slot and faces; only the legacy ci / co pass-through pins are gone.",
+ "job": {
+  "owner": "Claude:KV-NCKITS",
+  "branch": "claude/kvplan-nckits-1017",
+  "tag": "nc1",
+  "purpose": "KV-NCKITS 10-17 (coordinator decision 3, KV-PLAN-CI 2e2d12f42): ci-less successor of the closed qkd_ctrl_pc_sched_s7b (qkd_ctrl_pc_sched): the W-face ci_c (63 b) / co_c (12 b) pins and their pin flops, the legacy w_pend / w_go write command, HOFF hold, LATE watchdog, h_wcon / f_wmis completion check, write-done av_s / at_s and hf are removed logic (no producer of ci on the static die). Same outline, faces, recipe and pin rules as qkd_ctrl_pc_sched_s7b; every pin stays registered at the pin (flop-first in/out, hrst captured by a pin flop); 0 normal-cycle delta (lockstep vs the original with ci held 0).",
+  "benches": [
+   {
+    "name": "kvplan_ci_nc_lockstep_vs_original",
+    "cmd": "VERILATOR=verilator bash tools/qwen_kv_die/kvplan_ci_nc_gate.sh {RUN}/bench/nc",
+    "expect": "pass",
+    "pass_regex": "^PASS KVPLAN_CI_NC_LOCKSTEP_EXACT",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "kvplan_ci_nc_mutant1_sched_owner_check",
+    "cmd": "VERILATOR=verilator bash tools/qwen_kv_die/kvplan_ci_nc_mutant.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "fail_regex": "^FAIL LOCKSTEP",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/qwen_sys/emb_hbm_20261008",
+   "rtl/qwen_sys/host_20261013",
+   "rtl/qwen_sys/kv_die_20261009",
+   "rtl/qwen_sys/q5_20261009",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/qkd_ctrl_strip",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "tools/qwen_kv_die",
+   "results/arch/qwen_kv_static_programme_1017/die"
+  ],
+  "peak_ram_gb": 16
+ }
+}
