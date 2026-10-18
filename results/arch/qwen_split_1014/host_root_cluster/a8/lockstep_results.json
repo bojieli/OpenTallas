@@ -3,7 +3,7 @@
  "date": "2026-10-17",
  "rtl_commit": "5e17eec23",
  "dut": "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv IR_REPL=1 vs IR_REPL=0 (MUT=0, STRAPPED=1)",
- "bench": "results/arch/qwen_split_1014/host_root_cluster/a8/tb_irr_lockstep.sv",
+ "bench": "rtl/test/qwen_host/tb_irr_lockstep.sv",
  "simulator": "Icarus Verilog version 11.0 (stable) ()",
  "method": "two instances, same stimulus; all outputs (1601 bits) compared 4-state every cycle; epochs between random async resets: 3/4 legal credited traffic (queues fill to 16, drain under random reservation/ownership), 1/4 fully random illegal words/returns",
  "runs": [

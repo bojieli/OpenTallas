@@ -91,7 +91,7 @@
     "needs": [
      "iverilog"
     ],
-    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -Ptb_irr_lockstep.NCYC=50000 -Ptb_irr_lockstep.SEED=1017 -o {RUN}/bench/irr results/arch/qwen_split_1014/host_root_cluster/a8/tb_irr_lockstep.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv && vvp -n {RUN}/bench/irr",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -Ptb_irr_lockstep.NCYC=50000 -Ptb_irr_lockstep.SEED=1017 -o {RUN}/bench/irr rtl/test/qwen_host/tb_irr_lockstep.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv && vvp -n {RUN}/bench/irr",
     "pass_regex": "A8_LOCKSTEP .*mismatches=0 first_mismatch=-1 PASS",
     "min_count_regex": "A8_LOCKSTEP seed=\\d+ cycles=(\\d+)"
    },
@@ -103,7 +103,7 @@
     "needs": [
      "iverilog"
     ],
-    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -DQKD_IRR_MUTANT -Ptb_irr_lockstep.NCYC=50000 -Ptb_irr_lockstep.SEED=1017 -o {RUN}/bench/irr_m results/arch/qwen_split_1014/host_root_cluster/a8/tb_irr_lockstep.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv && vvp -n {RUN}/bench/irr_m",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -DQKD_IRR_MUTANT -Ptb_irr_lockstep.NCYC=50000 -Ptb_irr_lockstep.SEED=1017 -o {RUN}/bench/irr_m rtl/test/qwen_host/tb_irr_lockstep.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv && vvp -n {RUN}/bench/irr_m",
     "fail_regex": "A8_LOCKSTEP .*mismatches=[1-9]\\d* .*FAIL",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/core_rx_irr_mutant.log"
    }
