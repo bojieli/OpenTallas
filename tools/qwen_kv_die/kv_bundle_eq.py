@@ -164,20 +164,22 @@ def _free(m, near, x, y, w, h, gap=4.32, bgap=21.6):
     return True
 
 
-def _place_pads(K, m, staged, prev_pt, sink_pt, n, w, h, cap, grid=21.6, rmax=40):
+def _place_pads(K, m, staged, prev_pt, sink_pt, n, w, h, cap, grid=10.8, rmax=60):
     """n pad frames: each within cap of the previous point, the last within cap of the sink pin; nearest the sink first"""
     out, pt = [], prev_pt
-    span = rmax * grid + cap + 200.0
+    span = rmax * grid + 2 * cap + 400.0
     near = [i for i in list(m['insts']) + staged + [K.F.Inst(kn, 'keepout', kx, ky, kw, kh, 'R0')
                                                      for kn, kx, ky, kw, kh in m.get('keepouts', [])]
             if abs(i.x + i.w / 2 - sink_pt[0]) < span + i.w / 2 and abs(i.y + i.h / 2 - sink_pt[1]) < span + i.h / 2]
     for k in range(n):
         last = k == n - 1
         cands = []
-        for i in range(-rmax, rmax + 1):
+        # spots around the sink pin and around the previous station (the pads may wait anywhere on the last hop's reach)
+        for cx, cy in {sink_pt, pt, ((sink_pt[0] + pt[0]) / 2, (sink_pt[1] + pt[1]) / 2)}:
+          for i in range(-rmax, rmax + 1):
             for j in range(-rmax, rmax + 1):
-                x = K.up(sink_pt[0] + i * grid - w / 2, K.GX)
-                y = K.up(sink_pt[1] + j * grid - h / 2, K.GY)
+                x = K.up(cx + i * grid - w / 2, K.GX)
+                y = K.up(cy + j * grid - h / 2, K.GY)
                 a_ = (x, y + h / 2)
                 b_ = (x + w, y + h / 2)
                 din = abs(a_[0] - pt[0]) + abs(a_[1] - pt[1])

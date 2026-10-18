@@ -1740,14 +1740,16 @@ def place(m, K, geo, F):
 
 # QXF-SEAMK 10-18 (OT_KV_ATTN_AT_D2D=1, default off): kvs14c placed kvs_attn W of the N PV pair top, 2.0 mm S / 0.7 mm W of
 # the D2D end, so its four d2d record bundles ran 9-11 relays each way (rx 11, tx slot 9, tx 11: 22 of the +32 exposed
-# cycles a decode layer, TOKEN-XDIE-QWEN F6).  With the knob kvs_attn sits against the D2D end's W face (its N face
-# level with the end's rx_payload pin row, OT_KV_ATTN_D2D_TOP x the end's height above its bottom; its E face, which
-# carries attn__tx_valid / tx_payload, one halo from the end) and kvs_emb moves W of it on the same row (its embedding row
-# word becomes a 1-2 stage hop, once a token).  kvs14c pin geometry -> rx_record 0, tx_record 0, tx_slot 1 stage
+# cycles a decode layer, TOKEN-XDIE-QWEN F6).  With the knob kvs_attn sits W of the HOST root, its N face level with the
+# D2D end's bottom (OT_KV_ATTN_D2D_TOP x the end's height above its bottom, default 0: at 0.48 -- N face on the end's
+# rx_payload row, seam 0/1/0 -- the kvs_attn -> seq prg word found no relay spot in the HOST / D2D gap, planner dry run
+# qxf-seamk caseB), its E face (attn__tx_valid / tx_payload) one halo W of the end's W face, and kvs_emb moves W of it on
+# the same row (its embedding row word becomes a 1-2 stage hop, once a token).  kvs14c pin geometry -> rx_record 1,
+# tx_slot 0, tx_record 0 stages
 # (test_kv_bundle_eq.test_attn_at_d2d_pin_hops); the S-going kvs_attn words (ahs / pvst / pvfst / fin / acal) grow by
 # ~1.5-2 mm.  The KV die lead adopts it in a GEN (lanes/KV-LANDSLOT.md, KV-PLAN4.md).
 ATTN_AT_D2D = os.environ.get('OT_KV_ATTN_AT_D2D', '0') == '1'
-ATTN_D2D_TOP = float(os.environ.get('OT_KV_ATTN_D2D_TOP', '0.48'))
+ATTN_D2D_TOP = float(os.environ.get('OT_KV_ATTN_D2D_TOP', '0.0'))
 
 
 def d2d_side_anchors(d2d, attn_wh, emb_wh, halo=21.6, top=None):

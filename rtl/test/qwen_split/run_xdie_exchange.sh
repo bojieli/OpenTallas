@@ -14,9 +14,9 @@ NET_K='9,11,9,8,9,6,11'        # kvs14c as netlisted: srx 9, rx_payload 11, att_
 PLAN='2,2,2,2,2,2/11,11,9,9,9,11,11'   # every bundle equalised to its netlisted maximum (what the die plan must build)
 ZERO='0,0,0,0,0,0/0,0,0,0,0,0,0'
 # QXF-SEAMK 10-18 (F6): kvs14c after the generator's bundle pads (tools/qwen_kv_die/kv_bundle_eq.py: srx +2, kind +1, tx_v +5)
-# and the OT_KV_ATTN_AT_D2D placement (kvs_attn against the D2D end: rx 0/0, tx slot 1/1/1, tx 0/0, pin geometry of kvs14c)
+# and the OT_KV_ATTN_AT_D2D placement (kvs_attn beside the D2D end: rx 1/1, tx slot 0/0/0, tx 0/0, pin geometry of kvs14c)
 BEQ_K='11,11,9,9,9,11,11'
-AT_D2D_K='0,0,1,1,1,0,0'   
+AT_D2D_K='1,1,0,0,0,0,0'   # kvs_attn W of the HOST root, N face at the D2D end's bottom (OT_KV_ATTN_D2D_TOP 0)
 # name | expect | calendar flags | bench -G flags | masters (txdp = compiled TXDP, orig = as-built hard-wired TXDP)
 CONFIGS=(
  "vc|PASS|--c-real 1 --k-real 0 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GQGAP=1|txdp"
@@ -33,7 +33,7 @@ CONFIGS=(
  "netlist_k|FAIL|--c-real 0 --k-real 1 --qgap 0 --stages 0,0,0,0,0,0/$NET_K|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
  "netlist_k_beq|PASS|--c-real 0 --k-real 1 --qgap 0 --stages 0,0,0,0,0,0/$BEQ_K|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
  "vk_attn_d2d|PASS|--c-real 0 --k-real 1 --qgap 0 --stages 2,2,2,2,2,2/$AT_D2D_K|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
- "mut_attn_d2d_torn|FAIL|--c-real 0 --k-real 1 --qgap 0 --stages 2,2,2,2,2,2/0,1,1,1,1,0,0|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
+ "mut_attn_d2d_torn|FAIL|--c-real 0 --k-real 1 --qgap 0 --stages 2,2,2,2,2,2/0,1,0,0,0,0,0|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
  "mut1_kv_run_late|FAIL|--c-real 0 --k-real 1 --qgap 0 --stages $PLAN|-GC_REAL=0 -GK_REAL=1 -GQGAP=0 -GMUT=1|txdp"
  "mut2_phy_bit|FAIL|--c-real 1 --k-real 0 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GQGAP=1 -GMUT=2|txdp"
  "mut3_result_word|FAIL|--c-real 1 --k-real 0 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GQGAP=1 -GMUT=3|txdp"

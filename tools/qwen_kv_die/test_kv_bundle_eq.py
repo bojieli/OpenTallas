@@ -241,6 +241,16 @@ def seam_stages(ax, ay):
 
 
 class AttnAtD2D(unittest.TestCase):
+    def test_attn_at_d2d_rx_row(self):
+        # OT_KV_ATTN_D2D_TOP=0.48 (N face on the end's rx_payload row): seam rx 0 / tx slot 1 / tx 0
+        import kv_static_die as S
+        d2d = SimpleNamespace(**{k: D2D[k] for k in 'xywh'})
+        an = S.d2d_side_anchors(d2d, S.FRAME['attn'], S.FRAME['emb'], top=0.48)
+        w, h = S.FRAME['attn']
+        st = seam_stages(an['kvs_attn'][0] - w / 2, an['kvs_attn'][1] - h / 2)
+        self.assertEqual((st[('K.rx_record', 'rx_payload')], st[('K.tx_slot', 'att_tx_kind')], st[('K.tx_record', 'att_tx_payload')]),
+                         (0, 1, 0))
+
     def test_attn_at_d2d_pin_hops(self):
         import kv_static_die as S
         d2d = SimpleNamespace(**{k: D2D[k] for k in 'xywh'})
@@ -249,9 +259,9 @@ class AttnAtD2D(unittest.TestCase):
         ax, ay = an['kvs_attn'][0] - w / 2, an['kvs_attn'][1] - h / 2
         self.assertGreaterEqual(d2d.x - (ax + w), 21.6 - 1e-6)                  # one halo W of the end
         st = seam_stages(ax, ay)
-        self.assertEqual(sorted(st.items()), sorted({('K.rx_record', 'srx'): 0, ('K.rx_record', 'rx_payload'): 0,
-                                                     ('K.tx_slot', 'att_tx_slot'): 1, ('K.tx_slot', 'att_tx_kind'): 1,
-                                                     ('K.tx_slot', 'att_tx_beat'): 1, ('K.tx_record', 'att_tx_v'): 0,
+        self.assertEqual(sorted(st.items()), sorted({('K.rx_record', 'srx'): 1, ('K.rx_record', 'rx_payload'): 1,
+                                                     ('K.tx_slot', 'att_tx_slot'): 0, ('K.tx_slot', 'att_tx_kind'): 0,
+                                                     ('K.tx_slot', 'att_tx_beat'): 0, ('K.tx_record', 'att_tx_v'): 0,
                                                      ('K.tx_record', 'att_tx_payload'): 0}.items()))
         ew, eh = S.FRAME['emb']
         ex = an['kvs_emb'][0] - ew / 2
