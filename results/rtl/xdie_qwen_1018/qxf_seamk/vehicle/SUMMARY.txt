@@ -1,0 +1,5 @@
+netlist_k expect=FAIL got=FAIL -> OK
+netlist_k_beq expect=PASS got=PASS -> OK
+vk expect=PASS got=PASS -> OK
+vk_attn_d2d expect=PASS got=PASS -> OK   (rerun xdie_f6b after the X<0 calendar fix)
+mut_attn_d2d_torn expect=FAIL got=FAIL -> OK   (xdie_f6c: srx 0 vs rx_payload 1); an earlier kind-early variant 0,0,1,0,1,0,0 PASSED (not observable)
