@@ -1,0 +1,151 @@
+ERR phase 0: timeout
+ERR (c) phase 0: response beats dut 633 ref 2446 expected 2446
+ERR (c) phase 0: key 00000220 data differs / missing
+ERR (c) phase 0: key 00008131 data differs / missing
+ERR (c) phase 0: key 000082c0 data differs / missing
+ERR (c) phase 0: key 00010163 data differs / missing
+ERR (c) phase 0: key 000101b0 data differs / missing
+ERR (c) phase 0: key 000101f1 data differs / missing
+ERR (c) phase 0: key 00010250 data differs / missing
+ERR (c) phase 0: key 00018162 data differs / missing
+ERR (d) pc 0 credits 0 != 8
+ERR (d) pc 0 accepted 10 != 48
+ERR (d) pc 1 credits 0 != 8
+ERR (d) pc 1 accepted 12 != 48
+ERR (d) pc 2 credits 0 != 8
+ERR (d) pc 2 accepted 14 != 48
+ERR (d) pc 3 credits 0 != 8
+ERR (d) pc 3 accepted 14 != 48
+ERR (d) pc 4 credits 0 != 8
+ERR (d) pc 4 accepted 9 != 48
+ERR (d) pc 5 credits 0 != 8
+ERR (d) pc 5 accepted 11 != 48
+ERR (d) pc 6 credits 0 != 8
+ERR (d) pc 6 accepted 14 != 48
+ERR (d) pc 7 credits 0 != 8
+ERR (d) pc 7 accepted 12 != 48
+ERR (d) pc 8 credits 0 != 8
+ERR (d) pc 8 accepted 13 != 48
+ERR (d) pc 9 credits 0 != 8
+ERR (d) pc 9 accepted 15 != 48
+ERR (d) pc 10 credits 0 != 8
+ERR (d) pc 10 accepted 13 != 48
+ERR (d) pc 11 credits 0 != 8
+ERR (d) pc 11 accepted 13 != 48
+ERR (d) pc 12 credits 0 != 8
+ERR (d) pc 12 accepted 15 != 48
+ERR (d) pc 13 credits 0 != 8
+ERR (d) pc 13 accepted 11 != 48
+ERR (d) pc 14 credits 0 != 8
+ERR (d) pc 14 accepted 11 != 48
+ERR (d) pc 15 credits 0 != 8
+ERR (d) pc 15 accepted 12 != 48
+ERR (d) pc 16 credits 0 != 8
+ERR (d) pc 16 accepted 10 != 48
+ERR (d) pc 17 credits 0 != 8
+ERR (d) pc 17 accepted 18 != 48
+ERR (d) pc 18 credits 0 != 8
+ERR (d) pc 18 accepted 10 != 48
+ERR (d) pc 19 credits 0 != 8
+ERR (d) pc 19 accepted 10 != 48
+ERR (d) pc 20 credits 0 != 8
+ERR (d) pc 20 accepted 14 != 48
+ERR (d) pc 21 credits 0 != 8
+ERR (d) pc 21 accepted 11 != 48
+ERR (d) pc 22 credits 0 != 8
+ERR (d) pc 22 accepted 13 != 48
+ERR (d) pc 23 credits 0 != 8
+ERR (d) pc 23 accepted 13 != 48
+ERR (d) pc 24 credits 0 != 8
+ERR (d) pc 24 accepted 12 != 48
+ERR (d) pc 25 credits 0 != 8
+ERR (d) pc 25 accepted 13 != 48
+ERR (d) pc 26 credits 0 != 8
+ERR (d) pc 26 accepted 10 != 48
+ERR (d) pc 27 credits 0 != 8
+ERR (d) pc 27 accepted 12 != 48
+ERR (d) pc 28 credits 0 != 8
+ERR (d) pc 28 accepted 12 != 48
+ERR (d) pc 29 credits 0 != 8
+ERR (d) pc 29 accepted 15 != 48
+ERR (d) pc 30 credits 0 != 8
+ERR (d) pc 30 accepted 10 != 48
+ERR (d) pc 31 credits 0 != 8
+ERR (d) pc 31 accepted 15 != 48
+ERR (d) phase 0: write-done dut 397 ref 552 writes 552
+phase 0: 1536 requests (552 writes, 2446 read beats) on 32 PCs; responses dut 2446 ref 2446
+ERR phase 1: timeout
+ERR (c) phase 1: response beats dut 657 ref 2584 expected 2584
+ERR (d) pc 0 credits 0 != 8
+ERR (d) pc 0 accepted 12 != 48
+ERR (d) pc 1 credits 0 != 8
+ERR (d) pc 1 accepted 10 != 48
+ERR (d) pc 2 credits 0 != 8
+ERR (d) pc 2 accepted 11 != 48
+ERR (d) pc 3 credits 0 != 8
+ERR (d) pc 3 accepted 11 != 48
+ERR (d) pc 4 credits 0 != 8
+ERR (d) pc 4 accepted 10 != 48
+ERR (d) pc 5 credits 0 != 8
+ERR (d) pc 5 accepted 18 != 48
+ERR (d) pc 6 credits 0 != 8
+ERR (d) pc 6 accepted 12 != 48
+ERR (d) pc 7 credits 0 != 8
+ERR (d) pc 7 accepted 14 != 48
+ERR (d) pc 8 credits 0 != 8
+ERR (d) pc 8 accepted 10 != 48
+ERR (d) pc 9 credits 0 != 8
+ERR (d) pc 9 accepted 9 != 48
+ERR (d) pc 10 credits 0 != 8
+ERR (d) pc 10 accepted 16 != 48
+ERR (d) pc 11 credits 0 != 8
+ERR (d) pc 11 accepted 13 != 48
+ERR (d) pc 12 credits 0 != 8
+ERR (d) pc 12 accepted 11 != 48
+ERR (d) pc 13 credits 0 != 8
+ERR (d) pc 13 accepted 12 != 48
+ERR (d) pc 14 credits 0 != 8
+ERR (d) pc 14 accepted 12 != 48
+ERR (d) pc 15 credits 0 != 8
+ERR (d) pc 15 accepted 8 != 48
+ERR (d) pc 16 credits 0 != 8
+ERR (d) pc 16 accepted 13 != 48
+ERR (d) pc 17 credits 0 != 8
+ERR (d) pc 17 accepted 18 != 48
+ERR (d) pc 18 credits 0 != 8
+ERR (d) pc 18 accepted 19 != 48
+ERR (d) pc 19 credits 0 != 8
+ERR (d) pc 19 accepted 11 != 48
+ERR (d) pc 20 credits 0 != 8
+ERR (d) pc 20 accepted 13 != 48
+ERR (d) pc 21 credits 0 != 8
+ERR (d) pc 21 accepted 8 != 48
+ERR (d) pc 22 credits 0 != 8
+ERR (d) pc 22 accepted 22 != 48
+ERR (d) pc 23 credits 0 != 8
+ERR (d) pc 23 accepted 13 != 48
+ERR (d) pc 24 credits 0 != 8
+ERR (d) pc 24 accepted 14 != 48
+ERR (d) pc 25 credits 0 != 8
+ERR (d) pc 25 accepted 12 != 48
+ERR (d) pc 26 credits 0 != 8
+ERR (d) pc 26 accepted 11 != 48
+ERR (d) pc 27 credits 0 != 8
+ERR (d) pc 27 accepted 13 != 48
+ERR (d) pc 28 credits 0 != 8
+ERR (d) pc 28 accepted 10 != 48
+ERR (d) pc 29 credits 0 != 8
+ERR (d) pc 29 accepted 14 != 48
+ERR (d) pc 30 credits 0 != 8
+ERR (d) pc 30 accepted 18 != 48
+ERR (d) pc 31 credits 0 != 8
+ERR (d) pc 31 accepted 11 != 48
+ERR (d) phase 1: write-done dut 409 ref 521 writes 521
+phase 1: 1536 requests (521 writes, 2584 read beats) on 32 PCs; responses dut 2584 ref 2584
+latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles
+latency: request rq issue -> PHY accept mean 7.95 max 9.49 cks cycles; response PHY -> rd mean 5.72 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
+TB_DSFD_CTRL FAIL errors=403
+- rtl/dsrom_sys/s81_ph/test/tb_dsfd_ctrl.sv:246: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 666us; walltime 563.892 s; speed 1.210 us/s
+- Verilator: cpu 550.162 s on 1 threads; alloced 1038 MB
