@@ -48,14 +48,18 @@ def stack(kind, banks, x, orient, y0=LAT):
 
 
 def ranges(face_len, groups, margin=4.0):
-    """contiguous pin_ranges over the whole face, proportional to bit count."""
-    tot = sum(n for _, n in groups)
-    span = face_len - 2 * margin
+    """contiguous disjoint pin_ranges over the whole face: a <= 16-bit port gets max(1.2, 0.3 n) um, the wide ports share
+    the rest in proportion to their bit counts (0.3 um gap after every range)."""
+    fixed = {p: max(1.2, 0.3 * n) for p, n in groups if n <= 16}
+    tot = sum(n for p, n in groups if p not in fixed)
+    span = face_len - 2 * margin - sum(fixed.values())
+    assert span > 0 and tot > 0
     out, x = {}, margin
     for p, n in groups:
-        w = span * n / tot
+        w = fixed.get(p, span * n / tot if tot else 0.0)
         out[p] = [round(x, 3), round(x + w - 0.3, 3)]
         x += w
+    assert abs(x - (face_len - margin)) < 1e-6, (x, face_len)
     return out
 
 
@@ -118,14 +122,10 @@ def main():
     h["sources"] = [SRC + "ot_hbm_su_programme_pgcol.sv"]
     h["pins"] = {"W": ["clk", "rst_n", "cfg_we", "cfg_bank", "cfg_row", "cfg_data", "l_fault", "l_valid"],
                  "E": ["o_we", "o_any", "o_bank", "o_row", "o_data", "fault"]}
-    h["pin_ranges"] = dict(ranges(86.4, [("cfg_data", 256), ("cfg_bank", 16), ("cfg_row", 7), ("cfg_we", 1),
-                                         ("rst_n", 1), ("l_fault", 10), ("l_valid", 10)], 2.0),
+    h["pin_ranges"] = dict(ranges(86.4, [("cfg_data", 256), ("clk", 1), ("cfg_bank", 16), ("cfg_row", 7),
+                                         ("cfg_we", 1), ("rst_n", 1), ("l_fault", 10), ("l_valid", 10)], 2.0),
                            **ranges(86.4, [("o_data", 256), ("o_row", 7), ("o_bank", 5), ("o_any", 1), ("o_we", 10),
                                            ("fault", 1)], 2.0))
-    # clk in the W face middle of cfg_data
-    h["pin_ranges"]["clk"] = [42.0, 42.6]
-    h["pin_ranges"]["cfg_data"] = [2.0, 41.7]
-    h["pin_ranges"]["cfg_bank"] = [42.9, h["pin_ranges"]["cfg_bank"][1]]
     h["route"] = dict(h["route"], threads=8, peak_ram_gb=16)
     h.pop("macro_halo_um", None)
     h["pin_regs"] = {"enable": False, "reason": (
