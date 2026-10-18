@@ -98300,7 +98300,7 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 941.76,
+    "w": 950.4,
     "h": 950.4
    },
    "origin": {
@@ -98323,7 +98323,7 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 941.76,
+    "w": 950.4,
     "h": 950.4
    },
    "origin": {
@@ -98346,7 +98346,7 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 941.76,
+    "w": 950.4,
     "h": 950.4
    },
    "origin": {
@@ -98369,7 +98369,7 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 941.76,
+    "w": 950.4,
     "h": 950.4
    },
    "origin": {
@@ -107051,5 +107051,5 @@
    "layers": "M2-M7, die straps M8"
   }
  ],
- "notes_r8b": "H-DIE-R8b 2026-10-17: d4f grants r8 -> r8b (slot changes of the run8b bindings).\n\n  * sfup_<q> (SFU programme store r10 parent cluster, coordinator 0dh++ DECISION B): 941.76 x 950.4 (was 447.12 x\n    1023.84).  SW/SE/NE grow EAST from the same origin into free space (sfus_<q> keeps its abutment with sfucore_<q>,\n    0 relays); NW has pgp_NW east and sfus_NW west, so sfup_NW sits above pgp_NW (y 20412) and sucore_NW moves 300 um\n    east (x 9000, still W of su_NW2) to make room.\n  * cij_SW -> ot_hgi_coll_inj_idx_join_rg (CLOSED hcoll_inj_idx_join_rg_1017, 216 x 432): abuts coll_SW on its W face.\n  * LG fold (0db, CLOSED tap leaves 216 x 216): sfu_<q><g> = ot_hgi_sfu_lg_pair_tap_leaf 216 x 216 at the old leaf\n    origin (nearest legal 10.8-um site if that overlaps); hc_<q><g> = ot_hgi_sfu_lg_pair_tap_leaf_term 216 x 216 at\n    the W face of sfu_<q><g> (the 500 x 500 hfd_hc shell retires; HC<->SFU tap seam 0 um, no empty area on the LG chain).\nEvery changed slot is checked against every other die-level slot (no overlap) and the die outline."
+ "notes_r8b": "H-DIE-R8b 2026-10-17: d4f grants r8 -> r8b (slot changes of the run8b bindings).\n\n  * sfup_<q> (SFU programme store r10 parent cluster, coordinator 0dh++ DECISION B): 950.4 x 950.4 (lattice; was 447.12 x\n    1023.84).  SW/SE/NE grow EAST from the same origin into free space (sfus_<q> keeps its abutment with sfucore_<q>,\n    0 relays); NW has pgp_NW east and sfus_NW west, so sfup_NW sits above pgp_NW (y 20412) and sucore_NW moves 300 um\n    east (x 9000, still W of su_NW2) to make room.\n  * cij_SW -> ot_hgi_coll_inj_idx_join_rg (CLOSED hcoll_inj_idx_join_rg_1017, 216 x 432): abuts coll_SW on its W face.\n  * LG fold (0db, CLOSED tap leaves 216 x 216): sfu_<q><g> = ot_hgi_sfu_lg_pair_tap_leaf 216 x 216 at the old leaf\n    origin (nearest legal 10.8-um site if that overlaps); hc_<q><g> = ot_hgi_sfu_lg_pair_tap_leaf_term 216 x 216 at\n    the W face of sfu_<q><g> (the 500 x 500 hfd_hc shell retires; HC<->SFU tap seam 0 um, no empty area on the LG chain).\nEvery changed slot is checked against every other die-level slot (no overlap) and the die outline."
 }

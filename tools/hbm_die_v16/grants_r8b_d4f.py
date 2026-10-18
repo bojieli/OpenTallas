@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """H-DIE-R8b 2026-10-17: d4f grants r8 -> r8b (slot changes of the run8b bindings).
 
-  * sfup_<q> (SFU programme store r10 parent cluster, coordinator 0dh++ DECISION B): 941.76 x 950.4 (was 447.12 x
+  * sfup_<q> (SFU programme store r10 parent cluster, coordinator 0dh++ DECISION B): 950.4 x 950.4 (lattice; was 447.12 x
     1023.84).  SW/SE/NE grow EAST from the same origin into free space (sfus_<q> keeps its abutment with sfucore_<q>,
     0 relays); NW has pgp_NW east and sfus_NW west, so sfup_NW sits above pgp_NW (y 20412) and sucore_NW moves 300 um
     east (x 9000, still W of su_NW2) to make room.
@@ -17,7 +17,7 @@ import json
 import sys
 
 QS = ('SW', 'SE', 'NE', 'NW')
-SFUP = (941.76, 950.4)
+SFUP = (950.4, 950.4)   # SFU-PS-3: the 941.76-wide parent was off the 43.2 lattice; widened to 950.4 (pending_results 10-17)
 
 
 def rect(s):
