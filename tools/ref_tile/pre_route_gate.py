@@ -1091,6 +1091,9 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           TRIAL=1 if is_parent_kit(spec) else 0, CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
+    if textbook_reset_args(spec):
+        tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
+        sh = sh.replace(tb, tb.replace(" | sed", textbook_reset_args(spec) + " | sed", 1), 1)
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
     binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
@@ -1489,6 +1492,23 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
     return rec
 
 
+def upgrade_clock_record(ev: dict | None) -> dict | None:
+    """A pre-0dq gate clock record (no "<c>_pin_spread_ps") judged by the 0dq rule from its OWN report: the pin-flop
+    (boundary register) spread of the measured root's domain, as corner_spreads records it today.  ROOT-0040 2026-10-18:
+    without this an old record falls back to the all-register leaf spread, which 0dq does not judge."""
+    if not isinstance(ev, dict) or any(f"{c}_pin_spread_ps" in ev for c in ("tt", "ff")):
+        return ev
+    doms = [d for d in ev.get("clock_measurements") or [] if isinstance(d, dict)]
+    want = ev.get("measured_clock")
+    root = str(ev.get("root") or "").removeprefix("port:")
+    matched = [d for d in doms if want and d.get("clock") == want] or \
+              [d for d in doms if d.get("source") == root or d.get("clock") == root]
+    if len(matched) != 1:
+        return ev
+    add = {k: v for k, v in corner_spreads({}, matched[0]).items() if k.endswith("_pin_spread_ps")}
+    return dict(ev, **add, pin_spread_from_gate_report=True) if add else ev
+
+
 def corner_spreads(rec: dict, domain: dict) -> dict:
     """TT and FF insertion (latest register arrival), all-register leaf spread and pin-flop (boundary register) spread
     of one ck_insertion clock record (owner 10-17 0dq: the rule is the pin-flop spread at TT AND FF)."""
@@ -1520,6 +1540,14 @@ def clock_item(g: Gate, rec: dict) -> None:
         g.add("INFO", "clock_rule", f"root {rec['root']}: {rec['text']}")
 
 
+def textbook_reset_args(spec):
+    """GATE-FRICTION 2026-10-18: the kit's declared reset_ports reach the textbook lint, so a declared reset (KV core_peer
+    por_n, 5,344 async loads) is judged on the reset fanout limit, not the data-port one.  '' when none are declared (the
+    gate script stays byte-identical)."""
+    names = [str(x) for x in spec.get("reset_ports") or [] if isinstance(x, str) and re.fullmatch(r"[\w$\[\]:.]+", x)]
+    return f" --set reset_ports={shlex.quote(','.join(names))}" if names else ""
+
+
 def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, note: list | None = None) -> dict | None:
     """The kit's gate result when it is bound to this exact source commit and to the daemon overlays the gate executed
     (SB.validate: route-only helper drift does not invalidate a gate).  why: receives the refusal reason."""
@@ -1536,7 +1564,17 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             if rec is not None:
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
-        ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit)
+        tile = [kd.name, d.get("kit")]
+        try:
+            ks = json.loads((kd / "spec.json").read_text())
+            tile += [ks.get("name"), ks.get("top")]
+        except (OSError, ValueError):
+            pass
+        try:
+            ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"),
+                                     tile=[t for t in tile if t])
+        except TypeError:                                    # an older source_binding without the tile scope
+            ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"))
         if not ok:
             return no(reason)
         if note is not None:
@@ -1566,9 +1604,14 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
     before placement).  closed_stands: a CLOSED tile is not re-judged."""
     why, note = [], []
     rec = kit_gate_evidence(kd, source_commit, why, note)
-    ev = rec["clock"] if rec else None
+    ev = upgrade_clock_record(rec["clock"]) if rec else None
     if rec and note and "reported, not refused" in note[0]:
         g.add("INFO", "source_binding", note[0][:1500])
+    relaxed = (rec or {}).get("source_binding", {}).get("relaxing_rule_allowlist") if rec else None
+    if relaxed and not closed_stands:
+        # RELAXING-RULE ALLOWLIST (ROOT-0040): the gate stands across relaxing-only rule commits; recorded in the job
+        g.relaxing_rule_allowlist = relaxed
+        g.add("INFO", "relaxing_rule_allowlist", (note[0] if note else "relaxing-rule allowlist used")[:1500])
     if rec and not closed_stands and not rec["source_binding"].get("route_hold_context"):
         g.add("WARN", "route_hold_context",
               "historical CTS gate does not attest production hold margin/MM context; diagnostic clock evidence only",
@@ -1584,7 +1627,14 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
             # Route-only helpers are not bound by the gate: when they moved since the gate, the route freezes today's
             # effective plan (whose gate-executed rows SB.validate just proved equal to the staged ones).
             current, _ = HO.capture_plan(DAEMON_TREE, ROOT)
-            if SB.route_only_drift(frozen, current, rec["source_binding"]["files"]):
+            if relaxed:
+                # the relaxed paths changed since the gate: the route must run TODAY's (relaxed) helpers, never the
+                # gate-frozen pre-relaxation bytes (the old in-flow lint would still FAIL on the relaxed rule)
+                current["gate_verified_paths"] = SB.gate_overlay_paths(rec["source_binding"])
+                current["scope"] = "gate_executed_overlays_verified_relaxing_rule_allowlist_current"
+                current["relaxing_rule_allowlist"] = relaxed.get("commits")
+                frozen = current
+            elif SB.route_only_drift(frozen, current, rec["source_binding"]["files"]):
                 current["gate_verified_paths"] = SB.gate_overlay_paths(rec["source_binding"])
                 current["scope"] = "gate_executed_overlays_verified_route_only_helpers_current"
                 frozen = current
@@ -1824,7 +1874,8 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
     msg = " | ".join(f"{i['check']}: {i['message']}" + (f" (fix: {i['fix']})" if i["fix"] else "")
                      for i in (fails or warns))[:1500]
     return {"verdict": "REFUSE" if fails else ("WARN" if warns else "PASS"), "message": msg or "pre-route gate PASS",
-            "clock": getattr(g, "clock", None), "route_overlay_plan": getattr(g, "route_overlay_plan", None)}
+            "clock": getattr(g, "clock", None), "route_overlay_plan": getattr(g, "route_overlay_plan", None),
+            "relaxing_rule_allowlist": getattr(g, "relaxing_rule_allowlist", None)}
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -39,20 +39,32 @@
 // The lane rx word {fault, live, beat, valid} of dsfd_coll_lane_*: valid = the lep's registered lane-receive enable
 // (1 from the cycle after reset release): ot_pdie_ucie's rate matcher presents a beat EVERY cycle (an IDLE beat 512'b10
 // when its FIFO is empty, skipped by the gearbox), and the gearbox qualifies beats with `live` itself.
+// Pin rules (S81-RTLB3 2026-10-18; gate b6bf54dea WARNs: lo0_r / lo1_r drove 556 / 558 loads, 6 levels to wp; one
+// reset flop drove 1,232 loads): the core-side lane faces are CREDIT links (rtl/common/ot_link_credit.sv protocol, the
+// lane tile in LCR = 1 mode, as the S81 collective die lanes: run_die_layer.sh +define+OT_S81PH_LANE_CR).  lo_r is a
+// credit pulse that lands in ONE pin flop (cr_q); a TX read is issued only with a credit in hand (CRED 8 = the lane's
+// landing depth), lo_v / lo_d leave from flops.  li_v / li_d land in pin flops, li_r is a registered credit pulse per pop
+// (RX landing DR 8 = the lane sender's CRED 8).  The rst_n port drives only an ot_rst_relay (4 regions: TX lane 0, TX
+// lane 1, RX, host plane / faults); the 1,103 ri data bits carry no reset (ri[0] is the beat valid).
+// Added edges vs the valid/ready skid face (compiler + die): ro -> lane endpoint +2 cycles (lane credit landing pin flop
+// + FIFO), lane -> ri +1 cycle (lane credit sender flop); reset release +1 cycle (relay stage: 3 edges from rst_n).
+// The credit round trips (TX ~7, RX ~6 cycles) stay inside 8 credits: full beat rate; the off-die rate cap (0.764) and
+// the TX landing burst bound are unchanged.
 // Mutants (bench only): OT_S81SL_LEP_MUT_SWAP (halves swapped onto the lanes), OT_S81SL_LEP_MUT_NOPAIR (re-assembly
 // releases on lane 0 alone), OT_S81SL_LEP_MUT_NOOVF (landing-FIFO overflow not flagged), OT_S81SL_LEP_MUT_KSOFF
 // (key-store payload decoded one bit off), OT_S81SL_LEP_MUT_HDROP (a pending t_v host word overwritten).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_lep #(
     parameter integer DT = 512,        // TX landing FIFO depth per lane (flits; SRAM macro depth)
-    parameter integer DR = 4,          // RX re-assembly FIFO depth per lane (flits, flops)
+    parameter integer DR = 8,          // RX landing FIFO depth per lane (flits, flops) = the lane sender's CRED 8
+    parameter integer CRED = 8,        // TX credits = the lane's core-face landing depth (ot_link_credit_rx DEPTH 8)
     parameter integer SRAM = 1         // 1: TX storage in SRAM macros (0: flops, same cycle behaviour)
 ) (
     input  wire            clk,
     input  wire            rst_n,
     // slice outward line port
     input  wire [1103:0]   ro,
-    output reg  [1103:0]   ri,
+    output wire [1103:0]   ri,
     // link lanes (dsfd_coll_lane_* core side: lo = to link, li = from link)
     output wire            lo0_v, input wire lo0_r, output wire [552:0] lo0_d,
     output wire            lo1_v, input wire lo1_r, output wire [552:0] lo1_d,
@@ -75,11 +87,12 @@ module ot_s81sl_lep #(
 );
     localparam integer H = 552;
     localparam integer AT = $clog2(DT), AR = $clog2(DR);
-    // regional reset: own synchroniser on this leaf's clock root
-    reg [1:0] rs;
-    always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 2'b00; else rs <= {rs[0], 1'b1};
-    wire rn = rs[1];
-    always @(posedge clk or negedge rn) if (!rn) rxv <= 2'b00; else rxv <= 2'b11;
+    // regional reset: the port drives only this relay (own synchroniser on this leaf's clock root); one copy per region
+    wire [3:0] rr;
+    ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    wire rn = rr[3];                                   // host plane, outward-port valid, fault collector
+    wire rnx = rr[2];                                  // RX landing + re-assembly
+    always @(posedge clk or negedge rnx) if (!rnx) rxv <= 2'b00; else rxv <= 2'b11;
 
     // ---------------------------------------------------------------- outward-port pin flops
     reg rov; reg [1103:0] roq;
@@ -130,72 +143,92 @@ module ot_s81sl_lep #(
 
     // ---------------------------------------------------------------- TX landing FIFOs (one per lane)
     // Storage: ot_s81ph_mem1r1w SRAM = 1 (5 x ot_sram_1r1w_512x128_m4_r2c2 a lane, registered write port WREG = 1,
-    // registered read), DT entries; a 2-entry flop output buffer (ob0 / ob1) drives lo_v / lo_d from flops.  A read is
-    // issued only when its word will find a free output slot (static occupancy count, no combinational ready path).
+    // registered read), DT entries.  Credit sender: lo_r (a credit pulse per freed lane landing slot) lands in the pin flop
+    // cr_q; a read is issued only with a credit in hand (the credit is spent at issue), its word leaves on lo_v / lo_d
+    // from flops two edges later.  lo_d loads the SRAM read word every cycle (the lane samples it only with lo_v).
     wire [1:0] ovf;
     wire [1:0] lo_v, lo_r = {lo1_r, lo0_r};
     wire [2*(H+1)-1:0] lo_d;
+    localparam integer CW = $clog2(CRED + 1);
     genvar t;
     generate for (t = 0; t < 2; t = t + 1) begin : g_tx
-        reg [AT-1:0] wp, rp; reg [AT:0] n;
-        reg inf; reg [1:0] obn; reg obv; reg [H:0] ob0, ob1; reg of;
+        wire rt = rr[t];
+        reg [AT-1:0] wp, rp; reg [AT:0] n; reg [CW-1:0] cnt;
+        reg inf, of, ov; reg [H:0] od;
+        (* keep = "true" *) reg cr_q;                  // lo_r pin flop
         wire [H:0] q;
-        wire hs = obv && lo_r[t];
-        wire [1:0] base = obn - (hs ? 2'd1 : 2'd0);
-        wire iss = n != 0 && (base + (inf ? 2'd1 : 2'd0)) <= 2'd1;
+        wire iss = n != 0 && cnt != 0;
         wire wr = push && (n != DT || iss);
-        ot_s81ph_mem1r1w #(.W(H + 1), .DEPTH(DT), .SRAM(SRAM), .WREG(1)) u_m (.clk(clk), .rst_n(rn), .we(wr), .wa(wp),
+        ot_s81ph_mem1r1w #(.W(H + 1), .DEPTH(DT), .SRAM(SRAM), .WREG(1)) u_m (.clk(clk), .rst_n(rt), .we(wr), .wa(wp),
             .wd({sq, (t == 0) ? hf0 : hf1}), .re(iss), .ra(rp), .q(q));
-        always @(posedge clk or negedge rn)
-            if (!rn) begin wp <= 0; rp <= 0; n <= 0; inf <= 1'b0; obn <= 2'd0; obv <= 1'b0; of <= 1'b0; end
+        always @(posedge clk or negedge rt)
+            if (!rt) begin wp <= 0; rp <= 0; n <= 0; inf <= 1'b0; of <= 1'b0; cr_q <= 1'b0; cnt <= CW'(CRED); ov <= 1'b0; end
             else begin
+                cr_q <= lo_r[t];
+                cnt <= cnt + CW'(cr_q) - CW'(iss);
                 if (wr) wp <= (wp == DT - 1) ? 0 : wp + 1'b1;
                 if (iss) rp <= (rp == DT - 1) ? 0 : rp + 1'b1;
                 n <= n + (wr ? 1'b1 : 1'b0) - (iss ? 1'b1 : 1'b0);
                 inf <= iss;
-                obn <= base + (inf ? 2'd1 : 2'd0);
-                obv <= (base + (inf ? 2'd1 : 2'd0)) != 2'd0;
+                ov <= inf;
 `ifndef OT_S81SL_LEP_MUT_NOOVF
                 if (push && n == DT && !iss) of <= 1'b1;
 `endif
             end
-        always @(posedge clk) begin
-            if (hs) ob0 <= ob1;
-            if (inf) begin if (base == 2'd0) ob0 <= q; else ob1 <= q; end
-        end
-        assign lo_v[t] = obv; assign lo_d[t * (H + 1) +: H + 1] = ob0; assign ovf[t] = of;
+        always @(posedge clk) od <= q;
+        assign lo_v[t] = ov; assign lo_d[t * (H + 1) +: H + 1] = od; assign ovf[t] = of;
     end endgenerate
     assign lo0_v = lo_v[0]; assign lo0_d = lo_d[H:0];
     assign lo1_v = lo_v[1]; assign lo1_d = lo_d[2*H+1:H+1];
 
     // ---------------------------------------------------------------- RX pair re-assembly
+    // Credit receiver per lane (ot_link_credit_rx WFREE 2 form): li_v / li_d land in pin flops (vq / dq); the landing
+    // register is written every non-full cycle into mem[wp] through REGISTERED one-hot slot enables (credits guarantee a
+    // free slot), the non-empty flag is registered, li_r is a registered credit pulse per pop, a beat landing on a full
+    // FIFO is a sticky fault.  The read pointer is replicated RREP times (each copy selects <= 35 data columns).
+    localparam integer RREP = 16, SW = (H + 1 + RREP - 1) / RREP;
     wire [1:0] li_v = {li1_v, li0_v}; wire [2*(H+1)-1:0] li_d = {li1_d, li0_d};
-    wire [1:0] rne; wire [2*(H+1)-1:0] rhd; wire [1:0] lir;
+    wire [1:0] rne, rxf; wire [2*(H+1)-1:0] rhd; wire [1:0] lir;
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
     wire rel = rne[0];
 `else
     wire rel = rne[0] && rne[1];
 `endif
+    genvar c;
     generate for (t = 0; t < 2; t = t + 1) begin : g_rx
-        // li handshake captured at the pin (hq / dq flops), written one edge later; m counts written + in-flight
-        // entries, so the registered ready r never admits more than DR
         reg [H:0] mem [0:DR-1];
-        reg [AR-1:0] wp, rp; reg [AR:0] n, m; reg r, hq; reg [H:0] dq;
-        wire hs = li_v[t] && r;
-        wire pop = rel && n != 0;
-        wire [AR:0] mx = m + (hs ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
-        always @(posedge clk or negedge rn)
-            if (!rn) begin wp <= 0; rp <= 0; n <= 0; m <= 0; r <= 1'b0; hq <= 1'b0; end
+        reg [AR-1:0] wp, rp; reg [AR:0] n; reg vq, nz, cr, f; reg [DR-1:0] we; reg [H:0] dq;
+        wire pop = rel && nz;
+        wire full = n == (AR+1)'(DR);
+        wire wr = vq && !full;
+        wire [AR-1:0] wp_nx = wr ? ((wp == AR'(DR - 1)) ? '0 : wp + 1'b1) : wp;
+        wire [AR-1:0] rp_nx = pop ? ((rp == AR'(DR - 1)) ? '0 : rp + 1'b1) : rp;
+        wire [AR:0] n_nx = n + (AR+1)'(wr) - (AR+1)'(pop);
+        integer k;
+        always @(posedge clk or negedge rnx)
+            if (!rnx) begin wp <= 0; rp <= 0; n <= 0; vq <= 1'b0; nz <= 1'b0; cr <= 1'b0; f <= 1'b0; we <= DR'(1); end
             else begin
-                hq <= hs;
-                if (hq) wp <= (wp == DR - 1) ? 0 : wp + 1'b1;
-                if (pop) rp <= (rp == DR - 1) ? 0 : rp + 1'b1;
-                n <= n + (hq ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
-                m <= mx;
-                r <= mx < DR;
+                vq <= li_v[t];
+                cr <= pop;
+                if (vq && full && !pop) f <= 1'b1;
+                wp <= wp_nx; rp <= rp_nx; n <= n_nx; nz <= n_nx != 0;
+                for (k = 0; k < DR; k = k + 1) we[k] <= (wp_nx == AR'(k)) && (n_nx != (AR+1)'(DR));
             end
-        always @(posedge clk) begin dq <= li_d[t * (H + 1) +: H + 1]; if (hq) mem[wp] <= dq; end
-        assign rne[t] = n != 0; assign rhd[t * (H + 1) +: H + 1] = mem[rp]; assign lir[t] = r;
+        integer j;
+        always @(posedge clk) begin
+            dq <= li_d[t * (H + 1) +: H + 1];
+            for (j = 0; j < DR; j = j + 1) if (we[j]) mem[j] <= dq;
+        end
+        for (c = 0; c < RREP; c = c + 1) begin : g_c
+            localparam integer LO = c * SW, HI = ((c + 1) * SW > H + 1) ? H + 1 : (c + 1) * SW;
+            if (LO < H + 1) begin : g_on
+                (* keep = "true" *) reg [AR-1:0] rpc;
+                always @(posedge clk or negedge rnx) if (!rnx) rpc <= 0; else rpc <= rp_nx;
+                wire [H:0] row = mem[rpc];
+                assign rhd[t * (H + 1) + LO +: HI - LO] = row[HI-1:LO];
+            end
+        end
+        assign rne[t] = nz; assign lir[t] = cr; assign rxf[t] = f;
     end endgenerate
     assign li0_r = lir[0]; assign li1_r = lir[1];
     wire [H:0] h0 = rhd[H:0], h1 = rhd[2*H+1:H+1];
@@ -205,10 +238,14 @@ module ot_s81sl_lep #(
 `else
     wire [52:0] ksp = h0[4 +: 53];
 `endif
-    always @(posedge clk or negedge rn)
-        if (!rn) begin ri <= 1104'd0; perr <= 1'b0; fh_v <= 1'b0; fk_s <= 1'b0; end
+    reg [1103:1] rid; reg riv;
+    assign ri = {rid, riv};
+    always @(posedge clk) rid <= (rel && h0[0]) ? {h1[H-1:0], h0[H-1:1]} : 1103'd0;   // data: no reset
+    always @(posedge clk or negedge rnx)
+        if (!rnx) begin riv <= 1'b0; perr <= 1'b0; fh_v <= 1'b0; fk_s <= 1'b0; end
         else begin
-            ri <= (rel && h0[0]) ? {h1[H-1:0], h0[H-1:0]} : 1104'd0;
+            riv <= rel && h0[0];
+            if (|rxf) perr <= 1'b1;                    // a beat landed on a full RX FIFO (credit protocol broken)
             fh_v <= rel && !h0[0] && h0[3:1] == 3'd1;
             fk_s <= rel && !h0[0] && h0[3:1] == 3'd2 && ksp[52];
             // a released pair must be one frame (equal sequence parity); a die endpoint accepts ring / HOST / KS only
@@ -266,17 +303,17 @@ module ot_s81sl_slice_lep #(
         ot_s81sl_slice u_sl (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(lri), .ri_e(ri_n), .ro_e(ro_n), .ro_w(lro),
             .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc),
             .ck_rt(ck_rt), .fault(sf));
-        dsfd_coll_lane_w u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
+        dsfd_coll_lane_w #(.LCR(1)) u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
             .tx(tx0), .tf(tf[0]), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));
-        dsfd_coll_lane_w u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
+        dsfd_coll_lane_w #(.LCR(1)) u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
             .tx(tx1), .tf(tf[1]), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
     end else begin : g_e
         ot_s81sl_slice u_sl (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(ri_n), .ri_e(lri), .ro_e(lro), .ro_w(ro_n),
             .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc),
             .ck_rt(ck_rt), .fault(sf));
-        dsfd_coll_lane_e u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
+        dsfd_coll_lane_e #(.LCR(1)) u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
             .tx(tx0), .tf(tf[0]), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));
-        dsfd_coll_lane_e u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
+        dsfd_coll_lane_e #(.LCR(1)) u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
             .tx(tx1), .tf(tf[1]), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
     end endgenerate
     ot_s81sl_lep u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),

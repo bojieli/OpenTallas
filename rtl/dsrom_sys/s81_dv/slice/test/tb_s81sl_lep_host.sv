@@ -25,9 +25,9 @@ module tb_s81sl_lep_host #(parameter integer N = 400, parameter integer SEED = 3
         .li0_v(ai0v), .li0_r(ai0r), .li0_d(ai0d), .li1_v(ai1v), .li1_r(ai1r), .li1_d(ai1d), .rxv(arxv),
         .sl_f(1'b0), .l0_f(af0), .l1_f(af1), .l0_st(ast0), .l1_st(ast1),
         .t_host(t_host), .t_kd(t_kd), .f_host(f_host), .f_lf(f_lf), .f_ks(f_ks), .fault(a_f));
-    dsfd_coll_lane_w a_l0 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({ast0[0], ast0[1], arx0, arxv[0]}), .tx(atx0), .tf(),
+    dsfd_coll_lane_w #(.LCR(1)) a_l0 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({ast0[0], ast0[1], arx0, arxv[0]}), .tx(atx0), .tf(),
         .lo_v(a0v), .lo_r(a0r), .lo_d(a0d), .li_v(ai0v), .li_r(ai0r), .li_d(ai0d), .flt(af0));
-    dsfd_coll_lane_w a_l1 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({ast1[0], ast1[1], arx1, arxv[1]}), .tx(atx1), .tf(),
+    dsfd_coll_lane_w #(.LCR(1)) a_l1 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({ast1[0], ast1[1], arx1, arxv[1]}), .tx(atx1), .tf(),
         .lo_v(a1v), .lo_r(a1r), .lo_d(a1d), .li_v(ai1v), .li_r(ai1r), .li_d(ai1d), .flt(af1));
     dsfd_coll_lane_e h_l0 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({hst0[0], hst0[1], hrx0, rst_n}), .tx(htx0), .tf(),
         .lo_v(h0v), .lo_r(h0r), .lo_d(h0d), .li_v(hi0v), .li_r(1'b1), .li_d(hi0d), .flt(hf0));
