@@ -1704,7 +1704,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     r = s["route"]
     ph, pv = pin_layers(s, lc)
     srcs = " ".join(s["sources"])
-    params = " ".join(f"--param {k}={v}" for k, v in s["params"].items())
+    # shlex.quote: a sized literal (TGTS=552'h..) carries a quote; safe NAME=INT words stay unquoted (kit.env unchanged)
+    params = " ".join(f"--param {shlex.quote(f'{k}={v}')}" for k, v in s["params"].items())
     # optional "pin_ranges" {port: [lo_um, hi_um]} (along the face, from its left / bottom end): one region per ranged port so
     # a face tile's bus pins sit at the end facing their die neighbour and >= the given margin off the tile corners
     # ([vm8cp] corner-pin DRT-0255 class); ports without a range keep the whole face.
@@ -2039,7 +2040,8 @@ def lint_cmd(s: dict) -> str:
     # become instance overrides (-G only reaches the top level); unconnected wrapper ports are lint warnings only
     pv = ", ".join(f".{k}({v})" for k, v in s.get("params", {}).items())
     inst = f"{s['top']} #({pv}) u_top ();" if pv else f"{s['top']} u_top ();"
-    wrap = (f"mkdir -p {{RUN}} && printf '%s\\n' 'module ot_lint_top; {inst} endmodule' > {{RUN}}/ot_lint_top.sv && ")
+    # shq: a sized-literal param (552'h..) carries a quote; shq of a quote-free text is the old '...' word byte for byte
+    wrap = (f"mkdir -p {{RUN}} && printf '%s\\n' {shq(f'module ot_lint_top; {inst} endmodule')} > {{RUN}}/ot_lint_top.sv && ")
     return wrap + " ".join(["verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING",
                      *defs, *inc, "--top-module", "ot_lint_top", "{RUN}/ot_lint_top.sv", *s["sources"]]) + " && echo lint-ok"
 
