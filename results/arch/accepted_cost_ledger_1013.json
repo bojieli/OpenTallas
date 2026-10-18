@@ -1210,6 +1210,101 @@
   },
   {
    "design": "s81",
+   "unit": "S81.DV_LANDING_HALFCYCLE (p4l DV die: landed die-link crossings 1+E on every linked block input, forwarded half-cycle dsfd_dvrlyh relay hops, host plane hf/ht E28 once per token; added cycles a token, landing was unpriced)",
+   "group": "S81.DV_LANDING_HALFCYCLE",
+   "measured": 18275.5,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 1.904,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "dv_price --land-plan p4l --half-cycle (token-path DAG + p4l plan geometry + land plan E; COMPOSED_NOT_NATIVE), host plane once per token",
+     "base_tok_s": 1392.0,
+     "tok_s": 1365.5,
+     "added_cycles": 18275.5,
+     "landing_cycles": {
+      "land_norm_tree_full": {
+       "nodes": 162,
+       "cycles": 2268.0
+      },
+      "land_field_phase": {
+       "nodes": 324,
+       "cycles": 14352.0
+      },
+      "land_norm_tree_q": {
+       "nodes": 40,
+       "cycles": 220.0
+      },
+      "land_attn_q_path": {
+       "nodes": 40,
+       "cycles": 340.0
+      },
+      "land_h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 522.0
+      },
+      "land_router_tree": {
+       "nodes": 40,
+       "cycles": 340.0
+      },
+      "land_norm_tree_kv": {
+       "nodes": 40,
+       "cycles": 100.0
+      }
+     },
+     "host_cycles": 133.5,
+     "e2e_loss_pct": 1.904
+    },
+    "mtp": {
+     "model": "dv_price --land-plan p4l --half-cycle (token-path DAG + p4l plan geometry + land plan E; COMPOSED_NOT_NATIVE), host plane once per token",
+     "base_tok_s": 4109.5,
+     "tok_s": 4045.0,
+     "added_cycles": 16281.0,
+     "landing_cycles": {
+      "land_norm_tree_full": {
+       "nodes": 88,
+       "cycles": 1232.0
+      },
+      "land_norm_tree_q": {
+       "nodes": 43,
+       "cycles": 236.5
+      },
+      "land_attn_q_path": {
+       "nodes": 35,
+       "cycles": 297.5
+      },
+      "land_router_tree": {
+       "nodes": 43,
+       "cycles": 365.5
+      },
+      "land_field_phase": {
+       "nodes": 280,
+       "cycles": 13494.0
+      },
+      "land_h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 522.0
+      }
+     },
+     "host_cycles": 133.5,
+     "e2e_loss_pct": 1.57
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_dv_1016/p4l/price_land.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-18",
+   "status": "accepted",
+   "note": "S81-DIE7/PRICE dcaa88358 (README_price_land.md). Composed price, not a die run. The DV die drops the hub rows (VM/SU/HC/CAPT.CD_PINREG); DV running total = kept rows 0.871 + this 1.90 = 2.77 % AR (MTP 0.903 + 1.57 = 2.47 %) vs 15 %. Sensitivity: host serial at every stage -2.38 % AR / -1.93 % MTP; full-cycle hops -4.96 % / -4.11 %.",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-18",
+   "owner_exception": "OWNER 10-18 03:50 accepted S81 landing + half-cycle hops; the s81 total includes the hub rows the DV die drops (DV total 2.77 % AR)",
+   "acceptance_note": "OWNER 10-18 03:50: S81 half-cycle hops + landing accepted (about -2 %); merged by ROOT-0750 (coordinator 0gs)"
+  },
+  {
+   "design": "s81",
    "unit": "SU.HC_POST (ot_dsrom_su_hcpost, current production POST)",
    "group": "SU.HC_POST",
    "measured": 287.0,
@@ -2354,14 +2449,14 @@
    "over_limit_by_owner_exception": false
   },
   "s81": {
-   "accepted_pct": 23.391,
+   "accepted_pct": 25.295,
    "proposed_pct": 2.074,
-   "accepted_plus_proposed_pct": 25.465,
+   "accepted_plus_proposed_pct": 27.369,
    "limit_pct": 15.0,
-   "accepted_rows": 11,
+   "accepted_rows": 12,
    "proposed_rows": 12,
-   "headroom_pct": -8.391,
-   "owner_exception_rows": 2,
+   "headroom_pct": -10.295,
+   "owner_exception_rows": 3,
    "over_limit_by_owner_exception": true
   },
   "r25gq": {
