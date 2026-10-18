@@ -22,8 +22,11 @@ validate_case() {
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
-# ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset)
+# ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset).  The KV die
+# runs it after the strict bind below (QXF-SEAMK 10-18: netlist-walk export + the compiler's schedule for THIS die)
+if [ "$DIE" != kv ]; then
 RCL=$(bash "$SRC/tools/die_relay_chain_step.sh" "$C/relay_stages.json" "${OT_RELAY_SCHEDULE:-}" "$R/relay_check.json") && RCR=0 || RCR=$?; say "$RCL"; [ "$RCR" = 0 ] || exit 1
+fi
 # Owner no-stubs rule: audit the actual die.v against this run's real RTL at
 # every launch, including preserved-case resumes. HARD_PHY still needs real ports.
 if [ "$DIE" = kv ]; then
@@ -48,6 +51,24 @@ if [ "$DIE" = kv ]; then
   bash "$SRC/tools/qwen_kv_die/kv_port_bind_v2.sh" "$C/die.v" "$R/port_bind_v2" "$C/qkd_kv_relays.sv" "$R/expand.json" \
     > "$R/port_bind_v2.log" 2>&1
   say "STRICT PORT BIND v2: $(tail -1 $R/port_bind_v2.log | cut -c1-400)"
+  # QXF-SEAMK 10-18 (TOKEN-XDIE-QWEN F6: kvs14c logged 'RELAY_CHECK SKIPPED no compiled schedule' while its d2d <-> kvs_attn
+  # record bundles were torn 9/11, 8/9, 6/11): the die-run table is walked from the bound GEN netlist
+  # (RUN/relay_stages_netlist.json, tools/qwen_layerbench/netlist_relay_stages.py), the schedule is the calendar compiler
+  # run against THIS die (tools/qwen_layerbench/layer_compile.py -> RUN/layer_compile/, the D2D calendars + TXDP + KV
+  # programme the RTL loads), and tools/die_relay_check.py FAILS any stage difference AND any torn record bundle
+  # (tools/die_record_bundles.py).  OT_RELAY_SCHEDULE=<table> checks against a given compiled table instead (e.g.
+  # results/rtl/qwen_layer_tput_1018/compiled_L1/relay_schedule/kv_compiled.json.gz for the kvs14c netlist itself);
+  # OT_RELAY_SCHEDULE=skip is the only way to skip (stamped).  A FAIL stops the chain unless OT_BIND_DIAGNOSTIC=1.
+  bash "$SRC/tools/qwen_kv_die/kv_relay_check.sh" "$R" "$SRC" > "$R/relay_check.log" 2>&1 && RCR=0 || RCR=$?
+  say "$(grep -E '^RELAY_CHECK ' $R/relay_check.log | tail -1 | cut -c1-600)"
+  if [ "$RCR" != 0 ]; then
+    if [ "${OT_BIND_DIAGNOSTIC:-0}" = 1 ]; then
+      say "RELAY_CHECK FAIL ($R/relay_check.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT"
+      echo "RELAY_CHECK_FAIL_DIAGNOSTIC_ONLY" >> "$R/NOT_A_DIE_RESULT"
+    else
+      say "RELAY_CHECK FAIL ($R/relay_check.log): no die job launched"; exit 1
+    fi
+  fi
 fi
 # Q-COMPUTE-DIE 2026-10-15: OT_PG_OPEN_DIAG=1 lets a DIAGNOSTIC chain reach GRT/STA when pdngen PASSED and only
 # check_power_grid failed (islands listed by master class); run_pdn.tcl must have written floorplan_pdn_prepg.odb.
