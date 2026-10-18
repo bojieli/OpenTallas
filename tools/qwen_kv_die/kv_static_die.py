@@ -112,6 +112,26 @@ SUPERSEDED = ('ctrl_', 'cdc_', 'land_', 'wctl_', 'wleaf_', 'kvnc', 'lprg')
 # column ages + 2 x 16 kb star).
 import kv_static_attn_join as _AJ   # noqa: E402
 PVFIN = ON and _AJ.STREAM
+# RTL-BUILD-KV/FAULT 10-18 (lanes/RTL-BUILD-KV.md P7; OT_KV_AFAULT, default ON with the static die + PVFIN + FANFOLD): the
+# attention service-unit fault tree that drives attn_face.unit_fault (10 b) -- a REGISTERED NEIGHBOUR tree, fixed latency,
+# no ready / credit:
+#   af_<st>_<g>  x32  qkd_kv_cfault_node in each landing group tile (slg): fault_in = {up, vport f, ECTL kiss kf}; the K
+#                     issuer of engine g (ectl_<st>_<ectl_frame(g)>.kf, the group's own K link partner) and the V port of
+#                     the group pair (vport_<st>_<g // 2>.f, forked to both groups) are local; up = the node of the group
+#                     one strip slot below (slot s - 1 -> s, the FANFOLD up-gather direction); the chain-end group (slot
+#                     0, qkd_kvs_grp_h) has R = 2 {vport f, kf}; slot 7's node -> kvs_attn ufk_<st>
+#   afr          x1   qkd_attn_fault_root in kvs_attn: pin register of the 8 direct lanes (astk af x4 and ahub hf = forks
+#                     of the existing af_<st> / hf buses to the sequencer, pvw_0/1 pf fault, pvfin ff) + the two chain
+#                     pairs (W = WS | WN, E = ES | EN) -> attn_face.unit_fault
+# Latency per leaf = registered node edges + die relay stages of its buses (record()['attn_fault'], compiler-priced).
+AFAULT = PVFIN and FANFOLD and os.environ.get('OT_KV_AFAULT', '1') == '1'
+AFAULT_NODE = ('rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv', 'qkd_kv_cfault_node')
+AFAULT_ROOT = ('rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv', 'qkd_attn_fault_root')
+# afr d lanes (LSB first) = (tile port, die source); c lanes = the stack chain ends
+AFAULT_D = [('ufs_WS', ('astk_WS', 'af')), ('ufs_WN', ('astk_WN', 'af')), ('ufs_ES', ('astk_ES', 'af')),
+            ('ufs_EN', ('astk_EN', 'af')), ('ufh', ('ahub', 'hf')), ('ufp0', ('pvw_0', 'pf')), ('ufp1', ('pvw_1', 'pf')),
+            ('uff', ('pvfin', 'ff'))]
+AFAULT_C = [f'ufk_{st}' for st in ('WS', 'WN', 'ES', 'EN')]
 PVFIN_FILE = 'rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv'
 PVFIN_FRAME = (259.2, 259.2)            # kit qkd_pv_fin_s outline (gate pending)
 FIN = [('out_valid', 1), ('out_beat', 5), ('out_epoch', 16), ('out_data', 512)]    # pvfin fo = kvs_attn fin (LSB first)
@@ -141,6 +161,8 @@ def graph():
         left = A.apply(g, ages)
         if HROOT:
             _hroot_join(g)
+        if AFAULT:
+            _afault_join(g)
         _G['g'], _G['unpriced'] = g, left
         _G['ins'] = {i['name']: i for i in g['instances']}
         _G['spec'] = {}
@@ -162,6 +184,38 @@ def _hroot_join(g):
         if it != [{'instance': 'fanr', 'port': f'd{k}', 'lo': 0, 'width': 779}]:
             raise ValueError(f'kv_static_die HROOT: pc_{st}_31.chain_i is not fanr.d{k}: {it}')
         by[f'pc_{st}_31']['inputs']['chain_i'] = [{'instance': f'esh_{st}', 'port': 'd', 'lo': 0, 'width': 779}]
+
+
+def _afault_join(g):
+    """P7: the attention unit-fault tree nodes (their die-source inputs are tile ports bound by _die_joins; see AFAULT)"""
+    import kv_static as K
+    by = {i['name']: i for i in g['instances']}
+
+    def add(name, src, params):
+        sp = K.source(*src, K.ROOT)
+        pp = K.ports(sp, params)
+        if name in by:
+            raise ValueError(f'kv_static_die AFAULT: instance {name} already present')
+        i = dict(name=name, role='producer', source=src[0], module=src[1], sha256=sp['sha256'], parameters=dict(params),
+                 inputs={p: None for p, v in pp.items() if v['direction'] == 'input'})
+        g['instances'].append(i)
+        by[name] = i
+        if not any(d['path'] == src[0] for d in g['source_files']):
+            g['source_files'].append(dict(path=src[0], sha256=hashlib.sha256((ROOT / src[0]).read_bytes()).hexdigest()))
+            g['source_files'].sort(key=lambda d: d['path'])
+        return i
+    for st in STACKS:
+        for s_, gg in enumerate(ORDER):
+            add(f'af_{st}_{gg}', AFAULT_NODE, dict(R=2 if s_ == 0 else 3, STAGES=1, MUT=0))
+    add('afr', AFAULT_ROOT, dict(ND=len(AFAULT_D), NC=len(AFAULT_C), MUT=0))
+    face = by['attn_face']
+    nf = face['parameters']['NF']
+    if nf != len(AFAULT_D) + len(AFAULT_C) // 2 or face['inputs'].get('unit_fault', 0) is not None:
+        raise ValueError(f'kv_static_die AFAULT: attn_face NF {nf} / unit_fault already bound')
+    face['inputs']['unit_fault'] = [dict(instance='afr', port='unit_fault', lo=0, width=nf)]
+    g.setdefault('joins_added', []).append(dict(producer='af_*:qkd_kv_cfault_node + afr:qkd_attn_fault_root',
+        bound_inputs=1, owner_note='RTL-BUILD-KV/FAULT 10-18 (P7): attention unit-fault neighbour tree -> attn_face.unit_fault; '
+        'node / root inputs are die joins (kv_static_die._die_joins)'))
 
 
 def ins():
@@ -203,6 +257,11 @@ def cluster_of(name):
     if m:
         pc = int(m.group(2))
         return f'slg_{m.group(1)}_{pc_group()[(m.group(1), pc)]}', 'grp', f'bcdc{pc % 4}'
+    m = re.fullmatch(r'af_(WS|WN|ES|EN)_(\d)', name)        # P7 attention fault chain node: in its landing group
+    if m:
+        return f'slg_{m.group(1)}_{m.group(2)}', 'grp', 'af'
+    if name == 'afr':
+        return 'kvs_attn', 'attn', 'afr'
     m = re.fullmatch(r'cf1_(WS|WN|ES|EN)_(\d)', name)       # KVJ-SMALL cfault tree level 1: beside its group's PCs
     if m:
         return f'slg_{m.group(1)}_{m.group(2)}', 'grp', 'cf1'
@@ -353,6 +412,12 @@ def tile(die_inst):
             if v['direction'] == 'output':
                 wires.append(f'    wire [{v["width"] - 1}:0] w_{loc[n]}__{p};')
     overrides = CTL_OVERRIDE if kind == 'ctl' else (ATTN_OVERRIDE if kind == 'attn' and PVFIN else {})
+    if AFAULT and kind == 'attn':
+        overrides = {**overrides, **AFAULT_OVERRIDE}
+    if AFAULT and kind == 'grp':          # the chain node: slot 0 (R 2) has no up input
+        r_ = next(I[n]['parameters']['R'] for n in mem if loc[n] == 'af')
+        overrides = {**overrides, ('af', 'fault_in'): (([('afk', 1), ('afv', 1), ('afu', 1)], '{afu, afv, afk}') if r_ == 3
+                                                            else ([('afk', 1), ('afv', 1)], '{afv, afk}'))}
     for n in mem:
         sp = spec(n)
         cs = []
@@ -364,8 +429,14 @@ def tile(die_inst):
                 continue
             items = I[n]['inputs'].get(p)
             if (loc[n], p) in overrides:
-                pn, wd, expr = overrides[(loc[n], p)]
-                add_port(pn, dir='input', width=wd, cls='special', src=None)
+                ov = overrides[(loc[n], p)]
+                if len(ov) == 2:                         # several 1-port-per-source inputs, one expression
+                    for pn, wd in ov[0]:
+                        add_port(pn, dir='input', width=wd, cls='special', src=None)
+                    expr = ov[1]
+                else:
+                    pn, wd, expr = ov
+                    add_port(pn, dir='input', width=wd, cls='special', src=None)
                 cs.append(f'.{p}({expr})')
                 continue
             if items is None:
@@ -489,6 +560,11 @@ ATTN_OVERRIDE = {
     ('attn_face', 'f_epoch'): ('fin', 534, 'fin[21:6]'),
     ('attn_face', 'f_data'): ('fin', 534, 'fin[533:22]'),
 }
+# P7 (AFAULT): the fault root's die lanes, one 1-b tile port per source bus (LSB first)
+AFAULT_OVERRIDE = {
+    ('afr', 'd'): ([(pn, 1) for pn, _src in AFAULT_D], '{' + ', '.join(pn for pn, _src in reversed(AFAULT_D)) + '}'),
+    ('afr', 'c'): ([(pn, 1) for pn in AFAULT_C], '{' + ', '.join(reversed(AFAULT_C)) + '}'),
+}
 # die-level exports beyond the join's tile-to-tile edges: (local, port) -> (tile port, width)
 DIE_EXPORTS = dict(
     pc={('pc', 'er'): ('pc__er', 261), ('pc', 'ko'): ('pc__ko', 33), ('pc', 'fo'): ('pc__fo', 1),
@@ -503,6 +579,8 @@ DIE_EXPORTS = dict(
 if PVFIN:   # KV-PLAN-FIN: the final join's command word {start_pv, ep, cal R/P1/P0} (LSB first)
     DIE_EXPORTS['attn'][('attn_root', tuple(PVFST))] = ('pvfst', 65)
 DIE_EXPORTS['pc_h'] = DIE_EXPORTS['pc']
+if AFAULT:   # P7: each group's chain node -> the next slot's group (or, slot 7, the attention control tile)
+    DIE_EXPORTS['grp'] = {('af', 'fault'): ('af__fault', 1)}
 
 
 def _exports(kind):
@@ -1146,6 +1224,30 @@ def _die_joins(m, K, B, add, fk, rec):
     if PVFIN and 'pvfin' in by:
         bus('ks_pvfst', 'kv_oneway', 65, [('kvs_attn', 'pvfst'), ('pvfin', 'fs')])
         bus('ks_pvfin', 'kv_oneway', 534, [('pvfin', 'fo'), ('kvs_attn', 'fin')])
+    # P7 (AFAULT): the attention unit-fault tree (see AFAULT): group chain + local K / V faults, chain ends and the direct
+    # lanes into kvs_attn (afr).  pvw pf = the pair fault only (kv_die splits busy / out_age into pa under AFAULT)
+    if AFAULT:
+        for st in STACKS:
+            for s_, gg in enumerate(ORDER):
+                gd = f'slg_{st}_{gg}'
+                bus(f'ks_afk_{st}_{gg}', 'kv_oneway', 1, [(f'ectl_{st}_{ectl_frame(gg)}', 'kf'), (gd, 'afk')])
+                if s_:
+                    bus(f'ks_afc_{st}_{s_}', 'kv_oneway', 1, [(f'slg_{st}_{ORDER[s_ - 1]}', 'af__fault'), (gd, 'afu')])
+            for k in range(4):
+                bus(f'ks_afv_{st}_{k}', 'kv_oneway', 1, [(f'vport_{st}_{k}', 'f'), (f'slg_{st}_{2 * k}', 'afv')])
+                fk[f'ks_afv_{st}_{k}'] = [(f'slg_{st}_{2 * k + 1}', 'afv')]
+            bus(f'ks_afe_{st}', 'kv_oneway', 1, [(f'slg_{st}_{ORDER[-1]}', 'af__fault'), ('kvs_attn', f'ufk_{st}')])
+        names = {b_[0]: b_ for b_ in B}
+        for pn, (si, sp) in AFAULT_D:
+            trunk = next((b_[0] for b_ in B if b_[3][0] == (si, sp) and b_[1] not in ('clock_trunk', 'reset', 'constant')), None)
+            if trunk is not None and (si, sp) in (('ahub', 'hf'),) + tuple((f'astk_{st}', 'af') for st in STACKS):
+                if len(names[trunk][3]) != 2:
+                    raise ValueError(f'kv_static_die AFAULT: {trunk} is not point-to-point')
+                fk.setdefault(trunk, []).append(('kvs_attn', pn))      # relayed branch of the sequencer's fault bus
+            elif trunk is None:
+                bus(f'ks_af_{pn}', 'kv_oneway', 1, [(si, sp), ('kvs_attn', pn)])
+            else:
+                raise ValueError(f'kv_static_die AFAULT: {si}.{sp} already drives {trunk}')
     # HOST <-> boot / ownership / ownership observer (kv_static_boot_join.HOST_DIE_JOINS + kvjf own_obs quiet)
     hostw = {'boot_pr': 143, 'boot_image_target': 4, 'boot_image_ready': 1, 'boot_image_fault': 1, 'boot_image_epoch': 16,
              'boot_image_digest': 64, 'host_launch_quiet': 1, 'host_upstream_quiet': 6}
@@ -1215,12 +1317,14 @@ def _die_joins(m, K, B, add, fk, rec):
            dict(where='pvfin.fr (145 b: rz_valid, rz_epoch, 4 x 32-b head reciprocals)', owner='KVE: static hub '
                 'ot_qkd_ahub_static_die_cal rz_vector / rz_epoch + the R_AGE slot (the die hub qkd_ahub = legacy '
                 'ot_qwen_nearhbm_attn_hub_p has only the debug native_reciprocal, no slot / epoch)'),
-           dict(where='pvfin.ff (fault, output)', owner='KVE-2: the attention unit-fault OR tree (attn_face unit_fault)')]
+           *([] if AFAULT else [dict(where='pvfin.ff (fault, output)', owner='KVE-2: the attention unit-fault OR tree '
+                                     '(attn_face unit_fault)')])]
           if PVFIN else
           [dict(where='kvs_attn.attn_face__f_valid / f_data / f_epoch', owner='KVE: the PV final join '
                 'ot_qwen_tp8_pv256_finalize_static_cal (pvw_0/1 po -> 16,384 b) has RTL but no die element / kit')]),
-        dict(where='kvs_attn.attn_face__unit_fault (10 b)', owner='KVE-2: the 10 sticky service-unit faults (stacks, hub, '
-             'PV pairs pf, finalize, V req, e-read, rz-late, K identity, legacy pv, stack) need a die fault OR tree'),
+        *([] if AFAULT else [dict(where='kvs_attn.attn_face__unit_fault (10 b)', owner='KVE-2: the 10 sticky service-unit '
+             'faults (stacks, hub, PV pairs pf, finalize, V req, e-read, rz-late, K identity, legacy pv, stack) need a die '
+             'fault OR tree')]),
         dict(where='kvs_attn.attn_root PV_LEAD / attn_face RESULT_RELAY', owner='compiler: price from this plan (ks_pvst '
              'relay stages) and regenerate the tile (RTL defaults 0 / default now)'),
     ]
@@ -1401,8 +1505,10 @@ def pin_face(master, port):
     if master == 'qkd_ectlk':
         return _ECTL_FACE.get(port, 'W')
     if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h'):
-        if port in ('krsp', 'kreq', 'rsp', 'vreq'):
+        if port in ('krsp', 'kreq', 'rsp', 'vreq', 'afk', 'afv'):
             return 'E'
+        if port in ('afu', 'af__fault'):
+            return 'W'
         if port.startswith(('i_', 'o_')):
             return 'W'
     if master == 'qkd_kvs_fan':
@@ -1504,7 +1610,55 @@ def record(m):
                 join_instances=len(ins()), unpriced=_G.get('unpriced'),
                 static_buses=len(ks), static_relay_stages_max=max(ks.values()) if ks else 0,
                 open_tile_inputs=sorted(opens.values(), key=lambda r: (r['owner'] or '', r['master'], r['port'])),
+                attn_fault=afault_latency(m),
                 **{k: v for k, v in m.get('static_die', {}).items()})
+
+
+def afault_latency(m):
+    """P7: per fault source, the edges from its fault flop to attn_face.unit_fault (= the afr output): relay stages of
+    every die bus on its path (m['relay_stages'] / m['fork_stages'], None before the relay pass) + one edge per
+    registered node (group chain nodes, the root pin register).  The compiler takes the max per lane."""
+    st_, fs_ = m.get('relay_stages'), m.get('fork_stages', {})
+    if not AFAULT:
+        return None
+
+    def rs(b):
+        if st_ is None:
+            return None
+        return fs_[b] if b in fs_ else st_.get(b, 0)
+
+    def tot(*xs):
+        return None if any(x is None for x in xs) else sum(xs)
+    fk = m.get('forks', {})
+    lanes, leaves = {}, {}
+    for k, (pn, (si, sp)) in enumerate(AFAULT_D):
+        trunk = next((b_ for b_, v in fk.items() if ('kvs_attn', pn) in v), None)
+        bid = f'{trunk}__f{fk[trunk].index(("kvs_attn", pn))}' if trunk else f'ks_af_{pn}'
+        leaves[f'{si}.{sp}'] = dict(lane=k, buses=[bid], latency=tot(rs(bid), 1))
+    for st in STACKS:
+        lane = len(AFAULT_D) + (0 if st[0] == 'W' else 1)
+        down = {}                                        # slot -> edges from that node's output to unit_fault
+        acc = tot(rs(f'ks_afe_{st}'), 1)
+        for s_ in reversed(range(8)):
+            down[s_] = acc
+            acc = tot(acc, rs(f'ks_afc_{st}_{s_}'), 1) if s_ else acc
+        for s_, gg in enumerate(ORDER):
+            path = [f'ks_afk_{st}_{gg}'] + [f'ks_afc_{st}_{j}' for j in range(s_ + 1, 8)] + [f'ks_afe_{st}']
+            leaves[f'ectl_{st}_{ectl_frame(gg)}.kf'] = dict(lane=lane, buses=path,
+                                                            latency=tot(rs(path[0]), 1, down[s_]))
+        for k in range(4):
+            opts = []
+            for j, gg in enumerate((2 * k, 2 * k + 1)):
+                b = f'ks_afv_{st}_{k}' if j == 0 else f'ks_afv_{st}_{k}__f0'
+                opts.append(tot(rs(b), 1, down[ORDER.index(gg)]))
+            leaves[f'vport_{st}_{k}.f'] = dict(lane=lane, buses=[f'ks_afv_{st}_{k}', f'ks_afv_{st}_{k}__f0'],
+                                               latency=None if None in opts else min(opts))
+    for v in leaves.values():
+        lanes.setdefault(v['lane'], []).append(v['latency'])
+    return dict(rtl=[AFAULT_NODE[0], AFAULT_ROOT[0]], leaves=leaves,
+                lane_latency_max={k: (None if None in v else max(v)) for k, v in sorted(lanes.items())},
+                note='unit_fault lane k = OR of its leaves, each seen `latency` edges after its fault flop (fixed); '
+                     'the face folds |unit_fault into service_fault')
 
 
 def response_lat(m):
