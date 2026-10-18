@@ -189,7 +189,8 @@ module ot_hdc_v41x_attn_s #(
     parameter integer TD = 64,         // tile width (dims per q.k beat / rows per p.v block)
     parameter integer NL = 4,          // row lanes (rows per cycle)
     parameter integer TROWS = 640,     // staging buffer rows
-    parameter integer SC_CRED = 64,     // score-beat credits
+    parameter integer SC_CRED = 64,     // score-beat credits; 0 = static scores (SVC-PV3): no credit, sc_cr ignored --
+                                        //   the consumer takes every beat the cycle it is produced (valid-only)
     parameter integer PV_CRED = 64,    // pv-beat credits; 0 = static P.V (SVC-PV2): no credit, pv_cr ignored -- the
                                        //   consumer's buffer and drain are compiled and fault-checked there
     parameter bit SRAM_MACRO = 0,      // ASAP7 packed-row staging macro boundary
@@ -443,7 +444,7 @@ module ot_hdc_v41x_attn_s #(
     wire fl_go = pv_side && (fl_blk < nblk_p) && fl_half_free;
     // q.k issue (ILV: after the fill and the p.v beat of the cycle)
     wire qk_rows_ok = (wptr >= T) || (qk_row + NL <= wptr);
-    wire qk_go = act && !phase_pv && (q_cnt == H) && (qk_row < T) && qk_rows_ok && (sc_cred != 0) &&
+    wire qk_go = act && !phase_pv && (q_cnt == H) && (qk_row < T) && qk_rows_ok && ((SC_CRED == 0) || (sc_cred != 0)) &&
                  !((ILV != 0) && (((NSTAGE == 1) && fl_go) || pv_go));
     wire [BW-1:0] iss_bank = (pl_blk == iss_blk) ? ((pl_word == 0) ? nb_p : pl_bank) : blk_bank[iss_blk % BD];
     assign qk_iss = qk_go;
@@ -500,8 +501,10 @@ module ot_hdc_v41x_attn_s #(
                     held[q_bank] <= 1'b0;
                 end
             end
-            if (sc_cr && !qk_go) sc_cred <= sc_cred + 1'b1;
-            else if (!sc_cr && qk_go) sc_cred <= sc_cred - 1'b1;
+            if (SC_CRED != 0) begin
+                if (sc_cr && !qk_go) sc_cred <= sc_cred + 1'b1;
+                else if (!sc_cr && qk_go) sc_cred <= sc_cred - 1'b1;
+            end
             // p words
             if (p_go) begin
                 if (pl_word == 0) begin

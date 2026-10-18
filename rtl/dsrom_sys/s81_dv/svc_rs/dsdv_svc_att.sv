@@ -38,7 +38,9 @@
 // The HBM boundary is elastic (owner 10-15): per-PC DQ request credits from the controller, reads into slot-addressed
 // landing (no overflow possible), writes before reads per PC.  The closed engine's local valid / ready never stalls
 // on this program; any refusal is a fault.
-// Score beats go straight to the score exchange leaf (no FIFO; the engine credit is returned the next cycle).
+// Score beats go straight to the score exchange leaf (no FIFO, valid-only).  SVC-PV3 (10-18, owner rule): the score
+// credit is REMOVED -- the engine runs with SC_CRED 0 (q.k issue never waits on a credit, no sc_cr); the exchange takes
+// every beat the cycle it is produced, and a beat outside an active job is still fault 18.
 // P.V (S81U-SVC4, owner rule): the p feed is COMPILED -- from cycle PO of the share it offers one step (2 p words) every
 // cycle, never looking at the engine's p_ready; a step whose words have not landed (fault 20) or that the engine does
 // not take (fault 21) is a sticky fault.  The 4 owner slices drain their 8 P.V beats (5 words each) in 40 consecutive
@@ -62,7 +64,6 @@ module dsdv_svc_att #(
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
     parameter integer PFIFO = 512,
-    parameter integer SC_CRED = 8,
     parameter integer PVQ = 8,                    // P.V buffer = the beats of one job (static drain, no credit)
     parameter integer DQ = 8,
     parameter bit SRAM_MACRO = 0
@@ -317,7 +318,6 @@ module dsdv_svc_att #(
     // ------------------------------------------------------------------ engine (unchanged, D = 32: S = 1, LS = 0)
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f;
-    reg sc_cr;
 `ifdef SVCQ_ENG_FG3
     localparam integer E_FPL = 3, E_FML = 3, E_TS = 0, E_NAR = 0, E_MF = 0, E_TRX = 0, E_F12 = 0, E_FX = 0;
 `else
@@ -326,11 +326,11 @@ module dsdv_svc_att #(
     ot_hdc_v41x_attn_s #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TR), .SRAM_MACRO(SRAM_MACRO), .PWORDS(2),
                          .ILV(1), .REPL(2), .NSTAGE(2), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
                          .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX),
-                         .SC_CRED(SC_CRED), .PV_CRED(0)) u_eng (
+                         .SC_CRED(0), .PV_CRED(0)) u_eng (
         .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
         .q_v(eq_v), .q_w(eq_w), .q_ready(eq_ready),
         .kv_v(ekv_v), .kv_m(ekv_m), .kv_w(ekv_w), .kv_ready(kv_ready),
-        .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),
+        .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(1'b0),
         .p_v(ep_v), .p_w(ep_w), .p_ready(ep_ready),
         .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f), .pv_cr(1'b0),
         .qk_iss(), .pv_iss());
@@ -400,7 +400,7 @@ module dsdv_svc_att #(
             sw_w <= 0; sw_r <= 0; sw_i <= 0; sel_held <= 0; pres <= 0; spres <= 0; q_have <= 0;
             job_open <= 0; job_active <= 0; go_arm <= 0; go_cnt <= 0; go <= 0; run <= 0; rc <= 0;
             po <= 0; pvo <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
-            ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0; sc_cr <= 0;
+            ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0;
             pvw <= 0; pvr <= 0; p_i <= 0; pv_n <= 0; pv_ov <= 0; done <= 0; go_o <= 0;
             hcr <= 0; hack <= 0; iss_host <= 0; fc <= 0;
             sm_st <= 0; sm_rv <= 0; sm_rp <= 0; sm_rj <= 0; sm_kind <= 0; sm_jid <= 0; sm_rd <= 0;
@@ -505,8 +505,7 @@ module dsdv_svc_att #(
                 if (pcnt < (PFW+1)'(pstep)) fc[20] <= 1'b1;                   // p words not landed at the step's cycle
                 if (!ep_ready) fc[21] <= 1'b1;                                // the engine did not take the compiled step
             end
-            // ---- scores: straight to the score exchange, engine credit back the next cycle
-            sc_cr <= sc_v;
+            // ---- scores: straight to the score exchange (valid-only, no credit)
             // ---- P.V words: owner slices emit 5 words a beat (valid-only, never stalled)
             pv_ov <= 1'b0;
             if (pv_v) begin
