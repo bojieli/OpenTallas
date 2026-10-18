@@ -33,7 +33,7 @@ CONFIGS=(
  "netlist_k|FAIL|--c-real 0 --k-real 1 --qgap 0 --stages 0,0,0,0,0,0/$NET_K|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
  "netlist_k_beq|PASS|--c-real 0 --k-real 1 --qgap 0 --stages 0,0,0,0,0,0/$BEQ_K|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
  "vk_attn_d2d|PASS|--c-real 0 --k-real 1 --qgap 0 --stages 2,2,2,2,2,2/$AT_D2D_K|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
- "mut_attn_d2d_torn|FAIL|--c-real 0 --k-real 1 --qgap 0 --stages 2,2,2,2,2,2/0,0,1,0,1,0,0|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
+ "mut_attn_d2d_torn|FAIL|--c-real 0 --k-real 1 --qgap 0 --stages 2,2,2,2,2,2/0,1,1,1,1,0,0|-GC_REAL=0 -GK_REAL=1 -GQGAP=0|txdp"
  "mut1_kv_run_late|FAIL|--c-real 0 --k-real 1 --qgap 0 --stages $PLAN|-GC_REAL=0 -GK_REAL=1 -GQGAP=0 -GMUT=1|txdp"
  "mut2_phy_bit|FAIL|--c-real 1 --k-real 0 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GQGAP=1 -GMUT=2|txdp"
  "mut3_result_word|FAIL|--c-real 1 --k-real 0 --qgap 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=0 -GQGAP=1 -GMUT=3|txdp"
