@@ -149,7 +149,7 @@
   "script": "rtl/dsrom_sys/s81_dv/test/run_dv_die_probe.sh",
   "file_list": "results/rtl/s81_layer_tput_1018/die_probe.f (die_port_bind.py --elab-out closure: 269 RTL files + tb)",
   "host_dir": "ot-epyc5:/srv/opentallas-scratch/claude/tokpass-s81/probe_bind9",
-  "status": "v1 BUILD FAILED (classified in runs[0]); v2 launched",
+  "status": "MEASURED (negative): whole-die dv_die Verilator build exceeds 400 GB during elaboration (>10 min single thread) -> whole-die RTL simulation infeasible on the fleet; layer runs must use slices cut from the GEN netlist (TOK.DS.BENCH.3)",
   "verilator": "5.050 at ~/.local/opentallas-tools/verilator-5.050 on ot-epyc4/5 (the 07:38 run used /usr/bin 5.032 by mistake)",
   "runs": [
    {
@@ -168,9 +168,18 @@
     "host_dir": "ot-epyc5:/srv/opentallas-scratch/claude/layerbench-s81/probe_v2",
     "kit": "kit2 = kit + the two frame_bench.f variants in place of the base files + HB stripped on 4 lep instances",
     "verilator": "5.050",
-    "status": "LAUNCHED (ot-run --mem 120); result -> pending_results.txt"
+    "status": "OOM-KILLED at its 120 GB MemoryMax after 4:49 wall of single-thread elaboration (systemd oom-kill, 120G peak); first attempt failed MODMISSING ot_sram_1r1w_256x256_m2_r2c2 (ot_s81ph_col_tile.sv:61; closure missed the _v2 r2c2 macro model, added)"
+   },
+   {
+    "id": "probe_v3 (LAYERBENCH-S81 10-18)",
+    "host_dir": "ot-epyc5:/srv/opentallas-scratch/claude/layerbench-s81/probe_v3",
+    "kit": "kit2 (+ r2c2 macro)",
+    "verilator": "5.050",
+    "mem_request_gb": 400,
+    "status": "OOM-KILLED at its 400 GB MemoryMax after 10:12 wall, still in Verilator elaboration (400G peak; past all parse/link errors)"
    }
-  ]
+  ],
+  "slice_sizing": "dv_die = 7,489 instances; the bench vehicle is one interior slice (e.g. u_s_3S: end slices s_0*/s_7* enter 52 lanes unlanded, see compiler gaps) + its frames + landings/relays + seq_host/svc share, budget well under 100 GB"
  },
  "behavioural_or_missing": [
   {
