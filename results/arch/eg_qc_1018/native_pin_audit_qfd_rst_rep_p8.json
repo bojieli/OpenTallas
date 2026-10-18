@@ -1,0 +1,27 @@
+{
+ "cell": "qfd_rst_rep_p8",
+ "view": "physical/ref_tile/qfd_rst_rep_p8/views/qfd_rst_rep_p8",
+ "lib_cell": "qfd_rst_rep_p8",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 39.5,
+ "spread_ps": 0.9,
+ "outputs": 2,
+ "inputs": 1,
+ "launch_ps": 163.4,
+ "launch_pin": "q0",
+ "capture_ps": 104.9,
+ "capture_pin": "d",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 0.7,
+ "ff_launch_min_ps": 115.6,
+ "ff_hold_need_ps": -60.4,
+ "pass": true,
+ "fail_why": "",
+ "_audit_tool_commit": "1384dced3"
+}
