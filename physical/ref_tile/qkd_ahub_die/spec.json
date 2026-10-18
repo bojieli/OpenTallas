@@ -60,7 +60,7 @@
    "inst": "*g_s?0?*u_pbst",
    "at": [
     172.8,
-    43.2
+    86.4
    ],
    "orient": "R0"
   },
@@ -70,7 +70,7 @@
    "inst": "*g_s?1?*u_pbst",
    "at": [
     345.6,
-    43.2
+    86.4
    ],
    "orient": "R0"
   },
@@ -80,7 +80,7 @@
    "inst": "*g_s?2?*u_pbst",
    "at": [
     561.6,
-    43.2
+    86.4
    ],
    "orient": "R0"
   },
@@ -90,7 +90,7 @@
    "inst": "*g_s?3?*u_pbst",
    "at": [
     734.4,
-    43.2
+    86.4
    ],
    "orient": "R0"
   },
@@ -100,7 +100,7 @@
    "inst": "*g_pv?0?*u_pv",
    "at": [
     172.8,
-    302.4
+    345.6
    ],
    "orient": "R0"
   },
@@ -110,7 +110,7 @@
    "inst": "*g_pv?1?*u_pv",
    "at": [
     345.6,
-    302.4
+    345.6
    ],
    "orient": "R0"
   },
@@ -120,7 +120,7 @@
    "inst": "*g_pv?2?*u_pv",
    "at": [
     561.6,
-    302.4
+    345.6
    ],
    "orient": "R0"
   },
@@ -130,7 +130,7 @@
    "inst": "*g_pv?3?*u_pv",
    "at": [
     734.4,
-    302.4
+    345.6
    ],
    "orient": "R0"
   },
@@ -140,7 +140,7 @@
    "inst": "*g_zh?0?*u_zh",
    "at": [
     43.2,
-    518.4
+    561.6
    ],
    "orient": "R0"
   },
@@ -150,7 +150,7 @@
    "inst": "*g_zh?1?*u_zh",
    "at": [
     216.0,
-    518.4
+    561.6
    ],
    "orient": "R0"
   },
@@ -160,7 +160,7 @@
    "inst": "*g_zh?2?*u_zh",
    "at": [
     648.0,
-    518.4
+    561.6
    ],
    "orient": "R0"
   },
@@ -170,7 +170,7 @@
    "inst": "*g_zh?3?*u_zh",
    "at": [
     820.8,
-    518.4
+    561.6
    ],
    "orient": "R0"
   },
@@ -180,7 +180,7 @@
    "inst": "u_recip",
    "at": [
     907.2,
-    259.2
+    302.4
    ],
    "orient": "R0"
   },
@@ -190,7 +190,7 @@
    "inst": "u_core",
    "at": [
     432.0,
-    518.4
+    561.6
    ],
    "orient": "R0"
   }
@@ -210,7 +210,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "floorplan_note": "KV-AHUB hp4 2026-10-17 re-plan (hp3 FAIL: GRT 11, setup -845, entry arrivals 11-2,424 ps): dataflow columns. Lanes g=0..3 at x 172.8 / 345.6 | 561.6 / 734.4 (21.6 um gaps, 64.8 um centre channel 496.8-561.6 under the si pins): pbst row y 43.2 right above its pi_data[g] S-face pins, 108 um sr crossbar channel (u_sr relays, pbst[g] -> all four pvlg, span 713 um -> 2 hops), pvlg row y 302.4, core row y 518.4: zh0 43.2 / zh1 216 | core 432 (S face over the pvlg row: pl_y / rz / ra) | zh2 648 / zh3 820.8; reciprocal leaf R0 at 907.2,259.2 beside pvlg3 under zh3 (u_rxi / u_ryo relays, <= ~400 um hops). Outputs N face over the core. One clock entry ck (S face centre beside the relay mass) -> one balanced spine (H-tree) to all 14 child clock pins + relays, leaf targets = routed boundary insertion (pbst 313 / zh 247 / recip 239 / core 213 / pvlg 193 ps).",
+ "floorplan_note": "KV-AHUB hp4 2026-10-17 re-plan (hp3 FAIL: GRT 11, setup -845, entry arrivals 11-2,424 ps): dataflow columns. Lanes g=0..3 at x 172.8 / 345.6 | 561.6 / 734.4 (21.6 um gaps, 64.8 um centre channel 496.8-561.6 under the si pins): pbst row y 86.4 right above its pi_data[g] S-face pins, 108 um sr crossbar channel (u_sr relays, pbst[g] -> all four pvlg, span 713 um -> 2 hops), pvlg row y 345.6, core row y 561.6: zh0 43.2 / zh1 216 | core 432 (S face over the pvlg row: pl_y / rz / ra) | zh2 648 / zh3 820.8; reciprocal leaf R0 at 907.2,302.4 beside pvlg3 under zh3 (u_rxi / u_ryo relays, <= ~400 um hops). Outputs N face over the core. One clock entry ck (S face centre beside the relay mass) -> one balanced spine (H-tree) to all 14 child clock pins + relays, leaf targets = routed boundary insertion (pbst 313 / zh 247 / recip 239 / core 213 / pvlg 193 ps). hp4c: rows +43.2 so the core N edge (712.8) leaves 0.47 of its GRT gcell free (518.4 row: 0.26 free -> pin-access overflow 70-89 at the core N face); outputs unconstrained on N.",
  "job": {
   "owner": "Claude:KV-AHUB lane 10-17",
   "branch": "claude/kvtc-1017",
@@ -325,34 +325,6 @@
   "pi_beat": [
    172.8,
    885.6
-  ],
-  "am": [
-   300.0,
-   470.0
-  ],
-  "out_data": [
-   450.0,
-   720.0
-  ],
-  "out_beat": [
-   450.0,
-   720.0
-  ],
-  "out_valid": [
-   450.0,
-   720.0
-  ],
-  "out_g": [
-   450.0,
-   720.0
-  ],
-  "fault": [
-   450.0,
-   720.0
-  ],
-  "ev": [
-   450.0,
-   720.0
   ]
  },
  "cycle_cost": "+1 edge hub input -> output (SI_RLY 1, unchanged from hp3); reset release +5 edges after rst_n (no consumer counts from the port)",

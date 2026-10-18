@@ -32,9 +32,9 @@ module qkd_ahub_core #(
     parameter integer ZW = 4,
     parameter integer ZW_RLY = 0,
     parameter integer ZR_RLY = 0,
-    parameter integer RA_RLY = 0,
+    parameter integer RA_RLY = 1,   // KV-AHUB hp4d (10-17): 1 (was 0) -- core S-face pb_ra / pl_rz hops of ~650 um registered (ahub_die hp4b ra -145 ps); AS +1, NPR unchanged
     parameter integer SR_RLY = 1,
-    parameter integer PV_RLY = 0,
+    parameter integer PV_RLY = 1,   // KV-AHUB hp4d (10-17): 1 (was 0) -- core S-face pb_ra / pl_rz hops of ~650 um registered (ahub_die hp4b ra -145 ps); AS +1, NPR unchanged
     parameter integer Y_RLY = 0
 ) (
     input  wire          clk,
@@ -404,9 +404,9 @@ module ot_qkd_ahub_die #(
     parameter integer ZW = 4,
     parameter integer ZW_RLY = 0,
     parameter integer ZR_RLY = 0,
-    parameter integer RA_RLY = 0,
+    parameter integer RA_RLY = 1,   // KV-AHUB hp4d (10-17): 1 (was 0) -- core S-face pb_ra / pl_rz hops of ~650 um registered (ahub_die hp4b ra -145 ps); AS +1, NPR unchanged
     parameter integer SR_RLY = 1,
-    parameter integer PV_RLY = 0,
+    parameter integer PV_RLY = 1,   // KV-AHUB hp4d (10-17): 1 (was 0) -- core S-face pb_ra / pl_rz hops of ~650 um registered (ahub_die hp4b ra -145 ps); AS +1, NPR unchanged
     parameter integer Y_RLY = 0,
     parameter integer RX_RLY = 1,
     parameter integer RY_RLY = 1,
