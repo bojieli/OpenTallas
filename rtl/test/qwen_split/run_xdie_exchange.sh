@@ -18,7 +18,8 @@ PLAN='2,2,2,2,0,2/11,11,9,9,9,11,11'
 PLAN_R3='2,2,2,2,2,2/11,11,9,9,9,11,11'
 ZERO='0,0,0,0,0,0/0,0,0,0,0,0,0'
 OLDTXDP='3,3,1,4/3,4,3,3'      # the r4..r9 masters' hard-wired PR TXDP (component-bench codecs)
-# name | expect (PASS | FAIL | BUILD_FAIL) | calendar flags | bench -G flags
+PAIR_TXDP_OFF1='7,3,1,9/23,4,3,3'   # QXF-PAIR mutant: compute CMD/Q port TXDP one edge over the compiled C [6,3,1,9]
+# name | expect (PASS | FAIL | BUILD_FAIL) | calendar flags | bench -G flags [| source mod: face4 = vendored kvs_attn face MUT 4]
 CONFIGS=(
  "vc|PASS|--c-real 1 --k-real 0 --stages $PLAN|-GC_REAL=1 -GK_REAL=0"
  "vk|PASS|--c-real 0 --k-real 1 --stages $PLAN|-GC_REAL=0 -GK_REAL=1"
@@ -44,6 +45,25 @@ CONFIGS=(
  "mut2_phy_bit|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=2"
  "mut3_result_word|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=3"
  "mut4_qslot_late|FAIL|--c-real 1 --k-real 1 --stages $PLAN|-GC_REAL=1 -GK_REAL=1 -GMUT=4"
+ # QXF-FACE 10-18 (F3): as-built kvs_attn + REAL qkd_pv_fin_s, face / pvfin on the max(P0, P1, R) law, T = 256 and 8192
+ "fin_t256|PASS|--c-real 0 --k-real 3 --stages $PLAN|-GC_REAL=0 -GK_REAL=3 -GPOS_P=255"
+ "fin_t8192|PASS|--c-real 0 --k-real 3 --stages $PLAN|-GC_REAL=0 -GK_REAL=3 -GPOS_P=8191"
+ "fin_t256_face_noR|FAIL|--c-real 0 --k-real 3 --stages $PLAN|-GC_REAL=0 -GK_REAL=3 -GPOS_P=255|face4"
+ "fin_t8192_face_noR|FAIL|--c-real 0 --k-real 3 --stages $PLAN|-GC_REAL=0 -GK_REAL=3 -GPOS_P=8191|face4"
+ "fin_t256_pvfin_noR|FAIL|--c-real 0 --k-real 3 --stages $PLAN|-GC_REAL=0 -GK_REAL=3 -GPOS_P=255 -GFIN_MUT=3"
+ # QXF-PAIR 10-18: the PAIRED co-sim -- compute native59 real (C_REAL=1) + KV as-built kvs_attn + real pvfin (K_REAL=3),
+ # compute seam = one landed age per bundle (QXF-SEAMC lp_fix: C.rx_record 2, C.tx_record 0), KV seam = padded 11/9/11 (QXF-SEAMK)
+ "pair|PASS|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255"
+ "pair_t8192|PASS|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=8191"
+ "pair_phy9|PASS|--c-real 1 --k-real 3 --phy 9 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255"
+ "pair_l0|PASS|--c-real 1 --k-real 3 --layer L0 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255"
+ "pair_l0_phy9|PASS|--c-real 1 --k-real 3 --layer L0 --phy 9 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255"
+ "pair_mut_txdp_c_off1|FAIL|--c-real 1 --k-real 3 --stages $PLAN --masters-txdp $PAIR_TXDP_OFF1|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255"
+ "pair_mut_kseam_rx_torn|FAIL|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255 -GK_TEAR=1"
+ "pair_mut_kseam_tx_torn|FAIL|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255 -GK_TEAR=2"
+ "pair_mut_status_done|FAIL|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255 -GMUT=8"
+ "pair_mut_result_bit|FAIL|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255 -GMUT=9"
+ "pair_mut_phy_bit|FAIL|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255 -GMUT=2"
 )
 SRC_COMMON=("rtl/lib/ot_rst_pipe.sv" "$S/ot_qwen_crc_parallel.sv" "$S/ot_qwen_static_slot_link.sv" "$S/ot_qkvd_d2d_llr.sv"
  "$S/qkd_native_attention_record.sv" "$D/ot_qwen_d2d_static.sv" "$D/ot_qwen_d2d_services.sv" "$Q/qfd_kvn_static_transport.sv"
@@ -53,18 +73,25 @@ SRC_COMMON=("rtl/lib/ot_rst_pipe.sv" "$S/ot_qwen_crc_parallel.sv" "$S/ot_qwen_st
  "$Q/qfd_native59_static_service.sv" "$Q/qfd_native59_record_endpoint.sv" "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv"
  "$S/qkd_native_attention_programme.sv" "$S/qkd_native59_descriptor_producer.sv" "$S/qkd_native_attention_static_ctl.sv"
  "$S/qkd_native59_command_guard.sv" "$S/qkd_attn_cal_gen.sv" "$S/qkd_attn_service_root.sv" "$S/qkd_attn_result_face_s.sv"
- "rtl/test/qwen_split/xdie_kvs14c/qkd_kvs_attn_kvs14c.sv" "rtl/test/qwen_split/tb_xdie_qwen_exchange.sv")
+ "$S/qkd_pv_fin_s.sv" "rtl/hdc/ot_hdc_fp32_add_lat.sv" "rtl/hdc/ot_hdc_fp32_mul_lat.sv" "rtl/hdc/ot_hdc_prefix.sv" "rtl/hdc/ot_hdc_fastfp.sv"
+ "rtl/test/qwen_split/tb_xdie_qwen_exchange.sv")
+KATTN=rtl/test/qwen_split/xdie_kvs14c/qkd_kvs_attn_kvs14c.sv
 mkdir -p "$OUT"
-sha256sum "${SRC_COMMON[@]}" "$D/ot_qwen_d2d_dies.sv" tools/qwen_split/xdie_exchange_cal.py tools/qwen_split/d2d_link_calendar.py "$0" > "$OUT/source.sha256"
+sha256sum "${SRC_COMMON[@]}" "$KATTN" "$D/ot_qwen_d2d_dies.sv" tools/qwen_split/xdie_exchange_cal.py tools/qwen_split/d2d_link_calendar.py "$0" > "$OUT/source.sha256"
 want=("$@")
 one() {
-  local name=$1 exp=$2 calf=$3 gf=$4 o=$OUT/$1
+  local name=$1 exp=$2 calf=$3 gf=$4 mod=${5:-} o=$OUT/$1 kattn=$KATTN
   mkdir -p "$o"
-  python3 tools/qwen_split/xdie_exchange_cal.py --out "$o/cal" $calf > "$o/cal.log" 2>&1 || { echo "$name expect=$exp got=CAL_FAIL -> $([ $exp = FAIL ] && echo OK || echo UNEXPECTED)"; tail -3 "$o/cal.log"; return; }
+  if [ "$mod" = face4 ]; then   # QXF-FACE mutant: the vendored kvs_attn with its stream face at MUT 4 (R left out)
+    grep -c 'qkd_attn_result_face_s #(.NF(10), .RESULT_RELAY(0), .F_DLY(1), .MUT(0))' "$KATTN" | grep -qx 1 || { echo "$name expect=$exp got=MOD_FAIL -> UNEXPECTED"; return; }
+    sed 's/qkd_attn_result_face_s #(.NF(10), .RESULT_RELAY(0), .F_DLY(1), .MUT(0))/qkd_attn_result_face_s #(.NF(10), .RESULT_RELAY(0), .F_DLY(1), .MUT(4))/' "$KATTN" > "$o/qkd_kvs_attn_face4.sv"
+    kattn="$o/qkd_kvs_attn_face4.sv"
+  fi
+  python3 tools/qwen_split/xdie_exchange_cal.py --out "$o/cal" $calf > "$o/cal.log" 2>&1 || { echo "$name expect=$exp got=CAL_FAIL -> UNEXPECTED"; tail -3 "$o/cal.log"; return; }   # QXF-FACE: a run that never simulated is no FAIL witness
   # the die masters take TXDP from the compiler (xdie_params.svh P_TXDP_C / P_TXDP_K; QXF-LINK F4): no source patching
   $V --binary --timing -j "${JOBS:-4}" -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH \
      -DOT_MEM_NO_INIT -I"$o/cal" --top-module tb_xdie_qwen_exchange $gf -GCALDIR="\"$o/cal\"" --Mdir "$o/obj" \
-     "${SRC_COMMON[@]}" "$D/ot_qwen_d2d_dies.sv" > "$o/build.log" 2>&1 || {
+     "${SRC_COMMON[@]}" "$kattn" "$D/ot_qwen_d2d_dies.sv" > "$o/build.log" 2>&1 || {
        if [ "$exp" = BUILD_FAIL ] && grep -q 'D2D_TXDP_NOT_COMPILED' "$o/build.log"; then
          echo "$name expect=$exp got=BUILD_FAIL -> OK"; grep -m2 'D2D_TXDP_NOT_COMPILED' "$o/build.log" | sed 's/^/    /'; cp "$o/build.log" "$o/run.log"
        else echo "$name expect=$exp got=BUILD_FAIL -> UNEXPECTED"; grep -m6 '%Error' "$o/build.log"; fi
@@ -73,14 +100,14 @@ one() {
   rm -rf "$o/obj"
   local got=FAIL; grep -q '^XQ_PASS' "$o/run.log" && got=PASS
   echo "$name expect=$exp got=$got -> $([ $got = $exp ] && echo OK || echo UNEXPECTED)"
-  grep -E '^XQ_(E|CFG|PASS|FAIL|CAUSE)' "$o/run.log" | sed 's/^/    /'
+  grep -E '^XQ_(E|CFG|PASS|FAIL|CAUSE|FIN)' "$o/run.log" | sed 's/^/    /'
   grep -m3 '^XQ_ERR' "$o/run.log" | sed 's/^/    /'
 }
 pids=()
 for c in "${CONFIGS[@]}"; do
-  IFS='|' read -r name exp calf gf <<< "$c"
+  IFS='|' read -r name exp calf gf mod <<< "$c"
   if [ ${#want[@]} -gt 0 ] && ! printf '%s\n' "${want[@]}" | grep -qx "$name"; then continue; fi
-  one "$name" "$exp" "$calf" "$gf" > "$OUT/$name.summary" 2>&1 &
+  one "$name" "$exp" "$calf" "$gf" "$mod" > "$OUT/$name.summary" 2>&1 &
   pids+=($!)
 done
 for p in "${pids[@]}"; do wait $p; done
