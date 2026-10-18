@@ -69,6 +69,7 @@ def main():
             fn = [nd for nd in b['nodes'] if len(nd['outs']) > 1]
             if fn:
                 drop = (fn[0]['id'], len(fn[0]['outs']) - 1); mut_done = True
+        nck = {}   # node instance -> the clock its ck / clk_in sees
         for nd in b['nodes']:
             for t, nm in enumerate(nd['names']):
                 if nd['parent'] is None:
@@ -76,7 +77,8 @@ def main():
                 else:
                     pn = nodes[nd['parent']]; op = pn['outs'][nd['pbranch']]
                     i_expr = f'{pn["names"][t]}__{op}'
-                    ck = f'{pn["names"][t]}__c{op}'
+                    pm = mast[pn['names'][t]]   # plain relay parent: no clk_out, the child shares its clock
+                    ck = f'{pn["names"][t]}__c{op}' if (pm.endswith('_fc') or '_fc_f' in pm) else nck[pn['names'][t]]
                     if drop and drop == (pn['id'], nd['pbranch']):
                         i_expr = f"{W}'d0"
                 if nm == swap:   # mutant: bits 0/1 of this lane swapped on its input hop
@@ -86,6 +88,7 @@ def main():
                 outs = [(op, f'{nm}__{op}') for op in sorted(set(nd['outs']))]
                 couts = [(('clk_out' + op[1:]) if op != 'o' else 'clk_out', f'{nm}__c{op}') for op in sorted(set(nd['outs']))] \
                     if (mast[nm].endswith('_fc') or '_fc_f' in mast[nm]) else []
+                nck[nm] = ck
                 V.append(inst(nm, outs, i_expr, ck, couts))
         for si, (s_, sk) in enumerate(b['sinks'].items()):
             src_node, br = sk['src']
@@ -93,15 +96,21 @@ def main():
             dropped = drop is not None and src_node == drop[0] and br == drop[1]
             chain = sk['chain']
             extra = a.mut == 'lane_stage' and not mut_done and chain
+            pck = None   # per lane: the clock that clocked the previous chain stage
             for k, st_ in enumerate(chain):
+                cks = []
                 for t, nm in enumerate(st_):
                     i_expr = lane_in(t) if prev is None else prev[t]
                     if dropped and k == 0:
                         i_expr = f"{W}'d0"
-                    ck = 'clk' if k == 0 else f'{chain[k - 1][t]}__co'
+                    # a forwarded-clock (fc) stage drives clk_out; a plain relay has none and sits on the clock that
+                    # clocked it (the die's regional clock), so the next stage stays on that clock
+                    pm = mast[chain[k - 1][t]] if k else ''
+                    ck = 'clk' if k == 0 else (f'{chain[k - 1][t]}__co' if (pm.endswith('_fc') or '_fc_f' in pm) else pck[t])
+                    cks.append(ck)
                     couts = [('clk_out', f'{nm}__co')] if (mast[nm].endswith('_fc') or '_fc_f' in mast[nm]) else []
                     V.append(inst(nm, [('o', f'{nm}__o')], i_expr, ck, couts))
-                prev = [f'{nm}__o' for nm in st_]
+                prev = [f'{nm}__o' for nm in st_]; pck = cks
             if extra:   # mutant: lane 0 of this sink gets one more stage (same tile master)
                 nm0 = chain[-1][0]; xn = f'{nm0}__mutx'
                 V.append(f'  wire [{W - 1}:0] {xn}__o; wire {xn}__co;')
