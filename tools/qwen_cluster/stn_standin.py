@@ -11,6 +11,9 @@ hold / clk->q of one flop.  R per corner from --ins TT,FF,SS (default the ASSUME
 gates' measured CTS insertion).
 
     stn_standin.py OUT_DIR [--ins TT,FF,SS]
+
+The committed diag stand-ins use --ins 104,79,150: the station gates of a5f404c21 measured TT 103.7-104.4 / FF 78.4-81.9 /
+SS 136-150 ps boundary-mean insertion (spread 3-10 ps) on all four masters.
 """
 import argparse
 import json
