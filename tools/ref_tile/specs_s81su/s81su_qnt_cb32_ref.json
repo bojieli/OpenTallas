@@ -62,8 +62,8 @@
   "aspect": 1.0,
   "job": {
     "benched_by": "s81su_full",
-    "owner": "Codex:s81_su_closure",
-    "branch": "codex/s81su-physical-20261013",
+    "owner": "Claude:S81-QNTKEEP",
+    "branch": "claude/s81-qntkeep-1018",
     "tag": "v6-cb32",
     "purpose": "S81-QNTKEEP re-route of the CLOSED CB32 QNT tile with (* keep_hierarchy *) on ot_s81_su_qn_keep_ff (ROOT-KEEP gate rule); no logic change, zero added cycles/ports, unchanged slot/clocks/IO.",
     "no_bench_reason": "New CB32/CB16 control-bank mechanism qualifies on minimal full N256/S_RD16/NFI33 component against immutable69c124e5d QNT reference, all outputs/cycles; MUT6 copied-offset mutant must fail. Default SU composition full m0/m1/m5 evidence69c124e5d is preserved; no new latency or arithmetic order. Exact/mutant/source-matched price gates must pass before adoption.",
