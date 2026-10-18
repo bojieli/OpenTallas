@@ -16,7 +16,7 @@
 // copy holds the same value in the same cycle as the original single copy.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_rs_f #(
-    parameter integer MUT = 0,
+    parameter integer AMUT = 0,             // dsdv_svc_rs MUT (attention bench negative controls); lp.py owns MUT
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
     parameter integer SRAM_MACRO = 0
@@ -73,7 +73,7 @@ module dsdv_svc_rs_f #(
         .r_beat(r_beat[7:4]), .qrv(qrv[1]), .qr_data(qr_data[511:256]), .qr_tag(qr_tag[33:17]),
         .qr_beat(qr_beat[7:4]));
 
-    dsdv_svc_rs_attw #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO)) u_att (.ck(ck), .rst(rst), .sid(sid),
+    dsdv_svc_rs_attw #(.MUT(AMUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO)) u_att (.ck(ck), .rst(rst), .sid(sid),
         .cs(cs), .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
         .l_v(l_v), .l_d(l_d), .pv_ov(a_pv_v), .pv_od(a_pv_d),
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),

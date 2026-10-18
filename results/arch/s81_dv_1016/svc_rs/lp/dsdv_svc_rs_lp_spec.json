@@ -115,6 +115,7 @@
   "cycles": 3000,
   "reset_cycles": 16,
   "sim": "verilator",
-  "jobs": 8
+  "jobs": 8,
+  "verilator_flags": "-Wno-WIDTH -Wno-TIMESCALEMOD --unroll-count 16 --unroll-limit 131072 --output-split 20000 --output-split-cfuncs 2000 -fno-inline -MAKEFLAGS OPT_SLOW=-O0 -CFLAGS -O1"
  }
 }
