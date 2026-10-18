@@ -20,3 +20,6 @@ VERDICT: PASS (3 seeds) and 16/16 mutants FAIL.
   SE 1,088 sinks TT 112.9/11.7 ps FF spread 11.5, setup WNS +419 ps hold +46.3 ps
   NW 1,098 sinks TT 109.2/9.3 ps  FF spread 9.4,  setup WNS +416 ps hold +39.8 ps
   NE 1,066 sinks TT 110.3/10.4 ps FF spread 10.0, setup WNS +420 ps hold +43.9 ps
+ROUTES: hdie_host_cfg_leaf_sw_r1-r1-43607eeb2 CLOSED (TT +413.24 / FF hold +19.59 ps, DRC 0; auto-merged main f03c270c2).
+  nw/se/ne -43607eeb2 were refused at intake (main textbook_lint 550b34f66 moved the gate overlay; allowlisted as relaxing by
+  main's submit_exact) and are resubmitted under this commit's name (same kits, same gate results).
