@@ -488,19 +488,23 @@ module qkd_ahub_static_core_la #(
     // flop): the fault terms are registered first -- one flop per stack (tq, beside that stack's ap pin flops), one for the
     // global terms (gq), the start-edge value (sq) -- and fault replays the sealed core's fault update one edge later
     // (fault here == the sealed core's fault delayed by exactly one edge; hf +1 edge, fault reporting only).
-    reg [3:0] tq;reg gq,sq,start_q,act_q;
+    // KV-AHUBDW2 10-18 gate a2c: the single gq flop was one deep AND chain from the Z-tree zh_err_q flops (y~43) to the
+    // core (y~485): -278.5 ps.  gq is now five flops, one per term group (same edge, gq == |gqv): gqv[1] (Z/recip
+    // errors) sits by the trees, the others by the core; fault ORs five flop outputs (one gate level, no added edge).
+    reg [3:0] tq;reg [4:0] gqv;reg sq,start_q,act_q;
     always @(posedge clk or negedge rn[3])
-        if(!rn[3])begin tq<=0;gq<=0;sq<=0;start_q<=0;act_q<=0;end
+        if(!rn[3])begin tq<=0;gqv<=0;sq<=0;start_q<=0;act_q<=0;end
         else begin
             start_q<=start;act_q<=active;
             sq<=(T==0)||(T>8192)||(active_layer_parity!=active_layer[0])||mo_v;
-            gq<=active_layer_parity!=parity || active_layer!=layer || request_epoch!=epoch || |zh_err || rc_fault || (rc_vo!=recip_return) ||
-                (m_issue && lm_seen!=16'hffff) ||
+            gqv[0]<=active_layer_parity!=parity || active_layer!=layer || request_epoch!=epoch;
+            gqv[1]<=|zh_err || rc_fault || (rc_vo!=recip_return);
+            gqv[2]<=(m_issue && lm_seen!=16'hffff) ||
                 ((|issue) && (done_seen!=4'hf || zseen[0][63:0]!=zmask || zseen[1][63:0]!=zmask ||
-                    zseen[2][63:0]!=zmask || zseen[3][63:0]!=zmask)) ||
-                (first_q && (LMAX_IN_AGE==0 || Z_IN_AGE==0 || LMAX_ISSUE_AGE<1 || Z_START_AGE<1 ||
-                    RECIP_ISSUE_AGE<=Z_START_AGE+77 || RECIP_RETURN_AGE<=RECIP_ISSUE_AGE || RZ_PUBLISH_AGE<RECIP_RETURN_AGE+4)) ||
-                (pub_hit && rz_seen!=4'hf);
+                    zseen[2][63:0]!=zmask || zseen[3][63:0]!=zmask));
+            gqv[3]<=first_q && (LMAX_IN_AGE==0 || Z_IN_AGE==0 || LMAX_ISSUE_AGE<1 || Z_START_AGE<1 ||
+                    RECIP_ISSUE_AGE<=Z_START_AGE+77 || RECIP_RETURN_AGE<=RECIP_ISSUE_AGE || RZ_PUBLISH_AGE<RECIP_RETURN_AGE+4);
+            gqv[4]<=pub_hit && rz_seen!=4'hf;
             for(integer a=0;a<4;a=a+1)
                 tq[a]<=(si_valid[a]!=(lm_slot[a]||z_slot[a]||done_slot[a])) ||
                     (si_valid[a] && (si_epoch[16*a+:16]!=epoch || si_layer[6*a+:6]!=layer || si_g[a] ||
@@ -511,6 +515,6 @@ module qkd_ahub_static_core_la #(
     always @(posedge clk or negedge rn[3])
         if(!rn[3])fault<=0;
         else if(start_q)fault<=sq;
-        else if(act_q && (gq || |tq))fault<=1;
+        else if(act_q && (|gqv || |tq))fault<=1;
     initial if(Z_LEVEL_GAP<10 || Z_IN_STRIDE<4)$fatal(1,"invalid static AHUB geometry");
 endmodule
