@@ -91,7 +91,8 @@
      "iverilog"
     ],
     "pass_regex": "VMDEL_N BENCH PASS",
-    "min_count_regex": "NPC4 equivalence edges (\\d+)"
+    "min_count_regex": "NPC4 equivalence edges (\\d+)",
+    "pass_witness": "results/rtl/hbm_b_rtl1_1017/vmdel_n_bench/bench_stdout.log"
    },
    {
     "name": "mut_slot_swap",
@@ -102,7 +103,8 @@
     "needs": [
      "iverilog"
     ],
-    "fail_regex": "^VMDEL_N_LOCKSTEP FAIL MUT=1 errors=[1-9][0-9]*$"
+    "fail_regex": "^VMDEL_N_LOCKSTEP FAIL MUT=1 errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/hbm_b_rtl1_1017/vmdel_n_bench/t1.log"
    }
   ],
   "structural_change": "NPC 4 -> 2 (plan b): fill ports 2 x {v, bank, slot6, epoch16, data256}, 2 SRAMs, group counter 0..1, beat sector base + slot*16 + group*8, aperture base <= 7168; outline 257.04 x 108 (2 macros).",
@@ -210,5 +212,9 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "purpose": "HBM-B-RTL1 2026-10-17 (owner 0do, plan (b) d4g): the per-QUADRANT VM delivery lane, NPC 2 (ot_hbm_svc_vmdel_lane_n): each 4-SM quadrant fills its own 8 banks from its own 16 PCs, so a lane holds 2 PC landing SRAMs (slot g = SM group 2g+b/4 of the quadrant, controller lane b%4) and delivers 64 slots x 2 groups (1024 sectors) per block into bank b. 32 instances (8 per quadrant), replacing the 16 d4f hv17 lanes. Same pins rules as hv17 v6 (plain pin flop on every input incl. rst_n / bank_id / status, synchronous body reset, status reduced after capture, one clock root); LAT 2, STATUS_LAT 2, II 1."
+ "purpose": "HBM-B-RTL1 2026-10-17 (owner 0do, plan (b) d4g): the per-QUADRANT VM delivery lane, NPC 2 (ot_hbm_svc_vmdel_lane_n): each 4-SM quadrant fills its own 8 banks from its own 16 PCs, so a lane holds 2 PC landing SRAMs (slot g = SM group 2g+b/4 of the quadrant, controller lane b%4) and delivers 64 slots x 2 groups (1024 sectors) per block into bank b. 32 instances (8 per quadrant), replacing the 16 d4f hv17 lanes. Same pins rules as hv17 v6 (plain pin flop on every input incl. rst_n / bank_id / status, synchronous body reset, status reduced after capture, one clock root); LAT 2, STATUS_LAT 2, II 1.",
+ "reroute_reason": {
+  "kind": "evidence_gap",
+  "why": "bench_fix: hv18_vmdel_lane2-q2-a61511e52 NEEDS_RTL because run_vmdel_lane_n.sh printed only the last log line, so min_count_regex 'NPC4 equivalence edges (\\d+)' never matched; the script now prints the count lines (fleet run: 1538 edges, 0 mismatches; mutants 1/2/3 FAIL)"
+ }
 }

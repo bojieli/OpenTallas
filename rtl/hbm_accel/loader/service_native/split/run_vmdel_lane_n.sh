@@ -7,7 +7,7 @@ D=rtl/hbm_accel/loader/service_native/split; O=${1:-/tmp/vmdel_n_$$}; mkdir -p $
 for m in 0 1 2 3; do
   iverilog -g2012 -DMUT=$m -s tb_hbm_svc_vmdel_lane_n_lockstep -o $O/t$m $D/tb_hbm_svc_vmdel_lane_n_lockstep.sv $D/ot_hbm_svc_vmdel_lane_n.sv \
     $D/ot_hbm_svc_static_vm_delivery_split.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v || exit 2
-  vvp -n $O/t$m > $O/t$m.log 2>&1; tail -1 $O/t$m.log
+  vvp -n $O/t$m > $O/t$m.log 2>&1; grep -E "^(NPC4 equivalence edges|d4f beats|VMDEL_N_LOCKSTEP)" $O/t$m.log
   grep -qx "VMDEL_N_LOCKSTEP $([ $m = 0 ] && echo PASS || echo FAIL) MUT=$m.*" $O/t$m.log || grep -q "^VMDEL_N_LOCKSTEP $([ $m = 0 ] && echo PASS || echo FAIL) MUT=$m" $O/t$m.log || { echo "MUT=$m UNEXPECTED"; rc=1; }
 done
 [ $rc = 0 ] && echo "VMDEL_N BENCH PASS (NPC2 lockstep + NPC4 equivalence PASS; mutants 1/2/3 FAIL)" || echo "VMDEL_N BENCH FAIL"
