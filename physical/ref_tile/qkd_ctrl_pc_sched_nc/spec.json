@@ -1,0 +1,160 @@
+{
+ "name": "qkd_ctrl_pc_sched_nc",
+ "top": "qkd_ctrl_pc_sched_nc",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv",
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv",
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv",
+  "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv"
+ ],
+ "params": {
+  "PROFILE": 0,
+  "ELASTIC": 1,
+  "RAW_WD": 256,
+  "TQD": 64,
+  "DRAIN_PIPE": 0,
+  "STRAP_CDC": 0
+ },
+ "clock_port": "pll_hbm",
+ "reset_ports": [],
+ "outline": {
+  "w": 116.64,
+  "h": 108.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "hrst",
+   "pc",
+   "static_cmd_owner",
+   "static_cmd",
+   "reserved_rd",
+   "reserved_static_col",
+   "reserved_write_col",
+   "static_epoch",
+   "expected_raw_valid",
+   "corrected_epoch",
+   "idle_hbm",
+   "drain_fault_hbm"
+  ],
+  "E": [
+   "p_w_d",
+   "p_wd",
+   "p_col_v",
+   "p_col_we",
+   "p_col_sr",
+   "p_w_v",
+   "p_kv_v",
+   "p_em_v",
+   "p_fault",
+   "e_sec",
+   "e_row",
+   "e_l_v",
+   "e_fault",
+   "pi_v"
+  ],
+  "S": [
+   "po",
+   "ko",
+   "fi"
+  ],
+  "N": [
+   "pll_hbm",
+   "ki",
+   "fo",
+   "pc_q",
+   "s_cr_o",
+   "c_v",
+   "c_d",
+   "c_context",
+   "f_ecdc",
+   "physical_context",
+   "physical_col_sr",
+   "expected_sr",
+   "obs_commit_valid",
+   "native_commit_valid",
+   "native_observer_fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "slot_change_request": "KVCTRL core_s7 child of the c1 wires-parent qkd_ctrl_pc_host_static (247.512 x 378 controller slot). Sched: W = controller command / strap / drain face, E = port + ECC seams, S = PHY po, N = cdc / obs seams + clock.",
+ "job": {
+  "owner": "Claude:KV-NC-KITS",
+  "branch": "claude/kvnc-kits-1017",
+  "tag": "n1",
+  "purpose": "KV-PLAN-CI 2026-10-17 (coordinator decision 3): ci-less successor of the closed/kitted qkd_ctrl_pc_sched_s7b: the legacy controller command / KV-write word ci (319 b) has no producer on the static die, so its pin flops and the legacy write path are REMOVED logic (not tied inputs). Lockstep vs the original with ci held 0 under the compiled die calendar images (tools/qwen_kv_die/kvplan_ci_nc_gate.sh: 12/12 PASS, 3 mutants FAIL LOCKSTEP). PARAMS = the qkd_static_kv_pc_path_nc instance values. Sched: ci_c / co_c W pins and their pin flops removed; DRAIN_PIPE 0 / STRAP_CDC 0 as instantiated (sched_s7b kit had 1/1). Same outline / faces as sched_s7b.",
+  "extra_paths": [
+   "results/arch/qwen_kv_static_programme_1017/die",
+   "rtl/lib",
+   "rtl/qwen_sys/emb_hbm_20261008",
+   "rtl/qwen_sys/host_20261013",
+   "rtl/qwen_sys/kv_die_20261009",
+   "rtl/qwen_sys/q5_20261009",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_kv_die"
+  ],
+  "benches": [
+   {
+    "name": "kvplan_ci_nc_lockstep_vs_original",
+    "cmd": "VERILATOR=verilator bash tools/qwen_kv_die/kvplan_ci_nc_gate.sh {RUN}/bench/nc",
+    "expect": "pass",
+    "pass_regex": "^PASS KVPLAN_CI_NC_LOCKSTEP_EXACT_OBSERVED_MUTANTS_PARENT_ELABORATES",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "peak_ram_gb": 16
+ },
+ "structural_change": "KV-PLAN-CI 2026-10-17 (coordinator decision 3): ci-less successor of the closed/kitted qkd_ctrl_pc_sched_s7b: the legacy controller command / KV-write word ci (319 b) has no producer on the static die, so its pin flops and the legacy write path are REMOVED logic (not tied inputs). Lockstep vs the original with ci held 0 under the compiled die calendar images (tools/qwen_kv_die/kvplan_ci_nc_gate.sh: 12/12 PASS, 3 mutants FAIL LOCKSTEP). PARAMS = the qkd_static_kv_pc_path_nc instance values. Sched: ci_c / co_c W pins and their pin flops removed; DRAIN_PIPE 0 / STRAP_CDC 0 as instantiated (sched_s7b kit had 1/1). Same outline / faces as sched_s7b.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every seam/pin explicitly (children: input pin flops or the wrapped module's first stage; outputs flop-driven). No extra wrapper edges."
+ },
+ "std_area_um2": 6000,
+ "pin_ranges": {
+  "pll_hbm": [
+   57.0,
+   59.4
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
