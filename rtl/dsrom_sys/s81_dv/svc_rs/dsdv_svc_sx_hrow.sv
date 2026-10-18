@@ -1,24 +1,27 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
-// S81U-SVCX (2026-10-17): dsdv_svc_sx_row, the CENTRE LEAF of the split score exchange.  One leaf = one score ROW
-// (r = 0..3) of the slice's score exchange; the slice instantiates it 4x (dsdv_svc_sx), hardened once.
+// S81U-SVCX4 (2026-10-17): dsdv_svc_sx_hrow, the CENTRE LEAF of the split score exchange = HALF a score row.  The slice
+// (dsdv_svc_sx) instantiates it 8x (4 rows x 2 halves), hardened once; the strap hb picks the half.
 //
-// Why a row is a clean slice of the monolith: a score beat is 4 rows x 16 heads.  The q.k node adds lane (r, h) of
-// operand a to lane (r, h) of operand b -- no lane mixes rows; the scatter moves HEAD slots (left child heads lo..,
-// right child shifted by n/2 heads), the same shift for every row.  So row r of the gather (16 lanes y + 16 flags) and
-// row r of the scatter (8 head slots x {flag, y}) form an independent exchange, and 4 of them are bit-identical to the
-// monolithic dsdv_svc_sx (S81U-SVC 97c52bae0) cycle for cycle.  The 20-b tag {row 16, mask 4} rides as 4 x 5-b parts,
-// part r in row r (tag[5r +: 5]): the operand tag check covers all 20 bits across the 4 leaves (fault ORed in the
-// slice), and the scatter lane drops to 270 b = ONE closed dsfd_dvrly_276 station, the gather lane 534 b = two.
+// Why: the full-row leaf (S81U-SVCX, 14.4k sinks on a 389 um pin ring) measured TT 326..415 ps insertion / 89 ps spread
+// at its best CTS setting (gate 3), over the 300 / 80 clock rule.  Halving it gives ~7.3k sinks on a ~238 um ring.
 //
-// Pipeline (identical to the monolith's, which the role ROM offsets were compiled for): per face IN, the leaf holds the
-// LAST of the NR + 1 input registers (the slice's relay stations hold the others); per face OUT, the leaf holds the
-// centre register, the slice's relay stations the NR + 1 after it.  Every input lands in a flop, every output leaves a
-// flop (pins registered both ways); the node (16 x ot_hdc_v41x_qaddf, the engine lane-tree adder) and the crossbars
-// sit between them.  Static schedule (no ready / credit); sticky fault on operand misalignment, tag-part mismatch or a
-// stray valid, as the monolith.  MUT: bit 0 = right operand's flags not ORed; bit 1 = right scatter split off by one.
+// The halves are HEAD PARITY classes: half hb owns heads h = 2 i + hb (i = 0..7) of its row.  A score beat never mixes
+// heads in the gather (the node adds lane (r, h) of a to lane (r, h) of b), so the gather splits with no crossing.  The
+// scatter moves head SLOTS: a node over heads lo..hi sends lo..mid to the left child and mid + 1..hi to the right child
+// shifted down by the left half's size (8, 4, 2, 1).  Shifts by 8, 4 and 2 keep slot parity (local shift 4, 2, 1 inside
+// a half); only the pair nodes' shift by 1 would cross halves.  So the pair node does NOT shift: its right child gets
+// the lane as is, head 2k + 1 at slot 1 = local slot 0 of half 1, and the leaf of head t taps local slot 0 of half t[0]
+// (role head bit 0).  The other half's tap register holds 0 (valid low), so the slice ORs the two halves' 39-b tap
+// (the same kind of output glue as its row valid AND / fault OR).  Nothing crosses halves; zero added cycles; the 5-cycle
+// hop and the role ROM offsets are unchanged (the scatter lane's slot encoding below a pair node is internal to the
+// exchange: only the gather beat at the root and the taps leave it).
+// Lanes (per half): gather {v, tag part 5, y 8 x FP32, flags 8} = 270 b = ONE dsfd_dvrly_276 station; scatter
+// {v, tag part 5, 4 slots x {flag, y}} = 138 b, the two halves of a row share one 276-b station.  Every pin registered.
+// Static schedule (no ready / credit); sticky fault on operand misalignment, tag-part mismatch or a stray valid.
+// MUT: bit 0 = right operand's flags not ORed; bit 1 = right scatter split off by one (local) head slot.
 // ---------------------------------------------------------------------------------------------------------------------
-module dsdv_svc_sx_row #(
+module dsdv_svc_sx_hrow #(
     parameter integer MUT = 0,
     parameter integer FX = 5,
     parameter integer F12 = 1
@@ -26,17 +29,18 @@ module dsdv_svc_sx_row #(
     input  wire              ck,
     input  wire              rst,          // async die reset, active low (synchronised here)
     input  wire [3:0]        sid,          // slice-id strap
-    // this row of the tile partial: {v, tag part 5, y 16 x FP32, flags 16}
-    input  wire [533:0]      l_i,
-    // gather lanes {v, tag part 5, y 16 x FP32, flags 16}, one port per face (each = 2 dsfd_dvrly_276 stations)
-    input  wire [533:0]      gi_n, gi_e, gi_s, gi_w,
-    output wire [533:0]      go_n, go_e, go_s, go_w,
-    // scatter lanes {v, tag part 5, 8 head slots x {flag 1, y FP32}} (each = 1 dsfd_dvrly_276 station)
-    input  wire [269:0]      si_n, si_e, si_s, si_w,
-    output wire [269:0]      so_n, so_e, so_s, so_w,
-    // this row of the complete score beat (root slice only) {v, 533 b}
-    output wire [533:0]      rt_o,
-    // this row of this slice's SM head {v, tag part 5, flag, y FP32}
+    input  wire              hb,           // half strap: 0 = even heads, 1 = odd heads of the row
+    // this half row of the tile partial: {v, tag part 5, y 8 x FP32, flags 8}
+    input  wire [269:0]      l_i,
+    // gather lanes {v, tag part 5, y 8 x FP32, flags 8}, one port per face (each = 1 dsfd_dvrly_276 station)
+    input  wire [269:0]      gi_n, gi_e, gi_s, gi_w,
+    output wire [269:0]      go_n, go_e, go_s, go_w,
+    // scatter lanes {v, tag part 5, 4 head slots x {flag 1, y FP32}} (2 halves = 1 dsfd_dvrly_276 station)
+    input  wire [137:0]      si_n, si_e, si_s, si_w,
+    output wire [137:0]      so_n, so_e, so_s, so_w,
+    // this half row of the complete score beat (root slice only) {v, 269 b}
+    output wire [269:0]      rt_o,
+    // this row of this slice's SM head {v, tag part 5, flag, y FP32}; 0 unless this half owns the head
     output wire [38:0]       t_o,
     output reg               fault
 );
@@ -45,12 +49,16 @@ module dsdv_svc_sx_row #(
 `else
 `include "dsdv_svc_sx_roles.svh"
 `endif
-    localparam integer W = 533, N = 16, TW = 5, SW = 269, SL = 33;
+    localparam integer W = 269, N = 8, TW = 5, SW = 137, SL = 33, NS = 4;
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
+    // S81U-SVCX3: the sid strap lands in a pin flop first (gate 2: sid -> role ROM was 4 levels from the port); the
+    // strap is static and sid_q settles during the 2-cycle reset synchroniser, so role is unchanged from rn release.
+    reg [3:0] sid_q; reg hb_q;
+    always @(posedge ck) begin sid_q <= sid; hb_q <= hb; end
     reg [43:0] role;
-    always @(posedge ck or negedge rn) if (!rn) role <= '0; else role <= sx_role(sid);
+    always @(posedge ck or negedge rn) if (!rn) role <= '0; else role <= sx_role(sid_q);
     wire [2:0] r_ga = role[2:0], r_gb = role[5:3];
     wire [2:0] r_go [0:3];
     assign r_go[0] = role[8:6]; assign r_go[1] = role[11:9]; assign r_go[2] = role[14:12]; assign r_go[3] = role[17:15];
@@ -58,6 +66,7 @@ module dsdv_svc_sx_row #(
     wire [2:0] r_so [0:3];
     assign r_so[0] = role[26:24]; assign r_so[1] = role[29:27]; assign r_so[2] = role[32:30]; assign r_so[3] = role[35:33];
     wire [2:0] r_ts = role[38:36];
+    wire own = role[39] == hb_q;                  // this half holds the tapped head (head bit 0)
     genvar f, k;
     // per-face ports <-> face-indexed buses, faces {W, S, E, N} = [3:0] (the role ROM's face order)
     wire [3:0] gi_v = {gi_w[W], gi_s[W], gi_e[W], gi_n[W]}, si_v = {si_w[SW], si_s[SW], si_e[SW], si_n[SW]};
@@ -100,7 +109,7 @@ module dsdv_svc_sx_row #(
     wire [W:0] opb = gsrc(r_gb, lc_v, lc_d, gc_v, gc_d[0], gc_d[1], gc_d[2], gc_d[3], 1'b0, '0);
     wire a_v = opa[W], b_v = opb[W]; wire [W-1:0] a_d = opa[W-1:0], b_d = opb[W-1:0];
 
-    // ---------------- the node row: 16 x qaddf ----------------
+    // ---------------- the node row: 8 x qaddf (this half's heads) ----------------
     wire [N-1:0] fa = a_d[N-1:0], fb = (MUT[0]) ? '0 : b_d[N-1:0];
     wire [N*32-1:0] y; wire [N-1:0] af, fd; wire [TW-1:0] fd_tag; wire ov;
     generate for (k = 0; k < N; k = k + 1) begin : g_a
@@ -123,27 +132,29 @@ module dsdv_svc_sx_row #(
     always @(posedge ck) rt_d <= ad_d;
 
     // ---------------- scatter (head slots, this row) ----------------
-    reg [TW-1:0] sn_tag; reg sn_v; reg [16*SL-1:0] sn;
+    reg [TW-1:0] sn_tag; reg sn_v; reg [2*NS*SL-1:0] sn;
     always @(*) begin
         sn_v = 1'b0; sn_tag = '0; sn = '0;
         case (r_ss)
             3'd1, 3'd2, 3'd3, 3'd4: begin
                 sn_v = sc_v[r_ss - 3'd1]; sn_tag = sc_d[r_ss - 3'd1][SW-1 -: TW];
-                sn[0 +: 8*SL] = sc_d[r_ss - 3'd1][8*SL-1:0];
+                sn[0 +: NS*SL] = sc_d[r_ss - 3'd1][NS*SL-1:0];
             end
             3'd7: begin
                 sn_v = r_rt && ad_v; sn_tag = ad_d[W-1 -: TW];
-                for (int hh = 0; hh < 16; hh++) sn[SL*hh +: SL] = {ad_d[hh], ad_d[N + 32*hh +: 32]};
+                for (int hh = 0; hh < N; hh++) sn[SL*hh +: SL] = {ad_d[hh], ad_d[N + 32*hh +: 32]};
             end
             default: ;
         endcase
     end
-    wire [4:0] hsh = (5'd1 << r_sh) + ((MUT[1]) ? 5'd1 : 5'd0);
-    wire [8*SL-1:0] sp_l = sn[0 +: 8*SL];
-    wire [16*SL-1:0] sp_rr = sn >> (SL * hsh);
-    wire [8*SL-1:0] sp_r = sp_rr[0 +: 8*SL];
+    // absolute shift 1 << r_sh (8, 4, 2, 1 heads) = local shift 4, 2, 1 inside a parity half; the pair node (r_sh 0)
+    // does not shift (see the header)
+    wire [3:0] hsh = ((r_sh == 2'd0) ? 4'd0 : (4'd1 << (r_sh - 2'd1))) + ((MUT[1]) ? 4'd1 : 4'd0);
+    wire [NS*SL-1:0] sp_l = sn[0 +: NS*SL];
+    wire [2*NS*SL-1:0] sp_rr = sn >> (SL * hsh);
+    wire [NS*SL-1:0] sp_r = sp_rr[0 +: NS*SL];
     function automatic [SW:0] ssrc(input [2:0] s, input [3:0] cv, input [SW-1:0] c0, c1, c2, c3,
-                                    input nv, input [TW-1:0] nt, input [8*SL-1:0] l, r);
+                                    input nv, input [TW-1:0] nt, input [NS*SL-1:0] l, r);
         case (s)
             3'd1: ssrc = {cv[0], c0};
             3'd2: ssrc = {cv[1], c1};
@@ -162,8 +173,10 @@ module dsdv_svc_sx_row #(
         assign so_v[f] = v; assign so_d[SW*f +: SW] = d;
     end endgenerate
     wire [SW:0] ts = ssrc(r_ts, sc_v, sc_d[0], sc_d[1], sc_d[2], sc_d[3], sn_v, sn_tag, sp_l, sp_r);
-    always @(posedge ck or negedge rn) if (!rn) t_v <= 1'b0; else t_v <= ts[SW];
-    always @(posedge ck) begin t_tag <= ts[SW-1 -: TW]; t_f <= ts[32]; t_y <= ts[31:0]; end
+    always @(posedge ck or negedge rn) if (!rn) t_v <= 1'b0; else t_v <= own && ts[SW];
+    always @(posedge ck) begin
+        t_tag <= own ? ts[SW-1 -: TW] : '0; t_f <= own && ts[32]; t_y <= own ? ts[31:0] : '0;
+    end
 
     // ---------------- static-schedule checks (sticky; never re-time anything) ----------------
     reg [3:0] g_used, s_used;
@@ -181,5 +194,9 @@ module dsdv_svc_sx_row #(
     wire node = r_ga != 3'd0;
     wire mis = node && (a_v != b_v || (a_v && a_d[W-1 -: TW] != b_d[W-1 -: TW]));
     wire stray = |(gc_v & ~g_used) || |(sc_v & ~s_used);
-    always @(posedge ck or negedge rn) if (!rn) fault <= 1'b0; else if (mis || stray) fault <= 1'b1;
+    // S81U-SVCX3: the check is registered once beside the node (gate 2: face pin flop -> 5:1 operand mux -> tag compare
+    // -> the S-face fault pin flop was the worst reg->reg path, -64.7 ps); the sticky fault reports one cycle later.
+    reg chk;
+    always @(posedge ck or negedge rn) if (!rn) chk <= 1'b0; else chk <= mis || stray;
+    always @(posedge ck or negedge rn) if (!rn) fault <= 1'b0; else if (chk) fault <= 1'b1;
 endmodule

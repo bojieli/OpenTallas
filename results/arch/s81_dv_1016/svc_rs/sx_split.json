@@ -55,5 +55,53 @@
   "mutskew": "FAIL root err 600, taps err 9600, fault slice 4",
   "logs": "results/rtl/s81_dv_1016/svc_rs_split/"
  },
- "kit": "physical/ref_tile/dsdv_svc_sx_row (spec tools/ref_tile/specs_s81dv_svcx/dsdv_svc_sx_row.json, recipe 4, hold_budget die, M5 cap)"
+ "kit": "physical/ref_tile/dsdv_svc_sx_hrow (spec tools/ref_tile/specs_s81dv_svcx/dsdv_svc_sx_hrow.json; CTS settings of gate 3 kept); dsdv_svc_sx_row kit removed (never routed)",
+ "svcx4": {
+  "date": "2026-10-17",
+  "lane": "S81U-SVCX4",
+  "why": "the one-row leaf dsdv_svc_sx_row (14,383 sinks, 388.8 sq) measured at its best CTS (gate 3, c603d2060) TT 326.4..415.3 ps insertion / 88.9 ps spread, over the 300/80 clock rule; structural fix = halve the leaf",
+  "centre_leaf": {
+   "module": "dsdv_svc_sx_hrow",
+   "count_per_slice": 8,
+   "strap": "hb (half), sid (slice)",
+   "partition": "head parity: half b of row r = heads 2i+b (8 qaddf); gather never mixes heads",
+   "scatter_crossing_check": "node shifts head slots by its left size 8/4/2/1; 8/4/2 keep slot parity (local 4/2/1), only the pair nodes' shift by 1 crosses -> pair nodes no longer shift; the leaf of head t taps local slot 0 of half t[0] (role head bit 0); the non-owning half's tap register holds 0 and the slice ORs the 2 taps. Nothing crosses halves; scatter lane slot order below a pair node is internal to the exchange",
+   "ports_bits": {
+    "gather_lane_per_face_dir": 270,
+    "scatter_lane_per_face_dir": 138,
+    "leaf_partial_in": 270,
+    "root_out": 270,
+    "sm_tap_out": 39
+   },
+   "pins_total": 3855,
+   "outline_um": [
+    216.0,
+    216.0
+   ],
+   "face_pins": {
+    "N": 818,
+    "E": 1086,
+    "S": 861,
+    "W": 1086
+   },
+   "max_pins_per_um": 5.29,
+   "est_sinks": "~7.3k (half of 14,383)"
+  },
+  "relay_stations": "per face and row: gather 2 stations (one per half, 270 b + 6 spare), scatter 1 station (the 2 halves' 138 b, 0 spare); same 144 per slice",
+  "cycles": {
+   "hop": 5,
+   "added_cycles": 0,
+   "note": "pipeline unchanged; role ROM unchanged (pair-node shift handled in the leaf RTL)"
+  },
+  "bench": {
+   "host": "ot-epyc4",
+   "base": "PASS seeds 1,2: root 600/600 err 0, taps 9600/9600 err 0, fault 0",
+   "mut1_flags": "FAIL root err 600, taps err 8482",
+   "mut2_scatter": "FAIL taps err 9000",
+   "mutorder": "FAIL root err 599, taps err 3771",
+   "mutskew": "FAIL root err 600, taps err 9600, fault slice 4",
+   "logs": "results/rtl/s81_dv_1016/svc_rs_split/svcx4/"
+  },
+  "kit": "physical/ref_tile/dsdv_svc_sx_hrow (spec tools/ref_tile/specs_s81dv_svcx/dsdv_svc_sx_hrow.json; CTS settings of gate 3 kept); dsdv_svc_sx_row kit removed (never routed)"
+ }
 }
