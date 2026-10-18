@@ -1497,7 +1497,30 @@ def _leaf_pin(it, port):
     return it.x + fx, it.y + fy
 
 
-def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None, v143=None):
+# KV-LANDSLOT 10-18 (OT_KV_LANDSLOT=1, needs OT_KV_RLY_STD=1 + OT_KV_SEAM=1; default off = unchanged): the last relay
+# station of every data run crossing core clock trees gets the LANDING frame (qkd_rly_<W>_land, kv_rly_std.LAND
+# outlines), abutted to the receiving block face (kv_land_slot.py); kv_fwd_lanes.py binds qkd_landsh*_<S> there
+LANDSLOT = os.environ.get('OT_KV_LANDSLOT', '0') == '1'
+
+
+def build(*args, **kwargs):
+    """the plan (_build_plan) + the landing-frame reservation (OT_KV_LANDSLOT)"""
+    m = _build_plan(*args, **kwargs)
+    if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
+        if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
+            raise ValueError('OT_KV_LANDSLOT=1 needs OT_KV_RLY_STD=1 and OT_KV_SEAM=1 (landing slots are relay-standard rows '
+                             'on the driver-tree chains)')
+        import kv_land_slot
+        m = kv_land_slot.reserve(sys.modules[__name__], m, gap=float(os.environ.get('OT_KV_LAND_GAP', kv_land_slot.LAND_GAP)))
+        ls_ = m['land_slots']
+        print(f"kv die LANDSLOT: {ls_['crossings']} crossing runs, tiers {ls_['tiers']}, legality {ls_['legality']}",
+              file=sys.stderr)
+        if ls_['legality']['overlaps'] or ls_['legality']['outside']:
+            raise ValueError(f"kv die LANDSLOT: landing frames overlap / outside: {ls_['legality']}")
+    return m
+
+
+def _build_plan(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None, v143=None):
     """qwen-1010/b 2026-10-10: plan actual relay chains from drawn pins."""
     if os.environ.get('OT_KV_STATIC', '0') == '1':
         raise ValueError('OT_KV_STATIC requires the explicit source-pinned --static-graph compiler join; legacy physical graph is forbidden')
@@ -4682,9 +4705,14 @@ def main(argv=None):
         return 0
     if a.static_graph:
         ap.error('--static-graph requires explicit OT_KV_STATIC=1')
-    if KSD.ON and a.mode == 'case' and os.environ.get('OT_KV_STATIC_DIE_DIAGNOSTIC', '0') != '1':
+    if (KSD.ON and a.mode == 'case' and os.environ.get('OT_KV_STATIC_DIE_DIAGNOSTIC', '0') != '1'
+            and os.environ.get('OT_KV_STATIC_DIE_STRICT', '0') != '1'):
         # KVJ-G2 10-17: the static-die case stays HELD until the strict port bind is clean (0 unconnected functional inputs,
-        # 0 undriven, 0 functional ties); a diagnostic GEN (routing evidence of the static floorplan) must say so
+        # 0 undriven, 0 functional ties); a diagnostic GEN (routing evidence of the static floorplan) must say so.
+        # KV-PLAN4 10-18: OT_KV_STATIC_DIE_STRICT=1 lifts the hold for a REAL (non-diagnostic) GEN whose die chain runs the
+        # strict bind as a gate (die_chain.sh without OT_BIND_DIAGNOSTIC: bind_launch --strict + port_bind_v2 fail the run).
+        # KV-WIRE2 strict bind kvw2-6ad1dbb84/port_bind_v2_b PASS 0/0/0.  The record's open_tile_inputs (pc__*, ctl boot__* /
+        # oobs__*) are tile ports joined at die level (plan static_die.die_joins), not die opens.
         ap.error('static die case held: strict port bind not clean (kv_static_die record open_tile_inputs); set '
                  'OT_KV_STATIC_DIE_DIAGNOSTIC=1 for a DIAGNOSTIC (not a die result) GEN')
     if a.host_v14:
@@ -4715,6 +4743,8 @@ def main(argv=None):
     if a.mode == 'case':
         m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
         print(json.dumps(case(m, a.out)))
+        if m.get('land_slots'):
+            (a.out / 'land_slots.json').write_text(json.dumps(m['land_slots'], indent=1, default=str) + '\n')
         return 0
     rec = record(m)
     rec['legality'] = check(m)
