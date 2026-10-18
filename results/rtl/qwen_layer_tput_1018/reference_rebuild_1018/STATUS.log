@@ -1,0 +1,48 @@
+2026-10-18 07:54:59 kvprog start src b1af01f1c99f72dc0a8f13f4fa030e48d6c91e8b host ot-epyc5
+2026-10-18 07:54:59 build start src b1af01f1c99f72dc0a8f13f4fa030e48d6c91e8b host ot-epyc5
+2026-10-18 07:54:59 d2d start src b1af01f1c99f72dc0a8f13f4fa030e48d6c91e8b host ot-epyc5
+2026-10-18 07:54:59 kvprog rc=0 wall_s=0
+2026-10-18 07:54:59 d2d mutant 0 rc=1 FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+2026-10-18 07:54:59 d2d mutant 1 rc=1 FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+2026-10-18 07:54:59 d2d mutant 2 rc=1 FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+2026-10-18 07:55:00 d2d mutant 3 rc=1 FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+2026-10-18 07:55:00 d2d mutant 4 rc=1 FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+2026-10-18 07:55:00 d2d mutant 5 rc=1 FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+2026-10-18 07:55:00 d2d mutant 6 rc=1 FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+2026-10-18 07:55:00 d2d mutant 7 rc=1 FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+2026-10-18 07:55:00 d2d rc=1 wall_s=1
+2026-10-18 07:56:09 d2d start src b1af01f1c99f72dc0a8f13f4fa030e48d6c91e8b host ot-epyc5
+2026-10-18 07:56:16 d2d mutant 0 rc=0 D2D_PROGRAM_PASS
+2026-10-18 07:56:23 d2d mutant 1 rc=1 D2D_PROGRAM_FAIL
+2026-10-18 07:56:30 d2d mutant 2 rc=1 D2D_PROGRAM_FAIL
+2026-10-18 07:56:36 d2d mutant 3 rc=1 D2D_PROGRAM_FAIL
+2026-10-18 07:56:43 d2d mutant 4 rc=1 D2D_PROGRAM_FAIL
+2026-10-18 07:56:50 d2d mutant 5 rc=0 D2D_PROGRAM_PASS
+2026-10-18 07:56:56 d2d mutant 6 rc=0 D2D_PROGRAM_PASS
+2026-10-18 07:57:02 d2d mutant 7 rc=0 D2D_PROGRAM_PASS
+2026-10-18 07:57:02 d2d rc=1 wall_s=53
+2026-10-18 08:01:36 build pos rc=1
+2026-10-18 08:02:04 restore start src b1af01f1c99f72dc0a8f13f4fa030e48d6c91e8b host ot-epyc5
+2026-10-18 08:02:06 restore fails=148 (FAIL L1-d2 FAIL L0-d3 FAIL L2-d3 FAIL L2-d0 FAIL L0-d0 FAIL L0-d2 FAIL L2-d2 FAIL L1-d1 FAIL L1-d3 FAIL L3-d3 FAIL L3-d0 FAIL L1-d0 FAIL L2-d1 FAIL L3-d1 FAIL L0-d1 FAIL L5-d0 FAIL L4-d0 FAIL L4-d3 FAIL L6-d3 FAIL L3-d2 FAIL L8-d0 FAIL L4-d2 FAIL L6-d1 FAIL L5-d1 FAIL L4-d1 FAIL L5-d3 FAIL L7-d0 FAI)
+2026-10-18 08:02:06 restore rc=1 wall_s=2
+2026-10-18 08:02:39 hist_l3 start src b1af01f1c99f72dc0a8f13f4fa030e48d6c91e8b host ot-epyc5
+hist_l3 real 12 zero 132 pin True
+2026-10-18 08:02:40 hist_l3 rc=0 wall_s=1
+2026-10-18 08:05:40 restore start src 54663710f782876f9d0cc1824031e2c82712a18f host ot-epyc5
+2026-10-18 08:05:40 restore rc=3 wall_s=0
+2026-10-18 08:08:03 build neg rc=1
+2026-10-18 08:08:03 build rc=1 wall_s=784
+2026-10-18 08:08:38 restore start src 8a01e4a5aa968d509dbdf0b2a86e7df6fd0438e1 host ot-epyc5
+2026-10-18 08:08:45 build start src 8a01e4a5aa968d509dbdf0b2a86e7df6fd0438e1 host ot-epyc5
+2026-10-18 08:09:12 restore fails=0 ()
+2026-10-18 08:09:12 restore rc=0 wall_s=34
+2026-10-18 08:49:04 build pos rc=0
+2026-10-18 09:25:53 build neg rc=0
+2026-10-18 09:25:53 build rc=0 wall_s=4628
+2026-10-18 09:25:56 runL3 start src 8a01e4a5aa968d509dbdf0b2a86e7df6fd0438e1 host ot-epyc5
+2026-10-18 09:30:17 runL3neg start src 8a01e4a5aa968d509dbdf0b2a86e7df6fd0438e1 host ot-epyc5
+2026-10-18 09:32:38 gold start src 8a01e4a5aa968d509dbdf0b2a86e7df6fd0438e1 host ot-epyc5
+2026-10-18 11:51:59 runL3 {"mode": "L3", "exact": false, "cycles": null, "next_token": null, "winning_logit_bits": null, "layer_x_mismatches": 49152, "kv_mismatches": 6144} 
+2026-10-18 11:51:59 runL3 rc=1 wall_s=8763
+2026-10-18 11:52:00 runL3neg {"mode": "L3", "exact": false, "cycles": null, "next_token": null, "winning_logit_bits": null, "layer_x_mismatches": 49152, "kv_mismatches": 6144} 
+2026-10-18 11:52:00 runL3neg rc=1 wall_s=8503

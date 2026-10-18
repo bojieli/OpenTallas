@@ -27,7 +27,7 @@
    "price": 6797,
    "ratio": null,
    "exact": null,
-   "status": "PENDING: fleet ot-epyc5 /srv/opentallas-scratch/claude/tokpass-qwen-1018 (driver ~/scratch/tokpass-qwen/driver3b.sh; STATUS.log) -- 10-18 10:45: guard-clean (--unroll-count 4096) build pos rc=0 08:49, neg building; runL3/runL3neg/gold/runhead not yet run; LAYERBENCH-QWEN collects (pending_results)",
+   "status": "10-18 rebuild (8a01e4a5a) HANGS in L0 (pc_base 0, killed at 24,577 cycles); bisect A (10-13 source, same fixtures) + C (op trace) running on ot-epyc5 lb2qc-ref-1018 -- see reference_rebuild_verdict",
    "grade": "measured-on-reference-RTL (regression) -- NOT current die RTL"
   },
   {
@@ -44,7 +44,7 @@
    "price": 6835,
    "ratio": null,
    "exact": null,
-   "status": "PENDING: fleet ot-epyc5 /srv/opentallas-scratch/claude/tokpass-qwen-1018 (driver ~/scratch/tokpass-qwen/driver3b.sh; STATUS.log) -- 10-18 10:45: guard-clean (--unroll-count 4096) build pos rc=0 08:49, neg building; runL3/runL3neg/gold/runhead not yet run; LAYERBENCH-QWEN collects (pending_results)",
+   "status": "10-18 rebuild (8a01e4a5a) HANGS in L0 (pc_base 0, killed at 24,577 cycles); bisect A (10-13 source, same fixtures) + C (op trace) running on ot-epyc5 lb2qc-ref-1018 -- see reference_rebuild_verdict",
    "grade": "measured-on-reference-RTL + priced"
   },
   {
@@ -56,7 +56,7 @@
    "price": 3101,
    "ratio": null,
    "exact": null,
-   "status": "PENDING: fleet ot-epyc5 /srv/opentallas-scratch/claude/tokpass-qwen-1018 (driver ~/scratch/tokpass-qwen/driver3b.sh; STATUS.log) -- 10-18 10:45: guard-clean (--unroll-count 4096) build pos rc=0 08:49, neg building; runL3/runL3neg/gold/runhead not yet run; LAYERBENCH-QWEN collects (pending_results)",
+   "status": "10-18 rebuild (8a01e4a5a) HANGS in L0 (pc_base 0, killed at 24,577 cycles); bisect A (10-13 source, same fixtures) + C (op trace) running on ot-epyc5 lb2qc-ref-1018 -- see reference_rebuild_verdict",
    "grade": "measured-on-reference-RTL"
   }
  ],
@@ -179,8 +179,12 @@
     "log": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/k_ctl/"
    },
    "c_colW5": {
-    "slice": "c_colW5",
-    "result": "PENDING (first build at --mem 96 terminated during verilation; relaunched at 300 GB, pending_results)"
+    "slice": "c_colW5 (dvs_W5 + 4 qfd_c_b16_dv + 718 relays, cut from dv2f14bn)",
+    "result": "AS-BUILT FAIL: SMOKE_PASS (5,048 edges, no fault) but RESET_DET nondet 1 undeclared o_n_dv_l9_W4 -> SMOKE_RESULT FAIL; build 2,936 s / 124 GB RSS (Verilator 5.050)",
+    "cause": "qfd_dv_redstn2 level-9 sender drove nb_o = {0, v8 && mode 3, y8} every edge: y8 = level-8 fp32 adder data (DRST 0, unreset by design) leaves even with valid 0, so the 514-b W5 -> W4 die lane toggled on all 1,501 idle edges with initial-state garbage (only data port of the slice not zero when idle; violates the slice2 port contract 'a zero word is no word')",
+    "fix": "LB2-QWEN-C 2092dfebe: nb_o = v ? {01, y8} : 514'd0 (qfd_dv_redstn2 + qfd_dv_redstn); OT_QFD_L9_IDLE_MUT = as-built word",
+    "log": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/c_colW5_asbuilt/ (as-built FAIL witness)",
+    "fixed": "PENDING ot-epyc4:/srv/opentallas-scratch/claude/lb2qc-1018/smoke_fix.out (must SMOKE_RESULT PASS) + smoke_mut.out (OT_QFD_L9_IDLE_MUT, must FAIL regex 'UNDECLARED o_n_dv_l9_W4')"
    },
    "face_component_reference": "run_sys_face_bench.sh (compute src) on the same image: SYS_FACE_PASS MUT 0 (boot 54, PW 1024 DW 8, 1512 events exact), MUT 1 FAIL -> the face itself loads the programme when its pins are driven aligned; the die landing breaks it"
   },
@@ -224,5 +228,16 @@
   "terms": [],
   "note": "LAYERBENCH-QWEN 10-18: no term is measured on CURRENT die RTL yet (the die slices only reached reset/idle/programme-load smoke, which fails at die gaps G-C1/G-C2/G-C3); base terms keep their grades."
  },
- "reference_rebuild_verdict": "PENDING: the 10-13 numbers (L0 6,151 / chained 5,480 / head 3,048) neither stand nor fall yet; graded measured-old-RTL either way"
+ "reference_rebuild_verdict": {
+  "status": "NOT REPRODUCED on the 10-18 rebuild; 10-13 numbers neither confirmed nor withdrawn yet (bisect running)",
+  "rebuild": "ot-epyc5 /srv/opentallas-scratch/claude/tokpass-qwen-1018: src 8a01e4a5a (10-18), guard-clean --unroll-count 4096, restored fixtures (img_p1 sha-matched, history_l3 = realmem L0..L2 + zero L3+)",
+  "runL3_pos": "HANG: pc_base 0/0 (layer 0 never retires; 10-13 L0 retired at 6,151), me_busy every cycle, killed SIGTERM at cycle 24,577 / 8,763 s wall; result.json exact false, 49,152 X + 6,144 KV mismatches (nothing written)",
+  "runL3_neg": "HANG at pc_base 19/19 (10-13 neg finished L0..L2 at 4,517 / 4,507 / 4,507 cycles and mismatched), killed at cycle 24,577",
+  "source_drift": "between 10-13 (bd6e82288+30b6440b5) and 8a01e4a5a the reference core RTL changed: rtl/hdc/ot_qwen_rom_tile_w12.sv (+234: NODE 0 tiles c50f5f1e4, TOREG/RQR q14 node), ot_qwen_w12_matvec.sv (+131, ROM leaves e11579a83 / ba6ef8ae1), ot_hdc_vstream(_lane).sv (r6/r7 SU OREG/IREG 504164883 / a378d41c9), ot_qwen_me_array_w12.sv (NODE 0 on non-host tiles); harness/emitter identical",
+  "bisect": {
+   "A": "10-13 source 30b6440b5 + only the 10-18 harness env hooks, --unroll-count 4096, same restored fixtures, L3 (ot-epyc5 /srv/opentallas-scratch/claude/lb2qc-ref-1018/runA, STATUS.log [A]): exact 6,151/5,480/5,480 => 10-13 numbers STAND (unroll + restored fixtures clean) and the hang is the RTL drift; hang/mismatch => fixtures or unroll",
+   "C": "10-18 source 8a01e4a5a with the observation-only op-fetch trace (QROM_OPTRACE / RT_OPTRACE), L0 mode (9,000-cycle guard): names the op the core stops at (runC/runtime.log OPTRACE prog_a)"
+  },
+  "grade": "measured-old-RTL either way (reference core, not the die)"
+ }
 }

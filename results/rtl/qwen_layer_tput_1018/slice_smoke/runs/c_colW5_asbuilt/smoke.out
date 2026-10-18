@@ -1,0 +1,6 @@
+slice_smoke: /srv/opentallas-scratch/claude/layerbench-qwen-1018/smoke/c_colW5/tb_qwc_slice_colW5.sv: 30 inputs (9 clock, 4 reset), 36 outputs
+SMOKE_PASS qwc_slice_colW5 MUT=0 edges 5048
+RESET_DET ports 36 nondet 1 undeclared_nondet 1
+SMOKE_RESET_NONDETERMINISTIC qwc_slice_colW5
+  UNDECLARED o_n_dv_l9_W4
+SMOKE_RESULT FAIL qwc_slice_colW5 MUT=0
