@@ -69,9 +69,13 @@ class Programme(unittest.TestCase):
         for keys, n in re.findall(r'([\d,]+):word_count=(\d+);', body):
             for k in keys.split(','):
                 want[int(k)] = int(n)
+        # KVJ-G2b: the DIECFG / LINKCFG / ESCFG targets (conditional word counts in the dispatcher)
+        want.update({10: 32 + 43 + 1, 11: 66, 12: 1024, 13: 8})
+        import program_target_frames as PTF
+        self.assertEqual({t: PTF.TARGET_WORDS[t] for t in range(10, 14)}, {t: want[t] for t in range(10, 14)})
         for r in (self.comp, self.die):
             b = r['bundle']
-            self.assertEqual(b['target_order'], list(range(1, 10)) + [0])
+            self.assertEqual(b['target_order'], list(range(1, 10)) + [11, 12, 13, 0])
             for im in b['images'][:-1]:
                 self.assertEqual(im['program_words'], want[im['target']])
             self.assertEqual(int(b['images'][-1]['digest'], 16), r['layer']['digest'])

@@ -26,6 +26,7 @@ GITDIR = __import__('os').environ.get('OT_GIT_DIR', str(ROOT))   # S81-BIND3: so
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from die_cluster import boundary as CB   # noqa: E402
+import abstract_pin_windows as APW       # noqa: E402
 
 PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
 DFF = 'DFFHQNx1_ASAP7_75t_R'
@@ -114,6 +115,10 @@ def main():
                     '276 70 512 562 682); a (width, direction) without a closed view stays a DFF stand-in station (census)')
     ap.add_argument('--relay-kind', choices=('rly', 'rlyh'), default='rly',
                     help='rlyh (S81-BIND3): stations bind the closed HALF-CYCLE dsfd_dvrlyh_<W>_<dir> views (s81dv_rlyh_*)')
+    # ROOT-0440 10-18 (Q-DIE11 class: fully obstructed abstracts gave Qwen GRT overflow 72k-747k at the pin faces):
+    # pin-access window depth (um) per face pin cluster, OBS-free on M4..M6 (tools/abstract_pin_windows.py); M1-M3 stay
+    # obstructed.  Default env OT_ABS_PIN_WINDOW_UM, 0 = previous abstracts byte for byte.
+    ap.add_argument('--pin-window', type=float, default=float(__import__('os').environ.get('OT_ABS_PIN_WINDOW_UM', '0') or 0))
     ap.add_argument('--bind', choices=('standin', 'real'), default='standin',
                     help='real: S81-BIND real-view mode (tools/s81_dv/dv_bind.py) -- every plan master binds its RTL by the '
                     'bind table, real F1 relay masters on every link, regional reset relay tree, sourced forwarded clocks; '
@@ -177,6 +182,7 @@ def main():
         m = f"dv_{bl['name']}"
         w, h = bl['w'], bl['h']
         lines = [f'MACRO {m}', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', f'  SIZE {w:.3f} BY {h:.3f} ;', '  SYMMETRY X Y ;']
+        sig = []
         for port, d, bits, px, py, f in pins.get(bl['name'], []):
             lx, ly = px - (bl['x'] - ox), py - (bl['y'] - oy)
             span = bits * PIN_PITCH
@@ -190,6 +196,7 @@ def main():
                     rect = f'RECT {xx - 0.012:.3f} {yy:.3f} {xx + 0.012:.3f} {yy + 0.1:.3f}'; layer = 'M5'
                 lines += [f'  PIN {port}[{k}]', f'    DIRECTION {d.upper()} ;', '    USE SIGNAL ;', '    PORT',
                           f'      LAYER {layer} ;', f'        {rect} ;', '    END', f'  END {port}[{k}]']
+                sig.append((f'{port}[{k}]', layer, tuple(float(v) for v in rect.split()[1:])))
             if d != 'input':
                 t = span / 2 + PIN_PITCH
                 if f in 'WE':
@@ -200,11 +207,17 @@ def main():
                     rect = f'RECT {xx - 0.012:.3f} {yy:.3f} {xx + 0.012:.3f} {yy + 0.1:.3f}'; layer = 'M5'
                 lines += [f'  PIN cko_{port}', '    DIRECTION OUTPUT ;', '    USE SIGNAL ;', '    PORT',
                           f'      LAYER {layer} ;', f'        {rect} ;', '    END', f'  END cko_{port}']
+                sig.append((f'cko_{port}', layer, tuple(float(v) for v in rect.split()[1:])))
         lines += ['  PIN clk', '    DIRECTION INPUT ;', '    USE CLOCK ;', '    PORT', '      LAYER M5 ;',
                   f'        RECT {w / 2 - 0.012:.3f} 0.000 {w / 2 + 0.012:.3f} 0.100 ;', '    END', '  END clk']
         lines += ['  OBS', '    LAYER M1 ;', f'      RECT 0.2 0.2 {w - 0.2:.3f} {h - 0.2:.3f} ;']
-        for L in ('M2', 'M3', 'M4', 'M5', 'M6'):
-            lines += [f'    LAYER {L} ;', f'      RECT 0.2 0.2 {w - 0.2:.3f} {h - 0.2:.3f} ;']
+        win = APW.windows(w, h, sig, a.pin_window, 4, 6) if a.pin_window > 0 and sig else {}
+        for li, L in enumerate(('M2', 'M3', 'M4', 'M5', 'M6'), 2):
+            if not win.get(li):
+                lines += [f'    LAYER {L} ;', f'      RECT 0.2 0.2 {w - 0.2:.3f} {h - 0.2:.3f} ;']
+                continue
+            lines += [f'    LAYER {L} ;'] + [f'      RECT {q[0]:.3f} {q[1]:.3f} {q[2]:.3f} {q[3]:.3f} ;'
+                                             for q in APW.minus_rect((0.2, 0.2, w - 0.2, h - 0.2), win[li])]
         lines += ['  END', f'END {m}', '']
         (out / 'views' / f'{m}.lib').write_text(stand_in_lib(m, pins.get(bl['name'], [])))
         (out / 'views' / f'{m}.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(lines) + 'END LIBRARY\n')

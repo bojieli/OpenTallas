@@ -1,0 +1,593 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/tmp/r0330_eqv/hsm_xcal_t224_r2/out_old/script.ys' --
+
+1. Executing Verilog-2005 frontend: /tmp/r0330_eqv/hsm_xcal_t224_r2/src/00_ot_hbm_svc_sm_xcal_t.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/hsm_xcal_t224_r2/src/00_ot_hbm_svc_sm_xcal_t.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_svc_sm_xcal_t'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_svc_sm_xcal'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_static_cmd_target_core'.
+Storing AST representation for module `$abstract\ot_static_cmd_target'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_smh_calendar_static'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /tmp/r0330_eqv/hsm_xcal_t224_r2/src/04_ot_sram_1r1w_1024x256_m2_r2c2_bb.v
+Parsing SystemVerilog input from `/tmp/r0330_eqv/hsm_xcal_t224_r2/src/04_ot_sram_1r1w_1024x256_m2_r2c2_bb.v' to AST representation.
+Storing AST representation for module `$abstract\ot_sram_1r1w_1024x256_m2_r2c2'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: /tmp/r0330_eqv/hsm_xcal_t224_r2/src/05_ot_sram_1r1w_128x256_m1_r2c2_bb.v
+Parsing SystemVerilog input from `/tmp/r0330_eqv/hsm_xcal_t224_r2/src/05_ot_sram_1r1w_128x256_m1_r2c2_bb.v' to AST representation.
+Storing AST representation for module `$abstract\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /tmp/r0330_eqv/hsm_xcal_t224_r2/old/ot_hbm_svc_stack_fault.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/hsm_xcal_t224_r2/old/ot_hbm_svc_stack_fault.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_svc_stack_fault'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: /tmp/r0330_eqv/hsm_xcal_t224_r2/old/ot_hbm_svc_wb_cutthrough_cdc.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/hsm_xcal_t224_r2/old/ot_hbm_svc_wb_cutthrough_cdc.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_svc_wb_cutthrough_cdc'.
+Successfully finished Verilog frontend.
+
+9. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \MUT = 0
+
+10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_svc_sm_xcal_t'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\ot_hbm_svc_sm_xcal_t\MUT=s32'00000000000000000000000000000000'.
+
+10.1. Analyzing design hierarchy..
+Top module:  \ot_hbm_svc_sm_xcal_t
+Parameter \TARGET = 8'11111111
+Parameter \MODE = 0
+Parameter \AWA = 10
+Parameter \AWB = 7
+Parameter \RBW = 7
+Parameter \RCW = 8
+Parameter \NA = 1
+Parameter \NF = 1
+Parameter \MUT = 0
+Parameter \TGT_PIN = 1
+
+10.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_static_cmd_target'.
+Parameter \TARGET = 8'11111111
+Parameter \MODE = 0
+Parameter \AWA = 10
+Parameter \AWB = 7
+Parameter \RBW = 7
+Parameter \RCW = 8
+Parameter \NA = 1
+Parameter \NF = 1
+Parameter \MUT = 0
+Parameter \TGT_PIN = 1
+Generating RTLIL representation for module `$paramod$12cde0735ed7a27abeb10749b7ca5c11a151a2e9\ot_static_cmd_target'.
+Parameter \MUT = 0
+
+10.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_svc_sm_xcal'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000'.
+
+10.4. Analyzing design hierarchy..
+Top module:  \ot_hbm_svc_sm_xcal_t
+Used module:     $paramod$12cde0735ed7a27abeb10749b7ca5c11a151a2e9\ot_static_cmd_target
+Used module:     $paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000
+Parameter \TARGET = 8'11111111
+Parameter \MODE = 0
+Parameter \AWA = 10
+Parameter \AWB = 7
+Parameter \RBW = 7
+Parameter \RCW = 8
+Parameter \CW = 1
+Parameter \RELF = 0
+Parameter \NA = 1
+Parameter \NF = 1
+Parameter \LEAD = 8
+Parameter \MUT = 0
+Parameter \TGT_PIN = 1
+
+10.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_static_cmd_target_core'.
+Parameter \TARGET = 8'11111111
+Parameter \MODE = 0
+Parameter \AWA = 10
+Parameter \AWB = 7
+Parameter \RBW = 7
+Parameter \RCW = 8
+Parameter \CW = 1
+Parameter \RELF = 0
+Parameter \NA = 1
+Parameter \NF = 1
+Parameter \LEAD = 8
+Parameter \MUT = 0
+Parameter \TGT_PIN = 1
+Generating RTLIL representation for module `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core'.
+Parameter \W = 173
+
+10.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_smh_calendar_static'.
+Parameter \W = 173
+Generating RTLIL representation for module `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101'.
+
+10.7. Analyzing design hierarchy..
+Top module:  \ot_hbm_svc_sm_xcal_t
+Used module:     $paramod$12cde0735ed7a27abeb10749b7ca5c11a151a2e9\ot_static_cmd_target
+Used module:         $paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core
+Used module:     $paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000
+Used module:         $paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101
+
+10.8. Analyzing design hierarchy..
+Top module:  \ot_hbm_svc_sm_xcal_t
+Used module:     $paramod$12cde0735ed7a27abeb10749b7ca5c11a151a2e9\ot_static_cmd_target
+Used module:         $paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core
+Used module:     $paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000
+Used module:         $paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101
+
+10.9. Analyzing design hierarchy..
+Top module:  \ot_hbm_svc_sm_xcal_t
+Used module:     $paramod$12cde0735ed7a27abeb10749b7ca5c11a151a2e9\ot_static_cmd_target
+Used module:         $paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core
+Used module:     $paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000
+Used module:         $paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101
+Removing unused module `$paramod\ot_hbm_svc_sm_xcal_t\MUT=s32'00000000000000000000000000000000'.
+Removing unused module `$abstract\ot_hbm_svc_wb_cutthrough_cdc'.
+Removing unused module `$abstract\ot_hbm_svc_stack_fault'.
+Removing unused module `$abstract\ot_smh_calendar_static'.
+Removing unused module `$abstract\ot_static_cmd_target'.
+Removing unused module `$abstract\ot_static_cmd_target_core'.
+Removing unused module `$abstract\ot_hbm_svc_sm_xcal'.
+Removing unused module `$abstract\ot_hbm_svc_sm_xcal_t'.
+Removed 8 unused modules.
+
+5 modules:
+  $paramod$12cde0735ed7a27abeb10749b7ca5c11a151a2e9\ot_static_cmd_target
+  $paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core
+  $paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000
+  $paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101
+  ot_hbm_svc_sm_xcal_t
+
+11. Executing PROC pass (convert processes to netlists).
+
+11.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:24$180'.
+Removing empty process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:24$180'.
+Found and cleaned up 1 empty switch in `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+Found and cleaned up 5 empty switches in `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:77$133'.
+Removing empty process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:77$133'.
+Found and cleaned up 2 empty switches in `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+Cleaned up 9 empty switches.
+
+11.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 4 switch rules as full_case in process $proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162 in module $paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:34$135 in module $paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.
+Marked 15 switch rules as full_case in process $proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73 in module $paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:97$53 in module $paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.
+Marked 3 switch rules as full_case in process $proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32 in module $paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:58$20 in module $paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:49$17 in module $paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/00_ot_hbm_svc_sm_xcal_t.sv:37$15 in module ot_hbm_svc_sm_xcal_t.
+Removed a total of 0 dead cases.
+
+11.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 32 redundant assignments.
+Promoted 23 assignments to connections.
+
+11.4. Executing PROC_INIT pass (extract init attributes).
+
+11.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+Found async reset \rst_n in `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:34$135'.
+Found async reset \rst_n in `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+Found async reset \rst_n in `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:97$53'.
+Found async reset \rst_q in `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+Found async reset \rst_q in `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:58$20'.
+Found async reset \rst_n in `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:49$17'.
+Found async reset \rst_n in `\ot_hbm_svc_sm_xcal_t.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/00_ot_hbm_svc_sm_xcal_t.sv:37$15'.
+
+11.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~40 debug messages>
+
+11.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+     1/14: $0\done[0:0]
+     2/14: $0\active[0:0]
+     3/14: $0\calendar_v[0:0]
+     4/14: $0\last1[0:0]
+     5/14: $0\last0[0:0]
+     6/14: $0\valid1[0:0]
+     7/14: $0\valid0[0:0]
+     8/14: $0\issued[31:0]
+     9/14: $0\loops_left[15:0]
+    10/14: $0\limit[10:0]
+    11/14: $0\base[9:0]
+    12/14: $0\pc[9:0]
+    13/14: $0\running[0:0]
+    14/14: $0\fault[0:0]
+Creating decoders for process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:57$159'.
+Creating decoders for process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:34$135'.
+     1/2: $0\start_v_q[0:0]
+     2/2: $0\cfg_we_q[0:0]
+Creating decoders for process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:30$134'.
+Creating decoders for process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+     1/37: $0\rd_q[0:0]
+     2/37: $0\active[0:0]
+     3/37: $0\fault[0:0]
+     4/37: $0\cmd_v[0:0]
+     5/37: $0\cycle[31:0]
+     6/37: $0\cyc[31:0]
+     7/37: $0\tw_we[0:0]
+     8/37: $0\run_v[0:0]
+     9/37: $0\b_we[0:0]
+    10/37: $0\a_we[0:0]
+    11/37: $0\tw_data[255:0]
+    12/37: $0\tw_sel[1:0]
+    13/37: $0\tw_addr[6:0]
+    14/37: $0\head_pl[0:0]
+    15/37: $0\nxt[32:0]
+    16/37: $0\rem[15:0]
+    17/37: $0\s_base[12:0]
+    18/37: $0\s_limit[12:0]
+    19/37: $0\idx[6:0]
+    20/37: $0\fault_r[0:0]
+    21/37: $0\head_v[0:0]
+    22/37: $0\nxt_v[0:0]
+    23/37: $0\rd_end[0:0]
+    24/37: $0\seq_on[0:0]
+    25/37: $0\head_fire[31:0]
+    26/37: $0\nxt_lb[31:0]
+    27/37: $0\rd_lb[31:0]
+    28/37: $0\lbase[31:0]
+    29/37: $0\period[31:0]
+    30/37: $0\cmd[0:0]
+    31/37: $0\run_count[7:0]
+    32/37: $0\run_base[6:0]
+    33/37: $0\b_data[255:0]
+    34/37: $0\a_data[255:0]
+    35/37: $0\b_addr[6:0]
+    36/37: $0\a_addr[9:0]
+    37/37: $0\configured[0:0]
+Creating decoders for process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:100$55'.
+Creating decoders for process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:97$53'.
+     1/5: $0\flt_q[0:0]
+     2/5: $0\act_q[0:0]
+     3/5: $0\lv[0:0]
+     4/5: $0\dv[0:0]
+     5/5: $0\cv[0:0]
+Creating decoders for process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:93$52'.
+Creating decoders for process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+     1/15: $0\rp_q[6:0]
+     2/15: $0\rd_q[0:0]
+     3/15: $0\active[0:0]
+     4/15: $0\done[0:0]
+     5/15: $0\e_loops[15:0]
+     6/15: $0\e_limit[10:0]
+     7/15: $0\e_base[9:0]
+     8/15: $0\e_at[23:0]
+     9/15: $0\rc[23:0]
+    10/15: $0\n_go[7:0]
+    11/15: $0\n_rd[7:0]
+    12/15: $0\rp[6:0]
+    13/15: $0\ent_v[0:0]
+    14/15: $0\running[0:0]
+    15/15: $0\fault[0:0]
+Creating decoders for process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:58$20'.
+     1/2: $0\run_q[0:0]
+     2/2: $0\desc_we_q[0:0]
+Creating decoders for process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:57$19'.
+Creating decoders for process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:49$17'.
+     1/1: $0\rst_q[0:0]
+Creating decoders for process `\ot_hbm_svc_sm_xcal_t.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/00_ot_hbm_svc_sm_xcal_t.sv:37$15'.
+     1/1: $0\rst_q[0:0]
+
+11.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+11.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\done' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$610' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\fault' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$615' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\active' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$620' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\running' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$625' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\calendar_v' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$630' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\pc' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$635' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\base' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$640' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\limit' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$645' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\loops_left' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$650' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\issued' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$655' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\valid0' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$660' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\valid1' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$665' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\last0' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$670' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\last1' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+  created $adff cell `$procdff$675' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\calendar' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:57$159'.
+  created $dff cell `$procdff$676' with positive edge clock.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\ordinal' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:57$159'.
+  created $dff cell `$procdff$677' with positive edge clock.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\pc0' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:57$159'.
+  created $dff cell `$procdff$678' with positive edge clock.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\pc1' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:57$159'.
+  created $dff cell `$procdff$679' with positive edge clock.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\ord0' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:57$159'.
+  created $dff cell `$procdff$680' with positive edge clock.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\ord1' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:57$159'.
+  created $dff cell `$procdff$681' with positive edge clock.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\captured' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:57$159'.
+  created $dff cell `$procdff$682' with positive edge clock.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\cfg_we_q' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:34$135'.
+  created $adff cell `$procdff$687' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\start_v_q' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:34$135'.
+  created $adff cell `$procdff$692' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\cfg_addr_q' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:30$134'.
+  created $dff cell `$procdff$693' with positive edge clock.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\start_base_q' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:30$134'.
+  created $dff cell `$procdff$694' with positive edge clock.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\cfg_data_q' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:30$134'.
+  created $dff cell `$procdff$695' with positive edge clock.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\start_limit_q' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:30$134'.
+  created $dff cell `$procdff$696' with positive edge clock.
+Creating register for signal `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.\start_loops_q' using process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:30$134'.
+  created $dff cell `$procdff$697' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\configured' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$702' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\fault' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$707' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\active' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$712' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\a_we' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$717' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\b_we' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$722' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\run_v' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$727' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\a_addr' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$734' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\b_addr' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$741' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\a_data' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$748' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\b_data' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$755' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\run_base' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$762' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\run_count' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$769' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\cmd_v' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$774' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\cmd' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$781' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\cycle' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$786' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\rd_q' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$791' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\cyc' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$796' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\period' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$801' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\lbase' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$806' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\rd_lb' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$813' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\nxt_lb' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$820' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\head_fire' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$827' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\seq_on' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$832' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\rd_end' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$837' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\nxt_v' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$842' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\head_v' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$847' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\fault_r' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$852' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\idx' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$857' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\s_limit' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$864' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\s_base' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$871' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\rem' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$876' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\nxt' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$883' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\head_pl' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$890' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\tw_we' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $adff cell `$procdff$895' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\tw_addr' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$902' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\tw_sel' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$909' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\tw_data' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+  created $dff cell `$procdff$916' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\tgt_q' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:100$55'.
+  created $dff cell `$procdff$917' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\cv' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:97$53'.
+  created $adff cell `$procdff$922' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\dv' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:97$53'.
+  created $adff cell `$procdff$927' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\lv' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:97$53'.
+  created $adff cell `$procdff$932' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\act_q' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:97$53'.
+  created $adff cell `$procdff$937' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\flt_q' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:97$53'.
+  created $adff cell `$procdff$942' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\target_q' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:93$52'.
+  created $dff cell `$procdff$943' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\addr_q' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:93$52'.
+  created $dff cell `$procdff$944' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\base_q' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:93$52'.
+  created $dff cell `$procdff$945' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\limit_q' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:93$52'.
+  created $dff cell `$procdff$946' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\loops_q' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:93$52'.
+  created $dff cell `$procdff$947' with positive edge clock.
+Creating register for signal `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.\data_q' using process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:93$52'.
+  created $dff cell `$procdff$948' with positive edge clock.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\done' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$953' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\fault' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$958' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\active' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$963' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\running' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$968' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\rd_q' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$973' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\ent_v' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$978' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\rp' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$983' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\rp_q' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$988' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\n_rd' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$993' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\n_go' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$998' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\rc' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$1003' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\e_at' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$1008' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\e_base' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$1013' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\e_limit' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$1018' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\e_loops' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+  created $adff cell `$procdff$1023' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\desc_we_q' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:58$20'.
+  created $adff cell `$procdff$1028' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\run_q' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:58$20'.
+  created $adff cell `$procdff$1033' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\desc_addr_q' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:57$19'.
+  created $dff cell `$procdff$1034' with positive edge clock.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\run_base_q' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:57$19'.
+  created $dff cell `$procdff$1035' with positive edge clock.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\desc_data_q' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:57$19'.
+  created $dff cell `$procdff$1036' with positive edge clock.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\run_count_q' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:57$19'.
+  created $dff cell `$procdff$1037' with positive edge clock.
+Creating register for signal `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.\rst_q' using process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:49$17'.
+  created $adff cell `$procdff$1042' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_svc_sm_xcal_t.\rst_q' using process `\ot_hbm_svc_sm_xcal_t.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/00_ot_hbm_svc_sm_xcal_t.sv:37$15'.
+  created $adff cell `$procdff$1047' with positive edge clock and positive level reset.
+
+11.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+11.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 7 empty switches in `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+Removing empty process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:63$162'.
+Removing empty process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:57$159'.
+Removing empty process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:34$135'.
+Removing empty process `$paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/03_ot_smh_calendar_static.sv:30$134'.
+Found and cleaned up 22 empty switches in `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+Removing empty process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:140$73'.
+Removing empty process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:100$55'.
+Removing empty process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:97$53'.
+Removing empty process `$paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/02_ot_static_cmd_target.sv:93$52'.
+Found and cleaned up 11 empty switches in `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+Removing empty process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:81$32'.
+Removing empty process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:58$20'.
+Removing empty process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:57$19'.
+Removing empty process `$paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/01_ot_hbm_svc_sm_xcal.sv:49$17'.
+Removing empty process `ot_hbm_svc_sm_xcal_t.$proc$/tmp/r0330_eqv/hsm_xcal_t224_r2/src/00_ot_hbm_svc_sm_xcal_t.sv:37$15'.
+Cleaned up 40 empty switches.
+
+11.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.
+<suppressed ~35 debug messages>
+Optimizing module $paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.
+<suppressed ~134 debug messages>
+Optimizing module $paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.
+<suppressed ~40 debug messages>
+Optimizing module $paramod$12cde0735ed7a27abeb10749b7ca5c11a151a2e9\ot_static_cmd_target.
+Optimizing module ot_hbm_svc_sm_xcal_t.
+<suppressed ~2 debug messages>
+
+12. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_smh_calendar_static\W=s32'00000000000000000000000010101101.
+Deleting now unused module $paramod$3f80697c091839589f678d0bcd67eb647707358a\ot_static_cmd_target_core.
+Deleting now unused module $paramod\ot_hbm_svc_sm_xcal\MUT=s32'00000000000000000000000000000000.
+Deleting now unused module $paramod$12cde0735ed7a27abeb10749b7ca5c11a151a2e9\ot_static_cmd_target.
+<suppressed ~4 debug messages>
+
+13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_svc_sm_xcal_t..
+Removed 148 unused cells and 627 unused wires.
+<suppressed ~272 debug messages>
+
+14. Printing statistics.
+
+=== ot_hbm_svc_sm_xcal_t ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      345 wires
+     7262 wire bits
+      345 public wires
+     7262 public wire bits
+       18 ports
+      507 port bits
+      331 cells
+        8   $add
+       51   $adff
+       32   $dff
+       15   $eq
+        1   $ge
+        3   $gt
+        2   $le
+       31   $logic_and
+       20   $logic_not
+       21   $logic_or
+        3   $lt
+      127   $mux
+        3   $ne
+        2   $or
+        1   $pmux
+        3   $reduce_bool
+        6   $sub
+        1   ot_sram_1r1w_1024x256_m2_r2c2
+        1   ot_sram_1r1w_128x256_m1_r2c2
+
+15. Executing RTLIL backend.
+Output filename: /tmp/r0330_eqv/hsm_xcal_t224_r2/out_old/netlist.il
+
+16. Executing Verilog backend.
+
+16.1. Executing BMUXMAP pass.
+
+16.2. Executing DEMUXMAP pass.
+Dumping module `\ot_hbm_svc_sm_xcal_t'.
+
+End of script. Logfile hash: 4d54259b1d, time: 0.06s, user: 0.07s, system: 0.02s, MEM: 29.39 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 20% 1x hierarchy (0 sec), 19% 1x opt_clean (0 sec), ...
