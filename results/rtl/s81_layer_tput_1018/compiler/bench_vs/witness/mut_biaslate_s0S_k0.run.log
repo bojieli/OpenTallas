@@ -1,0 +1,23 @@
+VSOP op=12 cmd=600 cycles_cmd_to_last_result=57 slot=57
+VSOP op=9 cmd=4205 cycles_cmd_to_last_result=19 slot=19
+VSOP op=10 cmd=8289 cycles_cmd_to_last_result=147 slot=147
+VSOP op=11 cmd=8897 cycles_cmd_to_last_result=25 slot=25
+VSOP op=8 cmd=10442 cycles_cmd_to_last_result=191 slot=191
+MISMATCH check 1 pair 0 word 0 got 3f06fd0f want 4125f244
+MISMATCH check 1 pair 0 word 1 got 3f1923d5 want 41273578
+MISMATCH check 1 pair 0 word 2 got 3ecec6a1 want 41243a38
+MISMATCH check 1 pair 0 word 3 got 3f13d716 want 412665be
+MISMATCH check 1 pair 0 word 4 got 3e29f5b4 want 411e8854
+MISMATCH check 1 pair 0 word 5 got 3f1b58a2 want 41274861
+MISMATCH check 1 pair 0 word 6 got 3efc6dd3 want 412586aa
+MISMATCH check 1 pair 0 word 7 got 3eb234d0 want 4123141a
+MISMATCH check 1 pair 1 word 0 got 3f20862b want 4127fd92
+MISMATCH check 1 pair 1 word 1 got 3f1ca63d want 41275d3b
+MISMATCH check 1 pair 1 word 2 got 3ed44ffa want 41241cc1
+MISMATCH check 1 pair 1 word 3 got 3f1d745d want 41276a1d
+SLVSL sid=0 k=0 cmds=5 rowwrites=6 checked_pairs=20 xq=2/2 errors=24 slot_overruns=0 missed=0 fault=vp1/vs0/vq0
+FAIL
+- /srv/opentallas-scratch/claude/lb2-s81-cc/vs/kit/src/tools/s81_dv/layer_prog/vs/tb_vs_lowered.sv:136: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 1.792 s; speed 6.028 us/s
+- Verilator: cpu 1.788 s on 1 threads; allocated 20 MB
