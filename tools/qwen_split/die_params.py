@@ -119,7 +119,7 @@ def trapped_params(mod):
     return out
 
 
-def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT):
+def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, compiled=None):
     import die_port_bind as DPB
     import lane_latency_audit as LLA
     pj = Path(params) if params else Path(str(die_v) + '.params.json')
@@ -198,6 +198,18 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT):
                 fails.append(f'{D2D_MASTER}.TXDP {int(got):#010x} != image D2D_TXDP_C {v:#010x}')
         except ValueError as e:
             fails.append(str(e))
+    # (d) the layer compiler's TXD for THIS die (tools/qwen_layerbench/layer_compile.py manifest on this die's table):
+    # the image's die stages must be this die's seam ages, else the D2D calendar is compiled for another die
+    if compiled and tr is not None:
+        man = json.loads(Path(compiled).read_text())
+        want = man['txd']['C']
+        wv = sum(int(x) << (8 * i) for i, x in enumerate(want))
+        tr.update(compiled_txd_c=want, compiled_stages=man.get('stages'), compiled_manifest=str(compiled))
+        got = prm.get(D2D_MASTER, {}).get('TXDP')
+        if got is not None and int(got) != wv:
+            fails.append(f'{D2D_MASTER}.TXDP {int(got):#010x} != {wv:#010x} = the layer compiler\'s TXD {want} for this die '
+                         f'(stages {man.get("stages")}); recompile the image: D2D_DIE_STAGES=<these stages> '
+                         'tools/qwen_split/d2d_cal_image_production.sh')
     return dict(schema='opentallas.qwen_split.die_param_audit.v1', die_v=str(die_v), params=str(pj) if pj.exists() else None,
                 lanes=str(lanes) if lanes else None, trapped=req, xpf=xr, txdp=tr,
                 assigned={m: {k: v for k, v in p.items() if not k.startswith('_')} for m, p in prm.items()},
@@ -214,10 +226,11 @@ def main(argv=None):
     a_.add_argument('--lanes')
     a_.add_argument('--image', default=str(IMAGE))
     a_.add_argument('--src', default=str(ROOT), help='source root the port-bind record\'s relative RTL paths resolve against')
+    a_.add_argument('--compiled', help='layer_compile.py manifest.json compiled on this die (TXD check)')
     a_.add_argument('--out')
     a = ap.parse_args(argv)
     lanes = a.lanes or (str(Path(a.die_v).parent / 'fwd_lanes.json') if (Path(a.die_v).parent / 'fwd_lanes.json').exists() else None)
-    rec = audit(a.die_v, a.port_bind, a.params, lanes, a.image, a.src)
+    rec = audit(a.die_v, a.port_bind, a.params, lanes, a.image, a.src, a.compiled)
     if a.out:
         Path(a.out).write_text(json.dumps(rec, indent=1) + '\n')
     for f in rec['fails']:

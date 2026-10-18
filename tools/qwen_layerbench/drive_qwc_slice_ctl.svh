@@ -65,6 +65,15 @@
             digest = {digest[56:0], digest[63:57]} ^ prog[pi] ^ (pi < 1024 ? 64'(pi) : (64'd1 << 10) | 64'(pi - 1024));
         footer = prog[1023];
     end
+    // QLB-GEN: first edge of each record-port fault term (which slot / record raised it)
+    reg rp_af_said = 0, rp_sf_said = 0;
+    always @(posedge ck) if (rst_n) begin
+        if (dut.sys_face.u_record.af === 1'b1 && !rp_af_said) begin rp_af_said = 1;
+            $display("SMOKE_INFO record port af rises @%0d (rx_v %b auth_slot %b context_slot %b)", cyc,
+                     dut.sys_face.prog_rx_v, dut.sys_face.prog_auth_slot, dut.sys_face.prog_context_slot); end
+        if (dut.sys_face.u_record.slot_fault === 1'b1 && !rp_sf_said) begin rp_sf_said = 1;
+            $display("SMOKE_INFO record port slot_fault rises @%0d", cyc); end
+    end
     // program words at the tt_ctlm pins (after the die relays)
     always @(posedge ck) if (rst_n) begin
         if (dut.tt_ctlm.pw[74]) begin
@@ -143,7 +152,10 @@
         end
         $display("SMOKE_XPF hr lane edges %0d (tt_ctlm.hr -> W5-end slice output); XPF_TRANSPORT_EDGES elaborated %0d (expected %0d = 1 + lane)",
                  lat_hr, `SMOKE_XPF_T, lat_hr + 1);
-        if (lat_hr < 0 || `SMOKE_XPF_T != lat_hr + 1) smoke_err("XPF_TRANSPORT_EDGES != 1 + measured hr lane edges");
+        if (lat_hr < 0 || `SMOKE_XPF_T != lat_hr + 1) begin
+            $display("SMOKE_XPF_MISMATCH XPF_TRANSPORT_EDGES %0d != 1 + measured hr lane edges %0d", `SMOKE_XPF_T, lat_hr);
+            smoke_err("XPF_TRANSPORT_EDGES != 1 + measured hr lane edges");
+        end else $display("SMOKE_XPF_OK XPF_TRANSPORT_EDGES %0d = 1 + measured hr lane edges %0d", `SMOKE_XPF_T, lat_hr);
     end endtask
 `endif
     task automatic slice_programme(); begin
