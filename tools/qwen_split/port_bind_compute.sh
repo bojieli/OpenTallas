@@ -22,4 +22,12 @@ python3 $R/tools/die_port_bind.py $D $T45 --rtl-file $O/die_glue.sv --rtl-file $
   --define OT_QFD_UP4_CK_ENTRIES --strap-file ${OT_PORT_BIND_STRAPS:-$R/results/arch/qwen_split_compute_1014/straps.json} --out $O/port_bind.json > $O/port_bind.txt 2>&1
 rc=$?
 tail -1 $O/port_bind.txt
+# Q-COLLCAL 10-18: lane audit (one stage count per bus group; landing K straps = the GEN's total E; io_collective LX0..2
+# = the SerDes lane cycles TX(peer) + RX(own)).  Part of the strict bind: a die whose bus bits disagree, or whose collective
+# calendar misses its lanes, faults its static schedule.  OT_LANE_AUDIT=0 skips it (diagnosis only).
+if [ "${OT_LANE_AUDIT:-1}" = 1 ]; then
+  python3 $R/tools/qwen_split/lane_latency_audit.py $D --out $O/lane_latency_audit.json > $O/lane_latency_audit.txt 2>&1; la=$?
+  tail -1 $O/lane_latency_audit.txt
+  [ $la -ne 0 ] && [ $rc -eq 0 ] && rc=4
+fi
 exit $rc

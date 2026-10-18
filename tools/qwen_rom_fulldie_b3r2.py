@@ -4191,6 +4191,29 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if _fwd_rst(si_) is None or _fwd_rst(di_) is None:
                 return f'source / sink reset pin not found (src {_fwd_rst(si_)}, dst {_fwd_rst(di_)})'
             return None
+    fwd_eq = {}
+    if FWDL:
+        # Q-COLLCAL 10-18 (TP8 co-sim bug 2: serdes2_txv E 6 vs serdes2_tx E 5): ONE E per bus group (a valid bus and its
+        # data buses, tools/qwen_split/lane_groups.py; LANDING-CONTRACT L5), the earlier members wait in their ring
+        # (landing MCP E_sta + dE, hold window checked against the land plan's STA when present), and K = (TOTAL E +
+        # G - R0) mod 8 -- the land plan's K is E_sta + calendar (the residual), so only its calendar offset is kept.
+        sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+        import lane_groups as _LG
+        _pre, _cal, _h0 = [], {}, {}
+        for idx, pl in sorted(plans.items()):
+            if not pl['frames'] or _fwd_ok(pl) not in (None, 'BUMP'):
+                continue
+            n_ = len(pl['frames'])
+            lp_ = _lpE.get(pl['bid'], {})
+            es_ = int(lp_.get('E') or FWD_LANE_E_STA)
+            _pre.append(dict(bid=pl['bid'], src=pl['eps'][0][0], dst=pl['eps'][1][0], n=n_, E_sta=es_,
+                             E=fwd_e_est(n_) + es_ - FWD_LANE_E_STA))
+            if lp_.get('K') is not None and lp_.get('E') is not None:
+                _cal[pl['bid']] = (int(lp_['K']) - int(lp_['E'])) % 8
+            if lp_.get('h0'):
+                _h0[pl['bid']] = lp_['h0']
+        fwd_groups = _LG.equalize(_pre, 4, _cal, _h0)
+        fwd_eq = {r_['bid']: r_ for r_ in _pre}
     for idx, pl in sorted(plans.items()):
         bid, cl, bits, eps = pl['bid'], pl['cl'], pl['bits'], pl['eps']
         link = cl in ('link_spine', 'link_channel')
@@ -4204,12 +4227,18 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 e_ = fwd_e_est(n_) + es_ - FWD_LANE_E_STA
                 k_ = _lpE.get(bid, {}).get('K')
                 k_ = (e_ % 8) if k_ is None else int(k_)
+                if bid in fwd_eq:          # Q-COLLCAL: the bus group's E / landing MCP / total-E K
+                    es_, e_, k_ = fwd_eq[bid]['E_sta'], fwd_eq[bid]['E'], fwd_eq[bid]['K']
                 fwd = dict(bid=bid, cl=cl, bits=bits, n=n_, src=si_, dst=di_, src_ck=_fwd_clock(si_), dst_ck=_fwd_clock(di_),
                            src_rst=[si_, _fwd_rst(si_)], dst_rst=[di_, _fwd_rst(di_)], E=e_, E_sta=es_, K=k_,
                            lane={'RST': 'reset', 'BUMP': 'bump'}.get(why_, 'data'),
                            E_basis='land plan (die STA)' if bid in _lpE else 'estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA',
                            K_basis='land plan' if _lpE.get(bid, {}).get('K') is not None else 'E mod 8 (assumes G = R0); re-derive with the reset calendar',
                            stations=[], landing=None)
+                if bid in fwd_eq:
+                    fwd.update({k__: fwd_eq[bid][k__] for k__ in ('K_basis', 'cal', 'group', 'E_own', 'hold_E_group') if k__ in fwd_eq[bid]})
+                    if 'E_own' in fwd_eq[bid]:
+                        fwd['E_basis'] += fwd_eq[bid]['E_basis']
                 if why_ == 'BUMP':
                     # pad bump: no source root / reset -> hop 0 on the bump-side root (set at frame 0), epoch = receiver reset
                     fwd['src_ck'], fwd['src_rst'] = None, [di_, _fwd_rst(di_)]
@@ -4367,6 +4396,21 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                               masters=dict(collections.Counter(fwd_kind.values())),
                               stations=sum(len(r_['stations']) for r_ in fwd_rows), landings=len(fwd_rows),
                               plain_relays_left=sum(r_['n'] for r_ in fwd_skip))
+        m['fwd_lanes']['bus_groups'] = fwd_groups
+        # Q-COLLCAL 10-18 (TP8 co-sim bug 1: the dv2f14 SerDes lanes were not in the collective calendar): the GEN emits
+        # the per-port lane cycles and the io_collective master is elaborated with LX0..2 = TX(peer port) + RX(own)
+        # (die.v.params.json, read by the strict bind; case/coll_lane_latency.json); tools/qwen_split/lane_latency_audit.py
+        # re-derives both from die.v and fails the strict bind on any drift
+        _plain = [dict(bid=pl['bid'], src=pl['eps'][0][0], dst=pl['eps'][-1][0], n=len(pl['frames']))
+                  for pl in plans.values() if pl['bid'] not in fwd_eq]
+        cll = _LG.coll_lane_latency([r_ for r_ in fwd_rows if r_.get('E') is not None], _plain,
+                                    source='GEN tools/qwen_rom_fulldie_b3r2.py _relays_fanout (OT_SPLIT_FWD_LANES=1)')
+        m['coll_lane_latency'] = cll
+        if cll['verdict'] != 'PASS':
+            raise ValueError(f"collective lane latency: {cll['fails']}")
+        if any(i_.name == _LG.COLL_INST and i_.master == _LG.COLL_MASTER for i_ in m['insts']):
+            m.setdefault('die_master_params', {})[_LG.COLL_MASTER] = dict(
+                cll['params'], _source='Q-COLLCAL: GEN lane cycles (case/coll_lane_latency.json), LX_j = TX(peer) + RX(j)')
     # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
