@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.s81u.gunit2.bench.v1",
+ "lane": "S81U-GUNIT-L1b",
+ "date": "2026-10-18",
+ "source": "claude/s81u-gunit-l1-1017 fa629fcb5 (rtl/dsrom_sys/s81_dv/unit; kits 103f9cf73)",
+ "bench": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh /tmp/gunit_l1b_run/bench 8 0 (ot-run ot-epyc4, git archive fa629fcb5)",
+ "verdict": "PASS (MUT=0, 8 golden cases)",
+ "mutants": "PENDING: lanes/gunit_l1b/{mut1,mut10,full}.log (bench.sh)",
+ "router_ids_latency_edges": {"stop_pins": 38, "unit_pins": 50, "was": 36, "budget_select_only": 52.9,
+   "why": "+1 L1f bias add LAT 4 -> 5 (f12 l5x; LAT-4 first stage -207 ps at the gate), +1 L1 pin flops on the collector's i_v / i_ids (NATIVE-2: they fed the N-face ct_b output flop and the sequencer from the E pins); gather path 0 (L1c sends the request one edge earlier, L1f registers the one-hot hit decode)"},
+ "hc_latency_edges": {"stop_pins": 748, "unchanged": true}
+}
