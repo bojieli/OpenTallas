@@ -1,0 +1,130 @@
+{
+ "name": "qkd_seq_xd_sel_r",
+ "top": "qkd_seq_xd_sel_r",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_prg.sv"
+ ],
+ "params": {
+  "W": 128,
+  "NS": 8,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 43.2,
+  "h": 21.6,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "N": [
+   "q_v",
+   "q_d",
+   "k_d",
+   "ck"
+  ],
+  "S": [
+   "x_d",
+   "x_vo",
+   "x_co"
+  ],
+  "W": [
+   "x_vi",
+   "x_ci"
+  ],
+  "E": []
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "The RTL registers every pin itself: stage 1 = pin flops of q_v (8 kept select copies), q_d, k_d (N face) and x_vi/x_ci (W face); stage 2 = x_d (the per-group 2:1 select) and x_vo/x_co at the S face. Flow pin registers would add a further edge for no timing need."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "KV-NATIVE 10-17 successor of qkd_seq_xd_sel (routed native audit FAIL, claude/native-batch-1017 029f539c5, results/arch/native_batch_1017/native_batch_audit.json: q_v capture 230.8 > 190 -- the bare q_v pin fanned out to 128 mux selects ahead of the x_d flops). q_v now lands in 8 kept pin-flop select copies (16 bits each), q_d/k_d in pin flops, then x_d <= sel ? q_d : k_d (+1 edge, Q and KVN store data); the core's store-push control x_v/x_cls passes through the tile with the same +1 edge (W pins in, S pins out). Same 43.2 x 21.6 slot.",
+ "job": {
+  "owner": "Claude:KV-NATIVE",
+  "branch": "claude/kv-native-1017",
+  "tag": "r1",
+  "purpose": "KV-NATIVE 10-17: pin-registered store-data select leaf of qkd_seq_static_p (successor of qkd_seq_xd_sel); bench = the parent bench (seq_static_prg_bench.sh): exact vs qkd_seq_static on 36 layers (aq/kvn faces cycle-identical; store push +1 edge absorbed), mutants MUT 5 (select ignores q_v) and MUT 6 (one select copy ignores q_v) FAIL.",
+  "benches": [
+   {
+    "name": "seq_prg_pass",
+    "cmd": "bash tools/qwen_static_kv/seq_static_prg_bench.sh {RUN}/bench/m0 0 36",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_PRG PASS layers=36 aq=1188 kvn=72 kc=72 errors=0 mut=0 aq_vs_ref=0..0 kvn_vs_ref=0..0 kc_vs_ref=1..1",
+    "min_count_regex": "aq=(\\d+)"
+   },
+   {
+    "name": "seq_prg_mut_xdsel",
+    "cmd": "bash tools/qwen_static_kv/seq_static_prg_bench.sh {RUN}/bench/m5 5 36",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_PRG PASS",
+    "fail_regex": "^SEQ_PRG FAIL layers=36 .* mut=5"
+   },
+   {
+    "name": "seq_prg_mut_xdsel_copy",
+    "cmd": "bash tools/qwen_static_kv/seq_static_prg_bench.sh {RUN}/bench/m6 6 36",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_PRG PASS",
+    "fail_regex": "^SEQ_PRG FAIL layers=36 .* mut=6"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "results/arch/token_path_20261009/qwen_rom.json",
+   "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json",
+   "results/arch/qwen_split_1014/kvsys_v1_4_3_design/hbm_refresh_calendar.json",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+  ],
+  "views_to": "physical/ref_tile/qkd_seq_xd_sel/views",
+  "record_to": "results/rtl/ref_tile/qkd_seq_xd_sel",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "source": "results/arch/native_batch_1017/native_batch_audit.json",
+   "cell": "qkd_seq_xd_sel",
+   "capture_ps": 230.8,
+   "fix": "qkd_seq_xd_sel_r: q_v pin flop as 8 kept select copies + q_d/k_d pin flops, select after the edge into x_d (+1 edge, absorbed in qkd_seq_static_p: aq/kvn faces cycle-identical in the parent bench); x_v/x_cls passed through with +1.",
+   "why_route": "CLOSED qkd_seq_xd_sel (qkd_seq_xd_sel-x1-ec5a00436, record d62d2752f) FAILS the routed native pin audit (native_pin_audit.audit_one, origin/main 708fc1938; receipt claude/native-batch-1017 029f539c5): capture q_v 230.8 > 190 on 1 pin; launch 177.4, spread 5.0. New top qkd_seq_xd_sel_r."
+  }
+ }
+}
