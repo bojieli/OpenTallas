@@ -43,7 +43,12 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 
 ON = os.environ.get('OT_KV_STATIC_DIE', '0') == '1'
-RTL_FILE = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles.sv'
+# KV-PLAN 10-17 (HANDOFF 0cx+4 decision 1): one control root per die half (kvs_hroot_N / kvs_hroot_S), each serving its
+# own two stacks (es chain heads, fan words, group gathers, embedding return trains); off = the single top-centre root
+HROOT = os.environ.get('OT_KV_HROOT', '0') == '1'
+HROOT_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root.sv'
+RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot.sv' if HROOT else
+            'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles.sv')
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -54,7 +59,7 @@ HBM_CK = ('hck', 'pll_hbm', 'pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_h
 RESETS = ('rst_n', 'rsi', 'hrst_n', 'hrst', 'cal_rst_n')
 HBM_RST = ('hrst_n', 'hrst', 'cal_rst_n')
 KIND_MASTER = dict(fan='qkd_kvs_fan', grp='qkd_kvs_grp', pc='qkd_kvs_pc', pc_h='qkd_kvs_pc_h', ctl='qkd_kvs_ctl', attn='qkd_kvs_attn',
-                   emb='qkd_kvs_emb')
+                   emb='qkd_kvs_emb', hroot='qkd_kvs_hroot')
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
                  boot_obs='bobs', diecfg='dcfg')
@@ -62,7 +67,7 @@ GRP_LOCAL = dict(slg='slg', lcal='lcal', fcal='fcal', phase='phase', drain='drai
 # superseded die instances (0db) by name prefix
 SUPERSEDED = ('ctrl_', 'cdc_', 'land_', 'wctl_', 'wleaf_', 'kvnc', 'lprg')
 # per-tile frames (um, ASSUMED until kits close): see place()
-FRAME = dict(fan=(302.4, 302.4), attn=(302.4, 302.4), emb=(388.8, 302.4), ctl=(1123.2, 172.8))
+FRAME = dict(fan=(302.4, 302.4), attn=(302.4, 302.4), emb=(388.8, 302.4), ctl=(1123.2, 172.8), hroot=(388.8, 388.8))
 # Special bundles (die-port order = the existing master's binding order, LSB first)
 VREQ = [('vreq_valid', 1), ('vreq_t', 14)]                                         # qkd_pv16_vport vq<p>
 RSP = ['rsp_valid', 'rsp_v', 'rsp_t', 'rsp_epoch', 'rsp_data']                    # qkd_pv16_vport i<p> (R6)
@@ -84,10 +89,29 @@ def graph():
         g, _ = AJ.build()
         ages = json.loads((ROOT / AGES).read_text())
         left = A.apply(g, ages)
+        if HROOT:
+            _hroot_join(g)
         _G['g'], _G['unpriced'] = g, left
         _G['ins'] = {i['name']: i for i in g['instances']}
         _G['spec'] = {}
     return _G['g']
+
+
+def _hroot_join(g):
+    """the es fan root emits one unsteered edge word (qkd_kv_es_fan_root2.h); each stack root's qkd_kv_es_fan_stack
+    holds its stack's chain head (one more register: exactly the single root's word one edge later)"""
+    by = {i['name']: i for i in g['instances']}
+    f = by['fanr']
+    f.update(module='qkd_kv_es_fan_root2', source=HROOT_RTL, sha256=None)
+    for k, st in enumerate(STACKS):                     # chain d<k>: WS 0, WN 1, ES 2, EN 3
+        g['instances'].append(dict(name=f'esh_{st}', role='es_fan_stack', source=HROOT_RTL, module='qkd_kv_es_fan_stack',
+                                   sha256=None, parameters={'MUT': 0},
+                                   inputs={'ck': None, 'rst_n': None, 'stack': [{'strap': k, 'width': 2}],
+                                           'h': [{'instance': 'fanr', 'port': 'h', 'lo': 0, 'width': 783}]}))
+        it = by[f'pc_{st}_31']['inputs']['chain_i']
+        if it != [{'instance': 'fanr', 'port': f'd{k}', 'lo': 0, 'width': 779}]:
+            raise ValueError(f'kv_static_die HROOT: pc_{st}_31.chain_i is not fanr.d{k}: {it}')
+        by[f'pc_{st}_31']['inputs']['chain_i'] = [{'instance': f'esh_{st}', 'port': 'd', 'lo': 0, 'width': 779}]
 
 
 def ins():
@@ -134,6 +158,9 @@ def cluster_of(name):
         return f'slg_{m.group(1)}_{m.group(2)}', 'grp', 'cf1'
     if re.fullmatch(r'cf2_(WS|WN|ES|EN)_\d|cf3_[WE]|cf_root', name) or name == 'fanr':
         return 'kvs_ctl', 'ctl', name      # upper cfault levels + the C3 es fan root: beside the HOST root / writer
+    m = re.fullmatch(r'esh_(WS|WN|ES|EN)', name)
+    if m:
+        return f'kvs_hroot_{m.group(1)}', 'hroot', 'esh'
     if name in ('attn_root', 'attn_face', 'attn_cal'):
         return 'kvs_attn', 'attn', name
     m = re.fullmatch(r'(ectl_a|ki)_(WS|WN|ES|EN)_(\d)', name)
@@ -172,6 +199,8 @@ def kind_of(die_inst):
         return 'grp'
     if die_inst.startswith('kvs_fan_'):  # noqa
         return 'fan'
+    if die_inst.startswith('kvs_hroot_'):
+        return 'hroot'
     return dict(kvs_ctl='ctl', kvs_attn='attn', kvs_emb='emb').get(die_inst)
 
 
@@ -517,8 +546,12 @@ def rel(T, S):
             return 'prev' if int(S.split('_')[2]) == int(T.split('_')[2]) - 1 else 'next'
         if ks == 'emb':
             return 'next'              # the return train's root word leaves on the same face as a station's
-        if ks == 'ctl':
+        if ks in ('ctl', 'hroot'):
             return 'next'              # KVJ-C3: the es fan root's stack chain enters PC 31 on a station's chain face
+    if kt == 'hroot' and ks in ('pc', 'pc_h'):
+        return 'pc'                    # the stack's PC 31 chain end
+    if kt == 'ctl' and ks == 'hroot':
+        return 'hroot_' + S.split('_')[2]
     if kt == 'grp' and ks in ('pc', 'pc_h'):
         return f'pc{int(S.split("_")[2]) % 4}'
     if ks in ('ctl', 'attn', 'emb'):
@@ -685,6 +718,55 @@ def add_fans(tiles):
         # fan port order: inputs first, then outputs (stable across sides)
         tiles[fname] = dict(inst=fname, kind='fan', ports=OrderedDict(sorted(fports.items(), key=lambda kv: (kv[1]['dir'] != 'input', kv[0]))),
                             wires=[], body=[], members=[], loc={}, packed=[], keyexpr={})
+    if HROOT:
+        add_hroots(tiles)
+    return tiles
+
+
+def add_hroots(tiles):
+    """KV-PLAN 10-17 decision 1: distributed static control.  Per stack one control root tile kvs_hroot_<st>
+    (replica-identical, master qkd_kvs_hroot; the S roots at the stack seam, the N roots at the top of the N stacks:
+    the half root of decision 1 is the W + E pair, split because the PV column leaves no W <-> E crossing at the seam).
+    Down: ONE word ctl -> root {fan, h} (the stack fan word + the es edge word); the root emits the stack's chain head
+    (qkd_kv_es_fan_stack) and re-registers the fan word.  Up: the fan's group gathers -> ctl, the PC 31 embedding
+    return train -> the embedding tile.  Every word through the root takes exactly ONE register (priced as one relay
+    stage: qkd_kv_stack_relays / the chain-head register)."""
+    ctl, emb = tiles['kvs_ctl'], tiles['kvs_emb']
+    for st in STACKS:
+        hd = f'kvs_hroot_{st}'
+        t = tiles[hd]
+        P = t['ports']
+        hin = P['i_ctl']                                  # pack(): the es edge word h (783 b) from the fan root
+        HW = hin['width']
+        fo = ctl['ports'].pop(f'o_fan_{st}')
+        FW = fo['width']
+        cp = ctl['ports'].pop(f'o_hroot_{st}')
+        ctl['ports'][f'o_hroot_{st}'] = dict(dir='output', width=HW + FW, cls='bundle', peer=hd, peer_port='i_ctl',
+                                            consumers=[], expr='{' + fo['expr'] + ', ' + cp['expr'] + '}')
+        hin.update(width=HW + FW)
+        gp = ctl['ports'].pop(f'i_fan_{st}')
+        GW = gp['width']
+        ctl['packed'] = [(pn, w, f'i_hroot_{st}' if b == f'i_fan_{st}' else b, o) for pn, w, b, o in ctl['packed']]
+        ctl['ports'][f'i_hroot_{st}'] = dict(dir='input', width=GW, cls='bundle', peer=hd)
+        rp = emb['ports'].pop(f'i_kvpc_{st}_31')
+        RW = rp['width']
+        emb['packed'] = [(pn, w, f'i_hroot_{st}' if b == f'i_kvpc_{st}_31' else b, o) for pn, w, b, o in emb['packed']]
+        emb['ports'][f'i_hroot_{st}'] = dict(dir='input', width=RW, cls='bundle', peer=hd)
+        tiles[f'kvpc_{st}_31']['ports']['o_next'].update(peer=hd, peer_port='i_r')
+        fp = tiles[f'kvs_fan_{st}']['ports']
+        fp['i_ctl'].update(peer=hd)
+        fp['o_ctl'].update(peer=hd, peer_port='i_g')
+        P['i_g'] = dict(dir='input', width=GW, cls='bundle', peer=None)
+        P['i_r'] = dict(dir='input', width=RW, cls='bundle', peer=None)
+        P['rly__ck'] = dict(dir='input', width=1, cls='clock', domain='core')
+        for nm, w, peer, pport, expr in (('o_fan', FW, f'kvs_fan_{st}', 'i_ctl', 'w_rly__fan'),
+                                         ('o_ctl', GW, 'kvs_ctl', f'i_hroot_{st}', 'w_rly__g'),
+                                         ('o_emb', RW, 'kvs_emb', f'i_hroot_{st}', 'w_rly__r')):
+            P[nm] = dict(dir='output', width=w, cls='bundle', peer=peer, peer_port=pport, consumers=[], expr=expr)
+        t['wires'] += [f'    wire [{FW - 1}:0] w_rly__fan;', f'    wire [{GW - 1}:0] w_rly__g;', f'    wire [{RW - 1}:0] w_rly__r;']
+        t['body'].append(f'    qkd_kv_stack_relays #(.HW({HW}), .FW({FW}), .GW({GW}), .RW({RW})) u_rly (.ck(rly__ck), '
+                         f'.dn(i_ctl), .g_i(i_g), .r_i(i_r), .fan(w_rly__fan), .g(w_rly__g), .r(w_rly__r));')
+        t['hroot'] = dict(HW=HW, FW=FW, GW=GW, RW=RW)
     return tiles
 
 
@@ -1123,7 +1205,20 @@ def place(m, K, geo, F):
     sq = by['seq']
     anchors = dict(kvs_ctl=(host.x + host.w / 2, (sq.y + sq.h + host.y) / 2), kvs_emb=(d2d.x - 40.0, d2d.y + d2d.h / 2),
                    kvs_attn=((pv.x - 500.0) if pv else d2d.x, (pv.y + pv.h - 200.0) if pv else d2d.y - 400.0))   # W of the N pair's top: the pair-top gap stays a crossing
-    for nm, kind in (('kvs_ctl', 'ctl'), ('kvs_emb', 'emb'), ('kvs_attn', 'attn')):
+    hro = []
+    if HROOT:
+        # KV-PLAN decision 1: the S half root at the stack seam (where the S stacks' PC 31 chain ends sit), W of the PV
+        # column in the seam band between the S and N attention stacks; the N half root at the top of the N stacks
+        # (their PC 31 chain ends), W of the N pair's top.  Each serves its own two stacks.
+        p0, p1 = by['pvw_0'], by['pvw_1']
+        yseam = (p0.y + p0.h + p1.y) / 2
+        anchors['kvs_hroot_WS'] = (p0.x - 600.0, yseam)                   # bottom of the W side channel
+        anchors['kvs_hroot_ES'] = (p0.x + p0.w + 600.0, yseam)            # bottom of the E side channel
+        for st in ('WN', 'EN'):                                            # above the stack's PC 31 / control channel
+            gd, pc = by[f'slg_{st}_0'], by[f'kvpc_{st}_31']
+            anchors[f'kvs_hroot_{st}'] = (gd.x + gd.w / 2, pc.y + pc.h + 400.0)
+        hro = [(f'kvs_hroot_{st}', 'hroot') for st in ('WS', 'ES', 'WN', 'EN')]
+    for nm, kind in [('kvs_ctl', 'ctl'), ('kvs_emb', 'emb'), ('kvs_attn', 'attn')] + hro:
         w, h = FRAME[kind]
         x, y = free_spot(m, w, h, anchors[nm], GX, GY)
         m['insts'].append(F.Inst(nm, KIND_MASTER[kind], round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
@@ -1185,6 +1280,8 @@ def waypoints(m, a, pa, b, pb):
     wpm = os.environ.get('OT_KV_STATIC_WP', 'all')        # all | none | chain (diagnostic corridor variants)
     if wpm == 'none':
         return None
+    if HROOT:
+        return _hroot_waypoints(m, a, pa, b, pb)
     ends = {(a, pa), (b, pb)}
     other = [e for e in ends if e[0] != 'kvs_ctl']
     if len(other) != 1 or not any(e[0] == 'kvs_ctl' for e in ends):
@@ -1215,6 +1312,26 @@ def waypoints(m, a, pa, b, pb):
     else:
         pts = [(xcc, ytop)]
     return pts if a == 'kvs_ctl' else list(reversed(pts))
+
+
+def _hroot_waypoints(m, a, pa, b, pb):
+    """HROOT: an S stack root's words to / from the top tiles (ctl, emb) run down its own side of the PV column (W / E
+    side channel) to the seam row; everything else takes the planner's shortest path"""
+    ends = {a, b}
+    hr = next((e for e in ends if e in ('kvs_hroot_WS', 'kvs_hroot_ES')), None)
+    if hr is None or not ends & {'kvs_ctl', 'kvs_emb'}:
+        return None
+    by = {i.name: i for i in m['insts']}
+    pv = by.get('pvw_1')
+    pv144 = m['geo'].get('pv144') or {}
+    if pv is None or 'side_channel_um' not in pv144:
+        return None
+    sw, se = pv144['side_channel_um'][:2]
+    lx = pv.x - sw / 2 if hr.endswith('WS') else pv.x + pv.w + se / 2
+    top = by['kvs_ctl'] if 'kvs_ctl' in ends else by['kvs_emb']
+    h = by[hr]
+    pts = [(lx, top.y - 100.0), (lx, h.y + h.h / 2)]
+    return pts if a != hr else list(reversed(pts))
 
 
 # ------------------------------------------------------------------------------------------------ record / report
