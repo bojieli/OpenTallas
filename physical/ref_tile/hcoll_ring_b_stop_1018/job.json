@@ -1,5 +1,5 @@
 {
- "name": "hcoll_ring_b_stop_1018-r1-COMMIT",
+ "name": "hcoll_ring_b_stop_1018-r1-78d2d7956",
  "block": "ot_hgi_coll_ring_b_stop",
  "ref_tile": true,
  "owner": "Claude:HBM-RTL4",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/hbm-rtl4-ringb-1018",
-  "commit": "COMMIT"
+  "commit": "78d2d7956a4456ef69599f64e3e691424cf533e5"
  },
  "stages": {
   "bench": [
@@ -118,7 +118,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hbm_d4g_coll_ag_1017/route_ring_b/hcoll_ring_b_stop_1018-r1-COMMIT"
+   "to": "results/arch/hbm_d4g_coll_ag_1017/route_ring_b/hcoll_ring_b_stop_1018-r1-78d2d7956"
   }
  ],
  "cycles_added": 0,
