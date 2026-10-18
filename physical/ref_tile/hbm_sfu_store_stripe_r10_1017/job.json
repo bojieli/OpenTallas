@@ -112,40 +112,44 @@
     "peak_ram_gb": 64,
     "needs": [
      "verilator"
-    ]
+    ],
+    "pass_witness": "results/rtl/hbm_native_1017/sfu_r10n2_split_equiv_exact.log"
    },
    {
     "name": "split_mutant_flip",
     "cmd": "OUT={RUN}/bench/flip SFU_LG_R=23 STORE10=1 EQ_MUT=flip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip/run.log; exit 1",
     "expect": "fail",
-    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "fail_regex": "SFU_SPLIT_EQUIV FAIL mismatching_edges=|SFU_SPLIT_EQUIV_MISMATCH",
     "threads": 8,
     "peak_ram_gb": 64,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/hbm_native_1017/sfu_r10n2_split_mutant_flip.log"
    },
    {
     "name": "split_mutant_early",
     "cmd": "OUT={RUN}/bench/early SFU_LG_R=23 STORE10=1 EQ_MUT=early bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/early/run.log; exit 1",
     "expect": "fail",
-    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "fail_regex": "SFU_SPLIT_FAULT store=1 core=0",
     "threads": 8,
     "peak_ram_gb": 64,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/hbm_native_1017/sfu_r10n2_split_mutant_early.log"
    },
    {
     "name": "split_mutant_chain",
     "cmd": "OUT={RUN}/bench/chain SFU_LG_R=23 STORE10=1 EQ_MUT=chain bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/chain/run.log; exit 1",
     "expect": "fail",
-    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "fail_regex": "SFU_SPLIT_FAULT store=0 core=1",
     "threads": 8,
     "peak_ram_gb": 64,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/hbm_native_1017/sfu_r10n2_split_mutant_chain.log"
    }
   ],
   "calibrate": {

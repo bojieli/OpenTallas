@@ -277,7 +277,15 @@ reg io_cfg_we=0,io_start_v=0;
    else io_cfg_data=(io_cfg_data&((256'd1<<222)-1))|(256'hc7a1<<240)|(256'(p)<<223);
    @(negedge clk);
   end
+`ifdef SFU_PSTORE_R10
+  // r10n2 host contract (ot_hgi_sfu_programme_store_r10 header): io_start_v >= 4 IDLE edges after the last configuration
+  // write -- the IO2 leaf write lands depth(4)+1 edges after the head pin flop (2 edges per chain hop). With 3 idle edges
+  // the start reaches IO2 before its last row is written and the store raises an IO disagreement fault (SFU-R10N3 10-18).
+  // One-time per calendar load; per-token cost 0. Reference and store see the same start edge.
+  io_cfg_we=0;repeat(4)@(negedge clk);
+`else
   io_cfg_we=0;repeat(3)@(negedge clk);
+`endif
   io_start_v=1;@(negedge clk);io_start_v=0;
   // One actual hardware start; no runtime status polling or per-lane driving.
   repeat(IO_ROWS+10)begin
