@@ -1,12 +1,15 @@
 `timescale 1ns/1ps
 // S81U-SVC 2026-10-17: exact bench of the 16 regional service slices dsdv_svc_rs (2 x 8 grid, sid = 2 col + row,
-// abutted faces; root slice 9 = dsdv_svc_rs_root) against the dsfd_svc_c GOLDEN (tools/v41_ckv_sel_attn_vectors.py,
+// abutted faces; S81U-SVC4 p4j: entry slices 5 (W) / 11 (E) = dsdv_svc_rs_entry, the q.k fold at slice 9) against the
+// dsfd_svc_c GOLDEN (tools/v41_ckv_sel_attn_vectors.py,
 // the vectors tb_dsfd_svc_c runs: window rows qdq_fp8 through OWN_ROW frames -> HBM -> the window load, selected rows
 // qdq_fp4_e4m3 owned here from HBM / held elsewhere on ROWS frames, q, p; expected scores sc.hex and p.v pv.hex).
-// The bench is the VM + host + 16 regional controllers: it arms the job on j (frame count, END source 0), sends the q
-// frames into the ROOT's q pin (CFG, OWN_ROW x wcount, WIN_LOAD, SEL_IDS, ATTN_Q x 2, SMJ (SE job + 2 parameter rows),
-// ROWS (shuffled), GO at a compiled cycle, then PV after the last root score), host sector writes on hw with the
-// 8-credit hc contract, and models every slice's 2 PCs (request queue, DQ 8 credits, latency lat + rand, in-order
+// The bench is the VM + host + 16 regional controllers: it arms the job on both entries' j (frame count, END source 0),
+// sends the same q frames into both entries' q pins in the same cycle (CFG, OWN_ROW x wcount, WIN_LOAD, SEL_IDS, ATTN_Q
+// x 2, SMJ (SE job + 2 parameter rows), ROWS (shuffled), GO at a compiled cycle carrying the compiled p-feed start PO and
+// P.V drain base PVO, then PV at the compiled cycle GO + PVS -- checked to be after the last fold score), host sector
+// writes on the hw of the half that owns the PC (8-credit hc contract per entry; the end marker to both), and models
+// every slice's 2 PCs (request queue, DQ 8 credits, latency lat + rand, in-order
 // beats) on the compiler's dim-sliced image (the owned compressed rows pre-written per slice; the window rows only
 // through the slices' own OWN_ROW writes).
 // Checks (PASS = all zero):
@@ -14,14 +17,23 @@
 //          unless flagged), beats in row order, exactly ceil(T / 4) beats;
 //   SM     every slice's SE operand row (16 rows of its head = tile) equals the golden scores of the held rows;
 //          SE rows = ceil(T / 16); the SM head writes one e row per SE row, no SM fault;
-//   P.V    the 4 owner slices (tiles 4 ST ..): 8 beats each, every word bit-exact vs pv.hex (dims 32 t + 8 j + c);
-//   job    one jd done, no jd fault, no slice fault (att / sx / stream / SM), host image + acks + credits,
+//   P.V    at the pv pins of the entry of the half that holds quarter ST (none at the other): 4 windows of 40 words
+//          (owner k = tile 4 ST + k: 8 beats x 5 words) back to back, every word bit-exact vs pv.hex (dims 32 t + 8 j + c);
+//   job    one jd done per entry, no jd fault, no slice fault (att / sx / stream / SM / return tree), host image + acks
+//          + credits,
 //          HBM credit discipline (<= 8 per PC).
+`ifndef RS_OBS
+`define RS_OBS
+`endif
 module tb_dsdv_svc_rs;
     parameter integer DIE = 0;
     parameter integer ST = 0;
     parameter integer MAXCYC = 400000;
     parameter integer GODLY = 400;
+    parameter integer PVS0 = 150;          // compiled PV send: GO + ceil(5 T / 4) + PVS0 (the D = 32 share scores
+                                           // 1.25 cycles a row: tb_dsdv_svc_pfeed last score 1.25 T + 40; + tree + gd)
+    parameter integer KPV = 112;           // compiled P.V drain base: PO + ceil(T / 4) + KPV (probe: the last P.V word
+                                           // of a continuous drain <= p0 + ceil(T / 4) + 157, 40 words)
 `ifndef MUT
 `define MUT 0
 `endif
@@ -102,7 +114,11 @@ module tb_dsdv_svc_rs;
     reg [2*256-1:0] r_data [0:15]; reg [2*17-1:0] r_tag [0:15]; reg [2*4-1:0] r_beat [0:15];
     wire [15:0] pv_v, w_v; wire [512:0] pv_d [0:15]; wire [13:0] w_a [0:15]; wire [15:0] w_m [0:15];
     wire [511:0] w_d [0:15]; wire [11:0] w_st [0:15];
-    reg [32:0] jcmd = 0; wire [1:0] jd; reg q_v = 0; reg [511:0] q_d = 0; reg [291:0] hw = 0; wire [8:0] hc; wire rflt;
+    reg [32:0] jcmd = 0; reg q_v = 0; reg [511:0] q_d = 0;
+    wire [1:0] jdx [0:1]; reg [291:0] hwx [0:1]; wire [8:0] hcx [0:1]; wire [1:0] rfx;   // [0] W entry 5, [1] E entry 11
+    wire [4*514-1:0] ri [0:15], ro [0:15];
+    wire [2678:0] obs [0:15];
+    function automatic bit is_entry(input integer sd); is_entry = sd == RS_ENTRY_W || sd == RS_ENTRY_E; endfunction
     function automatic integer nb(input integer sd, input integer fc);
         integer r, c;
         r = sd % 2; c = sd / 2;
@@ -121,48 +137,49 @@ module tb_dsdv_svc_rs;
                 assign gi_v[gs][gf] = go_v[NBS][OF]; assign gi_d[gs][W*gf +: W] = go_d[NBS][W*OF +: W];
                 assign si_v[gs][gf] = so_v[NBS][OF]; assign si_d[gs][SW*gf +: SW] = so_d[NBS][SW*OF +: SW];
                 assign dn_i[gs][DW*gf +: DW] = dn_o[NBS][DW*OF +: DW]; assign up_i[gs][UW*gf +: UW] = up_o[NBS][UW*OF +: UW];
+                assign ri[gs][514*gf +: 514] = ro[NBS][514*OF +: 514];
             end else begin : g_e
                 assign gi_v[gs][gf] = 1'b0; assign gi_d[gs][W*gf +: W] = '0;
                 assign si_v[gs][gf] = 1'b0; assign si_d[gs][SW*gf +: SW] = '0;
                 assign dn_i[gs][DW*gf +: DW] = '0; assign up_i[gs][UW*gf +: UW] = '0;
+                assign ri[gs][514*gf +: 514] = '0;
             end
         end
-        if (gs == 9) begin : g_r
-            dsdv_svc_rs_root #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST)) u (.ck(ck), .rst(rst), .sid(4'(gs)),
-                .j(jcmd), .jd(jd), .q({1'b0, 1'b1, q_d, q_v}), .hw(hw), .hc(hc), .fault(rflt),
-                .dn_i(dn_i[gs]), .dn_o(dn_o[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]),
+        if (gs == RS_ENTRY_W || gs == RS_ENTRY_E) begin : g_r
+            localparam integer HX = (gs == RS_ENTRY_E) ? 1 : 0;
+            dsdv_svc_rs_entry #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST)) u (.ck(ck), .rst(rst), .sid(4'(gs)),
+                .j(jcmd), .jd(jdx[HX]), .q({1'b0, 1'b1, q_d, q_v}), .hw(hwx[HX]), .hc(hcx[HX]), .fault(rfx[HX]),
+                .dn_i(dn_i[gs]), .dn_o(dn_o[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]), .ri(ri[gs]), .ro(ro[gs]),
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
                 .si_v(si_v[gs]), .si_d(si_d[gs]), .so_v(so_v[gs]), .so_d(so_d[gs]),
                 .rq(rq[gs]), .rk(rk[gs]), .wd(wd[gs]), .rv(rv[gs]), .r_data(r_data[gs]), .r_tag(r_tag[gs]),
                 .r_beat(r_beat[gs]), .hs(2'b01), .pv_v(pv_v[gs]), .pv_d(pv_d[gs]),
-                .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]));
+                .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]), .obs(obs[gs]));
         end else begin : g_n
             dsdv_svc_rs #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST)) u (.ck(ck), .rst(rst), .sid(4'(gs)),
-                .dn_i(dn_i[gs]), .dn_o(dn_o[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]),
+                .dn_i(dn_i[gs]), .dn_o(dn_o[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]), .ri(ri[gs]), .ro(ro[gs]),
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
                 .si_v(si_v[gs]), .si_d(si_d[gs]), .so_v(so_v[gs]), .so_d(so_d[gs]),
                 .rq(rq[gs]), .rk(rk[gs]), .wd(wd[gs]), .rv(rv[gs]), .r_data(r_data[gs]), .r_tag(r_tag[gs]),
-                .r_beat(r_beat[gs]), .hs(2'b01), .pv_v(pv_v[gs]), .pv_d(pv_d[gs]),
-                .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]));
+                .r_beat(r_beat[gs]), .hs(2'b01),
+                .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]), .obs(obs[gs]));
+            assign pv_v[gs] = 1'b0; assign pv_d[gs] = '0;
         end
     end endgenerate
-    // per-slice local faults (diagnostic probes; the root fault / jd carry them)
+    // per-slice local faults and probes (observation ports, RS_OBS: {rt_v, rt_d, se_v, se_d, a_fc, lf})
     wire [15:0] sflt; wire [31:0] afc [0:15];
-    wire [15:0] se_v; wire [511:0] se_d [0:15];
+    wire [15:0] se_v; wire [511:0] se_d [0:15]; wire [15:0] rt_vv; wire [2131:0] rt_dd [0:15];
     generate for (gs = 0; gs < 16; gs = gs + 1) begin : g_p
-        if (gs == 9) begin : g_r
-            assign sflt[gs] = g_s[gs].g_r.u.u.lf; assign afc[gs] = g_s[gs].g_r.u.u.a_fc;
-            assign se_v[gs] = g_s[gs].g_r.u.u.se_v; assign se_d[gs] = g_s[gs].g_r.u.u.se_d;
-        end else begin : g_n
-            assign sflt[gs] = g_s[gs].g_n.u.u.lf; assign afc[gs] = g_s[gs].g_n.u.u.a_fc;
-            assign se_v[gs] = g_s[gs].g_n.u.u.se_v; assign se_d[gs] = g_s[gs].g_n.u.u.se_d;
-        end
+        assign sflt[gs] = obs[gs][0]; assign afc[gs] = obs[gs][32:1];
+        assign se_d[gs] = obs[gs][544:33]; assign se_v[gs] = obs[gs][545];
+        assign rt_dd[gs] = obs[gs][2677:546]; assign rt_vv[gs] = obs[gs][2678];
     end endgenerate
 
     // ---------------- q frames ----------------
     localparam integer QMAX = 8192;
     reg [511:0] qw [0:QMAX-1];
     integer nq = 0, nq_go = 0, nq_pv = 0, nframes = 0, last_hdr = 0, npair_in = 0;
+    integer pvs_c = 0, po_c = 0, pvo_c = 0;          // the compiled PV send, p-feed start and P.V drain base
     integer order [0:4095];
     function automatic [511:0] hdr(input [3:0] typ, input [11:0] len, input [448:0] spec);
         hdr = {typ, 1'b0, 4'b0001, 8'h5a, 3'd0, len, 21'd777, 10'd3, spec};
@@ -170,6 +187,13 @@ module tb_dsdv_svc_rs;
     endfunction
     task automatic build_frames();
         reg [448:0] sp; integer r, t, n, b, pr, cnt, base, sz; reg [2303:0] row;
+        // compiler rule (S81U-SVC4 static P.V): PV leaves the host PVS after GO; a slice's p feed starts once its last
+        // step's words have landed on the slowest slice (gd >= 6: words 2k, 2k + 1 by step k), the P.V drain base KPV
+        // after the last p step (engine pv beats, tb_dsdv_svc_pfeed)
+        n = (T + 1) / 2;
+        pvs_c = (5 * T + 3) / 4 + PVS0;
+        po_c = pvs_c + (n + 1) / 2 + (n + 249) / 250 + 4;
+        pvo_c = po_c + (T + 3) / 4 + KPV;
         sp = 0; sp[29:0] = WB;
         qw[nq] = hdr(4'd12, 0, sp); nq = nq + 1;
         for (r = 0; r < wcount; r = r + 1) begin
@@ -218,7 +242,8 @@ module tb_dsdv_svc_rs;
             base = base + sz;
         end
         nq_go = nq;
-        qw[nq] = hdr(4'd13, 0, 449'd0); nq = nq + 1;
+        sp = 0; sp[15:0] = po_c; sp[31:16] = pvo_c;
+        qw[nq] = hdr(4'd13, 0, sp); nq = nq + 1;
         nq_pv = nq;
         n = (T + 1) / 2; base = 0;
         while (base < n) begin
@@ -232,7 +257,8 @@ module tb_dsdv_svc_rs;
 
     // ---------------- host writes (dsfd_host_sd hw / hc: 8 credits, cr per word taken, ack per completed sector) ----
     localparam integer NHW = 96;
-    integer h_cred = 8, h_sent = 0, h_ack = 0, h_err = 0, h_mark = 0;
+    integer h_cred [0:1], h_sent = 0, h_ack = 0, h_err = 0, h_mark = 0;   // p4j: one 8-credit hw / hc contract per entry
+    initial begin h_cred[0] = 8; h_cred[1] = 8; end
     reg [255:0] h_dat [0:NHW-1]; reg [31:0] h_adr [0:NHW-1];
     integer cyc = 0;
     initial for (i = 0; i < NHW; i = i + 1) begin
@@ -240,14 +266,22 @@ module tb_dsdv_svc_rs;
         for (k = 0; k < 8; k = k + 1) h_dat[i][32*k +: 32] = 32'h1234_5678 * (i + 1) + k;
     end
     function automatic [4:0] pcmap(input [29:0] a); reg [29:0] x; x = (a >> 2) ^ (a >> 7) ^ (a >> 12); pcmap = x[4:0]; endfunction
+    // the host sends a sector write to the entry of the half that owns its PC (slices 0..7 W, 8..15 E); the end marker
+    // goes to both entries
     always @(posedge ck) begin
-        hw <= 0;
-        h_cred = h_cred + hc[0]; h_ack = h_ack + hc[8:1];
-        if (rst && cyc > 30 && h_cred > 0 && ($urandom % 4) == 0) begin
+        integer hh;
+        hwx[0] <= 0; hwx[1] <= 0;
+        for (hh = 0; hh < 2; hh = hh + 1) begin h_cred[hh] = h_cred[hh] + hcx[hh][0]; h_ack = h_ack + hcx[hh][8:1]; end
+        if (rst && cyc > 30 && ($urandom % 4) == 0) begin
             if (h_sent < NHW) begin
-                hw <= {(h_adr[h_sent][31] ? 2'd1 : 2'd0), 1'b1, h_adr[h_sent], h_dat[h_sent], 1'b1}; h_sent = h_sent + 1; h_cred = h_cred - 1;
-            end else if (h_mark == 0) begin
-                hw <= {2'd0, 1'b1, 32'hffffffff, 256'h0b007_e2d, 1'b1}; h_mark = 1; h_cred = h_cred - 1;
+                hh = (pcmap(h_adr[h_sent][29:0]) >= 5'd16) ? 1 : 0;
+                if (h_cred[hh] > 0) begin
+                    hwx[hh] <= {(h_adr[h_sent][31] ? 2'd1 : 2'd0), 1'b1, h_adr[h_sent], h_dat[h_sent], 1'b1};
+                    h_sent = h_sent + 1; h_cred[hh] = h_cred[hh] - 1;
+                end
+            end else if (h_mark == 0 && h_cred[0] > 0 && h_cred[1] > 0) begin
+                hwx[0] <= {2'd0, 1'b1, 32'hffffffff, 256'h0b007_e2d, 1'b1}; hwx[1] <= {2'd0, 1'b1, 32'hffffffff, 256'h0b007_e2d, 1'b1};
+                h_mark = 1; h_cred[0] = h_cred[0] - 1; h_cred[1] = h_cred[1] - 1;
             end
         end
     end
@@ -258,7 +292,7 @@ module tb_dsdv_svc_rs;
             kk = (longint'(pc) << 32) | longint'(h_adr[ii][29:0]);
             if (!hbm.exists(kk) || hbm[kk] !== h_dat[ii]) h_err = h_err + 1;
         end
-        if (h_ack != NHW || h_cred != 8) h_err = h_err + 1;
+        if (h_ack != NHW || h_cred[0] != 8 || h_cred[1] != 8) h_err = h_err + 1;
     endtask
 
     // ---------------- HBM: 32 PCs (slice s, pc p = index 2 s + p) ----------------
@@ -297,20 +331,23 @@ module tb_dsdv_svc_rs;
     end
 
     // ---------------- run + checks ----------------
-    integer qi = 0, t_pre = -1, n_done = 0;
+    integer qi = 0, t_pre = -1;
     integer rt_beats = 0, sc_err = 0, sc_chk = 0, ord_err = 0;
     integer se_rows [0:15], se_err = 0, se_chk = 0, wrows [0:15];
     integer pv_words [0:15], pv_err = 0, pv_chk = 0;
     reg [7:0] pvc [0:15]; reg [63:0] pvf [0:15];
-    integer go_cyc = -1, first_rt = -1, last_rt = -1, end_cyc = -1;
+    integer go_cyc = -1, first_rt = -1, last_rt = -1, end_cyc = -1, pv_early = 0, pv_sent = -1;
+    integer n_done_x [0:1], pv_first = -1, pv_last = -1, pv_gap = 0, pv_other = 0, pv_n = 0;
     initial for (i = 0; i < 16; i = i + 1) begin se_rows[i] = 0; pv_words[i] = 0; wrows[i] = 0; end
+    initial begin n_done_x[0] = 0; n_done_x[1] = 0; end
+    localparam integer PVH = (ST >= 2) ? 0 : 1;      // the half whose entry carries quarter ST's P.V (tiles 4 ST .. 4 ST + 3)
     always @(posedge ck) begin
         cyc <= cyc + 1;
         if (cyc == 3) rst <= 1;
         jcmd <= 0;
         if (cyc == 1) build_frames();
         if (cyc == 8) jcmd <= {1'b1, 9'd0, 8'(nframes), 2'b00, 5'b00001, 8'h5a};
-        if (jd[0]) begin n_done <= n_done + 1; end_cyc = cyc; end
+        for (k = 0; k < 2; k = k + 1) if (jdx[k][0]) begin n_done_x[k] = n_done_x[k] + 1; if (cyc > end_cyc) end_cyc = cyc; end
         // q stream: pre-GO frames back to back with random gaps; GO GODLY cycles after the last; PV after the last score
         q_v <= 0;
         if (rst && cyc > 40 && qi < nq) begin
@@ -318,12 +355,16 @@ module tb_dsdv_svc_rs;
                 if (($urandom % 8) != 0) begin q_v <= 1; q_d <= qw[qi]; qi = qi + 1; if (qi == nq_go) t_pre = cyc; end
             end else if (qi == nq_go) begin
                 if (cyc >= t_pre + GODLY) begin q_v <= 1; q_d <= qw[qi]; qi = qi + 1; go_cyc = cyc; end
-            end else if (rt_beats >= (T + 3) / 4) begin q_v <= 1; q_d <= qw[qi]; qi = qi + 1; end
+            end else if (cyc >= go_cyc + pvs_c) begin
+                if (qi == nq_pv && rt_beats < (T + 3) / 4) pv_early = 1;      // the compiled PV send precedes a fold score
+                if (qi == nq_pv) pv_sent = cyc;
+                q_v <= 1; q_d <= qw[qi]; qi = qi + 1;
+            end
         end
         // root complete scores
-        if (g_s[9].g_r.u.u.rt_v) begin
+        if (rt_vv[RS_FOLD]) begin
             reg [2131:0] b; integer r0, rr;
-            b = g_s[9].g_r.u.u.rt_d;
+            b = rt_dd[RS_FOLD];
             r0 = b[2131:2116];
             if (first_rt < 0) first_rt = cyc; last_rt = cyc;
             if (r0 != 4 * rt_beats) ord_err = ord_err + 1;
@@ -355,47 +396,58 @@ module tb_dsdv_svc_rs;
                 se_rows[s] = se_rows[s] + 1;
             end
             if (w_v[s]) wrows[s] = wrows[s] + 1;
-            // P.V words
+            // P.V words: only at the entry pins; owner k = tile 4 ST + k in window k (40 words), back to back
             if (pv_v[s]) begin
                 integer wi, t, dm;
-                t = tile_of(s); wi = pv_words[s] % 5;
-                if (t / 4 != ST) pv_err = pv_err + 1;
-                if (wi == 0) begin
-                    if (!pv_d[s][512]) pv_err = pv_err + 1;
-                    pvc[s] = pv_d[s][71:64]; pvf[s] = pv_d[s][63:0];
-                end else begin
-                    if (pv_d[s][512]) pv_err = pv_err + 1;
-                    dm = 32 * t + 8 * (wi - 1) + pvc[s];
-                    for (h = 0; h < H; h = h + 1) begin
-                        pv_chk = pv_chk + 1;
-                        if ((pv_d[s][32*h +: 32] !== pvm[dm][h*33 +: 32] && !pvm[dm][h*33 + 32]) ||
-                            pvf[s][16 * (wi - 1) + h] !== pvm[dm][h*33 + 32]) begin
-                            pv_err = pv_err + 1;
-                            if (pv_err < 8) $display("PV MISMATCH slice %0d dim %0d head %0d got %08x f%0d exp %08x f%0d", s, dm, h,
-                                pv_d[s][32*h +: 32], pvf[s][16 * (wi - 1) + h], pvm[dm][h*33 +: 32], pvm[dm][h*33 + 32]);
+                if (s != ((PVH == 1) ? RS_ENTRY_E : RS_ENTRY_W)) pv_other = pv_other + 1;
+                else begin
+                    t = 4 * ST + pv_n / 40; wi = pv_n % 5;
+                    if (pv_first < 0) pv_first = cyc; else if (cyc != pv_last + 1) pv_gap = pv_gap + 1;
+                    pv_last = cyc;
+                    if (pv_n >= 160) pv_err = pv_err + 1;
+                    else if (wi == 0) begin
+                        if (!pv_d[s][512]) pv_err = pv_err + 1;
+                        pvc[s] = pv_d[s][71:64]; pvf[s] = pv_d[s][63:0];
+                    end else begin
+                        if (pv_d[s][512]) pv_err = pv_err + 1;
+                        dm = 32 * t + 8 * (wi - 1) + pvc[s];
+                        for (h = 0; h < H; h = h + 1) begin
+                            pv_chk = pv_chk + 1;
+                            if ((pv_d[s][32*h +: 32] !== pvm[dm][h*33 +: 32] && !pvm[dm][h*33 + 32]) ||
+                                pvf[s][16 * (wi - 1) + h] !== pvm[dm][h*33 + 32]) begin
+                                pv_err = pv_err + 1;
+                                if (pv_err < 8) $display("PV MISMATCH entry %0d tile %0d dim %0d head %0d got %08x f%0d exp %08x f%0d", s, t, dm, h,
+                                    pv_d[s][32*h +: 32], pvf[s][16 * (wi - 1) + h], pvm[dm][h*33 +: 32], pvm[dm][h*33 + 32]);
+                            end
                         end
                     end
+                    pv_n = pv_n + 1;
                 end
-                pv_words[s] = pv_words[s] + 1;
             end
         end
-        if ((end_cyc > 0 && cyc > end_cyc + 300) || cyc >= MAXCYC) begin
+        if ((n_done_x[0] > 0 && n_done_x[1] > 0 && cyc > end_cyc + 300) || cyc >= MAXCYC) begin
             integer bad_se, bad_pv, bad_w, nown; reg [15:0] fl; reg [31:0] fc0;
             bad_se = 0; bad_pv = 0; bad_w = 0; nown = 0; fl = 0; fc0 = 0;
             for (s = 0; s < 16; s = s + 1) begin
                 if (se_rows[s] != (T + 15) / 16) bad_se = bad_se + 1;
                 if (wrows[s] != se_rows[s]) bad_w = bad_w + 1;
-                if (tile_of(s) / 4 == ST) begin nown = nown + 1; if (pv_words[s] != 40) bad_pv = bad_pv + 1; end
+                if (tile_of(s) / 4 == ST) nown = nown + 1;
                 fl[s] = sflt[s]; if (sflt[s] && fc0 == 0) fc0 = afc[s];
             end
             host_check();
-            $display("SVCRS_HOST sent=%0d acks=%0d credits=%0d errors=%0d", h_sent, h_ack, h_cred, h_err);
+            bad_pv = (pv_n != 160) + (pv_gap != 0) + (pv_other != 0);
+            $display("SVCRS_HOST sent=%0d acks=%0d credits=%0d/%0d errors=%0d", h_sent, h_ack, h_cred[0], h_cred[1], h_err);
+            $display("SVCRS_SCHED T=%0d pvs=%0d po=%0d pvo=%0d go=%0d last_fold_score=%0d pv_sent=%0d pv_early=%0d pv_words=%0d pv_first=%0d pv_last=%0d pv_gaps=%0d pv_other_entry=%0d done_W=%0d done_E=%0d",
+                T, pvs_c, po_c, pvo_c, go_cyc, last_rt, pv_sent, pv_early, pv_n, pv_first, pv_last, pv_gap, pv_other,
+                n_done_x[0], n_done_x[1]);
             $display("SVCRS die=%0d st=%0d T=%0d window=%0d nsel=%0d pairs_in=%0d go=%0d first_score=%0d last_score=%0d end=%0d root_beats=%0d sc_checked=%0d sc_errors=%0d order_errors=%0d se_checked=%0d se_errors=%0d se_bad_slices=%0d sm_rows_bad=%0d pv_owner_slices=%0d pv_checked=%0d pv_errors=%0d pv_bad_slices=%0d done=%0d jd_fault=%0d root_fault=%0d slice_faults=%04x first_fault_code=%08x cred_err=%0d cycles=%0d verdict=%s",
                 DIE, ST, T, wcount, nsel, npair_in, go_cyc, first_rt, last_rt, end_cyc, rt_beats, sc_chk, sc_err, ord_err,
-                se_chk, se_err, bad_se, bad_w, nown, pv_chk, pv_err, bad_pv, n_done, jd[1], rflt, fl, fc0, cred_err, cyc,
+                se_chk, se_err, bad_se, bad_w, nown, pv_chk, pv_err, bad_pv, n_done_x[0] + n_done_x[1], jdx[0][1] | jdx[1][1],
+                rfx != 0, fl, fc0, cred_err, cyc,
                 (sc_err == 0 && ord_err == 0 && rt_beats == (T + 3) / 4 && sc_chk > 0 && se_err == 0 && se_chk > 0 &&
-                 bad_se == 0 && bad_w == 0 && pv_err == 0 && pv_chk == 4 * 8 * 4 * 16 && bad_pv == 0 && n_done == 1 &&
-                 !jd[1] && !rflt && fl == 0 && h_err == 0 && cred_err == 0 && cyc < MAXCYC) ? "PASS" : "FAIL");
+                 bad_se == 0 && bad_w == 0 && pv_err == 0 && pv_chk == 4 * 8 * 4 * 16 && bad_pv == 0 &&
+                 n_done_x[0] == 1 && n_done_x[1] == 1 && pv_early == 0 &&
+                 !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 && h_err == 0 && cred_err == 0 && cyc < MAXCYC) ? "PASS" : "FAIL");
             $finish;
         end
     end

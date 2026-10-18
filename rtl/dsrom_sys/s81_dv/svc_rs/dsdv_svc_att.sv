@@ -16,7 +16,7 @@
 // No window-beat / fetched-row / G lanes: each slice reads only its own 2 PCs.  The window source, owned-row fetch and
 // result routing of the svc_c home are replicated per slice on the shared q stream (lockstep by data); the G router and
 // the a0 / od result emitter disappear (scores go to the score exchange and the slice's SM head, P.V leaves the 4 owner
-// slices on their own port).
+// slices on the half's P.V return tree to the p4j entry slice, in compiled windows).
 //
 // q frames (SVC FRAME PROTOCOL v1.1 header; payload as svc_c unless stated):
 //   12 CFG      [29:0] WB (window ring base)
@@ -26,7 +26,8 @@
 //    1 ATTN_Q   as svc_c; word r = head 8 b + r / 16, dims 32 (r % 16) .. : the slice keeps r % 16 == t
 //    6 ROWS     as svc_c; the slice keeps pair t / 2, half t % 2
 //    5 PV       as svc_c (stored by every slice, used by the 4 slices of quarter ST, which emit P.V)
-//   13 GO       (new, len 0) the compiled start: the engine share starts gd cycles after GO reaches this slice
+//   13 GO       (new, len 0) the compiled start: the engine share starts gd cycles after GO reaches this slice;
+//               [15:0] PO = the p-feed start, [31:16] PVO = the P.V drain base, both in cycles after the share's start
 //    9 SMJ      (new) SM head job / rows: [0] start, [4:1] kind, [12:5] jid, [13] operand rows (else parameter rows,
 //               r_j = payload index), [29:14] head mask (operand rows only)
 //
@@ -38,6 +39,11 @@
 // landing (no overflow possible), writes before reads per PC.  The closed engine's local valid / ready never stalls
 // on this program; any refusal is a fault.
 // Score beats go straight to the score exchange leaf (no FIFO; the engine credit is returned the next cycle).
+// P.V (S81U-SVC4, owner rule): the p feed is COMPILED -- from cycle PO of the share it offers one step (2 p words) every
+// cycle, never looking at the engine's p_ready; a step whose words have not landed (fault 20) or that the engine does
+// not take (fault 21) is a sticky fault.  The 4 owner slices drain their 8 P.V beats (5 words each) in 40 consecutive
+// cycles from PVO + pvs (rs_pvslot: owner k's window on the half's P.V return tree); a beat not produced by its slot is
+// fault 19.  pvs puts the 4 owners of a quarter in disjoint windows at the entry's pv pins (no arbitration).
 // MUT (bench negative controls): 1 = window scale byte of the neighbouring slot, 2 = ROWS half of the other tile of
 // the pair, 3 = q chunk of the neighbouring tile.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -56,6 +62,7 @@ module dsdv_svc_att #(
     input  wire [3:0]           sid,
     input  wire [3:0]           tile,
     input  wire [7:0]           gd,
+    input  wire [7:0]           pvs,               // compiled P.V drain slot after the job's PVO (255: not an owner)
     input  wire                 root,
     // the slice's copy of the broadcast stream (centre register)
     input  wire                 q_v,
@@ -253,6 +260,8 @@ module dsdv_svc_att #(
 
     // ------------------------------------------------------------------ static program (GO + gd)
     reg [7:0] go_cnt; reg go_arm; reg go;
+    reg [15:0] po, pvo, jc;                         // compiled p-feed start / P.V drain base; cycles since the share's start
+    reg dr_arm, dr_on; reg [2:0] dbeat;
     reg [9:0] rc; reg run;                           // program cycle
     wire [9:0] nbeat = (tjob + 10'd3) >> 2;
     // engine ports
@@ -291,7 +300,7 @@ module dsdv_svc_att #(
     reg [15:0] p_left;
     wire [1:0] pstep = (p_left >= 16'd2) ? 2'd2 : 2'(p_left);
     wire pvown = tile[3:2] == 2'(ST);
-    wire ep_v = job_active && p_left != 0 && pcnt >= (PFW+1)'(pstep);
+    wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
     wire ep_ready;
     wire [2*TD*16-1:0] ep_w = pvown ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
 
@@ -327,7 +336,7 @@ module dsdv_svc_att #(
     reg [3:0] pv_n;
     always @(posedge clk) if (pv_v) pvq[pvw[PA-1:0]] <= {pv_c, pv_y, pv_f};
     wire [PVB-1:0] pb = pvq[pvr[PA-1:0]];
-    always @(posedge clk) if (pvw != pvr)
+    always @(posedge clk) if (dr_on)
         pv_od <= (p_i == 0) ? {1'b1, 440'd0, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
 
     // ------------------------------------------------------------------ sequential
@@ -380,6 +389,7 @@ module dsdv_svc_att #(
             end
             sw_w <= 0; sw_r <= 0; sw_i <= 0; sel_held <= 0; pres <= 0; spres <= 0; q_have <= 0;
             job_open <= 0; job_active <= 0; go_arm <= 0; go_cnt <= 0; go <= 0; run <= 0; rc <= 0;
+            po <= 0; pvo <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
             ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0; sc_cr <= 0; pv_cr <= 0;
             pvw <= 0; pvr <= 0; p_i <= 0; pv_n <= 0; pv_ov <= 0; done <= 0; go_o <= 0;
             hcr <= 0; hack <= 0; iss_host <= 0; fc <= 0;
@@ -453,7 +463,7 @@ module dsdv_svc_att #(
             go <= 1'b0; go_o <= 1'b0;
             if (hdr_mine && h_type == 4'd13) begin
                 if (!job_open || go_arm || run) fc[8] <= 1'b1;
-                go_arm <= 1'b1; go_cnt <= gd;
+                go_arm <= 1'b1; go_cnt <= gd; po <= q_d[15:0]; pvo <= q_d[31:16];
             end else if (go_arm) begin
                 if (go_cnt == 0) begin go_arm <= 1'b0; go <= 1'b1; go_o <= 1'b1; end
                 else go_cnt <= go_cnt - 1'b1;
@@ -462,6 +472,8 @@ module dsdv_svc_att #(
             ej_v <= 1'b0; eq_v <= 1'b0; ekv_v <= 1'b0;
             if (go) begin
                 run <= 1'b1; rc <= 10'd1; ej_v <= 1'b1; job_active <= 1'b1; pv_n <= 0;
+                if (dr_arm || dr_on) fc[22] <= 1'b1;                          // a start while P.V of the last job drains
+                dr_arm <= pvown;
                 p_left <= (16'(tjob) + 16'(R) - 1) / 16'(R);
                 if (q_have != 5'd16) fc[9] <= 1'b1;                           // q not loaded at the compiled start
             end else if (run) begin
@@ -476,21 +488,33 @@ module dsdv_svc_att #(
             if (ekv_v && !kv_ready) fc[13] <= 1'b1;
             // ---- p feed (local: P.V is not cross-slice aligned)
             if (pay_mine && f_type == 4'd5) begin pw <= pw + 1'b1; if (pcnt >= (PFW+1)'(PFIFO)) fc[14] <= 1'b1; end
-            if (ep_v && ep_ready) begin pr <= pr + (PFW+1)'(pstep); p_left <= p_left - 16'(pstep); end
+            // ---- static p feed: the step is taken at its compiled cycle whatever the engine says; a refusal is a fault
+            jc <= go ? 16'd1 : (jc == 16'hffff ? jc : jc + 1'b1);
+            if (ep_v) begin
+                pr <= pr + (PFW+1)'(pstep); p_left <= p_left - 16'(pstep);
+                if (pcnt < (PFW+1)'(pstep)) fc[20] <= 1'b1;                   // p words not landed at the step's cycle
+                if (!ep_ready) fc[21] <= 1'b1;                                // the engine did not take the compiled step
+            end
             // ---- scores: straight to the score exchange, engine credit back the next cycle
             sc_cr <= sc_v;
             // ---- P.V words: owner slices emit 5 words a beat (valid-only, never stalled)
             pv_cr <= 1'b0; pv_ov <= 1'b0;
             if (pv_v) begin
                 pv_n <= pv_n + 1'b1;
-                if (pv_n == 4'd7) begin job_active <= 1'b0; job_open <= 1'b0; done <= 1'b1; end
+                if (pv_n == 4'd7) begin job_active <= 1'b0; job_open <= 1'b0; done <= !pvown; end   // owners: at drain end
             end
             if (pvown) begin
                 if (pv_v) begin pvw <= pvw + 1'b1; if (32'(pvw - pvr) >= PV_CRED) fc[15] <= 1'b1; end
-                if (pvw != pvr) begin
+                // compiled drain window: 8 beats x 5 words from PVO + pvs, back to back
+                if (dr_arm && !go && jc == pvo + 16'(pvs)) begin dr_arm <= 1'b0; dr_on <= 1'b1; p_i <= 0; dbeat <= 0; end
+                if (dr_on) begin
                     pv_ov <= 1'b1;
+                    if (p_i == 3'd0 && pvw == pvr) fc[19] <= 1'b1;            // the beat is not produced at its slot
                     p_i <= (p_i == 3'd4) ? 3'd0 : p_i + 1'b1;
-                    if (p_i == 3'd4) begin pvr <= pvr + 1'b1; pv_cr <= 1'b1; end
+                    if (p_i == 3'd4) begin
+                        pvr <= pvr + 1'b1; pv_cr <= 1'b1; dbeat <= dbeat + 1'b1;
+                        if (dbeat == 3'd7) begin dr_on <= 1'b0; done <= 1'b1; end
+                    end
                 end
             end else pv_cr <= pv_v;
             // ---- SMJ frames -> SM head

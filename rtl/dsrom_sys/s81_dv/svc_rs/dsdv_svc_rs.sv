@@ -1,11 +1,16 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
-// S81U-SVC (2026-10-17, S81-DV p4h): dsdv_svc_rs, the REGIONAL SERVICE SLICE (x16 on the 2 x 8 grid above the regional
-// controllers dsfd_ctrl_rg2; sid = 2 column + row, row 1 upper).  One master core dsdv_svc_rs_c; two port variants
-// (p4b rule: no open or tied ports on a hardened slice):
-//   dsdv_svc_rs_root  the root slice 9 (column 4, upper row): the host endpoint -- job descriptor j / jd, q stream,
-//                     host writes hw / hc and the slice-set fault come in / go out here (ot_s81_svc_job unchanged)
-//   dsdv_svc_rs       the other 15 slices: the stream arrives on the parent face, status leaves on it
+// S81U-SVC (2026-10-17, S81-DV p4h; S81U-SVC4: p4j): dsdv_svc_rs, the REGIONAL SERVICE SLICE (x16 on the 2 x 8 grid above
+// the regional controllers dsfd_ctrl_rg2; sid = rsv_NN = 2 column + row, row 1 upper).  One master core dsdv_svc_rs_c;
+// two port variants (p4b rule: no open or tied ports on a hardened slice):
+//   dsdv_svc_rs_entry the p4j q / P.V ENTRY slices rsv_05 (W half, columns 0-3) and rsv_11 (E half, columns 4-7), under
+//                     the slice-column voids: the host endpoint of the half -- job descriptor j / jd, q stream, host
+//                     writes hw / hc, the half's fault and its P.V words (pv) come in / go out here (ot_s81_svc_job)
+//   dsdv_svc_rs       the other 14 slices (incl. the chain roots rsv_07 / rsv_09, where the q.k fold sits): the stream
+//                     arrives on the parent face, status and P.V leave on it
+// p4j edges (svc_rs_tree.py): tq = dn stream parent -> child (incl. entry -> chain root 05 -> 07, 11 -> 09); tp = up +
+// P.V return child -> parent; tr_07_05 / tr_09_11 = the return lane on the chain-root -> entry edge (`ro` on 07 / 09,
+// `ri` on 05 / 11); the q.k partials entry -> root and the fold 07 <-> 09 ride the score exchange (svc_rs_embed.py).
 // Content of a slice (one regional clock; every input lands in a flop, every output leaves one):
 //   2 x dsfd_svc_pc    (closed, unchanged) the slice's two pseudo-channel faces, abutted to its dsfd_ctrl_rg2
 //   dsdv_svc_att       the attention share of head-dim tile t (D = 32 engine, S = 1) + its 2-PC HBM service
@@ -14,18 +19,21 @@
 //   SE row assembler   the tap's 4 rows x 1 head a beat -> 16-score SE operand rows for the head's SM
 //   ot_s81_su_sms     the slice's SM share (S81U-2 smq tap + head subtree; head = tile t): SE rows from the assembler,
 //                      parameter / SO rows from SMJ frames, its write rows leave on the SM face
-//   dn / up trees      neighbour-only broadcast of {q, hw} from the root (upper row both ways, down each column) and the
-//                      reduce of {all done, fault, host credits, host acks} back to it (svc_rs_tree.py role ROM:
+//   dn / up trees      neighbour-only broadcast of {q, hw} from the half's entry (upper row both ways, down each column)
+//                      and the reduce of {all done, fault, host credits, host acks} back to it (svc_rs_tree.py role ROM:
 //                      parent face, child faces, compiled GO delay gd); 5 cycles a hop (centre register, relay, out pin
 //                      flop | in pin flop, relay), as the score exchange
 //   hs status          the controller status face hs of the slice's ctrl_rg2 (dsfd_svc_hs's rule, fault half)
 // Ports per lanes/S81U-SVC.md: HBM rq 2 x 341 / rk, wd, rv 2 / r_data 2 x 256, r_tag 2 x 17, r_beat 2 x 4 / hs 2;
 // score lanes (gather 2,132 b + v, scatter 1,076 b + v) and stream lanes (dn 805 b, up 14 b) on N / E / S / W;
-// P.V 513 b + v out (non-zero on the 4 slices of quarter ST); SM face w_v / w_a 14 / w_m 16 / w_d 512 + status.
-// Root only: j 33 in, jd 2 out, q 515 in, hw 292 in, hc 9 out, fault out.
+//   P.V return tree    ri / ro (513 b + v a face): the owner slices' P.V words travel child -> parent to the entry in
+//                      compiled windows (att drain slot rs_pvslot); every hop 5 cycles; two valid words in one cycle or a
+//                      word on a face that is not a child are sticky faults (never arbitrated)
+// SM face w_v / w_a 14 / w_m 16 / w_d 512 + status.
+// Entry only: j 33 in, jd 2 out, q 515 in, hw 292 in, hc 9 out, fault out, P.V pv_v + pv_d 513 out.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_rs_c #(
-    parameter bit ROOT = 0,
+    parameter bit ENTRY = 0,
     parameter integer MUT = 0,
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
@@ -34,7 +42,7 @@ module dsdv_svc_rs_c #(
     input  wire              ck,
     input  wire              rst,
     input  wire [3:0]        sid,
-    // root host endpoint (ROOT only)
+    // half host endpoint (ENTRY only)
     input  wire [32:0]       j,
     output wire [1:0]        jd,
     input  wire [514:0]      q,
@@ -46,6 +54,9 @@ module dsdv_svc_rs_c #(
     output wire [4*805-1:0]  dn_o,
     input  wire [4*14-1:0]   up_i,
     output wire [4*14-1:0]   up_o,
+    // P.V return tree faces {W, S, E, N}: {d 513, v}
+    input  wire [4*514-1:0]  ri,
+    output wire [4*514-1:0]  ro,
     // score lanes
     input  wire [3:0]        gi_v,
     input  wire [4*2132-1:0] gi_d,
@@ -62,23 +73,28 @@ module dsdv_svc_rs_c #(
     input  wire [2*17-1:0]   r_tag,
     input  wire [2*4-1:0]    r_beat,
     input  wire [1:0]        hs,
-    // P.V out
-    output wire              pv_v,
-    output wire [512:0]      pv_d,
+    // P.V out (ENTRY only: the half's return tree root)
+    output reg               pv_v,
+    output reg  [512:0]      pv_d,
     // SM face
     output wire              w_v,
     output wire [13:0]       w_a,
     output wire [15:0]       w_m,
     output wire [511:0]      w_d,
     output wire [11:0]       w_st              // {o_rjid 8, o_den, o_alive, o_fo, o_fu}
+`ifdef RS_OBS
+    // bench observation only (hierarchical bench build: the slice is a hier block): {rt_v, rt_d, se_v, se_d, a_fc, lf}
+    , output wire [2678:0]   obs
+`endif
 );
 `include "dsdv_svc_rs_roles.svh"
     localparam integer DW = 805, UW = 14;
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
-    reg [21:0] role;
-    always @(posedge ck or negedge rn) if (!rn) role <= '0; else role <= rs_role(sid);
+    reg [21:0] role; reg [7:0] pvs;
+    always @(posedge ck or negedge rn) if (!rn) begin role <= '0; pvs <= 8'd255; end
+        else begin role <= rs_role(sid); pvs <= rs_pvslot(2'(ST), sid); end
     wire [3:0] tile = role[3:0], chm = role[7:4];
     wire [2:0] par = role[10:8];
 `ifdef RS_MUT_GD
@@ -98,11 +114,11 @@ module dsdv_svc_rs_c #(
                                    p1[512:1] <= p0[512:1]; p1[DW-1:514] <= p0[DW-1:514]; end
         assign dfi[f] = p1;
     end endgenerate
-    // root: host pins (pin flop) -> job gate (same cycle) -> relay
+    // entry: host pins (pin flop) -> job gate (same cycle) -> relay
     wire [DW-1:0] hst;
     wire [1:0] jdc; wire jf;
     reg [513:0] rad;                                  // synthetic END result word {data 512, v} (a0 tap of the job tile)
-    generate if (ROOT) begin : g_host
+    generate if (ENTRY) begin : g_host
         reg [514:0] qp; reg [291:0] hp; reg [32:0] jp;
         always @(posedge ck or negedge rn) if (!rn) begin qp[0] <= 1'b0; hp[0] <= 1'b0; end
             else begin qp[0] <= q[0]; hp[0] <= hw[0]; end
@@ -147,14 +163,14 @@ module dsdv_svc_rs_c #(
             .r_beat(r_beat[4*f +: 4]), .qrv(qrv[f]), .qr_data(qr_data[256*f +: 256]), .qr_tag(qr_tag[17*f +: 17]),
             .qr_beat(qr_beat[4*f +: 4]));
     end endgenerate
-    wire l_v; wire [2131:0] l_d;
+    wire l_v; wire [2131:0] l_d; wire a_pv_v; wire [512:0] a_pv_d;
     wire sm_st, sm_rv, sm_rp; wire [3:0] sm_kind; wire [7:0] sm_jid; wire [2:0] sm_rj; wire [511:0] sm_rd;
     wire go, done; wire [9:0] tjob; wire [7:0] tagj; wire [1:0] hcr, hack; wire a_f; wire [31:0] a_fc;
     dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO)) u_att (
-        .clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .root(ROOT),
+        .clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ENTRY),
         .q_v(cs[0]), .q_d(cs[512:1]), .hw_v(cs[513]), .hw_d(cs[DW-1:514]),
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
-        .l_v(l_v), .l_d(l_d), .pv_ov(pv_v), .pv_od(pv_d),
+        .l_v(l_v), .l_d(l_d), .pv_ov(a_pv_v), .pv_od(a_pv_d),
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
         .go_o(go), .tjob_o(tjob), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(a_f), .fault_code(a_fc));
 
@@ -200,11 +216,56 @@ module dsdv_svc_rs_c #(
         .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
         .o_rjid(o_rjid));
     assign w_st = {o_rjid, o_den, o_alive, o_fo, o_fu};
+`ifdef RS_OBS
+    assign obs = {rt_v, rt_d, se_v, se_d, a_fc, lf};
+`endif
+
+    // ------------------------------------------------------------------ P.V return tree (child -> parent, compiled windows)
+    localparam integer RW = 514;
+    wire [RW-1:0] rfi [0:3];
+    generate for (f = 0; f < 4; f = f + 1) begin : g_ri
+        reg p0v, p1v; reg [RW-2:0] p0d, p1d;
+        always @(posedge ck or negedge rn) if (!rn) begin p0v <= 1'b0; p1v <= 1'b0; end
+            else begin p0v <= ri[RW*f]; p1v <= p0v; end
+        always @(posedge ck) begin p0d <= ri[RW*f + 1 +: RW - 1]; p1d <= p0d; end
+        assign rfi[f] = {p1d, p1v};
+    end endgenerate
+    reg rm_v; reg [RW-2:0] rm_d; reg r_f;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin rm_v <= 1'b0; r_f <= 1'b0; end
+        else begin
+            reg [2:0] n;
+            n = 3'(a_pv_v);
+            for (int i = 0; i < 4; i++) begin
+                if (rfi[i][0] && chm[i]) n = n + 1'b1;
+                if (rfi[i][0] && !chm[i]) r_f <= 1'b1;                     // a P.V word on a face that is not a child
+            end
+            if (n > 3'd1) r_f <= 1'b1;                                      // two words in one cycle: a schedule fault
+            rm_v <= n != 0;
+        end
+    always @(posedge ck) begin
+        rm_d <= a_pv_d;
+        for (int i = 0; i < 4; i++) if (rfi[i][0] && chm[i]) rm_d <= rfi[i][RW-1:1];
+    end
+    generate for (f = 0; f < 4; f = f + 1) begin : g_ro
+        reg o0v, o1v; reg [RW-2:0] o0d, o1d;
+        always @(posedge ck or negedge rn) if (!rn) begin o0v <= 1'b0; o1v <= 1'b0; end
+            else begin o0v <= rm_v && par == 3'(f + 1); o1v <= o0v; end
+`ifdef RS_MUT_RO
+        // bench negative control: the chain root's result-out lane toward its entry (tr_07_05 / tr_09_11) flips a bit
+        always @(posedge ck) begin o0d <= rm_d ^ {511'd0, (sid == 4'd7 || sid == 4'd9), 1'b0}; o1d <= o0d; end
+`else
+        always @(posedge ck) begin o0d <= rm_d; o1d <= o0d; end
+`endif
+        assign ro[RW*f +: RW] = {o1d, o1v};
+    end endgenerate
+    always @(posedge ck or negedge rn) if (!rn) pv_v <= 1'b0; else pv_v <= ENTRY && rm_v && par == 3'd0;
+    always @(posedge ck) pv_d <= rm_d;
 
     // ------------------------------------------------------------------ controller status, local fault
     // hs = {fault, live} per PC controller (dsfd_svc_hs's synchroniser and rule: a fault, or live dropping after it
-    // rose, is a sticky slice fault; the job-done half of dsfd_svc_hs lives at the root's job gate, not here)
-    wire lf = a_f | x_f | rcol | o_fo | dstray;
+    // rose, is a sticky slice fault; the job-done half of dsfd_svc_hs lives at the entry's job gate, not here)
+    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f;
     (* async_reg = "true" *) reg [1:0] hs0, hs1;
     reg hs_up, hs_hf, hs_f;
     always @(posedge ck or negedge rn)
@@ -242,8 +303,8 @@ module dsdv_svc_rs_c #(
         assign up_o[UW*f +: UW] = o1;
     end endgenerate
 
-    // ------------------------------------------------------------------ root: job done (END), host credits / acks, fault
-    generate if (ROOT) begin : g_rt
+    // ------------------------------------------------------------------ entry: job done (END), host credits / acks, fault
+    generate if (ENTRY) begin : g_rt
         reg dprev, flt; reg [7:0] crc;
         always @(posedge ck or negedge rn)
             if (!rn) begin dprev <= 1'b0; rad <= '0; crc <= 0; hc <= 0; flt <= 1'b0; end
@@ -263,43 +324,60 @@ module dsdv_svc_rs_c #(
     end endgenerate
 endmodule
 
-// root slice (sid 9): the host endpoint
-module dsdv_svc_rs_root #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                          parameter bit SRAM_MACRO = 0) (
+// entry slices (rsv_05 W, rsv_11 E): the host endpoint of the half
+module dsdv_svc_rs_entry #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
+                           parameter bit SRAM_MACRO = 0) (
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [32:0] j, output wire [1:0] jd, input wire [514:0] q, input wire [291:0] hw, output wire [8:0] hc,
     output wire fault,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*14-1:0] up_i, output wire [4*14-1:0] up_o,
+    input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
     input  wire [3:0] gi_v, input wire [4*2132-1:0] gi_d, output wire [3:0] go_v, output wire [4*2132-1:0] go_d,
     input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,
     output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,
     input  wire [2*4-1:0] r_beat, input wire [1:0] hs,
     output wire pv_v, output wire [512:0] pv_d,
     output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
+`ifdef RS_OBS
+    , output wire [2678:0] obs
+`endif
 );
-    dsdv_svc_rs_c #(.ROOT(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO)) u (.ck(ck), .rst(rst),
+    /*verilator hier_block*/
+    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO)) u (.ck(ck), .rst(rst),
         .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .dn_i(dn_i), .dn_o(dn_o), .up_i(up_i),
-        .up_o(up_o), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v),
-        .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),
-        .pv_v(pv_v), .pv_d(pv_d), .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st));
+        .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d),
+        .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat),
+        .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st)
+`ifdef RS_OBS
+        , .obs(obs)
+`endif
+        );
 endmodule
 
-// the other 15 slices
+// the other 14 slices (incl. the chain roots rsv_07 / rsv_09: their P.V return lane toward the entry is `ro`)
 module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
                      parameter bit SRAM_MACRO = 0) (
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*14-1:0] up_i, output wire [4*14-1:0] up_o,
+    input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
     input  wire [3:0] gi_v, input wire [4*2132-1:0] gi_d, output wire [3:0] go_v, output wire [4*2132-1:0] go_d,
     input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,
     output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,
     input  wire [2*4-1:0] r_beat, input wire [1:0] hs,
-    output wire pv_v, output wire [512:0] pv_d,
     output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
+`ifdef RS_OBS
+    , output wire [2678:0] obs
+`endif
 );
-    wire [1:0] jd; wire [8:0] hc; wire fault;
-    dsdv_svc_rs_c #(.ROOT(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO)) u (.ck(ck), .rst(rst),
+    /*verilator hier_block*/
+    wire [1:0] jd; wire [8:0] hc; wire fault; wire pv_v; wire [512:0] pv_d;
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO)) u (.ck(ck), .rst(rst),
         .sid(sid), .j(33'd0), .jd(jd), .q(515'd0), .hw(292'd0), .hc(hc), .fault(fault), .dn_i(dn_i), .dn_o(dn_o),
-        .up_i(up_i), .up_o(up_o), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d),
-        .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat),
-        .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st));
+        .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v),
+        .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag),
+        .r_beat(r_beat), .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st)
+`ifdef RS_OBS
+        , .obs(obs)
+`endif
+        );
 endmodule
