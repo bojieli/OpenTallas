@@ -1,5 +1,5 @@
 {
- "name": "qkd_seq_core_st_s-c1-77c5e35bb",
+ "name": "qkd_seq_core_st_s-c1-13668abea",
  "block": "qkd_seq_core_static_s",
  "ref_tile": true,
  "owner": "Claude:RTL-BUILD-KV-SEQ",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/rtl-build-kv-seq-1018",
-  "commit": "77c5e35bb",
+  "commit": "13668abea",
   "extra_paths": [
    "rtl",
    "tools",
@@ -158,7 +158,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_seq_core_st_s/qkd_seq_core_st_s-c1-77c5e35bb"
+   "to": "results/rtl/ref_tile/qkd_seq_core_st_s/qkd_seq_core_st_s-c1-13668abea"
   }
  ],
  "cycles_added": 0,

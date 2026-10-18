@@ -1,5 +1,5 @@
 {
- "name": "qkd_seq_xs_s-x1-COMMIT",
+ "name": "qkd_seq_xs_s-x1-13668abea",
  "block": "qkd_seq_xs_s",
  "ref_tile": true,
  "owner": "Claude:RTL-BUILD-KV-SEQ",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/rtl-build-kv-seq-1018",
-  "commit": "COMMIT",
+  "commit": "13668abea",
   "extra_paths": [
    "rtl",
    "tools",
@@ -106,7 +106,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_seq_xs_s/qkd_seq_xs_s-x1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_seq_xs_s/qkd_seq_xs_s-x1-13668abea"
   }
  ],
  "cycles_added": 0,
