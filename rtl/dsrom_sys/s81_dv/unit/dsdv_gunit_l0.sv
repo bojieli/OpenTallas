@@ -23,6 +23,10 @@
 // moved to the E-side leaf dsdv_gunit_l0r (W-E registered seam).  This leaf registers each store write (wr_*: the edge
 // the store used to write) and the window's go (go_*), and relays L0r's group stream to L4 (input flop -> output flop).
 // Store write +2 edges, go +1, group stream +2 + 2 (relay): the stream reads a window 2 edges after its last write.
+// S81U-GUNIT6 (10-17, native pin rules, NATIVE-2 lessons): rst_n drives only ot_rst_relay (4 kept region copies; release
+// +3 edges, transaction-level exact); cw is captured ONCE (wv / wa / wd are both the job decode's input flops and the
+// first stage of the cw feedthrough; cwo_* = their output flops, still 2 edges), so no cw pin feeds two captures; j_v
+// (N output flop) has a kept internal twin ja for the job bookkeeping, so the output flop drives only its pin.  0 edges.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l0 #(
     parameter integer MUT = 0
@@ -39,7 +43,7 @@ module dsdv_gunit_l0 #(
     output reg           g_v, output reg [3:0] g_i, output reg [4:0] g_acc, output reg [319:0] g_d,
     output reg           j_v, output reg j_set, output reg j_w, output reg [9:0] j_row, output reg [4:0] j_lm,
     output reg  [15:0]   j_sm,
-    output wire          cwo_v, output wire [9:0] cwo_a, output wire [255:0] cwo_d, output wire [3:0] sid_o,
+    output reg           cwo_v, output reg [9:0] cwo_a, output reg [255:0] cwo_d, output wire [3:0] sid_o,
     input  wire          hct4_v, input wire [275:0] hct4_b, input wire mix_go, input wire launch, input wire f4,
     // E face (L0r: root store + group stream)
     output reg           wr_av, output reg [4:0] wr_agh, output reg [191:0] wr_ad,
@@ -49,18 +53,23 @@ module dsdv_gunit_l0 #(
 );
     localparam integer V = 276;
     integer j;
+    // reset relay (S81U-GUNIT6): the rst_n port drives only ot_rst_relay; region copies 0 feedthroughs / cw, 1 input
+    // flops, 2 window / job bookkeeping, 3 group stream relay.  Release is 3 edges after the port.
+    wire [3:0] rq;
+    ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
     // ---------------------------------------------------------------- feedthroughs
-    dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rst_n), .d(rs_i), .q(rn_o));
-    dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rst_n), .d(rn_i), .q(rs_o));
-    dsdv_gunit_pass #(.W(277)) u_ct (.clk(clk), .rst_n(rst_n), .d({hct4_b, hct4_v}), .q({hct_b, hct_v}));
-    dsdv_gunit_pass #(.W(271)) u_cw (.clk(clk), .rst_n(rst_n), .d({cw_d, cw_a, cw_v}), .q({cwo_d, cwo_a, cwo_v}));
-    dsdv_gunit_pass #(.W(4)) u_sid (.clk(clk), .rst_n(rst_n), .d(sid_i), .q(sid_o));
-    // ---------------------------------------------------------------- input flops
+    dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rq[0]), .d(rs_i), .q(rn_o));
+    dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rq[0]), .d(rn_i), .q(rs_o));
+    dsdv_gunit_pass #(.W(277)) u_ct (.clk(clk), .rst_n(rq[0]), .d({hct4_b, hct4_v}), .q({hct_b, hct_v}));
+    dsdv_gunit_pass #(.W(4)) u_sid (.clk(clk), .rst_n(rq[0]), .d(sid_i), .q(sid_o));
+    // ---------------------------------------------------------------- input flops (cw: one capture, = the feedthrough's stage 1)
     reg av, bv, wv, mg, ln, f4_q; reg [V-1:0] ab, bb; reg [9:0] wa; reg [255:0] wd;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin av <= 1'b0; bv <= 1'b0; wv <= 1'b0; mg <= 1'b0; ln <= 1'b0; f4_q <= 1'b0; end
+    always @(posedge clk or negedge rq[1])
+        if (!rq[1]) begin av <= 1'b0; bv <= 1'b0; wv <= 1'b0; mg <= 1'b0; ln <= 1'b0; f4_q <= 1'b0; end
         else begin av <= hp_av; bv <= hp_bv; wv <= cw_v; mg <= mix_go; ln <= launch; f4_q <= f4; end
     always @(posedge clk) begin ab <= hp_a; bb <= hp_b; wa <= cw_a; wd <= cw_d; end
+    always @(posedge clk or negedge rq[0]) if (!rq[0]) cwo_v <= 1'b0; else cwo_v <= wv;   // cw feedthrough stage 2
+    always @(posedge clk) begin cwo_a <= wa; cwo_d <= wd; end
     // ---------------------------------------------------------------- jobs: armed -> active (first beat)
     wire job_w = wv && wa[9:8] == 2'b10 && wa[0];
     reg pj_v; reg pj_set; reg pj_w; reg [9:0] pj_row; reg [4:0] pj_lm; reg [15:0] pj_sm;
@@ -76,13 +85,14 @@ module dsdv_gunit_l0 #(
     always @(posedge clk) begin                         // store writes -> L0r (output flops)
         wr_agh <= {ag, ah}; wr_ad <= ab[52 +: 192]; wr_bgh <= {bg, bh}; wr_bd <= bb[52 +: 192]; wr_b <= wb;
     end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wr_av <= 1'b0; wr_bv <= 1'b0; end else begin wr_av <= av; wr_bv <= bv; end
+    always @(posedge clk or negedge rq[2])
+        if (!rq[2]) begin wr_av <= 1'b0; wr_bv <= 1'b0; end else begin wr_av <= av; wr_bv <= bv; end
     reg rf_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
+    (* keep = "true" *) reg ja;                         // internal twin of the j_v output flop
+    always @(posedge clk or negedge rq[2])
+        if (!rq[2]) begin
             wb <= 1'b0; win_o <= 1'b0; win_seen <= 32'd0; win_n <= 6'd0; gap <= 6'd63; wdone <= 25'd0;
-            pj_v <= 1'b0; j_v <= 1'b0; go_a <= 1'b0; fault <= 1'b0;
+            pj_v <= 1'b0; j_v <= 1'b0; ja <= 1'b0; go_a <= 1'b0; fault <= 1'b0;
         end else begin
             go_a <= 1'b0;
             gap <= (gap == 6'd63) ? gap : gap + 6'd1;
@@ -99,9 +109,9 @@ module dsdv_gunit_l0 #(
             if (av || bv) begin
                 if (!win_o) begin
                     win_acc <= cacc;
-                    if (wdone == 25'd0 && !j_v) begin                              // the job's first beat
+                    if (wdone == 25'd0 && !ja) begin                               // the job's first beat
                         if (!pj_v || !mixed) fault <= 1'b1;
-                        j_v <= 1'b1; j_set <= pj_set; j_w <= pj_w; j_row <= pj_row; j_lm <= pj_lm; j_sm <= pj_sm;
+                        j_v <= 1'b1; ja <= 1'b1; j_set <= pj_set; j_w <= pj_w; j_row <= pj_row; j_lm <= pj_lm; j_sm <= pj_sm;
                         pj_v <= job_w;
                     end
                     if (wdone[cacc]) fault <= 1'b1;                                // accumulation twice in a job
@@ -116,17 +126,17 @@ module dsdv_gunit_l0 #(
                 end
             end
             if (mg) begin
-                if (!j_v) fault <= 1'b1;
-                j_v <= 1'b0; wdone <= 25'd0;
+                if (!ja) fault <= 1'b1;
+                j_v <= 1'b0; ja <= 1'b0; wdone <= 25'd0;
             end
             if (rf_q) fault <= 1'b1;                                           // L0r: a go while streaming
             if (f4_q) fault <= 1'b1;
         end
-    always @(posedge clk or negedge rst_n) if (!rst_n) mixed <= 1'b1; else mixed <= mg ? 1'b0 : ln ? 1'b1 : mixed;
+    always @(posedge clk or negedge rq[2]) if (!rq[2]) mixed <= 1'b1; else mixed <= mg ? 1'b0 : ln ? 1'b1 : mixed;
     // ---------------------------------------------------------------- group stream relay (L0r -> L4)
     reg rv_q; reg [3:0] ri_q; reg [4:0] racc_q; reg [319:0] rd_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rv_q <= 1'b0; rf_q <= 1'b0; g_v <= 1'b0; end
+    always @(posedge clk or negedge rq[3])
+        if (!rq[3]) begin rv_q <= 1'b0; rf_q <= 1'b0; g_v <= 1'b0; end
         else begin rv_q <= r_v; rf_q <= r_f; g_v <= rv_q; end
     always @(posedge clk) begin ri_q <= r_i; racc_q <= r_acc; rd_q <= r_d; g_i <= ri_q; g_acc <= racc_q; g_d <= rd_q; end
 endmodule

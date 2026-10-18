@@ -3,6 +3,7 @@
  "top": "dsdv_gunit_l0",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
@@ -95,7 +96,7 @@
   "macro_halo_um": 5.4,
   "pin_min_tracks": 4
  },
- "structural_change": "S81U-GUNIT3 (10-17): dsdv_gunit_l0 successor: the root store (12,288 flops) moved to the E-side leaf dsdv_gunit_l0r (GUNIT2 L0: 15,319 sinks, TT insertion 333 ps, clock-rule FAIL). L0 keeps the window bookkeeping, HC job hand-over, rung / cw / CTL / sid passes and relays L0r's group stream to L4 (+4 edges on the HC path, off the router path). Pins at 4 tracks (<= 5.2 pins/um), clock on the free W face.",
+ "structural_change": "S81U-GUNIT6 (10-17): native pin rules -- rst_n drives only ot_rst_relay ; cw captured once (feedthrough stage 1 = job-decode input flops); j_v output flop has a kept internal twin (0 data edges). S81U-GUNIT3 (10-17): dsdv_gunit_l0 successor: the root store (12,288 flops) moved to the E-side leaf dsdv_gunit_l0r (GUNIT2 L0: 15,319 sinks, TT insertion 333 ps, clock-rule FAIL). L0 keeps the window bookkeeping, HC job hand-over, rung / cw / CTL / sid passes and relays L0r's group stream to L4 (+4 edges on the HC path, off the router path). Pins at 4 tracks (<= 5.2 pins/um), clock on the free W face.",
  "job": {
   "owner": "Claude:S81U-GUNIT3",
   "branch": "claude/s81u-gunit3-1017",
