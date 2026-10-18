@@ -161,6 +161,13 @@ def main():
                               "results/arch/landed_parent_1018/pslice_c5"],
                  benches=benches))
     if diag:
+        # the L instances bind the S master in the diag RTL copy (same ports; module name unchanged so the SDC applies)
+        src = ROOT / LDIR / "ot_hbm_su_programme_pslice_c5_lp.sv"
+        dg = ROOT / LDIR / "diag" / "ot_hbm_su_programme_pslice_c5_lp.sv"
+        dg.parent.mkdir(exist_ok=True)
+        dg.write_text("// DIAG COPY (pslice_c5_kit.py --diag): L instances bound to the S master; never submitted / bound\n" +
+                      src.read_text().replace("ot_hbm_su_programme_pgcol_l ", "ot_hbm_su_programme_pgcol_s "))
+        spec["sources"][0] = f"{LDIR}/diag/ot_hbm_su_programme_pslice_c5_lp.sv"
         spec.update(name=name, diagnostic=True)
         spec["job"].update(tag="diag1", submit=False, views_to=f"physical/ref_tile/{name}/views",
                            record_to=f"results/rtl/ref_tile/{name}",
