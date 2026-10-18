@@ -256,7 +256,7 @@ def unfixed(top, orig):
         n = len(re.findall(r'(?m)^\s+' + FORKS[orig]['fork'] + r'\b', text))
         if not n:
             raise SystemExit(f'{top} binds no {FORKS[orig]["fork"]}')
-        for f in set(sources(top)) | {FORKS[orig]['original']}:
+        for f in set(sources(top)) | {FORKS[orig]['original']} | {v['file'] for v in FORKS.values()}:  # sources(base) reads every fork
             (scratch / f).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(ROOT / f, scratch / f)
         (scratch / lf).write_text(re.sub(r'(?m)^(\s+)' + FORKS[orig]['fork'] + r'\b', lambda m: m.group(1) + orig, text))

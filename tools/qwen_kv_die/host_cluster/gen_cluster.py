@@ -442,7 +442,11 @@ def main():
     def fork(m):
         forked[m.group(2)] += 1
         return m.group(1) + FORKS[m.group(2)]['fork'] + m.group(3)
-    txt = re.sub(r'(?m)^(\s+)(' + '|'.join(FORKS) + r')(\s+(?:#|\w))', fork, txt)
+    # the instance name may be escaped (`\\u_root.u_rank.u_fence`) when the member has no parameters (KV-CDC3 10-18:
+    # the visibility fence stayed unforked because `\w` missed the backslash)
+    txt = re.sub(r'(?m)^(\s+)(' + '|'.join(FORKS) + r')(\s+(?:#|\w|\\))', fork, txt)
+    if set(forked) != set(FORKS):
+        raise SystemExit(f'CDC forks not applied: {sorted(set(FORKS) - set(forked))} (forked {dict(forked)})')
     for pv in a.param:                 # member parameter overrides (opt-in RTL levers whose lock-step gate passed)
         m = re.fullmatch(r'(\w+)\.(\w+)=(-?\d+)', pv)
         n0 = len(re.findall(r'\b' + m.group(1) + r' #\(', txt))
