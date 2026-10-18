@@ -1,5 +1,5 @@
 {
- "name": "qkd_landsh0_1-f1-9c3d8af4f",
+ "name": "qkd_landsh0_1-f1-377a243b5",
  "block": "qkd_landsh0_1",
  "ref_tile": true,
  "owner": "Claude:KV-CLOCK/LANEKITS",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 6,
  "source": {
   "branch": "claude/kv-lanekits-1018",
-  "commit": "9c3d8af4f",
+  "commit": "377a243b5",
   "extra_paths": [
    "physical/qwen_kv_fwd_lane",
    "rtl/qwen_split/qfd_fwd_lane.sv",
@@ -115,7 +115,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_landsh0_1/qkd_landsh0_1-f1-9c3d8af4f"
+   "to": "results/rtl/ref_tile/qkd_landsh0_1/qkd_landsh0_1-f1-377a243b5"
   }
  ],
  "cycles_added": 0,
