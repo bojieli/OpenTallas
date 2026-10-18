@@ -105,6 +105,8 @@ module dsdv_svc_att #(
     localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam integer PFW = $clog2(PFIFO);
     localparam integer TR = 640;
+    localparam [15:0] FT_KNOWN = 16'b0011_0010_1110_1110;   // bits 1 2 3 5 6 7 9 12 13
+    localparam [15:0] FT_JOB = 16'b0000_0000_1110_0010;     // bits 1 5 6 7
     reg [31:0] fc;
     assign fault_code = fc;
     assign fault = |fc;
@@ -527,10 +529,10 @@ module dsdv_svc_att #(
                 sm_rp <= !f_hdr[13]; sm_rj <= 3'(f_idx); sm_rd <= q_d;
             end
             // ---- other frame checks
-            if (hdr_mine && !(h_type inside {4'd1, 4'd2, 4'd3, 4'd5, 4'd6, 4'd7, 4'd9, 4'd12, 4'd13})) fc[16] <= 1'b1;
+            if (hdr_mine && !FT_KNOWN[h_type]) fc[16] <= 1'b1;   // frame types 1 2 3 5 6 7 9 12 13 (yosys: no 'inside')
             if (hdr_mine && h_type == 4'd1 && h_len != 12'd128) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd3 && h_len != 12'd16) fc[16] <= 1'b1;
-            if (hdr_mine && (h_type inside {4'd1, 4'd5, 4'd6, 4'd7}) && !job_open) fc[17] <= 1'b1;
+            if (hdr_mine && FT_JOB[h_type] && !job_open) fc[17] <= 1'b1;   // frame types 1 5 6 7
             if (sc_v && !job_active) fc[18] <= 1'b1;
         end
     end
