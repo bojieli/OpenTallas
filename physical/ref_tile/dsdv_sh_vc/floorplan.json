@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  254.88,
-  151.2
+  226.8,
+  213.84
  ],
  "core": [
   2.16,
   2.16,
-  252.72,
-  149.04
+  224.64000000000001,
+  211.68
  ],
  "why": "spec outline",
- "std_area_um2": 1332,
+ "std_area_um2": 1269,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -60,11 +60,11 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "u_tts",
    "idx": 0,
-   "x": 22.464,
+   "x": 108.0,
    "y": 23.76,
    "w": 94.824,
    "h": 41.064,
-   "orient": "MY",
+   "orient": "R0",
    "offtrack": 0
   },
   {
@@ -73,8 +73,8 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "u_ttg",
    "idx": 0,
-   "x": 137.376,
-   "y": 23.76,
+   "x": 108.0,
+   "y": 86.4,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -86,8 +86,8 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "u_ttn",
    "idx": 0,
-   "x": 137.376,
-   "y": 86.4,
+   "x": 108.0,
+   "y": 149.04,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -98,7 +98,7 @@
   [
    "WARN",
    "util",
-   "utilisation 35% outside 45%-60% (std 1332 + macro 11682 in core 36802 um2)",
+   "utilisation 28% outside 45%-60% (std 1269 + macro 11682 in core 46614 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],

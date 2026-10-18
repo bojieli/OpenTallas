@@ -18,25 +18,24 @@
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
       "inst": "u_tts",
       "at": [
-        22.464,
+        108.0,
         23.76
-      ],
-      "orient": "MY"
+      ]
     },
     {
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
       "inst": "u_ttg",
       "at": [
-        137.376,
-        23.76
+        108.0,
+        86.4
       ]
     },
     {
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
       "inst": "u_ttn",
       "at": [
-        137.376,
-        86.4
+        108.0,
+        149.04
       ]
     }
   ],
@@ -79,7 +78,7 @@
       "extra": "-macro_clustering_size 1 -macro_clustering_max_diameter 16"
     }
   },
-  "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L2 middle leaf of dsdv_seq_host: ot_dsdv_vstop (shared V-rung stop) + CTL packer with the 128 x 186 template table in three 1R1W 128x256 SRAM macros (one per read port N / S / gunit; was 23.8k flops > 15k sinks) + the gunit cw port; flop-first / flop-last pins, die hold budget. S81U-SEQ3: compact 2 + 1 SRAM packing (H 151.2) for clock insertion; pin-flop payloads off the reset net (1,263 loads). S81U-SEQ4 (gate4 df8031f2c: TT ins 338.2 / spread 136.7: CTS hung the three SRAM clk pins directly on the level-1 trunk nets clknet_1_{0,1}__leaf_ck, slew 240 ps, u_ttn 201.5 vs flops 233..338; u_tts R0 put its clk pin on its far W edge at x 22): u_tts mirrored (MY) so all three SRAM clk pins sit in the x 117..138 centre column under the N clock pin, and each SRAM clk pin gets its own leaf cluster (macro_clustering_size 1; register clustering automatic: the fixed 16-um clusters / 20-um buffer pitch of gate5 7b7028b78 gave TT 299..422 ps). gate6 80e8e783d: SRAM clk pins 226-229 ps (fixed), registers 212..342: the late branch is the W-face cw pin-flop strip (x 0..22 beside u_tts, y 75..150: 287..342 ps) vs the centre (212); -balance_levels added so the W strip leaves get the same level count. gate7 34038e424 identical (balance_levels no effect). Structural: the cw port (267 b to dsdv_gunit, W neighbour column) moves from the W face to the W end of the N face (N 835 pin bits = 3.3/um; the cw link leaves N then turns W at the die, p4i not yet placed): no pin-flop strip in the 22-um channel W of u_tts; the clock pin stays at the N-face centre (x 127.4).",
+  "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L2 middle leaf of dsdv_seq_host: ot_dsdv_vstop (shared V-rung stop) + CTL packer with the 128 x 186 template table in three 1R1W 128x256 SRAM macros (one per read port N / S / gunit; was 23.8k flops > 15k sinks) + the gunit cw port; flop-first / flop-last pins, die hold budget. S81U-SEQ3: compact 2 + 1 SRAM packing (H 151.2) for clock insertion; pin-flop payloads off the reset net (1,263 loads). S81U-SEQ4 (gate4 df8031f2c: TT ins 338.2 / spread 136.7: CTS hung the three SRAM clk pins directly on the level-1 trunk nets clknet_1_{0,1}__leaf_ck, slew 240 ps, u_ttn 201.5 vs flops 233..338; u_tts R0 put its clk pin on its far W edge at x 22): u_tts mirrored (MY) so all three SRAM clk pins sit in the x 117..138 centre column under the N clock pin, and each SRAM clk pin gets its own leaf cluster (macro_clustering_size 1; register clustering automatic: the fixed 16-um clusters / 20-um buffer pitch of gate5 7b7028b78 gave TT 299..422 ps). gate6 80e8e783d: SRAM clk pins 226-229 ps (fixed), registers 212..342: the late branch is the W-face cw pin-flop strip (x 0..22 beside u_tts, y 75..150: 287..342 ps) vs the centre (212); -balance_levels added so the W strip leaves get the same level count. gate7 34038e424 identical (balance_levels no effect). Structural: the cw port (267 b to dsdv_gunit, W neighbour column) moves from the W face to the W end of the N face (N 835 pin bits = 3.3/um; the cw link leaves N then turns W at the die, p4i not yet placed): no pin-flop strip in the 22-um channel W of u_tts; the clock pin stays at the N-face centre (x 127.4). S81U-SEQ5 (lead S81-UNITS3 decision, gate8 62eb5588a TT 209..315 / sp 105: the H-tree root sat between the two macro rows of the 2 + 1 packing, N-band corners late): back to the SRAM column of gate2 8940e10e9 (226.8 x 213.84, TT 290.4 / 64.9): u_tts / u_ttg / u_ttn stacked at x 108 (21.6-um channels), all R0 so every SRAM clk pin (LEF clk at the macro W edge) faces the W register mass in one x-108 column (the SEQ4 MY fix's intent); keeps the SEQ4 per-macro clock clustering and the cw port at the W end of the N face; clock pin on N at x 101.5 (clock_pin_at), beside the column's W edge above the register mass, instead of the face centre (113.4, over the column). Width 226.8 is not the 254.88 common leaf width: the leaf sits in its 254.88 slot with the 28.08-um remainder as a seam channel on the side away from the link path.",
   "job": {
     "owner": "Claude:S81U-SEQ",
     "branch": "claude/s81u-seq-1017",
@@ -146,17 +145,20 @@
     "reason": "Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam."
   },
   "outline": {
-    "w": 254.88,
-    "h": 151.2
+    "w": 226.8,
+    "h": 213.84
   },
   "io_flop_at_pins": {
     "cols": 4,
     "allow_none": true
   },
   "keep_pin_regs": true,
-  "std_area_um2": 1332,
+  "std_area_um2": 1269,
   "fill_reason": {
-    "pin_bound": "S face 1,296 pin bits (rung 552 + L1 seam tw 194 / cn,cs,cg 255 / cf 267 / dn 27 / vf 1) = 5.1/um at the common leaf width 254.88. S81U-SEQ3 (gate 3c281784f: TT ins 311.6 at 226.8 x 213.84, util 28%): SRAMs packed 2 + 1 (S row u_tts / u_ttg, u_ttn above u_ttg; >= 20 um channels and edge clearances; std-cell band W of u_ttn plus the S / N pin bands): H 213.84 -> 151.2, core -21%, util 35% (macro-bound). Std 1,332 um2 + SRAM 11,682 um2."
+    "pin_bound": "S face 1,296 pin bits (rung 552 + L1 seam tw 194 / cn,cs,cg 255 / cf 267 / dn 27 / vf 1) = 5.7/um at 226.8; N 837 = 3.7/um. Macro-bound: three 94.824 x 41.064 SRAMs in one column with 21.6-um channels set H 213.84 (std 1,269 um2 + SRAM 11,682 um2, util ~27%). The 2 + 1 packing (H 151.2, util 35%) measured TT 315 / spread 105 (gate8) vs 290 / 65 for this column (gate2): clock closure outranks area (closure first)."
   },
-  "io_tcl": "physical/dsdv_seq_host_pins/dsdv_sh_vc.tcl"
+  "io_tcl": "physical/dsdv_seq_host_pins/dsdv_sh_vc.tcl",
+  "clock_pin_at": {
+    "N": 101.52
+  }
 }
