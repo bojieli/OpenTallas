@@ -6,7 +6,7 @@
  "owner_decision": "0ei 10-18: 16-region clock split of c_b16 (one region per A0 ROM-leaf tile)",
  "die_obligations": [
   "drop 16 regional clocks per cluster instance (dv2r8f: 48 instances -> 768 regional clock drops), each at its centre area pin (M7, cluster coordinates below; the face pins in the contract only seed the cluster IO placer)",
-  "neighbour-matched delivery: for every communicating region pair below (inside the cluster) the arrival at the child flops differs by <= 80 ps at TT AND FF; the die compensates each drop by the region's measured insertion (insertion_ps, filled from the cluster gate)",
+  "PHASE-ALIGNED delivery (Q-CL16-EARLY 10-18, replaces 'compensate each drop by insertion_ps'): for every communicating region pair below the die delivers the two centre-pin drops within +/-60 ps of each other at TT AND at FF (die tree budget, METHOD.md s2). The die does NOT compensate by the cluster's region insertion: the cluster closes every crossing in its own STA with the measured in-cluster skew (gate SDC: drops at 0 + set_clock_uncertainty 60 ps setup and hold between communicating region clocks). Measured on diag16ct 4_1_cts: compensating by insertion makes FF hold worse (-316.5 vs -231.1 ps pre-repair) and no choice of 16 drop offsets brings the crossing pins within 80 ps (LP minimax 301.5-308.7 ps; 62-65 of 73 crossings over 80): the in-region child-flop spread (690-927 ps per root at TT) is inside the cluster and only the cluster's own timing can absorb it.",
   "boundary ports are timed against the region that holds their pin register (port_domains); the die's neighbour links into / out of the cluster land or match against THAT region's clock (LANDING-CONTRACT)",
   "regional reset: unchanged (rst_n pin register in c0r0, equal-depth tree, 19 edges)"
  ],
@@ -307,8 +307,8 @@
    "diagonal": false
   },
   "c0r0-c1r0": {
-   "links": 4,
-   "bits": 1543,
+   "links": 5,
+   "bits": 2057,
    "diagonal": false
   },
   "c0r1-c0r2": {
@@ -432,8 +432,8 @@
    "diagonal": false
   }
  },
- "seam_crossings": 73,
- "seam_crossing_bits": 27286,
+ "seam_crossings": 74,
+ "seam_crossing_bits": 27800,
  "port_domains": {
   "bco0": "ck_c0r3",
   "bc1": "ck_c1r0",
@@ -446,5 +446,17 @@
   "bc3": "ck_c3r0",
   "bco3": "ck_c3r3"
  },
- "core_region_ports": "c0r0 (core_clk): bc0, rst_n, far, cid, tie_hi / tie_lo"
+ "core_region_ports": "c0r0 (core_clk): bc0, rst_n, far, cid, tie_hi / tie_lo",
+ "early_check": {
+  "lane": "Q-CL16-EARLY",
+  "record": "results/arch/qwen_cluster_1017/q_cluster16/early_xcheck_diag16ct/cl16_early.json",
+  "gate": "qfd_c_b16_dv_diag16ct-20261018-010608 4_1_cts.odb, placement-estimated parasitics, TT setup / FF hold, sign-off period 833.3 ps",
+  "verdict_phase_aligned_e60": "1 of 74 crossings outside budget: leg_3_1b_0 (u_leg_3_1b_0 c3r3 -> u_leg_3_1b_1 c2r2, diagonal, 356.7 um, 514 b): TT setup +44.0 at 833 with drops aligned -> -16.0 with the 60 ps die residual; cause = in-cluster skew -422.7 ps TT / -325.2 FF (launch leaf 1336.8 ps behind 372 + 294 ps clock wire buffers, capture 914.1). LANDING owed on this crossing (fix lane Q-CL16-LAND).",
+  "verdict_e30": "0 failing",
+  "hold_note": "hold slacks are pre-repair (the CTS hold guard made no progress: ws -714.85 on IO port u_dn2_entry); every crossing hold deficit fits its setup window after buffering",
+  "audit_gaps": [
+   "region_audit.py misses u_t_0_0.t_out -> u_t_1_0.n_a (c0r0 -> c1r0, 514 b; window OK: TT setup +368.8 at 833, FF hold +272.2): crossings = 74 / 27,800 b",
+   "audit names the 4 rpad crossings' sink pin 'trst'; the A0 pin is rst_n"
+  ]
+ }
 }
