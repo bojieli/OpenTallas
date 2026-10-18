@@ -159,6 +159,33 @@ class Gate(unittest.TestCase):
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("die_window, not slot_change", r["message"])
 
+    def test_slot_change_ignores_closed_views_of_superseded_rtl(self):
+        # (coordinator 10-17, qkd_static_kv_landing_row h3 @ 38043c01f) h1 closed on older RTL without the q ports,
+        # h2 closed on the current RTL; h3 = h2's RTL with q moved to the E face.  h1's port set must not make the
+        # face comparison incomplete.
+        old_rtl, new_rtl = "module ot_t; endmodule", "module ot_t(output q); endmodule"
+        p1 = "(--pin-region '^(d)(\\[|$)=left')"
+        p2 = "(--pin-region '^(d)(\\[|$)=left' --pin-region '^(q)(\\[|$)=left')"
+        p3 = "(--pin-region '^(d)(\\[|$)=left' --pin-region '^(q)(\\[|$)=right')"
+        for c, rtl, pins in (("111111111", old_rtl, p1), ("222222222", new_rtl, p2), ("333333333", new_rtl, p3)):
+            self.r.put(c, rtl=rtl, pins=pins)
+            self.r.c[c * 4] = self.r.c[c]
+        h1 = hist("t-h1-111111111", commit="111111111", t="01:00")
+        h2 = hist("t-h2-222222222", commit="222222222", t="02:00")
+        rr = {"kind": "slot_change", "slot_change_request": "row_h3 pin plan: q to the E face"}
+        r = self.run_(spec(name="t-h3-333333333", commit="333333333", reroute_reason=rr), jobs=[h1, h2])
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "slot_change"), r["message"])
+        self.assertEqual(r["facts"]["slot_superseded_rtl"], ["t-h1-111111111"])
+        # same faces as the same-RTL closed h2: still refused
+        self.r.put("444444444", rtl=new_rtl, pins=p2)
+        r = self.run_(spec(name="t-h3-444444444", commit="444444444", reroute_reason=rr), jobs=[h1, h2])
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("die_window, not slot_change", r["message"])
+        # only the older-RTL h1 closed: every view differs, so the earlier (incomplete-comparison) refusal stands
+        r = self.run_(spec(name="t-h3-333333333", commit="333333333", reroute_reason=rr), jobs=[h1])
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("port sets differ", r["message"])
+
     # ---------------------------------------------------------------- pin_register
     def test_pin_wrapper_changes_are_actual_rtl_changes(self):
         path = 'physical/ref_tile/t/kit.env'

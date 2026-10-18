@@ -111,7 +111,8 @@ class PreciseGateBinding(unittest.TestCase):
         self.sync_daemon(GATE, b'PIN_LAUNCH_MAX_PS = 240.0\n')
         ok, why = SB.validate(self.binding, self.root, self.daemon, self.tip)
         self.assertFalse(ok)
-        self.assertEqual(why, f'gate-executed daemon overlay changed: {GATE}')
+        self.assertTrue(why.startswith(f'gate-executed daemon overlay changed: {GATE}'), why)
+        self.assertIn('unclassified', why)              # GATE-FRICTION: the blocking commit is named
 
     def test_submit_only_lint_change_keeps_the_gate_valid(self):
         self.sync_daemon(GATE, b'# lint v1\nCLOSED_STANDS_KINDS = ("a", "native_capture")\n')
