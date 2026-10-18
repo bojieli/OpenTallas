@@ -87,7 +87,8 @@ def main():
     a = ap.parse_args()
     P = json.load(open(a.priced))
     C = json.load((gzip.open if a.contract.endswith(".gz") else open)(a.contract, "rt"))
-    gaps = {g["id"]: g for g in C["gaps"]}
+    # HBM-WIRE 10-18: gaps the contract marks closed (status "closed" + closed_by, d4g_functional_bind) no longer block
+    gaps = {g["id"]: g for g in C["gaps"] if str(g.get("status", "open")).lower() != "closed"}
     bound = {i["master"] for i in C["instances"].values()}
     layers = {}
     names = {"0": "L0 (first layer: CSA attention + MoE FFN, no indexer)", "2": "L2 (CSA + indexer IDX.INDEX)",
