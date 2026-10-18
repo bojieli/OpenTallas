@@ -79,7 +79,7 @@
  },
  "job": {
   "owner": "Claude:KV-HOSTCL-A8",
-  "branch": "claude/kvj-a8-1017",
+  "branch": "claude/kvj-a3-1017",
   "tag": "b1",
   "purpose": "HOST root cluster child qkd_hr_core_rx (rx_class, A8 IR_REPL=1): slice lock-step vs the flat module (IR_REPL=0) + mutant; cluster lock-step tools/qwen_kv_die/host_cluster/bench",
   "benches": [
@@ -104,7 +104,8 @@
      "iverilog"
     ],
     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -DQKD_IRR_MUTANT -Ptb_irr_lockstep.NCYC=50000 -Ptb_irr_lockstep.SEED=1017 -o {RUN}/bench/irr_m results/arch/qwen_split_1014/host_root_cluster/a8/tb_irr_lockstep.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv && vvp -n {RUN}/bench/irr_m",
-    "fail_regex": "A8_LOCKSTEP .*mismatches=[1-9]\\d* .*FAIL"
+    "fail_regex": "A8_LOCKSTEP .*mismatches=[1-9]\\d* .*FAIL",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/core_rx_irr_mutant.log"
    }
   ]
  },

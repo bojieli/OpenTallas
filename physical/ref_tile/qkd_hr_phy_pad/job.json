@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/kvj-a8-1017",
+  "branch": "claude/kvj-a3-1017",
   "commit": "COMMIT"
  },
  "stages": {
@@ -42,7 +42,8 @@
      "iverilog"
     ],
     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -Ptb_qkd_host_rx_pad5.MUT=1 -o {RUN}/bench/pad_m rtl/test/qwen_host/tb_qkd_host_rx_pad5.sv rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv && vvp -n {RUN}/bench/pad_m",
-    "fail_regex": "RXpad5 payload/padding/order"
+    "fail_regex": "RXpad5 payload/padding/order",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/phy_pad_mutant.log"
    }
   ],
   "calibrate": {
