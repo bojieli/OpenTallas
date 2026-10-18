@@ -18,7 +18,8 @@ module tb_s81sl_lep #(parameter integer N = 1000, parameter integer SEED = 1, pa
     ot_s81sl_lep la (.clk(clk), .rst_n(rst_n), .ro(a_ro), .ri(a_ri),
         .lo0_v(a0v), .lo0_r(a0r), .lo0_d(a0d), .lo1_v(a1v), .lo1_r(a1r), .lo1_d(a1d),
         .li0_v(ai0v), .li0_r(ai0r), .li0_d(ai0d), .li1_v(ai1v), .li1_r(ai1r), .li1_d(ai1d), .rxv(arxv),
-        .sl_f(1'b0), .l0_f(af0), .l1_f(af1), .fault(a_f));
+        .sl_f(1'b0), .l0_f(af0), .l1_f(af1), .l0_st(ast0), .l1_st(ast1),
+        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(), .fault(a_f));
     dsfd_coll_lane_w a_l0 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({ast0[0], ast0[1], arx0, arxv[0]}), .tx(atx0), .tf(),
         .lo_v(a0v), .lo_r(a0r), .lo_d(a0d), .li_v(ai0v), .li_r(ai0r), .li_d(ai0d), .flt(af0));
     dsfd_coll_lane_w a_l1 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({ast1[0], ast1[1], arx1, arxv[1]}), .tx(atx1), .tf(),
@@ -26,7 +27,8 @@ module tb_s81sl_lep #(parameter integer N = 1000, parameter integer SEED = 1, pa
     ot_s81sl_lep lb (.clk(clk), .rst_n(rst_n), .ro(b_ro), .ri(b_ri),
         .lo0_v(b0v), .lo0_r(b0r), .lo0_d(b0d), .lo1_v(b1v), .lo1_r(b1r), .lo1_d(b1d),
         .li0_v(bi0v), .li0_r(bi0r), .li0_d(bi0d), .li1_v(bi1v), .li1_r(bi1r), .li1_d(bi1d), .rxv(brxv),
-        .sl_f(1'b0), .l0_f(bf0), .l1_f(bf1), .fault(b_f));
+        .sl_f(1'b0), .l0_f(bf0), .l1_f(bf1), .l0_st(bst0), .l1_st(bst1),
+        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(), .fault(b_f));
     dsfd_coll_lane_e b_l0 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({bst0[0], bst0[1], brx0, brxv[0]}), .tx(btx0), .tf(),
         .lo_v(b0v), .lo_r(b0r), .lo_d(b0d), .li_v(bi0v), .li_r(bi0r), .li_d(bi0d), .flt(bf0));
     dsfd_coll_lane_e b_l1 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({bst1[0], bst1[1], brx1, brxv[1]}), .tx(btx1), .tf(),

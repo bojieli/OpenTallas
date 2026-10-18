@@ -14,10 +14,12 @@ module tb_s81sl_slice_lep #(parameter integer N = 200, parameter integer WAIT = 
     wire [512:0] pa0, pa1, pb0, pb1; wire ta0, ta1, tb0, tb1;
     ot_s81sl_slice_lepw A (.clk(clk), .rst_n(rst_n), .sid(4'd0), .ri_e(a_in), .ro_e(a_out), .vi(276'd0), .vo(), .bi(1104'd0),
         .bo(), .xc(), .rt(560'd0), .ck_line(), .ck_v(), .ck_xc(), .ck_rt(), .ch_b(1'b0), .tx0(atx0), .tx1(atx1),
-        .rx0({ast0, arx0}), .rx1({ast1, arx1}), .tf(), .fault(a_f));
+        .rx0({ast0, arx0}), .rx1({ast1, arx1}), .tf(),
+        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(), .fault(a_f));
     ot_s81sl_slice_lepe B (.clk(clk), .rst_n(rst_n), .sid(4'd7), .ri_w(b_in), .ro_w(b_out), .vi(276'd0), .vo(), .bi(1104'd0),
         .bo(), .xc(), .rt(560'd0), .ck_line(), .ck_v(), .ck_xc(), .ck_rt(), .ch_b(1'b0), .tx0(btx0), .tx1(btx1),
-        .rx0({bst0, brx0}), .rx1({bst1, brx1}), .tf(), .fault(b_f));
+        .rx0({bst0, brx0}), .rx1({bst1, brx1}), .tf(),
+        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(), .fault(b_f));
     ot_pdie_ucie #(.PMA_LAT(2)) ua0 (.clk(clk), .rst(rst_n), .tx(atx0), .rx(arx0), .st(ast0), .pma_tx(pa0), .pma_tck(ta0), .pma_rx(pb0), .pma_rck(tb0));
     ot_pdie_ucie #(.PMA_LAT(2)) ub0 (.clk(clk), .rst(rst_n), .tx(btx0), .rx(brx0), .st(bst0), .pma_tx(pb0), .pma_tck(tb0), .pma_rx(pa0), .pma_rck(ta0));
     ot_pdie_ucie #(.PMA_LAT(5)) ua1 (.clk(clk), .rst(rst_n), .tx(atx1), .rx(arx1), .st(ast1), .pma_tx(pa1), .pma_tck(ta1), .pma_rx(pb1), .pma_rck(tb1));

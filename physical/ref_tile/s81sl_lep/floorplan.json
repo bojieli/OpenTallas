@@ -48,7 +48,9 @@
    "li1_d",
    "rxv",
    "l0_f",
-   "l1_f"
+   "l1_f",
+   "l0_st",
+   "l1_st"
   ],
   "S": [
    "clk",
@@ -56,7 +58,13 @@
    "sl_f",
    "fault"
   ],
-  "N": []
+  "N": [
+   "t_host",
+   "t_kd",
+   "f_host",
+   "f_lf",
+   "f_ks"
+  ]
  },
  "clock_port": "clk",
  "blocks": [
