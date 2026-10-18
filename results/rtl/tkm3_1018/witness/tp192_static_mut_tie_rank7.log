@@ -1,0 +1,4 @@
+MISMATCH R 0 got00000000 expected80000000
+[541000] %Fatal: tb_hgi_coll_tkm_static.sv:57: Assertion failed in tb_hgi_coll_tkm_static: TKM_STATIC FAIL errors=1 words=2 cycles=628
+%Error: rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm_static.sv:57: Verilog $stop
+Aborting...

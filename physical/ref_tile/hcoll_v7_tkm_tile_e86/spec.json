@@ -57,13 +57,14 @@
     "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tp192_static.sh {RUN}/bench/tp192",
     "expect": "pass",
     "pass_regex": "TKM_TP192_STATIC_GATE_PASS",
-    "min_count_regex": "TKM_STATIC PASS(.*)",
+    "min_count_regex": "TKM_STATIC PASS words=([0-9]+) cycles=",
     "threads": 8,
     "peak_ram_gb": 160,
     "timeout_s": 21600,
     "needs": [
      "verilator"
-    ]
+    ],
+    "pass_witness": "results/rtl/tkm3_1018/witness/tp192_static_gate_pass.log"
    },
    {
     "name": "tkm_tp192_tie_mut",
@@ -75,7 +76,8 @@
     "timeout_s": 21600,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/tkm3_1018/witness/tp192_tie_mut_fail.log"
    }
   ],
   "extra_paths": [
