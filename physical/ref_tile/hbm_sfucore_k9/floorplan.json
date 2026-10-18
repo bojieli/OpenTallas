@@ -60,13 +60,13 @@
    "kv_we_n",
    "ro_x_n",
    "kv_wdata_n",
-   "kv_waddr_n"
+   "kv_waddr_n",
+   "io_word",
+   "compiler_control",
+   "fault"
   ],
   "E": [
    "clk_pe",
-   "io_word",
-   "compiler_control",
-   "fault",
    "vi_re_e",
    "vi_addr_e",
    "vi_q_e",

@@ -311,5 +311,242 @@ class ActualGraph(Fixture):
                 self.assertIn('OT_GF:', log)
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+# Extension mode (reviewed_gray_fifo_extensions, ROOT-0330-CDC 2026-10-18): core (two bus-bit roots) | hbm, two reviewed
+# ot_hbm_accel_cdc_fifo core -> hbm, one hard macro on core root 1 feeding FIFO 1, an hbm consumer mixing both FIFO
+# heads (each head read only while its own FIFO is non-empty), a pointer register (u_f1 rgray) and a level-sync source
+# (h_st) that are also gated storage consumers, a declared hbm -> core level synchroniser and a die-constant strap.
+EXT_FIXTURE = r"""
+module gx_fix #(parameter integer MUT = 0, parameter integer NOMAC = 0) (
+  input [1:0] ck_cr, input ck_hbm, input rst_c_n, input rst_h_n, input quad,
+  input c_wr, input [3:0] c_wd, output c_full,
+  output reg [3:0] h_q, output reg h_v, output reg qh,
+  output reg c_fault, output reg qc, output reg c_x);
+  wire both = rst_c_n & rst_h_n;
+  wire r0, r1, rh;
+  ot_reset_sync u_r0(.clk(ck_cr[0]), .async_rst_n(both), .sync_rst_n(r0));
+  ot_reset_sync u_r1(.clk(ck_cr[1]), .async_rst_n(both), .sync_rst_n(r1));
+  ot_reset_sync u_rh(.clk(ck_hbm), .async_rst_n(both), .sync_rst_n(rh));
+  reg [1:0] wa; always @(posedge ck_cr[1]) wa <= wa + 1'b1;
+  wire [3:0] rd;
+  wire [3:0] madd = (MUT == 1) ? h_q : c_wd;          // MUT 1: macro input from an hbm register (straddles families)
+  generate if (NOMAC) begin : g_nm
+    assign rd = c_wd ^ {2'b0, wa};
+  end else begin : g_m
+    fx_ram u_ram(.clk((MUT == 6) ? ck_hbm : ck_cr[1]), .ce(c_wr), .a(wa), .wd(madd), .rd(rd));   // MUT 6: hbm clock
+  end endgenerate
+  wire e0, e1, f1; wire [3:0] d0, d1;
+  wire pop0 = !e0;
+  wire pop1 = !e1 && (e0 || d0[3]);                    // u_f1 rgray reads u_f0 storage only while u_f0 is non-empty
+  ot_hbm_accel_cdc_fifo #(.W(4), .AW(2)) u_f0(.wclk(ck_cr[0]), .wrst_n(r0), .we(c_wr), .wdata(c_wd), .full(c_full),
+    .rd_freed(), .rclk(ck_hbm), .rrst_n(rh), .re(pop0), .rdata(d0), .empty(e0));
+  ot_hbm_accel_cdc_fifo #(.W(4), .AW(2)) u_f1(.wclk(ck_cr[1]), .wrst_n(r1), .we(c_wr), .wdata(rd), .full(f1),
+    .rd_freed(), .rclk(ck_hbm), .rrst_n(rh), .re(pop1), .rdata(d1), .empty(e1));
+  always @(posedge ck_hbm)
+    if (MUT == 2) h_q <= d1;                           // MUT 2: u_f1 head read ungated
+    else if (!e0 || !e1) h_q <= !e0 ? d0 : d1;
+  reg h_st;
+  always @(posedge ck_hbm or negedge rh) if (!rh) begin h_v <= 0; h_st <= 0; end
+    else begin h_v <= !e0 || !e1; if (!e0 && ^d0) h_st <= 1; end
+  (* async_reg = "true" *) reg s1, s2;
+  always @(posedge ck_cr[0] or negedge r0) if (!r0) begin s1 <= 0; s2 <= 0; c_fault <= 0; end
+    else begin
+      s1 <= (MUT == 3) ? (h_st & c_wr) : h_st;         // MUT 3: logic in the synchroniser
+      s2 <= s1;
+      c_fault <= (MUT == 4) ? (s2 | s1) : s2;          // MUT 4: the metastable stage 1 is consumed
+    end
+  always @(posedge ck_cr[0]) qc <= quad;
+  always @(posedge ck_hbm) qh <= quad;
+  always @(posedge ck_cr[0]) c_x <= (MUT == 5) ? h_v : c_wr;   // MUT 5: undeclared hbm -> core crossing
+endmodule
+"""
+FX_BB = '(* blackbox *)\nmodule fx_ram (input clk, input ce, input [1:0] a, input [3:0] wd, output [3:0] rd);\nendmodule\n'
+FX_LIB = """library(fx_ram_{c}) {{
+  cell(fx_ram) {{
+    memory () {{ type : ram; address_width : 2; word_width : 4; }}
+    pin(clk) {{ direction : input; clock : true; }}
+    pin({ck2}) {{ direction : input; {extra} timing() {{ related_pin : "clk"; timing_type : setup_rising; }} }}
+    bus(a) {{ direction : input; timing() {{ related_pin : "clk"; timing_type : setup_rising; }} }}
+    bus(wd) {{ direction : input; timing() {{ related_pin : "clk"; timing_type : setup_rising; }} }}
+    bus(rd) {{ direction : output; timing() {{ related_pin : "clk"; timing_type : rising_edge; }} }}
+  }}
+}}
+"""
+EXT_SOURCES = [G.RESET_SYNC[1], G.REVIEWED['ot_hbm_accel_cdc_fifo']['path']]
+EXT_INS = dict(core=['rst_c_n', 'c_wr', 'c_wd', 'quad'], hbm=['rst_h_n'])
+EXT_OUTS = dict(core=['c_full', 'c_fault', 'qc', 'c_x'], hbm=['h_q', 'h_v', 'qh'])
+
+
+def ext_spec(mut=0, nomac=0, straps=('quad',), levels=None):
+    view = 'physical/fx/fx_ram'
+    s = dict(name='gx_fix', top='gx_fix', kind='tile', params=dict(MUT=mut, NOMAC=nomac),
+             sources=EXT_SOURCES + ([] if nomac else [f'{view}/fx_ram_bb.v']) + ['gx_fix.sv'],
+             clock='multiple_cts_roots', clock_port='ck_cr[0]', clock_ports=['ck_cr[0]', 'ck_cr[1]', 'ck_hbm'],
+             clock_data_paths='reviewed_gray_fifos',
+             clock_relationship=dict(kind='independent_clock_families', periods_ps=dict(core=833.333, hbm=1024.0)),
+             clock_entry_domains=dict(
+                 core=dict(ratio=[1, 1], ports=['ck_cr[0]', 'ck_cr[1]'], inputs=EXT_INS['core'], outputs=EXT_OUTS['core']),
+                 hbm=dict(ratio=G.family_ratio('hbm'), ports=['ck_hbm'], inputs=EXT_INS['hbm'], outputs=EXT_OUTS['hbm'])),
+             reviewed_gray_fifo_extensions=dict(
+                 level_synchronizers=[dict(name='hbm_fault', source='h_st', chain=['s1', 's2'])] if levels is None else levels,
+                 die_constant_inputs=list(straps)))
+    if not nomac:
+        s['macros'] = [dict(view=view, count=1, inst='g_m.u_ram')]
+    return s
+
+
+class ExtFixture(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        for f in EXT_SOURCES:
+            (self.root / f).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(ROOT / f, self.root / f)
+        (self.root / 'gx_fix.sv').write_text(EXT_FIXTURE)
+        self.view = self.root / 'physical/fx/fx_ram'
+        self.view.mkdir(parents=True)
+        (self.view / 'fx_ram_bb.v').write_text(FX_BB)
+        for c in ('tt', 'ff', 'ss'):
+            (self.view / f'fx_ram_{c}.lib').write_text(FX_LIB.format(c=c, ck2='ce', extra=''))
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+
+@unittest.skipUnless(Path(YOSYS).exists() and Path(YOSYS).with_name('yosys-abc').exists(), 'Yosys 0.68 + yosys-abc required')
+class ExtLint(ExtFixture):
+    def test_admitted_fifo_macro_level_strap(self):
+        record = G.lint(ext_spec(), self.root)
+        fifos = {f['scope']: (fid, f) for fid, f in record['fifos'].items()}
+        self.assertEqual({k: (f['module'], f['writer'], f['reader']) for k, (_, f) in fifos.items()},
+                         dict(u_f0=('ot_hbm_accel_cdc_fifo', 'core', 'hbm'), u_f1=('ot_hbm_accel_cdc_fifo', 'core', 'hbm')))
+        f0, f1 = fifos['u_f0'][0], fifos['u_f1'][0]
+        self.assertEqual(fifos['u_f0'][1]['pointer_max_delay_ps'], 773.333)     # faster family (core) - 60
+        self.assertEqual(fifos['u_f0'][1]['storage_max_delay_ps'], 964.0)       # reader hbm 1024 - 60
+        self.assertEqual(list(record['macros'].values()), ['core'])
+        self.assertTrue(next(iter(record['macros'])).endswith('u_ram'))
+        self.assertEqual(record['levels']['l0'], dict(name='hbm_fault', src='hbm', dst='core', stages=2,
+                                                       max_delay_ps=773.333))
+        self.assertEqual(record['roles']['s1'], ['lsync1', 'l0', 'lvl', 0])
+        self.assertEqual(record['roles']['h_st'], ['lsrc', 'l0', 'lvl', 0])
+        self.assertEqual(record['gated']['h_q[0]'], sorted([f0, f1]))           # mixes both FIFO heads
+        self.assertEqual(record['gated']['h_st'], [f0])                          # level source AND gated consumer
+        self.assertEqual(record['gated']['u_f1.rgray[0]'], [f0])                 # pointer register AND gated consumer
+        self.assertEqual(record['strap_crossings'], ['quad->hbm'])
+        text = C.generate(ext_spec(), self.root)
+        for needle in ('proc ot_gf_ext_crossing', 'ot_gf_strap $start $pin $name $expected $inputs',
+                       'set ::ot_gf_levels [dict create {l0} {src hbm dst core bound 773.333}]',
+                       '{ot_gf_async $pin $cells $inputs; continue}'):
+            self.assertIn(needle, text)
+        for banned in ('set_false_path', 'set_clock_groups', 'set_multicycle_path', 'set_disable_timing'):
+            self.assertNotIn(banned, text)
+        clocks = C.clocks(ext_spec(), 833.333)
+        self.assertIn('create_clock -name ot_io_hbm -period 1024.000000000', clocks)
+        self.assertIn('[get_ports {ck_cr[1]}]', clocks)
+
+    def test_structural_mutants_refused(self):
+        for kw, why in [
+                (dict(mut=1), 'macro .*u_ram \\(core\\) input wd reads h_q.* \\(hbm\\); a macro must sit in one clock family'),
+                (dict(mut=6), 'macro .*u_ram \\(hbm\\) input .* \\(core\\); a macro must sit in one clock family'),
+                (dict(mut=2), 'consumer h_q.* loads FIFO u_f1 storage while the FIFO read-valid is false'),
+                (dict(mut=3), 'level synchroniser hbm_fault stage 1 s1 is not a direct flop'),
+                (dict(mut=4), 'level synchroniser hbm_fault stage 1 s1 drives more than stage 2'),
+                (dict(mut=5), 'unapproved crossing h_v \\(hbm\\) -> c_x \\(core\\)'),
+                (dict(straps=()), 'input quad \\(core\\) drives qh \\(hbm\\)'),
+                (dict(levels=[]), 'unapproved crossing h_st \\(hbm\\) -> s1 \\(core\\)'),
+                (dict(levels=[dict(name='x', source='h_st', chain=['s1'])]), 'needs >= 2 destination stages')]:
+            with self.subTest(kw=kw), self.assertRaisesRegex(G.GrayFifoError, why):
+                G.lint(ext_spec(**kw), self.root)
+
+    def test_macro_and_schema_refused(self):
+        (self.view / 'fx_ram_ff.lib').write_text(FX_LIB.format(c='ff', ck2='ce', extra='clock : true;'))
+        with self.assertRaisesRegex(G.GrayFifoError, 'exactly one Liberty clock pin'):
+            G.lint(ext_spec(), self.root)
+        (self.view / 'fx_ram_ff.lib').write_text(FX_LIB.format(c='ff', ck2='ce', extra=''))
+        s = ext_spec()
+        s['macros'][0]['count'] = 2
+        with self.assertRaisesRegex(G.GrayFifoError, 'differ from the declared macros'):
+            G.lint(s, self.root)
+        s = ext_spec()
+        del s['reviewed_gray_fifo_extensions']
+        with self.assertRaisesRegex(ValueError, 'no hard children/macros'):
+            C.generate(s, self.root)
+        s = ext_spec(nomac=1)
+        del s['reviewed_gray_fifo_extensions']
+        with self.assertRaisesRegex(G.GrayFifoError, 'clock port ck_cr\\[0\\] is not one actual scalar input'):
+            G.lint(s, self.root)                        # bus-bit roots stay refused outside the extension mode
+        s = ext_spec()
+        s['reviewed_gray_fifo_extensions']['false_paths'] = ['x']
+        with self.assertRaisesRegex(ValueError, 'no false paths'):
+            C.generate(s, self.root)
+
+    def test_reviewed_fifo_source_pinned(self):
+        path = self.root / G.REVIEWED['ot_hbm_accel_cdc_fifo']['path']
+        text = path.read_text()
+        old = 'wg_r1 <= wgray; wg_r2 <= wg_r1;'
+        self.assertEqual(text.count(old), 1)
+        path.write_text(text.replace(old, 'wg_r1 <= wgray; wg_r2 <= wgray;'))
+        with self.assertRaisesRegex(G.GrayFifoError, 'reviewed source changed'):
+            G.lint(ext_spec(), self.root)
+
+
+def ext_sta_case(root, out, name, mut=0):
+    """The extension TCL on the actual OpenSTA graph of the macro-free fixture (NOMAC 1)."""
+    sp = ext_spec(mut=mut, nomac=1)
+    paths = ' '.join(str(root / f) for f in sp['sources'])
+    synth = (f'read_verilog -sv -DSYNTHESIS {paths}; hierarchy -check -top gx_fix -chparam MUT {mut} -chparam NOMAC 1; '
+             f'synth -top gx_fix -flatten -noabc; dffunmap; abc -g simple; clean; write_json {out / "fix.json"}')
+    p = subprocess.run([YOSYS, '-Q', '-T', '-p', synth], text=True, capture_output=True)
+    if p.returncode:
+        raise AssertionError(p.stdout + p.stderr)
+    data = json.loads((out / 'fix.json').read_text())
+    m = data['modules']['gx_fix']
+    (out / 'probe.lib').write_text(fixture_lib(m))
+    if name == 'level_bypass':             # stage 2 of the level synchroniser fed straight from the hbm source
+        q = m['netnames']['s2']['bits'][0]
+        cell = next(c for c in m['cells'].values() if c['type'].startswith('$_DFF') and c['connections']['Q'] == [q])
+        cell['connections']['D'] = [m['netnames']['h_st']['bits'][0]]
+    jp, vp = out / f'{name}.json', out / f'{name}.v'
+    jp.write_text(json.dumps(data))
+    p = subprocess.run([YOSYS, '-Q', '-T', '-p', f'read_json {jp}; write_verilog -noattr -noexpr {vp}'],
+                       capture_output=True, text=True)
+    if p.returncode:
+        raise AssertionError(p.stdout + p.stderr)
+    generated = C.generate(sp, root).rsplit('\not_ce_apply\n', 1)[0]
+    ins, outs = [], []
+    for table, acc in ((EXT_INS, ins), (EXT_OUTS, outs)):
+        for domain, names in table.items():
+            for n in names:
+                w = len(m['ports'][n]['bits'])
+                acc += [f'{{{n}}} {domain}'] if w == 1 else [f'{{{n}[{i}]}} {domain}' for i in range(w)]
+    body = (f'read_liberty {{{out}/probe.lib}}\nread_verilog {{{vp}}}\nlink_design gx_fix\n'
+            + C.clocks(sp, 833.333) + generated
+            + f'\nset ins [dict create {" ".join(ins)}]\nset outs [dict create {" ".join(outs)}]\n'
+            + 'if {[catch {ot_ce_leaf_ownership $ins $outs} message]} {puts stderr $::errorInfo; exit 1}\n'
+            + 'puts ACTUAL_GX_GRAPH_PASS\nexit 0\n')
+    tp = out / f'{name}.tcl'
+    tp.write_text(body)
+    p = subprocess.run([STA, '-exit', str(tp)], text=True, capture_output=True)
+    return p.returncode, p.stdout + p.stderr
+
+
+@unittest.skipUnless(Path(YOSYS).exists() and Path(STA).exists() and Path(YOSYS).with_name('yosys-abc').exists(),
+                     'Yosys 0.68, yosys-abc and OpenSTA fixture tools required')
+class ExtActualGraph(ExtFixture):
+    def test_actual_graph_normal_and_mutants(self):
+        out = self.root / 'sta'
+        out.mkdir()
+        rc, log = ext_sta_case(self.root, out, 'normal')
+        self.assertEqual(rc, 0, log)
+        self.assertIn('ACTUAL_GX_GRAPH_PASS', log)
+        self.assertIn('OT_GF STRUCTURAL_PASS', log)
+        self.assertEqual(log.count('OT_GF BOUNDED level l0'), 1, log)
+        self.assertEqual(log.count('OT_GF BOUNDED strap quad'), 1, log)
+        self.assertGreaterEqual(log.count('mem mem -> gated'), 4, log)
+        self.assertGreaterEqual(log.count('src wptr -> sync1'), 6, log)       # 3-bit Gray pointer of both FIFOs
+        rc, log = ext_sta_case(self.root, out, 'level_bypass')
+        self.assertNotEqual(rc, 0, log)
+        self.assertIn('OT_GF:', log)
+
 if __name__ == '__main__':
     unittest.main()
