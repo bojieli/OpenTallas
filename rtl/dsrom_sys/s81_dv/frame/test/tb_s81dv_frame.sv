@@ -102,3 +102,12 @@ module tb_s81dv_frame;
         $finish;
     end
 endmodule
+`ifdef TB_PVTRACE
+// diagnostic: every element return word at the element pv port (edge = the RET edge numbering)
+module tb_s81dv_pvtrace (input wire clk, input wire [1:0] pv, input wire [31:0] prow, input wire [9:0] pseg,
+                         input wire [9:0] pnseg);
+    always @(posedge clk) if (|pv) $display("PV %0d %m %b rows %0d %0d seg %0d %0d n %0d", tb_s81dv_frame.edge_n, pv,
+                                            prow[15:0], prow[31:16], pseg[4:0], pseg[9:5], pnseg[4:0]);
+endmodule
+bind ot_v41_rom_elem_q_qxpq_w10 tb_s81dv_pvtrace u_pvt (.clk(clk), .pv(pv), .prow(prow), .pseg(pseg), .pnseg(pnseg));
+`endif
