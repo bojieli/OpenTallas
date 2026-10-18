@@ -1,0 +1,109 @@
+{
+ "schema": "opentallas.qwen_layer_tput.v3",
+ "lane": "TOKEN-PASS-QWEN 2026-10-18",
+ "grade_of_this_record": "PILOT / REGRESSION (not final RTL; not evidence of record)",
+ "owner_ask": "per-layer RTL sim of every representative Qwen3-8B ROM layer at production shape on CURRENT die RTL (compute dv2f14 + KV kvs14c co-simulated through the landed d2d link) with the compiler's static schedule",
+ "verdict": "NOT YET POSSIBLE on current die RTL: no functional vehicle of either die top exists (qfd_die is a portless GEN netlist: dv2f14bg 3,114 inst / 183 masters, kvs14c 33,206 inst; never simulated). This record = (1) current link-end RTL measured, (2) KV layer-programme control root, (3) the 10-13 reference-core layer vehicle re-run on today's tree (pending) after restoring its lost fixtures, (4) the plan for a die-slice vehicle.",
+ "rtl": {
+  "compute_die": "dv2f14 (claude/q-die13-1018 d5a922c32; chain dv2f14bg running, land_plan.json not produced yet)",
+  "kv_die": "kvs14c (claude/kv-clock-1018 f05f9338f / kv-landslot c1989d8c5; native PHY bind MISMATCH -> diagnostic)",
+  "this_run_source": "claude/tokpass-qwen-1018 b1af01f1c (= d5a922c32 + vehicle steps)"
+ },
+ "tp": {
+  "plan_of_record": "TP4 for this vehicle (gold = TP4 P8191)",
+  "tp8": "the split compute die is one 1/8 rank (768 of 6,144 tiles); TP8 per-layer UNMEASURED: no TP8 layer vehicle and no TP8 golden; only the component native_tp8_collective (results/rtl/qwen_layer_tput_1013/native_tp8_collective)"
+ },
+ "price": {
+  "per_layer": 6835,
+  "source": "results/arch/token_path_20261009/qwen_rom.json (L1 = me 3,459 + link 2,100 + su 1,276; L0 6,797)"
+ },
+ "layers": [
+  {
+   "layer": "L0 (cold KV fill)",
+   "position": 8191,
+   "rtl": "reference core (ot_qwen_rom_rt_die_w12_stream4_tagged_ar x4, partitioned) at b1af01f1c",
+   "cycles": null,
+   "cycles_10_13": 6151,
+   "price": 6797,
+   "ratio": null,
+   "exact": null,
+   "status": "PENDING: fleet ot-epyc5 /srv/opentallas-scratch/claude/tokpass-qwen-1018 (driver ~/scratch/tokpass-qwen/driver2.sh; STATUS.log)",
+   "grade": "measured-on-reference-RTL (regression) -- NOT current die RTL"
+  },
+  {
+   "layer": "L1 (chained, x35)",
+   "position": 8191,
+   "rtl": "same",
+   "cycles": null,
+   "cycles_10_13": 5480,
+   "composed_10_13": {
+    "cycles": 6639,
+    "ratio": 0.9713,
+    "how": "5,480 vehicle - 1,550 tile attention + 1,620 KV-die attention (static_kv_20261014 component) + 1,089 still priced (623 issue relays + 432 die relays + 34)"
+   },
+   "price": 6835,
+   "ratio": null,
+   "exact": null,
+   "status": "PENDING: fleet ot-epyc5 /srv/opentallas-scratch/claude/tokpass-qwen-1018 (driver ~/scratch/tokpass-qwen/driver2.sh; STATUS.log)",
+   "grade": "measured-on-reference-RTL + priced"
+  },
+  {
+   "layer": "LM head",
+   "rtl": "same",
+   "cycles": null,
+   "cycles_10_13": 3048,
+   "next_token_10_13": 24,
+   "price": 3101,
+   "ratio": null,
+   "exact": null,
+   "status": "PENDING: fleet ot-epyc5 /srv/opentallas-scratch/claude/tokpass-qwen-1018 (driver ~/scratch/tokpass-qwen/driver2.sh; STATUS.log) (waits for the CPU TP4 golden: needs gold L35 X)",
+   "grade": "measured-on-reference-RTL"
+  }
+ ],
+ "current_rtl_measured": {
+  "d2d_link_programme": {
+   "bench": "rtl/test/qwen_split/run_d2d_program.sh BACKEND=verilator (Verilator 5.050, ot-epyc5)",
+   "rtl": "qfd_d2d_static + qkd_d2d_static (rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv; the modules both die netlists bind) + qfd_kvn_static_transport + behavioural UCIe PHY pair (PHY = allowed model)",
+   "schedule": "tools/qwen_split/d2d_link_calendar.py --profile program, 36 layer calendars from token_path qwen_rom.json; compiled layer period 6,836",
+   "result": "PASS: 36/36 layers start on the compiled cycle (pin cycle = compiled - 2, constant), C->S 1188 / S->C 1188 frames, kvn 144, results 36, host checks 36, 0 normal-epoch faults, 0 errors; CRC-abort/retrain/replay recovery exact",
+   "mutants": {
+    "1 write slot +1": "FAIL (required)",
+    "2 KV RX demux swap": "FAIL",
+    "3 producer 1 cycle late": "FAIL",
+    "4 calendar wrong TXL": "FAIL",
+    "6 sequencer start 1 edge late (DRV=1 KV_PIN_SEQ=1)": "FAIL",
+    "7 KV anchor skew short (DRV=1 KV_PIN_SEQ=1)": "FAIL",
+    "5 kind-15 status stale": "PASSES = NOT IMPLEMENTED (header comment only; no MUT==5 in tb or RTL) -> bench gap"
+   },
+   "build_run_wall_s": "~7 s per config (build+run), 53 s for 8 configs",
+   "scope": "link protocol + calendar only: payloads are declared boundary stimuli; no die relays/landings; not native compute",
+   "logs": "d2d_program/"
+  },
+  "kv_layer_programme": {
+   "bench": "tools/qwen_static_kv/run_layer_programme.py (iverilog; tiny control root)",
+   "rtl": "qkd_static_kv_layer_programme (= kvs14c u_lprg in qkd_kvs_tiles_hroot_ff_k.sv)",
+   "result": "COMPONENT_PASS_WITH_FAILING_MUTANTS (3/3 mutants FAIL): 36 layers, 504 fixed control events",
+   "scope": "control/metadata only, no arithmetic/memory/link",
+   "receipt": "kv_layer_programme/receipt.json"
+  }
+ },
+ "native_FAIL_on_chip_parts": [
+  "compute layer arithmetic/control: vehicle = emitted cycle-reference core (controller/ME spine/SU partition), NOT the hardened qfd_c_b16_dv x48 / qfd_dv_slice2_e,w / qfd_native59_dv_service / qfd_tt_ctlm_dv tiles of dv2f14",
+  "attention: vehicle runs in-die HBM STREAM4 tile attention; the kvs14c attention (qkh/qkd_kvs tiles) is only priced (1,620 from the static_kv_20261014 component), never co-simulated with compute",
+  "TP collective: ot_rom_oneshot_allreduce over ot_rom_pkg_link (LAT 339) reference, not qfd_collective_static_io_production + serdes lanes",
+  "die relays / landings / forwarded half-cycle hops: priced (623 + 432 a layer), in NO RTL vehicle; dv2f14 land_plan.json not yet produced; die chain logs RELAY_CHECK SKIPPED (no compiled schedule OT_RELAY_SCHEDULE) -> the compiler does not consume the die relay/landing ages yet",
+  "d2d payloads in the link bench are external stimuli (link RTL itself is current)",
+  "KV die: native PHY bind MISMATCH keeps every KV GEN diagnostic; 16 lane views pending",
+  "embedding stage not in the per-layer vehicle"
+ ],
+ "fixture_finding": "All Qwen ROM layer-vehicle fixtures lived on EPYC1/EPYC2 (retired): W12 TP4 stage images (/home/ubuntu/w12, qwen-dspark-system/img_p1), the TP4 36-layer gold, the KV history. None on the live fleet or archive. Restored: stage images L0..L35 + head x4 from the local pinned prep npz (sha-checked vs prep image pins; head via new tools/qwen_tokpass/w12_head_restore.py), L0..L2 gold from local realmem-ctx8k, TP4 36+head gold re-run on CPU (local GPU in ERR state; owner 10-09 CPU goldens on the fleet).",
+ "next_vehicle_plan": "die-slice Verilator vehicle from GEN die.v + port_bind die_glue.sv (lane masters ot_qfd_lane_st/ot_qfd_land) + bound tile RTL; qfd_c_b16_dv as hier_block (one model x48); PHY _bb -> _model; UCIe to a kvs14c-side qkd_d2d_static + KV attention tiles (or the attention service component first); serdes ports to a TP collective boundary stimulus; romleaf +OT_ROM_DIR viamap images (7,680/die) generated from the restored W12 images; checks = tb_qwen_d2d_program calendars + TP gold X/KV; lane ages from land_plan.json once dv2f14bg/bhd chains emit it.",
+ "wall_time": {
+  "d2d_bench_s": 53,
+  "kv_programme_s": 1,
+  "reference_vehicle_10_13": {
+   "build_s": 1300,
+   "L3_run_s": 5024
+  }
+ }
+}
