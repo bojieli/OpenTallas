@@ -1,0 +1,25 @@
+HBM-B-RTL1b/HOST 2026-10-18 -- d4g per-quadrant host cfg leaves, lockstep vs d4f (source 1408d3188, branch claude/hbm-b-rtl1-host-1017)
+Fleet: ot-pve1 via ot-run (iverilog). Bench: rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh OUT MUT SEED D4G MUTQ
+Variants (ot_hbm_host_cfg_leaf2 at exact widths; every t_ready/t_active/t_fault input driven, every output sunk; no merge):
+  SW ot_hbm_host_cfg_leaf_sw NT18/NF29 | SE ot_hbm_host_cfg_leaf_se NT18/NF26 | NW ot_hbm_host_cfg_leaf_nw NT19/NF29 | NE ot_hbm_host_cfg_leaf_ne NT14/NF23
+D4G=1 composes all 4 variants (69 targets, 107 fault bits = the d4f host_status widths) against REF d4f (ingress -> targets direct).
+Latency vs d4f: config CFG_LAT +2 edges (pin flop + copy flop), status ST_LAT +2 edges; join GUARD = d4f GUARD + 4 + lane relays.
+POSITIVE
+  d4g_pos_s7   HOST_CFG_LEAF_LOCKSTEP_PASS d4g=1 mutq=-1 nt=69 nf=107 rounds=40 cfg=87 desc=86 launches=40 irq=40 cyc=9812
+  d4g_pos_s11  HOST_CFG_LEAF_LOCKSTEP_PASS d4g=1 mutq=-1 nt=69 nf=107 rounds=40 cfg=84 desc=83 launches=40 irq=40 cyc=9596
+  d4g_pos_s23  HOST_CFG_LEAF_LOCKSTEP_PASS d4g=1 mutq=-1 nt=69 nf=107 rounds=40 cfg=88 desc=87 launches=40 irq=40 cyc=9876
+  legacy_pos   HOST_CFG_LEAF_LOCKSTEP_PASS d4g=0 mutq=-1 nt=20 nf=40 rounds=40 cfg=87 desc=86 launches=40 irq=40 cyc=9812 (leaf2 NT5/NF10 regression, unchanged)
+MUTANTS (MUT applied to ONE leaf = MUTQ; 1 copy B drops cfg_data bit0, 2 copy B one stage short, 3 ready bits 0/1 swapped, 4 fault bit0 dropped)
+  SW q0: mut1 FAIL mism=5266 | mut2 FAIL mism=499 | mut3 FAIL mism=25707 | mut4 FAIL mism=69
+  SE q1: mut1 FAIL mism=5266 | mut2 FAIL mism=475 | mut3 FAIL mism=20129 | mut4 FAIL mism=69
+  NW q2: mut1 FAIL mism=5266 | mut2 FAIL mism=492 | mut3 FAIL mism=32    | mut4 FAIL mism=69
+  NE q3: mut1 FAIL mism=5266 | mut2 FAIL mism=503 | mut3 FAIL mism=23369 | mut4 FAIL mism=69
+VERDICT: PASS (3 seeds) and 16/16 mutants FAIL.
+--cts pre-route gates at 1408d3188 (ot-pve1), all WARN util-only (pin-limited 69.12 um square, util ~10%, as closed r1):
+  SW 1,094 sinks TT 113.8/12.2 ps FF spread 12.0, setup WNS +416 ps hold +43.5 ps
+  SE 1,088 sinks TT 112.9/11.7 ps FF spread 11.5, setup WNS +419 ps hold +46.3 ps
+  NW 1,098 sinks TT 109.2/9.3 ps  FF spread 9.4,  setup WNS +416 ps hold +39.8 ps
+  NE 1,066 sinks TT 110.3/10.4 ps FF spread 10.0, setup WNS +420 ps hold +43.9 ps
+ROUTES: hdie_host_cfg_leaf_sw_r1-r1-43607eeb2 CLOSED (TT +413.24 / FF hold +19.59 ps, DRC 0; auto-merged main f03c270c2).
+  nw/se/ne -43607eeb2 were refused at intake (main textbook_lint 550b34f66 moved the gate overlay; allowlisted as relaxing by
+  main's submit_exact) and are resubmitted under this commit's name (same kits, same gate results).

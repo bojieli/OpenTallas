@@ -14,18 +14,28 @@
 #   all             one run, all 12 q elements share one phase placed by the image writer's LPT (ROWS 8, K-split), which
 #                   ignores the return tree -- diagnostic only (D2: F1 collisions without the legaliser)
 # Env: SEED (1), ROWS, MATS, KK, CYC (3000), J (build jobs, 8), VFLAGS (extra verilator flags).
+# L4=1 (S81-LAND2): bench the successor <MASTER>_l4 (tools/s81_dv/frame_l4.py: column FIFO dsfd_cfifo_crs4, per-lane
+#   landings) through its bench wrapper <MASTER>_l4_b with lane strap K = LK (default 2); MUT=xlane re-derives the
+#   successor with lanes 1 / 2 swapped (frame_l4.py --mutant xlane).  The vectors and the check are the base master's.
 set -u
 O=$1; MASTER=${2:-col_h9}; MUT=${3:-0}; SET=${SET:-each}
 mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 FL=tools/s81_dv/frame_bench.f
-if [ "$MUT" = 0 ]; then FR=rtl/dsrom_sys/s81_dv/frame; else
+TOPF=""; DFR=$MASTER
+if [ "${L4:-0}" = 1 ]; then
+  if [ "$MUT" = 0 ]; then FR=rtl/dsrom_sys/s81_dv/frame_l4; else
+    [ -f $O/rtl/${MASTER}_l4.sv ] || python3 tools/s81_dv/frame_l4.py --mutant $MUT --out-rtl $(realpath $O)/rtl > $O/mutant.log 2>&1 || { echo "MUTANT_EMIT_FAILED"; tail -n 3 $O/mutant.log; exit 3; }
+    FR=$(realpath $O)/rtl; fi
+  TOPF="$FR/${MASTER}_l4_b.sv rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv"
+  DFR=${MASTER}_l4_b; SFX=_l4; VFLAGS="${VFLAGS:-} -DLK=${LK:-2}"
+elif [ "$MUT" = 0 ]; then FR=rtl/dsrom_sys/s81_dv/frame; else
   [ -f $O/rtl/$MASTER.sv ] || python3 tools/s81_dv/frame_wrap.py emit --mutant $MUT --out-rtl $(realpath $O)/rtl > $O/mutant.log 2>&1 || { echo "MUTANT_EMIT_FAILED"; tail -n 3 $O/mutant.log; exit 3; }
   FR=$(realpath $O)/rtl; fi
 if [ ! -x $O/obj/Vtb_s81dv_frame ]; then
   /usr/bin/time -v -o $O/time_build.log $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-lint -Wno-style \
-    -Wno-MULTIDRIVEN ${VFLAGS:-} -DFRAME=$MASTER -DDSFD_PQ_STATIC_X2 -DDSFD_PQ_HAS_BF_X2 --top-module tb_s81dv_frame -Mdir $O/obj \
-    -f $FL $FR/$MASTER.sv rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv \
+    -Wno-MULTIDRIVEN ${VFLAGS:-} -DFRAME=$DFR -DDSFD_PQ_STATIC_X2 -DDSFD_PQ_HAS_BF_X2 --top-module tb_s81dv_frame -Mdir $O/obj \
+    -f $FL $FR/$MASTER${SFX:-}.sv $TOPF rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv \
     --build-jobs ${J:-8} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 \
     || { echo "BUILD_FAILED"; grep -m8 -E "%Error" $O/build.log; tail -n 4 $O/build.log; exit 3; }
 fi

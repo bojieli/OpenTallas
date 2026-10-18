@@ -1,0 +1,9 @@
+MISMATCH blk 0 slot 0 group 0
+MISMATCH blk 0 slot 0 group 1
+MISMATCH blk 0 slot 1 group 0
+MISMATCH blk 0 slot 1 group 1
+MISMATCH blk 0 slot 2 group 0
+NPC4 equivalence edges 1538 mismatches 0
+d4f beats 1024, NPC2 beats 512, compared 512, first-beat edge after start 3
+VMDEL_N_LOCKSTEP FAIL MUT=1 errors=512
+rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_lane_n_lockstep.sv:102: $finish called at 3084000 (1ps)

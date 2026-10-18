@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from die_cluster import boundary as CB   # noqa: E402
+import abstract_pin_windows as APW       # noqa: E402
 
 PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
 DFF = 'DFFHQNx1_ASAP7_75t_R'
@@ -108,6 +109,13 @@ def main():
     ap.add_argument('--dieflow-ref', default='origin/main')
     ap.add_argument('--relay-ref', default=None, help='git ref holding the closed dsfd_dvrly_276_{EW,WE,NS,SN} views '
                     '(276-b lane stations become real relay macros; other widths stay DFF stand-ins)')
+    ap.add_argument('--relay-widths', type=int, nargs='+', default=[276],
+                    help='with --relay-ref: lane widths whose stations bind the closed dsfd_dvrly_<W>_<dir> views (S81-LAND2: '
+                    '276 70 512 562 682); a (width, direction) without a closed view stays a DFF stand-in station (census)')
+    # ROOT-0440 10-18 (Q-DIE11 class: fully obstructed abstracts gave Qwen GRT overflow 72k-747k at the pin faces):
+    # pin-access window depth (um) per face pin cluster, OBS-free on M4..M6 (tools/abstract_pin_windows.py); M1-M3 stay
+    # obstructed.  Default env OT_ABS_PIN_WINDOW_UM, 0 = previous abstracts byte for byte.
+    ap.add_argument('--pin-window', type=float, default=float(__import__('os').environ.get('OT_ABS_PIN_WINDOW_UM', '0') or 0))
     ap.add_argument('--bind', choices=('standin', 'real'), default='standin',
                     help='real: S81-BIND real-view mode (tools/s81_dv/dv_bind.py) -- every plan master binds its RTL by the '
                     'bind table, real F1 relay masters on every link, regional reset relay tree, sourced forwarded clocks; '
@@ -171,6 +179,7 @@ def main():
         m = f"dv_{bl['name']}"
         w, h = bl['w'], bl['h']
         lines = [f'MACRO {m}', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', f'  SIZE {w:.3f} BY {h:.3f} ;', '  SYMMETRY X Y ;']
+        sig = []
         for port, d, bits, px, py, f in pins.get(bl['name'], []):
             lx, ly = px - (bl['x'] - ox), py - (bl['y'] - oy)
             span = bits * PIN_PITCH
@@ -184,6 +193,7 @@ def main():
                     rect = f'RECT {xx - 0.012:.3f} {yy:.3f} {xx + 0.012:.3f} {yy + 0.1:.3f}'; layer = 'M5'
                 lines += [f'  PIN {port}[{k}]', f'    DIRECTION {d.upper()} ;', '    USE SIGNAL ;', '    PORT',
                           f'      LAYER {layer} ;', f'        {rect} ;', '    END', f'  END {port}[{k}]']
+                sig.append((f'{port}[{k}]', layer, tuple(float(v) for v in rect.split()[1:])))
             if d != 'input':
                 t = span / 2 + PIN_PITCH
                 if f in 'WE':
@@ -194,21 +204,35 @@ def main():
                     rect = f'RECT {xx - 0.012:.3f} {yy:.3f} {xx + 0.012:.3f} {yy + 0.1:.3f}'; layer = 'M5'
                 lines += [f'  PIN cko_{port}', '    DIRECTION OUTPUT ;', '    USE SIGNAL ;', '    PORT',
                           f'      LAYER {layer} ;', f'        {rect} ;', '    END', f'  END cko_{port}']
+                sig.append((f'cko_{port}', layer, tuple(float(v) for v in rect.split()[1:])))
         lines += ['  PIN clk', '    DIRECTION INPUT ;', '    USE CLOCK ;', '    PORT', '      LAYER M5 ;',
                   f'        RECT {w / 2 - 0.012:.3f} 0.000 {w / 2 + 0.012:.3f} 0.100 ;', '    END', '  END clk']
         lines += ['  OBS', '    LAYER M1 ;', f'      RECT 0.2 0.2 {w - 0.2:.3f} {h - 0.2:.3f} ;']
-        for L in ('M2', 'M3', 'M4', 'M5', 'M6'):
-            lines += [f'    LAYER {L} ;', f'      RECT 0.2 0.2 {w - 0.2:.3f} {h - 0.2:.3f} ;']
+        win = APW.windows(w, h, sig, a.pin_window, 4, 6) if a.pin_window > 0 and sig else {}
+        for li, L in enumerate(('M2', 'M3', 'M4', 'M5', 'M6'), 2):
+            if not win.get(li):
+                lines += [f'    LAYER {L} ;', f'      RECT 0.2 0.2 {w - 0.2:.3f} {h - 0.2:.3f} ;']
+                continue
+            lines += [f'    LAYER {L} ;'] + [f'      RECT {q[0]:.3f} {q[1]:.3f} {q[2]:.3f} {q[3]:.3f} ;'
+                                             for q in APW.minus_rect((0.2, 0.2, w - 0.2, h - 0.2), win[li])]
         lines += ['  END', f'END {m}', '']
         (out / 'views' / f'{m}.lib').write_text(stand_in_lib(m, pins.get(bl['name'], [])))
         (out / 'views' / f'{m}.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(lines) + 'END LIBRARY\n')
+    rview = {}                                    # (bits, dir) -> (w, h) of a closed relay view bound in this case
     if a.relay_ref:
         import subprocess
-        for d in RLY:
-            base = f'physical/ref_tile/s81dv_rly_276_{d.lower()}/views/dsfd_dvrly_276_{d}/dsfd_dvrly_276_{d}'
-            for ext, dst in (('.lef', f'rly_{d}.lef'), ('_tt.lib', f'rly_{d}_tt.lib')):
-                (out / 'views' / dst).write_bytes(subprocess.run(['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{base}{ext}'],
-                                                                 capture_output=True, check=True).stdout)
+        for b in sorted(set(a.relay_widths)):
+            for d in RLY:
+                base = f'physical/ref_tile/s81dv_rly_{b}_{d.lower()}/views/dsfd_dvrly_{b}_{d}/dsfd_dvrly_{b}_{d}'
+                lef = subprocess.run(['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{base}.lef'], capture_output=True)
+                if lef.returncode:
+                    continue
+                sz = next(l.split() for l in lef.stdout.decode().splitlines() if l.strip().startswith('SIZE'))
+                rview[(b, d)] = (float(sz[1]), float(sz[3]))
+                tag = d if b == 276 else f'{b}_{d}'      # 276 keeps its p4j file names
+                (out / 'views' / f'rly_{tag}.lef').write_bytes(lef.stdout)
+                (out / 'views' / f'rly_{tag}_tt.lib').write_bytes(subprocess.run(
+                    ['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{base}_tt.lib'], capture_output=True, check=True).stdout)
     # ------------------------------------------------------------------ die netlist
     v = ['module dv_die (input clk, input rst);', '  wire n_rst_dv = rst;']
     nreal = 0
@@ -241,9 +265,9 @@ def main():
         for k in range(st):
             wn = f'r_{nm}_{k}'
             v.append(f'  wire [{b - 1}:0] {wn};')
-            if a.relay_ref and b == 276:
+            if (b, sdir[(nm, k)]) in rview:
                 # real closed station (flop-first, recipe 4): ck = hop clock in, ck_o = forwarded out (F1)
-                v.append(f'  dsfd_dvrly_276_{sdir[(nm, k)]} st_{nm}_{k} (.i({prev}), .o({wn}), .ck(n{nm}_fck[{k}]), '
+                v.append(f'  dsfd_dvrly_{b}_{sdir[(nm, k)]} st_{nm}_{k} (.i({prev}), .o({wn}), .ck(n{nm}_fck[{k}]), '
                          f'.ck_o(n{nm}_fck[{k + 1}]), .rs(n_rst_dv));')
                 nreal += 1
                 prev = wn
@@ -265,14 +289,14 @@ def main():
         pl.append(f'place_inst -name u_{bl["name"]} -location {{{bl["x"] - ox:.3f} {bl["y"] - oy:.3f}}} -orientation R0 -status FIRM')
     # relay flops: a station of `b` flops on a small square of rows / sites at the hop point
     for nm, k, b, px, py in flops:
-        if a.relay_ref and b == 276:
-            w_, h_ = RLY[sdir[(nm, k)]]
+        if (b, sdir[(nm, k)]) in rview:
+            w_, h_ = rview[(b, sdir[(nm, k)])]
             pl.append(f'place_inst -name st_{nm}_{k} -location {{{px - w_ / 2:.3f} {py - h_ / 2:.3f}}} -orientation R0 -status FIRM')
             continue
         pl.append(f'place_inst -name ff_{nm}_{k} -location {{{round((px - 2) / SITE) * SITE:.3f} {round((py - 1) / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
         pl.append(f'place_inst -name lcb_{nm}_{k} -location {{{round((px - 4) / SITE) * SITE:.3f} {round((py - 2) / ROW) * ROW + 1.08:.3f}}} -orientation R0 -status PLACED')
     for nm, k, b, px, py in flops:
-        if a.relay_ref and b == 276:
+        if (b, sdir[(nm, k)]) in rview:
             continue
         side = max(1, int(math.ceil(math.sqrt(b * 0.648 / (ROW * SITE)) / 12)))   # ~12 sites per DFF
         cols = max(1, int(math.ceil(math.sqrt(b))))
@@ -361,7 +385,11 @@ rc=$?; echo $rc > $D/out/run.exit; exit $rc
     area = W * H / 1e6
     info = dict(schema='opentallas.s81_dv.die_case.v1', plan=str(a.plan), region=a.region, die_um=[W, H], area_mm2=round(area, 2),
                 blocks=dict(kinds), census={k: CENSUS.get(k, 'stand-in') for k in kinds},
-                real_views=dict(relay_276_stations=nreal, relay_ref=a.relay_ref,
+                real_views=dict(relay_276_stations=sum(1 for nm, k, b, *_ in flops if b == 276 and (b, sdir[(nm, k)]) in rview),
+                                relay_stations=nreal, relay_views=sorted(f'{b}_{d}' for b, d in rview),
+                                standin_stations=dict(collections.Counter(f'{b}_{sdir[(nm, k)]}' for nm, k, b, *_ in flops
+                                                                          if (b, sdir[(nm, k)]) not in rview)),
+                                relay_ref=a.relay_ref,
                                 diagnostic='relay rs pins on one special net (regional reset tree not modelled in this case)'),
                 links=len(nets), bits=nbits, bits_by_class=dict(used), relay_flops=nf,
                 die_nets_est=nbits + nf, die_repair=a.die_repair,

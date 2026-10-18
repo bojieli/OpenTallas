@@ -1154,6 +1154,26 @@ def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
     return True
 
 
+def between_in_stack(a: dict, b: dict, blocks: list) -> bool:
+    """a and b are two members of ONE abutted N-S stack that are not neighbours: overlapping in x, and the y gap between
+    them is filled by a chain of blocks each abutted_stack() to the next (a 3+ high bank of arrays; KV-PROMPT4 10-18:
+    the pairwise channel test saw macro 0 / macro 2 of a 4-high stack 17.9 um apart and failed it)."""
+    lo, hi = (a, b) if a["y"] < b["y"] else (b, a)
+    if not (min(lo["x"] + lo["w"], hi["x"] + hi["w"]) > max(lo["x"], hi["x"])):
+        return False
+    chain = sorted((c for c in blocks if c["y"] >= lo["y"] - 1e-6 and c["y"] + c["h"] <= hi["y"] + hi["h"] + 1e-6
+                    and min(c["x"] + c["w"], lo["x"] + lo["w"]) > max(c["x"], lo["x"])
+                    and min(c["x"] + c["w"], hi["x"] + hi["w"]) > max(c["x"], hi["x"])), key=lambda c: c["y"])
+    if len(chain) < 3 or chain[0] is not lo or chain[-1] is not hi:
+        return False
+    for p, q in zip(chain, chain[1:]):
+        gx = max(q["x"] - (p["x"] + p["w"]), p["x"] - (q["x"] + q["w"]))
+        gy = q["y"] - (p["y"] + p["h"])
+        if not abutted_stack(p, q, gx, gy):
+            return False
+    return True
+
+
 def bare_face(b: dict, face: str) -> bool:
     """True when the hard MACRO's face that ends up toward tile face `face` carries no pin of any use (signal, clock,
     power, ground) within 200 nm (as abutted_row).  Such a face next to a core edge whose tile face has no pins needs
@@ -1333,6 +1353,8 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             gx = max(b["x"] - (a["x"] + a["w"]), a["x"] - (b["x"] + b["w"]))
             gy = max(b["y"] - (a["y"] + a["h"]), a["y"] - (b["y"] + b["h"]))
             gap = max(gx, gy)
+            if gap < CHANNEL_UM - 1e-6 and between_in_stack(a, b, blocks):
+                continue    # non-neighbours of one abutted stack: the macros between them fill the "gap" (KV-PROMPT4)
             if gap < CHANNEL_UM - 1e-6 and abutted_stack(a, b, gx, gy):
                 continue    # the deliberate abutment this check names as its fix: one macro stack, no cells between
             if gap < CHANNEL_UM - 1e-6 and abutted_row(a, b, gx, gy):
