@@ -156,6 +156,9 @@ def main():
     # gate e8c5e2cf6: GPL-0305 RePlAce diverged (3.2k flops in 41k um2 placeable at PD 0.5) -> lower target density
     s["route"]["pd"] = 0.3
     s["job"] = dict(s["job"], branch="claude/su-pg-1018", owner="Claude:OWNERS-HBM/SU-PG")
+    # SU-PG g3 (305519145, 78 um channel): GPL routability mode hit 50 reverts (RUDY 1.25 at the SRAM pin faces) then
+    # GPL-0305 NaN at PD 0.3 -> plain wirelength/timing GPL; the trial GRT is the congestion judge
+    s["orfs_vars"] = dict(s.get("orfs_vars") or {}, GPL_ROUTABILITY_DRIVEN="0")
     (OUT / "hbm_su_pgcol_l_r5.json").write_text(json.dumps(s, indent=1) + "\n")
     h = leaf(s4, "hbm_su_pghead_r5", "ot_hbm_su_programme_pghead", 86.4, 86.4, [], WHY + (
         "THIS leaf: head (1 per quarter): cfg pin stage + column decode (bank[15:5] = column) + sticky fault OR of the "
