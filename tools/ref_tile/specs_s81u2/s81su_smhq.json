@@ -122,5 +122,7 @@
   ],
   "views_to": "physical/ref_tile/s81su_smhq/views",
   "record_to": "results/rtl/ref_tile/s81su_smhq"
- }
+ },
+ "child_clock_ref": "boundary",
+ "why_clock": "SMH 10-18: clock = balanced spine with child-insertion leaf targets from each child's ROUTED boundary-register insertion (child_clock_ref boundary), so the glue pin flops and the children's pin flops tick together. cfg_q and f are now registered at the pin, so no raw child clock pin is a pin flop (g1 spread 240 ps)."
 }

@@ -76,5 +76,6 @@
   "views_to": "physical/ref_tile/s81su_smhr/views",
   "record_to": "results/rtl/ref_tile/s81su_smhr"
  },
- "clock": "cts"
+ "child_clock_ref": "boundary",
+ "why_clock": "SMH 10-18: clock = balanced spine with child-insertion leaf targets from each child's ROUTED boundary-register insertion (child_clock_ref boundary), so the glue pin flops and the children's pin flops tick together. The 10-17 g3 TritonCTS trial (insertion-cap driven) gave pin-flop spread 144 ps; the g2 spine gave 24.8 ps (insertion > 300 ps is guidance under 0dq)."
 }
