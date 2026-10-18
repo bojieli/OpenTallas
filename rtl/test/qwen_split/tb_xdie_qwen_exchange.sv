@@ -9,7 +9,12 @@
 //                control composition (qkd_native_attention_programme + qkd_attn_cal_gen STRETCH=1 + qkd_attn_service_root,
 //                wired as in kvs14c qkd_kvs_attn) with its RESULT pins driven on the reserved ages (the result face
 //                qkd_attn_result_face_s is NOT on the link path; K_REAL=2 instantiates the as-built qkd_kvs_attn incl.
-//                the face and drives pvfin's beat stream into the face window: diagnostic, see the lane file)
+//                the face and drives pvfin's beat stream into the face window: diagnostic, see the lane file;
+//                QXF-FACE 10-18: K_REAL=3 = the as-built qkd_kvs_attn + the REAL stream final join qkd_pv_fin_s
+//                (pvfin, fed from kvs_attn pvfst; fo -> fin; fault -> uff) with the PV pair streams on their compiled
+//                slots P0 / P1 and the hub reciprocals on R (qkd_ahub_static_dw fr contract) as stimuli; POS_P sets
+//                the context T = POS_P + 1; FIN_MUT = the pvfin MUT; RESULT golden = obeat with a normal exponent
+//                (pairs x 2^h, reciprocal 2^-(h+1): (p0 + p1) * rz == obeat exactly))
 //   Calendars: the compiler images of tools/qwen_split/xdie_exchange_cal.py (d2d_link_calendar layer law with the real
 //   producer latencies), loaded through the cfg ports; one cal_start per layer, segment 0.
 // Modelled (declared): the UCIe PHY pair ot_qkvd_ucie_x64_phy_model at LAT = PHY FDI cycles (3.5 ns measured
@@ -44,12 +49,12 @@ endmodule
 
 module tb_xdie_qwen_exchange;
     `include "xdie_params.svh"
-    parameter integer MUT = 0, C_REAL = 1, K_REAL = 1, NL = 35, QGAP = 1;
+    parameter integer MUT = 0, C_REAL = 1, K_REAL = 1, NL = 35, QGAP = 1, POS_P = 255, FIN_MUT = 0;
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583, PR = 1, LEAD = 2 * PR;
     localparam [15:0] EP = 16'd9;
     localparam [17:0] TOK = 18'd50994;
-    localparam [12:0] POS = 13'd255;
+    localparam [12:0] POS = 13'(POS_P);
     localparam [1:0] GEN = 2'd1;
     localparam [379:0] TEMPLATE = 380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
     reg ck = 0; always #0.4167 ck = ~ck;
@@ -69,7 +74,12 @@ module tb_xdie_qwen_exchange;
     function automatic [511:0] qbeat(input integer b, input integer l);
         integer j; begin for (j = 0; j < 16; j = j + 1) qbeat[32*j +: 32] = qval(16 * b + j, l); end endfunction
     function automatic [511:0] obeat(input integer b, input integer l);
-        integer j; begin for (j = 0; j < 16; j = j + 1) obeat[32*j +: 32] = 32'(b * 16 + j) * 32'h85EBCA6B + 32'h1234567 + 32'(l) * 32'h27D4EB2F; end endfunction
+        integer j; begin for (j = 0; j < 16; j = j + 1) obeat[32*j +: 32] = 32'(b * 16 + j) * 32'h85EBCA6B + 32'h1234567 + 32'(l) * 32'h27D4EB2F;
+            if (K_REAL == 3) for (j = 0; j < 16; j = j + 1) obeat[32*j+29 +: 2] = 2'b01; end endfunction   // normal exponent 64..127
+    // K_REAL=3 pair partial: obeat with exponent + h (h = b / 8, the head of beat b); (p0 + p1) * 2^-(h+1) == obeat
+    function automatic [511:0] pbeat(input integer b, input integer l);
+        integer j; reg [511:0] o; begin o = obeat(b, l); pbeat = o;
+            for (j = 0; j < 16; j = j + 1) pbeat[32*j+23 +: 8] = o[32*j+23 +: 8] + 8'(b / 8); end endfunction
     function automatic [7:0] code(input integer k, input integer h, input integer d);
         integer x; begin x = (k * 91 + h * 37 + d) % 254; if (x >= 127) x = x + 1; code = x[7:0]; end endfunction
     function automatic [31:0] decode(input [7:0] b);
@@ -342,6 +352,49 @@ module tb_xdie_qwen_exchange;
                 cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.guard_fault, u_kattn.u_attn.ctl.record_fault,
                 u_kattn.u_attn.ctl.codec.fault_cause, u_kattn.u_attn.ctl.slot_fault, u_kattn.w_attn_face__result_fault, fres, fp0, fp1, fpv,
                 fcal[175:160], fage, u_kattn.w_attn_cal__tx_first); end
+    end else if (K_REAL == 3) begin : g_kfin
+        // QXF-FACE: as-built qkd_kvs_attn + real qkd_pv_fin_s (0 die relays on pvfst / fin: PV_LEAD 0, F_DLY 1 as built)
+        wire [30:0] pvst; wire [64:0] pvfst; wire [164:0] ahs; wire [536:0] prg; wire [47:0] ac0, ac1, ac2, ac3; wire [7:0] arh;
+        wire [76:0] i_ctl = {TOK, kv_go, stage, 18'(POS), EP, 14'(POS + 1), kv_run, kv_issue, 1'b1, 1'b1};
+        wire [521:0] srx = {512'd0, 5'd0, 4'd0, a_rxe};
+        wire [533:0] fin; wire uff;
+        qkd_kvs_attn u_kattn (.ck(ck), .rst_n(rst_n), .ufs_WS(1'b0), .ufs_WN(1'b0), .ufs_ES(1'b0), .ufs_EN(1'b0), .ufh(1'b0),
+            .ufp0(1'b0), .ufp1(1'b0), .uff(uff), .ufk_WS(1'b0), .ufk_WN(1'b0), .ufk_ES(1'b0), .ufk_EN(1'b0),
+            .d2d__srx(srx), .d2d__rx_payload(a_rxp), .d2d__att_tx_slot(a_txs), .d2d__att_tx_kind(a_tk), .d2d__att_tx_beat(a_tb),
+            .fin(fin), .attn__tx_valid(a_tv), .attn__tx_payload(a_tp), .pvst(pvst), .pvfst(pvfst), .ahs(ahs), .prg(prg),
+            .acal_WS(ac0), .acal_WN(ac1), .acal_ES(ac2), .acal_EN(ac3), .arh(arh), .i_ctl(i_ctl));
+        // pair / reciprocal stimuli on pvfin's compiled slots: input for edge k after the start edge (pvfst start sampled)
+        integer fk = -1; reg [15:0] s_p0 = 0, s_p1 = 0, s_r = 0, s_ep = 0;
+        always @(posedge ck) if (rst_n) begin
+            if (pvfst[0]) begin fk <= 1; s_p0 <= pvfst[32:17]; s_p1 <= pvfst[48:33]; s_r <= pvfst[64:49]; s_ep <= pvfst[16:1]; end
+            else if (fk >= 1 && fk < 20000) fk <= fk + 1;
+        end
+        wire f0v = fk >= 1 && fk >= s_p0 && fk < s_p0 + 32, f1v = fk >= 1 && fk >= s_p1 && fk < s_p1 + 32, frv = fk >= 1 && fk == s_r;
+        wire [4:0] f0b = 5'(fk - s_p0), f1b = 5'(fk - s_p1);
+        wire [127:0] rzw = {1'b0, 8'd123, 23'd0, 1'b0, 8'd124, 23'd0, 1'b0, 8'd125, 23'd0, 1'b0, 8'd126, 23'd0};   // head h: 2^-(h+1)
+        wire fo_v; wire [4:0] fo_b; wire [15:0] fo_e; wire [511:0] fo_d;
+        qkd_pv_fin_s #(.ADD_LAT(7), .MUL_LAT(6), .SKEW(1), .MUT(FIN_MUT)) u_fin (.ck(ck), .rst_n(rst_n),
+            .start(pvfst[0]), .epoch(pvfst[16:1]), .cal(pvfst[64:17]),
+            .p0_valid(f0v), .p0_beat(f0b), .p0_epoch(s_ep), .p0_data(f0v ? pbeat(f0b, lay) : 512'd0),
+            .p1_valid(f1v), .p1_beat(f1b), .p1_epoch(s_ep), .p1_data(f1v ? pbeat(f1b, lay) : 512'd0),
+            .rz_valid(frv), .rz_epoch(s_ep), .rz(rzw),
+            .out_valid(fo_v), .out_beat(fo_b), .out_epoch(fo_e), .out_data(fo_d), .fault(uff));
+        assign fin = {fo_d, fo_e, fo_b, fo_v};
+        wire [175:0] fcal = u_kattn.w_attn_root__cal;
+        wire [15:0] fpv = fcal[127:112], fp0 = fcal[143:128], fp1 = fcal[159:144], fr = fcal[175:160];
+        assign kq_v = prg[19]; assign kq_b = prg[24:20]; assign kq_d = prg[536:25];
+        assign kreq_v = prg[0];
+        assign k_pf = u_kattn.w_attn__fault;
+        reg sf = 0, fl = 0;
+        always @(posedge ck) if (rst_n && act && fo_v && fo_b == 0 && !fl) begin fl <= 1;
+            $display("XQ_FIN layer %0d T %0d: pvfin beat0 at root age %0d = PV %0d + max(P0 %0d, P1 %0d, R %0d) + 17 -> %0d | programme tx_first %0d",
+                lay, POS + 1, u_kattn.w_attn_root__age, fpv, fp0, fp1, fr,
+                fpv + ((fp0 > fp1) ? ((fp0 > fr) ? fp0 : fr) : ((fp1 > fr) ? fp1 : fr)) + 17, u_kattn.w_attn_cal__tx_first); end
+        always @(posedge ck) if (rst_n && (k_pf || u_kattn.w_attn_face__result_fault || uff) && !sf) begin sf <= 1;
+            $display("XQ_CAUSE kvs_attn+pvfin cyc %0d rel %0d: programme ctl local %0d record %0d (codec cause %b) | face result_fault %0d | pvfin fault %0d | cal P0 %0d P1 %0d PV %0d R %0d root age %0d | ctl tx_first %0d",
+                cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.record_fault, u_kattn.u_attn.ctl.codec.fault_cause,
+                u_kattn.w_attn_face__result_fault, uff, fp0, fp1, fpv, fr, u_kattn.w_attn_root__age, u_kattn.w_attn_cal__tx_first); end
+        always @(posedge ck) if (rst_n && act && (uff || u_kattn.w_attn_face__result_fault || u_kattn.w_attn_cal__fault)) err("pvfin / result face / calendar fault");
     end else begin : g_kstub
         wire r_ev = act && (rel >= P_RS && rel < P_RS + 32 || rel == P_RE);
         wire [3:0] r_kind = rel == P_RE ? 4'd4 : 4'd3;
