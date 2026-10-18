@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# LAYERBENCH-HBM (10-18): generate the DeepSeek-V4.1 per-record layer fixtures (ds_layer_fixtures.py) on the fleet.
+#   run_ds_fixtures.sh [REV=HEAD] [LAYERS="0 2 3 14 head"] [RANKS=0] [ROOT=/srv/opentallas-scratch/claude/layerbench-hbm/dsfix]
+# Inputs on the host under ROOT: ckpt/ = the sparse released-checkpoint subset of the 1M reference token
+# (tools/hgi_sim/ckpt_subset.py, 14.0 GB data; the full 476 GB snapshot is on the workstation only), refs/ = the W17
+# reference shards (committed: results/rtl/hbm_ds_layer_tput_1018/fixtures/w17_ref_ctx1048576_seed20260930).  ot-run
+# picks the host by --dir (only hosts holding ROOT qualify).  Out: ROOT/fix/<L>/ + ROOT/out/<L>.log.
+set -uo pipefail
+REV=${REV:-HEAD}; LAYERS=${LAYERS:-0 2 3 14 head}; RANKS=${RANKS:-0}
+ROOT=${ROOT:-/srv/opentallas-scratch/claude/layerbench-hbm/dsfix}; HOST=${HOST:-ot-epyc5}
+WT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
+SHA=$(git -C "$WT" rev-parse "$REV")
+ssh "$HOST" "rm -rf $ROOT/src && mkdir -p $ROOT/src $ROOT/out $ROOT/fix" || exit 2
+git -C "$WT" archive "$SHA" tools compiler/models docs/HBM_GENERIC_INTERFACE.md results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json \
+  results/abi3/qwen3_reduced_reference_oracle.json results/rtl/hdc_v41x_fullshape_layers.json results/rtl/v41_program_constants.json \
+  results/rtl/w17_v41_1m_reference_token.json results/rtl/w19_hbm_tp96_isa.json results/rtl/dshbm_baseline_measured_20261004 \
+  results/rtl/hbm_ds_layer_tput_1018/priced_layers.json results/arch/hbm_generic_iface_20261009 | ssh "$HOST" "tar -x -C $ROOT/src"
+echo "$SHA" | ssh "$HOST" "cat > $ROOT/src/REV"
+NOAVX="AVX512F AVX512CD AVX512_KNL AVX512_KNM AVX512_SKX AVX512_CLX AVX512_CNL AVX512_ICL AVX512_SPR AVX512_SPR"
+RC=0
+for L in $LAYERS; do
+  /home/ubuntu/bin/ot-run --mem ${MEM:-48} --threads 2 --dir "$ROOT" -- bash -c "cd $ROOT/src && \
+    HDC_V41_ARITH=chunk8 NPY_DISABLE_CPU_FEATURES='$NOAVX' OT_V41_FLASH_SNAPSHOT=$ROOT/ckpt \
+    python3 tools/hbm_layer_vehicle/ds_layer_fixtures.py --layer $L --ranks $RANKS --refs $ROOT/refs --out $ROOT/fix \
+      > $ROOT/out/$L.log 2>&1; rc=\$?; tail -2 $ROOT/out/$L.log; exit \$rc" &
+done
+for j in $(jobs -p); do wait $j || RC=1; done
+exit $RC
