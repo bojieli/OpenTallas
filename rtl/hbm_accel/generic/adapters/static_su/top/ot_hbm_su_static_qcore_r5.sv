@@ -21,7 +21,18 @@
 // compiler issues every consumed class; the pgslices check RF-source addresses against rf_bcmd).
 // FAULT: write-conflict and drain-check faults report one edge later (computed on registered inputs); reducer unchanged.
 // MUT (bench, must FAIL): 256 = an extra read stage (reads k+4); 16/32/64/128 as the hub.
+// g3 (HBM-SU6 2026-10-17, r5 g2 gate: rf_bcmd[*] 8,193 loads = synthesis merged the 8 per-sector address copies with the
+// rf_bcmd output flop; placement reg->reg -178.7 ps into mem[*] D): every replicated pin-rung copy is a KEPT instance
+// (ot_hbm_su_qcore_r5_kq, keep_hierarchy, never merged). Read address: one copy per (sector, class, 16-bit half)
+// (<= ~256 mux loads); class 5: one copy per (word slot, half). Writers: per-sector copies of wv/wa/wd/rrv/rra so each
+// copy feeds 8 banks. Same edges (all copies capture at k from the pins), same function.
 // ---------------------------------------------------------------------------------------------------------------------
+(* keep_hierarchy *)
+module ot_hbm_su_qcore_r5_kq #(parameter integer W=1,RST=0)(input wire clk,rst_n,input wire [W-1:0] d,output reg [W-1:0] q);
+ if(RST!=0)begin:g_r always @(posedge clk or negedge rst_n) if(!rst_n) q<={W{1'b0}}; else q<=d; end
+ else begin:g_n always @(posedge clk) q<=d; end
+endmodule
+
 module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1)(
  input wire clk_ctl,rst_n,
  input wire [6*9-1:0] rf_rd_cmd,
@@ -42,42 +53,53 @@ module ot_hbm_su_static_qcore_r5 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1
 );
  wire rf_drain_now=rf_drain_cmd[1]&&(rf_drain_cmd[0]||MUT==16);
  // ---------------------------------------------------------------- pin rung (raw capture at k)
- reg [53:0] cmd_p; reg [3:0] wv_p; reg [31:0] wa_p; reg [127:0] wd_p; reg rrv_p; reg [4:0] rra_p; reg [255:0] rrd_p;
- always @(posedge clk_ctl)begin wa_p<=rf_wa;wd_p<=rf_wd;rra_p<=rr_wa;rrd_p<=rr_wd;end
- always @(posedge clk_ctl or negedge rst_n)
-  if(!rst_n)begin cmd_p<=54'd0;wv_p<=4'd0;rrv_p<=1'b0;end
-  else begin cmd_p<=rf_rd_cmd;wv_p<=rf_wv;rrv_p<=rr_wv;end
- // read address copies, one per sector (classes 0..4: {v, row2, bank3-in-sector}); class 5 row per sector
- reg [5:0] ra_s [0:7][0:4]; reg [1:0] r5_s [0:7]; integer s1,c1;
- always @(posedge clk_ctl) for(s1=0;s1<8;s1=s1+1) begin
-  for(c1=0;c1<5;c1=c1+1) ra_s[s1][c1] <= {rf_rd_cmd[c1*9+8], rf_rd_cmd[c1*9+6+:2], rf_rd_cmd[c1*9+:3]};
-  r5_s[s1] <= rf_rd_cmd[5*9+6+:2];
+ reg [53:0] cmd_p; reg [255:0] rrd_p;
+ always @(posedge clk_ctl) rrd_p<=rr_wd;
+ always @(posedge clk_ctl or negedge rst_n) if(!rst_n) cmd_p<=54'd0; else cmd_p<=rf_rd_cmd;
+ // per-sector writer copies (kept): {wa 32, wd 128, rra 5} no reset; {wv 4, rrv 1} reset
+ wire [3:0] wv_s [0:7]; wire [31:0] wa_s [0:7]; wire [127:0] wd_s [0:7]; wire rrv_s [0:7]; wire [4:0] rra_s [0:7];
+ // read address copies (kept): classes 0..4 per (sector, half) {v, row2, bank3-in-sector}; class 5 per (word slot, half)
+ wire [5:0] ra_s [0:7][0:4][0:1]; wire r5v_s [0:7][0:1]; wire [4:0] r5a_s [0:7][0:1];
+ for(genvar s=0;s<8;s=s+1)begin:g_sec
+  ot_hbm_su_qcore_r5_kq #(.W(165),.RST(0)) u_wd(.clk(clk_ctl),.rst_n(rst_n),.d({rf_wa,rf_wd,rr_wa}),.q({wa_s[s],wd_s[s],rra_s[s]}));
+  ot_hbm_su_qcore_r5_kq #(.W(5),.RST(1)) u_wv(.clk(clk_ctl),.rst_n(rst_n),.d({rf_wv,rr_wv}),.q({wv_s[s],rrv_s[s]}));
+  for(genvar h=0;h<2;h=h+1)begin:g_h
+   for(genvar c=0;c<5;c=c+1)begin:g_c
+    ot_hbm_su_qcore_r5_kq #(.W(6),.RST(0)) u_ra(.clk(clk_ctl),.rst_n(rst_n),
+     .d({rf_rd_cmd[c*9+8],rf_rd_cmd[c*9+6+:2],rf_rd_cmd[c*9+:3]}),.q(ra_s[s][c][h]));
+   end
+   ot_hbm_su_qcore_r5_kq #(.W(1),.RST(1)) u_r5v(.clk(clk_ctl),.rst_n(rst_n),.d(rf_rd_cmd[5*9+8]),.q(r5v_s[s][h]));
+   ot_hbm_su_qcore_r5_kq #(.W(5),.RST(0)) u_r5a(.clk(clk_ctl),.rst_n(rst_n),.d({rf_rd_cmd[5*9+6+:2],rf_rd_cmd[5*9+3+:3]}),.q(r5a_s[s][h]));
+  end
  end
  // ---------------------------------------------------------------- storage: one copy, writes commit k+1
  reg [31:0] mem [0:255];               // word index {row2, bank6}
  wire [63:0] rf_wconf;
  for(genvar bb=0;bb<64;bb=bb+1)begin:g_rfb
+  localparam integer S=bb/8;
   reg wv; reg [1:0] wa; reg [31:0] wd; reg [2:0] nw; integer w;
   always @*begin
    wv=0;wa=0;wd=0;nw=0;
-   for(w=0;w<4;w=w+1)if(wv_p[w]&&wa_p[w*8+:6]==6'(bb))begin wv=1;wa=wa_p[w*8+6+:2];wd=wd_p[w*32+:32];nw=nw+3'd1;end
+   for(w=0;w<4;w=w+1)if(wv_s[S][w]&&wa_s[S][w*8+:6]==6'(bb))begin wv=1;wa=wa_s[S][w*8+6+:2];wd=wd_s[S][w*32+:32];nw=nw+3'd1;end
   end
-  wire rrb=(COLLPORT!=0)&&rrv_p&&rra_p[2:0]==3'(bb/8);
+  wire rrb=(COLLPORT!=0)&&rrv_s[S]&&rra_s[S][2:0]==3'(bb/8);
   wire [31:0] rrd=rrd_p[32*((MUT==128)?7-(bb%8):(bb%8))+:32];
-  wire bwv=wv||rrb; wire [1:0] bwa=rrb?rra_p[4:3]:wa; wire [31:0] bwd=rrb?rrd:wd;
+  wire bwv=wv||rrb; wire [1:0] bwa=rrb?rra_s[S][4:3]:wa; wire [31:0] bwd=rrb?rrd:wd;
   always @(posedge clk_ctl) if(bwv) mem[{bwa,6'(bb)}] <= bwd;
   assign rf_wconf[bb]=(nw>3'd1)||(rrb&&wv);
  end
  // ---------------------------------------------------------------- read pipeline: per-sector word k+1, sector select k+2
  reg [31:0] raw [0:4][0:7]; reg [2:0] sec1 [0:4]; reg [31:0] rd [0:4]; reg [31:0] rd_x [0:4];
  reg [255:0] raw5, rd5;
- integer c,kk,ss;
+ integer c,kk,ss,hh;
  always @(posedge clk_ctl)begin
   for(c=0;c<5;c=c+1)begin
-   for(ss=0;ss<8;ss=ss+1) if(ra_s[ss][c][5]) raw[c][ss] <= mem[{ra_s[ss][c][4:3],3'(ss),ra_s[ss][c][2:0]}];
+   for(ss=0;ss<8;ss=ss+1) for(hh=0;hh<2;hh=hh+1)
+    if(ra_s[ss][c][hh][5]) raw[c][ss][hh*16+:16] <= mem[{ra_s[ss][c][hh][4:3],3'(ss),ra_s[ss][c][hh][2:0]}][hh*16+:16];
    if(cmd_p[c*9+8]) sec1[c] <= cmd_p[c*9+3+:3];
   end
-  if(cmd_p[5*9+8]) for(kk=0;kk<8;kk=kk+1) raw5[kk*32+:32] <= mem[{cmd_p[5*9+6+:2],cmd_p[5*9+3+:3],3'(kk)}];
+  for(kk=0;kk<8;kk=kk+1) for(hh=0;hh<2;hh=hh+1)
+   if(r5v_s[kk][hh]) raw5[kk*32+hh*16+:16] <= mem[{r5a_s[kk][hh],3'(kk)}][hh*16+:16];
   for(c=0;c<5;c=c+1) rd_x[c] <= raw[c][sec1[c]];
   for(c=0;c<5;c=c+1) rd[c] <= (MUT==256) ? rd_x[c] : raw[c][sec1[c]];
   rd5 <= raw5;
