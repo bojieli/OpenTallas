@@ -731,7 +731,7 @@ def main():
 
     def centre(n):
         v = pl[n]; return v['x'] + v['w'] / 2, v['y'] + v['h'] / 2
-    is_rly = lambda n: I[n]['master'].startswith('hbfd_rly')
+    is_rly = lambda n: I[n]['master'].startswith(('hbfd_rly', 'hbfd_lh', 'hbfd_land'))
     # 4 remaining blocks by connectivity: compact660_v5 plan blocks are reserved for their owners, so a generated home
     # goes to free die area outside every plan block (corner voids beside the LK/EP column, channels) -- never squeezed
     # into a band (H-DIE 01:30 request)
@@ -1365,7 +1365,7 @@ puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'
             schema='opentallas.die_hold_budget.masters.v1', design='hbm', paths_cap=a.paths,
             diagnostic=sorted(c for c, k in kinds.items() if k.startswith('SYNTH') or 'DIAGNOSTIC' in k),
             real=sorted(c for c, k in kinds.items() if not (k.startswith('SYNTH') or 'DIAGNOSTIC' in k)),
-            relay=sorted(c for c in kinds if V[c]['master'].startswith('hbfd_rly')),
+            relay=sorted(c for c in kinds if V[c]['master'].startswith(('hbfd_rly', 'hbfd_lh', 'hbfd_land'))),
             launch_source={c: ('SYNTH ETM (ideal clocks, no wires): hold DIAGNOSTIC' if k.startswith('SYNTH') else 'routed view ETM clk->out min')
                            for c, k in sorted(kinds.items())},
             classify=f'python3 tools/die_hold_budget.py classify --report out/hold_links_ff.rpt --masters hold_budget_masters.json '
@@ -1424,7 +1424,7 @@ def render(out, man, P, W, H, trees=None):
     for n, b in P.items():
         if isinstance(b, dict) and 'x' in b:
             ax.add_patch(Rectangle((b['x'], b['y']), b['w'], b['h'], fill=False, lw=0.3, ls='--', color='0.5'))
-    col = lambda v: ('tab:green' if v['m'].startswith('hbfd_rly') else
+    col = lambda v: ('tab:green' if v['m'].startswith(('hbfd_rly', 'hbfd_lh', 'hbfd_land')) else
                      'tab:gray' if 'phy' in v['m'] else
                      'tab:red' if 'OVERFLOW' in v['rule'] else
                      'tab:purple' if v['rule'].startswith(('centroid', 'next to', 'no placed')) else
