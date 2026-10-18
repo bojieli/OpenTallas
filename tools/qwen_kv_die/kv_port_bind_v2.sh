@@ -16,6 +16,9 @@ F=(); [ -f "$RLY" ] && F+=(--rtl-file "$(readlink -f $RLY)")
 [ -f "$D.pads.json" ] && F+=(--pad-file "$D.pads.json")
 # relay standards (OT_KV_RLY_STD=1): the qkd_rlys_* replicas bind their real RTL (not a stub)
 grep -q "qkd_rlys_" "$D" && F+=(--rtl-file "$R/rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv")
+# KV-CLOCK 10-18 (OT_KV_FWD=1, kv_fwd_lanes.py): forwarded half-cycle lane stations + landings bind their real RTL
+grep -qE "qkd_(rlysh0?|landsh0?)_" "$D" && F+=(--rtl-file "$R/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv" \
+  --rtl-file "$R/rtl/qwen_split/qfd_fwd_lane.sv" --rtl-file "$R/rtl/hdc/ot_hdc_cg.sv")
 # KV-WIRE2 10-18: the static die's generated tile modules (qkd_kvs_*) exist in one file per design point
 # (kv_static_die.RTL_FILE: _hroot / _ff / _ep / _k): bind the ACTIVE point's file (kvw2-6ad1dbb84: the checker resolved the
 # tiles AMBIGUOUS to another point's text -> 6 width mismatches, 94 unconnected inputs, 76,364 undriven bits)
