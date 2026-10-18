@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hv18_vmdel_lane2",
  "verdict": "PASS",
- "generated": "2026-10-17T22:05:28-0700",
+ "generated": "2026-10-18T00:30:31-0700",
  "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "dd81ead950345b5db9a31a71e3553410266d3aa6",
+  "start_commit": "29cd9bd4adeca6528637df1ac1849e7e5a2ff1ee",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "be8f3ea3629f5094864d00183a18d40c5161aac0fa0a58e04b057e2124d6a83a",
-  "manifest_sha256": "68868b68a8690a9847d80215eb5a354b01b1c4ba3a47b9d772fe123881987b21",
+  "archive_sha256": "05ca2e91bfaefc7337c929140b4d22c646c46414e298b5669a944da57e6d8b61",
+  "manifest_sha256": "a4afb43ad45e7e2dc69d92fb7fd4f7862f3ef929b9206bc54abb6e846d670bc1",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -17315,8 +17315,8 @@
    {
     "path": "physical/ref_tile/hv18_vmdel_lane2/job.json",
     "kind": "file",
-    "sha256": "dd96bcd0240674341feeccfad8c42d5ce580744de6e033c18ee6061e38f1294e",
-    "git_blob": "3b05138ade92400dfce00431dc130926e867601e",
+    "sha256": "1c5f2d0d750d8c0d2b84b794d9cb4959d0c8f39cce2906e7746ff25b35949886",
+    "git_blob": "4e7bb6027a9da171f1e6ec0b590c3f5f24e4f9fc",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17443,8 +17443,8 @@
    {
     "path": "physical/ref_tile/hv18_vmdel_lane2/spec.json",
     "kind": "file",
-    "sha256": "b2a335be7d7ea1bcf295317c9b5d89a5a16bca639e7bab1f830fec1cc368c2d5",
-    "git_blob": "16a2d6b61d2072c2b81c5cb7811b5e8c32cbff8d",
+    "sha256": "1eaa850936ad1cc2fd03c7e7bb24dd40d9624b3137d1b32f4526624075f56fc3",
+    "git_blob": "24245f9c4e50fdc18de8237c933bca42db93bb45",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -31899,8 +31899,8 @@
    {
     "path": "rtl/hbm_accel/loader/service_native/split/run_vmdel_lane_n.sh",
     "kind": "file",
-    "sha256": "5c96a08617fd5842c86168ed621fb804f309047a5af63b61b6e78f01c20dc930",
-    "git_blob": "c890f2e4420c0b43fd47987a1c6192d4802a2627",
+    "sha256": "51fe71f6dd607e2704167d38662ea1e2a8ccf2476b3e4374e393827dff52dbf7",
+    "git_blob": "ff0ed13fd86e29639ba13ac76d3087bdb14b70a2",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -108299,8 +108299,8 @@
    {
     "path": "tools/textbook_lint.py",
     "kind": "file",
-    "sha256": "0fda292bb25637f2ddf9a0db09e964b794fdce006a45bcc6dd79a6be8e1adbbb",
-    "git_blob": "6f2c3d2f1864646f9feee7c4c334687d06ed23cb",
+    "sha256": "8e308cf763f819b9b9db6c048aea9604b454ee8da5cfeca6fc5260e7b9fd31c1",
+    "git_blob": "ed43caf823ca69a182b3036221b58ea9d7a357a8",
     "source": "daemon_overlay",
     "matches_provenance_commit": false
    },
@@ -117323,15 +117323,15 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 124571213,
-   "unpacked_bytes": 717545472,
+   "archive_bytes": 124571997,
+   "unpacked_bytes": 717549568,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "91a2a55be52b252e5f9dd2dde9b4f0b3ad86ff80",
-   "content_sha256": "46212c4a006d162487f2749d8e6001edbd7428d03a257e125b6e20e6b3202016",
+   "origin_main": "8f825ff482067ae8ef4023bf57b9095ac8edfe8a",
+   "content_sha256": "eaea0d5c6214b915818400f22635af911b3fc2142820838a45132c35b265ad16",
    "files": [
     {
      "path": "physical/common_flow/cg_pushdown.tcl",
@@ -117695,11 +117695,11 @@
     },
     {
      "path": "tools/textbook_lint.py",
-     "sha256": "0fda292bb25637f2ddf9a0db09e964b794fdce006a45bcc6dd79a6be8e1adbbb",
-     "git_blob": "6f2c3d2f1864646f9feee7c4c334687d06ed23cb",
+     "sha256": "8e308cf763f819b9b9db6c048aea9604b454ee8da5cfeca6fc5260e7b9fd31c1",
+     "git_blob": "ed43caf823ca69a182b3036221b58ea9d7a357a8",
      "mode": 436,
-     "resolution": "stale",
-     "literal_git_blob": "65426dd2f5cdd4a5e39de56a9e840d910e7082d2"
+     "resolution": "same",
+     "literal_git_blob": "ed43caf823ca69a182b3036221b58ea9d7a357a8"
     },
     {
      "path": "tools/tt_views/view_export.py",
@@ -117853,12 +117853,12 @@
     "physical/ref_tile/hv18_vmdel_lane2/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
     "physical/ref_tile/hv18_vmdel_lane2/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
     "physical/ref_tile/hv18_vmdel_lane2/signoff.sdc": "32b456a6b858b522b85c1c4247ea21908b6c7b53c1ab59616e687cdef33af695",
-    "physical/ref_tile/hv18_vmdel_lane2/spec.json": "b2a335be7d7ea1bcf295317c9b5d89a5a16bca639e7bab1f830fec1cc368c2d5",
+    "physical/ref_tile/hv18_vmdel_lane2/spec.json": "1eaa850936ad1cc2fd03c7e7bb24dd40d9624b3137d1b32f4526624075f56fc3",
     "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_pc_ref.sv": "01cea03735115135648f5b6cbc108c9d8ed26c8ebaa6281306fdcb5bf8e48553",
     "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split.sv": "908425fb67786a786d41b8afc93785574ca9c98ac1a2e031ec3c5c514674f04b",
     "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split_native.sv": "776a7f4e481a826fd61524efba13016e251de6fc2f9fe4e4018bea7d1c1ddd4d",
     "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv": "771bf3ef7e5fa654a81791eb5e20ac4de512870dabebf6f87efb0d7c8a53bd92",
-    "rtl/hbm_accel/loader/service_native/split/run_vmdel_lane_n.sh": "5c96a08617fd5842c86168ed621fb804f309047a5af63b61b6e78f01c20dc930",
+    "rtl/hbm_accel/loader/service_native/split/run_vmdel_lane_n.sh": "51fe71f6dd607e2704167d38662ea1e2a8ccf2476b3e4374e393827dff52dbf7",
     "rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_pc_ready_equiv.sv": "823e44d292359634f26572917ae2eb32b1e635625a2f6567c66e73615c4ea427",
     "rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_clock_ownership.sv": "481a3e368dc6e75747aa30890260932fd4e4ab4f675f79bf6355d9e57aa9ca87",
     "rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_lane_n_lockstep.sv": "47074f9364f96af433da866c7f0179e059485a98f86cb2d3f4ee46b57a16a77d",
@@ -117885,22 +117885,22 @@
     "tools/ref_tile/path_classes.tcl": "47d06c968afc42e5773c9490bab1c13d02d042fc7221f32bf9c76ce4efc54f73",
     "tools/ref_tile/ref_route.sh": "193dc145408ba7705e4802144bb16dffddd1efaced1bb5e9e6372c8e2e51c2d6",
     "tools/run_abi3_physical.py": "14f20a2ed72ad7fcec609e0364d8656c9c9d92374a7c2326c36ceb36a1cedcaf",
-    "tools/textbook_lint.py": "0fda292bb25637f2ddf9a0db09e964b794fdce006a45bcc6dd79a6be8e1adbbb",
+    "tools/textbook_lint.py": "8e308cf763f819b9b9db6c048aea9604b454ee8da5cfeca6fc5260e7b9fd31c1",
     "tools/w18/corner_sta.py": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
     "tools/w18/corner_sta_ref.py": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa"
    },
    "digest": "38ff5b422d02fa559dab48ddd4127292bdf3f959ed91a19ba618fdc1e5cfd84e"
   },
-  "captured": "2026-10-17T22:03:03-0700",
+  "captured": "2026-10-18T00:28:31-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hv18_vmdel_lane2/signoff.sdc"
   },
-  "remote_script_sha256": "cb1aeea316b90051f3bfc7c348cb74d5b68a3aedbebfa470e6167d6cf89eeb1e",
+  "remote_script_sha256": "e1368682eb261bb1198c926453816a98f002f940b2a4bba7b7df1325328d9cb2",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hv18_vmdel_lane2-20261017-220136",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hv18_vmdel_lane2-20261018-002751",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
