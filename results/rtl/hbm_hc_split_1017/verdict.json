@@ -1,0 +1,18 @@
+{
+  "lane": "HBM-B-RTL2",
+  "date": "2026-10-17",
+  "vehicle": "rtl/test/tb_hbm_hc_eng4_static.sv: ot_hbm_hc_root_static (TPRE=6) + 4 x ot_hbm_hc_qeng_static, lockstep vs ot_hbm_hc_eng_static golden (tools/rtl_hbm_hc_eng_static_gate.py --split)",
+  "host": "ot-agidock128:/srv/opentallas-scratch/claude/hbmb-rtl2-1017/out5",
+  "cases": {
+    "s_probe": {"expect": "first raw t=2195 (RAW0=165)", "result": "PASS", "first_raw_t": 2195},
+    "s_p1": {"result": "PASS", "HC_MIX_CYCLES": 996, "single_block": 968},
+    "s_p2": {"result": "PASS", "HC_MIX_CYCLES": 1246, "single_block": 1218},
+    "s_p8": {"result": "PASS", "HC_MIX_CYCLES": 2746, "single_block": 2718},
+    "s_g22": {"result": "PASS", "HC_MIX_CYCLES": 530},
+    "s_neg164": {"expect": "FAIL", "result": "FAIL (core fault t=2197)", "rc": 1},
+    "s_mutdata": {"expect": "FAIL", "result": "FAIL (MIX_MISMATCH pos0 row5)", "rc": 1},
+    "s_mut4_p1": {"expect": "FAIL", "result": "FAIL (13/24 mixes mismatch: q0 tree pairs (0,2),(1,3))", "rc": 1},
+    "s_mut1_p1": {"expect": "FAIL", "result": "FAIL (mix + tail mismatches: q0 bank 3 rotation)", "rc": 1}
+  },
+  "verdict": "PASS: split HC bit-exact to the single-block golden at +28 edges; all negative controls and RTL mutants FAIL"
+}
