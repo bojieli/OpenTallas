@@ -154,3 +154,38 @@ module ot_qfd_land #(
 `endif
 endmodule
 `default_nettype wire
+
+// LANDFIX-SQ (2026-10-18, coordinator 0gh: no plain relays left on the Qwen compute die): FORWARDED RESET LANES.
+// A reset lane (OT_SPLIT_FWD_LANES_RST=1) carries a reset LEVEL from its source (reset synchroniser / block reset output
+// / reset bump) to one block reset pin.  It cannot use the data landing: the ring's read epoch is the receiver's released
+// reset, which is the very level the lane carries, and the hop-0 gate (opened by the source's released reset) would hold
+// an asserting reset back.  Form: hop 0 = one register on the SOURCE root (no gate), ck_o = ~ck; stations = one register
+// on the lane clock, ck_o = ~ckf (half-cycle hops, as ot_qfd_lane_st); landing = the level re-registered on the
+// RECEIVING block's root (one STA-timed edge, the mesochronous lane -> root hop the data landings time too).  The level is
+// carried like the plain reset relay chains before it (registers without reset, ot_qwen_rst_rep class): the reset tree's
+// equal-depth release (fixed edges per lane, n/2 + 1 cycles) keeps the release on a fixed block-root edge.
+module ot_qfd_rlane_st #(parameter integer W = 1) (
+    input  wire         cap,         // hop 0: source block root;  station: the lane's forwarded clock (previous ck_o)
+    input  wire [W-1:0] a,
+    output reg  [W-1:0] b,
+    output wire         ck_o
+);
+    always @(posedge cap) b <= a;
+`ifdef OT_QFD_LANE_MUT_FULL
+    wire ckn, ckp;
+    ot_qfd_ckinv u_ck0 (.a(cap), .y(ckn));
+    ot_qfd_ckinv u_ck1 (.a(ckn), .y(ckp));
+    assign ck_o = ckp;
+`else
+    ot_qfd_ckinv u_ck0 (.a(cap), .y(ck_o));
+`endif
+endmodule
+
+// reset-release landing: the lane's reset level re-registered on the receiving block's root
+module ot_qfd_rlane_land #(parameter integer W = 1) (
+    input  wire         ck,          // receiving block root
+    input  wire [W-1:0] a,
+    output reg  [W-1:0] b
+);
+    always @(posedge ck) b <= a;
+endmodule

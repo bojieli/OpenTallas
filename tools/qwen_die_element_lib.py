@@ -126,18 +126,21 @@ def table(vals_fn, idx1, idx2=None):
 # the RISING root edge, ck_o = ~(ck gated); station: capture on ckf rising, ck_o = ~ckf), so every station hop is timed
 # as the half-cycle hop it is, on routed RC.  The landing is modelled as in the S81-LAND pilot (dv_land_pilot.py): the
 # lane's data / epoch pins are checked against the RECEIVING root ck, with case/landing.sdc's MCP -setup E -hold D-1.
-FWD_RE = re.compile(r'^qfd_(rlyh0|rlyh|landh0|landh)_')
+FWD_RE = re.compile(r'^qfd_(rlyh0|rlyh|landh0|landh|rlyr0|rlyrl|rlyr)_')   # LANDFIX-SQ: + forwarded reset lanes
 FWD_NOT_ROOT = ('ck_o', 'ckf')       # forwarded clock pins: no create_clock (die_sta_libs), propagated through the arcs
 FWD_CK_FWD = dict(ss=40.0, tt=40.0, ff=18.0)     # ASSUMED ck -> ck_o cell delay (one INVx2 / ICG + INV class)
 
 
 def fwd_cell(master, ports, c, pb, cq, trn):
     kind = FWD_RE.match(master).group(1)
-    clk = {'rlyh0': 'ck', 'rlyh': 'ckf', 'landh': 'ck', 'landh0': 'ck'}[kind]
+    clk = {'rlyh0': 'ck', 'rlyh': 'ckf', 'landh': 'ck', 'landh0': 'ck', 'rlyr0': 'ck', 'rlyr': 'ckf', 'rlyrl': 'ck'}[kind]
     edge = 'rising'                     # Q-DIE11 10-18: hop 0 captures on the rising root edge too
-    clocks = {'rlyh0': ('ck',), 'rlyh': ('ckf',), 'landh': ('ckf', 'ck'), 'landh0': ('ck_s', 'ck')}[kind]
-    data_in = {'rlyh0': ('a', 'en'), 'rlyh': ('a', 'ea'), 'landh': ('a', 'ea', 'rs'), 'landh0': ('a', 'rs')}[kind]
-    data_out = {'rlyh0': ('b', 'eb'), 'rlyh': ('b', 'eb'), 'landh': ('b', 'fault'), 'landh0': ('b', 'fault')}[kind]
+    clocks = {'rlyh0': ('ck',), 'rlyh': ('ckf',), 'landh': ('ckf', 'ck'), 'landh0': ('ck_s', 'ck'),
+              'rlyr0': ('ck',), 'rlyr': ('ckf',), 'rlyrl': ('ck',)}[kind]
+    data_in = {'rlyh0': ('a', 'en'), 'rlyh': ('a', 'ea'), 'landh': ('a', 'ea', 'rs'), 'landh0': ('a', 'rs'),
+               'rlyr0': ('a',), 'rlyr': ('a',), 'rlyrl': ('a',)}[kind]
+    data_out = {'rlyh0': ('b', 'eb'), 'rlyh': ('b', 'eb'), 'landh': ('b', 'fault'), 'landh0': ('b', 'fault'),
+                'rlyr0': ('b',), 'rlyr': ('b',), 'rlyrl': ('b',)}[kind]
     fd = FWD_CK_FWD.get(next(k for k, v in CORNERS.items() if v is c), 40.0)
     L = [f'  cell ({master}) {{ area : 0; dont_touch : true; dont_use : true;']
     pn = lambda q: q + '[0]' if (master, q) in IDX else q      # noqa: E731  (LEF pins indexed even at width 1)
@@ -157,7 +160,7 @@ def fwd_cell(master, ports, c, pb, cq, trn):
         if p in clocks:
             body = 'direction : input; clock : true; capacitance : 2.0;'
         elif p == 'ck_o':
-            src = 'ck' if kind == 'rlyh0' else 'ckf'
+            src = 'ck' if kind in ('rlyh0', 'rlyr0') else 'ckf'
             sense = 'negative_unate'    # every forward inverts (hop 0: ck_o = ~gated ck)
             dly = (lambda load, fd=fd: fd + c['k'] * load)
             body = (f'direction : output; max_capacitance : 5000; timing () {{ related_pin : "{pn(src)}"; timing_sense : {sense}; '

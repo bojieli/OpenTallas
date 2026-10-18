@@ -106,8 +106,12 @@ if '--case' in sys.argv:
         sdc = ['# Q-DIE11-RLY forwarded-lane landings (tools/qwen_tp8/relay_data_run.py): ring D %d, one E per link (TT and FF)'
                % fl['D']]
         for r_ in fl['lanes']:
+            if r_.get('lane') == 'reset':
+                continue          # LANDFIX-SQ forwarded reset lane: no ring, its landing is one single-cycle root capture
             pins = f"{r_['landing']}/a[*]" + ('' if r_['n'] == 1 else f" {r_['landing']}/ea[*]")
-            sdc += [f"set_multicycle_path -setup {r_['E']} -to [get_pins {{{pins}}}]",
+            # LANDFIX-SQ 10-18: the MCP is E_sta (the residual edges after the LAST station's launch, as the die STA counts
+            # them); dv2f14bn wrote the lane's total E (12-14 on the 26-frame lanes) -> hold edge E - D, FF hold -7.7 ns
+            sdc += [f"set_multicycle_path -setup {r_.get('E_sta', r_['E'])} -to [get_pins {{{pins}}}]",
                     f"set_multicycle_path -hold {fl['D'] - 1} -to [get_pins {{{pins}}}]"]
         (out / 'case' / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
         rec['fwd_lanes'] = {k_: fl[k_] for k_ in ('lanes', 'stations', 'landings', 'masters', 'plain_relays_left',
@@ -186,7 +190,7 @@ if '--case' in sys.argv:
     v.EMIT_SPLIT = True
     for name, mst in sorted(M.items()):
         # Q-DIE11-RLY: the forwarded-lane frames (qfd_rlyh*/qfd_landh*) DO get assigned pin files (their kits consume them)
-        if re.match(r'^(q[fk]d_rly(?!h0?_)|qfd_rst_rep)', name) or not any(getattr(i, 'master', '') == name for i in m['insts']):
+        if re.match(r'^(q[fk]d_rly(?!h0?_|r[0l]?_)|qfd_rst_rep)', name) or not any(getattr(i, 'master', '') == name for i in m['insts']):
             continue
         g = {}
         rects_ = list(v.pin_rects(mst, 1, {q: pw.get((name, q), 0) for q in mst.order}))
