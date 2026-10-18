@@ -145,6 +145,10 @@
   "views_to": "physical/ref_tile/hcoll_ring_ag_ctl_1017/views",
   "record_to": "results/arch/hbm_d4g_coll_ag_1017/route"
  },
+ "pin_regs": {
+  "enable": false,
+  "reason": "ring-stop control root split from ring_v5: ring link inputs cw_i/ccw_i are captured at the pin (pin[]), every ring / publish / lane-face output is a flop Q except carry_write (rx_slot AND pin-flop field, the closed state-capture lanes capture it at their own pin); compiler control inputs are evaluated in their reserved capture edge (bench-proven ring_v5 contract, AG=0 identical). Automatic +1 pin registers would shift the ctl <-> closed state-lane read loop (READ_LEAD 2) and break the lane alignment"
+ },
  "params": {},
  "macros": [],
  "children": [],
@@ -156,9 +160,6 @@
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
- },
- "pin_regs": {
-  "enable": true
  },
  "keep_pin_regs": true
 }
