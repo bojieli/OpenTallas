@@ -11,7 +11,8 @@
   ],
   "params": {},
   "orfs_vars": {
-    "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link"
+    "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link",
+    "OT_SPINE_PAD_CELL": "BUFx4_ASAP7_75t_R"
   },
   "clock_port": "clk",
   "reset_ports": [
