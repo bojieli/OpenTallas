@@ -80,9 +80,33 @@
  "job": {
   "owner": "Claude:KV-HOSTCL-A8",
   "branch": "claude/kvj-a8-1017",
-  "tag": "a8",
-  "purpose": "HOST root cluster child qkd_hr_core_rx route (KVJ-A8: IR_REPL=1 removes the ingest read-pointer ir high fanout)",
-  "no_bench_reason": "IR_REPL=1 vs 0 cycle-exact lock-step bench results/arch/qwen_split_1014/host_root_cluster/a8/ (mutant FAILs); cluster composition bench gates adoption"
+  "tag": "b1",
+  "purpose": "HOST root cluster child qkd_hr_core_rx (rx_class, A8 IR_REPL=1): slice lock-step vs the flat module (IR_REPL=0) + mutant; cluster lock-step tools/qwen_kv_die/host_cluster/bench",
+  "benches": [
+   {
+    "name": "irr_lockstep",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -Ptb_irr_lockstep.NCYC=50000 -Ptb_irr_lockstep.SEED=1017 -o {RUN}/bench/irr results/arch/qwen_split_1014/host_root_cluster/a8/tb_irr_lockstep.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv && vvp -n {RUN}/bench/irr",
+    "pass_regex": "A8_LOCKSTEP .*mismatches=0 first_mismatch=-1 PASS",
+    "min_count_regex": "A8_LOCKSTEP seed=\\d+ cycles=(\\d+)"
+   },
+   {
+    "name": "irr_mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -DQKD_IRR_MUTANT -Ptb_irr_lockstep.NCYC=50000 -Ptb_irr_lockstep.SEED=1017 -o {RUN}/bench/irr_m results/arch/qwen_split_1014/host_root_cluster/a8/tb_irr_lockstep.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv && vvp -n {RUN}/bench/irr_m",
+    "fail_regex": "A8_LOCKSTEP .*mismatches=[1-9]\\d* .*FAIL"
+   }
+  ]
  },
  "pin_ranges": {
   "rx_v": [

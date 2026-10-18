@@ -90,6 +90,10 @@ def main():
     ap.add_argument('--yosys', default=str(Path.home() / '.local/opentallas-tools/yosys-0.68/bin/yosys'))
     ap.add_argument('--work', default=None)
     ap.add_argument('--reuse', action='store_true', help='reuse the work dir yosys passes 1-2')
+    ap.add_argument('--mutant', action='append', default=[],
+                    help='bench mutant: invert child INPUT bit u_<child>.<port>[i] at the parent (the output must FAIL)')
+    ap.add_argument('--param', action='append', default=[],
+                    help='member parameter override <member module>.<PARAM>=<int> (e.g. qkd_host_rx_class_admission.IR_REPL=1)')
     a = ap.parse_args()
     part = json.load(open(a.partition))
     out = Path(a.out)
@@ -213,16 +217,16 @@ def main():
     for n in glue:
         if n in owner:
             continue
-        dow = collections.Counter(owner[x] for b in ins(n) for x in [drv.get(b)] if x in owner)
+        dow = collections.Counter(sorted(owner[x] for b in ins(n) for x in [drv.get(b)] if x in owner))
         if dow:
-            owner[n] = dow.most_common(1)[0][0]
+            owner[n] = sorted(dow.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
             settle()
     # a cone of die inputs only (e.g. por_n && pll_locked) read by several children: it joins its main consumer
     for n in glue:
         if n not in owner:
-            cow = collections.Counter(owner[x] for b in outs(n) for x in cons[b] if x in owner)
+            cow = collections.Counter(sorted(owner[x] for b in outs(n) for x in cons[b] if x in owner))
             if cow:
-                owner[n] = cow.most_common(1)[0][0]
+                owner[n] = sorted(cow.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
                 settle()
     left = [n for n in glue if n not in owner]
     seq = [n for n in left if re.search(r'dff|dlatch|mem', cells[n]['type'])]
@@ -233,16 +237,108 @@ def main():
     REPL = {c for c, d in part['children'].items() if len(d['members']) > 1 and
             len({cells['u_root.' + '.'.join(p.split('/')[1:])]['type'] for p in d['members']}) == 1 and
             all('g_slice' in p for p in d['members'])}
-    for n, c in owner.items():
-        if c not in REPL:
-            cells[n].setdefault('attributes', {})['submod'] = c
+    # ---- explicit submod (yosys submod dropped ports of aliased flatten nets): one module per child; a port is every
+    # bit a child's cells share with cells outside it or with a die port, grouped by its best net name and direction,
+    # so a die vector assembled from several children (service_faults, hc) is a plain output of each driving child
+    best = {}
+    for nm, n_ in sorted(T['netnames'].items(), key=lambda kv: (kv[1].get('hide_name', 0), kv[0] not in T['ports'],
+                                                               kv[0].count('.'), len(kv[0]), kv[0])):
+        for i, b in enumerate(n_['bits']):
+            if isinstance(b, int) and b not in best:
+                best[b] = (nm, i)
+    used = collections.defaultdict(set)              # bit -> owning children / 'P' (parent cell or die port)
+    for n, c in cells.items():
+        if c['type'] == '$scopeinfo':
+            continue
+        o = owner.get(n) if owner.get(n) not in REPL else None
+        for bits in c['connections'].values():
+            for b in bits:
+                if isinstance(b, int):
+                    used[b].add(o or 'P')
+    for d in T['ports'].values():
+        for b in d['bits']:
+            if isinstance(b, int):
+                used[b].add('P')
+    def sname(nm):
+        nm = nm[len('u_root.'):] if nm.startswith('u_root.') else nm
+        return re.sub(r'[^A-Za-z0-9_]', '_', nm.replace('.', '__'))
+    mods, inst = {}, {}
+    children = sorted(set(part['children']) - REPL)
+    for ch in children:
+        mine = [n for n, o in owner.items() if o == ch]
+        bits = sorted({b for n in mine for bb in cells[n]['connections'].values() for b in bb if isinstance(b, int)})
+        groups = collections.OrderedDict()
+        for b in bits:
+            if used[b] - {ch}:
+                dname = drv.get(b)
+                d = 'output' if dname in mine else 'input'
+                nm, i = best[b]
+                groups.setdefault((sname(nm), d), []).append((i, b))
+        ports, conn, pdir, taken = {}, {}, {}, set()
+        for (nm, d), lst in groups.items():
+            name = nm if nm not in taken else f'{nm}_{d[0]}'
+            if name in taken:
+                raise SystemExit(f'{ch}: port name collision {name}')
+            taken.add(name)
+            lst.sort()
+            ports[name] = dict(direction=d, bits=[b for _, b in lst])
+            conn[name] = [b for _, b in lst]
+            pdir[name] = d
+        mcells = {n: cells[n] for n in mine}
+        nets = {}
+        for nm, n_ in T['netnames'].items():
+            bb = [b for b in n_['bits'] if isinstance(b, int)]
+            if bb and all(b in set(bits) for b in bb) and not nm.startswith('$'):
+                nets[nm] = dict(hide_name=n_.get('hide_name', 0), bits=n_['bits'], attributes={})
+        for nm, pp in ports.items():
+            nets[nm] = dict(hide_name=0, bits=pp['bits'], attributes={})
+        mods[ch] = dict(attributes={}, ports=ports, cells=mcells, netnames=nets)
+        inst['u_' + ch[len('qkd_hr_'):]] = dict(hide_name=0, type=ch, parameters={}, attributes={},
+                                                port_directions=pdir, connections=conn)
+    nb = [max(b for c in cells.values() for bb in c['connections'].values() for b in bb if isinstance(b, int)) + 10]
+    for mi, mspec in enumerate(a.mutant):
+        m = re.fullmatch(r'(u_\w+)\.(\w+)\[(\d+)\]', mspec)
+        if not m or m.group(1) not in inst or m.group(2) not in inst[m.group(1)]['connections']:
+            raise SystemExit(f'bad --mutant {mspec}')
+        c_ = inst[m.group(1)]
+        if c_['port_directions'][m.group(2)] != 'input':
+            raise SystemExit(f'--mutant {mspec}: not a child input')
+        bl = c_['connections'][m.group(2)]
+        cells[f'$ot_mutant${mi}'] = dict(hide_name=1, type='$not', parameters=dict(A_SIGNED='0', A_WIDTH='1', Y_WIDTH='1'),
+                                         attributes={}, port_directions=dict(A='input', Y='output'),
+                                         connections=dict(A=[bl[int(m.group(3))]], Y=[nb[0]]))
+        bl[int(m.group(3))] = nb[0]
+        nb[0] += 1
+    for n in [n for n, o in owner.items() if o in children]:
+        del cells[n]
+    cells.update(inst)
+    for k in [k for k in D['modules'] if k not in ('qkd_hr_cluster_src',)]:
+        pass
+    D['modules'].update(mods)
+    D['modules']['qkd_hr_cluster'] = D['modules'].pop('qkd_hr_cluster_src')
+    D['modules']['qkd_hr_cluster']['attributes'] = {}
+    # plain identifiers for every generated module's nets (flatten names u_root.u_rank.x -> u_rank__x); a name that a
+    # port already uses (the port's own best net) is dropped
+    for mn in children + ['qkd_hr_cluster']:
+        m = D['modules'][mn]
+        out_n = {}
+        for nm in list(m['ports']):
+            out_n[nm] = m['netnames'].get(nm, dict(hide_name=0, bits=m['ports'][nm]['bits'], attributes={}))
+        for nm, n_ in m['netnames'].items():
+            if nm in m['ports'] or nm.startswith('$'):
+                continue
+            sn = sname(nm) if nm.startswith('u_root.') else nm
+            if sn not in out_n:
+                out_n[sn] = n_
+        m['netnames'] = out_n
     json.dump(D, open(work / 'p3in.json', 'w'))
-    yosys(a.yosys, '\n'.join([f'read_json {work}/p3in.json', 'hierarchy -top qkd_hr_cluster_src', 'submod', 'opt_clean', 'rename qkd_hr_cluster_src qkd_hr_cluster'] +
-                             [f'rename qkd_hr_cluster_src_{c} {c}' for c in sorted(set(part['children']) - REPL)] + [
-                              f'write_json {work}/p3.json',
-                              'select qkd_hr_cluster ' + ' '.join(sorted(set(part['children']) - REPL)),
+    yosys(a.yosys, '\n'.join([f'read_json {work}/p3in.json', 'hierarchy -top qkd_hr_cluster', 'opt_clean',
+                              f'tee -o {work}/check.txt check', f'write_json {work}/p3.json',
+                              'select qkd_hr_cluster ' + ' '.join(children),
                               f'write_verilog -noattr -selected {work}/cluster_raw.v']), 'p3', work)
-
+    chk = (work / 'check.txt').read_text()
+    if re.search(r'used but has no driver|multiple conflicting drivers|undriven', chk):
+        raise SystemExit('generated cluster has undriven/conflicting nets: ' + chk[-2000:])
     # ---- rewrite member instances to their source modules ---------------------------------------------------------------
     pm = paramods(work / 'p2a.log')
     txt = (work / 'cluster_raw.v').read_text()
@@ -253,6 +349,12 @@ def main():
         pp = ', '.join(f'.{k}({v})' for k, v in plist)
         return f'{base} #({pp}) ' if plist else f'{base} '
     txt = re.sub(r'\\(\$paramod\S+) ', fix, txt)
+    for pv in a.param:                 # member parameter overrides (opt-in RTL levers whose lock-step gate passed)
+        m = re.fullmatch(r'(\w+)\.(\w+)=(-?\d+)', pv)
+        n0 = len(re.findall(r'\b' + m.group(1) + r' #\(', txt))
+        if not n0:
+            raise SystemExit(f'--param {pv}: no instance of {m.group(1)}')
+        txt = re.sub(r'\b(' + m.group(1) + r') #\(', lambda x: f'{x.group(1)} #(.{m.group(2)}({m.group(3)}), ', txt)
     # escaped flattened names (\u_root.u_rank.u_phy.tx_d ) -> plain identifiers (u_rank__u_phy__tx_d); collisions refused
     plain = set(re.findall(r'(?<![\\\w$])[A-Za-z_][A-Za-z0-9_$]*', re.sub(r'\\\S+ ', ' ', txt)))
     esc = sorted(set(re.findall(r'\\(u_root\.\S+) ', txt)))
@@ -264,10 +366,10 @@ def main():
             raise SystemExit(f'port/net rename collision {e} -> {n}')
         ren[e] = n
     txt = re.sub(r'\\(u_root\.\S+) ', lambda m: ren[m.group(1)] + ' ', txt)
-    # yosys rename does not retarget the submod cells: child type -> qkd_hr_<child>, instance -> u_<child>
-    txt = re.sub(r'\bqkd_hr_cluster_src_(qkd_hr_\w+) qkd_hr_cluster_src_qkd_hr_(\w+) \(', r'\1 u_\2 (', txt)
     if 'qkd_hr_cluster_src' in txt:
         raise SystemExit('unrenamed qkd_hr_cluster_src reference')
+    if re.search(r'^\s*inout\b', txt, re.M):
+        raise SystemExit('inout port in the generated cluster (multi-driver net across children)')
     if '$paramod' in txt:
         raise SystemExit('unresolved $paramod reference left in the generated cluster')
     hdr = ('// GENERATED by tools/qwen_kv_die/host_cluster/gen_cluster.py from the unchanged flat HOST root sources and\n'

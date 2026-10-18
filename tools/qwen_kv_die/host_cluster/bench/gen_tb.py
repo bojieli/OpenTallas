@@ -41,7 +41,7 @@ def main():
     a('static std::mt19937_64 R;')
     a('template<class T> static void rnd(T& v,int w,double p1){ if(w==1){v=(R()%1000)<p1*1000;return;}'
       ' if(w<=64){uint64_t x=R(); if(w<64)x&=((1ull<<w)-1); v=x; return;} }')
-    a('template<int N> static void rndw(VlWide<N>& v,int w){for(int i=0;i<N;i++){uint32_t x=R(); int hi=w-32*i; if(hi<32)x&=(hi<=0?0:((1u<<hi)-1)); v[i]=x;}}')
+    a('template<std::size_t N> static void rndw(VlWide<N>& v,int w){for(int i=0;i<(int)N;i++){uint32_t x=R(); int hi=w-32*i; if(hi<32)x&=(hi<=0?0:((1u<<hi)-1)); v[i]=x;}}')
     a('static bool eqw(const uint32_t* a,const uint32_t* b,int n){for(int i=0;i<n;i++)if(a[i]!=b[i])return false;return true;}')
     a('int main(int argc,char**argv){ Verilated::commandArgs(argc,argv);')
     a(' unsigned long seed=argc>1?strtoul(argv[1],0,0):1; int mode=argc>2?atoi(argv[2]):0; long ncore=argc>3?atol(argv[3]):20000;')
@@ -81,7 +81,7 @@ def main():
     a(' while(cores<ncore){ int k=0; for(int i=1;i<4;i++) if(next[i]<next[k]) k=i; now=next[k];')
     a('  lv[k]=!lv[k]; next[k]+=half[k];')
     a('  clocks(); F->eval(); C->eval(); if(!compare())return 1;')
-    a('  if(k==0&&!lv[0]){ cores++; drive(); F->eval(); C->eval(); if(!compare())return 1; } }')
+    a('  if(k==0&&!lv[0]){ cores++; if(getenv("DBG"))printf("c%ld sf %x %x dr %x %x\\n",cores,(unsigned)F->service_faults,(unsigned)C->service_faults,(unsigned)F->service_diag_raw,(unsigned)C->service_diag_raw); drive(); F->eval(); C->eval(); if(!compare())return 1; } }')
     a(f' printf("LOCKSTEP PASS seed=%lu mode=%d core_cycles=%ld compares=%ld outputs={len(outs)} inputs={len(ins)}\\n",seed,mode,cores,cmp);')
     a(' F->final(); C->final(); delete F; delete C; return 0; }')
     Path(sys.argv[2]).write_text('\n'.join(L) + '\n')

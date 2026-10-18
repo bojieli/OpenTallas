@@ -62,9 +62,32 @@
  "job": {
   "owner": "Claude:KV-HOSTCL-A8",
   "branch": "claude/kvj-a8-1017",
-  "tag": "a8",
-  "purpose": "HOST root cluster child qkd_hr_phy_pad route (unchanged member; re-gated on the KVJ-A8 branch commit)",
-  "no_bench_reason": "gate-only kit; the cluster composition lock-step bench (A1-A6) gates adoption"
+  "tag": "b1",
+  "purpose": "HOST root cluster child qkd_hr_phy_pad (unchanged qkd_host_rx_pad5): its behavioural bench (48 exact words, credit/padding/overflow fail-closed) + MUT1 payload-bit mutant",
+  "benches": [
+   {
+    "name": "pad_exact",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/pad rtl/test/qwen_host/tb_qkd_host_rx_pad5.sv rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv && vvp -n {RUN}/bench/pad",
+    "pass_regex": "PASS RXPAD5 exact48"
+   },
+   {
+    "name": "pad_mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -Ptb_qkd_host_rx_pad5.MUT=1 -o {RUN}/bench/pad_m rtl/test/qwen_host/tb_qkd_host_rx_pad5.sv rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv && vvp -n {RUN}/bench/pad_m",
+    "fail_regex": "RXpad5 payload/padding/order"
+   }
+  ]
  },
  "pin_ranges": {
   "in_v": [
