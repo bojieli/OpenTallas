@@ -17,8 +17,12 @@
 // Group stream to L4 (one group a cycle, 16 an accumulation, the edge after the window completes + 1):
 // grp i = 4 k + m = slices 4m .. 4m+3 of copy k: {A32, A8, B8, B16a, B16b, C16a, C16b, C8, D8, D32} (10 words).
 // Feedthroughs: the rung (L2 <-> L4), cw (to L4 / L5), sid, the HC CTL rows (L4 -> L2), each 2 edges.
-// fault (sticky): any contract breach, a duplicate (g, h) or accumulation, reserved bits, an unarmed job, L4's fault.
-// Every input lands in a flop; every output leaves a flop.  MUT (bench only): 6 = roots 1 / 2 of g = 1 mod 4 swapped.
+// fault (sticky): any contract breach, a duplicate (g, h) or accumulation, reserved bits, an unarmed job, L4's / L0r's fault.
+// Every input lands in a flop; every output leaves a flop.
+// S81U-GUNIT3 (10-17): the root store (12,288 flops: 15,319 sinks on one root, TT insertion 333 ps, clock-rule FAIL)
+// moved to the E-side leaf dsdv_gunit_l0r (W-E registered seam).  This leaf registers each store write (wr_*: the edge
+// the store used to write) and the window's go (go_*), and relays L0r's group stream to L4 (input flop -> output flop).
+// Store write +2 edges, go +1, group stream +2 + 2 (relay): the stream reads a window 2 edges after its last write.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l0 #(
     parameter integer MUT = 0
@@ -36,7 +40,12 @@ module dsdv_gunit_l0 #(
     output reg           j_v, output reg j_set, output reg j_w, output reg [9:0] j_row, output reg [4:0] j_lm,
     output reg  [15:0]   j_sm,
     output wire          cwo_v, output wire [9:0] cwo_a, output wire [255:0] cwo_d, output wire [3:0] sid_o,
-    input  wire          hct4_v, input wire [275:0] hct4_b, input wire mix_go, input wire launch, input wire f4
+    input  wire          hct4_v, input wire [275:0] hct4_b, input wire mix_go, input wire launch, input wire f4,
+    // E face (L0r: root store + group stream)
+    output reg           wr_av, output reg [4:0] wr_agh, output reg [191:0] wr_ad,
+    output reg           wr_bv, output reg [4:0] wr_bgh, output reg [191:0] wr_bd, output reg wr_b,
+    output reg           go_a, output reg [4:0] go_acc, output reg go_b,
+    input  wire          r_v, input wire [3:0] r_i, input wire [4:0] r_acc, input wire [319:0] r_d, input wire r_f
 );
     localparam integer V = 276;
     integer j;
@@ -55,8 +64,7 @@ module dsdv_gunit_l0 #(
     // ---------------------------------------------------------------- jobs: armed -> active (first beat)
     wire job_w = wv && wa[9:8] == 2'b10 && wa[0];
     reg pj_v; reg pj_set; reg pj_w; reg [9:0] pj_row; reg [4:0] pj_lm; reg [15:0] pj_sm;
-    // ---------------------------------------------------------------- root store (2 window buffers)
-    reg [31:0] rs [0:2*16*2*6-1];                       // buffer b, slice g, half h, word j (0..5)
+    // ---------------------------------------------------------------- window bookkeeping (the store is L0r's)
     wire [4:0] aacc = ab[44:40], bacc = bb[44:40];
     wire [3:0] ag = ab[48:45], bg = bb[48:45];
     wire ah = ab[49], bh = bb[49];
@@ -65,16 +73,16 @@ module dsdv_gunit_l0 #(
     wire [4:0] cacc = av ? aacc : bacc;
     wire [5:0] nn = win_n + av + bv;
     wire w_fin = (av || bv) && nn == 6'd32;
-    always @(posedge clk) begin
-        if (av) for (j = 0; j < 6; j = j + 1) rs[192 * wb + 12 * ag + 6 * ah + j] <= ab[52 + 32 * j +: 32];
-        if (bv) for (j = 0; j < 6; j = j + 1) rs[192 * wb + 12 * bg + 6 * bh + j] <= bb[52 + 32 * j +: 32];
+    always @(posedge clk) begin                         // store writes -> L0r (output flops)
+        wr_agh <= {ag, ah}; wr_ad <= ab[52 +: 192]; wr_bgh <= {bg, bh}; wr_bd <= bb[52 +: 192]; wr_b <= wb;
     end
-    reg go_a; reg [4:0] go_acc; reg go_b;
-    reg a_on; reg [3:0] a_i; reg [4:0] a_acc; reg a_b;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin wr_av <= 1'b0; wr_bv <= 1'b0; end else begin wr_av <= av; wr_bv <= bv; end
+    reg rf_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             wb <= 1'b0; win_o <= 1'b0; win_seen <= 32'd0; win_n <= 6'd0; gap <= 6'd63; wdone <= 25'd0;
-            pj_v <= 1'b0; j_v <= 1'b0; go_a <= 1'b0; mixed <= 1'b1; fault <= 1'b0;
+            pj_v <= 1'b0; j_v <= 1'b0; go_a <= 1'b0; fault <= 1'b0;
         end else begin
             go_a <= 1'b0;
             gap <= (gap == 6'd63) ? gap : gap + 6'd1;
@@ -111,27 +119,14 @@ module dsdv_gunit_l0 #(
                 if (!j_v) fault <= 1'b1;
                 j_v <= 1'b0; wdone <= 25'd0;
             end
-            if (go_a && a_on && a_i != 4'd15) fault <= 1'b1;
+            if (rf_q) fault <= 1'b1;                                           // L0r: a go while streaming
             if (f4_q) fault <= 1'b1;
         end
     always @(posedge clk or negedge rst_n) if (!rst_n) mixed <= 1'b1; else mixed <= mg ? 1'b0 : ln ? 1'b1 : mixed;
-    // ---------------------------------------------------------------- group stream (16 groups an accumulation)
+    // ---------------------------------------------------------------- group stream relay (L0r -> L4)
+    reg rv_q; reg [3:0] ri_q; reg [4:0] racc_q; reg [319:0] rd_q;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin a_on <= 1'b0; a_i <= 4'd0; g_v <= 1'b0; end
-        else begin
-            if (go_a) begin a_on <= 1'b1; a_i <= 4'd0; a_acc <= go_acc; a_b <= go_b; end
-            else if (a_on) begin a_i <= a_i + 4'd1; if (a_i == 4'd15) a_on <= 1'b0; end
-            g_v <= a_on;
-        end
-    // group i = 4 k + m: slices 4m + t, half k >> 1, words (k & 1) * 3 + 0..2
-    wire [1:0] gk = a_i[3:2], gm = a_i[1:0];
-    wire [8:0] rb0 = 9'd192 * a_b + 9'd12 * {gm, 2'd0} + 9'd6 * gk[1] + 9'd3 * gk[0];
-    always @(posedge clk) begin
-        g_i <= a_i; g_acc <= a_acc;
-        g_d <= {rs[rb0 + 36 + 1], rs[rb0 + 36 + 0], rs[rb0 + 24 + 2], rs[rb0 + 24 + 1], rs[rb0 + 24 + 0],
-                rs[rb0 + 12 + ((MUT == 6) ? 1 : 2)], rs[rb0 + 12 + ((MUT == 6) ? 2 : 1)], rs[rb0 + 12 + 0],
-                rs[rb0 + 1], rs[rb0 + 0]};
-        //       D32 [319:288]  D8            C8             C16b           C16a
-        //       B16b           B16a          B8             A8             A32 [31:0]
-    end
+        if (!rst_n) begin rv_q <= 1'b0; rf_q <= 1'b0; g_v <= 1'b0; end
+        else begin rv_q <= r_v; rf_q <= r_f; g_v <= rv_q; end
+    always @(posedge clk) begin ri_q <= r_i; racc_q <= r_acc; rd_q <= r_d; g_i <= ri_q; g_acc <= racc_q; g_d <= rd_q; end
 endmodule

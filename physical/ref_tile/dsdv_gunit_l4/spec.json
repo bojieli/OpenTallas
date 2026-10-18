@@ -3,6 +3,7 @@
  "top": "dsdv_gunit_l4",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
@@ -52,7 +53,9 @@
    "rn_o",
    "rn_i",
    "launch",
-   "mixes",
+   "mx_v",
+   "mx_i",
+   "mx_y",
    "t_set",
    "t_w",
    "t_row",
@@ -67,13 +70,21 @@
    "f5"
   ],
   "E": [
+   "ss_v",
+   "ss",
+   "eps_c",
+   "r_v",
+   "r_y",
+   "r_f"
+  ],
+  "W": [
    "clk",
    "rst_n"
   ]
  },
  "outline": {
   "w": 345.6,
-  "h": 259.2
+  "h": 64.8
  },
  "recipe": 4,
  "clock": "cts",
@@ -83,13 +94,14 @@
   "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.0,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 4
  },
- "structural_change": "S81U-GUNIT2 (10-17): new leaf L4 of the six-leaf dsdv_gunit (S81-DV column-3 G-unit): HC finish: golden tree above the slice roots, rsqrt, 24 mixes, tail launch (2nd of 6). Every input lands in a flop, every output leaves a flop; carried buses cross in 2 edges (dsdv_gunit_pass); no ready / credit (static schedule, contract checks are faults).",
+ "structural_change": "S81U-GUNIT4 (10-17): rst_n via ot_rst_relay (4 kept regions; GUNIT3 gate: port 688 reset loads) and outline 345.6 x 64.8 (GUNIT3 gate: std 9,773 um2 at util 35% in 345.6 x 86.4; the stack width is fixed, the height shortens the rung hops). S81U-GUNIT3 (10-17): dsdv_gunit_l4 successor: the r chain (divc, + eps, rsqrt: 9.9k flops) moved to the E-side leaf dsdv_gunit_l4r (GUNIT2 L4: 21,174 sinks, TT insertion 436 ps, clock-rule FAIL). L4 keeps the golden tree above the slice roots, the 24 mixes, the tail launch and the passes. Outline from the gate's std area (L4 was 22% util at 345.6 x 259.2). Pins at 4 tracks, clock on the free W face. The 24 mixes leave one a cycle (38 pins, -768 flops) instead of a 768-bit register + bus.",
  "job": {
-  "owner": "Claude:S81U-GUNIT2",
-  "branch": "claude/s81u1-1017",
-  "tag": "g1",
+  "owner": "Claude:S81U-GUNIT3",
+  "branch": "claude/s81u-gunit3-1017",
+  "tag": "g3",
   "purpose": "S81-DV G-unit leaf L4 to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",

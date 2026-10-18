@@ -17,6 +17,11 @@
 // fault (sticky): an adder / multiplier / divider / rsqrt fault, a root twice, a quad pass overrun, L5's fault.
 // Every input lands in a flop; every output leaves a flop.  MUT (bench only): 5 = group association
 // N1 = A8 + (B8 + B16a); 7 = the r chain skips + eps.
+// S81U-GUNIT3 (10-17): the r chain (ss -> divc -> + eps -> rsqrt, 9.9k flops) moved to the E-side leaf dsdv_gunit_l4r
+// (the one-leaf L4 was 21,174 sinks, TT insertion 436 ps: clock-rule FAIL).  Seam: ss / eps leave from this leaf's own
+// registers, r / its valid / L4r's fault come back into input flops (+3 edges on the r chain; the mix phase waits for
+// r_ok as before, so only the HC latency moves).  The 24 mixes leave one a cycle as they are made (mx_v / mx_i / mx_y,
+// 38 pins, not a 768-bit register + bus): L5 assembles them; launch leaves with the last one as before.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l4 #(
     parameter integer MUT = 0
@@ -33,23 +38,30 @@ module dsdv_gunit_l4 #(
     output reg           mix_go_s, output reg launch_s, output reg fault,
     // N face (L5)
     output wire [275:0]  rn_o,  input wire [275:0] rn_i,
-    output reg           launch, output reg [767:0] mixes, output reg t_set, output reg t_w, output reg [9:0] t_row,
+    output reg           launch, output reg mx_v, output reg [4:0] mx_i, output reg [31:0] mx_y, output reg t_set, output reg t_w, output reg [9:0] t_row,
     output reg  [4:0]    t_lm, output reg [15:0] t_sm,
     output wire          cwo_v, output wire [9:0] cwo_a, output wire [255:0] cwo_d, output wire [3:0] sid_o,
-    input  wire          hct5_v, input wire [275:0] hct5_b, input wire f5
+    input  wire          hct5_v, input wire [275:0] hct5_b, input wire f5,
+    // E face (L4r: the r chain)
+    output reg           ss_v, output reg [31:0] ss, output reg [31:0] eps_c,
+    input  wire          r_v, input wire [31:0] r_y, input wire r_f
 );
     localparam integer V = 276, LA = 4, LM = 5, NACC = 25, NSET = 2;
+    // reset relay (S81U-GUNIT4): the rst_n port drives only ot_rst_relay; 4 kept region copies (each <= ~256
+    // reset loads, no port net spans the leaf).  Release is 3 edges after the port (transaction-level exact).
+    wire [3:0] rq;
+    ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
     // ---------------------------------------------------------------- feedthroughs
-    dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rst_n), .d(rs_i), .q(rn_o));
-    dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rst_n), .d(rn_i), .q(rs_o));
-    dsdv_gunit_pass #(.W(277)) u_ct (.clk(clk), .rst_n(rst_n), .d({hct5_b, hct5_v}), .q({hct_b, hct_v}));
-    dsdv_gunit_pass #(.W(271)) u_cw (.clk(clk), .rst_n(rst_n), .d({cw_d, cw_a, cw_v}), .q({cwo_d, cwo_a, cwo_v}));
-    dsdv_gunit_pass #(.W(4)) u_sid (.clk(clk), .rst_n(rst_n), .d(sid_i), .q(sid_o));
+    dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rq[0]), .d(rs_i), .q(rn_o));
+    dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rq[0]), .d(rn_i), .q(rs_o));
+    dsdv_gunit_pass #(.W(277)) u_ct (.clk(clk), .rst_n(rq[0]), .d({hct5_b, hct5_v}), .q({hct_b, hct_v}));
+    dsdv_gunit_pass #(.W(271)) u_cw (.clk(clk), .rst_n(rq[0]), .d({cw_d, cw_a, cw_v}), .q({cwo_d, cwo_a, cwo_v}));
+    dsdv_gunit_pass #(.W(4)) u_sid (.clk(clk), .rst_n(rq[0]), .d(sid_i), .q(sid_o));
     // ---------------------------------------------------------------- input flops
     reg o_v, wv, f5_q; reg [3:0] o_i; reg [4:0] o_acc; reg [31:0] A32, A8, B8, B16a, B16b, C16a, C16b, C8, D8, D32;
     reg aj_v, aj_set, aj_w; reg [9:0] aj_row; reg [4:0] aj_lm; reg [15:0] aj_sm; reg [9:0] wa; reg [255:0] wd;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin o_v <= 1'b0; wv <= 1'b0; f5_q <= 1'b0; aj_v <= 1'b0; end
+    always @(posedge clk or negedge rq[1])
+        if (!rq[1]) begin o_v <= 1'b0; wv <= 1'b0; f5_q <= 1'b0; aj_v <= 1'b0; end
         else begin o_v <= g_v; wv <= cw_v; f5_q <= f5; aj_v <= j_v; end
     always @(posedge clk) begin
         o_i <= g_i; o_acc <= g_acc;
@@ -60,20 +72,20 @@ module dsdv_gunit_l4 #(
     always @(posedge clk) if (wv && !wa[9] && wa[5:0] == 6'd62) eps_t[wa[8]] <= wd[255:224];
     // ---------------------------------------------------------------- A: level 1 / level 2 adders
     wire [31:0] p1, n2, p2, n1, n3; wire f1, f2, f3, f4, f5a;
-    ot_dsrom_qadd #(.LAT(LA)) u_a1 (clk, rst_n, o_v, (MUT == 5) ? B8 : A8, (MUT == 5) ? B16a : B8, p1, f1);
-    ot_dsrom_qadd #(.LAT(LA)) u_a2 (clk, rst_n, o_v, B16b, C16a, n2, f2);
-    ot_dsrom_qadd #(.LAT(LA)) u_a3 (clk, rst_n, o_v, C8, D8, p2, f3);
+    ot_dsrom_qadd #(.LAT(LA)) u_a1 (clk, rq[1], o_v, (MUT == 5) ? B8 : A8, (MUT == 5) ? B16a : B8, p1, f1);
+    ot_dsrom_qadd #(.LAT(LA)) u_a2 (clk, rq[1], o_v, B16b, C16a, n2, f2);
+    ot_dsrom_qadd #(.LAT(LA)) u_a3 (clk, rq[1], o_v, C8, D8, p2, f3);
     wire [31:0] d_a32, d_b16a, d_c16b, d_d32, d_a8; wire [8:0] d_t1; wire [LA:0] v1;
-    ot_hdc_delay #(.W(160), .D(LA)) u_d1 (.clk(clk), .rst_n(rst_n), .d({A32, B16a, C16b, D32, A8}),
+    ot_hdc_delay #(.W(160), .D(LA)) u_d1 (.clk(clk), .rst_n(rq[1]), .d({A32, B16a, C16b, D32, A8}),
                                           .q({d_a32, d_b16a, d_c16b, d_d32, d_a8}));
-    ot_hdc_delay #(.W(9), .D(LA)) u_t1 (.clk(clk), .rst_n(rst_n), .d({o_i, o_acc}), .q(d_t1));
-    ot_hdc_vline #(.D(LA)) u_v1 (.clk(clk), .rst_n(rst_n), .v(o_v), .vd(v1));
-    ot_dsrom_qadd #(.LAT(LA)) u_a4 (clk, rst_n, v1[LA], (MUT == 5) ? d_a8 : p1, (MUT == 5) ? p1 : d_b16a, n1, f4);
-    ot_dsrom_qadd #(.LAT(LA)) u_a5 (clk, rst_n, v1[LA], d_c16b, p2, n3, f5a);
+    ot_hdc_delay #(.W(9), .D(LA)) u_t1 (.clk(clk), .rst_n(rq[1]), .d({o_i, o_acc}), .q(d_t1));
+    ot_hdc_vline #(.D(LA)) u_v1 (.clk(clk), .rst_n(rq[1]), .v(o_v), .vd(v1));
+    ot_dsrom_qadd #(.LAT(LA)) u_a4 (clk, rq[1], v1[LA], (MUT == 5) ? d_a8 : p1, (MUT == 5) ? p1 : d_b16a, n1, f4);
+    ot_dsrom_qadd #(.LAT(LA)) u_a5 (clk, rq[1], v1[LA], d_c16b, p2, n3, f5a);
     wire [31:0] e_a32, e_n2, e_d32; wire [8:0] e_t; wire [LA:0] v2;
-    ot_hdc_delay #(.W(96), .D(LA)) u_d2 (.clk(clk), .rst_n(rst_n), .d({d_a32, n2, d_d32}), .q({e_a32, e_n2, e_d32}));
-    ot_hdc_delay #(.W(9), .D(LA)) u_t2 (.clk(clk), .rst_n(rst_n), .d(d_t1), .q(e_t));
-    ot_hdc_vline #(.D(LA)) u_v2 (.clk(clk), .rst_n(rst_n), .v(v1[LA]), .vd(v2));
+    ot_hdc_delay #(.W(96), .D(LA)) u_d2 (.clk(clk), .rst_n(rq[1]), .d({d_a32, n2, d_d32}), .q({e_a32, e_n2, e_d32}));
+    ot_hdc_delay #(.W(9), .D(LA)) u_t2 (.clk(clk), .rst_n(rq[1]), .d(d_t1), .q(e_t));
+    ot_hdc_vline #(.D(LA)) u_v2 (.clk(clk), .rst_n(rq[1]), .v(v1[LA]), .vd(v2));
     reg [31:0] l5 [0:79];
     wire [3:0] e_i = e_t[8:5];
     always @(posedge clk) if (v2[LA]) begin
@@ -85,13 +97,13 @@ module dsdv_gunit_l4 #(
     localparam integer DQ = 2 + 2 * LA;
     wire s0 = o_v && o_i == 4'd0;
     wire [DQ-2:0] qs;
-    ot_hdc_vline #(.D(DQ - 2)) u_qs (.clk(clk), .rst_n(rst_n), .v(s0), .vd(qs));
+    ot_hdc_vline #(.D(DQ - 2)) u_qs (.clk(clk), .rst_n(rq[2]), .v(s0), .vd(qs));
     wire [4:0] q_acc0;
-    ot_hdc_delay #(.W(5), .D(DQ - 2)) u_qacc (.clk(clk), .rst_n(rst_n), .d(o_acc), .q(q_acc0));
+    ot_hdc_delay #(.W(5), .D(DQ - 2)) u_qacc (.clk(clk), .rst_n(rq[2]), .d(o_acc), .q(q_acc0));
     reg q_on; reg [4:0] q_i; reg [4:0] q_acc;
     reg qr_v; reg [4:0] qr_i; reg [4:0] qr_acc; reg [31:0] q0, q1, q2, q3;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin q_on <= 1'b0; q_i <= 5'd0; qr_v <= 1'b0; end
+    always @(posedge clk or negedge rq[2])
+        if (!rq[2]) begin q_on <= 1'b0; q_i <= 5'd0; qr_v <= 1'b0; end
         else begin
             if (qs[DQ - 2]) begin q_on <= 1'b1; q_i <= 5'd0; q_acc <= q_acc0; end
             else if (q_on) begin q_i <= q_i + 5'd1; if (q_i == 5'd19) q_on <= 1'b0; end
@@ -99,13 +111,13 @@ module dsdv_gunit_l4 #(
         end
     always @(posedge clk) begin q0 <= l5[4 * q_i]; q1 <= l5[4 * q_i + 1]; q2 <= l5[4 * q_i + 2]; q3 <= l5[4 * q_i + 3]; end
     wire [31:0] l6a, l6b, l7; wire f6, f7, f8; wire [LA:0] vq1, vq2; wire [9:0] tq1, tq2;
-    ot_dsrom_qadd #(.LAT(LA)) u_a6 (clk, rst_n, qr_v, q0, q1, l6a, f6);
-    ot_dsrom_qadd #(.LAT(LA)) u_a7 (clk, rst_n, qr_v, q2, q3, l6b, f7);
-    ot_hdc_vline #(.D(LA)) u_vq1 (.clk(clk), .rst_n(rst_n), .v(qr_v), .vd(vq1));
-    ot_hdc_delay #(.W(10), .D(LA)) u_tq1 (.clk(clk), .rst_n(rst_n), .d({qr_i, qr_acc}), .q(tq1));
-    ot_dsrom_qadd #(.LAT(LA)) u_a8 (clk, rst_n, vq1[LA], l6a, l6b, l7, f8);
-    ot_hdc_vline #(.D(LA)) u_vq2 (.clk(clk), .rst_n(rst_n), .v(vq1[LA]), .vd(vq2));
-    ot_hdc_delay #(.W(10), .D(LA)) u_tq2 (.clk(clk), .rst_n(rst_n), .d(tq1), .q(tq2));
+    ot_dsrom_qadd #(.LAT(LA)) u_a6 (clk, rq[2], qr_v, q0, q1, l6a, f6);
+    ot_dsrom_qadd #(.LAT(LA)) u_a7 (clk, rq[2], qr_v, q2, q3, l6b, f7);
+    ot_hdc_vline #(.D(LA)) u_vq1 (.clk(clk), .rst_n(rq[2]), .v(qr_v), .vd(vq1));
+    ot_hdc_delay #(.W(10), .D(LA)) u_tq1 (.clk(clk), .rst_n(rq[2]), .d({qr_i, qr_acc}), .q(tq1));
+    ot_dsrom_qadd #(.LAT(LA)) u_a8 (clk, rq[2], vq1[LA], l6a, l6b, l7, f8);
+    ot_hdc_vline #(.D(LA)) u_vq2 (.clk(clk), .rst_n(rq[2]), .v(vq1[LA]), .vd(vq2));
+    ot_hdc_delay #(.W(10), .D(LA)) u_tq2 (.clk(clk), .rst_n(rq[2]), .d(tq1), .q(tq2));
     // ---------------------------------------------------------------- T: streaming levels 8 .. 12
     wire [5:0] t_vv; wire [32*6-1:0] t_d; wire [5*6-1:0] t_i; wire [5:0] t_l; wire [5*6-1:0] t_a; wire [4:0] t_f;
     assign t_vv[0] = vq2[LA]; assign t_d[31:0] = l7; assign t_i[4:0] = tq2[9:5]; assign t_l[0] = tq2[9:5] == 5'd19;
@@ -120,9 +132,9 @@ module dsdv_gunit_l4 #(
         always @(posedge clk) if (iv && !ii[0]) pend <= id;
         wire go = iv && (ii[0] || il);
         wire [31:0] y; wire f; wire [LA:0] vv; wire [10:0] tt;
-        ot_dsrom_qadd #(.LAT(LA)) u_t (clk, rst_n, go, ii[0] ? pend : id, ii[0] ? id : 32'd0, y, f);
-        ot_hdc_vline #(.D(LA)) u_tv (.clk(clk), .rst_n(rst_n), .v(go), .vd(vv));
-        ot_hdc_delay #(.W(11), .D(LA)) u_tt (.clk(clk), .rst_n(rst_n), .d({il, ii >> 1, ia}), .q(tt));
+        ot_dsrom_qadd #(.LAT(LA)) u_t (clk, rq[2], go, ii[0] ? pend : id, ii[0] ? id : 32'd0, y, f);
+        ot_hdc_vline #(.D(LA)) u_tv (.clk(clk), .rst_n(rq[2]), .v(go), .vd(vv));
+        ot_hdc_delay #(.W(11), .D(LA)) u_tt (.clk(clk), .rst_n(rq[2]), .d({il, ii >> 1, ia}), .q(tt));
         assign t_vv[lv + 1] = vv[LA];
         assign t_d[32 * (lv + 1) +: 32] = y; assign t_i[5 * (lv + 1) +: 5] = tt[9:5]; assign t_a[5 * (lv + 1) +: 5] = tt[4:0];
         assign t_l[lv + 1] = tt[10];
@@ -131,24 +143,21 @@ module dsdv_gunit_l4 #(
     wire root_v = t_vv[5]; wire [31:0] root = t_d[32 * 5 +: 32]; wire [4:0] root_acc = t_a[5 * 5 +: 5];
     // ---------------------------------------------------------------- roots -> proj / ss -> r
     reg [31:0] proj [0:23];
-    reg [24:0] rdone; reg ss_v; reg [31:0] ss; reg [31:0] eps_c;
+    reg [24:0] rdone;
     always @(posedge clk) if (root_v && root_acc < 5'd24) proj[root_acc] <= root;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) ss_v <= 1'b0;
+    always @(posedge clk or negedge rq[3])
+        if (!rq[3]) ss_v <= 1'b0;
         else ss_v <= root_v && root_acc == 5'd24;
     always @(posedge clk) begin if (root_v) ss <= root; eps_c <= (MUT == 7) ? 32'd0 : eps_t[aj_set]; end
-    wire [31:0] mq, me, rr; wire mq_v, me_v, rr_v, f_div, f_eps, f_rsq; wire [LA:0] ve;
-    ot_dsrom_divc #(.F(5), .K(12)) u_div (.clk(clk), .rst_n(rst_n), .v(ss_v), .x(ss), .y(mq), .vo(mq_v), .fault(f_div));
-    ot_hdc_vline #(.D(LA)) u_ve (.clk(clk), .rst_n(rst_n), .v(mq_v), .vd(ve));
-    ot_dsrom_qadd #(.LAT(LA)) u_eps (clk, rst_n, mq_v, mq, eps_c, me, f_eps);
-    assign me_v = ve[LA];
-    ot_dsrom_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rst_n), .v(me_v), .x(me), .y(rr), .vo(rr_v), .fault(f_rsq));
+    reg rr_v, f_r; reg [31:0] rr;                       // L4r's r: input flops
+    always @(posedge clk or negedge rq[3]) if (!rq[3]) begin rr_v <= 1'b0; f_r <= 1'b0; end else begin rr_v <= r_v; f_r <= r_f; end
+    always @(posedge clk) rr <= r_y;
     reg r_ok; reg [31:0] r;
     // ---------------------------------------------------------------- mix phase: 24 multiplies, then the tail launch
     reg m_on; reg [4:0] m_i; reg mm_v; reg [4:0] mm_i; reg [31:0] mm_a; reg mix_go;
     wire [31:0] my; wire f_mul; wire [LM:0] vm; wire [4:0] mi;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
+    always @(posedge clk or negedge rq[3])
+        if (!rq[3]) begin
             rdone <= 25'd0; r_ok <= 1'b0; m_on <= 1'b0; mm_v <= 1'b0; mix_go <= 1'b0; mix_go_s <= 1'b0;
             launch <= 1'b0; launch_s <= 1'b0; fault <= 1'b0;
         end else begin
@@ -163,12 +172,13 @@ module dsdv_gunit_l4 #(
             mm_v <= m_on; mm_i <= m_i;
             if (vm[LM] && mi == 5'd23) launch <= 1'b1;
             mix_go_s <= mix_go; launch_s <= launch;
-            if (f1 | f2 | f3 | f4 | f5a | f6 | f7 | f8 | (|t_f) | f_div | f_eps | f_rsq | f_mul | f5_q
+            if (f1 | f2 | f3 | f4 | f5a | f6 | f7 | f8 | (|t_f) | f_r | f_mul | f5_q
                 | (root_v && rdone[root_acc]) | (mix_go && !aj_v) | (qs[DQ - 2] && q_on && q_i != 5'd19)) fault <= 1'b1;
         end
     always @(posedge clk) mm_a <= proj[m_i];
-    ot_hdc_qmul_lat #(.LAT(LM)) u_mul (clk, rst_n, mm_v, mm_a, r, my, f_mul);
-    ot_hdc_vline #(.D(LM)) u_vm (.clk(clk), .rst_n(rst_n), .v(mm_v), .vd(vm));
-    ot_hdc_delay #(.W(5), .D(LM)) u_mi (.clk(clk), .rst_n(rst_n), .d(mm_i), .q(mi));
-    always @(posedge clk) if (vm[LM]) mixes[32 * mi +: 32] <= my;
+    ot_hdc_qmul_lat #(.LAT(LM)) u_mul (clk, rq[3], mm_v, mm_a, r, my, f_mul);
+    ot_hdc_vline #(.D(LM)) u_vm (.clk(clk), .rst_n(rq[3]), .v(mm_v), .vd(vm));
+    ot_hdc_delay #(.W(5), .D(LM)) u_mi (.clk(clk), .rst_n(rq[3]), .d(mm_i), .q(mi));
+    always @(posedge clk or negedge rq[3]) if (!rq[3]) mx_v <= 1'b0; else mx_v <= vm[LM];
+    always @(posedge clk) begin mx_i <= mi; mx_y <= my; end   // one mix a cycle to L5 (L5 assembles the 24)
 endmodule

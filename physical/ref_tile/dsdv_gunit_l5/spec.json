@@ -13,9 +13,6 @@
   "rtl/hdc/ot_hdc_sfu.sv",
   "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
   "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
-  "rtl/hdc/v41x/ot_dsrom_divc.sv",
-  "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
-  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
   "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
   "rtl/hdc/v41/ot_hdc_sk_arith.sv",
@@ -36,7 +33,9 @@
    "rs_i",
    "rs_o",
    "launch",
-   "mixes",
+   "mx_v",
+   "mx_i",
+   "mx_y",
    "t_set",
    "t_w",
    "t_row",
@@ -55,13 +54,25 @@
    "vi_n"
   ],
   "E": [
+   "xe_v",
+   "xe_x",
+   "ye_v",
+   "ye_y",
+   "ye_f",
+   "xd_v",
+   "xd_b",
+   "yd_v",
+   "yd_y",
+   "yd_f"
+  ],
+  "W": [
    "clk",
    "rst_n"
   ]
  },
  "outline": {
   "w": 345.6,
-  "h": 345.6
+  "h": 302.4
  },
  "recipe": 4,
  "clock": "cts",
@@ -71,13 +82,14 @@
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.0,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 4
  },
- "structural_change": "S81U-GUNIT2 (10-17): new leaf L5 of the six-leaf dsdv_gunit (S81-DV column-3 G-unit): exact HC tail (f12 units; Sinkhorn through an ICG, MCP 9) + coefficient CTL rows, s_3N rung face (top). Every input lands in a flop, every output leaves a flop; carried buses cross in 2 edges (dsdv_gunit_pass); no ready / credit (static schedule, contract checks are faults).",
+ "structural_change": "S81U-GUNIT3 (10-17): dsdv_gunit_l5 successor: the tail's exp / fdiv units (11.5k flops) moved to the E-side leaf dsdv_gunit_l5f (GUNIT2 L5: 23,268 sinks, TT insertion 563 ps / spread 109 ps, clock-rule FAIL); the row max is a 2-stage tree (one-cycle 3-deep scan was TT -970 ps); the Sinkhorn ICG enable is a flop, not the rst_n port (in->ICG -345 ps). Tail calendar re-derived (XS 3, MAX +1): bit-exact bench. The mixes arrive one a cycle and are assembled here (launch +1 edge).",
  "job": {
-  "owner": "Claude:S81U-GUNIT2",
-  "branch": "claude/s81u1-1017",
-  "tag": "g1",
+  "owner": "Claude:S81U-GUNIT3",
+  "branch": "claude/s81u-gunit3-1017",
+  "tag": "g3",
   "purpose": "S81-DV G-unit leaf L5 to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
