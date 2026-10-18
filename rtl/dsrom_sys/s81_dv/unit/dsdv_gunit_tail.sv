@@ -19,7 +19,7 @@
 //      (physical/ref_tile_specs/s81dv/gunit_sinkh_mcp.sdc).  One clock root, no generated clock.
 // Calendar (ages from launch; Le = unit latency + 1 for the operand register):
 //   P1      24 mul   t[i] * scale                     P2 = P1 + 24 + LMe   24 add  t[i] + base[i]
-//   MAX     row max of t[8..23] (registered)          P3 = MAX + 1         16 add  t[i] - max[row]
+//   MAX     row max of t[8..23] (2 stages)            P3 = MAX + 2         16 add  t[i] - max[row]
 //   P4      24 exp (pre/post negated)                 P5 = P4 + 24 + LEe   8 add   t[i] + 1
 //   P6      8 fdiv 1 / t[i]                           P7 = P6 + 8 + LDe    4 add + eps (pre), 4 mul x 2 (post)
 //   EREADY  = P7 + 8 + max(LMe, LAe): the Sinkhorn input is stable.
@@ -29,6 +29,13 @@
 // of the divider phase.  No ready / busy / response signal moves any event; a capture without out_valid, a launch while
 // active, an arithmetic exception or a Sinkhorn fault is a sticky fault.
 // MUT_PRE (bench only): the pre path skips + eps.
+// S81U-GUNIT3 (10-17): the exp and fdiv units (11.5k flops) live in the side leaf dsdv_gunit_l5f; this module drives
+// their registered operands out (x_* ports) and takes their results back XS = 3 edges later than in place (L5f input
+// flop, L5f output flop, L5's input flop): LE / LD below include XS, so the calendar stays exact.  MAX is a two-stage
+// tree (pairs, then the pair winners; first maximum wins ties exactly as the sequential scan: `greater` is a total
+// preorder): the one-cycle 3-deep scan was TT -970 ps.  P3 = MAX + 2.  The Sinkhorn gate's enable is a flop
+// (en_q = next edge is a wrap; set during reset), never the rst_n port: the gate then sees one extra edge at the first
+// edge after reset release, while the Sinkhorn is idle.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_tail #(
     parameter integer SK = 9,
@@ -42,11 +49,15 @@ module dsdv_gunit_tail #(
     input  wire [95:0]   scales,
     output reg           result_v,
     output wire [767:0]  result,
-    output wire          fault
+    output wire          fault,
+    // the exp / fdiv units (dsdv_gunit_l5f): operands out of this module's operand registers, results XS edges later
+    output wire          xe_v, output wire [31:0] xe_x, input wire xe_vo, input wire [31:0] xe_y, input wire xe_f,
+    output wire          xd_v, output wire [31:0] xd_b, input wire xd_vo, input wire [31:0] xd_y, input wire xd_f
 );
-    localparam integer LM = 5, LA = 4, LE = 7 * LM + 6 * LA + 2 * 6 + 5, LD = 21;   // LE 76
+    localparam integer XS = 3;
+    localparam integer LM = 5, LA = 4, LE = 7 * LM + 6 * LA + 2 * 6 + 5 + XS, LD = 21 + XS;   // LE 76 + XS
     localparam integer LMe = LM + 1, LAe = LA + 1, LEe = LE + 1, LDe = LD + 1;
-    localparam integer P1 = 1, P2 = P1 + 24 + LMe, MAX = P2 + 24 + LAe, P3 = MAX + 1, P4 = P3 + 16 + LAe;
+    localparam integer P1 = 1, P2 = P1 + 24 + LMe, MAX = P2 + 24 + LAe, P3 = MAX + 2, P4 = P3 + 16 + LAe;
     localparam integer P5 = P4 + 24 + LEe, P6 = P5 + 8 + LAe, P7 = P6 + 8 + LDe;
     localparam integer EREADY = P7 + 8 + ((LMe > LAe) ? LMe : LAe);
     localparam integer CAP = 42 * SK;
@@ -54,7 +65,7 @@ module dsdv_gunit_tail #(
     localparam integer CW = $clog2(SK);
     // ---------------------------------------------------------------- calendar
     reg active; reg [9:0] age;
-    reg [31:0] t [0:23], b [0:23], s [0:2], mx [0:3];
+    reg [31:0] t [0:23], b [0:23], s [0:2], mx [0:3], mp [0:7];
     reg [767:0] final_result;
     assign result = final_result;
     wire p1 = active && age >= P1 && age < P1 + 24;
@@ -87,8 +98,8 @@ module dsdv_gunit_tail #(
     ot_hdc_vline #(.D(LM)) u_vm (.clk(clk), .rst_n(rst_n), .v(mv_q), .vd(vm));
     ot_hdc_vline #(.D(LA)) u_va (.clk(clk), .rst_n(rst_n), .v(av_q), .vd(va));
     assign mo = vm[LM]; assign ao = va[LA];
-    ot_dsrom_exp_f12 #(.LM(LM), .LA(LA)) u_exp (.clk(clk), .rst_n(rst_n), .v(ev_q), .x(ex_q), .y(ey), .vo(eo), .fault(ef));
-    ot_dsrom_fdiv_f12 u_div (.clk(clk), .rst_n(rst_n), .v(dv_q), .a(32'h3f800000), .b(db_q), .y(dy), .vo(do_), .fault(df));
+    assign xe_v = ev_q; assign xe_x = ex_q; assign eo = xe_vo; assign ey = xe_y; assign ef = xe_f;
+    assign xd_v = dv_q; assign xd_b = db_q; assign do_ = xd_vo; assign dy = xd_y; assign df = xd_f;
     wire [4:0] mi, ai, ei, di;
     ot_hdc_delay #(.W(5), .D(LM)) u_mt (clk, rst_n, i_q, mi);
     ot_hdc_delay #(.W(5), .D(LA)) u_at (clk, rst_n, i_q, ai);
@@ -105,8 +116,10 @@ module dsdv_gunit_tail #(
         if (!rst_n) cnt <= {CW{1'b0}};
         else cnt <= (cnt == CW'(SK - 1)) ? {CW{1'b0}} : cnt + 1'b1;
     wire wrap = (cnt == CW'(SK - 1));                 // the gated clock's edge is the core edge ending this cycle
+    reg en_q;                                         // == wrap after every edge out of reset (cnt counts mod SK)
+    always @(posedge clk or negedge rst_n) if (!rst_n) en_q <= 1'b1; else en_q <= (cnt == CW'(SK - 2));
     wire gclk;
-    ot_hdc_cg u_gate (.clk(clk), .en(wrap || !rst_n), .gclk(gclk));
+    ot_hdc_cg u_gate (.clk(clk), .en(en_q), .gclk(gclk));
     wire [511:0] se, sy; wire sr, sv, sf, sbusy;
     genvar gj;
     generate for (gj = 0; gj < 16; gj = gj + 1) begin : g_se assign se[32 * gj +: 32] = t[gj + 8]; end endgenerate
@@ -150,12 +163,12 @@ module dsdv_gunit_tail #(
         if (ao) t[ai] <= ay;
         if (eo) t[ei] <= ey;
         if (do_) t[di] <= dy;
-        if (active && age == 10'(MAX)) for (integer r = 0; r < 4; r = r + 1) begin : maximum
-            reg [31:0] v;
-            v = t[8 + 4 * r];
-            for (integer c = 1; c < 4; c = c + 1) if (greater(t[8 + 4 * r + c], v)) v = t[8 + 4 * r + c];
-            mx[r] <= v;
+        if (active && age == 10'(MAX)) for (integer r = 0; r < 4; r = r + 1) begin : pairs
+            mp[2 * r]     <= greater(t[8 + 4 * r + 1], t[8 + 4 * r])     ? t[8 + 4 * r + 1] : t[8 + 4 * r];
+            mp[2 * r + 1] <= greater(t[8 + 4 * r + 3], t[8 + 4 * r + 2]) ? t[8 + 4 * r + 3] : t[8 + 4 * r + 2];
         end
+        if (active && age == 10'(MAX + 1)) for (integer r = 0; r < 4; r = r + 1)
+            mx[r] <= greater(mp[2 * r + 1], mp[2 * r]) ? mp[2 * r + 1] : mp[2 * r];
         if (capture_q) begin
             for (integer j = 0; j < 8; j = j + 1) final_result[j * 32 +: 32] <= t[j];
             final_result[256 +: 512] <= sy;

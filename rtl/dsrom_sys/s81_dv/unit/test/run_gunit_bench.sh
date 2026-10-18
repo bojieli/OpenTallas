@@ -7,7 +7,7 @@
 set -u
 U=$(cd "$(dirname "$0")/.." && pwd); R=$(cd "$U/../../../.." && pwd)
 T=${1:-$(mktemp -d)}; N=${2:-8}; mkdir -p "$T"
-SRC="rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv
+SRC="rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv
  rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv
  rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv
  rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_divc.sv rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv
@@ -17,7 +17,8 @@ SRC="rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l3.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv
- rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv
+ rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0r.sv
+ rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4r.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5f.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv
  rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_gunit.sv"
 python3 -I "$U/test/gunit_vectors.py" "$T/gv.hex" "$N" 1017 || { echo "GUNIT_GATE FAIL vectors"; exit 1; }
 MUTS=${3:-"0 1 4 5 6 7 8 9"}; ONLY=${3:+1}
