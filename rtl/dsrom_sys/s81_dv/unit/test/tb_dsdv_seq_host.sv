@@ -1,7 +1,9 @@
 `timescale 1ns/1ps
 // S81U-SEQ bench for dsdv_seq_host: lock-step against the REUSED goldens, cycle-exact on every unit output.
 //   golden host  dsfd_host_c (+DSFD_HOST_C_STATIC, ckv = ck) fed the same host stream (minus the 0x13 template words the
-//                unit intercepts): s_hw must equal its hw EVERY cycle and t_host[64:0] its t_collective completions.
+//                unit intercepts): s_hw must equal its hw EVERY cycle and t_host[64:0] its t_collective completions,
+//                HSH edges later (S81U-SEQ7: the unit's ingest runs APIPE 6, whose registered request-FIFO write lands
+//                every host sector in u_ox one edge later than the golden's APIPE 3 = the documented +1 host-path shift).
 //   golden seq   ot_s81_fixed_issue (NENG 5, ENG_PRESENT 10011) loaded with the golden host's t_sseq_pw / t_sseq_plen
 //                (its own paced path), reset with the unit's sequencer reset, launched D = 20 edges AHEAD of the unit
 //                (same clock phase), its completions modelled from its own commands.  Every golden command maps to an
@@ -15,7 +17,8 @@
 // job and the unit's status fault must rise (wf[0]).  PASS line "SEQHOST PASS".
 module tb_dsdv_seq_host;
     localparam integer V = 276, D = 20, LVO = 7, LJ = 2, LKD = 3, LR = 6, LS = 9, LCW = 3, LCF = 6;
-    localparam integer DV_V = 5, DV_S = LS + 5;     // calendar done row = issue + DV (V beat posted / svc chain done)
+    localparam integer DV_V = 5, DV_S = LS + 5;
+    localparam integer HSH = 1;                     // unit host path (f_host -> s_hw / t_host completion) = golden + HSH     // calendar done row = issue + DV (V beat posted / svc chain done)
 `ifndef MUT
     localparam integer MUT = 0;
 `else
@@ -135,6 +138,7 @@ module tb_dsdv_seq_host;
     integer hsp, jobs, gjobs, launch0, ncmd_n, ncmd_s, ncmd_j, nkit, nhw, ncomp, narr, nfrag_s, nfrag_n, coll_at;
     integer ncmd_g, ncw, mism_cw, fr_n, fr_s, mism_n, mism_s, mism_j, mism_k, mism_hw, mism_tc, seen_jobs;
     reg [V-1:0] a; reg [83:0] c;
+    reg [291:0] g_hw_p = 0; reg [64:0] g_tc_p = 0;  // the golden's hw / completion HSH (= 1) edge earlier
     initial begin
         cyc = 0; hsp = 0; jobs = 0; gjobs = 0; launch0 = -1; ncmd_n = 0; ncmd_s = 0; ncmd_j = 0; nkit = 0; nhw = 0; ncomp = 0;
         narr = 0; ncmd_g = 0; ncw = 0; mism_cw = 0; fr_n = 0; fr_s = 0; mism_n = 0; mism_s = 0; mism_j = 0; mism_k = 0; mism_hw = 0; mism_tc = 0;
@@ -167,10 +171,11 @@ module tb_dsdv_seq_host;
         if (cw_v) ncw = ncw + 1;
         if (s_j !== EJ[cyc]) begin mism_j = mism_j + 1; if (mism_j < 4) $display("MISMATCH s_j edge %0d got %h exp %h", cyc, s_j, EJ[cyc]); end
         if (t_kd !== EK[cyc]) begin mism_k = mism_k + 1; if (mism_k < 4) $display("MISMATCH t_kd edge %0d got %h exp %h", cyc, t_kd, EK[cyc]); end
-        if (s_hw !== g_hw) begin mism_hw = mism_hw + 1; if (mism_hw < 4) $display("MISMATCH s_hw edge %0d", cyc); end
-        if (t_host[64:0] !== g_tc[64:0]) begin mism_tc = mism_tc + 1; if (mism_tc < 4) $display("MISMATCH t_host completion edge %0d", cyc); end
+        if (s_hw !== (HSH != 0 ? g_hw_p : g_hw)) begin mism_hw = mism_hw + 1; if (mism_hw < 4) $display("MISMATCH s_hw edge %0d", cyc); end
+        if (t_host[64:0] !== (HSH != 0 ? g_tc_p : g_tc[64:0])) begin mism_tc = mism_tc + 1; if (mism_tc < 4) $display("MISMATCH t_host completion edge %0d", cyc); end
         if (s_hw[0]) begin SHC[cyc + 3] = 9'b000000011; nhw = nhw + 1; end
         if (g_hw[0]) GHC[cyc + 3] = 9'b000000011;
+        g_hw_p = g_hw; g_tc_p = g_tc[64:0];
         if (t_host[64]) ncomp = ncomp + 1;
         if (s_j[32]) SJD[cyc + LS] = 1;
     end
