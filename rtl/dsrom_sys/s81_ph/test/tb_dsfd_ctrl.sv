@@ -23,7 +23,12 @@ module tb_dsfd_ctrl;
     reg  [NPC*341-1:0] rq;
     wire [31:0] rk, wd;
     wire [1:0] st;
+`ifdef S81CTRL_RG2
+    // S81-CTRL 10-17: the same checks on 16 regional controllers dsfd_ctrl_rg2 (bench composition, same ports)
+    dsfd_ctrl_rg2x16 dut (.ckh(ckh), .cks(cks), .rst(rst), .phy(phy), .rd(rd), .rq(rq), .rk(rk), .wd(wd), .st(st));
+`else
     dsfd_ctrl dut (.ckh(ckh), .cks(cks), .rst(rst), .phy(phy), .rd(rd), .rq(rq), .rk(rk), .wd(wd), .st(st));
+`endif
     ot_s81ph_phy_on_bus #(.CLK_PS(CKH_PS)) u_bus (.phy(phy));
     // ---------------- reference PHY
     reg  [31:0] r_kv; wire [31:0] r_krdy, r_wdone, r_krv;

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Slot cells of the Qwen ROM TP8 KV-centre masters qkd_embgw / qkd_host: bit-exact bench through the cell's own ports
 # (packing mutant with a 3rd argument).
-#   bench.sh OUT_DIR CELL [mut]      CELL = embgw
+#   bench.sh OUT_DIR CELL [mut|headq]      CELL = embgw
 # Prints "PASS kv_gwhost <cell> ..." (rc 0) or "FAIL kv_gwhost <cell> ..." (rc 1).
 set -u
 OUT=$1; CELL=$2; MUT=${3:-}
 R=$(cd "$(dirname "$0")/../.." && pwd)
 mkdir -p "$OUT"
-D=""; [ -n "$MUT" ] && D="-DOT_QKD_SLOT_MUT"
+D=""; [ -n "$MUT" ] && D="-DOT_QKD_SLOT_MUT"; [ "$MUT" = headq ] && D="-DOT_QKD_HEADQ_MUT"   # headq: stale-head mutant (Q-KVFIX 0130)
 E=$R/rtl/qwen_sys/emb_hbm_20261008/synth
 K=$R/rtl/qwen_sys/kv_die_20261009
 case "$CELL" in

@@ -42,6 +42,8 @@ HUB_VM_TO_SVC_STAGES = 50    # c26l sp_vm centre -> svc_SW centre ~20 mm at 405 
 # vs 171 with the parallel tree the hub's price already contains -> +63 on every full-h norm (rstd precedes the matvec:
 # norm-after-matvec is AGENTS level 6, excluded, so this latency is on the critical path)
 FINISH_SEQ_EXTRA = 234 - 171
+LEAF_PARTIAL_EXTRA = (112 + 4 + 5) - 100
+LEAF_SCALE_EXTRA = (59 + 4 * 4 + 4) - 76
 
 
 def hop_only(stages):
@@ -49,7 +51,7 @@ def hop_only(stages):
     return {wl: t * 1e6 / (t * 1e6 / a + add) for wl, (a, t) in ANCHOR.items()}
 
 
-def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0):
+def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0, hbm_rt=False):
     """per-node delta (cycles) and a per-rule audit"""
     st = lambda um: math.ceil(um / g['hop_um'])
     xchg = g['scalar_exchange_stages']
@@ -78,6 +80,10 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0):
             if op in ('attn.quant', 'ffn.norm.scale', 'eng.gate') or op.endswith('hc.sumsq'):
                 add(nid, 'norm_tree_full', -18 + xchg)
                 add(nid, 'norm_finish_seq', FINISH_SEQ_EXTRA)
+                # S81-SLICE measured beat leaf (10-17, real vp+vn+vq RTL, bit-exact): go -> beat partial 112 + DL 4 +
+                # collector 5 = 121 vs the hub's sumsq 100; rstd -> XQ complete at the ring stop 59 + 4*4 (last leaf)
+                # + DL 4 = 79 vs the hub's scale 76.  hc_post (63 leaf vs 641 hub) NOT credited until slice-level.
+                add(nid, 'leaf_measured', LEAF_PARTIAL_EXTRA + LEAF_SCALE_EXTRA)
             elif op == 'attn.q_quant':
                 add(nid, 'norm_tree_q', -18 + st(3 * g['cluster_pitch_um']))
             elif op == 'attn.kv_rope_qdq':
@@ -89,6 +95,10 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0):
             add(nid, 'field_phase_wire', float(m.group(1)) * (r_phase - 1.0))
         if op == 'attn.q_rope':
             add(nid, 'attn_q_path', st(g['worst_slice_to_attention_um']) - HUB_VM_TO_SVC_STAGES)
+        if hbm_rt and op == 'attn.q_rope' and g.get('hbm_rt_stages'):
+            # p4g sensitivity: the farthest regional HBM controller's rq + rd stations, charged once per attention
+            # pass as if the KV read were NOT issued ahead (static schedule normally prefetches it)
+            add(nid, 'hbm_ctrl_rt', g['hbm_rt_stages'])
         if op == 'ffn.top6_order':
             add(nid, 'router_tree', st(g['worst_slice_to_gunit_um']))
         if g.get('slice_leaves'):
@@ -100,6 +110,15 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0):
                 add(nid, 'intra_slice_leaf', int(m.group(2)) * (ld + 2 * lm))   # return to owner + x to/from ring stop
             if cls == 'su' and op in ('attn.quant', 'ffn.norm.scale', 'attn.q_quant', 'attn.kv_rope_qdq', 'eng.gate'):
                 add(nid, 'intra_slice_leaf', 2 * lm)                            # partial to xfin leaf, rstd back
+        if g.get('tier_w'):
+            # p4c per-column tier exchange vs p4b end-column ring: the N tier needs the S tier's 40 beats; p4b moves
+            # them over 2 x 1,104-b end links (~20 cycles of serialization each), p4c over 8 x tier_w-bit links
+            # (5 x 1,104 / tier_w cycles per column); + up to 2 registered unit ring stops (+4) on the crossing
+            cross = 5 * 1104 / g['tier_w'] - 20 + 4
+            if m and cls == 'field':
+                add(nid, 'tier_cross', int(m.group(2)) * max(0.0, cross))
+            if cls == 'su' and op in ('attn.quant', 'ffn.norm.scale', 'eng.gate'):
+                add(nid, 'tier_cross', 4 + math.ceil(173 / g['tier_w']) - 1)   # partial flit + unit stops
         if re.search(r'(substage_hop\d+|head\.hop)$', nid):
             add(nid, 'h_xfer_ring', 2 * st(g['worst_slice_to_edge_um']))
     return d, rules
@@ -136,7 +155,7 @@ def ledger_split(path=LEDGER, drop=DROP):
     return kept, dropped, rows
 
 
-def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=DROP, basis_scale=1.0):
+def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=DROP, basis_scale=1.0, hbm_rt=False):
     kept, dropped, rows = ledger_split(drop=drop)
     st_eff = stages * 128 / frames if frames != 128 else stages
     ho = hop_only(89)
@@ -145,7 +164,7 @@ def price(g, stages=89, pinreg=8, su_scale=0.0, frames=128, drop=DROP, basis_sca
                ledger_kept_pct=kept, ledger_dropped_pct=dropped, workloads={})
     for wl, name in (('ar', 'ds_rom'), ('mtp', 'ds_rom_mtp')):
         doc = json.loads((TP / f'{name}.json').read_text())
-        delta, rules = dv_deltas(doc, g, pinreg, su_scale, basis_scale)
+        delta, rules = dv_deltas(doc, g, pinreg, su_scale, basis_scale, hbm_rt)
         base, new = solve_with_wave(doc, delta)
         dv_loss = ac.loss_pct(base, new)
         cur = ho[wl] * (1 - (kept[wl] + dropped[wl]) / 100)
@@ -171,7 +190,12 @@ def main():
     man = lambda p, q: abs(p[0] - q[0]) + abs(p[1] - q[1])
     g = dict(f, hop_um=f.get('hop_um', 405.0),
              worst_slice_to_gunit_um=max(man(cen(s), cen(B['gunit'])) for s in sl),
-             worst_slice_to_edge_um=max(min(man(cen(s), cen(B[c])) for c in ('coll_WS', 'coll_WN', 'coll_ES', 'coll_EN')) for s in sl))
+             # p4i: coll_edge deleted -> the cross-die link endpoints are the 4 end slices (dsdv_slice_lep)
+             worst_slice_to_edge_um=max(min(man(cen(s), cen(B[c])) for c in (('coll_WS', 'coll_WN', 'coll_ES', 'coll_EN')
+                                        if 'coll_WS' in B else ('s_0S', 's_0N', 's_7S', 's_7N'))) for s in sl))
+    hl = {l['i']: l['s'] for l in plan['links'] if l['i'].startswith(('hrq_', 'hrd_'))}
+    if hl:
+        g['hbm_rt_stages'] = max(hl.get(f'hrq_{k}', 0) + hl.get(f'hrd_{k}', 0) for k in {i[4:] for i in hl})
     # ROM capacity per die scales the stage count (owner-approved lever: fewer ROMs per die, more dies)
     st = math.ceil(89 * f.get('rom_slots_c26l', 1220) / f.get('rom_slots', 1220) - 1e-9)
     g['stages_from_slots'] = st
@@ -184,6 +208,19 @@ def main():
                    'pessimistic_keep_SU_HC_rows': price(g, stages=st, pinreg=16, drop=re.compile(r'^VM\.|^CAPT\.CD_PINREG$')),
                    'pessimistic_plus_su25': price(g, stages=st, pinreg=16, su_scale=0.25, drop=re.compile(r'^VM\.|^CAPT\.CD_PINREG$')),
                })
+    # p4g (coordinator 0cw+ (4)): the BF pair sequencer binds ot_s81_cfg7_seq_bfp PINREG=1 (closed, native PASS); its
+    # pin-register edges are the ledger row FIELD.CFG7_SEQ_PINREG (+4 lc->go_e on every FIELD matrix job), which
+    # every scenario above KEEPS.  'cfg7_pinreg0_binding' prices the old PINREG-0 cfg7_seq_bf binding (row dropped)
+    # so the absorbed cost is explicit.
+    kept_groups = {r['group'] for r in res['scenarios']['dv_base']['ledger_rows'] if not r['dropped']}
+    res['cfg7_binding'] = dict(master='ot_s81_cfg7_seq_bfp', params=dict(LAYOUT=1, PINREG=1),
+                               view='s81coll_cfg7_seq_bfp_pr-pr1-ef2866774 (CLOSED TT +244.3 / FF +23.9; native PASS 191.9/137.1/14.4)',
+                               ledger_row='FIELD.CFG7_SEQ_PINREG', ledger_row_kept=('FIELD.CFG7_SEQ_PINREG' in kept_groups),
+                               edges='lc->a/ce +2, lc->cfg/go_e +4, st +5 vs PINREG 0; charged +4 per FIELD matrix job')
+    assert res['cfg7_binding']['ledger_row_kept'], 'cfg7 PINREG ledger row missing'
+    res['scenarios']['cfg7_pinreg0_binding'] = price(g, stages=st, drop=re.compile(DROP.pattern + r'|^FIELD\.CFG7_SEQ_PINREG$'))
+    if g.get('hbm_rt_stages'):
+        res['scenarios']['dv_hbm_rt_unhidden'] = price(g, stages=st, hbm_rt=True)
     if g['hop_um'] < 405:   # reach sensitivity: also price the hub basis on the same hop (today's die degrades too)
         res['scenarios']['dv_base_hub_basis_same_hop'] = price(g, stages=st, basis_scale=405.0 / g['hop_um'])
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)

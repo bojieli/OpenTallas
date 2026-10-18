@@ -59,7 +59,7 @@
  "job": {
   "owner": "Claude H-NETLIST/COLL 1815",
   "branch": "claude/hnl-coll-tp192",
-  "tag": "d4f",
+  "tag": "d4f3",
   "purpose": "COLL ARGMAX leaf at d4f TP=192 (192-rank seen state, Codex 80898e86c): ot_hgi_coll_argmax_m #(TP 192) | recipe 4 (FLOW-HOLD die boundary hold budget: flop-first pins, no pads)",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
@@ -94,6 +94,29 @@
     ]
    },
    {
+    "name": "argmax_m_tp192_pos",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_argmax_m_bench.sh {RUN}/bench/am pos",
+    "expect": "pass",
+    "pass_regex": "ARGMAX_M_TP192 PASS G192 rounds5 exact5 start_reg1",
+    "min_count_regex": "ARGMAX_M_TP192 PASS G(192)",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "argmax_m_tp192_start_late",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_argmax_m_bench.sh {RUN}/bench/aml late",
+    "expect": "fail",
+    "fail_regex": "ARGMAX_M unexpected protocol fault",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
     "name": "hard_v7_q3_nl2_tp192_pos",
     "cmd": "HCOLL_NLINK=2 HCOLL_TP=192 bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/pos q3 pos",
     "expect": "pass",
@@ -107,7 +130,8 @@
    }
   ],
   "views_to": "physical/ref_tile/hcoll_v7_arg_tp192/views",
-  "record_to": "results/rtl/ref_tile/hcoll_v7_arg_tp192"
+  "record_to": "results/rtl/ref_tile/hcoll_v7_arg_tp192",
+  "design_note": "ARGMAX start edge +1 (START_REG=1): start and cfg_g/gbase/rank pin-registered into u_data, u_chk realigned (+2 on start, +1 on lanes). Compiler/calendar: the ARG start fires one edge later relative to its lanes; lanes stay >= start+2 raw edges (compiled programmes already schedule start, idle, lanes). Reset: one synchroniser flop (release +1)."
  },
  "params": {},
  "inter": [],

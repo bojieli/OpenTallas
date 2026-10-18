@@ -1,0 +1,11 @@
+MUT=0: GUNIT PASS cases=8 router_lat=60 (last SC -> ids row) hc_lat=640 (last HP -> first coef row)
+MUT=1: GUNIT FAIL 80 (MUT=1)
+MUT=4: GUNIT FAIL 130 (MUT=4)
+MUT=5: GUNIT FAIL 96 (MUT=5)
+MUT=6: GUNIT FAIL 100 (MUT=6)
+MUT=7: GUNIT FAIL 13 (MUT=7)
+GUNIT_GATE PASS (8 golden cases, mutants 1/4/5/6/7 detected)
+
+real	8m46.149s
+user	53m55.728s
+sys	2m38.123s

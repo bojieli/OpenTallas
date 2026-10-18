@@ -1,0 +1,12 @@
+{
+  "source_commit": "bd4c7e7cb",
+  "gate": "20261016-092026",
+  "remote": "ot-pve1",
+  "verdict": "FAIL",
+  "failure": "PPL-0086 ordered pin group11 not assigned; repeated sections have only0..15 available positions for16-bit groups",
+  "timing_qualified": false,
+  "physical_qualified": false,
+  "scope": "terminal source-bound IO-placement failure; no routed/native clock result",
+  "next": "Replace failed ordered PPL allocator with deterministic exact legal-track IO placement, every bus in disjoint ranges. Preserve W clock506..514 and reset515..519: compiler_control296..1004 overlaps that window, so its exact placement must skip reserved clock/reset tracks. Existing tools/pin_fit.py pin_balance/helper is starting point, but uniform placement must not overlap the reserved W band. Keep outline, layer cap, actual ports and all timing/congestion gates.",
+  "next_launched": false
+}

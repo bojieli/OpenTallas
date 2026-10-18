@@ -5,7 +5,7 @@ Stream S81-DV (owner decision 0cj, 2026-10-16 ~22:00). Plan level: nothing in th
 **Status: COMPOSED_NOT_NATIVE.** Every rate below is composed from the token-path DAG and plan geometry. It becomes a
 measured rate only once the slice benches and the die trial report their latencies.
 
-**Current die-trial base: p4** (coordinator decision 10-17, option B; section 0a). The earlier base was p1b (10-17). It is p1's geometry plus two changes:
+**Current die-trial base: p4d** = p4c-lanes on the final bf_col width (sections 0a and 0b). p4 itself is the coordinator decision of 10-17, option B. The earlier base was p1b (10-17). It is p1's geometry plus two changes:
 - the row-0 frames are placed MX, so their cfifo x tap faces the slice;
 - each shared unit sits against the slice it talks to.
 
@@ -200,6 +200,93 @@ Drivers:
 | Keep SU/HC rows + SU +25% | 1,237.0 | 3,708.9 | +11.9% |
 
 The leaf hops cost about 1.5% against p1b. Routing returned rows straight to the owning leaf, along the column, would win part of that back.
+
+### 0b. p4b: slice-master port variants (with S81-SLICE, 10-17)
+
+Open or tied ports are not allowed on a hardened slice. The slice master therefore exists in 3 **centre-leaf** variants; the 4 beat leaves are identical in all of them.
+
+| Variant | Ports | Slices |
+|---|---|---|
+| C1 | ring E/W + **V** (void-side, one 1,104-b ring-format pair) | 11: s_0S/N, s_7S/N (vertical end ring), s_2S/s_5S (bk_sel/bk_col), s_2N/s_5N (mix4), s_3S/N (G-unit injection), s_4N (seqhost) |
+| C2 | ring E/W + **B** (band-side; attention q/P·V) | 2: s_1S, s_6S |
+| C0 | ring E/W only | 3: s_1N, s_4S, s_6N |
+
+What makes exactly one V or B use per slice possible:
+- the bk units move to columns 2/5 (S slices);
+- the collective edge engines become ring stops on the end-column vertical ring (s_cS V → coll S → coll N → s_cN V);
+- the end slices' outward E/W ring port carries the PHY link lanes along the street;
+- the ctl tree rides the ring and street lanes on every slice.
+
+Metrics: cut 0.427, 0 over-reach, relays 1,768, 0.39 M bit·mm. MTP 4,154.0 (+25.4% vs today's 3,311.6 on main's current ledger). Explorer record `s81_dv_p4b`.
+
+### 0b (cont.). Long links (> 2 mm) and the tier crossing (owner question, 10-17)
+
+p4b links longer than 2 mm (`dv_plan.py` record, 405-µm hops):
+
+| Link | Width | Length | Relay stages | Per-layer critical path? |
+|---|---|---|---|---|
+| Street ring segments (slice ↔ slice, E–W) | 1,104 b | 2.9–3.6 mm (cluster pitch) | 7–8 | **Yes**: x all-gather and scalar exchange |
+| End-column N↔S ring (p4b: through the collective engines, 3 segments over a ~7.2-mm void) | 1,104 b | 7.2 mm total | ~18 + 2 stops | **Yes**: the tier crossing of the all-gather |
+| q / P·V (S slices of cols 1/6 ↔ PHY-side attention) | 1,104 b | 4.8 mm | 12 | **Yes**: q → attention priced (+16 vs hub); P·V is the wo_a operand |
+| G-unit ctl bundle (16 × 96 b, column 3 then the streets) | 96 b | 3.6–19.4 mm | 8–48 | Mostly **no**. Issuer words and HC coefficients are sent ahead. The expert ids (top-6 → experts) are on the FFN path, but arrive within the all-gather time already charged (48 < 112 stages) |
+| x-chain / return lanes to row-0/3 frames (R0) | 1,104 / 68 b | 2.7–3.2 mm | 8 | **Yes**: inside the phase path (118 stages) |
+
+The structural alternative evaluated is a **per-column tier exchange**. Every column links its S and N slice through its own void units, which become ring stops; this replaces the two fat end-column links. In every case the lane runs at the column centre, between unit faces.
+
+| | p4b (2 end links) | Tier exchange 1/8 width (138 b) | **Tier exchange 1/4 width (276 b) = p4c** |
+|---|---|---|---|
+| Max tier-link width | 1,104 b | 138 b | **276 b** |
+| Worst cut / windows > 0.55 | 0.427 / 0 | 0.427 / 0 | **0.427 / 0** |
+| Over-reach | 0 | 0 | **0** |
+| Relays | 1,768 | 1,872 | **1,872** |
+| bit·mm | 0.388 M | 0.378 M | **0.386 M** |
+| Phase path / scalar exchange | 118 / 95 | 118 / 95 | **118 / 95** |
+| Crossing serialization (N tier needs 40 S beats) | 2 links × 20 cycles | 40 cycles per column | **20 cycles per column** |
+| Unit ring stops on the crossing | — | +4 | **+4** |
+| MTP tok/s (DV base) | 4,154.0 | 4,084.6 (−1.7%) | **4,141.2 (−0.3%)** |
+| Worst stacked MTP | 3,705.1 | 3,640.7 | **3,693.2** |
+
+**Adopted: 276 b (p4c).**
+- It is better for routing: the widest vertical link drops from 1,104 to 276 b, the two 7.2-mm fat end links disappear, and the N/S traffic spreads over 8 short column chains.
+- It is structurally simpler: every slice uses its void-side V port the same way, the slice master drops to **two** centre-leaf variants (C1 = ring + V for 14 slices, C3 = ring + V + B for the attention slices s_1S / s_6S), and units become uniform ring stops.
+- The critical-path cost is the +4 cycles of unit stops: −0.3%, inside the model's noise.
+- 1/8 width is rejected: serialization makes it −1.7%.
+
+### 0b (cont.). p4c-lanes: every 1,104-b link as 4 × 276-b lanes (coordinator, 10-17)
+
+Wide stations have been the hard class: 566/624-b stations are slew-limited, and the 624 forks fail. Narrow stations close easily.
+
+The change: every 1,104-b link is carried as **4 parallel 276-b lanes**. That covers the street ring segments, the x chains, q/P·V and the unit ports. Each lane has its own station chain and its own forwarded clock, and the lanes are cycle-aligned: same stage count and same hop points, with the lanes 6 µm apart. This follows HBM's 48-b-lane practice. Bandwidth, the schedule and the slice / unit port widths are unchanged.
+
+| | p4c | **p4c-lanes** |
+|---|---|---|
+| Worst cut / windows > 0.55 | 0.427 / 0 | **0.415 / 0** |
+| Over-reach | 0 | **0** |
+| Station instances | 1,872 (1,104-b class) | **4,332** (≤ 276-b class) |
+| Relay bit-stages | 1,039,072 | **1,039,072** (unchanged) |
+| bit·mm | 0.386 M | **0.386 M** |
+| Phase path | 118 stages | **118 stages** |
+| MTP (DV base) | 4,141.2 | **4,141.2** (unchanged) |
+
+Only the station tiles and the plan change. The widest die-level station is now 276 b, which matches the tier links. The cut falls slightly because the lanes spread over adjacent windows. Explorer record `s81_dv_p4c_lanes`.
+
+### 0b (cont.). p4d: final bf_col width (S-ELEM, 10-17)
+
+S-ELEM fixed `dsfd_bf_col` at **604.8 × 198.72 µm**, with all parent pins on W/E and the height unchanged, so each frame is **1,436.832 µm** wide. That makes p4d, which is p4c-lanes at this frame width. The cap was ~613 µm per bf_col; 626.4 would have made the die 32.42 mm, over the limit.
+
+Two layout refinements apply:
+- Station chains are cut by arc length: no station sits on a corner, the die wire turns between stations, and corner relays are not needed.
+- The die-level stations are S-ELEM's flop-first `dsfd_dvrly_276_{EW,WE,NS,SN}` (recipe 4, with a forwarded `ck_o` for the F1 clock chain).
+
+| p4d | |
+|---|---|
+| Die | **31.73 × 25.00 mm = 793.2 mm²**; margins 0.64 / 0.50 mm per side under the reticle |
+| Worst cut / windows > 0.55 | **0.403 / 0** |
+| Over-reach | **0** |
+| Stations (276 b) | **3,272** (relay bit-stages 0.85 M); ctl rides the ring (G-unit on column 3 V chain), no separate ctl star |
+| bit·mm | 0.37 M |
+| Phase path / scalar exchange | 119 / 96 stages |
+| MTP (DV base) | **4,137.3 (+24.9%)**; worst stacked 3,689.6 (+11.4%) |
 
 ## 1. Why
 
@@ -403,3 +490,162 @@ What is not yet measured:
 1. Slice RTL bit-exact against `hdc_golden_v41` (chunk8) on the S81 SU/HC cases, with a 16-slice exchange bench for the norm.
 2. Slice closure via submit_exact.
 3. Hierarchical die trial (die_cluster).
+
+### 0b-p4e: tall units as stacked leaves (coordinator 10-17, accepted with conditions)
+p4e units are 0.68 mm wide. Each one stacks near-square leaves, each leaf with its own regional root:
+
+| Unit | Leaves | Leaf size (µm) |
+|---|---|---|
+| coll_* | 2 | 680 × 600 |
+| bk_col | 6 | 680 × 697 |
+| mix4_w, mix4_e | 6 | 680 × 625 |
+| gunit | 6 | 680 × 673 |
+| bk_sel | 4 | 680 × 721 |
+| seqhost | 5 | 680 × 634 |
+
+Conditions for the unit leads:
+- **Leaf-to-leaf hops are registered at both ends.** Pins are flop-first, and abutting faces put each boundary wire at ≤50 µm, well under the 405-µm hop limit.
+- **Long paths are registered inside the leaf.** A path that crosses a 600-720 µm leaf is registered inside that leaf, and the leaf's own timing closure covers it.
+- **The tier/ring stop sits in the middle leaf.** For 4-6 leaves that is leaf 2 or 3, counted from the slice end. The tier lanes enter and leave that leaf's E/W edge strips.
+- **Not allowed:** a single long tile, like the old 1 × 9.5 mm hc_eng.
+
+### 0b-p4f: no lane beside a slice (10-17)
+`dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4f` (p4e is reproduced byte-identical without `--p4f`).
+
+The p4e full-die repeater run overflowed where die lanes run over blocks, not in the streets. The x chain forward from row 2 to row 3 ran 1.6 mm up beside the slice inside the slice's x range, so 745 x-frame stations sat on or within 15 um of a block (57k bit-mm over blocks). The q / P.V legs ran along the bottom edge of frame row 0 (y 1.70-1.77 mm). The hotspots at x = 6.6 / 18.3 / 30.0 mm (slice E faces) and at y 1.7 mm match these.
+
+p4f changes:
+- Row-2 frames are MX (both tiers), so their tap sits above the slice top. Every x head leaves the slice's S or N face, and every forward leaves 120 um beyond its tap, away from the slice. No lane runs beside a slice, and no head shares a lane with a forward.
+- Column-end bundles are 4 x lanes 30 um apart (L colx+45..135, R colx+865..955), clear of the 680-um units (colx+160..840). The return lane sits nearest the frame (colx+15 / +985).
+- Street ring lanes are at one 30-um pitch (+-15..105 about the slice centre). Collective tx/rx are at +-135/165, and the tier lanes are 30 um apart.
+- q / P.V leave the svc half's outer face at y 1.25 / 1.45 mm (above the SM tiles), then go straight up the slice column. q and P.V are 120 um apart.
+- End-point lane shift is along the face only, so no pin sits inside its block.
+
+| | p4e | p4f |
+|---|---|---|
+| worst cut | 0.403 | 0.403 |
+| stations (276 b) | 3,326 | 2,624 |
+| relay bit-stages | 0.863 M | 0.669 M |
+| bit-mm | 0.377 M | 0.312 M |
+| longest link | tvN_s_6S 6.85 mm, 16 st | same |
+| stations on / within 15 um of a block | 745 | 0 |
+| worst slice-to-frame x depth | 9 | 9 (sum 560 -> 384) |
+| MTP (dv_price) | 4,129.3 | 4,129.3 |
+
+### 0b-p4g: regional HBM controllers, cfg7 bfp rebind (10-17)
+`dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4g` (`--p4g` implies `--p4f`; p4f is still reproduced byte-identical without it).
+
+Coordinator decisions 0cw+ (3) and (4):
+- **(3) dsfd_ctrl.** The 8500 x 250 strip (34:1) becomes 16 regional controllers `dsfd_ctrl_rg2`. Each controller is 531.25 x 250 um (2.1:1), and the 16 together keep the strip's 2.125 mm2. Each one serves 2 pseudo-channels: two `dsfd_ctrl_pc` tiles plus its own reset relay, PHY-reset register and {fault, live} register. The centre tile `dsfd_ctrl_ctr` is distributed among them. Each controller abuts the PHY north face over its own PCs, so the DFI (2 x 695 b) is an abutted face. Each controller's status rides in its own rd word (+2 b) and the service half ORs them, so there is no status chain.
+- **svc <-> controller links are now explicit.** Per controller, rq is 682 b (svc -> ctrl) and rd is 562 b (ctrl -> svc). They run as registered links in the 250-um channel between the controller row (top 1.45 mm) and the frames (1.70 mm), at a 15-um lane pitch. Farther controllers take higher lanes, so a drop never crosses a lane that continues.
+- **What p4f hid.** p4f drew svc -> PHY as a zero-length abutted face and left the strip unlinked. Carrying 16 PCs (~9.9 kb) 4.25 mm along the band, at the service-half end, exceeds the band's cross-section: cut 1.01 in 24 band windows. Everywhere else the worst is 0.30. This is the old basis arrangement (service halves at the PHY ends), now measured. The structural fix is either regional service slices next to their controllers (svc has no RTL yet: S81U-1) or more band height. The no-repeater GRT checks whether M6+ absorbs the band.
+- **(4) cfg7.** The BF pair sequencer binds `ot_s81_cfg7_seq_bfp` LAYOUT 1 / PINREG 1 (s81coll_cfg7_seq_bfp_pr-pr1-ef2866774, CLOSED, native PASS), paired with its f_prog consumer `dsfd_bf_front_static`. See `p4g/frame_bind.json`, which uses the bind7_bfprog frame family. Open item: bind7 shows `dsfd_bf_front_static.xb` INPUT_UNCONNECTED x519, which is a no-stubs item for the frame GEN.
+- **Price.** The pin-register edges are ledger row FIELD.CFG7_SEQ_PINREG (+4 lc->go_e per FIELD matrix job), which is kept. Scenario `cfg7_pinreg0_binding` gives MTP 4,134.3 against 4,129.3 bound (-0.12%). The HBM controller sensitivity `dv_hbm_rt_unhidden` (+21 stations once per attention pass, if the KV read were not issued ahead) gives MTP 4,126.7.
+
+| | p4f | p4g |
+|---|---|---|
+| worst cut | 0.403 | 1.010 (band only; rest 0.302) |
+| stations | 2,624 | 2,789 (+165 HBM rq/rd) |
+| relay bit-stages | 0.669 M | 0.772 M |
+| bit-mm | 0.312 M | 0.358 M (+0.046 M HBM) |
+| longest link | tvN_s_6S 6.85 mm, 16 st | same |
+| MTP / AR (dv_price) | 4,129.3 / 1,401.2 | 4,129.3 / 1,401.2 |
+
+### 0b-p4h: regional service slices (10-17)
+`dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4h --p4h-drop 6` (`--p4h` implies `--p4g`; p4g still reproduces byte-identical).
+
+Coordinator decision COORD 10-17 ~11:15: the two service halves become 16 regional service slices, one beside each regional controller. S81U-1 had no slice interface yet (no `lanes/S81U-1.md`), so each slice takes the per-channel-pair share (1/16) of the svc-half traffic.
+- **Where they fit.** The PHY's 8.5-mm north face leaves only 250 um below the frames, so nothing square-ish fits there. The row-0 S-tier frames over the PHY (2R, 3L, 3R, 4L, 4R, 5L; 9 slots each) give way. The region from x 10.54 to 21.19 mm and y 1.65 to 4.37 mm takes a 2 x 8 grid of `dsdv_svc_rg2` slices, each 1,222 x 1,338 um (1.09:1, 1.635 mm2). The lower row serves the even controllers and the upper row the odd ones.
+- **The SM share moves with the svc share (assumption A1, for S81U-1/S81U-2).** Scores/P are 8 kb per side, about as much as the HBM traffic. Leaving the 8 `ot_s81_su_sm` tiles at the band ends would recreate the long band. Each slice therefore holds svc 1/16 (13.43 mm2 estimate, no RTL) plus SM 1/16 (10.42 mm2), 1.491 mm2 needed, fit 1.10. The softmax max/sum per head then needs a tiny cross-slice tree; it rides the q/P.V tree.
+- **`--p4h-drop 4`** (3L-4R only) leaves 0.863 x 1.338 mm slices: fit 0.77 against svc+SM. It is rejected unless svc+SM comes in at 1.15 mm2 or less.
+- **Links.** The DFI is the abutted face, as in p4g. Lower slice <-> controller rq/rd (682/562 b) runs straight up through a 200-um channel. Each upper slice takes the column gap nearest its controller; a gap is 110 um per controller it carries (1,244 b at <= 0.55), and gap 5 carries two. q/P.V per half: s_3S / s_4S -> the root slice directly below (0.92 mm, 2 stations). From there a broadcast/reduce tree runs neighbour-only along the upper row and up -> low in each column (no star). The deepest root -> leaf path is <= 1.3 mm.
+- **Cost.** ROM slots fall 1,184 -> 1,130 and stages 92 -> 97. Slices s_2S/s_5S keep 7 frames and s_3S/s_4S keep 6, so the compiler rebalances y[a:b]. q/P.V move from s_1S/s_6S to s_3S/s_4S: the B-port slice variant moves to columns 3/4.
+- The empty band corners (x < 10.5 and x > 21.2, y < 1.7 mm) lie under the frames and no link crosses them, so they stay empty.
+
+| | p4f | p4g | p4h |
+|---|---|---|---|
+| worst cut | 0.403 | 1.010 (24 band windows) | **0.454** (hrq/hrd_14/15 drop, 0 windows > 0.55) |
+| stations | 2,624 | 2,789 | 2,347 |
+| relay bit-stages | 0.669 M | 0.772 M | 0.628 M |
+| bit-mm | 0.312 M | 0.358 M | 0.299 M |
+| longest link | tvN_s_6S 6.85 mm, 16 st | same | same; HBM longest 2.32 mm / 5 st (p4g 4.46 / 11) |
+| ROM slots / stages | 1,184 / 92 | 1,184 / 92 | 1,130 / 97 |
+| MTP / AR (dv_price) | 4,129.3 / 1,401.2 | 4,129.3 / 1,401.2 | 4,112.1 / 1,392.9 (-0.42%) |
+
+### 0b-p4i: coll_edge out, end-slice link endpoints, svc_rs centre chain, HP kind, host/job paths, REAL-RTL bind (10-17)
+`dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4i --p4h-drop 6` (`--p4i` implies `--p4h`; p4h still reproduces byte-identical).
+
+Coordinator 0cj ~15:00 (a)-(c):
+- **coll_edge deleted.** Columns 0 and 7 have no void unit. Their tier rung is relay stations only, s_cS <-> s_cN. The 4 end slices become master `dsdv_slice_lep`: ot_s81sl_slice plus 2 x 512-b link tx/rx endpoints. The link-port RTL is owed by S81-SLICE (reuse ot_s81ph_link_ep / coll_lane).
+- **svc_rs chain.** The 16 `dsdv_svc_rs` form a neighbour chain with 512-b lanes each way (S81U-1 sp_w / sp_e). Each half enters at its centre column (W: s_3S -> rsv_07, E: s_4S -> rsv_09). Every column folds its lower slice into its upper slice, then partials move along the upper row toward the centre (W cols 0->3, E cols 7->4) and fold W + E across the centre gap (fc_07_09 / fc_09_07). Broadcast (q, P) runs outward on the same edges. The order is fixed and compiler-visible. S81U-1 must confirm that it matches the golden head-dim reduction order.
+- **HP beat kind.** Kind 7 = HP, the HC projection partial (golden-subtree roots). It is a single beat on the same route as SC: slice -> tier line -> column-3 V -> gunit (vstop tap+sink 7). There are no new wires. RTL owed: K_HP in ot_s81sl_xr / rstop (S81-SLICE) and the vstop strap (S81U-1).
+- **seq_host host/job.** The column-4 void is enclosed: slices above and below, frames at 8.7-um gaps on both sides. A direct wire would run beside a slice (p4f rule) or over a frame. Host and job therefore use compiler-scheduled TDM on existing registered links:
+  - host in: lr_lk_WN0 -> N line -> s_4N -> V -> seqhost, 31 stations, 47 cycles;
+  - job out: seqhost -> V -> s_4S -> q_E -> chain, 24 cycles (far E) to 28 (far W via the fold);
+  - hc back: on the inward chain.
+  These paths are off the token critical path because jobs are issued ahead.
+
+| | p4h | p4i |
+|---|---|---|
+| worst cut | 0.454 | 0.454 (0 windows > 0.55) |
+| stations | 2,347 | 2,403 (end rung now spans the old coll blocks) |
+| relay bit-stages | 0.628 M | 0.643 M |
+| bit-mm | 0.299 M | 0.304 M |
+| worst slice -> edge endpoint | 14.7 mm (coll) | 11.7 mm (end slice) |
+| worst slice -> attention | 24.3 mm | 25.3 mm (centre entry) |
+| MTP / AR (dv_price) | 4,112.1 / 1,392.9 | 4,115.4 / 1,394.4 (+0.08% / +0.11%) |
+
+**REAL-RTL binding** (`dv_diecase.py --bind real --bind-table bind/bind_table_p4i.json`, tools/s81_dv/dv_bind.py, from S81-BIND):
+- Every plan master binds its RTL module. Masters with no RTL keep their plan master name and are listed as OPEN BINDINGS; nothing is stubbed.
+- Every link stage is a real F1 relay master. The 276-b stations bind closed views. The 68/512/562/682-b masters come from dsfd_rly_masters_dvw.sv; their views are still owed.
+- Reset is a regional synchronous-release relay tree of `dsfd_rly_1_WN` (closed view, 1,050 stations, 400-um cells, release depth up to 107). Frames read the parent station, so their release is one edge earlier, as the qxpq RSTP=1 change requires.
+- Forwarded clocks are sourced either from the slice ck_* outputs or from a clock-forward cell on the source region root (381 cells).
+- Mode-unused ties are declared as pads (coordinator 0da (c)): slice bi on HB=0 slices x14, ri_w at column 0 x2, ri_e at column 7 x2.
+- The frame member contract (bind/frame_contract.json, PASS 5/5) is checked against the members' RTL:
+  - ot_s81_cfg7_seq_bfp, LAYOUT 1 / PINREG 1;
+  - dsfd_cfifo_crs;
+  - dsfd_bf_front_roots (f_prog from bfp);
+  - dsfd_bf_col_cl, with lane_ckl[g] and lane_cko[g] tied to leaf_ck[2+g];
+  - qxpq_w10 RSTP=1.
+  The frame wrapper has no RTL, so frames stay an open binding owned by S81U-3.
+- Strict die_port_bind result: FAIL.
+  - masters 30, instances 4,019, unbound masters 8 (158 instances);
+  - stub 0, port_not_in_rtl 0, width mismatch 0, input_tied 0;
+  - input_unconnected 21 (bk_sel / bk_col V ports, PHY k_* from the open ctrl_rg2);
+  - undriven bits 95,048 (outputs of the open masters, plus slice_lep tx/rx);
+  - straps 1 (sid), pad bits 19,872.
+  The S81-BIND p4h baseline was 15 unbound / 24 unconnected / 84,816 undriven.
+- Open bindings and their owners:
+  - col_h9 / col_h10 / col_h9_MX x122 (S81U-3);
+  - dsfd_ctrl_rg2 x16 (HBM-ctrl / S81-DV);
+  - dsdv_svc_rs x16, dsdv_gunit, dsdv_seq_host (S81U-1);
+  - dsfd_engram_mix4_half x2 (S81U-3);
+  - slice_lep tx/rx ports (S81-SLICE);
+  - bk_sel / bk_col V-rung ports (S81U-2).
+
+#### p4i bind r2 (S81-DIE2 10-17 ~17:15): frames, ctrl_rg2, all relay views
+`dv_diecase.py --bind real --bind-table bind/bind_table_p4i.json` -> p4i/bind_r2 (r1 in p4i/bind kept).
+- Bound: col_h9 / col_h10 / col_h9_MX (S81U-3F RTL 99991b051; x lanes with xk = last-station ck_o, xo on xok, cr/cr_s on the region root); dsfd_ctrl_rg2 x16 (main 7d8b87af9; ckh = PHY clock; PHY k_*/kr_* as abutted faces, region k = PCs 2k/2k+1, the 32 plan DFI lanes are realised by the abutment); PHY W port = 5 mode-unused pads (49 b).
+- Relay views: all 14 station masters CLOSED + native PASS (68/512/562/682 receipts in physical/ref_tile/*/native_audit.json); child views smq, kp4_enc, rly_38_WN native PASS.
+- Strict die_port_bind FAIL: unbound 4 (svc_rs x16, gunit, seq_host, mix4_half x2), input_unconnected 8 (bk_sel/bk_col V ports), undriven 21,192 b (hrq 10,912 from svc_rs; tv 3,312 from the open units; lt_lk 4,096 = slice_lep tx; pv 2,208; slice rt 664), width 0, tied 0, pads 19,921. r1: 8 / 21 / 95,048.
+- FINDING (S81-DIE): plan RET = 68 but frame ret and slice rt lanes are 70 b ({rr[67:0], rr[0], rsync_s}): p4j must carry 70-b ret links (dsfd_dvrly_70_NS/SN kits owed; the 68 views become unused).
+- GRT p4i (stand-in blocks): nr overflow 0 (M3 9.67%); r overflow 0, fclk 0 mismatch, but post-GRT slew 1,402 violators worst 973.7 ps (p4h 22 / 349) -> classify before die STA.
+- Real-binding die run NOT placeable yet: 20 open-binding instances and 165 RTL-only instances (frames, slices, ctrl, PHY, links) have no abstract.
+
+#### p4j (S81-DIE3 10-17): RET 70 + q/P.V entry under the slice-column voids
+`dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4j --p4h-drop 6` (`--p4j` implies `--p4i`; p4i still reproduces plan.json byte-identical).
+- **p4i post-GRT slew classified (die_p4i_full_r grt.odb, 1,402 violators):** REGION + PLAN DEFECT, not the repeater step.
+  - 1,119 violators at (17.0-17.3, 4.39-4.72) mm and 261 at (14.4-14.7, 4.39-4.71) mm. All are fanout-1 die-net segments: 1,082 repeater->repeater and 320 from st_pv_E/W relay stations (dsfd_dvrly_276_WE).
+  - The segments are 450-600 um long against the 160-um max wire.
+  - Cause: p4i moved the q/P.V chain entry to the centre roots rsv_07 / rsv_09. Those sit under frames f_3R01 / f_4L01, so q_W/pv_W/q_E/pv_E (8 x 4 x 276 b) ran 7.5 mm of lane over the frame bodies. p4h had 0 um over blocks, and 14 p4i stations sat inside the frames.
+  - repair_design placed the repeaters on the frames. The spread then moved them to the 30-um channel and the 5-um frame gaps (max displacement 51 -> 322 um, full bins 3 -> 83, hard 884 -> 13,422 vs p4h). That left long unrepeated wires that upsizing cannot fix (911 blocked, 320 block drivers).
+- Fix (plan):
+  - q / P.V enter at the slice under the slice-column void (W rsv_05, E rsv_11, as in p4h). The chain root (fold) stays rsv_07 / rsv_09, one neighbour hop away.
+  - The entry->root edge carries q (tq_05_07, tq_11_09) and the partials toward the root (tp_05_07, tp_11_09). A new 512-b result lane (tr_07_05, tr_09_11) carries the folded result back to the entry. The reduction order is unchanged.
+  - New plan guard `lane_over_block_um` (p4j: exits if > 0).
+  - Result: lane over blocks 7,469 -> 0 um; stations 2,403 -> 2,371; bit-mm 304.4k -> 301.3k; deepest svc tree 2,144 -> 1,180 um; job far_W 27 -> 28 cyc (off the critical path).
+  - dv_price MTP / AR 4,115.7 / 1,394.5 (p4i 4,115.4 / 1,394.4).
+  - Contract change for S81U-1 (dsdv_svc_rs, no RTL yet): the q/pv slice faces are on rsv_05 / rsv_11; root slices get the ro/ri result lane.
+- RET 70: ret links are 70 b (frame ret / slice rt RTL). New relay masters dsfd_dvrly_70_NS/SN (dsfd_rly_masters_dvw.sv; kits s81dv_rly_70_{ns,sn}, 12.96 x 17.28): gate WARN (util only), SUBMITTED -w1-1e6f9a9d6. bind/bind_table_p4j.json retires the 68 views (relay_views_retired, with the reason).
+- Strict bind p4j (p4j/bind): FAIL. Unbound 4, unconnected 8, undriven 20,948 (p4i 21,192). Slice rt undriven 536 -> 420 b, all on s_2S/s_3S/s_4S/s_5S rt lanes from the row-0 frames dropped for the svc region: an S81-SLICE / bind-table decision (mode-unused tie with reason, or fewer rt lanes).
+- GRT: die_p4j_full_{nr,r} launched on E4 (same flow as p4i).

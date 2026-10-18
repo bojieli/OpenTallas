@@ -61,6 +61,11 @@ def replicas(w):
     """standard widths for a w-bit forward word, widest first (deterministic)"""
     if w <= 0:
         return []
+    if 0.7 * 528 <= w <= 528:
+        # KVPLAN2 2215: a word that fills >= 70 % of one qkd_rlys_528 takes that one replica (21.6 um wide) instead of a
+        # 296 + 3 x 36 row (93 um wide): a W-in / E-out stage on a vertical run gives up its frame width every hop (the
+        # 384-b PV trunk segments; no other KV die word is 370..527 b today)
+        return [528]
     best = None
     for k in range(1, 6):
         for combo in itertools.combinations_with_replacement(sorted(STD, reverse=True), k):
