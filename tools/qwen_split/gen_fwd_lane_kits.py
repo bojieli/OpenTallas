@@ -27,9 +27,11 @@ import gen_relay_rtl as GR  # noqa: E402
 LANE_RTL = ['rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc/ot_hdc_cg.sv']
 MASTERS_SV = 'physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv'
 CLK_TCL = 'physical/qwen_fwd_lane/fwd_lane_clocks.tcl'
-WIT = 'results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench'
-MUTANTS = {'qfd_rlyh0_': ('full', 'hop0inv'), 'qfd_rlyh_': ('full',), 'qfd_landh_': ('sel', 'naive'),
-           'qfd_landh0_': ('sel', 'hop0inv')}
+WIT = 'results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench_r2'   # Q-DIE11 10-18: witnesses of the rising-hop-0 RTL
+MUTANTS = {'qfd_rlyh0_': ('full',), 'qfd_rlyh_': ('full',), 'qfd_landh_': ('sel', 'naive'),
+           'qfd_landh0_': ('sel', 'naive')}
+# Q-DIE11 10-18: no hop-0 inversion mutant: the first-form (falling-edge) hop 0 delivers the same word stream through the
+# landing window (bench_r2 w*_hop0inv.log PASS: the ring absorbs the T/2), so it is not a bench-observable fault
 CLOCK = {'qfd_rlyh0_': 'ck', 'qfd_rlyh_': 'ckf', 'qfd_landh_': 'ck', 'qfd_landh0_': 'ck'}
 
 
