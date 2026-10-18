@@ -82,6 +82,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 10",
     "expect": "fail",
     "fail_regex": "^MUT=10: GUNIT FAIL ",
+    "fail_witness": "results/rtl/s81_dv_units_1017/gunit_l1b/mut10_witness.log",
     "threads": 6,
     "peak_ram_gb": 24
    }
