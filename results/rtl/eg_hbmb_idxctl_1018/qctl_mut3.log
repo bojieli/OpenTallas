@@ -1,0 +1,8 @@
+nq mismatch cyc10 got0
+frame_start mismatch cyc52
+frame_start mismatch cyc53
+slot mismatch cyc55
+field mismatch cyc55
+IDX_QCTL_STATIC MUT3 checked2804 issues2433 nq2769 faultchk2803 errors4761 fault1
+FATAL: rtl/test/hbm_idx_static/tb_idx_qctl_static.sv:80: idx qctl static lockstep mismatch
+       Time: 28130000  Scope: tb_idx_qctl_static

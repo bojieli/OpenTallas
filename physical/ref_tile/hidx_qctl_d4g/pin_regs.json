@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_idx_qctl_static",
+ "enable": false,
+ "reason": "RTL registers every data input (programme bus, start, length, nkeys, slot strap, vf/qf/scf) and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/quad_1017/ot_hbm_idx_qctl_static.sv, (* keep *) pin flops, +1/+1 edge = the +2 IDX timeline of lanes/HBM-B-RTL2.md ## IDX); a wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+}

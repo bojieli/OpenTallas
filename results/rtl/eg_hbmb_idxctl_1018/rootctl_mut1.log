@@ -1,0 +1,8 @@
+op mismatch cyc213
+fault mismatch cyc215 got1 exp0
+fault mismatch cyc216 got1 exp0
+fault mismatch cyc217 got1 exp0
+fault mismatch cyc218 got1 exp0
+IDX_ROOTCTL_STATIC MUT1 checked2844 issues2425 ingest2844 share8 errors2637 fault1
+FATAL: rtl/test/hbm_idx_static/tb_idx_rootctl_static.sv:94: idx rootctl static lockstep mismatch
+       Time: 28530000  Scope: tb_idx_rootctl_static

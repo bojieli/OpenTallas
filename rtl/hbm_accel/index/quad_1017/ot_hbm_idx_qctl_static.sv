@@ -9,6 +9,9 @@
 // whole IDX timeline is +2 edges after the host start (identical for root and quadrants, so the compiled
 // programme is unchanged). frame_start (query clear) = start + 2, aligned with the calendar issue as before.
 // RESET: rst_n drives only ot_rst_relay (release +3 edges); calendar/control flops reset, pin flops unreset.
+// CLOCK (ELEM-GAPS/HBMB 10-18): ONE clock root clk_program for every flop and the calendar SRAM (the die drives
+// clk_program and clk_program_mem from the same stream root; clk_program_mem is kept as a port, unloaded), so the
+// tile has a single CTS root and no data path between two clock entries. Same ports, same latency.
 // STATIC: no ready/credit; slot is a die strap (stack index of this quadrant's KV ordinals).
 module ot_hbm_idx_qctl_static(
  input wire clk_program,clk_program_mem,input wire rst_n,
@@ -31,7 +34,7 @@ module ot_hbm_idx_qctl_static(
   vf_r<=vf;qf_r<=qf;sf_r<=scf;
  end
  wire issue_v,calendar_fault,done_u;wire[31:0]ins;
- ot_hbm_idx_calendar_static calendar(.clk(clk_program),.clk_mem(clk_program_mem),.rst_n(rst_c),
+ ot_hbm_idx_calendar_static calendar(.clk(clk_program),.clk_mem(clk_program),.rst_n(rst_c),
  .program_we(pw_r),.program_addr(pa_r),.program_data(pd_r),.start(st_r),.length(ln_r),
  .issue_v(issue_v),.instruction(ins),.done(done_u),.fault(calendar_fault));
  wire[13:0]base=sl_r?14'd2736:14'd0;
