@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_ring_b_stop",
+ "enable": false,
+ "reason": "pin registers are explicit in the RTL: ring inputs land on the lane pin registers, every output (cw_o/ccw_o, ag_*, fault) is a flop Q, and every command/lp/qid input has the CMD_PIPE=1 register in ot_hgi_coll_ring_b_stop (compiler constant: ring-B commands issue one edge earlier than ring A; bench BLK=1); automatic pin registers would add a second, unpriced edge"
+}
