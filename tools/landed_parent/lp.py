@@ -511,7 +511,10 @@ class Parent:
         L = []
         w = L.append
         # header
-        items = [p["item"] for p in self.mod["ports"] if p["name"] not in self.ck]
+        dn = {"in": "input", "out": "output", "inout": "inout"}
+        items = [f"{dn[p['dir']]} wire {p['range'] + ' ' if p['range'] else ''}{p['name']}"   # full declarations: a
+                 for p in self.mod["ports"] if p["name"] not in self.ck]                     # removed clock port can
+                                                                                              # head a shared list
         items += [f"input wire ck_{r}" for r in self.regions]
         par = (self.mod["params_txt"] + ",\n    " if self.mod["params_txt"] and self.mod["params_txt"].strip() else "")
         w("`timescale 1ns/1ps")
