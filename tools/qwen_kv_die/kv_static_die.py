@@ -1812,7 +1812,7 @@ def ahub_ages(m, pv_lead=0, stack_start_lag=None):
     """KV-INTEG/AHUB: qkd_ahub_static_dw parameters from the plan's relay stages (D = registered die relay stages,
     pin registers excluded; bench tb_qkd_ahub_static_dw proves both formulas edge-exact):
       FR_OFS   = D(ks_pvfst) - PV_LEAD - D(ks_ahfr) - D(ks_ahs) - 1   -> fr lands on pvfin's R slot (cal R after start_pv)
-      AP_OFS_s = 2 + L_s + D(ap_s) - D(ks_ahs) - 1                     -> hub input ages of stack s = the native
+      AP_OFS_s = 2 + L_s + D(ap_s) - D(ks_ahs)  (ap pin flops)         -> hub input ages of stack s = the native
                                                                           service's LMAX / Z input ages
     L_s = the stack's start lag behind the attention root's start_qk (compiler; 0 if not given).  The hub's am word
     reaches astk_s L_h + D(am_s) - L_s edges after the service's (L_h = D(ks_ahs) + 1): the compiler's EXP_START must
@@ -1821,7 +1821,7 @@ def ahub_ages(m, pv_lead=0, stack_start_lag=None):
     lag = stack_start_lag or {}
     dh, df, dp = st.get('ks_ahs', 0), st.get('ks_ahfr', 0), st.get('ks_pvfst', 0)
     lh = dh + 1
-    ap = {s: 2 + lag.get(s, 0) + st.get(f'ap_{s}', 0) - lh for s in STACKS}
+    ap = {s: 2 + lag.get(s, 0) + st.get(f'ap_{s}', 0) - dh for s in STACKS}   # KV-AHUBDW: + 1 = the hub's ap pin flops
     return dict(schema='opentallas.qwen_kv.ahub_ages.v1', module='qkd_ahub_static_dw', file=AHUB_FILE,
                 relays=dict(ks_ahs=dh, ks_ahfr=df, ks_pvfst=dp, **{f'ap_{s}': st.get(f'ap_{s}', 0) for s in STACKS},
                             **{f'am_{s}': st.get(f'am_{s}', 0) for s in STACKS}),
