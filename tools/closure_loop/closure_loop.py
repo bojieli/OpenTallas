@@ -500,6 +500,10 @@ def stage_list(spec):
             out.append(dict(key=k, kind=k, cmd=st[k]["cmd"], ok=st[k].get("ok"),
                             threads=st[k].get("threads", t), ram=st[k].get("peak_ram_gb", r), logs=st[k].get("logs", [])))
     out.append(dict(key="commit", kind="commit"))
+    for x in out:
+        if x.get("ram"):
+            x["declared_ram"] = x["ram"]
+            x["ram"] = learned_ram(spec.get("block"), x["key"], x["ram"])
     return out
 
 
@@ -1953,13 +1957,44 @@ def job_tools(spec):
 
 
 # ------------------------------------------------------------------------------------------------ remote ops
+# FLEET-OOM (2026-10-18): the runner also (a) samples the stage's process-group RSS every 15 s -> <tag>.peak_kb (the
+# stage's measured peak; stage_peaks.json re-admits repeats of the same block + stage at it, learned_ram()), (b) when
+# that RSS passes the stage's declared GB (<tag>.decl) raises the build processes in it (cc1plus / verilator_bin /
+# yosys / ld ...) to oom_score_adj 900, so earlyoom takes the over-declared build, not a 9 MiB vvp of another job, and
+# (c) after the stage exits writes every earlyoom / kernel OOM kill of one of its pids (sampled into <tag>.pids) or of a
+# process whose command line names this run dir into <tag>.oomkill -- the daemon then retries the stage as a FLOW
+# failure (crash(), never NEEDS_RTL).  Before, earlyoom SIGTERMed tiny oom_score_adj-500 benches first and the bench
+# verdict read the truncated log as an RTL result (34 kills on 10-18, lanes/FLEET-OOM.md).
 RUNNER = r"""#!/bin/bash
-# closure-loop stage runner: <stage tag>.  pid/start/log/rc files next to this script.
+# closure-loop stage runner: <stage tag>.  pid/start/log/rc (+ peak_kb/pids/oomkill) files next to this script.
 st=$1; d=$(cd "$(dirname "$0")" && pwd)
 echo $$ > $d/$st.pid; date +%s > $d/$st.start
+rm -f $d/$st.oomkill $d/$st.peak_kb $d/$st.pids $d/$st.oomprefer
 cd "$(cat $d/SRC_DIR)"
+( decl=$(cat $d/$st.decl 2>/dev/null); case "$decl" in ''|*[!0-9]*) decl=0;; esac; pk=0; g=$(ps -o pgid= -p $$ | tr -d ' ')
+  while kill -0 $$ 2>/dev/null; do
+    snap=$(ps -eo pid=,pgid=,rss=,comm= 2>/dev/null | awk -v g=$g '$2==g')
+    s=$(echo "$snap" | awk '{s+=$3} END{print s+0}')
+    [ "$s" -gt "$pk" ] && { pk=$s; echo $pk > $d/$st.peak_kb; }
+    echo "$snap" | awk '{print $1}' >> $d/$st.pids; sort -u -o $d/$st.pids $d/$st.pids 2>/dev/null
+    if [ "$decl" -gt 0 ] && [ "$s" -gt $((decl * 1048576)) ]; then
+      for p in $(echo "$snap" | awk '$4 ~ /^(cc1plus|cc1|verilator_bin|verilator_bin_dbg|yosys|yosys-abc|ld|g\+\+|c\+\+|clang\+\+|openroad)$/ {print $1}'); do
+        [ "$(cat /proc/$p/oom_score_adj 2>/dev/null)" = 900 ] && continue
+        echo 900 > /proc/$p/oom_score_adj 2>/dev/null && echo "$(date -Is) stage RSS $((s / 1048576)) GB > declared $decl GB: pid $p oom_score_adj 900" >> $d/$st.oomprefer
+      done
+    fi
+    sleep 15
+  done ) > /dev/null 2>&1 &
 bash $d/$st.sh > $d/$st.log 2>&1
 rc=$?
+t0=$(cat $d/$st.start); run=$(dirname "$d")
+{ sudo -n journalctl -u earlyoom --since @$t0 --no-pager -q 2>/dev/null | grep -E 'sending SIG(TERM|KILL) to process'
+  sudo -n journalctl -k --since @$t0 --no-pager -q 2>/dev/null | grep -E 'Killed process [0-9]+'; } | while IFS= read -r ln; do
+  p=$(echo "$ln" | sed -nE 's/.*(to process|Killed process) ([0-9]+).*/\2/p')
+  { [ -n "$p" ] && grep -qx "$p" $d/$st.pids 2>/dev/null; } || case "$ln" in *"$run/"*) ;; *) continue;; esac
+  echo "$ln"
+done > $d/$st.oomkill.tmp 2>/dev/null
+[ -s $d/$st.oomkill.tmp ] && mv $d/$st.oomkill.tmp $d/$st.oomkill || rm -f $d/$st.oomkill.tmp
 echo $rc > $d/$st.rc.tmp && mv $d/$st.rc.tmp $d/$st.rc
 """
 
@@ -2425,7 +2460,8 @@ def sync_source(j):
     ship_helpers(host, run, j)
     corner_sta_compat(j, host, run, full)
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
-    ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
+    ssh(host, f"cat > {run}/cl/run.sh.tmp && chmod +x {run}/cl/run.sh.tmp && mv {run}/cl/run.sh.tmp {run}/cl/run.sh",
+        input=RUNNER, timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/job.json", input=json.dumps(spec, indent=1), timeout=60, check=True)
     if active_budget(spec):
         files = budget_files(spec["budget"])
@@ -3128,6 +3164,8 @@ def textbook_cfg(j):
     if isinstance(cr, dict):     # measured clock rule: only jobs ingested under it (never an older in-flight job)
         cfg["clock"] = {"enforce": cr.get("mode") == "refuse" and bool(j["spec"].get("ref_tile")),
                         "evidence": cr.get("evidence"), "closed_stands": bool(cr.get("closed_stands"))}
+        if isinstance(j["spec"].get("clock_rule_waiver"), dict):   # HANDOFF 0ga: the gate's recorded per-pair waiver
+            cfg["clock"]["waiver"] = j["spec"]["clock_rule_waiver"]
     # GATE-FRICTION 2026-10-18: the kit's declared reset_ports are resets for the in-flow lint too (por_n on KV core_peer)
     rsts = j.get("kit_reset_ports")
     if rsts is None and j["spec"].get("ref_tile") and j.get("commit_full"):
@@ -3227,6 +3265,15 @@ def fp_lint_finish(j, tag, text):
 # (the loop sees a flow error / crash retry), never a neighbour.  Spec "mem_cap_gb" overrides (0 = no cap).
 MEM_CAP_FACTOR = 4
 STAGE_OOM_SCORE_ADJ = 500
+# FLEET-OOM (2026-10-18): bench and route stages run at oom_score_adj 0.  At 500 (plus earlyoom's --prefer vvp|python3)
+# a 9 MiB bench vvp or a route's python3 scored 1300 against 1024 for a 112 GB cc1plus at 3 % free, so earlyoom killed
+# 34 small loop stages on 10-18 and the over-declared build kept growing.  Over-declared builds are raised by the runner
+# instead (RUNNER (b)); the other stage kinds keep 500.
+STAGE_OOM_SCORE_ADJ_KIND = {"bench": 0, "route": 0}
+
+
+def stage_oom_score_adj(kind):
+    return STAGE_OOM_SCORE_ADJ_KIND.get(kind, STAGE_OOM_SCORE_ADJ)
 MEM_CAP_SLACK_GB = 96
 
 
@@ -3281,7 +3328,7 @@ def launch_stage(j, st, cmd):
     # OOM-FIRST (drive-0849 2026-10-09): synth runs NATIVELY (host yosys, outside any container cgroup) -- the 208 GB
     # yosys that took the EPYC1 die GRT was one.  Every loop stage raises its own oom_score_adj (inherited by its
     # children; non-root may raise it) so a host OOM picks a loop stage, never a die run (-900) or an interactive job.
-    env += f"echo {STAGE_OOM_SCORE_ADJ} > /proc/self/oom_score_adj 2>/dev/null || true\n"
+    env += f"echo {stage_oom_score_adj(st['kind'])} > /proc/self/oom_score_adj 2>/dev/null || true\n"
     if st["kind"] == "bench":
         # Benches use the fleet's pinned tools (Verilator 5.050, yosys 0.68), the same ones every agent gate runs
         # under. The non-login ssh PATH picked Debian /usr/bin/verilator 5.032, so loop benches disagreed with the
@@ -3505,11 +3552,93 @@ def launch_stage(j, st, cmd):
     if "ALIVE" in alive.stdout:
         log(f"[{j['name']}] {t} already running on {j['host']}: adopted, not relaunched")
     else:
-        ssh(j["host"], f"cat > {run}/cl/{t}.sh && rm -f {run}/cl/{t}.rc", input=body, timeout=60, check=True)
+        ssh(j["host"], f"cat > {run}/cl/{t}.sh && rm -f {run}/cl/{t}.rc && echo {int(st.get('ram') or 0)} > {run}/cl/{t}.decl",
+            input=body, timeout=60, check=True)
+        # FLEET-OOM: every launch ships the current runner (atomic: a running stage keeps its old inode), so a retry in
+        # an existing run dir gets the RSS sampler and the OOM-kill check
+        ssh(j["host"], f"cat > {run}/cl/run.sh.tmp && chmod +x {run}/cl/run.sh.tmp && mv {run}/cl/run.sh.tmp {run}/cl/run.sh",
+            input=RUNNER, timeout=60, check=True)
         ssh(j["host"], f"nohup setsid bash {run}/cl/run.sh {t} > /dev/null 2>&1 < /dev/null & echo launched", timeout=60,
             check=True)
     j["stage_tag"] = t
     j["stage_started"] = now_iso()
+
+
+STAGE_PEAKS = STATE / "stage_peaks.json"
+PEAK_MARGIN = 1.15
+_peaks_cache = [None, {}]
+
+
+def stage_peaks():
+    """FLEET-OOM (2026-10-18): block|stage key -> measured stage peak (process-group RSS, RUNNER (a)), all hosts"""
+    try:
+        m = STAGE_PEAKS.stat().st_mtime
+    except OSError:
+        return {}
+    if _peaks_cache[0] != m:
+        try:
+            _peaks_cache[:] = [m, json.loads(STAGE_PEAKS.read_text())]
+        except (OSError, ValueError):
+            return _peaks_cache[1]
+    return _peaks_cache[1]
+
+
+def learned_ram(block, key, ram):
+    """FLEET-OOM (4): a repeat of the same block + stage is admitted at max(declared, PEAK_MARGIN x its measured peak)
+    (hcoll_v7_tkm_tile_e86 declared 160 GB, its Verilator build reached 298 GB and earlyoom took the host's benches)"""
+    e = stage_peaks().get(f"{block}|{key}") if block else None
+    if e and e.get("peak_gb", 0) * PEAK_MARGIN > (ram or 0):
+        return int(math.ceil(e["peak_gb"] * PEAK_MARGIN))
+    return ram
+
+
+def record_stage_peak(j, st, kb):
+    gb = round(kb / 1048576, 1)
+    if gb < 1:
+        return
+    k = f"{j['spec'].get('block')}|{st['key']}"
+    t = dict(stage_peaks())
+    e = dict(t.get(k) or dict(peak_gb=0.0, n=0))
+    e.update(n=e.get("n", 0) + 1, last_gb=gb, last_job=j["name"], last_host=j.get("host"), declared_gb=st.get("ram"),
+             peak_gb=max(e.get("peak_gb", 0.0), gb), at=now_iso())
+    t[k] = e
+    tmp = STAGE_PEAKS.with_suffix(".tmp")
+    tmp.write_text(json.dumps(t, indent=0, sort_keys=True))
+    os.replace(tmp, STAGE_PEAKS)
+    if st.get("ram") and gb > st["ram"]:
+        event(j, f"{st['key']} measured peak {gb} GB > declared {st['ram']} GB: repeats of {k} admit at "
+                 f"{learned_ram(j['spec'].get('block'), st['key'], st['ram'])} GB")
+
+
+def stage_oom_kills(j, st):
+    """FLEET-OOM (2): the runner's <tag>.oomkill (earlyoom / kernel OOM kills of the stage's pids); records the peak"""
+    t, run = j.get("stage_tag"), j.get("run")
+    if not t or not run or not j.get("host"):
+        return ""
+    r = ssh(j["host"], f"head -c 1500 {run}/cl/{t}.oomkill 2>/dev/null; echo; echo OT_PEAK_KB $(cat {run}/cl/{t}.peak_kb "
+                       f"2>/dev/null)", timeout=40)
+    out = r.stdout if not r.returncode else ""
+    m = re.search(r"OT_PEAK_KB (\d+)", out)
+    if m:
+        try:
+            record_stage_peak(j, st, int(m.group(1)))
+        except (OSError, ValueError) as ex:
+            log(f"[{j['name']}] stage peak not recorded: {ex}")
+    return out.split("OT_PEAK_KB")[0].strip()
+
+
+def oom_retry(j, st, fleet, kills):
+    """an earlyoom / kernel OOM kill of a stage process is a FLOW failure: retry the stage once, never NEEDS_RTL"""
+    first = kills.splitlines()[0][:300]
+    why = f"OOM-KILL: {len(kills.splitlines())} kill(s) of this stage's processes (flow failure, reroute_reason flow_failure): {first}"
+    if j["retries_used"] >= 1:
+        return crash(j, st, fleet, why)
+    j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why, resource=True,
+                                            cls="oom_kill", tail=kills[-1500:]))
+    j["retries_used"] = 1
+    j["attempt"] += 1
+    j["status"] = "READY"
+    event(j, f"{st['key']} {why[:400]} -> retry once (flow failure)")
 
 
 def poll_stage(j):
@@ -5042,11 +5171,13 @@ def bench_track(j, fleet, stl):
             return True
         ok_extra, _ = remote_ok(v, st.get("ok"))
         tail = stage_tail(v, st, 40)
-        crashed = state == "LOST" or bench_crashed(st, rc, tail)
+        kills = stage_oom_kills(v, st) if state == "RC" else ""
+        crashed = state == "LOST" or bool(kills) or bench_crashed(st, rc, tail)
         if crashed:
             if e["n"] < 2:
                 e["state"] = "retry"
-                event(j, f"bench track: {k} crashed (state {state}, rc={rc}); retry once")
+                event(j, f"bench track: {k} crashed (state {state}, rc={rc}"
+                         + (f"; OOM-KILL flow failure: {kills.splitlines()[0][:300]}" if kills else "") + "); retry once")
                 return True
             stop_main_for_bench(j)
             finish(j, "NEEDS_HUMAN", f"{k} crashed twice in the bench track (rc={rc})",
@@ -5690,6 +5821,9 @@ def step(j, fleet):
         j["unreachable"] = 0
         if state == "LOST":
             return crash(j, st, fleet, "LOST: stage wrapper gone without an rc file")
+        kills = stage_oom_kills(j, st)
+        if kills:
+            return oom_retry(j, st, fleet, kills)
         ok_extra, okout = remote_ok(j, st.get("ok"))
         if st["kind"] == "bench":
             tail = stage_tail(j, st, 40)
