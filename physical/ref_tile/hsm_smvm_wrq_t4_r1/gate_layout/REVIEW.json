@@ -12,6 +12,6 @@
   "clock_entry": "PASS: regional clock entries along W plus N",
   "shape": "ACCEPT: 142.6x388.8 (2.7:1) is set by the W/E pin count (pin-limited); gate PASS"
  },
- "notes": "d4g VM writer queue (HBM-B-RTL1b). Approved under closure-first; if die STA names the long axis, move buses to N/S and shorten. Re-stamped after the bench-only re-gate (same geometry).",
- "geometry_sha256": "f48370dd79f8224b38da65a11b5437ccbece76e5676aedd29487fd84e75156a9"
+ "notes": "d4g VM writer queue (HBM-B-RTL1b). Approved under closure-first; if die STA names the long axis, move buses to N/S and shorten. Re-stamped after the bench-only re-gate (floorplan PNG checked: identical outline, SRAM, pins and clock entries).",
+ "geometry_sha256": "7b2d6617592b8f75e16bd0651442817fe0e0603e9c35fe792c119cf94a06509b"
 }
