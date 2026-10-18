@@ -11,7 +11,8 @@
 // simulation they are identity.  OT_HBM_RLY_FC_MUT_CLKOUT (bench only): clk_out not driven by clk_in (held low).
 `default_nettype none
 module ot_hbm_rly_fc #(
-    parameter int W = 136
+    parameter int W = 136,
+    parameter int RS_RELAY = 0   // ot_hbm_rly RS_RELAY (registered reset relay on rs at any width)
 ) (
     input  wire         clk_in,
     input  wire         rs,
@@ -20,7 +21,7 @@ module ot_hbm_rly_fc #(
     output wire         clk_out
 );
     wire [W-1:0] q;
-    ot_hbm_rly #(.W(W)) u_stage (.ck(clk_in), .rs(rs), .i(i), .o(q));
+    ot_hbm_rly #(.W(W), .RS_RELAY(RS_RELAY)) u_stage (.ck(clk_in), .rs(rs), .i(i), .o(q));
 `ifdef OT_HBM_RLY_FC_MUT_CLKOUT
     assign clk_out = 1'b0;
 `else

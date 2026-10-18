@@ -24,7 +24,10 @@ E = 'rtl/qwen_sys/static_embedding_20261014/'
 # es merge child qkd_static_kv_pc_es_merge); its extra RTL dependencies
 PC_EMB_EXTRA = [E + 'qkd_embedding_static_map.sv', E + 'qkd_static_kv_pc_es_merge.sv', E + 'qkd_static_kv_pc_path_emb.sv',
                 # KVJ-C3 2026-10-17: the per-PC parent successor qkd_static_kv_pc_path_fan adds the chain station
-                E + 'qkd_kv_pc_chain_station.sv', E + 'qkd_static_kv_pc_path_fan.sv']
+                E + 'qkd_kv_pc_chain_station.sv',
+                # KV-PLAN-CI 2026-10-17 (coordinator decision 3): the ci-less successors (no legacy controller word ci on
+                # the static die; lockstep-equal to the originals with ci idle, tools/qwen_kv_die/kvplan_ci_nc_gate.sh)
+                S + 'qkd_ctrl_pc_nc.sv', S + 'qkd_static_kv_pc_path_nc.sv', E + 'qkd_static_kv_pc_path_fan_nc.sv']
 
 
 def pc_emb_sources():
@@ -41,7 +44,8 @@ ROLES = {
     'ownership': (S+'qkd_static_kv_ownership.sv', 'qkd_static_kv_ownership_calendar', 1),
     'drain_guard': (S+'qkd_static_kv_ownership.sv', 'qkd_static_kv_drain_guard4', 32),
     # KVJ-C3 2026-10-17: pc_path_emb + the static PC chain station (writer lane -> PC fan-out tap, embedding slot player)
-    'pc_path': (E+'qkd_static_kv_pc_path_fan.sv', 'qkd_static_kv_pc_path_fan', 128),
+    # KV-PLAN-CI 2026-10-17: ... without the legacy controller word ci (qkd_static_kv_pc_path_fan minus ci)
+    'pc_path': (E+'qkd_static_kv_pc_path_fan_nc.sv', 'qkd_static_kv_pc_path_fan_nc', 128),
     'landing': (S+'qkd_static_kv_landing_seg.sv', 'qkd_static_kv_landing_seg', 32),
     'landing_calendar': (S+'qkd_kv_landing_cal.sv', 'qkd_kv_landing_cal', 32),
     'front_calendar': (S+'qkd_kv_front_cal.sv', 'qkd_kv_front_cal', 32),
