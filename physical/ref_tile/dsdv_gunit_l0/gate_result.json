@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "dsdv_gunit_l0",
  "verdict": "WARN",
- "generated": "2026-10-17T18:53:23-0700",
+ "generated": "2026-10-17T19:41:45-0700",
  "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "b515d02d904edbba8a5665ddc6c6715ac5852316",
+  "start_commit": "d65d0d4a93054946cd14989134c26eee83121023",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "95823bbff92d863015cab0f97d2d3afe282a6afa6ed32bfd135c7365c6c1e93f",
-  "manifest_sha256": "b178f7fe417b95a9b4983ead85e35c9954cbd00bea81e87a27641985a6b4b0a8",
+  "archive_sha256": "a3dcf16f3c23aebec55f0fa481cd5f55a6518c3acc4a1df99e9678eca13567d3",
+  "manifest_sha256": "438587ea1f2c5a36e1685ec1fccd6207a6133985971770190dd46863d3eee956",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -17315,8 +17315,8 @@
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0r.sv",
     "kind": "file",
-    "sha256": "851d28cae6350cfb415376d2264746a7863e7d470267f268fee75f833712ec6e",
-    "git_blob": "ceb19efdd3d5575584eae12544f31421565e79dd",
+    "sha256": "b5328eaea6157aa38da45928578852b358969f306cb4abd23e8f0609ff44a64d",
+    "git_blob": "94928ed556d307ca6a4cd0a54a13eb218be0d6e6",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17347,16 +17347,16 @@
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv",
     "kind": "file",
-    "sha256": "91c90b4e1957ca6266f8e48ef2489d5a3f37087c87e5c3d4857cf64c71abc6bf",
-    "git_blob": "ba2d4f751da0b49830cc6277dffe6e2a2d1c55c5",
+    "sha256": "087050981195d3b13b490e89217bde1a4ffdae0c23ad3e7c4b1677daaadbde22",
+    "git_blob": "0cc697749673524c57de02d06fc8eca245fb6fab",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4r.sv",
     "kind": "file",
-    "sha256": "95d421f28f9a083dd31a20f1abf353c5433b334f44d01ff29e0c31482e1486c4",
-    "git_blob": "5a1159c1c1cb7a26b729d479079e523ed4601160",
+    "sha256": "a9c8d786f4f352e1a288064faa4e2a53d8836aa3cb5b5521ebbf0b4135e5ec62",
+    "git_blob": "1004a3afb583cda7f7212b0635a74a44dba459ad",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17371,8 +17371,8 @@
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5f.sv",
     "kind": "file",
-    "sha256": "c2476e95fd398708c15618ba3e38d4d103b34b7294289efa3e40131817dd6883",
-    "git_blob": "d3127f2a7a36811e096de9980ac291692e5e63e9",
+    "sha256": "42a4c50a08eebe05dec907fac561b1751857702f614730fe26d0b041c9c9f470",
+    "git_blob": "b967a74863684bcc3bc0a8c7b7f345488ae4064c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17411,8 +17411,8 @@
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh",
     "kind": "file",
-    "sha256": "5bc77ec216770d7cef6af12a8271915df17b9702c2ba60696aa15ec93b613472",
-    "git_blob": "fa1478cc04673c8bb8b45a75bfd03c2a9417562d",
+    "sha256": "281cbc19d4a6a2df83d3474bac0c48c8c4508380755599c1f2aa1a99f1e3607d",
+    "git_blob": "93cce4f09cc1221a2e60a3079925aceeee44d575",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -104099,14 +104099,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 118318775,
+   "archive_bytes": 118319422,
    "unpacked_bytes": 678727680,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "41b5927aed76e2a4d2a59d59d8e42b6ebc71c90b",
+   "origin_main": "27309ba597ba7f5e15e9a4c4b50f9fa9059d144b",
    "content_sha256": "46212c4a006d162487f2749d8e6001edbd7428d03a257e125b6e20e6b3202016",
    "files": [
     {
@@ -104498,7 +104498,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 637,
+   "count": 638,
    "paths": [
     "physical/common_flow/anchor_row_packing.tcl",
     "physical/common_flow/edge_sliver_block.tcl",
@@ -105113,6 +105113,7 @@
     "rtl/hdc/v41x/static/physical/gather_pdn_setback.tcl",
     "rtl/hdc/v41x/static/physical/gather_pin_audit.tcl",
     "rtl/hdc/v41x/static/physical/gather_pin_faces.tcl",
+    "rtl/lib/ot_rst_relay.sv",
     "tools/closure_loop/ck_insertion.py",
     "tools/dft/__init__.py",
     "tools/dft/check_scan_equivalence.py",
@@ -105173,19 +105174,19 @@
     "physical/ref_tile/dsdv_gunit_l0/spec.json": "c671c02e1ff8f578e22ed11fcdf9473c240ba0a8fb65c49d171634cd6b3e3eba",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv": "1d6cc13202a130e0a8b00c71611801e18abf7028e6eb67a20a1090b11c7c692b",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0.sv": "60655a6f180f601a4df1ad095e8e898554c2fef8ac04121b48de7e2d29c6f0b3",
-    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0r.sv": "851d28cae6350cfb415376d2264746a7863e7d470267f268fee75f833712ec6e",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0r.sv": "b5328eaea6157aa38da45928578852b358969f306cb4abd23e8f0609ff44a64d",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1.sv": "50fca72c351054c0449facd805c7b39a6f5aef299d373a5cf3f83a8dba22d441",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv": "2954da375bbe05c4988021bb2fb22a9ce261056d4a4f8b2300276e8ebd705f5b",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l3.sv": "9c7f6fde55c9e83fffc37aadc75109796ea2077f554b8d5ed9cd3a0307c02672",
-    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv": "91c90b4e1957ca6266f8e48ef2489d5a3f37087c87e5c3d4857cf64c71abc6bf",
-    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4r.sv": "95d421f28f9a083dd31a20f1abf353c5433b334f44d01ff29e0c31482e1486c4",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv": "087050981195d3b13b490e89217bde1a4ffdae0c23ad3e7c4b1677daaadbde22",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4r.sv": "a9c8d786f4f352e1a288064faa4e2a53d8836aa3cb5b5521ebbf0b4135e5ec62",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv": "38ba3e66d1d63ce5a2353cf777be61d25b70adf069d3bcd1daf849857685de45",
-    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5f.sv": "c2476e95fd398708c15618ba3e38d4d103b34b7294289efa3e40131817dd6883",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5f.sv": "42a4c50a08eebe05dec907fac561b1751857702f614730fe26d0b041c9c9f470",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv": "459b62b22794f3ca054acd9899ed9056b1aa5fe99248af54f55a01f7427b2d13",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv": "b6f32597d6e1d0d439f00820960b0a96623c98bc5be951f86da40c5a31a87bfb",
     "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv": "dc387ef457096b98790c05c643b5095f591232bb32d0144972ecb684a01d7425",
     "rtl/dsrom_sys/s81_dv/unit/test/gunit_vectors.py": "c66a3dd30bcccce1c6fbe67b0098f0b2c6046dfbce4567821667e13b395bbb89",
-    "rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh": "5bc77ec216770d7cef6af12a8271915df17b9702c2ba60696aa15ec93b613472",
+    "rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh": "281cbc19d4a6a2df83d3474bac0c48c8c4508380755599c1f2aa1a99f1e3607d",
     "rtl/dsrom_sys/s81_dv/unit/test/run_vstop_bench.sh": "1bf42f516636a3c956752ec3d6893a7708abe94248100adc73c0f0c599ec984b",
     "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_gunit.cpp": "3fb7b6aeea24659500c147a9ab04c1a27633b67499d91f5110bab9b0494c4af3",
     "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_gunit.sv": "98eaaaee563597ce84999d58e6f769ce7444fb74e396a7a3613c1ae23339fbd4",
@@ -105752,6 +105753,7 @@
     "rtl/hdc/v41x/static/physical/gather_pdn_setback.tcl": "6e632e2d5b3cff2d51c92d3cfe2425912ff0745c69618d080779cf1a0e61a57a",
     "rtl/hdc/v41x/static/physical/gather_pin_audit.tcl": "eb88968a4209ae2699cbdaff25083380e2690f6abfe2fabf8ddc5fc7b28eab8e",
     "rtl/hdc/v41x/static/physical/gather_pin_faces.tcl": "22afeaddfa10ceffc6189cadc4526f5c84ade399fb6751fe17c5683f11d2536e",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
     "tools/closure_loop/ck_insertion.py": "aa781a57409f054dfcbd54bca32e887dfbf6b199e16d48083450670b66d20e6a",
     "tools/dft/__init__.py": "fe1151f8253ee95b4a5ecd66d61b001e25ac8121d82ef94f52c49cf110523204",
     "tools/dft/check_scan_equivalence.py": "da840cd8cd54184a8d4e96d2e86360b621829f06d12dd84d89008c565e6b9b33",
@@ -105777,18 +105779,18 @@
     "tools/w18/corner_sta.py": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
     "tools/w18/corner_sta_ref.py": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa"
    },
-   "digest": "8bbc3cfe4426a4db7bd4d185d442ade1fa690bb68deff60b0c0840b9ed35ce43"
+   "digest": "b9b6a835761c76872fe89900aab1bf4965959005481d85e1cd34bb0437764cd2"
   },
-  "captured": "2026-10-17T18:49:43-0700",
+  "captured": "2026-10-17T19:37:55-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/dsdv_gunit_l0/signoff_ffrepair.sdc"
   },
-  "remote_script_sha256": "ee14d293329a0cf9dc2bd7b9a5b2dd2085d035d96cf98e782c057c9ef6f42a95",
+  "remote_script_sha256": "a3f5785e0bf646f1d5b05f79cf2cf209dbbefc3655d4232f087c91ebb32809b1",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_gunit_l0-20261017-184759",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_gunit_l0-20261017-193616",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
