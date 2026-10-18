@@ -1,0 +1,24 @@
+GATE INFO pin_regs: pin registers opted out: The RF read commands, relay writers and COLL writer are captured raw at the pins (the hub bank rung moved to the pin); reducer command, slice/SFU operands and drain decode land in clk_ctl registers; every output is a flop. A wrapper stage would add an edge to the fixed n+1 commit / n+3 read / E+11 s
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_su_qcore_r5_1017_20261017-195746.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_su_qcore_r5_1017_20261017-195746.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hbm_su_qcore_r5_1017-20261017-195746
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 281 s (gate total 1710 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1205, 'pin_rectangles': 1205, 'pin_track_checked': 1205, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 9dd54d9c4155db0e190b25905ffb9a2c0d84c20595f2c70b32053cf463e17459
+GATE INFO util: synthesized std area 16278 um2 + macros 7783 in core 44808: util 48% (std-cell density 48.1% of placeable 33857 um2; total fill 53.7%)
+GATE INFO textbook: WARN ot_hbm_su_static_qcore_r5 cells 150,767 flops 12,563 depth 441.8 ps util 0.5352 reach 143.1 um (5.1 s)
+GATE WARN textbook.high_fanout: net rf_bcmd[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 8,193 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.high_fanout: net rf_bcmd[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 8,193 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.high_fanout: net rf_bcmd[19]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 8,193 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.high_fanout: net rf_bcmd[28]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 8,193 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.boundary: 32 input->register endpoint(s) > 3 levels (worst slice_x[95]->rc_x[31]$_DFF_P_/D 4 lv, slice_x[94]->rc_x[30]$_DFF_P_/D 4 lv, slice_x[93]->rc_x[29]$_DFF_P_/D 4 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE INFO cts_calibration: ss insertion all 350.1..445.2 ps (spread 95.1), boundary mean 371.5; tt insertion all 262.5..356.5 ps (spread 94.0), boundary mean 283.3; ff insertion all 208.3..301.5 ps (spread 93.2), boundary mean 230.1; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.520 vs spec PD 0.52
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hbm_su_qcore_r5_1017/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      306 paths, worst slack -178.7 ps (e.g. mem[187][17]$_DFFE_PP_/D)
+GATE INFO path_classes: in->reg        41 paths, worst slack 227.0 ps (e.g. wv_p[3]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS -1.787325842883547e-10 hold WNS 4.2011588652357545e-11
+GATE INFO clock_rule: root port:clk_ctl: 12,565 sinks on the largest root <= 15,000; measured TT insertion 356.5 ps, leaf spread 94.0 ps
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/hbm-su3-1017/physical/ref_tile/hbm_su_qcore_r5_1017/gate_layout/floorplan.png; density /home/ubuntu/wt/hbm-su3-1017/physical/ref_tile/hbm_su_qcore_r5_1017/gate_layout/density.png
+PRE_ROUTE_GATE: WARN (0 fail, 5 warn)
+GATE: hbm_su_qcore_r5_1017/gate_result.json written (exact staged source binding; commit it with the kit)
