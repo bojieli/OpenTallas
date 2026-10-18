@@ -7,13 +7,13 @@
   0,
   0,
   172.8,
-  151.2
+  129.6
  ],
  "core": [
   2.16,
   2.16,
   170.64000000000001,
-  149.04
+  127.44
  ],
  "why": "spec outline",
  "std_area_um2": 6600,
@@ -68,21 +68,14 @@
    "inst": null,
    "idx": 0,
    "x": 55.296,
-   "y": 23.76,
+   "y": 2.16,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 42% outside 45%-60% (std 6600 + macro 3894 in core 24746 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/hdc/ot_hdc_sfu.sv",
