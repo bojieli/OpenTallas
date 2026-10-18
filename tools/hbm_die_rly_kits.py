@@ -132,7 +132,7 @@ def write_family(owner: str, branch: str, flows=FLOWS) -> list:
     for w in CLASSES:
         for fl in FLOWS:
             v.append(f"module {master(w, fl)} (input wire ck, input wire rs, input wire [{w - 1}:0] i, output wire [{w - 1}:0] o);")
-            v.append(f"    ot_hbm_rly #(.W({w})) u (.ck(ck), .rs(rs), .i(i), .o(o));")
+            v.append(f"    ot_hbm_rly #(.W({w}){rs_relay_param(master(w, fl))}) u (.ck(ck), .rs(rs), .i(i), .o(o));")
             v.append("endmodule")
             if fl in flows:
                 s = spec(w, fl, owner, branch)
@@ -156,8 +156,10 @@ FC_DIR = "physical/hbm_rly_fc"
 FC_SPECS = "tools/ref_tile/specs_hbmrly_fc"
 # NATIVE-FIX3 2026-10-18: masters whose rs pin goes through the registered reset relay (ot_hbm_rly RS_RELAY=1) although
 # W <= 256: the routed 136 NS/SN views failed native capture on rs (194-211 ps, NATIVE-3: rs drove all 136 stage clears)
+# HBM-NATIVE5/RLY4 2026-10-18: + the BASE 136 NS / SN masters (routed v1 views: rs capture 195.9 / 224.4 ps, owners HBM
+# native audit claude/owners-hbm-native-1018), bound in the d4g GEN1 lane chains
 RS_RELAY_MASTERS = {"hbfd_rly_136_NS_fc", "hbfd_rly_136_SN_fc", "hbfd_rly_136_NS_fc_f2", "hbfd_rly_136_NS_fc_f3",
-                    "hbfd_rly_136_SN_fc_f2", "hbfd_rly_136_SN_fc_f4"}
+                    "hbfd_rly_136_SN_fc_f2", "hbfd_rly_136_SN_fc_f4", "hbfd_rly_136_NS", "hbfd_rly_136_SN"}
 
 
 def rs_relay_param(m: str) -> str:
