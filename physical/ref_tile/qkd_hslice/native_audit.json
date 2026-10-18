@@ -4,23 +4,25 @@
  "lib_cell": "qkd_host_pc_slice_die",
  "insertion": true,
  "ref_src": [
-  "insertion.json boundary mean"
+  "insertion.json boundary mean",
+  "lib midrange"
  ],
- "R_ps": 221.0,
- "spread_ps": 54.8,
+ "R_ps": 213.3,
+ "spread_ps": 30.0,
  "outputs": 1034,
  "inputs": 1043,
- "launch_ps": 232.5,
+ "launch_ps": 241.7,
  "launch_pin": "ctrl_es[0]",
- "capture_ps": 435.7,
- "capture_pin": "host_rst_n",
+ "capture_ps": 181.6,
+ "capture_pin": "ctrl_completion_v",
  "launch_over": 1,
- "capture_over": 218,
+ "capture_over": 0,
  "comb_pins": 0,
  "comb_first": [],
- "ff_launch_min_ps": 104.5,
- "ff_hold_need_ps": -74.0,
+ "ff_launch_min_ps": 99.3,
+ "ff_hold_need_ps": -59.3,
  "pass": false,
- "fail_why": "launch 232.47551 > 220 (1 pins); capture 435.71126 > 190 (218 pins)",
- "job": "qkd_hslice-ec1-75cbc9b99"
+ "fail_why": "launch 241.65885 > 220 (1 pins)",
+ "job": "qkd_hslice-pc1-5fd00e3ad",
+ "classification": "KVE-2 10-17 (pc1 6_final.odb, TT, spef): ctrl_es[0]$_DFF_PN0_ CLK 239.4 -> QN 294.8 -> place8418 BUFx3 fanout 20 (334.1) -> _23708_ INV (369.1) -> place7471 BUFx3 -> wire6594 BUFx10 -> pin 478.7; ctrl_es[1] 411.7 through the recipe-2 outhold pad only. The launch_v copy was merged into the pin flop by opt_merge."
 }

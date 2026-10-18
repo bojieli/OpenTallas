@@ -24,6 +24,7 @@ create_clock -name ot_entry_16 -period 833.333000000 [get_ports {ck_sr[2]}]
 create_clock -name ot_entry_17 -period 833.333000000 [get_ports {ck_sr[3]}]
 create_clock -name ot_entry_18 -period 833.333000000 [get_ports {ck_rx}]
 create_clock -name ot_entry_19 -period 833.333000000 [get_ports {ck_ry}]
+create_clock -name ot_entry_20 -period 833.333000000 [get_ports {ck_si}]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]
@@ -37,10 +38,10 @@ set_input_transition 150 [all_inputs -no_clocks]
 set ::ot_ce_refs [dict create {ot_nhb_pbst/clk} {tt {282.1 313.4 336.2} ff {226.5 243.8 265.6} ss {375.6 433.1 458.0}} {ot_nhb_pvlg/clk} {tt {182.4 193.2 199.5} ff {146.8 155.9 161.8} ss {243.0 257.0 263.8}} {ot_nhb_zh/clk} {tt {237.4 246.5 266.4} ff {194.4 202.9 222.2} ss {306.9 316.8 337.7}} {ot_qkh_recip_leaf/clk} {tt {223.0 238.7 241.7} ff {180.5 194.4 196.9} ss {294.4 313.1 317.1}} {qkd_ahub_core/clk} {tt {199.2 213.2 237.0} ff {161.7 175.1 198.2} ss {261.1 276.1 300.6}}]
 set ::ot_ce_counts [dict create {ot_nhb_pbst} 4 {ot_nhb_pvlg} 4 {ot_nhb_zh} 4 {ot_qkh_recip_leaf} 1 {qkd_ahub_core} 1]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{*}} outputs {{*}}}]
-set ::ot_ce_source_domains [dict create {ck_core} {core} {ck_zh[0]} {core} {ck_zh[1]} {core} {ck_zh[2]} {core} {ck_zh[3]} {core} {ck_recip} {core} {ck_pbst[0]} {core} {ck_pbst[1]} {core} {ck_pbst[2]} {core} {ck_pbst[3]} {core} {ck_pvlg[0]} {core} {ck_pvlg[1]} {core} {ck_pvlg[2]} {core} {ck_pvlg[3]} {core} {ck_sr[0]} {core} {ck_sr[1]} {core} {ck_sr[2]} {core} {ck_sr[3]} {core} {ck_rx} {core} {ck_ry} {core}]
+set ::ot_ce_source_domains [dict create {ck_core} {core} {ck_zh[0]} {core} {ck_zh[1]} {core} {ck_zh[2]} {core} {ck_zh[3]} {core} {ck_recip} {core} {ck_pbst[0]} {core} {ck_pbst[1]} {core} {ck_pbst[2]} {core} {ck_pbst[3]} {core} {ck_pvlg[0]} {core} {ck_pvlg[1]} {core} {ck_pvlg[2]} {core} {ck_pvlg[3]} {core} {ck_sr[0]} {core} {ck_sr[1]} {core} {ck_sr[2]} {core} {ck_sr[3]} {core} {ck_rx} {core} {ck_ry} {core} {ck_si} {core}]
 set ::ot_ce_explicit_domains 0
-set ::ot_ce_cts_roots {{ck_sr[0]} {ck_sr[1]} {ck_sr[2]} {ck_sr[3]} {ck_rx} {ck_ry}}
-set ::ot_ce_ports {{ck_core} {ck_zh[0]} {ck_zh[1]} {ck_zh[2]} {ck_zh[3]} {ck_recip} {ck_pbst[0]} {ck_pbst[1]} {ck_pbst[2]} {ck_pbst[3]} {ck_pvlg[0]} {ck_pvlg[1]} {ck_pvlg[2]} {ck_pvlg[3]} {ck_sr[0]} {ck_sr[1]} {ck_sr[2]} {ck_sr[3]} {ck_rx} {ck_ry}}
+set ::ot_ce_cts_roots {{ck_sr[0]} {ck_sr[1]} {ck_sr[2]} {ck_sr[3]} {ck_rx} {ck_ry} {ck_si}}
+set ::ot_ce_ports {{ck_core} {ck_zh[0]} {ck_zh[1]} {ck_zh[2]} {ck_zh[3]} {ck_recip} {ck_pbst[0]} {ck_pbst[1]} {ck_pbst[2]} {ck_pbst[3]} {ck_pvlg[0]} {ck_pvlg[1]} {ck_pvlg[2]} {ck_pvlg[3]} {ck_sr[0]} {ck_sr[1]} {ck_sr[2]} {ck_sr[3]} {ck_rx} {ck_ry} {ck_si}}
 
 proc ot_ce_corner {} {
   if {[info exists ::ot_ioref_scene] && $::ot_ioref_scene eq "BC"} { return ff }

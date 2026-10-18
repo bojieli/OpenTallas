@@ -235,9 +235,10 @@ def review_required(spec, kit, jobs_dir=None):
     """(why or None): critical list hit (block, kit dir or spec name prefix) or >= REVIEW_FAILED_ROUTES failed routes"""
     names, block = critical_names(), spec.get("block")
     kitname = Path(kit).name if kit else None
-    hit = [x for x in (block, kitname) if x and x in names]
+    # entries are element / kit PREFIXES (coordinator's list: 'ot_v41_bf_', 'qfd_c_b16', ...)
+    hit = [(x, n) for x in (block, kitname, spec.get("name")) if x for n in sorted(names) if x.startswith(n)]
     if hit:
-        return f"{hit[0]} is on {CRITICAL_TILES}"
+        return f"{hit[0][0]} matches '{hit[0][1]}' on {CRITICAL_TILES}"
     bad = failed_routes(block, jobs_dir)
     if len(bad) >= REVIEW_FAILED_ROUTES:
         return f"{block} has {len(bad)} earlier non-CLOSED routes ({', '.join(bad[-3:])})"
@@ -303,6 +304,21 @@ def review_check(root, commit, kit, show=None):
     return None
 
 
+def drop_retired(spec):
+    """RETIRED-HOST (HOSTFIX 2026-10-17): strip retired fleet hosts from hosts / host_require with a warning (an emptied
+    list falls back to admission) instead of letting the daemon mark the job INVALID 'unknown host'."""
+    import retired_hosts
+    try:
+        doc = json.loads((HERE / "hosts.json").read_text())
+    except (OSError, ValueError):
+        doc = {"hosts": []}
+    spec, warns = retired_hosts.drop_retired_hosts(spec, {h.get("name") for h in doc.get("hosts", [])},
+                                                   retired_hosts.retired_names(doc))
+    for w in warns:
+        print(w)
+    return spec
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("spec")
@@ -328,6 +344,7 @@ def main(argv=None):
         a.follow_head = True
     if a.follow_head:
         spec = move_spec(spec, git(root, "rev-parse", "HEAD"))
+    spec = drop_retired(spec)
 
     def push():
         br = (spec.get("source") or {}).get("branch")

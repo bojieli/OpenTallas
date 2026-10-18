@@ -2,7 +2,8 @@
 // Bench: real static ingress -> ot_hbm_static_cfg_collar (SU/SFU variant A, IDX/TOPK/ARGMAX variant B,
 // spare A for negatives) -> ot_hbm_status_join -> ingress block_ready/program_active/program_fault.
 // Host stimulus = AXI-lite writes only; client busy/done are bench models of the engines' status pins.
-// CMUT -> collar MUT, JMUT -> join MUT. Every mutant must produce FAIL.
+// CMUT -> collar MUT, JMUT -> join MUT. Every mutant must produce FAIL. (CMUT=5: stream domain without its reset,
+// 6: binary event sequence instead of Gray, 7: crossing one synchroniser stage short)
 module tb_hbm_static_cfg_collar;
 parameter integer CMUT=0, JMUT=0;
 parameter integer NA0=2100, NA1=5, NB0=10;
@@ -52,6 +53,21 @@ always @(posedge sclk) begin
  if(d_start) d_starts=d_starts+1;
  d_done<=0; if(d_start) dbusy<=10; else if(dbusy>0) begin dbusy<=dbusy-1; if(dbusy==1) d_done<=1; end
  d_busy<={1'b0,dbusy>0};
+end
+// CDC monitor (HBM-COLSU 2026-10-17; COLSU-2: gated capture): collar D captures h_* on the serial edge where ev is high.
+// The held payload h_* must have been stable for one serial plus one stream period (8 + 6 ns: the bounded crossing window
+// before the stage that observed the code) up to and including that capture edge.
+// Also pins the launch latency: start_v rises a fixed number of serial edges after the first serial edge that follows the
+// stream edge publishing the launch (h_lv).
+wire [278:0] dh = {cd_.g_xser.h_cv, cd_.g_xser.h_dv, cd_.g_xser.h_lv, cd_.g_xser.h_ct, cd_.g_xser.h_ca, cd_.g_xser.h_cd};
+realtime dh_t1 = -1000, dh_t0 = -1000, t_lpub = -1, t_dstart = -1; integer cdc_err=0, cdc_ev=0;
+always @(dh) begin dh_t0 = dh_t1; dh_t1 = $realtime; if (cd_.g_xser.h_lv) t_lpub = $realtime; end
+always @(posedge sclk) begin
+ if (rst_n && cd_.g_xser.ev) begin
+  cdc_ev = cdc_ev + 1;
+  if (dh_t1 >= $realtime-8-6) cdc_err = cdc_err + 1;
+ end
+ if (d_start && t_dstart < 0) t_dstart = $realtime;
 end
 // E: serial collar driven directly with back-to-back broadcast events (faster than any ingress) -> must fault
 reg e_cv=0; wire e_fault;
@@ -159,6 +175,10 @@ initial begin
  repeat(60) @(posedge clk);
  chk(d_starts==1 && !d_active && !program_active && irq,"serial start exactly once, completes");
  chk(d_prm[15:0]==16'd7116,"serial operand row (SU length)");
+ chk(cdc_ev>=300 && cdc_err==0,"crossing payload stable >= serial+stream period up to the gated capture edge");
+ // serial edges at 4+8k. e1 = first serial edge strictly after the publish edge (x1); x2, x3 (lv), lv -> start_v: start_v Q
+ // changes at e1+3 serial edges and the monitor (posedge sclk) first sees it one edge later: e1 + 4 serial edges.
+ chk(t_lpub>0 && t_dstart == 4 + 8*(($rtoi(t_lpub)-4)/8 + 1) + 4*8,"serial launch latency: publish -> start_v = next serial edge + 3");
  // lost-event detection on the crossing
  @(negedge clk); e_cv=1; repeat(4) @(negedge clk); e_cv=0; repeat(10) @(posedge clk);
  chk(e_fault,"crossing faults on events closer than a serial edge");
@@ -169,6 +189,12 @@ initial begin
  chk(program_fault,"join program_fault from target");
  axw(12'hf30,32'd1); chk(last_resp==2,"launch refused after fault");
  chk(guard_err==0,"block_ready held low after configuration frames");
+ // ===== R (HBMA-HOST2 10-17): mid-run reset with stream events in flight clears BOTH domains of the serial
+ // collars (core reset rst_c_n, stream reset rst_s_n): no stale held event or sequence survives the release.
+ @(negedge clk); e_cv=1; repeat(2) @(negedge clk); e_cv=0; repeat(2) @(posedge clk);
+ rst_n=0; repeat(8) @(posedge clk); rst_n=1; repeat(24) @(posedge clk);
+ chk(!e_fault && !d_fault && !c_fault && !program_fault,"reset clears both domains; no stale stream event after release");
+ chk(d_seen==300 && d_starts==1,"no spurious serial write/start after reset");
  if(errors==0) $display("PASS collar+join+ingress checks=%0d A0=%0d A1=%0d B=%0d go=%0d/%0d/%0d", checks,a_seen0,a_seen1,b_seen,go_t[0],go_t[1],go_t[2]);
  else $display("FAIL errors=%0d checks=%0d", errors, checks);
  $finish;

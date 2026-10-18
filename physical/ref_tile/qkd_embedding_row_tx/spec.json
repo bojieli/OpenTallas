@@ -1,0 +1,208 @@
+{
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 4,
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.0
+ },
+ "name": "qkd_embedding_row_tx",
+ "top": "qkd_embedding_row_tx",
+ "sources": [
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "*u_row"
+  }
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 151.2,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "emb_tx_v",
+   "emb_tx_payload",
+   "emb_tx_slot"
+  ],
+  "E": [
+   "word_v",
+   "word_data",
+   "word_token",
+   "word_index",
+   "word_scale",
+   "word_epoch"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "fill_begin",
+   "fill_token",
+   "fill_epoch",
+   "fault",
+   "row_ready"
+  ],
+  "N": []
+ },
+ "pin_ranges": {
+  "emb_tx_payload": [
+   4,
+   140
+  ],
+  "emb_tx_v": [
+   141,
+   141.4
+  ],
+  "emb_tx_slot": [
+   143,
+   143.4
+  ],
+  "word_data": [
+   4,
+   120
+  ],
+  "word_token": [
+   121,
+   126
+  ],
+  "word_index": [
+   127,
+   129
+  ],
+  "word_epoch": [
+   130,
+   136
+  ],
+  "word_v": [
+   138,
+   138.4
+  ],
+  "word_scale": [
+   140,
+   140.4
+  ],
+  "ck": [
+   100,
+   100.4
+  ],
+  "rst_n": [
+   104,
+   104.4
+  ],
+  "fill_begin": [
+   60,
+   60.4
+  ],
+  "fill_token": [
+   62,
+   72
+  ],
+  "fill_epoch": [
+   74,
+   84
+  ],
+  "fault": [
+   160,
+   160.4
+  ],
+  "row_ready": [
+   164,
+   164.4
+  ]
+ },
+ "slot_change_request": "KVJ-C2 10-17 (plan N2): new master qkd_embedding_row_tx, 1 per die beside the d2d KV end (port-2 TX on W toward the d2d end, the qkd_embedding_static_join word face on E toward the 4 return trains, compiled fill on S). 216 x 151.2: one 64x512 macro N, contiguous std-cell band S (548-b output register next to rd_out on the macro W face).",
+ "job": {
+  "owner": "Claude:KVJ-C2 (Q-KVJOIN lane, kv_static_join_plan.md)",
+  "branch": "claude/kvj-c2-rowtx-1017",
+  "tag": "r2",
+  "purpose": "qkd_embedding_row_tx: 64x512 row stage + 548-b d2d port-2 formatter (kind 8/6/7), static, fault never stall",
+  "extra_paths": [
+   "rtl/test",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "tools/qwen_kv_die"
+  ],
+  "benches": [
+   {
+    "name": "row_tx_exact",
+    "cmd": "bash tools/qwen_kv_die/kvjc_row_tx_gate.sh {RUN}/bench/exact",
+    "expect": "pass",
+    "pass_regex": "^PASS KVJC_ROW_TX_EXACT",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "row_tx_mutant1",
+    "cmd": "bash tools/qwen_kv_die/kvjc_row_tx_gate.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL"
+   },
+   {
+    "name": "row_tx_mutant2",
+    "cmd": "bash tools/qwen_kv_die/kvjc_row_tx_gate.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL"
+   },
+   {
+    "name": "row_tx_mutant3",
+    "cmd": "bash tools/qwen_kv_die/kvjc_row_tx_gate.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL"
+   }
+  ]
+ },
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": true
+ },
+ "keep_pin_regs": true,
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": "6.0"
+ },
+ "structural_change": "r2 (KV-TILES-A 10-17) after r1 c6c3c5e83 NEEDS_RTL (base TT +162.06 / FF +5.02 / DRC 1; arg1 PD .45 FF -21.55 / DRC 3; arg2 PD .55 FF -10.27 / DRC 2). Hold class: ONE class, the rst_n port -> async RESETN removal check (arg1 worst input->reg -21.55 while every register D pin incl. all pin flops >= +12.38; rst_n is the only port the flow's pin registers exclude). Fix (RTL): rst_n lands in one kept pin flop whose Q is the async reset (D pin under the die hold budget; release +1 edge = same as the flow's data pin registers). DRC class: all M4 Shorts 1.26 um inside the SRAM east (w_mask/wd_in) pin face, x 192.42-193.68 vs OBS edge 193.68, clock-leaf and signal nets = jogs just past the default 1.2 um macro-edge guard (same shape as SU bank r5/r6); guard depth 6.0 um (routed DRC 0 on SU bank / ds-coll / hrow5 SRAM edges). Clock: TT insertion 325 / spread 110 with ck at the SW corner (x 30) while the register mass is the W out-flop and E pin-flop columns: ck (and rst_n) move to the S-face centre (x 100 / 104). RTL otherwise unchanged; bench exact PASS, mutants 1/2/3 FAIL."
+}

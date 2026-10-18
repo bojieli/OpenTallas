@@ -1,0 +1,15 @@
+MISMATCH aq data cyc=40 vo=0
+MISMATCH aq data cyc=41 vo=1
+MISMATCH aq data cyc=42 vo=1
+MISMATCH aq data cyc=43 vo=1
+MISMATCH aq data cyc=44 vo=0
+MISMATCH aq data cyc=45 vo=1
+MISMATCH aq data cyc=46 vo=0
+MISMATCH aq data cyc=47 vo=0
+MISMATCH aq data cyc=48 vo=1
+SUMMARY aq12_xmem_eq N=20000 aq_valid=13968 aq_err=19960 vq_frag=1299 vq_err=0 vq2_err=0
+FAIL aq12_xmem_eq
+- rtl/dsrom_sys/s81_dv/slice/test/tb_aq12_xmem_eq.sv:84: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.154 s; speed 129.635 us/s
+- Verilator: cpu 0.154 s on 1 threads; allocated 8 MB

@@ -1,0 +1,8 @@
+mutant: u_core_tx.host_rst_n inverted at the parent
+seed=1 mode=0: LOCKSTEP PASS seed=1 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=1 mode=1: LOCKSTEP PASS seed=1 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=2 mode=0: LOCKSTEP PASS seed=2 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=2 mode=1: MISMATCH phy_tx_flit t=555768504 fs core=666
+seed=3 mode=0: MISMATCH phy_tx_v t=43655504 fs core=52 flat=1 clu=0
+seed=3 mode=1: MISMATCH phy_tx_flit t=587058504 fs core=704
+CLUSTER_GATE FAIL mutant child=core_tx runs_pass=3/6 core_cycles=20000

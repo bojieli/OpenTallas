@@ -4306,6 +4306,24 @@ class _RstOcc:
         return None if best is None else (best[1], best[2])
 
 
+def _reset_reach_gate(errors, rec):
+    """Die standard (regional reset, owner 10-16): a reset net with an unreachable sink / driver (sink_unreachable,
+    driver_unreachable, leaf_no_trunk_cell) FAILS the die build.  ROOT-2105 10-17: OT_RESET_GATE=warn no longer bypasses
+    this (dv2f11 rst_field 34 sink_unreachable was carried as one 44.7-mm net under stage_build's warn); only an explicit
+    OT_RESET_GATE=diag continues, and the record says the gate FAILED (rec['reach_gate'] = 'FAIL_DIAG')."""
+    if not errors:
+        rec['reach_gate'] = 'PASS'
+        return
+    kinds = {}
+    for e in errors:
+        kinds[e.get('kind', '?')] = kinds.get(e.get('kind', '?'), 0) + 1
+    rec['reach_gate'] = 'FAIL_DIAG' if os.environ.get('OT_RESET_GATE') == 'diag' else 'FAIL'
+    rec['reach_gate_kinds'] = kinds
+    if rec['reach_gate'] == 'FAIL':
+        raise ValueError(f'reset tree: reachability gate FAIL, {len(errors)} unbuildable {kinds}: {errors[:8]} '
+                         f'(OT_RESET_GATE=diag continues for diagnosis only)')
+
+
 def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
     """nets: [dict(bid, dom, drv=(inst, port, (x, y)), sinks=[(inst, port, (x, y))])].  Returns (cells, wires, stats,
     errors): cells [(name, master, x, y, bid)], wires [(net, bid, [(inst, port)])] (driver first).  Pure geometry: the
@@ -4642,9 +4660,9 @@ def _reset_tree(v, m):
     cells, wires, per, errors = _rst_tree_build(nets, rects, m['die']['w'], m['die']['h'], v.GX, v.GY)
     if errors:
         rec.update(errors=errors, per_net=dict(per))
-        if _os.environ.get('OT_RESET_GATE') != 'warn':
-            raise ValueError(f'reset tree: {len(errors)} unbuildable: {errors[:8]}')
-        # diagnosis only (warn): the nets with an unbuildable sink / driver stay single long nets and are reported; Q-COMPUTE-DIE
+    _reset_reach_gate(errors, rec)
+    if errors:
+        # diagnosis only (OT_RESET_GATE=diag): the nets with an unbuildable sink / driver stay single long nets and are reported; Q-COMPUTE-DIE
         # 10-16: every OTHER reset net still gets its tree (r2h2: 3 unreachable pins on rst_spine / rst_io dropped the whole
         # tree, so rst_field reached 1,584 sinks as one 47.5 mm net and die STA read -3.96 us on it)
         if _os.environ.get('OT_RESET_PARTIAL', '1') == '0':
@@ -4711,7 +4729,7 @@ def _reset_tree(v, m):
                cycles_per_token=0)
     if any(len(s) != 1 for s in deps.values()):
         raise ValueError(f'reset tree: unequal leaf depth {rec["depth_cycles"]}')
-    if over and _os.environ.get('OT_RESET_GATE') != 'warn':
+    if over and _os.environ.get('OT_RESET_GATE') not in ('warn', 'diag'):
         raise ValueError(f'reset tree: {len(over)} reset nets over the reach: {over[:8]}')
     return rec
 

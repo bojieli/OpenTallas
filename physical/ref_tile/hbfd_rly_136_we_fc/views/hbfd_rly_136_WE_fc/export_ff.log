@@ -1,0 +1,43 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM reference pin u.u_stage.o[0]$_DFF_PN0_/CLK clock arrival max 59.926460 min 53.211407 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+OT_FC_CLOCK: clk_out = clk_out_fwd (clk_in, divide 1); 136 o vs clk_out_fwd (max 166.667 / min -55), 136 i vs clk_in (max 166.667 / min 55)
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_IOREF clock-port clk_in (core_clk): data input delays dropped
+OT_IOREF clock-port clk_out (clk_out_fwd): data input delays dropped
+OT_IOREF_EDGE core_clk boundary 136 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 58.0 min 56.5 max 60.0 n 136 boundary
+OT_WS max 4.1848274845435185e-10 min 2.8467304902246582e-11
+OT_FC_DRIVER BUFx12f_ASAP7_75t_R u.u_fcb_ck.u_cell
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_FC_METRIC arrival_max_rise 10.991039
+OT_FC_DRIVER_METRIC arrival_max_rise 10.820637
+OT_FC_METRIC arrival_min_rise 10.61477
+OT_FC_DRIVER_METRIC arrival_min_rise 10.444367
+OT_FC_METRIC arrival_max_fall 11.536921482290893
+OT_FC_DRIVER_METRIC arrival_max_fall 11.366511482290889
+OT_FC_METRIC arrival_min_fall 11.128596482290845
+OT_FC_DRIVER_METRIC arrival_min_fall 10.95821648229088
+OT_FC_METRIC slew_max_rise 4.275307
+OT_FC_DRIVER_METRIC slew_max_rise 4.269451
+OT_FC_METRIC slew_max_fall 4.100338
+OT_FC_DRIVER_METRIC slew_max_fall 4.094141
+OT_FC_ROOT clk_in
+OT_EXPORT_DONE
