@@ -909,10 +909,12 @@ fi
 # TRIAL ROUTE (owner rule 20:45 10-15; every kit since ROOT-0330-GRT 10-18, was parent / cluster kits only): place +
 # global-route here (no detailed route): overflow, per-layer usage and the congestion hotspots come back; overflow > 0
 # refuses the kit.  Single tiles (HBM qcore r5, S81 bk g2, KV landh0_548, Qwen h16b) passed the gate and failed GRT hours
-# into the route; the trial costs minutes.
+# into the route; the trial costs minutes.  ROOT-0630 (coordinator HANDOFF 0gi, 10-18): a SINGLE-tile kit's trial is a
+# congestion screen and runs SKIP_INCREMENTAL_REPAIR=1 (first GRT only, no post-GRT repair_design / repair_timing /
+# incremental re-route: ~2 min instead of ~25); parent / cluster kits keep the full trial.
 if [ "{TRIAL}" = 1 ]; then
   GT0=$(date +%s)
-  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
+  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 {GRTX}grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
   GL=$(ls $C/logs/asap7/*/base/5_1_grt.log 2>/dev/null | head -1)
   [ -n "$GL" ] && grep -E "^(M[0-9]+|Total) +[0-9]+ +[0-9]+ +[0-9.]+%" $GL | tail -12 | sed 's/^/GATE_GRT_LAYER /'
   [ -n "$GL" ] && grep -hE "GRT-0116|Total overflow|overflow" $GL | tail -3 | sed 's/^/GATE_GRT_NOTE /'
@@ -1146,7 +1148,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
-                          TRIAL=1, CLKS=",".join(RT.declared_clock_ports(spec)),
+                          TRIAL=1, GRTX=trial_grt_make_args(spec), CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     if textbook_reset_args(spec):
         tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
@@ -1233,6 +1235,12 @@ FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 10-15 (parent / cl
 def is_parent_kit(spec: dict) -> bool:
     """a parent / cluster kit: kind cluster, hardened children, or >= 4 hard macros"""
     return spec.get("kind") == "cluster" or bool(spec.get("children")) or len(spec.get("macros") or []) >= 4
+
+
+def trial_grt_make_args(spec: dict) -> str:
+    """extra ORFS make variables of the gate's trial GRT (ROOT-0630, HANDOFF 0gi): a single tile skips the post-GRT
+    incremental repair (a congestion screen; overflow > 0 still FAILs); a parent / cluster kit runs the full trial"""
+    return "" if is_parent_kit(spec) else "SKIP_INCREMENTAL_REPAIR=1 "
 
 
 def pin_demand(d: dict) -> list:
@@ -1330,6 +1338,7 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
             hot["worst_overflow_layer"] = [wovf[0], int(wovf[6])]
         secs = re.search(r"GATE_GRT_S=(\d+)", out)
         g.trial_route = dict(schema="opentallas.ref_tile.trial_route.v1", overflow=ovf, kind="parent" if parent else "tile",
+                             skip_incremental_repair=not parent,
                              rc=re.search(r"GATE_GRT_RC=(\S+)", out).group(1), grt_s=int(secs.group(1)) if secs else None,
                              layers=[dict(layer=r[0], capacity=int(r[1]), usage=int(r[2]), pct=float(r[3]),
                                           overflow=int(r[6])) for r in lay],
