@@ -13,6 +13,10 @@
 # (qc_gen.py port_added_edges), every cycle except the landed port while the landing is in reset / warm-up.  Landing
 # mutants (must FAIL): MUT 6 = read slot K = E + 1, MUT 7 = read-side epoch one edge late (lockstep), and region-audit
 # 'landclk' = the read half on the ring's write clock (a timing-only error, invisible to a one-clock RTL bench).
+# Q-CLUSTER-LANDALL (10-18): EVERY multi-bit crossing is landed (54); each port is compared against the reference delayed
+# by its documented offset (qc_gen.py: tap rows / bco / rs / rs_o / n_a / n_b, die_clock_contract.json
+# compiler.port_added_edges); ports fed through landings are masked only around the bench's reset pulses (landing
+# bubbles, contract L3).  MUT 6 / 7 act on landing leg_3_1b_1; region-audit 'unland' bypasses one landing (R6 FAIL).
 # (The Q-CLUSTER3 soft reference qcluster_ref_c392aa534.sv differs by design since Q-CLUSTER4: rs_i->rs_o 16->17, reset 18->19.)
 set -uo pipefail
 OUT=$(mkdir -p "$1" && realpath "$1")
@@ -39,7 +43,7 @@ for MUT in 0 1 2 3 4 5 6 7 S; do
   done
   rm -rf "$OUT/obj$MUT"
 done
-for M in none station tile landclk; do
+for M in none station tile landclk unland; do
   if [[ $M == none ]]; then A=(); want=PASS; else A=(--mutate $M); want=FAIL; fi
   python3 tools/qwen_cluster/region_audit.py "${A[@]}" --out "$OUT/region_audit_$M.json" > "$OUT/region_audit_$M.log" 2>&1
   if grep -q '^REGION_AUDIT_PASS' "$OUT/region_audit_$M.log"; then v=PASS; else v=FAIL; fi
