@@ -1,0 +1,547 @@
+{
+ "name": "hfd_hgi_vms_glue_sw",
+ "top": "hfd_hgi_vms_glue_sw_t",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "E": [
+   "cw_out",
+   "ccw_in",
+   "clk",
+   "rst_n",
+   "cw_in",
+   "ccw_out"
+  ],
+  "W": [
+   "b0_xq",
+   "b0_xq2",
+   "b0_eg",
+   "b0_pq",
+   "b0_pr",
+   "b0_status",
+   "b0_xq_done",
+   "b0_xq2_done",
+   "b1_xq",
+   "b1_xq2",
+   "b1_eg",
+   "b1_pq",
+   "b1_pr",
+   "b1_status",
+   "b1_xq_done",
+   "b1_xq2_done",
+   "b2_xq",
+   "b2_xq2",
+   "b2_eg",
+   "b2_pq",
+   "b2_pr",
+   "b2_status",
+   "b2_xq_done",
+   "b2_xq2_done",
+   "b3_xq",
+   "b3_xq2",
+   "b3_eg",
+   "b3_pq",
+   "b3_pr",
+   "b3_status",
+   "b3_xq_done",
+   "b3_xq2_done"
+  ],
+  "N": [
+   "b4_xq",
+   "b4_xq2",
+   "b4_eg",
+   "b4_pq",
+   "b4_pr",
+   "b4_status",
+   "b4_xq_done",
+   "b4_xq2_done",
+   "b5_xq",
+   "b5_xq2",
+   "b5_eg",
+   "b5_pq",
+   "b5_pr",
+   "b5_status",
+   "b5_xq_done",
+   "b5_xq2_done",
+   "cq"
+  ],
+  "S": [
+   "b6_xq",
+   "b6_xq2",
+   "b6_eg",
+   "b6_pq",
+   "b6_pr",
+   "b6_status",
+   "b6_xq_done",
+   "b6_xq2_done",
+   "b7_xq",
+   "b7_xq2",
+   "b7_eg",
+   "b7_pq",
+   "b7_pr",
+   "b7_status",
+   "b7_xq_done",
+   "b7_xq2_done",
+   "cr",
+   "client_seq",
+   "response_enable",
+   "response_seq",
+   "bank_enable",
+   "bank_client",
+   "hub_ring_enable",
+   "hub_ring_client",
+   "ring_tx_enable",
+   "ring_tx_source",
+   "replay_enable",
+   "replay_source",
+   "hub_status",
+   "mirror_busy",
+   "vmstat",
+   "ring_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "outline": {
+  "w": 777.6,
+  "h": 1555.2
+ },
+ "pin_ranges": {
+  "cw_out": [
+   4.32,
+   390.873
+  ],
+  "ccw_in": [
+   390.873,
+   777.426
+  ],
+  "clk": [
+   777.426,
+   777.6
+  ],
+  "rst_n": [
+   777.6,
+   777.774
+  ],
+  "cw_in": [
+   777.774,
+   1164.327
+  ],
+  "ccw_out": [
+   1164.327,
+   1550.88
+  ],
+  "b0_xq": [
+   4.32,
+   80.598
+  ],
+  "b0_xq2": [
+   80.598,
+   156.876
+  ],
+  "b0_eg": [
+   156.876,
+   233.153
+  ],
+  "b0_pq": [
+   233.153,
+   311.919
+  ],
+  "b0_pr": [
+   311.919,
+   385.433
+  ],
+  "b0_status": [
+   385.433,
+   390.407
+  ],
+  "b0_xq_done": [
+   390.407,
+   390.684
+  ],
+  "b0_xq2_done": [
+   390.684,
+   390.96
+  ],
+  "b1_xq": [
+   390.96,
+   467.238
+  ],
+  "b1_xq2": [
+   467.238,
+   543.516
+  ],
+  "b1_eg": [
+   543.516,
+   619.793
+  ],
+  "b1_pq": [
+   619.793,
+   698.559
+  ],
+  "b1_pr": [
+   698.559,
+   772.073
+  ],
+  "b1_status": [
+   772.073,
+   777.047
+  ],
+  "b1_xq_done": [
+   777.047,
+   777.324
+  ],
+  "b1_xq2_done": [
+   777.324,
+   777.6
+  ],
+  "b2_xq": [
+   777.6,
+   853.878
+  ],
+  "b2_xq2": [
+   853.878,
+   930.156
+  ],
+  "b2_eg": [
+   930.156,
+   1006.433
+  ],
+  "b2_pq": [
+   1006.433,
+   1085.199
+  ],
+  "b2_pr": [
+   1085.199,
+   1158.713
+  ],
+  "b2_status": [
+   1158.713,
+   1163.687
+  ],
+  "b2_xq_done": [
+   1163.687,
+   1163.964
+  ],
+  "b2_xq2_done": [
+   1163.964,
+   1164.24
+  ],
+  "b3_xq": [
+   1164.24,
+   1240.518
+  ],
+  "b3_xq2": [
+   1240.518,
+   1316.796
+  ],
+  "b3_eg": [
+   1316.796,
+   1393.073
+  ],
+  "b3_pq": [
+   1393.073,
+   1471.839
+  ],
+  "b3_pr": [
+   1471.839,
+   1545.353
+  ],
+  "b3_status": [
+   1545.353,
+   1550.327
+  ],
+  "b3_xq_done": [
+   1550.327,
+   1550.604
+  ],
+  "b3_xq2_done": [
+   1550.604,
+   1550.88
+  ],
+  "b4_xq": [
+   4.32,
+   65.412
+  ],
+  "b4_xq2": [
+   65.412,
+   126.504
+  ],
+  "b4_eg": [
+   126.504,
+   187.595
+  ],
+  "b4_pq": [
+   187.595,
+   250.679
+  ],
+  "b4_pr": [
+   250.679,
+   309.558
+  ],
+  "b4_status": [
+   309.558,
+   313.542
+  ],
+  "b4_xq_done": [
+   313.542,
+   313.763
+  ],
+  "b4_xq2_done": [
+   313.763,
+   313.985
+  ],
+  "b5_xq": [
+   313.985,
+   375.076
+  ],
+  "b5_xq2": [
+   375.076,
+   436.168
+  ],
+  "b5_eg": [
+   436.168,
+   497.26
+  ],
+  "b5_pq": [
+   497.26,
+   560.344
+  ],
+  "b5_pr": [
+   560.344,
+   619.222
+  ],
+  "b5_status": [
+   619.222,
+   623.207
+  ],
+  "b5_xq_done": [
+   623.207,
+   623.428
+  ],
+  "b5_xq2_done": [
+   623.428,
+   623.649
+  ],
+  "cq": [
+   623.649,
+   773.28
+  ],
+  "b6_xq": [
+   4.32,
+   66.232
+  ],
+  "b6_xq2": [
+   66.232,
+   128.143
+  ],
+  "b6_eg": [
+   128.143,
+   190.055
+  ],
+  "b6_pq": [
+   190.055,
+   253.985
+  ],
+  "b6_pr": [
+   253.985,
+   313.654
+  ],
+  "b6_status": [
+   313.654,
+   317.691
+  ],
+  "b6_xq_done": [
+   317.691,
+   317.916
+  ],
+  "b6_xq2_done": [
+   317.916,
+   318.14
+  ],
+  "b7_xq": [
+   318.14,
+   380.052
+  ],
+  "b7_xq2": [
+   380.052,
+   441.963
+  ],
+  "b7_eg": [
+   441.963,
+   503.875
+  ],
+  "b7_pq": [
+   503.875,
+   567.805
+  ],
+  "b7_pr": [
+   567.805,
+   627.474
+  ],
+  "b7_status": [
+   627.474,
+   631.511
+  ],
+  "b7_xq_done": [
+   631.511,
+   631.736
+  ],
+  "b7_xq2_done": [
+   631.736,
+   631.96
+  ],
+  "cr": [
+   631.96,
+   754.886
+  ],
+  "client_seq": [
+   754.886,
+   756.232
+  ],
+  "response_enable": [
+   756.232,
+   756.905
+  ],
+  "response_seq": [
+   756.905,
+   758.251
+  ],
+  "bank_enable": [
+   758.251,
+   760.045
+  ],
+  "bank_client": [
+   760.045,
+   763.634
+  ],
+  "hub_ring_enable": [
+   763.634,
+   764.083
+  ],
+  "hub_ring_client": [
+   764.083,
+   764.98
+  ],
+  "ring_tx_enable": [
+   764.98,
+   765.429
+  ],
+  "ring_tx_source": [
+   765.429,
+   766.775
+  ],
+  "replay_enable": [
+   766.775,
+   766.999
+  ],
+  "replay_source": [
+   766.999,
+   767.223
+  ],
+  "hub_status": [
+   767.223,
+   767.896
+  ],
+  "mirror_busy": [
+   767.896,
+   768.345
+  ],
+  "vmstat": [
+   768.345,
+   772.607
+  ],
+  "ring_fault": [
+   772.607,
+   773.28
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers the pins: the hub captures cq/client_seq/bank_client/response_seq/pr/enables on plain flops and drives cr/pq from flops; both ring stops capture l_in/pi/eg/ri/tx controls and drive l_out/xq/rce/cco/ack/wko/mirror_busy/fault from flops; the replay client likewise; sid lands on flops. Exceptions (the slice RTL, priced as is): bank_status feeds the status OR / CE adder rung before its first flop, xq_done feeds the commit fault compare. Synthesis pin registers would add an unpriced cycle and break the lockstep with the full slice."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "purpose": "OWNERS-HBM/VM-GLUE 2026-10-18 (HBM d4g plan (b), top-down contract: glue goes into a hardened tile): VM hub glue tile for SW (hb_vms_SW) = ot_vms_hub_static + 2 ot_vms_rstop_static + ot_vms_rcl_static + ot_vms_status_static, the 8 banks hoisted to die-level instances (gen_vms_hoist.py / HBM-B-RTL1 qb glue, logic unchanged). Tile top hfd_hgi_vms_glue_sw_t (gen_vms_glue_tiles.py): one clock (clk_hub/clk_ring/clk_replay are one stream clock), per-bank bank ports. Every port lands on / leaves from a flop except bank_status (status OR / CE adder rungs, as the slice) and the xq_done fault compare.",
+ "pin_density_per_um": {
+  "E": 5.75,
+  "W": 3.62,
+  "N": 4.52,
+  "S": 4.46
+ },
+ "job": {
+  "owner": "Claude OWNERS-HBM/VM-GLUE 1018",
+  "branch": "claude/vm-glue-1018",
+  "tag": "g1",
+  "purpose": "OWNERS-HBM/VM-GLUE 2026-10-18 (HBM d4g plan (b), top-down contract: glue goes into a hardened tile): VM hub glue tile for SW (hb_vms_SW) = ot_vms_hub_static + 2 ot_vms_rstop_static + ot_vms_rcl_static + ot_vms_status_static, the 8 banks hoisted to die-level instances (gen_vms_hoist.py / HBM-B-RTL1 qb glue, logic unchanged). Tile top hfd_hgi_vms_glue_sw_t (gen_vms_glue_tiles.py): one clock (clk_hub/clk_ring/clk_replay are one stream clock), per-bank bank ports. Every port lands on / leaves from a flop except bank_status (status OR / CE adder rungs, as the slice) and the xq_done fault compare.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm",
+   "rtl/lib",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hbm_die_v16",
+   "tools/hbm_die_v15/v16_layers"
+  ],
+  "record_to": "results/rtl/ref_tile/hfd_hgi_vms_glue_sw",
+  "benches": [
+   {
+    "name": "sw_pos",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SW pos {RUN}/bench",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^VMS_HOIST_EQUIV SW PASS checks=[1-9][0-9]* errors=0$",
+    "min_count_regex": "VMS_HOIST_EQUIV SW PASS checks=(\\d+)",
+    "pass_witness": "results/rtl/vm_glue_1018/bench/SWpos.sim.log"
+   },
+   {
+    "name": "mut_bank_sw",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SW bank {RUN}/bench",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^VMS_HOIST_EQUIV SW FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench/SWbank.sim.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/hfd_hgi_vms_glue_sw/views"
+ }
+}

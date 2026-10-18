@@ -1,0 +1,152 @@
+{
+ "name": "hfd_hgi_vms_glue_e-g1-COMMIT",
+ "block": "hfd_hgi_vms_glue_e_t",
+ "ref_tile": true,
+ "owner": "Claude OWNERS-HBM/VM-GLUE 1018",
+ "purpose": "OWNERS-HBM/VM-GLUE 2026-10-18 (HBM d4g plan (b), top-down contract: glue goes into a hardened tile): VM hub glue tile for SE (R0, sid 1) / NE (MX, sid 3) (hb_vms_SE, hb_vms_NE) = ot_vms_hub_static + 2 ot_vms_rstop_static + ot_vms_rcl_static + ot_vms_status_static, the 8 banks hoisted to die-level instances (gen_vms_hoist.py / HBM-B-RTL1 qb glue, logic unchanged). Tile top hfd_hgi_vms_glue_e_t (gen_vms_glue_tiles.py): one clock (clk_hub/clk_ring/clk_replay are one stream clock), per-bank bank ports, sid strap pin (one master for SE and NE). Every port lands on / leaves from a flop except bank_status (status OR / CE adder rungs, as the slice) and the xq_done fault compare.",
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/vm-glue-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm",
+   "rtl/lib",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hbm_die_v16",
+   "tools/hbm_die_v15/v16_layers"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_hgi_vms_glue_e_t u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "se_pos",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SE pos {RUN}/bench",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^VMS_QB_EQUIV SE PASS checks=[1-9][0-9]* errors=0$",
+    "min_count_regex": "VMS_QB_EQUIV SE PASS checks=(\\d+)",
+    "pass_witness": "results/rtl/vm_glue_1018/bench/SEpos.sim.log"
+   },
+   {
+    "name": "ne_pos",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh NE pos {RUN}/bench",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^VMS_QB_EQUIV NE PASS checks=[1-9][0-9]* errors=0$",
+    "min_count_regex": "VMS_QB_EQUIV NE PASS checks=(\\d+)",
+    "pass_witness": "results/rtl/vm_glue_1018/bench/NEpos.sim.log"
+   },
+   {
+    "name": "mut_bank_se",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SE bank {RUN}/bench",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^VMS_QB_EQUIV SE FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench/SEbank.sim.log"
+   },
+   {
+    "name": "mut_sid_se",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SE sid {RUN}/bench",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^VMS_QB_EQUIV SE FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench/SEsid.sim.log"
+   },
+   {
+    "name": "mut_sid_ne",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh NE sid {RUN}/bench",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^VMS_QB_EQUIV NE FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench/NEsid.sim.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hfd_hgi_vms_glue_e/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hfd_hgi_vms_glue_e/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hfd_hgi_vms_glue_e --out {RUN}/record/views/hfd_hgi_vms_glue_e_t  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hfd_hgi_vms_glue_e/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hfd_hgi_vms_glue_e/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hfd_hgi_vms_glue_e/hfd_hgi_vms_glue_e-g1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}
