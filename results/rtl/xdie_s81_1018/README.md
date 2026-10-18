@@ -105,3 +105,23 @@ python3 tools/xdie_s81/record.py --golden out_g4/g/golden.json --run out_g4/min/
 ```
 
 Cost: about 7 min and about 10 GB to build each configuration (24 GB with the C++ compile), and 4-20 min to run it.
+
+## S81-LINKTO re-gate on the BUILT RTL (`gate_g5`, 10-18, branch claude/s81-linkto-1018)
+
+Coordinator 0hn: decision 1 = tile-top `CH_BOARD 700` on `dsfd_coll_lane_w/_e` (rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv;
+the core module keeps 400; ACK timeout 879 -> 1,479 cycles > the 1,106-cycle switched round trip) + `ch_b 1` on every switched lane;
+decision 2 = SerDes on all 8 lanes of a die (UCIe cannot cross the switch).  The vehicle defaults are now that configuration
+(tb_xdie_s81 `CHB 1`, `S_UCIE 0`, `LOVR 0` = the built tiles); same stimulus as gate_g4 (stim.sha256 identical).
+
+| run | config | verdict |
+|---|---|---|
+| min | built tiles, ch_b 1, 8 x SerDes | PASS 12,096 beats exact, 0 late, 0 timeouts / replays; every instance E_meas identical to gate_g4 min |
+| min_err | + pad bit errors 1/7 cycles on all 32 SerDes lanes | PASS, LAND cycles identical to min |
+| chb0 (mutant) | ch_b 0 (CH_UCIE 100 basis) | FAIL 7,572 late, 256 timeouts, 44,384 replayed flits |
+| board400 (mutant) | pre-0hn tile CH_BOARD 400 (LOVR 1 CHB_OVR 400) | FAIL 1,212 late, 24 timeouts, 6,144 replayed flits |
+| swap / late / kp4d (mutants) | reduced calendar | FAIL all three |
+
+Witnesses `gate_g5/witness_*.log`; record.json regenerated from gate_g5 min (token_compose block kept, 527 slots; gate_g4
+verdicts under `history_gate_g4`).  Reproduce: `bash tools/xdie_s81/gate5.sh g5 a; bash tools/xdie_s81/gate5.sh g5 b`.
+Kit benches (dscoll_lane_w_lt / dscoll_lane_e_lt): `tools/xdie_s81/kit_bench.sh <out> pass|board400|chb0` (reduced calendar;
+board400 = sed of the tile-top default 700 -> 400 on the lane RTL).

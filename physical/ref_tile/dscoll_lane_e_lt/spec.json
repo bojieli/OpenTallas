@@ -160,7 +160,7 @@
   "owner": "Claude:S81-LINKTO",
   "branch": "claude/s81-linkto-1018",
   "tag": "lt",
-  "purpose": "S81-LINKTO (coordinator 0hn decision 1, TOKEN-XDIE-S81): dsfd_coll_lane_e as the p4l end-slice masters instantiate it (ot_s81sl_slice_lep*: LCR 1 credit core faces) with the tile-top ACK timeout CH_BOARD 700 (was 400: ACK timeout 879 < the 1,106-cycle switched round trip of a 377.6 ns one-tier switch crossing -> go-back-N replays broke the static calendar, gate_g4 asbuilt 8,240/12,096 beats late); ch_b 1 on every switched lane. GFMT 1 / EPPIPE 2 as the closed rt kit; geometry = the closed dscoll_lane_w_rt outline / 10-SRAM memory-per-column plan mirrored (die face E, core face W, u_rb on the E column); recipe 1 as rt (the RTL registers every pin: lr / gearbox beat / LCR credit faces / flt). No other logic change (timer width 10 -> 11 b). Benches = the xdie_s81 vehicle (built tiles, SerDes on all lanes) + CH_BOARD 400 / ch_b 0 mutants.",
+  "purpose": "S81-LINKTO (coordinator 0hn decision 1, TOKEN-XDIE-S81): dsfd_coll_lane_e as the p4l end-slice masters instantiate it (ot_s81sl_slice_lep*: LCR 1 credit core faces) with the tile-top ACK timeout CH_BOARD 700 (was 400: ACK timeout 879 < the 1,106-cycle switched round trip of a 377.6 ns one-tier switch crossing -> go-back-N replays broke the static calendar, gate_g4 asbuilt 8,240/12,096 beats late); ch_b 1 on every switched lane. GFMT 1 / EPPIPE 2 as the closed rt kit; geometry = the closed dscoll_lane_w_rt outline / 10-SRAM memory-per-column plan mirrored (die face E, core face W, u_rb on the E column); recipe 1 as rt (the RTL registers every pin: lr / gearbox beat / LCR credit faces / flt). No other logic change (timer width 10 -> 11 b). Benches = the xdie_s81 vehicle (built tiles, SerDes on all lanes) + CH_BOARD 400 / ch_b 0 mutants. Clock: balanced pre-placed spine (physical/common_flow/clock_spine.tcl) instead of TritonCTS: the 6b4725cef --cts gate measured TT pin-flop spread 164.7 / FF 150.1 ps > 80 across the W die face and E core face (432 um apart) with CTS.",
   "views_to": "physical/ref_tile/dscoll_lane_e_lt/views",
   "record_to": "results/rtl/ref_tile/dscoll_lane_e_lt",
   "benches": [
@@ -218,6 +218,7 @@
   "enable": false,
   "reason": "the lane RTL already registers every data pin (rx -> lr pin flops; tx = the gearbox's registered beat; LCR 1 core faces = ot_link_credit_rx landing flops for lo_v/lo_d and its registered credit pulse lo_r, ot_link_credit_tx sender flops for li_v/li_d with li_r captured; flt flops; chb registered in ot_s81ph_link_ep ch_b_q; tf is the forwarded clock buffer). This kit is the closed dscoll_lane_w_rt geometry (recipe 1) with only the ACK-timeout parameter changed (S81-LINKTO 0hn); +1 cycle a pin would change the measured cross-die landing cycles of the xdie_s81 vehicle and the TOKEN-XDIE-S81 record"
  },
+ "clock": "spine",
  "children": [],
  "inter": []
 }
