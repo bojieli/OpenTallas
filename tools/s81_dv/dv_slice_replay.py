@@ -38,6 +38,9 @@ def main(argv=None):
     ap.add_argument('--out', required=True)
     ap.add_argument('--t0', type=int, default=100)
     ap.add_argument('--mutant', default='')
+    ap.add_argument('--check-shift', type=int, default=0,
+                    help='DIAGNOSTIC ONLY: move every forward check by N cycles (to check payload / hops at a measured, '
+                         'non-scheduled arrival when the schedule itself fails); recorded, never a schedule verdict')
     a = ap.parse_args(argv)
     prog = Path(a.prog)
     S = json.loads((prog / 'schedule.json').read_text())
@@ -67,9 +70,8 @@ def main(argv=None):
         ti = int(e['payload'].split()[1].rstrip(';'))
         beat = int(T[ti]['beat'], 16)
         hops = (nb_col if nb_port == 'ro_w' else 7 - nb_col)
-        if a.mutant == 'hops':
-            hops += 1
-        wire = (beat & ~(0x1F << 4) & ~(0xF << 9)) | (hops & 0x1F) << 4 | (sid[nb] & 0xF) << 9
+        hw = hops + 1 if a.mutant == 'hops' else hops      # mutant: the replayed neighbour sends a wrong hops field
+        wire = (beat & ~(0x1F << 4) & ~(0xF << 9)) | (hw & 0x1F) << 4 | (sid[nb] & 0xF) << 9
         if a.mutant == 'shift1':
             t_inj += 1
         for k in L_in:
@@ -82,7 +84,7 @@ def main(argv=None):
         fw_col = col - 1 if side == 'ri_e' else col + 1
         fw = f'u_s_{fw_col}{tier}'
         fw_port = 'ro_w' if side == 'ri_e' else 'ro_e'
-        fwd = (wire & ~(0x1F << 4)) | ((hops - 1) & 0x1F) << 4
+        fwd = (wire & ~(0x1F << 4)) | ((hops - 1) & 0x1F) << 4    # expectation from the unmutated hops
         chk = []
         if hops - 1 > 0 and 0 <= fw_col <= 7:
             L_out = lanes(sl, fw_port, fw)
@@ -94,7 +96,7 @@ def main(argv=None):
                     continue
                 # the beat is whole when its slowest lane lands (the compiler's line model): every lane is checked
                 # at that ONE cycle -- a lane landing earlier (smaller E) tears the beat and fails here
-                tc = int(round(e['cycle'] + age_out)) + a.t0
+                tc = int(round(e['cycle'] + age_out)) + a.t0 + a.check_shift
                 word = (fwd >> (LANE * l)) & ((1 << LANE) - 1)
                 outs.append((tc, ports[pn]['index'], (1 << LANE) - 1, word, k))
                 chk.append(dict(lane=k, port=pn, cycle=tc, lane_age=links[k]['age_edges'], lane_E=links[k]['E']))
@@ -107,7 +109,8 @@ def main(argv=None):
     (out / 'out.txt').write_text(''.join(f'{c} {i} {m:x} {w:x}\n' for c, i, m, w, _ in outs))
     plan = [e for e in S['events'] if e.get('plan_only')]
     (out / 'replay.json').write_text(json.dumps(dict(schema='opentallas.s81_dv.slice_replay.v1', prog=str(prog),
-        slice=sl, sid=sid.get(sl), t0=a.t0, mutant=a.mutant or None, ctl=rec, in_events=len(ins), out_checks=len(outs),
+        slice=sl, sid=sid.get(sl), t0=a.t0, mutant=a.mutant or None,
+        check_shift=a.check_shift, verdict_kind='DIAGNOSTIC (checks moved off the schedule)' if a.check_shift else 'SCHEDULE', ctl=rec, in_events=len(ins), out_checks=len(outs),
         unchecked_plan_events=plan, ncyc=max([c for c, *_ in outs] + [c for c, *_ in ins]) + 50), indent=1) + '\n')
     print(f'dv_slice_replay: {len(rec)} CTL beats -> {len(ins)} lane events, {len(outs)} forward checks; '
           f'ncyc {max([c for c, *_ in outs] + [0]) + 50}')

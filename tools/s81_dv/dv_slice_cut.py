@@ -269,9 +269,11 @@ def main(argv=None):
             w = nets[re.match(r'[\w\\]+', cm['i']).group(0)][0] if re.fullmatch(r'[\w\\]+', cm['i'].strip()) else None
             if w is None:
                 raise SystemExit(f'dv_slice_cut: landing {i} data is not a whole net: {cm["i"][:60]}')
-            body.append(f'  wire {i}__ckf_d; wire [{w - 1}:0] {i}__i_d;   // lane flight time {dl:.1f} ps ({a.corner}, land plan S1)')
-            body.append(f'  assign #({dl / 1000.0:.4f}) {i}__ckf_d = {cm["ck_f"]};')
-            body.append(f'  assign #({dl / 1000.0:.4f}) {i}__i_d = {cm["i"]};')
+            # TRANSPORT delay (non-blocking intra-assignment): a continuous-assign delay is inertial and would swallow
+            # every clock pulse / one-cycle beat shorter than the 2-3 ns flight time
+            body.append(f'  reg {i}__ckf_d = 1\'b0; reg [{w - 1}:0] {i}__i_d = 0;   // lane flight time {dl:.1f} ps ({a.corner}, land plan S1)')
+            body.append(f'  always @({cm["ck_f"]}) {i}__ckf_d <= #({dl / 1000.0:.4f}) {cm["ck_f"]};')
+            body.append(f'  always @({cm["i"]}) {i}__i_d <= #({dl / 1000.0:.4f}) {cm["i"]};')
             lines[i] = ln
             lane_dl[i] = dict(dl_ps=round(dl, 1), E=r['E'], K=r['K'], corner=a.corner)
     lost = sorted(S - set(lines))
