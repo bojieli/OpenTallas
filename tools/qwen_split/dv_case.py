@@ -306,12 +306,21 @@ def apply_dv(v, m):
         stray = sorted(p_ for p_ in ports if p_.startswith('ck') and p_ not in centre_pins)
         if stray:
             raise ValueError(f'centre clocks: contract clock ports {stray} have no centre pin')
+        # OT_SPLIT_DV_CLUSTER_CLOCK_AT=face (Q-DIE11b 10-18, dv2f14bn case PLACE 'qfd_c_b16_dv MX y: site grid (0 + k*270)
+        # never meets the legal residues mod 80'): an interior M6-M9 pin cannot be on track in both R0 and MX / MY with
+        # this outline (H = 5227.176: H mod 10 = 6 vs the 270 row grid on M8; W, H mod 64 = 40 vs M5 / M4 on M6 / M7),
+        # so the drops stay at the contract's per-region FACE entries (M4 / M5) until the cluster outline / pin layer is
+        # chosen for centre pins; the related pins (port -> region clock) apply either way.
+        at_face = os.environ.get('OT_SPLIT_DV_CLUSTER_CLOCK_AT', 'centre') == 'face'
+        clk_ports = {pn: dict(ports[pn]) for pn in centre_pins}
         for pn in centre_pins:
             ports.pop(pn)
-    M[CDV] = Q._master(v, CWN - Q.SHAVE, ch - Q.SHAVE, ports)
+    M[CDV] = Q._master(v, CWN - Q.SHAVE, ch - Q.SHAVE, dict(ports, **(clk_ports if centre and at_face else {})))
     M[CDV].name = CDV
     if centre_pins:
         for pn, (x_, y_) in sorted(centre_pins.items()):
+            if at_face:
+                continue
             M[CDV].ports[pn] = ('area', 1, x_, y_, 1)
             M[CDV].order.append(pn)
         dom = dict(centre.get('port_domains') or {})
@@ -324,7 +333,8 @@ def apply_dv(v, m):
         rel = {p_: [dom.get(p_, dflt)] * d_['bits'] for p_, d_ in ports.items()}
         m['dv_cluster_clocks'] = dict(master=CDV, source=os.environ['OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS'],
                                       clocks={pn: list(xy) for pn, xy in sorted(centre_pins.items())},
-                                      layer='M8 area pin (die drop; the hardened cluster keeps the chimney free)',
+                                      layer=('contract face entry (M4/M5): centre pins blocked by MX/MY track legality'
+                                             if at_face else 'M8 area pin (die drop; the hardened cluster keeps the chimney free)'),
                                       default_domain=dflt, port_domains=dom, related_pins=rel)
     # Q-DIEPLAN8 10-17: dv2f10 PDN-0006 (die VDD M8 blocked by the abstract's M9 OBS on c16_E0_0).  The two-level
     # cluster contract (cluster_level 2: PG M8, signals M2-M7) leaves M9 to the die; the synthetic cluster and slice
