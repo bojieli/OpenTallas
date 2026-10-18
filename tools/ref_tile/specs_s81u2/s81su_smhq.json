@@ -142,7 +142,8 @@
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 24,
-    "fail_regex": "^SMS FAIL MUT=6 errors=[1-9]"
+    "fail_regex": "^SMS FAIL MUT=6 errors=[1-9]",
+    "fail_witness": "results/rtl/s81_dv_1016/su_sm/smh1018_smt_m6/run.log"
    },
    {
     "name": "sms_smt_mut_staleden",
@@ -150,7 +151,8 @@
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 24,
-    "fail_regex": "^SMS FAIL MUT=5 errors=[1-9]"
+    "fail_regex": "^SMS FAIL MUT=5 errors=[1-9]",
+    "fail_witness": "results/rtl/s81_dv_1016/su_sm/smh1018_smt_m5/run.log"
    }
   ]
  },
