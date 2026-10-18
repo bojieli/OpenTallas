@@ -63,6 +63,8 @@ CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first
 WATCH_THIN = 'closed, thin margin (watch)'
 NOT_BINDABLE = 'closed, not die-bindable (native)'
 MARGIN_FILE = 'results/arch/margin_thin_1016.json'
+DIE_SOURCES = 'results/fleet_viz/die_sources.json'
+HERE = pathlib.Path(__file__).resolve().parent
 BIND_TT_PS, BIND_FF_PS = 25.0, 10.0
 NOT_STARTED = 'not started (open)'   # registry-sync 10-15: a current die-contract element with no physical job yet
 # FLEETVIZ-ELEM 10-18: 'not started' is kept strictly for a die element with no job, no alias and no supersession at all.
@@ -619,6 +621,9 @@ class Elements:
                     if v.get('job'): d.setdefault(v['job'], v)
                     c = v.get('cell')
                     if c and (c not in d or (d[c].get('native') != 'PASS' and v.get('native') == 'PASS')): d[c] = v
+                    vw = v.get('view')   # by view path: the view a die binds (die_sources 'bound_views')
+                    if vw and ('view:' + vw not in d or (d['view:' + vw].get('native') != 'PASS' and v.get('native') == 'PASS')):
+                        d['view:' + vw] = v
                 self._margin = (('live', mt), d)
                 return d
             except Exception as e:  # noqa: BLE001
@@ -635,22 +640,43 @@ class Elements:
             text = repo.read(MARGIN_FILE) if repo is not None and blob else None
             doc = json.loads(text) if text else {}
             for v in doc.get('views', []):
-                for k in filter(None, (v.get('job'), v.get('cell'))):
+                for k in filter(None, (v.get('job'), v.get('cell'), v.get('view') and 'view:' + v['view'])):
                     d.setdefault(k, v)
         except Exception as e:  # noqa: BLE001 -- a bad file never breaks the table; rows show 'native unaudited'
             self.log('elements: margin audit: %s' % e)
         self._margin = (blob, d)
         return d
 
+    def bound_views(self):
+        """die_sources.json 'bound_views' {cell: {view, design, evidence}}: the view a current die binds for a cell when it is
+        not the best-slack closed job's view (e.g. KV binds ot_qkh_lane8_m5, the row's best job is qkh_lane8_ref_c).
+        origin/main first, else the copy beside this tool; cached 5 min."""
+        now = time.time()
+        if getattr(self, '_bv', (0, {}))[0] > now - 300:
+            return self._bv[1]
+        bv = {}
+        for read in (lambda: self.contracts.repo.read(DIE_SOURCES), lambda: (HERE / 'die_sources.json').read_text()):
+            try:
+                text = read()
+                bv = (json.loads(text).get('bound_views') or {}) if text else {}
+            except Exception:  # noqa: BLE001
+                bv = {}
+            if bv: break
+        self._bv = (now, bv)
+        return bv
+
     def apply_die_bindable(self, rows):
         audit = self.margin_audit()
+        bound = self.bound_views()
         for r in rows:
             if not r['category'].startswith('closed'):
                 r['die_bindable'] = None
                 continue
             b = r.get('best') or {}
             tt, ff = b.get('tt'), b.get('ff')
-            v = audit.get(b.get('job')) or next((audit[k] for k in [r['element']] + r.get('variants', []) if k in audit), None)
+            bk = next((k for k in [r['element']] + r.get('variants', []) if (bound.get(k) or {}).get('view')), None)
+            v = audit.get('view:' + bound[bk]['view']) if bk else None   # the view the die binds wins
+            v = v or audit.get(b.get('job')) or next((audit[k] for k in [r['element']] + r.get('variants', []) if k in audit), None)
             native = (v or {}).get('native')            # PASS / FAIL / None (no audited view)
             nwhy = '' if native == 'PASS' else ('native %s' % ((v or {}).get('native_why') or 'FAIL') if native == 'FAIL'
                                                   else 'native unaudited (no view on main)')
