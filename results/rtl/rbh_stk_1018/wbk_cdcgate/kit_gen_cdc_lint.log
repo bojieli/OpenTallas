@@ -1,0 +1,27 @@
+REF_TILE WARN clock_span: 777.6 x 518.4 um: one clock root over > 600 um -> split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+REF_TILE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it) -> pass --area-um2 / std_area_um2 from the synthesis smoke
+REF_TILE kit physical/ref_tile/hbm_wbk_q_1018 outline 777.6 x 518.4 um (spec outline (exact: the closed view's sub-slot)); job hbm_wbk_q_1018-q1-22961d638
+	Command being timed: "python3 tools/ref_tile/ref_tile.py gen tools/ref_tile/specs_hbm_d4g/hbm_wbk_q_1018.json --commit 22961d638"
+	User time (seconds): 827.76
+	System time (seconds): 36.03
+	Percent of CPU this job got: 101%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 14:14.54
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 41447584
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 34646281
+	Voluntary context switches: 260840
+	Involuntary context switches: 2491
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 30960
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+rc=0

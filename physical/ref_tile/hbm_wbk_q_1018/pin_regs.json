@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_wb_kport_q",
+ "enable": false,
+ "reason": "RTL registers every pin: stream inputs land in the wbk_q pin flops (rb_q/fb_q/re_q/fe_q/rt_q/rbase_q/wd_q/stk_q/q_s), stream outputs are flops (wb_ready/wa/wbw_*/fault), every K port has its own hbm_clk pin skid; a kit flop stage would add an unpriced edge and put a raw flop in front of the CDC FIFOs"
+}

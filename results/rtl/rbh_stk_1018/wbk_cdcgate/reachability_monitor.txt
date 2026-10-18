@@ -1,0 +1,25 @@
+# HBM-WBK 10-18 reachability witness: OLD (pre-gate) cutthrough + sim-only monitor of req_valid[pc] && fifo_empty[req_lane[pc]] (the only state where old/new k_v differ) on every hbm_clk edge, all wbq + GEN0 wb_default benches (script results/rtl/rbh_stk_1018/wbk_cdcgate/wbk_mon.sh). Expect hits=0.
+      2 WBK_EMPTY_MONITOR tb_hbm_svc_wb_pipeline_cdc.dut checks=800 req_valid_cycles=0 hits=0
+      2 WBK_EMPTY_MONITOR tb_hbm_svc_wb_pipeline_cdc.dut checks=608 req_valid_cycles=0 hits=0
+      2 WBK_EMPTY_MONITOR tb_hbm_svc_wb_pipeline_cdc.dut checks=27968 req_valid_cycles=844 hits=0
+      2 WBK_EMPTY_MONITOR tb_hbm_svc_wb_pipeline_cdc.dut checks=2016 req_valid_cycles=5 hits=0
+      1 WBK_EMPTY_MONITOR tb_hbm_svc_wb_pipeline_cdc.dut checks=9312 req_valid_cycles=0 hits=0
+      1 WBK_EMPTY_MONITOR tb_hbm_svc_wb_pipeline_cdc.dut checks=579872 req_valid_cycles=858 hits=0
+      1 WBK_EMPTY_MONITOR tb_hbm_svc_wb_pipeline_cdc.dut checks=352 req_valid_cycles=0 hits=0
+      1 WBK_EMPTY_MONITOR tb_hbm_svc_wb_pipeline_cdc.dut checks=288 req_valid_cycles=0 hits=0
+      1 WBK_EMPTY_MONITOR tb_hbm_svc_wb_kshare_qh.u_wbp.u_wb checks=264624 req_valid_cycles=64627 hits=0
+      1 WBK_EMPTY_MONITOR tb_hbm_svc_wb_kshare_qh.u_wbp.u_wb checks=228624 req_valid_cycles=63408 hits=0
+      1 WBK_EMPTY_MONITOR tb_hbm_svc_wb_kshare_qh.u_wbp.u_wb checks=210784 req_valid_cycles=37851 hits=0
+      1 WBK_EMPTY_MONITOR tb_hbm_svc_wb_kshare_qh.u_ref.u_wb checks=529248 req_valid_cycles=0 hits=0
+      1 WBK_EMPTY_MONITOR tb_hbm_svc_wb_kshare_qh.u_ref.u_wb checks=457248 req_valid_cycles=0 hits=0
+      1 WBK_EMPTY_MONITOR tb_hbm_svc_wb_kshare_qh.u_ref.u_wb checks=421568 req_valid_cycles=0 hits=0
+      1 WBK_EMPTY_MONITOR tb_hbm_svc_wb_kshare_q.u_wbp.u_wb checks=482528 req_valid_cycles=50865 hits=0
+STK_WB_DEFAULT PASS
+rc=0
+STK_WBQ PASS wbq_e
+rc=0
+STK_WBQ PASS wbq_e_wopen
+rc=0
+STK_WBQ PASS wbq_w
+rc=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-550208-1792329035): exit 0
