@@ -172,3 +172,17 @@ def test_declared_insertion_judges_skew_at_child_flops(tmp_path):
     out = tmp_path / 'o.json'
     D.main(['classify', '--report', str(rp), '--out', str(out), '--qwen-views', str(v)])
     assert json.loads(out.read_text())['verdict'] == 'PASS'
+
+
+def test_tap_mismatch_fails_even_when_pair_skew_cancels():
+    # Two equally mistapped tiles have zero pair skew; that cannot validate the
+    # declaration that the physical clock taps compensate their measured insertion.
+    p = _path('a', 'b', 'deep', 'deep', 20.0, delta=0.0)
+    p.update(src_lat_launch=-300.0, src_lat_capture=-300.0,
+             start_clock_pin='a/ck', end_clock_pin='b/ck')
+    r = D.classify([p], insertion={'deep': {'ck': 342.7}})
+    assert r['counts']['skew_fail_links'] == 0
+    assert r['counts']['tap_mismatch_links'] == 1
+    assert r['verdict'] == 'FAIL'
+    p.update(src_lat_launch=-342.7, src_lat_capture=-342.7)
+    assert D.classify([p], insertion={'deep': {'ck': 342.7}})['verdict'] == 'PASS'

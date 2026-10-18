@@ -254,7 +254,7 @@ def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None
     ndiag = sum(1 for lk in links.values() if lk['diagnostic'])
     nideal = sum(1 for lk in links.values() if lk['ideal'])
     placeholder_launch = sorted({lk['sender_master'] for lk in links.values() if lk['sender_master'] in diag})
-    if viol or skew_fail or u_bad or errors:
+    if viol or skew_fail or u_bad or errors or tap_mismatch:
         verdict = 'FAIL'
     elif truncated or ndiag or masters.get('diagnostic_all'):
         verdict = 'DIAGNOSTIC'
