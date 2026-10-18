@@ -7,7 +7,8 @@
  ],
  "params": {
   "MUT": 0,
-  "STRAPPED": 1
+  "STRAPPED": 1,
+  "IR_REPL": 1
  },
  "clock_port": "ck",
  "reset_ports": [
@@ -52,7 +53,7 @@
    "ctrl_cr"
   ]
  },
- "structural_change": "KVJ-A3 HOST cluster child qkd_hr_core_rx (core family): rx packet class admission (STRAPPED=1 as bound in qkd_host_packet_bundle_admission); W546 rx word from the phy|core CDC leaf on S. Partition plan results/arch/qwen_split_1014/host_root_cluster/partition_plan.md",
+ "structural_change": "KVJ-A3 HOST cluster child qkd_hr_core_rx (core family): rx packet class admission (STRAPPED=1 as bound in qkd_host_packet_bundle_admission); W546 rx word from the phy|core CDC leaf on S. Partition plan results/arch/qwen_split_1014/host_root_cluster/partition_plan.md; KVJ-A8: IR_REPL=1 replicates ingest read pointer per 64-bit queue slice (9 kept copies, 0 added cycles)",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -78,11 +79,11 @@
   "enable": true
  },
  "job": {
-  "owner": "Claude:KV-TILES-B/HOSTCL",
-  "branch": "claude/kvj-a3-1017",
-  "tag": "c1",
-  "purpose": "HOST root cluster child qkd_hr_core_rx (pre-route gate only; qkd_host_root CRITICAL: no REVIEW / no submit)",
-  "no_bench_reason": "gate-only kit; the cluster composition lock-step bench (A1-A6) gates adoption"
+  "owner": "Claude:KV-HOSTCL-A8",
+  "branch": "claude/kvj-a8-1017",
+  "tag": "a8",
+  "purpose": "HOST root cluster child qkd_hr_core_rx route (KVJ-A8: IR_REPL=1 removes the ingest read-pointer ir high fanout)",
+  "no_bench_reason": "IR_REPL=1 vs 0 cycle-exact lock-step bench results/arch/qwen_split_1014/host_root_cluster/a8/ (mutant FAILs); cluster composition bench gates adoption"
  },
  "pin_ranges": {
   "rx_v": [

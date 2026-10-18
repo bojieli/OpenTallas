@@ -1,13 +1,13 @@
 {
- "name": "qkd_hr_phy_adp-c1-COMMIT",
+ "name": "qkd_hr_phy_adp-a8-COMMIT",
  "block": "qfd_link_adp128",
  "ref_tile": true,
- "owner": "Claude:KV-TILES-B/HOSTCL",
- "purpose": "HOST root cluster child qkd_hr_phy_adp (pre-route gate only; qkd_host_root CRITICAL: no REVIEW / no submit)",
+ "owner": "Claude:KV-HOSTCL-A8",
+ "purpose": "HOST root cluster child qkd_hr_phy_adp route (unchanged member; re-gated on the KVJ-A8 branch commit)",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/kvj-a3-1017",
+  "branch": "claude/kvj-a8-1017",
   "commit": "COMMIT"
  },
  "stages": {
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_hr_phy_adp/qkd_hr_phy_adp-c1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_hr_phy_adp/qkd_hr_phy_adp-a8-COMMIT"
   }
  ],
  "cycles_added": 0,
