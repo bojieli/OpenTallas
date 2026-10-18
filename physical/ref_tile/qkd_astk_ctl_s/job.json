@@ -1,5 +1,5 @@
 {
- "name": "qkd_astk_ctl_s-s1-COMMIT",
+ "name": "qkd_astk_ctl_s-s1-20f707bc7",
  "block": "qkd_astk_ctl_s",
  "ref_tile": true,
  "owner": "Claude:S-KVASTK 10-18",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/s-kvastk-t2-1018",
-  "commit": "COMMIT",
+  "commit": "20f707bc7",
   "extra_paths": [
    "configs/hardware",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -116,7 +116,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_astk_ctl_s/qkd_astk_ctl_s-s1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_astk_ctl_s/qkd_astk_ctl_s-s1-20f707bc7"
   }
  ],
  "cycles_added": 0,
