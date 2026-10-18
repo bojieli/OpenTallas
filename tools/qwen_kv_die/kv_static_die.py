@@ -408,7 +408,10 @@ DIE_EXPORTS = dict(
         ('pc', 'po'): ('pc__po', 328), ('pc', 'completion_v'): ('pc__completion_v', 1),
         ('pc', 'completion_we'): ('pc__completion_we', 1)},
     ctl={('lprg', tuple(LP)): ('lp', 21), ('boot', 'setup_ready'): ('boot__setup_ready', 1),
-         ('own', 'native_reserved'): ('own__native_reserved', 1), ('own', 'ownership_valid'): ('own__ownership_valid', 1)},
+         ('own', 'native_reserved'): ('own__native_reserved', 1), ('own', 'ownership_valid'): ('own__ownership_valid', 1),
+         ('cf_root', 'fault'): ('cf_root__fault', 1)},    # KVJ-G2b: the completion-fault tree root -> HOST
+    # KVJ-G2b: the attention service root's PV start word -> both PV pairs' st face {start, context_len, epoch} (LSB first)
+    attn={('attn_root', ('start_pv', 'ctx', 'ep')): ('pvst', 31)},
 )
 DIE_EXPORTS['pc_h'] = DIE_EXPORTS['pc']
 
@@ -617,11 +620,43 @@ def add_fans(tiles):
                                             consumers=[], expr='{' + ', '.join(reversed([uexpr[k_] for k_ in union])) + '}')
         fports['i_ctl'] = dict(dir='input', width=off, cls='bundle', peer='kvs_ctl')
         sl = lambda key: f'i_ctl[{uoff[key] + uw[key] - 1}:{uoff[key]}]'      # noqa: E731
-        for k, gd in enumerate(grps):
-            gp = tiles[gd]['ports']['i_ctl']
-            fports[f'o_g{k}'] = dict(dir='output', width=gp['width'], cls='bundle', peer=gd, peer_port='i_ctl', consumers=[],
-                                     expr='{' + ', '.join(reversed([sl(key) for _pn, _w, key in gp['layout']])) + '}')
-            gp['peer'] = fname
+        # KVJ-G2b: the fan -> group words ride TWO neighbour CHAINS (fan -> slot 3 -> 2 -> 1 -> 0, fan -> slot 4 -> ... -> 7),
+        # not eight fan -> group bundles (the 8 x 194-b star filled the stack's control channel).  A group's word =
+        # the broadcast fields B (same keys for every group: boot data / address, programme fields) + one slot of
+        # per-group fields per chain group, own slot first; each group forwards {B, slots rotated by one} (pure wiring,
+        # identical replicas, no constant: the chain end's forward output is unconsumed)
+        lays = {gd: tiles[gd]['ports']['i_ctl']['layout'] for gd in grps}
+        common = set.intersection(*[{key for _pn, _w, key in lst} for lst in lays.values()])
+        bl = sorted((pn, w, key) for pn, w, key in lays[grps[0]] if key in common)
+        own = {gd: sorted((pn, w, key) for pn, w, key in lst if key not in common) for gd, lst in lays.items()}
+        sig = [(pn, w) for pn, w, _ in own[grps[0]]]
+        for gd in grps:
+            if [(pn, w) for pn, w, _ in own[gd]] != sig or [(pn, w) for pn, w, _ in bl] != \
+                    sorted((pn, w) for pn, w, key in lays[gd] if key in common):
+                raise ValueError(f'kv_static_die: {gd} control word is not replica-generic')
+        bw, pw = sum(w for _, w, _ in bl), sum(w for _, w in sig)
+        chains = [[f'slg_{stks[0]}_{ORDER[s_]}' for s_ in c_] for c_ in ((3, 2, 1, 0), (4, 5, 6, 7))]
+        nslot = len(chains[0])
+        for ci, ch in enumerate(chains):
+            lsb = [sl(key) for _pn, _w, key in bl] + [sl(key) for gd in ch for _pn, _w, key in own[gd]]
+            fports[f'o_ch{ci}'] = dict(dir='output', width=bw + pw * nslot, cls='bundle', peer=ch[0], peer_port='i_ctl',
+                                       consumers=[], expr='{' + ', '.join(reversed(lsb)) + '}')
+            for j, gd in enumerate(ch):
+                t_ = tiles[gd]
+                gp = t_['ports']['i_ctl']
+                gp.update(width=bw + pw * nslot, peer=fname if j == 0 else ch[j - 1], layout=None)
+                offs_, o_ = {}, 0
+                for pn, w, _ in bl:
+                    offs_[pn], o_ = o_, o_ + w
+                for pn, w, _ in own[gd]:
+                    offs_[pn], o_ = o_, o_ + w
+                t_['packed'] = [(pn, w, b_, offs_[pn] if b_ == 'i_ctl' else o_k) for pn, w, b_, o_k in t_['packed']]
+                rot = ([f'i_ctl[{bw - 1}:0]'] + ([f'i_ctl[{bw + pw * nslot - 1}:{bw + pw}]'] if nslot > 1 else []) +
+                       [f'i_ctl[{bw + pw - 1}:{bw}]'])
+                t_['ports']['o_dn'] = dict(dir='output', width=bw + pw * nslot, cls='bundle',
+                                           peer=ch[j + 1] if j + 1 < len(ch) else None,
+                                           peer_port='i_ctl' if j + 1 < len(ch) else None, consumers=[],
+                                           expr='{' + ', '.join(reversed(rot)) + '}')
         fports['o_kg'] = dict(dir='output', width=23, cls='export', expr=sl(('KG',)), consumers=[(e, 'kg') for e in ects])
         for key in cfgs:
             fports[f'o_c{key[1]}'] = dict(dir='output', width=uw[key], cls='export', expr=sl(key),
@@ -788,6 +823,8 @@ def inject(m, K):
             if v['dir'] != 'output':
                 continue
             if v['cls'] == 'bundle':
+                if v['peer'] is None:
+                    continue                    # a chain end's forward word (unconsumed by design)
                 nets[(d, pn)] = [(v['peer'], v['peer_port'])]
                 widths[(d, pn)] = v['width']
                 continue
@@ -909,14 +946,18 @@ def _die_joins(m, K, B, add, fk, rec):
     bus('ks_lprg_cht', 'kv_oneway', 59, [('host', 'cohort_tag'), ('kvs_ctl', 'cht')])
     bus('ks_lprg_chg', 'kv_oneway', 2, [('host', 'cohort_gen'), ('kvs_ctl', 'chg')])
     bus('ks_seq_lp', 'kv_oneway', 21, [('kvs_ctl', 'lp'), ('seq', 'lp')])
+    # KVJ-G2b: attention service root -> PV pairs (the pvw st face was undriven); PV_LEAD = these relay edges (record)
+    if 'pvw_0' in by and 'pvw_1' in by:
+        bus('ks_pvst', 'kv_oneway', 31, [('kvs_attn', 'pvst'), ('pvw_0', 'st')])
+        fk['ks_pvst'] = [('pvw_1', 'st')]
     # HOST <-> boot / ownership / ownership observer (kv_static_boot_join.HOST_DIE_JOINS + kvjf own_obs quiet)
     hostw = {'boot_pr': 143, 'boot_image_target': 4, 'boot_image_ready': 1, 'boot_image_fault': 1, 'boot_image_epoch': 16,
              'boot_image_digest': 64, 'host_launch_quiet': 1, 'host_upstream_quiet': 6}
     t = all_tiles()['kvs_ctl']
     for c, p, pi, pp, w, lo in host_joins():
         if c == 'host':
-            loc_, port_ = CTL_LOCAL[pi], pp
-            bus(f'ks_host_{p}', 'kv_oneway', 1, [('kvs_ctl', f'{loc_}__{port_}'), ('host', p)])
+            loc_, port_ = cluster_of(pi)[2], pp
+            bus(f'ks_host_{p}', 'kv_oneway', w or 1, [('kvs_ctl', f'{loc_}__{port_}'), ('host', p)])
         elif pi == 'host':
             loc_ = CTL_LOCAL[c]
             pn = f'{loc_}__{p}'
@@ -970,7 +1011,13 @@ def _die_joins(m, K, B, add, fk, rec):
              '(merge fault, KVN credit) have no static producer; seq successor without them or a static source'),
         dict(where='embgw.emr_<q> (x4, 521 b)', owner='KVJ-C3 / Q-KV (static emr source for the boot-only gateway)'),
         dict(where='host.ctrl_completion_fault', owner='KVJ-SMALL (OR of the 128 pc_path completion_fault)'),
-        dict(where='pvw_<p>.st / ie', owner='KVJ-B service root (start / ctx / epoch) + KVE-2 / KVJ-D (ASTK e-read)'),
+        dict(where='pvw_<p>.ie (1,024 b)', owner='KVE-2 / KVJ-D (ASTK e-read qkd_astk_er_tap in the strip successor)'),
+        dict(where='kvs_attn.attn_face__f_valid / f_data / f_epoch', owner='KVE: the PV final join '
+             'ot_qwen_tp8_pv256_finalize_static_cal (pvw_0/1 po -> 16,384 b) has RTL but no die element / kit'),
+        dict(where='kvs_attn.attn_face__unit_fault (10 b)', owner='KVE-2: the 10 sticky service-unit faults (stacks, hub, '
+             'PV pairs pf, finalize, V req, e-read, rz-late, K identity, legacy pv, stack) need a die fault OR tree'),
+        dict(where='kvs_attn.attn_root PV_LEAD / attn_face RESULT_RELAY', owner='compiler: price from this plan (ks_pvst '
+             'relay stages) and regenerate the tile (RTL defaults 0 / default now)'),
     ]
 
 
@@ -1127,6 +1174,44 @@ def pin_face(master, port):
     if master == 'qkd_kvs_fan':
         return 'W'
     return None
+
+
+def waypoints(m, a, pa, b, pb):
+    """KVJ-G2b: planned corridor of a long control-tile word (die points, in order from a to b), or None (shortest path).
+    ctl <-> S-stack chain root (PC 31) / stack fan: down the PV pair's side channel (W / E of the centre column) to the
+    stack seam row (the free band between the S and N stacks), then along it to the stack's control channel (between the
+    HOST slice column and the groups) and down that channel to the fan.  ctl <-> N-stack fan: across the top band into the
+    N stack's control channel.  The stack's K / V channel (groups <-> V ports / ECTL, 1 kb words) keeps its relay spots."""
+    ends = {(a, pa), (b, pb)}
+    other = [e for e in ends if e[0] != 'kvs_ctl']
+    if len(other) != 1 or not any(e[0] == 'kvs_ctl' for e in ends):
+        return None
+    inst, port = other[0]
+    mt = re.fullmatch(r'kvs_fan_(WS|WN|ES|EN)', inst)
+    mp = re.fullmatch(r'kvpc_(WS|ES)_31', inst)
+    if not (mt or mp):
+        return None
+    st = (mt or mp).group(1)
+    by = {i.name: i for i in m['insts']}
+    ctl, pv = by['kvs_ctl'], by.get('pvw_1')
+    pv144 = m['geo'].get('pv144') or {}
+    if pv is None or 'side_channel_um' not in pv144:
+        return None
+    west = st[0] == 'W'
+    sw, se = pv144['side_channel_um'][:2]
+    lx = pv.x - sw / 2 if west else pv.x + pv.w + se / 2
+    nst = st[0] + 'N'
+    yseam = (by['pvw_0'].y + by['pvw_0'].h + by[f'kvpc_{nst}_0'].y) / 2
+    hs, gd = by[f'hsl_{st}_0'], by[f'slg_{st}_0']
+    xcc = (hs.x + hs.w + gd.x) / 2 if west else (gd.x + gd.w + hs.x) / 2       # the stack's control channel
+    ytop = by[f'kvpc_{nst}_31'].y + by[f'kvpc_{nst}_31'].h + 60.0
+    if mp:                                  # the S chain root word: PV side channel -> seam row -> PC 31
+        pts = [(lx, ctl.y - 100.0), (lx, yseam)]
+    elif st[1] == 'S':                      # the S fan: PV side channel -> seam row -> its own control channel
+        pts = [(lx, ctl.y - 100.0), (lx, yseam), (xcc, yseam)]
+    else:
+        pts = [(xcc, ytop)]
+    return pts if a == 'kvs_ctl' else list(reversed(pts))
 
 
 # ------------------------------------------------------------------------------------------------ record / report

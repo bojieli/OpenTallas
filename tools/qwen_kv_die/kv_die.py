@@ -2365,6 +2365,34 @@ def _relays(m):
         return [c for c in cells if dist(c) <= d0 + 2 * G]
 
     def route(a, b, pa='', pb=''):
+        wps_ = KSD.waypoints(m, a, pa, b, pb) if (KSD.ON and m['geo'].get('static_die')) else None
+        if wps_:
+            # KVJ-G2b: a static-die long word (ctl -> S-stack chain root / fan) runs through its planned waypoints (the
+            # PV-side channel, the stack seam row, the stack's control channel) instead of the shortest corridor, which is
+            # the stack's K / V channel whose relay spots the group <-> V port / ECTL words need
+            try:
+                cells_ = []
+                for k_, (wx_, wy_) in enumerate(wps_):
+                    cy_ = int(wy_ // G)
+                    c_ = None
+                    for dx_ in range(0, 40):
+                        for sgn in (1, -1):
+                            q_ = (int(wx_ // G) + sgn * dx_, cy_)
+                            if 0 <= q_[0] < nx and 0 <= q_[1] < ny and not owner.get(q_) and not (SP['on'] and q_ in rocc):
+                                c_ = q_
+                                break
+                        if c_:
+                            break
+                    if c_ is None:
+                        raise ValueError('no waypoint cell')
+                    cells_.append(c_)
+                pth_ = route_(a, 'wp0', near_pin(ring(by[a]), a, pa), {cells_[0]})
+                for k_ in range(1, len(cells_)):
+                    pth_ += route_(f'wp{k_ - 1}', f'wp{k_}', [cells_[k_ - 1]], {cells_[k_]})[1:]
+                pth_ += route_(f'wp{len(cells_) - 1}', b, [cells_[-1]], set(near_pin(ring(by[b]), b, pb)))[1:]
+                return pth_
+            except ValueError as e_:
+                print(f'kv die KVJ-G2b: {a}.{pa} -> {b}.{pb} waypoint route failed ({e_}); shortest path', file=sys.stderr)
         try:
             return route_(a, b, near_pin(ring(by[a]), a, pa), set(near_pin(ring(by[b]), b, pb)))
         except ValueError:
