@@ -180,15 +180,7 @@
   "views_to": "physical/ref_tile/qkd_ectl3_kiss_st/views",
   "record_to": "results/rtl/ref_tile/qkd_ectl3_kiss_st"
  },
- "io_flop_at_pins": {
-  "cols": 4,
-  "allow_none": true
- },
- "inhold": true,
- "outhold": true,
- "keep_pin_regs": true,
- "pin_reg_split": true,
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
- }
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": false
 }
