@@ -15,21 +15,24 @@ where --dir does not exist), and among the hosts that can admit --mem takes the 
 than 8 threads (--threads, default 16) while a larger host that can admit it still has cores.  Then it runs
 ssh <host> "cd DIR && ot-heavy --mem GB -- <command>".
 It syncs nothing: the inputs must already be on the host (name them with --dir so only hosts that have them qualify).
---pick prints an eligible host and the table and runs nothing. It applies the same load hold as a run;
-if all qualifying hosts are load-held it returns 75 immediately with no host on stdout (never sleeps).  stdin/stdout/exit status are the remote command's.
-Load hold (v5, owner 2026-10-14 ~18:40 "1.5 times cores is fine ... there needs to be a queue of tasks"): a hand-run
-job is held on THIS side (re-probing every 60 s) while every host that qualifies has load1 > 1.5 x cores, then goes to
-a host under that line.  Memory remains the only admission limit on the hosts; closure-loop routes (which call
-ot-heavy directly) are not held.  OT_RUN_NO_LOAD_HOLD=1 disables the hold.  --max-wait also bounds the hold.
+--pick prints an eligible host and the table and runs nothing.  stdin/stdout/exit status are the remote command's.
+NO LOAD HOLD (v6, owner 2026-10-18 ~01:05 "NEVER hold jobs on CPU load; keep the fleet busy"; memory is the only
+admission limit): CPU load only ORDERS the hosts that admit a request now (least loaded first); it never holds, delays or
+excludes a job.  The v5 client-side hold (load1 > 1.5 x cores) is gone; OT_RUN_NO_LOAD_HOLD is accepted and ignored.
+Probes report load as cpu_load1 (load1 from older probes is read too).
+REBALANCE (v6): when no host admits the request now and more than one host qualifies (by --dir / --disk / --hosts),
+the job waits on the host with the most planned free memory (or on the chosen host, when it lost an admission race)
+for at most REQUEUE_S (300 s), then is cancelled there
+(never started) and placed again on whichever qualifying host admits it, so a queue on one host drains into memory
+freed on another.  Data locality is kept: only hosts that have --dir qualify; --hosts pins.  --max-wait bounds the whole.
 Immediate eligibility uses admit_gb (the actual atomic ot-heavy admission capacity), not free_gb after subtracting
-unstarted waiters. When no host can admit now, planned free_gb still chooses the memory queue; waiting jobs do not
-reserve physical RAM or prevent a smaller job using otherwise idle capacity. ot-heavy rechecks admission atomically.
-Queue candidates must have enough total physical RAM after mandatory headroom for the request; an idle small host
-cannot take an impossible request or release a capable host's CPU hold. Older probes without a total retain legacy eligibility.
-The CPU hold considers memory-admissible hosts first; if none admits the request, it considers the hosts eligible
-for a memory queue. An underloaded host without enough memory cannot release a hold on memory-admissible hosts.
---priority die: a die-level trial (owner 2026-10-15 23:50). On the host it waits with OT_HEAVY_PRIO=die; while it
-                 waits, ot-heavy admits other requests only if they leave its charge free (DIE-FIRST, ot-heavy-reconcile).
+unstarted waiters. When no host can admit now, planned free_gb still chooses the memory queue.
+Queue candidates must have enough total physical RAM after mandatory headroom for the request.
+--priority die: a die-level job (die STA / GEN / GRT / die chain; owner 2026-10-15 23:50, 2026-10-18). On the host it
+                 waits with OT_HEAVY_PRIO=die and is admitted AHEAD of tile gates and benches: a non-die request yields
+                 only while a waiting die job fits the host NOW (it starts within seconds); a die job that does not fit
+                 never holds memory idle (DIE-FIRST v2, ot-heavy-reconcile).  ot-run also sets it for commands matching
+                 DIE_RE (see die_like()).
 --max-wait SEC: give up (exit 75, NOT RUN) when the host has not admitted the command after SEC seconds.
 
 Exit status (v2, 2026-10-13, after a bench was reported "EXIT 0" although nothing had run): ot-run returns the command's
@@ -40,7 +43,7 @@ a last stderr line "ot-run: NOT RUN ..." / "ot-run: NOT COMPLETED ...".  The las
 A killed ot-run (timeout, Ctrl-C) cancels its waiter on the host, so the command cannot start later with nobody
 listening; a command that already started is left running and the message says so.
 """
-import concurrent.futures as cf, json, os, shlex, signal, subprocess, sys, time
+import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, time
 
 HOSTS = ["ot-epyc4", "ot-pve1", "ot-agidock128"]
 
@@ -57,13 +60,23 @@ def probe(host, d):
 
 
 THREADS, SMALL_CORES, SMALL_THREADS = 16, 48, 8
-LOAD_HOLD, HOLD_POLL = 1.5, 60
+REQUEUE_S = 300                    # v6 REBALANCE: a queued (unstarted) waiter is re-placed after this long
+DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b)")
+
+
+def load1(r):
+    return r.get("cpu_load1", r.get("load1", 0))
+
+
+def die_like(cmd, d):
+    """die-level by name: die STA / GEN / GRT / chain scripts (owner 2026-10-18: die jobs go ahead of tile gates)"""
+    return bool(DIE_RE.search(" ".join(cmd) + " " + (d or "")))
 
 
 def ratio(r, threads):
     """projected CPU load of a host with this job on it, in units of its cores (load1 lags a launch by ~1 min, so the
     units started in the last 90 s are counted at THREADS each)"""
-    return (r.get("load1", 0) + THREADS * r.get("fresh", 0) + threads) / r["ncpu"]
+    return (load1(r) + THREADS * r.get("fresh", 0) + threads) / r["ncpu"]
 
 
 def physically_capable(row, mem):
@@ -125,24 +138,16 @@ def status(hosts):
             out.append(f"{h} unreachable")
             continue
         out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, growth {r['growth_gb']}) load "
-                   f"{r.get('load1', 0):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
+                   f"{load1(r):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
                    + f" run {r['running']}")
     live = {h: r for h, r in res.items() if h not in held and r and not r.get("error") and r.get("ncpu")
             and r["disk_gb"] >= 20 and physically_capable(r, 32)}
-    fits = {h: r for h, r in live.items() if r.get("admit_gb", r["free_gb"]) >= 32}
-    qualifying = fits or live
-    under = {h: r for h, r in qualifying.items() if r.get("load1", 0) <= LOAD_HOLD * r["ncpu"]}
-    bypass = os.environ.get("OT_RUN_NO_LOAD_HOLD") == "1"
-    if qualifying and not under and not bypass:
-        next_job = " | next 16-thread 32 GB job: load held"
-    else:
-        eligible = {h: r for h, r in live.items() if bypass or h in under or h not in qualifying}
-        best, queue = choose(eligible, 32)
-        next_job = (f" | next 16-thread 32 GB job -> {best}" + (" (would queue)" if queue else "")) if best else " | next 16-thread 32 GB job: no eligible host"
+    best, queue = choose(live, 32)
+    next_job = (f" | next 16-thread 32 GB job -> {best}" + (" (would queue)" if queue else "")) if best else " | next 16-thread 32 GB job: no eligible host"
     print("ot-run status: " + " | ".join(out) + next_job)
 
 
-def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False):
+def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
@@ -196,7 +201,8 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False):
         return (ssh_rc or 255), False
     why = f"cannot cd to {d}" if state["nocd"] else f"ot-heavy exit {state['rc']}" if state["rc"] is not None \
         else f"ssh ended with status {ssh_rc} before the command was admitted"
-    say(f"ot-run: NOT RUN on {host}: {why}")
+    if not (quiet_notrun and state["rc"] == 75):
+        say(f"ot-run: NOT RUN on {host}: {why}")
     return (state["rc"] or ssh_rc or 255), False
 
 
@@ -264,58 +270,53 @@ def main():
                   f"edit {HELD_FILE} to release", file=sys.stderr)
             sys.exit(75 if pick else 1)
         hosts = kept
-    t0, held = time.time(), False
+    if os.environ.get("OT_RUN_PRIO_ENV") is None and die_like(cmd, d):
+        os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
+        print("ot-run: die-level command (DIE_RE): --priority die", file=sys.stderr)
+    t0 = time.time()
+    first = True
     while True:
-        with cf.ThreadPoolExecutor(len(hosts)) as ex:
-            res = dict(ex.map(lambda h: probe(h, d), hosts))
-        live = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and r["disk_gb"] >= disk and physically_capable(r, mem)}
-        # A host that cannot admit this request cannot release the CPU hold:
-        # otherwise an idle, memory-full EPYC filters out a loaded PVE that
-        # actually has memory, then choose() queues on the full EPYC forever.
-        fits = {h: r for h, r in live.items() if r.get("admit_gb", r["free_gb"]) >= mem}
-        qualifying = fits or live
-        under = {h: r for h, r in qualifying.items() if r.get("load1", 0) <= LOAD_HOLD * r["ncpu"]}
-        bypass = os.environ.get("OT_RUN_NO_LOAD_HOLD") == "1"
-        if bypass or not live or under:
-            if held:
-                print(f"ot-run: load hold released after {time.time() - t0:.0f} s", file=sys.stderr)
-            if not bypass:
-                res = {h: (r if h in under or h not in qualifying else {"error": "load hold: load1 > %.1f x cores" % LOAD_HOLD})
-                       for h, r in res.items()}
-            break
+        ok = place(hosts, d, disk, mem, quiet=not first)
+        best, queue = choose(ok, mem, threads)
+        if not best:
+            sys.exit("ot-run: no host qualifies")
+        print(f"ot-run: -> {best}" + (f" (will queue: admits {ok[best].get('admit_gb', ok[best]['free_gb'])} GB < {mem} GB)" if queue else ""),
+              file=sys.stderr)
         if pick:
-            sys.exit(print("ot-run: NOT RUN: load hold: every qualifying host above %.1f x cores; --pick is read-only, retry later" %
-                           LOAD_HOLD, file=sys.stderr) or 75)
-        if max_wait is not None and time.time() - t0 > max_wait:
-            sys.exit(print("ot-run: NOT RUN: load hold: every qualifying host above %.1f x cores for %d s" %
-                           (LOAD_HOLD, time.time() - t0), file=sys.stderr) or 75)
-        if not held:
-            print("ot-run: load hold: every qualifying host has load1 > %.1f x cores (%s); waiting" % (LOAD_HOLD, ", ".join(
-                f"{h} {r.get('load1', 0):.0f}/{r['ncpu']}" for h, r in qualifying.items())), file=sys.stderr)
-        held = True
-        time.sleep(HOLD_POLL)
+            print(best)
+            return
+        left = None if max_wait is None else max(1, int(max_wait - (time.time() - t0) + 0.999))
+        wait = left
+        if len(ok) > 1:                    # REBALANCE: an unstarted waiter is re-placed after REQUEUE_S
+            wait = REQUEUE_S if left is None else min(REQUEUE_S, left)
+        rc, ran = run(best, mem, cmd, d, wait, quiet_notrun=(wait != left))
+        if ran or rc != 75 or wait == left:
+            sys.exit(rc if ran else (rc or 255))
+        print(f"ot-run: REBALANCE: not admitted on {best} within {wait} s; placing again", file=sys.stderr)
+        first = False
+
+
+def place(hosts, d, disk, mem, quiet=False):
+    """probe the hosts; return host -> row for every host that qualifies (dir, disk, physical RAM).  No load test."""
+    with cf.ThreadPoolExecutor(len(hosts)) as ex:
+        res = dict(ex.map(lambda h: probe(h, d), hosts))
     ok = {}
     for h, r in res.items():
         note = "no " + str(d) if r is None else r.get("error") or ("disk %d GB < %d" % (r["disk_gb"], disk) if r["disk_gb"] < disk else "")
+        if r and not r.get("error") and not note and not r.get("ncpu"):
+            note = "probe without ncpu"
         if r and not r.get("error") and not physically_capable(r, mem):
             note = "request %d GB exceeds physical RAM after mandatory headroom" % mem
         if r and not r.get("error"):
-            print(f"ot-run: {h:14s} admits {r.get('admit_gb', r['free_gb']):5d} GB (avail {r['avail_gb']}, growth {r['growth_gb']}, headroom "
-                  f"{r['headroom_gb']}, waiters {r['waiting']}/{r['waiting_gb']} GB) load {r.get('load1', 0):.0f}/{r.get('ncpu', 0)} "
-                  f"running {r['running']} disk {r['disk_gb']} GB {note}", file=sys.stderr)
+            if not quiet:
+                print(f"ot-run: {h:14s} admits {r.get('admit_gb', r['free_gb']):5d} GB (avail {r['avail_gb']}, growth {r['growth_gb']}, headroom "
+                      f"{r['headroom_gb']}, waiters {r['waiting']}/{r['waiting_gb']} GB) load {load1(r):.0f}/{r.get('ncpu', 0)} "
+                      f"running {r['running']} disk {r['disk_gb']} GB {note}", file=sys.stderr)
             if not note:
                 ok[h] = r
-        else:
+        elif not quiet:
             print(f"ot-run: {h:14s} skipped: {note}", file=sys.stderr)
-    best, queue = choose(ok, mem, threads)
-    if not best:
-        sys.exit("ot-run: no host qualifies")
-    print(f"ot-run: -> {best}" + (f" (will queue: admits {ok[best]['free_gb']} GB < {mem} GB)" if queue else ""), file=sys.stderr)
-    if pick:
-        print(best)
-        return
-    rc, ran = run(best, mem, cmd, d, max_wait)
-    sys.exit(rc if ran else (rc or 255))
+    return ok
 
 
 if __name__ == "__main__":
