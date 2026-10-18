@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/dsdv_gunit_l2.lef",
-    "sha256": "80fee4b5f117f6ba5d2e2f7a49e851467751f089f96eb2f24b9025e73558ea4c"
+    "sha256": "d61692a9c6831539c24ee2e8b1f635ee616c7af5411c3f3169e2ebc30e422c3b"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-g1-99ffdc846/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-n3-4ad138b2f/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-g1-99ffdc846/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-g1-99ffdc846/record/views/dsdv_gunit_l2/provenance/raw/dsdv_gunit_l2.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-g1-99ffdc846/record/views/dsdv_gunit_l2/provenance/dsdv_gunit_l2.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-n3-4ad138b2f/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-n3-4ad138b2f/record/views/dsdv_gunit_l2/provenance/raw/dsdv_gunit_l2.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-n3-4ad138b2f/record/views/dsdv_gunit_l2/provenance/dsdv_gunit_l2.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 435 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 8 OBS rects moved into 8 pins: cwn_v, cws_v, dl_av, hct_v, hf, hp_av, rct_v, rf; pockets: 439 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-g1-99ffdc846/record/views/dsdv_gunit_l2/provenance/dsdv_gunit_l2.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l2-n3-4ad138b2f/record/views/dsdv_gunit_l2/provenance/dsdv_gunit_l2.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "dsdv_gunit_l2 345.6 x 172.8: PG M5 VDD 64 stripes (98% spread, 100% cov) / VSS 64 stripes (98% spread, 100% cov); strap M6; face pins 3584 blocked-above 0 blocked-same 0; clock clk insertion 277 ps; pockets M5 0 (closed)",
+    "summary": "dsdv_gunit_l2 345.6 x 172.8: PG M5 VDD 64 stripes (98% spread, 100% cov) / VSS 64 stripes (98% spread, 100% cov); strap M6; face pins 3584 blocked-above 0 blocked-same 0; clock clk insertion 328 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "dsdv_gunit_l2",
       "W": 345.6,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 3584,
         "blocked_above": 0,
-        "covered_below": 556,
+        "covered_below": 49,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 276.86,
-          "min_ps": 208.63
+          "max_ps": 327.9,
+          "min_ps": 244.81
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 435
+          "added": 439
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "dsdv_gunit_l2.lef",
-    "sha256": "4b756454150fac717c1a398f9f9dfe867ba45236d16e90f8a1c725a2bfa30f4b"
+    "sha256": "3ba2ce294fc9bc54e2bfc5bbc9bc3be4591b77829af6a77e9315edc7fe1fae44"
   }
 }
