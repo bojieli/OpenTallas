@@ -440,7 +440,6 @@ OPEN_OWNERS = [   # (role / local, port prefix) -> owner: producers still being 
     ('pc', 'emb_half', 'KVJ-C3 (embedding token-run slot player)'),
     ('pc', 'emb_scale', 'KVJ-C3 (embedding token-run slot player)'),
     ('pc', 'emb_return_slot', 'KVJ-C3 (embedding token-run slot player)'),
-    ('pc', 'ci', 'Q-KV decision: the legacy controller command/KV-write word (old qkd_cdc_wleaf co); no static producer'),
     ('embr', 'capture_slot', 'KVJ-C3 (embedding slot player: station capture slots)'),
     ('embr', 'transfer_slot', 'KVJ-C3 (embedding slot player: station transfer slots)'),
     ('join', 'beat_slot', 'KVJ-C3 (embedding slot player: join4 beat slot)'),
