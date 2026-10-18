@@ -188,6 +188,15 @@ class Abut(unittest.TestCase):
         h = RT.read_view_lef(self.V)["H"]
         self.assertEqual(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)]), [])
 
+    def test_stack_three_high(self):
+        """a 3+ high abutted bank: non-neighbours (macro 0 / macro 2) are one stack, not a sub-20-um channel
+        (KV-PROMPT4 10-18 between_in_stack); a real gap inside the bank still fails"""
+        h = RT.read_view_lef(self.V)["H"]
+        bank = [self.blk(i, 100.0, 100.0 + i * (h + 0.024)) for i in range(4)]
+        self.assertEqual(self.chan(bank), [])
+        gap = [self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024), self.blk(2, 100.0, 100.0 + 2 * h + 5.024)]
+        self.assertGreaterEqual(len(self.chan(gap)), 1)
+
     def test_stack_abutted_mirrored(self):
         """MY / MX / R180 banks abut like R0 (touching faces carry no signal pin); a rotated macro keeps the rule"""
         h = RT.read_view_lef(self.V)["H"]
