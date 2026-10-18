@@ -2,17 +2,22 @@
  "name": "s81su_smhq-s81su_smhq-COMMIT",
  "block": "dsfd_su_t_smhq",
  "ref_tile": true,
- "owner": "Claude:S81U-2",
+ "owner": "Claude:OWNERS-S81/SMH",
  "purpose": "S81U-SMH2: lane-quad regional cluster (x4 per head) of the S81-DV per-head SM subtree (bench: tools/s81_su_sm/sms_bench.sh SMT=1; su_gate.py run --hier --smu with OT_SU_VDEFS=-DSU_SMU_T).",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/s81u2-1017",
+  "branch": "claude/smh-1018",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/su_sm",
    "physical/ref_tile/s81su_sml_u65_ref/views",
-   "physical/ref_tile/s81su_smd_u65_ref/views"
+   "physical/ref_tile/s81su_smd_u65_ref/views",
+   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+   "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+   "rtl/hdc",
+   "tools/s81_su_sm",
+   "results/rtl/s81_dv_1016/su_sm"
   ]
  },
  "stages": {
@@ -26,6 +31,30 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "sms_smt_exact",
+    "cmd": "SMT=1 bash tools/s81_su_sm/sms_bench.sh {RUN}/sms_smt_exact 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "pass_regex": "^SMS PASS MUT=0 "
+   },
+   {
+    "name": "sms_smt_mut_split",
+    "cmd": "SMT=1 bash tools/s81_su_sm/sms_bench.sh {RUN}/sms_smt_mut_split 6",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "fail_regex": "^SMS FAIL MUT=6 errors=[1-9]"
+   },
+   {
+    "name": "sms_smt_mut_staleden",
+    "cmd": "SMT=1 bash tools/s81_su_sm/sms_bench.sh {RUN}/sms_smt_mut_staleden 5",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "fail_regex": "^SMS FAIL MUT=5 errors=[1-9]"
    }
   ],
   "calibrate": {
