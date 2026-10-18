@@ -1,0 +1,184 @@
+{
+ "schema": "opentallas.s81.layer_tput.v2",
+ "date": "2026-10-18",
+ "lane": "TOKEN-PASS-S81",
+ "status": "BLOCKED_NO_DV_LAYER_VEHICLE",
+ "summary": "The 10-13/14 layer vehicle tb_s81_die_layer cannot be updated to the current die: the p4l DV die (bind9) contains NONE of its masters (dsfd_sp_ctrl_e, dsfd_sp_hc_c, dsfd_sp_su_h, dsfd_sp_collective_c, dsfd_sp_gather_c/capture_c, the hub VM). The DV die is 128 ROM frames (col_h9/h10/h9_MX_l4 + cfg7_seq_bfp), 16 vector slices (ot_s81sl_slice*: SU/HC/norm/capture/Engram distributed), 16 svc_rs attention services, gunit, bk_sel/bk_col, seq_host (ot_dsdv_fixed_issue calendar), 224 landings, 2,836 rlyh relays, 16 HBM ctrl_rg2, serdes/ucie. No compiler emits a DV layer program (seq_host calendar + CTL templates, frame cfg7 programs, svc / gunit jobs, return calendar) and no DV fixtures exist, so no layer can run on it yet. Delivered now: per-layer p4l price (the target), a full-RTL die elaboration + idle-run cost probe (build/run wall for the fleet-hours estimate), and the vehicle plan.",
+ "layers": [
+  {
+   "design": "DS ROM S81 (DV die p4l, landed, half-cycle hops)",
+   "layer": "L0",
+   "cls": "sliding-window attention + MoE FFN (first layer; the model has no dense FFN layer: every layer is MoE top-6/384)",
+   "rtl": "claude/s81-die7-1018 77083deda; die top results/arch/s81_dv_1016/bind9 (die_sha256 d0222e67dc3d..., strict DIE_PORT_BIND PASS 40 masters / 7,489 inst)",
+   "cycles": null,
+   "price": {
+    "dv_p4l_crit": 15475.0,
+    "hub_dag_crit": 14942.6,
+    "workload": "ar",
+    "source": "results/rtl/s81_layer_tput_1018/layer_price_p4l.json (dv_layer_price.py = dv_price.py dv_base deltas + p4l land plan, half-cycle; COMPOSED_NOT_NATIVE)"
+   },
+   "ratio": null,
+   "exact": null,
+   "schedule_asserts": null,
+   "mutants": null,
+   "build_wall_s": null,
+   "run_wall_s": null,
+   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "historical_hub_vehicle": {
+    "cycles": 7737,
+    "src": "results/rtl/s81_layer_tput_1013/r8_landing_schedule_gate.json positive.L0.adjusted_layer_cycles (af72194a9)"
+   }
+  },
+  {
+   "design": "DS ROM S81 (DV die p4l, landed, half-cycle hops)",
+   "layer": "L2",
+   "cls": "CSA: compressor + indexer + sparse gather",
+   "rtl": "claude/s81-die7-1018 77083deda; die top results/arch/s81_dv_1016/bind9 (die_sha256 d0222e67dc3d..., strict DIE_PORT_BIND PASS 40 masters / 7,489 inst)",
+   "cycles": null,
+   "price": {
+    "dv_p4l_crit": 28102.8,
+    "hub_dag_crit": 27483.6,
+    "workload": "ar",
+    "source": "results/rtl/s81_layer_tput_1018/layer_price_p4l.json (dv_layer_price.py = dv_price.py dv_base deltas + p4l land plan, half-cycle; COMPOSED_NOT_NATIVE)"
+   },
+   "ratio": null,
+   "exact": null,
+   "schedule_asserts": null,
+   "mutants": null,
+   "build_wall_s": null,
+   "run_wall_s": null,
+   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "historical_hub_vehicle": {
+    "cycles": 16358,
+    "src": "results/rtl/s81_layer_tput_1013/r8_landing_schedule_gate.json positive.L2.adjusted_layer_cycles (af72194a9)"
+   }
+  },
+  {
+   "design": "DS ROM S81 (DV die p4l, landed, half-cycle hops)",
+   "layer": "L14",
+   "cls": "Engram + compressor + indexer",
+   "rtl": "claude/s81-die7-1018 77083deda; die top results/arch/s81_dv_1016/bind9 (die_sha256 d0222e67dc3d..., strict DIE_PORT_BIND PASS 40 masters / 7,489 inst)",
+   "cycles": null,
+   "price": {
+    "dv_p4l_crit": 28028.0,
+    "hub_dag_crit": 27347.8,
+    "workload": "ar",
+    "source": "results/rtl/s81_layer_tput_1018/layer_price_p4l.json (dv_layer_price.py = dv_price.py dv_base deltas + p4l land plan, half-cycle; COMPOSED_NOT_NATIVE)"
+   },
+   "ratio": null,
+   "exact": null,
+   "schedule_asserts": null,
+   "mutants": null,
+   "build_wall_s": null,
+   "run_wall_s": null,
+   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "historical_hub_vehicle": {
+    "cycles": 18861,
+    "src": "results/rtl/s81_functional_token_1014/layer_chain_c4b76480b/README.md (shier, c4b76480b)"
+   }
+  },
+  {
+   "design": "DS ROM S81 (DV die p4l, landed, half-cycle hops)",
+   "layer": "L20",
+   "cls": "HCA class pick: compressor + indexer + candidate merge (heaviest compressed-attention layer; layer_chain table ratio1+cmp+idx+cand)",
+   "rtl": "claude/s81-die7-1018 77083deda; die top results/arch/s81_dv_1016/bind9 (die_sha256 d0222e67dc3d..., strict DIE_PORT_BIND PASS 40 masters / 7,489 inst)",
+   "cycles": null,
+   "price": {
+    "dv_p4l_crit": 30428.5,
+    "hub_dag_crit": 29799.9,
+    "workload": "ar",
+    "source": "results/rtl/s81_layer_tput_1018/layer_price_p4l.json (dv_layer_price.py = dv_price.py dv_base deltas + p4l land plan, half-cycle; COMPOSED_NOT_NATIVE)"
+   },
+   "ratio": null,
+   "exact": null,
+   "schedule_asserts": null,
+   "mutants": null,
+   "build_wall_s": null,
+   "run_wall_s": null,
+   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "historical_hub_vehicle": {
+    "cycles": 34410,
+    "src": "results/rtl/s81_functional_token_1014/layer_chain_c4b76480b/README.md (c4b76480b)"
+   }
+  },
+  {
+   "design": "DS ROM S81 (DV die p4l, landed, half-cycle hops)",
+   "layer": "mtp_draft",
+   "cls": "MTP / DSpark draft (draft.fixed + draft.markov + draft.head)",
+   "rtl": "claude/s81-die7-1018 77083deda; die top results/arch/s81_dv_1016/bind9 (die_sha256 d0222e67dc3d..., strict DIE_PORT_BIND PASS 40 masters / 7,489 inst)",
+   "cycles": null,
+   "price": {
+    "dv_p4l_crit": 42457.5,
+    "hub_dag_crit": 42457.5,
+    "workload": "mtp",
+    "source": "results/rtl/s81_layer_tput_1018/layer_price_p4l.json (dv_layer_price.py = dv_price.py dv_base deltas + p4l land plan, half-cycle; COMPOSED_NOT_NATIVE)"
+   },
+   "ratio": null,
+   "exact": null,
+   "schedule_asserts": null,
+   "mutants": null,
+   "build_wall_s": null,
+   "run_wall_s": null,
+   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "historical_hub_vehicle": null
+  },
+  {
+   "design": "DS ROM S81 (DV die p4l, landed, half-cycle hops)",
+   "layer": "head",
+   "cls": "LM head + argmax (separate head die S058, not the p4l layer die)",
+   "rtl": "head die: not part of p4l (native 4-rank head bench, results/rtl/s81_functional_token_1014/r3r4)",
+   "cycles": null,
+   "price": {
+    "dv_p4l_crit": 11334.4,
+    "hub_dag_crit": 11334.4,
+    "workload": "ar",
+    "source": "results/rtl/s81_layer_tput_1018/layer_price_p4l.json (dv_layer_price.py = dv_price.py dv_base deltas + p4l land plan, half-cycle; COMPOSED_NOT_NATIVE)"
+   },
+   "ratio": null,
+   "exact": null,
+   "schedule_asserts": null,
+   "mutants": null,
+   "build_wall_s": null,
+   "run_wall_s": null,
+   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "historical_hub_vehicle": null
+  }
+ ],
+ "die_probe": {
+  "bench": "rtl/dsrom_sys/s81_dv/test/tb_dv_die_probe.sv",
+  "script": "rtl/dsrom_sys/s81_dv/test/run_dv_die_probe.sh",
+  "file_list": "results/rtl/s81_layer_tput_1018/die_probe.f (die_port_bind.py --elab-out closure: 269 RTL files + tb)",
+  "host_dir": "ot-epyc5:/srv/opentallas-scratch/claude/tokpass-s81/probe_bind9",
+  "status": "LAUNCHED 10-18 07:38 (ot-run, queued for 120 GB on ot-epyc5); result -> pending_results.txt",
+  "verilator": "5.032 (fleet; 5.050 of the 10-13 runs is not installed)"
+ },
+ "behavioural_or_missing": [
+  {
+   "item": "DV layer program compiler",
+   "why": "nothing lowers the token-path layer ops to the seq_host calendar / CTL templates / frame cfg7 programs / svc + gunit jobs / frame return calendar; frame_return_plan.py covers the return calendar only"
+  },
+  {
+   "item": "layer fixtures",
+   "why": "golden operands for slices (leaf stores), ROM frame images for the stage, KV/HBM state at 1M ctx; the 10-14 hub fixtures (SU snapshots, chain fixtures, 1M shard copies) lived on retired ot-epyc1tb, only su_cases_v2_ildr.pkl survives (ot-epyc4)"
+  },
+  {
+   "item": "cross-die collective / d2d",
+   "why": "off-die: serdes/ucie PMA are modelled (allowed); a layer bench needs the 4-die TP4 partner traffic at the PMA boundary (peer dies as stimulus or 4 die instances)"
+  },
+  {
+   "item": "HBM PHY",
+   "why": "ot_hbm3e_phy_v41x_aw30_e8p5 model (off-chip, allowed) needs the KV image for 1M ctx"
+  },
+  {
+   "item": "head die, MTP draft die",
+   "why": "not in p4l; head = separate die (native 4-rank head bench exists, 10-14 RTL); MTP draft die bound, not routed"
+  }
+ ],
+ "vehicle_plan": [
+  "1 dv_layer_compile.py: token-path layer ops -> per-engine static rows using p4l latencies (land_plan E, rlyh half-cycle stations, seq_host fixed latencies) -> seq_host calendar + CTL templates (+0x10/0x11/0x13/0x14 host CSR boot stream), cfg7 programs per frame, svc/gunit jobs, return calendar",
+  "2 fixtures from the released checkpoint + 1M shard per layer (L0, L2, L14, L20, L21) -> frame ROM images (dsrom_s81_crom_image.py), slice leaf-store images, HBM KV image",
+  "3 bench = dv_die (this probe top) + host-lane boot driver + 3 PMA peer models (TP4) + golden compare at the slices h rows (HLOAD/HSTORE readback) + schedule faults (fixed_issue / landings / svc sticky faults are the static-schedule assertions) + mutants (calendar row shifted by 1, landing E-1, VS_MUT)",
+  "4 cost: build/run wall from the probe; one die = one stage (97 stages), so a layer = 1-2 die runs"
+ ],
+ "fleet_cost_estimate": "pending the probe (build wall + RSS, simulated cycles per wall second); layer price 15-31k cycles a layer on p4l"
+}
