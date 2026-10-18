@@ -33,7 +33,6 @@
  "pins": {
   "S": [
    "vi_s",
-   "clk",
    "rst_n",
    "vo_s"
   ],
@@ -48,7 +47,8 @@
    "ek",
    "uid",
    "eg_n",
-   "fault"
+   "fault",
+   "clk"
   ]
  },
  "clock_port": "clk",
