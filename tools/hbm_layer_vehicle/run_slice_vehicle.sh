@@ -15,12 +15,17 @@ if [ "${REUSE:-0}" = 1 ] && [ -x "$OUT/obj/Vtb_hbm_slice" ]; then echo "REUSE bu
   python3 flatten_masters.py --bundle . --views views.json --hier ${HIERMARK:-1} --nohier "${NOHIER-hfd_vms_bank_native_q0_faces}" --verilator "$VL" > "$OUT/flatten.log" 2>&1 || { cat "$OUT/flatten.log"; exit 3; }
   sed 's#^#masters/#; s#$#.sv#' slice/masters.txt | grep -v '^masters/ot_hbm3e_phy_rc_e8p5\.sv$' > slice/masters.f
   for f in $(cat slice/masters.f); do [ -f "$f" ] || { echo "MISSING $f"; exit 4; }; done
-  /usr/bin/time -v -o "$OUT/build.time" "$VL" --binary --timing ${HIER:---hierarchical} -j "$JOBS" --build-jobs "$JOBS" -O1 \
-    --unroll-count 16384 --unroll-stmts 4000000 --top-module tb_hbm_slice -Mdir "$OUT/obj" \
+  # Verilate WITHOUT --build: the hier blocks are verilated serially (make -j1 hier_verilation) -- Verilator 5.050's
+  # _hier.mk two-target rule runs a block twice under make -j (PCH race + double memory, HBM-TKM3 47debc90b) -- then
+  # the C++ is built in parallel (hier_build -j JOBS).
+  /usr/bin/time -v -o "$OUT/build.time" bash -c '"$0" --cc --exe --main --timing ${HIER:---hierarchical} -j "$1" -O1 \
+    --unroll-count 16384 --unroll-stmts 4000000 --top-module tb_hbm_slice -Mdir "$2/obj" \
     -Wno-fatal -Wno-lint -Wno-style -Wno-MODDUP -Wno-PINMISSING -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-TIMESCALEMOD \
     -Wno-INITIALDLY -Wno-COMBDLY -Wno-BLKANDNBLK -Wno-SELRANGE -Wno-WIDTH -Wno-CASEINCOMPLETE \
     --x-initial unique --x-assign unique \
-    -f slice/masters.f rtl/test/hbm_layer/ot_hbm3e_phy_rc_e8p5_dram_model.sv slice/slice.v slice/tb_slice.sv > "$OUT/build.log" 2>&1
+    -f slice/masters.f rtl/test/hbm_layer/ot_hbm3e_phy_rc_e8p5_dram_model.sv slice/slice.v slice/tb_slice.sv &&
+    make -C "$2/obj" -f Vtb_hbm_slice_hier.mk -j1 hier_verilation &&
+    make -C "$2/obj" -f Vtb_hbm_slice_hier.mk -j "$1" hier_build' "$VL" "$JOBS" "$OUT" > "$OUT/build.log" 2>&1
   BRC=$?
 fi
 T1=$(date +%s); RRC=-1
