@@ -95,6 +95,18 @@ LEDGER = ROOT / "results/arch/hbm_d4g_price_1017/latency_ledger.json"
 # C2: gathers whose consumer is the quadrant-sliced HC engine (HC_POST) -> slice delivery, no ring
 SLICED_GATHERS = ("attn_out_gather", "ffn_out_gather")
 # D2: replicated tables (every quadrant reads them)
+# QBG (coordinator 0dr addition, 10-18): quantize-before-gather. Gathered tensors whose ONLY consumer is an FP8
+# block-dot linear (golden linear_q -> quant_fp8, block 32, UE8M0 exponent) are quantised in the source quadrant by the
+# same activation quantiser the SM x-load uses and gathered as E4M3 codes + one exponent byte per 32-block:
+#   expert_intermediate_gather.s* : a = silu(g) u -> to_bf16 -> linear_q(w2)          (hdc_golden_v41.expert)
+#   o-group (GROUP_REDUCE_MCAST)   : z = to_bf16(grouped wo_a) -> linear_q(wo_b)      (hdc_golden_v41 attention)
+#   engram.rows_gather             : decoded rows -> linear_q(engram.wkv)              (hdc_golden_v41.engram_layer)
+# Everything else (qa -> q_norm, kvraw -> kv_norm, iq -> FP4 index quant, gsc -> router, cmp, iwr, engram kv) stays
+# full precision; Qwen stays full precision.  Bit-exactness: quant_fp8 is per 32-block, so quantising each quadrant
+# slice separately equals quantising the whole vector iff every quadrant slice boundary is a multiple of 32
+# (qbg_slice_check below; bench tools/hgi_sim/qbg_quant_bench_1018.py against the reference quantizer).
+QBG_TAGS = ("expert_intermediate_gather.", "o-group", "engram.rows_gather.")
+QBG_BLOCK = 32
 REPL_TABLES = ("q_norm.gain", "kv_norm.gain", "route.bias", "kv_rope.table", "attend.sink_table", "route.one",
                "engram.codes", "engram.scales", "engram.wgt", "engram.ids")
 
@@ -192,6 +204,39 @@ def ag_cycles(B, r_hop, D=0.0, nominal=True, rings=1):
     return best, F
 
 
+def qbg_ok(r):
+    """the C1 record qualifies for quantize-before-gather (QBG_TAGS) and its quadrant slices are 32-block aligned"""
+    tag = r.tag or ""
+    if not tag.startswith(QBG_TAGS):
+        return False
+    A = r.desc.get("A")
+    n = A.n if A is not None else 0
+    return n > 0 and n % (NQ * QBG_BLOCK) == 0
+
+
+def qbg_census(prog):
+    """AG traffic census of one programme: bytes per C1 tag, the QBG-qualifying fraction and the slice check"""
+    rows, tot, ok = {}, 0, 0
+    for r in prog:
+        if classify(r) != "C1":
+            continue
+        B, _ = coll_bytes(r)
+        A = r.desc.get("A")
+        n = A.n if A is not None else 0
+        k = re.sub(r"\s.*", "", r.tag or "")
+        e = rows.setdefault(k, dict(records=0, bytes=0, n=n, quadrant_slice=n / NQ,
+                                    qualifies=bool((r.tag or "").startswith(QBG_TAGS)),
+                                    slice_mod32=(n // NQ) % 32 if n % NQ == 0 else None,
+                                    slice_mod128=(n // NQ) % 128 if n % NQ == 0 else None))
+        e["records"] += 1
+        e["bytes"] += B
+        tot += B
+        ok += B if qbg_ok(r) else 0
+    return dict(per_tag=rows, ag_bytes_total=tot, ag_bytes_qbg=ok, qbg_fraction=round(ok / tot, 4) if tot else 0.0,
+                qbg_bytes_after=ok // VM_WORD_B + ok // VM_WORD_B // QBG_BLOCK,
+                slice_rule="quadrant slice n/4 must be a multiple of the golden act_quant block (32); 128 reported for reference")
+
+
 def sfu_using(r):
     sut = getattr(r, "sut", None)
     return r.unit == "SFU" or (r.unit == "SU" and isinstance(sut, dict) and sut.get("sfu"))
@@ -213,6 +258,8 @@ def d4g_added(r, c, kn):
         B, wire = coll_bytes(r)
         if kn.get("ag_fp8") and r.op == "ALL_GATHER":
             B = B // VM_WORD_B + B // VM_WORD_B // 32          # FP8 k32 operand + E8M0 scales (opt-in, see doc)
+        elif kn.get("ag_qbg") and qbg_ok(r):
+            B = B // VM_WORD_B + B // VM_WORD_B // QBG_BLOCK   # QBG: E4M3 codes + 1 exponent byte a 32-block
         f1 = max(1, math.ceil(wire / kn["G1"] / 64))
         D = S.deliver(f1, kn["G1"], kn["lanes"])
         ag, _ = ag_cycles(B, kn["r_hop"], D, kn["nominal"], kn.get("rings", 1))
@@ -310,6 +357,8 @@ def _qwen(job):
         return S._qwen_job((name, var, stages))
     q = var.get("qwen") or {}
     kq = dict(kn, G1=q.get("G1", 8), lanes=q.get("lanes", 4))
+    kq.pop("ag_qbg", None)            # Qwen stays full precision (coordinator 0dr)
+    kq.pop("ag_fp8", None)
     base = T.cost
 
     def cost(r, dyn, L, cfg=None):
@@ -329,7 +378,9 @@ def _any(job):
 def _census(_):
     S.set_variant(PS.VARIANTS["b"], json.loads((ROOT / "results/arch/hbm_plan_study_1017/stages.json").read_text()))
     prog = RL.compile_case("AR")
-    return place_programme(prog)
+    out = place_programme(prog)
+    out["qbg_census_AR"] = qbg_census(prog)
+    return out
 
 
 def static_schedule(kn):
@@ -380,6 +431,13 @@ def main():
     variants["opt_2ring"] = (vb, dict(knob(ADDERS, st, ledger=led), rings=2))
     variants["opt_fp8_gather"] = (vb, dict(knob(ADDERS, st, ledger=led), ag_fp8=True))
     variants["opt_2ring_fp8"] = (vb, dict(knob(ADDERS, st, ledger=led), rings=2, ag_fp8=True))
+    # coordinator 0dr: two rings ADOPTED (d4g_2ring = the new d4g headline); QBG on top (adopted if bit-exact)
+    variants["opt_qbg"] = (vb, dict(knob(ADDERS, st, ledger=led), ag_qbg=True))
+    variants["opt_2ring_qbg"] = (vb, dict(knob(ADDERS, st, ledger=led), rings=2, ag_qbg=True))
+    variants["d4g_2ring_upper"] = (vbd, dict(knob([x for x in ADDERS if x != "BD"], st, nominal=False, ledger=led),
+                                             allow_mcast=False, rings=2))
+    variants["d4g_2ring_qbg_upper"] = (vbd, dict(knob([x for x in ADDERS if x != "BD"], st, nominal=False, ledger=led),
+                                                 allow_mcast=False, rings=2, ag_qbg=True))
     jobs = [("ds", f"{k}|{case}", case, v, st, kn) for k, (v, kn) in variants.items()
             for case in ("AR", "MTP_design", "draft_design")]
     jobs += [("qwen", f"{k}|qwen", v, st, kn) for k, (v, kn) in variants.items()]

@@ -1,9 +1,9 @@
 {
- "name": "hcoll_ring_ag_ctl_1017-ag1-COMMIT",
+ "name": "hcoll_ring_ag_ctl_1017-rc1-COMMIT",
  "block": "ot_hgi_coll_ring_ag_ctl",
  "ref_tile": true,
  "owner": "Claude:HBM-B-RTL3",
- "purpose": "d4g plan (b) COLL ring stop control root with the on-die ALL-GATHER (GATHER kind 3, per-direction publish ports); successor of the ring_v5 control (AG=0 identical); new element, no closed view",
+ "purpose": "d4g plan (b) COLL ring stop control root with the on-die ALL-GATHER (GATHER kind 3, per-direction publish ports); successor of the ring_v5 control (AG=0 identical); new element, no closed view; rc1 (review 0dr): pins spread over full faces (per-port pin_ranges + pin_balance, <=5.2/um), async reset on control registers only",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
@@ -115,7 +115,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hbm_d4g_coll_ag_1017/route/hcoll_ring_ag_ctl_1017-ag1-COMMIT"
+   "to": "results/arch/hbm_d4g_coll_ag_1017/route/hcoll_ring_ag_ctl_1017-rc1-COMMIT"
   }
  ],
  "cycles_added": 0,

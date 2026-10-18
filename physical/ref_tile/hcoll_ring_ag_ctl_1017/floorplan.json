@@ -38,17 +38,18 @@
    "ccw_i"
   ],
   "N": [
-   "clk",
    "pin0_q",
-   "pin1_q",
+   "state_tx",
    "carry_write",
    "acc_we",
    "acc_tag",
-   "state_tx",
+   "clk",
+   "av",
    "acc_rr",
-   "av"
+   "pin1_q"
   ],
   "S": [
+   "ag_d",
    "rst_n",
    "qid",
    "lp_we",
@@ -82,12 +83,11 @@
    "rr_local_tag",
    "rr_v",
    "rr_tag",
-   "rr_d",
    "ag_v",
    "ag_src",
    "ag_tag",
-   "ag_d",
-   "fault"
+   "fault",
+   "rr_d"
   ]
  },
  "clock_port": "clk",

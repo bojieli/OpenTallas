@@ -6,7 +6,7 @@
    "item": "COLL ring all-gather (GATHER kind 3)",
    "lane": "HBM-B-RTL3",
    "status": "measured",
-   "cycles_rule": "min(1.5 F + 3 hop, 2 F + 2 hop), hop = 2 + COLL_RING relays; RTL r=0: F224 340 / F112 172 (mode 0), F224 451 / F112 227 (mode 1)",
+   "cycles_rule": "min(1.5 F + 3 hop, 2 F + 2 hop), hop = 2 + COLL_RING relays; RTL r=0: F224 340 / F112 172 (mode 0), F224 451 / F112 227 (mode 1); TWO RINGS (0dr): ring B = ot_hgi_coll_ring_ag_lane (gather-only stop), flit i on ring i%2, same per-ring rule on F/2 (bench run_ring_ag2_bench.sh RINGS=1 vs 2)",
    "evidence": "rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh"
   },
   {
@@ -79,8 +79,10 @@
   {
    "item": "VM SE/NE client side + 16 vmdel lanes",
    "lane": "HBM-B-RTL1/VM",
-   "status": "plan",
-   "evidence": "lanes/HBM-B-RTL1.md: VM fork result not reported yet (vmdel unchanged = contract) -> 0 added until it reports"
+   "status": "measured",
+   "evidence": "lanes/HBM-B-RTL1.md VM DONE claude/hbm-b-rtl1-vm-1017 a61511e52: VMS_QB_EQUIV SE/NE PASS, WRQ4_LOCKSTEP PASS, VMDEL_N lockstep PASS, mutants FAIL",
+   "cycles": 0,
+   "cycles_rule": "SM writer 0 edges added (rv(t) -> wq slot 0 at t+3, calendar C_launch+2+LEAD+at unchanged); vmdel NPC2 LAT 2 / STATUS_LAT 2 / first beat start+3 unchanged; SE/NE bank timing = SW. E-quadrant SMs lose the VM ring hop (a gain, NOT credited: conservative)"
   }
  ]
 }

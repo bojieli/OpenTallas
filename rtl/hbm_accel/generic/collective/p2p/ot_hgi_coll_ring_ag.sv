@@ -25,7 +25,7 @@ module ot_hgi_coll_ring_ag_ctl #(
     input wire clk, rst_n,
     input wire [1:0] qid,
     input wire [279:0] cw_i, ccw_i,
-    output reg [279:0] cw_o, ccw_o,
+    output wire [279:0] cw_o, ccw_o,
     input wire lp_we,
     input wire [2:0] lp_tag,
     input wire state_read_add, state_read_tx, state_read_rr,
@@ -63,7 +63,15 @@ module ot_hgi_coll_ring_ag_ctl #(
     output reg [511:0] ag_d,
     output reg fault
 );
-    reg [279:0] pin [0:1];
+    // RTL3c (review 10-17): async reset only on CONTROL state. Data registers (ring pin / output
+    // payloads, rr_d/rr_tag, ag_d/ag_src/ag_tag) are plain flops in a separate block; every one is
+    // qualified by a reset valid bit (pin/cw_o/ccw_o bit 279, rr_v, ag_v), so behaviour is unchanged.
+    reg [1:0] pin_v, out_v;
+    reg [278:0] pin_p [0:1];
+    reg [278:0] out_p [0:1];
+    wire [279:0] pin [0:1];
+    assign pin[0]={pin_v[0],pin_p[0]};assign pin[1]={pin_v[1],pin_p[1]};
+    assign cw_o={out_v[0],out_p[0]};assign ccw_o={out_v[1],out_p[1]};
     assign pin0_q=pin[0];assign pin1_q=pin[1];
     for(genvar d=0;d<2;d=d+1)begin:g_carry_write
         assign carry_write[d]=rx_slot[d] && pin[d][278:277]==1 && pin[d][274:273]==qid;
@@ -89,20 +97,48 @@ module ot_hgi_coll_ring_ag_ctl #(
         flit={1'b1,gath?2'd3:(tx_result?2'd2:2'd1),qid,gath?qid:tx_dst,
               gath?tx_ttl[d*2+:2]:(tx_result?2'd3:2'd0),MUT_TAG?(tag^3'd1):tag,1'b0,11'b0,data};
     endfunction
+    // ring outputs (combinational next value; valid bit reset-registered, payload plain-registered)
+    reg [279:0] nx_out [0:1];
+    always @* begin:outs
+        reg [279:0] x;
+        for(integer d=0;d<2;d=d+1)begin
+            x=pin[d];nx_out[d]=0;
+            if(tx_forward[d])begin
+                nx_out[d]=x;
+                if(x[278:277]==2)nx_out[d][272:271]=x[272:271]-1'b1;
+                if(x[278:277]==3)nx_out[d][272:271]=x[272:271]-(MUT_TTL?2'd2:2'd1);
+            end
+            if(tx_inject[d])nx_out[d]=flit(d,tx_tag,state_tx);
+        end
+    end
+    // data registers: no reset (loads of rst_n = control state only)
+    always @(posedge clk) begin:data
+        reg [279:0] x;
+        pin_p[0]<=cw_i[278:0];pin_p[1]<=ccw_i[278:0];
+        out_p[0]<=nx_out[0][278:0];out_p[1]<=nx_out[1][278:0];
+        if(rr_local)begin rr_tag<=rr_local_tag;rr_d<=acc_rr;end
+        for(integer d=0;d<2;d=d+1)begin
+            x=pin[d];
+            if(rx_slot[d] && x[278:277]==2)begin rr_tag<=x[270:268];rr_d<=x[255:0];end
+            if(AG!=0 && rx_slot[d] && x[278:277]==3)begin
+                ag_src[d*2+:2]<=MUT_SRC?qid:x[276:275];ag_tag[d*3+:3]<=x[270:268];ag_d[d*256+:256]<=x[255:0];
+            end
+        end
+    end
     always @(posedge clk or negedge rst_n) begin:step
-        reg [279:0] x,outx;
+        reg [279:0] x;
         reg [2:0] tag;
         reg [1:0] src,dst,kind,ttl;
         reg [1:0] result_slots;
         if(!rst_n)begin
-            pin[0]<=0;pin[1]<=0;cw_o<=0;ccw_o<=0;
+            pin_v<=0;out_v<=0;
             local_v<=0;acc_v<=0;pending<=0;active<=0;pv<=0;
-            rr_v<=0;rr_tag<=0;rr_d<=0;fault<=0;ag_v<=0;ag_src<=0;ag_tag<=0;ag_d<=0;
+            rr_v<=0;fault<=0;ag_v<=0;
             read_add_v<=0;read_tx_v<=0;read_rr_v<=0;
             prep_add_v<=0;prep_tx_v<=0;prep_rr_v<=0;
             for(integer t=0;t<NT;t=t+1)carry_v[t]<=0;
         end else begin
-            pin[0]<=cw_i;pin[1]<=ccw_i;
+            pin_v<={ccw_i[279],cw_i[279]};out_v<={nx_out[1][279],nx_out[0][279]};
             // Read reservations precede their consuming operation by exactly
             // two edges. These checks report faults, never gate issue or wait.
             prep_add_v<=state_read_add;prep_tx_v<=state_read_tx;prep_rr_v<=state_read_rr;
@@ -127,7 +163,6 @@ module ot_hgi_coll_ring_ag_ctl #(
             ag_v<=0;
             result_slots=0;
             if(rr_local)begin
-                rr_tag<=rr_local_tag;rr_d<=acc_rr;
                 if(!acc_v[rr_local_tag] || pending[rr_local_tag])fault<=1;
                 acc_v[rr_local_tag]<=0;active[rr_local_tag]<=0;
             end
@@ -152,7 +187,7 @@ module ot_hgi_coll_ring_ag_ctl #(
             // Every physical arrival, including transit, must match a reservation.
             // A reservation with missing input also faults at this exact edge.
             for(integer d=0;d<2;d=d+1)begin
-                x=pin[d];outx=0;
+                x=pin[d];
                 tag=x[270:268];src=x[276:275];dst=x[274:273];
                 kind=x[278:277];ttl=x[272:271];
                 if(x[279]!=rx_slot[d])fault<=1;
@@ -173,13 +208,13 @@ module ot_hgi_coll_ring_ag_ctl #(
                     if(kind==2)begin
                         if(ttl==0)fault<=1;
                         result_slots[d]=1;active[tag]<=0;
-                        rr_v<=1;rr_tag<=tag;rr_d<=x[255:0];
+                        rr_v<=1;
                         if(rr_local || |(result_slots & ~(2'b1<<d)))fault<=1;
                     end
                     if(AG!=0 && kind==3)begin
                         // GATHER arrival: publish on this direction's port; no tag state.
                         if(ttl==0 || src==qid)fault<=1;
-                        ag_v[d]<=1;ag_src[d*2+:2]<=MUT_SRC?qid:src;ag_tag[d*3+:3]<=tag;ag_d[d*256+:256]<=x[255:0];
+                        ag_v[d]<=1;
                     end
                     if((kind==1 && dst!=qid) || ((kind==2 || kind==3) && ttl>1))begin
                         if(!tx_forward[d])fault<=1;
@@ -187,18 +222,13 @@ module ot_hgi_coll_ring_ag_ctl #(
                 end
                 if(tx_forward[d])begin
                     if(!rx_slot[d] || !x[279])fault<=1;
-                    outx=x;
-                    if(kind==2)outx[272:271]=ttl-1'b1;
-                    if(kind==3)outx[272:271]=ttl-(MUT_TTL?2'd2:2'd1);
                 end
                 if(tx_inject[d])begin
                     if(tx_forward[d])fault<=1;
                     if(tx_acc ? (!acc_v[tx_tag] || pending[tx_tag]) : !local_v[tx_tag])fault<=1;
                     if(tx_result && (!tx_acc || tx_dst!=qid))fault<=1;
                     if(gath && (tx_result || tx_ttl[d*2+:2]==0))fault<=1;
-                    outx=flit(d,tx_tag,state_tx);
                 end
-                if(d==0)cw_o<=outx;else ccw_o<=outx;
             end
             if(|tx_inject)begin
                 // Copies sent simultaneously in both directions are compiler-
