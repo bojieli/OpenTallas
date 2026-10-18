@@ -1,5 +1,5 @@
 {
- "name": "s81su_qnt_cb32_ref-v6-cb32-e4e2680c1",
+ "name": "s81su_qnt_cb32_ref-v6-cb32-6d627c6fe",
  "block": "dsfd_su_t_qnt",
  "ref_tile": true,
  "owner": "Claude:S81-QNTKEEP",
@@ -8,9 +8,10 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81-qntkeep-1018",
-  "commit": "e4e2680c1",
+  "commit": "6d627c6fe",
   "extra_paths": [
-   "tests/rtl/s81su_qnt_cb"
+   "tests/rtl/s81su_qnt_cb",
+   "tools/s81_suhc/fixtures"
   ]
  },
  "stages": {
@@ -47,6 +48,23 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "s81su_full_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "pass_regex": "RUN full_dpi_m0_a0_h pass",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su --shape full --hier"
+   },
+   {
+    "name": "s81su_full_mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "fail_regex": "RUN full_dpi_m5_a0_h fail",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su5 --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su5 --shape full --hier --mut 5",
+    "fail_witness": "results/rtl/s81su_qnt3_fixture_20261018/m5/run.log"
    }
   ],
   "calibrate": {
@@ -97,7 +115,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_qnt_cb32_ref/s81su_qnt_cb32_ref-v6-cb32-e4e2680c1"
+   "to": "results/rtl/ref_tile/s81su_qnt_cb32_ref/s81su_qnt_cb32_ref-v6-cb32-6d627c6fe"
   }
  ],
  "cycles_added": 0,
@@ -110,6 +128,6 @@
  "benched_by": "s81su_full",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why_route": "ROOT-KEEP (main f3c8ca0d1): ot_s81_su_qn_keep_ff is instantiated #(.W(KW)), so yosys named it $paramod and SYNTH_KEEP_MODULES matched nothing (hierarchy flattened). S81-QNTKEEP b7358a8b8 adds (* keep_hierarchy *) on the module (synthesis attribute only; QNT_CB lockstep m0 PASS / m6 FAIL vs immutable 69c124e5d). The CLOSED ae9b5d603 netlist (closed_archive) still holds all 576 copy flops; re-route makes the closed view source-current with the kept hierarchy and lets the routed native audit be compared to the closed one (R 293.3, launch 212.2 e_eps[10], capture 138.6, spread 26.7/26.4)."
+  "why_route": "ROOT-KEEP (main f3c8ca0d1): ot_s81_su_qn_keep_ff is instantiated #(.W(KW)), so yosys named it $paramod and SYNTH_KEEP_MODULES matched nothing (hierarchy flattened). S81-QNTKEEP b7358a8b8 adds (* keep_hierarchy *) on the module (synthesis attribute only; QNT_CB lockstep m0 PASS / m6 FAIL vs immutable 69c124e5d). The CLOSED ae9b5d603 netlist (closed_archive) still holds all 576 copy flops; re-route makes the closed view source-current with the kept hierarchy and lets the routed native audit be compared to the closed one (R 293.3, launch 212.2 e_eps[10], capture 138.6, spread 26.7/26.4). RESUBMIT after flow_failure (S81-QNT3 10-18): s81su_qnt_cb32_ref-v6-cb32-8757b43d0 went NEEDS_RTL only because bench_s81su_full_exact read the host-local /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl (on no host); the s81su_full benches are now pinned here on the committed tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl (sha 8c18c0655ccf), Verilator 5.050 m0 PASS / m5 FAIL (results/rtl/s81su_qnt3_fixture_20261018)."
  }
 }
