@@ -21,6 +21,14 @@
 //     registered lookups (fa_cn / fa_kh / fa_ev / fa_es and fb_*), so the gate's 18-level fb_t -> s_key -> key[s_slot]
 //     compare -> do_ins -> cnt_s -> cnt stage (~795 ps) loses the 64:1 / 2048:1 muxes and the 24-bit compare.
 //     Exact same state at every decision: no edge moves (cap_model.py unchanged, cap_bench cycle-exact).
+//   * S81U-CAP5 (10-17, CAP3 gate @1d808d023 WARN: n6_t[13] / re_t[13] 3,604 loads each, TT ins 328.1 / spread 104.6,
+//     resets 401 / 384, u_add s2_small -> s3_val ~647 ps): the look-ahead slot / h selects are REPLICATED, registered
+//     copies per slot group (la_* / lb_*: slot[2:0] + h for ev + h for es, (* keep *), <= ~128 loads a copy) loaded at
+//     the same edge as the word they decode -- n6's output register stage moves here (u_n6 RST 0 + n6_* flops = RST 1)
+//     so the A copies load from n6's calendar read like n6_t; the B copies load from norm(st_q) like re_t.  The store
+//     (cnt / ev / key / es) lives in the 8 slot groups; a lookup is a group-local 8:1 (x 32:1 for ev / es) on the
+//     group's copies and an 8:1 across groups.  Both adders (u_add, u_n6) are ot_s81_fadd_pipe (bit-identical,
+//     valid-only reset, one add in stage 3).  Same values at the same edges: cap_model.py unchanged.
 // MUT (bench mutants only): 1 wrong sibling association (h = parent of the parent), 3 leaf mapping off by one.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_cap_rt #(
@@ -104,10 +112,16 @@ module ot_s81sl_cap_rt #(
 
     // ------------------------------------------------------------ TREE ROOT n6 (inputs = the tree leaves' output flops)
     wire n6_v, n6_e, n6_f; wire [31:0] n6_t, n6_d;
-    ot_s81_retn_static #(.WIN(WIN), .RST(1)) u_n6 (.clk(clk), .rst_n(rs_n),
+    wire n6r_v, n6r_e; wire [31:0] n6r_t, n6r_d;          // n6 calendar read (its r_* registers)
+    ot_s81_retn_static #(.WIN(WIN), .RST(0), .ADDN(1)) u_n6 (.clk(clk), .rst_n(rs_n),
         .a_v(w_v), .a_t(w_t), .a_d(w_d), .a_e(w_e),
         .b_v(e_v), .b_t(e_t), .b_d(e_d), .b_e(e_e),
-        .o_v(n6_v), .o_t(n6_t), .o_d(n6_d), .o_e(n6_e), .fault(n6_f));
+        .o_v(n6r_v), .o_t(n6r_t), .o_d(n6r_d), .o_e(n6r_e), .fault(n6_f));
+    // n6's RST = 1 output register stage, here (as ot_s81_retn_static u_rd / g_rv: data without reset, valid with reset)
+    reg n6v_q, n6e_q; reg [31:0] n6t_q, n6d_q;
+    always @(posedge clk or negedge rs_n) if (!rs_n) n6v_q <= 1'b0; else n6v_q <= n6r_v;
+    always @(posedge clk) begin n6t_q <= n6r_t; n6d_q <= n6r_d; n6e_q <= n6r_e; end
+    assign n6_v = n6v_q, n6_t = n6t_q, n6_d = n6d_q, n6_e = n6e_q;
     reg lf_q;                                             // tree-leaf fault pin flops (OR after the flops)
     reg [1:0] lf_p;
     always @(posedge clk or negedge rs_c) if (!rs_c) lf_p <= 2'b00; else lf_p <= {e_f, w_f};
@@ -123,8 +137,8 @@ module ot_s81sl_cap_rt #(
     always @(posedge clk) begin
         fa_t <= n6_t; fa_d <= n6_d; fa_e <= n6_e;
         fb_t <= re_t; fb_d <= re_d; fb_e <= re_e;
-        fa_sl <= slotof(n6_t); fa_h <= hof(n6_t); fa_c <= complete(n6_t); fa_bad <= badof(n6_t); fa_pp <= ppof(n6_t);
-        fb_sl <= slotof(re_t); fb_h <= hof(re_t); fb_c <= complete(re_t); fb_bad <= badof(re_t); fb_pp <= ppof(re_t);
+        fa_sl <= na_sl; fa_h <= na_h; fa_c <= complete(n6_t); fa_bad <= badof(n6_t); fa_pp <= ppof(n6_t);
+        fb_sl <= nb_sl; fb_h <= nb_h; fb_c <= complete(re_t); fb_bad <= badof(re_t); fb_pp <= ppof(re_t);
     end
     wire ca = fa_c, cb = fb_c;
     wire sa = fa_v && !ca, sb = fb_v && !cb;              // store candidates
@@ -145,10 +159,8 @@ module ot_s81sl_cap_rt #(
     // pairing store state.  cnt[slot] = waiting entries + parents in flight, so a slot is never re-keyed while a
     // partial of its row is anywhere in the finish (the parent has the same key and comes back to the same slot):
     //   A insert +1 | A merge 0 (entry -> parent in flight) | B insert 0 | B merge -1 | B complete -1.
-    reg  [23:0] key [0:63];
-    reg  [31:0] es [0:63];                                // entry side (lo[k] of the waiting child)
-    wire [5:0]  cnt [0:63];
-    wire [31:0] ev [0:63];                                // entry valid, bit h
+    // key [slot] {pos, row, nseg}, es [slot] entry side (lo[k] of the waiting child), cnt [slot], ev [slot] entry valid
+    // bit h: all in the slot groups g_st[slot / 8]
     wire [7:0]  any_g;                                    // registered OR of cnt != 0 per slot group (F11)
     wire        any_open = |any_g;
     // registered look-ahead lookups of the F1 words' slots (loaded with fa_* / fb_*, see below)
@@ -171,29 +183,59 @@ module ot_s81sl_cap_rt #(
     end
     // ---- look-ahead lookups (S81U-CAP3): the slot state the NEXT decision sees = this edge's update forwarded over
     //      the array read, for the word now entering F1 on each side (A from the n6 output flop, B from the re-entry)
-    wire [5:0]  na_sl = slotof(n6_t), nb_sl = slotof(re_t);
-    wire [4:0]  na_h = hof(n6_t), nb_h = hof(re_t);
+    // top copies of the incoming words' slot / h (= slotof / hof of n6_t / re_t, registered with them)
+    (* keep = "true" *) reg [5:0] na_sl, nb_sl;
+    (* keep = "true" *) reg [4:0] na_h, nb_h;
+    (* keep = "true" *) reg [2:0] la_gs, lb_gs;          // group select copies for the across-group 8:1
+    wire [31:0] re_tn = norm(st_q);                       // = re_t at the next edge
+    wire [5:0]  na_sln = slotof(n6r_t), nb_sln = slotof(re_tn);
+    always @(posedge clk) begin
+        na_sl <= na_sln; na_h <= hof(n6r_t); la_gs <= na_sln[5:3];
+        nb_sl <= nb_sln; nb_h <= hof(re_tn); lb_gs <= nb_sln[5:3];
+    end
+    // group-local lookups (g_st), selected across groups
+    wire [5:0]  ga_cn [0:7], gb_cn [0:7];
+    wire [23:0] ga_key [0:7], gb_key [0:7];
+    wire [7:0]  ga_ev, gb_ev, ga_es, gb_es;
     wire [23:0] na_key = {n6_t[31:13], n6_t[4:0]}, nb_key = {re_t[31:13], re_t[4:0]};
     wire        upd = do_ins || do_mrg;
     wire        kwr = do_ins && !slot_busy;               // key[s_slot] <= s_key at this edge
     wire        a_ss = s_slot == na_sl, b_ss = s_slot == nb_sl;
     always @(posedge clk) begin
-        fa_cn <= (upd && a_ss) ? cnt_s : (do_rel && r_slot == na_sl) ? cnt_r : cnt[na_sl];
-        fb_cn <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : cnt[nb_sl];
-        fa_kh <= (kwr && a_ss) ? (s_key == na_key) : (key[na_sl] == na_key);
-        fb_kh <= (kwr && b_ss) ? (s_key == nb_key) : (key[nb_sl] == nb_key);
-        fa_ev <= (upd && a_ss && s_h == na_h) ? do_ins : ev[na_sl][na_h];
-        fb_ev <= (upd && b_ss && s_h == nb_h) ? do_ins : ev[nb_sl][nb_h];
-        fa_es <= (do_ins && a_ss && s_h == na_h) ? s_side : es[na_sl][na_h];
-        fb_es <= (do_ins && b_ss && s_h == nb_h) ? s_side : es[nb_sl][nb_h];
+        fa_cn <= (upd && a_ss) ? cnt_s : (do_rel && r_slot == na_sl) ? cnt_r : ga_cn[la_gs];
+        fb_cn <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gb_cn[lb_gs];
+        fa_kh <= (kwr && a_ss) ? (s_key == na_key) : (ga_key[la_gs] == na_key);
+        fb_kh <= (kwr && b_ss) ? (s_key == nb_key) : (gb_key[lb_gs] == nb_key);
+        fa_ev <= (upd && a_ss && s_h == na_h) ? do_ins : ga_ev[la_gs];
+        fb_ev <= (upd && b_ss && s_h == nb_h) ? do_ins : gb_ev[lb_gs];
+        fa_es <= (do_ins && a_ss && s_h == na_h) ? s_side : ga_es[la_gs];
+        fb_es <= (do_ins && b_ss && s_h == nb_h) ? s_side : gb_es[lb_gs];
     end
-    genvar gs, ge;
+    genvar gs;
     generate for (gs = 0; gs < 8; gs = gs + 1) begin : g_st
         reg [5:0]  cnt_g [0:7];
         reg [31:0] ev_g [0:7];
+        reg [23:0] key_g [0:7];
+        reg [31:0] es_g [0:7];
         reg        any_q;
         integer q;
         wire s_in = s_slot[5:3] == gs, r_in = r_slot[5:3] == gs;
+        // this group's copies of the incoming words' slot[2:0] / h (one for ev, one for es), loaded with na_* / nb_*
+        (* keep = "true" *) reg [2:0] la_sl, lb_sl;
+        (* keep = "true" *) reg [4:0] la_hv, la_hs, lb_hv, lb_hs;
+        always @(posedge clk) begin
+            la_sl <= na_sln[2:0]; la_hv <= hof(n6r_t); la_hs <= hof(n6r_t);
+            lb_sl <= nb_sln[2:0]; lb_hv <= hof(re_tn); lb_hs <= hof(re_tn);
+        end
+        assign ga_cn[gs] = cnt_g[la_sl]; assign ga_key[gs] = key_g[la_sl];
+        assign ga_ev[gs] = ev_g[la_sl][la_hv]; assign ga_es[gs] = es_g[la_sl][la_hs];
+        assign gb_cn[gs] = cnt_g[lb_sl]; assign gb_key[gs] = key_g[lb_sl];
+        assign gb_ev[gs] = ev_g[lb_sl][lb_hv]; assign gb_es[gs] = es_g[lb_sl][lb_hs];
+        always @(posedge clk)
+            if (do_ins && s_in) begin
+                es_g[s_slot[2:0]][s_h] <= s_side;
+                if (!slot_busy) key_g[s_slot[2:0]] <= s_key;
+            end
         always @(posedge clk or negedge rs_s[2 * gs + 1])
             if (!rs_s[2 * gs + 1]) begin
                 for (q = 0; q < 8; q = q + 1) ev_g[q] <= 32'd0;
@@ -211,15 +253,8 @@ module ot_s81sl_cap_rt #(
                 any_q <= 1'b0;
                 for (q = 0; q < 8; q = q + 1) if (cnt_g[q] != 6'd0) any_q <= 1'b1;
             end
-        for (ge = 0; ge < 8; ge = ge + 1) begin : g_e
-            assign cnt[8 * gs + ge] = cnt_g[ge];
-            assign ev[8 * gs + ge] = ev_g[ge];
-        end
         assign any_g[gs] = any_q;
     end endgenerate
-    always @(posedge clk) begin
-        if (do_ins) begin es[s_slot][s_h] <= s_side; if (!slot_busy) key[s_slot] <= s_key; end
-    end
     // SRAM: pins driven by flops; insert writes at the next edge, a merge reads at the next edge (read-old; an entry
     // inserted at decision c is read at the earliest by decision c + 1, i.e. after its write: no bypass)
     reg        m_wce, m_rce; reg [8:0] m_wa, m_ra; reg [127:0] m_wd, m_wm;
@@ -244,12 +279,12 @@ module ot_s81sl_cap_rt #(
         m3_q <= m_q[32 * m2_w +: 32]; m3_d <= m2_d; m3_t <= m2_t;
     end
     wire [31:0] sum; wire [1:0] serr; wire sv;
-    ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rs_f), .valid_in(m3_v), .a(m3_q), .b(m3_d),
+    ot_s81_fadd_pipe u_add (.clk(clk), .rst_n(rs_f), .valid_in(m3_v), .a(m3_q), .b(m3_d),
                                 .y(sum), .err(serr), .valid_out(sv));
     wire [31:0] st_q;
     ot_hdc_delay #(.W(32), .D(5)) u_std (.clk(clk), .rst_n(rs_f), .d(m3_t), .q(st_q));
     always @(posedge clk or negedge rs_f) if (!rs_f) re_v <= 1'b0; else re_v <= sv;
-    always @(posedge clk) begin re_t <= norm(st_q); re_d <= sum; re_e <= serr != 2'd0; end
+    always @(posedge clk) begin re_t <= re_tn; re_d <= sum; re_e <= serr != 2'd0; end
 
     // cfg pin flops
     reg cfgv_q; reg [159:0] cfgd_q;

@@ -34,10 +34,10 @@
    "w_f",
    "cfg_v",
    "cfg_d",
-   "clk",
    "rst_n",
    "cw_n_v",
    "cw_n_a",
+   "clk",
    "cw_n_d",
    "e_v",
    "e_t",
@@ -71,7 +71,7 @@
   "io_hold_margin_ns": 0.0,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81U-CAP2: the flat s81sl_cap failed the clock rule (22,261 sinks / one root, TT insertion 368.5 ps > 300, physical/ref_tile/s81sl_cap/gate_result.json); split into 2 x tree leaf (s81sl_cap_tr, one master, E instance MY) + root leaf (s81sl_cap_rt) with own clock roots and registered seams (nc RST flop -> n6 P1 flop, no added edge), parent s81sl_capc = instances + wiring. S81U-CAP3: pairing-store lookups read one register early with forwarding (gate's 18-level fb_t -> cnt stage, ~795 ps), reset relay 20 copies, SRAM on the lattice; 0 edges moved (cap_bench identical).",
+ "structural_change": "S81U-CAP2: the flat s81sl_cap failed the clock rule (22,261 sinks / one root, TT insertion 368.5 ps > 300, physical/ref_tile/s81sl_cap/gate_result.json); split into 2 x tree leaf (s81sl_cap_tr, one master, E instance MY) + root leaf (s81sl_cap_rt) with own clock roots and registered seams (nc RST flop -> n6 P1 flop, no added edge), parent s81sl_capc = instances + wiring. S81U-CAP3: pairing-store lookups read one register early with forwarding (gate's 18-level fb_t -> cnt stage, ~795 ps), reset relay 20 copies, SRAM on the lattice; 0 edges moved (cap_bench identical). S81U-CAP5 (CAP3 gate WARN: n6_t[13] / re_t[13] 3,604 loads, TT ins 328.1 / spread 104.6, resets 401 / 384, u_add s2_small -> s3_val ~647 ps): look-ahead slot / h selects replicated per slot group as kept registered copies (n6 output stage moved into the leaf, u_n6 RST 0), store key / es moved into the slot groups (group-local 8:1 then across-group 8:1), both adders ot_s81_fadd_pipe (bit-identical, valid-only reset, single add in stage 3), clk pin to the N-face centre (128-131) over the macro / store mass; 0 edges moved (cap_bench SLCAP lines identical).",
  "job": {
   "owner": "Claude:S81U-CAP2",
   "branch": "claude/s81u3-1017",
@@ -159,25 +159,25 @@
    66.0,
    106.0
   ],
-  "clk": [
-   106.0,
-   110.0
-  ],
   "rst_n": [
-   110.0,
-   114.0
+   106.0,
+   108.0
   ],
   "cw_n_v": [
-   114.0,
-   116.0
+   108.0,
+   110.0
   ],
   "cw_n_a": [
-   116.0,
-   129.0
+   110.0,
+   127.0
+  ],
+  "clk": [
+   128.0,
+   131.0
   ],
   "cw_n_d": [
-   129.0,
-   155.5
+   132.0,
+   158.0
   ],
   "e_f": [
    160.32,
@@ -216,7 +216,7 @@
    213.84
   ]
  },
- "why_floorplan": "259.2 x 108 (S81U-CAP3): SRAM at (43.2, 43.2) on the 43.2 lattice (CAP2 had it off-lattice at 23.04 / 23.76); its rd_out pins sit on its W edge and wd_in on its E edge, so the outline is 6 lattice steps wide to leave a ~42-um std-cell column on each side; one contiguous ring band (S 41 um: DEC + cw outputs to the S face; N 33 um: n6 / FIN under the N pins; W/E 41-42 um: pairing store, beside the macro's ports). clk/rst_n mid N face between the trees (cluster spine channel); N face = W-tree word (under u_tw), cfg + cw_n (middle), E-tree word (under u_te MY); S face cw_s + fault; ~10k flops, one root.",
+ "why_floorplan": "259.2 x 108 (S81U-CAP3): SRAM at (43.2, 43.2) on the 43.2 lattice (CAP2 had it off-lattice at 23.04 / 23.76); its rd_out pins sit on its W edge and wd_in on its E edge, so the outline is 6 lattice steps wide to leave a ~42-um std-cell column on each side; one contiguous ring band (S 41 um: DEC + cw outputs to the S face; N 33 um: n6 / FIN under the N pins; W/E 41-42 um: pairing store, beside the macro's ports). clk/rst_n mid N face between the trees (cluster spine channel); N face = W-tree word (under u_tw), cfg + cw_n (middle), E-tree word (under u_te MY); S face cw_s + fault; ~10k flops, one root. S81U-CAP5: clk moved to the N-face centre 128-131 um (was 106-110), rst_n / cw_n_v / cw_n_a shifted W of it.",
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
