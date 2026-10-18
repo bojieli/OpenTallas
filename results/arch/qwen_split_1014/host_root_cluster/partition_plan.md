@@ -143,3 +143,51 @@ The c1 gates found pins clustered on partial faces and the clock on the W face, 
 route.pin_balance: buses cover the full face (<= 6.2 /um) and ck sits mid-face between the data buses. Moving the clock cut adp insertion/spread from 302.6/89.0 to 236.6/62.1.
 The SRAM sits on the asap7 track lattice (offtrack 0) at (31.5, 28.1). The 43.2 lattice applies to the child origins in the cluster;
 an adp SRAM on the 43.2 lattice would need a 108-um tile (20-um pin-face margin).
+
+## 8. r2 (10-17 evening, after coordinator decisions D1-D6): protocol-safe partition and generated cluster RTL
+
+**Seam rule.** Every child pin is registered (pin_regs, +1 in / +1 out), so no same-cycle valid/ready may cross a
+seam (die interface rule 2026-10-07). The r1 cut audit (census elaboration, every member-to-member net) found four:
+AXI s_*/m_* between fullcontrol (core_prompt) and qkd_host_axi_packet (core_tx); token request/grant valid/ready
+between qkd_host_ctrl_token_service_packet (core_tx) and the coordinator (core_peer); the cancel handshake
+ctrl <-> peer codec; and, inside native_qm, every FIFO rd/rempty, wr/wfull and engine d/in/w valid/ready that an
+A1 face cut would place on a seam. r2 (`partition_r2.json`) removes all of them; every remaining seam is a credit
+channel (v/d/cr), a registered single-cycle event or a level.
+
+| child | members | family | note |
+|---|---|---|---|
+| qkd_hr_phy_adp x8 | qfd_link_adp128 | phy | direct; closed view stands (CLOSED_STANDS) |
+| qkd_hr_phy_pad | qkd_host_rx_pad5 | phy | direct |
+| qkd_hr_cdc_pc | u_phy.u_rx, u_phy.u_tx (ot_qwen_die_cdc_ch W546 PIPE2) | phy/core | wrapper |
+| qkd_hr_core_rx | rx_class_admission, IR_REPL=1 (A8) | core | direct |
+| qkd_hr_core_tx | tx_class | core | wrapper |
+| qkd_hr_core_prompt | fullcontrol (+prompt pins), hc_station, **axi_packet**, program_loader, program_rx, record_port + 45 glue cells | core | wrapper |
+| qkd_hr_core_peer | peer_link, peer_rank_codec, root_mux, tp8_coordinator, **ctrl_token_service_packet** + 4 glue | core | wrapper |
+| qkd_hr_core_guard | service_guard, native_token_endpoint + 25 glue (service_faults, observed faults) | core | wrapper |
+| qkd_hr_core_queue | ingress16 queue, marker_consumer, emb_boot_barrier | core | wrapper |
+| qkd_hr_core_order | ingest_chain_pt, boot_dispatch | core | wrapper |
+| qkd_hr_cdc_host | bridge u_ing/u_done, credit pacer, visibility fence | core/host | wrapper; D4 fold of the host family |
+| qkd_hr_ingest_qm | the WHOLE native_qm_debt | core/host/ingest | wrapper (one ck_ingest drives clk_i, clk_i_bank, clk_i_out) |
+
+- **A1 / A2 are superseded.** native_qm and the fence keep their internal FIFO and toggle/ack crossings; their own
+  faces are already registered credit channels, so the modules themselves are the multi-family leaves.
+- **A3/A4/A5 = generated, not hand-written.** `tools/qwen_kv_die/host_cluster/gen_cluster.py` elaborates the
+  UNCHANGED flat sources (yosys 0.68), keeps members, flattens the wires-only levels and moves each of the 74 glue
+  cells into the child that consumes it (prompt 45, guard 25, peer 4). An explicit Python submod cuts one module
+  per child with one port per family clock net. Output: `rtl/qwen_sys/host_cluster_20261017/qkd_hr_cluster.v`, with
+  the D3 face `ck_core, ck_host, ck_ingest, ck_phy_fam, ck_phy[7:0]`. The parent is wires only plus the 8 adp instances.
+- **D2** is applied in `kv_die.HOST_CLK_INFERRED`.
+- **Composition bench** (`bench/cluster_gate.py`, Verilator 5.050): flat root vs cluster in lock-step, with the 4
+  families clocked as in host_owner.hpp. All 73 outputs are compared after every evaluation, over 3 seeds x 2 modes
+  x 20k core cycles: **PASS 6/6** (`benches/cg_exact.log`). Mutants, each a child's reset input inverted at the
+  parent: all six core children **FAIL** (`benches/cg_mutant_*.log`). A mutant on core_rx rx_d[5] is NOT detected,
+  because random stimulus does not reach the rx packet path. That is a coverage gap: the bench proves the binding of
+  what it reaches, not the packet datapath.
+- **Kits (recipe 4, hold_budget die, pins <= 6/um).** prompt 259.2^2 (5,335 pin bits) and peer 302.4^2 (6,301) are
+  pin-limited: the u_ctrl status faces (tk8 744 b, kst8, boot8, service epochs) and the 528-b packet channels set
+  their size.
+- **CDC leaves.** `cdc_synchronizers` cannot admit the Gray FIFOs (no 2-D register names; FIFO storage is read
+  whenever the synchronised pointer differs, not only while an event is in flight). The reviewed mode
+  `reviewed_gray_fifos` (branch claude/kvhcl-cdc-1017, NOT on main, review pending) admits cdc_pc. cdc_host also
+  needs the fence's toggle/ack event syncs in the same leaf, and ingest_qm needs its 32 ingest-clock SRAMs. Both are
+  extensions being built on claude/kvhcl-cdc2-1017.

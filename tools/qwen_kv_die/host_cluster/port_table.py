@@ -2,7 +2,8 @@
 """KVJ-A3: per-child port table of the generated cluster (port, dir, width, the children/die ports on that net).
 usage: port_table.py rtl/qwen_sys/host_cluster_20261017/qkd_hr_cluster.v OUT.json"""
 import json, re, sys, collections
-txt = open(sys.argv[1]).read()
+import glob, os
+txt = ''.join(open(f).read() for f in sorted(glob.glob(os.path.join(os.path.dirname(sys.argv[1]), 'qkd_hr_*.v'))))
 mods = {m.group(1): m.group(2) for m in re.finditer(r'\nmodule (\w+)\((.*?)\nendmodule', txt, re.S)}
 def ports(body):
     out = {}

@@ -14,9 +14,9 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
-     "u_ingest_qm"
+     "u_ingest_qm",
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -40,10 +40,8 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
      "u_rank__u_adapter__g_slice_0___u_slice",
      "u_rank__u_adapter__g_slice_1___u_slice",
      "u_rank__u_adapter__g_slice_2___u_slice",
@@ -51,7 +49,9 @@
      "u_rank__u_adapter__g_slice_4___u_slice",
      "u_rank__u_adapter__g_slice_5___u_slice",
      "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
+     "u_rank__u_adapter__g_slice_7___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -66,11 +66,11 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice"
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -206,9 +206,9 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
-     "u_ingest_qm"
+     "u_ingest_qm",
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -217,7 +217,7 @@
     "width": 1,
     "peers": [
      "DIE:ck_phy_fam",
-     "u_phy_pad"
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -232,10 +232,8 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
      "u_rank__u_adapter__g_slice_0___u_slice",
      "u_rank__u_adapter__g_slice_1___u_slice",
      "u_rank__u_adapter__g_slice_2___u_slice",
@@ -243,7 +241,9 @@
      "u_rank__u_adapter__g_slice_4___u_slice",
      "u_rank__u_adapter__g_slice_5___u_slice",
      "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
+     "u_rank__u_adapter__g_slice_7___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -258,11 +258,11 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice"
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -353,7 +353,7 @@
     "dir": "output",
     "width": 1,
     "peers": [
-     "u_phy_pad"
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -361,7 +361,7 @@
     "dir": "input",
     "width": 546,
     "peers": [
-     "u_phy_pad"
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -369,7 +369,7 @@
     "dir": "input",
     "width": 1,
     "peers": [
-     "u_phy_pad"
+     "u_rank__u_phy__u_pad"
     ]
    }
   ],
@@ -391,9 +391,9 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
-     "u_ingest_qm"
+     "u_ingest_qm",
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -529,7 +529,7 @@
      "DIE:die_id",
      "u_core_peer",
      "u_core_prompt",
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -615,10 +615,8 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
      "u_rank__u_adapter__g_slice_0___u_slice",
      "u_rank__u_adapter__g_slice_1___u_slice",
      "u_rank__u_adapter__g_slice_2___u_slice",
@@ -626,7 +624,9 @@
      "u_rank__u_adapter__g_slice_4___u_slice",
      "u_rank__u_adapter__g_slice_5___u_slice",
      "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
+     "u_rank__u_adapter__g_slice_7___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -666,11 +666,11 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice"
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -685,11 +685,11 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice"
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -1033,7 +1033,7 @@
     "width": 2,
     "peers": [
      "u_core_queue",
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -1042,7 +1042,7 @@
     "width": 16,
     "peers": [
      "u_core_queue",
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -1051,7 +1051,7 @@
     "width": 1,
     "peers": [
      "u_core_queue",
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -1137,9 +1137,9 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
-     "u_ingest_qm"
+     "u_ingest_qm",
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -1164,10 +1164,8 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
      "u_rank__u_adapter__g_slice_0___u_slice",
      "u_rank__u_adapter__g_slice_1___u_slice",
      "u_rank__u_adapter__g_slice_2___u_slice",
@@ -1175,7 +1173,9 @@
      "u_rank__u_adapter__g_slice_4___u_slice",
      "u_rank__u_adapter__g_slice_5___u_slice",
      "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
+     "u_rank__u_adapter__g_slice_7___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -1272,11 +1272,11 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice"
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -1386,9 +1386,9 @@
      "u_core_order",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
-     "u_ingest_qm"
+     "u_ingest_qm",
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -1520,7 +1520,7 @@
      "DIE:die_id",
      "u_core_guard",
      "u_core_prompt",
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -1589,10 +1589,8 @@
      "u_core_order",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
      "u_rank__u_adapter__g_slice_0___u_slice",
      "u_rank__u_adapter__g_slice_1___u_slice",
      "u_rank__u_adapter__g_slice_2___u_slice",
@@ -1600,7 +1598,9 @@
      "u_rank__u_adapter__g_slice_4___u_slice",
      "u_rank__u_adapter__g_slice_5___u_slice",
      "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
+     "u_rank__u_adapter__g_slice_7___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -1631,11 +1631,11 @@
      "u_core_order",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice"
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -2376,7 +2376,7 @@
     "dir": "output",
     "width": 1,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -2384,7 +2384,7 @@
     "dir": "input",
     "width": 512,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -2392,7 +2392,7 @@
     "dir": "input",
     "width": 1,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -2550,9 +2550,9 @@
      "u_core_order",
      "u_core_peer",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
-     "u_ingest_qm"
+     "u_ingest_qm",
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -2689,7 +2689,7 @@
      "DIE:die_id",
      "u_core_guard",
      "u_core_peer",
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -2886,10 +2886,8 @@
      "u_core_order",
      "u_core_peer",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
      "u_rank__u_adapter__g_slice_0___u_slice",
      "u_rank__u_adapter__g_slice_1___u_slice",
      "u_rank__u_adapter__g_slice_2___u_slice",
@@ -2897,7 +2895,9 @@
      "u_rank__u_adapter__g_slice_4___u_slice",
      "u_rank__u_adapter__g_slice_5___u_slice",
      "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
+     "u_rank__u_adapter__g_slice_7___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -2976,11 +2976,11 @@
      "u_core_order",
      "u_core_peer",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice"
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -3381,7 +3381,7 @@
     "dir": "output",
     "width": 1,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -3389,7 +3389,7 @@
     "dir": "input",
     "width": 512,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -3397,7 +3397,7 @@
     "dir": "input",
     "width": 1,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -3429,7 +3429,7 @@
     "dir": "input",
     "width": 1,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -3437,7 +3437,7 @@
     "dir": "output",
     "width": 528,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -3445,7 +3445,7 @@
     "dir": "output",
     "width": 1,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -3491,9 +3491,9 @@
      "u_core_order",
      "u_core_peer",
      "u_core_prompt",
-     "u_core_rx",
      "u_core_tx",
-     "u_ingest_qm"
+     "u_ingest_qm",
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -3528,10 +3528,8 @@
      "u_core_order",
      "u_core_peer",
      "u_core_prompt",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
      "u_rank__u_adapter__g_slice_0___u_slice",
      "u_rank__u_adapter__g_slice_1___u_slice",
      "u_rank__u_adapter__g_slice_2___u_slice",
@@ -3539,7 +3537,9 @@
      "u_rank__u_adapter__g_slice_4___u_slice",
      "u_rank__u_adapter__g_slice_5___u_slice",
      "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
+     "u_rank__u_adapter__g_slice_7___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -3597,11 +3597,11 @@
      "u_core_order",
      "u_core_peer",
      "u_core_prompt",
-     "u_core_rx",
      "u_core_tx",
      "u_ingest_qm",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice"
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -3717,7 +3717,7 @@
     "width": 2,
     "peers": [
      "u_core_guard",
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -3725,7 +3725,7 @@
     "dir": "output",
     "width": 5,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -3734,7 +3734,7 @@
     "width": 512,
     "peers": [
      "u_core_guard",
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -3743,255 +3743,12 @@
     "width": 1,
     "peers": [
      "u_core_guard",
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    }
   ],
   "bits_in": 665,
   "bits_out": 723
- },
- "qkd_hr_core_rx": {
-  "inst": "u_core_rx",
-  "ports": [
-   {
-    "port": "ck_core",
-    "dir": "input",
-    "width": 1,
-    "peers": [
-     "DIE:ck_core",
-     "u_cdc_host",
-     "u_cdc_pc",
-     "u_core_guard",
-     "u_core_order",
-     "u_core_peer",
-     "u_core_prompt",
-     "u_core_queue",
-     "u_core_tx",
-     "u_ingest_qm"
-    ]
-   },
-   {
-    "port": "native_reserved",
-    "dir": "input",
-    "width": 1,
-    "peers": [
-     "DIE:native_reserved"
-    ]
-   },
-   {
-    "port": "ownership_valid",
-    "dir": "input",
-    "width": 1,
-    "peers": [
-     "DIE:ownership_valid"
-    ]
-   },
-   {
-    "port": "host_admission_open",
-    "dir": "output",
-    "width": 1,
-    "peers": [
-     "DIE:host_admission_open"
-    ]
-   },
-   {
-    "port": "host_launch_quiet",
-    "dir": "output",
-    "width": 1,
-    "peers": [
-     "DIE:host_launch_quiet"
-    ]
-   },
-   {
-    "port": "host_deferred",
-    "dir": "output",
-    "width": 1,
-    "peers": [
-     "DIE:host_deferred"
-    ]
-   },
-   {
-    "port": "die_id",
-    "dir": "input",
-    "width": 3,
-    "peers": [
-     "DIE:die_id",
-     "u_core_guard",
-     "u_core_peer",
-     "u_core_prompt"
-    ]
-   },
-   {
-    "port": "host_rst_n",
-    "dir": "input",
-    "width": 1,
-    "peers": [
-     "DIE:host_rst_n",
-     "u_cdc_host",
-     "u_cdc_pc",
-     "u_core_guard",
-     "u_core_order",
-     "u_core_peer",
-     "u_core_prompt",
-     "u_core_queue",
-     "u_core_tx",
-     "u_ingest_qm",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice",
-     "u_rank__u_adapter__g_slice_1___u_slice",
-     "u_rank__u_adapter__g_slice_2___u_slice",
-     "u_rank__u_adapter__g_slice_3___u_slice",
-     "u_rank__u_adapter__g_slice_4___u_slice",
-     "u_rank__u_adapter__g_slice_5___u_slice",
-     "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
-    ]
-   },
-   {
-    "port": "service_faults",
-    "dir": "output",
-    "width": 1,
-    "peers": [
-     "DIE:service_faults",
-     "u_cdc_host",
-     "u_cdc_pc",
-     "u_core_guard",
-     "u_core_order",
-     "u_core_peer",
-     "u_core_prompt",
-     "u_core_queue",
-     "u_core_tx",
-     "u_ingest_qm",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice"
-    ]
-   },
-   {
-    "port": "u_rank__ing_cls",
-    "dir": "output",
-    "width": 2,
-    "peers": [
-     "u_core_guard",
-     "u_core_queue"
-    ]
-   },
-   {
-    "port": "u_rank__ing_crn",
-    "dir": "input",
-    "width": 5,
-    "peers": [
-     "u_core_queue"
-    ]
-   },
-   {
-    "port": "u_rank__ing_d",
-    "dir": "output",
-    "width": 512,
-    "peers": [
-     "u_core_guard",
-     "u_core_queue"
-    ]
-   },
-   {
-    "port": "u_rank__ing_v",
-    "dir": "output",
-    "width": 1,
-    "peers": [
-     "u_core_guard",
-     "u_core_queue"
-    ]
-   },
-   {
-    "port": "u_rank__u_control__u_packet__hr",
-    "dir": "input",
-    "width": 1,
-    "peers": [
-     "u_core_prompt"
-    ]
-   },
-   {
-    "port": "u_rank__u_control__u_packet__hd",
-    "dir": "output",
-    "width": 512,
-    "peers": [
-     "u_core_prompt"
-    ]
-   },
-   {
-    "port": "u_rank__u_control__u_packet__hv",
-    "dir": "output",
-    "width": 1,
-    "peers": [
-     "u_core_prompt"
-    ]
-   },
-   {
-    "port": "u_rank__u_control__u_packet__cr",
-    "dir": "input",
-    "width": 1,
-    "peers": [
-     "u_core_peer"
-    ]
-   },
-   {
-    "port": "u_rank__u_control__u_packet__cd",
-    "dir": "output",
-    "width": 512,
-    "peers": [
-     "u_core_peer"
-    ]
-   },
-   {
-    "port": "u_rank__u_control__u_packet__cv",
-    "dir": "output",
-    "width": 1,
-    "peers": [
-     "u_core_peer"
-    ]
-   },
-   {
-    "port": "u_rank__u_control__u_packet__credit_return",
-    "dir": "output",
-    "width": 24,
-    "peers": [
-     "u_core_tx"
-    ]
-   },
-   {
-    "port": "u_rank__u_control__u_packet__peer_credit",
-    "dir": "output",
-    "width": 24,
-    "peers": [
-     "u_core_tx"
-    ]
-   },
-   {
-    "port": "u_rank__rx_cr",
-    "dir": "output",
-    "width": 1,
-    "peers": [
-     "u_core_prompt"
-    ]
-   },
-   {
-    "port": "u_rank__rx_d",
-    "dir": "input",
-    "width": 528,
-    "peers": [
-     "u_core_prompt"
-    ]
-   },
-   {
-    "port": "u_rank__rx_v",
-    "dir": "input",
-    "width": 1,
-    "peers": [
-     "u_core_prompt"
-    ]
-   }
-  ],
-  "bits_in": 543,
-  "bits_out": 1594
  },
  "qkd_hr_core_tx": {
   "inst": "u_core_tx",
@@ -4009,8 +3766,8 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
-     "u_ingest_qm"
+     "u_ingest_qm",
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -4035,9 +3792,7 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_ingest_qm",
-     "u_phy_pad",
      "u_rank__u_adapter__g_slice_0___u_slice",
      "u_rank__u_adapter__g_slice_1___u_slice",
      "u_rank__u_adapter__g_slice_2___u_slice",
@@ -4045,7 +3800,9 @@
      "u_rank__u_adapter__g_slice_4___u_slice",
      "u_rank__u_adapter__g_slice_5___u_slice",
      "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
+     "u_rank__u_adapter__g_slice_7___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -4061,10 +3818,10 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_ingest_qm",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice"
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -4146,7 +3903,7 @@
     "dir": "input",
     "width": 24,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -4154,7 +3911,7 @@
     "dir": "input",
     "width": 24,
     "peers": [
-     "u_core_rx"
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -4201,8 +3958,8 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
-     "u_core_tx"
+     "u_core_tx",
+     "u_rank__u_control__u_packet__u_rx"
     ]
    },
    {
@@ -4245,9 +4002,7 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
-     "u_phy_pad",
      "u_rank__u_adapter__g_slice_0___u_slice",
      "u_rank__u_adapter__g_slice_1___u_slice",
      "u_rank__u_adapter__g_slice_2___u_slice",
@@ -4255,7 +4010,9 @@
      "u_rank__u_adapter__g_slice_4___u_slice",
      "u_rank__u_adapter__g_slice_5___u_slice",
      "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
+     "u_rank__u_adapter__g_slice_7___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -4271,10 +4028,10 @@
      "u_core_peer",
      "u_core_prompt",
      "u_core_queue",
-     "u_core_rx",
      "u_core_tx",
-     "u_phy_pad",
-     "u_rank__u_adapter__g_slice_0___u_slice"
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
     ]
    },
    {
@@ -4376,128 +4133,5 @@
   ],
   "bits_in": 521,
   "bits_out": 364
- },
- "qkd_hr_phy_pad": {
-  "inst": "u_phy_pad",
-  "ports": [
-   {
-    "port": "ck_phy_fam",
-    "dir": "input",
-    "width": 1,
-    "peers": [
-     "DIE:ck_phy_fam",
-     "u_cdc_pc"
-    ]
-   },
-   {
-    "port": "host_rst_n",
-    "dir": "input",
-    "width": 1,
-    "peers": [
-     "DIE:host_rst_n",
-     "u_cdc_host",
-     "u_cdc_pc",
-     "u_core_guard",
-     "u_core_order",
-     "u_core_peer",
-     "u_core_prompt",
-     "u_core_queue",
-     "u_core_rx",
-     "u_core_tx",
-     "u_ingest_qm",
-     "u_rank__u_adapter__g_slice_0___u_slice",
-     "u_rank__u_adapter__g_slice_1___u_slice",
-     "u_rank__u_adapter__g_slice_2___u_slice",
-     "u_rank__u_adapter__g_slice_3___u_slice",
-     "u_rank__u_adapter__g_slice_4___u_slice",
-     "u_rank__u_adapter__g_slice_5___u_slice",
-     "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
-    ]
-   },
-   {
-    "port": "service_faults",
-    "dir": "output",
-    "width": 1,
-    "peers": [
-     "DIE:service_faults",
-     "u_cdc_host",
-     "u_cdc_pc",
-     "u_core_guard",
-     "u_core_order",
-     "u_core_peer",
-     "u_core_prompt",
-     "u_core_queue",
-     "u_core_rx",
-     "u_core_tx",
-     "u_ingest_qm",
-     "u_rank__u_adapter__g_slice_0___u_slice"
-    ]
-   },
-   {
-    "port": "u_rank__d_rcr",
-    "dir": "output",
-    "width": 1,
-    "peers": [
-     "u_rank__u_adapter__g_slice_0___u_slice",
-     "u_rank__u_adapter__g_slice_1___u_slice",
-     "u_rank__u_adapter__g_slice_2___u_slice",
-     "u_rank__u_adapter__g_slice_3___u_slice",
-     "u_rank__u_adapter__g_slice_4___u_slice",
-     "u_rank__u_adapter__g_slice_5___u_slice",
-     "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
-    ]
-   },
-   {
-    "port": "u_rank__d_rd",
-    "dir": "input",
-    "width": 1024,
-    "peers": [
-     "u_rank__u_adapter__g_slice_0___u_slice",
-     "u_rank__u_adapter__g_slice_1___u_slice",
-     "u_rank__u_adapter__g_slice_2___u_slice",
-     "u_rank__u_adapter__g_slice_3___u_slice",
-     "u_rank__u_adapter__g_slice_4___u_slice",
-     "u_rank__u_adapter__g_slice_5___u_slice",
-     "u_rank__u_adapter__g_slice_6___u_slice",
-     "u_rank__u_adapter__g_slice_7___u_slice"
-    ]
-   },
-   {
-    "port": "u_rank__d_rv",
-    "dir": "input",
-    "width": 1,
-    "peers": [
-     "u_rank__u_adapter__g_slice_0___u_slice"
-    ]
-   },
-   {
-    "port": "u_rank__u_phy__pad_cr",
-    "dir": "input",
-    "width": 1,
-    "peers": [
-     "u_cdc_pc"
-    ]
-   },
-   {
-    "port": "u_rank__u_phy__pad_d",
-    "dir": "output",
-    "width": 546,
-    "peers": [
-     "u_cdc_pc"
-    ]
-   },
-   {
-    "port": "u_rank__u_phy__pad_v",
-    "dir": "output",
-    "width": 1,
-    "peers": [
-     "u_cdc_pc"
-    ]
-   }
-  ],
-  "bits_in": 1028,
-  "bits_out": 549
  }
 }

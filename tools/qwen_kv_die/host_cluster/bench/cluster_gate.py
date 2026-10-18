@@ -16,19 +16,15 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[4]
+ROOT = Path(__file__).resolve().parents[4]   # repo root (tools/qwen_kv_die/host_cluster/bench)
 HERE = Path(__file__).resolve().parent
-CLUSTER = ROOT / 'rtl/qwen_sys/host_cluster_20261017/qkd_hr_cluster.v'
-CENSUS_YS = ROOT / 'results/arch/qwen_split_1014/host_root_cluster/census/elab.ys'
-PORTS = ROOT / 'results/arch/qwen_split_1014/host_root_cluster/root_ports.json'
+CLUSTER_DIR = ROOT / 'rtl/qwen_sys/host_cluster_20261017'   # qkd_hr_cluster.v (parent) + one file per child
+PORTS = HERE / 'root_ports.json'          # the flat root's ports (yosys, ENABLE_SERVICE/NATIVE/TOKEN=1, NL=2)
+SOURCES = HERE / 'sources.txt'            # census source list (SRAM behavioural models + the root's RTL)
 
 
 def sources():
-    toks = ' '.join(CENSUS_YS.read_text().splitlines()[:2]).split()
-    files = [t[len('src/'):] for t in toks if t.startswith('src/') and not t.endswith('_bb.v')]
-    srams = sorted(str(p.relative_to(ROOT)) for p in ROOT.glob('physical/asap7_memory_macros/ot_sram_*/ot_sram_*.v')
-                   if not p.name.endswith('_bb.v'))
-    return srams + files
+    return [l.strip() for l in SOURCES.read_text().splitlines() if l.strip()]
 
 
 def run(cmd, log, cwd):
@@ -48,14 +44,17 @@ def main():
     a = ap.parse_args()
     out = Path(a.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
-    txt = CLUSTER.read_text()
+    txt = ''.join(f.read_text() for f in sorted(CLUSTER_DIR.glob('qkd_hr_*.v')))
     if a.mode == 'mutant':
         m = re.search(r'\n  qkd_hr_' + a.child + r' u_' + a.child + r' \((.*?)\);', txt, re.S)
         mod = re.search(r'\nmodule qkd_hr_' + a.child + r'\(.*?\nendmodule', txt, re.S).group(0)
-        sig = 'host_rst_n' if re.search(r'^\s*input\s+host_rst_n\s*;', mod, re.M) else 'por_n'
-        if not m or f'.{sig}({sig})' not in m.group(1):
+        scalars = re.findall(r'^\s*input\s+(\w+)\s*;', mod, re.M)
+        cand = [x for x in scalars if x == 'host_rst_n'] + [x for x in scalars if re.search(r'por_n|rst', x)]
+        sig = (cand or [x for x in scalars if not x.startswith('ck')])[0]
+        b = re.search(r'\.' + sig + r'\(([^()]+)\)', m.group(1)) if m else None
+        if not b:
             sys.exit(f'CLUSTER_GATE ERROR no u_{a.child} {sig} input binding')
-        body = m.group(0).replace(f'.{sig}({sig})', f'.{sig}(!{sig})')
+        body = m.group(0).replace(b.group(0), f'.{sig}(!({b.group(1).strip()}))')
         print(f'mutant: u_{a.child}.{sig} inverted at the parent')
         txt = txt.replace(m.group(0), body)
     (out / 'qkd_hr_cluster_dut.v').write_text(txt)
