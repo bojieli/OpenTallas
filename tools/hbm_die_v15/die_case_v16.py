@@ -957,6 +957,20 @@ def main():
             continue
         cap = {f: 0.9 * (w if f in 'NS' else h) / 0.048 for f in 'NSEW'}
         want = {}
+        # H-D4G GEN2 10-18 (SFU-K9PIN / HANDOFF 0gj): a grant slot's synth_pin_bind pins the stand-in to its kit's pin plan --
+        # faces {port: face} (master-local, so every orientation of the shared abstract matches the hardened block) and
+        # windows [{ports, face, local_um [lo, hi]}] that pack those ports inside the window (pins/um <= the cap).
+        spb = gsl.get('synth_pin_bind') or {}
+        pb_face = dict(spb.get('faces', {}))
+        pb_win = {}
+        for wd in spb.get('windows', []):
+            for p_ in wd['ports']:
+                pb_face[p_] = wd['face']; pb_win[p_] = (wd['face'], float(wd['local_um'][0]), float(wd['local_um'][1]))
+        if spb:
+            miss = sorted(p_ for p_ in pb_face if p_ not in ports[c])
+            if miss:
+                raise SystemExit(f'{c}: synth_pin_bind names ports the master lacks {miss[:6]}')
+            flags[c] = 'synth_pin_bind'
         clockish = set(p for d_ in clk.values() for p in [re.sub(r'\[\d+\]$', '', x) for x in d_.get(rep, [])])
         insts_c = [n for n in V[c]['instances'] if n in pl] if a.compact_pins else [rep]
         for p, b in ports[c].items():
@@ -980,9 +994,29 @@ def main():
             px = sum(pxs) / len(pxs); py = sum(pys) / len(pys)
             sc = {'E': px / w, 'W': -px / w, 'N': py / h, 'S': -py / h}
             order = sorted(sc, key=lambda f: -sc[f])
+            if p in pb_face:
+                order = [pb_face[p]] + [f for f in order if f != pb_face[p]]
             along = (px if order[0] in 'NS' else py)
             want[p] = (order, along, b)
+        for p in pb_face:
+            if p in want and want[p][0][0] != pb_face[p]:      # peer-less port: still the kit face
+                want[p] = ([pb_face[p]] + [f for f in want[p][0] if f != pb_face[p]], want[p][1], want[p][2])
+        win_pins = []                                          # window ports: placed first (they own their tracks)
+        for wd in spb.get('windows', []):
+            f_, lo_w, hi_w = wd['face'], float(wd['local_um'][0]), float(wd['local_um'][1])
+            ps_ = [p_ for p_ in wd['ports'] if p_ in want]
+            tot_w = sum(ports[c][p_] for p_ in ps_)
+            if a.max_pin_density and tot_w / (hi_w - lo_w) > a.max_pin_density:
+                raise SystemExit(f'{c}: synth_pin_bind window {f_} {lo_w}-{hi_w} holds {tot_w} pins > {a.max_pin_density}/um')
+            x_ = lo_w
+            for p_ in ps_:
+                ln_ = (hi_w - lo_w) * ports[c][p_] / tot_w
+                win_pins.append((p_, dirs[c][p_], f_, x_, x_ + ln_, ports[c][p_], 0, ports[c][p_] > 1)); x_ += ln_
+            for p_ in ps_:
+                del want[p_]
         faces = {f: [] for f in 'NSEW'}; usedc = {f: 0 for f in 'NSEW'}
+        for wp in win_pins:
+            usedc[wp[2]] += wp[5]
         for p, (order, along, b) in sorted(want.items(), key=lambda kv: -kv[1][2]):
             base, left = 0, b      # a bus that does not fit its preferred face continues on the next face (bit slices)
             for f in order + [max(usedc, key=lambda f: cap[f] - usedc[f])]:
@@ -997,12 +1031,12 @@ def main():
                 raise SystemExit(f'{c}: pins do not fit ({b} b of {p})')
             if base != b or len([1 for f in faces for x in faces[f] if x[1] == p]) > 1:
                 flags.setdefault(c, 'bus_split_over_faces')
-        pinlist = []
+        pinlist = list(win_pins)
         for f, L in faces.items():
             if not L:
                 continue
             Lf = w if f in 'NS' else h
-            tot = sum(k for _, _, _, k in L)
+            tot = sum(k for _, _, _, k in L) + sum(wp[5] for wp in win_pins if wp[2] == f)
             PIN_STEP = max(PIN_STEP0, 1.0 / a.max_pin_density) if a.max_pin_density else PIN_STEP0
             if a.max_pin_density and tot / (0.9 * Lf) > a.max_pin_density:
                 pin_density_over.append(dict(cell=c, face=f, pins=tot, face_um=round(Lf, 2),
@@ -1038,6 +1072,8 @@ def main():
         if ko:
             carved[c] = ko
         face_report[c] = {f: sum(x[3] for x in L) for f, L in fp.items()}
+        for wp in win_pins:
+            face_report[c][wp[2]] = face_report[c].get(wp[2], 0) + wp[5]
 
     vpins = {c: lef_pins(vd / f'{c}.lef') for c in kinds}
     vxy = {c: lef_xy(vd / f'{c}.lef') for c in kinds}
