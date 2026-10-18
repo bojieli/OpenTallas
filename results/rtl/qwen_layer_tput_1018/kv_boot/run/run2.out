@@ -1,0 +1,61 @@
+slice_smoke: /srv/opentallas-scratch/claude/lb2-qwen-kv-1018/run2/tb_qwk_slice_boot.sv: 789 inputs (9 clock, 3 reset), 952 outputs
+build: 492.95 s 3214516 KB
+== asbuilt_s1: SMOKE_FAIL qwk_slice_boot MUT=0 errors 24 (222.17 s 33012 KB )
+SMOKE_ERR @8129 HOST loader fault (image refused)
+SMOKE_ERR @13517 HOST loader fault (image refused)
+SMOKE_ERR @16710 HOST loader fault (image refused)
+SMOKE_ERR @19726 HOST loader fault (image refused)
+SMOKE_ERR @22930 HOST loader fault (image refused)
+SMOKE_ERR @26134 HOST loader fault (image refused)
+SMOKE_ERR @30170 HOST loader fault (image refused)
+SMOKE_ERR @34206 HOST loader fault (image refused)
+== asbuilt_s2: SMOKE_FAIL qwk_slice_boot MUT=0 errors 24 (181.56 s 33776 KB )
+SMOKE_ERR @8129 HOST loader fault (image refused)
+SMOKE_ERR @13517 HOST loader fault (image refused)
+SMOKE_ERR @16710 HOST loader fault (image refused)
+SMOKE_ERR @19726 HOST loader fault (image refused)
+SMOKE_ERR @22930 HOST loader fault (image refused)
+SMOKE_ERR @26134 HOST loader fault (image refused)
+SMOKE_ERR @30170 HOST loader fault (image refused)
+SMOKE_ERR @34206 HOST loader fault (image refused)
+== fix_s1: SMOKE_PASS qwk_slice_boot MUT=0 edges 23755 (55.48 s 32532 KB )
+KVB_CYCLES t10_ready 5209 release2 6243 t1_ready 7926 t9_ready 17368 t13_ready 19606 t0_begin 19614 t0_ready 21684 setup_ready 21685 (t0_begin + 2071, release2 + 15442)
+KVB_RTL_ASSERT pre_reset 259 after_reset 0
+== fix_s2: SMOKE_PASS qwk_slice_boot MUT=0 edges 23755 (54.39 s 32328 KB )
+KVB_CYCLES t10_ready 5209 release2 6243 t1_ready 7926 t9_ready 17368 t13_ready 19606 t0_begin 19614 t0_ready 21684 setup_ready 21685 (t0_begin + 2071, release2 + 15442)
+KVB_RTL_ASSERT pre_reset 233 after_reset 0
+== fixalt_s1: SMOKE_PASS qwk_slice_boot MUT=0 edges 23755 (65.24 s 31988 KB )
+KVB_CYCLES t10_ready 5209 release2 6243 t1_ready 7926 t9_ready 17368 t13_ready 19606 t0_begin 19614 t0_ready 21684 setup_ready 21685 (t0_begin + 2071, release2 + 15442)
+KVB_RTL_ASSERT pre_reset 259 after_reset 0
+== fixA_s1: SMOKE_FAIL qwk_slice_boot MUT=0 errors 8 (69.07 s 33488 KB )
+SMOKE_ERR @25755 dispatcher fault
+SMOKE_ERR @25755 not every image installed
+SMOKE_ERR @25755 installed ISA digest differs
+SMOKE_ERR @25755 local_configured not 3'b111 (own, wprg, lprg)
+SMOKE_ERR @25755 not all 160 boot CDC sinks applied
+SMOKE_ERR @25755 KVB CDC sink streams differ from the compiled controller / front images
+SMOKE_ERR @25755 u_lprg does not hold the compiled layer image bit-exact
+SMOKE_ERR @25755 setup_ready did not rise
+== mut1: SMOKE_FAIL qwk_slice_boot MUT=0 errors 2 (52.25 s 32368 KB )
+KVB_ERR @12320 word at the dispatcher pins: target 7 addr 100 (expected 100) data 000000400001029f (image 000000400001029e)
+SMOKE_ERR @21755 boot words at the dispatcher pins differ from the images
+SMOKE_ERR @21755 KVB CDC sink streams differ from the compiled controller / front images
+KVB_CYCLES t10_ready 5209 release2 6243 t1_ready 7926 t9_ready 17368 t13_ready 19606 t0_begin 19614 t0_ready 21684 setup_ready 21685 (t0_begin + 2071, release2 + 15442)
+KVB_RTL_ASSERT pre_reset 259 after_reset 0
+== mut2: SMOKE_FAIL qwk_slice_boot MUT=0 errors 8 (69.39 s 32640 KB )
+SMOKE_ERR @25755 dispatcher fault
+SMOKE_ERR @25755 not every image installed
+SMOKE_ERR @25755 installed ISA digest differs
+SMOKE_ERR @25755 local_configured not 3'b111 (own, wprg, lprg)
+SMOKE_ERR @25755 not all 160 boot CDC sinks applied
+SMOKE_ERR @25755 KVB CDC sink streams differ from the compiled controller / front images
+SMOKE_ERR @25755 u_lprg does not hold the compiled layer image bit-exact
+SMOKE_ERR @25755 setup_ready did not rise
+== mut3: SMOKE_FAIL qwk_slice_boot MUT=0 errors 2 (54.19 s 32612 KB )
+KVB_ERR @7600 word at the dispatcher pins: target 1 addr 1 (expected 1) data 0000000000000311 (image 0000000000000310)
+SMOKE_ERR @21755 boot words at the dispatcher pins differ from the images
+SMOKE_ERR @21755 u_lprg does not hold the compiled layer image bit-exact
+KVB_CYCLES t10_ready 5209 release2 6243 t1_ready 7926 t9_ready 17368 t13_ready 19606 t0_begin 19614 t0_ready 21684 setup_ready 21685 (t0_begin + 2071, release2 + 15442)
+KVB_RTL_ASSERT pre_reset 259 after_reset 0
+== determinism asbuilt: RESET_DET ports 952 nondet 475 cycles_equal True events 19
+== determinism fix: RESET_DET ports 952 nondet 475 cycles_equal True events 46

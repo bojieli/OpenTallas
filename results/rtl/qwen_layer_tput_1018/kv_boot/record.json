@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.qwen_layerbench.kv_boot.v1",
+ "lane": "LB2-QWEN-KV (G-K1, Q-LBGAP)",
+ "task": "KV die programme load = full authenticated HOST boot through the KV GEN netlist",
+ "verdict": "FAIL (as-built die): the HOST loader refuses the target-10 die-cfg image (F-K1). DIAGNOSTIC PASS with the one-line loader fix (target_words(10)=77) and the HOST order BEGIN(next image) before the functional re-reset (F-K2).",
+ "die": {"netlist": "ot-epyc4:/srv/opentallas-scratch/claude/qwen-kvsys/kvs14c-place/port_bind_v2/die_bound.v", "die_sha256": "638e99519d0db77ac8861c787cf17d20937e22ce10b8ed4ecb6ab177b564107f", "src": "f05f9338f (wt-kvs14-f05f9338f)", "why_not_kvs14q": "kvs14q (claude/qlb-kv-gsrc-1018) PREP FAIL twice at 12:09/12:12 (STATUS.log); no port_bind_v2"},
+ "vehicle": {"top": "qwk_slice_boot", "cut": "tools/qwen_layerbench/slice_cut.py --master 'qkd_kvs_(ctl|hroot|grp|grp_h|pc|pc_h)' --grow 'qkd_rlys_.*|qkd_rst_region' (scripts/cut.sh)",
+   "instances": 14558, "masters": {"qkd_kvs_ctl": 1, "qkd_kvs_hroot": 4, "qkd_kvs_grp": 28, "qkd_kvs_grp_h": 4, "qkd_kvs_pc": 124, "qkd_kvs_pc_h": 4, "qkd_rlys_1": 2718, "qkd_rlys_36": 9603, "qkd_rlys_296": 773, "qkd_rlys_528": 1275, "qkd_rst_region": 24},
+   "ports": "789 inputs (111,665 bits), 952 outputs (182,788 bits), die_undriven 0, unresolved 0",
+   "note": "the 160 qkd_static_kv_boot_cdc sinks are in the 32 grp tiles (4 PC-controller CDCs + 1 front CDC each), not in the pc tiles; the 128 pc tiles (controller-calendar consumers) are included",
+   "build": "Verilator 5.050, one build 493 s, 3.2 GB peak (verilator); each run ~55-90 s, 33 MB", "full_vehicle": true},
+ "drive": "tools/qwen_layerbench/drive_qwk_slice_boot.svh + run_kv_boot.sh: REAL HOST loader qkd_host_program_loader_target (the host root u_program leaf) at the slice edge, boot_* assigns as qkd_host_root_admission; POR pad separate from the functional die/HBM resets; HBM clocks at the PLL model half period 0.512 ns, core 0.4167 ns",
+ "images": {"compiler": "tools/qwen_kv_die/kv_static_programme.py --profile die @ f05f9338f (kvprog_die/, kvprog.log)", "target1": "results/rtl/qwen_layer_tput_1018/compiled_L1/kv_programme/boot.hex (img_l1; same LP_DIGEST 514bb0b28004c8e8 / epoch 0x0b0b); img_die = all-compiler set (run fixalt_s1)",
+   "target10": "tools/qwen_layerbench/kv_boot_images.py die_cfg_image: ECTL cfg identity (g<<2)|stack, dly 0 x43, capability 1, seal (no die-plan producer of target 10 exists)", "digests": "loader digest == boot_bundle.json for every bundle image (checked)"},
+ "results": {
+   "asbuilt_s1/_s2": "FAIL: HOST loader fault at BEGIN target 10 (pw_count 77 != target_words(10)=76) -> boot_image_fault -> dispatcher fault code 0; nothing installed",
+   "fix_s1/_s2 (DIAGNOSTIC)": "PASS both initial states: 7199 words at the dispatcher pins bit-exact (host->pins 1 edge), installed 9'h1ff + link cfg + es12/13 + ISA (digest 514bb0b28004c8e8, epoch 0b0b), 160/160 CDC sinks applied (edges 9022..17400), every sink stream = one compiled controller (32 w) / front (6 w) image, local_configured 111, die cfg sealed (ECTL a cfg = image, capability 1), u_lprg 326/326 roots+binds bit-exact, setup_ready at edge 21685 = t0_begin + 2071 = target-0 image_ready + 1, identical in both seeds",
+   "cycles": {"t10_ready": 5209, "functional_release": 6243, "t1_ready": 7926, "t9_ready": 17368, "t13_ready": 19606, "t0_begin": 19614, "t0_ready": 21684, "setup_ready": 21685, "boot_from_release_edges": 15442},
+   "fixalt_s1": "PASS with the kv_static_programme die-profile target 1 (same cycles)",
+   "fixA_s1": "FAIL (F-K2): literal order re-reset then BEGIN target 1 -> dispatcher fault code 7 at release+2",
+   "rtl_asserts": "259 ot_async_fifo Gray-pointer $error on the random pre-reset state (before the die reset trees deliver reset), 0 after the reset mark",
+   "reset_det": "475 of 952 outputs differ between the two initial states: payload buses only (ler/les/dpo/hcw/krs/pvrs to PHY / hsl / ectl / vport: unreset datapath registers); every control output (setup_ready, completion fault, ECTL cfg, resets) deterministic; bit-level valid check not done"},
+ "mutants": {
+   "mut1": {"what": "target-7 word 100 bit 0 flipped at the slice edge (after the loader digest)", "fail_regex": "SMOKE_ERR .*KVB CDC sink streams differ", "witness": "run/run_mut1.log"},
+   "mut2": {"what": "target 2 before target 1", "fail_regex": "dispatcher fault code 00001000", "witness": "run/run_mut2.log"},
+   "mut3": {"what": "target-1 word 1 (stage-1 kgo) bit 0 flipped at the slice edge", "fail_regex": "SMOKE_ERR .*u_lprg does not hold the compiled layer image", "witness": "run/run_mut3.log"},
+   "fixA": {"what": "literal HOST order (finding F-K2)", "fail_regex": "dispatcher fault code 10000000", "witness": "run/run_fixA_s1.log"}},
+ "findings": {
+   "F-K1": "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv target_words(10)=76 (32+43+1) but qkd_static_kv_boot_dispatch DIECAP=1 (kvs_ctl u_boot) requires 32+43+2=77: the HOST refuses the die-cfg image; same on origin/main and claude/qlb-kv-gsrc-1018. Fix: 77 (or derive from DIECAP); diagnostic copy run/qkd_host_program_loader_target_t10w77.sv",
+   "F-K2": "after target 10 the HOST loader keeps program_ready high (host_rst_n is not the functional reset); a functional re-reset clears the dispatcher's ready_q, so at release it sees a new rising boot_image_ready of target 10 with next_word 0 -> fault code 7. Works if the HOST BEGINs the next image before releasing the functional resets (default bench order). RTL fix option: dispatcher arms ready_q=1 out of reset (ignore a ready already high at release), or the HOST reset role drops boot_image_ready while die_rst_n is low.",
+   "F-K3": "kvs14c leaves qkd_kv_die_cfg rst_dly / ectl_b_cfg / ectl_c_cfg unconnected (the 42 qkd_rst_region dly pins are die constants; die ECTL3 takes ectl_a only): the target-10 reset words have no consumer (KVJ-F law says HOST-loaded); and no tool emits target 10 from a die plan (kv_static_programme.py takes die_cfg_words but nothing supplies them)",
+   "F-K4": "the HOST image digest (rotl7 ^ word ^ addr) cancels words repeated with an address period of 64 an even number of times and all address terms of a 1024-word image: targets 6..9 digest = seed ^ target (32 identical PC images per stack), the same as an all-zero image; a transfer that zeroes or permutes those images passes auth"},
+ "not_done": {"kvs_attn attention step": "BLOCKED: ot-epyc5 tokpass-qwen-1018/STATUS.log has 'gold start' (09:32) but no 'gold rc=0'"}
+}

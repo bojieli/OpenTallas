@@ -1,0 +1,134 @@
+{
+ "schema": "opentallas.qwen_layerbench.kv_boot_images.v1",
+ "order": [
+  10,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  11,
+  12,
+  13,
+  0
+ ],
+ "epoch": 2827,
+ "images": {
+  "10": {
+   "pw": 77,
+   "dw": 0,
+   "digest": "08296b6e2b034263",
+   "source": "kv_boot_images.die_cfg_image (identity ECTL cfg, dly all 0, cap 1)",
+   "bundle_digest": null,
+   "sha256": "7e4270f779a356097b358861f57309ae9a239f671cec70392ab13473b0b1cfdf"
+  },
+  "1": {
+   "pw": 327,
+   "dw": 0,
+   "digest": "48e17fd5e5c3f749",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target1.hex",
+   "bundle_digest": "48e17fd5e5c3f749",
+   "sha256": "eb7f832af86717f94bd29f1ad627497fb2be95cec27ecd56d0a1bfcfc1ca2a43"
+  },
+  "2": {
+   "pw": 181,
+   "dw": 0,
+   "digest": "abe7ba21416eb901",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target2.hex",
+   "bundle_digest": "abe7ba21416eb901",
+   "sha256": "c9372c3a40d428ed3cdf0a4e76d7535b1d6b2a5890ca56be16d89676f59a9578"
+  },
+  "3": {
+   "pw": 4,
+   "dw": 0,
+   "digest": "35450524f9e64f3b",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target3.hex",
+   "bundle_digest": "35450524f9e64f3b",
+   "sha256": "f7cf5a5d2ef140b2d1f6b4d61115883e462e5bde1242bf26e9609fd353690129"
+  },
+  "4": {
+   "pw": 192,
+   "dw": 0,
+   "digest": "ebfc8cfcbbb1c4b9",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target4.hex",
+   "bundle_digest": "ebfc8cfcbbb1c4b9",
+   "sha256": "678b4a040d0d65eb4033d786c44715a39e9559cc0897eec38bcad114e279771c"
+  },
+  "5": {
+   "pw": 192,
+   "dw": 0,
+   "digest": "ebfc8cfcbbb1c4b8",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target5.hex",
+   "bundle_digest": "ebfc8cfcbbb1c4b8",
+   "sha256": "fa68b95121bdca383eae3a7b78ba8f41297412b33a931b1818fddeee08bc7692"
+  },
+  "6": {
+   "pw": 1024,
+   "dw": 0,
+   "digest": "51484f5354505241",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target6.hex",
+   "bundle_digest": "51484f5354505241",
+   "sha256": "3401f5fd2463f779a8070c96606e0d7249752a14df114156f5e837646132ce79"
+  },
+  "7": {
+   "pw": 1024,
+   "dw": 0,
+   "digest": "51484f5354505240",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target7.hex",
+   "bundle_digest": "51484f5354505240",
+   "sha256": "3401f5fd2463f779a8070c96606e0d7249752a14df114156f5e837646132ce79"
+  },
+  "8": {
+   "pw": 1024,
+   "dw": 0,
+   "digest": "51484f535450524f",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target8.hex",
+   "bundle_digest": "51484f535450524f",
+   "sha256": "3401f5fd2463f779a8070c96606e0d7249752a14df114156f5e837646132ce79"
+  },
+  "9": {
+   "pw": 1024,
+   "dw": 0,
+   "digest": "51484f535450524e",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target9.hex",
+   "bundle_digest": "51484f535450524e",
+   "sha256": "3401f5fd2463f779a8070c96606e0d7249752a14df114156f5e837646132ce79"
+  },
+  "11": {
+   "pw": 66,
+   "dw": 0,
+   "digest": "8168c1aa9cb86999",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target11.hex",
+   "bundle_digest": "8168c1aa9cb86999",
+   "sha256": "8d7f82543ef856309239f259fbe3146a9b361bbe1088760c4a60fcc8e1e3ec53"
+  },
+  "12": {
+   "pw": 1024,
+   "dw": 0,
+   "digest": "d3c9d308d0a9b54d",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target12.hex",
+   "bundle_digest": "d3c9d308d0a9b54d",
+   "sha256": "b8f47e3c8917c5136bab1623cddd6ede98dfe3843e71014b60fc8a45258cebaa"
+  },
+  "13": {
+   "pw": 8,
+   "dw": 0,
+   "digest": "0fd6c55d67dd0275",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target13.hex",
+   "bundle_digest": "0fd6c55d67dd0275",
+   "sha256": "7fce4c45005b63f6d3f59cbb035b28df62f0d1c7f83a7b3da6942c0e64ee51f7"
+  },
+  "0": {
+   "pw": 1024,
+   "dw": 8,
+   "digest": "514bb0b28004c8e8",
+   "source": "results/rtl/qwen_layer_tput_1018/kv_boot/kvprog_die/target0.hex",
+   "bundle_digest": "514bb0b28004c8e8",
+   "sha256": "c172c7510d7b02131f911b7b36b7b2ba49166ddae15eaa778d1503afe4ca32e8"
+  }
+ }
+}
