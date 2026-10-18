@@ -15,6 +15,12 @@
 // Timeline vs the original with go at G: S = G+4; capture S+j+13; L, W0, W1, done all +1+VMX; done = W1 + ACK + 1.
 // Pins: 136 vm_rq + 264 vm_rr + 338 cq + 2 + 274 cr + ~110 command/status = ~1.13k (118.8 sq at <= 2.4 pins/um).
 // MUT: as ot_hbm_argmax_static (1 id offset, 2 capture early, 3 no second O word) and SWMUT 1/2 as the sw_vm wrapper.
+// busy EXPORT FLOP (HBM-NATIVE 10-17, after the routed native pin audit of hbm_argmax_swvm_r2_1017-r2-e4dc0b651: busy launch
+// 222.4 > 220 ps): the busy PORT was the FSM state flop itself, which also gates go_p, s_beat and flt inside the tile, so
+// its Q net is loaded and the flop is placed by the internal logic, not at the pin. The FSM keeps its own flop busy_i;
+// the port is driven by a dedicated (* keep *) export flop busy_x that receives the SAME next state with the SAME reset
+// on every edge (busy_x(t) == busy_i(t) for all t): 0 cycles, bit-identical at the pin (lockstep bench
+// tb_argmax_r2_busy_export vs the closed e4dc0b651 RTL; mutant OT_ARGMAX_BUSY_EXPORT_MUT drops one clear and is rejected).
 module ot_hbm_argmax_static_sw_vm_r2 #(
     parameter integer TP = 192,
     parameter integer RANK_W = (TP<=1?1:$clog2(TP)),
@@ -40,9 +46,13 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     output wire [337:0]  cq,
     output reg  [1:0]    cq_seq,
     input  wire [273:0]  cr,
-    output reg           busy, done, fault, nan_flag
+    output wire          busy,
+    output reg           done, fault, nan_flag
 );
     localparam [1:0] sid = 2'd0;
+    reg busy_i;                                                         // FSM state (internal loads)
+    (* keep = "true", dont_touch = "true" *) reg busy_x;           // pin export copy (drives only the busy port)
+    assign busy = busy_x;
     // ---------------------------------------------------------------- reset relay (3 regions)
     wire [2:0] rr_n;
     ot_rst_relay #(.REGIONS(3)) u_rst(.clk(clk), .rst_n_in(rst_n), .rst_n(rr_n));
@@ -68,7 +78,7 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     wire legal = n_p != 18'd0 && imm_p < 18'd262143 &&
                  (mode_p || (am_p ? ab_p[17:16] == 2'd0 : ab_p[17:16] == sid)) &&
                  ob_p[17:16] == sid && ((ob_p + {2'd0, ois_p}) >> 16) == {16'd0, sid};
-    always @(posedge clk) if (go_p && !busy) begin
+    always @(posedge clk) if (go_p && !busy_i) begin
         mode_q <= mode_p; am_q <= am_p; imm_q <= imm_p; ab_q <= ab_p; n_q <= n_p; ob_q <= ob_p;
         ois_q <= ois_p; legal_q <= legal;
     end
@@ -100,7 +110,7 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     wire [522:0] as_q = 523'd0;           // SW VM die: no STREAM wiring (as ot_hbm_argmax_static_sw_vm)
     // ---------------------------------------------------------------- engine (closed, unchanged)
     reg e_v, e_last, e_be; reg [7:0] e_m; reg [255:0] e_vals, e_bias;
-    wire s_beat = busy && mode_q && as_q[0];
+    wire s_beat = busy_i && mode_q && as_q[0];
     always @(posedge clk or negedge rst_rd)
         if (!rst_rd) begin e_v <= 1'b0; e_last <= 1'b0; end
         else begin
@@ -137,17 +147,17 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
                            kill ? 32'd0 : (32'hF << (4 * wa[2:0])), {14'h1E80, (st == E_W1) ? 2'd1 : 2'd0}};
     always @(posedge clk or negedge rst_ctl) begin
         if (!rst_ctl) begin
-            st <= E_IDLE; busy <= 1'b0; done <= 1'b0; fault <= 1'b0; nan_flag <= 1'b0; flt <= 1'b0; cq_v <= 1'b0;
+            st <= E_IDLE; busy_i <= 1'b0; busy_x <= 1'b0; done <= 1'b0; fault <= 1'b0; nan_flag <= 1'b0; flt <= 1'b0; cq_v <= 1'b0;
             cq_seq <= 2'd0; wr_now <= 1'b0; cnt <= 6'd0; res_bad <= 1'b0;
         end else begin
             done <= 1'b0; fault <= 1'b0; cq_v <= 1'b0; wr_now <= 1'b0;
-            if (busy && st != E_CHK && (ack_bad || (!mode_q && rd_bad))) flt <= 1'b1;
+            if (busy_i && st != E_CHK && (ack_bad || (!mode_q && rd_bad))) flt <= 1'b1;
             if (o_v && !(st == E_WAIT && cnt == 6'd0)) flt <= 1'b1;      // engine out must be exactly on L+ELAT
             case (st)
-                E_IDLE: if (go_p) begin busy <= 1'b1; st <= E_CHK; end
+                E_IDLE: if (go_p) begin busy_i <= 1'b1; busy_x <= 1'b1; st <= E_CHK; end
                 E_CHK: begin
                     flt <= 1'b0; res_bad <= 1'b0; le <= ab_q + n_q - 18'd1;
-                    if (!legal_q) begin fault <= 1'b1; busy <= 1'b0; st <= E_IDLE; end
+                    if (!legal_q) begin fault <= 1'b1; busy_i <= 1'b0; busy_x <= 1'b0; st <= E_IDLE; end
                     else st <= mode_q ? E_WAIT : E_ROW;
                     cnt <= 6'd63;                          // STREAM: armed by the last beat
                 end
@@ -174,7 +184,11 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
                     if (st == E_W1) begin cnt <= 6'(ACK); st <= E_END; end else st <= E_W1;
                 end
                 E_END: if (cnt == 6'd0) begin                  // W1 + ACK + 1
-                    done <= !(flt || res_bad || ack_bad); fault <= flt || res_bad || ack_bad; busy <= 1'b0; st <= E_IDLE;
+                    done <= !(flt || res_bad || ack_bad); fault <= flt || res_bad || ack_bad; busy_i <= 1'b0;
+`ifndef OT_ARGMAX_BUSY_EXPORT_MUT
+                    busy_x <= 1'b0;
+`endif
+                    st <= E_IDLE;
                 end else cnt <= cnt - 6'd1;
                 default: st <= E_IDLE;
             endcase
