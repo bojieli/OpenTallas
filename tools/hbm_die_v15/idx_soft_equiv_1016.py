@@ -62,23 +62,27 @@ def main():
                     '(regression: the pre-N_Q client); default: this tree with N_Q=--nq')
     ap.add_argument('--gate', choices=('soft', 'client'), default='soft',
                     help='soft: ot_hbm_idx_client_static_soft; client: ot_hbm_idx_client_static_sw of this tree')
+    ap.add_argument('--am-merge', type=int, default=0, help='AM_MERGE of both designs (HBM-SU3 10-17: argmax r2 share)')
     a = ap.parse_args()
+    leaves = LEAVES + ([IDX + 'ot_hbm_idx_vm_share_static_am.sv'] if a.am_merge else [])
+    masters = LEAF_MASTERS + (('ot_hbm_idx_vm_share_static_am',) if a.am_merge else ())
     out = a.out.resolve(); out.mkdir(parents=True, exist_ok=True)
     src = ROOT
     if a.mutant:
         src = out / 'mut_src'
         shutil.rmtree(src, ignore_errors=True)
-        for f in LEAVES + GOLD + GATE:
+        for f in leaves + GOLD + GATE:
             (src / f).parent.mkdir(parents=True, exist_ok=True); shutil.copy(ROOT / f, src / f)
         f, old, new = MUTANTS[a.mutant]
         t = (src / f).read_text(); assert t.count(old) == 1, (f, old); (src / f).write_text(t.replace(old, new))
-    lib = ' '.join(str(src / f) for f in LEAVES)
+    lib = ' '.join(str(src / f) for f in leaves)
     rd = lambda files, root=None: f"read_verilog -sv -lib {lib}; read_verilog -sv {' '.join(str((root or src) / f) for f in files)}"
     gate_files, gate_top = (GATE, 'ot_hbm_idx_client_static_soft') if a.gate == 'soft' else (GOLD, 'ot_hbm_idx_client_static_sw')
     groot = a.gold_root.resolve() if a.gold_root else None
-    chp = lambda tag, top: '' if (tag == 'gold' and groot) else f'chparam -set N_Q {a.nq} -set TP {a.tp} {top}; '
+    amp = f' -set AM_MERGE {a.am_merge}' if a.am_merge else ''
+    chp = lambda tag, top: '' if (tag == 'gold' and groot) else (f'chparam -set N_Q {a.nq} -set TP {a.tp}{amp} {top}; ' if top != 'x' else '')
     glue = dict(GLUE_REG, gate=GLUE_REG['gold'] if a.gate == 'client' else GLUE_REG['gate'])
-    sel = ' '.join(f't:{m}' for m in LEAF_MASTERS)
+    sel = ' '.join(f't:{m}' for m in masters)
     names = {}
     for tag, files, top in (('gold', GOLD, 'ot_hbm_idx_client_static_sw'), ('gate', gate_files, gate_top)):
         rc, o = yosys(f"{rd(files, groot if tag == 'gold' else None)}; {chp(tag, top)}hierarchy -top {top}; proc; flatten; select -write {out}/{tag}.cells {sel}", out / f'{tag}_list.log')
@@ -104,7 +108,7 @@ def main():
     log = (out / 'equiv.log').read_text()
     ok = rc == 0 and ('SUCCESS!' in log if a.method == 'sat' else 'Equivalence successfully proven!' in log)
     verdict = 'EQUIVALENT' if ok else 'NOT_EQUIVALENT'
-    print(f"IDX_SOFT_EQUIV method={a.method} gate={a.gate} gold_root={a.gold_root} nq={a.nq} mutant={a.mutant} {verdict} rc={rc} leaves={len(names['gold'])}")
+    print(f"IDX_SOFT_EQUIV method={a.method} gate={a.gate} gold_root={a.gold_root} nq={a.nq} am_merge={a.am_merge} mutant={a.mutant} {verdict} rc={rc} leaves={len(names['gold'])}")
     if not ok:
         print(o[-2000:])
     sys.exit(0 if ok else 1)

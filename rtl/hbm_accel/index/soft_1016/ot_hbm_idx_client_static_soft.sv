@@ -6,7 +6,11 @@
 // (tools/hbm_die_v15/idx_soft_parent_1016.py) and the v16 die binds them at the grant slots idx_ctl, idx_op, idx_q,
 // idx_s0..s3, idx_sel, idx_link. Proof of equivalence with ot_hbm_idx_client_static_sw (leaf children cut, all
 // glue compared, sequential induction): results/arch/hbm_idx_soft_parent_1016/equiv.
-module ot_hbm_idx_client_static_soft #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1?1:$clog2(TP)))(   // N_Q as ot_hbm_idx_parent_static (A2P: 2)
+// AM_MERGE (HBM-SU3 2026-10-17, default 0 = unchanged; d4f binds 1 with the argmax successor ot_hbm_argmax_static_sw_vm_r2):
+//   the VM share is ot_hbm_idx_vm_share_static_am, whose four bank-pair leaves do the ARGMAX 8:1 sector select and merge
+//   the lanes on a p = 0 -> 3 register chain: argmax_rr is ONE 264-bit word {lane valid8, data256}, 4 edges after the
+//   leaves' steer (argmax VMX = 4 + its pin register = 5). INDEX / TOPK faces and edges unchanged.
+module ot_hbm_idx_client_static_soft #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1?1:$clog2(TP)),AM_MERGE=0)(   // N_Q as ot_hbm_idx_parent_static (A2P: 2)
  input wire clk_program,clk_program_mem,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,
@@ -27,7 +31,7 @@ module ot_hbm_idx_client_static_soft #(parameter integer N_Q=4,TP=96,RANK_W=(TP<
  output wire[337:0]cq,output wire[1:0]cq_seq,input wire[273:0]cr,
  output wire topk_busy,topk_done,topk_fault,output wire share_fault,
  // third owner of the SW IDX read group: the static ARGMAX.LOCAL VM reader (ot_hbm_argmax_static, separate unit)
- input wire[135:0]argmax_rq,output wire[2055:0]argmax_rr
+ input wire[135:0]argmax_rq,output wire[(AM_MERGE!=0?264:2056)-1:0]argmax_rr
 );
  wire weight_slot,query_slot,query_emit,key_slot_w,ingest_v,link_flush,link_emit;
  wire[6:0]query_index;wire[4:0]query_emit_head;wire[7:0]key_index_w;
@@ -35,7 +39,7 @@ module ot_hbm_idx_client_static_soft #(parameter integer N_Q=4,TP=96,RANK_W=(TP<
  wire vf,qf,sf,lf;wire[N_Q-1:0]scf;wire[3:0]selected_v;
  wire[135:0]index_rq;wire[2055:0]index_rr;
  assign key_slot=key_slot_w;assign key_index=key_index_w;
- ot_hbm_idx_ctl_static #(.N_Q(N_Q)) ctl(.clk_program(clk_program),.clk_program_mem(clk_program_mem),.clk_sel(clk_sel),.clk_topk(clk_topk),
+ ot_hbm_idx_ctl_static #(.N_Q(N_Q),.AM_MERGE(AM_MERGE)) ctl(.clk_program(clk_program),.clk_program_mem(clk_program_mem),.clk_sel(clk_sel),.clk_topk(clk_topk),
   .clk_pair(clk_pair),.rst_n(rst_n),.program_we(program_we),.program_addr(program_addr),.program_data(program_data),
   .start(start),.length(length),.nkeys(nkeys),.weight_slot(weight_slot),.query_slot(query_slot),.query_index(query_index),
   .query_emit(query_emit),.query_emit_head(query_emit_head),.key_slot(key_slot_w),.key_index(key_index_w),
