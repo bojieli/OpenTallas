@@ -130,6 +130,13 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
     cp "$SRC/tools/die_clock_check.tcl" $D/die_clock_check.tcl
     printf '%s\n' 'if {[catch {set ::env(OT_DCC_OUT) /work/die_clock_dump.tsv; source /work/die_clock_check.tcl} err]} { puts "OT_DCC_FAIL $err" } else { puts OT_DCC_DONE }' >> $D/grt_$c.tcl
   fi
+  # KV-LANDSLOT 10-18: reset release window of the cross-tree reset root hops (OT_RST_WINDOW_HOPS = kv_rst_window.py
+  # hops json): MCP setup E_r / hold E_r-1 per hop, worst path per hop net -> rst_window_<c>.tsv (after the reports)
+  if [ -n "${OT_RST_WINDOW_HOPS:-}" ] && [ -s "$OT_RST_WINDOW_HOPS" ]; then
+    python3 "$SRC/tools/qwen_kv_die/kv_rst_window.py" tcl --hops "$OT_RST_WINDOW_HOPS" --corner $c --out $D/rst_window.tcl \
+      && printf '%s\n' 'if {[catch {source /work/rst_window.tcl} err]} { puts "OT_RST_WINDOW_FAIL $err" }' >> $D/grt_$c.tcl \
+      || say "RST WINDOW $c: Tcl generation FAIL"
+  fi
   # DIE-FLOW 10-17: post-GRT slew/cap audit of the repeated die nets (TT session; GRT detours are invisible pre-GRT)
   if [ "${OT_DIE_REPAIR:-0}" = 1 ] && [ "$c" = tt ] && [ -f $G/die_repeaters.tcl ]; then
     cp $G/die_repeaters.tcl $G/die_repeaters.skip_nets.txt $D/ 2>/dev/null
@@ -147,6 +154,12 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
       && say "DIE CLOCK CHECK $c: $D/die_clock_check.txt" || say "DIE CLOCK CHECK $c report FAIL (see $D/die_clock_check.txt)"
   elif [ "$DCC" = 1 ]; then say "DIE CLOCK CHECK $c: no dump ($(grep -m1 OT_DCC_FAIL $D/grt_$c.log))"; fi
 done
+if [ -n "${OT_RST_WINDOW_HOPS:-}" ] && [ -s "$OT_RST_WINDOW_HOPS" ]; then
+  RWD=$R/dieclk; say "$(python3 "$SRC/tools/qwen_kv_die/kv_rst_window.py" report --hops "$OT_RST_WINDOW_HOPS" \
+    --tt $R/sta_${DIE}_tt/rst_window_tt.tsv --ff $R/sta_${DIE}_ff/rst_window_ff.tsv \
+    $( [ -s $RWD/dump_tt.tsv ] && echo --dump-tt $RWD/dump_tt.tsv ) $( [ -s $RWD/dump_ff.tsv ] && echo --dump-ff $RWD/dump_ff.tsv ) \
+    --out $R/rst_window.json 2>&1 | tail -1)"
+fi
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
 # DIE-FLOW 2026-10-17 (FLOW-HOLD D1-D3, OT_HOLD_BUDGET=die: die_sta_libs.py U 25 + sta_tcl.py FF hold dump): per-link
 # classifier -- launch-min from the bound ETMs, delta <= 80, ASSUMED single-flop masters = hold DIAGNOSTIC links

@@ -269,6 +269,20 @@ def main(argv=None):
         rep['totals']['stations'] += n
         rep['totals']['bits'] += S
         rep['totals'][f'{X}->{Y}'] += 1
+    # KV-LANDSLOT 10-18: the landing must sit in a frame the die planner reserved for it (kv_land_slot.py ->
+    # qkd_rly_<W>_land, kv_rly_std.py lays its forward replicas at the landing outlines; RUN/rly_std.json land_slots).
+    # A 36 / 296 / 528-b landing outside one does not fit its station outline (KV-LANEKITS util 181 / 128 / 126 %)
+    rsj = a.run / 'rly_std.json'
+    slots = json.loads(rsj.read_text()).get('land_slots', {}) if rsj.exists() else {}
+    lastst = {L['stations'][-1]: L for L in rep['lanes']}
+    unslot = [dict(station=s, S=L['S'], src_tree=L['src_tree'], dst_tree=L['dst_tree'], dst=L['dst'])
+              for s, L in sorted(lastst.items()) if s not in slots]
+    rep['land_slots'] = dict(reserved=len(slots), slotted=len(lastst) - len(unslot), unslotted=len(unslot),
+                             unslotted_wide=sum(1 for u in unslot if u['S'] != 1), unslotted_examples=unslot[:60],
+                             reserved_unused=sorted(set(slots) - set(lastst))[:200],
+                             reserved_unused_count=len(set(slots) - set(lastst)))
+    for s, L in lastst.items():
+        L['land_slot'] = s in slots
     rep['skipped'] = dict(skipped)
     rep['skipped_examples'] = {k: v[:40] for k, v in skip_ex.items()}
     rep['totals'] = dict(rep['totals'])
@@ -295,6 +309,11 @@ def main(argv=None):
             missing.append(mst)
     if missing and not a.netlist_only:
         raise SystemExit(f'kv_fwd_lanes: no closed view for {missing} (gate + route the lane kits, or --netlist-only)')
+    ls_ = rep['land_slots']
+    if ls_['unslotted_wide'] and not a.netlist_only:
+        (a.run / 'fwd_lanes.json').write_text(json.dumps(rep, indent=1) + '\n')
+        raise SystemExit(f"kv_fwd_lanes: {ls_['unslotted_wide']} wide landings have no reserved landing frame (plan the die "
+                         f"with OT_KV_LANDSLOT=1; e.g. {ls_['unslotted_examples'][:3]})")
     add_lef = []
     for mst, vd in views.items():
         blk, sz = RS.lef_macro(ROOT / vd / f'{mst}.lef')
@@ -328,7 +347,8 @@ def main(argv=None):
     rep['views_bound'] = sorted(views)
     rep['views_missing'] = missing
     (a.run / 'fwd_lanes.json').write_text(json.dumps(rep, indent=1) + '\n')
-    print(json.dumps(dict(totals=rep['totals'], skipped=rep['skipped'], per_master=rep['per_master'], missing=missing)))
+    print(json.dumps(dict(totals=rep['totals'], skipped=rep['skipped'], per_master=rep['per_master'], missing=missing,
+                          land_slots={k: v for k, v in rep['land_slots'].items() if not k.endswith(('examples', 'unused'))})))
     return 0
 
 
