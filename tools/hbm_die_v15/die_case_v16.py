@@ -386,6 +386,13 @@ def main():
         if e['kind'] in ('REAL', 'ROUTED_UNBOUND'):
             shutil.copy(ROOT / e['lef'], vd / f'{c}.lef')
             shutil.copy(ROOT / e['tt'], vd / f'{c}_tt.lib'); shutil.copy(ROOT / e['ff'], vd / f'{c}_ff.lib')
+            if c != e['master']:   # H-DIE-R8b: a routed parameter variant (cfg_collar__pv0/1/2 = col_sfu/col_su/col_idx):
+                m_ = re.escape(e['master'])   # macro + liberty cell carry the CELL name die.v instantiates (ORD-2013 in run8)
+                f_ = vd / f'{c}.lef'
+                f_.write_text(re.sub(rf'^(MACRO|END)(\s+){m_}\s*$', rf'\1\g<2>{c}', f_.read_text(), flags=re.M))
+                for k_ in ('tt', 'ff'):
+                    f_ = vd / f'{c}_{k_}.lib'
+                    f_.write_text(re.sub(rf'(\bcell\s*\(\s*"?){m_}("?\s*\))', rf'\g<1>{c}\2', f_.read_text()))
             kinds[c] = 'ROUTED_UNBOUND' + (' (TT abstract used at FF: modelled off-die PHY macro)' if e['tt'] == e['ff'] else '')
             if e['master'] in DIAGNOSTIC:
                 kinds[c] += f" DIAGNOSTIC ({DIAGNOSTIC[e['master']]})"
