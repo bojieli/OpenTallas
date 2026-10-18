@@ -847,7 +847,7 @@ if [ "{CTS}" = 1 ]; then
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
   python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --raw-source --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
-  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
+  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','child_flop','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
   ot_layout $NB/4_1_cts.odb placed
@@ -1702,6 +1702,12 @@ def corner_spreads(rec: dict, domain: dict) -> dict:
     for c in ("tt", "ff"):
         cr = domain.get(c) or {}
         al, bd = cr.get("all") or {}, cr.get("boundary") or {}
+        cf = cr.get("child_flop") or {}
+        if cf.get("boundary") and cf.get("all"):
+            # CHILD-FLOP (SM-RP4 2026-10-18): a cluster's hard-child clock pins enter all_registers at their RAW arrival,
+            # which the spine sets EARLY by the child's own insertion R; the rule judges the child FLOPS (pin + R)
+            bd, al = cf["boundary"], cf["all"]
+            rec[f"{c}_child_flop_refs"] = cf.get("refs")
         if al.get("min") is not None and al.get("max") is not None:
             lo, hi = float(al["min"]), float(al["max"])
             rec[f"{c}_insertion_ps"], rec[f"{c}_spread_ps"] = hi, round(hi - lo, 1)
@@ -2020,6 +2026,26 @@ def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") ->
     return res
 
 
+CLOCK_WAIVER_MAX_PS = TL.CLOCK_WAIVER_MAX_PS
+
+
+def apply_clock_rule_waiver(g: Gate, spec: dict) -> None:
+    """HANDOFF 0ga 2026-10-18: the job spec's "clock_rule_waiver" turns the clock_rule FAIL into a WARN that prints the
+    waiver when textbook_lint.clock_waiver_eval accepts it (per-pair excess <= 2 ps, recorded, named pair alone)."""
+    w = spec.get("clock_rule_waiver")
+    items = [i for i in g.items if i["check"] == "clock_rule" and i["severity"] == "FAIL"]
+    if not isinstance(w, dict) or not items:
+        return
+    applied, note, why = TL.clock_waiver_eval((getattr(g, "clock", None) or {}).get("evidence") or {}, w)
+    if not applied:
+        for i in items:
+            i["message"] += f" (clock_rule_waiver NOT applied: {'; '.join(why)})"
+        return
+    print(f"pre_route_gate: WAIVER {note}", file=sys.stderr)
+    for i in items:
+        i["severity"], i["message"] = "WARN", i["message"] + f" -- WAIVED: {note}"
+
+
 def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = None,
                  closed_stands: bool = False, clock_mode: str = "refuse") -> dict:
     """closure-loop submit hook: the LOCAL gate on a job spec AT ITS SOURCE COMMIT (kit / pins / RTL / children /
@@ -2059,6 +2085,7 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
                         check_slot_fit(g, Path(td) / kit, spec, repo, commit)
                         if clock_mode != "off":
                             check_clock_evidence(g, Path(td) / kit, known_sinks, closed_stands, commit)
+                            apply_clock_rule_waiver(g, spec)
                             if clock_mode != "refuse":
                                 for i in g.items:
                                     if i["check"] == "clock_rule" and i["severity"] == "FAIL":
