@@ -1,0 +1,9 @@
+# fail witness (ELEM-GAPS/HBMN1 2026-10-18): stdout+stderr of the job.json bench cmd for ring_ag_n_mut_txlead, run verbatim on ot-epyc5 from the worktree content of 70e647fca
+RING_AG_N LOCK mismatch t=10 cw 1 ccw 1 rr 0/0 ag 00/00
+RING_AG_N LOCK mismatch t=35 cw 1 ccw 1 rr 0/0 ag 00/00
+RING_AG_N LOCK mismatch t=41 cw 1 ccw 1 rr 0/0 ag 00/00
+RING_AG_N LOCK mismatch t=44 cw 0 ccw 1 rr 0/0 ag 00/00
+RING_AG_N LOCK mismatch t=55 cw 1 ccw 1 rr 0/0 ag 00/00
+RING_AG_N LOCK mismatch t=56 cw 1 ccw 0 rr 0/0 ag 00/00
+RING_AG_N MUTANT txlead FAILED
+EXIT 1
