@@ -26,7 +26,11 @@ if [ "$PDN_REV" = r7 ] || [ "$PDN_REV" = r8 ]; then
   cp $R/case_r22k/pdn.tcl $R/case_r22k/pdn_r5.tcl
 # licensed link-PHY abstracts (io_serdes*, io_ucie) carry their own M4 PG straps under a full M1-M5 OBS: no die macro
 # grid reaches them (PDN-0006); their PG hookup is the PHY IP integration, recorded open (OT_PGCHECK reports it)
-  python3 tools/qwen_split/pdn_regroup.py $R/case_r22k --skip-prefix rly_ $UP4SKIP --skip-prefix io_serdes --skip-prefix io_ucie --pos ../out/rom_tp8b.json --out pdn.tcl $TIE_LOCAL > $R/pdn_$PDN_REV.json || { echo pdn regroup failed; exit 10; }
+# Q-DIEPLAN8 10-17: the DV plans place ~500 hard relay macros (qfd_rly_*: VDD/VSS on M7 + one M8 rect at the cell foot).
+# Under r8 with --skip-prefix rly_ no M8 stripe meets those pins (dv2f10 PSM-0039 on all 498 relays). OT_PDN_RELAY_GRIDS=1
+# groups the relays into the per-phase macro grids like every other macro (4 y-phases on the 2.16 lattice).
+  RLYSKIP="--skip-prefix rly_"; [ "${OT_PDN_RELAY_GRIDS:-0}" = 1 ] && RLYSKIP=
+  python3 tools/qwen_split/pdn_regroup.py $R/case_r22k $RLYSKIP $UP4SKIP --skip-prefix io_serdes --skip-prefix io_ucie --pos ../out/rom_tp8b.json --out pdn.tcl $TIE_LOCAL > $R/pdn_$PDN_REV.json || { echo pdn regroup failed; exit 10; }
 fi
 # Binding supplies the actual modeled PHY masters, and regroup writes the final
 # PDN grid. Apply the explicit contract here, before run.tcl creates any ODB.
