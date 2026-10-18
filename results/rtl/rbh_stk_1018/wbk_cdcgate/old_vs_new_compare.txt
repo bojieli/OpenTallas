@@ -1,0 +1,29 @@
+== wbq_e new: STK_WBQ PASS wbq_e rc=0  old: STK_WBQ PASS wbq_e rc=0 
+  DIFFER ./wbq_e.log
+== wbq_w new: STK_WBQ PASS wbq_w rc=0  old: STK_WBQ PASS wbq_w rc=0 
+  DIFFER ./wbq_w.log
+== wbq_e_wopen new: STK_WBQ PASS wbq_e_wopen rc=0  old: STK_WBQ PASS wbq_e_wopen rc=0 
+  DIFFER ./wbq_e_wopen.log
+== wbq_mut_quad new: STK_WBQ MUTANT_REJECTED wbq_mut_quad rc=0  old: STK_WBQ MUTANT_REJECTED wbq_mut_quad rc=0 
+  IDENTICAL ./wbq_mut_quad.log
+== wbq_mut_span new: STK_WBQ MUTANT_REJECTED wbq_mut_span rc=0  old: STK_WBQ MUTANT_REJECTED wbq_mut_span rc=0 
+  IDENTICAL ./wbq_mut_span.log
+== wbq_mut_premature new: STK_WBQ MUTANT_REJECTED wbq_mut_premature rc=0  old: STK_WBQ MUTANT_REJECTED wbq_mut_premature rc=0 
+  IDENTICAL ./wbq_mut_premature.log
+== wbq_mut_ksaddr new: STK_WBQ MUTANT_REJECTED wbq_mut_ksaddr rc=0  old: STK_WBQ MUTANT_REJECTED wbq_mut_ksaddr rc=0 
+  IDENTICAL ./wbq_mut_ksaddr.log
+== wb_default new: STK_WB_DEFAULT PASS rc=0  old: STK_WB_DEFAULT PASS rc=0 
+  IDENTICAL ./cutthrough/depth.log
+  IDENTICAL ./cutthrough/early_row_mutant.log
+  IDENTICAL ./cutthrough/fast.log
+  IDENTICAL ./cutthrough/faults.log
+  IDENTICAL ./cutthrough/mutant.log
+  IDENTICAL ./cutthrough/positive.log
+  IDENTICAL ./cutthrough/resets.log
+  IDENTICAL ./cutthrough/tail.log
+  IDENTICAL ./kshare_q/address.log
+  DIFFER ./kshare_q/baseline.log
+  IDENTICAL ./kshare_q/overlap.log
+  IDENTICAL ./kshare_q/premature.log
+  IDENTICAL ./wb_default.log
+filtered (Verilator runtime-stat lines removed): compared=20 differ=0
