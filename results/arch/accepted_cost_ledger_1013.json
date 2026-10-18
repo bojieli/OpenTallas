@@ -76,6 +76,33 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "DIE.FWD_LANE_LANDING (Qwen split compute die: 113 regional-root relay lanes -> forwarded half-cycle lanes + D4 landings; N/2+2+E per traversal vs n+1)",
+   "group": "DIE.FWD_LANE_LANDING",
+   "measured": 15148.5,
+   "price": 13723.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1039,
+   "e2e_loss_pct": 0.568,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path (tools/qwen_split/fwd_lane_price.py --scope conservative)",
+     "base_cycles": 249431.0,
+     "cycles": 250856.5,
+     "added_cycles": 1425.5,
+     "e2e_loss_pct": 0.568,
+     "data_scope_e2e_loss_pct": 0.368
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_split_compute_1014/q_die11_rly_1018/price_conservative.json results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench/pass.log",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-18",
+   "status": "proposed",
+   "note": "Q-DIE11-RLY 10-18 (coordinator HANDOFF 0ea item 1, LANDING-CONTRACT L4 + section 7). price/measured = the priced critical-path lane edges a token (today n+1, landed (n-1)/2+2+E). E is the S81 p4j half-cycle fit ceil((n-1)/2)+1 (>=2), NOT yet the Qwen die STA: re-price with the dv2f14 land plan (OT_SPLIT_LAND_PLAN). Conservative scope charges the tt_ctlm cmd/hr/status lanes serially on every ME op (upper bound); data-path-only scope: 0.368 %. Behaviour: tools/qwen_split/bench_fwd_lane.sh PASS + 5 mutants FAIL."
+  },
+  {
+   "design": "qwen_rom",
    "unit": "DIE.RELAY (r21 die relay stations as wire-stage counts: BD 41->77, TWS 38->93, ORD 7->10, link 339->365; increment a layer)",
    "group": "DIE.RELAY",
    "measured": 613.0,
@@ -2276,11 +2303,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 6.553,
-   "accepted_plus_proposed_pct": 7.618,
+   "proposed_pct": 7.121,
+   "accepted_plus_proposed_pct": 8.186,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 11,
+   "proposed_rows": 12,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
