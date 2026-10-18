@@ -26,6 +26,11 @@ import kv_static_kvjf_join as F
 
 ROOT_M = ('rtl/qwen_sys/split_20261014/qkd_attn_service_root.sv', 'qkd_attn_service_root')
 FACE_M = ('rtl/qwen_sys/split_20261014/qkd_attn_result_face.sv', 'qkd_attn_result_face')
+# KV-PLAN-FIN 10-17: OT_KV_PVFIN=1 (default ON under OT_KV_STATIC_DIE=1) joins the BEAT-STREAM face qkd_attn_result_face_s:
+# its f_valid / f_beat / f_epoch / f_data (512 b) are fed by the stream final join qkd_pv_fin_s (die element pvfin,
+# results/arch/qwen_kv_pvfin_1017/plan.json); F_DLY (pin stage + die relay edges pvfin -> face) is compiler-priced.
+FACE_S_M = ('rtl/qwen_sys/split_20261014/qkd_attn_result_face_s.sv', 'qkd_attn_result_face_s')
+STREAM = __import__('os').environ.get('OT_KV_PVFIN', __import__('os').environ.get('OT_KV_STATIC_DIE', '0')) == '1'
 NF = 10
 ROOT_FROM_PROG = ('request_valid', 'request_epoch', 'request_layer', 'request_position', 'request_calendar',
                   'q_valid', 'q_beat')
@@ -35,12 +40,14 @@ PROG_FROM_FACE = ('result_valid', 'result_beat', 'result_data', 'result_epoch', 
                   'service_fault')
 
 
-def attention_result_join(graph, root=K.ROOT, prog='attention_programme', rname='attn_root', fname='attn_face'):
+def attention_result_join(graph, root=K.ROOT, prog='attention_programme', rname='attn_root', fname='attn_face', stream=None):
+    stream = STREAM if stream is None else stream
     ins, width_of, ep = F._ctx(graph, root)
     if prog not in ins:
         raise ValueError(f'template instance {prog} missing')
     r = F._add_unpriced(graph, ins, rname, ROOT_M, dict(PV_LEAD=None, MUT=0), root)
-    f = F._add_unpriced(graph, ins, fname, FACE_M, dict(NF=NF, RESULT_RELAY=None, MUT=0), root)
+    f = (F._add_unpriced(graph, ins, fname, FACE_S_M, dict(NF=NF, RESULT_RELAY=None, F_DLY=None, MUT=0), root) if stream else
+         F._add_unpriced(graph, ins, fname, FACE_M, dict(NF=NF, RESULT_RELAY=None, MUT=0), root))
     p = ins[prog]
     bound = []
 
@@ -54,7 +61,7 @@ def attention_result_join(graph, root=K.ROOT, prog='attention_programme', rname=
         bind(f, q, [ep(rname, s)])
     for q in PROG_FROM_FACE:
         bind(p, q, [ep(fname, q)])
-    graph.setdefault('joins_added', []).append(dict(producer=f'{rname}:{ROOT_M[1]} + {fname}:{FACE_M[1]}',
+    graph.setdefault('joins_added', []).append(dict(producer=f'{rname}:{ROOT_M[1]} + {fname}:{(FACE_S_M if stream else FACE_M)[1]}',
         bound_inputs=len(bound), owner_note='KVJ-SMALL (a) 10-17: attention result face + service root beside the '
         'programme; finalize out_* and unit faults are die joins (KVJ-G2); PV_LEAD / RESULT_RELAY compiler-priced'))
     return bound

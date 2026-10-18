@@ -1006,6 +1006,8 @@ if KSD.ON:
                'kvn_word_identity', 'kvn_word_generation'):
         BINDINGS['qkd_d2ds']['ports'][_p] = [_p]
     RTL.update({k_: KSD.RTL_FILE for k_ in KSD.KIND_MASTER.values()}, qkd_ectlk=KSD.bindings()['qkd_ectlk']['file'])
+    if KSD.PVFIN:      # KV-PLAN-FIN: the stream PV final join element pvfin
+        RTL.update(qkd_pvfin=KSD.PVFIN_FILE)
 
 
 # not exact-cut yet (frames sized, RTL partition owed): reported, not strict
