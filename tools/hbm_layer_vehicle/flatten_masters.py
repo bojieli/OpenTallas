@@ -16,6 +16,7 @@ def main():
     ap.add_argument("--bundle", default=".")
     ap.add_argument("--views", required=True)
     ap.add_argument("--hier", type=int, default=1, help="mark each master /*verilator hier_block*/")
+    ap.add_argument("--nohier", default="", help="comma list of masters NOT marked hier_block (a bench reaches inside them)")
     ap.add_argument("--verilator", default=os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"))
     a = ap.parse_args()
     B = Path(a.bundle)
@@ -43,7 +44,7 @@ def main():
             t = re.sub(r"\b(module\s+)(" + alt + r")\b", lambda x: x.group(1) + x.group(2) + tag, t)
             t = re.sub(r"(?<![\w$.])(" + alt + r")\b(?=\s*(?:#|[A-Za-z_]\w*\s*(?:\[[^\]]*\]\s*)?\())",
                        lambda x: x.group(1) + tag, t)
-        if a.hier and not m.startswith(("hbfd_rly_", "hfd_ckgen")) and "blackbox" not in t[:20000]:
+        if a.hier and m not in set(a.nohier.split(",")) and not m.startswith(("hbfd_rly_", "hfd_ckgen")) and "blackbox" not in t[:20000]:
             # Verilator hierarchical verilation: every hard master is verilated on its own (memory bounded per master,
             # as the die is hardened per master); the whole-die flat elaboration exceeded 380 GB (10-18)
             mm = re.search(r"\bmodule\s+" + re.escape(m) + r"\b", t)

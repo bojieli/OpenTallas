@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # LAYERBENCH-HBM (10-18): build + run a cut d4g slice (cut_slice.py + gen_slice_tb.py) under Verilator 5.050.
 #   SRC=<bundle root (make_bundle.py: rtl/ physical/ files.f incdirs.f master_files.json views.json) + slice/>  OUT=<dir>
-#   [JOBS=8] [CYCLES=] [REPLAY=slice/replay/<name>] [HBM_IMG_DIR=] [BUILD_ONLY=0] [REUSE=0: 1 = skip the build if OUT/obj exists]
+#   [NOHIER=hfd_vms_bank_native_q0_faces (masters built flat: the VM backdoor reaches the bank macros)] [JOBS=8] [CYCLES=] [REPLAY=slice/replay/<name>] [HBM_IMG_DIR=] [BUILD_ONLY=0] [REUSE=0: 1 = skip the build if OUT/obj exists]
 # slice/ holds slice.v, tb_slice.sv, masters.txt (from the cutter) and replay/<name>/*.mem.  The HBM PHY blackbox master is
 # replaced by the off-chip PHY+DRAM model rtl/test/hbm_layer/ot_hbm3e_phy_rc_e8p5_dram_model.sv; every other slice
 # master is the die's real bound RTL (one flattened namespace per master, as the die vehicle).
@@ -12,7 +12,7 @@ VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 mkdir -p "$OUT"; cd "$SRC"
 T0=$(date +%s); BRC=0
 if [ "${REUSE:-0}" = 1 ] && [ -x "$OUT/obj/Vtb_hbm_slice" ]; then echo "REUSE build $OUT/obj"; else
-  [ -f masters.f ] && [ -d masters ] || python3 flatten_masters.py --bundle . --views views.json --hier ${HIERMARK:-1} --verilator "$VL" > "$OUT/flatten.log" 2>&1 || { cat "$OUT/flatten.log"; exit 3; }
+  python3 flatten_masters.py --bundle . --views views.json --hier ${HIERMARK:-1} --nohier "${NOHIER-hfd_vms_bank_native_q0_faces}" --verilator "$VL" > "$OUT/flatten.log" 2>&1 || { cat "$OUT/flatten.log"; exit 3; }
   sed 's#^#masters/#; s#$#.sv#' slice/masters.txt | grep -v '^masters/ot_hbm3e_phy_rc_e8p5\.sv$' > slice/masters.f
   for f in $(cat slice/masters.f); do [ -f "$f" ] || { echo "MISSING $f"; exit 4; }; done
   /usr/bin/time -v -o "$OUT/build.time" "$VL" --binary --timing ${HIER:---hierarchical} -j "$JOBS" --build-jobs "$JOBS" -O1 \

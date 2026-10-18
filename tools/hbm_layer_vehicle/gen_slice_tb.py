@@ -16,8 +16,13 @@ REPLAY MODEL (the slice's neighbours, at their SCHEDULED cycles).  replay.json (
 TB prints SLICE_CHECK_FAIL / SLICE_REC lines, SLICE_OUT first/last change cycle per output (measured activity span),
 and SLICE_PASS (all checks met, drives applied) or SLICE_FAIL.  Plusargs: +REPLAY=<dir> (mem files), +CYCLES=<n>
 stream edges after reset (default: last event + 64, or 2000 with no replay), +HBM_IMG_DIR=<dir> (DRAM model preload).
+VM image / VM checks (backdoor, the producer records' state): M events {"k":"M","mem":"vm","bank","row","sector","val"}
+(cyc 0 only: preloaded before reset release) write the bank's SRAM macro cells with the bank's own SECDED (39,32) check
+bits (ot_vms_bank_q0_faces_body.sv: sector s -> bank s[2:0], quarter s[14:13], mirror s[15] -> macro C else A, row
+s[12:3]; check bits in macro B); C events on port "vm:<sector hex>" compare that word's data cells.  Needs the VM bank
+master built flat (run_slice_vehicle.sh NOHIER=hfd_vms_bank_native_q0_faces): a hier_block hides its internals.
 Event header word (64 b): [63:62] kind 1=D 2=C 3=end, [61:60] dom 0 stream 1 serial 2 hbm, [59:44] port index
-(inputs / outputs index spaces), [43:32] rec+1 (0 = none), [31:0] cyc.
+(inputs / outputs index spaces; C with bit 59 set = VM check {1, mirror, bank 3, row 10} at [59:44]), [43:32] rec+1 (0 = none), [31:0] cyc.
 """
 import argparse, json, sys
 from pathlib import Path
@@ -48,7 +53,12 @@ def main():
         r = json.loads(Path(rp).read_text())
         name = Path(rp).stem if Path(rp).name != "replay.json" else Path(rp).parent.name
         ev = r["events"]
-        bad = [e for e in ev if (e["port"] not in (iidx if e["k"] == "D" else oidx))]
+        vm = [e for e in ev if e["k"] == "M"]
+        ev = [e for e in ev if e["k"] != "M"]
+        if any(e.get("cyc", 0) != 0 or e.get("mem") != "vm" for e in vm):
+            sys.exit("gen_slice_tb: only cyc-0 VM preload (M) events are supported")
+        bad = [e for e in ev if not (e["port"] in (iidx if e["k"] == "D" else oidx) or
+                                     (e["k"] == "C" and e["port"].startswith("vm:")))]
         if bad:
             sys.exit(f"gen_slice_tb: {len(bad)} events on ports not on the slice boundary, e.g. {bad[:3]}")
         ev = sorted(ev, key=lambda e: (DOM[e["dom"]], e["cyc"], e["k"]))
@@ -57,7 +67,12 @@ def main():
         hl, vl, ml = [], [], []
         for e in ev:
             k = 1 if e["k"] == "D" else 2
-            pi = iidx[e["port"]] if k == 1 else oidx[e["port"]]
+            if e["port"].startswith("vm:"):
+                s = int(e["port"][3:], 16)
+                pi = 0x8000 | ((s >> 15) & 1) << 14 | (s & 7) << 10 | ((s >> 3) & 0x3FF)
+                width[e["port"]] = 256
+            else:
+                pi = iidx[e["port"]] if k == 1 else oidx[e["port"]]
             rec = (e.get("rec", -1) + 1) & 0xFFF
             hl.append(f"{(k << 62) | (DOM[e['dom']] << 60) | (pi << 44) | (rec << 32) | (e['cyc'] & 0xFFFFFFFF):016x}")
             w = width[e["port"]]
@@ -72,9 +87,15 @@ def main():
         (d / "hdr.mem").write_text("\n".join(hl) + "\n")
         (d / "val.mem").write_text("\n".join(vl) + "\n")
         (d / "msk.mem").write_text("\n".join(ml) + "\n")
+        vlines = []
+        for e in vm:
+            s = int(e["sector"]) if not isinstance(e["sector"], str) else int(e["sector"], 16)
+            assert (s & 7) == e["bank"] and ((s >> 3) & 0x3FF) == e["row"], e
+            vlines.append(f"{(s >> 15) & 1:x} {s & 7:x} {(s >> 3) & 0x3FF:03x} {int(e['val'], 16):064x}")
+        (d / "vm_pre.txt").write_text("\n".join(vlines) + ("\n" if vlines else ""))
         last = max([e["cyc"] for e in ev if e["dom"] == "stream"] + [0])
         (d / "index.json").write_text(json.dumps({"events": len(ev), "drives": sum(e["k"] == "D" for e in ev),
-                                                  "checks": sum(e["k"] == "C" for e in ev), "last_stream_cyc": last,
+                                                  "checks": sum(e["k"] == "C" for e in ev), "vm_preload_words": len(vm), "last_stream_cyc": last,
                                                   "records": sorted({e["rec"] for e in ev if "rec" in e})}, indent=1))
         nev_max = max(nev_max, len(ev) + 1)
     nev = a.nev or nev_max
@@ -134,7 +155,67 @@ def main():
         L.append(f"            {k}: sample[{e['width'] - 1}:0] = {e['name']};")
     L += ["            default: ;",
           "        endcase",
+          "    endfunction"]
+    import re as _re
+    banks = sorted((int(n[-1]), n) for n in b["instances"] if _re.match(r"^vmb_[A-Z]{2}\d$", n))
+    L += ["    // VM bank backdoor (cells of the bank's real SRAM macro models; layout of ot_sram_1r1w_1024x256_m2_r2c2: MUX 2)",
+          "    function automatic [6:0] vchk(input [31:0] d);",
+          "        integer i, j, a0, b0, c0, n; reg [6:0] c, col; reg [31:0] rm;",
+          "        begin",
+          "            c = 0;",
+          "            for (j = 0; j < 7; j = j + 1) begin",
+          "                rm = 0; n = 0;",
+          "                for (a0 = 0; a0 < 7; a0 = a0 + 1) for (b0 = a0 + 1; b0 < 7; b0 = b0 + 1) for (c0 = b0 + 1; c0 < 7; c0 = c0 + 1) begin",
+          "                    if (n < 32) begin col = (7'd1 << a0) | (7'd1 << b0) | (7'd1 << c0); rm[n] = col[j]; end",
+          "                    n = n + 1;",
+          "                end",
+          "                c[j] = ^(d & rm);",
+          "            end",
+          "            vchk = c;",
+          "        end",
           "    endfunction",
+          "    task automatic vm_cell(input integer bk, input integer mac, input integer a, input integer bit_i, input reg v);",
+          "        case (bk)"]
+    for bi, n in banks:
+        L.append(f"            {bi}: case (mac) 0: dut.{n}.u_ot_pr_core.bank.u_a.arr[a/2][bit_i*2 + a%2] = v; "
+                 f"1: dut.{n}.u_ot_pr_core.bank.u_b.arr[a/2][bit_i*2 + a%2] = v; "
+                 f"default: dut.{n}.u_ot_pr_core.bank.u_c.arr[a/2][bit_i*2 + a%2] = v; endcase")
+    L += ["            default: $fatal(1, \"SLICE_FAIL no VM bank %0d in the slice\", bk);",
+          "        endcase",
+          "    endtask",
+          "    function automatic reg vm_get(input integer bk, input integer mac, input integer a, input integer bit_i);",
+          "        vm_get = 1'b0;",
+          "        case (bk)"]
+    for bi, n in banks:
+        L.append(f"            {bi}: vm_get = (mac == 0) ? dut.{n}.u_ot_pr_core.bank.u_a.arr[a/2][bit_i*2 + a%2] : "
+                 f"dut.{n}.u_ot_pr_core.bank.u_c.arr[a/2][bit_i*2 + a%2];")
+    L += ["            default: ;",
+          "        endcase",
+          "    endfunction",
+          "    function automatic [MAXW-1:0] vm_rd(input integer mir, input integer bk, input integer row);",
+          "        vm_rd = '0;",
+          "        for (integer i = 0; i < 256; i = i + 1) vm_rd[i] = vm_get(bk, mir ? 2 : 0, row, i);",
+          "    endfunction",
+          "    integer vm_words = 0;",
+          "    initial begin : VMPRE",
+          "        integer fd, mir, bk, row; reg [255:0] dv; reg [6:0] ck;",
+          "        #1;",
+          "        if (rdir.len() > 0) begin",
+          "            fd = $fopen({rdir, \"/vm_pre.txt\"}, \"r\");",
+          "            if (fd != 0) begin",
+          "                while ($fscanf(fd, \"%h %h %h %h\\n\", mir, bk, row, dv) == 4) begin",
+          "                    for (integer i = 0; i < 256; i = i + 1) vm_cell(bk, mir ? 2 : 0, row, i, dv[i]);",
+          "                    for (integer k = 0; k < 8; k = k + 1) begin",
+          "                        ck = vchk(dv[k*32 +: 32]);",
+          "                        for (integer j = 0; j < 7; j = j + 1) vm_cell(bk, 1, row, (mir ? 56 : 0) + k*7 + j, ck[j]);",
+          "                    end",
+          "                    vm_words = vm_words + 1;",
+          "                end",
+          "                $fclose(fd);",
+          "            end",
+          "            $display(\"SLICE_VM_PRELOAD words=%0d\", vm_words);",
+          "        end",
+          "    end",
           "    task automatic step(input integer d);",
           "        reg [MAXW-1:0] got;",
           "        integer p, rec;",
@@ -146,7 +227,7 @@ def main():
           "            end else if (hdr[p][63:62] == 2'd1) begin",
           "                drive(hdr[p][59:44], val[p]); drives = drives + 1;",
           "            end else begin",
-          "                got = sample(hdr[p][59:44]); checks = checks + 1;",
+          "                got = hdr[p][59] ? vm_rd(hdr[p][58], hdr[p][56:54], hdr[p][53:44]) : sample(hdr[p][59:44]); checks = checks + 1;",
           "                if (((got ^ val[p]) & msk[p]) != '0) begin",
           "                    fails = fails + 1;",
           "                    $display(\"SLICE_CHECK_FAIL out=%0d dom=%0d cyc=%0d rec=%0d\", hdr[p][59:44], d, cnt[d], rec);",
