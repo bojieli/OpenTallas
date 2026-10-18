@@ -10,8 +10,6 @@ rc=0
 for m in 0 1 2 3 4 6; do
   iverilog -g2012 -DMUT=$m -s tb_hbm_sm_vm_wr_q_t_lanes4_lockstep -o $O/tb$m $SRC || exit 2
   vvp -n $O/tb$m > $O/tb$m.log 2>&1; tail -2 $O/tb$m.log
-  # BENCH-FIX 10-18: the work-count line (3rd from last) must reach the stage log for the loop's min_count_regex
-  [ $m = 0 ] && grep -E "SM-writer emissions [0-9]+," $O/tb$m.log
   r=$(grep -cE "^TB_WRQ4_LOCKSTEP $([ $m = 0 ] && echo PASS || echo FAIL) MUT=$m" $O/tb$m.log)
   [ "$r" = 1 ] || { echo "case MUT=$m UNEXPECTED"; rc=1; }
 done
