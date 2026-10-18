@@ -60,14 +60,47 @@
     "pin_min_tracks": 1
   },
   "aspect": 1.0,
-  "job": {"benched_by": "s81su_full", 
+  "job": {
+    "benched_by": "s81su_full",
     "owner": "Codex:s81_su_closure",
     "branch": "codex/s81su-physical-20261013",
     "tag": "v6-cb32",
-    "purpose": "QNT production opt-in CB32 copied data-offset controls per bit bank, max select fanout32; defaultCB256 kept, zero added stages/cycles/ports and unchanged slot/clocks/IO. Actual b8 routed control\u2192barrel setup-92.88 triggered this structural fix; minimum production immutable69 reference exact+MUT6 gate runs alongside route.",
+    "purpose": "S81-QNTKEEP re-route of the CLOSED CB32 QNT tile with (* keep_hierarchy *) on ot_s81_su_qn_keep_ff (ROOT-KEEP gate rule); no logic change, zero added cycles/ports, unchanged slot/clocks/IO.",
     "no_bench_reason": "New CB32/CB16 control-bank mechanism qualifies on minimal full N256/S_RD16/NFI33 component against immutable69c124e5d QNT reference, all outputs/cycles; MUT6 copied-offset mutant must fail. Default SU composition full m0/m1/m5 evidence69c124e5d is preserved; no new latency or arithmetic order. Exact/mutant/source-matched price gates must pass before adoption.",
     "views_to": "physical/ref_tile/s81su_qnt_cb32_ref/views",
-    "record_to": "results/rtl/ref_tile/s81su_qnt_cb32_ref"
+    "record_to": "results/rtl/ref_tile/s81su_qnt_cb32_ref",
+    "extra_paths": [
+      "tests/rtl/s81su_qnt_cb"
+    ],
+    "benches": [
+      {
+        "name": "qnt_cb_exact",
+        "cmd": "bash tests/rtl/s81su_qnt_cb/run_direct.sh {RUN}/bench/qnt_cb_exact 0",
+        "expect": "pass",
+        "pass_regex": "PASS QNT_CB N=256 S_RD=16 NFI=33 MUT=0",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "qnt_cb_mut6_copied_offset",
+        "cmd": "bash tests/rtl/s81su_qnt_cb/run_direct.sh {RUN}/bench/qnt_cb_mut6 6",
+        "expect": "fail",
+        "fail_regex": "FAIL QNT_CB active_data=1 cycle=\\d+ MUT=6",
+        "fail_witness": "results/rtl/s81su_qnt_keep_b7358a8b8_20261018/m6/run.log",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "reroute_reason": {
+      "kind": "rtl_change",
+      "why_route": "ROOT-KEEP (main f3c8ca0d1): ot_s81_su_qn_keep_ff is instantiated #(.W(KW)), so yosys named it $paramod and SYNTH_KEEP_MODULES matched nothing (hierarchy flattened). S81-QNTKEEP b7358a8b8 adds (* keep_hierarchy *) on the module (synthesis attribute only; QNT_CB lockstep m0 PASS / m6 FAIL vs immutable 69c124e5d). The CLOSED ae9b5d603 netlist (closed_archive) still holds all 576 copy flops; re-route makes the closed view source-current with the kept hierarchy and lets the routed native audit be compared to the closed one (R 293.3, launch 212.2 e_eps[10], capture 138.6, spread 26.7/26.4)."
+    }
   },
   "orfs_vars": {
     "SYNTH_KEEP_MODULES": "ot_s81_su_qn_keep_ff"
