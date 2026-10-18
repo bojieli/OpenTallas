@@ -83,6 +83,15 @@
    "evidence": "lanes/HBM-B-RTL1.md VM DONE claude/hbm-b-rtl1-vm-1017 a61511e52: VMS_QB_EQUIV SE/NE PASS, WRQ4_LOCKSTEP PASS, VMDEL_N lockstep PASS, mutants FAIL",
    "cycles": 0,
    "cycles_rule": "SM writer 0 edges added (rv(t) -> wq slot 0 at t+3, calendar C_launch+2+LEAD+at unchanged); vmdel NPC2 LAT 2 / STATUS_LAT 2 / first beat start+3 unchanged; SE/NE bank timing = SW. E-quadrant SMs lose the VM ring hop (a gain, NOT credited: conservative)"
+  },
+  {
+   "item": "ARGMAX VM response via the IDX root share merge (argmax r2 + ot_hbm_idx_rootctl_static_am)",
+   "lane": "HBM-IDXAM (10-18; r2 engine HBM-TILES-B / HBM-NATIVE)",
+   "status": "measured",
+   "cycles_rule": "per ARGMAX record vs ot_hbm_idx_rootctl_static -> ot_hbm_argmax_static_sw_vm: VM requests +1 (r2 go pin register), capture and O writes +6 (VMX 5 = 4-edge equal-latency merge chain in the 4 IDX share pair leaves + r2 vm_rr pin register, + go pin), done +7 (ACK 13: cr pin register). INDEX / TOPK faces and every other IDX root output +0.",
+   "cycles": 7,
+   "applies": "once per token at the LM-head ARGMAX (serial token tail); compiler schedule: tools/hbm_argmax_static_vectors.py r2 (go at G: S = G+4, L = S+ns+9+VMX, VMX 5, ACK 13)",
+   "evidence": "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh (claude/hbm-idxam-1018): path bench rootctl_am->r2 vs rootctl->sw_vm offsets rq 1 / write 6 / event 7 at TIES 0/1/2, results/rtl/hbm_idxam_1018/idx_rootctl_am_bench.log"
   }
  ]
 }
