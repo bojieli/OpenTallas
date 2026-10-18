@@ -164,6 +164,20 @@ def apply_dv(v, m):
         for d in D['insts']:
             if d['x'] >= xs:
                 d['x'] = round(d['x'] + seam, 3)
+    # slice reach channel (Q-DIE9 10-17, OT_SPLIT_DV_SLICE_GAP_UM, default 0 = abutted): dv2f11 abutted the slice row to
+    # the S faces of cluster rows 1-2, burying their rst_n / ck_w0 / ck_e0 entry pins (and the slices' own ck / rst_n,
+    # W face against the neighbour slice): GEN rst_field tree 34 sink_unreachable -> one 44.7-mm net.  A channel of G
+    # above and below the slice row (the slice row moves N by G, rows 2-3 by 2 G; G on the 43.2 lattice) makes those
+    # pins reachable; the slice's ck / rst_n move to its N face (in the channel); the cw / rs words become G-um wires.
+    sgap = float(os.environ.get('OT_SPLIT_DV_SLICE_GAP_UM', '0') or 0)
+    if sgap:
+        ys = next(i['y'] for i in D['insts'] if i['n'] == 'dvs_W0')
+        for d in D['insts']:
+            if d['n'].startswith('dvs_'):
+                d['y'] = round(d['y'] + sgap, 3)
+            elif d['n'].startswith('c16_') and d['y'] > ys:
+                d['y'] = round(d['y'] + 2 * sgap, 3)
+    SLF = 'N' if sgap else 'W'
     # W-column channel width (Q-DV option (i), 2026-10-17): every PHY stays on the W die edge, single file; the far
     # SerDes (io_serdes_2, under io_serdes_1) reaches the collective's S face over a relayed FDI lane in this channel
     wchan = float(os.environ.get('OT_SPLIT_DV_WCHAN_UM', '0') or 0)
@@ -307,7 +321,7 @@ def apply_dv(v, m):
     for kind, bits in LAT.items():
         sp[f'{kind}_eo'] = (bits, 'E')
         sp[f'{kind}_ei'] = (bits, 'E')
-    sp.update({'ck': (1, 'W'), 'rst_n': (1, 'W')})
+    sp.update({'ck': (1, SLF), 'rst_n': (1, SLF)})
     FX = _load('OT_SPLIT_DV_FACES')           # face mode: real RTL face variants, no re-home stand-ins
     # W5 re-home ports (one per re-homed q3h bus, same width) go on the W face too
     removed = {n for n in by if n not in DI}
@@ -357,7 +371,7 @@ def apply_dv(v, m):
                 sp2[n_] = (b, dn.upper())
             for n_, b in fu:
                 sp2[n_] = (b, up.upper())
-            sp2.update({'ck': (1, 'W'), 'rst_n': (1, 'W')})
+            sp2.update({'ck': (1, SLF), 'rst_n': (1, SLF)})
             rtl = {p_['port']: p_['bits'] for p_ in FX[mn]['ports']}
             bad = sorted(set(sp2) ^ set(rtl)) + sorted(k for k in sp2 if k in rtl and rtl[k] != sp2[k][0])
             if bad:

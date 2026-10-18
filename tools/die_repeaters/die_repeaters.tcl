@@ -316,8 +316,21 @@ proc ot_die_repeaters {cfg} {
   set ::ot_die_rep_skip $skip
   set fh [open [file rootname $report].skip_nets.txt w]; puts $fh [join $skip_names "\n"]; close $fh
   set dt {}
-  foreach n $skip_names { set o [get_nets -quiet [string map {\[ \\[ \] \\]} $n]]; if {[llength $o]} { lappend dt {*}$o } }
+  # Q-DIE9 10-17: the escaped STA lookup misses bus-bit nets ('n_clk_r0[0]': dv2f11 matched 2 of 51 skip nets and
+  # repair_design buffered 44 clock nets).  Every skip net is also marked do-not-touch on the odb net itself (the
+  # resizer honours dbNet::isDoNotTouch), and the count reported is the odb count.
+  foreach n $skip_names {
+    set o [get_nets -quiet [string map {\[ \\[ \] \\]} $n]]
+    if {![llength $o]} { set o [get_nets -quiet $n] }
+    if {[llength $o]} { lappend dt {*}$o }
+  }
   if {[llength $dt]} { set_dont_touch $dt }
+  set n_dt_odb 0
+  foreach n $skip_names {
+    set net [$blk findNet $n]
+    if {$net ne "NULL" && $net ne ""} { $net setDoNotTouch 1; incr n_dt_odb }
+  }
+  set dt [lrepeat $n_dt_odb x]
   set skip_iterms [dict create]
   foreach n $skip_names { set net [$blk findNet $n]; if {$net ne "NULL" && $net ne ""} { dict set skip_iterms $n [llength [$net getITerms]] } }
   ot_die_rep_log "skip nets=[llength $skip_names] (sigtype $n_sig, clock pins $n_ck; repeated forwarded clocks $n_rep) dont_touch=[llength $dt]"
