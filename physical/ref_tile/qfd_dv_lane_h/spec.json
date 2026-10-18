@@ -108,7 +108,7 @@
   "w": 172.8,
   "h": 129.6
  },
- "recipe": 3,
+ "recipe": 2,
  "route": {
   "pd": 0.52,
   "threads": 16,
@@ -207,7 +207,8 @@
  "inhold": true,
  "outhold": true,
  "pin_regs": {
-  "enable": true
+  "enable": false,
+  "reason": "ot_hdc_vstream_lane_h registers every input (q_* pin flops) and every output (out flops) in RTL; the su8 LTD relays and the head's ML + 2 + 2 RD alignment count exactly those edges: an extra kit pin register would break the read round trip"
  },
  "keep_pin_regs": true,
  "pin_reg_split": true,

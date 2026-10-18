@@ -1,21 +1,6 @@
 {
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "qfd_dv_lane_h",
- "enable": true,
- "clock": "clk",
- "clock_ports": [
-  "clk"
- ],
- "reset_ports": [
-  "rst_n"
- ],
- "exclude": "",
- "reset": "",
- "reason": "",
- "latency_cycles": {
-  "input": 1,
-  "output": 1
- },
- "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
- "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+ "enable": false,
+ "reason": "ot_hdc_vstream_lane_h registers every input (q_* pin flops) and every output (out flops) in RTL; the su8 LTD relays and the head's ML + 2 + 2 RD alignment count exactly those edges: an extra kit pin register would break the read round trip"
 }
