@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "enable": false,
+ "reason": "H9b registers every pin in RTL: every K input lands in a pure pin flop (kp_*, data unconditional), k_rdy is a flop, kr_rdy is pin-registered (kr_rdy_q), KR outputs leave the per-64b skid head flops, PHY commands leave OREG flops, PHY return enters RREG flops, straps enter pc_id_q/refresh_reload_q; a kit flop stage would add a redundant edge"
+}

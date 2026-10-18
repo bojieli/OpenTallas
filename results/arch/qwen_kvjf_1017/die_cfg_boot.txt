@@ -1,0 +1,13 @@
+scn0 (must PASS): PASS kv_die_cfg_boot scn0 mut0 regions43 D19
+scn1 (must PASS): PASS kv_die_cfg_boot scn1 mut0 regions43 D19
+scn2 (must PASS): PASS kv_die_cfg_boot scn2 mut0 regions43 D19
+scn3 (must PASS): PASS kv_die_cfg_boot scn3 mut0 regions43 D19
+mut1 (must FAIL): FAIL kv_die_cfg_boot scn0 mut1 errors32
+mut3 (must FAIL): FAIL kv_die_cfg_boot scn0 mut3 errors86
+mut2 (must FAIL): FAIL kv_die_cfg_boot scn3 mut2 errors1
+regression lockstep_m0: PASS dispatcher lockstep vs 73d265953 replays60 edges625878 setup_edges72 faulted_replays15 front_last_pulses1440 diffs0
+regression lockstep_m4: PASS observed negative MUT4 front_last_bad1440
+regression cdc_m0: PASS dispatcher+160 boot_cdc+observe: setup_ready after 15 core edges, 4288 HBM sink words exact, 128 seals, 32 front applied without seal
+regression cdc_m4: FATAL: /home/ubuntu/wt/kvj-f-1017/rtl/test/qwen_static_kv/tb_static_boot_dispatch_cdc.sv:72: MUT4: setup never rose (front CDCs applied 0/32)
+regression unit receipt: PASS
+PASS die_cfg_boot: 4 scenarios, 3 mutants caught, KVJ-A dispatcher regressions unchanged at DIECFG=0

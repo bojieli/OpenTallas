@@ -5,6 +5,9 @@
 module tb_hbm_vm_native_parent;
     parameter integer SID=0,RG=5,WG=2;
     parameter integer MUT=0; //1: wrong response-group wiring at actual bank output
+    parameter integer PIN_IN=0; // H-SM 2026-10-17: literal bank input pin flops (hub BANK_PIN_IN); every bank latency +PIN_IN
+    parameter integer EXP_LAT=-1; // mutant: expected latency offset (-1 = PIN_IN)
+    localparam integer PL=(EXP_LAT<0)?PIN_IN:EXP_LAT;
     localparam RB=$clog2(RG+1),WB=$clog2(WG+5);
     reg clk=0;always #5 clk=~clk;
     reg rst_n=0;
@@ -44,7 +47,7 @@ module tb_hbm_vm_native_parent;
     assign pr=0; // packet path is outside this DMA/wide-group integration gate
     generate
     if(SID==0)begin:quadrant_SW
-      hfd_hgi_vms_static_SW #(.STRAP_BANKS(1),.STRAP_MUT(MUT==1?0:MUT)) u_die_master (
+      hfd_hgi_vms_static_SW #(.STRAP_BANKS(1),.STRAP_MUT(MUT==1?0:MUT),.BANK_PIN_IN(PIN_IN)) u_die_master (
        .clk_bank({8{clk}}),
        .clk_hub(clk),
        .clk_ring({2{clk}}),
@@ -86,7 +89,7 @@ module tb_hbm_vm_native_parent;
        .cr());
     end
     if(SID==1)begin:quadrant_SE
-      hfd_hgi_vms_static_SE #(.STRAP_BANKS(1),.STRAP_MUT(MUT==1?0:MUT)) u_die_master (
+      hfd_hgi_vms_static_SE #(.STRAP_BANKS(1),.STRAP_MUT(MUT==1?0:MUT),.BANK_PIN_IN(PIN_IN)) u_die_master (
        .clk_bank({8{clk}}),
        .clk_hub(clk),
        .clk_ring({2{clk}}),
@@ -126,7 +129,7 @@ module tb_hbm_vm_native_parent;
        .ring_fault());
     end
     if(SID==2)begin:quadrant_NW
-      hfd_hgi_vms_static_NW #(.STRAP_BANKS(1),.STRAP_MUT(MUT==1?0:MUT)) u_die_master (
+      hfd_hgi_vms_static_NW #(.STRAP_BANKS(1),.STRAP_MUT(MUT==1?0:MUT),.BANK_PIN_IN(PIN_IN)) u_die_master (
        .clk_bank({8{clk}}),
        .clk_hub(clk),
        .clk_ring({2{clk}}),
@@ -166,7 +169,7 @@ module tb_hbm_vm_native_parent;
        .ring_fault());
     end
     if(SID==3)begin:quadrant_NE
-      hfd_hgi_vms_static_NE #(.STRAP_BANKS(1),.STRAP_MUT(MUT==1?0:MUT)) u_die_master (
+      hfd_hgi_vms_static_NE #(.STRAP_BANKS(1),.STRAP_MUT(MUT==1?0:MUT),.BANK_PIN_IN(PIN_IN)) u_die_master (
        .clk_bank({8{clk}}),
        .clk_hub(clk),
        .clk_ring({2{clk}}),
@@ -224,18 +227,18 @@ module tb_hbm_vm_native_parent;
         begin
             @(posedge clk);
             if(rst_n)for(integer b=0;b<8;b=b+1)begin
-                if(dq[b*281+280])exp_done[cycle+3][b]=1;
-                for(integer g=0;g<WG;g=g+1)if(wq[(b*WG+g)*281+280])exp_done[cycle+3][b]=1;
+                if(dq[b*281+280])exp_done[cycle+3+PL][b]=1;
+                for(integer g=0;g<WG;g=g+1)if(wq[(b*WG+g)*281+280])exp_done[cycle+3+PL][b]=1;
                 if(rslot_v[b])begin
                     group_id=int'(rslot[b*RB+:RB]);
                     if(group_id<RG&&rq[(b*RG+group_id)*17+16])begin
                         row=int'(rq[(b*RG+group_id)*17+3+:10]);
-                        exp_rr_v[cycle+6][b*RG+group_id]=1;
-                        exp_data[cycle+6][b*256+:256]=payload(b,row);
+                        exp_rr_v[cycle+6+PL][b*RG+group_id]=1;
+                        exp_data[cycle+6+PL][b*256+:256]=payload(b,row);
                     end else if(group_id==RG&&pq[b*285+284])begin
-                        row=int'(pq[b*285+272+:10]);exp_pr_v[cycle+6][b]=1;
-                        exp_data[cycle+6][b*256+:256]=payload(b,row);
-                        exp_pr_tag[cycle+6][b*8+:8]=pq[b*285+:8];
+                        row=int'(pq[b*285+272+:10]);exp_pr_v[cycle+6+PL][b]=1;
+                        exp_data[cycle+6+PL][b*256+:256]=payload(b,row);
+                        exp_pr_tag[cycle+6+PL][b*8+:8]=pq[b*285+:8];
                     end
                 end
             end

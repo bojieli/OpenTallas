@@ -236,5 +236,12 @@ module tb_qkd_embgw_slot;
         else $display("FAIL kv_gwhost embgw errors=%0d rsp=%0d/%0d", errors, n_rsp, exp_n);
         $finish;
     end
+    // fault watchdog (Q-KVFIX 0130): a latched gateway fault stops the answers (and the request credits), so the fetch
+    // task would wait for the timeout; end the run 2,000 cycles after the fault instead (a passing run never faults)
+    integer fault_cyc = 0;
+    always @(negedge ck) if (rst_n && est[1]) begin
+        fault_cyc = fault_cyc + 1;
+        if (fault_cyc == 2000) begin $display("FAIL kv_gwhost embgw gateway fault cause=%h rsp=%0d/%0d", est[12:2], n_rsp, exp_n); $finish; end
+    end
     initial begin #40000000; $display("FAIL kv_gwhost embgw timeout rsp=%0d/%0d cause=%h", n_rsp, exp_n, est[12:2]); $finish; end
 endmodule

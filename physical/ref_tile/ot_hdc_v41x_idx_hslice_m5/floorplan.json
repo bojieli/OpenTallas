@@ -69,8 +69,14 @@
   "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/kit.env",
   "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/clock.sdc",
   "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/signoff.sdc",
+  "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/signoff_ffrepair.sdc",
   "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/pdn.tcl",
   "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/pre_cts.tcl",
+  "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/post_cts.tcl",
+  "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/post_grt.tcl",
+  "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/pre_drt.tcl",
+  "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/pre_fill.tcl",
+  "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/post_fill.tcl",
   "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/pre_grt.tcl",
   "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -81,6 +87,8 @@
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
-  "physical/common_flow/grt_macro_top_layer.tcl"
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl"
  ]
 }

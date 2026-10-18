@@ -304,6 +304,21 @@ def review_check(root, commit, kit, show=None):
     return None
 
 
+def drop_retired(spec):
+    """RETIRED-HOST (HOSTFIX 2026-10-17): strip retired fleet hosts from hosts / host_require with a warning (an emptied
+    list falls back to admission) instead of letting the daemon mark the job INVALID 'unknown host'."""
+    import retired_hosts
+    try:
+        doc = json.loads((HERE / "hosts.json").read_text())
+    except (OSError, ValueError):
+        doc = {"hosts": []}
+    spec, warns = retired_hosts.drop_retired_hosts(spec, {h.get("name") for h in doc.get("hosts", [])},
+                                                   retired_hosts.retired_names(doc))
+    for w in warns:
+        print(w)
+    return spec
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("spec")
@@ -329,6 +344,7 @@ def main(argv=None):
         a.follow_head = True
     if a.follow_head:
         spec = move_spec(spec, git(root, "rev-parse", "HEAD"))
+    spec = drop_retired(spec)
 
     def push():
         br = (spec.get("source") or {}).get("branch")

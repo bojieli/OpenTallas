@@ -10,7 +10,7 @@ module tb_controller_calendar_native;
  wire [327:0]po;wire[293:0]co;wire[260:0]er;wire fault,cf;wire[15:0]oe;
  reg[288:0]pi=0;
  qkd_ctrl_pc_host_static #(.PROFILE(0),.ELASTIC(1),.RAW_WD(256),.TQD(64))dut(
- .pll_hbm(ck), .pll_hbm_port(ck), .pll_hbm_ecc(ck),.hrst(rn),.ck(ck),.rsi(rn),.pc(5'd13),.ci(319'b0),.co(co),.es(288'b0),.er(er),.po(po),.pi(pi),.ki(33'b0),.ko(),.fi(1'b0),.fo(fault),
+ .pll_hbm(ck), .pll_hbm_port(ck), .pll_hbm_ecc(ck), .pll_hbm_cdc(ck), .pll_hbm_obs(ck),.hrst(rn),.ck(ck),.rsi(rn),.pc(5'd13),.ci(319'b0),.co(co),.es(288'b0),.er(er),.po(po),.pi(pi),.ki(33'b0),.ko(),.fi(1'b0),.fo(fault),
  .static_cmd_owner(owner),.static_cmd(cmd),.reserved_rd(rd),.reserved_static_col(sr),.reserved_write_col(wr),.static_epoch(epoch),.expected_raw_valid(raw),
  .cfg_stack(2'b0),.es_context(318'b0),.es_expected_valid(1'b0),.es_expected_identity(61'b0),.es_expected_address(29'b0),.es_expected_pc(5'b0),.es_expected_stack(2'b0),
  .native_commit_valid(),.native_commit_identity(),.native_commit_address(),.corrected_epoch(oe),.completion_v(),.completion_we(),.completion_fault(cf),.idle_core(),.idle_hbm(),.drain_fault_core(),.drain_fault_hbm());
@@ -59,7 +59,7 @@ module tb_controller_calendar_native;
  if(oe!=epoch_in||{co[11:9],co[7:1]}!=10'(sec)||co[281:26]!==payload(sec,64+integer'(layer)))$fatal(1,"FAIL native calendar actual data index%0d",landed);
  landed++;frame_landed++;
  end
- if(fault||cf||calfault)begin $display("DETAIL schedule%0b cmd%0b early%0b raw%0b legalrd%0b j%0d go%0b open%h done%h",dut.u_core.u_ctl.core.on.fault_schedule,dut.u_core.f_cmd,dut.u_core.f_early,dut.u_core.f_raw,dut.u_core.u_ctl.core.on.legal_rd,dut.u_core.u_ctl.core.on.j,dut.u_core.u_ctl.core.go,dut.u_core.u_ctl.core.on.open,dut.u_core.u_ctl.core.on.done);$fatal(1,"FAIL native calendar fault edge%0d fo%0b cf%0b cal%0b",edge_num,fault,cf,calfault);end
+ if(fault||cf||calfault)begin $display("DETAIL schedule%0b cmd%0b early%0b raw%0b legalrd%0b j%0d go%0b open%h done%h",dut.u_sched.u_ctl.core.on.fault_schedule,dut.u_sched.f_cmd,dut.u_sched.f_early,dut.u_sched.f_raw,dut.u_sched.u_ctl.core.on.legal_rd,dut.u_sched.u_ctl.core.on.j,dut.u_sched.u_ctl.core.go,dut.u_sched.u_ctl.core.on.open,dut.u_sched.u_ctl.core.on.done);$fatal(1,"FAIL native calendar fault edge%0d fo%0b cf%0b cal%0b",edge_num,fault,cf,calfault);end
  end
  end
  always @(negedge ck)pi=due[edge_num+1];

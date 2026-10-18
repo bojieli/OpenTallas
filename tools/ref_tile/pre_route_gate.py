@@ -1361,12 +1361,15 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
         area = float(am.group(1))
         W, H = fp["die"][2], fp["die"][3]
         core = (W - 2 * RT.CORE_MARGIN) * (H - 2 * RT.CORE_MARGIN)
-        mac = sum(b["w"] * b["h"] for b in fp["blocks"])
         area = synthesis_std_area(area, fp["blocks"])
-        u = (area + mac) / core
+        halo = float(spec["route"].get("macro_halo_um", RT.HALO_UM)) if spec.get("recipe", 1) >= 2 else RT.HALO_UM
+        um = RT.util_metrics(area, fp["blocks"], core, halo)
         # high util is a closure risk (FAIL > 70%); low util only costs wire / area (closed blocks sit at 6-22%): WARN
-        sev = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN")
-        g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {u:.0%}",
+        sev, _ok = RT.util_severity(um)
+        mac = um["macro_um2"]
+        g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {um['util']:.0%}"
+              + (f" (std-cell density {um['density']:.1%} of placeable {um['placeable_um2']:.0f} um2; total fill "
+                 f"{um['total_fill']:.1%})" if mac else ""),
               f"set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO" else "")
     check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
     check_memory_ff(g, out)

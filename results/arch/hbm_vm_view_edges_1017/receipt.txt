@@ -1,0 +1,32 @@
+== m00
+VIEW_EDGES hfd_vms_wq2_merge DIN=0 DOUT=0 checks=9904 mismatches=0 x_gl=0 x_rtl=0
+VIEW_EDGES PASS
+== q0c_contract_00
+MISMATCH eg t=25
+MISMATCH pr t=25
+MISMATCH eg t=26
+MISMATCH pr t=26
+== q0c_contract_10
+VIEW_EDGES hfd_vms_bank_native_q0_faces DIN=1 DOUT=0 checks=34557 mismatches=0 x_gl=0 x_rtl=107
+VIEW_EDGES PASS
+== q0c_faces_00
+VIEW_EDGES hfd_vms_bank_native_q0_faces DIN=0 DOUT=0 checks=34557 mismatches=0 x_gl=0 x_rtl=107
+VIEW_EDGES PASS
+== r4_contract_00
+MISMATCH eg t=25
+MISMATCH pr t=25
+MISMATCH eg t=26
+MISMATCH pr t=26
+== r4_contract_11
+VIEW_EDGES hfd_vms_bank_native_q1_core DIN=1 DOUT=1 checks=22267 mismatches=0 x_gl=0 x_rtl=17
+VIEW_EDGES PASS
+== r4_pr_01
+VIEW_EDGES hfd_vms_bank_native_q1_core DIN=0 DOUT=1 checks=22267 mismatches=0 x_gl=0 x_rtl=17
+VIEW_EDGES PASS
+# merge leaf mutants (earlier run, same netlist/tool): DIN=1 DOUT=0 mismatches=4217 FAIL; DIN=0 DOUT=1 mismatches=4217 FAIL
+# Method: tools/hbm_die_v16/view_vs_rtl_edges.py -- ROUTED 6_final.v (physical_artifacts of the CLOSED closure-loop route) with
+# ASAP7 RVT cell models (ORFS asap7lock; specify removed, flop clk->Q #1 = 10 ps so zero-delay clock-tree deltas cannot race),
+# port-name aliasing of OpenROAD write_verilog split (P -> P__o), vs CONTRACT RTL with inputs delayed DIN / outputs DOUT edges,
+# random every-edge inputs (straps bid=5 sid=1), 2500 edges, EPYC4 (ot-run).
+# Verdict: wq2_merge view == RTL (0,0); q0C view == hfd_vms_bank_native_q0_faces (0,0) == bare hfd_vms_bank_native_q0 + 1 input edge;
+# q1core_r4 view == hfd_vms_bank_native_q1_core +1 in +1 out == hfd_vms_bank_native_q1_core_pr +1 OUT (not bindable as _pr).

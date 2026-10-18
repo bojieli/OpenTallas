@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_status_join_fa",
+ "enable": false,
+ "reason": "RTL registers every pin: every input lands in an unconditional pin flop (data) or a reset pin flop (valid/strobe/status), every output is a flop Q (HBMA-HOST 2026-10-17 audit of the source); a kit flop stage would add a redundant edge"
+}
