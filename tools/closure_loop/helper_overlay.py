@@ -125,6 +125,66 @@ FLEET_RUN = ("tools/closure_loop/tt_overlay.py",)
 LINT_ONLY = ("tools/textbook_lint.py",)
 
 
+# RELAXING-ONLY RULE CHANGES (ROOT-0040 2026-10-18, owner 10-17: "rules exist to close the die ASAP, never to delay it").
+# A gate executed with an older overlay / gate tool stays valid when EVERY commit that changed the file between the
+# gate's blob and today's blob is listed here: each one only relaxed a rule (a FAIL became a WARN), so a gate that met
+# the old rule meets the new one too.  The tile must still meet the relaxed rule's own condition ("requires"), judged
+# from the existing gate report (source_binding.relaxed_rule_requirement).  Full commit shas only.  Add an entry only
+# for a change that relaxes and never tightens: any tightening needs a re-gate.
+RELAXING_RULE_COMMITS = {
+    "ef6a3af26513c90c8af5d553c7238276df905848": dict(
+        rule="0dq", requires="clock_pin_spread",
+        what="clock rule 0dq (owner 10-17): insertion > 300 ps / > 15k sinks FAIL -> WARN; FAIL only on pin-flop "
+             "spread > 80 ps at TT or FF"),
+}
+
+
+def relaxing_only_span(repo, rel, old_blob, new_blob, heads, allow=None, max_steps=64):
+    """(ok, commits): walk rel's blob history back from new_blob to old_blob over the commits reachable from heads
+    (origin/main plus the route commit).  ok only when the chain exists and every commit on it is in allow (default
+    RELAXING_RULE_COMMITS) or, for a LINT_ONLY path, changes only comments / submit-only constants.  commits: the shas
+    on the chain, newest first ([] when old_blob == new_blob)."""
+    allow = RELAXING_RULE_COMMITS if allow is None else allow
+    if not old_blob or not new_blob:
+        return False, []
+    if old_blob == new_blob:
+        return True, []
+    heads = [h for h in heads if h]
+    if not heads:
+        return False, []
+    p = subprocess.run(["git", "-C", str(repo), "log", "--format=C %H", "--raw", "--no-abbrev", "--no-renames", *heads,
+                        "--", rel], capture_output=True, text=True, timeout=180)
+    if p.returncode:
+        return False, []
+    trans, cur = [], None          # (commit, pre_blob, post_blob), newest first
+    for ln in p.stdout.splitlines():
+        if ln.startswith("C "):
+            cur = ln[2:].strip()
+        elif ln.startswith(":") and cur:
+            f = ln.split()
+            if len(f) >= 5:
+                trans.append((cur, f[2], f[3]))
+    chain, blob, seen = [], new_blob, set()
+    for _ in range(max_steps):
+        if blob == old_blob:
+            return True, chain
+        step = next((t for t in trans if t[2] == blob and t[0] not in seen), None)
+        if step is None:
+            return False, chain
+        c, pre, post = step
+        seen.add(c)
+        ok = c in allow
+        if not ok and rel in LINT_ONLY:
+            a = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", pre], capture_output=True, timeout=60)
+            b = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", post], capture_output=True, timeout=60)
+            ok = not a.returncode and not b.returncode and lint_change_is_submit_only(a.stdout, b.stdout)
+        if not ok:
+            return False, chain + [c]
+        chain.append(c)
+        blob = pre
+    return False, chain
+
+
 # SUBMIT-ONLY lint names (ROOT 2026-10-16, coordinator): constants of tools/textbook_lint.py read only by the submit-time
 # CLOSED-STANDS lint, never by the pre-route gate.  A textbook_lint change confined to them (and to comments / docstrings)
 # leaves every gate verdict valid.
