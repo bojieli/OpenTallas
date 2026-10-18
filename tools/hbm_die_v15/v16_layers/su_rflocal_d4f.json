@@ -1,0 +1,73 @@
+{
+ "region": "su_rflocal_d4f",
+ "author": "Claude H-NETLIST 2330",
+ "basis_commit": "H-SU RF_LOCAL 68885c3bf (receipt 815151a6a)",
+ "instances": [],
+ "edges": [],
+ "clocks": [],
+ "straps": [],
+ "gaps": [],
+ "param_override": {
+  "sucore_SW": {
+   "RF_LOCAL": 1
+  },
+  "su_SW0": {
+   "RF_LOCAL": 1
+  },
+  "su_SW1": {
+   "RF_LOCAL": 1
+  },
+  "su_SW2": {
+   "RF_LOCAL": 1
+  },
+  "su_SW3": {
+   "RF_LOCAL": 1
+  },
+  "sucore_SE": {
+   "RF_LOCAL": 1
+  },
+  "su_SE0": {
+   "RF_LOCAL": 1
+  },
+  "su_SE1": {
+   "RF_LOCAL": 1
+  },
+  "su_SE2": {
+   "RF_LOCAL": 1
+  },
+  "su_SE3": {
+   "RF_LOCAL": 1
+  },
+  "sucore_NW": {
+   "RF_LOCAL": 1
+  },
+  "su_NW0": {
+   "RF_LOCAL": 1
+  },
+  "su_NW1": {
+   "RF_LOCAL": 1
+  },
+  "su_NW2": {
+   "RF_LOCAL": 1
+  },
+  "su_NW3": {
+   "RF_LOCAL": 1
+  },
+  "sucore_NE": {
+   "RF_LOCAL": 1
+  },
+  "su_NE0": {
+   "RF_LOCAL": 1
+  },
+  "su_NE1": {
+   "RF_LOCAL": 1
+  },
+  "su_NE2": {
+   "RF_LOCAL": 1
+  },
+  "su_NE3": {
+   "RF_LOCAL": 1
+  }
+ },
+ "notes": "SU RF local copy: RF_LOCAL=1 on every pgslice (registered rf_bword/rf_bcmd/rf_dsec beside the bank group) AND qcore (class-5 check leads the drain by 2); both required. Compiler: su_top_compile --rf-local 1 (RF read classes 1/5 issued one edge earlier). No die pin change."
+}

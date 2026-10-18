@@ -44,11 +44,19 @@ module ot_hgi_sm_xload_xq_pegress #(
     parameter integer PMAX = 8,
     parameter integer NR   = 32
 ) (
+    // x6 (10-16): four regional clock entries of the one die clock (same PLL, phase 0; ordinary related STA across them):
+    // clk = core (N face: replicas, beat select, xw output registers), clk_w = W face bq_d pin registers,
+    // clk_s = S face rwq pin registers, clk_e = E face control pin registers.  In RTL simulation all four are the same net.
     input  wire               clk,
+    input  wire               clk_w,
+    input  wire               clk_s,
+    input  wire               clk_e,
+    input  wire               clk_c,       // x6b: select cluster (replicas + xbeat) root, entered on the W face centre
     input  wire               rn,          // leaf reset (ctl relay output through the tree)
-    input  wire [7:0]         ed5,         // {ok, b} of the ctl emission tag ed[RDP-3]
+    input  wire [7:0]         ed5,         // x6: {ok, b} of ctl ed[RDP-4] (one edge EARLY; the E pin register restores ed[RDP-3])
     input  wire [16:0]        ede,         // ctl emission tag ed[RDP-2] = {en, ok, last, addr7, grp7}
-    input  wire               bq_v, bq_last,
+    input  wire               bq_v,        // x6: ctl bs_v (one edge EARLY; the E pin register restores the ctl bq_v)
+    input  wire               bq_last,
     input  wire [6:0]         bq_addr, bq_b,
     input  wire [1023:0]      rwq,         // the pair's 4 BF quarter rw registers
     input  wire [2047:0]      bq_d,        // the pair's BD ring beat register
@@ -68,8 +76,9 @@ module ot_hgi_sm_xload_xq_pegress #(
         for (pp2 = 0; pp2 < PMAX; pp2 = pp2 + 1)
             if (pp2 * XC + XOFF < bb * 2048 + 2048 && pp2 * XC + XOFF + 1024 > bb * 2048) bslot = pp2;
     endfunction
+    // ---- S face (clk_s): rw pin registers
     reg [1023:0] rw;
-    always @(posedge clk) rw <= rwq;
+    always @(posedge clk_s) rw <= rwq;
     wire [2047:0] beats [0:NBMAX-1];
     genvar gb;
     generate for (gb = 0; gb < NBMAX; gb = gb + 1) begin : g_beat
@@ -85,25 +94,48 @@ module ot_hgi_sm_xload_xq_pegress #(
             assign beats[gb] = {1024'd0, sh};
         end
     end endgenerate
-    reg [EW-1:0] e6;
-    always @(posedge clk or negedge rn) if (!rn) e6 <= '0; else e6 <= ede;
-    (* keep = 1 *) reg [7:0] e5r [0:NR-1];   // replicas kept (gate: merged bqvr drove 4,125 loads)
-    always @(posedge clk or negedge rn)
-        if (!rn) for (integer k = 0; k < NR; k = k + 1) e5r[k] <= 8'd0;
-        else for (integer k = 0; k < NR; k = k + 1) e5r[k] <= ed5;
+    // ---- E face (clk_e): every control input lands in exactly ONE pin register (owner rule; native capture x5:
+    // ed5[7] 337.5 ps fanned out to 32 replicas).  Regional SYNCHRONOUS reset: rn feeds only the NRR relay D pins.
+    localparam integer NRR = 4;
+    (* keep = 1 *) reg [NRR-1:0] rnr;
+    always @(posedge clk_e) rnr <= {NRR{rn}};
+    reg [7:0] e5p; reg bvp;
+    always @(posedge clk_e) begin e5p <= ed5; bvp <= rnr[3] ? bq_v : 1'b0; end
+    reg e6v; reg [EW-2:0] e6f;
+    always @(posedge clk_e) begin e6v <= rnr[0] ? ede[EW-1] : 1'b0; e6f <= ede[EW-2:0]; end
+    wire [EW-1:0] e6 = {e6v, e6f};
+    reg bc_v, bc_last; reg [6:0] bc_addr, bc_b;
+    always @(posedge clk_e) begin
+        if (!rnr[1]) begin bc_v <= 1'b0; bc_last <= 1'b0; end
+        else begin bc_v <= bvp; bc_last <= bq_last; end
+        bc_addr <= bq_addr; bc_b <= bq_b;
+    end
+    // ---- W face (clk_w): BD beat pin registers
+    reg [2047:0] bq_c;
+    always @(posedge clk_w) bq_c <= bq_d;
+    // ---- core (clk): replicated selects (from the E pin registers, same edge as before), beat select, xw registers
+    wire [7:0] e5r [0:NR-1];
+    wire [NR-1:0] bqvr;
+    genvar gr;
+    generate for (gr = 0; gr < NR; gr = gr + 1) begin : g_rep
+        (* keep = 1 *) reg e5v;
+        (* keep = 1 *) reg [6:0] e5b;
+        (* keep = 1 *) reg bqq;
+        always @(posedge clk_c) begin
+            e5v <= rnr[gr * NRR / NR] ? e5p[7] : 1'b0;
+            bqq <= rnr[gr * NRR / NR] ? bvp : 1'b0;
+            e5b <= e5p[6:0];
+        end
+        assign e5r[gr] = {e5v, e5b};
+        assign bqvr[gr] = bqq;
+    end endgenerate
     reg [2047:0] xbeat;
-    always @(posedge clk) for (integer k = 0; k < NR; k = k + 1) begin
+    always @(posedge clk_c) for (integer k = 0; k < NR; k = k + 1) begin
         xbeat[k*RB +: RB] <= {RB{1'b0}};
         if (e5r[k][7]) for (integer x = 0; x < NBMAX; x = x + 1) if (e5r[k][6:0] == 7'(x)) xbeat[k*RB +: RB] <= beats[x][k*RB +: RB];
     end
-    reg bc_v, bc_last; reg [6:0] bc_addr, bc_b; reg [2047:0] bq_c; (* keep = 1 *) reg [NR-1:0] bqvr;
-    always @(posedge clk or negedge rn) begin
-        if (!rn) begin bc_v <= 1'b0; bc_last <= 1'b0; bqvr <= '0; end
-        else begin bc_v <= bq_v; bc_last <= bq_last; bqvr <= {NR{bq_v}}; end
-    end
-    always @(posedge clk) begin bc_addr <= bq_addr; bc_b <= bq_b; bq_c <= bq_d; end
-    always @(posedge clk or negedge rn) begin
-        if (!rn) begin xw_en <= 1'b0; xw_last <= 1'b0; x_done <= 1'b0; end
+    always @(posedge clk) begin
+        if (!rnr[2]) begin xw_en <= 1'b0; xw_last <= 1'b0; x_done <= 1'b0; end
         else begin
             xw_en <= e6[EW-1] || bc_v; xw_last <= (e6[EW-1] && e6[EW-3]) || bc_last;
             x_done <= xw_en && xw_last;
@@ -157,7 +189,7 @@ module ot_hgi_sm_xload_xq_pair #(
     assign rwq_m = (MAPMUT != 0) ? {rwq[1023:512], rwq[255:0], rwq[511:256]} : rwq;
     ot_hgi_sm_xload_cl2_bdring #(.PMAX(PMAX)) u_bd (.clk(clk_bd), .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .qq_lo(qq_lo),
         .qq_hi(qq_hi), .qe_lo(qe_lo), .qe_hi(qe_hi), .bsel(bsel), .lane_en_i(lane_en), .bq_d(bq_d));
-    ot_hgi_sm_xload_xq_pegress #(.PMAX(PMAX)) u_eg (.clk(clk_eg), .rn(rn), .ed5(ed5), .ede(ede), .bq_v(bq_v),
+    ot_hgi_sm_xload_xq_pegress #(.PMAX(PMAX)) u_eg (.clk(clk_eg), .clk_w(clk_eg), .clk_s(clk_eg), .clk_e(clk_eg), .clk_c(clk_eg), .rn(rn), .ed5(ed5), .ede(ede), .bq_v(bq_v),
         .bq_last(bq_last), .bq_addr(bq_addr), .bq_b(bq_b), .rwq(rwq_m), .bq_d(bq_d), .x_done(x_done), .xw_en(xw_en),
         .xw_last(xw_last), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data));
 endmodule
@@ -208,14 +240,15 @@ module ot_hgi_sm_xload_static_xql #(
     wire [2047:0] l_d; wire qv_lo, qv_hi, qo_lo, qo_hi, qf_lo, qf_hi; wire [255:0] qq_lo, qq_hi; wire signed [9:0] qe_lo, qe_hi;
     wire [15:0] r_wsel; wire zlo, zhi; wire [NBQ2-1:0] bsel; wire [PMAX*8-1:0] lane_en;
     wire [7:0] eg_ed5; wire [16:0] eg_ede; wire eg_bqv, eg_bqlast; wire [6:0] eg_bqaddr, eg_bqb;
-    ot_hgi_sm_xload_cl2_ctlw #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT), .EGRESS_SPLIT(1)) u_ctl (
-        .clk(clk), .clk_eg(clk), .clk_cal(clk_cal), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target),
+    // d4f die master ctlx (HBM-B 10-17) = ctlw EGRESS_SPLIT 1 with the die-connected ports only + kept select replicas
+    ot_hgi_sm_xload_cl2_ctlx #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT)) u_ctl (
+        .clk(clk), .clk_cal(clk_cal), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target),
         .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit),
         .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured), .fault(fault), .active(active),
-        .x_done(), .xw_en(), .xw_last(), .xw_addr(), .xw_grp(), .xw_data(), .rq(rq), .rr(rr), .rn_o(rn),
-        .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi), .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(1024'd0),
+        .rq(rq), .rr(rr), .rn_o(rn),
+        .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi), .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a),
         .l_d_o(l_d), .qv_lo(qv_lo), .qv_hi(qv_hi), .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi),
-        .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel), .lane_en(lane_en), .bq_d(2048'd0),
+        .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel), .lane_en(lane_en),
         .eg_ed5(eg_ed5), .eg_ede(eg_ede), .eg_bqv(eg_bqv), .eg_bqlast(eg_bqlast), .eg_bqaddr(eg_bqaddr), .eg_bqb(eg_bqb));
     ot_hbm_xp_aq_tree13 u_aq_lo (.clk(clk_qlo), .rst_n(rn), .v(qv_lo), .fp4(1'b0), .x(l_d[1023:0]), .vo(qo_lo), .q(qq_lo),
                              .e(qe_lo), .y(), .fault(qf_lo));

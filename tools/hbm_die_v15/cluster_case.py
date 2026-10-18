@@ -31,6 +31,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 from die_cluster import boundary as CB  # noqa: E402
+from die_repeaters import step as REP  # noqa: E402
 PERIOD = dict(stream=833.333, hbm=1024.0, serial=1111.111)
 
 
@@ -41,7 +42,13 @@ def main():
     ap.add_argument('--rect', required=True, type=float, nargs=4)
     ap.add_argument('--name', required=True)
     ap.add_argument('--out', required=True, type=Path)
-    ap.add_argument('--reach', type=float, default=450.0)
+    ap.add_argument('--reach', type=float, default=450.0,
+                    help='die reach (um): nets longer are a planning defect (missing relay register), measured + reported '
+                         'by the shared repeater step; with --legacy-repair it is the old repair max wire')
+    ap.add_argument('--repeater-max-wire-um', type=float, default=None,
+                    help='shared die-net repeater step max wire (default 160 um, tools/die_repeaters/step.py)')
+    ap.add_argument('--legacy-repair', action='store_true',
+                    help='old repair_design -max_wire_length REACH (no native-aware repeaters; reproduces pre-10-17 pilots)')
     ap.add_argument('--congestion-iterations', type=int, default=10)
     ap.add_argument('--body-policy', choices=('cut', 'snap', 'grow', 'fail'), default='cut')
     ap.add_argument('--cts', choices=('none', 'tritoncts'), default='none',
@@ -49,6 +56,8 @@ def main():
     ap.add_argument('--pin-spacing-tracks', type=int, default=2)
     ap.add_argument('--allowed-edges', default='NESW', help='outline edges that may carry ports (die-edge sides excluded)')
     ap.add_argument('--max-pin-density', type=float, default=6.0)
+    ap.add_argument('--max-dpl-gsites', type=float, default=2.0,
+                    help='core sites (G) above which the snap legaliser replaces detailed_placement (DPL site-grid memory)')
     ap.add_argument('--allow-boundary-errors', action='store_true', help='write the case although boundary.json has errors')
     a = ap.parse_args()
     C = json.loads(a.contract.read_text())
@@ -203,7 +212,7 @@ def main():
            'set c0 [clock seconds]\n'
            'if {[catch {clock_tree_synthesis -buf_list {BUFx4_ASAP7_75t_R BUFx8_ASAP7_75t_R BUFx12_ASAP7_75t_R} '
            '-root_buf BUFx16f_ASAP7_75t_R -sink_clustering_enable} e]} { puts "OT_CTS_FAIL $e" }\n'
-           'puts "OT_CTS_S [expr {[clock seconds]-$c0}]"\n' + CB.legalize_tcl('cts') + '\n')
+           'puts "OT_CTS_S [expr {[clock seconds]-$c0}]"\n' + CB.legalize_tcl('cts', max_dpl_gsites=a.max_dpl_gsites) + '\n')
     clocks = '\n'.join(f'create_clock -name {d} -period {PERIOD[d]} [get_ports clk_{d}]' for d in sorted(doms))
     io = []
     ins = collections.defaultdict(list); outs = collections.defaultdict(list)
@@ -219,6 +228,13 @@ def main():
                   f'if {{[llength $pi]}} {{ set_input_delay {t:.1f} -clock {dom} [get_ports $pi] }}\n'
                   f'set fo [open /work/io_{dom}_out.txt]; set po [read $fo]; close $fo\n'
                   f'if {{[llength $po]}} {{ set_output_delay {t:.1f} -clock {dom} [get_ports $po] }}')
+    # DIE-FLOW 10-17 (owner 0cl): the shared native-aware die-net repeater step (buffers only, registers / relays
+    # unchanged and checked, clock/reset ports untouched); the cluster legalises the buffers itself (legalize_tcl)
+    rep_tcl = (f'repair_design -max_wire_length {a.reach:.0f}\n' if a.legacy_repair else
+               REP.tcl_call('cluster', '/work/out/die_repeaters.json', legalize='none', reach_um=a.reach,
+                            max_wire_um=a.repeater_max_wire_um))
+    if not a.legacy_repair:
+        REP.copy(out)
     tcl = f'''# cluster {a.name} GRT + CTS + TT/FF STA (tools/hbm_die_v15/cluster_case.py) -- NOT_A_DIE_RESULT
 read_lef {plat}/lef/asap7_tech_1x_201209.lef
 read_lef {plat}/lef/asap7sc7p5t_28_R_1x_220121a.lef
@@ -247,9 +263,8 @@ set_wire_rc -signal -layer M6
 {clocks}
 estimate_parasitics -placement
 set r0 [clock seconds]
-repair_design -max_wire_length {a.reach:.0f}
-puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"
-{CB.legalize_tcl('repair')}
+{rep_tcl}puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"
+{CB.legalize_tcl('repair', max_dpl_gsites=a.max_dpl_gsites)}
 {cts}{CB.bounds_check_tcl('/work/out/cluster_bounds.json', 'pre_grt')}set_routing_layers -signal M4-M9 -clock M5-M9
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M9 0.146
@@ -281,6 +296,8 @@ if {{[catch {{
   close $out
 }} e]}} {{ puts "OT_GCELL_FAIL $e" }}
 estimate_parasitics -global_routing
+# DIE-FLOW 10-17: post-GRT slew/cap audit of the repeated die nets (GRT detours the placement estimate cannot see)
+if {{[llength [info procs ot_die_rep_post_grt_audit]]}} {{ ot_die_rep_post_grt_audit /work/out/die_repeaters.post_grt.json }}
 {'set_propagated_clock [all_clocks]' if a.cts != 'none' else '# --cts none: ideal clocks (regional roots by DIE-CLOCK on out/grt.odb)'}
 set_clock_groups -asynchronous {' '.join(f'-group {d}' for d in sorted(doms))}
 set_clock_uncertainty -setup 60 [all_clocks]
@@ -289,8 +306,9 @@ set_clock_uncertainty -hold 25 [all_clocks]
 if {{[llength [get_ports -quiet rst_*]]}} {{ set_false_path -from [get_ports rst_*] }}
 foreach {{c k}} {{tt max ff min}} {{
   report_checks -corner $c -path_delay $k -group_path_count 20 -format full_clock_expanded -fields {{slew cap input_pins nets fanout}} > /work/out/worst_${{c}}_${{k}}.rpt
-  report_wns -corner $c > /work/out/wns_${{c}}_${{k}}.rpt
-  report_tns -corner $c >> /work/out/wns_${{c}}_${{k}}.rpt
+  # pinned OpenSTA: report_wns / report_tns take -min / -max, not -corner (STA-0562 ended d4fR1 after GRT)
+  report_wns -$k > /work/out/wns_${{c}}_${{k}}.rpt
+  report_tns -$k >> /work/out/wns_${{c}}_${{k}}.rpt
 }}
 {'report_clock_skew -setup > /work/out/clock_skew.rpt' + chr(10) + 'report_clock_skew -hold >> /work/out/clock_skew.rpt' if a.cts != 'none' else '# --cts none: no clock tree, no skew report (STA-0562 on ideal clocks)'}
 puts OT_DONE

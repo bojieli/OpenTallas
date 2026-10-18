@@ -268,6 +268,10 @@ def main():
     ap.add_argument("--link-handoff", default=None,
                     help="Q-ATTN result-serializer decision.json (link_handoff + per_op): Q/KVN sends wait for the measured last "
                          "qkv result landing (+1 visibility) instead of the priced qkv window")
+    ap.add_argument("--period-align", type=int, default=768,
+                    help="program profile: pad the token period up to a multiple of this many core edges (default 768, "
+                         "coordinator 10-17 KVJ-E2: 768 core edges = 625 HBM beats, so every token run starts at one HBM-beat "
+                         "phase and the KV die's compiled core->HBM phase launches hold for every token); 1 = no padding")
     ap.add_argument("--allow-unmeasured-host", action="store_true",
                     help="diagnostic program images only: retain PENDING HOST stages and compile with zero; never production-qualified")
     a = ap.parse_args()
@@ -311,6 +315,13 @@ def main():
     if layout:
         # absolute program: segment 0 replayed at every priced layer start, segment 1 at token start (cycle 0)
         L = layout["layers"]
+        if a.period_align < 1:
+            raise SystemExit("--period-align must be >= 1")
+        raw = layout["token_period"]
+        layout["token_period"] = -(-raw // a.period_align) * a.period_align
+        layout["token_period_pad"] = dict(unpadded=raw, align=a.period_align, pad_edges=layout["token_period"] - raw,
+                                          why="core 625 u x 768 = HBM 768 u x 625: a token period that is a multiple of 768 "
+                                              "core edges starts every token run at one HBM-beat phase (KV phase launches)")
         over = [l["id"] for l in L if spans[0] >= l["cycles"]]
         if over:
             raise SystemExit(f"layer run longer than its layer window: {over}")

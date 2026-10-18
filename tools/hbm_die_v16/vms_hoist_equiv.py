@@ -72,8 +72,11 @@ def main():
     for p, segs in rem['port_split'].items():
         for ni, np_, lo, hi in segs:
             lo, hi = compact(p, lo, hi)
-            if np_ == 'clk':
-                conn[ni]['clk'] = f'{p}[{lo}]'; continue
+            if np_ == 'clk':   # every bank clock pin (faces: clk, clk_n/s/e/w, clk_macro0..2) = the slice's clk_bank[b]
+                for cp in (['clk', 'clk_n', 'clk_s', 'clk_e', 'clk_w', 'clk_macro0', 'clk_macro1', 'clk_macro2']
+                           if 'faces' in next(i['master'] for i in insts if i['name'] == ni) else ['clk']):
+                    conn[ni][cp] = f'{p}[{lo}]'
+                continue
             d = dict(P_ := {n: dd for dd, b, n in P})[p]
             if d == 'input':
                 conn[ni][np_] = f'{p}[{hi - 1}:{lo}]'
@@ -116,7 +119,7 @@ def main():
     L_.append('endmodule')
     ins = [(n, b) for d, b, n in P if d == 'input']
     outs = [(n, b) for d, b, n in P if d == 'output']
-    prm = '#(.STRAP_BANKS(1)' + (',.Q2_MERGE(1)' if q == 'NW' else '') + ')'
+    prm = '#(.STRAP_BANKS(1),.BANK_PIN_IN(1)' + (',.Q2_MERGE(1)' if q == 'NW' else '') + ')'
     T = ['`timescale 1ns/1ps', 'module tb_vms_hoist;', '  reg clk = 0; always #1 clk = ~clk;']
     T += [f'  reg [{b - 1}:0] {n};' for n, b in ins]
     T += [f'  wire [{b - 1}:0] a_{n}, b_{n};' for n, b in outs]

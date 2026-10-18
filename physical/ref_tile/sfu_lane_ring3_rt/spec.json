@@ -107,13 +107,16 @@
  "route": {
   "pd": 0.6,
   "threads": 12,
-  "peak_ram_gb": 48
+  "peak_ram_gb": 48,
+  "io_hold_margin_ns": 0.0,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:rr1012",
-  "branch": "claude/el1011-rr1012-sfu",
-  "tag": "rt",
-  "purpose": "rr1012 re-route of closed hbm_sfu_lane_ring3_aa5dd28d5 (ot_su12_sfu, same aa5dd28d5 RTL snapshot, outline 216.0x330.48 (slot height/origins, width grown from 159.84: util 74% -> 54%), all pins W as io_left.tcl) through ref_tile: layer contract RLAYERS M2-M6 + PG M6 keeps M7 (hfd_sfu PG/strap layer) clear (child_lint c), above-only pin keepout re-applied by hold ECO (child_lint f)",
+  "owner": "Claude FLOW-HOLD 1016 (for Claude:rr1012)",
+  "branch": "claude/flowhold-1016",
+  "tag": "bh1",
+  "purpose": "FLOW-HOLD re-route of closed sfu_lane_ring3_rt-rt-ae5899467 under hold_budget die (native B_pinflop_wire)",
   "benches": [
    {
     "name": "c12_campaign_exact",
@@ -157,5 +160,26 @@
  "contract_note": "die slot r25gq hb_sfu_*/u_tile_* is 159.84 x 330.48; the flat ref synthesis is 37,368 um2 = 74% there (gate FAIL util). Width grown to 216.0 (util 54%), height and slot origins unchanged: the tile columns (x pitch 333.07) leave a 173-um gap, so the 16-tile hfd_sfu stack still fits; contract slot w must be updated to 216.0 by the die lead.",
  "macros": [],
  "children": [],
- "inter": []
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "FLOW-HOLD 2026-10-16: the RTL already registers the data pins (closed sfu_lane_ring3_rt-rt-ae5899467: input pin -> D paths carry only buffers, no logic; results/arch/boundary_hold_budget_1016/IMPACT.md); a synthesis pin stage would add schedule cycles. Flop-first via io_flop_at_pins."
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/boundary_hold_budget_1016/impact.json",
+  "cell": "ot_su12_sfu",
+  "launch_ps": 242.2,
+  "capture_ps": 417.6,
+  "fix": "FLOW-HOLD die boundary hold budget (coordinator-approved 2026-10-16, RULE.md): recipe 4 hold_budget die -- flop-first pins (io_flop_at_pins, no inhold/outhold pads), boundary min delays credit C=25 ps, die STA owns link hold. Impact class B_pinflop_wire: est. capture 417.6->417.6, launch 242.2->62.8."
+ },
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
 }

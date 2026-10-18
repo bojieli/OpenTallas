@@ -1,0 +1,8 @@
+mutant: u_core_peer.host_rst_n inverted at the parent
+seed=1 mode=0: MISMATCH seen t=553667 fs core=0 flat=0 clu=1
+seed=1 mode=1: MISMATCH seen t=553667 fs core=0 flat=0 clu=1
+seed=2 mode=0: MISMATCH seen t=553667 fs core=0 flat=0 clu=1
+seed=2 mode=1: MISMATCH seen t=553667 fs core=0 flat=0 clu=1
+seed=3 mode=0: MISMATCH seen t=553667 fs core=0 flat=0 clu=1
+seed=3 mode=1: MISMATCH seen t=553667 fs core=0 flat=0 clu=1
+CLUSTER_GATE FAIL mutant child=core_peer runs_pass=0/6 core_cycles=20000

@@ -16,4 +16,4 @@ localparam [20*36-1:0] D2D_CAL_START = 720'h3a78638cd23721e3576a33cb6322023074e2
 localparam integer D2D_ADM_OFS = 72;      // admission cal_start, edges after the epoch strobe
 localparam integer D2D_ADM_LEN = 1100;    // admission run length (all calendars idle)
 localparam integer D2D_FIRST_TOKEN = 1176;  // first token cal_start, edges after the epoch strobe
-localparam integer D2D_TOKEN_PERIOD = 249431;  // compiled token period (token path totals)
+localparam integer D2D_TOKEN_PERIOD = 249600;  // compiled token period (token path totals padded to a 768-edge multiple)

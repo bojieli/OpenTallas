@@ -1,0 +1,1 @@
+S81-TILES3 10-17: logs at 0cd373110 (ot_s81sl_aq12x fork; shared aq12 = main), ot-epyc4, Verilator 5.050: base PASS (aq_err 0, vq2_err 0, 13,968 aq outputs, 1,299 vq fragments); mutxptr FAIL aq_err 19,960; mutvq2 FAIL vq2_err 3,274; beat 37 L0 with VQ_XMEM=2 PASS err=0. beat37_xmem1_run.log is the earlier AQ_XMEM=1 evidence (mode dropped).

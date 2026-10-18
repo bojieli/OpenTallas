@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/qkd_static_kv_landing_lane.lef",
+    "sha256": "c5f941378ef20ac1e8c229e38e307395fa8ac91613a9f5d77b720cb235c9f3ee"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_landing_lane_h3-h3-a526c0005/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_landing_lane_h3-h3-a526c0005/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_landing_lane_h3-h3-a526c0005/record/views/qkd_static_kv_landing_lane/provenance/raw/qkd_static_kv_landing_lane.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_landing_lane_h3-h3-a526c0005/record/views/qkd_static_kv_landing_lane/provenance/qkd_static_kv_landing_lane.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 106 OBS rects moved into 105 pins: arm, cfg_group[0], cfg_group[1], cfg_group[2], cfg_stack[0], cfg_stack[1], epoch[0], epoch[10], epoch[11], epoch[12], epoch[13], epoch[14]; pockets: 246 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_landing_lane_h3-h3-a526c0005/record/views/qkd_static_kv_landing_lane/provenance/qkd_static_kv_landing_lane.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "qkd_static_kv_landing_lane 140.4 x 88.56: PG M5 VDD 26 stripes (96% spread, 100% cov) / VSS 26 stripes (96% spread, 100% cov); strap M6; face pins 663 blocked-above 0 blocked-same 0; clock ck insertion 226 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "qkd_static_kv_landing_lane",
+      "W": 140.4,
+      "H": 88.56,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.962,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.962,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 663,
+        "blocked_above": 0,
+        "covered_below": 11,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck": {
+          "max_ps": 226.2,
+          "min_ps": 139.07
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 246
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "qkd_static_kv_landing_lane.lef",
+    "sha256": "a0ea47ab303a940bade2459bffb6ee54f194bff4ca01a41896611048722839ee"
+  }
+}

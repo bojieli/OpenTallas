@@ -1,0 +1,25 @@
+
+// KVN record, kind 5: [547:543] epoch[12:8], [542:539] 5, [538:533] stage6, [532:522] tag11, [521:520] gen2,
+// [519:512] epoch[7:0], [511:0] data. Token/position/segment of TAG59 are not carried: the KV side binds them to the
+// compiled context (kind 12) and checks every carried field against it.
+module ot_qwen_d2d_kvn_tx (
+    input  wire         ck, rst_n,
+    input  wire [523:0] x3,               // {v, tag11, data512} from qfd_kvn_static_transport
+    input  wire [58:0]  x3_identity,      // TAG59 {epoch16, stage6, token18, position13, segment6}
+    input  wire [1:0]   x3_generation,
+    output reg          tx_valid,
+    output reg  [547:0] tx_payload,
+    output reg          fault
+);
+    wire [15:0] ep = x3_identity[58:43];
+    wire [5:0]  sg = x3_identity[42:37];
+    // Payload has no reset/enable fanout: validity is the ownership boundary.
+    // The matching payload and tx_valid still land on the same original edge.
+    always @(posedge ck)
+        tx_payload <= {ep[12:8], 4'd5, sg, x3[522:512], x3_generation, ep[7:0], x3[511:0]};
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin tx_valid <= 0; fault <= 0; end
+        else begin
+            tx_valid <= x3[523];
+            if (x3[523]) begin
+                if (x3[522:520] != 3'd2 || ep[15:13] != 3'd0) fault <= 1'b1;   // KVN class only; epoch < 8192

@@ -43,8 +43,11 @@ module tb_qkd_ahub_d_eq;
 `ifndef R_PI
 `define R_PI 0
 `endif
+`ifndef R_SI
+`define R_SI 0
+`endif
     ot_qwen_nearhbm_attn_hub_d #(.ZW_RLY(`R_ZW), .ZR_RLY(`R_ZR), .RA_RLY(`R_RA), .SR_RLY(`R_SR), .PV_RLY(`R_PV),
-        .Y_RLY(`R_Y), .RX_RLY(`R_RX), .RY_RLY(`R_RX), .PI_RLY(`R_PI)) u_d (.clk(clk), .rst_n(rst_n), .start(start), .si_valid(si_valid),
+        .Y_RLY(`R_Y), .RX_RLY(`R_RX), .RY_RLY(`R_RX), .PI_RLY(`R_PI), .SI_RLY(`R_SI)) u_d (.clk(clk), .rst_n(rst_n), .start(start), .si_valid(si_valid),
         .si_type(si_type), .si_g(si_g), .si_hh(si_hh), .si_k(si_k), .si_any(si_any), .si_data(si_data),
         .pi_valid(pi_valid), .pi_g(pi_g), .pi_beat(pi_beat), .pi_data(pi_data), .mo_valid(mo_v_d), .mo_g(mo_g_d),
         .mo_hh(mo_hh_d), .mo_data(mo_d_d), .out_valid(out_v_d), .out_g(out_g_d), .out_beat(ob_d), .out_data(od_d),

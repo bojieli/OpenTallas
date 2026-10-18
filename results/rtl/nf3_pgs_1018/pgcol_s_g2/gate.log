@@ -1,0 +1,25 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: ot_hbm_su_programme_pgcol registers every input in RTL: start/length at the pin (the pslice STAGES 1 stage), cfg_we/cfg_any/cfg_bank on the CPIN 1 pin stage (NATIVE-FIX3 10-18, +1 configuration edge), cfg_row/cfg_data on the per-bank config copy registers (the head presents them one edge after the c
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_su_pgcol_s_r5_20261018-010924.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_su_pgcol_s_r5_20261018-010924.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_su_pgcol_s_r5-20261018-010924
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 24 s (gate total 353 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 565, 'pin_rectangles': 565, 'pin_track_checked': 565, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 02906c9df3fa83b9f9e1b750b22120b963ca3c690556f99e470e8a1aba8ad88e
+GATE INFO util: synthesized std area 866 um2 + macros 27241 in core 75975: util 2% (std-cell density 2.3% of placeable 37646 um2; total fill 37.0%)
+GATE INFO textbook: PASS ot_hbm_su_programme_pgcol_s cells 6,373 flops 1,558 depth 360.1 ps util 0.3711 reach 0.0 um (0.4 s)
+GATE INFO cts_calibration: ss insertion all 355.3..430.9 ps (spread 75.6), boundary mean 402.1; tt insertion all 260.4..334.6 ps (spread 74.2), boundary mean 309.5; ff insertion all 205.6..275.0 ps (spread 69.4), boundary mean 252.6; macro_clk flag True
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hbm_su_pgcol_s_r5/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg       72 paths, worst slack 116.4 ps (e.g. u_c.u_p.busy$_SDFF_PN0_/D)
+GATE INFO path_classes: macro->reg    221 paths, worst slack 241.0 ps (e.g. u_c.u_p.g_m4.ix[0].mem.og_q[0][233]$_DFF_P_/D)
+GATE INFO path_classes: reg->macro      7 paths, worst slack 277.5 ps (e.g. u_c.u_p.g_m4.ix[0].mem.g[1].mem/wd_in[212])
+GATE INFO path_classes: in->reg         4 paths, worst slack 478.7 ps (e.g. u_c.g_rr.u_rr.rst_n[1]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 1.1640199915063931e-10 hold WNS 2.870101378782408e-11
+GATE WARN clock_rule: root port:clk: 1,565 sinks on the largest root; measured TT insertion 334.6 ps, FF insertion 275.0 ps, TT pin-flop spread 39.3 ps, FF pin-flop spread 35.9 ps; WARN: insertion 334.6 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/nf3-pgs-1018/physical/ref_tile/hbm_su_pgcol_s_r5/gate_layout/floorplan.png; density /home/ubuntu/wt/nf3-pgs-1018/physical/ref_tile/hbm_su_pgcol_s_r5/gate_layout/density.png
+GATE WARN fill: fill 36% = (hard macros 27241.0 + synthesized std cells 954.6) / outline 78382.1 um2; pin demand per face: S 293 pins over 289.9/302.4 um (96%), N 288 pins over 293.4/302.4 um (97%), W 48 pins over 0.0/259.2 um (0%), E 48 pins over 0.0/259.2 um (0%) (< 50%)
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M3 11.95% used
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/nf3-pgs-1018/physical/ref_tile/hbm_su_pgcol_s_r5/source_binding_history/21dbc8d82bd47b7a0d0b0867024d79109b887146acca6ed8e263ac3f0e7c5d2a.json
+GATE: hbm_su_pgcol_s_r5/gate_result.json written (exact staged source binding; commit it with the kit)

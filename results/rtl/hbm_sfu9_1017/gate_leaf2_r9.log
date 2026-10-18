@@ -1,0 +1,25 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: the leaf RTL registers every input at the pin (pure flops: rb/we_q/addr_q/data_q/start_*_q) and every output is a stripe register (calendar/valid/active/done/fault/ordinal/mm); a kit flop stage would add an edge to the priced r9 schedule
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 8 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_sfu_store_leaf2_r9_1017_20261017-074307.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_sfu_store_leaf2_r9_1017_20261017-074307.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hbm_sfu_store_leaf2_r9_1017-20261017-074307
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 35 s (gate total 498 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 798, 'pin_rectangles': 798, 'pin_track_checked': 798, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 5b528650e3e48a16afbe4a1f70b1cf01c360f19507ed9286d3b5b7e4cb82c3b9
+GATE INFO util: synthesized std area 797 um2 + macros 49257 in core 80062: util 63%
+GATE INFO textbook: WARN ot_hgi_sfu_store_leaf2_r9 cells 5,474 flops 1,682 depth 226.7 ps util 0.6258 reach 0.0 um (0.2 s)
+GATE WARN textbook.util_channel: 2 macro channel(s) narrower than 20 um with placement rows (e.g. u_leaf.g_stripe\[0\].u_program.g_page\[0\].u_program|u_leaf.g_stripe\[1\].u_program.g_page\[0\].u_program 0.0 um, u_leaf.g_stripe\[0\].u_program.g_page\[1\].u_program|u_leaf.g_stripe\[1\].u_program.g_page\[1\].u_program 0.0 um): widen to >= 20 um or block the channel  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 478.1..650.5 ps (spread 172.4), boundary mean 564.4; tt insertion all 365.6..525.3 ps (spread 159.7), boundary mean 453.8; ff insertion all 297.4..442.3 ps (spread 144.9), boundary mean 381.6; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hbm_sfu_store_leaf2_r9_1017/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->macro     85 paths, worst slack 72.3 ps (e.g. u_leaf.g_stripe[0].u_program.g_page[1].u_program/wd_in[251])
+GATE INFO path_classes: macro->reg      8 paths, worst slack 73.2 ps (e.g. u_leaf.g_stripe[1].u_program.captured[139]$_DFF_P_/D)
+GATE INFO path_classes: reg->reg      207 paths, worst slack 108.4 ps (e.g. u_leaf.g_stripe[1].u_program.calendar[1]$_SDFF_PN0_/D)
+GATE INFO path_classes: setup WNS 7.230283038950347e-11 hold WNS 4.880484905100957e-12
+GATE INFO clock_rule: root port:clk: 1,686 sinks on the largest root <= 15,000; measured TT insertion 525.3 ps, leaf spread 159.7 ps
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/sfustore-r9-1017/physical/ref_tile/hbm_sfu_store_leaf2_r9_1017/gate_layout/floorplan.png; density /home/ubuntu/wt/sfustore-r9-1017/physical/ref_tile/hbm_sfu_store_leaf2_r9_1017/gate_layout/density.png
+GATE INFO fill: fill 61% = (hard macros 49256.8 + synthesized std cells 848.6) / outline 82721.1 um2; pin demand per face: S 86 pins over 227.0/425.5 um (53%), N 0 pins over 0.0/425.5 um (0%), W 834 pins over 189.8/194.4 um (98%), E 34 pins over 0.0/194.4 um (0%)
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 20.94% used
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: hbm_sfu_store_leaf2_r9_1017/gate_result.json written (exact staged source binding; commit it with the kit)
+GATE_EXIT=0

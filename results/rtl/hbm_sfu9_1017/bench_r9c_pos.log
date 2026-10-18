@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits   564 GB (avail 539, growth 144, headroom 0, waiters 0/0 GB) load 57/128 running 29 disk 545 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1934647-1792255818 after 0 s
+SFU_SPLIT_EQUIV PASS edges=6683 active_output_edges=6515 delay_core=4 delay_status=2 lg_path=23
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:280: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 6us; walltime 180.603 s; speed 31.493 ns/s
+- Verilator: cpu 177.972 s on 1 threads; alloced 1147 MB
+SFU_SPLIT_GATE POSITIVE PASS
+BENCH pos rc=0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1934647-1792255818): exit 0

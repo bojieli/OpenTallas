@@ -1,0 +1,119 @@
+{
+ "schema": "opentallas.kvjb.attn_cal_gen_bench.v1",
+ "verdict": "PASS",
+ "commit": "8dbb8aec7dd117125bef09461856ad9db521bb82",
+ "dirty": true,
+ "sources": {
+  "rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv": "7b3b2159e62915903c455d8c0b0321b60867775eca3dba57f2c7972c7855c887",
+  "rtl/test/qwen_split/tb_qkd_attn_cal_gen.sv": "de6aeb04b81e5251c9073526c9aab1903bbf5cb7993fe5b7d31b5283228b9223",
+  "tools/qwen_attention_native/run_cal_gen_bench.sh": "516bd9ba54f957af0e4e0ce3eb8499f3b8d758acf4ef1488ca7264bb4896fdb1",
+  "tools/qwen_attention_native/attn_calendar.py": "01722f18b395d00e13411cc6b05584dd2b871bb704293ca261d943f52ae8405e",
+  "tools/qwen_kv_die/compile_native_endpoint.py": "79ec246bea7276b3f99c58953dc79743db465593f7ebcace8b516d9b3a70e408",
+  "tools/qwen_kv_die/static_qk_calendar.py": "c3513cdca36733983d1dc1d41881859248783b2527706a8531caa2e88ce82bbb",
+  "tools/qwen_kv_die/kv_static_programme.py": "a46da79eb0782eb953dd1c3720453e10fe0f26c75271a706cd258a704d6ac067",
+  "results/arch/qwen_kv_static_programme_1017/die_ages.json": "f21067b021482dacd8a19ff703540bc0aebc5991d15392de9f3ea2bb71375593",
+  "results/arch/qwen_kv_static_programme_1017/die/report.json": "6a80770fa91334710fcf36849b8a65e140901752783fd92c38824b7d9f93fdeb"
+ },
+ "golden": "attn_calendar.calendar_w16(T, head_g3s2) + compile_native_endpoint.compile_programme(rx_cmd) for every T=1..8192; STRETCH=1: kv_static_programme.attention_calendar(T, profile, service_end) + the fixed link words",
+ "generic_yosys_cells": 1957,
+ "runs": [
+  {
+   "G3S2": 1,
+   "RX_CMD": 2,
+   "mut": 0,
+   "stretch": null,
+   "expect": "PASS",
+   "result": "CALGEN PASS checked=8256 (all T, II=1, +64 held) faults=3"
+  },
+  {
+   "G3S2": 1,
+   "RX_CMD": 4,
+   "mut": 0,
+   "stretch": null,
+   "expect": "PASS",
+   "result": "CALGEN PASS checked=8256 (all T, II=1, +64 held) faults=3"
+  },
+  {
+   "G3S2": 0,
+   "RX_CMD": 2,
+   "mut": 0,
+   "stretch": null,
+   "expect": "PASS",
+   "result": "CALGEN PASS checked=8256 (all T, II=1, +64 held) faults=3"
+  },
+  {
+   "G3S2": 0,
+   "RX_CMD": 4,
+   "mut": 0,
+   "stretch": null,
+   "expect": "PASS",
+   "result": "CALGEN PASS checked=8256 (all T, II=1, +64 held) faults=3"
+  },
+  {
+   "G3S2": 1,
+   "RX_CMD": 2,
+   "mut": 1,
+   "stretch": null,
+   "expect": "FAIL",
+   "result": "CALGEN FAIL errors=120 checked=8256"
+  },
+  {
+   "G3S2": 1,
+   "RX_CMD": 2,
+   "mut": 2,
+   "stretch": null,
+   "expect": "FAIL",
+   "result": "CALGEN FAIL errors=1026 checked=8256"
+  },
+  {
+   "G3S2": 1,
+   "RX_CMD": 2,
+   "mut": 3,
+   "stretch": null,
+   "expect": "FAIL",
+   "result": "CALGEN FAIL errors=130 checked=8256"
+  },
+  {
+   "G3S2": 1,
+   "RX_CMD": 2,
+   "mut": 0,
+   "stretch": "component",
+   "expect": "PASS",
+   "result": "CALGEN PASS checked=8256 (all T, II=1, +64 held) faults=3"
+  },
+  {
+   "G3S2": 1,
+   "RX_CMD": 2,
+   "mut": 0,
+   "stretch": "die",
+   "expect": "PASS",
+   "result": "CALGEN PASS checked=8256 (all T, II=1, +64 held) faults=3"
+  },
+  {
+   "G3S2": 1,
+   "RX_CMD": 2,
+   "mut": 4,
+   "stretch": "die",
+   "expect": "FAIL",
+   "result": "CALGEN FAIL errors=8256 checked=8256"
+  },
+  {
+   "G3S2": 1,
+   "RX_CMD": 2,
+   "mut": 5,
+   "stretch": "die",
+   "expect": "FAIL",
+   "result": "CALGEN FAIL errors=5165 checked=8256"
+  },
+  {
+   "G3S2": 1,
+   "RX_CMD": 2,
+   "mut": 1,
+   "stretch": "die",
+   "expect": "FAIL",
+   "result": "CALGEN FAIL errors=60 checked=8256"
+  }
+ ],
+ "note": "run_cal_gen_bench.sh on the uncommitted tree; every source sha256 equals c8bef2d0b (verified), so dirty=true is the working-tree flag only",
+ "sources_commit": "c8bef2d0b"
+}

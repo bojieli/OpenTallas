@@ -1,0 +1,1812 @@
+{
+ "schema": "opentallas.s81_dv.bind_case.v1",
+ "regions": [
+  "cl0N",
+  "cl0S",
+  "cl1N",
+  "cl1S",
+  "cl2N",
+  "cl2S",
+  "cl3N",
+  "cl3S",
+  "cl4N",
+  "cl4S",
+  "cl5N",
+  "cl5S",
+  "cl6N",
+  "cl6S",
+  "cl7N",
+  "cl7S",
+  "edge0",
+  "edge8",
+  "south2",
+  "south3",
+  "south4",
+  "south5",
+  "void1",
+  "void2",
+  "void3",
+  "void4",
+  "void5"
+ ],
+ "open_bindings": {
+  "f_0L00": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_0L01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_0L02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_0L03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_0L10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_0L11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_0L12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_0L13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_0R00": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_0R01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_0R02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_0R03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_0R10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_0R11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_0R12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_0R13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_1L00": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_1L01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_1L02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_1L03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_1L10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_1L11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_1L12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_1L13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_1R00": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_1R01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_1R02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_1R03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_1R10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_1R11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_1R12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_1R13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_2L00": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_2L01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_2L02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_2L03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_2L10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_2L11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_2L12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_2L13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_2R01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_2R02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_2R03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_2R10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_2R11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_2R12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_2R13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_3L01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_3L02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_3L03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_3L10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_3L11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_3L12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_3L13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_3R01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_3R02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_3R03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_3R10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_3R11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_3R12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_3R13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_4L01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_4L02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_4L03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_4L10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_4L11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_4L12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_4L13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_4R01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_4R02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_4R03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_4R10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_4R11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_4R12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_4R13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_5L01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_5L02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_5L03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_5L10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_5L11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_5L12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_5L13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_5R00": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_5R01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_5R02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_5R03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_5R10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_5R11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_5R12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_5R13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_6L00": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_6L01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_6L02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_6L03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_6L10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_6L11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_6L12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_6L13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_6R00": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_6R01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_6R02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_6R03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_6R10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_6R11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_6R12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_6R13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_7L00": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_7L01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_7L02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_7L03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_7L10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_7L11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_7L12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_7L13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_7R00": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_7R01": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_7R02": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_7R03": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_7R10": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "f_7R11": {
+   "master": "col_h10",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_7R12": {
+   "master": "col_h9_MX",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper has no RTL (audit S-1)"
+  },
+  "f_7R13": {
+   "master": "col_h9",
+   "owner": "S81U-3",
+   "reason": "frame cluster wrapper over the class-A in-frame tiles has no RTL (audit S-1)"
+  },
+  "ctrl_00": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_01": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_02": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_03": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_04": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_05": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_06": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_07": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_08": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_09": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_10": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_11": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_12": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_13": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_14": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "ctrl_15": {
+   "master": "dsfd_ctrl_rg2",
+   "owner": "S81-DV / HBM-ctrl",
+   "reason": "no wrapper RTL over 2 x dsfd_ctrl_pc + reset relay + PHY-reset register (p4g SPEC (3))"
+  },
+  "rsv_00": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_01": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_02": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_03": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_04": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_05": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_06": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_07": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_08": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_09": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_10": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_11": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_12": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_13": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_14": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "rsv_15": {
+   "master": "dsdv_svc_rs",
+   "owner": "S81U-1",
+   "reason": "regional service slice (svc 2-PC share + SM 1/16, W->E chain, centre fold) has no RTL"
+  },
+  "mix4_w": {
+   "master": "dsfd_engram_mix4_half",
+   "owner": "S81U-3",
+   "reason": "no half module over engram_mix4_c (audit S-6)"
+  },
+  "gunit": {
+   "master": "dsdv_gunit",
+   "owner": "S81U-1",
+   "reason": "G-unit RTL in progress (S81U-1 worktree s81u1-1017, uncommitted dsdv_gunit.sv); needs vstop HP kind 7"
+  },
+  "seqhost": {
+   "master": "dsdv_seq_host",
+   "owner": "S81U-1",
+   "reason": "no DV wrapper over stage_seq_static/host_c (audit S-6)"
+  },
+  "mix4_e": {
+   "master": "dsfd_engram_mix4_half",
+   "owner": "S81U-3",
+   "reason": "no half module over engram_mix4_c (audit S-6)"
+  }
+ },
+ "plan_port_not_in_rtl": [
+  {
+   "inst": "s_0S",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "tx0",
+   "dir": "o",
+   "bits": 512,
+   "link": "lt_lk_WS0",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_0S",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "rx0",
+   "dir": "i",
+   "bits": 512,
+   "link": "lr_lk_WS0",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_0S",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "tx1",
+   "dir": "o",
+   "bits": 512,
+   "link": "lt_lk_WS1",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_0S",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "rx1",
+   "dir": "i",
+   "bits": 512,
+   "link": "lr_lk_WS1",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_0N",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "tx0",
+   "dir": "o",
+   "bits": 512,
+   "link": "lt_lk_WN0",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_0N",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "rx0",
+   "dir": "i",
+   "bits": 512,
+   "link": "lr_lk_WN0",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_0N",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "tx1",
+   "dir": "o",
+   "bits": 512,
+   "link": "lt_lk_WN1",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_0N",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "rx1",
+   "dir": "i",
+   "bits": 512,
+   "link": "lr_lk_WN1",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_7S",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "tx0",
+   "dir": "o",
+   "bits": 512,
+   "link": "lt_lk_ES0",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_7S",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "rx0",
+   "dir": "i",
+   "bits": 512,
+   "link": "lr_lk_ES0",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_7S",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "tx1",
+   "dir": "o",
+   "bits": 512,
+   "link": "lt_lk_ES1",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_7S",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "rx1",
+   "dir": "i",
+   "bits": 512,
+   "link": "lr_lk_ES1",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_7N",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "tx0",
+   "dir": "o",
+   "bits": 512,
+   "link": "lt_lk_EN0",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_7N",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "rx0",
+   "dir": "i",
+   "bits": 512,
+   "link": "lr_lk_EN0",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_7N",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "tx1",
+   "dir": "o",
+   "bits": 512,
+   "link": "lt_lk_EN1",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "s_7N",
+   "master": "dsdv_slice_lep",
+   "module": "ot_s81sl_slice",
+   "plan_port": "rx1",
+   "dir": "i",
+   "bits": 512,
+   "link": "lr_lk_EN1",
+   "owner": "S81-SLICE",
+   "note": "end-slice cross-die link endpoint (2 x 512-b tx/rx, ot_s81ph_link_ep / ot_s81ph_coll_lane reuse) not yet in ot_s81sl_slice (coordinator 0cj ~15:00 (a))"
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi0_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_00_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi0_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_00_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi1_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_01_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi1_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_01_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi2_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_02_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi2_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_02_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi3_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_03_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi3_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_03_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi4_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_04_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi4_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_04_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi5_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_05_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi5_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_05_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi6_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_06_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi6_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_06_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi7_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_07_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi7_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_07_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi8_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_08_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi8_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_08_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi9_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_09_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi9_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_09_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi10_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_10_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi10_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_10_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi11_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_11_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi11_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_11_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi12_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_12_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi12_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_12_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi13_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_13_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi13_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_13_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi14_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_14_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi14_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_14_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi15_0",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_15_0",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "phy_hbm",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "plan_port": "dfi15_1",
+   "dir": "i",
+   "bits": 695,
+   "link": "dfi_15_1",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "bk_col",
+   "master": "dsfd_bk_collector",
+   "module": "dsfd_bk_collector",
+   "plan_port": "vS",
+   "dir": "i",
+   "bits": 276,
+   "link": "tvN_s_1S",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "bk_col",
+   "master": "dsfd_bk_collector",
+   "module": "dsfd_bk_collector",
+   "plan_port": "vS",
+   "dir": "o",
+   "bits": 276,
+   "link": "tvS_bk_col",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "bk_col",
+   "master": "dsfd_bk_collector",
+   "module": "dsfd_bk_collector",
+   "plan_port": "vN",
+   "dir": "o",
+   "bits": 276,
+   "link": "tvN_bk_col",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "bk_col",
+   "master": "dsfd_bk_collector",
+   "module": "dsfd_bk_collector",
+   "plan_port": "vN",
+   "dir": "i",
+   "bits": 276,
+   "link": "tvS_s_1N",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "bk_sel",
+   "master": "dsfd_bk_selector",
+   "module": "dsfd_bk_selector",
+   "plan_port": "vS",
+   "dir": "i",
+   "bits": 276,
+   "link": "tvN_s_4S",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "bk_sel",
+   "master": "dsfd_bk_selector",
+   "module": "dsfd_bk_selector",
+   "plan_port": "vS",
+   "dir": "o",
+   "bits": 276,
+   "link": "tvS_bk_sel",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "bk_sel",
+   "master": "dsfd_bk_selector",
+   "module": "dsfd_bk_selector",
+   "plan_port": "vN",
+   "dir": "o",
+   "bits": 276,
+   "link": "tvN_bk_sel",
+   "owner": null,
+   "note": null
+  },
+  {
+   "inst": "bk_sel",
+   "master": "dsfd_bk_selector",
+   "module": "dsfd_bk_selector",
+   "plan_port": "vN",
+   "dir": "i",
+   "bits": 276,
+   "link": "tvS_seqhost",
+   "owner": null,
+   "note": null
+  }
+ ],
+ "relay_masters": {
+  "dsfd_dvrly_276_WE": 412,
+  "dsfd_dvrly_276_EW": 410,
+  "dsfd_dvrly_276_SN": 309,
+  "dsfd_dvrly_276_NS": 869,
+  "dsfd_dvrly_68_SN": 214,
+  "dsfd_dvrly_68_NS": 64,
+  "dsfd_dvrly_682_NS": 31,
+  "dsfd_dvrly_682_WE": 3,
+  "dsfd_dvrly_562_EW": 5,
+  "dsfd_dvrly_562_SN": 30,
+  "dsfd_dvrly_682_EW": 4,
+  "dsfd_dvrly_562_WE": 4,
+  "dsfd_dvrly_512_EW": 24,
+  "dsfd_dvrly_512_WE": 24
+ },
+ "clock_forward_cells": 381,
+ "reset": {
+  "grid_um": 400.0,
+  "root_cell": [
+   39,
+   3
+  ],
+  "root_xy": [
+   15800.0,
+   1480.0
+  ],
+  "stations": 1050,
+  "max_release_depth": 107,
+  "min_release_depth": 2,
+  "max_relay_fanout": 35,
+  "region_release_depth": {
+   "cl2S": 47,
+   "cl5S": 49,
+   "cl6S": 58,
+   "cl4S": 29,
+   "cl0N": 102,
+   "cl5N": 79,
+   "cl0S": 70,
+   "cl6N": 93,
+   "cl3S": 38,
+   "void4": 45,
+   "south3": 17,
+   "edge0": 86,
+   "south2": 25,
+   "cl3N": 81,
+   "cl7S": 66,
+   "south4": 19,
+   "void2": 54,
+   "void5": 57,
+   "cl1N": 89,
+   "cl4N": 67,
+   "cl7N": 105,
+   "cl2N": 70,
+   "void1": 59,
+   "cl1S": 55,
+   "south5": 25,
+   "edge8": 107
+  },
+  "unreachable_cells": 3519
+ },
+ "straps": [
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ],
+  [
+   "ot_s81sl_slice",
+   "sid"
+  ]
+ ],
+ "mode_unused_pads": [
+  {
+   "inst": "s_0S",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_0S",
+   "master": "ot_s81sl_slice",
+   "port": "ri_w",
+   "bits": 1104,
+   "reason": "tier line W end (column 0): no west neighbour; the snake end carries xfin on V"
+  },
+  {
+   "inst": "s_0N",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_0N",
+   "master": "ot_s81sl_slice",
+   "port": "ri_w",
+   "bits": 1104,
+   "reason": "tier line W end (column 0): no west neighbour; the snake end carries xfin on V"
+  },
+  {
+   "inst": "s_1S",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_1N",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_2S",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_2N",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_3N",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_4N",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_5S",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_5N",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_6S",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_6N",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_7S",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_7S",
+   "master": "ot_s81sl_slice",
+   "port": "ri_e",
+   "bits": 1104,
+   "reason": "tier line E end (column 7): no east neighbour; the snake end carries xfin on V"
+  },
+  {
+   "inst": "s_7N",
+   "master": "ot_s81sl_slice",
+   "port": "bi",
+   "bits": 1104,
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+  },
+  {
+   "inst": "s_7N",
+   "master": "ot_s81sl_slice",
+   "port": "ri_e",
+   "bits": 1104,
+   "reason": "tier line E end (column 7): no east neighbour; the snake end carries xfin on V"
+  }
+ ],
+ "views": {
+  "open_binding": 158,
+  "rtl_no_view": 27,
+  "relay_closed_view": 2000,
+  "relay_rtl_view_owed": 403,
+  "reset_station_closed_view": 1050
+ },
+ "frame_contract": {
+  "verdict": "PASS",
+  "members": 5,
+  "problems": []
+ },
+ "rtl_extra": [
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv"
+ ],
+ "top_offchip_ports": [
+  "lk_WS0_pma_tx",
+  "lk_WS0_pma_tck",
+  "lk_WS0_pma_rx",
+  "lk_WS0_pma_rck",
+  "lk_WS1_pma_tx",
+  "lk_WS1_pma_tck",
+  "lk_WS1_pma_rx",
+  "lk_WS1_pma_rck",
+  "lk_WN0_pma_tx",
+  "lk_WN0_pma_tck",
+  "lk_WN0_pma_rx",
+  "lk_WN0_pma_rck",
+  "lk_WN1_pma_tx",
+  "lk_WN1_pma_tck",
+  "lk_WN1_pma_rx",
+  "lk_WN1_pma_rck",
+  "lk_ES0_pma_tx",
+  "lk_ES0_pma_tck",
+  "lk_ES0_pma_rx",
+  "lk_ES0_pma_rck",
+  "lk_ES1_pma_tx",
+  "lk_ES1_pma_tck",
+  "lk_ES1_pma_rx",
+  "lk_ES1_pma_rck",
+  "lk_EN0_pma_tx",
+  "lk_EN0_pma_tck",
+  "lk_EN0_pma_rx",
+  "lk_EN0_pma_rck",
+  "lk_EN1_pma_tx",
+  "lk_EN1_pma_tck",
+  "lk_EN1_pma_rx",
+  "lk_EN1_pma_rck"
+ ],
+ "port_bind_rc": 1,
+ "port_bind_cmd": [
+  "python3",
+  "/home/ubuntu/wt/s81dv-p4i-1017/tools/die_port_bind.py",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/die.v",
+  "--top",
+  "dv_die",
+  "--rtl-root",
+  "/home/ubuntu/wt/s81dv-p4i-1017/rtl",
+  "--rtl-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/cells_used.v",
+  "--strap-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/straps.json",
+  "--pad-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/pads.json",
+  "--out",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/port_bind.json",
+  "--rtl-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "--rtl-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+  "--rtl-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "--rtl-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+  "--rtl-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+  "--rtl-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+  "--rtl-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+  "--rtl-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/57bc4ad63f81e29f35a758ec36e4827265047874/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+  "--rtl-file",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "--prefer",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/claude_s81slice-1017/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "--prefer",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+  "--prefer",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "--prefer",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+  "--prefer",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+  "--prefer",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+  "--prefer",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+  "--prefer",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/claude_s81slice-1017/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+  "--prefer",
+  "/home/ubuntu/scratch/s81dv-p4i/bind_p4i/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "--allow-model",
+  "ot_s81_pma_bm",
+  "--allow-model",
+  "ot_s81_hbm3e_dev_bm"
+ ]
+}

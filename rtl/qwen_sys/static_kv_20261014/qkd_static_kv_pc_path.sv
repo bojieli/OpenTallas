@@ -9,6 +9,10 @@
 // expectations from qkd_kv_landing_cal, and boot/go from the actual sequencer.
 module qkd_static_kv_pc_path (
     input wire pll_hbm,
+    input wire pll_hbm_port,  // u_ctrl.u_port HBM clock entry (same clock as pll_hbm; separate die entry)
+    input wire pll_hbm_ecc,   // u_ctrl.u_ecc HBM clock entry (same clock as pll_hbm; separate die entry)
+    input wire pll_hbm_cdc,   // u_ctrl.u_cdc HBM clock entry (core_s7; same clock as pll_hbm; separate die entry)
+    input wire pll_hbm_obs,   // u_ctrl.u_obs HBM clock entry (core_s7; same clock as pll_hbm; separate die entry)
     input wire hrst,
     input wire ck,
     input wire rsi,
@@ -91,6 +95,8 @@ module qkd_static_kv_pc_path (
     wire front_put;
     qkd_ctrl_pc_host_static #(.ROW0(64), .CVL(2), .HOFF(3), .WDONE(17), .LATE(4096), .PROFILE(0), .EVMUT(0), .MUT(0), .ELASTIC(1), .RAW_WD(256), .TQD(64)) u_ctrl (
         .pll_hbm(pll_hbm),
+        .pll_hbm_port(pll_hbm_port),
+        .pll_hbm_ecc(pll_hbm_ecc), .pll_hbm_cdc(pll_hbm_cdc), .pll_hbm_obs(pll_hbm_obs),
         .hrst(hrst),
         .ck(ck),
         .rsi(rsi),

@@ -1,0 +1,139 @@
+{
+ "name": "s81ctrl_rg2",
+ "top": "dsfd_ctrl_rg2",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_ctrl_pc.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 531.25,
+  "h": 250.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "N": [
+   "rq",
+   "rd",
+   "clk",
+   "ck_o"
+  ],
+  "S": [
+   "k_v",
+   "k_rdy",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_we",
+   "k_wdata",
+   "k_wstrb",
+   "k_wr_done",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "ckh"
+  ],
+  "W": [
+   "rst_n"
+  ]
+ },
+ "sdc_extra": [
+  "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_hclk.sdc"
+ ],
+ "recipe": 4,
+ "hold_budget": "tile",
+ "hold_budget_reason": "CDC leaf: two asynchronous roots (clk stream / ckh HBM) through ot_s81ph_afifo; PHY-face k_rdy is the PHY's abutted valid/ready (one gate before the request hold register enable), not a pin flop",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every die-face pin already (ot_s81ph_ctrl_pc: rq pin register, rd/rk/wd/status output flops; PHY kr_*/k_wr_done pin flops, k_* output flops); the one unregistered PHY-face input k_rdy is the PHY valid/ready on the abutted face. A flow pin register would add a cycle on the elastic HBM boundary and break the PHY valid/ready."
+ },
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-CTRL 10-17: NEW regional S81 HBM controller (p4g SPEC (3), p4i open master dsfd_ctrl_rg2 x16, 531.25 x 250 um on the PHY N face). 2 x the benched S81-PH per-PC channel ot_s81ph_ctrl_pc (unchanged) + one regional status register; regional reset leaf synchronised per domain; PHY face = the PHY's k_*/kr_* buses for PCs 2k,2k+1 (S), svc slice rq 682 / rd 562 (N). Flow control only at the HBM boundary (PHY valid/ready); die face never stalls (overflow = sticky fault). Bench: tb_dsfd_ctrl on 16 x rg2 PASS (same latencies as dsfd_ctrl: rq->PHY min 6.95 cks, PHY->rd 5.26 cks), mutants MUT_RD / MUT_PACK FAIL. ck_o = rd-link forwarded clock (clk through the kept ckinv pair, as the dvrly stations), N face. Pin plan (tools/s81_ctrl/gen_rg2_bench.py pins): S face = PC 0 bits W half / PC 1 E half in the PHY's x order (abuts the PHY DFI columns), ckh at the S centre; N face = PC 0 rq+rd W half, clk + ck_o centre, PC 1 E half.",
+ "job": {
+  "owner": "Claude:S81-CTRL",
+  "branch": "claude/s81ctrl-1017",
+  "tag": "c1",
+  "purpose": "S81-DV regional HBM controller dsfd_ctrl_rg2 (2 PCs, 531.25x250 exact slot), first hardening",
+  "benches": [
+   {
+    "name": "rg2_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_exact none 1024 1 48 4",
+    "expect": "pass",
+    "pass_regex": "TB_DSFD_CTRL PASS",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg2_mut_rd",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_mut_rd S81CTRL_MUT_RD 1024 1 48 4",
+    "expect": "fail",
+    "fail_regex": "TB_DSFD_CTRL FAIL",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg2_mut_pack",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_mut_pack S81PH_MUT_PACK 1024 1 48 4",
+    "expect": "fail",
+    "fail_regex": "TB_DSFD_CTRL FAIL",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/s81ctrl_rg2/views",
+  "record_to": "results/rtl/ref_tile/s81ctrl_rg2",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/chip",
+   "rtl/hdc/v41x",
+   "rtl/hdc/kv",
+   "physical/s81_ctrl_rg2",
+   "rtl/dsrom_sys/s81_glue"
+  ]
+ },
+ "io_tcl": "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_pins.tcl",
+ "forwarded_clock": true,
+ "boundary_tcl": [
+  "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_hclk.sdc"
+ ],
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

@@ -1,9 +1,11 @@
 #!/bin/bash
-# ot-heavy v9 (2026-10-16: docker run inherits the declared --memory via the ot-heavy-docker shim); v8 (2026-10-13 owner 17:55: admission, placement and the per-unit table use ONE arithmetic, `ot-heavy-reconcile --gate` = books(); see that file: a unit is charged what it can still grow into, bounded by its own observed peak and its class peak; no request waits while > 25 % of RAM is really available and the 20 % floor holds); v7 (2026-10-13: --tag LABEL (shown in ps; ot-run cancels its own waiter by it), --max-wait SEC (exit 75 'NOT RUN' instead of waiting for ever), an 'admitted' line on stderr after a wait); v6 (2026-10-13 owner: growth charged to a running unit is capped from its own observed peak after 5 min, plus a real-memory floor of 20 % of RAM); v5 (2026-10-13: /etc/ot-heavy.conf is re-read on every attempt, so a headroom change reaches queued waiters); v4 (2026-10-13 owner: an over-sized request is ADMITTED on its measured class size; v3 counts docker memory via use.<unit>; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
+# ot-heavy v11 (2026-10-18: die waiters re-try every 5 s; DIE-FIRST v2 in reconcile only orders, never holds idle memory; no load test anywhere); v9 (2026-10-16: docker run inherits the declared --memory via the ot-heavy-docker shim); v8 (2026-10-13 owner 17:55: admission, placement and the per-unit table use ONE arithmetic, `ot-heavy-reconcile --gate` = books(); see that file: a unit is charged what it can still grow into, bounded by its own observed peak and its class peak; no request waits while > 25 % of RAM is really available and the 20 % floor holds); v7 (2026-10-13: --tag LABEL (shown in ps; ot-run cancels its own waiter by it), --max-wait SEC (exit 75 'NOT RUN' instead of waiting for ever), an 'admitted' line on stderr after a wait); v6 (2026-10-13 owner: growth charged to a running unit is capped from its own observed peak after 5 min, plus a real-memory floor of 20 % of RAM); v5 (2026-10-13: /etc/ot-heavy.conf is re-read on every attempt, so a headroom change reaches queued waiters); v4 (2026-10-13 owner: an over-sized request is ADMITTED on its measured class size; v3 counts docker memory via use.<unit>; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
 # Runs a large build / bench under a hard memory cap and admits it only when the host's memory allows:
 #   ot-heavy --mem <GB> [--slots-class big|small (ignored)] -- <command...>
-# Admission (v8): `ot-heavy-reconcile --gate`: MemAvailable - MEM >= 20 % of RAM, and either MemAvailable - (growth charged
-# to the running units) - HEADROOM_GB (/etc/ot-heavy.conf) >= MEM, or more than 25 % of RAM is really available.
+# Admission (v10, owner 2026-10-17 "admit as soon as possible"): `ot-heavy-reconcile --gate`: MemAvailable - (growth
+# charged to running units, each at most GROWTH_FACTOR=0.5 x its declared margin) >= NEED_FACTOR=0.7 x MEM, and
+# MemAvailable - 0.7 x MEM >= MIN_AVAIL_FRAC=0.05 x RAM (factors in /etc/ot-heavy.conf; see ot-heavy-reconcile).
+# HEADROOM_GB applies only to the bash fallback below, when the gate cannot answer.
 # Each job runs in its own systemd user scope with MemoryMax=MEM (no swap), so it cannot exceed its request.
 # v4: when MEM > 2x the measured peak of the command's class (ot-heavy-reconcile --sizes; local table merged with the
 # fleet table), the RESERVATION charged for admission is ceil(max(1.5 x peak, peak + 8 GB)) instead of MEM.  MemoryMax
@@ -73,6 +75,6 @@ while :; do
   [ $waited = 0 ] && echo "ot-heavy: waiting for memory on $(hostname): $WHY" >&2
   waited=1
   case "$MAXWAIT" in ''|*[!0-9]*) ;; *) [ $(( $(date +%s) - T0 )) -ge "$MAXWAIT" ] && { echo "ot-heavy: NOT RUN: no memory on $(hostname) within ${MAXWAIT} s ($WHY): $*" >&2; exit 75; };; esac
-  sleep 20
+  if [ "${OT_HEAVY_PRIO:-}" = die ]; then sleep 5; else sleep 20; fi   # v11: a die waiter re-tries first (DIE-FIRST v2 = order)
 done
 echo "ot-heavy: NOT RUN: internal error, admission loop ended: $*" >&2; exit 70   # unreachable; never fall off the end with 0

@@ -35,13 +35,31 @@ if true;then
  sources+=($P/ot_hgi_sfu_split_engine.sv $P/ot_hgi_sfu_lg_relay.sv $P/ot_hgi_sfu_lg_pair_leaf.sv)
  defs+=(-DSFU_LG_R=$SFU_LG_R)
 fi
+# STORE6=1 (r6, opt-in): the store under test is ot_hgi_sfu_programme_store_r6 (reset relay, relay stage, D=4)
+if [ "${STORE6:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r6.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_PSTORE_R6); fi
+# STORE7=1 (r7): ot_hgi_sfu_programme_store_r7 (synchronous regional reset tree, release 4 edges; D=4). EQ_MUT=early: config 1 edge early
+if [ "${STORE7:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7.sv $P/ot_hgi_sfu_program_stripe_sreset.sv $P/ot_hgi_sfu_calendar_paged_sreset.sv $P/ot_hgi_sfu_io_calendar_sreset.sv); defs+=(-DSFU_PSTORE_R7); fi
+if [ "${SFU_LOCAL_KEEP:-0}" = 1 ];then defs+=(-DOT_SFU_LOCAL_KEEP);fi
+# STORE7B=1 (r7b): ot_hgi_sfu_programme_store_r7b (r7 reset tree + SRAM pipelining; D=10, status 8)
+if [ "${STORE7B:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7b.sv $P/ot_hgi_sfu_program_stripe_pipe.sv $P/ot_hgi_sfu_calendar_paged_pipe.sv $P/ot_hgi_sfu_io_calendar_pipe.sv); defs+=(-DSFU_PSTORE_R7B); fi
+# STORE7D=1 (r7d): ot_hgi_sfu_programme_store_r7d (r7c + 8 regional clock roots; D=4, status 2)
+if [ "${STORE7D:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7d.sv $P/ot_hgi_sfu_program_stripe_rc.sv $P/ot_hgi_sfu_calendar_paged_rd.sv $P/ot_hgi_sfu_io_calendar_rd.sv); defs+=(-DSFU_PSTORE_R7D); fi
+# STORE7C=1 (r7c): ot_hgi_sfu_programme_store_r7c (r7 reset tree + kept per-pair SRAM write copies; D=4, status 2)
+if [ "${STORE7C:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r7c.sv $P/ot_hgi_sfu_program_stripe_rc.sv $P/ot_hgi_sfu_calendar_paged_rc.sv $P/ot_hgi_sfu_io_calendar_rc.sv); defs+=(-DSFU_PSTORE_R7C); fi
+# STORE9=1 (r9, SFU-STORE-9 10-17): ot_hgi_sfu_programme_store_r9 (4 hardened bank leaves, per-leaf cfg hop +1 on the
+# configuration-write path only; D=4, status 2). EQ_MUT=cfgdrop: leaf P1 configuration hop dropped (must fail)
+if [ "${STORE9:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r9.sv $P/ot_hgi_sfu_store_leaf_r9.sv); defs+=(-DSFU_PSTORE_R9); fi
+# STORE10=1 (r10, SFU-PS-FUND 10-17): ot_hgi_sfu_programme_store_r10 (11 one-stripe spine leaves on ot_sram_1r1w_512x256_m1_r2c2,
+# configuration chains; SFU-PS-4 per-row relays: D=5, status 3, io_store_r10.hex advance 2). EQ_MUT=chain: leaf P4 strobe
+# ignores its chain depth; noshift: combinational programme start; rowskew: row R3 bypasses its launch relay (all must fail)
+if [ "${STORE10:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r10.sv $P/ot_hgi_sfu_store_stripe_leaf_r10.sv physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v); defs+=(-DSFU_PSTORE_R10); fi
 # CORE2=1 (k7, opt-in): the core under test is ot_hgi_sfu_core_split2 (W/E lane ports, regional clock roots, reset relay)
 if [ "${CORE2:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_CORE_SPLIT2); fi
 # CORE3=1 (k9, opt-in): ot_hgi_sfu_core_split3 = split2 re-sliced into W/N/E/S lane face groups (pure port wrapper)
 if [ "${CORE3:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv $P/ot_hgi_sfu_core_split3.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_CORE_SPLIT3); fi
 # SYNC_RST=1 (k8, owner standard 10-16): synchronous regional resets in the SFU core files (OT_SFU_SYNC_RST)
 if [ "${SYNC_RST:-0}" = 1 ];then defs+=(-DOT_SFU_SYNC_RST); fi
-case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
+case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; cfgdrop) defs+=(-DOT_SFU_PSTORE9_MUT_CFGDROP);; split) defs+=(-DOT_SFU_PSTORE9_MUT_SPLIT);; chain) defs+=(-DOT_SFU_PSTORE10_MUT_CHAIN);; noshift) defs+=(-DOT_SFU_PSTORE10B_MUT_NOSHIFT);; rowskew) defs+=(-DOT_SFU_PSTORE10C_MUT_ROWSKEW);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
 defs+=(-DSFU_IO_ROWS=$rows -DSFU_SCALAR_EDGE=$sedge)
@@ -57,6 +75,6 @@ if [ -z "${EQ_MUT:-}" ];then
  [ "$rc" = 0 ] && grep -q 'SFU_SPLIT_EQUIV PASS' "$OUT/run.log" && grep -q '^PASS canonical' "$OUT/run.log" && echo "SFU_SPLIT_GATE POSITIVE PASS" && exit 0
  echo "SFU_SPLIT_GATE POSITIVE FAIL rc=$rc";exit 1
 else
- [ "$rc" != 0 ] && grep -q 'SFU_SPLIT_EQUIV FAIL\|SFU_SPLIT_EQUIV_MISMATCH' "$OUT/run.log" && echo "SFU_SPLIT_GATE MUTANT ${EQ_MUT} REJECTED (expected)" && exit 0
+ [ "$rc" != 0 ] && grep -q 'SFU_SPLIT_EQUIV FAIL\|SFU_SPLIT_EQUIV_MISMATCH\|SFU_SPLIT_FAULT' "$OUT/run.log" && echo "SFU_SPLIT_GATE MUTANT ${EQ_MUT} REJECTED (expected)" && exit 0
  echo "SFU_SPLIT_GATE MUTANT ${EQ_MUT} ESCAPED rc=$rc";exit 1
 fi

@@ -8,8 +8,8 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 S=rtl/hbm_accel/generic/vm/static
 src=($S/hfd_hgi_vms_static.sv $S/hfd_hgi_vms_static_glue.sv $S/hfd_hgi_vms_static_core.sv $S/ot_vms_slice_static.sv $S/ot_vms_bank_native_physical.sv
      $S/ot_vms_hub_static.sv $S/ot_vms_rstop_static.sv $S/ot_vms_rcl_static.sv $S/ot_vms_status_static.sv $S/ot_vms_bank_static.sv
-     $S/ot_vms_bank_strap_physical.sv $S/ot_vms_ce_counter_pipe.sv $S/wq_merge/hfd_vms_wq2_merge.sv $S/physical/*.sv
-     $(ls $S/ot_vms_bank_static_*.sv) rtl/lib/ot_rst_relay.sv
+     $S/ot_vms_bank_strap_physical.sv $S/ot_vms_ce_counter_pipe.sv $S/wq_merge/hfd_vms_wq2_merge.sv $S/physical/*.sv $S/faces_q0/*.sv
+     $(ls $S/ot_vms_bank_static_*.sv | grep -v tb_) rtl/lib/ot_rst_relay.sv
      physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
 sha256sum "${src[@]}" tools/hbm_die_v16/gen_vms_hoist.py tools/hbm_die_v16/vms_hoist_equiv.py tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json > "$OUT/sources.sha256"
 for q in SW NW SE NE; do for m in pos mut; do

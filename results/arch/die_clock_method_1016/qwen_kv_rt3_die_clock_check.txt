@@ -1,0 +1,51 @@
+die clock check: 22917 tiles / 23177 clock entries, 142535 die clock cells, 0 die flops, roots pll/pll_c[0], pll/pll_WS[0], pll/pll_WN[0], pll/pll_ES[0], pll/pll_EN[0], pll/pll_hbm_WS[0], pll/pll_hbm_WN[0], pll/pll_hbm_ES[0], pll/pll_hbm_EN[0]
+insertion model ps : min 5491.7 / med 16538.8 / p90 22398.1 / max 22746.7 (spread 17255.0)
+insertion STA ps   : min 7111.9 / med 23500.5 / p90 23715.8 / max 23735.7 (spread 16623.8)  [late]; min 5400.6 / med 16815.3 / p90 16893.7 / max 16957.4 (spread 11556.7) [early]
+tree levels        : min 106 / med 459 / p90 777 / max 797 (spread 691)
+non-common pairs 26810 (no common root 920, unmatched 3569)
+non-common model ps: min 25.4 / med 709.8 / p90 1573.1 / max 6859.7 (spread 6834.3)
+non-common STA ps  : min 2.0 / med 548.5 / p90 1307.2 / max 6395.3 (spread 6393.3)
+pair skew STA ps   : min 0.0 / med 20.9 / p90 140.9 / max 16610.3 (spread 16610.3)
+per region (9): entries | insertion STA late | flop arrival spread | intra pairs NCP / skew
+  ES                             3982 |   23128.4..23566.4 |     43.0 |   4818 4747.2 / 378.6
+  WS                             3989 |   23131.8..23562.8 |     37.0 |   4825 4856.9 / 375.8
+  EN                             3555 |   23131.3..23561.3 |     38.0 |   4392 3095.6 / 372.4
+  WN                             3526 |   23128.0..23555.1 |     38.3 |   4362 2980.9 / 376.0
+  c                              7865 |   23448.3..23735.7 |     44.1 |   7489 6395.3 / 142.4
+  hbm_ES                           65 |   12928.3..13119.4 |     16.9 |      1 284.3 / 164.7
+  hbm_EN                           65 |     7111.9..7295.5 |     16.0 |      1 187.2 / 156.8
+  hbm_WN                           65 |     7557.7..7740.1 |     18.1 |      1 337.4 / 160.3
+  hbm_WS                           65 |   13345.9..13526.2 |     18.1 |      1 344.5 / 150.3
+inter-region pairs: 920
+NEIGHBOUR CHECK budget 80.0 ps (TT + FF): FAIL  judged 26189 pairs, over 299
+  async:core833|hbm_EN                     pairs    149 (async family crossing: CDC / FIFO, not judged)
+  async:core833|hbm_ES                     pairs    151 (async family crossing: CDC / FIFO, not judged)
+  async:core833|hbm_WN                     pairs    158 (async family crossing: CDC / FIFO, not judged)
+  async:core833|hbm_WS                     pairs    163 (async family crossing: CDC / FIFO, not judged)
+  intra:EN                                 pairs   4392 over     0  TT max 28.6  FF max 32.2
+  intra:ES                                 pairs   4818 over     0  TT max 31.9  FF max 33.3
+  intra:WN                                 pairs   4362 over     0  TT max 28.9  FF max 30.0
+  intra:WS                                 pairs   4825 over     0  TT max 27.8  FF max 33.2
+  intra:c                                  pairs   7489 over     0  TT max 24.5  FF max 27.4
+  intra:hbm_EN                             pairs      1 over     0  TT max 3.8  FF max 10.0
+  intra:hbm_ES                             pairs      1 over     0  TT max 11.7  FF max 2.0
+  intra:hbm_WN                             pairs      1 over     0  TT max 7.3  FF max 6.8
+  intra:hbm_WS                             pairs      1 over     0  TT max 2.7  FF max 1.2
+  neighbour:EN|c                           pairs     66 over    66  TT max 183.4  FF max 222.2
+  neighbour:ES|c                           pairs     66 over    66  TT max 182.1  FF max 192.1
+  neighbour:WN|c                           pairs     83 over    83  TT max 188.9  FF max 233.5
+  neighbour:WS|c                           pairs     84 over    84  TT max 180.2  FF max 206.5
+worst 12 pairs (non-common = max side from the branch point):
+  tile A                             tile B                                model      STA     skew  branch
+  cdc_EN_0                           ctrl_EN__u_pc0                            -        -  16186.6  NO COMMON ROOT
+  cdc_EN_10                          ctrl_EN__u_pc10                           -        -  16177.7  NO COMMON ROOT
+  cdc_EN_11                          ctrl_EN__u_pc11                           -        -  16181.7  NO COMMON ROOT
+  cdc_EN_12                          ctrl_EN__u_pc12                           -        -  16189.5  NO COMMON ROOT
+  cdc_EN_13                          ctrl_EN__u_pc13                           -        -  16178.4  NO COMMON ROOT
+  cdc_EN_14                          ctrl_EN__u_pc14                           -        -  16187.2  NO COMMON ROOT
+  cdc_EN_15                          ctrl_EN__u_pc15                           -        -  16169.8  NO COMMON ROOT
+  cdc_EN_16                          ctrl_EN__u_pc16                           -        -  16183.1  NO COMMON ROOT
+  cdc_EN_17                          ctrl_EN__u_pc17                           -        -  16181.7  NO COMMON ROOT
+  cdc_EN_18                          ctrl_EN__u_pc18                           -        -  16187.1  NO COMMON ROOT
+  cdc_EN_19                          ctrl_EN__u_pc19                           -        -  16188.3  NO COMMON ROOT
+  cdc_EN_1                           ctrl_EN__u_pc1                            -        -  16176.1  NO COMMON ROOT

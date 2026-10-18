@@ -49,6 +49,7 @@
   "physical/ref_tile/s81_rly_266_ew/kit.env",
   "physical/ref_tile/s81_rly_266_ew/clock.sdc",
   "physical/ref_tile/s81_rly_266_ew/signoff.sdc",
+  "physical/ref_tile/s81_rly_266_ew/signoff_ffrepair.sdc",
   "physical/ref_tile/s81_rly_266_ew/pdn.tcl",
   "physical/ref_tile/s81_rly_266_ew/pre_cts.tcl",
   "physical/ref_tile/s81_rly_266_ew/post_cts.tcl",
@@ -68,10 +69,6 @@
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/s81_rly_266_ew/pre_gpl.tcl",
-  "physical/ref_tile/s81_rly_266_ew/pre_dpl.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl"
  ]
 }

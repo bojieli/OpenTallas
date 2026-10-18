@@ -1,0 +1,7 @@
+FAIL qfd_collective_static_io_production x1      INPUT_UNCONNECTED in_unconn=cmd_mode,cmd_tag,cmd_v,cmd_words,in_valid
+FAIL qfd_dv_slice2                      x12     PORT_NOT_IN_RTL/INPUT_UNCONNECTED not_in_rtl=ch_ei,ch_eo,ch_wi,ch_wo,cmd_ei,cmd_eo,cmd_wi,cmd_wo in_unconn=ch_dn_i,ch_up_i,cmd_i,hr_i,l9_i,rs_n,rs_s,sc_dn_i
+FAIL qfd_embedding_word_provider        x1      INPUT_UNCONNECTED in_unconn=core_start,core_token,embed_code_addr,embed_code_re,embed_scale_addr,embed_scale_re
+FAIL qfd_native59_compute_service       x1      INPUT_UNCONNECTED in_unconn=kv_waddr,kv_wdata,kv_we,native_issue,write_commit_line,write_commit_mask,write_commit_v
+FAIL qfd_sys_face                       x1      INPUT_UNCONNECTED in_unconn=crom_fault_code,res_issue_fault,seq_cfg_image_ready,seq_dc,seq_descriptor_obs,seq_program_obs
+FAIL qfd_tt_ctlm_b2                     x1      WIDTH_MISMATCH/INPUT_UNCONNECTED width=ib:354vs380 in_unconn=am0,am1,am2,am3,am4,am5,b2_status_fault,cp_active
+DIE_PORT_BIND FAIL masters=118 instances=926 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=43 width_mismatch=1 input_unconnected=57 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=1072 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=3 pad_bits=0

@@ -1,0 +1,93 @@
+{
+ "schema": "opentallas.s81_ctrl_rg2.bench.v1",
+ "lane": "S81-CTRL 10-17",
+ "dut": "dsfd_ctrl_rg2 (rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv) x16 in the bench composition dsfd_ctrl_rg2x16 (tools/s81_ctrl/gen_rg2_bench.py), same ports as dsfd_ctrl",
+ "bench": "rtl/dsrom_sys/s81_ph/test/tb_dsfd_ctrl.sv (define S81CTRL_RG2) via rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh; reference PHY rtl/chip/ot_chip_v41x_hbm3e_phy.sv (KTAGW 17, K_AW 30); checks (a) PHY request sequence per PC, (b) rd order per PC, (c) response set vs REF PHY incl. read-after-write, (d) wd counts / all credits returned / st={0,1}, (e) mid-run reset + second phase every PC every cycle",
+ "host": "ot-epyc4, Verilator 5.032",
+ "runs": [
+  {
+   "what": "baseline dsfd_ctrl (strip, run_ctrl_bench.sh)",
+   "ckh_ps": 1024,
+   "seed": 1,
+   "n": 48,
+   "verdict": "PASS",
+   "lat_min_rq_to_phy_cks": 6.95,
+   "lat_min_phy_to_rd_cks": 5.26,
+   "rq_to_phy_mean_max": [
+    18.62,
+    167.53
+   ],
+   "phy_to_rd_mean_max": [
+    5.73,
+    6.18
+   ]
+  },
+  {
+   "what": "rg2 x16",
+   "ckh_ps": 1024,
+   "seed": 1,
+   "n": 48,
+   "verdict": "PASS",
+   "requests": 3072,
+   "read_beats": 4907,
+   "lat_min_rq_to_phy_cks": 6.95,
+   "lat_min_phy_to_rd_cks": 5.26,
+   "rq_to_phy_mean_max": [
+    17.19,
+    170.14
+   ],
+   "phy_to_rd_mean_max": [
+    5.72,
+    6.18
+   ]
+  },
+  {
+   "what": "rg2 x16",
+   "ckh_ps": 900,
+   "seed": 2,
+   "n": 128,
+   "verdict": "PASS",
+   "requests": 8192,
+   "read_beats": 13484
+  },
+  {
+   "what": "rg2 x16",
+   "ckh_ps": 900,
+   "seed": 3,
+   "n": 128,
+   "verdict": "PASS",
+   "requests": 8192,
+   "read_beats": 13795
+  },
+  {
+   "what": "mutant S81CTRL_MUT_RD (rk/wd swapped in the rd word)",
+   "ckh_ps": 1024,
+   "seed": 1,
+   "verdict": "FAIL (expected)",
+   "errors": 403
+  },
+  {
+   "what": "mutant S81PH_MUT_PACK (PHY request tag bit 0 flipped)",
+   "ckh_ps": 1024,
+   "seed": 1,
+   "verdict": "FAIL (expected)",
+   "errors": 3431
+  },
+  {
+   "what": "rg2 x16 after adding ck_o (forwarded rd clock)",
+   "ckh_ps": 1024,
+   "seed": 1,
+   "n": 48,
+   "verdict": "PASS"
+  },
+  {
+   "what": "mutant S81CTRL_MUT_RD after ck_o",
+   "ckh_ps": 1024,
+   "seed": 1,
+   "verdict": "FAIL (expected)",
+   "errors": 403
+  }
+ ],
+ "finding": "per-PC latencies identical to the benched strip controller (min 6.95 / 5.26 cks); the regional controller adds no cycle on the data paths (status: 1 extra register, level signal)",
+ "flow_control": "die face: no ready, never stalls (overflow beyond DQ=8 per PC is dropped + sticky fault in rd[561]); PHY face keeps the PHY valid/ready (HBM boundary); rk/wd are the elastic HBM-boundary returns used by the svc as buffer-block checks"
+}

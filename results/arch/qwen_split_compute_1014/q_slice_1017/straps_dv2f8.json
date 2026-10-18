@@ -1,0 +1,217 @@
+{
+ "schema": "opentallas.die_strap_manifest.v1",
+ "die": "Qwen compute die dv2f8 (qfd_die), plan dv2f8-faces-qslice (Q-SLICE face variants)",
+ "rules": "coordinator 0da 10-17: (a) identity straps OK; (b) spare quantized relay bits OK only if no consumer reads them; (c) ties on provably unused modes OK, listed per die; (d) functional config must come from real producers",
+ "straps": [
+  [
+   "qfd_c_b16_dv",
+   "cid"
+  ],
+  [
+   "qfd_c_b16_dv",
+   "far"
+  ],
+  [
+   "qfd_c_b16_dv",
+   "rs_i"
+  ],
+  [
+   "qfd_dv_slice2_w",
+   "st_wi"
+  ],
+  [
+   "qfd_dv_slice2_w",
+   "sc_wi"
+  ],
+  [
+   "qfd_dv_slice2_w",
+   "l9_wi"
+  ],
+  [
+   "qfd_dv_slice2_e",
+   "st_wi"
+  ],
+  [
+   "qfd_dv_slice2_e",
+   "sc_wi"
+  ],
+  [
+   "qfd_dv_slice2_e",
+   "arv_wi"
+  ],
+  [
+   "qfd_dv_slice2_e",
+   "art_wi"
+  ],
+  [
+   "qfd_dv_slice2_e",
+   "arm_wi"
+  ],
+  [
+   "qfd_dv_slice2_e",
+   "arl_wi"
+  ],
+  [
+   "qfd_dv_slice2_e",
+   "ard_wi"
+  ],
+  [
+   "qfd_dv_slice2_e",
+   "dd_wi"
+  ],
+  [
+   "qfd_dv_slice2_e",
+   "ag_wi"
+  ],
+  [
+   "qfd_dv_slice2_e",
+   "l9_wi"
+  ]
+ ],
+ "entries": [
+  {
+   "master": "qfd_c_b16_dv",
+   "port": "cid",
+   "bits": 12,
+   "instances": 48,
+   "total_bits": 576,
+   "rule": "a",
+   "class": "identity strap",
+   "reason": "cluster position id; only consumer is the ROM-leaf tile_id[15:4] of the 16 tiles (tile identity)"
+  },
+  {
+   "master": "qfd_c_b16_dv",
+   "port": "far",
+   "bits": 1,
+   "instances": 48,
+   "total_bits": 48,
+   "rule": "a",
+   "class": "identity strap",
+   "reason": "band position (far = bands 0/3); only consumer is the xcst station index sidx (position identity)"
+  },
+  {
+   "master": "qfd_c_b16_dv",
+   "port": "rs_i",
+   "bits": 514,
+   "instances": 24,
+   "total_bits": 12336,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "far-band clusters (c16_*_0, c16_*_3) have no cluster beyond them; rs_i feeds only the 16-register rs_i -> rs_o feedthrough, and rs_o is unconnected on every far instance, so no consumer reads it. Q-CLUSTER 0fd5cb773 keeps one master; a port-free far variant would remove the tie (Decision 3)"
+  },
+  {
+   "master": "qfd_dv_slice2_w",
+   "port": "st_wi",
+   "bits": 1088,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "W5: no slice beyond the W5 end on the up-travelling stream (the W column sends no stream word); zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_w",
+   "port": "sc_wi",
+   "bits": 48,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "W5: no slice beyond the W5 end on the up-travelling scalar chain; zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_w",
+   "port": "l9_wi",
+   "bits": 514,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "L9 sender slices (W1/W3/W5) take no level-9 neighbour word: the RTL never reads l9_i in mode 3; zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_e",
+   "port": "st_wi",
+   "bits": 1088,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "E5 chain end: no slice east of E5 (down-travelling stream); zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_e",
+   "port": "sc_wi",
+   "bits": 48,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "E5 chain end (scalar); zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_e",
+   "port": "arv_wi",
+   "bits": 1,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "E5 chain end (outbound AR); zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_e",
+   "port": "art_wi",
+   "bits": 32,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "E5 chain end; zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_e",
+   "port": "arm_wi",
+   "bits": 1,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "E5 chain end; zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_e",
+   "port": "arl_wi",
+   "bits": 1,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "E5 chain end; zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_e",
+   "port": "ard_wi",
+   "bits": 512,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "E5 chain end; zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_e",
+   "port": "dd_wi",
+   "bits": 548,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "E5 chain end (outbound D2D); zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_e",
+   "port": "ag_wi",
+   "bits": 10,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "E5 chain end (status OR chain: zero = identity); zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  },
+  {
+   "master": "qfd_dv_slice2_e",
+   "port": "l9_wi",
+   "bits": 514,
+   "rule": "c",
+   "class": "provably unused mode (chain end)",
+   "reason": "L9 sender slices (E1/E3/E5); zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
+  }
+ ],
+ "rtl_literal_ties": [
+  {
+   "module": "qfd_d2d_static (ot_qwen_d2d_dies.sv:264)",
+   "bits": "tv[3] 1 + tp[4*FW-1:3*FW]",
+   "rule": "c",
+   "reason": "D2D port 3 is the KV-die -> compute RX lane (kvn rx); the compiled program has no compute -> KV TX on port 3; the KV end faults any stray valid"
+  }
+ ],
+ "total_constant_bits": 12960,
+ "not_accepted": "every INPUT_UNCONNECTED / UNDRIVEN item of port_bind_r3.json (functional producers): see lanes/Q-BIND.md"
+}
