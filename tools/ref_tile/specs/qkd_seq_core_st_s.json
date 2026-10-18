@@ -1,0 +1,185 @@
+{
+ "name": "qkd_seq_core_st_s",
+ "top": "qkd_seq_core_static_s",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 34.56,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "prg_req_v",
+   "prg_req_pos",
+   "prg_q_v",
+   "prg_q_beat",
+   "kvn_word_valid",
+   "kvn_word_tag",
+   "lp_run",
+   "lp_layer",
+   "lp_ctx_t",
+   "x_v",
+   "s_qpop",
+   "ck"
+  ],
+  "S": [
+   "svc_h",
+   "ar_h",
+   "hf",
+   "hs",
+   "tk",
+   "kst",
+   "rst_n"
+  ],
+  "W": [
+   "f_aqm_w",
+   "f_kc_w",
+   "f_af_w"
+  ],
+  "E": [
+   "f_aqm_e",
+   "f_kc_e",
+   "f_af_e"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every functional input (programme request/position/Q valid/beat, KVN valid/tag, layer programme, svc, hub, af returns) lands in its own pin flop inside the leaf and every output is a register (as qkd_seq_core_st_p). A recipe-3 pin register would add an edge to the compiled CMD->push/pop timeline."
+ },
+ "kind": "tile",
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Successor of qkd_seq_core_st_p: kvn_cr / mf returns, the row-credit account (kwc/kwq/jc x4, f_cr/f_join), merge-fault latch f_row, posted-row timeline (s_kwgo/s_kwn/kvw_*/f_kwm x2), KVN pops (s_kpop/s_kidx) and x_cls deleted; Q store push one edge earlier (no xd_sel); drained = !act. 61 N / 202 S / 63 W / 63 E pins (was 98 / 230 / 92 / 92); 43.2 x 34.56 (S 4.7 pins/um; W/E 1.8/um). Grown from 43.2 x 25.92 after closure refused FLOORPLAN_MARGIN util 73.8% (620 um2 std cells / 840 um2 core): core 38.88 x 30.24 = 1,176 um2 -> 52.7%.",
+ "job": {
+  "owner": "Claude:RTL-BUILD-KV-SEQ",
+  "branch": "claude/rtl-build-kv-seq-1018",
+  "tag": "c1",
+  "purpose": "RTL-BUILD-KV/SEQ 10-18 (P3): successor cluster qkd_seq_static_s of qkd_seq_static_p WITHOUT the legacy landing faces (kvn_<q>_d out has no consumer, kvn_<q>_cr / mf_<q> in have no producer on the static KV die): logic deleted (row-credit account, posted-row timeline, KVN store, kvn pin stages, xd_sel). Bench: LOCKSTEP vs qkd_seq_static_p (always-available credit, mf 0) with the actual attention programme RTL, aq/kc/hs/tk/kst compared on every edge over 36 link-slotted layers plus a live fault phase. ",
+  "benches": [
+   {
+    "name": "seq_s_pass",
+    "cmd": "bash tools/qwen_static_kv/seq_static_s_bench.sh {RUN}/bench/m0 0 36",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_S PASS layers=36 aq=4752 kc=\\d+ hs=36 drn_toggles=\\d+ errors=0 mut=0 lockstep_vs_p=every_edge",
+    "min_count_regex": "aq=(\\d+)",
+    "pass_witness": "results/rtl/qwen_static_kv/seq_static_s_1018/m0.log"
+   },
+   {
+    "name": "seq_s_mut_qswap",
+    "cmd": "bash tools/qwen_static_kv/seq_static_s_bench.sh {RUN}/bench/m1 1 36",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_S PASS",
+    "fail_regex": "^SEQ_S FAIL layers=36 .* mut=1 ",
+    "fail_witness": "results/rtl/qwen_static_kv/seq_static_s_1018/m1.log"
+   },
+   {
+    "name": "seq_s_mut_late",
+    "cmd": "bash tools/qwen_static_kv/seq_static_s_bench.sh {RUN}/bench/m3 3 36",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_S PASS",
+    "fail_regex": "^SEQ_S FAIL layers=36 .* mut=3 ",
+    "fail_witness": "results/rtl/qwen_static_kv/seq_static_s_1018/m3.log"
+   },
+   {
+    "name": "seq_s_mut_kvn_early",
+    "cmd": "bash tools/qwen_static_kv/seq_static_s_bench.sh {RUN}/bench/m4 4 36",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_S PASS",
+    "fail_regex": "^SEQ_S FAIL layers=36 .* mut=4 ",
+    "fail_witness": "results/rtl/qwen_static_kv/seq_static_s_1018/m4.log"
+   },
+   {
+    "name": "seq_s_mut_push_late",
+    "cmd": "bash tools/qwen_static_kv/seq_static_s_bench.sh {RUN}/bench/m6 6 36",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_S PASS",
+    "fail_regex": "^SEQ_S FAIL layers=36 .* mut=6 ",
+    "fail_witness": "results/rtl/qwen_static_kv/seq_static_s_1018/m6.log"
+   },
+   {
+    "name": "seq_s_mut_drn",
+    "cmd": "bash tools/qwen_static_kv/seq_static_s_bench.sh {RUN}/bench/m7 7 36",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_S PASS",
+    "fail_regex": "^SEQ_S FAIL layers=36 .* mut=7 ",
+    "fail_witness": "results/rtl/qwen_static_kv/seq_static_s_1018/m7.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "results/arch/token_path_20261009/qwen_rom.json",
+   "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json",
+   "results/arch/qwen_split_1014/kvsys_v1_4_3_design/hbm_refresh_calendar.json",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "results/rtl/qwen_static_kv/seq_static_s_1018"
+  ],
+  "views_to": "physical/ref_tile/qkd_seq_core_st_s/views",
+  "record_to": "results/rtl/ref_tile/qkd_seq_core_st_s"
+ },
+ "std_area_um2": 620
+}
