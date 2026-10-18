@@ -1,0 +1,217 @@
+{
+ "name": "dscoll_lane_w_lt",
+ "top": "dsfd_coll_lane_w",
+ "kind": "tile",
+ "sources": [
+  "rtl/link/ot_link_crc32.sv",
+  "rtl/common/ot_link_credit.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv"
+ ],
+ "params": {
+  "GFMT": 1,
+  "EPPIPE": 2,
+  "LCR": 1,
+  "CH_BOARD": 700
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 432.0,
+  "h": 336.96
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "inst": "*u_rb.g_sram.g_t?0?.u_m",
+   "at": [
+    31.536,
+    49.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "inst": "*u_rb.g_sram.g_t?1?.u_m",
+   "at": [
+    31.536,
+    101.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "inst": "*u_rb.g_sram.g_t?2?.u_m",
+   "at": [
+    31.536,
+    153.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "inst": "*u_rb.g_sram.g_t?3?.u_m",
+   "at": [
+    31.536,
+    205.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "inst": "*u_rb.g_sram.g_t?4?.u_m",
+   "at": [
+    31.536,
+    257.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "inst": "*u_fifo.g_sram.g_t?0?.u_m",
+   "at": [
+    225.936,
+    49.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "inst": "*u_fifo.g_sram.g_t?1?.u_m",
+   "at": [
+    225.936,
+    101.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "inst": "*u_fifo.g_sram.g_t?2?.u_m",
+   "at": [
+    225.936,
+    153.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "inst": "*u_fifo.g_sram.g_t?3?.u_m",
+   "at": [
+    225.936,
+    205.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "inst": "*u_fifo.g_sram.g_t?4?.u_m",
+   "at": [
+    225.936,
+    257.04
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rx",
+   "tx",
+   "tf"
+  ],
+  "E": [
+   "lo_v",
+   "lo_r",
+   "lo_d",
+   "li_v",
+   "li_r",
+   "li_d",
+   "flt"
+  ],
+  "N": [
+   "ck",
+   "rs",
+   "chb"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:S81-LINKTO",
+  "branch": "claude/s81-linkto-1018",
+  "tag": "lt",
+  "purpose": "S81-LINKTO (coordinator 0hn decision 1, TOKEN-XDIE-S81): dsfd_coll_lane_w as the p4l end-slice masters instantiate it (ot_s81sl_slice_lep*: LCR 1 credit core faces) with the tile-top ACK timeout CH_BOARD 700 (was 400: ACK timeout 879 < the 1,106-cycle switched round trip of a 377.6 ns one-tier switch crossing -> go-back-N replays broke the static calendar, gate_g4 asbuilt 8,240/12,096 beats late); ch_b 1 on every switched lane. GFMT 1 / EPPIPE 2 as the closed rt kit; geometry = the closed dscoll_lane_w_rt outline / 10-SRAM memory-per-column plan; recipe 1 as rt (the RTL registers every pin: lr / gearbox beat / LCR credit faces / flt). No other logic change (timer width 10 -> 11 b). Benches = the xdie_s81 vehicle (built tiles, SerDes on all lanes) + CH_BOARD 400 / ch_b 0 mutants.",
+  "views_to": "physical/ref_tile/dscoll_lane_w_lt/views",
+  "record_to": "results/rtl/ref_tile/dscoll_lane_w_lt",
+  "benches": [
+   {
+    "name": "xdie_switched_pass",
+    "cmd": "J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/pass pass",
+    "expect": "pass",
+    "threads": 6,
+    "peak_ram_gb": 30,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
+    "min_count_regex": "^PASS xdie_s81: (\\d+) beats",
+    "pass_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_pass.log"
+   },
+   {
+    "name": "xdie_mut_board400",
+    "cmd": "J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/board400 board400",
+    "expect": "fail",
+    "threads": 6,
+    "peak_ram_gb": 30,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
+    "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
+    "fail_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_witness_board400.log"
+   },
+   {
+    "name": "xdie_mut_chb0",
+    "cmd": "J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/chb0 chb0",
+    "expect": "fail",
+    "threads": 6,
+    "peak_ram_gb": 30,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
+    "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
+    "fail_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_witness_chb0.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools/xdie_s81",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "results/rtl/xdie_s81_1018/gate_g5"
+  ]
+ },
+ "recipe": 1
+}

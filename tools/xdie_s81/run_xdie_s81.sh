@@ -2,6 +2,7 @@
 # run_xdie_s81.sh <outdir> <name> <golden dir> [MODE ep|master] [-G... / +define+... verilator args]   (cwd = repo root)
 # TOKEN-XDIE-S81 multi-die collective co-sim (tb_xdie_s81): build + run one configuration under Verilator.
 # Lane tile build = the hardened kit's params (physical/ref_tile/dscoll_lane_w_rt spec: GFMT 1, EPPIPE 2) + LCR 1.
+# LANE=<file> (env) replaces the lane tile RTL ot_s81ph_coll_lane.sv (kit mutant benches).
 # Prints the bench verdict line; exit 0 = "PASS xdie_s81", 1 = FAIL, 3 = build failure.
 set -u; O=$1; N=$2; G=$3; MODE=${4:-ep}; shift 4 || shift $#
 mkdir -p $O/$N
@@ -9,7 +10,7 @@ V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V
 L=rtl/dsrom_sys/s81_link
 SRCS="rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv
  rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv
- rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv
+ rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv ${LANE:-rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv}
  $L/ot_s81_kp4_common.sv $L/ot_s81_kp4_enc.sv $L/ot_s81_kp4_bm.sv $L/ot_s81_kp4_dsyn.sv $L/ot_s81_kp4_ddly.sv $L/ot_s81_kp4_dchn.sv
  $L/ot_s81_kp4_dout.sv $L/ot_s81_kp4_dec.sv $L/ot_pdie_serdes.sv
  physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v
