@@ -286,8 +286,46 @@ def apply_dv(v, m):
         ports['rs_o'] = dict(dir='output', bits=514, face='S', layer='M5',
                              range=[round(rs[1] + 6.0, 3), round(rs[1] + 6.0 + 513 * Q.PITCH, 3)])
         ch = 5184.0
+    # Q-DIE11b 10-18 (Q-CLUSTER16 die_clock_contract / Q-CLUSTER5 centre feed): OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS=<json>
+    # drops every regional clock of the cluster at an interior AREA pin at its region centre (clocks.<r>.pin /
+    # centre_pin_um, cluster frame) instead of the contract's face entry: the die clock tree enters each region at its
+    # centre (no face-fed H-tree across the 1.2 x 1.3-mm region).  port_domains (port -> region clock, default the
+    # core_region clock) become the stand-in lib's related pins, so die STA times each cluster port against the region
+    # that holds its pin register.  The contract's face entries for those clocks only seed the cluster IO placer.
+    centre = _load('OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS')
+    centre_pins = {}
+    if centre:
+        for r, c_ in centre['clocks'].items():
+            pn = c_['pin']
+            x_, y_ = c_['centre_pin_um']
+            if pn not in ports:
+                raise ValueError(f'centre clocks: {pn} is not a {CDV} contract port')
+            if not (0 < x_ < CWN - Q.SHAVE and 0 < y_ < ch - Q.SHAVE):
+                raise ValueError(f'centre clocks: {pn} centre {x_},{y_} outside the {CWN} x {ch} cluster outline')
+            centre_pins[pn] = (round(x_, 3), round(y_, 3))
+        stray = sorted(p_ for p_ in ports if p_.startswith('ck') and p_ not in centre_pins)
+        if stray:
+            raise ValueError(f'centre clocks: contract clock ports {stray} have no centre pin')
+        for pn in centre_pins:
+            ports.pop(pn)
     M[CDV] = Q._master(v, CWN - Q.SHAVE, ch - Q.SHAVE, ports)
     M[CDV].name = CDV
+    if centre_pins:
+        for pn, (x_, y_) in sorted(centre_pins.items()):
+            M[CDV].ports[pn] = ('area', 1, x_, y_, 1)
+            M[CDV].order.append(pn)
+        dom = dict(centre.get('port_domains') or {})
+        dflt = centre.get('default_domain') or next(
+            (centre['clocks'][r]['pin'] for r in centre['clocks']
+             if r in str(centre.get('core_region_ports', '')).split(' ')[0]), sorted(centre_pins)[0])
+        bad = sorted(set(dom) - set(ports)) + sorted(set(dom.values()) - set(centre_pins))
+        if bad:
+            raise ValueError(f'centre clocks: port_domains name unknown ports / clocks {bad}')
+        rel = {p_: [dom.get(p_, dflt)] * d_['bits'] for p_, d_ in ports.items()}
+        m['dv_cluster_clocks'] = dict(master=CDV, source=os.environ['OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS'],
+                                      clocks={pn: list(xy) for pn, xy in sorted(centre_pins.items())},
+                                      layer='M8 area pin (die drop; the hardened cluster keeps the chimney free)',
+                                      default_domain=dflt, port_domains=dom, related_pins=rel)
     # Q-DIEPLAN8 10-17: dv2f10 PDN-0006 (die VDD M8 blocked by the abstract's M9 OBS on c16_E0_0).  The two-level
     # cluster contract (cluster_level 2: PG M8, signals M2-M7) leaves M9 to the die; the synthetic cluster and slice
     # abstracts obstructed M1-M9.  OT_SPLIT_DV_OBS_TOP=8 obstructs M1-M8 only (default 9 = the dv2f10 abstracts).
