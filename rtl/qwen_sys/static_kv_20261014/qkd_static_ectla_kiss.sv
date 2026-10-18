@@ -21,8 +21,13 @@ module qkd_static_ectla_kiss #(parameter integer RESPONSE_LAT=14, parameter inte
 );
     wire [16:0]   rq;
     wire [1024:0] rs;
+    // ECTLA-3 2026-10-17 (FLOW-HOLD flop-first): the rst_n pin lands on a pin flop; the ECTL A body's reset relay
+    // (u_rpin async clear) takes that flop, not the port (routed r3-32e20b9e0: port -> RESETN removal FF -81 ps, the
+    // only unrepairable hold class).  Assert and release of the body move one edge later; nothing counts from it.
+    (* keep *) reg rst_q;
+    always @(posedge ck) rst_q <= rst_n;
     qkd_ectl_a_tp8_direct #(.EPOCH(1), .STATIC_QK(1), .QK_ISSUE_AGE(QK_ISSUE_AGE), .ROW_RETURN_LAT(RESPONSE_LAT+7), .HXK(HXK)) u (
-        .ck(ck), .rst_n(rst_n), .cfg(cfg), .rq(rq), .rs(rs), .t0_row(t0_row), .t1_row(t1_row), .x_i(x_i), .rs_o(rs_o));
+        .ck(ck), .rst_n(rst_q), .cfg(cfg), .rq(rq), .rs(rs), .t0_row(t0_row), .t1_row(t1_row), .x_i(x_i), .rs_o(rs_o));
     qkd_static_k_issuer #(.RESPONSE_LAT(RESPONSE_LAT), .MUT(MUT)) u_k (
         .ck(ck), .rst_n(rst_n), .kgo(kgo), .epoch(epoch), .layer(layer), .rq(rq),
         .req_valid(req_valid), .req_t(req_t), .req_v(req_v), .req_epoch(req_epoch), .req_layer(req_layer),

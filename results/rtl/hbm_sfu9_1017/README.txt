@@ -14,3 +14,9 @@ r9c gates (HBM-TILES-B 10-17 12:04, re-launched: the 10:11 launch died at once, 
   clock/control round the stack. Preserved (gate_result.json + gate_layout).
 r9d (mkspec_r9d.py): same RTL/pins; the stack is split into two halves with ONE 21.6 um W->E crossing channel at mid-height,
   where clk + control enter. leaf2d 280.8x349.92 (1.25:1), leaf3d 298.08x492.48 (1.65:1).
+r9d gates (12:2x, cdf3f4995): leaf2d WARN (fill 51%, 2 zero-um abutment channels): trial GRT overflow 0, CTS TT insertion
+  407.7 / spread 131.3 (1,686 sinks) -> CRITICAL (hbm_sfu_programme_store family): coordinator reviews
+  physical/ref_tile/hbm_sfu_store_leaf2_r9d_1017/gate_layout/{floorplan,density,congestion}.png before any submit.
+  leaf3d FAIL: M4 overflow 307 at the W/E edges of the 2nd macro of the upper half (pin-access row, Max H 1), CTS 616.9/261.3
+  (2,359 sinks). Next for leaf3: not more height; try 2 columns x 3 (centre crossing channel both ways) or 2 leaf2-like
+  halves, and find why insertion grows with height (E-band sinks reach the W clock entry only through the channel).

@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hier_contract'))
 import child_lint
 import direct_macro_clock_entries
 import async_gray_fifo_constraints
+import cdc_sync_constraints
 
 MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
@@ -149,6 +150,10 @@ def domains(spec):
                 raise ValueError(f'entries: duplicate domain clock port {port}')
             owners[port] = name
         out[name] = data
+    if spec.get('cdc_synchronizers') is not None:
+        if set(owners) != set(spec['clock_ports']):
+            raise ValueError('entries: domain clock coverage differs from actual source ports')
+        cdc_sync_constraints.validate(spec)
     if leaf and spec.get('clock_data_paths') == 'related_pll_ratio' and not any(d['ratio'] == [4, 3] for d in out.values()):
         raise ValueError('related_pll_ratio requires at least one actual 4/3 domain (else use related_same_frequency)')
     if set(owners) != set(spec['clock_ports']):
@@ -288,6 +293,8 @@ def _generate(spec, root):
     body = LEAF_BODY if native_leaf(spec) else BODY
     if spec.get('clock_data_paths') == 'async_gray_fifo':
         body = async_gray_fifo_constraints.extend(body, spec, root)
+    if spec.get('cdc_synchronizers') is not None:
+        body = cdc_sync_constraints.extend(body, spec, root)
     if direct['entries']:
         body = direct_body(body, direct)
     return (f'# OT_CLOCK_ENTRY_DOMAIN_API_VERSION {ENTRY_DOMAIN_API_VERSION}\n'
