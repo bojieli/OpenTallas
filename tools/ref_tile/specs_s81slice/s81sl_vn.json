@@ -90,7 +90,7 @@
       "v": "M3 M5"
     }
   },
-  "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice; flop-first pins, die hold budget.",
+  "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice; flop-first pins, die hold budget. S81-TILES5 10-17 (coordinator 0co ~17:55): E face y_v / y_i / y re-pinned from 6.5-349.9 to 6.48-73.44 (y 12.96-73.44, 4.2/um) = the vq W-face y span, so the vn -> vq y seam is a straight 60.5-um bus (vn and vq bottom-aligned in the beat leaf), no funnel.",
   "job": {
     "owner": "Claude:S81-SLICE",
     "branch": "claude/s81slice-1017",
@@ -208,15 +208,15 @@
     ],
     "y_v": [
       6.48,
-      9.936
+      8.64
     ],
     "y_i": [
-      9.936,
-      15.984
+      8.64,
+      12.96
     ],
     "y": [
-      15.984,
-      349.92
+      12.96,
+      73.44
     ],
     "rb_v": [
       6.48,

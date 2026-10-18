@@ -14,6 +14,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hier_contract'))
 import child_lint
 import direct_macro_clock_entries
 import async_gray_fifo_constraints
+import cdc_sync_constraints
+import gray_fifo_cdc_constraints
 
 MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
@@ -46,6 +48,15 @@ def related_data(spec):
         return False
     if policy == 'async_gray_fifo':
         async_gray_fifo_constraints.relationship(spec)
+        return False
+    if policy == cdc_sync_constraints.ASYNC_POLICY:
+        # Asynchronous stream833.333 / HBM1024 roots whose only crossings are the linted cdc_synchronizers
+        # structure (Gray source, >= 2-stage chain, gated payload capture); no ordinary STA across the roots.
+        cdc_sync_constraints.async_relationship(spec)
+        return False
+    if policy == gray_fifo_cdc_constraints.POLICY:
+        # Asynchronous clock families: no ordinary STA across them; only the reviewed FIFO crossings are bounded.
+        gray_fifo_cdc_constraints.relationship(spec)
         return False
     if policy == 'related_pll_ratio':
         # One die PLL, stream /3 and serial /4 of the VCO, common epoch origin (3 serial = 4 stream cycles): the
@@ -117,6 +128,12 @@ def domains(spec):
     divided = spec.get('clock_data_paths') == 'related_pll_dividers'
     if divided:
         pll_divider_ratios(spec)
+    families = spec.get('clock_data_paths') == gray_fifo_cdc_constraints.POLICY
+    if families:
+        gray_fifo_cdc_constraints.relationship(spec)
+    cdc_async = spec.get('clock_data_paths') == cdc_sync_constraints.ASYNC_POLICY
+    if cdc_async:
+        cdc_sync_constraints.async_relationship(spec)
     owners = {}
     out = {}
     for name, data in declared.items():
@@ -125,14 +142,16 @@ def domains(spec):
         if set(data) - {'ratio', 'ports', 'inputs', 'outputs', 'io_budget'}:
             raise ValueError('entries: unsupported domain policy (no clock exceptions)')
         ratio = data.get('ratio')
-        if asynchronous:
+        if asynchronous or cdc_async:
             expected_ratio = [1, 1] if name == 'core' else [3072000, 2499999]
             if ratio != expected_ratio:
-                raise ValueError('async_gray_fifo requires actual stream833.333 / HBM1024 periods')
-        if not (divided or asynchronous) and ratio not in ([1, 1], [4, 3]):
+                raise ValueError(f'{spec.get("clock_data_paths")} requires actual stream833.333 / HBM1024 periods')
+        if families and ratio != gray_fifo_cdc_constraints.family_ratio(name):
+            raise ValueError(f'reviewed_gray_fifos {name} ratio must be the actual family period ratio')
+        if not (divided or asynchronous or families or cdc_async) and ratio not in ([1, 1], [4, 3]):
             raise ValueError('entries: only related CK1/1 and CKV4/3 are supported')
         pll = leaf and spec.get('clock_data_paths') == 'related_pll_ratio'
-        if leaf and (ratio != [1, 1] and not (divided or asynchronous or pll and ratio == [4, 3] and name != 'core') or not asynchronous and len(data.get('ports', [])) != 1):
+        if leaf and (ratio != [1, 1] and not (divided or asynchronous or families or cdc_async or pll and ratio == [4, 3] and name != 'core') or not (asynchronous or families) and len(data.get('ports', [])) != 1):
             raise ValueError('multiple_cts_roots requires one actual related phase0 root per domain '
                              '(samefrequency, or a non-core 4/3 domain under related_pll_ratio)')
         if name == 'core' and ratio != [1, 1]:
@@ -149,6 +168,10 @@ def domains(spec):
                 raise ValueError(f'entries: duplicate domain clock port {port}')
             owners[port] = name
         out[name] = data
+    if spec.get('cdc_synchronizers') is not None:
+        if set(owners) != set(spec['clock_ports']):
+            raise ValueError('entries: domain clock coverage differs from actual source ports')
+        cdc_sync_constraints.validate(spec)
     if leaf and spec.get('clock_data_paths') == 'related_pll_ratio' and not any(d['ratio'] == [4, 3] for d in out.values()):
         raise ValueError('related_pll_ratio requires at least one actual 4/3 domain (else use related_same_frequency)')
     if set(owners) != set(spec['clock_ports']):
@@ -288,6 +311,10 @@ def _generate(spec, root):
     body = LEAF_BODY if native_leaf(spec) else BODY
     if spec.get('clock_data_paths') == 'async_gray_fifo':
         body = async_gray_fifo_constraints.extend(body, spec, root)
+    if spec.get('cdc_synchronizers') is not None:
+        body = cdc_sync_constraints.extend(body, spec, root)
+    if spec.get('clock_data_paths') == gray_fifo_cdc_constraints.POLICY:
+        body = gray_fifo_cdc_constraints.extend(body, spec, root)
     if direct['entries']:
         body = direct_body(body, direct)
     return (f'# OT_CLOCK_ENTRY_DOMAIN_API_VERSION {ENTRY_DOMAIN_API_VERSION}\n'
