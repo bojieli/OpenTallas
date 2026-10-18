@@ -78,7 +78,7 @@ EOF
 gold)
   mkvenv || done_ 3
   L=$FX/gold/tp4; mkdir -p "$L"
-  env $ENVTP OMP_NUM_THREADS=${THREADS:-64} "$V/bin/python" tools/qwen_hbmacc_position_oracle_gpu.py --run --device cpu \
+  env $ENVTP OMP_NUM_THREADS=${THREADS:-64} "$PYV" tools/qwen_hbmacc_position_oracle_gpu.py --run --device cpu \
     --prep-dir "$FX/prep/tp4" --layers 36 --head --tokens "$FX/inputs/prompt_tokens_8192.txt" --positions 8191 \
     --embedding-npz "$FX/inputs/prompt_embedding.npz" --out "$L" > "$D/gold_tp4.log" 2>&1 || done_ 4
   python3 tools/exactness/fixtures.py verify --gold "$L" --ref results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4/oracle.json \
