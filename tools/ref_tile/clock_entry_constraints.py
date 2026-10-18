@@ -171,7 +171,10 @@ def domains(spec):
     if spec.get('cdc_synchronizers') is not None:
         if set(owners) != set(spec['clock_ports']):
             raise ValueError('entries: domain clock coverage differs from actual source ports')
-        cdc_sync_constraints.validate(spec)
+        if families:
+            gray_fifo_cdc_constraints.event_groups(spec)   # family-period groups, linted with the FIFOs
+        else:
+            cdc_sync_constraints.validate(spec)
     if leaf and spec.get('clock_data_paths') == 'related_pll_ratio' and not any(d['ratio'] == [4, 3] for d in out.values()):
         raise ValueError('related_pll_ratio requires at least one actual 4/3 domain (else use related_same_frequency)')
     if set(owners) != set(spec['clock_ports']):
@@ -311,7 +314,7 @@ def _generate(spec, root):
     body = LEAF_BODY if native_leaf(spec) else BODY
     if spec.get('clock_data_paths') == 'async_gray_fifo':
         body = async_gray_fifo_constraints.extend(body, spec, root)
-    if spec.get('cdc_synchronizers') is not None:
+    if spec.get('cdc_synchronizers') is not None and spec.get('clock_data_paths') != gray_fifo_cdc_constraints.POLICY:
         body = cdc_sync_constraints.extend(body, spec, root)
     if spec.get('clock_data_paths') == gray_fifo_cdc_constraints.POLICY:
         body = gray_fifo_cdc_constraints.extend(body, spec, root)
