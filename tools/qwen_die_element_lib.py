@@ -36,12 +36,24 @@ class _Clocks(tuple):
                           'ck_records', 'ck_root_mux', 'ck_coordinator_codec', 'ck_coordinator_lifecycle',
                           'ck_coordinator_post') + tuple(f'ck_phy{i}' for i in range(8)) + ('ck_qm_bank0', 'ck_qm_bank1'))
 
+    # KV-CASE2 10-18: the static KV die's composite tiles (qkd_kvs_*, kv_static_die) name each child's clock entry
+    # <child>__<clock> (pc__ck, bcdc0__hck, pc__pll_hbm ...); the HBM-domain child clocks (kv_static_die HBM_CK)
+    STATIC_SUB = frozenset(('hck', 'pll_hbm', 'pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_hbm_obs', 'cal_hck',
+                            'front_hck', 'return_hck', 'return_ck'))
+
     def __contains__(self, p):
+        if str(p) == 'hck':                 # OT_KV_TILE_KITS: a kit tile's one HBM-domain clock port
+            return True
+        if '__' in str(p):
+            b_ = str(p).rsplit('__', 1)[1]
+            if b_ and (b_ in self.STATIC_SUB or self.__contains__(b_)):
+                return True
         return tuple.__contains__(self, p) or str(p) in self.HOST_V14 or \
             bool(re.fullmatch(r'(ck|hk)_[a-z]\d{0,2}', str(p)))   # hk_*: v1.2 HBM-clock entries
 
 
-CLOCKS = _Clocks(('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk') + tuple(f'ck{i}' for i in range(9)) + ('ck_pin','ck_head','ck_tree','ck_xpf','ck_me_sched','ck_sched'))   # + per-child clock entries (qwen split compute C5: xcol ck0..8, tt_up4 ck_pin / ck_l0..3)
+# KV-WIRE2 10-18: + 'hck' = the HBM-domain clock port of the OT_KV_TILE_KITS kit tiles (kv_static_die kit_clocks)
+CLOCKS = _Clocks(('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'hck') + tuple(f'ck{i}' for i in range(9)) + ('ck_pin','ck_head','ck_tree','ck_xpf','ck_me_sched','ck_sched'))   # + per-child clock entries (qwen split compute C5: xcol ck0..8, tt_up4 ck_pin / ck_l0..3)
 CORNERS = dict(  # setup, hold, clk->q base, ps/fF output slope, output transition base, ps/fF, input cap fF (ASSUMED)
     ss=dict(setup=30.0, hold=5.0, cq=75.0, k=0.9, tr=25.0, tk=1.6, cin=0.7, volt=0.63, temp=100),
     ff=dict(setup=12.0, hold=12.0, cq=32.0, k=0.35, tr=10.0, tk=0.7, cin=0.6, volt=0.77, temp=0))
