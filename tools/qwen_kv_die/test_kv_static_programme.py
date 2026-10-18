@@ -70,7 +70,7 @@ class Programme(unittest.TestCase):
             for k in keys.split(','):
                 want[int(k)] = int(n)
         # KVJ-G2b: the DIECFG / LINKCFG / ESCFG targets (conditional word counts in the dispatcher)
-        want.update({10: 32 + 43 + 1, 11: 66, 12: 1024, 13: 8})
+        want.update({10: 32 + 43 + 2, 11: 66, 12: 1024, 13: 8})
         import program_target_frames as PTF
         self.assertEqual({t: PTF.TARGET_WORDS[t] for t in range(10, 14)}, {t: want[t] for t in range(10, 14)})
         for r in (self.comp, self.die):

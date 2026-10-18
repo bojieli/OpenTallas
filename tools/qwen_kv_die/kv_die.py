@@ -1021,6 +1021,13 @@ if KSD.ON:
     if KSD.AHUB_STATIC:    # KV-INTEG/AHUB: the static hub element (one clock entry; kv_static_die AHUB binding)
         AHUB_CLK[:] = ['ck_c']
         RTL.update(qkd_ahub=f'{KSD.AHUB_FILE} qkd_ahub_static_dw')
+    if KSD.AFAULT:     # RTL-BUILD-KV/FAULT P7: the pair fault rides its own 1-b die word to the attention fault root
+        for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):
+            _pp = SPLIT_BINDINGS[_mn]['ports']
+            if _pp.get('pf') == ['fault', 'busy', 'out_age']:
+                _pp['pf'], _pp['pa'] = ['fault'], ['busy', 'out_age']
+                SPLIT_BINDINGS[_mn]['classed'] = dict(SPLIT_BINDINGS[_mn].get('classed') or {},
+                                                      pa='debug: pair busy / out age (unread on the die)')
 
 
 # not exact-cut yet (frames sized, RTL partition owed): reported, not strict
