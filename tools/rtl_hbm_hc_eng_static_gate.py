@@ -68,6 +68,12 @@ def main():
     ap.add_argument('--raw0', type=int, default=0)
     ap.add_argument('--rs', type=int, default=0)
     ap.add_argument('--seed', type=int, default=20261016)
+    # HBM-B-RTL2 (2026-10-17): plan (b) split engine ot_hbm_hc_root_static + 4 x ot_hbm_hc_qeng_static
+    # (tb_hbm_hc_eng4_static).  Waves keep the single-block cadence and times; quarter q ingests its quarter slice of
+    # all 24 rows (480 quarter-local waves) and of every position (20 waves); each ingest event fires --ding edges
+    # earlier (root out flop + quarter pin flop + XRD relays).  RAW0 from the split probe.
+    ap.add_argument('--split', action='store_true')
+    ap.add_argument('--ding', type=int, default=2)
     a = ap.parse_args()
     run = a.run
     run.mkdir(parents=True, exist_ok=True)
@@ -103,6 +109,10 @@ def main():
         # phase A: the weight set (slot 1) from the 4 quadrants, quadrant q rows 6q..6q+5, 480 waves each
         for q in range(4):
             t = T0 + q
+            if a.split:
+                add(t - a.ding, ing=1, ingq=q, kind=1, slot=slot, lo=0, w=0, cnt=480, word=0)
+                sched.append((q, t + 1, 480, 1, 0, 0))
+                continue
             add(t, ing=1, ingq=q, kind=1, slot=slot, lo=6 * q, w=0, cnt=480, word=0)
             sched.append((q, t + 1, 480, 1, (6 * q) * WPR, 0))
         TB = T0 + 4 * 480 + 16                                     # record start (HC_MIX latency counts from here)
@@ -110,6 +120,10 @@ def main():
         for p in range(P):
             for q in range(4):
                 t = TB + q + 80 * p
+                if a.split:
+                    add(t - a.ding, ing=1, ingq=q, kind=0, slot=0, lo=p, w=0, cnt=20, word=(20 * p) % 1024)
+                    sched.append((q, t + 1, 20, 0, p, (20 * p) % 1024))
+                    continue
                 add(t, ing=1, ingq=q, kind=0, slot=0, lo=p, w=20 * q, cnt=20, word=(20 * p) % 1024)
                 sched.append((q, t + 1, 20, 0, p * WPR + 20 * q, (20 * p) % 1024))
         land0 = TB + 3 + 2 + 4 * 19 + 3                             # last wave of position 0 written in the banks
@@ -177,7 +191,7 @@ def main():
     (run / 'prog.mem').write_text('\n'.join(words) + '\n')
     (run / 'sched.txt').write_text(''.join('%d %d %d %d %d %d\n' % s for s in sched))
     (run / 'gm.txt').write_text(''.join('%d %d %d %d %d\n' % g for g in gm))
-    meta = dict(mode=a.mode, npos=P, words=len(words), events=events, waves=sum(s[2] for s in sched),
+    meta = dict(split=a.split, ding=a.ding if a.split else 0, mode=a.mode, npos=P, words=len(words), events=events, waves=sum(s[2] for s in sched),
                 gathered=len(gm), raw0=a.raw0, rs=a.rs, emits=P * (4 if a.mode == 'full' else 2) if a.mode != 'probe' else 0)
     (run / 'case.json').write_text(json.dumps(meta, indent=1) + '\n')
     (run / 'plus.txt').write_text(f"+NWORDS={len(words)} +NSCHED={len(sched)} +NGM={len(gm)} +NPOS={P} "

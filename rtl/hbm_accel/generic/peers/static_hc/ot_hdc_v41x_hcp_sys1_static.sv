@@ -82,6 +82,12 @@ module ot_hdc_v41x_hcp_sys1_static #(
     parameter integer STATIC_CALENDAR = 0, // compiler schedules all raw reads; no credit/ready gating
     parameter integer SYS  = 0,
     parameter integer SYS_LAT = 0,
+    // HBM-B-RTL2 (plan (b) d4g, 2026-10-17; default 0 = unchanged): SYS = 1 with TPRE > 0 takes sys_sum already reduced
+    // by the first TPRE levels of the pairwise chunk tree (outside, in the 4 quarter engines ot_hbm_hc_qeng_static):
+    // sys_sum carries W >> TPRE aligned subtree sums (leaf i = lanes i*2^TPRE .. +2^TPRE-1), the internal tree only
+    // builds the remaining LW - TPRE levels, and SYS_LAT counts to the arrival of those subtree sums.  Same pairs, same
+    // order, so the run sums are bit-identical to TPRE = 0.
+    parameter integer TPRE = 0,
     parameter integer PW   = (PMAX > 1) ? $clog2(PMAX) : 1,
     parameter integer OXW  = (OMAX > 1) ? $clog2(OMAX) : 1
 ) (
@@ -122,11 +128,13 @@ module ot_hdc_v41x_hcp_sys1_static #(
     output wire [$clog2(W):0] sd_nv,
     output wire [AW-1:0]     sd_wa,
     output wire [AW-1:0]     sd_xa,
-    input  wire [W*32-1:0]   sys_sum,
+    input  wire [(W>>TPRE)*32-1:0] sys_sum,
     input  wire              sys_fault
 );
     localparam integer LW  = $clog2(W);
     localparam integer NVW = LW + 1;
+    localparam integer LWT = LW - TPRE;               // tree levels built here
+    localparam integer NL  = W >> TPRE;               // tree leaves
     localparam integer DFW = $clog2(DF);
     // descriptor fields
     localparam integer F_V   = 0;
@@ -144,7 +152,7 @@ module ot_hdc_v41x_hcp_sys1_static #(
     // pipeline taps (descriptor delay-line index of the task a stage holds)
     localparam integer T_OP   = 21 + ML + 3;                 // group operands of term 7
     localparam integer T_LEAF = SYS ? SYS_LAT + 1 : 31 + ML; // tree leaves
-    localparam integer T_TAIL = T_LEAF + 3 * LW;             // tree output = tail level 0 input
+    localparam integer T_TAIL = T_LEAF + 3 * LWT;             // tree output = tail level 0 input
     localparam integer NDL    = T_TAIL + 3 * TL + 1;
 
     genvar gk, gg, gl, gv;
@@ -252,11 +260,12 @@ module ot_hdc_v41x_hcp_sys1_static #(
             x_addr[AW*i +: AW] <= dl[DW*(3*i) + F_XA +: AW];
         end
 
-    reg [W*32-1:0] leaf;
+    reg [NL*32-1:0] leaf;
     reg            leaf_v;
     wire           lane_fault_any;
     assign sd_v = d0[F_V]; assign sd_ss = d0[F_SS]; assign sd_nv = d0[F_NV +: NVW]; assign sd_wa = d0[F_WA +: AW];
     assign sd_xa = d0[F_XA +: AW];
+    initial if (TPRE != 0 && (SYS == 0 || TPRE >= LW)) $fatal(1, "TPRE needs SYS = 1 and TPRE < log2(W)");
     generate if (SYS == 0) begin : g_flat
     // ------------------------------------------------------------------ input registers
     reg [8*W*32-1:0] w_in;
@@ -358,7 +367,7 @@ module ot_hdc_v41x_hcp_sys1_static #(
     assign lane_fault_any = |lane_fault;
     end else begin : g_sys
     // the stage chain is outside: stage 7's chunk sums of the task at tap T_LEAF - 1 arrive on sys_sum now
-    always @(posedge reduction_clk) leaf <= dl[DW*(T_LEAF-1) + F_V] ? sys_sum : {(W*32){1'b0}};
+    always @(posedge reduction_clk) leaf <= dl[DW*(T_LEAF-1) + F_V] ? sys_sum : {(NL*32){1'b0}};
     always @(posedge reduction_clk or negedge rst_n)
         if (!rst_n) leaf_v <= 1'b0;
         else leaf_v <= dl[DW*(T_LEAF-1) + F_V];
@@ -367,17 +376,17 @@ module ot_hdc_v41x_hcp_sys1_static #(
     wire [31:0] root;
     wire        tree_fault;
     wire        tree_vo;
-    ot_hdc_v41x_addtree #(.N(W)) u_tree (.clk(reduction_clk), .rst_n(rst_n), .v(leaf_v), .x(leaf), .y(root), .vo(tree_vo),
+    ot_hdc_v41x_addtree #(.N(NL)) u_tree (.clk(reduction_clk), .rst_n(rst_n), .v(leaf_v), .x(leaf), .y(root), .vo(tree_vo),
                                          .fault(tree_fault));
-    wire [LW*3:0] tvv;
-    ot_hdc_v41x_vline #(.D(3*LW)) u_tvv (.clk(reduction_clk), .rst_n(rst_n), .v(leaf_v), .vd(tvv));
+    wire [LWT*3:0] tvv;
+    ot_hdc_v41x_vline #(.D(3*LWT)) u_tvv (.clk(reduction_clk), .rst_n(rst_n), .v(leaf_v), .vd(tvv));
 
     // ------------------------------------------------------------------ tail: pairwise tree over runs
     wire [32*(TL+1)-1:0] ev_val;
     wire [TL:0]          ev_v;
     wire [TL-1:0]        tail_fault;
     assign ev_val[31:0] = root;
-    assign ev_v[0] = tvv[3*LW];
+    assign ev_v[0] = tvv[3*LWT];
     generate for (gv = 0; gv < TL; gv = gv + 1) begin : g_tail
         localparam integer TAP = T_TAIL + 3 * gv;
         wire bitl  = dl[DW*TAP + F_R + gv];
