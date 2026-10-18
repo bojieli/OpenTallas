@@ -295,6 +295,18 @@ def apply_dv(v, m):
     if obs_top not in (8, 9):
         raise ValueError(f'OT_SPLIT_DV_OBS_TOP must be 8 or 9, got {obs_top}')
     M[CDV].obs_top = obs_top
+    # Q-DIE11 10-18 (coordinator 0ea item 2): dv2f12 GRT overflow 72,022, all in capacity-0 GCells in the bottom 240 um
+    # of the slice row: the synthetic slice abstract obstructed M1-M8 over its whole footprint, so its 3,095 S-face M5
+    # pins had no access.  The slice uses M1-M5 inside (its SRAM macros obstruct M1-M4, tile signal cap M5), so
+    # OT_SPLIT_DV_SLICE_OBS_TOP=5 obstructs only those, and OT_SPLIT_DV_PIN_WINDOW_UM=<d> keeps a d-um pin-access window
+    # (M4..obs_top) along every pin cluster of every face (qwen_rom_fulldie.pin_windows).  Defaults keep dv2f13 abstracts.
+    slice_obs = int(os.environ.get('OT_SPLIT_DV_SLICE_OBS_TOP', str(obs_top)))
+    if not 5 <= slice_obs <= 9:
+        raise ValueError(f'OT_SPLIT_DV_SLICE_OBS_TOP must be 5..9, got {slice_obs}')
+    slice_win = float(os.environ.get('OT_SPLIT_DV_PIN_WINDOW_UM', '0') or 0)
+    if slice_win:
+        m.setdefault('dv_slice_abstract', {}).update(obs_top=slice_obs, pin_window_um=slice_win, window_layers=f'M4-M{slice_obs}',
+                                                     rule='hardened slice keeps OBS within M1-M%d and the face windows free on M4-M%d' % (slice_obs, slice_obs))
     # ---- slice master (synthetic role ports)
     sw, sh = DI['dvs_W0']['w'], DI['dvs_W0']['h']
     # slice ports (SYNTHETIC, Q-DV roles): N / S faces MIRROR the abutting clusters' S-face pins (bc<lc> -> cw_*<lc>,
@@ -376,11 +388,14 @@ def apply_dv(v, m):
             bad = sorted(set(sp2) ^ set(rtl)) + sorted(k for k in sp2 if k in rtl and rtl[k] != sp2[k][0])
             if bad:
                 raise ValueError(f'dv face mode: {mn} frame vs RTL face map mismatch {bad[:12]}')
-            qs = v.Master(mn, sw - Q.SHAVE, sh - Q.SHAVE, obs_top, f'Q-DV slice2 face variant {mn} (RTL ports, dn = {dn})')
+            qs = v.Master(mn, sw - Q.SHAVE, sh - Q.SHAVE, slice_obs, f'Q-DV slice2 face variant {mn} (RTL ports, dn = {dn})'
+                          + (f'; OBS M1-M{slice_obs}, pin windows {slice_win} um' if slice_win else ''))
+            qs.pin_window = slice_win
             _place(qs, sp2, sw - Q.SHAVE, sh - Q.SHAVE, fixed_rng)
             M[mn] = qs
     else:
-        qs = v.Master(SLICE, sw - Q.SHAVE, sh - Q.SHAVE, obs_top, 'Q-DV slice2 (SYNTHETIC role ports, RTL step 2 pending)')
+        qs = v.Master(SLICE, sw - Q.SHAVE, sh - Q.SHAVE, slice_obs, 'Q-DV slice2 (SYNTHETIC role ports, RTL step 2 pending)')
+        qs.pin_window = slice_win
         _place(qs, sp, sw - Q.SHAVE, sh - Q.SHAVE, fixed_rng)
         M[SLICE] = qs
     # ---- instances: retained / clusters / slices at the dv model's positions
