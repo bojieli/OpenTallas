@@ -108,5 +108,9 @@
   "io_tcl": "physical/s81su_physical/s81su_qnt_b8_ref_io.tcl",
   "params": {
     "CB": 32
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "RTL-registered pins (CLOSED tile re-route, owner rule 19:50 opt-out): ot_s81_su_qnt registers every input at its pin (dq_st/dq_kind/dq_gsel/dq_jid/dq_v/dq_d, fq pin flops; rst through the rr0/rr1 synchroniser) and drives every output from a register (output reg e_*/o_*); the closed ae9b5d603 view audits 0 combinational pins, launch 212.2 / capture 138.6 ps. A flow pin register would add a cycle per port the SU calendar does not price."
   }
 }
