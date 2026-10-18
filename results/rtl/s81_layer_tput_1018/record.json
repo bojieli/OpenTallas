@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.s81.layer_tput.v2",
  "date": "2026-10-18",
- "lane": "TOKEN-PASS-S81",
- "status": "BLOCKED_NO_DV_LAYER_VEHICLE",
- "summary": "The 10-13/14 layer vehicle tb_s81_die_layer cannot be updated to the current die: the p4l DV die (bind9) contains NONE of its masters (dsfd_sp_ctrl_e, dsfd_sp_hc_c, dsfd_sp_su_h, dsfd_sp_collective_c, dsfd_sp_gather_c/capture_c, the hub VM). The DV die is 128 ROM frames (col_h9/h10/h9_MX_l4 + cfg7_seq_bfp), 16 vector slices (ot_s81sl_slice*: SU/HC/norm/capture/Engram distributed), 16 svc_rs attention services, gunit, bk_sel/bk_col, seq_host (ot_dsdv_fixed_issue calendar), 224 landings, 2,836 rlyh relays, 16 HBM ctrl_rg2, serdes/ucie. No compiler emits a DV layer program (seq_host calendar + CTL templates, frame cfg7 programs, svc / gunit jobs, return calendar) and no DV fixtures exist, so no layer can run on it yet. Delivered now: per-layer p4l price (the target), a full-RTL die elaboration + idle-run cost probe (build/run wall for the fleet-hours estimate), and the vehicle plan.",
+ "lane": "TOKEN-PASS-S81 -> LAYERBENCH-S81 (10-18)",
+ "status": "BLOCKED_ON_DIE_GAPS: layer bench pieces built (compiler, fixtures, kit+cutter+replay bench on real p4l RTL); no layer measured",
+ "summary": "Compiler (tools/s81_dv/dv_layer_compile.py): op schedule = p4l price for all 6 layers; L0 slice-norm smoke lowered and booted on the real dsdv_seq_host (8/8 CTL beats on schedule). Fixtures (tools/s81_dv/dv_layer_fixtures.py): L0/L2/L14/L20/HEAD every priced op bit-exact vs w17 1M shard, manifests in fixtures/; MTP draft gap. Slice bench (dv_rtl_kit.py, dv_slice_cut.py, dv_slice_tb.py, dv_slice_replay.py): cut_3S 563 inst, 43 min / 47.6 GB build, 57 cyc/s; L0 smoke replay FAILS on die gap G1 (no hop-0 clock gate: K>=D landings fault, beats 10 edges early). Whole-die Verilator build OOM > 400 GB. Composition rule: layer cycles = the critical (slowest) slice under the fixed schedule; for L0 that is an end slice (latest CTL arrival, owns the TP all-reduce links), blocked on G3.",
  "layers": [
   {
    "design": "DS ROM S81 (DV die p4l, landed, half-cycle hops)",
@@ -23,7 +23,7 @@
    "mutants": null,
    "build_wall_s": null,
    "run_wall_s": null,
-   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "grade": "NOT_MEASURED: bench built; blocked on die gaps G1 (landing epoch, no hop-0 gate), G3 (end-slice landings) and compiler lowering gaps (vp NORM coeffs, xs DV ROM images, SU/svc/bk/gunit job ABIs)",
    "historical_hub_vehicle": {
     "cycles": 7737,
     "src": "results/rtl/s81_layer_tput_1013/r8_landing_schedule_gate.json positive.L0.adjusted_layer_cycles (af72194a9)"
@@ -47,7 +47,7 @@
    "mutants": null,
    "build_wall_s": null,
    "run_wall_s": null,
-   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "grade": "NOT_MEASURED: bench built; blocked on die gaps G1 (landing epoch, no hop-0 gate), G3 (end-slice landings) and compiler lowering gaps (vp NORM coeffs, xs DV ROM images, SU/svc/bk/gunit job ABIs)",
    "historical_hub_vehicle": {
     "cycles": 16358,
     "src": "results/rtl/s81_layer_tput_1013/r8_landing_schedule_gate.json positive.L2.adjusted_layer_cycles (af72194a9)"
@@ -71,7 +71,7 @@
    "mutants": null,
    "build_wall_s": null,
    "run_wall_s": null,
-   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "grade": "NOT_MEASURED: bench built; blocked on die gaps G1 (landing epoch, no hop-0 gate), G3 (end-slice landings) and compiler lowering gaps (vp NORM coeffs, xs DV ROM images, SU/svc/bk/gunit job ABIs)",
    "historical_hub_vehicle": {
     "cycles": 18861,
     "src": "results/rtl/s81_functional_token_1014/layer_chain_c4b76480b/README.md (shier, c4b76480b)"
@@ -95,7 +95,7 @@
    "mutants": null,
    "build_wall_s": null,
    "run_wall_s": null,
-   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "grade": "NOT_MEASURED: bench built; blocked on die gaps G1 (landing epoch, no hop-0 gate), G3 (end-slice landings) and compiler lowering gaps (vp NORM coeffs, xs DV ROM images, SU/svc/bk/gunit job ABIs)",
    "historical_hub_vehicle": {
     "cycles": 34410,
     "src": "results/rtl/s81_functional_token_1014/layer_chain_c4b76480b/README.md (c4b76480b)"
@@ -119,7 +119,7 @@
    "mutants": null,
    "build_wall_s": null,
    "run_wall_s": null,
-   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "grade": "NOT_MEASURED: bench built; blocked on die gaps G1 (landing epoch, no hop-0 gate), G3 (end-slice landings) and compiler lowering gaps (vp NORM coeffs, xs DV ROM images, SU/svc/bk/gunit job ABIs)",
    "historical_hub_vehicle": null
   },
   {
@@ -140,7 +140,7 @@
    "mutants": null,
    "build_wall_s": null,
    "run_wall_s": null,
-   "grade": "NOT_MEASURED: no per-layer vehicle or layer program exists for the DV die (see blockers)",
+   "grade": "NOT_MEASURED: bench built; blocked on die gaps G1 (landing epoch, no hop-0 gate), G3 (end-slice landings) and compiler lowering gaps (vp NORM coeffs, xs DV ROM images, SU/svc/bk/gunit job ABIs)",
    "historical_hub_vehicle": null
   }
  ],
@@ -149,8 +149,37 @@
   "script": "rtl/dsrom_sys/s81_dv/test/run_dv_die_probe.sh",
   "file_list": "results/rtl/s81_layer_tput_1018/die_probe.f (die_port_bind.py --elab-out closure: 269 RTL files + tb)",
   "host_dir": "ot-epyc5:/srv/opentallas-scratch/claude/tokpass-s81/probe_bind9",
-  "status": "LAUNCHED 10-18 07:38 (ot-run, queued for 120 GB on ot-epyc5); result -> pending_results.txt",
-  "verilator": "5.032 (fleet; 5.050 of the 10-13 runs is not installed)"
+  "status": "MEASURED (negative): whole-die dv_die Verilator build exceeds 400 GB during elaboration (>10 min single thread) -> whole-die RTL simulation infeasible on the fleet; layer runs must use slices cut from the GEN netlist (TOK.DS.BENCH.3)",
+  "verilator": "5.050 at ~/.local/opentallas-tools/verilator-5.050 on ot-epyc4/5 (the 07:38 run used /usr/bin 5.032 by mistake)",
+  "runs": [
+   {
+    "id": "probe_bind9 (TOKEN-PASS-S81 07:38)",
+    "host_dir": "ot-epyc5:/srv/opentallas-scratch/claude/tokpass-s81/probe_bind9",
+    "verilator": "5.032 (wrong: the closure daemon pins 5.050)",
+    "result": "BUILD FAILED rc 1 at elaboration (37.9 s, 11.8 GB RSS), 12 errors",
+    "classification": [
+     "KIT CLOSURE (tool gap, die_port_bind --elab-out): the module->file index took the base files rtl/v41rom/ot_v41_rom_elem_w10.sv and ot_v41_bf16_lanes2.sv; the frames (col_h9/h10 _l4) are built and benched from tools/s81_dv/frame_bench.f with the same-named variants ot_v41_rom_elem_w10_rne_wake_prepare.sv and ot_v41_bf16_lanes2_rne_prepare.sv (GRADUAL_RNE, RC, WAKE_REG, HITFIX, FIX_SECOND_ROW_INDEX) -> PINNOTFOUND x8",
+     "DIE NETLIST (gap for S81-DIE lead): die.v passes #(.HB(0)) to the parameter-free masters ot_s81sl_slice_lepw (2), ot_s81sl_slice_lepe (1), ot_s81sl_slice_lepe_nh (1); die_port_bind reports params_not_in_rtl 0 although the masters have no HB parameter -> PINNOTFOUND x4. HB 0 is the masters fixed C1 behaviour, so the kit strips it (recorded, no behaviour change)"
+    ],
+    "kit_sources": "all 213 src/wt files byte-identical to origin/claude/s81-die6-1018 (3923ae6de), the die of record ref"
+   },
+   {
+    "id": "probe_v2 (LAYERBENCH-S81 10-18)",
+    "host_dir": "ot-epyc5:/srv/opentallas-scratch/claude/layerbench-s81/probe_v2",
+    "kit": "kit2 = kit + the two frame_bench.f variants in place of the base files + HB stripped on 4 lep instances",
+    "verilator": "5.050",
+    "status": "OOM-KILLED at its 120 GB MemoryMax after 4:49 wall of single-thread elaboration (systemd oom-kill, 120G peak); first attempt failed MODMISSING ot_sram_1r1w_256x256_m2_r2c2 (ot_s81ph_col_tile.sv:61; closure missed the _v2 r2c2 macro model, added)"
+   },
+   {
+    "id": "probe_v3 (LAYERBENCH-S81 10-18)",
+    "host_dir": "ot-epyc5:/srv/opentallas-scratch/claude/layerbench-s81/probe_v3",
+    "kit": "kit2 (+ r2c2 macro)",
+    "verilator": "5.050",
+    "mem_request_gb": 400,
+    "status": "OOM-KILLED at its 400 GB MemoryMax after 10:12 wall, still in Verilator elaboration (400G peak; past all parse/link errors)"
+   }
+  ],
+  "slice_sizing": "dv_die = 7,489 instances; the bench vehicle is one interior slice (e.g. u_s_3S: end slices s_0*/s_7* enter 52 lanes unlanded, see compiler gaps) + its frames + landings/relays + seq_host/svc share, budget well under 100 GB"
  },
  "behavioural_or_missing": [
   {
@@ -180,5 +209,15 @@
   "3 bench = dv_die (this probe top) + host-lane boot driver + 3 PMA peer models (TP4) + golden compare at the slices h rows (HLOAD/HSTORE readback) + schedule faults (fixed_issue / landings / svc sticky faults are the static-schedule assertions) + mutants (calendar row shifted by 1, landing E-1, VS_MUT)",
   "4 cost: build/run wall from the probe; one die = one stage (97 stages), so a layer = 1-2 die runs"
  ],
- "fleet_cost_estimate": "pending the probe (build wall + RSS, simulated cycles per wall second); layer price 15-31k cycles a layer on p4l"
+ "fleet_cost_estimate": "pending the probe (build wall + RSS, simulated cycles per wall second); layer price 15-31k cycles a layer on p4l",
+ "bench": {
+  "compiler": "results/rtl/s81_layer_tput_1018/compiler/",
+  "fixtures": "results/rtl/s81_layer_tput_1018/fixtures/",
+  "slice_bench": "results/rtl/s81_layer_tput_1018/slice_bench/ (README, record.json, gaps.json G1-G7)"
+ },
+ "composition": "Every slice runs the same compiled calendar shifted by its CTL arrival; the layer = the slowest (critical) slice under the fixed static schedule (no backpressure, so slices do not interact beyond scheduled boundary traffic, which the replay model injects/asserts at its scheduled cycles).",
+ "token_compose": {
+  "terms": [],
+  "note": "no term measured yet: no representative layer has run bit-exact on p4l RTL (blocked on die gaps G1/G2/G3 in slice_bench/gaps.json, compiler lowering gaps in compiler/summary.json). Grades stay at the priced p4l values."
+ }
 }
