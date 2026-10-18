@@ -1,0 +1,29 @@
+2026-10-18T00:16:51-07:00 start host=regular-crane tag=s0 mut=0
+2026-10-18T00:42:50-07:00 build s0 rc=0 bin=ok
+  s_g22: HC_ENG_DONE mode=2 npos=1 mixes=0 mixbad=0 outs=2 outbad=0 TB=8 last_mix_t=0 first_out_t=538 last_out_t=538 HC_MIX_CYCLES=530
+  s_g22: HC_ENG PASS
+  s_g22: RUN_RC=0
+  s_neg164: HC_ENG_FAULT t=2197 seq=0 ev=0 ps=0 qf=0000 core=1 mix=0 tbl=0 tail=0 tfl=0
+  s_neg164: RUN_RC=1
+  s_p1: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=0 TB=1944 last_mix_t=2441 first_out_t=2940 last_out_t=2940 HC_MIX_CYCLES=996
+  s_p1: HC_ENG PASS
+  s_p1: RUN_RC=0
+  s_mutdata: MIX_MISMATCH pos0 row5 got=3d47c219 exp=3d47c218
+  s_mutdata: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=1 outs=4 outbad=0 TB=1944 last_mix_t=2441 first_out_t=2940 last_out_t=2940 HC_MIX_CYCLES=996
+  s_mutdata: [6175000] %Fatal: tb_hbm_hc_eng4_static.sv:163: Assertion failed in tb_hbm_hc_eng4_static: HC_ENG FAIL
+  s_mutdata: RUN_RC=1
+  s_p2: HC_ENG_DONE mode=0 npos=2 mixes=48 mixbad=0 outs=8 outbad=0 TB=1944 last_mix_t=2691 first_out_t=2941 last_out_t=3190 HC_MIX_CYCLES=1246
+  s_p2: HC_ENG PASS
+  s_p2: RUN_RC=0
+  s_probe: PROBE raw t=2195 ss=1 pos=0 idx=0
+  s_probe: PROBE raw t=2205 ss=0 pos=0 idx=0
+  s_probe: PROBE raw t=2215 ss=0 pos=0 idx=1
+  s_probe: PROBE raw t=2225 ss=0 pos=0 idx=2
+  s_probe: PROBE raw t=2235 ss=0 pos=0 idx=3
+  s_probe: PROBE raw t=2245 ss=0 pos=0 idx=4
+  s_probe: PROBE raw t=2255 ss=0 pos=0 idx=5
+  s_probe: PROBE raw t=2265 ss=0 pos=0 idx=6
+  s_p8: HC_ENG_DONE mode=0 npos=8 mixes=192 mixbad=0 outs=32 outbad=0 TB=1944 last_mix_t=4191 first_out_t=2941 last_out_t=4690 HC_MIX_CYCLES=2746
+  s_p8: HC_ENG PASS
+  s_p8: RUN_RC=0
+2026-10-18T00:45:09-07:00 done s0

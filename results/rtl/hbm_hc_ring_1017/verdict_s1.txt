@@ -1,0 +1,11 @@
+2026-10-18T00:17:12-07:00 start host=regular-crane tag=s1 mut=1
+2026-10-18T00:43:10-07:00 build s1 rc=0 bin=ok
+  s_mut1_p1: MIX_MISMATCH pos0 row0 got=3dcc9a1b exp=3dd683ab
+  s_mut1_p1: MIX_MISMATCH pos0 row1 got=bdbcc015 exp=bdc4654d
+  s_mut1_p1: MIX_MISMATCH pos0 row2 got=3d48d6fb exp=3c7e523c
+  s_mut1_p1: MIX_MISMATCH pos0 row3 got=3ded8530 exp=3d8f6917
+  s_mut1_p1: MIX_MISMATCH pos0 row4 got=3c3d3f99 exp=bcb19ef8
+  s_mut1_p1: TAIL_MISMATCH q0 pos0 word0 got=3f4515bd exp=3f4535bb
+  s_mut1_p1: TAIL_MISMATCH q0 pos0 word1 got=3f686f05 exp=3f68635c
+  s_mut1_p1: TAIL_MISMATCH q0 pos0 word2 got=3f2946ac exp=3f282d86
+2026-10-18T00:44:33-07:00 done s1

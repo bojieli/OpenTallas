@@ -1,0 +1,11 @@
+2026-10-18T00:29:16-07:00 start host=regular-crane tag=s4 mut=4
+2026-10-18T00:58:23-07:00 build s4 rc=0 bin=ok
+  s_mut4_p1: MIX_MISMATCH pos0 row1 got=bdc4654f exp=bdc4654d
+  s_mut4_p1: MIX_MISMATCH pos0 row2 got=3c7e5248 exp=3c7e523c
+  s_mut4_p1: MIX_MISMATCH pos0 row5 got=3d47c21d exp=3d47c219
+  s_mut4_p1: MIX_MISMATCH pos0 row6 got=3d1761e6 exp=3d1761e7
+  s_mut4_p1: MIX_MISMATCH pos0 row9 got=bdeda207 exp=bdeda205
+  s_mut4_p1: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=13 outs=4 outbad=0 TB=1944 last_mix_t=2441 first_out_t=2940 last_out_t=2940 HC_MIX_CYCLES=996
+  s_mut4_p1: [6175000] %Fatal: tb_hbm_hc_eng4_static.sv:163: Assertion failed in tb_hbm_hc_eng4_static: HC_ENG FAIL
+  s_mut4_p1: RUN_RC=1
+2026-10-18T00:59:43-07:00 done s4
