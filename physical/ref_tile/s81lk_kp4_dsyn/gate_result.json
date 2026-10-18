@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "s81lk_kp4_dsyn",
- "verdict": "FAIL",
- "generated": "2026-10-17T19:13:31-0700",
- "host": "ot-agidock128",
+ "verdict": "WARN",
+ "generated": "2026-10-17T19:31:28-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "ee3dfe951784a75abf10398f0c0e062942d2f2e3",
+  "start_commit": "99ef9ab4b6276e563c61b2aa1878ce0536d659ef",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,7 +21,7 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "09661162cdb3afa247e9c159a6d3753f648ae63b885d0be79c54d4add779aec2",
+  "archive_sha256": "2063b22fccbc4b84575eddcd43ac2050b07f30023bd5b9b462732849ddf40278",
   "manifest_sha256": "1e2c08f0baeaddeff299027ddbbaf52fc8cafcb25c225c99adbd564c44ec0a00",
   "files": [
    {
@@ -161778,7 +161778,7 @@
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "7f1a597f0702a51e34adc1368ce055a1b7901459",
+   "origin_main": "36073dd614a0be62b4178753040c4417522d1103",
    "content_sha256": "46212c4a006d162487f2749d8e6001edbd7428d03a257e125b6e20e6b3202016",
    "files": [
     {
@@ -162317,16 +162317,16 @@
    },
    "digest": "2534d33c42ff33c1cbacdab511d86f0c59c0794a36ec834b4310c5f8125892e5"
   },
-  "captured": "2026-10-17T18:33:46-0700",
+  "captured": "2026-10-17T19:16:56-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/s81lk_kp4_dsyn/signoff_ffrepair.sdc"
   },
-  "remote_script_sha256": "cee4078a0ad5bf49744a1d9b838309d4fe93aee477249ef8eb04f32548f42935",
+  "remote_script_sha256": "9f9cb725804dc78b88343346e77e6d4746c9697c25ae54f175a343d174fd9ee7",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81lk_kp4_dsyn-20261017-183117",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81lk_kp4_dsyn-20261017-191415",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -162384,12 +162384,6 @@
    "check": "textbook.util_channel",
    "message": "utilisation 35.0% outside 45%-65% (std 15695 + macro 0 um2 in 44808 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
-  },
-  {
-   "severity": "FAIL",
-   "check": "fill",
-   "message": "fill 34% = (hard macros 0.0 + synthesized std cells 15695.2) / outline 46656.0 um2; pin demand per face: S 35 pins over 56.2/216.0 um (26%), N 544 pins over 114.3/216.0 um (53%), W 585 pins over 205.5/216.0 um (95%), E 360 pins over 186.0/216.0 um (86%) (< 35%)",
-   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
   }
  ],
  "port_latency": {
