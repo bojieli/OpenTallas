@@ -35,6 +35,13 @@ module ot_hbm_hc_qeng_static #(
     parameter integer DRLY = 1,                  // relay registers centre <-> bank 0 / bank 7
     parameter integer TLA  = 7,                  // tree adder stages (1.2 GHz pipelined binary32 add)
     parameter integer XW_BEATS = 4,
+    // HBM-RTL5 10-18 (coordinator 0fi, d4g HC U-ring): XRLY die relay stages on the bank 7 -> bank 0 chain-exit hop
+    // (3x3 U with the hub on the mouth cell: b7 is not edge-adjacent to b0).  Default 0 = unchanged.  The stages come
+    // out of the DRLY exit budget (bank 0 keeps DRLY - XRLY >= 1 registers), so the centre / root timing is that of
+    // DRLY: the d4g U uses DRLY 2, XRLY 1 (hub DRLY 2, root QDRLY 2, bank 0 tile DRLY 1 unchanged).  One stage = the
+    // die relay classes side by side, 1136 + 624 + 304 = 2,064 b (2,049 used: {lane fault, 64 chunk sums}; 15 spare
+    // bits tied low), ot_hbm_rly = the hbfd_rly_{1136,624,304}_<flow> masters (reset: rs, released 3 edges later).
+    parameter integer XRLY = 0,
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -62,6 +69,7 @@ module ot_hbm_hc_qeng_static #(
 );
     localparam integer XB = 8192 / XW_BEATS;
     initial if (XW_BEATS != 4) $fatal(1, "ring form: XW_BEATS must be 4 (2,048-b beats, 256-b bank slices)");
+    initial if (XRLY < 0 || DRLY - XRLY < 1) $fatal(1, "XRLY: 0 <= XRLY <= DRLY - 1 (bank 0 registers the exit)");
     // ------------------------------------------------------------------ centre
     wire [7:0] rb, wf; wire [12:0] wc_w, wc_n, wc_e, wc_s; wire [2048:0] s_c;
     wire bd_v, bd_ss; wire [6:0] bd_nv; wire [9:0] bd_wa, bd_xa;
@@ -87,10 +95,20 @@ module ot_hbm_hc_qeng_static #(
         .o_v(cv[(k)+1]), .o_ss(css[(k)+1]), .o_nv(cnv[((k)+1)*7 +: 7]), .o_wa(cwa[((k)+1)*10 +: 10]), .o_xa(cxa[((k)+1)*10 +: 10]), \
         .sum_out(csum[((k)+1)*2048 +: 2048]), .f_out(cf[(k)+1])
     assign cv[0] = bd_v; assign css[0] = bd_ss; assign cnv[0 +: 7] = bd_nv; assign cwa[0 +: 10] = bd_wa; assign cxa[0 +: 10] = bd_xa;
-    ot_hbm_hc_bankq0_static #(.MUT(0), .DRLY(DRLY)) u_b0 (.clk(clk), .rst_n(rb[0]), `OT_HCQ_CHAIN(0),
+    // bank 7 chain exit -> [XRLY die relay stages] -> bank 0 exit relay
+    wire [2048:0] s_x [0:XRLY];
+    assign s_x[0] = {cf[8], csum[8*2048 +: 2048]};
+    for (genvar r = 0; r < XRLY; r = r + 1) begin : g_xr
+        wire [2063:0] ri = {15'd0, s_x[r]}, ro;
+        ot_hbm_rly #(.W(1136)) u_r0 (.ck(clk), .rs(rb[0]), .i(ri[0    +: 1136]), .o(ro[0    +: 1136]));
+        ot_hbm_rly #(.W(624))  u_r1 (.ck(clk), .rs(rb[0]), .i(ri[1136 +: 624]),  .o(ro[1136 +: 624]));
+        ot_hbm_rly #(.W(304))  u_r2 (.ck(clk), .rs(rb[0]), .i(ri[1760 +: 304]),  .o(ro[1760 +: 304]));
+        assign s_x[r+1] = ro[2048:0];
+    end
+    ot_hbm_hc_bankq0_static #(.MUT(0), .DRLY(DRLY - XRLY)) u_b0 (.clk(clk), .rst_n(rb[0]), `OT_HCQ_CHAIN(0),
         .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[0 +: 256]),
         .wv(wc_w[12]), .xv(wc_w[11]), .j(wc_w[10]), .wa(wc_w[9:0]), .wfault(wf[0]),
-        .s_i({cf[8], csum[8*2048 +: 2048]}), .s_o(s_c));
+        .s_i(s_x[XRLY]), .s_o(s_c));
     for (genvar e = 0; e < 2; e = e + 1) begin : g_ft          // e 0: bank 2 (N, wc_n), e 1: bank 6 (S, wc_s)
         localparam integer K0 = 2 + 4 * e;
         wire [12:0] wc = (e == 0) ? wc_n : wc_s;
