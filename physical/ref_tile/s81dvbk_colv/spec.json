@@ -135,7 +135,7 @@
   "branch": "claude/pl-bk-1018",
   "tag": "pl1",
   "purpose": "S81-DV dsdv_bk_col vertical-cut cluster (PL-BK, PARENTS-LANDED 10-18): single-region cluster of closed leaves.",
-  "benched_by": "run_bk_bench.sh col (exact PASS; mutant 3 FAIL witness bk_units_bk3/col_mut3.txt): the cluster's own RTL",
+  "bench_note": "run_bk_bench.sh col (exact PASS; mutant 3 FAIL witness bk_units_bk3/col_mut3.txt): the cluster's own RTL",
   "views_to": "physical/ref_tile/s81dvbk_colv/views",
   "record_to": "results/rtl/ref_tile/s81dvbk_colv",
   "benches": [
