@@ -38,7 +38,7 @@ set i [ot_ref_pick $ot_ref_by ot_s81_kp4_ddly {*u_dly}]
 $i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_s81_kp4_ddly at 43.2 302.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_s81_kp4_dout {*u_out}]
-$i setOrient R0; $i setLocation [expr {round(302.4 * $dbu)}] [expr {round(259.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_s81_kp4_dout at 302.4 259.2 R0"
+$i setOrient R0; $i setLocation [expr {round(345.6 * $dbu)}] [expr {round(259.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_s81_kp4_dout at 345.6 259.2 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 4} { error "ref_tile place: expected 4 macros, netlist has $nb" }
