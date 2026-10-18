@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits   699 GB (avail 638, growth 149, headroom 0, waiters 0/0 GB) load 76/128 running 35 disk 573 GB 
+ot-run: ot-pve1        admits     4 GB (avail 76, growth 74, headroom 0, waiters 0/0 GB) load 205/28 running 27 disk 1271 GB 
+ot-run: ot-agidock128  admits    76 GB (avail 73, growth 20, headroom 0, waiters 0/0 GB) load 21/64 running 10 disk 265 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-232833-1792311862 after 1 s
+OUT MISMATCH leaf 0 half row 0 got c080c047bfca3f5fc070bf55c01c4063bf41bf24bdedbc8240444008c023bdbf want c075c03abf9a3f81c07cbf83c034405bbf40bf22bdd3bc3640434008c024bdc8
+OUT MISMATCH leaf 0 half row 1 got c036401140593fdebfafbf2940353e583defbfbac01e3fec4040c00c3fcebeb3 want c028402240503fe0bfcbbf6b403e3e443dffbfb9c01e3fec403fc00c3fcfbeb4
+OUT MISMATCH leaf 0 half row 2 got bea7400ebdc13eb3bfd540123f203f4240753fd1bfd240d73f95402bbfd63fdf want bed7400dbd4e3edcbfc940133f153f2d40753fd1bfd240d73f96402bbfd63fde
+OUT MISMATCH leaf 0 half row 3 got 3fcb3edfbfcfbf033f4d402a3f174003c06a402540013f80bf75bf983f8b3ed5 want 3fcd3edfbfd8beac3f4b402a3f293ff1c06a402540003f81bf75bf983f8c3ed2
+OUT MISMATCH leaf 0 half row 4 got 3f89c068c028bf34bf47bf9f404ebcc83ec64054bf133f8f406ebfcc3ebf3fbb want 3f9dc06bc02ebf39bf70bf994054bb673ec84054bf143f8f406dbfcc3ec13fbb
+OUT MISMATCH leaf 0 half row 5 got c0cebfa1bf0f402240653fb44003bfc14001c0503e913f603fd1bff9bf8c3d3f want c0cfbf86bf06401b40673f994001bfb44001c04f3e913f5f3fd1bffabf8c3d4d
+OUT MISMATCH leaf 0 half row 6 got 3f83403140123e783fadbfb83f8ebfee3ff3beb23e0ac03dc040400e3f92401b want 3f89402a40083e0f3fa7bfaa3fa2bfe13ff3beb43e04c03dc040400f3f92401b
+SLICEENG vs_mut=7 sums=4 gates=4 half_rows=80 mismatches=80 fault=0 reduce_cmd_to_last_gate=700 add_cmd_to_last_write=81
+FAIL
+FAIL slice_eng VS_MUT=7
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-232833-1792311862): exit 1

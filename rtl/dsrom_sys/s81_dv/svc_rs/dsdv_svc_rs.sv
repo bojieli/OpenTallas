@@ -49,11 +49,12 @@ module dsdv_svc_rs_c #(
     input  wire [291:0]      hw,
     output reg  [8:0]        hc,
     output wire              fault,
+    output reg  [1:0]        st_rg,        // region status {fault, live} of the half's controllers (ENTRY only)
     // stream tree faces {W, S, E, N} = [3:0]
     input  wire [4*805-1:0]  dn_i,
     output wire [4*805-1:0]  dn_o,
-    input  wire [4*14-1:0]   up_i,
-    output wire [4*14-1:0]   up_o,
+    input  wire [4*16-1:0]   up_i,         // {rg fault, rg live, done, fault, cr 6, ack 6} a face
+    output wire [4*16-1:0]   up_o,
     // P.V return tree faces {W, S, E, N}: {d 513, v}
     input  wire [4*514-1:0]  ri,
     output wire [4*514-1:0]  ro,
@@ -88,7 +89,7 @@ module dsdv_svc_rs_c #(
 `endif
 );
 `include "dsdv_svc_rs_roles.svh"
-    localparam integer DW = 805, UW = 14;
+    localparam integer DW = 805, UW = 16;
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
@@ -277,31 +278,11 @@ module dsdv_svc_rs_c #(
             hs_f <= lf | hs_hf;
         end
 
-    // ------------------------------------------------------------------ up tree: {done, fault, cr 6, ack 6}
-    wire [UW-1:0] ufi [0:3];
-    generate for (f = 0; f < 4; f = f + 1) begin : g_ui
-        reg [UW-1:0] p0, p1;
-        always @(posedge ck or negedge rn) if (!rn) begin p0 <= '0; p1 <= '0; end
-            else begin p0 <= up_i[UW*f +: UW]; p1 <= p0; end
-        assign ufi[f] = p1;
-    end endgenerate
-    reg [UW-1:0] uc;
-    always @(posedge ck or negedge rn)
-        if (!rn) uc <= '0;
-        else begin
-            reg dn_all, fl; reg [5:0] c6, a6;
-            dn_all = done; fl = hs_f; c6 = 6'(hcr); a6 = 6'(hack);
-            for (int i = 0; i < 4; i++) if (chm[i]) begin
-                dn_all = dn_all & ufi[i][13]; fl = fl | ufi[i][12]; c6 = c6 + ufi[i][11:6]; a6 = a6 + ufi[i][5:0];
-            end
-            uc <= {dn_all, fl, c6, a6};
-        end
-    generate for (f = 0; f < 4; f = f + 1) begin : g_uo
-        reg [UW-1:0] o0, o1;
-        always @(posedge ck or negedge rn) if (!rn) begin o0 <= '0; o1 <= '0; end
-            else begin o0 <= (par == 3'(f + 1)) ? uc : '0; o1 <= o0; end
-        assign up_o[UW*f +: UW] = o1;
-    end endgenerate
+    // ------------------------------------------------------------------ up tree: {rg fault, rg live, done, fault, cr 6, ack 6}
+    // (dsdv_svc_rs_up below; RTL-BUILD-S81 10-18: + the region status {fault, live} of the half's ctrl_rg2 controllers)
+    wire [UW-1:0] uc;
+    dsdv_svc_rs_up #(.UW(UW)) u_up (.ck(ck), .rn(rn), .chm(chm), .par(par), .done(done), .fl(hs_f), .hcr(hcr), .hack(hack),
+        .hs_s(hs1), .up_i(up_i), .up_o(up_o), .uc(uc));
 
     // ------------------------------------------------------------------ entry: job done (END), host credits / acks, fault
     generate if (ENTRY) begin : g_rt
@@ -318,8 +299,15 @@ module dsdv_svc_rs_c #(
             end
         assign jd = {jdc[1] | flt, jdc[0]};
         assign fault = flt;
+        // region status (residual row 6, the producer of dsdv_seq_host st_rg): the up-tree fold of every controller's
+        // hs = {fault, live} in this half: fault = OR, live = AND (all controllers up); registered at the entry
+`ifdef RS_MUT_ST
+        always @(posedge ck or negedge rn) if (!rn) st_rg <= 2'b00; else st_rg <= {uc[15], hs1[0]};   // NEG CTRL: the entry's own live, children ignored
+`else
+        always @(posedge ck or negedge rn) if (!rn) st_rg <= 2'b00; else st_rg <= uc[15:14];
+`endif
     end else begin : g_nrt
-        always @(posedge ck) begin rad <= '0; hc <= '0; end
+        always @(posedge ck) begin rad <= '0; hc <= '0; st_rg <= 2'b00; end
         assign jd = 2'b00; assign fault = 1'b0;
     end endgenerate
 endmodule
@@ -329,8 +317,8 @@ module dsdv_svc_rs_entry #(parameter integer MUT = 0, parameter integer DIE_ID =
                            parameter bit SRAM_MACRO = 0) (
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [32:0] j, output wire [1:0] jd, input wire [514:0] q, input wire [291:0] hw, output wire [8:0] hc,
-    output wire fault,
-    input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*14-1:0] up_i, output wire [4*14-1:0] up_o,
+    output wire fault, output wire [1:0] st_rg,
+    input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
     input  wire [3:0] gi_v, input wire [4*2132-1:0] gi_d, output wire [3:0] go_v, output wire [4*2132-1:0] go_d,
     input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,
@@ -344,7 +332,7 @@ module dsdv_svc_rs_entry #(parameter integer MUT = 0, parameter integer DIE_ID =
 );
     /*verilator hier_block*/
     dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO)) u (.ck(ck), .rst(rst),
-        .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .dn_i(dn_i), .dn_o(dn_o), .up_i(up_i),
+        .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg), .dn_i(dn_i), .dn_o(dn_o), .up_i(up_i),
         .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d),
         .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat),
         .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st)
@@ -358,7 +346,7 @@ endmodule
 module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
                      parameter bit SRAM_MACRO = 0) (
     input  wire ck, rst, input wire [3:0] sid,
-    input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*14-1:0] up_i, output wire [4*14-1:0] up_o,
+    input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
     input  wire [3:0] gi_v, input wire [4*2132-1:0] gi_d, output wire [3:0] go_v, output wire [4*2132-1:0] go_d,
     input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,
@@ -370,9 +358,9 @@ module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, pa
 `endif
 );
     /*verilator hier_block*/
-    wire [1:0] jd; wire [8:0] hc; wire fault; wire pv_v; wire [512:0] pv_d;
+    wire [1:0] jd; wire [8:0] hc; wire fault; wire pv_v; wire [512:0] pv_d; wire [1:0] st_rg;
     dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO)) u (.ck(ck), .rst(rst),
-        .sid(sid), .j(33'd0), .jd(jd), .q(515'd0), .hw(292'd0), .hc(hc), .fault(fault), .dn_i(dn_i), .dn_o(dn_o),
+        .sid(sid), .j(33'd0), .jd(jd), .q(515'd0), .hw(292'd0), .hc(hc), .fault(fault), .st_rg(st_rg), .dn_i(dn_i), .dn_o(dn_o),
         .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v),
         .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag),
         .r_beat(r_beat), .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st)
@@ -380,4 +368,52 @@ module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, pa
         , .obs(obs)
 `endif
         );
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// dsdv_svc_rs_up (RTL-BUILD-S81 10-18, factored out of dsdv_svc_rs_c unchanged for bits [13:0]): the up tree node of one
+// service slice.  Faces {W, S, E, N} in: pin flop + relay; the fold over the child faces (role ROM chm): done = AND,
+// fault = OR, host credits / acks = sum; out on the parent face: register + pin flop (5 cycles a hop with the parent's
+// in flops).  Bits [15:14] = the region status of the controllers below and at this slice: fault = OR of hs fault,
+// live = AND of hs live (hs_s = this slice's synchronised ctrl_rg2 hs = {fault, live}).  No flow control.
+// ---------------------------------------------------------------------------------------------------------------------
+module dsdv_svc_rs_up #(parameter integer UW = 16, parameter integer UPMUT = 0) (   // UPMUT: bench negative control only
+    input  wire            ck,
+    input  wire            rn,
+    input  wire [3:0]      chm,
+    input  wire [2:0]      par,
+    input  wire            done,
+    input  wire            fl,
+    input  wire [1:0]      hcr,
+    input  wire [1:0]      hack,
+    input  wire [1:0]      hs_s,
+    input  wire [4*UW-1:0] up_i,
+    output wire [4*UW-1:0] up_o,
+    output reg  [UW-1:0]   uc
+);
+    wire [UW-1:0] ufi [0:3];
+    genvar f;
+    generate for (f = 0; f < 4; f = f + 1) begin : g_ui
+        reg [UW-1:0] p0, p1;
+        always @(posedge ck or negedge rn) if (!rn) begin p0 <= '0; p1 <= '0; end
+            else begin p0 <= up_i[UW*f +: UW]; p1 <= p0; end
+        assign ufi[f] = p1;
+    end endgenerate
+    always @(posedge ck or negedge rn)
+        if (!rn) uc <= '0;
+        else begin
+            reg dn_all, fl_, rgf, rgl; reg [5:0] c6, a6;
+            dn_all = done; fl_ = fl; c6 = 6'(hcr); a6 = 6'(hack); rgf = hs_s[1]; rgl = hs_s[0];
+            for (int i = 0; i < 4; i++) if (chm[i]) begin
+                dn_all = dn_all & ufi[i][13]; fl_ = fl_ | ufi[i][12]; c6 = c6 + ufi[i][11:6]; a6 = a6 + ufi[i][5:0];
+                rgf = rgf | ufi[i][15]; rgl = (UPMUT == 1) ? (rgl | ufi[i][14]) : (rgl & ufi[i][14]);
+            end
+            uc <= {rgf, rgl, dn_all, fl_, c6, a6};
+        end
+    generate for (f = 0; f < 4; f = f + 1) begin : g_uo
+        reg [UW-1:0] o0, o1;
+        always @(posedge ck or negedge rn) if (!rn) begin o0 <= '0; o1 <= '0; end
+            else begin o0 <= (par == 3'(f + 1)) ? uc : '0; o1 <= o0; end
+        assign up_o[UW*f +: UW] = o1;
+    end endgenerate
 endmodule

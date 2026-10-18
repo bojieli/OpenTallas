@@ -106,7 +106,7 @@ module tb_dsdv_svc_rs;
     end
 
     // ---------------- 16 slices ----------------
-    localparam integer W = 2132, SW = 1076, DW = 805, UW = 14;
+    localparam integer W = 2132, SW = 1076, DW = 805, UW = 16;
     wire [3:0] gi_v [0:15], go_v [0:15], si_v [0:15], so_v [0:15];
     wire [4*W-1:0] gi_d [0:15], go_d [0:15]; wire [4*SW-1:0] si_d [0:15], so_d [0:15];
     wire [4*DW-1:0] dn_i [0:15], dn_o [0:15]; wire [4*UW-1:0] up_i [0:15], up_o [0:15];
@@ -117,6 +117,10 @@ module tb_dsdv_svc_rs;
     reg [32:0] jcmd = 0; reg q_v = 0; reg [511:0] q_d = 0;
     wire [1:0] jdx [0:1]; reg [291:0] hwx [0:1]; wire [8:0] hcx [0:1]; wire [1:0] rfx;   // [0] W entry 5, [1] E entry 11
     wire [4*514-1:0] ri [0:15], ro [0:15];
+    // RTL-BUILD-S81 10-18: region status st_rg at the two entries; +hsdrop=<sid> holds one slice's controller hs at
+    // {fault 0, live 0} from reset (never rose: no hs fault) -> its half must report live 0, the other half live 1
+    wire [1:0] stx [0:1]; reg [1:0] hsv [0:15]; integer hsdrop;
+    initial begin hsdrop = -1; void'($value$plusargs("hsdrop=%d", hsdrop)); for (int k = 0; k < 16; k++) hsv[k] = (k == hsdrop) ? 2'b00 : 2'b01; end
     wire [2678:0] obs [0:15];
     function automatic bit is_entry(input integer sd); is_entry = sd == RS_ENTRY_W || sd == RS_ENTRY_E; endfunction
     function automatic integer nb(input integer sd, input integer fc);
@@ -148,12 +152,12 @@ module tb_dsdv_svc_rs;
         if (gs == RS_ENTRY_W || gs == RS_ENTRY_E) begin : g_r
             localparam integer HX = (gs == RS_ENTRY_E) ? 1 : 0;
             dsdv_svc_rs_entry #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST)) u (.ck(ck), .rst(rst), .sid(4'(gs)),
-                .j(jcmd), .jd(jdx[HX]), .q({1'b0, 1'b1, q_d, q_v}), .hw(hwx[HX]), .hc(hcx[HX]), .fault(rfx[HX]),
+                .j(jcmd), .jd(jdx[HX]), .q({1'b0, 1'b1, q_d, q_v}), .hw(hwx[HX]), .hc(hcx[HX]), .fault(rfx[HX]), .st_rg(stx[HX]),
                 .dn_i(dn_i[gs]), .dn_o(dn_o[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]), .ri(ri[gs]), .ro(ro[gs]),
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
                 .si_v(si_v[gs]), .si_d(si_d[gs]), .so_v(so_v[gs]), .so_d(so_d[gs]),
                 .rq(rq[gs]), .rk(rk[gs]), .wd(wd[gs]), .rv(rv[gs]), .r_data(r_data[gs]), .r_tag(r_tag[gs]),
-                .r_beat(r_beat[gs]), .hs(2'b01), .pv_v(pv_v[gs]), .pv_d(pv_d[gs]),
+                .r_beat(r_beat[gs]), .hs(hsv[gs]), .pv_v(pv_v[gs]), .pv_d(pv_d[gs]),
                 .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]), .obs(obs[gs]));
         end else begin : g_n
             dsdv_svc_rs #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST)) u (.ck(ck), .rst(rst), .sid(4'(gs)),
@@ -161,7 +165,7 @@ module tb_dsdv_svc_rs;
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
                 .si_v(si_v[gs]), .si_d(si_d[gs]), .so_v(so_v[gs]), .so_d(so_d[gs]),
                 .rq(rq[gs]), .rk(rk[gs]), .wd(wd[gs]), .rv(rv[gs]), .r_data(r_data[gs]), .r_tag(r_tag[gs]),
-                .r_beat(r_beat[gs]), .hs(2'b01),
+                .r_beat(r_beat[gs]), .hs(hsv[gs]),
                 .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]), .obs(obs[gs]));
             assign pv_v[gs] = 1'b0; assign pv_d[gs] = '0;
         end
@@ -426,7 +430,7 @@ module tb_dsdv_svc_rs;
             end
         end
         if ((n_done_x[0] > 0 && n_done_x[1] > 0 && cyc > end_cyc + 300) || cyc >= MAXCYC) begin
-            integer bad_se, bad_pv, bad_w, nown; reg [15:0] fl; reg [31:0] fc0;
+            integer bad_se, bad_pv, bad_w, nown, st_bad; reg [15:0] fl; reg [31:0] fc0;
             bad_se = 0; bad_pv = 0; bad_w = 0; nown = 0; fl = 0; fc0 = 0;
             for (s = 0; s < 16; s = s + 1) begin
                 if (se_rows[s] != (T + 15) / 16) bad_se = bad_se + 1;
@@ -435,6 +439,8 @@ module tb_dsdv_svc_rs;
                 fl[s] = sflt[s]; if (sflt[s] && fc0 == 0) fc0 = afc[s];
             end
             host_check();
+            st_bad = (stx[0] !== {1'b0, !(hsdrop >= 0 && hsdrop < 8)}) + (stx[1] !== {1'b0, !(hsdrop >= 8 && hsdrop < 16)});
+            $display("SVCRS_ST hsdrop=%0d st_rg W=%b E=%b bad=%0d", hsdrop, stx[0], stx[1], st_bad);
             bad_pv = (pv_n != 160) + (pv_gap != 0) + (pv_other != 0);
             $display("SVCRS_HOST sent=%0d acks=%0d credits=%0d/%0d errors=%0d", h_sent, h_ack, h_cred[0], h_cred[1], h_err);
             $display("SVCRS_SCHED T=%0d pvs=%0d po=%0d pvo=%0d go=%0d last_fold_score=%0d pv_sent=%0d pv_early=%0d pv_words=%0d pv_first=%0d pv_last=%0d pv_gaps=%0d pv_other_entry=%0d done_W=%0d done_E=%0d",
@@ -447,7 +453,7 @@ module tb_dsdv_svc_rs;
                 (sc_err == 0 && ord_err == 0 && rt_beats == (T + 3) / 4 && sc_chk > 0 && se_err == 0 && se_chk > 0 &&
                  bad_se == 0 && bad_w == 0 && pv_err == 0 && pv_chk == 4 * 8 * 4 * 16 && bad_pv == 0 &&
                  n_done_x[0] == 1 && n_done_x[1] == 1 && pv_early == 0 &&
-                 !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 && h_err == 0 && cred_err == 0 && cyc < MAXCYC) ? "PASS" : "FAIL");
+                 !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 && h_err == 0 && cred_err == 0 && st_bad == 0 && cyc < MAXCYC) ? "PASS" : "FAIL");
             $finish;
         end
     end

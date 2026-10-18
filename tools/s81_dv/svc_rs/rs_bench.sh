@@ -3,6 +3,7 @@
 # of tools/v41_ckv_sel_attn_vectors.py).
 # Usage (repo root): DIE=0 ST=0 tools/s81_dv/svc_rs/rs_bench.sh OUTDIR VECDIR VARIANT CASE ...
 #   VARIANT: base | mut1 (window scale byte) | mut2 (ROWS half) | mut3 (q chunk) | mutgd (one slice's GO delay + 1)
+#            | mutst (entry st_rg = its own controller live, children ignored; run with HSDROP=<sid>)
 #            | mutro (the chain roots 07 / 09 flip a bit on their P.V return lane ro -> entry ri: tr_07_05 / tr_09_11)
 #   ENGDEF (default SVCQ_ENG_FG3: the buildable engine latencies, same values), SEEDS (default "1 2")
 set -euo pipefail
@@ -12,7 +13,7 @@ SEEDS=${SEEDS:-"1 2"}; DIE=${DIE:-0}; ST=${ST:-0}; ENGDEF=${ENGDEF-SVCQ_ENG_FG3}
 source tools/s81_dv/svc_rs/rs_files.sh
 DEF=()
 case "$V" in
-  base) ;; mut1) DEF=(-DMUT=1);; mut2) DEF=(-DMUT=2);; mut3) DEF=(-DMUT=3);; mutgd) DEF=(-DRS_MUT_GD);; mutro) DEF=(-DRS_MUT_RO);;
+  base) ;; mut1) DEF=(-DMUT=1);; mut2) DEF=(-DMUT=2);; mut3) DEF=(-DMUT=3);; mutgd) DEF=(-DRS_MUT_GD);; mutro) DEF=(-DRS_MUT_RO);; mutst) DEF=(-DRS_MUT_ST);;
   *) echo "variant?" >&2; exit 2;;
 esac
 B=$O/${V}_d${DIE}s${ST}
@@ -28,7 +29,7 @@ if [ ! -x "$B/obj/Vtb_dsdv_svc_rs" ]; then
 fi
 for C in "$@"; do
   for s in $SEEDS; do
-    "$B/obj/Vtb_dsdv_svc_rs" +dir="$VEC/$C" +seed=$s > "$B/run_${C}_s$s.log" 2>&1 || true
-    echo "$V d${DIE}s${ST} $C s$s: $(grep -h '^SVCRS ' "$B/run_${C}_s$s.log" | tail -1)"
+    "$B/obj/Vtb_dsdv_svc_rs" +dir="$VEC/$C" +seed=$s ${HSDROP:++hsdrop=$HSDROP} > "$B/run_${C}_s$s.log" 2>&1 || true
+    echo "$V d${DIE}s${ST} $C s$s: $(grep -h '^SVCRS_ST ' "$B/run_${C}_s$s.log" | tail -1) | $(grep -h '^SVCRS ' "$B/run_${C}_s$s.log" | tail -1)"
   done
 done
