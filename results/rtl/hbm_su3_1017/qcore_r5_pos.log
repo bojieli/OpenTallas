@@ -1,1 +1,2 @@
-QCORE_RG PASS checks=9104 scalars=310 valid_reads=6111 fault_lags=1 fault_edges=9096
+QCORE_RG PASS checks=9104 scalars=310 valid_reads=6111 fault_lags=4 fault_edges=9096
+rtl/test/hbm_qcore_physical_1016/tb_qcore_rg_lockstep.sv:66: $finish called at 91280000 (1ps)

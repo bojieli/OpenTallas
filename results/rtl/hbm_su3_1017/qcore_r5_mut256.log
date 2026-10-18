@@ -1,0 +1,7 @@
+RF WORD MISMATCH t=226000 class 3 xxxxxxxx/1c6de638
+RF WORD MISMATCH t=256000 class 3 1c6de638/xxxxxxxx
+RF WORD MISMATCH t=346000 class 1 xxxxxxxx/1cd6c239
+RF WORD MISMATCH t=376000 class 0 xxxxxxxx/9691a32d
+RF WORD MISMATCH t=376000 class 2 xxxxxxxx/24d83a49
+QCORE_RG FAIL errors=12444 checks=9104 scalars=310
+rtl/test/hbm_qcore_physical_1016/tb_qcore_rg_lockstep.sv:66: $finish called at 91280000 (1ps)
