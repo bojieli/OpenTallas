@@ -88,7 +88,7 @@ class HelperOverlay(unittest.TestCase):
         run = Path(self.tmp.name) / 'run'
         CL.ship_helpers('local', str(run), job)
         before = (run / 'cl/orfs_hold_mm.tcl').read_bytes()
-        self.commit_helper(b'# helper changed after gate and first route ship\n')
+        self.commit_helper(b'set ot_hold_margin 0.05 ;# helper changed after gate and first route ship\n')
         self.assertFalse(SB.validate(binding, self.root, self.daemon, self.tip)[0])
         mtime = (run / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns
         CL.ship_helpers('local', str(run), job)
@@ -255,13 +255,50 @@ class HelperOverlay(unittest.TestCase):
     def test_new_job_still_resolves_current_helpers_and_old_uninstalled_plan_refuses(self):
         _, binding = self.gate()
         self.commit_helper(b'# new current helper\n')
-        job = {'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}
-        with self.assertRaisesRegex(ValueError, 'effective route helper drift'):
+        job = {'name': 'u', 'events': [], 'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}
+        with patch.object(CL, 'HELPER_STORE', Path(self.tmp.name)/'store'):          # AUTO FROZEN-REPLAY of the gate's set
             CL.ship_helpers('local', str(Path(self.tmp.name)/'uninstalled'), job)
+        self.assertEqual((Path(self.tmp.name)/'uninstalled/cl/orfs_hold_mm.tcl').read_bytes(), self.new)
+        self.assertTrue(job['helper_overlay_replays'])
         fresh = {'freeze_helper_overlay': True}
         run = Path(self.tmp.name)/'fresh'
         CL.ship_helpers('local', str(run), fresh)
         self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(), b'# new current helper\n')
+
+    def test_lint_only_drift_ships_frozen_bytes(self):
+        _, binding = self.gate()
+        frozen_plan = binding['route_overlay_plan']
+        self.commit_helper(b'# lint constants changed after the gate\n')
+        job = {'name': 'lint-t', 'events': [], 'freeze_helper_overlay': True, 'route_overlay_plan': frozen_plan}
+        run = Path(self.tmp.name)/'lintrun'
+        with patch.object(HO, 'LINT_ONLY', (self.rel,)), patch.object(CL, 'HELPER_STORE', Path(self.tmp.name)/'store'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(), self.new)            # the frozen bytes, not main's
+        self.assertEqual(job['route_overlay_plan']['content_sha256'], frozen_plan['content_sha256'])
+        self.assertEqual(job['helper_overlay_sanctioned'][0]['kind'], 'lint_frozen')
+        self.assertEqual(HO.verify_installed_plan(run/'cl', job['route_overlay_plan'])['status'], 'verified_original')
+
+    def test_frozen_replay_ships_gate_bytes_after_any_main_drift(self):
+        _, binding = self.gate()
+        frozen_plan = binding['route_overlay_plan']
+        self.commit_helper(b'# behaviour change after the gate\n')
+        job = {'name': 'replay-t', 'events': [], 'freeze_helper_overlay': True, 'route_overlay_plan': frozen_plan}
+        job['replay_frozen_helpers'] = {'at': 'now'}
+        run = Path(self.tmp.name)/'r1'
+        with patch.object(CL, 'HELPER_STORE', Path(self.tmp.name)/'store'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(), self.new)
+        self.assertEqual(HO.verify_installed_plan(run/'cl', frozen_plan)['status'], 'verified_original')
+
+    def test_lint_only_foreign_blob_still_refuses(self):
+        _, binding = self.gate()
+        self.commit_helper(b'# later main\n')
+        (self.daemon/self.rel).write_bytes(b'# daemon-only edit\n')
+        job = {'name': 'l2', 'events': [], 'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}
+        with patch.object(HO, 'LINT_ONLY', (self.rel,)), patch.object(CL, 'HELPER_STORE', Path(self.tmp.name)/'store'):
+            CL.ship_helpers('local', str(Path(self.tmp.name)/'lint2'), job)          # not lint-sanctioned: full replay
+        self.assertEqual((Path(self.tmp.name)/'lint2/cl/orfs_hold_mm.tcl').read_bytes(), self.new)
+        self.assertTrue(job['helper_overlay_replays'])
 
     def test_negative_metrics_are_still_rejected_after_honest_recovery(self):
         job, run = self.installed_job()
@@ -294,7 +331,7 @@ class HelperOverlay(unittest.TestCase):
     def test_explicit_gate_recovery_preserves_old_identity_but_new_submission_stays_current(self):
         staged,binding = self.recovered_gate()
         before = binding['identity'],binding['start_commit'],binding['commit'],binding['manifest_sha256']
-        self.commit_helper(b'# later effective main change\n')
+        self.commit_helper(b'set ot_hold_margin 0.06 ;# later effective main change\n')
         self.assertFalse(SB.validate(binding,self.root,self.daemon,self.tip)[0])
         self.assertTrue(SB.validate(binding,self.root,self.daemon,self.tip,frozen_recovery=True)[0])
         self.assertEqual(before,(binding['identity'],binding['start_commit'],binding['commit'],binding['manifest_sha256']))
@@ -395,3 +432,12 @@ class HelperOverlay(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class FrozenReplayUnrecoverable(unittest.TestCase):
+    def test_unrecoverable_frozen_set_still_refuses(self):
+        frozen = {'schema': HO.SCHEMA, 'origin_main': '0'*40, 'files': [{'path': 'tools/x.tcl', 'sha256': '1'*64,
+                  'git_blob': '2'*40, 'mode': 420, 'resolution': 'same'}]}
+        frozen['content_sha256'] = HO.digest(frozen['files'])
+        with self.assertRaises(ValueError):
+            HO.recover_frozen_payloads(Path(tempfile.mkdtemp()), None, frozen)

@@ -119,11 +119,15 @@ class MacroPinCoverage(unittest.TestCase):
 
     def test_fresh_route_requires_opt_in_and_records_reason(self):
         source = (HERE / "hold_eco.tcl").read_text()
-        guide_check = source[source.index("set guides [expr"):source.index("set snap [dict create]")]
+        # the guide decision (header + strategy); since d767c270e/3a655cf87 the A-scoped native normalization block
+        # sits between them and needs a real block, so it is skipped here (ot_native "" = the default, no plan)
+        guide_check = (source[source.index("set guides [expr"):source.index("set snap [dict create]")] +
+                       source[source.index('if {$guides} {\n  puts "OT_ECO route_strategy incremental'):
+                              source.index('if {$ot_native ne ""} {\n  source $ot_native')])
         route = source[source.index("set ra [expr"):source.index("filler_placement")]
         with tempfile.TemporaryDirectory() as tmp:
             output = self.run_tcl(r'''
-set ot_eco_pk 0; set ot_eco_meg 0
+set ot_eco_pk 0; set ot_eco_meg 0; set ot_native ""
 proc envd {n d} {if {[info exists ::env($n)]} {return $::env($n)}; return $d}
 unset -nocomplain ::env(OT_ALLOW_FRESH_GRT)
 namespace eval grt {proc have_routes {} {return $::have_guides}}

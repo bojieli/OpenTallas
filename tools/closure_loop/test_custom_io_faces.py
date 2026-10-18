@@ -197,3 +197,12 @@ class ActualSourceGate(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_place_pin_with_pin_size_is_literal():
+    # S-NET+FILL 2026-10-16: tools/ref_tile/spread_face_pins.py writes -pin_size before -force_to_die_boundary
+    import custom_io_faces as C
+    line = "place_pin -pin_name {do0[0]} -layer M3 -location {4.365 25.920} -pin_size {0.018 0.144} -force_to_die_boundary"
+    m = C.PLACE.fullmatch(line)
+    assert m and m.group('pin') == 'do0[0]' and m.group('layer') == 'M3'
+    assert C.PLACE.fullmatch(line.replace('-pin_size {0.018 0.144}', '-pin_size {0.018}')) is None
