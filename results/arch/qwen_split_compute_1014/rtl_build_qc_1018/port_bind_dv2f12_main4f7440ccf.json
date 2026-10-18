@@ -1,0 +1,250 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "verdict": "FAIL",
+ "failing": [
+  "input_unconnected"
+ ],
+ "summary": {
+  "masters": 116,
+  "instances": 2446,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 1,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 16,
+  "pad_bits": 0,
+  "unresolved_children": 0
+ },
+ "child_closure": {
+  "modules": 245,
+  "unresolved_children": {},
+  "model_children": {
+   "ot_qkvd_ucie_x64_phy_model": [
+    "ot_qkvd_ucie_x64_phy"
+   ]
+  }
+ },
+ "straps_declared": [
+  "qfd_c_b16_dv:cid",
+  "qfd_c_b16_dv:far",
+  "qfd_c_b16_dv:rs_i",
+  "qfd_dv_slice2_e:ag_wi",
+  "qfd_dv_slice2_e:ard_wi",
+  "qfd_dv_slice2_e:arl_wi",
+  "qfd_dv_slice2_e:arm_wi",
+  "qfd_dv_slice2_e:art_wi",
+  "qfd_dv_slice2_e:arv_wi",
+  "qfd_dv_slice2_e:dd_wi",
+  "qfd_dv_slice2_e:l9_wi",
+  "qfd_dv_slice2_e:sc_wi",
+  "qfd_dv_slice2_e:st_wi",
+  "qfd_dv_slice2_w:l9_wi",
+  "qfd_dv_slice2_w:sc_wi",
+  "qfd_dv_slice2_w:st_wi"
+ ],
+ "die_sha256": "edb105c8dd2234dfaa826c219fa249c528416c72db43424e11f7b49ddebe2fe9",
+ "defines": [
+  "OT_QFD_UP4_CK_ENTRIES"
+ ],
+ "die_v": "dv2f12 die.v (Q-STUB copy /tmp/qstub/die.v, sha above)",
+ "rtl": "origin/main 4f7440ccf",
+ "masters": {
+  "ot_qfd_serdes_112g_x12_phy_s597": {
+   "verdict": "PASS",
+   "instances": 3,
+   "rtl": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+   "kind": "model"
+  },
+  "ot_qfd_ucie_x64_phy": {
+   "verdict": "PASS",
+   "instances": 1,
+   "rtl": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+   "kind": "model"
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "verdict": "PASS",
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "model"
+  },
+  "qfd_c_b16_dv": {
+   "verdict": "PASS",
+   "instances": 48,
+   "rtl": "rtl/physical/qcluster/qfd_c_b16_dv.sv",
+   "kind": "real",
+   "straps": [
+    "cid",
+    "far",
+    "rs_i"
+   ],
+   "output_open": [
+    "bco0",
+    "bco1",
+    "bco2",
+    "bco3",
+    "rs_o",
+    "tie_hi",
+    "tie_lo"
+   ]
+  },
+  "qfd_ckbump": {
+   "verdict": "PASS",
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "model"
+  },
+  "qfd_clkrx": {
+   "verdict": "PASS",
+   "instances": 1,
+   "rtl": "/home/ubuntu/scratch/rtl-build-qc-1018/pb_dv2f12_main/die_glue.sv",
+   "kind": "real"
+  },
+  "qfd_collective_static_io_production": {
+   "verdict": "PASS",
+   "instances": 1,
+   "rtl": "rtl/physical/ot_qfd_collective_static_io_production.sv",
+   "kind": "real",
+   "output_open": [
+    "fault_code",
+    "transport_abort",
+    "transport_cdc_fault",
+    "transport_fault_cause"
+   ]
+  },
+  "qfd_d2d_static": {
+   "verdict": "PASS",
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "kind": "real",
+   "output_open": [
+    "transport_fault"
+   ]
+  },
+  "qfd_dv_slice2_e": {
+   "verdict": "PASS",
+   "instances": 6,
+   "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+   "kind": "real",
+   "straps": [
+    "ag_wi",
+    "ard_wi",
+    "arl_wi",
+    "arm_wi",
+    "art_wi",
+    "arv_wi",
+    "dd_wi",
+    "l9_wi",
+    "sc_wi",
+    "st_wi"
+   ],
+   "output_open": [
+    "ccm_eo",
+    "cct_eo",
+    "ccv_eo",
+    "ccw_eo",
+    "cmd_wo",
+    "dr_wo",
+    "hr_wo",
+    "l9_eo",
+    "rd_wo",
+    "re_wo",
+    "rl_wo",
+    "rr_wo",
+    "rv_wo",
+    "sc_wo",
+    "ss_eo",
+    "st_wo"
+   ]
+  },
+  "qfd_dv_slice2_w": {
+   "verdict": "PASS",
+   "instances": 6,
+   "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+   "kind": "real",
+   "straps": [
+    "l9_wi",
+    "sc_wi",
+    "st_wi"
+   ],
+   "output_open": [
+    "ccm_wo",
+    "cct_wo",
+    "ccv_wo",
+    "ccw_wo",
+    "l9_eo",
+    "sc_wo",
+    "ss_wo",
+    "st_wo"
+   ]
+  },
+  "qfd_embedding_word_provider": {
+   "verdict": "PASS",
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_embedding_word_provider.sv",
+   "kind": "real",
+   "output_open": [
+    "fault"
+   ]
+  },
+  "qfd_native59_dv_service": {
+   "verdict": "PASS",
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_native59_dv_service.sv",
+   "kind": "real",
+   "output_open": [
+    "completed"
+   ]
+  },
+  "qfd_rstseq": {
+   "verdict": "PASS",
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "real",
+   "output_open": [
+    "rso_s"
+   ]
+  },
+  "qfd_rstsync": {
+   "verdict": "PASS",
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "real"
+  },
+  "qfd_sigbump": {
+   "verdict": "PASS",
+   "instances": 5,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "model"
+  },
+  "qfd_sys_face": {
+   "verdict": "FAIL",
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_sys_face.sv",
+   "kind": "real",
+   "input_unconnected": [
+    "emb_prov_fault"
+   ],
+   "output_open": [
+    "fault"
+   ]
+  },
+  "qfd_tt_ctlm_dv": {
+   "verdict": "PASS",
+   "instances": 1,
+   "rtl": "rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
+   "kind": "real",
+   "output_open": [
+    "cf"
+   ]
+  }
+ }
+}

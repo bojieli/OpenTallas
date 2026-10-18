@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.rtl_build_inventory.v1",
+ "lane": "RTL-BUILD-QC",
+ "date": "2026-10-18",
+ "die": "Qwen compute (qfd_die) dv2f12 die.v + main 4f7440ccf RTL, strict + recursive die_port_bind (tools/qwen_split/port_bind_compute.sh, straps_dv2f8.json)",
+ "verdict": "NO MISSING RTL: 0 unbound masters, 0 unresolved children of 245 modules, 0 undriven bits, 0 ports not in RTL; 1 input unconnected (die.v predates the RTL edge)",
+ "masters_without_rtl": [],
+ "inputs_without_producer": [
+  {
+   "port": "qfd_sys_face.emb_prov_fault",
+   "state": "RTL edge on main (Q-STUB F3 6408ed64b: embed_prov.fault -> sys_face, sys_face_bind EDGES); dv2f12 die.v predates it",
+   "owner": "Q-DIE10 dv2f13 GEN (no RTL owed)"
+  }
+ ],
+ "hardening_owed_not_missing_rtl": {
+  "qfd_c_b16_dv": {
+   "inst": 48,
+   "owner": "Q-CLUSTER4",
+   "rtl": "rtl/physical/qcluster/qfd_c_b16_dv.sv (+ romleaf_rr c1r8 children on main)"
+  },
+  "qfd_dv_slice2_w": {
+   "inst": 6,
+   "owner": "Q-SLICE/QC",
+   "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+  },
+  "qfd_dv_slice2_e": {
+   "inst": 6,
+   "owner": "Q-SLICE/QC",
+   "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+  },
+  "qfd_tt_ctlm_dv": {
+   "inst": 1,
+   "owner": "Q-CTLM",
+   "rtl": "rtl/qwen_dv/qfd_tt_ctlm_dv.sv"
+  },
+  "qfd_native59_dv_service": {
+   "inst": 1,
+   "owner": "Q-N59",
+   "rtl": "rtl/qwen_split/qfd_native59_dv_service.sv"
+  },
+  "qfd_collective_static_io_production": {
+   "inst": 1,
+   "owner": "QC collective",
+   "rtl": "rtl/physical/ot_qfd_collective_static_io_production.sv",
+   "note": "qfd_io_collective_s1..s4 never routed"
+  },
+  "qfd_sys_face": {
+   "inst": 1,
+   "owner": "Q-DIE10/coordinator",
+   "note": "rs2 kit gate (CRITICAL); bound view @4458091af stale until rs2 closes"
+  }
+ },
+ "models_phy_class": {
+  "qfd_ckbump": 1,
+  "qfd_sigbump": 5,
+  "ot_qkvd_ucie_x64_phy": 1,
+  "qfd_clkrx": {
+   "inst": 1,
+   "note": "generated RTL (gen_relay_rtl.py -> die_glue.sv); coordinator 0de+9: PHY-class clock-receiver model"
+  },
+  "ot_qfd_ucie_x64_phy": {
+   "inst": 1,
+   "note": "PHY abstract (_bb)"
+  },
+  "ot_qfd_serdes_112g_x12_phy_s597": {
+   "inst": 3,
+   "note": "PHY abstract (_bb)"
+  }
+ },
+ "die_constant_inputs": {
+  "manifest": "results/arch/qwen_split_compute_1014/q_slice_1017/straps_dv2f8.json (16 master ports)",
+  "identity_0da_a": [
+   "qfd_c_b16_dv.cid x48 (12 b)",
+   "qfd_c_b16_dv.far x48"
+  ],
+  "chain_end_idle_word": [
+   "qfd_c_b16_dv.rs_i on the 24 far clusters (c16_*_0/_3; feedthrough start, RTL header)",
+   "dvs_W1/W3/W5, dvs_E1/E3/E5 .l9_wi (L9 sender: l9_i unused in STN mode 3)",
+   "dvs_W5 .st_wi/.sc_wi (W5 up end)",
+   "dvs_E5 .st_wi/.sc_wi/.ar*_wi/.dd_wi/.ag_wi (E5 chain end; ag zero = OR identity)"
+  ],
+  "note": "all documented in qfd_dv_slice2.sv / qfd_c_b16_dv.sv headers; no producer exists by topology. die.v writes literals; the cluster header intends its own tie_hi/tie_lo (die generator, Q-DIE10, optional)"
+ },
+ "rtl_internal_ties": {
+  "file": "rtl_internal_ties_dv2f12.json",
+  "ties": 228,
+  "unclassified": 0,
+  "proof_owed": "mode_unused_head_su (70): qfd_tt_ctlm_head_static leaves po_su_go open and ties the SU / memory returns; no fault if the head program ever issues an SU op. Fix at the next head revision (po_su_go -> head fault) or a compiler image check; head h16b is CRITICAL and submitting, so not edited here",
+  "rtl_literal_qc12": "ot_qwen_d2d_dies.sv tv[3]=0 (port 3 has no compute->KV TX traffic; end faults a stray valid) = 0da c, listed"
+ },
+ "open_outputs_observation_only": [
+  "sys_face.fault (fab already in RESULT)",
+  "io_collective fault_code/transport_* (OR in fault -> sys_face io_fault)",
+  "d2d_rom.transport_fault[7:0] (in d2d fault)",
+  "native59.completed",
+  "tt_ctlm.cf (core_fault/c_fault already in dc)",
+  "rstseq.rso_s (spine region empty after dv)",
+  "far clusters bco0..3/rs_o (topology end)",
+  "c_b16 tie_hi/tie_lo (unused by die.v)"
+ ]
+}
