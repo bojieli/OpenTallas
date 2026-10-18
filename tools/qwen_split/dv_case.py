@@ -151,6 +151,49 @@ def _wcol_rebind(v, m, M, keep, out, wrtl):
     return rec
 
 
+def _pin_centre(i, q, port):
+    """Absolute centre of port on instance i (master q), orientation applied; the instance centre without the port."""
+    sp = q.ports.get(port) if q is not None else None
+    if sp is None:
+        return i.x + i.w / 2, i.y + i.h / 2
+    if sp[0] == 'area':
+        x, y = sp[2], sp[3]
+    else:
+        c = sum(sp[4]) / len(sp[4]) if sp[0] == 'pins' else sp[4]
+        x, y = {'E': (i.w, c), 'W': (0.0, c), 'N': (c, i.h), 'S': (c, 0.0)}[sp[2]]
+    if getattr(i, 'orient', 'R0') in ('MY', 'R180'):
+        x = i.w - x
+    if getattr(i, 'orient', 'R0') in ('MX', 'R180'):
+        y = i.h - y
+    return i.x + x, i.y + y
+
+
+def _tie_sources(m, M):
+    """S-QTIES 10-18 (owner HANDOFF 0fd #4): every dv strap / chain-end idle word of the die is driven from a cluster's
+    own TIEHI / TIELO outputs (qfd_c_b16_dv tie_hi / tie_lo, RTL header intent) instead of a die.v literal.  cid / far
+    (identity) and a far cluster's rs_i come from the instance's OWN ties; a slice chain-end word (W5 st / sc, E5 up
+    inputs, l9_wi on the L9 senders) from the cluster whose tie pin is nearest (Manhattan) to the tied port.
+    Returns {(inst, port): driver inst}; tp8b_v5.write_netlist emits the bits from the driver's tih_ / til_ nets."""
+    by = {i.name: i for i in m['insts']}
+    drv = [i for i in m['insts'] if i.master == CDV and 'tie_lo' in M[CDV].ports]
+    if not drv:
+        raise ValueError(f'OT_SPLIT_DV_TIE_SRC: no {CDV} instance with tie_hi / tie_lo pins')
+    tp = {i.name: _pin_centre(i, M[CDV], 'tie_lo') for i in drv}
+    src = {}
+    for inst, port, bits, val in m['ties']:
+        i = by.get(inst)
+        if i is None:
+            continue
+        if i.master == CDV:
+            src[(inst, port)] = inst
+            continue
+        if not inst.startswith('dvs_'):
+            continue
+        x, y = _pin_centre(i, M.get(i.master), port)
+        src[(inst, port)] = min(tp, key=lambda n: (abs(tp[n][0] - x) + abs(tp[n][1] - y), n))
+    return src
+
+
 def apply_dv(v, m):
     D = _load('OT_SPLIT_DV')
     C = _load('OT_SPLIT_Q3H_CONTRACT')
@@ -655,6 +698,10 @@ def apply_dv(v, m):
         if n.startswith('c16_') and n not in fed:
             m['ties'].append((n, 'rs_i', 514, 0))
     m['ties'][:] = [t for t in m['ties'] if t[0] in names]
+    if os.environ.get('OT_SPLIT_DV_TIE_SRC') == '1':
+        m['tie_src'] = _tie_sources(m, M)
+        m['q3h']['dv_tie_src'] = dict(flag='OT_SPLIT_DV_TIE_SRC=1', ties=len(m['tie_src']),
+                                      drivers=len(set(m['tie_src'].values())))
     conn = {tuple(e) for b in out for e in b[3]}
     for bid, cl, bits, kept, gone in partial:
         sf_ = [e for e in kept[1:] if e[0] == 'sys_face' and tuple(e) not in conn]

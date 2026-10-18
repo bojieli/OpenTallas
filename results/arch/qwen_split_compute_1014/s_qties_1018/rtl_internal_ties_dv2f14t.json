@@ -1,0 +1,2033 @@
+{
+ "schema": "opentallas.rtl_internal_ties.v1",
+ "files": 109,
+ "ties": 251,
+ "classes": {
+  "mode_unused_cp": 1,
+  "static_ready": 12,
+  "test_repair": 57,
+  "mode_unused_head_su": 70,
+  "compiled_const": 2,
+  "arith_const": 59,
+  "mode_unused_seg": 3,
+  "phy_model": 2,
+  "mem_strobe_const": 15,
+  "mode_unused_sfu_external": 7,
+  "mode_unused_alt_write": 4,
+  "mode_unused_d2d_slave": 4,
+  "no_reset_datapath": 3,
+  "identity_const": 1,
+  "chain_end_idle": 7,
+  "mode_unused_nk_kv_write": 4
+ },
+ "rows": [
+  {
+   "file": "rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
+   "line": 164,
+   "port": "cp_active",
+   "value": "1'b0",
+   "cls": "mode_unused_cp",
+   "reason": "CP copy engine left the die with dv (header GONE list)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
+   "line": 171,
+   "port": "me_mem_ok",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 141,
+   "port": "rr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 141,
+   "port": "rr_addr",
+   "value": "12'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 141,
+   "port": "cr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 141,
+   "port": "cr_sel",
+   "value": "18'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 261,
+   "port": "wrom_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 267,
+   "port": "scale_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 270,
+   "port": "embed_code_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 273,
+   "port": "embed_scale_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 276,
+   "port": "crom_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 285,
+   "port": "va_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 288,
+   "port": "vb_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 291,
+   "port": "vc_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 330,
+   "port": "vx_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 334,
+   "port": "t_lvl",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 335,
+   "port": "fab_fault",
+   "value": "1'b0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 336,
+   "port": "w_ok",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 337,
+   "port": "emb_ok",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 368,
+   "port": "pi_me_mx_we",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 371,
+   "port": "pi_me_o_we",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 377,
+   "port": "pi_su_rt_active",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 378,
+   "port": "pi_su_rt_inflight",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 380,
+   "port": "pi_su_ready",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 381,
+   "port": "pi_su_idle",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 412,
+   "port": "pi_su_va_re",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 413,
+   "port": "pi_su_va_addr",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 415,
+   "port": "pi_su_wrom_re",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 416,
+   "port": "pi_su_wrom_addr",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 417,
+   "port": "pi_su_kv_we",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 418,
+   "port": "pi_su_progress",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 419,
+   "port": "pi_su_progress_rows",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 420,
+   "port": "pi_su_fault",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 426,
+   "port": "x_ofin",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 427,
+   "port": "x_fidx",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 428,
+   "port": "x_fval",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 433,
+   "port": "su_go",
+   "value": "1'b0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 433,
+   "port": "su_sfu",
+   "value": "3'd0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 435,
+   "port": "d_su_ready",
+   "value": "1'b0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 435,
+   "port": "d_su_idle",
+   "value": "1'b0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 435,
+   "port": "d_su_active",
+   "value": "1'b0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 435,
+   "port": "d_su_inflight",
+   "value": "8'd0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 435,
+   "port": "d_su_progress",
+   "value": "16'd0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "line": 435,
+   "port": "d_su_rows",
+   "value": "16'd0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 133,
+   "port": "rr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 133,
+   "port": "rr_addr",
+   "value": "12'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 133,
+   "port": "cr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 133,
+   "port": "cr_sel",
+   "value": "18'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 211,
+   "port": "wrom_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 217,
+   "port": "scale_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 220,
+   "port": "embed_code_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 223,
+   "port": "embed_scale_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 226,
+   "port": "crom_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 235,
+   "port": "va_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 238,
+   "port": "vb_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 241,
+   "port": "vc_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 280,
+   "port": "vx_q",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 284,
+   "port": "t_lvl",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 285,
+   "port": "fab_fault",
+   "value": "1'b0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 286,
+   "port": "w_ok",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 287,
+   "port": "emb_ok",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 318,
+   "port": "pi_me_mx_we",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 321,
+   "port": "pi_me_o_we",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 327,
+   "port": "pi_su_rt_active",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 328,
+   "port": "pi_su_rt_inflight",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 330,
+   "port": "pi_su_ready",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 331,
+   "port": "pi_su_idle",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 362,
+   "port": "pi_su_va_re",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 363,
+   "port": "pi_su_va_addr",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 365,
+   "port": "pi_su_wrom_re",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 366,
+   "port": "pi_su_wrom_addr",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 367,
+   "port": "pi_su_kv_we",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 368,
+   "port": "pi_su_progress",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 369,
+   "port": "pi_su_progress_rows",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 370,
+   "port": "pi_su_fault",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 376,
+   "port": "x_ofin",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 377,
+   "port": "x_fidx",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 378,
+   "port": "x_fval",
+   "value": "'0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 383,
+   "port": "su_go",
+   "value": "1'b0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 383,
+   "port": "su_sfu",
+   "value": "3'd0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 385,
+   "port": "d_su_ready",
+   "value": "1'b0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 385,
+   "port": "d_su_idle",
+   "value": "1'b0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 385,
+   "port": "d_su_active",
+   "value": "1'b0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 385,
+   "port": "d_su_inflight",
+   "value": "8'd0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 385,
+   "port": "d_su_progress",
+   "value": "16'd0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+   "line": 385,
+   "port": "d_su_rows",
+   "value": "16'd0",
+   "cls": "mode_unused_head_su",
+   "reason": "ME head controller (qfd_tt_ctlm_head_static) reuses the ROM core controller with RT_SU=0: the SU / memory-return ports have no peer on the dv die (SU, VM, embedding live in the slices); rule c, PROOF OWED (head program has no SU op)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 535,
+   "port": "split_log2",
+   "value": "4'd0",
+   "cls": "compiled_const",
+   "reason": "no K split in the head program (compiled constant)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 652,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 654,
+   "port": "b",
+   "value": "{XW{1'b0}}",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 654,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 964,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1067,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1068,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1080,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1081,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1082,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1083,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1084,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1085,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1086,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1087,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1088,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1089,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1090,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1091,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1092,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1093,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1094,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1095,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1096,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1097,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1098,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1099,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+   "line": 1376,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_cg.sv",
+   "line": 31,
+   "port": "SE",
+   "value": "1'b0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_cmd_cal.sv",
+   "line": 119,
+   "port": "rr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_cmd_cal.sv",
+   "line": 119,
+   "port": "rr_addr",
+   "value": "12'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_cmd_cal.sv",
+   "line": 119,
+   "port": "cr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_cmd_cal.sv",
+   "line": 119,
+   "port": "cr_sel",
+   "value": "18'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_split/qfd_sys_face.sv",
+   "line": 345,
+   "port": "start_seg",
+   "value": "1'b0",
+   "cls": "mode_unused_seg",
+   "reason": "calendars started at segment 0 only"
+  },
+  {
+   "file": "rtl/qwen_split/qfd_sys_face.sv",
+   "line": 347,
+   "port": "start_seg",
+   "value": "1'b0",
+   "cls": "mode_unused_seg",
+   "reason": "calendars started at segment 0 only"
+  },
+  {
+   "file": "rtl/qwen_split/qfd_sys_face.sv",
+   "line": 349,
+   "port": "start_seg",
+   "value": "1'b0",
+   "cls": "mode_unused_seg",
+   "reason": "calendars started at segment 0 only"
+  },
+  {
+   "file": "rtl/qwen_split/qfd_link_slots.sv",
+   "line": 109,
+   "port": "far_v",
+   "value": "1'b0",
+   "cls": "phy_model",
+   "reason": "PHY model far-end loopback unused (allowed model)"
+  },
+  {
+   "file": "rtl/qwen_split/qfd_link_slots.sv",
+   "line": 109,
+   "port": "far_flit",
+   "value": "{PW{1'b0}}",
+   "cls": "phy_model",
+   "reason": "PHY model far-end loopback unused (allowed model)"
+  },
+  {
+   "file": "rtl/qwen_split/qfd_native59_dv_service.sv",
+   "line": 161,
+   "port": "issue_nout",
+   "value": "18'd1",
+   "cls": "compiled_const",
+   "reason": "formatter issues one output per native write (compiled constant)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv",
+   "line": 46,
+   "port": "w_mask_in",
+   "value": "{512{1'b1}}",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv",
+   "line": 46,
+   "port": "rr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv",
+   "line": 46,
+   "port": "rr_addr",
+   "value": "12'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv",
+   "line": 46,
+   "port": "cr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv",
+   "line": 46,
+   "port": "cr_sel",
+   "value": "18'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_slice2.sv",
+   "line": 258,
+   "port": "sw_m",
+   "value": "{64{1'b1}}",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 138,
+   "port": "rr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 138,
+   "port": "rr_addr",
+   "value": "18'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 138,
+   "port": "cr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 138,
+   "port": "cr_sel",
+   "value": "16'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 181,
+   "port": "w_mask_in",
+   "value": "{256{1'b1}}",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 181,
+   "port": "rr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 181,
+   "port": "rr_addr",
+   "value": "18'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 181,
+   "port": "cr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 181,
+   "port": "cr_sel",
+   "value": "16'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 184,
+   "port": "w_mask_in",
+   "value": "{256{1'b1}}",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 184,
+   "port": "rr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 184,
+   "port": "rr_addr",
+   "value": "18'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 184,
+   "port": "cr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 184,
+   "port": "cr_sel",
+   "value": "16'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 211,
+   "port": "w_mask_in",
+   "value": "{256{1'b1}}",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 212,
+   "port": "rr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 212,
+   "port": "rr_addr",
+   "value": "12'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 212,
+   "port": "cr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 212,
+   "port": "cr_sel",
+   "value": "16'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 229,
+   "port": "w_mask_in",
+   "value": "{256{1'b1}}",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 230,
+   "port": "rr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 230,
+   "port": "rr_addr",
+   "value": "14'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 230,
+   "port": "cr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 230,
+   "port": "cr_sel",
+   "value": "16'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 233,
+   "port": "w_mask_in",
+   "value": "{256{1'b1}}",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 234,
+   "port": "rr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 234,
+   "port": "rr_addr",
+   "value": "14'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 234,
+   "port": "cr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+   "line": 234,
+   "port": "cr_sel",
+   "value": "16'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_su8_entries.sv",
+   "line": 247,
+   "port": "sy_exp_y",
+   "value": "32'd0",
+   "cls": "mode_unused_sfu_external",
+   "reason": "SFH=0: special functions inside the lane; external SFU tile ports unused"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_su8_entries.sv",
+   "line": 247,
+   "port": "sy_exp_vo",
+   "value": "1'b0",
+   "cls": "mode_unused_sfu_external",
+   "reason": "SFH=0: special functions inside the lane; external SFU tile ports unused"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_su8_entries.sv",
+   "line": 247,
+   "port": "sy_exp_f",
+   "value": "1'b0",
+   "cls": "mode_unused_sfu_external",
+   "reason": "SFH=0: special functions inside the lane; external SFU tile ports unused"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_su8_entries.sv",
+   "line": 248,
+   "port": "sy_rcp_y",
+   "value": "32'd0",
+   "cls": "mode_unused_sfu_external",
+   "reason": "SFH=0: special functions inside the lane; external SFU tile ports unused"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_su8_entries.sv",
+   "line": 248,
+   "port": "sy_rcp_f",
+   "value": "1'b0",
+   "cls": "mode_unused_sfu_external",
+   "reason": "SFH=0: special functions inside the lane; external SFU tile ports unused"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_su8_entries.sv",
+   "line": 249,
+   "port": "sy_rsq_y",
+   "value": "32'd0",
+   "cls": "mode_unused_sfu_external",
+   "reason": "SFH=0: special functions inside the lane; external SFU tile ports unused"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_su8_entries.sv",
+   "line": 249,
+   "port": "sy_rsq_f",
+   "value": "1'b0",
+   "cls": "mode_unused_sfu_external",
+   "reason": "SFH=0: special functions inside the lane; external SFU tile ports unused"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "line": 59,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "line": 62,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "line": 63,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "line": 119,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "line": 120,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "line": 154,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "line": 155,
+   "port": "b",
+   "value": "8'd0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "line": 177,
+   "port": "b",
+   "value": "24'd0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "line": 148,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "line": 191,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "line": 195,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "line": 196,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "line": 241,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "line": 242,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "line": 255,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "line": 256,
+   "port": "b",
+   "value": "8'd0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "line": 278,
+   "port": "b",
+   "value": "24'd0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "line": 337,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fastfp.sv",
+   "line": 413,
+   "port": "b",
+   "value": "24'd0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "line": 106,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "line": 181,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "line": 226,
+   "port": "b",
+   "value": "24'd0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_vstream_lane.sv",
+   "line": 371,
+   "port": "w_mask_in",
+   "value": "{256{1'b1}}",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_vstream_lane.sv",
+   "line": 372,
+   "port": "rr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_vstream_lane.sv",
+   "line": 372,
+   "port": "rr_addr",
+   "value": "14'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_vstream_lane.sv",
+   "line": 372,
+   "port": "cr_en",
+   "value": "2'b00",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_vstream_lane.sv",
+   "line": 372,
+   "port": "cr_sel",
+   "value": "16'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_heads.sv",
+   "line": 72,
+   "port": "aw_v",
+   "value": "1'b0",
+   "cls": "mode_unused_alt_write",
+   "reason": "xs tap alternate write port unused with STATIC_SCHEDULE=1"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_heads.sv",
+   "line": 72,
+   "port": "aw_a",
+   "value": "{AW{1'b0}}",
+   "cls": "mode_unused_alt_write",
+   "reason": "xs tap alternate write port unused with STATIC_SCHEDULE=1"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_heads.sv",
+   "line": 72,
+   "port": "aw_m",
+   "value": "16'd0",
+   "cls": "mode_unused_alt_write",
+   "reason": "xs tap alternate write port unused with STATIC_SCHEDULE=1"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_heads.sv",
+   "line": 72,
+   "port": "aw_d",
+   "value": "512'd0",
+   "cls": "mode_unused_alt_write",
+   "reason": "xs tap alternate write port unused with STATIC_SCHEDULE=1"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_heads.sv",
+   "line": 89,
+   "port": "b_r",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_heads.sv",
+   "line": 90,
+   "port": "n_r",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  },
+  {
+   "file": "rtl/qwen_dv/qfd_dv_heads.sv",
+   "line": 90,
+   "port": "s_r",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  },
+  {
+   "file": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "line": 139,
+   "port": "reset_req",
+   "value": "1'b0",
+   "cls": "mode_unused_d2d_slave",
+   "reason": "D2D recovery: compute side is MASTER(0) (host reset / boot come from the KV die); the master does not take fwd_epoch_i"
+  },
+  {
+   "file": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "line": 139,
+   "port": "recovery_clear",
+   "value": "1'b0",
+   "cls": "mode_unused_d2d_slave",
+   "reason": "D2D recovery: compute side is MASTER(0) (host reset / boot come from the KV die); the master does not take fwd_epoch_i"
+  },
+  {
+   "file": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "line": 139,
+   "port": "boot_begin",
+   "value": "1'b0",
+   "cls": "mode_unused_d2d_slave",
+   "reason": "D2D recovery: compute side is MASTER(0) (host reset / boot come from the KV die); the master does not take fwd_epoch_i"
+  },
+  {
+   "file": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "line": 244,
+   "port": "fwd_epoch_i",
+   "value": "1'b0",
+   "cls": "mode_unused_d2d_slave",
+   "reason": "D2D recovery: compute side is MASTER(0) (host reset / boot come from the KV die); the master does not take fwd_epoch_i"
+  },
+  {
+   "file": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "line": 186,
+   "port": "r_ce_in",
+   "value": "1'b1",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "line": 189,
+   "port": "rr_en",
+   "value": "2'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "line": 189,
+   "port": "rr_addr",
+   "value": "12'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "line": 189,
+   "port": "cr_en",
+   "value": "2'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "line": 189,
+   "port": "cr_sel",
+   "value": "18'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 179,
+   "port": "rst_n",
+   "value": "1'b1",
+   "cls": "no_reset_datapath",
+   "reason": "data registers without reset (reset only on control)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 275,
+   "port": "r_ce_in",
+   "value": "1'b1",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 276,
+   "port": "w_ce_in",
+   "value": "1'b1",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 277,
+   "port": "w_mask_in",
+   "value": "{128{1'b1}}",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 277,
+   "port": "rr_en",
+   "value": "2'b0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 277,
+   "port": "rr_addr",
+   "value": "14'b0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 277,
+   "port": "cr_en",
+   "value": "2'b0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 277,
+   "port": "cr_sel",
+   "value": "14'b0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 314,
+   "port": "rst_n",
+   "value": "1'b1",
+   "cls": "no_reset_datapath",
+   "reason": "data registers without reset (reset only on control)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 428,
+   "port": "r_ce_in",
+   "value": "1'b1",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 429,
+   "port": "w_mask_in",
+   "value": "{546{1'b1}}",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/rom/ot_coll_tp8_static.sv",
+   "line": 445,
+   "port": "rst_n",
+   "value": "1'b1",
+   "cls": "no_reset_datapath",
+   "reason": "data registers without reset (reset only on control)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_coll_static_face.sv",
+   "line": 72,
+   "port": "epoch",
+   "value": "8'h01",
+   "cls": "identity_const",
+   "reason": "collective slot-link epoch id: same constant on both peers (identity, 0da a)"
+  },
+  {
+   "file": "rtl/physical/ot_qfd_static_transport.sv",
+   "line": 64,
+   "port": "w_mask_in",
+   "value": "{546{1'b1}}",
+   "cls": "mem_strobe_const",
+   "reason": "full-word write mask / always-enabled macro strobe (structure)"
+  },
+  {
+   "file": "rtl/physical/qfd_tile_nl_rp2_45.sv",
+   "line": 107,
+   "port": "n_a",
+   "value": "512'd0",
+   "cls": "chain_end_idle",
+   "reason": "reduction / fault chain head: the idle word (zero) at the chain end"
+  },
+  {
+   "file": "rtl/physical/qfd_tile_nl_rp2_45.sv",
+   "line": 107,
+   "port": "n_b",
+   "value": "512'd0",
+   "cls": "chain_end_idle",
+   "reason": "reduction / fault chain head: the idle word (zero) at the chain end"
+  },
+  {
+   "file": "rtl/physical/qfd_tile_nl_rp2_45.sv",
+   "line": 107,
+   "port": "n_va",
+   "value": "1'b0",
+   "cls": "chain_end_idle",
+   "reason": "reduction / fault chain head: the idle word (zero) at the chain end"
+  },
+  {
+   "file": "rtl/physical/ot_qwen_rom_tile_nk.sv",
+   "line": 88,
+   "port": "kvw_ce",
+   "value": "1'b0",
+   "cls": "mode_unused_nk_kv_write",
+   "reason": "nk ROM tile: KV write port unused in this tile mode"
+  },
+  {
+   "file": "rtl/physical/ot_qwen_rom_tile_nk.sv",
+   "line": 88,
+   "port": "kvw_addr",
+   "value": "7'd0",
+   "cls": "mode_unused_nk_kv_write",
+   "reason": "nk ROM tile: KV write port unused in this tile mode"
+  },
+  {
+   "file": "rtl/physical/ot_qwen_rom_tile_nk.sv",
+   "line": 88,
+   "port": "kvw_data",
+   "value": "512'd0",
+   "cls": "mode_unused_nk_kv_write",
+   "reason": "nk ROM tile: KV write port unused in this tile mode"
+  },
+  {
+   "file": "rtl/physical/ot_qwen_rom_tile_nk.sv",
+   "line": 88,
+   "port": "kvw_mask",
+   "value": "512'd0",
+   "cls": "mode_unused_nk_kv_write",
+   "reason": "nk ROM tile: KV write port unused in this tile mode"
+  },
+  {
+   "file": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+   "line": 276,
+   "port": "t_fault_in",
+   "value": "1'b0",
+   "cls": "chain_end_idle",
+   "reason": "reduction / fault chain head: the idle word (zero) at the chain end"
+  },
+  {
+   "file": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+   "line": 918,
+   "port": "rr_en",
+   "value": "2'b0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+   "line": 918,
+   "port": "rr_addr",
+   "value": "14'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+   "line": 918,
+   "port": "cr_en",
+   "value": "2'b0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+   "line": 918,
+   "port": "cr_sel",
+   "value": "16'd0",
+   "cls": "test_repair",
+   "reason": "SRAM row/column redundancy repair or scan enable: test/repair port (allowed tied, no DFT phase)"
+  },
+  {
+   "file": "rtl/hdc/ot_qwen_w12_matvec.sv",
+   "line": 168,
+   "port": "i_gbase",
+   "value": "32'd0",
+   "cls": "chain_end_idle",
+   "reason": "reduction / fault chain head: the idle word (zero) at the chain end"
+  },
+  {
+   "file": "rtl/hdc/ot_qwen_w12_matvec.sv",
+   "line": 168,
+   "port": "t_fault_in",
+   "value": "1'b0",
+   "cls": "chain_end_idle",
+   "reason": "reduction / fault chain head: the idle word (zero) at the chain end"
+  },
+  {
+   "file": "rtl/hdc/ot_qwen_w12_matvec.sv",
+   "line": 1473,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+   "line": 57,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+   "line": 60,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+   "line": 61,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+   "line": 117,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+   "line": 118,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+   "line": 168,
+   "port": "cin",
+   "value": "1'b1",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+   "line": 169,
+   "port": "b",
+   "value": "8'd0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+   "line": 191,
+   "port": "b",
+   "value": "24'd0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_qwen_w12_arith.sv",
+   "line": 125,
+   "port": "cin",
+   "value": "1'b0",
+   "cls": "arith_const",
+   "reason": "adder carry-in / zero operand inside an arithmetic primitive (structure, not a functional input)"
+  },
+  {
+   "file": "rtl/hdc/ot_qwen_me_array_w12.sv",
+   "line": 353,
+   "port": "i_gbase",
+   "value": "32'd0",
+   "cls": "chain_end_idle",
+   "reason": "reduction / fault chain head: the idle word (zero) at the chain end"
+  },
+  {
+   "file": "rtl/physical/qcluster/qfd_c_stn.sv",
+   "line": 40,
+   "port": "b_r",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  },
+  {
+   "file": "rtl/physical/qcluster/qfd_c_stn.sv",
+   "line": 55,
+   "port": "b_r",
+   "value": "1'b1",
+   "cls": "static_ready",
+   "reason": "static cycle schedule: no ready/backpressure (owner 10-14); the consumer is always ready by construction"
+  }
+ ]
+}

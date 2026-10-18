@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.die_strap_removal.v1",
+ "item": "S-QTIES 10-18 (owner HANDOFF 0fd #4): the 16 compute-die strap ports of straps_dv2f8.json driven from cluster TIEHI / TIELO outputs instead of die.v literals",
+ "flag": "OT_SPLIT_DV_TIE_SRC=1 (tools/qwen_split/dv_case.py _tie_sources -> model tie_src; tools/qwen_kv_die/tp8b_v5.py write_netlist / port_widths). Default off: dv2f14 die.v unchanged. ON for the next GEN.",
+ "rule": "cid / far / rs_i of every qfd_c_b16_dv from the instance's OWN tie_hi / tie_lo (RTL header intent); slice chain-end words (W5 st/sc_wi, E5 st/sc/ar*/dd/ag_wi, l9_wi on the 6 L9 senders) from the cluster whose tie_lo pin is nearest (Manhattan): the abutting c16_<col>_1 in every case",
+ "gen": {"tree": "Q-DIE11b dv2f14bn source d46934ef3 (+ the three S-QTIES files), run.sh = dv2f14bn run.sh + OT_SPLIT_DV_TIE_SRC=1", "host": "ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14t", "rc": 0,
+         "relays": 515, "instances": 3053, "over_reach": 0, "max_pin_to_pin_um": 393.3, "same_as_baseline_dv2f14bn": true},
+ "die_v": {"literal_strap_connections_baseline": 137, "literal_strap_connections": 0, "converted": 137, "values_preserved": 137,
+           "own_tie": 120, "neighbour_tie": 17, "new_tie_output_connections": 96, "other_changes": 0},
+ "port_bind": {"baseline_dv2f14bn": "PASS strap_ports=16", "dv2f14t_manifest": "PASS strap_ports=0", "dv2f14t_empty_manifest": "PASS strap_ports=0 input_tied=0 input_unconnected=0 undriven_net_bits=0"},
+ "rtl_tie_scan": "files 109, RTL-internal ties 251, unclassified 0 (internal ties are below the die masters and unchanged by this item)",
+ "not_run": "die GRT / STA on this die.v (the 96 tie nets are constant nets; stand-in libs give tie_hi / tie_lo no arcs) -- next dv2f14+ chain carries it"
+}

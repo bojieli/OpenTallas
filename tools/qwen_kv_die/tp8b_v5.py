@@ -2066,6 +2066,10 @@ def _wrap(v, m, G, peers):
         for i_ in model['insts']:
             if i_.master in model.get('tie_self', []):
                 live[(i_.master, 'tie_hi')] = live[(i_.master, 'tie_lo')] = 1
+        for d_ in set(model.get('tie_src', {}).values()):
+            # S-QTIES (OT_SPLIT_DV_TIE_SRC): the driving instance's tie_hi / tie_lo pins exist on this die
+            if d_ in byi:
+                live[(byi[d_].master, 'tie_hi')] = live[(byi[d_].master, 'tie_lo')] = 1
         # a port without a die net on THIS die is not emitted (the KV-die widths carried D2D faces: qkd_seq rf / tf)
         return {key: live[key] for key in set(w) | set(live) if key in live}
 
@@ -2221,11 +2225,18 @@ def _wrap(v, m, G, peers):
             assert set(vals) == set(range(max(vals) + 1)), (inst, real, 'incomplete join')
             conns[inst].append(f'.{real}({joined_expr(vals)})')
         tie_self = set(model.get('tie_self', []))
+        tie_src = model.get('tie_src', {})
         tied = set()
         for inst, port, bits, val in ties:
             if inst not in conns:
                 continue
-            if byi[inst].master in tie_self and (byi[inst].master, port) in sys.modules['compute_spine'].STRAP_PORTS:
+            if (inst, port) in tie_src:
+                # S-QTIES 10-18 (OT_SPLIT_DV_TIE_SRC): strap / chain-end word from a cluster's TIEHI / TIELO (own or nearest)
+                d_ = tie_src[(inst, port)]
+                hi, lo = f'tih_{d_}', f'til_{d_}'
+                conns[inst].append(f'.{port}({{' + ', '.join(f'{hi}[0]' if (val >> b) & 1 else f'{lo}[0]' for b in range(bits - 1, -1, -1)) + '})')
+                tied.add(d_)
+            elif byi[inst].master in tie_self and (byi[inst].master, port) in sys.modules['compute_spine'].STRAP_PORTS:
                 # v1.2: every strap bit from the instance's own TIEHI / TIELO outputs (MSB first)
                 hi, lo = f'tih_{inst}', f'til_{inst}'
                 conns[inst].append(f'.{port}({{' + ', '.join(f'{hi}[0]' if (val >> b) & 1 else f'{lo}[0]' for b in range(bits - 1, -1, -1)) + '})')
