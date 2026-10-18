@@ -35,36 +35,39 @@
    },
    {
     "name": "ring_ag_mut_ttl",
-    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh {RUN}/bench/mut_ttl ttl",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh {RUN}/bench/mut_ttl ttl; rc=$?; grep -h '^RING_AG FAIL' {RUN}/bench/mut_ttl/mut_ttl.log; exit $rc",
     "expect": "fail",
     "fail_regex": "RING_AG FAIL errors=",
     "threads": 2,
     "peak_ram_gb": 8,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctl_1017/bench_witness/ring_ag_mut_ttl.log"
    },
    {
     "name": "ring_ag_mut_src",
-    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh {RUN}/bench/mut_src src",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh {RUN}/bench/mut_src src; rc=$?; grep -h '^RING_AG FAIL' {RUN}/bench/mut_src/mut_src.log; exit $rc",
     "expect": "fail",
     "fail_regex": "RING_AG FAIL errors=",
     "threads": 2,
     "peak_ram_gb": 8,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctl_1017/bench_witness/ring_ag_mut_src.log"
    },
    {
     "name": "ring_ag_mut_ag0",
-    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh {RUN}/bench/mut_ag0 ag0",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh {RUN}/bench/mut_ag0 ag0; rc=$?; grep -h '^RING_AG FAIL' {RUN}/bench/mut_ag0/mut_ag0.log; exit $rc",
     "expect": "fail",
     "fail_regex": "RING_AG FAIL errors=",
     "threads": 2,
     "peak_ram_gb": 8,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctl_1017/bench_witness/ring_ag_mut_ag0.log"
    }
   ],
   "calibrate": {
