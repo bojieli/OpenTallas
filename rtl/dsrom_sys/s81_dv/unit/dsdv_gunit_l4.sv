@@ -17,6 +17,11 @@
 // fault (sticky): an adder / multiplier / divider / rsqrt fault, a root twice, a quad pass overrun, L5's fault.
 // Every input lands in a flop; every output leaves a flop.  MUT (bench only): 5 = group association
 // N1 = A8 + (B8 + B16a); 7 = the r chain skips + eps.
+// S81U-GUNIT3 (10-17): the r chain (ss -> divc -> + eps -> rsqrt, 9.9k flops) moved to the E-side leaf dsdv_gunit_l4r
+// (the one-leaf L4 was 21,174 sinks, TT insertion 436 ps: clock-rule FAIL).  Seam: ss / eps leave from this leaf's own
+// registers, r / its valid / L4r's fault come back into input flops (+3 edges on the r chain; the mix phase waits for
+// r_ok as before, so only the HC latency moves).  The 24 mixes leave one a cycle as they are made (mx_v / mx_i / mx_y,
+// 38 pins, not a 768-bit register + bus): L5 assembles them; launch leaves with the last one as before.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l4 #(
     parameter integer MUT = 0
@@ -33,10 +38,13 @@ module dsdv_gunit_l4 #(
     output reg           mix_go_s, output reg launch_s, output reg fault,
     // N face (L5)
     output wire [275:0]  rn_o,  input wire [275:0] rn_i,
-    output reg           launch, output reg [767:0] mixes, output reg t_set, output reg t_w, output reg [9:0] t_row,
+    output reg           launch, output reg mx_v, output reg [4:0] mx_i, output reg [31:0] mx_y, output reg t_set, output reg t_w, output reg [9:0] t_row,
     output reg  [4:0]    t_lm, output reg [15:0] t_sm,
     output wire          cwo_v, output wire [9:0] cwo_a, output wire [255:0] cwo_d, output wire [3:0] sid_o,
-    input  wire          hct5_v, input wire [275:0] hct5_b, input wire f5
+    input  wire          hct5_v, input wire [275:0] hct5_b, input wire f5,
+    // E face (L4r: the r chain)
+    output reg           ss_v, output reg [31:0] ss, output reg [31:0] eps_c,
+    input  wire          r_v, input wire [31:0] r_y, input wire r_f
 );
     localparam integer V = 276, LA = 4, LM = 5, NACC = 25, NSET = 2;
     // ---------------------------------------------------------------- feedthroughs
@@ -131,18 +139,15 @@ module dsdv_gunit_l4 #(
     wire root_v = t_vv[5]; wire [31:0] root = t_d[32 * 5 +: 32]; wire [4:0] root_acc = t_a[5 * 5 +: 5];
     // ---------------------------------------------------------------- roots -> proj / ss -> r
     reg [31:0] proj [0:23];
-    reg [24:0] rdone; reg ss_v; reg [31:0] ss; reg [31:0] eps_c;
+    reg [24:0] rdone;
     always @(posedge clk) if (root_v && root_acc < 5'd24) proj[root_acc] <= root;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) ss_v <= 1'b0;
         else ss_v <= root_v && root_acc == 5'd24;
     always @(posedge clk) begin if (root_v) ss <= root; eps_c <= (MUT == 7) ? 32'd0 : eps_t[aj_set]; end
-    wire [31:0] mq, me, rr; wire mq_v, me_v, rr_v, f_div, f_eps, f_rsq; wire [LA:0] ve;
-    ot_dsrom_divc #(.F(5), .K(12)) u_div (.clk(clk), .rst_n(rst_n), .v(ss_v), .x(ss), .y(mq), .vo(mq_v), .fault(f_div));
-    ot_hdc_vline #(.D(LA)) u_ve (.clk(clk), .rst_n(rst_n), .v(mq_v), .vd(ve));
-    ot_dsrom_qadd #(.LAT(LA)) u_eps (clk, rst_n, mq_v, mq, eps_c, me, f_eps);
-    assign me_v = ve[LA];
-    ot_dsrom_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rst_n), .v(me_v), .x(me), .y(rr), .vo(rr_v), .fault(f_rsq));
+    reg rr_v, f_r; reg [31:0] rr;                       // L4r's r: input flops
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin rr_v <= 1'b0; f_r <= 1'b0; end else begin rr_v <= r_v; f_r <= r_f; end
+    always @(posedge clk) rr <= r_y;
     reg r_ok; reg [31:0] r;
     // ---------------------------------------------------------------- mix phase: 24 multiplies, then the tail launch
     reg m_on; reg [4:0] m_i; reg mm_v; reg [4:0] mm_i; reg [31:0] mm_a; reg mix_go;
@@ -163,12 +168,13 @@ module dsdv_gunit_l4 #(
             mm_v <= m_on; mm_i <= m_i;
             if (vm[LM] && mi == 5'd23) launch <= 1'b1;
             mix_go_s <= mix_go; launch_s <= launch;
-            if (f1 | f2 | f3 | f4 | f5a | f6 | f7 | f8 | (|t_f) | f_div | f_eps | f_rsq | f_mul | f5_q
+            if (f1 | f2 | f3 | f4 | f5a | f6 | f7 | f8 | (|t_f) | f_r | f_mul | f5_q
                 | (root_v && rdone[root_acc]) | (mix_go && !aj_v) | (qs[DQ - 2] && q_on && q_i != 5'd19)) fault <= 1'b1;
         end
     always @(posedge clk) mm_a <= proj[m_i];
     ot_hdc_qmul_lat #(.LAT(LM)) u_mul (clk, rst_n, mm_v, mm_a, r, my, f_mul);
     ot_hdc_vline #(.D(LM)) u_vm (.clk(clk), .rst_n(rst_n), .v(mm_v), .vd(vm));
     ot_hdc_delay #(.W(5), .D(LM)) u_mi (.clk(clk), .rst_n(rst_n), .d(mm_i), .q(mi));
-    always @(posedge clk) if (vm[LM]) mixes[32 * mi +: 32] <= my;
+    always @(posedge clk or negedge rst_n) if (!rst_n) mx_v <= 1'b0; else mx_v <= vm[LM];
+    always @(posedge clk) begin mx_i <= mi; mx_y <= my; end   // one mix a cycle to L5 (L5 assembles the 24)
 endmodule
