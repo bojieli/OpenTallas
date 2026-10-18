@@ -1,0 +1,47 @@
+{
+ "design": "r25gq",
+ "unit": "HBM.D4G_LANDING_HALFCYCLE (d4g die: landed forwarded inter-region crossings, 4-slot ring, latency ceil(N/2)+1+E (+1 block flop in base) vs N full-cycle stations today; 165 of 482 links landed, land plan MODEL pilot E at TT+FF)",
+ "group": "HBM.D4G_LANDING_HALFCYCLE",
+ "measured": 7216.8,
+ "price": 0.0,
+ "unit_of_measure": "cycles",
+ "unit_ratio": null,
+ "e2e_loss_pct": 1.13,
+ "binding_workload": "ds_ar",
+ "per_workload": {
+  "ds_ar": {
+   "model": "d4g_land_price_1018 on PRICE5 d4g_2ring_qbg (per-class stage delta, bits-weighted)",
+   "base_tok_s": 1905.4,
+   "tok_s": 1883.9,
+   "added_cycles": 7216.8,
+   "e2e_loss_pct": 1.13
+  },
+  "ds_mtp": {
+   "base_tok_s": 3258.7,
+   "tok_s": 3223.4,
+   "e2e_loss_pct": 1.08
+  },
+  "qwen_ar": {
+   "base_tok_s": 946.2,
+   "tok_s": 945.5,
+   "e2e_loss_pct": 0.07
+  },
+  "reference_full_cycle_N+2+E": {
+   "ar_tok_s": 1774.6,
+   "mtp_tok_s": 3026.4,
+   "qwen_tok_s": 939.1,
+   "ar_loss_pct": 6.86,
+   "mtp_loss_pct": 7.13
+  },
+  "sensitivity_ceil_old_plan": {
+   "ar_loss_pct": 1.67,
+   "mtp_loss_pct": 1.67
+  }
+ },
+ "within_unit_limit": true,
+ "evidence": "results/arch/hbm_die_d4g/landing/land_price_1018.json (branch claude/hland-dcc-1018)",
+ "evidence_grade": "composed_model",
+ "date": "2026-10-18",
+ "status": "proposed",
+ "note": "HBM-LANDING/PRICE. Composed price, not a die run; E re-derived from GEN2 die STA at TT+FF. INTEG fix (odd-N E-1) keeps latency_half identical, so this price stands. Append to results/arch/accepted_cost_ledger_1013.json at merge to main (kept as a separate file so hland-1018 stays merge-clean with hd4g-gen2)."
+}
