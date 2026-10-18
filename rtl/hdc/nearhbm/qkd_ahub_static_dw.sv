@@ -50,7 +50,7 @@ module qkd_ahub_static_io #(
     output reg  [15:0]   epoch,
     output reg  [5:0]    layer,
     output reg  [13:0]   T,
-    output reg  [191:0]  hub_cal,             // {RZ_PUBLISH, RECIP_ISSUE, Z_START, LMAX_ISSUE, Z_IN x4, LMAX_IN x4}
+    output wire [191:0]  hub_cal,             // {RZ_PUBLISH, RECIP_ISSUE, Z_START, LMAX_ISSUE, Z_IN x4, LMAX_IN x4}
     output reg  [63:0]   si_epoch,
     output reg  [23:0]   si_layer,
     // from the hub
@@ -64,8 +64,13 @@ module qkd_ahub_static_io #(
     output reg  [127:0]  fr_rz,
     output reg           fault
 );
-    wire [15:0] c_lmax = hs_cal_lo[15:0],  c_z = hs_cal_lo[31:16],  c_hl = hs_cal_lo[47:32], c_hz = hs_cal_lo[63:48];
-    wire [15:0] c_hr = hs_cal_lo[79:64],   c_hp = hs_cal_lo[95:80], c_pv = hs_cal_lo[111:96];
+    // KV-AHUBDW 10-18 (pin rule: flop-first pins): every hs bit lands in a pin flop first (cal_q / cal_r_q beside start /
+    // epoch / layer / T); the calendar adds (constant AP_OFS) and the export target are computed from the pin flops in the
+    // same cycle start is high, so the hub still samples hub_cal on start (no added edge, behaviour unchanged).
+    reg  [111:0] cal_q;  reg [15:0] cal_r_q;
+    always @(posedge ck) begin cal_q <= hs_cal_lo; cal_r_q <= hs_cal_r; end
+    wire [15:0] c_lmax = cal_q[15:0],  c_z = cal_q[31:16],  c_hl = cal_q[47:32], c_hz = cal_q[63:48];
+    wire [15:0] c_hr = cal_q[79:64],   c_hp = cal_q[95:80], c_pv = cal_q[111:96];
     reg  [191:0] cal_n;
     integer s_;
     always @* begin
@@ -76,15 +81,17 @@ module qkd_ahub_static_io #(
         end
     end
     // export target from the same command's PV_START + R (17-bit + sign: never wraps into a reachable age)
-    wire signed [18:0] tgt_n = $signed({3'd0, c_pv}) + $signed({3'd0, hs_cal_r}) + FR_OFS + ((MUT == 1) ? 1 : 0);
+    wire signed [18:0] tgt_n = $signed({3'd0, c_pv}) + $signed({3'd0, cal_r_q}) + FR_OFS + ((MUT == 1) ? 1 : 0);
     // pin stage (every input registered; start / held words ride together, so the hub samples one coherent command)
     always @(posedge ck or negedge rst_n)
         if (!rst_n) start <= 1'b0; else start <= hs_start;
     always @(posedge ck) begin
-        epoch <= hs_ep; layer <= hs_layer; T <= hs_ctx; hub_cal <= cal_n;
+        epoch <= hs_ep; layer <= hs_layer; T <= hs_ctx;
     end
+    assign hub_cal = cal_n;
     reg signed [18:0] tgt_q;
-    always @(posedge ck) if (hs_start) tgt_q <= tgt_n;
+    always @(posedge ck) if (start) tgt_q <= tgt_n;
+    wire signed [18:0] tgt = start ? tgt_n : tgt_q;                 // this command's target from its start cycle on
     // held si identity (the native service's held_epoch / held_layer, captured on start)
     always @(posedge ck) if (start) begin si_epoch <= {4{epoch}}; si_layer <= {4{layer}}; end
     // ---- reciprocal export: one registered word at io age tgt ---------------------------------------------------------
@@ -93,8 +100,8 @@ module qkd_ahub_static_io #(
     reg  [15:0] prev_ep;
     wire [16:0] age_nx = start ? 17'd1 : {1'b0, age} + 17'd1;     // io age of the NEXT cycle
     wire        live   = start || active;
-    wire        emit   = live && $signed({2'b0, age_nx}) == tgt_q;
-    wire        bad_t  = start && (tgt_q < 19'sd1 || tgt_q > 19'sd65535);
+    wire        emit   = live && $signed({2'b0, age_nx}) == tgt;
+    wire        bad_t  = start && (tgt < 19'sd1 || tgt > 19'sd65535);
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin active <= 1'b0; published <= 1'b0; age <= 16'd0; fr_valid <= 1'b0; xf <= 1'b0; end
         else begin
@@ -159,7 +166,20 @@ module qkd_ahub_static_dw #(
     wire [63:0] si_epoch;  wire [23:0] si_layer;
     wire [143:0] am;  wire rz_valid, rz_publish, hub_fault;  wire [1:0] rz_head;  wire [31:0] rz_data;
     wire [15:0] rz_epoch;  wire [127:0] rz_vector;
-    wire [171:0] ap = {ap3, ap2, ap1, ap0};
+    // KV-AHUBDW 10-18 (pin rules): (a) synced regional resets: the rst_n port drives ONLY the 2-flop synchroniser of
+    // u_rr (ot_rst_pipe, the relay form of ot_rst_relay for a cluster this size); each region is its own flop chain
+    // placed by its loads: 0 io leaf + ap pin flops, 1 core (its own 4-region pipe inside), 2..5 the four Z trees'
+    // rst_n pins, 6 the reciprocal leaf's rst_n pin.  Release = 2 + 2 edges after the port (no consumer counts from it).
+    // (b) flop-first pins: the four stack words ap_s land in pin flops ap_q (+1 edge on the hub input ages: the plan's
+    // AP_OFS_s = 2 + L_s + D(ap_s) - D(ks_ahs), kv_static_die.ahub_ages); hs lands in u_io's pin flops; every output
+    // (am, fr, hf) leaves a flop.  (c) the sealed ot_qkd_ahub_static_die_cal is composed here child by child (same
+    // core / relays / Z trees / reciprocal leaf, same parameters, RECIP_RETURN = R_ISSUE + 67 + RX + RY) so each hard
+    // child gets its own reset region; tb_qkd_ahub_static_dw checks it edge-exact against the sealed master.
+    wire [6:0] rr;
+    ot_rst_pipe #(.REGIONS(7), .STAGES(2)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
+    reg  [171:0] ap_q;
+    always @(posedge ck) ap_q <= {ap3, ap2, ap1, ap0};
+    wire [171:0] ap = ap_q;
     wire [3:0] si_valid, si_g, si_any;  wire [7:0] si_type, si_hh;  wire [15:0] si_k;  wire [127:0] si_data;
     genvar s;
     generate for (s = 0; s < 4; s = s + 1) begin : g_si
@@ -175,17 +195,41 @@ module qkd_ahub_static_dw #(
     assign am0 = am_astk(am[35:0]);    assign am1 = am_astk(am[71:36]);
     assign am2 = am_astk(am[107:72]);  assign am3 = am_astk(am[143:108]);
     qkd_ahub_static_io #(.AP_OFS(AP_OFS), .FR_OFS(FR_OFS), .MUT(MUT)) u_io (
-        .ck(ck), .rst_n(rst_n), .hs_start(hs_start), .hs_ep(hs_ep), .hs_layer(hs_layer), .hs_ctx(hs_ctx),
+        .ck(ck), .rst_n(rr[0]), .hs_start(hs_start), .hs_ep(hs_ep), .hs_layer(hs_layer), .hs_ctx(hs_ctx),
         .hs_cal_lo(hs_cal_lo), .hs_cal_r(hs_cal_r), .start(start), .epoch(epoch), .layer(layer), .T(T),
         .hub_cal(hub_cal), .si_epoch(si_epoch), .si_layer(si_layer), .rz_publish(rz_publish), .rz_epoch(rz_epoch),
         .rz_vector(rz_vector), .hub_fault(hub_fault), .fr_valid(fr_valid), .fr_epoch(fr_epoch), .fr_rz(fr_rz),
         .fault(hf));
-    // cal: {RZ_PUBLISH, RECIP_ISSUE, Z_START, LMAX_ISSUE, Z_IN x4, LMAX_IN x4}; RECIP_RETURN is the leaf+relay geometry
-    ot_qkd_ahub_static_die_cal #(.Z_IN_STRIDE(Z_IN_STRIDE), .Z_LEVEL_GAP(10), .ZW_RLY(ZW_RLY), .ZR_RLY(ZR_RLY),
-                                 .RX_RLY(RX_RLY), .RY_RLY(RY_RLY)) u_hub (
-        .cal(hub_cal), .ck_core(ck), .ck_recip(ck), .ck_zh({4{ck}}), .rst_n(rst_n), .start(start),
-        .active_layer_parity(layer[0]), .request_epoch(epoch), .active_layer(layer), .T(T),
-        .si_valid(si_valid), .si_g(si_g), .si_any(si_any), .si_epoch(si_epoch), .si_layer(si_layer), .si_type(si_type),
-        .si_hh(si_hh), .si_k(si_k), .si_data(si_data), .am(am), .rz_valid(rz_valid), .rz_head(rz_head),
-        .rz_data(rz_data), .rz_epoch(rz_epoch), .rz_publish(rz_publish), .rz_vector(rz_vector), .fault(hub_fault));
+    // ---- the static hub (= ot_qkd_ahub_static_die_cal, cal {RZ_PUBLISH, RECIP_ISSUE, Z_START, LMAX_ISSUE, Z_IN x4,
+    // LMAX_IN x4}; RECIP_RETURN is the leaf + relay geometry) ----
+    wire [3:0] zh_start, zh_g;  wire [511:0] zh_we, zh_sid;  wire [15:0] zh_iv, zh_err;
+    wire [23:0] zh_p;  wire [255:0] zh_root;
+    wire rc_v, rc_vo, rc_fault;  wire [31:0] rc_x, rc_y;
+    wire [15:0] recip_return = hub_cal[175:160] + 16'(67 + RX_RLY + RY_RLY);
+    qkd_ahub_static_core_cal #(.Z_IN_STRIDE(Z_IN_STRIDE), .Z_LEVEL_GAP(10)) u_core (
+        .cal({hub_cal[191:176], recip_return, hub_cal[175:0]}),
+        .clk(ck), .rst_n(rr[1]), .start(start), .active_layer_parity(layer[0]), .request_epoch(epoch),
+        .active_layer(layer), .T(T),
+        .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh), .si_k(si_k), .si_any(si_any),
+        .si_epoch(si_epoch), .si_layer(si_layer), .si_data(si_data),
+        .am(am), .zh_start(zh_start), .zh_we(zh_we), .zh_sid(zh_sid), .zh_iv(zh_iv), .zh_g(zh_g), .zh_p(zh_p),
+        .zh_root(zh_root), .zh_err(zh_err), .rc_v(rc_v), .rc_x(rc_x), .rc_y(rc_y), .rc_vo(rc_vo), .rc_fault(rc_fault),
+        .rz_valid(rz_valid), .rz_head(rz_head), .rz_data(rz_data), .rz_epoch(rz_epoch), .rz_publish(rz_publish),
+        .rz4(rz_vector), .fault(hub_fault));
+    genvar a;
+    generate for (a = 0; a < 4; a = a + 1) begin : g_zh
+        wire [267:0] zi;  wire [67:0] zo, zot;
+        ot_qkd_drly #(.W(268), .N(ZW_RLY)) u_ri (.clk(ck),
+            .d({zh_start[a], zh_we[128*a +: 128], zh_sid[128*a +: 128], zh_iv[4*a +: 4], zh_g[a], zh_p[6*a +: 6]}), .q(zi));
+        ot_nhb_zh u_zh (.clk(ck), .rst_n(rr[2 + a]), .start(zi[267]), .zs_we(zi[266:139]), .sid(zi[138:11]),
+                        .ziv(zi[10:7]), .zg(zi[6]), .zp(zi[5:0]), .root(zot[63:0]), .zerr(zot[67:64]));
+        ot_qkd_drly #(.W(68), .N(ZR_RLY)) u_ro (.clk(ck), .d(zot), .q(zo));
+        assign zh_root[64*a +: 64] = zo[63:0];  assign zh_err[4*a +: 4] = zo[67:64];
+    end endgenerate
+    wire [32:0] rx;  wire [33:0] ry, ryt;
+    ot_qkd_drly #(.W(33), .N(RX_RLY)) u_rx (.clk(ck), .d({rc_v, rc_x}), .q(rx));
+    ot_qkh_recip_leaf u_recip (.clk(ck), .rst_n(rr[6]), .v(rx[32]), .x(rx[31:0]), .y(ryt[31:0]), .vo(ryt[32]),
+                               .fault(ryt[33]));
+    ot_qkd_drly #(.W(34), .N(RY_RLY)) u_ry (.clk(ck), .d(ryt), .q(ry));
+    assign rc_y = ry[31:0];  assign rc_vo = ry[32];  assign rc_fault = ry[33];
 endmodule

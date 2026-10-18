@@ -2,7 +2,7 @@
 // KV-INTEG/AHUB 2026-10-18: the KV die hub element qkd_ahub_static_dw (static six-root hub + reciprocal export) between
 // the ACTUAL attention service root (qkd_attn_service_root, PV_LEAD) and the ACTUAL PV final join (qkd_pv_fin_s), with
 // die relay chains on every bus (hs, ap x4 with unequal stage counts, fr, pvfst) and the plan-priced offsets
-//   AP_OFS[s] = 2 + D_AP[s] - D_HS - 1,   FR_OFS = D_PVFST - PV_LEAD - D_FR - D_HS - 1.
+//   AP_OFS[s] = 2 + D_AP[s] - D_HS (ap pin flops, KV-AHUBDW),   FR_OFS = D_PVFST - PV_LEAD - D_FR - D_HS - 1.
 // Reference: the qualified native service's hub block (ot_qkd_ahub_static_die_cal fed by the root with no die stages,
 // LIN / ZIN = LMAX_START / Z_START + 2, held epoch / layer), stimulus = the stack words on the reference's compiled slots.
 // Checks, several passes (T 8192 / 3000 / 1 / 8192, epochs and layers differ):
@@ -19,7 +19,8 @@ module tb_qkd_ahub_static_dw;
     localparam integer D_AP0 = 3, D_AP1 = 0, D_AP2 = 1, D_AP3 = 2;
     localparam integer LH = D_HS + 1;
     localparam integer FR_OFS = D_PVFST - PVL - D_FR - D_HS - 1;
-    localparam [63:0] AP_OFS = {16'(2 + D_AP3 - LH), 16'(2 + D_AP2 - LH), 16'(2 + D_AP1 - LH), 16'(2 + D_AP0 - LH)};
+    // KV-AHUBDW 10-18: + 1 for the DUT's ap pin flops (AP_OFS[s] = 2 + D_AP[s] - D_HS)
+    localparam [63:0] AP_OFS = {16'(2 + D_AP3 - D_HS), 16'(2 + D_AP2 - D_HS), 16'(2 + D_AP1 - D_HS), 16'(2 + D_AP0 - D_HS)};
     localparam integer NP = 4;
     // calendar (11 x 16 b): {R, P1, P0, PV_START, HUB_PUB, HUB_RECIP, HUB_Z, HUB_LMAX, Z, LMAX, EXP}
     localparam [15:0] C_EXP = 16'd0, C_LMAX = 16'd98, C_Z = 16'd198, C_HL = 16'd110, C_HZ = 16'd470, C_HR = 16'd555,
