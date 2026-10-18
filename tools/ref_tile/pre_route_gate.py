@@ -2020,6 +2020,60 @@ def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") ->
     return res
 
 
+CLOCK_WAIVER_MAX_PS = 2.0
+
+
+def apply_clock_rule_waiver(g: Gate, spec: dict) -> None:
+    """HANDOFF 0ga 2026-10-18 (s81lk_kp4_dec syn-dly 80.5 FF vs 80): a coordinator-recorded per-pair excess.  The job
+    spec's "clock_rule_waiver" {"pair": "a-b", "ff_ps"|"tt_ps": measured, "limit_ps", "by"} turns the clock_rule FAIL
+    into a WARN that prints the waiver, only when every over-limit corner spread of the gate evidence is <= limit + 2 ps,
+    <= the recorded value, and (child-pair basis) comes from that pair alone.  Anything else stays a FAIL."""
+    w = spec.get("clock_rule_waiver")
+    items = [i for i in g.items if i["check"] == "clock_rule" and i["severity"] == "FAIL"]
+    if not isinstance(w, dict) or not items:
+        return
+    ev = (getattr(g, "clock", None) or {}).get("evidence") or {}
+    lim = TL.CLK_SPREAD_MAX_PS
+    pair = {x.strip().removeprefix("u_") for x in str(w.get("pair", "")).split("-") if x.strip()}
+    why = []
+    if not str(w.get("by", "")).strip():
+        why.append("no 'by'")
+    _num = TL._num
+    if not _num(w.get("limit_ps")) or float(w["limit_ps"]) != lim:
+        why.append(f"limit_ps must be {lim:.0f}")
+    over = 0
+    for c, (v, basis) in TL.clock_spreads(ev).items():
+        if v <= lim:
+            continue
+        over += 1
+        rec_ps = w.get(f"{c}_ps")
+        if not _num(rec_ps) or v > float(rec_ps) + 1e-6:
+            why.append(f"{c.upper()} {v:.1f} ps not recorded in the waiver ({c}_ps={rec_ps})")
+        if v > lim + CLOCK_WAIVER_MAX_PS:
+            why.append(f"{c.upper()} {v:.1f} ps exceeds limit + {CLOCK_WAIVER_MAX_PS:.0f}")
+        if basis == "pin-flop" and ev.get(f"{c}_pin_spread_basis") == "child_pair":
+            # waiver tokens name the child instance (u_dly / dly) or its block suffix (s81lk_kp4_ddly / ddly)
+            def named(p):
+                inst = [str(p.get(k, "")).removeprefix("u_") for k in ("a", "b")]
+                return len(pair) == 2 and all(any(t.endswith(x) for t in pair) for x in inst) \
+                    and all(any(t.endswith(x) for x in inst) for t in pair)
+            bad = [p for p in ev.get("child_pairs") or () if p.get("corner") == c and float(p.get("ps", 0)) > lim
+                   and not named(p)]
+            if bad:
+                why.append(f"{c.upper()} pair(s) {', '.join(b['a'] + '-' + b['b'] for b in bad)} over {lim:.0f} too")
+    if not over:
+        why.append("no over-limit spread in the evidence")
+    if why:
+        for i in items:
+            i["message"] += f" (clock_rule_waiver NOT applied: {'; '.join(why)})"
+        return
+    note = (f"clock_rule_waiver by {w['by']}: pair {w.get('pair')} "
+            + ", ".join(f"{c}_ps {w[c + '_ps']}" for c in ("tt", "ff") if f"{c}_ps" in w) + f" vs limit {lim:.0f}")
+    print(f"pre_route_gate: WAIVER {note}", file=sys.stderr)
+    for i in items:
+        i["severity"], i["message"] = "WARN", i["message"] + f" -- WAIVED: {note}"
+
+
 def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = None,
                  closed_stands: bool = False, clock_mode: str = "refuse") -> dict:
     """closure-loop submit hook: the LOCAL gate on a job spec AT ITS SOURCE COMMIT (kit / pins / RTL / children /
@@ -2059,6 +2113,7 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
                         check_slot_fit(g, Path(td) / kit, spec, repo, commit)
                         if clock_mode != "off":
                             check_clock_evidence(g, Path(td) / kit, known_sinks, closed_stands, commit)
+                            apply_clock_rule_waiver(g, spec)
                             if clock_mode != "refuse":
                                 for i in g.items:
                                     if i["check"] == "clock_rule" and i["severity"] == "FAIL":
