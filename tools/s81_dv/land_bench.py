@@ -20,11 +20,22 @@ T, D, R0, G, MARGIN, SKEW = 834, 4, 4, 6, 100, 80
 GEOM = [dict(name='dL0_wrap', N=0, DH=100, LR=100), dict(name='dL_halfT', N=3, DH=135, LR=140),
         dict(name='dL_T_wrap_age1', N=6, DH=131, LR=83), dict(name='dL_2T_wrap_16hop', N=15, DH=115, LR=172)]
 SWEEP = list(range(-SKEW, SKEW + 1, 20))
+# LANDFIX-SQ (10-18) --long: dsfd_dvland_276l (D 8, 6-bit K) on the p4l long lanes; each geometry is swept over its
+# measured TT/FF arrival spread (p4l land plan S1 tt - ff, +-half) instead of the +-80 ps neighbour budget.
+# LR >= SK + 100 (the sweep moves LR by +-SK; a negative insertion is not a delay).  Long-mode slip test: the hop-0 gate
+# opens SLIP_N edges late, SLIP_N = the fewest edges that push the nominal arrival past the window's late edge E T: inside
+# the 8-T window a 1-edge slip is self-consistent (the ring absorbs it, latency +1) and the epoch check cannot see it --
+# gate slips are the static reset calendar's check; the tile's fault covers window violations.
+GEOM_LONG = [dict(name='host_hf_ht_60hop_E28', N=59, DH=405, LR=2400, SK=2300),
+             dict(name='seqhost_jw_jd_33hop_E16', N=32, DH=420, LR=1400, SK=1300),
+             dict(name='seqhost_cw_23hop_E12', N=22, DH=420, LR=1000, SK=900),
+             dict(name='xtier_tv_16hop_E9', N=15, DH=420, LR=800, SK=700)]
 
 
-def pick_k(dl):
-    e = math.ceil((dl + SKEW + MARGIN) / T)
-    assert dl - SKEW > (e - D) * T + MARGIN, 'window too narrow for this dL spread'
+def pick_k(dl, skew=SKEW, d=None):
+    d = d or D
+    e = math.ceil((dl + skew + MARGIN) / T)
+    assert dl - skew > (e - d) * T + MARGIN, 'window too narrow for this dL spread'
     return e, e + G - R0
 
 
@@ -38,25 +49,34 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', type=Path, default=ROOT / 'results/arch/s81_dv_1016/landing/bench.json')
     ap.add_argument('--widths', type=int, nargs='+', default=[70, 276])
+    ap.add_argument('--long', action='store_true', help='dsfd_dvland_276l: D 8, KW 6, long-lane geometries (GEOM_LONG)')
     a = ap.parse_args()
+    d_, kw, nmax, geoms = (8, 6, 64, GEOM_LONG) if a.long else (D, 3, 16, GEOM)
+    if a.long:
+        a.widths = [276]
     tmp = Path(tempfile.mkdtemp(prefix='s81land_'))
     res = dict(schema='opentallas.s81_land.bench.v1', tb=str(TB.relative_to(ROOT)), dut=str(DUT.relative_to(ROOT)),
-               T_ps=T, D=D, R0=R0, G=G, margin_ps=MARGIN, skew_sweep_ps=SWEEP, variants={})
+               T_ps=T, D=d_, KW=kw, R0=R0, G=G, margin_ps=MARGIN, skew_sweep_ps=SWEEP if not a.long else 'per geometry +-SK, 9 points',
+               geometries=geoms, variants={})
     verdict = True
     for var, define in (('base', None), ('mut_naive', 'OT_S81_LAND_MUT_NAIVE'), ('mut_sel', 'OT_S81_LAND_MUT_SEL')):
         vr = dict(runs=[], expect='PASS' if var == 'base' else 'FAIL')
         for w in a.widths:
             b = tmp / f'{var}_{w}'
-            cmd = ['iverilog', '-g2012', f'-DTB_W={w}', '-o', str(b), str(TB), str(DUT)] + ([f'-D{define}'] if define else [])
+            cmd = ['iverilog', '-g2012', f'-DTB_W={w}', f'-DTB_D={d_}', f'-DTB_KW={kw}', f'-DTB_NMAX={nmax}', '-o', str(b), str(TB),
+                   str(DUT)] + ([f'-D{define}'] if define else [])
             subprocess.run(cmd, check=True)
-            for g in GEOM:
+            for g in geoms:
                 dl0 = (g['N'] + 1) * g['DH'] - g['LR']
-                e, k = pick_k(dl0)
-                for s in SWEEP:
-                    r = run(str(b), dict(N=g['N'], DH=g['DH'], LR=g['LR'] - s, K=k, R0=R0, G=G))
+                sk = g.get('SK', SKEW)
+                e, k = pick_k(dl0, sk, d_)
+                cyc = {} if not a.long else dict(CYC=320)
+                for s in (SWEEP if not a.long else [round(sk * (i - 4) / 4) for i in range(9)]):
+                    r = run(str(b), dict(N=g['N'], DH=g['DH'], LR=g['LR'] - s, K=k, R0=R0, G=G, **cyc))
                     r.update(geom=g['name'], E=e, ok=(r.get('mism', 1) == 0 and r.get('fault', 1) == 0 and r.get('meas') == r.get('pred')))
                     vr['runs'].append(r)
-                r = run(str(b), dict(N=g['N'], DH=g['DH'], LR=g['LR'], K=k, R0=R0, G=G, SLIP=1))   # calendar slip
+                slip = 1 if not a.long else (e * T - dl0) // T + 1
+                r = run(str(b), dict(N=g['N'], DH=g['DH'], LR=g['LR'], K=k, R0=R0, G=G, SLIP=slip, **cyc))   # calendar slip
                 r.update(geom=g['name'], E=e, slip_test=True, ok=(r.get('fault') == 1))
                 vr['runs'].append(r)
         sweep = [r for r in vr['runs'] if not r.get('slip_test')]
@@ -66,7 +86,7 @@ def main():
         for r in sweep:
             vr['latency_by_geom'].setdefault(f"{r['geom']}/w{r['w']}", set()).add(r.get('meas'))
         vr['latency_by_geom'] = {k: sorted(v) for k, v in vr['latency_by_geom'].items()}
-        passed = vr['sweep_pass'] == vr['sweep_runs'] and vr['slip_fault_raised'] == len(GEOM) * len(a.widths)
+        passed = vr['sweep_pass'] == vr['sweep_runs'] and vr['slip_fault_raised'] == len(geoms) * len(a.widths)
         vr['verdict'] = 'PASS' if passed else 'FAIL'
         verdict &= (vr['verdict'] == vr['expect'])
         res['variants'][var] = vr

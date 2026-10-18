@@ -25,6 +25,18 @@
 `ifndef RS_OBS
 `define RS_OBS
 `endif
+// S81U-SVC6: RS_PL = the slices are pre-built Verilator protect-libs (rs_bench_pl.sh; MUT / DIE_ID / ST and the RS_MUT_*
+// defines are baked into the libs), so the top build sees only the wrappers -- the --hierarchical top re-elaborated the full
+// slice hierarchy in V3Param (> 4 h single-thread at 66 GB, never finished)
+`ifdef RS_PL
+`define RS_ENT_MOD dsdv_svc_rs_entry_pl
+`define RS_SL_MOD dsdv_svc_rs_pl
+`define RS_PRM
+`else
+`define RS_ENT_MOD dsdv_svc_rs_entry
+`define RS_SL_MOD dsdv_svc_rs
+`define RS_PRM #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST))
+`endif
 module tb_dsdv_svc_rs;
     parameter integer DIE = 0;
     parameter integer ST = 0;
@@ -32,8 +44,9 @@ module tb_dsdv_svc_rs;
     parameter integer GODLY = 400;
     parameter integer PVS0 = 150;          // compiled PV send: GO + ceil(5 T / 4) + PVS0 (the D = 32 share scores
                                            // 1.25 cycles a row: tb_dsdv_svc_pfeed last score 1.25 T + 40; + tree + gd)
-    parameter integer KPV = 112;           // compiled P.V drain base: PO + ceil(T / 4) + KPV (probe: the last P.V word
-                                           // of a continuous drain <= p0 + ceil(T / 4) + 157, 40 words)
+    parameter integer KPV = 55;            // compiled P.V drain base: PO + 8 ceil(T / 32) + KPV (SVC-PV 10-18, PV_CRED 8:
+                                           // tb_dsdv_svc_pvdrain, all 8 beats in pvq by p0 + 53 + 8 ceil(T / 32); was
+                                           // PO + ceil(T / 4) + 112 for the 4-deep pvq, which faulted 15 / 19)
 `ifndef MUT
 `define MUT 0
 `endif
@@ -151,7 +164,7 @@ module tb_dsdv_svc_rs;
         end
         if (gs == RS_ENTRY_W || gs == RS_ENTRY_E) begin : g_r
             localparam integer HX = (gs == RS_ENTRY_E) ? 1 : 0;
-            dsdv_svc_rs_entry #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST)) u (.ck(ck), .rst(rst), .sid(4'(gs)),
+            `RS_ENT_MOD `RS_PRM u (.ck(ck), .rst(rst), .sid(4'(gs)),
                 .j(jcmd), .jd(jdx[HX]), .q({1'b0, 1'b1, q_d, q_v}), .hw(hwx[HX]), .hc(hcx[HX]), .fault(rfx[HX]), .st_rg(stx[HX]),
                 .dn_i(dn_i[gs]), .dn_o(dn_o[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]), .ri(ri[gs]), .ro(ro[gs]),
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
@@ -160,7 +173,7 @@ module tb_dsdv_svc_rs;
                 .r_beat(r_beat[gs]), .hs(hsv[gs]), .pv_v(pv_v[gs]), .pv_d(pv_d[gs]),
                 .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]), .obs(obs[gs]));
         end else begin : g_n
-            dsdv_svc_rs #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST)) u (.ck(ck), .rst(rst), .sid(4'(gs)),
+            `RS_SL_MOD `RS_PRM u (.ck(ck), .rst(rst), .sid(4'(gs)),
                 .dn_i(dn_i[gs]), .dn_o(dn_o[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]), .ri(ri[gs]), .ro(ro[gs]),
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
                 .si_v(si_v[gs]), .si_d(si_d[gs]), .so_v(so_v[gs]), .so_d(so_d[gs]),
@@ -197,7 +210,7 @@ module tb_dsdv_svc_rs;
         n = (T + 1) / 2;
         pvs_c = (5 * T + 3) / 4 + PVS0;
         po_c = pvs_c + (n + 1) / 2 + (n + 249) / 250 + 4;
-        pvo_c = po_c + (T + 3) / 4 + KPV;
+        pvo_c = po_c + 8 * ((T + 31) / 32) + KPV;
         sp = 0; sp[29:0] = WB;
         qw[nq] = hdr(4'd12, 0, sp); nq = nq + 1;
         for (r = 0; r < wcount; r = r + 1) begin
@@ -347,6 +360,9 @@ module tb_dsdv_svc_rs;
     localparam integer PVH = (ST >= 2) ? 0 : 1;      // the half whose entry carries quarter ST's P.V (tiles 4 ST .. 4 ST + 3)
     always @(posedge ck) begin
         cyc <= cyc + 1;
+`ifdef RS_PROG
+        if (cyc % 500 == 0) begin $display("SVCRS_PROG cyc=%0d qi=%0d done=%0d/%0d rt_beats=%0d pv_n=%0d rfx=%0h sflt=%04x jd=%0d%0d", cyc, qi, n_done_x[0], n_done_x[1], rt_beats, pv_n, rfx, sflt, jdx[0][1], jdx[1][1]); $fflush; end
+`endif
         if (cyc == 3) rst <= 1;
         jcmd <= 0;
         if (cyc == 1) build_frames();

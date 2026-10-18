@@ -1,0 +1,362 @@
+{
+ "ck_w0": {
+  "tt": {
+   "n": 102,
+   "pin_min": 3067.9,
+   "pin_max": 3240.0,
+   "pin_spread": 172.1,
+   "flop_min": 3276.2,
+   "flop_max": 3354.0,
+   "flop_spread": 77.8,
+   "a0_pin": [
+    3067.9,
+    3201.1
+   ],
+   "stn_pin": [
+    3214.8,
+    3240.0
+   ],
+   "soft_regs": [
+    3215.3,
+    3231.5
+   ],
+   "latest": "u_fab.u_leg_4_0a_13/ck",
+   "earliest": "u_t_0_0/ck_node"
+  },
+  "ff": {
+   "n": 102,
+   "pin_min": 2359.2,
+   "pin_max": 2707.1,
+   "pin_spread": 347.9,
+   "flop_min": 2498.6,
+   "flop_max": 2902.0,
+   "flop_spread": 403.4,
+   "a0_pin": [
+    2359.2,
+    2707.1
+   ],
+   "stn_pin": [
+    2451.4,
+    2614.3
+   ],
+   "soft_regs": [
+    2490.0,
+    2563.7
+   ],
+   "latest": "u_t_0_0/ck_rp9",
+   "earliest": "u_t_1_0/ck_rp0"
+  }
+ },
+ "ck_w1": {
+  "tt": {
+   "n": 95,
+   "pin_min": 3209.2,
+   "pin_max": 3382.6,
+   "pin_spread": 173.4,
+   "flop_min": 3417.1,
+   "flop_max": 3496.6,
+   "flop_spread": 79.5,
+   "a0_pin": [
+    3209.2,
+    3345.4
+   ],
+   "stn_pin": [
+    3358.0,
+    3382.6
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_dn1_rly4/ck",
+   "earliest": "u_t_0_1/ck_node"
+  },
+  "ff": {
+   "n": 95,
+   "pin_min": 2455.0,
+   "pin_max": 2836.6,
+   "pin_spread": 381.6,
+   "flop_min": 2632.7,
+   "flop_max": 3031.5,
+   "flop_spread": 398.8,
+   "a0_pin": [
+    2455.0,
+    2836.6
+   ],
+   "stn_pin": [
+    2571.2,
+    2697.4
+   ],
+   "soft_regs": null,
+   "latest": "u_t_0_1/ck_rp9",
+   "earliest": "u_t_0_1/ck_node"
+  }
+ },
+ "ck_w2": {
+  "tt": {
+   "n": 99,
+   "pin_min": 3301.0,
+   "pin_max": 3472.1,
+   "pin_spread": 171.1,
+   "flop_min": 3510.7,
+   "flop_max": 3586.2,
+   "flop_spread": 75.5,
+   "a0_pin": [
+    3301.0,
+    3435.5
+   ],
+   "stn_pin": [
+    3448.2,
+    3472.1
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_leg_4_0b_0/ck",
+   "earliest": "u_t_1_2/ck_node"
+  },
+  "ff": {
+   "n": 99,
+   "pin_min": 2559.3,
+   "pin_max": 2989.7,
+   "pin_spread": 430.4,
+   "flop_min": 2698.7,
+   "flop_max": 3114.9,
+   "flop_spread": 416.2,
+   "a0_pin": [
+    2559.3,
+    2989.7
+   ],
+   "stn_pin": [
+    2638.2,
+    2781.7
+   ],
+   "soft_regs": null,
+   "latest": "u_t_0_2/ck_fa4",
+   "earliest": "u_t_1_2/ck_rp0"
+  }
+ },
+ "ck_w3": {
+  "tt": {
+   "n": 91,
+   "pin_min": 3532.9,
+   "pin_max": 3703.0,
+   "pin_spread": 170.1,
+   "flop_min": 3740.0,
+   "flop_max": 3818.6,
+   "flop_spread": 78.6,
+   "a0_pin": [
+    3532.9,
+    3666.5
+   ],
+   "stn_pin": [
+    3677.5,
+    3703.0
+   ],
+   "soft_regs": [
+    3689.3,
+    3703.0
+   ],
+   "latest": "u_fab.u_dn0_exit/ck",
+   "earliest": "u_t_1_3/ck_node"
+  },
+  "ff": {
+   "n": 91,
+   "pin_min": 2660.1,
+   "pin_max": 3189.9,
+   "pin_spread": 529.8,
+   "flop_min": 2833.5,
+   "flop_max": 3315.1,
+   "flop_spread": 481.6,
+   "a0_pin": [
+    2660.1,
+    3189.9
+   ],
+   "stn_pin": [
+    2764.5,
+    2930.4
+   ],
+   "soft_regs": [
+    2914.4,
+    2929.0
+   ],
+   "latest": "u_t_0_3/ck_fa4",
+   "earliest": "u_t_1_3/ck_node"
+  }
+ },
+ "ck_e0": {
+  "tt": {
+   "n": 93,
+   "pin_min": 2727.1,
+   "pin_max": 2886.0,
+   "pin_spread": 158.9,
+   "flop_min": 2930.9,
+   "flop_max": 3006.7,
+   "flop_spread": 75.8,
+   "a0_pin": [
+    2727.1,
+    2856.7
+   ],
+   "stn_pin": [
+    2869.6,
+    2886.0
+   ],
+   "soft_regs": [
+    2877.7,
+    2990.7
+   ],
+   "latest": "u_fab.u_ft_16/ck",
+   "earliest": "u_t_2_0/ck_node"
+  },
+  "ff": {
+   "n": 93,
+   "pin_min": 2102.8,
+   "pin_max": 2470.9,
+   "pin_spread": 368.1,
+   "flop_min": 2242.2,
+   "flop_max": 2599.3,
+   "flop_spread": 357.1,
+   "a0_pin": [
+    2102.8,
+    2470.9
+   ],
+   "stn_pin": [
+    2189.7,
+    2290.5
+   ],
+   "soft_regs": [
+    2254.5,
+    2340.8
+   ],
+   "latest": "u_t_3_0/ck_tx0",
+   "earliest": "u_t_3_0/ck_rp3"
+  }
+ },
+ "ck_e1": {
+  "tt": {
+   "n": 103,
+   "pin_min": 2743.6,
+   "pin_max": 2914.0,
+   "pin_spread": 170.4,
+   "flop_min": 2947.7,
+   "flop_max": 3028.0,
+   "flop_spread": 80.3,
+   "a0_pin": [
+    2743.6,
+    2877.0
+   ],
+   "stn_pin": [
+    2887.1,
+    2914.0
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_dn3_rly3/ck",
+   "earliest": "u_t_3_1/ck_node"
+  },
+  "ff": {
+   "n": 103,
+   "pin_min": 2168.4,
+   "pin_max": 2479.8,
+   "pin_spread": 311.4,
+   "flop_min": 2307.8,
+   "flop_max": 2608.2,
+   "flop_spread": 300.4,
+   "a0_pin": [
+    2168.4,
+    2479.8
+   ],
+   "stn_pin": [
+    2241.6,
+    2396.8
+   ],
+   "soft_regs": null,
+   "latest": "u_t_3_1/ck_tx0",
+   "earliest": "u_t_3_1/ck_rp2"
+  }
+ },
+ "ck_e2": {
+  "tt": {
+   "n": 97,
+   "pin_min": 3231.0,
+   "pin_max": 3398.6,
+   "pin_spread": 167.6,
+   "flop_min": 3435.7,
+   "flop_max": 3512.6,
+   "flop_spread": 76.9,
+   "a0_pin": [
+    3231.0,
+    3361.9
+   ],
+   "stn_pin": [
+    3374.8,
+    3398.6
+   ],
+   "soft_regs": null,
+   "latest": "u_fab.u_leg_2_3a_2/ck",
+   "earliest": "u_t_3_2/ck_node"
+  },
+  "ff": {
+   "n": 97,
+   "pin_min": 2570.8,
+   "pin_max": 2868.2,
+   "pin_spread": 297.4,
+   "flop_min": 2710.2,
+   "flop_max": 3054.9,
+   "flop_spread": 344.7,
+   "a0_pin": [
+    2570.8,
+    2868.2
+   ],
+   "stn_pin": [
+    2645.6,
+    2820.4
+   ],
+   "soft_regs": null,
+   "latest": "u_t_2_2/ck",
+   "earliest": "u_t_2_2/ck_rp5"
+  }
+ },
+ "ck_e3": {
+  "tt": {
+   "n": 92,
+   "pin_min": 3354.1,
+   "pin_max": 3520.6,
+   "pin_spread": 166.5,
+   "flop_min": 3558.1,
+   "flop_max": 3634.6,
+   "flop_spread": 76.5,
+   "a0_pin": [
+    3354.1,
+    3483.8
+   ],
+   "stn_pin": [
+    3495.7,
+    3520.6
+   ],
+   "soft_regs": [
+    3499.6,
+    3510.0
+   ],
+   "latest": "u_fab.u_dn2_rly10/ck",
+   "earliest": "u_t_3_3/ck_node"
+  },
+  "ff": {
+   "n": 92,
+   "pin_min": 2632.3,
+   "pin_max": 2981.9,
+   "pin_spread": 349.6,
+   "flop_min": 2771.2,
+   "flop_max": 3150.5,
+   "flop_spread": 379.3,
+   "a0_pin": [
+    2632.3,
+    2981.9
+   ],
+   "stn_pin": [
+    2702.2,
+    2875.3
+   ],
+   "soft_regs": [
+    2720.2,
+    2871.8
+   ],
+   "latest": "u_t_2_3/ck_tx3",
+   "earliest": "u_t_2_3/ck_rp5"
+  }
+ }
+}

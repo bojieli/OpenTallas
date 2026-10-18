@@ -1,0 +1,10 @@
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_seq_xd_sel/src/00_qkd_seq_static_prg.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_seq_xd_sel/new/ot_hbm_svc_stack_fault.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_seq_xd_sel/new/ot_hbm_svc_wb_cutthrough_cdc.sv
+hierarchy -top qkd_seq_xd_sel -chparam W 128 -chparam MUT 0
+tee -o /tmp/r0330_eqv/qkd_seq_xd_sel/out_new/modules.txt ls
+proc; flatten; opt_clean -purge
+rename -enumerate
+tee -o /tmp/r0330_eqv/qkd_seq_xd_sel/out_new/stat.txt stat
+write_rtlil /tmp/r0330_eqv/qkd_seq_xd_sel/out_new/netlist.il
+write_verilog -noattr /tmp/r0330_eqv/qkd_seq_xd_sel/out_new/netlist.v

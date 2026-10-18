@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_bk_g",
+ "enable": false,
+ "reason": "Source-registered: every input lands in a flop at the pin (vstop / strap / vd input flops) and every output leaves a flop (vin lane registers, vstop / vout output flops); recipe pin_regs would add an unpriced stage on the rung and on the leaf hops (static schedule)."
+}

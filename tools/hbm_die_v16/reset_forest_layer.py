@@ -34,6 +34,10 @@ def main():
     ap.add_argument('--out', required=True, type=Path); ap.add_argument('--report', required=True, type=Path)
     ap.add_argument('--reach', type=float, default=405.0); ap.add_argument('--fanout', type=int, default=2048)
     ap.add_argument('--mut-skew', action='store_true')
+    ap.add_argument('--zones', choices=('d4b', 'quadrant'), default='d4b',
+                    help="quadrant (H-D4G d4g): one regional root per die quadrant (no E core column)")
+    ap.add_argument('--diag', action='store_true',
+                    help='record reachability errors and still write the layer (FAIL_DIAG); default: they FAIL (exit 3)')
     a = ap.parse_args()
     R, FO = a.reach, a.fanout
     c = load(a.contract); man = load(a.manifest)
@@ -49,6 +53,8 @@ def main():
 
     def zone(xy):
         x, y = xy
+        if a.zones == 'quadrant':
+            return ('N' if y >= H / 2 else 'S') + ('W' if x < W / 2 else 'E')
         if CB0 <= x <= CB1:
             return 'C'
         return ('N' if y >= H / 2 else 'S') + ('W' if x < CB0 else 'E')
@@ -182,9 +188,15 @@ def main():
     a.out.write_text(json.dumps(spec) + '\n')
     rep.update(tiles=len(tiles), reset_ports=len(ports), problems=problems,
                tiles_by_master=dict(collections.Counter(t['master'] for t in tiles)))
+    # H-D4G reset reachability gate (die standard: regional reset): an unplaced reset sink cannot be reached by any tree
+    for m_, k_ in unplaced.items():
+        problems.append(dict(kind='sink_unreachable', master=m_, sinks=k_, why='no placement / home for the reset pin'))
+    rep['reach_gate'] = 'PASS' if not problems else ('FAIL_DIAG' if a.diag else 'FAIL')
     a.report.write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps({k: rep[k] for k in ('tiles', 'reset_ports', 'tiles_by_master', 'unplaced')}),
-          {k: (v.get('sinks'), v.get('age')) for k, v in rep['domains'].items()}, len(problems), 'problems')
+          {k: (v.get('sinks'), v.get('age')) for k, v in rep['domains'].items()}, len(problems), 'problems', rep['reach_gate'])
+    if rep['reach_gate'] == 'FAIL':
+        raise SystemExit(3)
 
 
 if __name__ == '__main__':

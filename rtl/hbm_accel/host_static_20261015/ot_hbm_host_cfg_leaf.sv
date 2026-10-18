@@ -143,3 +143,106 @@ module ot_hbm_host_cfg_leaf2 #(parameter integer NT = 20, parameter integer NF =
         .t_ready(t_ready), .t_active(t_active), .t_fault(t_fault), .s_ready(s_ready), .s_active(s_active), .s_fault(s_fault));
 endmodule
 `default_nettype wire
+`default_nettype none
+// d4g per-quadrant hardened masters (HBM-B-RTL1b 10-17): ot_hbm_host_cfg_leaf2 at the EXACT per-quadrant status
+// widths of host_cfg_leaf_map_d4g.json (SW 18/29, SE 18/26, NW 19/29, NE 14/23), so every t_ready/t_active/t_fault
+// input is driven by a real target/source pin in its die and no input is tied (owner 10-14 no-stubs rule; the
+// NT20/NF32 leaf2 master would leave 1..6 ready/active and 3..9 fault inputs open per quadrant).  SW+NW cannot merge
+// (NT19 would leave one SW ready/active pair tied).  Every output (both copy groups, every status bit) has a sink.
+module ot_hbm_host_cfg_leaf_sw #(parameter integer MUT = 0) (
+    input  wire clk, rst_n,
+    input  wire cfg_v, input wire [7:0] cfg_target, input wire [11:0] cfg_addr, input wire [255:0] cfg_data,
+    input  wire desc_v, input wire [11:0] desc_base, input wire [12:0] desc_limit, input wire [15:0] desc_loops,
+    input  wire launch_v,
+    output wire a_cfg_v, output wire [7:0] a_cfg_target, output wire [11:0] a_cfg_addr, output wire [255:0] a_cfg_data,
+    output wire a_desc_v, output wire [11:0] a_desc_base, output wire [12:0] a_desc_limit, output wire [15:0] a_desc_loops,
+    output wire a_launch_v,
+    output wire b_cfg_v, output wire [7:0] b_cfg_target, output wire [11:0] b_cfg_addr, output wire [255:0] b_cfg_data,
+    output wire b_desc_v, output wire [11:0] b_desc_base, output wire [12:0] b_desc_limit, output wire [15:0] b_desc_loops,
+    output wire b_launch_v,
+    input  wire [17:0] t_ready, t_active, input wire [28:0] t_fault,
+    output wire [17:0] s_ready, s_active, output wire [28:0] s_fault
+);
+    ot_hbm_host_cfg_leaf2 #(.NT(18), .NF(29), .MUT(MUT)) u (
+        .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
+        .a_cfg_v(a_cfg_v), .a_cfg_target(a_cfg_target), .a_cfg_addr(a_cfg_addr), .a_cfg_data(a_cfg_data),
+        .a_desc_v(a_desc_v), .a_desc_base(a_desc_base), .a_desc_limit(a_desc_limit), .a_desc_loops(a_desc_loops),
+        .a_launch_v(a_launch_v), .b_cfg_v(b_cfg_v), .b_cfg_target(b_cfg_target), .b_cfg_addr(b_cfg_addr),
+        .b_cfg_data(b_cfg_data), .b_desc_v(b_desc_v), .b_desc_base(b_desc_base), .b_desc_limit(b_desc_limit),
+        .b_desc_loops(b_desc_loops), .b_launch_v(b_launch_v), .t_ready(t_ready), .t_active(t_active),
+        .t_fault(t_fault), .s_ready(s_ready), .s_active(s_active), .s_fault(s_fault));
+endmodule
+module ot_hbm_host_cfg_leaf_se #(parameter integer MUT = 0) (
+    input  wire clk, rst_n,
+    input  wire cfg_v, input wire [7:0] cfg_target, input wire [11:0] cfg_addr, input wire [255:0] cfg_data,
+    input  wire desc_v, input wire [11:0] desc_base, input wire [12:0] desc_limit, input wire [15:0] desc_loops,
+    input  wire launch_v,
+    output wire a_cfg_v, output wire [7:0] a_cfg_target, output wire [11:0] a_cfg_addr, output wire [255:0] a_cfg_data,
+    output wire a_desc_v, output wire [11:0] a_desc_base, output wire [12:0] a_desc_limit, output wire [15:0] a_desc_loops,
+    output wire a_launch_v,
+    output wire b_cfg_v, output wire [7:0] b_cfg_target, output wire [11:0] b_cfg_addr, output wire [255:0] b_cfg_data,
+    output wire b_desc_v, output wire [11:0] b_desc_base, output wire [12:0] b_desc_limit, output wire [15:0] b_desc_loops,
+    output wire b_launch_v,
+    input  wire [17:0] t_ready, t_active, input wire [25:0] t_fault,
+    output wire [17:0] s_ready, s_active, output wire [25:0] s_fault
+);
+    ot_hbm_host_cfg_leaf2 #(.NT(18), .NF(26), .MUT(MUT)) u (
+        .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
+        .a_cfg_v(a_cfg_v), .a_cfg_target(a_cfg_target), .a_cfg_addr(a_cfg_addr), .a_cfg_data(a_cfg_data),
+        .a_desc_v(a_desc_v), .a_desc_base(a_desc_base), .a_desc_limit(a_desc_limit), .a_desc_loops(a_desc_loops),
+        .a_launch_v(a_launch_v), .b_cfg_v(b_cfg_v), .b_cfg_target(b_cfg_target), .b_cfg_addr(b_cfg_addr),
+        .b_cfg_data(b_cfg_data), .b_desc_v(b_desc_v), .b_desc_base(b_desc_base), .b_desc_limit(b_desc_limit),
+        .b_desc_loops(b_desc_loops), .b_launch_v(b_launch_v), .t_ready(t_ready), .t_active(t_active),
+        .t_fault(t_fault), .s_ready(s_ready), .s_active(s_active), .s_fault(s_fault));
+endmodule
+module ot_hbm_host_cfg_leaf_nw #(parameter integer MUT = 0) (
+    input  wire clk, rst_n,
+    input  wire cfg_v, input wire [7:0] cfg_target, input wire [11:0] cfg_addr, input wire [255:0] cfg_data,
+    input  wire desc_v, input wire [11:0] desc_base, input wire [12:0] desc_limit, input wire [15:0] desc_loops,
+    input  wire launch_v,
+    output wire a_cfg_v, output wire [7:0] a_cfg_target, output wire [11:0] a_cfg_addr, output wire [255:0] a_cfg_data,
+    output wire a_desc_v, output wire [11:0] a_desc_base, output wire [12:0] a_desc_limit, output wire [15:0] a_desc_loops,
+    output wire a_launch_v,
+    output wire b_cfg_v, output wire [7:0] b_cfg_target, output wire [11:0] b_cfg_addr, output wire [255:0] b_cfg_data,
+    output wire b_desc_v, output wire [11:0] b_desc_base, output wire [12:0] b_desc_limit, output wire [15:0] b_desc_loops,
+    output wire b_launch_v,
+    input  wire [18:0] t_ready, t_active, input wire [28:0] t_fault,
+    output wire [18:0] s_ready, s_active, output wire [28:0] s_fault
+);
+    ot_hbm_host_cfg_leaf2 #(.NT(19), .NF(29), .MUT(MUT)) u (
+        .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
+        .a_cfg_v(a_cfg_v), .a_cfg_target(a_cfg_target), .a_cfg_addr(a_cfg_addr), .a_cfg_data(a_cfg_data),
+        .a_desc_v(a_desc_v), .a_desc_base(a_desc_base), .a_desc_limit(a_desc_limit), .a_desc_loops(a_desc_loops),
+        .a_launch_v(a_launch_v), .b_cfg_v(b_cfg_v), .b_cfg_target(b_cfg_target), .b_cfg_addr(b_cfg_addr),
+        .b_cfg_data(b_cfg_data), .b_desc_v(b_desc_v), .b_desc_base(b_desc_base), .b_desc_limit(b_desc_limit),
+        .b_desc_loops(b_desc_loops), .b_launch_v(b_launch_v), .t_ready(t_ready), .t_active(t_active),
+        .t_fault(t_fault), .s_ready(s_ready), .s_active(s_active), .s_fault(s_fault));
+endmodule
+module ot_hbm_host_cfg_leaf_ne #(parameter integer MUT = 0) (
+    input  wire clk, rst_n,
+    input  wire cfg_v, input wire [7:0] cfg_target, input wire [11:0] cfg_addr, input wire [255:0] cfg_data,
+    input  wire desc_v, input wire [11:0] desc_base, input wire [12:0] desc_limit, input wire [15:0] desc_loops,
+    input  wire launch_v,
+    output wire a_cfg_v, output wire [7:0] a_cfg_target, output wire [11:0] a_cfg_addr, output wire [255:0] a_cfg_data,
+    output wire a_desc_v, output wire [11:0] a_desc_base, output wire [12:0] a_desc_limit, output wire [15:0] a_desc_loops,
+    output wire a_launch_v,
+    output wire b_cfg_v, output wire [7:0] b_cfg_target, output wire [11:0] b_cfg_addr, output wire [255:0] b_cfg_data,
+    output wire b_desc_v, output wire [11:0] b_desc_base, output wire [12:0] b_desc_limit, output wire [15:0] b_desc_loops,
+    output wire b_launch_v,
+    input  wire [13:0] t_ready, t_active, input wire [22:0] t_fault,
+    output wire [13:0] s_ready, s_active, output wire [22:0] s_fault
+);
+    ot_hbm_host_cfg_leaf2 #(.NT(14), .NF(23), .MUT(MUT)) u (
+        .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
+        .a_cfg_v(a_cfg_v), .a_cfg_target(a_cfg_target), .a_cfg_addr(a_cfg_addr), .a_cfg_data(a_cfg_data),
+        .a_desc_v(a_desc_v), .a_desc_base(a_desc_base), .a_desc_limit(a_desc_limit), .a_desc_loops(a_desc_loops),
+        .a_launch_v(a_launch_v), .b_cfg_v(b_cfg_v), .b_cfg_target(b_cfg_target), .b_cfg_addr(b_cfg_addr),
+        .b_cfg_data(b_cfg_data), .b_desc_v(b_desc_v), .b_desc_base(b_desc_base), .b_desc_limit(b_desc_limit),
+        .b_desc_loops(b_desc_loops), .b_launch_v(b_launch_v), .t_ready(t_ready), .t_active(t_active),
+        .t_fault(t_fault), .s_ready(s_ready), .s_active(s_active), .s_fault(s_fault));
+endmodule
+`default_nettype wire

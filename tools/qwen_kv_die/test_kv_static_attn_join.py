@@ -11,7 +11,7 @@ def test_programme_service_face_bound():
     assert p['request_ready'][0]['instance'] == 'attn_root'
     assert all(p[q][0]['instance'] == 'attn_face' for q in A.PROG_FROM_FACE)
     face_open = sorted(k for k, v in ins['attn_face']['inputs'].items() if v is None)
-    assert face_open == ['ck', 'f_data', 'f_epoch', 'f_valid', 'rst_n', 'unit_fault']
+    assert face_open == sorted(['ck', 'f_data', 'f_epoch', 'f_valid', 'rst_n', 'unit_fault'] + (['f_beat'] if A.STREAM else []))
     assert ins['attn_face']['parameters']['RESULT_RELAY'] is None       # compiler-priced
     root_open = sorted(k for k, v in ins['attn_root']['inputs'].items() if v is None)
     assert root_open == ['ck', 'fused_program_capability', 'rst_n']

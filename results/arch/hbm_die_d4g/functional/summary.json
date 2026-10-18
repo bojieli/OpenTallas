@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.hbm.d4g.functional_wiring.v1",
+ "lane": "HBM-WIRE", "date": "2026-10-18",
+ "question": "TOKEN-PASS-HBMDS graded every DS layer BLOCKED on G-CIL-INJ/DEL/RC, G-SMVM-XCMD, G-HC-ENG/G-HC, G-SFU-OPERAND-JOIN-*, G-DMA-WB: are those paths wired on the d4g GEN2 die?",
+ "answer": {
+  "structural": "All 1,152 compiled producer->consumer paths of those gap classes (289,940 bits) are bound bit-exactly on the GEN2 pre-relay contract AND on the GEN2 landed smoke contract (18,851 inst, through relays/landing hops). The contract gap list was never pruned when layers l2..l6 bound them (stale), and tools/hbm_layer_vehicle/layer_coverage.py treats every listed gap as open.",
+  "HC_ENG": "The HC engine IS on the die: hc_eng = ot_hbm_hc_root_static (programme/sequencer/core/tail) + 4 x hc_<q> = ot_hbm_hc_qhub_static (quadrant LG client + quarter-engine centre) + 4 x 8 bank tiles hcb_<q>0..7 (ot_hbm_hc_bankq*_static) = root + 4 quarter engines of HBM-B-RTL2; no block missing.",
+  "XCMD": "The static x-load command issuer IS on the die: xl_<q>_ctl (ot_hgi_sm_xload_cl2_ctlx, own programme calendar from the host F20 leaf, no x_rdy) -> aq trees -> xq_<q>_p<p>_{bfq,bd,eg} -> sm.xw_*; SM command = {xc_<q><k>.cmd_ext[108:0] (ot_hbm_svc_sm_xcal_t), svg_<q><k>.sm_command[82:0]}.",
+  "real_gap": "G-CIL-INJ slot: l5b_cij4 inserted cij_<q> (INJLAT 12) in SE/NW/NE but left cxij_<q> at INJ_RET 11 / B39_NOOP 0 (pre-join values). The join samples the SU word at P+INJLAT-2 (needs SU inj_d register at P+9 = INJ_RET 9, as cxij_SW) and bit 39 selects IDX staging -> every SU-sourced inject word in SE/NW/NE reached COLL two edges stale. FIX l7_wire.py: INJ_RET 9, B39_NOOP 1 (3 SYNTH leaves, no route change)."
+ },
+ "checks": {
+  "functional_bind_gen1": "FAIL 102 paths (cij missing in SE/NW/NE) -- fail witness",
+  "functional_bind_gen2": "FAIL 6 slot rules (cxij SE/NW/NE INJ_RET/B39_NOOP) + 9 stale gaps",
+  "functional_bind_gen2_landsmoke": "FAIL 6 slot rules + 9 stale gaps (all 1,152 paths bound through landing hops)",
+  "functional_bind_gen2b": "PASS 1,160 paths/rules, 0 stale (GEN2 + l7_wire)",
+  "port_bind_gen2b": "DIE_PORT_BIND PASS 1,198 inst",
+  "checker_mutants": "test_d4g_functional_bind.py: 7/7 mutants FAIL with the named reason (FB_TEST PASS)"
+ },
+ "benches": {
+  "sucx (d4g_wire_bench_sucx.py; die slice cic/cxij/cij/cxdl0-3/cxrc vs RTL composition inj_copy + cxport_split + inj_idx_join_rg_flat at the COMPILED slot, Verilator 5.050, ot-epyc5)": {
+   "GEN2": {"SW": "PASS", "SE": "FAIL 19,385 mismatches", "NW": "FAIL 19,385", "NE": "FAIL 19,385"},
+   "GEN2b": {"SW": "PASS", "SE": "PASS", "NW": "PASS", "NE": "PASS"},
+   "mutants_GEN2b_SW_SE": {"m1 cij su_inj_d halves": "FAIL", "m2 cxdl lane 1<-2": "FAIL", "m3 cxrc SFU operand faces": "FAIL", "m4 cxij inj_q1<-su2": "FAIL"},
+   "activity": "checks 18,180, dw 16,902, inj 13,737, rc 736, rr 448, sfu 18,175 per run"
+  },
+  "paths (d4g_wire_bench_paths.py; generated die.v connection text of all 1,152 spec paths, random producer words every cycle)": {
+   "GEN2": "PASS 1,152 paths 289,940 bits 458,496 checks", "GEN2b": "PASS",
+   "mutants_GEN2b": {"XCMD": "FAIL", "HC": "FAIL", "DMA": "FAIL", "SFUJ": "FAIL", "INJ": "FAIL", "DEL": "FAIL", "RC": "FAIL"}
+  }
+ },
+ "not_checked_here": ["HC XRD/XRU vs landed hop latency (landed paths: the land plan's latency; HCROOT2 / HBM-LANDING set XRD/XRU, 0gr)",
+                      "loader/issuer gaps (G-HOST-*, G-SFU-LOADER-*, G-SU-PROG-HOST, G-CIL-IDXCP/AMCP/COLLSTAT, G-QUANT-SPLIT, G-SMVM-CALISS/STRAP, G-DMA): not datapath wiring, left open in the contract",
+                      "observe-only open outputs reviewed, not functional: sm.request / svg.expected_request (SM checks internally), xl aq y, cp_svg cmd/cycle (MODE 0), hcb_<q>7 o_* (descriptor chain exit)"]
+}
