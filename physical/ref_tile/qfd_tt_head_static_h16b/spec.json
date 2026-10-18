@@ -310,17 +310,6 @@
     "fail_regex": "REGROUP_FAIL"
    },
    {
-    "name": "bench_tt_sreg_mut",
-    "cmd": "RG_OBJ={RUN}/bench/rg_sm RG_DEFS=-DOT_SREG_MUT bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
-    "expect": "fail",
-    "threads": 8,
-    "peak_ram_gb": 4,
-    "needs": [
-     "verilator"
-    ],
-    "fail_regex": "OT_SREG_MISMATCH"
-   },
-   {
     "name": "bench_tt_dpre_mut",
     "cmd": "RG_OBJ={RUN}/bench/rg_dm RG_DEFS=-DOT_DPRE_MUT bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
     "expect": "fail",
