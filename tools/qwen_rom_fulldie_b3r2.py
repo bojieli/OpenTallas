@@ -2882,6 +2882,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             # dv2f14 GEN try 1 (square bits/6 frames) left 3 sys_face / d2d nets without relay sites (over reach 622-666 um):
             # widen only the N/S face (the corridor flow is vertical), keep the plain frame height, area from the width
             face = bits / 6.0 + 4.0
+            if _os_r.environ.get('OT_SPLIT_FWD_LAND_SHAPE', 'ns') == 'square':
+                # Q-DIE11b 10-18: the landing kits (qfwd_landh0_548_ew 65x99, landh_548_en 99x99) need <= 6 pins/um on
+                # E/W data faces too; the frame does not know its lane direction here, so every face >= bits / 6 um
+                side = max(face, math.sqrt(2.8 * bits / 0.55))
+                return max(v.up(side, v.GX), v.CORR) - v.SHAVE, max(v.up(side, v.GY), RELAY_V_H) - v.SHAVE
             w0, h0 = ((v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE) if bits <= RELAY_STD_BITS else
                       (max(v.up(span1, v.GX), v.CORR) - v.SHAVE,
                        (RELAY_V_H if cl == 'link_spine' and span1 > BWP_H else max(v.up(span1, v.GY), BWP_H)) - v.SHAVE))
