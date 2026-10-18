@@ -99,7 +99,7 @@
     "threads": 16,
     "peak_ram_gb": 28,
     "pass_regex": "^SX_BENCH PASS$",
-    "min_count_regex": "^SX root 600/600 beats \\(err 0\\)  taps 9600/9600 "
+    "min_count_regex": "^SX root 600/600 beats \\(err 0\\)  taps (9600)/9600 \\(err 0\\)"
    },
    {
     "name": "sx_mutflag",

@@ -18,4 +18,5 @@ mkdir -p "$O/$V"
   rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv \
   $D/dsdv_svc_sx_hrow.sv $D/dsdv_svc_sx.sv $D/test/tb_dsdv_svc_sx.sv > "$O/$V/build.log" 2>&1 || { tail -30 "$O/$V/build.log"; exit 1; }
 for s in $SEEDS; do "$O/$V/obj/Vtb_dsdv_svc_sx" +seed=$s > "$O/$V/run_s$s.log" 2>&1 || true
-  echo "$V seed $s: $(grep -E 'SX root|SX_BENCH' "$O/$V/run_s$s.log" | tr '\n' ' ')"; done
+  echo "$V seed $s: $(grep -E 'SX root|SX_BENCH' "$O/$V/run_s$s.log" | tr '\n' ' ')"
+  grep -E '^(SX root|SX_BENCH)' "$O/$V/run_s$s.log" || true; done   # the verdict lines on stdout, at line start (closure-loop regexes)

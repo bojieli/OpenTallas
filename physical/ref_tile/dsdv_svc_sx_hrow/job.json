@@ -1,5 +1,5 @@
 {
- "name": "dsdv_svc_sx_hrow-dsdv_svc_sx_hrow-8fac140a6",
+ "name": "dsdv_svc_sx_hrow-dsdv_svc_sx_hrow-COMMIT",
  "block": "dsdv_svc_sx_hrow",
  "ref_tile": true,
  "owner": "Claude:S81U-SVCX4",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81u-svcx4-1017",
-  "commit": "8fac140a67e94d1697848afc7e7de1143082548c",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/svc_rs",
    "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
@@ -37,7 +37,7 @@
     "threads": 16,
     "peak_ram_gb": 28,
     "pass_regex": "^SX_BENCH PASS$",
-    "min_count_regex": "^SX root 600/600 beats \\(err 0\\)  taps 9600/9600 "
+    "min_count_regex": "^SX root 600/600 beats \\(err 0\\)  taps (9600)/9600 \\(err 0\\)"
    },
    {
     "name": "sx_mutflag",
@@ -124,7 +124,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow-dsdv_svc_sx_hrow-8fac140a6"
+   "to": "results/rtl/ref_tile/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow-dsdv_svc_sx_hrow-COMMIT"
   }
  ],
  "cycles_added": 0,
