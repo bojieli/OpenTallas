@@ -7,13 +7,13 @@
   0,
   0,
   345.6,
-  86.4
+  64.8
  ],
  "core": [
   2.16,
   2.16,
   343.44,
-  84.24000000000001
+  62.64
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -89,6 +89,7 @@
  "blocks": [],
  "findings": [],
  "referenced": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",

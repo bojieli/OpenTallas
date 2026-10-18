@@ -47,7 +47,7 @@
   "macro_halo_um": 5.4,
   "pin_min_tracks": 4
  },
- "structural_change": "S81U-GUNIT3 (10-17): new E-side leaf L0r of dsdv_gunit: the HP root store (2 window buffers, 12,288 flops) + the 16-group stream, split out of L0 (clock-rule FAIL at 15,319 sinks). W face only (registered seam with L0); read select replicated per output word (10 kept copies).",
+ "structural_change": "S81U-GUNIT4 (10-17): read select replicated per output byte (40 x 5 kept flops, was 10 per word): GUNIT3 gate net g_sel[6].q[2] 3,059 loads drove the worst reg->reg path (+62 ps). S81U-GUNIT3 (10-17): new E-side leaf L0r of dsdv_gunit: the HP root store (2 window buffers, 12,288 flops) + the 16-group stream, split out of L0 (clock-rule FAIL at 15,319 sinks). W face only (registered seam with L0); read select replicated per output word (10 kept copies).",
  "job": {
   "owner": "Claude:S81U-GUNIT3",
   "branch": "claude/s81u-gunit3-1017",

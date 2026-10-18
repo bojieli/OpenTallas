@@ -15,13 +15,17 @@ module dsdv_gunit_l5f #(
     input  wire          xd_v, input wire [31:0] xd_b, output reg yd_v, output reg [31:0] yd_y, output reg yd_f
 );
     localparam integer LM = 5, LA = 4;
+    // reset relay (S81U-GUNIT4): the rst_n port drives only ot_rst_relay; 2 kept region copies (each <= ~256
+    // reset loads, no port net spans the leaf).  Release is 3 edges after the port (transaction-level exact).
+    wire [1:0] rq;
+    ot_rst_relay #(.REGIONS(2)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
     reg ev, dv; reg [31:0] ex, db;
-    always @(posedge clk or negedge rst_n) if (!rst_n) begin ev <= 1'b0; dv <= 1'b0; end else begin ev <= xe_v; dv <= xd_v; end
+    always @(posedge clk or negedge rq[0]) if (!rq[0]) begin ev <= 1'b0; dv <= 1'b0; end else begin ev <= xe_v; dv <= xd_v; end
     always @(posedge clk) begin ex <= xe_x; db <= xd_b; end
     wire [31:0] ey, dy; wire eo, ef, do_, df;
-    ot_dsrom_exp_f12 #(.LM(LM), .LA(LA)) u_exp (.clk(clk), .rst_n(rst_n), .v(ev), .x(ex), .y(ey), .vo(eo), .fault(ef));
-    ot_dsrom_fdiv_f12 u_div (.clk(clk), .rst_n(rst_n), .v(dv), .a(32'h3f800000), .b(db), .y(dy), .vo(do_), .fault(df));
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin ye_v <= 1'b0; yd_v <= 1'b0; end else begin ye_v <= eo; yd_v <= do_; end
+    ot_dsrom_exp_f12 #(.LM(LM), .LA(LA)) u_exp (.clk(clk), .rst_n(rq[0]), .v(ev), .x(ex), .y(ey), .vo(eo), .fault(ef));
+    ot_dsrom_fdiv_f12 u_div (.clk(clk), .rst_n(rq[1]), .v(dv), .a(32'h3f800000), .b(db), .y(dy), .vo(do_), .fault(df));
+    always @(posedge clk or negedge rq[1])
+        if (!rq[1]) begin ye_v <= 1'b0; yd_v <= 1'b0; end else begin ye_v <= eo; yd_v <= do_; end
     always @(posedge clk) begin ye_y <= ey; ye_f <= ef; yd_y <= dy; yd_f <= df; end
 endmodule

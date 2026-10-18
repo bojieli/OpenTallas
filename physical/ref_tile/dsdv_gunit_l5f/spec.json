@@ -3,6 +3,7 @@
  "top": "dsdv_gunit_l5f",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
@@ -40,8 +41,8 @@
   ]
  },
  "outline": {
-  "w": 172.8,
-  "h": 172.8
+  "w": 151.2,
+  "h": 151.2
  },
  "recipe": 4,
  "clock": "cts",
@@ -54,7 +55,7 @@
   "macro_halo_um": 5.4,
   "pin_min_tracks": 4
  },
- "structural_change": "S81U-GUNIT3 (10-17): new E-side leaf L5f of dsdv_gunit: the HC tail's exp (ot_dsrom_exp_f12, depth 76) and reciprocal (ot_dsrom_fdiv_f12, depth 21), unchanged units, split out of L5 (clock-rule FAIL at 23,268 sinks). W face only (registered seam with L5).",
+ "structural_change": "S81U-GUNIT4 (10-17): rst_n via ot_rst_relay (2 kept regions; GUNIT3 gate: port 611 reset loads) and outline 151.2 x 151.2 (GUNIT3 gate: std 11,361 um2 at util 40% in 172.8 x 172.8). S81U-GUNIT3 (10-17): new E-side leaf L5f of dsdv_gunit: the HC tail's exp (ot_dsrom_exp_f12, depth 76) and reciprocal (ot_dsrom_fdiv_f12, depth 21), unchanged units, split out of L5 (clock-rule FAIL at 23,268 sinks). W face only (registered seam with L5).",
  "job": {
   "owner": "Claude:S81U-GUNIT3",
   "branch": "claude/s81u-gunit3-1017",

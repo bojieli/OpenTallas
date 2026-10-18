@@ -11,7 +11,8 @@
 //          words (k & 1) * 3 + 0..2: {D32, D8, C8, C16b, C16a, B16b, B16a, B8, A8, A32}.
 // Timing: a write lands in the store 2 edges after L0's register, a go starts the stream 2 edges after L0's register,
 // so a window's last write is in the store before the stream's first read (the same order as the one-leaf form).
-// The read select is replicated per output word (10 copies, keep): one copy drives 32 bits of a 32:1 word mux.
+// The read select is replicated per output byte (40 copies, keep; S81U-GUNIT4: the per-word copy drove 3,059 loads,
+// the leaf's worst reg->reg path): one copy drives 8 bits of a 32:1 word mux.
 // r_f (sticky): a go while the previous stream still runs.  MUT (bench only): 6 = roots 1 / 2 of g = 1 mod 4 swapped.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l0r #(
@@ -39,9 +40,9 @@ module dsdv_gunit_l0r #(
     end
     // ---------------------------------------------------------------- group stream (16 groups an accumulation)
     reg a_on; reg [3:0] a_i; reg [4:0] a_acc;
-    wire [49:0] sel;                                    // {b, i} per output word (10 kept copies)
+    wire [199:0] sel;                                   // {b, i} per output byte (40 kept copies: word w, byte k = 4 w + k)
     genvar c;
-    generate for (c = 0; c < 10; c = c + 1) begin : g_sel
+    generate for (c = 0; c < 40; c = c + 1) begin : g_sel
         (* keep = "true" *) reg [4:0] q;
         always @(posedge clk) q <= ga ? {gb, 4'd0} : {q[4], q[3:0] + 4'd1};
         assign sel[5 * c +: 5] = q;
@@ -57,12 +58,16 @@ module dsdv_gunit_l0r #(
     function automatic [8:0] wad(input [4:0] bi, input integer s, input integer o);
         wad = 9'd192 * bi[4] + 9'd12 * ({bi[1:0], 2'd0} + s) + 9'd6 * bi[3] + 9'd3 * bi[2] + o;
     endfunction
+    // output word w (A32 [31:0] .. D32 [319:288]) = slice 4m + ws(w), word wo(w)
+    function automatic integer ws(input integer w); ws = (w < 2) ? 0 : (w < 5) ? 1 : (w < 8) ? 2 : 3; endfunction
+    function automatic integer wo(input integer w);
+        case (w) 1, 6, 9: wo = 1; 3: wo = (MUT == 6) ? 2 : 1; 4: wo = (MUT == 6) ? 1 : 2; 7: wo = 2; default: wo = 0; endcase
+    endfunction
+    integer w, k;
     always @(posedge clk) begin
         r_i <= a_i; r_acc <= a_acc;
-        r_d <= {rs[wad(sel[45 +: 5], 3, 1)], rs[wad(sel[40 +: 5], 3, 0)], rs[wad(sel[35 +: 5], 2, 2)], rs[wad(sel[30 +: 5], 2, 1)],
-                rs[wad(sel[25 +: 5], 2, 0)], rs[wad(sel[20 +: 5], 1, (MUT == 6) ? 1 : 2)], rs[wad(sel[15 +: 5], 1, (MUT == 6) ? 2 : 1)],
-                rs[wad(sel[10 +: 5], 1, 0)], rs[wad(sel[5 +: 5], 0, 1)], rs[wad(sel[0 +: 5], 0, 0)]};
-        //       D32 [319:288]  D8            C8             C16b           C16a
-        //       B16b           B16a          B8             A8             A32 [31:0]
+        for (w = 0; w < 10; w = w + 1)
+            for (k = 0; k < 4; k = k + 1)
+                r_d[32 * w + 8 * k +: 8] <= rs[wad(sel[5 * (4 * w + k) +: 5], ws(w), wo(w))][8 * k +: 8];
     end
 endmodule

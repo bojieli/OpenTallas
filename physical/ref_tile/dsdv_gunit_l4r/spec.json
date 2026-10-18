@@ -3,6 +3,7 @@
  "top": "dsdv_gunit_l4r",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
@@ -50,7 +51,7 @@
   "macro_halo_um": 5.4,
   "pin_min_tracks": 4
  },
- "structural_change": "S81U-GUNIT3 (10-17): new E-side leaf L4r of dsdv_gunit: the HC norm's r chain (ss -> divc / 20,480 -> + eps -> rsqrt), unchanged units, split out of L4 (clock-rule FAIL at 21,174 sinks). W face only (registered seam with L4).",
+ "structural_change": "S81U-GUNIT4 (10-17): rst_n via ot_rst_relay (3 kept regions; GUNIT3 gate: port 547 reset loads). S81U-GUNIT3 (10-17): new E-side leaf L4r of dsdv_gunit: the HC norm's r chain (ss -> divc / 20,480 -> + eps -> rsqrt), unchanged units, split out of L4 (clock-rule FAIL at 21,174 sinks). W face only (registered seam with L4).",
  "job": {
   "owner": "Claude:S81U-GUNIT3",
   "branch": "claude/s81u-gunit3-1017",
