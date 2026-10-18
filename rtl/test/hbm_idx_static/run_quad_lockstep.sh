@@ -36,7 +36,8 @@ build(){ # tag qswap
  "$vl" -DOT_IDX_SCORE_CLUSTER --hierarchical --binary --timing --verilate-jobs "${IDX_VERILATE_JOBS:-8}" --build-jobs "${IDX_BUILD_JOBS:-16}" -O1 -Wno-fatal -Wno-lint -Wno-style \
   -GTP=192 -GRANK=$rank -GNKEYS=5472 -GCHAIN=6 -GQSWAP=$2 --top-module tb_idx_quad_lockstep --Mdir "$out/obj_$1" "${src[@]}" > "$out/build_$1.log" 2>&1
 }
-build pos 0 & build qswap 1 & wait
+# IDX_SERIAL=1: one build at a time (~53 GB RSS each; ot-run --mem 64), else both in parallel (~110 GB)
+if [ "${IDX_SERIAL:-0}" = 1 ]; then build pos 0; build qswap 1; else build pos 0 & build qswap 1 & wait; fi
 echo BUILDS_DONE
 len(){ python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["length"])' "$1/calendar.json"; }
 rc=0
