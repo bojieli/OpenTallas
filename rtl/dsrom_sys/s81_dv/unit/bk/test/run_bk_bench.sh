@@ -27,7 +27,7 @@ if [ "$U" = sel ]; then
     rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv \
     rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv \
     rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv \
-    $DV $B/bk/dsdv_bk_sel.sv $B/bk/dsdv_bk_col.sv rtl/dsrom_sys/s81_ph/ot_s81ph_col.sv rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv \
+    $DV $B/bk/dsdv_bk_g.sv $B/bk/dsdv_bksel_c.sv $B/bk/dsdv_bk_sel.sv $B/bk/dsdv_bk_col.sv rtl/dsrom_sys/s81_ph/ot_s81ph_col.sv rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv \
     rtl/link/ot_fifo_sram_fwft.sv rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv > "$OUT/build_sel_m$MUT.log" 2>&1 \
     || { echo "DSDV_BK_SEL FAIL mut=$MUT (build, $OUT/build_sel_m$MUT.log)"; exit 1; }
   for v in $VARS; do
@@ -46,10 +46,10 @@ if [ "$U" = sel ]; then
 else
   [ -n "$VARS" ] || VARS="gold1 gold2_thru gold3_mir gold4_thrumir fault1 fault2 fault3 fault4 fault5"
   verilator --binary --timing -j "${JOBS:-8}" -Wno-fatal -Wno-lint -Wno-style --top-module tb_s81ph_col \
-    +define+OT_DSDV_BK=$MUT +define+OT_DSDV_BK_COLB -Mdir "$OUT/obj_col_m$MUT" \
+    +define+OT_DSDV_BK=$MUT +define+OT_DSDV_BK_COLB +define+OT_S81PH_COLT_RING -Mdir "$OUT/obj_col_m$MUT" \
     rtl/common/ot_fwd_link_stage.sv $M256 $M128 rtl/link/ot_fifo_sram_fwft.sv \
     rtl/dsrom_sys/s81_ph/ot_s81ph_col.sv rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv \
-    $DV $B/bk/dsdv_bk_col.sv rtl/dsrom_sys/s81_ph/test/tb_s81ph_col.sv > "$OUT/build_col_m$MUT.log" 2>&1 \
+    $DV $B/bk/dsdv_bk_g.sv $B/bk/dsdv_bk_col.sv rtl/dsrom_sys/s81_ph/test/tb_s81ph_col.sv > "$OUT/build_col_m$MUT.log" 2>&1 \
     || { echo "DSDV_BK_COL FAIL mut=$MUT (build, $OUT/build_col_m$MUT.log)"; exit 1; }
   for v in $VARS; do
     pa=""

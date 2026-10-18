@@ -35,9 +35,14 @@ module tb_dsdv_bk_wrap #(
     assign vf = 1'b0;
     bit thru, mir; int lmap;
     bit thr_on; int tok;                  // ingress throttle (the compiler's rate match to the drain windows), in words
+    bit fullrate; int nfr = 0;            // +fullrate: S81U-BK's refill = the drain capacity exactly (2 / 4 words per
+                                          // frame: 100% window use, so every window the frame-atomic merger leaves empty
+                                          // is a permanent backlog: overflow depends on a cycle of latency).  Default
+                                          // (S81U-BK2): the collector's ingress is matched to 7/8 of the drain capacity
+                                          // (one word less every 8th frame); the selector reduces, its refill is unchanged
     int  side [0:3];                     // 0 = arrives on A (vi_a), 1 = on B
     initial begin
-        thru = $test$plusargs("thru"); mir = $test$plusargs("mir"); thr_on = !$test$plusargs("nothrottle");
+        thru = $test$plusargs("thru"); mir = $test$plusargs("mir"); thr_on = !$test$plusargs("nothrottle"); fullrate = (UNIT == 0) || $test$plusargs("fullrate");
         if (!$value$plusargs("lmap=%d", lmap)) lmap = 0;
         for (int l = 0; l < 4; l++) side[l] = (lmap == 1) ? (l == 0 ? 0 : 1) : (l == 3 ? 1 : 0);
         tok = 64;
@@ -125,7 +130,7 @@ module tb_dsdv_bk_wrap #(
         slot = cyc % 8;
         a = '0; b = '0;
         if (rst && cyc > 40 && cyc > rst_hi + 8) begin
-            if (slot == 0) tok = (tok + (thru ? 2 : 4) > 64) ? 64 : tok + (thru ? 2 : 4);
+            if (slot == 0) begin nfr++; tok = (tok + (thru ? 2 : 4) - ((!fullrate && nfr % 8 == 0) ? 1 : 0) > 64) ? 64 : tok + (thru ? 2 : 4) - ((!fullrate && nfr % 8 == 0) ? 1 : 0); end
             // A side arrivals: slot 0 = the drain CTL for the next frame's window; through singles (+thru, 1..3); ingress
             if (slot == 0) begin
                 a[0] = 1; a[3:1] = 0; a[8:4] = $urandom; a[12:9] = $urandom; a[28:21] = UID; a[31:29] = 1;
@@ -188,12 +193,12 @@ module tb_dsdv_bk_wrap #(
 `ifdef OT_DSDV_BK_COLB
     generate if (UNIT == 1) begin : g_dbg
         always @(posedge ck) if (fault && !f_seen) begin f_seen = 1;
-            $display("WRAP_DBG fault cyc %0d vstop %0d vin %0d vout %0d", cyc, g_col.u_u.vs_f, g_col.u_u.vi_f, g_col.u_u.vo_f); end
+            $display("WRAP_DBG fault cyc %0d vstop %0d vin %0d vout %0d", cyc, g_col.u_u.u_g.vs_f, g_col.u_u.u_g.vi_f, g_col.u_u.u_g.vo_f); end
     end endgenerate
 `else
     generate if (UNIT == 0) begin : g_dbg0
         always @(posedge ck) if (fault && !f_seen) begin f_seen = 1;
-            $display("WRAP_DBG fault cyc %0d vstop %0d vin %0d vout %0d", cyc, g_sel.u_u.u_l1.vs_f, g_sel.u_u.u_l1.vi_f, g_sel.u_u.u_l1.vo_f); end
+            $display("WRAP_DBG fault cyc %0d vstop %0d vin %0d vout %0d", cyc, g_sel.u_u.u_g.vs_f, g_sel.u_u.u_g.vi_f, g_sel.u_u.u_g.vo_f); end
     end endgenerate
 `endif
     final $display("WRAP_SUMMARY unit %0d thru %0d mir %0d lmap %0d: through beats %0d, ingress words %0d, drain CTL %0d, egress words %0d, errors %0d",
