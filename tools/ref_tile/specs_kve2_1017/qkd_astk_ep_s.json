@@ -1,0 +1,265 @@
+{
+ "name": "qkd_astk_ep_s",
+ "top": "qkd_astk_ep_s",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+  "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+  "physical/qkd_astk_strip/macros/ot_sram_1r1w_256x128_m1_r2c2/ot_sram_1r1w_256x128_m1_r2c2_bb.v",
+  "physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 162.0,
+  "h": 345.6
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2",
+   "count": 1,
+   "inst": "*u_e0",
+   "at": [
+    52.704,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2",
+   "count": 1,
+   "inst": "*u_e1",
+   "at": [
+    52.704,
+    66.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2",
+   "count": 1,
+   "inst": "*u_e2",
+   "at": [
+    52.704,
+    110.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2",
+   "count": 1,
+   "inst": "*u_e3",
+   "at": [
+    52.704,
+    153.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/qkd_astk_strip/macros/ot_sram_1r1w_256x128_m1_r2c2",
+   "count": 1,
+   "inst": "*u_sc0",
+   "at": [
+    52.704,
+    196.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/qkd_astk_strip/macros/ot_sram_1r1w_256x128_m1_r2c2",
+   "count": 1,
+   "inst": "*u_sc1",
+   "at": [
+    52.704,
+    259.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "xi",
+   "so",
+   "cal_exp",
+   "eo",
+   "sq",
+   "sf",
+   "rst_n",
+   "ck",
+   "si"
+  ],
+  "E": [
+   "qi",
+   "ri",
+   "xa",
+   "xe",
+   "xo"
+  ],
+  "N": [
+   "zo"
+  ],
+  "S": [
+   "zi"
+  ]
+ },
+ "pin_ranges": {
+  "xi": [
+   3,
+   60
+  ],
+  "so": [
+   62,
+   150
+  ],
+  "cal_exp": [
+   151,
+   155
+  ],
+  "eo": [
+   155.5,
+   158
+  ],
+  "sq": [
+   158.5,
+   160
+  ],
+  "sf": [
+   160.5,
+   161
+  ],
+  "rst_n": [
+   161.5,
+   162
+  ],
+  "ck": [
+   172.6,
+   173.1
+  ],
+  "si": [
+   180,
+   315
+  ],
+  "qi": [
+   3,
+   113
+  ],
+  "ri": [
+   114,
+   214
+  ],
+  "xa": [
+   215,
+   266
+  ],
+  "xe": [
+   267,
+   293
+  ],
+  "xo": [
+   294,
+   342
+  ],
+  "zo": [
+   1.5,
+   160.5
+  ],
+  "zi": [
+   1.5,
+   160.5
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
+ },
+ "recipe": 4,
+ "slot_change_request": "KVE-2-ASTK 2026-10-17: lane-free static ASTK slice (qkd_astk_strip_st): same 162 x 345.6 outline and macro column as qkd_astk_ep; no tree lanes cross it (the S / N faces carry the chunk chain zi / zo, slice j - 1 -> j), W = engine port so / si + return chain in xi + straps (sq, eo) + calendar cal_exp + ck, E = command / e-row bus taps qi / ri, exp leaves xa / xe, return chain out xo. The strip parent qkd_astk_strip_st no longer needs the two 162 um tree columns (no qkd_astk_pv*): die lead to re-cut the ASTK_W slot.",
+ "job": {
+  "owner": "Claude:KVE-2-ASTK 10-17",
+  "branch": "claude/kve2-astk-1017",
+  "tag": "st1",
+  "purpose": "KVE-2-ASTK credit-free, lane-free successor of qkd_astk_ep (owner static-cycle rule, HANDOFF 0db): the selected static calendar slice qkd_astk_ep_cal (STATIC 1, HEADS 1) without the P.V-tree lanes (2,716 pass-through pins / flops), the node credit cr (si[633] = engine nb_cr) and the unread so[423:412]; per-slice EXP offset strap eo.  4,365 pins, every pin a register in RTL.",
+  "extra_paths": [
+   "configs/hardware",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/qkd_astk_strip",
+   "results/asap7_physical/bitcell_density",
+   "results/rtl/ref_tile/qkd_astk_ep_s/bench_witness_st1/",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/test/nearhbm",
+   "rtl/test/qwen_kv_die",
+   "rtl/test/sim_hdc_v41x_fastfp_dpi.cpp",
+   "rtl/test/sim_hdc_v41x_fastfp_dpi.sv",
+   "rtl/test/sim_hdc_v41x_fastfp_wrap.sv",
+   "tools/check_macro_track_alignment.py",
+   "tools/mem_compiler",
+   "tools/qwen_kv_die",
+   "tools/qwen_rom_fulldie.py"
+  ],
+  "benches": [
+   {
+    "name": "qkd_astk_strip_st_lockstep",
+    "cmd": "bash tools/qwen_kv_die/astk_static_bench.sh {RUN}/bench/pos 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_astk_strip_st lockstep",
+    "note": "every edge of qkd_astk_strip_st (ctl_s + 8 ep_s + 32 ex_s + 4 zn) equals qkd_astk_native_stack_cal (the selected static ASTK) on si / ap / lt / e reads / fault; phase 1 functional (T 8192, 8,192 scores, lmax 4, Z 64, 2,048 e reads), phase 2 T 600 random",
+    "pass_witness": "results/rtl/ref_tile/qkd_astk_ep_s/bench_witness_st1/mut0.log"
+   },
+   {
+    "name": "qkd_astk_ep_s_mutant",
+    "cmd": "bash tools/qwen_kv_die/astk_static_bench.sh {RUN}/bench/neg 1",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_astk_strip_st",
+    "note": "MUT 1: ep_s e rows written one address off",
+    "fail_witness": "results/rtl/ref_tile/qkd_astk_ep_s/bench_witness_st1/mut1.log"
+   }
+  ]
+ },
+ "structural_change": "st1 (KVE-2-ASTK 10-17): new master qkd_astk_ep_s replaces qkd_astk_ep (ks1 HOLD / ks3 HOLD / ks4 CONGESTION / ks2 NEEDS_RTL): static calendar logic of qkd_astk_ep_cal, no lanes (S / N faces now carry zi / zo only), no credit; recipe 4 flop-first pins, die hold budget; clock on the W face at mid-height (the W-face pin-flop band and the E-face band sit either side of the macro column).",
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every data pin: so / qi / xi / zi / ri / xe / sq / eo / cal_exp land in (* keep *) pin flops (so_q, qq, xq, zq, rq, eq / eqc, sq_q, eo_q, cal_exp_q) and si / xo / zo / xa are registers (qkd_astk_ep_s, rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv); the static calendar prices exactly these edges"
+ }
+}

@@ -91,9 +91,12 @@
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.0,
   "macro_halo_um": 5.4,
-  "pin_min_tracks": 4
+  "pin_min_tracks": 4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware"
+  }
  },
- "structural_change": "S81U-GUNIT-L1 (10-17): new E-side leaf L1f of dsdv_gunit (hardened once, 4 instances, q-agnostic: q-specific enables / hits on their own wires): SC store slice (112 x fp32), bias in 2 x ot_sram_1r1w_128x256_m1_r2c2 (read one beat ahead, no added edge), 16 bias adds, key, 2 x bitonic sort8 + merge8 at two compare-exchanges per registered stage (13,564 generic flops < 15k), gather of the chosen scores. Flop-first / flop-last; no ready / credit. | S81U-GUNIT-L1b (10-17): NATIVE-2 pin rules (relayed reset, pin flops) + one-compare-deep select stages + LAT-5 bias add (+1 edge) + registered gather decode; clk / rst_n pins at the S-face centre (pin_ranges; the gate put clk at the SW corner: TT spread 132.6 ps)",
+ "structural_change": "S81U-GUNIT-L1 (10-17): new E-side leaf L1f of dsdv_gunit (hardened once, 4 instances, q-agnostic: q-specific enables / hits on their own wires): SC store slice (112 x fp32), bias in 2 x ot_sram_1r1w_128x256_m1_r2c2 (read one beat ahead, no added edge), 16 bias adds, key, 2 x bitonic sort8 + merge8 at two compare-exchanges per registered stage (13,564 generic flops < 15k), gather of the chosen scores. Flop-first / flop-last; no ready / credit. | S81U-GUNIT-L1b (10-17): NATIVE-2 pin rules (relayed reset, pin flops) + one-compare-deep select stages + LAT-5 bias add (+1 edge) + registered gather decode; clk / rst_n pins at the S-face centre (pin_ranges; the gate put clk at the SW corner: TT spread 132.6 ps) | PL-GULEAF (10-18): route.cts_sink extra -no_obstruction_aware (s81 gather leaf 10-14 precedent): the gate @103f9cf73 measured boundary pin-flop spread TT 278.1..391.9 ps (113.8 > 80) with the H-tree detouring around the abutted 2-SRAM stack in the tile centre",
  "job": {
   "owner": "Claude:S81U-GUNIT-L1",
   "branch": "claude/s81u-gunit-l1-1017",
