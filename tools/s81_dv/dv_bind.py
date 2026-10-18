@@ -24,10 +24,10 @@ dv_<inst> stand-ins of the diagnostic case, then runs the STRICT tools/die_port_
   * hop-0 gate   S81-LBGAP/G1 (10-18, LANDING-CONTRACT L3): on every LANDED lane the hop-0 forward cell is a clock gate
                  (ICGx4, CLK = the source root / the source master's forwarded clock) opened by a released reset, so the
                  landing's ck_f edge 0 is a calendar source edge G for any flight time dL and wc is cleared while ck_f is
-                 stopped.  Calendar G = R0 per lane (R0 = release edge of the landing's rs): the gate enable is the source
-                 block's reset leaf, delayed at the source by (R0 - G_leaf) gate-calendar reset stations when the source
-                 releases first; when the receiver releases first, the LANDING rs is its leaf delayed at the receiver by
-                 (G_leaf - R0) stations instead.  K = E for every lane (no strap offset), and R0 <= G holds by construction.
+                 stopped.  Calendar R0 = G + (N mod 2) per lane (R0 = first read edge of the landing, N stations):
+                 the gate enable is the source block's reset leaf, delayed at the source by gate-calendar reset stations
+                 when the source would open early; otherwise the LANDING rs is its leaf delayed at the receiver.  K = E
+                 for every lane (no strap offset); rs releases before the lane's first clock edge reaches the ring.
 """
 from __future__ import annotations
 
@@ -429,10 +429,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         v.append(f'  {mod}{ps} u_{n} ({", ".join(cs)});')
     # landings (S81-LAND2): K = E of the link's die STA window (land plan), assuming the hop-0 gate opens at the
     # receiver's reset release (G = R0); E > 7 needs G - R0 = E - 7 in the reset calendar (recorded per row)
-    # S81-LBGAP/G1 (LANDING-CONTRACT L3): hop-0 gate calendar.  G_leaf = release edge of the source block's reset leaf,
-    # R_leaf = release edge of the receiver's.  Both pointers of the landing then start on the same calendar edge
-    # (G = R0): the earlier side is delayed by |G_leaf - R_leaf| gate-calendar stations (dsfd_rly_1, one edge each)
-    # beside its own block (source pin / landing), clocked by that block's root, tapped from one chain per leaf.
+    # S81-LBGAP/G1 (LANDING-CONTRACT L3): hop-0 gate calendar.  G = first gated edge at the source, R0 = first read
+    # edge of the landing (rc).  The lane clock reaches the ring at G + (N mod 2)/2 + dL (the N half-cycle stations
+    # invert it; dL is the forwarded-clock lag the land-plan E absorbs) while the word captured by station 0 at edge s
+    # is written at epoch s - G + floor(N/2); the compiler's age ceil(N/2) + E + 1 then needs R0 = G + (N mod 2) with
+    # K = E (verified by the lane bench at TT and FF flight).  G_leaf / R_leaf = release edges of the source / receiver
+    # reset leaves; the side that would release early is delayed by gate-calendar stations (dsfd_rly_1, one edge
+    # each) beside its own block (source pin / landing), clocked by that block's root, tapped from one chain per leaf.
+    # The landing rs releases at least T/2 before the first lane clock edge reaches the ring.
     lsrc = {l['i'].replace('-', '_'): l for l in plan['links']}
     rdep = rst['depth']
     gcal, gate_en, land_rs, cal_place = {}, {}, {}, []
@@ -443,7 +447,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         while len(ch) < nd:
             up = ch[-1] if ch else leaf
             wn = f'rsg_{leaf}_{ckr}_{len(ch)}'
-            v.append(f'  wire {wn}; {rmst} st_{wn} (.ck(ck_{ckr}), .rs({up}), .i({up}), .o({wn}));   // gate calendar ({why})')
+            v.append(f'  wire {wn};')
+            v.append(f'  {rmst} st_{wn} (.ck(ck_{ckr}), .rs({up}), .i({up}), .o({wn}));   // gate calendar ({why})')
             cal_place.append(dict(inst=f'st_{wn}', master=rmst, orient='R0', xy=[round(xy[0], 3), round(xy[1], 3)], kind='gate_calendar'))
             ch.append(wn)
         return ch[nd - 1]
@@ -453,12 +458,13 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         a_ = blocks[l_['e'][0][0]]['name']
         sleaf, rleaf = rst['block_leaf'].get(a_, 'rst_sync1'), rst['block_leaf'][n]
         ds_, dr_ = rdep[sleaf], rdep[rleaf]
-        if ds_ < dr_:
-            gate_en[nm] = cal_tap(sleaf, reg[a_], dr_ - ds_, l_['e'][0][2:4], f'source {a_} releases {dr_ - ds_} edges before {n}')
+        h_ = len(chains_pts[nm]) % 2            # R0 - G = N mod 2: an odd half-cycle chain lands on the inverted phase
+        if dr_ - ds_ > h_:
+            gate_en[nm] = cal_tap(sleaf, reg[a_], dr_ - ds_ - h_, l_['e'][0][2:4], f'gate opens {h_} edges before the {n} landing rs')
             land_rs[nm] = rleaf
-        elif ds_ > dr_:
+        elif dr_ - ds_ < h_:
             gate_en[nm] = sleaf
-            land_rs[nm] = cal_tap(rleaf, reg[n], ds_ - dr_, l_['e'][1][2:4], f'receiver {n} releases {ds_ - dr_} edges before {a_}')
+            land_rs[nm] = cal_tap(rleaf, reg[n], ds_ + h_ - dr_, l_['e'][1][2:4], f'landing rs {h_} edges after the {a_} gate')
         else:
             gate_en[nm], land_rs[nm] = sleaf, rleaf
         st = len(chains_pts[nm])
@@ -481,11 +487,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             if [lm, sp] not in straps:
                 straps.append([lm, sp])
         land_rows.append(dict(link=nm, inst=n, master=lm, bits=b, stages=st, E=e_, K=k_, D=8 if long_ else 4,
-                              K_source='land_plan E (G = R0)' if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
-                              calendar_G_minus_R0=0, fault_bit=j, src=a_, hop0_gate=f'fwd_{nm}', gate_en=gate_en[nm],
+                              K_source='land_plan E (gate calendar R0 = G + N mod 2)' if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
+                              calendar_G_minus_R0=-h_, fault_bit=j, src=a_, hop0_gate=f'fwd_{nm}', gate_en=gate_en[nm],
                               land_rs=land_rs[nm], release_src=ds_, release_dst=dr_,
-                              calendar_stations=dict(side='source' if ds_ < dr_ else ('receiver' if ds_ > dr_ else None),
-                                                     n=abs(ds_ - dr_))))
+                              calendar_stations=dict(side='source' if dr_ - ds_ > h_ else ('receiver' if dr_ - ds_ < h_ else None),
+                                                     n=abs(dr_ - ds_ - h_))))
     for lm in sorted({r['master'] for r in land_rows}):
         straps.append([lm, 'k'])
     if land_rows:
@@ -534,7 +540,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         st = len(pts)
         gen = gate_en.get(nm)
         if gen:
-            # S81-LBGAP/G1: landed lane -> hop-0 clock gate opened by the released reset on the calendar edge G = R0
+            # S81-LBGAP/G1: landed lane -> hop-0 clock gate opened by the released reset on the calendar edge G = R0 - (N mod 2)
             v.append(f'  {ICG} fwd_{nm} (.CLK({ck or "ck_" + reg[a]}), .ENA({gen}), .SE(1\'b0), .GCLK(n{nm}_fck[0]));   '
                      f'// hop 0: clock gate (LANDING-CONTRACT L3) on {"the source master forwarded clock" if ck else "the source region root"}')
             gate_cells += 1
@@ -590,7 +596,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                              by_master=dict(collections.Counter(r['master'] for r in land_rows)),
                              by_inst_kind=dict(collections.Counter(r['inst'].split('_')[0] for r in land_rows)),
                              no_E=[r['link'] for r in land_rows if r['E'] is None],
-                             calendar_needs=[r for r in land_rows if r['calendar_G_minus_R0']], rows=land_rows))
+                             calendar_needs=[r for r in land_rows if r['calendar_stations']['n']], rows=land_rows))
     if run_bind:
         cmd = ['python3', str(ROOT / 'tools/die_port_bind.py'), str(out / 'die.v'), '--top', 'dv_die', '--rtl-root', str(ROOT / 'rtl'),
                '--rtl-file', str(out / 'cells_used.v'), '--strap-file', str(out / 'straps.json'), '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind.json')]

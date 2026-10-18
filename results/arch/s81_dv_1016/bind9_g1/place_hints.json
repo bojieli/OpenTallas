@@ -40937,7 +40937,7 @@
    "orient": "R0",
    "xy": [
     1770.5,
-    7750.9
+    7420.9
    ],
    "kind": "gate_calendar"
   },
@@ -40993,6 +40993,16 @@
   },
   {
    "inst": "st_rsg_rs_5_13_cl0S_11",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    1770.5,
+    7750.9
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_5_13_cl0S_12",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
@@ -41067,7 +41077,7 @@
    "orient": "R0",
    "xy": [
     1770.5,
-    19203.1
+    18873.1
    ],
    "kind": "gate_calendar"
   },
@@ -41113,6 +41123,16 @@
   },
   {
    "inst": "st_rsg_rs_5_41_cl0N_11",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    1770.5,
+    19203.1
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_5_41_cl0N_12",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
@@ -41222,6 +41242,16 @@
    "kind": "gate_calendar"
   },
   {
+   "inst": "st_rsg_rs_15_13_cl1S_10",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    5661.6,
+    7480.9
+   ],
+   "kind": "gate_calendar"
+  },
+  {
    "inst": "st_rsg_rs_25_13_1_cl2S_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -41302,16 +41332,6 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_25_13_1_cl2S_8",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    9552.7,
-    7600.9
-   ],
-   "kind": "gate_calendar"
-  },
-  {
    "inst": "st_rsg_rs_12_4_1_cl1S_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -41348,26 +41368,6 @@
    "xy": [
     5627.9,
     2160.0
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_12_4_1_cl1S_4",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    5627.9,
-    2160.0
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_15_13_cl1S_10",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    5651.6,
-    9885.9
    ],
    "kind": "gate_calendar"
   },
@@ -41532,16 +41532,6 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_18_4_cl1S_11",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    6645.3,
-    2160.0
-   ],
-   "kind": "gate_calendar"
-  },
-  {
    "inst": "st_rsg_rs_15_41_3_cl1N_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -41632,6 +41622,16 @@
    "kind": "gate_calendar"
   },
   {
+   "inst": "st_rsg_rs_15_41_3_cl1N_9",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    5661.6,
+    18933.1
+   ],
+   "kind": "gate_calendar"
+  },
+  {
    "inst": "st_rsg_rs_25_41_1_cl2N_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -41713,16 +41713,6 @@
   },
   {
    "inst": "st_rsg_rs_25_41_1_cl2N_8",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    9552.7,
-    19053.1
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_25_41_1_cl2N_9",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
@@ -41898,26 +41888,6 @@
    "xy": [
     6121.6,
     14215.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_14_39_1_cl1N_0",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    5627.9,
-    13627.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_15_41_3_cl1N_9",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    5651.6,
-    21338.1
    ],
    "kind": "gate_calendar"
   },
@@ -42132,12 +42102,12 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_16_34_3_cl1N_8",
+   "inst": "st_rsg_rs_25_13_1_cl2S_8",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    6645.3,
-    13627.3
+    9552.7,
+    7480.9
    ],
    "kind": "gate_calendar"
   },
@@ -42146,8 +42116,8 @@
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    10042.7,
-    9885.9
+    9552.7,
+    7480.9
    ],
    "kind": "gate_calendar"
   },
@@ -42392,16 +42362,6 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_22_4_1_cl2S_5",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    9519.0,
-    2160.0
-   ],
-   "kind": "gate_calendar"
-  },
-  {
    "inst": "st_rsg_rs_28_10_1_cl2S_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -42442,12 +42402,22 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_28_10_1_cl2S_4",
+   "inst": "st_rsg_rs_25_41_1_cl2N_9",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    10536.4,
-    4855.7
+    9552.7,
+    18933.1
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_25_41_1_cl2N_10",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    9552.7,
+    18933.1
    ],
    "kind": "gate_calendar"
   },
@@ -42498,26 +42468,6 @@
    "xy": [
     9519.0,
     13627.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_23_34_1_cl2N_5",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    9519.0,
-    13627.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_25_41_1_cl2N_10",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    9542.7,
-    21338.1
    ],
    "kind": "gate_calendar"
   },
@@ -42722,22 +42672,12 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_26_34_1_cl2N_8",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    10536.4,
-    13627.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
    "inst": "st_rsg_rs_34_13_2_cl3S_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    13933.7,
-    9885.9
+    14393.7,
+    7600.9
    ],
    "kind": "gate_calendar"
   },
@@ -42902,6 +42842,16 @@
    "kind": "gate_calendar"
   },
   {
+   "inst": "st_rsg_rs_34_13_2_cl3S_17",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    13933.7,
+    9885.9
+   ],
+   "kind": "gate_calendar"
+  },
+  {
    "inst": "st_rsg_rs_31_10_2_cl3S_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -42948,26 +42898,6 @@
    "xy": [
     13410.0,
     4855.7
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_31_10_2_cl3S_5",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    13410.0,
-    4855.7
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_34_13_2_cl3S_17",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    13433.7,
-    9885.9
    ],
    "kind": "gate_calendar"
   },
@@ -43053,6 +42983,16 @@
   },
   {
    "inst": "st_rsg_rs_34_41_cl3N_0",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    14393.7,
+    19053.1
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_34_41_cl3N_1",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
@@ -43172,16 +43112,6 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_34_29_void3_11",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    13903.7,
-    15947.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
    "inst": "st_rsg_rs_33_34_2_cl3N_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -43252,32 +43182,12 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_33_34_2_cl3N_7",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    13410.0,
-    13627.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_34_41_cl3N_1",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    13433.7,
-    16738.1
-   ],
-   "kind": "gate_calendar"
-  },
-  {
    "inst": "st_rsg_rs_34_41_cl3N_2",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
     13433.7,
-    21338.1
+    16738.1
    ],
    "kind": "gate_calendar"
   },
@@ -43542,32 +43452,22 @@
    "kind": "gate_calendar"
   },
   {
+   "inst": "st_rsg_rs_45_13_1_cl4S_0",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    17574.8,
+    7480.9
+   ],
+   "kind": "gate_calendar"
+  },
+  {
    "inst": "st_rsg_rs_54_13_2_cl5S_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
     21465.9,
     7600.9
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_54_13_2_cl5S_1",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    21465.9,
-    7600.9
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_45_13_1_cl4S_0",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    17564.8,
-    9885.9
    ],
    "kind": "gate_calendar"
   },
@@ -43812,16 +43712,6 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_48_10_1_cl4S_5",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    18558.5,
-    4855.7
-   ],
-   "kind": "gate_calendar"
-  },
-  {
    "inst": "st_rsg_rs_45_7_1_south4_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -43893,16 +43783,6 @@
   },
   {
    "inst": "st_rsg_rs_54_41_cl5N_0",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    21465.9,
-    19053.1
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_54_41_cl5N_1",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
@@ -43997,7 +43877,7 @@
    "orient": "R0",
    "xy": [
     17564.8,
-    21338.1
+    16738.1
    ],
    "kind": "gate_calendar"
   },
@@ -44302,12 +44182,12 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_46_34_1_cl4N_8",
+   "inst": "st_rsg_rs_54_13_2_cl5S_1",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    18558.5,
-    13627.3
+    21465.9,
+    7480.9
    ],
    "kind": "gate_calendar"
   },
@@ -44316,8 +44196,8 @@
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    22415.9,
-    7600.9
+    21465.9,
+    7480.9
    ],
    "kind": "gate_calendar"
   },
@@ -44386,8 +44266,8 @@
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    21955.9,
-    9885.9
+    22415.9,
+    7600.9
    ],
    "kind": "gate_calendar"
   },
@@ -44622,16 +44502,6 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_51_10_2_cl5S_3",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    21432.2,
-    4855.7
-   ],
-   "kind": "gate_calendar"
-  },
-  {
    "inst": "st_rsg_rs_57_4_2_cl5S_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -44682,12 +44552,12 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_57_4_2_cl5S_5",
+   "inst": "st_rsg_rs_54_41_cl5N_1",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    22449.6,
-    2160.0
+    21465.9,
+    18933.1
    ],
    "kind": "gate_calendar"
   },
@@ -44696,8 +44566,8 @@
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    22415.9,
-    19053.1
+    21465.9,
+    18933.1
    ],
    "kind": "gate_calendar"
   },
@@ -44743,6 +44613,16 @@
   },
   {
    "inst": "st_rsg_rs_54_41_cl5N_7",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    22415.9,
+    19053.1
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_54_41_cl5N_8",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
@@ -44828,26 +44708,6 @@
    "xy": [
     21432.2,
     13627.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_53_34_1_cl5N_8",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    21432.2,
-    13627.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_54_41_cl5N_8",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    21455.9,
-    21338.1
    ],
    "kind": "gate_calendar"
   },
@@ -45052,16 +44912,6 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_56_34_1_cl5N_7",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    22449.6,
-    13627.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
    "inst": "st_rsg_rs_64_13_cl6S_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -45166,8 +45016,8 @@
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    25846.9,
-    9885.9
+    26306.9,
+    7600.9
    ],
    "kind": "gate_calendar"
   },
@@ -45462,16 +45312,6 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_61_4_cl6S_11",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    25323.2,
-    2160.0
-   ],
-   "kind": "gate_calendar"
-  },
-  {
    "inst": "st_rsg_rs_67_4_cl6S_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -45513,16 +45353,6 @@
   },
   {
    "inst": "st_rsg_rs_67_4_cl6S_4",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    26340.6,
-    2160.0
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_67_4_cl6S_5",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
@@ -45632,6 +45462,16 @@
    "kind": "gate_calendar"
   },
   {
+   "inst": "st_rsg_rs_64_41_cl6N_10",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    26306.9,
+    19053.1
+   ],
+   "kind": "gate_calendar"
+  },
+  {
    "inst": "st_rsg_rs_63_37_1_cl6N_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -45678,36 +45518,6 @@
    "xy": [
     25323.2,
     13627.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_63_37_1_cl6N_5",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    25323.2,
-    13627.3
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_63_41_2_cl6N_0",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    25323.2,
-    16323.0
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rs_64_41_cl6N_10",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    25346.9,
-    21338.1
    ],
    "kind": "gate_calendar"
   },
@@ -45778,16 +45588,6 @@
    "xy": [
     25346.9,
     21338.1
-   ],
-   "kind": "gate_calendar"
-  },
-  {
-   "inst": "st_rsg_rsl_x_f_6R10_l3_0_cl6N_0",
-   "master": "dsfd_rly_1_WN",
-   "orient": "R0",
-   "xy": [
-    26340.6,
-    13627.3
    ],
    "kind": "gate_calendar"
   },
@@ -45907,7 +45707,7 @@
    "orient": "R0",
    "xy": [
     30198.0,
-    7750.9
+    7420.9
    ],
    "kind": "gate_calendar"
   },
@@ -45953,6 +45753,16 @@
   },
   {
    "inst": "st_rsg_rs_74_13_cl7S_10",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    30198.0,
+    7750.9
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_74_13_cl7S_11",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
@@ -46017,7 +45827,7 @@
    "orient": "R0",
    "xy": [
     30198.0,
-    19203.1
+    18873.1
    ],
    "kind": "gate_calendar"
   },
@@ -46063,6 +45873,16 @@
   },
   {
    "inst": "st_rsg_rs_74_41_3_cl7N_10",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    30198.0,
+    19203.1
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_74_41_3_cl7N_11",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
@@ -46332,6 +46152,16 @@
    "kind": "gate_calendar"
   },
   {
+   "inst": "st_rsg_rs_29_3_3_south3_2",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    11969.9,
+    1450.0
+   ],
+   "kind": "gate_calendar"
+  },
+  {
    "inst": "st_rsg_rs_31_3_south3_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -46362,6 +46192,16 @@
    "kind": "gate_calendar"
   },
   {
+   "inst": "st_rsg_rs_31_3_south3_3",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    12501.1,
+    1450.0
+   ],
+   "kind": "gate_calendar"
+  },
+  {
    "inst": "st_rsg_rs_33_3_2_south3_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -46373,6 +46213,16 @@
   },
   {
    "inst": "st_rsg_rs_33_3_2_south3_1",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    13563.6,
+    1450.0
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_33_3_2_south3_2",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
@@ -46472,12 +46322,12 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_45_4_1_south4_0",
+   "inst": "st_rsg_rs_41_3_2_south4_5",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    17496.2,
-    1650.0
+    16751.1,
+    1450.0
    ],
    "kind": "gate_calendar"
   },
@@ -46512,17 +46362,17 @@
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_48_4_south4_0",
+   "inst": "st_rsg_rs_44_3_south4_3",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
-    18858.2,
-    1650.0
+    17813.6,
+    1450.0
    ],
    "kind": "gate_calendar"
   },
   {
-   "inst": "st_rsg_rs_48_4_south4_1",
+   "inst": "st_rsg_rs_48_4_south4_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
    "xy": [
@@ -46842,6 +46692,16 @@
    "kind": "gate_calendar"
   },
   {
+   "inst": "st_rsg_rs_34_7_2_south3_29",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    13668.7,
+    4365.7
+   ],
+   "kind": "gate_calendar"
+  },
+  {
    "inst": "st_rsg_rs_45_7_1_south4_7",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -47062,6 +46922,46 @@
    "kind": "gate_calendar"
   },
   {
+   "inst": "st_rsg_rs_48_4_south4_1",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    18858.2,
+    1650.0
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_48_4_south4_2",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    18858.2,
+    1650.0
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_34_29_void3_11",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    13933.7,
+    15947.3
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_34_29_void3_12",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    13933.7,
+    15947.3
+   ],
+   "kind": "gate_calendar"
+  },
+  {
    "inst": "st_rsg_rs_45_25_2_void4_0",
    "master": "dsfd_rly_1_WN",
    "orient": "R0",
@@ -47148,6 +47048,26 @@
    "xy": [
     18064.8,
     12918.3
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_45_25_2_void4_9",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    18064.8,
+    12918.3
+   ],
+   "kind": "gate_calendar"
+  },
+  {
+   "inst": "st_rsg_rs_45_33_1_void4_24",
+   "master": "dsfd_rly_1_WN",
+   "orient": "R0",
+   "xy": [
+    17709.8,
+    16248.1
    ],
    "kind": "gate_calendar"
   }

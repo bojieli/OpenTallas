@@ -46,7 +46,7 @@ FLIGHT_SIM = """// dv_flight_sim (S81-LBGAP/G1, bench side): F whole periods of 
 // landing.  The word is delayed F edges of the lane clock and the lane clock reaches the landing F edges late: its first
 // edge carries the word of hop-0 gate edge G, as the silicon ck_f edge 0 does (LANDING-CONTRACT L3).
 module dv_flight_sim #(parameter integer W = 1, parameter integer F = 0) (
-    input  wire ck_in, input wire [W-1:0] i_in, output wire ck_out, output wire [W-1:0] i_out);
+    input  wire ck_in, input wire rs, input wire [W-1:0] i_in, output wire ck_out, output wire [W-1:0] i_out);
     generate if (F == 0) begin : g0
         assign ck_out = ck_in; assign i_out = i_in;
     end else begin : gf
@@ -57,8 +57,11 @@ module dv_flight_sim #(parameter integer W = 1, parameter integer F = 0) (
         always @(posedge ck_in) begin
             d[0] <= i_in;
             for (k = 1; k < F; k = k + 1) d[k] <= d[k - 1];
-            if (n < F) n <= n + 1;
         end
+        // the flight count starts with the lane clock's first real edge: the time-0 settle of an idle-high (inverted,
+        // half-cycle) lane clock is not an edge (rs kept on the port for the record; the wire delay ignores it)
+        always @(posedge ck_in)
+            if ($time > 0 && n < F) n <= n + 1;
         /* verilator lint_off COMBDLY */
         always_latch if (!ck_in) en_l = (n >= F);
         /* verilator lint_on COMBDLY */
@@ -113,8 +116,8 @@ def main(argv=None):
     ap.add_argument('--top', default='dv_die')
     ap.add_argument('--no-grow', action='store_true')
     ap.add_argument('--land-plan', help='p4l land_plan.json: back-annotate every landing input (ck_f and i together) with '
-                    'the lane flight time at --corner as a CYCLE model (S81-LBGAP/G1): F = 1 + ceil(-S1/T) whole periods '
-                    '(the same rule as E, so F = E at the corner that sets E), clipped into the landing window (E-D, E]. '
+                    'the lane flight time at --corner as a CYCLE model (S81-LBGAP/G1): F = ceil(-S1/T) whole periods '
+                    '(E - 1 at the corner that sets E), clipped into the landing window [E-D+1, E-1]. '
                     'RTL relays are zero-delay, so without it every lane with E >= D aliases its ring.  The model delays the '
                     'lane word by F ck_f edges and opens ck_f F edges late -- the hop-0 gate (die.v ICG, LANDING-CONTRACT '
                     'L3) is what makes the late first edge carry the calendar epoch.  Bench side only (wire flight), never '
@@ -302,8 +305,11 @@ def main(argv=None):
             if s1 is None:
                 raise SystemExit(f'dv_slice_cut: landing {i} has no S1 at {a.corner}')
             E_, D_ = int(r['E']), int(r.get('D', LPJ.get('D', 4)))
-            f_raw = 1 + math.ceil(-float(s1) / T_ps)
-            F = min(max(f_raw, E_ - D_ + 1), E_) + a.flight_shift
+            # whole periods the lane clock lags beyond the single-cycle hop, kept inside the window: with the hop-0
+            # gate and the calendar R0 = G + (N mod 2) the ring occupancy is E - 1 - F + (N mod 2), legal for
+            # E - D + 1 <= F <= E - 1
+            f_raw = math.ceil(-float(s1) / T_ps)
+            F = min(max(f_raw, E_ - D_ + 1), E_ - 1) + a.flight_shift
             F = max(F, 0)
             cm = byname[i][3]
             ln = lines[i]
@@ -314,7 +320,7 @@ def main(argv=None):
             # CYCLE flight model (zero-delay RTL): Verilator 5.050 drops transport-delayed clock pulses, so the flight is
             # whole periods on the lane's own (gated) clock
             body.append(f'  wire {i}__ckf_d; wire [{w - 1}:0] {i}__i_d;   // lane flight {F} cycles ({a.corner}: S1 {float(s1):.1f} ps, E {E_}, D {D_})')
-            body.append(f'  dv_flight_sim #(.W({w}), .F({F})) {i}__flight (.ck_in({cm["ck_f"]}), .i_in({cm["i"]}), .ck_out({i}__ckf_d), .i_out({i}__i_d));')
+            body.append(f'  dv_flight_sim #(.W({w}), .F({F})) {i}__flight (.ck_in({cm["ck_f"]}), .rs({cm["rs"]}), .i_in({cm["i"]}), .ck_out({i}__ckf_d), .i_out({i}__i_d));')
             lines[i] = ln
             lane_dl[i] = dict(F=F, F_raw=f_raw, s1_ps=float(s1), E=E_, D=D_, K=r['K'], corner=a.corner, flight_shift=a.flight_shift)
     lost = sorted(S - set(lines))
