@@ -101,7 +101,8 @@ module ot_s81sl_slice #(
     parameter integer DL = 4,        // leaf <-> centre relay stages (equal for every leaf: the farthest leaf, 1.84 mm)
     parameter integer DR = 6,        // frame return lanes -> capture root (worst entry face to the centre, 2.3 mm)
     parameter integer DX = 6,        // x streamer -> x-chain heads (centre to the bottom face)
-    parameter integer VQ_XMEM = 2    // vq's x wait line: 2 = the one-macro sub-beat SRAM ring (the s81sl_vq kit), 0 = flops
+    parameter integer VQ_XMEM = 2,   // vq's x wait line: 2 = the one-macro sub-beat SRAM ring (the s81sl_vq kit), 0 = flops
+    parameter integer VS_MUT = 0     // bench negative controls only (every leaf's ot_s81sl_vs MUT); 0 in every build
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -132,7 +133,7 @@ module ot_s81sl_slice #(
     wire [4:0] f_lf;
     genvar k;
     generate for (k = 0; k < 5; k = k + 1) begin : lf
-        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
+        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
             .c_v(c_v_l[k]), .c_d(c_d_l[160 * k +: 160]),
             .sw_v(sw_v_l[k]), .sw_a(sw_a_l[10 * k +: 10]), .sw_m(sw_m_l[8 * k +: 8]), .sw_d(sw_d_l[256 * k +: 256]),
             .cw_v(cw_v_l[2 * k +: 2]), .cw_a(cw_a_l[24 * k +: 24]), .cw_d(cw_d_l[64 * k +: 64]),
@@ -172,8 +173,8 @@ module ot_s81sl_slice #(
             .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
         assign bo = 1104'd0;     // C1 has no band port: the C1 cluster master does not expose bi / bo
     end endgenerate
-    // xfin (S81-DV leaf): sid strap pending (S81-DV to convert SID to a strap pin before its view is final)
-    ot_s81dv_xfin u_xf (.clk(clk), .rst_n(rst_n), .go(x_go), .eps(x_eps), .s_v(x_sv), .s_i(x_si), .s(x_s),
+    // xfin (S81-DV leaf): slice id on its strap pin (captured inside xfin; one hardened master for all 16 slices)
+    ot_s81dv_xfin u_xf (.clk(clk), .rst_n(rst_n), .go(x_go), .sid(sid), .eps(x_eps), .s_v(x_sv), .s_i(x_si), .s(x_s),
         .wi_v(nx_wi[172]), .wi_h(nx_wi[171:168]), .wi_b(nx_wi[167:160]), .wi_d(nx_wi[159:0]),
         .ei_v(nx_ei[172]), .ei_h(nx_ei[171:168]), .ei_b(nx_ei[167:160]), .ei_d(nx_ei[159:0]),
         .eo_v(nx_eo[172]), .eo_h(nx_eo[171:168]), .eo_b(nx_eo[167:160]), .eo_d(nx_eo[159:0]),

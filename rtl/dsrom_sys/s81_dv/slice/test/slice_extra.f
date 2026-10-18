@@ -1,0 +1,14 @@
+rtl/v41rom/ot_v41_kreg.sv
+rtl/common/ot_prefix.sv
+rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_stream_rom4_sel.sv
+rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv
+rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv
+rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv
+physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
