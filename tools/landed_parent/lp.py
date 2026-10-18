@@ -156,6 +156,29 @@ def parse_module(text: str, name: str) -> dict:
     for mm in re.finditer(r"\blocalparam\b\s*(?:integer|int|\[[^\]]*\])?\s*(\w+)\s*=\s*([^;,]+)", body):
         params[mm.group(1)] = mm.group(2).strip()
     ports, d, rng = [], None, None
+    names = [" ".join(it.split()) for it in split_top(ports_txt)]
+    if names and all(re.fullmatch(r"\w+", n) for n in names):
+        # non-ANSI (Verilog-1995) header: directions / ranges from the body's port declarations, which are then
+        # removed from the body (with their 'wire X;' twins) so emit() re-declares each port exactly once
+        decl = {}
+        def take(mm):
+            ds, r, ns = mm.group(1), mm.group(2), [x.strip() for x in mm.group(3).split(",")]
+            if all(x in names for x in ns):
+                for x in ns:
+                    decl[x] = (ds, r)
+                return ""
+            return mm.group(0)
+        body = re.sub(r"\b(input|output|inout)\b\s*(?:wire|reg|logic)?\s*(?:signed)?\s*(\[[^\]]*\])?\s*([\w\s,]+?)\s*;",
+                      take, body)
+        body = re.sub(r"\bwire\b\s*(?:signed)?\s*(\[[^\]]*\])?\s*(\w+)\s*;",
+                      lambda mm: "" if mm.group(2) in decl else mm.group(0), body)
+        for n in names:
+            if n not in decl:
+                raise SystemExit(f"{name}: non-ANSI port {n} has no input/output declaration")
+            ds, r = decl[n]
+            item = f"{ds} wire {r + ' ' if r else ''}{n}"
+            ports.append(dict(name=n, dir={"input": "in", "output": "out", "inout": "inout"}[ds], range=r, item=item))
+        return dict(name=name, params=params, params_txt=params_txt, ports=ports, body=body)
     for it in split_top(ports_txt):
         it = " ".join(it.split())
         mm = re.match(r"(input|output|inout)?\s*(?:wire|reg|logic)?\s*(?:signed)?\s*(\[[^\]]*\])?\s*(\w+)$", it)
