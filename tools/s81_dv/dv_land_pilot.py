@@ -14,6 +14,14 @@ ONE E per link (all lanes of a bundle share the compiler slot), the SAME E at TT
   dv_land_pilot.py kit --plan DIR --case-remote CASE --libs-remote LIBS [--corners tt ff]
       -> DIR/sta_land_<corner>.tcl + run.sh: the dv_sta_pilot STA with landing.sdc sourced, plus per-link worst
          setup / hold at the landed block pins (link_<corner>.rpt) and the relay-hop hold path details (hop_<corner>.rpt)
+  dv_land_pilot.py variant --mode {half,outhold} --base-libs DIR --out DIR --case-remote CASE --out-remote RDIR
+      relay->relay hold fix prototypes on the same routed case (S81-LAND2):
+        half    : half-cycle hops -- every relay's ck -> ck_o arc becomes NEGATIVE unate (ck_o = ~ck: rise/fall tables
+                  swapped; the kept inverter pair becomes one/three inverters), and every DFF stand-in station's BUF
+                  clock forward (ff_*) is replace_cell'd by INVx8; station k+1 captures half a period after station k
+        outhold : every relay data output o[*] launches --outhold-ps later (cell_rise/cell_fall + ps, min AND max: a
+                  delay cell in the relay output adds to both)
+      -> DIR/{libs/, sta_<c>.tcl, run.sh}; run.sh = base STA (no landing) + classify, then plan + kit + landed STA
 """
 import argparse, collections, json, math, re
 from pathlib import Path
@@ -48,11 +56,23 @@ def main():
     k.add_argument('--case-remote', required=True)
     k.add_argument('--libs-remote', required=True)
     k.add_argument('--corners', nargs='+', default=['tt', 'ff'])
+    k.add_argument('--extra-tcl', type=Path, default=None, help='tcl inserted after read_db (variant netlist edits)')
     k.add_argument('--hop-endpoints', nargs='*', default=['st_x_f_0L00_l2_0/i[22]', 'st_tvS_s_7N_0/i[117]', 'st_tvS_s_7N_5/i[117]',
                                                          'st_xrE_0S_l1_0/i[33]', 'st_xrE_0S_l1_3/i[33]', 'st_pv_W_l1_0/i[224]'])
+    v = sp.add_parser('variant')
+    v.add_argument('--mode', choices=('half', 'outhold'), required=True)
+    v.add_argument('--outhold-ps', type=float, default=200.0)
+    v.add_argument('--base-libs', required=True, type=Path, help='local copy of the pilot rly_<d>_<c>.lib (ck->ck_o patched)')
+    v.add_argument('--out', required=True, type=Path)
+    v.add_argument('--case-remote', required=True)
+    v.add_argument('--out-remote', required=True)
+    v.add_argument('--corners', nargs='+', default=['tt', 'ff'])
+    v.add_argument('--D', type=int, default=4)
     a = ap.parse_args()
     if a.cmd == 'kit':
         return kit(a)
+    if a.cmd == 'variant':
+        return variant(a)
     case = json.load(open(a.case))
     links = {}
     for c in case['chains']:
@@ -107,6 +127,79 @@ def main():
     print(json.dumps(summ, indent=1))
 
 
+def _swap_ck_o(lib):
+    """ck -> ck_o positive -> negative unate: an odd inverter count, so ck_o rises when ck falls (cell_rise <- the
+    falling-input table, i.e. the old cell_fall, and vice versa; transitions follow their output edge)."""
+    m = re.search(r'pin\("ck_o"\)\s*\{', lib)
+    i = lib.index('timing_sense : positive_unate;', m.start())
+    j = lib.index('\n    }\n', i)
+    body = lib[i:j].replace('positive_unate', 'negative_unate', 1)
+    body = body.replace('/* S81-DIE4', '/* S81-LAND2 HALF-CYCLE PROTOTYPE: ck_o = ~ck (tables of the even-inverter view, edges swapped) | S81-DIE4')
+    tmp = {'cell_rise(': '@CF(', 'cell_fall(': '@CR(', 'rise_transition(': '@FT(', 'fall_transition(': '@RT('}
+    for k, t in tmp.items():
+        body = body.replace(k, t)
+    for t, k in (('@CR(', 'cell_rise('), ('@CF(', 'cell_fall('), ('@RT(', 'rise_transition('), ('@FT(', 'fall_transition(')):
+        body = body.replace(t, k)
+    return lib[:i] + body + lib[j:]
+
+
+def _outhold(lib, ps):
+    """+ps on every o[*] rising_edge arc delay (cell_rise / cell_fall values)"""
+    out, pos = [], 0
+    for m in re.finditer(r'pin\("o\[\d+\]"\)\s*\{', lib):
+        e = lib.index('\n    }\n', m.start())
+        seg = lib[m.start():e]
+        seg = re.sub(r'((?:cell_rise|cell_fall)\(\w+\)\s*\{\s*index_1\("[^"]*"\);\s*values\(")([^"]*)("\))',
+                     lambda g: g.group(1) + ','.join(f'{float(x) + ps:.5f}' for x in g.group(2).split(',')) + g.group(3), seg)
+        out.append(lib[pos:m.start()]); out.append(seg); pos = e
+    out.append(lib[pos:])
+    return ''.join(out).replace('cell (', f'/* S81-LAND2 OUTHOLD PROTOTYPE: o[*] launch +{ps:g} ps */\n  cell (', 1)
+
+
+def variant(a):
+    import shutil, sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import dv_sta_pilot as P
+    (a.out / 'libs').mkdir(parents=True, exist_ok=True)
+    for f in sorted(a.base_libs.glob('rly_*_*.lib')):
+        lib = f.read_text()
+        lib = _swap_ck_o(lib) if a.mode == 'half' else _outhold(lib, a.outhold_ps)
+        (a.out / 'libs' / f.name).write_text(lib)
+    extra = ''
+    if a.mode == 'half':
+        extra = ('# S81-LAND2 HALF-CYCLE PROTOTYPE: DFF stand-in station clock forwards BUFx8 -> INVx8 (ck_o = ~ck)\n'
+                 'set nrep 0; foreach i [get_cells ff_*] { replace_cell $i INVx8_ASAP7_75t_R; incr nrep }\n'
+                 'puts "OT_HALF_REPLACED $nrep"\n')
+    for c in a.corners:
+        t = P.STA.format(corner=c, plat=P.PLAT, std=' '.join(P.STD[c]))
+        t = t.replace('NOT_A_DIE_RESULT', f'NOT_A_DIE_RESULT + S81-LAND2 {a.mode} hop prototype')
+        t = t.replace('source {plat}/setRC.tcl'.format(plat=P.PLAT), extra + 'source {plat}/setRC.tcl'.format(plat=P.PLAT))
+        (a.out / f'sta_{c}.tcl').write_text(t)
+    (a.out / 'classify.py').write_text(P.CLASSIFY)
+    here = Path(__file__).resolve().parent
+    for f in ('dv_land_pilot.py', 'dv_sta_pilot.py'):
+        shutil.copy(here / f, a.out / f)
+    cs = ' '.join(a.corners)
+    runs = '; '.join(f'/usr/bin/time -v openroad -threads ${{CPUS:-8}} -no_init -exit /pilot/sta_{c}.tcl > /pilot/out/sta_{c}.log 2>&1' for c in a.corners)
+    if extra:
+        (a.out / 'extra.tcl').write_text(extra)
+    xt = f' --extra-tcl $D/extra.tcl' if extra else ''
+    (a.out / 'run.sh').write_text(f'''#!/bin/bash
+# S81-LAND2 hop-fix prototype {a.mode} (NOT_A_DIE_RESULT); case {a.case_remote}
+D=$(cd $(dirname $0) && pwd); N=dvhop-$$; mkdir -p $D/out $D/land
+docker run --rm --name $N --cpus=${{CPUS:-8}} --memory=${{MEMG:-48}}g -v {a.case_remote}:/case:ro -v $D:/pilot -w /pilot openroad/orfs:asap7lock \\
+  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; {runs}; chmod -R a+rwX /pilot/out" || {{ echo 1 > $D/out/run.exit; exit 1; }}
+python3 $D/classify.py {a.case_remote}/case.json $D/out {cs} > $D/out/classes.txt 2>&1
+python3 $D/dv_land_pilot.py plan --case {a.case_remote}/case.json --reports $D/out --out $D/land --D {a.D} --corners {cs} > $D/land/plan.txt 2>&1 || {{ echo 2 > $D/out/run.exit; exit 2; }}
+python3 $D/dv_land_pilot.py kit --plan $D/land --case-remote {a.case_remote} --libs-remote {a.out_remote}/libs --corners {cs}{xt}
+bash $D/land/run.sh; rc=$?
+python3 $D/classify.py {a.case_remote}/case.json $D/land/out {cs} > $D/land/out/classes.txt 2>&1
+echo $rc > $D/out/run.exit; exit $rc
+''')
+    (a.out / 'run.sh').chmod(0o755)
+    print(a.out)
+
+
 def kit(a):
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -133,6 +226,8 @@ foreach ep {{{' '.join(a.hop_endpoints)}}} {{
 }}
 puts OT_STA_DONE''')
         t = t.replace('/pilot/libs/rly_', '/libs/rly_')
+        if a.extra_tcl:
+            t = t.replace(f'source {P.PLAT}/setRC.tcl', a.extra_tcl.read_text() + f'source {P.PLAT}/setRC.tcl', 1)
         (a.plan / f'sta_land_{c}.tcl').write_text(t)
     runs = '; '.join(f'/usr/bin/time -v openroad -threads ${{CPUS:-8}} -no_init -exit /pilot/sta_land_{c}.tcl > /pilot/out/sta_{c}.log 2>&1' for c in a.corners)
     (a.plan / 'run.sh').write_text(f'''#!/bin/bash
