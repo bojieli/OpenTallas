@@ -1,6 +1,6 @@
 {
  "unit": "dsdv_svc_rs (x16, 2 x 8 grid, sid = rsv_NN; S81-DV p4j: rsv_05 / rsv_11 = dsdv_svc_rs_entry, the q / P.V entry + host endpoint of the W / E half; the q.k fold at rsv_09, chain roots rsv_07 / rsv_09)",
- "lane": "S81U-SVC3 2026-10-17; S81U-SVC4 2026-10-17 (p4j topology, static P.V feed / drain)",
+ "lane": "S81U-SVC3 2026-10-17; S81U-SVC4 2026-10-17 (p4j topology, static P.V feed / drain); S81U-SVC5 2026-10-17 (sx leaf = 8 x dsdv_svc_sx_hrow)",
  "form": "CLUSTER of hardened leaves; the slice top is NOT kitted. Every leaf below is hardened once and replicated.",
  "leaves": [
   {
@@ -16,10 +16,11 @@
    "role": "D=32 attention share (ot_hdc_v41x_attn_s D=TD=32, NL 4, S=1) + 2-PC service: OWN_ROW/host writes, window + scale reads, owned-row fetch, slot-addressed landing 640 x 256 b, q 16 x 512 b, p 512 x 512 b"
   },
   {
-   "inst": "u_sx",
-   "module": "dsdv_svc_sx = 4 x dsdv_svc_sx_row + dsfd_dvrly_276 relays",
-   "state": "sx_row kit + local gate PASS (S81U-SVCX); relays closed",
-   "role": "q.k balanced 16-tile tree node, scatter, SM-head tap"
+   "inst": "u_sx (g_r[0..3].g_h[0..1].u_hrow + relays)",
+   "module": "dsdv_svc_sx = 8 x dsdv_svc_sx_hrow (head-parity half row, strap hb; 216 x 216 um, 3,855 pins, ~7.3k sinks) + dsfd_dvrly_276 relays",
+   "state": "dsdv_svc_sx_hrow gate WARN 0 fail (TT 207..261 ps / spread 54), SUBMITTED dsdv_svc_sx_hrow-c5a8d5b10 (S81U-SVCX4); relays closed",
+   "role": "q.k balanced 16-tile tree node, scatter, SM-head tap",
+   "placement": "the 8 leaves sit at the slice centre (4 x 2 array)"
   },
   {
    "inst": "u_sms",

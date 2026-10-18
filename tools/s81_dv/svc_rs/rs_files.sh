@@ -1,5 +1,5 @@
 # S81U-SVC: source list of the dsdv_svc_rs slice (sourced by rs_bench.sh / rs_lint.sh)
-#   score exchange = the S81U-SVCX split form (4 x dsdv_svc_sx_row + closed dsfd_dvrly_276 relays);
+#   score exchange = the S81U-SVCX split form (8 x dsdv_svc_sx_hrow head-parity half rows + closed dsfd_dvrly_276 relays);
 #   SM share = ot_s81_su_sms with -DSU_SMU_T (hardened regional clusters dsfd_su_t_smhq x4 + dsfd_su_t_smhr)
 D=rtl/dsrom_sys/s81_dv/svc_rs
 SM=rtl/dsrom_sys/s81_dv/su_sm
@@ -19,5 +19,5 @@ RS_SRC=(rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_s.
   rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv
   rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv
   rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
-  $D/dsdv_svc_sx_row.sv $D/dsdv_svc_sx.sv $D/dsdv_svc_att.sv $D/dsdv_svc_rs.sv)
+  $D/dsdv_svc_sx_hrow.sv $D/dsdv_svc_sx.sv $D/dsdv_svc_att.sv $D/dsdv_svc_rs.sv)
 RS_LIB=(-v rtl/dsrom_sys/s81_ph/svc/dsfd_svc_c.sv)
