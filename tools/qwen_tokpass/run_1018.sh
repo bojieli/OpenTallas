@@ -19,6 +19,10 @@ D=$1; STEP=$2
 SRC=$D/src; FX=$D/fx; LOG=$D/STATUS.log
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 ENVTP="QWEN_O4_TP=4 QWEN_O4_GROUPS=6144 HDC_SU_WIDTH=1024 HDC_KV_FMT=fp8"
+V=$D/venv; PYV=$V/bin/python   # venv (system site + torch CPU + safetensors): the fleet python lacks both
+mkvenv() { [ -x "$PYV" ] && "$PYV" -c "import torch, safetensors" 2>/dev/null && return 0
+  { python3 -m venv --system-site-packages "$V" && "$V/bin/pip" install -q torch --index-url https://download.pytorch.org/whl/cpu \
+    && "$V/bin/pip" install -q safetensors; } >> "$D/venv.log" 2>&1; }
 now() { TZ=America/Los_Angeles date '+%F %H:%M:%S'; }
 log() { echo "$(now) $*" >> "$LOG"; }
 T0=$(date +%s)
@@ -27,11 +31,12 @@ cd "$SRC" || exit 2
 log "$STEP start src $(cat SOURCE_COMMIT) host $(hostname)"
 case $STEP in
 restore)
+  mkvenv || done_ 3
   mkdir -p "$FX/img_p1" "$D/restore"
   : > "$D/restore/fails.txt"
   one() { local o=$FX/img_p1/L$1-d$2 f=$D/restore/L$1-d$2.log
-    env $ENVTP python3 tools/exactness/w12_layer_restore.py "$FX/prep/tp4" $1 $2 "$o" > "$f" 2>&1 || \
-    env $ENVTP python3 tools/exactness/w12_layer_restore.py "$FX/prep/tp4" $1 $2 "$o" --compact >> "$f" 2>&1 || \
+    env $ENVTP "$PYV" tools/exactness/w12_layer_restore.py "$FX/prep/tp4" $1 $2 "$o" > "$f" 2>&1 || \
+    env $ENVTP "$PYV" tools/exactness/w12_layer_restore.py "$FX/prep/tp4" $1 $2 "$o" --compact >> "$f" 2>&1 || \
     echo "FAIL L$1-d$2" >> "$D/restore/fails.txt"; }
   for l in $(seq 0 35); do for d in 0 1 2 3; do
     while [ "$(jobs -rp | wc -l)" -ge 48 ]; do wait -n; done
@@ -39,8 +44,8 @@ restore)
   done; done; wait
   for d in 0 1 2 3; do
     o=$FX/img_p1/head-d$d
-    { env $ENVTP python3 tools/qwen_tokpass/w12_head_restore.py "$FX/prep/tp4" $d "$o" && \
-      env $ENVTP python3 tools/exactness/w12_head_stage.py "$FX/prep/tp4" $d "$o"; } > "$D/restore/head-d$d.log" 2>&1 || echo "FAIL head-d$d" >> "$D/restore/fails.txt"
+    { env $ENVTP "$PYV" tools/qwen_tokpass/w12_head_restore.py "$FX/prep/tp4" $d "$o" && \
+      env $ENVTP "$PYV" tools/exactness/w12_head_stage.py "$FX/prep/tp4" $d "$o"; } > "$D/restore/head-d$d.log" 2>&1 || echo "FAIL head-d$d" >> "$D/restore/fails.txt"
   done
   n=$(wc -l < "$D/restore/fails.txt"); log "restore fails=$n ($(head -c 300 "$D/restore/fails.txt" | tr '\n' ' '))"
   [ "$n" = 0 ]; done_ $? ;;
@@ -69,8 +74,7 @@ sys.exit(0 if ok and len(man) == 12 else 1)
 EOF
   done_ $? ;;
 gold)
-  V=$D/venv
-  [ -x "$V/bin/python" ] || { python3 -m venv --system-site-packages "$V" && "$V/bin/pip" install -q torch --index-url https://download.pytorch.org/whl/cpu; } >> "$D/gold_venv.log" 2>&1 || done_ 3
+  mkvenv || done_ 3
   L=$FX/gold/tp4; mkdir -p "$L"
   env $ENVTP OMP_NUM_THREADS=${THREADS:-64} "$V/bin/python" tools/qwen_hbmacc_position_oracle_gpu.py --run --device cpu \
     --prep-dir "$FX/prep/tp4" --layers 36 --head --tokens "$FX/inputs/prompt_tokens_8192.txt" --positions 8191 \
@@ -90,6 +94,9 @@ d2d)
 kvprog)
   python3 tools/qwen_static_kv/run_layer_programme.py --out "$D/kvprog" > "$D/kvprog.out" 2>&1; done_ $? ;;
 build)
+  # 10-15 fleet NBA guard (verilator_guarded.py) refuses this die: 3 in-place NBA loops (u_hbm t_rd_sectors, kvw_ce,
+  # st_rsp_stall) -> unroll them (the guard's own remedy); the 10-13 builds predate the guard
+  export QROM_VFLAGS_EXTRA="${QROM_VFLAGS_EXTRA:---unroll-count 4096}"
   python3 tools/qwen_missing/partition_token.py build --variant part --build "$D/bld_pos" --jobs ${JOBS:-32} --dcu 2 --duc 2 --su-ml 7 --comp 1 > "$D/build_pos.log" 2>&1; r1=$?
   log "build pos rc=$r1"
   python3 tools/qwen_missing/partition_token.py build --variant part --build "$D/bld_neg" --jobs ${JOBS:-32} --dcu 2 --duc 2 --su-ml 7 --comp 0 > "$D/build_neg.log" 2>&1; r2=$?

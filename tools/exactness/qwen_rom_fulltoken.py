@@ -109,6 +109,8 @@ if os.environ.get("QROM_LAT"):
     COLL = [f"-GLAT={int(os.environ['QROM_LAT'])}" if g == "-GLAT=339" else g for g in COLL]
 VFLAGS = ["--cc", "-O3", "-Wno-fatal", "-Wno-TIMESCALEMOD", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
           "-Wno-PINMISSING", "-Wno-LATCH", "-Wno-MULTIDRIVEN"]
+# TOKEN-PASS-QWEN 10-18: extra Verilator flags (e.g. --unroll-count for the fleet NBA-loop guard)
+VFLAGS += os.environ.get("QROM_VFLAGS_EXTRA", "").split()
 
 
 def sha(p):
