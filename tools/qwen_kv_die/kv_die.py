@@ -1018,6 +1018,13 @@ if KSD.ON:
     RTL.update({k_: KSD.RTL_FILE for k_ in KSD.KIND_MASTER.values()}, qkd_ectlk=KSD.bindings()['qkd_ectlk']['file'])
     if KSD.PVFIN:      # KV-PLAN-FIN: the stream PV final join element pvfin
         RTL.update(qkd_pvfin=KSD.PVFIN_FILE)
+    if KSD.AFAULT:     # RTL-BUILD-KV/FAULT P7: the pair fault rides its own 1-b die word to the attention fault root
+        for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):
+            _pp = SPLIT_BINDINGS[_mn]['ports']
+            if _pp.get('pf') == ['fault', 'busy', 'out_age']:
+                _pp['pf'], _pp['pa'] = ['fault'], ['busy', 'out_age']
+                SPLIT_BINDINGS[_mn]['classed'] = dict(SPLIT_BINDINGS[_mn].get('classed') or {},
+                                                      pa='debug: pair busy / out age (unread on the die)')
 
 
 # not exact-cut yet (frames sized, RTL partition owed): reported, not strict
