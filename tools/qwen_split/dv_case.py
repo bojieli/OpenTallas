@@ -237,6 +237,20 @@ def apply_dv(v, m):
             sh = max(0.0, uk['x'] + uk['w'] + 21.6 - min(d['x'] for d in bumps))
             for d in bumps:
                 d['x'] = round(d['x'] + sh, 3)
+    # Q-DIE13 10-18 landing channels (dv2f14bg LAND_CROSS GEN: 10 native59 <-> d2d_rom / sys_face landing hops 411-470 um
+    # > 405: the blocks abut native59 across 108-um gaps that the bulk relays fill, no free station site in reach).
+    # OT_SPLIT_DV_D2D_DY (um) moves d2d_rom, ucie_kv and the N bump row up (the die top grows with them: H is the max
+    # instance top below); OT_SPLIT_DV_SYSFACE_DX (um) moves sys_face E. Both widen the native59 N / E gaps into a
+    # landing channel for the OT_SPLIT_LAND_CROSS stations. Keep both on the 43.2-um lattice (129.6 = one 548-b
+    # landing frame 60 um + its hop room).
+    d2d_dy = float(os.environ.get('OT_SPLIT_DV_D2D_DY', '0') or 0)
+    if d2d_dy:
+        for n_ in ('d2d_rom', 'ucie_kv', 'ckb_rom', 'rs_bump', 'bump_fwd_epoch', 'bump_fwd_lrst'):
+            if n_ in DI:
+                DI[n_]['y'] = round(DI[n_]['y'] + d2d_dy, 3)
+    sf_dx = float(os.environ.get('OT_SPLIT_DV_SYSFACE_DX', '0') or 0)
+    if sf_dx and 'sys_face' in DI:
+        DI['sys_face']['x'] = round(DI['sys_face']['x'] + sf_dx, 3)
     by = {i.name: i for i in m['insts']}
     # retained instances take the dv model's places BEFORE the masters are drawn (the collective / PHY frames follow
     # their instance outline: OT_SPLIT_PHY_TALL edge variants, collective re-kitted tall; PHYs above it are MX)

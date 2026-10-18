@@ -4504,6 +4504,11 @@ RST_REP = 'qfd_rst_rep'          # ot_qwen_rst_rep PAD=0: 1 input flop + 2 regis
 RST_PAD = 'qfd_rst_rep_p8'       # ot_qwen_rst_rep PAD=8: 8 pad flops between the input and the output rank = 10 cycles
 RST_PAD_LV = 5                   # one pad cell = 5 repeater levels (10 cycles)
 RST_W, RST_H = 5.184, 2.16       # 12 GX x 1 GY (<= 5.4 x 2.16: 96 sites x 8 rows), M1-M3
+# Q-DIE13 10-18: OT_RST_REP_VIEW=closed plans the CLOSED qfd_rst_rep / _p8 frames (physical/ref_tile/qfd_rst_rep*,
+# 12.96 x 6.48, clk/d W M4 at y 3.132/3.228, q0 E M4 y 3.228, q1 N M5 x 6.972) so bind_real binds them by name
+RST_CLOSED = os.environ.get('OT_RST_REP_VIEW', '') == 'closed'
+if RST_CLOSED:
+    RST_W, RST_H = 12.96, 6.48
 RST_PITCH_UM = 220.0             # trunk lattice
 RST_LEAF_UM = 200.0              # sinks of one lattice cell share a leaf repeater
 RST_NET_UM = 450.0               # build limit per net (cell centres); the emitted pins are re-checked at RST_OK_UM
@@ -4972,10 +4977,16 @@ def _reset_tree(v, m):
         for mn, pad in ((RST_REP, 0), (RST_PAD, 8)):
             M = v.Master(mn, RST_W, RST_H, 3, f'reset tree repeater (ot_qwen_rst_rep PAD={pad}): 1 input flop + {pad} pad '
                          f'flops + 2 registered outputs, standard cells M1-M3, clk + d on W, q0 on E, q1 on N')
-            M.face('clk', 1, 'W', 'M4', RST_H * 0.3)
-            M.face('d', 1, 'W', 'M4', RST_H * 0.7)
-            M.face('q0', 1, 'E', 'M4', RST_H / 2)
-            M.face('q1', 1, 'N', 'M5', RST_W / 2)
+            if RST_CLOSED:              # the closed view's own pin centres (bind_real swaps in its LEF)
+                M.face('clk', 1, 'W', 'M4', 3.132)
+                M.face('d', 1, 'W', 'M4', 3.228)
+                M.face('q0', 1, 'E', 'M4', 3.228)
+                M.face('q1', 1, 'N', 'M5', 6.972)
+            else:
+                M.face('clk', 1, 'W', 'M4', RST_H * 0.3)
+                M.face('d', 1, 'W', 'M4', RST_H * 0.7)
+                M.face('q0', 1, 'E', 'M4', RST_H / 2)
+                M.face('q1', 1, 'N', 'M5', RST_W / 2)
             o[mn] = M
         return o
     v.masters = masters
