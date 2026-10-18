@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_coll_static_face",
+ "enable": false,
+ "reason": "RTL is pin-registered at the face boundary except the compiled calendar tokens: tx_slot/peer_slot are captured by the calendar's first flop (core cal_ck) and the CDC write (tx_wck: wd/wa/wp); rx_data/rx_valid are the CDC o_data/o_valid registers (rx_rck); phy_tx/phy_tx_valid are codec registers and phy_rx is captured by the codec pin register (codec_ck[0]). An added synthesized register would change the compiled latency L (bench measures exactly L=376)."
+}
