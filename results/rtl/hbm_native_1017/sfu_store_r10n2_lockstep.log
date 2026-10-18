@@ -1,0 +1,49 @@
+# r10n2 (KH-NATIVE3 10-17) store lockstep r7c vs r10 (relays SFU-PS-4 + r10n2 2-edge chain hops, strobe depths P0/P3 1, P1/P4 3, P2/P5 5, P6 0, P7 2, IO0 0, IO1 2, IO2 4), ISHIFT 1 / PSHIFT 3; verilator 5.050
+## ls_m0
+SFU_STORE_R10_LOCKSTEP mode=0 seed=7 pshift=3 ishift=1 edges=2640 mismatching=0 active_ctl=275 active_io=400 fault_edges=0 fault_edge_r7c=-1 fault_edge_r10=-1
+SFU_STORE_R10_LOCKSTEP PASS mode=0
+SFU_STORE_R10_GATE POSITIVE PASS mode=0
+## ls_m1
+SFU_STORE_R10_LOCKSTEP mode=1 seed=7 pshift=3 ishift=1 edges=2640 mismatching=0 active_ctl=7 active_io=400 fault_edges=1377 fault_edge_r7c=1264 fault_edge_r10=1267
+SFU_STORE_R10_LOCKSTEP PASS mode=1
+SFU_STORE_R10_GATE POSITIVE PASS mode=1
+## ls_m2
+SFU_STORE_R10_LOCKSTEP mode=2 seed=7 pshift=3 ishift=1 edges=2640 mismatching=0 active_ctl=5 active_io=400 fault_edges=1379 fault_edge_r7c=1262 fault_edge_r10=1265
+SFU_STORE_R10_LOCKSTEP PASS mode=2
+SFU_STORE_R10_GATE POSITIVE PASS mode=2
+## ls_m3
+SFU_STORE_R10_LOCKSTEP mode=3 seed=7 pshift=3 ishift=1 edges=2640 mismatching=0 active_ctl=0 active_io=3 fault_edges=1389 fault_edge_r7c=1252 fault_edge_r10=1253
+SFU_STORE_R10_LOCKSTEP PASS mode=3
+SFU_STORE_R10_GATE POSITIVE PASS mode=3
+## ls_m4
+SFU_STORE_R10_LOCKSTEP mode=4 seed=7 pshift=3 ishift=1 edges=3803 mismatching=0 active_ctl=153 active_io=4 fault_edges=2551 fault_edge_r7c=1253 fault_edge_r10=1254
+SFU_STORE_R10_LOCKSTEP PASS mode=4
+SFU_STORE_R10_GATE POSITIVE PASS mode=4
+## ls_s101
+SFU_STORE_R10_LOCKSTEP mode=0 seed=101 pshift=3 ishift=1 edges=4319 mismatching=0 active_ctl=702 active_io=824 fault_edges=0 fault_edge_r7c=-1 fault_edge_r10=-1
+SFU_STORE_R10_LOCKSTEP PASS mode=0
+SFU_STORE_R10_GATE POSITIVE PASS mode=0
+## ls_s202
+SFU_STORE_R10_LOCKSTEP mode=0 seed=202 pshift=3 ishift=1 edges=4480 mismatching=0 active_ctl=504 active_io=574 fault_edges=0 fault_edge_r7c=-1 fault_edge_r10=-1
+SFU_STORE_R10_LOCKSTEP PASS mode=0
+SFU_STORE_R10_GATE POSITIVE PASS mode=0
+## ls_s12345
+SFU_STORE_R10_LOCKSTEP mode=0 seed=12345 pshift=3 ishift=1 edges=4055 mismatching=0 active_ctl=464 active_io=568 fault_edges=0 fault_edge_r7c=-1 fault_edge_r10=-1
+SFU_STORE_R10_LOCKSTEP PASS mode=0
+SFU_STORE_R10_GATE POSITIVE PASS mode=0
+## mut_depth1
+SFU_STORE_R10_LOCKSTEP mode=0 seed=7 pshift=3 ishift=1 edges=2640 mismatching=1391 active_ctl=275 active_io=400 fault_edges=0 fault_edge_r7c=-1 fault_edge_r10=1250
+[2646000] %Fatal: tb_sfu_store_r10_lockstep.sv:150: Assertion failed in tb_sfu_store_r10_lockstep.unnamedblk3: SFU_STORE_R10_LOCKSTEP FAIL fault edge r10-r7c=1251 want 1
+SFU_STORE_R10_GATE MUTANT depth1 REJECTED (expected)
+## mut_fwd1
+SFU_STORE_R10_LOCKSTEP mode=0 seed=7 pshift=3 ishift=1 edges=2640 mismatching=1391 active_ctl=275 active_io=400 fault_edges=0 fault_edge_r7c=-1 fault_edge_r10=1250
+[2646000] %Fatal: tb_sfu_store_r10_lockstep.sv:150: Assertion failed in tb_sfu_store_r10_lockstep.unnamedblk3: SFU_STORE_R10_LOCKSTEP FAIL fault edge r10-r7c=1251 want 1
+SFU_STORE_R10_GATE MUTANT fwd1 REJECTED (expected)
+## mut_chain
+SFU_STORE_R10_LOCKSTEP mode=0 seed=7 pshift=3 ishift=1 edges=2640 mismatching=275 active_ctl=275 active_io=400 fault_edges=0 fault_edge_r7c=-1 fault_edge_r10=-1
+[2646000] %Fatal: tb_sfu_store_r10_lockstep.sv:153: Assertion failed in tb_sfu_store_r10_lockstep: SFU_STORE_R10_LOCKSTEP FAIL mismatching_edges=275
+SFU_STORE_R10_GATE MUTANT chain REJECTED (expected)
+## gap3
+SFU_STORE_R10_LOCKSTEP mode=0 seed=7 pshift=3 ishift=1 edges=2638 mismatching=313 active_ctl=275 active_io=400 fault_edges=0 fault_edge_r7c=-1 fault_edge_r10=2323
+[2644000] %Fatal: tb_sfu_store_r10_lockstep.sv:150: Assertion failed in tb_sfu_store_r10_lockstep.unnamedblk3: SFU_STORE_R10_LOCKSTEP FAIL fault edge r10-r7c=2324 want 1
+SFU_STORE_R10_GATE POSITIVE FAIL rc=1

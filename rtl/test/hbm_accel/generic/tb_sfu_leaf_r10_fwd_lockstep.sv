@@ -22,7 +22,11 @@ module tb_sfu_leaf_r10_fwd_lockstep;
     .out_addr(b_addr), .out_data(b_data), .in_start_v(in_start_v), .in_start_base(in_start_base), .in_legal(in_legal),
     .in_span(in_span), .in_loops(in_loops), .in_loops_one(in_loops_one), .in_cv(in_cv), .out_cal(b_cal), .out_v(b_v),
     .out_active(b_act), .out_done(b_done), .out_fault(b_flt), .out_ord(b_ord), .out_hz(b_hz), .out_b26(b_b26));
-  wire [600:0] oa = {a_addr, a_data, a_cal, a_v, a_act, a_done, a_flt, a_ord, a_hz, a_b26};
+  // r10n2 (KH-NATIVE3 10-17): the chain-out pins are the closed RTL's delayed by ONE edge (+1 chain stage: in-face pin flop
+  // -> out-face fwd flop); every other output on the same edge. The mutant (OT_SFU_LEAF10_MUT_FWD = r10n 1-edge forward) must fail.
+  reg [AW-1:0] a_addr_d; reg [255:0] a_data_d;
+  always @(posedge clk) begin a_addr_d <= a_addr; a_data_d <= a_data; end
+  wire [600:0] oa = {a_addr_d, a_data_d, a_cal, a_v, a_act, a_done, a_flt, a_ord, a_hz, a_b26};
   wire [600:0] ob = {b_addr, b_data, b_cal, b_v, b_act, b_done, b_flt, b_ord, b_hz, b_b26};
   integer seed, n, edges = 0, errs = 0, nv = 0, ndone = 0, nflt = 0, nwr = 0, nst = 0, nrst = 0, nchain = 0, k;
   always @(posedge clk) begin

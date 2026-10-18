@@ -11,6 +11,9 @@
 // configuration on the r7c edge (no +1 hop).
 // PRICED CYCLES vs r7c: SUPERSEDED by RELAYS (SFU-PS-4) below: D = 5, status 3 (r7c + 1 edge everywhere, with the
 // compile schedule's ARITH_START_ADVANCE_R10 = 2); reset release 4 edges unchanged.
+// r10n2 (KH-NATIVE3 10-17): each leaf chain hop is 2 edges (leaf in-face pin flop -> out-face fwd flop, native capture
+// fix); write strobe depths 0..5 (see depth()). A write lands depth+1 edges after the head pin flop; the deepest IO leaf
+// (IO2, depth 4) meets the unchanged host contract (io_start_v >= 4 idle edges after the last write) with 0 edges slack.
 // Configuration write path: chain depth k (0..2) lands k edges after r7c. Host contract: the first start
 // (io_start_v) must be sampled >= 4 edges after the last configuration write (r7c >= 1, r9 >= 2); programme load is
 // once per calendar load, so the per-token cost is 0 cycles.
@@ -83,7 +86,14 @@ module ot_hgi_sfu_programme_store_r10 #(
   case(l) 1:pred=0; 2:pred=1; 4:pred=3; 5:pred=4; 7:pred=6; 9:pred=8; 10:pred=9; default:pred=-1; endcase
  endfunction
  function automatic integer depth(input integer l);
-  case(l) 0,3,7,9:depth=1; 1,4,10:depth=2; 2,5:depth=3; default:depth=0; endcase   // P0/P3 chains behind a row relay
+`ifdef OT_SFU_PSTORE10N2_MUT_DEPTH1
+  // MUTANT: r10n chain depths (1 edge per leaf hop) with the r10n2 leaf (2 edges per hop)
+  case(l) 0,3,7,9:depth=1; 1,4,10:depth=2; 2,5:depth=3; default:depth=0; endcase
+`else
+  // r10n2 (KH-NATIVE3 10-17): leaf chain hop = 2 edges (in-face pin flop + out-face fwd flop); row relay = 1 edge.
+  // depth = relay (P0/P3 rows: 1) + 2 x chain position: P0/P3 1, P1/P4 3, P2/P5 5; P6 0, P7 2; IO0 0, IO1 2, IO2 4.
+  case(l) 0,3:depth=1; 7,9:depth=2; 1,4:depth=3; 10:depth=4; 2,5:depth=5; default:depth=0; endcase
+`endif
  endfunction
  // ---- head pin flops: pure (pin -> D), one copy each
  reg p_cfg_we,p_io_cfg_we,p_io_start_v;
@@ -118,15 +128,15 @@ module ot_hgi_sfu_programme_store_r10 #(
   assign we0[8+s]=rbd1 && rb[3] && p_io_cfg_we && p_io_cfg_stripe==s;
  end
  // chain-depth delay of each strobe (depth 0 leaves sample we0 directly)
- (* keep = "true", dont_touch = "true" *) reg [NL-1:0] we_d1,we_d2,we_d3;
- always @(posedge clk)begin we_d1<=we0;we_d2<=we_d1;we_d3<=we_d2;end
+ (* keep = "true", dont_touch = "true" *) reg [NL-1:0] we_d1,we_d2,we_d3,we_d4,we_d5;
+ always @(posedge clk)begin we_d1<=we0;we_d2<=we_d1;we_d3<=we_d2;we_d4<=we_d3;we_d5<=we_d4;end
  wire [NL-1:0] leaf_we;
  for(genvar l=0;l<NL;l=l+1)begin:g_wed
 `ifdef OT_SFU_PSTORE10_MUT_CHAIN
   // MUTANT: chain depth ignored for leaf 4 (P4 strobe one edge early -> writes the P3 row's data)
-  assign leaf_we[l]=(l==4)?we0[l]:(depth(l)==0)?we0[l]:(depth(l)==1)?we_d1[l]:(depth(l)==2)?we_d2[l]:we_d3[l];
+  assign leaf_we[l]=(l==4)?we0[l]:(depth(l)==0)?we0[l]:(depth(l)==1)?we_d1[l]:(depth(l)==2)?we_d2[l]:(depth(l)==3)?we_d3[l]:(depth(l)==4)?we_d4[l]:we_d5[l];
 `else
-  assign leaf_we[l]=(depth(l)==0)?we0[l]:(depth(l)==1)?we_d1[l]:(depth(l)==2)?we_d2[l]:we_d3[l];
+  assign leaf_we[l]=(depth(l)==0)?we0[l]:(depth(l)==1)?we_d1[l]:(depth(l)==2)?we_d2[l]:(depth(l)==3)?we_d3[l]:(depth(l)==4)?we_d4[l]:we_d5[l];
 `endif
  end
  // ---- launch arguments, precomputed in front of the leaf pins (as r9)

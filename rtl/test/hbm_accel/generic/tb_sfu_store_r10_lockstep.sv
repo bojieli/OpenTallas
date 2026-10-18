@@ -46,7 +46,7 @@ module tb_sfu_store_r10_lockstep;
   .io_cfg_we(io_cfg_we),.io_cfg_stripe(io_cfg_stripe),.io_cfg_addr(io_cfg_addr),.io_cfg_data(io_cfg_data),
   .io_start_v(io_start_v),.io_start_base(io_start_base),.io_start_limit(io_start_limit),.io_start_loops(io_start_loops),
   .io_active(c_ia),.io_done(c_id),.io_ordinal(c_io_o),.io_word(c_io),.compiler_control(c_ctl),.fault(c_f));
- integer edges=0,mism=0,active_ctl=0,active_io=0,faulted=0,mode=0,seed=1,pshift=3,ishift=1,fr=-1,fc=-1,unstick=0;
+ integer gap=4,edges=0,mism=0,active_ctl=0,active_io=0,faulted=0,mode=0,seed=1,pshift=3,ishift=1,fr=-1,fc=-1,unstick=0;
  reg checking=0;
  // r7c outputs delayed by 0..4 edges: programme side by PSHIFT, IO side by ISHIFT
  localparam integer PW=1742+1+1+32, IW=471+1+1+32;
@@ -111,7 +111,7 @@ module tb_sfu_store_r10_lockstep;
   integer w;
   start_base=0;start_limit=12'(np);start_loops=16'(ploops);
   io_start_base=0;io_start_limit=12'(nio);io_start_loops=16'(ioloops);
-  repeat(4)@(negedge clk);                       // r10 host contract: start >= 4 edges after the last write
+  repeat(gap)@(negedge clk);                     // r10 host contract: start >= 4 edges after the last write (+GAP for the boundary test)
   io_start_v=1;@(negedge clk);io_start_v=0;
   w=nio*ioloops+np*ploops+40;
   if(mode==4)begin
@@ -128,6 +128,7 @@ module tb_sfu_store_r10_lockstep;
   if($value$plusargs("SEED=%d",seed))void'($urandom(seed));
   if(!$value$plusargs("PSHIFT=%d",pshift))pshift=3;
   if(!$value$plusargs("ISHIFT=%d",ishift))ishift=1;
+  if(!$value$plusargs("GAP=%d",gap))gap=4;
   repeat(6)@(negedge clk);
   checking=1;
   rst_n=0;repeat(8)@(negedge clk);rst_n=1;
