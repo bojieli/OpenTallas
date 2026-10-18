@@ -112,6 +112,9 @@ SUPERSEDED = ('ctrl_', 'cdc_', 'land_', 'wctl_', 'wleaf_', 'kvnc', 'lprg')
 # column ages + 2 x 16 kb star).
 import kv_static_attn_join as _AJ   # noqa: E402
 PVFIN = ON and _AJ.STREAM
+# KV-RTRUNK 10-17: the PV pairs carry the result trunks (kv_die.PV_RS: pair port bundle pr) -> pvfin.p0 / p1 are wired
+RS_PAIRS = PVFIN and os.environ.get('OT_KV_PV_T', '0') == '1' and 'result_trunk' in json.loads(
+    (Path(__file__).resolve().parents[2] / 'results/arch/qwen_kv_die/pv_trunk_t/plan.json').read_text())
 PVFIN_FILE = 'rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv'
 PVFIN_FRAME = (259.2, 259.2)            # kit qkd_pv_fin_s outline (gate pending)
 FIN = [('out_valid', 1), ('out_beat', 5), ('out_epoch', 16), ('out_data', 512)]    # pvfin fo = kvs_attn fin (LSB first)
@@ -1146,6 +1149,11 @@ def _die_joins(m, K, B, add, fk, rec):
     if PVFIN and 'pvfin' in by:
         bus('ks_pvfst', 'kv_oneway', 65, [('kvs_attn', 'pvfst'), ('pvfin', 'fs')])
         bus('ks_pvfin', 'kv_oneway', 534, [('pvfin', 'fo'), ('kvs_attn', 'fin')])
+        # KV-RTRUNK 10-17: each PV pair's 534-b result beat stream (qkd_pvw_die_t rs_*: two result trunks -> header in the
+        # strip; beat b at pair age out_age + RS_D + b, results/arch/qwen_kv_die/pv_trunk_t/plan.json result_trunk)
+        if RS_PAIRS:
+            bus('ks_pvp0', 'kv_oneway', 534, [('pvw_0', 'pr'), ('pvfin', 'p0')])
+            bus('ks_pvp1', 'kv_oneway', 534, [('pvw_1', 'pr'), ('pvfin', 'p1')])
     # HOST <-> boot / ownership / ownership observer (kv_static_boot_join.HOST_DIE_JOINS + kvjf own_obs quiet)
     hostw = {'boot_pr': 143, 'boot_image_target': 4, 'boot_image_ready': 1, 'boot_image_fault': 1, 'boot_image_epoch': 16,
              'boot_image_digest': 64, 'host_launch_quiet': 1, 'host_upstream_quiet': 6}
@@ -1208,10 +1216,11 @@ def _die_joins(m, K, B, add, fk, rec):
         dict(where='embgw.emr_<q> (x4, 521 b)', owner='KVJ-C3 / Q-KV (static emr source for the boot-only gateway)'),
         dict(where='host.ctrl_completion_fault', owner='KVJ-SMALL (OR of the 128 pc_path completion_fault)'),
         dict(where='pvw_<p>.ie (1,024 b)', owner='KVE-2 / KVJ-D (ASTK e-read qkd_astk_er_tap in the strip successor)'),
-        *([dict(where='pvfin.p0 / pvfin.p1 (534 b each: valid, beat, epoch, 512-b data)', owner='PV pair successor: '
-                'the 512-b registered RESULT TRUNK in qkd_pvw_die_t (pv_trunk_gen: the 32 column joins inject their held y '
-                'at compiled slots, beat order 0..31, exit at the strip corner facing pvfin); the current po is 16,384 b '
-                'at 32 staggered column ages (COL_D) and cannot feed one capture slot (results/arch/qwen_kv_pvfin_1017)'),
+        *(([] if RS_PAIRS else
+            [dict(where='pvfin.p0 / pvfin.p1 (534 b each: valid, beat, epoch, 512-b data)', owner='PV pair successor: '
+                  'the 512-b registered RESULT TRUNK in qkd_pvw_die_t (pv_trunk_gen: the 32 column joins inject their held y '
+                  'at compiled slots, beat order 0..31, exit at the strip corner facing pvfin); the current po is 16,384 b '
+                  'at 32 staggered column ages (COL_D) and cannot feed one capture slot (results/arch/qwen_kv_pvfin_1017)')]) + [
            dict(where='pvfin.fr (145 b: rz_valid, rz_epoch, 4 x 32-b head reciprocals)', owner='KVE: static hub '
                 'ot_qkd_ahub_static_die_cal rz_vector / rz_epoch + the R_AGE slot (the die hub qkd_ahub = legacy '
                 'ot_qwen_nearhbm_attn_hub_p has only the debug native_reciprocal, no slot / epoch)'),
