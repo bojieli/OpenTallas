@@ -61,6 +61,17 @@ CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own'
 GRP_LOCAL = dict(slg='slg', lcal='lcal', fcal='fcal', phase='phase', drain='drain')
 # superseded die instances (0db) by name prefix
 SUPERSEDED = ('ctrl_', 'cdc_', 'land_', 'wctl_', 'wleaf_', 'kvnc', 'lprg')
+# KV-PLAN-FIN 10-17 (OT_KV_PVFIN, default ON with OT_KV_STATIC_DIE): the PV final join as ONE 512-b beat-stream slice
+# qkd_pv_fin_s (die element pvfin, master qkd_pvfin, kit physical/ref_tile/qkd_pv_fin_s), W of the attention hub between
+# the two PV pair strips; it feeds the stream face qkd_attn_result_face_s in kvs_attn (bundle port fin, 534 b).  Plan:
+# results/arch/qwen_kv_pvfin_1017/plan.json (why not the 16,384-b ot_qwen_tp8_pv256_finalize_static_cal: 32 staggered
+# column ages + 2 x 16 kb star).
+import kv_static_attn_join as _AJ   # noqa: E402
+PVFIN = ON and _AJ.STREAM
+PVFIN_FILE = 'rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv'
+PVFIN_FRAME = (259.2, 259.2)            # kit qkd_pv_fin_s outline (gate pending)
+FIN = [('out_valid', 1), ('out_beat', 5), ('out_epoch', 16), ('out_data', 512)]    # pvfin fo = kvs_attn fin (LSB first)
+PVFST = ['start_pv', 'ep', 'cal[175:128]']                                        # kvs_attn pvfst = pvfin fs (65 b)
 # per-tile frames (um, ASSUMED until kits close): see place()
 FRAME = dict(fan=(302.4, 302.4), attn=(302.4, 302.4), emb=(388.8, 302.4), ctl=(1123.2, 172.8))
 # Special bundles (die-port order = the existing master's binding order, LSB first)
@@ -273,7 +284,7 @@ def tile(die_inst):
         for p, v in spec(n).items():
             if v['direction'] == 'output':
                 wires.append(f'    wire [{v["width"] - 1}:0] w_{loc[n]}__{p};')
-    overrides = CTL_OVERRIDE if kind == 'ctl' else {}
+    overrides = CTL_OVERRIDE if kind == 'ctl' else (ATTN_OVERRIDE if kind == 'attn' and PVFIN else {})
     for n in mem:
         sp = spec(n)
         cs = []
@@ -402,6 +413,14 @@ CTL_OVERRIDE = {
     ('lprg', 'authority_position'): ('cht', 59, "{5'd0, cht[18:6]}"),
     ('lprg', 'authority_generation'): ('chg', 2, 'chg'),
 }
+# ATTN (PVFIN): the stream face's final-join inputs = ONE die bundle fin (pvfin fo: one relay chain for valid / beat /
+# epoch / data, so they stay edge-aligned)
+ATTN_OVERRIDE = {
+    ('attn_face', 'f_valid'): ('fin', 534, 'fin[0]'),
+    ('attn_face', 'f_beat'): ('fin', 534, 'fin[5:1]'),
+    ('attn_face', 'f_epoch'): ('fin', 534, 'fin[21:6]'),
+    ('attn_face', 'f_data'): ('fin', 534, 'fin[533:22]'),
+}
 # die-level exports beyond the join's tile-to-tile edges: (local, port) -> (tile port, width)
 DIE_EXPORTS = dict(
     pc={('pc', 'er'): ('pc__er', 261), ('pc', 'ko'): ('pc__ko', 33), ('pc', 'fo'): ('pc__fo', 1),
@@ -413,6 +432,8 @@ DIE_EXPORTS = dict(
     # KVJ-G2b: the attention service root's PV start word -> both PV pairs' st face {start, context_len, epoch} (LSB first)
     attn={('attn_root', ('start_pv', 'ctx', 'ep')): ('pvst', 31)},
 )
+if PVFIN:   # KV-PLAN-FIN: the final join's command word {start_pv, ep, cal R/P1/P0} (LSB first)
+    DIE_EXPORTS['attn'][('attn_root', tuple(PVFST))] = ('pvfst', 65)
 DIE_EXPORTS['pc_h'] = DIE_EXPORTS['pc']
 
 
@@ -745,6 +766,12 @@ def bindings():
                    s1=['s1'], s2=['s2'], s3=['s3'], rq=[f for f, _ in KREQ], rs=list(KRSP), kg=list(KG), cfg=['cfg'],
                    kf=['fault'], ck_a=['ck'], rst_n=['rst_n']),
         sliced=dict(ck_b='ck_a', ck_c='ck_a'), classed={})
+    if PVFIN:
+        out['qkd_pvfin'] = dict(module='qkd_pv_fin_s', file=PVFIN_FILE, parameters=dict(ADD_LAT=7, MUL_LAT=6, SKEW=1, MUT=0),
+            ports=dict(ck=['ck'], rst_n=['rst_n'], fs=['start', 'epoch', 'cal'],
+                       p0=['p0_valid', 'p0_beat', 'p0_epoch', 'p0_data'], p1=['p1_valid', 'p1_beat', 'p1_epoch', 'p1_data'],
+                       fr=['rz_valid', 'rz_epoch', 'rz'], fo=[f for f, _ in FIN], ff=['fault']),
+            sliced={}, classed={})
     return out
 
 
@@ -950,6 +977,10 @@ def _die_joins(m, K, B, add, fk, rec):
     if 'pvw_0' in by and 'pvw_1' in by:
         bus('ks_pvst', 'kv_oneway', 31, [('kvs_attn', 'pvst'), ('pvw_0', 'st')])
         fk['ks_pvst'] = [('pvw_1', 'st')]
+    # KV-PLAN-FIN: attention root -> final join command word; final join beat stream -> the stream face (kvs_attn fin)
+    if PVFIN and 'pvfin' in by:
+        bus('ks_pvfst', 'kv_oneway', 65, [('kvs_attn', 'pvfst'), ('pvfin', 'fs')])
+        bus('ks_pvfin', 'kv_oneway', 534, [('pvfin', 'fo'), ('kvs_attn', 'fin')])
     # HOST <-> boot / ownership / ownership observer (kv_static_boot_join.HOST_DIE_JOINS + kvjf own_obs quiet)
     hostw = {'boot_pr': 143, 'boot_image_target': 4, 'boot_image_ready': 1, 'boot_image_fault': 1, 'boot_image_epoch': 16,
              'boot_image_digest': 64, 'host_launch_quiet': 1, 'host_upstream_quiet': 6}
@@ -1012,8 +1043,17 @@ def _die_joins(m, K, B, add, fk, rec):
         dict(where='embgw.emr_<q> (x4, 521 b)', owner='KVJ-C3 / Q-KV (static emr source for the boot-only gateway)'),
         dict(where='host.ctrl_completion_fault', owner='KVJ-SMALL (OR of the 128 pc_path completion_fault)'),
         dict(where='pvw_<p>.ie (1,024 b)', owner='KVE-2 / KVJ-D (ASTK e-read qkd_astk_er_tap in the strip successor)'),
-        dict(where='kvs_attn.attn_face__f_valid / f_data / f_epoch', owner='KVE: the PV final join '
-             'ot_qwen_tp8_pv256_finalize_static_cal (pvw_0/1 po -> 16,384 b) has RTL but no die element / kit'),
+        *([dict(where='pvfin.p0 / pvfin.p1 (534 b each: valid, beat, epoch, 512-b data)', owner='PV pair successor: '
+                'the 512-b registered RESULT TRUNK in qkd_pvw_die_t (pv_trunk_gen: the 32 column joins inject their held y '
+                'at compiled slots, beat order 0..31, exit at the strip corner facing pvfin); the current po is 16,384 b '
+                'at 32 staggered column ages (COL_D) and cannot feed one capture slot (results/arch/qwen_kv_pvfin_1017)'),
+           dict(where='pvfin.fr (145 b: rz_valid, rz_epoch, 4 x 32-b head reciprocals)', owner='KVE: static hub '
+                'ot_qkd_ahub_static_die_cal rz_vector / rz_epoch + the R_AGE slot (the die hub qkd_ahub = legacy '
+                'ot_qwen_nearhbm_attn_hub_p has only the debug native_reciprocal, no slot / epoch)'),
+           dict(where='pvfin.ff (fault, output)', owner='KVE-2: the attention unit-fault OR tree (attn_face unit_fault)')]
+          if PVFIN else
+          [dict(where='kvs_attn.attn_face__f_valid / f_data / f_epoch', owner='KVE: the PV final join '
+                'ot_qwen_tp8_pv256_finalize_static_cal (pvw_0/1 po -> 16,384 b) has RTL but no die element / kit')]),
         dict(where='kvs_attn.attn_face__unit_fault (10 b)', owner='KVE-2: the 10 sticky service-unit faults (stacks, hub, '
              'PV pairs pf, finalize, V req, e-read, rz-late, K identity, legacy pv, stack) need a die fault OR tree'),
         dict(where='kvs_attn.attn_root PV_LEAD / attn_face RESULT_RELAY', owner='compiler: price from this plan (ks_pvst '
@@ -1041,6 +1081,9 @@ def _clocks_resets(m, B, add, rec):
                 cb = f'kvsid_{d}__{pn}'
                 add((cb, 'constant', v['width'], [(d, pn)]))
                 ties[cb] = (v['width'], v['value'])
+    if PVFIN and any(i.name == 'pvfin' for i in m['insts']):
+        extra['clk_core_c'].append(('pvfin', 'ck'))
+        extra['rst_die'].append(('pvfin', 'rst_n'))
     for st in STACKS:
         kc = f'kc_{st}'
         extra[f'clk_core_{st}'].append((kc, 'ck'))
@@ -1128,6 +1171,15 @@ def place(m, K, geo, F):
         x, y = free_spot(m, w, h, anchors[nm], GX, GY)
         m['insts'].append(F.Inst(nm, KIND_MASTER[kind], round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
                                  region='io', domain='core'))
+    # KV-PLAN-FIN: the stream final join between the two PV pair strips (pvw_0 strip = its top, pvw_1 strip = its bottom),
+    # W of the attention hub (the reciprocal source): both 512-b pair streams and rz are ~0.5-1.5 mm hops
+    ah = by.get('ahub')
+    if PVFIN and ah is not None and 'pvw_0' in by and pv is not None:
+        w, h = PVFIN_FRAME
+        ys = (by['pvw_0'].y + by['pvw_0'].h + pv.y) / 2
+        x, y = free_spot(m, w, h, (ah.x - w / 2 - 30.0, ys), GX, GY)
+        m['insts'].append(F.Inst('pvfin', 'qkd_pvfin', round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
+                                 region='io', domain='core'))
 
 
 def free_spot(m, w, h, anchor, GX, GY, halo=21.6, rmax=4000.0):
@@ -1173,6 +1225,8 @@ def pin_face(master, port):
             return 'W'
     if master == 'qkd_kvs_fan':
         return 'W'
+    if master == 'qkd_pvfin':          # kit qkd_pv_fin_s faces
+        return dict(p0='S', p1='N', fo='W', ff='W').get(port, 'E')
     return None
 
 
