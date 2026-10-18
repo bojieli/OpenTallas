@@ -1,0 +1,119 @@
+{
+ "schema": "opentallas.s81_dv.frame_contract.v1",
+ "wrapper": {
+  "masters": [
+   "col_h9",
+   "col_h10",
+   "col_h9_MX"
+  ],
+  "owner": "S81U-3",
+  "note": "BOUND (S81-DIE2 10-17): col_h9 / col_h10 / col_h9_MX RTL from claude/s81u3-frame-1017 99991b051 (D2 r1 skew); the member contract below is still checked against the members' RTL"
+ },
+ "members": [
+  {
+   "master": "ot_s81_cfg7_seq_bfp",
+   "ref": "origin/main",
+   "path": "rtl/v41die/ot_s81_cfg7_seq_bfp.sv",
+   "view": "s81coll_cfg7_seq_bfp_pr-pr1-ef2866774 (CLOSED TT +244.3 / FF +23.9; native PASS)",
+   "ref_sha": "b497d3ac7ef6aa317bdffac329e5561a001beefd",
+   "kind": "real",
+   "ports_missing": [],
+   "params_missing": [],
+   "clock_ties": [],
+   "params": {
+    "LAYOUT": 1,
+    "PINREG": 1
+   },
+   "reset": null
+  },
+  {
+   "master": "dsfd_cfifo_crs",
+   "ref": "origin/main",
+   "path": "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv",
+   "view": "r5f-507e1b0c3 (CLOSED TT +71.04 / FF +17.32; native PASS)",
+   "ref_sha": "b497d3ac7ef6aa317bdffac329e5561a001beefd",
+   "kind": "real",
+   "ports_missing": [],
+   "params_missing": [],
+   "clock_ties": [],
+   "params": {},
+   "reset": null
+  },
+  {
+   "master": "dsfd_bf_front_roots",
+   "ref": "origin/main",
+   "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv",
+   "view": "h03-392d7efcb (CLOSED TT +0.00 / FF +18.20; native PASS)",
+   "ref_sha": "b497d3ac7ef6aa317bdffac329e5561a001beefd",
+   "kind": "real",
+   "ports_missing": [],
+   "params_missing": [],
+   "clock_ties": [],
+   "params": {},
+   "reset": null
+  },
+  {
+   "master": "dsfd_bf_col_cl",
+   "ref": "origin/claude/selem-bfcol-2020",
+   "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_cl.sv",
+   "view": null,
+   "ref_sha": "bdcfbe61a609e3182a98e52c33d5420bd402aebb",
+   "kind": "real",
+   "ports_missing": [],
+   "params_missing": [],
+   "clock_ties": [
+    {
+     "port": "lane_ckl[0]",
+     "to": "leaf_ck[2]"
+    },
+    {
+     "port": "lane_cko[0]",
+     "to": "leaf_ck[2]"
+    },
+    {
+     "port": "lane_ckl[1]",
+     "to": "leaf_ck[3]"
+    },
+    {
+     "port": "lane_cko[1]",
+     "to": "leaf_ck[3]"
+    },
+    {
+     "port": "lane_ckl[2]",
+     "to": "leaf_ck[4]"
+    },
+    {
+     "port": "lane_cko[2]",
+     "to": "leaf_ck[4]"
+    },
+    {
+     "port": "lane_ckl[3]",
+     "to": "leaf_ck[5]"
+    },
+    {
+     "port": "lane_cko[3]",
+     "to": "leaf_ck[5]"
+    }
+   ],
+   "params": {},
+   "reset": null
+  },
+  {
+   "master": "ot_v41_rom_elem_q_qxpq_w10",
+   "ref": "origin/claude/qxpq-rst-1017",
+   "path": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+   "view": "dsrom-qelem-qs5f-rstp-35152e3e1-tc-hm10-cl (SUBMITTED)",
+   "ref_sha": "2bded98f01c60ed66c88cc8dd2a0a91278e3391c",
+   "kind": "real",
+   "ports_missing": [],
+   "params_missing": [],
+   "clock_ties": [],
+   "params": {
+    "RSTP": 1
+   },
+   "reset": "rst_n released ONE regional edge earlier: the frame reset pin reads the PARENT station of its cell (co 0co 14:25)"
+  }
+ ],
+ "problems": [],
+ "verdict": "PASS"
+}
