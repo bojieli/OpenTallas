@@ -58,7 +58,10 @@ def mk(name, top, params, W, H, pins, B, core_in, core_out, ser_in, ser_out, std
 WHY = ('HBM-SU3 10-17 cxport SPLIT (coordinator 0dc: hub of 13.2k pin bits on 264.6 um): the quarter hub becomes 4 '
        'delivery leaves beside the pgslices, one inject-gather leaf and one RED_CARRY/SFU-operand leaf beside sucore; same '
        'epoch counters, slots and edges (lockstep vs the hub PASS QID 2 and QID 0/B39, split-only mutants 1-4 FAIL); the '
-       'delivery calendar rule (lane j -> slice j) now FAULTs if broken. ')
+       'delivery calendar rule (lane j -> slice j) now FAULTs if broken. Every 3:4 crossing is MUX-ONLY (decode before the '
+       'slot on the writer side; STA times stream->serial at the 1-quantum pair, 278 ps): the hub-equivalent dl gate showed '
+       '-266 ps (dw_d after the slot decode) and rc -277 ps (64:1 SFU lane select); the SFU operand is registered whole and '
+       'lane-selected on the next serial edge (compiler: SFU-source reducer command at E+1). ')
 B = dict(del_valid=1, del_flit=545, del_obase=40, dw_v=2, dw_row=18, dw_d=1024, clk_s=1, clk_q=1, rst_s_n=1, rst_q_n=1, fault=1)
 mk('hbm_su_cx_dl_1017', 'ot_hbm_su_static_cxport_dl', {'QID': 2, 'G': 0}, 108.0, 216.0,
    {'W': ['del_valid', 'del_obase', 'del_flit'], 'E': ['dw_v', 'dw_row', 'dw_d'], 'N': ['clk_s', 'clk_q', 'rst_s_n', 'rst_q_n', 'fault']},

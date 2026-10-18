@@ -45,19 +45,22 @@ module ot_hbm_su_static_cxport_dl #(parameter integer QID=0, G=0, MUT=0)(
 );
  wire [1:0] sp, sq, rslot, oslot_i; wire s_ev;
  ot_hbm_su_cx_epoch #(.MUT(MUT)) u_ep(.clk_s(clk_s),.clk_q(clk_q),.rst_s_n(rst_s_n),.rst_q_n(rst_q_n),.sp(sp),.sq(sq),.rslot(rslot),.s_ev(s_ev),.oslot_i(oslot_i));
- reg [585:0] dl_slot [0:3];
- always @(posedge clk_s) dl_slot[sp] <= {del_valid, del_flit, del_obase};
+ // MUX-ONLY CROSSING: the stream side decodes the lane (valid / half / row / data / aperture check) BEFORE the slot, so
+ // the serial capture is a pure 4:1 slot mux (STA times stream->serial at the 1-quantum edge pair, 278 ps).
+ wire [39:0] ob_s = del_obase;
+ wire hi_s = (MUT==2) ? 1'b0 : ob_s[6];
+ wire [1044:0] dl_dec = {del_valid && (ob_s[3:0]!=4'd0 || ob_s[17:16]!=2'(QID) || ob_s[39:18]!=22'd0 || !del_flit[544] || ob_s[5:4]!=2'(G)),
+                         del_valid ? (hi_s ? 2'b10 : 2'b01) : 2'b00,
+                         del_valid ? (hi_s ? {ob_s[15:7], 9'd0} : {9'd0, ob_s[15:7]}) : 18'd0,
+                         del_valid ? (hi_s ? {del_flit[511:0], 512'd0} : {512'd0, del_flit[511:0]}) : 1024'd0};
+ reg [1044:0] dl_slot [0:3];
+ always @(posedge clk_s) dl_slot[sp] <= dl_dec;
  reg sfault_s;
  always @(posedge clk_s or negedge rst_s_n) if(!rst_s_n) sfault_s<=1'b0; else if(sp==2'd2 && del_valid) sfault_s<=1'b1;
- wire [585:0] dl = dl_slot[rslot];
- wire vv = dl[585]; wire [544:0] f = dl[584:40]; wire [39:0] ob = dl[39:0];
- wire hi = (MUT==2) ? 1'b0 : ob[6];
- wire dbad = vv && (ob[3:0]!=4'd0 || ob[17:16]!=2'(QID) || ob[39:18]!=22'd0 || !f[544] || ob[5:4]!=2'(G));
- always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) dw_v<=2'd0; else dw_v <= vv ? (hi ? 2'b10 : 2'b01) : 2'b00;
- always @(posedge clk_q) begin
-  dw_row <= vv ? (hi ? {ob[15:7], 9'd0} : {9'd0, ob[15:7]}) : 18'd0;
-  dw_d   <= vv ? (hi ? {f[511:0], 512'd0} : {512'd0, f[511:0]}) : 1024'd0;
- end
+ wire [1044:0] dl = dl_slot[rslot];
+ wire dbad = dl[1044];
+ always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) dw_v<=2'd0; else dw_v <= dl[1043:1042];
+ always @(posedge clk_q) begin dw_row <= dl[1041:1024]; dw_d <= dl[1023:0]; end
  reg sf_q;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) sf_q<=1'b0; else sf_q<=sfault_s;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) fault<=1'b0; else if(dbad||sf_q) fault<=1'b1;
@@ -89,32 +92,34 @@ module ot_hbm_su_static_cxport_ij #(
  wire [1:0] sp, sq, rslot, oslot_i; wire s_ev;
  ot_hbm_su_cx_epoch #(.MUT(MUT)) u_ep(.clk_s(clk_s),.clk_q(clk_q),.rst_s_n(rst_s_n),.rst_q_n(rst_q_n),.sp(sp),.sq(sq),.rslot(rslot),.s_ev(s_ev),.oslot_i(oslot_i));
  reg sfault_s;
- reg [161:0] ij_slot [0:3];
  reg [161:0] rqd [0:RQ-RQC];
  always @(posedge clk_s) begin
   rqd[0] <= {inj_rd, inj_addr};
   for(integer t=1;t<=RQ-RQC;t=t+1) rqd[t] <= rqd[t-1];
  end
  wire [161:0] rq_al = (RQ==RQC) ? {inj_rd, inj_addr} : rqd[(RQ>RQC)?RQ-RQC-1:0];
- always @(posedge clk_s) ij_slot[sp] <= rq_al;
+ // MUX-ONLY CROSSING: the request is decoded on the stream side; the slot holds {ibad, iv4, ig8, ib8}
  always @(posedge clk_s or negedge rst_s_n)
   if(!rst_s_n) sfault_s<=1'b0; else if(sp==2'd2 && (|rq_al[161:160])) sfault_s<=1'b1;
- wire [161:0] ij = ij_slot[rslot];
- reg [3:0] iv; reg [7:0] ig; reg [7:0] ib; reg ibad;
+ reg [3:0] iv_s; reg [7:0] ig_s; reg [7:0] ib_s; reg ibad_s;
  integer k;
  always @* begin
-  iv=0; ig=0; ib=0; ibad=0;
+  iv_s=0; ig_s=0; ib_s=0; ibad_s=0;
   for(k=0;k<4;k=k+1) begin : dec
    reg [39:0] a; reg [39:0] lo; reg v;
-   a  = ij[40*k+:40];
-   lo = ij[80*(k/2)+:40];
-   v  = ij[160+(k/2)] && !(B39_NOOP!=0 && lo[39]);
-   iv[k] = v;
-   ig[2*k+:2] = a[5:4];
-   ib[2*k+:2] = {a[6],a[3]};
-   if(v && (a[2:0]!=3'd0 || a[17:16]!=2'(QID) || a[38:18]!=21'd0 || a[39])) ibad=1'b1;
+   a  = rq_al[40*k+:40];
+   lo = rq_al[80*(k/2)+:40];
+   v  = rq_al[160+(k/2)] && !(B39_NOOP!=0 && lo[39]);
+   iv_s[k] = v;
+   ig_s[2*k+:2] = a[5:4];
+   ib_s[2*k+:2] = {a[6],a[3]};
+   if(v && (a[2:0]!=3'd0 || a[17:16]!=2'(QID) || a[38:18]!=21'd0 || a[39])) ibad_s=1'b1;
   end
  end
+ reg [20:0] ijd_slot [0:3];
+ always @(posedge clk_s) ijd_slot[sp] <= {ibad_s, iv_s, ig_s, ib_s};
+ wire [20:0] ijd = ijd_slot[rslot];
+ wire ibad = ijd[20]; wire [3:0] iv = ijd[19:16]; wire [7:0] ig = ijd[15:8]; wire [7:0] ib = ijd[7:0];
  reg [19:0] ip [0:3+SD];
  always @(posedge clk_q or negedge rst_q_n)
   if(!rst_q_n) begin for(integer t=0;t<=3+SD;t=t+1) ip[t]<=20'd0; end
@@ -158,6 +163,11 @@ module ot_hbm_su_static_cxport_ij #(
 endmodule
 
 // ------------------------------------------------------------------------------------------------ RED_CARRY + SFU operand
+// rc SFU operand (d): the hub selects ro_slot[rslot] lane red_sel[3:0] (a 64:1 AND-OR) on the stream->serial crossing,
+// which STA times at the 1-quantum edge pair (gate: sfu_x -277 ps). Here the crossing is mux-only: every serial edge
+// registers the whole slot word (rq, 528 b) and the lane select is serial->serial on the NEXT edge. COMPILER: the
+// SFU-source reducer command (red_sel / red_cmd osel=1, lane[6]=1) issues at E+1 instead of E = ceil((3A+3)/4); the
+// operand, its ro_v check and the reducer timeline are otherwise unchanged (sfu_x at E+1 is the hub's sfu_x at E).
 module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
  input wire clk_s, clk_q, rst_s_n, rst_q_n,   // epoch reset per domain
  output reg rc_v,
@@ -181,9 +191,10 @@ module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
  wire [1:0] sp, sq, rslot, oslot_i; wire s_ev;
  ot_hbm_su_cx_epoch #(.MUT(MUT)) u_ep(.clk_s(clk_s),.clk_q(clk_q),.rst_s_n(rst_s_n),.rst_q_n(rst_q_n),.sp(sp),.sq(sq),.rslot(rslot),.s_ev(s_ev),.oslot_i(oslot_i));
  reg sfault_s;
- reg [259:0] rr_slot [0:3];
  reg [527:0] ro_slot [0:3];
- always @(posedge clk_s) begin ro_slot[sp] <= {ro_v, ro_x}; rr_slot[sp] <= {rr_v, rr_tag, rr_d}; end
+ // MUX-ONLY CROSSING for rr: the tag is one-hot decoded on the stream side (slot {v, tag3, onehot8, d256})
+ reg [267:0] rr_slot1 [0:3];
+ always @(posedge clk_s) begin ro_slot[sp] <= {ro_v, ro_x}; rr_slot1[sp] <= {rr_v, rr_tag, 8'd1 << rr_tag, rr_d}; end
  always @(posedge clk_s or negedge rst_s_n)
   if(!rst_s_n) sfault_s<=1'b0; else if(sp==2'd2 && (rr_v||(|ro_v))) sfault_s<=1'b1;
  reg r_sv; reg [31:0] r_tag, r_x;
@@ -199,19 +210,22 @@ module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
  reg [260:0] rc_slot [0:2];
  always @(posedge clk_q) rc_slot[sq] <= {emit, r_tag[17]&&(MUT!=3), r_tag[16:14], cvec};
  reg [7:0] tv; reg [4:0] tdst [0:7];
- wire [259:0] rr = rr_slot[rslot];
- wire rrv = rr[259]; wire [2:0] rrt = rr[258:256];
+ wire [267:0] rr1 = rr_slot1[rslot];
+ wire rrv = rr1[267]; wire [2:0] rrt = rr1[266:264]; wire [7:0] rroh = rr1[263:256]; wire [255:0] rr_dd = rr1[255:0];
+ wire tvh = |(tv & rroh);                     // tv[rrt] as an AND-OR of the one-hot tag
+ reg [4:0] tdh; integer u;
+ always @* begin tdh = 5'd0; for(u=0;u<8;u=u+1) if(rroh[u]) tdh = tdh | tdst[u]; end
  reg rbad;
  always @(posedge clk_q or negedge rst_q_n)
   if(!rst_q_n) begin tv<=8'd0; rr_wv<=1'b0; rbad<=1'b0; end
   else begin
-   rr_wv <= rrv && tv[rrt];
-   rbad  <= (rrv && !tv[rrt]) || (emit && r_tag[23] && tv[r_tag[16:14]] && !(rrv && rrt==r_tag[16:14]));
-   if(rrv) tv[rrt] <= 1'b0;
+   rr_wv <= rrv && tvh;
+   rbad  <= (rrv && !tvh) || (emit && r_tag[23] && tv[r_tag[16:14]] && !(rrv && rroh[r_tag[16:14]]));
+   if(rrv) tv <= tv & ~rroh;
    if(emit && r_tag[23]) tv[r_tag[16:14]] <= 1'b1;
   end
  always @(posedge clk_q) begin
-  rr_wa <= tdst[rrt]; rr_wd <= rr[255:0];
+  rr_wa <= tdh; rr_wd <= rr_dd;
   if(emit && r_tag[23]) tdst[r_tag[16:14]] <= r_tag[22:18];
  end
  reg [260:0] pend; reg rc_coll;
@@ -226,7 +240,8 @@ module ot_hbm_su_static_cxport_rc #(parameter integer MUT=0)(
  always @(posedge clk_s)
   if(ev[260] && !ev[259]) begin rc_tag<=ev[258:256]; rc_d<=ev[255:0]; end
   else if(pend[260]) begin rc_tag<=pend[258:256]; rc_d<=pend[255:0]; end
- wire [527:0] ro = ro_slot[rslot];
+ reg [527:0] ro;
+ always @(posedge clk_q) ro <= ro_slot[rslot];          // mux-only crossing; lane select next serial edge
  wire ro_mine = red_sel[11] && red_sel[7] && red_sel[6];
  wire ro_ext  = red_sel[10:8]==3'd0 || red_sel[10:8]==3'd1 || red_sel[10:8]==3'd3;
  wire ro_bad  = ro_mine && ro_ext && !ro[512+red_sel[3:0]];

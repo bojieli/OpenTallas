@@ -5,7 +5,9 @@
 // Serial 4 / stream 3 quanta on one lattice; rst_n released between a common edge pair (phase zero).
 // Random traffic on every input under the compiler calendar: no SU-bound valid at stream phase 2, delivery lane j only
 // to slice j; addresses mostly inside the aperture (out-of-aperture and phase-2 valids in later phases exercise faults).
-// Every output bit (inj_d, rc_*, dw_*, rr_w*, sfu_x, fault) equal (!==) at every edge of both clocks.
+// Every output bit (inj_d, rc_*, dw_*, rr_w*, fault) equal (!==) at every edge of both clocks; the split's SFU operand
+// is commanded one serial edge later (red_sel delayed, the compiler's E+1 rule): its sfu_x equals the hub's sfu_x of the
+// previous serial edge, and an ro_v fault may report one serial edge later.
 // MUT (both sides): 1/2/3/4 change both identically -> must still PASS (sanity) unless MUTONE=1 (split only) -> FAIL.
 module tb_hbm_su_cxport_split;
  parameter integer QID=2, B39=0, MUT=0, MUTONE=0, NRST=3, EDGES=4000;
@@ -54,17 +56,24 @@ module tb_hbm_su_cxport_split;
   .rc_v(h_rcv),.rc_tag(h_rct),.rc_d(h_rcd),.rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.inj_q(inj_q),.dw_v(h_dwv),.dw_row(h_dwr),
   .dw_d(h_dwd),.red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.rr_wv(h_rrv),.rr_wa(h_rra),.rr_wd(h_rrd),.ro_v(ro_v),
   .ro_x(ro_x),.red_sel(red_sel),.sfu_x(h_sfu),.fault(h_f));
+ reg [11:0] red_sel_d = 12'd0; always @(posedge clk_q) red_sel_d <= red_sel;   // E+1 SFU-operand rule
  ot_hbm_su_static_cxport_split #(.QID(QID),.B39_NOOP(B39),.INJ_RET(11),.MUT(MUT)) spl(.clk_s(clk_s),.clk_q(clk_q),.rst_n(rst_n),
   .inj_rd(inj_rd),.inj_addr(inj_addr),.inj_d(s_ij),.del_valid(del_valid),.del_flit(del_flit),.del_obase(del_obase),
   .rc_v(s_rcv),.rc_tag(s_rct),.rc_d(s_rcd),.rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.inj_q(inj_q),.dw_v(s_dwv),.dw_row(s_dwr),
   .dw_d(s_dwd),.red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.rr_wv(s_rrv),.rr_wa(s_rra),.rr_wd(s_rrd),.ro_v(ro_v),
-  .ro_x(ro_x),.red_sel(red_sel),.sfu_x(s_sfu),.fault(s_f));
- wire [6000:0] oh={h_ij,h_rcv,h_rct,h_rcd,h_dwv,h_dwr,h_dwd,h_rrv,h_rra,h_rrd,h_sfu};
- wire [6000:0] os={s_ij,s_rcv,s_rct,s_rcd,s_dwv,s_dwr,s_dwd,s_rrv,s_rra,s_rrd,s_sfu};
+  .ro_x(ro_x),.red_sel(red_sel_d),.sfu_x(s_sfu),.fault(s_f));
+ wire [6000:0] oh={h_ij,h_rcv,h_rct,h_rcd,h_dwv,h_dwr,h_dwd,h_rrv,h_rra,h_rrd};
+ wire [6000:0] os={s_ij,s_rcv,s_rct,s_rcd,s_dwv,s_dwr,s_dwd,s_rrv,s_rra,s_rrd};
+ reg [31:0] h_sfu_q; reg h_f_q=0; integer sfn=0, flag=0;
+ always @(posedge clk_q) if(cmp) begin #2; if((^h_sfu_q)!==1'bx && s_sfu!==h_sfu_q) begin errors=errors+1; if(errors<6) $display("SFU MISMATCH t=%0t %h/%h", $time, s_sfu, h_sfu_q); end
+  sfn=sfn+1; h_sfu_q=h_sfu; end else h_sfu_q=h_sfu;
  integer checks=0, errors=0, cmp=0, dwn=0, ijn=0, rcn=0, rrn=0, fn=0, legal_f=0;
  always @(posedge clk_s or posedge clk_q) if(cmp) begin
   #1; checks=checks+1; dwn=dwn+((|h_dwv)===1'b1); ijn=ijn+((|h_ij)===1'b1); if(legal && h_f) begin legal_f=legal_f+1; if(legal_f==1) $display("DBG first legal fault t=%0t sfs %b ibad %b dbad %b rbad %b robad %b", $time, hub.sfault_s, hub.ibad, hub.dbad, hub.rbad, hub.ro_bad); end rcn=rcn+h_rcv; rrn=rrn+h_rrv; fn=fn+h_f;
-  if(oh!==os || h_f!==s_f) begin errors=errors+1;
+  if(h_f!==s_f && !(h_f===1'b1 && s_f===1'b0 && h_f_q===1'b0)) begin errors=errors+1; if(errors<6) $display("FAULT MISMATCH t=%0t %b/%b", $time, h_f, s_f); end
+  else if(h_f!==s_f) flag=flag+1;
+  h_f_q=h_f;
+  if(oh!==os) begin errors=errors+1;
    if(errors<6) $display("MISMATCH t=%0t ij %0d rc %0d dw %0d/%0d/%0d rr %0d sfu %0d fault %b/%b", $time, h_ij!==s_ij,
     {h_rcv,h_rct,h_rcd}!=={s_rcv,s_rct,s_rcd}, h_dwv!==s_dwv, h_dwr!==s_dwr, h_dwd!==s_dwd, {h_rrv,h_rra,h_rrd}!=={s_rrv,s_rra,s_rrd}, h_sfu!==s_sfu, h_f, s_f); end
  end
@@ -80,7 +89,7 @@ module tb_hbm_su_cxport_split;
    active=0; repeat(30) @(negedge clk_q);
   end
   if(errors==0 && legal_f==0 && checks>NRST*EDGES && dwn>0 && ijn>0 && rcn>0 && rrn>0 && fn>0)
-   $display("CXPORT_SPLIT PASS checks=%0d dw=%0d inj=%0d rc=%0d rr=%0d fault_edges=%0d", checks, dwn, ijn, rcn, rrn, fn);
+   $display("CXPORT_SPLIT PASS checks=%0d dw=%0d inj=%0d rc=%0d rr=%0d sfu_checks=%0d fault_lags=%0d fault_edges=%0d", checks, dwn, ijn, rcn, rrn, sfn, flag, fn);
   else $display("CXPORT_SPLIT FAIL legal_phase_faults=%0d errors=%0d checks=%0d dw=%0d inj=%0d rc=%0d rr=%0d fault_edges=%0d", legal_f, errors, checks, dwn, ijn, rcn, rrn, fn);
   $finish;
  end
