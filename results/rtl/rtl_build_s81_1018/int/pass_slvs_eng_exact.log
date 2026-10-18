@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       admits   185 GB (avail 455, growth 325, headroom 0, waiters 0/0 GB) load 112/128 running 43 disk 606 GB 
+ot-run: ot-pve1        admits   -50 GB (avail 77, growth 112, headroom 0, waiters 2/34 GB) load 68/28 running 27 disk 1285 GB 
+ot-run: ot-agidock128  admits    -5 GB (avail 66, growth 69, headroom 0, waiters 41/805 GB) load 23/64 running 10 disk 287 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2358354-1792308983 after 0 s
+LEAFENG mut=0 partials=4 half_rows=16 mismatches=0 fault=0 vp0 vs0 reduce_cmd_to_last_partial=159 add_cmd_to_last_write=73
+PASS
+PASS leaf_eng MUT=0 seed=7
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2358354-1792308983): exit 0

@@ -1,10 +1,10 @@
 #!/bin/bash
-# ve_bench.sh <outdir> [MUT 0|1|2] [GAP] (cwd = repo root): S81U-MIX ot_s81sl_ve beat bench (tb_s81sl_ve) on
+# ve_bench.sh <outdir> [MUT 0|1|2] [GAP] [SEED] (cwd = repo root): S81U-MIX ot_s81sl_ve beat bench (tb_s81sl_ve) on
 # tools/s81_dv/ve_golden.py fixtures (hdc_golden_v41 chunk8).  MUT 0 must print PASS; MUT 1 / 2 must be rejected.
 # Exit 0 = PASS only (expect=fail form for the mutants: a rejected mutant exits 1 with "MUTANT n REJECTED").
-set -u; O=$1; M=${2:-0}; G=${3:-0}; mkdir -p $O/fx
+set -u; O=$1; M=${2:-0}; G=${3:-0}; SD=${4:-7}; mkdir -p $O/fx
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
-python3 tools/s81_dv/ve_golden.py $O/fx --seed 7 > $O/gold.log 2>&1 || { echo "BENCH_SETUP_FAILED gold"; exit 4; }
+python3 tools/s81_dv/ve_golden.py $O/fx --seed $SD > $O/gold.log 2>&1 || { echo "BENCH_SETUP_FAILED gold"; exit 4; }
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -GMUT=$M -GGAP=$G --top-module tb_s81sl_ve -Mdir $O/obj \
   $(cat rtl/dsrom_sys/s81_dv/eng/test/ve.f) --build-jobs ${J:-4} > $O/build.log 2>&1 || { echo "BUILD_FAILED"; tail -n 8 $O/build.log; exit 3; }
 $O/obj/Vtb_s81sl_ve +dir=$O/fx > $O/run.log 2>&1

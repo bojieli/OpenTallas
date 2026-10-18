@@ -120,7 +120,7 @@
    },
    {
     "name": "slve_mut2",
-    "cmd": "bash tools/s81_slice/ve_bench.sh {RUN}/slve_mut2 2 0",
+    "cmd": "bash tools/s81_slice/ve_bench.sh {RUN}/slve_mut2 2 1 1",
     "expect": "fail",
     "fail_regex": "MUTANT 2 REJECTED mismatches=[1-9]",
     "fail_witness": "results/rtl/rtl_build_s81_1018/int/witness_slve_mut2.log",
