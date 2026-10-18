@@ -1555,6 +1555,39 @@
   },
   {
    "design": "s81",
+   "unit": "SVC.PV_DRAIN (dsdv_svc_att P.V buffer pvq / PV_CRED 4 -> 8; compiled drain base PVO = PO + 8 ceil(T/32) + 55, was PO + ceil(T/4) + 112)",
+   "group": "SVC.PV_DRAIN",
+   "measured": 79.0,
+   "price": 124.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 0.6371,
+   "e2e_loss_pct": 0.0,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 828866.4,
+     "added_cycles": 0.0,
+     "runs_per_token": 40,
+     "critical_runs": 0,
+     "overlapped_runs": 40,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": -1800.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_dv_1016/svc_rs/svc_pv/pvd8b.txt",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-18",
+   "status": "proposed",
+   "note": "SVC-PV 10-18 (claude/svc-pv-1018 b109174d1; svc_rs not on main yet). A GAIN, no cost: price/measured = the compiled P.V drain distance PVO - PO at T 46 (124 -> 79 cycles; -45 .. -57 cycles per attention job for T 1 .. 640). The old 4-deep pvq faulted 15/19 (engine's 8-beat P.V burst vs ~45-cycle pv_cr loop inside the 40-cycle static drain window); coordinator fix (b) (per-owner p-feed offset) is infeasible at depth 4 (tb_dsdv_svc_pvdrain: depth 4 fails at every W and T), so fallback (a): depth 8, the credit never binds (passes with pv_cr never returned), drain purely static. Area +4 x 2,120 b flops per owner slice (16 owner slices a die). Token path: attn.pv is overlapped (40 runs, 0 critical) -> e2e 0.0 %. 16-slice bench verdict pending (lanes/S81U-SVC.md SVC-PV)."
+  },
+  {
+   "design": "s81",
    "unit": "VM.A2_COMMIT_REMAINDER (A2-F hop-1 core ages + commit relay over VM.RELAY W+R: commit relay +5, core commit 0, core read return -2 = +3 per VM-class node; hop-2 core would be +7)",
    "group": "VM.A2_COMMIT_REMAINDER",
    "measured": 32.0,
@@ -2481,7 +2514,7 @@
    "accepted_plus_proposed_pct": 27.369,
    "limit_pct": 15.0,
    "accepted_rows": 12,
-   "proposed_rows": 12,
+   "proposed_rows": 13,
    "headroom_pct": -10.295,
    "owner_exception_rows": 3,
    "over_limit_by_owner_exception": true
