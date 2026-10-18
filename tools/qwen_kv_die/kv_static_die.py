@@ -434,7 +434,7 @@ def _d2d_bundles():
     if 'd2db' in _G:
         return _G['d2db']
     s = K.source('rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv', 'qkd_d2d_static')
-    w = K.ports(s, {k: v for k, v in dict(MUT=0, NL=2, PR=1).items() if k in s['parameters']})
+    w = K.ports(s, {k: v for k, v in dict(MUT=0, NL=2, PR=1, TXDP=K.d2d_txdp_k()).items() if k in s['parameters']})
     if D2D_LISTS is None:                # standalone (--rtl): kv_die defines the bundles (it does not import us back ON)
         import kv_die as _kd
         D2DS_SVC, SEQST_RX, SEQST_KW = _kd.D2DS_SVC, _kd.SEQST_RX, _kd.SEQST_KW
