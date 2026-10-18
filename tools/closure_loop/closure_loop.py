@@ -3128,6 +3128,8 @@ def textbook_cfg(j):
     if isinstance(cr, dict):     # measured clock rule: only jobs ingested under it (never an older in-flight job)
         cfg["clock"] = {"enforce": cr.get("mode") == "refuse" and bool(j["spec"].get("ref_tile")),
                         "evidence": cr.get("evidence"), "closed_stands": bool(cr.get("closed_stands"))}
+        if isinstance(j["spec"].get("clock_rule_waiver"), dict):   # HANDOFF 0ga: the gate's recorded per-pair waiver
+            cfg["clock"]["waiver"] = j["spec"]["clock_rule_waiver"]
     # GATE-FRICTION 2026-10-18: the kit's declared reset_ports are resets for the in-flow lint too (por_n on KV core_peer)
     rsts = j.get("kit_reset_ports")
     if rsts is None and j["spec"].get("ref_tile") and j.get("commit_full"):
