@@ -1,0 +1,597 @@
+{
+ "schema": "owners_qwen_native_1018",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "tool_commit": "61836b68b",
+ "launch_ps": 220.0,
+ "capture_ps": 190.0,
+ "spread_ps": 80,
+ "records": [
+  {
+   "cell": "ot_hdc_vreduce_tail64",
+   "view": "physical/ref_tile/qfd_su_vred_tail64/views/ot_hdc_vreduce_tail64",
+   "lib_cell": "ot_hdc_vreduce_tail64",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 183.3,
+   "spread_ps": 19.3,
+   "outputs": 59,
+   "inputs": 489,
+   "launch_ps": 209.4,
+   "launch_pin": "o_we",
+   "capture_ps": 225.5,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 18.8,
+   "ff_launch_min_ps": 110.2,
+   "ff_hold_need_ps": -64.4,
+   "pass": false,
+   "fail_why": "capture 225.45593 > 190 (1 pins)",
+   "job": "qfd_su_vred_tail64-p5-b60f838a8",
+   "record_commit": "31f5d94bc",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "rst_n",
+     225.5
+    ]
+   ]
+  },
+  {
+   "cell": "ot_hdc_vreduce_region8",
+   "view": "physical/ref_tile/qfd_su_vred_region8/views/ot_hdc_vreduce_region8",
+   "lib_cell": "ot_hdc_vreduce_region8",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 208.7,
+   "spread_ps": 20.6,
+   "outputs": 61,
+   "inputs": 285,
+   "launch_ps": 236.4,
+   "launch_pin": "v_out",
+   "capture_ps": 237.5,
+   "capture_pin": "rst_n",
+   "launch_over": 1,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 19.7,
+   "ff_launch_min_ps": 116.7,
+   "ff_hold_need_ps": -65.1,
+   "pass": false,
+   "fail_why": "launch 236.42897 > 220 (1 pins); capture 237.4892 > 190 (1 pins)",
+   "job": "qfd_su_vred_region8-p5-b60f838a8",
+   "record_commit": "7b61ff19e",
+   "launch_fail_pins": [
+    [
+     "v_out",
+     236.4
+    ]
+   ],
+   "capture_fail_pins": [
+    [
+     "rst_n",
+     237.5
+    ]
+   ]
+  },
+  {
+   "cell": "ot_hdc_vstream_lane_h",
+   "view": "physical/ref_tile/qfd_su_lane_h/views/ot_hdc_vstream_lane_h",
+   "lib_cell": "ot_hdc_vstream_lane_h",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 249.0,
+   "spread_ps": 59.8,
+   "outputs": 377,
+   "inputs": 765,
+   "launch_ps": 287.1,
+   "launch_pin": "va_addr[0]",
+   "capture_ps": 192.0,
+   "capture_pin": "sy_rsq_y[28]",
+   "launch_over": 27,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 57.4,
+   "ff_launch_min_ps": 113.6,
+   "ff_hold_need_ps": -58.0,
+   "pass": false,
+   "fail_why": "launch 287.14777 > 220 (27 pins); capture 191.98918 > 190 (1 pins)",
+   "job": "qfd_su_lane_h-sp1-943c39997",
+   "record_commit": "1bfc3da99",
+   "launch_fail_pins": [
+    [
+     "va_addr[0]",
+     287.1
+    ],
+    [
+     "va_addr[2]",
+     279.4
+    ],
+    [
+     "va_addr[3]",
+     272.9
+    ],
+    [
+     "va_addr[1]",
+     268.0
+    ],
+    [
+     "va_addr[4]",
+     236.1
+    ],
+    [
+     "wrom_addr[0]",
+     235.0
+    ],
+    [
+     "vc_addr[22]",
+     230.7
+    ],
+    [
+     "vc_addr[23]",
+     229.6
+    ],
+    [
+     "wrom_addr[9]",
+     229.0
+    ],
+    [
+     "wrom_addr[14]",
+     228.9
+    ],
+    [
+     "retire",
+     227.8
+    ],
+    [
+     "va_addr[8]",
+     227.6
+    ],
+    [
+     "va_addr[13]",
+     227.5
+    ],
+    [
+     "wrom_addr[13]",
+     227.2
+    ],
+    [
+     "wrom_addr[2]",
+     226.8
+    ],
+    [
+     "sx_exp_x[2]",
+     226.2
+    ],
+    [
+     "wrom_addr[15]",
+     225.0
+    ],
+    [
+     "wrom_addr[1]",
+     224.8
+    ],
+    [
+     "va_addr[17]",
+     224.6
+    ],
+    [
+     "vb_addr[18]",
+     224.3
+    ],
+    [
+     "va_addr[5]",
+     223.8
+    ],
+    [
+     "wrom_addr[4]",
+     223.2
+    ],
+    [
+     "wrom_re",
+     222.5
+    ],
+    [
+     "va_addr[6]",
+     221.0
+    ],
+    [
+     "vm_waddr[6]",
+     220.7
+    ],
+    [
+     "kv_waddr[12]",
+     220.4
+    ],
+    [
+     "va_addr[18]",
+     220.4
+    ]
+   ],
+   "capture_fail_pins": [
+    [
+     "sy_rsq_y[28]",
+     192.0
+    ]
+   ]
+  },
+  {
+   "cell": "ot_qfd_xs_leaf",
+   "view": "physical/ref_tile/qfd_xs_leaf_w130/views/ot_qfd_xs_leaf",
+   "lib_cell": "ot_qfd_xs_leaf",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 179.9,
+   "spread_ps": 15.4,
+   "outputs": 1218,
+   "inputs": 1202,
+   "launch_ps": 192.4,
+   "launch_pin": "wo_d[998]",
+   "capture_ps": 175.6,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 15.1,
+   "ff_launch_min_ps": 104.8,
+   "ff_hold_need_ps": -60.8,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfd_xs_leaf_w130-w3p-099253177",
+   "record_commit": "4af46270e",
+   "launch_fail_pins": [],
+   "capture_fail_pins": []
+  },
+  {
+   "cell": "qfd_landh_1_EW_65x30",
+   "view": "physical/ref_tile/qfwd_landh_1_ew_65x30/views/qfd_landh_1_EW_65x30",
+   "lib_cell": "qfd_landh_1_EW_65x30",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 37.9,
+   "spread_ps": 1.1,
+   "outputs": 2,
+   "inputs": 6,
+   "launch_ps": 91.9,
+   "launch_pin": "fault",
+   "capture_ps": 227.3,
+   "capture_pin": "k1",
+   "launch_over": 0,
+   "capture_over": 3,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 1.0,
+   "ff_launch_min_ps": 55.8,
+   "ff_hold_need_ps": -17.1,
+   "pass": false,
+   "fail_why": "capture 227.32946 > 190 (3 pins)",
+   "job": "qfwd_landh_1_ew_65x30-f2-9ddc1acf2",
+   "record_commit": "5ce271567",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "k1",
+     227.3
+    ],
+    [
+     "k0",
+     226.1
+    ],
+    [
+     "k2",
+     196.6
+    ]
+   ],
+   "relative_supplementary": {
+    "neighbour_job": "qfwd_rlyh_1_sn_65x30-f1-93960f2c9",
+    "pass_": false,
+    "fail_why": "capture 226.92946 > 190 (3 pins)",
+    "relative": {
+     "tt": {
+      "clock_pin": "ckf",
+      "rel_min_ps": -1.4,
+      "rel_max_ps": -0.4,
+      "mismatch_ps": 1.4,
+      "offset_ps": -0.9,
+      "comp_ps": 37.5
+     },
+     "ff": {
+      "clock_pin": "ckf",
+      "rel_min_ps": -1.5,
+      "rel_max_ps": -0.5,
+      "mismatch_ps": 1.5,
+      "offset_ps": -0.9,
+      "comp_ps": 29.7
+     }
+    },
+    "launch_ps": 92.3,
+    "capture_ps": 226.9
+   }
+  },
+  {
+   "cell": "qfd_rlyh0_1_SW_65x30",
+   "view": "physical/ref_tile/qfwd_rlyh0_1_sw_65x30/views/qfd_rlyh0_1_SW_65x30",
+   "lib_cell": "qfd_rlyh0_1_SW_65x30",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 71.8,
+   "spread_ps": 0.0,
+   "outputs": 2,
+   "inputs": 2,
+   "launch_ps": 92.3,
+   "launch_pin": "eb",
+   "capture_ps": 176.7,
+   "capture_pin": "en",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 0.0,
+   "ff_launch_min_ps": 63.3,
+   "ff_hold_need_ps": -23.7,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_rlyh0_1_sw_65x30-f2-9ddc1acf2",
+   "record_commit": "3c3e96a22",
+   "launch_fail_pins": [],
+   "capture_fail_pins": []
+  },
+  {
+   "cell": "qfd_rlyh_1_SN_65x30",
+   "view": "physical/ref_tile/qfwd_rlyh_1_sn_65x30/views/qfd_rlyh_1_SN_65x30",
+   "lib_cell": "qfd_rlyh_1_SN_65x30",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 37.5,
+   "spread_ps": 0.0,
+   "outputs": 2,
+   "inputs": 2,
+   "launch_ps": 90.6,
+   "launch_pin": "eb",
+   "capture_ps": 55.4,
+   "capture_pin": "a[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 0.0,
+   "ff_launch_min_ps": 62.3,
+   "ff_hold_need_ps": -12.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_rlyh_1_sn_65x30-f1-93960f2c9",
+   "record_commit": "eb94b38c2",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [],
+   "relative_supplementary": {
+    "neighbour_job": "qfwd_rlyh0_1_sw_65x30-f2-9ddc1acf2",
+    "pass_": true,
+    "fail_why": "",
+    "relative": {
+     "tt": {
+      "clock_pin": "ckf",
+      "rel_min_ps": -34.3,
+      "rel_max_ps": -34.3,
+      "mismatch_ps": 34.3,
+      "offset_ps": -34.3,
+      "comp_ps": 71.8
+     },
+     "ff": {
+      "clock_pin": "ckf",
+      "rel_min_ps": -26.0,
+      "rel_max_ps": -26.0,
+      "mismatch_ps": 26.0,
+      "offset_ps": -26.0,
+      "comp_ps": 55.7
+     }
+    },
+    "launch_ps": 56.3,
+    "capture_ps": 89.7
+   }
+  },
+  {
+   "cell": "qfd_rlyh_548_SN_65x60",
+   "view": "physical/ref_tile/qfwd_rlyh_548_sn_65x60/views/qfd_rlyh_548_SN_65x60",
+   "lib_cell": "qfd_rlyh_548_SN_65x60",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 95.1,
+   "spread_ps": 24.6,
+   "outputs": 549,
+   "inputs": 549,
+   "launch_ps": 195.5,
+   "launch_pin": "b[425]",
+   "capture_ps": 70.2,
+   "capture_pin": "a[502]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 23.6,
+   "ff_launch_min_ps": 53.4,
+   "ff_hold_need_ps": -9.7,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_rlyh_548_sn_65x60-f1-93960f2c9",
+   "record_commit": "33cb6b68b",
+   "launch_fail_pins": [],
+   "capture_fail_pins": []
+  },
+  {
+   "cell": "qkd_controller_hbm_calendar",
+   "view": "physical/ref_tile/qkd_controller_hbm_calendar/views/qkd_controller_hbm_calendar",
+   "lib_cell": "qkd_controller_hbm_calendar",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 115.9,
+   "spread_ps": 13.4,
+   "outputs": 66,
+   "inputs": 95,
+   "launch_ps": 181.9,
+   "launch_pin": "static_cmd[10]",
+   "capture_ps": 130.9,
+   "capture_pin": "layer[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 14.1,
+   "ff_launch_min_ps": 107.2,
+   "ff_hold_need_ps": -60.6,
+   "pass": true,
+   "fail_why": "",
+   "job": "qkd_controller_hbm_calendar-c1-6e465d52f",
+   "record_commit": "652bce853",
+   "launch_fail_pins": [],
+   "capture_fail_pins": []
+  },
+  {
+   "cell": "qkd_ctrl_pc_obs_child",
+   "view": "physical/ref_tile/qkd_ctrl_pc_obs_s7c/views/qkd_ctrl_pc_obs_child",
+   "lib_cell": "qkd_ctrl_pc_obs_child",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 141.0,
+   "spread_ps": 33.1,
+   "outputs": 93,
+   "inputs": 678,
+   "launch_ps": 183.3,
+   "launch_pin": "native_commit_identity[58]",
+   "capture_ps": 153.5,
+   "capture_pin": "context_word[107]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 32.2,
+   "ff_launch_min_ps": 103.0,
+   "ff_hold_need_ps": -52.8,
+   "pass": true,
+   "fail_why": "",
+   "job": "qkd_ctrl_pc_obs_s7c-s7c-41cf54199",
+   "record_commit": "93a797abe",
+   "launch_fail_pins": [],
+   "capture_fail_pins": []
+  },
+  {
+   "cell": "qkd_ctrl_pc_cdc_child",
+   "view": "physical/ref_tile/qkd_ctrl_pc_cdc_s7c/views/qkd_ctrl_pc_cdc_child",
+   "lib_cell": "qkd_ctrl_pc_cdc_child",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 158.2,
+   "spread_ps": 33.7,
+   "outputs": 617,
+   "inputs": 976,
+   "launch_ps": 196.2,
+   "launch_pin": "completion_fault",
+   "capture_ps": 154.3,
+   "capture_pin": "es[104]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 32.1,
+   "ff_launch_min_ps": 105.4,
+   "ff_hold_need_ps": -62.0,
+   "pass": true,
+   "fail_why": "",
+   "job": "qkd_ctrl_pc_cdc_s7c-s7c-9eb027cde",
+   "record_commit": "a86962f8d",
+   "launch_fail_pins": [],
+   "capture_fail_pins": []
+  },
+  {
+   "cell": "ot_qfd_kv_landing_ecc",
+   "view": "physical/ref_tile/qfd_q5_landing_ecc_p2/views/ot_qfd_kv_landing_ecc",
+   "lib_cell": "ot_qfd_kv_landing_ecc",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 106.8,
+   "spread_ps": 9.3,
+   "outputs": 317,
+   "inputs": 315,
+   "launch_ps": 150.0,
+   "launch_pin": "o_v",
+   "capture_ps": 73.5,
+   "capture_pin": "i_code[195]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 9.6,
+   "ff_launch_min_ps": 87.0,
+   "ff_hold_need_ps": -19.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfd_q5_landing_ecc_p2-p2c-af44ec03d",
+   "record_commit": "8a7328b55",
+   "launch_fail_pins": [],
+   "capture_fail_pins": []
+  },
+  {
+   "cell": "qkd_kv_static_writer_native",
+   "view": "physical/ref_tile/qkd_kv_static_writer_native_r1/views/qkd_kv_static_writer_native",
+   "lib_cell": "qkd_kv_static_writer_native",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 265.0,
+   "spread_ps": 45.1,
+   "outputs": 1284,
+   "inputs": 650,
+   "launch_ps": 199.1,
+   "launch_pin": "es[629]",
+   "capture_ps": 268.0,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 42.7,
+   "ff_launch_min_ps": 113.0,
+   "ff_hold_need_ps": -62.9,
+   "pass": false,
+   "fail_why": "capture 268.01032 > 190 (1 pins)",
+   "job": "qkd_kv_static_writer_native_r1-r3-7489b1528",
+   "record_commit": "4f752891f",
+   "launch_fail_pins": [],
+   "capture_fail_pins": [
+    [
+     "rst_n",
+     268.0
+    ]
+   ]
+  }
+ ]
+}

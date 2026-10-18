@@ -1,0 +1,17 @@
+# S-NATIVE (OWNERS-QWEN) 2026-10-18: native_pin_audit.py audit_one @ origin/main 61836b68b (0dq: launch<=220, capture<=190, pin-flop spread<=80 TT+FF, 0 comb); fleet ot-epyc4; views from origin/codex/closure-record-<job>. 13 views: 8 BINDABLE, 5 FAIL; 0 comb pins; every spread <=60 TT/FF.
+die	element	job	record	launch_ps(pin)	capture_ps(pin)	spread_tt/ff(R)	verdict	cause_fix
+C	ot_hdc_vreduce_tail64	qfd_su_vred_tail64-p5-b60f838a8	31f5d94bc	209.4(o_we)	225.5(rst_n)	19.3/18.8(183.3)	FAIL capture rst_n	raw rst_n fan-out, no reset relay; fix rr1-style regional reset relay; RE-ROUTE qfd_su_vred_tail64
+C	ot_hdc_vreduce_region8	qfd_su_vred_region8-p5-b60f838a8	7b61ff19e	236.4(v_out)	237.5(rst_n)	20.6/19.7(208.7)	FAIL launch v_out + capture rst_n	raw rst_n fan-out + v_out pin reg also feeds busy_out (loaded); fix reset relay + dedicated v_out pin copy; RE-ROUTE qfd_su_vred_region8
+C	ot_hdc_vstream_lane_h	qfd_su_lane_h-sp1-943c39997	1bfc3da99	287.1(va_addr[0])	192.0(sy_rsq_y[28])	59.8/57.4(249.0)	FAIL launch 27 pins (va_addr,wrom_addr) + capture 1 pin	addr output regs placed 235-287 from face pins; fix out-face addr register (+1 cycle on va/wrom read, price in model) or re-pin beside regs; RE-ROUTE qfd_su_lane_h
+C	ot_qfd_xs_leaf	qfd_xs_leaf_w130-w3p-099253177	4af46270e	192.4(wo_d[998])	175.6(rst_n)	15.4/15.1(179.9)	BINDABLE	-
+C	qfd_landh_1_EW_65x30	qfwd_landh_1_ew_65x30-f2-9ddc1acf2	5ce271567	91.9(fault)	227.3(k1)	1.1/1.0(37.9)	FAIL capture k0/k1/k2 (strap)	k = K identity strap tied from the instance's own tie_hi/tie_lo, feeds rc-k select; constant in die; fix (no re-route) case_analysis/false-path k* in die SDC as strap waiver, else RE-ROUTE qfwd_landh_1_ew_65x30 with k registered; relative vs rlyh_1_SN boundary match 1.4/1.5
+C	qfd_rlyh0_1_SW_65x30	qfwd_rlyh0_1_sw_65x30-f2-9ddc1acf2	3c3e96a22	92.3(eb)	176.7(en)	0.0/0.0(71.8)	BINDABLE	-
+C	qfd_rlyh_1_SN_65x30	qfwd_rlyh_1_sn_65x30-f1-93960f2c9	eb94b38c2	90.6(eb)	55.4(a[0])	0.0/0.0(37.5)	BINDABLE	relative vs rlyh0_1_SW PASS (mismatch 34.3 TT / 26.0 FF)
+C	qfd_rlyh_548_SN_65x60	qfwd_rlyh_548_sn_65x60-f1-93960f2c9	33cb6b68b	195.5(b[425])	70.2(a[502])	24.6/23.6(95.1)	BINDABLE	-
+C	qfd_embedding_word_provider	qfd_embedding_word_provider-rr1-ebd3f200b	fd4dac297(claude/qc-lane-1017b)	99.7	88.0(rst_n)	30.3(276.3)	BINDABLE	existing receipt checked, job CLOSED; merge claude/qc-lane-1017b fd4dac297
+KV	qkd_controller_hbm_calendar	qkd_controller_hbm_calendar-c1-6e465d52f	652bce853	181.9(static_cmd[10])	130.9(layer[0])	13.4/14.1(115.9)	BINDABLE	-
+KV	qkd_ctrl_pc_obs_child	qkd_ctrl_pc_obs_s7c-s7c-41cf54199	93a797abe	183.3	153.5	33.1/32.2(141.0)	BINDABLE	-
+KV	qkd_ctrl_pc_cdc_child	qkd_ctrl_pc_cdc_s7c-s7c-9eb027cde	a86962f8d	196.2(completion_fault)	154.3	33.7/32.1(158.2)	BINDABLE	launch 24 ps under budget
+KV	ot_qfd_kv_landing_ecc	qfd_q5_landing_ecc_p2-p2c-af44ec03d	8a7328b55	150.0(o_v)	73.5	9.3/9.6(106.8)	BINDABLE	-
+KV	qkd_kv_static_writer_native	qkd_kv_static_writer_native_r1-r3-7489b1528	4f752891f	199.1(es[629])	268.0(rst_n)	45.1/42.7(265.0)	FAIL capture rst_n	raw rst_n fan-out; fix regional reset relay; RE-ROUTE qkd_kv_static_writer_native_r1 (r4 was CANCELLED)
+KV	ot_qkvd_llr_replay_sram_leaf	-	-	-	-	-	NOT AUDITABLE	no closure-loop job and no routed view; kit physical/ref_tile/qkd_slot_store137 never routed; needs owner + route
