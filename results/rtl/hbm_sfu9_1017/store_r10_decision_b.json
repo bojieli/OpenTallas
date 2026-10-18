@@ -66,5 +66,63 @@
    ]
   },
   "full_engine": "tb_hgi_sfu_split_equiv STORE10=1 with io_store_r10.hex for the store (reference engine keeps io.hex); EQ_MUT=noshift must fail -- runs as bench stages of the parent cluster job / local run (see lanes/SFU-PS-FUND.md)"
+ },
+ "relays_sfu_ps_4": {
+  "date": "2026-10-17",
+  "lane": "SFU-PS-4",
+  "why": "decision-B cluster gate ba12a358d: clock spine 1.8-2.1 ns, head->far leaf -770, leaf->head -777, leaf->S face -483 ps",
+  "hardware": [
+   "per-row programme launch relay (pr_*, +1)",
+   "per-row configuration relay before chain heads P0/P3 (cr_*; strobes +1; chain depths 1/2/3)",
+   "per-row registered status pre-combine (sp_* / si_*) before agreement/fault/status (+1, exact: reset qualifier delayed with it)",
+   "io_word / compiler_control output relay toward the S face (+1)"
+  ],
+  "latency": {
+   "store_D": 5,
+   "status": 3,
+   "vs_r7c_same_image": {
+    "io_word": 1,
+    "io_status": 1,
+    "compiler_control": 3,
+    "programme_status": 3,
+    "io_fault": 1,
+    "programme_fault": 3
+   }
+  },
+  "compile_schedule": "ARITH_START_ADVANCE_R10=2 (was 1): arith_start (io_word[470]) placed 2 IO rows earlier in io_store_r10.hex; with it every store output is r7c + 1 edge (D=5, status 3); 0 cycles/token (once per invocation)",
+  "host_contract": "unchanged: io_start_v >= 4 edges after the last configuration write (programme leaves at chain depth 3 start >= 3 edges after the IO start)",
+  "benches": {
+   "lockstep_vs_r7c": "ISHIFT=1 PSHIFT=3 PASS modes 0-4 (seed 12345) + seeds 7/101/202; fault edge +3 P (modes 1-2), +1 IO (modes 3-4), sticky",
+   "mutants_rejected": [
+    "noshift",
+    "chain",
+    "flip",
+    "rowskew (row R3 bypasses its launch relay)"
+   ],
+   "logs": "~/scratch/sfu-ps-fund/c/",
+   "full_engine_split_equiv": "STORE10=1 D=5 DS=3: pending (~/scratch/sfu-ps-fund/c/canon_{pos,rowskew,noshift}.out)"
+  },
+  "clock": "cluster clock = TritonCTS H-tree (spec clock=cts) balancing the leaf liberty clock-tree-path insertion, replacing the pre-placed spine"
+ },
+ "chain_r10n2_kh_native3": {
+  "date": "2026-10-17",
+  "lane": "KH-NATIVE3",
+  "why": "routed native audit lanes/NATIVE-2.md (claude/native-2-1017 3fd032e8e) of the CLOSED r10n leaf view: capture 236.1 ps on 93 in_data pins (r10n fwd flops took D from the in pin ~150 um away)",
+  "hardware": {
+   "leaf": "fwd_data_q/fwd_addr_q (out face) <= data_q/addr_q (in-face pin flops): out_data(t) = in_data(t-2), 2 edges per chain hop (r10n: 1)",
+   "head_strobe_depths": "relay (P0/P3 rows) + 2 x chain position: P0 1, P1 3, P2 5, P3 1, P4 3, P5 5, P6 0, P7 2, IO0 0, IO1 2, IO2 4 (r10n/SFU-PS-4: 1,2,3,1,2,3,0,1,0,1,2)"
+  },
+  "total_store_latency": {
+   "read_datapath": "io_word D = 5, compiler_control D = 5 with ARITH_START_ADVANCE_R10 = 2, status 3 (unchanged by r10n2; = SFU-PS-4)",
+   "configuration_write": "host write sampled at edge e lands in leaf l's macro at e + depth(l) + 2 (head pin flop, depth strobe delays, leaf we_q); worst P2/P5 e+7, IO2 e+6 (r10n: e+5 / e+4)",
+   "host_contract": "io_start_v >= 4 idle edges after the last configuration write: UNCHANGED, now 0 edges slack at IO2 (bench GAP=3 FAILS, GAP=4 PASSES); programme leaves start >= 3 edges after the IO start so P2/P5 depth 5 is covered",
+   "per_token_cycles": 0,
+   "illegal_mid_run_write": "a write to a depth-k stripe faults k edges later than r7c (k now 0..5)"
+  },
+  "benches": {
+   "store_lockstep": "results/rtl/hbm_native_1017/sfu_store_r10n2_lockstep.log (modes 0-4 seed 7, mode 0 seeds 101/202/12345 PASS; mutants depth1 / fwd1 / chain REJECTED; GAP=3 FAIL)",
+   "leaf_lockstep": "results/rtl/hbm_native_1017/sfu_leaf_r10n2_fwd_{pos,mut}.log (vs closed r10 RTL ref0 with chain out +1 edge: PASS 60,204 edges; r10n pin-forward mutant REJECTED)",
+   "full_engine": "tb_hgi_sfu_split_equiv STORE10=1 runs as bench stages of the leaf job (not run locally: host load ~67/32)"
+  }
  }
 }
