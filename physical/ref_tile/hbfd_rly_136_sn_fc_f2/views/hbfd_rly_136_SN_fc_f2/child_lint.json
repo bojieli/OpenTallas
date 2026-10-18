@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_136_sn_fc_f2-ff1-02fc2ee56/record/views/hbfd_rly_136_SN_fc_f2/provenance/hbfd_rly_136_SN_fc_f2.candidate.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_136_sn_fc_f2-rr1-38533e489/record/views/hbfd_rly_136_SN_fc_f2/provenance/hbfd_rly_136_SN_fc_f2.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "hbfd_rly_136_SN_fc_f2 56.16 x 21.6: PG M5 VDD 20 stripes (91% spread, 100% cov) / VSS 20 stripes (91% spread, 100% cov); strap M6; face pins 412 blocked-above 0 blocked-same 0; clock clk_in insertion 72 ps; pockets M5 0 (closed)",
+ "summary": "hbfd_rly_136_SN_fc_f2 56.16 x 21.6: PG M5 VDD 20 stripes (91% spread, 100% cov) / VSS 20 stripes (91% spread, 100% cov); strap M6; face pins 412 blocked-above 0 blocked-same 0; clock clk_in insertion 79 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "hbfd_rly_136_SN_fc_f2",
   "W": 56.16,
@@ -38,7 +38,7 @@
   "face": {
    "face_pins": 412,
    "blocked_above": 0,
-   "covered_below": 146,
+   "covered_below": 90,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -47,8 +47,8 @@
   },
   "clock_insertion": {
    "clk_in": {
-    "max_ps": 71.8,
-    "min_ps": 56.33
+    "max_ps": 79.06,
+    "min_ps": 66.87
    }
   },
   "pockets": {
@@ -57,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 61
+    "added": 66
    },
    "count": 0,
    "area_um2": 0,

@@ -13,16 +13,28 @@
 //   C4 program_active / program_fault and the irq RISING edge of DUT at t == REF at t - (CFG_LAT + ST_LAT)
 //      (irq clears at the next launch_v, which the join sees on the same edge in both: the irq pulse is RT edges shorter)
 //   C5 no target ever sees a launch while armed and not ready (both paths; fault[1] stays 0 until the poison round)
-// MUT: passed to every leaf (1 dropped bit, 2 copy one stage short, 3 ready swap, 4 fault drop).
+// MUT: passed to every leaf, or only to leaf MUTQ (1 dropped bit, 2 copy one stage short, 3 ready swap, 4 fault drop).
+// D4G 0: 4 x ot_hbm_host_cfg_leaf2 NT5/NF10 (fault bit 2j+b = target j fault[b]).
+// D4G 1 (HBM-B-RTL1b): the d4g per-quadrant masters ot_hbm_host_cfg_leaf_{sw,se,nw,ne} at their exact NT/NF
+//   (18/29, 18/26, 19/29, 14/23): NT bench targets per leaf (one per ready/active bit); leaf fault bit j < NT = target
+//   j fault[0], j >= NT = target j-NT fault[1] (NF < 2 NT in every quadrant), so every leaf input is driven.
 module tb_hbm_host_cfg_leaf_lockstep;
     parameter integer MUT = 0;
     parameter integer ROUNDS = 40;
     parameter integer SEED = 7;
-    localparam integer NQ = 4, NTQ = 5, NTG = NQ * NTQ, NFQ = 2 * NTQ, NF = 2 * NTG;
+    parameter integer D4G = 0;
+    parameter integer MUTQ = -1;
+    localparam integer NQ = 4;
+    function integer ntq(input integer q); ntq = D4G ? (q == 0 ? 18 : q == 1 ? 18 : q == 2 ? 19 : 14) : 5; endfunction
+    function integer nfq(input integer q); nfq = D4G ? (q == 0 ? 29 : q == 1 ? 26 : q == 2 ? 29 : 23) : 10; endfunction
+    function integer toff(input integer q); integer i; begin toff = 0; for (i = 0; i < q; i = i + 1) toff = toff + ntq(i); end endfunction
+    function integer foff(input integer q); integer i; begin foff = 0; for (i = 0; i < q; i = i + 1) foff = foff + nfq(i); end endfunction
+    localparam integer NTG = toff(NQ), NF = foff(NQ);
     localparam integer CFG_LAT = 2, ST_LAT = 2, RT = CFG_LAT + ST_LAT, G = 8;
-    localparam [NTG*8-1:0] TGTS = {8'd35,8'd34,8'd33,8'd32,8'd31,8'd30,8'd29,8'd28,8'd27,8'd26,
-                                   8'd25,8'd24,8'd23,8'd22,8'd21,8'd20,8'd19,8'd18,8'd17,8'd16};
-    localparam [255:0] TMASK = (256'hfffff << 16) | (256'd1 << 125);
+    function [NTG*8-1:0] mk_tgts(input integer dummy); integer i; begin
+        for (i = 0; i < NTG; i = i + 1) mk_tgts[i*8 +: 8] = 16 + i; end endfunction
+    localparam [NTG*8-1:0] TGTS = mk_tgts(0);
+    localparam [255:0] TMASK = (((256'd1 << NTG) - 1) << 16) | (256'd1 << 125);
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
     integer cyc = 0;
@@ -56,13 +68,24 @@ module tb_hbm_host_cfg_leaf_lockstep;
         .desc_limit(d_dl), .desc_loops(d_dp), .launch_v(d_lv), .fault(d_fault));
 
     // ---------------- REF: targets straight off the ingress
-    wire [NTG-1:0] r_rdy, r_act; wire [NF-1:0] r_flt;
+    wire [NTG-1:0] r_rdy, r_act; wire [NF-1:0] r_flt; wire [2*NTG-1:0] r_tf;
+    wire [NTG-1:0] d_rdy, d_act, j_rdy, j_act; wire [NF-1:0] d_flt, j_flt; wire [2*NTG-1:0] d_tf;
     wire [NTG*320-1:0] r_tin;   // per-target input bundle {lv,dv,cv,payload317} as seen at the target pins
     genvar k;
     generate for (k = 0; k < NTG; k = k + 1) begin : g_rt
         assign r_tin[k*320 +: 320] = {r_lv, r_dv, r_cv, r_dp, r_dl, r_db, r_cd, r_ca, r_ct};
         tb_cfg_tgt #(.ID(16 + k)) t (.clk(clk), .rst_n(rst_n), .cfg_v(r_cv), .cfg_target(r_ct), .cfg_addr(r_ca),
-            .desc_v(r_dv), .launch_v(r_lv), .ready(r_rdy[k]), .active(r_act[k]), .fault(r_flt[2*k +: 2]));
+            .desc_v(r_dv), .launch_v(r_lv), .ready(r_rdy[k]), .active(r_act[k]), .fault(r_tf[2*k +: 2]));
+    end endgenerate
+    // per-leaf fault bit order (the same selection on both paths)
+    genvar fq, fj;
+    generate for (fq = 0; fq < NQ; fq = fq + 1) begin : g_fs
+        for (fj = 0; fj < nfq(fq); fj = fj + 1) begin : g_b
+            localparam integer TI = toff(fq) + (D4G ? (fj < ntq(fq) ? fj : fj - ntq(fq)) : fj / 2);
+            localparam integer FB = D4G ? (fj < ntq(fq) ? 0 : 1) : fj % 2;
+            assign r_flt[foff(fq) + fj] = r_tf[2*TI + FB];
+            assign d_flt[foff(fq) + fj] = d_tf[2*TI + FB];
+        end
     end endgenerate
     ot_hbm_status_join_fa #(.NT(NTG), .NF(NF), .NH(1), .TGTS(TGTS), .GUARD(G), .NA(1), .FCLR(8'd125), .RRELAY(1)) join_r (
         .clk(clk), .rst_n(rst_n), .cfg_v(r_cv), .desc_v(r_dv), .launch_v(r_lv), .cfg_target(r_ct),
@@ -70,29 +93,72 @@ module tb_hbm_host_cfg_leaf_lockstep;
         .block_ready(r_br), .program_active(r_pa), .program_fault(r_pf), .irq(r_irq), .die_fault(r_df), .a_cause(r_ac));
 
     // ---------------- DUT: 4 leaves, NCP 2 (targets 0-2 of a quadrant on copy 0, 3-4 on copy 1)
-    wire [NTG-1:0] d_rdy, d_act, j_rdy, j_act; wire [NF-1:0] d_flt, j_flt;
     wire [NTG*320-1:0] d_tin;
     genvar q, j;
     generate for (q = 0; q < NQ; q = q + 1) begin : g_q
+        localparam integer NTQ = ntq(q), NFQ = nfq(q), TO = toff(q), FO = foff(q);
+        localparam integer LM = (MUTQ < 0 || MUTQ == q) ? MUT : 0;
         wire [1:0] ocv, odv, olv; wire [15:0] oct; wire [23:0] oca, odb; wire [511:0] ocd; wire [25:0] odl; wire [31:0] odp;
         // the hardened master: copy A = ocv[0].., copy B = ocv[1]..
-        ot_hbm_host_cfg_leaf2 #(.NT(NTQ), .NF(NFQ), .MUT(MUT)) leaf (.clk(clk), .rst_n(rst_n),
+        if (D4G == 0) begin : g_l2
+        ot_hbm_host_cfg_leaf2 #(.NT(NTQ), .NF(NFQ), .MUT(LM)) leaf (.clk(clk), .rst_n(rst_n),
             .cfg_v(d_cv), .cfg_target(d_ct), .cfg_addr(d_ca), .cfg_data(d_cd), .desc_v(d_dv), .desc_base(d_db),
             .desc_limit(d_dl), .desc_loops(d_dp), .launch_v(d_lv),
             .a_cfg_v(ocv[0]), .a_cfg_target(oct[7:0]), .a_cfg_addr(oca[11:0]), .a_cfg_data(ocd[255:0]), .a_desc_v(odv[0]),
             .a_desc_base(odb[11:0]), .a_desc_limit(odl[12:0]), .a_desc_loops(odp[15:0]), .a_launch_v(olv[0]),
             .b_cfg_v(ocv[1]), .b_cfg_target(oct[15:8]), .b_cfg_addr(oca[23:12]), .b_cfg_data(ocd[511:256]), .b_desc_v(odv[1]),
             .b_desc_base(odb[23:12]), .b_desc_limit(odl[25:13]), .b_desc_loops(odp[31:16]), .b_launch_v(olv[1]),
-            .t_ready(d_rdy[q*NTQ +: NTQ]), .t_active(d_act[q*NTQ +: NTQ]), .t_fault(d_flt[q*NFQ +: NFQ]),
-            .s_ready(j_rdy[q*NTQ +: NTQ]), .s_active(j_act[q*NTQ +: NTQ]), .s_fault(j_flt[q*NFQ +: NFQ]));
+            .t_ready(d_rdy[TO +: NTQ]), .t_active(d_act[TO +: NTQ]), .t_fault(d_flt[FO +: NFQ]),
+            .s_ready(j_rdy[TO +: NTQ]), .s_active(j_act[TO +: NTQ]), .s_fault(j_flt[FO +: NFQ]));
+        end else if (q == 0) begin : g_sw
+        ot_hbm_host_cfg_leaf_sw #(.MUT(LM)) leaf (.clk(clk), .rst_n(rst_n),
+            .cfg_v(d_cv), .cfg_target(d_ct), .cfg_addr(d_ca), .cfg_data(d_cd), .desc_v(d_dv), .desc_base(d_db),
+            .desc_limit(d_dl), .desc_loops(d_dp), .launch_v(d_lv),
+            .a_cfg_v(ocv[0]), .a_cfg_target(oct[7:0]), .a_cfg_addr(oca[11:0]), .a_cfg_data(ocd[255:0]), .a_desc_v(odv[0]),
+            .a_desc_base(odb[11:0]), .a_desc_limit(odl[12:0]), .a_desc_loops(odp[15:0]), .a_launch_v(olv[0]),
+            .b_cfg_v(ocv[1]), .b_cfg_target(oct[15:8]), .b_cfg_addr(oca[23:12]), .b_cfg_data(ocd[511:256]), .b_desc_v(odv[1]),
+            .b_desc_base(odb[23:12]), .b_desc_limit(odl[25:13]), .b_desc_loops(odp[31:16]), .b_launch_v(olv[1]),
+            .t_ready(d_rdy[TO +: NTQ]), .t_active(d_act[TO +: NTQ]), .t_fault(d_flt[FO +: NFQ]),
+            .s_ready(j_rdy[TO +: NTQ]), .s_active(j_act[TO +: NTQ]), .s_fault(j_flt[FO +: NFQ]));
+        end else if (q == 1) begin : g_se
+        ot_hbm_host_cfg_leaf_se #(.MUT(LM)) leaf (.clk(clk), .rst_n(rst_n),
+            .cfg_v(d_cv), .cfg_target(d_ct), .cfg_addr(d_ca), .cfg_data(d_cd), .desc_v(d_dv), .desc_base(d_db),
+            .desc_limit(d_dl), .desc_loops(d_dp), .launch_v(d_lv),
+            .a_cfg_v(ocv[0]), .a_cfg_target(oct[7:0]), .a_cfg_addr(oca[11:0]), .a_cfg_data(ocd[255:0]), .a_desc_v(odv[0]),
+            .a_desc_base(odb[11:0]), .a_desc_limit(odl[12:0]), .a_desc_loops(odp[15:0]), .a_launch_v(olv[0]),
+            .b_cfg_v(ocv[1]), .b_cfg_target(oct[15:8]), .b_cfg_addr(oca[23:12]), .b_cfg_data(ocd[511:256]), .b_desc_v(odv[1]),
+            .b_desc_base(odb[23:12]), .b_desc_limit(odl[25:13]), .b_desc_loops(odp[31:16]), .b_launch_v(olv[1]),
+            .t_ready(d_rdy[TO +: NTQ]), .t_active(d_act[TO +: NTQ]), .t_fault(d_flt[FO +: NFQ]),
+            .s_ready(j_rdy[TO +: NTQ]), .s_active(j_act[TO +: NTQ]), .s_fault(j_flt[FO +: NFQ]));
+        end else if (q == 2) begin : g_nw
+        ot_hbm_host_cfg_leaf_nw #(.MUT(LM)) leaf (.clk(clk), .rst_n(rst_n),
+            .cfg_v(d_cv), .cfg_target(d_ct), .cfg_addr(d_ca), .cfg_data(d_cd), .desc_v(d_dv), .desc_base(d_db),
+            .desc_limit(d_dl), .desc_loops(d_dp), .launch_v(d_lv),
+            .a_cfg_v(ocv[0]), .a_cfg_target(oct[7:0]), .a_cfg_addr(oca[11:0]), .a_cfg_data(ocd[255:0]), .a_desc_v(odv[0]),
+            .a_desc_base(odb[11:0]), .a_desc_limit(odl[12:0]), .a_desc_loops(odp[15:0]), .a_launch_v(olv[0]),
+            .b_cfg_v(ocv[1]), .b_cfg_target(oct[15:8]), .b_cfg_addr(oca[23:12]), .b_cfg_data(ocd[511:256]), .b_desc_v(odv[1]),
+            .b_desc_base(odb[23:12]), .b_desc_limit(odl[25:13]), .b_desc_loops(odp[31:16]), .b_launch_v(olv[1]),
+            .t_ready(d_rdy[TO +: NTQ]), .t_active(d_act[TO +: NTQ]), .t_fault(d_flt[FO +: NFQ]),
+            .s_ready(j_rdy[TO +: NTQ]), .s_active(j_act[TO +: NTQ]), .s_fault(j_flt[FO +: NFQ]));
+        end else if (q == 3) begin : g_ne
+        ot_hbm_host_cfg_leaf_ne #(.MUT(LM)) leaf (.clk(clk), .rst_n(rst_n),
+            .cfg_v(d_cv), .cfg_target(d_ct), .cfg_addr(d_ca), .cfg_data(d_cd), .desc_v(d_dv), .desc_base(d_db),
+            .desc_limit(d_dl), .desc_loops(d_dp), .launch_v(d_lv),
+            .a_cfg_v(ocv[0]), .a_cfg_target(oct[7:0]), .a_cfg_addr(oca[11:0]), .a_cfg_data(ocd[255:0]), .a_desc_v(odv[0]),
+            .a_desc_base(odb[11:0]), .a_desc_limit(odl[12:0]), .a_desc_loops(odp[15:0]), .a_launch_v(olv[0]),
+            .b_cfg_v(ocv[1]), .b_cfg_target(oct[15:8]), .b_cfg_addr(oca[23:12]), .b_cfg_data(ocd[511:256]), .b_desc_v(odv[1]),
+            .b_desc_base(odb[23:12]), .b_desc_limit(odl[25:13]), .b_desc_loops(odp[31:16]), .b_launch_v(olv[1]),
+            .t_ready(d_rdy[TO +: NTQ]), .t_active(d_act[TO +: NTQ]), .t_fault(d_flt[FO +: NFQ]),
+            .s_ready(j_rdy[TO +: NTQ]), .s_active(j_act[TO +: NTQ]), .s_fault(j_flt[FO +: NFQ]));
+        end
         for (j = 0; j < NTQ; j = j + 1) begin : g_t
-            localparam integer C = (j < 3) ? 0 : 1;
-            localparam integer T = q * NTQ + j;
+            localparam integer C = (j < (NTQ + 1) / 2) ? 0 : 1;
+            localparam integer T = TO + j;
             assign d_tin[T*320 +: 320] = {olv[C], odv[C], ocv[C], odp[C*16 +: 16], odl[C*13 +: 13], odb[C*12 +: 12],
                                           ocd[C*256 +: 256], oca[C*12 +: 12], oct[C*8 +: 8]};
             tb_cfg_tgt #(.ID(16 + T)) t (.clk(clk), .rst_n(rst_n), .cfg_v(ocv[C]), .cfg_target(oct[C*8 +: 8]),
                 .cfg_addr(oca[C*12 +: 12]), .desc_v(odv[C]), .launch_v(olv[C]),
-                .ready(d_rdy[T]), .active(d_act[T]), .fault(d_flt[2*T +: 2]));
+                .ready(d_rdy[T]), .active(d_act[T]), .fault(d_tf[2*T +: 2]));
         end
     end endgenerate
     ot_hbm_status_join_fa #(.NT(NTG), .NF(NF), .NH(1), .TGTS(TGTS), .GUARD(G + RT), .NA(1), .FCLR(8'd125), .RRELAY(1)) join_d (
@@ -125,7 +191,7 @@ module tb_hbm_host_cfg_leaf_lockstep;
             if ({j_rdy, j_act, j_flt} !== {h_rdy[RT-1], h_act[RT-1], h_flt[RT-1]}) begin
                 m3 = m3 + 1; if (m3 < 4) $display("C3 cyc %0d join status inputs != REF@-%0d", cyc, RT); end
             if ({d_pa, d_pf, d_irq && !d_irq_q} !== h_prog[RT-1]) begin m4 = m4 + 1; if (m4 < 4) $display("C4 cyc %0d join outputs != REF@-%0d", cyc, RT); end
-            if (!poison && ((|(r_flt & {NTG{2'b10}})) || (|(d_flt & {NTG{2'b10}})))) begin
+            if (!poison && ((|(r_tf & {NTG{2'b10}})) || (|(d_tf & {NTG{2'b10}})))) begin
                 m5 = m5 + 1; if (m5 < 4) $display("C5 cyc %0d launch reached a not-ready target", cyc); end
         end
         if (r_lv) nlaunch_r = nlaunch_r + 1; if (d_lv) nlaunch_d = nlaunch_d + 1;
@@ -166,13 +232,13 @@ module tb_hbm_host_cfg_leaf_lockstep;
             idle(60 + $urandom % 8);
         end
         // poison round: a config row at the fault address of one target (t_fault path through the leaf)
-        poison = 1; tgt = 16 + NTQ * ($urandom % NQ);   // target 0 of a quadrant: its fault[0] is leaf t_fault bit 0
+        poison = 1; tgt = 16 + toff((MUTQ >= 0) ? MUTQ : $urandom % NQ);   // target 0 of a quadrant: its fault[0] is leaf t_fault bit 0
         wr(12'hf20, {12'd0, 12'habc, 8'(tgt)});
         for (w = 0; w < 8; w = w + 1) wr(12'hf24, $urandom);
         idle(40);
         if (!r_pf || !d_pf) begin m4 = m4 + 1; $display("poison fault not seen r=%0d d=%0d", r_pf, d_pf); end
         if (m1 == 0 && m2 == 0 && m3 == 0 && m4 == 0 && m5 == 0 && nlaunch_r == ROUNDS && nirq_d == nirq_r && ncfg > 0)
-            $display("HOST_CFG_LEAF_LOCKSTEP_PASS rounds=%0d cfg=%0d desc=%0d launches=%0d irq=%0d cyc=%0d", ROUNDS, ncfg, ndesc, nlaunch_r, nirq_r, cyc);
+            $display("HOST_CFG_LEAF_LOCKSTEP_PASS d4g=%0d mutq=%0d nt=%0d nf=%0d rounds=%0d cfg=%0d desc=%0d launches=%0d irq=%0d cyc=%0d", D4G, MUTQ, NTG, NF, ROUNDS, ncfg, ndesc, nlaunch_r, nirq_r, cyc);
         else
             $display("HOST_CFG_LEAF_LOCKSTEP_FAIL mism=%0d c1=%0d c2=%0d c3=%0d c4=%0d c5=%0d launches=%0d/%0d irq=%0d/%0d",
                      m1 + m2 + m3 + m4 + m5 + (nlaunch_r != ROUNDS) + (nirq_d != nirq_r), m1, m2, m3, m4, m5, nlaunch_r, nlaunch_d, nirq_r, nirq_d);

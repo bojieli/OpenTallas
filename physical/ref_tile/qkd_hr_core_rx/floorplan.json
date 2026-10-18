@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
  "name": "qkd_hr_core_rx",
- "top": "qkd_host_rx_class_admission",
+ "top": "qkd_host_rx_class_admission_rr",
  "kind": "tile",
  "die": [
   0,
@@ -66,6 +66,8 @@
  "blocks": [],
  "findings": [],
  "referenced": [
+  "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission_rr.sv",
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv",
   "rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv",
   "physical/ref_tile/qkd_hr_core_rx/kit.env",

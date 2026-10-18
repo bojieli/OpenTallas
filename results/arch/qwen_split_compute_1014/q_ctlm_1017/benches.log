@@ -1,0 +1,13 @@
+CTLM_ABI_PASS MUT=0 256 vectors (ss5/ag5/dc/hr/ME start)
+CTLM_ABI_FAIL MUT=4 errors 255
+CTLM_ABI_FAIL MUT=5 errors 127
+CTLM_CAL MUT=0 NSL=0: PASS 62/62
+CTLM_CAL MUT=1 NSL=0: FAIL 2/62
+CTLM_CAL MUT=2 NSL=0: FAIL 2/62
+CTLM_CAL MUT=3 NSL=0: FAIL 60/62
+QCTLM BENCHES: PASS
+SYS_FACE_PASS MUT=0 boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact
+SYS_FACE_FAIL MUT=1 timeout (errors 1476, face_fault 1 cal_fault 1)
+SYS_FACE_FAIL MUT=2 errors 65 (face_fault 0 prov_fault 1)
+SYS_FACE_FAIL MUT=3 timeout (errors 3, face_fault 1 cal_fault 0)
+SYS_FACE_FAIL MUT=4 timeout (errors 1, face_fault 1 cal_fault 1)

@@ -1,0 +1,220 @@
+{
+ "name": "hbm_su_pghead_r5-r5-COMMIT",
+ "block": "ot_hbm_su_programme_pghead",
+ "ref_tile": true,
+ "owner": "Claude:NATIVE-FIX3/pgs",
+ "purpose": "SU programme cluster leaf ot_hbm_su_programme_pghead (HBM-SU r5 per-column split)",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/nf3-pgs-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/hbm_static",
+   "tools/hdc_golden.py",
+   "rtl/hbm_accel/generic/adapters/static_su/programme",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_programme_pghead u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pgcol_equiv_7111_q0123",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/pos bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "pass",
+    "pass_regex": "SU_PROGRAMME_PGCOL_GATE PASS",
+    "min_count_regex": "SU_PROGRAMME_PGCOL PASS edges=(\\d+)"
+   },
+   {
+    "name": "pgcol_mut_cfg",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/cfg ONLY=cfg bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_cfg_q0.log"
+   },
+   {
+    "name": "pgcol_mut_phase",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/phase ONLY=phase bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_phase_q0.log"
+   },
+   {
+    "name": "pgcol_mut_cfgany",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/cfgany ONLY=cfgany bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_cfgany_q0.log"
+   },
+   {
+    "name": "pgcol_mut_stale",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/stale ONLY=stale bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_stale_q0.log"
+   },
+   {
+    "name": "pgcol_mut_rstrelay",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/rstrelay ONLY=rstrelay bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_rstrelay_q0.log"
+   },
+   {
+    "name": "pgcol_mut_cpin",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/cpin ONLY=cpin bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_cpin_q0.log"
+   },
+   {
+    "name": "pgcol_mut_oreg",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/oreg ONLY=oreg bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_oreg_q0.log"
+   },
+   {
+    "name": "pgcol_mut_freg",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/freg ONLY=freg bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_freg_q0.log"
+   },
+   {
+    "name": "pgcol_mut_hrelay",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/hrelay ONLY=hrelay bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_hrelay_q0.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_su_pghead_r5/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=1 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_su_pghead_r5/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_su_pghead_r5 --out {RUN}/record/views/ot_hbm_su_programme_pghead  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_su_pghead_r5/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_su_pghead_r5/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_su_pghead_r5/hbm_su_pghead_r5-r5-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "SUCCESSOR of the flat per-quarter SU programme tile (hbm_su_pslice_r3_1017 gate FAIL 8058137fc: TT clock insertion 851..1280 ps, spread 429, GRT 4 h timeout; hbm_su_pslice_r4_1017 294f94bbd: TT 830..1148 ps, spread 318, GRT > 3.5 h with clock NDRs dropped, killed): one root over 98 SRAMs + 14k flops on 940 x 760 um. r5 = cluster ot_hbm_su_programme_pslice_c5: one leaf per command column (own packed 16-edge/row index, own dictionary, own 256 command flops, controller replica) + a head leaf (cfg stage + column decode + fault OR). Lockstep bench vs r4 on all 4 quarters PASS, mutants cfg/phase/cfgany/stale FAIL (db03bbcbd, results/rtl/hbm_su_lane_1017/r5_pgcol). Start advance unchanged DEPTH+4. THIS leaf: head (1 per quarter): cfg pin stage + column decode (bank[15:5] = column) + sticky fault OR of the 10 leaves + leaf-valid lockstep check; pin-bound register tile, inputs W / outputs E (placeholder faces). NATIVE-FIX3/pgs 10-18 (NATIVE-3 audit, claude/native-3-1017 73adc87ea, lanes/NATIVE-3.md): pin registers in RTL -- leaf: ot_rst_relay at rst_n (release +3 edges) and a pin stage on cfg_we/cfg_any/cfg_bank (CPIN 1; cfg_row/cfg_data stay on the config copy registers, presented by the head one edge later: gate g1 with all cfg inputs pin-flopped had TT pin-flop spread 101 ps); head: export registers on every output (o_we decoded into one flop per column, OREG 1), l_fault pin registers (FREG 1, leaves report fault FADV 2 edges early so the cluster fault edge is unchanged) and ot_rst_relay at rst_n (HRLY 1, gate g1 rst_n capture 238 ps). Cluster configuration latency +2 edges (compile-scheduled: the host configures while idle, 2 edges earlier; a write on pin edge e pairs with a start on edge e+2 for the reject rule); start advance DEPTH+4, command/valid/done/busy/fault edges unchanged. Bench: lockstep vs r4 on all 4 quarters PASS with the cluster writes driven 2 edges ahead + reset-release check (3 edges, leaves and head); mutants cfg/phase/cfgany/stale/rstrelay/cpin/oreg/freg/hrelay FAIL (results/rtl/nf3_pgs_1018).",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/native_3_1017/native_3_audit.json",
+  "cell": "ot_hbm_su_programme_pghead",
+  "launch_ps": 225.6,
+  "capture_ps": 204.5,
+  "closed_job": "hbm_su_pghead_r5-r5-114508f65",
+  "why": "NATIVE-3 audit (claude/native-3-1017 73adc87ea, lanes/NATIVE-3.md): launch o_we[0..9] 221.1..225.6 ps > 220 and capture l_fault[1,4,5,6] 199.3..204.5 ps > 190 (R 101.8); relative re-audit vs pgcol_s / lgtap fails (launch and capture together) -> o_we from export flops, l_fault into pin flops (native_launch class; RTL changed, so kind pin_register)",
+  "fix": "RTL: every output leaves from an export register (o_we decoded into one flop per column, OREG 1; +1 configuration edge); l_fault lands on pin registers (FREG 1; leaves FADV 2 keep the cluster fault edge); head out-of-range fault delayed CLAT 2; rst_n drives only ot_rst_relay (HRLY 1)"
+ }
+}

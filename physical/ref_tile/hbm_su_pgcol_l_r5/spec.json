@@ -1,0 +1,465 @@
+{
+ "name": "hbm_su_pgcol_l_r5",
+ "top": "ot_hbm_su_programme_pgcol_l",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {},
+ "outline": {
+  "w": 302.4,
+  "h": 453.6,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?0?.mem",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?1?.mem",
+   "at": [
+    43.2,
+    84.24
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?2?.mem",
+   "at": [
+    43.2,
+    125.28
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?3?.mem",
+   "at": [
+    43.2,
+    166.32
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?4?.mem",
+   "at": [
+    43.2,
+    207.36
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.ix?0?.mem.g?0?.mem",
+   "at": [
+    43.2,
+    248.4
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.ix?0?.mem.g?1?.mem",
+   "at": [
+    43.2,
+    289.44
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.ix?0?.mem.g?2?.mem",
+   "at": [
+    43.2,
+    330.48
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.ix?0?.mem.g?3?.mem",
+   "at": [
+    43.2,
+    371.52
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?5?.mem",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?6?.mem",
+   "at": [
+    172.8,
+    84.24
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?7?.mem",
+   "at": [
+    172.8,
+    125.28
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?8?.mem",
+   "at": [
+    172.8,
+    166.32
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?9?.mem",
+   "at": [
+    172.8,
+    207.36
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?10?.mem",
+   "at": [
+    172.8,
+    248.4
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?11?.mem",
+   "at": [
+    172.8,
+    289.44
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.g_m4.dt?0?.mem.g?12?.mem",
+   "at": [
+    172.8,
+    330.48
+   ],
+   "orient": "R0",
+   "exact": true
+  }
+ ],
+ "pins": {
+  "N": [
+   "cfg_data",
+   "cfg_bank",
+   "cfg_row",
+   "cfg_we",
+   "cfg_any",
+   "rst_n",
+   "start",
+   "length"
+  ],
+  "S": [
+   "command",
+   "busy",
+   "valid",
+   "done",
+   "fault",
+   "edge_index",
+   "clk"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.3,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_group_max": 1,
+  "io_hold_margin_ns": 0.0,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hbm_su_programme_pgcol registers every input in RTL: start/length at the pin (the pslice STAGES 1 stage), cfg_we/cfg_any/cfg_bank on the CPIN 1 pin stage (NATIVE-FIX3 10-18, +1 configuration edge), cfg_row/cfg_data on the per-bank config copy registers (the head presents them one edge after the control), rst_n only into ot_rst_relay; every output is a register (command, busy_q, valid, done, edge_index, fault_d). A kit flop stage would add an edge the start-advance contract (DEPTH+4) does not price."
+ },
+ "children": [],
+ "inter": [],
+ "clock": "cts",
+ "orfs_vars": {},
+ "structural_change": "SUCCESSOR of the flat per-quarter SU programme tile (hbm_su_pslice_r3_1017 gate FAIL 8058137fc: TT clock insertion 851..1280 ps, spread 429, GRT 4 h timeout; hbm_su_pslice_r4_1017 294f94bbd: TT 830..1148 ps, spread 318, GRT > 3.5 h with clock NDRs dropped, killed): one root over 98 SRAMs + 14k flops on 940 x 760 um. r5 = cluster ot_hbm_su_programme_pslice_c5: one leaf per command column (own packed 16-edge/row index, own dictionary, own 256 command flops, controller replica) + a head leaf (cfg stage + column decode + fault OR). Lockstep bench vs r4 on all 4 quarters PASS, mutants cfg/phase/cfgany/stale FAIL (db03bbcbd, results/rtl/hbm_su_lane_1017/r5_pgcol). Start advance unchanged DEPTH+4. THIS leaf: L master (3 per quarter): 4 index + 13 dictionary SRAMs, 302.4 x 453.6, MY stack dictionary 0..4 + index 0..3, R0 stack dictionary 5..12, one 34.8 um channel, N cfg band 41 um, S band = 256 command flops, ~3.3k flops one root. NATIVE-FIX3/pgs 10-18 (NATIVE-3 audit, claude/native-3-1017 73adc87ea, lanes/NATIVE-3.md): pin registers in RTL -- leaf: ot_rst_relay at rst_n (release +3 edges) and a pin stage on cfg_we/cfg_any/cfg_bank (CPIN 1; cfg_row/cfg_data stay on the config copy registers, presented by the head one edge later: gate g1 with all cfg inputs pin-flopped had TT pin-flop spread 101 ps); head: export registers on every output (o_we decoded into one flop per column, OREG 1), l_fault pin registers (FREG 1, leaves report fault FADV 2 edges early so the cluster fault edge is unchanged) and ot_rst_relay at rst_n (HRLY 1, gate g1 rst_n capture 238 ps). Cluster configuration latency +2 edges (compile-scheduled: the host configures while idle, 2 edges earlier; a write on pin edge e pairs with a start on edge e+2 for the reject rule); start advance DEPTH+4, command/valid/done/busy/fault edges unchanged. Bench: lockstep vs r4 on all 4 quarters PASS with the cluster writes driven 2 edges ahead + reset-release check (3 edges, leaves and head); mutants cfg/phase/cfgany/stale/rstrelay/cpin/oreg/freg/hrelay FAIL (results/rtl/nf3_pgs_1018).",
+ "job": {
+  "owner": "Claude:NATIVE-FIX3/pgs",
+  "branch": "claude/nf3-pgs-1018",
+  "tag": "r5",
+  "purpose": "SU programme cluster leaf ot_hbm_su_programme_pgcol_l (HBM-SU r5 per-column split)",
+  "views_to": "physical/ref_tile/hbm_su_pgcol_l_r5/views",
+  "record_to": "results/rtl/ref_tile/hbm_su_pgcol_l_r5",
+  "extra_paths": [
+   "tools/hbm_static",
+   "tools/hdc_golden.py",
+   "rtl/hbm_accel/generic/adapters/static_su/programme",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "pgcol_equiv_7111_q0123",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/pos bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "pass",
+    "pass_regex": "SU_PROGRAMME_PGCOL_GATE PASS",
+    "min_count_regex": "SU_PROGRAMME_PGCOL PASS edges=(\\d+)"
+   },
+   {
+    "name": "pgcol_mut_cfg",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/cfg ONLY=cfg bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_cfg_q0.log"
+   },
+   {
+    "name": "pgcol_mut_phase",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/phase ONLY=phase bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_phase_q0.log"
+   },
+   {
+    "name": "pgcol_mut_cfgany",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/cfgany ONLY=cfgany bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_cfgany_q0.log"
+   },
+   {
+    "name": "pgcol_mut_stale",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/stale ONLY=stale bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_stale_q0.log"
+   },
+   {
+    "name": "pgcol_mut_rstrelay",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/rstrelay ONLY=rstrelay bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_rstrelay_q0.log"
+   },
+   {
+    "name": "pgcol_mut_cpin",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/cpin ONLY=cpin bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_cpin_q0.log"
+   },
+   {
+    "name": "pgcol_mut_oreg",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/oreg ONLY=oreg bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_oreg_q0.log"
+   },
+   {
+    "name": "pgcol_mut_freg",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/freg ONLY=freg bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_freg_q0.log"
+   },
+   {
+    "name": "pgcol_mut_hrelay",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "OUT={RUN}/bench/hrelay ONLY=hrelay bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/rtl/nf3_pgs_1018/bench/run_hrelay_q0.log"
+   }
+  ]
+ },
+ "hold_budget": "die",
+ "pin_ranges": {
+  "cfg_data": [
+   4.0,
+   284.9
+  ],
+  "cfg_bank": [
+   285.2,
+   286.4
+  ],
+  "cfg_row": [
+   286.7,
+   288.5
+  ],
+  "cfg_we": [
+   288.8,
+   289.7
+  ],
+  "cfg_any": [
+   290.0,
+   290.9
+  ],
+  "rst_n": [
+   291.2,
+   292.1
+  ],
+  "start": [
+   292.4,
+   293.3
+  ],
+  "length": [
+   293.6,
+   298.1
+  ],
+  "command": [
+   4.0,
+   148.0
+  ],
+  "clk": [
+   150.8,
+   151.4
+  ],
+  "busy": [
+   154.0,
+   156.0
+  ],
+  "valid": [
+   156.5,
+   158.5
+  ],
+  "done": [
+   159.0,
+   161.0
+  ],
+  "fault": [
+   161.5,
+   163.5
+  ],
+  "edge_index": [
+   164.0,
+   298.4
+  ]
+ }
+}

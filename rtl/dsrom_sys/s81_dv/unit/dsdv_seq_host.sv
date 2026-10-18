@@ -317,7 +317,7 @@ module dsdv_sh_vc #(parameter integer V = 276, parameter integer MUT = 0) (
     wire vsf;
     ot_dsdv_vstop #(.V(V)) u_vs (.clk(ck), .rst_n(rn), .tap_k(tap_k), .sink_k(sink_k), .vi_s(vi_s), .vo_n(vo_n),
         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
-        .fault(vsf));
+        .fault(vsf), .ra_s(), .ra_n(), .dk_n(), .dk_s());   // vstop second-consumer taps: unused here
     reg arg_f;
     always @(posedge ck or negedge rn) if (!rn) arg_f <= 1'b0; else if (ban || bas || bag || cwc) arg_f <= 1'b1;
     always @(posedge ck) vf_o <= vsf | arg_f;
