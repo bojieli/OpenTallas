@@ -1,0 +1,144 @@
+{
+ "name": "qkd_kvs_attn-i2-COMMIT",
+ "block": "qkd_kvs_attn",
+ "ref_tile": true,
+ "owner": "Claude:KV-INTEG2",
+ "purpose": "KV-INTEG/KITS-A 10-18 (RTL-BUILD-KV M1): kit of the generated singleton static tile qkd_kvs_attn.  Bench: LOCKSTEP of the kit top (one ck) against the die-bound tile of the same design point without OT_KV_TILE_KITS (per-child clock ports, all on the one die trunk), random inputs from reset + a phase with every child output wire forced random; mutants: a dropped child wire (1), two swapped wire slices (2), a missing child (3).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-integ2-kits-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "results/arch/qwen_kv_static_programme_1017",
+   "results/arch/qwen_kv_die",
+   "results/arch/qwen_kv_pvfin_1017",
+   "results/rtl/qwen_kv_die/kvs_kits_1018"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_attn u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv rtl/qwen_sys/split_20261014/qkd_attn_service_root.sv rtl/qwen_sys/split_20261014/qkd_attn_result_face_s.sv rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "attn_lockstep",
+    "cmd": "bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/attn_m0 attn 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=attn .* errors=0 mut=0",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/qwen_kv_die/kvs_kits_1018/attn_m0.log"
+   },
+   {
+    "name": "attn_mut1",
+    "cmd": "bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/attn_m1 attn 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=attn ",
+    "fail_regex": "^KVS_TILE FAIL tile=attn .* mut=1 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_1018/attn_m1.log"
+   },
+   {
+    "name": "attn_mut2",
+    "cmd": "bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/attn_m2 attn 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=attn ",
+    "fail_regex": "^KVS_TILE FAIL tile=attn .* mut=2 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_1018/attn_m2.log"
+   },
+   {
+    "name": "attn_mut3",
+    "cmd": "bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/attn_m3 attn 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=attn ",
+    "fail_regex": "^KVS_TILE FAIL tile=attn .* mut=3 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_1018/attn_m3.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_attn/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_attn/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_attn --out {RUN}/record/views/qkd_kvs_attn  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvs_attn/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvs_attn/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvs_attn/qkd_kvs_attn-i2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "NEW kit (RTL-BUILD-KV M1, KV-INTEG/KITS-A): generated static tile qkd_kvs_attn of the KV die (5 children: qkd_attn_cal_gen, qkd_attn_fault_root, qkd_attn_result_face_s, qkd_attn_service_root, qkd_native_attention_programme; hard: none), from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv (sha256 36f274261cab) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck (OT_KV_TILE_KITS).  Faces {'S': 809, 'N': 1092, 'E': 626} pins on 302.4 x 302.4 um (die frame record (302.4, 302.4) ASSUMED -> this outline for KV-PLAN3)."
+}

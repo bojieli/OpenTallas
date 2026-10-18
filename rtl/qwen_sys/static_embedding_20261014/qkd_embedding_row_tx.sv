@@ -18,7 +18,7 @@
 // (hbm_embedding_budget.first_emb_send - 1); a late, duplicate, foreign or extra word, a slot without a staged row, a
 // 66th slot or a fill_begin that would drop an unsent row latch fault and never move the schedule.  Flow control
 // exists only at the d2d boundary (the link's own replay layer), never here.
-// Size: 1 macro, 548 + 64 + 16 + 18 + 16 + 7 + ~6 flops.  Edges: 0 added on the d2d path (the port's codec edge).
+// Size: 1 macro, 548 + 64 + 16 + 18 + 16 + 7 + ~6 flops + 1 reset pin flop.  Edges: 0 added on the d2d path (the port's codec edge).
 // MUT (bench only): 1 = code word index field off by one; 2 = no residency check at the header slot;
 //                   3 = word n + 1 read one item late (the payload repeats the previous word).
 // ---------------------------------------------------------------------------------------------------------------------
@@ -70,8 +70,14 @@ module qkd_embedding_row_tx #(
         if (fill_begin) begin tok <= fill_token; ep <= fill_epoch; end
         if (word_v && word_scale && armed && n == 7'd0) scale <= word_data[15:0];
     end
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin
+    // r2 (KV-TILES-A 10-17): rst_n lands in ONE pin flop (plain D, no async term) whose Q is the async reset of every
+    // other register, so the port is a D pin under the die hold budget like every data pin (r1 FF -21.55 was the rst_n
+    // RESETN removal check straight from the port).  Same +1 edge as the flow's data pin registers: release stays
+    // aligned with the registered data faces.
+    (* keep *) reg rst_q;
+    always @(posedge ck) rst_q <= rst_n;
+    always @(posedge ck or negedge rst_q)
+        if (!rst_q) begin
             emb_tx_v <= 1'b0; fault <= 1'b0; armed <= 1'b0; filled <= 64'd0; scale_filled <= 1'b0; n <= 7'd0;
         end else begin
             emb_tx_v <= emb_tx_slot;

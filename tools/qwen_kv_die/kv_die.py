@@ -1018,6 +1018,9 @@ if KSD.ON:
     RTL.update({k_: KSD.RTL_FILE for k_ in KSD.KIND_MASTER.values()}, qkd_ectlk=KSD.bindings()['qkd_ectlk']['file'])
     if KSD.PVFIN:      # KV-PLAN-FIN: the stream PV final join element pvfin
         RTL.update(qkd_pvfin=KSD.PVFIN_FILE)
+    if KSD.AHUB_STATIC:    # KV-INTEG/AHUB: the static hub element (one clock entry; kv_static_die AHUB binding)
+        AHUB_CLK[:] = ['ck_c']
+        RTL.update(qkd_ahub=f'{KSD.AHUB_FILE} qkd_ahub_static_dw')
     if KSD.AFAULT:     # RTL-BUILD-KV/FAULT P7: the pair fault rides its own 1-b die word to the attention fault root
         for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):
             _pp = SPLIT_BINDINGS[_mn]['ports']
@@ -3359,7 +3362,8 @@ def masters(m, k=1, port_bits=None):
                 # cfg), so the MX origin only meets the M4 / M5 grids, as the rhead's W-face M4 clock does
                 mm.face(p, 1, 'E', 'M4', 88.0 if p == 'ck' else 95.0, 1)
                 continue
-            if bits == 1 and (p in ('ck', 'clk', 'rst_n', 'rsi', 'c_arst_n', 'rs') or p.startswith(('pll', 'rso'))):
+            if bits == 1 and (p in ('ck', 'clk', 'rst_n', 'rsi', 'c_arst_n', 'rs') or p.startswith(('pll', 'rso'))) and not (
+                    KSD.ON and KSD.KITS and mst in KSD.KIT_FACE):     # KITS-B: kit tiles draw clock / reset on a face
                 j = len([q for q in mm.order if mm.ports[q][0] == 'area'])
                 mm.area(p, 1, min(mm.w - 1.0, max(1.0, mm.w / 2 + ((j % 12) - 6) * 1.6)),
                         min(mm.h - 1.0, max(1.0, mm.h / 2 + (j // 12 - 5) * 1.6)), 1)
