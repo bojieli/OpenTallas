@@ -97,6 +97,18 @@ report_check_types -max_slew -max_capacitance -violators > /pilot/out/{corner}_d
 puts OT_STA_DONE
 '''
 
+STATION_RPT = r'''set fo [open /pilot/out/{corner}_station.rpt w]
+foreach inst [get_cells st_*] {{
+  set ps [get_pins [get_full_name $inst]/i*]
+  foreach d {{max min}} {{
+    set pe [lindex [find_timing_paths -path_delay $d -to $ps -group_path_count 1] 0]
+    set sl none; if {{$pe ne ""}} {{ catch {{ set sl [sta::format_time [$pe slack] 1] }} }}
+    puts $fo "[get_full_name $inst] $d $sl"
+  }}
+}}
+close $fo
+'''
+
 CLASSIFY = r'''#!/usr/bin/env python3
 # per-(link class, hop kind) slack classes from the pilot end-format reports (S81-DIE4 STA pilot)
 import json, re, sys, collections
@@ -159,6 +171,9 @@ def main():
     ap.add_argument('--standin-views', type=Path, default=None)
     ap.add_argument('--src-data-ps', type=float, default=25.0)
     ap.add_argument('--src-cko-ps', type=float, default=25.0)
+    ap.add_argument('--station-report', action='store_true',
+                    help='per relay station: worst setup / hold to its i[*] pins (out/<corner>_station.rpt): every hop, '
+                    'not only the worst 200k endpoints')
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--relay-ref', default='origin/main')
     ap.add_argument('--corners', nargs='+', default=['tt', 'ff'])
@@ -183,6 +198,8 @@ def main():
         for f in sorted(a.standin_views.glob('dv_*.lib')):
             (a.out / 'libs' / f.name).write_text(standin_contract(f.read_text(), a.src_data_ps, a.src_cko_ps, a.hop_fix == 'half'))
         sta = sta.replace('[glob $C/views/dv_*.lib]', '[glob /pilot/libs/dv_*.lib]')
+    if a.station_report:
+        sta = sta.replace('puts OT_STA_DONE', STATION_RPT + 'puts OT_STA_DONE')
     for c in a.corners:
         (a.out / f'sta_{c}.tcl').write_text(sta.format(corner=c, plat=PLAT, std=' '.join(STD[c])))
     (a.out / 'classify.py').write_text(CLASSIFY)
