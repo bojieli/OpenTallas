@@ -26,7 +26,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_dsdv_vstop #(
     parameter integer V   = 276,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // JREG 1 (default, every unit): in_* land in the stop's own inject flops.  JREG 0 (S81-NATIVE3 10-17, gunit L2):
+    // the caller already registers its inject sources at its pins (in_* are flop outputs, e.g. an OR of two pin-captured
+    // CTL rows), so the stop uses them as its inject flops: identical cycle behaviour, no second edge.
+    parameter integer JREG = 1
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -50,9 +54,19 @@ module ot_dsdv_vstop #(
 );
     localparam [2:0] K_XQ = 3'd1, K_XB = 3'd2;
     // ---------------------------------------------------------------- input flops
-    reg [V-1:0] is_, in_, jn, js; reg jnv, jsv; reg [7:0] tap_c, sink_c;
-    always @(posedge clk) begin is_ <= vi_s; in_ <= vi_n; jn <= in_n; js <= in_s; tap_c <= tap_k; sink_c <= sink_k; end
-    always @(posedge clk or negedge rst_n) if (!rst_n) begin jnv <= 1'b0; jsv <= 1'b0; end else begin jnv <= in_nv; jsv <= in_sv; end
+    reg [V-1:0] is_, in_; reg [7:0] tap_c, sink_c;
+    wire [V-1:0] jn, js; wire jnv, jsv;
+    always @(posedge clk) begin is_ <= vi_s; in_ <= vi_n; tap_c <= tap_k; sink_c <= sink_k; end
+    generate
+        if (JREG != 0) begin : g_jreg
+            reg [V-1:0] jn_q, js_q; reg jnv_q, jsv_q;
+            always @(posedge clk) begin jn_q <= in_n; js_q <= in_s; end
+            always @(posedge clk or negedge rst_n) if (!rst_n) begin jnv_q <= 1'b0; jsv_q <= 1'b0; end else begin jnv_q <= in_nv; jsv_q <= in_sv; end
+            assign jn = jn_q; assign js = js_q; assign jnv = jnv_q; assign jsv = jsv_q;
+        end else begin : g_jpin
+            assign jn = in_n; assign js = in_s; assign jnv = in_nv; assign jsv = in_sv;
+        end
+    endgenerate
 
     // ---------------------------------------------------------------- one direction: classify / forward / tap / inject
     // fr_* : continuation fragments still to pass (arrivals); ij_* : injected fragments still owed (injector)
