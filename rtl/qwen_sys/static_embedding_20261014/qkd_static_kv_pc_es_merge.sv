@@ -15,9 +15,17 @@
 // identity.  Size: 288 (merge) + ~350 (endpoint) flops.
 // MUT (bench only): 1 = no conflict fault; 2 = the strap identity check ignored; 3 = the embedding word wins a conflict.
 // ---------------------------------------------------------------------------------------------------------------------
+// KVJ-G2b 10-17 (coordinator 0cx+++ (b): the HBM side is elastic, the fixed return slot holds only after a re-timing
+// buffer): RETIME=1 holds the controller's er word when it arrives BEFORE the compiled return_slot (one outstanding read,
+// so one 260-b register) and presents it at the slot; an er on the slot edge passes straight through (the RETIME=0
+// behaviour, so every exact-slot schedule is unchanged).  Faults: the slot with no word (late beyond the schedule), a
+// second word while one is held, a word with no read pending, er[260] / er[258] as before.  The compiler's return_slot
+// is then the WORST-case controller latency, not an exact one.  RETIME=0 = the original exact-arrival endpoint
+// (lock-step equal to qkd_embedding_static_pc).
 module qkd_embedding_static_pc_strap #(
     parameter integer ROW0 = 24427,
-    parameter integer MUT  = 0
+    parameter integer MUT  = 0,
+    parameter integer RETIME = 0
 )(input wire ck,rst_n,boot_ready,
   input wire [1:0] strap_stack,input wire [4:0] strap_pc,
   input wire issue_v,input wire [17:0] token,input wire [5:0] word_index,
@@ -45,28 +53,41 @@ module qkd_embedding_static_pc_strap #(
     reg [15:0] epoch_q;
     wire wrong_home=(MUT==2)?1'b0:(stack!=strap_stack||pc!=strap_pc);
     assign outstanding=pending;
+    // RETIME: the held word (early arrival) or the word on the slot edge
+    reg h_v;
+    reg [259:1] h_d;
+    wire [260:0] eff=(RETIME!=0&&!er[0]&&h_v)?{er[260],h_d,1'b1}:er;
     always @(posedge ck) begin
         es[287:1] <= {1'b0,1'b0,bank,col,row,256'd0};
         if(issue_v) begin token_q<=token;word_q<=word_index;half_q<=half;scale_q<=scale;epoch_q<=epoch;end
-        beat_data<=er[256:1];beat_token<=token_q;beat_word<=word_q;
+        beat_data<=eff[256:1];beat_token<=token_q;beat_word<=word_q;
         beat_half<=half_q;beat_scale<=scale_q;beat_epoch<=epoch_q;
+        if(RETIME!=0&&er[0]&&!return_slot) h_d<=er[259:1];
     end
     always @(posedge ck or negedge rst_n)
-        if(!rst_n) begin pending<=0;beat_v<=0;corrected<=0;fault<=0;es[0]<=0;end
+        if(!rst_n) begin pending<=0;beat_v<=0;corrected<=0;fault<=0;es[0]<=0;h_v<=0;end
         else begin
             es[0]<=issue_v;
             beat_v<=return_slot;
-            corrected<=return_slot&&er[257];
+            corrected<=return_slot&&eff[257];
             if(return_slot) pending<=0;
             if(issue_v) pending<=1;
             if(issue_v&&(!boot_ready||pending||!valid_address||wrong_home)) fault<=1;
-            if(return_slot!=er[0] || (return_slot&&!pending) || er[260] || (return_slot&&er[258])) fault<=1;
+            if(RETIME==0) begin
+                if(return_slot!=er[0] || (return_slot&&!pending) || er[260] || (return_slot&&er[258])) fault<=1;
+            end else begin
+                if(er[0]&&!return_slot) begin h_v<=1; if(!pending||h_v) fault<=1; end
+                if(return_slot) h_v<=0;
+                if((return_slot&&!eff[0]) || (return_slot&&er[0]&&h_v) || (return_slot&&!pending) || er[260] ||
+                   (return_slot&&eff[258])) fault<=1;
+            end
         end
 endmodule
 
 module qkd_static_kv_pc_es_merge #(
     parameter integer ROW0 = 24427,
-    parameter integer MUT  = 0
+    parameter integer MUT  = 0,
+    parameter integer RETIME = 1          // KVJ-G2b: the die element re-times an early controller word onto its slot
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -103,7 +124,7 @@ module qkd_static_kv_pc_es_merge #(
     always @(posedge ck) rs_q <= rst_n;
     wire [287:0] ees;
     wire         emb_fault;
-    qkd_embedding_static_pc_strap #(.ROW0(ROW0), .MUT(MUT == 2 ? 2 : 0)) u_emb (.ck(ck), .rst_n(rs_q),
+    qkd_embedding_static_pc_strap #(.ROW0(ROW0), .MUT(MUT == 2 ? 2 : 0), .RETIME(RETIME)) u_emb (.ck(ck), .rst_n(rs_q),
         .boot_ready(emb_boot_ready), .strap_stack(cfg_stack), .strap_pc(pc),
         .issue_v(emb_issue_v), .token(emb_token), .word_index(emb_word_index), .half(emb_half), .scale(emb_scale),
         .epoch(emb_epoch), .return_slot(emb_return_slot), .es(ees), .er(er),

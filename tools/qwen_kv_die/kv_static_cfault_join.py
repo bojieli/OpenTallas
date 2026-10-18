@@ -70,7 +70,7 @@ def cfault_join(graph, root=K.ROOT):
         raise ValueError('HOST root ctrl_completion_fault is not an input')
     hw = hp['ctrl_completion_fault']['width']
     joins = [dict(consumer='host.ctrl_completion_fault', producer='cf_root.fault', lo=0, width=1,
-                  host_master=f'{B.HOST[0]}:{B.HOST[1]}', reduced_by_tree=dict(lo=1, width=hw - 1),
+                  host_master=f'{B.HOST[0]}:{B.HOST[1]}', **(dict(reduced_by_tree=dict(lo=1, width=hw - 1)) if hw > 1 else {}),
                   note='HOST consumes only |ctrl_completion_fault; bits [hw-1:1] are the tree-reduced per-PC bits '
                        '(narrow the port in the KVJ-A3 host cluster); same core clock family as the pc_path sources')]
     graph.setdefault('die_joins', []).extend(joins)
