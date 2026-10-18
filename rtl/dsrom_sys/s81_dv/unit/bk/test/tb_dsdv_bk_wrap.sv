@@ -32,6 +32,8 @@ module tb_dsdv_bk_wrap #(
     output wire         vf
 );
     localparam integer V = 276, LW = 7;
+    localparam integer RL = (UNIT == 0) ? 1 : 0;   // S81-TILES8/bk 10-18: dsdv_bk_sel rung relays u_rs / u_rn = +1 rung
+                                                   // cycle per direction (through beats and the drain CTL alike)
     localparam [2:0] IK = 3'd4, EK = 3'd5;
     localparam [7:0] UID = 8'h5B;
     assign vf = 1'b0;
@@ -162,8 +164,9 @@ module tb_dsdv_bk_wrap #(
     always @(posedge ck) begin
         vd <= {512'd0, 1'b0, 1'b1};
         if (rst && cyc > 40) begin
-            // vo at this edge corresponds to arrivals driven 3 posedges ago (driven at edge k -> visible -> vo after 2 more)
-            int k; k = cyc - 3;
+            // vo at this edge corresponds to arrivals driven 3 (+RL) posedges ago (driven at edge k -> visible -> vo after
+            // 2 more, + RL rung relay stages; the window moves with the CTL, so window checks use the same k)
+            int k; k = cyc - 3 - RL;
             if (k > rst_hi + 3 && k < fwd_a.size()) begin : g_chk
                 bit [V-1:0] ea, eb; bit inwin;
                 ea = fwd_a[k]; eb = fwd_b[k];
