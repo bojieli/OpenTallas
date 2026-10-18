@@ -2601,6 +2601,28 @@ def _relays(m):
                     if it_.orient in ('MX', 'R180'):
                         y_ = it_.h - y_
                     _PIN_HINT[(it_.name, p_)] = (it_.x + x_, it_.y + y_)
+    if PV_T and KSD.ASTK_ST and __import__('os').environ.get('OT_KV_ASTK_HINT', '1') == '1':
+        # KV-SDW2 10-18: the ASTK e-read ends are pin-hinted from pass 1 (as the V port vo / pr).  Unhinted, a pass routed
+        # pve_<st> between the NEAREST points of two ~10-mm-tall frames (strip 220 x 9675 beside pair 1555 x 12010): the
+        # chain ran along the die S / N edge, then the drawn pins (strip seam end, pair strip face) left 10-mm first hops
+        # (SDW=1 plan: pve_WS/ES/EN/WN unrepaired, the hinted re-plan never completed).  Strip: erd / vh<k> on its
+        # seam end (qkd_astk canonical N, qkd_astk_n canonical S), cal on canonical N; pair: ie / iee on the strip face
+        # (a re-plan pass's drawn-pin hints win: setdefault).
+        P_ = pvt_plan()
+        for it_ in m['insts']:
+            def die_xy_(cx, cy, it=it_):
+                fx_ = it.w - cx if it.orient in ('MY', 'R180') else cx
+                fy_ = it.h - cy if it.orient in ('MX', 'R180') else cy
+                return (it.x + fx_, it.y + fy_)
+            if it_.master in ('qkd_astk', 'qkd_astk_n'):
+                seam_y_ = it_.h if it_.master == 'qkd_astk' else 0.0
+                for p_ in ('erd',) + tuple(f'vh{k_}' for k_ in range(4)):
+                    _PIN_HINT.setdefault((it_.name, p_), die_xy_(it_.w / 2, seam_y_))
+                _PIN_HINT.setdefault((it_.name, 'cal'), die_xy_(it_.w / 2, it_.h))
+            elif it_.master in ('qkd_pvw_s', 'qkd_pvw_n'):
+                ctx_ = P_['face_pins']['strip']['x']
+                for p_, dx_ in (('ie', 60.0), ('iee', 90.0)):
+                    _PIN_HINT.setdefault((it_.name, p_), die_xy_(ctx_ + dx_, it_.h))
     if HOST_V14.get('trees') and 'serdes_host' in by:
         # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
         # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
