@@ -261,6 +261,7 @@
  ],
  "clock": "cts",
  "hold_budget": "die",
+ "slot_change_request": "IDX-SMALL 10-18, d4g plan (b): the v15 contract slot idx_sel (317.52x1164.24, 3.7:1, ~7.2k pins on a partial W face at 10.4/um) is superseded by the d4g grant slot idx_sel 600x450 (grants_d4g.json, FACES_ONLY, its E clock offset 581.3 lies outside a 450-um face). This kit takes 600x450 with W in_line+control+observes, E clock (SE end)+selected_line, S out_line (<= 5.8 pins/um); H-D4G places the xq root node W and the link E.",
  "job": {
   "owner": "Claude OWNERS-HBM/IDX-SMALL 1018",
   "branch": "claude/hbm-idx-small-1018",

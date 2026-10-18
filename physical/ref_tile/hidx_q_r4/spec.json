@@ -229,6 +229,7 @@
  "inhold": false,
  "outhold": false,
  "hold_budget": "die",
+ "slot_change_request": "IDX-SMALL 10-18, d4g plan (b): RTL2 reuses ot_hbm_idx_query_static once per quadrant on its own VM (lanes/HBM-B-RTL2.md ## IDX), so the v15 contract slot idx_q (449.28 sq, clock E) is superseded; the d4g grant slot idx_q (grants_d4g.json, 260x260, FACES_ONLY) holds this 170.64x164.16 kit; every pin incl. clk on W beside the pin-flop mass (d4g lists the clock on E: H-D4G re-faces the slot or accepts W).",
  "params": {},
  "children": [],
  "inter": [],
