@@ -104,12 +104,12 @@
    140.4
   ],
   "ck": [
-   30,
-   30.4
+   100,
+   100.4
   ],
   "rst_n": [
-   34,
-   34.4
+   104,
+   104.4
   ],
   "fill_begin": [
    60,
@@ -135,8 +135,8 @@
  "slot_change_request": "KVJ-C2 10-17 (plan N2): new master qkd_embedding_row_tx, 1 per die beside the d2d KV end (port-2 TX on W toward the d2d end, the qkd_embedding_static_join word face on E toward the 4 return trains, compiled fill on S). 216 x 151.2: one 64x512 macro N, contiguous std-cell band S (548-b output register next to rd_out on the macro W face).",
  "job": {
   "owner": "Claude:KVJ-C2 (Q-KVJOIN lane, kv_static_join_plan.md)",
-  "branch": "claude/kvj-c2-kits-1017",
-  "tag": "r1",
+  "branch": "claude/kvj-c2-rowtx-1017",
+  "tag": "r2",
   "purpose": "qkd_embedding_row_tx: 64x512 row stage + 548-b d2d port-2 formatter (kind 8/6/7), static, fault never stall",
   "extra_paths": [
    "rtl/test",
@@ -200,5 +200,9 @@
  "pin_regs": {
   "enable": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": "6.0"
+ },
+ "structural_change": "r2 (KV-TILES-A 10-17) after r1 c6c3c5e83 NEEDS_RTL (base TT +162.06 / FF +5.02 / DRC 1; arg1 PD .45 FF -21.55 / DRC 3; arg2 PD .55 FF -10.27 / DRC 2). Hold class: ONE class, the rst_n port -> async RESETN removal check (arg1 worst input->reg -21.55 while every register D pin incl. all pin flops >= +12.38; rst_n is the only port the flow's pin registers exclude). Fix (RTL): rst_n lands in one kept pin flop whose Q is the async reset (D pin under the die hold budget; release +1 edge = same as the flow's data pin registers). DRC class: all M4 Shorts 1.26 um inside the SRAM east (w_mask/wd_in) pin face, x 192.42-193.68 vs OBS edge 193.68, clock-leaf and signal nets = jogs just past the default 1.2 um macro-edge guard (same shape as SU bank r5/r6); guard depth 6.0 um (routed DRC 0 on SU bank / ds-coll / hrow5 SRAM edges). Clock: TT insertion 325 / spread 110 with ck at the SW corner (x 30) while the register mass is the W out-flop and E pin-flop columns: ck (and rst_n) move to the S-face centre (x 100 / 104). RTL otherwise unchanged; bench exact PASS, mutants 1/2/3 FAIL."
 }

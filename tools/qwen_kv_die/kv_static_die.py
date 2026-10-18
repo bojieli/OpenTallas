@@ -56,8 +56,22 @@ HROOT_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root.sv'
 # tile and its two 6-mm feeds (root -> fan 334 b, fan -> root 144 b) from the stack control channels.
 FANFOLD = HROOT and os.environ.get('OT_KV_FANFOLD', '0') == '1'
 # one generated tile file per design point (the ECTL frame pairing re-orders the fan's frame cfg words)
+# KV-INTEG2 10-18: ONE kit design point OT_KV_TILE_KITS=1 (alias OT_KV_KVS_CK1=1; default off, so every existing design
+# point and its tile file are unchanged; tile file suffix '_k').  Under it every kit tile takes ONE clock port per domain
+# ('ck' core / 'hck' HBM) instead of one '<child>__ck' port per child (each child's entry already joined the same region
+# trunk, _clocks_resets: clk_core_<r> / clk_hbm_<r>, so the die net is unchanged; the kit gets one CTS root beside its
+# register mass), and every port sits on a fixed canonical face shared by the die frame and the kit:
+#   KITS-A singletons kvs_ctl / kvs_attn / kvs_emb (CK1_KINDS, faces KVS_FACES): hard children with a CLOSED view
+#     (KIT_HARD) are instantiated without #() when every parameter equals the RTL default (the cluster gate refuses
+#     parameters on a hard child);
+#   KITS-B replicated grp / grp_h / pc / pc_h / hroot (KIT_KINDS, faces KIT_FACE): FLAT leaf kits (kit_clocks).
+KITS = os.environ.get('OT_KV_TILE_KITS', os.environ.get('OT_KV_KVS_CK1', '0')) == '1'
+KVS_CK1 = KITS
+CK1_KINDS = ('ctl', 'attn', 'emb')
+KIT_HARD = ('qkd_embedding_row_tx',)
+KIT_KINDS = ('grp', 'grp_h', 'pc', 'pc_h', 'hroot')
 RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
-            ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + '.sv')
+            ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') + '.sv')
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -457,8 +471,8 @@ def tile(die_inst):
                 continue
             if items is None:
                 if p in CORE_CK or p in HBM_CK:
-                    pn = add_port(f'{loc[n]}__{p}', dir='input', width=1, cls='clock',
-                                  domain='hbm' if p in HBM_CK else 'core')
+                    ckn = (('hck' if p in HBM_CK else 'ck') if KVS_CK1 and kind in CK1_KINDS else f'{loc[n]}__{p}')
+                    pn = add_port(ckn, dir='input', width=1, cls='clock', domain='hbm' if p in HBM_CK else 'core')
                 elif p in RESETS:
                     dom = 'hbm' if (p in HBM_RST or (p == 'rst_n' and hbm_only)) else 'core'
                     pn = add_port('hrst_n' if dom == 'hbm' else 'rst_n', dir='input', width=1, cls='reset', domain=dom)
@@ -477,6 +491,11 @@ def tile(die_inst):
             s = K.source(I[n]['source'], I[n]['module'])
             dflt = _rtl_defaults(I[n]['source'], I[n]['module'])
             par = {k: (dflt.get(k) if v is None else v) for k, v in par.items()}
+        if KVS_CK1 and kind in CK1_KINDS and I[n]['module'] in KIT_HARD:
+            dflt = _rtl_defaults(I[n]['source'], I[n]['module'])
+            if any(str(dflt.get(k)) != str(v) for k, v in par.items()):
+                raise ValueError(f'kv_static_die: hard child {n} ({I[n]["module"]}) needs non-default parameters {par}')
+            par = {}
         ps = (' #(' + ', '.join(f'.{k}({v})' for k, v in par.items()) + ')') if par else ''
         body.append(f'    {I[n]["module"]}{ps} u_{loc[n]} (' + ', '.join(cs) + ');')
     # outputs: member output slices read by another tile / an existing die master, plus the die-level exports
@@ -676,6 +695,9 @@ def module_text(t, name):
          f'module {name} (']
     pl = []
     for pn, v in t['ports'].items():
+        if KITS and t['kind'] in CK1_KINDS + KIT_KINDS and v['cls'] == 'clock':
+            pl.append(f'    {v["dir"]} wire {pn}')         # the kit's CTS root: a scalar port
+            continue
         pl.append(f'    {v["dir"]} wire [{v["width"] - 1}:0] {pn}')
     L.append(',\n'.join(pl))
     L.append(');')
@@ -969,9 +991,39 @@ def add_hroots(tiles):
     return tiles
 
 
+def kit_clocks(tiles):
+    """OT_KV_TILE_KITS: per kit tile one clock port per domain (ck / hck), every child clock pin on it.  Pure renaming:
+    every child entry of a kind already joined the same region trunk (_clocks_resets: clk_core_<r> / clk_hbm_<r>)."""
+    for t in tiles.values():
+        if t['kind'] not in KIT_KINDS:
+            continue
+        P = t['ports']
+        ren = {pn: ('hck' if v.get('domain') == 'hbm' else 'ck') for pn, v in P.items() if v['cls'] == 'clock'}
+        if not ren:
+            continue
+        clash = [n for n in ('ck', 'hck') if n in P and n not in ren]
+        if clash:
+            raise ValueError(f'kv_static_die KITS: {t["inst"]} already has a non-clock port {clash}')
+        Q = OrderedDict()
+        for pn, v in P.items():
+            nm = ren.get(pn, pn)
+            if nm not in Q:
+                Q[nm] = v
+        t['ports'] = Q
+        rx = re.compile(r'\b(' + '|'.join(re.escape(k) for k in sorted(ren, key=len, reverse=True)) + r')\b')
+        sub = lambda x: rx.sub(lambda m_: ren[m_.group(1)], x)           # noqa: E731
+        t['body'] = [sub(x) for x in t['body']]
+        t['wires'] = [sub(x) for x in t['wires']]
+        for v in Q.values():
+            if v.get('expr'):
+                v['expr'] = sub(v['expr'])
+    return tiles
+
+
 def all_tiles():
     if 'tiles' not in _G:
-        _G['tiles'] = add_fans(pack({d: tile(d) for d in members()}))
+        t_ = add_fans(pack({d: tile(d) for d in members()}))
+        _G['tiles'] = kit_clocks(t_) if KITS else t_
     return _G['tiles']
 
 
@@ -1550,7 +1602,31 @@ _ECTL_FACE = {'si': 'E', 'so': 'E', 't0': 'S', 'e0': 'S', 'e1': 'S', 's0': 'S', 
               's2': 'N', 's3': 'N'}
 
 
+# OT_KV_TILE_KITS: complete canonical face map of the kit tiles (die frame = kit; shared by kvs_tile_kits.py).  Group (R0 =
+# W stacks, MY = E stacks): W = control channel (its 4 PCs' words, PC pass words, clocks / resets / identity straps), E =
+# K / V channel, N / S = the folded fan chain.  PC: W = the PHY's DFI face (abutted), E = the HOST slice / control channel
+# (clocks, resets, straps, er, completion), N / S = the PC chain + group words.  Root (R0 for all four): N = the control /
+# embedding tile words, S = the stack (group chain + PC chain head + return train), E = the eight ECTL frames, W = clock.
+KIT_FACE = {
+    'qkd_kvs_grp': dict(kreq='E', vreq='E', rsp='E', krsp='E', i_ctl='N', o_ctl='N', o_dn='S', i_up='S'),
+    'qkd_kvs_pc': dict(i_next='N', o_next='N', pc__ki='N', i_grp='N', o_grp='N', x__est__0_1='N', pc__fo='N',
+                       o_prev='S', i_prev='S', pc__ko='S', pc__fi='S',
+                       pc__pi='W', pc__po='W', pc__front_hbm_data='W', pc__return_hbm_data='W'),
+    'qkd_kvs_hroot': dict(i_ctl='N', o_ctl='N', o_emb='N', o_pc='S', i_r='S', o_ch0='S', i_g='S', o_kg='E',
+                          **{f'o_c{e}': 'E' for e in range(8)}),
+}
+KIT_FACE['qkd_kvs_grp_h'] = KIT_FACE['qkd_kvs_grp']
+KIT_FACE['qkd_kvs_pc_h'] = KIT_FACE['qkd_kvs_pc']
+KIT_DEFAULT_FACE = dict(qkd_kvs_grp='W', qkd_kvs_grp_h='W', qkd_kvs_pc='E', qkd_kvs_pc_h='E', qkd_kvs_hroot='W')
+
+
 def pin_face(master, port):
+    if KITS and master in KIT_FACE:
+        return KIT_FACE[master].get(port, KIT_DEFAULT_FACE[master])
+    return _pin_face(master, port)
+
+
+def _pin_face(master, port):
     """canonical (R0) face of a static tile's port, or None (auto): the K / V words on the group's engine-side face (the
     landing <-> V port / ECTL channel), every control word (fan, PC bundles) on its PHY-side face (the control channel
     between the HOST slices and the groups), so the control traffic never takes the K / V channel's relay spots"""
@@ -1579,16 +1655,46 @@ def pin_face(master, port):
         f_ = dict(i_next='N', o_next='N', pc__ki='N', o_prev='S', i_prev='S', pc__ko='S', i_grp='N', o_grp='N').get(port)
         if f_:
             return f_
+    if KVS_CK1 and master in KVS_FACES:   # KITS-A kits physical/ref_tile/qkd_kvs_{ctl,attn,emb}: the kit uses these faces
+        return kvs_face(master, port)
     if master == 'qkd_pvfin':          # kit qkd_pv_fin_s faces
         return dict(p0='S', p1='N', fo='W', ff='W').get(port, 'E')
     return None
 
 
 
+# KV-INTEG/KITS-A 10-18: canonical (R0) faces of the singleton tiles (die plan m1 placement: kvs_ctl in the centre band
+# between the sequencer (S) and the HOST root / D2D end (N), the W / E stack roots' words leave across the top band W / E;
+# kvs_attn W of the N PV pair top, D2D end to its N / NE, the PV final join and the pair strips S; kvs_emb W of the D2D
+# end (E), the W stack roots' return trains W, the E ones + the ctl word S).  Rules by port name so a regenerated tile
+# (FAULT / BOOT add or change ports) gets faces mechanically: first match wins, the last entry is the default.
+KVS_FACES = {
+    'qkd_kvs_ctl': [('W', r'^[io]_hroot_W[SN]$'), ('E', r'^[io]_hroot_E[SN]$'), ('S', r'^(lp|o_attn|ck|rst_n)$'),
+                    ('N', r'.')],
+    'qkd_kvs_attn': [('N', r'^d2d__(srx|rx_payload|att_tx_slot|att_tx_kind|att_tx_beat)$'),
+                     ('E', r'^(attn__tx_valid|attn__tx_payload|i_ctl)$'), ('S', r'.')],
+    'qkd_kvs_emb': [('W', r'^i_hroot_W[SN]$'), ('S', r'^(i_hroot_E[SN]|i_ctl|ck|rst_n)$'), ('E', r'.')],
+}
+
+
+def kvs_face(master, port):
+    for f_, rx in KVS_FACES[master]:
+        if re.search(rx, port):
+            return f_
+    raise ValueError(f'kvs_face: no face for {master}.{port}')
+
+
 def face_order(master, face, ports):
     """KV-PLAN3: along-face order (from the face origin) of a static tile's pins, or the given order.  The group's W face
     carries its four PCs' words: interleave i_pc<j> / o_pc<j> bottom-up so pair j sits level with PC j (PC k of the
     slot = 4 slot + j, bottom-up; the even spread puts pair j's centre within ~125 um of PC j's centre)"""
+    if KITS and master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'W':
+        # kit: PC pairs 0 / 1 below, the clocks / resets / straps / pass words mid-face (beside the register mass), 2 / 3 above
+        def key(p):
+            if p[:4] in ('i_pc', 'o_pc') and p[4:].isdigit():
+                return (int(p[4:]) + (1 if int(p[4:]) >= 2 else 0), p[0] == 'o', p)
+            return (2, p not in ('ck', 'hck'), p)
+        return sorted(ports, key=key)
     if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'W':
         def key(p):
             if p[:4] in ('i_pc', 'o_pc') and p[4:].isdigit():
