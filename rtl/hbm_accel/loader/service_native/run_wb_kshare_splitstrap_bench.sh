@@ -33,6 +33,9 @@ for c in "${cases[@]}"; do
  else
   test "$rc" != 0 && grep -q 'WB_INTEGRITY' "$out/$c.log"
  fi
+ # SVC-SMALL 10-18: surface the tb verdict/count lines on stdout (the closure loop reads only this output;
+ # without them a qualified run had no count line -> VACUOUS)
+ grep -E '^PASS tb_hbm_svc_wb_kshare_splitstrap_q' "$out/$c.log" | head -3 || true
  echo "QUALIFIED $c expected_exit=$rc"
  # Keep source-bound logs; generated C++ and objects are disposable after the verdict.
  rm -rf "$out/obj-$c"

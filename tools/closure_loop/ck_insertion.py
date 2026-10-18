@@ -166,7 +166,10 @@ set ot_ck_clk [lindex $ot_ck_selected 0]
 dict for {{i cp}} $regs {{
   set a [ot_ck_arr [get_pins $cp] $ot_ck_clk]
   if {{$a eq "" || $a eq "INF" || $a eq "-INF"}} continue
-  puts "OT_CK [expr {{[dict exists $bnd $i] ? 1 : 0}}] $a"
+  set ot_ck_m ""
+  set ot_ck_c [get_cells -quiet -of_objects [get_pins $cp]]
+  if {{[llength $ot_ck_c]}} {{ set ot_ck_dm [[ord::get_db] findMaster [get_property $ot_ck_c ref_name]]; if {{$ot_ck_dm ne "NULL" && [$ot_ck_dm isBlock]}} {{ set ot_ck_m [$ot_ck_dm getName] }} }}
+  puts "OT_CK [expr {{[dict exists $bnd $i] ? 1 : 0}}] $a $ot_ck_m"
 }}
 foreach inst [[ord::get_db_block] getInsts] {{
   if {{![[$inst getMaster] isBlock]}} continue
@@ -240,6 +243,36 @@ def macro_outliers(rec, slew_ps=MC_SLEW_PS, late_ps=MC_LATE_PS):
                 out.setdefault(x["pin"], []).extend(why)
     return dict(n=n, slew_ps=slew_ps, late_ps=late_ps, flag=bool(out),
                 outliers=[dict(pin=k, why="; ".join(v)) for k, v in sorted(out.items())])
+
+
+CTP_RE = re.compile(r"timing_type\s*:\s*max_clock_tree_path\s*;.*?values\(\"([\d.]+)\"\).*?values\(\"([\d.]+)\"\)", re.S)
+
+
+def child_refs(root, mlibs, corner):
+    """CHILD-FLOP (SM-RP4 2026-10-18, owner 0dq "child-flop spread for a cluster"): {block master: (R ps, basis)} at this
+    corner for every hard child whose liberty the route reads.  R = the child's routed boundary-register insertion
+    (views/<child>/insertion.json <corner>.boundary.mean, the reference its pin flops launch / capture at), else the
+    lib's max_clock_tree_path.  A hard child's clock pin is a register to all_registers (its ETM carries the setup /
+    hold checks), so its RAW pin arrival -- placed EARLY by the spine by exactly this R -- is not a flop arrival."""
+    out = {}
+    for lib in mlibs:
+        host = Path(root) / lib[len("/src/"):]
+        name = re.sub(rf"_{corner}\.lib$", "", host.name)
+        ij = host.parent / "insertion.json"
+        try:
+            b = ((json.loads(ij.read_text()).get(corner) or {}).get("boundary") or {}) if ij.is_file() else {}
+        except (OSError, ValueError):
+            b = {}
+        if b.get("n") and b.get("mean") is not None:
+            out[name] = (float(b["mean"]), "insertion.json boundary mean")
+            continue
+        try:
+            vals = [float(x) for m in CTP_RE.finditer(host.read_text(errors="replace")) for x in m.groups()]
+        except OSError:
+            vals = []
+        if vals:
+            out[name] = (max(vals), "lib max_clock_tree_path")
+    return out
 
 
 def stats(v):
@@ -328,17 +361,29 @@ def main():
             out = result.stdout
             if result.returncode:
                 raise SystemExit(f"{corner}: clock insertion replay failed ({result.returncode})\n{out[-1500:]}\n{result.stderr[-1500:]}")
-        b, al = [], []
-        for m in re.finditer(r"^OT_CK (\d) (\S+)", out, re.M):
+        b, al, cb, cal, craw = [], [], [], [], {}
+        refs = child_refs(sroot, mlibs, corner) if sroot else {}
+        for m in re.finditer(r"^OT_CK (\d) (\S+)(?: (\S+))?[ \t]*$", out, re.M):
             x = float(m[2])
             al.append(x)
             if m[1] == "1":
                 b.append(x)
+            if m[3]:                         # a hard child's clock pin: its flops sit R later (unknown R: kept raw)
+                r = refs.get(m[3])
+                craw.setdefault(m[3], [r[1] if r else "no reference: raw pin arrival", r[0] if r else 0.0, 0])[2] += 1
+                x = x + (r[0] if r else 0.0)
+            cal.append(x)
+            if m[1] == "1":
+                cb.append(x)
         mrows = [(m[1], float(m[2]), float(m[3]), m[4])
                  for m in re.finditer(r"^OT_MC (\S+) (\S+) (\S+) (\S+)", out, re.M)]
         rec[corner] = dict(boundary=stats(b), all=stats(al), errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
                            macros=macro_summary(mrows, round(sum(al) / len(al), 1) if al else None),
                            macro_libs=len(mlibs))
+        if craw:
+            rec[corner]["child_flop"] = dict(boundary=stats(cb), all=stats(cal),
+                                             refs={k: dict(basis=v[0], ref_ps=round(v[1], 1), pins=v[2])
+                                                   for k, v in sorted(craw.items())})
         if not al and corner == "tt" and not need_tt:
             continue                     # TT is informational for an SS-corner route
         if not al:

@@ -462,10 +462,20 @@ def relaxed_rule_requirement(needs, clock, gate=None):
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})
             tt, ff = sp.get("tt"), sp.get("ff")
             ok = tt is not None and tt[0] <= CLOCK_PIN_SPREAD_MAX_PS and (ff is None or ff[0] <= CLOCK_PIN_SPREAD_MAX_PS)
+            waived = ""
+            w = clock.get("clock_rule_waiver") if isinstance(clock, dict) else None
+            if not ok and tt is not None and isinstance(w, dict):
+                # S81-DEC5 10-18: the kit job's recorded per-pair waiver (HANDOFF 0ga), the same rule as the gate's
+                import sys
+                sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+                import textbook_lint as TL
+                ok, note, _ = TL.clock_waiver_eval(clock, w)
+                waived = f" -- WAIVED: {note}" if ok else ""
             text = ("0dq: no TT spread in the gate report" if tt is None else
                     f"0dq: TT {tt[1]} spread {tt[0]:.1f} ps" + (f", FF {ff[1]} spread {ff[0]:.1f} ps" if ff else
                                                                ", FF not reported (left to the routed audit)")
-                    + (f" <= {CLOCK_PIN_SPREAD_MAX_PS:.0f}" if ok else f" (limit {CLOCK_PIN_SPREAD_MAX_PS:.0f}: FAIL)"))
+                    + (waived if waived else f" <= {CLOCK_PIN_SPREAD_MAX_PS:.0f}" if ok
+                       else f" (limit {CLOCK_PIN_SPREAD_MAX_PS:.0f}: FAIL)"))
             rows.append(dict(requires=n, ok=ok, text=text, tt=tt and list(tt), ff=ff and list(ff),
                              ff_left_to_routed_audit=ff is None))
         else:
