@@ -35,7 +35,17 @@
       "x_wv",
       "x_wa",
       "x_wm",
-      "x_wd"
+      "x_wd",
+      "ve_rv",
+      "ve_rc",
+      "ve_rh",
+      "ve_rk",
+      "ve_rw",
+      "ve_pv",
+      "ve_pc",
+      "ve_phh",
+      "ve_pkk",
+      "ve_pdd"
     ],
     "E": [
       "u_v",
@@ -44,7 +54,16 @@
       "um_v",
       "um_q",
       "um_b",
-      "um_i"
+      "um_i",
+      "ve_av",
+      "ve_ac",
+      "ve_ah",
+      "ve_aval",
+      "ve_ag",
+      "ve_ov",
+      "ve_oc",
+      "ve_oy",
+      "ve_fi"
     ],
     "S": [
       "clk",
@@ -61,6 +80,12 @@
       "ra_vi",
       "ra_ri",
       "ra_fi",
+      "e_v",
+      "e_c",
+      "e_d",
+      "g_v",
+      "g_c",
+      "g_d",
       "fault"
     ]
   },
@@ -81,12 +106,12 @@
       "v": "M3 M5"
     }
   },
-  "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice (SU lane engine, helper S81-SLICE-SU); flop-first pins, die hold budget.",
+  "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice (SU lane engine, helper S81-SLICE-SU); flop-first pins, die hold budget. RTL-BUILD-S81 10-18: + op 14 ENG (Engram mix feeder of the beat's ve sub-leaf: 4 kb h stash, gate latch, write-back) and the ve / e / g seams.",
   "job": {
-    "owner": "Claude:S81-SLICE-SU",
-    "branch": "claude/s81sl-su-1017",
+    "owner": "Claude:RTL-BUILD-S81",
+    "branch": "claude/rtl-build-s81-1018-int",
     "tag": "s81sl_vs",
-    "purpose": "S81-SLICE-SU: beat-leaf SU lane engine (QB/RA/RB/QR/MOE + SW/RA sequencing) to closure (TT setup / FF hold / DRC 0 + native audit).",
+    "purpose": "RTL-BUILD-S81: beat-leaf SU lane engine + op 14 ENG feeder to closure (TT setup / FF hold / DRC 0 + native audit).",
     "extra_paths": [
       "rtl/dsrom_sys/s81_dv/slice",
       "rtl/dsrom_sys/s81_suhc",
@@ -101,7 +126,11 @@
       "tools/hdc_golden.py",
       "tools/hdc_golden_v41.py",
       "tools/rtl_hdc_v41_blockdot_campaign.py",
-      "tools/dsrom_su_swiglu.py"
+      "tools/dsrom_su_swiglu.py",
+      "rtl/dsrom_sys/s81_dv/eng",
+      "rtl/dsrom_sys/engram/mix",
+      "tools/s81_dv/ve_golden.py",
+      "physical/hbm_norm_split_20261008/sources.f"
     ],
     "benches": [
       {
@@ -159,6 +188,32 @@
         "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=6 L0$",
         "threads": 4,
         "peak_ram_gb": 6
+      },
+      {
+        "name": "slvs_eng_exact",
+        "cmd": "bash tools/s81_slice/leaf_eng_bench.sh {RUN}/slvs_eng_m0 0",
+        "expect": "pass",
+        "pass_regex": "^PASS leaf_eng MUT=0 seed=7$",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slvs_eng_mut7",
+        "cmd": "RAW=1 bash tools/s81_slice/leaf_eng_bench.sh {RUN}/slvs_eng_m7 7",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 6,
+        "fail_regex": "^LEAFENG mut=7 .*mismatches=[1-9]",
+        "fail_witness": "results/rtl/rtl_build_s81_1018/int/witness_slvs_eng_mut7.log"
+      },
+      {
+        "name": "slvs_eng_mut8",
+        "cmd": "RAW=1 bash tools/s81_slice/leaf_eng_bench.sh {RUN}/slvs_eng_m8 8",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 6,
+        "fail_regex": "^LEAFENG mut=8 .*mismatches=[1-9]",
+        "fail_witness": "results/rtl/rtl_build_s81_1018/int/witness_slvs_eng_mut8.log"
       }
     ],
     "views_to": "physical/ref_tile/s81sl_vs/views",
@@ -169,127 +224,8 @@
     "reason": "Source-registered (S81-SLICE-SU): every data input lands in a flop at the pin (the *_c / *_q capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam."
   },
   "util": 0.52,
-  "std_area_um2": 8200,
-  "pin_ranges": {
-    "s_v": [
-      6.48,
-      8.887
-    ],
-    "s_d": [
-      8.887,
-      50.521
-    ],
-    "x_rv": [
-      50.521,
-      52.928
-    ],
-    "x_ra": [
-      52.928,
-      57.555
-    ],
-    "x_qv": [
-      57.555,
-      59.961
-    ],
-    "x_qd": [
-      59.961,
-      125.28
-    ],
-    "x_wv": [
-      6.48,
-      9.041
-    ],
-    "x_wa": [
-      9.041,
-      15.206
-    ],
-    "x_wm": [
-      15.206,
-      20.571
-    ],
-    "x_wd": [
-      20.571,
-      125.28
-    ],
-    "u_v": [
-      6.48,
-      9.023
-    ],
-    "u_i": [
-      9.023,
-      12.33
-    ],
-    "u": [
-      12.33,
-      112.432
-    ],
-    "um_v": [
-      112.432,
-      114.974
-    ],
-    "um_q": [
-      114.974,
-      117.517
-    ],
-    "um_b": [
-      117.517,
-      120.059
-    ],
-    "um_i": [
-      120.059,
-      125.28
-    ],
-    "sw_v": [
-      6.48,
-      8.839
-    ],
-    "sw_d": [
-      8.839,
-      62.042
-    ],
-    "sw_w": [
-      62.042,
-      70.582
-    ],
-    "sw_lim": [
-      70.582,
-      79.122
-    ],
-    "sw_vi": [
-      79.122,
-      81.482
-    ],
-    "sw_ri": [
-      81.482,
-      96.402
-    ],
-    "sw_fi": [
-      96.402,
-      98.762
-    ],
-    "ra_v": [
-      98.762,
-      101.121
-    ],
-    "ra_x": [
-      101.121,
-      109.662
-    ],
-    "ra_vi": [
-      109.662,
-      112.021
-    ],
-    "ra_ri": [
-      112.021,
-      120.561
-    ],
-    "ra_fi": [
-      120.561,
-      122.921
-    ],
-    "fault": [
-      122.921,
-      125.28
-    ]
+  "outline": {
+    "w": 216.0,
+    "h": 216.0
   }
 }

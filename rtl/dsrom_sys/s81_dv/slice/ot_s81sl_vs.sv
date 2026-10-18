@@ -38,15 +38,17 @@
 //           elements of this beat; golden tools/hdc_golden_v41.py engram_layer).  imm[30] = phase.  The beat's h is first
 //           copied into the leaf store by vp HSTORE (32 rows at Hb, vn's half-row layout: half row i = rows Hb + 2 i,
 //           Hb + 2 i + 1 = elements 4 i .. 4 i + 3 of all 4 copies, copy j element 4 i + e at bits (4 j + e) * 16).
-//           phase 0 REDUCE  n = 64, a0 = Hb, a1 = KWb: 16 h row-pair reads (one a cycle) into the h stash (4 kb), then
-//                   64 reads of the compiler-fixed K / W pairs (row KWb + 2 q = K[j][4 i ..], KWb + 2 q + 1 = W[j][4 i ..],
-//                   q = 16 j + i, copy-major) -> one ve quad a cycle (GAP 0); the 4 ve beat partial triples (hh, kk, dd)
+//           K / W / V region (compiler row map results/arch/s81_dv_1016/eng/kv_rowmap.json, A0 per Engram layer): K_j at
+//           A0 + 16 j (element 4 r + w at row A0 + 16 j + r, word w), W_j at A0 + 64 + 16 j, V at A0 + 128 (144 rows).
+//           phase 0 REDUCE  n = 64, a0 = Hb, a1 = A0: 16 h row-pair reads (one a cycle) into the h stash (4 kb), then
+//                   64 reads alternating K_j and W_j row pairs (8 elements = 2 quads each; copy-major) -> ve quads, one a
+//                   cycle after the first pair (GAP 0); the 4 ve beat partial triples (hh, kk, dd)
 //                   leave the leaf on e_v / e_c / e_d (pin flops, toward xr -> xfin ENG).  Done = 4th triple out.
 //                   The gate latch is cleared at the command.
 //           gates   g_v / g_c / g_d (eg -> centre -> this leaf): gate of copy g_c latched; a second gate of one copy
 //                   before the next REDUCE is a sticky fault.
-//           phase 1 ADD  n = 32, a0 = Vb, a1 = Hb' (write-back base): all 4 gates must be latched (else fault, command
-//                   refused).  32 reads of the V row pairs (Vb + 2 s = V[8 s .. 8 s + 7], re-read per copy) -> one ve add
+//           phase 1 ADD  n = 32, a0 = A0, a1 = Hb' (write-back base): all 4 gates must be latched (else fault, command
+//                   refused).  32 reads of the V row pairs (A0 + 128 + 2 s = V[8 s .. 8 s + 7], re-read per copy) -> one ve add
 //                   beat a cycle (8 elements of copy j = read >> 3, h from the stash, gate j) -> the 32 BF16 results land
 //                   in the stash in place (copy j's slots only) -> 16 row-pair writes Hb' + 2 i (the h layout) -> vp HLOAD
 //                   moves them back into vn's h store.  Done = last write.
@@ -191,13 +193,16 @@ module ot_s81sl_vs #(
                 x_rv <= (rs[2:0] & cad) == 3'd0;
             end
         end
+    wire [8:0] rs_e = rs - 9'd16;                    // ENG REDUCE K / W read r: copy r[6:4], pair r[3:1], W when r[0]
     always @(posedge clk)
         case (op)
             OP_MOE: x_ra <= a0 + {3'd0, rs[5:3], 4'd0} + {6'd0, rs[2:0], 1'b0};
             OP_RA:  x_ra <= a0 + {2'd0, rs[8:3], 1'b0};
             OP_SW:  x_ra <= a0 + {1'b0, rs[8:2], 1'b0};
             OP_QR:  x_ra <= a0 + {rs[8:1], 1'b0};
-            OP_ENG: x_ra <= ph ? a0 + {6'd0, rs[2:0], 1'b0} : (rs < 9'd16) ? a0 + {rs[8:0], 1'b0} : a1 + {rs[8:0] - 9'd16, 1'b0};
+            OP_ENG: x_ra <= ph ? a0 + 10'd128 + {6'd0, rs[2:0], 1'b0} :
+                           (rs < 9'd16) ? a0 + {rs[8:0], 1'b0} :
+                           a1 + {3'd0, rs_e[0], 6'd0} + {3'd0, rs_e[6:4], 4'd0} + {6'd0, rs_e[3:1], 1'b0};
             default: x_ra <= a0 + {rs[8:0], 1'b0};
         endcase
 
@@ -311,7 +316,10 @@ module ot_s81sl_vs #(
     reg [2:0] kp_e; reg [5:0] ko_e; reg [4:0] fl_e; reg fl_on;
     reg [31:0]  gate [0:3];
     wire eng_r = arr && op == OP_ENG && !ph, eng_a = arr && op == OP_ENG && ph;
-    wire [5:0] eq = ka[5:0] - 6'd16;                 // REDUCE quad (arrivals 16 .. 79)
+    wire [7:0] er = ka - 8'd16;                      // REDUCE K / W arrival r (16 .. 79): K pair even r, W pair odd r
+    reg  [255:0] kst; reg [127:0] wst; reg epend;    // K pair stash, W upper half, second quad pending
+    wire [5:0] eq0 = {er[6:4], er[3:1], 1'b0}; reg [5:0] eqp;
+    wire [5:0] eq = epend ? eqp : eq0;              // quad 16 j + i (W arrival: even quad; next cycle: odd)
     reg [255:0] hrow, hra, hrb; reg [31:0] gsel;
     always @(*) begin
         hrow = hst[eq[3:0]];
@@ -322,9 +330,10 @@ module ot_s81sl_vs #(
         hw32 = {r[(4 * j + e) * 16 +: 16], 16'd0};
     endfunction
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin ve_rv <= 1'b0; ve_av <= 1'b0; gmask <= 4'd0; end
+        if (!rs_o) begin ve_rv <= 1'b0; ve_av <= 1'b0; gmask <= 4'd0; epend <= 1'b0; end
         else begin
-            ve_rv <= eng_r && ka >= 8'd16;
+            ve_rv <= (eng_r && ka >= 8'd16 && er[0]) || epend;
+            epend <= eng_r && ka >= 8'd16 && er[0];
             ve_av <= eng_a;
             if (acc_cmd && c_op == OP_ENG && !c_ph) gmask <= 4'd0;
             else if (gv_c) gmask <= gmask | (4'd1 << gc_c);
@@ -335,8 +344,11 @@ module ot_s81sl_vs #(
         if (eng_r && ka < 8'd16) hst[ka[3:0]] <= xq_c;
         ve_rc <= eq[5:4];
         for (i = 0; i < 4; i = i + 1) ve_rh[32 * i +: 32] <= hw32(hrow, eq[5:4], i[1:0]);
-        ve_rk <= xq_c[127:0];
-        ve_rw <= (MUT == 8) ? xq_c[127:0] : xq_c[255:128];
+        if (eng_r && ka >= 8'd16 && !er[0]) kst <= xq_c;
+        if (eng_r && ka >= 8'd16 && er[0]) wst <= xq_c[255:128];
+        eqp <= eq0 | 6'd1;
+        ve_rk <= epend ? kst[255:128] : kst[127:0];
+        ve_rw <= (MUT == 8) ? (epend ? kst[255:128] : kst[127:0]) : (epend ? wst : xq_c[127:0]);
         // ADD: arrival s (copy j = ka[4:3], elements 8 s' .. 8 s' + 7, s' = ka[2:0]) = V row pair; h from half rows 2 s', 2 s' + 1
         ve_ac <= ka[4:3];
         for (i = 0; i < 4; i = i + 1) begin

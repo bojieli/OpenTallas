@@ -8,8 +8,8 @@ those statements are no longer in engram_layer's source (the fixture tracks the 
 
 Outputs (hex, one word / row per line) in OUTDIR:
   img_k.mem   (k = 0..4) leaf k's 88 row pairs: h half rows 0..15 at rows 0.. (vn layout: copy j element 4 i + e at
-              bits (4 j + e) * 16), K / W pairs at rows 64.. (pair q = 16 j + i: K[j][4 i ..] low, W[j][4 i ..] high),
-              V pairs at rows 200.. (V[8 s .. 8 s + 7])
+              bits (4 j + e) * 16), then the 72 row pairs of the Engram region at A0 (kv_rowmap.json: K_j at A0 + 16 j,
+              W_j at A0 + 64 + 16 j, V at A0 + 128)
   flit.mem    the 15 x 12 foreign NX flits {b 8, d 160} (source slice order, then vector v = kind * 4 + copy in the
               source's injection order: copy-major, kind hh, kk, dd), d = the source's 5 beat partials (leaf 0 in [31:0])
   fv.mem      the vector index of each flit line
@@ -124,7 +124,9 @@ def main():
         e0 = 320 * a.sid + 64 * lf
         hb, kb, wb, vb, yb = h[:, e0:e0 + 64], key[:, e0:e0 + 64], wgt[:, e0:e0 + 64], value[e0:e0 + 64], y[:, e0:e0 + 64]
         img = [hrow(hb, i) for i in range(16)]
-        img += [words(list(kb[j, 4 * i:4 * i + 4]) + list(wb[j, 4 * i:4 * i + 4])) for j in range(4) for i in range(16)]
+        # the K / W / V region of the compiler row map (kv_rowmap.json): 72 row pairs from A0
+        img += [words(kb[j, 8 * i:8 * i + 8]) for j in range(4) for i in range(8)]
+        img += [words(wb[j, 8 * i:8 * i + 8]) for j in range(4) for i in range(8)]
         img += [words(vb[8 * s:8 * s + 8]) for s in range(8)]
         (o / f"img_{lf}.mem").write_text("\n".join(img) + "\n")
         ys += [hrow(yb, i) for i in range(16)]

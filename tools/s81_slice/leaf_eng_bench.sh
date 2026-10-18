@@ -1,7 +1,8 @@
 #!/bin/bash
 # leaf_eng_bench.sh <outdir> [MUT 0|7|8] [SEED]  (cwd = repo root): RTL-BUILD-S81 Engram mix through ONE ot_s81sl_leaf
 # (vp + vn + vq + vs op 14 ENG + ve; tb_s81sl_leaf_eng) on tools/s81_dv/ve_golden.py fixtures (hdc_golden_v41 chunk8).
-# MUT 0 must PASS; MUT 7 / 8 (vs ENG negative controls) must FAIL.  Exit 0 = the expected verdict.
+# MUT 0 must PASS; MUT 7 / 8 (vs ENG negative controls) must FAIL.  Exit 0 = the expected verdict; RAW=1: exit 0 only on
+# PASS (the closure loop's expect=fail form).
 set -u; O=$1; M=${2:-0}; S=${3:-7}; mkdir -p $O/fx
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 python3 tools/s81_dv/ve_golden.py $O/fx --seed $S > $O/gold.log 2>&1 || { echo "BENCH_SETUP_FAILED gold"; tail -5 $O/gold.log; exit 4; }
@@ -14,5 +15,5 @@ $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -GMUT=$M --top-
 grep -E "PINMISSING|PINCONNECTEMPTY|PINNOCONNECT" $O/build.log | grep -i "s81sl_leaf\|s81sl_vs\|s81sl_ve" | head -5
 $O/obj/Vtb_s81sl_leaf_eng +dir=$O/fx > $O/run.log 2>&1
 grep -E "^LEAFENG|MISMATCH|TIMEOUT|^PASS|^FAIL" $O/run.log | head -20
-if [ "$M" = 0 ]; then grep -q '^PASS' $O/run.log && { echo "PASS leaf_eng MUT=0 seed=$S"; exit 0; }; echo "FAIL leaf_eng"; exit 1; fi
+if [ "$M" = 0 ] || [ -n "${RAW:-}" ]; then grep -q '^PASS' $O/run.log && { echo "PASS leaf_eng MUT=$M seed=$S"; exit 0; }; echo "FAIL leaf_eng MUT=$M"; exit 1; fi
 grep -q '^FAIL' $O/run.log && { echo "NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=$M"; exit 0; }; echo "NEGATIVE_CONTROL_PASSED MUT=$M (bench blind)"; exit 1

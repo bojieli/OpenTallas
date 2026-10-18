@@ -2,13 +2,15 @@
 // RTL-BUILD-S81 (2026-10-18): Engram mix through ONE ot_s81sl_leaf (the beat leaf exactly as ot_s81sl_slice wires it:
 // vp + vn + vq + vs + vsw + RA pair + ve).  Fixtures: tools/s81_dv/ve_golden.py (hdc_golden_v41 chunk8: one beat x 4
 // copies; p = the 12 beat partials, y = bf16(h + gate*v)).  Only the leaf's ports are driven:
-//   row writes (sw_*): h at rows 0.. (vn half-row layout), K/W pairs at 64.., V pairs at 200..
+//   row writes (sw_*): h at rows 0.. (vn half-row layout); the Engram K / W / V region of the compiler row map
+//   (results/arch/s81_dv_1016/eng/kv_rowmap.json, L1 A0 = 704): K_j at A0 + 16 j, W_j at A0 + 64 + 16 j, V at A0 + 128
 //   vp HLOAD 0 (h -> vn), vp HSTORE 300 (vn -> leaf store: the real h source of op 14)
-//   vs op 14 REDUCE (a0 300, a1 64, n 64)  -> e_* triples checked against p
-//   gates on g_* (the eg values of the fixture), vs op 14 ADD (a0 200, a1 400, n 32)
+//   vs op 14 REDUCE (a0 300, a1 A0, n 64)  -> e_* triples checked against p
+//   gates on g_* (the eg values of the fixture), vs op 14 ADD (a0 A0, a1 400, n 32)
 //   vp HLOAD 400 (results -> vn h store), vp HSTORE 500, vp RDOUT 500 x 16 -> lo checked against y.
 // -GMUT=7 / 8 (vs MUT: wrong gate copy / K as W) must FAIL.
 module tb_s81sl_leaf_eng #(parameter integer MUT = 0);
+    localparam [9:0] A0 = 10'd704;
     reg clk = 1'b0;
     always #0.5 clk = ~clk;
     reg [31:0] hm [0:255], km [0:255], wm [0:255], vm [0:63], gm [0:3], pm [0:11], ym [0:255];
@@ -69,21 +71,24 @@ module tb_s81sl_leaf_eng #(parameter integer MUT = 0);
         $readmemh({dir, "/y.mem"}, ym);
         repeat (4) @(negedge clk); rst_n = 1'b1; repeat (10) @(negedge clk);
         for (i = 0; i < 16; i = i + 1) wrow(2 * i, hrow(i, 0));
-        for (j = 0; j < 4; j = j + 1) for (i = 0; i < 16; i = i + 1)
-            wrow(64 + 2 * (16 * j + i), {wm[64 * j + 4 * i + 3], wm[64 * j + 4 * i + 2], wm[64 * j + 4 * i + 1], wm[64 * j + 4 * i],
-                                        km[64 * j + 4 * i + 3], km[64 * j + 4 * i + 2], km[64 * j + 4 * i + 1], km[64 * j + 4 * i]});
+        for (j = 0; j < 4; j = j + 1) for (i = 0; i < 8; i = i + 1) begin
+            wrow(A0 + 16 * j + 2 * i, {km[64 * j + 8 * i + 7], km[64 * j + 8 * i + 6], km[64 * j + 8 * i + 5], km[64 * j + 8 * i + 4],
+                                      km[64 * j + 8 * i + 3], km[64 * j + 8 * i + 2], km[64 * j + 8 * i + 1], km[64 * j + 8 * i]});
+            wrow(A0 + 64 + 16 * j + 2 * i, {wm[64 * j + 8 * i + 7], wm[64 * j + 8 * i + 6], wm[64 * j + 8 * i + 5], wm[64 * j + 8 * i + 4],
+                                      wm[64 * j + 8 * i + 3], wm[64 * j + 8 * i + 2], wm[64 * j + 8 * i + 1], wm[64 * j + 8 * i]});
+        end
         for (i = 0; i < 8; i = i + 1)
-            wrow(200 + 2 * i, {vm[8 * i + 7], vm[8 * i + 6], vm[8 * i + 5], vm[8 * i + 4], vm[8 * i + 3], vm[8 * i + 2],
+            wrow(A0 + 128 + 2 * i, {vm[8 * i + 7], vm[8 * i + 6], vm[8 * i + 5], vm[8 * i + 4], vm[8 * i + 3], vm[8 * i + 2],
                                vm[8 * i + 1], vm[8 * i]});
         repeat (4) @(negedge clk);
         cmd(4'd3, 10'd0, 10'd0, 8'd0, 128'd0); repeat (40) @(negedge clk);          // HLOAD h -> vn
         cmd(4'd4, 10'd300, 10'd0, 8'd0, 128'd0); repeat (40) @(negedge clk);        // HSTORE vn -> rows 300..
         t_r = cyc + 1;
-        cmd(4'd14, 10'd300, 10'd64, 8'd64, 128'd0); vs_wait;                         // REDUCE
+        cmd(4'd14, 10'd300, A0, 8'd64, 128'd0); vs_wait;                         // REDUCE
         for (j = 0; j < 4; j = j + 1) begin @(negedge clk); g_v = 1'b1; g_c = j; g_d = gm[j]; end
         @(negedge clk); g_v = 1'b0; repeat (4) @(negedge clk);
         t_a = cyc + 1;
-        cmd(4'd14, 10'd200, 10'd400, 8'd32, {97'd0, 1'b1, 30'd0}); vs_wait;          // ADD (imm[30])
+        cmd(4'd14, A0, 10'd400, 8'd32, {97'd0, 1'b1, 30'd0}); vs_wait;          // ADD (imm[30])
         cmd(4'd3, 10'd400, 10'd0, 8'd0, 128'd0); repeat (40) @(negedge clk);        // HLOAD results -> vn
         cmd(4'd4, 10'd500, 10'd0, 8'd0, 128'd0); repeat (40) @(negedge clk);        // HSTORE vn -> rows 500..
         rd_on = 1'b1;

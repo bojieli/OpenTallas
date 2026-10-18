@@ -33,7 +33,7 @@ module tb_s81sl_slice_eng #(parameter integer VS_MUT = 0, parameter integer SID 
               x[37 +: 5] = tgt; x[42 +: 5] = lm; x[47 +: 160] = body; ctl = x; end
     endfunction
     function automatic [9:0] prow(input integer p);
-        prow = (p < 16) ? 2 * p : (p < 80) ? 64 + 2 * (p - 16) : 200 + 2 * (p - 80);
+        prow = (p < 16) ? 2 * p : 704 + 2 * (p - 16);       // h rows, then the Engram region (L1 A0 = 704)
     endfunction
     task automatic send(input [1103:0] x);
         begin @(negedge clk); ri_w = x; @(negedge clk); ri_w = 0; end
@@ -93,7 +93,7 @@ module tb_s81sl_slice_eng #(parameter integer VS_MUT = 0, parameter integer SID 
         vcmd(5'h1F, 4'd4, 10'd300, 10'd0, 8'd0, 128'd0); repeat (60) @(negedge clk);     // HSTORE vn -> 300
         send(ctl(5'd1, 5'd0, {64'd0, par[1], 31'd0, 1'b1, par[0]})); repeat (8) @(negedge clk);   // xfin go, ENG
         t_r = cyc + 1;
-        vcmd(5'h1F, 4'd14, 10'd300, 10'd64, 8'd64, 128'd0);                              // op 14 REDUCE, 5 leaves
+        vcmd(5'h1F, 4'd14, 10'd300, 10'd704, 8'd64, 128'd0);                              // op 14 REDUCE, 5 leaves
         // the 15 other slices' flits (in each source's injection order), one a cycle on the line
         for (i = 0; i < 180; i = i + 1) begin
             @(negedge clk);
@@ -104,7 +104,7 @@ module tb_s81sl_slice_eng #(parameter integer VS_MUT = 0, parameter integer SID 
         while (ng < 4 && cyc < t_r + 5000) @(negedge clk);
         repeat (8) @(negedge clk);
         t_a = cyc + 1;
-        vcmd(5'h1F, 4'd14, 10'd200, 10'd400, 8'd32, {97'd0, 1'b1, 30'd0});              // op 14 ADD
+        vcmd(5'h1F, 4'd14, 10'd704, 10'd400, 8'd32, {97'd0, 1'b1, 30'd0});              // op 14 ADD
         repeat (150) @(negedge clk);
         vcmd(5'h1F, 4'd3, 10'd400, 10'd0, 8'd0, 128'd0); repeat (60) @(negedge clk);     // HLOAD results -> vn
         vcmd(5'h1F, 4'd4, 10'd500, 10'd0, 8'd0, 128'd0); repeat (60) @(negedge clk);     // HSTORE vn -> 500
