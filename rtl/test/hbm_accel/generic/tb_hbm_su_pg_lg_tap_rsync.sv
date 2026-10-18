@@ -14,7 +14,8 @@ module tb_hbm_su_pg_lg_tap_rsync;
  initial begin #(T0); forever begin pclk=1; #(TP/2); pclk=0; #(TP/2); end end
  reg por=0, active=0, ref_rst=0;
  reg [33:0] lrq, frq; reg [561:0] lwq, fwq; reg [1:0] lrd, lwr, nwd; reg [513:0] nrr;
- function automatic [561:0] r562(input integer d); integer i; begin for(i=0;i<18;i=i+1) r562[i*32+:32]=$urandom; end endfunction
+ // 18 x 32 random bits built in a 576-bit temp (a part-select past bit 561 of the result aborts fleet Icarus 12 vvp, rc 134)
+ function automatic [561:0] r562(input integer d); integer i; reg [575:0] t; begin for(i=0;i<18;i=i+1) t[i*32+:32]=$urandom; r562=t[561:0]; end endfunction
  always @(negedge pclk) if(active) begin
   // sparse valids so the calendars and the return checks see both legal and illegal traffic
   lrq=r562(0); frq=r562(0); lwq=r562(0); fwq=r562(0); lrd=$urandom; lwr=$urandom; nwd=$urandom; nrr=r562(0);
