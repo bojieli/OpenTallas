@@ -121,7 +121,8 @@ module ot_s81sl_slice #(
     parameter integer DL = 4,        // leaf <-> centre relay stages (equal for every leaf: the farthest leaf, 1.84 mm)
     parameter integer DR = 6,        // frame return lanes -> capture root (worst entry face to the centre, 2.3 mm)
     parameter integer DX = 6,        // x streamer -> x-chain heads (centre to the bottom face)
-    parameter integer VQ_XMEM = 2    // vq's x wait line: 2 = the one-macro sub-beat SRAM ring (the s81sl_vq kit), 0 = flops
+    parameter integer VQ_XMEM = 2,   // vq's x wait line: 2 = the one-macro sub-beat SRAM ring (the s81sl_vq kit), 0 = flops
+    parameter integer VS_MUT = 0     // bench negative controls only (ot_s81sl_vs MUT through the leaves); 0 in every build
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -153,7 +154,7 @@ module ot_s81sl_slice #(
     wire [4:0] ev_l, ev_x, gv_x, gv_l; wire [9:0] ec_l, ec_x, gc_x, gc_l; wire [479:0] ed_l, ed_x; wire [159:0] gd_x, gd_l;
     genvar k;
     generate for (k = 0; k < 5; k = k + 1) begin : lf
-        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
+        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
             .c_v(c_v_l[k]), .c_d(c_d_l[160 * k +: 160]),
             .sw_v(sw_v_l[k]), .sw_a(sw_a_l[10 * k +: 10]), .sw_m(sw_m_l[8 * k +: 8]), .sw_d(sw_d_l[256 * k +: 256]),
             .cw_v(cw_v_l[2 * k +: 2]), .cw_a(cw_a_l[24 * k +: 24]), .cw_d(cw_d_l[64 * k +: 64]),

@@ -18,12 +18,9 @@ module tb_s81sl_slice_eng #(parameter integer VS_MUT = 0, parameter integer SID 
     reg [1103:0] ri_w = 0;
     wire [1103:0] ro_e, ro_w, bo; wire [275:0] vo; wire [4*1104-1:0] xc; wire [15:0] ck_line, ck_xc; wire [1:0] ck_v;
     wire [7:0] ck_rt; wire fault;
-    ot_s81sl_slice #(.HB(0)) u_dut (.clk(clk), .rst_n(rst_n), .sid(SID[3:0]), .ri_w(ri_w), .ri_e(1104'd0), .ro_e(ro_e),
+    ot_s81sl_slice #(.HB(0), .VS_MUT(VS_MUT)) u_dut (.clk(clk), .rst_n(rst_n), .sid(SID[3:0]), .ri_w(ri_w), .ri_e(1104'd0), .ro_e(ro_e),
         .ro_w(ro_w), .vi(276'd0), .vo(vo), .bi(1104'd0), .bo(bo), .xc(xc), .rt(560'd0), .ck_line(ck_line), .ck_v(ck_v),
         .ck_xc(ck_xc), .ck_rt(ck_rt), .fault(fault));
-    defparam u_dut.lf[0].u_lf.VS_MUT = VS_MUT; defparam u_dut.lf[1].u_lf.VS_MUT = VS_MUT;
-    defparam u_dut.lf[2].u_lf.VS_MUT = VS_MUT; defparam u_dut.lf[3].u_lf.VS_MUT = VS_MUT;
-    defparam u_dut.lf[4].u_lf.VS_MUT = VS_MUT;
     integer cyc = 0, i, k, b, bad = 0, ng = 0, ns = 0, nlo = 0, rdk = 0, t_r = 0, t_g = 0, t_a = 0, t_w = 0;
     always @(posedge clk) cyc <= cyc + 1;
     // ---- beat builders (tier line, from the W neighbour, hops 1 = deliver here)
@@ -97,7 +94,7 @@ module tb_s81sl_slice_eng #(parameter integer VS_MUT = 0, parameter integer SID 
         // the 15 other slices' flits (in each source's injection order), one a cycle on the line
         for (i = 0; i < 180; i = i + 1) begin
             @(negedge clk);
-            ri_w = 0; ri_w[0] = 1'b1; ri_w[3:1] = 3'd3; ri_w[8:4] = 5'd1; ri_w[12:9] = flit[i][167:160] / 5;
+            ri_w = 0; ri_w[0] = 1'b1; ri_w[3:1] = 3'd3; ri_w[8:4] = 5'd1; ri_w[12:9] = flit[i][163:160];
             ri_w[20:13] = flit[i][167:160]; ri_w[21 +: 160] = flit[i][159:0];
         end
         @(negedge clk); ri_w = 0;

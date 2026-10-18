@@ -10,7 +10,7 @@ Outputs (hex, one word / row per line) in OUTDIR:
   img_k.mem   (k = 0..4) leaf k's 88 row pairs: h half rows 0..15 at rows 0.. (vn layout: copy j element 4 i + e at
               bits (4 j + e) * 16), then the 72 row pairs of the Engram region at A0 (kv_rowmap.json: K_j at A0 + 16 j,
               W_j at A0 + 64 + 16 j, V at A0 + 128)
-  flit.mem    the 15 x 12 foreign NX flits {b 8, d 160} (source slice order, then vector v = kind * 4 + copy in the
+  flit.mem    the 15 x 12 foreign NX flits {b 8 = {v 4, sid 4} (xfin ENG tag), d 160} (source slice order, then vector v = kind * 4 + copy in the
               source's injection order: copy-major, kind hh, kk, dd), d = the source's 5 beat partials (leaf 0 in [31:0])
   fv.mem      the vector index of each flit line
   sum.mem     12 golden copy sums (v = kind * 4 + copy): hh, kk, dd over the full D = 5120
@@ -115,7 +115,7 @@ def main():
         for j in range(HC):
             for k in range(3):
                 d = words(bp(k, j, s * NVL + l) for l in range(NVL))
-                fl.append(f"{(s * NVL):02x}{d}")
+                fl.append(f"{(((k * 4 + j) << 4) | s):02x}{d}")          # ENG tag b = {v, sid} (xfin ENG)
                 fv.append(f"{k * 4 + j:x}")
     (o / "flit.mem").write_text("\n".join(fl) + "\n")
     (o / "fv.mem").write_text("\n".join(fv) + "\n")

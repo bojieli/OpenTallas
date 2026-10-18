@@ -6,16 +6,16 @@
  "die": [
   0,
   0,
-  216.0,
-  216.0
+  172.8,
+  172.8
  ],
  "core": [
   2.16,
   2.16,
-  213.84,
-  213.84
+  170.64000000000001,
+  170.64000000000001
  ],
- "why": "spec outline",
+ "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
  "layer_contract": {
   "children": {},
@@ -66,9 +66,6 @@
    "ve_ah",
    "ve_aval",
    "ve_ag",
-   "ve_ov",
-   "ve_oc",
-   "ve_oy",
    "ve_fi"
   ],
   "S": [
@@ -92,6 +89,9 @@
    "g_v",
    "g_c",
    "g_d",
+   "ve_ov",
+   "ve_oc",
+   "ve_oy",
    "fault"
   ]
  },

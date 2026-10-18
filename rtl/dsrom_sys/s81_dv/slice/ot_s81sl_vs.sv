@@ -218,6 +218,17 @@ module ot_s81sl_vs #(
         if (!rs_c) ka <= 8'd0;
         else if (acc_cmd) ka <= 8'd0;
         else if (arr) ka <= ka + 8'd1;
+    // ENG stash-read index replicas (gate high_fanout: one 16 x 256-b stash read select drove 4,100 loads): 4 identical
+    // copies of the arrival and flush counters, one per 64-b column group of the stash (keep: not merged by synthesis)
+    (* keep = "true" *) reg [7:0] ka_q [0:3];
+    (* keep = "true" *) reg [3:0] fl_q [0:3];
+    (* keep = "true" *) reg [3:0] eqp_q [0:3];
+    (* keep = "true" *) reg       ep_q [0:3];
+    integer rq;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) for (rq = 0; rq < 4; rq = rq + 1) ka_q[rq] <= 8'd0;
+        else for (rq = 0; rq < 4; rq = rq + 1)
+            if (acc_cmd) ka_q[rq] <= 8'd0; else if (arr) ka_q[rq] <= ka_q[rq] + 8'd1;
 
     // ================================================================ SW: groups to the lane sub-leaf
     always @(posedge clk or negedge rs_r) if (!rs_r) sw_v <= 1'b0; else sw_v <= arr && op == OP_SW;
@@ -320,20 +331,26 @@ module ot_s81sl_vs #(
     reg  [255:0] kst; reg [127:0] wst; reg epend;    // K pair stash, W upper half, second quad pending
     wire [5:0] eq0 = {er[6:4], er[3:1], 1'b0}; reg [5:0] eqp;
     wire [5:0] eq = epend ? eqp : eq0;              // quad 16 j + i (W arrival: even quad; next cycle: odd)
-    reg [255:0] hrow, hra, hrb; reg [31:0] gsel;
+    reg [255:0] hrow, hra, hrb, xwsel; reg [31:0] gsel;
     always @(*) begin
-        hrow = hst[eq[3:0]];
-        hra = hst[{ka[2:0], 1'b0}]; hrb = hst[{ka[2:0], 1'b1}];
+        for (rq = 0; rq < 4; rq = rq + 1) begin
+            hrow[64 * rq +: 64] = hst[ep_q[rq] ? eqp_q[rq] : {ka_q[rq][3:1], 1'b0}][64 * rq +: 64];
+            hra[64 * rq +: 64] = hst[{ka_q[rq][2:0], 1'b0}][64 * rq +: 64];
+            hrb[64 * rq +: 64] = hst[{ka_q[rq][2:0], 1'b1}][64 * rq +: 64];
+            xwsel[64 * rq +: 64] = hst[fl_q[rq]][64 * rq +: 64];
+        end
         gsel = gate[(MUT == 7) ? ka[4:3] ^ 2'd1 : ka[4:3]];
     end
     function automatic [31:0] hw32(input [255:0] r, input [1:0] j, input [1:0] e);
         hw32 = {r[(4 * j + e) * 16 +: 16], 16'd0};
     endfunction
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin ve_rv <= 1'b0; ve_av <= 1'b0; gmask <= 4'd0; epend <= 1'b0; end
+        if (!rs_o) begin ve_rv <= 1'b0; ve_av <= 1'b0; gmask <= 4'd0; epend <= 1'b0;
+                         for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= 1'b0; end
         else begin
             ve_rv <= (eng_r && ka >= 8'd16 && er[0]) || epend;
             epend <= eng_r && ka >= 8'd16 && er[0];
+            for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
             ve_av <= eng_a;
             if (acc_cmd && c_op == OP_ENG && !c_ph) gmask <= 4'd0;
             else if (gv_c) gmask <= gmask | (4'd1 << gc_c);
@@ -347,6 +364,7 @@ module ot_s81sl_vs #(
         if (eng_r && ka >= 8'd16 && !er[0]) kst <= xq_c;
         if (eng_r && ka >= 8'd16 && er[0]) wst <= xq_c[255:128];
         eqp <= eq0 | 6'd1;
+        for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
         ve_rk <= epend ? kst[255:128] : kst[127:0];
         ve_rw <= (MUT == 8) ? (epend ? kst[255:128] : kst[127:0]) : (epend ? wst : xq_c[127:0]);
         // ADD: arrival s (copy j = ka[4:3], elements 8 s' .. 8 s' + 7, s' = ka[2:0]) = V row pair; h from half rows 2 s', 2 s' + 1
@@ -367,14 +385,17 @@ module ot_s81sl_vs #(
     end
     // partial triples out; result / flush counters
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin e_v <= 1'b0; kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0; end
+        if (!rs_o) begin e_v <= 1'b0; kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
+                         for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0; end
         else begin
             e_v <= vpv_c;
-            if (acc_cmd) begin kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0; end
+            if (acc_cmd) begin kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
+                               for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0; end
             else begin
                 if (vpv_c) kp_e <= kp_e + 3'd1;
                 if (vov_c) begin ko_e <= ko_e + 6'd1; if (ko_e == 6'd31) fl_on <= 1'b1; end
                 if (fl_on) begin fl_e <= fl_e + 5'd1; if (fl_e == 5'd15) fl_on <= 1'b0; end
+                if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
             end
         end
     always @(posedge clk) begin e_c <= vpc_c; e_d <= vpd_c; end
@@ -436,7 +457,7 @@ module ot_s81sl_vs #(
                 for (i = 0; i < 3; i = i + 1) if (k_ra[1:0] == i) x_wd[32 * i +: 32] <= rar_c;
             end
             OP_RB, OP_QR: begin x_wa <= ob + {2'd0, k_out[7:0]}; x_wm <= 8'h0F; x_wd <= {128'd0, xo_d[127:0]}; end
-            OP_ENG: begin x_wa <= a1 + {4'd0, fl_e[4:0], 1'b0}; x_wm <= 8'hFF; x_wd <= hst[fl_e[3:0]]; end
+            OP_ENG: begin x_wa <= a1 + {4'd0, fl_e[4:0], 1'b0}; x_wm <= 8'hFF; x_wd <= xwsel; end
             default: begin x_wa <= ob + {1'b0, k_out[7:0], 1'b0}; x_wm <= 8'hFF; x_wd <= xo_d; end   // MOE
         endcase
     end
