@@ -140,7 +140,8 @@ module ot_hgi_sfu_programme_store_r10 #(
    assign a_in=c_addr[PR];
    assign d_in=c_data[PR];
   end
-  ot_hgi_sfu_store_stripe_leaf_r10 #(.AW(AW)) u_leaf(.clk(clk),.rst_a(ra_leaf[l]),.in_we(leaf_we[l]),
+  ot_hgi_sfu_store_stripe_leaf_r10 u_leaf(   // no #(): hard child (default AW=11 = PAGE_AW 1)
+  .clk(clk),.rst_a(ra_leaf[l]),.in_we(leaf_we[l]),
    .in_addr(a_in),.in_data(d_in),.out_addr(c_addr[l]),.out_data(c_data[l]),
    .in_start_v((l>=8)?io_sv:p_sv),.in_start_base((l>=8)?p_io_start_base:p_start_base),.in_legal((l>=8)?io_legal:p_legal),
    .in_span((l>=8)?io_span:p_span),.in_loops((l>=8)?p_io_start_loops:p_start_loops),.in_loops_one((l>=8)?io_lone:p_lone),
