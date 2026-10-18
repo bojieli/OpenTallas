@@ -1182,6 +1182,9 @@ def waypoints(m, a, pa, b, pb):
     stack seam row (the free band between the S and N stacks), then along it to the stack's control channel (between the
     HOST slice column and the groups) and down that channel to the fan.  ctl <-> N-stack fan: across the top band into the
     N stack's control channel.  The stack's K / V channel (groups <-> V ports / ECTL, 1 kb words) keeps its relay spots."""
+    wpm = os.environ.get('OT_KV_STATIC_WP', 'all')        # all | none | chain (diagnostic corridor variants)
+    if wpm == 'none':
+        return None
     ends = {(a, pa), (b, pb)}
     other = [e for e in ends if e[0] != 'kvs_ctl']
     if len(other) != 1 or not any(e[0] == 'kvs_ctl' for e in ends):
@@ -1189,7 +1192,7 @@ def waypoints(m, a, pa, b, pb):
     inst, port = other[0]
     mt = re.fullmatch(r'kvs_fan_(WS|WN|ES|EN)', inst)
     mp = re.fullmatch(r'kvpc_(WS|ES)_31', inst)
-    if not (mt or mp):
+    if not (mt or mp) or (wpm == 'chain' and not mp):
         return None
     st = (mt or mp).group(1)
     by = {i.name: i for i in m['insts']}
