@@ -71,8 +71,8 @@ j['record_to'] = 'results/rtl/ref_tile/' + name; j['views_to'] = f'physical/ref_
 j['extra_paths'] = ['tools/hbm_static/su_pg_lg_tap_rsync_run.sh', 'rtl/test/hbm_accel/generic/tb_hbm_su_pg_lg_tap_rsync.sv']
 j['benches'] = [
     {'name': 'rsync_lockstep', 'cmd': 'bash tools/hbm_static/su_pg_lg_tap_rsync_run.sh {RUN}/bench/pos 0', 'expect': 'pass',
-     'pass_regex': 'PG_LG_TAP_RSYNC PASS', 'min_count_regex': 'checks=(\\d+)', 'threads': 1, 'peak_ram_gb': 2, 'needs': ['iverilog']},
+     'pass_regex': 'PG_LG_TAP_RSYNC PASS', 'pass_witness': 'results/rtl/hbm_su3_1017/pg_lg_tap_pos.log', 'min_count_regex': 'checks=(\\d+)', 'threads': 1, 'peak_ram_gb': 2, 'needs': ['iverilog']},
     {'name': 'rsync_mutant', 'cmd': 'bash tools/hbm_static/su_pg_lg_tap_rsync_run.sh {RUN}/bench/mut 1', 'expect': 'fail',
-     'fail_regex': 'PG_LG_TAP_RSYNC FAIL', 'threads': 1, 'peak_ram_gb': 2, 'needs': ['iverilog']}]
+     'fail_regex': 'PG_LG_TAP_RSYNC FAIL', 'fail_witness': 'results/rtl/hbm_su3_1017/pg_lg_tap_mut1.log', 'threads': 1, 'peak_ram_gb': 2, 'needs': ['iverilog']}]
 out = Path('tools/ref_tile/specs_hbm_su3') / f'{name}.json'
 out.write_text(json.dumps(s, indent=1) + '\n'); print(out)

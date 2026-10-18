@@ -31,6 +31,7 @@
     "cmd": "bash tools/hbm_static/su_pg_lg_tap_rsync_run.sh {RUN}/bench/pos 0",
     "expect": "pass",
     "pass_regex": "PG_LG_TAP_RSYNC PASS",
+    "pass_witness": "results/rtl/hbm_su3_1017/pg_lg_tap_pos.log",
     "min_count_regex": "checks=(\\d+)",
     "threads": 1,
     "peak_ram_gb": 2,
@@ -43,6 +44,7 @@
     "cmd": "bash tools/hbm_static/su_pg_lg_tap_rsync_run.sh {RUN}/bench/mut 1",
     "expect": "fail",
     "fail_regex": "PG_LG_TAP_RSYNC FAIL",
+    "fail_witness": "results/rtl/hbm_su3_1017/pg_lg_tap_mut1.log",
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
