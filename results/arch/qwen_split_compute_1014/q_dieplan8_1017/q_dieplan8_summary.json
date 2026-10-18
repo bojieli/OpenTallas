@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.q_dieplan8.v1",
+ "date": "2026-10-17",
+ "dv2f10_chain": {
+  "run": "ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f10/chain",
+  "src": "93f6cc056",
+  "strict_bind": "PASS 113 masters / 716 instances",
+  "real_case": "OT_LEGAL 0 overlaps / 0 outside",
+  "pdn": "FAIL PDN-0006 'VDD on M8 is blocked by obstructions on M9 for c16_E0_0'",
+  "class": "abstract defect: synthetic qfd_c_b16_dv / qfd_dv_slice2_w/_e (and unused qfd_c_b16) LEFs obstruct M1-M9; the cluster_level-2 contract leaves M9 to the die",
+  "grt": "not reached",
+  "sta": "not reached",
+  "note": "gen_chain status line says chain_nr rc=0 although PDN failed (chain_after_build exits 0 after die_chain stops)"
+ },
+ "dv2f10_pdn_test": {
+  "dir": "ot-epyc4:.../dv2f10/pdn_m9test",
+  "change": "M9 OBS removed from the 4 synthetic masters",
+  "pdn": "PASS special_shapes=19116422 (156 s, 47 GB peak incl. check)",
+  "check_power_grid": "VDD FAIL PSM-0069: PSM-0039 on all 498 rly_* relay macros (relays skipped by pdn_regroup --skip-prefix rly_; relay VDD/VSS M7 + one M8 foot rect never meet a core M8 stripe)"
+ },
+ "dv2f11": {
+  "commit": "0df705a29",
+  "changes": [
+   "cluster contract cluster_contract_dv_c392aa534.json (8 regional roots ck_w0..3/ck_e0..3; rows 1-2 on W/E faces M4 facing the 17.28-um inter-cluster gaps; cluster column pitch 2376 = 2358.72 + 17.28)",
+   "qfd_c_b16_dv RTL c392aa534",
+   "OT_SPLIT_DV_OBS_TOP=8",
+   "chain: OT_DIE_REPAIR=1 + OT_PDN_RELAY_GRIDS=1"
+  ],
+  "gen": {
+   "relays": 498,
+   "max_pin_to_pin_um": 393.2,
+   "over_reach": 0,
+   "unrepaired": 0,
+   "worst_cut": 0.347,
+   "build_s": 110,
+   "reset_over_500": 1,
+   "instances": 716,
+   "pin_align": {
+    "OK": 819,
+    "WARN": 319
+   },
+   "cycles_per_ar_token": null,
+   "stages": null
+  },
+  "gen_gates": "HARD (relay, per-bit reach 405)",
+  "strict_bind": "PASS 113 masters / 716 instances (8 ck pins bound)",
+  "pdn": "PASS (r8 + relay grids: 574 instances in 12 M8 macro grids); OT_PGCHECK VDD PASS / VSS PASS (18:04 PDT) -- first PG-clean Qwen compute DV die"
+ }
+}

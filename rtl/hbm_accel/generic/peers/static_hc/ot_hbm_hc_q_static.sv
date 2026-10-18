@@ -67,6 +67,12 @@ module ot_hbm_hc_q_static #(
     output reg fault
 );
     initial if(DONE_LAT<1)$fatal(1,"DONE_LAT must be positive");
+    // ---- regional reset (HCDMA-HCQ 10-17): the rst_n port drives only the registered relay (assert asynchronous,
+    // release 3 clk edges later); each region resets its own flops from a relay copy placed beside it, so no net from
+    // the port spans the 432 um tile. The F20 target already synchronises its own release (2 edges), the host programs
+    // the target long after reset, and nothing in this master counts cycles from reset release.
+    wire [5:0] rr_n;
+    ot_rst_relay #(.REGIONS(6)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr_n));
     // ---- input pin registers
     reg [2055:0] rr_q;
     reg [7:0] w_done_q;
@@ -74,8 +80,8 @@ module ot_hbm_hc_q_static #(
     reg [2:0] result_pos_q;
     reg [767:0] result_q;
     always @(posedge clk)begin rr_q<=lg_rr;result_pos_q<=result_position;result_q<=result;end
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n)begin w_done_q<=0;result_v_q<=0;end
+    always @(posedge clk or negedge rr_n[5])
+        if(!rr_n[5])begin w_done_q<=0;result_v_q<=0;end
         else begin w_done_q<=lg_w_done;result_v_q<=result_v;end
     // ---- F20 programme target (folded collar, pin-registered soft logic)
     wire cfg_we,start_v,tgt_fault;
@@ -84,7 +90,7 @@ module ot_hbm_hc_q_static #(
     wire [10:0] start_limit;
     wire [15:0] start_loops;
     ot_static_program_target #(.PCW(10),.TGT_PIN(1)) target(
-        .clk(clk),.rst_n(rst_n),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
+        .clk(clk),.rst_n(rr_n[0]),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .program_active(program_active),.program_cfg_we(cfg_we),.program_cfg_addr(p_addr),.program_cfg_data(p_data),
         .program_start_v(start_v),.program_start_base(start_base),.program_start_limit(start_limit),
@@ -93,7 +99,7 @@ module ot_hbm_hc_q_static #(
     wire [78:0] c;
     wire cal_v,cal_fault;
     ot_vms_calendar_static #(.W(79)) programme(
-        .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
+        .clk(clk),.rst_n(rr_n[1]),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
         .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
         .calendar(c),.calendar_v(cal_v),.ordinal(),.active(program_active),.done(program_done),.fault(cal_fault));
     wire residual_launch=c[0];
@@ -112,17 +118,17 @@ module ot_hbm_hc_q_static #(
     wire res_fault,gat_fault,wr_fault;
     ot_hgi_hc_residual_vm_static #(.CAPTURE_LAT(RD_CAPTURE-((MUT==3)?1:0)),.MUT_POSITION((MUT==1)?1:0),.BEATS(XW_BEATS),
         .MUT_BEAT((MUT==4)?1:(MUT==5)?2:0)) residual(
-        .clk(clk),.rst_n(rst_n),.launch(residual_launch),.npos(residual_npos),.base_sector(residual_base),
+        .clk(clk),.rst_n(rr_n[2]),.launch(residual_launch),.npos(residual_npos),.base_sector(residual_base),
         .local_rq(res_rq),.local_read(res_read),.local_rr(gather_phase?2056'd0:rr_q),
         .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.x_wave_beat(x_wave_beat),.done(residual_done),.fault(res_fault));
     ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE)) gather(
-        .clk(clk),.rst_n(rst_n),.launch(gather_launch),.npos(gather_npos),
+        .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.npos(gather_npos),
         .base_sector(gather_base),.position_stride_sector(gather_stride),
         .local_rq(gat_rq),.local_read(gat_read),.local_rr(gather_phase?rr_q:2056'd0),
         .gathered_mix_v(gathered_mix_v),.gathered_mix_row(gathered_mix_row),
         .gathered_mix_pos(gathered_mix_pos),.gathered_mix_data(gathered_mix_data),.done(gather_done),.fault(gat_fault));
     ot_hgi_hc_result_vm_static store(
-        .clk(clk),.rst_n(rst_n),.store_slot(store_slot),.base_sector(result_base+((MUT==2)?16'd1:16'd0)),
+        .clk(clk),.rst_n(rr_n[4]),.store_slot(store_slot),.base_sector(result_base+((MUT==2)?16'd1:16'd0)),
         .store_position(store_position),.result_v(result_v_q),.result_position(result_pos_q),.result(result_q),
         .local_wq(lg_wq),.local_write(write_sel),.fault(wr_fault));
     // ---- output pin register on the request port (phase-owned, never merged)
@@ -131,14 +137,14 @@ module ot_hbm_hc_q_static #(
         res_any=0;gat_any=0;
         for(integer b=0;b<8;b=b+1)begin res_any=res_any|res_rq[b*17+16];gat_any=gat_any|gat_rq[b*17+16];end
     end
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n)lg_rq<=0;
+    always @(posedge clk or negedge rr_n[5])
+        if(!rr_n[5])lg_rq<=0;
         else lg_rq<=gather_phase?gat_rq:res_rq;
     // ---- write-done reservation: every store's banks return local_w_done exactly DONE_LAT edges later
     reg [7:0] done_cal[0:DONE_LAT-1];
     reg own_fault;
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n)begin
+    always @(posedge clk or negedge rr_n[5])
+        if(!rr_n[5])begin
             own_fault<=0;fault<=0;
             for(integer i=0;i<DONE_LAT;i=i+1)done_cal[i]<=0;
         end else begin

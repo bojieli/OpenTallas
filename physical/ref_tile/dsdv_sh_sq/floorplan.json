@@ -1,0 +1,95 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "dsdv_sh_sq",
+ "top": "dsdv_sh_sq",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  254.88,
+  120.96
+ ],
+ "core": [
+  2.16,
+  2.16,
+  252.72,
+  118.8
+ ],
+ "why": "spec outline",
+ "std_area_um2": 14796,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "S": [
+   "rn_i",
+   "rs_o",
+   "pw_i",
+   "pl_i",
+   "tw_i",
+   "cf_i",
+   "ks_i",
+   "kd_o",
+   "j_o",
+   "jd_i",
+   "sq_o",
+   "vf_o"
+  ],
+  "N": [
+   "rn_o",
+   "rs_i",
+   "tw_o",
+   "cf_o",
+   "cn_o",
+   "cs_o",
+   "cg_o",
+   "dn_i",
+   "vf_i"
+  ],
+  "E": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+  "physical/ref_tile/dsdv_sh_sq/kit.env",
+  "physical/ref_tile/dsdv_sh_sq/clock.sdc",
+  "physical/ref_tile/dsdv_sh_sq/signoff.sdc",
+  "physical/ref_tile/dsdv_sh_sq/signoff_ffrepair.sdc",
+  "physical/ref_tile/dsdv_sh_sq/pdn.tcl",
+  "physical/ref_tile/dsdv_sh_sq/pre_cts.tcl",
+  "physical/ref_tile/dsdv_sh_sq/post_cts.tcl",
+  "physical/ref_tile/dsdv_sh_sq/post_grt.tcl",
+  "physical/ref_tile/dsdv_sh_sq/pre_drt.tcl",
+  "physical/ref_tile/dsdv_sh_sq/pre_fill.tcl",
+  "physical/ref_tile/dsdv_sh_sq/post_fill.tcl",
+  "physical/ref_tile/dsdv_sh_sq/pre_grt.tcl",
+  "physical/ref_tile/dsdv_sh_sq/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/dsdv_seq_host_pins/dsdv_sh_sq.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl"
+ ]
+}

@@ -1,0 +1,26 @@
+{
+ "direct_children": [
+  "qkd_hr_core_rx",
+  "qkd_hr_phy_pad"
+ ],
+ "wrapped_children": [
+  "qkd_hr_cdc_host",
+  "qkd_hr_cdc_pc",
+  "qkd_hr_core_guard",
+  "qkd_hr_core_order",
+  "qkd_hr_core_peer",
+  "qkd_hr_core_prompt",
+  "qkd_hr_core_queue",
+  "qkd_hr_core_tx",
+  "qkd_hr_ingest_qm"
+ ],
+ "glue_per_child": {
+  "qkd_hr_core_peer": 4,
+  "qkd_hr_core_prompt": 45,
+  "qkd_hr_core_guard": 25
+ },
+ "glue_cells": 74,
+ "glue_assigned": 74,
+ "glue_left_in_parent": [],
+ "glue_left_count": 0
+}

@@ -797,8 +797,11 @@ HOST_CLK_FAMILY = dict(
     **{c: 'phy' for c in [f'ck_phy{i}' for i in range(8)] + ['ck_pad', 'ck_phy_rx_w', 'ck_phy_tx_r']})
 HOST_CLK_INFERRED = dict(
     **{c: 'core' for c in ('ck_program_rx', 'ck_program_loader', 'ck_dispatch', 'ck_retire', 'ck_bootbarrier',
-                           'ck_records', 'ck_coordinator_codec', 'ck_coordinator_lifecycle', 'ck_coordinator_post')},
-    **{c: 'host' for c in ('ck_peer', 'ck_root_mux')})     # board-link family (1 GHz = the host period; no board PLL output)
+                           'ck_records', 'ck_coordinator_codec', 'ck_coordinator_lifecycle', 'ck_coordinator_post',
+                           # COORD 0dd+ D2 (10-17, KVJ-A3 census): ck_peer / ck_root_mux talk to core blocks through direct
+                           # same-cycle valid/ready with no synchroniser (root_mux<->coordinator, peer_link.normal_rx ->
+                           # program_rx, token request/grant), so they are CORE, not the 1 GHz host family
+                           'ck_peer', 'ck_root_mux')})
 HOST_GROUPS = dict(chain_f='chf', chain_c='chc', chain_a='cha', chain_fault_i='chx', slice_ack='sak',
                    slice_boot_done='sbd', slice_boot_ok='sbo', slice_boot_fault='sbf')
 
@@ -834,7 +837,8 @@ def host_rt_binding():
 
 
 def slice_die_binding():
-    names = ['ck_station', 'ck_static', 'ck_boot', 'ck_boot_test', 'host_rst_n', 'hbm_rst_n', 'lpc', 'bgi', 'bgo', 'fi',
+    # KV-FIX3 es2 2026-10-17: one clock entry ck (the four former entries were taps of the same clk_core_<stack> net)
+    names = ['ck', 'host_rst_n', 'hbm_rst_n', 'lpc', 'bgi', 'bgo', 'fi',
              'fo', 'ci', 'co', 'ai', 'ao', 'fault_i', 'fault_o', 'land_es', 'land_er', 'ctrl_es', 'ctrl_er',
              'ctrl_completion_v', 'ctrl_completion_we', 'ski', 'sdi', 'soi', 'sfi', 'sko', 'sdo', 'soo', 'sfo']
     return dict(module='qkd_host_pc_slice_die', file=SLICE_DIE_FILE, ports={n: [n] for n in names}, classed={})
@@ -2138,7 +2142,7 @@ def _host_v14_buses(m):
         for st in STACKS:
             if bid == f'clk_core_{st}':
                 B[i_] = (bid, cl, bits, list(B[i_][3]) + [(sl(st, k), c) for k in range(32)
-                                                          for c in ('ck_station', 'ck_static', 'ck_boot', 'ck_boot_test')])
+                                                          for c in ('ck',)])
     for f_ in ('host', 'ingest', 'phy'):
         add((f'clk_{f_}', 'clock_trunk', 1, [('pll', f'pll_{f_}')] + [('host', c) for c, f in sorted(fam.items()) if f == f_]))
     for si, st in enumerate(STACKS):
@@ -3830,9 +3834,8 @@ def _slice_pins(m, mm, down=False):
         for p, size in zip(lst, span):
             mm.face(p, w[p], face, 'M5', round(pos + size / 2, 3), 4)
             pos += size + 2.0
-    centres = dict(ck_station=('W', -5), ck_static=('W', 5),
+    centres = dict(ck=('W', -5),
                    host_rst_n=('W', -15), hbm_rst_n=('W', 15),
-                   ck_boot=('E', -5), ck_boot_test=('E', 5),
                    ctrl_completion_v=('E', -15), ctrl_completion_we=('E', 15),
                    lpc=('W', 0))
     rest = sorted(p for p in w if p not in mm.ports)

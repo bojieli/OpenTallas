@@ -1,5 +1,5 @@
 {
- "name": "hdie_col_idx_r1-r2-COMMIT",
+ "name": "hdie_col_idx_r1-r3-COMMIT",
  "block": "ot_hbm_static_cfg_collar",
  "ref_tile": true,
  "owner": "Claude:HBM-NATIVE",
@@ -195,6 +195,6 @@
  "reroute_reason": {
   "kind": "rtl_change",
   "vs": "hdie_col_idx_r1-r1-dcfed59ab",
-  "why": "native audit rst_n capture 499.0 ps: raw pin fanout -> local reset sync at the pin"
+  "why": "native pin audit (lanes/NATIVE-BATCH.md; results/arch/native_batch_1017 at claude/native-batch-1017 029f539c5): rst_n capture 499.0 ps, raw pin fanout to every collar flop -> local 2-flop reset sync at the pin (col_su r3 shape, capture 65.3); r2-62981a68f NEEDS_RTL was a bench qualification fault, fixed 40fcb3c9f (rec masked by go, pw_addr/pw_data by pw_we)"
  }
 }

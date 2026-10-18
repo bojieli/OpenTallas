@@ -34,7 +34,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 GRID = 400.0                      # reset station grid (<= measured reach 405 um per hop)
 FWD = 'BUFx8_ASAP7_75t_R'          # clock-forward cell (hop 0 source)
-INV = 'INVx2_ASAP7_75t_R'          # reset polarity (active-high block reset pins)
+INV = 'INVx2_ASAP7_75t_R'
+LAND_W = (70, 276, 512, 562, 682)  # dsfd_dvland_<W> tiles (rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv)          # reset polarity (active-high block reset pins)
 RST_RLY = {'EW': 'dsfd_rly_1_EW', 'WE': 'dsfd_rly_1_WE', 'NS': 'dsfd_rly_1_NS', 'SN': 'dsfd_rly_1_NS'}   # SN = NS mirrored (MX)
 ORIENT = {'WE': 'R0', 'EW': 'MY', 'NS': 'R90', 'SN': 'R270'}     # dsfd_rly_1_WN (in W, out N) turned to the tree edge
 CELL_MODELS = f'''// ASAP7 standard cells used by the S81-DV bound die top (functional models of library cells, not stand-ins)
@@ -59,9 +60,16 @@ def git_show(ref, path):
     return subprocess.run(['git', '-C', os.environ.get('OT_GIT_DIR', str(ROOT)), 'show', f'{ref}:{path}'], capture_output=True, check=True).stdout
 
 
-def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, extra_rtl=()):
-    """plan: loaded plan; sdir[(link_nm, k)] = station direction; chains_pts[link_nm] = station points (die coords)."""
+def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, extra_rtl=(), land_plan=None):
+    """plan: loaded plan; sdir[(link_nm, k)] = station direction; chains_pts[link_nm] = station points (die coords).
+    land_plan: S81-LAND pilot land_plan.json (per link E) -> landing K straps (else the table's land_plan, else K 1)."""
     T = json.load(open(table_path))
+    # S81-LAND2 (LANDING-CONTRACT L1-L7): port rules with "land": true get a dsfd_dvland_<W> tile between the last relay
+    # station and the block input (ring on the lane's forwarded clock, read on the block root from its regional reset,
+    # K strap, fault -> die status port land_fault).  0-stage links (neighbour root -> root) need none.
+    lp = land_plan or (ROOT / T['land_plan'] if T.get('land_plan') else None)
+    land_e = {r['link']: r['E'] for r in json.load(open(lp))['links']} if lp else {}
+    landings = []                 # (inst, link, bits)
     out.mkdir(parents=True, exist_ok=True)
     W, H = plan['facts']['die_um']
     pitch = plan['facts']['cluster_pitch_um']
@@ -139,6 +147,12 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                         c[ck[0]]  # make sure the clock output is connected
                 else:
                     w = dname(e[3])
+                    if rule.get('land') and chains_pts[e[3]] and b in LAND_W:
+                        landings.append((n, e[3], b))
+                        w = f'w_{e[3]}_lnd'          # the landing's o, abutted to the block input
+                    elif rule.get('land') and chains_pts[e[3]]:
+                        plan_not_in_rtl.append(dict(inst=n, module=mod, plan_port=p, dir=d, bits=b, link=e[3],
+                                                    note=f'no dsfd_dvland_{b} tile: lane NOT landed'))
                     c[rport].append((lane * lw, lane * lw + min(b, lw) - 1, w, b))
                     link_dst[e[3]] = w
                     if rule.get('ck_in'):   # the lane's forwarded clock (last station ck_o) into the receiver
@@ -167,6 +181,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             nm_ = f'{bl["name"]}_{tp["port"]}'
             io.append(f'  {tp["dir"]} wire [{tp["bits"] - 1}:0] {nm_}')
             top_ports.append(nm_)
+    if landings:
+        io.append(f'  output wire [{len(landings) - 1}:0] land_fault')
+        top_ports.append('land_fault')
     # non-ANSI header (the strict checker reads port widths from body declarations)
     names = [x.split()[-1] for x in io]
     v[-1] = f'module dv_die ({", ".join(names)});'
@@ -257,6 +274,19 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         col_ = int(n[2]) if n.startswith('s_') else None
         for mu in m.get('mode_unused', []):
             w_ = mu['when']
+            if w_ == 'lanes_without_producer':
+                # trailing lanes of a lane-packed port that no plan link reaches (e.g. slice rt lanes of row-0 frames
+                # the plan dropped): tie 0 and declare the exact bit range as a pad; internal gaps stay undriven (fail)
+                segs_ = conn[n].get(mu['port'])
+                wd_ = widths[mu['port']]
+                top_ = max((hi for lo, hi, _w, _b in segs_), default=-1) if segs_ else -1
+                if segs_ is not None and top_ + 1 < wd_ and (top_ + 1) % mu['lane'] == 0:
+                    segs_.append((top_ + 1, wd_ - 1, None, wd_ - 1 - top_))
+                    pads.setdefault(f'u_{n}', dict(master=mod, reason=mu['reason'], ports={}))['ports'].setdefault(
+                        mu['port'], []).append([top_ + 1, wd_ - 1])
+                    pad_rows.append(dict(inst=n, master=mod, port=mu['port'], bits=wd_ - 1 - top_, lo=top_ + 1, hi=wd_ - 1,
+                                         lanes=(wd_ - 1 - top_) // mu['lane'], reason=mu['reason']))
+                continue
             hit = (w_ == 'always' or (w_ == 'hb0' and not (params.get(n) or {}).get(m.get('hb_param', 'HB'))) or
                    (w_ == 'col0' and col_ == 0) or (w_ == 'col7' and col_ == 7))
             if hit and not conn[n].get(mu['port']):
@@ -278,7 +308,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 if lo > pos:
                     parts.append(f'u_{n}_{rp}_nc{pos}[{lo - pos - 1}:0]')
                     v.append(f'  wire [{lo - pos - 1}:0] u_{n}_{rp}_nc{pos};')
-                parts.append(f'{w}[{hi - lo}:0]')
+                parts.append(f"{hi - lo + 1}'d0" if w is None else f'{w}[{hi - lo}:0]')
                 pos = hi + 1
             if wd and pos < wd:
                 parts.append(f'u_{n}_{rp}_nc{pos}[{wd - pos - 1}:0]')
@@ -289,6 +319,21 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         pv = params.get(n) or {}
         ps = f' #({", ".join(f".{k}({vv})" for k, vv in pv.items())})' if pv else ''
         v.append(f'  {mod}{ps} u_{n} ({", ".join(cs)});')
+    # landings (S81-LAND2): K = E of the link's die STA window (land plan), assuming the hop-0 gate opens at the
+    # receiver's reset release (G = R0); E > 7 needs G - R0 = E - 7 in the reset calendar (recorded per row)
+    land_rows = []
+    for j, (n, nm, b) in enumerate(landings):
+        st = len(chains_pts[nm])
+        e_ = land_e.get(nm)
+        k_ = min(max(e_ or 1, 1), 7)
+        v.append(f'  wire [{b - 1}:0] w_{nm}_lnd;')
+        v.append(f'  dsfd_dvland_{b} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck(ck_{reg[n]}), .rs({rst["block_leaf"][n]}), '
+                 f".k(3'd{k_}), .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
+        land_rows.append(dict(link=nm, inst=n, master=f'dsfd_dvland_{b}', bits=b, stages=st, E=e_, K=k_,
+                              K_source='land_plan E (G = R0)' if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
+                              calendar_G_minus_R0=max(0, (e_ or 1) - 7), fault_bit=j))
+    for b in sorted({b for _, _, b in landings}):
+        straps.append([f'dsfd_dvland_{b}', 'k'])
     # relay chains (F1)
     nst = collections.Counter(); fwd_cells = 0
     for l in plan['links']:
@@ -347,7 +392,12 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     rec = dict(schema='opentallas.s81_dv.bind_case.v1', regions=regions, open_bindings=open_bind,
                plan_port_not_in_rtl=plan_not_in_rtl, relay_masters=dict(nst), clock_forward_cells=fwd_cells,
                abutted_plan_lanes=abut_rows, reset=rst['summary'], straps=straps, mode_unused_pads=pad_rows, views=dict(views),
-               frame_contract=dict(verdict=frame_rec['verdict'], members=len(frame_rec['members']), problems=frame_rec['problems']), rtl_extra=extra, top_offchip_ports=top_ports)
+               frame_contract=dict(verdict=frame_rec['verdict'], members=len(frame_rec['members']), problems=frame_rec['problems']), rtl_extra=extra, top_offchip_ports=top_ports,
+               landings=dict(count=len(land_rows), land_plan=str(lp) if lp else None,
+                             by_master=dict(collections.Counter(r['master'] for r in land_rows)),
+                             by_inst_kind=dict(collections.Counter(r['inst'].split('_')[0] for r in land_rows)),
+                             no_E=[r['link'] for r in land_rows if r['E'] is None],
+                             calendar_needs=[r for r in land_rows if r['calendar_G_minus_R0']], rows=land_rows))
     if run_bind:
         cmd = ['python3', str(ROOT / 'tools/die_port_bind.py'), str(out / 'die.v'), '--top', 'dv_die', '--rtl-root', str(ROOT / 'rtl'),
                '--rtl-file', str(out / 'cells_used.v'), '--strap-file', str(out / 'straps.json'), '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind.json')]
@@ -429,6 +479,62 @@ def place_lane(rule, e, es, bl):
     return i, rule['port'], lw, ck
 
 
+RESET_REACH_UM = 405.0             # measured repeated reach (plan 405 um, memory reach-405-repeaters-1016)
+
+
+def reset_reach_gate(blocks, par, free, nx, ny, block_pin, station_pts, reach=RESET_REACH_UM, mode=None):
+    """Die standard (regional reset; as the Qwen generator 27309ba59 and HBM die_case_v16 reset_reach_gate): every reset
+    sink must be reachable by the regional reset tree.  Errors (FAIL, ValueError) -- 'warn' does NOT bypass them, only
+    OT_RESET_GATE=diag continues (rec reach_gate FAIL_DIAG):
+      sink_unreachable    a block reset pin / relay station rs whose own grid cell is not on the BFS street tree and whose
+                          nearest tree station is more than `reach` away (cell_of() would silently stretch the hop);
+      sink_buried         a block reset pin strictly inside ANOTHER block's outline (no street can reach it);
+      driver_unreachable  no block-free cell for the root synchroniser.
+    over_reach (recorded, not a FAIL): a station -> parent hop longer than `reach` (relay timing judges it)."""
+    mode = os.environ.get('OT_RESET_GATE') if mode is None else mode
+    errors, over = [], 0
+    if not par:
+        errors.append(dict(kind='driver_unreachable', pin='rst_n', why='no block-free reset street cell'))
+
+    def raw(x, y):
+        return (min(max(int(x // GRID), 0), nx - 1), min(max(int(y // GRID), 0), ny - 1))
+
+    def nearest(x, y):
+        return min(par, key=lambda k: abs(free[k][0] - x) + abs(free[k][1] - y))
+
+    def buried(x, y, own):
+        for b in blocks:
+            if b['name'] != own and b['x'] + 0.5 < x < b['x'] + b['w'] - 0.5 and b['y'] + 0.5 < y < b['y'] + b['h'] - 0.5:
+                return b['name']
+        return None
+    sinks = [(f"{n}.rst", xy, n) for n, xy in block_pin.items()] + \
+            [(f"{nm}[{k}].rs", xy, None) for (nm, k), xy in station_pts.items()]
+    for pin, (x, y), own in sinks if par else ():
+        if own is not None:
+            b = buried(x, y, own)
+            if b:
+                errors.append(dict(kind='sink_buried', pin=pin, under=b))
+                continue
+        if raw(x, y) in par:
+            continue
+        c = nearest(x, y)
+        um = abs(free[c][0] - x) + abs(free[c][1] - y)
+        if um > reach:
+            errors.append(dict(kind='sink_unreachable', pin=pin, station=c, um=round(um, 1)))
+    for c, p in par.items():
+        if p is not None and abs(free[c][0] - free[p][0]) + abs(free[c][1] - free[p][1]) > reach:
+            over += 1
+    kinds = dict(collections.Counter(e['kind'] for e in errors))
+    rec = dict(reach_um=reach, sinks=len(sinks), errors=len(errors), kinds=kinds, first=errors[:20], over_reach_hops=over,
+               reach_gate='PASS' if not errors else ('FAIL_DIAG' if mode == 'diag' else 'FAIL'))
+    print('reset_reach_gate', json.dumps({k: rec[k] for k in ('reach_gate', 'sinks', 'errors', 'kinds', 'over_reach_hops')}),
+          flush=True)
+    if rec['reach_gate'] == 'FAIL':
+        raise ValueError(f"reset tree: reachability gate FAIL, {len(errors)} unbuildable {kinds}: {errors[:8]} "
+                         f"(OT_RESET_GATE=diag continues for diagnosis only)")
+    return rec
+
+
 def reset_tree(plan, reg, chains_pts, sdir, master=None):
     rr = {d: master for d in RST_RLY} if master else RST_RLY
     W, H = plan['facts']['die_um']
@@ -453,6 +559,8 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None):
                 if hit:
                     free[(i, j)] = hit; break
     # root: the die reset pad at the south edge centre street
+    if not free:
+        reset_reach_gate(blocks, {}, free, nx, ny, {}, {})
     root = min(free, key=lambda c: abs(free[c][0] - W / 2) + free[c][1])
     par = {root: None}
     q = collections.deque([root])
@@ -468,6 +576,9 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None):
         if c in par:
             return c
         return min(par, key=lambda k: abs(free[k][0] - x) + abs(free[k][1] - y))
+    gate = reset_reach_gate(blocks, par, free, nx, ny,
+                            {b['name']: (b['x'] + b['w'] / 2, b['y']) for b in blocks},
+                            {(nm, k): xy for nm, pts in chains_pts.items() for k, xy in enumerate(pts)})
     need = set()
     station_cell = {}
     for nm, pts in chains_pts.items():
@@ -517,7 +628,7 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None):
     summary = dict(grid_um=GRID, root_cell=root, root_xy=free[root], stations=len(tree) + 2, max_release_depth=max(depths),
                    min_release_depth=min(depths), max_relay_fanout=max(leaves.values()),
                    region_release_depth={r: max(dep(c) + 2 for c in tree if creg(c) == r) for r in set(map(creg, tree))},
-                   unreachable_cells=nx * ny - len(par))
+                   unreachable_cells=nx * ny - len(par), reach_gate=gate)
     return dict(verilog=v, station_leaf={k: name[c] for k, c in station_cell.items()},
                 block_leaf={b: name[c] for b, c in block_cell.items()},
                 block_parent={b: (name[par[c]] if par[c] is not None else 'rst_sync1') for b, c in block_cell.items()},

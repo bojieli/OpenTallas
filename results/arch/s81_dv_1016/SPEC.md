@@ -631,3 +631,21 @@ Coordinator 0cj ~15:00 (a)-(c):
 - FINDING (S81-DIE): plan RET = 68 but frame ret and slice rt lanes are 70 b ({rr[67:0], rr[0], rsync_s}): p4j must carry 70-b ret links (dsfd_dvrly_70_NS/SN kits owed; the 68 views become unused).
 - GRT p4i (stand-in blocks): nr overflow 0 (M3 9.67%); r overflow 0, fclk 0 mismatch, but post-GRT slew 1,402 violators worst 973.7 ps (p4h 22 / 349) -> classify before die STA.
 - Real-binding die run NOT placeable yet: 20 open-binding instances and 165 RTL-only instances (frames, slices, ctrl, PHY, links) have no abstract.
+
+#### p4j (S81-DIE3 10-17): RET 70 + q/P.V entry under the slice-column voids
+`dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4j --p4h-drop 6` (`--p4j` implies `--p4i`; p4i still reproduces plan.json byte-identical).
+- **p4i post-GRT slew classified (die_p4i_full_r grt.odb, 1,402 violators):** REGION + PLAN DEFECT, not the repeater step.
+  - 1,119 violators at (17.0-17.3, 4.39-4.72) mm and 261 at (14.4-14.7, 4.39-4.71) mm. All are fanout-1 die-net segments: 1,082 repeater->repeater and 320 from st_pv_E/W relay stations (dsfd_dvrly_276_WE).
+  - The segments are 450-600 um long against the 160-um max wire.
+  - Cause: p4i moved the q/P.V chain entry to the centre roots rsv_07 / rsv_09. Those sit under frames f_3R01 / f_4L01, so q_W/pv_W/q_E/pv_E (8 x 4 x 276 b) ran 7.5 mm of lane over the frame bodies. p4h had 0 um over blocks, and 14 p4i stations sat inside the frames.
+  - repair_design placed the repeaters on the frames. The spread then moved them to the 30-um channel and the 5-um frame gaps (max displacement 51 -> 322 um, full bins 3 -> 83, hard 884 -> 13,422 vs p4h). That left long unrepeated wires that upsizing cannot fix (911 blocked, 320 block drivers).
+- Fix (plan):
+  - q / P.V enter at the slice under the slice-column void (W rsv_05, E rsv_11, as in p4h). The chain root (fold) stays rsv_07 / rsv_09, one neighbour hop away.
+  - The entry->root edge carries q (tq_05_07, tq_11_09) and the partials toward the root (tp_05_07, tp_11_09). A new 512-b result lane (tr_07_05, tr_09_11) carries the folded result back to the entry. The reduction order is unchanged.
+  - New plan guard `lane_over_block_um` (p4j: exits if > 0).
+  - Result: lane over blocks 7,469 -> 0 um; stations 2,403 -> 2,371; bit-mm 304.4k -> 301.3k; deepest svc tree 2,144 -> 1,180 um; job far_W 27 -> 28 cyc (off the critical path).
+  - dv_price MTP / AR 4,115.7 / 1,394.5 (p4i 4,115.4 / 1,394.4).
+  - Contract change for S81U-1 (dsdv_svc_rs, no RTL yet): the q/pv slice faces are on rsv_05 / rsv_11; root slices get the ro/ri result lane.
+- RET 70: ret links are 70 b (frame ret / slice rt RTL). New relay masters dsfd_dvrly_70_NS/SN (dsfd_rly_masters_dvw.sv; kits s81dv_rly_70_{ns,sn}, 12.96 x 17.28): gate WARN (util only), SUBMITTED -w1-1e6f9a9d6. bind/bind_table_p4j.json retires the 68 views (relay_views_retired, with the reason).
+- Strict bind p4j (p4j/bind): FAIL. Unbound 4, unconnected 8, undriven 20,948 (p4i 21,192). Slice rt undriven 536 -> 420 b, all on s_2S/s_3S/s_4S/s_5S rt lanes from the row-0 frames dropped for the svc region: an S81-SLICE / bind-table decision (mode-unused tie with reason, or fewer rt lanes).
+- GRT: die_p4j_full_{nr,r} launched on E4 (same flow as p4i).

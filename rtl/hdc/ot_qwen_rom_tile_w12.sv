@@ -139,6 +139,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer TREE_LAT = 3,       // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
     parameter integer GLUE_HARD = 0, // opt-in consumer hard operand and column RQR registers
     parameter integer LOCAL_ROOTS = 0, // opt-in localized soft roots, no data latency change
+    parameter integer REGROOT = 0,     // Q-ROMPARENT 10-16 (RPH 3 only): ck_reg = {data E, data W, gn W, gs W} regional roots; 0 = ck_reg unused
     parameter integer CHILD_CLOCKS = 0
 ) (
     input wire [CODE_BANKS-1:0] ck_rpair,
@@ -146,6 +147,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     input wire [1:0] ck_rqr,
     input wire [1:0] ck_rqre,
     input wire [7:0] ck_tx,
+    input wire [3:0] ck_reg,
 
     input wire [7:0] ck_lsl,
     input wire ck_node,
@@ -254,9 +256,9 @@ module ot_qwen_rom_tile_logic_w12 #(
         initial $fatal(1,"GLUE_HARD requires ROM-only fixed 64-lane A0 local clock configuration");
     end endgenerate
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
+        .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .REGROOT(REGROOT), .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
-        .ck_lsl(ck_lsl), .ck_tx(ck_tx),
+        .ck_lsl(ck_lsl), .ck_tx(ck_tx), .ck_reg(ck_reg),
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
@@ -501,11 +503,24 @@ module ot_qwen_rom_tile_logic_w12 #(
                         initial $fatal(1,"RPH3 differs from fixed single-ROM leaf");
                     end
                     for (genvar col=0;col<2;col=col+1) begin : g_col
+                        //: REGROOT 2 (Q-ROMPARENT-2 10-17, regional reset): one kept relay flop per ROM leaf drives only that
+                        //: leaf's rst_n (asynchronous assert, release one edge later), clocked on the gutter root of the
+                        //: leaf's column half (W: ck_reg[0] rsw / ck_reg[1] rnw; E: ck_rqr[0] rs / ck_rqr[1] rn), so the
+                        //: tile reset net ends at 10 relay clears beside the leaves instead of 10 macro pins across 1.17 mm.
+                        wire rst_leaf;
+                        if (REGROOT >= 2 && LOCAL_ROOTS != 0 && CHILD_CLOCKS != 0) begin : g_lrr
+                            wire ck_lr = (col == 0) ? ((b < SB) ? ck_reg[0] : ck_reg[1]) : ((b < SB) ? ck_rqr[0] : ck_rqr[1]);
+                            (* keep *) reg rq;
+                            always @(posedge ck_lr or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                            assign rst_leaf = rq;
+                        end else begin : g_lrn
+                            assign rst_leaf = rst_n;
+                        end
                         ot_qwen_tile_romleaf
 `ifndef SYNTHESIS
                             #(.ROM_TILE(ROM_TILE),.ROM_BANK(b),.ROM_COL(col))
 `endif
-                            u_leaf (.clk(CHILD_CLOCKS ? (col==0 ? ck_rpair[b] : ck_pair1[b]) : clk),.rst_n(rst_n),.ce_d(ce_pre[b]),
+                            u_leaf (.clk(CHILD_CLOCKS ? (col==0 ? ck_rpair[b] : ck_pair1[b]) : clk),.rst_n(rst_leaf),.ce_d(ce_pre[b]),
                                 .any_d((b<SB)?any_s:any_n),.ad_d((b<SB)?adm_pre:adm_pre_n),.r_q(r_q[512*col +: 512]));
                     end
                     assign rom_req_m[13*b +: 13]=13'd0;
@@ -549,6 +564,16 @@ module ot_qwen_rom_tile_logic_w12 #(
                     ot_qwen_tile_rqr_half u_nw(.clk(ck_gn),.d(rwn[CODE_BANKS][511:0]),.q(gn_q[511:0]));
                     ot_qwen_tile_rqr_half u_se(.clk(ck_rqre[0]),.d(rw[CODE_BANKS][1023:512]),.q(gs_q[1023:512]));
                     ot_qwen_tile_rqr_half u_ne(.clk(ck_rqre[1]),.d(rwn[CODE_BANKS][1023:512]),.q(gn_q[1023:512]));
+                end else if (REGROOT != 0 && RPH == 3) begin : g_col_roots
+                    // Q-ROMPARENT 10-16 (claude/romparent-c1r8, merged by Q-BIND 10-17): each ROM column's half of the
+                    // group words on its own regional root (west column [PWB*2-1:0] on ck_reg[0]/[1]; east column keeps
+                    // ck_rqr); same values, same edges.
+                    (* keep *) reg [2*2*PWB-1:0] gs, gn;
+                    always @(posedge ck_reg[0]) gs[2*PWB-1:0] <= rw[CODE_BANKS][2*PWB-1:0];
+                    always @(posedge ck_gs)     gs[4*PWB-1:2*PWB] <= rw[CODE_BANKS][4*PWB-1:2*PWB];
+                    always @(posedge ck_reg[1]) gn[2*PWB-1:0] <= rwn[CODE_BANKS][2*PWB-1:0];
+                    always @(posedge ck_gn)     gn[4*PWB-1:2*PWB] <= rwn[CODE_BANKS][4*PWB-1:2*PWB];
+                    assign gs_q=gs;assign gn_q=gn;
                 end else begin:g_soft
                     (* keep *) reg [2*2*PWB-1:0] gs, gn;
                     always @(posedge ck_gs) gs <= rw[CODE_BANKS];
@@ -786,6 +811,7 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer BAW = 12,           // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
     parameter integer GLUE_HARD = 0, // opt-in consumer hard operand and column RQR registers
     parameter integer LOCAL_ROOTS = 0, // opt-in localized soft roots, no data latency change
+    parameter integer REGROOT = 0,     // Q-ROMPARENT 10-16 (RPH 3 only): ck_reg = {data E, data W, gn W, gs W} regional roots; 0 = ck_reg unused
     parameter integer CHILD_CLOCKS = 0
 ) (
     input wire [CODE_BANKS-1:0] ck_rpair,
@@ -793,6 +819,7 @@ module ot_qwen_rom_tile_w12 #(
     input wire [1:0] ck_rqr,
     input wire [1:0] ck_rqre,
     input wire [7:0] ck_tx,
+    input wire [3:0] ck_reg,
 
     // Q-TILE-REPACK 10-15: CHILD_CLOCKS with RPH 1 (ROM macros placed directly in the tile parent): one raw-macro clock
     // entry per macro, index p*CODE_BANKS + b (= g_col[p].g_bank[b].u_rom).  Unused (any value) otherwise.
@@ -831,9 +858,9 @@ module ot_qwen_rom_tile_w12 #(
 `ifndef SYNTHESIS
         .ROM_TILE(ROM_TILE),
 `endif
-        .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
+        .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .REGROOT(REGROOT), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
         .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT)) u_logic (
-        .ck_rpair(ck_rpair), .ck_pair1(ck_pair1), .ck_rqr(ck_rqr), .ck_rqre(ck_rqre), .ck_tx(ck_tx), .ck_lsl(ck_lsl), .ck_node(ck_node),
+        .ck_rpair(ck_rpair), .ck_pair1(ck_pair1), .ck_rqr(ck_rqr), .ck_rqre(ck_rqre), .ck_tx(ck_tx), .ck_reg(ck_reg), .ck_lsl(ck_lsl), .ck_node(ck_node),
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),

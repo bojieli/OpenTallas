@@ -1,0 +1,146 @@
+{
+  "name": "s81sl_vsw",
+  "top": "ot_s81sl_vsw",
+  "kind": "tile",
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 2
+    }
+  ],
+  "pins": {
+    "N": [
+      "i_v",
+      "i_d",
+      "i_w",
+      "i_lim"
+    ],
+    "S": [
+      "clk",
+      "rst_n",
+      "o_v",
+      "o_d",
+      "o_f"
+    ]
+  },
+  "recipe": 4,
+  "hold_budget": "die",
+  "inhold": false,
+  "outhold": false,
+  "clock": "cts",
+  "layer_cap": "M5",
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M3 M5"
+    }
+  },
+  "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice (SU lane engine, helper S81-SLICE-SU); flop-first pins, die hold budget.",
+  "job": {
+    "owner": "Claude:S81-SLICE-SU",
+    "branch": "claude/s81sl-su-1017",
+    "tag": "s81sl_vsw",
+    "purpose": "S81-SLICE-SU: beat-leaf SW lane (one hub ot_s81_su_swl) to closure (TT setup / FF hold / DRC 0 + native audit).",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_dv/slice",
+      "rtl/dsrom_sys/s81_suhc",
+      "tools/s81_slice",
+      "tools/s81_suhc/hc_gate.py",
+      "tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl",
+      "rtl/hdc",
+      "rtl/proto",
+      "rtl/lib",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "tools/hdc_golden.py",
+      "tools/hdc_golden_v41.py",
+      "tools/rtl_hdc_v41_blockdot_campaign.py",
+      "tools/dsrom_su_swiglu.py"
+    ],
+    "benches": [
+      {
+        "name": "slvs_exact",
+        "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_exact 0 L0",
+        "expect": "pass",
+        "pass_regex": "^PASS vs MUT=0 L0$",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slvs_mut1",
+        "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut1 1 L0",
+        "expect": "pass",
+        "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=1 L0$",
+        "threads": 4,
+        "peak_ram_gb": 6
+      }
+    ],
+    "views_to": "physical/ref_tile/s81sl_vsw/views",
+    "record_to": "results/rtl/ref_tile/s81sl_vsw"
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "Source-registered (S81-SLICE-SU): every data input lands in a flop at the pin (the *_c / *_q capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam."
+  },
+  "util": 0.52,
+  "std_area_um2": 12000,
+  "pin_ranges": {
+    "i_v": [
+      6.48,
+      9.246
+    ],
+    "i_d": [
+      9.246,
+      166.441
+    ],
+    "i_w": [
+      166.441,
+      187.981
+    ],
+    "i_lim": [
+      187.981,
+      209.52
+    ],
+    "o_v": [
+      6.48,
+      11.618
+    ],
+    "o_d": [
+      11.618,
+      204.382
+    ],
+    "o_f": [
+      204.382,
+      209.52
+    ]
+  }
+}

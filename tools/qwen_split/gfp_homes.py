@@ -113,7 +113,14 @@ def apply(model, path):
     for n, h in homes.items():
         i = by[n]
         same = h['m'] == i.master or (rebase is not None and ({h['m'], i.master} <= TILE_PAIR or (h['m'], i.master) in RENAMED))
-        if same and any(abs(float(h[k])-getattr(i,k)) > 1e-3 for k in ('w','h')) and _view_shrink(i, h):
+        tall_io = (os.environ.get('OT_SPLIT_PHY_TALL') == '1' and same and n.startswith(('io_serdes', 'io_collective'))
+                   and abs(float(h['w']) - i.h) < 1.0 and abs(float(h['h']) - i.w) < 1.0)
+        if tall_io:
+            # Q-DIEPLAN3 10-17: the modeled tall PHY edge variant / re-kitted tall collective (OT_SPLIT_PHY_TALL): the
+            # instance carries the new outline; the (base-geometry) home keeps its origin and is checked with its
+            # home outline; the dv die re-places it (tools/qwen_split/dv_case.py)
+            proposed[n].update(w=float(h['w']), h=float(h['h']))
+        elif same and any(abs(float(h[k])-getattr(i,k)) > 1e-3 for k in ('w','h')) and _view_shrink(i, h):
             view_shrunk.append(n)                      # closed leaf smaller than its historical frame: keep the origin
         elif not same or any(abs(float(h[k])-getattr(i,k)) > 1e-3 for k in ('w','h')):
             raise ValueError(f'OT_SPLIT_HOMES: {n} master/outline mismatch')

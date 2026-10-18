@@ -113,3 +113,24 @@ class VisualReview(unittest.TestCase):
         self.lock.write_text('{"owner": "codex"}')
         self.assertIsNone(SE.reviewer_allowed("Codex coordinator"))
         self.assertIsNotNone(SE.reviewer_allowed("coordinator (Claude)"))
+
+
+def test_bench_evidence_refusals():
+    P = {"name": "pos", "cmd": "x", "expect": "pass"}
+    F = {"name": "mut", "cmd": "y", "expect": "fail", "fail_regex": "MISMATCH", "fail_witness": "results/w.log"}
+    st = lambda *b: dict(SPEC, stages={"bench": list(b)})  # noqa: E731
+    assert S.bench_evidence_problems(st(P, F)) == ([], [])
+    e, _ = S.bench_evidence_problems(dict(SPEC))
+    assert e and "no benches" in e[0]
+    e, _ = S.bench_evidence_problems(st(P))
+    assert any("expect=fail mutant" in x for x in e)
+    e, _ = S.bench_evidence_problems(st({"name": "lint", "cmd": "z", "expect": "pass"}, F))
+    assert any("behavioural" in x for x in e)
+    nowit = dict(F, fail_witness=None)
+    e, _ = S.bench_evidence_problems(st(P, nowit))
+    assert e and "fail_witness" in e[0]
+    e, w = S.bench_evidence_problems(dict(st(P, nowit), fail_witness_waiver="mutant log captured after the route"))
+    assert not e and w and "[waived]" in w[0]
+    e, w = S.bench_evidence_problems(st(P, nowit), allow_missing_witness=True)
+    assert not e and w
+    assert S.bench_evidence_problems(dict(SPEC, hold_merge="never merges"))[0] == []
