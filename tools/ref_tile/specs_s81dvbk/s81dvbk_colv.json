@@ -127,12 +127,12 @@
   "threads": 16,
   "peak_ram_gb": 64
  },
- "structural_change": "S81U-BK3 vertical cut (coordinator 0cj (b)): wires-only cluster of re-pinned square-ish leaves stacked in the 680-um column; plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json. NOT GENERATED YET: the child views (views_to of the leaf kits) exist only after the leaves close.",
+ "structural_change": "S81U-BK3 vertical cut (coordinator 0cj (b)): wires-only cluster of re-pinned square-ish CLOSED leaves stacked in the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json). PL-BK 10-18 (PARENTS-LANDED): ONE clock region, no landings, by the landed-regions standard's own threshold: 673.92 x 648 (< 1 mm) and the closed children's boundary insertion means agree within 4.5 ps (TT cm 264.8 / cl 269.3 / g2 265.1; FF 219.9 / 225.7 / 219.0); every internal crossing is in the lane <-> merger credit loop or the glue -> lanes -> merger -> glue (vd) path, one strongly connected set that lp.py cannot land without a compiler re-schedule. Children: closed s81dvbk_cl-l1-cc118de88, s81dvbk_cm-m1-8c2850345, s81dvbk_g2-g2-3f5182cd2.",
  "job": {
-  "owner": "Claude:S81U-BK3",
-  "branch": "claude/s81u2-bk-1017",
-  "tag": "v1",
-  "purpose": "S81-DV dsdv_bk_col vertical-cut cluster (lane S81U-BK3): closure after its leaves close.",
+  "owner": "Claude:PL-BK",
+  "branch": "claude/pl-bk-1018",
+  "tag": "pl1",
+  "purpose": "S81-DV dsdv_bk_col vertical-cut cluster (PL-BK, PARENTS-LANDED 10-18): single-region cluster of closed leaves.",
   "benched_by": "the leaf jobs (dsdv_bk_col / dsdv_bk_sel exact + mutant benches)",
   "views_to": "physical/ref_tile/s81dvbk_colv/views",
   "record_to": "results/rtl/ref_tile/s81dvbk_colv"

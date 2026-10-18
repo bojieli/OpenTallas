@@ -32,7 +32,14 @@ module tb_dsdv_bk_wrap #(
     output wire         vf
 );
     localparam integer V = 276, LW = 7;
-    localparam integer RL = (UNIT == 0) ? 1 : 0;   // S81-TILES8/bk 10-18: dsdv_bk_sel rung relays u_rs / u_rn = +1 rung
+`ifdef OT_DSDV_BK_LP
+    // PL-BK 10-18: the LANDED selector dsdv_bk_sel_x_lp (lp.py; record results/arch/landed_parent_1018/dsdv_bk_sel_x):
+    // the rung relays sit in their own clock regions and land into the core region (+3 edges per direction on top of
+    // the relay's +1); the whole core calendar (glue, quarters, control) moves +3 with the rung, so RL = 1 + 3
+    localparam integer RL = (UNIT == 0) ? 4 : 0;
+`else
+    localparam integer RL = (UNIT == 0) ? 1 : 0;
+`endif   // S81-TILES8/bk 10-18: dsdv_bk_sel rung relays u_rs / u_rn = +1 rung
                                                    // cycle per direction (through beats and the drain CTL alike)
     localparam [2:0] IK = 3'd4, EK = 3'd5;
     localparam [7:0] UID = 8'h5B;
@@ -59,7 +66,11 @@ module tb_dsdv_bk_wrap #(
     assign vi_s = mir ? vi_b : vi_a; assign vi_n = mir ? vi_a : vi_b;
     assign vo_a = mir ? vo_n : vo_s; assign vo_b = mir ? vo_s : vo_n;
     generate if (UNIT == 0) begin : g_sel
-        dsdv_bk_sel #(.MUT(MUT)) u_u (.clk(ck), .rst_n(rst), .tap_k(8'h11), .sink_k(8'h10), .ik(IK), .ek(EK), .uid(UID),
+`ifdef OT_DSDV_BK_LP
+        dsdv_bk_sel_x_lp #(.MUT(0)) u_u (.ck_core(ck), .ck_rs(ck), .ck_rn(ck), .rst_n(rst),
+`else
+        dsdv_bk_sel #(.MUT(MUT)) u_u (.clk(ck), .rst_n(rst),
+`endif .tap_k(8'h11), .sink_k(8'h10), .ik(IK), .ek(EK), .uid(UID),
             .eg_n(mir), .vi_s(vi_s), .vo_n(vo_n), .vi_n(vi_n), .vo_s(vo_s), .fault(fault));
     end else begin : g_col
         dsdv_bk_col #(.MUT(MUT)) u_u (.clk(ck), .rst_n(rst), .tap_k(8'h11), .sink_k(8'h10), .ik(IK), .ek(EK), .uid(UID),
