@@ -25,6 +25,11 @@
 // one region per bank tile + centre); each bank tile relays it again at its own boundary (RST_RELAY 1).
 // MUT (bench): 1 = bank 3 weight slice rotated, 3 = x landing one run off, 4 = tree level-1 pairs (0,2),(1,3)
 // instead of (0,1),(2,3) (reduction order changed).
+// RING FORM (2026-10-17, coordinator decision: hc_<q> + centre in the ring hole): this module is now the SOFT
+// composition of the die tiles: ot_hbm_hc_qcen_static (centre, inside ot_hbm_hc_qhub_static) + bank tiles
+// ot_hbm_hc_bankq0_static (bank 0, W edge, chain-exit relay), ot_hbm_hc_bankq_ft_static (banks 2 N / 6 S, feeding
+// corners 1, 3 / 5, 7), ot_hbm_hc_bankq_static (banks 1, 3, 4, 5, 7). The x_wave data beats go to the banks directly
+// (256-b slice each); corner banks write one edge later (their feed register). Ports unchanged.
 module ot_hbm_hc_qeng_static #(
     parameter integer K    = 20480,
     parameter integer DRLY = 1,                  // relay registers centre <-> bank 0 / bank 7
@@ -55,144 +60,67 @@ module ot_hbm_hc_qeng_static #(
     output reg            ps_f,
     output reg            fault
 );
-    localparam integer W = 64, AW = 10, R = K / 2048, WPRQ = K / 1024, NJ = W / 32;
-    localparam integer LM = 8, LA = 7, SOR = 1, ML = 2, NVW = 7, LT = 6;
-    // bank 0 input -> bank 7 sum_out (the full engine's SYS_LAT - 2 DRLY)
-    localparam integer SB = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR;
-    initial if (K % 2048 != 0 || R > 16 || WPRQ > 32) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
-
-    // ------------------------------------------------------------------ synced reset (9 regions: 8 banks + centre)
-    wire [8:0] rn;
-    ot_rst_relay #(.REGIONS(9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
-    wire rc = rn[8];
-
-    // ------------------------------------------------------------------ pin registers
-    reg dv_q, dss_q; reg [6:0] dnv_q; reg [9:0] dwa_q, dxa_q;
-    reg iv_q, ik_q; reg [1:0] is_q; reg [4:0] ilo_q, iw_q; reg [11:0] ic_q; reg [9:0] iwd_q;
-    always @(posedge clk or negedge rc)
-        if (!rc) begin dv_q <= 1'b0; iv_q <= 1'b0; end else begin dv_q <= d_v; iv_q <= i_v; end
-    always @(posedge clk) begin
-        dss_q <= d_ss; dnv_q <= d_nv; dwa_q <= d_wa; dxa_q <= d_xa;
-        ik_q <= i_kind; is_q <= i_slot; ilo_q <= i_lo; iw_q <= i_w; ic_q <= i_cnt; iwd_q <= i_word;
-    end
-    wire xv_q; wire [9:0] xw_q; wire [8191:0] xd_q; wire rx_fault;
-    ot_hbm_hc_xw_rx_static #(.BEATS(XW_BEATS)) u_rx (.clk(clk), .rst_n(rc), .x_v(x_wave_v), .x_beat(x_wave_beat),
-        .x_word(x_wave_word), .x_data(x_wave), .wave_v(xv_q), .wave_word(xw_q), .wave(xd_q), .fault(rx_fault));
-
-    // ------------------------------------------------------------------ ingest sequencer (this quadrant)
-    reg in_act, in_kind; reg [1:0] in_ph, in_slot; reg [4:0] in_lo, in_w; reg [11:0] in_left; reg [9:0] in_word;
-    wire due = in_act && in_ph == 2'd0;
-    wire [3:0] drun = 4'(in_w / NJ);
-    wire dj = in_w[0];
-    wire [9:0] dxaddr = 10'(in_lo * R + drun + ((MUT == 3) ? 1 : 0));
-    wire [9:0] dwaddr = 10'(in_slot * 256 + in_lo * R + drun);
-    reg lowbad;
-    always @* begin
-        lowbad = 1'b0;
-        for (integer m = 0; m < 256; m = m + 1) lowbad = lowbad | (|xd_q[m*32 +: 16]);
-    end
-    reg b_wv, b_xv, b_j; reg [9:0] b_a; reg [8191:0] b_d; reg ing_fault;
-    always @(posedge clk or negedge rc) begin
-        if (!rc) begin in_act <= 0; in_ph <= 0; b_wv <= 0; b_xv <= 0; ing_fault <= 0; end
-        else begin
-            b_wv <= due && in_kind; b_xv <= due && !in_kind;
-            if (xv_q && !due) ing_fault <= 1'b1;                                    // unsolicited wave
-            if (due) begin
-                if (!xv_q || xw_q != in_word) ing_fault <= 1'b1;
-                if (!in_kind && lowbad) ing_fault <= 1'b1;                          // residual must be BF16-valued
-                in_word <= in_word + 1'b1;
-                in_left <= in_left - 1'b1;
-                if (in_left == 12'd1) in_act <= 1'b0;
-                if (in_w == 5'(WPRQ - 1)) begin
-                    in_w <= 5'd0;
-                    if (in_kind && in_lo == 5'd23) begin in_lo <= 5'd0; in_slot <= in_slot + 1'b1; end
-                    else in_lo <= in_lo + 1'b1;
-                end else in_w <= in_w + 1'b1;
-            end
-            if (in_act) in_ph <= in_ph + 1'b1;
-            if (iv_q) begin
-                if (in_act || ic_q == 0 || iw_q >= WPRQ || ilo_q >= (ik_q ? 24 : 8)) ing_fault <= 1'b1;
-                in_act <= 1'b1; in_kind <= ik_q; in_ph <= 2'd0; in_slot <= is_q; in_lo <= ilo_q; in_w <= iw_q;
-                in_left <= ic_q; in_word <= iwd_q;
-            end
+    localparam integer XB = 8192 / XW_BEATS;
+    initial if (XW_BEATS != 4) $fatal(1, "ring form: XW_BEATS must be 4 (2,048-b beats, 256-b bank slices)");
+    // ------------------------------------------------------------------ centre
+    wire [7:0] rb, wf; wire [12:0] wc_w, wc_n, wc_e, wc_s; wire [2048:0] s_c;
+    wire bd_v, bd_ss; wire [6:0] bd_nv; wire [9:0] bd_wa, bd_xa;
+    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .MUT((MUT == 3 || MUT == 4) ? MUT : 0)) u_cen (
+        .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
+        .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
+        .x_v(x_wave_v), .x_beat(x_wave_beat), .x_word(x_wave_word), .s_i(s_c), .wfault_i(wf), .rst_b(rb),
+        .bd_v(bd_v), .bd_ss(bd_ss), .bd_nv(bd_nv), .bd_wa(bd_wa), .bd_xa(bd_xa),
+        .wc_w(wc_w), .wc_n(wc_n), .wc_e(wc_e), .wc_s(wc_s), .ps_v(ps_v), .ps(ps), .ps_f(ps_f), .fault(fault));
+    // ------------------------------------------------------------------ per-bank beat slices (bank k = term k)
+    wire [8*256-1:0] xs;
+    for (genvar k = 0; k < 8; k = k + 1) begin : g_xs
+        for (genvar i = 0; i < 8; i = i + 1) begin : g_i
+            assign xs[k*256 + i*32 +: 32] = x_wave[i*256 + k*32 +: 32];
         end
     end
-    always @(posedge clk) begin b_j <= dj; b_a <= in_kind ? dwaddr : dxaddr; b_d <= xd_q; end
-
-    // ------------------------------------------------------------------ bank ring (chain 0 -> 7)
-    localparam integer DW = 2 + NVW + 2 * AW;
-    wire [DW-1:0] d_in = {dv_q, dss_q, dnv_q, dwa_q, dxa_q};
-    wire [DW-1:0] d_rel; wire [W*32:0] s_src, s_rel;
-    if (DRLY == 0) begin : g_nor
-        assign d_rel = d_in; assign s_rel = s_src;
-    end else begin : g_rel
-        reg [DW-1:0] dr [0:DRLY-1]; reg [W*32:0] sr [0:DRLY-1];
-        always @(posedge clk) begin
-            dr[0] <= d_in; sr[0] <= s_src;
-            for (integer i = 1; i < DRLY; i = i + 1) begin dr[i] <= dr[i-1]; sr[i] <= sr[i-1]; end
-        end
-        assign d_rel = dr[DRLY-1]; assign s_rel = sr[DRLY-1];
+    // ------------------------------------------------------------------ ring chain 0 -> 7
+    wire [8:0] cv, css, cf; wire [9*7-1:0] cnv; wire [9*10-1:0] cwa, cxa; wire [9*2048-1:0] csum;
+    // corner feeds: bank 2 feeds 1 (a) and 3 (b); bank 6 feeds 5 (a) and 7 (b)
+    wire [3:0] fx_v; wire [7:0] fx_b; wire [4*256-1:0] fx_d; wire [3:0] fwv, fxv, fj; wire [4*10-1:0] fwa;
+    wire [3:0] frst, fwf_c;                        // corner reset (through the edge tile) / corner fault (into it)
+    `define OT_HCQ_CHAIN(k) .d_v(cv[k]), .d_ss(css[k]), .d_nv(cnv[(k)*7 +: 7]), .d_wa(cwa[(k)*10 +: 10]), .d_xa(cxa[(k)*10 +: 10]), \
+        .o_v(cv[(k)+1]), .o_ss(css[(k)+1]), .o_nv(cnv[((k)+1)*7 +: 7]), .o_wa(cwa[((k)+1)*10 +: 10]), .o_xa(cxa[((k)+1)*10 +: 10]), \
+        .sum_out(csum[((k)+1)*2048 +: 2048]), .f_out(cf[(k)+1])
+    assign cv[0] = bd_v; assign css[0] = bd_ss; assign cnv[0 +: 7] = bd_nv; assign cwa[0 +: 10] = bd_wa; assign cxa[0 +: 10] = bd_xa;
+    ot_hbm_hc_bankq0_static #(.MUT(0), .DRLY(DRLY)) u_b0 (.clk(clk), .rst_n(rb[0]), `OT_HCQ_CHAIN(0),
+        .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[0 +: 256]),
+        .wv(wc_w[12]), .xv(wc_w[11]), .j(wc_w[10]), .wa(wc_w[9:0]), .wfault(wf[0]),
+        .s_i({cf[8], csum[8*2048 +: 2048]}), .s_o(s_c));
+    for (genvar e = 0; e < 2; e = e + 1) begin : g_ft          // e 0: bank 2 (N, wc_n), e 1: bank 6 (S, wc_s)
+        localparam integer K0 = 2 + 4 * e;
+        wire [12:0] wc = (e == 0) ? wc_n : wc_s;
+        ot_hbm_hc_bankq_ft_static #(.MUT(0)) u_b (.clk(clk), .rst_n(rb[K0]), `OT_HCQ_CHAIN(K0),
+            .sum_in(csum[K0*2048 +: 2048]), .f_in(cf[K0]),
+            .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[K0*256 +: 256]),
+            .wv(wc[12]), .xv(wc[11]), .j(wc[10]), .wa(wc[9:0]), .wfault(wf[K0]),
+            .fa_xb_v(x_wave_v), .fa_xb_beat(x_wave_beat), .fa_xb_d(xs[(K0-1)*256 +: 256]),
+            .fa_wv(wc[12]), .fa_xv(wc[11]), .fa_j(wc[10]), .fa_wa(wc[9:0]),
+            .fa_xb_v_o(fx_v[2*e]), .fa_xb_beat_o(fx_b[4*e +: 2]), .fa_xb_d_o(fx_d[(2*e)*256 +: 256]),
+            .fa_wv_o(fwv[2*e]), .fa_xv_o(fxv[2*e]), .fa_j_o(fj[2*e]), .fa_wa_o(fwa[(2*e)*10 +: 10]),
+            .fb_xb_v(x_wave_v), .fb_xb_beat(x_wave_beat), .fb_xb_d(xs[(K0+1)*256 +: 256]),
+            .fb_wv(wc[12]), .fb_xv(wc[11]), .fb_j(wc[10]), .fb_wa(wc[9:0]),
+            .fb_xb_v_o(fx_v[2*e+1]), .fb_xb_beat_o(fx_b[4*e+2 +: 2]), .fb_xb_d_o(fx_d[(2*e+1)*256 +: 256]),
+            .fb_wv_o(fwv[2*e+1]), .fb_xv_o(fxv[2*e+1]), .fb_j_o(fj[2*e+1]), .fb_wa_o(fwa[(2*e+1)*10 +: 10]),
+            .fa_rst_n(rb[K0-1]), .fb_rst_n(rb[K0+1]), .fa_rst_n_o(frst[2*e]), .fb_rst_n_o(frst[2*e+1]),
+            .fa_wfault(fwf_c[2*e]), .fb_wfault(fwf_c[2*e+1]), .fa_wfault_o(wf[K0-1]), .fb_wfault_o(wf[K0+1]));
     end
-    wire [8:0] cv, css, cf; wire [9*NVW-1:0] cnv; wire [9*AW-1:0] cwa, cxa; wire [9*W*32-1:0] csum;
-    assign {cv[0], css[0], cnv[0 +: NVW], cwa[0 +: AW], cxa[0 +: AW]} = d_rel;
-    assign csum[0 +: W*32] = {(W*32){1'b0}}; assign cf[0] = 1'b0;
-    assign s_src = {cf[8], csum[8*W*32 +: W*32]};
-    genvar gk;
-    for (gk = 0; gk < 8; gk = gk + 1) begin : g_bank
-        ot_hbm_hc_bank_static #(.W(W), .AW(AW), .LM(LM), .LA(LA), .MUT((MUT == 1 && gk == 3) ? 1 : 0), .RST_RELAY(1)) u_b (
-            .clk(clk), .rst_n(rn[gk]), .first(gk == 0),
-            .d_v(cv[gk]), .d_ss(css[gk]), .d_nv(cnv[gk*NVW +: NVW]), .d_wa(cwa[gk*AW +: AW]), .d_xa(cxa[gk*AW +: AW]),
-            .o_v(cv[gk+1]), .o_ss(css[gk+1]), .o_nv(cnv[(gk+1)*NVW +: NVW]), .o_wa(cwa[(gk+1)*AW +: AW]),
-            .o_xa(cxa[(gk+1)*AW +: AW]), .sum_in(csum[gk*W*32 +: W*32]), .sum_out(csum[(gk+1)*W*32 +: W*32]),
-            .f_in(cf[gk]), .f_out(cf[gk+1]),
-            .wv(b_wv), .xv(b_xv), .j(b_j), .wa(b_a), .wd(bank_slice(b_d, gk)));
+    // corners 1, 3, 5, 7 (feed index c = 0..3) and bank 4 (E edge, wc_e)
+    for (genvar c = 0; c < 4; c = c + 1) begin : g_cn
+        localparam integer KC = 2 * c + 1;
+        ot_hbm_hc_bankq_static #(.MUT((MUT == 1 && KC == 3) ? 1 : 0)) u_b (.clk(clk), .rst_n(frst[c]), `OT_HCQ_CHAIN(KC),
+            .sum_in(csum[KC*2048 +: 2048]), .f_in(cf[KC]),
+            .xb_v(fx_v[c]), .xb_beat(fx_b[2*c +: 2]), .xb_d(fx_d[c*256 +: 256]),
+            .wv(fwv[c]), .xv(fxv[c]), .j(fj[c]), .wa(fwa[c*10 +: 10]), .wfault(fwf_c[c]));
     end
-    function automatic [1023:0] bank_slice(input [8191:0] d, input integer k);
-        for (integer m = 0; m < 32; m = m + 1) bank_slice[m*32 +: 32] = d[m*256 + k*32 +: 32];
-    endfunction
-
-    // ------------------------------------------------------------------ 6-level subtree of the csum chunk tree
-    // valid of the task whose chunk sums are on s_rel now (bank 0 input + SB + DRLY)
-    localparam integer VD = SB + DRLY;
-    reg [VD-1:0] vl;
-    always @(posedge clk or negedge rc) if (!rc) vl <= 0; else vl <= {vl[VD-2:0], cv[0]};
-    wire leaf_v = vl[VD-1];
-    wire [64*32-1:0] lv0;
-    // MUT 4: level-1 pairs (0,2),(1,3) within each group of 4 (association changed)
-    for (genvar i = 0; i < 64; i = i + 1) begin : g_perm
-        localparam integer SRC = (MUT == 4) ? ((i & ~3) | ((i & 1) << 1) | ((i >> 1) & 1)) : i;
-        assign lv0[i*32 +: 32] = s_rel[SRC*32 +: 32];
-    end
-    // nodes: level l (1..6) holds 64 >> l nodes at flat index OFF(l) + i, OFF(l) = 64 - (128 >> l); root = node 62
-    wire [63*32-1:0] nd; wire [62:0] nv, ne;
-    for (genvar l = 1; l <= LT; l = l + 1) begin : g_lvl
-        localparam integer N = 64 >> l, OFF = 64 - (128 >> l), POFF = 64 - (256 >> l);
-        for (genvar i = 0; i < N; i = i + 1) begin : g_n
-            wire [31:0] a, b; wire va; wire [1:0] e;
-            if (l == 1) begin : g_leaf
-                assign a = lv0[(2*i)*32 +: 32]; assign b = lv0[(2*i+1)*32 +: 32]; assign va = leaf_v;
-            end else begin : g_up
-                assign a = nd[(POFF + 2*i)*32 +: 32]; assign b = nd[(POFF + 2*i + 1)*32 +: 32]; assign va = nv[POFF + 2*i];
-            end
-            ot_hdc_fp32_add_lat #(.LAT(TLA), .DRST(0)) u_a (.clk(clk), .rst_n(rc), .valid_in(va), .a(a), .b(b),
-                .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
-            assign ne[OFF + i] = nv[OFF + i] && (|e);
-        end
-    end
-    localparam integer RT = 62;
-    // lane fault of the task, delayed to the tree output
-    reg [LT*TLA-1:0] lfd;
-    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA-2:0], s_rel[W*32] && leaf_v};
-
-    // ------------------------------------------------------------------ output pin flops + status
-    always @(posedge clk or negedge rc) begin
-        if (!rc) begin ps_v <= 1'b0; ps_f <= 1'b0; fault <= 1'b0; end
-        else begin
-            ps_v <= nv[RT];
-            ps_f <= lfd[LT*TLA-1] || (|ne);
-            if (ing_fault || rx_fault) fault <= 1'b1;
-        end
-    end
-    always @(posedge clk) ps <= nd[RT*32 +: 32];
+    ot_hbm_hc_bankq_static #(.MUT(0)) u_b4 (.clk(clk), .rst_n(rb[4]), `OT_HCQ_CHAIN(4),
+        .sum_in(csum[4*2048 +: 2048]), .f_in(cf[4]),
+        .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[4*256 +: 256]),
+        .wv(wc_e[12]), .xv(wc_e[11]), .j(wc_e[10]), .wa(wc_e[9:0]), .wfault(wf[4]));
+    `undef OT_HCQ_CHAIN
 endmodule
 `default_nettype wire
