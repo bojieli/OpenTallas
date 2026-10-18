@@ -3,6 +3,7 @@
  "top": "dsdv_gunit_l1c",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_sel.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1c.sv"
  ],
@@ -37,7 +38,7 @@
   ]
  },
  "outline": {
-  "w": 129.6,
+  "w": 86.4,
   "h": 216.0
  },
  "recipe": 4,
@@ -51,7 +52,7 @@
   "macro_halo_um": 5.4,
   "pin_min_tracks": 4
  },
- "structural_change": "S81U-GUNIT-L1 (10-17): new E-side leaf L1c of dsdv_gunit: merges the four fronts' per-beat top-6 lists (q inserted into the index), a running top-8 over the beats (two interleaved accumulators on one 2-stage merge8), the final merge, ascending-index order (3 compare-exchanges per stage), ids to L1, gather request / reply OR (4,800 generic flops). Flop-first / flop-last; no ready / credit.",
+ "structural_change": "S81U-GUNIT-L1 (10-17): new E-side leaf L1c of dsdv_gunit: merges the four fronts' per-beat top-6 lists (q inserted into the index), a running top-8 over the beats (two interleaved accumulators on one 2-stage merge8), the final merge, ascending-index order (3 compare-exchanges per stage), ids to L1, gather request / reply OR (4,800 generic flops). Flop-first / flop-last; no ready / credit. | S81U-GUNIT-L1b (10-17): NATIVE-2 pin rules (relayed reset, pin flops) + one-compare-deep select stages ; outline 86.4 x 216 (was 129.6: util 18%)",
  "job": {
   "owner": "Claude:S81U-GUNIT-L1",
   "branch": "claude/s81u-gunit-l1-1017",
@@ -59,6 +60,7 @@
   "purpose": "S81-DV G-unit router leaf L1C to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/lib",
    "rtl/hdc",
    "rtl/dsrom_sys/s81_suhc",
    "tools/hdc_golden_v41.py",

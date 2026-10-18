@@ -3,6 +3,7 @@
  "top": "dsdv_gunit_l1",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1.sv"
  ],
@@ -86,7 +87,7 @@
   "macro_halo_um": 5.4,
   "pin_min_tracks": 4
  },
- "structural_change": "S81U-GUNIT-L1 (10-17): L1 (GUNIT2: 114,054 sinks on one root, clock-rule FAIL) is now the router STACK leaf only: rung feedthrough, SC checks / window + job sequencer, per-front control, bias-row writes to the fronts' SRAM macros, ids CTL row from the collector, routing-weight operands (renumbered ids row + one gathered score row) to L3, weight-row merge (~3.9k flops generic). Score store, bias table (now 8 x ot_sram_1r1w_128x256 in the fronts) and the select (two compare-exchanges per stage) moved to five E-side leaves dsdv_gunit_l1f x4 + dsdv_gunit_l1c. Every input lands in a flop, every output leaves a flop; no ready / credit.",
+ "structural_change": "S81U-GUNIT-L1 (10-17): L1 (GUNIT2: 114,054 sinks on one root, clock-rule FAIL) is now the router STACK leaf only: rung feedthrough, SC checks / window + job sequencer, per-front control, bias-row writes to the fronts' SRAM macros, ids CTL row from the collector, routing-weight operands (renumbered ids row + one gathered score row) to L3, weight-row merge (~3.9k flops generic). Score store, bias table (now 8 x ot_sram_1r1w_128x256 in the fronts) and the select (two compare-exchanges per stage) moved to five E-side leaves dsdv_gunit_l1f x4 + dsdv_gunit_l1c. Every input lands in a flop, every output leaves a flop; no ready / credit. | S81U-GUNIT-L1b (10-17): NATIVE-2 pin rules (relayed reset, pin flops) + one-compare-deep select stages ; collector ids into pin flops (+1 edge ids row)",
  "job": {
   "owner": "Claude:S81U-GUNIT-L1",
   "branch": "claude/s81u-gunit-l1-1017",
@@ -94,6 +95,7 @@
   "purpose": "S81-DV G-unit router leaf L1 to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/lib",
    "rtl/hdc",
    "rtl/dsrom_sys/s81_suhc",
    "tools/hdc_golden_v41.py",
