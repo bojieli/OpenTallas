@@ -1091,6 +1091,9 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           TRIAL=1 if is_parent_kit(spec) else 0, CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
+    if textbook_reset_args(spec):
+        tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
+        sh = sh.replace(tb, tb.replace(" | sed", textbook_reset_args(spec) + " | sed", 1), 1)
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
     binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
@@ -1537,6 +1540,14 @@ def clock_item(g: Gate, rec: dict) -> None:
         g.add("INFO", "clock_rule", f"root {rec['root']}: {rec['text']}")
 
 
+def textbook_reset_args(spec):
+    """GATE-FRICTION 2026-10-18: the kit's declared reset_ports reach the textbook lint, so a declared reset (KV core_peer
+    por_n, 5,344 async loads) is judged on the reset fanout limit, not the data-port one.  '' when none are declared (the
+    gate script stays byte-identical)."""
+    names = [str(x) for x in spec.get("reset_ports") or [] if isinstance(x, str) and re.fullmatch(r"[\w$\[\]:.]+", x)]
+    return f" --set reset_ports={shlex.quote(','.join(names))}" if names else ""
+
+
 def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, note: list | None = None) -> dict | None:
     """The kit's gate result when it is bound to this exact source commit and to the daemon overlays the gate executed
     (SB.validate: route-only helper drift does not invalidate a gate).  why: receives the refusal reason."""
@@ -1553,7 +1564,17 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             if rec is not None:
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
-        ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"))
+        tile = [kd.name, d.get("kit")]
+        try:
+            ks = json.loads((kd / "spec.json").read_text())
+            tile += [ks.get("name"), ks.get("top")]
+        except (OSError, ValueError):
+            pass
+        try:
+            ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"),
+                                     tile=[t for t in tile if t])
+        except TypeError:                                    # an older source_binding without the tile scope
+            ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"))
         if not ok:
             return no(reason)
         if note is not None:
