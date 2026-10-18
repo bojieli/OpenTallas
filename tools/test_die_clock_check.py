@@ -120,6 +120,13 @@ class NeighbourCheck(unittest.TestCase):
         self.assertAlmostEqual(c["delta_ff_signed_ps"]["max"], -60.0, places=1)
         self.assertEqual(c["delta_ff_signed_ps"]["positive"], 0)
 
+    def test_self_parent_entry_terminates(self):
+        # Qwen KV ideal sink clocks: the entry pin is its own clock source (T parent == node): must not loop
+        d = "R\ta/ck\t0\t0\t-\t-\nT\ta/ck\tm\t0\t0\ta/ck\t-\t-\nT\tb/ck\tm\t5\t0\tb/ck\t-\t-\nP\ta\tb\tn\n"
+        open(self.f, "w").write(d)
+        r = D.report(self.f, budget=80)
+        self.assertEqual(r["counts"]["tiles"], 2)
+
     def test_no_ff_is_incomplete(self):
         good = NB.replace("\t1300\t1100\n", "\t1060\t970\n")
         open(self.f, "w").write(good)

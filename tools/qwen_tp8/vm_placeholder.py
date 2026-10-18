@@ -19,6 +19,7 @@ import argparse, gzip, json, re, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import qwen_die_element_lib as E   # noqa: E402
+import abstract_pin_windows as APW   # noqa: E402
 
 OLD = (4708.8, 2347.92); NEW = (4838.4, 2546.64); ORIGIN = (13284.0, 17051.04); DX = round(NEW[0] - OLD[0], 4)
 EAST_X = 4600.0
@@ -29,10 +30,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--lef', required=True); ap.add_argument('--port-dirs', required=True); ap.add_argument('--out', required=True)
     ap.add_argument('--obs-top', default='M7')
+    # Q-DIE11b 10-18: pin-access windows (tools/abstract_pin_windows.py) at every face pin cluster, OBS-free on
+    # M<lowest signal pin layer>..obs-top.  Default 0 (env OT_ABS_PIN_WINDOW_UM unset) = the previous full-outline OBS.
+    import os
+    ap.add_argument('--pin-window', type=float, default=float(os.environ.get('OT_ABS_PIN_WINDOW_UM', '0') or 0))
     a = ap.parse_args()
     op = gzip.open if a.lef.endswith('.gz') else open
     src = op(a.lef, 'rt').read().split('\n')
     out, pin, use, moved, n_pins = [], None, None, {}, 0
+    sig_rects, layer = [], None
     i = 0
     while i < len(src):
         ln = src[i]; t = ln.split()
@@ -43,10 +49,18 @@ def main():
             pin = t[1]; use = None; n_pins += 1
         elif t[:1] == ['USE']:
             use = t[1]
+        elif t[:1] == ['LAYER'] and pin:
+            layer = t[1]
         elif t[:1] == ['OBS']:
             out.append('  OBS')
-            for L in LAYERS[:LAYERS.index(a.obs_top) + 1]:
-                out += [f'    LAYER {L} ;', f'      RECT 0 0 {NEW[0]:.3f} {NEW[1]:.3f} ;']
+            sig = [r for r in sig_rects if r[2][0] <= 0.5 or r[2][1] <= 0.5 or r[2][2] >= NEW[0] - 0.5 or r[2][3] >= NEW[1] - 0.5]
+            top = LAYERS.index(a.obs_top) + 1
+            lo = min((int(r[1][1:]) for r in sig), default=4)
+            win = APW.windows(NEW[0], NEW[1], sig, a.pin_window, max(lo, 1), top) if a.pin_window > 0 else {}
+            for k_, L in enumerate(LAYERS[:top], 1):
+                out += [f'    LAYER {L} ;'] + [f'      RECT {q[0]:.3f} {q[1]:.3f} {q[2]:.3f} {q[3]:.3f} ;' if win.get(k_) else
+                                               f'      RECT 0 0 {NEW[0]:.3f} {NEW[1]:.3f} ;'
+                                               for q in (APW.minus(NEW[0], NEW[1], win[k_]) if win.get(k_) else [None])]
             out.append('  END')
             while src[i].strip() != 'END':
                 i += 1
@@ -66,6 +80,8 @@ def main():
                 cx, cy = (x0 + x1) / 2, (y0 + y1) / 2; w, h = x1 - x0, y1 - y0
                 nx, ny = round(NEW[0] / 2 / 0.048) * 0.048, round(NEW[1] / 2 / 0.048) * 0.048
                 x0, x1, y0, y1 = round(nx - w / 2, 3), round(nx + w / 2, 3), round(ny - h / 2, 3), round(ny + h / 2, 3); how = 'area'
+            if use not in ('POWER', 'GROUND') and layer:
+                sig_rects.append((pin, layer, (x0, y0, x1, y1)))
             moved.setdefault(g, dict(how=how, bits=0, x=[x0, x1], layer=None)); m = moved[g]; m['bits'] += 1
             m['x'] = [min(m['x'][0], x0), max(m['x'][1], x1)]
             ln = f'        RECT {x0:.3f} {y0:.3f} {x1:.3f} {y1:.3f} ;'
@@ -83,7 +99,7 @@ def main():
         p.write_text(p.read_text().replace(f'library (qfd_elements_{c})', f'library (qfd_vm_placeholder_{c})', 1))
     rec = dict(schema='opentallas.qwen-tp8.vm-placeholder.v1', master='qfd_sp_vector_memory', kind='PLACEHOLDER (assumed single-flop pins, no routed view)',
                size_um=list(NEW), origin_um=list(ORIGIN), was=dict(size_um=list(OLD), origin_um=[13284.0, 17249.76]),
-               obs_layers=LAYERS[:LAYERS.index(a.obs_top) + 1], pins=n_pins, port_dirs=dirs,
+               obs_layers=LAYERS[:LAYERS.index(a.obs_top) + 1], pin_window_um=a.pin_window, pins=n_pins, port_dirs=dirs,
                groups={g: dict(how=m['how'], shapes=m['bits'], x_um=[round(v, 3) for v in m['x']]) for g, m in sorted(moved.items())},
                rule='W edge and N face fixed on the die; S face 198.72 um south; ar / xe_d / xe_r follow the E edge (+129.6 um)')
     (od / 'placeholder.json').write_text(json.dumps(rec, indent=1) + '\n')

@@ -52,7 +52,7 @@ def emit(caldir, out):
     lines.append(f'localparam integer D2D_ADM_OFS = {adm["ofs"]};      // admission cal_start, edges after the epoch strobe')
     lines.append(f'localparam integer D2D_ADM_LEN = {adm["len"]};    // admission run length (all calendars idle)')
     lines.append(f'localparam integer D2D_FIRST_TOKEN = {adm["first_token_ofs"]};  // first token cal_start, edges after the epoch strobe')
-    lines.append(f'localparam integer D2D_TOKEN_PERIOD = {prog["token_period"]};  // compiled token period (token path totals)')
+    lines.append(f'localparam integer D2D_TOKEN_PERIOD = {prog["token_period"]};  // compiled token period (token path totals padded to a 768-edge multiple)')
     Path(out).write_text('\n'.join(lines) + '\n')
 
 

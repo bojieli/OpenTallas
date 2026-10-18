@@ -4,7 +4,8 @@ case (elements.lef, die.v, place.tcl) for tools/hier_contract/pinreg_audit.py (r
 
 usage (repo root): python3 tools/qwen_tp8/reset_tree_run.py OUTDIR [--case]   -> OUTDIR/reset_tree.json (+ OUTDIR/case)
 OT_RELAY_GATE=warn records the data-relay misses instead of raising (they are the data stream's); OT_RESET_GATE=warn
-does the same for the reset tree (diagnosis only)."""
+records reset nets over the reach; an unreachable reset sink/driver always FAILS (die standard) unless OT_RESET_GATE=diag
+(diagnosis only, record reach_gate FAIL_DIAG)."""
 import json, sys, time
 from pathlib import Path
 sys.path.insert(0, 'tools')

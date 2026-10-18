@@ -313,8 +313,16 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
                               f"those of closed {eq[-1]} (a layer-cap change alone is die_window, not slot_change)")
             return admit(f"outline / pin faces differ from the closed view per {cite[:200]!r}"
                          + ("" if g else " (not verifiable: no kit.env geometry)"))
+        # (coordinator 10-17) the face comparison uses only closed views built from byte-identical RTL: a closed view
+        # whose RTL differs is superseded (e.g. landing_row h1 without the 8 preg ports against h3) and must not make
+        # the comparison incomplete.  Views of unknown RTL stay in (fail closed); when every view differs, all stay
+        # (the earlier behaviour).
+        cmp_set = [x for x in same if rtl[x["name"]][0] != "differs"] or same
+        superseded = [x["name"] for x in same if x not in cmp_set]
+        if superseded:
+            facts["slot_superseded_rtl"] = superseded
         outline = custom_io_faces.outline(g)
-        old_outlines = {x["name"]: custom_io_faces.outline((recs[x["name"]] or {}).get("geom")) for x in same}
+        old_outlines = {x["name"]: custom_io_faces.outline((recs[x["name"]] or {}).get("geom")) for x in cmp_set}
         if outline is None or any(v is None for v in old_outlines.values()):
             return refuse("slot_change needs readable source-pinned new and closed ref_tile outline geometry")
         custom = (new_rec or {}).get("custom_io_faces") or {"status": "absent"}
@@ -328,7 +336,7 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
             return refuse("slot_change custom IO plus nonempty pin-region rules are ambiguous")
         facts["slot_outline"] = outline
         face_evidence, eq = {}, []
-        for closed_job in same:
+        for closed_job in cmp_set:
             closed_name = closed_job["name"]
             closed_rec = recs[closed_name] or {}
             # Only proven FW/FH or actual port-to-face changes justify this
