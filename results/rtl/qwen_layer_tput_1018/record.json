@@ -104,6 +104,15 @@
   "reference_vehicle_10_13": {
    "build_s": 1300,
    "L3_run_s": 5024
-  }
- }
+  },
+  "restore_s": 34,
+  "verilate_die_s": 352
+ },
+ "fixture_restore": {
+  "stage_images": "148/148 restored (L0..L35 + head x 4 dies) sha-equal to the prep image pins, 34 s on ot-epyc5 (fx/img_p1, 31 GB)",
+  "kv_history_l3": "L0..L2 real (L0 die0 pin match) + 132 zero placeholders (L3 chain only)",
+  "gold_tp4_36": "CPU golden queued after restore (torch 2.14.1+cpu in pip --target pylib; fleet has no python3-venv)"
+ },
+ "vehicle_build_finding": "the 10-15 fleet Verilator NBA guard (tools/verilator_guarded.py) REFUSES the 10-13 reference die: 3 in-place NBA loops (u_hbm t_rd_sectors, kvw_ce, st_rsp_stall) -> 10-13-era builds predate the guard; rebuilt with --unroll-count 4096 (QROM_VFLAGS_EXTRA): guard clean at verilate (352 s, 35.6 GB). If the L3 cycles/exactness differ from 10-13, the 10-13 numbers were from a guard-flagged model.",
+ "source_commit": "8a01e4a5a"
 }
