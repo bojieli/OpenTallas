@@ -1,0 +1,8 @@
+mutant: u_cdc_host.u_rank__u_bridge__qv inverted at the parent
+seed=1 mode=0: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+seed=1 mode=1: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+seed=2 mode=0: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+seed=2 mode=1: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+seed=3 mode=0: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+seed=3 mode=1: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+CLUSTER_GATE FAIL mutant child=cdc_host port=u_rank__u_bridge__qv runs_pass=0/6 core_cycles=20000

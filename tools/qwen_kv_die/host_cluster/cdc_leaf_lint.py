@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """KV-HOSTCL-CDC2: run the reviewed_gray_fifos structural CDC lint on the actual multi-family HOST-cluster leaves.
 
-Builds a lint spec per leaf from the generated cluster file (rtl/qwen_sys/host_cluster_20261017/qkd_hr_cluster.v) plus
+Builds a lint spec per leaf from the leaf's generated child file (rtl/qwen_sys/host_cluster_20261017/<top>.v, one file
+per child since KVJ-A3 r2 c3) plus
 the census source list (results/arch/qwen_split_1014/host_root_cluster/census/elab.ys; SRAM macros as their _bb.v
 views through spec.macros). Port families are inferred from the actual elaborated netlist: an input belongs to the
 family of the registers/macros that sample it, an output to the family of its driving register; a port sampled by
@@ -20,7 +21,7 @@ sys.path.insert(0, str(ROOT / 'tools/ref_tile'))
 import cdc_sync_constraints as S          # noqa: E402
 import gray_fifo_cdc_constraints as G     # noqa: E402
 
-CLUSTER = 'rtl/qwen_sys/host_cluster_20261017/qkd_hr_cluster.v'
+CLUSTER_DIR = 'rtl/qwen_sys/host_cluster_20261017'   # one generated file per child
 CENSUS = ROOT / 'results/arch/qwen_split_1014/host_root_cluster/census/elab.ys'
 SRAM = 'physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1'
 CLOCKS = dict(core='ck_core', host='ck_host', ingest='ck_ingest', phy='ck_phy_fam')
@@ -53,9 +54,9 @@ LEAVES = {
 
 
 def sources(top):
-    """The census sources that define the module closure of `top` (cluster file first)."""
+    """The census sources that define the module closure of `top` (the child's generated file first)."""
     toks = ' '.join(CENSUS.read_text().splitlines()[:2]).split()
-    files = [CLUSTER] + [t[len('src/'):] for t in toks if t.startswith('src/') and not t.endswith('_bb.v')]
+    files = [f'{CLUSTER_DIR}/{top}.v'] + [t[len('src/'):] for t in toks if t.startswith('src/') and not t.endswith('_bb.v')]
     body, owner = {}, {}
     for f in files:
         text = re.sub(r'//[^\n]*|/\*.*?\*/', '', (ROOT / f).read_text(), flags=re.S)

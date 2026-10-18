@@ -1,0 +1,8 @@
+mutant: u_ingest_qm.host_rst_n inverted at the parent
+seed=1 mode=0: MISMATCH host_upstream_quiet t=2220335 fs core=2 flat=0 clu=8
+seed=1 mode=1: MISMATCH host_upstream_quiet t=2220335 fs core=2 flat=0 clu=8
+seed=2 mode=0: MISMATCH host_upstream_quiet t=2220335 fs core=2 flat=0 clu=8
+seed=2 mode=1: MISMATCH host_upstream_quiet t=2220335 fs core=2 flat=0 clu=8
+seed=3 mode=0: MISMATCH host_upstream_quiet t=2220335 fs core=2 flat=0 clu=8
+seed=3 mode=1: MISMATCH host_upstream_quiet t=2220335 fs core=2 flat=0 clu=8
+CLUSTER_GATE FAIL mutant child=ingest_qm runs_pass=0/6 core_cycles=20000

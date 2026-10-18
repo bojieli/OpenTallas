@@ -5,8 +5,10 @@ lock-step harness (gen_tb.py) and run it.
 
   cluster_gate.py exact  --out DIR                 # expect pass: CLUSTER_GATE PASS
   cluster_gate.py mutant --out DIR --child core_rx # expect fail: the child's reset input inverted at the parent
+  cluster_gate.py mutant --out DIR --child cdc_host --port P  # expect fail: the child's input P inverted (~) at the
+                                                   # parent (a child whose reset mutant the random stimulus cannot see)
 
-usage: cluster_gate.py {exact,mutant} --out DIR [--child C] [--cycles N] [--verilator V]
+usage: cluster_gate.py {exact,mutant} --out DIR [--child C] [--port P] [--cycles N] [--verilator V]
 """
 import argparse
 import json
@@ -39,6 +41,7 @@ def main():
     ap.add_argument('mode', choices=['exact', 'mutant'])
     ap.add_argument('--out', required=True)
     ap.add_argument('--child', default='core_queue')
+    ap.add_argument('--port', help='mutant: invert this child input binding instead of its reset')
     ap.add_argument('--cycles', type=int, default=20000)
     ap.add_argument('--verilator', default=str(Path.home() / '.local/opentallas-tools/verilator-5.050/bin/verilator'))
     a = ap.parse_args()
@@ -50,11 +53,14 @@ def main():
         mod = re.search(r'\nmodule qkd_hr_' + a.child + r'\(.*?\nendmodule', txt, re.S).group(0)
         scalars = re.findall(r'^\s*input\s+(\w+)\s*;', mod, re.M)
         cand = [x for x in scalars if x == 'host_rst_n'] + [x for x in scalars if re.search(r'por_n|rst', x)]
-        sig = (cand or [x for x in scalars if not x.startswith('ck')])[0]
+        sig = a.port or (cand or [x for x in scalars if not x.startswith('ck')])[0]
+        if a.port and not re.search(r'^\s*input\s+(?:\[[^]]*\]\s*)?' + sig + r'\s*;', mod, re.M):
+            sys.exit(f'CLUSTER_GATE ERROR u_{a.child} has no input {sig}')
         b = re.search(r'\.' + sig + r'\(([^()]+)\)', m.group(1)) if m else None
         if not b:
             sys.exit(f'CLUSTER_GATE ERROR no u_{a.child} {sig} input binding')
-        body = m.group(0).replace(b.group(0), f'.{sig}(!({b.group(1).strip()}))')
+        body = m.group(0).replace(b.group(0), f'.{sig}(~({b.group(1).strip()}))' if a.port else
+                                  f'.{sig}(!({b.group(1).strip()}))')
         print(f'mutant: u_{a.child}.{sig} inverted at the parent')
         txt = txt.replace(m.group(0), body)
     (out / 'qkd_hr_cluster_dut.v').write_text(txt)
@@ -86,7 +92,7 @@ def main():
             line = (r.stdout.strip().splitlines() or ['(no output)'])[-1]
             print(f'seed={seed} mode={mode}: {line}')
             ok += r.returncode == 0 and line.startswith('LOCKSTEP PASS')
-    tag = f'{a.mode}' + (f' child={a.child}' if a.mode == 'mutant' else '')
+    tag = f'{a.mode}' + (f' child={a.child}' + (f' port={a.port}' if a.port else '') if a.mode == 'mutant' else '')
     print(f'CLUSTER_GATE {"PASS" if ok == 6 else "FAIL"} {tag} runs_pass={ok}/6 core_cycles={a.cycles}')
     shutil.rmtree(out / 'obj_flat', ignore_errors=True)
     shutil.rmtree(out / 'obj_clu', ignore_errors=True)
