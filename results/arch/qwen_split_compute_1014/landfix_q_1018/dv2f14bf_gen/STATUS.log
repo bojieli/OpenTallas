@@ -1,0 +1,4 @@
+2026-10-18 06:07:38 PDT port-bind (no stubs): DIE_PORT_BIND PASS masters=183 instances=3114 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=16 pad_bits=0 unresolved_children=0 rc=0
+2026-10-18 06:07:38 PDT qwen-split compute chain dv2f14bf (src be77fd9f9132b500980838bf1d81ddd3ae31a0f2); real views: 7 masters / 9 of 209 instances
+2026-10-18 06:07:38 PDT chain start die=r22k src=be77fd9f9132b500980838bf1d81ddd3ae31a0f2 from=case
+2026-10-18 06:07:38 PDT RELAY_CHECK SKIPPED no compiled schedule given (OT_RELAY_SCHEDULE); die run table /srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bf/chain/case_r22k/relay_stages.json MISSING
