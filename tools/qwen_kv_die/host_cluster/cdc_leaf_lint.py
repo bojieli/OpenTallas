@@ -9,6 +9,12 @@ family of the registers/macros that sample it, an output to the family of its dr
 several families is reported (it is assigned to the first and the lint names the resulting refusal).
 
     python3 tools/qwen_kv_die/host_cluster/cdc_leaf_lint.py [--json OUT] [top ...]
+    python3 tools/qwen_kv_die/host_cluster/cdc_leaf_lint.py --unfix qkd_host_native_qm_debt qkd_hr_ingest_qm
+        # MUTANT (expect REFUSED): the leaf binds the shared original instead of its CDC fork
+
+KV-CDC2 (10-18): the leaves bind leaf-local CDC forks (rtl/qwen_sys/host_cluster_cdc_20261018/forks.json) and their
+mixed-family output buses are split per family by gen_cluster.py; the pre-fix record (cdc_leaf_lint.json, REFUSED x3)
+stays as committed history, the fixed run writes cdc_leaf_lint_cdc2.json.
 """
 import argparse
 import json
@@ -22,6 +28,8 @@ import cdc_sync_constraints as S          # noqa: E402
 import gray_fifo_cdc_constraints as G     # noqa: E402
 
 CLUSTER_DIR = 'rtl/qwen_sys/host_cluster_20261017'   # one generated file per child
+FORKS = json.loads((ROOT / 'rtl/qwen_sys/host_cluster_cdc_20261018/forks.json').read_text())
+FORKS.pop('_doc', None)
 CENSUS = ROOT / 'results/arch/qwen_split_1014/host_root_cluster/census/elab.ys'
 SRAM = 'physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1'
 CLOCKS = dict(core='ck_core', host='ck_host', ingest='ck_ingest', phy='ck_phy_fam')
@@ -47,19 +55,26 @@ LEAVES = {
         dict(name='qm_hov', src_domain='host', dst_domain='ingest', source=QM + 'u_hx.ovf',
              chain=[QM + 'hov_s[0]', QM + 'hov_s[1]'], sync_max_delay_ps=940.0, why='sticky host FIFO overflow level'),
         # rov_s: u_rx write side is tied off (RMW_EN 0), its overflow is constant and the synchroniser folds away.
-        # fs: fs[0] <= f_any = (f_code != 0) has logic in front of stage 1 and is left undeclared on purpose.
+        # KV-CDC2 fork qkd_hr_native_qm_cdc: the sticky fault leaves clk_i from registers only
+        dict(name='qm_fault', src_domain='ingest', dst_domain='core', source=QM + 'f_any_q',
+             chain=[QM + 'fs[0]', QM + 'fs[1]'], sync_max_delay_ps=773.333, why='registered sticky fault level -> die clock'),
+        dict(name='qm_fault_h', src_domain='ingest', dst_domain='host', source=QM + 'f_any_h',
+             chain=[QM + 'fh_s[0]', QM + 'fh_s[1]'], sync_max_delay_ps=940.0,
+             why='registered sticky fault level -> host clock (quiet_h)'),
     ]),
     'qkd_hr_cdc_pc': dict(families=('core', 'phy'), synchronizers=None),
 }
 
 
-def sources(top):
-    """The census sources that define the module closure of `top` (the child's generated file first)."""
+def sources(top, base=ROOT):
+    """The census sources plus the CDC forks that define the module closure of `top` (the child's generated file first);
+    `base` is the tree whose files are read (a scratch copy for the --unfix mutant)."""
     toks = ' '.join(CENSUS.read_text().splitlines()[:2]).split()
-    files = [f'{CLUSTER_DIR}/{top}.v'] + [t[len('src/'):] for t in toks if t.startswith('src/') and not t.endswith('_bb.v')]
+    files = [f'{CLUSTER_DIR}/{top}.v'] + [v['file'] for v in FORKS.values()] + \
+        [t[len('src/'):] for t in toks if t.startswith('src/') and not t.endswith('_bb.v')]
     body, owner = {}, {}
     for f in files:
-        text = re.sub(r'//[^\n]*|/\*.*?\*/', '', (ROOT / f).read_text(), flags=re.S)
+        text = re.sub(r'//[^\n]*|/\*.*?\*/', '', (base / f).read_text(), flags=re.S)
         for m in re.finditer(r'\bmodule\s+(\w+)(.*?)\bendmodule\b', text, re.S):
             if m.group(1) not in owner:
                 owner[m.group(1)], body[m.group(1)] = f, m.group(2)
@@ -74,8 +89,8 @@ def sources(top):
     return [f for f in files if f in used]
 
 
-def base_spec(top, leaf, inputs, outputs):
-    s = dict(name=top, top=top, kind='tile', sources=sources(top), clock='multiple_cts_roots', clock_port='ck_core',
+def base_spec(top, leaf, inputs, outputs, base=ROOT):
+    s = dict(name=top, top=top, kind='tile', sources=sources(top, base), clock='multiple_cts_roots', clock_port='ck_core',
              clock_ports=[CLOCKS[f] for f in leaf['families']], clock_data_paths=G.POLICY,
              clock_relationship=dict(kind=G.RELATIONSHIP_KIND, periods_ps={f: G.FAMILIES[f] for f in leaf['families']}),
              clock_entry_domains={f: dict(ratio=G.family_ratio(f), ports=[CLOCKS[f]], inputs=inputs.get(f, []),
@@ -198,13 +213,7 @@ def event_diagnostic(top, leaf, ins, outs):
 # DIAGNOSTIC RTL patches (proposed fixes, never committed RTL): applied to a scratch copy of the sources so the lint can
 # report what refuses after the first refusal. Each entry: (file, old, new, extra cdc_synchronizers groups).
 PATCHES = {
-    'qkd_hr_ingest_qm': [(
-        'rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv',
-        'else begin fs <= {fs[0], f_any}; fault_c <= fault_c | fs[1]; end',
-        'else begin fs <= {fs[0], f_any_q}; fault_c <= fault_c | fs[1]; end\n'
-        '    reg f_any_q; always @(posedge clk_i or negedge rn_i) if (!rn_i) f_any_q <= 1\'b0; else f_any_q <= f_any;',
-        [dict(name='qm_fault', src_domain='ingest', dst_domain='core', source=QM + 'f_any_q',
-              chain=[QM + 'fs[0]', QM + 'fs[1]'], sync_max_delay_ps=773.333, why='registered sticky fault level')])],
+    # 'qkd_hr_ingest_qm': the f_any_q register is now real RTL (KV-CDC2 fork qkd_hr_native_qm_cdc)
 }
 
 
@@ -233,6 +242,40 @@ def patched(top, leaf, ins, outs, scratch):
                     constant_chains=record.get('constant_chains', []))
     except G.GrayFifoError as e:
         return dict(patched=applied, verdict='REFUSED', refusal=str(e))
+
+
+def unfixed(top, orig):
+    """MUTANT: the lint of `top` on a scratch copy whose leaf file binds the shared original `orig` instead of its fork."""
+    import shutil
+    import tempfile
+    leaf = LEAVES[top]
+    with tempfile.TemporaryDirectory(prefix='ot-cdc-unfix-') as d:
+        scratch = Path(d)
+        lf = f'{CLUSTER_DIR}/{top}.v'
+        text = (ROOT / lf).read_text()
+        n = len(re.findall(r'(?m)^\s+' + FORKS[orig]['fork'] + r'\b', text))
+        if not n:
+            raise SystemExit(f'{top} binds no {FORKS[orig]["fork"]}')
+        for f in set(sources(top)) | {FORKS[orig]['original']}:
+            (scratch / f).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(ROOT / f, scratch / f)
+        (scratch / lf).write_text(re.sub(r'(?m)^(\s+)' + FORKS[orig]['fork'] + r'\b', lambda m: m.group(1) + orig, text))
+        s = base_spec(top, leaf, {}, {}, scratch)
+        for f in [x[0] for x in G._macro_sources(s, ROOT)] + \
+                [str(p.relative_to(ROOT)) for m in s.get('macros', []) for p in (ROOT / m['view']).glob('*.lib')]:
+            (scratch / f).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(ROOT / f, scratch / f)
+        groups = [g for g in (leaf.get('synchronizers') or []) if not g['name'].startswith('qm_fault')] \
+            if orig == 'qkd_host_native_qm_debt' else leaf.get('synchronizers')
+        lv = dict(leaf, synchronizers=groups)
+        ins, outs, notes = infer_ports(top, leaf)
+        s = base_spec(top, lv, ins, outs, scratch)
+        try:
+            G.lint(s, scratch)
+            r = dict(verdict='PASS')
+        except G.GrayFifoError as e:
+            r = dict(verdict='REFUSED', refusal=str(e))
+    return dict(top=top, mutant=f'unfix {orig} ({n} instance(s) of {FORKS[orig]["fork"]} bind the original)', **r)
 
 
 def run(top):
@@ -282,7 +325,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('tops', nargs='*', default=list(LEAVES))
     ap.add_argument('--json')
+    ap.add_argument('--unfix', help='MUTANT: the named leaves bind this shared original instead of its CDC fork')
     a = ap.parse_args()
+    if a.unfix:
+        out = [unfixed(t, a.unfix) for t in a.tops]
+        for r in out:
+            print('CDC_LINT_MUTANT', r['top'], r['mutant'], r['verdict'], r.get('refusal', ''))
+        if a.json:
+            Path(a.json).write_text(json.dumps(out, indent=1, sort_keys=True) + '\n')
+        return
     out = [run(t) for t in a.tops]
     for r in out:
         print(r['top'], r['verdict'], r.get('refusal', r.get('counts')))

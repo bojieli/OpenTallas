@@ -7,6 +7,12 @@ lock-step harness (gen_tb.py) and run it.
   cluster_gate.py mutant --out DIR --child core_rx # expect fail: the child's reset input inverted at the parent
   cluster_gate.py mutant --out DIR --child cdc_host --port P  # expect fail: the child's input P inverted (~) at the
                                                    # parent (a child whose reset mutant the random stimulus cannot see)
+  cluster_gate.py mutant --out DIR --unfix qkd_host_native_qm_debt  # expect fail: the leaf binds the shared original
+                                                   # instead of its CDC fork (the reference keeps the fork)
+
+The CDC leaves bind leaf-local CDC forks (rtl/qwen_sys/host_cluster_cdc_20261018/forks.json, KV-CDC2 10-18); the flat
+reference is built with each fork in place of its original (module renamed back, original file dropped), so the
+lock-step stays exact.
 
 usage: cluster_gate.py {exact,mutant} --out DIR [--child C] [--port P] [--cycles N] [--verilator V]
 """
@@ -23,6 +29,13 @@ HERE = Path(__file__).resolve().parent
 CLUSTER_DIR = ROOT / 'rtl/qwen_sys/host_cluster_20261017'   # qkd_hr_cluster.v (parent) + one file per child
 PORTS = HERE / 'root_ports.json'          # the flat root's ports (yosys, ENABLE_SERVICE/NATIVE/TOKEN=1, NL=2)
 SOURCES = HERE / 'sources.txt'            # census source list (SRAM behavioural models + the root's RTL)
+FORKS_JSON = ROOT / 'rtl/qwen_sys/host_cluster_cdc_20261018/forks.json'
+
+
+def forks():
+    f = json.loads(FORKS_JSON.read_text()) if FORKS_JSON.is_file() else {}
+    f.pop('_doc', None)
+    return f
 
 
 def sources():
@@ -42,13 +55,23 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--child', default='core_queue')
     ap.add_argument('--port', help='mutant: invert this child input binding instead of its reset')
+    ap.add_argument('--unfix', help='mutant: the leaves bind this shared original module instead of its CDC fork')
     ap.add_argument('--cycles', type=int, default=20000)
     ap.add_argument('--verilator', default=str(Path.home() / '.local/opentallas-tools/verilator-5.050/bin/verilator'))
     a = ap.parse_args()
     out = Path(a.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
     txt = ''.join(f.read_text() for f in sorted(CLUSTER_DIR.glob('qkd_hr_*.v')))
-    if a.mode == 'mutant':
+    FK = forks()
+    if a.unfix:
+        if a.mode != 'mutant' or a.unfix not in FK:
+            sys.exit(f'CLUSTER_GATE ERROR --unfix {a.unfix}: mutant mode and one of {sorted(FK)}')
+        n0 = len(re.findall(r'(?m)^\s+' + FK[a.unfix]['fork'] + r'\b', txt))
+        if not n0:
+            sys.exit(f'CLUSTER_GATE ERROR no instance of {FK[a.unfix]["fork"]}')
+        txt = re.sub(r'(?m)^(\s+)' + FK[a.unfix]['fork'] + r'\b', lambda m: m.group(1) + a.unfix, txt)
+        print(f'mutant: {n0} instance(s) of {FK[a.unfix]["fork"]} bind the original {a.unfix}')
+    elif a.mode == 'mutant':
         m = re.search(r'\n  qkd_hr_' + a.child + r' u_' + a.child + r' \((.*?)\);', txt, re.S)
         mod = re.search(r'\nmodule qkd_hr_' + a.child + r'\(.*?\nendmodule', txt, re.S).group(0)
         scalars = re.findall(r'^\s*input\s+(\w+)\s*;', mod, re.M)
@@ -69,12 +92,27 @@ def main():
     common = ['--cc', '-O2', '--x-assign', '0', '--x-initial', '0', '-Wno-fatal', '-Wno-lint', '-Wno-style',
               '-Wno-MULTIDRIVEN', '-Wno-UNOPTFLAT', '--no-timing', '-I' + str(ROOT / 'rtl'), '-CFLAGS', '-O1', '-j', '0']
     src = [str(ROOT / s) for s in sources()]
+    # flat reference: each fork replaces its original (renamed back to the original module name)
+    refdir = out / 'ref_forks'
+    refdir.mkdir(exist_ok=True)
+    drop, ref_src = {str(ROOT / v['original']) for v in FK.values()}, []
+    for orig, v in FK.items():
+        t = (ROOT / v['file']).read_text()
+        if len(re.findall(r'\bmodule\s+' + v['fork'] + r'\b', t)) != 1:
+            sys.exit(f'CLUSTER_GATE ERROR fork file {v["file"]} must define {v["fork"]} once')
+        o = re.sub(r'//[^\n]*|/\*.*?\*/', '', (ROOT / v['original']).read_text(), flags=re.S)
+        if re.findall(r'\bmodule\s+(\w+)', o) != [orig]:
+            sys.exit(f'CLUSTER_GATE ERROR {v["original"]} must define only {orig}')
+        (refdir / Path(v['file']).name).write_text(re.sub(r'\bmodule\s+' + v['fork'] + r'\b', 'module ' + orig, t))
+        ref_src.append(str(refdir / Path(v['file']).name))
+    flat_src = [x for x in src if x not in drop] + ref_src
+    clu_src = src + [str(ROOT / v['file']) for v in FK.values()]
     p1 = subprocess.Popen([V] + common + ['--prefix', 'Vflat', '--top-module', 'qkd_host_root_admission',
                                           '-GENABLE_SERVICE=1', '-GENABLE_NATIVE=1', '-GENABLE_TOKEN=1', '-GNL=2',
-                                          '-Mdir', str(out / 'obj_flat')] + src,
+                                          '-Mdir', str(out / 'obj_flat')] + flat_src,
                           stdout=open(out / 'vl_flat.log', 'w'), stderr=subprocess.STDOUT)
     p2 = subprocess.Popen([V] + common + ['--prefix', 'Vclu', '--top-module', 'qkd_hr_cluster', '-Mdir',
-                                          str(out / 'obj_clu')] + src + [str(out / 'qkd_hr_cluster_dut.v')],
+                                          str(out / 'obj_clu')] + clu_src + [str(out / 'qkd_hr_cluster_dut.v')],
                           stdout=open(out / 'vl_clu.log', 'w'), stderr=subprocess.STDOUT)
     if p1.wait() or p2.wait():
         sys.exit('CLUSTER_GATE ERROR verilator: ' + (out / 'vl_flat.log').read_text()[-800:] + (out / 'vl_clu.log').read_text()[-800:])
@@ -92,7 +130,8 @@ def main():
             line = (r.stdout.strip().splitlines() or ['(no output)'])[-1]
             print(f'seed={seed} mode={mode}: {line}')
             ok += r.returncode == 0 and line.startswith('LOCKSTEP PASS')
-    tag = f'{a.mode}' + (f' child={a.child}' + (f' port={a.port}' if a.port else '') if a.mode == 'mutant' else '')
+    tag = f'{a.mode}' + ((f' unfix={a.unfix}' if a.unfix else f' child={a.child}' + (f' port={a.port}' if a.port else ''))
+                         if a.mode == 'mutant' else '')
     print(f'CLUSTER_GATE {"PASS" if ok == 6 else "FAIL"} {tag} runs_pass={ok}/6 core_cycles={a.cycles}')
     shutil.rmtree(out / 'obj_flat', ignore_errors=True)
     shutil.rmtree(out / 'obj_clu', ignore_errors=True)

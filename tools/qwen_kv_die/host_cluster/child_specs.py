@@ -35,7 +35,8 @@ CENTROIDS = dict(qkd_hr_phy_adp=(475, 86), qkd_hr_phy_pad=(300, 230), qkd_hr_cdc
 UTIL, PIN_PER_UM = 0.5, 6.0
 MACROS = {'ot_sram_1r1w_1024x256_m2_r2c2': (174.744, 70.470), 'ot_sram_1rw_256x64_m4_r2c2': (66.312, 17.820),
           'ot_sram_1r1w_32x128_m1': (51.408, 20.790)}
-CDC_LINT = RES / 'cdc/cdc_leaf_lint.json'               # fleet run of cdc_leaf_lint.py --json (port families + verdict)
+CDC_LINT = RES / 'cdc/cdc_leaf_lint_cdc2.json'          # fleet run of cdc_leaf_lint.py --json on the KV-CDC2 leaves
+#                                                        (forks + per-family ports); cdc_leaf_lint.json = pre-fix REFUSED x3
 CDC_REVIEW = ('reviewed_gray_fifos (claude/kvhcl-cdc-1017 + kvhcl-cdc2-1017 event synchronisers / hard macros / chained '
               'storage) coordinator review PENDING; D3 family clocks, D5 credit channels at the host/PHY off-die boundary')
 FLAT = 1.0                                               # hier census area ~ the route synthesis (queue gate: 7,286 vs 5,415 hier)
@@ -182,8 +183,8 @@ def main():
         mut = f'--inst {inst_of(direct, child)}' if direct else f'--child {child[len("qkd_hr_"):]}'
         if child in MUTANT_PORT:
             mut += f' --port {MUTANT_PORT[child]}'
-        spec['job'] = dict(owner='Claude:KV-TILES-D/CDC' if cdc else 'Claude:KV-HOSTCL',
-                           branch='claude/kvhcl-leaves-1017' if cdc else 'claude/kvj-a3-1017', tag='r2',
+        spec['job'] = dict(owner='Claude:KV-CDC2' if cdc else 'Claude:KV-HOSTCL',
+                           branch='claude/kv-cdc2-1018' if cdc else 'claude/kvj-a3-1017', tag='r2',
                            purpose=f'HOST root cluster r2 child {child} (pre-route gate + route; parent qkd_host_root is CRITICAL)',
                            benches=[dict(name='cluster_lockstep', expect='pass', threads=16, peak_ram_gb=24, needs=['verilator'],
                                          cmd=f'{cg} exact --out {{RUN}}/bench/cg_exact',
