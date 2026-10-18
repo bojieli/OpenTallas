@@ -68,7 +68,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # station and the block input (ring on the lane's forwarded clock, read on the block root from its regional reset,
     # K strap, fault -> die status port land_fault).  0-stage links (neighbour root -> root) need none.
     lp = land_plan or (ROOT / T['land_plan'] if T.get('land_plan') else None)
-    land_e = {r['link']: r['E'] for r in json.load(open(lp))['links']} if lp else {}
+    land_rows_plan = {r['link']: r for r in json.load(open(lp))['links']} if lp else {}
+    land_e = {k: r['E'] for k, r in land_rows_plan.items()}
     landings = []                 # (inst, link, bits)
     out.mkdir(parents=True, exist_ok=True)
     W, H = plan['facts']['die_um']
@@ -417,19 +418,27 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     for j, (n, nm, b, *ad) in enumerate(landings):
         st = len(chains_pts[nm])
         e_ = land_e.get(nm)
-        k_ = min(max(e_ or 1, 1), 7)
-        lm, ow, ast = (ad[0], ad[1], ad[2]) if ad else (f'dsfd_dvland_{b}', b, {})
+        pr = land_rows_plan.get(nm, {})
+        # LANDFIX-SQ (10-18): the land plan names the tile per link (D 4 dsfd_dvland_<W>, 3-bit K <= 7; or the long tile
+        # dsfd_dvland_<W>l, D 8, 6-bit K <= 63 for E > 7 or a TT/FF spread > 2 ns).  K = E (G = R0: the hop-0 gate opens on
+        # the receiver's calendar release edge), so no reset-calendar offset is needed for any E.
+        long_ = (not ad) and pr.get('master') == f'dsfd_dvland_{b}l'
+        kw_ = 6 if long_ else 3
+        if e_ is not None and e_ > (2 ** kw_ - 1):
+            raise SystemExit(f'dv_bind: landing {nm} E {e_} > K range {2 ** kw_ - 1} of its tile (land plan {lp})')
+        k_ = max(e_ or 1, 1)
+        lm, ow, ast = (ad[0], ad[1], ad[2]) if ad else ((f'dsfd_dvland_{b}l' if long_ else f'dsfd_dvland_{b}'), b, {})
         v.append(f'  wire [{ow - 1}:0] w_{nm}_lnd;')
         xs_ = ''.join(f', .{sp}({sv})' for sp, sv in ast.items())
         v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck(ck_{reg[n]}), .rs({rst["block_leaf"][n]}), '
-                 f".k(3'd{k_}){xs_}, .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
+                 f".k({kw_}'d{k_}){xs_}, .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
         for sp in ast:
             if [lm, sp] not in straps:
                 straps.append([lm, sp])
-        land_rows.append(dict(link=nm, inst=n, master=lm, bits=b, stages=st, E=e_, K=k_,
+        land_rows.append(dict(link=nm, inst=n, master=lm, bits=b, stages=st, E=e_, K=k_, D=8 if long_ else 4,
                               K_source='land_plan E (G = R0)' if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
-                              calendar_G_minus_R0=max(0, (e_ or 1) - 7), fault_bit=j))
-    for lm in sorted({(x[3] if len(x) > 3 else f'dsfd_dvland_{x[2]}') for x in landings}):
+                              calendar_G_minus_R0=0, fault_bit=j))
+    for lm in sorted({r['master'] for r in land_rows}):
         straps.append([lm, 'k'])
     # relay chains (F1)
     nst = collections.Counter(); fwd_cells = 0

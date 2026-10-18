@@ -26,6 +26,8 @@ ONE E per link (all lanes of a bundle share the compiler slot), the SAME E at TT
 import argparse, collections, json, math, re
 from pathlib import Path
 T = 833.333
+LONG_W = (276,)          # widths with a long landing tile dsfd_dvland_<W>l (rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv)
+LONG_SPREAD_PS = 2000.0
 
 
 def end_slacks(path):
@@ -107,22 +109,32 @@ def main():
         e_min = max(1 + max(0, math.ceil(-r[c]['s1'] / T)) for c in a.corners)
         e = e_min
         su = {c: round(r[c]['s1'] + (e - 1) * T, 1) for c in a.corners}
-        ho = {c: (round(r[c]['h0'] + (a.D - e) * T, 1) if r[c]['h0'] < 1e8 else None) for c in a.corners}
-        ok = all(v >= 0 for v in su.values()) and all(v is None or v >= 0 for v in ho.values())
         fin = [r[c]['s1'] for c in a.corners if r[c]['s1'] < 1e8]     # unlisted at a corner = met with margin there
         spread = round(max(fin) - min(fin), 1) if fin else 0.0
+        # LANDFIX-SQ (10-18): a lane whose E exceeds the D-4 tile's 3-bit K (E > 2D - 1) or whose TT/FF arrival spread
+        # exceeds LONG_SPREAD_PS (the D-4 window is 4 T minus setup / hold / margin ~3.0 ns) lands on the long tile
+        # dsfd_dvland_<W>l (D 8, 6-bit K); only W in LONG_W has one.
+        d_l, master = a.D, f'dsfd_dvland_{L["bits"]}'
+        if e > 2 * a.D - 1 or spread > LONG_SPREAD_PS:
+            if L['bits'] in LONG_W:
+                d_l, master = 8, f'dsfd_dvland_{L["bits"]}l'
+            else:
+                master = None
+        ho = {c: (round(r[c]['h0'] + (d_l - e) * T, 1) if r[c]['h0'] < 1e8 else None) for c in a.corners}
+        ok = all(v >= 0 for v in su.values()) and all(v is None or v >= 0 for v in ho.values()) and master is not None
         plan.append(dict(link=nm, cls=L['cls'], dst=L['dst'], bits=L['bits'], stages=L['stages'],
                          s1={c: round(r[c]['s1'], 1) for c in a.corners},
                          h0={c: (round(r[c]['h0'], 1) if r[c]['h0'] < 1e8 else None) for c in a.corners},
-                         E=e, setup_E=su, hold_E=ho, tt_ff_spread_ps=spread, window_ok=ok,
-                         added_edges=1 + e, ring_flops=a.D * L['bits'] + L['bits']))
+                         E=e, D=d_l, master=master, K=e, setup_E=su, hold_E=ho, tt_ff_spread_ps=spread, window_ok=ok,
+                         added_edges=1 + e, ring_flops=d_l * L['bits'] + L['bits']))
         hist[e] += 1
         sdc.append(f'set_multicycle_path -setup {e} -to [get_pins u_{L["dst"]}/{L["pin"]}[*]]')
-        sdc.append(f'set_multicycle_path -hold {a.D - 1} -to [get_pins u_{L["dst"]}/{L["pin"]}[*]]')
+        sdc.append(f'set_multicycle_path -hold {d_l - 1} -to [get_pins u_{L["dst"]}/{L["pin"]}[*]]')
     a.out.mkdir(parents=True, exist_ok=True)
     summ = dict(links=len(plan), E_hist=dict(sorted(hist.items())), window_fail=[p['link'] for p in plan if not p['window_ok']],
                 ring_flops=sum(p['ring_flops'] for p in plan), bits=sum(p['bits'] for p in plan),
-                max_spread_ps=max(p['tt_ff_spread_ps'] for p in plan))
+                max_spread_ps=max(p['tt_ff_spread_ps'] for p in plan),
+                long_tiles=[p['link'] for p in plan if p['D'] == 8])
     json.dump(dict(schema='opentallas.s81_land.pilot_plan.v1', T_ps=T, D=a.D, corners=a.corners,
                    rule='E = max over corners of 1 + ceil(-S1/T); setup_E = S1 + (E-1)T; hold_E = H0 + (D-E)T', summary=summ,
                    links=plan), open(a.out / 'land_plan.json', 'w'), indent=1)

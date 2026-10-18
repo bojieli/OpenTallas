@@ -124,6 +124,8 @@ def main():
                     'bind table, real F1 relay masters on every link, regional reset relay tree, sourced forwarded clocks; '
                     'writes <out>/bind/ and runs the STRICT die_port_bind')
     ap.add_argument('--bind-table', default=str(ROOT / 'results/arch/s81_dv_1016/bind/bind_table.json'))
+    ap.add_argument('--land-plan', default=None, help='LANDFIX-SQ: per-link landing E / tile (dv_land_pilot plan) for --bind real; '
+                    'default = the bind table land_plan')
     a = ap.parse_args()
     plan = load(a.plan)
     out = Path(a.out); (out / 'views').mkdir(parents=True, exist_ok=True); (out / 'out').mkdir(exist_ok=True)
@@ -173,7 +175,8 @@ def main():
         if a.region:
             raise SystemExit('dv_diecase: --bind real is a full-die netlist (no --region)')
         import dv_bind
-        rec = dv_bind.emit(plan, out / 'bind', Path(a.bind_table), sdir, chain_pts)
+        rec = dv_bind.emit(plan, out / 'bind', Path(a.bind_table), sdir, chain_pts,
+                           land_plan=Path(a.land_plan) if a.land_plan else None)
         print(json.dumps({k: v for k, v in rec.items() if k in ('relay_masters', 'clock_forward_cells', 'reset', 'port_bind_rc')}, indent=1))
         return
     # ------------------------------------------------------------------ abstracts (one master per kept instance)
