@@ -30,6 +30,9 @@
 //     group's copies and an 8:1 across groups.  Both adders (u_add, u_n6) are ot_s81_fadd_pipe (bit-identical,
 //     valid-only reset, one add in stage 3).  Same values at the same edges: cap_model.py unchanged.
 // MUT (bench mutants only): 1 wrong sibling association (h = parent of the parent), 3 leaf mapping off by one.
+// OWNERS-S81/CAP2 (10-18, CAP5 --cts gate @59b690283 + cts_native_probe launch FAIL fault 236.7 / cw_n_a[12] 227.3 /
+// [13] 224.9 > 220): every held output now launches from a dedicated TOP-module pin copy flop whose only load is its pin
+// (cw_a_p / cw_d_p: same next state, same edge; fault_p: copy of the sticky, +1 edge on fault visibility only).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_cap_rt #(
     parameter integer WIN = 2,
@@ -55,11 +58,18 @@ module ot_s81sl_cap_rt #(
     output wire [3:0]    cw_n_v,       // leaves 3, 4 (N face)
     output wire [47:0]   cw_n_a,
     output wire [127:0]  cw_n_d,
-    output reg           fault
+    output wire          fault
 );
-    reg  [9:0]   cw_v; reg [119:0] cw_a; reg [319:0] cw_d;
-    assign cw_s_v = cw_v[5:0];   assign cw_s_a = cw_a[71:0];   assign cw_s_d = cw_d[191:0];
-    assign cw_n_v = cw_v[9:6];   assign cw_n_a = cw_a[119:72]; assign cw_n_d = cw_d[319:192];
+    reg  [9:0]   cw_v; (* keep = "true" *) reg [119:0] cw_a; (* keep = "true" *) reg [319:0] cw_d;   // kept: never folded into the pin copies
+    // OWNERS-S81/CAP2 (10-18): the held capture words cw_a / cw_d keep their value between writes, so their flops load
+    // their own hold muxes and io_flop_at_pins cannot anchor them (cts_native_probe launch cw_n_a[12] 227.3 ps: flop
+    // ~25 um from its N pin on a late leaf).  The pins are driven by dedicated TOP-module copy flops (* keep *) loaded
+    // with the SAME next state at the SAME edge (0 edges moved); the hold feedback taps the internal copies only.
+    (* keep = "true" *) reg [119:0] cw_a_p; (* keep = "true" *) reg [319:0] cw_d_p;
+    (* keep = "true" *) reg fault_p;
+    assign cw_s_v = cw_v[5:0];   assign cw_s_a = cw_a_p[71:0];   assign cw_s_d = cw_d_p[191:0];
+    assign cw_n_v = cw_v[9:6];   assign cw_n_a = cw_a_p[119:72]; assign cw_n_d = cw_d_p[319:192];
+    assign fault = fault_p;
     integer i, j;
     wire [19:0] rsv;
     ot_rst_relay #(.REGIONS(20), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
@@ -326,21 +336,31 @@ module ot_s81sl_cap_rt #(
                 if (d3_v[j] && d3_k[j] < 3'd5) cw_v[2 * d3_k[j] + d3_a[j][2]] <= 1'b1;
             f8 <= d3_v[0] && d3_v[1] && d3_k[0] == d3_k[1] && d3_a[0][2] == d3_a[1][2];
         end
-    always @(posedge clk)
+    reg [119:0] cw_a_n; reg [319:0] cw_d_n;                // next state of the held capture words (internal + pin copy)
+    always @* begin
+        cw_a_n = cw_a; cw_d_n = cw_d;
         for (j = 0; j < 2; j = j + 1)
             if (d3_v[j])
                 for (i = 0; i < 5; i = i + 1)
                     if (d3_k[j] == i) begin
-                        cw_a[24 * i + 12 * d3_a[j][2] +: 12] <= d3_a[j];
-                        cw_d[64 * i + 32 * d3_a[j][2] +: 32] <= d3_d[j];
+                        cw_a_n[24 * i + 12 * d3_a[j][2] +: 12] = d3_a[j];
+                        cw_d_n[64 * i + 32 * d3_a[j][2] +: 32] = d3_d[j];
                     end
+    end
+    always @(posedge clk) begin cw_a <= cw_a_n; cw_d <= cw_d_n; cw_a_p <= cw_a_n; cw_d_p <= cw_d_n; end
 
     // ------------------------------------------------------------ sticky fault
     wire f10 = (re_v && re_e) || (fa_v && fa_e);         // lane err / status faults: in the tree leaves (lf_q)
     wire f11 = cfgv_q && any_open;
+    reg fault_q;                                          // internal sticky fault (D = the decision logic's OR)
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) fault <= 1'b0;
-        else if (n6_f || lf_q || f5 || f6 || f7 || f8 || (|f9) || f10 || f11) fault <= 1'b1;
+        if (!rs_c) fault_q <= 1'b0;
+        else if (n6_f || lf_q || f5 || f6 || f7 || f8 || (|f9) || f10 || f11) fault_q <= 1'b1;
+    // OWNERS-S81/CAP2 (10-18): the fault pin is a dedicated copy flop of the sticky (+1 edge on fault visibility only;
+    // fault is checked at phase end, not timed: SLICE_CONTRACT).  Its only load is the S pin, so io_flop_at_pins anchors
+    // it there (gate @59b690283: the sticky flop sat at (120, 77.8) beside its OR cone, ~170 um from the S pin, launch
+    // 236.7 ps > 220).  f5..f7 are decision logic, not registered bits: a same-edge copy would carry the cone to the pin.
+    always @(posedge clk or negedge rs_c) if (!rs_c) fault_p <= 1'b0; else fault_p <= fault_q;
 `ifndef SYNTHESIS
     // bench visibility: which obligation fired first ([1] tree leaves, [3] n6, [4..10] F5..F11)
     reg [15:0] fcause;
