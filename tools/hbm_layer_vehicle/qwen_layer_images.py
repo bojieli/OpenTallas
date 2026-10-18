@@ -361,7 +361,7 @@ def run_fixture(fix, stage, ranks):
     """HGI-1 functional model over the committed-manifest fixture: VM of each rank before / after every executed
     non-CTL record + the expected.npz integrity check."""
     import hbm_generic_iface as HGI
-    from hgi_sim.machine import UNITS, Die, Hbm, Machine
+    from hgi_sim.machine import UNITS, Die, Hbm, Machine, e4m3_table
     from hgi_sim.records import decode_program
     fix = Path(fix)
     cman = json.loads((QREC / f"fixtures/manifest_{stage}.json").read_text())
@@ -405,22 +405,59 @@ def run_fixture(fix, stage, ranks):
             for v in dies[r].stream_seen.values():   # head: logits leave the SU on a STREAM, not into the VM
                 streams[r].append(np.ascontiguousarray(v).view(np.uint32).reshape(-1).copy())
     tok, _ = M.run(img, 0, cman["position"], hash_bufs=False, hook=hook)
-    # integrity: every expected array of ranks R occurs bit-exactly in some post-record VM at a vm_map base
+    # integrity: every expected array of ranks R occurs bit-exactly in the run, in the form qwen_d4g_proof checks it:
+    #   VM (any word offset of some post-record VM; qknorm.k sits at QN + nq*HD, act at ACT + rank part), the SU STREAM
+    #   (head logits), the die's HBM KV plane decoded through the E4M3 table (kv_append.K<h>/V<h>, FP8 rows at POS),
+    #   or SC * attn_scale (attention_qk.scores*scale: the proof's derived view; SC rows of P = POS+1 per q head).
     exp = np.load(fix / "expected.npz")
-    bases = sorted(set(cman["vm_map_words"].values()))
-    found, missing = 0, []
+    vmw = cman["vm_map_words"]
+    tab = np.asarray(e4m3_table(), np.float32).view(np.uint32)
+    hd, scale = 128, np.float32(1.0 / 128 ** 0.5)          # qwen_compiler md attn_scale = f32(1/sqrt(head_dim))
+
+    def in_vm(v, e):
+        pos_ = np.nonzero(v[:v.size - e.size + 1] == e[0])[0]
+        return any(np.array_equal(v[p:p + e.size], e) for p in pos_)
+
+    found, missing, where = 0, [], {}
     for key in exp.files:
         dk = key.split(".")[0]
         if not dk.startswith("d") or not dk[1:].isdigit() or int(dk[1:]) not in ranks:
             continue
+        r = int(dk[1:])
         e = np.ascontiguousarray(exp[key]).view(np.uint32).reshape(-1)
-        ok = any(np.array_equal(v[b:b + e.size], e) for v in post[int(dk[1:])].values() for b in bases
-                 if b + e.size <= v.size) or any(np.array_equal(v, e) for v in streams[int(dk[1:])])
-        found += ok
-        if not ok:
+        how = None
+        if any(in_vm(v, e) for v in post[r].values()):
+            how = "vm"
+        elif any(np.array_equal(v, e) for v in streams[r]):
+            how = "stream"
+        elif ".kv_append." in key:
+            kind, h = "KV".index(key.rsplit(".", 1)[1][0]), int(key.rsplit(".", 1)[1][1:])
+            nl = max(1, len(cman.get("layers") or []))
+            for b, d8, n in dies[r].hbm.regions:
+                if n != "KV":
+                    continue
+                plane, layer_b = 8192 * hd, d8.size // nl            # Geometry.kv_plane (ctx 8192, FP8), kv_layer
+                for j in range(nl):
+                    o = j * layer_b + (h * 2 + kind) * plane + POS * hd
+                    if o + hd <= d8.size and np.array_equal(tab[d8[o:o + hd]], e):
+                        how = "hbm_kv_e4m3"
+                        break
+        elif key.endswith("attention_qk.scores*scale"):
+            P = cman["position"] + 1
+            nq = e.size // P
+            ctx = (vmw["E"] - vmw["SC"]) // max(nq, 1)
+            from hgi_sim import lib as A
+            for v in post[r].values():
+                sc = np.stack([v[vmw["SC"] + jj * ctx: vmw["SC"] + jj * ctx + P] for jj in range(nq)]).view(np.float32)
+                if np.array_equal(np.asarray(A.mul(sc, scale), np.float32).view(np.uint32).reshape(-1), e):
+                    how = "vm_sc_times_attn_scale"
+                    break
+        where[key] = how
+        found += how is not None
+        if how is None:
             missing.append(key)
     return img, seq, pre, post, dict(token=int(tok), expected_found=found, expected_missing=missing,
-                                     expected_checked=found + len(missing))
+                                     expected_checked=found + len(missing), found_as=where)
 
 
 def cmd_snap(a):
