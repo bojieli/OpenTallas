@@ -60,7 +60,42 @@ def attention_result_join(graph, root=K.ROOT, prog='attention_programme', rname=
     return bound
 
 
+CALGEN_M = ('rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv', 'qkd_attn_cal_gen')
+# KVJ-G2b 10-17: the die image's STRETCH=1 parameters (kv_static_programme die report: profile die, d_qk = QK_ISSUE_AGE 62 -
+# 34, d_rl = RL 95 - 19, service_end 1777, compiled_rx_cmd 2; G3S2 = the v1.4.3 staged head ingress)
+CALGEN_P = dict(G3S2=1, RX_CMD=2, STRETCH=1, D_QK=28, D_RL=76, SERVICE_END=1777, MUT=0)
+PROG_FROM_CALGEN = (('compiled_calendar', 'cal'), ('compiled_rx_cmd', 'rx_cmd'), ('compiled_tx_first', 'tx_first'),
+                    ('compiled_end', 'end_age'))
+
+
+def cal_gen_join(graph, root=K.ROOT, prog='attention_programme', lp='layer_programme', name='attn_cal'):
+    """qkd_attn_cal_gen STRETCH=1 in the attention control tile: go <- the layer programme's stage_start (the compiler
+    places it CAL_GEN_LAT = 10 edges before the first issue; margin 867 in the die report), ctx_t / epoch <- the layer
+    programme; the programme's compiled_calendar / rx_cmd / tx_first / end <- the generator's held outputs."""
+    ins, width_of, ep = F._ctx(graph, root)
+    for need in (prog, lp):
+        if need not in ins:
+            raise ValueError(f'template instance {need} missing')
+    c = F._add_unpriced(graph, ins, name, CALGEN_M, dict(CALGEN_P), root)
+    p = ins[prog]
+    bound = []
+
+    def bind(i, port, items):
+        B._bind(i, port, items, width_of)
+        bound.append(f'{i["name"]}.{port}')
+    bind(c, 'go', [ep(lp, 'stage_start')])
+    bind(c, 'ctx_t', [ep(lp, 'ctx_t')])
+    bind(c, 'epoch', [ep(lp, 'epoch')])
+    for q, s in PROG_FROM_CALGEN:
+        bind(p, q, [ep(name, s)])
+    graph.setdefault('joins_added', []).append(dict(producer=f'{name}:{CALGEN_M[1]}', bound_inputs=len(bound),
+        owner_note='KVJ-G2b 10-17: attention calendar generator STRETCH=1 (D_QK 28, D_RL 76, SERVICE_END 1777) feeds '
+        'the programme compiled_* (replaces the boot-image constants)'))
+    return bound
+
+
 def build(root=K.ROOT):
     graph, bound = F.build(root)
     bound += attention_result_join(graph, root)
+    bound += cal_gen_join(graph, root)
     return graph, bound

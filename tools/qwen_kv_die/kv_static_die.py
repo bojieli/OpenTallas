@@ -79,9 +79,9 @@ _G = {}
 def graph():
     """the merged static join with the priced ages (cached per process)"""
     if 'g' not in _G:
-        import kv_static_kvjf_join as F
+        import kv_static_attn_join as AJ      # KVJ-G2b: kvjf build + attention service root / result face + cal_gen
         import kv_static_ages as A
-        g, _ = F.build()
+        g, _ = AJ.build()
         ages = json.loads((ROOT / AGES).read_text())
         left = A.apply(g, ages)
         _G['g'], _G['unpriced'] = g, left
@@ -129,6 +129,13 @@ def cluster_of(name):
     if m:
         pc = int(m.group(2))
         return f'slg_{m.group(1)}_{pc_group()[(m.group(1), pc)]}', 'grp', f'bcdc{pc % 4}'
+    m = re.fullmatch(r'cf1_(WS|WN|ES|EN)_(\d)', name)       # KVJ-SMALL cfault tree level 1: beside its group's PCs
+    if m:
+        return f'slg_{m.group(1)}_{m.group(2)}', 'grp', 'cf1'
+    if re.fullmatch(r'cf2_(WS|WN|ES|EN)_\d|cf3_[WE]|cf_root', name) or name == 'fanr':
+        return 'kvs_ctl', 'ctl', name      # upper cfault levels + the C3 es fan root: beside the HOST root / writer
+    if name in ('attn_root', 'attn_face', 'attn_cal'):
+        return 'kvs_attn', 'attn', name
     m = re.fullmatch(r'(ectl_a|ki)_(WS|WN|ES|EN)_(\d)', name)
     if m:
         return f'ectl_{m.group(2)}_{m.group(3)}', 'ectl', 'a' if m.group(1) == 'ectl_a' else 'k'
@@ -507,6 +514,8 @@ def rel(T, S):
             return 'prev' if int(S.split('_')[2]) == int(T.split('_')[2]) - 1 else 'next'
         if ks == 'emb':
             return 'next'              # the return train's root word leaves on the same face as a station's
+        if ks == 'ctl':
+            return 'next'              # KVJ-C3: the es fan root's stack chain enters PC 31 on a station's chain face
     if kt == 'grp' and ks in ('pc', 'pc_h'):
         return f'pc{int(S.split("_")[2]) % 4}'
     if ks in ('ctl', 'attn', 'emb'):
