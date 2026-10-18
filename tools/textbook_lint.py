@@ -223,6 +223,34 @@ TIE_RE = re.compile(r"^TIE(HI|LO)", re.I)
 PHYS_RE = re.compile(r"TAPCELL|FILL|DECAP|ENDCAP|WELLTAP|ANTENNA", re.I)
 CLKPIN_RE = re.compile(r"^(clk|ck|clock|CLK|CK)(_?[a-z0-9]*)?$", re.I)
 RST_RE = re.compile(r"(^|[\s_.\\/])(p?a?rst|reset|rsv?)(_?n|_ni|_i|_[a-z0-9]+)?($|[\s_\[.$/])", re.I)
+
+
+def declared_resets(T):
+    """GATE-FRICTION 2026-10-18 (KV core_peer por_n, 5,344 async loads, refused as a DATA port > 2,048): the kit spec's
+    reset_ports (passed as --set reset_ports=a,b or cfg set) are resets whatever their name; plus power-on-reset names
+    (por, por_n, poweron_rst ...)."""
+    v = (T or {}).get("reset_ports") or ()
+    names = [x.strip() for x in (v.split(",") if isinstance(v, str) else v) if str(x).strip()]
+    return {re.sub(r"\[.*$", "", str(n)) for n in names}
+
+
+POR_RE = re.compile(r"(^|[\s_.\\/])(por|poweron|power_on)(_?n|_ni|_i|_[a-z0-9]+)?($|[\s_\[.$/])", re.I)
+
+
+def is_reset_net(label, net, T=None, port=True):
+    """reset-named (RST_RE) nets as before; a power-on-reset name or a declared reset_ports entry counts only for a
+    PORT-driven net (so the change only ever relaxes: a data-port limit 2,048 -> the reset limit 8,000)."""
+    if RST_RE.search(label) or RST_RE.search(net):
+        return True
+    if not port:
+        return False
+    if POR_RE.search(label) or POR_RE.search(net):
+        return True
+    decl = declared_resets(T)
+    if not decl:
+        return False
+    base = re.sub(r"\[.*$", "", re.sub(r"^port\s+", "", str(label)).strip())
+    return base in decl or re.sub(r"\[.*$", "", str(net)) in decl
 SEQ_CLK_PINS = {"CLK"}
 ASYNC_PINS = {"RESET", "SET", "RESETN", "SETN"}
 
@@ -776,7 +804,7 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
         d = driver[x]
         lab = net_label(g, A, x)
         is_port = d[0] < 0
-        is_rst = bool(RST_RE.search(lab)) or bool(RST_RE.search(g.net_name[x]))
+        is_rst = is_reset_net(lab, g.net_name[x], T, port=is_port)
         cat = "hf_max_reset" if is_rst else ("hf_max_port" if is_port else "hf_max_net")
         M[cat] = max(M[cat], tot)
         lim = T["hf_report"] if (is_port or is_rst) else T["hf_max"]
@@ -806,7 +834,7 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
 
     # ---- 3. boundary: forward from input ports (levels), stop at sequential / macro
     data_in = {x for b, (dd, x) in g.ports.items() if dd == "input" and x not in clk}
-    rst_in = {x for b, (dd, x) in g.ports.items() if dd == "input" and RST_RE.search(b)}
+    rst_in = {x for b, (dd, x) in g.ports.items() if dd == "input" and is_reset_net(b, b, T)}
     in_lv = {x: (0, A["driver"][x][1]) for x in data_in}       # net -> (levels from a data input port, port)
     q_ps = {}                                                   # net -> (ps from a flop / macro output, start)
     for ci in range(ncell):
