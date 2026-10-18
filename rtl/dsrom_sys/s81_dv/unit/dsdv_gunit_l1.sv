@@ -28,6 +28,10 @@
 // fault (sticky): duplicate SC row, row >= 64, an SC beat with no armed job or while the select runs, a job write
 // while one is armed, the collector's fault (fewer than K, a front's adder fault), L3's fault, a CTL collision.
 // Every input lands in a flop; every output leaves a flop (the ids row: the collector's zero-idle ids into ct_b).
+// S81U-GUNIT-L1b (10-17, NATIVE-2 pin rules): rst_n drives only ot_rst_relay (4 kept region copies); the job /
+// window / route_scale registers left the reset block (the raw port was their load enable: in->reg -167 ps at the
+// gate); the collector's i_v / i_ids land in pin flops (they fed the N-face ct_b output flop and the sequencer
+// straight from the E pins): +1 edge on the ids row (and the weights' start).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l1 #(
     parameter integer MUT = 0
@@ -55,17 +59,19 @@ module dsdv_gunit_l1 #(
 );
     localparam integer V = 276, K = 6, NSET = 2, NE = 448, IW = 9, SB = 1;
     integer i, j, q, i2;
+    wire [3:0] rq;                            // relayed resets: [0] rung dn, [1] rung up, [2] N / E input flops, [3] sequencer
+    ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
     // ---------------------------------------------------------------- rung feedthrough (L2 <-> L3)
-    dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rst_n), .d(rn_i), .q(rs_o));
-    dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rst_n), .d(rs_i), .q(rn_o));
+    dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rq[0]), .d(rn_i), .q(rs_o));
+    dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rq[1]), .d(rs_i), .q(rn_o));
     // ---------------------------------------------------------------- input flops
-    reg dav, dbv, wv, wv3, f3_q, fc_q, gv; reg [V-1:0] ab, bb, wb3; reg [9:0] wa; reg [255:0] wd; reg [3:0] sid_c;
-    reg [191:0] gd;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin dav <= 1'b0; dbv <= 1'b0; wv <= 1'b0; wv3 <= 1'b0; f3_q <= 1'b0; fc_q <= 1'b0; gv <= 1'b0; end
-        else begin dav <= dl_av; dbv <= dl_bv; wv <= cw_v; wv3 <= w_v; f3_q <= f3; fc_q <= fc; gv <= gs_v; end
+    reg dav, dbv, wv, wv3, f3_q, fc_q, gv, iv; reg [V-1:0] ab, bb, wb3; reg [9:0] wa; reg [255:0] wd; reg [3:0] sid_c;
+    reg [191:0] gd; reg [53:0] ids;
+    always @(posedge clk or negedge rq[2])
+        if (!rq[2]) begin dav <= 1'b0; dbv <= 1'b0; wv <= 1'b0; wv3 <= 1'b0; f3_q <= 1'b0; fc_q <= 1'b0; gv <= 1'b0; iv <= 1'b0; end
+        else begin dav <= dl_av; dbv <= dl_bv; wv <= cw_v; wv3 <= w_v; f3_q <= f3; fc_q <= fc; gv <= gs_v; iv <= i_v; end
     always @(posedge clk) begin
-        ab <= dl_a; bb <= dl_b; wa <= cw_a; wd <= cw_d; sid_c <= sid_i; wb3 <= w_b; sid_o <= sid_c; gd <= gs_d;
+        ab <= dl_a; bb <= dl_b; wa <= cw_a; wd <= cw_d; sid_c <= sid_i; wb3 <= w_b; sid_o <= sid_c; gd <= gs_d; ids <= i_ids;
     end
     wire av = dav && ab[3:1] == 3'd5, bv = dbv && bb[3:1] == 3'd5;
     wire [SB-1:0] wset = wa[8 +: SB];
@@ -73,8 +79,8 @@ module dsdv_gunit_l1 #(
     reg [31:0] rscale [0:NSET-1];
     wire bias_w = wv && !wa[9] && wa[5:0] < 6'd56;
     always @(posedge clk) if (wv && !wa[9] && wa[5:0] == 6'd62) rscale[wset] <= wd[32 * 6 +: 32];
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) bw_e <= 8'd0; else bw_e <= bias_w ? (8'd1 << wa[2:0]) : 8'd0;
+    always @(posedge clk or negedge rq[2])
+        if (!rq[2]) bw_e <= 8'd0; else bw_e <= bias_w ? (8'd1 << wa[2:0]) : 8'd0;
     always @(posedge clk) begin bw_a <= {wset, wa[5:3]}; bw_d <= wd; end
     // ---------------------------------------------------------------- router job (armed -> taken by the SC window)
     reg jv; reg [SB-1:0] jset; reg [8:0] jne; reg [9:0] jrow; reg [4:0] jlm; reg [15:0] jsm;
@@ -97,19 +103,19 @@ module dsdv_gunit_l1 #(
     wire [2:0]  bn_n = (st == S_SEL) ? n : 3'd0;
     wire [3:0]  nb_n = last ? nbs_c : nbs;
     wire [8:0]  ne_n = last ? ne_x : ne;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
+    always @(posedge clk or negedge rq[3])
+        if (!rq[3]) begin
             st <= S_IN; seen <= 64'd0; nseen <= 7'd0; fault <= 1'b0; jv <= 1'b0; c_go <= 1'b0; we <= 56'd0; re <= 1'b0;
             rw_st <= 1'b0; rw_v <= 1'b0; ct_v <= 1'b0;
         end else begin
             rw_st <= 1'b0; rw_v <= 1'b0;
-            if (fc_q || f3_q || (i_v && wv3)) fault <= 1'b1;
+            if (fc_q || f3_q || (iv && wv3)) fault <= 1'b1;
             if (av && (ab[49:46] != 4'd0 || seen[ra_a])) fault <= 1'b1;
             if (bv && (bb[49:46] != 4'd0 || seen[ra_b] || (av && ra_a == ra_b))) fault <= 1'b1;
             if ((av || bv) && st != S_IN) fault <= 1'b1;
             if (job_w) begin
                 if (jv && !take) fault <= 1'b1;
-                jv <= 1'b1; jset <= wd[40 +: SB]; jsm <= wd[15:0]; jlm <= wd[20:16]; jrow <= wd[30:21]; jne <= wd[39:31];
+                jv <= 1'b1;
             end
             // SC word enables per front: word j of a beat with row r is index 7 r + j, front (7 r + j)[5:4]
             for (i = 0; i < 4; i = i + 1)
@@ -118,30 +124,43 @@ module dsdv_gunit_l1 #(
                     we[14 * i + 7 + j] <= bv && 9'((7 * ra_b + j) >> 4) % 4 == i;
                 end
             c_go <= go_n; re <= 1'b1;
-            ct_v <= i_v || wv3;
+            ct_v <= iv || wv3;
             case (st)
                 S_IN: begin
                     if (take) begin
                         if (!jv) fault <= 1'b1;
-                        jv <= job_w; cset <= jset; ne <= jne; row <= jrow; lmask <= jlm; smask <= jsm;
-                        nsc <= 7'((jne + 9'd6) / 9'd7); rw_scale <= rscale[jset];
+                        jv <= job_w;
                     end
                     seen <= seen | (av ? 64'd1 << ra_a : 64'd0) | (bv ? 64'd1 << ra_b : 64'd0);
                     nseen <= nseen + av + bv;
-                    if (last) begin n <= 3'd1; nbs <= nbs_c; st <= (nbs_c == 4'd1) ? S_IDS : S_SEL; end
+                    if (last) st <= (nbs_c == 4'd1) ? S_IDS : S_SEL;
                 end
-                S_SEL: begin                                  // beats 1 .. ceil(ne / 64) - 1, one a cycle
-                    n <= n + 3'd1;
-                    if ({1'b0, n} + 4'd1 == nbs) st <= S_IDS;
-                end
-                S_IDS: if (i_v) begin rw_st <= 1'b1; st <= S_GW; n <= 3'd0; end
+                S_SEL: if ({1'b0, n} + 4'd1 == nbs) st <= S_IDS;      // beats 1 .. ceil(ne / 64) - 1, one a cycle
+                S_IDS: if (iv) begin rw_st <= 1'b1; st <= S_GW; end
                 S_GW: begin                                   // ids row (renumbered) next edge, the gathered row on arrival
-                    if (n == 3'd0) begin rw_v <= 1'b1; n <= 3'd1; end
+                    if (n == 3'd0) rw_v <= 1'b1;
                     if (gv) begin rw_v <= 1'b1; st <= S_IN; seen <= 64'd0; nseen <= 7'd0; end
                 end
                 default: st <= S_IN;
             endcase
         end
+    // the job / window registers (no reset: loaded only on a job write / the window's first beat / the sequencer steps)
+    always @(posedge clk) begin
+        if (job_w) begin jset <= wd[40 +: SB]; jsm <= wd[15:0]; jlm <= wd[20:16]; jrow <= wd[30:21]; jne <= wd[39:31]; end
+        case (st)
+            S_IN: begin
+                if (take) begin
+                    cset <= jset; ne <= jne; row <= jrow; lmask <= jlm; smask <= jsm;
+                    nsc <= 7'((jne + 9'd6) / 9'd7); rw_scale <= rscale[jset];
+                end
+                if (last) begin n <= 3'd1; nbs <= nbs_c; end
+            end
+            S_SEL: n <= n + 3'd1;
+            S_IDS: if (iv) n <= 3'd0;
+            S_GW:  if (n == 3'd0) n <= 3'd1;
+            default: ;
+        endcase
+    end
     // per-front control of the beat issued this edge
     always @(posedge clk) begin
         sa_r <= ra_a; sa_d <= ab[52 +: 224]; sb_r <= ra_b; sb_d <= bb[52 +: 224];
@@ -169,11 +188,11 @@ module dsdv_gunit_l1 #(
             ctl = {V{1'b0}}; ctl[0] = 1'b1; ctl[12:9] = s; ctl[21 +: 186] = p;
         end
     endfunction
-    // the collector's ids are zero when idle: header gated by i_v, ids OR'd in
-    wire [31:0] pk0 = {5'd0, i_ids[IW * 2 +: IW], i_ids[IW * 1 +: IW], i_ids[IW * 0 +: IW]};
-    wire [31:0] pk1 = {5'd0, i_ids[IW * 5 +: IW], i_ids[IW * 4 +: IW], i_ids[IW * 3 +: IW]};
+    // the collector's ids are zero when idle: header gated by its valid, ids OR'd in (both from this leaf's pin flops)
+    wire [31:0] pk0 = {5'd0, ids[IW * 2 +: IW], ids[IW * 1 +: IW], ids[IW * 0 +: IW]};
+    wire [31:0] pk1 = {5'd0, ids[IW * 5 +: IW], ids[IW * 4 +: IW], ids[IW * 3 +: IW]};
     reg [V-1:0] idb;
     always @(*) begin idb = {V{1'b0}}; idb[61 +: 64] = {pk1, pk0}; end
     always @(posedge clk)
-        ct_b <= (i_v ? ctl(row, 4'h3, 128'd0, smask, lmask, sid_c) : {V{1'b0}}) | idb | (wv3 ? wb3 : {V{1'b0}});
+        ct_b <= (iv ? ctl(row, 4'h3, 128'd0, smask, lmask, sid_c) : {V{1'b0}}) | idb | (wv3 ? wb3 : {V{1'b0}});
 endmodule
