@@ -393,7 +393,7 @@ def run_fixture(fix, stage, ranks):
     pre = {r: {} for r in ranks}
     post = {r: {} for r in ranks}
     last = {r: dies[r].vm.copy() for r in ranks}
-    seq = []
+    seq, streams = [], {r: [] for r in ranks}
 
     def hook(Mm, rec, L):
         j = len(seq)
@@ -402,6 +402,8 @@ def run_fixture(fix, stage, ranks):
             pre[r][j] = last[r]
             last[r] = dies[r].vm.copy()
             post[r][j] = last[r]
+            for v in dies[r].stream_seen.values():   # head: logits leave the SU on a STREAM, not into the VM
+                streams[r].append(np.ascontiguousarray(v).view(np.uint32).reshape(-1).copy())
     tok, _ = M.run(img, 0, cman["position"], hash_bufs=False, hook=hook)
     # integrity: every expected array of ranks R occurs bit-exactly in some post-record VM at a vm_map base
     exp = np.load(fix / "expected.npz")
@@ -413,7 +415,7 @@ def run_fixture(fix, stage, ranks):
             continue
         e = np.ascontiguousarray(exp[key]).view(np.uint32).reshape(-1)
         ok = any(np.array_equal(v[b:b + e.size], e) for v in post[int(dk[1:])].values() for b in bases
-                 if b + e.size <= v.size)
+                 if b + e.size <= v.size) or any(np.array_equal(v, e) for v in streams[int(dk[1:])])
         found += ok
         if not ok:
             missing.append(key)

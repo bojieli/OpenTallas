@@ -11,7 +11,7 @@ WT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 SHA=$(git -C "$WT" rev-parse "$REV")
 ssh "$HOST" "rm -rf $ROOT/cqw/src $ROOT/cqw/out && mkdir -p $ROOT/cqw/src $ROOT/cqw/out $ROOT/cqw/log" || exit 2
 git -C "$WT" archive "$SHA" tools results/rtl/hbm_qwen_layer_tput_1018 results/rtl/hbm_ds_layer_tput_1018/slice_sw \
-  results/arch/hbm_generic_iface_20261009 | ssh "$HOST" "tar -x -C $ROOT/cqw/src"
+  results/arch/hbm_generic_iface_20261009 rtl/hbm_accel/generic/adapters rtl/hdc/v41x | ssh "$HOST" "tar -x -C $ROOT/cqw/src"
 echo "$SHA" | ssh "$HOST" "cat > $ROOT/cqw/src/REV"
 RC=0
 for S in $STAGES; do
