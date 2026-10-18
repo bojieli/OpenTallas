@@ -8,7 +8,7 @@ B="$OUT/obj_q$QM"
 verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style -j 8 -DQMUT=$QM --top-module tb_xload_xql_quad_lock --Mdir "$B" \
   rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv \
   rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv \
-  physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv \
+  rtl/hdc/ot_hdc_delay.sv physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv \
   physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \
   rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_xql_quad_lock.sv > "$OUT/build_q$QM.log" 2>&1 || { tail -30 "$OUT/build_q$QM.log"; exit 1; }
 "$B/Vtb_xload_xql_quad_lock" > "$OUT/qlock_q$QM.log" 2>&1 || true
