@@ -50,6 +50,13 @@ def main() -> None:
     if a.result.exists():
         raise SystemExit("Refusing to overwrite an existing verdict")
     out = a.workdir.resolve()
+    if out.exists():
+        # A retried bench (closure loop) finds the workdir of its killed first attempt but no verdict (qfd_tile_nk_tp8-c1
+        # 10-12: attempt 1 LOST on ENOSPC, the retry died here on FileExistsError before writing a result -> reported as
+        # "expected PASS but rc=1").  With no verdict file the partial workdir holds no evidence: start it afresh.
+        import shutil
+        print(f"stale workdir without a verdict, removed: {out}", flush=True)
+        shutil.rmtree(out)
     out.mkdir(parents=True, exist_ok=False)
     orig = a.ref_file.read_text() if a.ref_file else subprocess.check_output(
         ["git", "-C", str(ROOT), "show", f"{ORIG_COMMIT}:rtl/hdc/ot_hdc_matvec.sv"], text=True)

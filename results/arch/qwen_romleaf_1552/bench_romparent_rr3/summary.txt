@@ -1,0 +1,21 @@
+BENCH nkrr MUT0 exit 0 ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560 leaves'{'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00,
+BENCH nkrr MUT4 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_nk_native_rr.sv:71: Assertion failed in tb_qwen_romleaf_parent_nk_native_rr: RO
+BENCH nkrr MUT14 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_nk_native_rr.sv:71: Assertion failed in tb_qwen_romleaf_parent_nk_native_rr: RO
+BENCH nkrr MUT21 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_nk_native_rr.sv:71: Assertion failed in tb_qwen_romleaf_parent_nk_native_rr: RO
+BENCH nkrr MUT22 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_nk_native_rr.sv:71: Assertion failed in tb_qwen_romleaf_parent_nk_native_rr: RO
+BENCH nkrr MUT23 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_nk_native_rr.sv:71: Assertion failed in tb_qwen_romleaf_parent_nk_native_rr: RO
+BENCH nkrr MUT24 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_nk_native_rr.sv:71: Assertion failed in tb_qwen_romleaf_parent_nk_native_rr: RO
+BENCH nkrr MUT25 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_nk_native_rr.sv:71: Assertion failed in tb_qwen_romleaf_parent_nk_native_rr: RO
+BENCH nkrr MUT26 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_nk_native_rr.sv:71: Assertion failed in tb_qwen_romleaf_parent_nk_native_rr: RO
+BENCH nkrr MUT27 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_nk_native_rr.sv:71: Assertion failed in tb_qwen_romleaf_parent_nk_native_rr: RO
+BENCH nlrr MUT0 exit 0 ROMLEAF_PARENT_NATIVE_PASS checks6399 valids2560 nonzero2560 leaves'{'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'h
+BENCH nlrr MUT4 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_native_rr.sv:69: Assertion failed in tb_qwen_romleaf_parent_native_rr: ROMLEAF_
+BENCH nlrr MUT14 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_native_rr.sv:69: Assertion failed in tb_qwen_romleaf_parent_native_rr: ROMLEAF_
+BENCH nlrr MUT21 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_native_rr.sv:69: Assertion failed in tb_qwen_romleaf_parent_native_rr: ROMLEAF_
+BENCH nlrr MUT22 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_native_rr.sv:69: Assertion failed in tb_qwen_romleaf_parent_native_rr: ROMLEAF_
+BENCH nlrr MUT23 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_native_rr.sv:69: Assertion failed in tb_qwen_romleaf_parent_native_rr: ROMLEAF_
+BENCH nlrr MUT24 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_native_rr.sv:69: Assertion failed in tb_qwen_romleaf_parent_native_rr: ROMLEAF_
+BENCH nlrr MUT25 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_native_rr.sv:69: Assertion failed in tb_qwen_romleaf_parent_native_rr: ROMLEAF_
+BENCH nlrr MUT26 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_native_rr.sv:69: Assertion failed in tb_qwen_romleaf_parent_native_rr: ROMLEAF_
+BENCH nlrr MUT27 exit 1 [6508000] %Fatal: tb_qwen_romleaf_parent_native_rr.sv:69: Assertion failed in tb_qwen_romleaf_parent_native_rr: ROMLEAF_
+main RTL b906e0fd6 (claude/s-qa0-1018); ot-epyc4 /srv/opentallas-scratch/claude/s-qa0-bench; Verilator 5.050
