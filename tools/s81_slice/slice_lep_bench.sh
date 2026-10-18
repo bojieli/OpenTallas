@@ -4,6 +4,9 @@
 set -u; O=$1; M=${2:-none}; BV=${3:-lepe}; mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 D=""; [ $M = swap ] && D="+define+OT_S81SL_LEP_MUT_SWAP"; [ $BV = lepe_nh ] && D="$D +define+TB_SLEP_NH"; M0=$M; M=${M}_$BV
+# SW=1 (S81-LINKTO 0hn, 10-18): +define+TB_SLEP_SW = SerDes KP4 lanes + 453-cycle switch leg, masters ch_b 1
+KP4=""; if [ "${SW:-0}" = 1 ]; then D="$D +define+TB_SLEP_SW +incdir+rtl/dsrom_sys/s81_link"; M=${M}_sw
+  KP4="rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv"; fi
 MAC="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"
 CEN="rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv
@@ -13,7 +16,7 @@ CEN="rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_s
 LEP="rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv
  rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv
  rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv
- rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_lep.sv
+ $KP4 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_lep.sv
  rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv
  $(ls rtl/dsrom_sys/s81_dv/eng/ot_s81sl_eg*.sv 2>/dev/null | tr '\n' ' ')"
 srcs="$(cat physical/hbm_norm_split_20261008/sources.f rtl/dsrom_sys/s81_dv/slice/test/leaf_bench.f | sort -u | tr '\n' ' ') $MAC $CEN $LEP"

@@ -6,7 +6,15 @@
 // `ro` at a Bernoulli rate below the lane rate plus back-to-back bursts; every beat must leave the peer's `ri`
 // bit-exact and in order, with no fault.  Then an over-rate burst must raise A's sticky fault (landing overflow).
 // +define+TB_LEP_NH (S81-LEPV): both dies use the host-less leaf top ot_s81sl_lep_nh (HOST_EN 0, no host ports).
+// +define+TB_LEP_SW (S81-LINKTO 0hn, 10-18): the SWITCHED die-to-die config: every lane = ot_pdie_serdes (KP4) + a fixed
+// 445-cycle switch leg each way (2 x PMA 4 + 445 = 453 cycles = 377.6 ns; lane 1 +7 cycles skew) and the lane tiles
+// strapped ch_b = 1 (CH_BOARD 700 at the tile top: ACK timeout 1,479 > the 1,106-cycle round trip).
 // Verdict: "PASS lep ..." or "FAIL lep ...".
+`ifdef TB_LEP_SW
+`define TB_LEP_CHB 1'b1
+`else
+`define TB_LEP_CHB 1'b0
+`endif
 `ifdef TB_LEP_NH
 `define TB_LEP_M ot_s81sl_lep_nh
 `define TB_LEP_HOST
@@ -30,24 +38,37 @@ module tb_s81sl_lep #(parameter integer N = 1000, parameter integer SEED = 1, pa
         .li0_v(ai0v), .li0_r(ai0r), .li0_d(ai0d), .li1_v(ai1v), .li1_r(ai1r), .li1_d(ai1d), .rxv(arxv),
         .sl_f(1'b0), .l0_f(af0), .l1_f(af1), `TB_LEP_ST(ast0, ast1)
         `TB_LEP_HOST .fault(a_f));
-    dsfd_coll_lane_w #(.LCR(1)) a_l0 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({ast0[0], ast0[1], arx0, arxv[0]}), .tx(atx0), .tf(),
+    dsfd_coll_lane_w #(.LCR(1)) a_l0 (.ck(clk), .rs(rst_n), .chb(`TB_LEP_CHB), .rx({ast0[0], ast0[1], arx0, arxv[0]}), .tx(atx0), .tf(),
         .lo_v(a0v), .lo_r(a0r), .lo_d(a0d), .li_v(ai0v), .li_r(ai0r), .li_d(ai0d), .flt(af0));
-    dsfd_coll_lane_w #(.LCR(1)) a_l1 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({ast1[0], ast1[1], arx1, arxv[1]}), .tx(atx1), .tf(),
+    dsfd_coll_lane_w #(.LCR(1)) a_l1 (.ck(clk), .rs(rst_n), .chb(`TB_LEP_CHB), .rx({ast1[0], ast1[1], arx1, arxv[1]}), .tx(atx1), .tf(),
         .lo_v(a1v), .lo_r(a1r), .lo_d(a1d), .li_v(ai1v), .li_r(ai1r), .li_d(ai1d), .flt(af1));
     `TB_LEP_M lb (.clk(clk), .rst_n(rst_n), .ro(b_ro), .ri(b_ri),
         .lo0_v(b0v), .lo0_r(b0r), .lo0_d(b0d), .lo1_v(b1v), .lo1_r(b1r), .lo1_d(b1d),
         .li0_v(bi0v), .li0_r(bi0r), .li0_d(bi0d), .li1_v(bi1v), .li1_r(bi1r), .li1_d(bi1d), .rxv(brxv),
         .sl_f(1'b0), .l0_f(bf0), .l1_f(bf1), `TB_LEP_ST(bst0, bst1)
         `TB_LEP_HOST .fault(b_f));
-    dsfd_coll_lane_e #(.LCR(1)) b_l0 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({bst0[0], bst0[1], brx0, brxv[0]}), .tx(btx0), .tf(),
+    dsfd_coll_lane_e #(.LCR(1)) b_l0 (.ck(clk), .rs(rst_n), .chb(`TB_LEP_CHB), .rx({bst0[0], bst0[1], brx0, brxv[0]}), .tx(btx0), .tf(),
         .lo_v(b0v), .lo_r(b0r), .lo_d(b0d), .li_v(bi0v), .li_r(bi0r), .li_d(bi0d), .flt(bf0));
-    dsfd_coll_lane_e #(.LCR(1)) b_l1 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({bst1[0], bst1[1], brx1, brxv[1]}), .tx(btx1), .tf(),
+    dsfd_coll_lane_e #(.LCR(1)) b_l1 (.ck(clk), .rs(rst_n), .chb(`TB_LEP_CHB), .rx({bst1[0], bst1[1], brx1, brxv[1]}), .tx(btx1), .tf(),
         .lo_v(b1v), .lo_r(b1r), .lo_d(b1d), .li_v(bi1v), .li_r(bi1r), .li_d(bi1d), .flt(bf1));
+`ifdef TB_LEP_SW
+    // SerDes macros (KP4) + the switch leg (tb_lep_sw_chan, fixed delay): lane 1 7 cycles later than lane 0
+    wire [543:0] sa0, sa1, sb0, sb1, ra0, ra1, rb0, rb1;
+    ot_pdie_serdes #(.PMA_LAT(4)) ua0 (.clk(clk), .rst(rst_n), .tx(atx0), .rx(arx0), .st(ast0), .pma_tx(sa0), .pma_tck(), .pma_rx(ra0), .pma_rck(clk));
+    ot_pdie_serdes #(.PMA_LAT(4)) ub0 (.clk(clk), .rst(rst_n), .tx(btx0), .rx(brx0), .st(bst0), .pma_tx(sb0), .pma_tck(), .pma_rx(rb0), .pma_rck(clk));
+    ot_pdie_serdes #(.PMA_LAT(4)) ua1 (.clk(clk), .rst(rst_n), .tx(atx1), .rx(arx1), .st(ast1), .pma_tx(sa1), .pma_tck(), .pma_rx(ra1), .pma_rck(clk));
+    ot_pdie_serdes #(.PMA_LAT(4)) ub1 (.clk(clk), .rst(rst_n), .tx(btx1), .rx(brx1), .st(bst1), .pma_tx(sb1), .pma_tck(), .pma_rx(rb1), .pma_rck(clk));
+    tb_lep_sw_chan #(.D(445)) c_ab0 (.clk(clk), .d(sa0), .q(rb0));
+    tb_lep_sw_chan #(.D(445)) c_ba0 (.clk(clk), .d(sb0), .q(ra0));
+    tb_lep_sw_chan #(.D(452)) c_ab1 (.clk(clk), .d(sa1), .q(rb1));
+    tb_lep_sw_chan #(.D(452)) c_ba1 (.clk(clk), .d(sb1), .q(ra1));
+`else
     // UCIe macros: lane 0 PMA latency 2, lane 1 PMA latency 9 (lane skew 14 cycles round trip)
     ot_pdie_ucie #(.PMA_LAT(2)) ua0 (.clk(clk), .rst(rst_n), .tx(atx0), .rx(arx0), .st(ast0), .pma_tx(pa0), .pma_tck(ta0), .pma_rx(pb0), .pma_rck(tb0));
     ot_pdie_ucie #(.PMA_LAT(2)) ub0 (.clk(clk), .rst(rst_n), .tx(btx0), .rx(brx0), .st(bst0), .pma_tx(pb0), .pma_tck(tb0), .pma_rx(pa0), .pma_rck(ta0));
     ot_pdie_ucie #(.PMA_LAT(9)) ua1 (.clk(clk), .rst(rst_n), .tx(atx1), .rx(arx1), .st(ast1), .pma_tx(pa1), .pma_tck(ta1), .pma_rx(pb1), .pma_rck(tb1));
     ot_pdie_ucie #(.PMA_LAT(9)) ub1 (.clk(clk), .rst(rst_n), .tx(btx1), .rx(brx1), .st(bst1), .pma_tx(pb1), .pma_tck(tb1), .pma_rx(pa1), .pma_rck(ta1));
+`endif
 
     // ---- scoreboards
     reg [1103:0] qa [0:4095]; reg [1103:0] qb [0:4095];   // A->B beats sent / B->A beats sent
@@ -99,10 +120,24 @@ module tb_s81sl_lep #(parameter integer N = 1000, parameter integer SEED = 1, pa
         $display("LEP_STATS sent A->B %0d recv %0d, B->A %0d recv %0d, mismatches %0d, fault_main %0d, overflow_fault %0d, lane_flt A %b%b B %b%b",
             na, ra_m, nb, rb_m, bad_main, f_main, ofl_seen, af0, af1, bf0, bf1);
         if (bad_main == 0 && ra_m == N && rb_m == N && !f_main && ofl_seen)
+`ifdef TB_LEP_SW
+            $display("PASS lep: %0d + %0d beats bit-exact in order across 2 x 2 SWITCHED SerDes lanes (453-cycle leg, ch_b 1, lane skew 7, SRAM landing wrapped); overflow flagged", ra_m, rb_m);
+`else
             $display("PASS lep: %0d + %0d beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged", ra_m, rb_m);
+`endif
         else
             $display("FAIL lep: mismatches %0d recv %0d/%0d %0d/%0d fault_main %0d overflow_fault %0d", bad_main, ra_m, N, rb_m, N, f_main, ofl_seen);
         $finish;
     end
     initial begin #(0.8333 * (WAIT + 40 * N + 20000)); $display("FAIL lep: TIMEOUT recv %0d/%0d %0d/%0d", ra, na, rb, nb); $finish; end
 endmodule
+`ifdef TB_LEP_SW
+// the switch leg of TB_LEP_SW: a fixed D-cycle delay of the PMA word (registered output: D cycles from d to q)
+module tb_lep_sw_chan #(parameter integer W = 544, parameter integer D = 445) (input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
+    localparam integer AW = $clog2(D + 1);
+    reg [W-1:0] m [0:D-1]; reg [AW-1:0] p = 0; reg [W-1:0] q_r = 0; integer i;
+    initial for (i = 0; i < D; i = i + 1) m[i] = 0;
+    always @(posedge clk) begin q_r <= m[p]; m[p] <= d; p <= (p == D - 1) ? 0 : p + 1; end
+    assign q = q_r;
+endmodule
+`endif

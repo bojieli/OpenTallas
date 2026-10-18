@@ -5,7 +5,9 @@
 // N = 4 dies = the production TP group (TP4: a_allgather / router_allgather / rows / topk / cand / Engram rows
 // all-gathers, out / combine all-reduce = reduce-scatter + all-gather, argmax merge, stage hop).  Each die = its 4
 // cross-die endpoints (end slices s_0S, s_7S, s_0N, s_7N of the p4l plan; xdie_s81_ep = current RTL ring stop + lep +
-// 2 lane tiles + 2 PHY macros per the plan: S ports lane 0 ot_pdie_ucie / lane 1 ot_pdie_serdes, N ports 2 x serdes).
+// 2 lane tiles + 2 PHY macros: S81-LINKTO 0hn (10-18) every port 2 x ot_pdie_serdes, since UCIe cannot cross the switch;
+// S_UCIE 1 = the historical p4l plan, S ports lane 0 ot_pdie_ucie).  Lane tiles = the BUILT dsfd_coll_lane_w/_e (CH_BOARD
+// 700 at the tile top) strapped ch_b = CHB = 1 (switched basis); CHB 0 / LOVR 1 CHB_OVR 400 are the timeout mutants.
 // Fabric (MODELLED, the only off-chip part): one-tier multi-plane switch, static circuits, one switch chip per crossing:
 //   die d ES (s_7S) <-> die d+1 WS (s_0S)     (d -> d+1 and d+1 -> d)
 //   die d EN (s_7N) <-> die d+2 WN (s_0N)     (d -> d+2 and d+2 -> d)
@@ -28,7 +30,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_xdie_s81 #(
     parameter integer D_CH = 445,
-    parameter integer CHB = 0,          // lane tile ch_b strap: 0 = UCIe timeout basis (p4l plan strap), 1 = board basis
+    parameter integer CHB = 1,          // lane tile ch_b strap: 1 = board / switched basis (S81-LINKTO 0hn: every switched lane), 0 = UCIe basis
+    parameter integer S_UCIE = 0,       // 1 = historical p4l plan (lane 0 of the WS / ES ports = ot_pdie_ucie); 0 = SerDes on all 8 lanes (0hn decision 2)
     parameter integer LOVR = 0, parameter integer CHB_OVR = 400, parameter integer CRED_OVR = 512, parameter integer SEQW_OVR = 10,
     parameter integer LSRAM = 1,
     parameter integer DMUT = 0,
@@ -69,7 +72,7 @@ module tb_xdie_s81 #(
         localparam integer PR = (P == 0) ? (((ge / NP) + ND - 1) % ND) * NP + 1 :
                                 (P == 1) ? (((ge / NP) + 1) % ND) * NP + 0 :
                                 (P == 2) ? (((ge / NP) + 2) % ND) * NP + 3 : (((ge / NP) + 2) % ND) * NP + 2;
-        xdie_s81_ep #(.SIDE(P % 2), .HOST(P == 3 ? 1 : 0), .PHY0((P < 2 || FORCE_UCIE != 0) ? 0 : 1), .PHY1(FORCE_UCIE != 0 ? 0 : 1), .DMUT(DMUT),
+        xdie_s81_ep #(.SIDE(P % 2), .HOST(P == 3 ? 1 : 0), .PHY0(((P < 2 && S_UCIE != 0) || FORCE_UCIE != 0) ? 0 : 1), .PHY1(FORCE_UCIE != 0 ? 0 : 1), .DMUT(DMUT),
             .LOVR(LOVR), .CHB_OVR(CHB_OVR), .CRED_OVR(CRED_OVR), .SEQW_OVR(SEQW_OVR), .LSRAM(LSRAM)) u_ep (
             .clk(clk), .rst_n(rst_n), .sid({P >= 2 ? 1'b1 : 1'b0, P % 2 ? 3'd7 : 3'd0}), .ch_b(CHB[0]),
             .ri_n(ri[ge]), .ro_n(ro[ge]), .pma_tx0(ptx0[ge]), .pma_tx1(ptx1[ge]), .pma_rx0(prx0[ge]), .pma_rx1(prx1[ge]),
@@ -87,7 +90,7 @@ module tb_xdie_s81 #(
             assign rt0 = u_ep.g_le.u_ln0.u.u_ep.st_retx_flits; assign rt1 = u_ep.g_le.u_ln1.u.u_ep.st_retx_flits;
         end
         // receive channels: from the circuit peer's pads (lane k -> lane k)
-        xdie_s81_chan #(.W(544), .D(D_CH), .ERRP((P >= 2 && FORCE_UCIE == 0) ? ERRP : 0)) u_c0 (.clk(clk), .d(ptx0[PR]), .q(prx0[ge]));
+        xdie_s81_chan #(.W(544), .D(D_CH), .ERRP(((P >= 2 || S_UCIE == 0) && FORCE_UCIE == 0) ? ERRP : 0)) u_c0 (.clk(clk), .d(ptx0[PR]), .q(prx0[ge]));
         xdie_s81_chan #(.W(544), .D(D_CH + ((LATE_MUT != 0 && PR == 1 * NP + 1) ? LATE_MUT : 0)), .ERRP(FORCE_UCIE == 0 ? ERRP : 0)) u_c1 (.clk(clk), .d(ptx1[PR]), .q(prx1[ge]));
     end endgenerate
 
