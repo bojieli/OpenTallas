@@ -5,8 +5,11 @@ lock-step harness (gen_tb.py) and run it.
 
   cluster_gate.py exact  --out DIR                 # expect pass: CLUSTER_GATE PASS
   cluster_gate.py mutant --out DIR --child core_rx # expect fail: the child's reset input inverted at the parent
+  cluster_gate.py rrmutant --out DIR --define M      # expect fail: the cluster built with `define M (a member wrapper's
+                                                    # bench mutant, e.g. QKD_HR_PR_RR_MUTANT: core_prompt relays bypassed);
+                                                    # the flat reference keeps the accepted wrappers
 
-usage: cluster_gate.py {exact,mutant} --out DIR [--child C] [--cycles N] [--verilator V]
+usage: cluster_gate.py {exact,mutant,rrmutant} --out DIR [--child C] [--define M] [--cycles N] [--verilator V]
 """
 import argparse
 import json
@@ -63,7 +66,8 @@ def run(cmd, log, cwd):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('mode', choices=['exact', 'mutant'])
+    ap.add_argument('mode', choices=['exact', 'mutant', 'rrmutant'])
+    ap.add_argument('--define', default='QKD_HR_PR_RR_MUTANT')
     ap.add_argument('--out', required=True)
     ap.add_argument('--child', default='core_queue')
     ap.add_argument('--cycles', type=int, default=20000)
@@ -94,7 +98,10 @@ def main():
                                           '-GENABLE_SERVICE=1', '-GENABLE_NATIVE=1', '-GENABLE_TOKEN=1', '-GNL=2',
                                           '-Mdir', str(out / 'obj_flat')] + flat_sources(out),
                           stdout=open(out / 'vl_flat.log', 'w'), stderr=subprocess.STDOUT)
-    p2 = subprocess.Popen([V] + common + ['--prefix', 'Vclu', '--top-module', 'qkd_hr_cluster', '-Mdir',
+    if a.mode == 'rrmutant':
+        print(f'rrmutant: cluster built with -D{a.define} (flat reference unchanged)')
+    p2 = subprocess.Popen([V] + common + (['-D' + a.define] if a.mode == 'rrmutant' else []) +
+                          ['--prefix', 'Vclu', '--top-module', 'qkd_hr_cluster', '-Mdir',
                                           str(out / 'obj_clu')] + src + [str(out / 'qkd_hr_cluster_dut.v')],
                           stdout=open(out / 'vl_clu.log', 'w'), stderr=subprocess.STDOUT)
     if p1.wait() or p2.wait():
@@ -113,7 +120,7 @@ def main():
             line = (r.stdout.strip().splitlines() or ['(no output)'])[-1]
             print(f'seed={seed} mode={mode}: {line}')
             ok += r.returncode == 0 and line.startswith('LOCKSTEP PASS')
-    tag = f'{a.mode}' + (f' child={a.child}' if a.mode == 'mutant' else '')
+    tag = f'{a.mode}' + (f' child={a.child}' if a.mode == 'mutant' else '') + (f' define={a.define}' if a.mode == 'rrmutant' else '')
     print(f'CLUSTER_GATE {"PASS" if ok == 6 else "FAIL"} {tag} runs_pass={ok}/6 core_cycles={a.cycles}')
     shutil.rmtree(out / 'obj_flat', ignore_errors=True)
     shutil.rmtree(out / 'obj_clu', ignore_errors=True)
