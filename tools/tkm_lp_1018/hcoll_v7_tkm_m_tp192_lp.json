@@ -1,0 +1,561 @@
+{
+ "name": "hcoll_v7_tkm_m_tp192_lp",
+ "top": "ot_hgi_coll_tkm_m_tp192_lp",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "rtl/hbm_accel/generic/collective/tkm/lp/ot_hgi_coll_tkm_m_tp192_lp.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_ctl.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_buffer.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86/ot_hgi_coll_tkm_tile_e86_bb.v"
+ ],
+ "params": {},
+ "clock": "cts",
+ "clock_port": "ck_SW",
+ "clock_ports": [
+  "ck_SW",
+  "ck_NW",
+  "ck_NE",
+  "ck_SE"
+ ],
+ "sdc_extra": [
+  "rtl/hbm_accel/generic/collective/tkm/lp/ot_hgi_coll_tkm_m_tp192_lp.sdc"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1944.0,
+  "h": 1944.0,
+  "exact": true
+ },
+ "child_lattice_um": 43.2,
+ "children": [
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t0",
+   "at": [
+    86.4,
+    388.8
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t1",
+   "at": [
+    86.4,
+    691.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t2",
+   "at": [
+    86.4,
+    993.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t3",
+   "at": [
+    86.4,
+    1296.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t4",
+   "at": [
+    86.4,
+    1598.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t5",
+   "at": [
+    388.8,
+    1598.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t6",
+   "at": [
+    388.8,
+    1296.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t7",
+   "at": [
+    388.8,
+    993.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t8",
+   "at": [
+    388.8,
+    691.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t9",
+   "at": [
+    388.8,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t10",
+   "at": [
+    691.2,
+    388.8
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t11",
+   "at": [
+    691.2,
+    691.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t12",
+   "at": [
+    691.2,
+    993.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t13",
+   "at": [
+    691.2,
+    1296.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t14",
+   "at": [
+    691.2,
+    1598.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t15",
+   "at": [
+    993.6,
+    1598.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t16",
+   "at": [
+    993.6,
+    1296.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t17",
+   "at": [
+    993.6,
+    993.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t18",
+   "at": [
+    993.6,
+    691.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t19",
+   "at": [
+    993.6,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t20",
+   "at": [
+    993.6,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t21",
+   "at": [
+    1296.0,
+    86.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t22",
+   "at": [
+    1296.0,
+    388.8
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t23",
+   "at": [
+    1296.0,
+    691.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t24",
+   "at": [
+    1296.0,
+    993.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t25",
+   "at": [
+    1296.0,
+    1296.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t26",
+   "at": [
+    1296.0,
+    1598.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t27",
+   "at": [
+    1598.4,
+    1598.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t28",
+   "at": [
+    1598.4,
+    1296.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t29",
+   "at": [
+    1598.4,
+    993.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t30",
+   "at": [
+    1598.4,
+    691.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t31",
+   "at": [
+    1598.4,
+    388.8
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    734.4,
+    108.0
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    734.4,
+    216.0
+   ]
+  }
+ ],
+ "pins": {
+  "S": [
+   "del_flit",
+   "del_valid",
+   "del_slot",
+   "start",
+   "arg_mode",
+   "rst_n",
+   "cfg_n",
+   "cfg_k",
+   "cfg_nout",
+   "cfg_g",
+   "cfg_gbase",
+   "cfg_pf",
+   "cfg_obase",
+   "cfg_rbase",
+   "cfg_has_r",
+   "ck_SE"
+  ],
+  "W": [
+   "w_v",
+   "w_addr",
+   "w_mask",
+   "w_data",
+   "ck_SW",
+   "busy",
+   "done",
+   "fault",
+   "stat_cycles"
+  ],
+  "N": [
+   "ck_NW",
+   "ck_NE"
+  ],
+  "E": []
+ },
+ "pin_ranges": {
+  "del_flit": [
+   90.0,
+   640.0
+  ],
+  "del_valid": [
+   645.0,
+   650.0
+  ],
+  "del_slot": [
+   652.0,
+   657.0
+  ],
+  "start": [
+   660.0,
+   661.0
+  ],
+  "arg_mode": [
+   662.0,
+   663.0
+  ],
+  "rst_n": [
+   664.0,
+   665.0
+  ],
+  "cfg_n": [
+   670.0,
+   700.0
+  ],
+  "cfg_k": [
+   702.0,
+   730.0
+  ],
+  "cfg_nout": [
+   732.0,
+   760.0
+  ],
+  "cfg_g": [
+   762.0,
+   780.0
+  ],
+  "cfg_gbase": [
+   782.0,
+   800.0
+  ],
+  "cfg_pf": [
+   802.0,
+   840.0
+  ],
+  "cfg_obase": [
+   842.0,
+   940.0
+  ],
+  "cfg_rbase": [
+   942.0,
+   1040.0
+  ],
+  "cfg_has_r": [
+   1042.0,
+   1043.0
+  ],
+  "ck_SE": [
+   1446.0,
+   1446.3
+  ],
+  "w_v": [
+   100.0,
+   101.0
+  ],
+  "w_addr": [
+   105.0,
+   200.0
+  ],
+  "w_mask": [
+   205.0,
+   245.0
+  ],
+  "w_data": [
+   250.0,
+   520.0
+  ],
+  "ck_SW": [
+   539.0,
+   539.3
+  ],
+  "busy": [
+   560.0,
+   561.0
+  ],
+  "done": [
+   563.0,
+   564.0
+  ],
+  "fault": [
+   566.0,
+   567.0
+  ],
+  "stat_cycles": [
+   570.0,
+   650.0
+  ],
+  "ck_NW": [
+   539.0,
+   539.3
+  ],
+  "ck_NE": [
+   1446.0,
+   1446.3
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 32,
+  "peak_ram_gb": 256,
+  "pin_v": "M5",
+  "pin_h": "M4 M6",
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "every port is registered in the ctl leaf (del_flit beat / cfg capture / w_* output regs) or is a region clock / reset"
+ },
+ "structural_change": "PL-TP192 10-18 landed-regions standard: tkm_static's 32-tile chain + buffer + calendar body re-built as a landed parent (lp.py): 4 quadrant regions (842-um, one TritonCTS tree each), 7 chain seams pre-scheduled in the ctl calendar (SETTLE+42, per-segment conv strobes) and LANDED (14 landings, 4-slot, +3 edges, no backpressure); flat lockstep + golden benches",
+ "job": {
+  "owner": "Claude PL-TP192 1018",
+  "branch": "claude/pl-tp192-1018",
+  "tag": "pl1018",
+  "purpose": "HBM d4g tkm_SW sub-cluster (TP192 top-k merge, 32 x e86) as a landed parent",
+  "submit": false,
+  "hold_merge": "diagnostic: e86 stand-in abstract (standin_from_gate.py) until hcoll_v7_tkm_tile_e86 closes",
+  "benches": [
+   {
+    "name": "tkm_tp192_lp_lockstep",
+    "expect": "pass",
+    "cmd": "LP_ROOT=$PWD SIM=verilator LP_VFLAGS='--timing --hierarchical rtl/hbm_accel/generic/collective/p2p/qtkm_hier.vlt -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT' bash rtl/hbm_accel/generic/collective/tkm/lp/ot_hgi_coll_tkm_m_tp192_lp_bench.sh bench_out/lockstep"
+   },
+   {
+    "name": "tkm_tp192_seg_golden",
+    "expect": "pass",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tp192_seg.sh bench_out/golden"
+   }
+  ]
+ },
+ "inter": []
+}

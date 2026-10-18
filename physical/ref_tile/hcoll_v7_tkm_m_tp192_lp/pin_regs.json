@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_tkm_m_tp192_lp",
+ "enable": false,
+ "reason": "every port is registered in the ctl leaf (del_flit beat / cfg capture / w_* output regs) or is a region clock / reset"
+}
