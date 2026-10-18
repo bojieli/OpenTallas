@@ -22,6 +22,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+GITDIR = __import__('os').environ.get('OT_GIT_DIR', str(ROOT))   # S81-BIND3: sources from a git archive, refs from the repo
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from die_cluster import boundary as CB   # noqa: E402
@@ -111,6 +112,8 @@ def main():
     ap.add_argument('--relay-widths', type=int, nargs='+', default=[276],
                     help='with --relay-ref: lane widths whose stations bind the closed dsfd_dvrly_<W>_<dir> views (S81-LAND2: '
                     '276 70 512 562 682); a (width, direction) without a closed view stays a DFF stand-in station (census)')
+    ap.add_argument('--relay-kind', choices=('rly', 'rlyh'), default='rly',
+                    help='rlyh (S81-BIND3): stations bind the closed HALF-CYCLE dsfd_dvrlyh_<W>_<dir> views (s81dv_rlyh_*)')
     ap.add_argument('--bind', choices=('standin', 'real'), default='standin',
                     help='real: S81-BIND real-view mode (tools/s81_dv/dv_bind.py) -- every plan master binds its RTL by the '
                     'bind table, real F1 relay masters on every link, regional reset relay tree, sourced forwarded clocks; '
@@ -210,8 +213,9 @@ def main():
         import subprocess
         for b in sorted(set(a.relay_widths)):
             for d in RLY:
-                base = f'physical/ref_tile/s81dv_rly_{b}_{d.lower()}/views/dsfd_dvrly_{b}_{d}/dsfd_dvrly_{b}_{d}'
-                lef = subprocess.run(['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{base}.lef'], capture_output=True)
+                rk = a.relay_kind
+                base = f'physical/ref_tile/s81dv_{rk}_{b}_{d.lower()}/views/dsfd_dv{rk}_{b}_{d}/dsfd_dv{rk}_{b}_{d}'
+                lef = subprocess.run(['git', '-C', GITDIR, 'show', f'{a.relay_ref}:{base}.lef'], capture_output=True)
                 if lef.returncode:
                     continue
                 sz = next(l.split() for l in lef.stdout.decode().splitlines() if l.strip().startswith('SIZE'))
@@ -219,7 +223,7 @@ def main():
                 tag = d if b == 276 else f'{b}_{d}'      # 276 keeps its p4j file names
                 (out / 'views' / f'rly_{tag}.lef').write_bytes(lef.stdout)
                 (out / 'views' / f'rly_{tag}_tt.lib').write_bytes(subprocess.run(
-                    ['git', '-C', str(ROOT), 'show', f'{a.relay_ref}:{base}_tt.lib'], capture_output=True, check=True).stdout)
+                    ['git', '-C', GITDIR, 'show', f'{a.relay_ref}:{base}_tt.lib'], capture_output=True, check=True).stdout)
     # ------------------------------------------------------------------ die netlist
     v = ['module dv_die (input clk, input rst);', '  wire n_rst_dv = rst;']
     nreal = 0
@@ -254,7 +258,7 @@ def main():
             v.append(f'  wire [{b - 1}:0] {wn};')
             if (b, sdir[(nm, k)]) in rview:
                 # real closed station (flop-first, recipe 4): ck = hop clock in, ck_o = forwarded out (F1)
-                v.append(f'  dsfd_dvrly_{b}_{sdir[(nm, k)]} st_{nm}_{k} (.i({prev}), .o({wn}), .ck(n{nm}_fck[{k}]), '
+                v.append(f'  dsfd_dv{a.relay_kind}_{b}_{sdir[(nm, k)]} st_{nm}_{k} (.i({prev}), .o({wn}), .ck(n{nm}_fck[{k}]), '
                          f'.ck_o(n{nm}_fck[{k + 1}]), .rs(n_rst_dv));')
                 nreal += 1
                 prev = wn
@@ -299,10 +303,10 @@ def main():
         import subprocess, tempfile
         tmp = Path(tempfile.mkdtemp(prefix='dvrep_'))
         (tmp / 'tools/die_repeaters').mkdir(parents=True)
-        names = subprocess.run(['git', '-C', str(ROOT), 'ls-tree', '--name-only', a.dieflow_ref, 'tools/die_repeaters/'],
+        names = subprocess.run(['git', '-C', GITDIR, 'ls-tree', '--name-only', a.dieflow_ref, 'tools/die_repeaters/'],
                                capture_output=True, text=True, check=True).stdout.split()
         for f in (Path(n).name for n in names):
-            (tmp / 'tools/die_repeaters' / f).write_bytes(subprocess.run(['git', '-C', str(ROOT), 'show', f'{a.dieflow_ref}:tools/die_repeaters/{f}'],
+            (tmp / 'tools/die_repeaters' / f).write_bytes(subprocess.run(['git', '-C', GITDIR, 'show', f'{a.dieflow_ref}:tools/die_repeaters/{f}'],
                                                                         capture_output=True, check=True).stdout)
         (tmp / 'tools/die_cluster').mkdir(); shutil.copy(ROOT / 'tools/die_cluster/cluster_bounds.tcl', tmp / 'tools/die_cluster/')
         for f in ('die_reach.py',):
@@ -376,7 +380,7 @@ rc=$?; echo $rc > $D/out/run.exit; exit $rc
                                 relay_stations=nreal, relay_views=sorted(f'{b}_{d}' for b, d in rview),
                                 standin_stations=dict(collections.Counter(f'{b}_{sdir[(nm, k)]}' for nm, k, b, *_ in flops
                                                                           if (b, sdir[(nm, k)]) not in rview)),
-                                relay_ref=a.relay_ref,
+                                relay_ref=a.relay_ref, relay_kind=a.relay_kind,
                                 diagnostic='relay rs pins on one special net (regional reset tree not modelled in this case)'),
                 links=len(nets), bits=nbits, bits_by_class=dict(used), relay_flops=nf,
                 die_nets_est=nbits + nf, die_repair=a.die_repair,
