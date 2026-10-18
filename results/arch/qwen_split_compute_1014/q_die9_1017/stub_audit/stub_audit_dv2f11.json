@@ -1,0 +1,285 @@
+{
+ "schema": "opentallas.die_stub_audit.v1",
+ "lane": "Q-DIE9-AUDIT",
+ "date": "2026-10-17",
+ "rules": "coordinator 0da 10-17 (a) identity straps OK if listed; (b) quantized-relay spare bits OK only if unread; (c) unused-mode ties OK only if provably unused and listed; (d) functional config straps REJECTED; plus no stand-ins/blackboxes, no unconnected inputs, no undriven nets, no open outputs a consumer should read, no unbound masters",
+ "netlist": {
+  "host": "ot-epyc4",
+  "die_v": "/srv/opentallas-scratch/claude/qwen-split-compute/dv2f11/chain/case_r22k/die.v",
+  "die_sha256": "0ba499b6bb7a0f5fe3c6bffcfb351977e9ab75d2b1caee265af5ecda0aef15cc",
+  "src_tree": "dv2f11/src (SOURCE_COMMIT 0df705a29, overlay; NOT byte-equal, see F1)",
+  "strap_manifest": "results/arch/qwen_split_compute_1014/q_slice_1017/straps_dv2f8.json",
+  "tools": "tools/die_port_bind.py v2 (import) + audit.py/chk2.py (scratch ot-epyc4:/srv/opentallas-scratch/claude/q-die9-audit-1017) + verilator 5.032 lint of 5 masters"
+ },
+ "port_bind_recheck": {
+  "recorded": "PASS masters=113 instances=716 strap_ports=16 pad_bits=0",
+  "independent": {
+   "instances": 716,
+   "masters_missing_rtl_top": 0,
+   "input_unconnected": 0,
+   "undriven_read_bits": 0,
+   "driven_unread_bits": 0
+  }
+ },
+ "masters": {
+  "functional": 17,
+  "functional_instances": 80,
+  "relay_and_reset_rep_masters": 96,
+  "relay_instances": 636
+ },
+ "views": {
+  "closed_real": {
+   "qfd_d2d_static": "r5 (provenance unverified: RTL qfd_d2d_static_core changed after gate commit c38379ae2: 40ee9b9d8, 4f6da736d)",
+   "qfd_embedding_word_provider": "RTL == 22bfcf49b",
+   "qfd_rstseq": "RTL == a99d91628",
+   "qfd_rstsync": "RTL == a99d91628",
+   "qfd_sys_face": "STALE: view @4458091af has input pins crom_fault_code, res_issue_fault that the G8 RTL dropped; RTL changed 81 lines"
+  },
+  "hard_macro_phy": {
+   "ot_qfd_serdes_112g_x12_phy_s597": 3,
+   "ot_qfd_ucie_x64_phy": 1
+  },
+  "assumed_abstract": {
+   "qfd_c_b16_dv": 48,
+   "qfd_dv_slice2_e": 6,
+   "qfd_dv_slice2_w": 6,
+   "qfd_native59_dv_service": 1,
+   "qfd_tt_ctlm_dv": 1,
+   "qfd_collective_static_io_production": 1,
+   "qfd_clkrx": 1,
+   "qfd_ckbump": 1,
+   "qfd_sigbump": 5,
+   "ot_qkvd_ucie_x64_phy": 1,
+   "relays_rst_rep (generated)": 636
+  },
+  "summary": "real views 7 masters / 9 of 80 functional instances (sys_face stale -> 6 / 8 consistent); 71 functional instances on assumed abstracts -> any GRT/STA is DIAGNOSTIC"
+ },
+ "constants": {
+  "a_identity": {
+   "qfd_c_b16_dv.cid": {
+    "bits": 576,
+    "inst": 48,
+    "verified": "only consumer tile_id[15:4] of the 16 ROM leaves"
+   },
+   "qfd_c_b16_dv.far": {
+    "bits": 48,
+    "inst": 48,
+    "verified": "only consumer xcst sidx"
+   },
+   "offchip_strap_bumps": "qfd_sigbump pkg_s0, pkg_s1, die_ps (package/die position pins, off-chip model)"
+  },
+  "b_quantized_spare": {
+   "pad_bits": 0,
+   "verdict": "N/A (relays exact width)"
+  },
+  "c_unused_mode_listed": {
+   "qfd_c_b16_dv.rs_i (far clusters)": {
+    "bits": 12336,
+    "inst": 24,
+    "verified": "feeds only the 16-register rs_i->rs_o feedthrough; rs_o open on every far instance",
+    "cost": "24 x 16 x 514 = 197,376 dead flops; a port-free far variant removes them (Decision 3)"
+   },
+   "qfd_dv_slice2_w W5 st_wi/sc_wi": {
+    "bits": 1136
+   },
+   "qfd_dv_slice2_e E5 st/sc/arv/art/arm/arl/ard/dd/ag _wi": {
+    "bits": 2241
+   },
+   "qfd_dv_slice2_{w,e} l9_wi on L9 senders W1/W3/W5, E1/E3/E5": {
+    "bits": 3084,
+    "note": "sender role is program-defined (SETID/command mode), zero word = idle per slice2 header, so safe even if read"
+   },
+   "total_bits": 18797
+  },
+  "d_functional_config": {
+   "die_top": 0,
+   "verdict": "PASS"
+  },
+  "rtl_internal_ties_listed_c": [
+   "qfd_dv_su8_entries SFH=0: sy_exp/rcp/rsq_* = 0 (SFU pipelines inside lane; documented)",
+   "qfd_dv_heads aw_* = 0 (attention return arrives as stream x words; documented)",
+   "qfd_tt_ctlm_dv me_mem_ok=1, cp_active=0, rom_ret constant fields (CP copy engine / VM ME port gone; documented)",
+   "qfd_tt_ctlm_head_static (inherited, unchanged KEPT controller): crom_q, embed_code_q, embed_scale_q, d_su_*, pi_su_*, pi_me_*_we = 0, emb_ok=1, fab_fault=0 -- NOT individually proven unused here",
+   "qfd_d2d_static_core reset_req/recovery_clear/boot_begin = 0 (host-initiated recovery unused)",
+   "design constants: native59 issue_nout=1, coll face epoch=1, rom_core_ctrl split_log2=0, sys_face start_seg=0",
+   "SRAM repair/mask/ce ties and static ready=1 (legit)"
+  ]
+ },
+ "open_outputs": {
+  "FAIL_fault_unobserved": {
+   "ports": 1,
+   "bits": 1,
+   "what": [
+    "qfd_embedding_word_provider.fault"
+   ]
+  },
+  "WARN_fault_detail_summary_observed": {
+   "ports": 5,
+   "bits": 78,
+   "what": [
+    "qfd_collective_static_io_production.fault_code",
+    "qfd_collective_static_io_production.transport_abort",
+    "qfd_collective_static_io_production.transport_cdc_fault",
+    "qfd_collective_static_io_production.transport_fault_cause",
+    "qfd_d2d_static.transport_fault"
+   ]
+  },
+  "WARN_observation_no_consumer": {
+   "ports": 1,
+   "bits": 1,
+   "what": [
+    "qfd_native59_dv_service.completed"
+   ]
+  },
+  "c_chain_end_far_cluster": {
+   "ports": 120,
+   "bits": 61872,
+   "what": [
+    "qfd_c_b16_dv.bco0",
+    "qfd_c_b16_dv.bco1",
+    "qfd_c_b16_dv.bco2",
+    "qfd_c_b16_dv.bco3",
+    "qfd_c_b16_dv.rs_o"
+   ]
+  },
+  "c_chain_end_slice": {
+   "ports": 12,
+   "bits": 3879,
+   "what": [
+    "qfd_dv_slice2_e.cmd_wo",
+    "qfd_dv_slice2_e.dr_wo",
+    "qfd_dv_slice2_e.hr_wo",
+    "qfd_dv_slice2_e.rd_wo",
+    "qfd_dv_slice2_e.re_wo",
+    "qfd_dv_slice2_e.rl_wo",
+    "qfd_dv_slice2_e.rr_wo",
+    "qfd_dv_slice2_e.rv_wo",
+    "qfd_dv_slice2_e.sc_wo",
+    "qfd_dv_slice2_e.st_wo",
+    "qfd_dv_slice2_w.sc_wo",
+    "qfd_dv_slice2_w.st_wo"
+   ]
+  },
+  "c_l9_receiver_no_send": {
+   "ports": 6,
+   "bits": 3084,
+   "what": [
+    "qfd_dv_slice2_e.l9_eo",
+    "qfd_dv_slice2_w.l9_eo"
+   ]
+  },
+  "c_reset_region_absent": {
+   "ports": 1,
+   "bits": 1,
+   "what": [
+    "qfd_rstseq.rso_s"
+   ]
+  },
+  "c_root_only_replica_status": {
+   "ports": 55,
+   "bits": 1727,
+   "what": [
+    "qfd_dv_slice2_e.ccm_eo",
+    "qfd_dv_slice2_e.cct_eo",
+    "qfd_dv_slice2_e.ccv_eo",
+    "qfd_dv_slice2_e.ccw_eo",
+    "qfd_dv_slice2_e.ss_eo",
+    "qfd_dv_slice2_w.ccm_wo",
+    "qfd_dv_slice2_w.cct_wo",
+    "qfd_dv_slice2_w.ccv_wo",
+    "qfd_dv_slice2_w.ccw_wo",
+    "qfd_dv_slice2_w.ss_wo"
+   ]
+  },
+  "c_unused_tie_helper": {
+   "ports": 96,
+   "bits": 96,
+   "what": [
+    "qfd_c_b16_dv.tie_hi",
+    "qfd_c_b16_dv.tie_lo"
+   ]
+  },
+  "ok_redundant_fault_observed_internally": {
+   "ports": 2,
+   "bits": 2,
+   "what": [
+    "qfd_sys_face.fault",
+    "qfd_tt_ctlm_dv.cf"
+   ]
+  }
+ },
+ "rtl_closure": {
+  "unresolved_children": {
+   "qfd_tile_nk_rp2_romleaf_rr / qfd_tile_nl_rp2_romleaf_rr": "768 instances (48 clusters x 16) -- no module in dv2f11/src; die_port_bind checks only top-level masters, so its PASS cannot see this",
+   "memory_macros": "ot_sram_* (6) + ot_rom_4096x72_m8 absent from src; macro models exist on main physical/asap7_memory_macros (allowed)"
+  },
+  "blackbox_attr": [
+   "ot_qfd_serdes_112g_x12_phy_s597 (_bb, PHY allowed)",
+   "ot_qfd_ucie_x64_phy (_bb, PHY allowed)"
+  ],
+  "names_shell": "ot_qfd_issue_shell (real logic)",
+  "src_drift_vs_0df705a29": {
+   "closure_files_checked": 86,
+   "byte_equal": 85,
+   "differ": [
+    "rtl/qwen_dv/qfd_dv_slice2.sv (src 13:15 copy lacks 2f8b7015b st sid field)"
+   ],
+   "absent": [
+    "rtl/physical/qfd_tile_nk_rp2_romleaf_rr.sv",
+    "rtl/physical/qfd_tile_nl_rp2_romleaf_rr.sv"
+   ],
+   "rp2_45_differs": "rtl/physical/qfd_tile_nk_rp2_45.sv"
+  },
+  "lint": {
+   "clean_no_undriven_pin": [
+    "qfd_dv_slice2_e (3 UNDRIVEN kq_* = dead STATIC_SCHEDULE=0 queue, benign)",
+    "qfd_tt_ctlm_dv",
+    "qfd_native59_dv_service",
+    "qfd_d2d_static",
+    "qfd_embedding_word_provider"
+   ],
+   "not_linted": [
+    "qfd_sys_face (include d2d_cal_image.svh)",
+    "qfd_collective_static_io_production (OT_QFDS_* defines)",
+    "qfd_c_b16_dv (ROM leaf absent)"
+   ]
+  }
+ },
+ "verdict": {
+  "a": "PASS (624 b identity, listed)",
+  "b": "N/A (0 pad bits)",
+  "c": "PASS-with-listing (18,797 b input ties provably unused + open chain-end outputs; open-output classes must be added to the manifest)",
+  "d": "PASS (no functional config strap at die top)",
+  "die": "FAIL: no-stub rule not met",
+  "fails": [
+   {
+    "id": "F1",
+    "what": "768 ROM-leaf children of qfd_c_b16_dv have no RTL in the die source tree (dv2f11/src overlay != 0df705a29; RTL exists there via 55b6fda33)",
+    "owner": "Q-DIEPLAN (src sync) + Q-BIND (die_port_bind must resolve the full child closure)"
+   },
+   {
+    "id": "F2",
+    "what": "qfd_sys_face closed view is stale (pre-G8, 2 view input pins floating in the physical case)",
+    "owner": "Q-CTLM (re-close sys_face at G8 RTL)"
+   },
+   {
+    "id": "F3",
+    "what": "qfd_embedding_word_provider.fault (preload|store fault) has no consumer: fault unobservable",
+    "owner": "Q-CTLM (sys_face fault input into face_fault/result_cause)"
+   },
+   {
+    "id": "F4",
+    "what": "71 of 80 functional instances on assumed abstracts (no closed view): cluster 48, slices 12, native59, tt_ctlm_dv, collective io, clkrx, bumps, KV UCIe",
+    "owner": "Q-CLUSTER3 (c_b16_dv), Q-SLICE (slice2 faces), Q-CTLM (tt_ctlm_dv), Q-N59 (native59_dv_service), QC (collective_static_io_production)"
+   }
+  ],
+  "warns": [
+   "collective fault_code/fault_cause and d2d transport_fault[7:0] open (summary fault observed)",
+   "native59 completed open",
+   "rstseq rso_s open (spine region absent on DV die)",
+   "far-cluster feedthrough = 197k dead flops",
+   "head_static inherited ties not proven",
+   "d2d view provenance unverified"
+  ]
+ }
+}
