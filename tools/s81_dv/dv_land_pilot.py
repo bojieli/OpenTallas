@@ -225,7 +225,7 @@ foreach ep {{{' '.join(a.hop_endpoints)}}} {{
   catch {{ report_checks -path_delay min -to [get_pins $ep] -fields {{slew cap fanout}} -digits 1 >> /pilot/out/hop_{c}.rpt }}
 }}
 puts OT_STA_DONE''')
-        t = t.replace('/pilot/libs/rly_', '/libs/rly_')
+        t = t.replace('/pilot/libs/', '/libs/')
         if a.extra_tcl:
             t = t.replace(f'source {P.PLAT}/setRC.tcl', a.extra_tcl.read_text() + f'source {P.PLAT}/setRC.tcl', 1)
         (a.plan / f'sta_land_{c}.tcl').write_text(t)
