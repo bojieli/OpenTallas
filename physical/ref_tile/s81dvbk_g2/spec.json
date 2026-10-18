@@ -1,0 +1,225 @@
+{
+ "name": "s81dvbk_g2",
+ "top": "dsdv_bk_g",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 259.2
+ },
+ "pins": {
+  "S": [
+   "vi_s",
+   "clk",
+   "rst_n",
+   "vo_s"
+  ],
+  "N": [
+   "vi_n",
+   "vo_n"
+  ],
+  "W": [
+   "ln0",
+   "vd",
+   "ln2"
+  ],
+  "E": [
+   "ln1",
+   "tap_k",
+   "sink_k",
+   "ik",
+   "ek",
+   "uid",
+   "eg_n",
+   "fault",
+   "ln3"
+  ]
+ },
+ "pin_ranges": {
+  "vi_s": [
+   4,
+   82
+  ],
+  "clk": [
+   82,
+   86
+  ],
+  "rst_n": [
+   86,
+   90
+  ],
+  "vo_s": [
+   90,
+   168.8
+  ],
+  "vi_n": [
+   4,
+   84
+  ],
+  "vo_n": [
+   88.8,
+   168.8
+  ],
+  "ln0": [
+   4,
+   86.4
+  ],
+  "vd": [
+   86.4,
+   172.8
+  ],
+  "ln2": [
+   172.8,
+   255.2
+  ],
+  "ln1": [
+   4,
+   118
+  ],
+  "tap_k": [
+   118,
+   121
+  ],
+  "sink_k": [
+   121,
+   124
+  ],
+  "ik": [
+   124,
+   126
+  ],
+  "ek": [
+   126,
+   128
+  ],
+  "uid": [
+   128,
+   131
+  ],
+  "eg_n": [
+   131,
+   133
+  ],
+  "fault": [
+   133,
+   135
+  ],
+  "ln3": [
+   137,
+   255.2
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 2
+  }
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: every input lands in a flop at the pin (vstop / strap / vd input flops) and every output leaves a flop (vin lane registers, vstop / vout output flops); recipe pin_regs would add an unpriced stage on the rung and on the leaf hops (static schedule)."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.0
+ },
+ "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Glue: rung on S / N (clock centred on S), W face ln0 / vd / ln2 (merger or control W of it), E face ln1 / straps / ln3. The S81U-BK2 kit s81dvbk_g (259.2 x 216, clock pin in the SW corner) measured TT insertion 457.3 / spread 128.2 ps.",
+ "job": {
+  "owner": "Claude:S81U-BK3",
+  "branch": "claude/s81u2-bk-1017",
+  "tag": "g2",
+  "purpose": "S81-DV bk glue leaf, vertical cut (shared by dsdv_bk_sel / dsdv_bk_col; lane S81U-BK3): closure (TT setup / FF hold / DRC 0 + native audit).",
+  "benches": [
+   {
+    "name": "dsdv_bk_col_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh col {RUN}/col 0",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^DSDV_BK_COL PASS mut=0$"
+   },
+   {
+    "name": "dsdv_bk_col_mut_lateodd",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh col {RUN}/colm3 3 gold5_odd",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^DSDV_BK_COL FAIL mut=3$",
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk2/col_mut3.txt"
+   },
+   {
+    "name": "dsdv_bk_sel_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh sel {RUN}/sel 0",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^DSDV_BK_SEL PASS mut=0$"
+   },
+   {
+    "name": "dsdv_bk_sel_mut_lateodd",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh sel {RUN}/selm3 3 odd",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^DSDV_BK_SEL FAIL mut=3$",
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk2/sel_mut3.txt"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/rtl/s81_dv_1016/bk_units",
+   "results/rtl/s81_dv_1016/bk_units_bk2",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/hdc",
+   "rtl/link"
+  ],
+  "views_to": "physical/ref_tile/s81dvbk_g2/views",
+  "record_to": "results/rtl/ref_tile/s81dvbk_g2"
+ },
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

@@ -11,7 +11,9 @@
 //   B arrivals: slots 0..3 = through traffic (+thru: XQ / XB 4-fragment beats from slot 0, singles) else ingress;
 //            slots 4..7 = ingress.
 //   Egress (vo on the A side): the drain window = slots 4..7 (+thru, n 4, d 5) or 0..7 (n 8, d 1) of the next frame,
-//            i.e. every A-side output slot that no forwarded B beat uses.  Ingress is throttled to the drain rate (the
+//            i.e. every A-side output slot that no forwarded B beat uses.  +oddwin: the compiler leaves the last of
+//            those slots unused (n 3 / n 7: an ODD window), so a 2-beat word may not start on its last slot (S81U-BK3:
+//            with even windows only, the vd capture puts every word start on an even slot and mutant 3 was unreachable).  Ingress is throttled to the drain rate (the
 //            compiler's rate match; +nothrottle lifts it for the fail-closed overflow case).
 //   Lane -> direction (one lane on one direction): default lanes 0..2 arrive on A, lane 3 on B; +lmap=1: lane 0 on A,
 //   lanes 1..3 on B.  Each lane word is queued when the bench drives it; a word with data[499:256] == 0 and no fault
@@ -33,7 +35,7 @@ module tb_dsdv_bk_wrap #(
     localparam [2:0] IK = 3'd4, EK = 3'd5;
     localparam [7:0] UID = 8'h5B;
     assign vf = 1'b0;
-    bit thru, mir; int lmap;
+    bit thru, mir, oddw; int lmap; int wn_n, wn_d, refill;
     bit thr_on; int tok;                  // ingress throttle (the compiler's rate match to the drain windows), in words
     bit fullrate; int nfr = 0;            // +fullrate: S81U-BK's refill = the drain capacity exactly (2 / 4 words per
                                           // frame: 100% window use, so every window the frame-atomic merger leaves empty
@@ -42,7 +44,9 @@ module tb_dsdv_bk_wrap #(
                                           // (one word less every 8th frame); the selector reduces, its refill is unchanged
     int  side [0:3];                     // 0 = arrives on A (vi_a), 1 = on B
     initial begin
-        thru = $test$plusargs("thru"); mir = $test$plusargs("mir"); thr_on = !$test$plusargs("nothrottle"); fullrate = (UNIT == 0) || $test$plusargs("fullrate");
+        thru = $test$plusargs("thru"); mir = $test$plusargs("mir"); oddw = $test$plusargs("oddwin");
+        wn_n = (thru ? 4 : 8) - (oddw ? 1 : 0); wn_d = thru ? 5 : 1; refill = wn_n / 2;   // refill = drain capacity
+        thr_on = !$test$plusargs("nothrottle"); fullrate = (UNIT == 0) || $test$plusargs("fullrate");
         if (!$value$plusargs("lmap=%d", lmap)) lmap = 0;
         for (int l = 0; l < 4; l++) side[l] = (lmap == 1) ? (l == 0 ? 0 : 1) : (l == 3 ? 1 : 0);
         tok = 64;
@@ -130,13 +134,13 @@ module tb_dsdv_bk_wrap #(
         slot = cyc % 8;
         a = '0; b = '0;
         if (rst && cyc > 40 && cyc > rst_hi + 8) begin
-            if (slot == 0) begin nfr++; tok = (tok + (thru ? 2 : 4) - ((!fullrate && nfr % 8 == 0) ? 1 : 0) > 64) ? 64 : tok + (thru ? 2 : 4) - ((!fullrate && nfr % 8 == 0) ? 1 : 0); end
+            if (slot == 0) begin nfr++; tok = (tok + refill - ((!fullrate && nfr % 8 == 0) ? 1 : 0) > 64) ? 64 : tok + refill - ((!fullrate && nfr % 8 == 0) ? 1 : 0); end
             // A side arrivals: slot 0 = the drain CTL for the next frame's window; through singles (+thru, 1..3); ingress
             if (slot == 0) begin
                 a[0] = 1; a[3:1] = 0; a[8:4] = $urandom; a[12:9] = $urandom; a[28:21] = UID; a[31:29] = 1;
-                a[39:32] = thru ? 4 : 8; a[47:40] = thru ? 5 : 1;
+                a[39:32] = 8'(wn_n); a[47:40] = 8'(wn_d);
                 // window (arrival index; the unit's LW = 7: CTL vo edge + 7 + d = first window vo edge)
-                win_lo.push_back(cyc + (thru ? 12 : 8)); win_hi.push_back(cyc + 15);
+                win_lo.push_back(cyc + LW + wn_d); win_hi.push_back(cyc + LW + wn_d + wn_n - 1);
                 n_ctl++;
             end else if (thru && slot < 4) through(0, slot, a);
             else ingress(0, a);

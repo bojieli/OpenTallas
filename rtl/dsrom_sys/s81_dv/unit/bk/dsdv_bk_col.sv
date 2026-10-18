@@ -1,18 +1,18 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
-// S81U-BK2 (2026-10-17): dsdv_bk_col, the S81-DV row collector unit (plan p4h block bk_col, column 1 V rung), as a
-// WIRES-ONLY hardened cluster (no flops of its own) of hard children, each with its own clock tree:
-//   u_g          dsdv_bk_g        the shared V-rung glue leaf (vstop + V ingress + V egress), S of the merger
-//   u_rw / u_re  dsdv_bkcol_lr    lane relays (2 stages) beside the W / E lane-tile pairs (the closed lane tiles'
-//                                 c_in face points AWAY from the merger, so the glue reaches it through a relay)
-//   g_l[0..3]    dsfd_colt_lane   the CLOSED lane tile (physical/s81_ph_views/closed/dsfd_colt_lane, 7345266ce-e:
-//                                 DEPTH 256, DM 8, shift head buffer); E pair MY-mirrored
-//   u_m          dsfd_colt_mrg    the CLOSED merger (physical/s81_ph_views/closed/dsfd_colt_mrg, cd3337221-b: DM 8, PACE 2)
+// S81U-BK2 / S81U-BK3 (2026-10-17): dsdv_bk_col, the S81-DV row collector unit (plan p4h block bk_col, column 1 V rung),
+// as a WIRES-ONLY hardened cluster (no flops of its own) of hard children, each with its own clock tree.
+// S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the cluster stacks inside the 680-um column (673.92 x 864;
+// results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row lanes 0 / 1, middle row merger + glue, N row lanes 2 / 3.
+//   u_g          dsdv_bk_g        the shared V-rung glue leaf (vstop + V ingress + V egress), middle row E
+//   g_l[0..3]    dsdv_bkcol_l     the lane tile (= dsfd_colt_lane DEPTH 256 / DM 8 / RING 1), re-pinned and re-cut
+//                                 square-ish (259.2 x 216); N row MX-mirrored
+//   u_m          dsdv_bkcol_m     the merger (= dsfd_colt_mrg DM 8 / PACE 2), re-pinned: S face lanes 0/1, N face 2/3
+// Every leaf-to-leaf hop is <= ~405 um, so the S81U-BK2 lane relays (2 stages) are gone (-2 edges on the lane path).
 // S81U-BK's single flat leaf (50,134 sinks on one root: TT insertion 683.5 ps, spread 157.7 ps) is retired.  Children are
-// instantiated WITHOUT parameters: their closed defaults ARE the hardened configuration (no #() on a hard child).
-// Lane tile <-> merger: closed-tile pin flop to pin flop, no station (ot_s81ph_col_t had HOPS 5; DM 8 covers the shorter
-// credit round trip).  That lane -> merger credit loop is internal and fixed-latency; no unit port carries credit / ready
-// / back-pressure.  MUT (bench only) 1..4: dsdv_bk_v.sv mutants.
+// instantiated WITHOUT parameters: their wrappers fix the hardened configuration (no #() on a hard child).
+// Lane tile <-> merger: tile pin flop to pin flop, no station.  That lane -> merger credit loop is internal and
+// fixed-latency; no unit port carries credit / ready / back-pressure.  MUT (bench only) 1..4: dsdv_bk_v.sv mutants.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_bk_col #(
     parameter integer V   = 276,
@@ -32,24 +32,21 @@ module dsdv_bk_col #(
     output wire [V-1:0]  vo_s,
     output wire          fault
 );
-    wire [2*515-1:0] glw, gle; wire [4*515-1:0] cl; wire [513:0] vd; wire vf_fwd;
+    wire [514:0] l0, l1, l2, l3; wire [513:0] vd;
 `ifdef OT_DSDV_BK_HARD
     dsdv_bk_g u_g (
 `else
     dsdv_bk_g #(.V(V), .MUT(MUT)) u_g (
 `endif
         .clk(clk), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),
-        .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .ln_w(glw), .ln_e(gle), .vd(vd), .fault(fault));
-    // relays: W pair = lanes 0 (SW), 2 (NW); E pair = lanes 1 (SE), 3 (NE)
-    wire [1029:0] rwo, reo;
-    dsdv_bkcol_lr u_rw (.ck(clk), .i(glw), .o(rwo));
-    dsdv_bkcol_lr u_re (.ck(clk), .i(gle), .o(reo));
-    assign cl = {reo[515 +: 515], rwo[515 +: 515], reo[0 +: 515], rwo[0 +: 515]};
+        .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .ln0(l0), .ln1(l1), .ln2(l2), .ln3(l3), .vd(vd), .fault(fault));
+    wire [4*515-1:0] cl = {l3, l2, l1, l0};
     wire [3:0] tcr; wire [4*513-1:0] fw; wire [4*4-1:0] ff;
     genvar g;
     generate for (g = 0; g < 4; g = g + 1) begin : g_l       // lane 0 SW, 1 SE, 2 NW, 3 NE
-        dsfd_colt_lane u_l (.ck(clk), .rst(rst_n), .c_in(cl[515 * g +: 515]), .f_cr(tcr[g]), .t_w(fw[513 * g +: 513]),
+        dsdv_bkcol_l u_l (.ck(clk), .rst(rst_n), .c_in(cl[515 * g +: 515]), .f_cr(tcr[g]), .t_w(fw[513 * g +: 513]),
             .t_f(ff[4 * g +: 4]));
     end endgenerate
-    dsfd_colt_mrg u_m (.ck(clk), .rst(rst_n), .f_w(fw), .f_f(ff), .t_cr(tcr), .vd(vd), .vf(vf_fwd));
+    dsdv_bkcol_m u_m (.ck(clk), .rst(rst_n), .f_w_s(fw[0 +: 2*513]), .f_w_n(fw[2*513 +: 2*513]), .f_f_s(ff[0 +: 8]),
+        .f_f_n(ff[8 +: 8]), .t_cr_s(tcr[1:0]), .t_cr_n(tcr[3:2]), .vd(vd));
 endmodule
