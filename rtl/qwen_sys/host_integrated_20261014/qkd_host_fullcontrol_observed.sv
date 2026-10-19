@@ -18,7 +18,11 @@ module qkd_host_fullcontrol_observed #(
     parameter integer T_LINK  = 200000,
     parameter integer T_HBM   = 200000,
     parameter integer ENABLE_SERVICE=0,
-    parameter integer WDOG    = 1 << 22
+    parameter integer WDOG    = 1 << 22,
+    // MU-QWEN-HOST 10-18 (opt-in; 0 = unchanged): 1 = 4 users on the 4-slot static calendar (NSLOT 4, PLB 11 so
+    // {slot2, pos11} stays inside the 13-bit prompt SRAM; host MU_OUT + package controller MU; the step's user rides
+    // on hc pos[17:16]).  The CSR decode-busy view is 'any step outstanding'.
+    parameter integer MU      = 0
 ) (
     input wire ck_host, ck_csr, ck_rst, ck_ctl,
     input wire [2:0] die_id,
@@ -142,6 +146,8 @@ output wire  begin_fault,
     wire eng_start, eng_done, eng_fault;
     wire [NW-1:0] eng_token, eng_pos, eng_next_token;
     wire [SB-1:0] eng_slot;
+    wire [SB+PLB-1:0] pb_waddr_h, pb_raddr_h;   // {slot, position}: 14 b today, 13 b (bit 13 zero) under MU
+    assign pb_waddr = 14'(pb_waddr_h); assign pb_raddr = 14'(pb_raddr_h);
     wire [AW-1:0] kv_base;
     wire [31:0] eng_cycles, eng_next_val;
     // user-state clear (ENG_CTX = NSLOT = 1): nothing to clear -- a step at position p reads KV positions 0..p only,
@@ -149,7 +155,7 @@ output wire  begin_fault,
     wire clr_req;
     wire clr_ack=1'b0; // acknowledgement now owned by host hardened leaf
     qkd_host_if_pins_observed #(.PB_READ_PIPE(1+PROMPT_READ_LATENCY),.MUT_DONE_GUARD(MUT_DONE_GUARD),.PB_VALID_ONLY(PROMPT_VALID_ONLY), .NSLOT(NSLOT), .MODE(0), .ENG_CTX(NSLOT), .NW(NW), .PLB(PLB), .CTX_MAX(CTX), .AW(AW),
-                 .KVW(KVW), .FMT(MUT_FMT?0:1)) u_host (.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
+                 .KVW(KVW), .FMT(MUT_FMT?0:1), .MU_OUT(MU)) u_host (.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
         .clk(ck_host), .rst_n(host_rst_n), .die_id(die_id),
         .s_awvalid(h_awvalid), .s_awready(h_awready), .s_awaddr(h_awaddr),
         .s_wvalid(h_wvalid), .s_wready(h_wready), .s_wdata(h_wdata), .s_wstrb(h_wstrb),
@@ -162,7 +168,7 @@ output wire  begin_fault,
         .m_wvalid(m_wvalid), .m_wready(m_wready), .m_wdata(m_wdata), .m_wstrb(m_wstrb), .m_wlast(m_wlast),
         .m_bvalid(m_bvalid), .m_bready(m_bready), .m_bresp(m_bresp),
         .irq(hi_irq),
-        .pb_we(pb_we), .pb_waddr(pb_waddr), .pb_wdata(pb_wdata), .pb_re(pb_re), .pb_raddr(pb_raddr), .pb_q(pb_q),
+        .pb_we(pb_we), .pb_waddr(pb_waddr_h), .pb_wdata(pb_wdata), .pb_re(pb_re), .pb_raddr(pb_raddr_h), .pb_q(pb_q),
         .eng_start(eng_start), .eng_token(eng_token), .eng_pos(eng_pos), .eng_slot(eng_slot), .kv_base(kv_base),
         .eng_done(eng_done), .eng_next_token(eng_next_token), .eng_cycles(eng_cycles), .eng_fault(eng_fault),
         .eng_clr_req(clr_req), .eng_clr_ack(clr_ack),
@@ -174,11 +180,17 @@ output wire  begin_fault,
     wire disagree, wdog_fault, start_unready, die_fault;
     wire [31:0] n_steps;
     wire [119:0] ctl_res;
-    qkd_host_ctl_service_pins #(.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE)) u_pkg(
+    qkd_host_ctl_service_pins #(.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.MU(MU)) u_pkg(
         .ck(ck_ctl),.rst_n(host_rst_n),.sys_ready(sys_ready),.pb_fault(pb_fault),.die_id(die_id),
         .service_abort(service_abort),.service_ready(service_ready),.service_ready8(service_ready8),.begin_block(epoch_busy),.epoch_fault(begin_fault),
         .req({kv_base,eng_pos,eng_token,eng_start}),.pr(pr),.tk(tk8),.hc(hc),.res(ctl_res));
     assign package_abort=eng_fault;
+    // MU: steps outstanding (eng_start in, eng_done pulses out; one synchronous 833 ps family)
+    reg [2:0] mu_out_n;
+    always @(posedge ck_ctl or negedge host_rst_n)
+        if (!host_rst_n) mu_out_n <= 0;
+        else if (MU != 0) mu_out_n <= mu_out_n + (eng_start ? 3'd1 : 3'd0) - (eng_done ? 3'd1 : 3'd0);
+    wire decode_done = (MU != 0) ? (mu_out_n == 0 && !eng_start) : eng_done;
     assign eng_done=ctl_res[0]; assign eng_fault=ctl_res[1];
     assign eng_next_token=ctl_res[19:2];assign eng_next_val=ctl_res[51:20];
     assign eng_cycles=ctl_res[83:52];assign disagree=ctl_res[84];
@@ -186,7 +198,8 @@ output wire  begin_fault,
     assign die_fault=ctl_res[87];assign n_steps=ctl_res[119:88];
     assign c_start=hc[38];assign c_gen=hc[37:36];
     assign c_token=hc[35:18];assign c_pos=hc[17:0];assign c_kv_base=kv_base;
-    initial if (PROMPT_READ_LATENCY<1 || D!=8 || NW!=18 || AW!=24 || NSLOT!=1 || PLB!=13 || CTX!=8192)
+    initial if (PROMPT_READ_LATENCY<1 || D!=8 || NW!=18 || AW!=24 || CTX!=8192 ||
+        (MU==0 ? (NSLOT!=1 || PLB!=13) : (NSLOT!=4 || PLB!=11)))
         $fatal(1,"full-control physical shape mismatch");
     // ---- CSRs, faults, interrupt ----
     assign fault_src = {9'd0, pb_fault, crom_fault, die_fault, boot_fault, start_unready, wdog_fault, disagree,
@@ -201,7 +214,7 @@ output wire  begin_fault,
         cnt[32*15 +: 32] = service_status;
     end
     qkd_host_csr_service_pins #(.NCNT(16),.MUT_DIAG(MUT_DIAG),.ENABLE_SERVICE(ENABLE_SERVICE)) u_csr (
-        .decode_request(eng_start),.decode_start(hc[38]),.decode_done(eng_done),.epoch_busy(epoch_busy),.startup_allowed(startup_allowed),
+        .decode_request(eng_start),.decode_start(hc[38]),.decode_done(decode_done),.epoch_busy(epoch_busy),.startup_allowed(startup_allowed),
         .clk(ck_csr), .rst_n(host_rst_n),.por_n(por_n),.service_ready8(service_ready8),
 .begin_tx_cr(begin_tx_cr),.begin_tx_available(begin_tx_available),.pending_ack8(pending_ack8),.service_epoch8(service_epoch8),.service_fault(service_fault),.ingest_permission(ingest_permission),.begin_v(begin_v),.begin_epoch(begin_epoch),.begin_available(begin_available),.begin_fault(begin_fault),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),

@@ -98,6 +98,24 @@ ROLES = {
     # KVJ-C3 2026-10-17: root of the four per-stack static PC chains, beside the writer and the d2d KV end
     'es_fan_root': (S+'qkd_kv_es_fan_root.sv', 'qkd_kv_es_fan_root', 1),
 }
+# MU-ADOPT-KV 10-19 (Qwen ROM 4 users, R6; OT_KV_MU=1, default off: every existing design point is unchanged): the per-user
+# KV row 64 + layer + 256*user (user = the stage's TAG epoch[1:0]).  Write side: the writer role binds the drop-in wrapper
+# qkd_kv_static_writer_native_mu (closed writer + qkd_kv_mu_wrow, glue of the RTL-only parent kvs_ctl); read side: every
+# pc_path gets MU=1 (the inline qkd_kv_mu_rrow map in qkd_static_kv_pc_path_nc).  Tile file suffix '_mu'.
+MU = __import__('os').environ.get('OT_KV_MU', '0') == '1'
+MU_DEPS = ['rtl/physical/ot_qkd_kv_static_writer_native.sv', 'rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv',
+           # MU-KV-BOOT 10-19: the multi-context layer programme / boot dispatcher wrappers instantiate the originals
+           S + 'qkd_static_kv_layer_programme.sv', S + 'qkd_static_kv_boot_dispatch.sv']
+if MU:
+    ROLES['writer'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv', 'qkd_kv_static_writer_native_mu', 1)
+    # MU-KV-BOOT 10-19 (hroot README section 3): 4 token contexts (user = authority_epoch[1:0]) on the one boot-loaded
+    # stage table + the compiled GAP[4][36] block (boot image MU form, kv_static_boot_join.BOOT_MU dispatcher)
+    ROLES['layer_programme'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv',
+                                'qkd_static_kv_layer_programme_mu', 1)
+    # MU-KV-PROG 10-19: the ownership calendar is the one lprg consumer in qkd_kvs_ctl with per-TOKEN state (a go while its
+    # window is active faults); its _mu successor re-arms the window per user token start (results/rtl/mu_qwen_1018/kvprog)
+    ROLES['ownership'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv', 'qkd_static_kv_ownership_calendar_mu', 1)
+    MU_DEPS.append(S + 'qkd_static_kv_ownership.sv')
 # return-train beat record (qkd_embedding_static_return_head / _hop capture_record, unpacked by join4), MSB first
 EMB_RECORD = (('emb_beat_epoch', 16), ('emb_beat_scale', 1), ('emb_beat_half', 1), ('emb_beat_word', 6),
               ('emb_beat_token', 18), ('emb_beat_data', 256))
@@ -425,15 +443,15 @@ def template(root=ROOT):
     netlist. Unknown measured latencies are null, not guessed physical values.
     """
     params={
-        'layer_programme':dict(MUT=0),'attention_programme':dict(MUT=0,LAND=1 if __import__('os').environ.get('OT_KV_ATTN_LAND','0')=='1' else 0),
+        'layer_programme':dict(MUT=0,**({'MU':1} if MU else {})),'attention_programme':dict(MUT=0,LAND=1 if __import__('os').environ.get('OT_KV_ATTN_LAND','0')=='1' else 0),
         'phase_launch':dict(PH0=None,SAFE_LOW_U=None,SAFE_HIGH_U=None,META_HOLD_CORE=None,MUT=0),
-        'ownership':dict(MUT=0),'drain_guard':dict(MUT=0),
-        'pc_path':{},'landing':dict(MUT=0,HOP_MUT=0),
+        'ownership':dict(MUT=0,**({'MU':1} if MU else {})),'drain_guard':dict(MUT=0),
+        'pc_path':dict(MU=1 if MU else 0),'landing':dict(MUT=0,HOP_MUT=0),
         'landing_calendar':dict(MUT=0,PH0=0),'front_calendar':dict(MUT=0),
         'k_issuer':dict(RESPONSE_LAT=None,MUT=0),
         'vport':dict(MUT=0,DQ=None,RT=None),
         'ectla':dict(STATIC_QK=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=None,HXK=13),
-        'writer':dict(MUT=0,VMAP=1),'writer_programme':dict(MUT=0,VMAP=1),
+        'writer':dict(MUT=0,VMAP=1,**({'MU':1} if MU else {})),'writer_programme':dict(MUT=0,VMAP=1),
         'link':dict(MUT=0,NL=2,NTX=d2d_ntx_k(),PR=1,TXDP=d2d_txdp_k() if root == ROOT else compiled_txdp(root=root)),
         'embgw':dict(MUT=0),'emb_return_head':dict(MUT=0),'emb_return_hop':{},'emb_join':dict(MUT=0),'row_tx':dict(MUT=0),
         'es_fan_root':dict(MUT=0),

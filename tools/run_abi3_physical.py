@@ -2198,11 +2198,12 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
         raise ValueError("OT_PIN_ORDER_DESC: port base names only")
     if desc:
         lines += [
-            f"set ot_pin_desc {{{' '.join(desc)}}}",
+            # ORFS sources this script inside a proc: a plain `set` is proc-local and `global` then finds nothing
+            # (HC bank e0/b0 pord1 gates: "can't read ot_pin_desc").  Use the namespace-qualified global.
+            f"set ::ot_pin_desc {{{' '.join(desc)}}}",
             "proc ot_order_pins {names} {",
-            "  global ot_pin_desc",
-            "  if {[llength $names] > 0 && [lsearch -exact $ot_pin_desc [ot_pin_base [lindex $names 0]]] >= 0} {",
-            "    foreach n $names { if {[lsearch -exact $ot_pin_desc [ot_pin_base $n]] < 0} {",
+            "  if {[llength $names] > 0 && [lsearch -exact $::ot_pin_desc [ot_pin_base [lindex $names 0]]] >= 0} {",
+            "    foreach n $names { if {[lsearch -exact $::ot_pin_desc [ot_pin_base $n]] < 0} {",
             "      error \"OT_PIN_ORDER_DESC: region mixes descending [ot_pin_base [lindex $names 0]] with $n\" } }",
             "    return [lreverse $names]",
             "  }",

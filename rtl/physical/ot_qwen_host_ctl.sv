@@ -14,7 +14,11 @@
 module qkd_host_ctl #(
     parameter integer ND=8,
     parameter integer WDOG=1<<22,
-    parameter integer MUT=0
+    parameter integer MUT=0,
+    // MU-QWEN-HOST 10-18 (opt-in; 0 = unchanged): 1 = ot_qfd_pkgctl MU (4 steps outstanding, gen = step tag) and the
+    // step's user on hc pos[17:16] (user = kv_base / 1024, the host's slot * KVW; positions are < 8192, so pos[17:13]
+    // are always zero today).  The 182-bit hc contract keeps its width and fields.
+    parameter integer MU=0
 )(
     input wire ck, rst_n,
     input wire ready,
@@ -48,7 +52,7 @@ module qkd_host_ctl #(
     wire [23:0] kv_base;
     wire [1:0] gen;
     wire [31:0] next_val,cycles,n_steps;
-    ot_qfd_pkgctl #(.D(ND),.WDOG(WDOG),.DONE_REG(1)) u_pkg(
+    ot_qfd_pkgctl #(.D(ND),.WDOG(WDOG),.DONE_REG(1),.MU(MU)) u_pkg(
         .clk(ck),.rst_n(rst_n),.ready(ready_q),
         .eng_start(req_q[0]),.eng_token(req_q[18:1]),.eng_pos(req_q[36:19]),.eng_kv_base(req_q[60:37]),
         .eng_done(done),.eng_next_token(next_token),.eng_next_val(next_val),.eng_cycles(cycles),.eng_fault(fault),
@@ -57,7 +61,8 @@ module qkd_host_ctl #(
         .disagree(disagree),.wdog_fault(wdog),.start_unready(unready),.die_fault(die_fault),.n_steps(n_steps));
     // kv_base is the pkgctl engine field, not part of the raw dctl interface.
     // The immutable KV map is the merged sequencer's existing implementation.
-    assign hc={pr_q,start,gen,token ^ ((MUT!=0 && start)?18'd1:18'd0),pos};
+    wire [17:0] hc_pos = (MU!=0) ? {kv_base[11:10],pos[15:0]} : pos;
+    assign hc={pr_q,start,gen,token ^ ((MUT!=0 && start)?18'd1:18'd0),hc_pos};
     always @(posedge ck or negedge rst_n)
         if (!rst_n) res<=0;
         else res<={n_steps,die_fault,unready,wdog,disagree,cycles,next_val,next_token,fault,done};

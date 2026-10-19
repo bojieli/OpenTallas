@@ -1,0 +1,157 @@
+{
+ "mut": 0,
+ "cases": [
+  "red",
+  "neg_drift",
+  "neg_coll",
+  "full"
+ ],
+ "red": {
+  "H": 279856,
+  "T": 17491,
+  "ncyc": 842668,
+  "K": 0,
+  "C": 1,
+  "starts": 1481,
+  "starts_per_user": {
+   "0": 529,
+   "1": 424,
+   "2": 333,
+   "3": 195
+  },
+  "fires": 3677,
+  "fires_per_user": {
+   "0": 1731,
+   "1": 1082,
+   "2": 540,
+   "3": 324
+  },
+  "emb": 102,
+  "seg": 205,
+  "leaf_entries": 317,
+  "head_identity_window": [
+   1100,
+   3207
+  ],
+  "measured_frame1": {
+   "0": {
+    "tokens": 16,
+    "tok_s": 68606.7
+   },
+   "1": {
+    "tokens": 10,
+    "tok_s": 42879.2
+   },
+   "2": {
+    "tokens": 5,
+    "tok_s": 21439.6
+   },
+   "3": {
+    "tokens": 3,
+    "tok_s": 12863.8
+   }
+  },
+  "compiled": [
+   {
+    "user": 0,
+    "tokens_per_frame": 16,
+    "tok_s": 68606.7
+   },
+   {
+    "user": 1,
+    "tokens_per_frame": 10,
+    "tok_s": 42879.2
+   },
+   {
+    "user": 2,
+    "tokens_per_frame": 5,
+    "tok_s": 21439.6
+   },
+   {
+    "user": 3,
+    "tokens_per_frame": 3,
+    "tok_s": 12863.8
+   }
+  ]
+ },
+ "neg_drift": {
+  "want_edge": 18591,
+  "opf": [
+   [
+    18592,
+    "0010",
+    0
+   ],
+   [
+    18593,
+    "0010",
+    0
+   ]
+  ],
+  "raised": true
+ },
+ "neg_coll": {
+  "want_edge": 6469,
+  "opf": [
+   [
+    6470,
+    "0000",
+    0
+   ]
+  ],
+  "raised": true
+ },
+ "full": {
+  "H": 4025840,
+  "T": 251615,
+  "ncyc": 4056940,
+  "K": 0,
+  "C": 1,
+  "starts": 4792,
+  "starts_per_user": {
+   "0": 725,
+   "1": 743,
+   "2": 1736,
+   "3": 1588
+  },
+  "fires": 22146,
+  "fires_per_user": {
+   "0": 7703,
+   "1": 7221,
+   "2": 3853,
+   "3": 3369
+  },
+  "emb": 46,
+  "seg": 1670,
+  "leaf_entries": 4036,
+  "head_identity_window": [
+   1100,
+   3207
+  ],
+  "measured_frame1": {},
+  "compiled": [
+   {
+    "user": 0,
+    "tokens_per_frame": 16,
+    "tok_s": 4769.2
+   },
+   {
+    "user": 1,
+    "tokens_per_frame": 15,
+    "tok_s": 4471.1
+   },
+   {
+    "user": 2,
+    "tokens_per_frame": 8,
+    "tok_s": 2384.6
+   },
+   {
+    "user": 3,
+    "tokens_per_frame": 7,
+    "tok_s": 2086.5
+   }
+  ]
+ },
+ "verdict": "PASS",
+ "fails": []
+}

@@ -1911,6 +1911,87 @@
   },
   {
    "design": "r25gq",
+   "unit": "ATT.D4G.PV_MERGE: on-die cross-SM ATT.PV merge (SU lane-store pairwise tree + COLL ring all-gather + top levels in attend.norm; previously unpriced)",
+   "group": "ATT.D4G.PV_MERGE",
+   "measured": 400.8,
+   "price": 0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 2.463,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "SU edge model from the RTL constants of the merge bench (start 5, fill +13, lane LAT 30, store read +3, drain +7, 3:4 serial) + d4g ring all-gather (ag_cycles)",
+     "base_cycles": 629775.1,
+     "cycles": 645676.5,
+     "added_cycles": 15901.4,
+     "e2e_loss_pct": 2.463
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "exactness benched on the real N512 SU arithmetic with the RTL PV nodes (golden pairwise tree incl. +0 pads, final == fixture PV): RTL bench RUNNING (tb_su_static_arithmetic build >120 GB, ot-epyc6; pending_results HBM-ATTGAP); python golden tree of the RTL nodes == fixture PV; cycles MODELLED (not a die run). HBM-ATTGAP 10-19.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
+   "unit": "ATT.D4G.SPAN: ATT.QK + ATT.PV on the d4g die SM master (GEN2b ot_hbm_accel_smh_attn, real DS L2 rows, busiest SM KV8), per T640 layer",
+   "group": "ATT.D4G.SPAN",
+   "measured": 1523,
+   "price": 1355,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.124,
+   "e2e_loss_pct": 1.004,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "d4g price5 priced_layers: attend.qk/pv serial on every T640 layer's critical path; the record at its measured span (first command word -> last result)",
+     "base_cycles": 629775.1,
+     "cycles": 636159.1,
+     "added_cycles": 6384,
+     "e2e_loss_pct": 1.004
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/hbm_ds_layer_tput_1018/veh_att_1019/unit/L2_pos.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "VEH-ATT 07a99bc0a: 20/20 ops bit-exact; QK 684 (KV8) / 660 (KV4), PV 839 / 815 vs base 547 / 808; 38 T640 layers (T128 not measured, kept at price). HBM-ATTGAP 10-19.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
+   "unit": "ATT.D4G.SUBRUN32: QK / PV as two 32-row sub-runs a SM (programme residency: one resident QK + PV copy, 1,019 / 971 of 1,024 words; no RTL)",
+   "group": "ATT.D4G.SUBRUN32",
+   "measured": 509.0,
+   "price": 0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 2.98,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "sub-run spans summed + issuer go bubble 5, minus the one-op spans, per T640 layer",
+     "base_cycles": 629775.1,
+     "cycles": 649117.1,
+     "added_cycles": 19342,
+     "e2e_loss_pct": 2.98
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "replaces a 1,531-word one-op programme that cannot be resident (1,024-word svg/xc programme SRAM; reinstall ~61k ingress edges a SM op). Alternative BIGPROG (2,048-word programme stores, SM-service tile re-close) would save this row; not taken (closure first, owner: HBM accepts AR loss without numerics change). Window staging refresh (DMA, 0 critical cycles) removes per-token descriptor/programme changes. HBM-ATTGAP 10-19.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
    "unit": "ATT.QK + ATT.PV on the SM engines (owner option B; DS-V4.1 T640/T128 records, canonical KV8 528 B / KV4 288 B rows)",
    "group": "ATT",
    "measured": 53472.0,
@@ -1937,9 +2018,15 @@
    "evidence": "results/hbm_sm_attention_1015/b_measured_model.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
-   "status": "proposed",
+   "status": "superseded",
    "note": "per-token attention cycles at measured spans (QK 547/411, PV 808/580 per T640/T128 record, exposed) vs A price 339.144/147.144 a record (38 T640 + 2 T128 layers); exposed -4.57 % e2e (2,024.7 vs 2,121.8 tok/s), KV-prefetched -3.22 % (2,053.5). Structural: dedicated ATT tiles retired (111.1 mm2 / ~161 W freed). Spans are component-shape (r6 bench_r6_canonical, 12/12 gates); SM-element bench r2 in progress; first access, publish, cross-SM merge MODEL. qwen_ar row pending the r2 Qwen measurement (standard 128-B rows + in-SM fold). NOTE r25gq proposed total is already far over 15 % from SM.MATVEC/IDX rows (owner decision needed independent of this row).",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "d4g price5 (547/808 are the d4g base_cost) + ATT.D4G.* rows",
+    "reason": "HBM-ATTGAP 10-19: the A-price composition of this row is retired by the d4g price; the d4g die measurements are the ATT.D4G rows",
+    "date": "2026-10-19"
+   }
   },
   {
    "design": "r25gq",
@@ -2852,8 +2939,8 @@
    "headroom_pct": 4.085,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": false,
-   "superseded_rows": 0,
-   "superseded_pct_not_counted": 0
+   "superseded_rows": 1,
+   "superseded_pct_not_counted": 4.574
   }
  }
 }
