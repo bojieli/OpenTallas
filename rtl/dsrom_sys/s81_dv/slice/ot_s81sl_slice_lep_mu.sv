@@ -17,7 +17,10 @@
 //   dsdv_slice_lepe_nh_mus  s_7S        E, lep_mu_a, mu_c / mu_rc in
 //   dsdv_slice_lepw_mab     s_0S (MU 2) W, lep_mu_ab, + copy-B lane pair tx2 / tx3 / rx2 / rx3 (-> lk_WS2 / lk_WS3)
 // S-tier mu_rt: the endpoint still checks nothing itself; its RX tag is not returned (column-4 margin, MU-S81/DIE owed).
-// The forwarded lane clocks tf / tfb are PHY-macro-side outputs (as the single-user masters' tf).
+// BIND/mu4 10-19: NO forwarded lane clock outputs.  tf / tfb (the lane tiles' kept clock feedthrough, a copy of clk) had no
+// consumer on any die (census: only these wrappers exported them; the PHY / SerDes ports take tx only, every bench leaves
+// .tf() open), so they are removed at the source: the lane tiles are the tf-less tops dsfd_coll_lane_w_ntf / _e_ntf
+// (ot_s81ph_coll_lane.sv, same core and parameters, the clk feedthrough pin dropped) and no master here has tf / tfb.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_slice_lep_mux #(
     parameter integer SIDE = 0,
@@ -40,7 +43,6 @@ module ot_s81sl_slice_lep_mux #(
     input  wire            ch_b,
     output wire [511:0]    tx0, output wire [511:0] tx1,
     input  wire [513:0]    rx0, input  wire [513:0] rx1,
-    output wire [1:0]      tf,
     input  wire [76:0]     t_host, input wire [53:0] t_kd,
     output wire [514:0]    f_host, output wire [3:0] f_lf, output wire [52:0] f_ks,
     input  wire [33:0]     mu_c,
@@ -48,7 +50,6 @@ module ot_s81sl_slice_lep_mux #(
     output wire [31:0]     mu_rt,
     output wire [511:0]    tx2, output wire [511:0] tx3,
     input  wire [513:0]    rx2, input  wire [513:0] rx3,
-    output wire [1:0]      tfb,
     output wire            fault
 );
 `ifndef SYNTHESIS
@@ -61,33 +62,33 @@ module ot_s81sl_slice_lep_mux #(
         ot_s81sl_slice u_sl (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(lri), .ri_e(ri_n), .ro_e(ro_n), .ro_w(lro),
             .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc),
             .ck_rt(ck_rt), .fault(sf));
-        dsfd_coll_lane_w #(.LCR(1)) u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
-            .tx(tx0), .tf(tf[0]), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));
-        dsfd_coll_lane_w #(.LCR(1)) u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
-            .tx(tx1), .tf(tf[1]), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
+        dsfd_coll_lane_w_ntf #(.LCR(1)) u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
+            .tx(tx0), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));
+        dsfd_coll_lane_w_ntf #(.LCR(1)) u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
+            .tx(tx1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
         if (AB_EN != 0) begin : g_b
-        dsfd_coll_lane_w #(.LCR(1)) u_ln2 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx2[512], rx2[513], rx2[511:0], rxvb[0]}),
-            .tx(tx2), .tf(tfb[0]), .lo_v(l2v), .lo_r(l2r), .lo_d(l2d), .li_v(i2v), .li_r(i2r), .li_d(i2d), .flt(f2));
-        dsfd_coll_lane_w #(.LCR(1)) u_ln3 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx3[512], rx3[513], rx3[511:0], rxvb[1]}),
-            .tx(tx3), .tf(tfb[1]), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));
+        dsfd_coll_lane_w_ntf #(.LCR(1)) u_ln2 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx2[512], rx2[513], rx2[511:0], rxvb[0]}),
+            .tx(tx2), .lo_v(l2v), .lo_r(l2r), .lo_d(l2d), .li_v(i2v), .li_r(i2r), .li_d(i2d), .flt(f2));
+        dsfd_coll_lane_w_ntf #(.LCR(1)) u_ln3 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx3[512], rx3[513], rx3[511:0], rxvb[1]}),
+            .tx(tx3), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));
         end
     end else begin : g_e
         ot_s81sl_slice u_sl (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(ri_n), .ri_e(lri), .ro_e(lro), .ro_w(ro_n),
             .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc),
             .ck_rt(ck_rt), .fault(sf));
-        dsfd_coll_lane_e #(.LCR(1)) u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
-            .tx(tx0), .tf(tf[0]), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));
-        dsfd_coll_lane_e #(.LCR(1)) u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
-            .tx(tx1), .tf(tf[1]), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
+        dsfd_coll_lane_e_ntf #(.LCR(1)) u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
+            .tx(tx0), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));
+        dsfd_coll_lane_e_ntf #(.LCR(1)) u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
+            .tx(tx1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
         if (AB_EN != 0) begin : g_b
-        dsfd_coll_lane_e #(.LCR(1)) u_ln2 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx2[512], rx2[513], rx2[511:0], rxvb[0]}),
-            .tx(tx2), .tf(tfb[0]), .lo_v(l2v), .lo_r(l2r), .lo_d(l2d), .li_v(i2v), .li_r(i2r), .li_d(i2d), .flt(f2));
-        dsfd_coll_lane_e #(.LCR(1)) u_ln3 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx3[512], rx3[513], rx3[511:0], rxvb[1]}),
-            .tx(tx3), .tf(tfb[1]), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));
+        dsfd_coll_lane_e_ntf #(.LCR(1)) u_ln2 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx2[512], rx2[513], rx2[511:0], rxvb[0]}),
+            .tx(tx2), .lo_v(l2v), .lo_r(l2r), .lo_d(l2d), .li_v(i2v), .li_r(i2r), .li_d(i2d), .flt(f2));
+        dsfd_coll_lane_e_ntf #(.LCR(1)) u_ln3 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx3[512], rx3[513], rx3[511:0], rxvb[1]}),
+            .tx(tx3), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));
         end
     end endgenerate
     generate if (AB_EN == 0) begin : g_nb
-        assign tx2 = 512'd0; assign tx3 = 512'd0; assign tfb = 2'b00;
+        assign tx2 = 512'd0; assign tx3 = 512'd0;
         assign l2r = 1'b0; assign l3r = 1'b0; assign i2v = 1'b0; assign i3v = 1'b0; assign i2d = 553'd0; assign i3d = 553'd0;
         assign f2 = 3'd0; assign f3 = 3'd0;
     end endgenerate
@@ -131,15 +132,14 @@ module ot_s81sl_slice_lepw_mu (
     output wire [4*1104-1:0] xc, input wire [8*70-1:0] rt,
     output wire [15:0] ck_line, output wire [1:0] ck_v, output wire [15:0] ck_xc, output wire [7:0] ck_rt,
     input  wire ch_b, output wire [511:0] tx0, output wire [511:0] tx1, input wire [513:0] rx0, input wire [513:0] rx1,
-    output wire [1:0] tf,
     input  wire [33:0] mu_c, input wire [10:0] mu_rc, output wire [31:0] mu_rt,
     output wire fault
 );
     ot_s81sl_slice_lep_mux #(.SIDE(0), .HOST_EN(0), .AB_EN(0)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_n(ri_e), .ro_n(ro_e),
         .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt),
-        .ch_b(ch_b), .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1), .tf(tf),
+        .ch_b(ch_b), .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1),
         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),   // no host plane (lep_mu_a has no host ports)
-        .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(mu_rt), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));
+        .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(mu_rt), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .fault(fault));
 endmodule
 module ot_s81sl_slice_lepw_mus (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
@@ -148,15 +148,14 @@ module ot_s81sl_slice_lepw_mus (
     output wire [4*1104-1:0] xc, input wire [8*70-1:0] rt,
     output wire [15:0] ck_line, output wire [1:0] ck_v, output wire [15:0] ck_xc, output wire [7:0] ck_rt,
     input  wire ch_b, output wire [511:0] tx0, output wire [511:0] tx1, input wire [513:0] rx0, input wire [513:0] rx1,
-    output wire [1:0] tf,
     input  wire [33:0] mu_c, input wire [10:0] mu_rc,
     output wire fault
 );
     ot_s81sl_slice_lep_mux #(.SIDE(0), .HOST_EN(0), .AB_EN(0)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_n(ri_e), .ro_n(ro_e),
         .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt),
-        .ch_b(ch_b), .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1), .tf(tf),
+        .ch_b(ch_b), .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1),
         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
-        .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));
+        .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .fault(fault));
 endmodule
 module ot_s81sl_slice_lepe_mu (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
@@ -165,16 +164,15 @@ module ot_s81sl_slice_lepe_mu (
     output wire [4*1104-1:0] xc, input wire [8*70-1:0] rt,
     output wire [15:0] ck_line, output wire [1:0] ck_v, output wire [15:0] ck_xc, output wire [7:0] ck_rt,
     input  wire ch_b, output wire [511:0] tx0, output wire [511:0] tx1, input wire [513:0] rx0, input wire [513:0] rx1,
-    output wire [1:0] tf,
     input  wire [76:0] t_host, input wire [53:0] t_kd, output wire [514:0] f_host, output wire [3:0] f_lf, output wire [52:0] f_ks,
     input  wire [33:0] mu_c, input wire [10:0] mu_rc, output wire [31:0] mu_rt,
     output wire fault
 );
     ot_s81sl_slice_lep_mux #(.SIDE(1), .HOST_EN(1), .AB_EN(0)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_n(ri_w), .ro_n(ro_w),
         .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt),
-        .ch_b(ch_b), .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1), .tf(tf),
+        .ch_b(ch_b), .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1),
         .t_host(t_host), .t_kd(t_kd), .f_host(f_host), .f_lf(f_lf), .f_ks(f_ks),
-        .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(mu_rt), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));
+        .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(mu_rt), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .fault(fault));
 endmodule
 module ot_s81sl_slice_lepe_nh_mus (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
@@ -183,15 +181,14 @@ module ot_s81sl_slice_lepe_nh_mus (
     output wire [4*1104-1:0] xc, input wire [8*70-1:0] rt,
     output wire [15:0] ck_line, output wire [1:0] ck_v, output wire [15:0] ck_xc, output wire [7:0] ck_rt,
     input  wire ch_b, output wire [511:0] tx0, output wire [511:0] tx1, input wire [513:0] rx0, input wire [513:0] rx1,
-    output wire [1:0] tf,
     input  wire [33:0] mu_c, input wire [10:0] mu_rc,
     output wire fault
 );
     ot_s81sl_slice_lep_mux #(.SIDE(1), .HOST_EN(0), .AB_EN(0)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_n(ri_w), .ro_n(ro_w),
         .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt),
-        .ch_b(ch_b), .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1), .tf(tf),
+        .ch_b(ch_b), .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1),
         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
-        .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));
+        .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .fault(fault));
 endmodule
 module ot_s81sl_slice_lepw_mab (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
@@ -200,16 +197,15 @@ module ot_s81sl_slice_lepw_mab (
     output wire [4*1104-1:0] xc, input wire [8*70-1:0] rt,
     output wire [15:0] ck_line, output wire [1:0] ck_v, output wire [15:0] ck_xc, output wire [7:0] ck_rt,
     input  wire ch_b, output wire [511:0] tx0, output wire [511:0] tx1, input wire [513:0] rx0, input wire [513:0] rx1,
-    output wire [1:0] tf,
     input  wire [33:0] mu_c, input wire [10:0] mu_rc,
-    output wire [511:0] tx2, output wire [511:0] tx3, input wire [513:0] rx2, input wire [513:0] rx3, output wire [1:0] tfb,
+    output wire [511:0] tx2, output wire [511:0] tx3, input wire [513:0] rx2, input wire [513:0] rx3,
     output wire fault
 );
     ot_s81sl_slice_lep_mux #(.SIDE(0), .HOST_EN(0), .AB_EN(1)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_n(ri_e), .ro_n(ro_e),
         .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt),
-        .ch_b(ch_b), .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1), .tf(tf),
+        .ch_b(ch_b), .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1),
         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
-        .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(), .tx2(tx2), .tx3(tx3), .rx2(rx2), .rx3(rx3), .tfb(tfb), .fault(fault));
+        .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(), .tx2(tx2), .tx3(tx3), .rx2(rx2), .rx3(rx3), .fault(fault));
 endmodule
 
 // MU-S81-2/DIE: vertical 512 / 562 stations of the copy-B lane pair (s_0S -> lk_WS2 / lk_WS3 along the 40-um frame/PHY

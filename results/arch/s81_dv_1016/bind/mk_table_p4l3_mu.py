@@ -82,8 +82,9 @@ def build(ab):
         M[new] = m
         w = dict(W.get(M[src]['module'], {}))
         w.update(mu_c=34, mu_rc=11, **({'mu_rt': 32} if rt else {}))
+        w.pop('tf', None)        # BIND/mu4: MU masters have no tf / tfb (tf-less lane tiles dsfd_coll_lane_*_ntf)
         if extra:
-            w.update(tx2=512, tx3=512, rx2=514, rx3=514, tfb=2)
+            w.update(tx2=512, tx3=512, rx2=514, rx3=514)
         W[module] = w
     slice_master('dsdv_slice_lepe', 'dsdv_slice_lepe_mu', 'ot_s81sl_slice_lepe_mu', True, 'h')
     slice_master('dsdv_slice_lepe_nh', 'dsdv_slice_lepe_nh_mus', 'ot_s81sl_slice_lepe_nh_mus', False, 'a')
@@ -102,6 +103,13 @@ def build(ab):
     T['status_fault_masters'] = ['dsdv_slice', 'dsfd_bk_collector', 'dsfd_bk_selector', 'dsdv_gunit', 'dsdv_svc_rs']
     # seq_host MU table faults (hslot + hwin fold, dsdv_mu_hwin.sv t_mf[3:0]) leave as die status pins (strict OUTPUT_OPEN before)
     T['masters']['dsdv_seq_host_mux'].setdefault('top_ports', []).append({'port': 't_mf', 'dir': 'output', 'bits': 4})
+    # BIND/mu4 10-19: chain-end frames (strict OUTPUT_OPEN xo / xok on 64 frames): every col_h9 / col_h10 instance with no
+    # plan xo link binds the generated chain-end variant <module>_nx (tools/s81_dv/frame_l4.py: xo / xok and their four
+    # relays removed at the source; frame_bench NX=1).  col_h9_MX (the L02 -> L03 forward) is unchanged.
+    for mk in ('col_h9', 'col_h10'):
+        mod = T['masters'][mk]['module']
+        T['masters'][mk]['chain_end'] = {'plan_port': 'xo', 'dir': 'o', 'module': mod + '_nx'}
+        W[mod + '_nx'] = {k: v for k, v in W[mod].items() if k not in ('xo', 'xok')}
     T['spare_out_rules'] = True          # tools/s81_dv/dv_spare_out.py (svc_rs role faces, lane quantisation, clock taps)
     T['rtl_files'] = T['rtl_files'] + ['physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']   # dsdv_mu_land SRAM 1
     cv = T['child_views']

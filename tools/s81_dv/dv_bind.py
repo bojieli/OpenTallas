@@ -205,6 +205,16 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         nm = l['i'].replace('-', '_')
         ends[blocks[a]['name']].append((pa, 'o', l['b'], nm, xa, ya, blocks[b]['name']))
         ends[blocks[b]['name']].append((pb, 'i', l['b'], nm, xb, yb, blocks[a]['name']))
+    # BIND/mu4 10-19: chain-end variants.  A master with "chain_end": {"plan_port": "xo", "dir": "o", "module": M'} binds
+    # every instance that has NO plan link on that plan port to M' (the same RTL without that output and its only drivers,
+    # e.g. col_h9_l4_nx), so a forward chain's last member carries no output without a consumer (no tie, no spare).
+    for mk, m in M.items():
+        ce = m.get('chain_end')
+        if not ce:
+            continue
+        for bl in blocks:
+            if bl['master'] == mk and not any(e[0] == ce['plan_port'] and e[1] == ce['dir'] for e in ends[bl['name']]):
+                m.setdefault('inst_module', {}).setdefault(bl['name'], ce['module'])
     # ------------------------------------------------------------------ port map -> per instance connections
     conn = {}                     # inst -> {rtl_port: [(lo, hi, expr)]}
     link_src = {}                 # link_nm -> (expr driving the link's input, fwd clock expr or None)

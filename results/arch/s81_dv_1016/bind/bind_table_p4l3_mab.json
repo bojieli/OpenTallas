@@ -481,7 +481,6 @@
    "tx1": 512,
    "rx0": 514,
    "rx1": 514,
-   "tf": 2,
    "t_host": 77,
    "t_kd": 54,
    "f_host": 515,
@@ -513,7 +512,6 @@
    "tx1": 512,
    "rx0": 514,
    "rx1": 514,
-   "tf": 2,
    "fault": 1,
    "mu_c": 34,
    "mu_rc": 11
@@ -539,7 +537,6 @@
    "tx1": 512,
    "rx0": 514,
    "rx1": 514,
-   "tf": 2,
    "fault": 1,
    "mu_c": 34,
    "mu_rc": 11,
@@ -566,15 +563,33 @@
    "tx1": 512,
    "rx0": 514,
    "rx1": 514,
-   "tf": 2,
    "fault": 1,
    "mu_c": 34,
    "mu_rc": 11,
    "tx2": 512,
    "tx3": 512,
    "rx2": 514,
-   "rx3": 514,
-   "tfb": 2
+   "rx3": 514
+  },
+  "col_h9_l4_nx": {
+   "clk": 1,
+   "cr": 1,
+   "cr_s": 1,
+   "rst_n": 1,
+   "x": 1104,
+   "xk": 4,
+   "ret": 70,
+   "lk": 12
+  },
+  "col_h10_l4_nx": {
+   "clk": 1,
+   "cr": 1,
+   "cr_s": 1,
+   "rst_n": 1,
+   "x": 1104,
+   "xk": 4,
+   "ret": 70,
+   "lk": 12
   }
  },
  "masters": {
@@ -673,7 +688,12 @@
      "f_7R13": "12'h492"
     }
    },
-   "instance_param": "INSTANCE"
+   "instance_param": "INSTANCE",
+   "chain_end": {
+    "plan_port": "xo",
+    "dir": "o",
+    "module": "col_h9_l4_nx"
+   }
   },
   "col_h10": {
    "module": "col_h10_l4",
@@ -744,7 +764,12 @@
      "f_7R11": "12'h492"
     }
    },
-   "instance_param": "INSTANCE"
+   "instance_param": "INSTANCE",
+   "chain_end": {
+    "plan_port": "xo",
+    "dir": "o",
+    "module": "col_h10_l4_nx"
+   }
   },
   "col_h9_MX": {
    "module": "col_h9_MX_l4",

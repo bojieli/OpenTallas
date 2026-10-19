@@ -165,3 +165,30 @@ module dsfd_coll_lane_e #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter
     ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
+
+// BIND/mu4 10-19: tf-less tile tops for the S81 DV MU die (ot_s81sl_slice_lep_mu.sv).  Same core, same parameters and
+// pin plan as dsfd_coll_lane_w / _e above, minus the tf pin: tf is ot_s81ph_ckbuf = assign y = a, a feedthrough of the
+// tile clock with no consumer on the die (strict bind OUTPUT_OPEN), so the pin is removed, not tied.  The core tf stays
+// inside (a wire of clk, no cell).  Re-kit owed for the hardened lane view (pin list delta: tf only).
+module dsfd_coll_lane_w_ntf #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF,
+    parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif, parameter integer EPRX = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
+    parameter integer EPTO = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif,
+    parameter integer LRXW = `ifdef OT_S81PH_LANE_RXW 1 `else 0 `endif, parameter integer EPMW = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
+    parameter integer CH_BOARD = 700) (
+    input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
+    input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
+    output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(), .lo_v(lo_v[0]),
+        .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
+endmodule
+module dsfd_coll_lane_e_ntf #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF,
+    parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif, parameter integer EPRX = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
+    parameter integer EPTO = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif,
+    parameter integer LRXW = `ifdef OT_S81PH_LANE_RXW 1 `else 0 `endif, parameter integer EPMW = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
+    parameter integer CH_BOARD = 700) (
+    input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
+    input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
+    output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(), .lo_v(lo_v[0]),
+        .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
+endmodule
