@@ -363,7 +363,7 @@ def parse_modules(text: str, path: str):
         # Declaration keywords inside strings must not resolve non-ANSI ports.
         body_masked = _lexical_mask(body, strings=True)
         # localparams / body parameters (non-ANSI parameter declarations)
-        for pm in re.finditer(r'\b(?:parameter|localparam)\s+(?:integer\s+|int\s+|\[[^\]]*\]\s*)?([^;]+);', body_masked):
+        for pm in re.finditer(r'\b(?:parameter|localparam)\s+(?:(?:integer|int|string|logic|bit|real|signed|unsigned)\s+|\[[^\]]*\]\s*)*([^;]+);', body_masked):
             for item in _split_commas(body[pm.start(1):pm.end(1)]):          # a declaration list: localparam A = .., B = .., C = ..;
                 im = re.match(r'\s*(\w+)\s*=\s*(.+)$', item, re.S)
                 if im:
@@ -699,9 +699,13 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
         rec['kind'] = 'model' if mst in allow_model else mod.kind(idx)
         if not params and mst in mparams:     # sidecar: the master's hardened elaboration parameters
             params = {k: v for k, v in mparams[mst].items() if not k.startswith('_')}
-            unk = sorted(k for k in params if k not in mod.params)
-            if unk:
-                findings['PARAM_NOT_IN_RTL'].append(f'{mst}: {unk}')
+        # inline #(...) overrides AND sidecar parameters must name a parameter of the RTL module (S81-LBGAP/G5 10-18:
+        # only the sidecar was checked, so die.v's #(.HB(0)) on parameter-free masters reported params_not_in_rtl 0)
+        unk = sorted(k for k in params if k not in mod.params)
+        if unk:
+            f_ = f'{mst}: {unk}'
+            if f_ not in findings['PARAM_NOT_IN_RTL']:
+                findings['PARAM_NOT_IN_RTL'].append(f_)
         pkey = json.dumps(params, sort_keys=True)
         if pkey not in rec['param_sets']:
             rec['param_sets'][pkey] = 0
