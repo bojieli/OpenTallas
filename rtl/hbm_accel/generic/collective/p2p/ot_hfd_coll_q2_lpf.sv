@@ -4,7 +4,7 @@
 // WIRES-ONLY flat expansion of ot_hfd_coll_q2_hard_v8g (q2 COLL quadrant parent, NLINK 2, SOLO 0) at closed-view
 // granularity: same ports / clock entries; lockstep-identical (tb_hfd_coll_q2_lpf_eq). Input of lp.py (landed parent).
 module ot_hfd_coll_q2_lpf(
- input wire rst_n,input wire [1:0] qid,
+ input wire rst_n,input wire [1:0] qid,qid_rg,
  input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [26:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,
  input wire [15:0] clk_vmwrite,input wire [9:0] clk_link,
@@ -224,7 +224,7 @@ module ot_hfd_coll_q2_lpf(
  wire [279:0] r_pin0,r_pin1;wire [1:0] r_carry_write;wire r_acc_we;wire [2:0] r_acc_tag;
  wire [255:0] r_rhs_add,r_carry_add,r_state_tx,r_acc_rr,r_ay;wire [7:0] r_av;
  ot_hgi_coll_ring_ag_ctl u_rctl(
-  .clk(clk_ring[0]),.rst_n(rst_n),.qid(qid),.cw_i(pr_cw_i),.ccw_i(pr_ccw_i),.cw_o(pr_cw_o),.ccw_o(pr_ccw_o),
+  .clk(clk_ring[0]),.rst_n(rst_n),.qid(qid_rg),.cw_i(pr_cw_i),.ccw_i(pr_ccw_i),.cw_o(pr_cw_o),.ccw_o(pr_ccw_o),
   .lp_we(ra_lp_we),.lp_tag(ra_lp_tag),
   .state_read_add(ra_state_read_add),.state_read_tx(ra_state_read_tx),.state_read_rr(ra_state_read_rr),
   .state_add_tag(ra_state_add_tag),.state_tx_tag(ra_state_tx_tag),.state_rr_tag(ra_state_rr_tag),

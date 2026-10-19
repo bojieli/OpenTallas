@@ -126,14 +126,17 @@
    ]
   }
  ],
- "static": [],
+ "static": [
+  "qid",
+  "qid_rg"
+ ],
  "tb_static": {
-  "qid": "2'd1"
+  "qid": "2'd1",
+  "qid_rg": "2'd1"
  },
  "loose": [
   "ring_fault",
-  "writer_fault",
-  "qid"
+  "writer_fault"
  ],
  "sticky_outputs": {
   "fault": 8,
@@ -149,5 +152,8 @@
  },
  "tb_stimulus": "rtl/hbm_accel/generic/collective/p2p/landed/stim_q3_lp.vh",
  "mut_child": "u_rctl",
- "qid_landing_note": "QF-COLLQ 10-18: qid (quadrant identity, constant per die instance) is LANDED into wr/rg as a loose net instead of a case-analysed static strap: the S-face pin reached u_rctl.qid 1,146-1,200 um combinationally (textbook wire_reach REFUSE > 500 um). A constant has no schedule, so it is left out of the offset solve (lag recorded)."
+ "port_regions": {
+  "qid_rg": "rg"
+ },
+ "qid_rg_note": "QF-COLLQ 10-18: qid_rg = the ring region's copy of the quadrant identity strap (N face beside u_rctl; die ties it to the same constant as qid). One S-face qid reached u_rctl.qid 1,146-1,200 um combinationally (textbook wire_reach REFUSE > 500 um); a strap is case-analysed, never landed, so each region gets its own pin."
 }

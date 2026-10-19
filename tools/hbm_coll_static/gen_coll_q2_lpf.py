@@ -29,7 +29,7 @@ VARIANTS = {
            "fj": "ot_hgi_coll_fj_n2s1", "qso": "ot_hgi_coll_qso_n2s1"},
 }
 
-HEADER_PORTS = """ input wire rst_n,input wire [1:0] qid,
+HEADER_PORTS = """ input wire rst_n,input wire [1:0] qid,qid_rg,
  input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [@NCK@:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,@ARG@
  input wire [15:0] clk_vmwrite,input wire [9:0] clk_link,
@@ -290,7 +290,7 @@ def flat(v="q2") -> str:
     w(" wire [279:0] r_pin0,r_pin1;wire [1:0] r_carry_write;wire r_acc_we;wire [2:0] r_acc_tag;")
     w(" wire [255:0] r_rhs_add,r_carry_add,r_state_tx,r_acc_rr,r_ay;wire [7:0] r_av;")
     w(" ot_hgi_coll_ring_ag_ctl u_rctl(")
-    w("  .clk(clk_ring[0]),.rst_n(rst_n),.qid(qid),.cw_i(pr_cw_i),.ccw_i(pr_ccw_i),.cw_o(pr_cw_o),.ccw_o(pr_ccw_o),")
+    w("  .clk(clk_ring[0]),.rst_n(rst_n),.qid(qid_rg),.cw_i(pr_cw_i),.ccw_i(pr_ccw_i),.cw_o(pr_cw_o),.ccw_o(pr_ccw_o),")
     w("  .lp_we(ra_lp_we),.lp_tag(ra_lp_tag),")
     w("  .state_read_add(ra_state_read_add),.state_read_tx(ra_state_read_tx),.state_read_rr(ra_state_read_rr),")
     w("  .state_add_tag(ra_state_add_tag),.state_tx_tag(ra_state_tx_tag),.state_rr_tag(ra_state_rr_tag),")
@@ -345,19 +345,21 @@ def tb_eq(v="q2", cycles=3000) -> str:
         L.append(f" reg [{W[n] - 1}:0] i_{n};")
     for n in outs:
         L.append(f" wire [{W[n] - 1}:0] a_{n},b_{n};")
-    conn_a = [f".{c}({{{W[c]}{{clk}}}})" for c in cks] + [".rst_n(rst_n)"] + [f".{n}(i_{n})" for n in ins] + [f".{n}(a_{n})" for n in outs]
+    # QF-COLLQ 10-18: qid_rg = the ring's copy of the quadrant identity strap (N face beside u_rctl; the die ties it to the
+    # same constant as qid); the reference parent has the single qid
+    conn_a = [f".{c}({{{W[c]}{{clk}}}})" for c in cks] + [".rst_n(rst_n)"] + [f".{n}(i_{n})" for n in ins if n != "qid_rg"] + [f".{n}(a_{n})" for n in outs]
     conn_b = [f".{c}({{{W[c]}{{clk}}}})" for c in cks] + [".rst_n(rst_n)"] + [f".{n}(i_{n})" for n in ins] + [f".{n}(b_{n})" for n in outs]
     L.append(f" {VARIANTS[v]['ref']} u_ref(" + ",".join(conn_a) + ");")
     L.append(f" ot_hfd_coll_{v}_lpf u_flat(" + ",".join(conn_b) + ");")
     L.append(" integer cyc,bad,nc;")
     L.append(" initial begin bad=0;nc=0;")
-    L.append("  i_qid=2'd1;")
+    L.append("  i_qid=2'd1; i_qid_rg=2'd1;")
     for n in ins:
-        if n != "qid":
+        if n not in ("qid", "qid_rg"):
             L.append(f"  i_{n}={{{','.join(['$urandom'] * ((W[n] + 31) // 32))}}};")
     L.append(f"  for(cyc=0;cyc<{cycles};cyc=cyc+1)begin @(negedge clk); if(cyc==16) rst_n=1'b1;")
     for n in ins:
-        if n == "qid":
+        if n in ("qid", "qid_rg"):
             continue
         # sparse control strobes so the parents run real programmes between faults
         if W[n] == 1:

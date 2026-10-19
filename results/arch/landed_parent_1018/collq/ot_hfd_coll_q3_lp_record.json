@@ -445,67 +445,15 @@
    "read": "u_lpl_11_r (ck_sw)",
    "added_edges": 3,
    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_11_w.* -to u_lpl_11_r.*"
-  },
-  {
-   "name": "12",
-   "net": "qid",
-   "src_region": "sw",
-   "dst_region": "wr",
-   "src_nodes": [
-    "port:qid"
-   ],
-   "width": 2,
-   "readers": [
-    "u_writer.sid"
-   ],
-   "loose": true,
-   "ring": "u_lpl_12_w (ck_sw)",
-   "read": "u_lpl_12_r (ck_wr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_12_w.* -to u_lpl_12_r.*"
-  },
-  {
-   "name": "13",
-   "net": "qid",
-   "src_region": "sw",
-   "dst_region": "rg",
-   "src_nodes": [
-    "port:qid"
-   ],
-   "width": 2,
-   "readers": [
-    "u_rctl.qid"
-   ],
-   "loose": true,
-   "ring": "u_lpl_13_w (ck_sw)",
-   "read": "u_lpl_13_r (ck_rg)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_13_w.* -to u_lpl_13_r.*"
   }
  ],
  "pads": [],
  "loose_status": {
   "nets": [
-   "qid",
    "ring_fault",
    "writer_fault"
   ],
   "lag": [
-   {
-    "net": "qid",
-    "reader": "u_fj",
-    "lag_edges": 0
-   },
-   {
-    "net": "qid",
-    "reader": "u_rctl",
-    "lag_edges": 3
-   },
-   {
-    "net": "qid",
-    "reader": "u_writer",
-    "lag_edges": 0
-   },
    {
     "net": "ring_fault",
     "reader": "u_fj",
@@ -536,7 +484,7 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 11502,
+  "landing": 11456,
   "pads": 0,
   "reset": 10
  },
@@ -640,7 +588,6 @@
    "u_radd7": 0
   },
   "input_port_offset_edges": {
-   "qid": 0,
    "cfg_v": 0,
    "cfg_target": 0,
    "cfg_addr": 0,
@@ -748,9 +695,6 @@
   },
   "reset_release_added_edges": 3,
   "status_flag_lag_edges": {
-   "qid->u_fj": 0,
-   "qid->u_rctl": 3,
-   "qid->u_writer": 0,
    "ring_fault->u_fj": 3,
    "writer_fault->u_fj": 6
   },
@@ -765,7 +709,7 @@
  ],
  "audit": {
   "ok": true,
-  "landings": 14,
+  "landings": 12,
   "reset_hops": 2,
   "fails": []
  }

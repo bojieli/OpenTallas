@@ -94,8 +94,20 @@ def entry_domains(cks):
     sv = (d / f"{top}.sv").read_text()
     sdc = (d / f"{top}.sdc").read_text()
     head = sv[sv.index(f"module {top}"):sv.index(");")]
-    io = re.findall(r"^\s*(input|output)\s+(?:wire|logic|reg)?\s*(?:\[[^\]]*\]\s*)?(\w+)", head, re.M)
+    # QF-COLLQ 10-18: every port of the ANSI header, incl. continuation lines ("    pr_ccw_i," after "input wire [279:0]
+    # pr_cw_i,"), which the first-name-only regex dropped from every domain (lpk1: 15 q3 ports had no IO budget)
+    io, last = [], None
+    for ln in head.splitlines()[1:]:
+        m = re.match(r"\s*(input|output)\s+(?:wire|logic|reg)?\s*(?:\[[^\]]*\]\s*)?(.*)", ln)
+        if m:
+            last, rest = m.group(1), m.group(2)
+        elif last and re.match(r"\s*\w", ln):
+            rest = ln
+        else:
+            continue
+        io += [(last, n) for n in re.findall(r"\b([A-Za-z_]\w*)\b", rest.split("//")[0])]
     own = {m.group(2): m.group(1) for m in re.finditer(r"-clock (ck_\w+) \[get_ports \{(\w+)", sdc)}
+    own.setdefault("qid_rg", "ck_rg")      # identity strap copy beside u_rctl (static: no lp.py IO delay line)
     name = {cks[0]: "core", "ck_wr": "wr", "ck_rg": "rg"}
     out = {name[c]: {"ratio": [1, 1], "ports": [c], "inputs": [], "outputs": []} for c in cks}
     for kind, p in io:
@@ -118,8 +130,10 @@ def spec():
     pins = {
         "W": ["vm_rq", "vm_rr", "ck_wr", "vm_kq"] + (TKX_W if VARIANT == "q3" else []),
         # QF-COLLQ 10-18: rc_v / rc_tag (read only by u_control, region sw, S row at x 172.8) moved N -> S: on N they reached
-        # u_control 1,179 um combinationally (textbook wire_reach REFUSE > 500 um); rc_d stays on N (-> isa_lp_data on N)
-        "N": ["pr_cw_i", "pr_ccw_o", "isa_ring", "isa_lp_data", "rc_d"] + ra[:15] + ["ck_rg"] + ra[15:]
+        # u_control 1,179 um combinationally (textbook wire_reach REFUSE > 500 um); rc_d stays on N (-> isa_lp_data on N).
+        # qid_rg: the ring region's own copy of the quadrant identity strap, beside ck_rg / u_rctl (S qid reached u_rctl.qid
+        # 1,146-1,200 um); the die ties both qid pins to the same constant
+        "N": ["pr_cw_i", "pr_ccw_o", "isa_ring", "isa_lp_data", "rc_d"] + ra[:15] + ["ck_rg", "qid_rg"] + ra[15:]
              + ["rr_v", "rr_tag", "rr_d", "ag_v", "ag_src", "ag_tag", "ag_d", "pr_ccw_i", "pr_cw_o"]
              + (TKX_OUT if VARIANT == "q3" else []),
         "E": ["inj_rd", "inj_idx", "hgi_inj_addr", "inj_d", "del_valid", "del_flit", "hgi_del_obase"],
