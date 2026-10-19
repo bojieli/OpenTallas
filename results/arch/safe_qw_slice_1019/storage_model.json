@@ -1,15 +1,15 @@
 {
   "status": "STRUCTURAL_MODEL_PRE_RTL",
-  "source_macro": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.json",
-  "macro": "ot_sram_1r1w_32x546_m1",
-  "macro_bits": 17472,
-  "macro_width_um": 177.768,
-  "macro_height_um": 81.0,
-  "macro_area_um2": 14399.208,
+  "source_macro": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.json",
+  "macro": "ot_sram_1r1w_32x64_m1",
+  "macro_bits": 2048,
+  "macro_width_um": 31.968,
+  "macro_height_um": 17.28,
+  "macro_area_um2": 552.40704,
   "instances": [
     {
       "name": "skew_s",
-      "count": 1,
+      "count": 9,
       "useful_bits": 7196,
       "read_per_cycle": 1,
       "write_per_cycle": 1,
@@ -17,7 +17,7 @@
     },
     {
       "name": "skew_n",
-      "count": 1,
+      "count": 9,
       "useful_bits": 7196,
       "read_per_cycle": 1,
       "write_per_cycle": 1,
@@ -25,7 +25,7 @@
     },
     {
       "name": "hi_fifo",
-      "count": 1,
+      "count": 9,
       "useful_bits": 4096,
       "read_per_cycle": 1,
       "write_per_cycle": 1,
@@ -33,7 +33,7 @@
     },
     {
       "name": "l9_fifo",
-      "count": 1,
+      "count": 9,
       "useful_bits": 4096,
       "read_per_cycle": 1,
       "write_per_cycle": 1,
@@ -41,15 +41,15 @@
     },
     {
       "name": "scale_wait3",
-      "count": 1,
+      "count": 9,
       "useful_bits": 1536,
       "read_per_cycle": 1,
       "write_per_cycle": 1,
       "interface_bits": 512
     }
   ],
-  "total_macros": 5,
-  "total_macro_area_um2": 71996.04000000001,
+  "total_macros": 45,
+  "total_macro_area_um2": 24858.3168,
   "useful_storage_bits": 24120,
   "removed_storage_flops": 24120,
   "added_cycles": {
@@ -59,8 +59,8 @@
     "scale_wait": 0,
     "root_argmax": 1
   },
-  "method": "Synchronous read lookahead; compare-and-forward read/write collision explicitly rather than relying on macro read-during-write. 1 read and 1 write each cycle, no arbitration/stalls.",
-  "geometry": "All macro origins on43.2 lattice; footprints occupy216x129.6 sites with pin-face channels to be synthesized/placed.",
+  "method": "Synchronous read lookahead; compare-and-forward read/write collision explicitly rather than relying on macro read-during-write. 1 read and 1 write each cycle, no arbitration/stalls. Physical ports are nine64-bit banks padded to576; upper30 mask bits0. Delay CE is always1 with nonzero read offset, so reset does not fan out to18 CE pins and exactD/startup unchanged.",
+  "geometry": "Compiler-native32x64 m1, density W5.961/E5.903 pins/um. Nine-bank3x3 groups use43.2lattice origins and>=20um channels; actual gross302.4x172.8 allocation per logical port, external pin/PG access and routed timing still pending.",
   "qualification": "Timing, util, reset fanout, argmax pipelining and parent W/E landing prices require measured synth/benches before kit gate",
   "reset_release_added_edges": {
     "core": 2,
@@ -76,6 +76,13 @@
   },
   "estimated_net_std_flop_change": -22425,
   "std_flop_change_scope": "Logical storage/reset allocation only; mapped total area, child reset sinks and native-clock timing still require whole-kit synthesis. Existing FIFO pointers remain unchanged; no guessed standard-cell area.",
-  "twelve_slice_macro_instances": 60,
-  "twelve_slice_macro_area_mm2": 0.8639524800000001
+  "twelve_slice_macro_instances": 540,
+  "twelve_slice_macro_area_mm2": 0.2982998016,
+  "logical_ports": 5,
+  "physical_banks_per_logical_port": 9,
+  "logical_port_bits": 546,
+  "physical_port_bits": 576,
+  "padded_masked_bits": 30,
+  "cfg_setup_added_edges": 2,
+  "cfg_acceptance": "Input config C commits C+2, next data C+3; static early-data fault, no ready/credit. Back-to-back config II1 preserved."
 }
