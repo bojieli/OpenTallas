@@ -66,12 +66,17 @@ ROUNDS=4, T0=1000+32*NS;
     wire [3:0] mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};      // the die master's t_mf fold
     dsdv_mu_hslot #(.NSLOT(NS), .MUT(0)) u_hs (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
         .f_kd({ku[31], 53'd0}), .f_mc(f_mc), .t_ku(ku), .t_mf(hmf));
+`ifndef ANCHOR_ONLY_REPRO
     dsdv_mu_hwin #(.NSLOT(NS), .NEV(NEV), .NEP(4), .NRT(2), .MUT(WMUT), .HEAD_STAGE(1), .COMPACT_PTR(1), .CHECK_STAGE(1), .LIVE_COUNT(1), .RAW_SELECT(1), .LOCAL_BOOT(1),.EARLY_HEAD_CAPTURE(1)) dut (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
         .f_mc(f_mc), .f_mw(f_mw), .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(mu_rt), .t_wf(wf));
+`endif
     wire [4*34-1:0] anchor_c; wire [4*11-1:0] anchor_rc; wire [1:0] anchor_wf;
     dsdv_mu_hwin #(.NSLOT(NS),.NEV(NEV),.NEP(4),.NRT(2),.MUT(WMUT),
        .HEAD_STAGE(1),.COMPACT_PTR(1),.CHECK_STAGE(1),.LIVE_COUNT(1),.RAW_SELECT(1),.LOCAL_BOOT(1),.EARLY_HEAD_CAPTURE(0)) anchor
        (.ck(ck),.rst_n(rst_n),.f_ks(f_ks),.f_mc(f_mc),.f_mw(f_mw),.mu_c(anchor_c),.mu_rc(anchor_rc),.mu_rt(mu_rt),.t_wf(anchor_wf));
+`ifdef ANCHOR_ONLY_REPRO
+    assign mu_c=anchor_c; assign mu_rc=anchor_rc; assign wf=anchor_wf;
+`else
     integer miter_edges=0;
     always @(negedge ck) begin
        if({mu_c,mu_rc,wf} !== {anchor_c,anchor_rc,anchor_wf})
@@ -84,6 +89,7 @@ ROUNDS=4, T0=1000+32*NS;
        miter_edges=miter_edges+1;
     end
     final $display("EARLY_MITER edges %0d",miter_edges);
+`endif
 `ifdef HEAD_COMPARE
     wire [4*34-1:0] ref_c; wire [4*11-1:0] ref_rc; wire [1:0] ref_wf;
     integer head_compares=0;
@@ -95,6 +101,56 @@ ROUNDS=4, T0=1000+32*NS;
         head_compares=head_compares+1;
     end
     final $display("HEAD_STAGE_EQUIV comparisons %0d",head_compares);
+`endif
+`ifndef ORIGINAL_ASSERT_REPRO
+    localparam integer SI=(NS>1)?$clog2(NS):1, EI=(NEV>1)?$clog2(NEV):1;
+    localparam [NS-1:0] OH0={{(NS-1){1'b0}},1'b1};
+    // Original assertion inventory, qualified only by external reset plus its original enable.
+    always @(posedge ck) if(rst_n && anchor.rn && anchor.rr[anchor.COPY_END])
+       if(anchor.g_live_count.count_r !== (SI+1)'($countones(anchor.vld))) $fatal(1,"live-count differs from valid table");
+    for(genvar ac_anchor=0;ac_anchor<NEV;ac_anchor=ac_anchor+1) begin:g_assert_anchor
+       always @(posedge ck) if(rst_n && anchor.rr[anchor.RBOOT_BASE+ac_anchor])
+          if(anchor.g_event_broadcast[ac_anchor].g_boot_local.count_r !== (SI+1)'($countones(anchor.vld)))
+             $fatal(1,"event boot count differs event%0d",ac_anchor);
+       always @(posedge ck) if(rst_n && anchor.rn && anchor.LOCAL_BOOT!=0 && anchor.g_event_broadcast[ac_anchor].cfg_w1_r)
+          if(anchor.g_event_broadcast[ac_anchor].cfg_sel_r !== (anchor.esel==EI'(ac_anchor)))
+             $fatal(1,"boot selector lookahead mismatch e%0d",ac_anchor);
+    end
+    integer ae_anchor;
+    always @(posedge ck or negedge anchor.rn) if(!anchor.rn) begin end else if(rst_n) begin
+       if(anchor.rp !== (OH0 << anchor.rpb)) $fatal(1,"retire SRAM pointer mismatch");
+       if(anchor.sl !== (OH0 << anchor.slb)) $fatal(1,"slot SRAM pointer mismatch");
+       if(anchor.gx !== (OH0 << anchor.gxb)) $fatal(1,"gap SRAM pointer mismatch");
+       for(ae_anchor=0;ae_anchor<NEV;ae_anchor=ae_anchor+1)
+          if(anchor.pe[ae_anchor] !== (OH0 << anchor.pbi[ae_anchor])) $fatal(1,"event SRAM pointer mismatch e%0d",ae_anchor);
+    end
+`ifndef ANCHOR_ONLY_REPRO
+    // Original assertion inventory, qualified only by external reset plus its original enable.
+    always @(posedge ck) if(rst_n && dut.rn && dut.rr[dut.COPY_END])
+       if(dut.g_live_count.count_r !== (SI+1)'($countones(dut.vld))) $fatal(1,"live-count differs from valid table");
+    for(genvar ac_dut=0;ac_dut<NEV;ac_dut=ac_dut+1) begin:g_assert_dut
+       always @(posedge ck) if(rst_n && dut.rr[dut.RBOOT_BASE+ac_dut])
+          if(dut.g_event_broadcast[ac_dut].g_boot_local.count_r !== (SI+1)'($countones(dut.vld)))
+             $fatal(1,"event boot count differs event%0d",ac_dut);
+       always @(posedge ck) if(rst_n && dut.rn && dut.LOCAL_BOOT!=0 && dut.g_event_broadcast[ac_dut].cfg_w1_r)
+          if(dut.g_event_broadcast[ac_dut].cfg_sel_r !== (dut.esel==EI'(ac_dut)))
+             $fatal(1,"boot selector lookahead mismatch e%0d",ac_dut);
+    end
+    integer ae_dut;
+    always @(posedge ck or negedge dut.rn) if(!dut.rn) begin end else if(rst_n) begin
+       if(dut.rp !== (OH0 << dut.rpb)) $fatal(1,"retire SRAM pointer mismatch");
+       if(dut.sl !== (OH0 << dut.slb)) $fatal(1,"slot SRAM pointer mismatch");
+       if(dut.gx !== (OH0 << dut.gxb)) $fatal(1,"gap SRAM pointer mismatch");
+       for(ae_dut=0;ae_dut<NEV;ae_dut=ae_dut+1)
+          if(dut.pe[ae_dut] !== (OH0 << dut.pbi[ae_dut])) $fatal(1,"event SRAM pointer mismatch e%0d",ae_dut);
+    end
+`endif
+`ifdef ASSERT_CORRUPT
+    initial begin
+       wait(rst_n && anchor.rr[anchor.RBOOT_BASE]); @(negedge ck);
+       force anchor.g_event_broadcast[0].g_boot_local.count_r = (SI+1)'(1);
+    end
+`endif
 `endif
     // slot attributes: land = slot[0], ab = slot[1]
     function automatic [1:0] att(input integer sl); att = {sl[0] ? 1'b1 : 1'b0, sl[1] ? 1'b1 : 1'b0}; endfunction

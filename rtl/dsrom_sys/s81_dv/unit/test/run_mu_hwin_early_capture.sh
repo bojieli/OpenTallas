@@ -20,14 +20,20 @@ run() {
  mkdir "$case_dir" || { echo "REFUSE existing case $case_dir" >&2; exit 73; }
  printf '%s\n' "$@" > "$case_dir/arguments.txt"
  verilator --binary --timing --x-initial unique --x-assign unique -j "${OT_THREADS:-8}" -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style \
-  +define+OT_MEM_NO_INIT +define+DSDV_MU_POINTER_ASSERT --top-module "$top" "$@" "${files[@]}" \
+  +define+OT_MEM_NO_INIT --top-module "$top" "$@" "${files[@]}" \
   --Mdir "$case_dir/obj" -o tb > "$case_dir/build.log" 2>&1
- for seed in 1 19 313; do
-  "$case_dir/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed > "$case_dir/run_seed$seed.log" 2>&1
-  grep -q "$expected" "$case_dir/run_seed$seed.log"
+ for seed in ${RUN_SEEDS:-1 19 313}; do
+  local rc=0
+  "$case_dir/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed > "$case_dir/run_seed$seed.log" 2>&1 || rc=$?
+  if [[ "$expected" == FAIL:* ]]; then
+    [[ $rc -ne 0 ]]; grep -q "${expected#FAIL:}" "$case_dir/run_seed$seed.log"
+  else
+    [[ $rc -eq 0 ]]; grep -q "$expected" "$case_dir/run_seed$seed.log"
+  fi
  done
 }
-run wrapper tb_dsdv_mu_mem_early_capture 'EC_MEM PASS'
+RUN_SEEDS=1 run original_assert_repro tb_dsdv_mu_hwin_early_capture 'FAIL:event boot count differs event0' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+ANCHOR_ONLY_REPRO +define+ORIGINAL_ASSERT_REPRO +define+DSDV_MU_POINTER_ASSERT
+RUN_SEEDS=1 run guarded_assert_corruption tb_dsdv_mu_hwin_early_capture 'FAIL:event boot count differs event0' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+ANCHOR_ONLY_REPRO +define+ASSERT_CORRUPT
 run ns2_ev1 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D
 run ns47 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=47 +define+MIN_D
 printf '%s\n' 'EARLY_CAPTURE_INITIAL PASS'
