@@ -13,10 +13,11 @@ from pathlib import Path
 import att_images as A
 import smb_unit as S
 from attention_prel_model import model
+from attention_mode_contract import analyse
 from hbm_svc_packed136_image import sector_address
 
 
-def compile_attention(rec, sm=0, mut=''):
+def compile_attention(rec, sm=0, mut='', mixed_context=False):
     ops, nrun = A.plan_d4g(rec, sub=8)
     ops = [o for o in ops if o[5] == sm]
     store = S.Store(0)
@@ -27,10 +28,15 @@ def compile_attention(rec, sm=0, mut=''):
         lines = A.op_lines(rec, op[3])
         if not 1 <= len(lines) <= 64:
             raise ValueError('attention block exceeds cache capacity')
-        svg, xc = [], []
+        svg, xc, literal = [], [], []
+        bad_mode_injected = False
         for c in range(first, exp['end'] + 1):
             f = cal.cyc[c] if c < len(cal.cyc) else {}
             cmd = A.E.cmd_word(**f)
+            if mut == 'invalid_mode' and cmd != 0 and not bad_mode_injected:
+                cmd = (cmd & ~(7 << 181)) | (3 << 181)
+                bad_mode_injected = True
+            literal.append(cmd)
             rd = None
             if f.get('pkt'):
                 packet = cal.pkt[c]
@@ -47,8 +53,13 @@ def compile_attention(rec, sm=0, mut=''):
             old = svg[:]
             svg = [(w & ~mask) | ((old[i + 1] & mask) if i + 1 < len(old) else 0)
                    for i, w in enumerate(old)]
+        class_plan = analyse(literal, block_lines=len(lines)) if mixed_context else None
+        if class_plan and class_plan['extra_descriptors']:
+            raise ValueError('explicit priced GO split must be scheduled: ' + json.dumps(class_plan))
+        descriptor_mode = ((literal[0] >> 181) & 7) if mixed_context else 0
         pb, pl = store.add(svg, xc)
-        blocks.append(dict(op=op, cal=cal, exp=exp, first=first, lines=lines, prog=(pb, pl), words=len(svg)))
+        blocks.append(dict(op=op, cal=cal, exp=exp, first=first, lines=lines, prog=(pb, pl), words=len(svg),
+                           class_plan=class_plan, descriptor_mode=descriptor_mode))
     if len(blocks) > S.TBL:
         raise ValueError('descriptor overflow')
     ing, xw, mem = [], [], {}
@@ -73,7 +84,7 @@ def compile_attention(rec, sm=0, mut=''):
         xw.extend((offset + c, w) for c, w in b['cal'].xw.items())
         d = S.desc_row(i, row_base=i * 8, landing=i % 4, epoch=i + 1, rows=len(b['lines']),
                        tag_base=0, prog_base=b['prog'][0], prog_limit=b['prog'][1], go_at=b['go_at'],
-                       row_off=0, loops=1, lstep=0, mode=0, mrel=0, fl=0)
+                       row_off=0, loops=1, lstep=0, mode=b['descriptor_mode'], mrel=0, fl=0)
         for j, target in enumerate((S.SVG_TGT, S.XC_TGT)):
             ing.append((dt + 2 * i + j, S.ingress(cfg=((1 << 10) | i, d), target=target)))
         raw = b''.join(int(x).to_bytes(136, 'little') for x in b['lines'])
@@ -102,12 +113,12 @@ def compile_attention(rec, sm=0, mut=''):
 
 def run(a):
     rec, src = A.load_ds(Path(a.kv), a.layer)
-    c = compile_attention(rec, a.sm, a.mut)
+    c = compile_attention(rec, a.sm, a.mut, a.mixed_context)
     d = Path(a.work).resolve() / a.name
     d.mkdir(parents=True, exist_ok=True)
     counts = S.write_events(c, d)
     (d / 'compile.json').write_text(json.dumps(dict(source=src, budget=c['budget'], events=counts,
-        blocks=[{k:b[k] for k in ('op','prog','words','go_at','first_abs','end_abs')} for b in c['blocks']]), indent=2) + '\n')
+        blocks=[{k:b[k] for k in ('op','prog','words','go_at','first_abs','end_abs','class_plan','descriptor_mode')} for b in c['blocks']]), indent=2) + '\n')
     if not a.exe:
         print(json.dumps(c['budget'], indent=2)); return
     exe = Path(a.exe).resolve()
@@ -150,5 +161,6 @@ if __name__ == '__main__':
     p.add_argument('--kv', required=True); p.add_argument('--layer', type=int, default=2)
     p.add_argument('--sm', type=int, default=0); p.add_argument('--work', required=True)
     p.add_argument('--name', default='attention'); p.add_argument('--exe'); p.add_argument('--out', default='attention.json')
-    p.add_argument('--mut', default='', choices=['','wrong_row','read_early'])
+    p.add_argument('--mut', default='', choices=['','wrong_row','read_early','invalid_mode'])
+    p.add_argument('--mixed-context', action='store_true', help='opt-in descriptor mode197 class contract; requires matching future hardware')
     run(p.parse_args())
