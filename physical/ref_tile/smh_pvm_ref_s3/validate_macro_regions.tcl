@@ -2,6 +2,8 @@
 set vb [ord::get_db_block]
 set vdu [[ord::get_db_tech] getDbUnitsPerMicron]
 set vi [dict create]
+if {![info exists pvm_stage]} {set pvm_stage pre_dpl}
+set pvm_unlegal 0
 foreach inst [$vb getInsts] {
  regsub -all {\\} [$inst getName] {} key
  if {[dict exists $vi $key]} {error "PVM_HOP ambiguous exact cell $key"}
@@ -10,9 +12,27 @@ foreach inst [$vb getInsts] {
  if {[$m isBlock] || [$m getType] in {CORE_WELLTAP CORE_SPACER ENDCAP}} continue
  if {[$inst getPlacementStatus] in {NONE UNPLACED}} {error "PVM_HOP unplaced functional cell $key"}
  set bb [$inst getBBox]
- if {[$bb yMin]<round(229.23*$vdu) || [$bb yMax]>round(300.24*$vdu)} {error "PVM_HOP functional cell outside sole band $key"}
+ if {[$bb yMin]<round(229.23*$vdu) || [$bb yMax]>round(300.24*$vdu)} {
+  # Pre-DPL, resizer repeaters (repair_design long wires) sit at unlegalized PLACED spots; rows exist only in the band, so
+  # DPL legalizes them into it. Anything else outside the band is an error; the strict band check reruns on 3_place.odb.
+  if {$pvm_stage eq "pre_dpl" && [$inst getPlacementStatus] eq "PLACED" && [string match {wire*} $key]} {incr pvm_unlegal; continue}
+  error "PVM_HOP functional cell outside sole band $key"
+ }
 }
-foreach name {pvm_macro_cone pvm_macro_W_constants} {
+puts "PVM_HOP stage=$pvm_stage unlegalized_repeaters_below_band=$pvm_unlegal"
+# constants: FIRM on legal sites inside their two rows (macro_regions.tcl pvm_fix_constants, df4214d0d)
+set vcn 0
+foreach inst [$vb getInsts] {
+ if {[[$inst getMaster] getName] ni {TIEHIx1_ASAP7_75t_R TIELOx1_ASAP7_75t_R}} continue
+ set bb [$inst getBBox]
+ if {[$bb yMin]>=round(229.23*$vdu) && [$bb yMax]<=round(229.77*$vdu) && [$bb xMin]>=round(86.4*$vdu) && [$bb xMax]<=round(172.8*$vdu)} {
+  if {[$inst getPlacementStatus] ne "FIRM"} {error "PVM_HOP constant not FIRM [$inst getName]"}
+  incr vcn
+ }
+}
+if {$vcn<546} {error "PVM_HOP only $vcn of 546 W constants in their rows"}
+puts "PVM_HOP W constants FIRM in rows=$vcn"
+foreach name {pvm_macro_cone} {
  set rg [$vb findRegion $name]
  if {$rg eq "NULL" || [$rg getRegionType] ne "EXCLUSIVE"} {error "PVM_HOP missing real fence $name"}
  set groups [$rg getGroups]
@@ -31,8 +51,9 @@ foreach name {pvm_macro_cone pvm_macro_W_constants} {
  if {$n==0} {error "PVM_HOP empty required fence $name"}
  puts "PVM_HOP fence $name actual placed members=$n"
 }
+set ::pvm_vdu $vdu
 proc pvm_hop_bbox {px py bb} {
- global vdu
+ set vdu $::pvm_vdu
  set maxd 0.0
  foreach x [list [$bb xMin] [$bb xMax]] {foreach y [list [$bb yMin] [$bb yMax]] {
   set d [expr {(abs($x-$px)+abs($y-$py))/double($vdu)}]
