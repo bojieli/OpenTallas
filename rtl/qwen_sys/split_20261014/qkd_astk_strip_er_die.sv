@@ -17,6 +17,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module qkd_astk_strip_er_die #(
     parameter integer RL = 1,
+    parameter integer DISTRIBUTED_ER = 0,
     parameter integer Z_STRIDE = 4
 ) (
     input  wire              ck_c,
@@ -70,8 +71,12 @@ module qkd_astk_strip_er_die #(
     wire [3:0]  response_v;
     wire [43:0] response_addr;
     wire        af_s, er_fault;
-    assign af = af_s | er_fault;
-    qkd_astk_strip_er_st #(.RL(RL), .Z_STRIDE(Z_STRIDE), .N(4)) u_strip (.ck_c(ck_c), .ck_z(ck_z), .ck_x(ck_x), .ck_e(ck_e),
+    generate if (DISTRIBUTED_ER) begin : g_phys_fault
+        qkd_astk_fault_join u_fault (.ck(ck_er), .rst_n(rst_n), .a(af_s), .b(er_fault), .q(af));
+    end else begin : g_legacy_fault
+        assign af = af_s | er_fault;
+    end endgenerate
+    qkd_astk_strip_er_st #(.RL(RL), .Z_STRIDE(Z_STRIDE), .N(4), .DISTRIBUTED_ER(DISTRIBUTED_ER)) u_strip (.ck_c(ck_c), .ck_z(ck_z), .ck_x(ck_x), .ck_e(ck_e),
         .ck_r(ck_r), .ck_er(ck_er), .rst_n(rst_n), .st(st), .aq(aq), .am(am), .cal(cal), .ap(ap), .af(af_s), .lt(lt),
         .so(so), .si(si), .read_v(read_v), .read_addr(read_addr), .response_v(response_v), .response_addr(response_addr),
         .response_data(erd), .er_fault(er_fault));

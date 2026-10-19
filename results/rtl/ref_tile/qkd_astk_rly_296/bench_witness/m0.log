@@ -1,0 +1,3 @@
+# astk_phys_bench.sh MUT=0, iverilog 12.0, ot-epyc4, HKV-ASTK 2026-10-18
+PASS ASTK physical relay 2000 words reset + RL3 + fault edge
+/srv/opentallas-scratch/claude/hkv-astk-1018/rtl/test/qwen_kv_die/tb_qkd_astk_phys.sv:18: $finish called at 20006000 (1ps)

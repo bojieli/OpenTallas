@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       admits   880 GB (avail 704, growth 88, headroom 0, waiters 0/0 GB) load 25/128 running 14 disk 415 GB 
+ot-run: ot-epyc5       admits  1256 GB (avail 936, growth 26, headroom 0, waiters 0/0 GB) load 58/128 running 6 disk 566 GB 
+ot-run: ot-pve1        skipped: no /tmp/s81lbgap_g2/src
+ot-run: ot-agidock128  skipped: no /tmp/s81lbgap_g2/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1617277-1792349520 after 0 s
+MISMATCH sid 1: P1 E hops/src
+MISMATCH sid 1: P1 W zero-hop side sent
+MISMATCH sid 2: P1 E hops/src
+MISMATCH sid 2: P1 W hops/src
+MISMATCH sid 3: P1 E hops/src
+MISMATCH sid 3: P1 W hops/src
+MISMATCH sid 4: P1 E hops/src
+MISMATCH sid 4: P1 W hops/src
+MISMATCH sid 5: P1 E hops/src
+MISMATCH sid 5: P1 W hops/src
+MISMATCH sid 6: P1 E hops/src
+MISMATCH sid 6: P1 W hops/src
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=tiercol
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1617277-1792349520): exit 0
+EXIT 0

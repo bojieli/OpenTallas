@@ -67,3 +67,18 @@ def test_result_trunk_beats_consecutive_in_order_no_collision():
     # column c's beats ride trunk c only; the heads are columns 0 / 8
     assert {s for s, (c, _) in rs['node_of_col'].items() if c == 0} == {P.col_of(0, r) for r in range(16)}
     assert rs['node_of_col'][0] == (0, 0) and rs['node_of_col'][8] == (1, 0)
+
+
+def test_result_trunk_header_f2_adds_one_edge():
+    """HKV-PVRS2 10-19: --rs-hd f (qkd_pv_rs_hd_f rev f2, input pin registers) = header 2 edges: RS_D + 1, T / epoch
+    sampling cycle unchanged; r (and the legacy leaf) stay at 1"""
+    g = _gen_rs()
+    D, R = g.timing()
+    r = g.rs_timing(D, D[0] + R[0] - D[0])
+    g.a.rs_hd = 'f'
+    f = g.rs_timing(D, D[0] + R[0] - D[0])
+    assert r['header_stages'] == 1 and f['header_stages'] == 2
+    assert f['rs_d'] == r['rs_d'] + 1 == 3 + f['J0'] and f['t_header'] == r['t_header']
+    assert g.rs_mods()['hd'] == 'qkd_pv_rs_hd_f'
+    g.a.rs_native = False
+    assert g.rs_timing(D, D[0] + R[0] - D[0])['rs_d'] == r['rs_d']

@@ -6652,7 +6652,7 @@
    "R0"
   ],
   "u_RH_r0": [
-   "qkd_pv_rs_hd_r",
+   "qkd_pv_rs_hd_f",
    777.6,
    11944.8,
    190.08,
@@ -22953,7 +22953,8 @@
   ],
   "width": 534,
   "beat_age": "beat b (= column b) leaves rs_* at pair age out_age + RS_D + b (b = 0..31, consecutive edges)",
-  "rs_d": 49,
+  "rs_d": 50,
+  "header_stages": 2,
   "nodes": {
    "t0": 48,
    "t1": 50
@@ -23185,11 +23186,11 @@
    "qkd_rlyi_258s": 64,
    "qkd_rlys_296": 132,
    "qkd_rlys_36": 31,
-   "qkd_pv_rs_hd_r": 1
+   "qkd_pv_rs_hd_f": 1
   },
   "new_leaves": {
    "qkd_rlyi_258s": "physical/ref_tile/qkd_rlyi_258s",
-   "qkd_pv_rs_hd_r": "physical/ref_tile/qkd_pv_rs_hd_r",
+   "qkd_pv_rs_hd_f": "physical/ref_tile/qkd_pv_rs_hd_f",
    "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv"
   },
   "face_pin": {
