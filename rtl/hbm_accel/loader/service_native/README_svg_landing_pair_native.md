@@ -18,9 +18,10 @@ those two reference SRAMs are not part of the four-macro leaf inventory.
 All three roots are explicit: `pair_hbm_clk`, `pair_clk`, `return_clk`, with
 corresponding active-low raw resets. Both banks use the same pair HBM/stream
 roots. Old `bank/4` clock mapping must be replaced for banks J and J+4.
-Each native bank owns its two-stage HBM/stream reset landing; feed it RAW reset,
-not the leaf's landed reset, which would accidentally add two more stages.
-Pair/meta and local-return logic each have their own two-stage reset landing.
+The leaf owns4/2/2 first-stage reset copies on HBM/pair/return roots. Banks,
+metadata and ring slices own their local second-stage branches; phase0 inputs
+are shared from the leaf. Feed raw resets to the leaf; do not cascade landed
+reset into phase0, which would add release edges.
 Reset assertion/release must be balanced across the three roots and other
 participating pair/cache roots. No payload reset mass is added.
 
@@ -121,8 +122,8 @@ The initial static-producer testbench race is preserved as a diagnostic log;
    16bit metadata ring. No >=3-stage unchanged flop metadata chain.
 6. Geometry candidate only: four43.2-lattice macro origins; one full-width narrow
    cell band inside43.176um gap, height from measured cell area at40-60%; routing/
-   PG/clock access reserved elsewhere. Measured3177.81306um2 of cells fits a
-   16.2um full-width band (y99.9..116.1) at51.60% local density. Physical
+   PG/clock access reserved elsewhere. Measured3107.20212um2 of cells fits a
+   16.2um full-width band (y99.9..116.1) at50.45% local density. Physical
    placement/reach/native pin access remain OPEN.
 7. Three explicit roots; physical forwarding, native neighbour references,
    TT/FF pin-flop spread<=80ps and hold margin>=0.03ns remain OPEN.
@@ -167,3 +168,50 @@ failed/incomplete earlier mapping logs are preserved under
 `native_pair_evidence/fanout_8792c55c3`. Baseline area755.3898 was incomplete
 (unflattened kept cells), then2977.87752 was complete but fanout FAIL. Those
 values are not final geometry evidence.
+
+## Strict raw-reset graph revision
+
+The earlier7aeca767d ordinary fanout PASS did not prove the native raw-reset
+landing rule. Collapsing real INV/BUF paths exposed148/72/68 raw asynchronous
+FF sinks on HBM/pair/return. That graph is superseded. Model ec3bf46c0 preceded
+RTL327ef3481. The helper follows the cache lane's real no-BUF reset-phase style:
+one kept RVT-mapped asynchronous-clear FF with D=1 per source phase.
+
+| Native root | Raw-reset FFs | Maximum first-Q branch FFs | Maximum branch-Q owned FFs |
+|---|---:|---:|---:|
+| pair_hbm | 4 | 19 | 6 |
+| pair | 2 | 19 | 12 |
+| return | 2 | 18 | 9 |
+
+All raw paths have zero buffer/inverter cells before the first FF. All first
+and second stages have D=1 and the actual native root clock. Every branch
+asynchronously clears from its assigned first-stage Q. Raw assertion clears
+first Q, then branch Q, then its owned controls without a clock. On E1 after
+raw release, first Q rises but branch stays0; on E2 branch Q rises. Functional
+control begins E3, exactly as before. First-stage copies are balanced by source
+index; this adds no operation edge or artificial buffer model.
+
+This table covers native landing, not a uniform two-level graph for the entire
+leaf. Each existing response FIFO retains `both_reset = hreset && sreset`.
+That AND clears both FFs of each write/read-domain reset synchronizer (four
+FFs per bank). Its q1 then clears18 FIFO functional FFs per domain. Thus FIFO
+release adds two domain-local synchronization edges after both native resets
+release, followed by the existing online Gray/flag CDC qualification. Either
+native reset assertion clears both FIFO domains through the AND. Different
+domain release times are supported by this existing handshake. These equations
+and actual mapped clocks/D/async pins are included in the complete reset audit.
+No new FIFO reset or protocol latency was introduced. Canonical tool/root
+acceptance of this complete graph remains required before a physical gate.
+
+All-J bench e8ee1565f explicitly observes74/36/34 native branches: asynchronous
+assertion, E1first=1/branch=0 and E2branch=1 have zero witness errors. Each of
+HBM, pair and return releases first in a separate identity-guard scenario; the
+old-master protocol miter remains0/0. Nominal groups, II1windows, exact7edge
+latency and all three discriminating mutants retain their prior results.
+
+Final mapping is3107.20212um2,6551FF (5773unreset/778resettable), four actual
+macros, no unknown cells, all273outputs registered, maximum nonclock pin load27.
+The unchanged16.2um fullwidth placement band now has50.45% local density. This
+is native shape/area/fanout evidence only; reset slew/reach, canonical tool
+review, ordinary TT/FF timing, clock roots and macro pin access remain OPEN.
+Witnesses are in `native_pair_evidence/reset_e8ee1565f`.

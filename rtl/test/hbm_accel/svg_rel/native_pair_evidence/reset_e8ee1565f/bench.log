@@ -1,0 +1,219 @@
+ot-run: ot-epyc4       admits  1022 GB (avail 814, growth 99, headroom 0, waiters 0/0 GB) load 115/128 running 34 disk 412 GB 
+ot-run: ot-epyc5       admits   582 GB (avail 521, growth 113, headroom 0, waiters 0/0 GB) load 73/128 running 13 disk 564 GB 
+ot-run: ot-epyc6       admits   795 GB (avail 670, growth 113, headroom 0, waiters 0/0 GB) load 26/128 running 14 disk 563 GB 
+ot-run: ot-epyc7       admits   868 GB (avail 699, growth 91, headroom 0, waiters 0/0 GB) load 41/96 running 18 disk 502 GB 
+ot-run: ot-epyc8       admits  1158 GB (avail 924, growth 113, headroom 0, waiters 0/0 GB) load 45/128 running 30 disk 565 GB 
+ot-run: ot-pve1        admits   130 GB (avail 103, growth 8, headroom 0, waiters 0/0 GB) load 36/28 running 4 disk 1197 GB 
+ot-run: ot-agidock128  admits   104 GB (avail 85, growth 13, headroom 0, waiters 0/0 GB) load 12/64 running 8 disk 46 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1455984-1792429534 after 0 s
+RESULT_ROOT=/srv/opentallas-scratch/claude/hbm-svg-native-pair-1019-safe
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_IDENTITY_GUARD_PASS case=0
+PAIR_IDENTITY_GUARD_PASS case=1
+PAIR_IDENTITY_GUARD_PASS case=2
+PAIR_IDENTITY_GUARD_PASS case=3
+PAIR_RESET_GRAPH errors=0/0/0 raw_first=4/2/2 branches=74/36/34 unequal_release=PASS
+SVG_NATIVE_PAIR PASS mut=0 J=0 errors=0 payload_groups=3264 masked_warm_groups=24 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0 packets=417/412
+- rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:245: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.110 s; speed 37.705 us/s
+- Verilator: cpu 0.110 s on 1 threads; allocated 7 MB
+CASE J=0 MUT=0 RC=0
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_IDENTITY_GUARD_PASS case=0
+PAIR_IDENTITY_GUARD_PASS case=1
+PAIR_IDENTITY_GUARD_PASS case=2
+PAIR_IDENTITY_GUARD_PASS case=3
+PAIR_RESET_GRAPH errors=0/0/0 raw_first=4/2/2 branches=74/36/34 unequal_release=PASS
+SVG_NATIVE_PAIR PASS mut=0 J=1 errors=0 payload_groups=3264 masked_warm_groups=24 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0 packets=417/412
+- rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:245: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.110 s; speed 37.694 us/s
+- Verilator: cpu 0.110 s on 1 threads; allocated 7 MB
+CASE J=1 MUT=0 RC=0
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_IDENTITY_GUARD_PASS case=0
+PAIR_IDENTITY_GUARD_PASS case=1
+PAIR_IDENTITY_GUARD_PASS case=2
+PAIR_IDENTITY_GUARD_PASS case=3
+PAIR_RESET_GRAPH errors=0/0/0 raw_first=4/2/2 branches=74/36/34 unequal_release=PASS
+SVG_NATIVE_PAIR PASS mut=0 J=2 errors=0 payload_groups=3264 masked_warm_groups=24 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0 packets=417/412
+- rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:245: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.110 s; speed 37.632 us/s
+- Verilator: cpu 0.110 s on 1 threads; allocated 7 MB
+CASE J=2 MUT=0 RC=0
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_IDENTITY_GUARD_PASS case=0
+PAIR_IDENTITY_GUARD_PASS case=1
+PAIR_IDENTITY_GUARD_PASS case=2
+PAIR_IDENTITY_GUARD_PASS case=3
+PAIR_RESET_GRAPH errors=0/0/0 raw_first=4/2/2 branches=74/36/34 unequal_release=PASS
+SVG_NATIVE_PAIR PASS mut=0 J=3 errors=0 payload_groups=3264 masked_warm_groups=24 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0 packets=417/412
+- rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:245: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.109 s; speed 37.774 us/s
+- Verilator: cpu 0.109 s on 1 threads; allocated 7 MB
+CASE J=3 MUT=0 RC=0
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SELECT_DATA_FAIL ordinal=1 full=1
+PAIR_SELECT_DATA_FAIL ordinal=2 full=2
+PAIR_SELECT_DATA_FAIL ordinal=3 full=3
+PAIR_SELECT_DATA_FAIL ordinal=4 full=4
+PAIR_SELECT_DATA_FAIL ordinal=5 full=5
+PAIR_SELECT_DATA_FAIL ordinal=6 full=6
+PAIR_SELECT_DATA_FAIL ordinal=7 full=7
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_IDENTITY_GUARD_PASS case=0
+PAIR_IDENTITY_GUARD_PASS case=1
+PAIR_IDENTITY_GUARD_PASS case=2
+PAIR_IDENTITY_GUARD_PASS case=3
+PAIR_RESET_GRAPH errors=0/0/0 raw_first=4/2/2 branches=74/36/34 unequal_release=PASS
+SVG_NATIVE_PAIR FAIL mut=1 J=1 errors=3263 payload_groups=3264 masked_warm_groups=24 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0 packets=417/412
+[4133304] %Fatal: tb_svg_landing_pair_native.sv:245: Assertion failed in tb_svg_landing_pair_native: native landing pair mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:245: Verilog $stop
+Aborting...
+CASE J=1 MUT=1 RC=1
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_META_ALIGN_FAIL ordinal=3/2
+PAIR_META_ALIGN_FAIL ordinal=4/3
+PAIR_META_ALIGN_FAIL ordinal=5/4
+PAIR_META_ALIGN_FAIL ordinal=6/5
+PAIR_META_ALIGN_FAIL ordinal=7/6
+PAIR_META_ALIGN_FAIL ordinal=0/7
+PAIR_META_ALIGN_FAIL ordinal=1/0
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_COUNTS_FAIL data=3165 warm=120 windows=12 reset=3 latency=7/7 completes=12/12
+PAIR_IDENTITY_GUARD_PASS case=0
+PAIR_IDENTITY_GUARD_PASS case=1
+PAIR_IDENTITY_GUARD_PASS case=2
+PAIR_IDENTITY_GUARD_PASS case=3
+PAIR_RESET_GRAPH errors=0/0/0 raw_first=4/2/2 branches=74/36/34 unequal_release=PASS
+SVG_NATIVE_PAIR FAIL mut=2 J=1 errors=4276 payload_groups=3165 masked_warm_groups=120 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0 packets=417/412
+[4133304] %Fatal: tb_svg_landing_pair_native.sv:245: Assertion failed in tb_svg_landing_pair_native: native landing pair mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:245: Verilog $stop
+Aborting...
+CASE J=1 MUT=2 RC=1
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_META_ALIGN_FAIL valid=0/1 tick=14
+PAIR_META_ALIGN_FAIL valid=0/1 tick=15
+PAIR_META_ALIGN_FAIL valid=0/1 tick=16
+PAIR_RESET_WARM edge=12 expected=9
+PAIR_META_ALIGN_FAIL ordinal=2/5
+PAIR_META_ALIGN_FAIL ordinal=3/6
+PAIR_RING_PHASE_FAIL
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=12 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=12 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_COUNTS_FAIL data=3159 warm=129 windows=12 reset=3 latency=7/7 completes=12/12
+PAIR_IDENTITY_GUARD_PASS case=0
+PAIR_IDENTITY_GUARD_PASS case=1
+PAIR_IDENTITY_GUARD_PASS case=2
+PAIR_IDENTITY_GUARD_PASS case=3
+PAIR_RESET_GRAPH errors=0/0/0 raw_first=4/2/2 branches=74/36/34 unequal_release=PASS
+SVG_NATIVE_PAIR FAIL mut=3 J=1 errors=6653 payload_groups=3159 masked_warm_groups=129 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0 packets=417/412
+[4133304] %Fatal: tb_svg_landing_pair_native.sv:245: Assertion failed in tb_svg_landing_pair_native: native landing pair mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:245: Verilog $stop
+Aborting...
+CASE J=1 MUT=3 RC=1
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1455984-1792429534): exit 0

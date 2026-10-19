@@ -1,0 +1,220 @@
+{
+  "max_nonclock_load": 27,
+  "source_sha256": {
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram285.sv": "a5184e6126930a80e4a451821b20d6f788e8c161ca16ae4cd45df052b9591f26",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_sram285.sv": "f137c3572b667597680eb3ce58a01cbcc2c4815f6c28e0fa8d4e1ac357a95241",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_boundary.sv": "c15693365963d3133f6e64645a397a5a411445022072bcddc9dd1ba44c474165",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_regional.sv": "9a03551c35a4dfc4ca455a2150e0c5e26807a986940babb740f10113be7d003d",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_landing_pair_native.sv": "403e5f4460f15e54d6c77315b7bc2bab22df24437aee15f6c0cc740f7a643abb",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_bb.v": "ffe1be696bc082dd4b0d9492fc37b08ab4dcb131a8a12063cc183a78ceb04947",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v": "35e0905c083a17f1c222512a3093a059cec5b128f5f017fda999653084c9e75f",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_sram285_safe.sv": "67852f4606aac2d5421b93a33ad28891b1d64766850994146b3936daa7faf7d4",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_boundary_safe.sv": "08ade3c67997e2086d8963f2ea7e73bfd8e2b00923dd86b40791918fe3151bc5",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_safe.sv": "41a35dbbf9aa0cdf1733242854c61e4c5a41f74724836443566b5508062a9c51"
+  },
+  "mapped_json_sha256": "f89f8920b5b06d8c83bd7eeb3876d9b67fdaae2454e3dcc92bc5a366bd00dcef",
+  "physical_claim": false,
+  "std_area_um2": 3107.20212,
+  "macro_counts": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 2,
+    "ot_sram_1r1w2c_8x285_m1": 2
+  },
+  "unmapped_or_unknown": {},
+  "FF_cells_total": 6551,
+  "FF_cell_types": {
+    "DFFHQNx1_ASAP7_75t_R": 5773,
+    "DFFASRHQNx1_ASAP7_75t_R": 778
+  },
+  "FF_hierarchy_groups": {
+    "other_native_control": 1510,
+    "ingress_slices": 2712,
+    "pair_slices": 816,
+    "return_slices": 1513
+  },
+  "output_boundary": {
+    "in_ready": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "overflow": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "complete_v": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "complete_bank": {
+      "FF_Q_through_polarity_buffer": 4
+    },
+    "bank_fault": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "out_data": {
+      "FF_Q_through_polarity_buffer": 256
+    },
+    "out_ordinal": {
+      "FF_Q_through_polarity_buffer": 3
+    },
+    "out_valid": {
+      "FF_Q_through_polarity_buffer": 1
+    },
+    "phase_fault": {
+      "FF_Q_through_polarity_buffer": 1
+    }
+  },
+  "input_boundary": {
+    "in_v": {
+      "bits": 2,
+      "direct_seq_D_loads": 0,
+      "comb_or_macro_loads": 20,
+      "pin_fanout_max": 10
+    },
+    "in_data": {
+      "bits": 570,
+      "direct_seq_D_loads": 570,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "reserve_v": {
+      "bits": 1,
+      "direct_seq_D_loads": 2,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "reserve_bank": {
+      "bits": 2,
+      "direct_seq_D_loads": 4,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "reserve_epoch": {
+      "bits": 16,
+      "direct_seq_D_loads": 32,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "reserve_total": {
+      "bits": 12,
+      "direct_seq_D_loads": 18,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "stop": {
+      "bits": 1,
+      "direct_seq_D_loads": 2,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "read_v": {
+      "bits": 2,
+      "direct_seq_D_loads": 2,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "read_bank": {
+      "bits": 4,
+      "direct_seq_D_loads": 4,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "read_row": {
+      "bits": 12,
+      "direct_seq_D_loads": 12,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "ordinal": {
+      "bits": 3,
+      "direct_seq_D_loads": 0,
+      "comb_or_macro_loads": 12,
+      "pin_fanout_max": 4
+    },
+    "group_valid": {
+      "bits": 1,
+      "direct_seq_D_loads": 0,
+      "comb_or_macro_loads": 4,
+      "pin_fanout_max": 4
+    }
+  },
+  "over32_counts": {
+    "clock": 3
+  },
+  "kept_instance_paths_remaining": [],
+  "qualification": "native shape/functional/mapped census evidence; root canonicaltool review, placement/reset slew/reach/clocks/TTFF/macro access OPEN; no gate",
+  "RTL_commit": "327ef3481",
+  "bench_commit": "e8ee1565f",
+  "audit_commit": "0967a4950",
+  "baseline_raw_async_FFs": {
+    "pair_hbm_rst_n": 148,
+    "pair_rst_n": 72,
+    "return_rst_n": 68
+  },
+  "native_reset_profiles": {
+    "pair_hbm_rst_n": {
+      "raw_async_ff_count": 4,
+      "max_first_async_ff_count": 19,
+      "max_second_async_ff_count": 6,
+      "first_and_second_clocks_match_root": true,
+      "first_and_second_D_constant_one": true,
+      "strict_native_profile_pass": true
+    },
+    "pair_rst_n": {
+      "raw_async_ff_count": 2,
+      "max_first_async_ff_count": 19,
+      "max_second_async_ff_count": 12,
+      "first_and_second_clocks_match_root": true,
+      "first_and_second_D_constant_one": true,
+      "strict_native_profile_pass": true
+    },
+    "return_rst_n": {
+      "raw_async_ff_count": 2,
+      "max_first_async_ff_count": 18,
+      "max_second_async_ff_count": 9,
+      "first_and_second_clocks_match_root": true,
+      "first_and_second_D_constant_one": true,
+      "strict_native_profile_pass": true
+    }
+  },
+  "native_reset_release": "async assertion,E1first1/branch0,E2branch1;4/2/2 firststage and74/36/34 branch source witness errors0/0/0",
+  "unequal_release_orders": [
+    "HBM,pair,return",
+    "pair,return,HBM",
+    "return,HBM,pair"
+  ],
+  "internal_FIFO": "two AND roots hreset&&sreset; four internal syncFFs/bank, q1 async clears18 functionalFF/domain; extra two synchronizer edges plus online CDC qualification unchanged; wholeleaf not uniformly2levels",
+  "bench": {
+    "all_J_pass": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "payload_groups": 3264,
+    "warm_groups": 24,
+    "packets": 829,
+    "II1windows": 12,
+    "independent_valid": 1032,
+    "latency": [
+      7,
+      7
+    ],
+    "firstvalid": 9,
+    "old_master_miter": [
+      0,
+      0
+    ],
+    "mutant_errors": [
+      3263,
+      4276,
+      6653
+    ]
+  },
+  "placement_band": {
+    "y_um": [
+      99.9,
+      116.1
+    ],
+    "height_um": 16.2,
+    "width_um": 380.16,
+    "density": 0.50453125
+  }
+}
