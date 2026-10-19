@@ -536,9 +536,14 @@ def landed_sdc(spec, root):
         # reserve plus the conservative default phase envelope; no MCP survives.
         return ("# PL-KIT direct D4/E2; diagnostic/adoption requires source-pinned native phase receipt.\n"
                 "set ot_lp_direct_T [get_property [get_clocks core_clk] period]\n"
-                "foreach a [get_clocks ot_entry_*] {\n"
-                " foreach b [get_clocks ot_entry_*] {\n"
-                "  if {[get_full_name $a] eq [get_full_name $b]} continue\n"
+                "set ot_lp_direct_roots [lmap c [get_clocks ot_entry_*] {get_full_name $c}]\n"
+                "set ot_lp_direct_clocks {}\n"
+                "foreach c [all_clocks] {\n"
+                " if {[ot_cf_root [get_full_name $c]] in $ot_lp_direct_roots} {lappend ot_lp_direct_clocks $c}\n"
+                "}\n"
+                "foreach a $ot_lp_direct_clocks {\n"
+                " foreach b $ot_lp_direct_clocks {\n"
+                "  if {[ot_cf_root [get_full_name $a]] eq [ot_cf_root [get_full_name $b]]} continue\n"
                 f"  set_clock_uncertainty -setup [expr {{{60 + residual}.0 + 0.75 * $ot_lp_direct_T}}] -from $a -to $b\n"
                 f"  set_clock_uncertainty -hold {25 + residual}.0 -from $a -to $b\n"
                 " }\n}\n" + seam)
