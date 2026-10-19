@@ -1,0 +1,5 @@
+LP_LOCKSTEP PASS MUT=0 compared=55728 cycles=7000 warm=33
+- rtl/hbm_accel/generic/collective/tkm/lp/tb_ot_hgi_coll_tkm_m_tp192_lp.sv:117: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 1202.701 s; speed 5.820 ns/s
+- Verilator: cpu 1202.658 s on 65 threads; allocated 76735 MB

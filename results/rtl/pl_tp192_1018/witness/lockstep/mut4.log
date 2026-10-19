@@ -1,0 +1,10 @@
+LP_MISMATCH port=stat_cycles cycle=34 flat=0000000b landed=0000000a
+LP_MISMATCH port=stat_cycles cycle=35 flat=0000000c landed=0000000b
+LP_MISMATCH port=stat_cycles cycle=36 flat=0000000d landed=0000000c
+LP_MISMATCH port=stat_cycles cycle=37 flat=0000000e landed=0000000d
+LP_MISMATCH port=stat_cycles cycle=38 flat=0000000f landed=0000000e
+LP_LOCKSTEP FAIL MUT=4 mismatches=5320 of 55728
+- rtl/hbm_accel/generic/collective/tkm/lp/tb_ot_hgi_coll_tkm_m_tp192_lp.sv:117: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 1978.624 s; speed 3.538 ns/s
+- Verilator: cpu 1959.045 s on 65 threads; allocated 76735 MB

@@ -1,0 +1,10 @@
+MISMATCH O 11 got00006e7b expected000068f6
+MISMATCH O 12 got00007757 expected00006e7b
+MISMATCH O 13 got000077b2 expected00007757
+MISMATCH O 14 got000077d9 expected000077b2
+MISMATCH O 15 got0000845e expected000077d9
+MISMATCH R 11 got402b0000 expected40250000
+MISMATCH R 13 got402e0000 expected402b0000
+[21105000] %Fatal: tb_hgi_coll_tkm_m_tp192_seg.sv:65: Assertion failed in tb_hgi_coll_tkm_m_tp192_seg: TKM_STATIC FAIL errors=927 words=1024 cycles=25285
+%Error: rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm_m_tp192_seg.sv:65: Verilog $stop
+Aborting...
