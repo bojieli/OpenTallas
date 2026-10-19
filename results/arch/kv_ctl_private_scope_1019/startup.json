@@ -1,0 +1,2138 @@
+{
+  "schema": "ctl_copy_first_use_obligations.v1",
+  "rows": [
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[10\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[10\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[11\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[11\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[12\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[12\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[13\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[13\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[14\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[14\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[15\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[15\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[16\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[16\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[17\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[17\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[18\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[18\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[19\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[19\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[1\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[1\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[20\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[20\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[21\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[21\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[22\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[22\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[23\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[23\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[24\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[24\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[25\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[25\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[26\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[26\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[27\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[27\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[28\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[28\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[29\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[29\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[2\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[2\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[30\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[30\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[3\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[3\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[4\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[4\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[5\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[5\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[6\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[6\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[7\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[7\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[8\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[8\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[9\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_boot.layer_data\\[9\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "boot__boot_pr__ot_q\\[67\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "boot__boot_pr[67]"
+        }
+      ],
+      "classification": "unreset state; first qualified consumer must be proved",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "boot__boot_pr__ot_q\\[69\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "boot__boot_pr[69]"
+        }
+      ],
+      "classification": "unreset state; first qualified consumer must be proved",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.epoch_q\\[0\\]$_DFF_P_/QN",
+      "copies": 3,
+      "extra": 2,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "cht__ot_q\\[43\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.epoch_q\\[1\\]$_DFF_P_/QN",
+      "copies": 4,
+      "extra": 3,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "cht__ot_q\\[44\\]"
+        }
+      ],
+      "classification": "unreset landing; conditional same-edge capture before qualified valid use",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.ix\\[0\\]$_DFF_P_/QN",
+      "copies": 4,
+      "extra": 3,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wprg.word_index_q\\[0\\]"
+        }
+      ],
+      "classification": "unreset state; first qualified consumer must be proved",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[11\\]$_DFF_PN0_/QN",
+      "copies": 4,
+      "extra": 3,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6911"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wprg.ld$_DFF_PN0_/QN",
+      "copies": 11,
+      "extra": 10,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "_17838_"
+        },
+        {
+          "pin": "RESETN",
+          "net": "u_ot_pr_core.u_wprg.g_rc.rc_q\\[1\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6011"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.c_wait\\[0\\]$_DFFE_PN0N_/QN",
+      "copies": 3,
+      "extra": 2,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "_22779_"
+        },
+        {
+          "pin": "RESETN",
+          "net": "u_ot_pr_core.u_lprg.rnv\\[2\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net5516"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.c_wait\\[1\\]$_DFFE_PN0N_/QN",
+      "copies": 3,
+      "extra": 2,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "_22778_"
+        },
+        {
+          "pin": "RESETN",
+          "net": "u_ot_pr_core.u_lprg.rnv\\[2\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net5517"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.c_wait\\[2\\]$_DFFE_PN0N_/QN",
+      "copies": 3,
+      "extra": 2,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "_22777_"
+        },
+        {
+          "pin": "RESETN",
+          "net": "u_ot_pr_core.u_lprg.rnv\\[2\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net5518"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.c_wait\\[3\\]$_DFFE_PN0N_/QN",
+      "copies": 3,
+      "extra": 2,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "_22776_"
+        },
+        {
+          "pin": "RESETN",
+          "net": "u_ot_pr_core.u_lprg.rnv\\[2\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net5519"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "boot__boot_pr__ot_q\\[70\\]$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "boot__boot_pr[70]"
+        }
+      ],
+      "classification": "unreset state; first qualified consumer must be proved",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c1$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c2$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c3$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c4$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c5$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c6$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c7$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c8$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c9$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c10$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c11$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c12$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c13$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c14$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c15$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c16$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c17$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c18$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c19$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c20$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c21$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c22$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c23$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c24$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c25$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c26$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c27$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c28$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c29$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c30$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c31$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c32$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c33$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c34$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c35$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c36$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c37$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c38$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c39$_DFF_P_/QN",
+      "copies": 6,
+      "extra": 5,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "rst_n__ot_rl1$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rl0\\[0\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "rst_n__ot_rl0$_DFF_P_/QN",
+      "copies": 3,
+      "extra": 2,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]$_DFF_PN0_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[0\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rl1\\[0\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6923"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_dcfg.pr_n$_DFF_PN0_/QN",
+      "copies": 6,
+      "extra": 5,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_dcfg.ps\\[0\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "por_n__ot_rlc\\[0\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net3735"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_boot.g_mu.g_we$_DFF_PN0_/QN",
+      "copies": 5,
+      "extra": 4,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "_23587_"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[37\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net3323"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_fanr_g_rc_rsv__c1$_DFF_P_/QN",
+      "copies": 7,
+      "extra": 6,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_fanr_g_rc_rsv__c2$_DFF_P_/QN",
+      "copies": 7,
+      "extra": 6,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_fanr_g_rc_rsv__c3$_DFF_P_/QN",
+      "copies": 7,
+      "extra": 6,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_fanr.rs_q$_DFF_P_/QN",
+      "copies": 7,
+      "extra": 6,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_fanr.ph1$_DFF_PN0_/QN",
+      "copies": 33,
+      "extra": 32,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_fanr.ev_now"
+        },
+        {
+          "pin": "RESETN",
+          "net": "u_ot_pr_core.u_fanr.g_rc.rc_q\\[2\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net4890"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c0$_DFF_P_/QN",
+      "copies": 7,
+      "extra": 6,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c1$_DFF_P_/QN",
+      "copies": 8,
+      "extra": 7,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c2$_DFF_P_/QN",
+      "copies": 8,
+      "extra": 7,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c3$_DFF_P_/QN",
+      "copies": 7,
+      "extra": 6,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.w_lprg__fault$_DFF_PN0_/QN",
+      "copies": 7,
+      "extra": 6,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "_24011_"
+        },
+        {
+          "pin": "RESETN",
+          "net": "u_ot_pr_core.u_lprg.rnv\\[3\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net7014"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.wq$_DFF_PN0_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_lprg.row_acc"
+        },
+        {
+          "pin": "RESETN",
+          "net": "u_ot_pr_core.u_lprg.rnv\\[3\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net5640"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_oobs.rn$_DFF_P_/QN",
+      "copies": 2,
+      "extra": 1,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_own.g_mu.rn$_DFF_P_/QN",
+      "copies": 10,
+      "extra": 9,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_wprg_g_rc_rpv__c1$_DFF_P_/QN",
+      "copies": 5,
+      "extra": 4,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_wprg_g_rc_rpv__c2$_DFF_P_/QN",
+      "copies": 5,
+      "extra": 4,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wprg.reset_pin_n$_DFF_P_/QN",
+      "copies": 5,
+      "extra": 4,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        }
+      ],
+      "classification": "unreset reset carrier; arbitrary old Q can affect async consumer before first ck",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.slot$_DFF_PN0_/QN",
+      "copies": 4,
+      "extra": 3,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wprg.word_slot_q"
+        },
+        {
+          "pin": "RESETN",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[0\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6990"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[0\\]$_DFF_PN0_/QN",
+      "copies": 6,
+      "extra": 5,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6909"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[1\\]$_DFF_PN0_/QN",
+      "copies": 3,
+      "extra": 2,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6912"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[2\\]$_DFF_PN0_/QN",
+      "copies": 8,
+      "extra": 7,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6913"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[3\\]$_DFF_PN0_/QN",
+      "copies": 8,
+      "extra": 7,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6914"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[4\\]$_DFF_PN0_/QN",
+      "copies": 5,
+      "extra": 4,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6915"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[5\\]$_DFF_PN0_/QN",
+      "copies": 4,
+      "extra": 3,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6916"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[6\\]$_DFF_PN0_/QN",
+      "copies": 5,
+      "extra": 4,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6917"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[7\\]$_DFF_PN0_/QN",
+      "copies": 4,
+      "extra": 3,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6918"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[8\\]$_DFF_PN0_/QN",
+      "copies": 5,
+      "extra": 4,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6919"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[9\\]$_DFF_PN0_/QN",
+      "copies": 4,
+      "extra": 3,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6920"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[10\\]$_DFF_PN0_/QN",
+      "copies": 5,
+      "extra": 4,
+      "inputs": [
+        {
+          "pin": "CLK",
+          "net": "ck"
+        },
+        {
+          "pin": "D",
+          "net": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]"
+        },
+        {
+          "pin": "RESETN",
+          "net": "rst_n__ot_rlc\\[38\\]"
+        },
+        {
+          "pin": "SETN",
+          "net": "net6910"
+        }
+      ],
+      "classification": "async-reset state; exact reset assertion and deassertion/enable equality required",
+      "verdict": "HOLD: no independently initialized clone first-use proof"
+    }
+  ],
+  "ff_roots": 114,
+  "extra_ff": 278,
+  "unconditional_startup_equivalence": false
+}
