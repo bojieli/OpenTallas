@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.hbm_next_1019.sm4.bench.v1",
+ "sim": "Verilator 5.050 (fleet ot-epyc5, the closure daemon's version)",
+ "bench": "rtl/hbm_next/sm/tb/tb_hnx_rp4lp4_leaf.sv via rtl/hbm_next/sm/tb/run_leaf_bench.sh; reference = P PRODUCTION d4g leaves ot_hbm_accel_smh_leafh (rtl/hbm_accel/sm/ot_hbm_accel_smh.sv) + an independent spec model of the lane-select / publish protocol",
+ "exactness": {
+  "separate x stores (hnx_rp4lp4_lf)": {
+   "P1": "PASS",
+   "P2": "PASS",
+   "P3": "PASS",
+   "P4": "PASS (1,546 words, every lane, 0 lane / stream mismatches, 0 collisions)",
+   "MUT1 lane alias": "FAIL as required (LANE MISMATCH 127)",
+   "MUT2 lane-select ignored": "FAIL as required (LANE MISMATCH 382)",
+   "MUT3 publish slot": "FAIL as required (STREAM MISMATCH 482)",
+   "logs": "bench/leaf/ (P1-3, mutants), bench/leaf1/run_p4_m0_t0.log (P4)"
+  },
+  "shared x store (hnx_rp4lp4_lfx + hnx_xs4, -DHNX_XS4)": {
+   "P1": "PASS",
+   "P4": "PASS",
+   "MUT1 x-store lane alias": "FAIL as required",
+   "MUT2": "FAIL as required",
+   "MUT3": "FAIL as required",
+   "logs": "bench/xs4/"
+  }
+ },
+ "throughput": {
+  "price": "c_AR: a P-lane SM record of N <= P rows costs the AR record (hbm_plane_model: weight-stream bound); measured P=1 leaf span on the same stimulus = the priced cycles",
+  "rows": [
+   {
+    "shape": "64 chunks x 8 rows x K=16 (production-like)",
+    "P1_span": 8238,
+    "P4_span": 8262,
+    "ratio": 1.0029,
+    "P4_results": "4x (2,048 vs 512 words)",
+    "verdict": "PASS (<= 1.10)"
+   },
+   {
+    "shape": "64 chunks x 8 rows x K=4 (minimum spacing, gather lane 100% busy)",
+    "P1_span": 2094,
+    "P4_span": 2118,
+    "ratio": 1.0115,
+    "P4_results": "4x, 1.000 words/cycle, 0 collisions",
+    "verdict": "PASS"
+   },
+   {
+    "shape": "xs4 leaf, K=16",
+    "P4_span": 8262,
+    "verdict": "PASS (same cycles as separate stores)"
+   }
+  ],
+  "logs": "bench/thr_k4, bench/thr_k16, bench/xs4_thr16"
+ },
+ "latency": "vs the d4g rp4lp leaf: +1 (lane front register) on rows and x writes, +1 publish merge, lane p results +8p; schedule rule: interleaved row chunks >= 32 cycles apart (K >= 4)"
+}

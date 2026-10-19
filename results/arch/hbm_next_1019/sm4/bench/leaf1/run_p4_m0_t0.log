@@ -1,0 +1,10 @@
+HNX_RP4LP4 P=4 MUT=0 LSKEW=8 chunks=52 words=1546 sel_beats=114 lane_bad=0 stream_bad=0 coll_model=0 coll_dut=0
+  lane 0 words 393
+  lane 1 words 384
+  lane 2 words 400
+  lane 3 words 369
+PASS HNX-RP4LP4 P=4
+- rtl/hbm_next/sm/tb/tb_hnx_rp4lp4_leaf.sv:153: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 1.804 s; speed 3.360 us/s
+- Verilator: cpu 1.445 s on 1 threads; allocated 22 MB
