@@ -8,7 +8,7 @@ set -u; O=$1; N=$2; G=$3; MODE=${4:-ep}; shift 4 || shift $#
 mkdir -p $O/$N
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 L=rtl/dsrom_sys/s81_link
-SRCS="rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv
+SRCS="physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/common/ot_link_credit_rx_sram.sv rtl/lib/ot_sram_showahead_1r1w.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv
  rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv
  rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_split.sv ${LANE:-rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv}
  $L/ot_s81_kp4_common.sv $L/ot_s81_kp4_enc.sv $L/ot_s81_kp4_bm.sv $L/ot_s81_kp4_dsyn.sv $L/ot_s81_kp4_ddly.sv $L/ot_s81_kp4_dchn.sv
@@ -19,6 +19,7 @@ SRCS="rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/lib/ot_rst_rela
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv
  rtl/test/xdie_s81/xdie_s81.vlt rtl/test/xdie_s81/xdie_s81_ep.sv rtl/test/xdie_s81/tb_xdie_s81.sv"
 D="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2"
+if [ "${RXSRAM:-0}" = 1 ]; then D="$D +define+OT_S81PH_LANE_RXSRAM"; fi
 if [ $MODE = master ]; then
   D="$D +define+XDIE_MASTER +define+DSFD_PQ_STATIC_X2"
   MAC="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"

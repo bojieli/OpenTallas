@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  475.2,
+  561.6,
   561.6
  ],
  "core": [
   2.16,
   2.16,
-  473.03999999999996,
+  559.44,
   559.44
  ],
  "why": "spec outline",
@@ -178,13 +178,78 @@
    "h": 29.736,
    "orient": "MY",
    "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "inst": "*g_lcri.g_sram_rx.u_ski.u_head.g_bank?0?.u_m",
+   "idx": 0,
+   "x": 475.2,
+   "y": 43.2,
+   "w": 51.408,
+   "h": 20.79,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "inst": "*g_lcri.g_sram_rx.u_ski.u_head.g_bank?1?.u_m",
+   "idx": 0,
+   "x": 475.2,
+   "y": 129.6,
+   "w": 51.408,
+   "h": 20.79,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "inst": "*g_lcri.g_sram_rx.u_ski.u_head.g_bank?2?.u_m",
+   "idx": 0,
+   "x": 475.2,
+   "y": 302.4,
+   "w": 51.408,
+   "h": 20.79,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "inst": "*g_lcri.g_sram_rx.u_ski.u_head.g_bank?3?.u_m",
+   "idx": 0,
+   "x": 475.2,
+   "y": 388.8,
+   "w": 51.408,
+   "h": 20.79,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "inst": "*g_lcri.g_sram_rx.u_ski.u_head.g_bank?4?.u_m",
+   "idx": 0,
+   "x": 475.2,
+   "y": 475.2,
+   "w": 51.408,
+   "h": 20.79,
+   "orient": "R0",
+   "offtrack": 0
   }
  ],
  "findings": [
   [
    "WARN",
    "fill",
-   "fill 23% = (macros/children 51776 + std 10496) / outline 266872 um2 (lattice/channel-bound gate-rule exception: ROOT approved safe lattice/channel geometry475.2x561.6: 43.2um lattice plus >=20um pin-face channels forces86.4um row pitch. One central full-width standard-cell band216..259.2 keeps register reach short. Overall fill23.3%; prior synthesis10495.7um2 / band20341.999um2 =51.6%. Final gate visual review still required.)",
+   "fill 21% = (macros/children 57120 + std 10496) / outline 315395 um2 (lattice/channel-bound gate-rule exception: ROOT mandated SRAM storage successor plus43.2lattice and>=20umchannels; newthirdcolumn needs561.6square. Candidate measuredstdarea must be refreshed from synthesis beforefullgate. stdband216..259.2.)",
    ""
   ]
  ],
@@ -200,6 +265,8 @@
   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
   "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+  "rtl/common/ot_link_credit_rx_sram.sv",
+  "rtl/lib/ot_sram_showahead_1r1w.sv",
   "physical/dscoll_cx/sram_edge_strip.tcl",
   "physical/ref_tile/dscoll_lane_e_ltr/kit.env",
   "physical/ref_tile/dscoll_lane_e_ltr/clock.sdc",
@@ -264,6 +331,26 @@
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
   "physical/ref_tile/dscoll_lane_e_ltr/place.tcl"
  ]
 }

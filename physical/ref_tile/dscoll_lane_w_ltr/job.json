@@ -1,13 +1,13 @@
 {
- "name": "dscoll_lane_w_ltr-geom-COMMIT",
+ "name": "dscoll_lane_w_ltr-stp1-COMMIT",
  "block": "dsfd_coll_lane_w",
  "ref_tile": true,
- "owner": "Codex:S81-COLL-GEOM",
- "purpose": "COORD 07:21 safe geometry: 43.2um SRAM origins, full-face outer pins <=6/um, one north std-cell band, central core-face clock beside register mass. S81-SAFE-FIX/COLL (10-19, SAFE-AUDIT-S81 row dsfd_coll_lane_w: items 3/1/7): structural fix of the reset / select fan-out on the HF-3 ltr kit (cxea3 geometry, E exact MY mirror). RTL SAFE 1 (tile-top default): the single reset synchroniser flop u.rst_s[1] drove 6,837 loads (939 async clears + ~5,750 rst-gated hold enables of the ep frame data) -> ot_rst_relay 5 kept per-consumer copies, rx beat landing reset only on its 3 flag bits, ot_s81ph_link_ep DNR 1 (frame data registers reset-free), LCR landing read pointer rp (4,426 loads) kept per 8-bit slice (ot_link_credit_rx RREP 70). Kit: reset_landing 2 stages at the N face, io_hold_margin 0.03, tf forwarded-clock SDC (HF-3b). 0 data cycles; reset release +3 edges. ",
+ "owner": "Codex:S81-COLL-STORAGEP1",
+ "purpose": "Opt-in SRAM landing receiver: five32x128banks for553x8logicalFIFO; current+previouswriteforwarding, exactshowahead, no newedges; total15SRAMs, explicitlargeroutline.",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "codex/s81-coll-geom-1019",
+  "branch": "codex/s81-coll-storagep1-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl",
@@ -22,7 +22,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_coll_lane_w #(.GFMT(1), .EPPIPE(2), .LCR(1), .CH_BOARD(700)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_split.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_coll_lane_w #(.GFMT(1), .EPPIPE(2), .LCR(1), .CH_BOARD(700), .RXSRAM(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_split.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv rtl/common/ot_link_credit_rx_sram.sv rtl/lib/ot_sram_showahead_1r1w.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -32,7 +32,7 @@
    },
    {
     "name": "xdie_switched_pass",
-    "cmd": "J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/pass pass",
+    "cmd": "RXSRAM=1 J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/pass pass",
     "expect": "pass",
     "threads": 6,
     "peak_ram_gb": 30,
@@ -41,11 +41,11 @@
     ],
     "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
     "min_count_regex": "^PASS xdie_s81: (\\d+) beats",
-    "pass_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_pass.log"
+    "pass_witness": "results/rtl/s81_coll_storagep1_1019/link/pass.log"
    },
    {
     "name": "xdie_mut_board400",
-    "cmd": "J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/board400 board400",
+    "cmd": "RXSRAM=1 J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/board400 board400",
     "expect": "fail",
     "threads": 6,
     "peak_ram_gb": 30,
@@ -54,11 +54,11 @@
     ],
     "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
     "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
-    "fail_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_witness_board400.log"
+    "fail_witness": "results/rtl/s81_coll_storagep1_1019/link/board400.log"
    },
    {
     "name": "xdie_mut_chb0",
-    "cmd": "J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/chb0 chb0",
+    "cmd": "RXSRAM=1 J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/chb0 chb0",
     "expect": "fail",
     "threads": 6,
     "peak_ram_gb": 30,
@@ -67,7 +67,7 @@
     ],
     "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
     "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
-    "fail_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_witness_chb0.log"
+    "fail_witness": "results/rtl/s81_coll_storagep1_1019/link/chb0.log"
    }
   ],
   "calibrate": {
@@ -84,7 +84,7 @@
    "peak_ram_gb": 48
   },
   "collect": {
-   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dscoll_lane_w_ltr --out {RUN}/record/views/dsfd_coll_lane_w --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dscoll_lane_w_ltr --out {RUN}/record/views/dsfd_coll_lane_w --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
   }
  },
  "verdict": {
@@ -101,6 +101,7 @@
    "physical/common_flow/link_budget_consistent.sdc"
   ],
   "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
   ]
  },
@@ -120,7 +121,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_lane_w_ltr/dscoll_lane_w_ltr-geom-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_lane_w_ltr/dscoll_lane_w_ltr-stp1-COMMIT"
   }
  ],
  "cycles_added": 0,

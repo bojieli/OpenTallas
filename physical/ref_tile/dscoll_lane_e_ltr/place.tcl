@@ -62,7 +62,22 @@ puts "REF_TILE place: [$i getName] ot_sram_1r1w_512x128_m4_r2c2 at 43.2 388.8 MY
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_512x128_m4_r2c2 {*u_fifo.g_sram.g_t?4?.u_m}]
 $i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_512x128_m4_r2c2 at 43.2 475.2 MY"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*g_lcri.g_sram_rx.u_ski.u_head.g_bank?0?.u_m}]
+$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 475.2 43.2 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*g_lcri.g_sram_rx.u_ski.u_head.g_bank?1?.u_m}]
+$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(129.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 475.2 129.6 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*g_lcri.g_sram_rx.u_ski.u_head.g_bank?2?.u_m}]
+$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 475.2 302.4 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*g_lcri.g_sram_rx.u_ski.u_head.g_bank?3?.u_m}]
+$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(388.8 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 475.2 388.8 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*g_lcri.g_sram_rx.u_ski.u_head.g_bank?4?.u_m}]
+$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(475.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 475.2 475.2 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
-if {$nb != 10} { error "ref_tile place: expected 10 macros, netlist has $nb" }
+if {$nb != 15} { error "ref_tile place: expected 15 macros, netlist has $nb" }
 
 source /src/physical/dscoll_cx/coll_cell_band.tcl

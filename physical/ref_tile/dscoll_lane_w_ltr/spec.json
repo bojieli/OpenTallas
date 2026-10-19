@@ -13,20 +13,23 @@
   "rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv",
   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
-  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv"
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+  "rtl/common/ot_link_credit_rx_sram.sv",
+  "rtl/lib/ot_sram_showahead_1r1w.sv"
  ],
  "params": {
   "GFMT": 1,
   "EPPIPE": 2,
   "LCR": 1,
-  "CH_BOARD": 700
+  "CH_BOARD": 700,
+  "RXSRAM": 1
  },
  "clock_port": "ck",
  "reset_ports": [
   "rs"
  ],
  "outline": {
-  "w": 475.2,
+  "w": 561.6,
   "h": 561.6
  },
  "macros": [
@@ -139,6 +142,61 @@
    ],
    "orient": "R0",
    "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*g_lcri.g_sram_rx.u_ski.u_head.g_bank?0?.u_m",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*g_lcri.g_sram_rx.u_ski.u_head.g_bank?1?.u_m",
+   "at": [
+    475.2,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*g_lcri.g_sram_rx.u_ski.u_head.g_bank?2?.u_m",
+   "at": [
+    475.2,
+    302.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*g_lcri.g_sram_rx.u_ski.u_head.g_bank?3?.u_m",
+   "at": [
+    475.2,
+    388.8
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*g_lcri.g_sram_rx.u_ski.u_head.g_bank?4?.u_m",
+   "at": [
+    475.2,
+    475.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
   }
  ],
  "pins": {
@@ -169,16 +227,16 @@
   "io_hold_margin_ns": 0.03
  },
  "job": {
-  "owner": "Codex:S81-COLL-GEOM",
-  "branch": "codex/s81-coll-geom-1019",
-  "tag": "geom",
-  "purpose": "COORD 07:21 safe geometry: 43.2um SRAM origins, full-face outer pins <=6/um, one north std-cell band, central core-face clock beside register mass. S81-SAFE-FIX/COLL (10-19, SAFE-AUDIT-S81 row dsfd_coll_lane_w: items 3/1/7): structural fix of the reset / select fan-out on the HF-3 ltr kit (cxea3 geometry, E exact MY mirror). RTL SAFE 1 (tile-top default): the single reset synchroniser flop u.rst_s[1] drove 6,837 loads (939 async clears + ~5,750 rst-gated hold enables of the ep frame data) -> ot_rst_relay 5 kept per-consumer copies, rx beat landing reset only on its 3 flag bits, ot_s81ph_link_ep DNR 1 (frame data registers reset-free), LCR landing read pointer rp (4,426 loads) kept per 8-bit slice (ot_link_credit_rx RREP 70). Kit: reset_landing 2 stages at the N face, io_hold_margin 0.03, tf forwarded-clock SDC (HF-3b). 0 data cycles; reset release +3 edges. ",
+  "owner": "Codex:S81-COLL-STORAGEP1",
+  "branch": "codex/s81-coll-storagep1-1019",
+  "tag": "stp1",
+  "purpose": "Opt-in SRAM landing receiver: five32x128banks for553x8logicalFIFO; current+previouswriteforwarding, exactshowahead, no newedges; total15SRAMs, explicitlargeroutline.",
   "views_to": "physical/ref_tile/dscoll_lane_w_ltr/views",
   "record_to": "results/rtl/ref_tile/dscoll_lane_w_ltr",
   "benches": [
    {
     "name": "xdie_switched_pass",
-    "cmd": "J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/pass pass",
+    "cmd": "RXSRAM=1 J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/pass pass",
     "expect": "pass",
     "threads": 6,
     "peak_ram_gb": 30,
@@ -187,11 +245,11 @@
     ],
     "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
     "min_count_regex": "^PASS xdie_s81: (\\d+) beats",
-    "pass_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_pass.log"
+    "pass_witness": "results/rtl/s81_coll_storagep1_1019/link/pass.log"
    },
    {
     "name": "xdie_mut_board400",
-    "cmd": "J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/board400 board400",
+    "cmd": "RXSRAM=1 J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/board400 board400",
     "expect": "fail",
     "threads": 6,
     "peak_ram_gb": 30,
@@ -200,11 +258,11 @@
     ],
     "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
     "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
-    "fail_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_witness_board400.log"
+    "fail_witness": "results/rtl/s81_coll_storagep1_1019/link/board400.log"
    },
    {
     "name": "xdie_mut_chb0",
-    "cmd": "J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/chb0 chb0",
+    "cmd": "RXSRAM=1 J=6 bash tools/xdie_s81/kit_bench.sh {RUN}/chb0 chb0",
     "expect": "fail",
     "threads": 6,
     "peak_ram_gb": 30,
@@ -213,7 +271,7 @@
     ],
     "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
     "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
-    "fail_witness": "results/rtl/xdie_s81_1018/gate_g5/kit_witness_chb0.log"
+    "fail_witness": "results/rtl/s81_coll_storagep1_1019/link/chb0.log"
    }
   ],
   "extra_paths": [
@@ -297,15 +355,15 @@
   "enable": true,
   "stages": 2,
   "clock": "ck",
-  "reason": "S81-SAFE-FIX/COLL 10-19 (owner safe-design checklist item 1, ROOT-RST): rs lands at its N face in 2 plain ck flops (rs__ot_rl0 -> rs__ot_rl1) before the lane's own 2-flop synchroniser + 1 relay stage (ot_rst_relay, 5 kept per-consumer copies); reset release = 2 + 2 + 1 = 5 edges after rs (was 2), a scheduled constant; data latency unchanged"
+  "reason": "rs lands on core face in two ck flops, then existing two-flop synchroniser and one relay; RXSRAM expands same-depth relay from5 to40 independent copies. No added data/reset release edge versus SAFE geometry."
  },
  "std_area_um2": 10495.7,
  "fill_reason": {
   "lattice_channel_bound": {
-   "why": "ROOT approved safe lattice/channel geometry475.2x561.6: 43.2um lattice plus >=20um pin-face channels forces86.4um row pitch. One central full-width standard-cell band216..259.2 keeps register reach short. Overall fill23.3%; prior synthesis10495.7um2 / band20341.999um2 =51.6%. Final gate visual review still required.",
+   "why": "ROOT mandated SRAM storage successor plus43.2lattice and>=20umchannels; newthirdcolumn needs561.6square. Candidate measuredstdarea must be refreshed from synthesis beforefullgate. stdband216..259.2.",
    "lattice_um": 43.2,
    "min_channel_um": 41.88,
-   "std_band_util": 0.516,
+   "std_band_util": 0.435968,
    "approved_by": "ROOT coordinator 10-19 S81-COLL-GEOM (final visual approval pending)",
    "std_band_y_um": [
     216,
@@ -314,6 +372,6 @@
   }
  },
  "slot_change_request": {
-  "reason": "ROOT accepted required safe-geometry outline475.2x561.6 vs432x336.96; MU-DIE-S81 must update plan slot and core-face clock/reset/chb plus full-face rx/tx pins before bind."
+  "reason": "S81-COLL-STORAGEP1 candidate561.6square (was475.2x561.6safegeometry; originally432x336.96); all15macros charged, parentmustproveactualslot+escape beforeadoption."
  }
 }

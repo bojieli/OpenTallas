@@ -13,6 +13,13 @@
 `define OT_S81PH_EPPIPE_DEF -1
 `endif
 `endif
+`ifndef OT_S81PH_RXSRAM_DEF
+`ifdef OT_S81PH_LANE_RXSRAM
+`define OT_S81PH_RXSRAM_DEF 1
+`else
+`define OT_S81PH_RXSRAM_DEF 0
+`endif
+`endif
 // ---------------------------------------------------------------------------------------------------------------
 // ot_s81ph_coll_lane -- one link lane TILE of the S81 collective slab (CLAUDE S81-PH coll v2, redesign pass).
 // coll_m1 (the whole slab, 156k flops, 104 macros, ~1M nets) stayed 7 h in timing-driven global placement; the slab
@@ -75,7 +82,8 @@ module ot_s81ph_coll_lane #(
     //     enables); (d) the LCR landing FIFO read pointer is kept per 8-bit slice (ot_link_credit_rx RREP 70: 70 x 3
     //     kept flops, ~64 mux loads each instead of 4,426 on rp[1]).  0 data cycles; reset release +1 edge in RTL (the
     //     kit's reset_landing adds 2 more at the face).
-    parameter integer SAFE = 0
+    parameter integer SAFE = 0,
+    parameter integer RXSRAM = 0 // opt-in memory-backed credit landing; legacy default unchanged
 ) (
     input  wire          clk,
     input  wire          rs_n,       // stream reset (async assert), synchronised here
@@ -99,11 +107,15 @@ module ot_s81ph_coll_lane #(
     localparam integer PNUM = (GFMT != 0) ? FB * 3 * (IDLE_P - 1) : FB * G * (IDLE_P - 1);
     localparam integer PDEN = (GFMT != 0) ? 4 * IDLE_P : S * IDLE_P;
     wire rst_n, rst_ni, rst_no, rst_ne, rst_ng;  // local / credit rx / credit tx / endpoint / gearbox
+    localparam integer HEAD_NS = (W + 1 + 15) / 16;
+    wire [HEAD_NS-1:0] head_rst_n;
     wire [514:0] lr;
     generate if (SAFE != 0) begin : g_safe_rst
-        wire [4:0] rr;
-        ot_rst_relay #(.REGIONS(5), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rs_n), .rst_n(rr));
+        wire [5+(RXSRAM ? HEAD_NS : 0)-1:0] rr;
+        ot_rst_relay #(.REGIONS(5+(RXSRAM ? HEAD_NS : 0)), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rs_n), .rst_n(rr));
         assign rst_n = rr[0]; assign rst_ni = rr[1]; assign rst_no = rr[2]; assign rst_ne = rr[3]; assign rst_ng = rr[4];
+        if(RXSRAM) begin:g_head_rst assign head_rst_n=rr[5+:HEAD_NS]; end
+        else begin:g_no_head_rst assign head_rst_n={HEAD_NS{rr[1]}}; end
         reg [2:0] lr_f; reg [511:0] lr_d;
         always @(posedge clk or negedge rst_n) if (!rst_n) lr_f <= 3'b000; else lr_f <= {rx[514], rx[513], rx[0]};
         always @(posedge clk) lr_d <= rx[512:1];
@@ -112,6 +124,7 @@ module ot_s81ph_coll_lane #(
     reg [1:0] rst_s;
     always @(posedge clk or negedge rs_n) if (!rs_n) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     assign rst_n = rst_s[1]; assign rst_ni = rst_s[1]; assign rst_no = rst_s[1]; assign rst_ne = rst_s[1]; assign rst_ng = rst_s[1];
+    assign head_rst_n={HEAD_NS{rst_s[1]}};
     reg [514:0] lr_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) lr_q <= 0; else lr_q <= rx;
     assign lr = lr_q;
@@ -122,8 +135,14 @@ module ot_s81ph_coll_lane #(
     wire ir_g = ir && (UPGATE == 0 || up);
     generate if (LCR != 0) begin : g_lcri
         wire lcf;
+        if(RXSRAM) begin:g_sram_rx
+        ot_link_credit_rx_sram #(.W(W+1),.DEPTH(8),.WFREE(LRXW ? 2 : 1)) u_ski(
+            .clk(clk),.rst_n(rst_ni),.head_rst_n(head_rst_n),.l_valid(lo_v),.l_data(lo_d),
+            .l_credit(lo_r),.o_valid(iv),.o_ready(ir_g),.o_data({il,id}),.fault(lcf));
+        end else begin:g_flop_rx
         ot_link_credit_rx #(.W(W + 1), .DEPTH(8), .OREG(0), .WFREE(LRXW ? 2 : 1), .RREP(SAFE ? 70 : 1)) u_ski (.clk(clk), .rst_n(rst_ni), .l_valid(lo_v), .l_data(lo_d),
             .l_credit(lo_r), .o_valid(iv), .o_ready(ir_g), .o_data({il, id}), .fault(lcf));
+        end
     end else begin : g_skid_i
     ot_s81ph_skid2 #(.W(W + 1)) u_ski (.clk(clk), .rst_n(rst_ni), .in_v(lo_v), .in_r(lo_r), .in_d(lo_d),
         .out_v(iv), .out_r(ir_g), .out_d({il, id}));
@@ -171,21 +190,21 @@ module dsfd_coll_lane_w #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter
     parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif, parameter integer EPRX = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
     parameter integer EPTO = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif,
     parameter integer LRXW = `ifdef OT_S81PH_LANE_RXW 1 `else 0 `endif, parameter integer EPMW = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
-    parameter integer CH_BOARD = 700, parameter integer SAFE = 1) (
+    parameter integer CH_BOARD = 700, parameter integer SAFE = 1, parameter integer RXSRAM = `OT_S81PH_RXSRAM_DEF) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD), .SAFE(SAFE)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD), .SAFE(SAFE), .RXSRAM(RXSRAM)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
 module dsfd_coll_lane_e #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF,
     parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif, parameter integer EPRX = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
     parameter integer EPTO = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif,
     parameter integer LRXW = `ifdef OT_S81PH_LANE_RXW 1 `else 0 `endif, parameter integer EPMW = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
-    parameter integer CH_BOARD = 700, parameter integer SAFE = 1) (
+    parameter integer CH_BOARD = 700, parameter integer SAFE = 1, parameter integer RXSRAM = `OT_S81PH_RXSRAM_DEF) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD), .SAFE(SAFE)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD), .SAFE(SAFE), .RXSRAM(RXSRAM)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule

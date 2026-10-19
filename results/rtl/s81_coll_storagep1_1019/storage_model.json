@@ -1,0 +1,36 @@
+{
+ "logical_width": 553,
+ "logical_depth": 8,
+ "logical_bits": 4424,
+ "bank_width": 128,
+ "bank_depth": 32,
+ "banks": 5,
+ "physical_bits": 20480,
+ "macro_area_um2": 5343.8616,
+ "helper_payload_register_bits": 1106,
+ "head_select_register_bits": 70,
+ "read_cycles": 1,
+ "physical_write_registration_cycles": 1,
+ "external_data_edges_added_candidate": 0,
+ "reset_edges_added_candidate": 0,
+ "reset_strategy": "expand existing same-depth region relay to give each16-bit forwarding slice distinct reset; no new reset level",
+ "placement_candidate": {
+  "outline_um": [
+   561.6,
+   561.6
+  ],
+  "newbank_x_um": 475.2,
+  "newbank_y_um": [
+   43.2,
+   129.6,
+   302.4,
+   388.8,
+   475.2
+  ],
+  "std_band_y_um": [
+   216,
+   259.2
+  ]
+ },
+ "guard": "requires cycle-equivalence, native SRAM SS clkq and CTS proof, explicit die slot update before adoption"
+}
