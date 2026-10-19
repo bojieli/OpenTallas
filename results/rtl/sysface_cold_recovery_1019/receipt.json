@@ -1,0 +1,35 @@
+{
+  "source_commit": "84df2e5ae",
+  "tool": "Verilator5.050",
+  "host": "ot-epyc6",
+  "units": [
+    "oth-ubuntu-154172-1792428591",
+    "oth-ubuntu-154173-1792428591",
+    "oth-ubuntu-153880-1792428591"
+  ],
+  "status": "PASS two admissions and two expected table mutant failures",
+  "scope": "Legal component cap1 programme, real AUTH/PW/DW replay/witness/context/receiver, actual FACE/SRAM/provider; cold prefix replay after abort/re-epoch. No actual D2D wire, full production image, filler lifecycle or absolute clock origin.",
+  "checks": {
+    "admissions": 2,
+    "PW_per_admission": 1024,
+    "DW_per_admission": 8,
+    "cold_INIT": 2,
+    "row_words_per_admission": 64,
+    "scale_per_admission": 1,
+    "epoch_to_Tstart_sample": 2000,
+    "Tstart_to_Estart_sample": 3,
+    "Tstart_to_INIT_publication": 212,
+    "Tstart_to_INIT_sample": 213
+  },
+  "source_hashes": {
+    "rtl/qwen_split/qfd_sys_face.sv": "0bd5c4948524c78b948f7eb88b09d435d494897228c221e708db142574640ac2",
+    "rtl/test/qwen_split/tb_qfd_sys_face_cold.sv": "550e8a4960b74e0516269dbbaca89f1b4348a245bf85ab94f04ec02cd8912859",
+    "rtl/test/qwen_split/build_sysface_cold_fixture.py": "9214f5f4f8a47e2c58b3b9068237d5599d393d9297fafa0226d2a61d1a3da3ed",
+    "rtl/test/qwen_split/run_sys_face_cold.sh": "567e908611856c11102881151c9daeb7ded31e176630e57a10f12de431b102e3",
+    "results/arch/sysface_sram_players_1019/cold_manifest.json": "a4b4fb3f84c69b89c25376f9e81cffc1b86cc58438ef66b3486a3f3225d19889"
+  },
+  "mutants": {
+    "1": "wrong E segment violates header timing on both admissions",
+    "2": "wrong INIT stage faults/violates init_u0 alignment on both admissions"
+  }
+}

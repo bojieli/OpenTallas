@@ -1,0 +1,28 @@
+ot-run: ot-epyc4       admits  1016 GB (avail 801, growth 90, headroom 0, waiters 0/0 GB) load 77/128 running 30 disk 317 GB 
+ot-run: ot-epyc5       admits   576 GB (avail 517, growth 113, headroom 0, waiters 0/0 GB) load 63/128 running 11 disk 1041 GB 
+ot-run: ot-epyc6       admits   270 GB (avail 303, growth 113, headroom 0, waiters 0/0 GB) load 32/128 running 15 disk 6035 GB 
+ot-run: ot-epyc7       admits   519 GB (avail 464, growth 101, headroom 0, waiters 0/0 GB) load 59/96 running 17 disk 6433 GB 
+ot-run: ot-epyc8       admits  1145 GB (avail 915, growth 113, headroom 0, waiters 0/0 GB) load 52/128 running 32 disk 327 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-cold-recovery-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-cold-recovery-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-153880-1792428591 after 0 s
+COLDAGE epoch77 cold_start2077 ADMdone1
+COLDAGE E_start_sample2080 relative3
+ERR @2290 INIT not stage0/aligned init_u0
+COLDAGE INIT_pin_sample2290 relative213
+COLDAGE FILL_pin_sample2290 relativeE210
+FAULT boot0 prog0 cal0 emb0 rp0 armed0 go0 mu0 accepted0 cold1
+ERR @2443 fault raised
+COLDAGE epoch2448 cold_start4448 ADMdone1
+COLDAGE E_start_sample4451 relative3
+ERR @4661 INIT not stage0/aligned init_u0
+COLDAGE INIT_pin_sample4661 relative213
+COLDAGE FILL_pin_sample4661 relativeE210
+FAULT boot0 prog0 cal0 emb0 rp0 armed0 go0 mu0 accepted0 cold1
+ERR @4814 fault raised
+SYS_FACE_COLD_FAIL MUT2 errors4 face1 provider0
+[4015000] %Fatal: tb_qfd_sys_face_cold.sv:215: Assertion failed in tb_qfd_sys_face_cold
+%Error: /srv/opentallas-scratch/claude/sysface-cold-recovery-1019/rtl/test/qwen_split/tb_qfd_sys_face_cold.sv:215: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-153880-1792428591): exit 0

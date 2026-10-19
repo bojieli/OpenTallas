@@ -1,0 +1,23 @@
+ot-run: ot-epyc4       admits  1016 GB (avail 801, growth 90, headroom 0, waiters 0/0 GB) load 77/128 running 30 disk 317 GB 
+ot-run: ot-epyc5       admits   577 GB (avail 517, growth 113, headroom 0, waiters 0/0 GB) load 63/128 running 11 disk 1041 GB 
+ot-run: ot-epyc6       admits   270 GB (avail 303, growth 113, headroom 0, waiters 0/0 GB) load 32/128 running 15 disk 6035 GB 
+ot-run: ot-epyc7       admits   519 GB (avail 464, growth 101, headroom 0, waiters 0/0 GB) load 59/96 running 17 disk 6433 GB 
+ot-run: ot-epyc8       admits  1145 GB (avail 915, growth 113, headroom 0, waiters 0/0 GB) load 52/128 running 32 disk 327 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-cold-recovery-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-cold-recovery-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-154172-1792428591 after 0 s
+COLDAGE epoch77 cold_start2077 ADMdone1
+COLDAGE E_start_sample2080 relative3
+COLDAGE INIT_pin_sample2290 relative213
+COLDAGE FILL_pin_sample2290 relativeE210
+COLDAGE epoch2448 cold_start4448 ADMdone1
+COLDAGE E_start_sample4451 relative3
+COLDAGE INIT_pin_sample4661 relative213
+COLDAGE FILL_pin_sample4661 relativeE210
+SYS_FACE_COLD_PASS MUT0 Tprefix3 Esegment1 init2 AUTH/re-admission row64+scale
+- /srv/opentallas-scratch/claude/sysface-cold-recovery-1019/rtl/test/qwen_split/tb_qfd_sys_face_cold.sv:216: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.015 s; speed 267.225 us/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-154172-1792428591): exit 0
