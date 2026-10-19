@@ -15,7 +15,7 @@ changes, one of these holds:
   * the new blob is a revision the path already had on BASE's history (a lane copying a tool from main).
 Merge commits are skipped (rule_span lists their parents' commits; a non-clean merge it refuses on its own).
 
-GUARDED = helper_overlay HELPERS / FLEET_RUN / PUBLISH_ONLY / LINT_ONLY, plus every non-test, non-doc file under
+GUARDED = helper_overlay HELPERS / FLEET_RUN / PUBLISH_ONLY / LINT_ONLY, plus every non-test .py/.tcl/.sdc/.sh file under
 tools/closure_loop/, tools/ref_tile/, tools/hier_contract/, tools/tt_views/ and physical/common_flow/.
 
 Usage: gate_rule_guard.py [--repo R] [--base origin/main] [--tip HEAD]       exit 0 PASS, 1 REFUSE, 2 usage/git error
@@ -34,6 +34,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 GUARDED_DIRS = ("tools/closure_loop/", "tools/ref_tile/", "tools/hier_contract/", "tools/tt_views/",
                 "physical/common_flow/")
+CODE_SUFFIXES = (".py", ".tcl", ".sdc", ".sh")   # tool / flow code; kit specs and data (tools/ref_tile/specs/*.json) are not
 ZERO = "0" * 40
 
 
@@ -74,7 +75,7 @@ def guarded_paths_fn(ho):
         | set(getattr(ho, "LINT_ONLY", ()))
 
     def guarded(rel):
-        return rel in exact or (rel.startswith(GUARDED_DIRS) and not is_test_or_doc(rel))
+        return rel in exact or (rel.startswith(GUARDED_DIRS) and rel.endswith(CODE_SUFFIXES) and not is_test_or_doc(rel))
     return guarded
 
 
@@ -86,7 +87,8 @@ def registry_keys(text):
 
 def main_blobs(repo, base, rel, cache):
     if rel not in cache:
-        out = git(repo, "log", "--format=", "--raw", "--no-abbrev", "--no-renames", base, "--", rel, check=False)
+        out = git(repo, "log", "--max-count=300", "--format=", "--raw", "--no-abbrev", "--no-renames", base, "--", rel,
+                  check=False)
         cache[rel] = {f[3] for ln in out.splitlines() if ln.startswith(":") for f in [ln.split()] if len(f) >= 5}
     return cache[rel]
 

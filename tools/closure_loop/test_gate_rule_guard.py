@@ -83,7 +83,8 @@ def test_rule_commits_entry_in_same_push_passes(tmp_path):
 def test_comment_only_tests_and_copy_of_main_pass(tmp_path):
     r, _ = repo(tmp_path)
     commit(r, {"tools/closure_loop/ck_insertion.py": "# note\nX = 2\n"}, "comment")
-    commit(r, {"tools/closure_loop/test_x.py": "def test(): pass\n", "tools/ref_tile/README.md": "x\n"}, "tests")
+    commit(r, {"tools/closure_loop/test_x.py": "def test(): pass\n", "tools/ref_tile/README.md": "x\n",
+               "tools/ref_tile/specs/k.json": "{}\n"}, "tests, docs, kit specs")
     commit(r, {"tools/closure_loop/ck_insertion.py": "X = 1\n"}, "take tool from an older main revision")
     ok, rows = run(r)
     assert ok, rows
