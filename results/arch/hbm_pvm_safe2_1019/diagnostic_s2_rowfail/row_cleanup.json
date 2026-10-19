@@ -1,0 +1,16 @@
+{
+ "original_verdict": "FAIL",
+ "cause": "DPL-0033: seven fixed physical CORE_WELLTAP instances stranded below y216 retained row band",
+ "physical_master_type": "CORE_WELLTAP",
+ "boundary_y_um": 215.73,
+ "cleanup": "remove only physical CORE_WELLTAP below216 before destroying lower rows",
+ "read_only_failed_odb_proof": {
+  "removed_physical_welltaps": 5077,
+  "remaining_below_band": 0,
+  "retained_rows": 312,
+  "input_odb_unchanged": true
+ },
+ "geometry_changed": false,
+ "rtl_changed": false,
+ "signoff": "TT setup and FF hold primary; SS sensitivity only"
+}

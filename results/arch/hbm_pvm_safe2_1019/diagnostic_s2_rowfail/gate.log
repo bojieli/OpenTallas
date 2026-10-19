@@ -1,0 +1,20 @@
+GATE INFO pin_regs: pin registers on every data input and output (+1 cycle each; kit pin_regs.json)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc8 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_smh_pvm_ref_s2_20261019-081444.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_smh_pvm_ref_s2_20261019-081444.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/smh_pvm_ref_s2-20261019-081444
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc8 in 216 s (gate total 792 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1128, 'pin_rectangles': 1128, 'pin_track_checked': 1128, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 d38766b9ada60abdbb28fba3ce9814af32f261c9f390e51ccfb399e38fcc84bc
+GATE INFO util: synthesized std area 10343 um2 + macros 26361 in core 88852: util 18% (std-cell density 17.6% of placeable 58862 um2; total fill 41.3%)
+GATE INFO port_latency: elaborated pin registers: 8 input / 9 output ports +1 edge; 2 ports pass through (clock/reset/excluded/inout)
+GATE INFO textbook: WARN ot_hbm_sm_pv_merge_s2 cells 87,753 flops 13,792 depth 390.1 ps util 0.3982 reach 0.0 um (2.5 s)
+GATE WARN textbook.high_fanout: reset rst_n__ot_rl1$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 285 loads (250 flops, e.g. u_ot_pr_core.bp[0]$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR DPL-0033] detailed placement checks failed during check placement.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_rule: root port:clk: 13,793 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+GATE FAIL remote_script: remote script completed with exit 1  -> FIX: read the original terminal log and fix the reported failure
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-hbm-pvm-safe2-1019/physical/ref_tile/smh_pvm_ref_s2/gate_layout/floorplan.png
+GATE FAIL trial_route: trial global route produced no congestion table (GATE_GRT_RC=2)  -> FIX: read the remote grt.log
+PRE_ROUTE_GATE: FAIL (3 fail, 2 warn)
+GATE: smh_pvm_ref_s2/gate_result.json written (exact staged source binding; commit it with the kit)
