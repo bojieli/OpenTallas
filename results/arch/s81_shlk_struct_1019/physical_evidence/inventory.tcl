@@ -5,6 +5,7 @@ set dbu [expr {double([$b getDbUnitsPerMicron])}]
 set t [[ord::get_db] getTech]
 set f [open $::env(ESCAPE_OUT) w]
 puts $f "DBU\t$dbu"
+puts $f "ODB\t$::env(ESCAPE_ODB)"
 foreach name {M3 M4 M5} {
  set l [$t findLayer $name]
  puts $f "LAYER\t$name\t[$l getDirection]\t[$l getWidth]\t[$l getSpacing]"
