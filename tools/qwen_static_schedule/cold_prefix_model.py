@@ -1,9 +1,11 @@
 """Source-derived cold prefix CANDIDATE; epoch origin stays unbound until GI/face/die join.
 No RTL or production image is selected by this model.
 """
-import argparse,json,re,hashlib
+import argparse,json,re,hashlib,sys
 from pathlib import Path
-from . import mu_d2d_ovl as D
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"qwen_split"))
+import d2d_link_calendar as L
+CALS=("C_tx","C_rx","K_tx","K_rx")
 
 def unpack_admission(text,name):
  v=int(re.search(r"OVL_"+name+r"_IMG = 1024'h([0-9a-f]+)",text).group(1),16)
@@ -22,20 +24,24 @@ def events(words):
 
 def build(root,out):
  text=(root/'rtl/qwen_sys/d2d_static_20261015/ovl_release/ovl_release_img.svh').read_text()
- old={c:unpack_admission(text,c.upper()) for c in D.CALS}
+ old={c:unpack_admission(text,c.upper()) for c in CALS}
  txd={'C':[8,3,1,10],'K':[22,4,3,3]}
  msgs=[dict(src=c[0],cyc=t,tx_port=p,rx_port=p,kind=k,beat=b) for c in ['C_tx','K_tx'] for t,p,k,b in events(old[c])]
- imgs,tab=D.L.compile_seg(msgs,D.TXL,D.PHY+2,0,txd)
+ imgs,tab=L.compile_seg(msgs,6,7,0,txd)
  assert imgs==old,('source admission decode mismatch',imgs,old)
  context_send=max(max(x['rx_out'],x['cyc']) for x in tab)+4
  msgs.append(dict(src='K',cyc=context_send,tx_port=1,rx_port=1,kind=12,beat=0))
- imgs,tab=D.L.compile_seg(msgs,D.TXL,D.PHY+2,0,txd)
+ imgs,tab=L.compile_seg(msgs,6,7,0,txd)
  assert all(len(v)<=16 for v in imgs.values())
  adm_len=max(max(x['rx_out'],x['cyc']) for x in tab)+4
- segs,law=D.seg_msgs(D.txd_of(D.STAGES,kv_codec=2)[0],txd,kv_codec=2)
- # Preserve canonical MU selector plus following user0 record in the head image.
- segs['tok_rx'].append(dict(src='K',cyc=2,tx_port=1,rx_port=1,kind=12,beat=1))
- heads=D.seg_images(segs,txd)['tok_rx']
+ headmsgs=[dict(src='K',cyc=2,tx_port=1,rx_port=1,kind=12,beat=1),dict(src='K',cyc=3,tx_port=1,rx_port=1,kind=12,beat=0),dict(src='K',cyc=191,tx_port=2,rx_port=2,kind=8,beat=0)]
+ headmsgs += [dict(src='K',cyc=192+i,tx_port=2,rx_port=2,kind=6+i//32,beat=i%32)for i in range(64)]
+ _,htab=L.compile_seg(headmsgs,6,7,0,txd)
+ heads={}
+ for c in ['K_tx','C_rx']:
+  ev=[(x['cyc'] if c=='K_tx' else x['arrive'],x['tx_port'] if c=='K_tx' else x['rx_port'],x['kind'],x['beat'])for x in htab]
+  ev.sort();start=ev[0][0]-1
+  heads[c]=dict(start=start,occ=(start,ev[-1][0]+1),events=len(ev),img=L.image([(t-start,p,k,b)for t,p,k,b in ev]))
  prefix={c:{'start_relative_GI_raw_INIT':63+d['start'],'last_relative_GI_raw_INIT':63+d['occ'][1]-1,'events':d['events'],'image':d['img']}for c,d in heads.items()}
  result=dict(schema='opentallas.qwen.cold-prefix-candidate.v1',production_bound=False,
  blockers=['FACE-to-GI raw DH transport/clock age unbound','actual embedding row producer/provider/consumer join pending','final programme store ABI/image capacity pending','absolute epoch origin unbound'],

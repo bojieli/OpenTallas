@@ -8,7 +8,7 @@
 //   NORMAL MODE: two start-list players (TX, RX), each reading its compiled list from a ROM port (one 32-b word an
 //     entry, tools/qwen_static_schedule/mu_d2d_ovl.py):  [31:12] dt (edges after the previous entry; the first entry
 //     counts from the anchor), [11] go (0 = wait-only entry), [10] seg, [9:8] user, [7] wrap (the next entry is word 0:
-//     the frame repeats), [6:0] 0.  Both players start on the anchor edge = FIRST_OFS edges after the epoch strobe
+//     the frame repeats at the static WRAP_BASE; reset/halt always replay word0), [6:0] 0.  Both players start on the anchor edge = FIRST_OFS edges after the epoch strobe
 //     (EP_SKEW aligns the two dies on one absolute edge, as ot_qwen_d2d_cal_seq AUTO), so every start of both dies is
 //     a compiled absolute edge.  No valid / ready / credit selects a cycle.
 // Reload follows the base sequencer's idle-only contract; an active reload is never a normal epoch restart.
@@ -18,7 +18,7 @@
 //     collision = fault).  halt (the end's epoch_abort) stops both players; the next epoch strobe re-anchors.
 // ROM ports: synchronous read (q = mem[addr] one edge after addr); the die GEN binds one ROM macro per list.
 // =====================================================================================================================
-module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer MIN_DT = 4, parameter integer MUT_HALT_REWIND = 0) (
+module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer WRAP_BASE=0, parameter integer MIN_DT = 4, parameter integer MUT_HALT_REWIND = 0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          go,            // anchor: entry 0's dt counts from this edge
@@ -31,6 +31,7 @@ module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer MIN_
     output reg           running,
     output reg           fault
 );
+    initial if (WRAP_BASE < 0 || WRAP_BASE >= 2**AW) $error("WRAP_BASE outside list ROM");
     reg [AW-1:0] addr;
     reg [31:0]   nxt;
     reg          nv;
@@ -65,7 +66,7 @@ module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer MIN_
                 if (!nv || bad_n) fault <= 1'b1;
                 running <= 1'b1;
                 cur <= nxt; cnt <= nxt[31:12]; nv <= 1'b0; age <= 2'd0;
-                addr <= nxt[7] ? '0 : addr + 1'b1;
+                addr <= nxt[7] ? AW'(WRAP_BASE) : addr + 1'b1;
             end else if (running) cnt <= cnt - 20'd1;
         end
     end
@@ -74,6 +75,7 @@ endmodule
 module ot_qwen_d2d_ovl_seq #(
     parameter integer MUT_HALT_REWIND = 0, // bench-only old mid-list restart behavior
     parameter integer NE = 32,
+    parameter integer TX_WRAP_BASE=0, parameter integer RX_WRAP_BASE=0,
     parameter integer AW = 11,           // list ROM address width (2,048 words: one 4-user frame is 1,703 a list)
     parameter [32*NE-1:0] TX_IMG = '0,
     parameter [32*NE-1:0] RX_IMG = '0,
@@ -134,9 +136,9 @@ module ot_qwen_d2d_ovl_seq #(
             else if (act) begin e <= e + 32'd1; if (go) act <= 1'b0; end
         end
     wire t_start, t_seg, r_start, r_seg, t_run, r_run, t_f, r_f; wire [1:0] t_u, r_u;
-    ot_qwen_d2d_list_play #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND)) u_tx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload), .rom_addr(tx_rom_addr),
+    ot_qwen_d2d_list_play #(.AW(AW), .WRAP_BASE(TX_WRAP_BASE), .MUT_HALT_REWIND(MUT_HALT_REWIND)) u_tx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload), .rom_addr(tx_rom_addr),
         .rom_q(tx_rom_q), .start(t_start), .seg(t_seg), .user(t_u), .running(t_run), .fault(t_f));
-    ot_qwen_d2d_list_play #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND)) u_rx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload), .rom_addr(rx_rom_addr),
+    ot_qwen_d2d_list_play #(.AW(AW), .WRAP_BASE(RX_WRAP_BASE), .MUT_HALT_REWIND(MUT_HALT_REWIND)) u_rx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload), .rom_addr(rx_rom_addr),
         .rom_q(rx_rom_q), .start(r_start), .seg(r_seg), .user(r_u), .running(r_run), .fault(r_f));
     assign cal_start    = s_start | t_start;
     assign cal_seg      = s_start ? s_seg : t_seg;
