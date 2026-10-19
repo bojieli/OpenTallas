@@ -4,7 +4,7 @@
  "view": "s81dv_idxrg (physical/ref_tile/s81dv_idxrg; kit spec tools/ref_tile/specs_s81dv_idx/s81dv_idxrg.json)",
  "release_tree": "MU.BAL.SX.3 (p4l had no index reader/scorer)",
  "owner_lane": "S81-IDXRD -> bind owner S81-DIE8",
- "params": {"SRAM_MACRO": 1, "MUT": 0, "DQ": 8, "LG": 8, "IQD": 128, "SQD": 32, "LFD": 256, "RQD": 16},
+ "params": {"SRAM_MACRO": 1, "MUT": 0, "DQ": 8, "LG": 8, "IQD": 256, "SQD": 64, "LFD": 256, "RQD": 16},
  "macros": "6 x ot_sram_1r1w_256x256_m2_r2c2 a region: 4 landing (2 a PC, code sector halves, read together = 1 key a cycle) + 2 list (gather)",
  "instances": "u_idxrg_00 .. u_idxrg_15: ONE per dsfd_ctrl_rg2 region k (= ctrl_k / rsv_k of dv_plan.rsv_links), sid strap = k = chain position",
  "insertion": {
