@@ -53,5 +53,14 @@ the clock-family owner's validated native `get_property $pin clocks`, followed
 by `get_full_name`, and requires exactly one owner. The actual TT runtime control
 in `physical/native_tag_control_tt` records those names and hash-bound arrivals;
 its clocks are propagated and the timing search precedes property extraction.
-FF/SS control collection and the new whole-spine geometry replay are pending.
-This fixes tag collection, without removing the other production blockers.
+The completed TT/FF/SS controls are joined in
+`physical/native_tag_controls/baseline_native_tag_receipt.json`: each corner has
+59 finite pin arrivals and59 unique named clock owners. The36 remaining blockers
+are retained. This fixes tag collection without removing production blockers.
+
+An additional physical-site audit found that all20 failed-pair witness stations
+lack a containing physical placement row in the source ODB. Its1855 fragmented
+rows are not a global site grid. Free hard-macro rectangles and a legal lattice
+are insufficient to prove physical row legality. The final whole-spine ODB audit
+must check actual row containment as well as overlaps, endpoint coverage, fanout
+and405um reach. No timing proposal is authorized from the single-pair witness.

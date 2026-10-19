@@ -1,0 +1,1733 @@
+{
+ "schema": "opentallas.qwen.q_phase_receipt.v1",
+ "plan_sha256": "bbcc958fdb01ae0d871348f3e44edb9037f18986e2c8fc6ce7e25e706d4bc465",
+ "targets_sha256": "fa12fab8941fe4327aa743449a58ef9e2235993aea09e53ec5c7b32480e0b9cf",
+ "identity": {
+  "source_commit": "1075e50e2dcc1c25d15ab8232757bac665f11a1a",
+  "die_v_sha256": "fe1f963ef3fb89514981e3bfbc5032590de349a1e289e241ac9b51d0ca0e7f49",
+  "fwd_lanes_sha256": "d04b7d31688b3d440d0c5760a0903d067dacbeb844eb4f08ffb4e671afb92b70",
+  "qready_sha256": "e18a5232d9e9dc286f01f0ea271d4c406116cc4690801d15492108a791482227"
+ },
+ "lanes": {
+  "dvw_dd_wo": {
+   "source": "dvs_W5.dd_wo",
+   "consumer": "native59.dd_i",
+   "frames": 26,
+   "E": 19,
+   "K": 2,
+   "planned_age_edges": 20,
+   "G_effective": 1267,
+   "R0": 1596,
+   "source_reset_raw": 1266,
+   "clock_ports": {
+    "dvs_W5": {
+     "master": "qfd_dv_slice2_w",
+     "pins": {
+      "ck": "dvs_W5/ck"
+     }
+    },
+    "rly_dvw_dd_wo_0": {
+     "master": "qfd_rlyh0_548_SW_95x60",
+     "pins": {
+      "ck": "rly_dvw_dd_wo_0/ck",
+      "ck_o": "rly_dvw_dd_wo_0/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_1": {
+     "master": "qfd_rlyh_548_EN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_1/ckf",
+      "ck_o": "rly_dvw_dd_wo_1/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_2": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_2/ckf",
+      "ck_o": "rly_dvw_dd_wo_2/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_3": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_3/ckf",
+      "ck_o": "rly_dvw_dd_wo_3/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_4": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_4/ckf",
+      "ck_o": "rly_dvw_dd_wo_4/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_5": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_5/ckf",
+      "ck_o": "rly_dvw_dd_wo_5/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_6": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_6/ckf",
+      "ck_o": "rly_dvw_dd_wo_6/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_7": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_7/ckf",
+      "ck_o": "rly_dvw_dd_wo_7/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_8": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_8/ckf",
+      "ck_o": "rly_dvw_dd_wo_8/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_9": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_9/ckf",
+      "ck_o": "rly_dvw_dd_wo_9/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_10": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_10/ckf",
+      "ck_o": "rly_dvw_dd_wo_10/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_11": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_11/ckf",
+      "ck_o": "rly_dvw_dd_wo_11/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_12": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_12/ckf",
+      "ck_o": "rly_dvw_dd_wo_12/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_13": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_13/ckf",
+      "ck_o": "rly_dvw_dd_wo_13/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_14": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_14/ckf",
+      "ck_o": "rly_dvw_dd_wo_14/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_15": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_15/ckf",
+      "ck_o": "rly_dvw_dd_wo_15/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_16": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_16/ckf",
+      "ck_o": "rly_dvw_dd_wo_16/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_17": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_17/ckf",
+      "ck_o": "rly_dvw_dd_wo_17/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_18": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_18/ckf",
+      "ck_o": "rly_dvw_dd_wo_18/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_19": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_19/ckf",
+      "ck_o": "rly_dvw_dd_wo_19/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_20": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_20/ckf",
+      "ck_o": "rly_dvw_dd_wo_20/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_21": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_21/ckf",
+      "ck_o": "rly_dvw_dd_wo_21/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_22": {
+     "master": "qfd_rlyh_548_SN_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_22/ckf",
+      "ck_o": "rly_dvw_dd_wo_22/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_23": {
+     "master": "qfd_rlyh_548_SW_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_23/ckf",
+      "ck_o": "rly_dvw_dd_wo_23/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_24": {
+     "master": "qfd_rlyh_548_EW_95x60",
+     "pins": {
+      "ckf": "rly_dvw_dd_wo_24/ckf",
+      "ck_o": "rly_dvw_dd_wo_24/ck_o"
+     }
+    },
+    "rly_dvw_dd_wo_25": {
+     "master": "qfd_landh_548_EN_95x60",
+     "pins": {
+      "ck": "rly_dvw_dd_wo_25/ck",
+      "ckf": "rly_dvw_dd_wo_25/ckf"
+     }
+    },
+    "native59": {
+     "master": "qfd_native59_dv_service",
+     "pins": {
+      "ck": "native59/ck"
+     }
+    }
+   },
+   "note": "G includes HOP0_EN_REG=1; measured source/forwarded/read phases must realize the planned age"
+  },
+  "sf_q_slot": {
+   "source": "sys_face.q_slot",
+   "consumer": "native59.q_slot",
+   "frames": 1,
+   "E": 1,
+   "K": 3,
+   "planned_age_edges": 2,
+   "G_effective": 22,
+   "R0": 1596,
+   "source_reset_raw": 21,
+   "clock_ports": {
+    "sys_face": {
+     "master": "qfd_sys_face",
+     "pins": {
+      "ck": "sys_face/ck"
+     }
+    },
+    "rly_sf_q_slot_0": {
+     "master": "qfd_landh0_1_SW_65x30",
+     "pins": {
+      "ck": "rly_sf_q_slot_0/ck",
+      "ck_s": "rly_sf_q_slot_0/ck_s"
+     }
+    },
+    "native59": {
+     "master": "qfd_native59_dv_service",
+     "pins": {
+      "ck": "native59/ck"
+     }
+    }
+   },
+   "note": "G includes HOP0_EN_REG=1; measured source/forwarded/read phases must realize the planned age"
+  },
+  "sf_q_slot_beat": {
+   "source": "sys_face.q_slot_beat",
+   "consumer": "native59.q_slot_beat",
+   "frames": 1,
+   "E": 1,
+   "K": 3,
+   "planned_age_edges": 2,
+   "G_effective": 22,
+   "R0": 1596,
+   "source_reset_raw": 21,
+   "clock_ports": {
+    "sys_face": {
+     "master": "qfd_sys_face",
+     "pins": {
+      "ck": "sys_face/ck"
+     }
+    },
+    "rly_sf_q_slot_beat_0": {
+     "master": "qfd_landh0_5_NW_65x30",
+     "pins": {
+      "ck": "rly_sf_q_slot_beat_0/ck",
+      "ck_s": "rly_sf_q_slot_beat_0/ck_s"
+     }
+    },
+    "native59": {
+     "master": "qfd_native59_dv_service",
+     "pins": {
+      "ck": "native59/ck"
+     }
+    }
+   },
+   "note": "G includes HOP0_EN_REG=1; measured source/forwarded/read phases must realize the planned age"
+  }
+ },
+ "corners": {
+  "tt": {
+   "arrivals": {
+    "dvs_W5/ck": {
+     "late_ps": 23383.199219,
+     "early_ps": 22780.359375,
+     "slew_ps": 12.819777
+    },
+    "native59/ck": {
+     "late_ps": 22855.007812,
+     "early_ps": 22241.417969,
+     "slew_ps": 15.088077
+    },
+    "rly_dvw_dd_wo_0/ck": {
+     "late_ps": 23388.732422,
+     "early_ps": 22785.492188,
+     "slew_ps": 18.308846
+    },
+    "rly_dvw_dd_wo_0/ck_o": {
+     "late_ps": 25537.923828,
+     "early_ps": 24873.427734,
+     "slew_ps": 102.615486
+    },
+    "rly_dvw_dd_wo_1/ck_o": {
+     "late_ps": 23920.96875,
+     "early_ps": 23317.728516,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_1/ckf": {
+     "late_ps": 25917.132812,
+     "early_ps": 25252.636719,
+     "slew_ps": 1203.610229
+    },
+    "rly_dvw_dd_wo_10/ck_o": {
+     "late_ps": 29553.136719,
+     "early_ps": 28888.640625,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_10/ckf": {
+     "late_ps": 27406.851562,
+     "early_ps": 26803.611328,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_11/ck_o": {
+     "late_ps": 27877.572266,
+     "early_ps": 27274.332031,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_11/ckf": {
+     "late_ps": 29873.736328,
+     "early_ps": 29209.242188,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_12/ck_o": {
+     "late_ps": 30344.453125,
+     "early_ps": 29679.960938,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_12/ckf": {
+     "late_ps": 28198.171875,
+     "early_ps": 27594.933594,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_13/ck_o": {
+     "late_ps": 28668.892578,
+     "early_ps": 28065.652344,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_13/ckf": {
+     "late_ps": 30665.052734,
+     "early_ps": 30000.560547,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_14/ck_o": {
+     "late_ps": 31135.769531,
+     "early_ps": 30471.277344,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_14/ckf": {
+     "late_ps": 28989.494141,
+     "early_ps": 28386.253906,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_15/ck_o": {
+     "late_ps": 29460.214844,
+     "early_ps": 28856.974609,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_15/ckf": {
+     "late_ps": 31456.369141,
+     "early_ps": 30791.876953,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_16/ck_o": {
+     "late_ps": 31927.085938,
+     "early_ps": 31262.59375,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_16/ckf": {
+     "late_ps": 29780.814453,
+     "early_ps": 29177.574219,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_17/ck_o": {
+     "late_ps": 30251.53125,
+     "early_ps": 29648.294922,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_17/ckf": {
+     "late_ps": 32247.6875,
+     "early_ps": 31583.195312,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_18/ck_o": {
+     "late_ps": 32718.404297,
+     "early_ps": 32053.912109,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_18/ckf": {
+     "late_ps": 30572.130859,
+     "early_ps": 29968.894531,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_19/ck_o": {
+     "late_ps": 31042.847656,
+     "early_ps": 30439.611328,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_19/ckf": {
+     "late_ps": 33039.003906,
+     "early_ps": 32374.511719,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_2/ck_o": {
+     "late_ps": 26387.853516,
+     "early_ps": 25723.357422,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_2/ckf": {
+     "late_ps": 24241.568359,
+     "early_ps": 23638.328125,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_20/ck_o": {
+     "late_ps": 33509.722656,
+     "early_ps": 32845.230469,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_20/ckf": {
+     "late_ps": 31363.449219,
+     "early_ps": 30760.212891,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_21/ck_o": {
+     "late_ps": 31834.166016,
+     "early_ps": 31230.929688,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_21/ckf": {
+     "late_ps": 33830.320312,
+     "early_ps": 33165.828125,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_22/ck_o": {
+     "late_ps": 34301.039062,
+     "early_ps": 33636.546875,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_22/ckf": {
+     "late_ps": 32154.765625,
+     "early_ps": 31551.529297,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_23/ck_o": {
+     "late_ps": 32628.623047,
+     "early_ps": 32025.386719,
+     "slew_ps": 103.067589
+    },
+    "rly_dvw_dd_wo_23/ckf": {
+     "late_ps": 34621.640625,
+     "early_ps": 33957.148438,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_24/ck_o": {
+     "late_ps": 35160.335938,
+     "early_ps": 34495.84375,
+     "slew_ps": 99.535439
+    },
+    "rly_dvw_dd_wo_24/ckf": {
+     "late_ps": 33012.730469,
+     "early_ps": 32409.496094,
+     "slew_ps": 1219.05896
+    },
+    "rly_dvw_dd_wo_25/ck": {
+     "late_ps": 22859.777344,
+     "early_ps": 22247.019531,
+     "slew_ps": 37.795227
+    },
+    "rly_dvw_dd_wo_25/ckf": {
+     "late_ps": 35507.179688,
+     "early_ps": 34842.683594,
+     "slew_ps": 1101.565552
+    },
+    "rly_dvw_dd_wo_3/ck_o": {
+     "late_ps": 24712.289062,
+     "early_ps": 24109.048828,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_3/ckf": {
+     "late_ps": 26708.455078,
+     "early_ps": 26043.958984,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_4/ck_o": {
+     "late_ps": 27179.173828,
+     "early_ps": 26514.677734,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_4/ckf": {
+     "late_ps": 25032.888672,
+     "early_ps": 24429.650391,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_5/ck_o": {
+     "late_ps": 25503.609375,
+     "early_ps": 24900.369141,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_5/ckf": {
+     "late_ps": 27499.775391,
+     "early_ps": 26835.279297,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_6/ck_o": {
+     "late_ps": 27970.496094,
+     "early_ps": 27306.0,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_6/ckf": {
+     "late_ps": 25824.210938,
+     "early_ps": 25220.970703,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_7/ck_o": {
+     "late_ps": 26294.931641,
+     "early_ps": 25691.691406,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_7/ckf": {
+     "late_ps": 28291.095703,
+     "early_ps": 27626.599609,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_8/ck_o": {
+     "late_ps": 28761.816406,
+     "early_ps": 28097.320312,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_8/ckf": {
+     "late_ps": 26615.53125,
+     "early_ps": 26012.291016,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_9/ck_o": {
+     "late_ps": 27086.251953,
+     "early_ps": 26483.011719,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_9/ckf": {
+     "late_ps": 29082.416016,
+     "early_ps": 28417.919922,
+     "slew_ps": 1018.898987
+    },
+    "rly_sf_q_slot_0/ck": {
+     "late_ps": 22853.140625,
+     "early_ps": 22241.207031,
+     "slew_ps": 26.832571
+    },
+    "rly_sf_q_slot_0/ck_s": {
+     "late_ps": 22994.064453,
+     "early_ps": 22380.835938,
+     "slew_ps": 13.672734
+    },
+    "rly_sf_q_slot_beat_0/ck": {
+     "late_ps": 22860.863281,
+     "early_ps": 22247.576172,
+     "slew_ps": 11.275294
+    },
+    "rly_sf_q_slot_beat_0/ck_s": {
+     "late_ps": 22990.878906,
+     "early_ps": 22375.990234,
+     "slew_ps": 9.70622
+    },
+    "sys_face/ck": {
+     "late_ps": 22719.638672,
+     "early_ps": 22112.804688,
+     "slew_ps": 39.778275
+    }
+   },
+   "missing": []
+  },
+  "ff": {
+   "arrivals": {
+    "dvs_W5/ck": {
+     "late_ps": 19399.316406,
+     "early_ps": 18878.726562,
+     "slew_ps": 10.829346
+    },
+    "native59/ck": {
+     "late_ps": 18791.603516,
+     "early_ps": 18275.001953,
+     "slew_ps": 13.144161
+    },
+    "rly_dvw_dd_wo_0/ck": {
+     "late_ps": 19405.589844,
+     "early_ps": 18884.394531,
+     "slew_ps": 16.434366
+    },
+    "rly_dvw_dd_wo_0/ck_o": {
+     "late_ps": 21040.144531,
+     "early_ps": 20482.917969,
+     "slew_ps": 39.591022
+    },
+    "rly_dvw_dd_wo_1/ck_o": {
+     "late_ps": 19836.628906,
+     "early_ps": 19315.433594,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_1/ckf": {
+     "late_ps": 21408.013672,
+     "early_ps": 20850.787109,
+     "slew_ps": 1165.140381
+    },
+    "rly_dvw_dd_wo_10/ck_o": {
+     "late_ps": 24510.951172,
+     "early_ps": 23953.726562,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_10/ckf": {
+     "late_ps": 22877.542969,
+     "early_ps": 22356.347656,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_11/ck_o": {
+     "late_ps": 23249.880859,
+     "early_ps": 22728.685547,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_11/ckf": {
+     "late_ps": 24821.265625,
+     "early_ps": 24264.039062,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_12/ck_o": {
+     "late_ps": 25193.601562,
+     "early_ps": 24636.376953,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_12/ckf": {
+     "late_ps": 23560.193359,
+     "early_ps": 23038.998047,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_13/ck_o": {
+     "late_ps": 23932.53125,
+     "early_ps": 23411.335938,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_13/ckf": {
+     "late_ps": 25503.916016,
+     "early_ps": 24946.689453,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_14/ck_o": {
+     "late_ps": 25876.251953,
+     "early_ps": 25319.027344,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_14/ckf": {
+     "late_ps": 24242.84375,
+     "early_ps": 23721.648438,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_15/ck_o": {
+     "late_ps": 24615.181641,
+     "early_ps": 24093.986328,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_15/ckf": {
+     "late_ps": 26186.566406,
+     "early_ps": 25629.339844,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_16/ck_o": {
+     "late_ps": 26558.902344,
+     "early_ps": 26001.677734,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_16/ckf": {
+     "late_ps": 24925.494141,
+     "early_ps": 24404.298828,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_17/ck_o": {
+     "late_ps": 25297.832031,
+     "early_ps": 24776.636719,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_17/ckf": {
+     "late_ps": 26869.216797,
+     "early_ps": 26311.990234,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_18/ck_o": {
+     "late_ps": 27241.552734,
+     "early_ps": 26684.328125,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_18/ckf": {
+     "late_ps": 25608.144531,
+     "early_ps": 25086.949219,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_19/ck_o": {
+     "late_ps": 25980.482422,
+     "early_ps": 25459.287109,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_19/ckf": {
+     "late_ps": 27551.867188,
+     "early_ps": 26994.640625,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_2/ck_o": {
+     "late_ps": 21780.349609,
+     "early_ps": 21223.125,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_2/ckf": {
+     "late_ps": 20146.941406,
+     "early_ps": 19625.746094,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_20/ck_o": {
+     "late_ps": 27924.203125,
+     "early_ps": 27366.978516,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_20/ckf": {
+     "late_ps": 26290.794922,
+     "early_ps": 25769.599609,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_21/ck_o": {
+     "late_ps": 26663.132812,
+     "early_ps": 26141.9375,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_21/ckf": {
+     "late_ps": 28234.517578,
+     "early_ps": 27677.291016,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_22/ck_o": {
+     "late_ps": 28606.853516,
+     "early_ps": 28049.628906,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_22/ckf": {
+     "late_ps": 26973.445312,
+     "early_ps": 26452.25,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_23/ck_o": {
+     "late_ps": 27347.021484,
+     "early_ps": 26825.826172,
+     "slew_ps": 39.787041
+    },
+    "rly_dvw_dd_wo_23/ckf": {
+     "late_ps": 28917.167969,
+     "early_ps": 28359.941406,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_24/ck_o": {
+     "late_ps": 29353.638672,
+     "early_ps": 28796.412109,
+     "slew_ps": 38.25631
+    },
+    "rly_dvw_dd_wo_24/ckf": {
+     "late_ps": 27719.705078,
+     "early_ps": 27198.509766,
+     "slew_ps": 1180.383423
+    },
+    "rly_dvw_dd_wo_25/ck": {
+     "late_ps": 18792.421875,
+     "early_ps": 18276.564453,
+     "slew_ps": 36.080982
+    },
+    "rly_dvw_dd_wo_25/ckf": {
+     "late_ps": 29689.705078,
+     "early_ps": 29132.480469,
+     "slew_ps": 1064.480103
+    },
+    "rly_dvw_dd_wo_3/ck_o": {
+     "late_ps": 20519.279297,
+     "early_ps": 19998.083984,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_3/ckf": {
+     "late_ps": 22090.664062,
+     "early_ps": 21533.4375,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_4/ck_o": {
+     "late_ps": 22463.0,
+     "early_ps": 21905.775391,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_4/ckf": {
+     "late_ps": 20829.591797,
+     "early_ps": 20308.396484,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_5/ck_o": {
+     "late_ps": 21201.929688,
+     "early_ps": 20680.734375,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_5/ckf": {
+     "late_ps": 22773.314453,
+     "early_ps": 22216.087891,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_6/ck_o": {
+     "late_ps": 23145.650391,
+     "early_ps": 22588.425781,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_6/ckf": {
+     "late_ps": 21512.242188,
+     "early_ps": 20991.046875,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_7/ck_o": {
+     "late_ps": 21884.580078,
+     "early_ps": 21363.384766,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_7/ckf": {
+     "late_ps": 23455.964844,
+     "early_ps": 22898.738281,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_8/ck_o": {
+     "late_ps": 23828.300781,
+     "early_ps": 23271.076172,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_8/ckf": {
+     "late_ps": 22194.892578,
+     "early_ps": 21673.697266,
+     "slew_ps": 982.966492
+    },
+    "rly_dvw_dd_wo_9/ck_o": {
+     "late_ps": 22567.230469,
+     "early_ps": 22046.035156,
+     "slew_ps": 37.147522
+    },
+    "rly_dvw_dd_wo_9/ckf": {
+     "late_ps": 24138.615234,
+     "early_ps": 23581.388672,
+     "slew_ps": 982.966492
+    },
+    "rly_sf_q_slot_0/ck": {
+     "late_ps": 18793.556641,
+     "early_ps": 18277.958984,
+     "slew_ps": 25.055979
+    },
+    "rly_sf_q_slot_0/ck_s": {
+     "late_ps": 18921.642578,
+     "early_ps": 18404.089844,
+     "slew_ps": 11.493069
+    },
+    "rly_sf_q_slot_beat_0/ck": {
+     "late_ps": 18799.013672,
+     "early_ps": 18282.486328,
+     "slew_ps": 9.203904
+    },
+    "rly_sf_q_slot_beat_0/ck_s": {
+     "late_ps": 18916.224609,
+     "early_ps": 18397.574219,
+     "slew_ps": 7.557304
+    },
+    "sys_face/ck": {
+     "late_ps": 18694.164062,
+     "early_ps": 18182.126953,
+     "slew_ps": 38.7509
+    }
+   },
+   "missing": []
+  },
+  "ss": {
+   "arrivals": {
+    "dvs_W5/ck": {
+     "late_ps": 29630.082031,
+     "early_ps": 28887.007812,
+     "slew_ps": 17.044964
+    },
+    "native59/ck": {
+     "late_ps": 29353.835938,
+     "early_ps": 28575.072266,
+     "slew_ps": 19.190258
+    },
+    "rly_dvw_dd_wo_0/ck": {
+     "late_ps": 29634.185547,
+     "early_ps": 28890.738281,
+     "slew_ps": 22.358191
+    },
+    "rly_dvw_dd_wo_0/ck_o": {
+     "late_ps": 32839.523438,
+     "early_ps": 32099.03125,
+     "slew_ps": 102.615486
+    },
+    "rly_dvw_dd_wo_1/ck_o": {
+     "late_ps": 30166.417969,
+     "early_ps": 29422.974609,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_1/ckf": {
+     "late_ps": 33218.734375,
+     "early_ps": 32478.240234,
+     "slew_ps": 1203.610229
+    },
+    "rly_dvw_dd_wo_10/ck_o": {
+     "late_ps": 36854.71875,
+     "early_ps": 36114.226562,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_10/ckf": {
+     "late_ps": 33652.289062,
+     "early_ps": 32908.84375,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_11/ck_o": {
+     "late_ps": 34123.003906,
+     "early_ps": 33379.5625,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_11/ckf": {
+     "late_ps": 37175.320312,
+     "early_ps": 36434.828125,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_12/ck_o": {
+     "late_ps": 37646.035156,
+     "early_ps": 36905.542969,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_12/ckf": {
+     "late_ps": 34443.605469,
+     "early_ps": 33700.160156,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_13/ck_o": {
+     "late_ps": 34914.320312,
+     "early_ps": 34170.878906,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_13/ckf": {
+     "late_ps": 37966.636719,
+     "early_ps": 37226.144531,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_14/ck_o": {
+     "late_ps": 38437.351562,
+     "early_ps": 37696.859375,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_14/ckf": {
+     "late_ps": 35234.921875,
+     "early_ps": 34491.476562,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_15/ck_o": {
+     "late_ps": 35705.640625,
+     "early_ps": 34962.195312,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_15/ckf": {
+     "late_ps": 38757.953125,
+     "early_ps": 38017.460938,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_16/ck_o": {
+     "late_ps": 39228.671875,
+     "early_ps": 38488.179688,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_16/ckf": {
+     "late_ps": 36026.238281,
+     "early_ps": 35282.796875,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_17/ck_o": {
+     "late_ps": 36496.957031,
+     "early_ps": 35753.511719,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_17/ckf": {
+     "late_ps": 39549.269531,
+     "early_ps": 38808.777344,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_18/ck_o": {
+     "late_ps": 40019.988281,
+     "early_ps": 39279.496094,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_18/ckf": {
+     "late_ps": 36817.558594,
+     "early_ps": 36074.113281,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_19/ck_o": {
+     "late_ps": 37288.273438,
+     "early_ps": 36544.828125,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_19/ckf": {
+     "late_ps": 40340.589844,
+     "early_ps": 39600.097656,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_2/ck_o": {
+     "late_ps": 33689.449219,
+     "early_ps": 32948.957031,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_2/ckf": {
+     "late_ps": 30487.019531,
+     "early_ps": 29743.574219,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_20/ck_o": {
+     "late_ps": 40811.304688,
+     "early_ps": 40070.8125,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_20/ckf": {
+     "late_ps": 37608.875,
+     "early_ps": 36865.429688,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_21/ck_o": {
+     "late_ps": 38079.589844,
+     "early_ps": 37336.148438,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_21/ckf": {
+     "late_ps": 41131.90625,
+     "early_ps": 40391.414062,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_22/ck_o": {
+     "late_ps": 41602.621094,
+     "early_ps": 40862.128906,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_22/ckf": {
+     "late_ps": 38400.191406,
+     "early_ps": 37656.746094,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_23/ck_o": {
+     "late_ps": 38874.050781,
+     "early_ps": 38130.605469,
+     "slew_ps": 103.067589
+    },
+    "rly_dvw_dd_wo_23/ckf": {
+     "late_ps": 41923.222656,
+     "early_ps": 41182.730469,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_24/ck_o": {
+     "late_ps": 42461.921875,
+     "early_ps": 41721.429688,
+     "slew_ps": 99.535439
+    },
+    "rly_dvw_dd_wo_24/ckf": {
+     "late_ps": 39258.15625,
+     "early_ps": 38514.714844,
+     "slew_ps": 1219.05896
+    },
+    "rly_dvw_dd_wo_25/ck": {
+     "late_ps": 29367.601562,
+     "early_ps": 28589.414062,
+     "slew_ps": 41.575195
+    },
+    "rly_dvw_dd_wo_25/ckf": {
+     "late_ps": 42808.761719,
+     "early_ps": 42068.269531,
+     "slew_ps": 1101.565552
+    },
+    "rly_dvw_dd_wo_3/ck_o": {
+     "late_ps": 30957.736328,
+     "early_ps": 30214.291016,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_3/ckf": {
+     "late_ps": 34010.050781,
+     "early_ps": 33269.558594,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_4/ck_o": {
+     "late_ps": 34480.765625,
+     "early_ps": 33740.273438,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_4/ckf": {
+     "late_ps": 31278.335938,
+     "early_ps": 30534.892578,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_5/ck_o": {
+     "late_ps": 31749.052734,
+     "early_ps": 31005.609375,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_5/ckf": {
+     "late_ps": 34801.367188,
+     "early_ps": 34060.875,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_6/ck_o": {
+     "late_ps": 35272.085938,
+     "early_ps": 34531.59375,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_6/ckf": {
+     "late_ps": 32069.654297,
+     "early_ps": 31326.208984,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_7/ck_o": {
+     "late_ps": 32540.371094,
+     "early_ps": 31796.925781,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_7/ckf": {
+     "late_ps": 35592.683594,
+     "early_ps": 34852.191406,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_8/ck_o": {
+     "late_ps": 36063.402344,
+     "early_ps": 35322.910156,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_8/ckf": {
+     "late_ps": 32860.972656,
+     "early_ps": 32117.527344,
+     "slew_ps": 1018.898987
+    },
+    "rly_dvw_dd_wo_9/ck_o": {
+     "late_ps": 33331.6875,
+     "early_ps": 32588.244141,
+     "slew_ps": 97.191895
+    },
+    "rly_dvw_dd_wo_9/ckf": {
+     "late_ps": 36384.0,
+     "early_ps": 35643.507812,
+     "slew_ps": 1018.898987
+    },
+    "rly_sf_q_slot_0/ck": {
+     "late_ps": 29343.029297,
+     "early_ps": 28566.832031,
+     "slew_ps": 30.721516
+    },
+    "rly_sf_q_slot_0/ck_s": {
+     "late_ps": 29495.742188,
+     "early_ps": 28719.361328,
+     "slew_ps": 18.161749
+    },
+    "rly_sf_q_slot_beat_0/ck": {
+     "late_ps": 29353.818359,
+     "early_ps": 28575.660156,
+     "slew_ps": 15.53215
+    },
+    "rly_sf_q_slot_beat_0/ck_s": {
+     "late_ps": 29497.033203,
+     "early_ps": 28717.720703,
+     "slew_ps": 13.996852
+    },
+    "sys_face/ck": {
+     "late_ps": 29148.445312,
+     "early_ps": 28379.214844,
+     "slew_ps": 43.800186
+    }
+   },
+   "missing": []
+  }
+ },
+ "measurement_sources": {
+  "tt": {
+   "schema": "opentallas.qwen.q_phase_measure.v1",
+   "corner": "tt",
+   "plan_sha256": "bbcc958fdb01ae0d871348f3e44edb9037f18986e2c8fc6ce7e25e706d4bc465",
+   "manifest_sha256": "3133eac78d4667c47f6a816129c665f23bd9ac90d769053b1246ecbbe9a27b18",
+   "odb_sha256": "7c52dac7fad8e62d9eea6793c5c7f22e38f2708baf55fd555a8eb044399fe4c8",
+   "libraries": {
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "/work/libs/qfd_elements_tt.lib": "65ee84dc00b72eef3791dacd0619310eb784b0625d9d124301bb09f30f27d67e",
+    "/work/libs/qfd_etm_ot_hbm3e_phy_tt.lib": "b58d5f587d58b0d20f9f866455b0e6d84c919b6abc9b44f827c88c0c4e230a42",
+    "/work/libs/qfd_etm_ot_qfd_serdes_112g_x12_phy_s597_tt.lib": "b32b5383483b0bb6b0c825f50697f179731d7b27863d7f010c35ce04b0388c2e",
+    "/work/libs/qfd_etm_ot_qfd_ucie_x64_phy_tt.lib": "b83c6e00d3fbdd6ce99652017084f96a9cc129306ea5f4bbe101c3627d88a551",
+    "/work/libs/qfd_etm_qfd_d2d_static_tt.lib": "8f4a4e88ff9b736a97ecdd1c1921353019220e15313c622f8fda1e772417a518",
+    "/work/libs/qfd_etm_qfd_embedding_word_provider_tt.lib": "3705e092c0d5043260faa9eede0e38a6606106e3909277f27266d73d5a57f519",
+    "/work/libs/qfd_etm_qfd_landh0_1_EN_65x30_tt.lib": "8310dfa92a7d3b7b56bd66ef5bba52164fa07f517f21d21081078ca87939b22c",
+    "/work/libs/qfd_etm_qfd_landh0_1_EW_65x30_tt.lib": "1c3192b191526bbc754cb0e5dae10008dd37f2e5b7609cafec209547a3e6d86e",
+    "/work/libs/qfd_etm_qfd_landh0_1_NE_65x30_tt.lib": "157b9603395d792c27ddecdea8a74a570ec4850ce3dfce351c09debf0d09ea8d",
+    "/work/libs/qfd_etm_qfd_landh_1_EN_65x30_tt.lib": "3e9f0e26e4e4106a3576bcbfc42e95a06c84bae0b02c62c16275a516cc9c429b",
+    "/work/libs/qfd_etm_qfd_landh_1_NE_65x30_tt.lib": "46bf9e0df924cabf3086956c5b2bd9d625b31d0764e5022084884edc3b248577",
+    "/work/libs/qfd_etm_qfd_landh_1_NS_65x30_tt.lib": "002ad80b38472dc5d34ff8cdbc7ef448b850a199b0a8a35af7296c1de8d73dc5",
+    "/work/libs/qfd_etm_qfd_rst_rep_p8_tt.lib": "77570d23f0d9954627d8ad11bbacacba0ef4d03f805ea3ebfdaf1ee12519ce5c",
+    "/work/libs/qfd_etm_qfd_rst_rep_tt.lib": "7679bbe4028c682d4d1cefc1e571ef4ec7b3c39af1593aebe10d989e92944929",
+    "/work/libs/qfd_etm_qfd_rstseq_tt.lib": "6580b530bfae0f88e5c2c08c24fee8cfde74adff769648f83a063ef0cf683af1",
+    "/work/libs/qfd_etm_qfd_rstsync_tt.lib": "90e709a1694aae429e1f5461d58abb8e8467fc0e0823ccdbf8956ffef96a2e3f",
+    "/work/libs/qfd_etm_qfd_sys_face_tt.lib": "b9f93f9322225e933184f31e7057af5abb559f4d8055ebbb9cb641677ec73418"
+   },
+   "arrivals_sha256": "50eb639785a92c3a66c3f69e0bc952efeb4eaadbc51003d3ca6e9376f6f307e6",
+   "pins_with_propagated_clocks": [
+    "dvs_W5/ck",
+    "native59/ck",
+    "rly_dvw_dd_wo_0/ck",
+    "rly_dvw_dd_wo_0/ck_o",
+    "rly_dvw_dd_wo_1/ck_o",
+    "rly_dvw_dd_wo_1/ckf",
+    "rly_dvw_dd_wo_10/ck_o",
+    "rly_dvw_dd_wo_10/ckf",
+    "rly_dvw_dd_wo_11/ck_o",
+    "rly_dvw_dd_wo_11/ckf",
+    "rly_dvw_dd_wo_12/ck_o",
+    "rly_dvw_dd_wo_12/ckf",
+    "rly_dvw_dd_wo_13/ck_o",
+    "rly_dvw_dd_wo_13/ckf",
+    "rly_dvw_dd_wo_14/ck_o",
+    "rly_dvw_dd_wo_14/ckf",
+    "rly_dvw_dd_wo_15/ck_o",
+    "rly_dvw_dd_wo_15/ckf",
+    "rly_dvw_dd_wo_16/ck_o",
+    "rly_dvw_dd_wo_16/ckf",
+    "rly_dvw_dd_wo_17/ck_o",
+    "rly_dvw_dd_wo_17/ckf",
+    "rly_dvw_dd_wo_18/ck_o",
+    "rly_dvw_dd_wo_18/ckf",
+    "rly_dvw_dd_wo_19/ck_o",
+    "rly_dvw_dd_wo_19/ckf",
+    "rly_dvw_dd_wo_2/ck_o",
+    "rly_dvw_dd_wo_2/ckf",
+    "rly_dvw_dd_wo_20/ck_o",
+    "rly_dvw_dd_wo_20/ckf",
+    "rly_dvw_dd_wo_21/ck_o",
+    "rly_dvw_dd_wo_21/ckf",
+    "rly_dvw_dd_wo_22/ck_o",
+    "rly_dvw_dd_wo_22/ckf",
+    "rly_dvw_dd_wo_23/ck_o",
+    "rly_dvw_dd_wo_23/ckf",
+    "rly_dvw_dd_wo_24/ck_o",
+    "rly_dvw_dd_wo_24/ckf",
+    "rly_dvw_dd_wo_25/ck",
+    "rly_dvw_dd_wo_25/ckf",
+    "rly_dvw_dd_wo_3/ck_o",
+    "rly_dvw_dd_wo_3/ckf",
+    "rly_dvw_dd_wo_4/ck_o",
+    "rly_dvw_dd_wo_4/ckf",
+    "rly_dvw_dd_wo_5/ck_o",
+    "rly_dvw_dd_wo_5/ckf",
+    "rly_dvw_dd_wo_6/ck_o",
+    "rly_dvw_dd_wo_6/ckf",
+    "rly_dvw_dd_wo_7/ck_o",
+    "rly_dvw_dd_wo_7/ckf",
+    "rly_dvw_dd_wo_8/ck_o",
+    "rly_dvw_dd_wo_8/ckf",
+    "rly_dvw_dd_wo_9/ck_o",
+    "rly_dvw_dd_wo_9/ckf",
+    "rly_sf_q_slot_0/ck",
+    "rly_sf_q_slot_0/ck_s",
+    "rly_sf_q_slot_beat_0/ck",
+    "rly_sf_q_slot_beat_0/ck_s",
+    "sys_face/ck"
+   ],
+   "clock_identity_sha256": "37927418910a8ab837f32a8eaa21ce9f0fc8677202bda89b362a75d69e0e4991",
+   "clock_identity_status": "native get_property pin clocks; empty/missing tags block qualification",
+   "parasitics": "placement estimate on completed physical clock ODB",
+   "scope": "actual die clock pin arrivals; single-corner early/late; not native flop or production admission"
+  },
+  "ff": {
+   "schema": "opentallas.qwen.q_phase_measure.v1",
+   "corner": "ff",
+   "plan_sha256": "bbcc958fdb01ae0d871348f3e44edb9037f18986e2c8fc6ce7e25e706d4bc465",
+   "manifest_sha256": "3133eac78d4667c47f6a816129c665f23bd9ac90d769053b1246ecbbe9a27b18",
+   "odb_sha256": "7c52dac7fad8e62d9eea6793c5c7f22e38f2708baf55fd555a8eb044399fe4c8",
+   "libraries": {
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+    "/work/libs/qfd_elements_ff.lib": "834b84ea8401ee19800337ee33124cb5d0ad4e5a59e97c5ff434963e4fe42331",
+    "/work/libs/qfd_etm_ot_hbm3e_phy_ff.lib": "e25300f464cfa6faa086518d156e440a0322651d8b4d54327ac5982e5a22342c",
+    "/work/libs/qfd_etm_ot_qfd_serdes_112g_x12_phy_s597_ff.lib": "68c07a17b74bccb67b1f2f77403ada6846b28ad96d8e46193c462442e4c396b2",
+    "/work/libs/qfd_etm_ot_qfd_ucie_x64_phy_ff.lib": "5662a897a21077acf01e7a85d695014f653b3994150a77440c4284cf7f06d73e",
+    "/work/libs/qfd_etm_qfd_d2d_static_ff.lib": "8557a5b2407c7648eac934dbe05f5b6d339d47f0112cf77cdaada854f022c095",
+    "/work/libs/qfd_etm_qfd_embedding_word_provider_ff.lib": "03aba9e40b7326dd0c5f2fd670845db0af9d4b3714568bb585b4d6e1e3d66bd1",
+    "/work/libs/qfd_etm_qfd_landh0_1_EN_65x30_ff.lib": "87f949a54720ffcbd9c7a376703d25373e4b6f90fd34be9023856d69c1f4d8c3",
+    "/work/libs/qfd_etm_qfd_landh0_1_EW_65x30_ff.lib": "78b5052c932017b450aaf97ce92173e5258396af4a06554dfe83cae540e4a8a1",
+    "/work/libs/qfd_etm_qfd_landh0_1_NE_65x30_ff.lib": "3ee20da809bf0ada5f4654c247dd8a137bef70b532f03f0cae002283a2cea567",
+    "/work/libs/qfd_etm_qfd_landh_1_EN_65x30_ff.lib": "99e248ca2434f7e007f62c69c403869af4942c3b37f42937a74c08706dc825ea",
+    "/work/libs/qfd_etm_qfd_landh_1_NE_65x30_ff.lib": "e9217196a0aae5e5092db6c7633f5d9f69ffb31e7b992a02ad9ffbebd41570b5",
+    "/work/libs/qfd_etm_qfd_landh_1_NS_65x30_ff.lib": "c079f56b32c0bfb70f0238d1aaceb60ae2a26a9e19cc3a38b899b3e378f8803d",
+    "/work/libs/qfd_etm_qfd_rst_rep_ff.lib": "14e6d6deb2bae6208f5697e62417cddcebe2301a1d35ee31d6074fd16520e72f",
+    "/work/libs/qfd_etm_qfd_rst_rep_p8_ff.lib": "7003bec73daa1baaf4c5d389cfeb606d54f4f5b773a02d5b4bf879c318514867",
+    "/work/libs/qfd_etm_qfd_rstseq_ff.lib": "9fbd00e822ad06e48a69b156246112130949c7708ba735e68a1e9c0a3bba619d",
+    "/work/libs/qfd_etm_qfd_rstsync_ff.lib": "062651d6608d8826fabae8c4a824a1d54128282c6a1f4fc296651113f478b054",
+    "/work/libs/qfd_etm_qfd_sys_face_ff.lib": "9d9c81377f1af40d703a62cc62bd197dc200a737af46ae515bba988c295c8d1e"
+   },
+   "arrivals_sha256": "73c97db9bfdc99dd1d95d4b717e4b379f70edf07ed5b4f756d0cc540c0d5fe35",
+   "pins_with_propagated_clocks": [
+    "dvs_W5/ck",
+    "native59/ck",
+    "rly_dvw_dd_wo_0/ck",
+    "rly_dvw_dd_wo_0/ck_o",
+    "rly_dvw_dd_wo_1/ck_o",
+    "rly_dvw_dd_wo_1/ckf",
+    "rly_dvw_dd_wo_10/ck_o",
+    "rly_dvw_dd_wo_10/ckf",
+    "rly_dvw_dd_wo_11/ck_o",
+    "rly_dvw_dd_wo_11/ckf",
+    "rly_dvw_dd_wo_12/ck_o",
+    "rly_dvw_dd_wo_12/ckf",
+    "rly_dvw_dd_wo_13/ck_o",
+    "rly_dvw_dd_wo_13/ckf",
+    "rly_dvw_dd_wo_14/ck_o",
+    "rly_dvw_dd_wo_14/ckf",
+    "rly_dvw_dd_wo_15/ck_o",
+    "rly_dvw_dd_wo_15/ckf",
+    "rly_dvw_dd_wo_16/ck_o",
+    "rly_dvw_dd_wo_16/ckf",
+    "rly_dvw_dd_wo_17/ck_o",
+    "rly_dvw_dd_wo_17/ckf",
+    "rly_dvw_dd_wo_18/ck_o",
+    "rly_dvw_dd_wo_18/ckf",
+    "rly_dvw_dd_wo_19/ck_o",
+    "rly_dvw_dd_wo_19/ckf",
+    "rly_dvw_dd_wo_2/ck_o",
+    "rly_dvw_dd_wo_2/ckf",
+    "rly_dvw_dd_wo_20/ck_o",
+    "rly_dvw_dd_wo_20/ckf",
+    "rly_dvw_dd_wo_21/ck_o",
+    "rly_dvw_dd_wo_21/ckf",
+    "rly_dvw_dd_wo_22/ck_o",
+    "rly_dvw_dd_wo_22/ckf",
+    "rly_dvw_dd_wo_23/ck_o",
+    "rly_dvw_dd_wo_23/ckf",
+    "rly_dvw_dd_wo_24/ck_o",
+    "rly_dvw_dd_wo_24/ckf",
+    "rly_dvw_dd_wo_25/ck",
+    "rly_dvw_dd_wo_25/ckf",
+    "rly_dvw_dd_wo_3/ck_o",
+    "rly_dvw_dd_wo_3/ckf",
+    "rly_dvw_dd_wo_4/ck_o",
+    "rly_dvw_dd_wo_4/ckf",
+    "rly_dvw_dd_wo_5/ck_o",
+    "rly_dvw_dd_wo_5/ckf",
+    "rly_dvw_dd_wo_6/ck_o",
+    "rly_dvw_dd_wo_6/ckf",
+    "rly_dvw_dd_wo_7/ck_o",
+    "rly_dvw_dd_wo_7/ckf",
+    "rly_dvw_dd_wo_8/ck_o",
+    "rly_dvw_dd_wo_8/ckf",
+    "rly_dvw_dd_wo_9/ck_o",
+    "rly_dvw_dd_wo_9/ckf",
+    "rly_sf_q_slot_0/ck",
+    "rly_sf_q_slot_0/ck_s",
+    "rly_sf_q_slot_beat_0/ck",
+    "rly_sf_q_slot_beat_0/ck_s",
+    "sys_face/ck"
+   ],
+   "clock_identity_sha256": "37927418910a8ab837f32a8eaa21ce9f0fc8677202bda89b362a75d69e0e4991",
+   "clock_identity_status": "native get_property pin clocks; empty/missing tags block qualification",
+   "parasitics": "placement estimate on completed physical clock ODB",
+   "scope": "actual die clock pin arrivals; single-corner early/late; not native flop or production admission"
+  },
+  "ss": {
+   "schema": "opentallas.qwen.q_phase_measure.v1",
+   "corner": "ss",
+   "plan_sha256": "bbcc958fdb01ae0d871348f3e44edb9037f18986e2c8fc6ce7e25e706d4bc465",
+   "manifest_sha256": "3133eac78d4667c47f6a816129c665f23bd9ac90d769053b1246ecbbe9a27b18",
+   "odb_sha256": "7c52dac7fad8e62d9eea6793c5c7f22e38f2708baf55fd555a8eb044399fe4c8",
+   "libraries": {
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz": "9ac9c70139da3c4c72b2ed6113f011d8d96de2b30f9b261a237d2ed58ffa1ff5",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz": "6912520ffc1ae5bf69103d0286bcb7867fc90de80365dfc8ec0d6b55a9113f27",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "/sslibs/qfd_elements_ss.lib": "ef98dc4e49adb33a650d18fae0ee9bcea4c7ef8715f6b1165fc3f0d6cde8f267",
+    "/sslibs/qfd_etm_ot_hbm3e_phy_ss.lib": "6fba65e3e8d68c87f1f6fff3f8f7b163523603564d6aa1169fc02b05f5d62268",
+    "/sslibs/qfd_etm_ot_qfd_serdes_112g_x12_phy_s597_ss.lib": "d158a374117fbfb87ba4e465d9a59d95a2ab3a2dc53e29e16469aac40852bea5",
+    "/sslibs/qfd_etm_ot_qfd_ucie_x64_phy_ss.lib": "d0b51258a5aa4184306da5b4afa4e8c98a8e2c9f4164ed3679264bf990b4cb79",
+    "/sslibs/qfd_etm_qfd_d2d_static_ss.lib": "3d3fca994d5c65e1f2ca0d332b98290c16ef8d6d966abbc06d011fae00a79deb",
+    "/sslibs/qfd_etm_qfd_embedding_word_provider_ss.lib": "57a2815321403da338bc2f08c79718f43b0fd4ec519eb31b923be7dc18b2f30e",
+    "/sslibs/qfd_etm_qfd_landh0_1_EN_65x30_ss.lib": "365afaaa2d96094c7649f966d58d557a6a148e51e87bb6714a1c1ae510a2768b",
+    "/sslibs/qfd_etm_qfd_landh0_1_EW_65x30_ss.lib": "936ab51af7bfac39fb413d62289f2f66181a368ce01b3b287f9daab9bc30c591",
+    "/sslibs/qfd_etm_qfd_landh0_1_NE_65x30_ss.lib": "9bab53eb9b45b9fe11242f37b7ca5e3767b303a0bdd70ebe689721afc90fc097",
+    "/sslibs/qfd_etm_qfd_landh_1_EN_65x30_ss.lib": "e07f4cc86bfbe802690b4b576781889485349486bbb52e41e06660923b71f805",
+    "/sslibs/qfd_etm_qfd_landh_1_NE_65x30_ss.lib": "a4d4e7ff40adf79d091d6d65a2609320912e8f8aa3c3217aaea6dbbe00e2c2e3",
+    "/sslibs/qfd_etm_qfd_landh_1_NS_65x30_ss.lib": "1c2c8949a909b80093ec9564506dfb0b1f1598b781d9102e66dffc26371416b9",
+    "/sslibs/qfd_etm_qfd_rst_rep_p8_ss.lib": "6154cf88cb430e8e00e31ca5f6d22faf2ae716a2f2fa03e253f0fcc5803b39a8",
+    "/sslibs/qfd_etm_qfd_rst_rep_ss.lib": "5ef3e9e42e71db80c2bd1b6e4ac26c0cdba4c3924ebe80328e031fbfdc14de52",
+    "/sslibs/qfd_etm_qfd_rstseq_ss.lib": "2e5b1af3b6ea6900acd08cf503fcc6e565f620f96aabdd99e93b5c426e40a47d",
+    "/sslibs/qfd_etm_qfd_rstsync_ss.lib": "d41e80a4fd6f13d0cc82e7fa0e88aa038bfde5a9e8f8d3536a05a7dc5b5fdabe",
+    "/sslibs/qfd_etm_qfd_sys_face_ss.lib": "60e524cc6004b264dbcfa74d67edecc0009c971ab8fde994659f9e15e4efd223"
+   },
+   "arrivals_sha256": "ea6f24effa35d9f50701d680dce80fbc3edad67e93feb3eab3331890b7ffaaa0",
+   "pins_with_propagated_clocks": [
+    "dvs_W5/ck",
+    "native59/ck",
+    "rly_dvw_dd_wo_0/ck",
+    "rly_dvw_dd_wo_0/ck_o",
+    "rly_dvw_dd_wo_1/ck_o",
+    "rly_dvw_dd_wo_1/ckf",
+    "rly_dvw_dd_wo_10/ck_o",
+    "rly_dvw_dd_wo_10/ckf",
+    "rly_dvw_dd_wo_11/ck_o",
+    "rly_dvw_dd_wo_11/ckf",
+    "rly_dvw_dd_wo_12/ck_o",
+    "rly_dvw_dd_wo_12/ckf",
+    "rly_dvw_dd_wo_13/ck_o",
+    "rly_dvw_dd_wo_13/ckf",
+    "rly_dvw_dd_wo_14/ck_o",
+    "rly_dvw_dd_wo_14/ckf",
+    "rly_dvw_dd_wo_15/ck_o",
+    "rly_dvw_dd_wo_15/ckf",
+    "rly_dvw_dd_wo_16/ck_o",
+    "rly_dvw_dd_wo_16/ckf",
+    "rly_dvw_dd_wo_17/ck_o",
+    "rly_dvw_dd_wo_17/ckf",
+    "rly_dvw_dd_wo_18/ck_o",
+    "rly_dvw_dd_wo_18/ckf",
+    "rly_dvw_dd_wo_19/ck_o",
+    "rly_dvw_dd_wo_19/ckf",
+    "rly_dvw_dd_wo_2/ck_o",
+    "rly_dvw_dd_wo_2/ckf",
+    "rly_dvw_dd_wo_20/ck_o",
+    "rly_dvw_dd_wo_20/ckf",
+    "rly_dvw_dd_wo_21/ck_o",
+    "rly_dvw_dd_wo_21/ckf",
+    "rly_dvw_dd_wo_22/ck_o",
+    "rly_dvw_dd_wo_22/ckf",
+    "rly_dvw_dd_wo_23/ck_o",
+    "rly_dvw_dd_wo_23/ckf",
+    "rly_dvw_dd_wo_24/ck_o",
+    "rly_dvw_dd_wo_24/ckf",
+    "rly_dvw_dd_wo_25/ck",
+    "rly_dvw_dd_wo_25/ckf",
+    "rly_dvw_dd_wo_3/ck_o",
+    "rly_dvw_dd_wo_3/ckf",
+    "rly_dvw_dd_wo_4/ck_o",
+    "rly_dvw_dd_wo_4/ckf",
+    "rly_dvw_dd_wo_5/ck_o",
+    "rly_dvw_dd_wo_5/ckf",
+    "rly_dvw_dd_wo_6/ck_o",
+    "rly_dvw_dd_wo_6/ckf",
+    "rly_dvw_dd_wo_7/ck_o",
+    "rly_dvw_dd_wo_7/ckf",
+    "rly_dvw_dd_wo_8/ck_o",
+    "rly_dvw_dd_wo_8/ckf",
+    "rly_dvw_dd_wo_9/ck_o",
+    "rly_dvw_dd_wo_9/ckf",
+    "rly_sf_q_slot_0/ck",
+    "rly_sf_q_slot_0/ck_s",
+    "rly_sf_q_slot_beat_0/ck",
+    "rly_sf_q_slot_beat_0/ck_s",
+    "sys_face/ck"
+   ],
+   "clock_identity_sha256": "37927418910a8ab837f32a8eaa21ce9f0fc8677202bda89b362a75d69e0e4991",
+   "clock_identity_status": "native get_property pin clocks; empty/missing tags block qualification",
+   "parasitics": "placement estimate on completed physical clock ODB",
+   "scope": "actual die clock pin arrivals; single-corner early/late; not native flop or production admission"
+  }
+ },
+ "hard_child_clock_references": {
+  "dvs_W5/ck": {
+   "master": "qfd_dv_slice2_w",
+   "view": "ASSUMED (ideal 0, no measured view)",
+   "insertion_ss_ff_tt_ps": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rly_dvw_dd_wo_0/ck": {
+   "master": "qfd_rlyh0_548_SW_95x60",
+   "view": "ASSUMED (ideal 0, no measured view)",
+   "insertion_ss_ff_tt_ps": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rly_dvw_dd_wo_1/ckf": {
+   "master": "qfd_rlyh_548_EN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_2/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_3/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_4/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_5/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_6/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_7/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_8/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_9/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_10/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_11/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_12/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_13/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_14/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_15/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_16/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_17/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_18/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_19/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_20/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_21/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_22/ckf": {
+   "master": "qfd_rlyh_548_SN_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_23/ckf": {
+   "master": "qfd_rlyh_548_SW_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_24/ckf": {
+   "master": "qfd_rlyh_548_EW_95x60",
+   "view": null,
+   "insertion_ss_ff_tt_ps": null
+  },
+  "rly_dvw_dd_wo_25/ck": {
+   "master": "qfd_landh_548_EN_95x60",
+   "view": "ASSUMED (ideal 0, no measured view)",
+   "insertion_ss_ff_tt_ps": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rly_dvw_dd_wo_25/ckf": {
+   "master": "qfd_landh_548_EN_95x60",
+   "view": "ASSUMED (ideal 0, no measured view)",
+   "insertion_ss_ff_tt_ps": null
+  },
+  "native59/ck": {
+   "master": "qfd_native59_dv_service",
+   "view": "ASSUMED (ideal 0, no measured view)",
+   "insertion_ss_ff_tt_ps": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "sys_face/ck": {
+   "master": "qfd_sys_face",
+   "view": "real",
+   "insertion_ss_ff_tt_ps": [
+    352.6,
+    219.9,
+    269.3
+   ]
+  },
+  "rly_sf_q_slot_0/ck": {
+   "master": "qfd_landh0_1_SW_65x30",
+   "view": "ASSUMED (ideal 0, no measured view)",
+   "insertion_ss_ff_tt_ps": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rly_sf_q_slot_0/ck_s": {
+   "master": "qfd_landh0_1_SW_65x30",
+   "view": "ASSUMED (ideal 0, no measured view)",
+   "insertion_ss_ff_tt_ps": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rly_sf_q_slot_beat_0/ck": {
+   "master": "qfd_landh0_5_NW_65x30",
+   "view": "ASSUMED (ideal 0, no measured view)",
+   "insertion_ss_ff_tt_ps": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rly_sf_q_slot_beat_0/ck_s": {
+   "master": "qfd_landh0_5_NW_65x30",
+   "view": "ASSUMED (ideal 0, no measured view)",
+   "insertion_ss_ff_tt_ps": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "blockers": [
+  "Q readiness certificate belongs to a different GEN",
+  "SAFE2 native clock port absent from GEN: native59/ck_fmt",
+  "SAFE2 native clock port absent from GEN: native59/ck_qbuf",
+  "unqualified hard-child clock reference: dvs_W5/ck master qfd_dv_slice2_w",
+  "unqualified hard-child clock reference: native59/ck master qfd_native59_dv_service",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_0/ck master qfd_rlyh0_548_SW_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_1/ckf master qfd_rlyh_548_EN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_10/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_11/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_12/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_13/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_14/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_15/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_16/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_17/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_18/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_19/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_2/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_20/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_21/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_22/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_23/ckf master qfd_rlyh_548_SW_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_24/ckf master qfd_rlyh_548_EW_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_25/ck master qfd_landh_548_EN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_25/ckf master qfd_landh_548_EN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_3/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_4/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_5/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_6/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_7/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_8/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_dvw_dd_wo_9/ckf master qfd_rlyh_548_SN_95x60",
+  "unqualified hard-child clock reference: rly_sf_q_slot_0/ck master qfd_landh0_1_SW_65x30",
+  "unqualified hard-child clock reference: rly_sf_q_slot_0/ck_s master qfd_landh0_1_SW_65x30",
+  "unqualified hard-child clock reference: rly_sf_q_slot_beat_0/ck master qfd_landh0_5_NW_65x30",
+  "unqualified hard-child clock reference: rly_sf_q_slot_beat_0/ck_s master qfd_landh0_5_NW_65x30"
+ ],
+ "pin_evidence_complete": false,
+ "phase_qualified": false,
+ "advance_admitted": false,
+ "remaining_proof": "Run all512 production Q writes and32 requests on these actual phases with the bound programme; prove landing epoch, planned age, native SRAM readiness and unchanged CMD/Q output slots"
+}
