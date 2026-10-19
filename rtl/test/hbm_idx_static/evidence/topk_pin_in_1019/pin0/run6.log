@@ -8,6 +8,6 @@ END MISMATCH ecnt 920 done 0 fault 1 expected 1/0
 END MISMATCH ecnt 985 done 0 fault 1 expected 1/0
 END MISMATCH ecnt 1080 done 0 fault 1 expected 1/0
 IDX_TOPK_STATIC PIN_IN0 SMUT0 MUT6 records29 dones0 faults29 sectors_checked147 errors59 schedule_edges3212
-[44030000] %Fatal: tb_idx_topk_static.sv:149: Assertion failed in tb_idx_topk_static: static TOPK on actual SW slice mismatch
-%Error: rtl/test/hbm_idx_static/tb_idx_topk_static.sv:149: Verilog $stop
+[44030000] %Fatal: tb_idx_topk_static.sv:151: Assertion failed in tb_idx_topk_static: static TOPK on actual SW slice mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_topk_static.sv:151: Verilog $stop
 Aborting...

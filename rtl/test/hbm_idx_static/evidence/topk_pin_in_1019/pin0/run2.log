@@ -18,6 +18,6 @@ VM MISMATCH sector 141b got e61e219f0000003f0000003ef883a904bb4c743080806c3068e6
 VM MISMATCH sector 1431 got 1eca322b897d9f0b82cf546323a2d8c1781ea8d6000000060000000400000003 expected 1eca322b897d9f0b82cf546323a2d8c1781ea8d6000000040000000300000002
 VM MISMATCH sector 1439 got ea6ec84b6b9f127c17a45dd8ea36c1bb5c83386bbdb4f720fe2a82fa00000006 expected ea6ec84b6b9f127c17a45dd8ea36c1bb5c83386bbdb4f720fe2a82fa00000003
 IDX_TOPK_STATIC PIN_IN0 SMUT0 MUT2 records29 dones26 faults3 sectors_checked147 errors30 schedule_edges3212
-[44030000] %Fatal: tb_idx_topk_static.sv:149: Assertion failed in tb_idx_topk_static: static TOPK on actual SW slice mismatch
-%Error: rtl/test/hbm_idx_static/tb_idx_topk_static.sv:149: Verilog $stop
+[44030000] %Fatal: tb_idx_topk_static.sv:151: Assertion failed in tb_idx_topk_static: static TOPK on actual SW slice mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_topk_static.sv:151: Verilog $stop
 Aborting...
