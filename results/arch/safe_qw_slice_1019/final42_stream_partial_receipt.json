@@ -1,0 +1,20 @@
+{
+  "source": "b99c1cb10",
+  "proof_commit": "c317daff3",
+  "shape": "MU_NU4 SU_LT1 HD_W1301 Verilator5.050",
+  "production_e_w": "nine positives PASS each; see full outer logs",
+  "mutant14": "k FAIL128/512 expected",
+  "mutant15": "q FAIL0/512 expected",
+  "memory_model": "strict32x64 proxy for these full production runs; actual compiled64 model passed independent width/mask/readhold proof c317; combined real-native production pending",
+  "native_cells": 42,
+  "storage_area_um2": 23201.09568,
+  "stream_reset_source": "0df1d4c0e",
+  "stream_equivalence": {
+    "host": "ot-epyc5",
+    "unit": "oth-ubuntu-1709880-1792428842",
+    "result": "PASS1500cycles/tworesets alloutputs",
+    "mutant_unit": "oth-ubuntu-1714129-1792429033",
+    "mutant_result": "MUT2 FAIL cycle37 expected"
+  },
+  "scope": "stream reset partition only; dynamic packer control/depth unsafe, delegated dedicated source owner; no physical qualification"
+}
