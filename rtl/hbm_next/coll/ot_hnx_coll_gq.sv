@@ -236,10 +236,14 @@ module ot_hnx_coll_gq_issue #(
     end
     // HNX source row offsets soff[r] = r rs_A (13-b sector-local), registered one edge after the fire; row 0 is 0, and
     // row 1's first read is at the earliest one edge after that register loads (K >= 1, issue edge fire + 2).
-    reg [12:0] soff [1:15];
-    always @(posedge clk) for (integer r = 1; r < 16; r = r + 1) soff[r] <= (MUT == 6) ? 13'd0 : 13'(r * g_rsa);
+    // gq_issue n2 (timing, NEEDS_RTL n1 TT -111.78: soff -> sec_add -> + i -> 8:1 rdw select fanned to 512 p_d bits):
+    // the row SOURCE BASE rsrc[r] = g_src + r rs_A is registered directly (same edge as the old soff register, from the
+    // same g_src / g_rsa registers), so no row-offset adder sits on any issue path; the payload and quantiser-capture
+    // bank selects are registered one stage early (psel / asel, from ev_k[S_P-2] / ev_k[S_QCAP-1]). Same edges, same values.
+    reg [15:0] rsrc [1:15];
+    always @(posedge clk) for (integer r = 1; r < 16; r = r + 1) rsrc[r] <= (MUT == 6) ? g_src : sec_add(g_src, 13'(r * g_rsa));
     function automatic [15:0] row_src(input [3:0] r);
-        row_src = (r == 4'd0) ? g_src : sec_add(g_src, soff[r]);
+        row_src = (r == 4'd0) ? g_src : rsrc[r];
     endfunction
     // ------------------------------------------------------------------ event pipeline {v, k}
     reg [ND-1:0] ev_v; reg [16:0] ev_k [0:ND-1];         // HNX entry {row[3:0], k[9:0], t[2:0]}
@@ -294,6 +298,14 @@ module ot_hnx_coll_gq_issue #(
         if (!rn) for (integer d = 0; d < 8; d = d + 1) rdx[d] <= 8'd0;
         else begin rdx[0] <= rd_exp; for (integer d = 1; d < 8; d = d + 1) rdx[d] <= rdx[d-1]; end
     reg [2055:0] rr_q; reg [7:0] rrv_q;
+    // early bank selects (low 3 sector bits only: sec_add carries never reach bit 13, so s[2:0] = (base + off)[2:0])
+    reg [2:0] psel [0:1]; reg [2:0] asel [0:7];
+    always @(posedge clk) for (integer r = 0; r < 2; r = r + 1) begin : nb_sel
+        reg [10:0] i; reg [15:0] s;
+        i = flit_i(ek(ev_k[S_P-2]), r); s = sec_add(row_src(er(ev_k[S_P-2])), 13'(i)); psel[r] <= s[2:0];
+        i = flit_i(ek(ev_k[S_QCAP-1]), r);
+        for (integer w = 0; w < 4; w = w + 1) begin s = sec_add(row_src(er(ev_k[S_QCAP-1])), 13'({i, 2'b00} + w)); asel[r*4 + w] <= s[2:0]; end
+    end
     function automatic [255:0] rdw(input [2:0] b);       // captured read word of bank b (8:1 select, no runtime part-select)
         rdw = 256'd0;
         for (integer j = 0; j < 8; j = j + 1) if (b == 3'(j)) rdw = rr_q[j*257 +: 256];
@@ -312,11 +324,7 @@ module ot_hnx_coll_gq_issue #(
         end
     always @(posedge clk) for (integer r = 0; r < 2; r = r + 1) begin : nb_4
         reg [10:0] i; reg [15:0] s;
-        i = flit_i(ek(ev_k[S_QCAP]), r);
-        for (integer w = 0; w < 4; w = w + 1) begin
-            s = sec_add(row_src(er(ev_k[S_QCAP])), 13'({i, 2'b00} + w));
-            aq_x[r*1024 + w*256 +: 256] <= rdw(s[2:0]);
-        end
+        for (integer w = 0; w < 4; w = w + 1) aq_x[r*1024 + w*256 +: 256] <= rdw(asel[r*4 + w]);
     end
     reg [511:0] aq_q_q; reg [19:0] aq_e_q;
     always @(posedge clk or negedge rn) if (!rn) begin aq_vo_q <= 2'd0; aq_fault_q <= 2'd0; end else begin aq_vo_q <= aq_vo; aq_fault_q <= aq_fault; end
@@ -342,8 +350,7 @@ module ot_hnx_coll_gq_issue #(
         p_k <= kp;
         for (integer r = 0; r < 2; r = r + 1) begin : nb_7
             reg [10:0] i; reg [15:0] s; i = flit_i(kp, r); p_i[r] <= i;
-            s = sec_add(row_src(rp), 13'(i));
-            if (!g_qbg) p_d[r] <= rdw(s[2:0]);
+            if (!g_qbg) p_d[r] <= rdw(psel[r]);
             else if (is_code(i)) p_d[r] <= aq_q_q[r*256 +: 256];
             else p_d[r] <= (i == {3'b0, g_bs}) ? ex_n[255:0] : ex_n[511:256];
         end
