@@ -1,0 +1,376 @@
+{
+  "verdict": "PASS",
+  "scope": "Exact native nontransparent cell/master/function identities plus all core input/output source and inversion parity relationships through actual native BUF/INV and ties. Actual frozen-run 1_synth baseline; StageA internal cell numbering differs and is not substituted. This is a netlist structural correspondence, not a formal RTL equivalence proof.",
+  "source_synth_odb_sha256": "07677533ff630f13bc454d349424f9301e5a2ea98a64158eb5c2e1e65806e36b",
+  "post_cts_odb_sha256": "09b8507cf2f62428641a60ccc59d83e0767dbdb939f7c45fe23c0cc29f7cdc83",
+  "nontransparent_state_and_logic_cells": 67,
+  "all_core_and_port_relationships": 252,
+  "source_FF_count": 51,
+  "new_state_or_changed_nontransparent_functions": 0,
+  "clock_net_count": 6,
+  "maximum_direct_clock_driver_loads": 15,
+  "all_native_clock_net_drivers": [
+    {
+      "net": "clk",
+      "drivers": [],
+      "sinks": [
+        [
+          "clkbuf_0_clk",
+          "A",
+          "BUFx8_ASAP7_75t_R"
+        ]
+      ],
+      "direct_loads": 1
+    },
+    {
+      "net": "clknet_0_clk",
+      "drivers": [
+        [
+          "clkbuf_0_clk",
+          "Y",
+          "BUFx8_ASAP7_75t_R"
+        ]
+      ],
+      "sinks": [
+        [
+          "clkbuf_2_0__f_clk",
+          "A",
+          "BUFx8_ASAP7_75t_R"
+        ],
+        [
+          "clkbuf_2_1__f_clk",
+          "A",
+          "BUFx8_ASAP7_75t_R"
+        ],
+        [
+          "clkbuf_2_2__f_clk",
+          "A",
+          "BUFx8_ASAP7_75t_R"
+        ],
+        [
+          "clkbuf_2_3__f_clk",
+          "A",
+          "BUFx8_ASAP7_75t_R"
+        ]
+      ],
+      "direct_loads": 4
+    },
+    {
+      "net": "clknet_2_0__leaf_clk",
+      "drivers": [
+        [
+          "clkbuf_2_0__f_clk",
+          "Y",
+          "BUFx8_ASAP7_75t_R"
+        ]
+      ],
+      "sinks": [
+        [
+          "a_q\\[10\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[11\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[12\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[13\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[14\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[1\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[11\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[12\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[13\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[14\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[15\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[1\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "reset_first$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "u_reset_a/q$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "u_reset_b/q$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ]
+      ],
+      "direct_loads": 15
+    },
+    {
+      "net": "clknet_2_1__leaf_clk",
+      "drivers": [
+        [
+          "clkbuf_2_1__f_clk",
+          "Y",
+          "BUFx8_ASAP7_75t_R"
+        ]
+      ],
+      "sinks": [
+        [
+          "a_q\\[0\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[15\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[2\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[3\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[4\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[5\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[6\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "a_q\\[7\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[0\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[2\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[3\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[4\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[5\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[6\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[7\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ]
+      ],
+      "direct_loads": 15
+    },
+    {
+      "net": "clknet_2_2__leaf_clk",
+      "drivers": [
+        [
+          "clkbuf_2_2__f_clk",
+          "Y",
+          "BUFx8_ASAP7_75t_R"
+        ]
+      ],
+      "sinks": [
+        [
+          "a_q\\[8\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[8\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[9\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[0\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[13\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[1\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[3\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[4\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[5\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[6\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[8\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "clkload0",
+          "A",
+          "INVx3_ASAP7_75t_R"
+        ]
+      ],
+      "direct_loads": 12
+    },
+    {
+      "net": "clknet_2_3__leaf_clk",
+      "drivers": [
+        [
+          "clkbuf_2_3__f_clk",
+          "Y",
+          "BUFx8_ASAP7_75t_R"
+        ]
+      ],
+      "sinks": [
+        [
+          "a_q\\[9\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "b_q\\[10\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[10\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[11\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[12\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[14\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[15\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[2\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[7\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "y\\[9\\]$_DFF_PN0_",
+          "CLK",
+          "DFFASRHQNx1_ASAP7_75t_R"
+        ],
+        [
+          "clkload1",
+          "A",
+          "INVx4_ASAP7_75t_R"
+        ]
+      ],
+      "direct_loads": 11
+    }
+  ]
+}

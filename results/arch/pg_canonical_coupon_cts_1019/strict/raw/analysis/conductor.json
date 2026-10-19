@@ -1,0 +1,25 @@
+{
+  "source_odb_sha256": "09b8507cf2f62428641a60ccc59d83e0767dbdb939f7c45fe23c0cc29f7cdc83",
+  "shape_count": 8388,
+  "native_vias": 175,
+  "conductor_components": [
+    {
+      "net": "VDD",
+      "shape_count": 4792,
+      "rooted": true
+    },
+    {
+      "net": "VSS",
+      "shape_count": 3596,
+      "rooted": true
+    }
+  ],
+  "unrooted": [],
+  "unmatched_pg_bpins": [],
+  "term_rectangle_contacts_to_rooted_native_core_pg": 510,
+  "missing_term_rectangle_contacts": [],
+  "native_metadata_unbound_terms": 192,
+  "cross_net_short_shape_count": 0,
+  "wrong_bound_pin_contacts": 0,
+  "scope": "Geometric native PG union/contact proof for exact single CORE domain; independent of metadata binding, native DRC, signal-route shorts, IR/EM, and extracted timing."
+}

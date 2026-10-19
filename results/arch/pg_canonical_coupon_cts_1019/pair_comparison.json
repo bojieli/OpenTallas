@@ -1,0 +1,76 @@
+{
+  "geometry_cells_equal": true,
+  "geometry_rows_equal": true,
+  "geometry_pins_equal": true,
+  "geometry_pg_shapes_equal": true,
+  "binding_differences": [
+    {
+      "instance": "clkbuf_0_clk",
+      "pin": "VDD",
+      "default": null,
+      "strict": "VDD"
+    },
+    {
+      "instance": "clkbuf_0_clk",
+      "pin": "VSS",
+      "default": null,
+      "strict": "VSS"
+    },
+    {
+      "instance": "clkbuf_2_0__f_clk",
+      "pin": "VDD",
+      "default": null,
+      "strict": "VDD"
+    },
+    {
+      "instance": "clkbuf_2_0__f_clk",
+      "pin": "VSS",
+      "default": null,
+      "strict": "VSS"
+    },
+    {
+      "instance": "clkbuf_2_1__f_clk",
+      "pin": "VDD",
+      "default": null,
+      "strict": "VDD"
+    },
+    {
+      "instance": "clkbuf_2_1__f_clk",
+      "pin": "VSS",
+      "default": null,
+      "strict": "VSS"
+    },
+    {
+      "instance": "clkbuf_2_2__f_clk",
+      "pin": "VDD",
+      "default": null,
+      "strict": "VDD"
+    },
+    {
+      "instance": "clkbuf_2_2__f_clk",
+      "pin": "VSS",
+      "default": null,
+      "strict": "VSS"
+    },
+    {
+      "instance": "clkbuf_2_3__f_clk",
+      "pin": "VDD",
+      "default": null,
+      "strict": "VDD"
+    },
+    {
+      "instance": "clkbuf_2_3__f_clk",
+      "pin": "VSS",
+      "default": null,
+      "strict": "VSS"
+    }
+  ],
+  "changed_bound_term_count": 10,
+  "all_source_relationships_default": "PASS",
+  "all_source_relationships_strict": "PASS",
+  "timing_log_identity": {
+    "TT": true,
+    "FF": true,
+    "SS": true
+  }
+}

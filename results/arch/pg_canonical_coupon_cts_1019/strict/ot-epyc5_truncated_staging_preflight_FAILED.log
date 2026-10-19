@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/pg-canonical-coupon-cts-1019/preflight.py", line 7, in <module>
+    assert not bad,(len(bad),bad[:8])
+           ^^^^^^^
+AssertionError: (8820, ['tools/hbm_die_v15/v16_specs/vmsm.json', 'tools/hbm_die_v15/v16_synth_drive.py', 'tools/hbm_die_v15/v16_synth_drive_r8b.py', 'tools/hbm_die_v15/v16_views.py', 'tools/hbm_die_v15/v6_eval.py', 'tools/hbm_die_v15/view_case.py', 'tools/hbm_die_v15/view_inventory.py', 'tools/hbm_die_v15/vm_bank_grant_1417.py'])

@@ -1,0 +1,448 @@
+{
+  "creator": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+  "modules": {
+    "$paramod\\ot_pg_reset_copy_1019\\COPY_ID=s32'00000000000000000000000000000000": {
+      "attributes": {
+        "keep_hierarchy": "00000000000000000000000000000001",
+        "hdlname": "ot_pg_reset_copy_1019"
+      },
+      "parameter_default_values": {
+        "COPY_ID": "00000000000000000000000000000000"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "d": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "q": {
+          "direction": "output",
+          "bits": [ 5 ]
+        }
+      },
+      "cells": {
+        "$procdff$4237": {
+          "hide_name": 1,
+          "type": "$adff",
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "0",
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "ARST": "input",
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "ARST": [ 3 ],
+            "CLK": [ 2 ],
+            "D": [ 4 ],
+            "Q": [ 5 ]
+          }
+        }
+      },
+      "netnames": {
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "d": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+          }
+        },
+        "q": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+          }
+        },
+        "rst_n": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "$paramod\\ot_pg_reset_copy_1019\\COPY_ID=s32'00000000000000000000000000000001": {
+      "attributes": {
+        "keep_hierarchy": "00000000000000000000000000000001",
+        "hdlname": "ot_pg_reset_copy_1019"
+      },
+      "parameter_default_values": {
+        "COPY_ID": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "d": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "q": {
+          "direction": "output",
+          "bits": [ 5 ]
+        }
+      },
+      "cells": {
+        "$procdff$4242": {
+          "hide_name": 1,
+          "type": "$adff",
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "0",
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "ARST": "input",
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "ARST": [ 3 ],
+            "CLK": [ 2 ],
+            "D": [ 4 ],
+            "Q": [ 5 ]
+          }
+        }
+      },
+      "netnames": {
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "d": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+          }
+        },
+        "q": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+          }
+        },
+        "rst_n": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "ot_pg_canonical_xor16_1019": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "hdlname": "ot_pg_canonical_xor16_1019"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "a": {
+          "direction": "input",
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ]
+        },
+        "b": {
+          "direction": "input",
+          "bits": [ 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35 ]
+        },
+        "y": {
+          "direction": "output",
+          "bits": [ 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51 ]
+        }
+      },
+      "cells": {
+        "$auto$ff.cc:337:slice$4339": {
+          "hide_name": 1,
+          "type": "$_DFF_PN0_",
+          "parameters": {
+          },
+          "attributes": {
+            "keep": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output",
+            "R": "input"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ "1" ],
+            "Q": [ 52 ],
+            "R": [ 3 ]
+          }
+        },
+        "$procdff$4247": {
+          "hide_name": 1,
+          "type": "$adff",
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "0000000000000000",
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000010000"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "ARST": "input",
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "ARST": [ 53 ],
+            "CLK": [ 2 ],
+            "D": [ 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 ],
+            "Q": [ 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51 ]
+          }
+        },
+        "$procdff$4252": {
+          "hide_name": 1,
+          "type": "$adff",
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "00000000",
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "ARST": "input",
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "ARST": [ 53 ],
+            "CLK": [ 2 ],
+            "D": [ 28, 29, 30, 31, 32, 33, 34, 35 ],
+            "Q": [ 70, 71, 72, 73, 74, 75, 76, 77 ]
+          }
+        },
+        "$procdff$4257": {
+          "hide_name": 1,
+          "type": "$adff",
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "0000000000000000",
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000010000"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "ARST": "input",
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "ARST": [ 78 ],
+            "CLK": [ 2 ],
+            "D": [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ],
+            "Q": [ 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94 ]
+          }
+        },
+        "$procdff$4262": {
+          "hide_name": 1,
+          "type": "$adff",
+          "parameters": {
+            "ARST_POLARITY": "00000000000000000000000000000000",
+            "ARST_VALUE": "00000000",
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "ARST": "input",
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "ARST": [ 78 ],
+            "CLK": [ 2 ],
+            "D": [ 20, 21, 22, 23, 24, 25, 26, 27 ],
+            "Q": [ 95, 96, 97, 98, 99, 100, 101, 102 ]
+          }
+        },
+        "$xor$/src/tests/pg_canonical_coupon_1019/coupon.sv:15$4228": {
+          "hide_name": 1,
+          "type": "$xor",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000010000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000010000",
+            "Y_WIDTH": "00000000000000000000000000010000"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94 ],
+            "B": [ 95, 96, 97, 98, 99, 100, 101, 102, 70, 71, 72, 73, 74, 75, 76, 77 ],
+            "Y": [ 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 ]
+          }
+        },
+        "u_reset_a": {
+          "hide_name": 0,
+          "type": "$paramod\\ot_pg_reset_copy_1019\\COPY_ID=s32'00000000000000000000000000000000",
+          "parameters": {
+          },
+          "attributes": {
+            "keep": "00000000000000000000000000000001",
+            "keep_hierarchy": "00000000000000000000000000000001",
+            "module_not_derived": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output",
+            "rst_n": "input"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 52 ],
+            "q": [ 78 ],
+            "rst_n": [ 3 ]
+          }
+        },
+        "u_reset_b": {
+          "hide_name": 0,
+          "type": "$paramod\\ot_pg_reset_copy_1019\\COPY_ID=s32'00000000000000000000000000000001",
+          "parameters": {
+          },
+          "attributes": {
+            "keep": "00000000000000000000000000000001",
+            "keep_hierarchy": "00000000000000000000000000000001",
+            "module_not_derived": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output",
+            "rst_n": "input"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 52 ],
+            "q": [ 53 ],
+            "rst_n": [ 3 ]
+          }
+        }
+      },
+      "netnames": {
+        "$0\\y[15:0]": {
+          "hide_name": 1,
+          "bits": [ 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 ],
+          "attributes": {
+          }
+        },
+        "a": {
+          "hide_name": 0,
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ],
+          "attributes": {
+          }
+        },
+        "a_q": {
+          "hide_name": 0,
+          "bits": [ 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94 ],
+          "attributes": {
+          }
+        },
+        "b": {
+          "hide_name": 0,
+          "bits": [ 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35 ],
+          "attributes": {
+          }
+        },
+        "b_q": {
+          "hide_name": 0,
+          "bits": [ 95, 96, 97, 98, 99, 100, 101, 102, 70, 71, 72, 73, 74, 75, 76, 77 ],
+          "attributes": {
+          }
+        },
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "reset_a": {
+          "hide_name": 0,
+          "bits": [ 78 ],
+          "attributes": {
+          }
+        },
+        "reset_b": {
+          "hide_name": 0,
+          "bits": [ 53 ],
+          "attributes": {
+          }
+        },
+        "reset_first": {
+          "hide_name": 0,
+          "bits": [ 52 ],
+          "attributes": {
+            "keep": "00000000000000000000000000000001"
+          }
+        },
+        "rst_n": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        },
+        "y": {
+          "hide_name": 0,
+          "bits": [ 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51 ],
+          "attributes": {
+          }
+        }
+      }
+    }
+  }
+}

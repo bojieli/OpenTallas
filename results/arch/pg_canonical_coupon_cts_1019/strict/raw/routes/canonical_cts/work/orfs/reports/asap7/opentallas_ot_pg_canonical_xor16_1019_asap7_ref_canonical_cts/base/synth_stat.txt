@@ -1,0 +1,122 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+17. Printing statistics.
+
+=== $paramod\ot_pg_reset_copy_1019\COPY_ID=s32'00000000000000000000000000000000 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        6        -        6        - wires
+        6        -        6        - wire bits
+        4        -        4        - public wires
+        4        -        4        - public wire bits
+        4        -        4        - ports
+        4        -        4        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.496        3    0.496 cells
+        1    0.379        1    0.379   DFFASRHQNx1_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_pg_reset_copy_1019\COPY_ID=s32'00000000000000000000000000000000': 0.495720
+     of which used for sequential elements: 0.379080 (76.47%)
+
+=== $paramod\ot_pg_reset_copy_1019\COPY_ID=s32'00000000000000000000000000000001 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        6        -        6        - wires
+        6        -        6        - wire bits
+        4        -        4        - public wires
+        4        -        4        - public wire bits
+        4        -        4        - ports
+        4        -        4        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.496        3    0.496 cells
+        1    0.379        1    0.379   DFFASRHQNx1_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_pg_reset_copy_1019\COPY_ID=s32'00000000000000000000000000000001': 0.495720
+     of which used for sequential elements: 0.379080 (76.47%)
+
+=== ot_pg_canonical_xor16_1019 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       86        -       74        - wires
+      131        -      119        - wire bits
+       16        -        8        - public wires
+       61        -       53        - public wire bits
+       13        -        5        - ports
+       58        -       50        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       89   23.153       83   22.162 cells
+       51   19.333       49   18.575   DFFASRHQNx1_ASAP7_75t_R
+       17    0.744       17    0.744   INVx1_ASAP7_75t_R
+        2    0.146        -        -   INVx3_ASAP7_75t_R
+        3    0.131        1    0.044   TIEHIx1_ASAP7_75t_R
+       16    2.799       16    2.799   XOR2x1_ASAP7_75t_R
+        2    0.991        2        - submodules
+        1    0.496        1        -   $paramod\ot_pg_reset_copy_1019\COPY_ID=s32'00000000000000000000000000000000
+        1    0.496        1        -   $paramod\ot_pg_reset_copy_1019\COPY_ID=s32'00000000000000000000000000000001
+
+   Chip area for module '\ot_pg_canonical_xor16_1019': 23.153040
+     of which used for sequential elements: 19.333080 (83.50%)
+
+=== design hierarchy ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       89   23.153       83   22.162 ot_pg_canonical_xor16_1019
+        3    0.496        3    0.496 $paramod\ot_pg_reset_copy_1019\COPY_ID=s32'00000000000000000000000000000000
+        3    0.496        3    0.496 $paramod\ot_pg_reset_copy_1019\COPY_ID=s32'00000000000000000000000000000001
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       86        -       74        - wires
+      131        -      119        - wire bits
+       16        -        8        - public wires
+       61        -       53        - public wire bits
+       13        -        5        - ports
+       58        -       50        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       89   23.153       83   22.162 cells
+       51   19.333       49   18.575   DFFASRHQNx1_ASAP7_75t_R
+       17    0.744       17    0.744   INVx1_ASAP7_75t_R
+        2    0.146        -        -   INVx3_ASAP7_75t_R
+        3    0.131        1    0.044   TIEHIx1_ASAP7_75t_R
+       16    2.799       16    2.799   XOR2x1_ASAP7_75t_R
+        2    0.991        2        - submodules
+        1    0.496        1        -   $paramod\ot_pg_reset_copy_1019\COPY_ID=s32'00000000000000000000000000000000
+        1    0.496        1        -   $paramod\ot_pg_reset_copy_1019\COPY_ID=s32'00000000000000000000000000000001
+
+   Chip area for top module '\ot_pg_canonical_xor16_1019': 23.153040
+     of which used for sequential elements: 19.333080 (83.50%)
+

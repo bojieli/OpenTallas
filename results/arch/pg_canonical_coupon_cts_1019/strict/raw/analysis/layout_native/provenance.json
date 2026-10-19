@@ -1,0 +1,52 @@
+{
+  "odb_sha256": "09b8507cf2f62428641a60ccc59d83e0767dbdb939f7c45fe23c0cc29f7cdc83",
+  "native_geometry_sha256": "fa185cdf6b4e2efd5fa3476d1e9e5fa5f85ac9eb0d09b508365c161534978422",
+  "dbu": 1000,
+  "native_cell_count": 255,
+  "actual_rows": [
+    [
+      2160,
+      20790,
+      41040,
+      21060
+    ],
+    [
+      2160,
+      21060,
+      41040,
+      21330
+    ],
+    [
+      2160,
+      21330,
+      41040,
+      21600
+    ],
+    [
+      2160,
+      21600,
+      41040,
+      21870
+    ],
+    [
+      2160,
+      21870,
+      41040,
+      22140
+    ],
+    [
+      2160,
+      22140,
+      41040,
+      22410
+    ]
+  ],
+  "clock_pin_um": [
+    8.7,
+    43.158
+  ],
+  "fill_band_percent": 53.42592592592593,
+  "fill_whole_outline_percent": 1.8031249999999999,
+  "fill_core_percent": 2.2260802469135803,
+  "notes": "Full panel 1:1; row zoom exaggerates Y explicitly. Draws actual native coordinates and actual pins, not model locations."
+}
