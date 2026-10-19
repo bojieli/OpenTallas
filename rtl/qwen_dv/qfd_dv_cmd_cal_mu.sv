@@ -39,7 +39,12 @@
 // MUT (bench only): 1..3 as qfd_dv_cmd_cal; 11 = relocation / tag / cmd_user from the wrong user ((u + 1) % NU);
 //   12 = the per-user base dropped (no relocation); 13 = the old one-in-flight rule (a start while ANY playhead plays
 //   faults and is refused); 14 = a start for a playing user is not faulted (silent restart); 15 = a start freezes every
-//   playhead for that edge (the single calendar's global go gating), which shifts the other users' timelines.
+//   playhead for that edge (the single calendar's global go gating), which shifts the other users' timelines;
+//   16 = UFOLD user fields left at the image's 0 (the slices' per-user LM-head argmax then merges every user into user 0).
+// UFOLD (MU-ADOPT-CTLM 10-19, opt-in, NU > 1 and UB <= 2 only): the issued word also carries its user in the two spare
+//   fields the R4 per-user LM-head argmax (rtl/qwen_dv/mu/qfd_dv_amax_mu.sv) reads: STN (kind 2) cmd[52:51] and AMAX
+//   (kind 6) cmd[9:8] := user (zero-extended to 2 bits).  The image leaves them 0 (non-zero = fault_code[3], as the XC
+//   tag user bits).  Same register, same edge: 0 added latency; user 0's words are the image's words.
 // =====================================================================================================================
 module qfd_dv_cmd_cal_mu #(
     parameter integer MUT = 0,
@@ -49,7 +54,8 @@ module qfd_dv_cmd_cal_mu #(
     parameter integer UB = (NU > 1) ? $clog2(NU) : 1,
     parameter integer UVM_STRIDE = 0,               // per-user VM / landing base stride (address-field units)
     parameter integer PIDX_STRIDE = 0,              // per-user SU program-index stride
-    parameter integer UTAG_LSB = 6                  // XC tag bit of the user field
+    parameter integer UTAG_LSB = 6,                 // XC tag bit of the user field
+    parameter integer UFOLD = 0                     // 1: user into STN cmd[52:51] / AMAX cmd[9:8] (NU > 1, UB <= 2)
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -246,10 +252,22 @@ module qfd_dv_cmd_cal_mu #(
                           if (ic[23 + UTAG_LSB +: UB] != {UB{1'b0}}) r_bad = 1'b1;
                           rc[23 + UTAG_LSB +: UB] = ru;
                       end
+                3'd6: if (UFOLD != 0) begin
+                          if (ic[9:8] != 2'd0) r_bad = 1'b1;
+                          rc[9:8] = (MUT == 16) ? 2'd0 : 2'(ru);
+                      end
                 default: ;
             endcase
+            // STN user (UFOLD): beside the dbase relocation above, any dst
+            if (UFOLD != 0 && i_kind == 3'd2) begin
+                if (ic[52:51] != 2'd0) r_bad = 1'b1;
+                rc[52:51] = (MUT == 16) ? 2'd0 : 2'(ru);
+            end
         end
     end
+    generate if (UFOLD != 0 && (NU < 2 || UB > 2)) begin : g_ufold_bad
+        initial $error("qfd_dv_cmd_cal_mu: UFOLD needs 2 <= NU <= 4");
+    end endgenerate
 
     // ================================================================ sequential
     integer k;

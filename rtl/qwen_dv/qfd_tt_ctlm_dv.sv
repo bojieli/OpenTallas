@@ -43,7 +43,9 @@
 //       the stage start edge, instead of the image's CALS stage (PW1017 [17:12]): as built, all 36 layers would read the
 //       weights of the one layer named in the image.
 //   0 extra edges on the issue path (the stage latch loads on the same edge as tok_r / pos_r).
-// MUT (bench only): 1..3 -> qfd_dv_cmd_cal MUT; 4 = x_oprog / x_orows swapped; 5 = dc rom_fault from ag any (not vm);
+// MUT (bench only): 1..3 -> qfd_dv_cmd_cal(_mu) MUT; 16 = calendar UFOLD off (NU > 1); 17 = SU count / observation of
+//   every user (NU > 1); 18 = one shared tok / pos register instead of the per-user bank (NU > 1); 19 = every user's dh
+//   start starts the ME programme (NU > 1); 20 = head stage latched on every dh start, not on LOCAL SEG (NU > 1); 4 = x_oprog / x_orows swapped; 5 = dc rom_fault from ag any (not vm);
 //   6 = nval from the old (pre-widening) ss bits [73:42] instead of tok_val; 7 = ME idle ignores ag stn_busy;
 //   8 = coll_busy clears on the ar_last rise only (the pre-widening rule); 9 = HARD_HR leaf stage from the CALS word.
 // HARD_HR (S-QWCOL 10-18, default 1): the head side is the hardened TT head leaf ot_qfd_tt_ctlm_static_hr (kit
@@ -52,19 +54,43 @@
 //   child's rom_cmd register IS the ib field of hr (hr = {ib, xpf, v} still one register after the relocated command);
 //   the child's reset stations release its state one ck edge after rst_n (no data / command edge changes).  Its three
 //   clock entries (ck_head, ck_pm0, ck_pm1) are this block's ck.  HARD_HR = 0: the previous inline head (reference).
+// NU (MU-ADOPT-CTLM 10-19, Qwen ROM 4 users, MU-QWEN R1/R2/R5; design record results/rtl/mu_qwen_1018/README.md s3 and
+//   results/rtl/mu_qwen_1018/ctlm/README.md).  NU = 1 (default) = the single-user block on every edge (the calendar is
+//   qfd_dv_cmd_cal_mu at NU 1, lockstep-identical to qfd_dv_cmd_cal).  NU = 2..4:
+//   - dh_user[1:0] (new input, pin-registered beside dh) = the user of the dh stage start (qfd_sys_face seq_dh_user,
+//     MU-QWEN R3 USER prefix event).  Ignored at NU = 1 (tie 0).
+//   - u_cal = qfd_dv_cmd_cal_mu #(NU, UVM_STRIDE, PIDX_STRIDE, UTAG_LSB, UFOLD 1): one playhead per user; the issued
+//     word carries its user (PORTS / STN-VM bases + u*UVM_STRIDE, SU pidx + u*PIDX_STRIDE, XC tag user bits, and STN
+//     cmd[52:51] / AMAX cmd[9:8] = user for the R4 per-user LM-head argmax).  No new output: the slices see the user in
+//     the cmd fields.  Strides = tools/qwen_static_schedule/mu_calendar.py DV_UVM_STRIDE / DV_PIDX_STRIDE / DV_UTAG_LSB.
+//   - per-user token / position bank (R2, token row part): a start latches tok/pos of ITS user; a LOCAL SEG entry starts
+//     the ME segment with the token / position of the entry's user; LOCAL EMB sends the entry's user's token.
+//   - the dh stage start starts the decode ME programme (base 0, XPF schedule) for user 0 only (the latency user):
+//     fillers' ME work runs as compiled LOCAL SEG entries of their own calendar segments (op-level interleave).
+//   - head running stage (STAGE_ME 1, ROM relocation): latched on user 0's dh start and on every LOCAL SEG start with
+//     the segment's user's stage (per-user stage bank); a filler's dh start leaves it alone.
+//   - SU accepted count / SU observation (head o-sync, XPF su events) count user 0's SU commands only, so the latency
+//     user's head and XPF see exactly the single-user event stream.
+//   User 0 is cycle-identical to NU = 1 (bench rtl/test/mu_qwen_seq ctlm cases).  Static schedule: no ready / credit;
+//   every violation is a sticky fault (calendar fault_code, start_fault), never a stall.
 // =====================================================================================================================
 module qfd_tt_ctlm_dv #(
     parameter integer XPF_TRANSPORT_EDGES = -1,
     parameter integer MUT = 0,
     parameter integer LAST_STAGE = 37,
     parameter integer HARD_HR = 1,
-    parameter integer STAGE_ME = 0
+    parameter integer STAGE_ME = 0,
+    parameter integer NU = 1,
+    parameter integer UVM_STRIDE = 4096,
+    parameter integer PIDX_STRIDE = 128,
+    parameter integer UTAG_LSB = 6
 ) (
     input  wire          ck,
     input  wire          rst_n,
     // ---------------- system face (qfd_sys_face)
     input  wire [74:0]   pw,
     input  wire [186:0]  dh,
+    input  wire [1:0]    dh_user,
     input  wire          kok,
     input  wire          kwd,
     input  wire          fab,
@@ -96,9 +122,12 @@ module qfd_tt_ctlm_dv #(
     reg  [106:0] ss_q;
     reg  [9:0]   ag_q;
     reg          fab_q;                   // kok / kwd / pw land in the head's own pin stations (AUD 4 / IS 1)
+    reg  [1:0]   dhu_q;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin dh_q <= 187'd0; ss_q <= 107'd0; ag_q <= 10'd0; fab_q <= 1'b0; end
-        else begin dh_q <= dh; ss_q <= ss5; ag_q <= ag5; fab_q <= fab; end
+        if (!rst_n) begin dh_q <= 187'd0; ss_q <= 107'd0; ag_q <= 10'd0; fab_q <= 1'b0; dhu_q <= 2'd0; end
+        else begin dh_q <= dh; ss_q <= ss5; ag_q <= ag5; fab_q <= fab; dhu_q <= (NU > 1) ? dh_user : 2'd0; end
+    localparam integer UB = (NU > 1) ? $clog2(NU) : 1;
+    wire [UB-1:0] s_user = dhu_q[UB-1:0];
     wire        s_start = dh_q[42];
     wire [5:0]  s_stage = dh_q[41:36];
     wire [17:0] s_tok = dh_q[35:18], s_pos = dh_q[17:0];
@@ -115,31 +144,56 @@ module qfd_tt_ctlm_dv #(
     // ------------------------------------------------------------------ static command calendar
     wire        c_emb, c_seg, c_su, c_xc, c_run, c_done, c_fault, c_ready;
     wire [11:0] c_base; wire [8:0] c_pidx;
-    qfd_dv_cmd_cal #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : 0), .LAST_STAGE(LAST_STAGE)) u_cal (.ck(ck), .rst_n(rst_n),
+    wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
+    // MUT 1..3 -> the calendar's MUT; MUT 16 (bench only, NU > 1) -> the calendar's UFOLD-off mutant
+    qfd_dv_cmd_cal_mu #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : (MUT == 16) ? 16 : 0), .LAST_STAGE(LAST_STAGE), .NU(NU),
+        .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0)) u_cal (
+        .ck(ck), .rst_n(rst_n),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
-        .start(s_start), .stage(s_stage), .cmd(cmd), .loc_emb(c_emb), .loc_seg(c_seg), .loc_base(c_base),
+        .start(s_start), .stage(s_stage), .start_user(s_user), .cmd(cmd), .cmd_user(c_user), .loc_emb(c_emb),
+        .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
-        .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .done(c_done), .fault(c_fault));
+        .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),
+        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode));
+    // user-0 gates (NU > 1): the head / XPF see the latency user's SU stream only (MUT 17: every user's)
+    wire        c_u0 = (NU == 1) || (c_user == {UB{1'b0}}) || (MUT == 17);
+    wire        s_u0 = (NU == 1) || (s_user == {UB{1'b0}}) || (MUT == 19);
     assign cal_image_ready = c_ready;
 
     // ------------------------------------------------------------------ token / ME start (was seq_su's st face)
     // STAGE_ME: the ME programme starts only in decode stages (see the header)
-    wire        s_me = (STAGE_ME == 0) ? s_start : (s_start && s_stage != 6'd0 && s_stage < LAST_STAGE[5:0]);
-    reg  [17:0] tok_r, pos_r;
+    // head running stage (NU > 1): the hard leaf has ONE loaded stage (ROM relocation).  Latch it on user 0's dh start
+    // (as today) and on every LOCAL SEG start with the stage of the SEGMENT's user (per-user stage bank), so each ME
+    // segment reads its own user's layer.  A filler's dh start does not touch it.  NU = 1: hd = the dh start / stage.
+    // (MUT 20, bench only: every dh start latches, no SEG latch = the single-user wiring.)
+    reg  [5:0]  stg_b [0:NU-1];
+    integer     sg_i;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin for (sg_i = 0; sg_i < NU; sg_i = sg_i + 1) stg_b[sg_i] <= 6'd0; end
+        else if (s_start) stg_b[s_user] <= s_stage;
+    wire        hd_start = (NU == 1 || (MUT == 20)) ? s_start : ((s_start && s_u0) || c_seg);
+    wire [5:0]  hd_stage = (NU == 1 || (MUT == 20)) ? s_stage : ((s_start && s_u0) ? s_stage : stg_b[c_user]);
+    // NU > 1: the dh start runs the ME programme for user 0 only; per-user tok / pos bank (MUT 18: one shared register)
+    wire        s_me0 = (STAGE_ME == 0) ? s_start : (s_start && s_stage != 6'd0 && s_stage < LAST_STAGE[5:0]);
+    wire        s_me = s_me0 && s_u0;
+    reg  [17:0] tok_b [0:NU-1], pos_b [0:NU-1];
     reg         st_h; reg [17:0] st_tok, st_pos; reg [11:0] st_base;
     reg         start_fault;
+    wire [UB-1:0] b_wr = (MUT == 18) ? {UB{1'b0}} : s_user, b_rd = (MUT == 18) ? {UB{1'b0}} : c_user;
+    integer     ub_i;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
-            tok_r <= 18'd0; pos_r <= 18'd0; st_h <= 1'b0; st_tok <= 18'd0; st_pos <= 18'd0; st_base <= 12'd0;
+            for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0; end
+            st_h <= 1'b0; st_tok <= 18'd0; st_pos <= 18'd0; st_base <= 12'd0;
             start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0;
         end else begin
-            if (s_start) begin tok_r <= s_tok; pos_r <= s_pos; end
+            if (s_start) begin tok_b[b_wr] <= s_tok; pos_b[b_wr] <= s_pos; end
             st_h <= s_me | c_seg;
             if (s_me) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end
-            else if (c_seg) begin st_tok <= tok_r; st_pos <= pos_r; st_base <= c_base; end
+            else if (c_seg) begin st_tok <= tok_b[b_rd]; st_pos <= pos_b[b_rd]; st_base <= c_base; end
             if (s_me && c_seg) start_fault <= 1'b1;
-            emb_start <= c_emb; emb_token <= tok_r;
+            emb_start <= c_emb; emb_token <= tok_b[b_rd];
         end
     wire [48:0] st = {st_h, st_tok, st_pos, st_base};
 
@@ -149,8 +203,8 @@ module qfd_tt_ctlm_dv #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin su_acc <= 24'd0; su_obs <= 16'd0; end
         else begin
-            if (c_su) su_acc <= su_acc + 24'd1;
-            su_obs <= {c_su, c_su, 2'd2, 3'd0, c_pidx};
+            if (c_su && c_u0) su_acc <= su_acc + 24'd1;
+            su_obs <= {c_su && c_u0, c_su && c_u0, 2'd2, 3'd0, c_pidx};
         end
     wire [15:0] x_oprog = (MUT == 4) ? ss_rows : ss_prog;
     wire [15:0] x_orows = (MUT == 4) ? ss_prog : ss_rows;
@@ -175,7 +229,7 @@ module qfd_tt_ctlm_dv #(
         // stage_start / stage ports when STAGE_ME = 1, else from the image CALS word.  Part (a) is here in the parent.
         // MUT 9 (bench only) = the as-built leaf (stage from the CALS word) under STAGE_ME = 1.
         ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0 && MUT != 9) ? 1 : 0)) u_hr (
-            .stage_start(s_start), .stage(s_stage),
+            .stage_start(hd_start), .stage(hd_stage),
             .rom_ret_i(rom_ret), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs),
             .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos), .rom_cmd(ib_q),
             .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(actual_me_observe),
@@ -197,7 +251,7 @@ module qfd_tt_ctlm_dv #(
         always @(posedge ck or negedge rst_n)
             if (!rst_n) begin loaded_stage <= 6'd0; relocation_sticky <= 1'b0; ib_r <= 380'd0; end
             else begin
-                if (STAGE_ME != 0) begin if (s_start) loaded_stage <= s_stage; end
+                if (STAGE_ME != 0) begin if (hd_start) loaded_stage <= hd_stage; end
                 else if (pw[74] && pw[73:64] == 10'd1017 && pw[63:32] == 32'h43414c53) loaded_stage <= pw[17:12];
                 if (relocation_fault) relocation_sticky <= 1'b1;
                 ib_r <= ib;
@@ -288,5 +342,6 @@ module qfd_tt_ctlm_dv #(
             dc <= {(MUT == 5) ? ag_any : ag_vm, !ag_su_busy, xc_busy, core_fault, c_fault | ag_any | fab_q, tok_seen, ntok, nval};
         end
     assign cf = core_fault | c_fault;
-    wire unused = &{1'b0, c_run, c_done, ss_q[73:61], ss_q[28:26], ss_tok[23:18], dh_q[43], unused_me};
+    wire unused = &{1'b0, c_run, c_done, ss_q[73:61], ss_q[28:26], ss_tok[23:18], dh_q[43], unused_me, c_run_u,
+                    c_done_user, c_fcode};
 endmodule
