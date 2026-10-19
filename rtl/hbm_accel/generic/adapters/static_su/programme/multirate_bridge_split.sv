@@ -38,10 +38,12 @@ module ot_hbm_su_multirate_bridge_q #(
  localparam integer STR0=(XR0-8)/4, STW0=(XW0-8)/4;
  localparam integer STR=(MUT==3)?0:STR0, STW=(MUT==3)?0:STW0;
  localparam integer WW=$clog2(SRD+1)>$clog2(SWD+1)?$clog2(SRD+1):$clog2(SWD+1);
+`ifndef SYNTHESIS
  initial begin
   if(READ_RETURN<10||WRITE_RETURN<7||WRITE_RETURN>READ_RETURN)$fatal(1,"bridge_q: LG round trip below the 10/7 contract");
   if(XR0<8||XW0<8||XR0-4*STR0>10||XW0-4*STW0>10)$fatal(1,"bridge_q: 2-bank seam window < 2q (XR=%0d XW=%0d)",XR0,XW0);
  end
+`endif
  reg [1:0] cnt;                 // serial event n mod 4 (= the old serial_slot)
  reg [WW-1:0] warm;
  // staging: at serial edge e the return source n = e+ST-D sits in bank (n mod 2)
@@ -110,9 +112,10 @@ module ot_hbm_su_multirate_bridge_s #(
   end
  endfunction
  wire active=phase[1:0]!=1 && stream_warm>=2;
- wire lsel=slot_for_phase(phase)[0] ^ (MUT==2);
- wire rsel=slot_for_phase(phase-4'(RP))[0];
- wire dsel=slot_for_phase(phase-4'(WP))[0];
+ wire [1:0] lslot=slot_for_phase(phase), rslot=slot_for_phase(phase-4'(RP)), dslot=slot_for_phase(phase-4'(WP));
+ wire lsel=lslot[0] ^ (MUT==2);
+ wire rsel=rslot[0];
+ wire dsel=dslot[0];
  wire [RQ_BITS-1:0] rq_pick = lsel ? rq_b1 : rq_b0;
  wire [WQ_BITS-1:0] wq_pick = lsel ? wq_b1 : wq_b0;
  // launch registers: no reset (active is 0 while stream_warm is reset)
