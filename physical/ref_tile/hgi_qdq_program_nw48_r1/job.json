@@ -1,5 +1,5 @@
 {
- "name": "hgi_qdq_program_nw48_r1-nw48r1-COMMIT",
+ "name": "hgi_qdq_program_nw48_r1-nw48r1-01f0ae709",
  "block": "ot_hgi_qdq_nw_program_leaf",
  "ref_tile": true,
  "owner": "Claude:OWN-QDQ",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/own-qdq-1018",
-  "commit": "COMMIT",
+  "commit": "01f0ae709",
   "extra_paths": [
    "rtl/hdc",
    "rtl/lib",
@@ -109,7 +109,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_qdq_program_nw48_r1/hgi_qdq_program_nw48_r1-nw48r1-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_qdq_program_nw48_r1/hgi_qdq_program_nw48_r1-nw48r1-01f0ae709"
   }
  ],
  "cycles_added": 0,
