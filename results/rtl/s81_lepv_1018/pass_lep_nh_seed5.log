@@ -2,5 +2,5 @@ LEPNH_STATS H->A ring 400/400 | A->H ring 459/459 host-plane frames 0 | mismatch
 PASS lep_nh: H->A 400 + A->H 459 ring beats bit-exact in order, no host-plane frame sent; HOST and KS frames into the HOST_EN 0 endpoint flagged (fault), not delivered
 - rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_nh.sv:106: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 21us; walltime 0.301 s; speed 69.844 us/s
-- Verilator: cpu 0.301 s on 1 threads; allocated 10 MB
+- Verilator: $finish at 21us; walltime 0.496 s; speed 42.396 us/s
+- Verilator: cpu 0.496 s on 1 threads; allocated 10 MB
