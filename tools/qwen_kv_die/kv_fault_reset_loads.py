@@ -5,8 +5,12 @@ import hashlib
 import json
 import re
 from pathlib import Path
-import kv_fault_plane as I
-P=I.P
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import die_port_bind as P
+
+def digest(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def trace_reset(bit, edges):
@@ -105,8 +109,8 @@ def derive(run,plan,source):
         entry=dict(entries[0]);entry.update(root_id=info['id'],depth_from_root=path['registered_depth'],master='qkd_rlys_1',port='b')
         all_nodes[(info['id'],bit)]=entry
     return dict(schema='opentallas.kv_fault_reset_loads.v1',status='REVIEW_ONLY_RESET_ADMISSION_OPEN',
-        input_die_sha256=I.digest(die),native_lef_sha256=I.digest(view),
-        input_place_sha256=I.digest(run/'case_kv/place.tcl'),input_lef_sha256=I.digest(run/'case_kv/elements.lef'),
+        input_die_sha256=digest(die),native_lef_sha256=digest(view),
+        input_place_sha256=digest(run/'case_kv/place.tcl'),input_lef_sha256=digest(run/'case_kv/elements.lef'),
         candidate_normalized_sha256=hashlib.sha256(json.dumps(plan,sort_keys=True,separators=(',',':')).encode()).hexdigest(),loads=loads,
         existing_reset_nodes=list(all_nodes.values()),existing_reset_node_count=len(all_nodes),
         load_count=len(loads),unknown_root_loads=sum(x['root_instance'] is None for x in loads),
