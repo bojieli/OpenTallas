@@ -1,0 +1,647 @@
+{
+ "original_no_growth": {
+  "max_read_L1_um": 829.1640000000002,
+  "max_pin_to_write_L1_um": 1096.6680000000001,
+  "register_to_macro_two_hop_write_necessary_um": 548.3340000000001,
+  "read_405_pass": false,
+  "write_two_hop_810_necessary_pass": false,
+  "land_s_xy": [
+   43.2,
+   950.4
+  ],
+  "bank_assignments": [
+   {
+    "bank": 0,
+    "slot": 1,
+    "xy": [
+     432,
+     475.2
+    ],
+    "orient": "MX",
+    "read_worst_um": 818.8200000000002,
+    "read_worst_bit": 283,
+    "read_from": [
+     432.012,
+     527.5799999999999
+    ],
+    "read_to": [
+     79.116,
+     993.504
+    ],
+    "write_worst_um": 1096.6680000000001,
+    "write_worst_bit": 545,
+    "write_from": [
+     0.0,
+     1016.508
+    ],
+    "write_to": [
+     608.892,
+     528.732
+    ]
+   },
+   {
+    "bank": 1,
+    "slot": 2,
+    "xy": [
+     129.6,
+     1036.8
+    ],
+    "orient": "R0",
+    "read_worst_um": 124.13999999999987,
+    "read_worst_bit": 1091,
+    "read_from": [
+     129.612,
+     1090.572
+    ],
+    "read_to": [
+     156.684,
+     993.504
+    ],
+    "write_worst_um": 353.3399999999999,
+    "write_worst_bit": 1091,
+    "write_from": [
+     0.0,
+     1111.116
+    ],
+    "write_to": [
+     306.49199999999996,
+     1064.268
+    ]
+   },
+   {
+    "bank": 2,
+    "slot": 3,
+    "xy": [
+     345.6,
+     1036.8
+    ],
+    "orient": "R0",
+    "read_worst_um": 233.5800000000001,
+    "read_worst_bit": 1624,
+    "read_from": [
+     345.612,
+     1089.324
+    ],
+    "read_to": [
+     207.85199999999998,
+     993.504
+    ],
+    "write_worst_um": 663.9959999999999,
+    "write_worst_bit": 1637,
+    "write_from": [
+     0.0,
+     1205.772
+    ],
+    "write_to": [
+     522.492,
+     1064.268
+    ]
+   },
+   {
+    "bank": 3,
+    "slot": 0,
+    "xy": [
+     432,
+     1598.4
+    ],
+    "orient": "R0",
+    "read_worst_um": 829.1640000000002,
+    "read_worst_bit": 2043,
+    "read_from": [
+     432.012,
+     1638.7320000000002
+    ],
+    "read_to": [
+     248.07600000000002,
+     993.504
+    ],
+    "write_worst_um": 955.836,
+    "write_worst_bit": 1905,
+    "write_from": [
+     0.0,
+     1252.236
+    ],
+    "write_to": [
+     608.892,
+     1599.18
+    ]
+   }
+  ]
+ },
+ "central_four_s129": {
+  "max_read_L1_um": 237.6600000000002,
+  "max_pin_to_write_L1_um": 620.7959999999998,
+  "register_to_macro_two_hop_write_necessary_um": 310.3979999999999,
+  "read_405_pass": true,
+  "write_two_hop_810_necessary_pass": true,
+  "land_s_xy": [
+   129.6,
+   950.4
+  ],
+  "bank_assignments": [
+   {
+    "bank": 0,
+    "slot": 0,
+    "xy": [
+     129.6,
+     1036.8
+    ],
+    "orient": "R0",
+    "read_worst_um": 158.12399999999988,
+    "read_worst_bit": 545,
+    "read_from": [
+     129.612,
+     1090.572
+    ],
+    "read_to": [
+     190.668,
+     993.504
+    ],
+    "write_worst_um": 374.3159999999999,
+    "write_worst_bit": 267,
+    "write_from": [
+     0.0,
+     969.756
+    ],
+    "write_to": [
+     306.49199999999996,
+     1037.58
+    ]
+   },
+   {
+    "bank": 1,
+    "slot": 1,
+    "xy": [
+     345.6,
+     1036.8
+    ],
+    "orient": "R0",
+    "read_worst_um": 199.59600000000006,
+    "read_worst_bit": 1078,
+    "read_from": [
+     345.612,
+     1089.324
+    ],
+    "read_to": [
+     241.836,
+     993.504
+    ],
+    "write_worst_um": 569.3399999999999,
+    "write_worst_bit": 1091,
+    "write_from": [
+     0.0,
+     1111.116
+    ],
+    "write_to": [
+     522.492,
+     1064.268
+    ]
+   },
+   {
+    "bank": 2,
+    "slot": 2,
+    "xy": [
+     129.6,
+     1166.4
+    ],
+    "orient": "MY",
+    "read_worst_um": 237.6600000000002,
+    "read_worst_bit": 1562,
+    "read_from": [
+     306.49199999999996,
+     1212.9720000000002
+    ],
+    "read_to": [
+     288.29999999999995,
+     993.504
+    ],
+    "write_worst_um": 415.932,
+    "write_worst_bit": 1092,
+    "write_from": [
+     0.0,
+     1111.308
+    ],
+    "write_to": [
+     306.49199999999996,
+     1220.748
+    ]
+   },
+   {
+    "bank": 3,
+    "slot": 3,
+    "xy": [
+     345.6,
+     1166.4
+    ],
+    "orient": "R0",
+    "read_worst_um": 224.3640000000002,
+    "read_worst_bit": 2043,
+    "read_from": [
+     345.612,
+     1206.7320000000002
+    ],
+    "read_to": [
+     334.476,
+     993.504
+    ],
+    "write_worst_um": 620.7959999999998,
+    "write_worst_bit": 2068,
+    "write_from": [
+     0.0,
+     1281.132
+    ],
+    "write_to": [
+     522.492,
+     1182.8280000000002
+    ]
+   }
+  ]
+ },
+ "central_four_s43": {
+  "max_read_L1_um": 310.76400000000024,
+  "max_pin_to_write_L1_um": 620.7959999999998,
+  "register_to_macro_two_hop_write_necessary_um": 310.3979999999999,
+  "read_405_pass": true,
+  "write_two_hop_810_necessary_pass": true,
+  "land_s_xy": [
+   43.2,
+   950.4
+  ],
+  "bank_assignments": [
+   {
+    "bank": 0,
+    "slot": 0,
+    "xy": [
+     129.6,
+     1036.8
+    ],
+    "orient": "R0",
+    "read_worst_um": 122.41200000000003,
+    "read_worst_bit": 532,
+    "read_from": [
+     129.612,
+     1089.324
+    ],
+    "read_to": [
+     103.02000000000001,
+     993.504
+    ],
+    "write_worst_um": 374.3159999999999,
+    "write_worst_bit": 267,
+    "write_from": [
+     0.0,
+     969.756
+    ],
+    "write_to": [
+     306.49199999999996,
+     1037.58
+    ]
+   },
+   {
+    "bank": 1,
+    "slot": 1,
+    "xy": [
+     345.6,
+     1036.8
+    ],
+    "orient": "R0",
+    "read_worst_um": 285.9960000000001,
+    "read_worst_bit": 1078,
+    "read_from": [
+     345.612,
+     1089.324
+    ],
+    "read_to": [
+     155.436,
+     993.504
+    ],
+    "write_worst_um": 569.3399999999999,
+    "write_worst_bit": 1091,
+    "write_from": [
+     0.0,
+     1111.116
+    ],
+    "write_to": [
+     522.492,
+     1064.268
+    ]
+   },
+   {
+    "bank": 2,
+    "slot": 2,
+    "xy": [
+     129.6,
+     1166.4
+    ],
+    "orient": "R0",
+    "read_worst_um": 306.15600000000006,
+    "read_worst_bit": 1637,
+    "read_from": [
+     129.612,
+     1220.172
+    ],
+    "read_to": [
+     209.10000000000002,
+     993.504
+    ],
+    "write_worst_um": 318.39599999999973,
+    "write_worst_bit": 1637,
+    "write_from": [
+     0.0,
+     1205.772
+    ],
+    "write_to": [
+     306.49199999999996,
+     1193.8680000000002
+    ]
+   },
+   {
+    "bank": 3,
+    "slot": 3,
+    "xy": [
+     345.6,
+     1166.4
+    ],
+    "orient": "R0",
+    "read_worst_um": 310.76400000000024,
+    "read_worst_bit": 1983,
+    "read_from": [
+     345.612,
+     1200.9720000000002
+    ],
+    "read_to": [
+     242.31599999999997,
+     993.504
+    ],
+    "write_worst_um": 620.7959999999998,
+    "write_worst_bit": 2068,
+    "write_from": [
+     0.0,
+     1281.132
+    ],
+    "write_to": [
+     522.492,
+     1182.8280000000002
+    ]
+   }
+  ]
+ },
+ "central_four_s388": {
+  "max_read_L1_um": 343.5000000000002,
+  "max_pin_to_write_L1_um": 577.4520000000001,
+  "register_to_macro_two_hop_write_necessary_um": 288.72600000000006,
+  "read_405_pass": true,
+  "write_two_hop_810_necessary_pass": true,
+  "land_s_xy": [
+   388.8,
+   950.4
+  ],
+  "bank_assignments": [
+   {
+    "bank": 0,
+    "slot": 2,
+    "xy": [
+     129.6,
+     1166.4
+    ],
+    "orient": "R180",
+    "read_worst_um": 343.5000000000002,
+    "read_worst_bit": 542,
+    "read_from": [
+     306.49199999999996,
+     1193.9160000000002
+    ],
+    "read_to": [
+     449.58000000000004,
+     993.504
+    ],
+    "write_worst_um": 577.4520000000001,
+    "write_worst_bit": 0,
+    "write_from": [
+     0.0,
+     922.092
+    ],
+    "write_to": [
+     306.49199999999996,
+     1193.0520000000001
+    ]
+   },
+   {
+    "bank": 1,
+    "slot": 0,
+    "xy": [
+     129.6,
+     1036.8
+    ],
+    "orient": "MY",
+    "read_worst_um": 292.8599999999999,
+    "read_worst_bit": 1091,
+    "read_from": [
+     306.49199999999996,
+     1090.572
+    ],
+    "read_to": [
+     502.284,
+     993.504
+    ],
+    "write_worst_um": 380.9399999999998,
+    "write_worst_bit": 546,
+    "write_from": [
+     0.0,
+     1016.7
+    ],
+    "write_to": [
+     306.49199999999996,
+     1091.148
+    ]
+   },
+   {
+    "bank": 2,
+    "slot": 1,
+    "xy": [
+     345.6,
+     1036.8
+    ],
+    "orient": "MY",
+    "read_worst_um": 129.27599999999995,
+    "read_worst_bit": 1637,
+    "read_from": [
+     522.492,
+     1090.572
+    ],
+    "read_to": [
+     554.7,
+     993.504
+    ],
+    "write_worst_um": 561.9000000000001,
+    "write_worst_bit": 1358,
+    "write_from": [
+     0.0,
+     1156.092
+    ],
+    "write_to": [
+     522.492,
+     1116.684
+    ]
+   },
+   {
+    "bank": 3,
+    "slot": 3,
+    "xy": [
+     345.6,
+     1166.4
+    ],
+    "orient": "MY",
+    "read_worst_um": 289.2120000000001,
+    "read_worst_bit": 2068,
+    "read_from": [
+     522.492,
+     1209.132
+    ],
+    "read_to": [
+     596.076,
+     993.504
+    ],
+    "write_worst_um": 537.3240000000001,
+    "write_worst_bit": 1638,
+    "write_from": [
+     0.0,
+     1205.916
+    ],
+    "write_to": [
+     522.492,
+     1220.748
+    ]
+   }
+  ]
+ },
+ "central_four_s345": {
+  "max_read_L1_um": 300.30000000000024,
+  "max_pin_to_write_L1_um": 577.4520000000001,
+  "register_to_macro_two_hop_write_necessary_um": 288.72600000000006,
+  "read_405_pass": true,
+  "write_two_hop_810_necessary_pass": true,
+  "land_s_xy": [
+   345.6,
+   950.4
+  ],
+  "bank_assignments": [
+   {
+    "bank": 0,
+    "slot": 2,
+    "xy": [
+     129.6,
+     1166.4
+    ],
+    "orient": "R180",
+    "read_worst_um": 300.30000000000024,
+    "read_worst_bit": 540,
+    "read_from": [
+     306.49199999999996,
+     1194.1080000000002
+    ],
+    "read_to": [
+     406.18800000000005,
+     993.504
+    ],
+    "write_worst_um": 577.4520000000001,
+    "write_worst_bit": 0,
+    "write_from": [
+     0.0,
+     922.092
+    ],
+    "write_to": [
+     306.49199999999996,
+     1193.0520000000001
+    ]
+   },
+   {
+    "bank": 1,
+    "slot": 0,
+    "xy": [
+     129.6,
+     1036.8
+    ],
+    "orient": "MY",
+    "read_worst_um": 249.6599999999999,
+    "read_worst_bit": 1091,
+    "read_from": [
+     306.49199999999996,
+     1090.572
+    ],
+    "read_to": [
+     459.084,
+     993.504
+    ],
+    "write_worst_um": 380.9399999999998,
+    "write_worst_bit": 546,
+    "write_from": [
+     0.0,
+     1016.7
+    ],
+    "write_to": [
+     306.49199999999996,
+     1091.148
+    ]
+   },
+   {
+    "bank": 2,
+    "slot": 1,
+    "xy": [
+     345.6,
+     1036.8
+    ],
+    "orient": "MY",
+    "read_worst_um": 108.06,
+    "read_worst_bit": 1624,
+    "read_from": [
+     522.492,
+     1089.324
+    ],
+    "read_to": [
+     510.252,
+     993.504
+    ],
+    "write_worst_um": 561.9000000000001,
+    "write_worst_bit": 1358,
+    "write_from": [
+     0.0,
+     1156.092
+    ],
+    "write_to": [
+     522.492,
+     1116.684
+    ]
+   },
+   {
+    "bank": 3,
+    "slot": 3,
+    "xy": [
+     345.6,
+     1166.4
+    ],
+    "orient": "MY",
+    "read_worst_um": 246.01200000000006,
+    "read_worst_bit": 2068,
+    "read_from": [
+     522.492,
+     1209.132
+    ],
+    "read_to": [
+     552.876,
+     993.504
+    ],
+    "write_worst_um": 537.3240000000001,
+    "write_worst_bit": 1638,
+    "write_from": [
+     0.0,
+     1205.916
+    ],
+    "write_to": [
+     522.492,
+     1220.748
+    ]
+   }
+  ]
+ }
+}
