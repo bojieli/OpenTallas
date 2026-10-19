@@ -120,6 +120,29 @@ CASES.update({
     "rl_dv2f14bq_ktv2skew": RLB + ["--real-lanes", QR, "--real-lanes-override", "KTV2=7", "--lats", "376", "--expect-fail"],
 })
 
+# Q-COLLCAL-RL batch 2: rl_dv2f14bq_ls376 FAILED (mismatches 0, every die cdc bit 11 = face f2 = SerDes port 0 RX xfifo
+# r_fault; port 2 face clean) -> the GEN LX0 10 is off for port 0: sweep LX0 with LX1/LX2 as emitted (0 / 9)
+for lx0_ in (8, 9, 11, 12):
+    CASES[f"rl_dv2f14bq_lx0_{lx0_}"] = RLB + ["--real-lanes", QR, "--lats", "376", "--lx", str(lx0_), "0", "9"]
+
+# batch 3: LX0 10 is the best point (8/9/11/12 add mismatches + abort); the port 0 RX valid lane is N 2 vs its data lane N 3
+# (same K 2) -> diagnostic: equal the valid lane to the data lane (NRV0=3) / the other way (NR0=2)
+CASES["rl_dv2f14bq_nrv0_3"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "NRV0=3", "--lats", "376"]
+CASES["rl_dv2f14bq_nr0_2"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "NR0=2", "--lats", "376"]
+# batch 4: NRV0/NR0 equalised still FAIL (data exact, cdc bit 11 only) -> port 2 TX valid lane N 10 vs data N 8 (K 6/6)
+CASES["rl_dv2f14bq_ntv2_8"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "NTV2=8", "--lats", "376"]
+CASES["rl_dv2f14bq_nofwd_fixed"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "NTV2=8", "NRV0=3", "--lats", "376"]
+# batch 5: lane N equalisation does not clear cdc bit 11 (port 0 RX read fault, data exact) -> does the calendar need LS > 376
+for ls_ in (378, 380, 384, 390):
+    CASES[f"rl_dv2f14bq_ls{ls_}"] = RLB + ["--real-lanes", QR, "--lats", str(ls_)]
+# batch 6: LS 378..390 PASS -> LS 377 bound + the negatives at the passing LS 378 (discriminating witnesses)
+CASES["rl_dv2f14bq_ls377"] = RLB + ["--real-lanes", QR, "--lats", "377"]
+CASES["rl_dv2f14bq_ls378_lx707"] = RLB + ["--real-lanes", QR, "--lats", "378", "--lx", "7", "0", "7", "--expect-fail"]
+CASES["rl_dv2f14bq_ls378_ktv2skew"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "KTV2=7", "--lats", "378", "--expect-fail"]
+# batch 7: LS 377 PASS (376 FAIL) = the price on dv2f14bq; negatives at the priced point
+CASES["rl_dv2f14bq_ls377_lx707"] = RLB + ["--real-lanes", QR, "--lats", "377", "--lx", "7", "0", "7", "--expect-fail"]
+CASES["rl_dv2f14bq_ls377_ktv2skew"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "KTV2=7", "--lats", "377", "--expect-fail"]
+
 if __name__ == "__main__":
     if sys.argv[1] == "list":
         print("\n".join(CASES))
