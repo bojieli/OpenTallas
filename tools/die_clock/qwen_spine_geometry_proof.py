@@ -71,14 +71,14 @@ def propose_rows(block,names,u):
                 physical_rows_created=False,power_qualified=False,timing_qualified=False)
 
 
-def audit(odb_path,manifest_path,tool_source,row_plan=None):
+def audit(odb_path,manifest_path,tool_source,row_plan=None,regional_only=False):
     from openroad import Tech,Design
     tech=Tech();design=Design(tech);design.readDb(odb_path)
     block=design.getBlock();u=block.getDbUnitsPerMicron()
-    m=json.loads(Path(manifest_path).read_text());sp=m['spine']
+    m=json.loads(Path(manifest_path).read_text());sp={} if regional_only else m['spine']
     errors=[];names={n for n,t in m['cell_tree'].items() if t=='spine'}
-    if not m.get('geometry_only'):errors.append('not a geometry-only replay')
-    if not m['spec']['spine'].get('exact_footprint_bays'):errors.append('not exact footprint topology')
+    if not regional_only and not m.get('geometry_only'):errors.append('not a geometry-only replay')
+    if not regional_only and not m['spec']['spine'].get('exact_footprint_bays'):errors.append('not exact footprint topology')
     boxes={};fixed={};grid=defaultdict(list);pitch=round(100*u)
     rows_by_y=defaultdict(list)
     for row in block.getRows():
@@ -103,24 +103,35 @@ def audit(odb_path,manifest_path,tool_source,row_plan=None):
     if hits:errors.append('actual placed footprint overlaps: '+str(len(hits)))
     if off_rows:errors.append('actual spine cells without a containing physical placement row: '+str(len(off_rows)))
     all_clock_off_rows=[]
+    all_clock_hits=set()
     for name,*_ in m['cells']:
         r=boxes.get(name,fixed.get(name))
         if r is None or not any(q[0]<=r[0] and q[2]>=r[2] and q[3]>=r[3] for q in rows_by_y[r[1]]):
             all_clock_off_rows.append(name)
-    regional_long=[]
+        if r is not None:
+            for x in range(r[0]//pitch,(r[2]-1)//pitch+1):
+                for y in range(r[1]//pitch,(r[3]-1)//pitch+1):
+                    for other in grid[x,y]:
+                        if other!=name and overlaps(r,boxes.get(other,fixed.get(other))):
+                            all_clock_hits.add(tuple(sorted((name,other))))
+    if all_clock_hits:errors.append('all-clock actual footprint overlaps: '+str(len(all_clock_hits)))
+    if regional_only and all_clock_off_rows:errors.append('regional clock cells without physical rows: '+str(len(all_clock_off_rows)))
+    regional_long=[];max_regional_direct=0.0;max_regional_fanout=0
     for name,*_ in m['cells']:
         if name in names:continue
         inst=block.findInst(name);output=inst.findITerm('Y') if inst else None
         if output is None or output.getNet() is None:continue
+        max_regional_fanout=max(max_regional_fanout,sum(p.getIoType()=='INPUT' for p in output.getNet().getITerms()))
         q=output.getBBox();xy=((q.xMin()+q.xMax())/2/u,(q.yMin()+q.yMax())/2/u)
         for sink in output.getNet().getITerms():
             if sink.getIoType()!='INPUT':continue
             q=sink.getBBox();dest=((q.xMin()+q.xMax())/2/u,(q.yMin()+q.yMax())/2/u)
             distance=sum(abs(xy[i]-dest[i]) for i in (0,1))
+            max_regional_direct=max(max_regional_direct,distance)
             if distance>405+1e-7:
                 regional_long.append(dict(source=name+'/Y',sink=sink.getInst().getName()+'/'+sink.getMTerm().getName(),
                                           direct_distance_um=distance))
-    source=sp['source'];sbn='dc_spine_src'
+    source=sp.get('source');sbn='dc_spine_src'
     def iterm(ref,output):
         kind,n=ref
         pn=(sbn+'/Y' if n==source else n) if kind=='pin' else n+('/Y' if output else '/A')
@@ -135,49 +146,60 @@ def audit(odb_path,manifest_path,tool_source,row_plan=None):
         if net is None or b.getNet()!=net:errors.append('physical edge disconnected: '+an+' -> '+bn)
         if net is not None:
             fanouts[net.getName()]=sum(p.getIoType()=='INPUT' for p in net.getITerms())
-        path=e['route_cells'];ca=[(v+.5)*10 for v in path[0]];cb=[(v+.5)*10 for v in path[-1]]
-        length=(len(path)-1)*10+sum(abs(axy[i]-ca[i])+abs(bxy[i]-cb[i]) for i in (0,1))
+        path=e['route_cells']
+        if any(abs(a[0]-b[0])+abs(a[1]-b[1])!=1 for a,b in zip(path,path[1:])):
+            errors.append('nonadjacent declared route cells: '+an+' -> '+bn)
+        polyline=[axy]+[tuple((v+.5)*10 for v in c) for c in path[1:-1]]+[bxy]
+        length=sum(sum(abs(a[i]-b[i]) for i in (0,1)) for a,b in zip(polyline,polyline[1:]))
         reaches.append(length);edge_count+=1
         if length>405+1e-7:errors.append(f'actual placed routed reach {length:.6f}>405: {an}->{bn}')
-        if abs(length-e['placed_pin_routed_bound_um'])>1e-6:errors.append('placed pin receipt changed: '+an+' -> '+bn)
+        if e.get('placed_pin_routed_bound_um') is None or abs(length-e['placed_pin_routed_bound_um'])>1e-6:
+            errors.append('placed pin receipt missing/changed: '+an+' -> '+bn)
         if e['load'][0]=='pin':delivered.append(bn)
-    expected=[m['root_buffer'][m['trees'][n]['root']]+'/A' for n in sp['members']]
+    expected=[m['root_buffer'][m['trees'][n]['root']]+'/A' for n in sp.get('members',[])]
     missing=sorted(set(expected)-set(delivered));extra=sorted(set(delivered)-set(expected))
     duplicates=sorted(n for n,c in Counter(delivered).items() if c!=1)
     if missing or extra or duplicates:errors.append('regional endpoint coverage missing/extra/duplicate')
     if max(fanouts.values(),default=0)>2:errors.append('actual spine fanout exceeds two')
-    gen=block.findITerm(source);entry=block.findITerm(sbn+'/A')
-    if gen is None or entry is None or gen.getNet()!=entry.getNet():errors.append('generator entry disconnected')
-    else:
-        nload=sum(p.getIoType()=='INPUT' for p in gen.getNet().getITerms())
-        if nload!=1:errors.append('generator must drive exactly one spine entry')
+    if not regional_only:
+        gen=block.findITerm(source);entry=block.findITerm(sbn+'/A')
+        if gen is None or entry is None or gen.getNet()!=entry.getNet():errors.append('generator entry disconnected')
+        else:
+            nload=sum(p.getIoType()=='INPUT' for p in gen.getNet().getITerms())
+            if nload!=1:errors.append('generator must drive exactly one spine entry')
+    if regional_only and regional_long:errors.append('regional actual direct wires exceed405: '+str(len(regional_long)))
     if row_plan:
         rp=propose_rows(block,{c[0] for c in m['cells']},u)
         rp.update(odb_sha256=sha(odb_path),manifest_sha256=sha(manifest_path))
         Path(row_plan).write_text(json.dumps(rp,indent=1)+'\n')
-    return dict(schema='opentallas.qwen.full_spine_geometry_proof.v1',tool_source=tool_source,
+    return dict(schema='opentallas.qwen.regional_checkpoint_geometry.v1' if regional_only else 'opentallas.qwen.full_spine_geometry_proof.v1',tool_source=tool_source,
+                auditor_sha256=sha(__file__),
                 odb_sha256=sha(odb_path),manifest_sha256=sha(manifest_path),
                 source_generator=source,all_clock_cells=len(m['cells']),spine_cells=len(boxes),
                 regional_clock_cells=len(m['cells'])-len(boxes),regional_trees=len(m['trees']),
                 required_spine_endpoints=len(expected),delivered_endpoints=len(delivered),
                 endpoint_missing=missing,endpoint_extra=extra,endpoint_duplicates=duplicates,
                 fixed_obstacles=len(fixed),overlap_count=len(hits),overlap_examples=sorted(hits)[:100],
+                all_clock_overlap_count=len(all_clock_hits),all_clock_overlap_examples=sorted(all_clock_hits)[:100],
                 physical_rows=len(block.getRows()),off_row_count=len(off_rows),off_row_examples=off_rows[:100],
                 all_new_clock_cells_off_row=len(all_clock_off_rows),all_new_clock_off_row_examples=all_clock_off_rows[:100],
                 regional_direct_distance_gt405_count=len(regional_long),
+                max_regional_actual_direct_um=max_regional_direct,max_regional_actual_fanout=max_regional_fanout,
                 regional_direct_distance_gt405_examples=sorted(regional_long,key=lambda r:-r['direct_distance_um'])[:100],
                 native_regional_geometry_qualified=False,
                 routed_stage_count=edge_count,max_actual_placed_routed_bound_um=max(reaches,default=0),
                 generator_entry_routed_bound_um=sp.get('source_input_routed_bound_um'),
                 max_actual_spine_fanout=max(fanouts.values(),default=0),errors=errors,
-                geometry_pass=not errors,timing_qualified=False,production_admitted=False)
+                geometry_pass=not errors,full_spine_proven=not regional_only and not errors,
+                timing_qualified=False,production_admitted=False)
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for arg in ('odb','manifest','tool-source','out'):p.add_argument('--'+arg,required=True)
     p.add_argument('--row-plan-out')
-    a=p.parse_args();r=audit(a.odb,a.manifest,a.tool_source,a.row_plan_out)
+    p.add_argument('--regional-only',action='store_true',help='audit actual checkpoint only; never assert full-spine coverage')
+    a=p.parse_args();r=audit(a.odb,a.manifest,a.tool_source,a.row_plan_out,a.regional_only)
     Path(a.out).write_text(json.dumps(r,indent=1)+'\n')
     print(json.dumps(r,indent=1),flush=True)
     raise SystemExit(0 if r['geometry_pass'] else 1)

@@ -106,3 +106,21 @@ rail length, covering all109395 off-row historical clock cells. Compressed full
 coordinates and their hashes accompany the readable summary. This is a readonly
 requirements model for the old topology; it creates no physical rows or power
 connections and does not approve a new candidate or expand the die.
+
+The full exact-regional replay reached its actual occupied regional checkpoint:
+35302 clock cells, zero all-clock footprint overlaps and zero regional direct
+wires>405um (`physical/regional_full_audit`). It remains blocked by35285 missing
+physical rows. The following spine planner then rejected a39-step continuation
+from actual origin2020.140,5350.050 to bay2363.580,5400.000um. The preserved
+`physical/spine_36diag/plan_fail.json` binds all763 required endpoints and the
+complete failed path. The old route representation detoured through endpoint
+cell centres and counted406.230um. Connecting actual endpoints to the first/last
+interior vertices gives396.230um; a20um displacement gives416.230um and still
+rejects. Twelve focused fleet tests pass with that actual failure regression.
+
+`qwen_replay_spine.py` replays the entire required spine from an immutable
+occupied regional ODB, preserving regional cells and native targets. A failure
+keeps its partial stations and exact next-bay witness; a placed-pin failure also
+keeps the actual ODB. A completed replay still requires the independent whole
+footprint/net/endpoint/fanout/routed-reach/row audit, physical power and all
+native phase references. It performs no STA or production admission.

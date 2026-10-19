@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import unittest
+import json
 from qwen_exact_corridor import ExactBayGrid,ExactForwardedBuilder,ExactRegionalBuilder,check_reach
 from qwen_corridor_audit import bay,overlap
 
@@ -59,7 +60,21 @@ def test_regional_leaf_uses_exact_pocket_and_reserves_footprints():
     assert not any(overlap(a,c) for i,a in enumerate(boxes) for c in boxes[i+1:])
 
 
+def test_actual_failed_bay_uses_trimmed_endpoint_route():
+    p=Path(__file__).parent/'evidence_qphase_1019/physical/spine_36diag/plan_fail.json'
+    f=json.loads(p.read_text())['failure'];b=next(b for b in f['next_bays'] if b['site'] is not None)
+    class Coordinates:
+        def xy(self,c):return tuple((v+.5)*10 for v in c)
+    route=f['path'][f['cursor']:b['index']+1]
+    assert abs(check_reach(route,f['source'],b['site'],Coordinates())-396.23)<1e-6
+    moved=[f['source'][0]-20,f['source'][1]]
+    try:check_reach(route,moved,b['site'],Coordinates())
+    except ValueError as e:assert '>405' in str(e)
+    else:raise AssertionError('actual endpoint displacement mutant escaped405 guard')
+
+
 class ExactCorridor(unittest.TestCase):
+    def test_actual_failed_bay_uses_trimmed_endpoint_route(self): test_actual_failed_bay_uses_trimmed_endpoint_route()
     def test_regional_leaf_uses_exact_pocket_and_reserves_footprints(self): test_regional_leaf_uses_exact_pocket_and_reserves_footprints()
     def test_full_footprint_overlap_not_origin_only(self): test_full_footprint_overlap_not_origin_only()
     def test_reserve_occupied_bays(self): test_reserve_occupied_bays()

@@ -89,8 +89,11 @@ class ExactRegionalBuilder(rt.Builder):
 
 
 def routed_bound(path,start,end,grid):
-    return (len(path)-1)*rt.GRID+sum(abs(start[i]-grid.xy(path[0])[i])+
-                                      abs(end[i]-grid.xy(path[-1])[i]) for i in (0,1))
+    # Connect actual pins directly to the first/last interior route vertices.
+    # Detouring via an endpoint's cell centre can add redundant wire and reject
+    # a legal actual bay (measured failure406.230 ->396.230um at202/535).
+    points=[start]+[grid.xy(c) for c in path[1:-1]]+[end]
+    return sum(abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(points,points[1:]))
 
 
 def check_reach(path,start,end,grid):
@@ -119,7 +122,14 @@ class ExactForwardedBuilder:
                 p=dest if k==len(path)-1 else self.g.point(path[k])
                 if p is not None and routed_bound(path[cursor:k+1],at,p,self.g)<=405+1e-7:
                     eligible.append((k,p))
-            if not eligible:raise ValueError('no <=405um exact-bay continuation from '+str(path[cursor]))
+            if not eligible:
+                self.failure=dict(cursor=cursor,cell=path[cursor],source=at,target=dest,driver=drv,
+                                  target_ref=target,path=path,
+                                  next_bays=[dict(index=k,cell=path[k],site=self.g.point(path[k]),
+                                                  bound=None if self.g.point(path[k]) is None else
+                                                  routed_bound(path[cursor:k+1],at,self.g.point(path[k]),self.g))
+                                             for k in range(cursor+1,min(len(path),cursor+61))])
+                raise ValueError('no <=405um exact-bay continuation from '+str(path[cursor]))
             k,p=eligible[-1]
             if k==len(path)-1:load=target
             else:
