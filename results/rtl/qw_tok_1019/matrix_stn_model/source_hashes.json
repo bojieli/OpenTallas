@@ -1,0 +1,67 @@
+[
+  {
+    "revision": "0d4c9808f",
+    "path": "tools/qwen_layerbench/dv_lower.py",
+    "sha256": "ba65c02d72e91371e315e8b721336ea6cf3158cbb2550b73e299edebfa200d71"
+  },
+  {
+    "revision": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_dv_redstn2.sv",
+    "sha256": "5d79b68d15a65c7baf6fd6a60b43ce46950abe2065d31968bae86466c240f0e7"
+  },
+  {
+    "revision": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_dv_slice2.sv",
+    "sha256": "6f1afb7f43ff5691eef0e3b0bd9f50c77cc7a55600817b0d2f2d467637a81aea"
+  },
+  {
+    "revision": "0d4c9808f",
+    "path": "rtl/test/qwen_dv/dv_bench2.py",
+    "sha256": "48ef71e2e53cec810ebe9d2ac2c2c455151da67458c4176ad2315456f362985f"
+  },
+  {
+    "revision": "0d4c9808f",
+    "path": "rtl/test/qwen_dv/tb_qfd_dv2.sv",
+    "sha256": "bd6a1a480211a20e8ec5d1e446a848df56c3023fca1a95265debdf03b890dfb3"
+  },
+  {
+    "revision": "416cd1a11",
+    "path": "tools/qwen_layerbench/dv_lower_mat.py",
+    "sha256": "31c93ae942fb446f720032e93010aa6aaeb3eea77b10a325f43c517c5e6157a4"
+  },
+  {
+    "revision": "416cd1a11",
+    "path": "rtl/test/qwen_dv/dv_lower_mat_bench.py",
+    "sha256": "f9f53f8d5e6c21c1d8570def2e85b143ac9ea0f278a6a52ee0d4e4a50de5532b"
+  },
+  {
+    "revision": "416cd1a11",
+    "path": "rtl/test/qwen_dv/dv_bench.py",
+    "sha256": "e4f52f07f7e89d487990ffd12e53e337185be48bba54f0653cfe9d9bc09ac2bc"
+  },
+  {
+    "revision": "416cd1a11",
+    "path": "tools/qwen_layerbench/dv_layer_fixture.py",
+    "sha256": "146d8301ce6f68ca82c7e411f4af795ecadb1ed6549230cbbdcee7fd47240151"
+  },
+  {
+    "revision": "416cd1a11",
+    "path": "tools/hdc_golden.py",
+    "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  },
+  {
+    "revision": "416cd1a11",
+    "path": "results/rtl/qlb_c4b_1018/dv_lower_mat/stn_ages.json",
+    "sha256": "5d5601f353d2ed56cab28ae332d973a4a008f16c11b34c5b86333f0881c2127e"
+  },
+  {
+    "revision": "28ebdeac7",
+    "path": "results/rtl/qw_tok_1019/layer_stage_replay/fixtures.json",
+    "sha256": "5fa81b93b8463457d0df9692b0fdf8efacbcf7872192c3ac9243cc74d08a317a"
+  },
+  {
+    "revision": "28ebdeac7",
+    "path": "results/rtl/qw_tok_1019/layer_stage_replay/source_ancestry.json",
+    "sha256": "f8934ebc4ced5dda6c8c5e2c0264f35bb271f6d60ff77efa25cf60cff33e79f2"
+  }
+]

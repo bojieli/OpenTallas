@@ -1,0 +1,18 @@
+{
+  "patch_applies_to": "416cd1a11",
+  "changes": "four keyword additions only; no execution or age change",
+  "checks": [
+    {
+      "path": "tools/qwen_layerbench/dv_lower_mat.py",
+      "cmd_stn_calls": 2,
+      "syntax": "PASS",
+      "explicit_final_cluster_kc_one": "PASS"
+    },
+    {
+      "path": "rtl/test/qwen_dv/dv_lower_mat_bench.py",
+      "cmd_stn_calls": 2,
+      "syntax": "PASS",
+      "explicit_final_cluster_kc_one": "PASS"
+    }
+  ]
+}
