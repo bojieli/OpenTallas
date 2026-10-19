@@ -192,7 +192,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
     <div>
       <h1><span class="g">OpenTallas</span> compute fleet</h1>
       <div class="sub">Chip-design place-and-route, synthesis and RTL simulation, live</div>
-      <div class="dsum" id="dieSum" title="Per die, from the current die contracts (results/fleet_viz/die_contracts.json): contract masters + physical leaves; open = in flight + failed + not started"></div>
+      <div class="dsum" id="dieSum" title="Per die, from the current die contracts (hourly from the die binds: results/fleet_viz/die_sources.json -> die_contracts_live.json): contract masters + physical leaves; open = in flight + failed + not started"></div>
     </div>
     <a class="xnav" id="xnav" href="/explorer">Chip Explorer &rarr;</a>
     <a class="xnav" id="covnav" href="/explorer/coverage/" style="margin-left:0">Coverage &rarr;</a>
@@ -919,7 +919,7 @@ window.addEventListener('resize', () => { for (const c of cards.values()) layout
 const ECOL = {'closed, thin margin (watch)': '#facc15', 'closed, not die-bindable (native)': '#fb923c', 'closed (TT era)': '#4ade80', 'closed (TT re-verified)': '#2dd4bf', 'closed (earlier)': '#a3e635', 'first trial in flight': '#5ee7ff',
   'failed, re-running': '#fbbf24', 'revoked, re-running': '#fb923c', 'revoked (no live job)': '#f97316', 'needs redesign (no live job)': '#ff5d73',
   'flow failure (no live job)': '#c084fc', 'cancelled only': '#8a97b8', 'superseded': '#64748b', 'implementation recorded (no physical job)': '#93c5fd',
-  'not started (open)': '#f472b6'};
+  'not started (open)': '#f472b6', 'kit prepared, no route job': '#a78bfa', 'parent open, leaves under way': '#67e8f9'};
 const ECOLS = [['element', 'element'], ['category', 'status'], ['dietxt', 'die · owner'], ['purpose', 'what it is'], ['tt', 'TT setup'], ['ff', 'FF hold'], ['ss', 'SS sens.'], ['drc', 'DRC'],
   ['die', 'die µm²'], ['util', 'util'], ['live', 'live'], ['failed', 'failed'], ['jobs', 'jobs'], ['closed_t', 'closed'], ['qualification', 'qualification'], ['lt', 'latest event']];
 const EF = Object.assign({tgt: '', txt: '', grp: true, die: true, sts: null, sort: 'category', dir: 1}, relabel(ls('ef')) || {});

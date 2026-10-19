@@ -106,10 +106,41 @@ if '--case' in sys.argv:
         sdc = ['# Q-DIE11-RLY forwarded-lane landings (tools/qwen_tp8/relay_data_run.py): ring D %d, one E per link (TT and FF)'
                % fl['D']]
         for r_ in fl['lanes']:
+            if r_.get('lane') == 'reset':
+                continue          # LANDFIX-SQ forwarded reset lane: no ring, its landing is one single-cycle root capture
             pins = f"{r_['landing']}/a[*]" + ('' if r_['n'] == 1 else f" {r_['landing']}/ea[*]")
-            sdc += [f"set_multicycle_path -setup {r_['E']} -to [get_pins {{{pins}}}]",
+            # LANDFIX-SQ 10-18: the MCP is E_sta (the residual edges after the LAST station's launch, as the die STA counts
+            # them); dv2f14bn wrote the lane's total E (12-14 on the 26-frame lanes) -> hold edge E - D, FF hold -7.7 ns
+            sdc += [f"set_multicycle_path -setup {r_.get('E_sta', r_['E'])} -to [get_pins {{{pins}}}]",
                     f"set_multicycle_path -hold {fl['D'] - 1} -to [get_pins {{{pins}}}]"]
+        # NS-CASE 10-18 (ROOT-2115): the landing's K straps k0..k2 are die constants (each on the instance's own
+        # tie_hi / tie_lo; lane_latency_audit (b) in the strict bind checks the netlist K == this K): the die STA
+        # case-analyses them, as the tile native audit --case k0,k1,k2 excludes them
+        sdc += ['set ::ot_case_n 0; set ::ot_case_miss 0',
+                'proc ot_case {v p} { set q [get_pins -quiet $p]; if {[llength $q]} { set_case_analysis $v $q; '
+                'incr ::ot_case_n } else { incr ::ot_case_miss } }']
+        n_case = 0
+        for r_ in fl['lanes']:
+            if r_.get('lane') == 'reset' or r_.get('K') is None:
+                continue
+            for i in range(3):
+                sdc.append(f"ot_case {(int(r_['K']) >> i) & 1} {{{r_['landing']}/k{i}}}"); n_case += 1
+        sdc.append('puts "OT_CASE_STRAPS set $::ot_case_n missing $::ot_case_miss of %d"' % n_case)
         (out / 'case' / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
+        if m.get('coll_lane_latency'):
+            # Q-COLLCAL 10-18: the SerDes lane cycles of THIS build and the collective calendar that absorbs them
+            (out / 'case' / 'coll_lane_latency.json').write_text(json.dumps(m['coll_lane_latency'], indent=1) + '\n')
+            rec['coll_lane_latency'] = {k_: m['coll_lane_latency'][k_] for k_ in ('LX', 'verdict', 'fails')}
+    if m.get('die_master_params'):
+        # Q-COLLCAL 10-18: the elaboration parameters of the die's masters (tools/die_port_bind.py reads DIE_V.params.json:
+        # the strict bind elaborates io_collective with the GEN's LX0..2); merged over any sidecar the writer left
+        pj = out / 'case' / 'die.v.params.json'
+        cur = json.loads(pj.read_text()) if pj.exists() else dict(schema='opentallas.die_params.v1', netlist='die.v', masters={})
+        for mst_, prm_ in m['die_master_params'].items():
+            cur.setdefault('masters', {}).setdefault(mst_, {}).update(prm_)
+        pj.write_text(json.dumps(cur, indent=1, sort_keys=True) + '\n')
+        rec['die_master_params'] = m['die_master_params']
+        (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
         rec['fwd_lanes'] = {k_: fl[k_] for k_ in ('lanes', 'stations', 'landings', 'masters', 'plain_relays_left',
                                                   'reclassed_reset_hops')} | dict(lanes=len(fl['lanes']), skipped=len(fl['skipped']))
         (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
@@ -186,7 +217,7 @@ if '--case' in sys.argv:
     v.EMIT_SPLIT = True
     for name, mst in sorted(M.items()):
         # Q-DIE11-RLY: the forwarded-lane frames (qfd_rlyh*/qfd_landh*) DO get assigned pin files (their kits consume them)
-        if re.match(r'^(q[fk]d_rly(?!h0?_)|qfd_rst_rep)', name) or not any(getattr(i, 'master', '') == name for i in m['insts']):
+        if re.match(r'^(q[fk]d_rly(?!h0?_|r[0l]?_)|qfd_rst_rep)', name) or not any(getattr(i, 'master', '') == name for i in m['insts']):
             continue
         g = {}
         rects_ = list(v.pin_rects(mst, 1, {q: pw.get((name, q), 0) for q in mst.order}))

@@ -65,13 +65,24 @@ def al(n, a=32):
 class Geometry:
     """Per-die shapes and the VM / HBM maps for one Qwen3 config at TP4."""
 
-    def __init__(self, cfg, ctx):
+    def __init__(self, cfg, ctx, tp=TP):
         self.H, self.NH, self.KV, self.HD = cfg["hidden_size"], cfg["num_attention_heads"], \
             cfg["num_key_value_heads"], cfg["head_dim"]
         self.FF, self.V, self.L = cfg["intermediate_size"], cfg["vocab_size"], cfg["num_hidden_layers"]
-        self.nq, self.nk = self.NH // TP, self.KV // TP
-        self.ff = self.FF // TP
-        self.hrows = self.V // TP
+        # tp 4: the r25 die (the golden's die decomposition).  tp 8: the d4g GEN2 die (16 SM, 2 stacks), mapped so that
+        # every value is bit-identical to the TP-4 golden (D4G8 below); no numerics change.
+        assert tp in (4, 8), tp
+        self.tp = tp
+        self.d4g8 = tp == 8
+        self.nq, self.nk = self.NH // tp, self.KV // tp
+        self.ff = self.FF // tp
+        self.hrows = self.V // tp
+        # D4G8 down projection (rank q = 4 r + j): the TP-4 die-j partial (K slice j of FF/4, a csum8 whose padded
+        # tree is not a 2-way split at FF/8) is computed WHOLE, for output-row half r, so the K-split tree is the
+        # golden's; the 4 partials of a row half are reduced ((P0 + P1) + (P2 + P3)) by COLL.GROUP_REDUCE_MCAST s 4
+        # (sub-group r = ranks 4r..4r+3 in rank = j order), which multicasts [half 0 | half 1] to every rank.
+        self.dk = self.FF // 4 if self.d4g8 else self.ff          # down K per die
+        self.drows = self.H // 2 if self.d4g8 else self.H        # down output rows per die
         self.ctx = ctx
         self.rows_qkv = (self.nq + 2 * self.nk) * self.HD
         H, HD = self.H, self.HD
@@ -109,6 +120,9 @@ class Geometry:
         put("ESC", 1)
         put("AMX", 2)
         put("TOK", 1)
+        if self.d4g8:
+            put("ACTALL", self.FF)          # the gathered SwiGLU activation, rank q's 1,536 at q * 1,536 (BF16 values)
+            put("RKJ", 64)                  # per-die U32 table: j = rank mod 4 (one word a layer, indexed by L)
         self.vm_end = cur[0]
         # the head reuses the attention scratch for its logits: raw sums in SC, scales in E, scaled logits in place
         assert self.nq * ctx >= self.hrows or ctx < 8192, "head shard must fit the score scratch"
@@ -136,7 +150,7 @@ class Geometry:
         hput("o_s", H * 2)
         hput("gu", 2 * self.ff * H)
         hput("gu_s", 2 * self.ff * 2)
-        hput("down", H * self.ff)
+        hput("down", self.drows * self.dk)
         hput("down_s", H * 2)
         hput("ln1", H * 2)
         hput("ln2", H * 2)
@@ -151,6 +165,33 @@ class Geometry:
         self.hbm = dict(EMBED=base, TABLES=base * 2, HEAD=base * 3, WEIGHTS=base * 4, KV=base * 6)
         self.tables = dict(norm=0, one=al(H * 2), rope=al(H * 2) + 32)
         self.rope_row = HD * 4                        # cos(HD/2) | sin(HD/2) FP32: angle t serves the pair (2t, 2t+1)
+        if self.d4g8:
+            self.tables["rkj"] = al(self.tables["rope"] + ctx * self.rope_row)
+
+    # -- per-die row / column maps (tp 4: exactly the golden's QwenR25.die_rows / head_rows) --------------------------
+    def qkv_rows(self, d):
+        nq, nk, HD = self.nq, self.nk, self.HD
+        q = np.arange(d * nq * HD, (d + 1) * nq * HD)
+        k = self.NH * HD + np.arange(d * nk * HD, (d + 1) * nk * HD)
+        v = (self.NH + self.KV) * HD + np.arange(d * nk * HD, (d + 1) * nk * HD)
+        return q, k, v
+
+    def head_rows(self, d):
+        return d * self.V // self.tp, (d + 1) * self.V // self.tp
+
+    def ffn_cols(self, d):
+        """the FFN columns (gate / up rows, SwiGLU outputs) die d computes"""
+        if self.d4g8:
+            j, r = d % 4, d // 4
+            return np.arange(j * self.dk + r * self.ff, j * self.dk + (r + 1) * self.ff)
+        return np.arange(d * self.ff, (d + 1) * self.ff)
+
+    def down_block(self, d):
+        """(output rows, K columns) of die d's down partial"""
+        if self.d4g8:
+            j, r = d % 4, d // 4
+            return np.arange(r * self.drows, (r + 1) * self.drows), np.arange(j * self.dk, (j + 1) * self.dk)
+        return np.arange(self.H), np.arange(d * self.ff, (d + 1) * self.ff)
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -180,22 +221,25 @@ def build_images(model, g: Geometry, layers, kv_state=None, shared_embed=None):
     hc, hs = model.img.get("lm_head")
     dies = []
     kvs = {i: kv_state(i) for i in layers} if kv_state else {}
-    for d in range(TP):
+    for d in range(g.tp):
         hb = Hbm()
         hb.add(g.hbm["EMBED"], shared_embed, "EMBED")
         tab = np.zeros(g.tables["rope"] + rope.nbytes, dtype=np.uint8)
         tab[:fnorm.size] = fnorm
         tab[g.tables["one"]:g.tables["one"] + 4] = np.asarray([1.0], dtype=F).view(np.uint8)
-        tab[g.tables["rope"]:] = rope.view(np.uint8).reshape(-1)
+        tab[g.tables["rope"]:g.tables["rope"] + rope.nbytes] = rope.view(np.uint8).reshape(-1)
+        if g.d4g8:
+            tab = np.concatenate([tab, np.zeros(g.tables["rkj"] + 64 * 4 - tab.size, dtype=np.uint8)])
+            tab[g.tables["rkj"]:g.tables["rkj"] + 64 * 4] = np.full(64, d % 4, dtype=np.uint32).view(np.uint8)
         hb.add(g.hbm["TABLES"], tab, "TABLES")
-        r0, r1 = model.head_rows(d)
+        r0, r1 = g.head_rows(d)
         head = np.zeros(al(g.hrows * H) + al(g.hrows * 2), dtype=np.uint8)
         head[:g.hrows * H] = hc[r0:r1].view(np.uint8).reshape(-1)
         head[al(g.hrows * H):al(g.hrows * H) + g.hrows * 2] = bf16_bytes(hs[r0:r1])
         hb.add(g.hbm["HEAD"], head, "HEAD")
         wts = np.zeros(g.layer_bytes * len(layers), dtype=np.uint8)
         kv = np.zeros(g.kv_layer * len(layers), dtype=np.uint8)
-        q, k, v = model.die_rows(d)
+        q, k, v = g.qkv_rows(d)
         rows = np.concatenate([q, k, v])
         for j, i in enumerate(layers):
             blk = wts[j * g.layer_bytes:(j + 1) * g.layer_bytes]
@@ -210,11 +254,13 @@ def build_images(model, g: Geometry, layers, kv_state=None, shared_embed=None):
             w("o", c[:, d * g.nq * g.HD:(d + 1) * g.nq * g.HD])
             w("o_s", bf16_bytes(s))
             c, s = model.img.get(f"L{i}.gu")
-            gr = np.concatenate([np.arange(d * g.ff, (d + 1) * g.ff), g.FF + np.arange(d * g.ff, (d + 1) * g.ff)])
+            fc = g.ffn_cols(d)
+            gr = np.concatenate([fc, g.FF + fc])
             w("gu", c[gr])
             w("gu_s", bf16_bytes(s[gr]))
             c, s = model.img.get(f"L{i}.down")
-            w("down", c[:, d * g.ff:(d + 1) * g.ff])
+            dr, dc = g.down_block(d)
+            w("down", c[dr][:, dc])
             w("down_s", bf16_bytes(s))
             w("ln1", bf16_bytes(model.lw(i, "input_layernorm")))
             w("ln2", bf16_bytes(model.lw(i, "post_attention_layernorm")))
@@ -348,6 +394,10 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
                     dyn_mul=g.rope_row), O=V(g, "ROPE", HD)), tag="rope.table_row", family="rope"), [], ["ROPE"])
         b.add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="FP32", base=T + g.tables["one"], n=1),
                                            O=V(g, "ONE", 1)), tag="swiglu.route_one", family="swiglu"), [], ["ONE"])
+        if g.d4g8:
+            b.add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=T + g.tables["rkj"],
+                                                       n=max(1, n_layers)), O=V(g, "RKJ", max(1, n_layers), fmt="U32")),
+                      tag="down.rank_table", family="down"), [], ["RKJ"])
         if n_layers > 1:
             b.add(Rec("CTL", "LOOP", param=n_layers, tag="layers"), [], [])
         # -- attention block ------------------------------------------------------------------------------
@@ -434,15 +484,34 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
         b.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AB, dst=I.DST_VM), desc=dict(
             A=V(g, "GURAW", 2 * g.ff), B=V(g, "SCL", 2 * g.ff), O=V(g, "GU", 2 * g.ff)),
             tag="row_scale_gu", family="row_scale_gu"), ["GURAW", "SCL"], ["GU"])
-        b.add(Rec("SFU", "GLU", imm_a=FLT_MAX, desc=dict(A=V(g, "GU", g.ff), B=V(g, "GU", g.ff, off=g.ff),
-                                                         C=V(g, "ONE", g.ff, ibcast=1),
-                                                         O=V(g, "ACT", g.ff, fmt="BF16")),
-                  tag="swiglu", family="swiglu"), ["GU", "ONE"], ["ACT"])
-        b.add(Rec("SM", "MATVEC", param=3, desc=dict(
-            A=V(g, "ACT", g.ff), B=W("down", "INT8", g.ff, H, g.ff), O=V(g, "DPART", H)),
-            tag="down", family="down"), ["ACT"], ["DPART"])
-        b.add(Rec("COLL", "ALL_REDUCE_SUM", desc=dict(A=V(g, "DPART", H), O=V(g, "DSUM", H)),
-                  tag="all_reduce_down", family="all_reduce_down"), ["DPART"], ["DSUM"])
+        if not g.d4g8:
+            b.add(Rec("SFU", "GLU", imm_a=FLT_MAX, desc=dict(A=V(g, "GU", g.ff), B=V(g, "GU", g.ff, off=g.ff),
+                                                             C=V(g, "ONE", g.ff, ibcast=1),
+                                                             O=V(g, "ACT", g.ff, fmt="BF16")),
+                      tag="swiglu", family="swiglu"), ["GU", "ONE"], ["ACT"])
+            b.add(Rec("SM", "MATVEC", param=3, desc=dict(
+                A=V(g, "ACT", g.ff), B=W("down", "INT8", g.ff, H, g.ff), O=V(g, "DPART", H)),
+                tag="down", family="down"), ["ACT"], ["DPART"])
+            b.add(Rec("COLL", "ALL_REDUCE_SUM", desc=dict(A=V(g, "DPART", H), O=V(g, "DSUM", H)),
+                      tag="all_reduce_down", family="all_reduce_down"), ["DPART"], ["DSUM"])
+        else:
+            # D4G8: SwiGLU into the rank's slot of ACTALL, all-gather (8 x 1,536), the whole TP-4 slice j partial for
+            # row half r, then the sub-group reduce of the row halves (see Geometry)
+            b.add(Rec("SFU", "GLU", imm_a=FLT_MAX, desc=dict(
+                A=V(g, "GU", g.ff), B=V(g, "GU", g.ff, off=g.ff), C=V(g, "ONE", g.ff, ibcast=1),
+                O=MDesc(space="VM", fmt="BF16", base=g.vm["ACTALL"], n=g.ff, dyn_sel=DYN["RANK"], dyn_mul=g.ff)),
+                tag="swiglu", family="swiglu"), ["GU", "ONE"], ["ACTALL"])
+            b.add(Rec("COLL", "ALL_GATHER", desc=dict(A=V(g, "ACTALL", g.FF), O=V(g, "ACTALL", g.FF)),
+                      tag="act_all_gather", family="act_all_gather"), ["ACTALL"], ["ACTALL"])
+            # A = [ACT slice j half 0 | half 1]: rank j's and rank j + 4's 1,536 (rows j and j + 4 of ACTALL)
+            b.add(Rec("SM", "MATVEC", param=3, desc=dict(
+                A=MDesc(space="VM", fmt="FP32", base=g.vm["ACTALL"], n=g.ff, m=2, stride=4 * g.ff, indexed=1,
+                        dyn_mul=g.ff),
+                B=W("down", "INT8", g.dk, g.drows, g.dk), O=V(g, "DPART", g.drows),
+                I=V(g, "RKJ", 1, fmt="U32")),
+                tag="down", family="down"), ["ACTALL", "RKJ"], ["DPART"])
+            b.add(Rec("COLL", "GROUP_REDUCE_MCAST", param=4, desc=dict(A=V(g, "DPART", g.drows), O=V(g, "DSUM", H)),
+                      tag="all_reduce_down", family="all_reduce_down"), ["DPART"], ["DSUM"])
         b.add(Rec("DMA", "LOAD", desc=dict(A=W("down_s", "BF16", H, 1, 0), O=V(g, "SCL", H)),
                   tag="row_scale_down.load", family="row_scale_down"), [], ["SCL"])
         b.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AB, ad=I.AD_C, dst=I.DST_VM), desc=dict(

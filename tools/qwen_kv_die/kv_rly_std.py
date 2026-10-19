@@ -36,6 +36,12 @@ ROOT = Path(__file__).resolve().parents[2]
 RT = 'physical/ref_tile'
 RTL = 'rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv'
 STD = {1: (12.96, 12.96), 36: (12.96, 12.96), 296: (21.6, 47.52), 528: (21.6, 82.08)}
+# KV-LANDSLOT 10-18: the LANDING outlines of the forwarded-lane kits (tools/qwen_kv_die/gen_kv_fwd_lane.py LAND on
+# claude/kv-lanekits-1018: qkd_landsh{,0}_<S>; the 36 / 296 / 528 landings gate at 181 / 128 / 126 % in the station
+# outline).  A relay frame the die planner reserved as a landing (master qkd_rly_<W>_land, kv_land_slot.py) lays its
+# forward replicas out at these outlines, so kv_fwd_lanes.py can bind qkd_landsh*_<S> in place
+LAND = {1: (12.96, 12.96), 36: (25.92, 21.6), 296: (51.84, 47.52), 528: (51.84, 82.08)}
+LAND_SUFFIX = '_land'
 REPLICA_GAP = 10.8
 GY = 2.16
 CORNERS = ('tt', 'ff', 'ss')
@@ -55,6 +61,18 @@ PAD_COST, INST_COST = 1.0, 60.0
 
 def name(s):
     return f'qkd_rlys_{s}'
+
+
+def replica_pads(s, used):
+    """One replica's exact paired tie-low inputs / unused registered outputs; never a master-wide minimum."""
+    if s not in STD or type(used) is not int or not 0 < used <= s:
+        raise ValueError(f'invalid standard replica padding {used}/{s}')
+    if used == s:
+        return None
+    return dict(master=name(s),
+                reason='kv_rly_std replica: exactly these high a bits are tied zero and the matching b bits '
+                       'drive private spare wires; lower logical bits remain required',
+                ports={p: [[used, s - 1]] for p in ('a', 'b')})
 
 
 def replicas(w):
@@ -79,16 +97,23 @@ def replicas(w):
     return best[1]
 
 
-def layout(w, rev=0):
-    """(frame w, frame h, [(std, dx, dy, role)]) of a w-bit relay stage with rev reverse bits"""
+def dims(s, role='fwd', land=False):
+    """outline of one replica slot: a landing frame's forward slots take the landing kit outline"""
+    return LAND[s] if (land and role == 'fwd') else STD[s]
+
+
+def layout(w, rev=0, land=False):
+    """(frame w, frame h, [(std, dx, dy, role)]) of a w-bit relay stage with rev reverse bits (land: the forward
+    replicas are landing slots, LAND outlines; the replica choice is unchanged)"""
     # reverse bits ride their own replicas, MIRRORED (MY: a on the E face, b on the W face)
     reps = [(s, 'fwd') for s in replicas(w - rev)] + [(s, 'rev') for s in replicas(rev)]
-    fh = max(STD[s][1] for s, _ in reps)
+    fh = max(dims(s, r, land)[1] for s, r in reps)
     out, x = [], 0.0
     for s, role in reps:
-        dy = round(math.floor((fh - STD[s][1]) / 2 / GY + 1e-9) * GY, 4)
+        sw, sh = dims(s, role, land)
+        dy = round(math.floor((fh - sh) / 2 / GY + 1e-9) * GY, 4)
         out.append((s, round(x, 4), dy, role))
-        x += STD[s][0] + REPLICA_GAP
+        x += sw + REPLICA_GAP
     return round(x - REPLICA_GAP, 4), fh, out
 
 
@@ -173,7 +198,7 @@ def main(argv=None):
     rep = dict(schema='opentallas.qwen_kvsys_rly_std.v1', standards={name(s): dict(w=STD[s][0], h=STD[s][1], bits=s) for s in STD},
                replica_gap_um=REPLICA_GAP, per_master={}, totals=defaultdict(int))
     used_std = defaultdict(int)
-    min_used = {}
+    instance_pads = {}
     for ln in lines:
         m = inst_re.match(ln)
         if not m:
@@ -189,7 +214,8 @@ def main(argv=None):
             raise ValueError(f'{inst}: a / b {len(A)} / {len(B)} b vs relay width {W}')
         rv = rev_bits[mst]
         bid = re.sub(r'^rly_', '', inst).rsplit('_', 1)[0]
-        fw_, fh_, reps = layout(W, len(rv))
+        land = mst.endswith(LAND_SUFFIX)
+        fw_, fh_, reps = layout(W, len(rv), land=land)
         if inst not in plc:
             raise ValueError(f'{inst}: not placed in place.tcl')
         _, fx, fy, fo = plc[inst]
@@ -213,21 +239,25 @@ def main(argv=None):
                 k_f += len(idx)
                 ain = [A[i] for i in idx] + ['0'] * (s - len(idx))
                 bout = [B[i] for i in idx]
-                min_used[s] = min(min_used.get(s, s), len(idx))
             else:
                 idx = rv[k_r:k_r + s]                     # reverse bits: b -> flop -> a (mirrored replica)
                 k_r += len(idx)
                 ain = [B[i] for i in idx] + ['0'] * (s - len(idx))
                 bout = [A[i] for i in idx]
-                min_used[s] = min(min_used.get(s, s), len(idx))
+            entry = replica_pads(s, len(idx))
+            if entry is not None:
+                instance_pads[nm] = entry
             if len(bout) < s:
                 sp = f'n_{nm}__spare'
                 add_wires.append(f'  wire [{s - len(bout) - 1}:0] {sp};')
                 bout = bout + [f'{sp}[{t}]' for t in range(s - len(bout))]
             new_lines.append(f'  {name(s)} {nm} (.ck({conns["ck"]}), .a({pack(ain)}), .b({pack(bout)}));')
             # a mirrored frame (kv_pin_repair.py relays are MY: a on the E face) mirrors the row and every replica
-            px = fw_ - dx - STD[s][0] if flx else dx
-            py = oy + (fh_ - dy - STD[s][1] if fly else dy)
+            sw_, sh_ = dims(s, role, land)
+            px = fw_ - dx - sw_ if flx else dx
+            py = oy + (fh_ - dy - sh_ if fly else dy)
+            if land and role == 'fwd':
+                rep.setdefault('land_slots', {})[nm] = dict(frame=inst, S=s, outline=[sw_, sh_])
             ro = ORIENT[(flx ^ (role == 'rev'), fly)]
             add_place.append(f'ot_mts::place [$_blk findInst {nm}] {fx + px:.3f} {fy + py:.3f} {ro}')
             used_std[s] += 1
@@ -237,7 +267,7 @@ def main(argv=None):
         drop.add(inst)
         pm = rep['per_master'].setdefault(mst, dict(width=W, reverse=len(rv), replicas=[name(s) for s, *_ in reps],
                                                     row_um=[fw_, fh_], frame_um=list(frame) if frame else None,
-                                                    frame_fits=fits, instances=0))
+                                                    frame_fits=fits, instances=0, landing=land))
         pm['instances'] += 1
         pm['frame_fits'] = pm['frame_fits'] and fits
         rep['totals']['relays'] += 1
@@ -245,9 +275,7 @@ def main(argv=None):
     rep['totals'] = dict(rep['totals'], per_standard={name(s): n for s, n in sorted(used_std.items())},
                          std_area_mm2=round(sum(n * STD[s][0] * STD[s][1] for s, n in used_std.items()) / 1e6, 3),
                          frames_not_fitting=sum(1 for v in rep['per_master'].values() if not v['frame_fits']))
-    pads = {name(s): dict(reason='KV relay standard used below its width (kv_rly_std.py): spare input bits tied low; '
-                                 'the matching output bits drive private open wires', ports={'a': [[u, s - 1]]})
-            for s, u in sorted(min_used.items()) if u < s}
+    pads = dict(pads={}, instances=instance_pads)
     rep['pads'] = pads
     if a.dry_run:
         out = a.run / 'rly_std.dry.json'
@@ -281,7 +309,7 @@ def main(argv=None):
     end = re.search(r'^END LIBRARY\s*$', t, re.M)
     t = (t[:end.start()] + '\n'.join(add_lef) + '\n' + t[end.start():]) if end else t + '\n' + '\n'.join(add_lef) + '\n'
     (case / 'elements.lef').write_text(t + '\n')
-    (case / 'die.v.pads.json').write_text(json.dumps(dict(pads=pads), indent=1) + '\n')
+    (case / 'die.v.pads.json').write_text(json.dumps(pads, indent=1) + '\n')
     vj = json.loads((libs / 'views.json').read_text())
     for s, (vd, _, sz) in sorted(views.items()):
         for c in CORNERS:

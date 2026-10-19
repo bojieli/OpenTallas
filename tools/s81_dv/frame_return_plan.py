@@ -45,6 +45,16 @@ import static_return_calendar as C  # noqa: E402
 SCHEMA = 'opentallas.s81_dv.frame_return_plan.v1'
 WIN, RST = 2, 1                   # dsfd_node_* (ot_s81_retn_static #(.WIN(2), .RST(1)))
 CF = 2                            # dsfd_cfifo_crs: root word on ri at edge n -> frame ret (rd) at n + 2 (measured)
+# LANDFIX-SQ/F (10-18): column FIFO x ingress.  The emission constants (EMISSION e0 / off) were measured on dsfd_cfifo_crs,
+# whose x word reaches the column registers (xa / xb / cc / x2) X_CRS edges after the frame x pins (marker-sampled read
+# epoch).  dsfd_cfifo_crs4 (the _l4 frames) lands every x lane in an ot_s81_land ring read E edges after the source's
+# hop-0 gate opens (contract L3/L4: E = K + R0 - G, G = R0 -> E = K = the lane strap lk), i.e. X_CRS4(E) = E + 1 edges
+# from the gate-relative launch.  Every frame-internal event (cfg / go / x beats ride the same lanes) therefore moves by
+# X_CRS4(E) - X_CRS = E - 6 edges: E = 2 -> 4 edges earlier (measured, frame bench L4 LK 2, b1 10-18).
+X_CRS = 7
+def x_shift(land_e):
+    """edges the frame calendar moves when the column FIFO is dsfd_cfifo_crs4 with frame lane latency E (None: crs)"""
+    return 0 if land_e is None else (land_e + 1) - X_CRS
 OPTAG = 1                         # the PQ op tag of the bench's one op (row tag bits [15:14])
 EMISSION = ROOT / 'results/arch/s81_dv_1016/frame/return_plan/emission.json'
 
@@ -260,12 +270,16 @@ def golden_vals(mat, x, nseg):
     return {r: [int(G.bits(G.csum(blocks[r, e0 // 32:(e0 + el) // 32]))) for e0, el in segs] for r in range(mat.rows)}
 
 
-def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000):
-    """legalise one K-split phase of the frame: every q pair one segment; returns the plan (schedule data)"""
+def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg_extra=None):
+    """legalise one K-split phase of the frame: every q pair one segment; returns the plan (schedule data).
+    land_e: the _l4 successor (dsfd_cfifo_crs4) with every x lane at landing latency E (one E per frame); None = crs
+    seg_extra: optional MEASURED element-work term per segment (TOK-S81-GAPS/XS, PV trace), added to E(pair, seg) before
+    legalising (a per-segment term changes the calendar, so it cannot be added after planning)"""
     import v41_die_images_w17w10 as I
     import v41_rom_ksplit_bankmap as S
     topo = load_topology(master)
     off, e0 = emission(master)
+    e0 += x_shift(land_e)
     nsr = len(pairs) // nseg
     # the phase stream does not depend on which pair holds which segment: take it from a scratch placement
     scratch = I.Field(16, 1, 0, depth=8192, active=len(pairs), pp=True, fast=True)
@@ -280,8 +294,11 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000):
     segs = S.segments(mat.K, nseg)
     beat = [class_last_beat(stream, 0, len(stream), *S.unit_range(mat.fmt, a0, el)) for a0, el in segs]
 
+    sx = list(seg_extra) if seg_extra is not None else [0] * len(segs)
+    assert len(sx) == len(segs), (sx, len(segs))
+
     def emit_edge(p, s):
-        return e0 + beat[s] + off[p]
+        return e0 + beat[s] + off[p] + sx[s]
     vals = golden_vals(mat, x, nseg)
     assign, f, w = legalise(topo, pairs, nsr, nseg, emit_edge, vals, seed, iters)
     rep, ret = compose(topo, leaves_for(assign, emit_edge, vals))
@@ -289,7 +306,10 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000):
     return dict(schema=SCHEMA, master=master, win=WIN, rst=RST, cf=CF, K=mat.K, nseg=nseg, super_rows=nsr,
                 rows=mat.rows, topology=dict(nodes=topo['nodes'], root=topo['root'], root_link=topo['root_link'],
                                              r1_skew=topo['r1_skew']),
-                emission=dict(rule='E(pair, seg) = e0 + last_beat(seg class) + off(pair)', e0=e0, off=off,
+                emission=dict(rule='E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)', e0=e0, off=off,
+                              seg_extra=sx,
+                              cfifo='dsfd_cfifo_crs' if land_e is None else 'dsfd_cfifo_crs4', land_e=land_e,
+                              x_shift=x_shift(land_e),
                               last_beat=beat, edges={f'e{p}': emit_edge(p, s) for p, [(R, s, n)] in assign.items()}),
                 placement=[dict(pair=p, field_slot=slot_of[p], super_row=R, seg=s, nseg=n, rows=[2 * R, 2 * R + 1])
                            for p, [(R, s, n)] in sorted(assign.items())],

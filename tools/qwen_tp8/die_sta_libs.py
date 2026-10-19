@@ -50,6 +50,9 @@ def domain(net):
     return 'stream'
 
 
+MEASURED_SRCS = ('insertion.json boundary mean', 'insertion.json child_flop boundary mean')
+
+
 def measured_clock_refs(lib_path, insertion_path, corner):
     """Require the bound view's own per-clock boundary measurement, never a lib estimate."""
     if not insertion_path.is_file():
@@ -60,7 +63,9 @@ def measured_clock_refs(lib_path, insertion_path, corner):
     result = {}
     for pin in clocks:
         r = refs.get(pin)
-        if not r or r['src'] != 'insertion.json boundary mean' or not math.isfinite(r['rise']):
+        # KVR-PLACE2 10-19: a parent with hard children carries the NATIVE-REF child_flop boundary mean (pinreg_audit
+        # clock_refs; cts_native_probe.MEASURED_SRCS) -- also the view's own measurement (expanded ASTK qkd_astk_ep_s)
+        if not r or r['src'] not in MEASURED_SRCS or not math.isfinite(r['rise']):
             raise ValueError(f"missing {corner} boundary mean for {lib_path}:{pin}")
         result[pin] = r['rise']
     return result
@@ -247,7 +252,8 @@ def main():
     lef = {k: q for k, q in lef.items() if k not in skip}
     stubs = {mst: {p: [d, 0, set()] for p, d in ports.items()} for mst, ports in dirs.items()}
     for corner in ('tt', 'ff', 'ss'):
-        E.write_lib(corner, lef, stubs, out / f'qfd_elements_{corner}.lib', clock_ports=declared_clocks)
+        E.write_lib(corner, lef, stubs, out / f'qfd_elements_{corner}.lib', clock_ports=declared_clocks,
+                    related_pins=contract.get('related_pins'))
     views['assumed'] = sorted(lef)
     views['assumed_clock_insertion'] = {m: 'ideal zero-insertion assumption, no measured boundary evidence'
                                        for m in dirs if m not in leaves}

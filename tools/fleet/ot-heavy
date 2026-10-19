@@ -1,5 +1,5 @@
 #!/bin/bash
-# ot-heavy v11 (2026-10-18: die waiters re-try every 5 s; DIE-FIRST v2 in reconcile only orders, never holds idle memory; no load test anywhere); v9 (2026-10-16: docker run inherits the declared --memory via the ot-heavy-docker shim); v8 (2026-10-13 owner 17:55: admission, placement and the per-unit table use ONE arithmetic, `ot-heavy-reconcile --gate` = books(); see that file: a unit is charged what it can still grow into, bounded by its own observed peak and its class peak; no request waits while > 25 % of RAM is really available and the 20 % floor holds); v7 (2026-10-13: --tag LABEL (shown in ps; ot-run cancels its own waiter by it), --max-wait SEC (exit 75 'NOT RUN' instead of waiting for ever), an 'admitted' line on stderr after a wait); v6 (2026-10-13 owner: growth charged to a running unit is capped from its own observed peak after 5 min, plus a real-memory floor of 20 % of RAM); v5 (2026-10-13: /etc/ot-heavy.conf is re-read on every attempt, so a headroom change reaches queued waiters); v4 (2026-10-13 owner: an over-sized request is ADMITTED on its measured class size; v3 counts docker memory via use.<unit>; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
+# ot-heavy v12 (2026-10-18 FLEET-OOM: pinned Verilator 5.050 / yosys 0.68 first on PATH for every job); v11 (2026-10-18: die waiters re-try every 5 s; DIE-FIRST v2 in reconcile only orders, never holds idle memory; no load test anywhere); v9 (2026-10-16: docker run inherits the declared --memory via the ot-heavy-docker shim); v8 (2026-10-13 owner 17:55: admission, placement and the per-unit table use ONE arithmetic, `ot-heavy-reconcile --gate` = books(); see that file: a unit is charged what it can still grow into, bounded by its own observed peak and its class peak; no request waits while > 25 % of RAM is really available and the 20 % floor holds); v7 (2026-10-13: --tag LABEL (shown in ps; ot-run cancels its own waiter by it), --max-wait SEC (exit 75 'NOT RUN' instead of waiting for ever), an 'admitted' line on stderr after a wait); v6 (2026-10-13 owner: growth charged to a running unit is capped from its own observed peak after 5 min, plus a real-memory floor of 20 % of RAM); v5 (2026-10-13: /etc/ot-heavy.conf is re-read on every attempt, so a headroom change reaches queued waiters); v4 (2026-10-13 owner: an over-sized request is ADMITTED on its measured class size; v3 counts docker memory via use.<unit>; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
 # Runs a large build / bench under a hard memory cap and admits it only when the host's memory allows:
 #   ot-heavy --mem <GB> [--slots-class big|small (ignored)] -- <command...>
 # Admission (v10, owner 2026-10-17 "admit as soon as possible"): `ot-heavy-reconcile --gate`: MemAvailable - (growth
@@ -68,6 +68,14 @@ while :; do
     # the ot-heavy-docker shim (installed as /usr/local/lib/ot-heavy/bin/docker) gives every `docker run` the same
     # declared cap (--memory = --memory-swap = MEM).  A job that needs more must declare more.
     export OT_HEAVY_MEM_GB="$MEM"
+    # v12 (FLEET-OOM 2026-10-18): every job gets the fleet's pinned tools first on PATH (Verilator 5.050, yosys 0.68),
+    # the ones the closure-loop daemon's bench stages use; /usr/bin/verilator is Debian 5.032 (none on PVE1), so lane
+    # benches run through ot-run and the daemon's job benches disagreed.  OT_HEAVY_SYSTEM_TOOLS=1 opts out.
+    if [ -z "${OT_HEAVY_SYSTEM_TOOLS:-}" ]; then
+      for _d in "$HOME/.local/opentallas-tools/yosys-0.68/bin" "$HOME/.local/opentallas-tools/verilator-5.050/bin"; do
+        [ -d "$_d" ] && export PATH="$_d:$PATH"
+      done
+    fi
     [ -x /usr/local/lib/ot-heavy/bin/docker ] && export PATH="/usr/local/lib/ot-heavy/bin:$PATH"
     exec systemd-run --user --scope -q --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 -- "$@"
   fi

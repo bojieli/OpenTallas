@@ -156,10 +156,27 @@ def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, wes
         L += [f"      RECT 0.500 {yy:.3f} {w - 0.5:.3f} {yy + sw:.3f} ;" for yy in straps[net]]
         L += ["    END", f"  END {net}"]
     L += ["  OBS"]
-    for layer in ("M1", "M2", "M3", "M4"):
-        xobs = "0.400" if west and layer == "M4" else "0"
-        L += [f"    LAYER {layer} ;", f"    RECT {xobs} 0 {w:.3f} {h:.3f} ;"]
-    L += ["    LAYER M5 ;", f"    RECT {'0.400' if west else '0'} 0 {w:.3f} {h - 0.4:.3f} ;"]
+    # Q-DIE11b 10-18: optional pin-access windows (tools/abstract_pin_windows.py, env OT_ABS_PIN_WINDOW_UM, default 0 =
+    # the previous OBS byte for byte) at the FDI pin cluster, OBS-free on the pin layer (M4 west / M5 top).
+    import os
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import abstract_pin_windows as APW
+    depth = float(os.environ.get("OT_ABS_PIN_WINDOW_UM", "0") or 0)
+    if depth > 0:
+        lay = 4 if west else 5
+        prs = [(b, f"M{lay}", (0.0, 600.0 + i * pitch, pl, 600.0 + i * pitch + pw) if west else
+                (x0 + i * pitch, h - pl, x0 + i * pitch + pw, h)) for i, (_p, b) in enumerate(bits)]
+        win = APW.windows(w, h, prs, depth, lay, lay)
+        for k in range(1, 6):
+            base = (0.4 if west and k >= 4 else 0.0, 0.0, w, h - 0.4 if k == 5 else h)
+            L += [f"    LAYER M{k} ;"] + [f"    RECT {q[0]:.3f} {q[1]:.3f} {q[2]:.3f} {q[3]:.3f} ;"
+                                         for q in APW.minus_rect(base, win.get(k, []))]
+    else:
+        for layer in ("M1", "M2", "M3", "M4"):
+            xobs = "0.400" if west and layer == "M4" else "0"
+            L += [f"    LAYER {layer} ;", f"    RECT {xobs} 0 {w:.3f} {h:.3f} ;"]
+        L += ["    LAYER M5 ;", f"    RECT {'0.400' if west else '0'} 0 {w:.3f} {h - 0.4:.3f} ;"]
     L += ["  END", f"END {name}", "", "END LIBRARY"]
     pin_info = dict(signal_pins=len(bits), pin_pitch_um=pitch, pin_layer="M4" if west else "M5",
                     pin_edge="west (adapter-facing)" if west else "top (core-facing)")

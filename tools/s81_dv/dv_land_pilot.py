@@ -11,6 +11,20 @@ ONE E per link (all lanes of a bundle share the compiler slot), the SAME E at TT
 
   dv_land_pilot.py plan --case case.json --reports OUTDIR --out DIR [--D 4] [--corners tt ff]
       -> DIR/land_plan.json (per link: stages, S1 / H0 per corner, E, window margins, added edges) + DIR/landing.sdc
+      --bundle CLS [CLS ..]  (S81-DIE7 10-18) links of these classes landing in the SAME receiver form ONE bundle that the
+         receiver reads on ONE K (the frame x lanes: col_h*_l4 lk = max lane E, bind8/mk_table_p4l2.py): every lane of
+         the bundle gets the bundle E = max over its lanes, so the model times what the bound hardware does
+  dv_land_pilot.py rebundle --plan-in DIR --out DIR [--bundle x_frame]
+      the --bundle rule applied to an existing land_plan.json (no reports needed); rewrites land_plan.json + landing.sdc
+  dv_land_pilot.py agebundle --plan-in DIR --out DIR [--classes xring unit attn]
+      (S81-LBGAP/G8 10-18) lanes <stem>_l<i> of one link into one receiver form a BUNDLE that the receiver consumes in ONE
+      cycle (ot_s81sl_rstop 4 x 276 line beat, seqhost / svc entry words): every lane must land at the SAME age.  The
+      compiler / RTL age of a landed lane is ceil(N/2) + K + 1 (N half-cycle stations, K the landing strap, gate calendar
+      R0 = G + N mod 2), so per bundle K_l = E_l + (A - age_l), A = max lane age with K = E.  E stays the lane's STA E;
+      K is re-checked in the landing window per corner, F_c = ceil(-S1_c / T) in [K - D + 1, K - 1] (and
+      hold_K = H0 + (D - K) T >= 0 where H0 is known); a D 4 lane that does not fit moves to the long tile
+      dsfd_dvland_<W>l (D 8) when one exists; a bundle that fits no tile keeps K = E and is listed (age_unequal).
+      x_frame bundles (frame lk straps, bind table frame_lk) are only audited (frame_age_unequal).
   dv_land_pilot.py kit --plan DIR --case-remote CASE --libs-remote LIBS [--corners tt ff]
       -> DIR/sta_land_<corner>.tcl + run.sh: the dv_sta_pilot STA with landing.sdc sourced, plus per-link worst
          setup / hold at the landed block pins (link_<corner>.rpt) and the relay-hop hold path details (hop_<corner>.rpt)
@@ -26,6 +40,8 @@ ONE E per link (all lanes of a bundle share the compiler slot), the SAME E at TT
 import argparse, collections, json, math, re
 from pathlib import Path
 T = 833.333
+LONG_W = (276,)          # widths with a long landing tile dsfd_dvland_<W>l (rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv)
+LONG_SPREAD_PS = 2000.0
 
 
 def end_slacks(path):
@@ -51,6 +67,17 @@ def main():
     p.add_argument('--out', required=True, type=Path)
     p.add_argument('--D', type=int, default=4)
     p.add_argument('--corners', nargs='+', default=['tt', 'ff'])
+    p.add_argument('--bundle', nargs='*', default=[], help='link classes whose lanes into one receiver share one E (x_frame)')
+    rb = sp.add_parser('rebundle')
+    rb.add_argument('--plan-in', required=True, type=Path)
+    rb.add_argument('--out', required=True, type=Path)
+    rb.add_argument('--bundle', nargs='+', default=['x_frame'])
+    rb.add_argument('--landed', type=Path, default=None, help='landed STA of the source plan (link_<corner>.rpt): hold margins of '
+                    'raised lanes whose H0 is unlisted = landed min slack - (E_bundle - E_lane) T')
+    ab = sp.add_parser('agebundle')
+    ab.add_argument('--plan-in', required=True, type=Path)
+    ab.add_argument('--out', required=True, type=Path)
+    ab.add_argument('--classes', nargs='+', default=['xring', 'unit', 'attn'])
     k = sp.add_parser('kit')
     k.add_argument('--plan', required=True, type=Path)
     k.add_argument('--case-remote', required=True)
@@ -75,6 +102,10 @@ def main():
         return kit(a)
     if a.cmd == 'variant':
         return variant(a)
+    if a.cmd == 'rebundle':
+        return rebundle(a)
+    if a.cmd == 'agebundle':
+        return agebundle(a)
     case = json.load(open(a.case))
     links = {}
     for c in case['chains']:
@@ -107,27 +138,190 @@ def main():
         e_min = max(1 + max(0, math.ceil(-r[c]['s1'] / T)) for c in a.corners)
         e = e_min
         su = {c: round(r[c]['s1'] + (e - 1) * T, 1) for c in a.corners}
-        ho = {c: (round(r[c]['h0'] + (a.D - e) * T, 1) if r[c]['h0'] < 1e8 else None) for c in a.corners}
-        ok = all(v >= 0 for v in su.values()) and all(v is None or v >= 0 for v in ho.values())
         fin = [r[c]['s1'] for c in a.corners if r[c]['s1'] < 1e8]     # unlisted at a corner = met with margin there
         spread = round(max(fin) - min(fin), 1) if fin else 0.0
+        # LANDFIX-SQ (10-18): a lane whose E exceeds the D-4 tile's 3-bit K (E > 2D - 1) or whose TT/FF arrival spread
+        # exceeds LONG_SPREAD_PS (the D-4 window is 4 T minus setup / hold / margin ~3.0 ns) lands on the long tile
+        # dsfd_dvland_<W>l (D 8, 6-bit K); only W in LONG_W has one.
+        d_l, master = a.D, f'dsfd_dvland_{L["bits"]}'
+        if e > 2 * a.D - 1 or spread > LONG_SPREAD_PS:
+            if L['bits'] in LONG_W:
+                d_l, master = 8, f'dsfd_dvland_{L["bits"]}l'
+            else:
+                master = None
+        ho = {c: (round(r[c]['h0'] + (d_l - e) * T, 1) if r[c]['h0'] < 1e8 else None) for c in a.corners}
+        ok = all(v >= 0 for v in su.values()) and all(v is None or v >= 0 for v in ho.values()) and master is not None
         plan.append(dict(link=nm, cls=L['cls'], dst=L['dst'], bits=L['bits'], stages=L['stages'],
                          s1={c: round(r[c]['s1'], 1) for c in a.corners},
                          h0={c: (round(r[c]['h0'], 1) if r[c]['h0'] < 1e8 else None) for c in a.corners},
-                         E=e, setup_E=su, hold_E=ho, tt_ff_spread_ps=spread, window_ok=ok,
-                         added_edges=1 + e, ring_flops=a.D * L['bits'] + L['bits']))
+                         E=e, D=d_l, master=master, K=e, setup_E=su, hold_E=ho, tt_ff_spread_ps=spread, window_ok=ok,
+                         added_edges=1 + e, ring_flops=d_l * L['bits'] + L['bits']))
         hist[e] += 1
         sdc.append(f'set_multicycle_path -setup {e} -to [get_pins u_{L["dst"]}/{L["pin"]}[*]]')
-        sdc.append(f'set_multicycle_path -hold {a.D - 1} -to [get_pins u_{L["dst"]}/{L["pin"]}[*]]')
+        sdc.append(f'set_multicycle_path -hold {d_l - 1} -to [get_pins u_{L["dst"]}/{L["pin"]}[*]]')
+    if a.bundle:
+        plan = bundle_rows(plan, a.bundle, T)
+        hist = collections.Counter(p['E'] for p in plan)
+        sdc = sdc[:1] + sdc_lines(plan, {nm: L['pin'] for nm, L in links.items()})
+    write_plan(a, plan, hist, sdc)
+
+
+def sdc_lines(plan, pins):
+    out = []
+    for p in plan:
+        out.append(f'set_multicycle_path -setup {p["E"]} -to [get_pins u_{p["dst"]}/{pins[p["link"]]}[*]]')
+        out.append(f'set_multicycle_path -hold {p["D"] - 1} -to [get_pins u_{p["dst"]}/{pins[p["link"]]}[*]]')
+    return out
+
+
+def bundle_rows(plan, classes, T):
+    """S81-DIE7 (10-18): lanes of a bundle class into one receiver read on ONE K (frame lk = max lane E): E -> the bundle max;
+    setup_E / hold_E / window re-derived from the row's S1 / H0 (setup_E = S1 + (E-1)T, hold_E = H0 + (D-E)T)."""
+    grp = collections.defaultdict(list)
+    for p in plan:
+        if p['cls'] in classes:
+            grp[p['dst']].append(p)
+    for dst, rows in grp.items():
+        eb = max(r['E'] for r in rows)
+        for r in rows:
+            if r['E'] == eb and 'bundle_E' not in r:
+                r.update(bundle=dst, lane_E=r['E'], bundle_E=eb)
+                continue
+            r.setdefault('lane_E', r['E'])
+            e = eb
+            r.update(bundle=dst, bundle_E=eb, E=e, K=e, added_edges=1 + e)
+            r['setup_E'] = {c: (round(v + (e - 1) * T, 1) if v is not None else None) for c, v in r['s1'].items()}
+            r['hold_E'] = {c: (round(v + (r['D'] - e) * T, 1) if v is not None else None) for c, v in r['h0'].items()}
+            r['window_ok'] = (all(v is None or v >= 0 for v in r['setup_E'].values())
+                              and all(v is None or v >= 0 for v in r['hold_E'].values()) and r['master'] is not None)
+    return plan
+
+
+def write_plan(a, plan, hist, sdc, extra=None):
     a.out.mkdir(parents=True, exist_ok=True)
     summ = dict(links=len(plan), E_hist=dict(sorted(hist.items())), window_fail=[p['link'] for p in plan if not p['window_ok']],
                 ring_flops=sum(p['ring_flops'] for p in plan), bits=sum(p['bits'] for p in plan),
-                max_spread_ps=max(p['tt_ff_spread_ps'] for p in plan))
+                max_spread_ps=max(p['tt_ff_spread_ps'] for p in plan),
+                long_tiles=[p['link'] for p in plan if p['D'] == 8])
+    summ['bundled_raised'] = [p['link'] for p in plan if p.get('lane_E') is not None and p['lane_E'] != p['E']]
+    summ['min_setup_E'] = {c: min((p['setup_E'][c], p['link']) for p in plan if p['setup_E'].get(c) is not None) for c in a.corners}
     json.dump(dict(schema='opentallas.s81_land.pilot_plan.v1', T_ps=T, D=a.D, corners=a.corners,
-                   rule='E = max over corners of 1 + ceil(-S1/T); setup_E = S1 + (E-1)T; hold_E = H0 + (D-E)T', summary=summ,
-                   links=plan), open(a.out / 'land_plan.json', 'w'), indent=1)
+                   rule='E = max over corners of 1 + ceil(-S1/T); setup_E = S1 + (E-1)T; hold_E = H0 + (D-E)T'
+                        + (f'; bundle classes {list(a.bundle)}: one E per receiver = max lane E' if getattr(a, 'bundle', None) else ''),
+                   summary=summ, **(extra or {}), links=plan), open(a.out / 'land_plan.json', 'w'), indent=1)
     (a.out / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
     print(json.dumps(summ, indent=1))
+
+
+def lane_bundles(plan):
+    """(stem, dst) -> rows of the multi-lane bundles (<stem>_l<i> into one receiver)"""
+    grp = collections.defaultdict(list)
+    for p in plan:
+        m = re.fullmatch(r'(.+)_l(\d+)', p['link'])
+        if m:
+            grp[(m.group(1), p['dst'])].append(p)
+    return {k: v for k, v in grp.items() if len(v) > 1}
+
+
+def lane_age(r, K=None):
+    return math.ceil(r['stages'] / 2) + (r['K'] if K is None else K) + 1
+
+
+def window_ok_K(r, K, D, T):
+    """landing window of lane r read at strap K in a D-slot ring: per corner F = ceil(-S1/T) in [K-D+1, K-1]
+    (F <= 0 with K 1 = single-cycle met) and hold_K = H0 + (D - K) T >= 0 where H0 is known"""
+    why = []
+    for c, s1 in r['s1'].items():
+        if s1 is None:
+            continue
+        F = math.ceil(-float(s1) / T)
+        if not (K - D + 1 <= F <= K - 1) and not (F <= 0 and K == 1):
+            why.append(f'{c}: F {F} outside [{K - D + 1}, {K - 1}]')
+        h0 = (r.get('h0') or {}).get(c)
+        if h0 is not None and h0 + (D - K) * T < 0:
+            why.append(f'{c}: hold_K {h0 + (D - K) * T:.1f} ps')
+    return why
+
+
+def agebundle(a):
+    src = json.load(open(a.plan_in / 'land_plan.json'))
+    T, plan = src['T_ps'], src['links']
+    bund = lane_bundles(plan)
+    fixed, unequal, frame_bad, moved = [], [], [], []
+    for (stem, dst), rows in sorted(bund.items()):
+        ages = [lane_age(r) for r in rows]
+        if len(set(ages)) == 1:
+            continue
+        cls = rows[0]['cls']
+        if cls not in a.classes:
+            if cls == 'x_frame':
+                frame_bad.append(dict(bundle=stem, dst=dst, lanes=[(r['link'], r['stages'], r['K']) for r in rows], ages=ages))
+            continue
+        A = max(ages)
+        trial, why = [], []
+        for r, ag in zip(rows, ages):
+            K = r['K'] + (A - ag)
+            D, master = r['D'], r['master']
+            w = window_ok_K(r, K, D, T)
+            if w and D == 4 and r['bits'] in LONG_W:
+                w8 = window_ok_K(r, K, 8, T)
+                if not w8:
+                    D, master, w = 8, f'dsfd_dvland_{r["bits"]}l', []
+            if K > (63 if D == 8 else 7):
+                w.append(f'K {K} beyond the strap range')
+            trial.append((r, K, D, master))
+            why += [f'{r["link"]} K {K} D {D}: {x}' for x in w]
+        if why:
+            unequal.append(dict(bundle=stem, dst=dst, cls=cls, lanes=[(r['link'], r['stages'], r['E']) for r in rows], ages=ages,
+                                why=why))
+            continue
+        for r, K, D, master in trial:
+            raised = K - r['K']
+            if D != r['D']:
+                moved.append(r['link'])
+                r['ring_flops'] = (D + 1) * r['bits']
+            r.update(bundle=f'{stem}->{dst}', lane_age_E=lane_age(r), bundle_age=A, K=K, D=D, master=master,
+                     K_source='S81-LBGAP/G8 bundle age: K = E + (max bundle age - lane age)',
+                     added_edges=r.get('added_edges', 1 + r['E']) + raised)
+            r['window_ok'] = True
+        fixed.append(dict(bundle=stem, dst=dst, cls=cls, age=A, K=[r['K'] for r in rows], E=[r['E'] for r in rows],
+                          N=[r['stages'] for r in rows]))
+    a.D, a.corners = src['D'], src['corners']
+    summ_extra = dict(agebundle=dict(rule='per bundle <stem>_l<i> -> dst: K_l = E_l + (A - age_l), age = ceil(N/2) + K + 1',
+                                     classes=a.classes, multi_lane_bundles=len(bund), equalised=fixed, moved_to_D8=moved,
+                                     age_unequal=unequal, frame_age_unequal=frame_bad))
+    head = ['# S81-LAND landing model (tools/s81_dv/dv_land_pilot.py agebundle of %s): per forwarded-clock link, ring D, K = '
+            'bundle-age strap (S81-LBGAP/G8); setup multicycle = K, hold = D - 1; NOT_A_DIE_RESULT (stand-in blocks)'
+            % (a.plan_in / 'land_plan.json')]
+    for r in plan:     # the landing reads at K: the window multicycle is K (= E outside the equalised bundles)
+        r.setdefault('K', r['E'])
+    write_plan(a, plan, collections.Counter(p['E'] for p in plan),
+               head + sdc_lines([dict(p, E=p['K']) for p in plan], {p['link']: f"i_{p['link']}" for p in plan}),
+               extra=dict(source_plan=str(a.plan_in / 'land_plan.json'), **summ_extra))
+
+
+def rebundle(a):
+    src = json.load(open(a.plan_in / 'land_plan.json'))
+    plan = bundle_rows(src['links'], a.bundle, src['T_ps'])
+    a.D, a.corners = src['D'], src['corners']
+    if a.landed:
+        mins = {c: {} for c in a.corners}
+        for c in a.corners:
+            for line in open(a.landed / f'link_{c}.rpt'):
+                f = line.split()
+                if len(f) >= 3 and f[1] == 'min' and f[2] not in ('none', '?'):
+                    mins[c][f[0]] = float(f[2])
+        for r in plan:
+            if r.get('lane_E') is not None and r['lane_E'] != r['E']:
+                r['hold_E_landed'] = {c: (round(mins[c][r['link']] - (r['E'] - r['lane_E']) * src['T_ps'], 1)
+                                          if r['link'] in mins[c] else None) for c in a.corners}
+                if any(v is not None and v < 0 for v in r['hold_E_landed'].values()):
+                    r['window_ok'] = False
+    head = ['# S81-LAND landing model (tools/s81_dv/dv_land_pilot.py rebundle of %s): per forwarded-clock link, ring D = %d,'
+            ' ONE E for TT and FF, bundle classes %s share one E per receiver; NOT_A_DIE_RESULT (stand-in blocks)'
+            % (a.plan_in / 'land_plan.json', a.D, ' '.join(a.bundle))]
+    write_plan(a, plan, collections.Counter(p['E'] for p in plan), head + sdc_lines(plan, {p['link']: f"i_{p['link']}" for p in plan}),
+               extra=dict(source_plan=str(a.plan_in / 'land_plan.json')))
 
 
 def _swap_ck_o(lib):
@@ -230,7 +424,8 @@ foreach ep {{{' '.join(a.hop_endpoints)}}} {{
 puts OT_STA_DONE''')
         t = t.replace('/pilot/libs/', '/libs/')
         if a.standin_libs:
-            t = t.replace('[glob $C/views/dv_*.lib]', '[glob /libs/dv_*.lib]')
+            # S81-BIND3: per-corner stand-in libs (dv_<inst>_<corner>.lib, leaf-pin arcs differ by corner) when present
+            t = t.replace('[glob $C/views/dv_*.lib]', f'[concat [glob -nocomplain /libs/dv_*_{c}.lib] [glob -nocomplain /libs/dv_*standin*.lib]]')
         if a.extra_tcl:
             t = t.replace(f'source {P.PLAT}/setRC.tcl', a.extra_tcl.read_text() + f'source {P.PLAT}/setRC.tcl', 1)
         (a.plan / f'sta_land_{c}.tcl').write_text(t)

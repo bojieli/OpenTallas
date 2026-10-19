@@ -93,7 +93,7 @@ def cmd_gen(a):
     x = (rng.standard_normal(a.K) * np.exp2(rng.integers(-3, 4, size=a.K))).astype(np.float32)
     if a.plan:
         import frame_return_plan as P
-        plan = P.plan_phase(a.master, qa, mats[0], x, a.nseg, seed=a.seed, iters=a.iters)
+        plan = P.plan_phase(a.master, qa, mats[0], x, a.nseg, seed=a.seed, iters=a.iters, land_e=a.land_e)
         orig = I._place
         I._place = P.place_fn(plan['assign_slots'], a.nseg)
         try:
@@ -262,6 +262,8 @@ def main(argv=None):
                    'check then requires the ret words to equal the predicted calendar cycle for cycle')
     g.add_argument('--nseg', type=int, default=4)
     g.add_argument('--iters', type=int, default=4000)
+    g.add_argument('--land-e', type=int, default=None, help='LANDFIX-SQ/F: plan for the _l4 successor (dsfd_cfifo_crs4) '
+                   'with frame lane landing latency E (= the bench strap LK); default: dsfd_cfifo_crs')
     c = sp.add_parser('check')
     c.add_argument('--dir', required=True)
     c.add_argument('--log', required=True)

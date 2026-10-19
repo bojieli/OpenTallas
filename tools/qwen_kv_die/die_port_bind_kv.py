@@ -42,6 +42,10 @@ HARD_PORT_RTL = {
 
 
 def header(text, mod):
+    # Port/parameter comments may contain ");". Remove them before finding
+    # the header terminator, or a real declared port silently disappears.
+    text = re.sub(r'/\*.*?\*/', '', text, flags=re.S)
+    text = re.sub(r'//[^\n]*', '', text)
     m = re.search(r'^\s*module\s+' + mod + r'\b(.*?)\);', text, re.M | re.S)
     if not m:
         return None, None
@@ -158,7 +162,7 @@ def main(argv=None):
                              die_ports_not_bound=sorted(set(dp)-set(ports)), rtl_inputs_unconnected=unin,
                              rtl_outputs_unread=unout)
 
-        elif mst.startswith('qkd_rly') and rtxt is not None:
+        elif mst.startswith('qkd_rly') and rtxt is not None and mst not in EXP:   # KV-CLOCK: lane masters bind via EXP
             _, ports = header(rtxt, mst)
             if ports is None:
                 r.update(cls='RELAY', note=f'no module {mst} in {a.relay_rtl}')
@@ -169,7 +173,7 @@ def main(argv=None):
                 r.update(cls='REAL' if not bad and not miss else 'MISMATCH', module=mst, file=a.relay_rtl,
                          note='die relay: generated register RTL, per-bit direction (kv_relays.py)',
                          width_or_missing=bad, die_ports_not_bound=[], rtl_inputs_unconnected=miss, rtl_outputs_unread=[])
-        elif mst.startswith('qkd_rly'):
+        elif mst.startswith('qkd_rly') and mst not in EXP:
             r.update(cls='RELAY', note='die-top relay register: only a generated lint stub module exists (no RTL relay master)')
         elif mst in EXP:
             f = ROOT / EXP[mst]['rtl']

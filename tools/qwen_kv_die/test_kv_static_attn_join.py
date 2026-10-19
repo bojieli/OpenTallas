@@ -14,7 +14,12 @@ def test_programme_service_face_bound():
     assert face_open == sorted(['ck', 'f_data', 'f_epoch', 'f_valid', 'rst_n', 'unit_fault'] + (['f_beat'] if A.STREAM else []))
     assert ins['attn_face']['parameters']['RESULT_RELAY'] is None       # compiler-priced
     root_open = sorted(k for k, v in ins['attn_root']['inputs'].items() if v is None)
-    assert root_open == ['ck', 'fused_program_capability', 'rst_n']
+    assert root_open == ['ck', 'rst_n']
+    # RTL-BUILD-KV/FAULT P8: both capability inputs <- the die cfg capability word
+    for n in A.CAP_CONSUMERS:
+        assert ins[n]['inputs']['fused_program_capability'] == [dict(instance='diecfg', port='fused_program_capability',
+                                                                     lo=0, width=1)], n
+    assert ins['diecfg']['parameters']['CAP'] == 1 and ins['boot']['parameters']['DIECAP'] == 1
 
 
 def test_widths():

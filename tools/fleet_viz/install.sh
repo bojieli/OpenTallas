@@ -4,6 +4,8 @@ set -euo pipefail
 src=$(cd "$(dirname "$0")" && pwd); dst=$HOME/.local/share/fleet-viz
 mkdir -p "$dst" "$HOME/.config/systemd/user"
 cp "$src"/{server.py,agent.py,recorder.py,elements.py,die_contracts.py,flow_state.py,export_replay.py,index.html,fv_stale.js,fleet_hosts.json} "$dst"/
+# element truth sync (FLEETVIZ-ELEM 10-18): hourly native audit + die contracts from the current die binds
+cp "$src"/{native_sync.py,die_contract_sync.py,margin_thin.py} "$dst"/; cp "$src"/../../results/fleet_viz/die_sources.json "$dst"/ 2>/dev/null || true
 cp "$src"/{landing.py,coverage.py,native_provenance.py,elem_shell.py,elem_desc.py,explorer.py,explorer_geom.py,explorer.html,explorer.js,explorer_story.js,explorer_dies.json,explorer_names.json,explorer_compose.json,stories_import.py} "$dst"/
 mkdir -p "$dst/stories" "$dst/explorer"
 # data-flow views + link records (explorer/dataflow/data/*.links.json.gz from dataflow_links.py)
@@ -34,7 +36,9 @@ fi
 rm -rf "$dst/landing"; mkdir -p "$dst/landing/recordings"
 cp "$src"/landing/{index.html,landing.css,landing.js} "$dst/landing/"; cp "$src"/landing/recordings/*.json "$dst/landing/recordings/"
 cp "$src"/fleet-viz.service "$HOME/.config/systemd/user/"
+cp "$src"/fleet-viz-elem-sync.{service,timer} "$HOME/.config/systemd/user/"
 systemctl --user daemon-reload
 systemctl --user enable fleet-viz.service >/dev/null
+systemctl --user enable --now fleet-viz-elem-sync.timer >/dev/null
 systemctl --user restart fleet-viz.service
 rm -f "$dst"/landmask.js
