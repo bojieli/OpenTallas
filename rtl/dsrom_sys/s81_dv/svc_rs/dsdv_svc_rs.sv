@@ -30,6 +30,21 @@
 //                      compiled windows (att drain slot rs_pvslot); every hop 5 cycles; two valid words in one cycle or a
 //                      word on a face that is not a child are sticky faults (never arbitrated)
 // SM face w_v / w_a 14 / w_m 16 / w_d 512 + status.
+// P PATH (TOK-S81-GAPS/SVCP 10-19, die gap G9; GO frame [47:32] PIO != 0, else legacy = PV frame from the host q):
+//   the SM's SE e rows (16 FP32 exp of head g = tile, one per 16 positions) are rounded to BF16 (RNE, hdc_golden.to_bf16)
+//   into pbuf (40 x 256 b) as they leave the SM.  From share cycle PIO the slice injects one P BEAT every 2 cycles into its
+//   score-exchange leaf (beat k = rows 4k .. 4k + 3: head lane g = {P bf16, 16'h0}, every other lane +0, flags 0, row
+//   mask = rows < T); the exchange's balanced gather adds x + 0 (exact), so the fold root rsv_09 sees all 16 heads x 4
+//   rows a beat (rt).  The root packs the PV frame (header type 5, len ceil(T / 2), the job tag, then word w = rows 2w,
+//   2w + 1 x 16 heads BF16) -- one word a cycle -- into its P.V return node: up to its entry rsv_11 (tr_09_11) and across
+//   the centre (pout = W face, the abutted lane pr_09_07) to the W chain root rsv_07 (pin = E face), which forwards it to
+//   rsv_05 (tr_07_05).  In the P window (share cycles [PIO, PVO)) an entry puts the return-tree words on its dn stream
+//   instead of its pv pins: every slice of both halves receives the PV frame exactly as from the host (the owners'
+//   p FIFO / static p feed are unchanged).  The tap beats of the P window do not enter the SE assembler.  Static: no
+//   credit / ready; sticky fault (lf) on a P beat whose e row is not in pbuf at its cycle, a P beat colliding with an
+//   engine score beat, a root beat off the 2-cycle cadence or with a non-BF16 / flagged lane, a pbuf overflow, an
+//   injected word colliding with a host q word.  The SO (normalised o) rows still leave only on w_* (G9b: no on-die
+//   consumer; attn.normalize stays a die gap).
 // Entry only: j 33 in, jd 2 out, q 515 in, hw 292 in, hc 9 out, fault out, P.V pv_v + pv_d 513 out.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_rs_c #(
@@ -93,9 +108,10 @@ module dsdv_svc_rs_c #(
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
-    reg [21:0] role; reg [7:0] pvs;
-    always @(posedge ck or negedge rn) if (!rn) begin role <= '0; pvs <= 8'd255; end
-        else begin role <= rs_role(sid); pvs <= rs_pvslot(2'(ST), sid); end
+    reg [21:0] role; reg [7:0] pvs, pf;
+    wire [1:0] a_st;                                  // stack position (dsdv_svc_att: CFG [31:30] or the parameter ST)
+    always @(posedge ck or negedge rn) if (!rn) begin role <= '0; pvs <= 8'd255; pf <= 8'h00; end
+        else begin role <= rs_role(sid); pvs <= rs_pvslot(a_st, sid); pf <= rs_pface(sid); end
     wire [3:0] tile = role[3:0], chm = role[7:4];
     wire [2:0] par = role[10:8];
 `ifdef RS_MUT_GD
@@ -105,6 +121,13 @@ module dsdv_svc_rs_c #(
 `endif
     genvar f;
 
+    // P path state used by the dn tree's entry mux (defined with the P path below)
+    wire [15:0] pio, pvo_j, jcs;
+    wire pon = pio != 16'd0;                          // the job's P path is compiled (GO [47:32])
+    wire pwin = pon && jcs >= pio && jcs < pvo_j;     // P window: tap beats are P beats, return-tree words are P words
+    localparam integer RW = 514;
+    reg rm_v; reg [RW-2:0] rm_d; reg r_f;
+    wire pinj = ENTRY && rm_v && pwin;                // entry: the return-tree word goes on the dn stream (q part)
     // ------------------------------------------------------------------ dn tree: faces in (pin flop + relay)
     wire [DW-1:0] dfi [0:3];
     generate for (f = 0; f < 4; f = f + 1) begin : g_di
@@ -138,7 +161,7 @@ module dsdv_svc_rs_c #(
     end endgenerate
     // centre register
     reg [DW-1:0] cs;
-    wire [DW-1:0] cin = (par == 3'd0) ? hst : dfi[par - 3'd1];
+    wire [DW-1:0] cin = (par == 3'd0) ? (pinj ? {hst[DW-1:513], rm_d[511:0], 1'b1} : hst) : dfi[par - 3'd1];
     always @(posedge ck or negedge rn) if (!rn) begin cs[0] <= 1'b0; cs[513] <= 1'b0; end
         else begin cs[0] <= cin[0]; cs[513] <= cin[513]; end
     always @(posedge ck) begin cs[512:1] <= cin[512:1]; cs[DW-1:514] <= cin[DW-1:514]; end
@@ -173,11 +196,13 @@ module dsdv_svc_rs_c #(
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
         .l_v(l_v), .l_d(l_d), .pv_ov(a_pv_v), .pv_od(a_pv_d),
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
-        .go_o(go), .tjob_o(tjob), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(a_f), .fault_code(a_fc));
+        .go_o(go), .tjob_o(tjob), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(a_f), .fault_code(a_fc),
+        .pio_o(pio), .pvo_o(pvo_j), .jc_o(jcs), .st_o(a_st));
 
     // ------------------------------------------------------------------ score exchange
     wire rt_v, t_v, x_f; wire [2131:0] rt_d; wire [19:0] t_tag; wire [127:0] t_y; wire [3:0] t_f;
-    dsdv_svc_sx #(.MUT(0)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v), .l_d(l_d),
+    reg pl_v; reg [2131:0] pl_d;                     // P beat (registered), muxed onto the engine's score-beat port
+    dsdv_svc_sx #(.MUT(0)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v || pl_v), .l_d(pl_v ? pl_d : l_d),
         .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d),
         .rt_v(rt_v), .rt_d(rt_d), .t_v(t_v), .t_tag(t_tag), .t_y(t_y), .t_f(t_f), .fault(x_f));
 
@@ -192,15 +217,16 @@ module dsdv_svc_rs_c #(
         for (int i = 0; i < 4; i++) if (t_m[i]) se_nxt[32 * (4 * t_row[3:2] + i) +: 32] = t_y[32*i +: 32];
             else se_nxt[32 * (4 * t_row[3:2] + i) +: 32] = 32'd0;
     end
+    wire t_vs = t_v && !pwin;                         // P-window tap beats are P, not scores
     always @(posedge ck) begin
-        if (t_v) se_acc <= t_last ? 512'd0 : se_nxt;
-        if (t_v && t_last) se_d <= se_nxt;
+        if (t_vs) se_acc <= t_last ? 512'd0 : se_nxt;
+        if (t_vs && t_last) se_d <= se_nxt;
     end
     always @(posedge ck or negedge rn)
         if (!rn) begin se_v <= 1'b0; se_flag <= 1'b0; end
         else begin
-            se_v <= t_v && t_last;
-            if (go) se_flag <= 1'b0; else if (t_v && |(t_f & t_m)) se_flag <= 1'b1;
+            se_v <= t_vs && t_last;
+            if (go) se_flag <= 1'b0; else if (t_vs && |(t_f & t_m)) se_flag <= 1'b1;
         end
 
     // ------------------------------------------------------------------ SM head (S81U-2: smq tap + hardened smh)
@@ -217,13 +243,80 @@ module dsdv_svc_rs_c #(
         .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
         .o_rjid(o_rjid));
     assign w_st = {o_rjid, o_den, o_alive, o_fo, o_fu};
+
+    // ------------------------------------------------------------------ P path (TOK-S81-GAPS/SVCP; header above)
+    // (1) SE e rows -> BF16 -> pbuf (row oc = positions 16 oc .. 16 oc + 15 of head g)
+    function automatic [15:0] bf16(input [31:0] x);
+        reg [31:0] y;
+`ifdef RS_MUT_P
+        y = x;                                        // bench negative control: truncation instead of RNE
+`else
+        y = x + 32'h7fff + 32'(x[16]);
+`endif
+        bf16 = y[31:16];
+    endfunction
+    reg sek; reg [5:0] pb_n; reg [255:0] pbuf [0:39]; reg p_f;
+    wire pb_w = w_v && sek && pb_n != 6'd40;
+    always @(posedge ck) if (pb_w) for (int i = 0; i < 16; i++) pbuf[pb_n][16*i +: 16] <= bf16(w_d[32*i +: 32]);
+    // (2) P beats into the score exchange from PIO, one every 2 cycles (aligned like the engine's score beats: gd)
+    reg [7:0] pk;
+    wire [9:0] nbt = (tjob + 10'd3) >> 2;
+    wire pfire = pon && 10'(pk) < nbt && jcs == pio + {7'd0, pk, 1'b0};
+    wire [9:0] prow = {pk, 2'b00};
+    wire [255:0] prw = pbuf[pk[7:2]];
+    always @(posedge ck) begin
+        pl_d <= '0;
+        pl_d[2131:2116] <= 16'(prow);
+        for (int i = 0; i < 4; i++) if (32'(prow) + i < 32'(tjob)) begin
+            pl_d[2112 + i] <= 1'b1;
+            pl_d[64 + (16*i + 32'(tile))*32 +: 32] <= {prw[16*(4*pk[1:0] + i) +: 16], 16'h0000};
+        end
+    end
+    // (3) fold root: rt P beats -> PV frame words (header, then A = rows 0 / 1, B = rows 2 / 3 of each beat)
+    function automatic [1023:0] pbeat(input [2131:0] b);
+        for (int jj = 0; jj < 4; jj++) for (int h = 0; h < 16; h++) pbeat[16*(16*jj + h) +: 16] = b[64 + 32*(16*jj + h) + 16 +: 16];
+    endfunction
+    function automatic bad_beat(input [2131:0] b);
+        bad_beat = |b[63:0];
+        for (int l = 0; l < 64; l++) if (b[64 + 32*l +: 16] != 16'h0000) bad_beat = 1'b1;
+    endfunction
+    wire [9:0] pn = (tjob + 10'd1) >> 1;              // words of the job's PV frame
+    wire rtp = rt_v && pwin;
+    reg [1:0] pph; reg phd; reg [9:0] pwc; reg pp_v; reg [512:0] pp_d; reg [1023:0] phold;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin sek <= 1'b0; pb_n <= 6'd0; pk <= 8'd0; pl_v <= 1'b0; pph <= 2'd0; phd <= 1'b0; pwc <= 10'd0; pp_v <= 1'b0; p_f <= 1'b0; end
+        else begin
+            if (sm_st) begin sek <= sm_kind == 4'd4; if (sm_kind == 4'd4) pb_n <= 6'd0; end
+            else if (pb_w) pb_n <= pb_n + 1'b1;
+            if (w_v && sek && pb_n == 6'd40) p_f <= 1'b1;                          // more e rows than pbuf holds
+            pl_v <= pfire;
+            if (go) pk <= 8'd0; else if (pfire) pk <= pk + 1'b1;
+            if (pfire && {2'b00, pb_n} <= {2'b00, pk[7:2]}) p_f <= 1'b1;             // the beat's e row is not in pbuf yet
+            if (pl_v && l_v) p_f <= 1'b1;                                           // a P beat on an engine score beat
+            pp_v <= 1'b0;
+            if (go) begin pph <= 2'd0; phd <= 1'b0; pwc <= 10'd0; end
+            else if (rtp) begin
+                if (bad_beat(rt_d)) p_f <= 1'b1;                                    // a lane that is not an exact BF16
+                if (!phd) begin pp_v <= 1'b1; phd <= 1'b1; pph <= 2'd1; end         // header
+                else if (pph == 2'd2) begin pp_v <= pwc < pn; pwc <= pwc + 1'b1; pph <= 2'd1; end
+                else p_f <= 1'b1;                                                   // off the 2-cycle cadence
+            end else if (pph == 2'd1) begin pp_v <= pwc < pn; pwc <= pwc + 1'b1; pph <= 2'd2; end
+            else if (pph == 2'd2) begin pp_v <= pwc < pn; pwc <= pwc + 1'b1; pph <= 2'd0; end
+            if (pinj && hst[0]) p_f <= 1'b1;                                        // an injected word on a host q word
+        end
+    always @(posedge ck) begin
+        if (rtp) phold <= pbeat(rt_d);
+        if (rtp && !phd) pp_d <= {1'b0, 4'd5, 1'b0, 4'b0001, tagj, 3'd0, 12'(pn), 480'd0};
+        else if (pph == 2'd1) pp_d <= {1'b0, phold[511:0]};
+        else pp_d <= {1'b0, phold[1023:512]};
+    end
 `ifdef RS_OBS
     assign obs = {rt_v, rt_d, se_v, se_d, a_fc, lf};
 `endif
 
     // ------------------------------------------------------------------ P.V return tree (child -> parent, compiled windows)
-    localparam integer RW = 514;
     wire [RW-1:0] rfi [0:3];
+    wire [3:0] chr = chm | pf[7:4];                   // return-tree children + the P path's extra in face (rsv_07: E)
     generate for (f = 0; f < 4; f = f + 1) begin : g_ri
         reg p0v, p1v; reg [RW-2:0] p0d, p1d;
         always @(posedge ck or negedge rn) if (!rn) begin p0v <= 1'b0; p1v <= 1'b0; end
@@ -231,27 +324,26 @@ module dsdv_svc_rs_c #(
         always @(posedge ck) begin p0d <= ri[RW*f + 1 +: RW - 1]; p1d <= p0d; end
         assign rfi[f] = {p1d, p1v};
     end endgenerate
-    reg rm_v; reg [RW-2:0] rm_d; reg r_f;
     always @(posedge ck or negedge rn)
         if (!rn) begin rm_v <= 1'b0; r_f <= 1'b0; end
         else begin
             reg [2:0] n;
-            n = 3'(a_pv_v);
+            n = 3'(a_pv_v) + 3'(pp_v);
             for (int i = 0; i < 4; i++) begin
-                if (rfi[i][0] && chm[i]) n = n + 1'b1;
-                if (rfi[i][0] && !chm[i]) r_f <= 1'b1;                     // a P.V word on a face that is not a child
+                if (rfi[i][0] && chr[i]) n = n + 1'b1;
+                if (rfi[i][0] && !chr[i]) r_f <= 1'b1;                     // a P.V word on a face that is not a child
             end
             if (n > 3'd1) r_f <= 1'b1;                                      // two words in one cycle: a schedule fault
             rm_v <= n != 0;
         end
     always @(posedge ck) begin
-        rm_d <= a_pv_d;
-        for (int i = 0; i < 4; i++) if (rfi[i][0] && chm[i]) rm_d <= rfi[i][RW-1:1];
+        rm_d <= pp_v ? pp_d : a_pv_d;
+        for (int i = 0; i < 4; i++) if (rfi[i][0] && chr[i]) rm_d <= rfi[i][RW-1:1];
     end
     generate for (f = 0; f < 4; f = f + 1) begin : g_ro
         reg o0v, o1v; reg [RW-2:0] o0d, o1d;
         always @(posedge ck or negedge rn) if (!rn) begin o0v <= 1'b0; o1v <= 1'b0; end
-            else begin o0v <= rm_v && par == 3'(f + 1); o1v <= o0v; end
+            else begin o0v <= rm_v && (par == 3'(f + 1) || (pwin && pf[f])); o1v <= o0v; end   // + P out face (rsv_09: W)
 `ifdef RS_MUT_RO
         // bench negative control: the chain root's result-out lane toward its entry (tr_07_05 / tr_09_11) flips a bit
         always @(posedge ck) begin o0d <= rm_d ^ {511'd0, (sid == 4'd7 || sid == 4'd9), 1'b0}; o1d <= o0d; end
@@ -260,13 +352,13 @@ module dsdv_svc_rs_c #(
 `endif
         assign ro[RW*f +: RW] = {o1d, o1v};
     end endgenerate
-    always @(posedge ck or negedge rn) if (!rn) pv_v <= 1'b0; else pv_v <= ENTRY && rm_v && par == 3'd0;
+    always @(posedge ck or negedge rn) if (!rn) pv_v <= 1'b0; else pv_v <= ENTRY && rm_v && par == 3'd0 && !pwin;
     always @(posedge ck) pv_d <= rm_d;
 
     // ------------------------------------------------------------------ controller status, local fault
     // hs = {fault, live} per PC controller (dsfd_svc_hs's synchroniser and rule: a fault, or live dropping after it
     // rose, is a sticky slice fault; the job-done half of dsfd_svc_hs lives at the entry's job gate, not here)
-    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f;
+    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f | p_f;
     (* async_reg = "true" *) reg [1:0] hs0, hs1;
     reg hs_up, hs_hf, hs_f;
     always @(posedge ck or negedge rn)

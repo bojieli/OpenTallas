@@ -14,7 +14,7 @@ window image.  Every field is the decode of the BUILT RTL (main f93fea12a+, cred
       [511:508] type, [507] END (the job's last frame), [506:503] mask (bit 0 = this die's slices), [502:495] tag,
       [491:480] len (payload words), [479:459] pos / 21-b field, [458:449] user, [448:0] spec.
   frames (dsdv_svc_att.sv:17-31 + decode lines):
-      12 CFG      spec[29:0] WB (window ring base)                                  dsdv_svc_att.sv:151
+      12 CFG      spec[29:0] WB (window ring base), [32] ST valid, [31:30] ST (G10: the die's stack position)
        3 OWN_ROW  [465:459] slot = pos mod 128, [458:449] user; 16 words {scale 8, codes 256} (word t -> tile t):
                   codes -> sector WB + 68 u + slot[6:1] on PC slot[0]; scale byte slot[4:0] of sector
                   WB + 68 u + 64 + slot[6] on PC slot[5]                            dsdv_svc_att.sv:177-193
@@ -24,8 +24,12 @@ window image.  Every field is the decode of the BUILT RTL (main f93fea12a+, cred
        9 SMJ      spec[0] start, [4:1] kind (4 = SE), [12:5] jid; 2 parameter rows: row 0 {[13:0] obase, [64 +: 7]
                   nv = ceil(T / 16), [96 +: 32] scale, [128 +: 3] lt = log2(nv)}, row 1 sinks [32 h +: 32]
                                                                        rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smq.sv:12-13, 95
-      13 GO       len 0, spec[15:0] PO (p-feed start), [31:16] PVO (P.V drain base), cycles after the share start
-       5 PV       p words: word w = rows 2 w, 2 w + 1, head h at bits 16 (j 16 + h) (BF16)
+      13 GO       len 0, spec[15:0] PO (p-feed start), [31:16] PVO (P.V drain base), [47:32] PIO (on-die P injection
+                  start; TOK-S81-GAPS/SVCP 10-19), cycles after the share start
+       5 PV       p words: word w = rows 2 w, 2 w + 1, head h at bits 16 (j 16 + h) (BF16) -- ON-DIE since SVCP
+                  (PPATH): the SM e rows -> BF16 -> score-exchange P beats -> fold root rsv_09 packs this frame -> both
+                  entries put it on their dn stream (dsdv_svc_rs.sv P PATH); the host sends no PV frame.  PPATH False =
+                  the legacy host PV frame (bench reference only)
   static rules (no credit / ready; dsdv_svc_att.sv:33-58, tb_dsdv_svc_rs.sv build_frames):
       PV send >= GO + ceil(5 T / 4) + 150 (after the last fold score); PO = PVS + ceil(n / 2) + ceil(n / 250) + 4,
       n = ceil(T / 2); PVO = PO + 8 ceil(T / 32) + 55; the quarter-ST P.V leaves the entry of half PVH (ST < 2: E)
@@ -39,11 +43,14 @@ Status (L0, sliding window, TP4 rank 0 = heads 0..15):
   attn.own_row_write / window_load / scores: LOWERED with the committed slice-set bench
       (results/rtl/s81_layer_tput_1018/compiler/bench_svc: the 16 real dsdv_svc_rs, the images and cycles emitted here,
       bit-exact vs the L0 fixtures).
-  attn.pv: PARTIAL -- the P.V words of quarter ST are bit-exact, but die.v instantiates every u_rsv_* with ST = 0
-      (no parameter override), so only dims 0..127 of the rank's 16 heads leave the die (dsdv_svc_att.sv:313 pvown).
-  attn.max / exp / den / sink / normalize: GAP -- the SM head computes them inside each slice, but its write face
-      w_v / w_a / w_m / w_d / w_st is unconnected on all 16 u_rsv_* in die.v: no on-die path from the SM rows to the
-      PV-frame p operand (the q pin is fed only by u_s_3S / u_s_4S xr band bo) nor to the normalisation.
+  attn.max / exp: LOWERED (TOK-S81-GAPS/SVCP 10-19, PPATH): the SE job's e rows feed the on-die P path (SM -> BF16
+      pbuf -> score-exchange P beats -> fold root PV frame -> entries' dn stream -> owners' p feed); bench_svc_p checks
+      every P word at the root and on both entries' dn streams = bf16(fixture attn.exp) and the P.V bit-exact.
+  attn.den / sink: PARTIAL -- computed on-die by the same SE job (SM head), consumed only by the SO normalisation.
+  attn.normalize: GAP G9b -- the SO job's o rows leave only on w_* (no on-die consumer; the SO operand rows = P.V by
+      head would come back as SMJ frames from the slice band, and the other 3 quarters need the cross-die exchange).
+  attn.pv: PARTIAL -- the P.V words of quarter ST are bit-exact; ST is now the CFG field (G10 strap part fixed), but
+      the other 3 quarters of the rank's 512 dims reach wo_a only through an unpriced cross-die exchange (G10).
   The q words reach the entry q pins from u_s_3S (W) / u_s_4S (E) ot_s81sl_xr band bo (pk[511:0], same cycle on both
   sides); producing those rows (header rows + q / own-row payload) is the slice families' send programme.
 """
@@ -63,13 +70,21 @@ for p in (ROOT / 'tools', ROOT / 'tools/s81_dv', ROOT):
 
 OPS = [r'^attn\.(own_row_write|window_load|scores|max|exp|den|sink|pv|normalize)$']
 BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc'
+BENCH_P = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc_p'   # TOK-S81-GAPS/SVCP: on-die P path (PPATH)
 UNIT = 'svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4'
 INSTS = [f'u_rsv_{i:02d}' for i in range(16)] + ['u_seqhost']
 
 H, D, TD, WIN = 16, 512, 32, 128
 WB, SB, USER = 0x100, 0x1000, 3
-ST = 0                       # die.v: no ST override on u_rsv_* (default 0)
+ST = 0                       # the die's stack position, sent in the CFG frame ([32] valid, [31:30]) -- G10
 PVS0, KPV, PV_LAT = 150, 55, 56
+PPATH = True                 # TOK-S81-GAPS/SVCP: P is produced on-die (GO PIO != 0); False = legacy host PV frame
+# on-die P path constants (share cycles; measured by tb_svc_lower, results/rtl/s81_layer_tput_1018/compiler/bench_svc_p):
+#   PIO = PIO0 + 5 ceil(T / 4) / 4 ... see p_sched(); PO = PIO + P_ARR + ceil(n / 2) + P_PO_M; PVO = PO + 8 ceil(T / 32) + KPV
+# measured 10-19 (bench_svc_p sweep, out_p1 build src 85340f61a, T 128, GO 1555): SM e rows land GO+283..GO+305; the
+# P beats read pbuf from PIO+75 (2 edges/beat) -> PIO0 270 FAIL (P read before the first e row), 285 PASS; the PV frame
+# reaches the owners PIO+90 (W) / +85 (E) -> P_ARR 60 FAIL (PO before the frame: fault 00104000), 70 PASS.  Tight = 285 / 70.
+PIO0, P_ARR, P_PO_M, PIO_EARLY = 285, 70, 8, 150
 W_SLACK = 560                # WIN_LOAD -> GO: 64 code + 2 scale reads a PC at DQ 8 credits x <= 56-edge latency + margin
 Q_ARM = 4                    # j pin -> first q header (job pin flop + table push, ot_s81_svc_job.sv:31-32, 91-92)
 JD_LAT = 1                   # last P.V word at the pv pin -> jd done pulse (SVC-PV3 logs: end = pv_last + 1)
@@ -162,7 +177,7 @@ class Job:
     def _frames(self):
         C, T, tag, mut = self.C, self.T, self.tag, self.mutant
         fr = []
-        fr.append(('CFG', [hdr(12, 0, tag, spec=WB)]))
+        fr.append(('CFG', [hdr(12, 0, tag, spec=WB | (1 << 32) | ((ST & 3) << 30))]))
         ow = []
         pos = self.pos - 1 if mut == 'slot' else self.pos             # MUTANT 'slot': wrong OWN_ROW pos field
         ow.append(hdr(3, 16, tag, pos=pos))
@@ -184,6 +199,7 @@ class Job:
         fr.append(('SMJ', [hdr(9, 2, tag, spec=1 | (4 << 1) | (0x21 << 5)), r0, r1]))
         fr.append(('GO', None))                                                                        # filled by schedule
         pb = C.bf16_bits(self.p)                                                                       # [16, T]
+        self.p_bits = pb
         n = -(-T // 2)
         pw = []
         for w in range(n):
@@ -195,7 +211,9 @@ class Job:
                         word |= int(pb[h, t]) << (16 * (jj * H + h))
             pw.append(word)
         assert n <= 250
-        fr.append(('PV', [hdr(5, n, tag, end=True)] + pw))
+        self.p_words = [hdr(5, n, tag, pos=0, user=0)] + pw    # the PV frame as the fold root packs it (on-die)
+        if not PPATH:
+            fr.append(('PV', [hdr(5, n, tag, end=True)] + pw))
         return fr
 
     # ------------------------------------------------------------------ static schedule (cycles at the entry q pins)
@@ -212,10 +230,22 @@ class Job:
                 t = max(t, t_q)
             if name == 'GO':
                 go = max(t, go_min)
-                pvs = max(-(-5 * T // 4) + PVS0, t_exp - go)
-                po = pvs + -(-n // 2) + -(-n // 250) + 4
+                pio = 0
+                if PPATH:
+                    # on-die P: PIO after the SM's last e row (measured), the PV frame reaches the owners P_ARR after
+                    # PIO, one word a cycle.  MUTANT 'pio_early': the GO frame's PIO PIO_EARLY cycles early, PO / PVO
+                    # unchanged (the first P beats find no e row in pbuf: sticky slice fault)
+                    pio = PIO0
+                    pvs = pio
+                    po = pio + P_ARR + -(-n // 2) + P_PO_M
+                    if self.mutant == 'pio_early':
+                        pio -= PIO_EARLY
+                else:
+                    pvs = max(-(-5 * T // 4) + PVS0, t_exp - go)
+                    po = pvs + -(-n // 2) + -(-n // 250) + 4
                 pvo = po + 8 * -(-T // 32) + KPV
-                ws = [hdr(13, 0, self.tag, spec=(po & 0xFFFF) | ((pvo & 0xFFFF) << 16))]
+                ws = [hdr(13, 0, self.tag, spec=(po & 0xFFFF) | ((pvo & 0xFFFF) << 16) | ((pio & 0xFFFF) << 32))]
+                self.pio = pio
                 t = go
                 self.go, self.pvs, self.po, self.pvo = go, pvs, po, pvo
             if name == 'PV':
@@ -321,8 +351,9 @@ def bench_image(job, s, out, base=60):
     off = base - s['s_j']
     w = s['words']
     arg, jw = job_word(s['nframes'], job.tag)
+    pv_c = s['at']['PV'] + off if 'PV' in s['at'] else s['go'] + job.pio + off      # PPATH: nominal P start (GO + PIO)
     meta = [len(w), job.T, s['j_w'] + off, s['j_e'] + off, jw & 0xFFFFFFFF, jw >> 32, 0, s['pv_first'] + off,
-            s['done_e'] + off, s['go'] + off, s['at']['PV'] + off, ST, s['done_w'] + off, 0, 0, 0]
+            s['done_e'] + off, s['go'] + off, pv_c, ST, s['done_w'] + off, int(PPATH), len(job.p_words), 0]
     img = job.hbm_image()
     meta[6] = len(img)
     sc, pv = job.expected_hex()
@@ -330,12 +361,12 @@ def bench_image(job, s, out, base=60):
     files = {'meta.hex': hx(meta + [0] * (32 - len(meta)), 32),
              'qcyc.hex': hx([c + off for c, _ in w], 32), 'qwd.hex': hx([x for _, x in w], 512),
              'hkey.hex': hx(sorted(img), 64), 'hdat.hex': hx([img[k] for k in sorted(img)], 256),
-             'sc.hex': hx(sc, 33 * H), 'pv.hex': hx(pv, 33 * H)}
+             'sc.hex': hx(sc, 33 * H), 'pv.hex': hx(pv, 33 * H), 'pexp.hex': hx(job.p_words, 512)}
     for k, v in files.items():
         (out / k).write_text(v)
     rec = dict(schema='opentallas.s81_dv.svc_bench_image.v1', tb_offset=off, mutant=job.mutant, tag=job.tag,
                j_arg=arg, j_word=f'{jw:09x}', frames={k: v + off for k, v in s['at'].items()},
-               go=s['go'] + off, pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pv_first=s['pv_first'] + off,
+               go=s['go'] + off, pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pio=job.pio, ppath=PPATH, pv_first=s['pv_first'] + off,
                pv_last=s['pv_last'] + off, done_w=s['done_w'] + off, done_e=s['done_e'] + off, anchors=job.anchor, T=job.T, heads=[job.h0, job.h0 + H],
                st=ST, sha256={k: hashlib.sha256(v.encode()).hexdigest() for k, v in files.items()})
     (out / 'image.json').write_text(json.dumps(rec, indent=1) + '\n')
@@ -407,22 +438,45 @@ def lower(die, op, ctx):
         st = 'LOWERED'
     elif name in ('attn.window_load', 'attn.scores'):
         st = 'LOWERED'
+    elif name in ('attn.max', 'attn.exp') and PPATH:
+        st = 'LOWERED'
+        r['bench'] = BENCH_P
+    elif name in ('attn.den', 'attn.sink') and PPATH:
+        st = 'PARTIAL'
+        r['gap'] = dict(module='dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b',
+                        port='w_v / w_a / w_m / w_d (SO o rows)',
+                        missing='den / sink are computed on-die by the layer\'s SE job (the same SMJ frame as max / exp, '
+                                'lowered), but their only consumer is the SO normalisation, whose o rows have no on-die '
+                                'consumer (G9b): no bench checks den / sink')
     elif name == 'attn.pv':
         st = 'PARTIAL'
-        r['gap'] = dict(module='results/arch/s81_dv_1016/bind9/die.v u_rsv_00..15 (dsdv_svc_att ST)', port='ST (parameter)',
-                        missing='every u_rsv_* takes the default ST = 0, so only the quarter-0 owners (tiles 0..3 = dims '
-                                '0..127) emit P.V (rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:313 pvown, '
-                                'dsdv_svc_rs_roles.svh rs_pvslot); the rank needs all 512 dims of its 16 heads for '
-                                'wo_a: dims 128..511 have no on-die P.V output (the quarter-0 words are bench-exact)')
+        r['gap'] = dict(module='dsdv_svc_att quarter ST (pvown) -- die gap G10 (cross-die part)',
+                        port='P.V quarters 4 ST .. 4 ST + 3 (one die) -> wo_a (all 512 dims of the rank)',
+                        missing='by design (results/arch/s81_dv_1016/svc_rs/decisions.json, svc_c rule) a die emits the P.V '
+                                'of its stack\'s output quarter only (tiles 4 ST .. 4 ST + 3, dsdv_svc_att pvown); the '
+                                'quarter words are bench-exact with P produced ON-DIE (PPATH).  ST is the CFG frame field '
+                                '[32] / [31:30] since TOK-S81-GAPS/SVCP (one die netlist, 4 stack positions); the other 3 '
+                                'quarters reach wo_a only through a cross-die exchange that no layer op prices or lowers '
+                                '(TOK.DS.XDIE / S81-DIE8 decision)')
     else:
         st = 'GAP'
-        r['gap'] = dict(module='results/arch/s81_dv_1016/bind9/die.v u_rsv_00..15 (dsdv_svc_rs SM face)',
+        r['gap'] = dict(module='results/arch/s81_dv_1016/bind_p4l3_g8/die.v u_rsv_00..15 (dsdv_svc_rs SM face) -- die gap G9',
                         port='w_v / w_a / w_m / w_d / w_st',
                         missing='the SM head (ot_s81_su_sms, dsdv_svc_rs.sv:215-219) computes the head\'s max / exp / '
-                                'den from the SE rows, but its write face is unconnected on all 16 u_rsv_* (open '
-                                'outputs): the P operand of the PV frame and den for the normalisation have no on-die '
-                                'path (the entry q pin is fed only by u_s_3S / u_s_4S xr band bo); the bench feeds P '
-                                '= bf16(fixture attn.exp) as runtime data')
+                                'den from the SE rows, but its write face has NO consumer anywhere in rtl/ (open outputs '
+                                'on all 16 u_rsv_*; die_port_bind does not count unconnected outputs, so strict bind '
+                                'PASSes and synthesis would remove the SM): the P operand of the PV frame (16 heads x 2 '
+                                'rows BF16 a word, from 16 different slices) and the normalised o rows have no on-die '
+                                'path; the bench feeds P = bf16(fixture attn.exp) as runtime data. Needs an RTL dataflow '
+                                'decision (gaps.json G9 options), not a lowering') if not PPATH else dict(
+                        module='dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b',
+                        port='w_v / w_a / w_m / w_d (SO o rows; die.v: open)',
+                        missing='the SO job (den divide + inverse RoPE -> BF16 o rows) runs in slice g, but its o rows '
+                                'leave only on w_*, which nothing on the die reads, and its operand rows (P.V of head g, '
+                                'all dims) exist on-die only as the owners\' P.V quarter words at the entry pv pins: '
+                                'needs (a) the SO operand rows back as SMJ frames (slice band send programme) or an '
+                                'in-grid head gather, (b) an o-row exit (return tree -> pv pins), (c) the cross-die '
+                                'quarters (G10)')
     return dict(r, status=st)
 
 
@@ -441,7 +495,7 @@ def main(argv=None):
         die = DC.Die(DC.die_tree(DC.DIE_REF))
     except Exception as e:    # noqa: BLE001 -- the link ages fall back to the bind9 values
         print('die model unavailable, bind9 link ages:', e)
-    for mut in (None, 'slot', 'late'):
+    for mut in (None, 'slot', 'pio_early' if PPATH else 'late'):
         job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut)
         rec = bench_image(job, s, Path(a.out) / (mut or 'base'))
         print(mut or 'base', json.dumps({k: rec[k] for k in ('go', 'pv_first', 'done_w', 'done_e', 'frames')}))

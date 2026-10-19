@@ -39,6 +39,26 @@ class T(unittest.TestCase):
         self.assertEqual(rc, 0, r['summary'])
         self.assertEqual(r['verdict'], 'PASS')
 
+    def test_unread_output_bits(self):
+        # A named net with no consumer used to pass and the SM would be synthesised away.
+        rc, r = run("module top (ck);\n input ck;\n wire [15:0] dead;\n"
+                    " a u (.ck(ck), .i({16{ck}}), .en(ck), .o(dead));\nendmodule\n")
+        self.assertEqual(rc, 1)
+        self.assertEqual(r['summary']['unread_net_bits'], 16)
+        self.assertEqual(r['unread_nets'], {'dead': 16})
+
+    def test_open_output(self):
+        rc, r = run("module top (ck);\n input ck;\n"
+                    " a u (.ck(ck), .i({16{ck}}), .en(ck), .o());\nendmodule\n")
+        self.assertEqual(rc, 1)
+        self.assertEqual(r['summary']['output_open_ports'], 1)
+        self.assertIn('OUTPUT_OPEN', r['masters']['a']['fails'])
+
+    def test_top_output_is_a_consumer(self):
+        rc, r = run("module top (ck, y);\n input ck;\n output [15:0] y;\n"
+                    " a u (.ck(ck), .i({16{ck}}), .en(ck), .o(y));\nendmodule\n")
+        self.assertEqual(rc, 0, r['summary'])
+
     def test_duplicate_port(self):
         # r2h2/r2h4 GEN emitted .tt(actual) AND .tt(1538'h0) on one instance; Verilog keeps one silently -> FAIL
         rc, r = run("module top (ck);\n  input ck;\n  wire [15:0] n1;\n  wire [15:0] n2;\n"
@@ -100,6 +120,32 @@ class T(unittest.TestCase):
             pf.write_text(json.dumps({'pads': {'a': {'reason': 'x', 'ports': {'i': {'logical_width': 12}}}}}))
             rc, r = run(one, ['--pad-file', str(pf)])
             self.assertIn('input_tied', r['failing'])             # a pad bit tied HIGH is not padding
+
+    def test_declared_spare_outputs(self):
+        # TOK-S81-GAPS/SVCP: a declared spare output range may stay unread; undeclared bits and open ports still fail
+        die = ("module top (ck, y);\n input ck;\n output [11:0] y;\n wire [15:0] o;\n"
+               " a u (.ck(ck), .i({16{ck}}), .en(ck), .o(o));\n assign_free x ();\nendmodule\n").replace(" assign_free x ();\n", "")
+        die = die.replace("output [11:0] y;\n wire [15:0] o;", "output [11:0] y;\n wire [15:0] o;\n wire [3:0] o_nc;")
+        die = die.replace(".o(o)", ".o({o_nc, y})")
+        rc, r = run(die)
+        self.assertEqual(rc, 1)
+        self.assertEqual(r['summary']['unread_net_bits'], 4)
+        with tempfile.TemporaryDirectory() as d:
+            pf = Path(d) / 'pads.json'
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'spare face', 'ports': {'o': [[12, 15]]}}}}))
+            rc, r = run(die, ['--pad-file', str(pf)])
+            self.assertEqual(rc, 0, r['summary'])
+            self.assertEqual(r['summary']['spare_out_bits'], 4)
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'x', 'ports': {'o': [[13, 15]]}}}}))
+            rc, r = run(die, ['--pad-file', str(pf)])
+            self.assertEqual(r['summary']['unread_net_bits'], 1)   # bit 12 is not declared
+            opn = "module top (ck);\n input ck;\n a u (.ck(ck), .i({16{ck}}), .en(ck), .o());\nendmodule\n"
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'x', 'ports': {'o': [[0, 15]]}}}}))
+            rc, r = run(opn, ['--pad-file', str(pf)])
+            self.assertEqual(rc, 0, r['summary'])                   # a fully declared open output port is spare
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'x', 'ports': {'o': [[1, 15]]}}}}))
+            rc, r = run(opn, ['--pad-file', str(pf)])
+            self.assertEqual(r['summary']['output_open_ports'], 1)  # partly declared: still OUTPUT_OPEN
 
     def test_params_sidecar(self):
         with tempfile.TemporaryDirectory() as d:

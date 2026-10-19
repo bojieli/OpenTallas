@@ -475,6 +475,27 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                     pad_rows.append(dict(inst=n, master=mod, port=mu['port'], bits=wd_ - 1 - top_, lo=top_ + 1, hi=wd_ - 1,
                                          lanes=(wd_ - 1 - top_) // mu['lane'], reason=mu['reason']))
                 continue
+            if w_ == 'unlinked_out_bits':
+                # TOK-S81-GAPS/SVCP (10-19): OUTPUT bit ranges of a multi-face port that no plan lane reads (the svc_rs
+                # faces off the slice's tree / exchange role): left open (_nc nets) and DECLARED as spare outputs with
+                # the reason (die_port_bind counts them as spare_out_bits); every other open / unread output fails
+                if mu['port'] not in widths:
+                    continue
+                wd_ = widths[mu['port']]
+                got = sorted((lo, hi) for lo, hi, _w, _b in conn[n].get(mu['port'], []))
+                gaps, pos_ = [], 0
+                for lo, hi in got:
+                    if lo > pos_:
+                        gaps.append((pos_, lo - 1))
+                    pos_ = max(pos_, hi + 1)
+                if pos_ < wd_:
+                    gaps.append((pos_, wd_ - 1))
+                for lo, hi in gaps:
+                    pads.setdefault(f'u_{n}', dict(master=mod, reason=mu['reason'], ports={}))['ports'].setdefault(
+                        mu['port'], []).append([lo, hi])
+                    pad_rows.append(dict(inst=n, master=mod, port=mu['port'], bits=hi - lo + 1, lo=lo, hi=hi,
+                                         reason=mu['reason'], spare_output=True))
+                continue
             if w_ == 'unlinked_bits':
                 # S81-DIE5: bit ranges of a multi-face port that no plan lane reaches (svc_rs faces the role ROM never
                 # selects: a stream valid / P.V word / score on a face that is not a tree edge is a sticky fault, so the

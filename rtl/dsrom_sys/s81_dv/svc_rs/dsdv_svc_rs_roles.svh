@@ -44,5 +44,13 @@ function automatic [7:0] rs_pvslot(input [1:0] st, input [3:0] sid);
         default: rs_pvslot = 8'd255;
     endcase
 endfunction
+// P path faces (TOK-S81-GAPS/SVCP): {pin 4, pout 4}, bit = face N / E / S / W
+function automatic [7:0] rs_pface(input [3:0] sid);
+    case (sid)
+        4'd7: rs_pface = 8'h20;   // pin 0010 pout 0000
+        4'd9: rs_pface = 8'h08;   // pin 0000 pout 1000
+        default: rs_pface = 8'h00;
+    endcase
+endfunction
 localparam integer RS_ENTRY_W = 5, RS_ENTRY_E = 11, RS_CROOT_W = 7, RS_CROOT_E = 9, RS_FOLD = 9;
 localparam integer RS_HOP = 5, RS_DMAX = 3, RS_G0 = 1, RS_PVW = 40, RS_OFFMAX = 15;

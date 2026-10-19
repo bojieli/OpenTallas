@@ -87,7 +87,21 @@ def main():
           'function automatic [7:0] rs_pvslot(input [1:0] st, input [3:0] sid);', '    case ({st, sid})']
     for (st, s), v in sorted(pvslot.items()):
         L.append(f"        6'd{16 * st + s}: rs_pvslot = 8'd{v};   // st {st} slice {s} tile {rows[s]['tile']}")
+    # TOK-S81-GAPS/SVCP (10-19): the on-die P path.  The fold root (rsv_09) packs the PV frame from the score
+    # exchange's root beats and sends it to its entry (rsv_11, return tree) AND across the centre to the other chain
+    # root (rsv_07, the abutted lane pr_09_07: root W face -> chain root E face), which forwards it to its entry
+    # (rsv_05) on its own return edge; both entries put it on their dn stream.  rs_pface = {pin 4, pout 4} (face masks,
+    # bit = face N / E / S / W): pout = the extra P out face of the fold root, pin = the extra P child face.
+    fr, fo = CROOT['E'], CROOT['W']
+    assert fr[0] == fo[0] and abs(fr[1] - fo[1]) == 1, 'the chain roots must abut'
+    f_out = 'W' if fo[1] < fr[1] else 'E'
+    pface = {E.sid(fr): (0, 1 << FACES.index(f_out)), E.sid(fo): (1 << FACES.index(E.OPP[f_out]), 0)}
     L += ["        default: rs_pvslot = 8'd255;", '    endcase', 'endfunction',
+          '// P path faces (TOK-S81-GAPS/SVCP): {pin 4, pout 4}, bit = face N / E / S / W',
+          'function automatic [7:0] rs_pface(input [3:0] sid);', '    case (sid)']
+    for s_, (pi_, po_) in sorted(pface.items()):
+        L.append(f"        4'd{s_}: rs_pface = 8'h{(pi_ << 4) | po_:02x};   // pin {pi_:04b} pout {po_:04b}")
+    L += ["        default: rs_pface = 8'h00;", '    endcase', 'endfunction',
           f'localparam integer RS_ENTRY_W = {es["W"]}, RS_ENTRY_E = {es["E"]}, RS_CROOT_W = {E.sid(CROOT["W"])}, '
           f'RS_CROOT_E = {E.sid(CROOT["E"])}, RS_FOLD = {base["root"]};',
           f'localparam integer RS_HOP = {HOP}, RS_DMAX = {dmax}, RS_G0 = {G0}, RS_PVW = {PVW}, RS_OFFMAX = {offmax};']

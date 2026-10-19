@@ -2114,6 +2114,41 @@
      "port": "q",
      "when": "unlinked_bits",
      "reason": "q[514:513] = {fault, live} of the svc frame protocol word: dsdv_svc_rs_c takes only cq[512:0] at its q pin flop (r1 <= {.., cq[512:1], cq[0]}), so the bits are not read; the slice band beat carries no such bits"
+    },
+    {
+     "port": "dn_o",
+     "when": "unlinked_out_bits",
+     "reason": "TOK-S81-GAPS/SVCP (10-19): svc_rs output face not on this slice's stream tree / return tree / score-exchange embedding (svc_rs_tree.py role ROM + rs_pface, svc_rs_embed.py): the hardened-once slice drives all 4 faces of every lane class, the role ROM gates the valid of a face that is not an edge to 0, so the face output is a spare (no die lane reads it)"
+    },
+    {
+     "port": "up_o",
+     "when": "unlinked_out_bits",
+     "reason": "TOK-S81-GAPS/SVCP (10-19): svc_rs output face not on this slice's stream tree / return tree / score-exchange embedding (svc_rs_tree.py role ROM + rs_pface, svc_rs_embed.py): the hardened-once slice drives all 4 faces of every lane class, the role ROM gates the valid of a face that is not an edge to 0, so the face output is a spare (no die lane reads it)"
+    },
+    {
+     "port": "ro",
+     "when": "unlinked_out_bits",
+     "reason": "TOK-S81-GAPS/SVCP (10-19): svc_rs output face not on this slice's stream tree / return tree / score-exchange embedding (svc_rs_tree.py role ROM + rs_pface, svc_rs_embed.py): the hardened-once slice drives all 4 faces of every lane class, the role ROM gates the valid of a face that is not an edge to 0, so the face output is a spare (no die lane reads it)"
+    },
+    {
+     "port": "go_v",
+     "when": "unlinked_out_bits",
+     "reason": "TOK-S81-GAPS/SVCP (10-19): svc_rs output face not on this slice's stream tree / return tree / score-exchange embedding (svc_rs_tree.py role ROM + rs_pface, svc_rs_embed.py): the hardened-once slice drives all 4 faces of every lane class, the role ROM gates the valid of a face that is not an edge to 0, so the face output is a spare (no die lane reads it)"
+    },
+    {
+     "port": "go_d",
+     "when": "unlinked_out_bits",
+     "reason": "TOK-S81-GAPS/SVCP (10-19): svc_rs output face not on this slice's stream tree / return tree / score-exchange embedding (svc_rs_tree.py role ROM + rs_pface, svc_rs_embed.py): the hardened-once slice drives all 4 faces of every lane class, the role ROM gates the valid of a face that is not an edge to 0, so the face output is a spare (no die lane reads it)"
+    },
+    {
+     "port": "so_v",
+     "when": "unlinked_out_bits",
+     "reason": "TOK-S81-GAPS/SVCP (10-19): svc_rs output face not on this slice's stream tree / return tree / score-exchange embedding (svc_rs_tree.py role ROM + rs_pface, svc_rs_embed.py): the hardened-once slice drives all 4 faces of every lane class, the role ROM gates the valid of a face that is not an edge to 0, so the face output is a spare (no die lane reads it)"
+    },
+    {
+     "port": "so_d",
+     "when": "unlinked_out_bits",
+     "reason": "TOK-S81-GAPS/SVCP (10-19): svc_rs output face not on this slice's stream tree / return tree / score-exchange embedding (svc_rs_tree.py role ROM + rs_pface, svc_rs_embed.py): the hardened-once slice drives all 4 faces of every lane class, the role ROM gates the valid of a face that is not an edge to 0, so the face output is a spare (no die lane reads it)"
     }
    ]
   },
