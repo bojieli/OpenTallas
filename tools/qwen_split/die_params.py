@@ -65,9 +65,15 @@ def xpf_transport_edges(hr_rows):
     rows = [dict(bid=bid, kind='direct' if r is None else ('fwd' if r.get('E') is not None else 'plain'),
                  n=None if r is None else r.get('n'), E=None if r is None else r.get('E'),
                  K=None if r is None else r.get('K'), lane_cycles=ages[bid]) for bid, r in hr_rows]
+    # Q-XPF 10-18: a land-plan lane (E_sta > 2) is reproduced by a netlist bench only with its lane timing
+    # (tools/qwen_split/land_lag_sim.py annotate: LAG = E_sta - 2); the zero-delay netlist aliases E by the ring depth
+    # D 4 when E_sta > 3 (dv2f14bi hr: E 18 reads as 14 -> XPF 20 measured as 16).  The value assigned is the plan's.
+    lag = {bid: max(0, int(r.get('E_sta') or 2) - 2) for bid, r in hr_rows if r is not None and r.get('E') is not None}
     return HR_PIN_REG + age, dict(XPF_TRANSPORT_EDGES=HR_PIN_REG + age, hr_pin_register=HR_PIN_REG, lane_cycles=age,
                                   buses=rows, rule='1 (hr pin register) + lane_groups.lane_cycles(hr bus): fwd E + 1, '
-                                                   'plain n, direct 0')
+                                                   'plain n, direct 0',
+                                  sim_lag=lag, bench_rule='measure with land_lag_sim.py annotate (LAG = E_sta - 2) + '
+                                  'xpf-check: 1 + measured == XPF; the zero-delay netlist aliases when E_sta > D - 1')
 
 
 def txdp_from_image(path=IMAGE):
