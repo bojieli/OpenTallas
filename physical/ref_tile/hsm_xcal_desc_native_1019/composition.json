@@ -1,0 +1,20 @@
+{
+  "top": "ot_hbm_xcal_partition_t",
+  "source": "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_partition_t.sv",
+  "children": {
+    "u_host": {
+      "spec": "physical/ref_tile/hsm_xcal_desc_native_1019/spec.json",
+      "clock_binding": "clk_desc -> clk_desc"
+    },
+    "u_prog": {
+      "spec": "physical/ref_tile/hsm_xcal_prog_native_1019/spec.json",
+      "clock_binding": "clk_prog -> clk"
+    }
+  },
+  "same_frequency": true,
+  "nominal_phase_edges": 0,
+  "data_exceptions": [],
+  "boundary_bits": 313,
+  "boundary_added_edges": 2,
+  "root_arrival_audit": "OPEN"
+}

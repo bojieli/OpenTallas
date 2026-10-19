@@ -1,0 +1,92 @@
+{
+  "name": "hsm_xcal_desc_native_1019",
+  "top": "ot_hbm_xcal_desc_host_native",
+  "params": {
+    "PAW": 11,
+    "PREL": 1,
+    "DD": 256,
+    "DAW": 8
+  },
+  "sources": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_host_native.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_native.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  ],
+  "clock_port": "clk_desc",
+  "outline": {
+    "w": 164.16,
+    "h": 198.72,
+    "exact": true
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        43.2,
+        43.2
+      ],
+      "inst": "u_desc.g_t2.u_tab_lo"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        43.2,
+        129.6
+      ],
+      "inst": "u_desc.g_t2.u_tab_hi"
+    }
+  ],
+  "pins": {
+    "N": [
+      "tgt",
+      "cfg_v",
+      "cfg_target",
+      "cfg_addr",
+      "cfg_data",
+      "desc_v",
+      "desc_base",
+      "desc_limit",
+      "desc_loops",
+      "launch_v"
+    ],
+    "E": [
+      "cw",
+      "ca",
+      "cd",
+      "sv",
+      "sb",
+      "sl",
+      "sn",
+      "sx",
+      "pdone",
+      "pfault"
+    ],
+    "S": [
+      "configured",
+      "fault",
+      "active",
+      "done"
+    ],
+    "W": [
+      "rst_n",
+      "clk_desc"
+    ]
+  },
+  "kind": "tile",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "prototype_only": true,
+  "route": {
+    "io_hold_margin_ns": 0.03
+  },
+  "review_blockers": [
+    "Parent source/geometry review required before gate",
+    "Measured synthesis area and mapped kept-copy fanout audit OPEN",
+    "Canonical descriptor macro density scope unresolved",
+    "TT/FF pin-flop spread and linked-root phase contract OPEN"
+  ]
+}
