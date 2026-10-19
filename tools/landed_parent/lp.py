@@ -954,6 +954,14 @@ class Parent:
         flops_oreg = sum(eval_width(self.ports[p]["range"], self.env) * k for p, k in (P.get("oregs") or {}).items())
         flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) + self.rx for i in self.insts if any(
             pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in i["conns"].items()))
+        # emit() creates a distinct W1 u_lprb pad for EVERY regional reset
+        # vector bit, in addition to the ordinary scalar child reset pad.
+        regional_reset_pads = [dict(instance=i, pin=pin, bit=bit,
+                                   stages=t.get(i, 0) + self.rx)
+            for (i, pin), binding in self.regional_bindings.items()
+            if binding['role'] == 'resets' for bit in range(len(binding['regions']))]
+        regional_reset_FFs = sum(pad['stages'] for pad in regional_reset_pads)
+        flops_rst += regional_reset_FFs
         pairs = sorted({"-".join(sorted((L["src_region"], L["dst_region"]))) for L in P["lands"]})
         rpairs = sorted({"-".join(sorted((rt["reset_region"], r))) for r in self.regions if r != rt["reset_region"]})
         port_in = {p["name"]: t.get(f"port:{p['name']}", 0) for p in self.mod["ports"]
@@ -982,6 +990,8 @@ class Parent:
                               note="sticky status flags (no reservation / valid / payload effect): landed, outside the "
                                    "offset solve; the reader sees each flag lag_edges later than the flat parent"),
             reset=dict(port=self.rst, root_region=rt["reset_region"], depth=rt["RB"], hops=rt["hops"],
+                       **(dict(regional_vector_padding_FFs=regional_reset_FFs,
+                               regional_vector_padding=regional_reset_pads) if regional_reset_pads else {}),
                        note="flat reference == landed parent with its reset delayed by depth; child c's reset run is "
                             "depth + t(c)"),
             flops=dict(landing=flops_land, pads=flops_pad, reset=flops_rst, **({"out_regs": flops_oreg} if flops_oreg else {})),
