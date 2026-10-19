@@ -15,6 +15,10 @@
 #                      cycles(N) = measured done edge - go edge + 1 of the m = 1 / m = P production records
 #    t_d4g_P6          d4g ot_hbm_idx_topk_static (die-bound today) on the same records/golden -> PASS (same VM image)
 #    t_m1 t_m2 t_m3    hnx MUT 1 heap NOT reset per row / 2 row stride dropped / 3 lane insert rate violated -> FAIL
+#  union  : IDX.UNION (op 5) ot_hnx_idx_union_static on the same SW slice: production E 384 K 6 k 6 at N = 1,2,3,4,6
+#           (+ 8 random N 1..16 records, 3 fault records), golden tools/hbm_next/isa_rows.idx_union:
+#    u_m0 -> PASS; cycles(N) = measured done edge - go edge + 1;  u_m1 (pop highest first = E2 order), u_m2 (kappa
+#    dropped), u_m3 (row stride dropped), u_m4 (U counts every slot) -> FAIL
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -40,12 +44,36 @@ COMMON=($X/ot_hbm_idx_vm_static.sv $X/hidx_meta_w25_d123_r0.sv rtl/hdc/ot_hdc_de
 VLT=rtl/test/hbm_idx_static/parent.vlt
 sha256sum "${D4G[@]}" "${HNX[@]}" "${COMMON[@]}" $VLT tools/hbm_next/hnx_idx_rows_calendar.py tools/hbm_next/hnx_idx_rows_vectors.py \
   tools/hbm_idx_static_calendar.py tools/hbm_next/hnx_idx_bench.sh > "$O/sources_$ST.sha256"
+VS=rtl/hbm_accel/generic/vm/static
+SLICE=(rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv $VS/hfd_hgi_vms_static.sv $VS/ot_vms_slice_static.sv $VS/ot_vms_hub_static.sv
+ $VS/ot_vms_bank_static.sv $VS/ot_vms_rstop_static.sv $VS/ot_vms_rcl_static.sv $VS/ot_vms_status_static.sv
+ physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
+if [ "$ST" = union ]; then
+  USRC=(rtl/hbm_next/idx/ot_hnx_idx_union_static.sv "${SLICE[@]}" rtl/hbm_next/idx/tb/tb_hnx_idx_union.sv)
+  sha256sum "${USRC[@]}" tools/hbm_next/hnx_idx_union_vectors.py tools/hbm_next/isa_rows.py > $O/sources_union_rtl.sha256
+  python3 tools/hbm_next/hnx_idx_union_vectors.py $O/uvec 0 8 > $O/uvec.log 2>&1 || { V "uvec FAILED"; cat $O/uvec.log; exit 1; }
+  V "uvec: $(head -1 $O/uvec.log)"
+  ub(){ local d=$O/obj_$1; rm -rf $d
+    verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hnx_idx_union -GMUT=$2 -Mdir $d -o V$1 "${USRC[@]}" > $O/build_$1.log 2>&1 \
+     || { sleep 5; verilator --binary --timing -j 1 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hnx_idx_union -GMUT=$2 -Mdir $d -o V$1 "${USRC[@]}" > $O/build_$1.log 2>&1; }
+    V "build $1 bin=$( [ -x $d/V$1 ] && echo ok || echo MISSING) $(grep -c '%Error' $O/build_$1.log) errors"; }
+  ur(){ local od=$O/run_$1; rm -rf $od; cp -r $O/uvec $od
+    ( cd $od && $O/obj_$1/V$1 > run.log 2>&1; echo RUN_RC=$? >> run.log )
+    local got=FAIL; grep -q 'RUN_RC=0' $od/run.log && grep -q 'IDX_UNION MUT[0-9]* .*errors0 ' $od/run.log && got=PASS
+    local ok=OK; [ "$got" = "$2" ] || ok=UNEXPECTED
+    V "$1 [$ok want $2 got $got]: $(grep -h 'IDX_UNION MUT\|MISMATCH' $od/run.log | head -3 | tr '\n' ' ')"
+    python3 - $od <<'PYC' | tee -a $O/verdict_$ST.txt
+import json,sys,re
+od=sys.argv[1]; rows=json.load(open(od+'/rows.json')); ends=[int(x) for x in re.findall(r'END_EDGE (\d+)',open(od+'/run.log').read())]
+print('   cycles '+od.split('/')[-1]+': '+'; '.join(f"{r['kind']} U{r['U']}: compiled {r['edges']} measured {ends[i]-r['G']+1 if i<len(ends) else None}" for i,r in enumerate(rows) if r['kind']!='random'))
+PYC
+  }
+  for m in 0 1 2 3 4; do ub u_m$m $m & done; wait
+  ur u_m0 PASS & for m in 1 2 3 4; do ur u_m$m FAIL & done; wait
+  rm -rf $O/obj_*; V done; exit 0
+fi
 if [ "$ST" = topk ]; then
-  VS=rtl/hbm_accel/generic/vm/static
-  TSRC=($X/ot_hbm_idx_topk_static.sv rtl/hbm_next/idx/ot_hnx_idx_topk_rows_static.sv rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv
-   $VS/hfd_hgi_vms_static.sv $VS/ot_vms_slice_static.sv $VS/ot_vms_hub_static.sv $VS/ot_vms_bank_static.sv $VS/ot_vms_rstop_static.sv
-   $VS/ot_vms_rcl_static.sv $VS/ot_vms_status_static.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
-   rtl/hbm_next/idx/tb/tb_hnx_idx_topk_rows.sv)
+  TSRC=($X/ot_hbm_idx_topk_static.sv rtl/hbm_next/idx/ot_hnx_idx_topk_rows_static.sv "${SLICE[@]}" rtl/hbm_next/idx/tb/tb_hnx_idx_topk_rows.sv)
   sha256sum "${TSRC[@]}" tools/hbm_idx_topk_rows_vectors.py tools/hbm_idx_topk_static_vectors.py > $O/sources_topk_rtl.sha256
   for P in 2 3 4 6; do python3 tools/hbm_idx_topk_rows_vectors.py $O/tvec_rows_P$P $P 0 12 rows > $O/tvec_rows_P$P.log 2>&1 || V "tvec P$P FAILED"; done
   python3 tools/hbm_idx_topk_rows_vectors.py $O/tvec_static_P6 6 0 12 static > $O/tvec_static_P6.log 2>&1 || V "tvec static FAILED"
