@@ -4,8 +4,9 @@
   "current_declared_H512": 1830,
   "event_indexed_bits": 2912,
   "source_inputs": {
-    "qkd_host_if_pins_observed_rc.sv": "bbc64263e3552e1f5152f171a9c0cad714fd69dc900dd183219e53ac9c170be6",
-    "ot_host_if_pb2_observed_rc.sv": "dd3d4c7d4252812394d960490e6cdef4af599f928390e94bd2fe49fcf01a5ed9"
+    "qkd_host_if_pins_observed_rc.sv": "dd4466353253276fb3ec5b38ca9d97afeaadaa2e5936f29467d718d183dfa6c6",
+    "ot_host_if_pb2_observed_rc.sv": "eed202fbf386b685424e9a27c748391c66e60fe20d43caeabb9fd9075afd2eb8",
+    "qkd_host_native_owner_join_rc.sv": "8897f2f79cb60592b5a8ee867ac87328d96e4f5338d8c73b9848cd52838fa9a9"
   },
   "ports": {
     "core_existing_certificate_key87": "same actual scheduler pending owner/terminal/nativegen tuple, independent of certificate_v; reuse exact input",
@@ -89,5 +90,6 @@
     "10": "first prompt malformed epoch, known committed initial0",
     "15": "step0 prompt healthy, then actual generated step1 malformed epoch; prior known mirror1/70002/0 and normal-event count0"
   },
-  "gate_edit_status": "NOT_EDITED; parent must review exact amended DAG and preserve old-source failures first"
+  "gate_edit_status": "NOT_EDITED; parent must review exact amended DAG and preserve old-source failures first",
+  "source_revision_note": "Core59560eb89; scheduler/ifpins child84b25fbc6 diagnostic source, before prospective gate. Exact pre-edit SHA captures real code, not observed mutable data."
 }

@@ -84,6 +84,12 @@
       "scenario": "genuine finite rank7 opcode4 ready/valid transport stall",
       "watchdog": 4194304,
       "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 15,
+      "scenario": "healthy prompt0 then actual generated step1 malformed epoch; atomic mirror/EVENT rejection",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_OLD_SOURCE_FAILURE_REQUIRED_BEFORE_REPAIR"
     }
   ],
   "causal_controls": [
