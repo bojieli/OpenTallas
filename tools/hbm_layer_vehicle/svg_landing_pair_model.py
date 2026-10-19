@@ -41,5 +41,5 @@ def model():
         'output_registers':'native ready/overflow/completion-bank/fault exported separately from their existing Q; data/ordinal/valid/phasefault are ring return Q; no combinational OR fault pin',
         'storage':'two native landing SRAMs +two native response SRAMs; 1140bit ingress ring per bank,1052bit return ring,16bit group-alignment ring; no >=3 unchanged flop delay chain',
         'geometry':'source-bound reduced candidate380.16x198.72; mapped strict-reset area3107.20212um2; 16.2um fullwidth band at50.45% density; face access, <=405um reach and root spread OPEN',
-        'qualification':'strict-reset source327ef3481 actual-SRAM all-J old/new miter PASS; three mutants FAIL; fullflatten mapped fanout PASS; physical timing/reach/pin access OPEN; no gate/submit',
+        'qualification':'strict-reset source327ef3481 actual-SRAM all-J old/new miter PASS; three mutants FAIL; direct max27 only; corrected BUF/INV-collapsed SRAMQ329/FFQ91/rp34 FAIL, sourcefanout qualification withdrawn; physical timing/reach/pin access OPEN; no gate/submit',
     }

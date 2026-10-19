@@ -1,5 +1,5 @@
 {
-  "status": "FUNCTIONAL AND MAPPED FANOUT PASS at8792c55c3; physical qualification OPEN",
+  "status": "FUNCTIONAL/RESET PROOF PASS; BUFFER/INV-COLLAPSED FUNCTIONAL FANOUT FAIL",
   "baseline": {
     "std_area_um2": 2977.87752,
     "ff": 6058,
@@ -92,5 +92,16 @@
       "wrong ordinal"
     ]
   },
-  "reset_followup": "Prior raw-root graph failed collapsed native audit despite ordinary fanout PASS. Superseded by svg_pair_reset_model.json: strict-reset RTL327ef3481, bench e8ee1565f, HBM4/19/6 pair2/19/12 return2/18/9; full FIFO internal qualification separately disclosed. Latest area3107.20212um2/6551FF/maxnonclock27."
+  "reset_followup": "Prior raw-root graph failed collapsed native audit despite ordinary fanout PASS. Superseded by svg_pair_reset_model.json: strict-reset RTL327ef3481, bench e8ee1565f, HBM4/19/6 pair2/19/12 return2/18/9; full FIFO internal qualification separately disclosed. Latest area3107.20212um2/6551FF/maxnonclock27.",
+  "corrected_collapsed_audit": {
+    "source": "327ef3481",
+    "SRAM_Q_max": 329,
+    "FF_Q_max": 91,
+    "return_ring_rp0_loads": 34,
+    "port_max": 11,
+    "comb_max": 26,
+    "reset_max": 19,
+    "meaning": "Previous max27 was direct-net count. Native source-fanout qualification withdrawn; real metadata/state-copy or priced-stage redesign required. Existing functional/reset evidence remains valid."
+  },
+  "physical_claim": "NONE"
 }
