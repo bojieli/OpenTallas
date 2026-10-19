@@ -78,7 +78,15 @@ def main():
     pins['clk_rst'] = ('E', snap(190.0))
     avoid = {f: [v for n, (ff, v) in pins.items() if ff == f] for f in 'NSEW'}
     # W face: rr per bank row; rq + rr_valid beside the controller rows
-    rowbanks = {r: [b for b, (c, rr) in sorted(HOME.items(), key=lambda t: t[1][0]) if rr == r] for r in range(4)}
+    # HBM-DBKCPL 10-18: the col2 banks (2 = row 0, 7 = row 3) take rr on the N/S face beside their wd, not the W face.
+    # With rr on W (432 um away) their 547 block pins had a centroid 157 um from the bank (daemon FLOORPLAN_MARGIN
+    # bank_distance, hv16_dbk_cpl-q1-c2094045d) and rr[2*257+..] was the gate's worst in->macro path (-58.8 ps TT placement):
+    # 2 x 256 unregistered bits ran 430 um across the cluster.  Now they run ~110 um (bank W edge -> col1/col2 channel ->
+    # face); the die carries them on its own relayed lanes.  rr_valid (rr[b*257+256]) stays on W with the controller.
+    # Wires only, 0 cycles.  Banks never sit more than 100 um from their pins' centroid on the 3-column lattice otherwise:
+    # with rr on W a bank needs x0 <~ 290 um, so only two columns qualify.
+    FARC = 2
+    rowbanks = {r: [b for b, (c, rr) in sorted(HOME.items(), key=lambda t: t[1][0]) if rr == r and c != FARC] for r in range(4)}
     seg = {0: (2.4, 170.0), 1: (172.0, 248.0), 2: (296.0, 368.0), 3: (370.0, 537.6)}
     for r, banks in rowbanks.items():
         names = [f'rr[{b*257+i}]' for b in banks for i in range(256)]
@@ -94,6 +102,7 @@ def main():
         for c in range(3):
             banks = [b for r in rows for b, (cc, rr) in HOME.items() if cc == c and rr == r]
             names = [f'wd[{b*289+i}]' for b in banks for i in range(289)]
+            if c == FARC: names += [f'rr[{b*257+i}]' for b in banks for i in range(256)]
             avoid.setdefault(face, [])
             for n, v in zip(names, grid(*nseg[c], len(names), avoid[face])): pins[n] = ('N' if face == 'N' else 'S', v)
     wb = (['wb_reserve_v', 'wb_reserve_bank', 'wb_fill_bank'] + [f'wb_reserve_epoch[{i}]' for i in range(16)] +
@@ -152,9 +161,15 @@ def main():
         slot_change_request=(f'hb_dbk_<q> (d4f slot 560.0 x 400.0) -> {W} x {H} (1.12:1): 8 banks + controller + collar leaf '
             'on the 43.2 lattice cannot fit 560 x 400 (see make_dbk_cpl_parent.py); master ports: clk_tab[1:0] removed, '
             'clk_rst added (reset relay root, same die clock); rr/rq W, wd/wb/wa N, F20 host bus/status/straps E, '
-            'clk_bank on the nearest face (W x3, N x3, S x1, E x1); OWNERS-HBM/STK 10-18: 606.96 x 542.16 (macro_edge 20 um), wd of bank rows 0-1 on the S face, rows 2-3 on N (wire_reach), F20 host bus over the full E face.'),
+            'clk_bank on the nearest face (W x3, N x3, S x1, E x1); OWNERS-HBM/STK 10-18: 606.96 x 542.16 (macro_edge 20 um), wd of bank rows 0-1 on the S face, rows 2-3 on N (wire_reach), F20 host bus over the full E face; HBM-DBKCPL 10-18: rr of the col2 banks (rr[514..769] bank 2 -> S face, rr[1799..2054] bank 7 -> N face, beside their wd; rr_valid stays W) for daemon bank_distance (157 um).'),
         structural_change=why,
         reroute_reason=dict(kind='slot_change', source='physical/ref_tile/hv15_dbk_cp (gate 1f18141cb, structural FAIL)', why=why))
+    # HBM-DBKCPL 10-18: retry of the refused c2094045d (FLOORPLAN_MARGIN bank_distance) with the fixed pin plan
+    reroute_flow = dict(kind='flow_failure', failed_job='hv16_dbk_cpl-q1-c2094045d',
+        failure=('FLOORPLAN_MARGIN bank_distance: u_dbk.L[7].u_bank 157.6 um / u_dbk.L[2].u_bank 157.2 um from their 547 '
+                 "pins' centroid (rr on the W face 432 um away); fixed: their rr on the N/S face beside wd, wires only"),
+        why=why)
+    spec['reroute_reason'] = reroute_flow
     spec['job'] = dict(owner='Claude:OWNERS-HBM/STK', branch='claude/owners-hbm-1018-stk', tag='q1', record_to=f'results/rtl/ref_tile/{NAME}',
         purpose=('HBM die d4g hb_dbk_<q> x4 (per quadrant, master unchanged; F20 tgt 104+QID: SW 104 / SE 105 / NW 106 / NE 107; '
                  'RBH-STK). ' + why),
