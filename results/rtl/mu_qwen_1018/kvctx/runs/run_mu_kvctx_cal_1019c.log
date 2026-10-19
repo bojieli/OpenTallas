@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-linkcfg-mu-1019/src
+ot-run: ot-epyc5       admits   659 GB (avail 575, growth 113, headroom 0, waiters 0/0 GB) load 67/128 running 19 disk 1286 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-linkcfg-mu-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-linkcfg-mu-1019/src
+ot-run: ot-epyc8       admits   625 GB (avail 551, growth 113, headroom 0, waiters 0/0 GB) load 92/128 running 23 disk 441 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-linkcfg-mu-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-linkcfg-mu-1019/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1328586-1792420426 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+OK   mu_image: committed d2d_cal_image_mu.svh == compiler (D2D_MU=1)
+OK   kvctx_pass: MU_KVCTX_PASS kmut 0 rmut 0 cal cmut 0
+OK   kvctx_k1: MU_KVCTX_FAIL kmut 1 rmut 0 cal cmut 0: kvctx_k1_r0_cal_c0 C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3207, 1, 16, 9011, 8168), (5394, 2, 16, 8465, 8180)]) | K4 leaf loads [(2, 8465, 8180), (3, 8738, 8174), (1, 9011, 8168)] (want [(1, 8465, 8180), (2, 8738, 8174), (3, 9011, 8168)]); after the first filler EMB/SEG: []
+OK   kvctx_k2: MU_KVCTX_FAIL kmut 2 rmut 0 cal cmut 0: K1 KV identity: 3 reference words differ (of 4, want 4): ['202 KID BAD mu 1 1 0002801088ffd00 ref 1 00020008807fe80', '402 KID BAD mu 1 1 00030011117fb80 ref 1 00020008807fe80'] | K3 face pair end 219: face TAG 2801088ffd00 (want user 0 20008807fe80) valid 1; pair end 419: face TAG 30011117fb80 (want user 0 20008807fe80) valid 1; pair end 619: face TAG 3801199ffa00 (want user 0 4000883ffec0) valid 1
+OK   kvctx_k3: MU_KVCTX_FAIL kmut 3 rmut 0 cal cmut 0: kvctx_k3_r0_cal_c0 C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3207, 1, 16, 0, 0), (5394, 2, 16, 0, 0)]) | K4 leaf loads [] (want [(1, 8465, 8180), (2, 8738, 8174), (3, 9011, 8168)]); after the first filler EMB/SEG: []
+OK   kvctx_r1: MU_KVCTX_FAIL kmut 0 rmut 1 cal cmut 0: kvctx_k0_r1_cal_c0 C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3207, 1, 16, 9011, 8168), (5394, 2, 16, 8465, 8180)]) | K4 leaf loads [(2, 8465, 8180), (3, 8738, 8174), (1, 9011, 8168)] (want [(1, 8465, 8180), (2, 8738, 8174), (3, 9011, 8168)]); after the first filler EMB/SEG: []
+OK   kvctx_c1: MU_KVCTX_FAIL kmut 0 rmut 0 cal cmut 1: kvctx_k0_r0_cal_c1 C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3207, 1, 16, 0, 0), (5394, 2, 16, 0, 0)]) | K3 face 4 face receives (want 8); pair end 419: face TAG 0 (want user 0 20008807fe80) valid 0; pair end 819: face TAG 0 (want user 0 4000883ffec0) valid 0 | K4 leaf loads [] (want [(1, 8465, 8180), (2, 8738, 8174), (3, 9011, 8168)]); after the first filler EMB/SEG: [] | K5 sticky faults kv_mu / kv_ref / face / leaf = (0, 0, 1, 0) | K6 calendars: faults cseq / kseq / crx / ktx + context events ktx / crx = (0, 0, 0, 0, 8, 4) (want 0 0 0 0 8 8)
+MU_KVCTX BENCHES: PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1328586-1792420426): exit 0

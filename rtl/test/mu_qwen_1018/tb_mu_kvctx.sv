@@ -162,6 +162,8 @@ module tb_mu_kvctx;
     reg [186:0] ev; reg have; reg [1023:0] evf, lgf; reg flt_l = 0; reg [23:0] sua_l = 0; reg [5:0] cst_l = 0;
     reg [55:0] dc_l = 0; reg opf_l = 0; reg [3:0] lfc_l = 0; reg [1:0] eu_l = 0, su_l = 0;
     reg pair2 = 0, cslot_l = 0;
+    // MU-DQ-D2DUSER C8 (as tb_mu_opseg_dv; KV-LINKCFG-MU 10-19: mu_opseg_bench check_case reads CTXU from this log too)
+    reg sg_l = 0; reg [1:0] xu_l = 0; integer cu_bad = 0, cu_n1 = 0, cu_n2 = 0, cu_n3 = 0;
     initial begin
         if (!$value$plusargs("EV=%s", evf)) $fatal(1, "+EV");
         if (!$value$plusargs("LOG=%s", lgf)) $fatal(1, "+LOG");
@@ -193,6 +195,15 @@ module tb_mu_kvctx;
             end
             if (cslot_l) $fdisplay(lg, "%0d FRX %h %0d %0d", cyc, h_tag, h_ev, h_f);
             cslot_l = c_slot;
+            if (dut.st_h) begin
+                xu_l = sg_l ? su_l : 2'd0;
+                if (xu_l == 2'd1) cu_n1 = cu_n1 + 1; if (xu_l == 2'd2) cu_n2 = cu_n2 + 1; if (xu_l == 2'd3) cu_n3 = cu_n3 + 1;
+            end
+            if (nps[17:16] !== ((NU > 1) ? xu_l : 2'd0)) begin
+                cu_bad = cu_bad + 1;
+                if (cu_bad <= 3) $fdisplay(lg, "%0d CTXU_ERR carried %0d want %0d", cyc, nps[17:16], xu_l);
+            end
+            sg_l = dut.c_seg;
             if (ctx_x[128]) $fdisplay(lg, "%0d CTXLD %0d %h %h", cyc, ctx_u, ctx_x[36 * (ctx_u - 1) + 18 +: 18], ctx_x[36 * (ctx_u - 1) +: 18]);
             cst_l = cst; dc_l = dc; opf_l = dut.op_fault; lfc_l = dut.l_fcode;
             flt_l = dut.u_cal.fault; sua_l = dut.su_acc; hd_l = hd;
@@ -225,6 +236,7 @@ module tb_mu_kvctx;
             if (have && ec <= cyc) $fatal(1, "event file not sorted at cycle %0d", ec);
             cyc = cyc + 1;
             if (cyc >= ncyc) begin
+                $fdisplay(lg, "%0d CTXU %0d %0d %0d %0d", cyc, cu_bad, cu_n1, cu_n2, cu_n3);
                 $fdisplay(lg, "%0d KIDN %0d", cyc, kidn);
                 $fdisplay(lg, "%0d KEND %0d %0d %0d %0d", cyc, m_f, r_f, h_f, x_f);
                 if (CAL) $fdisplay(lg, "%0d KCALEND %0d %0d %0d %0d %0d %0d", cyc, cs_f, ks_f, crf, ktf, nk_ctx, nc_ctx);

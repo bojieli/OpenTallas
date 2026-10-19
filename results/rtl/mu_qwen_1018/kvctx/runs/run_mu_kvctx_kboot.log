@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-linkcfg-mu-1019/src
+ot-run: ot-epyc5       admits   659 GB (avail 575, growth 113, headroom 0, waiters 0/0 GB) load 67/128 running 19 disk 1286 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-linkcfg-mu-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-linkcfg-mu-1019/src
+ot-run: ot-epyc8       admits   625 GB (avail 551, growth 113, headroom 0, waiters 0/0 GB) load 92/128 running 23 disk 441 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-linkcfg-mu-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-linkcfg-mu-1019/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1328583-1792420426 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+OK   mu_image: committed d2d_cal_image_mu.svh == compiler (D2D_MU=1)
+OK   kboot_image: target11_mu.hex == d2d_cal_image_mu.svh K TX/RX + SEG2
+OK   kvctx_kboot_mu: MU_KVCTX_PASS kmut 0 rmut 0 cal cmut 0 kboot target11_mu.hex
+OK   kvctx_kboot_prefix: MU_KVCTX_FAIL kmut 0 rmut 0 cal cmut 0 kboot target11_prefix.hex: K1 KV identity: 3 reference words differ (of 4, want 4): ['202 KID BAD mu 1 1 0002801088ffd00 ref 1 00020008807fe80', '402 KID BAD mu 1 1 00030011117fb80 ref 1 00020008807fe80'] | K2 MU port words 4 (want 8), unobserved [] | K3 face pair end 219: face TAG 0 (want user 0 20008807fe80) valid 0; pair end 419: face TAG 0 (want user 0 20008807fe80) valid 0; pair end 619: face TAG 0 (want user 0 4000883ffec0) valid 0 | K5 sticky faults kv_mu / kv_ref / face / leaf = (1, 0, 1, 1) | K6 calendars: faults cseq / kseq / crx / ktx + context events ktx / crx = (0, 0, 0, 0, 4, 8) (want 0 0 0 0 8 8)
+MU_KVCTX BENCHES: PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1328583-1792420426): exit 0
