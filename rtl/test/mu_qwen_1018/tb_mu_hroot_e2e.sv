@@ -64,7 +64,7 @@ module tb_mu_hroot_e2e;
  reg[1023:0]rowmap;                                  // (user, layer) -> written once per round
  integer done_cyc[0:3],ret_cyc[0:3];reg[1:0]ret_order[0:15];integer ret_n=0;reg[1:0]acc_order[0:15];integer acc_n=0;
  reg[1:0]last_gen_rep=0;reg collide_mode=0;
- task fail(input[511:0]m);begin fails=fails+1;if(fails<8)$display("ERR cyc %0d %0s",cyc,m);end endtask
+ task fail(input[1023:0]m);begin fails=fails+1;if(fails<8)$display("ERR cyc %0d %0s",cyc,m);end endtask
  always @(negedge ck)if(rst_n)begin
   if(ws)begin
    nws=nws+1;uw=kepo[1:0];
@@ -169,7 +169,8 @@ module tb_mu_hroot_e2e;
   for(r=0;r<ROUNDS;r=r+1)begin
    for(k=0;k<4;k=k+1)begin wr_of[k]=0;layer_seen[k]=0;end
    for(u=0;u<4;u=u+1)host_step(u,r);
-   if(!(owned&&a_busy&&ep.g_mu.n_q==4&&alloc.g_mu.ubusy==4'hf))fail("4 steps not all in flight (endpoint contexts / allocator allocations)");
+   repeat(3)@(negedge ck);   // the last hc start reaches the endpoint context 2 edges later (input + accept registers)
+   if(!(owned&&a_busy&&ep.g_mu.n_q==4&&alloc.g_mu.ubusy==4'hf))fail("4 steps not all in flight (ep/alloc)");
    for(u=0;u<4;u=u+1)kv_start(u);
    // wait for the 4 retires of this round, then the 4 allocator terminals in the same order
    k=0;while(ret_n<4*(r+1)&&k<20000)begin @(negedge ck);k=k+1;end
