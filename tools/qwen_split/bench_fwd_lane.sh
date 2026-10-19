@@ -1,7 +1,7 @@
 #!/bin/bash
 # Q-DIE11-RLY 10-18: behavioural bench of the Qwen forwarded-clock HALF-CYCLE lane + landing (rtl/qwen_split/qfd_fwd_lane.sv,
 # LANDING-CONTRACT L1-L7) through the GENERATED die wrappers (tools/qwen_split/gen_relay_rtl.py) -- Verilator 5.050.
-# usage: bench_fwd_lane.sh <pass|sel|naive|vld|full|hop0inv|encomb> <work dir> [W]
+# usage: bench_fwd_lane.sh <pass|sel|naive|vld|full|hop0inv|encomb|rlyencomb> <work dir> [W]
 #   pass : 8 lanes in parallel (n = 1, 2, 5, 5+2T lag, 8, 27 frames; source released before / after the receiver), each
 #          hop with its own clock-leg and data-leg delay (clock leg longer: the hold-critical case), receiver root offset
 #          from the source root.  Per lane the bench derives the latency L from the geometry (read 0.25..1.25 T after
@@ -11,7 +11,10 @@
 #          QK-LANDEN 10-19: an n = 1 lane (qfd_landh0) registers en on ck_s before its clock gate: its write epoch is source
 #          edge G + 1 (the word launched at G is never written, 0 bubble) and K = (L - 1 - (R0 - (G + 1))) mod 8; lanes
 #          l8 / l9 are n = 1 with the source / the receiver releasing late (l0 releases the source first).
-#   encomb: the landh0 en UNREGISTERED (the closed-view form, en -> ICG combinational) under the registered calendar: FAIL
+#          RLYH0-EN 10-19: the multi-frame lanes' hop-0 station (qfd_rlyh0) registers en on the source root the same way:
+#          EVERY lane's write epoch is G + 1 (HREG = 1 for all NF), K = (L - 1 - (R0 - (G + 1))) mod 8.
+#   encomb: both hop-0 forms with en UNREGISTERED (the closed-view form, en -> ICG combinational) under the registered
+#          calendar: FAIL.  rlyencomb: only the rlyh0 station's en unregistered (landh0 registered): FAIL (lanes n >= 2)
 #   sel / naive / vld / full / hop0inv: the same bench on the RTL built with one mutant define (read slot one late; no
 #          ring; every slot valid at once; full-cycle forwards; the first-form inverting hop-0 gate) -- each must FAIL.
 set -u
@@ -22,7 +25,8 @@ DEF=
 case $mode in
   pass) ;; sel) DEF=+define+OT_QFD_LAND_MUT_SEL ;; naive) DEF=+define+OT_QFD_LAND_MUT_NAIVE ;;
   vld) DEF=+define+OT_QFD_LAND_MUT_VLD ;; full) DEF=+define+OT_QFD_LANE_MUT_FULL ;; hop0inv) DEF=+define+OT_QFD_LANE_MUT_HOP0INV ;;
-  encomb) DEF=+define+OT_QFD_LAND_MUT_ENCOMB ;;
+  encomb) DEF="+define+OT_QFD_LAND_MUT_ENCOMB +define+OT_QFD_LANE_MUT_ENCOMB" ;;
+  rlyencomb) DEF=+define+OT_QFD_LANE_MUT_ENCOMB ;;
   *) echo "bad mode $mode"; exit 2 ;;
 esac
 # the die wrappers exactly as the die generator names / ports them (gen_relay_rtl.py on a mini die.v)
@@ -55,7 +59,7 @@ endmodule
 // source release edge G, receiver release edge R0, extra clock lag XL on the last hop
 module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.2, XL = 0.0, DOFF = 2.0,
               parameter integer G = 10, R0 = 12, LADD = 0, KFROM = -1,
-              parameter integer HREG = (NF == 1) ? 1 : 0) (                // landh0: en registered on ck_s (+1 edge)
+              parameter integer HREG = 1) (       // hop-0 en registered on the source root (+1 edge): landh0 AND rlyh0
     input wire cks, input wire ckd, input wire [31:0] es, input wire [31:0] ed, output integer err, output integer chk, output wire flt);
     localparam real T = 10.0;
     reg  [W-1:0] src = 0;

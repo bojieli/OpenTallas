@@ -44,7 +44,7 @@
  "recipe": 3,
  "pin_regs": {
   "enable": false,
-  "reason": "KV-RTRUNK: a result-trunk station is ONE register stage pin to pin (inject: a / y -> 2:1 -> flop -> b; header: trunk words -> AND / 2:1 -> flop -> beat word); its flop is the pin register of every pin; pv_trunk_gen counts exactly 1 core cycle per station (RS_D), so a flow-inserted pin register would change the static beat schedule; AD3-KV-RSHD 10-18: the native successor keeps each replicated select inside its own output half (8 loads, no AND)"
+  "reason": "HKV-PVRS2 10-19 rev f2: the RTL registers EVERY input at its pin (stage 1: one flop per bit, anchored at the pin by io_flop_at_pins) and every output is a flop (stage 2: the f1 half-local select stage); a flow pin register would add a third edge. Header = 2 edges pin to pin, pv_trunk_gen --rs-hd f counts RS_D = 1 + 2 + J0 (+1 vs f1, owner rule 10-15 register every tile pin; f1 native capture FAIL a1v[19] 253.1 > 190)"
  },
  "inhold": true,
  "outhold": true,
@@ -62,10 +62,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:AD3-KV-RSHD",
-  "branch": "claude/ad3-kv-rshd-1018",
-  "tag": "f1",
-  "purpose": "AD3-KV-RSHD 10-18: PV result-trunk HEADER with HALF-LOCAL selects (lower half muxes take part-0 V copies a0v, upper half part-1 copies a1v, 8 loads each, no AND / no cross-half net; epoch banks er <- a0t, o_epoch <- a1t), 190.08 x 43.2 um; successor of qkd_pv_rs_hd_r (CLOSED, native capture FAIL S+R 259.9 on 94 select pins)",
+  "owner": "Claude:HKV-PVRS2",
+  "branch": "claude/hkv-pvrs2-1019",
+  "tag": "f2",
+  "purpose": "HKV-PVRS2 10-19: qkd_pv_rs_hd_f rev f2 = f1 (half-local selects) + INPUT PIN REGISTERS on every input (+1 edge, pv_trunk_gen header 2 -> RS_D + 1); f1 CLOSED TT +264.95 / FF +21.21 but native capture FAIL a1v[19] 253.1 > 190 on 38 data pins (a0v/a1v selects, a0t/a1t, far a0/a1/b1 data). 190.08 x 43.2 kept: S face 1096 pins = 5.8 /um (<= 6 /um floor 183 um), height one 43.2 lattice step",
   "benches": [
    {
     "name": "exact_words",
@@ -88,7 +88,19 @@
     "needs": [
      "verilator"
     ],
-    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/leaf_qkd_pv_rs_hd_f_mut.log"
+    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/leaf_qkd_pv_rs_hd_f2_mut.log"
+   },
+   {
+    "name": "nopr_mutant",
+    "cmd": "bash rtl/qwen_sys/split_20261014/test/bench_rtrunk_leaves.sh nopr qkd_pv_rs_hd_f {RUN}/bench_n",
+    "expect": "fail",
+    "fail_regex": "RTRUNK_LEAF FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/leaf_qkd_pv_rs_hd_f2_nopr.log"
    },
    {
     "name": "pair_rs_hdf",
@@ -111,7 +123,19 @@
     "needs": [
      "verilator"
     ],
-    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/pair_rs_hdf_mut.log"
+    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/pair_rs_hdf2_mut.log"
+   },
+   {
+    "name": "pair_rs_hdf_cal0",
+    "cmd": "HDF_RS_D_ADJ=0 bash tools/qwen_kv_die/pv_rtrunk_bench_hdf.sh {RUN}/pair_c 0 1000",
+    "expect": "fail",
+    "fail_regex": "PV_PAIR_RS FAIL T=1000",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qwen_kv_die/pv_trunk_t/witness/pair_rs_hdf2_cal0.log"
    }
   ],
   "views_to": "physical/ref_tile/qkd_pv_rs_hd_f/views",
@@ -129,7 +153,9 @@
    "tools/qwen_kv_die/pv_rtrunk_bench.sh",
    "tools/qwen_kv_die/pv_rtrunk_bench_hdf.sh",
    "tools/qwen_nearhbm_attn_ref.py"
-  ]
+  ],
+  "cycles_added": 1,
+  "structural_change": "HKV-PVRS2 10-19 rev f2: input pin registers. f1 (CLOSED TT +264.95 / FF +21.21) failed native capture (a1v[19] S + R 253.1 > 190 on 38 data pins: a0v/a1v half selects 23, a0t/a1t, far trunk data a0/a1/b1 191-209): one stage pin to pin in a pin-limited outline at 4 % util put the select copies 8 mux loads and the data muxes far from their S-face pins. f2: every input bit one flop at its pin, then the unchanged f1 half-local select stage on the registered copies; outputs unchanged flops. Function = f1 one edge later (all inputs delayed equally; T and out_epoch captured together). +1 cycle: pv_trunk_gen --rs-hd f header 2 edges (RS_D 49 -> 50 on the committed pair)."
  },
  "children": [],
  "inter": [],
@@ -138,5 +164,11 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "AD3-KV-RSHD 10-18: native successor of qkd_pv_rs_hd_r (CLOSED TT +258.9 / FF +23.6, native capture FAIL S+R 259.9 > 190 on 94 pins: each V copy va[k] = a0v[k] & a1v[k] joined two part pins and drove 16 muxes in BOTH halves; a0t & a1t drove 32 epoch flops). Half-local selects: lower half <- part-0 copies, upper half <- part-1 copies (8 loads, no AND); er <- a0t, o_epoch <- a1t. Exact because pv_trunk_gen drives both T0 parts V / T from the same signals through stations clocked together (pair bench lockstep). Same ports, same one-stage schedule (pv_trunk_gen --rs-hd f)."
+ "structural_change": "HKV-PVRS2 10-19 rev f2: input pin registers. f1 (CLOSED TT +264.95 / FF +21.21) failed native capture (a1v[19] S + R 253.1 > 190 on 38 data pins: a0v/a1v half selects 23, a0t/a1t, far trunk data a0/a1/b1 191-209): one stage pin to pin in a pin-limited outline at 4 % util put the select copies 8 mux loads and the data muxes far from their S-face pins. f2: every input bit one flop at its pin, then the unchanged f1 half-local select stage on the registered copies; outputs unchanged flops. Function = f1 one edge later (all inputs delayed equally; T and out_epoch captured together). +1 cycle: pv_trunk_gen --rs-hd f header 2 edges (RS_D 49 -> 50 on the committed pair).",
+ "reroute_reason": {
+  "kind": "native_capture",
+  "source": "physical/ref_tile/qkd_pv_rs_hd_f/native_qkd_pv_rs_hd_f_f1-44ac716d6_FAIL.json",
+  "cell": "qkd_pv_rs_hd_f",
+  "fix": "input pin flops at the pins: rev f2 RTL registers every input bit at its pin (stage 1, anchored by io_flop_at_pins: S-face input flop bank beside the pins in the gate placement) before the f1 half-local select stage; the f1 select copies a0v/a1v/a0t/a1t and far data a0/a1/b1 (capture 191-253 ps) now end at a pin-local flop D. +1 cycle (pv_trunk_gen header 2, RS_D + 1). Same outline / pin faces."
+ }
 }

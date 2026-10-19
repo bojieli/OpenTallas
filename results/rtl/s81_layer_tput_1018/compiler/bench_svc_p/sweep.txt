@@ -1,0 +1,16 @@
+# TOK-S81-GAPS/SVCP P-timing sweep 10-19 (out_p1 build, RTL src 85340f61a, Verilator 5.050, ot-epyc4, seed 1, L0 fixture, T 128, GO 1555)
+# p<PIO0>_a<P_ARR>: verdict; SM e rows land GO+283..+305; P beats PIO+75..+137; PV frame at owners PIO+90 W / +85 E
+# result: PIO0 270 FAIL / 278 PASS (bound 271..278); P_ARR 67 FAIL / 70 PASS (bound 68..70); chosen 285 / 70: total 2554 cyc vs 2999 at 600 / 200 (-445)
+run_p600_a40.log:SVCLOW die=0 st=0 T=128 ffc=00104000 cred_err=0 sched_bad=0 cycles=2839 verdict=FAIL
+run_probe_p282_a70.log:SVCLOW die=0 st=0 T=128 ffc=00000000 cred_err=0 sched_bad=0 cycles=2551 verdict=PASS
+run_probe_p285_a64.log:SVCLOW die=0 st=0 T=128 ffc=00104000 cred_err=0 sched_bad=0 cycles=2548 verdict=FAIL
+run_p600_a70.log:SVCLOW die=0 st=0 T=128 ffc=00000000 cred_err=0 sched_bad=0 cycles=2869 verdict=PASS
+run_p600_a50.log:SVCLOW die=0 st=0 T=128 ffc=00104000 cred_err=0 sched_bad=0 cycles=2849 verdict=FAIL
+run_p270_a200.log:SVCLOW die=0 st=0 T=128 ffc=00000000 cred_err=0 sched_bad=0 cycles=2669 verdict=FAIL
+run_p600_a30.log:SVCLOW die=0 st=0 T=128 ffc=00104000 cred_err=0 sched_bad=0 cycles=2829 verdict=FAIL
+run_p240_a200.log:SVCLOW die=0 st=0 T=128 ffc=00000000 cred_err=0 sched_bad=0 cycles=2639 verdict=FAIL
+run_p600_a60.log:SVCLOW die=0 st=0 T=128 ffc=00104000 cred_err=0 sched_bad=0 cycles=2859 verdict=FAIL
+run_probe_p278_a70.log:SVCLOW die=0 st=0 T=128 ffc=00000000 cred_err=0 sched_bad=0 cycles=2547 verdict=PASS
+run_p285_a200.log:SVCLOW die=0 st=0 T=128 ffc=00000000 cred_err=0 sched_bad=0 cycles=2684 verdict=PASS
+run_p255_a200.log:SVCLOW die=0 st=0 T=128 ffc=00000000 cred_err=0 sched_bad=0 cycles=2654 verdict=FAIL
+run_probe_p285_a67.log:SVCLOW die=0 st=0 T=128 ffc=00104000 cred_err=0 sched_bad=0 cycles=2551 verdict=FAIL

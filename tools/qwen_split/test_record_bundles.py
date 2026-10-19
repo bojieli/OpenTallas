@@ -50,14 +50,15 @@ class RecordBundles(unittest.TestCase):
         self.assertEqual(c, {'lnk_rx_payload': 2, 'lnk_native_rx_v': 0, 'lnk_native_rx_slot': 0,
                              'lnk_native_rx_slot_kind': 0, 'lnk_native_rx_slot_beat': 0})
         s = {k: v['cycles'] for k, v in B['SF.rx_record']['members'].items()}
-        # G-C2 (measured at the face pins by LAYERBENCH-QWEN): prog_auth_slot +5, prog_witness_slot +4, the rest +3
+        # G-C2 (measured at the face pins by LAYERBENCH-QWEN on the old RTL): prog_auth_slot +5, prog_witness_slot +4, the
+        # rest +3.  RLYH0-EN 10-19: under the registered-en rlyh0 RTL every as-built strap reads E = K - 1 -> one less each
         self.assertEqual((s['sf_prog_auth_slot'], s['sf_prog_witness_slot'], s['sf_prog_rx_v'], s['sf_prog_context_slot'],
-                          s['lnk_rx_payload__fo1']), (5, 4, 3, 3, 3))
+                          s['lnk_rx_payload__fo1']), (4, 3, 2, 2, 2))
         self.assertTrue(B['C.tx_slot']['consistent'] and B['C.x3_record']['consistent'])
         self.assertFalse(B['SF.status']['consistent'])          # same class: levels +3 vs result_* +4
-        # QK-LANDEN 10-19: the as-built netlist straps its one-frame (landh0) member with the pre-registered-en K, one slot
-        # off under the registered-en RTL -> SF.tx_record now fails too (the GEN re-straps it, test below)
-        self.assertEqual(sorted(f.split(':')[0] for f in rec['fails']), ['C.rx_record', 'SF.rx_record', 'SF.status', 'SF.tx_record'])
+        # QK-LANDEN 10-19 made SF.tx_record fail (only its one-frame member moved); RLYH0-EN 10-19 moves every forwarded
+        # member by the same edge (hop-0 en registered on every lane) -> SF.tx_record is consistent again
+        self.assertEqual(sorted(f.split(':')[0] for f in rec['fails']), ['C.rx_record', 'SF.rx_record', 'SF.status'])
 
     def test_fixed_dv2f14bn_netlist_passes(self):
         bmap, info, rows, probs = RB.rows_from_netlist(FX)
@@ -100,7 +101,8 @@ class RecordBundles(unittest.TestCase):
         LG.equalize([r for r in q if r.get('E') is not None], 4, cal, h0)
         a = audit(q)
         self.assertEqual(sorted(f.split(':')[0] for f in a['fails']), ['C.rx_record', 'SF.cfg', 'SF.rx_record', 'SF.status'])
-        self.assertEqual({k: v['K'] for k, v in a['bundles']['C.rx_record']['members'].items()}['lnk_rx_payload'], 1)
+        # RLYH0-EN 10-19: the multi-frame lane's K carries the hop-0 en register edge (+1; was 1)
+        self.assertEqual({k: v['K'] for k, v in a['bundles']['C.rx_record']['members'].items()}['lnk_rx_payload'], 2)
         fixed = RB.fix_lanes(copy.deepcopy(rows), bmap, 4, cal, h0)
         self.assertEqual(audit(fixed)['verdict'], 'PASS')
 

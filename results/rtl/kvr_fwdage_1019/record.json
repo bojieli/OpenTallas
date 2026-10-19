@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.kvr_fwdage.record.v1",
+ "lane": "KVR-FWDAGE (sub-lane of DIE-KV-REPLACE), 2026-10-19; base claude/kvr-landlag-1019 f7db2adf1",
+ "rtl_verification": "ot_qfd_land (rtl/qwen_split/qfd_fwd_lane.sv) reads slot (rc - K) mod D, rc counting ck edges from the rs release R0, wc counting forwarded edges from the in-band lane epoch (source release G; G + 1 for an n = 1 landh0 whose en is registered on ck_s, QK-LANDEN): o = w(t - L), L = K + 1 + (R0 - G) - h0(n), the station transit absorbed by the ring (L mod 4 fixed by K, representative = the one inside the ring window). With the KV GEN calendar G = R0: K = E + h0 gives L = E + 1 for every n. Confirmed on the real KV wrappers (qkd_rlysh.sv) by bench_kv_fwd_lane.sh hw/compiled PASS and the encomb mutant FAIL (n = 1 only).",
+ "fix": {
+   "tools/qwen_kv_die/kv_fwd_lanes.py": "strap_k(n, E) = (E + h0(n)) mod 8 (h0 = lane_groups.HOP0_EN_REG for n = 1); landed_cost: landed = E + 2 (compiled ceil(landed - 1) = E + 1 = L_hw; post stages still added by iterate); added = landed - today (negative for most lanes); rows carry h0",
+   "tools/qwen_kv_die/kv_static_ages.py": "fwd_overlay: a landed bus takes ceil(landed - 1) EXACTLY (was max(plan stages, landed age): a lane faster than its relay plan kept the plan count)",
+   "tools/qwen_kv_die/kv_fwd_lane_price.py": "rule landed = E + 2; signed worst lane per bundle recorded, token charge max(0, worst)",
+   "tools/qwen_layerbench/netlist_relay_stages.py": "docstring only (n = 1 table age K = L with K = E + 1, cal 0)",
+   "tools/qwen_kv_die/bench_kv_fwd_lane.sh": "KV GEN straps K = (E + h0) mod 8; modes hw / compiled (PASS), oldgen / encomb mutants (FAIL); + n = 40 lane",
+   "tests": "test_land_lag_sim.test_kv_gen_fixed_rule_passes (the GEN's own strap_k / landed_cost through kv-check, n 1..99 ages); test_kv_static_ages.test_fwd_overlay_takes_the_landed_age_both_ways"
+ },
+ "kv_check_kvs14r_base": {
+   "method": "KVR-LANDLAG replay (replay_fixed.py: kv_fwd_lanes.form on case_kv/die.v.prefwd + rly_std slots + moved landings + post / plain stages); the fixed render differs from the base case_kv/die.v in 17 lines, only the n = 1 landing K-strap ties",
+   "before": "kvs14r_before/land_lag.log: FAIL 330/330 (structure 0, strap 17, window 17, latency 330)",
+   "after": "kvs14r_fixed/land_lag.json: PASS 330 crossings, 0 failing, compiled - hw latency delta 0 on all 330",
+   "fixed_die_v_sha256": "51c2610ab889a8047e18295db983d26071f8d148477f42bcfcea0ee92d48ad06",
+   "fixed_fwd_lanes_sha256": "6441088a2f78fd9704478e86fed7dec35dd0c098681841e8cd8e7cbc968ae574"
+ },
+ "age_deltas": {
+   "n=1 (17 lanes)": "compiled age 3 -> 3 (unchanged); hardware age 2 -> 3 (strap K 2 -> 3): the netlist-table age (= K) moves +1 on 17 buses, kv_static_ages / kv_static_params unchanged",
+   "n>1 (310 lanes)": "compiled age -1 .. -47 edges (sum -5761), hardware unchanged; ages now 3..48",
+   "n>1 with a post-landing stage (3 lanes)": "-8, -28, -28 edges",
+   "kv_static_ages overlay on kvs13l4_plan_ages_source": "32 landed buses move -6 .. -34 edges vs the old overlay, all 32 now BELOW their relay plan stage count",
+   "detail": "age_deltas.txt"
+ },
+ "bench": "Verilator 5.050 on ot-epyc4 via ot-run: bench_hw PASS 0/1345, bench_compiled PASS 0/1345 (n 1/2/5/15/40: L 3/3/4/9/22); mutants bench_oldgen FAIL 1343/1345, bench_encomb FAIL 269/1345 (the n = 1 lane)",
+ "compute_die": "not changed. Compute lanes charge lane_groups.lane_cycles = E + 1 for every n and strap K = (E + cal) mod 8 with cal = (G - R0) + h0: neither bug. Risk to check (compute owner): netlist_relay_stages charges an n = 1 landed lane age K, which equals the delivered L = K - (G - R0) only when the land-plan calendar G - R0 is 0 for that bus.",
+ "open": [
+   "planned E is the zero-delay estimate: the first bench draft with 0.4 ns forwarded legs on all 39 hops of an n = 40 lane (1.56 T insertion) FAILED 267/269 in hw mode (writes behind the read slot). KV lanes reach n = 93: their E must come from the die STA's measured E_sta (already 'owed' in fwd_lanes.json) before the KV calendar is final.",
+   "KV calendar consumers (kv_static_params static_params.json, layer_compile KV ages) must be regenerated on the next KV prep with this generator"
+ ]
+}

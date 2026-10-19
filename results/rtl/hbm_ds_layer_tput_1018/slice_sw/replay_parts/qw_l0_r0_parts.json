@@ -1,0 +1,39 @@
+{
+ "source": "/home/ubuntu/scratch/lb2-hbm2-rpl/qemit/L0/r0/replay.json",
+ "nev": 6309,
+ "parts": [
+  {
+   "name": "qw_l0_r0_p0",
+   "events": 5880,
+   "preload": 1488,
+   "cycles": 12238,
+   "programmes": [
+    0,
+    1,
+    2
+   ],
+   "records": [
+    6,
+    10,
+    17,
+    23
+   ],
+   "carried_sectors": 0
+  },
+  {
+   "name": "qw_l0_r0_p1",
+   "events": 1676,
+   "preload": 1648,
+   "cycles": 34107,
+   "programmes": [
+    3,
+    4
+   ],
+   "records": [
+    27,
+    33
+   ],
+   "carried_sectors": 1200
+  }
+ ]
+}

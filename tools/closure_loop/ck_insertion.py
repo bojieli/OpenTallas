@@ -150,6 +150,38 @@ proc ot_ck_macro_owned {p selected} {
 """
 
 
+# Boundary membership is physical connectivity, including disabled/false-path
+# arcs. Timing-path enumeration omits precisely the paths an exception hides.
+# OpenSTA includes asynchronous controls in -data_pins, so remove those before
+# intersecting the structural input fanout with the selected clock's registers.
+BOUNDARY_TCL = r"""
+set bnd {}
+set ot_ck_data {}
+set ot_ck_async {}
+foreach p [all_registers -async_pins] { dict set ot_ck_async [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $ot_ck_async $n]} { dict set ot_ck_data $n 1 }
+}
+set din [all_inputs -no_clocks]
+if {[llength $din]} {
+  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
+    set n [get_full_name $p]
+    if {![dict exists $ot_ck_data $n]} continue
+    set i [regsub {/[^/]+$} $n {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+set dout [all_outputs]
+if {[llength $dout]} {
+  foreach p [get_fanin -to $dout -flat -startpoints_only -trace_arcs all] {
+    set i [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+"""
+
+
 def tcl(corner, db, sdc, routed, clock, mlibs=(), raw_source=False):
     C = corner.upper()
     ml = "\n".join(f"read_liberty {l}" for l in mlibs)
@@ -166,10 +198,7 @@ set_propagated_clock [all_clocks]
 {CLOCK_SETUP_TCL.replace('CLOCK_REQUEST', clock)}
 set regs {{}}
 foreach p [all_registers -clock_pins -clock $ot_ck_selected] {{ set n [get_full_name $p]; dict set regs [regsub {{/[^/]+$}} $n {{}}] $n }}
-set bnd {{}}
-set din [all_inputs -no_clocks]
-if {{[llength $din]}} {{ foreach pe [find_timing_paths -path_delay max -from $din -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe endpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }} }}
-foreach pe [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe startpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }}
+{BOUNDARY_TCL}
 {ACTIVE_TCL}
 {MACRO_CLOCK_SCOPE_TCL}
 set ot_ck_clk [lindex $ot_ck_selected 0]

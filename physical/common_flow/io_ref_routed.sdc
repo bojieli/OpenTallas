@@ -120,16 +120,42 @@ foreach cn $ot_ir_real {
 }
 set ot_ir_real_src {}
 foreach cn $ot_ir_real { foreach s [get_property [get_clocks $cn] sources] { lappend ot_ir_real_src [get_full_name $s] } }
-set ot_ir_bnd [dict create]
-set ot_ir_din [all_inputs -no_clocks]
-if {[llength $ot_ir_din]} {
-  foreach pe [find_timing_paths -path_delay max -from $ot_ir_din -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {
-    dict set ot_ir_bnd [regsub {/[^/]+$} [get_full_name [get_property $pe endpoint]] {}] 1 }
+# Structural boundary membership survives false/disabled data paths; async controls are excluded.
+proc ot_ir_boundary_cells {} {
+  set regs {}
+  foreach p [all_registers -clock_pins] {
+    set n [get_full_name $p]
+    dict set regs [regsub {/[^/]+$} $n {}] $n
+  }
+
+set bnd {}
+set ot_ck_data {}
+set ot_ck_async {}
+foreach p [all_registers -async_pins] { dict set ot_ck_async [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $ot_ck_async $n]} { dict set ot_ck_data $n 1 }
 }
-if {[llength [all_outputs]]} {
-  foreach pe [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {
-    dict set ot_ir_bnd [regsub {/[^/]+$} [get_full_name [get_property $pe startpoint]] {}] 1 }
+set din [all_inputs -no_clocks]
+if {[llength $din]} {
+  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
+    set n [get_full_name $p]
+    if {![dict exists $ot_ck_data $n]} continue
+    set i [regsub {/[^/]+$} $n {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
 }
+set dout [all_outputs]
+if {[llength $dout]} {
+  foreach p [get_fanin -to $dout -flat -startpoints_only -trace_arcs all] {
+    set i [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+
+  return $bnd
+}
+set ot_ir_bnd [ot_ir_boundary_cells]
 # CLOCK-CLASS 2026-10-13 (export-sdc; smh_tile_eg r10 diagnosis codex/hbm-sm-cluster 4a8f09870): ONE boundary number per
 # clock is wrong for a block whose boundary registers sit on two clock classes of the same port clock -- smh_tile_eg:
 # 9 flops + the ICG on the raw clk net (0.5 ps) beside 967 flops behind the ICG and the spine (TT 1871..1902): the

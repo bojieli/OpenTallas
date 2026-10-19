@@ -18,22 +18,22 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_lb_v_lane_ckf can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_lane_ckf can not be propagated.
-QDM REFGLOB *u_land.rc* reference: 3 registers, median arrival 99.822273 (range 99.811470 .. 100.197861)
-QDM reference pin u_land.rc[0]$_DFF_PN0_/CLK clock arrival max 99.822273 min 89.114281 skew 90 hold 50
-OT_HOLD_BUDGET die: L_min 89.114281 C 25 U 25 relief 0
+QDM REFGLOB *u_land.rc* reference: 3 registers, median arrival 94.972221 (range 94.932297 .. 94.992645)
+QDM reference pin u_land.rc[1]$_DFF_PN0_/CLK clock arrival max 94.972221 min 85.27037 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 85.27037 C 25 U 25 relief 0
 [WARNING STA-0441] set_input_delay relative to a clock defined on the same port/pin not allowed.
 [WARNING STA-0440] set_output_delay not allowed on power port 'VDD'.
 [WARNING STA-0440] set_output_delay not allowed on ground port 'VSS'.
 OT_IO_INTER 135 inputs 133 outputs at 150 ps
-OT_FWD_LANE: lane inputs min = L_min 152.070572 + C 25 + U 25 (lane_ckf ring write flops)
+OT_FWD_LANE: lane inputs min = L_min 176.850342 + C 25 + U 25 (lane_ckf ring write flops)
 OT_FWD_LANE: landing write clock lane_ckf on ck_s (period 833.333008); ring -> o window = die STA landing MCP
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_lane_ckf can not be propagated.
 OT_IOREF clock-port ck (core_clk): data input delays dropped
 OT_IOREF clock-port ck_s (lane_ckf): data input delays dropped
 OT_IOREF_EDGE core_clk boundary 133 negedge 0 noarc 0 inverted 0
-OT_IOREF_EDGE lane_ckf boundary 519 negedge 0 noarc 0 inverted 0
-OT_IOREF ot_lb_v_core_clk core_clk mean 96.7 min 92.3 max 100.6 n 133 boundary
-OT_IOREF ot_lb_v_lane_ckf lane_ckf mean 172.2 min 169.0 max 174.2 n 519 boundary
-OT_WS max -1.364180990393038e-11 min 4.065803249631017e-11
+OT_IOREF_EDGE lane_ckf boundary 513 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 95.9 min 90.2 max 102.8 n 133 boundary
+OT_IOREF ot_lb_v_lane_ckf lane_ckf mean 195.7 min 189.6 max 198.9 n 513 boundary
+OT_WS max 8.590905764549461e-13 min 4.6247242146968404e-11
 OT_EXPORT_DONE

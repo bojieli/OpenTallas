@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hbm_coll_ops_images.v1",
+ "lane": "VEH-FMT-COLL2",
+ "fixtures": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L00",
+ "layer": 0,
+ "R": 2,
+ "t_start": 40,
+ "nev": 6309,
+ "records": [
+  {
+   "k_layer": 33,
+   "tag": "o-group tree reduce (8 contributors) + multicast",
+   "i": 29,
+   "op": "COLL.GROUP_REDUCE_MCAST",
+   "d4g_placement": "needs_tp192_programme",
+   "priced_cycles": 1349.22,
+   "open": [
+    "cross-die reduce phase not emitted: needs_tp192_programme (golden tree = TP-96 o-group of 8; d4g contributor set / tree order undefined until a TP-192 DS programme exists)",
+    "peer partials A of the 7 other contributors absent (fixture ranks [0]; all-rank capture launched: dsfix/fix_allr on ot-epyc5)",
+    "hb_coll_SW programme = 1536-b uop rows (static_uop_layout_v4.json): no hard_v8x row compiler for the reduce (row_gather_rows.py / argmax_rows.py are host_v4-timed mechanism compilers)"
+   ],
+   "status": "emitted_on_die_phase",
+   "F": 384,
+   "R": 2,
+   "stride": 384,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "n_words": 12288,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 507,
+   "check_cyc": 523,
+   "model_span_fire_to_last_write": 327,
+   "launch_to_last_write": 370,
+   "calendar": {
+    "target": 96,
+    "loops": 466,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x5203000200020000c000142"
+   },
+   "collq_reservations": {
+    "reads": 384,
+    "writes": 1152,
+    "first": 17,
+    "last": 327,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 12288,
+   "far_end_flits": 1152,
+   "replays": [
+    {
+     "name": "ds_l0_grm_r029",
+     "events": 3883,
+     "vm_preload": 384,
+     "cycles": 587,
+     "checks": 2695,
+     "replay_sha256": "a3fd9a5216c11ba966e22eda579154e3fa5917143d221e1a64c356eab7583c31"
+    }
+   ]
+  }
+ ],
+ "counts": {
+  "emitted_on_die_phase": 1
+ }
+}

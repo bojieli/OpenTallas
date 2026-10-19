@@ -1,6 +1,6 @@
 {
  "top": "qfd_tt_ctlm_dv_lpf",
- "why": "HF-4 (HARD-FIX 0id) 10-18: Qwen TT control cluster qfd_tt_ctlm_dv (slot 777.6 x 345.6) as a landed parent. The hard TT head h16c/h17 (ck_head TT insertion ~355 ps, FF ~292) and the calendar's 2 x 64x512 SRAMs + pin registers (macro clock entry ~0 ps) differ by >300 ps and sit ~400 um apart, so they get their own clock regions: core = u_gi (W, calendar SRAMs, pin registers), hr = u_hr + u_go + u_thru (E). Every input lands from core (port_regions) and every output leaves hr, so the cluster is the flat block + 3 edges on every output (uniform).",
+ "why": "HF-4 (HARD-FIX 0id) 10-18: Qwen TT control cluster qfd_tt_ctlm_dv (slot 777.6 x 345.6) as a landed parent. The hard TT head h16c/h17 (ck_head TT insertion ~355 ps, FF ~292) and the calendar's 2 x 64x512 SRAMs + pin registers (macro clock entry ~0 ps) differ by >300 ps and sit ~400 um apart, so they get their own clock regions: core = u_gi (W, calendar SRAMs, pin registers), hr = u_hr + u_go + u_thru (E). Every input lands from core (port_regions) and every output leaves hr, so the cluster is the flat block + 3 edges on every output (uniform). MU-ADOPT-CTLM 10-19: u_gi calendar = qfd_dv_cmd_cal_mu NU 4 (Qwen ROM 4 users) + dh_user input (core). MU-QW-DIE 10-19: OPSEG 1 (MU-QW-B1 op-start leaf u_gi.g_op.u_leaf (core), ROM 4096x72 inside; coordinator 0ka boot context record DW5/DW6 in u_gi) + QW-DIEFIX hr pack in u_thru (zero logic, hr region).",
  "sources": [
   "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf.sv"
  ],
@@ -30,16 +30,21 @@
   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv",
   "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv",
   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv",
-  "rtl/qwen_dv/qfd_dv_cmd_cal.sv",
+  "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
   "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
   "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
   "rtl/lib/ot_reset_sync.sv",
-  "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv"
+  "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+  "rtl/qwen_dv/qfd_dv_hr_pack.sv",
+  "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"
  ],
  "params": {
   "XPF_TRANSPORT_EDGES": 20,
   "STAGE_ME": 1,
-  "LAST_STAGE": 37
+  "LAST_STAGE": 37,
+  "NU": 4,
+  "OPSEG": 1
  },
  "out_dir": "rtl/qwen_dv/lp",
  "record_dir": "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
@@ -84,6 +89,7 @@
  "port_regions": {
   "pw": "core",
   "dh": "core",
+  "dh_user": "core",
   "kok": "core",
   "kwd": "core",
   "fab": "core",
