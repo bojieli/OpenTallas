@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_seq_static_s",
+ "enable": false,
+ "reason": "Wires-only cluster parent of the static sequencer (OT_QKD_SEQ_STATIC_S_HARD): every boundary net lands in / launches from a hard child's own pin flops (core prg/kvn/lp/svc/ar_h/hf input registers; xs x_d/x_v/qpop pin flops; fan aq/kc registered outputs), and the die prices every crossing with its own relays (kv_static_die relay_stages, ks_prg/ks_arh/kc_*/aq_*). A recipe-3 pin register would add an unpriced edge on every seq face (aq Q push / kc / tk)."
+}

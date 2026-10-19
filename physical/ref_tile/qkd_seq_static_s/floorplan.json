@@ -1,0 +1,315 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qkd_seq_static_s",
+ "top": "qkd_seq_static_s",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  604.8,
+  475.2
+ ],
+ "core": [
+  2.16,
+  2.16,
+  602.64,
+  473.03999999999996
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {
+   "qkd_seq_core_static_s": "M5",
+   "qkd_seq_xs_s": "M5",
+   "qkd_seq_fan_s": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M7"
+  ],
+  "strap_layer": "M8"
+ },
+ "pins": {
+  "W": [
+   "af_WS",
+   "af_WN",
+   "aq_WN",
+   "aq_WS",
+   "kc_WN",
+   "kc_WS",
+   "kst",
+   "kvn_word_valid",
+   "kvn_word_tag",
+   "svc",
+   "tk"
+  ],
+  "E": [
+   "af_EN",
+   "aq_EN",
+   "aq_ES",
+   "hf",
+   "kc_EN",
+   "kc_ES"
+  ],
+  "S": [
+   "af_ES",
+   "ar_h",
+   "prg_req_v",
+   "prg_req_pos",
+   "prg_q_v",
+   "prg_q_beat",
+   "prg_q_data"
+  ],
+  "N": [
+   "ck",
+   "rst_n",
+   "lp_run",
+   "lp_layer",
+   "lp_ctx_t",
+   "hs"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_seq_core_st_s/views/qkd_seq_core_static_s",
+   "master": "qkd_seq_core_static_s",
+   "inst": "u_core",
+   "idx": 0,
+   "x": 302.4,
+   "y": 43.224,
+   "w": 43.2,
+   "h": 34.56,
+   "orient": "MX",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s",
+   "master": "qkd_seq_xs_s",
+   "inst": "g_xs[0].u_xs",
+   "idx": 0,
+   "x": 172.8,
+   "y": 129.624,
+   "w": 97.2,
+   "h": 97.2,
+   "orient": "MX",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s",
+   "master": "qkd_seq_xs_s",
+   "inst": "g_xs[1].u_xs",
+   "idx": 0,
+   "x": 345.6,
+   "y": 129.624,
+   "w": 97.2,
+   "h": 97.2,
+   "orient": "MX",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s",
+   "master": "qkd_seq_xs_s",
+   "inst": "g_xs[2].u_xs",
+   "idx": 0,
+   "x": 172.8,
+   "y": 302.424,
+   "w": 97.2,
+   "h": 97.2,
+   "orient": "MX",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s",
+   "master": "qkd_seq_xs_s",
+   "inst": "g_xs[3].u_xs",
+   "idx": 0,
+   "x": 345.6,
+   "y": 302.424,
+   "w": 97.2,
+   "h": 97.2,
+   "orient": "MX",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s",
+   "master": "qkd_seq_fan_s",
+   "inst": "g_fan[1].u_fan",
+   "idx": 0,
+   "x": 43.2,
+   "y": 129.6,
+   "w": 32.4,
+   "h": 108.0,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s",
+   "master": "qkd_seq_fan_s",
+   "inst": "g_fan[0].u_fan",
+   "idx": 0,
+   "x": 43.2,
+   "y": 259.2,
+   "w": 32.4,
+   "h": 108.0,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s",
+   "master": "qkd_seq_fan_s",
+   "inst": "g_fan[3].u_fan",
+   "idx": 0,
+   "x": 518.424,
+   "y": 129.6,
+   "w": 32.4,
+   "h": 108.0,
+   "orient": "MY",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s",
+   "master": "qkd_seq_fan_s",
+   "inst": "g_fan[2].u_fan",
+   "idx": 0,
+   "x": 518.424,
+   "y": 259.2,
+   "w": 32.4,
+   "h": 108.0,
+   "orient": "MY",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_seq_core_static_s#0: origin (302.4, 43.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_seq_xs_s#0: origin (172.8, 129.624) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_seq_xs_s#0: origin (345.6, 129.624) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_seq_xs_s#0: origin (172.8, 302.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_seq_xs_s#0: origin (345.6, 302.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_seq_fan_s#0: origin (518.424, 129.6) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_seq_fan_s#0: origin (518.424, 259.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "fill",
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  ]
+ ],
+ "referenced": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+  "physical/ref_tile/qkd_seq_static_s/kit.env",
+  "physical/ref_tile/qkd_seq_static_s/clock.sdc",
+  "physical/ref_tile/qkd_seq_static_s/signoff.sdc",
+  "physical/ref_tile/qkd_seq_static_s/pdn.tcl",
+  "physical/ref_tile/qkd_seq_static_s/pre_cts.tcl",
+  "physical/ref_tile/qkd_seq_static_s/post_cts.tcl",
+  "physical/ref_tile/qkd_seq_static_s/post_grt.tcl",
+  "physical/ref_tile/qkd_seq_static_s/pre_drt.tcl",
+  "physical/ref_tile/qkd_seq_static_s/pre_fill.tcl",
+  "physical/ref_tile/qkd_seq_static_s/post_fill.tcl",
+  "physical/ref_tile/qkd_seq_static_s/pre_grt.tcl",
+  "physical/ref_tile/qkd_seq_static_s/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qkd_seq_static_s/pre_gpl.tcl",
+  "physical/ref_tile/qkd_seq_static_s/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/ref_tile/qkd_seq_static_s/spine_ins.tcl",
+  "physical/ref_tile/qkd_seq_core_st_s/views/qkd_seq_core_static_s/qkd_seq_core_static_s.lef",
+  "physical/ref_tile/qkd_seq_core_st_s/views/qkd_seq_core_static_s/qkd_seq_core_static_s_ss.lib",
+  "physical/ref_tile/qkd_seq_core_st_s/views/qkd_seq_core_static_s/qkd_seq_core_static_s_ff.lib",
+  "physical/ref_tile/qkd_seq_core_st_s/views/qkd_seq_core_static_s/qkd_seq_core_static_s_tt.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s.lef",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_ss.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_ff.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_tt.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s.lef",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_ss.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_ff.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_tt.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s.lef",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_ss.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_ff.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_tt.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s.lef",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_ss.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_ff.lib",
+  "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s/qkd_seq_xs_s_tt.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s.lef",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_ss.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_ff.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_tt.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s.lef",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_ss.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_ff.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_tt.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s.lef",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_ss.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_ff.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_tt.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s.lef",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_ss.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_ff.lib",
+  "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s/qkd_seq_fan_s_tt.lib",
+  "physical/ref_tile/qkd_seq_static_s/place.tcl"
+ ]
+}
