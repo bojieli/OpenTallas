@@ -105,6 +105,7 @@ module ot_host_if_pb2_observed_rc #(
     // Private common-clock functional join. Descriptor and native namespaces differ.
     output wire native_certificate_attempt_v,event_certified_v,
     output wire cq_dma_retired_v,
+    input wire native_certificate_key_ok,
     input wire native_issue_ready,
     input wire native_cq_offer_ok,
     output wire native_cq_prospective_v, native_cq_prospective_native_valid,
@@ -389,7 +390,7 @@ module ot_host_if_pb2_observed_rc #(
         native_bound_tag[42:37] == 0 && native_bound_tag[5:0] == 0 &&
         native_bound_tag[36:19] == eng_token && native_bound_tag[18:6] == eng_pos[12:0] &&
         eng_pos[17:13] == 0;
-    wire native_identity_bad = !pending_native_valid || !health_native_valid ||
+    wire native_identity_bad = !native_certificate_key_ok || !pending_native_valid || !health_native_valid ||
         health_native_tag != pending_terminal_tag || health_native_gen != pending_native_gen;
     wire identity_bad = cut_now && ((ENABLE_NATIVE_OWNER_JOIN ? native_identity_bad :
         health_identity_i != pending_identity) || !health_cutoff_i || !raw_including_now || !armed_q);
