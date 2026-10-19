@@ -63,6 +63,17 @@ module ot_hbm_r14_aq_pc_safe #(
   wire [WQW-1:0] qread=wr_ok ? q_rp_plus2 : q_rp_plus1;
   reg qfresh; reg [WQW-1:0] qfresh_addr; reg [29:0] qfresh_data;
   reg [29:0] qhead;
+  // Same-edge local head copies: each row bit drives eight comparators and
+  // eight look-row capture muxes; each read flag serves eight bank timers.
+  (* keep="true",dont_touch="true" *) reg [19:0] head_local[0:3];
+  for(genvar g=0;g<4;g=g+1)begin:HEAD_LOCAL
+    always @(posedge clk)if(head_from_push||(wr_ok&&q_n>1))
+      `ifdef BW_AQ_MUT_HEAD
+      head_local[g]<=head_next[19:0] ^ (g==0?20'd2:20'd0);
+`else
+      head_local[g]<=head_next[19:0];
+`endif
+  end
   reg [31:0] hb_oh;
   wire [WQW-1:0] qsuccessor=q_rp_plus1;
   wire [29:0] qprefetch=(qfresh&&qfresh_addr==qsuccessor)?qfresh_data:qm[29:0];
@@ -93,10 +104,11 @@ module ot_hbm_r14_aq_pc_safe #(
   always @(posedge clk)begin qfresh_addr<=qwp;qfresh_data<={wr_bank,wr_col,wr_row,wr_rd};end
   always @(posedge clk)begin
     for(integer b=0;b<32;b=b+1)begin
-      if(q_ne&&hb==b)look_row[b]<=hrow;
+      if(q_ne&&hb_oh[b])look_row[b]<=head_local[b/8][19:1];
       else if(qpush&&wr_bank==b&&bank_n[b]==0)look_row[b]<=wr_row;
     end
-    if(row_fire&&c_op==ACT)orow[c_bank]<=c_row;
+    for(integer b=0;b<32;b=b+1)
+      if(row_local[b/16][21]&&c_oh[b])orow[b]<=row_local[b/16][18:0];
   end
   reg [WQW:0] q_n; reg [WQW-1:0] q_rp;
   wire [4:0] hb=qhead[29:25], hc=qhead[24:20]; wire [RW_ROW-1:0] hrow=qhead[19:1]; wire hr=qhead[0];   // registered head (valid when q_n != 0)
@@ -107,6 +119,18 @@ module ot_hbm_r14_aq_pc_safe #(
   reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
   reg [3:0] rtw_c, wtr_c; reg phase;
   reg c_v; reg [2:0] c_op; reg [4:0] c_bank; reg [31:0] c_oh; reg [RW_ROW-1:0] c_row;
+  // Registered decoded commands share the original command capture edge.
+  // The three decoded controls and row word are local to sixteen banks.
+  (* keep="true",dont_touch="true" *) reg [21:0] row_local[0:1];
+  for(genvar g=0;g<2;g=g+1)begin:ROW_LOCAL
+    // Only validity/opcode flags reset. The row word is consumed only by ACT.
+    always @(posedge clk)row_local[g][18:0]<=r_row;
+    always @(posedge clk or negedge reset_regions[32+g])
+      if(!reset_regions[32+g])row_local[g][21:19]<=0;
+      else row_local[g][21:19]<={slot_next&&r_v&&r_op==ACT,
+                                slot_next&&r_v&&r_op==PRE,
+                                slot_next&&r_v&&r_op==REFPB};
+  end
   wire row_fire = c_v;
   wire q_ne = q_n != 0;
   wire ref_due = (ref_c == 0);
@@ -120,28 +144,55 @@ module ot_hbm_r14_aq_pc_safe #(
   // Per-bank summaries replace the old WQ-wide indexed scan. Four groups
   // select independently; one additional registered stage chooses a group.
   reg [3:0] ac_v;reg[4:0]ac_b[0:3];reg[RW_ROW-1:0]ac_row[0:3];
-  reg ac2_v;reg[4:0]ac2_b;reg[RW_ROW-1:0]ac2_row;
+  reg ac2_v;reg[4:0]ac2_b;wire[RW_ROW-1:0]ac2_row=ac2_row_local[0];
+  (* keep="true",dont_touch="true" *) reg [31:0] ac2_oh;
+  (* keep="true",dont_touch="true" *) reg [RW_ROW-1:0] ac2_row_local[0:1];
+  (* keep="true",dont_touch="true" *) reg [3:0] ac_v_local[0:2];
+  wire [31:0] act_row_match;
+  for(genvar b=0;b<32;b=b+1)begin:ACT_MATCH
+    assign act_row_match[b]=look_row[b]==ac2_row_local[b/16];
+  end
   always @* begin
     held=0;need=0;
     for(integer b=0;b<32;b=b+1)begin
       need[b]=bank_n[b]!=0;
       held[b]=bank_n[b]!=0&&open[b]&&look_row[b]==orow[b];
     end
-    act_b=ac2_b;act_row=ac2_row;act_cand_oh=32'b1<<ac2_b;
-    act_cand=ac2_v&&bank_n[ac2_b]!=0&&!open[ac2_b]&&!blk[ac2_b]&&look_row[ac2_b]==ac2_row;
+    act_b=ac2_b;act_row=ac2_row;act_cand_oh=ac2_oh;
+    act_cand=ac2_v&&|(ac2_oh&need&~open&~blk&act_row_match);
   end
   always @(posedge clk or negedge reset_regions[63])begin
-    if(!reset_regions[63])begin ac_v<=0;ac2_v<=0;ac2_b<=0;ac2_row<=0;
+    if(!reset_regions[63])begin ac_v<=0;ac2_v<=0;ac2_b<=0;ac2_oh<=0;
+      for(integer k=0;k<2;k=k+1)ac2_row_local[k]<=0;
+      for(integer k=0;k<3;k=k+1)ac_v_local[k]<=0;
       for(integer g=0;g<4;g=g+1)begin ac_b[g]<=0;ac_row[g]<=0;end
     end else begin
       for(integer g=0;g<4;g=g+1)begin:SG
         reg found;found=0;ac_v[g]<=0;
+        for(integer k=0;k<3;k=k+1)ac_v_local[k][g]<=0;
         for(integer j=0;j<8;j=j+1)if(!found&&bank_n[g*8+j]!=0&&!open[g*8+j]&&!blk[g*8+j])begin
-          found=1;ac_v[g]<=1;ac_b[g]<=5'(g*8+j);ac_row[g]<=look_row[g*8+j];
+          found=1;ac_v[g]<=1;
+          for(integer k=0;k<3;k=k+1)ac_v_local[k][g]<=1;ac_b[g]<=5'(g*8+j);ac_row[g]<=look_row[g*8+j];
         end
       end
       begin:S2 reg found;found=0;ac2_v<=0;
-        for(integer g=0;g<4;g=g+1)if(!found&&ac_v[g])begin found=1;ac2_v<=1;ac2_b<=ac_b[g];ac2_row<=ac_row[g];end
+        for(integer g=0;g<4;g=g+1)if(!found&&ac_v[g])begin found=1;ac2_v<=1;ac2_b<=ac_b[g];
+`ifdef BW_AQ_MUT_ACT
+          ac2_oh<=32'b1<<(ac_b[g]^5'd1);
+`else
+          ac2_oh<=32'b1<<ac_b[g];
+`endif
+          for(integer k=0;k<2;k=k+1)begin
+            for(integer b=0;b<RW_ROW;b=b+1)
+              begin:SROW
+                reg found_row;
+                found_row=0;ac2_row_local[k][b]<=0;
+                for(integer j=0;j<4;j=j+1)if(!found_row&&ac_v_local[b/8][j])begin
+                  found_row=1;ac2_row_local[k][b]<=ac_row[j][b];
+                end
+              end
+          end
+        end
       end
     end
   end
@@ -151,11 +202,11 @@ module ot_hbm_r14_aq_pc_safe #(
   wire hit_rd = col_v && !col_we, hit_wr = col_v && col_we;
   for (genvar b = 0; b < 32; b = b + 1) begin : bank
     reg [4:0] rcd, ras, wrr; reg [8:0] aok; reg [2:0] rtp;
-    wire act_e = row_fire && c_op == ACT && c_oh[b];
-    wire pre_e = row_fire && c_op == PRE && c_oh[b];
-    wire rfp_e = row_fire && c_op == REFPB && c_oh[b];
-    wire rd_e = hit_rd && hb == 5'(b);
-    wire wr_e = hit_wr && hb == 5'(b);
+    wire act_e = row_local[b/16][21] && c_oh[b];
+    wire pre_e = row_local[b/16][20] && c_oh[b];
+    wire rfp_e = row_local[b/16][19] && c_oh[b];
+    wire rd_e = hit_rd && hb_oh[b];
+    wire wr_e = hit_wr && hb_oh[b];
     always @(posedge clk or negedge reset_regions[b])
       if (!reset_regions[b]) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; wrr <= 0; end
       else begin
@@ -218,15 +269,30 @@ module ot_hbm_r14_aq_pc_safe #(
     end
   end
   assign bkey=rk[5][0];assign bsel=rs[5][0];
+  // Separate retained final selector captures for each live 32-bank lookup.
+  (* keep="true",dont_touch="true" *) reg [4:0] refresh_sel_local[0:3];
+  for(genvar k=0;k<4;k=k+1)begin:REFRESH_LOCAL
+    always @(posedge clk or negedge reset_regions[62])
+      if(!reset_regions[62])refresh_sel_local[k]<=0;
+      else refresh_sel_local[k]<=(rk[4][0]<=rk[4][1]?rs[4][0]:rs[4][1])
+`ifdef BW_AQ_MUT_REFRESH
+        ^(k==0?5'd1:5'd0)
+`endif
+        ;
+  end
   // ---- column: the head entry, strictly in order --------------------------------------------------------------------
   wire [31:0] pre_fl = (c_v && c_op == PRE) ? c_oh : 32'b0;
   // Compare rows locally in parallel instead of selecting a 19-bit word
   // through a 32:1 mux before comparing it. Each head-row bit has 32 loads.
   wire [31:0] head_row_match;
   for(genvar b=0;b<32;b=b+1)begin:HEAD_ROW
-    assign head_row_match[b]=(orow[b]==hrow);
+    assign head_row_match[b]=(orow[b]==head_local[b/8][19:1]);
   end
-  wire head_bank_rdy = q_ne && |(hb_oh & open & (hr ? rcd_z : rcdw_z) & ~blk & ~pre_fl & head_row_match);
+  wire [31:0] head_timer_ready;
+  for(genvar b=0;b<32;b=b+1)begin:HEAD_TIMER
+    assign head_timer_ready[b]=head_local[b/8][0]?rcd_z[b]:rcdw_z[b];
+  end
+  wire head_bank_rdy = q_ne && |(hb_oh & open & head_timer_ready & ~blk & ~pre_fl & head_row_match);
   wire wr_ok = head_bank_rdy && ccdl_z[hb[1:0]] && (hr ? (wtr_c == 0) : (rtw_c == 0));
   assign col_v = wr_ok; assign col_we = wr_ok && !hr; assign col_aq = wr_ok && hr;
   assign col_bank = hb; assign col_col = hc;
@@ -250,8 +316,8 @@ module ot_hbm_r14_aq_pc_safe #(
   // Current bank state must be fresh. A stronger live cyclic-distance guard
   // was measured separately: it did not fix the full L02 static miss and
   // starved the legal mixed transaction trace. Keep the proven state check.
-  wire ref_choice_fresh=!refreshed[bsel]&&!need[bsel]&&!open[bsel]&&!aok_busy[bsel];
-  wire ref_choice_protected=refreshed[bsel]||need[bsel]||open[bsel]||aok_busy[bsel];
+  wire ref_choice_fresh=!refreshed[refresh_sel_local[0]]&&!need[refresh_sel_local[1]]&&!open[refresh_sel_local[2]]&&!aok_busy[refresh_sel_local[3]];
+  wire ref_choice_protected=refreshed[refresh_sel_local[0]]||need[refresh_sel_local[1]]||open[refresh_sel_local[2]]||aok_busy[refresh_sel_local[3]];
 `endif
   wire ep_start = ref_choice_fresh && (PULLIN > 0) && !ep && !ref_pend && 32'(pin) < PULLIN && ref_c > RW'(LEAD + 12) && bkey < 7'd16 &&
                   sact >= 4'd6;
