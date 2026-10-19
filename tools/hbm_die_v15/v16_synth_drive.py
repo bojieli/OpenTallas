@@ -31,11 +31,25 @@ NOPARAM = re.compile(r"Module `\\?(\w+)' referenced in module .* does not have a
 
 
 def module_index(commit):
-    out = subprocess.run(['git', '-C', str(ROOT), 'grep', '-n', '-E', r'^\s*module\s+\w+', commit, '--', '*.sv', '*.v'],
-                         capture_output=True, text=True).stdout
+    # Scan the actual HBM source checkout, not git grep <rev> over the entire object database (which can decompress
+    # hundreds of thousands of blobs on the coordinator). Actual builds still archive the requested immutable ref.
+    head = subprocess.run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], check=True, capture_output=True, text=True).stdout.strip()
+    wanted = subprocess.run(['git', '-C', str(ROOT), 'rev-parse', commit], check=True, capture_output=True, text=True).stdout.strip()
+    if head != wanted:
+        raise ValueError('module index requires a checkout of the pinned synthesis commit')
+    roots = ['rtl/hbm_accel', 'rtl/hbm_next', 'rtl/hbm_mtp', 'rtl/hdc', 'rtl/lib', 'rtl/dsrom_sys/s81_window_la/recovered_ctl_m2',
+             'physical/hbm_accel_die_views', 'physical/hbm_generic', 'physical/hbm_mtp',
+             'physical/hbm_xp_aq_tree13_1014', 'physical/asap7_memory_macros', 'physical/asap7_memory_macros_v2']
+    roots = [p for p in roots if (ROOT / p).is_dir()]
+    if not roots:
+        raise ValueError('pinned HBM source roots are absent from the sparse checkout')
+    proc = subprocess.run(['timeout', '120', 'rg', '-n', '--glob', '*.sv', '--glob', '*.v', r'^\s*module\s+\w+',
+                           *roots], cwd=ROOT, capture_output=True, text=True)
+    if proc.returncode not in (0, 1):
+        raise RuntimeError(f'HBM module index scan failed rc={proc.returncode}: {proc.stderr[:500]}')
     idx = {}
-    for line in out.splitlines():
-        _, path, _, txt = line.split(':', 3)
+    for line in proc.stdout.splitlines():
+        path, _, txt = line.split(':', 2)
         m = re.match(r'\s*module\s+(\w+)', txt)
         if m and not re.search(r'(^|/)tb_|/test/|/tb/', path):
             idx.setdefault(m.group(1), []).append(path)

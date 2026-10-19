@@ -641,6 +641,17 @@ def pad_bits(spec, width):
     return out
 
 
+def bit_ranges(bits):
+    """Compact complete diagnostic bit sets without changing any admission rule."""
+    out = []
+    for bit in sorted(set(bits)):
+        if out and bit == out[-1][1] + 1:
+            out[-1][1] = bit
+        else:
+            out.append([bit, bit])
+    return out
+
+
 def load_pads(obj):
     """{"pads": {master: {"reason": str, "ports": {port: [[lo, hi], ...] | {"logical_width": L}}}}} ->
     Optional "instances" entries add master/reason/ports per instance and load as (master, port, instance).
@@ -782,6 +793,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             if drv_cnt[n].get(i, 0) == 0:
                 drv_cnt[n][i] += c
     undriven, multi, unread = defaultdict(int), defaultdict(int), defaultdict(int)
+    unread_bits = defaultdict(list)
     for n, bs in rd.items():
         dc = drv_cnt.get(n, {})
         for i in bs:
@@ -794,6 +806,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
         for i, c in dc.items():
             if i not in rd.get(n, ()) and n not in tin and (n, i) not in spare_drv:
                 unread[n] += 1
+                unread_bits[n].append(i)
             if c > 1 and i not in rd.get(n, ()):
                 multi[n] += 1
     # ---------------- summary
@@ -839,6 +852,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                 failing=fail_keys, summary=S, masters=out_m,
                 undriven_nets=dict(sorted(undriven.items(), key=lambda kv: -kv[1])[:200]),
                 unread_nets=dict(sorted(unread.items(), key=lambda kv: -kv[1])[:200]),
+                unread_bit_ranges={n: bit_ranges(bits) for n, bits in sorted(unread_bits.items())},
                 unread_classes=_classes(unread), undriven_classes=_classes(undriven), multi_driven_classes=_classes(multi),
                 multi_driven_nets=dict(sorted(multi.items(), key=lambda kv: -kv[1])[:200]),
                 top_assigns=findings['TOP_ASSIGN'][:20], params_not_in_rtl=findings['PARAM_NOT_IN_RTL'][:40])
