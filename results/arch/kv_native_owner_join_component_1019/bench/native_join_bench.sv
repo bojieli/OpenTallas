@@ -445,6 +445,7 @@ reg allow_aw=1,allow_w=1;
    tick(64);
    if(allocations!=post_completions+1)$fatal(1,"CQ_STALL_ACTIVE_COUNT alloc=%0d post=%0d",allocations,post_completions);
    if(!binding_valid||!post_pending)$fatal(1,"CQ_STALL_RELEASE_EARLY");
+   if(pending_phase==0||issues!=allocations+1)$fatal(1,"CQ_STALL_NEXT_UNBOUND_NOT_EXERCISED pending=%0d issues=%0d alloc=%0d",pending_phase,issues,allocations);
    if(saved_cq_key_valid&&saved_cq_key[60:2]!=={16'd1,6'd37,18'd70003,13'd1,6'd0})$fatal(1,"CQ_STALL_OLD_EVENT_KEY");
    $display("CQ_STALL e=%0d pending_phase=%0d issues=%0d alloc=%0d post=%0d saved=%h",edges,pending_phase,issues,allocations,post_completions,saved_cq_key);
    hold_dma_b=0;
