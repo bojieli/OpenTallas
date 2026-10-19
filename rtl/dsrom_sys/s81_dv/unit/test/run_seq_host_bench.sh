@@ -41,7 +41,9 @@ mdef() { case $1 in 7) echo +define+OT_ING_MUT_HREGV;; 8) echo +define+OT_ING_MU
 # S81-SHLK s10b (VL_EXTRA has -DOT_S81_SH_S10B): 15 = descriptor-queue read copy 0 stalls, 16 = hr_v copy 3 never
 # clears, 17 = st_row / st_left hi +- 1 never refreshed, 18 = refresh overwrites a fresh segment load, 19 = u_cx read copy 0 stalls
 MUTS="1 2 3 4 5 6 7 8 9 10"; case "${VL_EXTRA:-}" in *OT_S81_SH_APIPE10*) MUTS="$MUTS 11 14";; esac
-case "${VL_EXTRA:-}" in *OT_S81_SH_S10B*) MUTS="$MUTS 15 16 17 18 19";; esac
+# (15 / 17 / 18 are not exercised here -- seqhost segments start row-aligned and 1 descriptor sits in the queue; they are
+# caught by physical/sys_takeover/host_native_pipe_bench.py dqc10 / hpref10 / hphold10 with HNP_S10B=1)
+case "${VL_EXTRA:-}" in *OT_S81_SH_S10B*) MUTS="$MUTS 16 19";; esac
 if [ "${3:-}" = base ]; then
   build base || exit 2
   for seed in $SEEDS; do

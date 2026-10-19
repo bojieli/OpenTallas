@@ -59,6 +59,10 @@ extra = {
     "raw_fenced_stall": case_raw_multi(rngm, [1, 1, 0, 1, 1, 0, 1, 1], [24, 2, 3, 24, 1, 2, 30, 1]),
 }
 extra["raw_fenced_stall"]["mstall"] = 90
+if os.environ.get('HNP_S10B') == '1':
+    # S81-SHLK s10b: segments of 16k sectors start st_left with a zero low nibble, so the first step borrows from the
+    # registered hi - 1 right after the segment load (catches a refresh that overwrites the loaded value, hphold10)
+    extra["raw_b16"] = case_raw_multi(np.random.default_rng(20261020), [1, 1, 0, 1, 1], [16, 32, 16, 48, 1])
 # Exercise the actual failed block-address cone across ap1_gs[7] / sb boundary.
 if mode in ('pos8','pos9','apbskip9','apstale9','apxskip9','pos10','apbskip10','apstale10','apxskip10','sprh10','spkind10','rac10','banktail10','rszswap10','sramcur10','dqc10','hrc10','hpref10','hphold10','cxrc10'):
     extra['ikey_cross_sb'] = C.case_ikey(np.random.default_rng(20261019),256,first=32720,ndie=4,die=2,ns=4)
