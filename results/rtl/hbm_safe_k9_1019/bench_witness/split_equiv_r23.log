@@ -1,7 +1,7 @@
 SFU_SPLIT_EQUIV PASS edges=6679 active_output_edges=6511 delay_core=3 delay_status=2 lg_path=23 wq_extra=1
 - rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:343: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 6us; walltime 177.781 s; speed 31.506 ns/s
-- Verilator: cpu 177.763 s on 1 threads; allocated 151 MB
+- Verilator: $finish at 6us; walltime 172.604 s; speed 32.451 ns/s
+- Verilator: cpu 172.596 s on 1 threads; allocated 152 MB
 SFU_SPLIT_GATE POSITIVE PASS
 BENCH_EXIT 0
