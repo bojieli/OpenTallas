@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.hbm_bw_unit.v1",
+ "pattern": "ds",
+ "defines": [
+  "MR",
+  "SAFE",
+  "OT_PC_CFG_MUT_PC"
+ ],
+ "seed": 1,
+ "layers": 4,
+ "blocks": 156,
+ "rc": 1,
+ "bw": null,
+ "pcs": [],
+ "fault": [
+  "FAULT pc0 pc_fault 0 owner_fault 1 cyc 5",
+  "%Error: /srv/opentallas-scratch/claude/hbm-bw-finalrate-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_bw_pc4.sv:110: Verilog $stop"
+ ],
+ "done": []
+}

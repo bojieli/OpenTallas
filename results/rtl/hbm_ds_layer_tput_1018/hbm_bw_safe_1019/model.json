@@ -27,20 +27,22 @@
   "latency": {
     "pins_added_vs_mr": 0,
     "ACT_lookahead_pipeline_edges": 2,
-    "refresh_argmin_extra_edges": 1,
-    "static_go_budget_edges_per_64_lines": 88
+    "static_go_budget_edges_per_64_lines": 88,
+    "refresh_argmin_pipeline_edges": 5,
+    "legacy_KR_compatibility_bridge_HBM_edges": 1,
+    "legacy_KR_compatibility_payload_bits_per_pc": 831
   },
   "routing": {
     "proposed_outline_um": [
-      388.8,
-      388.8
+      432,
+      475.2
     ],
     "macro_lattice_um": 43.2,
-    "max_outline_span_um": 388.8,
-    "track_check": "await synthesized pin inventory; full faces <=6 pins/um"
+    "max_outline_span_um": 475.2,
+    "track_check": "Older diagnostics PASS1224pin geometry; latestsingleband safe3 physicalmeasurement pending."
   },
   "schedule": "No service-go stall allowed; upstream prefetch lead must absorb the two-stage ACT selection. Production bench must pass exact go slots.",
-  "capacity": "Expert three-copy footprint is being checked against real 32GiB/stack allocation; no adoption until proven.",
+  "capacity": "REPRICE3 9b66f8ccf routedexpert3x reserves16512rows2.015625GiB/SM vs4GiB; .8031GiB realpayload; fullimage nonexpert/KV closure remainsconditional.",
   "synthesis_total_area_um2": 54299.62512,
   "synthesis_macro_area_um2": 50620.0864,
   "synthesis_std_area_um2": 3679.538719999997,
@@ -55,7 +57,19 @@
     92.74,
     92.94
   ],
-  "controller_source": "f175c1132",
-  "replicas_note": "REPRICE3 capacity config2stacks/die,16SM/die=>64PC/die; confirm physical GEN inventory.",
-  "sector_conservation": "PASS eachPC: requested8300 columns8300 returns8300; owner starts8HBM edges after reset"
+  "controller_source": "877c9e27d",
+  "replicas_note": "GEN2e manifest proves64 cfg_h9b controllers/die,2stacks32PC/stack; clockcontract.json pins64hbm1024ps endpoints.",
+  "sector_conservation": "PASS eachPC: requested8300 columns8300 returns8300; owner starts8HBM edges after reset",
+  "physical_status": "OPEN. safe3 source55bafafca uses432x475.2,13macros,onecoreFENCE270..291.06um, actualroute1024ps; existing tool signoff833 overconstraint beingrepaired byroot. Existingstdarea is OLDdiagnostic before72reset/headH9b changes; remeasure beforefinalgate.",
+  "production_status": "OPEN. safe oldL14 exact23/23@88. Latestfull66op unbridged nativeH9b failedCDC720; provenoptinKRbridge component+mutant877c9e27d; full66op bridgedretry pending.",
+  "random_traffic_sensitivity": {
+    "requests": 6000,
+    "read_beats_exact": 12944,
+    "write_cols_completions_exact": 759,
+    "baseline_edges": 88783,
+    "safe_edges": 166919,
+    "qualification": "FAIL existing10percent ratecheck; allidentity/data match; IDmutantfails; rejectedopenpagepolicy preservesfailureevidence."
+  },
+  "die_outline_delta_mm2_64pc": 11.5903954944,
+  "signoff_policy": "TTsetup+FFhold primary, SS sensitivity. HBMperiod1024ps sourcepincontract unchanged; setup60ps/hold25ps uncertainty, holdmargin30ps."
 }
