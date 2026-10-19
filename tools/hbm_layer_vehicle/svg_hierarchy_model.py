@@ -30,6 +30,8 @@ def model():
             conservative_prefetch_added_stream_edges=math.ceil(2*1024/833.333)+1+1+2,
             selected_prefetch_margin_stream_edges=8,
             metadata_delay_stream_edges=2,
+            cache_open_delay_stream_edges=2,
+            cache_open_contract='Delay the complete OPEN envelope by the same2edges as drain sector data/labels; cache enforces fixed sector pulses from OPEN and cannot accept a gap.',
             metadata_fields=['valid','mask4','ordinal11','bank2','epoch16','last','read_mux_ordinal11'],
             protocol='Keep fixed GO and SM programme words unchanged. Delay actual landing data with metadata2edges; reserve is naturally1edge later inside the native bank and HBM response2edges later. Compiler first/fetch/ids residency margins add8edges; measure production smoke before accepting.',
             physical_scope='The aggregate still has unregistered/millimetre parent paths. This integration cannot establish physical closure.'),
