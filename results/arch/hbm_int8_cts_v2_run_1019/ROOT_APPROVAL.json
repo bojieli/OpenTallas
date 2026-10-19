@@ -1,0 +1,13 @@
+{
+  "root_authorized": true,
+  "stage": "INT8_CTS_ONLY_CHECKPOINT_V2",
+  "candidate": "smh_int8_safe_tie_t1_cts2",
+  "manifest_sha256": "d16dc56f45bf4243d94ef760f93577364204cea57e444fc00b35bc4510c4e8ec",
+  "pg_tests_pass": true,
+  "pg_helper_sha256": "86ecd58dcc68419006b65d773c832ac6feeaf7ecdcf39dbf9f8f442f868bb5c4",
+  "metric_smoke_receipt_sha256": "366e4671a35a07c07b46e7c1ff2939363787fe1978fb1f8109c2dab9bc313c33",
+  "neighbor_timing_status": "DIAGNOSTIC_ONLY",
+  "kit_commit": "ec8bf662d",
+  "scope": "One fresh isolated admitted diagnostic CTS attempt, checkpoint before reports, independent read-only TT/FF/native/conductor/identity/PNG collection. This replaces failed infrastructure protocol only; original failed run/grant retained. No synthesis, data repair, GRT/DRT, submit, shared activation, parent adoption or automatic physical retry. All remote inputs/platform/image hashes required before launch.",
+  "qualification": "Root-referenced IO diagnostic only. Preserve checkpoint if any report or proof fails; no success publication until every pinned check passes. ROOT personal new PNG/native review required before next physical stage."
+}

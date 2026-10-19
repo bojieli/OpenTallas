@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-int8-cts-v2-run-1019/output
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-int8-cts-v2-run-1019/output
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-int8-cts-v2-run-1019/output
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-int8-cts-v2-run-1019/output
+ot-run: ot-epyc8       admits  1321 GB (avail 981, growth 37, headroom 0, waiters 0/0 GB) load 25/128 running 12 disk 111 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-int8-cts-v2-run-1019/output
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-int8-cts-v2-run-1019/output
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1861278-1792443811 after 1 s
+{
+  "schema": "int8.postcts.readonly.cost.v1",
+  "new_cells": 253,
+  "new_native_area_um2": 75.85974,
+  "new_TT_input_cap_fF": 530.839298,
+  "open_output_loads": 110,
+  "open_output_load_area_um2": 13.31154,
+  "open_output_TT_input_cap_fF": 194.752118
+}
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1861278-1792443811): exit 0

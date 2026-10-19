@@ -1,0 +1,1084 @@
+{
+  "electrical": [
+    {
+      "corner": "FF",
+      "check": "max capacitance",
+      "role": "boundary",
+      "count": 1070,
+      "worst": {
+        "corner": "FF",
+        "check": "max capacitance",
+        "pin": "$abc$36464$auto$blifparse.cc:397:parse_blif$36571/Y",
+        "master": "INVx1_ASAP7_75t_R",
+        "classes": [
+          "boundary"
+        ],
+        "limit": 46.08,
+        "actual": 114.8,
+        "slack": -68.72,
+        "net_ids": [
+          10071
+        ]
+      },
+      "masters": {
+        "INVx1_ASAP7_75t_R": 1070
+      }
+    },
+    {
+      "corner": "FF",
+      "check": "max slew",
+      "role": "boundary",
+      "count": 2445,
+      "worst": {
+        "corner": "FF",
+        "check": "max slew",
+        "pin": "o_data[0]",
+        "master": "TOP_PORT",
+        "classes": [
+          "boundary"
+        ],
+        "limit": 260.0,
+        "actual": 1608.73,
+        "slack": -1348.73,
+        "net_ids": [
+          10071
+        ]
+      },
+      "masters": {
+        "TOP_PORT": 1070,
+        "INVx1_ASAP7_75t_R": 1070,
+        "NAND2xp33_ASAP7_75t_R": 7,
+        "DFFASRHQNx1_ASAP7_75t_R": 22,
+        "DFFHQNx1_ASAP7_75t_R": 276
+      }
+    },
+    {
+      "corner": "FF",
+      "check": "max slew",
+      "role": "native_async_reset_set",
+      "count": 22,
+      "worst": {
+        "corner": "FF",
+        "check": "max slew",
+        "pin": "$auto$ff.cc:337:slice$4995/RESETN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "classes": [
+          "native_async_reset_set"
+        ],
+        "limit": 260.0,
+        "actual": 261.72,
+        "slack": -1.72,
+        "net_ids": [
+          5264
+        ]
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 22
+      }
+    },
+    {
+      "corner": "TT",
+      "check": "max capacitance",
+      "role": "boundary",
+      "count": 1070,
+      "worst": {
+        "corner": "TT",
+        "check": "max capacitance",
+        "pin": "$abc$36464$auto$blifparse.cc:397:parse_blif$36571/Y",
+        "master": "INVx1_ASAP7_75t_R",
+        "classes": [
+          "boundary"
+        ],
+        "limit": 46.08,
+        "actual": 114.8,
+        "slack": -68.72,
+        "net_ids": [
+          10071
+        ]
+      },
+      "masters": {
+        "INVx1_ASAP7_75t_R": 1070
+      }
+    },
+    {
+      "corner": "TT",
+      "check": "max slew",
+      "role": "boundary",
+      "count": 2443,
+      "worst": {
+        "corner": "TT",
+        "check": "max slew",
+        "pin": "o_data[0]",
+        "master": "TOP_PORT",
+        "classes": [
+          "boundary"
+        ],
+        "limit": 260.0,
+        "actual": 1839.69,
+        "slack": -1579.69,
+        "net_ids": [
+          10071
+        ]
+      },
+      "masters": {
+        "TOP_PORT": 1070,
+        "INVx1_ASAP7_75t_R": 1070,
+        "NAND2xp33_ASAP7_75t_R": 7,
+        "DFFASRHQNx1_ASAP7_75t_R": 22,
+        "DFFHQNx1_ASAP7_75t_R": 274
+      }
+    },
+    {
+      "corner": "TT",
+      "check": "max slew",
+      "role": "internal",
+      "count": 37,
+      "worst": {
+        "corner": "TT",
+        "check": "max slew",
+        "pin": "$auto$ff.cc:337:slice$4907/D",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "classes": [
+          "internal"
+        ],
+        "limit": 260.0,
+        "actual": 350.29,
+        "slack": -90.29,
+        "net_ids": [
+          1665
+        ]
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 35,
+        "NAND2xp33_ASAP7_75t_R": 2
+      }
+    },
+    {
+      "corner": "TT",
+      "check": "max slew",
+      "role": "native_async_reset_set",
+      "count": 150,
+      "worst": {
+        "corner": "TT",
+        "check": "max slew",
+        "pin": "$auto$ff.cc:337:slice$4995/RESETN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "classes": [
+          "native_async_reset_set"
+        ],
+        "limit": 260.0,
+        "actual": 368.81,
+        "slack": -108.81,
+        "net_ids": [
+          5264
+        ]
+      },
+      "masters": {
+        "DFFASRHQNx1_ASAP7_75t_R": 144,
+        "INVx1_ASAP7_75t_R": 6
+      }
+    }
+  ],
+  "all_row_count": 7237,
+  "new_cell_count": 253,
+  "open_new_outputs": [
+    {
+      "instance": "clkload0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11538
+      ]
+    },
+    {
+      "instance": "clkload1",
+      "master": "CKINVDCx12_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11540
+      ]
+    },
+    {
+      "instance": "clkload10",
+      "master": "BUFx24_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11412
+      ]
+    },
+    {
+      "instance": "clkload100",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11472
+      ]
+    },
+    {
+      "instance": "clkload101",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11473
+      ]
+    },
+    {
+      "instance": "clkload102",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11475
+      ]
+    },
+    {
+      "instance": "clkload103",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11456
+      ]
+    },
+    {
+      "instance": "clkload104",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11459
+      ]
+    },
+    {
+      "instance": "clkload105",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11460
+      ]
+    },
+    {
+      "instance": "clkload106",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11461
+      ]
+    },
+    {
+      "instance": "clkload107",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11462
+      ]
+    },
+    {
+      "instance": "clkload108",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11463
+      ]
+    },
+    {
+      "instance": "clkload109",
+      "master": "INVxp33_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11464
+      ]
+    },
+    {
+      "instance": "clkload11",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11413
+      ]
+    },
+    {
+      "instance": "clkload12",
+      "master": "INVx5_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11525
+      ]
+    },
+    {
+      "instance": "clkload13",
+      "master": "INVx5_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11526
+      ]
+    },
+    {
+      "instance": "clkload14",
+      "master": "CKINVDCx11_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11527
+      ]
+    },
+    {
+      "instance": "clkload15",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11414
+      ]
+    },
+    {
+      "instance": "clkload16",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11415
+      ]
+    },
+    {
+      "instance": "clkload17",
+      "master": "INVx5_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11418
+      ]
+    },
+    {
+      "instance": "clkload18",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11419
+      ]
+    },
+    {
+      "instance": "clkload19",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11421
+      ]
+    },
+    {
+      "instance": "clkload2",
+      "master": "BUFx24_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11541
+      ]
+    },
+    {
+      "instance": "clkload20",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11523
+      ]
+    },
+    {
+      "instance": "clkload21",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11499
+      ]
+    },
+    {
+      "instance": "clkload22",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11514
+      ]
+    },
+    {
+      "instance": "clkload23",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11517
+      ]
+    },
+    {
+      "instance": "clkload24",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11518
+      ]
+    },
+    {
+      "instance": "clkload25",
+      "master": "INVx5_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11519
+      ]
+    },
+    {
+      "instance": "clkload26",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11520
+      ]
+    },
+    {
+      "instance": "clkload27",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11521
+      ]
+    },
+    {
+      "instance": "clkload28",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11522
+      ]
+    },
+    {
+      "instance": "clkload29",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11509
+      ]
+    },
+    {
+      "instance": "clkload3",
+      "master": "BUFx24_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11544
+      ]
+    },
+    {
+      "instance": "clkload30",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11510
+      ]
+    },
+    {
+      "instance": "clkload31",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11512
+      ]
+    },
+    {
+      "instance": "clkload32",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11513
+      ]
+    },
+    {
+      "instance": "clkload33",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11515
+      ]
+    },
+    {
+      "instance": "clkload34",
+      "master": "INVx6_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11416
+      ]
+    },
+    {
+      "instance": "clkload35",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11420
+      ]
+    },
+    {
+      "instance": "clkload36",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11426
+      ]
+    },
+    {
+      "instance": "clkload37",
+      "master": "CKINVDCx8_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11427
+      ]
+    },
+    {
+      "instance": "clkload38",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11428
+      ]
+    },
+    {
+      "instance": "clkload39",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11429
+      ]
+    },
+    {
+      "instance": "clkload4",
+      "master": "BUFx24_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11545
+      ]
+    },
+    {
+      "instance": "clkload40",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11430
+      ]
+    },
+    {
+      "instance": "clkload41",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11433
+      ]
+    },
+    {
+      "instance": "clkload42",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11439
+      ]
+    },
+    {
+      "instance": "clkload43",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11422
+      ]
+    },
+    {
+      "instance": "clkload44",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11423
+      ]
+    },
+    {
+      "instance": "clkload45",
+      "master": "INVx4_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11424
+      ]
+    },
+    {
+      "instance": "clkload46",
+      "master": "INVx4_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11425
+      ]
+    },
+    {
+      "instance": "clkload47",
+      "master": "INVx1_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11507
+      ]
+    },
+    {
+      "instance": "clkload48",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11508
+      ]
+    },
+    {
+      "instance": "clkload49",
+      "master": "INVx5_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11434
+      ]
+    },
+    {
+      "instance": "clkload5",
+      "master": "BUFx24_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11547
+      ]
+    },
+    {
+      "instance": "clkload50",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11435
+      ]
+    },
+    {
+      "instance": "clkload51",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11436
+      ]
+    },
+    {
+      "instance": "clkload52",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11437
+      ]
+    },
+    {
+      "instance": "clkload53",
+      "master": "INVx6_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11440
+      ]
+    },
+    {
+      "instance": "clkload54",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11496
+      ]
+    },
+    {
+      "instance": "clkload55",
+      "master": "INVx8_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11497
+      ]
+    },
+    {
+      "instance": "clkload56",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11498
+      ]
+    },
+    {
+      "instance": "clkload57",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11500
+      ]
+    },
+    {
+      "instance": "clkload58",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11501
+      ]
+    },
+    {
+      "instance": "clkload59",
+      "master": "INVxp33_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11502
+      ]
+    },
+    {
+      "instance": "clkload6",
+      "master": "BUFx24_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11549
+      ]
+    },
+    {
+      "instance": "clkload60",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11503
+      ]
+    },
+    {
+      "instance": "clkload61",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11476
+      ]
+    },
+    {
+      "instance": "clkload62",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11478
+      ]
+    },
+    {
+      "instance": "clkload63",
+      "master": "BUFx24_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11480
+      ]
+    },
+    {
+      "instance": "clkload64",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11481
+      ]
+    },
+    {
+      "instance": "clkload65",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11482
+      ]
+    },
+    {
+      "instance": "clkload66",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11483
+      ]
+    },
+    {
+      "instance": "clkload67",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11505
+      ]
+    },
+    {
+      "instance": "clkload68",
+      "master": "BUFx24_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11506
+      ]
+    },
+    {
+      "instance": "clkload69",
+      "master": "INVx6_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11489
+      ]
+    },
+    {
+      "instance": "clkload7",
+      "master": "BUFx24_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11551
+      ]
+    },
+    {
+      "instance": "clkload70",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11490
+      ]
+    },
+    {
+      "instance": "clkload71",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11492
+      ]
+    },
+    {
+      "instance": "clkload72",
+      "master": "BUFx24_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11493
+      ]
+    },
+    {
+      "instance": "clkload73",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11494
+      ]
+    },
+    {
+      "instance": "clkload74",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11495
+      ]
+    },
+    {
+      "instance": "clkload75",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11468
+      ]
+    },
+    {
+      "instance": "clkload76",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11469
+      ]
+    },
+    {
+      "instance": "clkload77",
+      "master": "INVxp33_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11470
+      ]
+    },
+    {
+      "instance": "clkload78",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11485
+      ]
+    },
+    {
+      "instance": "clkload79",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11486
+      ]
+    },
+    {
+      "instance": "clkload8",
+      "master": "INVx5_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11410
+      ]
+    },
+    {
+      "instance": "clkload80",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11487
+      ]
+    },
+    {
+      "instance": "clkload81",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11488
+      ]
+    },
+    {
+      "instance": "clkload82",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11441
+      ]
+    },
+    {
+      "instance": "clkload83",
+      "master": "INVx1_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11443
+      ]
+    },
+    {
+      "instance": "clkload84",
+      "master": "INVx1_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11444
+      ]
+    },
+    {
+      "instance": "clkload85",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11446
+      ]
+    },
+    {
+      "instance": "clkload86",
+      "master": "INVx1_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11447
+      ]
+    },
+    {
+      "instance": "clkload87",
+      "master": "INVxp33_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11474
+      ]
+    },
+    {
+      "instance": "clkload88",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11477
+      ]
+    },
+    {
+      "instance": "clkload89",
+      "master": "INVx3_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11448
+      ]
+    },
+    {
+      "instance": "clkload9",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11411
+      ]
+    },
+    {
+      "instance": "clkload90",
+      "master": "INVx5_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11449
+      ]
+    },
+    {
+      "instance": "clkload91",
+      "master": "INVx5_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11450
+      ]
+    },
+    {
+      "instance": "clkload92",
+      "master": "INVx5_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11451
+      ]
+    },
+    {
+      "instance": "clkload93",
+      "master": "INVx5_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11453
+      ]
+    },
+    {
+      "instance": "clkload94",
+      "master": "CKINVDCx6p67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11454
+      ]
+    },
+    {
+      "instance": "clkload95",
+      "master": "CKINVDCx6p67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11455
+      ]
+    },
+    {
+      "instance": "clkload96",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11457
+      ]
+    },
+    {
+      "instance": "clkload97",
+      "master": "INVxp67_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11465
+      ]
+    },
+    {
+      "instance": "clkload98",
+      "master": "INVx8_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11467
+      ]
+    },
+    {
+      "instance": "clkload99",
+      "master": "INVx2_ASAP7_75t_R",
+      "all_input_nets_on_proven_clock_graph": true,
+      "input_nets": [
+        11471
+      ]
+    }
+  ],
+  "new_masters": {
+    "BUFx24_ASAP7_75t_R": 154,
+    "INVx3_ASAP7_75t_R": 15,
+    "INVxp67_ASAP7_75t_R": 16,
+    "INVxp33_ASAP7_75t_R": 4,
+    "INVx2_ASAP7_75t_R": 36,
+    "CKINVDCx6p67_ASAP7_75t_R": 2,
+    "INVx5_ASAP7_75t_R": 10,
+    "INVx4_ASAP7_75t_R": 2,
+    "CKINVDCx5p33_ASAP7_75t_R": 2,
+    "INVx8_ASAP7_75t_R": 2,
+    "INVx6_ASAP7_75t_R": 3,
+    "CKINVDCx11_ASAP7_75t_R": 1,
+    "CKINVDCx8_ASAP7_75t_R": 1,
+    "INVx1_ASAP7_75t_R": 4,
+    "CKINVDCx12_ASAP7_75t_R": 1
+  },
+  "clock_nets_backward_native_sink_graph": 144
+}

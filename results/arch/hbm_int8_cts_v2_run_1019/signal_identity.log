@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/hbm-int8-cts-v2-run-1019/kit/check_signal_identity.py", line 95, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/srv/opentallas-scratch/claude/hbm-int8-cts-v2-run-1019/kit/check_signal_identity.py", line 92, in main
+    result=check(load(pre/'raw.json'),load(post/'raw.json'),load(pre/'positions.json'),load(post/'positions.json'),read_liberty(paths))
+  File "/srv/opentallas-scratch/claude/hbm-int8-cts-v2-run-1019/kit/check_signal_identity.py", line 72, in check
+    require(parse_function(pins[outs[0]]['function'])==parse_function(ins[0]),'new cell is not positive buffer '+name)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/hbm-int8-cts-v2-run-1019/kit/check_signal_identity.py", line 7, in require
+    if not ok: raise ValueError(msg)
+               ^^^^^^^^^^^^^^^^^^^^^
+ValueError: new cell is not positive buffer clkload9
