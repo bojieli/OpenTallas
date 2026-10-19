@@ -1,0 +1,33 @@
+OWN-IDXSCORE reset diagnosis, 2026-10-18 (Codex takeover)
+
+Historical qs2 (9ca6b5314) FAIL is preserved in qs2_reset_failure/.
+Both positives have exactly one whole-bus mismatch, cyc3 while rst_n=0:
+new val0 ff80 vs one-edge-delayed old val0 0000, with ev=0 and fault=0.
+
+Contract: rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static.sv
+lines 121-126 explicitly document unreset payload and reset ev/fault.
+Line 124 clocks score[305:1] unconditionally, with no reset assignment.
+The split E tile uses exactly the same output flop structure.
+FF80 is the tail's masked/not-kept score sentinel (ot_hbm_idx_owned_native.sv,
+o_score assignment); comparing its cold uninitialized arrival against a delayed
+old arrival during reset invents a payload reset contract the RTL never had.
+
+Correction is confined to harness: assert BOTH old/new ev and fault zero while
+rst_n is low; compare the ENTIRE 306-bit score plus fault against old+1 at
+EVERY rst_n-high edge, starting at reset release with no guessed warmup and
+without a valid-only mask. Original two raw-bit frames and RNG draw sequence
+are preserved, including overflow/refusal and zero behavior. A third frame
+uses finite positive E2M1 operands, near-unity UE8M0 scales and bounded BF16
+weights to require meaningful nonzero output from BOTH rows at HALF0/HALF1.
+The finite frame additionally requires no lane faults; exactly 49 total score
+events are required. All three routing/retiming mutants remain mandatory.
+
+2b2e1ecb7 additionally forces opposite initial output payloads for two reset
+edges, releases them to normal RTL, and repeats each positive via a runtime
+plusarg. Controls stay under RTL throughout. Each execution has its own log.
+
+No RTL correction or physical submission is justified by the historical
+cold-reset mismatch. No closure/qualification claim is made until new gate
+logs pass. qs3 uses ca8a2552b (without poison) and remains live; successor qs4
+must run 2b2e1ecb7 (poison included), preferably reusing compiled artifacts
+only after the pinned qs3 job exits. Do not mutate qs3 source while it runs.
