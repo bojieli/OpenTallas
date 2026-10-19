@@ -44,7 +44,8 @@
 // by both in one edge is a fault.
 module ot_hgi_coll_gq_issue #(
     parameter integer MUT = 0       // bench mutants: 1 rx src of h=1 uses the CW table on CCW, 2 exponent bias 126,
-                                    // 3 publish lands at i+1, 4 self-land skipped, 5 ring-B command one edge late
+                                    // 3 publish lands at i+1, 4 self-land skipped, 5 ring-B command one edge late,
+                                    // 6 quantiser element line one bank short (x one edge early)
 )(
     input  wire          clk, rst_n,
     input  wire [1:0]    qid,
@@ -120,12 +121,14 @@ module ot_hgi_coll_gq_issue #(
     reg [1:0] aq_vo_q, aq_fault_q; reg flt_q; wire flt_n = flt_q;
     reg [135:0] vm_rq; wire [2055:0] vm_rr = {vm_rr_hi, vm_rr_lo};
     assign vm_rq_lo = vm_rq[67:0]; assign vm_rq_hi = vm_rq[135:68];
-    // quantisers: two instances of the CLOSED quantiser tile RTL (ot_hbm_xp_aq_tree13 = ot_hdc_actquant, 13 edges,
-    // input S0 / output registers at its pins), synthesised flat in this leaf (saves 2 x 1,290 leaf pins)
+    // quantisers: two instances of ot_hgi_coll_aq13 = the CLOSED quantiser tile RTL (ot_hbm_xp_aq_tree13 = ot_hdc_actquant,
+    // 13 edges, input S0 / output registers at its pins) with its 1,024 x 9 element shift line replaced by the hold-safe
+    // ot_hdc_delay_hc (same edges; the shift line cost 64,598 CTS hold buffers in this leaf), synthesised flat in this
+    // leaf (saves 2 x 1,290 leaf pins)
     reg [1:0] aq_v; reg [2047:0] aq_x; wire [1:0] aq_vo, aq_fault; wire [511:0] aq_q; wire [19:0] aq_e; wire [1023:0] aq_y;
-    ot_hbm_xp_aq_tree13 u_aq0(.clk(clk), .rst_n(rn), .v(aq_v[0]), .fp4(1'b0), .x(aq_x[1023:0]), .vo(aq_vo[0]),
+    ot_hgi_coll_aq13 #(.LMUT(MUT == 6)) u_aq0(.clk(clk), .rst_n(rn), .v(aq_v[0]), .fp4(1'b0), .x(aq_x[1023:0]), .vo(aq_vo[0]),
         .q(aq_q[255:0]), .e(aq_e[9:0]), .y(aq_y[511:0]), .fault(aq_fault[0]));
-    ot_hbm_xp_aq_tree13 u_aq1(.clk(clk), .rst_n(rn), .v(aq_v[1]), .fp4(1'b0), .x(aq_x[2047:1024]), .vo(aq_vo[1]),
+    ot_hgi_coll_aq13 #(.LMUT(MUT == 6)) u_aq1(.clk(clk), .rst_n(rn), .v(aq_v[1]), .fp4(1'b0), .x(aq_x[2047:1024]), .vo(aq_vo[1]),
         .q(aq_q[511:256]), .e(aq_e[19:10]), .y(aq_y[1023:512]), .fault(aq_fault[1]));
     reg [1:0] q_id;
     always @(posedge clk) q_id <= qid;

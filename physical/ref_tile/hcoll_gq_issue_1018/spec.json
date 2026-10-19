@@ -6,12 +6,14 @@
   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
   "rtl/lib/ot_rst_relay.sv",
-  "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv",
   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv",
   "rtl/hdc/v41/ot_hdc_actquant.sv",
   "rtl/hdc/ot_hdc_fpu.sv",
   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
-  "rtl/hdc/ot_hdc_delay.sv"
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_hc.sv",
+  "rtl/hdc/ot_hdc_cg.sv"
  ],
  "clock_port": "clk",
  "reset_ports": [
@@ -113,21 +115,21 @@
   "pin_balance": {
    "group_max": 32
   },
-  "io_hold_margin_ns": 0.0,
+  "io_hold_margin_ns": 0.025,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Claude:HBM-COLLQ",
-  "branch": "claude/hbm-collq-1018",
-  "tag": "r1",
-  "purpose": "d4g plan (b) per-quadrant COLL gather master, ISSUE leaf: F20 target + descriptor calendar, static two-ring gather schedule, VM reads (COLL read share), 2 flat quantisers (QBG, = closed ot_hbm_xp_aq_tree13 RTL), payload, ring-A merge register (ISA +2 edges) and ring-B commands; new element, no closed view",
+  "branch": "claude/hbm-gqissue-1018",
+  "tag": "r2",
+  "purpose": "d4g plan (b) per-quadrant COLL gather master, ISSUE leaf: F20 target + descriptor calendar, static two-ring gather schedule, VM reads (COLL read share), 2 flat quantisers (QBG, ot_hgi_coll_aq13 = closed ot_hbm_xp_aq_tree13 RTL with its 1,024 x 9 element shift line replaced by the hold-safe ot_hdc_delay_hc: r1 CTS gate spent 64,598 hold buffers on the bare line hops), payload, ring-A merge register (ISA +2 edges) and ring-B commands; new element, no closed view",
   "benches": [
    {
     "name": "coll_gq_exact",
     "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/gq",
     "expect": "pass",
-    "min_count_regex": "COLLQ BENCH PASS mutants_rejected=(6)",
+    "min_count_regex": "COLLQ BENCH PASS mutants_rejected=(7)",
     "threads": 16,
     "peak_ram_gb": 24,
     "needs": [
@@ -195,6 +197,18 @@
     "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m5.log"
    },
    {
+    "name": "coll_gq_mut_m6",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m6 m6",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m6.log"
+   },
+   {
     "name": "coll_gq_mut_kq1",
     "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_kq1 kq1",
     "expect": "fail",
@@ -222,7 +236,9 @@
    "tools/hgi_sim/collq_gather_1018.py",
    "tools/hdc_golden.py",
    "tools/hdc_golden_v41.py",
-   "results/rtl/hbm_collq_1018"
+   "results/rtl/hbm_collq_1018",
+   "physical/hbm_xp_aq_tree13_1014/tb_aq_tree13.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
   ],
   "views_to": "physical/ref_tile/hcoll_gq_issue_1018/views",
   "record_to": "results/arch/hbm_die_d4g/collq/route_hcoll_gq_issue_1018"
