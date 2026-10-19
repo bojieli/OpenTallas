@@ -63,3 +63,12 @@ consumer predecessor is gu for resid1 and next-stage qkv for resid2; the first
 qkv embedding/INIT predecessor and the actual landing/read lifetimes remain
 open. The corrected source review enumerates every command and preserves the
 retracted intermediate hypotheses only in producer_source_audit.json.
+
+The optional PW packet is now concrete: witness/witness_template_packet contains
+the full1024-word MODEL image and manifest. All13 record round trips pass; only
+PW400..438 change. Record0's unused high tail carries WTN1/revision/base/count;
+no extra header word is needed. The manifest exports the changed candidate
+calendar-copy digest, not an installed or authenticated production digest. It
+also prices128 partial-record assembly bits and the loaded-mask/loader state
+as additional to the earlier template and dynamic-state lower bounds. Current
+public PW and all actual receiver images remain unchanged.
