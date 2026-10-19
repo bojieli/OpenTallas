@@ -37,6 +37,92 @@ endmodule
 
 
 class NetlistWalk(unittest.TestCase):
+    def test_word_alignment_uses_every_actual_bit_age(self):
+        rtl = RTL + '''
+module dst2(input wire ck, input wire [1:0] i); endmodule
+module qkd_rlysh0_1(input wire ck, a, output wire b); endmodule
+module qkd_rlysh_1(input wire ck, a, output wire b); endmodule
+module qkd_landsh_1(input wire ck, a, k0, k1, k2, output wire b, tie_hi, tie_lo); endmodule
+'''
+        for actual_k, recorded_e, expected in [(3, 3, 4), (2, 3, None), (4, 4, None)]:
+            kports = ', '.join(f'.k{q}({"hi1" if actual_k & (1 << q) else "lo1"})' for q in range(3))
+            die = f'''module die();
+wire n_clk_core_c, a0, a1, a2, b0, b1, hi0, lo0, hi1, lo1; wire [3:0] n_src;
+src s (.ck(n_clk_core_c), .o(n_src));
+qkd_rlysh0_1 h0 (.ck(n_clk_core_c), .a(n_src[0]), .b(a0));
+qkd_landsh_1 l0 (.ck(n_clk_core_c), .a(a0), .b(b0), .k0(hi0), .k1(hi0), .k2(lo0), .tie_hi(hi0), .tie_lo(lo0));
+qkd_rlysh0_1 h1 (.ck(n_clk_core_c), .a(n_src[1]), .b(a1));
+qkd_rlysh_1 mid (.ck(n_clk_core_c), .a(a1), .b(a2));
+qkd_landsh_1 l1 (.ck(n_clk_core_c), .a(a2), .b(b1), {kports}, .tie_hi(hi1), .tie_lo(lo1));
+dst2 d (.ck(n_clk_core_c), .i({{b1,b0}}));
+endmodule'''
+            rows = dict(l0=dict(E=3, K=3, cal=0, n=2, stations=['h0', 'l0']),
+                        l1=dict(E=recorded_e, K=recorded_e, cal=0, n=3, stations=['h1', 'mid', 'l1']))
+            with tempfile.TemporaryDirectory() as t:
+                Path(t, 'm.sv').write_text(rtl)
+                Path(t, 'die.v').write_text(die)
+                pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real')
+                                   for m in ('src', 'dst2', 'qkd_rlysh0_1', 'qkd_rlysh_1', 'qkd_landsh_1')}, defines=[])
+                doc = N.export(f'{t}/die.v', pb, 'qwen_kv', 'HEAD', [], [t], 'bits', land_e=rows)
+            self.assertEqual(doc['buses'][0]['age_edges'], expected)
+            self.assertEqual(doc['buses'][0]['src_nets'], ['n_src'])
+            self.assertEqual(doc['problem_count'] == 0, expected is not None, doc['problems'])
+
+    def test_native_trunk_inject_has_independent_v_and_token_ages(self):
+        trunk = ROOT / 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv'
+        die = '''module die();
+wire n_clk_core_c, n_d, q0, q1; wire [257:0] bo;
+src s (.ck(n_clk_core_c), .v(n_d));
+qkd_rlys_1 p0 (.ck(n_clk_core_c), .a(n_d), .b(q0));
+qkd_rlys_1 p1 (.ck(n_clk_core_c), .a(q0), .b(q1));
+qkd_rlyi_258s inject (.ck(n_clk_core_c), .s(n_d), .a(258'd0), .y({q1,q0,256'd0}), .b(bo));
+endmodule'''
+        with tempfile.TemporaryDirectory() as t:
+            Path(t, 'm.sv').write_text(RTL)
+            Path(t, trunk.name).write_text(trunk.read_text())
+            Path(t, 'die.v').write_text(die)
+            pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real') for m in ('src', 'qkd_rlys_1')}, defines=[])
+            pb['masters']['qkd_rlyi_258s'] = dict(rtl=f'{t}/{trunk.name}', kind='real')
+            doc = N.export(f'{t}/die.v', pb, 'qwen_kv', 'HEAD', [], [t], 'roles')
+        roles = {b['dst']['port']: b['age_edges'] for b in doc['buses'] if b['dst']['port'].startswith('y__')}
+        self.assertEqual(roles, {'y__256_256': 1, 'y__257_257': 2})
+        self.assertEqual(doc['problem_count'], 0, doc['problems'])
+
+    def test_packed_relay_bits_are_distinct_pipeline_flops(self):
+        rtl = RTL + 'module qkd_rlys_4(input wire ck, input wire [3:0] a, output wire [3:0] b); endmodule'
+        die = '''module die();
+wire n_clk_core_c, n_d, n_out; wire [3:0] q;
+src s (.ck(n_clk_core_c), .v(n_d));
+qkd_rlys_4 pipe (.ck(n_clk_core_c), .a({q[2:0],n_d}), .b(q));
+dst d (.ck(n_clk_core_c), .v(q[3]));
+endmodule'''
+        with tempfile.TemporaryDirectory() as t:
+            Path(t, 'm.sv').write_text(rtl)
+            Path(t, 'die.v').write_text(die)
+            pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real') for m in ('src', 'dst', 'qkd_rlys_4')}, defines=[])
+            doc = N.export(f'{t}/die.v', pb, 'qwen_kv', 'HEAD', [], [t], 'packed')
+        self.assertEqual(doc['problem_count'], 0, doc['problems'])
+        self.assertEqual(doc['buses'][0]['age_edges'], 4)
+
+    def test_revisited_forwarded_bits_are_not_plain_flops(self):
+        rtl=RTL+"module qkd_landsh_2(input wire ck,input wire [1:0] a,output wire [1:0] b,input wire k0,k1,k2,tie_hi,tie_lo); endmodule"
+        die="""module die();
+wire n_clk_core_c,n_d,hi,lo;wire [1:0] q;
+src s (.ck(n_clk_core_c), .v(n_d));
+qkd_landsh_2 land (.ck(n_clk_core_c), .a({q[0],n_d}), .b(q), .k0(lo), .k1(hi), .k2(lo), .tie_hi(hi), .tie_lo(lo));
+dst d (.ck(n_clk_core_c), .v(q[1]));
+endmodule"""
+        with tempfile.TemporaryDirectory() as t:
+            Path(t,'m.sv').write_text(rtl);Path(t,'die.v').write_text(die)
+            pb=dict(masters={m:dict(rtl=f'{t}/m.sv',kind='real') for m in ('src','dst','qkd_landsh_2')},defines=[])
+            doc=N.export(f'{t}/die.v',pb,'qwen_kv','HEAD',[],[t],'revisited',
+                         land_e={'land':dict(E=1,K=2,cal=1,n=1,stations=['land'])})
+        self.assertGreater(doc['problem_count'],0)
+        bus=doc['buses'][0]
+        self.assertIsNone(bus['age_edges'])
+        self.assertEqual(bus['age_diagnostic']['plain_counts'],[0])
+        self.assertEqual(bus['age_diagnostic']['forwarded_paths'],[['land','land']])
+
     def test_stages_from_netlist(self):
         with tempfile.TemporaryDirectory() as t:
             (Path(t) / 'm.sv').write_text(RTL)
@@ -58,6 +144,51 @@ class NetlistWalk(unittest.TestCase):
         self.assertIsNone(N.age_fields(r, {'rly_x_4': 3})['age_edges'])            # n > 1: needs the land plan
         self.assertEqual(N.age_fields(dict(st={3}, lands={()}), {})['age_edges'], 3)
 
+    def test_explicit_plain_post_stages(self):
+        row = dict(E=3, K=3, cal=0, n=5, post_stages=2, stations=['h0','h1','h2','h3','landing'])
+        record = dict(st={7}, lands={('landing',)}, forwarded_paths={tuple(row['stations'])}, plain_counts={2})
+        self.assertEqual(N.age_fields(record, {'landing': 3}, {'landing': row})['age_edges'], 6)
+        # Unexplained extra frames remain unknown rather than silently charged.
+        self.assertIsNone(N.age_fields(record, {'landing': 3},
+                                      {'landing': dict(E=3, K=3, cal=0, n=5)})['age_edges'])
+        self.assertIsNone(N.age_fields(dict(st={8}, lands={('landing',)}), {'landing': 3},
+                                      {'landing': row})['age_edges'])
+
+    def test_zero_strap_encoding(self):
+        with tempfile.TemporaryDirectory() as t:
+            path = Path(t, 'lanes.json')
+            path.write_text(json.dumps(dict(lanes=[dict(bid='kv', landing='land', E=8, K=8, cal=0, n=15, stations=[f'h{i}' for i in range(14)])])))
+            metadata = N.export_lanes(path)
+        self.assertEqual(metadata['land']['K'], 0)
+        self.assertEqual(N.age_fields(dict(st={15}, lands={('land',)}, forwarded_paths={tuple([f'h{i}' for i in range(14)]+['land'])}, plain_counts={0}), {'land': 0}, metadata)['age_edges'], 9)
+
+    def test_walked_plain_prefix_requires_exact_forwarded_chain(self):
+        row = dict(E=3, K=3, cal=0, n=2, stations=['hop', 'land'], post_stages=1)
+        record = dict(st={6}, lands={('land',)}, forwarded_paths={('hop', 'land')}, plain_counts={4})
+        self.assertEqual(N.age_fields(record, {'land': 3}, {'land': row})['age_edges'], 8)
+        record['forwarded_paths'] = {('foreign_hop', 'land')}
+        self.assertIsNone(N.age_fields(record, {'land': 3}, {'land': row})['age_edges'])
+
+    def test_forwarded_order_and_occurrences_are_required(self):
+        row=dict(E=3,K=3,cal=0,n=3,stations=['h0','h1','land'])
+        record=dict(st={3},lands={('land',)},forwarded_paths={('h0','h1','land')},plain_counts={0})
+        self.assertEqual(N.age_fields(record,{'land':3},{'land':row})['age_edges'],4)
+        row['stations']=['h1','h0','land']
+        self.assertIsNone(N.age_fields(record,{'land':3},{'land':row})['age_edges'])
+        row['stations']=['h0','h1','land']
+        record.update(st={4},forwarded_paths={('h0','h0','h1','land')})
+        self.assertIsNone(N.age_fields(record,{'land':3},{'land':row})['age_edges'])
+
+    def test_multiple_landings_require_disjoint_exact_chains_and_straps(self):
+        rows = dict(l1=dict(E=3, K=3, cal=0, n=2, stations=['h1', 'l1']),
+                    l2=dict(E=4, K=5, cal=1, n=1, stations=['l2']))
+        record = dict(st={5}, lands={('l1', 'l2')},
+                      forwarded_paths={('h1', 'l1', 'l2')}, plain_counts={2})
+        self.assertEqual(N.age_fields(record, {'l1': 3, 'l2': 5}, rows)['age_edges'], 11)
+        self.assertIsNone(N.age_fields(record, {'l1': 3, 'l2': 4}, rows)['age_edges'])
+        rows['l2']['stations'] = ['l1']
+        self.assertIsNone(N.age_fields(record, {'l1': 3, 'l2': 5}, rows)['age_edges'])
+
     def test_shared_age_source_on_compute_seam(self):
         import record_bundles as RB
         f = ROOT / 'results/rtl/qwen_layer_tput_1018/fixtures/dv2f18dh2_seam'
@@ -71,7 +202,7 @@ class NetlistWalk(unittest.TestCase):
             if row.get('E') is None:
                 continue
             land = lanes[bid]['landing']
-            record = dict(st={row['n']}, lands={(land,)})
+            record = dict(st={row['n']}, lands={(land,)}, forwarded_paths={N.lane_chain(metadata[land], land)}, plain_counts={0})
             self.assertEqual(N.age_fields(record, {land: row['K']}, metadata)['age_edges'], RB.cycles(row), bid)
             self.assertIsNone(N.age_fields(record, {land: (row['K'] + 1) % 8}, metadata)['age_edges'])
 
@@ -89,7 +220,7 @@ endmodule"""
                 Path(t, 'die.v').write_text(die)
                 pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real') for m in ('src', 'dst', master)}, defines=[])
                 doc = N.export(f'{t}/die.v', pb, design, 'HEAD', [], [t], 'unit',
-                               land_e={'land': dict(E=1, K=2, cal=1, n=1)})
+                               land_e={'land': dict(E=1, K=2, cal=1, n=1, stations=['land'])})
             self.assertEqual(doc['problem_count'], 0, doc['problems'])
             self.assertEqual(len(doc['buses']), 1)
             self.assertEqual(doc['buses'][0]['age_edges'], 2)

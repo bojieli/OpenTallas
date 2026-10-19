@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.token_compose_xdie.v1.index",
- "generated_from": "1eadb631d",
+ "generated_from": "6a33d03d0",
  "tool": "tools/token_compose_xdie.py",
  "clock_hz": 1200000000.0,
  "formula": "T_token = sum_l n_l C_die(l) + sum_l n_l sum_x max(0, E_meas(x) - O_meas(l,x)); tok/s = f_clk / T (MTP: per accepted token = step / tau)",
@@ -190,6 +190,14 @@
   {
    "record": "results/rtl/xdie_s81_1018/record.json",
    "family": "xdie",
+   "used": false,
+   "n_terms": 527,
+   "why": "Historical link component measurements retained; canonical refreshed S81 link record owns the same slots. Full token and MU latency equality remain unqualified.",
+   "superseded_by": "results/rtl/xdie_s81_1019/record.json"
+  },
+  {
+   "record": "results/rtl/xdie_s81_1019/record.json",
+   "family": "xdie",
    "used": true,
    "n_terms": 527,
    "why": null
@@ -199,14 +207,14 @@
   "ds_rom": {
    "ar": {
     "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, AR",
-    "tok_s": 1217.2,
-    "T_token_cycles": 985848.6,
-    "per_accepted_cycles": 985848.6,
+    "tok_s": 1212.6,
+    "T_token_cycles": 989618.6,
+    "per_accepted_cycles": 989618.6,
     "tau": null,
-    "pct_measured_current_rtl": 10.69,
-    "banner": "10.7% of token cycles measured on current RTL (60.5% on older RTL, 17.5% modelled PHY, 11.2% priced)",
+    "pct_measured_current_rtl": 11.03,
+    "banner": "11.0% of token cycles measured on current RTL (60.3% on older RTL, 17.5% modelled PHY, 11.2% priced)",
     "by_grade": {
-     "measured-current-RTL": 105349.0,
+     "measured-current-RTL": 109119.0,
      "measured-old-RTL": 596814.7,
      "modelled-PHY": 172975.0,
      "priced": 110709.9
@@ -218,18 +226,18 @@
      "uncorrected_tok_s": 1365.7,
      "scan_stacks_correction_cycles": 20470.0
     },
-    "vs_price_pct": -8.79
+    "vs_price_pct": -9.14
    },
    "mtp": {
     "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, MTP (DSpark, tau 4.159)",
-    "tok_s": 3622.2,
-    "T_token_cycles": 1377830.8,
-    "per_accepted_cycles": 331289.0,
+    "tok_s": 3611.7,
+    "T_token_cycles": 1381860.8,
+    "per_accepted_cycles": 332258.0,
     "tau": 4.159,
-    "pct_measured_current_rtl": 8.13,
-    "banner": "8.1% of token cycles measured on current RTL (65.8% on older RTL, 13.6% modelled PHY, 12.4% priced)",
+    "pct_measured_current_rtl": 8.4,
+    "banner": "8.4% of token cycles measured on current RTL (65.6% on older RTL, 13.6% modelled PHY, 12.4% priced)",
     "by_grade": {
-     "measured-current-RTL": 112048.0,
+     "measured-current-RTL": 116078.0,
      "measured-old-RTL": 906844.8,
      "modelled-PHY": 187823.6,
      "priced": 171114.4
@@ -241,7 +249,7 @@
      "uncorrected_tok_s": 4045.4,
      "scan_stacks_correction_cycles": 66615.0
     },
-    "vs_price_pct": -5.63
+    "vs_price_pct": -5.9
    }
   },
   "qwen_rom": {
@@ -349,8 +357,8 @@
     "available": true,
     "users": 46,
     "fillers": 0,
-    "per_user_tok_s": 1217.2,
-    "aggregate_tok_s": 55991,
+    "per_user_tok_s": 1212.6,
+    "aggregate_tok_s": 55780,
     "slot_cycles": 21313.7,
     "period_cycles": 980428,
     "dies": 520,
@@ -365,8 +373,8 @@
     "available": true,
     "users": 10,
     "fillers": 1,
-    "per_user_tok_s": 3622.2,
-    "aggregate_tok_s": 37093,
+    "per_user_tok_s": 3611.7,
+    "aggregate_tok_s": 36985,
     "slot_cycles": 124524,
     "period_cycles": 1303400,
     "dies": 520,

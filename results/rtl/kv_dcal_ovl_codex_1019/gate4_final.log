@@ -1,0 +1,24 @@
+GATE INFO pin_regs: pin registers opted out: Explicit RTL pin registers: every functional input (reload, epoch_go, halt, bcfg_*) is captured once at the pin and every output is a tile output register (one stage after the sequencer; the inner anchor runs EP_SKEW-2 so the epoch-anchored outputs keep the pin tile edges). A generic extra stage wou
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc7 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qkd_d2d_cal_seq_pin_ovl_bc_20261019-081827.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qkd_d2d_cal_seq_pin_ovl_bc_20261019-081827.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qkd_d2d_cal_seq_pin_ovl_bc-20261019-081827
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc7 in 48 s (gate total 197 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 97, 'pin_rectangles': 97, 'pin_track_checked': 97, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 98771aa69b4345ea0851a8cff82495caa9a699ffb91bb2c041a987d6c551316e
+GATE INFO util: synthesized std area 298 um2 + macros 4783 in core 26519: util 2% (std-cell density 1.5% of placeable 19323 um2; total fill 19.2%)
+GATE INFO textbook: PASS qkd_d2d_cal_seq_pin_ovl_bc cells 1,888 flops 456 depth 308.4 ps util 0.1922 reach 0.0 um (0.1 s)
+GATE INFO cts_calibration: ss insertion all 301.0..350.2 ps (spread 49.2), boundary mean 325.4; tt insertion all 223.9..265.4 ps (spread 41.5), boundary mean 244.4; ff insertion all 177.6..214.4 ps (spread 36.8), boundary mean 195.7; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: OT_SPINE iter 0 (coarse) leaves 69 sinks 498 cells 137 leaf arrival 182.9..232.5 ps (spread 49.6) pad 60.0 / 14.0 ps
+GATE INFO clock_spine: OT_SPINE iter 1 (fine) leaves 69 sinks 498 cells 214 leaf arrival 205.7..232.5 ps (spread 26.8) pad 60.0 / 21.0 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      484 paths, worst slack 222.1 ps (e.g. u_ot_pr_core.u_core.u_seq.e[20]$_DFFE_PN0P_/D)
+GATE INFO path_classes: macro->reg     64 paths, worst slack 228.4 ps (e.g. u_ot_pr_core.u_core.rx_q[24]$_DFF_P_/D)
+GATE INFO path_classes: reg->out       52 paths, worst slack 300.8 ps (e.g. running)
+GATE INFO path_classes: setup WNS 2.2213031414253237e-10 hold WNS 2.655275999075002e-11
+GATE INFO clock_rule: root port:ck: 458 sinks on the largest root; measured TT insertion 265.4 ps, FF insertion 214.4 ps, TT pin-flop spread 31.1 ps, FF pin-flop spread 28.5 ps (spread <= 80 ps)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-kv-dcal-ovl-1019/physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-kv-dcal-ovl-1019/physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 4.35% used; GRT 30 s
+PRE_ROUTE_GATE: PASS (0 fail, 0 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/codex-kv-dcal-ovl-1019/physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/source_binding_history/d6d4c7caf08d7b0e953819a1253d736fe696e070b8e5cd2c3c546791cf843c3c.json
+GATE: qkd_d2d_cal_seq_pin_ovl_bc/gate_result.json written (exact staged source binding; commit it with the kit)

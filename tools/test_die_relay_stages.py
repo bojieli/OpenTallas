@@ -128,6 +128,17 @@ class Schema(unittest.TestCase):
 
 
 class Check(unittest.TestCase):
+    def test_effective_age_drift_cannot_hide_behind_equal_frame_digest(self):
+        p = plan([bus('a', 'x', 'b', 'y', 5, age_edges=4)])
+        sched = DRS.compiled(p, 'age-test')
+        self.assertEqual(CHK.check(p, sched)['verdict'], 'PASS')
+        for age in (3, None, '<absent>'):
+            run = plan([bus('a', 'x', 'b', 'y', 5, **({} if age == '<absent>' else dict(age_edges=age)))])
+            self.assertEqual(run['digest'], p['digest'])  # preserve historical frame-count digest contract
+            rep = CHK.check(run, sched)
+            self.assertEqual(rep['verdict'], 'FAIL')
+            self.assertEqual(len(rep['age_diffs']), 1)
+
     def setUp(self):
         self.p = plan([bus('a', 'x', 'b', 'y', 3), bus('a', 'x', 'c', 'y', 0)])
 

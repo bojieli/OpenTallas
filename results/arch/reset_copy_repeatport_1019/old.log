@@ -1,0 +1,11 @@
+
+-- Running command `read_rtlil original.il; script old.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: original.il
+
+-- Executing script file `old.ys' --
+Added wire \ot_rrs__rr__ot_rlv__c0 to module \top.
+Added wire \ot_rrs__rr__ot_rlv__c1 to module \top.
+Warning: Selection "}" did not match any object.
+ERROR: Failed to parse port expression `{'.

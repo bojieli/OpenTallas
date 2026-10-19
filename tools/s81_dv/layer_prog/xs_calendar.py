@@ -401,8 +401,17 @@ def cmd_cap(a):
         per_slice = [sorted(i for fr in grp['groups'][g] for i in fr) for g in range(XP.NSLICE)]
         span = max(len(s) for s in per_slice)
         if key not in obase:                      # slice vp store: one 64-row-aligned region per matrix (allocation)
-            obase[key] = nxt
-            nxt += 64 * -(-span // 320)
+            if getattr(a, 'final_ffn_placement', False) and op == 'ffn.down':
+                # cap addresses WORDS, while final_ffn allocates four-word ROWS.
+                from layer_prog.final_ffn import CAPTURE, expert_slot
+                slot = expert_slot(grp['expert'], fx.meta['experts'])
+                if span != 80 or grp['out'] != 'bf16':
+                    raise ValueError('final FFN requires actual output-sharded80-row BF16 down capture')
+                obase[key] = 4 * (CAPTURE + 16 * slot)
+                nxt += 64 * -(-span // 320)  # preserve every other matrix's canonical allocation
+            else:
+                obase[key] = nxt
+                nxt += 64 * -(-span // 320)
         slices = []
         for g in range(XP.NSLICE):
             rows = [grp['rows'][i] for i in per_slice[g]]
@@ -432,6 +441,9 @@ def cmd_cap(a):
         rec['phases'].append(dict(phase=k, op=op, mat=grp['mat'], chunk=ch, rows_per_phase=R, slices=slices))
     rec['faults'] = bad
     rec['vp_rows_used'] = nxt
+    if getattr(a, 'final_ffn_placement', False):
+        rec['final_ffn_placement'] = dict(capture_rows=[128,240],assembled_rows=[320,432],combined_rows=[448,464],
+                                         admitted=False,requires='dead VPX lease + real RD/allgather reservations')
     Path(a.out).write_text(json.dumps(rec, indent=1) + '\n')
     print(f'XS_CAP {a.layer} phases {len(seq)} slices/phase <= {XP.NSLICE} faults {bad} vp rows {nxt}')
     return 0 if bad == 0 else 1
@@ -458,6 +470,7 @@ def main(argv=None):
     p.add_argument('--out', required=True)
     p.add_argument('--fixtures', default=str(LX.FIX))
     p.add_argument('--layer', default='L0')
+    p.add_argument('--final-ffn-placement', action='store_true', help='opt-in actual VS13 capture rows; requires VPX lifetime proof')
     a = ap.parse_args(argv)
     return {'gen': cmd_gen, 'check': cmd_check, 'collect': cmd_collect, 'cap': cmd_cap}[a.cmd](a)
 

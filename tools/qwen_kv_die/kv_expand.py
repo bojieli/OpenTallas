@@ -31,6 +31,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 import kv_die as K  # noqa: E402
 from binding_order import sliced_order
+import kv_expand_parameters as EP
 
 CORNERS = ('tt', 'ff', 'ss')
 RT = 'physical/ref_tile'
@@ -346,6 +347,10 @@ def main(argv=None):
     ap.add_argument('--run', type=Path, required=True)
     ap.add_argument('--only', default='')
     ap.add_argument('--astk-static', action='store_true', help='expand only the actual RL3 static ASTK source, with native leaf views')
+    ap.add_argument('--parameter-profiles', type=Path,
+                    default=__import__('os').environ.get('OT_KV_PARAMETER_PROFILES'),
+                    help='Exact selected child profiles (or OT_KV_PARAMETER_PROFILES)')
+    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Source-only preservation; never native qualification')
     a = ap.parse_args(argv)
     if __import__('os').environ.get('OT_KV_STATIC', '0') == '1' or (a.run / 'static_bind.json').exists():
         ap.error('static source graph cannot inherit legacy frame/leaf views; actual static physical bindings/clock homes remain required')
@@ -358,6 +363,9 @@ def main(argv=None):
         FR = dict(FR, **ASTK.configure(K, VIEWS, RTL, SUBLEVELS, ALIAS))
         ASTK.require_views(ROOT)
     only = [x for x in a.only.split(',') if x] or list(FR)
+    param_path = case / 'die.v.params.json'
+    child_params = json.loads(param_path.read_text()) if param_path.exists() else {}
+    profiles = json.loads(a.parameter_profiles.read_text()) if a.parameter_profiles else {}
     dv = (case / 'die.v').read_text()
     lines = dv.split('\n')
     wires = {}
@@ -407,7 +415,9 @@ def main(argv=None):
                 r['w'] = 1 if r['bits'] == {None} else max(r['bits']) + 1
             leaf[nm] = dict(view=vd, lef=blk, size=sz, ports=ports)
     views = json.loads((libs / 'views.json').read_text())
-    rep = dict(schema='opentallas.qwen_kvsys_expand.v1', frames={})
+    rep = dict(schema='opentallas.qwen_kvsys_expand.v1', frames={}, parameter_instances={},
+               preexpand_die_sha256=EP.sha(case / 'die.v'))
+    occupied = set(re.findall(r'^\s+\w+(?:\s*#\s*\((?:[^()]|\([^()]*\))*\))?\s+(\S+)\s*\(', dv, re.M))
     new_lines, add_wires, add_place, drop_inst, used_leaf = [], [], [], set(), set()
     inst_re = re.compile(r'^\s+(\w+) (\S+) \((.*)\);\s*$')
     jcache = {}
@@ -505,6 +515,14 @@ def main(argv=None):
             cf = FLIP[co]
             orient = ORIENT[(ff[0] ^ cf[0], ff[1] ^ cf[1])]
             cinst = f'{inst}__{re.sub(r"[^A-Za-z0-9_]", "_", cell)}'
+            if cinst in occupied or cinst in child_params:
+                raise ValueError(f'{cinst}: duplicate instance or stale child parameters')
+            occupied.add(cinst)
+            literals, profile = EP.preserve(ROOT, base_type(c['type']), c.get('parameters', {}),
+                                            RTL[ct], L['view'], profiles, a.diagnostic_parameter_profiles)
+            if profile is not None:
+                child_params[cinst] = literals
+                rep['parameter_instances'][cinst] = dict(module=base_type(c['type']), literals=literals, profile=profile)
             pc = []
             for p, bits in c['connections'].items():
                 if p not in L['ports']:
@@ -557,7 +575,11 @@ def main(argv=None):
     for f in ('die.v', 'place.tcl', 'elements.lef'):
         if not (case / f'{f}.preexp').exists():
             shutil.copy(case / f, case / f'{f}.preexp')
+    # All validation precedes mutation, including stale parent-sidecar entries.
+    for inst in drop_inst:
+        child_params.pop(inst, None)
     (case / 'die.v').write_text('\n'.join(new_lines))
+    param_path.write_text(json.dumps(child_params, indent=1) + '\n')
     keep = [ln for i, ln in enumerate(place) if not any(i == plc[x][0] for x in drop_inst)]
     j = max(i for i, ln in enumerate(keep) if 'ot_mts::place' in ln)
     keep[j + 1:j + 1] = add_place

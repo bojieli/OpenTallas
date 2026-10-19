@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-landcb16-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-landcb16-1019/src
+ot-run: ot-epyc6       admits   867 GB (avail 703, growth 96, headroom 0, waiters 0/0 GB) load 13/128 running 7 disk 5994 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-landcb16-1019/src
+ot-run: ot-epyc8       admits  1289 GB (avail 971, growth 69, headroom 0, waiters 0/0 GB) load 26/128 running 22 disk 173 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-landcb16-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-landcb16-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2520700-1792434453 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+SAFE_LAND_MISMATCH cycle=12
+SAFE_LAND_MISMATCH cycle=13
+SAFE_LAND_MISMATCH cycle=14
+[20006000] %Fatal: tb_qfd_c_land_safe.sv:30: Assertion failed in tb: SAFE_LAND_FAIL MUT1 errors=1968
+%Error: rtl/test/tb_qfd_c_land_safe.sv:30: Verilog $stop
+Aborting...
+SAFE_LAND_EXIT 0 WD=258 MODE=mut
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2520700-1792434453): exit 1

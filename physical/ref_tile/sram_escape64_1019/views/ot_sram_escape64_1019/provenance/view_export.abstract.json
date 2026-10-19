@@ -1,0 +1,210 @@
+{
+  "name": "ot_sram_escape64_1019",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 3.8023759141303515e-10 min 5.200649633163579e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/record/views/ot_sram_escape64_1019:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src/physical/ref_tile/sram_escape64_1019/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 4.4674802746058617e-10 min 1.787350822901601e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/record/views/ot_sram_escape64_1019:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src/physical/ref_tile/sram_escape64_1019/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 4.225214067510308e-10 min 3.840948392674903e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/record/views/ot_sram_escape64_1019:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src/physical/ref_tile/sram_escape64_1019/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src/physical/ref_tile/sram_escape64_1019/signoff.sdc",
+    "sha256": "86c8084b18f37d83deecc4a5fe1301e0a7168d6abb4893aa3640c461b078463e",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/cl/routed_ioref.a1.json",
+    "sha256": "73bfa313b20039dd1d11f207eca429bd38e3cc52e883a2e0532cbfaa93aa57ba",
+    "expect_ps": {
+      "tt": 422.52,
+      "ff": 17.87
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "19d0fe6e3ff27d57cc527dff0ff4aabd47073e15ffe936d4bec70d2c1699a0b3"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+        "sha256": "a2fc1ab2421ecf212aaaecec108a5b1a8d0fd3010c9b584c3648ffd96f2b5989"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+        "sha256": "fd9dfbb0ab5127026d7024a5c59cac0d87b57a6ea42cf9c547abb3e501a2cbe7"
+      },
+      "/work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.odb",
+        "sha256": "81c02e2165d2836fc5f816cd9727418e40e8fd5827af11290705a8e2098183e0"
+      },
+      "/work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.sdc",
+        "sha256": "9ef26787244b16b0974cf531589185a7868ba06fec24570c49303ea828b068ab"
+      },
+      "/work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.spef",
+        "sha256": "d93026c43b392058ff73bf7320a71278cabb1d71ad2192affadc287958c4eb8a"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/routes/sram_escape64_1019_coupon_3ff02bde1/work/orfs/w18_extra.sdc",
+        "sha256": "86c8084b18f37d83deecc4a5fe1301e0a7168d6abb4893aa3640c461b078463e"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 17.87350822901601,
+        "verdict_ps": 17.87,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 422.5214067510308,
+        "verdict_ps": 422.52,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ss.lib]",
+        "read_db /work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib]",
+        "read_db /work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib]",
+        "read_db /work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_sram_escape64_1019_asap7_ref_sram_escape64_1019_coupon_3ff02bde1/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch/claude/closure-loop/sram_escape64_1019-coupon-3ff02bde1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1"
+  ],
+  "abstract": {
+    "mode": "default",
+    "default_pin_access_violations": 0
+  },
+  "files": {
+    "ot_sram_escape64_1019.lef": "660c819ca8a369031801448dd2ed763b28b09088f6975d11d6ee76ce8606d700",
+    "ot_sram_escape64_1019_ff.lib": "9c4435086958b173a8a5eaeb4572ed39e20c23acace657b2b70ba0adc4355b6c",
+    "ot_sram_escape64_1019_ss.lib": "4053d28fc293bd07c6d3b095eea0dd7323efaaf6fdf5b34f162262bd03d62516",
+    "ot_sram_escape64_1019_tt.lib": "b46c2d54fbab46dc0cad59cb755f37574f8d119fbfc943070e0553b7a3a2d855"
+  },
+  "ok": true,
+  "checked": true
+}
