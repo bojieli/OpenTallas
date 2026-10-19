@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""OWNERS-HBM/VM-GLUE 2026-10-18: tile specs of the three VM hub-glue masters (hfd_hgi_vms_glue_{sw,e,nw}_t,
+"""OWNERS-HBM/VM-GLUE 2026-10-18 (rev 2 VM-GLUE2: registered faces, spine clock, E = NC 0 SE/NE glue): tile specs of the three VM hub-glue masters (hfd_hgi_vms_glue_{sw,e,nw}_t,
 gen_vms_glue_tiles.py) -> tools/ref_tile/specs_hbm_vm_glue/<kit>.json.
-Pin plan (ports from the tile headers; <= 6 pins/um on every face; flop-first/last RTL, so no synthesis pin registers):
+Pin plan (ports from the tile headers; <= 6 pins/um on every face; every port has explicit pin flops + 2 relays in the RTL):
   ring face   cw_out+ccw_in (to/from the NEXT hub) | clk rst_n | cw_in+ccw_out (from/to the PREVIOUS hub), 8,896 b.
               SW / NW at R0: E face (toward the central channel); E master at R0 = SE: W face; NE = MX of SE (the
               ring stays on the W face, so ONE pin plan serves both E hubs; only the order along the face mirrors).
@@ -16,7 +16,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RTL = 'rtl/hbm_accel/generic/vm/static/'
 SRC = [RTL + x for x in ('hfd_hgi_vms_glue_tiles.sv', 'hfd_hgi_vms_static_glue.sv', 'ot_vms_hub_static.sv',
-                          'ot_vms_rstop_static.sv', 'ot_vms_rcl_static.sv', 'ot_vms_status_static.sv')]
+                          'ot_vms_rstop_static.sv', 'ot_vms_rstop_static_vr.sv', 'ot_vms_rcl_static.sv',
+                          'ot_vms_status_static.sv')] + ['rtl/lib/ot_rst_relay.sv']
 OUTDIR = ROOT / 'tools/ref_tile/specs_hbm_vm_glue'
 W, H = 777.6, 1555.2
 MARGIN = 4.32
@@ -24,9 +25,9 @@ BANKP = ('xq', 'xq2', 'eg', 'pq', 'pr', 'status', 'xq_done', 'xq2_done', 'flt')
 M = dict(
     sw=dict(top='hfd_hgi_vms_glue_sw_t', ring='E', far='W', q='SW', inst='hb_vms_SW', bench=[('SW', 'pos'), ('SW', 'bank')]),
     e=dict(top='hfd_hgi_vms_glue_e_t', ring='W', far='E', q='SE (R0, sid 1) / NE (MX, sid 3)', inst='hb_vms_SE, hb_vms_NE',
-           bench=[('SE', 'pos'), ('NE', 'pos'), ('SE', 'bank'), ('SE', 'sid'), ('NE', 'sid')]),
+           bench=[('SE', 'pos'), ('NE', 'pos'), ('SE', 'bank'), ('NE', 'bank'), ('SE', 'sid'), ('NE', 'sid')]),
     nw=dict(top='hfd_hgi_vms_glue_nw_t', ring='E', far='W', q='NW', inst='hb_vms_NW', bench=[('NW', 'pos'), ('NW', 'bank')]))
-TAG = lambda q: 'VMS_HOIST_EQUIV' if q in ('SW', 'NW') else 'VMS_QB_EQUIV'
+TAG = lambda q: 'VMS_HOIST_EQUIV'
 WIT = 'results/rtl/vm_glue_1018/bench/'
 
 
@@ -80,24 +81,29 @@ def spec(k, c):
         else:
             b.update(fail_regex=f'^{TAG(q)} {q} FAIL checks=[0-9]+ errors=[1-9][0-9]*$', fail_witness=WIT + f'{q}{m}.sim.log')
         benches.append(b)
-    purpose = (f"OWNERS-HBM/VM-GLUE 2026-10-18 (HBM d4g plan (b), top-down contract: glue goes into a hardened tile): VM hub glue "
-               f"tile for {c['q']} ({c['inst']}) = ot_vms_hub_static + 2 ot_vms_rstop_static + ot_vms_rcl_static + "
-               f"ot_vms_status_static, the 8 banks hoisted to die-level instances (gen_vms_hoist.py / HBM-B-RTL1 qb glue, logic "
-               f"unchanged). Tile top {c['top']} (gen_vms_glue_tiles.py): one clock (clk_hub/clk_ring/clk_replay are one stream "
-               f"clock), per-bank bank ports{', sid strap pin (one master for SE and NE)' if k == 'e' else ''}. Every port lands on / "
-               f"leaves from a flop except bank_status (status OR / CE adder rungs, as the slice) and the xq_done fault compare.")
+    purpose = (f"OWNERS-HBM/VM-GLUE2 2026-10-18 rev 2 (HBM d4g plan (b), GEN2 binding): VM hub glue tile for {c['q']} "
+               f"({c['inst']}) = ot_vms_slice_static_glue (ot_vms_hub_static + 2 ring stops + ot_vms_rcl_static + "
+               f"ot_vms_status_static; 8 banks are die-level instances) with the ring stops as ot_vms_rstop_static_vr "
+               f"(valid-only reset, logic verbatim). Tile top {c['top']} (gen_vms_glue_tiles.py): one clock (OT_SPINE), "
+               f"rst_n -> ot_rst_relay, REGISTERED FACES: every port passes a pin flop + 2 relay flops (<= ~410 um a stage "
+               f"over the 777.6 x 1555.2 pin-bound outline), per-bank bank ports"
+               f"{', sid strap pin (one master for SE and NE, NC 0 as GEN2 binds them)' if k == 'e' else ''}.")
     return {
         'name': f'hfd_hgi_vms_glue_{k}', 'top': c['top'], 'kind': 'tile', 'sources': SRC,
-        'clock_port': 'clk', 'reset_ports': ['rst_n'], 'pins': faces, 'layer_cap': 'M5', 'recipe': 2,
+        'clock_port': 'clk', 'clock': 'spine', 'reset_ports': ['rst_n'], 'pins': faces, 'layer_cap': 'M5', 'recipe': 2,
         'route': {'pd': 0.5, 'period_ps': 833.333, 'threads': 16, 'peak_ram_gb': 64, 'hold_margin_ns': 0.03,
-                  'pin_balance': {'group_max': 1}},
+                  'io_hold_margin_ns': 0.03, 'pin_balance': {'group_max': 1}},
         'outline': {'w': W, 'h': H}, 'pin_ranges': ranges, 'params': {}, 'children': [], 'inter': [],
-        'pin_regs': {'enable': False, 'reason': 'RTL registers the pins: the hub captures cq/client_seq/bank_client/'
-                     'response_seq/pr/enables on plain flops and drives cr/pq from flops; both ring stops capture l_in/pi/eg/ri/'
-                     'tx controls and drive l_out/xq/rce/cco/ack/wko/mirror_busy/fault from flops; the replay client likewise; '
-                     'sid lands on flops. Exceptions (the slice RTL, priced as is): bank_status feeds the status OR / CE adder '
-                     'rung before its first flop, xq_done feeds the commit fault compare. Synthesis pin registers would add an '
-                     'unpriced cycle and break the lockstep with the full slice.'},
+        'pin_regs': {'enable': False, 'reason': 'RTL registers every pin explicitly (rev 2): each input lands on a pin '
+                     'flop then 2 relay flops before the slice, each output leaves the slice through 2 relay flops and a pin '
+                     'flop (gen_vms_glue_tiles.py PIPE 3, recorded latency). Synthesis pin registers would add a further '
+                     'unrecorded cycle.'},
+        'structural_change': ('VM-GLUE2 rev 2 LATENCY (for the compiler / VM calendar owner): every hub-tile input +3 cycles and '
+                              'every output +3 cycles (pin flop + 2 relays a face; the measured rev-1 setup WNS -1,744 ps came '
+                              'from single-cycle hub / ring-stop logic spanning 1-2.4 ns of wire); ring transit through a hub +6; '
+                              'bank access round trip (pq -> pr, xq -> xq_done) +6, absorbed for the commit check by slice '
+                              'BANK_PIN_IN 1 -> 7 (COMMIT_DELAY 6 -> 12); calendar inputs (enables, sources, seqs, clients, '
+                              'replay) are issued 3 edges earlier for the same effect; reset release +3 (ot_rst_relay).'),
         'io_flop_at_pins': {'cols': 4, 'allow_none': True}, 'inhold': True, 'outhold': True, 'keep_pin_regs': True,
         'pin_reg_split': True, 'hold_pad': {'cell': 'HB2xp67_ASAP7_75t_R'},
         'purpose': purpose,

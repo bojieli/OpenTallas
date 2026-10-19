@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# OWNERS-HBM/VM-GLUE 2026-10-18: VM hub-glue TILE top (hfd_hgi_vms_glue_{sw,e,nw}_t) + 8 die-level q0_faces banks
-# [+ NW merges] == full-slice reference, every output on every edge, 3000 random edges (vms_glue_tile_equiv.py over
-# the vms_hoist_equiv / vms_qb_equiv compositions).  pos must print "<TAG> <Q> PASS checks=N errors=0"; mut (bank: bank
+# OWNERS-HBM/VM-GLUE 2026-10-18 (rev 2, VM-GLUE2): VM hub-glue TILE top (hfd_hgi_vms_glue_{sw,e,nw}_t: registered faces,
+# valid-only-reset ring stops) + 8 die-level q0_faces banks [+ NW merges] == the same composition around <tile>_ref (the
+# identical face pipes around the ORIGINAL slice glue), every output on every edge, 3000 random edges
+# (vms_glue_tile_equiv.py over the vms_hoist_equiv compositions, layer vm_hoist_d4f = GEN2: SW NC 2, NW/SE/NE NC 0).  pos must print "<TAG> <Q> PASS checks=N errors=0"; mut (bank: bank
 # 0/1 rslot swap; sid: E strap = the other E quadrant's sid) must print "<TAG> <Q> FAIL checks=N errors=M>0".
 # Exit status 0 only on a counted PASS.
 #   run_vms_glue_tile_equiv.sh Q pos|bank|sid OUT
@@ -11,12 +12,12 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 S=rtl/hbm_accel/generic/vm/static
 src=($S/hfd_hgi_vms_static.sv $S/hfd_hgi_vms_static_glue.sv $S/hfd_hgi_vms_static_core.sv $S/hfd_hgi_vms_static_qb.sv
      $S/hfd_hgi_vms_glue_tiles.sv $S/hfd_hgi_vms_glue_tiles_flat.sv $S/ot_vms_slice_static.sv
-     $S/ot_vms_bank_native_physical.sv $S/ot_vms_hub_static.sv $S/ot_vms_rstop_static.sv $S/ot_vms_rcl_static.sv $S/ot_vms_status_static.sv
+     $S/ot_vms_bank_native_physical.sv $S/ot_vms_hub_static.sv $S/ot_vms_rstop_static.sv $S/ot_vms_rstop_static_vr.sv $S/ot_vms_rcl_static.sv $S/ot_vms_status_static.sv
      $S/ot_vms_bank_static.sv $S/ot_vms_bank_strap_physical.sv $S/ot_vms_ce_counter_pipe.sv $S/wq_merge/hfd_vms_wq2_merge.sv $S/physical/*.sv
      $(ls $S/ot_vms_bank_static_*.sv) $S/faces_q0/hfd_vms_bank_native_q0_faces.sv $S/faces_q0/ot_vms_bank_q0_faces_core.sv
      $S/faces_q0/ot_vms_bank_q0_faces_body.sv rtl/lib/ot_rst_relay.sv
      physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
-case $q in SW|NW) TAG=VMS_HOIST_EQUIV;; *) TAG=VMS_QB_EQUIV;; esac
+TAG=VMS_HOIST_EQUIV
 X=; [ "$m" != pos ] && X="--mut $m"
 D="$OUT/$q$m"
 python3 tools/hbm_die_v16/vms_glue_tile_equiv.py --quadrant $q --out "$D" $X > "$D.gen.log" 2>&1 || { cat "$D.gen.log"; echo "$TAG $q GENFAIL"; exit 1; }

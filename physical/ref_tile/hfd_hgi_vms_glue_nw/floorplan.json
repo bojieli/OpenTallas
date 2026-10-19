@@ -146,8 +146,10 @@
   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static_vr.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv",
+  "rtl/lib/ot_rst_relay.sv",
   "physical/ref_tile/hfd_hgi_vms_glue_nw/kit.env",
   "physical/ref_tile/hfd_hgi_vms_glue_nw/clock.sdc",
   "physical/ref_tile/hfd_hgi_vms_glue_nw/signoff.sdc",
@@ -177,6 +179,8 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/hfd_hgi_vms_glue_nw/pre_gpl.tcl",
   "physical/ref_tile/hfd_hgi_vms_glue_nw/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl"
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/ref_tile/hfd_hgi_vms_glue_nw/spine_ins.tcl"
  ]
 }

@@ -198,10 +198,29 @@ TCL = r'''
 set ::ot_ag_seen {}
 proc ot_ag_public_nets {cell} {
   set result {}
+  # The mapped register instance keeps its Yosys register name plus the cell-type suffix ($_DFF_PN0_, $_DFFE_PN0P_, ...)
+  # through placement, CTS and repair; its output net names do not (QN-only ASAP7 flops, buffers inserted after CTS:
+  # HBMA-SVC 10-17 hdie_svc_stack_fault CTS refused rd_gray[0] -> rd_gray_w1[0] with an empty target role).
+  set inst [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  if {[regexp {^(.*)\$_[A-Z0-9_]+_$} $inst unused reg]} {lappend result $reg}
   foreach p [get_pins -quiet -of_objects [get_cells $cell]] {
     if {[get_property $p direction] ne "output"} continue
     foreach net [get_nets -quiet -of_objects $p] {
       lappend result [string map {\\ {}} [get_full_name $net]]
+      # ASAP7 flops expose only QN (DFFHQNx*, DFFASRHQNx1): synthesis puts the register's public name on the output of
+      # the inverter that QN drives, not on QN itself.  Follow exactly that one inverter stage (HBMA-SVC 10-17: the
+      # first actual ORFS run of this profile, hdie_svc_stack_fault, refused u_ca.u_status.rd_gray[0] -> rd_gray_w1[0]
+      # because both public names sat behind the QN inverter).  No other cell type is traversed.
+      if {[lindex [split [get_full_name $p] /] end] ne "QN"} continue
+      foreach load [get_pins -quiet -of_objects $net] {
+        if {[get_property $load direction] ne "input"} continue
+        set lc [get_cells -quiet -of_objects $load]
+        if {![regexp {^INVx} [get_property $lc ref_name]]} continue
+        foreach q [get_pins -quiet -of_objects $lc] {
+          if {[get_property $q direction] ne "output"} continue
+          foreach n2 [get_nets -quiet -of_objects $q] {lappend result [string map {\\ {}} [get_full_name $n2]]}
+        }
+      }
     }
   }
   return $result
@@ -249,6 +268,18 @@ proc ot_ag_async_control {pin} {
   # Reset recovery/removal stays timed. A FIFO data/pointer publication must
   # never acquire an async-control exception by sharing a legitimate D target.
   foreach start [get_fanin -flat -startpoints_only -to $pin] {
+    # A tie-driven async pin (ASAP7 DFFASRHQNx1 SETN/RESETN tied by TIEHI/TIELO) has no driving register: OpenSTA returns
+    # the pin itself as its only startpoint (HBMA-SVC 10-17, hdie_svc_stack_fault SETN of u_ca.u_status.rd_bin[2]).
+    # Admit exactly that case, and only when every driver of the pin's net is a tie cell.
+    if {[get_full_name $start] eq [get_full_name $pin]} {
+      set tied 1
+      foreach d [get_pins -quiet -of_objects [get_nets -quiet -of_objects $pin]] {
+        if {[get_property $d direction] ne "output"} continue
+        if {![regexp {^TIE(HI|LO)x} [get_property [get_cells -quiet -of_objects $d] ref_name]]} {set tied 0}
+      }
+      if {!$tied} {error "OT_ASYNC_GRAY: asynchronous control without a register or tie driver [get_full_name $pin]"}
+      continue
+    }
     set cell [get_cells -quiet -of_objects $start]
     if {[llength $cell]!=1} continue
     if {[llength [ot_ag_role [get_full_name $cell]]]} {
@@ -308,10 +339,27 @@ proc ot_ag_payload {start port source name source_domain target_domain} {
   dict incr ::ot_ag_seen [list $scope payload]
   return 1
 }
+proc ot_ag_online_merged {scope role domains} {
+  # HBMA-SVC 10-17 (hdie_svc_stack_fault, first actual ORFS run): FIFOs with the same two clocks and the same reset
+  # inputs have bit-identical online flag chains (constant 1 after reset, then the two-flop synchroniser), and synthesis
+  # merges them into ONE chain that keeps a single scope's name.  Admit a missing online crossing only when (a) no mapped
+  # cell of this scope's online chain is left (it was merged away, not left unaudited) and (b) another FIFO scope with
+  # the same writer/reader domains has that online crossing audited.  Gray pointers and payload are never merged here.
+  if {[llength [get_cells -quiet "$scope.${role}*"]]} {return 0}
+  dict for {other od} $::ot_ag_fifo_domains {
+    if {$other ne $scope && $od eq $domains && [dict exists $::ot_ag_seen [list $other $role]]} {
+      puts "OT_ASYNC_GRAY MERGED_ONLINE $scope $role -> $other"
+      return 1
+    }
+  }
+  return 0
+}
 proc ot_ag_complete {} {
   dict for {scope domains} $::ot_ag_fifo_domains {
     foreach role {wr_gray rd_gray wr_online rd_online} {
-      if {![dict exists $::ot_ag_seen [list $scope $role]]} {error "OT_ASYNC_GRAY: missing actual audited crossing $scope $role"}
+      if {[dict exists $::ot_ag_seen [list $scope $role]]} continue
+      if {$role in {wr_online rd_online} && [ot_ag_online_merged $scope $role $domains]} continue
+      error "OT_ASYNC_GRAY: missing actual audited crossing $scope $role"
     }
   }
   if {$::ot_ag_primitive && ![dict exists $::ot_ag_seen [list {} payload]]} {error "OT_ASYNC_GRAY: missing primitive payload crossing"}

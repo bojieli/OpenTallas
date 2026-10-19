@@ -15,6 +15,7 @@ import child_lint
 import direct_macro_clock_entries
 import async_gray_fifo_constraints
 import cdc_sync_constraints
+import gray_fifo_cdc_constraints
 
 MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
@@ -47,6 +48,15 @@ def related_data(spec):
         return False
     if policy == 'async_gray_fifo':
         async_gray_fifo_constraints.relationship(spec)
+        return False
+    if policy == cdc_sync_constraints.ASYNC_POLICY:
+        # Asynchronous stream833.333 / HBM1024 roots whose only crossings are the linted cdc_synchronizers
+        # structure (Gray source, >= 2-stage chain, gated payload capture); no ordinary STA across the roots.
+        cdc_sync_constraints.async_relationship(spec)
+        return False
+    if policy == gray_fifo_cdc_constraints.POLICY:
+        # Asynchronous clock families: no ordinary STA across them; only the reviewed FIFO crossings are bounded.
+        gray_fifo_cdc_constraints.relationship(spec)
         return False
     if policy == 'related_pll_ratio':
         # One die PLL, stream /3 and serial /4 of the VCO, common epoch origin (3 serial = 4 stream cycles): the
@@ -98,6 +108,71 @@ def native_leaf(spec):
     return spec.get("clock") == "multiple_cts_roots" or (spec.get("kind") == "tile" and spec.get("clock") == "hybrid_entries")
 
 
+def landed_cluster(spec):
+    """PL-KIT 10-18 (landed-regions standard): a kind-cluster multiple_cts_roots parent built by tools/landed_parent/lp.py.
+    Every clock_ports entry is one region CTS root (TritonCTS per root, as the multi-root leaf); each hard child's clock
+    pin is an ordinary sink of its region root (RTL: ck_<r> -> child clock pin), measured at its effective flops
+    (entry-wire arrival + the child's views/<child>/insertion.json boundary min / mean / max).  Cross-root datapaths are
+    the lp landings (cell multicycles from spec "landed_record") and the 1-bit regional reset runs, timed as related
+    same-frequency roots.  Leaf tiles and every other mode are unchanged."""
+    return spec.get("clock") == "multiple_cts_roots" and spec.get("kind") == "cluster"
+
+
+def landed_record(spec, root):
+    """The lp.py record (<top>_lp_record.json) of a landed cluster, validated against the spec (fail closed)."""
+    if not landed_cluster(spec):
+        return None
+    path = spec.get("landed_record")
+    if not isinstance(path, str) or not path:
+        raise ValueError('landed cluster (kind cluster + multiple_cts_roots) requires "landed_record": the lp.py '
+                         '<top>_lp_record.json of this parent')
+    if not spec.get("children"):
+        raise ValueError("landed cluster requires hard children (children[])")
+    if spec.get("clock_data_paths") != "related_same_frequency":
+        raise ValueError('landed cluster: landings and reset runs cross region roots; requires clock_data_paths '
+                         '"related_same_frequency" (same_pll_fixed_phase ratio1/1 phase0)')
+    if spec.get("soft_root_macro_masters") or spec.get("soft_root_macro_bindings") or spec.get("cdc_synchronizers") is not None:
+        raise ValueError("landed cluster: raw-memory sinks / CDC synchronizers are leaf-tile features")
+    rec = json.loads((Path(root) / path).read_text())
+    if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") != spec.get("top"):
+        raise ValueError(f'{path}: not the lp.py record of {spec.get("top")}')
+    regions = rec.get("regions")
+    if not isinstance(regions, dict) or not regions:
+        raise ValueError(f"{path}: no regions")
+    ports = [r.get("clock_port") for r in regions.values()]
+    if sorted(ports) != sorted(spec["clock_ports"]) or ports[0] != spec["clock_port"]:
+        raise ValueError(f'{path}: region clock ports {ports} differ from clock_ports (first region = clock_port)')
+    D, E = rec.get("D"), rec.get("E")
+    if type(D) is not int or type(E) is not int or not 0 < E < D:
+        raise ValueError(f"{path}: invalid landing depth D / read offset E")
+    names = [L.get("name") for L in rec.get("landings") or []]
+    if any(not isinstance(n, str) or not re.fullmatch(r"[A-Za-z0-9_]+", n) for n in names) or len(set(names)) != len(names):
+        raise ValueError(f"{path}: invalid landing names")
+    return rec
+
+
+def landed_sdc(spec, root):
+    """Landing multicycles (LANDING-CONTRACT L5, lp.py Pm.sdc): ring u_lpl_<n>_w -> read u_lpl_<n>_r -setup E -hold D-1.
+    Cell-based, so they are independent of the root clock names; '' for every non-landed spec (kits byte-identical)."""
+    rec = landed_record(spec, root)
+    if rec is None:
+        return ""
+    D, E = rec["D"], rec["E"]
+    names = [L["name"] for L in rec.get("landings") or []]
+    o = [f"# ---- PL-KIT landed cluster ({spec['landed_record']}): {len(names)} landings, multicycle -setup {E} -hold {D - 1}"]
+    if names:
+        o += ["set ot_lp_lands {" + " ".join(names) + "}", "set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {",
+              "  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]",
+              "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
+              "  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w/*] }",
+              "  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }",
+              "  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }",
+              f"  set_multicycle_path -setup {E} -from $ot_lf -to $ot_lt",
+              f"  set_multicycle_path -hold {D - 1} -from $ot_lf -to $ot_lt", "}",
+              'puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"']
+    return "\n".join(o) + "\n"
+
+
 def domains(spec):
     """Explicit related PLL /3 and /4 clock domains. No exception policy."""
     declared = spec.get('clock_entry_domains')
@@ -105,7 +180,9 @@ def domains(spec):
     if leaf:
         signoff_period(spec)
         related_data(spec)
-    if leaf and (spec.get('kind') != 'tile' or declared is None or len(spec.get('clock_ports', [])) < 2):
+    # a cluster qualifies only as a LANDED cluster (lp.py record named; landed_record() validates it in load_spec)
+    landed = landed_cluster(spec) and isinstance(spec.get('landed_record'), str) and bool(spec.get('children'))
+    if leaf and (spec.get('kind') != 'tile' and not landed or declared is None or len(spec.get('clock_ports', [])) < 2):
         raise ValueError('multiple_cts_roots requires a leaf tile, at least two roots and explicit IO domains')
     if declared is None:
         return {'core': dict(ratio=[1, 1], ports=list(spec['clock_ports']),
@@ -118,6 +195,12 @@ def domains(spec):
     divided = spec.get('clock_data_paths') == 'related_pll_dividers'
     if divided:
         pll_divider_ratios(spec)
+    families = spec.get('clock_data_paths') == gray_fifo_cdc_constraints.POLICY
+    if families:
+        gray_fifo_cdc_constraints.relationship(spec)
+    cdc_async = spec.get('clock_data_paths') == cdc_sync_constraints.ASYNC_POLICY
+    if cdc_async:
+        cdc_sync_constraints.async_relationship(spec)
     owners = {}
     out = {}
     for name, data in declared.items():
@@ -126,14 +209,16 @@ def domains(spec):
         if set(data) - {'ratio', 'ports', 'inputs', 'outputs', 'io_budget'}:
             raise ValueError('entries: unsupported domain policy (no clock exceptions)')
         ratio = data.get('ratio')
-        if asynchronous:
+        if asynchronous or cdc_async:
             expected_ratio = [1, 1] if name == 'core' else [3072000, 2499999]
             if ratio != expected_ratio:
-                raise ValueError('async_gray_fifo requires actual stream833.333 / HBM1024 periods')
-        if not (divided or asynchronous) and ratio not in ([1, 1], [4, 3]):
+                raise ValueError(f'{spec.get("clock_data_paths")} requires actual stream833.333 / HBM1024 periods')
+        if families and ratio != gray_fifo_cdc_constraints.family_ratio(name):
+            raise ValueError(f'reviewed_gray_fifos {name} ratio must be the actual family period ratio')
+        if not (divided or asynchronous or families or cdc_async) and ratio not in ([1, 1], [4, 3]):
             raise ValueError('entries: only related CK1/1 and CKV4/3 are supported')
         pll = leaf and spec.get('clock_data_paths') == 'related_pll_ratio'
-        if leaf and (ratio != [1, 1] and not (divided or asynchronous or pll and ratio == [4, 3] and name != 'core') or not asynchronous and len(data.get('ports', [])) != 1):
+        if leaf and (ratio != [1, 1] and not (divided or asynchronous or families or cdc_async or pll and ratio == [4, 3] and name != 'core') or not (asynchronous or families) and len(data.get('ports', [])) != 1):
             raise ValueError('multiple_cts_roots requires one actual related phase0 root per domain '
                              '(samefrequency, or a non-core 4/3 domain under related_pll_ratio)')
         if name == 'core' and ratio != [1, 1]:
@@ -274,7 +359,12 @@ def _generate(spec, root):
                     raise ValueError(f'{view}/{pin}/{corner}: inconsistent boundary reference')
                 refs[master][pin][corner] = values
     expected = sum(counts[m] * len(refs[m]) for m in refs) + len(direct['entries'])
-    if expected != len(spec['clock_ports']) - len(roots):
+    landed = landed_cluster(spec)
+    if landed:
+        # every port is a region root; the hard-child clock pins are root sinks, counted by the Tcl (fail closed)
+        if direct['entries'] or not refs:
+            raise ValueError('landed cluster: no raw macro entries; hard children are sinks of their region root')
+    elif expected != len(spec['clock_ports']) - len(roots):
         raise ValueError(f'entries: {expected} bound child clock pins, {len(spec["clock_ports"]) - len(roots)} hard source ports')
     rows = []
     for master, pins in refs.items():
@@ -290,16 +380,19 @@ def _generate(spec, root):
         out_row = '' if fout == 0.2 else " io_budget_out_ps " + str(round(period * fout, 3))
         domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(period * fin, 3)) + out_row + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
-    body = LEAF_BODY if native_leaf(spec) else BODY
+    body = LANDED_BODY if landed else LEAF_BODY if native_leaf(spec) else BODY
     if spec.get('clock_data_paths') == 'async_gray_fifo':
         body = async_gray_fifo_constraints.extend(body, spec, root)
     if spec.get('cdc_synchronizers') is not None:
         body = cdc_sync_constraints.extend(body, spec, root)
+    if spec.get('clock_data_paths') == gray_fifo_cdc_constraints.POLICY:
+        body = gray_fifo_cdc_constraints.extend(body, spec, root)
     if direct['entries']:
         body = direct_body(body, direct)
     return (f'# OT_CLOCK_ENTRY_DOMAIN_API_VERSION {ENTRY_DOMAIN_API_VERSION}\n'
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
-            + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if native_leaf(spec) else '') +
+            + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if native_leaf(spec) else '')
+            + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n' if landed else '') +
             'set ::ot_ce_refs [dict create ' + ' '.join(rows) + ']\n'
             'set ::ot_ce_counts [dict create ' + ' '.join(f'{{{m}}} {n}' for m, n in counts.items()) + ']\n'
             'set ::ot_ce_domains [dict create ' + ' '.join(domain_rows) + ']\n'
@@ -907,6 +1000,61 @@ def leaf_body():
 
 
 LEAF_BODY = leaf_body()
+
+
+def landed_body():
+    """PL-KIT 10-18: the multi-root leaf body for a LANDED cluster (landed_cluster): hard-child clock pins are sinks of
+    their region root, measured at the child's flops (entry-wire arrival + insertion.json boundary min / mean / max of
+    the actual corner); every bound child clock pin must be reached from a root (fail closed); a hard child belongs to
+    the domain of the root its clock pin sits on.  LEAF_BODY (leaf tiles) is unchanged."""
+    body = LEAF_BODY
+    child_sink = (
+        '      set arrival [ot_ce_clock_wire $pin $clock]\n'
+        '      if {[dict exists $::ot_ce_counts $master]} {\n'
+        '        # landed cluster: a hard child on its region root, judged at its flops (entry wire + routed child insertion)\n'
+        '        set key "$master/[get_property $pin lib_pin_name]"\n'
+        '        if {![dict exists $::ot_ce_refs $key]} { error "OT_LANDED: CTS root $name reaches unbound hard-child pin [get_full_name $pin]" }\n'
+        '        set cname [get_full_name $cell]\n'
+        '        if {[dict exists $::ot_ce_landed_owner $cname] && [dict get $::ot_ce_landed_owner $cname] ne [dict get $::ot_ce_source_domains $name]} {\n'
+        '          error "OT_LANDED: hard child $cname clock pins on different region roots"\n'
+        '        }\n'
+        '        dict set ::ot_ce_landed_owner $cname [dict get $::ot_ce_source_domains $name]\n'
+        '        lassign [dict get $::ot_ce_refs $key $corner] clo cmean chi\n'
+        '        dict set ot_ce_child_ext [get_full_name $pin] [list [expr {$arrival + $clo}] [expr {$arrival + $chi}]]\n'
+        '        puts "OT_LANDED CHILD_SINK $corner $name [get_full_name $pin] wire=$arrival R=$cmean min=[expr {$arrival + $clo}] max=[expr {$arrival + $chi}]"\n'
+        '        set arrival [expr {$arrival + $cmean}]\n'
+        '        incr ot_ce_landed_hits\n'
+        '      }\n')
+    substitutions = [
+        # hard children are not entries of their own: their clock pins are visited on the region roots below
+        ('      if {![dict exists $::ot_ce_refs $key]} continue\n',
+         '      if {![dict exists $::ot_ce_refs $key] || $::ot_ce_landed_cluster} continue\n'),
+        ('  set boundary_cells {}; set boundary_cells_ready 0\n',
+         '  set boundary_cells {}; set boundary_cells_ready 0\n  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]\n'),
+        ('    set arrivals {}; set measured {}; set total 0.0\n',
+         '    set arrivals {}; set measured {}; set total 0.0; set ot_ce_child_ext [dict create]\n'),
+        ('      if {[dict exists $::ot_ce_counts $master]} { error "OT_HYBRID: CTS root $name reaches a hard child" }\n'
+         '      set arrival [ot_ce_clock_wire $pin $clock]\n', child_sink),
+        ('    set mean [expr {$total / [llength $arrivals]}]\n',
+         '    set mean [expr {$total / [llength $arrivals]}]\n'
+         '    foreach pin $boundary {\n'
+         '      if {![dict exists $ot_ce_child_ext [get_full_name $pin]]} continue\n'
+         '      lassign [dict get $ot_ce_child_ext [get_full_name $pin]] clo chi\n'
+         '      set lo [expr {min($lo, $clo)}]; set hi [expr {max($hi, $chi)}]\n'
+         '    }\n'),
+        ('  if {[dict size $seen] != [llength $::ot_ce_ports]} { error "OT_ENTRIES: incomplete actual child/source coverage" }\n',
+         '  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins} { error "OT_LANDED: $ot_ce_landed_hits of $::ot_ce_landed_child_pins'
+         ' bound hard-child clock pins reached from the region roots" }\n'
+         '  if {[dict size $seen] != [llength $::ot_ce_ports]} { error "OT_ENTRIES: incomplete actual child/source coverage" }\n'),
+    ]
+    for old, new in substitutions:
+        if body.count(old) != 1:
+            raise ValueError("multi-root leaf body changed; revalidate landed-cluster extension")
+        body = body.replace(old, new)
+    return body
+
+
+LANDED_BODY = landed_body()
 
 
 def direct_body(body, direct):

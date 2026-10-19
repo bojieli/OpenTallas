@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "hfd_hgi_vms_glue_nw_t",
  "enable": false,
- "reason": "RTL registers the pins: the hub captures cq/client_seq/bank_client/response_seq/pr/enables on plain flops and drives cr/pq from flops; both ring stops capture l_in/pi/eg/ri/tx controls and drive l_out/xq/rce/cco/ack/wko/mirror_busy/fault from flops; the replay client likewise; sid lands on flops. Exceptions (the slice RTL, priced as is): bank_status feeds the status OR / CE adder rung before its first flop, xq_done feeds the commit fault compare. Synthesis pin registers would add an unpriced cycle and break the lockstep with the full slice."
+ "reason": "RTL registers every pin explicitly (rev 2): each input lands on a pin flop then 2 relay flops before the slice, each output leaves the slice through 2 relay flops and a pin flop (gen_vms_glue_tiles.py PIPE 3, recorded latency). Synthesis pin registers would add a further unrecorded cycle."
 }

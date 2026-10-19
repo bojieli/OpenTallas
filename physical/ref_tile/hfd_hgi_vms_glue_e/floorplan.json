@@ -87,8 +87,7 @@
    "b5_pr",
    "b5_status",
    "b5_xq_done",
-   "b5_xq2_done",
-   "cq"
+   "b5_xq2_done"
   ],
   "S": [
    "b6_xq",
@@ -108,7 +107,6 @@
    "b7_xq_done",
    "b7_xq2_done",
    "sid",
-   "cr",
    "client_seq",
    "response_enable",
    "response_seq",
@@ -141,8 +139,10 @@
   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static_vr.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv",
+  "rtl/lib/ot_rst_relay.sv",
   "physical/ref_tile/hfd_hgi_vms_glue_e/kit.env",
   "physical/ref_tile/hfd_hgi_vms_glue_e/clock.sdc",
   "physical/ref_tile/hfd_hgi_vms_glue_e/signoff.sdc",
@@ -172,6 +172,8 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/hfd_hgi_vms_glue_e/pre_gpl.tcl",
   "physical/ref_tile/hfd_hgi_vms_glue_e/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl"
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/ref_tile/hfd_hgi_vms_glue_e/spine_ins.tcl"
  ]
 }

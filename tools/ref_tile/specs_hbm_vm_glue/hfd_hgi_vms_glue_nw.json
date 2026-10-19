@@ -7,10 +7,13 @@
   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static_vr.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv",
-  "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv"
+  "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv",
+  "rtl/lib/ot_rst_relay.sv"
  ],
  "clock_port": "clk",
+ "clock": "spine",
  "reset_ports": [
   "rst_n"
  ],
@@ -125,6 +128,7 @@
   "threads": 16,
   "peak_ram_gb": 64,
   "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
   "pin_balance": {
    "group_max": 1
   }
@@ -512,8 +516,9 @@
  "inter": [],
  "pin_regs": {
   "enable": false,
-  "reason": "RTL registers the pins: the hub captures cq/client_seq/bank_client/response_seq/pr/enables on plain flops and drives cr/pq from flops; both ring stops capture l_in/pi/eg/ri/tx controls and drive l_out/xq/rce/cco/ack/wko/mirror_busy/fault from flops; the replay client likewise; sid lands on flops. Exceptions (the slice RTL, priced as is): bank_status feeds the status OR / CE adder rung before its first flop, xq_done feeds the commit fault compare. Synthesis pin registers would add an unpriced cycle and break the lockstep with the full slice."
+  "reason": "RTL registers every pin explicitly (rev 2): each input lands on a pin flop then 2 relay flops before the slice, each output leaves the slice through 2 relay flops and a pin flop (gen_vms_glue_tiles.py PIPE 3, recorded latency). Synthesis pin registers would add a further unrecorded cycle."
  },
+ "structural_change": "VM-GLUE2 rev 2 LATENCY (for the compiler / VM calendar owner): every hub-tile input +3 cycles and every output +3 cycles (pin flop + 2 relays a face; the measured rev-1 setup WNS -1,744 ps came from single-cycle hub / ring-stop logic spanning 1-2.4 ns of wire); ring transit through a hub +6; bank access round trip (pq -> pr, xq -> xq_done) +6, absorbed for the commit check by slice BANK_PIN_IN 1 -> 7 (COMMIT_DELAY 6 -> 12); calendar inputs (enables, sources, seqs, clients, replay) are issued 3 edges earlier for the same effect; reset release +3 (ot_rst_relay).",
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
@@ -525,7 +530,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "purpose": "OWNERS-HBM/VM-GLUE 2026-10-18 (HBM d4g plan (b), top-down contract: glue goes into a hardened tile): VM hub glue tile for NW (hb_vms_NW) = ot_vms_hub_static + 2 ot_vms_rstop_static + ot_vms_rcl_static + ot_vms_status_static, the 8 banks hoisted to die-level instances (gen_vms_hoist.py / HBM-B-RTL1 qb glue, logic unchanged). Tile top hfd_hgi_vms_glue_nw_t (gen_vms_glue_tiles.py): one clock (clk_hub/clk_ring/clk_replay are one stream clock), per-bank bank ports. Every port lands on / leaves from a flop except bank_status (status OR / CE adder rungs, as the slice) and the xq_done fault compare.",
+ "purpose": "OWNERS-HBM/VM-GLUE2 2026-10-18 rev 2 (HBM d4g plan (b), GEN2 binding): VM hub glue tile for NW (hb_vms_NW) = ot_vms_slice_static_glue (ot_vms_hub_static + 2 ring stops + ot_vms_rcl_static + ot_vms_status_static; 8 banks are die-level instances) with the ring stops as ot_vms_rstop_static_vr (valid-only reset, logic verbatim). Tile top hfd_hgi_vms_glue_nw_t (gen_vms_glue_tiles.py): one clock (OT_SPINE), rst_n -> ot_rst_relay, REGISTERED FACES: every port passes a pin flop + 2 relay flops (<= ~410 um a stage over the 777.6 x 1555.2 pin-bound outline), per-bank bank ports.",
  "pin_density_per_um": {
   "E": 5.75,
   "W": 3.62,
@@ -536,7 +541,7 @@
   "owner": "Claude OWNERS-HBM/VM-GLUE 1018",
   "branch": "claude/vm-glue-1018",
   "tag": "g1",
-  "purpose": "OWNERS-HBM/VM-GLUE 2026-10-18 (HBM d4g plan (b), top-down contract: glue goes into a hardened tile): VM hub glue tile for NW (hb_vms_NW) = ot_vms_hub_static + 2 ot_vms_rstop_static + ot_vms_rcl_static + ot_vms_status_static, the 8 banks hoisted to die-level instances (gen_vms_hoist.py / HBM-B-RTL1 qb glue, logic unchanged). Tile top hfd_hgi_vms_glue_nw_t (gen_vms_glue_tiles.py): one clock (clk_hub/clk_ring/clk_replay are one stream clock), per-bank bank ports. Every port lands on / leaves from a flop except bank_status (status OR / CE adder rungs, as the slice) and the xq_done fault compare.",
+  "purpose": "OWNERS-HBM/VM-GLUE2 2026-10-18 rev 2 (HBM d4g plan (b), GEN2 binding): VM hub glue tile for NW (hb_vms_NW) = ot_vms_slice_static_glue (ot_vms_hub_static + 2 ring stops + ot_vms_rcl_static + ot_vms_status_static; 8 banks are die-level instances) with the ring stops as ot_vms_rstop_static_vr (valid-only reset, logic verbatim). Tile top hfd_hgi_vms_glue_nw_t (gen_vms_glue_tiles.py): one clock (OT_SPINE), rst_n -> ot_rst_relay, REGISTERED FACES: every port passes a pin flop + 2 relay flops (<= ~410 um a stage over the 777.6 x 1555.2 pin-bound outline), per-bank bank ports.",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/lib",
