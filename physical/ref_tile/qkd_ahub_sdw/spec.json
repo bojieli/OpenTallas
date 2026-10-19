@@ -59,70 +59,70 @@
  "pin_ranges": {
   "ap0": [
    194.4,
-   259.2
+   229.68
   ],
   "am0": [
-   194.4,
+   229.68,
    259.2
   ],
   "fr_valid": [
-   259.2,
+   301.32,
    302.4
   ],
   "fr_epoch": [
-   259.2,
-   302.4
+   295.2,
+   301.32
   ],
   "fr_rz": [
    259.2,
-   302.4
+   295.2
   ],
   "ap1": [
    302.4,
-   345.6
+   325.92
   ],
   "am1": [
-   302.4,
+   325.92,
    345.6
   ],
   "ap2": [
    194.4,
-   259.2
+   229.68
   ],
   "am2": [
-   194.4,
+   229.68,
    259.2
   ],
   "ap3": [
    259.2,
-   302.4
+   282.72
   ],
   "am3": [
-   259.2,
+   282.72,
    302.4
   ],
   "hs_start": [
    194.4,
-   259.2
+   198.72
   ],
   "hs_ep": [
-   194.4,
-   259.2
+   198.72,
+   226.8
   ],
   "hs_layer": [
-   194.4,
-   259.2
+   226.8,
+   237.6
   ],
   "hs_ctx": [
-   194.4,
+   237.6,
    259.2
   ],
   "hs_cal_lo": [
    410.4,
-   475.2
+   464.4
   ],
   "hs_cal_r": [
-   410.4,
+   464.4,
    475.2
   ],
   "hf": [
@@ -223,7 +223,12 @@
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "pin_min_tracks": 3
+  "pin_min_tracks": 3,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5"
+  }
  },
  "floorplan_note": "KV-AHUBDW 10-18: static hub cluster, 734.4 x 561.6 (die frame was the legacy hub 1175.04 x 760.32: -54% area).  Faces from the planned m1 KV die: ASTK WS/WN on W, ES/EN on E (ap/am), pvfin W (fr), kvs_attn + seq N (hs, hf), clock trunk + reset N.  Rows: Z trees zh0/zh1 MX at y 43.2 and zh2/zh3 R0 at y 345.6 with their S (input, 268 b) faces toward the 151.2-um logic band y 194.4-345.6 (core calendar / Z-load / LMAX / reciprocal issue, io leaf, ap pin flops) that spans W->E between the stack faces; reciprocal leaf R0 at 475.2,302.4 (inputs N, outputs S into the band, RX/RY relays 1).  64.8-um channels between tiles carry the zh root returns.  One clock entry ck (N centre) -> balanced spine to the 5 child clock pins (child-insertion leaf targets) + the band flops. || KV-AHUBDW2 10-18: outline 734.4 x 540 (was 561.6; gate fill 34% < 35%, not pin-bound: N 24%, W 12%, E 8%): N margin over zh2/zh3 43.2 um, reciprocal leaf moved down one lattice step to 475.2,259.2 (64.8 um to N; beside zh3, 43.2 um to the E face).",
  "structural_change": "NEW kit (KV-AHUBDW 10-18): the KV die hub element qkd_ahub_static_dw (static six-root hub) as a cluster of 5 CLOSED children (4 ot_nhb_zh m5 views, ot_qkh_recip_leaf np1 view) + flat core / io logic; the closed qkd_ahub_core belongs to the legacy hub and is not used.  RTL pin rules in 02f980add (flop-first pins, ot_rst_pipe regional resets). || KV-AHUBDW2 10-18 (a1 EARLY_FAIL_SETUP -412 ps, classified: core logic depth + cross-cluster wire, NOT child insertion -- macro class +178 ps, spine leaf spread 29 ps): (1) u_io export decided one edge ahead (em_q from latched tgt_q; was cal_r_q -> PV_START+R adder -> compare -> 145 W-face enables, 289 endpoints); (2) qkd_ahub_static_core_la: every calendar decode registered one edge ahead (u_dn) with an edge-age-1 decode for the first cycle (u_d1), nblk(T) registered from the held command T (u_io T_p/T_h) (age -> rz/rc_x/zh_p/zh_iv/ma_x, T -> hh_b/k_b/z_b); (3) zh_err registered at the Z tree outputs (child zerr -> fault -273 ps); (4) am valid without the u_io.start term (start -> E-face am flops -109 ps; a start on an am edge now faults). || HKV-AHUB4 10-19 (a4): hardened at the KV DIE binding Z_IN_STRIDE = 4 (kv_static_die ASTK_Z_STRIDE = the CLOSED qkd_astk_ctl_s Z stride; claude/hkv-die-1019 e070e47a2 binds ONLY this parameter, AP_OFS / FR_OFS stay RTL defaults). The a3 kit (qkd_ahub_sdw-a3-dad8bea8e) is the RTL default stride 16 = a reference, NOT the die binding. RTL byte-identical to a3 (04e81f626): at stride 4 the Z window divide / modulo are 2-bit shifts / masks (the guard Z_IN_STRIDE < 4 passes; slot_h = d[1:0], slot_k = d[5:2], k <= 15 since nblk <= 16). || HKV-AHUB5 10-19 (a5): hardened at the KV die's FULL binding (HKV-DIE2 decision, HKV-DIE3 593596f40 OT_KV_AHUB_OFS: the die binds the ACTUAL post-station AP_OFS / FR_OFS, kv_static_params AHUB_OFS_BOUND checks kit == die == table): Z_IN_STRIDE 4 + AP_OFS [WS,WN,ES,EN] = [-36,-36,-34,-35] (64'hffddffdeffdcffdc = {16'hffdd, 16'hffde, 16'hffdc, 16'hffdc}) + FR_OFS -7 (32'hfffffff9: yosys chparam cannot decode '-7', 32'h two's complement verified on yosys 0.68 = -7 for the integer parameter), from the kvs14p-fa7fe4ff9 netlist table (results/rtl/qwen_kv_die/hkv_die2_1019/static_params_fa7fe4ff9_netlist_vs_90dedf84f_model.json: D(ks_ahs) 46, D(ks_pvfst) 40, D(ap) 8/8/10/9). AP_OFS / FR_OFS are constant addends of the u_io calendar adds (cal_n = c + AP_OFS, tgt_n = PV_START + R + FR_OFS): the netlist changes, the geometry does not.  a4 (default offsets {4{2}} / 0) is NOT die-bindable (bench m8 FAILS against the die).  The die relay table moves with every KV re-place: a different table needs a5' (or runtime offsets) -- AHUB_OFS_BOUND fails closed.  reset_landing opt-out: the RTL lands rst_n (ot_rst_pipe s0/s1).",
@@ -400,5 +405,6 @@
    "FR_OFS": "32'hfffffff9"
   },
   "why": "a3 (qkd_ahub_sdw-a3-dad8bea8e) is the RTL default (stride 16, AP_OFS {4{2}}, FR_OFS 0) = a reference only, not die-bindable; a4 (stride 4, default offsets) fails against the die (s4o m8). a5 = the die's binding (HKV-DIE3 OT_KV_AHUB_OFS, fa7fe4ff9 table)."
- }
+ },
+ "pin_order_note": "KV-SUBMITFIX 10-19 (pin_order rule, ROOT-PINORDER): route.pin_balance (place_pin, bit k at lo+(hi-lo)(k+.5)/n, M4/M6 alternating on W/E, M5 on N) with disjoint per-port ranges inside the a5 windows (shared windows split in proportion to width).  All ports ascending, no pin_order_desc: the hub has NO abutted neighbour in the KV die (abutted_joint_audit kvs14r-131a7af2c-base: 0 joints on ahub; every hub bus crosses die relay stages ks_ahs / ap_<st> / am_<st> / ks_ahfr).  ot_nhb_zh MX at y 43.2 is NOT possible: the closed view's clk/rst_n M4 pins (148.368-148.392) sit 24 nm off the M4 track under MX at every 43.2-lattice y (check_macro_track_alignment: MX 43.2 -> 2 M4 off-track, 43.224 -> 0); kept at 43.224 (gate WARN macro_grid) until the child view is rebuilt on the lattice."
 }
