@@ -16,6 +16,10 @@ case $JOB in
      bld bL bL cur +define+OT_S81_LAND_MUT_SEL; r landsel bL gm564 ;;
   m) bld bM bM mu -GMU=1
      r mu_real bM mr; r mu_dense bM md; r mu_dense_err bM md +ERRP=7 ;;
+  m2) # 10-19 re-run of the m runs on job m's build bM (same binary) with the MU goldens regenerated with the lep tag field
+      # [1077:1045] zero on untagged TP beats (gen_golden MU_SPARE; the first m goldens put random payload there -> FINDING)
+      ln -sfn ../out_m/bM $O/bM
+      r mu_real bM mr; r mu_dense bM md; r mu_dense_err bM md +ERRP=7 ;;
   w) bld bMW bMW mu -GMU=1 +define+OT_S81SL_LEP_MUT_WRONGCOPY; r wrongcopy bMW mm
      bld bMT bMT mu -GMU=1 +define+OT_S81SL_LEP_MUT_TAGDROP; r tagdrop bMT mm ;;
 esac

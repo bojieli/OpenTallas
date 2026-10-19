@@ -72,6 +72,9 @@ PORT_TO = {1: +1, 0: -1, 3: +2}       # sender port -> peer offset (each die rea
 CLASS = {0: "S", 1: "S", 2: "N", 3: "N"}
 
 
+MU_SPARE = False
+
+
 def beat_word(payload: bytes, inst: int, seq: int, src: int) -> int:
     assert len(payload) <= BEAT_B
     w = 1                                  # valid
@@ -81,6 +84,8 @@ def beat_word(payload: bytes, inst: int, seq: int, src: int) -> int:
     w |= int.from_bytes(payload.ljust(BEAT_B, b"\0"), "little") << 64
     w |= (inst & 0xFF) << 1088
     w |= (seq & 0xFF) << 1096
+    if MU_SPARE:                           # MU (10-19 fix): [1077:1045] is the MU lep's tag field (spare in every real XB /
+        w &= ~(((1 << 33) - 1) << 1045)    # XQ beat); the lep RX clears it on every delivered beat -> keep it 0 here too
     return w
 
 
@@ -136,6 +141,8 @@ def main():
     t = WARM
     inst = 0
     U = a.mu_users
+    global MU_SPARE
+    MU_SPARE = bool(U)
     shifts = None
     if U and a.mu_mode == "real":
         cal = json.loads(Path(a.mu_cal).read_text())
