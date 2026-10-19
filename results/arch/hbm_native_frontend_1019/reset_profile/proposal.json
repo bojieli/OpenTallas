@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.native-reset-source-proposal.v1",
+  "status": "PROPOSED_NOT_ADMITTED",
+  "requires_root_review": true,
+  "scope": "ot_hbm_svc_four_owner_links; four independent local clock roots; source exact only",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_four_owner_links.sv": "a093de1ea6dc5e841840353c163ae7bf39c9eeaf4b30e1a127b963472c4c6bd8"
+  },
+  "mapped_census_sha256": "490fac82a3cf3115be34d5d15dd51f8c485dac10acc8b7d6f57e7b8a819a8781",
+  "raw_sinks": 8,
+  "first_stage_ff": 8,
+  "second_stage_ff": 196,
+  "maximum_actual_reset_terminal_load": 25,
+  "actual_nonclock_over32": 0,
+  "behavior": "PASS four faces independently stopped/resumed, eight phases; all192 slice+4 control reset branches checked; no clock needed for assertion; exact two edges for release",
+  "first_qualified_functional_edge": 3,
+  "equations": [
+    "first <= 0 asynchronously on raw assertion; first <= 1 at each local posedge",
+    "second <= 0 asynchronously on first assertion; second <= 1 at each local posedge",
+    "raw release edge1: first=1/second=0; edge2: second=1; functional FFs first execute edge3"
+  ],
+  "mutants": {
+    "early": "FAIL reset early release",
+    "late": "FAIL reset late release"
+  },
+  "physical_claim": false,
+  "tool_admission": "No threshold override or profile activation implemented; ROOT must bind exact source/mapped certificate before gate"
+}
