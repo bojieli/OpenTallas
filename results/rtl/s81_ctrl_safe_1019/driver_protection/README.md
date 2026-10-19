@@ -1,0 +1,7 @@
+# Targeted protected-driver diagnosis
+
+Baseline exactsource8a9d1473c physical CTS aborted ODB-0373 while setup repair attempted to connect an iterm to protected ot_inhold_n00001. SS setup-31.89/FF hold-49.87 are incomplete diagnostic state, not a timing PASS. The prior-floorplan image was viewed. Four real SRAMs/2740FF, total58437.01908/std1120.12308um2. Outline531.25x302.4 remains unchanged in this controlled test; overall fill~36–37% is not approved. Raw SRAM face825contacts/81um=10.185contacts/um, still escape/PG/via/DRC unqualified.
+
+New per-kit pre-CTS hook protects only exactly1243 ot_ihdrv_NNNNN input-hold strong drivers against resize/reconnect. It verifies actual BUFx4f masters, existing paired protected HB and port nets, protected HB->driver link and an unprotected downstream driver->capture net. It never releases existing hold protection, changes delay uncertainty or removes a timing check. It refuses a driver census mismatch, unprotected link, or protected downstream repair net. Read-only actual3_5_place_dp.odb tests: positive PASS, all3 negative cases fail with their named guard. Sourcefile is included, and original actual STA failure retained. This is targeted diagnosis, not a global tool policy change.
+
+Fresh actual CTS/TT/FF regression, per-root native boundary proof, eventual placement/wire/PG escape, final geometry and ROOT review remain required. Behavioral proofs: full32PC exact crossing and actual2PC3mechanism negatives in sibling result directories. Golden sources do not waive physical or storage/CDC obligations.

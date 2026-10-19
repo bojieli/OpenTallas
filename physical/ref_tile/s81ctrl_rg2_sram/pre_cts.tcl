@@ -1,4 +1,5 @@
 # ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl) + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)
+source /src/physical/s81_ctrl_rg2/sram_hold_driver_protect.tcl
 source /src/physical/qwen_die_masters/pre_cts_skew.tcl
 rename clock_tree_synthesis ::ot_ref_cts_boundary_orig
 proc clock_tree_synthesis {args} {

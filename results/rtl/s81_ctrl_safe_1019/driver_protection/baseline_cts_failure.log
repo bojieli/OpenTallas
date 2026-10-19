@@ -1,0 +1,1337 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_ff.lib
+read_db /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_2_place_iop.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_place_pre_gpl.tcl
+OT_PRS: 562 output pins already on a dedicated flop, 684 pins split onto a cloned flop (1374 cells added, 654 load-less cells removed), 1 outputs not flop-driven
+INHOLD: 1243 input hold cells (HB2xp67_ASAP7_75t_R; 0 strong pads by OT_HOLD_PAD_STRONG_RE, dont_touch; driver 'BUFx4f_ASAP7_75t_R', 2486 FIRM for GPL), 2 inputs skipped (clock / reset-only / non-DFF)
+OUTHOLD: 1246 output hold stages (BUF + HB2xp67_ASAP7_75t_R + BUF FIRM at the pin, 0 with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), 1 outputs skipped (not flop-driven), 0 QN inverters absorbed FIRM at the pin
+OT_IOFLOP extra capture k_rdy[0] -> u_ot_pr_core.g_pc\[0\].u_pc.g_h\[0\].krq_c$_DFF_PN0_ at (4266, 2430) DBU
+OT_IOFLOP extra capture k_rdy[0] -> u_ot_pr_core.g_pc\[0\].u_pc.g_h\[1\].krq_c$_DFF_PN0_ at (4266, 2700) DBU
+OT_IOFLOP extra capture k_rdy[0] -> u_ot_pr_core.g_pc\[0\].u_pc.g_h\[2\].krq_c$_DFF_PN0_ at (3132, 2160) DBU
+OT_IOFLOP extra capture k_rdy[0] -> u_ot_pr_core.g_pc\[0\].u_pc.g_h\[3\].krq_c$_DFF_PN0_ at (4266, 3780) DBU
+OT_IOFLOP extra capture k_rdy[0] -> u_ot_pr_core.g_pc\[0\].u_pc.g_h\[4\].krq_c$_DFF_PN0_ at (2862, 2430) DBU
+OT_IOFLOP extra capture k_rdy[0] -> u_ot_pr_core.g_pc\[0\].u_pc.g_h\[5\].krq_c$_DFF_PN0_ at (3942, 3510) DBU
+OT_IOFLOP extra capture k_rdy[0] -> u_ot_pr_core.g_pc\[0\].u_pc.g_h\[6\].krq_c$_DFF_PN0_ at (5670, 2430) DBU
+OT_IOFLOP extra capture k_rdy[0] -> u_ot_pr_core.g_pc\[0\].u_pc.g_h\[7\].krq_c$_DFF_PN0_ at (4266, 4050) DBU
+OT_IOFLOP extra capture k_rdy[0] -> u_ot_pr_core.g_pc\[0\].u_pc.g_h\[8\].krq_c$_DFF_PN0_ at (2862, 2700) DBU
+OT_IOFLOP extra capture k_rdy[0] -> u_ot_pr_core.g_pc\[0\].u_pc.g_h\[9\].krq_c$_DFF_PN0_ at (3132, 2970) DBU
+OT_IOFLOP extra capture k_rdy[0] -> u_ot_pr_core.g_pc\[0\].u_pc.g_h\[10\].krq_c$_DFF_PN0_ at (5670, 2700) DBU
+OT_IOFLOP extra capture k_rdy[1] -> u_ot_pr_core.g_pc\[1\].u_pc.g_h\[0\].krq_c$_DFF_PN0_ at (265788, 2430) DBU
+OT_IOFLOP extra capture k_rdy[1] -> u_ot_pr_core.g_pc\[1\].u_pc.g_h\[1\].krq_c$_DFF_PN0_ at (265788, 2700) DBU
+OT_IOFLOP extra capture k_rdy[1] -> u_ot_pr_core.g_pc\[1\].u_pc.g_h\[2\].krq_c$_DFF_PN0_ at (264384, 2430) DBU
+OT_IOFLOP extra capture k_rdy[1] -> u_ot_pr_core.g_pc\[1\].u_pc.g_h\[3\].krq_c$_DFF_PN0_ at (267192, 2430) DBU
+OT_IOFLOP extra capture k_rdy[1] -> u_ot_pr_core.g_pc\[1\].u_pc.g_h\[4\].krq_c$_DFF_PN0_ at (264384, 2700) DBU
+OT_IOFLOP extra capture k_rdy[1] -> u_ot_pr_core.g_pc\[1\].u_pc.g_h\[5\].krq_c$_DFF_PN0_ at (267192, 2700) DBU
+OT_IOFLOP extra capture k_rdy[1] -> u_ot_pr_core.g_pc\[1\].u_pc.g_h\[6\].krq_c$_DFF_PN0_ at (265896, 4050) DBU
+OT_IOFLOP extra capture k_rdy[1] -> u_ot_pr_core.g_pc\[1\].u_pc.g_h\[7\].krq_c$_DFF_PN0_ at (265788, 4320) DBU
+OT_IOFLOP extra capture k_rdy[1] -> u_ot_pr_core.g_pc\[1\].u_pc.g_h\[8\].krq_c$_DFF_PN0_ at (265788, 4590) DBU
+OT_IOFLOP extra capture k_rdy[1] -> u_ot_pr_core.g_pc\[1\].u_pc.g_h\[9\].krq_c$_DFF_PN0_ at (265788, 4860) DBU
+OT_IOFLOP extra capture k_rdy[1] -> u_ot_pr_core.g_pc\[1\].u_pc.g_h\[10\].krq_c$_DFF_PN0_ at (265788, 5130) DBU
+OT_ANCHOR_PACK: legally packed 8733 owned anchors; maximum Manhattan displacement 1620.0 DBU
+OT_IOFLOP fixed 1246 output-port and 1263 input-port flops at their pins (5 ports not single-flop)
+Took 32 seconds: source /work/hooks/pre_global_place_pre_gpl.tcl
+[INFO RSZ-0026] Removed 170 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 0 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 1247 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.45 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 529.038 300.240 ) um
+[INFO GPL-0016] Core area:                  157051.794 um^2
+[INFO GPL-0036] Movable instances area:        813.899 um^2
+[INFO GPL-0037] Total instances area:        59813.546 um^2
+[INFO GPL-0035] Pin density area adjust:        26.013 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             32606
+[INFO GPL-0007] Movable instances:               10070
+[INFO GPL-0008] Fixed instances:                 20072
+[INFO GPL-0009] Dummy instances:                  2464
+[INFO GPL-0010] Number of nets:                  22232
+[INFO GPL-0011] Number of pins:                  49952
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 531.250 302.400 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 529.038 300.240 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                157051.794 um^2
+[INFO GPL-0017] Fixed instances area:        63457.161 um^2
+[INFO GPL-0018] Movable instances area:        839.912 um^2
+[INFO GPL-0019] Utilization:                     0.897 %
+[INFO GPL-0020] Standard cells area:           839.912 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 10070	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00069055 HPWL: 4290766725
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00000852 HPWL: 2215737543
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00000555 HPWL: 2210704386
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00000218 HPWL: 2210275447
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000064 HPWL: 2210173093
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.4500
+[INFO GPL-0024] Movable insts average area:      0.083 um^2
+[INFO GPL-0025] Ideal bin area:                  0.185 um^2
+[INFO GPL-0026] Ideal bin count:                847330
+[INFO GPL-0027] Total bin area:             157051.794 um^2
+[INFO GPL-0028] Bin count (X, Y):         512 ,    512
+[INFO GPL-0029] Bin size (W * H):       1.029 *  0.582 um
+[INFO GPL-0030] Number of bins:                 262144
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.6995 |  7.804302e+05 |   +0.00% |  1.27e-13 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 4, overflow: 0.611, keep resizer changes at: 1, HPWL: 780095246
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     22232
+    final |     +1.8% |    1019 |    3843 |          2441 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 2440 slew violations.
+[INFO RSZ-0035] Found 23 fanout violations.
+[INFO RSZ-0036] Found 448 capacitance violations.
+[INFO RSZ-0037] Found 2001 long wires.
+[INFO RSZ-0039] Resized 1019 instances.
+[INFO RSZ-0038] Inserted 3843 buffers in 2441 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     11346
+     1100 |     -0.0% |      11 |       12 |     10246
+     2200 |     -0.2% |     611 |      461 |      9146
+     3300 |     -0.2% |     651 |      504 |      8046
+     4400 |     -0.4% |    1216 |     1018 |      6946
+     5500 |     -0.4% |    1413 |     1358 |      5846
+     6600 |     -0.6% |    1992 |     1918 |      4746
+     7700 |     -0.9% |    2693 |     2599 |      3646
+     8800 |     -1.1% |    3360 |     3260 |      2546
+     9900 |     -1.2% |    3843 |     3605 |      1446
+    11000 |     -1.2% |    3843 |     3606 |       346
+    final |     -1.2% |    3843 |     3606 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack 8.84301e-11
+[INFO GPL-0107] Timing-driven: repair_design delta area: 319.277 um^2 (+38.01%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 3606 (+35.81%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 7449, deleted: 3843
+[INFO GPL-0110] Timing-driven: new target density: 0.45341122
+[INFO GPL-0038] Routability snapshot saved at iter = 5
+        4 |   0.5853 |  7.836534e+05 |          |           |      
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+       10 |   0.5632 |  7.781294e+05 |   -0.29% |  2.06e-13 |      
+       20 |   0.4996 |  7.745140e+05 |   -0.46% |  3.36e-13 |      
+       30 |   0.4752 |  7.733084e+05 |   -0.16% |  5.47e-13 |      
+       40 |   0.4635 |  7.720187e+05 |   -0.17% |  8.91e-13 |      
+       50 |   0.4724 |  7.723610e+05 |   +0.04% |  1.45e-12 |      
+       60 |   0.4655 |  7.717506e+05 |   -0.08% |  2.36e-12 |      
+       70 |   0.4572 |  7.712134e+05 |   -0.07% |  3.85e-12 |      
+       80 |   0.4555 |  7.708787e+05 |   -0.04% |  6.27e-12 |      
+       90 |   0.4599 |  7.710768e+05 |   +0.03% |  1.02e-11 |      
+      100 |   0.4655 |  7.715897e+05 |   +0.07% |  1.66e-11 |      
+      110 |   0.4625 |  7.716000e+05 |   +0.00% |  2.71e-11 |      
+      120 |   0.4594 |  7.713790e+05 |   -0.03% |  4.41e-11 |      
+      130 |   0.4627 |  7.713414e+05 |   -0.00% |  7.19e-11 |      
+      140 |   0.4725 |  7.718727e+05 |   +0.07% |  1.17e-10 |      
+      150 |   0.4673 |  7.718641e+05 |   -0.00% |  1.91e-10 |      
+      160 |   0.4667 |  7.718249e+05 |   -0.01% |  3.11e-10 |      
+      170 |   0.4630 |  7.719410e+05 |   +0.02% |  5.06e-10 |      
+      180 |   0.4651 |  7.723225e+05 |   +0.05% |  8.24e-10 |      
+      190 |   0.4622 |  7.733028e+05 |   +0.13% |  1.34e-09 |      
+      200 |   0.4543 |  7.762604e+05 |   +0.38% |  2.19e-09 |      
+      210 |   0.4462 |  7.830578e+05 |   +0.88% |  3.56e-09 |      
+      220 |   0.4378 |  8.002558e+05 |   +2.20% |  5.79e-09 |      
+      230 |   0.4441 |  8.035150e+05 |   +0.41% |  9.42e-09 |      
+      240 |   0.4410 |  7.959851e+05 |   -0.94% |  1.53e-08 |      
+      250 |   0.4293 |  7.975358e+05 |   +0.19% |  2.50e-08 |      
+      260 |   0.4286 |  7.938305e+05 |   -0.46% |  4.07e-08 |      
+      270 |   0.4219 |  7.897473e+05 |   -0.51% |  6.62e-08 |      
+      280 |   0.4076 |  7.898607e+05 |   +0.01% |  1.08e-07 |      
+      290 |   0.3908 |  7.842360e+05 |   -0.71% |  1.76e-07 |      
+      300 |   0.3727 |  7.801052e+05 |   -0.53% |  2.86e-07 |      
+      310 |   0.3668 |  7.764668e+05 |   -0.47% |  4.66e-07 |      
+      320 |   0.3392 |  7.734036e+05 |   -0.39% |  7.36e-07 |      
+      330 |   0.3248 |  7.694273e+05 |   -0.51% |  1.08e-06 |      
+      340 |   0.3151 |  7.690345e+05 |   -0.05% |  1.60e-06 |      
+      350 |   0.2994 |  7.691495e+05 |   +0.01% |  2.35e-06 |      
+[INFO GPL-0040] Routability iteration: 1
+[WARNING GRT-0281] Net ckh has a large fanout of 2079 terminals.
+[WARNING GRT-0281] Net clk has a large fanout of 1356 terminals.
+[INFO GPL-0041] Total routing overflow: 10753.5646
+[INFO GPL-0042] Number of overflowed tiles: 175673 (35.56%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.3819
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.3200
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.2639
+[INFO GPL-0046] Average top 5.0% routing congestion: 1.1909
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.3510
+[INFO GPL-0048] Routing congestion (1.3510) lower than previous minimum (1e+30). Updating minimum.
+[INFO GPL-0086] Inflated area:                  53.910 um^2 (+4.65%)
+[INFO GPL-0052] Placement target density:       0.4534
+[INFO GPL-0076] Removing fillers, count: Before: 275968, After: 275608 (-0.13%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 41277.671, After: 41223.791 (-0.13%)
+[INFO GPL-0078] Removed fillers count: 360, area removed: 53.847 um^2. Remaining area to be compensated by modifying density: 0.063 um^2
+[INFO GPL-0058] White space area:            93594.633 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      42436.858 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:           41223.791 um^2 (-0.13%)
+[INFO GPL-0061] Total non-inflated area:     42436.890 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         42490.799 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.4534
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      360 |   0.5386 |  7.779410e+05 |   +1.14% |  2.29e-13 |      
+      370 |   0.5014 |  7.740763e+05 |   -0.50% |  3.37e-13 |      
+      380 |   0.4763 |  7.728970e+05 |   -0.15% |  4.96e-13 |      
+      390 |   0.4882 |  7.722519e+05 |   -0.08% |  7.31e-13 |      
+      400 |   0.4836 |  7.720859e+05 |   -0.02% |  1.08e-12 |      
+      410 |   0.4756 |  7.717002e+05 |   -0.05% |  1.59e-12 |      
+      420 |   0.4698 |  7.711280e+05 |   -0.07% |  2.34e-12 |      
+      430 |   0.4654 |  7.708895e+05 |   -0.03% |  3.44e-12 |      
+      440 |   0.4791 |  7.713577e+05 |   +0.06% |  5.07e-12 |      
+      450 |   0.4824 |  7.718775e+05 |   +0.07% |  7.47e-12 |      
+      460 |   0.4717 |  7.714632e+05 |   -0.05% |  1.10e-11 |      
+      470 |   0.4735 |  7.716080e+05 |   +0.02% |  1.62e-11 |      
+      480 |   0.4861 |  7.719506e+05 |   +0.04% |  2.39e-11 |      
+      490 |   0.4882 |  7.720093e+05 |   +0.01% |  3.52e-11 |      
+      500 |   0.4840 |  7.719463e+05 |   -0.01% |  5.18e-11 |      
+      510 |   0.4806 |  7.718152e+05 |   -0.02% |  7.63e-11 |      
+      520 |   0.4787 |  7.718158e+05 |   +0.00% |  1.12e-10 |      
+      530 |   0.4844 |  7.718043e+05 |   -0.00% |  1.66e-10 |      
+      540 |   0.4845 |  7.719937e+05 |   +0.02% |  2.44e-10 |      
+      550 |   0.4788 |  7.718994e+05 |   -0.01% |  3.59e-10 |      
+      560 |   0.4802 |  7.722788e+05 |   +0.05% |  5.30e-10 |      
+      570 |   0.4846 |  7.727892e+05 |   +0.07% |  7.80e-10 |      
+      580 |   0.4827 |  7.737961e+05 |   +0.13% |  1.15e-09 |      
+      590 |   0.4766 |  7.755942e+05 |   +0.23% |  1.69e-09 |      
+      600 |   0.4718 |  7.771522e+05 |   +0.20% |  2.49e-09 |      
+      610 |   0.4618 |  7.821213e+05 |   +0.64% |  3.67e-09 |      
+      620 |   0.4572 |  7.946999e+05 |   +1.61% |  5.40e-09 |      
+      630 |   0.4616 |  7.924626e+05 |   -0.28% |  7.95e-09 |      
+      640 |   0.4638 |  7.893853e+05 |   -0.39% |  1.17e-08 |      
+      650 |   0.4581 |  7.899616e+05 |   +0.07% |  1.72e-08 |      
+      660 |   0.4476 |  7.873112e+05 |   -0.34% |  2.54e-08 |      
+      670 |   0.4436 |  7.869536e+05 |   -0.05% |  3.74e-08 |      
+      680 |   0.4410 |  7.848904e+05 |   -0.26% |  5.51e-08 |      
+      690 |   0.4376 |  7.830081e+05 |   -0.24% |  8.12e-08 |      
+      700 |   0.4325 |  7.808053e+05 |   -0.28% |  1.20e-07 |      
+      710 |   0.4206 |  7.766108e+05 |   -0.54% |  1.76e-07 |      
+      720 |   0.3981 |  7.756238e+05 |   -0.13% |  2.59e-07 |      
+      730 |   0.3801 |  7.735677e+05 |   -0.27% |  3.82e-07 |      
+      740 |   0.3631 |  7.716831e+05 |   -0.24% |  5.63e-07 |      
+      750 |   0.3524 |  7.705667e+05 |   -0.14% |  8.29e-07 |      
+      760 |   0.3344 |  7.696086e+05 |   -0.12% |  1.22e-06 |      
+      770 |   0.3167 |  7.693866e+05 |   -0.03% |  1.80e-06 |      
+[INFO GPL-0040] Routability iteration: 2
+[INFO GPL-0041] Total routing overflow: 10575.1963
+[INFO GPL-0042] Number of overflowed tiles: 176045 (35.64%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.3692
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.3043
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.2576
+[INFO GPL-0046] Average top 5.0% routing congestion: 1.1883
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.3367
+[INFO GPL-0048] Routing congestion (1.3367) lower than previous minimum (1.351). Updating minimum.
+[INFO GPL-0086] Inflated area:                  60.649 um^2 (+5.00%)
+[INFO GPL-0052] Placement target density:       0.4534
+[INFO GPL-0076] Removing fillers, count: Before: 275608, After: 275203 (-0.15%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 41223.791, After: 41163.214 (-0.15%)
+[INFO GPL-0078] Removed fillers count: 405, area removed: 60.577 um^2. Remaining area to be compensated by modifying density: 0.071 um^2
+[INFO GPL-0058] White space area:            93594.633 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      42436.858 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:           41163.214 um^2 (-0.15%)
+[INFO GPL-0061] Total non-inflated area:     42436.961 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         42497.609 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.4534
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      780 |   0.6074 |  7.788645e+05 |   +1.23% |  1.68e-13 |      
+      790 |   0.5412 |  7.768684e+05 |   -0.26% |  2.47e-13 |      
+      800 |   0.5125 |  7.739145e+05 |   -0.38% |  3.64e-13 |      
+      810 |   0.4963 |  7.727350e+05 |   -0.15% |  5.36e-13 |      
+      820 |   0.5041 |  7.725180e+05 |   -0.03% |  7.90e-13 |      
+      830 |   0.4969 |  7.722199e+05 |   -0.04% |  1.16e-12 |      
+      840 |   0.4869 |  7.716833e+05 |   -0.07% |  1.71e-12 |      
+      850 |   0.4788 |  7.711233e+05 |   -0.07% |  2.52e-12 |      
+      860 |   0.4895 |  7.713414e+05 |   +0.03% |  3.72e-12 |      
+      870 |   0.5031 |  7.718117e+05 |   +0.06% |  5.48e-12 |      
+      880 |   0.4877 |  7.717406e+05 |   -0.01% |  8.07e-12 |      
+      890 |   0.4964 |  7.718606e+05 |   +0.02% |  1.19e-11 |      
+      900 |   0.4944 |  7.719476e+05 |   +0.01% |  1.75e-11 |      
+      910 |   0.5044 |  7.721322e+05 |   +0.02% |  2.58e-11 |      
+      920 |   0.5066 |  7.722991e+05 |   +0.02% |  3.80e-11 |      
+      930 |   0.4972 |  7.721053e+05 |   -0.03% |  5.60e-11 |      
+      940 |   0.4992 |  7.721803e+05 |   +0.01% |  8.25e-11 |      
+      950 |   0.5043 |  7.722870e+05 |   +0.01% |  1.21e-10 |      
+      960 |   0.5035 |  7.723875e+05 |   +0.01% |  1.79e-10 |      
+      970 |   0.5011 |  7.724257e+05 |   +0.00% |  2.64e-10 |      
+      980 |   0.5024 |  7.727141e+05 |   +0.04% |  3.88e-10 |      
+      990 |   0.5010 |  7.730204e+05 |   +0.04% |  5.72e-10 |      
+     1000 |   0.5027 |  7.736148e+05 |   +0.08% |  8.43e-10 |      
+     1010 |   0.5003 |  7.745094e+05 |   +0.12% |  1.24e-09 |      
+     1020 |   0.4982 |  7.766957e+05 |   +0.28% |  1.83e-09 |      
+     1030 |   0.4927 |  7.788778e+05 |   +0.28% |  2.69e-09 |      
+     1040 |   0.4788 |  7.857965e+05 |   +0.89% |  3.97e-09 |      
+     1050 |   0.4761 |  7.951871e+05 |   +1.20% |  5.83e-09 |      
+     1060 |   0.4775 |  7.910801e+05 |   -0.52% |  8.59e-09 |      
+     1070 |   0.4767 |  7.895468e+05 |   -0.19% |  1.27e-08 |      
+     1080 |   0.4796 |  7.895390e+05 |   -0.00% |  1.86e-08 |      
+     1090 |   0.4672 |  7.876366e+05 |   -0.24% |  2.75e-08 |      
+     1100 |   0.4630 |  7.851811e+05 |   -0.31% |  4.04e-08 |      
+     1110 |   0.4606 |  7.854562e+05 |   +0.04% |  5.95e-08 |      
+     1120 |   0.4565 |  7.817028e+05 |   -0.48% |  8.77e-08 |      
+     1130 |   0.4463 |  7.793101e+05 |   -0.31% |  1.29e-07 |      
+     1140 |   0.4421 |  7.763567e+05 |   -0.38% |  1.90e-07 |      
+     1150 |   0.4309 |  7.747622e+05 |   -0.21% |  2.80e-07 |      
+     1160 |   0.4022 |  7.736502e+05 |   -0.14% |  4.13e-07 |      
+     1170 |   0.3842 |  7.724852e+05 |   -0.15% |  6.08e-07 |      
+     1180 |   0.3634 |  7.718504e+05 |   -0.08% |  8.96e-07 |      
+     1190 |   0.3375 |  7.703840e+05 |   -0.19% |  1.32e-06 |      
+     1200 |   0.3108 |  7.705797e+05 |   +0.03% |  1.94e-06 |      
+[INFO GPL-0040] Routability iteration: 3
+[INFO GPL-0041] Total routing overflow: 10531.5803
+[INFO GPL-0042] Number of overflowed tiles: 176443 (35.72%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.3479
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.2926
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.2514
+[INFO GPL-0046] Average top 5.0% routing congestion: 1.1858
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.3203
+[INFO GPL-0048] Routing congestion (1.3203) lower than previous minimum (1.337). Updating minimum.
+[INFO GPL-0086] Inflated area:                  55.226 um^2 (+4.34%)
+[INFO GPL-0052] Placement target density:       0.4534
+[INFO GPL-0076] Removing fillers, count: Before: 275203, After: 274834 (-0.13%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 41163.214, After: 41108.021 (-0.13%)
+[INFO GPL-0078] Removed fillers count: 369, area removed: 55.193 um^2. Remaining area to be compensated by modifying density: 0.033 um^2
+[INFO GPL-0058] White space area:            93594.633 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      42436.858 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:           41108.021 um^2 (-0.13%)
+[INFO GPL-0061] Total non-inflated area:     42436.994 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         42492.220 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.4534
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+     1210 |   0.6098 |  7.787538e+05 |   +1.06% |  1.88e-13 |      
+     1220 |   0.5539 |  7.753239e+05 |   -0.44% |  2.78e-13 |      
+     1230 |   0.5213 |  7.736940e+05 |   -0.21% |  4.09e-13 |      
+     1240 |   0.5081 |  7.728086e+05 |   -0.11% |  6.02e-13 |      
+     1250 |   0.5139 |  7.726295e+05 |   -0.02% |  8.87e-13 |      
+     1260 |   0.5085 |  7.721928e+05 |   -0.06% |  1.31e-12 |      
+     1270 |   0.5021 |  7.717335e+05 |   -0.06% |  1.93e-12 |      
+     1280 |   0.4945 |  7.716194e+05 |   -0.01% |  2.84e-12 |      
+     1290 |   0.5097 |  7.716421e+05 |   +0.00% |  4.18e-12 |      
+     1300 |   0.5132 |  7.718670e+05 |   +0.03% |  6.15e-12 |      
+     1310 |   0.5091 |  7.719275e+05 |   +0.01% |  9.07e-12 |      
+     1320 |   0.5117 |  7.721624e+05 |   +0.03% |  1.34e-11 |      
+     1330 |   0.5125 |  7.720543e+05 |   -0.01% |  1.97e-11 |      
+     1340 |   0.5195 |  7.724255e+05 |   +0.05% |  2.90e-11 |      
+     1350 |   0.5183 |  7.723890e+05 |   -0.00% |  4.27e-11 |      
+     1360 |   0.5170 |  7.725326e+05 |   +0.02% |  6.29e-11 |      
+     1370 |   0.5145 |  7.724964e+05 |   -0.00% |  9.27e-11 |      
+     1380 |   0.5172 |  7.725949e+05 |   +0.01% |  1.36e-10 |      
+     1390 |   0.5207 |  7.728143e+05 |   +0.03% |  2.01e-10 |      
+     1400 |   0.5189 |  7.728033e+05 |   -0.00% |  2.96e-10 |      
+     1410 |   0.5187 |  7.731330e+05 |   +0.04% |  4.36e-10 |      
+     1420 |   0.5173 |  7.735189e+05 |   +0.05% |  6.43e-10 |      
+     1430 |   0.5154 |  7.742172e+05 |   +0.09% |  9.47e-10 |      
+     1440 |   0.5156 |  7.755609e+05 |   +0.17% |  1.39e-09 |      
+     1450 |   0.5125 |  7.777445e+05 |   +0.28% |  2.05e-09 |      
+     1460 |   0.5061 |  7.810410e+05 |   +0.42% |  3.02e-09 |      
+     1470 |   0.4896 |  7.873825e+05 |   +0.81% |  4.45e-09 |      
+     1480 |   0.4880 |  7.935571e+05 |   +0.78% |  6.55e-09 |      
+     1490 |   0.4891 |  7.876793e+05 |   -0.74% |  9.65e-09 |      
+     1500 |   0.4940 |  7.904064e+05 |   +0.35% |  1.42e-08 |      
+     1510 |   0.4917 |  7.868174e+05 |   -0.45% |  2.09e-08 |      
+     1520 |   0.4834 |  7.876317e+05 |   +0.10% |  3.08e-08 |      
+     1530 |   0.4783 |  7.832301e+05 |   -0.56% |  4.54e-08 |      
+     1540 |   0.4720 |  7.852766e+05 |   +0.26% |  6.69e-08 |      
+     1550 |   0.4653 |  7.815616e+05 |   -0.47% |  9.85e-08 |      
+     1560 |   0.4567 |  7.798133e+05 |   -0.22% |  1.45e-07 |      
+     1570 |   0.4431 |  7.761685e+05 |   -0.47% |  2.14e-07 |      
+     1580 |   0.4256 |  7.737733e+05 |   -0.31% |  3.15e-07 |      
+     1590 |   0.4020 |  7.724343e+05 |   -0.17% |  4.64e-07 |      
+     1600 |   0.3839 |  7.719523e+05 |   -0.06% |  6.83e-07 |      
+     1610 |   0.3591 |  7.715055e+05 |   -0.06% |  1.01e-06 |      
+     1620 |   0.3268 |  7.707744e+05 |   -0.09% |  1.48e-06 |      
+     1630 |   0.2981 |  7.707663e+05 |   -0.00% |  2.18e-06 |      
+[INFO GPL-0040] Routability iteration: 4
+[INFO GPL-0041] Total routing overflow: 10366.5095
+[INFO GPL-0042] Number of overflowed tiles: 176685 (35.77%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.3522
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.2961
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.2538
+[INFO GPL-0046] Average top 5.0% routing congestion: 1.1857
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.3241
+[INFO GPL-0049] Routing congestion (1.3241) higher than minimum (1.3203). Consecutive non-improvement count: 1.
+[INFO GPL-0086] Inflated area:                  59.829 um^2 (+4.50%)
+[INFO GPL-0052] Placement target density:       0.4534
+[INFO GPL-0076] Removing fillers, count: Before: 274834, After: 274435 (-0.15%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 41108.021, After: 41048.341 (-0.15%)
+[INFO GPL-0078] Removed fillers count: 399, area removed: 59.680 um^2. Remaining area to be compensated by modifying density: 0.149 um^2
+[INFO GPL-0058] White space area:            93594.633 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      42436.858 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:           41048.341 um^2 (-0.15%)
+[INFO GPL-0061] Total non-inflated area:     42437.143 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         42496.972 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.4534
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+     1640 |   0.5814 |  7.786739e+05 |   +1.03% |  2.29e-13 |      
+     1650 |   0.5444 |  7.751365e+05 |   -0.45% |  3.37e-13 |      
+     1660 |   0.5309 |  7.739274e+05 |   -0.16% |  4.96e-13 |      
+     1670 |   0.5197 |  7.728006e+05 |   -0.15% |  7.31e-13 |      
+     1680 |   0.5281 |  7.728199e+05 |   +0.00% |  1.08e-12 |      
+     1690 |   0.5184 |  7.724972e+05 |   -0.04% |  1.59e-12 |      
+     1700 |   0.5130 |  7.718007e+05 |   -0.09% |  2.34e-12 |      
+     1710 |   0.5169 |  7.714812e+05 |   -0.04% |  3.44e-12 |      
+     1720 |   0.5248 |  7.717582e+05 |   +0.04% |  5.07e-12 |      
+     1730 |   0.5216 |  7.720263e+05 |   +0.03% |  7.47e-12 |      
+     1740 |   0.5231 |  7.720891e+05 |   +0.01% |  1.10e-11 |      
+     1750 |   0.5247 |  7.723771e+05 |   +0.04% |  1.62e-11 |      
+     1760 |   0.5280 |  7.722426e+05 |   -0.02% |  2.39e-11 |      
+     1770 |   0.5326 |  7.725676e+05 |   +0.04% |  3.52e-11 |      
+     1780 |   0.5331 |  7.726963e+05 |   +0.02% |  5.18e-11 |      
+     1790 |   0.5315 |  7.727874e+05 |   +0.01% |  7.63e-11 |      
+     1800 |   0.5309 |  7.727672e+05 |   -0.00% |  1.12e-10 |      
+     1810 |   0.5347 |  7.729738e+05 |   +0.03% |  1.66e-10 |      
+     1820 |   0.5364 |  7.731431e+05 |   +0.02% |  2.44e-10 |      
+     1830 |   0.5307 |  7.731701e+05 |   +0.00% |  3.60e-10 |      
+     1840 |   0.5305 |  7.734674e+05 |   +0.04% |  5.30e-10 |      
+     1850 |   0.5319 |  7.739785e+05 |   +0.07% |  7.80e-10 |      
+     1860 |   0.5313 |  7.747259e+05 |   +0.10% |  1.15e-09 |      
+     1870 |   0.5291 |  7.765295e+05 |   +0.23% |  1.69e-09 |      
+     1880 |   0.5256 |  7.790389e+05 |   +0.32% |  2.49e-09 |      
+     1890 |   0.5172 |  7.838158e+05 |   +0.61% |  3.67e-09 |      
+     1900 |   0.5017 |  7.928332e+05 |   +1.15% |  5.40e-09 |      
+     1910 |   0.5035 |  7.934324e+05 |   +0.08% |  7.95e-09 |      
+     1920 |   0.5053 |  7.888214e+05 |   -0.58% |  1.17e-08 |      
+     1930 |   0.5067 |  7.899553e+05 |   +0.14% |  1.72e-08 |      
+     1940 |   0.5072 |  7.834819e+05 |   -0.82% |  2.54e-08 |      
+     1950 |   0.5009 |  7.878328e+05 |   +0.56% |  3.74e-08 |      
+     1960 |   0.4965 |  7.853535e+05 |   -0.31% |  5.51e-08 |      
+     1970 |   0.4911 |  7.820852e+05 |   -0.42% |  8.12e-08 |      
+     1980 |   0.4801 |  7.794774e+05 |   -0.33% |  1.20e-07 |      
+     1990 |   0.4705 |  7.762192e+05 |   -0.42% |  1.76e-07 |      
+     2000 |   0.4484 |  7.745971e+05 |   -0.21% |  2.59e-07 |      
+     2010 |   0.4216 |  7.735243e+05 |   -0.14% |  3.82e-07 |      
+     2020 |   0.3969 |  7.728226e+05 |   -0.09% |  5.63e-07 |      
+     2030 |   0.3738 |  7.722879e+05 |   -0.07% |  8.29e-07 |      
+     2040 |   0.3443 |  7.714551e+05 |   -0.11% |  1.22e-06 |      
+     2050 |   0.3039 |  7.710706e+05 |   -0.05% |  1.80e-06 |      
+[INFO GPL-0040] Routability iteration: 5
+[INFO GPL-0041] Total routing overflow: 10273.2783
+[INFO GPL-0042] Number of overflowed tiles: 176758 (35.78%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.3487
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.2905
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.2471
+[INFO GPL-0046] Average top 5.0% routing congestion: 1.1813
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.3196
+[INFO GPL-0049] Routing congestion (1.3196) higher than minimum (1.3203). Consecutive non-improvement count: 2.
+[INFO GPL-0086] Inflated area:                  61.290 um^2 (+4.41%)
+[INFO GPL-0052] Placement target density:       0.4534
+[INFO GPL-0076] Removing fillers, count: Before: 274435, After: 274026 (-0.15%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 41048.341, After: 40987.165 (-0.15%)
+[INFO GPL-0078] Removed fillers count: 409, area removed: 61.176 um^2. Remaining area to be compensated by modifying density: 0.114 um^2
+[INFO GPL-0058] White space area:            93594.633 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      42436.858 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:           40987.165 um^2 (-0.15%)
+[INFO GPL-0061] Total non-inflated area:     42437.257 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         42498.547 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.4534
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+     2060 |   0.6224 |  7.791613e+05 |   +1.05% |  2.12e-13 |      
+     2070 |   0.5732 |  7.757241e+05 |   -0.44% |  3.12e-13 |      
+     2080 |   0.5490 |  7.740428e+05 |   -0.22% |  4.59e-13 |      
+     2090 |   0.5316 |  7.733968e+05 |   -0.08% |  6.76e-13 |      
+     2100 |   0.5448 |  7.730433e+05 |   -0.05% |  9.96e-13 |      
+     2110 |   0.5313 |  7.727456e+05 |   -0.04% |  1.47e-12 |      
+     2120 |   0.5241 |  7.717090e+05 |   -0.13% |  2.16e-12 |      
+     2130 |   0.5234 |  7.713823e+05 |   -0.04% |  3.19e-12 |      
+     2140 |   0.5379 |  7.717232e+05 |   +0.04% |  4.69e-12 |      
+     2150 |   0.5333 |  7.721070e+05 |   +0.05% |  6.91e-12 |      
+     2160 |   0.5380 |  7.722916e+05 |   +0.02% |  1.02e-11 |      
+     2170 |   0.5366 |  7.724439e+05 |   +0.02% |  1.50e-11 |      
+     2180 |   0.5413 |  7.724075e+05 |   -0.00% |  2.21e-11 |      
+     2190 |   0.5439 |  7.727623e+05 |   +0.05% |  3.26e-11 |      
+     2200 |   0.5463 |  7.727714e+05 |   +0.00% |  4.80e-11 |      
+     2210 |   0.5505 |  7.730888e+05 |   +0.04% |  7.06e-11 |      
+     2220 |   0.5445 |  7.729974e+05 |   -0.01% |  1.04e-10 |      
+     2230 |   0.5469 |  7.732072e+05 |   +0.03% |  1.53e-10 |      
+     2240 |   0.5491 |  7.733234e+05 |   +0.02% |  2.26e-10 |      
+     2250 |   0.5445 |  7.732945e+05 |   -0.00% |  3.33e-10 |      
+     2260 |   0.5448 |  7.735804e+05 |   +0.04% |  4.90e-10 |      
+     2270 |   0.5446 |  7.740951e+05 |   +0.07% |  7.22e-10 |      
+     2280 |   0.5451 |  7.747782e+05 |   +0.09% |  1.06e-09 |      
+     2290 |   0.5448 |  7.762370e+05 |   +0.19% |  1.57e-09 |      
+     2300 |   0.5413 |  7.785525e+05 |   +0.30% |  2.31e-09 |      
+     2310 |   0.5335 |  7.819688e+05 |   +0.44% |  3.40e-09 |      
+     2320 |   0.5148 |  7.898263e+05 |   +1.00% |  5.00e-09 |      
+     2330 |   0.5257 |  7.938454e+05 |   +0.51% |  7.36e-09 |      
+     2340 |   0.5194 |  7.880253e+05 |   -0.73% |  1.08e-08 |      
+     2350 |   0.5270 |  7.898619e+05 |   +0.23% |  1.60e-08 |      
+     2360 |   0.5262 |  7.857735e+05 |   -0.52% |  2.35e-08 |      
+     2370 |   0.5074 |  7.873885e+05 |   +0.21% |  3.46e-08 |      
+     2380 |   0.5065 |  7.850698e+05 |   -0.29% |  5.10e-08 |      
+     2390 |   0.4906 |  7.828313e+05 |   -0.29% |  7.52e-08 |      
+     2400 |   0.4809 |  7.795722e+05 |   -0.42% |  1.11e-07 |      
+     2410 |   0.4813 |  7.774538e+05 |   -0.27% |  1.63e-07 |      
+     2420 |   0.4543 |  7.751446e+05 |   -0.30% |  2.40e-07 |      
+     2430 |   0.4301 |  7.737686e+05 |   -0.18% |  3.54e-07 |      
+     2440 |   0.4078 |  7.730720e+05 |   -0.09% |  5.21e-07 |      
+     2450 |   0.3879 |  7.726893e+05 |   -0.05% |  7.68e-07 |      
+     2460 |   0.3552 |  7.714681e+05 |   -0.16% |  1.13e-06 |      
+     2470 |   0.3111 |  7.710797e+05 |   -0.05% |  1.67e-06 |      
+[INFO GPL-0040] Routability iteration: 6
+[INFO GPL-0041] Total routing overflow: 10061.1544
+[INFO GPL-0042] Number of overflowed tiles: 176902 (35.81%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.3503
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.2819
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.2381
+[INFO GPL-0046] Average top 5.0% routing congestion: 1.1757
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.3161
+[INFO GPL-0048] Routing congestion (1.3161) lower than previous minimum (1.32). Updating minimum.
+[INFO GPL-0086] Inflated area:                  57.538 um^2 (+3.97%)
+[INFO GPL-0052] Placement target density:       0.4534
+[INFO GPL-0076] Removing fillers, count: Before: 274026, After: 273642 (-0.14%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 40987.165, After: 40929.729 (-0.14%)
+[INFO GPL-0078] Removed fillers count: 384, area removed: 57.436 um^2. Remaining area to be compensated by modifying density: 0.102 um^2
+[INFO GPL-0058] White space area:            93594.633 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      42436.858 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:           40929.729 um^2 (-0.14%)
+[INFO GPL-0061] Total non-inflated area:     42437.359 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         42494.897 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.4534
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+     2480 |   0.6433 |  7.798974e+05 |   +1.14% |  2.04e-13 |      
+     2490 |   0.5927 |  7.760180e+05 |   -0.50% |  3.00e-13 |      
+     2500 |   0.5627 |  7.741000e+05 |   -0.25% |  4.42e-13 |      
+     2510 |   0.5483 |  7.738364e+05 |   -0.03% |  6.51e-13 |      
+     2520 |   0.5595 |  7.733761e+05 |   -0.06% |  9.59e-13 |      
+     2530 |   0.5406 |  7.727614e+05 |   -0.08% |  1.41e-12 |      
+     2540 |   0.5384 |  7.718792e+05 |   -0.11% |  2.08e-12 |      
+     2550 |   0.5348 |  7.716733e+05 |   -0.03% |  3.06e-12 |      
+     2560 |   0.5491 |  7.719006e+05 |   +0.03% |  4.51e-12 |      
+     2570 |   0.5479 |  7.722406e+05 |   +0.04% |  6.65e-12 |      
+     2580 |   0.5482 |  7.723094e+05 |   +0.01% |  9.80e-12 |      
+     2590 |   0.5523 |  7.726980e+05 |   +0.05% |  1.44e-11 |      
+     2600 |   0.5506 |  7.726310e+05 |   -0.01% |  2.13e-11 |      
+     2610 |   0.5542 |  7.730450e+05 |   +0.05% |  3.13e-11 |      
+     2620 |   0.5543 |  7.728961e+05 |   -0.02% |  4.61e-11 |      
+     2630 |   0.5600 |  7.731551e+05 |   +0.03% |  6.80e-11 |      
+     2640 |   0.5586 |  7.734187e+05 |   +0.03% |  1.00e-10 |      
+     2650 |   0.5580 |  7.732230e+05 |   -0.03% |  1.47e-10 |      
+     2660 |   0.5620 |  7.735932e+05 |   +0.05% |  2.17e-10 |      
+     2670 |   0.5555 |  7.735817e+05 |   -0.00% |  3.20e-10 |      
+     2680 |   0.5552 |  7.736715e+05 |   +0.01% |  4.71e-10 |      
+     2690 |   0.5568 |  7.742906e+05 |   +0.08% |  6.94e-10 |      
+     2700 |   0.5572 |  7.749601e+05 |   +0.09% |  1.02e-09 |      
+     2710 |   0.5554 |  7.765628e+05 |   +0.21% |  1.51e-09 |      
+     2720 |   0.5557 |  7.785698e+05 |   +0.26% |  2.22e-09 |      
+     2730 |   0.5470 |  7.820265e+05 |   +0.44% |  3.27e-09 |      
+     2740 |   0.5279 |  7.887567e+05 |   +0.86% |  4.81e-09 |      
+     2750 |   0.5339 |  7.939040e+05 |   +0.65% |  7.08e-09 |      
+     2760 |   0.5320 |  7.890348e+05 |   -0.61% |  1.04e-08 |      
+     2770 |   0.5359 |  7.901024e+05 |   +0.14% |  1.54e-08 |      
+     2780 |   0.5392 |  7.851400e+05 |   -0.63% |  2.26e-08 |      
+     2790 |   0.5354 |  7.875028e+05 |   +0.30% |  3.33e-08 |      
+     2800 |   0.5203 |  7.858986e+05 |   -0.20% |  4.91e-08 |      
+     2810 |   0.5098 |  7.842651e+05 |   -0.21% |  7.23e-08 |      
+     2820 |   0.4966 |  7.810530e+05 |   -0.41% |  1.06e-07 |      
+     2830 |   0.4861 |  7.770444e+05 |   -0.51% |  1.57e-07 |      
+     2840 |   0.4707 |  7.756802e+05 |   -0.18% |  2.31e-07 |      
+     2850 |   0.4407 |  7.743966e+05 |   -0.17% |  3.40e-07 |      
+     2860 |   0.4011 |  7.737974e+05 |   -0.08% |  5.01e-07 |      
+     2870 |   0.3740 |  7.728278e+05 |   -0.13% |  7.38e-07 |      
+     2880 |   0.3497 |  7.719169e+05 |   -0.12% |  1.09e-06 |      
+     2890 |   0.3119 |  7.709763e+05 |   -0.12% |  1.60e-06 |      
+[INFO GPL-0040] Routability iteration: 7
+[INFO GPL-0041] Total routing overflow: 10012.8337
+[INFO GPL-0042] Number of overflowed tiles: 177246 (35.88%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.3584
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.2840
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.2338
+[INFO GPL-0046] Average top 5.0% routing congestion: 1.1729
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.3212
+[INFO GPL-0049] Routing congestion (1.3212) higher than minimum (1.3161). Consecutive non-improvement count: 1.
+[INFO GPL-0086] Inflated area:                  70.186 um^2 (+4.66%)
+[INFO GPL-0052] Placement target density:       0.4534
+[INFO GPL-0076] Removing fillers, count: Before: 273642, After: 273173 (-0.17%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 40929.729, After: 40859.578 (-0.17%)
+[INFO GPL-0078] Removed fillers count: 469, area removed: 70.150 um^2. Remaining area to be compensated by modifying density: 0.035 um^2
+[INFO GPL-0058] White space area:            93594.633 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      42436.858 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:           40859.578 um^2 (-0.17%)
+[INFO GPL-0061] Total non-inflated area:     42437.394 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         42507.580 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.4534
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+     2900 |   0.6630 |  7.792937e+05 |   +1.08% |  1.96e-13 |      
+     2910 |   0.6130 |  7.762658e+05 |   -0.39% |  2.88e-13 |      
+     2920 |   0.5776 |  7.746672e+05 |   -0.21% |  4.25e-13 |      
+     2930 |   0.5625 |  7.740857e+05 |   -0.08% |  6.26e-13 |      
+     2940 |   0.5674 |  7.734502e+05 |   -0.08% |  9.22e-13 |      
+     2950 |   0.5586 |  7.730506e+05 |   -0.05% |  1.36e-12 |      
+     2960 |   0.5496 |  7.722348e+05 |   -0.11% |  2.00e-12 |      
+     2970 |   0.5481 |  7.718835e+05 |   -0.05% |  2.95e-12 |      
+     2980 |   0.5586 |  7.721669e+05 |   +0.04% |  4.34e-12 |      
+     2990 |   0.5638 |  7.724964e+05 |   +0.04% |  6.40e-12 |      
+     3000 |   0.5616 |  7.726169e+05 |   +0.02% |  9.42e-12 |      
+     3010 |   0.5626 |  7.728192e+05 |   +0.03% |  1.39e-11 |      
+     3020 |   0.5656 |  7.730141e+05 |   +0.03% |  2.05e-11 |      
+     3030 |   0.5723 |  7.732510e+05 |   +0.03% |  3.01e-11 |      
+     3040 |   0.5732 |  7.733682e+05 |   +0.02% |  4.44e-11 |      
+     3050 |   0.5777 |  7.736524e+05 |   +0.04% |  6.54e-11 |      
+     3060 |   0.5765 |  7.736326e+05 |   -0.00% |  9.63e-11 |      
+     3070 |   0.5768 |  7.738326e+05 |   +0.03% |  1.42e-10 |      
+     3080 |   0.5771 |  7.739730e+05 |   +0.02% |  2.09e-10 |      
+     3090 |   0.5753 |  7.740745e+05 |   +0.01% |  3.08e-10 |      
+     3100 |   0.5752 |  7.742611e+05 |   +0.02% |  4.54e-10 |      
+     3110 |   0.5762 |  7.747478e+05 |   +0.06% |  6.68e-10 |      
+     3120 |   0.5753 |  7.753181e+05 |   +0.07% |  9.84e-10 |      
+     3130 |   0.5744 |  7.763106e+05 |   +0.13% |  1.45e-09 |      
+     3140 |   0.5720 |  7.786858e+05 |   +0.31% |  2.14e-09 |      
+     3150 |   0.5575 |  7.817516e+05 |   +0.39% |  3.14e-09 |      
+     3160 |   0.5455 |  7.864812e+05 |   +0.60% |  4.63e-09 |      
+     3170 |   0.5471 |  7.934229e+05 |   +0.88% |  6.81e-09 |      
+     3180 |   0.5572 |  7.899296e+05 |   -0.44% |  1.00e-08 |      
+     3190 |   0.5452 |  7.901920e+05 |   +0.03% |  1.48e-08 |      
+     3200 |   0.5543 |  7.837438e+05 |   -0.82% |  2.18e-08 |      
+     3210 |   0.5492 |  7.870327e+05 |   +0.42% |  3.21e-08 |      
+     3220 |   0.5347 |  7.828819e+05 |   -0.53% |  4.72e-08 |      
+     3230 |   0.5324 |  7.828181e+05 |   -0.01% |  6.95e-08 |      
+     3240 |   0.5030 |  7.816827e+05 |   -0.15% |  1.02e-07 |      
+     3250 |   0.4982 |  7.768958e+05 |   -0.61% |  1.51e-07 |      
+     3260 |   0.4790 |  7.754533e+05 |   -0.19% |  2.22e-07 |      
+     3270 |   0.4476 |  7.741133e+05 |   -0.17% |  3.27e-07 |      
+     3280 |   0.4000 |  7.736541e+05 |   -0.06% |  4.82e-07 |      
+     3290 |   0.3807 |  7.729442e+05 |   -0.09% |  7.10e-07 |      
+     3300 |   0.3541 |  7.720636e+05 |   -0.11% |  1.05e-06 |      
+     3310 |   0.3160 |  7.711701e+05 |   -0.12% |  1.54e-06 |      
+[INFO GPL-0040] Routability iteration: 8
+[INFO GPL-0041] Total routing overflow: 9784.9001
+[INFO GPL-0042] Number of overflowed tiles: 177257 (35.88%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.3746
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.2893
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.2358
+[INFO GPL-0046] Average top 5.0% routing congestion: 1.1711
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.3320
+[INFO GPL-0049] Routing congestion (1.3320) higher than minimum (1.3161). Consecutive non-improvement count: 2.
+[INFO GPL-0086] Inflated area:                  63.903 um^2 (+4.05%)
+[INFO GPL-0052] Placement target density:       0.4534
+[INFO GPL-0076] Removing fillers, count: Before: 273173, After: 272746 (-0.16%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 40859.578, After: 40795.710 (-0.16%)
+[INFO GPL-0078] Removed fillers count: 427, area removed: 63.868 um^2. Remaining area to be compensated by modifying density: 0.034 um^2
+[INFO GPL-0058] White space area:            93594.633 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      42436.858 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:           40795.710 um^2 (-0.16%)
+[INFO GPL-0061] Total non-inflated area:     42437.429 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         42501.331 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.4534
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+     3320 |   0.6739 |  7.797001e+05 |   +1.11% |  1.88e-13 |      
+     3330 |   0.6298 |  7.766161e+05 |   -0.40% |  2.78e-13 |      
+     3340 |   0.5882 |  7.757374e+05 |   -0.11% |  4.09e-13 |      
+     3350 |   0.5727 |  7.743384e+05 |   -0.18% |  6.02e-13 |      
+     3360 |   0.5696 |  7.737777e+05 |   -0.07% |  8.87e-13 |      
+     3370 |   0.5749 |  7.734916e+05 |   -0.04% |  1.31e-12 |      
+     3380 |   0.5601 |  7.723946e+05 |   -0.14% |  1.93e-12 |      
+     3390 |   0.5618 |  7.720900e+05 |   -0.04% |  2.84e-12 |      
+     3400 |   0.5681 |  7.723427e+05 |   +0.03% |  4.18e-12 |      
+     3410 |   0.5741 |  7.724698e+05 |   +0.02% |  6.15e-12 |      
+     3420 |   0.5758 |  7.727655e+05 |   +0.04% |  9.07e-12 |      
+     3430 |   0.5777 |  7.729054e+05 |   +0.02% |  1.34e-11 |      
+     3440 |   0.5848 |  7.734468e+05 |   +0.07% |  1.97e-11 |      
+     3450 |   0.5816 |  7.734463e+05 |   -0.00% |  2.90e-11 |      
+     3460 |   0.5862 |  7.735406e+05 |   +0.01% |  4.27e-11 |      
+     3470 |   0.5886 |  7.737900e+05 |   +0.03% |  6.29e-11 |      
+     3480 |   0.5874 |  7.740424e+05 |   +0.03% |  9.26e-11 |      
+     3490 |   0.5846 |  7.738650e+05 |   -0.02% |  1.36e-10 |      
+     3500 |   0.5860 |  7.740270e+05 |   +0.02% |  2.01e-10 |      
+     3510 |   0.5895 |  7.742950e+05 |   +0.03% |  2.96e-10 |      
+     3520 |   0.5875 |  7.743641e+05 |   +0.01% |  4.36e-10 |      
+     3530 |   0.5859 |  7.748323e+05 |   +0.06% |  6.43e-10 |      
+     3540 |   0.5854 |  7.755616e+05 |   +0.09% |  9.47e-10 |      
+     3550 |   0.5851 |  7.766269e+05 |   +0.14% |  1.39e-09 |      
+     3560 |   0.5820 |  7.789557e+05 |   +0.30% |  2.05e-09 |      
+     3570 |   0.5669 |  7.816658e+05 |   +0.35% |  3.02e-09 |      
+     3580 |   0.5588 |  7.857057e+05 |   +0.52% |  4.45e-09 |      
+     3590 |   0.5608 |  7.908097e+05 |   +0.65% |  6.56e-09 |      
+     3600 |   0.5703 |  7.884432e+05 |   -0.30% |  9.66e-09 |      
+     3610 |   0.5518 |  7.896758e+05 |   +0.16% |  1.42e-08 |      
+     3620 |   0.5637 |  7.855196e+05 |   -0.53% |  2.09e-08 |      
+     3630 |   0.5599 |  7.847363e+05 |   -0.10% |  3.08e-08 |      
+     3640 |   0.5484 |  7.825226e+05 |   -0.28% |  4.54e-08 |      
+     3650 |   0.5398 |  7.834274e+05 |   +0.12% |  6.69e-08 |      
+     3660 |   0.5043 |  7.809388e+05 |   -0.32% |  9.85e-08 |      
+     3670 |   0.5065 |  7.787677e+05 |   -0.28% |  1.45e-07 |      
+     3680 |   0.4807 |  7.759461e+05 |   -0.36% |  2.14e-07 |      
+     3690 |   0.4537 |  7.742617e+05 |   -0.22% |  3.15e-07 |      
+     3700 |   0.4067 |  7.742584e+05 |   -0.00% |  4.64e-07 |      
+     3710 |   0.3834 |  7.733023e+05 |   -0.12% |  6.83e-07 |      
+     3720 |   0.3509 |  7.725277e+05 |   -0.10% |  1.01e-06 |      
+     3730 |   0.3152 |  7.713596e+05 |   -0.15% |  1.48e-06 |      
+[INFO GPL-0040] Routability iteration: 9
+[INFO GPL-0041] Total routing overflow: 9695.9096
+[INFO GPL-0042] Number of overflowed tiles: 177230 (35.88%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.3743
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.2909
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.2357
+[INFO GPL-0046] Average top 5.0% routing congestion: 1.1700
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.3326
+[INFO GPL-0049] Routing congestion (1.3326) higher than minimum (1.3161). Consecutive non-improvement count: 3.
+[INFO GPL-0086] Inflated area:                  51.392 um^2 (+3.13%)
+[INFO GPL-0052] Placement target density:       0.4534
+[INFO GPL-0076] Removing fillers, count: Before: 272746, After: 272403 (-0.13%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 40795.710, After: 40744.406 (-0.13%)
+[INFO GPL-0078] Removed fillers count: 343, area removed: 51.304 um^2. Remaining area to be compensated by modifying density: 0.088 um^2
+[INFO GPL-0054] No improvement in routing congestion for 3 consecutive iterations (limit is 3).
+[INFO GPL-0055] Reverting inflation values and target density from the iteration with minimum observed routing congestion.
+[INFO GPL-0056] Minimum observed routing congestion: 1.3161
+[INFO GPL-0057] Target density at minimum routing congestion: 0.4534
+[INFO GPL-0080] Restoring 1623 previously removed fillers.
+[INFO GPL-0081] Number of fillers before restoration 272403 and after 274026 . Relative change: +0.60%%
+[INFO GPL-0082] Total filler area before restoration 40744.41 and after 40987.16 (um^2). Relative change: +0.60%%
+[INFO GPL-0089] Routability finished. Reverting to minimal observed routing congestion, could not reach target.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+     3740 |   0.5697 |  7.751356e+05 |   +0.49% |  1.74e-13 |      
+     3750 |   0.5309 |  7.715644e+05 |   -0.46% |  2.57e-13 |      
+     3760 |   0.5066 |  7.699975e+05 |   -0.20% |  3.78e-13 |      
+     3770 |   0.5188 |  7.700186e+05 |   +0.00% |  5.57e-13 |      
+     3780 |   0.5177 |  7.699294e+05 |   -0.01% |  8.21e-13 |      
+     3790 |   0.5117 |  7.695536e+05 |   -0.05% |  1.21e-12 |      
+     3800 |   0.5029 |  7.691890e+05 |   -0.05% |  1.78e-12 |      
+     3810 |   0.4945 |  7.687883e+05 |   -0.05% |  2.62e-12 |      
+     3820 |   0.5042 |  7.687789e+05 |   -0.00% |  3.87e-12 |      
+     3830 |   0.5119 |  7.687509e+05 |   -0.00% |  5.70e-12 |      
+     3840 |   0.5074 |  7.689540e+05 |   +0.03% |  8.39e-12 |      
+     3850 |   0.5107 |  7.690113e+05 |   +0.01% |  1.24e-11 |      
+     3860 |   0.5138 |  7.689794e+05 |   -0.00% |  1.82e-11 |      
+     3870 |   0.5111 |  7.690396e+05 |   +0.01% |  2.68e-11 |      
+     3880 |   0.5083 |  7.689934e+05 |   -0.01% |  3.95e-11 |      
+     3890 |   0.5067 |  7.687781e+05 |   -0.03% |  5.82e-11 |      
+     3900 |   0.5089 |  7.689095e+05 |   +0.02% |  8.58e-11 |      
+     3910 |   0.5032 |  7.686446e+05 |   -0.03% |  1.26e-10 |      
+     3920 |   0.5054 |  7.686974e+05 |   +0.01% |  1.86e-10 |      
+     3930 |   0.5033 |  7.687108e+05 |   +0.00% |  2.74e-10 |      
+     3940 |   0.4997 |  7.687351e+05 |   +0.00% |  4.04e-10 |      
+     3950 |   0.5005 |  7.689765e+05 |   +0.03% |  5.95e-10 |      
+     3960 |   0.4979 |  7.693251e+05 |   +0.05% |  8.76e-10 |      
+     3970 |   0.4940 |  7.705557e+05 |   +0.16% |  1.29e-09 |      
+     3980 |   0.4858 |  7.727743e+05 |   +0.29% |  1.90e-09 |      
+     3990 |   0.4672 |  7.816769e+05 |   +1.15% |  2.80e-09 |      
+     4000 |   0.4590 |  7.924799e+05 |   +1.38% |  4.12e-09 |      
+     4010 |   0.4742 |  7.970812e+05 |   +0.58% |  6.06e-09 |      
+     4020 |   0.4489 |  7.942719e+05 |   -0.35% |  8.93e-09 |      
+     4030 |   0.4546 |  7.908254e+05 |   -0.43% |  1.32e-08 |      
+     4040 |   0.4416 |  7.920242e+05 |   +0.15% |  1.94e-08 |      
+     4050 |   0.4441 |  7.902782e+05 |   -0.22% |  2.85e-08 |      
+     4060 |   0.4360 |  7.899386e+05 |   -0.04% |  4.20e-08 |      
+     4070 |   0.4209 |  7.881053e+05 |   -0.23% |  6.19e-08 |      
+     4080 |   0.3975 |  7.859365e+05 |   -0.28% |  9.12e-08 |      
+     4090 |   0.3959 |  7.819804e+05 |   -0.50% |  1.34e-07 |      
+     4100 |   0.3922 |  7.785009e+05 |   -0.44% |  1.98e-07 |      
+     4110 |   0.3685 |  7.769337e+05 |   -0.20% |  2.91e-07 |      
+     4120 |   0.3480 |  7.744519e+05 |   -0.32% |  4.29e-07 |      
+     4130 |   0.3202 |  7.728211e+05 |   -0.21% |  6.32e-07 |      
+     4140 |   0.3014 |  7.712710e+05 |   -0.20% |  9.31e-07 |      
+     4150 |   0.2824 |  7.692027e+05 |   -0.27% |  1.37e-06 |      
+     4160 |   0.2576 |  7.666311e+05 |   -0.33% |  2.02e-06 |      
+     4170 |   0.2365 |  7.664940e+05 |   -0.02% |  2.98e-06 |      
+     4180 |   0.2256 |  7.669539e+05 |   +0.06% |  4.39e-06 |      
+     4190 |   0.2043 |  7.675478e+05 |   +0.08% |  6.46e-06 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 4196, overflow: 0.195, keep resizer changes at: 1, HPWL: 767934030
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     25838
+    final |     +1.2% |      75 |    2658 |          1994 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1099 slew violations.
+[INFO RSZ-0036] Found 111 capacitance violations.
+[INFO RSZ-0037] Found 1938 long wires.
+[INFO RSZ-0039] Resized 75 instances.
+[INFO RSZ-0038] Inserted 2658 buffers in 1994 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     11346
+     1100 |     -0.0% |      23 |       12 |     10246
+     2200 |     -0.1% |     732 |      425 |      9146
+     3300 |     -0.1% |     795 |      486 |      8046
+     4400 |     -0.2% |    1524 |     1090 |      6946
+     5500 |     -0.3% |    2067 |     1432 |      5846
+     6600 |     -0.5% |    3150 |     2079 |      4746
+     7700 |     -0.7% |    4425 |     2789 |      3646
+     8800 |     -1.0% |    5612 |     3415 |      2546
+     9900 |     -1.1% |    6261 |     3800 |      1446
+    11000 |     -1.1% |    6264 |     3852 |       346
+    final |     -1.1% |    6264 |     3852 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack 6.632449e-11
+[INFO GPL-0107] Timing-driven: repair_design delta area: -194.558 um^2 (-11.85%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 246 (+1.80%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 6510, deleted: 6264
+[INFO GPL-0110] Timing-driven: new target density: 0.4533842
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+     4200 |   0.2359 |  7.716046e+05 |   +0.53% |  9.51e-06 |      
+     4210 |   0.1944 |  7.712632e+05 |   -0.04% |  1.40e-05 |      
+     4220 |   0.1079 |  7.788643e+05 |   +0.99% |  2.06e-05 |      
+     4228 |   0.0972 |  7.841433e+05 |          |  2.92e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 4228
+[INFO GPL-1017] Routability mode iteration count: 4129
+[INFO GPL-1005] Routability final weighted congestion: 1.3401
+[INFO GPL-1002] Placed Cell Area             1255.5336
+[INFO GPL-1003] Available Free Area         93594.6333
+[INFO GPL-1004] Minimum Feasible Density        0.0100 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0149
+[INFO GPL-1008]     - For 80% usage of free space: 0.0168
+[INFO GPL-1009]     - For 50% usage of free space: 0.0268
+[INFO GPL-1011] Original area (um^2): 839.91
+[INFO GPL-1012] Total routability artificial inflation: 290.90 (+34.63%)
+[INFO GPL-1013] Total timing-driven delta area: 124.72 (+14.85%)
+[INFO GPL-1014] Final placement area: 1255.53 (+49.48%)
+Took 341 seconds: global_placement -density 0.45 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 60192 um^2 38% utilization.
+write_db /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_3_place_gp.odb
+Elapsed time: 6:17.12[h:]min:sec. CPU time: user 1633.79 sys 7.86 (435%). Peak memory: 1338860KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb          377           1307 b12d1c278c38d53fe3a6
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+Running resize.tcl, stage 3_4_place_resized
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_ff.lib
+read_db /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_3_place_gp.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+estimate_parasitics -placement
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     26084
+     1000 |     +0.0% |       0 |      72 |            67 |     25084
+     2000 |     +0.0% |       0 |      72 |            67 |     24084
+     3000 |     +0.0% |       0 |      83 |            78 |     23084
+     4000 |     +0.0% |       0 |      84 |            79 |     22084
+     5000 |     +0.0% |       0 |      86 |            81 |     21084
+     6000 |     +0.1% |       0 |      98 |            93 |     20084
+     7000 |     +0.1% |       1 |     148 |           143 |     19084
+     8000 |     +0.1% |       1 |     227 |           222 |     18084
+     9000 |     +0.1% |       1 |     227 |           222 |     17084
+    10000 |     +0.1% |      26 |     285 |           280 |     16084
+    11000 |     +0.3% |      26 |     625 |           567 |     15084
+    12000 |     +0.4% |      26 |     685 |           625 |     14084
+    13000 |     +0.4% |      26 |     685 |           625 |     13084
+    14000 |     +0.4% |      26 |     704 |           644 |     12084
+    15000 |     +0.4% |      26 |     834 |           772 |     11084
+    16000 |     +0.5% |      26 |     932 |           868 |     10084
+    17000 |     +0.5% |      26 |     932 |           868 |      9084
+    18000 |     +0.5% |      26 |     954 |           890 |      8084
+    19000 |     +0.5% |      60 |    1016 |           952 |      7084
+    20000 |     +0.5% |      60 |    1016 |           952 |      6084
+    21000 |     +0.5% |      60 |    1016 |           952 |      5084
+    22000 |     +0.5% |      60 |    1016 |           952 |      4084
+    23000 |     +0.5% |      60 |    1016 |           952 |      3084
+    24000 |     +0.5% |      60 |    1016 |           952 |      2084
+    25000 |     +0.5% |      60 |    1016 |           952 |      1084
+    26000 |     +0.5% |      60 |    1016 |           952 |        84
+    final |     +0.5% |      60 |    1016 |           952 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 989 slew violations.
+[INFO RSZ-0036] Found 1 capacitance violations.
+[INFO RSZ-0039] Resized 60 instances.
+[INFO RSZ-0038] Inserted 1016 buffers in 952 nets.
+[INFO RSZ-0504] Runtime: 1.25s
+Floating nets: 
+Report metrics stage 3, resizer...
+
+==========================================================================
+resizer report_design_area
+--------------------------------------------------------------------------
+Design area 60503 um^2 39% utilization.
+Instance count before 33994, after 35010
+Pin count before 55164, after 57196
+write_db /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_4_place_resized.odb
+Elapsed time: 0:10.05[h:]min:sec. CPU time: user 12.62 sys 3.28 (158%). Peak memory: 445944KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_4_place_resized         .odb           10            435 13a499f3dc2da29e109f
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+Running detail_place.tcl, stage 3_5_place_dp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_ff.lib
+read_db /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_4_place_resized.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_detail_place_pre_dpl.tcl
+INHOLD released 6224 FIRM hold cells / drivers for DPL
+OT_OFLOP released 2509 output-port flops for DPL
+detailed_placement
+[INFO DPL-0006] Core area: 157051.79 um^2
+[INFO DPL-0007] Movable instances area: 2856.03 um^2
+[INFO DPL-0008] Fixed instances area within core: 57647.42 um^2
+[INFO DPL-0009] Utilization: 38.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 35006 cells
+[INFO DPL-0393]   height 300 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       2857 |       721 |      1913
+        1 |        499 |        59 |       440
+        2 |         62 |         6 |        56
+        3 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 3.
+[INFO DPL-0500] Runtime: 0.71s
+Placement Analysis
+---------------------------------
+total displacement      19723.2 u
+average displacement        0.6 u
+max displacement           43.0 u
+original HPWL          784599.8 u
+legalized HPWL         789513.5 u
+delta HPWL                    1 %
+
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 15095 fixed cells.
+[INFO DPL-0318] Collected 23671 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (2160, 2160) - (529038, 300240)
+[INFO DPL-0310] Assigned 23671 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 7.892101e+08.
+[INFO DPL-0302] End of matching; objective is 7.888847e+08, improvement is 0.04 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 7.864353e+08.
+[INFO DPL-0307] End of global swaps; objective is 7.864353e+08, improvement is 0.31 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 7.861487e+08.
+[INFO DPL-0309] End of vertical swaps; objective is 7.861487e+08, improvement is 0.04 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 7.855716e+08.
+[INFO DPL-0305] End of reordering; objective is 7.855716e+08, improvement is 0.07 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 473420 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 473420, swaps 105984, moves 130605 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 7.840730e+08, Scratch cost 7.820503e+08, Incremental cost 7.820503e+08, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 7.820503e+08.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.26 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.257968 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 12343 cell flips.
+[INFO DPL-0384] End of flipping; objective is 7.798765e+08, improvement is 0.47 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL           789513.5 u (  398421.2,   391092.3)
+Final HPWL              779559.2 u (  390727.1,   388832.1)
+Delta HPWL                  -1.3 % (      -1.9,       -0.6)
+
+Took 5 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 1326 instances
+[INFO DPL-0021] HPWL before          779559.2 u
+[INFO DPL-0022] HPWL after           779492.8 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring
+detailed_placement
+[INFO DPL-0006] Core area: 157051.79 um^2
+[INFO DPL-0007] Movable instances area: 2856.03 um^2
+[INFO DPL-0008] Fixed instances area within core: 57647.42 um^2
+[INFO DPL-0009] Utilization: 38.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 35006 cells
+[INFO DPL-0393]   height 300 row(s): 4 cells
+[INFO DPL-0500] Runtime: 0.26s
+Placement Analysis
+---------------------------------
+total displacement       4872.6 u
+average displacement        0.1 u
+max displacement            1.4 u
+original HPWL          779492.8 u
+legalized HPWL         783822.7 u
+delta HPWL                    1 %
+
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 60503 um^2 39% utilization.
+write_db /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_place.sdc
+Elapsed time: 0:15.27[h:]min:sec. CPU time: user 17.27 sys 1.71 (124%). Peak memory: 1065904KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb           15           1040 aa39762bff9e7b9ef72a
+cp /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_5_place_dp.odb /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_place.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_ff.lib
+read_db /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+OT_FWD: repair_clock_inverters skipped (forwarded-clock subtree kept)
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_MACRO_CTS 4 clocked macros: -macro_clustering_size 2 -macro_clustering_max_diameter 40
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0011]  Clock net "clk" for macros has 4 sinks.
+[INFO CTS-0011]  Clock net "clk_regs" for registers has 1351 sinks.
+[INFO CTS-0007] Net "ckh" found for clock "hclk".
+[INFO CTS-0011]  Clock net "ckh" for macros has 4 sinks.
+[INFO CTS-0011]  Clock net "ckh_regs" for registers has 2074 sinks.
+[INFO CTS-0007] Net "ck_o" found for clock "ck_o_fwd".
+[WARNING CTS-0105] Net "ck_o" already has clock buffer output3415. Skipping...
+[INFO CTS-0008] TritonCTS found 4 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 4 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 4.
+[INFO CTS-0029]  Macro  sinks will be clustered in groups of up to 2 and with maximum cluster diameter of 40.0 um.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(43212, 43980), (259212, 173676)].
+[INFO CTS-0024]  Normalized sink region: [(32.0089, 32.5778), (192.009, 128.649)].
+[INFO CTS-0025]     Width:  160.0000.
+[INFO CTS-0026]     Height: 96.0711.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 2
+    Sub-region size: 80.0000 X 96.0711
+[INFO CTS-0034]     Segment length (rounded): 40.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 4.
+[INFO CTS-0201] 4 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk_regs.
+[INFO CTS-0028]  Total number of sinks: 1351.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 21.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 59.
+[INFO CTS-0024]  Normalized sink region: [(7.69676, 33.5827), (388.04, 221.292)].
+[INFO CTS-0025]     Width:  380.3429.
+[INFO CTS-0026]     Height: 187.7096.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 30
+    Sub-region size: 190.1714 X 187.7096
+[INFO CTS-0034]     Segment length (rounded): 96.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 15
+    Sub-region size: 190.1714 X 93.8548
+[INFO CTS-0034]     Segment length (rounded): 46.
+ Level 3
+    Direction: Horizontal
+    Sinks per sub-region: 8
+    Sub-region size: 95.0857 X 93.8548
+[INFO CTS-0034]     Segment length (rounded): 48.
+ Level 4
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 95.0857 X 46.9274
+[INFO CTS-0034]     Segment length (rounded): 24.
+ Level 5
+    Direction: Horizontal
+    Sinks per sub-region: 2
+    Sub-region size: 47.5429 X 46.9274
+[INFO CTS-0034]     Segment length (rounded): 24.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 59.
+[INFO CTS-0201] 4 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ckh.
+[INFO CTS-0028]  Total number of sinks: 4.
+[INFO CTS-0029]  Macro  sinks will be clustered in groups of up to 2 and with maximum cluster diameter of 40.0 um.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(43212, 43980), (259212, 173676)].
+[INFO CTS-0024]  Normalized sink region: [(32.0089, 32.5778), (192.009, 128.649)].
+[INFO CTS-0025]     Width:  160.0000.
+[INFO CTS-0026]     Height: 96.0711.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 2
+    Sub-region size: 80.0000 X 96.0711
+[INFO CTS-0034]     Segment length (rounded): 40.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 4.
+[INFO CTS-0201] 4 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ckh_regs.
+[INFO CTS-0028]  Total number of sinks: 2074.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 51.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 97.
+[INFO CTS-0024]  Normalized sink region: [(3.76339, 2.71538), (386.029, 132.839)].
+[INFO CTS-0025]     Width:  382.2655.
+[INFO CTS-0026]     Height: 130.1235.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 49
+    Sub-region size: 191.1328 X 130.1235
+[INFO CTS-0034]     Segment length (rounded): 96.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 191.1328 X 65.0617
+[INFO CTS-0034]     Segment length (rounded): 32.
+ Level 3
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 95.5664 X 65.0617
+[INFO CTS-0034]     Segment length (rounded): 48.
+ Level 4
+    Direction: Vertical
+    Sinks per sub-region: 7
+    Sub-region size: 95.5664 X 32.5309
+[INFO CTS-0034]     Segment length (rounded): 16.
+ Level 5
+    Direction: Horizontal
+    Sinks per sub-region: 4
+    Sub-region size: 47.7832 X 32.5309
+[INFO CTS-0034]     Segment length (rounded): 24.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 97.
+[INFO CTS-0018]     Created 3 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 3 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 2:2..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 117 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 9.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 9.
+[INFO CTS-0015]     Created 117 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:9, 2:18, 3:2, 4:3, 5:1, 8:1, 14:1, 15:1, 16:1, 18:1, 19:1, 20:1, 22:2, 23:6, 24:15, 25:12, 26:15..
+[INFO CTS-0017]     Max level of the clock tree: 5.
+[INFO CTS-0018]     Created 3 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 3 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 2:2..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 164 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 9.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 9.
+[INFO CTS-0015]     Created 164 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:2, 2:12, 3:10, 4:6, 5:4, 6:4, 7:5, 9:1, 10:1, 11:3, 12:1, 13:1, 14:1, 15:2, 16:5, 17:2, 18:2, 19:1, 20:3, 21:4, 22:2, 23:1, 24:5, 25:5, 26:12, 27:15, 28:7, 29:8, 30:3, 31:1..
+[INFO CTS-0017]     Max level of the clock tree: 5.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 4
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 464.38 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 0
+[INFO CTS-0098] Clock net "clk_regs"
+[INFO CTS-0099]  Sinks 1389
+[INFO CTS-0100]  Leaf buffers 59
+[INFO CTS-0101]  Average sink wire length 360.14 um
+[INFO CTS-0102]  Path depth 8 - 9
+[INFO CTS-0207]  Dummy loads inserted 38
+[INFO CTS-0098] Clock net "ckh"
+[INFO CTS-0099]  Sinks 4
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 411.49 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 0
+[INFO CTS-0098] Clock net "ckh_regs"
+[INFO CTS-0099]  Sinks 2147
+[INFO CTS-0100]  Leaf buffers 97
+[INFO CTS-0101]  Average sink wire length 467.38 um
+[INFO CTS-0102]  Path depth 8 - 9
+[INFO CTS-0207]  Dummy loads inserted 73
+[INFO RSZ-0047] Found 19 long wires.
+[INFO RSZ-0048] Inserted 19 buffers in 19 nets.
+[INFO CTS-0033] Balancing latency for clock hclk
+[INFO CTS-0036]  inserted 9 delay buffers
+[INFO CTS-0033] Balancing latency for clock core_clk
+[INFO CTS-0036]  inserted 6 delay buffers
+[INFO CTS-0037] Total number of delay buffers: 15
+[INFO CTS-0500] Runtime: 2.89s
+QDM PINFLOP reference: 1263 input pin flops (0 hard-child clock pins at +insertion), median arrival 428.31424 (range 366.379913 .. 667.344543)
+QDM reference pin u_ot_pr_core.g_pc[1].u_pc.rq_d_q[90]$_DFF_P_/CLK clock arrival max 428.31424 min 339.359375 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+DSFD_CTRL_RG2 hclk reference u_ot_pr_core.g_pc[0].u_pc.krd_q[122]$_DFF_P_/CLK of 580 pin flops: clock arrival max 596.293884 min 337.994293 skew 90 hold 50
+OT_LINK_BUDGET clock core_clk T 770.000 L 398.4 (356.9..439.9 std_regs 1350 (macro pins excluded)) skew 150 link 114 -> S 223.0 R 223.0; in max 487.0 out max 487.0
+OT_LINK_BUDGET clock hclk T 900.000 L 588.6 (509.9..667.3 std_regs 2074 (macro pins excluded)) skew 150 link 114 -> S 288.0 R 288.0; in max 552.0 out max 552.0
+OT_LINK_BUDGET ports in:hclk 560 in:core_clk 682 out:hclk 684 out:core_clk 562 async_pins_excluded 548
+Took 8 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 157051.79 um^2
+[INFO DPL-0007] Movable instances area: 3018.29 um^2
+[INFO DPL-0008] Fixed instances area within core: 57647.42 um^2
+[INFO DPL-0009] Utilization: 38.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 35440 cells
+[INFO DPL-0393]   height 300 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         38 |         8 |        30
+        1 |         14 |         2 |        12
+        2 |         12 |         2 |        10
+        3 |         14 |         2 |        12
+        4 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 4.
+[INFO DPL-0500] Runtime: 0.67s
+Placement Analysis
+---------------------------------
+total displacement        665.4 u
+average displacement        0.0 u
+max displacement           38.9 u
+original HPWL          797880.7 u
+legalized HPWL         797950.9 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+OT_CLK_PROTECT dont_touch clock nets=328 clock buffers=323
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/s81ctrl_rg2_sram/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
+QDM PINFLOP reference: 1263 input pin flops (0 hard-child clock pins at +insertion), median arrival 340.1273 (range 298.1436 .. 420.7021)
+QDM reference pin u_ot_pr_core.g_pc[0].u_pc.krd_q[171]$_DFF_P_/CLK clock arrival max 340.1273 min 324.6274 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+DSFD_CTRL_RG2 hclk reference u_ot_pr_core.g_pc[0].u_pc.krd_q[20]$_DFF_P_/CLK of 580 pin flops: clock arrival max 356.7219 min 338.7086 skew 90 hold 50
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
+OT_HOLD_MM virtual period: ot_lb_v_core_clk 770.000000 -> 833.333008 (reference core_clk)
+OT_HOLD_MM sync: SS setup ws -32.89 / FF hold ws -49.87 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 168 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 168 out of 168 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% |  -32.886 |    -1300.6 |    -1624.4 |    168 | u_ot_pr_core.g_pc\[1\].u_pc.g_h\[4\].krq_c$_DFF_PN0_/D
+[ERROR ODB-0373] Attempt to connect iterm to dont_touch net ot_inhold_n00001
+OT_HOLD_MM after repair: SS setup ws -31.89 / FF hold ws -49.87 ps
+Error: cts.tcl, 83 ODB-0373
+Elapsed time: 0:17.82[h:]min:sec. CPU time: user 25.97 sys 8.02 (190%). Peak memory: 1184244KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_dsfd_ctrl_rg2_asap7_ref_gate/base/4_1_cts.odb] Error 2

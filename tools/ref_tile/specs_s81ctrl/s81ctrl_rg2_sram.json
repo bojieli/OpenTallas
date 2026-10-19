@@ -107,11 +107,11 @@
   "macro_halo_um": 5.4,
   "io_hold_margin_ns": 0.03
  },
- "structural_change": "S81-CODEX/CTRL SRAM candidate: replace four over2kb runtime flop FIFOs with actual independent-clock 16x546 SRAMs, preserving original registered-empty Gray2 control and next-head read scheduling. Logical9872bits, physical34944bits; no storage waiver. Four actual176.904x81 LEFs on43.2lattice, xgap39.096/ygap48.6. Outlineheight302.4 (old250 infeasible); parent slot update owed. Actual synthesis/std band, <=405reach, PG/via escape, native clocks and TT/FF closure remain gate obligations. Mechanism six productionAF phasecasesPASS and2realmutantFAIL; full32PC regression still running.",
+ "structural_change": "S81-CODEX/CTRL SRAM candidate: replace four over2kb runtime flop FIFOs with actual independent-clock 16x546 SRAMs, preserving original registered-empty Gray2 control and next-head read scheduling. Logical9872bits, physical34944bits; no storage waiver. Four actual176.904x81 LEFs on43.2lattice, xgap39.096/ygap48.6. Outlineheight302.4 (old250 infeasible); parent slot update owed. Actual synthesis/std band, <=405reach, PG/via escape, native clocks and TT/FF closure remain gate obligations. Mechanism six productionAF phasecasesPASS and2realmutantFAIL; full32PC regression still running. Targeted ODB-0373 diagnosis: protect exactly1243 actual input-hold drivers against resize/reconnect on existing protected HB->driver links. HB/port/link protections retained, downstream capture nets remain repairable; no hold timing change. Geometry unchanged to isolate the tool interaction.",
  "job": {
   "owner": "Codex:S81-CODEX/CTRL",
-  "branch": "codex/s81-ctrl-witness-1019",
-  "tag": "sram1",
+  "branch": "codex/s81-ctrl-minbench-1019",
+  "tag": "sram1drv",
   "purpose": "S81 CTRL four real dualclock SRAMs: qualify exact crossing edges and storage geometry; no inherited flop waiver.",
   "benches": [
    {
@@ -204,5 +204,8 @@
    531.25,
    302.4
   ]
- }
+ },
+ "pre_cts_extra": [
+  "physical/s81_ctrl_rg2/sram_hold_driver_protect.tcl"
+ ]
 }
