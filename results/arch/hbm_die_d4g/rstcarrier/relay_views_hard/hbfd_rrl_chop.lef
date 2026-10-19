@@ -1,0 +1,38 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+UNITS
+    DATABASE MICRONS 1000 ;
+END UNITS
+
+MACRO hbfd_rrl_chop
+  FOREIGN hbfd_rrl_chop 0 0 ;
+  CLASS BLOCK ;
+  SIZE 12.96 BY 6.48 ;
+  PIN clk
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  3.228 6.456 3.252 6.480 ;
+    END
+  END clk
+  PIN rst_n_in
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  6.468 0.000 6.492 0.024 ;
+    END
+  END rst_n_in
+  PIN rst_n
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  9.708 6.456 9.732 6.480 ;
+    END
+  END rst_n
+END hbfd_rrl_chop
+
+END LIBRARY

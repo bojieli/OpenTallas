@@ -66,17 +66,49 @@ def obs_rects(obs):
     return out
 
 
+BUCKET_UM = 2.0  # pin-rect index cell
+
+
+def pin_index(pins):
+    """{layer: {(bx, by): {pin order index}}}: every signal pin rect binned on a BUCKET_UM grid of its layer.
+    PINSTUB-INDEX (DAEMON-FIX2 2026-10-19): move_stubs tested every OBS rect against every pin rect -- 1.1 M OBS rects x
+    5,288 pins on ot_hbm_accel_smh_fc_xr2 (46 MB LEF) ran > 600 s, so the daemon's commit child-lint (pin_stub_fix)
+    timed out 10 times and smn_fcxr2_ref_fa-r4-637a35abf stopped NEEDS_HUMAN after it CLOSED.  Same hits, same order."""
+    idx = {}
+    for k, rs in enumerate(pins.values()):
+        for lay, a, b, c, e in rs:
+            cells = idx.setdefault(lay, {})
+            for bx in range(int(min(a, c) // BUCKET_UM), int(max(a, c) // BUCKET_UM) + 1):
+                for by in range(int(min(b, e) // BUCKET_UM), int(max(b, e) // BUCKET_UM) + 1):
+                    cells.setdefault((bx, by), set()).add(k)
+    return idx
+
+
+def _candidates(idx, layer, r):
+    cells = idx.get(layer)
+    if not cells:
+        return ()
+    out = set()
+    for bx in range(int(min(r[0], r[2]) // BUCKET_UM), int(max(r[0], r[2]) // BUCKET_UM) + 1):
+        for by in range(int(min(r[1], r[3]) // BUCKET_UM), int(max(r[1], r[3]) // BUCKET_UM) + 1):
+            out |= cells.get((bx, by), set())
+    return sorted(out)
+
+
 def move_stubs(head, obs, pins):
     """step 1; returns (head, obs, moved {pin: [(layer, (x0, y0, x1, y1) strings)]})"""
     moved = {}
     out, cur = [], None
+    names = list(pins)
+    idx = pin_index(pins)
     for line in obs.split("\n"):
         m = re.match(r"\s*LAYER (\S+)", line)
         if m: cur = m.group(1); out.append(line); continue
-        m = re.match(r"\s*RECT\s+([-\d.]+) ([-\d.]+) ([-\d.]+) ([-\d.]+)", line)
+        m = re.match(r"\s*RECT\s+([-\d.]+) ([-\d.]+) ([-\d.]+) ([-\d.]+)", line) if cur in idx else None
         if m:
             r = tuple(map(float, m.groups()))
-            hit = [p for p, rs in pins.items() if any(l == cur and _ov(r, x[1:]) for x in rs for l in [x[0]])]
+            hit = [p for p in (names[k] for k in _candidates(idx, cur, r))
+                   if any(x[0] == cur and _ov(r, x[1:]) for x in pins[p])]
             if len(hit) == 1:
                 moved.setdefault(hit[0], []).append((cur, m.groups())); continue
             if len(hit) > 1:

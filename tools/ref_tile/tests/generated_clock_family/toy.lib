@@ -1,0 +1,14 @@
+library(toy) {
+ delay_model  :  table_lookup;
+ time_unit  :  "1ps"; voltage_unit  :  "1V"; current_unit  :  "1mA"; capacitive_load_unit(1,pf);
+ nom_voltage :  1; nom_temperature : 25; nom_process : 1;
+ lu_table_template(t) {variable_1 : input_net_transition; index_1("1");}
+ cell(BUF) {area : 1; pin(A){direction : input;capacitance : 0.001;}
+ pin(Y){direction : output;function : "A"; timing(){related_pin : "A";timing_sense : positive_unate;
+ cell_rise(t){values("3");}cell_fall(t){values("5");}rise_transition(t){values("1");}fall_transition(t){values("1");}}}}
+ cell(FF) {area : 1; ff(IQ,IQN){clocked_on : "CK";next_state : "D";}
+ pin(CK){direction : input;clock : true;capacitance : 0.001;}
+ pin(D){direction : input;capacitance : 0.001;}
+ pin(Q){direction : output;function : "IQ";timing(){related_pin : "CK";timing_type : rising_edge;timing_sense : non_unate;
+ cell_rise(t){values("2");}cell_fall(t){values("2");}rise_transition(t){values("1");}fall_transition(t){values("1");}}}}
+}
