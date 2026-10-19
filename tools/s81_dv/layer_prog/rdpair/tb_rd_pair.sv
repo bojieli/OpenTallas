@@ -28,7 +28,7 @@ module tb_rd_pair;
    if (mut==8 && lateword[0]) changed=lateword;
  end
  assign vi[1]=changed; assign vi[0]=0;
- integer due[0:31]; integer ndue=0,read_seen=0;
+ integer due[0:31]; integer ndue=0,read_seen=0,local_due=0;
  function automatic [255:0] pattern(input integer n);
    integer j; begin for(j=0;j<8;j=j+1) pattern[32*j+:32]=32'hc065a100^(n*32'h1010101)^(j*32'h183a71);end
  endfunction
@@ -92,10 +92,10 @@ module tb_rd_pair;
     $display("VPAIR %0d %0d %h",cyc,vseen,clean);previous<=clean;vseen<=vseen+1;
    end
    if(cib[0][0]&&cid[0]==0&&cib[0][3:1]==4) begin
-    localcount=localcount+1;$display("LOCAL %0d",cyc);
+    localcount=localcount+1;local_due=cyc+3;$display("LOCAL %0d",cyc);
    end
    if(phase==1&&swv[0][1]) begin
-    if(swa[0][10+:10]!==320+2*writes||swd[0][256+:256]!==pattern(writes)) begin errors=errors+1;$display("LOCAL_DATA_FAIL %0d row%0d",cyc,swa[0][10+:10]);end
+    if(swa[0][10+:10]!==320+2*writes||swd[0][256+:256]!==pattern(writes)||cyc!==local_due+writes) begin errors=errors+1;$display("LOCAL_DATA_FAIL %0d row%0d",cyc,swa[0][10+:10]);end
     $display("LOCAL_WRITE %0d %0d %h",cyc,swa[0][10+:10],swd[0][256+:256]);writes=writes+1;
    end
    if((phase==2||phase==3)&&swv[1][1]) begin
