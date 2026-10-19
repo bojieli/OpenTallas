@@ -29,7 +29,7 @@ T="cd $OUT/src && $VL HDC_V41_ARITH=chunk8 python3 tools/hbm_layer_vehicle/smb_u
 case "$JOB" in
   smoke) J="$T --layers L00:0 --name smoke --out $OUT/out/smoke.json" ;;
   trace) J="$T --layers L00:0 --define TRACE --name trace --out $OUT/out/trace.json" ;;
-  pos)   J="$T --layers L00:0,L02:2,L14:14,head:0 --name pos --out $OUT/out/pos.json" ;;
+  pos)   J="export SMB_PACE_NUM=${PNUM:-200}; $T --layers L00:0,L02:2,L14:14,head:0 --name pos --out $OUT/out/pos.json" ;;
   probe)  J="export SMB_PACE_ADD=${PADD:-8} SMB_BSCALE=${BSCALE:-1}; $T --layers L14:14 --name probe${PADD:-8}_${BSCALE:-1} --out $OUT/out/probe${PADD:-8}_${BSCALE:-1}.json" ;;
   l14)   J="$T --layers L14:14 --name l14 --out $OUT/out/l14.json" ;;
   late)  J="$T --layers L14:14 --mut late_ids --name late --out $OUT/out/late.json" ;;
