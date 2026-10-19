@@ -1,57 +1,17 @@
-# dsdv_gunit_l5 -- S81 G-unit leaf L5 (HC tail + coefficient CTL rows)
+# dsdv_gunit_l5 safe2 review candidate
 
-## S81-SAFE-FIX/GUNIT redesign (2026-10-19)
+The forbidden old MCP gate used a nine-cycle data exception. Safe1 removed that mask and pipelined Sinkhorn, but failed actual TT setup -54.7ps. Safe2 adds a registered alignment/sticky cut before each positive-add sum/round, including step-zero epsilon, with matched bypass timing. D0=17, DS=15, LAT602; HC adds161edges versus safe1 and216 versus old MCP. No ICG/data timing masks are used.
 
-The first route was `dsdv_gunit_l5-g3-37cf95cf2`. Its gate passed only because `gunit_sinkh_mcp.sdc` made the whole
-Sinkhorn a 9-cycle multicycle path behind an ICG. That one reg->reg stage was ~5.3 ns and 138 logic levels
-(`u_tail.u_sinkh.g_srow[*].g_dec` -> `w[*]`). Hiding it with an SDC exception is masking, so the tile was redesigned
-structurally:
+Verilator5.050: Sinkhorn300 mixed cases bit-exact PASS; early-step mutant FAIL63errors40cases. Full GUNIT8cases exact PASS; mutants8/10 FAIL104/73. Actual HOP GU pin-age witness on separate branch codex/s81-gunit-pin-age-1019: candidate975N/973S from common lastHP_N, old759/757 and wrong+1 are negatives; compiler admission remains source-gated and pending native repair.
 
-- **Sinkhorn:** `rtl/hdc/v41/ot_hdc_sinkhorn_p.sv` matches `ot_hdc_sinkhorn` bit for bit, including y and fault, and
-  runs on the core clock. Each normalisation is cut into 11 registered stages of at most ~20 levels:
-  - three chained adds;
-  - T (+ eps in steady steps, normalise in step 0);
-  - the seed, in 3 stages (ROM, carry-save, CPA);
-  - the quotient, in 3 stages (X*R carry-save, CPA plus M', remainder carry-save);
-  - a combinational final.
+Safe-design review facts:
+1. Registered boundaries/reset: source input/output FFs and two reset-landing stages. Native CTS census is FAIL: worst launch227.2635ps xd_b[9], five outputs exceed220ps; capture96.9404ps vi_n[0], zero captures over190ps, zero combinational pins. This is a material failure, no submit/adoption.
+2. Reach: square259.2um; actual gate textbook max31.3um. No hard macros.
+3. Fanout: kept108 table-select copies and local T/R/mode copies; no high-fanout gate finding. Exact driver fanout/cap/clock offset of native-failing xe_x/xd_b outputs is under investigation before choosing a fix.
+4. Depth/timing: coarse gate WARN, zeroFAIL; TT placement-RC setup+2.8206326ps and hold+33.6654593ps. Logic-depth estimate675.1ps/16levels (tc_q13 to quotient decode w30) remains a warning; no data exception. Separate process-corner sensitivity on the same immutable CTS placement: SS setup-368.0124ps/hold+38.0719ps, FF setup+195.9856ps/hold+29.2094ps. These separate library diagnostics do not replace routed signoff and are not silently conflated with the coarse gate.
+5. Storage: delay chains removed. Existing3456bit four-entry base/scale table is static CW configuration, replicated4:1 selection; no new runtime flop array. Existing static-table waiver must remain explicit in owner review, no new waiver inferred here.
+6. Geometry: no macros, one contiguous standard-cell area;259.2square. Synth liberty std32414.88294um2 /64963.8144core =49.90%; ODB cell-area estimate29009um2 gives44.65%. Both within owner40–60%. Actual pin geometry1861signal/clock rectangles PASS,0inaccessible/outside/missing. PNGs viewed.
+7. Clock/hold: TT/FF pin-flop spread53.1/51.1ps (all-flop55.9/53.1); insertion351.0/294.1ps;19732sinks, guidance only. Route io_hold_margin0.03ns. Native launch FAIL above still blocks adoption. Boundary must match actual parent compensation/landing.
+8. Schedule: static, router56 unchanged, reset+2 unchanged; safe2 unit HC964stop/976unit; actual HOP GU boundary uses common lastHP_N to CTL_N975/CTL_S973. All216extraedges versus oldMCP must be reflected in compiler reservations/dependencies/token model after source qualification. No rate/overlap claim.
 
-  Step 0 takes 12 stages and shares the same datapath. There is no ICG and no multicycle exception.
-- **Latency:** the result latency is 441 edges after accept, and the HC result arrives 55 edges later than before
-  (tail L 637 -> 692; G-unit `hc_lat` 748 -> 803 at the stop pins). This is handed to MU-DIE-S81 for the schedule and
-  the token pricer.
-- **Table select:** the select `tj_set`/`tj_w` drove 3,456 loads. It is now replicated in two kept ranks (8 -> 108
-  copies, one per 8-bit read group). It costs 0 edges because the select is stable from L4's `mix_go`, at least 29 edges
-  before launch.
-- **Index delay lines:** the tail's 5-bit index delay lines (79/24/5/4 deep, 560 flop->flop chain flops) are replaced by
-  the index recomputed from `age` and registered. This costs 0 edges.
-- **Kit settings:** `reset_landing` 2 stages and `io_hold_margin_ns` 0.03 are on; `gunit_sinkh_mcp.sdc` and
-  `ot_hdc_cg` are no longer used.
-- **Benches:**
-  - `run_sinkhorn_p_eq.sh`: equivalence with `ot_hdc_sinkhorn` over 300 mixed cases (exp-like, wide range, subnormal and
-    zero rows, fault words), plus mutant 1, which lands a step one stage early.
-  - `run_gunit_bench.sh`: the exact bench, plus mutants 8 and 10.
-
-## SAFE-DESIGN checklist (owner 10-19)
-
-| # | item | result |
-|---|---|---|
-| 1 | pin registers + reset landing | PASS / fixed. The RTL registers every input and output (input flops, output flops, `dsdv_gunit_pass` feedthroughs), so the recipe `pin_regs` stays off with its recorded reason (no double stage on the rung). `reset_landing` is on with 2 stages (fixed), followed by `ot_rst_relay`. |
-| 2 | reach <= 405 um per cycle | PASS. The outline is 345.6 x 302.4 and every pin flop is anchored at its face (`io_flop_at_pins`). The gate lint checks reach. |
-| 3 | fanout <= ~32 in critical cones | fixed: `tj_set`/`tj_w` have 108 kept copies; the Sinkhorn has kept T and R copies per quotient and 16 kept mode copies. Check the gate's high_fanout warnings and that the kept copies survive Yosys (attribute-based keep, so not name-based). |
-| 4 | <= ~600 ps / ~20 levels per stage, no masking | fixed: the multicycle SDC is removed and the Sinkhorn is pipelined (see above). Check the gate's logic_depth. |
-| 5 | storage > 2 kb in SRAM, no long delay chains | fixed: the index delay lines are gone. **Waived with reason:** the 2 set x 2 which x 864 b base/scale table (3.4 kb flops) is a 4-entry static configuration table, written only by cw, with a replicated 4:1 read select. An SRAM macro (>= 64 deep) would be ~94 % empty and add macro floorplan risk. |
-| 6 | floorplan / util 40-60 % / aspect <= 2 | aspect 1.14 and no macros. Util comes from gate synthesis (see the gate packet); re-outline if it falls outside 40-60 %. |
-| 7 | clock: pin-flop spread <= 80 TT+FF, io_hold 0.03 | `io_hold_margin_ns` is 0.03 (fixed). One root with no ICG. The spread is judged at the gate (`--cts`); the previous trial measured TT 77.9 / FF 68.3. |
-| 8 | static schedule, cycles handed over | fixed: HC result +55 edges and reset release +2 are handed to MU-DIE-S81 (INBOX). |
-
-## Codex safe2 structural successor
-Previous safe1 gate is preserved at results/rtl/s81_safe_fix_1019/gunit_l5/gate1_failure.
-It failed reset landing (stale flow hook), and measured TT setup -54.7ps on the real positive-add path
-from u_tail.u_sinkh.g_row[2].e3_q exponent through eps alignment/sum/round into g_t[0].tm_q.
-Textbook also identified a ~785ps/18-level first-add stage. No false/multicycle paths are added.
-Every positive add now has an alignment/sticky register before sum/round, including the step-zero eps add.
-Step0 D0=17, steady DS=15, LAT602; HC latency +161 edges versus safe1, reset release unchanged.
-The normalisation bypass is delayed one register to match the eps add; control counter widened to5bits.
-Checklist1 reset: latestmain common_flow hook restored; checklist4: structural arithmetic cut (gate pending).
-Checklist6: outline259.2square from measured32844um2 synthesis, baseline50.6% cell density (remeasure after pipeline).
-Other checklist items remain as above; pending benches and CTS establish exactness and physical closure.
+Trial GRT overflow0, worstM2 utilization49.90%. This is a trial gate, not a routed native qualification. Gate/source binding, exact benches, native library/receipt and SS/FF diagnostics are preserved under results/rtl/s81_safe_fix_1019/gunit_l5/safe2. Critical/repeated-failure tile: no REVIEW or submit before ROOT PNG/checklist/native review and structural repair of the five launch violations.

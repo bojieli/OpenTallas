@@ -1,0 +1,46 @@
+{
+  "candidate": "7819cbc5e",
+  "qualification": "physical gate994776 pending; no adoption",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv": "eea6018d01ec1a67d98a6e61ec6e2d9bc35713499403d44617318716386de5f1",
+    "rtl/hdc/v41/ot_hdc_sinkhorn_p.sv": "8850383ef63e84b341f9da52ce7c2ae5a51cd847af851573b1e4e35f93a902b8"
+  },
+  "measured_unit_receipt": {
+    "verilator": "5.050",
+    "sinkhorn_cases": 300,
+    "sinkhorn_lat": 602,
+    "gunit_cases": 8,
+    "router_lat": 56,
+    "hc_lat_stop_pins": 964,
+    "hc_lat_unit_pins": 976,
+    "safe2_added_hc_edges": 161,
+    "old_MCP_added_hc_edges": 216,
+    "mut8": "FAIL104",
+    "mut10": "FAIL73",
+    "adoption": "pending physical gate; no timing masks",
+    "sinkhorn_mut1": "FAIL63errors40cases"
+  },
+  "compiler_obligation": {
+    "file": "tools/s81_dv/layer_prog/lower_gu.py",
+    "current_HC_LAT_N_S": [
+      759,
+      757
+    ],
+    "prospective_HC_LAT_N_S": [
+      975,
+      973
+    ],
+    "status": "UNQUALIFIED until pin-level run_gu_bench on source-pinned safe2",
+    "router": "unchanged",
+    "downstream": "recompile CTL arrival events, leaf write reservations, dependency start/end, replay expectations and source manifests; do not alter expectations without contract proof"
+  },
+  "model_obligation": {
+    "extra_cycles_vs_safe1": 161,
+    "extra_cycles_vs_old_MCP": 216,
+    "fast_clock_GHz": 1.2,
+    "extra_ns_per_HC_job_vs_safe1": 134.16666666666669,
+    "extra_ns_per_HC_job_vs_MCP": 180,
+    "pricing": "actual serialized critical-path HC call count and MU users, no unmeasured overlap or timing acceptance"
+  },
+  "source_note": "The used arithmetic is ot_hdc_sinkhorn_p.sv; legacy ot_hdc_sinkhorn.sv is not the safe2 pipelined engine."
+}

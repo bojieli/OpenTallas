@@ -1,0 +1,22 @@
+{
+  "source": "7819cbc5e",
+  "gate": "WARN zeroFAIL",
+  "TT_placement_setup_ps": 2.8206326163626727,
+  "TT_placement_hold_ps": 33.665459309162316,
+  "SS_same_CTS_placement_setup_ps": -368.01239833295085,
+  "SS_same_CTS_placement_hold_ps": 38.071906738323946,
+  "FF_same_CTS_placement_setup_ps": 195.98561662448333,
+  "FF_same_CTS_placement_hold_ps": 29.209412666375556,
+  "native": "FAIL launch5>220ps, worst227.2635; capturePASS,comb0",
+  "GRT_overflow": 0,
+  "TT_FF_pin_spread_ps": [
+    53.1,
+    51.1
+  ],
+  "PNGs": [
+    "physical/ref_tile/dsdv_gunit_l5/gate_layout/floorplan.png",
+    "physical/ref_tile/dsdv_gunit_l5/gate_layout/density.png"
+  ],
+  "SAFE_checklist": "physical/ref_tile/dsdv_gunit_l5/README.md",
+  "status": "ROOT review packet; no REVIEW/submit; source-pinned age witness separate branch47024feb3; native driver census pending"
+}

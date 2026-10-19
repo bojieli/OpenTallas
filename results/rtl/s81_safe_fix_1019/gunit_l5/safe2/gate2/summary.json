@@ -1,0 +1,131 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Source-registered: every input lands in a flop at the pin and every output is a flop (dsdv_gunit_l* input/output flops, dsdv_gunit_pass feedthroughs, ot_dsdv_vstop's own flops); recipe pin_regs would add an unpriced stage on the router's critical path and on every rung hop.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc8 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_dsdv_gunit_l5_20261019-080725.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_dsdv_gunit_l5_20261019-080725.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/dsdv_gunit_l5-20261019-080725",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc8 in 913 s (gate total 4092 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 1861, 'pin_rectangles': 1861, 'pin_track_checked': 1861, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 8972bbc76625ef931400faacb116e495064bc66fd2987eb7c07dbb3e2f165eb1",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 32415 um2 + macros 0 in core 64964: util 50%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN dsdv_gunit_l5 cells 286,424 flops 19,732 depth 675.1 ps util 0.4465 reach 31.3 um (10.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 19,732 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_ot_pr_core.u_tail.u_sinkh.g_row[0].g_q[2].u_q.tc_q[13]$_DFF_P_ -> u_ot_pr_core.u_tail.u_sinkh.g_row[2].g_dec[0].w[30]$_DFFE_PP_/D: ~675 ps estimated (16 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 44.7% outside 45%-65% (std 29009 + macro 0 um2 in 64964 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:clk: 19,732 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 19,732 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 383.3..443.2 ps (spread 59.9), boundary mean 407.8; tt insertion all 295.1..351.0 ps (spread 55.9), boundary mean 316.2; ff insertion all 241.0..294.1 ps (spread 53.1), boundary mean 260.2; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/dsdv_gunit_l5/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      465 paths, worst slack 2.8 ps (e.g. u_ot_pr_core.u_tail.ab_q[1]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 2.8206326163626727e-12 hold WNS 3.3665459309162316e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk: 19,732 sinks on the largest root; measured TT insertion 351.0 ps, FF insertion 294.1 ps, TT pin-flop spread 53.1 ps, FF pin-flop spread 51.1 ps; WARN: 19,732 sinks on one clock root > 15,000 (guidance); insertion 351.0 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-gunit-safe2-1019/physical/ref_tile/dsdv_gunit_l5/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-gunit-safe2-1019/physical/ref_tile/dsdv_gunit_l5/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 49.90% used; GRT 765 s",
+   "fix": ""
+  }
+ ]
+}
