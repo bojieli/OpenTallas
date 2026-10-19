@@ -1,6 +1,4 @@
-ot-run: ot-epyc5       admits    33 GB (avail 433, growth 410, headroom 0, waiters 0/0 GB) load 163/128 running 39 disk 1576 GB 
-ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-183633-1792403621 after 1 s
+# KV-PEER5 10-19: source claude/kv-peer5-1019 8168052f5 (git archive on ot-epyc5), Verilator 5.050, run via ot-run
 Verilator 5.050 2026-07-01 rev v5.050
 MISMATCH t=61000 fault 0/1 hc 0000000000000000000000000000000000000000000000/0000000000000000000000000000000000000000000000
 MISMATCH t=63000 fault 0/1 hc 0000000000000000000000000000000000000000000000/0000000000000000000000000000000000000000000000
@@ -11,8 +9,8 @@ HKV_PEER_PD_EQUIV ES=1 die=0 cycles=60000 accepted=7262 tk8_writes=16915 hc_writ
 HKV_PEER_PD_EQUIV FAIL
 - rtl/test/qwen_host/tb_hkv_peer_pd_equiv.sv:100: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 139us; walltime 0.128 s; speed 1.087 ms/s
-- Verilator: cpu 0.097 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 139us; walltime 0.070 s; speed 2.000 ms/s
+- Verilator: cpu 0.070 s on 1 threads; allocated 7 MB
 MISMATCH t=31000 fault 0/1 hc 33e48953bf0532d687ef58b4a8d315135b6aa3275d0174/0000000000000000000000000000000000000000000000
 MISMATCH t=33000 fault 0/1 hc 13e48953bf0532d685ef58b4a8d315135b6aa3275d0174/0000000000000000000000000000000000000000000000
 MISMATCH t=35000 fault 0/1 hc 13e48953bf0532d685ef58b4a8d315135b6aa3275d0174/0000000000000000000000000000000000000000000000
@@ -22,8 +20,8 @@ HKV_PEER_PD_EQUIV ES=1 die=3 cycles=60000 accepted=7516 tk8_writes=13044 hc_writ
 HKV_PEER_PD_EQUIV FAIL
 - rtl/test/qwen_host/tb_hkv_peer_pd_equiv.sv:100: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 140us; walltime 0.091 s; speed 1.551 ms/s
-- Verilator: cpu 0.086 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 140us; walltime 0.074 s; speed 1.891 ms/s
+- Verilator: cpu 0.074 s on 1 threads; allocated 7 MB
 MISMATCH t=71000 fault 0/1 hc 0000000000000000000000000000000000000000000000/0000000000000000000000000000000000000000000000
 MISMATCH t=73000 fault 0/1 hc 0000000000000000000000000000000000000000000000/0000000000000000000000000000000000000000000000
 MISMATCH t=75000 fault 0/1 hc 0000000000000000000000000000000000000000000000/0000000000000000000000000000000000000000000000
@@ -33,8 +31,8 @@ HKV_PEER_PD_EQUIV ES=0 die=0 cycles=60000 accepted=6629 tk8_writes=15394 hc_writ
 HKV_PEER_PD_EQUIV FAIL
 - rtl/test/qwen_host/tb_hkv_peer_pd_equiv.sv:100: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 132us; walltime 0.075 s; speed 1.777 ms/s
-- Verilator: cpu 0.074 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 132us; walltime 0.065 s; speed 2.044 ms/s
+- Verilator: cpu 0.065 s on 1 threads; allocated 7 MB
 MISMATCH t=31000 fault 0/1 hc 23509db373e48953bf0532d687ef58b4a8d315135b6ae3/0000000000000000000000000000000000000000000000
 MISMATCH t=33000 fault 0/1 hc 367c1288234a130baea56f6be74be59cfcf60f35c61e84/0000000000000000000000000000000000000000000000
 MISMATCH t=35000 fault 0/1 hc 167c1288234a130baca56f6be74be59cfcf60f35c61e84/0000000000000000000000000000000000000000000000
@@ -44,7 +42,6 @@ HKV_PEER_PD_EQUIV ES=0 die=5 cycles=60000 accepted=7061 tk8_writes=13217 hc_writ
 HKV_PEER_PD_EQUIV FAIL
 - rtl/test/qwen_host/tb_hkv_peer_pd_equiv.sv:100: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 141us; walltime 0.108 s; speed 1.303 ms/s
-- Verilator: cpu 0.080 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 141us; walltime 0.082 s; speed 1.705 ms/s
+- Verilator: cpu 0.082 s on 1 threads; allocated 7 MB
 HKV_PEER_PD FAIL mutant 4/4
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-183633-1792403621): exit 1

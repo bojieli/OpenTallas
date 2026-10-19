@@ -1,20 +1,20 @@
 {
- "name": "qkd_hr_core_peer-r4-COMMIT",
+ "name": "qkd_hr_core_peer-r5-COMMIT",
  "block": "qkd_hr_core_peer",
  "ref_tile": true,
- "owner": "Claude:HKV-PROMPT6",
- "purpose": "HOST root cluster child qkd_hr_core_peer r3: reset relays + root-mux restructure + 280.8 outline, centre clock (parent qkd_host_root is CRITICAL)",
+ "owner": "Claude:KV-PEER5",
+ "purpose": "HOST root cluster child qkd_hr_core_peer r5 safe redesign: centre clock, reset relay copies <=256, registered one-hot TX grant + slices, input stages, constant-index tk8 writes (parent qkd_host_root is CRITICAL)",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/hkv-peer6-1019",
+  "branch": "claude/kv-peer5-1019",
   "commit": "COMMIT"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_hr_core_peer u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/host_cluster_20261017/qkd_hr_core_peer.v rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/link/ot_link_afifo.sv rtl/physical/ot_qfd_link_adp512_split.sv rtl/physical/ot_qfd_prompt_sram_capture.sv rtl/physical/ot_qkd_host_prompt_capture_pins.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_host_ctl.sv rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch.sv rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv rtl/qwen_sys/host_20261013/qkd_host_csr_service_pins.sv rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv rtl/qwen_sys/host_20261013/qkd_host_emb_boot_barrier.sv rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv rtl/qwen_sys/host_20261013/qkd_host_hc_station.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_station_debt.sv rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv rtl/qwen_sys/host_20261013/qkd_host_phy_cdc5.sv rtl/qwen_sys/host_20261013/qkd_host_pin_channel.sv rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv rtl/qwen_sys/host_20261013/qkd_host_qm_clock_bridge_service.sv rtl/qwen_sys/host_20261013/qkd_host_qm_clock_bridge_service_debt.sv rtl/qwen_sys/host_20261013/qkd_host_qm_credit_pacer.sv rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service.sv rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service_debt.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback_debt.sv rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv rtl/qwen_sys/host_20261013/qkd_host_tx_class.sv rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_control_prompt_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_coordinator_services.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_marker_consumer.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_admission.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_collected.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_link.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_rank_codec.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_root_mux.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv rtl/qwen_sys/ot_qwen_sys_rst_seq.sv rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_pc.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_static.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_static_completion_debt.sv rtl/qwen_sys/split_20261014/qkd_host_pc_slice_debt.sv rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv rtl/qwen_sys/split_20261014/qkd_static_completion_ownerdemux.sv rtl/qwen_sys/static_kv_20261014/qkd_host_native_quiet.sv rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_tp8_coordinator_rr.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_rank_codec_rr.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_ctrl_token_service_packet_collected_rr.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_link_rr.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl_rr.sv rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_ctrl_token_service_packet_collected_pd.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_hr_core_peer u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/host_cluster_20261017/qkd_hr_core_peer.v rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/link/ot_link_afifo.sv rtl/physical/ot_qfd_link_adp512_split.sv rtl/physical/ot_qfd_prompt_sram_capture.sv rtl/physical/ot_qkd_host_prompt_capture_pins.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_host_ctl.sv rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch.sv rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv rtl/qwen_sys/host_20261013/qkd_host_csr_service_pins.sv rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv rtl/qwen_sys/host_20261013/qkd_host_emb_boot_barrier.sv rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv rtl/qwen_sys/host_20261013/qkd_host_hc_station.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_station_debt.sv rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv rtl/qwen_sys/host_20261013/qkd_host_phy_cdc5.sv rtl/qwen_sys/host_20261013/qkd_host_pin_channel.sv rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv rtl/qwen_sys/host_20261013/qkd_host_qm_clock_bridge_service.sv rtl/qwen_sys/host_20261013/qkd_host_qm_clock_bridge_service_debt.sv rtl/qwen_sys/host_20261013/qkd_host_qm_credit_pacer.sv rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service.sv rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service_debt.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback_debt.sv rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv rtl/qwen_sys/host_20261013/qkd_host_tx_class.sv rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_control_prompt_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_coordinator_services.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_marker_consumer.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_admission.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_collected.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_link.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_rank_codec.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_root_mux.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv rtl/qwen_sys/ot_qwen_sys_rst_seq.sv rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_pc.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_static.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_static_completion_debt.sv rtl/qwen_sys/split_20261014/qkd_host_pc_slice_debt.sv rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv rtl/qwen_sys/split_20261014/qkd_static_completion_ownerdemux.sv rtl/qwen_sys/static_kv_20261014/qkd_host_native_quiet.sv rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl2.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_tp8_coordinator_rr.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_rank_codec_rr.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_ctrl_token_service_packet_collected_rr.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_link_rr.sv rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl_rr.sv rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_ctrl_token_service_packet_collected_pd.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -59,29 +59,6 @@
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_rrmutant_qkd_hr_core_peer.log"
    },
    {
-    "name": "peer_root_mux_pl",
-    "expect": "pass",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "cmd": "bash rtl/test/qwen_host/hr_peer_pl_1018/run_hr_peer_pl.sh {RUN}/bench/pl 0",
-    "pass_regex": "HR_PEER_PL .* PASS"
-   },
-   {
-    "name": "peer_root_mux_pl_mutant",
-    "expect": "fail",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "cmd": "bash rtl/test/qwen_host/hr_peer_pl_1018/run_hr_peer_pl.sh {RUN}/bench/plm 1",
-    "fail_regex": "HR_PEER_PL .* FAIL",
-    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hr_peer_pl_mutant.log"
-   },
-   {
     "name": "peer_pd_equiv",
     "expect": "pass",
     "threads": 4,
@@ -105,6 +82,75 @@
     "fail_regex": "HKV_PEER_PD FAIL mutant [1-4]/4",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/peer_pd_mutant_FAIL_v5050.log",
     "note": "QKD_HR_PEPD_MUTANT drops the same-edge head forwarding: must FAIL"
+   },
+   {
+    "name": "peer_root_mux_pl2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/qwen_host/hr_peer_pl2_1019/run_hr_peer_pl2.sh {RUN}/bench/pl2 0",
+    "pass_regex": "HR_PEER_PL2 .* PASS"
+   },
+   {
+    "name": "peer_root_mux_pl2_mutant",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/qwen_host/hr_peer_pl2_1019/run_hr_peer_pl2.sh {RUN}/bench/pl2m 1",
+    "fail_regex": "HR_PEER_PL2 .* FAIL",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hr_peer_pl2_mutant_FAIL_v5050.log"
+   },
+   {
+    "name": "stage_tp8_coordinator",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/qwen_host/hr_peer_stage_1019/run_hr_peer_stage.sh {RUN}/bench/st_tp8_coordinator qkd_host_tp8_coordinator 0",
+    "pass_regex": "HR_PEER_STAGE qkd_host_tp8_coordinator .* PASS"
+   },
+   {
+    "name": "stage_tp8_coordinator_mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/qwen_host/hr_peer_stage_1019/run_hr_peer_stage.sh {RUN}/bench/stm_tp8_coordinator qkd_host_tp8_coordinator 1",
+    "fail_regex": "HR_PEER_STAGE qkd_host_tp8_coordinator .* FAIL",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hr_peer_stage_tp8_coordinator_mutant_FAIL_v5050.log"
+   },
+   {
+    "name": "stage_peer_rank_codec",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/qwen_host/hr_peer_stage_1019/run_hr_peer_stage.sh {RUN}/bench/st_peer_rank_codec qkd_host_peer_rank_codec 0",
+    "pass_regex": "HR_PEER_STAGE qkd_host_peer_rank_codec .* PASS"
+   },
+   {
+    "name": "stage_peer_rank_codec_mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/qwen_host/hr_peer_stage_1019/run_hr_peer_stage.sh {RUN}/bench/stm_peer_rank_codec qkd_host_peer_rank_codec 1",
+    "fail_regex": "HR_PEER_STAGE qkd_host_peer_rank_codec .* FAIL",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hr_peer_stage_peer_rank_codec_mutant_FAIL_v5050.log"
    }
   ],
   "calibrate": {
@@ -155,7 +201,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_hr_core_peer/qkd_hr_core_peer-r4-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_hr_core_peer/qkd_hr_core_peer-r5-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -164,5 +210,5 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_peer (core family, one ck_core entry): members u_peer, u_peer_codec, u_root_mux, u_coordinator, u_ctrl + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | r3 (KV-HROOT-PEER 10-18, gate ca25bcce7 FAIL: TT spread 80.6, insertion 472.7 from a NW-corner clock entry, reg->reg -272.8 (step_slot rank-0 RX / last_allocation TX), por_n 5,341 + host_rst_n 3,419 reset loads from the ports, util 17%): (a) every reset pin of the 5 members behind a local ot_rst_relay (tools/qwen_kv_die/host_cluster/gen_peer_rr.py; +3 release uniform); (b) root mux -> qkd_host_peer_root_mux_pl: cycle-exact one-hot TX round robin (no 512-b runtime part-select) + registered rank-0 RX slice (+1 cycle on rank0->coordinator class9 words; bench rtl/test/qwen_host/hr_peer_pl_1018); (c) outline 302.4 -> 280.8 (pin-bound: 6,301 pins, faces 5.5-5.8 /um after moving cd S, guarded_tk/slice_boot_done/step tags W, slice_boot_ok/seen/peer acks E), ck_core at the N-face centre (was the NW corner). | r4 (HKV-PROMPT6 10-19, routed r3-40d82161e NEEDS_RTL TT -174.78 / FF -11.03; routed sign-off STA classified: no reset-pin path among violators): (1) TT u_ctrl.u_m rp -> 4:1x512 head mux q[rp] -> h[511:K]==0 OR trees -> accept -> 744-flop tk8 / kst8 enable (all 400 listed endpoints, -174.8): registered queue head h (+ same-edge write forwarding) with zero flags computed at queue write (qkd_host_ctrl_token_service_packet_collected_pd, gen_peer_pd.py; bit/cycle exact, 0 cycles); (2) FF input pin-reg hold slice_boot_done/guarded_tk/step*_client_tag/cq_pos (-11.0, 150+ ep): route.io_hold_margin_ns 0.03; internal participant_trace -5.9 to route hold repair; (3) main RESET-LANDING: reset_landing 2 stages on por_n/host_rst_n ahead of the member relays (release +2 more ck_core edges, uniform). MU (allocator_mu) NOT carried: not wireable alone (MU-ADOPT-HROOT)."
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_peer (core family, one ck_core entry): members u_peer, u_peer_codec, u_root_mux, u_coordinator, u_ctrl + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | r3 (KV-HROOT-PEER 10-18, gate ca25bcce7 FAIL: TT spread 80.6, insertion 472.7 from a NW-corner clock entry, reg->reg -272.8 (step_slot rank-0 RX / last_allocation TX), por_n 5,341 + host_rst_n 3,419 reset loads from the ports, util 17%): (a) every reset pin of the 5 members behind a local ot_rst_relay (tools/qwen_kv_die/host_cluster/gen_peer_rr.py; +3 release uniform); (b) root mux -> qkd_host_peer_root_mux_pl: cycle-exact one-hot TX round robin (no 512-b runtime part-select) + registered rank-0 RX slice (+1 cycle on rank0->coordinator class9 words; bench rtl/test/qwen_host/hr_peer_pl_1018); (c) outline 302.4 -> 280.8 (pin-bound: 6,301 pins, faces 5.5-5.8 /um after moving cd S, guarded_tk/slice_boot_done/step tags W, slice_boot_ok/seen/peer acks E), ck_core at the N-face centre (was the NW corner). | r4 (HKV-PROMPT6 10-19, routed r3-40d82161e NEEDS_RTL TT -174.78 / FF -11.03; routed sign-off STA classified: no reset-pin path among violators): (1) TT u_ctrl.u_m rp -> 4:1x512 head mux q[rp] -> h[511:K]==0 OR trees -> accept -> 744-flop tk8 / kst8 enable (all 400 listed endpoints, -174.8): registered queue head h (+ same-edge write forwarding) with zero flags computed at queue write (qkd_host_ctrl_token_service_packet_collected_pd, gen_peer_pd.py; bit/cycle exact, 0 cycles); (2) FF input pin-reg hold slice_boot_done/guarded_tk/step*_client_tag/cq_pos (-11.0, 150+ ep): route.io_hold_margin_ns 0.03; internal participant_trace -5.9 to route hold repair; (3) main RESET-LANDING: reset_landing 2 stages on por_n/host_rst_n ahead of the member relays (release +2 more ck_core edges, uniform). MU (allocator_mu) NOT carried: not wireable alone (MU-ADOPT-HROOT). | r5 (KV-PEER5 / REFILL-1330 10-19, SAFE-AUDIT-KV: r4 ec2f20a5f not submitted, checklist fails 3/4/7; r4 gate --cts TT placement reg->reg classes from a placement-RC STA of the r4 4_1_cts.odb: engine_result_v pin flop -> lifecycle selected-terminal compare -> lifecycle_fault -146.8 / terminal_* -133.2, local_service_epoch pin flop -> rank codec status -> root mux lq_d -97.0 / last_status -84.2, ctrl h -> tk8 -68.7, grant_position -> codec TX -> root mux / rank codec -68.4..-52.2, peer link pr -> physical RX -> coordinator RX -56.2): (1) CLOCK: ck_core pinned to the N-face centre (pin_ranges 136.8-144.0; r4 placed it at the NW end); (2) RESET COPIES: every member relay is ot_rst_relay #(REGIONS K) (coordinator por_n 26, ctrl rst_n 11 / por_n 4, peer link rst_n 7, rank codec por_n 5, root mux por_n 3) and synthesis spreads each member's async-reset flops over the K kept copies (physical/common_flow/ot_rst_split.tcl via orfs_vars OT_RST_SPLIT=1; error above 256 a copy; r4 had 5,165 / 2,165 / 1,260 / 893 on one flop); KV-RELAYGEN had not landed, so the copies are emitted here by gen_peer_rr.py the same way; (3) ROOT MUX r5 = qkd_host_peer_root_mux_pl2: REGISTERED ONE-HOT TX grant (ready from registers only, AND-OR load, no runtime part-select / wide shifter; +<=1 edge), TX rank-0 slice (+1), physical RX slice (+1), r3 rank-0 RX slice kept (bench rtl/test/qwen_host/hr_peer_pl2_1019, per-channel word streams vs the unchanged mux + fault parity); (4) INPUT STAGES (+1 edge, plain registers in the member wrappers): coordinator engine_result_* and rank codec status inputs (service/program/drain levels) (bench rtl/test/qwen_host/hr_peer_stage_1019, lock-step vs the member with the inputs delayed one edge); (5) ctrl _pd fork: the 13 runtime part-select writes X[role|src*W+:W] (tk8 93 b, kst8, boot8, service_epoch8, seq_rx) as constant-index one-hot slice writes (bit/cycle exact, peer_pd_equiv); (6) pin regs on, reset_landing 2, io_hold_margin 0.03 (unchanged from r4); util waiver: pin-bound (fill_reason). Added cycles -> KV static schedule / HOST calendar (class9 lifecycle transport, not the per-token compute schedule): coordinator<->rank TX/RX +1 each direction, engine result +1, rank-0 status +1."
 }

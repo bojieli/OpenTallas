@@ -1,30 +1,27 @@
-ot-run: ot-epyc5       admits    33 GB (avail 433, growth 410, headroom 0, waiters 0/0 GB) load 163/128 running 39 disk 1576 GB 
-ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-183625-1792403621 after 0 s
+# KV-PEER5 10-19: source claude/kv-peer5-1019 8168052f5 (git archive on ot-epyc5), Verilator 5.050, run via ot-run
 Verilator 5.050 2026-07-01 rev v5.050
 HKV_PEER_PD_EQUIV ES=1 die=0 cycles=60000 accepted=7262 tk8_writes=16915 hc_writes=1981 resets=1915 mismatches=0
 HKV_PEER_PD_EQUIV PASS
 - rtl/test/qwen_host/tb_hkv_peer_pd_equiv.sv:100: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 139us; walltime 0.094 s; speed 1.484 ms/s
-- Verilator: cpu 0.091 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 139us; walltime 0.228 s; speed 610.134 us/s
+- Verilator: cpu 0.115 s on 1 threads; allocated 7 MB
 HKV_PEER_PD_EQUIV ES=1 die=3 cycles=60000 accepted=7516 tk8_writes=13044 hc_writes=7769 resets=2040 mismatches=0
 HKV_PEER_PD_EQUIV PASS
 - rtl/test/qwen_host/tb_hkv_peer_pd_equiv.sv:100: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 140us; walltime 0.111 s; speed 1.263 ms/s
-- Verilator: cpu 0.108 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 140us; walltime 0.088 s; speed 1.599 ms/s
+- Verilator: cpu 0.085 s on 1 threads; allocated 7 MB
 HKV_PEER_PD_EQUIV ES=0 die=0 cycles=60000 accepted=6629 tk8_writes=15394 hc_writes=2498 resets=1242 mismatches=0
 HKV_PEER_PD_EQUIV PASS
 - rtl/test/qwen_host/tb_hkv_peer_pd_equiv.sv:100: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 132us; walltime 0.077 s; speed 1.730 ms/s
-- Verilator: cpu 0.077 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 132us; walltime 0.094 s; speed 1.411 ms/s
+- Verilator: cpu 0.094 s on 1 threads; allocated 7 MB
 HKV_PEER_PD_EQUIV ES=0 die=5 cycles=60000 accepted=7061 tk8_writes=13217 hc_writes=10087 resets=2053 mismatches=0
 HKV_PEER_PD_EQUIV PASS
 - rtl/test/qwen_host/tb_hkv_peer_pd_equiv.sv:100: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 141us; walltime 0.098 s; speed 1.435 ms/s
-- Verilator: cpu 0.094 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 141us; walltime 0.091 s; speed 1.552 ms/s
+- Verilator: cpu 0.091 s on 1 threads; allocated 7 MB
 HKV_PEER_PD PASS 4/4
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-183625-1792403621): exit 0
