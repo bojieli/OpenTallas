@@ -42,6 +42,18 @@ qkd_kvs_attn kvs_attn(.ck(ckc),.rst_n(rst),.ufh(hf));
             self.assertEqual(set(v['source_counts_by_clock']),{'ckWS[0]','ckWN[0]','ckES[0]','ckEN[0]','ckc[0]'})
             self.assertEqual(v['spare_transport_candidates'][0]['source_clock'],'ckWS[0]')
 
+    def test_single_landing_uses_ck_s_launch_root(self):
+        with tempfile.TemporaryDirectory() as d:
+            r=Path(d);self.fixture(r,last_a="36'b0")
+            for name in ('case_kv/die.v','port_bind_v2/die_bound.v'):
+                p=r/name;p.write_text(p.read_text().replace('qkd_landsh_36 last(.ck(ckc),','qkd_landsh0_36 last(.ck_s(ckWS),.ck(ckc),'))
+            p=r/'case_kv/elements.lef';lef=p.read_text().replace('qkd_landsh_36','qkd_landsh0_36')
+            pins=''.join(f' PIN a[{i}]\n PORT\n LAYER M4 ;\n RECT 0 1 0.1 1.1 ;\n END\n END a[{i}]\n' for i in range(36))
+            p.write_text(lef.replace('END qkd_landsh0_36',pins+'END qkd_landsh0_36'))
+            p=r/'fwd_lanes.json';doc=json.loads(p.read_text());doc['lanes'][0]['stations']=['last'];p.write_text(json.dumps(doc))
+            v=F.inventory(r);self.assertEqual(v['spare_transport_candidates'][0]['source_clock'],'ckWS[0]')
+            self.assertEqual(v['spare_transport_candidates'][0]['destination_clock'],'ckc[0]')
+
     def test_live_consumer_is_not_spare(self):
         with tempfile.TemporaryDirectory() as d:
             r=Path(d);self.fixture(r,extra='some_consumer real(.a(n_spare[35]));')
