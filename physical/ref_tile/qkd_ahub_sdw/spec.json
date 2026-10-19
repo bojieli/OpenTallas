@@ -391,5 +391,14 @@
   "cycles_added": 1,
   "views_to": "physical/ref_tile/qkd_ahub_sdw/views",
   "record_to": "results/rtl/ref_tile/qkd_ahub_sdw"
+ },
+ "reroute_reason": {
+  "kind": "param_change",
+  "params": {
+   "Z_IN_STRIDE": 4,
+   "AP_OFS": "64'hffddffdeffdcffdc",
+   "FR_OFS": "32'hfffffff9"
+  },
+  "why": "a3 (qkd_ahub_sdw-a3-dad8bea8e) is the RTL default (stride 16, AP_OFS {4{2}}, FR_OFS 0) = a reference only, not die-bindable; a4 (stride 4, default offsets) fails against the die (s4o m8). a5 = the die's binding (HKV-DIE3 OT_KV_AHUB_OFS, fa7fe4ff9 table)."
  }
 }
