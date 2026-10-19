@@ -12,7 +12,7 @@ for group in ['AO','OA','SIMPLE','INVBUF','SEQ']:
         a=re.search(r'\barea\s*:\s*([0-9.eE+-]+)',txt[m.end():])
         if a:areas[m[1]]=float(a[1])
 base='rtl/hbm_accel/loader/service_native/'
-common=[base+n for n in ['ot_hbm_xcal_desc_host_native.sv','ot_hbm_xcal_desc_native.sv','ot_hbm_xcal_prog_native.sv','ot_hbm_xcal_calendar_native.sv']]+['rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv']
+common=[base+n for n in ['ot_hbm_xcal_desc_host_native.sv','ot_hbm_xcal_desc_native.sv','ot_hbm_xcal_prog_native.sv','ot_hbm_xcal_calendar_native.sv','ot_hbm_xcal_target_native.sv','ot_hbm_xcal_kept_bits.sv']]
 bbs=['physical/asap7_memory_macros/'+n+'/'+n+'_bb.v' for n in ['ot_sram_1r1w_128x256_m1_r2c2','ot_sram_1r1w_1024x256_m2_r2c2']]
 yosys='/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys'
 for top,params in [('ot_hbm_xcal_desc_host_native',{'PAW':11,'PREL':1,'DD':256,'DAW':8}),('ot_hbm_xcal_prog_native',{'PAW':11,'PREL':1})]:
@@ -20,7 +20,7 @@ for top,params in [('ot_hbm_xcal_desc_host_native',{'PAW':11,'PREL':1,'DD':256,'
     la=''.join(' -liberty '+str(p) for p in libs)
     script=['read_liberty -lib '+str(p) for p in libs]
     script+=['read_verilog -sv '+p for p in common+bbs]
-    script+=['hierarchy -check -top '+top+''.join(' -chparam '+k+' '+str(v) for k,v in params.items()),'synth -top '+top+' -flatten','dfflibmap -liberty '+str(libs[-1]),'abc'+la+' -D 833.333','setundef -zero','opt_clean -purge','tee -o '+str(dst/'stat.txt')+' stat'+la,'write_json '+str(dst/'mapped.json'),'write_verilog '+str(dst/'mapped.v')]
+    script+=['hierarchy -check -top '+top+''.join(' -chparam '+k+' '+str(v) for k,v in params.items()),'synth -top '+top+' -flatten','dfflibmap -liberty '+str(libs[-1]),'abc'+la+' -D 833.333','setundef -zero','setattr -mod -unset keep_hierarchy','flatten','opt_clean -purge','tee -o '+str(dst/'stat.txt')+' stat'+la,'write_json '+str(dst/'mapped.json'),'write_verilog '+str(dst/'mapped.v')]
     (dst/'synth.ys').write_text('\n'.join(script)+'\n')
     with (dst/'yosys.log').open('w') as log:subprocess.run([yosys,'-s',str(dst/'synth.ys')],stdout=log,stderr=subprocess.STDOUT,check=True)
     design=json.loads((dst/'mapped.json').read_text());mod=design['modules'][top]

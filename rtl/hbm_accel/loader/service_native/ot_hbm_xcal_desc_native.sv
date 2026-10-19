@@ -52,8 +52,8 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
             .w_ce_in(desc_we_q && !running && desc_addr_q[7]), .w_addr_in(desc_addr_q[6:0]), .wd_in(desc_data_q),
             .w_mask_in({256{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
         for(genvar slice=0;slice<16;slice=slice+1)begin:g_read_slice
-            (* keep = 1 *) reg bank_q;
-            always @(posedge clk)bank_q<=rp[7];
+            wire bank_q;
+            (* keep = 1 *) ot_hbm_xcal_kept_bit u_bank(.clk(clk),.d(rp[7]),.q(bank_q));
             assign rd[16*slice+:16]=bank_q?rd_hi[16*slice+:16]:rd_lo[16*slice+:16];
         end
     end endgenerate

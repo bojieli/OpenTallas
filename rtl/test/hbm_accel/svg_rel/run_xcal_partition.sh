@@ -8,7 +8,8 @@ vlt="$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator"
  rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_host_native.sv \
  rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_native.sv \
  rtl/hbm_accel/loader/service_native/ot_hbm_xcal_prog_native.sv \
- rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv \
+ rtl/hbm_accel/loader/service_native/ot_hbm_xcal_target_native.sv \
+ rtl/hbm_accel/loader/service_native/ot_hbm_xcal_kept_bits.sv \
  rtl/hbm_accel/loader/service_native/ot_hbm_xcal_calendar_native.sv \
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v \
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \
