@@ -99,13 +99,15 @@ def sm_row(P0, W, smw, smh, north, H):
     return out, top
 
 
-def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None):
+def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None, hc='quad', vm_dw=0.0, vm_dh=0.0):
     """F4-C quadrant band (W-quadrant S frame, x from the die W edge): row A = 8 VM banks on the SM row inner face,
     row B = 4 SU groups (SU slot + HC client + SFU group (+ quant)) over the 4 SMs, quadrant core at the inner end."""
     out = {}
     dims = lambda n: (P0[n]['w'], P0[n]['h'])
     CX = W / 2
     vw, vh = dims(f'vmb_{q}0')
+    vw = round(vw + vm_dw, 3)               # VM growth (PROG 10-19 01:35): bank SRAM part widened by vm_dw
+    vh = round(vh + vm_dh, 3)               # ... or made taller by vm_dh (one-column macro stack, 47-um pin ring kept)
     ga = 40.0
     order = (1, 0, 2, 3)               # su_0 (SU_CORE / SFU_CORE hub of the quadrant) second from the outer edge
     x = EDGE
@@ -128,8 +130,11 @@ def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None):
     if vmh == 'inner':
         out[f'vmh_{q}'] = R(x, BY, vmh_w, vmh_h); x += vmh_w + ga
     sw_, sh_ = dims(f'sfucore_{q}'); out[f'sfucore_{q}'] = R(x, BY, sw_, sh_)
-    out[f'hce_{q}'] = R(x, BY + sh_ + 60.0, 1598.4, 1598.4)       # quadrant HC engine over the SFU core (HC_ENG to hc_q)
-    x += max(sw_, 1598.4) + ga
+    if hc == 'quad':
+        out[f'hce_{q}'] = R(x, BY + sh_ + 60.0, 1598.4, 1598.4)   # quadrant HC engine over the SFU core (HC_ENG to hc_q)
+        x += max(sw_, 1598.4) + ga
+    else:                                                          # ONE HC engine (PROG 10-19 01:35): slot released
+        x += sw_ + ga
     y = BY
     for n in ('dbk', 'sucore', 'sucx', 'hc', 'cij', 'idxq'):
         w_, h_ = dims(f'{n}_{q}')
@@ -185,18 +190,18 @@ def strip_c(P0, ys, W, sh, coll_d):
     return out
 
 
-def plan_f4c(P0, tw, th, vmh, coll_d=500.0, side=None):
+def plan_f4c(P0, tw, th, vmh, coll_d=500.0, side=None, hc='quad', vm_dw=0.0, vm_dh=0.0):
     smw, smh = sm_dims(tw, th)
     W = round(2 * (EDGE + 4 * smw + sum(GAPS) + CH / 2), 2)
     BY = 2056.0 + smh + 200.0
     tops = []
     cores = {}
     for q in ('SW', 'NW'):
-        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side)
+        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side, hc, vm_dw, vm_dh)
         assert right <= W / 2 - CH / 2 + 1e-6, (q, 'core overruns centre channel', right, W / 2 - CH / 2)
         cores[q] = c; tops.append(top)
     for q, src in (('SE', 'SW'), ('NE', 'NW')):
-        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side)
+        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side, hc, vm_dw, vm_dh)
         cores[q] = {n: S.mirror_x(r, W) for n, r in c.items()}; tops.append(top)
     ys = max(tops) + 100.0
     SH = 1800.0
@@ -209,6 +214,11 @@ def plan_f4c(P0, tw, th, vmh, coll_d=500.0, side=None):
     for q in ('NW', 'NE'):
         P.update({k: S.mirror_y(r, H) for k, r in cores[q].items()})
     P.update(strip_c(P0, ys, W, SH, coll_d))
+    if hc == 'one':
+        # the ONE split HC engine (GEN2 binds ot_hbm_hc_root_static + 4 qhub + 32 bank tiles, 5,223 x 1,953 um at the S-E PHY
+        # corner): the S-E corner between idxs_SE and the die E edge, up to 40 um under the SM row
+        x0 = P['idxs_SE']['x'] + P['idxs_SE']['w'] + 60.0
+        P['hce_SE'] = R(x0, 21.6, W - EDGE - x0, 2056.0 - 40.0 - 21.6)
     return P, W, H
 
 
@@ -233,13 +243,27 @@ def plan_f4w(P0, tw, th):
     return P, W, H
 
 
-def graph_for(P, coll_x):
+def graph_for(P, coll_x, hc='quad', coll_l5=False):
     G = json.loads((FRAME / 'd4g_phy.compact.graph.json').read_text())
     for n, v in G['nodes'].items():
         if n in P:
             if abs(v['w'] - P[n]['w']) > 1e-6 or abs(v['h'] - P[n]['h']) > 1e-6:
                 v['provenance'] = v.get('provenance', '') + f" | HBM-NEXT-DIE P=4: {P[n]['w']} x {P[n]['h']}"
             v['w'], v['h'] = P[n]['w'], P[n]['h']; v['area_mm2'] = round(v['w'] * v['h'] / 1e6, 4)
+    if hc == 'one':                    # one engine: the 4 hc_q clients all link to hce_SE (bits per client unchanged)
+        for q in ('SW', 'NW', 'NE'):
+            G['nodes'].pop(f'hce_{q}', None)
+        for l in G['links']:
+            for e in ('src', 'dst'):
+                if re.fullmatch(r'hce_(SW|NW|NE)', l[e]):
+                    l[e] = 'hce_SE'; l['provenance'] = l.get('provenance', '') + ' | HBM-NEXT-DIE: ONE HC engine (hce_SE corner)'
+            l['id'] = f"{l['src']}>{l['dst']}:{l['cls']}"
+        G['nodes']['hce_SE']['provenance'] = 'HBM-NEXT-DIE 10-19: ONE split HC engine (GEN2 hc_eng, 250 cyc/row measured by UNITS) at the S-E PHY corner'
+    if coll_l5:   # UNITS-COLL 10-19 (units/coll/README.md): L = 5 = per quadrant hb_coll -> cxdl_<q>4 586 b + cxdl -> SU 1,044 b
+        for q in ('SW', 'NW', 'SE', 'NE'):    # quadrant-local, ring / EP unchanged; lane 4 lands on su_<q>0 (SU landing decision open)
+            G['links'].append(dict(id=f'coll_{q}>su_{q}0:COLL_VM_L5', src=f'coll_{q}', dst=f'su_{q}0', cls='COLL_VM', bits=1630,
+                                   bytes_per_token={'qwen': 0.0, 'ds': 0.0}, criticality=0.05, rule=None, fixed_return=False,
+                                   provenance='HBM-NEXT-UNITS-COLL L=5 5th delivery lane: 586 + 1,044 b (cxdl_<q>4 on the path)'))
     if coll_x != 1:
         for l in G['links']:
             if l['cls'] in ('COLL_VM', 'COLL_RING', 'COLL_EP'):
@@ -321,6 +345,10 @@ def main():
     ap.add_argument('--grp-side', type=float, default=None, help='F4-C: SU-group HC client / SFU group plan blocks at this square size '
                     '(GEN2 grant outlines are 216 x 216; the d4g plan blocks 500 x 500 / 500 x 800 are d4f-era placeholders)')
     ap.add_argument('--png', action='store_true')
+    ap.add_argument('--coll-l5', action='store_true', help='COLL L = 5 as UNITS-COLL measured it (+1,630 b per quadrant, COLL_VM only)')
+    ap.add_argument('--hc', default='quad', choices=('quad', 'one'), help='4 quadrant HC slots (reserve) or ONE engine at the S-E PHY corner')
+    ap.add_argument('--vm-dh', type=float, default=0.0, help='VM bank growth in height: 412k words = 5 x 1024x256 macros stacked = +86.4; 524k (Engram ~490k) = 6 = +151.2')
+    ap.add_argument('--vm-dw', type=float, default=0.0, help='VM bank growth: um added to every vmb_* width (412k words = 5 macros: 118.8)')
     a = ap.parse_args()
     P0 = json.loads((FRAME / 'd4g_phy.compact.P.json').read_text())
     out = ROOT / a.out
@@ -334,10 +362,10 @@ def main():
         elif t == 'f4w':
             P, W, H = plan_f4w(P0, a.tile_w, a.tile_h)
         elif t == 'f4c':
-            P, W, H = plan_f4c(P0, a.tile_w, a.tile_h, a.vmh, a.coll_d, a.grp_side)
+            P, W, H = plan_f4c(P0, a.tile_w, a.tile_h, a.vmh, a.coll_d, a.grp_side, a.hc, a.vm_dw, a.vm_dh)
         tag = t + a.suffix
         ov, outside, ret = checks(P, W, H)
-        G = graph_for(P, a.coll_x if t != 'd4g' else 1.0)
+        G = graph_for(P, a.coll_x if t != 'd4g' else 1.0, a.hc if t == 'f4c' else 'quad', a.coll_l5 and t != 'd4g')
         ev = S.write_plan(out / tag, P, G, H, tag, W=W)
         cut = ev['cut_phy_unmasked']
         placed = sum(r['w'] * r['h'] for r in P.values()) / 1e6
@@ -347,7 +375,9 @@ def main():
                         cut_v=cut['worst_v'], cut_h=cut['worst_h'], cut_over_060=cut['over_060'], graph_bit_mm=ev['sum_bits_mm'],
                         stages_bw=ev['stages_bw'], per_class=ev['per_class'], longest_class_um=ev['by_class_longest_um'],
                         relay_flops=ev['graph_relay_flops'], overlaps=len(ov), overlap_pairs=ov[:10], outside=outside, reticle=ret,
-                        sm_hbm_offset_um=sm_hbm_offsets(P), vmh=a.vmh if t == 'f4c' else None, grp_side=a.grp_side if t == 'f4c' else None, coll_d=a.coll_d if t == 'f4c' else None, coll_x=a.coll_x if t != 'd4g' else 1.0)
+                        sm_hbm_offset_um=sm_hbm_offsets(P), vmh=a.vmh if t == 'f4c' else None, grp_side=a.grp_side if t == 'f4c' else None, coll_d=a.coll_d if t == 'f4c' else None, coll_x=a.coll_x if t != 'd4g' else 1.0,
+                        hc=a.hc if t == 'f4c' else None, coll_l5=a.coll_l5, vm_dw=a.vm_dw if t == 'f4c' else None, vm_dh=a.vm_dh if t == 'f4c' else None,
+                        hce_um=[P['hce_SE']['w'], P['hce_SE']['h']] if 'hce_SE' in P else None)
         r = res[tag]
         print(tag, f"{W/1000:.2f}x{H/1000:.2f}={r['die_mm2']} cut {cut['worst_v']['ratio']}/{cut['worst_h']['ratio']} bitmm {ev['sum_bits_mm']/1e6:.3f}M "
               f"stg {ev['stages_bw']} ovl {len(ov)} out {len(outside)} ret {ret['ok']} SM_HBM {ev['per_class'].get('SM_HBM', {}).get('stages_bw')} "
