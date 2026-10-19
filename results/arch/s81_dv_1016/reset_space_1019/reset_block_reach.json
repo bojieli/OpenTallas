@@ -1,0 +1,2605 @@
+{
+ "summary": {
+  "scope": "BLOCK_RESET_SOURCE_PIN_GEOMETRY_DIAGNOSTIC_NOT_NEW_BIND_OR_HARDENED_PARENT_FIT",
+  "reset_blocks": 183,
+  "served": 183,
+  "failures": [],
+  "models": {
+   "flexible_STANDIN_no_hardened_parent_fit": 182,
+   "actual_closed_LEF": 1
+  },
+  "max_min_rect_um": 343.171999999998,
+  "inverter_required": [
+   "rsv_00",
+   "rsv_01",
+   "rsv_02",
+   "rsv_03",
+   "rsv_04",
+   "rsv_05",
+   "rsv_06",
+   "rsv_07",
+   "rsv_08",
+   "rsv_09",
+   "rsv_10",
+   "rsv_11",
+   "rsv_12",
+   "rsv_13",
+   "rsv_14",
+   "rsv_15"
+  ],
+  "remaining": "Standin port geometry/active-high inverter must be emitted and physically checked; root2/new calendars/actual wire obstacles, RC, native clocks and child slot fit remain OWED."
+ },
+ "blocks": [
+  {
+   "block": "f_0L00",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_2_4",
+   "min_rect_um": 18.503999999999905,
+   "point": [
+    1277.616,
+    1794.0
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0L01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsl_x_f_0L01_l0_0",
+   "min_rect_um": 14.244999999999663,
+   "point": [
+    1996.0320000000002,
+    5089.728
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0L02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsl_lr_lk_WS1_1",
+   "min_rect_um": 13.544000000000096,
+   "point": [
+    1277.616,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0L03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_4_26",
+   "min_rect_um": 10.447999999998274,
+   "point": [
+    1996.0320000000002,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0L10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_0_38_2",
+   "min_rect_um": 10.781000000001313,
+   "point": [
+    559.2,
+    15380.431999999999
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0L11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsl_x_f_0L11_l0_0",
+   "min_rect_um": 10.208000000000311,
+   "point": [
+    1996.0320000000002,
+    16583.984
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0L12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_2_48",
+   "min_rect_um": 157.04799999999727,
+   "point": [
+    1277.616,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0L13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_2_61_1",
+   "min_rect_um": 19.257000000002108,
+   "point": [
+    1098.0120000000002,
+    24743.44
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0R00",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_8_4",
+   "min_rect_um": 72.7360000000001,
+   "point": [
+    3731.848,
+    1794.0
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0R01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_8_18",
+   "min_rect_um": 19.939400000000205,
+   "point": [
+    3660.0063999999998,
+    7489.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0R02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_8_19",
+   "min_rect_um": 124.51200000000017,
+   "point": [
+    3731.848,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0R03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_6_27",
+   "min_rect_um": 158.44799999999987,
+   "point": [
+    3013.432,
+    11067.344000000001
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0R10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_6_39_cl0N_3",
+   "min_rect_um": 11.711999999997715,
+   "point": [
+    3013.432,
+    13830.416
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0R11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_10_47_1_cl0N_0",
+   "min_rect_um": 21.323999999998705,
+   "point": [
+    3013.432,
+    16509.356
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0R12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_8_48",
+   "min_rect_um": 72.75199999999813,
+   "point": [
+    3731.848,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_0R13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_8_61",
+   "min_rect_um": 18.00340000000233,
+   "point": [
+    3660.0063999999998,
+    24743.44
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1L00",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_12_4_1",
+   "min_rect_um": 69.5680000000009,
+   "point": [
+    5168.68,
+    1794.0
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1L01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsl_x_f_1L01_l1_0",
+   "min_rect_um": 14.396999999999935,
+   "point": [
+    5887.0960000000005,
+    5089.728
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1L02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_12_19_2",
+   "min_rect_um": 113.99200000000019,
+   "point": [
+    5168.68,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1L03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_14_26",
+   "min_rect_um": 10.503999999998086,
+   "point": [
+    5887.0960000000005,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1L10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_14_39_1_cl1N_2",
+   "min_rect_um": 15.085000000000946,
+   "point": [
+    5887.0960000000005,
+    13830.416
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1L11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_14_40_1",
+   "min_rect_um": 14.25999999999749,
+   "point": [
+    5887.0960000000005,
+    16210.844
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1L12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_12_48_1",
+   "min_rect_um": 69.58399999999892,
+   "point": [
+    5168.68,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1L13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_14_58_1",
+   "min_rect_um": 12.887999999998101,
+   "point": [
+    5887.0960000000005,
+    23462.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1R00",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_18_4",
+   "min_rect_um": 37.263999999999896,
+   "point": [
+    7622.912,
+    1794.0
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1R01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_16_11",
+   "min_rect_um": 16.29200000000037,
+   "point": [
+    6904.496,
+    4639.692
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1R02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_18_19",
+   "min_rect_um": 89.03999999999996,
+   "point": [
+    7622.912,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1R03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_16_26",
+   "min_rect_um": 9.591999999998734,
+   "point": [
+    6904.496,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1R10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_16_34_3_cl1N_6",
+   "min_rect_um": 8.989000000002306,
+   "point": [
+    6904.496,
+    13897.807999999999
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1R11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_16_41",
+   "min_rect_um": 19.60899999999856,
+   "point": [
+    6904.496,
+    16658.612
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1R12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_18_48",
+   "min_rect_um": 37.279999999997926,
+   "point": [
+    7622.912,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_1R13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_18_61",
+   "min_rect_um": 18.45220000000245,
+   "point": [
+    7658.8328,
+    24743.44
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2L00",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_22_4_1",
+   "min_rect_um": 40.43200000000047,
+   "point": [
+    9059.744,
+    1794.0
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2L01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_23_11_2",
+   "min_rect_um": 14.889999999998508,
+   "point": [
+    9778.160000000002,
+    4714.698
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2L02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_22_19_1",
+   "min_rect_um": 92.20800000000054,
+   "point": [
+    9059.744,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2L03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_23_26",
+   "min_rect_um": 9.98399999999674,
+   "point": [
+    9778.160000000002,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2L10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_23_34_1_cl2N_4",
+   "min_rect_um": 9.90899999999965,
+   "point": [
+    9778.160000000002,
+    13897.807999999999
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2L11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_23_46_2",
+   "min_rect_um": 9.815999999998894,
+   "point": [
+    9778.160000000002,
+    18822.824
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2L12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_22_48_1",
+   "min_rect_um": 40.4479999999985,
+   "point": [
+    9059.744,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2L13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_23_58",
+   "min_rect_um": 9.967999999997119,
+   "point": [
+    9778.160000000002,
+    23462.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2R01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_28_11_1",
+   "min_rect_um": 14.832000000000335,
+   "point": [
+    11513.976,
+    4489.68
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2R02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_28_19_1",
+   "min_rect_um": 66.60800000000017,
+   "point": [
+    11513.976,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2R03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_26_26",
+   "min_rect_um": 9.056000000000495,
+   "point": [
+    10795.560000000001,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2R10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_26_34_1_cl2N_4",
+   "min_rect_um": 8.981000000003405,
+   "point": [
+    10795.560000000001,
+    13897.807999999999
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2R11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_26_46_2",
+   "min_rect_um": 8.888000000002648,
+   "point": [
+    10795.560000000001,
+    18822.824
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2R12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_28_48_1",
+   "min_rect_um": 14.847999999998137,
+   "point": [
+    11513.976,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_2R13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_26_55_2",
+   "min_rect_um": 11.349000000005617,
+   "point": [
+    10795.560000000001,
+    22384.719999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3L01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_31_11_2",
+   "min_rect_um": 69.33599999999933,
+   "point": [
+    12950.808,
+    4489.68
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3L02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_31_19",
+   "min_rect_um": 143.45600000000195,
+   "point": [
+    12950.808,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3L03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_33_26",
+   "min_rect_um": 9.943999999997686,
+   "point": [
+    13669.224000000002,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3L10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_33_34_2_cl3N_4",
+   "min_rect_um": 9.869000000000597,
+   "point": [
+    13669.224000000002,
+    13897.807999999999
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3L11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_33_46_2",
+   "min_rect_um": 9.77599999999984,
+   "point": [
+    13669.224000000002,
+    18822.824
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3L12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_31_48_2",
+   "min_rect_um": 69.35199999999713,
+   "point": [
+    12950.808,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3L13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_33_58",
+   "min_rect_um": 9.927999999998065,
+   "point": [
+    13669.224000000002,
+    23462.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3R01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_38_11_1",
+   "min_rect_um": 9.9120000000039,
+   "point": [
+    15509.040000000003,
+    4489.68
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3R02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_38_19_1",
+   "min_rect_um": 11.864000000004125,
+   "point": [
+    15509.040000000003,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3R03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_36_26",
+   "min_rect_um": 9.080000000001746,
+   "point": [
+    14790.624000000003,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3R10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_36_34_1_cl3N_5",
+   "min_rect_um": 11.720000000001164,
+   "point": [
+    14790.624000000003,
+    13830.416
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3R11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_36_46_2",
+   "min_rect_um": 8.9120000000039,
+   "point": [
+    14790.624000000003,
+    18822.824
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3R12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_38_48_1",
+   "min_rect_um": 9.928000000001703,
+   "point": [
+    15509.040000000003,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_3R13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_36_58",
+   "min_rect_um": 9.064000000002125,
+   "point": [
+    14790.624000000003,
+    23462.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4L01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_41_11_2",
+   "min_rect_um": 74.30399999999827,
+   "point": [
+    16945.872000000003,
+    4489.68
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4L02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_41_19",
+   "min_rect_um": 88.71200000000044,
+   "point": [
+    16945.872000000003,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4L03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsl_jw_E_l0_5",
+   "min_rect_um": 11.333000000000538,
+   "point": [
+    17664.288,
+    11606.48
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4L10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_43_34_1_cl4N_2",
+   "min_rect_um": 14.239999999997963,
+   "point": [
+    17664.288,
+    13830.416
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4L11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_43_46_2",
+   "min_rect_um": 11.432000000000698,
+   "point": [
+    17664.288,
+    18822.824
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4L12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_41_48_2",
+   "min_rect_um": 74.31999999999607,
+   "point": [
+    16945.872000000003,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4L13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_43_55_3",
+   "min_rect_um": 11.231999999999971,
+   "point": [
+    17664.288,
+    22182.543999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4R01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_48_11_1",
+   "min_rect_um": 36.99200000000019,
+   "point": [
+    19536.104000000003,
+    4489.68
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4R02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_48_19_1",
+   "min_rect_um": 88.76800000000003,
+   "point": [
+    19536.104000000003,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4R03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_46_26",
+   "min_rect_um": 9.087999999999738,
+   "point": [
+    18817.688000000002,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4R10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_46_34_1_cl4N_3",
+   "min_rect_um": 9.013000000002648,
+   "point": [
+    18817.688000000002,
+    13897.807999999999
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4R11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_46_46_2",
+   "min_rect_um": 8.920000000001892,
+   "point": [
+    18817.688000000002,
+    18822.824
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4R12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_48_48_1",
+   "min_rect_um": 37.00799999999799,
+   "point": [
+    19536.104000000003,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_4R13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_46_58",
+   "min_rect_um": 9.072000000000116,
+   "point": [
+    18817.688000000002,
+    23462.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5L01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_51_11_2",
+   "min_rect_um": 47.22400000000016,
+   "point": [
+    20972.936,
+    4489.68
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5L02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsl_xrW_4S_l2_1",
+   "min_rect_um": 120.31200000000081,
+   "point": [
+    20972.936,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5L03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_53_26",
+   "min_rect_um": 9.959999999999127,
+   "point": [
+    21691.352,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5L10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_53_34_1_cl5N_4",
+   "min_rect_um": 9.885000000002037,
+   "point": [
+    21691.352,
+    13897.807999999999
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5L11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_53_46_2",
+   "min_rect_um": 9.79200000000128,
+   "point": [
+    21691.352,
+    18822.824
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5L12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_51_48_2",
+   "min_rect_um": 47.23999999999796,
+   "point": [
+    20972.936,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5L13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_53_58",
+   "min_rect_um": 9.943999999999505,
+   "point": [
+    21691.352,
+    23462.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5R00",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_57_4_2",
+   "min_rect_um": 8.039999999998827,
+   "point": [
+    23427.168,
+    1794.0
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5R01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_56_11",
+   "min_rect_um": 15.779999999999745,
+   "point": [
+    22708.752,
+    4639.692
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5R02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_57_19",
+   "min_rect_um": 219.79999999999927,
+   "point": [
+    23427.168,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5R03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_56_26",
+   "min_rect_um": 9.079999999998108,
+   "point": [
+    22708.752,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5R10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_56_34_1_cl5N_4",
+   "min_rect_um": 9.005000000001019,
+   "point": [
+    22708.752,
+    13897.807999999999
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5R11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_56_46_2",
+   "min_rect_um": 8.912000000000262,
+   "point": [
+    22708.752,
+    18822.824
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5R12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_57_48_2",
+   "min_rect_um": 8.055999999996857,
+   "point": [
+    23427.168,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_5R13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_56_58",
+   "min_rect_um": 9.063999999998487,
+   "point": [
+    22708.752,
+    23462.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6L00",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_61_4",
+   "min_rect_um": 4.87200000000098,
+   "point": [
+    24864.000000000004,
+    1794.0
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6L01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_63_11_2",
+   "min_rect_um": 14.873999999998887,
+   "point": [
+    25582.416,
+    4714.698
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6L02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_61_19",
+   "min_rect_um": 56.64800000000105,
+   "point": [
+    24864.000000000004,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6L03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_63_29_2",
+   "min_rect_um": 10.399999999997817,
+   "point": [
+    25582.416,
+    11943.44
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6L10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_63_37_1_cl6N_5",
+   "min_rect_um": 9.893000000000029,
+   "point": [
+    25582.416,
+    13897.807999999999
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6L11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_63_41_1",
+   "min_rect_um": 10.927999999999884,
+   "point": [
+    25582.416,
+    16583.984
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6L12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_61_48",
+   "min_rect_um": 4.8879999999990105,
+   "point": [
+    24864.000000000004,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6L13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_63_60_2",
+   "min_rect_um": 12.980999999999767,
+   "point": [
+    25582.416,
+    24339.088
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6R00",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_67_4",
+   "min_rect_um": 59.10400000000095,
+   "point": [
+    27318.232000000004,
+    1794.0
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6R01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_66_18_3",
+   "min_rect_um": 19.784999999999854,
+   "point": [
+    26779.420000000002,
+    7489.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6R02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_67_19",
+   "min_rect_um": 110.88000000000102,
+   "point": [
+    27318.232000000004,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6R03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_65_26",
+   "min_rect_um": 167.52000000000044,
+   "point": [
+    26599.816000000003,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6R10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_65_39_cl6N_0",
+   "min_rect_um": 19.509000000001834,
+   "point": [
+    26599.816000000003,
+    13763.024
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6R11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_65_46_2",
+   "min_rect_um": 24.264000000002852,
+   "point": [
+    26599.816000000003,
+    18822.824
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6R12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_67_48",
+   "min_rect_um": 59.11999999999898,
+   "point": [
+    27318.232000000004,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_6R13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_68_61_2",
+   "min_rect_um": 19.08820000000196,
+   "point": [
+    27821.1232,
+    24743.44
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7L00",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_71_4_1",
+   "min_rect_um": 55.936000000003105,
+   "point": [
+    28755.064000000006,
+    1794.0
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7L01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_73_11_1",
+   "min_rect_um": 17.203999999998814,
+   "point": [
+    29473.480000000003,
+    4639.692
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7L02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_71_19_1",
+   "min_rect_um": 107.71200000000317,
+   "point": [
+    28755.064000000006,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7L03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_73_26_1",
+   "min_rect_um": 10.503999999997177,
+   "point": [
+    29473.480000000003,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7L10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_73_39_1_cl7N_3",
+   "min_rect_um": 12.615999999994528,
+   "point": [
+    29473.480000000003,
+    13830.416
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7L11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_73_40_1",
+   "min_rect_um": 14.25999999999658,
+   "point": [
+    29473.480000000003,
+    16210.844
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7L12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_71_48_1",
+   "min_rect_um": 55.952000000001135,
+   "point": [
+    28755.064000000006,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7L13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_72_61",
+   "min_rect_um": 19.329799999999523,
+   "point": [
+    29257.955200000004,
+    24743.44
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7R00",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_77_4",
+   "min_rect_um": 50.84799999999609,
+   "point": [
+    31209.296000000006,
+    1794.0
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7R01",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_75_11",
+   "min_rect_um": 16.29200000000219,
+   "point": [
+    30490.880000000005,
+    4639.692
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7R02",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_77_19",
+   "min_rect_um": 64.07999999999629,
+   "point": [
+    31209.296000000006,
+    7899.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7R03",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_75_26",
+   "min_rect_um": 9.592000000000553,
+   "point": [
+    30490.880000000005,
+    10662.992
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7R10",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_75_39_cl7N_0",
+   "min_rect_um": 19.50100000000384,
+   "point": [
+    30490.880000000005,
+    13763.024
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7R11",
+   "module": "col_h10_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_75_40",
+   "min_rect_um": 13.347999999999956,
+   "point": [
+    30490.880000000005,
+    16210.844
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7R12",
+   "module": "col_h9_MX_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_77_48",
+   "min_rect_um": 186.89599999999336,
+   "point": [
+    31209.296000000006,
+    19352.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "f_7R13",
+   "module": "col_h9_l4",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_78_61_2",
+   "min_rect_um": 17.930600000003324,
+   "point": [
+    31819.949600000004,
+    24743.44
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_0S",
+   "module": "ot_s81sl_slice_lepw_mus",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_5_13",
+   "min_rect_um": 57.43600000000015,
+   "point": [
+    2504.732,
+    5394.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_0N",
+   "module": "ot_s81sl_slice_lepw_mu",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_5_42",
+   "min_rect_um": 50.195999999998094,
+   "point": [
+    2504.732,
+    16862.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_1S",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_15_13",
+   "min_rect_um": 76.19599999999991,
+   "point": [
+    6395.796,
+    5394.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_1N",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_15_42",
+   "min_rect_um": 64.39599999999791,
+   "point": [
+    6395.796,
+    16862.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_2S",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_25_13_1",
+   "min_rect_um": 25.132000000000517,
+   "point": [
+    10286.86,
+    5394.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_2N",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_25_42_1",
+   "min_rect_um": 39.92399999999725,
+   "point": [
+    10286.86,
+    16862.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_3S",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_34_13_2",
+   "min_rect_um": 70.11599999999726,
+   "point": [
+    14177.924000000003,
+    5394.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_3N",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_34_42_2",
+   "min_rect_um": 42.23599999999533,
+   "point": [
+    14177.924000000003,
+    16862.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_4S",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_45_13_1",
+   "min_rect_um": 42.764000000000124,
+   "point": [
+    18308.988,
+    5394.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_4N",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_45_42_1",
+   "min_rect_um": 38.979999999995925,
+   "point": [
+    18308.988,
+    16862.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_5S",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_54_13_2",
+   "min_rect_um": 31.924000000001797,
+   "point": [
+    22200.052,
+    5394.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_5N",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_54_42_2",
+   "min_rect_um": 39.94800000000032,
+   "point": [
+    22200.052,
+    16862.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_6S",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_64_13",
+   "min_rect_um": 43.80399999999918,
+   "point": [
+    26091.116,
+    5394.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_6N",
+   "module": "ot_s81sl_slice",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_64_42",
+   "min_rect_um": 50.195999999996275,
+   "point": [
+    26091.116,
+    16862.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_7S",
+   "module": "ot_s81sl_slice_lepe_nh_mus",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_74_13",
+   "min_rect_um": 89.77999999999793,
+   "point": [
+    29982.180000000004,
+    5394.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "s_7N",
+   "module": "ot_s81sl_slice_lepe_mu",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_74_42",
+   "min_rect_um": 77.97999999999593,
+   "point": [
+    29982.180000000004,
+    16862.079999999998
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "phy_hbm",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_39_0_2",
+   "min_rect_um": 24.31200000000291,
+   "point": [
+    16243.456000000002,
+    20
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_00",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_29_2_2",
+   "min_rect_um": 305.6650000000018,
+   "point": [
+    12259.081000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_01",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_31_3",
+   "min_rect_um": 336.9379999999976,
+   "point": [
+    12790.331000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_02",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_32_3",
+   "min_rect_um": 340.57000000000266,
+   "point": [
+    13321.581000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_03",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_34_3_2",
+   "min_rect_um": 335.6699999999976,
+   "point": [
+    13852.831000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_04",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_35_3",
+   "min_rect_um": 343.171999999998,
+   "point": [
+    14384.081000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_05",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_36_3_south3_2",
+   "min_rect_um": 335.6979999999978,
+   "point": [
+    14915.331000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_06",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_38_3_2",
+   "min_rect_um": 335.71199999999885,
+   "point": [
+    15446.581000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_07",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rsg_rs_39_3_1_south4_2",
+   "min_rect_um": 335.6779999999992,
+   "point": [
+    15977.831000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_08",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_40_3",
+   "min_rect_um": 340.58199999999965,
+   "point": [
+    16509.081000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_09",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_42_3_2",
+   "min_rect_um": 335.65799999999695,
+   "point": [
+    17040.331000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_10",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_43_3_1",
+   "min_rect_um": 340.5540000000012,
+   "point": [
+    17571.581000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_11",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_44_3",
+   "min_rect_um": 340.5880000000009,
+   "point": [
+    18102.831000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_12",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_45_3_2",
+   "min_rect_um": 340.57400000000166,
+   "point": [
+    18634.081000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_13",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_47_3_1",
+   "min_rect_um": 337.298,
+   "point": [
+    19165.331000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_14",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_48_3",
+   "min_rect_um": 340.5459999999996,
+   "point": [
+    19696.581000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "ctrl_15",
+   "module": "dsfd_ctrl_rg2",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_50_3_3",
+   "min_rect_um": 323.6939999999986,
+   "point": [
+    20227.831000000002,
+    1200
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "rsv_00",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_27_4_2",
+   "min_rect_um": 170.6450000000018,
+   "point": [
+    11270.347,
+    1674.0
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_01",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_27_7_2",
+   "min_rect_um": 161.33299999999963,
+   "point": [
+    11270.347,
+    3051.84
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_02",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_30_4_2",
+   "min_rect_um": 64.74500000000148,
+   "point": [
+    12675.521,
+    1674.0
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_03",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_31_7",
+   "min_rect_um": 161.26299999999992,
+   "point": [
+    12675.521,
+    3051.84
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_04",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_34_4",
+   "min_rect_um": 42.3990000000008,
+   "point": [
+    14080.695000000002,
+    1674.0
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_05",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_34_7",
+   "min_rect_um": 76.66499999999814,
+   "point": [
+    14080.695000000002,
+    3051.84
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_06",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_38_4_1",
+   "min_rect_um": 50.14699999999834,
+   "point": [
+    15485.869000000002,
+    1674.0
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_07",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_36_8",
+   "min_rect_um": 18.195000000003347,
+   "point": [
+    14859.882000000003,
+    3520.0840000000003
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_08",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_41_4",
+   "min_rect_um": 52.763000000001966,
+   "point": [
+    16891.043000000005,
+    1674.0
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_09",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_41_7",
+   "min_rect_um": 50.603000000001884,
+   "point": [
+    16891.043000000005,
+    3051.84
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_10",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_45_4",
+   "min_rect_um": 98.69499999999675,
+   "point": [
+    18406.217000000004,
+    1674.0
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_11",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_45_7_1",
+   "min_rect_um": 274.0490000000018,
+   "point": [
+    18406.217000000004,
+    3051.84
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_12",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_48_4_2",
+   "min_rect_um": 54.80700000000138,
+   "point": [
+    19811.391000000003,
+    1674.0
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_13",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_49_7_1",
+   "min_rect_um": 107.4569999999976,
+   "point": [
+    19811.391000000003,
+    3051.84
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_14",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_52_4_1",
+   "min_rect_um": 162.15699999999993,
+   "point": [
+    21216.565000000002,
+    1674.0
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "rsv_15",
+   "module": "dsdv_svc_rs",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_52_7_1",
+   "min_rect_um": 76.71499999999924,
+   "point": [
+    21216.565000000002,
+    3051.84
+   ],
+   "polarity": "high",
+   "inverter_required": true
+  },
+  {
+   "block": "bk_col",
+   "module": "dsdv_bk_col",
+   "pin": "rst_n",
+   "kind": "actual_closed_LEF",
+   "source": "st_rs_15_25_2",
+   "min_rect_um": 45.48399999999947,
+   "rectangles": [
+    [
+     6574.628000000001,
+     10144.92,
+     6574.652,
+     10145.004
+    ],
+    [
+     6574.628000000001,
+     10144.936,
+     6574.652,
+     10165.547
+    ]
+   ],
+   "polarity": "low"
+  },
+  {
+   "block": "gunit",
+   "module": "dsdv_gunit",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_34_29",
+   "min_rect_um": 284.14400000000205,
+   "point": [
+    14177.924000000003,
+    12028.5
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "bk_sel",
+   "module": "dsdv_bk_sel",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_45_25_2",
+   "min_rect_um": 38.93999999999687,
+   "point": [
+    18308.988,
+    10144.92
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "seqhost",
+   "module": "dsdv_seq_host_mux",
+   "pin": "rst_n",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_45_33_3",
+   "min_rect_um": 71.1917647058799,
+   "point": [
+    18308.988,
+    13541.491764705881
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "lk_WS0",
+   "module": "ot_pdie_serdes_col",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_0_9_3",
+   "min_rect_um": 120.94799999999918,
+   "point": [
+    259.2,
+    3800.0999999999995
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "lk_WS1",
+   "module": "ot_pdie_serdes_col",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_0_19_1",
+   "min_rect_um": 267.796,
+   "point": [
+    259.2,
+    7744.9
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "lk_WN0",
+   "module": "ot_pdie_serdes_col",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_0_38",
+   "min_rect_um": 20.81999999999755,
+   "point": [
+    518.4,
+    15459.539999999999
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "lk_WN1",
+   "module": "ot_pdie_serdes_col",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_0_47_3",
+   "min_rect_um": 189.8919999999992,
+   "point": [
+    259.2,
+    19212.1
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "lk_ES0",
+   "module": "ot_pdie_serdes_col",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_79_9",
+   "min_rect_um": 168.57199999999966,
+   "point": [
+    32227.712000000003,
+    3800.0999999999995
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "lk_ES1",
+   "module": "ot_pdie_serdes_col",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_79_19_1",
+   "min_rect_um": 235.40400000000045,
+   "point": [
+    32227.712000000003,
+    7744.9
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "lk_EN0",
+   "module": "ot_pdie_serdes_col",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "new_bridge_124",
+   "min_rect_um": 229.77200000000084,
+   "point": [
+    32227.712000000003,
+    15267.3
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  },
+  {
+   "block": "lk_EN1",
+   "module": "ot_pdie_serdes_col",
+   "pin": "rst",
+   "kind": "flexible_STANDIN_no_hardened_parent_fit",
+   "source": "st_rs_79_47_3",
+   "min_rect_um": 157.5,
+   "point": [
+    32227.712000000003,
+    19212.1
+   ],
+   "polarity": "low",
+   "inverter_required": false
+  }
+ ]
+}

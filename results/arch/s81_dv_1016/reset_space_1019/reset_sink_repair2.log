@@ -1,0 +1,71 @@
+ot-run: die-level command (DIE_RE): --priority die
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc7       admits   877 GB (avail 711, growth 97, headroom 0, waiters 0/0 GB) load 41/96 running 19 disk 6406 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3167160-1792429861 after 0 s
+{
+  "scope": "CONNECTED_GRAPH_TO_ACTUAL_CLOSED_DATA_RELAY_LANDING_RS_MIN_RECT_GEOMETRY_ONLY_NO_ROUTE_RC_OR_CALENDAR",
+  "sinks": 3462,
+  "served": 3460,
+  "unserved": 2,
+  "missing_models": [],
+  "max_min_rect_um": 373.7450000000026,
+  "first_unserved": [
+    {
+      "sink": "ld_r_f_0R00",
+      "master": "dsfd_dvland_70",
+      "reset_rectangles": [
+        [
+          3002.0359999999996,
+          5381.376,
+          3002.12,
+          5381.4
+        ]
+      ]
+    },
+    {
+      "sink": "ld_r_f_0R01",
+      "master": "dsfd_dvland_70",
+      "reset_rectangles": [
+        [
+          2964.7759999999994,
+          5381.376,
+          2964.8599999999997,
+          5381.4
+        ]
+      ]
+    }
+  ],
+  "block_standin_closed_parent_and_calendars": "OWED exact reset-port/model mapping, actual root2/body graph selection, new reset calendars and physical wires"
+}
+{
+  "scope": "ACTUAL_RELAY_LANDING_RESET_SINK_MIN_RECT_GEOMETRY_ONLY_NODE_I_RS_TRACK_ESCAPE_NO_ROUTE_RC_OR_CALENDAR",
+  "actual_sinks": 3462,
+  "served": 3462,
+  "unserved": [],
+  "missing_models": [],
+  "new_sink_nodes": [
+    {
+      "inst": "new_sink_0",
+      "sink": "ld_r_f_0R00",
+      "origin": [
+        2837.136,
+        5194.08
+      ],
+      "parent": "st_rs_6_12",
+      "parent_escape_length_um": 179.18999999999915,
+      "sink_min_rect_um": 325.82000000000016
+    }
+  ],
+  "failures": [],
+  "max_sink_min_rect_um": 373.7450000000026,
+  "candidate_nodes": 5312,
+  "connected_nodes": 5311,
+  "remaining_scope": "Actual closed parent and flexible stand-in block resets, root2, all new gate calendars, obstacles/DRC/RC/native clocks and bind still OWED."
+}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3167160-1792429861): exit 0

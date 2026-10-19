@@ -75,3 +75,9 @@ paths. The .rs pin is a separate physical load of the same reset net. The isolat
 candidate may be removed only after all real sinks are served by the rebuilt
 graph. Existing orientation hints include reflections, but the current writer
 uses R0 and the LEF declares no symmetry; no reflection credit is taken here.
+
+## Strict track-escape and sink diagnostics (10:35 PT)
+
+The original45-bridge min-rectangle graph remains preserved. reset_access_bridges.py instead prices both reset.i and reset.rs with actual VIA45/VIA56 access and M4/M5/M6/M7 track-compatible escape. It needs127 legal R0/.048-lattice bodies, all with .5um clearance and <=405um selected escape length. One isolated original reset cell remains unconnected; this is a diagnosis, not a bound graph. A subsequent one-body sink repair serves all3462 data relay/landing sinks under the stated min-rectangle sink metric. All183 block reset sinks are geometrically served, but182 use prospective stand-in face access and16 active-high service resets still need actual inverter bodies. Two root landing bodies fit with real both-input track-escape lengths; the external reset source/async network and native regional clocks remain owed.
+
+These scripts and JSONs do not emit a new die.v, route wires, prove PG/DRC/RC, validate calendar ages or qualify child fit. The stronger bridge graph and the weaker sink metric are deliberately separate. Full actual pin/net obstruction routing, removal/reconnection of the isolated node, global calendar rederivation and strict bind remain required.
