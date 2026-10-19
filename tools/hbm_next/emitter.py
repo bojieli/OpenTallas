@@ -979,6 +979,101 @@ def emit_segment(seg, s, dyn, objs, comp2obj, uf, opmap, n_rows, se=None):
     return bytes(blob), dict(st), errs[:20]
 
 
+def _all_wait():
+    from hgi_sim import records as RC
+    return (1 << len(RC.UNITS)) - 1
+
+
+def _merge_rows_ok(r2, rx2):
+    IR.check(r2, rx2)
+    if rx2 is not None:
+        conf = IR.check_rows_independent(r2, rx2)
+        assert conf is None, f"ARGMAX_MERGE rows not independent: {conf}"
+        rows = [x.desc["O"].base for _, x in IR.expand(r2, rx2)]
+        assert rows == [rows[0] + i for i in range(rx2.n)], f"tokx ids not contiguous: {rows}"
+
+
+def head_tail(blob, se, N, mode):
+    """step 5 head tail of a whole-token image (R9).  The head segment ends with COLL.ARGMAX_MERGE (N rows, one id a
+    row).  Its O is re-pointed to the aux TOKX table: tokx[0] = k, tokx[1 + rho] = row rho's winning id (rs_O = 1, so
+    the ids are contiguous: TOKX A = U32 [1 + N]).  Then:
+      MTP:   CTL.ACCEPT (A = accept.a, U32 [1]) -> CTL.TOKX (param 0, A = tokx, k = a + 1 beats) -> CTL.END.
+             a and tokx[0] = a + 1 are written by the DSpark accept compare (d4g ot_dshbm_dspark_ctl accept_a0, the
+             CP-side control block: verify ids tokx[1..5] against the drafted ids; priced in mh_ctl) -- NOT a record.
+      users: CTL.TOKX (param 1, A = tokx, tokx[0] = N: an image constant the host writes with the image) -> CTL.END.
+    Every tail record drains every unit first (wait = all).  -> (bytes, stats, errors)"""
+    from hgi_sim import records as RC
+    st, errs, out = defaultdict(int), [], bytearray()
+    tok = se.aux.take("tokx", 1 + N)
+    acc = se.aux.take("accept.a", 1) if mode == "mtp" else None
+    off, recs = 0, []
+    while off < len(blob):
+        r, rx, nxt = IR.decode_one(blob, off)
+        recs.append((r, rx))
+        off = nxt
+    hit = 0
+    for r, rx in recs:
+        if r.unit == "COLL" and r.op == "ARGMAX_MERGE":
+            r = copy.copy(r)
+            r.desc = dict(r.desc)
+            r.desc["O"] = _md(r.desc["O"], base=tok + 1, n=1, m=1, stride=0)
+            if rx is not None:
+                rx = copy.deepcopy(rx)
+                rx.rs = dict(rx.rs, O=1)
+            hit += 1
+            emit_rec(out, st, errs, r, rx, "head ARGMAX_MERGE -> tokx", check_rows=_merge_rows_ok)
+        else:
+            emit_rec(out, st, errs, r, rx, f"head {r.unit}.{r.op}")
+    if hit != 1:
+        errs.append(dict(rec="head", err=f"expected one COLL.ARGMAX_MERGE in the head, found {hit}"))
+        st["fail"] += 1
+    W = _all_wait()
+    if mode == "mtp":
+        emit_rec(out, st, errs, RC.Rec("CTL", "ACCEPT", wait=W, desc=dict(A=_u32(acc, 1))), None, "CTL.ACCEPT")
+        emit_rec(out, st, errs, RC.Rec("CTL", "TOKX", wait=W, param=0, desc=dict(A=_u32(tok, 1 + N))), None,
+                 "CTL.TOKX mtp")
+    else:                                 # users: one beat a user; AR: an MTP-mode commit of k = 1 (tokx[0] = 1)
+        emit_rec(out, st, errs, RC.Rec("CTL", "TOKX", wait=W, param=1 if mode == "mu" else 0,
+                                       desc=dict(A=_u32(tok, 1 + N))), None, f"CTL.TOKX {mode}")
+    emit_rec(out, st, errs, RC.Rec("CTL", "END", wait=W), None, "CTL.END")
+    st["tokx_base"], st["accept_base"] = tok, acc
+    return bytes(out), dict(st), errs
+
+
+def assemble_token(out_dir, mode, N, segblobs, prologue, res):
+    """one whole-token image: [users prologue] + every segment in programme order (layers ascending, head last; the
+    head carries the tail).  Checked: the whole image decodes record by record (round trip), exactly one END (last),
+    the record count = the per-segment sums, every aux table below 2^19 words."""
+    order = sorted([k for k, _ in segblobs if k != "head"], key=int) + ["head"]
+    by = dict(segblobs)
+    img, table = bytearray(prologue), []
+    if prologue:
+        table.append(dict(segment="users_prologue", offset=0, bytes=len(prologue)))
+    for k in order:
+        b = by[k]
+        table.append(dict(segment=str(k), offset=len(img), bytes=len(b), sha256=hashlib.sha256(b).hexdigest()))
+        img += b
+    off, nrec, ends, ops = 0, 0, [], defaultdict(int)
+    while off < len(img):
+        r, rx, nxt = IR.decode_one(bytes(img), off)
+        assert IR.encode(r, rx) == bytes(img[off:nxt]), f"whole-image round trip at {off}"
+        if r.unit == "CTL" and r.op == "END":
+            ends.append(nrec)
+        if r.unit == "CTL":
+            ops[r.op] += 1
+        off, nrec = nxt, nrec + 1
+    need = max(int(s.get("vm_need_words", 0)) for s in res["segments"].values())
+    name = f"{mode}_N{N}_token.hgi1r"
+    (out_dir / name).write_bytes(bytes(img))
+    liveins = {k: dict(words=s["livein_words"], top=s["livein_top"][:4]) for k, s in res["segments"].items()
+               if s.get("livein_words")}
+    return dict(image=name, bytes=len(img), records=nrec, sha256=hashlib.sha256(bytes(img)).hexdigest(),
+                liveins=liveins, one_vm_map=not liveins,
+                end_at=ends, end_ok=(ends == [nrec - 1]), ctl_ops=dict(ops), segments=table,
+                vm_need_words=need, fits_2p19=need <= 1 << 19,
+                errors=sum(len(s.get("errors", ())) for s in res["segments"].values()))
+
+
 def users_prologue(N, aux_base):
     """the users image prologue: CTL.USERS (ROWX n = N, slot0 0) reading the host-written {token_s, pos_s} table"""
     from hgi_sim import records as RC
@@ -996,6 +1091,10 @@ def main():
     ap.add_argument("--P", type=int, default=4)
     ap.add_argument("--legacy", action="store_true", help="step-3 behaviour (union records skipped, no ATT plan)")
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--N", type=int, default=0, help="rows (mu: users 1..4; default mtp 6 / mu 4 / ar 1)")
+    ap.add_argument("--whole", action="store_true",
+                    help="step 5: every segment + the head, ONE VM map (common aux base = the largest high-water mark), "
+                         "assembled into one whole-token image with the head tail (TOKX / ACCEPT / END)")
     a = ap.parse_args()
     from hgi_sim import hbm_plane_model as M
     from hgi_sim import ds_native_timing as DT
@@ -1004,11 +1103,16 @@ def main():
     PC.CUR["hist"] = PC.lane_hists()
     PC.apply_knobs(PC.Knobs(**dict(PC.HEAD, P=a.P)))
     IR.P_LANES = a.P
-    N = {"mtp": 6, "ar": 1, "mu": 4}[a.mode]
+    N = a.N or {"mtp": 6, "ar": 1, "mu": 4}[a.mode]
+    assert a.mode != "mtp" or N == 6, "MTP verify is N = 6"
+    assert a.mode != "ar" or N == 1
     cfg = M.plane_cfg(a.P if N > 1 else 1)
     users = a.mode == "mu"
     PC.CUR["mode"] = "users" if users else "verify"
-    union = PC.users_union(st["users_union"], N) if users else st["verify_union"][6]["mean"]
+    if users:
+        union = PC.users_union(st["users_union"], N) if N > 1 else 6.0
+    else:
+        union = st["verify_union"][6]["mean"]
     prog, _ = M.ds_compile(N, cfg, union, "upper", users)
     M.P5._count_slots(prog)
     M.P5._consumers(prog)
@@ -1019,7 +1123,7 @@ def main():
         isa_version=IR.VERSION, segments={})
     a.out.mkdir(parents=True, exist_ok=True)
     work = []
-    for key, seg, s in SC.schedule_segments(prog, set(a.layers.split(","))):
+    for key, seg, s in SC.schedule_segments(prog, None if a.whole else set(a.layers.split(","))):
         fps = EG.footprints(seg, s)
         skip = frozenset() if (a.legacy or N == 1) else frozenset(union_skip(seg, s, fps))
         joins = () if (a.legacy or N == 1) else union_join_families(seg, s, skip)
@@ -1030,18 +1134,28 @@ def main():
         if not a.legacy:
             se = SegEmit(seg, s, dyn, objs, comp2obj, uf, opmap, N, a.mode, a.P, Aux(pl["high_water"]), fps, skip)
         work.append((key, seg, s, fps, vals, uf, opmap, objs, comp2obj, pl, se))
+    gh = None
+    if a.whole and not a.legacy:            # one VM map: pinned columns at 0, every segment's aux at the same base
+        gh = max(w[9]["high_water"] for w in work)
+        for w in work:
+            w[-1].aux = Aux(gh)
+        res["vm_map"] = dict(aux_base=-(-gh // 32) * 32, largest_high_water=gh,
+                             note="pinned columns h / PRE at 0, every segment's aux at aux_base; values a segment reads "
+                                  "before its own writer (live-ins, not pinned) are listed in token.liveins: their "
+                                  "producer's placement is NOT yet tied to the consumer's (open)")
     if users and not a.legacy:
         ustride, tried = user_stride([w[-1] for w in work])
         res["users_hbm"] = dict(hsh=USER_HSH, stride_bytes=ustride, collisions_by_stride={str(k): v for k, v in
                                                                                          tried.items()})
         for w in work:
             w[-1].ustride = ustride or (1 << 36)
-        pb, pst, perr = users_prologue(N, 0)
+        pb, pst, perr = users_prologue(N, (-(-gh // 32) * 32) if gh is not None else 0)
         (a.out / "mu_prologue.hgi1r").write_bytes(pb)
         res["users_prologue"] = dict(stats=pst, errors=perr, sha256=hashlib.sha256(pb).hexdigest(),
                                      note="A = the host-written {token_s, pos_s} table at the image's users.table aux "
                                           "address (the per-segment aux map below); relocated by the whole-token "
                                           "assembler")
+    segblobs = []
     for key, seg, s, fps, vals, uf, opmap, objs, comp2obj, pl, se in work:
         li = defaultdict(lambda: [0, 0.0, 0])
         for v in vals:
@@ -1055,7 +1169,13 @@ def main():
         if se is not None and users:
             se.aux.take("users.table", 2 * N)
         blob, est, errs = emit_segment(seg, s, dyn, objs, comp2obj, uf, opmap, N, se)
-        (a.out / f"{a.mode}_L{key}.hgi1r").write_bytes(blob)
+        if a.whole and key == "head" and se is not None:
+            blob, tst, terr = head_tail(blob, se, N, a.mode)
+            est = dict(est, tail=tst)
+            errs = errs + terr
+        segblobs.append((key, blob))
+        if not a.whole:
+            (a.out / f"{a.mode}_L{key}.hgi1r").write_bytes(blob)
         kinds = defaultdict(int)
         for o in objs:
             kinds[o["kind"]] += 1
@@ -1074,6 +1194,10 @@ def main():
         print(a.mode, key, json.dumps(dict(emit=est, errors=errs[:3], need=need, hw=pl["high_water"]))[:1500],
               flush=True)
         (a.out / "emitter.json").write_text(json.dumps(res, indent=1, default=str) + "\n")
+    if a.whole:
+        res["token"] = assemble_token(a.out, a.mode, N, segblobs, (a.out / "mu_prologue.hgi1r").read_bytes()
+                                      if users and not a.legacy else b"", res)
+        print("token", json.dumps(res["token"])[:1500], flush=True)
     srcs = ["tools/hbm_next/emitter.py", "tools/hbm_next/isa_rows.py", "tools/hbm_next/plane_compiler.py",
             "tools/hbm_next/static_check.py"]
     res["sources_sha256"] = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in srcs}
