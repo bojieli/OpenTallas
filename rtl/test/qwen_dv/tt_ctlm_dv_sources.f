@@ -32,3 +32,4 @@ rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv
 physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv
 physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
+rtl/qwen_dv/qfd_mu_context_guard.sv

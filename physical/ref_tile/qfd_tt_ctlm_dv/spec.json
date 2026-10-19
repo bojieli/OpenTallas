@@ -6,19 +6,24 @@
   "rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp.sv",
   "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
   "rtl/common/landed_parent/ot_pl_land.sv",
-  "rtl/qwen_dv/qfd_dv_cmd_cal.sv",
+  "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
   "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
   "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
   "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/lib/ot_reset_sync.sv",
-  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/qwen_dv/qfd_dv_hr_pack.sv",
+  "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
  ],
  "params": {
   "XPF_TRANSPORT_EDGES": 20,
   "STAGE_ME": 1,
   "LAST_STAGE": 37,
-  "MUT": 0
+  "MUT": 0,
+  "NU": 4,
+  "OPSEG": 1
  },
  "clock_port": "ck_core",
  "reset_ports": [
@@ -39,14 +44,14 @@
     475.2,
     43.2
    ],
-   "orient": "MY"
+   "orient": "R0"
   }
  ],
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
-   "inst": "*u_cal*g_m?0?*u_pm",
+   "inst": "u_gi.u_cal.g_m[0].u_pm",
    "at": [
     43.2,
     43.2
@@ -56,12 +61,22 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
-   "inst": "*u_cal*g_m?1?*u_pm",
+   "inst": "u_gi.u_cal.g_m[1].u_pm",
    "at": [
     43.2,
-    120.984
+    121.008
    ],
    "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "u_gi.g_op.u_leaf.g_op.u_rom",
+   "at": [
+    43.2,
+    259.2
+   ],
    "orient": "R0"
   }
  ],
@@ -72,7 +87,6 @@
   ],
   "N": [
    "ck_core",
-   "ck_hr",
    "rst_n",
    "native_ret",
    "native_cmd",
@@ -86,6 +100,7 @@
    "control_stores_ready",
    "dc",
    "cf",
+   "dh_user",
    "dh",
    "fab",
    "kok",
@@ -94,6 +109,8 @@
    "pw"
   ],
   "S": [
+   "tl",
+   "ck_hr",
    "ag5",
    "cmd",
    "hr",
@@ -101,6 +118,10 @@
   ]
  },
  "pin_ranges": {
+  "ck_core": [
+   194.4,
+   194.65
+  ],
   "emb_start": [
    324.013,
    324.263
@@ -109,9 +130,17 @@
    324.763,
    327.763
   ],
+  "ck_hr": [
+   655.017,
+   655.267
+  ],
   "rst_n": [
    420.271,
    420.521
+  ],
+  "tl": [
+   43.2,
+   410.4
   ],
   "native_ret": [
    462.479,
@@ -120,6 +149,18 @@
   "native_cmd": [
    501.755,
    656.86
+  ],
+  "ag5": [
+   655.767,
+   657.433
+  ],
+  "cmd": [
+   657.933,
+   677.267
+  ],
+  "dh_user": [
+   662.0,
+   662.5
   ],
   "command_stage": [
    665.517,
@@ -140,6 +181,10 @@
   "cal_descriptor_obs": [
    674.767,
    686.267
+  ],
+  "hr": [
+   677.767,
+   753.267
   ],
   "cal_image_ready": [
    686.767,
@@ -181,33 +226,13 @@
    745.933,
    758.6
   ],
-  "pw": [
-   759.1,
-   771.6
-  ],
-  "ag5": [
-   655.767,
-   657.433
-  ],
-  "cmd": [
-   657.933,
-   677.267
-  ],
-  "hr": [
-   677.767,
-   753.267
-  ],
   "ss5": [
    753.767,
    771.6
   ],
-  "ck_hr": [
-   419.119,
-   419.369
-  ],
-  "ck_core": [
-   194.4,
-   194.65
+  "pw": [
+   759.1,
+   771.6
   ]
  },
  "pg_layer": "M7",
@@ -216,18 +241,26 @@
   "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.03
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
  },
  "job": {
-  "owner": "Claude:HF-4",
-  "branch": "claude/hf4-1018",
-  "tag": "lp1",
-  "purpose": "Qwen TT control cluster qfd_tt_ctlm_dv as a LANDED parent (HF-4, HARD-FIX 0id, landed-regions-standard-1018): lp.py top qfd_tt_ctlm_dv_lpf_lp, 2 region roots (ck_core: pin regs + calendar + 2 x 64x512 SRAMs; ck_hr: hard TT head h16c/h17 + XPF + dc + output side), 20 landings (3490 flops), uniform +3 edges on every output, inputs on time, reset depth 3; slot 777.6 x 345.6 (not 2.3:1).",
+  "owner": "Claude:MU-DQ-CTLMCLK",
+  "branch": "claude/mu-dq-ctlmclk-1019",
+  "tag": "clk2",
+  "purpose": "Qwen TT control cluster qfd_tt_ctlm_dv, MU release die (claude/mu-die-qw2-1019 base): landed parent qfd_tt_ctlm_dv_lpf_lp, COORD 0ke clock fix: (a) h16c ck_pm0/1 detached for CTS and re-driven from the ck_head net + record tap, (b) ck_hr port on the S face beside h16c ck_head, ck_core region = u_gi only (every input lands from hr; tl straight from core, COORD 0kg): 21 landings / 4,178 landing flops (was 8,943).",
   "extra_paths": [
    "rtl/test/qwen_dv",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "physical/ref_tile/qfd_tt_head_static_h16c"
+   "physical/ref_tile/qfd_tt_head_static_h16c",
+   "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
+   "results/closure_loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+   "results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+   "results/rtl/mu_qwen_1018/b1/rom"
   ],
   "benches": [
    {
@@ -378,17 +411,11 @@
     "ck_core"
    ],
    "inputs": [
-    "pw",
-    "dh",
-    "kok",
-    "kwd",
-    "fab",
-    "native_ret",
-    "ss5",
-    "ag5",
     "rst_n"
    ],
-   "outputs": []
+   "outputs": [
+    "tl"
+   ]
   },
   "hr": {
    "ratio": [
@@ -398,7 +425,17 @@
    "ports": [
     "ck_hr"
    ],
-   "inputs": [],
+   "inputs": [
+    "pw",
+    "dh",
+    "dh_user",
+    "kok",
+    "kwd",
+    "fab",
+    "native_ret",
+    "ss5",
+    "ag5"
+   ],
    "outputs": [
     "program_obs",
     "control_stores_ready",
@@ -420,5 +457,55 @@
   }
  },
  "landed_record": "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/qfd_tt_ctlm_dv_lpf_lp_record.json",
- "landed_note": "HF-4 10-18: die obligations (record die_obligations): two clock ports ck_core / ck_hr (regional, related, same PLL phase); every output +3 edges vs the flat qfd_tt_ctlm_dv, inputs on time -> the GEN must re-derive XPF_TRANSPORT_EDGES (+3 -> 23 if counted from the flat hr register) and lane ages of cmd/hr/dc/native_cmd; lp MUT 4 (u_hr reset one stage late) is NOT observable (PASS) because h16c re-times its own reset stations and its state starts at program load, waived."
+ "landed_note": "HF-4 10-18: die obligations (record die_obligations): two clock ports ck_core / ck_hr (regional, related, same PLL phase); every output +3 edges vs the flat qfd_tt_ctlm_dv, inputs on time -> the GEN must re-derive XPF_TRANSPORT_EDGES (+3 -> 23 if counted from the flat hr register) and lane ages of cmd/hr/dc/native_cmd; lp MUT 4 (u_hr reset one stage late) is NOT observable (PASS) because h16c re-times its own reset stations and its state starts at program load, waived. SUPERSEDED offsets by MU-DQ-CTLMCLK (see clock_note_ctlmclk / record compiler).",
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "hf4c_note": "HF-4c 10-18 (first gen on the CLOSED h16c view qfd_tt_head_static_h16c-h16c-ae6b0c59a): (1) h16c MY is impossible on the asap7 tracks (no MY x origin puts its 245 M5 S-face pins on track; M3 also off except x%0.036 shifts) -> R0 at (475.2,43.2): S face (rom_cmd/rom_ret/ck_head/ck_pm0) stays S, E face (1,088 pins: landing reads + outputs) faces a 41-um E channel next to the N/S output pins x 655-771; (2) upper calendar SRAM 120.984 -> 121.008 (120.984 = 1,585 pins off track; 121.008 = the h16c stack pitch).",
+ "hard_define": "SYNTHESIS",
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: lp.py regional reset runs (rst_n -> u_lpr_root 1 flop on ck_core -> u_lpr_core / u_lpr_hr 2 flops per region -> u_lprc_* per child; port net has one sink, reset depth 3 proven by the landed lockstep bench)"
+ },
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w_64x512_m1_r2c2",
+  "ot_rom_4096x72_m8"
+ ],
+ "soft_root_macro_bindings": {
+  "u_gi.u_cal.g_m[0].u_pm": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_m[1].u_pm": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.g_op.u_leaf.g_op.u_rom": {
+   "master": "ot_rom_4096x72_m8",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  }
+ },
+ "raw_memory_note": "TW2-QCTLM 10-19: gate 20261019-010025 CTS stopped at 'OT_HYBRID: CTS source ck_core must reach only standard-cell clock pins' = the calendar's 2 raw 64x512 SRAMs (lp region ck_core) were undeclared sinks; now exact raw-memory bindings on region root ck_core (tool: claude/root-landed-rawmem-1019 7729b9de4, landed clusters accept raw sinks of a region root)",
+ "fill_reason": {
+  "pin_bound": "width 777.6 is the die slot: N face (native59/sys_face, 1066 pins over 574 um) and S face (W5, 766 pins over 588 um) pin x positions are kept to abut the die neighbours (74-76% of each face); height 345.6 = the hard h16c child (222.48 at y 43.2) plus the N-face pin-flop band (21 columns, recipe-2 hold stages) and its escape over the child on the 43.2 lattice; one lattice step less (302.4) leaves 36.7 um for 1066 N pins + their flops. Measured fill 34.1% pre-MU; MU NU4 (claude/mu-adopt-ctlm-1019) adds ~3.7k core flops"
+ },
+ "mu_note": "MU-DQ-CTLMKIT 10-19: (1) leaf ROM u_gi.g_op.u_leaf.g_op.u_rom (38.0 x 62.9) at (43.2, 259.2) R0 on the 43.2 lattice, core region, above the calendar SRAM stack (43.2..198.8; 60.4 um channel, pins on its W face like the SRAMs, facing the calendar glue strip), raw-memory sink of ck_core like the SRAMs; (2) tl[1087:0] (one TLOAD table word, else 0) on the S face x 432.0-655.3 (4.9 pins/um) left of cmd (the die's W5 st_wi beside cmd_wi), landed core->hr like cmd; (3) dh_user[1:0] on the N face x 662.0 (gap between native_cmd and command_stage); die GEN ties it 0 (OPSEG mode). Die obligation: re-place tl / dh_user pins with the die top-down pin assignment.",
+ "landed_raw_detach": true,
+ "clock_note_ctlmclk": "MU-DQ-CTLMCLK 10-19 (COORD 0ke/0kg): (a) landed_raw_detach: the h16c raw SRAM clock pins ck_pm0/ck_pm1 are disconnected from ck_hr for clock_tree_synthesis (TritonCTS balances ck_hr's registers against h16c ck_head only, R 303 TT) and reconnected to the ck_head clock net after CTS, then landed_raw_tap lifts them to the record offset (+288 TT / +232 FF); (b) ck_hr port moved N x 419 -> S x 655.0 (16 um left of / 43 um below h16c ck_head at (671.2, 43.2)); (c) ck_core region = u_gi (calendar SRAMs + ROM leaf, W); the input pin-register band (N x 460-771, S ss5/ag5) is landed from hr (lp port_regions hr), tl[1087:0] leaves core directly on the S face x 43.2-410.4 under the core region. DIE GEN (dv2f18mu): ck_hr pin N->S; tl pins S x 432-655 -> 43.2-410.4; inputs pw/kok/kwd/native_ret presented +6 edges (dh/dh_user/fab/ss5/ag5 on time), every output +6 edges except tl +3 (record compiler block); inputs timed on ck_hr. (d) clk2: gate 044135 measured ck_core regs over a ~560 um sink region (boundary tl band 177/154 TT/FF, hr 129/114) -> lp_region_fences.tcl fences each region root's registers to its half (core x 0-432, hr x 432-777.6).",
+ "pin_hook_before_flops": [
+  "physical/ref_tile/qfd_tt_ctlm_dv/lp_region_fences.tcl"
+ ]
 }

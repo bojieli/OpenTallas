@@ -19,6 +19,9 @@
 //   context record in image DW5 / DW6).  OPSEG 1: the leaf qfd_sys_face_mu_dhuser #(OPSEG 1) sits inside u_gi (core
 //   region, g_op.u_leaf; ROM ot_rom_4096x72_m8 inside; its own hard tile per MU-LEAF-KIT), observing u_gi's dh pin
 //   register and driving u_gi's calendar op start.  OPSEG 0 (default): no leaf, the previous cluster on every edge.
+// MU-DQ-CTLMCLK 10-19 (COORD 0ke / 0kg): tl[1087:0] leaves u_gi DIRECTLY (core region: no 1088-b core -> hr landing, its
+//   pins on the S face under the core region); every input port is landed from the hr region (spec port_regions: the
+//   pin-register band lies in hr's footprint), so ck_core keeps no boundary pin but rst_n (ck_core spread 162/144 fix).
 // =====================================================================================================================
 module qfd_tt_ctlm_dv_lpf #(
     parameter integer XPF_TRANSPORT_EDGES = -1,
@@ -28,14 +31,23 @@ module qfd_tt_ctlm_dv_lpf #(
     parameter integer UVM_STRIDE = 4096,         // = tools/qwen_static_schedule/mu_calendar.py DV_UVM_STRIDE
     parameter integer PIDX_STRIDE = 128,         // = DV_PIDX_STRIDE
     parameter integer UTAG_LSB = 6,              // = DV_UTAG_LSB
-    parameter integer OPSEG = 0,                 // MU-QW-DIE 10-19: 1 = op-start leaf + boot context (Qwen ROM 4 users)
-    parameter string  OPSEG_VIAMAP = "",
-    parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg"
+    parameter integer CTX_SRC = 0, FCTX = 0,
+    parameter [11:0] NCTX_BASE = 12'h010,
+    parameter integer INIT_U0 = 0, INIT_FIRST = -1, INIT_CNT = 0,
+    parameter integer OPSEG = 0,
+    parameter integer OPSEG_EXPANDED = 0,
+    parameter OPSEG_VIAMAP1 = "", OPSEG_VIAMAP2 = "",
+    parameter OPSEG_INST1 = "qfd_tt_ctlm_opseg_b1", OPSEG_INST2 = "qfd_tt_ctlm_opseg_b2",                 // MU-QW-DIE 10-19: 1 = op-start leaf + boot context (Qwen ROM 4 users)
+    parameter OPSEG_VIAMAP = ""       ,
+    parameter OPSEG_INST = "qfd_tt_ctlm_opseg"         
 ) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [74:0]   pw,
     input  wire [186:0]  dh,
+    input  wire          init_u0,                  // explicit static admission INIT selector, aligned to DH stage0
+    input  wire [128:0]  ctx_x,
+    input  wire          mu_fault,
     input  wire [1:0]    dh_user,                // user of the dh stage start (qfd_sys_face seq_dh_user; tie 0 = user 0)
     input  wire          kok,
     input  wire          kwd,
@@ -54,7 +66,7 @@ module qfd_tt_ctlm_dv_lpf #(
     input  wire [94:0]   native_ret,
     output wire [452:0]  hr,
     output wire [115:0]  cmd,
-    output wire [1087:0] tl,                     // QLB-C4b slice table words (W5 st_wi), via u_thru like cmd
+    output wire [1087:0] tl,                     // QLB-C4b slice table words (W5 st_wi), straight from u_gi (core)
     input  wire [106:0]  ss5,
     input  wire [9:0]    ag5,
     output wire          emb_start,
@@ -62,7 +74,6 @@ module qfd_tt_ctlm_dv_lpf #(
     output wire          cf
 );
     wire [115:0] g_cmd;
-    wire [1087:0] g_tl;
     wire [75:0]  g_cal_program_obs;
     wire [68:0]  g_cal_descriptor_obs;
     wire         g_cal_image_ready, g_emb_start;
@@ -71,7 +82,9 @@ module qfd_tt_ctlm_dv_lpf #(
     wire [5:0]   s_stage;
     wire [48:0]  st;
     wire [1:0]   hu;                             // MU-DQ-D2DUSER: head-start user, core -> hr (landed like st)
-    wire [17:0]  npos_h;
+    wire [17:0] npos_h, ntok_h;
+    wire lcv_h;
+    wire [37:0] fctx;
     wire [15:0]  su_obs, x_oprog, x_orows;
     wire [23:0]  su_acc;
     wire         x_oidle;
@@ -84,16 +97,16 @@ module qfd_tt_ctlm_dv_lpf #(
     wire [72:0]  hr_lo;
     wire [379:0] ib_hr;
     qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
-        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .OPSEG(OPSEG), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST))
-        u_gi (.ck(ck), .rst_n(rst_n), .dh(dh), .dh_user(dh_user), .ss5(ss5),
-        .ag5(ag5), .fab(fab), .cmd(g_cmd), .tl(g_tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
+        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .INIT_U0(INIT_U0), .INIT_FIRST(INIT_FIRST), .INIT_CNT(INIT_CNT), .CTX_SRC(CTX_SRC), .FCTX(FCTX), .NCTX_BASE(NCTX_BASE), .OPSEG(OPSEG), .OPSEG_EXPANDED(OPSEG_EXPANDED), .OPSEG_VIAMAP1(OPSEG_VIAMAP1), .OPSEG_VIAMAP2(OPSEG_VIAMAP2), .OPSEG_INST1(OPSEG_INST1), .OPSEG_INST2(OPSEG_INST2), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST))
+        u_gi (.ck(ck), .rst_n(rst_n), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .init_u0(init_u0), .mu_fault(mu_fault), .ss5(ss5),
+        .ag5(ag5), .fab(fab), .cmd(g_cmd), .tl(tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
         .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start),
-        .s_stage(s_stage), .st(st), .hu(hu), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows),
+        .s_stage(s_stage), .st(st), .hu(hu), .fctx(fctx), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows),
         .x_oidle(x_oidle), .rom_ret_v(rom_ret_v), .dcs(dcs));
     ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0) ? 1 : 0)) u_hr (
         .stage_start(s_start), .stage(s_stage),
         .rom_ret_i({rom_ret_v[1], 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, rom_ret_v[0], 1'b1}), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs),
-        .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(npos_h), .rom_cmd(ib_q),
+        .layer_context_v(lcv_h), .native_tok(ntok_h), .native_pos(npos_h), .rom_cmd(ib_q),
         .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(me_observe),
         .native_ret(native_ret), .ck_head(ck), .ck_pm0(ck), .ck_pm1(ck), .rst_n(rst_n),
         .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
@@ -106,9 +119,9 @@ module qfd_tt_ctlm_dv_lpf #(
     qfd_tt_ctlm_dv_go #(.XPF_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_go (.ck(ck), .rst_n(rst_n), .pw(pw), .st(st),
         .su_obs(su_obs), .me_observe(me_observe), .cp(cp), .me_image_ready(me_image_ready), .hr_fault(hr_fault),
         .dcs(dcs), .hr_lo(hr_lo), .dc(dc), .cf(cf), .control_stores_ready(control_stores_ready));
-    qfd_tt_ctlm_dv_thru u_thru (.ck(ck), .rst_n(rst_n), .hu_i(hu), .npos_i(npos_h), .native_pos(native_pos), .cmd_i(g_cmd), .cal_program_obs_i(g_cal_program_obs),
+    qfd_tt_ctlm_dv_thru u_thru (.ck(ck), .rst_n(rst_n), .hu_i(hu), .fctx_i(fctx), .lcv_i(lcv_h), .ntok_i(ntok_h), .layer_context_v(layer_context_v), .native_tok(native_tok), .npos_i(npos_h), .native_pos(native_pos), .cmd_i(g_cmd), .cal_program_obs_i(g_cal_program_obs),
         .cal_descriptor_obs_i(g_cal_descriptor_obs), .cal_image_ready_i(g_cal_image_ready), .emb_start_i(g_emb_start),
-        .emb_token_i(g_emb_token), .ib_i(ib_q), .ib_hr(ib_hr), .tl_i(g_tl), .tl(tl), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs),
+        .emb_token_i(g_emb_token), .ib_i(ib_q), .ib_hr(ib_hr), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs),
         .cal_image_ready(cal_image_ready), .emb_start(emb_start), .emb_token(emb_token));
     // QW-DIEFIX 10-19: hr[452:73] in the slice layout: u_thru's qfd_dv_hr_pack (zero-logic permutation of the registered
     // ib_q; hr_contract.py follows the child port)

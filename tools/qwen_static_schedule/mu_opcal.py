@@ -106,6 +106,20 @@ def result_timing(root_capture=0):
                 emb_t=AM_EMIT_T + bank)
 
 
+def result_timing(root_capture=0):
+    """Price the measured SAFE scalar capture without adopting its opt-in RTL.
+
+    Source4ddd08d8a; witness dfc91c00c safe_scalar/latency_ii.pass.log:
+    +1 result edge, sustained group II1. The actual view must bind the parameter.
+    """
+    if root_capture not in (0, 1):
+        raise ScheduleError("am_root_capture must match a measured0/1 scalar variant")
+    ssq = AM_CMD_PIN + tok_slice0_edge() + root_capture + ST_REG + SS_PIN
+    bank = ssq + BANK_WR
+    return dict(root_capture=root_capture, res_ssq=ssq, res_bank=bank,
+                emb_t=AM_EMIT_T + bank)
+
+
 # ---------------------------------------------------------------------------------------------------- image
 def F(**kv):
     return C.F(**kv)

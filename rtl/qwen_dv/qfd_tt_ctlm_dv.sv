@@ -101,13 +101,36 @@
 //     CTX[111], or a mask bit of a user >= NU) is a sticky op_fault and loads nothing.  The image reaches the cluster
 //     only as dh PW / DW rows: on this die the closed qfd_sys_face replays its config image under the host's BEGIN /
 //     AUTH, so the record is part of the boot image (fixed in operation, no handshake); no port change.
-//   - op_fault (sticky) = leaf fault | start collision, into core_fault (dc, cf).
+//   - filler RUNTIME initial context (MU-DQ-BOOTCTX 10-19, coordinator 0kg (1); CTX_SRC 1, opt-in, 0 = unchanged and
+//     ctx_x ignored): the production source is the KV/system die host plane over the EXISTING KV->compute D2D record
+//     stream (MU-KV-CTX: a 2nd kind-12 HOST context slot whose TAG user = epoch[1:0] names a filler).  The die-top leaf
+//     qfd_mu_ctx_rx (beside qfd_sys_face, reads its D2D RX nets) emits ctx_x = {load, CTX} in the SAME record layout as
+//     the DW5 / DW6 boot record (mask = 1 << (u - 1)).  ctx_x lands in a pin register (ctx_q, +1 edge) and is checked /
+//     loaded by the same loader as the boot record (the image record stays the boot default; both on one edge = fault).
+//     Loader rule (static schedule: the compiler places a filler's request while that filler is idle): a runtime load
+//     must not share its edge with a leaf start (l_start) or a filler result (r_fill) of a filler in its mask -> sticky
+//     op_fault and nothing loaded.  Edges: leaf register (slot + 1) -> [die hops] -> ctx_q -> bank write.
+//     MUT (bench only): 33 the same-filler start / result rule not checked (the load wins, no fault).
+//   - op_fault (sticky) = leaf fault | start collision | bad / colliding context record, into core_fault (dc, cf).
 //   No port change.  New macro in the cluster: 1 x ot_rom_4096x72_m8 (leaf image).  Bench rtl/test/mu_qwen_seq/
 //   mu_opseg_bench.py.  MUT (bench only): 21 u_cal range ignored; 22 collision not flagged; 23 filler result written to
 //   the next filler's bank; 24 / 25 / 26 -> leaf MUT 4 (entry one edge late) / 5 (re-anchor every L0) / 6 (no drift check);
 //   30 / 31 -> calendar MUT 4 / 5 (TLOAD payload halves swapped / table word one edge late; QLB-C4b's 9 / 10 -- 9 is
 //   HARD_HR's here);  27 context record never loaded (banks start at 0: the pre-0ka hardware); 28 record of user u loaded into user
 //   (u mod (NU-1)) + 1; 29 record not checked (a bad tag loads and does not fault).
+// FILLER NATIVE CONTEXT (MU-DQ-BOOTCTX 10-19, FCTX 1, opt-in, OPSEG only; 0 = unchanged): the hard head raises
+//   layer_context_v only for an accepted start at prog_base 0 (the latency user's decode stage start), but a filler's
+//   attention (kv) ops run as a LOCAL SEG at prog_base NCTX_BASE (mu_opcal layer_entries: C.loc_seg(0x10)), so native59
+//   never opened a filler context.  Here: a head start (st) of a filler (hu != 0) at base NCTX_BASE raises
+//   layer_context_v on the edge the head would for base 0 (h_start -> head pin register -> layer_context_v register =
+//   2 edges), with native_tok / native_pos = that start's tok / {user, pos} from this block's own 2-edge copy of st
+//   (held until the next head start reaches the head's latch, exactly as the head's native_tok / native_pos register
+//   behaves for an accepted start; the copy makes the context independent of the head's start acceptance -- found by
+//   the bench: a start the busy head does not accept leaves the head's latch on the previous user) and command_stage
+//   (= that segment's user stage, per-user stage bank).  ~75 flops.  native59 NU 4
+//   (MU-DQ-D2DUSER) keys the context by native_pos[17:16].  The closed qfd_sys_face's host-context check must skip
+//   filler contexts (qfd_host_native_context_rx MU_HEAD 1, re-close owner MU-DQ-SYSFACE).  0 added edges; 2 flops.
+//   MUT 35 (bench only): the filler context is not raised (the pre-fix hardware).
 // D2D USER (MU-DQ-D2DUSER 10-19, NU > 1): native_pos[17:16] = the user of the latest head start (see hu below), the
 //   carrier native59 stamps into the D2D CMD / Q epoch[1:0]; no port change, no added edge.  MUT 32 = user not carried.
 // =====================================================================================================================
@@ -121,10 +144,17 @@ module qfd_tt_ctlm_dv #(
     parameter integer UVM_STRIDE = 4096,
     parameter integer PIDX_STRIDE = 128,
     parameter integer UTAG_LSB = 6,
+    parameter integer INIT_U0 = 0, INIT_FIRST = -1, INIT_CNT = 0,
     parameter integer OPSEG = 0,
+    parameter integer OPSEG_EXPANDED = 0,
+    parameter OPSEG_VIAMAP1 = "", OPSEG_VIAMAP2 = "",
+    parameter OPSEG_INST1 = "qfd_tt_ctlm_opseg_b1", OPSEG_INST2 = "qfd_tt_ctlm_opseg_b2",
     parameter string  OPSEG_VIAMAP = "",
     parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg",
-    parameter integer HR_ASBUILT = 0                // QW-DIEFIX: 1 = bench mutant (as-built hr layout)
+    parameter integer HR_ASBUILT = 0,               // QW-DIEFIX: 1 = bench mutant (as-built hr layout)
+    parameter integer CTX_SRC = 0,                  // MU-DQ-BOOTCTX: 1 = runtime filler context on ctx_x (OPSEG only)
+    parameter integer FCTX = 0,                     // MU-DQ-BOOTCTX: 1 = filler native context at base NCTX_BASE
+    parameter [11:0]  NCTX_BASE = 12'h010
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -132,12 +162,15 @@ module qfd_tt_ctlm_dv #(
     input  wire [74:0]   pw,
     input  wire [186:0]  dh,
     input  wire [1:0]    dh_user,
+    input  wire          mu_fault,                 // registered observer fault, visible in STATUS
+    input  wire          init_u0,                  // explicit static admission INIT selector, aligned to DH stage0
+    input  wire [128:0]  ctx_x,                     // CTX_SRC 1: {load, CTX record} from qfd_mu_ctx_rx (else unused)
     input  wire          kok,
     input  wire          kwd,
     input  wire          fab,
     output wire [75:0]   program_obs,
     output wire          control_stores_ready,
-    output wire          layer_context_v,
+    output wire          layer_context_v,           // head layer context | filler native context (FCTX)
     output wire [17:0]   native_tok,
     output wire [17:0]   native_pos,
     output wire [5:0]    command_stage,
@@ -168,6 +201,12 @@ module qfd_tt_ctlm_dv #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin dh_q <= 187'd0; ss_q <= 107'd0; ag_q <= 10'd0; fab_q <= 1'b0; dhu_q <= 2'd0; end
         else begin dh_q <= dh; ss_q <= ss5; ag_q <= ag5; fab_q <= fab; dhu_q <= (NU > 1) ? dh_user : 2'd0; end
+    reg init_u0_q;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) init_u0_q <= 1'b0;
+        else init_u0_q <= (INIT_U0 != 0) ? init_u0 : 1'b0;
+    initial if (INIT_U0 != 0 && (INIT_FIRST < 0 || INIT_FIRST % 4 != 0 || INIT_CNT < 1 || INIT_FIRST + INIT_CNT > 1024))
+        $error("INIT_U0 requires a source-bound aligned INIT_FIRST/INIT_CNT programme range");
     localparam integer UB = (NU > 1) ? $clog2(NU) : 1;
     localparam integer OPS = (OPSEG != 0 && NU > 1) ? 1 : 0;
     wire [UB-1:0] s_user = (OPS != 0) ? {UB{1'b0}} : dhu_q[UB-1:0];
@@ -189,7 +228,7 @@ module qfd_tt_ctlm_dv #(
     wire        l_v, l_ff; wire [1:0] l_u2; wire [5:0] l_stage; wire [9:0] l_first, l_cnt; wire [3:0] l_fcode;
     wire        l_fault;
     generate if (OPS != 0) begin : g_op
-        qfd_sys_face_mu_dhuser #(.NU(NU), .OPSEG(1), .LAST_STAGE(LAST_STAGE), .VIAMAP(OPSEG_VIAMAP),
+        qfd_sys_face_mu_dhuser #(.NU(NU), .OPSEG(1), .EXPANDED(OPSEG_EXPANDED), .VIAMAP1(OPSEG_VIAMAP1), .VIAMAP2(OPSEG_VIAMAP2), .INSTANCE1(OPSEG_INST1), .INSTANCE2(OPSEG_INST2), .LAST_STAGE(LAST_STAGE), .VIAMAP(OPSEG_VIAMAP),
             .INSTANCE(OPSEG_INST), .MUT((MUT >= 24 && MUT <= 26) ? MUT - 20 : 0)) u_leaf (.ck(ck), .rst_n(rst_n),
             .dh_run(dh_q[43:0]), .dh_user(), .res_user(), .mu_fault(l_fault), .op_v(l_v), .op_user(l_u2),
             .op_stage(l_stage), .op_first(l_first), .op_cnt(l_cnt), .op_ff(l_ff), .op_fcode(l_fcode));
@@ -199,38 +238,60 @@ module qfd_tt_ctlm_dv #(
     end endgenerate
     wire [UB-1:0] l_user = l_u2[UB-1:0];
     // filler initial context record (CTX_DW, see the header): checked and loaded on the accepted seal edge
-    wire [127:0] c_ctx; wire c_ctxld;                                // from u_cal (below)
+    wire [127:0] c_ctx_cal; wire c_ctxld_cal;                        // from u_cal (below): the boot record
+    // runtime record (CTX_SRC 1): pin register, then the same record path as the boot record
+    reg mu_fault_q;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) mu_fault_q <= 1'b0; else mu_fault_q <= mu_fault;
+    reg  [128:0] ctx_q;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) ctx_q <= 129'd0; else ctx_q <= (CTX_SRC != 0 && OPS != 0) ? ctx_x : 129'd0;
+    wire        x_ld = (CTX_SRC != 0) && (OPS != 0) && ctx_q[128];
+    wire [127:0] c_ctx = x_ld ? ctx_q[127:0] : c_ctx_cal;
+    wire        c_ctxld = c_ctxld_cal || x_ld;
+    wire        r_fill;                                              // filler result write (below)
+    wire [1:0]  r_u2;
     localparam integer NF = (NU > 1) ? NU - 1 : 1;                   // fillers
     wire [2:0]  ctx_mask = c_ctx[110:108];
     wire        ctx_ok = (MUT == 29) || (c_ctx[127:112] == 16'h4D43 && !c_ctx[111] && (({1'b0, ctx_mask} >> (NU - 1)) == 4'd0));
-    wire        ctx_ld = (OPS != 0) && c_ctxld && ctx_ok && (MUT != 27);
-    wire        ctx_bad = (OPS != 0) && c_ctxld && !ctx_ok;
+    // same-filler collision of a runtime load (with the leaf start / result of a filler in its mask) or both sources
+    wire        x_hit = x_ld && (c_ctxld_cal || (l_v && !s_start && l_u2 != 2'd0 && ctx_mask[l_u2 - 2'd1]) ||
+                                 (r_fill && r_u2 != 2'd0 && ctx_mask[r_u2 - 2'd1])) && (MUT != 33);
+    wire        ctx_ld = (OPS != 0) && c_ctxld && ctx_ok && !x_hit && (MUT != 27);
+    wire        ctx_bad = (OPS != 0) && c_ctxld && (!ctx_ok || x_hit);
     wire        l_start = (OPS != 0) && l_v && !(s_start);          // the face start wins a collision
     wire        op_coll = (OPS != 0) && l_v && s_start;
+    wire u0_init_start = (INIT_U0 != 0) && init_u0_q && s_start && s_stage == 6'd0 && s_user == {UB{1'b0}};
+    wire init_u0_bad = init_u0_q && !u0_init_start;
     reg         op_fault;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) op_fault <= 1'b0;
-        else if (l_fault || (op_coll && MUT != 22) || ctx_bad) op_fault <= 1'b1;
+        else if (l_fault || (op_coll && MUT != 22) || ctx_bad || (mu_fault_q && MUT != 37) || ctx_write_fault || init_u0_bad) op_fault <= 1'b1;
     wire        u_start = s_start || l_start;
     wire [5:0]  u_stage = l_start ? l_stage : s_stage;
     wire [UB-1:0] u_user = l_start ? l_user : s_user;
 
     // ------------------------------------------------------------------ static command calendar
+    wire ctx_write_fault;
     wire        c_emb, c_seg, c_su, c_xc, c_run, c_done, c_fault, c_ready;
     wire [11:0] c_base; wire [8:0] c_pidx;
     wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
     // MUT 1..3 -> the calendar's MUT; MUT 16 (bench only, NU > 1) -> the calendar's UFOLD-off mutant
-    qfd_dv_cmd_cal_mu #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : (MUT == 16 || MUT == 21 || MUT == 33) ? MUT : (MUT == 30) ? 4 : (MUT == 31) ? 5 : 0), .LAST_STAGE(LAST_STAGE), .NU(NU),
+    qfd_dv_cmd_cal_mu #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : (MUT == 39) ? 33 : (MUT == 16 || MUT == 21) ? MUT : (MUT == 30) ? 4 : (MUT == 31) ? 5 : 0), .LAST_STAGE(LAST_STAGE), .NU(NU),
         .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS)) u_cal (
         .ck(ck), .rst_n(rst_n),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
-        .start(u_start), .stage(u_stage), .start_user(u_user), .start_rng(l_start), .start_first(l_first),
-        .start_cnt(l_cnt), .cmd(cmd), .tl(tl), .cmd_user(c_user), .loc_emb(c_emb),
+        .start(u_start), .stage(u_stage), .start_user(u_user), .start_rng(l_start || u0_init_start), .start_first(u0_init_start ? 10'(INIT_FIRST) : l_first),
+        .start_cnt(u0_init_start ? 10'(INIT_CNT) : l_cnt), .cmd(cmd), .tl(tl), .cmd_user(c_user), .loc_emb(c_emb),
         .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
         .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),
-        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode), .ctx_dw(c_ctx), .ctx_load(c_ctxld));
+        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode), .ctx_dw(c_ctx_cal), .ctx_load(c_ctxld_cal));
+    qfd_mu_context_guard #(.NU(NU), .ENABLE(OPS), .MUT((MUT == 36) ? 1 : 0)) u_ctx_guard (
+        .ck(ck), .rst_n(rst_n), .load(ctx_ld), .load_mask(ctx_mask),
+        .consume(c_emb || c_seg), .consume_user(c_user),
+        .result_write(r_fill), .result_user(r_wr), .fault(ctx_write_fault));
     // user-0 gates (NU > 1): the head / XPF see the latency user's SU stream only (MUT 17: every user's)
     wire        c_u0 = (NU == 1) || (c_user == {UB{1'b0}}) || (MUT == 17);
     wire        s_u0 = (NU == 1) || (s_user == {UB{1'b0}}) || (MUT == 19);
@@ -260,8 +321,8 @@ module qfd_tt_ctlm_dv #(
     reg         start_fault;
     wire [UB-1:0] b_wr = (MUT == 18) ? {UB{1'b0}} : s_user, b_rd = (MUT == 18) ? {UB{1'b0}} : c_user;
     // OPSEG filler result: tok_b / pos_b of the result's user (MUT 23: the next filler's bank)
-    wire        r_fill = (OPS != 0) && ss_tokv && ss_tu != 2'd0 && {1'b0, ss_tu} < 3'(NU);
-    wire [1:0]  r_u2 = (MUT == 23) ? ((ss_tu == 2'(NU - 1)) ? 2'd1 : ss_tu + 2'd1) : ss_tu;
+    assign      r_fill = (OPS != 0) && ss_tokv && ss_tu != 2'd0 && {1'b0, ss_tu} < 3'(NU);
+    assign      r_u2 = (MUT == 23) ? ((ss_tu == 2'(NU - 1)) ? 2'd1 : ss_tu + 2'd1) : ss_tu;
     wire [UB-1:0] r_wr = r_u2[UB-1:0];
     integer     ub_i;
     always @(posedge ck or negedge rst_n)
@@ -297,7 +358,27 @@ module qfd_tt_ctlm_dv #(
         else if (s_me) hu <= 2'd0;
         else if (c_seg) hu <= (NU > 1 && MUT != 32) ? 2'(c_user) : 2'd0;
     wire [17:0] native_pos_h;
-    assign native_pos = (NU > 1) ? (native_pos_h | {hu, 16'd0}) : native_pos_h;
+    // filler native context (FCTX, see the header): 2 edges after the filler's base-NCTX_BASE head start, as the head's
+    wire        lcv_h;
+    wire [17:0] native_tok_h;
+    reg  [1:0]  fcx, fh;
+    reg  [17:0] f1_tok, f1_pos, ov_tok, ov_pos; reg ov;
+    wire        f0 = (FCTX != 0) && (OPS != 0) && (MUT != 35) && st_h && st_base == NCTX_BASE && hu != 2'd0;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin
+            fcx <= 2'd0; fh <= 2'd0; f1_tok <= 18'd0; f1_pos <= 18'd0; ov <= 1'b0; ov_tok <= 18'd0; ov_pos <= 18'd0;
+        end else begin
+            fcx <= {fcx[0], f0}; fh <= {fh[0], st_h};
+            f1_tok <= st_tok; f1_pos <= st_pos;
+            if (fh[0]) begin                                   // the edge the head latches this start's tok / pos
+                ov <= fcx[0];
+                if (fcx[0]) begin ov_tok <= f1_tok; ov_pos <= f1_pos; end
+            end
+        end
+    assign layer_context_v = lcv_h | fcx[1];
+    assign native_tok = ov ? ov_tok : native_tok_h;
+    // [17:16] stays the D2DUSER carrier (hu, every edge); [15:0] from the filler copy while it holds
+    assign native_pos = (NU > 1) ? ((ov ? {2'b00, ov_pos[15:0]} : native_pos_h) | {hu, 16'd0}) : native_pos_h;
 
     // ------------------------------------------------------------------ SU observation (was seq_su's xs / su_observe)
     reg  [23:0] su_acc;                       // SU commands issued (the head's other-unit accepted count)
@@ -333,7 +414,7 @@ module qfd_tt_ctlm_dv #(
         ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0 && MUT != 9) ? 1 : 0)) u_hr (
             .stage_start(hd_start), .stage(hd_stage),
             .rom_ret_i(rom_ret), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs),
-            .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos_h), .rom_cmd(ib_q),
+            .layer_context_v(lcv_h), .native_tok(native_tok_h), .native_pos(native_pos_h), .rom_cmd(ib_q),
             .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(actual_me_observe),
             .native_ret(native_ret), .ck_head(ck), .ck_pm0(ck), .ck_pm1(ck), .rst_n(rst_n),
             .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
@@ -368,7 +449,7 @@ module qfd_tt_ctlm_dv #(
         qfd_tt_ctlm_head_static u_head (
             .me_observe(actual_me_observe), .cp_active(1'b0), .cp(cp),
             .me_image_ready(me_image_ready), .program_obs(program_obs),
-            .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos_h),
+            .layer_context_v(lcv_h), .native_tok(native_tok_h), .native_pos(native_pos_h),
             .clk(ck), .ck_sched(ck), .rst_n(rst_n),
             .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
             .pw_v(pw[74]), .pw_addr(pw[73:64]), .pw_data(pw[63:0]),

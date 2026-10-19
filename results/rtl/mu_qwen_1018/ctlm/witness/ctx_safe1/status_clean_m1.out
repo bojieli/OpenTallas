@@ -1,0 +1,5 @@
+MU_OBSERVER_STATUS FAIL errors=2
+- rtl/test/mu_qwen_seq/tb_mu_observer_status.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 390ns; walltime 0.000 s; speed 3.222 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

@@ -1,0 +1,4 @@
+case neg_observer done: 0 fails so far
+LANDED_LOCKSTEP PASS lmut 0 runs=1: neg_observer: LANDED_LOCKSTEP PASS LMUT=0 compared=4592 mismatches=0 active=1067 tl_words=0 op_starts=3
+MU_OPSEG_PASS mut 0
+{"mut": 0, "cases": ["neg_observer"], "emb_t": null, "res_skew": 0, "observer_status": {"core_fault": true, "cf": true, "first_status": [[1021, "50000000000000"]]}, "neg_observer": {"want_edge": 1601, "opf": [[1601, "0000", 0]], "raised": true}, "landed": [["neg_observer", "LANDED_LOCKSTEP PASS LMUT=0 compared=4592 mismatches=0 active=1067 tl_words=0 op_starts=3"]], "verdict": "PASS"}

@@ -131,8 +131,10 @@ def landed_record(spec, root):
     if spec.get("clock_data_paths") != "related_same_frequency":
         raise ValueError('landed cluster: landings and reset runs cross region roots; requires clock_data_paths '
                          '"related_same_frequency" (same_pll_fixed_phase ratio1/1 phase0)')
-    if spec.get("soft_root_macro_masters") or spec.get("soft_root_macro_bindings") or spec.get("cdc_synchronizers") is not None:
-        raise ValueError("landed cluster: raw-memory sinks / CDC synchronizers are leaf-tile features")
+    # TW2-QCTLM 10-19: raw-memory sinks of a region root are allowed (raw_macro_clocks.contract: exact instance / master /
+    # clock pin / region root); CDC synchronizers stay a leaf-tile feature (regions are related same-frequency roots)
+    if spec.get("cdc_synchronizers") is not None:
+        raise ValueError("landed cluster: CDC synchronizers are leaf-tile features")
     rec = json.loads((Path(root) / path).read_text())
     if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") != spec.get("top"):
         raise ValueError(f'{path}: not the lp.py record of {spec.get("top")}')
@@ -423,7 +425,13 @@ def landed_raw_tcl(spec, root):
     if not targets:
         return []
     rows = ' '.join(f'{{{k}}} {{ref {v["ref"]} tt {v["tt"]:g} ff {v["ff"]:g} ss {v["ss"]:g}}}' for k, v in sorted(targets.items()))
-    return [f'set ::ot_lrt_targets [dict create {rows}]', 'source /src/physical/common_flow/landed_raw_tap.tcl']
+    out = [f'set ::ot_lrt_targets [dict create {rows}]']
+    # MU-DQ-CTLMCLK 10-19 (COORD 0ke option a): spec landed_raw_detach -> the tapped pins are OUT of TritonCTS (detached
+    # during clock_tree_synthesis, re-driven from their co-timed ref pin's net after it), so the region root balances its
+    # registers against the ref pin's insertion only (h16c ck_head R 303), not against the raw SRAM pins (R 15)
+    if spec.get('landed_raw_detach'):
+        out.append('set ::ot_lrt_detach 1')
+    return out + ['source /src/physical/common_flow/landed_raw_tap.tcl']
 
 
 def landed_sdc(spec, root):

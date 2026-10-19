@@ -53,11 +53,36 @@ module qfd_mu_ctx_rx #(
         if (!rst_n) begin ctx_x <= 129'd0; ctx_user <= 2'd0; mu_fault <= 1'b0; end
         else begin
             ctx_x[128] <= 1'b0;
-            if (rx_v !== context_slot && context_slot) mu_fault <= 1'b1;
+            if (rx_v != context_slot && context_slot) mu_fault <= 1'b1;
             if (context_slot && rx_v) begin
                 if (!good || {1'b0, u} >= 3'(NU)) mu_fault <= 1'b1;
                 else if (u != 2'd0) begin ctx_x <= {1'b1, r}; ctx_user <= ul; end
             end
         end
     end
+endmodule
+
+// =====================================================================================================================
+// qfd_mu_ctx_rx_die (MU-DQ-BOOTCTX 10-19) -- the die-GEN form of qfd_mu_ctx_rx: whole-port inputs, so the die joins the
+// EXISTING nets of the face's D2D RX ports as one more endpoint (the die bus model connects whole ports; no part-select
+// endpoints): prog_context_slot, prog_rx_v, rx_payload[547:0] (only [547:512] and [58:0] are read; the other 453 inputs
+// are unused -- a GEN part-select endpoint would drop those pins, follow-up).  Logic = qfd_mu_ctx_rx, unchanged.
+// ctx_user / mu_fault are open observability outputs (no die consumer port today).
+// =====================================================================================================================
+module qfd_mu_ctx_rx_die #(
+    parameter integer NU = 4,
+    parameter integer MUT = 0
+) (
+    input  wire         ck,
+    input  wire         rst_n,
+    input  wire         prog_context_slot,
+    input  wire         prog_rx_v,
+    input  wire [547:0] rx_payload,
+    output wire [128:0] ctx_x,
+    output wire [1:0]   ctx_user,
+    output wire         mu_fault
+);
+    qfd_mu_ctx_rx #(.NU(NU), .MUT(MUT)) u_rx (.ck(ck), .rst_n(rst_n), .context_slot(prog_context_slot), .rx_v(prog_rx_v),
+        .rx_hdr(rx_payload[547:517]), .rx_beat(rx_payload[516:512]), .rx_tag(rx_payload[58:0]), .ctx_x(ctx_x),
+        .ctx_user(ctx_user), .mu_fault(mu_fault));
 endmodule
