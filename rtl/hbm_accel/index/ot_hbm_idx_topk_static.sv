@@ -30,7 +30,9 @@
 module ot_hbm_idx_topk_static #(
     parameter integer MUT = 0,
     parameter integer IDW = 20,
-    parameter integer ACK = 12      // measured: cq at W, hub W+1, bank W+3, echo W+9, response W+10, cr pin W+12
+    parameter integer ACK = 12,     // measured: cq at W, hub W+1, bank W+3, echo W+9, response W+10, cr pin W+12
+    parameter integer RT_EXTRA = 0  // fixed extra VM round-trip edges outside this engine (the hardened IDX root's vm_rr
+                                    // pin register = 1): capture n+8+RT_EXTRA, every row +RT_EXTRA. Default 0 = as built.
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -75,8 +77,8 @@ module ot_hbm_idx_topk_static #(
     reg [14:0] i_sec; reg [14:0] i_left; reg i_tgl, i_first;
     // ------------------------------------------------------------ fixed read pipeline (face timing n+1 / n+7 / n+8)
     // info {v, bank3, first, last, off3, lastw3}
-    reg [11:0] dp [0:8];
-    wire [11:0] di = dp[(MUT == 4) ? 6 : 7];
+    reg [11:0] dp [0:8+RT_EXTRA];
+    wire [11:0] di = dp[(MUT == 4) ? 6 + RT_EXTRA : 7 + RT_EXTRA];
     reg cap_v, cap_first, cap_last; reg [2:0] cap_off, cap_lastw; reg [255:0] cap_d;
     wire rd_now = st == E_RD && !i_tgl;
     wire rd_last = rd_now && i_left == 15'd0;
@@ -86,10 +88,10 @@ module ot_hbm_idx_topk_static #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             vm_rq <= 136'd0; cap_v <= 1'b0;
-            for (integer d = 0; d < 9; d = d + 1) dp[d] <= 12'd0;
+            for (integer d = 0; d < 9 + RT_EXTRA; d = d + 1) dp[d] <= 12'd0;
         end else begin
             vm_rq <= 136'd0;
-            for (integer d = 1; d < 9; d = d + 1) dp[d] <= dp[d-1];
+            for (integer d = 1; d < 9 + RT_EXTRA; d = d + 1) dp[d] <= dp[d-1];
             dp[0] <= 12'd0;
             if (rd_now && !rsid_bad) begin
                 vm_rq[17*i_sec[2:0] +: 17] <= {1'b1, am_q, i_sec};
@@ -272,7 +274,7 @@ module ot_hbm_idx_topk_static #(
                     i_tgl <= !i_tgl;
                     if (rd_now) begin
                         i_sec <= i_sec + 15'd1; i_left <= i_left - 15'd1; i_first <= 1'b0;
-                        if (rd_last) begin cnt <= 4'd8; st <= E_DR; end
+                        if (rd_last) begin cnt <= 4'(8 + RT_EXTRA); st <= E_DR; end
                     end
                 end
                 E_DR: if (cnt == 4'd0) st <= E_FL1; else cnt <= cnt - 4'd1;
