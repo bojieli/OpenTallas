@@ -29,7 +29,7 @@ VARIANTS = {
            "fj": "ot_hgi_coll_fj_n2s1", "qso": "ot_hgi_coll_qso_n2s1"},
 }
 
-HEADER_PORTS = """ input wire rst_n,input wire [1:0] qid,qid_rg,
+HEADER_PORTS = """ input wire rst_n,input wire [1:0] qid,qid_rg,qid_wr,
  input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [@NCK@:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,@ARG@
  input wire [15:0] clk_vmwrite,input wire [9:0] clk_link,
@@ -275,7 +275,7 @@ def flat(v="q2") -> str:
     w(" ot_hgi_coll_static_vmwrite_roots_v6_physical u_writer(")
     names = ["rgx_data0", "rgx_data1", "rgx_data2", "rgx_data3", "rgx_ctrl", "tkw", "meta", "body"] + [f"bank{b}" for b in range(8)]
     w("  " + ",".join(f".clk_{n}(clk_vmwrite[{i}])" for i, n in enumerate(names)) + ",")
-    w("  .rst_n(rst_n),.sid(qid),.rgx_v(w_rgx_v),.rgx_addr(w_rgx_addr),")
+    w("  .rst_n(rst_n),.sid(qid_wr),.rgx_v(w_rgx_v),.rgx_addr(w_rgx_addr),")
     w("  .rgx_data0(w_rgx_d0),.rgx_data1(w_rgx_d1),.rgx_data2(w_rgx_d2),.rgx_data3(w_rgx_d3),")
     if SOLO:
         w("  .rgx_vm(w_rgx_vm),.tkw_v(tkx_w_v),.tkw_d({tkx_w_addr,tkx_w_mask,tkx_w_data}),")
@@ -346,20 +346,22 @@ def tb_eq(v="q2", cycles=3000) -> str:
     for n in outs:
         L.append(f" wire [{W[n] - 1}:0] a_{n},b_{n};")
     # QF-COLLQ 10-18: qid_rg = the ring's copy of the quadrant identity strap (N face beside u_rctl; the die ties it to the
-    # same constant as qid); the reference parent has the single qid
-    conn_a = [f".{c}({{{W[c]}{{clk}}}})" for c in cks] + [".rst_n(rst_n)"] + [f".{n}(i_{n})" for n in ins if n != "qid_rg"] + [f".{n}(a_{n})" for n in outs]
+    # same constant as qid); the reference parent has the single qid.  TW-HBM-COLLP 10-19: qid_wr = the writer region's
+    # copy (W face beside ck_wr / u_writer.sid): one qid owned by the sw region fed the wr-region writer (kit OT_MULTI_ROOT
+    # "input qid has wrong domain for u_writer"); a strap is never landed, so each region gets its own pin
+    conn_a = [f".{c}({{{W[c]}{{clk}}}})" for c in cks] + [".rst_n(rst_n)"] + [f".{n}(i_{n})" for n in ins if n not in ("qid_rg", "qid_wr")] + [f".{n}(a_{n})" for n in outs]
     conn_b = [f".{c}({{{W[c]}{{clk}}}})" for c in cks] + [".rst_n(rst_n)"] + [f".{n}(i_{n})" for n in ins] + [f".{n}(b_{n})" for n in outs]
     L.append(f" {VARIANTS[v]['ref']} u_ref(" + ",".join(conn_a) + ");")
     L.append(f" ot_hfd_coll_{v}_lpf u_flat(" + ",".join(conn_b) + ");")
     L.append(" integer cyc,bad,nc;")
     L.append(" initial begin bad=0;nc=0;")
-    L.append("  i_qid=2'd1; i_qid_rg=2'd1;")
+    L.append("  i_qid=2'd1; i_qid_rg=2'd1; i_qid_wr=2'd1;")
     for n in ins:
-        if n not in ("qid", "qid_rg"):
+        if n not in ("qid", "qid_rg", "qid_wr"):
             L.append(f"  i_{n}={{{','.join(['$urandom'] * ((W[n] + 31) // 32))}}};")
     L.append(f"  for(cyc=0;cyc<{cycles};cyc=cyc+1)begin @(negedge clk); if(cyc==16) rst_n=1'b1;")
     for n in ins:
-        if n in ("qid", "qid_rg"):
+        if n in ("qid", "qid_rg", "qid_wr"):
             continue
         # sparse control strobes so the parents run real programmes between faults
         if W[n] == 1:

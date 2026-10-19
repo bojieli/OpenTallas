@@ -1689,8 +1689,20 @@ def gen_hooks(s: dict, kd: str) -> dict:
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
             if clock_entry_constraints.landed_cluster(s):
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
+                # TW-HBM-PSLICE 10-19 (b895c55d9 on claude/pl-pslice-1018): clock_entries.tcl admits a hard child's clock
+                # pin as a region-root sink only when its master is in ::ot_ce_counts; that dict was set only post-CTS
+                # (clock_entry.sdc) and write_sdc drops Tcl variables, so every real landed kit failed "CTS source must
+                # reach only standard-cell clock pins" (pslice_c5_lp real3; the unit test set the dict by hand)
+                lc = {}
+                for ch in s.get("children", []):
+                    m = Path(ch["view"]).name
+                    lc[m] = lc.get(m, 0) + int(ch.get("count", 1))
+                pre_cts.append("set ::ot_ce_counts [dict create " + " ".join(f"{{{m}}} {n}" for m, n in lc.items()) + "]")
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
+        # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
+        # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
+        pre_cts.extend(clock_entry_constraints.landed_raw_tcl(s, ROOT))
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
@@ -2076,6 +2088,12 @@ def referenced_paths(s: dict, kd: str) -> list:
         out += [f"{ch['view']}/insertion.json" for ch in s["children"]]
         if clock_entry_constraints.landed_cluster(s):
             out.append(s["landed_record"])
+            raw = clock_entry_constraints.landed_raw_targets(s, ROOT)
+            if raw:
+                # HF-4d: the leaf closed records the raw-pin reference / tolerance are read from, and the tap hook
+                out += ["physical/common_flow/landed_raw_tap.tcl"] + sorted({v["record"] for v in raw.values()})
+                out += sorted({f"{ch['view']}/port_latency.json" for ch in s["children"]})
+                out += sorted({v["verdict"] for v in raw.values()})
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
@@ -2221,6 +2239,13 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
 def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None, out_root: Path = ROOT,
         write: bool = True) -> dict:
     s = load_spec(spec_path)
+    if s.get("face_land"):     # HKV-RSTCAP 10-19: shared reset / late-pin face landing (tools/ref_tile/face_land.py)
+        sys.path.insert(0, str(HERE))
+        import face_land
+        try:
+            face_land.apply(s, write=write, root=ROOT)
+        except face_land.FaceLandError as e:
+            raise SpecError(str(e))
     apply_recipe(s, kit_recipe(s, out_root, spec_path))
     check_hold_budget(s)
     slot = contract_slot(s)

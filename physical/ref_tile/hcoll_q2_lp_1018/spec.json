@@ -115,7 +115,9 @@
    "ports": [
     "ck_wr"
    ],
-   "inputs": [],
+   "inputs": [
+    "qid_wr"
+   ],
    "outputs": [
     "vm_kq"
    ]
@@ -655,6 +657,7 @@
    "vm_rq",
    "vm_rr",
    "ck_wr",
+   "qid_wr",
    "vm_kq"
   ],
   "N": [

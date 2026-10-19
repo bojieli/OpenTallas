@@ -46,7 +46,7 @@ endtask
 initial begin : s_main
     integer row, seg, c, l;
     reg [63:0] md;
-    fi_qid = 2'd1; fi_qid_rg = 2'd1; fi_cfg_v = 0; fi_cfg_target = S_TGT; fi_cfg_addr = 0; fi_cfg_data = 0; fi_desc_v = 0;
+    fi_qid = 2'd1; fi_qid_rg = 2'd1; fi_qid_wr = 2'd1; fi_cfg_v = 0; fi_cfg_target = S_TGT; fi_cfg_addr = 0; fi_cfg_data = 0; fi_desc_v = 0;
     fi_desc_base = 12'd0; fi_desc_limit = 13'(S_NR); fi_desc_loops = 16'd1; fi_launch_v = 0; fi_rc_v = 0;
     fi_phy_up = 2'b11; fi_rx_pin_v = 2'b00; fi_vm_rr = 0; fi_inj_d = 0; fi_rx_pin_flit = 0; fi_pr_cw_i = 0; fi_pr_ccw_i = 0;
     fi_rc_d = 0; fi_rc_tag = 0; fi_ra_lp_data = 0;

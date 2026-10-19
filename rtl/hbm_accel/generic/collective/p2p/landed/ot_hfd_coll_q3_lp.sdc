@@ -76,3 +76,4 @@ set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_wr [get_ports {tkx_w_data[*]
 if {!$::ot_ref_pre_cts} { set_propagated_clock [get_clocks {ck_wr ck_rg}] }
 set_case_analysis 0 [get_ports {qid[*]}]   ;# identity strap
 set_case_analysis 0 [get_ports {qid_rg[*]}]   ;# identity strap
+set_case_analysis 0 [get_ports {qid_wr[*]}]   ;# identity strap

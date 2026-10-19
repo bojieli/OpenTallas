@@ -108,6 +108,7 @@ def entry_domains(cks):
         io += [(last, n) for n in re.findall(r"\b([A-Za-z_]\w*)\b", rest.split("//")[0])]
     own = {m.group(2): m.group(1) for m in re.finditer(r"-clock (ck_\w+) \[get_ports \{(\w+)", sdc)}
     own.setdefault("qid_rg", "ck_rg")      # identity strap copy beside u_rctl (static: no lp.py IO delay line)
+    own.setdefault("qid_wr", "ck_wr")      # TW-HBM-COLLP 10-19: identity strap copy beside u_writer (static)
     name = {cks[0]: "core", "ck_wr": "wr", "ck_rg": "rg"}
     out = {name[c]: {"ratio": [1, 1], "ports": [c], "inputs": [], "outputs": []} for c in cks}
     for kind, p in io:
@@ -128,7 +129,8 @@ def spec():
           "ra_tx_tag", "ra_tx_dst", "ra_tx_result", "ra_tx_acc", "ra_tx_gather", "ra_tx_ttl", "ra_rx_slot", "ra_rx_kind",
           "ra_rx_src", "ra_rx_tag", "ra_rr_local", "ra_rr_local_tag"]
     pins = {
-        "W": ["vm_rq", "vm_rr", "ck_wr", "vm_kq"] + (TKX_W if VARIANT == "q3" else []),
+        # TW-HBM-COLLP 10-19: qid_wr = the writer region's own copy of the quadrant identity strap, beside ck_wr / u_writer
+        "W": ["vm_rq", "vm_rr", "ck_wr", "qid_wr", "vm_kq"] + (TKX_W if VARIANT == "q3" else []),
         # QF-COLLQ 10-18: rc_v / rc_tag (read only by u_control, region sw, S row at x 172.8) moved N -> S: on N they reached
         # u_control 1,179 um combinationally (textbook wire_reach REFUSE > 500 um); rc_d stays on N (-> isa_lp_data on N).
         # qid_rg: the ring region's own copy of the quadrant identity strap, beside ck_rg / u_rctl (S qid reached u_rctl.qid

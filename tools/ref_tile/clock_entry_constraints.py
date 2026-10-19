@@ -151,6 +151,126 @@ def landed_record(spec, root):
     return rec
 
 
+# Rule H1 (tools/hier_contract/pair_check.HOLD_TREE = 50 ps hold margin + 50 ps die skew): the hold margin part of the
+# per-pair hold uncertainty a leaf signs off between two different clock entries; the rest is the die-skew tolerance.
+H1_HOLD_MARGIN_PS = 50.0
+
+
+def _tcl_words(text, var):
+    """the words of a generated `set ::<var> {{a} {b}}` line (None when absent)"""
+    m = re.search(r'^set ::' + var + r' \{(.*)\}\s*$', text, re.M)
+    return [a or b for a, b in re.findall(r'\{([^{}\s]+)\}|([^{}\s]+)', m[1])] if m else None
+
+
+def landed_raw_pins(view, root):
+    """HF-4d 10-19 (coordinator option A, Q.STA.TTC.2): the RAW-MEMORY clock pins of a hard child in a LANDED cluster.
+    A hybrid_entries leaf (h16c ot_qfd_tt_ctlm_static_hr) exposes, besides its CTS-root pin (ck_head), direct SRAM clock
+    entries (ck_pm0/ck_pm1: port -> one SRAM clk).  Its ETM has only min/max_clock_tree_path on them and NO arcs, so
+    all_registers never reaches them and the ETM says nothing about when they must arrive.  The requirement is in the
+    leaf's CLOSED RECORD, not the ETM: the record's sign-off SDC compensates every entry to one phase phi (latency = phi -
+    wire - R, the direct SRAM row with R = 0, phi = the CTS root's routed boundary mean), i.e. each SRAM clock pin is
+    CO-TIMED with the boundary flops of the CTS-root pin; the per-pair hold uncertainty between two entries (rule H1:
+    50 margin + 50 die skew) is the arrival tolerance the leaf signed off.
+    Returns {raw pin: {"ref": cts-root pin, "tol": ps, "refs": {corner: [lo, mean, hi]}, "record": sign-off SDC,
+    "verdict": verdict.json}} with refs = the leaf's measured port -> SRAM clk wire (insertion.json clock_measurements[pin][corner].all, n = 1), so the parent
+    judges  wire(raw) + refs.mean  ==  wire(ref) + R(ref).boundary.mean  within tol at TT and FF.  {} when the child has
+    no raw entry.  Fail closed on any record mismatch."""
+    view = Path(view)
+    ins = json.loads((view / 'insertion.json').read_text())
+    cm = ins.get('clock_measurements') or {}
+    raw_like = sorted(p for p, r in cm.items() if any(not (r.get(c) or {}).get('boundary') for c in CORNERS))
+    if not raw_like:
+        return {}
+    where = f'{view}: raw child clock pins {raw_like}'
+    try:
+        pl = json.loads((view / 'port_latency.json').read_text())
+        job = pl['job']
+        clocks = list(pl['control_roles']['clocks'])
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        raise ValueError(f'{where}: no closed-record port_latency.json job / clock roles ({e})')
+    vpath = Path(root) / 'results' / 'closure_loop' / job / 'verdict.json'
+    try:
+        verdict = json.loads(vpath.read_text())
+    except (OSError, ValueError) as e:
+        raise ValueError(f'{where}: leaf closed record {vpath} unreadable ({e})')
+    if verdict.get('status') != 'CLOSED' or verdict.get('job') != job:
+        raise ValueError(f'{where}: {vpath} is not the CLOSED record of {job}')
+    routes = [r.get('to') for r in (verdict.get('job_spec') or {}).get('record') or []
+              if isinstance(r, dict) and str(r.get('from', '')).endswith('/record/route')]
+    if len(routes) != 1 or not routes[0]:
+        raise ValueError(f'{where}: {vpath} names no unique record route directory')
+    sdc_path = Path(root) / routes[0] / 'signoff.sdc'
+    try:
+        sdc = sdc_path.read_text()
+    except OSError as e:
+        raise ValueError(f'{where}: leaf sign-off SDC {sdc_path} missing ({e})')
+    ports, roots = _tcl_words(sdc, 'ot_ce_ports'), _tcl_words(sdc, 'ot_ce_cts_roots')
+    direct = re.search(r'^set ::ot_ce_direct_entries (.*)$', sdc, re.M)
+    raw = {m[3]: m[4] for m in re.finditer(r'\{\{([^{}\s]+)\} \{([^{}\s]+)\} \{([^{}\s]+)\} \{([^{}\s]+)\} ',
+                                            direct[1])} if direct else {}
+    hold = re.findall(r'^\s*set_clock_uncertainty -hold ([\d.]+) -from \$a -to \$b\s*$', sdc, re.M)
+    model = ('set latency [expr {$ref - $wire - $mean}]' in sdc
+             and 'lappend rows [list [lindex $sources 0] $pin $wire 0 0 0 $clock 0 $domain]' in sdc)
+    if not ports or not roots or len(roots) != 1 or not raw or len(hold) != 1 or not model:
+        raise ValueError(f'{where}: {sdc_path} is not a hybrid-entries sign-off with one CTS root, direct raw SRAM '
+                         'entries (R 0), entry compensation and one per-pair hold uncertainty')
+    ref = roots[0]
+    if sorted(ports) != sorted(clocks) or sorted(ports) != sorted(cm) or sorted(ports) != sorted([ref, *raw]):
+        raise ValueError(f'{where}: bound clock pins differ: record SDC {ports}, port_latency {clocks}, insertion '
+                         f'{sorted(cm)}, CTS root {ref} + raw {sorted(raw)}')
+    if sorted(raw) != raw_like:
+        raise ValueError(f'{where}: pins without a routed boundary differ from the record raw SRAM entries {sorted(raw)}')
+    tol = float(hold[0]) - H1_HOLD_MARGIN_PS
+    if not tol > 0:
+        raise ValueError(f'{where}: record hold uncertainty {hold[0]} leaves no die-skew tolerance')
+    out = {}
+    for pin in sorted(raw):
+        refs = {}
+        for c in CORNERS:
+            rc, bc = cm[pin].get(c) or {}, (cm[ref].get(c) or {}).get('boundary') or {}
+            a = rc.get('all') or {}
+            mac = rc.get('macros') or {}
+            if rc.get('errors') or a.get('n') != 1 or mac.get('n') != 1 or not bc.get('n'):
+                raise ValueError(f'{where}: {pin}/{c}: not one measured SRAM clock wire, or {ref} has no boundary')
+            v = [float(a[k]) for k in ('min', 'mean', 'max')]
+            if not all(math.isfinite(x) and x >= 0 for x in v) or not v[0] <= v[1] <= v[2]:
+                raise ValueError(f'{where}: {pin}/{c}: invalid leaf wire reference')
+            refs[c] = v
+        out[pin] = dict(ref=ref, tol=tol, refs=refs, record=f'{routes[0]}/signoff.sdc',
+                        verdict=f'results/closure_loop/{job}/verdict.json')
+    return out
+
+
+def landed_raw_targets(spec, root):
+    """HF-4d 10-19: {"<master>/<raw pin>": {"ref": pin, "tt"|"ff"|"ss": ps, "record": path}} for the post-CTS raw-pin
+    delay tap (physical/common_flow/landed_raw_tap.tcl): the pin-arrival offset raw - ref the leaf's closed record signed
+    off, R(ref).boundary.mean - w_leaf(raw).mean per corner; {} for every kit without raw child clock pins."""
+    out = {}
+    if not landed_cluster(spec):
+        return out
+    for child in spec.get('children', []):
+        view = Path(root) / child['view']
+        raw = landed_raw_pins(view, root)
+        if not raw:
+            continue
+        cm = json.loads((view / 'insertion.json').read_text())['clock_measurements']
+        for pin, info in raw.items():
+            row = dict(ref=info['ref'], record=info['record'], verdict=info['verdict'])
+            for c in CORNERS:
+                row[c] = round(float(cm[info['ref']][c]['boundary']['mean']) - info['refs'][c][1], 3)
+            out[f'{view.name}/{pin}'] = row
+    return out
+
+
+def landed_raw_tcl(spec, root):
+    """pre_cts.tcl lines that arm landed_raw_tap.tcl ([] without raw child clock pins: kits byte-identical)"""
+    targets = landed_raw_targets(spec, root)
+    if not targets:
+        return []
+    rows = ' '.join(f'{{{k}}} {{ref {v["ref"]} tt {v["tt"]:g} ff {v["ff"]:g} ss {v["ss"]:g}}}' for k, v in sorted(targets.items()))
+    return [f'set ::ot_lrt_targets [dict create {rows}]', 'source /src/physical/common_flow/landed_raw_tap.tcl']
+
+
 def landed_sdc(spec, root):
     """Landing multicycles (LANDING-CONTRACT L5, lp.py Pm.sdc): ring u_lpl_<n>_w -> read u_lpl_<n>_r -setup E -hold D-1.
     Cell-based, so they are independent of the root clock names; '' for every non-landed spec (kits byte-identical)."""
@@ -238,7 +358,10 @@ def domains(spec):
     if spec.get('cdc_synchronizers') is not None:
         if set(owners) != set(spec['clock_ports']):
             raise ValueError('entries: domain clock coverage differs from actual source ports')
-        cdc_sync_constraints.validate(spec)
+        if families:
+            gray_fifo_cdc_constraints.event_groups(spec)   # family-period groups, linted with the FIFOs (gray_fifo (d))
+        else:
+            cdc_sync_constraints.validate(spec)
     if leaf and spec.get('clock_data_paths') == 'related_pll_ratio' and not any(d['ratio'] == [4, 3] for d in out.values()):
         raise ValueError('related_pll_ratio requires at least one actual 4/3 domain (else use related_same_frequency)')
     if set(owners) != set(spec['clock_ports']):
@@ -319,7 +442,8 @@ def _generate(spec, root):
     if spec.get('clock') == 'hybrid_entries' and (not isinstance(roots, list) or not roots or
             not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(spec['clock_ports'])):
         raise ValueError('hybrid_entries requires a nonempty proper subset of distinct clock_cts_roots')
-    refs, counts = {}, {}
+    refs, counts, raw = {}, {}, {}
+    landed = landed_cluster(spec)
     for child in spec.get('children', []):
         view = Path(root) / child['view']
         master = view.name
@@ -341,6 +465,11 @@ def _generate(spec, root):
         if len(pins) > 1 and spec.get('clock_entry_domains') is None:
             raise ValueError(f'{view}: multi-clock child requires explicit entry domain/ratio/IO mapping')
         refs[master] = {}
+        # HF-4d 10-19: a landed cluster's hard child may carry raw SRAM clock entries (no ETM arcs, no routed boundary);
+        # their reference and tolerance come from the leaf's CLOSED RECORD (landed_raw_pins), never from the ETM
+        child_raw = landed_raw_pins(view, root) if landed else {}
+        for pin, info in child_raw.items():
+            raw[f'{master}/{pin}'] = info
         for pin, measured in pins.items():
             refs[master][pin] = {}
             for corner in CORNERS:
@@ -350,16 +479,20 @@ def _generate(spec, root):
                 clocks = child_lint.clock_insertion(lib.read_text())
                 if pin not in clocks or set(clocks) != set(pins):
                     raise ValueError(f'{lib}: routed/Liberty clock pin association mismatch')
+                if pin in child_raw:
+                    refs[master][pin][corner] = child_raw[pin]['refs'][corner]
+                    continue
                 data = measured.get(corner, {})
-                b = data.get('boundary', {})
+                b = data.get('boundary') or {}
+                if not b.get('n'):
+                    raise ValueError(f'{view}/{pin}/{corner}: missing real routed boundary reference')
                 values = [float(b[k]) for k in ('min', 'mean', 'max')]
-                if not b.get('n') or data.get('errors') or not all(math.isfinite(x) for x in values):
+                if data.get('errors') or not all(math.isfinite(x) for x in values):
                     raise ValueError(f'{view}/{pin}/{corner}: missing real routed boundary reference')
                 if not values[0] <= values[1] <= values[2]:
                     raise ValueError(f'{view}/{pin}/{corner}: inconsistent boundary reference')
                 refs[master][pin][corner] = values
     expected = sum(counts[m] * len(refs[m]) for m in refs) + len(direct['entries'])
-    landed = landed_cluster(spec)
     if landed:
         # every port is a region root; the hard-child clock pins are root sinks, counted by the Tcl (fail closed)
         if direct['entries'] or not refs:
@@ -380,10 +513,10 @@ def _generate(spec, root):
         out_row = '' if fout == 0.2 else " io_budget_out_ps " + str(round(period * fout, 3))
         domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(period * fin, 3)) + out_row + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
-    body = LANDED_BODY if landed else LEAF_BODY if native_leaf(spec) else BODY
+    body = (landed_raw_body(LANDED_BODY) if raw else LANDED_BODY) if landed else LEAF_BODY if native_leaf(spec) else BODY
     if spec.get('clock_data_paths') == 'async_gray_fifo':
         body = async_gray_fifo_constraints.extend(body, spec, root)
-    if spec.get('cdc_synchronizers') is not None:
+    if spec.get('cdc_synchronizers') is not None and spec.get('clock_data_paths') != gray_fifo_cdc_constraints.POLICY:
         body = cdc_sync_constraints.extend(body, spec, root)
     if spec.get('clock_data_paths') == gray_fifo_cdc_constraints.POLICY:
         body = gray_fifo_cdc_constraints.extend(body, spec, root)
@@ -392,7 +525,10 @@ def _generate(spec, root):
     return (f'# OT_CLOCK_ENTRY_DOMAIN_API_VERSION {ENTRY_DOMAIN_API_VERSION}\n'
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
             + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if native_leaf(spec) else '')
-            + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n' if landed else '') +
+            + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n' if landed else '')
+            + ('set ::ot_ce_landed_raw [dict create ' + ' '.join(
+                f'{{{k}}} {{ref {v["ref"]} tol {v["tol"]:g} record {v["record"]}}}' for k, v in sorted(raw.items())) + ']\n'
+               if raw else '') +
             'set ::ot_ce_refs [dict create ' + ' '.join(rows) + ']\n'
             'set ::ot_ce_counts [dict create ' + ' '.join(f'{{{m}}} {n}' for m, n in counts.items()) + ']\n'
             'set ::ot_ce_domains [dict create ' + ' '.join(domain_rows) + ']\n'
@@ -1058,36 +1194,34 @@ def landed_body():
         ('      if {![dict exists $::ot_ce_refs $key]} continue\n',
          '      if {![dict exists $::ot_ce_refs $key] || $::ot_ce_landed_cluster} continue\n'),
         ('  set boundary_cells {}; set boundary_cells_ready 0\n',
-         '  set boundary_cells {}; set boundary_cells_ready 0\n  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]\n'
-         '  set ot_ce_hard_cells {}\n'
-         '  foreach cell [get_cells -quiet -hierarchical *] {\n'
-         '    if {[dict exists $::ot_ce_counts [get_property $cell ref_name]]} {lappend ot_ce_hard_cells $cell}\n'
-         '  }\n'),
-        # AD-HBM-COLLP 10-18: a hard child's CHECK-ONLY clock pins (capture domains whose ETM has setup/hold arcs but no
-        # clk->Q arc, e.g. the COLL writer's clk_rgx_data*/clk_meta/clk_tkw landing captures) are not inferred register
-        # clock pins in OpenSTA (all_registers -clock_pins needs a regClkToQ arc), so they were never measured and the
-        # landed count failed closed (47 of 54).  Add every bound child clock pin that this root's clock reaches.
+         '  set boundary_cells {}; set boundary_cells_ready 0\n  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]\n'),
+        # TW-HBM-COLLP 10-19: bound CHECK-ONLY child clock pins (no clk->Q arc, so not in all_registers) are sinks of the
+        # region root their net is wired to (ot_ce_net_root_port: structural, mode-independent), measured like the others
         ('    set pins [all_registers -clock [get_full_name $clock] -clock_pins]\n'
          '    if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }\n',
          '    set pins [all_registers -clock [get_full_name $clock] -clock_pins]\n'
          '    set ot_ce_pin_seen [dict create]\n'
          '    foreach pin $pins {dict set ot_ce_pin_seen [get_full_name $pin] 1}\n'
-         '    foreach cell $ot_ce_hard_cells {\n'
+         '    foreach cell [get_cells -quiet -hierarchical *] {\n'
          '      set master [get_property $cell ref_name]\n'
-         '      dict for {key corners} $::ot_ce_refs {\n'
-         '        if {[string first "$master/" $key] != 0} continue\n'
-         '        set pin [get_pins -quiet "[get_full_name $cell]/[string range $key [string length "$master/"] end]"]\n'
-         '        if {[llength $pin] != 1 || [dict exists $ot_ce_pin_seen [get_full_name $pin]]} continue\n'
-         '        foreach c [get_property $pin clocks] {\n'
-         '          if {[get_full_name $c] eq [get_full_name $clock]} {\n'
-         '            lappend pins $pin; dict set ot_ce_pin_seen [get_full_name $pin] 1\n'
-         '            puts "OT_LANDED CHECK_CLOCK_PIN $name [get_full_name $pin] (timing-check-only child clock pin)"\n'
-         '            break\n'
-         '          }\n'
-         '        }\n'
+         '      if {![dict exists $::ot_ce_counts $master]} continue\n'
+         '      foreach pin [get_pins -quiet -of_objects $cell] {\n'
+         '        set key "$master/[get_property $pin lib_pin_name]"\n'
+         '        if {![dict exists $::ot_ce_refs $key] || [dict exists $ot_ce_pin_seen [get_full_name $pin]]} continue\n'
+         '        if {[info exists ::ot_ce_landed_raw] && [dict exists $::ot_ce_landed_raw $key]} continue\n'
+         '        if {[ot_ce_net_root_port $pin] ne $name} continue\n'
+         '        lappend pins $pin; dict set ot_ce_pin_seen [get_full_name $pin] 1\n'
+         '        puts "OT_LANDED CHECK_CLOCK_PIN $name [get_full_name $pin] (timing-check-only child clock pin)"\n'
          '      }\n'
          '    }\n'
          '    if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }\n'),
+        # a hard child with several clock pins on ONE region root (writer clk_body + clk_bank0-7) is one owner, not a
+        # duplicate; pins of one child on different roots still fail ("clock pins on different region roots")
+        ('      if {[dict exists $cells $cell]} { error "OT_MULTI_ROOT: duplicate clock ownership $cell" }\n',
+         '      if {[dict exists $cells $cell] && ([dict get $cells $cell] ne $domain'
+         ' || ![dict exists $::ot_ce_counts [get_property [get_cells -of_objects $pin] ref_name]])} {\n'
+         '        error "OT_MULTI_ROOT: duplicate clock ownership $cell"\n'
+         '      }\n'),
         ('    set arrivals {}; set measured {}; set total 0.0\n',
          '    set arrivals {}; set measured {}; set total 0.0; set ot_ce_child_ext [dict create]\n'),
         ('      if {[dict exists $::ot_ce_counts $master]} { error "OT_HYBRID: CTS root $name reaches a hard child" }\n'
@@ -1119,7 +1253,88 @@ def landed_body():
     return body
 
 
-LANDED_BODY = landed_body()
+# TW-HBM-COLLP 10-19: a hard child's CHECK-ONLY clock pins (setup/hold arcs, no clk->Q in the ETM, e.g. the COLL
+# writer's clk_rgx_data0-3 / clk_rgx_ctrl / clk_meta / clk_tkw landing captures) are not register clock pins for
+# OpenSTA (all_registers -clock_pins needs a clk->Q arc).  The root that drives such a pin is found STRUCTURALLY: walk
+# the pin's net back through single-input standard cells (CTS buffers / inverters) to a top port.  Never ask the
+# timing graph (get_property <pin> clocks): its answer depends on the command mode, and the ORFS multi-mode load
+# (orfs_hold_mm.tcl read_sdc -mode ss) returns no clocks there (AD-HBM-COLLP lpk4: 47 of 54 although the pins sit on
+# ck_wr).
+LANDED_ROOT_PROC = r"""proc ot_ce_net_root_port {pin} {
+  set net [get_nets -quiet -of_objects $pin]
+  for {set i 0} {$i < 256 && [llength $net] == 1} {incr i} {
+    set ports [get_ports -quiet -of_objects $net]
+    if {[llength $ports] == 1} { return [get_full_name [lindex $ports 0]] }
+    if {[llength $ports]} { return "" }
+    set drv [get_pins -quiet -of_objects $net -filter "direction == output"]
+    if {[llength $drv] != 1} { return "" }
+    set cell [get_cells -quiet -of_objects $drv]
+    if {[llength $cell] != 1 || [dict exists $::ot_ce_counts [get_property $cell ref_name]]} { return "" }
+    set ins [get_pins -quiet -of_objects $cell -filter "direction == input"]
+    if {[llength $ins] != 1} { return "" }
+    set net [get_nets -quiet -of_objects $ins]
+  }
+  return ""
+}
+"""
+
+
+LANDED_BODY = LANDED_ROOT_PROC + landed_body()
+
+
+def landed_raw_body(body):
+    """HF-4d 10-19 (coordinator option A): LANDED_BODY for a cluster whose hard child carries raw SRAM clock entries
+    (::ot_ce_landed_raw from landed_raw_pins: the leaf's closed record).  all_registers never reaches such a pin (no ETM
+    arcs), so after every region root is measured each bound raw pin is visited on the root of its co-timed CTS-root pin
+    (h16c ck_pm0/ck_pm1 -> the root of ck_head): effective = entry-wire arrival + the leaf's own pin -> SRAM wire, judged
+    against the co-timed pin's effective arrival (wire + routed R boundary mean) = the leaf sign-off phase.  Post-CTS
+    (propagated, measured) |skew| > the leaf's sign-off tolerance is an ERROR (fail closed); pre-CTS it is only reported.
+    A raw pin reached as a register, an unreached co-timed pin or a raw pin not on that root (no propagated arrival)
+    fails.  Landed kits without raw entries keep LANDED_BODY byte-identical."""
+    raw_visit = (
+        '  # HF-4d raw SRAM clock entries of hard children: co-timed with their CTS-root pin per the leaf closed record\n'
+        '  set ot_ce_raw_fail {}\n'
+        '  set ot_ce_raw_diag [expr {[info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts && (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)}]\n'
+        '  foreach cell [get_cells -quiet -hierarchical *] {\n'
+        '    set master [get_property $cell ref_name]\n'
+        '    if {![dict exists $::ot_ce_counts $master]} continue\n'
+        '    set cname [get_full_name $cell]\n'
+        '    foreach pin [get_pins -quiet -of_objects $cell] {\n'
+        '      set key "$master/[get_property $pin lib_pin_name]"\n'
+        '      if {![dict exists $::ot_ce_landed_raw $key]} continue\n'
+        '      set refpin [dict get $::ot_ce_landed_raw $key ref]; set tol [dict get $::ot_ce_landed_raw $key tol]\n'
+        '      if {![dict exists $ot_ce_landed_eff "$cname/$refpin"]} {\n'
+        '        error "OT_LANDED: raw child clock pin [get_full_name $pin]: its co-timed pin $cname/$refpin was not reached from a region root"\n'
+        '      }\n'
+        '      lassign [dict get $ot_ce_landed_eff "$cname/$refpin"] rclock rname reff\n'
+        '      set wire [ot_ce_clock_wire $pin [get_clocks $rclock]]\n'
+        '      lassign [dict get $::ot_ce_refs $key $corner] rlo rmean rhi\n'
+        '      set eff [expr {$wire + $rmean}]; set skew [expr {$eff - $reff}]\n'
+        '      set verdict [expr {$ot_ce_raw_diag ? "PRE_CTS" : (abs($skew) <= $tol ? "PASS" : "FAIL")}]\n'
+        '      puts "OT_LANDED RAW_PIN $corner $rname [get_full_name $pin] wire=$wire R=$rmean eff=$eff co_timed=$cname/$refpin eff_ref=$reff skew=[format %.1f $skew] tol=$tol $verdict"\n'
+        '      if {$verdict eq "FAIL"} { lappend ot_ce_raw_fail "[get_full_name $pin] [format %.1f $skew] ps" }\n'
+        '      incr ot_ce_landed_hits\n'
+        '    }\n'
+        '  }\n'
+        '  if {[llength $ot_ce_raw_fail]} {\n'
+        '    error "OT_LANDED: raw child clock pin arrival vs its co-timed CTS-root pin beyond the leaf sign-off tolerance at $corner: [join $ot_ce_raw_fail {, }]"\n'
+        '  }\n')
+    substitutions = [
+        ('  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]\n',
+         '  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]; set ot_ce_landed_eff [dict create]\n'),
+        ('        if {![dict exists $::ot_ce_refs $key]} { error "OT_LANDED: CTS root $name reaches unbound hard-child pin [get_full_name $pin]" }\n',
+         '        if {![dict exists $::ot_ce_refs $key]} { error "OT_LANDED: CTS root $name reaches unbound hard-child pin [get_full_name $pin]" }\n'
+         '        if {[dict exists $::ot_ce_landed_raw $key]} { error "OT_LANDED: raw child clock pin [get_full_name $pin] reached as a register (record says no ETM arcs)" }\n'),
+        ('        set arrival [expr {$arrival + $cmean}]\n        incr ot_ce_landed_hits\n',
+         '        set arrival [expr {$arrival + $cmean}]\n        incr ot_ce_landed_hits\n'
+         '        dict set ot_ce_landed_eff "$cname/[get_property $pin lib_pin_name]" [list [get_full_name $clock] $name $arrival]\n'),
+        ('  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins}', raw_visit + '  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins}'),
+    ]
+    for old, new in substitutions:
+        if body.count(old) != 1:
+            raise ValueError("landed body changed; revalidate the raw child clock pin extension")
+        body = body.replace(old, new)
+    return body
 
 
 def direct_body(body, direct):

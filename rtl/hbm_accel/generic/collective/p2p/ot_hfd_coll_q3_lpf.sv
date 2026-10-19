@@ -4,7 +4,7 @@
 // WIRES-ONLY flat expansion of ot_hfd_coll_q3_hard_v8x #(NLINK 2, TP 192) (q3 SW COLL quadrant parent, SOLO 1) at closed-view
 // granularity: same ports / clock entries; lockstep-identical (tb_hfd_coll_q3_lpf_eq). Input of lp.py (landed parent).
 module ot_hfd_coll_q3_lpf(
- input wire rst_n,input wire [1:0] qid,qid_rg,
+ input wire rst_n,input wire [1:0] qid,qid_rg,qid_wr,
  input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [27:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,input wire clk_arg,
  input wire [15:0] clk_vmwrite,input wire [9:0] clk_link,
@@ -237,7 +237,7 @@ module ot_hfd_coll_q3_lpf(
  wire [280:0] kq0,kq1,kq2,kq3,kq4,kq5,kq6,kq7;
  ot_hgi_coll_static_vmwrite_roots_v6_physical u_writer(
   .clk_rgx_data0(clk_vmwrite[0]),.clk_rgx_data1(clk_vmwrite[1]),.clk_rgx_data2(clk_vmwrite[2]),.clk_rgx_data3(clk_vmwrite[3]),.clk_rgx_ctrl(clk_vmwrite[4]),.clk_tkw(clk_vmwrite[5]),.clk_meta(clk_vmwrite[6]),.clk_body(clk_vmwrite[7]),.clk_bank0(clk_vmwrite[8]),.clk_bank1(clk_vmwrite[9]),.clk_bank2(clk_vmwrite[10]),.clk_bank3(clk_vmwrite[11]),.clk_bank4(clk_vmwrite[12]),.clk_bank5(clk_vmwrite[13]),.clk_bank6(clk_vmwrite[14]),.clk_bank7(clk_vmwrite[15]),
-  .rst_n(rst_n),.sid(qid),.rgx_v(w_rgx_v),.rgx_addr(w_rgx_addr),
+  .rst_n(rst_n),.sid(qid_wr),.rgx_v(w_rgx_v),.rgx_addr(w_rgx_addr),
   .rgx_data0(w_rgx_d0),.rgx_data1(w_rgx_d1),.rgx_data2(w_rgx_d2),.rgx_data3(w_rgx_d3),
   .rgx_vm(w_rgx_vm),.tkw_v(tkx_w_v),.tkw_d({tkx_w_addr,tkx_w_mask,tkx_w_data}),
   .ingress_slot(w_ingress_slot),.slot_valid(w_slot_valid),.slot_owner(w_slot_owner),
