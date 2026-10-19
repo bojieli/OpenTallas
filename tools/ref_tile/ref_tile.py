@@ -719,7 +719,18 @@ def read_view_lef(view: str) -> dict:
     p = ROOT / view / f"{view_name(view)}.lef"
     if not p.exists():
         raise SpecError(f"view {view}: {p.relative_to(ROOT)} missing")
-    return child_lint.parse_lef(p.read_text(errors="replace"), view_name(view))
+    text = p.read_text(errors="replace")
+    # KV-ECTL5 2026-10-19 (qkd_ectl3_kiss_st-e4-13455b5bb: DRT-0073 No access point for u_a/req_t[10], twice): a child pin
+    # with a same-layer OBS rect closer than the wide-metal spacing has no clean access point in the parent; refuse at gen
+    import abstract_pin_stub as aps
+    if re.search(r"\n[ \t]*OBS[ \t]*(?=\n)", text):
+        bad = aps.pin_spacing_violations(text)
+        if bad:
+            ex = ", ".join(f"{n} {l} gap {g:g} < {need:g}" for n, l, g, need, _ in bad[:4])
+            raise SpecError(f"view {view}: {len(bad)} pins without a DRC-clean access point ({ex}); re-run "
+                            f"tools/hier_contract/abstract_pin_stub.py on provenance/raw/{view_name(view)}.lef (pin keep-out "
+                            f">= wide-metal spacing)")
+    return child_lint.parse_lef(text, view_name(view))
 
 
 def track_macro(view: str) -> dict:
@@ -1741,6 +1752,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
             if clock_entry_constraints.landed_cluster(s):
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
+                pre_cts.extend(clock_entry_constraints.landed_pre_cts_tcl(s, ROOT))
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
