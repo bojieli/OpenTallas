@@ -1,0 +1,17 @@
+SFU_SPLIT_EQUIV_MISMATCH edge=5767 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=5768 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=5769 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=5770 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=5770 out=0 lg_ro=1 status=0
+[4894000] %Fatal: tb_hgi_sfu_split_equiv.sv:241: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_FAULT store=0 core=1
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:241: Verilog $stop
+Aborting...
+SFU_SPLIT_GATE MUTANT skip REJECTED (expected)
+SFU_SPLIT_EQUIV_MISMATCH edge=5767 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=5768 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=5769 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=5770 out=0 lg_ro=1 status=0
+[4894000] %Fatal: tb_hgi_sfu_split_equiv.sv:241: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_FAULT store=0 core=1
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:241: Verilog $stop
+Aborting...
+BENCH_EXIT 1
