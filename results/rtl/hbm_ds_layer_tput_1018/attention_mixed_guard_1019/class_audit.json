@@ -1,0 +1,4610 @@
+{
+  "source_proofs": [
+    {
+      "source": "/srv/opentallas-scratch/claude/codex-attention-prel-1019/implementation_class/src/tools/hbm_sm_attention/sm_elem_bench.py",
+      "sha256": "0ff8a736df0c567e451e8cf1224c60de877d53ee469ba2188486f43840f8eb0b",
+      "function": "compile_op",
+      "mode_expression": "4 | (2 if not qk else 0) | (1 if kv4 and (not qk) else 0)",
+      "variant_modes": {
+        "qk_kv8": 4,
+        "qk_kv4": 4,
+        "pv_kv8": 6,
+        "pv_kv4": 7
+      },
+      "all_cal_set_lines": [
+        284,
+        287,
+        381,
+        317,
+        318,
+        373,
+        374,
+        327,
+        334,
+        337
+      ],
+      "fill_lines": [
+        388
+      ],
+      "property": "every field-bearing command is A2 magic with constant per-call mode and attention class1",
+      "scope": "universal source property, independent of operand values, row count and result calibration; not an arithmetic fixture replay"
+    },
+    {
+      "source": "/srv/opentallas-scratch/claude/codex-attention-prel-1019/implementation_class/src/tools/hbm_layer_vehicle/qwen_att_unit.py",
+      "sha256": "f42a6bb62da245ef647f70373310c0e95db238065d1f875e7e7074aaf270a642",
+      "function": "compile_q",
+      "mode_expression": "4 | (0 if qk else 2)",
+      "variant_modes": {
+        "qk_kv8": 4,
+        "pv_kv8": 6
+      },
+      "all_cal_set_lines": [
+        139,
+        142,
+        242,
+        172,
+        173,
+        238,
+        240,
+        184,
+        191,
+        193,
+        213,
+        220,
+        216
+      ],
+      "fill_lines": [
+        248
+      ],
+      "property": "every field-bearing command is A2 magic with constant per-call mode and attention class1",
+      "scope": "universal source property, independent of operand values, row count and result calibration; not an arithmetic fixture replay"
+    }
+  ],
+  "fixtures": [
+    {
+      "source": {
+        "att_kv_json": "/srv/opentallas-scratch/claude/layerbench-hbm/dsfix/att/L02/att_kv.json",
+        "npz_sha256": "5a5427bb429666291f063415816f89003518c54152d5244865357b4f42af3035",
+        "layer": 2,
+        "rank": 0,
+        "qk_priced": [
+          {
+            "i": 63,
+            "start": 10427.06,
+            "end": 11032.36,
+            "base_cost": 547
+          }
+        ],
+        "pv_priced": [
+          {
+            "i": 67,
+            "start": 11577.74,
+            "end": 12547.17,
+            "base_cost": 808
+          }
+        ],
+        "ring": {
+          "n": 128,
+          "m": 128,
+          "on": true,
+          "first": 0
+        },
+        "c_rows": 512
+      },
+      "programmes": [
+        {
+          "name": "qk_sm_SW0",
+          "subrun_rows": 0,
+          "word_count": 807,
+          "magic_words": 693,
+          "mode_counts": {
+            "4": 693
+          },
+          "literal_sha256": "79069ac7c41dd136de9e50c3c8df77761a1bb1ab94cb6bacfaa27887ce4ba927"
+        },
+        {
+          "name": "pv_sm_SW0",
+          "subrun_rows": 0,
+          "word_count": 912,
+          "magic_words": 838,
+          "mode_counts": {
+            "6": 838
+          },
+          "literal_sha256": "07ea86ed5c0c0a33b922ce3e0285536220b1cd5a5db68015895713f5030e15fc"
+        },
+        {
+          "name": "qk_sm_SW1",
+          "subrun_rows": 0,
+          "word_count": 807,
+          "magic_words": 693,
+          "mode_counts": {
+            "4": 693
+          },
+          "literal_sha256": "79069ac7c41dd136de9e50c3c8df77761a1bb1ab94cb6bacfaa27887ce4ba927"
+        },
+        {
+          "name": "pv_sm_SW1",
+          "subrun_rows": 0,
+          "word_count": 912,
+          "magic_words": 838,
+          "mode_counts": {
+            "6": 838
+          },
+          "literal_sha256": "07ea86ed5c0c0a33b922ce3e0285536220b1cd5a5db68015895713f5030e15fc"
+        },
+        {
+          "name": "qk_sm_SW2",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW2",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW3",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW3",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW4",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW4",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW5",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW5",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW6",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW6",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW7",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW7",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_NW0",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_NW0",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_NW1",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_NW1",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW0_k0",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k1",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k2",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k3",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k4",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k5",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k6",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k7",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "pv_sm_SW0_k0",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k1",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k2",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k3",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k4",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k5",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k6",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k7",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "qk_sm_SW1_k0",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k1",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k2",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k3",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k4",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k5",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k6",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k7",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "pv_sm_SW1_k0",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k1",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k2",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k3",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k4",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k5",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k6",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k7",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "qk_sm_SW2_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW2_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW3_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW3_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW4_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW4_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW5_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW5_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW6_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW6_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW7_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW7_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_NW0_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_NW0_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_NW1_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_NW1_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW0_k0",
+          "subrun_rows": 32,
+          "word_count": 551,
+          "magic_words": 437,
+          "mode_counts": {
+            "4": 437
+          },
+          "literal_sha256": "5a4eb1c7aaae36b3008be4b3980d8c732c325365d1c4fb8ab95cc2e2e23d4818"
+        },
+        {
+          "name": "qk_sm_SW0_k1",
+          "subrun_rows": 32,
+          "word_count": 551,
+          "magic_words": 437,
+          "mode_counts": {
+            "4": 437
+          },
+          "literal_sha256": "5a4eb1c7aaae36b3008be4b3980d8c732c325365d1c4fb8ab95cc2e2e23d4818"
+        },
+        {
+          "name": "pv_sm_SW0_k0",
+          "subrun_rows": 32,
+          "word_count": 624,
+          "magic_words": 582,
+          "mode_counts": {
+            "6": 582
+          },
+          "literal_sha256": "554d2edb26d6f82dfb53c4afffe3c491e5aab047ec5478ae61236c1435af76e7"
+        },
+        {
+          "name": "pv_sm_SW0_k1",
+          "subrun_rows": 32,
+          "word_count": 624,
+          "magic_words": 582,
+          "mode_counts": {
+            "6": 582
+          },
+          "literal_sha256": "554d2edb26d6f82dfb53c4afffe3c491e5aab047ec5478ae61236c1435af76e7"
+        },
+        {
+          "name": "qk_sm_SW1_k0",
+          "subrun_rows": 32,
+          "word_count": 551,
+          "magic_words": 437,
+          "mode_counts": {
+            "4": 437
+          },
+          "literal_sha256": "5a4eb1c7aaae36b3008be4b3980d8c732c325365d1c4fb8ab95cc2e2e23d4818"
+        },
+        {
+          "name": "qk_sm_SW1_k1",
+          "subrun_rows": 32,
+          "word_count": 551,
+          "magic_words": 437,
+          "mode_counts": {
+            "4": 437
+          },
+          "literal_sha256": "5a4eb1c7aaae36b3008be4b3980d8c732c325365d1c4fb8ab95cc2e2e23d4818"
+        },
+        {
+          "name": "pv_sm_SW1_k0",
+          "subrun_rows": 32,
+          "word_count": 624,
+          "magic_words": 582,
+          "mode_counts": {
+            "6": 582
+          },
+          "literal_sha256": "554d2edb26d6f82dfb53c4afffe3c491e5aab047ec5478ae61236c1435af76e7"
+        },
+        {
+          "name": "pv_sm_SW1_k1",
+          "subrun_rows": 32,
+          "word_count": 624,
+          "magic_words": 582,
+          "mode_counts": {
+            "6": 582
+          },
+          "literal_sha256": "554d2edb26d6f82dfb53c4afffe3c491e5aab047ec5478ae61236c1435af76e7"
+        },
+        {
+          "name": "qk_sm_SW2_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW2_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW2_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW2_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_SW3_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW3_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW3_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW3_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_SW4_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW4_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW4_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW4_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_SW5_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW5_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW5_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW5_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_SW6_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW6_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW6_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW6_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_SW7_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW7_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW7_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW7_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_NW0_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_NW0_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_NW0_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_NW0_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_NW1_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_NW1_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_NW1_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_NW1_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        }
+      ],
+      "total_programmes": 220,
+      "total_magic_words": 82266
+    },
+    {
+      "source": {
+        "att_kv_json": "/srv/opentallas-scratch/claude/layerbench-hbm/dsfix/att/L14/att_kv.json",
+        "npz_sha256": "96f26103948ca59c7c6cff7e4adaa55496042ab1f346638ff0ed83d9f0401953",
+        "layer": 14,
+        "rank": 0,
+        "qk_priced": [
+          {
+            "i": 126,
+            "start": 15746.91,
+            "end": 16352.21,
+            "base_cost": 547
+          }
+        ],
+        "pv_priced": [
+          {
+            "i": 130,
+            "start": 16897.59,
+            "end": 17867.01,
+            "base_cost": 808
+          }
+        ],
+        "ring": {
+          "n": 128,
+          "m": 128,
+          "on": true,
+          "first": 0
+        },
+        "c_rows": 512
+      },
+      "programmes": [
+        {
+          "name": "qk_sm_SW0",
+          "subrun_rows": 0,
+          "word_count": 807,
+          "magic_words": 693,
+          "mode_counts": {
+            "4": 693
+          },
+          "literal_sha256": "79069ac7c41dd136de9e50c3c8df77761a1bb1ab94cb6bacfaa27887ce4ba927"
+        },
+        {
+          "name": "pv_sm_SW0",
+          "subrun_rows": 0,
+          "word_count": 912,
+          "magic_words": 838,
+          "mode_counts": {
+            "6": 838
+          },
+          "literal_sha256": "07ea86ed5c0c0a33b922ce3e0285536220b1cd5a5db68015895713f5030e15fc"
+        },
+        {
+          "name": "qk_sm_SW1",
+          "subrun_rows": 0,
+          "word_count": 807,
+          "magic_words": 693,
+          "mode_counts": {
+            "4": 693
+          },
+          "literal_sha256": "79069ac7c41dd136de9e50c3c8df77761a1bb1ab94cb6bacfaa27887ce4ba927"
+        },
+        {
+          "name": "pv_sm_SW1",
+          "subrun_rows": 0,
+          "word_count": 912,
+          "magic_words": 838,
+          "mode_counts": {
+            "6": 838
+          },
+          "literal_sha256": "07ea86ed5c0c0a33b922ce3e0285536220b1cd5a5db68015895713f5030e15fc"
+        },
+        {
+          "name": "qk_sm_SW2",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW2",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW3",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW3",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW4",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW4",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW5",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW5",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW6",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW6",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW7",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_SW7",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_NW0",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_NW0",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_NW1",
+          "subrun_rows": 0,
+          "word_count": 783,
+          "magic_words": 669,
+          "mode_counts": {
+            "4": 669
+          },
+          "literal_sha256": "a4ad534dbfd486fe13adc4b6a65f1720eb6037a4a6b735733f16bac4c4d8cfc4"
+        },
+        {
+          "name": "pv_sm_NW1",
+          "subrun_rows": 0,
+          "word_count": 888,
+          "magic_words": 814,
+          "mode_counts": {
+            "7": 814
+          },
+          "literal_sha256": "1c40d2b1e28485bd41bd42db9fb504a8312f18718ce926e4ef458b46ddbfc358"
+        },
+        {
+          "name": "qk_sm_SW0_k0",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k1",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k2",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k3",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k4",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k5",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k6",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW0_k7",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "pv_sm_SW0_k0",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k1",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k2",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k3",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k4",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k5",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k6",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW0_k7",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "qk_sm_SW1_k0",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k1",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k2",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k3",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k4",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k5",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k6",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "qk_sm_SW1_k7",
+          "subrun_rows": 8,
+          "word_count": 359,
+          "magic_words": 245,
+          "mode_counts": {
+            "4": 245
+          },
+          "literal_sha256": "16ceee4843bed96295ef516b1577041c6c3a3b59361db46fc8faf175e0fd257f"
+        },
+        {
+          "name": "pv_sm_SW1_k0",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k1",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k2",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k3",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k4",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k5",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k6",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "pv_sm_SW1_k7",
+          "subrun_rows": 8,
+          "word_count": 408,
+          "magic_words": 390,
+          "mode_counts": {
+            "6": 390
+          },
+          "literal_sha256": "bbe11ec2023f6064bfc2f2d59b374166ba38d91cbaeadcb10f7720ba3385c653"
+        },
+        {
+          "name": "qk_sm_SW2_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW2_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW2_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW2_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW3_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW3_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW3_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW3_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW4_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW4_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW4_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW4_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW5_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW5_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW5_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW5_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW6_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW6_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW6_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW6_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW7_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_SW7_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_SW7_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_SW7_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_NW0_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW0_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_NW0_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW0_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_NW1_k0",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k1",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k2",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k3",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k4",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k5",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k6",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "qk_sm_NW1_k7",
+          "subrun_rows": 8,
+          "word_count": 335,
+          "magic_words": 221,
+          "mode_counts": {
+            "4": 221
+          },
+          "literal_sha256": "897946e174ef00df8ef05904300c4bf8c9b9a8f3419d5fbfe9d8530436cadebb"
+        },
+        {
+          "name": "pv_sm_NW1_k0",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k1",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k2",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k3",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k4",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k5",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k6",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "pv_sm_NW1_k7",
+          "subrun_rows": 8,
+          "word_count": 384,
+          "magic_words": 366,
+          "mode_counts": {
+            "7": 366
+          },
+          "literal_sha256": "50784cd3567f7a8214e65c915d4fe430598cca381e9932c83c88c7710cf8269e"
+        },
+        {
+          "name": "qk_sm_SW0_k0",
+          "subrun_rows": 32,
+          "word_count": 551,
+          "magic_words": 437,
+          "mode_counts": {
+            "4": 437
+          },
+          "literal_sha256": "5a4eb1c7aaae36b3008be4b3980d8c732c325365d1c4fb8ab95cc2e2e23d4818"
+        },
+        {
+          "name": "qk_sm_SW0_k1",
+          "subrun_rows": 32,
+          "word_count": 551,
+          "magic_words": 437,
+          "mode_counts": {
+            "4": 437
+          },
+          "literal_sha256": "5a4eb1c7aaae36b3008be4b3980d8c732c325365d1c4fb8ab95cc2e2e23d4818"
+        },
+        {
+          "name": "pv_sm_SW0_k0",
+          "subrun_rows": 32,
+          "word_count": 624,
+          "magic_words": 582,
+          "mode_counts": {
+            "6": 582
+          },
+          "literal_sha256": "554d2edb26d6f82dfb53c4afffe3c491e5aab047ec5478ae61236c1435af76e7"
+        },
+        {
+          "name": "pv_sm_SW0_k1",
+          "subrun_rows": 32,
+          "word_count": 624,
+          "magic_words": 582,
+          "mode_counts": {
+            "6": 582
+          },
+          "literal_sha256": "554d2edb26d6f82dfb53c4afffe3c491e5aab047ec5478ae61236c1435af76e7"
+        },
+        {
+          "name": "qk_sm_SW1_k0",
+          "subrun_rows": 32,
+          "word_count": 551,
+          "magic_words": 437,
+          "mode_counts": {
+            "4": 437
+          },
+          "literal_sha256": "5a4eb1c7aaae36b3008be4b3980d8c732c325365d1c4fb8ab95cc2e2e23d4818"
+        },
+        {
+          "name": "qk_sm_SW1_k1",
+          "subrun_rows": 32,
+          "word_count": 551,
+          "magic_words": 437,
+          "mode_counts": {
+            "4": 437
+          },
+          "literal_sha256": "5a4eb1c7aaae36b3008be4b3980d8c732c325365d1c4fb8ab95cc2e2e23d4818"
+        },
+        {
+          "name": "pv_sm_SW1_k0",
+          "subrun_rows": 32,
+          "word_count": 624,
+          "magic_words": 582,
+          "mode_counts": {
+            "6": 582
+          },
+          "literal_sha256": "554d2edb26d6f82dfb53c4afffe3c491e5aab047ec5478ae61236c1435af76e7"
+        },
+        {
+          "name": "pv_sm_SW1_k1",
+          "subrun_rows": 32,
+          "word_count": 624,
+          "magic_words": 582,
+          "mode_counts": {
+            "6": 582
+          },
+          "literal_sha256": "554d2edb26d6f82dfb53c4afffe3c491e5aab047ec5478ae61236c1435af76e7"
+        },
+        {
+          "name": "qk_sm_SW2_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW2_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW2_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW2_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_SW3_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW3_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW3_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW3_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_SW4_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW4_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW4_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW4_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_SW5_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW5_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW5_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW5_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_SW6_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW6_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW6_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW6_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_SW7_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_SW7_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_SW7_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_SW7_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_NW0_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_NW0_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_NW0_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_NW0_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "qk_sm_NW1_k0",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "qk_sm_NW1_k1",
+          "subrun_rows": 32,
+          "word_count": 527,
+          "magic_words": 413,
+          "mode_counts": {
+            "4": 413
+          },
+          "literal_sha256": "ead168b1f664211cb06ef5790b88eb52cc6dfefd6f5e6bcdf59a29d5070da524"
+        },
+        {
+          "name": "pv_sm_NW1_k0",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        },
+        {
+          "name": "pv_sm_NW1_k1",
+          "subrun_rows": 32,
+          "word_count": 600,
+          "magic_words": 558,
+          "mode_counts": {
+            "7": 558
+          },
+          "literal_sha256": "1720659d811f7cebe5606ce9a3c018d307fd498960d3d0da643ecc9753828a9d"
+        }
+      ],
+      "total_programmes": 220,
+      "total_magic_words": 82266
+    }
+  ],
+  "actual_frontend": {
+    "path": "/srv/opentallas-scratch/claude/codex-attention-prel-1019/implementation_class/src/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv",
+    "sha256": "379dc1eadcd4365e0d955dd7755da55893e7aa647aaac1b6f140dad09e5b92c2",
+    "classification": "mode[2]",
+    "invalid_mode": 3,
+    "runtime_invalid_mode_witness": "separate full-service run required"
+  },
+  "default_compatibility": {
+    "exact": true,
+    "event_sha256": {
+      "xw.hex": "91861e27fec2ea20f367e6f57686231706bcb1fae23d2d76c99e8e86a8740792",
+      "mem.hex": "9d1914870899bef78408a726c94dbf2c93c39cda28024376a57652e57c9a230c",
+      "ids.hex": "d3d6ae864989a061a6627f8f0d6f4d95516bf758e684091242e84d9559004f26",
+      "ing.hex": "674eb4b3e12e15d286d4316a26e83b7d43da8766b832040e31f6965b1bb8eca9"
+    },
+    "receipt": "/srv/opentallas-scratch/claude/codex-attention-prel-1019/out/kv8.json"
+  },
+  "legal_mixed_mode_only_split": {
+    "words": 3,
+    "magic_words": 3,
+    "mode_counts": {
+      "0": 2,
+      "4": 1
+    },
+    "literal_sha256": "43b568fcbbea304908995f3810332381bebe35f8da059ab71343419d1f2d2e84",
+    "segments": [
+      {
+        "begin": 0,
+        "limit": 1,
+        "attention_class": 0
+      },
+      {
+        "begin": 1,
+        "limit": 2,
+        "attention_class": 1
+      },
+      {
+        "begin": 2,
+        "limit": 3,
+        "attention_class": 0
+      }
+    ],
+    "extra_descriptors": 2,
+    "extra_install_ingress_edges": 4,
+    "extra_programme_words_before_dedup": 0,
+    "extra_hbm_bytes_conservative": 17408,
+    "added_idle_stream_edges_lower_bound": 20,
+    "split_policy": "reuse full cache block and literal command words; retire/reopen with fresh epoch per segment",
+    "gap_validity": "recompile complete calendar at certified drained class boundaries; expose unresolved live-state dependencies",
+    "status": "priced GO split required; not silently rejected or executed unchanged"
+  },
+  "post_mrel_generic_positive": {
+    "words": 2,
+    "magic_words": 2,
+    "mode_counts": {
+      "4": 2
+    },
+    "literal_sha256": "92a2d98c6102d6e5f354525610b12ce52287507a5cc2ac72925f31fdc8a5fa8f",
+    "segments": [
+      {
+        "begin": 0,
+        "limit": 2,
+        "attention_class": 1
+      }
+    ],
+    "extra_descriptors": 0,
+    "extra_install_ingress_edges": 0,
+    "extra_programme_words_before_dedup": 0,
+    "extra_hbm_bytes_conservative": 0,
+    "added_idle_stream_edges_lower_bound": 0,
+    "split_policy": "reuse full cache block and literal command words; retire/reopen with fresh epoch per segment",
+    "gap_validity": "recompile complete calendar at certified drained class boundaries; expose unresolved live-state dependencies",
+    "status": "single-class"
+  },
+  "pass": true
+}
