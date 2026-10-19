@@ -1241,6 +1241,10 @@ def bindings():
                        **{f'am_{st}': [f'am{k}'] for k, st in enumerate(STACKS)},
                        fr=['fr_valid', 'fr_epoch', 'fr_rz'], hf=['hf'], ck_c=['ck'], rst_n=['rst_n']),
             sliced={}, classed={})
+        # HKV-DIE 10-19 (HKV-ASTK finding): the hub's Z input stride must be the strip's (closed qkd_astk_ctl_s Z_STRIDE 4);
+        # the RTL default 16 put every Z word on the wrong hub slot.  The hub kit must be (re)hardened at this value.
+        if ASTK_ST:
+            out['qkd_ahub']['parameters'] = dict(Z_IN_STRIDE=ASTK_Z_STRIDE)
     return out
 
 
