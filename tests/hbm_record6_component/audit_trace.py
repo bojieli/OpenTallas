@@ -32,7 +32,7 @@ def audit(log,abort=False,mut=0):
  starts=[v for v in starts if int(v['aborted'])==0]
  captures=[fields(l)for l in text.splitlines()if l.startswith('SOURCE_CAPTURE ')]
  # An aborted prefix legitimately captures group0 once in each quarter.
- expected_capture=20 if abort else 16
+ expected_capture=36 if abort else 32
  ok=(not duplicates and not missing_in and not missing_out and len(roots)==2 and len(scalars)==2 and len(sectors)==2 and len(retires)==2 and len(starts)==2 and len(captures)==expected_capture and 'CLOCK_CAUSAL_PASS' in text and not failures)
  return dict(verdict='NUMERICAL_COMPONENT_PASS'if ok else'INCOMPLETE_TRACE',scope='No full-token, SRAM physical, timing or parent-H qualification',reset_abort=abort,adds_in=len(inputs),adds_out=len(outputs),missing_inputs=missing_in,missing_outputs=missing_out,duplicates=duplicates,roots=roots,scalars=scalars,native_sectors=sectors,retires=retires,starts=starts,captures=len(captures),failures=failures)
 
