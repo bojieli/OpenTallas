@@ -1,0 +1,5 @@
+GRAPHICS_ONLY_LOCAL_PASS matplotlib3.10.8; no simulation/synthesis/build
+source_sha256=196c1e3bfb9cb7e284a30a85fc3c483afa19202ff02992640ef724fddde726cf
+/home/ubuntu/.local/lib/python3.10/site-packages/matplotlib/projections/__init__.py:63: UserWarning: Unable to import Axes3D. This may be due to multiple versions of Matplotlib being installed (e.g. as a system package and as a pip package). As a result, the 3D projection is not available.
+  warnings.warn("Unable to import Axes3D. This may be due to multiple versions of "
+geometry_subset_sha256=43eb42f0419fed17f8c0748ca3f634049b4d4be7ba80210c26a0d018e769ab9e

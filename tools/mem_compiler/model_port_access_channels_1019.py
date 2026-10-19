@@ -114,12 +114,20 @@ def plan(data):
     old_obs=[dict(o,rect_nm=[o['rect_nm'][0]+channel,o['rect_nm'][1],
                             o['rect_nm'][2]+channel,o['rect_nm'][3]]) for o in data['obs']]
     errors=[]; min_gaps={'M4':10**9,'M5':10**9,'V4':10**9}
+    min_parallel_gaps={'M4':10**9,'M5':10**9}
+    min_connected_areas={'M4':10**9,'M5':10**9}
     # Analytical physical checks cover every lead rectangle and native via
     # enclosure. Same-net intentional intersections are retained.
     for i,s in enumerate(shapes):
         r=s['rect_nm']; layer=s['layer']
+        if min(r[2]-r[0],r[3]-r[1])!=24:errors.append(['native_width_table',s])
         if not(0<=r[0]<r[2]<=width and 0<=r[1]<r[3]<=height): errors.append(['outline',s])
-        if (r[2]-r[0])*(r[3]-r[1])<rules['minimum_area_nm2']:errors.append(['minimum_area',s])
+        area=(r[2]-r[0])*(r[3]-r[1])
+        # Every complete same-layer patch in this construction is one wire
+        # rectangle containing its full native via enclosure. Separate M4
+        # patches connect through M5 but each meets AREA independently.
+        min_connected_areas[layer]=min(min_connected_areas[layer],area)
+        if area<rules['minimum_area_nm2']:errors.append(['connected_patch_minimum_area',s])
         for o in old_obs:
             if layer==o['layer'] and overlap(r,o['rect_nm']):errors.append(['old_OBS',s,o])
         for p in pg:
@@ -131,9 +139,19 @@ def plan(data):
             if q['net']==s['net'] or q['layer']!=layer:continue
             gaps=distance(r,q['rect_nm']); g=max(gaps)
             min_gaps[layer]=min(min_gaps[layer],g)
-            #40nm is stronger than ordinary24nm spacing and includes the
-            #native EOL/corner scalar spacing here; full deck is still native.
-            if g<40:errors.append(['cross_net_metal_spacing',s,q,gaps])
+            axis=0 if layer=='M4' else 1
+            parallel_run=min(r[axis+2],q['rect_nm'][axis+2])-max(r[axis],q['rect_nm'][axis])
+            if parallel_run>0:
+                gap=gaps[1-axis]
+                min_parallel_gaps[layer]=min(min_parallel_gaps[layer],gap)
+                # Native PRL table: width0->24nm; width>=25nm->72nm.
+                # All signal shapes here are exactly24nm. PG96nm above
+                # is separately checked at72nm, never treated as thin.
+                if gap<24:errors.append(['native_thin_width_PRL_spacing',s,q,gap,parallel_run])
+            #48nm also covers the maximum listed scalar EOL-keepout
+            #extension, exceeding native40nm EOL/corner scalar spacing.
+            # Full native LEF58, track-phase and density remain unqualified.
+            if g<48:errors.append(['cross_net_metal_spacing',s,q,gaps])
     for i,v in enumerate(vias):
         for q in vias[i+1:]:
             if v['net']==q['net']:continue
@@ -179,7 +197,12 @@ def plan(data):
             read_energy_fj=b['read_energy_fj']+cap_sum*b['voltage']**2,
             write_energy_fj=b['write_energy_fj']+cap_sum*b['voltage']**2,
             clock_access_energy_fj=sum(p['cap_ff'] for p in clocks)*b['voltage']**2,
-            leakage_nw=b['leakage_nw'])
+            core_source_leakage_nw=b['leakage_nw'],
+            leakage_nw=data['leakage_density_nw_per_um2']*width*height/1e6,
+            read_plus_clock_access_energy_fj=b['read_energy_fj']+(cap_sum+sum(p['cap_ff'] for p in clocks))*b['voltage']**2,
+            write_plus_clock_access_energy_fj=b['write_energy_fj']+(cap_sum+sum(p['cap_ff'] for p in clocks))*b['voltage']**2,
+            simultaneous_read_write_plus_clock_access_energy_fj=b['read_energy_fj']+b['write_energy_fj']+(cap_sum+sum(p['cap_ff'] for p in clocks))*b['voltage']**2,
+            complete_boundary_clock_driver_energy_fj=sum(b['clk_cap_ff']+p['cap_ff'] for p in clocks)*b['voltage']**2)
     return dict(schema='opentallas.analytical-port-access-channel.v1',
         status='MODEL_ONLY_PENDING_ROOT_REVIEW_NO_GENERATION',name=data['name'],
         old_outline_nm=[old_w,old_h],outline_nm=[width,height],core_offset_nm=[channel,0],
@@ -189,13 +212,20 @@ def plan(data):
         proof=dict(pin_count=len(paths),path_count=len(paths),via_count=len(vias),
             source_to_terminal_connected_paths=connected_paths,
             geometry_error_count=len(errors),errors=errors,minimum_cross_net_axis_gaps_nm=min_gaps,
-            same_layer_spacing_scalar_checked_nm=40,wide_pg_spacing_checked_nm=72,
+            same_layer_spacing_scalar_checked_nm=48,wide_pg_spacing_checked_nm=72,
+            native_signal_width_nm=24,native_PRL_thin_spacing_nm=24,native_PRL_wide_spacing_nm=72,
+            minimum_parallel_run_gaps_nm=min_parallel_gaps,
+            minimum_connected_same_layer_patch_area_nm2=min_connected_areas,
+            native_minimum_area_nm2=rules['minimum_area_nm2'],
+            contained_native_via_enclosures=len(vias),
             technology_rule_deck_qualification=None,parent_external_escape_qualification=None,
             per_pin_clock_phase_qualification=None),
         timing=timing,source_provenance=data['source_provenance'],rules=rules,
         source_semantics_unchanged=data['source_semantics_unchanged'],
         cycle_change_proposed=0,native_qualification=None,parent_fit=None,
         characterized_load_range_ff=[.72,46.08],characterized_slew_range_ps=[5,320],
+        energy_policy='C*V^2 per complete 0->1->0 cycle, one supply-charge event; read/write charge every nonclock lead one such cycle. Clock lead is separate, added once in read/write_plus_clock_access_energy. Full boundary clock driver also includes original clk pin capacitance; CTS is outside scope.',
+        leakage_policy='Conservative existing compiler area-proportional density applied to full new outline, including passive access. Unchanged original core-source leakage is separately reported; no leakage benefit claimed.',
         hold_policy='Added FF minimum CQ is zero, not the maximum lead delay; FF input hold charges maximum clock lead. Native qualification remains open.',
         note='Via R from native setRC; via enclosure metal included in wire capacitance. No separate via-cut fringe C characterization, as in platform RC model.')
 

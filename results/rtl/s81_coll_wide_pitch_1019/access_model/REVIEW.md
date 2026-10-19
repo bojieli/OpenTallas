@@ -15,7 +15,9 @@ Translate the whole inherited box by (21.360,0) um. The translation preserves
 all inherited port-to-core boundary anchors, 77 actual PG rectangles and all
 four original body obstructions. No invisible new core terminal is invented.
 
-`input.json` pins every original endpoint and its kind, PG, OBS, geometry,
+`full.png` and `corner.png` visualize the full paid outline and lower W
+access corner from the exact analytical rectangles; these are not placement
+or routed screenshots. `input.json` pins every original endpoint and its kind, PG, OBS, geometry,
 corner model and calibration. `model.json` enumerates every complete path,
 its metal rectangles, exact native VIA45 cuts/enclosures, layer lengths,
 resistance, capacitance, and every per-pin input/clock capacitance.
@@ -59,12 +61,20 @@ cut +/-12x12 nm, and 34 nm cut spacing. All complete wire/enclosure unions
 meet minimum area. Exhaustive model checks find zero overlap/spacing,
 outline, minimum-area, original-OBS or PG-spacing errors. Minimum cross-net
 axis gaps are M4 **50 nm**, M5 **72 nm**, cuts **72 nm**; scalar metal check
-uses 40 nm, stronger than ordinary 24 nm spacing. This covers the enumerated
-geometry and enclosure checks, not all LEF58/density/fill/antenna rules.
+uses 48 nm, exceeding 40 nm EOL/corner scalar spacing and covering the
+largest listed 48 nm keepout extension. Native PRL rules are checked
+separately: every signal wire is exactly 24 nm wide and uses the 24 nm
+spacing-table entry; 96 nm PG metal uses the 72 nm wide-wire entry.
+Minimum parallel-run gaps are 72 nm on both M4 and M5. The smallest
+connected same-layer patches are **6600 nm² M4 / 3408 nm² M5**, each
+containing its complete native via enclosure and independently exceeding
+2000 nm². Separate M4 patches are not summed through a different-layer
+connection to manufacture minimum area. This covers the enumerated
+geometry, width/PRL and enclosure checks, not all LEF58/density/fill/antenna rules.
 Native DRC and a complete external contact/PG/OBS proof are still required.
 
 The positive and two causal mutants ran on the fleet, unit
-`oth-ubuntu-1214657-1792439609`, using the exact planner source hash in
+`oth-ubuntu-1619042-1792439973`, using the exact planner source hash in
 `input.json`. All 437 source-to-terminal paths connect. Reversing the columns
 back produces an actual M4 cross-net overlap; removing source vias leaves
 `r_ce_in` disconnected. Both witnesses are retained in `model_witness.log`.
@@ -112,12 +122,31 @@ reviewed explicitly before emitting views; a single optimistic nominal table
 is insufficient. Bounds shown apply within original 0.72..46.08 fF loads
 and 5..320 ps slew domain, not uncharacterized extrapolation.
 
-The model charges one full-swing transition on every nonclock access network
-for both read and write energy, including unused and repair pins. Actual
-clock access activity is separate above; ten TT payload clocks total
-**131.623094 fF** before CTS. Core leakage stays 38090.4912 nW per macro:
-passive access adds no devices and no leakage benefit. Output slew and the
-complete load-dependent values are in the JSON. No signoff margin, external
+Energy convention is supply energy **C*V² per complete 0→1→0 cycle**,
+which contains one supply-charge event. It is not C*V² per edge. Each
+read/write number charges every nonclock lead one such cycle, including
+unused and repair pins: a conservative activity allowance, not measured
+switching. Clock access energy is one complete clock period and is separate
+in the table. Add it **once per clock period**, including when read and
+write happen concurrently. JSON fields explicitly provide read+clock,
+write+clock, and simultaneous-read/write+one-clock-access totals. Do not
+sum two per-operation clock charges for simultaneous read and write.
+
+The unchanged source core-energy formula prices wordline, decoder, bitline
+and per-bit periphery; it does not explicitly include charging the external
+clock pin. `complete_boundary_clock_driver_energy_fj` reports the original
+clock-pin capacitance plus its new lead. Upstream CTS and the rest of the
+clock tree remain outside this macro model and must be composed once.
+Ten TT payload clock pins total **131.623094 fF** before CTS.
+
+The original source macro's area-proportional leakage is25888.1616 nW,
+unchanged source devices. The previous proposal's38090.4912 nW arose from
+applying that compiler assumption to its stretched outline; it was not a
+measured core number. This model conservatively retains the compiler's
+**5 nW/um² full-outline leakage budget**, now **47435.9184 nW** per macro,
+including passive channels. Both the unchanged source number and full
+budget are explicit in JSON. No leakage saving is claimed. Output slew
+and complete load-dependent values are in JSON. No signoff margin, external
 clock insertion, SS acceptance, or production bandwidth is inferred.
 
 ## Composition and next step

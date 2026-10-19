@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   993 GB (avail 783, growth 88, headroom 0, waiters 0/0 GB) load 41/128 running 25 disk 503 GB 
+ot-run: ot-epyc5       admits   614 GB (avail 513, growth 83, headroom 0, waiters 0/0 GB) load 65/128 running 8 disk 639 GB 
+ot-run: ot-epyc6       admits  1075 GB (avail 837, growth 85, headroom 0, waiters 0/0 GB) load 95/128 running 32 disk 687 GB 
+ot-run: ot-epyc7       admits   588 GB (avail 512, growth 101, headroom 0, waiters 0/0 GB) load 199/96 running 59 disk 6304 GB 
+ot-run: ot-epyc8       admits  1269 GB (avail 962, growth 73, headroom 0, waiters 0/0 GB) load 33/128 running 21 disk 114 GB 
+ot-run: ot-pve1        admits   128 GB (avail 101, growth 2, headroom 0, waiters 0/0 GB) load 7/28 running 1 disk 1209 GB 
+ot-run: ot-agidock128  admits    92 GB (avail 77, growth 13, headroom 0, waiters 0/0 GB) load 27/64 running 10 disk 283 GB 
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-1216094-1792439916 after 0 s
+Traceback (most recent call last):
+  File "<string>", line 12, in <module>
+ModuleNotFoundError: No module named 'matplotlib'
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1216094-1792439916): exit 1

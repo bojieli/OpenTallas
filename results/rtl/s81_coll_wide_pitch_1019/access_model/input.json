@@ -3995,6 +3995,7 @@
     "core_height_um": 29.563163260579266,
     "core_width_um": 173.94799999999998
   },
+  "leakage_density_nw_per_um2": 5,
   "name": "ot_sram_1r1w_512x128_m4_r2c2_p192_sc2",
   "obs": [
     {
@@ -4846,10 +4847,11 @@
       "ot-pve1",
       "ot-epyc7"
     ],
+    "old_json_sha256": "ff563d0bfc50d97e09ebbd0427858f4e3a2837bab16503d6f57831f88cded60b",
     "old_lef_path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
     "old_lef_sha256": "bf018f2d8886b98a4a9644a788c8d26231d2d10eeb333c2b732cc5556233eca1",
     "old_macro_ref": "eb8141cf8",
-    "planner_sha256": "47f7a2c45fbb543bd0c6e814eaf69d04e6007d69d82a3ab66976d53ef1e57ae0",
+    "planner_sha256": "2b4f2a2a23f5272393974655b89ad510947364e935b3771bfdc82136e5276394",
     "platform_rules_sha256": "b7103a10b644df04034273636db50599cd41cc452339c317c282fb80e04d5184",
     "technology_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41"
   },
@@ -4893,7 +4895,7 @@
         "clk_to_q_ps": 346.0436643943168,
         "corner": "ff",
         "hold_ps": 19.67222053777778,
-        "leakage_nw": 38090.491200000004,
+        "leakage_nw": 25888.161600000003,
         "min_period_ps": 318.03307739804444,
         "min_pulse_ps": 127.21323095921778,
         "out_r_kohm": 0.31724855211381614,
@@ -4942,7 +4944,7 @@
         "clk_to_q_ps": 524.0724742442052,
         "corner": "ss",
         "hold_ps": 30.074020584583334,
-        "leakage_nw": 38090.491200000004,
+        "leakage_nw": 25888.161600000003,
         "min_period_ps": 480.3331843324704,
         "min_pulse_ps": 192.1332737329882,
         "out_r_kohm": 0.7083491406580278,
@@ -4991,7 +4993,7 @@
         "clk_to_q_ps": 415.19529909991155,
         "corner": "tt",
         "hold_ps": 21.600259385555557,
-        "leakage_nw": 38090.491200000004,
+        "leakage_nw": 25888.161600000003,
         "min_period_ps": 380.88584645675326,
         "min_pulse_ps": 152.3543385827013,
         "out_r_kohm": 0.4562575976456151,

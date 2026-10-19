@@ -1,13 +1,13 @@
-ot-run: ot-epyc4       admits  1011 GB (avail 786, growth 79, headroom 0, waiters 0/0 GB) load 39/128 running 23 disk 503 GB 
-ot-run: ot-epyc5       admits   622 GB (avail 518, growth 83, headroom 0, waiters 0/0 GB) load 44/128 running 8 disk 639 GB 
-ot-run: ot-epyc6       admits  1009 GB (avail 820, growth 113, headroom 0, waiters 0/0 GB) load 114/128 running 34 disk 687 GB 
-ot-run: ot-epyc7       admits   449 GB (avail 415, growth 101, headroom 0, waiters 0/0 GB) load 293/96 running 73 disk 6305 GB 
-ot-run: ot-epyc8       admits  1209 GB (avail 930, growth 83, headroom 0, waiters 2/64 GB) load 49/128 running 28 disk 95 GB 
-ot-run: ot-pve1        admits   136 GB (avail 107, growth 2, headroom 0, waiters 0/0 GB) load 5/28 running 1 disk 1209 GB 
-ot-run: ot-agidock128  admits    94 GB (avail 78, growth 13, headroom 0, waiters 0/0 GB) load 23/64 running 11 disk 283 GB 
-ot-run: -> ot-pve1
-ot-heavy: admitted on ot-pve1 as oth-ubuntu-1214657-1792439609 after 1 s
+ot-run: ot-epyc4       admits  1048 GB (avail 805, growth 72, headroom 0, waiters 0/0 GB) load 42/128 running 22 disk 503 GB 
+ot-run: ot-epyc5       admits   613 GB (avail 512, growth 83, headroom 0, waiters 0/0 GB) load 69/128 running 8 disk 639 GB 
+ot-run: ot-epyc6       admits  1101 GB (avail 847, growth 77, headroom 0, waiters 0/0 GB) load 96/128 running 30 disk 687 GB 
+ot-run: ot-epyc7       admits   589 GB (avail 513, growth 101, headroom 0, waiters 0/0 GB) load 177/96 running 52 disk 6303 GB 
+ot-run: ot-epyc8       admits  1237 GB (avail 966, growth 99, headroom 0, waiters 0/0 GB) load 27/128 running 19 disk 114 GB 
+ot-run: ot-pve1        admits   130 GB (avail 103, growth 2, headroom 0, waiters 0/0 GB) load 8/28 running 1 disk 1209 GB 
+ot-run: ot-agidock128  admits    92 GB (avail 77, growth 13, headroom 0, waiters 0/0 GB) load 26/64 running 9 disk 283 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1619042-1792439973 after 0 s
 ACCESS_MODEL_PASS paths=437 connected=437 vias=870 geometry_errors=0
-MUTANT_UNREVERSED_COLUMNS_FAIL ['cross_net_metal_spacing', {'layer': 'M4', 'rect_nm': [0, 960, 21059, 984], 'net': 'r_ce_in', 'role': 'terminal_horizontal'}, {'layer': 'M4', 'rect_nm': [20917, 960, 21384, 984], 'net': 'r_addr_in[0]', 'role': 'source_horizontal'}, [0, 0]]
+MUTANT_UNREVERSED_COLUMNS_FAIL ['native_thin_width_PRL_spacing', {'layer': 'M4', 'rect_nm': [0, 960, 21059, 984], 'net': 'r_ce_in', 'role': 'terminal_horizontal'}, {'layer': 'M4', 'rect_nm': [20917, 960, 21384, 984], 'net': 'r_addr_in[0]', 'role': 'source_horizontal'}, 0, 142]
 MUTANT_MISSING_SOURCE_VIA_FAIL r_ce_in
-ot-run: RAN on ot-pve1 (unit oth-ubuntu-1214657-1792439609): exit 0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1619042-1792439973): exit 0

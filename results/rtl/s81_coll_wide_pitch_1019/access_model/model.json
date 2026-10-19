@@ -16,7 +16,9 @@
     0
   ],
   "cycle_change_proposed": 0,
+  "energy_policy": "C*V^2 per complete 0->1->0 cycle, one supply-charge event; read/write charge every nonclock lead one such cycle. Clock lead is separate, added once in read/write_plus_clock_access_energy. Full boundary clock driver also includes original clk pin capacitance; CTS is outside scope.",
   "hold_policy": "Added FF minimum CQ is zero, not the maximum lead delay; FF input hold charges maximum clock lead. Native qualification remains open.",
+  "leakage_policy": "Conservative existing compiler area-proportional density applied to full new outline, including passive access. Unchanged original core-source leakage is separately reported; no leakage benefit claimed.",
   "macro_area_um2": 9487.18368,
   "name": "ot_sram_1r1w_512x128_m4_r2c2_p192_sc2",
   "native_qualification": null,
@@ -56629,18 +56631,31 @@
     }
   ],
   "proof": {
+    "contained_native_via_enclosures": 870,
     "errors": [],
     "geometry_error_count": 0,
+    "minimum_connected_same_layer_patch_area_nm2": {
+      "M4": 6600,
+      "M5": 3408
+    },
     "minimum_cross_net_axis_gaps_nm": {
       "M4": 50,
       "M5": 72,
       "V4": 72
     },
+    "minimum_parallel_run_gaps_nm": {
+      "M4": 72,
+      "M5": 72
+    },
+    "native_PRL_thin_spacing_nm": 24,
+    "native_PRL_wide_spacing_nm": 72,
+    "native_minimum_area_nm2": 2000,
+    "native_signal_width_nm": 24,
     "parent_external_escape_qualification": null,
     "path_count": 437,
     "per_pin_clock_phase_qualification": null,
     "pin_count": 437,
-    "same_layer_spacing_scalar_checked_nm": 40,
+    "same_layer_spacing_scalar_checked_nm": 48,
     "source_to_terminal_connected_paths": 437,
     "technology_rule_deck_qualification": null,
     "via_count": 870,
@@ -56740,10 +56755,11 @@
       "ot-pve1",
       "ot-epyc7"
     ],
+    "old_json_sha256": "ff563d0bfc50d97e09ebbd0427858f4e3a2837bab16503d6f57831f88cded60b",
     "old_lef_path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
     "old_lef_sha256": "bf018f2d8886b98a4a9644a788c8d26231d2d10eeb333c2b732cc5556233eca1",
     "old_macro_ref": "eb8141cf8",
-    "planner_sha256": "47f7a2c45fbb543bd0c6e814eaf69d04e6007d69d82a3ab66976d53ef1e57ae0",
+    "planner_sha256": "2b4f2a2a23f5272393974655b89ad510947364e935b3771bfdc82136e5276394",
     "platform_rules_sha256": "b7103a10b644df04034273636db50599cd41cc452339c317c282fb80e04d5184",
     "technology_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41"
   },
@@ -56771,9 +56787,11 @@
       "clock_pin_cap_ff_by_pin": {
         "clk": 14.189709400000002
       },
+      "complete_boundary_clock_driver_energy_fj": 8.41307870326,
+      "core_source_leakage_nw": 25888.161600000003,
       "hold_required_upper_ps": 27.56664942013017,
       "input_lead_delay_upper_ps": 11.043297635383507,
-      "leakage_nw": 38090.491200000004,
+      "leakage_nw": 47435.9184,
       "max_cq_ps_by_load_ff": {
         "0.72": 362.2088482857121,
         "11.52": 372.79144791574134,
@@ -57231,9 +57249,12 @@
         "46.08": 38.32727913128294
       },
       "output_slew_intrinsic_upper_ps": 98.82041987589922,
-      "read_energy_fj": 1938.8286136499332,
+      "read_energy_fj": 1938.828613649933,
+      "read_plus_clock_access_energy_fj": 1941.0914220731931,
       "setup_required_upper_ps": 43.63249759329146,
-      "write_energy_fj": 2473.4760069299336
+      "simultaneous_read_write_plus_clock_access_energy_fj": 2979.5842411068534,
+      "write_energy_fj": 2473.476006929933,
+      "write_plus_clock_access_energy_fj": 2475.7388153531933
     },
     "ss": {
       "added_min_cq_lower_bound_ps": 0,
@@ -57242,9 +57263,11 @@
       "clock_pin_cap_ff_by_pin": {
         "clk": 12.5002694
       },
+      "complete_boundary_clock_driver_energy_fj": 4.9613569248600005,
+      "core_source_leakage_nw": 25888.161600000003,
       "hold_required_upper_ps": 40.30212324775371,
       "input_lead_delay_upper_ps": 16.645043016009783,
-      "leakage_nw": 38090.491200000004,
+      "leakage_nw": 47435.9184,
       "max_cq_ps_by_load_ff": {
         "0.72": 547.2711445630746,
         "11.52": 562.0776305493813,
@@ -57702,9 +57725,12 @@
         "46.08": 43.027091777939035
       },
       "output_slew_intrinsic_upper_ps": 121.44404530962807,
-      "read_energy_fj": 1346.1186373028481,
+      "read_energy_fj": 1346.118637302848,
+      "read_plus_clock_access_energy_fj": 1347.6334098837078,
       "setup_required_upper_ps": 66.67368684834683,
-      "write_energy_fj": 1692.152296182848
+      "simultaneous_read_write_plus_clock_access_energy_fj": 2079.1771257392984,
+      "write_energy_fj": 1692.1522961828477,
+      "write_plus_clock_access_energy_fj": 1693.667068763708
     },
     "tt": {
       "added_min_cq_lower_bound_ps": 0,
@@ -57713,9 +57739,11 @@
       "clock_pin_cap_ff_by_pin": {
         "clk": 13.162309400000002
       },
+      "complete_boundary_clock_driver_energy_fj": 6.449531606,
+      "core_source_leakage_nw": 25888.161600000003,
       "hold_required_upper_ps": 30.159486434883824,
       "input_lead_delay_upper_ps": 13.012914961565286,
-      "leakage_nw": 38090.491200000004,
+      "leakage_nw": 47435.9184,
       "max_cq_ps_by_load_ff": {
         "0.72": 433.695737530189,
         "11.52": 445.77963485196165,
@@ -58173,9 +58201,12 @@
         "46.08": 39.99773550318914
       },
       "output_slew_intrinsic_upper_ps": 107.39284916304496,
-      "read_energy_fj": 1629.1294208677134,
+      "read_energy_fj": 1629.1294208677132,
+      "read_plus_clock_access_energy_fj": 1630.9995104737131,
       "setup_required_upper_ps": 49.82832078200467,
-      "write_energy_fj": 2064.391884867713
+      "simultaneous_read_write_plus_clock_access_energy_fj": 2509.4548764188867,
+      "write_energy_fj": 2064.391884867713,
+      "write_plus_clock_access_energy_fj": 2066.261974473713
     }
   }
 }
