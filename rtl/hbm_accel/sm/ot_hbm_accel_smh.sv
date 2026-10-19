@@ -2490,6 +2490,12 @@ module ot_hbm_accel_smh_leaf #(
     output wire [TAGW-1:0]          o_itag,
     output wire [LBS*266+LSB*16-1:0] o_iw,
     output wire [LBS*266+LSB*16-1:0] o_ix
+`ifdef OT_SMH_XSE
+    ,
+    output wire                     o_ifirst_e,
+    output wire                     o_ilast_e,
+    output wire [TAGW-1:0]          o_itag_e
+`endif
 `else
     output wire                     gv,
     output wire                     gf,
@@ -2759,6 +2765,19 @@ module ot_hbm_accel_smh_leaf #(
     // front's registered output (its j stage became the column input pin flops: 0 cycles)
     assign o_iv_b = iv_b; assign o_iv_f = iv_f; assign o_ifirst = ifirst; assign o_ilast = ilast; assign o_ifp4 = ifp4;
     assign o_itag = itag; assign o_iw = iw; assign o_ix = ix;
+`ifdef OT_SMH_XSE
+    // HF-5b 2026-10-18 OT_SMH_XSE: the BF16 column's (E face) copy of the shared control is its OWN kept register
+    // (same D, same edge: 0 cycles, identical values).  Was one flop driving both the N pin (x 123) and the E pin
+    // (x 302, y 141): xs native audit launch o_itag_e 229 ps > 220 (closed view smh_xs_ref_p45m da183de3c).
+`ifdef OT_SMH_MUT_XSE
+    localparam [TAGW-1:0] XSE_MUT = 1;  // negative control: the E copy registers tag bit 0 inverted
+`else
+    localparam [TAGW-1:0] XSE_MUT = 0;
+`endif
+    // a kreg instance (keep_hierarchy): synthesis never merges it back into the N copy
+    ot_hbm_accel_smh_kreg #(.W(2+TAGW)) u_ctle (.clk(clk), .rst_n(1'b1), .en(1'b1),
+        .d({c3bd[CW-3], c3bd[CW-4], c3bd[TAGW-1:0] ^ XSE_MUT}), .q({o_ifirst_e, o_ilast_e, o_itag_e}));
+`endif
 `else
     reg              jv_b, jv_f, jfirst, jlast, jfp4;
     reg [TAGW-1:0]   jtag;
@@ -2951,7 +2970,9 @@ module ot_hbm_accel_smh_xs #(parameter integer TAGW = 16, parameter integer NBEA
     output wire o_ifirst_e, output wire o_ilast_e, output wire [TAGW-1:0] o_itag_e
 );
     localparam integer XW = 7, CW = 6 + TAGW, WSW = 788, RBW = CW + WSW + 1 + XW, BBW = 1 + XW + NBEAT + 2048, NG = 25;
+`ifndef OT_SMH_XSE
     assign o_ifirst_e = o_ifirst; assign o_ilast_e = o_ilast; assign o_itag_e = o_itag;
+`endif
     wire rl_n;
 `ifdef OT_SMH_RSTRELAY
     ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rl_n));
@@ -2988,7 +3009,11 @@ module ot_hbm_accel_smh_xs #(parameter integer TAGW = 16, parameter integer NBEA
         .c_l(rl[RBW-1 -: CW]), .w_l(rl[XW+1 +: WSW]), .x_ce(rl[XW]), .x_a(rl[XW-1:0]),
         .b_en(bk[BBW-1]), .b_a(bk[BBW-2 -: XW]), .b_d(bk[2047:0]), .ohr(ohr),
         .o_iv_b(o_iv_b), .o_iv_f(o_iv_f), .o_ifirst(o_ifirst), .o_ilast(o_ilast), .o_ifp4(o_ifp4), .o_itag(o_itag),
-        .o_iw(o_iw), .o_ix(o_ix));
+        .o_iw(o_iw), .o_ix(o_ix)
+`ifdef OT_SMH_XSE
+        , .o_ifirst_e(o_ifirst_e), .o_ilast_e(o_ilast_e), .o_itag_e(o_itag_e)
+`endif
+        );
 endmodule
 
 // the block-dot column: the leaf's j stage as input pin flops, then ot_hbm_accel_smh_bd_col (unchanged)
