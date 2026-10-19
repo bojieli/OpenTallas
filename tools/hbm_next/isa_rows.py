@@ -39,7 +39,7 @@ sys.path.insert(0, str(TOOLS))
 import hbm_generic_iface as HGI  # noqa: E402
 from hgi_sim import records as RC  # noqa: E402
 
-VERSION = "HGI-1R 1.0 (draft for the P = 4 next die, 2026-10-19)"
+VERSION = "HGI-1R 1.1 (draft for the P = 4 next die, 2026-10-19: rtab 19 b, hsh, IDX.KVUNION, ATT plan mode)"
 SPEC_MD = ROOT / "results/arch/hbm_next_1019/cmtp/isa_rows.md"
 P_LANES = 4                       # physical lanes of the next die (owner 10-19 00:05, P = 4)
 N_MAX = 16                        # rows a record (4-bit nm1)
@@ -66,9 +66,13 @@ ROWX_FIELDS = [
                           "part q), 3 reserved; other units 0 (see sm_pass_plan)"),
     ("rsel", 18, 1, False, "rows from the VM row table at rtab + 32 L: N = U32(word 0) <= nm1 + 1, row r takes entry word 1 + r"),
     ("rsv19", 19, 1, False, "reserved, 0"),
-    ("rtab", 20, 18, False, "rsel: VM word address of row-table row 0 (32-word aligned, < 2^18); else 0"),
-    ("emask", 38, 7, False, "rsel: bit k (A..I order) = operand k steps by the entry's e field instead of rho; else 0"),
-    ("rsv45", 45, 43, False, "reserved, 0"),
+    ("rtab", 20, 19, False, "rsel: VM word address of row-table row 0 / of the ATT plan (32-word aligned, < 2^19: the grown "
+                            "VM, PROG 10-19; was 18 b in 1.0); else 0"),
+    ("emask", 39, 7, False, "rsel: bit k (A..I order) = operand k steps by the entry's e field instead of rho; else 0"),
+    ("hsh", 46, 5, False, "HBM row-stride shift: an HBM operand steps rs_k << hsh BYTES a row (0 = bytes, the 1.0 meaning; "
+                          "users mode: 12 = 4 KiB units, so the 24-bit rs reaches +-32 GiB per-user KV regions); VM strides are "
+                          "never shifted"),
+    ("rsv51", 51, 37, False, "reserved, 0"),
 ] + [(f"rs_{k}", 88 + RSTRIDE_W * i, RSTRIDE_W, True,
       f"row stride of operand {k} (signed; HBM bytes, multiple of 32 / VM FP32 words; 0 = broadcast; "
       f"must be 0 when {k} is absent or a STREAM / NONE descriptor)") for i, k in enumerate(OPND)]
@@ -86,11 +90,27 @@ ENTRY_FIELDS = [("rho", 0, 4, "row / position / user index: DYN bank slot0 + rho
 
 # ---- new / defined operations --------------------------------------------------------------------------------------
 NEW_OPS = {
-    "IDX.UNION": dict(code=5, param="none; imm_a = experts E (DS 384); imm_b = slot pitch K (DS 6, e = rho x K + kappa)",
+    "IDX.UNION": dict(code=5, param="none; imm_a = experts E (DS 384); imm_b = slots a position row K (DS image 7 = 6 routed + the shared expert slot; e = rho x K + kappa)",
                       operands="A = U32 top-k ids, m = N rows of n = k, each row strictly ascending (IDX.TOPK order 1); "
                                "O = U32 union ids ascending (O.n >= U); D[0] = U (a CTL.LOOP [17] count); "
                                "R = U row-table rows of 32 words (R.stride = 32): word 0 = c_u, words 1..c_u = "
                                "entries {rho, e} in ascending rho, kappa = rank of u in row rho"),
+    "IDX.KVUNION": dict(code=6, param="[3:0] lanes NL - 1 (NL <= P), [7:4] slot0 (the lanes' first DYN bank), [8] users "
+                                      "(lanes are users: disjoint KV, masks exclusive), [24:16] line budget a SM (<= 256: the "
+                                      "static calendar's reserved ATT span); imm_a = W (window rows, DS 128); "
+                                      "imm_b = list-store rows a lane (DS 512)",
+                        operands="A = U32 selection lists, m = NL rows of n = k (row l = lane l's TOPK_MERGE selection, "
+                                 "strictly ascending, k <= imm_b), A.stride = row stride; window of lane l = positions "
+                                 "POS_SLOT(slot0 + l) - W + 1 .. POS_SLOT(slot0 + l) (>= 0); R = the attention PLAN: 32 "
+                                 "SM blocks of PLAN_WORDS (R.base 32-aligned; layout isa_rows.md R10); D = the lane map "
+                                 "(D.n >= 16 + 128 NL): D[0] = union lines U, D[1 + l] = T_l, D[5 + l] = run chunks nrun_l, "
+                                 "D[9] = max lines a SM (<= param [24:16] budget, else E_RANGE), D[10] = nodes, "
+                                 "D[16 + 128 l + k] = node of lane l run k = {sm [4:0], node [9:5]}"),
+    "ATT.QK/PV plan": dict(code="QK 0 / PV 1", param="unchanged (HGI-1)",
+                           operands="with ROWX rsel = 1 and emask = 0: the KV-UNION PLAN mode (R10): rtab = the "
+                                    "IDX.KVUNION plan base; row rho = query lane rho (bank slot0 + rho, rs on its q / "
+                                    "p / score / output operands); SM s streams the lines of plan block s once, lane l "
+                                    "applies the lines whose mask bit l is set on its own ordinal"),
     "CTL.USERS": dict(code=8, param="[3:0] N - 1 when no ROWX (slot0 = 0); with ROWX: N, slot0",
                       operands="A = U32 [2 N]: {token_s, pos_s} for s = 0 .. N - 1; sets DYN bank slot0 + s: "
                                "POS = POS_SLOT = pos_s, POS1 = POS_SLOT1 = pos_s + 1, TOKEN = token_s, SLOT = slot0 + s, "
@@ -109,19 +129,36 @@ assert HGI.D_OPS["CTL"][5] == "TOKX" and HGI.D_OPS["CTL"][7] == "ACCEPT" and len
 # ---- row timing: cost of an N-row record = c1 + (N - 1) (II + rgap).  PRICED unless marked MEASURED; UNITS replaces
 # each entry with its measured RTL II (throughput qualification: measured within 10 % of this price).
 ROW_II = {
-    "SM.MATVEC": ("pass plan", "PRICED", "sm_pass_plan: line issues / max(1, issues per line / 1.374) of the AR record"),
-    "ATT.QK/PV": ("union stream", "PRICED", "fixed spans once + comp x U(N)/U(1) a pass, passes = ceil(N / P); E1 PASS (att4/E1.md)"),
+    "SM.MATVEC": ("pass plan", "PRICED", "sm_pass_plan: line issues / max(1, issues per line / 1.374) of the AR record; "
+                                        "SM4 lane-major publish skew +8 a further lane a pass (hnx_rp4lp4 LSKEW, MEASURED)"),
+    "ATT.QK/PV": ("union stream", "MEASURED", "ATT4 bench: span = fixed 113-127 + 7.8 a union row (= fixed + comp x "
+                                              "U(N)/U(1)), passes = ceil(N / P); shared 4-lane merge PV span 16-40 "
+                                              "shorter (a1); E1 PASS; plan mode R10"),
     "FUSED.HC_PRE_NORM": (197.0, "MEASURED", "P6 RTL 8fe5d18bd: (1,451 - 466) / 5"),
     "FUSED.HC_POST": (100.0, "PRICED", "SU chain 25,600 words / 256"),
     "FUSED.QDQ_*": ("n / 32", "PRICED", "quantiser 32 elements a cycle"),
-    "HC.HC_MIX*": (250.0, "PRICED", "HCP W256 x6 measured II 250; Sinkhorn 634 / 3 units; GATE <= 950 (STUDY d), static engine 4,385 FAILS"),
-    "COLL.*": ("c1 - 741.7", "PRICED", "one message train: endpoint + crossing + tail (741.7) once, payload x N"),
-    "IDX.TOPK": (47.0, "PRICED", "router top-6 RTL 47 cycles a row"),
-    "IDX.INDEX": ("c1 x 152 / 658.9", "PRICED", "one key stream; query ingest 152 of the 658.9-cycle frame a row"),
-    "IDX.UNION": ("N x 6 / 8 + 24", "PRICED", "8 ids a cycle into a 384-b bitmap + per-expert table write (CMTP estimate)"),
-    "SU.VOP": ("su nv", "PRICED", "timing.su_cost at 2 m minus m: lane beats a row, depth once"),
+    "HC.HC_MIX*": (250.0, "MEASURED", "UNITS tb_hnx_hc_eng4 (hnx root + 4 ring quarters): HC_MIX 998 + 250 (N - 1), "
+                                      "bit-exact N = 1..8"),
+    "COLL.ALL_GATHER / ALL_REDUCE": ("3K/2", "MEASURED", "UNITS-COLL ot_hnx_coll_gq: one fire + 40-edge drain, 3K/2 "
+                                                         "edges a further row (K ring indices) = the price c1 - 741.7"),
+    "COLL.ROW_GATHER": (623.0, "MEASURED", "UNITS-COLL rows: R = 623 flits a rail at the DS verify shape (price 1,449; "
+                                           "payload-proportional elsewhere)"),
+    "COLL.ARGMAX_MERGE": (32.0, "MEASURED", "UNITS-COLL rows: 53 + 32 (N - 1) (price 12.7-23.7)"),
+    "COLL.TOPK_MERGE": ("c1 - 741.7", "PRICED", "one message train: endpoint + crossing + tail once, payload x N"),
+    "IDX.TOPK": (49.2, "MEASURED", "UNITS-IDX ot_hnx_idx_topk_rows_static (price 47.0)"),
+    "IDX.INDEX": (953.0, "MEASURED", "UNITS-IDX: 1,397 + 953 (N - 1) (selector top-512 a row, key stream re-read a row; "
+                                     "price 152 of the 658.9 frame); IDXN redesign (N selectors, one key pass) running"),
+    "IDX.UNION": ("48/67/90/101/142 (N 1/2/3/4/6)", "MEASURED", "UNITS-IDX ot_hnx_idx_union_static (idx packet client, "
+                                                                "~18.6 a row; price N x 6 / 8 + 24)"),
+    "IDX.KVUNION": ("(W + N k) / 8 + 320", "PRICED", "merge of N ascending lists at 8 ids a cycle + 32 plan blocks x 320 "
+                                                     "words at 32 words a cycle; runs on IDX beside the ROW_GATHER the ATT "
+                                                     "record waits for anyway (off the critical path)"),
+    "SU.VOP": ("(2k + 1) ceil(e / 512) + 2", "MEASURED", "UNITS-SUDMA ot_hnx_su_rowx: AB 44 / ABC 72 at e = 7,168 (one "
+                                                         "store write port: k per-row VM operands fill, 1 result); indexed "
+                                                         "gather 1 (= price)"),
+    "DMA.KVWB_DS": (8.0, "MEASURED", "UNITS-SUDMA kvwb: 36 + 8 (N - 1), +28 a 256-slot ring wrap (price 2)"),
     "DMA.*": ("c1 - first access", "PRICED", "first access once, rows at full bandwidth"),
-    "ARGMAX.LOCAL": (6.0, "PRICED", "per-row reduce tail"),
+    "ARGMAX.LOCAL": (169.0, "MEASURED", "UNITS-SUDMA argmax: 211 + 169 (N - 1) (VM read one sector an edge; price 6)"),
     "CTL.*": (0.0, "n/a", "CTL rows are not issued (USERS / TOKX take N from the record)"),
 }
 
@@ -138,11 +175,12 @@ class RowX:
     rsel: int = 0
     rtab: int = 0
     emask: int = 0
+    hsh: int = 0
     rs: dict = dataclasses.field(default_factory=dict)     # operand -> signed row stride
 
     def fields(self):
         v = dict(nm1=self.n - 1, slot0=self.slot0, rgap=self.rgap, rpl=self.rpl, rsel=self.rsel, rsv19=0,
-                 rtab=self.rtab, emask=self.emask, rsv45=0)
+                 rtab=self.rtab, emask=self.emask, hsh=self.hsh, rsv51=0)
         for k in OPND:
             v[f"rs_{k}"] = int(self.rs.get(k, 0))
         return v
@@ -168,10 +206,10 @@ class RowX:
             if signed and x >> (width - 1):
                 x -= 1 << width
             v[name] = x
-        if v["rsv19"] or v["rsv45"]:
+        if v["rsv19"] or v["rsv51"]:
             raise RangeFault("ROWX reserved bits set")
         return cls(n=v["nm1"] + 1, slot0=v["slot0"], rgap=v["rgap"], rpl=v["rpl"], rsel=v["rsel"], rtab=v["rtab"],
-                   emask=v["emask"], rs={k: v[f"rs_{k}"] for k in OPND if v[f"rs_{k}"]})
+                   emask=v["emask"], hsh=v["hsh"], rs={k: v[f"rs_{k}"] for k in OPND if v[f"rs_{k}"]})
 
 
 class RangeFault(Exception):
@@ -182,7 +220,7 @@ def ops_of(unit):
     """HGI-1R op list of a unit (HGI-1 list + the new codes)."""
     ops = list(HGI.D_OPS[unit])
     if unit == "IDX":
-        ops += ["UNION"]
+        ops += ["UNION", "KVUNION"]
     if unit == "CTL":
         ops += ["USERS"]
     return ops
@@ -263,9 +301,14 @@ def check(rec: RC.Rec, rx: RowX | None):
     if rx is None:
         if rec.unit == "SM" and ((rec.param >> 2) & 0xF) > 7:
             raise RangeFault("HGI-1 SM positions field is [4:2]; [5] needs ROWX")
-        if rec.op in ("UNION",):
-            raise RangeFault("IDX.UNION carries ROWX (N = A.m)")
         return
+    if rec.unit == "IDX" and rec.op in ("UNION", "KVUNION"):
+        raise RangeFault(f"IDX.{rec.op} carries no ROWX (N = A.m)")
+    if rx.hsh and not any(d.space == "HBM" and rx.rs.get(k) for k, d in rec.desc.items()) and not (
+            rec.unit == "IDX" and rec.op == "INDEX" and rx.rs.get("I")):
+        raise RangeFault("hsh without an HBM row stride")
+    if rx.hsh > 20:
+        raise RangeFault(f"hsh {rx.hsh} > 20")
     if not 1 <= rx.n <= N_MAX:
         raise RangeFault(f"N {rx.n}")
     if rec.slot != (rx.slot0 & 7):
@@ -282,16 +325,23 @@ def check(rec: RC.Rec, rx: RowX | None):
             raise RangeFault(f"rpl {rx.rpl} needs a static N whose remainder r = N mod {P_LANES} divides {P_LANES} "
                              "into a power-of-two group")
     if rx.rsel:
-        if rx.rtab % TABLE_ROW_WORDS or rx.rtab >= 1 << 18:
-            raise RangeFault(f"rtab {rx.rtab} not 32-word aligned below 2^18")
+        if rx.rtab % TABLE_ROW_WORDS or rx.rtab >= 1 << 19:
+            raise RangeFault(f"rtab {rx.rtab} not 32-word aligned below 2^19")
+        if rec.unit == "ATT":
+            if rx.emask:
+                raise RangeFault("ATT plan mode: emask must be 0")
+            if rx.n > P_LANES:
+                raise RangeFault(f"ATT plan mode: {rx.n} lanes > P = {P_LANES} (one record a lane pass)")
     elif rx.rtab or rx.emask:
         raise RangeFault("rtab / emask without rsel")
     for k, s in rx.rs.items():
         d = rec.desc.get(k)
+        if s and k == "I" and rec.unit == "IDX" and rec.op == "INDEX" and d is None:
+            continue                 # R11: users-mode key-store row step (I is otherwise absent on INDEX)
         if s and (d is None or d.space in ("STREAM", "NONE")):
             raise RangeFault(f"row stride on absent / {getattr(d, 'space', 'absent')} operand {k}")
-        if s and d.space == "HBM" and s % 32:
-            raise RangeFault(f"HBM row stride {s} of {k} not a multiple of 32 bytes")
+        if s and d.space == "HBM" and (s << rx.hsh) % 32:
+            raise RangeFault(f"HBM row stride {s} << {rx.hsh} of {k} not a multiple of 32 bytes")
     if rec.unit == "SM":
         pm1 = (rec.param >> 2) & 0xF
         if rx.rsel:
@@ -329,7 +379,8 @@ def expand(rec: RC.Rec, rx: RowX | None, vm=None, L: int = 0):
     row evaluates its descriptors in.  SM rows are single-position MATVECs (param [5:2] = 0)."""
     if rx is None:
         return [(rec.slot, rec)]
-    rows = table_entries(rx, vm, L) if rx.rsel else [(r, 0) for r in range(rx.n)]
+    att_plan = rx.rsel and rec.unit == "ATT"
+    rows = table_entries(rx, vm, L) if rx.rsel and not att_plan else [(r, 0) for r in range(rx.n)]
     out = []
     for rho, e in rows:
         r = copy.copy(rec)
@@ -337,7 +388,7 @@ def expand(rec: RC.Rec, rx: RowX | None, vm=None, L: int = 0):
         for k, d in rec.desc.items():
             d2 = copy.copy(d)
             step = e if rx.rsel and rx.emask >> OPND.index(k) & 1 else rho
-            d2.base = d.base + step * rx.rs.get(k, 0)
+            d2.base = d.base + step * (rx.rs.get(k, 0) << (rx.hsh if d.space == "HBM" else 0))
             if d2.base < 0 or d2.base >= 1 << 40:
                 raise RangeFault(f"row {rho} operand {k} base out of range")
             r.desc[k] = d2
@@ -488,6 +539,196 @@ def entry_word(rho, e):
 
 
 # ======================================================================================================================
+# R10: the attention KV-union PLAN (IDX.KVUNION -> ATT plan mode).  Exactness = ATT4 gate E1 (att4/E1.md C1..C5)
+# ======================================================================================================================
+NSM_ATT = 32                      # SMs a die that run attention jobs
+PLAN_WORDS = 320                  # one SM block: header 32 + 256 line words + 32 mask words
+PLAN_LINES = 256                  # MROWS of ot_hnx_att4_issue (lines an SM streams in one op)
+PLAN_NODES = 16                   # (lane, run) nodes an SM publishes in one op
+LINE_WIN = 1 << 31                # line word: [31] 1 = window row {ring lane [29:28], position [27:0]}; 0 = list-store row
+DMAP = 16                         # D[16 + 128 l + k] = node of lane l run k
+RUN_MAX = 128
+
+
+def att_lanes_from(sel_rows, pos_rows, W=128, users=False):
+    """lane lists in the golden order (E1 C1): window rows oldest first, then the compressed selection ascending.
+    sel_rows[l] = lane l's selection (ascending, TOPK_MERGE order), pos_rows[l] = POS_SLOT of its bank."""
+    lanes = []
+    for l, (sel, ps) in enumerate(zip(sel_rows, pos_rows)):
+        if any(b <= a for a, b in zip(sel, sel[1:])):
+            raise RangeFault(f"lane {l} selection not strictly ascending")
+        ring = l if users else 0
+        lanes.append(dict(win=[("w", ring, q) for q in range(max(0, ps - W + 1), ps + 1)],
+                          sel=[("c", l if users else 0, i) for i in sel], sel_ids=list(sel), store=l))
+    return lanes
+
+
+def _nrun(T, div=1, nsm=NSM_ATT):
+    nch, r = -(-T // 8), 1
+    while -(-nch // r) > nsm:
+        r *= 2
+    return max(1, r // div)
+
+
+def kv_union_plan(lanes, nsm=NSM_ATT, store_rows=512, budget=PLAN_LINES):
+    """IDX.KVUNION reference (the hardware computes exactly this; the compiler reserves `budget` lines a SM).
+    1. Union stream (C1): every lane's window rows, ascending by (position, ring lane), then every lane's compressed
+       rows ascending by (store lane, id) -- MTP lanes share one ring and one id space (store lane 0), users do not.
+    2. Lane ordinals (C2): lane l's lines = the stream entries its list holds, in stream order = its golden list.
+    3. Aligned runs (C4): nrun_l = the smallest power of two with ceil(ceil(T_l / 8) / nrun) <= 32, divided by the
+       best of 1 / 2 / 4 (smaller aligned runs are equally exact); run k = ordinals [8 nrun k, 8 nrun (k + 1)).
+    4. Jobs (ATT4 E1 sec. 4, 'balanced'): run index k of all lanes is ONE job when its union <= 0.75 x the lanes' sum
+       (lines shared), else one job a lane; LPT (largest first, least-loaded SM, lowest SM on ties) onto nsm SMs; an
+       SM streams its jobs back to back in ascending run index (a lane's short last run is its last node there).
+    -> plan dict (blocks per SM, lane map, U, T, nrun, max_lines) or RangeFault (budget / node / run overflow)."""
+    keys = sorted({x for ln in lanes for x in ln["win"]}, key=lambda x: (x[2], x[1]))
+    keys += sorted({x for ln in lanes for x in ln["sel"]}, key=lambda x: (x[1], x[2]))
+    pos_of = {k: i for i, k in enumerate(keys)}
+    nl = len(lanes)
+    lsets = [set(ln["win"]) | set(ln["sel"]) for ln in lanes]
+    lane_ord = [[u for u, k in enumerate(keys) if k in lsets[l]] for l in range(nl)]
+    T = [len(x) for x in lane_ord]
+    store_of = {}
+    for l, ln in enumerate(lanes):
+        for j, x in enumerate(ln["sel"]):
+            store_of.setdefault(x, ln["store"] * store_rows + j)     # the lowest lane that holds it (MTP) / own (users)
+    best = None
+    for div in (1, 2, 4):
+        nrun = [_nrun(t, div, nsm) for t in T]
+        nr = max((-(-t // (8 * r)) for t, r in zip(T, nrun)), default=0)
+        jobs = []
+        for k in range(nr):
+            runs = {l: lane_ord[l][8 * nrun[l] * k: 8 * nrun[l] * (k + 1)] for l in range(nl)}
+            runs = {l: r for l, r in runs.items() if r}
+            tot = sum(len(r) for r in runs.values())
+            uni = sorted(set().union(*[set(r) for r in runs.values()])) if runs else []
+            if tot and len(uni) <= 0.75 * tot:
+                jobs.append(dict(k=k, lanes=sorted(runs), lines=uni, runs=runs))
+            else:
+                jobs += [dict(k=k, lanes=[l], lines=list(r), runs={l: r}) for l, r in sorted(runs.items())]
+        if nr > RUN_MAX:
+            continue
+        load = [0] * nsm
+        nnod = [0] * nsm
+        on = [[] for _ in range(nsm)]
+        for j in sorted(jobs, key=lambda j: (-len(j["lines"]), j["k"], j["lanes"])):
+            s_ = min((x for x in range(nsm) if nnod[x] + len(j["lanes"]) <= PLAN_NODES), key=lambda x: (load[x], x),
+                     default=None)
+            if s_ is None:
+                break
+            load[s_] += len(j["lines"])
+            nnod[s_] += len(j["lanes"])
+            on[s_].append(j)
+        else:
+            if best is None or max(load) < best[0]:
+                best = (max(load), div, nrun, on)
+    if best is None:
+        raise RangeFault("KVUNION: no run size fits 128 runs a lane and 16 nodes a SM")
+    mx, div, nrun, on = best
+    if mx > budget:
+        raise RangeFault(f"KVUNION: a SM needs {mx} lines > budget {budget}")
+    blocks, dmap = [], {}
+    for s_, js in enumerate(on):
+        js = sorted(js, key=lambda j: (j["k"], j["lanes"]))
+        lines, nodes, masks = [], [], []
+        for j in js:
+            for u in j["lines"]:
+                lines.append(u)
+                masks.append(tuple(int(l in j["runs"] and u in set(j["runs"][l])) for l in range(nl)))
+            for l in j["lanes"]:
+                if len(nodes) >= PLAN_NODES:
+                    raise RangeFault(f"KVUNION: SM {s_} > {PLAN_NODES} nodes")
+                dmap[(l, j["k"])] = (s_, len(nodes))
+                nodes.append((l, j["k"], len(j["runs"][l])))
+        words = []
+        for u in lines:
+            kind, ring, idx = keys[u]
+            words.append(LINE_WIN | (ring << 28) | idx if kind == "w" else store_of[keys[u]])
+        blocks.append(dict(lines=lines, words=words, masks=masks, nodes=nodes))
+    return dict(nl=nl, U=len(keys), T=T, nrun=nrun, div=div, max_lines=mx, blocks=blocks, dmap=dmap, keys=keys,
+                lane_ord=lane_ord, store_rows=store_rows)
+
+
+def plan_words(plan, nsm=NSM_ATT):
+    """-> (R, D): the U32 VM images IDX.KVUNION writes (R = nsm blocks of PLAN_WORDS, D = the lane map)"""
+    import numpy as np
+    R = np.zeros(nsm * PLAN_WORDS, np.uint32)
+    for s_, b in enumerate(plan["blocks"]):
+        o = s_ * PLAN_WORDS
+        R[o] = len(b["lines"])
+        R[o + 1] = len(b["nodes"])
+        for i, (l, k, n) in enumerate(b["nodes"]):
+            R[o + 2 + i] = (l & 3) | (k & 0xFFF) << 2 | (n & 0xFFFF) << 14
+        for i, w in enumerate(b["words"]):
+            R[o + 32 + i] = w
+        for i, mk in enumerate(b["masks"]):
+            for l, bit in enumerate(mk):
+                if bit:
+                    R[o + 288 + 2 * (i // 16) + (i % 16) // 8] |= np.uint32(1 << (4 * (i % 8) + l))
+    D = np.zeros(DMAP + RUN_MAX * plan["nl"], np.uint32)
+    D[0] = plan["U"]
+    for l in range(plan["nl"]):
+        D[1 + l] = plan["T"][l]
+        D[5 + l] = plan["nrun"][l]
+    D[9] = plan["max_lines"]
+    D[10] = len(plan["dmap"])
+    for (l, k), (s_, n) in plan["dmap"].items():
+        D[DMAP + RUN_MAX * l + k] = (s_ & 0x1F) | (n & 0x1F) << 5
+    return R, D
+
+
+def plan_lane_lists(R, D, nl, lanes, store_rows=512, nsm=NSM_ATT):
+    """DECODE the VM images as the ATT engines do and rebuild every lane's list in its merge order: for lane l, run k
+    = 0, 1, ...: SM / node from D, that SM's masked lines for lane l, the node's slice in stream order.  Also checks
+    the per-SM ordinal alignment (C2 / C4).  -> [list of line keys a lane] (compare with the golden lane lists)"""
+    out = []
+    store_key = {}
+    for ln in lanes:
+        for j, x in enumerate(ln["sel"]):
+            store_key[ln["store"] * store_rows + j] = x
+    for l in range(nl):
+        T, nrun = int(D[1 + l]), int(D[5 + l])
+        lst = []
+        k = 0
+        while len(lst) < T:
+            v = int(D[DMAP + RUN_MAX * l + k])
+            s_, node = v & 0x1F, v >> 5 & 0x1F
+            o = s_ * PLAN_WORDS
+            nlines, nnodes = int(R[o]), int(R[o + 1])
+            if node >= nnodes or nlines > PLAN_LINES:
+                raise RangeFault(f"lane {l} run {k}: bad node {node} / lines {nlines}")
+            mine = [i for i in range(nlines)
+                    if int(R[o + 288 + 2 * (i // 16) + (i % 16) // 8]) >> (4 * (i % 8) + l) & 1]
+            # the lane's nodes on this SM consume `mine` in node order
+            used = 0
+            for nn in range(nnodes):
+                w = int(R[o + 2 + nn])
+                nl_, nk, nlen = w & 3, w >> 2 & 0xFFF, w >> 14 & 0xFFFF
+                if nl_ != l:
+                    continue
+                if nn == node:
+                    if nk != k:
+                        raise RangeFault(f"lane {l}: node {node} on SM {s_} is run {nk}, map says {k}")
+                    if used % 8:
+                        raise RangeFault(f"lane {l} run {k}: SM-local ordinal {used} not chunk aligned (C2/C4)")
+                    if len(lst) != 8 * nrun * k:
+                        raise RangeFault(f"lane {l} run {k}: starts at ordinal {len(lst)}, not {8 * nrun * k}")
+                    for i in mine[used:used + nlen]:
+                        w_ = int(R[o + 32 + i])
+                        if w_ & LINE_WIN:
+                            lst.append(("w", w_ >> 28 & 3, w_ & 0x0FFFFFFF))
+                        else:
+                            lst.append(store_key[w_])
+                    break
+                used += nlen
+            k += 1
+            if k > RUN_MAX:
+                raise RangeFault(f"lane {l}: runs never reach T = {T}")
+        out.append(lst)
+    return out
+
+
+# ======================================================================================================================
 # md tables + self test
 # ======================================================================================================================
 def md_tables():
@@ -547,7 +788,8 @@ def selftest():
         "rtab unaligned": lambda: check(dataclasses.replace(r6, param=1), RowX(n=6, rsel=1, rtab=33)),
         "rpl on SU": lambda: check(RC.Rec("SU", "VOP"), RowX(n=2, rpl=1)),
         "CTL.LOOP rows": lambda: check(RC.Rec("CTL", "LOOP"), RowX(n=2)),
-        "reserved bits": lambda: RowX.decode(RowX(n=2).encode() | (1 << 50)),
+        "reserved bits": lambda: RowX.decode(RowX(n=2).encode() | (1 << 60)),
+        "hsh without HBM stride": lambda: check(RC.Rec("SU", "VOP", desc=dict(A=MD(space="VM", base=0, n=8, m=1))), RowX(n=2, hsh=12, rs=dict(A=8))),
     }
     for k, f in neg.items():
         try:
@@ -615,6 +857,77 @@ def selftest():
     assert best_rpl(6, 4, nc=20, rows=1) == (1, 1.8) and best_rpl(6, 4, nc=20, rows=40) == (2, 1.5)
     res["pass_plan_N6"] = dict(no_split=p0["cost_vs_ar"], ksplit=p1["cost_vs_ar"], rowsplit_13rows=p2["cost_vs_ar"],
                                lanes_pass2=p1["passes"][1])
+    # 9) R10 KV-union plan: decode(images) rebuilds every lane's golden list, chunk-aligned per SM; mutants fail
+    rng = np.random.default_rng(1910)
+    kvp = {}
+    for case, nl, users, ov in (("mtp4_overlap0.6", 4, False, 0.6), ("mtp2_pass2", 2, False, 0.6),
+                                ("mtp4_disjoint", 4, False, 0.0), ("mtp4_full", 4, False, 1.0),
+                                ("users4", 4, True, 0.0), ("short_ctx", 4, False, 0.5)):
+        nrows = 4096 if case != "short_ctx" else 40
+        k = 512 if case != "short_ctx" else 9
+        base = sorted(rng.choice(nrows, k, replace=False).tolist())
+        sels = []
+        for l in range(nl):
+            keep = [i for i in base if rng.random() < ov]
+            rest = sorted(set(rng.choice(nrows, 3 * k, replace=False).tolist()) - set(keep))
+            sels.append(sorted(keep + rest[:k - len(keep)]))
+        pos = [70000 + l for l in range(nl)] if case != "short_ctx" else [300 + l for l in range(nl)]
+        if users:
+            pos = [70000 + 977 * l for l in range(nl)]
+        lanes = att_lanes_from(sels, pos, 128, users)
+        plan = kv_union_plan(lanes)
+        R, D = plan_words(plan)
+        got = plan_lane_lists(R, D, nl, lanes)
+        for l in range(nl):
+            assert got[l] == lanes[l]["win"] + lanes[l]["sel"], (case, l)
+        kvp[case] = dict(U=plan["U"], T=plan["T"], nrun=plan["nrun"], div=plan["div"], max_lines=plan["max_lines"],
+                         nodes=len(plan["dmap"]))
+        if case == "mtp4_overlap0.6":
+            for mname, mut in (("zero_insertion", "zins"), ("lane_swap", "swap"), ("node_misaligned", "shift")):
+                R2 = R.copy()
+                o = int(D[DMAP + RUN_MAX * 1 + 0] & 0x1F) * PLAN_WORDS
+                if mut == "zins":          # lane 1 gets a beat on a line it did not select (E1 negative 'zins')
+                    for i in range(int(R2[o])):
+                        wi = o + 288 + 2 * (i // 16) + (i % 16) // 8
+                        if not int(R2[wi]) >> (4 * (i % 8) + 1) & 1:
+                            R2[wi] |= np.uint32(1 << (4 * (i % 8) + 1))
+                            break
+                elif mut == "swap":        # lane 1 reads lane 0's mask bits (ATT4 MUT 4)
+                    for i in range(int(R2[o])):
+                        wi = o + 288 + 2 * (i // 16) + (i % 16) // 8
+                        b0 = int(R2[wi]) >> (4 * (i % 8)) & 1
+                        R2[wi] = (int(R2[wi]) & ~(1 << (4 * (i % 8) + 1))) | (b0 << (4 * (i % 8) + 1))
+                else:                      # a node length off by one: the next node starts off a chunk boundary
+                    w = int(R2[o + 2])
+                    R2[o + 2] = (w & 0x3FFF) | (((w >> 14) - 1) & 0xFFFF) << 14
+                try:
+                    bad = plan_lane_lists(R2, D, nl, lanes)
+                    ok = all(bad[l] == lanes[l]["win"] + lanes[l]["sel"] for l in range(nl))
+                except RangeFault:
+                    ok = False
+                assert not ok, f"KV plan mutant {mname} not caught"
+                kvp[case]["mutant_" + mname] = "caught"
+    try:
+        kv_union_plan(att_lanes_from([sorted(rng.choice(4096, 512, replace=False).tolist()) for _ in range(4)],
+                                     [70000 + l for l in range(4)], 128, True), budget=40)
+        raise AssertionError("KVUNION budget overflow did not fault")
+    except RangeFault:
+        kvp["budget_overflow"] = "faults"
+    rx_att = RowX(n=4, rsel=1, rtab=4096 * 32, rs=dict(A=512, O=512))
+    att = RC.Rec("ATT", "QK", desc=dict(A=MD(space="VM", base=0, n=512, m=1), O=MD(space="VM", base=1 << 16, n=640, m=1)))
+    assert decode_one(encode(att, rx_att))[1] == rx_att and len(expand(att, rx_att)) == 4
+    for bad_rx in (dataclasses.replace(rx_att, emask=1), dataclasses.replace(rx_att, n=5)):
+        try:
+            check(att, bad_rx)
+            raise AssertionError("ATT plan-mode negative did not fault")
+        except RangeFault:
+            pass
+    rx_h = RowX(n=4, hsh=12, rs=dict(O=230000))          # users: 4 KiB units -> 942 MB a user region
+    kvwb = RC.Rec("DMA", "KVWB_DS", desc=dict(A=MD(space="VM", base=0, n=512, m=1),
+                                               O=MD(space="HBM", base=1 << 34, n=512, m=256, stride=2048)))
+    assert [x.desc["O"].base for _, x in expand(kvwb, rx_h)] == [(1 << 34) + i * 230000 * 4096 for i in range(4)]
+    assert decode_one(encode(kvwb, rx_h))[1] == rx_h
+    res["kv_union_plan"] = kvp
     # 8) md tables single source
     md = SPEC_MD.read_text() if SPEC_MD.exists() else ""
     res["md_tables_match"] = md_tables() in md

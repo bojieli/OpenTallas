@@ -1,0 +1,9 @@
+CXDL5 LOCKSTEP runs0-1 checks3060 dw_edges2818 errors0 fault_end ref1111 hnx1111
+CXDL5_CALENDAR F640 M160 X32 L4_last_serial_edge167 L5_last_serial_edge135 speedup1.237 missing0
+LAND MISMATCH run4 slice0 half0 row88 i704 seen-1
+CXDL5 PASS lockstep_checks3060 calendar L4 167 -> L5 135 serial edges (x1.237) collision_fault1
+- rtl/hbm_next/coll/tb/tb_hnx_su_cxdl5.sv:161: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.022 s; speed 270.063 us/s
+- Verilator: cpu 0.014 s on 1 threads; allocated 7 MB
+RUN_RC=0

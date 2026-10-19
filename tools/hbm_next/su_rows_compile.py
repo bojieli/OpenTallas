@@ -17,6 +17,11 @@ Schedule (static, compiler-fixed, every edge known; collision = assert here, FAU
 Row-relative image (default): every command is row 0's; the per-edge row code (rowc.mem) names the row of the vmr, vmw and
 control classes and ot_hnx_su_rowx adds row x stride (VM sector, store row, control vb) per operand. --absolute: the
 unrolled d4g image (absolute addresses, row codes 0) -> must give the SAME expected files (the d4g SU runs it unchanged).
+--wsplit 1 (HBM-NEXT-UNITS-SUDMA2, needs ot_hnx_su_top with wsplit = 1): split store write phase. The fill writes the
+HI = 0 store groups on even bank-write edges and HI = 1 on odd ones (fill command e -> bank write e + FW, FW = 12, from
+the ab_n4_g0 witness); a vector's lane write W = emit + 23 is put on a fill-HI0 edge, HI = 1 banks commit at W, HI = 0
+banks (deferred one edge by ot_hnx_su_wsplit) at W + 1, on a fill-HI1 edge. Vectors emit every 2nd edge, the row fill
+streams with no gap: II = 2 k nv (+ 2 --sguard). --fw 11 = the schedule-parity witness (must FAULT st_conflict).
 Golden: hdc_golden mul / add / bf16 RNE in NumPy, independent of the DUT (su_arith_compile seed rows = VM rows).
 Outputs: prog.mem (4 x 2422 b a line), rowc.mem (4 x 20 b), strides.mem, expw/exps/explw.mem, arith/seed.mem,
 programme.json (cycles(N), II, dictionary sizes per 256-b column for the row-relative and the absolute image).
@@ -42,6 +47,9 @@ def main():
     ap.add_argument('--op', choices=('AB', 'ABC'), default='AB'); ap.add_argument('--absolute', action='store_true')
     ap.add_argument('--lat', type=int, default=1, help='edges of the rowx stage (REG 1)')
     ap.add_argument('--guard', type=int, default=1, help='edges between fill and lane-result store writes')
+    ap.add_argument('--wsplit', type=int, default=0, help='1: split store write phase (ot_hnx_su_top wsplit = 1)')
+    ap.add_argument('--fw', type=int, default=12, help='fill command -> bank write edge offset (11 = parity witness)')
+    ap.add_argument('--sguard', type=int, default=0, help='wsplit: extra edge pairs a period')
     a = ap.parse_args()
     N, nv, L = a.n, a.nv, a.lat
     assert 1 <= N <= 16 and N * nv <= 128 - 0 and VM_O + VM_RS * (N - 1) + nv <= 512 and VM_A + VM_RS * (N - 1) + nv <= VM_C
@@ -54,10 +62,19 @@ def main():
     k, g = len(rowops), a.guard
     # store write port (ONE per bank: fill > lane result, both on one edge = FAULT st_conflict): fill cmd e writes at
     # e + 11, emit m writes its result at m + 23 -> period p: fills of row p + 1 then the results of row p, disjoint
-    II = (2 * k + 1) * nv + 2 * g
+    II = (2 * k + 1) * nv + 2 * g if not a.wsplit else 2 * k * nv + 2 * a.sguard
     T = lambda p: 2 * nv + (p + 1) * II           # period p = -1 .. N - 1 (p = -1: prologue fill of row 0)
     FR = [T(r - 1) for r in range(N)]
-    EM = [[T(r) + 2 * k * nv + g - 12 + j for j in range(nv)] for r in range(N)]
+    if a.wsplit:
+        # lane write W = emit + 23 on a fill-HI0 bank-write edge: W = T + FW (mod 2); first emit >= last fill cmd + 25
+        def em0(r):
+            b = T(r) + 24
+            return b + ((b + 23 - T(r) - a.fw) % 2)
+        EM = [[em0(r) + 2 * j for j in range(nv)] for r in range(N)]
+        for r in range(1, N):
+            assert EM[r][0] > EM[r - 1][-1], 'emit slots overlap'
+    else:
+        EM = [[T(r) + 2 * k * nv + g - 12 + j for j in range(nv)] for r in range(N)]
     for r in range(N):
         assert EM[r][0] >= FR[r] + 2 * k * nv - 1 + 25, 'row data not in the store before its first emit'
     S = EM[0][0] - 8
@@ -147,6 +164,17 @@ def main():
             for q in range(4):
                 v |= ((((ctl[e][q] << 240 | vmr[e][q]) << 312 | vmw[e][q]) << 54) << 74) << (q * QW)
             f.write(f'{v:0{QW}x}\n')
+    # SUDMA2: the row code as programme column bits: per quarter a 2442-b line {rc20, line2422} (prog_rc.mem, 4 x 2442
+    # = 9768 b, quarter q at q x 2442, for su_programme_compile --line-bits 9768 --partition 4); prog_rc0.mem = rc zeroed
+    QR = QW + 20
+    for nm, use in (('prog_rc.mem', 1), ('prog_rc0.mem', 0)):
+        with open(out / nm, 'w') as f:
+            for e in range(NE):
+                v = 0
+                for q in range(4):
+                    lq = (((ctl[e][q] << 240 | vmr[e][q]) << 312 | vmw[e][q]) << 54) << 74
+                    v |= (lq | (rc[e][q] << QW if use else 0)) << (q * QR)
+                f.write(f'{v:0{(4 * QR + 3) // 4}x}\n')
     (out / 'rowc.mem').write_text(''.join(''.join(f'{rc[e][q]:05x}' for q in (3, 2, 1, 0)) + '\n' for e in range(NE)))
     # strides (rowx ports): r_ss A,B,C,D,I (16 b sectors) | r_sr (9 b rows) | w_ss O,R | w_sr | c_vb A,B,C,D,O (24 b)
     rs_sec = [VM_RS << 4, 0, VM_RS << 4, 0, 0] if rel else [0] * 5
@@ -176,13 +204,24 @@ def main():
             w = ((((ctl[e][q] << 240 | vmr[e][q]) << 312 | vmw[e][q]) << 54) << 74)
             for c in range(cols):
                 dic[c].add((w >> (256 * c)) & ((1 << 256) - 1))
+    # SUDMA2: the row code as a PROGRAMME COLUMN: the 20-b rc rides the spare top bits of column 9 (2422 + 20 = 2442 <=
+    # 10 x 256: no new column, no new macro, pslice SB 2422 -> 2442); dictionary words a column with rc included
+    dic_rc = [set() for _ in range(cols)]
+    for e in range(NE):
+        for q in range(4):
+            w = ((((ctl[e][q] << 240 | vmr[e][q]) << 312 | vmw[e][q]) << 54) << 74) | rc[e][q] << QW
+            for c in range(cols):
+                dic_rc[c].add((w >> (256 * c)) & ((1 << 256) - 1))
     first_cmd = 0
     last_w = max(x[0] for x in expw)
     man = dict(schema='opentallas.hbm_next.su_rows.v1', n=N, nv=nv, op=a.op, row_relative=rel, lat=L, edges=NE,
+               wsplit=a.wsplit, fw=a.fw,
                ii=II, c1_rule='2 nv B fill + II row-0 fill + 16 + nv emits + 23 + MARGIN + 2 nv drain', row_ops=rowops,
                fr=FR, ld_edge=S, first_emit=EM[0][0], last_drain=DR[-1][-1], first_cmd_edge=first_cmd,
                last_vm_write_edge=last_w, cycles=last_w - first_cmd + 1 - L, expected_vm_writes=len(expw),
                expected_scalars=0, dict_words_per_col=[len(d) for d in dic],
+               dict_words_per_col_rc_in_col9=[len(d) for d in dic_rc],
+               d4g_pslice_q4_dict_capacity=[128 * b for b in (3, 10, 9, 13, 2, 1, 1, 1, 1, 1)],
                golden='hdc_golden mul/add NumPy FP32 RNE (+ bf16 RNE for ABC), independent of the DUT')
     (out / 'programme.json').write_text(json.dumps(man, indent=1) + '\n')
     print(f'NE={NE} NW={len(expw)} NS=0 II={II} cycles={man["cycles"]}')

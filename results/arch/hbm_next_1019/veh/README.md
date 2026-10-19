@@ -2,6 +2,37 @@
 
 This is next-release work, not a release gate. **No layer of the P = 4 die has been measured in RTL yet**, so every tok/s figure below is a priced composition. Measured unit terms are applied where they exist (`token_composition.json` ledger).
 
+## Step 2 (10-19 ~02:10): measured unit terms IN the schedule (`token_composition.json` headline)
+
+The headline point is now **L = 5, HC row II 250 (measured on the hnx RTL by UNITS), VM grown, DIE f4c_t5 relay stages and the SM4 lane latency, all inside the static S2 schedule** (compose_grid `phys` axis). The self-check still passes 10/10: the grid reproduces D1 and Phase-1 exactly.
+
+| point (L5, HC II 250, VM grown) | AR | MTP | 4 users agg / per user |
+|---|---:|---:|---:|
+| d4g-class stages, no SM4 latency (earlier priced point) | 1,949.7 | 3,459.9 | 4,481.6 / 1,120.4 |
+| **f4c_t5: all relay classes moved + SM4 latency (HEADLINE)** | **1,989.9** | **3,383.7** | **4,373.7 / 1,093.4** |
+| f4c_t5_smhbm: only SM_HBM moved + SM4 latency (no credit for shorter SM_X / VM_HUB) | 1,944.2 | 3,288.0 | 4,236.2 / 1,059.0 |
+| targets | 1,905.4 | 3,363.5 | 4,365.3 / 1,000 |
+| CMTP compiler-of-record re-time x the f4c_t5 factor (cross-reference) | 1,989.9 | 3,423.0 | 4,316.6 / 1,079.2 |
+
+- The headline meets all four targets, but only narrowly: MTP +0.6 %, 4-user aggregate +0.2 %.
+- Against d4g-class stages, f4c_t5 gives AR +2.1 % (SM_X 11.25 -> 6.46 and VM_HUB shorten the fetch leg) but MTP -2.2 % and 4-user -2.4 %.
+- On the CMTP chain (with its rpl / union histogram / M1 rules), the **4-user aggregate is 4,316.6, -1.1 % under target**. Per user still holds at 1,079.
+- If DIE's shorter SM_X / VM_HUB do not survive relays + GRT (`f4c_t5_smhbm`), MTP falls to 3,288 (-2.2 %) and 4-user to 4,236 (-3.0 %).
+- The SM4 lane latency costs 89.8k cycles a MTP step and 80.5k a 4-user step. The SM records are mostly short (L3: 70 of 86 MTP SM records are 32.6-43.6-cycle expert slices), so a fixed +26 a record shows. **Lever:** publish the 4 lanes without the +8p skew (parallel result slots), or let the compiler hide the skew under the next record.
+- HC II 250 and COLL 3K/2 are each **measured = priced**, so the HC and COLL terms do not change.
+
+### Per-unit P = 4 layer benches driven by one layer's records (`layer_units/`, `sm4_layer/`)
+- `p4_layer_units.py records`: DS L2 + L3 at the headline point gives MTP 375 records (SM 174, COLL 69, SU 68, HC 4, IDX 5, FUSED 10, DMA 16) and 4-user 351 records. `plan` maps them to unit benches (`layer_units/plan.json`).
+  - **HC** (N 6 / N 4): both counts are measured points of tb_hnx_hc_eng4 (2,248 / 1,748). No re-run.
+  - **COLL** (N <= 6 trains): measured (s1/s2). The law is exact in F. No re-run.
+  - **ATT**: the production attention shape is the ATT4 bench shape (s03). No re-run.
+  - **SM**: the layer's short records were NEW shapes.
+- `run_sm4_layer.sh` (fleet ot-epyc5, Verilator 5.050) ran the SM4 leaf at the layer's record shapes:
+  - shapes: NCHUNK 9 / 20 / 32 (expert 2304x53, 5120x24, 8192x53), spacing K 4 and 16, P 1 vs P 4;
+  - **all PASS. Delta = exactly +24 cycles at every shape.** The ratio is 1.072 for the shortest record (9 chunks, K 4) and 1.006 for 32 chunks at K 16. This confirms the per-record charge used in the schedule;
+  - MUT1 lane alias: **FAIL as required** (LANE MISMATCH; witness `sm4_layer/mut1_k4/`).
+- The value-exact layer benches (MTP accept / reject, 4-user vs the CMTP goldens) still wait on the CMTP binary record images (emitter + VM allocator), on records_mtp / mu4, and on the UNITS FUSED / IDX row RTL (`p4_intake.json`).
+
 ## AR layer path = the d4g path (`ar_repro.json`: PASS)
 
 Single-user AR on the P = 4 die issues P = 1 records. Its layer path is therefore the d4g one.

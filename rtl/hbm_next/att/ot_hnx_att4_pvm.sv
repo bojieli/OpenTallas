@@ -12,8 +12,9 @@
 // The reset lands in one kept register beside the pin (RSTPIN style).  No credit / ready / stall; faults are sticky.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hnx_att4_pvm #(
-    parameter integer LV  = 4,
-    parameter integer MUT = 0
+    parameter integer LV    = 4,
+    parameter integer MUT   = 0,
+    parameter integer STORE = 0         // A1 fallback: 1 = the stack in flops (ot_hnx_att_stack_flop, LV 3 + node word)
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -48,7 +49,7 @@ module ot_hnx_att4_pvm #(
     wire [31:0] m_pub_data;
     wire [3:0]  m_pub_word;
     wire [2:0]  m_pub_slot;
-    ot_hnx_att_pv_merge #(.L(16), .IL(8), .TAGW(16), .ALAT(7), .LV(LV), .MUT(MUT), .PUBLISH(1)) u_pvm (
+    ot_hnx_att_pv_merge #(.L(16), .IL(8), .TAGW(16), .ALAT(7), .LV(LV), .MUT(MUT), .PUBLISH(1), .STORE(STORE)) u_pvm (
         .clk(clk), .rst_n(rq), .ev(ev_q), .sum(sum_q), .tag_d(tag_q),
         .pv_v(m_pv_v), .pv_y(m_pv_y), .pv_tag(m_pv_tag), .fault(m_fault),
         .pub_start(ps_q), .pub_slot(psl_q), .pub_v(m_pub_v), .pub_data(m_pub_data), .pub_word(m_pub_word),

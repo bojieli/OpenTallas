@@ -9,6 +9,7 @@
   "rtl/hbm_next/hc/ot_hnx_hgi_hc_residual_vm.sv",
   "rtl/hbm_next/hc/ot_hnx_hgi_hc_result_vm.sv",
   "rtl/hbm_next/hc/ot_hnx_hgi_hc_gathered_mix_reader.sv",
+  "rtl/hbm_next/hc/ot_hnx_hc_xbrep.sv",
   "rtl/hbm_next/hc/ot_hnx_hc_q.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
   "rtl/hbm_next/hc/ot_hnx_hc_qhub.sv",
@@ -136,7 +137,10 @@
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_hnx_hc_xbrep"
+  ]
  },
  "io_flop_at_pins": {
   "cols": 4,
@@ -147,14 +151,14 @@
  "keep_pin_regs": true,
  "pin_regs": {
   "enable": false,
-  "reason": "ot_hnx_hc_qhub = ot_hnx_hc_q (every pin registered in RTL, see the d4g kit hbm_hcq_hub_1017) + ot_hnx_hc_qcen (descriptor/event/beat-control/s_i/wfault pin flops; bd_*, wc_*, rstb_*, ps* are flops); the bank beat slices xb_* leave hc_q's x_wave output register directly; a kit flop stage would shift the compiled schedule"
+  "reason": "ot_hnx_hc_qhub = ot_hnx_hc_q (every pin registered in RTL, see the d4g kit hbm_hcq_hub_1017) + ot_hnx_hc_qcen (descriptor/event/beat-control/s_i/wfault pin flops; bd_*, wc_*, rstb_*, ps* are flops); the bank beat slices xb_d* leave hc_q's x_wave output register directly and xb_v*/xb_beat* leave a per-face copy of its beat-control register (ot_hnx_hc_xbrep, HUBFIX 10-19); a kit flop stage would shift the compiled schedule"
  },
  "children": [],
  "inter": [],
  "job": {
   "owner": "Claude:HBM-NEXT-UNITS",
   "branch": "claude/hbm-next-units-1019",
-  "tag": "n1",
+  "tag": "n2",
   "purpose": "HBM-NEXT P=4 HC quarter hub (hnx fork of hbm_hcq_hub_1017): hc_<q> with N-row strided residual/result addressing + quarter-engine centre",
   "views_to": "physical/ref_tile/hnx_hcq_hub_1019/views",
   "record_to": "results/rtl/ref_tile/hnx_hcq_hub_1019",
@@ -216,6 +220,20 @@
     "fail_witness": "results/arch/hbm_next_1019/units/hc/witness/q_m8.log"
    },
    {
+    "name": "hnx_hcq_mut9",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/qm9 qm9",
+    "expect": "fail",
+    "pass_regex": "TB_HNX_HC_Q PASS MUT=9",
+    "fail_regex": "TB_HNX_HC_Q FAIL MUT=9 ",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "HUBFIX: the E face copy of the x_wave beat-control register is a relay one edge late (every copy is checked against the original each edge)",
+    "fail_witness": "results/arch/hbm_next_1019/units/hc/witness/q_m9.log"
+   },
+   {
     "name": "hnx_hc_ring_rows",
     "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/e0 e0",
     "expect": "pass",
@@ -244,9 +262,17 @@
   ]
  },
  "params": {},
- "structural_change": "HBM-NEXT-UNITS (P=4 next die, not a release gate): hnx fork of hbm_hcq_hub_1017, same outline/pins/macro. Delta = N-row records: hc_q programme word 79 -> 111 b ([94:79] residual row stride, [110:95] result row stride, sectors; 0 = d4g dense form), residual reader row counter (SPR slots a row, row base += stride), result store base + p*stride. No datapath change; the HC_MIX row II is the engine core (25 accumulations x K/2048 = 250 cycles a row, measured).",
+ "structural_change": "HBM-NEXT-UNITS (P=4 next die, not a release gate): hnx fork of hbm_hcq_hub_1017, same outline/pins/macro. Delta = N-row records: hc_q programme word 79 -> 111 b ([94:79] residual row stride, [110:95] result row stride, sectors; 0 = d4g dense form), residual reader row counter (SPR slots a row, row base += stride), result store base + p*stride. No datapath change; the HC_MIX row II is the engine core (25 accumulations x K/2048 = 250 cycles a row, measured). HUBFIX 10-19 (closure job hnx_hcq_hub_1019-n1-c8a284b41 FLOORPLAN_MARGIN wire_reach: u_q.residual.x_wave_beat[1] 608 um, x_wave_beat[0] 549 um, x_wave_v 530 um from the N/E face pins -- ONE beat-control register fanned to 4 faces, same in the d4g hub): four per-face copies ot_hnx_hc_xbrep (W, N, E, S) loaded on the same edge from the same next-state (zero added cycles, schedule unchanged), kept by name (route.synth_keep_modules) so opt_merge cannot fold them; the original register feeds the centre only.",
  "reset_landing": {
   "enable": true,
   "stages": 2
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "failed_job": "hnx_hcq_hub_1019-n1-c8a284b41",
+  "failure": "FLOORPLAN_MARGIN textbook_lint wire_reach: u_q.residual.x_wave_beat[1] 608 um, x_wave_beat[0] 549 um, x_wave_v 530 um (one beat-control register fanned to the N/E/S/W face pins)",
+  "change": "rtl/hbm_next/hc/ot_hnx_hc_xbrep.sv: four per-face copies of the beat-control register (same edge, same next-state, zero added cycles), kept by name (route.synth_keep_modules); ot_hnx_hgi_hc_residual_vm / ot_hnx_hc_q XFC, ot_hnx_hc_qhub drives xb_v*/xb_beat* from the copies",
+  "bench": "hnx_hcq_exact: tb_hnx_hc_q q_n4s + q_d4g PASS with the per-edge face-copy check (Verilator 5.050, results/arch/hbm_next_1019/units/hc/witness/verdict_q_hubfix.txt, q_n4s_hubfix.log)",
+  "mutant": "hnx_hcq_mut9 (E face copy one edge late) FAIL, committed witness results/arch/hbm_next_1019/units/hc/witness/q_m9.log; mut7/mut8/ring_mut1 witnesses unchanged"
  }
 }

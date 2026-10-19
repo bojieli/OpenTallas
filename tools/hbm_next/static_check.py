@@ -147,8 +147,10 @@ def c4_vm_live(recs, s, fps, n_rows, const_words=None, hpre=((0, 20480), (40960,
     copies = defaultdict(mk)
     const = mk()
     spans = []
+    selfw_words = defaultdict(int)
     for i in order:
         rd, wr = fps[i]
+        wv = [(lo // VM_OFF, lo % VM_OFF, min(hi - (lo // VM_OFF) * VM_OFF, VM_WORDS)) for sp, lo, hi in wr if sp == "VM"]
         for sp, lo, hi in rd:
             if sp != "VM":
                 continue
@@ -159,9 +161,20 @@ def c4_vm_live(recs, s, fps, n_rows, const_words=None, hpre=((0, 20480), (40960,
             d = c["defined"][a:b]
             und = d < 0
             if und.any():                                     # live-in: entering column (per copy) or constant (once)
+                # SELF-OVERWRITTEN: an undefined word this record also WRITES (outside h / PRE) is its own output
+                # (the in-place all-gather's footprint reads its whole destination; only its own, already defined,
+                # slice is data) -> not a live-in, never live before the write
+                sw = np.zeros(b - a, bool)
+                for cw, aw, bw in wv:
+                    if cw == cp and aw < b and a < bw:
+                        sw[max(aw, a) - a:min(bw, b) - a] = True
+                sw &= und & ~isc[a:b]
+                if sw.any():
+                    r_ = recs[ex[i][0]]
+                    selfw_words[f"{r_.unit}.{r_.op}"] += int(sw.sum())
                 col = und & isc[a:b]
                 d[col] = 0.0
-                cst = und & ~isc[a:b]
+                cst = und & ~isc[a:b] & ~sw
                 if cst.any():
                     cd, cl = const["defined"][a:b], const["lastuse"][a:b]
                     cd[cst & (cd < 0)] = 0.0
@@ -199,7 +212,8 @@ def c4_vm_live(recs, s, fps, n_rows, const_words=None, hpre=((0, 20480), (40960,
     if const_words:
         peak += const_words
     return dict(peak_words=int(peak), peak_at=round(at, 1), copies=len(copies),
-                live_in_const_words=int(((const["defined"] >= 0) & (const["lastuse"] >= 0)).sum()))
+                live_in_const_words=int(((const["defined"] >= 0) & (const["lastuse"] >= 0)).sum()),
+                self_overwritten_read_words=dict(selfw_words))
 
 
 def c5_ring(ring_slots, n_rows, window=128, pos0=1 << 20 - 1):

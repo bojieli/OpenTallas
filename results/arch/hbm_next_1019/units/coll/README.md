@@ -104,11 +104,73 @@ The deliveries are replicated per quadrant, so the 4 lanes of a die carry 256 B/
 - Model / proof / vectors: `tools/hbm_next/hnx_coll_gq_train.py` (check-train, vectors-rows, price). This is a fork of `tools/hgi_sim/collq_gather_1018.py`.
 - Evidence: `bench/` (verdicts, logs, cycles_N, check logs) and `witness/` (mutant fail witnesses).
 
+## Step 2 (10-19 restart agent): endpoint train, L = 5 landing, re-gate
+
+### Off-die endpoint train: no RTL change (the critical `ot_hgi_coll_ctl_v5` is untouched)
+
+The d4g COLL ISA already runs an N-row record as **one issuer loop**. The loop iteration is the row/flit counter, and the per-row steps are real RTL arithmetic: `iter_inj_idx_step`, `iter_inj_addr_step`, `iter_vm_step`, `iter_del_step`, `iter_rgx_step` and `iter_link_slot_step` in `ot_hgi_coll_iter_mul` + `ot_hgi_coll_q_static_ctl_v5`. A non-dense destination stride (rs_O) is handled by the compiler, which splits the delivery loop row at every row boundary. The endpoint, the 453-edge crossing and the tail are paid once, and the link sequence slots run on through the whole train. So ROW_GATHER, kv gather (the same shape) and ARGMAX_MERGE need only the compiler (`tools/hbm_coll_static/row_gather_rows.py`, `argmax_rows.py`).
+
+**Measured (fresh, fleet Verilator 5.050, `tools/hbm_next/hnx_coll_rows_bench.sh`, `rows/`).** The bench runs the current die-bound native V4 quadrants (q3 SW + q2 host_v4, one die, SPMD loopback at W = 453). The ctl_v5 / issuer_v6 / hard_v8 parents are cycle-locked to them (+2 edges, `tb_hgi_coll_q_hard_v5`). Every flit's data and address is checked.
+
+| record | N=1 | N=2 | N=3 | N=4 | N=6 | further-row II | price |
+|---|---:|---:|---:|---:|---:|---:|---|
+| ROW_GATHER, DS MTP verify bypass (96 ranks x 13 rows x 288 B, R = 623 flits a rail) | 1,113 | 1,736 | 2,359 | 2,982 | 4,228 | **623.0** (= R: payload only) | model row II 1,449: the measured II is lower |
+| ARGMAX_MERGE G96 (q3 ARG fold) | 53 | 85 | 117 | 149 | 213 | **32.0** | priced 23.7: +8.3 a row (+42 cycles a 6-row record, ~0.2 % of the step) -> CMTP to use 32 |
+
+- ROW_GATHER delivered 3,115 / 6,230 / 9,345 / 12,460 / 18,690 flits exactly.
+- The mutants are rejected: row stride dropped (addr_err 9,345), link-slot step dropped (data_err 12,450), ARGMAX operand step dropped (data_err 3). The witnesses are in `witness/rows_*.log`.
+- The bench copy `rtl/hbm_next/coll/tb/tb_hnx_coll_rows.sv` fixes the d4g ARGMAX lane-count verdict (it applied P x R to every lane).
+- The script's anchored grep missed the padded ARGMAX verdict lines, so the logs were re-read with the corrected regex (`rows/verdict_reread.txt`). The script is fixed.
+- The q3 TKM is the KMAX-64 copy, as in `run_q_hard_v5_bench.sh`: neither op starts the TKM.
+
+**The other COLL ops are also compiler-only.**
+- **TOPK_MERGE:** N rows = one gather train plus N serial TKM merges (TKM measured 2,834 cycles a merge). Each row's TKM start is its own programme row, carrying its own `tkm_cfg_obase`, plus a wait loop. That is 2 rows a TOPK row.
+- **ALL_GATHER / GROUP_REDUCE_MCAST, x N payload:** the steady loop count grows by the payload. The prologue and epilogue are paid once, and the compiler writes the epilogue's link slots as absolute 16-bit sequences.
+- **Limit:** the 64-row programme store. ROW_GATHER at N = 6 uses 33 / 31 rows (q3 / q2), and ARGMAX uses 64 at any N (a software-pipelined body).
+
+### L = 5: the SU landing decision (RTL + bench)
+
+**Decision: lane 4 lands in the free half of the existing SU slice ports.** There is no 5th SU slice and no new RF write port.
+- Each pgslice already has two independent delivery write groups: `dw_v[HI]` writes banks 16HI..16HI+15 at `dw_row[9HI+:9]`, and `dw_v` = 2'b11 writes both.
+- A d4g lane uses one of them a serial edge: 3 stream events per 4 stream edges, one 64-B flit each.
+- **Lane 4 path:** lane 4 is a neighbour chain along the quadrant's SU band (`ot_hnx_su_cxdl_tap_s`). The tap registers one stream edge a hop and keeps the flits with ob[5:4] = s, using the unchanged d4g `dl_s` leaf behind a slice filter.
+- **Serial leaf:** `ot_hnx_su_cxdl_q2` is the d4g `dl_q` with a second bank pair. Each half is own | lane 4 (AND-OR).
+- **Schedule:** the compiler's static calendar puts every lane-4 flit where the own lane's flit of the same event is in the other half. A same-half collision is a compile error, and the leaf latches FAULT.
+- **Faces:** the slice's dw face (1,044 b) is unchanged.
+
+**Bench `tb_hnx_su_cxdl5` (fleet, `tools/hbm_next/hnx_cxdl5_bench.sh`, `cxdl5/`): PASS.**
+- **Lockstep with the four d4g `ot_hbm_su_static_cxport_dl` leaves, lane 4 idle:** 3,060 serial edges, legal plus violation traffic. Every dw / fault bit is identical.
+- **640-flit region:** L = 4 lands in 167 serial edges and L = 5 in 135, every flit exactly once. Net of the 8-edge start, that is x1.25 = 5/4.
+- **Forced same-half collision:** FAULT.
+- **Mutants:** 11 (collision unchecked), 12 (tap ignores the slice) and 13 (lane-4 halves swapped) FAIL. The witnesses are in `witness/cxdl5_m*.log`.
+
+**DIE bits a quadrant at L = 5** (replaces the earlier "cxdl_<q>4 -> SU 1,044 b + new SU port"):
+
+| link | bits | notes |
+|---|---:|---|
+| hb_coll -> tap 0 | 586 | lane-4 stream |
+| tap s -> tap s+1 | 3 x 586 | neighbour hops across the SU band; DIE checks hop length <= reach at the stream clock |
+| tap s -> serial leaf s | 1,065 a slice | abutted, the same seam as dl_s -> dl_q |
+
+- No new dw port and no SU RF change.
+- The COLL body side (ND + 1 sink, qso slices, ctl delivery_obase 160 -> 200 b, the compiler's lane count 4 -> 5) is still as specified above. The ctl part touches the critical `ot_hgi_coll_ctl_v5`, so it is report only.
+
+### Re-gate (hnx kits, closure daemon)
+
+- `physical/ref_tile/hnx_gq_issue_1019` and `hnx_gq_land_1019` are forks of `hcoll_gq_*_1018`.
+  - Same outline (237.6 x 237.6) and faces; ld_desc is 53 -> 69 b and ld_ev_k 10 -> 17 b.
+  - io_hold_margin is 0.03, and the reset landing is the current main flow.
+  - The benches are `hnx_coll_bench.sh` main + m6/m7/m8, with committed witnesses.
+- Both were SUBMITTED through submit_exact at be0562a05: `hnx_gq_land_1019-n1-be0562a05` and `hnx_gq_issue_1019-n1-be0562a05`.
+- **Watch:** the landing pre-stage adder (+13-b roff).
+- Neither is on a critical list, and ctl_v5 is unchanged.
+
 ## Next
 
-1. **Off-die endpoint train in `ot_hgi_coll_ctl_v5` (CRITICAL, report only).** ROW_GATHER / TOPK_MERGE / kv gather / ARGMAX_MERGE take N rows as one message: the endpoint and the crossing are paid once, then the payloads go in row order. ALL_GATHER / GROUP_REDUCE_MCAST carry N x payload.
-   - Fork the record adapter (issuer + ctl) into `rtl/hbm_next/coll/`.
-   - Bench it against `tb_hfd_coll_static_allgather`.
-2. **Record-adapter decode of ROWX into the gather descriptor:** nm1, rs_A, rs_O, plus the rs_O = R K (mod 8) compiler rule (CMTP).
-3. **Re-gate hcoll_gq_issue / gq_land with the hnx_ kits.** Watch the landing pre-stage adder.
-4. **L = 5:** an SU landing decision, then forks of the COLL body / qso slices with the NDEL parameter.
+1. **Collect the two closure jobs** (pending_results). On a timing fail of gq_land, check the roff adder path first.
+2. **CMTP:**
+   - set the ARGMAX_MERGE row II to 32 (measured) and ROW_GATHER to R (measured 623 at the DS verify shape);
+   - emit COLL N-row records as issuer loops (row_gather_rows / argmax_rows are the reference lowerings);
+   - add the lane-4 half calendar for L = 5.
+3. **L = 5 COLL body:** fork the qso slices with one more sink (NDEL 5). The ctl_v5 delivery_obase widening (CRITICAL) is report only. Gate the tap and serial leaves (`ot_hnx_su_cxdl_tap_s`, `ot_hnx_su_cxdl_q2`) as hnx kits from `hbm_su_cx_dl_1017`.
+4. **gq train:** the record-adapter decode of ROWX (nm1, rs_A, rs_O + the rs_O = R K mod 8 rule) into the gather descriptor.

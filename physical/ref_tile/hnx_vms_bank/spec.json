@@ -1,0 +1,581 @@
+{
+ "name": "hnx_vms_bank",
+ "top": "hnx_vms_bank_q0_faces",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_next/vm/hnx_vms_bank_q0_faces.sv",
+  "rtl/hbm_next/vm/ot_hnx_vms_bank_q0_core.sv",
+  "rtl/hbm_next/vm/ot_hnx_vms_bank_q0_body.sv",
+  "rtl/hbm_next/vm/ot_hnx_vms_ce_counter_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "rst_n",
+   "bid",
+   "sid",
+   "rslot_v",
+   "rslot",
+   "wslot_v",
+   "wslot",
+   "rq2",
+   "rr2",
+   "kq_done",
+   "kq",
+   "status",
+   "clk",
+   "clk_n"
+  ],
+  "S": [
+   "rq3",
+   "rr3",
+   "dq",
+   "dq_done",
+   "pq",
+   "pr",
+   "clk_s"
+  ],
+  "E": [
+   "rq1",
+   "rr1",
+   "wq1",
+   "wq_done1",
+   "xq2",
+   "xq2_done",
+   "eg",
+   "clk_e"
+  ],
+  "W": [
+   "rq0",
+   "rr0",
+   "rq4",
+   "rr4",
+   "wq0",
+   "wq_done0",
+   "xq",
+   "xq_done",
+   "clk_w",
+   "clk_macro0",
+   "clk_macro1",
+   "clk_macro2",
+   "clk_macro3"
+  ]
+ },
+ "pin_ranges": {
+  "rst_n": [
+   5.388,
+   5.484
+  ],
+  "bid": [
+   5.82,
+   6.78
+  ],
+  "sid": [
+   7.116,
+   7.644
+  ],
+  "rslot_v": [
+   7.98,
+   8.076
+  ],
+  "rslot": [
+   8.412,
+   9.372
+  ],
+  "wslot_v": [
+   9.708,
+   9.804
+  ],
+  "wslot": [
+   10.14,
+   11.148
+  ],
+  "rq2": [
+   11.484,
+   18.924
+  ],
+  "rr2": [
+   19.26,
+   130.524
+  ],
+  "kq_done": [
+   130.86,
+   130.956
+  ],
+  "kq": [
+   131.292,
+   257.676
+  ],
+  "status": [
+   258.012,
+   265.5
+  ],
+  "clk": [
+   134.94,
+   135.036
+  ],
+  "clk_n": [
+   137.916,
+   138.012
+  ],
+  "rq3": [
+   5.388,
+   9.42
+  ],
+  "rr3": [
+   9.564,
+   69.132
+  ],
+  "dq": [
+   69.276,
+   136.86
+  ],
+  "dq_done": [
+   136.956,
+   137.052
+  ],
+  "pq": [
+   137.196,
+   203.532
+  ],
+  "pr": [
+   203.676,
+   265.356
+  ],
+  "clk_s": [
+   134.94,
+   135.036
+  ],
+  "rq1": [
+   5.388,
+   11.196
+  ],
+  "rr1": [
+   11.436,
+   97.548
+  ],
+  "wq1": [
+   97.788,
+   192.636
+  ],
+  "wq_done1": [
+   192.876,
+   192.972
+  ],
+  "xq2": [
+   193.212,
+   286.044
+  ],
+  "xq2_done": [
+   286.284,
+   286.38
+  ],
+  "eg": [
+   286.62,
+   379.452
+  ],
+  "clk_e": [
+   191.964,
+   192.06
+  ],
+  "rq0": [
+   5.388,
+   11.196
+  ],
+  "rr0": [
+   11.436,
+   97.548
+  ],
+  "rq4": [
+   97.788,
+   103.596
+  ],
+  "rr4": [
+   103.836,
+   190.284
+  ],
+  "wq0": [
+   190.524,
+   285.708
+  ],
+  "wq_done0": [
+   285.948,
+   286.044
+  ],
+  "xq": [
+   286.284,
+   379.116
+  ],
+  "xq_done": [
+   379.356,
+   379.452
+  ],
+  "clk_w": [
+   191.964,
+   192.06
+  ],
+  "clk_macro0": [
+   31.404,
+   31.5
+  ],
+  "clk_macro1": [
+   122.028,
+   122.124
+  ],
+  "clk_macro2": [
+   212.652,
+   212.748
+  ],
+  "clk_macro3": [
+   303.276,
+   303.372
+  ]
+ },
+ "outline": {
+  "w": 270.0,
+  "h": 403.92,
+  "exact": true
+ },
+ "layer_cap": "M6",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*bank.u_a",
+   "at": [
+    47.52,
+    30.672
+   ],
+   "at_exact": true,
+   "clock_entry": {
+    "port": "clk_macro0",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*bank.u_b",
+   "at": [
+    47.52,
+    121.296
+   ],
+   "at_exact": true,
+   "clock_entry": {
+    "port": "clk_macro1",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*bank.u_c",
+   "at": [
+    47.52,
+    211.92
+   ],
+   "at_exact": true,
+   "clock_entry": {
+    "port": "clk_macro2",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*bank.u_a1",
+   "at": [
+    47.52,
+    302.544
+   ],
+   "at_exact": true,
+   "clock_entry": {
+    "port": "clk_macro3",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:HBM-NEXT-UNITS-VM",
+  "branch": "claude/hbm-next-units-vm-1019",
+  "tag": "v1",
+  "purpose": "HBM-NEXT P=4 VM bank, 2^19 words (A0+A1 data macros, 17-bit sector); hnx fork of vm_native_q0_faces_g313c",
+  "structural_change": "HBM-NEXT-UNITS-VM (P=4 next die, not a release gate): hnx fork of the d4g SE/NE/SW/NW VM bank master vm_native_q0_faces_g313c (hfd_vms_bank_native_q0_faces, all 32 d4g banks). VM grows 2^18 -> 2^19 words: 4th SRAM u_a1 (A1 = quadrant rows 1024-2047) in the same abutted N-S stack (+90.624 um: outline 270 x 313.2 -> 270 x 403.92), direct clock entry clk_macro3 at its clk pin; check macro B carries the A1 field [167:112]; 3:1 capture mux; 17-bit sector (+1 bit on rq/wq/dq/kq/xq/xq2/eg/pq). Same edges (read n+6, +1 pin), same face clocks/pin registers. Pins: d4g plan with widened buses (N/S d4g slots; W/E re-spread at 7 M4 tracks on the taller faces), tools/hbm_next/hnx_vm_pins.py.",
+  "extra_paths": [
+   "rtl/hbm_next/vm",
+   "physical/hbm_next/vm",
+   "tools/hbm_next/hnx_vm_bench.sh",
+   "tools/hbm_next/hnx_vm_pins.py",
+   "rtl/hbm_accel/generic/vm/static/faces_q0",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/common_flow/assigned_pin_exact.tcl",
+   "physical/common_flow/macro_channel_block.tcl",
+   "physical/common_flow/clock_entries.tcl"
+  ],
+  "record_to": "results/rtl/ref_tile/hnx_vms_bank",
+  "views_to": "physical/ref_tile/hnx_vms_bank/views",
+  "benches": [
+   {
+    "name": "hnx_vm_exact",
+    "cmd": "bash tools/hbm_next/hnx_vm_bench.sh {RUN}/bench/vm m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "HNX_VM_BENCH PASS"
+   },
+   {
+    "name": "hnx_vm_mut5_a1_select",
+    "cmd": "bash tools/hbm_next/hnx_vm_bench.sh {RUN}/bench/vm_m5 m5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "fail_regex": "TB_HNX_VM FAIL MUT=5",
+    "fail_witness": "results/arch/hbm_next_1019/units/vm/witness/m5.log"
+   },
+   {
+    "name": "hnx_vm_mut6_sector_wrap",
+    "cmd": "bash tools/hbm_next/hnx_vm_bench.sh {RUN}/bench/vm_m6 m6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "fail_regex": "TB_HNX_VM FAIL MUT=6",
+    "fail_witness": "results/arch/hbm_next_1019/units/vm/witness/m6.log"
+   },
+   {
+    "name": "hnx_vm_mut7_a1_check",
+    "cmd": "bash tools/hbm_next/hnx_vm_bench.sh {RUN}/bench/vm_m7 m7",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "fail_regex": "TB_HNX_VM FAIL MUT=7",
+    "fail_witness": "results/arch/hbm_next_1019/units/vm/witness/m7.log"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "clock": "hybrid_entries",
+ "io_tcl": "physical/hbm_next/vm/hnx_vms_bank_pins.tcl",
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/hbm_next/vm/hnx_vms_bank_post_iop.tcl"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual source wrapper explicitly preserves exact recipe3 input registers; no additional automatic stage."
+ },
+ "floorplan_note": "d4g g313c floorplan kept (one abutted N-S SRAM stack centred between the W/E std-cell bands, ~30 um N/S channels); hnx adds u_a1 on top of the stack at the same pitch (90.624) and grows the outline by one pitch.",
+ "pg_layer": "M6",
+ "layer_cap_grant": "H-DIE 2210 v4: VM bank strap masters are pin-perimeter bound (270 x 270, ~1,260 b per face): PG moves to M6 so M5 pins need no stripe clearance; parent strap M7 (H-DIE 2210, H-SM proposal)",
+ "structural_change": "HBM-NEXT-UNITS-VM (P=4 next die, not a release gate): hnx fork of the d4g SE/NE/SW/NW VM bank master vm_native_q0_faces_g313c (hfd_vms_bank_native_q0_faces, all 32 d4g banks). VM grows 2^18 -> 2^19 words: 4th SRAM u_a1 (A1 = quadrant rows 1024-2047) in the same abutted N-S stack (+90.624 um: outline 270 x 313.2 -> 270 x 403.92), direct clock entry clk_macro3 at its clk pin; check macro B carries the A1 field [167:112]; 3:1 capture mux; 17-bit sector (+1 bit on rq/wq/dq/kq/xq/xq2/eg/pq). Same edges (read n+6, +1 pin), same face clocks/pin registers. Pins: d4g plan with widened buses (N/S d4g slots; W/E re-spread at 7 M4 tracks on the taller faces), tools/hbm_next/hnx_vm_pins.py.",
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_ports": [
+  "clk",
+  "clk_n",
+  "clk_s",
+  "clk_e",
+  "clk_w",
+  "clk_macro0",
+  "clk_macro1",
+  "clk_macro2",
+  "clk_macro3"
+ ],
+ "clock_entry_domains": {
+  "n": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_n"
+   ],
+   "inputs": [
+    "bid",
+    "sid",
+    "rslot_v",
+    "rslot",
+    "wslot_v",
+    "wslot",
+    "rq2",
+    "kq"
+   ],
+   "outputs": [
+    "rr2",
+    "kq_done",
+    "status"
+   ]
+  },
+  "s": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_s"
+   ],
+   "inputs": [
+    "rq3",
+    "dq",
+    "pq"
+   ],
+   "outputs": [
+    "rr3",
+    "dq_done",
+    "pr"
+   ]
+  },
+  "e": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_e"
+   ],
+   "inputs": [
+    "rq1",
+    "wq1",
+    "xq2"
+   ],
+   "outputs": [
+    "rr1",
+    "wq_done1",
+    "xq2_done",
+    "eg"
+   ]
+  },
+  "w": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_w"
+   ],
+   "inputs": [
+    "rq0",
+    "rq4",
+    "wq0",
+    "xq"
+   ],
+   "outputs": [
+    "rr0",
+    "rr4",
+    "wq_done0",
+    "xq_done"
+   ]
+  },
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n"
+   ],
+   "outputs": []
+  },
+  "macro0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_macro0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "macro1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_macro1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "macro2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_macro2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "macro3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_macro3"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_cts_roots": [
+  "clk",
+  "clk_n",
+  "clk_s",
+  "clk_e",
+  "clk_w"
+ ]
+}

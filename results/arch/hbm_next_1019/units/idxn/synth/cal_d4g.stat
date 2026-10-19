@@ -1,0 +1,51 @@
+
+9. Printing statistics.
+
+=== ot_hbm_idx_calendar_static ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      604        - wires
+     1205        - wire bits
+       17        - public wires
+      587        - public wire bits
+       12        - ports
+      316        - port bits
+      667   64.998 cells
+        1    0.087   A2O1A1Ixp33_ASAP7_75t_R
+        2    0.175   AND2x2_ASAP7_75t_R
+        1    0.087   AND3x1_ASAP7_75t_R
+        1    0.117   AND5x1_ASAP7_75t_R
+        1    0.087   AO21x1_ASAP7_75t_R
+       32    2.799   AOI211xp5_ASAP7_75t_R
+      128    9.331   AOI21xp33_ASAP7_75t_R
+        1    0.087   AOI22xp33_ASAP7_75t_R
+        1    0.087   AOI31xp33_ASAP7_75t_R
+       65    24.64   DFFASRHQNx1_ASAP7_75t_R
+      178    7.786   INVx1_ASAP7_75t_R
+       23    1.341   NAND2xp33_ASAP7_75t_R
+        1    0.073   NAND3xp33_ASAP7_75t_R
+        1    0.102   NAND5xp2_ASAP7_75t_R
+       40    2.333   NOR2xp33_ASAP7_75t_R
+       34    2.479   NOR3xp33_ASAP7_75t_R
+        2    0.175   NOR4xp25_ASAP7_75t_R
+        4    0.408   NOR5xp2_ASAP7_75t_R
+       32    2.799   O2A1O1Ixp33_ASAP7_75t_R
+        1    0.087   OAI211xp5_ASAP7_75t_R
+       86    6.269   OAI21xp33_ASAP7_75t_R
+        4     0.35   OAI22xp33_ASAP7_75t_R
+        1    0.087   OAI31xp33_ASAP7_75t_R
+        1    0.087   OR2x2_ASAP7_75t_R
+        1    0.087   OR3x1_ASAP7_75t_R
+        3    0.306   OR4x1_ASAP7_75t_R
+        2    0.233   OR5x1_ASAP7_75t_R
+       15    1.968   XNOR2xp5_ASAP7_75t_R
+        4    0.525   XOR2xp5_ASAP7_75t_R
+        1        -   ot_sram_1r1w_256x256_m2_r2c2
+
+   Area for cell type \ot_sram_1r1w_256x256_m2_r2c2 is unknown!
+
+   Chip area for module '\ot_hbm_idx_calendar_static': 64.997640
+     of which used for sequential elements: 24.640200 (37.91%)
+
