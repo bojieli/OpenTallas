@@ -178,15 +178,15 @@ def main(argv=None):
     p.add_argument("--out")
     a = ap.parse_args(argv)
     r = stress(a.trials, a.nl, a.lv, a.seed)
-    # negative control: an ILLEGAL record (lane 3's chunk 2 only 3 turns after its chunk 1, while lanes 0-2 ripple
-    # chunk 3) must fault -- the model and the RTL refuse it, never stall
-    ev = {}
-    for l in range(3):
+    # negative control: an ILLEGAL record (the last lane's chunk 2 only 3 turns after its chunk 1, while the other lanes
+    # ripple chunk 3) must fault -- the model and the RTL refuse it, never stall (P3 10-19: lane nl - 1, = lane 3 at nl 4)
+    ev, il = {}, a.nl - 1
+    for l in range(il):
         for c in range(4):
             ev.setdefault(8 * c, {})[l] = (c == 0, c == 3)
-    ev.setdefault(16, {})[3] = (True, False)
-    ev.setdefault(24, {})[3] = (False, False)
-    ev.setdefault(27, {})[3] = (False, True)
+    ev.setdefault(16, {})[il] = (True, False)
+    ev.setdefault(24, {})[il] = (False, False)
+    ev.setdefault(27, {})[il] = (False, True)
     r["illegal_record_faults"] = len(simulate(ev, a.nl, a.lv)["faults"]) > 0
     ok = r["faults"] == 0 and r["illegal_record_faults"]
     print(("PASS" if ok else "FAIL") + " HNX_SMERGE_SCHED " + json.dumps({k: v for k, v in r.items() if k != "fault_examples"}))
