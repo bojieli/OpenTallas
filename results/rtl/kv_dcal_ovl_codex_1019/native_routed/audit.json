@@ -1,0 +1,35 @@
+{
+ "cell": "qkd_d2d_cal_seq_pin_ovl_bc",
+ "view": "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/views/qkd_d2d_cal_seq_pin_ovl_bc",
+ "lib_cell": "qkd_d2d_cal_seq_pin_ovl_bc",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean"
+ ],
+ "R_ps": 228.0,
+ "spread_ps": 25.9,
+ "outputs": 52,
+ "inputs": 44,
+ "launch_ps": 217.5,
+ "launch_pin": "cfg_data[25]",
+ "capture_ps": 145.3,
+ "capture_pin": "halt",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 20.2,
+ "ff_launch_min_ps": 132.1,
+ "ff_hold_need_ps": -57.6,
+ "pass": true,
+ "fail_why": "",
+ "source_job": "qkd_d2d_cal_seq_pin_ovl_bc-ovlbc3-4c08e56aa",
+ "record_commit": "75ce5a496",
+ "main_record_merge": "f26c04265",
+ "library_sha256": {
+  "qkd_d2d_cal_seq_pin_ovl_bc_ff.lib": "740c8049e962f9c8efcc538c884fbf5b2d34d5d09a48b4a822ef3705c6733d49",
+  "qkd_d2d_cal_seq_pin_ovl_bc_ss.lib": "aad1206dc2cae1e8a843097e06ee6d73f142fd1d6174d4d6fc7ee8e4cafe2a1b",
+  "qkd_d2d_cal_seq_pin_ovl_bc_tt.lib": "68d1d21e99cfdf61e621b30cc0e733fb59cc1bebd352bda6229907cdd1cbe012"
+ },
+ "scope": "closedoldframecomponent only; finalexpandedcyclicimage and dieparentcompensation notbound"
+}
