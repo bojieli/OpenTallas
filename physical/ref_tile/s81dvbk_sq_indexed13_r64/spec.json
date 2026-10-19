@@ -1,0 +1,253 @@
+{
+ "name": "s81dvbk_sq_indexed13_r64",
+ "top": "dsdv_bksel_q",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+  "rtl/common/ot_fwd_link_stage.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 388.8
+ },
+ "pins": {
+  "N": [
+   "t_s",
+   "ck",
+   "rst",
+   "f_c",
+   "f_cr",
+   "lane"
+  ],
+  "W": [
+   "t_o"
+  ]
+ },
+ "pin_ranges": {
+  "t_s": [
+   2.16,
+   146.52
+  ],
+  "ck": [
+   146.52,
+   150.84
+  ],
+  "rst": [
+   150.84,
+   153.0
+  ],
+  "f_c": [
+   153.0,
+   166.0
+  ],
+  "f_cr": [
+   166.0,
+   168.0
+  ],
+  "lane": [
+   168.0,
+   300.24
+  ],
+  "t_o": [
+   2.16,
+   386.64
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    172.8,
+    129.6
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    172.8,
+    216.0
+   ],
+   "at_exact": true
+  }
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: dsfd_selt_q2 QIO (the closed quarter RTL, unchanged) lands lane / f_c / f_cr in its pin flops and launches t_s / t_o from flops."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "structural_change": "INDEXED13 explicit original-index candidate input; 13 x36b tuples replace sparse REBASE expansion. 27 KEPT format selects cap tuple mux selects at20loads; unchanged native arithmetic and6SRAM. Macro origins43.2lattice, bottom3rows, full-width topband; clockNcentre. 302.4x388.8 fits2quarter widths inside680um column. Opt-in; existing views unchanged. Fallback:64KEPT identical samephase final-stage quarter reset copies; ot_rst_copies canonicalization caps eachat256loads (baseline one reset9751loads). +63flops/quarter; no pipeline/reset-release cycle change.",
+ "job": {
+  "owner": "Codex:S81-TOPK-FINAL",
+  "branch": "codex/s81-topk-final-1019",
+  "tag": "idx13r64",
+  "purpose": "Qualify opt-in exact packed final-select input at production shape; price1037cycles.",
+  "benches": [
+   {
+    "name": "indexed13_production",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build results/arch/s81_topk_final_1019/bench/indexed13",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^BK_LAYER PASS"
+   },
+   {
+    "name": "indexed13_identity_mutant",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build results/arch/s81_topk_final_1019/bench/indexed13_identity",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk_final_1019/bench/indexed13_identity/verdict.txt"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/rtl/s81_dv_1016/bk_units",
+   "results/rtl/s81_dv_1016/bk_units_bk2",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_glue",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/hdc",
+   "rtl/link",
+   "tools/s81_dv/layer_prog",
+   "results/arch/s81_topk_final_1019"
+  ],
+  "views_to": "physical/ref_tile/s81dvbk_sq_indexed13_r64/views",
+  "record_to": "results/rtl/ref_tile/s81dvbk_sq_indexed13_r64",
+  "bench_sources": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/common/ot_fwd_link_stage.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv",
+   "tools/s81_dv/layer_prog/bk/tb_bk_layer.sv",
+   "tools/s81_dv/layer_prog/bk/run_bk_layer.sh",
+   "tools/s81_dv/layer_prog/lower_bk.py",
+   "results/arch/s81_topk_final_1019/bench/indexed13/stim.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13/exp.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13/meta.json",
+   "results/arch/s81_topk_final_1019/bench/indexed13_identity/stim.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13_identity/exp.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13_identity/meta.json"
+  ]
+ },
+ "defines": [
+  "OT_S81PH_SEL_INDEXED13",
+  "OT_S81PH_SEL_RST64"
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "fill_reason": {
+  "pin_bound": "N face1450 data/control/clock/reset pins needs >=241.7um at6pins/um; six SRAM and top full-width std band. Synthesis measured area must confirm safe fill before submit."
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "Default-off INDEXED13 packed original-index input; kept format selects; macros placed43.2grid with full-width stdband. Earlier closed quarter retained."
+ },
+ "reset_relay_split": {
+  "max_loads": 256
+ },
+ "std_area_um2": 38462.74,
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

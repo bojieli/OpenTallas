@@ -93,9 +93,21 @@ module dsfd_selt_q #(
 );
     localparam integer W = 16, IW = 20, K = 512, AW = 8, KW = 10, CB = 11, EW = 37, GW = CB + 4;
     localparam integer CW = $clog2(DM + 1);
+`ifdef OT_S81PH_SEL_RST64
+    // Same two-edge release as rst_s, with 64 identical KEPT last-stage
+    // registers. ot_rst_copies partitions the flattened reset loads <=256/copy.
+    (* keep = "true" *) reg rst_a;
+    (* keep = "true" *) reg [63:0] quarter_rst__ot_rlv;
+    always @(posedge ck[0] or negedge rst[0]) begin
+        if (!rst[0]) begin rst_a <= 1'b0; quarter_rst__ot_rlv <= 64'd0; end
+        else begin rst_a <= 1'b1; quarter_rst__ot_rlv <= {64{rst_a}}; end
+    end
+    wire rst_n = quarter_rst__ot_rlv[0];
+`else
     reg [1:0] rst_s;
     always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rst_n = rst_s[1];
+`endif
     // lane: pin flop (inside ot_s81ph_sel_in, STG 0) + decode
     wire b_v, b_last, h_v, act, e_fmt, e_orphan, e_link;
     wire [15:0] b_lv; wire [255:0] b_val; wire [319:0] b_idx; wire [1:0] b_q, h_q, act_q; wire [9:0] h_k; wire [7:0] h_tag;

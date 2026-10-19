@@ -1,0 +1,86 @@
+{
+ "False": {
+  "op": "attn.idx.topk_final",
+  "t_issue": 100,
+  "t_first_in": 100,
+  "t_last_in": 6082,
+  "ingress_beats": 5983,
+  "window": [
+   6722,
+   6795
+  ],
+  "drain": {
+   "vi_n_edge": 6712,
+   "vo_edge": 6714,
+   "payload": 676187,
+   "n": 74,
+   "d": 1
+  },
+  "calendar_issue": 6701,
+  "words": 35,
+  "sel_per_quarter": [
+   120,
+   137,
+   131,
+   124
+  ],
+  "golden_ok": true,
+  "golden": "attn.idx.topk_final (sorted)",
+  "tail_budget": 640,
+  "shard": {
+   "k_dies": 1,
+   "candidates": [
+    512,
+    512,
+    512,
+    512
+   ],
+   "closure": null
+  },
+  "indexed13": false,
+  "span_edges": 6692,
+  "price_cycles": 178
+ },
+ "True": {
+  "op": "attn.idx.topk_final",
+  "t_issue": 100,
+  "t_first_in": 100,
+  "t_last_in": 423,
+  "ingress_beats": 324,
+  "window": [
+   1063,
+   1136
+  ],
+  "drain": {
+   "vi_n_edge": 1053,
+   "vo_edge": 1055,
+   "payload": 676187,
+   "n": 74,
+   "d": 1
+  },
+  "calendar_issue": 1042,
+  "words": 35,
+  "sel_per_quarter": [
+   120,
+   137,
+   131,
+   124
+  ],
+  "golden_ok": true,
+  "golden": "attn.idx.topk_final (sorted)",
+  "tail_budget": 640,
+  "shard": {
+   "k_dies": 1,
+   "candidates": [
+    512,
+    512,
+    512,
+    512
+   ],
+   "closure": null
+  },
+  "indexed13": true,
+  "span_edges": 1033,
+  "price_cycles": 178
+ }
+}
