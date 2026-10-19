@@ -1,0 +1,52 @@
+{
+  "source_revision": "8e6003874",
+  "tool": "Verilator 5.050",
+  "host": "ot-epyc7",
+  "remote_root": "/srv/opentallas-scratch/claude/hbm-svg-return-1019",
+  "outputs": 1632,
+  "latency": {
+    "samples": 1632,
+    "min_edges": 7,
+    "max_edges": 7
+  },
+  "reset_warmup_edges": [
+    9,
+    9,
+    9
+  ],
+  "sustained_windows": [
+    {
+      "groups": 64,
+      "edges": 64,
+      "bytes_per_edge": 128
+    },
+    {
+      "groups": 64,
+      "edges": 64,
+      "bytes_per_edge": 128
+    },
+    {
+      "groups": 64,
+      "edges": 64,
+      "bytes_per_edge": 128
+    }
+  ],
+  "mutants": [
+    {
+      "id": 1,
+      "fail_regex": "RETURN_DATA_FAIL",
+      "witness": "mutant1_fail.log"
+    },
+    {
+      "id": 2,
+      "fail_regex": "RETURN_DATA_FAIL",
+      "witness": "mutant2_fail.log"
+    },
+    {
+      "id": 3,
+      "fail_regex": "RING_PHASE_FAIL",
+      "witness": "mutant3_fail.log"
+    }
+  ],
+  "physical_claim": false
+}

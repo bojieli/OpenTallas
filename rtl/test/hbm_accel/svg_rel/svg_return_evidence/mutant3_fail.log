@@ -1,0 +1,21 @@
+SOURCE_REVISION=8e6003874
+Verilator 5.050 2026-07-01 rev v5.050
+RETURN_FAULT_FAIL
+RETURN_VALID_FAIL tick=14 got=0 expected=1
+RETURN_FAULT_FAIL
+RETURN_VALID_FAIL tick=15 got=0 expected=1
+RETURN_FAULT_FAIL
+RING_PHASE_FAIL phase_fault=0001
+RETURN_VALID_FAIL tick=16 got=0 expected=1
+RESET_WARM edge=12 expected=9
+RETURN_SUSTAIN window=1 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=12 expected=9
+RETURN_SUSTAIN window=2 groups=64 cache_edges=64 bytes_per_edge=128
+RESET_WARM edge=12 expected=9
+RETURN_SUSTAIN window=3 groups=64 cache_edges=64 bytes_per_edge=128
+RETURN_COUNTS_FAIL outputs=1422 windows=3 warm_checks=3
+RETURN_LATENCY samples=1422 minimum_edges=7 maximum_edges=7
+SVG_RETURN FAIL mut=3 errors=3526 outputs=1422 windows=3 warm_checks=3 latency_stages=7
+[1614624] %Fatal: tb_svg_return_regional.sv:94: Assertion failed in tb_svg_return_regional: regional return mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_return_regional.sv:94: Verilog $stop
+Aborting...
