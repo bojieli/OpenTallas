@@ -101,5 +101,19 @@
         "ff": -580.7
       }
     }
+  },
+  "tt_probe": {
+    "path": "results/rtl/s81_slice_1017/capc_nativep1_1019/native_cts/probe.tcl",
+    "sha256": "a90154d4e66d5178f9293f502c77ac36cd722e90a8d57dd0b55a9bfaed6d5108"
+  },
+  "ff_probe": {
+    "path": "results/rtl/s81_slice_1017/capc_nativep1_1019/native_ff/probe_ff.tcl",
+    "sha256": "60315030e01017996b762cb3833edfc77dfaad29127c304db8d6c62f76e7a5b7"
+  },
+  "native_context": {
+    "source_commit": "aa10fa84d9bd95208dabb41d7bdb868168f1c4f2",
+    "db": "4_1_cts.odb",
+    "scope": "placement-estimated-native-STA",
+    "adoption_proof": false
   }
 }
