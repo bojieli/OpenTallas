@@ -46,3 +46,19 @@ def test_forest_leaf_over_reach():
 def test_pass():
     rec = gate({'stream': [('near', 'rst_n')]}, {}, 'warn')
     assert rec['reach_gate'] == 'PASS'
+
+
+def test_relay_row_hop_checked():
+    """HBM-RSTROW: hbfd_rly_*_rr.rso -> next station rs is checked like a forest edge (reach + buried)."""
+    PL['rly'] = dict(x=100, y=420, w=20, h=20, o='R0'); CELL['rly'] = 'rly'; VXY['rly'] = {'rso': (0, 10)}
+    MASTER['rly'] = 'hbfd_rly_48_EW_rr'
+    try:
+        rec = gate({}, {('rly', 'rso'): [('rly', 'rso'), ('near', 'rst_n')]}, 'warn')
+        assert rec['reach_gate'] == 'PASS' and rec['relay_row_sinks'] == 1 and rec['forest_sinks'] == 1
+        rec = gate({}, {('rly', 'rso'): [('rly', 'rso'), ('far', 'rst_n')]}, 'diag')
+        assert rec['kinds'] == {'sink_unreachable': 1}
+        MASTER['rly'] = 'hbfd_rly_48_EW'   # a base relay's o is data, not a reset driver: ignored
+        assert gate({}, {('rly', 'rso'): [('rly', 'rso'), ('far', 'rst_n')]}, 'warn')['forest_sinks'] == 0
+    finally:
+        for d in (PL, CELL, VXY, MASTER):
+            d.pop('rly', None)

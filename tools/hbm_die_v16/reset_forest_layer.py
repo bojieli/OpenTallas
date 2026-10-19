@@ -20,6 +20,7 @@ import sys
 import time
 
 from reset_forest_geometry import Geometry, GeometryError, md
+import reset_rows
 
 T0 = time.time()
 
@@ -37,10 +38,11 @@ def load(p):
     return json.loads(gzip.open(p).read() if str(p).endswith('.gz') else Path(p).read_text())
 
 
-MAX_PAD = 32   # rtl/hbm_accel/die_glue/hbfd_rrl.sv defines hbfd_rrl_pad2 .. hbfd_rrl_pad32
+MAX_PAD = 128  # rtl/hbm_accel/die_glue/hbfd_rrl.sv defines hbfd_rrl_pad2 .. hbfd_rrl_pad128 (405 um hops on a 31.8 mm die: ages ~90)
 
 
-def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False, max_root_tries=40):
+def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False, max_root_tries=40,
+          survey=None, relay_rows=False):
     if reach <= 0 or fanout < 1:
         raise GeometryError('reach and fanout must be positive')
     if any(i['master'].startswith('hbfd_rrl_') for i in c['instances'].values()):
@@ -60,8 +62,19 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
     def zone(xy):
         x, y = xy
         if zones != 'quadrant' and CB0 <= x <= CB1:
-            return 'C'
+            # FOREST2: the centre column spans the full die height (~31.8 mm); one root at its middle gave 16 mm
+            # root->leaf chains (44 release stages on GEN2a).  Split it N/S like the quadrants.
+            return 'C' + ('N' if y >= H / 2 else 'S')
         return ('N' if y >= H / 2 else 'S') + ('W' if x < (W / 2 if zones == 'quadrant' else CB0) else 'E')
+
+    # HBM-RSTROW (coordinator 0jp, Proposal A): relay rows carry their own reset (reset_rows.py).  Only row heads are
+    # forest sinks; their leaves release at domain age + off (off <= 0) so every station releases by D + 1 + depth.
+    rows = reset_rows.plan_rows(c) if relay_rows else None
+    offmap, feeds = {}, {}
+    if rows:
+        for h, o in rows['heads'].items():
+            offmap[(h, 'rs')] = o
+        report['relay_rows'] = rows['stats']
 
     def centre(points):
         return tuple(sum(p[i] for p in points) / len(points) for i in (0, 1))
@@ -94,13 +107,28 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             prev = [n, 'rst_n']
         return prev
 
-    def plan_region(z, Z, site, distributed_source, allowed):
+    def plan_region(z, Z, site, pnodes, allowed):
         root = g.reserve('sync', site, max_distance=reach, allowed=allowed)
-        pre = g.chain(distributed_source, root)
+        # FOREST2: the POR trunk is a tree too: each region's root chains from the nearest node of the domain trunk
+        # (ingress or an earlier region's POR hop), so the crowded ckgen neighbourhood is left once per domain.
+        rin = g.tile_pin(root, 'rst_n_in')
+        last = None
+        for psrc, page in sorted(pnodes, key=lambda n: (n[1] + md(g.tile_pin(n[0], 'rst_n'), rin) / g.budget,
+                                                          md(g.tile_pin(n[0], 'rst_n'), rin)))[:4]:
+            snap = g.snapshot()
+            try:
+                pre = g.chain(g.tile_pin(psrc, 'rst_n'), root)
+                break
+            except GeometryError as e:
+                g.restore(snap)
+                last = e
+        else:
+            raise last
+        new_pnodes = [(t, page + i + 1) for i, t in enumerate(pre)]
         cells = collections.defaultdict(list)
-        for ref, xy in Z:
-            cells[(int(xy[0] // (reach / 2)), int(xy[1] // (reach / 2)))].append((ref, xy))
-        leaves = []
+        for ref, xy in Z:   # one leaf drives sinks of ONE release target (offset class)
+            cells[(int(xy[0] // (reach / 2)), int(xy[1] // (reach / 2)), offmap.get(ref[:2], 0))].append((ref, xy))
+        placed = []
         for _, cell in sorted(cells.items()):
             pending = [cell[k:k + fanout] for k in range(0, len(cell), fanout)]
             while pending:
@@ -109,20 +137,69 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                     leaf = g.reserve('hop', centre([s[1] for s in chunk]),
                                      targets=[('rst_n', s[1]) for s in chunk], allowed=allowed)
                 except GeometryError:
+                    if len(chunk) == 1 and rows and chunk[0][0][:2] in offmap and chunk[0][0][0] in rows['alts']:
+                        # HBM-RSTROW: an unhomable row head (row starts in a narrow channel) -> feed the row at a deeper
+                        # station of its heaviest branch; the stations above it take the reset backwards (rso -> rs)
+                        h, alt = chunk[0][0][0], None
+                        for f in rows['alts'][h]:
+                            try:
+                                fxy = g.pin(f, 'rs')
+                                alt = g.reserve('hop', fxy, targets=[('rst_n', fxy)], allowed=allowed)
+                            except GeometryError:
+                                continue
+                            feeds[h] = f
+                            offmap[(f, 'rs')] = reset_rows.feed_offset(rows, f)
+                            placed.append((alt, [((f, 'rs', 0, 1), fxy)]))
+                            break
+                        if alt is not None:
+                            continue
                     if len(chunk) == 1:
+                        if survey is not None:   # --survey: record the unhomable sink, keep planning (layer refused)
+                            survey.append(dict(pin=f'{chunk[0][0][0]}.{chunk[0][0][1]}', xy=[round(v, 1) for v in chunk[0][1]],
+                                               zone=z, reason='no reachable leaf home within reach'))
+                            continue
                         raise
                     mid = len(chunk) // 2
                     pending[0:0] = [chunk[:mid], chunk[mid:]]
                     continue
-                chain = g.chain(g.tile_pin(root, 'rst_n'), leaf)
-                leaves.append(dict(tile=leaf, chain=chain, sinks=chunk, age=3 + len(pre) + 3 + len(chain) + 1))
-        return dict(zone=z, root=root, pre=pre, leaves=leaves)
+                placed.append((leaf, chunk))
+        # FOREST2: a TREE, not a star of root->leaf chains: leaves nearest the root first, each chained from the nearest
+        # existing node (root or an earlier reach hop), so trunks are shared (GEN2a stream C: 30-70 s per 16 mm star
+        # chain, hundreds of leaves).  Ages differ per leaf and are equalized inside the leaf (pad<N>).
+        rp = g.tile_pin(root, 'rst_n')
+        nodes = [(root, page + len(pre) + 3)]
+        leaves = []
+        for leaf, chunk in sorted(placed, key=lambda t: md(rp, g.tile_pin(t[0], 'rst_n_in'))):
+            end = g.tile_pin(leaf, 'rst_n_in')
+            # shallowest arrival first: node age + estimated hops (md / hop budget); shares trunks without the deep
+            # winding branches nearest-node chaining built (GEN2a serial: 65 release stages)
+            order = sorted(nodes, key=lambda n: (n[1] + md(g.tile_pin(n[0], 'rst_n'), end) / g.budget,
+                                                 md(g.tile_pin(n[0], 'rst_n'), end)))
+            tries = order[:4] + ([nodes[0]] if nodes[0] not in order[:4] else [])
+            last = None
+            for src, src_age in tries:   # nearest nodes first, the root last; reach budget unchanged
+                snap = g.snapshot()
+                try:
+                    chain = g.chain(g.tile_pin(src, 'rst_n'), leaf)
+                    break
+                except GeometryError as e:
+                    g.restore(snap)   # a failed chain may have reserved part of its hops
+                    last = e
+            else:
+                raise last
+            nodes += [(t, src_age + i + 1) for i, t in enumerate(chain)]
+            leaves.append(dict(tile=leaf, src=src, chain=chain, sinks=chunk, age=src_age + len(chain) + 1,
+                               off=offmap.get(chunk[0][0][:2], 0)))
+        return dict(zone=z, root=root, pre=pre, psrc=psrc, leaves=leaves, new_pnodes=new_pnodes)
 
     sinks = collections.defaultdict(list)
+    head_age, dom_age = {}, {}
     seen = set()
     for x in c['clock_resets']:
         if x['kind'] != 'reset' or x['source'][0] != 'hb_ckgen':
             continue
+        if rows and x['port'] == 'rs' and x['instance'] in rows['parent']:
+            continue   # chained relay station: rs <- parent rso (emitted below)
         for bit in range(x['bits']):
             ref = (x['instance'], x['port'], bit, x['bits'])
             if ref[:3] in seen:
@@ -136,6 +213,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         distributed_source = g.tile_pin(ingress, 'rst_n')
         log('domain', dom, por, 'sinks', len(S), 'flood start')
         allowed = g.reach_mask(distributed_source)
+        pnodes = [(ingress, 3)]
         log('flood done, reachable cells', sum(allowed))
         groups = collections.defaultdict(list)
         for ref, xy in S:
@@ -150,20 +228,24 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                 snap = g.snapshot()
                 log('  region', z, 'try', k, 'site', [round(v) for v in site])
                 try:
-                    plan = plan_region(z, Z, site, distributed_source, allowed)
+                    plan = plan_region(z, Z, site, pnodes, allowed)
                     plan['root_try'] = k
                     break
                 except GeometryError as e:
                     g.restore(snap)
                     errs.append(f'{k}@({site[0]:.0f},{site[1]:.0f}): {e}')
+                    log('    rejected:', errs[-1])
             if plan is None:
                 raise GeometryError(f'{dom} {z}: no regional root home routes within reach after {len(errs)} sites; '
                                     f'first {errs[0]}; last {errs[-1]}')
             if plan['root_try']:
                 report['root_alternatives'].append(dict(domain=dom, por=por, zone=z, try_index=plan['root_try'],
                                                         rejected=errs))
+            pnodes += plan['new_pnodes']
             plans.append(plan)
-        age = max(l['age'] for p in plans for l in p['leaves'])
+        age = max(l['age'] - l['off'] for p in plans for l in p['leaves'])
+        log('domain', dom, 'release age', age, 'min leaf age', min(l['age'] for p in plans for l in p['leaves']),
+            'leaves', sum(len(p['leaves']) for p in plans))
         ingress_name = emit(ingress, dom, f'{dom}_por', 'local POR synchronization before registered distribution')
         edge(['hb_ckgen', por], [ingress_name, 'rst_n_in'], dom)
         ages = []
@@ -171,14 +253,13 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         for plan in plans:
             z, root, pre = plan['zone'], plan['root'], plan['pre']
             tag = f'{dom}_{z}'
-            prev = wire_chain([ingress_name, 'rst_n'], pre, dom, tag, 'synchronized POR reach hop')
+            prev = wire_chain([plan['psrc']['name'], 'rst_n'], pre, dom, tag, 'synchronized POR reach hop')
             rt = emit(root, dom, tag, 'regional root: two sync stages and one relay stage')
             edge(prev, [rt, 'rst_n_in'], dom)
             for leaf in plan['leaves']:
                 chain, tile = leaf['chain'], leaf['tile']
-                prev = wire_chain([rt, 'rst_n'], chain, dom, tag, 'regional reach hop')
-                point = g.tile_pin(chain[-1] if chain else root, 'rst_n')
-                pads = age - leaf['age']
+                prev = wire_chain([leaf['src']['name'], 'rst_n'], chain, dom, tag, 'regional reach hop')
+                pads = age + leaf['off'] - leaf['age']
                 if mut_skew and not mutated:
                     pads += 1
                     mutated = True
@@ -192,6 +273,9 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                     if b == 0:
                         ports.append([i, p])
                 ages.append(leaf['age'] + pads)
+                for (i, p, b, nb), _ in leaf['sinks']:
+                    head_age[i] = leaf['age'] + pads
+        dom_age[(dom, por)] = age
         report['domains'][f'{dom}:{por}'] = dict(sinks=len(S), regions=len(plans), age=age,
                                                        actual_leaf_ages=sorted(set(ages)))
     bridges = collections.defaultdict(list)
@@ -216,6 +300,38 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             edge(prev, dst, 'stream')
             drop.append([src, 'bridge_rst_n', dst[0]])
         report['domains'][f'bridge:{src}'] = dict(sinks=len(dsts), age=age, actual_leaf_ages=[age])
+    remaster = []
+    if rows:
+        por_of = {x['instance']: (x['domain'], x['source'][1]) for x in c['clock_resets']
+                  if x['kind'] == 'reset' and x['port'] == 'rs' and x['instance'] in rows['depth']}
+        fin = reset_rows.finalize(rows, feeds)
+        missing = [f for f in fin['feeds'] if f not in head_age]
+        if missing and not survey:
+            raise GeometryError(f'{len(missing)} relay row feeds got no forest leaf, e.g. {missing[:5]}')
+        if not missing:
+            st_age, bad = reset_rows.check_release(rows, fin, head_age, {h: dom_age[por_of[h]] for h in rows['heads']})
+            if bad:
+                raise GeometryError(f'relay row release check: {len(bad)} stations release after D + 1 + depth, e.g. {bad[:5]}')
+            report['relay_rows']['max_station_rs_age'] = max(st_age.values(), default=0)
+        report['relay_rows'].update(fed_below_head=len(feeds), feeds_below_head={h: f for h, f in sorted(feeds.items())},
+                                    remastered=len(fin['remaster']),
+                                    rr_masters=dict(collections.Counter(x['master'] for x in fin['remaster'])))
+        hops = []
+        for r, p in sorted(fin['rparent'].items()):
+            dom = por_of[r][0]
+            w = int(reset_rows.BASE.match(c['instances'][p]['master']).group(1))
+            # rso sits on the o face of the _rr master (kit HBM-RSTROW-RTL); the placed base LEF has no rso yet: the
+            # middle o pin stands for it here, die_case_v16's reset gate checks the actual _rr LEF pins.
+            hops.append(md(g.pin(p, 'o', w // 2, w), g.pin(r, 'rs')))
+            edges.append(dict(src=[p, 'rso'], dst=[r, 'rs'], bits=1, clock=dom,
+                              basis='HBM-RSTROW relay-row reset: parent rso -> station rs (1 release edge a station)'))
+            ports.append([r, 'rs'])
+        report['relay_rows'].update(max_row_hop_um=max(hops, default=0), row_hops_over_reach=sum(h > reach for h in hops))
+        if any(h > reach for h in hops):
+            raise GeometryError(f'{sum(h > reach for h in hops)} relay-row reset hops exceed the reach')
+        remaster = fin['remaster']
+    if survey:
+        raise GeometryError(f'{len(survey)} reset sinks have no reachable leaf home (survey: see report unhomable)')
     if mut_skew:
         report['geometry_gate'] = report['reach_gate'] = 'FAIL_MUTANT_RELEASE_AGE'
     # Independent check of emitted actual pin distances, including all pad links.
@@ -224,14 +340,14 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         if ref[0] in byname:
             return g.tile_pin(byname[ref[0]], ref[1])
         return g.pin(ref[0], f'{ref[1]}[{ref[2]}]' if len(ref) > 2 else ref[1])
-    lengths = [md(endpoint(e['src']), endpoint(e['dst'])) for e in edges]
+    lengths = [md(endpoint(e['src']), endpoint(e['dst'])) for e in edges if e['src'][1] != 'rso']
     if any(d > reach + 1e-6 for d in lengths):
         raise GeometryError('emitted edge exceeds actual placed pin reach')
     report.update(tiles=len(tiles), reset_ports=len(ports), max_actual_pin_hop_um=max(lengths, default=0),
                   tiles_by_master=dict(collections.Counter(t['master'] for t in tiles)))
     spec = dict(region='reset_forest', author='H-NETLIST source-bound reset planner',
                 basis_commit='regional synchronous reset owner standard 10-16',
-                instances=tiles, edges=edges, clocks=clocks, straps=[], gaps=[], drop_edges=drop,
+                instances=tiles, edges=edges, clocks=clocks, straps=[], gaps=[], drop_edges=drop, remaster=remaster,
                 reset_forest_ports=ports, notes=__doc__)
     return spec, report
 
@@ -245,18 +361,22 @@ def main():
     ap.add_argument('--fanout', type=int, default=2048)
     ap.add_argument('--zones', choices=('d4b', 'quadrant'), default='d4b')
     ap.add_argument('--mut-skew', action='store_true', help='emit an explicitly failing release-age bench mutant')
+    ap.add_argument('--survey', action='store_true', help='plan around unhomable sinks and list them all (still no layer)')
+    ap.add_argument('--relay-rows', action='store_true', help='HBM-RSTROW: relay rows carry their reset; heads only')
     ap.add_argument('--diag', action='store_true', help='compatibility: failures still refuse layer emission and exit 3')
     a = ap.parse_args()
     try:
+        survey = [] if a.survey else None
         spec, rep = build(load(a.contract), load(a.manifest), a.views, a.relay_views,
-                          a.reach, a.fanout, a.zones, a.mut_skew)
+                          a.reach, a.fanout, a.zones, a.mut_skew, survey=survey,
+                          relay_rows=a.relay_rows)
     except GeometryError as e:
         a.report.write_text(json.dumps(dict(schema='opentallas.hbm.reset_forest.v2', geometry_gate='FAIL', reach_gate='FAIL',
-                                           physical_signoff='OPEN', problems=[str(e)]), indent=2) + '\n')
+                                           physical_signoff='OPEN', problems=[str(e)], unhomable=survey or []), indent=2) + '\n')
         print(f'reset forest FAIL: {e}')
         raise SystemExit(3)
     rep['input_sha256'] = {str(p.resolve()): hashlib.sha256(p.read_bytes()).hexdigest()
-                           for p in (a.contract, a.manifest, Path(__file__), Path(__file__).with_name('reset_forest_geometry.py'),
+                           for p in (a.contract, a.manifest, Path(__file__), Path(__file__).with_name('reset_forest_geometry.py'), Path(__file__).with_name('reset_rows.py'),
                                      Path(__file__).resolve().parents[2] / SRC,
                                      Path(__file__).resolve().parents[2] / DEPS[0])}
     a.out.write_text(json.dumps(spec) + '\n')

@@ -76,6 +76,41 @@ class ResetSplice(unittest.TestCase):
             self.assertEqual(out['edges'][0]['source'], ['leaf', 'rst_n', 0, 1])
             self.assertEqual(json.loads((d/'report.json').read_text())['problems'], [])
 
+    def test_relay_row_remaster_and_chain(self):
+        """HBM-RSTROW: the head (it has a successor) is remastered to _rr and keeps its POR binding (a forest leaf feeds it
+        in the real layer); the successor's rs is driven by the head's rso; the tail keeps its base master."""
+        rtl = S.F.Rtl()
+        m = 'hbfd_rly_48_WE'
+        P = rtl.ports(m, 'rtl/hbm_accel/die_glue/hbfd_rly_masters.sv', {})
+        inst = {n: dict(master=m, source='rtl/hbm_accel/die_glue/hbfd_rly_masters.sv', params={}, ports=P) for n in ('h', 't')}
+        c = dict(instances=inst, masters={m: 2}, edges=[dict(name='d', bits=48, source=['h', 'o', 0, 48], sink=['t', 'i', 0, 48])],
+                 clock_resets=[dict(instance=n, port='rs', bits=1, domain='stream', kind='reset',
+                                    source=['hb_ckgen', 'por_stream']) for n in ('h', 't')], straps=[], gaps=[], summary={})
+        l = dict(region='reset_forest', instances=[], clocks=[], reset_forest_ports=[['t', 'rs']],
+                 edges=[dict(src=['h', 'rso'], dst=['t', 'rs'], clock='stream')],
+                 remaster=[dict(inst='h', old=m, master=m + '_rr', source='rtl/hbm_accel/die_glue/hbfd_rly_rr_masters.sv',
+                                rtl_deps=['rtl/hbm_accel/die_glue/ot_hbm_rly_rr.sv'])])
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            for name, obj in [('c.json', c), ('l.json', l)]:
+                (d / name).write_text(json.dumps(obj))
+            r = subprocess.run([sys.executable, str(Path(S.__file__)), str(d/'c.json'), str(d/'l.json'),
+                                str(d/'out.json'), '--report', str(d/'report.json')], capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            out = json.loads((d/'out.json').read_text())
+            self.assertEqual(out['instances']['h']['master'], m + '_rr')
+            self.assertEqual(out['instances']['h']['ports']['rso'], dict(direction='output', bits=1))
+            self.assertEqual(out['instances']['t']['master'], m)
+            self.assertEqual(out['masters'], {m: 1, m + '_rr': 1})
+            self.assertEqual([x['instance'] for x in out['clock_resets']], ['h'])
+            self.assertIn(dict(name='h__rso__t__rs', bits=1, source=['h', 'rso', 0, 1], sink=['t', 'rs', 0, 1], clock='stream',
+                               ready_or_credit=False, allowed_exception=None, basis='', region='reset_forest'), out['edges'])
+        # a stale remaster (wrong old master) is refused
+        c2, problems = json.loads(json.dumps(c)), []
+        l2 = json.loads(json.dumps(l)); l2['remaster'][0]['old'] = 'hbfd_rly_136_WE'
+        S.apply_remaster(c2, l2, rtl, problems)
+        self.assertIn('remaster stale', problems[0])
+
 
 if __name__ == '__main__':
     unittest.main()

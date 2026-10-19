@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Exercise actual reset tile source over varied phase assertion/release; mutant adds one release cycle.
-FOREST2 10-19: also hbfd_rrl_pad2..pad32 (release age N); --mutant-pad drops one stage of hbfd_rrl_stages."""
+FOREST2 10-19: also hbfd_rrl_pad2..pad128 (release age N); --mutant-pad drops one stage of hbfd_rrl_stages."""
 import argparse, pathlib, subprocess, tempfile
 p=argparse.ArgumentParser();p.add_argument('--mutant', action='store_true');p.add_argument('--mutant-pad', action='store_true');a=p.parse_args()
 root=pathlib.Path(__file__).resolve().parents[2]
-PADS=list(range(2,33))
+PADS=list(range(2,129))
 with tempfile.TemporaryDirectory(prefix='hbfd_rrl_') as td:
  d=pathlib.Path(td)
  src=(root/'rtl/hbm_accel/die_glue/hbfd_rrl.sv').read_text()
@@ -30,7 +30,7 @@ initial begin
   if("""+asrt+""") $fatal(1,"ASSERT async pad"); checks=checks+"""+str(len(PADS))+""";
   repeat(2) @(negedge clk);
   #(0.17+j*0.09); rn=1;
-  for(k=1;k<=34;k=k+1) begin
+  for(k=1;k<=130;k=k+1) begin
    @(posedge clk); #0.01;
    if(s!==(k>=3) || h!==(k>=1)) $fatal(1,"RELEASE age cycle=%0d sync=%b hop=%b",k,s,h);
    if("""+rel+""") $fatal(1,"RELEASE age pad cycle=%0d",k);
@@ -39,7 +39,7 @@ initial begin
   if(j%5==2) begin #3.3; rn=0; #0.02; if(s!==0 || h!==0 || """+asrt+""") $fatal(1,"ASSERT async mid-cycle"); checks=checks+1; end
   @(negedge clk);
  end
- $display("RESET_TILE PASS checks=%0d trials=24 sync_age=3 hop_age=1 pad_ages=2..32",checks); $finish;
+ $display("RESET_TILE PASS checks=%0d trials=24 sync_age=3 hop_age=1 pad_ages=2..128",checks); $finish;
 end
 endmodule
 """)
