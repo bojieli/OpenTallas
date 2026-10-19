@@ -60,15 +60,21 @@ module tb_hbm_svg_rel_sm;
  // Minimum production component: this SM owns PCs0..3. Four complete real
  // leaves retain all bank/refresh state; the remaining DRAM fixture lanes have
  // no requesting SM and are outside the measurement. Released masters stay32PC.
- wire[3:0]safe_pf,safe_of;
- assign native_fault=|safe_pf || |safe_of || (row_v[0]&&row_v[1]) || (row_v[2]&&row_v[3]);
+ wire[3:0]safe_pf,safe_of,safe_bridge_fault;
+ wire[3:0]native_rv,native_rrdy;wire[67:0]native_rt;wire[15:0]native_rb;wire[1023:0]native_rd;
+ assign native_fault=|safe_pf || |safe_of || |safe_bridge_fault || (row_v[0]&&row_v[1]) || (row_v[2]&&row_v[3]);
  for(genvar p=0;p<4;p=p+1)begin:g_safe_pc
   ot_hbm_svc_pc_ctrl_leaf_safe #(.P(p)) u(
    .clk(hbm),.rst_n(hrst),.k_v(kv[p]),.k_rdy(krdy[p]),.k_we(kwe[p]),.k_addr(ka[p*30+:30]),.k_len(kl[p*4+:4]),.k_tag(kt[p*17+:17]),
-   .k_wdata(kw[p*256+:256]),.k_wstrb(ks[p*32+:32]),.kr_v(rv_[p]),.kr_rdy(rrdy[p]),.kr_tag(rt[p*17+:17]),.kr_beat(rb[p*4+:4]),.kr_data(rd[p*256+:256]),
+   .k_wdata(kw[p*256+:256]),.k_wstrb(ks[p*32+:32]),.kr_v(native_rv[p]),.kr_rdy(native_rrdy[p]),.kr_tag(native_rt[p*17+:17]),.kr_beat(native_rb[p*4+:4]),.kr_data(native_rd[p*256+:256]),
    .k_wr_done(kdone[p]),.row_v(row_v[p]),.row_op(row_op[p*3+:3]),.row_bank(row_bank[p*5+:5]),.row_row(row_row[p*19+:19]),
    .col_v(col_v[p]),.col_we(col_we[p]),.col_bank(col_bank[p*5+:5]),.col_col(col_col[p*5+:5]),.col_data(col_data[p*256+:256]),.col_strb(col_strb[p*32+:32]),
    .dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(safe_pf[p]),.owner_fault(safe_of[p]));
+  // Compatibility with this legacy SM producer's same-edge return arbiter.
+  // Released native H9b/SAFE controllers retain their previous-ready ABI.
+  ot_hbm_svc_kr_ready_bridge u_kr_bridge(.clk(hbm),.rst_n(hrst),
+   .in_v(native_rv[p]),.in_rdy(native_rrdy[p]),.in_data({native_rt[p*17+:17],native_rb[p*4+:4],native_rd[p*256+:256]}),
+   .out_v(rv_[p]),.out_rdy(rrdy[p]),.out_data({rt[p*17+:17],rb[p*4+:4],rd[p*256+:256]}),.fault(safe_bridge_fault[p]),.occupancy());
  end
  assign row_v[31:4]=0;assign col_v[31:4]=0;assign col_we[31:4]=0;
  assign krdy[31:4]=0;assign rv_[31:4]=0;
