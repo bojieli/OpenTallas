@@ -1,0 +1,5 @@
+PASS P-LANE P=8 bdc_results=768 tcc_results=768 chunks=12 K=16 nonzero_bdc=768 xor_bdc=8337f4b8 xor_tcc=078fe9eb (bit-exact vs production single-lane columns)
+- rtl/test/hbm_accel/sm_mtp_lanes/tb_hbm_sm_bdc_p.sv:102: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.554 s; speed 2.570 us/s
+- Verilator: cpu 0.554 s on 1 threads; allocated 34 MB
