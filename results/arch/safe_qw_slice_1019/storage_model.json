@@ -25,7 +25,7 @@
     },
     {
       "name": "hi_fifo",
-      "count": 9,
+      "count": 8,
       "useful_bits": 4096,
       "read_per_cycle": 1,
       "write_per_cycle": 1,
@@ -33,7 +33,7 @@
     },
     {
       "name": "l9_fifo",
-      "count": 9,
+      "count": 8,
       "useful_bits": 4096,
       "read_per_cycle": 1,
       "write_per_cycle": 1,
@@ -41,15 +41,15 @@
     },
     {
       "name": "scale_wait3",
-      "count": 9,
+      "count": 8,
       "useful_bits": 1536,
       "read_per_cycle": 1,
       "write_per_cycle": 1,
       "interface_bits": 512
     }
   ],
-  "total_macros": 45,
-  "total_macro_area_um2": 24858.3168,
+  "total_macros": 42,
+  "total_macro_area_um2": 23201.09568,
   "useful_storage_bits": 24120,
   "removed_storage_flops": 24120,
   "added_cycles": {
@@ -76,15 +76,17 @@
   },
   "estimated_net_std_flop_change": -19076,
   "std_flop_change_scope": "Logical allocation plus recursive Yosys proc/opt scalar delta; excludes native mapping/placement buffering. Scalar baseline includes SAFE_STORAGE argmax pipeline, so63 logical pipeline bits are charged separately. Real mapped area and full native clock timing still pending.",
-  "twelve_slice_macro_instances": 540,
-  "twelve_slice_macro_area_mm2": 0.2982998016,
+  "twelve_slice_macro_instances": 504,
+  "twelve_slice_macro_area_mm2": 0.27841314816,
   "logical_ports": 5,
-  "physical_banks_per_logical_port": 9,
-  "logical_port_bits": 546,
-  "physical_port_bits": 576,
-  "padded_masked_bits": 30,
+  "physical_banks_per_logical_port": "ceil(actual_client_width/64):two514-bitclients9each;three512-bitclients8each",
+  "logical_port_bits": "514or512actualpayload;portablegenericalso546",
+  "physical_port_bits": "576for514,512for512",
+  "padded_masked_bits": "62for514,0for512",
   "cfg_setup_added_edges": 2,
   "cfg_acceptance": "Input config C commits C+2, next data C+3; static early-data fault, no ready/credit. Back-to-back config II1 preserved.",
   "scalar_generic_flop_delta_vs_safe_storage": 3285,
-  "scalar_argmax_pipeline_added_logical_bits": 63
+  "scalar_argmax_pipeline_added_logical_bits": 63,
+  "required_reset_boot_guard_cycles": 16,
+  "production_reset_to_epoch_ledger": "PENDING join with production controller; benchguard16 is explicit reset-only startup contract, not proven absorbed by admission."
 }

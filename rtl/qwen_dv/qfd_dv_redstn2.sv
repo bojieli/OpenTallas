@@ -261,11 +261,11 @@ module qfd_dv_sram_lookahead #(parameter integer W = 512, parameter integer MUT 
     input wire [W-1:0] wd, output wire [W-1:0] q
 );
     wire same = write && wa == ra;
-    wire [545:0] mq;
+    wire [W-1:0] mq;
     reg [W-1:0] bypass_data;
     always @(posedge ck) bypass_data <= wd;
-    qfd_dv_sram_32x546_bank9 u_m (.clk(ck), .r_ce_in(!same), .r_addr_in(ra), .rd_out(mq),
-        .w_ce_in(write), .w_addr_in(wa), .wd_in({{(546-W){1'b0}}, wd}), .w_mask_in({546{1'b1}}));
+    qfd_dv_sram_bank64 #(.W(W)) u_m (.clk(ck), .r_ce_in(!same), .r_addr_in(ra), .rd_out(mq),
+        .w_ce_in(write), .w_addr_in(wa), .wd_in(wd), .w_mask_in({W{1'b1}}));
     genvar g;
     generate for (g = 0; g < (W+31)/32; g = g + 1) begin : g_out
         localparam integer B = ((W-32*g) < 32) ? W-32*g : 32;
@@ -299,9 +299,9 @@ module qfd_dv_sram_delay #(parameter integer W = 514, parameter integer D = 14, 
         if (!rst_n) begin wp <= 0; valid <= 0; end
         else begin wp <= wp + 1'b1; valid <= {valid[D-3:0], 1'b1}; end
     wire [4:0] ra = wp - (D-1) + ((MUT != 0) ? 5'd1 : 5'd0);
-    wire [545:0] mq;
-    qfd_dv_sram_32x546_bank9 u_m (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(mq),
-        .w_ce_in(1'b1), .w_addr_in(wp), .wd_in({{(546-W){1'b0}}, d}), .w_mask_in({546{1'b1}}));
+    wire [W-1:0] mq;
+    qfd_dv_sram_bank64 #(.W(W)) u_m (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(mq),
+        .w_ce_in(1'b1), .w_addr_in(wp), .wd_in(d), .w_mask_in({W{1'b1}}));
     genvar g;
     generate for (g = 0; g < (W+31)/32; g = g + 1) begin : g_out
         localparam integer B = ((W-32*g) < 32) ? W-32*g : 32;
@@ -320,19 +320,30 @@ module qfd_dv_kept_valid #(parameter integer ID = 0) (input wire ck, rst_n, d, o
     always @(posedge ck or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
 endmodule
 
-// Nine true compiler-native 32x64 banks preserve one logical546-bit1R1W port.
-// The final30 physical bits are padded and never written. Every physical bank
-// has the same1-edge read/collision semantics; consumers explicitly avoid a
-// same-address read/write. Delay clients write throughout reset with valid0.
+// Width-aware compiler-native banks. Only observable payload bits are stored;
+// every final unused physical bit has mask0.512uses8banks,514/546use9.
+module qfd_dv_sram_bank64 #(parameter integer W=546)(
+ input wire clk,r_ce_in,w_ce_in,input wire[4:0] r_addr_in,w_addr_in,
+ output wire[W-1:0] rd_out,input wire[W-1:0] wd_in,w_mask_in
+);
+ localparam integer N=(W+63)/64,P=64*N-W;
+ wire[64*N-1:0] data={{P{1'b0}},wd_in},mask={{P{1'b0}},w_mask_in};
+ wire[64*N-1:0] result;
+ generate for(genvar b=0;b<N;b=b+1) begin:g_bank
+  ot_sram_1r1w_32x64_m1 u_m(.clk(clk),.r_ce_in(r_ce_in),.r_addr_in(r_addr_in),.rd_out(result[64*b+:64]),
+   .w_ce_in(w_ce_in),.w_addr_in(w_addr_in),.wd_in(data[64*b+:64]),.w_mask_in(mask[64*b+:64]));
+ end endgenerate
+ assign rd_out=result[W-1:0];
+`ifndef SYNTHESIS
+ initial if(W<1||W>546) $fatal(1,"SRAM_BANK64_WIDTH");
+`endif
+endmodule
+
+// Portable546-bit contract for other clients; Qwen instances use exactWabove.
 module qfd_dv_sram_32x546_bank9(
  input wire clk,r_ce_in,w_ce_in,input wire[4:0] r_addr_in,w_addr_in,
  output wire[545:0] rd_out,input wire[545:0] wd_in,w_mask_in
 );
- wire[575:0] data={30'd0,wd_in},mask={30'd0,w_mask_in};
- wire[575:0] result;
- generate for(genvar b=0;b<9;b=b+1) begin:g_bank
-  ot_sram_1r1w_32x64_m1 u_m(.clk(clk),.r_ce_in(r_ce_in),.r_addr_in(r_addr_in),.rd_out(result[64*b+:64]),
-   .w_ce_in(w_ce_in),.w_addr_in(w_addr_in),.wd_in(data[64*b+:64]),.w_mask_in(mask[64*b+:64]));
- end endgenerate
- assign rd_out=result[545:0];
+ qfd_dv_sram_bank64 #(.W(546)) u_port(.clk(clk),.r_ce_in(r_ce_in),.w_ce_in(w_ce_in),
+  .r_addr_in(r_addr_in),.w_addr_in(w_addr_in),.rd_out(rd_out),.wd_in(wd_in),.w_mask_in(w_mask_in));
 endmodule
