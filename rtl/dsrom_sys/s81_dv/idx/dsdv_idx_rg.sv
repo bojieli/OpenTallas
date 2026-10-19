@@ -21,14 +21,19 @@
 // JOB (one frame on the query chain qi; frame header as the SVC FRAME PROTOCOL v1: [511:508] type, [502:495] tag,
 // [491:480] len, [458:449] user, spec [448:0]):
 //   type 4 IDX_S  full scan of positions [B, B + N)                    len 64
-//   type 8 IDX_G  gather (re-index) of NC candidate positions          len 64 + ceil(NC / 16)
-//   spec [19:0] B (scan; 0 for a gather), [40:20] N (scan count, or NC), [50:41] k (<= 512), [80:51] KB,
+//   type 8 IDX_G  gather (re-index) of NB candidate BLOCKS              len 64 + ceil(NB / 16)
+//   spec [19:0] B (scan; 0 for a gather), [40:20] N (scan count, or NB), [50:41] k (<= 512), [80:51] KB,
 //        [96:81] T0, [100:97] P (>= 2), [103:101] ik (= the selector's ingress-kind strap)
 //   payload 0..63: query, word 2h = head h's 128 FP4 codes, word 2h + 1 = {[47:32] BF16 head weight, [31:0] scales}
-//   payload 64..: (IDX_G) candidate list, 16 entries a word ([32 e +: 20] = position), ascending positions, entry
-//                 e of list word w = candidate ordinal c = 16 w + e.  A gather is scored in ORDINAL space: the
-//                 selector sees ordinal c as its index (the list is ascending, so "ties to the lower index" is the same
-//                 rule on ordinals as on positions); the ordinal -> position map stays with the list's owner.
+//   payload 64..: (IDX_G) candidate block list, 16 entries a word ([32 e +: 17] = block b = positions 8 b .. 8 b + 7,
+//                 the re-index candidate unit: dsrom_reindex_candidates 2,048 blocks = 16,384 keys), strictly
+//                 ascending blocks; entry e of list word v = block ordinal o = 16 v + e, candidate ordinal c = 8 o + t
+//                 for position 8 b + t.  A gather is scored in ORDINAL space: the selector sees c as its index (the
+//                 list is ascending, so "ties to the lower index" is the same rule on ordinals as on positions); the
+//                 ordinal -> position map stays with the list's owner.  A block lies in ONE 16-position word (lanes
+//                 0..7 or 8..15), so every region owns at most ONE key of a block (t = (r ^ h(j))[2:0] when
+//                 (r ^ h(j))[3] == b[0], j = b >> 1): the list needs no per-region filtering storage.  The list is
+//                 kept in a list memory (LFD words; SRAM_MACRO: 2 x ot_sram_1r1w_256x256, 4,096 blocks a job).
 // Frames of other types are skipped (len words).  Every frame is forwarded unchanged on qo (2 edges a hop).
 //
 // STATIC SCHEDULE (owner rule: no credit / ready / arbitration on the on-die production path).  Frame END (the last
@@ -64,7 +69,7 @@ module dsdv_idx_rg #(
     parameter integer LG = 8,           // landing slots a PC (16 key cells each)
     parameter integer IQD = 128,        // key items in flight (item queue)
     parameter integer SQD = 32,         // scores between the engine and the word assembler
-    parameter integer LFD = 8           // candidate-list words buffered (gather)
+    parameter integer LFD = 256         // candidate-list words held (gather; 256 with SRAM_MACRO = 2 macros)
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -81,6 +86,7 @@ module dsdv_idx_rg #(
 );
     localparam integer SLW = 3;            // slot field of the read tag (LG = 8)
     initial if (LG != 8) $fatal(1, "dsdv_idx_rg: LG must be 8 (3-bit tag slot field)");
+    initial if (SRAM_MACRO && LFD != 256) $fatal(1, "dsdv_idx_rg: SRAM_MACRO list memory is 256 words");
     localparam integer IQW = $clog2(IQD), SQW = $clog2(SQD), LFW = $clog2(LFD);
 
     // ------------------------------------------------------------------ reset
@@ -112,7 +118,7 @@ module dsdv_idx_rg #(
     endfunction
 
     // ------------------------------------------------------------------ forward declarations
-    reg         wdone_p, wdone, gw_ld;
+    reg         wdone_p, wdone;
     reg  [7:0]  fc_set;
     // ------------------------------------------------------------------ job registers
     reg        act, infr, isj;               // job active / in a frame / the frame is an index job
@@ -128,6 +134,7 @@ module dsdv_idx_rg #(
     reg [2:0]  ik;
     reg [7:0]  tg;
     reg [15:0] j0, j1, nw;                   // first / last absolute word, word count
+    reg [15:0] nlw;                          // gather: list words
     reg [7:0]  fc;                           // sticky fault causes
     wire       fault = |fc;
     wire       q_v = qr[0];
@@ -148,12 +155,13 @@ module dsdv_idx_rg #(
     reg [15:0]  ql_w;
     reg [2:0]   qset;
     reg         q_done;
-    // candidate list FIFO (gather)
-    reg [511:0] lf [0:LFD-1];
-    reg [LFW:0] lf_n;
-    reg [LFW-1:0] lf_w, lf_r;
+    // candidate block list (gather): written as it arrives, read by the walker's prefetcher
     wire        lf_push = pay_job && pw >= 12'd64;
-    wire        lf_pop;
+    reg  [LFW:0] lf_wn;                      // list words written
+    reg  [LFW:0] lf_rn;                      // list words read (requested)
+    reg          lfr_e;
+    reg  [LFW-1:0] lfr_a;
+    wire [511:0] lf_q;
     // window clock
     reg         ended;
     reg [19:0]  tc;
@@ -161,7 +169,7 @@ module dsdv_idx_rg #(
     always @(posedge ck or negedge rn)
         if (!rn) begin
             act <= 1'b0; infr <= 1'b0; isj <= 1'b0; left <= 0; pw <= 0; ftyp <= 0; gat <= 0; jb <= 0; jn <= 0; jk <= 0;
-            kb <= 0; t0 <= 0; pp <= 0; ik <= 0; tg <= 0; j0 <= 0; j1 <= 0; nw <= 0; ql_v <= 1'b0; ql_h <= 0;
+            kb <= 0; t0 <= 0; pp <= 0; ik <= 0; tg <= 0; j0 <= 0; j1 <= 0; nw <= 0; nlw <= 0; ql_v <= 1'b0; ql_h <= 0;
             qset <= 0; q_done <= 1'b0; ended <= 1'b0; tc <= 0;
         end else begin
             ql_v <= 1'b0;
@@ -171,8 +179,10 @@ module dsdv_idx_rg #(
                 if (hdr_job && !act) begin
                     act <= 1'b1; gat <= q_d[511]; jb <= q_d[19:0]; jn <= h_n; jk <= q_d[50:41]; kb <= q_d[80:51];
                     t0 <= q_d[96:81]; pp <= q_d[100:97]; ik <= q_d[103:101]; tg <= q_d[502:495];
-                    if (q_d[511]) begin j0 <= 16'd0; j1 <= 16'((h_n - 21'd1) >> 4); nw <= 16'((h_n + 21'd15) >> 4); end
-                    else begin j0 <= q_d[19:4]; j1 <= h_end[19:4]; nw <= 16'(h_end[19:4] - q_d[19:4] + 16'd1); end
+                    // gather: NB blocks = 8 NB ordinals = ceil(NB / 2) selector words, ceil(NB / 16) list words
+                    if (q_d[511]) begin j0 <= 16'd0; j1 <= 16'(((h_n + 21'd1) >> 1) - 21'd1); nw <= 16'((h_n + 21'd1) >> 1);
+                                        nlw <= 16'((h_n + 21'd15) >> 4); end
+                    else begin j0 <= q_d[19:4]; j1 <= h_end[19:4]; nw <= 16'(h_end[19:4] - q_d[19:4] + 16'd1); nlw <= 16'd0; end
                     q_done <= 1'b0; ended <= 1'b0; tc <= 0;
                 end
             end else if (is_p) begin
@@ -284,6 +294,25 @@ module dsdv_idx_rg #(
         end
     end endgenerate
 
+    // ------------------------------------------------------------------ list memory (gather): 1 write + 1 read a cycle
+    generate if (SRAM_MACRO) begin : g_lm
+        genvar hh;
+        for (hh = 0; hh < 2; hh = hh + 1) begin : g_h
+            ot_sram_1r1w_256x256_m2_r2c2 u_mem (
+                .clk(ck), .r_ce_in(lfr_e), .r_addr_in(8'(lfr_a)), .rd_out(lf_q[256 * hh +: 256]),
+                .w_ce_in(lf_push), .w_addr_in(8'(lf_wn)), .wd_in(q_d[256 * hh +: 256]), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
+        end
+    end else begin : g_lb
+        reg [511:0] mem [0:LFD-1];
+        reg [511:0] q;
+        always @(posedge ck) begin
+            if (lf_push) mem[lf_wn[LFW-1:0]] <= q_d;
+            if (lfr_e) q <= mem[lfr_a];
+        end
+        assign lf_q = q;
+    end endgenerate
+
     // ------------------------------------------------------------------ walker (items + requests)
     // item {pc, slot, cell, w (word - j0), lane, lw}
     localparam integer IW = 1 + SLW + 4 + 16 + 4 + 1;
@@ -303,8 +332,11 @@ module dsdv_idx_rg #(
     reg [SLW-1:0] wsl;
     reg [29:0]  wa;                          // block sector base
     reg [15:0]  gw;                          // gather: list word index
-    reg [15:0]  gm;                          // gather: remaining matches in the head word
-    reg [3:0]   ge;                          // gather: current entry
+    reg [15:0]  gm;                          // gather: remaining owned entries of the head word
+    reg [511:0] lh;                          // gather: head list word
+    reg         ln_v;                        // gather: prefetched next list word
+    reg [511:0] ln_d;
+    reg         lfd1, lfd2;                  // list read in flight (memory read, then data)
     reg         gq;                          // gather: second request (scale) pending
     reg [3:0]   gcell;
     reg [3:0]   gkc;
@@ -324,14 +356,15 @@ module dsdv_idx_rg #(
             s_vm[c] = (jj >= j0) && (jj <= j1) && (pos >= 21'(jb)) && (pos < 21'(jb) + jn);
         end
     end
-    // gather helpers: matches of the head list word
-    wire [511:0] lh = lf[lf_r];
-    reg  [15:0]  g_mm;
+    // gather helpers: entries of the prefetched list word this region owns a key of (block b: word j = b >> 1,
+    // the region's lane x = me ^ h(j) lies in the block when x[3] == b[0]; t = x[2:0])
+    reg  [15:0]  n_om;
     always @* begin
-        for (c = 0; c < 16; c = c + 1) begin : g_mt
-            reg [19:0] ps;
-            ps = lh[32 * c +: 20];
-            g_mm[c] = (21'({gw, 4'(c)}) < jn) && ((ps[3:0] ^ hj(ps[19:4])) == me);
+        for (c = 0; c < 16; c = c + 1) begin : g_om
+            reg [16:0] bb; reg [3:0] x;
+            bb = ln_d[32 * c +: 17];
+            x = me ^ hj(16'(bb >> 1));
+            n_om[c] = (21'({gw, 4'(c)}) < jn) && (x[3] == bb[0]);
         end
     end
     reg [3:0] g_lo;
@@ -339,9 +372,12 @@ module dsdv_idx_rg #(
         g_lo = 4'd0;
         for (c = 15; c >= 0; c = c - 1) if (gm[c]) g_lo = 4'(c);
     end
-    wire [19:0] g_p = lh[32 * g_lo +: 20];
-    wire [15:0] g_j = 16'(g_p[19:4]);
-    assign lf_pop = (ws == 3'd3) && lf_n != 0 && gm == 16'd0 && !gq && gw_ld;
+    wire [16:0] g_b = lh[32 * g_lo +: 17];
+    wire [15:0] g_j = 16'(g_b >> 1);                 // the position's word
+    wire [3:0]  g_x = me ^ hj(g_j);
+    wire [3:0]  g_ln = {g_lo[0], g_x[2:0]};          // selector lane: ordinal 8 o + t, o = 16 gw + g_lo
+    wire [15:0] g_w = {gw[12:0], g_lo[3:1]};         // selector word: ordinal >> 4
+    wire        g_lw = g_lo[0] || !gm[g_lo | 4'd1];  // this region's last key of the selector word
     // slot free condition
     wire [1:0] sfree;
     assign sfree[0] = !sb[0][sa[0]];
@@ -360,8 +396,9 @@ module dsdv_idx_rg #(
     integer q, e;
     always @(posedge ck or negedge rn)
         if (!rn) begin
-            ws <= 3'd0; wg <= 0; wvm <= 0; wc <= 0; wk <= 0; wpc <= 0; wsl <= 0; wa <= 0; gw <= 0; gm <= 0; ge <= 0; gblk <= 0; fc <= 8'd0;
-            gq <= 1'b0; gcell <= 0; gkc <= 0; gpc <= 0; gsl <= 0; gw_ld <= 1'b0;
+            ws <= 3'd0; wg <= 0; wvm <= 0; wc <= 0; wk <= 0; wpc <= 0; wsl <= 0; wa <= 0; gw <= 0; gm <= 0; gblk <= 0; fc <= 8'd0;
+            gq <= 1'b0; gcell <= 0; gkc <= 0; gpc <= 0; gsl <= 0; ln_v <= 1'b0; lfd1 <= 1'b0; lfd2 <= 1'b0; lfr_e <= 1'b0;
+            lf_rn <= 0;
             i_v <= 2'b00; ipush <= 1'b0;
             for (q = 0; q < 2; q = q + 1) begin
                 sa[q] <= 0; so_[q] <= 0; sopen[q] <= 1'b0;
@@ -369,7 +406,7 @@ module dsdv_idx_rg #(
                                                      sne[q][e] <= 0; snr[q][e] <= 0; end
                 for (e = 0; e < LG * 16; e = e + 1) begin cdv[q][e] <= 2'b00; scv[q][e] <= 1'b0; end
             end
-            lw_v <= 2'b00; iq_n <= 0; iq_w <= 0; lf_n <= 0; lf_w <= 0; lf_r <= 0;
+            lw_v <= 2'b00; iq_n <= 0; iq_w <= 0; lf_wn <= 0;
         end else begin : g_walk
             reg [7:0] fw;
             fw = 8'd0;
@@ -378,7 +415,7 @@ module dsdv_idx_rg #(
             for (q = 0; q < 2; q = q + 1) if (iss[q]) i_v[q] <= 1'b0;
             // ---------------- walker
             if (hdr_job && !act) begin
-                if (q_d[511]) begin ws <= 3'd3; gw <= 0; gw_ld <= 1'b0; end
+                if (q_d[511]) begin ws <= 3'd3; gw <= 0; gm <= 0; end
                 else begin ws <= 3'd1; wg <= {4'd0, q_d[19:8]}; end
             end else case (ws)
                 3'd1: begin                                      // scan: next group
@@ -417,38 +454,37 @@ module dsdv_idx_rg #(
                         wg <= wg + 16'd1; ws <= 3'd1;
                     end
                 end
-                3'd3: begin                                      // gather: head list word
-                    if (gw >= nw) begin
+                3'd3: begin                                      // gather: take the next list word
+                    if (gw >= nlw) begin
                         for (q = 0; q < 2; q = q + 1) if (sopen[q]) begin scl_d[q][so_[q]] <= 1'b1; sopen[q] <= 1'b0; end
                         ws <= 3'd5;
-                    end else if (lf_n != 0 && !gw_ld) begin gm <= g_mm; gw_ld <= 1'b1; end
-                    else if (gw_ld && gm == 16'd0) begin gw_ld <= 1'b0; gw <= gw + 16'd1; end
-                    else if (gw_ld) begin                         // one match: cell, 2 requests, item
-                        if ((!sopen[g_j[4]] || sni[g_j[4]][so_[g_j[4]]] == 5'd16) ? sfree[g_j[4]] : 1'b1) begin
-                            if (iq_n < (IQW+1)'(IQD - 1) && !(i_v[g_j[4]] && !iss[g_j[4]])) begin
-                                reg [SLW-1:0] s_; reg [3:0] cl;
-                                if (!sopen[g_j[4]] || sni[g_j[4]][so_[g_j[4]]] == 5'd16) begin
-                                    if (sopen[g_j[4]]) scl_d[g_j[4]][so_[g_j[4]]] <= 1'b1;
-                                    s_ = sa[g_j[4]]; cl = 4'd0;
-                                    sb[g_j[4]][s_] <= 1'b1; scl_d[g_j[4]][s_] <= 1'b0; sni[g_j[4]][s_] <= 5'd1;
-                                    snc[g_j[4]][s_] <= 0; sne[g_j[4]][s_] <= 6'd3; snr[g_j[4]][s_] <= 0;
-                                    so_[g_j[4]] <= s_; sopen[g_j[4]] <= 1'b1; sa[g_j[4]] <= sa[g_j[4]] + 1'b1;
-                                end else begin
-                                    s_ = so_[g_j[4]]; cl = 4'(sni[g_j[4]][s_]);
-                                    sni[g_j[4]][s_] <= sni[g_j[4]][s_] + 5'd1; sne[g_j[4]][s_] <= sne[g_j[4]][s_] + 6'd3;
-                                end
-                                cdv[g_j[4]][{s_, cl}] <= 2'b00; scv[g_j[4]][{s_, cl}] <= 1'b0;
-                                i_v[g_j[4]] <= 1'b1;
-                                i_a[g_j[4]] <= kb + 30'(g_j[15:5]) * 30'd34 + 30'(2 * g_j[3:0]);
-                                i_l[g_j[4]] <= 4'd2;
-                                i_t[g_j[4]] <= {2'b11, 1'b1, 3'(s_), cl, 1'b0, 3'd0, 3'd0};
-                                gpc <= g_j[4]; gsl <= s_; gcell <= cl; gkc <= g_j[3:0]; gblk <= g_j[15:1+4]; gq <= 1'b1;
-                                ipush <= 1'b1;
-                                ipd <= {g_j[4], s_, cl, gw - j0, g_lo, (gm & ~(16'd1 << g_lo)) == 16'd0};
-                                gm <= gm & ~(16'd1 << g_lo);
-                                ws <= 3'd4;
-                            end
+                    end else if (ln_v) begin lh <= ln_d; gm <= n_om; ws <= 3'd6; end
+                end
+                3'd6: begin                                      // gather: one owned key = cell, code request, item
+                    if (gm == 16'd0) begin gw <= gw + 16'd1; ws <= 3'd3; end
+                    else if (((!sopen[g_j[4]] || sni[g_j[4]][so_[g_j[4]]] == 5'd16) ? sfree[g_j[4]] : 1'b1) &&
+                             iq_n < (IQW+1)'(IQD - 1) && !(i_v[g_j[4]] && !iss[g_j[4]])) begin : g_take
+                        reg [SLW-1:0] s_; reg [3:0] cl;
+                        if (!sopen[g_j[4]] || sni[g_j[4]][so_[g_j[4]]] == 5'd16) begin
+                            if (sopen[g_j[4]]) scl_d[g_j[4]][so_[g_j[4]]] <= 1'b1;
+                            s_ = sa[g_j[4]]; cl = 4'd0;
+                            sb[g_j[4]][s_] <= 1'b1; scl_d[g_j[4]][s_] <= 1'b0; sni[g_j[4]][s_] <= 5'd1;
+                            snc[g_j[4]][s_] <= 0; sne[g_j[4]][s_] <= 6'd3; snr[g_j[4]][s_] <= 0;
+                            so_[g_j[4]] <= s_; sopen[g_j[4]] <= 1'b1; sa[g_j[4]] <= sa[g_j[4]] + 1'b1;
+                        end else begin
+                            s_ = so_[g_j[4]]; cl = 4'(sni[g_j[4]][s_]);
+                            sni[g_j[4]][s_] <= sni[g_j[4]][s_] + 5'd1; sne[g_j[4]][s_] <= sne[g_j[4]][s_] + 6'd3;
                         end
+                        cdv[g_j[4]][{s_, cl}] <= 2'b00; scv[g_j[4]][{s_, cl}] <= 1'b0;
+                        i_v[g_j[4]] <= 1'b1;
+                        i_a[g_j[4]] <= kb + 30'(g_j[15:5]) * 30'd34 + 30'(2 * g_j[3:0]);
+                        i_l[g_j[4]] <= 4'd2;
+                        i_t[g_j[4]] <= {2'b11, 1'b1, 3'(s_), cl, 1'b0, 3'd0, 3'd0};
+                        gpc <= g_j[4]; gsl <= s_; gcell <= cl; gkc <= g_j[3:0]; gblk <= g_j[15:5]; gq <= 1'b1;
+                        ipush <= 1'b1;
+                        ipd <= {g_j[4], s_, cl, g_w, g_ln, g_lw};
+                        gm <= gm & ~(16'd1 << g_lo);
+                        ws <= 3'd4;
                     end
                 end
                 3'd4: if (!(i_v[gpc] && !iss[gpc])) begin       // gather: the scale request
@@ -456,18 +492,23 @@ module dsdv_idx_rg #(
                     i_a[gpc] <= kb + 30'(gblk) * 30'd34 + 30'd32 + 30'(gkc[3]);
                     i_l[gpc] <= 4'd1;
                     i_t[gpc] <= {2'b11, 1'b1, 3'(gsl), gcell, 1'b1, gkc[2:0], 3'd0};
-                    gq <= 1'b0; ws <= 3'd3;
+                    gq <= 1'b0; ws <= 3'd6;
                 end
                 default: ;
             endcase
             if (wdone_p) ws <= 3'd0;
-            // ---------------- list FIFO
+            // ---------------- list memory: writes as the list arrives; one prefetched word ahead of the walker
             if (lf_push) begin
-                lf[lf_w] <= q_d; lf_w <= lf_w + 1'b1;
-                if (lf_n == (LFW+1)'(LFD) && !lf_pop) fw[0] = 1'b1;
+                lf_wn <= lf_wn + 1'b1;
+                if (lf_wn == (LFW+1)'(LFD)) fw[0] = 1'b1;              // list longer than the list memory
             end
-            if (lf_pop) lf_r <= lf_r + 1'b1;
-            lf_n <= lf_n + (lf_push ? 1'b1 : 1'b0) - (lf_pop ? 1'b1 : 1'b0);
+            if (hdr_job && !act) begin lf_wn <= 0; lf_rn <= 0; ln_v <= 1'b0; end
+            lfr_e <= 1'b0; lfd1 <= lfr_e; lfd2 <= lfd1;
+            if (gat && act && !ln_v && !lfr_e && !lfd1 && !lfd2 && lf_rn < lf_wn && 16'(lf_rn) < nlw) begin
+                lfr_e <= 1'b1; lfr_a <= lf_rn[LFW-1:0]; lf_rn <= lf_rn + 1'b1;
+            end
+            if (lfd2) begin ln_v <= 1'b1; ln_d <= lf_q; end
+            if (ws == 3'd3 && gw < nlw && ln_v && !lfd2) ln_v <= 1'b0;
             // ---------------- item queue
             if (ipush) begin iq[iq_w] <= ipd; iq_w <= iq_w + 1'b1; end
             if (ipop) iq_r <= iq_r + 1'b1;
@@ -578,8 +619,8 @@ module dsdv_idx_rg #(
     reg           r_v;                       // ready word
     reg [15:0]    r_w; reg [15:0] r_lv; reg [255:0] r_s; reg r_f;
     wire          r_take;
-    wire          sq_pop = (sq_n != 0) && !(a_v && a_done);
     reg           a_done;
+    wire          sq_pop = (sq_n != 0) && !(a_v && a_done);
     always @(posedge ck or negedge rn)
         if (!rn) begin mq_w <= 0; mq_r <= 0; sq_w <= 0; sq_r <= 0; sq_n <= 0; infl <= 0; a_v <= 1'b0; a_done <= 1'b0;
                        r_v <= 1'b0; end
@@ -626,13 +667,13 @@ module dsdv_idx_rg #(
             4'd0: hb = bk(ik, 2'd0, 1'b0, 1'b1, {4'd1, tg}, {224'd0, 2'd0, jk, 20'({j0, 4'd0})});
             4'd1: hb = bk(ik, 2'd1, 1'b0, 1'b1, {4'd1, tg}, {224'd0, 2'd1, jk, 20'({j1 + 16'd1, 4'd0})});
             4'd2: hb = bk(ik, 2'd1, 1'b0, 1'b0, {4'd2, tg}, 256'd0);
-            4'd3: hb = bk(ik, 2'd1, 1'b1, 1'b0, 12'd0, {239'd0, 1'b1, 16'd0});
+            4'd3: hb = bk(ik, 2'd1, 1'b1, 1'b0, 12'd0, {4'd2, tg, 227'd0, 1'b1, 16'd0});
             4'd4: hb = bk(ik, 2'd2, 1'b0, 1'b1, {4'd1, tg}, {224'd0, 2'd2, jk, 20'({j1 + 16'd1, 4'd0})});
             4'd5: hb = bk(ik, 2'd2, 1'b0, 1'b0, {4'd2, tg}, 256'd0);
-            4'd6: hb = bk(ik, 2'd2, 1'b1, 1'b0, 12'd0, {239'd0, 1'b1, 16'd0});
+            4'd6: hb = bk(ik, 2'd2, 1'b1, 1'b0, 12'd0, {4'd2, tg, 227'd0, 1'b1, 16'd0});
             4'd7: hb = bk(ik, 2'd3, 1'b0, 1'b1, {4'd1, tg}, {224'd0, 2'd3, jk, 20'({j1 + 16'd1, 4'd0})});
             4'd8: hb = bk(ik, 2'd3, 1'b0, 1'b0, {4'd2, tg}, 256'd0);
-            4'd9: hb = bk(ik, 2'd3, 1'b1, 1'b0, 12'd0, {239'd0, 1'b1, 16'd0});
+            4'd9: hb = bk(ik, 2'd3, 1'b1, 1'b0, 12'd0, {4'd2, tg, 227'd0, 1'b1, 16'd0});
             default: hb = '0;
         endcase
     end
@@ -643,9 +684,11 @@ module dsdv_idx_rg #(
     assign r_take = slot && r_v && r_w == ew;
     wire        late = slot && ((own_w && !r_take) || (r_v && r_w < ew));
     wire [275:0] ins0 = bk(ik, 2'd0, 1'b0, 1'b0, {4'd2, tg}, r_take ? r_s : 256'd0);
-    wire        p1_due = (MUT == 4 && me == 4'd0) ? p1_d : p1;
     reg         p1_d;
-    wire [275:0] ins1 = bk(ik, 2'd0, 1'b1, 1'b0, {11'd0, p1_f}, {239'd0, p1_last, p1_lv});
+    wire        p1_due = (MUT == 4 && me == 4'd0) ? p1_d : p1;
+    // part 1 carries data[511:256]: {type 2, tag} at [511:500] (bk_vin takes a split word's type / tag from part 1),
+    // [272] last, [271:256] lane valid; [8] = the word's in-band fault flag
+    wire [275:0] ins1 = bk(ik, 2'd0, 1'b1, 1'b0, {11'd0, p1_f}, {4'd2, tg, 227'd0, p1_last, p1_lv});
     always @(posedge ck or negedge rn)
         if (!rn) begin ew <= 0; et <= 0; p1 <= 1'b0; p1_d <= 1'b0; wdone <= 1'b0; wdone_p <= 1'b0; so[0] <= 1'b0; fc_set <= 0; end
         else begin

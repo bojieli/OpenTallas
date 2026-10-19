@@ -1,0 +1,50 @@
+{
+ "name": "s81dv_idxrg",
+ "top": "dsdv_idx_rg",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "params": {"SRAM_MACRO": 1},
+ "clock_port": "ck",
+ "reset_ports": ["rst"],
+ "outline": {"w": 1080.0, "h": 1080.0},
+ "macros": [{"view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2", "count": 4}],
+ "pins": {
+  "N": ["rqi", "rdo"],
+  "S": ["rqo", "rdi"],
+  "W": ["qi", "si", "sid", "rst", "ck"],
+  "E": ["qo", "so", "st"]
+ },
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 64, "hold_margin_ns": 0.03, "io_hold_margin_ns": 0.025},
+ "pin_regs": {"enable": false, "reason": "Source-registered: dsdv_idx_rg lands every input in a flop at the pin and drives every output from a flop (header 'Pins'); the 2-edge chain hops (qi->qo, si->so) and the +1 station register on rq/rd are the priced static schedule, a recipe pin stage would shift every compiled beat."},
+ "keep_pin_regs": true,
+ "structural_change": "S81-IDXRD (MU.BAL.SX.3, release blocker): NEW element. p4l (bind9) has no index reader/scorer; this is the regional reader x16 (one per dsfd_ctrl_rg2 region), a station on the region's rq/rd link, exact engine ot_hdc_v41x_idx_engine NK 1, selector-native BK beats on a neighbour-only score chain into dsdv_bk_sel.",
+ "job": {
+  "owner": "Claude:S81-IDXRD",
+  "branch": "claude/s81-idxrd-1018",
+  "tag": "s81dv_idxrg",
+  "purpose": "S81-DV p4l regional index reader/scorer dsdv_idx_rg (x16 a die, MU.BAL.SX.3 release blocker) to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/idx",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_ctrl_pc.sv",
+   "rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv",
+   "results/rtl/s81_idxrd_1018"
+  ],
+  "benches": [],
+  "views_to": "physical/ref_tile/s81dv_idxrg/views",
+  "record_to": "results/rtl/ref_tile/s81dv_idxrg"
+ }
+}
