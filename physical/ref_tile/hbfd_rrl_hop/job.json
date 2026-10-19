@@ -1,5 +1,5 @@
 {
- "name": "hbfd_rrl_hop-r1-COMMIT",
+ "name": "hbfd_rrl_hop-r1-f8912d0c5",
  "block": "hbfd_rrl_hop",
  "ref_tile": true,
  "owner": "Codex:HBM-CHAIN5-reset-tiles",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex/hbm-reset-tiles-1018",
-  "commit": "COMMIT",
+  "commit": "f8912d0c522493ce5980c8eb717b01caa94f6d81",
   "extra_paths": [
    "tools/hbm_die_v16"
   ]
@@ -91,7 +91,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbfd_rrl_hop/hbfd_rrl_hop-r1-COMMIT"
+   "to": "results/rtl/ref_tile/hbfd_rrl_hop/hbfd_rrl_hop-r1-f8912d0c5"
   }
  ],
  "cycles_added": 0,
