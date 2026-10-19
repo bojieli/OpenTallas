@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       admits  1117 GB (avail 839, growth 50, headroom 0, waiters 0/0 GB) load 33/128 running 15 disk 433 GB 
+ot-run: ot-epyc5       admits   647 GB (avail 509, growth 19, headroom 0, waiters 0/0 GB) load 43/128 running 7 disk 910 GB 
+ot-run: ot-epyc6       admits  1249 GB (avail 934, growth 60, headroom 0, waiters 0/0 GB) load 34/128 running 16 disk 5719 GB 
+ot-run: ot-epyc7       admits  1077 GB (avail 805, growth 47, headroom 0, waiters 0/0 GB) load 23/96 running 14 disk 6275 GB 
+ot-run: ot-epyc8       admits  1258 GB (avail 938, growth 44, headroom 0, waiters 0/0 GB) load 16/128 running 10 disk 66 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2266277-1792449383 after 0 s
