@@ -55,7 +55,7 @@ def macros(variant='a'):
     return out
 
 
-def benches(tile):
+def benches(tile, hfx=False):
     sh = ('PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py '
           '--unit {u} --mut {m} --threads 4 --out {{RUN}}/bench/kvpc_{u}_m{m}')
     b = []
@@ -72,6 +72,11 @@ def benches(tile):
                   .replace('kvpc_tile_m0', f'kvpc_tile_{tile}_m0'), expect='pass', threads=4, peak_ram_gb=16,
                   needs=['verilator'], pass_regex=r'^KVPC_TILE PASS .* errors=0 mut=0',
                   pass_witness=f'{WIT}/tile_{tile}_m0.log'))
+    if hfx:
+        b.append(dict(name=f'kvpc_tile_{tile}_mut4', cmd=sh.format(u='tile', m=4).replace('--unit tile', f'--unit tile --tile {tile}')
+                      .replace('kvpc_tile_m4', f'kvpc_tile_{tile}_m4'), expect='fail', threads=4, peak_ram_gb=16,
+                      needs=['verilator'], pass_regex=r'^KVPC_TILE PASS ', fail_regex=r'^KVPC_TILE FAIL .* mut=4',
+                      fail_witness=f'{WIT}/tile_{tile}_m4.log'))
     return b
 
 
@@ -82,7 +87,17 @@ def derive(tile, tag, variant):
     s['name'] = kit
     s['sources'] = [SR_TILE if f == RL_TILE else f for f in s['sources']] + NEW_RTL
     s['macros'] = macros(variant)
-    s['sdc_extra'] = list(s.get('sdc_extra', [])) + [f'physical/qkd_kvs_kits/qkd_kvs_pc_{tag}_store.sdc']
+    if tag in ('sr1', 'sr2', 'sr2b'):
+        s['sdc_extra'] = list(s.get('sdc_extra', [])) + [f'physical/qkd_kvs_kits/qkd_kvs_pc_{tag}_store.sdc']
+    else:
+        # KV-PC2 (sr3+): the banks write on hck (front) / hck->ck (return ring): no storage-root clocks at all; the
+        # eight pc__front_hbm_data / pc__return_hbm_data inputs are unused (kept for the die binding)
+        s['pins']['S'] = list(s['pins']['S']) + ['pc__hfx']
+        s['fill_reason'] = dict(pin_bound=(
+            'The die frame sets the outline, not the area: every face is pin-bound (gate qkd_kvs_pc_h_sr1 15:39: N 1547 '
+            'pins over 260.9/267.8 um = 5.9/um, E 1422 over 292.2/300.2, W 675 over 291.0/300.2; 92-97 % of every edge '
+            'occupied at the ~6 pins/um face limit).  Moving 9216 storage FF into 23 SRAM banks cut the std-cell area, so '
+            'fill fell below 35 %; shrinking needs a die-level pin re-assignment (MU-DIE-KV), not a tile change.'))
     s['reset_relay_split'] = dict(max_loads=32)
     ov = dict(s.get('orfs_vars', {}))
     ov['OT_RST_COPIES_WIDE'] = '1'      # kept copy families that select wide words / flop-array reads (item 3)
@@ -93,15 +108,22 @@ def derive(tile, tag, variant):
            'qkd_kvpc_sram_1019.sv; 0 added edges); the 2405 / 2051 / 854-load pointer roots are gone; scheduler hr_q / hgo '
            'are kept copy families split <= 32 loads (ot_rst_copies); storage roots are hclk-family clocks of the bank '
            'write ports.')
+    if tag not in ('sr1', 'sr2', 'sr2b'):
+        why = ('KV-PC2 10-19 (structurally safe successor of sr1 / sr2): ' + why.replace(
+            'storage roots are hclk-family clocks of the bank write ports.',
+            'front banks write AND read on hck (the landing / pointer clock: no storage-root clocks, no same-phase '
+            'claim); return-ring banks write on hck, read on ck behind per-slot toggle 2-flop synchronisers; embedding '
+            'FIFOs are Gray-pointer async FIFOs; the three dropped sticky faults (chain / es_merge / embr) leave '
+            'registered on pc__hfx[2:0] for the health plane.'))
     s['structural_change'] = why
     s['purpose'] = why
     s['safe_design_checklist'] = f'see physical/ref_tile/{kit}/README.md'
     j = s['job']
-    j['owner'] = 'Claude:KV-PC'
-    j['branch'] = 'claude/kv-pc-1019'
+    j['owner'] = 'Claude:KV-PC' if tag in ('sr1', 'sr2', 'sr2b') else 'Claude:KV-PC2'
+    j['branch'] = 'claude/kv-pc-1019' if tag in ('sr1', 'sr2', 'sr2b') else 'claude/kv-pc2-1019'
     j['tag'] = tag
     j['purpose'] = why
-    j['benches'] = benches(tile)
+    j['benches'] = benches(tile, hfx=tag not in ('sr1', 'sr2', 'sr2b'))
     j['extra_paths'] = sorted(set(j.get('extra_paths', [])) | {VIEW, WIT, 'rtl', 'tools/qwen_kv_die'})
     j['views_to'] = f'physical/ref_tile/{kit}/views'
     j['record_to'] = f'results/rtl/ref_tile/{kit}'
@@ -133,7 +155,8 @@ def main():
     ap.add_argument('--tag', default='sr1')
     ap.add_argument('--variant', default='a', choices=('a', 'b'))
     a = ap.parse_args()
-    (ROOT / f'physical/qkd_kvs_kits/qkd_kvs_pc_{a.tag}_store.sdc').write_text(store_sdc(a.tag))
+    if a.tag in ('sr1', 'sr2', 'sr2b'):
+        (ROOT / f'physical/qkd_kvs_kits/qkd_kvs_pc_{a.tag}_store.sdc').write_text(store_sdc(a.tag))
     for tile in ('pc', 'pc_h'):
         kit, s = derive(tile, a.tag, a.variant)
         for m in s['macros']:

@@ -61,7 +61,11 @@ module qkd_kvpc_ram2c #(
 endmodule
 
 // ---- elastic front (qkd_kv_hbm_elastic_front_mc_nc successor) ----------------------------------------------------
-// 32 x 297 {epoch16, co[281:1]} on 5 banks; bank k writes on its storage root pll_hbm_data[min(k,3)] (the original
+// KV-PC2 10-19: ONE clock.  The landing registers land_v / land_d and the write pointer wp are pll_hbm flops, so the
+// banks now WRITE on pll_hbm too (sr1 wrote on the four PHY storage roots pll_hbm_data[k] under an unproven "same phase
+// as pll_hbm" claim: a crossing timed as same-clock).  pll_hbm_data is kept as an unused port (die binding unchanged;
+// the die may drop the 4 storage-root bindings at adoption).  Write and read share pll_hbm: no CDC, no age claim.
+// (sr1 text:) 32 x 297 {epoch16, co[281:1]} on 5 banks; bank k writes on its storage root pll_hbm_data[min(k,3)] (the original
 // 4 roots, same phase as pll_hbm), reads on pll_hbm.  The 16 read-pointer copies (2405-load roots) are gone: the read
 // address is one 5-bit next-pointer into 5 macro address pins.  Control logic is the original, line for line.
 module qkd_kvpc_s_front #(
@@ -136,8 +140,8 @@ module qkd_kvpc_s_front #(
 `else
     localparam integer RAM_MUT = (MUT == 4) ? 1 : 0;
 `endif
-    qkd_kvpc_ram2c #(.WORDS(DEPTH), .BITS(297), .NW(4), .WCLK_MAP(64'h33210), .MUT(RAM_MUT)) u_mem (
-        .wclk(pll_hbm_data), .rclk(pll_hbm), .r_ce(!w_hit), .r_addr(ra_next), .rd(mem_rd),
+    qkd_kvpc_ram2c #(.WORDS(DEPTH), .BITS(297), .NW(1), .WCLK_MAP(64'd0), .MUT(RAM_MUT)) u_mem (
+        .wclk(pll_hbm), .rclk(pll_hbm), .r_ce(!w_hit), .r_addr(ra_next), .rd(mem_rd),
         .w_ce({5{land_v}}), .w_addr(wp[AW-1:0]), .wd(land_d));
 `ifndef SYNTHESIS
     reg blk_q;
@@ -180,7 +184,12 @@ module qkd_kvpc_s_front #(
 endmodule
 
 // ---- static return ring (qkd_static_kv_return_slots_mc_nc successor) ---------------------------------------------
-// 8 x 288 on 5 banks: bank k writes on its storage root pll_hbm_data[min(k,3)] (HBM clock family), reads on ck.  The 16
+// KV-PC2 10-19: the banks WRITE on pll_hbm (the clock of hd / write_slot / wp / published, which launch the write) and
+// read on ck: a real dual-clock FIFO.  The crossing is the per-slot published / consumed toggle bits through 2-flop
+// synchronisers (one bit per slot, each toggles once per wrap: no multi-bit skew), and a slot is read only after its
+// toggle is visible on ck (fault_core flags a compiled read of an unpublished slot).  No storage-root clocks, no
+// same-phase claim (sr1 wrote on pll_hbm_data[k]; port kept unused).
+// (sr1 text:) 8 x 288 on 5 banks: bank k writes on its storage root pll_hbm_data[min(k,3)] (HBM clock family), reads on ck.  The 16
 // read-pointer copies (rq) are gone: one registered read of slot rp(t) = rp + slot issued at t-1.  Everything else is
 // the original.
 module qkd_kvpc_s_return #(parameter integer DEPTH = 8, parameter integer MUT = 0)(   // MUT 1 bank permutation, 2 no prefetch
@@ -252,8 +261,8 @@ module qkd_kvpc_s_return #(parameter integer DEPTH = 8, parameter integer MUT = 
    end
   end
  always @(posedge pll_hbm)fault_hbm<=hr && (fault_hbm_s || fault_hbm_set);
- qkd_kvpc_ram2c #(.WORDS(DEPTH), .BITS(288), .NW(4), .WCLK_MAP(64'h33210), .MUT(MUT == 1 ? 1 : 0)) u_mem (
-  .wclk(pll_hbm_data), .rclk(ck), .r_ce(1'b1), .r_addr(ra_next), .rd(read_data),
+ qkd_kvpc_ram2c #(.WORDS(DEPTH), .BITS(288), .NW(1), .WCLK_MAP(64'd0), .MUT(MUT == 1 ? 1 : 0)) u_mem (
+  .wclk(pll_hbm), .rclk(ck), .r_ce(1'b1), .r_addr(ra_next), .rd(read_data),
   .w_ce({5{hr && write_slot}}), .w_addr(wa), .wd(hd));
  always @(posedge ck or negedge rs_b)
   if(!rs_b)begin pub_sync1<=0;pub_sync2<=0;end

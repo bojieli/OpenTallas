@@ -1021,7 +1021,41 @@ def pc_sram_text(txt):
         txt = txt.replace(o, w)
     if n != 1:
         raise ValueError('kv_static_die PC_SRAM: PC kit module has no single u_embr return hop / head')
-    return txt
+    return pc_hfx_text(txt)
+
+
+PC_HFX_PORT = '    output wire [2:0] pc__hfx,'
+
+
+def pc_hfx_text(txt):
+    """KV-PC2 10-19: registered fault export to the health plane.  The PC kit module computed three sticky ck-domain
+    faults that reached no port (SAFE-MODEL 5cd55681e: 'selected GEN7 drops chain_fault in 124 PC + 4 PC_H'):
+    the boot chain station fault (w_pc__chain_fault), the embedding es-merge fault (w_pc__es_merge_fault) and the
+    embedding return hop / head fault (w_embr__fault).  They leave on pc__hfx[2:0] = {embr, es_merge, chain} through one
+    registered sticky stage on ck (landed reset w_rland__rst_n; cleared only by reset, never masked).  The die binds
+    pc__hfx into the KV health plane (lanes KV-HEALTH / KV-GEN9).  Idempotent pure text rewrite."""
+    if 'pc__hfx' in txt:
+        return txt
+    anchor = '    output wire [0:0] pc__fo,'
+    for need in (anchor, 'wire [0:0] w_pc__chain_fault;', 'wire [0:0] w_pc__es_merge_fault;', 'w_embr__fault',
+                 'wire w_rland__rst_n;'):
+        if txt.count(need) < 1:
+            raise ValueError(f'kv_static_die PC_HFX: PC kit module lacks {need!r}')
+    if txt.count(anchor) != 1:
+        raise ValueError('kv_static_die PC_HFX: PC kit module has no single pc__fo port')
+    txt = txt.replace(anchor, anchor + '\n' + PC_HFX_PORT)
+    body = ('    // KV-PC2 registered sticky fault export (pc__hfx = {embr, es_merge, chain}; health plane)\n'
+            '    reg [2:0] hfx_q;\n'
+            '    always @(posedge ck or negedge w_rland__rst_n)\n'
+            '        if (!w_rland__rst_n) hfx_q <= 3\'d0;\n'
+            '`ifdef OT_KVPC_HFX_MUT\n'
+            '        else hfx_q <= hfx_q | {1\'b0, w_pc__es_merge_fault[0], w_pc__chain_fault[0]};\n'
+            '`else\n'
+            '        else hfx_q <= hfx_q | {w_embr__fault[0], w_pc__es_merge_fault[0], w_pc__chain_fault[0]};\n'
+            '`endif\n'
+            '    assign pc__hfx = hfx_q;\n')
+    i = txt.rindex('endmodule')
+    return txt[:i] + body + txt[i:]
 
 
 def pc_rland_text(txt):

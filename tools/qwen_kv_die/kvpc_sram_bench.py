@@ -11,7 +11,9 @@
 Mutants (--mut N, must FAIL): front 1 read +1 / 4 bank permutation / 5 no prefetch; return 1 bank perm / 2 no prefetch;
 cdc 1 down bank perm / 2 down no prefetch; tq 1 bypass dropped; sched 1 tag-queue read not advanced
 (OT_KVPC_MUT_TQ_NEXT); tile 1 tag-queue read not advanced / 2 front bank permutation / 3 embedding up-FIFO bank permutation inside
-the DUT tile (random tile stimulus reaches 3 only: 1 and 2 are covered by their unit benches).
+the DUT tile (random tile stimulus reaches 3 only: 1 and 2 are covered by their unit benches) / 4 health export drops the
+embr fault bit (OT_KVPC_HFX_MUT; KV-PC2: DUT pc__hfx = registered sticky {embr, es_merge, chain} of REF's internal faults).
+KV-PC2 10-19: front / return banks write on pll_hbm (no storage-root clocks); unit benches unchanged (roots = pll_hbm).
     python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit U [--tile pc|pc_h] [--mut N] [--edges E] [--seed S] --out DIR
 One verdict line 'KVPC_<UNIT> PASS|FAIL ...'; exit 0 only on PASS."""
 import argparse
@@ -86,7 +88,7 @@ def rnd(w):
 
 
 def lockstep_tb(name, P, ref_inst, dut_inst, clocks, resets, edges, mut, extra_in=None, tag='SCHED', qual=None,
-                strap=None):
+                strap=None, extra=''):
     """generic two-instance random lockstep: clocks {port: half_period_ps}, resets {port: clock port}; qual {output:
     (valid bit, data msb, data lsb)}: the data slice of that output is compared only while REF's valid bit is set (the
     payload of an EMPTY dual-clock FIFO head: an undefined async read across domains in the original)"""
@@ -130,6 +132,8 @@ def lockstep_tb(name, P, ref_inst, dut_inst, clocks, resets, edges, mut, extra_i
         L.append(f'    chk = chk + 1; if ({cond}) begin bad = bad + 1; nbad[{k}] = nbad[{k}] + 1; '
                  f'if (bad < 8) $display("MISMATCH t=%0d %s out {n}{val} end')
     L.append('  end endtask')
+    if extra:
+        L.append(extra)
     cks = list(clocks)
     for c in cks:
         L.append(f'  always @(negedge {c}) if ({" && ".join(resets)}) begin phase = "{c[:3]}"; compare; end')
@@ -258,15 +262,27 @@ def main():
         raise SystemExit('kvpc_sram_bench: DUT must be the SRAM tile, REF the _rl tile')
     (out / 'tiles.sv').write_text('`timescale 1ns/1ps\n' + ref + '\n' + dut)
     P = ports(ref)
-    if P != ports(dut):
-        raise SystemExit('kvpc_sram_bench: tile REF / DUT ports differ')
+    if P != [p for p in ports(dut) if p[0] != 'pc__hfx'] or ('pc__hfx', 'output', 3) not in ports(dut):
+        raise SystemExit('kvpc_sram_bench: tile REF / DUT ports differ (DUT = REF + output [2:0] pc__hfx)')
     edges = a.edges or 3000
+    # KV-PC2 health export: DUT pc__hfx must be the registered sticky OR of REF's three internal faults (which reach no
+    # REF port), {u_embr fault, es_merge, chain}, cleared by the landed ck reset.
+    hfx = '\n'.join([
+        '  reg [2:0] hfx_m; integer hfx_act = 0;',
+        '  always @(posedge ck or negedge u_ref.w_rland__rst_n)',
+        "    if (!u_ref.w_rland__rst_n) hfx_m <= 3'd0;",
+        '    else hfx_m <= hfx_m | {u_ref.w_embr__fault[0], u_ref.w_pc__es_merge_fault[0], u_ref.w_pc__chain_fault[0]};',
+        '  always @(negedge ck) if (rst_n && hrst_n) begin chk = chk + 1; if (u_dut.pc__hfx != 0) hfx_act = hfx_act + 1;',
+        '    if (u_dut.pc__hfx !== hfx_m) begin bad = bad + 1;',
+        '      if (bad < 8) $display("MISMATCH t=%0d out pc__hfx %h/%h", t, hfx_m, u_dut.pc__hfx); end end',
+        '  final $display("HFX active_edges=%0d final=%b", hfx_act, hfx_m);'])
     xin = {'pc__front_hbm_data': '{4{hck}}', 'pc__return_hbm_data': '{4{hck}}'}
     tb = lockstep_tb('tb_kvpc_tile', P, 'ref_tile', 'dut_tile', {'ck': 417, 'hck': 512}, {'rst_n': 'ck', 'hrst_n': 'hck'},
-                     edges, a.mut, extra_in=xin, tag='TILE')
+                     edges, a.mut, extra_in=xin, tag='TILE', extra=hfx)
     (out / 'tb.sv').write_text(tb)
     files = [str(out / 'tb.sv'), str(out / 'tiles.sv')] + base
-    defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 2: ['OT_KVPC_FRONT_MUT4'], 3: ['OT_KVPC_CDC_UP_MUT']}.get(a.mut, [])
+    defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 2: ['OT_KVPC_FRONT_MUT4'], 3: ['OT_KVPC_CDC_UP_MUT'],
+            4: ['OT_KVPC_HFX_MUT']}.get(a.mut, [])
     return build_run(out, 'tb_kvpc_tile', files, defs, a.threads, 'TILE', plus)
 
 
