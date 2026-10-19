@@ -1,0 +1,104 @@
+{
+  "status": "ROOT_APPROVAL_REQUIRED_NO_DESIGN_GENERATION_OR_EXECUTION",
+  "resources_requested": {
+    "unpinned": true,
+    "cpus": 1,
+    "memory_gb": 4,
+    "disk_gb": 2,
+    "basis": "bounded few-thousand-shape diagnostic; not measured runtime"
+  },
+  "inputs": {
+    "qwen": {
+      "commit": "5666def4037d8b00a9bfccd6c3e51842d60bdace",
+      "path": "results/arch/qwen_dualclk_native_grid_1019/variant.json",
+      "sha256": "55b2625c47f7354628d1a51a68d66bbd1b164e2acd92ba59456910f1620b4c11"
+    },
+    "sc2": {
+      "commit": "e91e038034b5f75d65d683ae0a152dd839daaa9f",
+      "path": "results/rtl/s81_coll_wide_pitch_1019/native_grid/candidate_paths.json",
+      "sha256": "daa85d7d249bb78510490343336164a6995b489288c79848ba984060dc757f24"
+    }
+  },
+  "sequence": [
+    {
+      "id": "A",
+      "kind": "visible_regular_wire_rule_visibility",
+      "outline_um": [
+        10,
+        10
+      ],
+      "family_cases": {
+        "qwen": [
+          "wclk",
+          "r_ce_in",
+          "first east output"
+        ],
+        "sc2": [
+          "clk",
+          "r_ce_in",
+          "first east output"
+        ]
+      },
+      "representation": "actual REGULAR dbWire + dbWire patches + complete VIA45; no fixed/special substitution",
+      "geometry": "exact source pad/lead/via intersection cropped at join +/-0.5um; crop edges outside scoring ROI",
+      "controls": [
+        "aligned rectangle",
+        "exact 9nm step",
+        "all-fixed same candidate",
+        "23nm cross-net gap",
+        "disconnected contact",
+        "old track-center phase",
+        "33nm versus24nm width coverage"
+      ],
+      "checker": "drt::check_drc -box ROI -output_file report",
+      "no_repair_before_verdict": true
+    },
+    {
+      "id": "B",
+      "kind": "two_exact_diagnostic_macro_signal_access",
+      "depends": "A visibility receipt and ROOT grant",
+      "instances": 2,
+      "signal_nets": 643,
+      "orientation": "N",
+      "origins_um": [
+        [
+          43.2,
+          43.2
+        ],
+        [
+          302.4,
+          43.2
+        ]
+      ],
+      "native_commands": [
+        "pin_access -min_access_points 1",
+        "detailed_route -output_drc report"
+      ],
+      "negative_controls": [
+        "blocked terminal approach",
+        "omitted endpoint census"
+      ],
+      "does_not_qualify": "internal analytical leads hidden behind macro OBS"
+    },
+    {
+      "id": "C",
+      "kind": "actual_PG_contact_binding_and_access",
+      "depends": "A visibility receipt and ROOT grant",
+      "instances": 2,
+      "pg_rectangles": 121,
+      "native_commands": [
+        "pdngen -failed_via_report report",
+        "check_power_grid -net VDD",
+        "check_power_grid -net VSS"
+      ],
+      "binding": "each exact MTerm/ITerm to real domain special net and top supply BTerm",
+      "negative_controls": [
+        "disconnect PG ITerm",
+        "swap supply net",
+        "remove sole landing via"
+      ],
+      "required_census": "per-PG-rectangle physical contact, not only ITerm counts"
+    }
+  ],
+  "native_verdict": null
+}

@@ -1,0 +1,55 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+VERSION 26Q3-1510-g6cb3f2b704
+COMMAND check_drc present=0
+[WARNING STA-0160] no commands match 'check_drc'.
+
+COMMAND pin_access present=1
+pin_access [-db_process_node name] [-bottom_routing_layer layer]
+   [-top_routing_layer layer] [-via_access_layer layer]
+   [-via_in_pin_bottom_layer layer] [-via_in_pin_top_layer layer]
+   [-min_access_points count] [-verbose level] [-distributed]
+   [-remote_host rhost] [-remote_port rport] [-shared_volume vol]
+   [-cloud_size sz] 
+
+
+COMMAND detailed_route present=1
+detailed_route [-output_maze filename] [-output_drc filename]
+   [-output_guide_coverage filename] [-drc_report_iter_step step]
+   [-db_process_node name] [-disable_via_gen] [-droute_end_iter iter]
+   [-via_in_pin_bottom_layer layer] [-via_in_pin_top_layer layer]
+   [-via_access_layer layer] [-or_seed seed] [-or_k k]
+   [-bottom_routing_layer layer] [-top_routing_layer layer] [-verbose level]
+   [-distributed] [-remote_host rhost] [-remote_port rport] [-shared_volume vol]
+   [-cloud_size sz] [-clean_patches] [-no_pin_access] [-min_access_points count]
+   [-save_guide_updates] [-repair_pdn_vias layer] [-single_step_dr] 
+
+
+COMMAND detailed_route_debug present=1
+detailed_route_debug [-pa] [-ta] [-dr] [-maze] [-net name] [-pin name]
+   [-box x1 y1 x2 y2] [-dump_last_worker] [-iter iter] [-pa_markers] [-dump_dr]
+   [-dump_dir dir] [-snapshot_dir dir] [-pa_edge] [-pa_commit]
+   [-write_net_tracks] 
+
+
+COMMAND check_power_grid present=1
+check_power_grid -net power_net [-error_file error_file] [-floorplanning]
+   [-dont_require_terminals] 
+
+
+COMMAND pdngen present=1
+pdngen [-skip_trim] [-dont_add_pins] [-reset] [-ripup] [-report_only]
+   [-check_only] [-failed_via_report file] [-verbose] 
+
+
+COMMAND add_global_connection present=1
+add_global_connection [-net net_name] [-inst_pattern inst_name_pattern]
+   [-pin_pattern pin_name_pattern] [(-power|-ground)] [-region region_name]
+   [-defer_connection] 
+
+
+COMMAND global_connect present=1
+global_connect [-force] [-verbose]  
+
