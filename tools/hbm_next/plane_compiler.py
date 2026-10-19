@@ -56,6 +56,7 @@ STATS = ROOT / "results/arch/hbm_mtp_next_1018/stats/summary.json"
 
 @dataclasses.dataclass(frozen=True)
 class Knobs:
+    union_safe: bool = False    # U-only static variants reserve N rows per expert (no histogram timing)
     rpl: bool = False            # SM remainder-pass layouts (D1: ceil(N / P) passes)
     union_hist: bool = False     # measured lane histogram for the union experts (D1: mean P_e)
     m1: bool = False             # x-load + publish beats (D1: not priced)
@@ -74,6 +75,7 @@ class Knobs:
     def tag(self):
         return (f"rpl{int(self.rpl)}_uh{int(self.union_hist)}_m1{int(self.m1)}_L{self.coll_lanes}_hc{int(self.hc_ii)}"
                 f"_vm{'G' if self.vm_grown else 'S'}_P{self.P}_bf{self.bf16_lanes or self.P}"
+                + ("_union_safe" if self.union_safe else "")
                 + (f"_meas-{'-'.join(self.meas)}" if self.meas else ""))
 
     @property
@@ -145,7 +147,10 @@ def post_sm(out, N, lanes, union, topk, kn: Knobs, hist):
         else:
             f_d1 = max(1.0, math.ceil(math.ceil(pe) / lanes) / V.HBM_RATIO)
             base = c.base_cost / f_d1
-            if kn.union_hist and hist:
+            if kn.union_safe:
+                f = sm_issue_factor(N, rl, nc, rows_sm, kn.rpl)
+                nrow = N
+            elif kn.union_hist and hist:
                 f = sum(fr * sm_issue_factor(h, rl, nc, rows_sm, kn.rpl) for h, fr in hist.items())
                 nrow = sum(fr * h for h, fr in hist.items())
             else:
@@ -437,6 +442,15 @@ def install():
                 hist = CUR["hist"]["verify6"]
             elif mode == "users":
                 hist = CUR["hist"]["users"].get(P)
+            if kn.union_safe:
+                hist = {P: 1.0}
+                # egather was priced at average pe by the legacy compiler. Reserve all N rows.
+                from hgi_sim.ds_mtp_verify import coll_cycles
+                pe0 = kw.get("topk", 6) * P / max(kw.get("topk", 6), int(round(kw.get("union") or 6 * P)))
+                for rec in out:
+                    if getattr(rec, "mtp_kind", "") == "egather":
+                        nb = 4 * rec.desc["A"].n
+                        rec.base_cost *= coll_cycles(rec.op, P * nb, 96)[0] / coll_cycles(rec.op, int(round(pe0 * nb)), 96)[0]
             nt = post_sm(out, P, kw.get("sm_k"), kw.get("union"), kw.get("topk", 6), kn, hist)
             nt["att_single_records"] = att_single(out, kw.get("bmodel"), kn)
             tk = kw.get("topk", 6)
@@ -691,7 +705,7 @@ def meas(a):
     CUR["hist"] = lane_hists()
     out = dict(schema="opentallas.hbm_next_1019.cmtp.meas_retime.v1", generated_utc=datetime.datetime.now(
         datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), rule=__doc__, meas_keys=MEAS, options={},
-        union_bound=UNION_BOUND[0])
+        union_bound=UNION_BOUND[0], union_safe=bool(getattr(a, "union_safe", False)))
     for key, label, kn0, mu_n in MEAS_OPTIONS:
         if a.only and key not in a.only.split(","):
             continue
@@ -699,7 +713,7 @@ def meas(a):
         for name, ms in meas_cases(key):
             if a.cases and name not in a.cases.split("|"):
                 continue
-            kn = dataclasses.replace(kn0, meas=tuple(ms))
+            kn = dataclasses.replace(kn0, meas=tuple(ms), union_safe=bool(getattr(a, "union_safe", False)))
             r = run_case(kn, st, a.jobs, kn.P, mu_n)
             rows[name] = r
             print(f"{key:7s} {name:40s} AR {r['ar_tok_s']:7.1f}  MTP {r['mtp']['tok_s']:7.1f} (verify "
@@ -739,6 +753,7 @@ def main():
     q.add_argument("--only", default="")
     q.add_argument("--cases", default="", help="'|'-separated case names")
     q.add_argument("--step5", action="store_true", help="step 5 case set (IDXN / SUDMA2 / FUSED + frames, v2 ALL)")
+    q.add_argument("--union-safe", action="store_true", help="sound U-only variants: reserve N rows per union expert")
     q.add_argument("--union-bound", action="store_true",
                    help="reserved static calendar: union loops priced at U = 6 N (draft: no-sharing bound)")
     o = sub.add_parser("options")

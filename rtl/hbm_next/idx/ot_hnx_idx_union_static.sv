@@ -48,8 +48,12 @@ module ot_hnx_idx_union_static #(
     input  wire [273:0]  cr,
     output reg           busy,
     output reg           done,
-    output reg           fault
+    output reg           fault,
+    output wire          union_v,
+    output wire [9:0]    union_count
 );
+    assign union_v = done;
+    assign union_count = ucount;
     localparam [3:0] S_IDLE = 0, S_CHK = 1, S_RD = 2, S_WAITC = 3, S_ORD = 4, S_PRE = 5, S_WT = 6, S_NEXT = 7, S_END = 8;
     localparam [1:0] P_TAB = 0, P_O = 1, P_D = 2;
     integer l, r, j, w;

@@ -1,0 +1,21 @@
+END_EDGE 49  done
+END_EDGE 98  done
+END_EDGE 166  done
+END_EDGE 234  done
+END_EDGE 325  done
+END_EDGE 416  done
+END_EDGE 517  done
+END_EDGE 619  done
+END_EDGE 762  done
+END_EDGE 903  done
+END_EDGE 991 fault
+END_EDGE 1060 fault
+END_EDGE 1063 fault
+END_EDGE 1204  done
+END_EDGE 1345  done
+IDX_UNION MUT0 records15 dones12 faults3 sectors_checked367 errors0 schedule_edges1349
+UNION_BOUNDARY PASS real_IDX_UNION_to_static_calendar CMUT0
+- rtl/hbm_next/control/tb_hnx_union_boundary.sv:167: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 44us; walltime 0.049 s; speed 896.465 us/s
+- Verilator: cpu 0.049 s on 1 threads; allocated 9 MB
