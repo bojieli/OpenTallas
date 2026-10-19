@@ -1,0 +1,111 @@
+{
+ "schema": "opentallas.hbm_hc_images.v1",
+ "lane": "VEH-FMT-COLL2",
+ "fixtures": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L02",
+ "layer": 2,
+ "records": [
+  {
+   "k_layer": 32,
+   "tag": "hc_attn (mixes + Sinkhorn) post",
+   "op": "HC.HC_MIX_POST",
+   "priced_op": "HC.HC_MIX",
+   "i": 58,
+   "projection": "projection_open: HC.HC_MIX rows (residual x waves -> hcb banks -> qcen ps -> root) need the HC weight rows; fixture TP-96 rank 0 owns no mix row (no HC_MIX_ROWS record / operands)",
+   "status": "emitted",
+   "form": "G22 gathered-mix (TP-96 rank-0 HC_MIX_POST: gather + root tail + store)",
+   "a_sector": 64,
+   "o_sector": 72,
+   "launch": [
+    2315,
+    2864
+   ],
+   "word0_edge": [
+    2325,
+    2874
+   ],
+   "gather_row0_at": 2350,
+   "result_pins_after": 2876,
+   "store_word": 4,
+   "check_cyc": 2920,
+   "qhub_rows": {
+    "A": 26,
+    "B": 5
+   },
+   "calendar_rows": {
+    "A": 11,
+    "B": 14
+   },
+   "emit_after_row0": 527,
+   "words_checked": 48,
+   "replays": [
+    {
+     "name": "ds_l2_hc_r058",
+     "events": 419,
+     "vm_preload": 3,
+     "cycles": 2984,
+     "checks": 107,
+     "replay_sha256": "888ebea60a1d297d931765bb1a68b8190727b666a150878030464ede4ac98ab1"
+    }
+   ]
+  },
+  {
+   "k_layer": 53,
+   "tag": "hc_ffn (mixes + Sinkhorn) post",
+   "op": "HC.HC_MIX_POST",
+   "priced_op": "HC.HC_MIX",
+   "i": 78,
+   "projection": "projection_open: HC.HC_MIX rows (residual x waves -> hcb banks -> qcen ps -> root) need the HC weight rows; fixture TP-96 rank 0 owns no mix row (no HC_MIX_ROWS record / operands)",
+   "status": "emitted",
+   "form": "G22 gathered-mix (TP-96 rank-0 HC_MIX_POST: gather + root tail + store)",
+   "a_sector": 64,
+   "o_sector": 72,
+   "launch": [
+    2315,
+    2864
+   ],
+   "word0_edge": [
+    2325,
+    2874
+   ],
+   "gather_row0_at": 2350,
+   "result_pins_after": 2876,
+   "store_word": 4,
+   "check_cyc": 2920,
+   "qhub_rows": {
+    "A": 26,
+    "B": 5
+   },
+   "calendar_rows": {
+    "A": 11,
+    "B": 14
+   },
+   "emit_after_row0": 527,
+   "words_checked": 48,
+   "replays": [
+    {
+     "name": "ds_l2_hc_r078",
+     "events": 419,
+     "vm_preload": 3,
+     "cycles": 2984,
+     "checks": 107,
+     "replay_sha256": "6b954a1e2bcc2549410a442c9d1784a42cc304e97d7cf082ab76a2d407f0f8e8"
+    }
+   ]
+  }
+ ],
+ "counts": {
+  "emitted": 2
+ },
+ "unpriced_hc": [
+  {
+   "i": 58,
+   "op": "HC.HC_MIX",
+   "tag": "hc_attn (mixes + Sinkhorn)"
+  },
+  {
+   "i": 78,
+   "op": "HC.HC_MIX",
+   "tag": "hc_ffn (mixes + Sinkhorn)"
+  }
+ ]
+}
