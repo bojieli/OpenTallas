@@ -1,0 +1,228 @@
+SERVER DIED
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/cli/main.py", line 118, in main
+    args.dispatch_function(args)
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/cli/serve.py", line 154, in cmd
+    uvloop.run(run_server(args))
+  File "/usr/local/lib/python3.12/dist-packages/uvloop/__init__.py", line 96, in run
+    return __asyncio.run(
+           ^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1515, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.12/dist-packages/uvloop/__init__.py", line 48, in wrapper
+    return await main
+           ^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/launchers/api_server/entry.py", line 172, in run_server
+    await run_server_worker(listen_address, sock, args, **uvicorn_kwargs)
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/launchers/api_server/entry.py", line 185, in run_server_worker
+    async with build_async_engine_client(
+  File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/launchers/api_server/entry.py", line 58, in build_async_engine_client
+    async with build_async_engine_client_from_engine_args(
+  File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/launchers/api_server/entry.py", line 80, in build_async_engine_client_from_engine_args
+    vllm_config = engine_args.create_engine_config(usage_context=usage_context)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py", line 2173, in create_engine_config
+    maybe_override_with_speculators(
+  File "/usr/local/lib/python3.12/dist-packages/vllm/transformers_utils/config.py", line 814, in maybe_override_with_speculators
+    config_dict, _ = PreTrainedConfig.get_config_dict(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/configuration_utils.py", line 747, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/configuration_utils.py", line 802, in _get_config_dict
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/utils/hub.py", line 294, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/utils/hub.py", line 470, in cached_files
+    raise OSError(
+OSError: RedHatAI/Qwen3-8B-quantized.w8a8 is not a local folder and is not a valid model identifier listed on 'https://huggingface.co/models'
+If this is a private repository, make sure to pass a token having permission to this repo either by logging in with `hf auth login` or by passing `token=<your_token>`
+SERVER DIED
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/cli/main.py", line 118, in main
+    args.dispatch_function(args)
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/cli/serve.py", line 154, in cmd
+    uvloop.run(run_server(args))
+  File "/usr/local/lib/python3.12/dist-packages/uvloop/__init__.py", line 96, in run
+    return __asyncio.run(
+           ^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1515, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.12/dist-packages/uvloop/__init__.py", line 48, in wrapper
+    return await main
+           ^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/launchers/api_server/entry.py", line 172, in run_server
+    await run_server_worker(listen_address, sock, args, **uvicorn_kwargs)
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/launchers/api_server/entry.py", line 185, in run_server_worker
+    async with build_async_engine_client(
+  File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/launchers/api_server/entry.py", line 58, in build_async_engine_client
+    async with build_async_engine_client_from_engine_args(
+  File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/launchers/api_server/entry.py", line 80, in build_async_engine_client_from_engine_args
+    vllm_config = engine_args.create_engine_config(usage_context=usage_context)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py", line 2173, in create_engine_config
+    maybe_override_with_speculators(
+  File "/usr/local/lib/python3.12/dist-packages/vllm/transformers_utils/config.py", line 814, in maybe_override_with_speculators
+    config_dict, _ = PreTrainedConfig.get_config_dict(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/configuration_utils.py", line 747, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/configuration_utils.py", line 802, in _get_config_dict
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/utils/hub.py", line 294, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/utils/hub.py", line 470, in cached_files
+    raise OSError(
+OSError: RedHatAI/Qwen3-8B-quantized.w8a8 is not a local folder and is not a valid model identifier listed on 'https://huggingface.co/models'
+If this is a private repository, make sure to pass a token having permission to this repo either by logging in with `hf auth login` or by passing `token=<your_token>`
+kv_tokens=404336
+max_fit_long=46 max_fit_short=394
+[bf16_kvauto long c=1 rc=0] Output token throughput (tok/s): 73.90  Median TTFT (ms): 785.86  Median TPOT (ms): 12.01  Median ITL (ms): 12.03 
+[bf16_kvauto long c=2 rc=0] Output token throughput (tok/s): 127.66  Median TTFT (ms): 1153.23  Median TPOT (ms): 13.44  Median ITL (ms): 12.75 
+[bf16_kvauto long c=4 rc=0] Output token throughput (tok/s): 198.40  Median TTFT (ms): 1659.61  Median TPOT (ms): 16.80  Median ITL (ms): 14.34 
+[bf16_kvauto long c=8 rc=0] Output token throughput (tok/s): 272.13  Median TTFT (ms): 1603.05  Median TPOT (ms): 25.89  Median ITL (ms): 17.55 
+[bf16_kvauto long c=16 rc=0] Output token throughput (tok/s): 324.39  Median TTFT (ms): 1811.85  Median TPOT (ms): 44.49  Median ITL (ms): 23.97 
+[bf16_kvauto long c=32 rc=0] Output token throughput (tok/s): 315.21  Median TTFT (ms): 2259.77  Median TPOT (ms): 92.66  Median ITL (ms): 44.34 
+[bf16_kvauto long c=46 rc=0] Output token throughput (tok/s): 314.99  Median TTFT (ms): 2995.33  Median TPOT (ms): 131.91  Median ITL (ms): 50.81 
+[bf16_kvauto long c=64 rc=0] Output token throughput (tok/s): 297.77  Median TTFT (ms): 26961.16  Median TPOT (ms): 149.52  Median ITL (ms): 51.75 
+[bf16_kvauto long c=128 rc=0] Output token throughput (tok/s): 291.78  Median TTFT (ms): 134340.58  Median TPOT (ms): 157.97  Median ITL (ms): 52.11 
+[bf16_kvauto short c=1 rc=0] Output token throughput (tok/s): 88.41  Median TTFT (ms): 57.55  Median TPOT (ms): 11.21  Median ITL (ms): 11.21 
+[bf16_kvauto short c=2 rc=0] Output token throughput (tok/s): 174.86  Median TTFT (ms): 92.39  Median TPOT (ms): 11.26  Median ITL (ms): 11.23 
+[bf16_kvauto short c=4 rc=0] Output token throughput (tok/s): 339.54  Median TTFT (ms): 169.37  Median TPOT (ms): 11.42  Median ITL (ms): 11.42 
+[bf16_kvauto short c=8 rc=0] Output token throughput (tok/s): 640.35  Median TTFT (ms): 274.26  Median TPOT (ms): 11.98  Median ITL (ms): 11.81 
+[bf16_kvauto short c=16 rc=0] Output token throughput (tok/s): 1147.36  Median TTFT (ms): 409.77  Median TPOT (ms): 13.13  Median ITL (ms): 12.73 
+[bf16_kvauto short c=32 rc=0] Output token throughput (tok/s): 1853.91  Median TTFT (ms): 615.31  Median TPOT (ms): 15.97  Median ITL (ms): 14.79 
+[bf16_kvauto short c=64 rc=0] Output token throughput (tok/s): 2813.38  Median TTFT (ms): 655.72  Median TPOT (ms): 21.51  Median ITL (ms): 17.79 
+[bf16_kvauto short c=128 rc=0] Output token throughput (tok/s): 3489.50  Median TTFT (ms): 955.69  Median TPOT (ms): 34.40  Median ITL (ms): 25.99 
+[bf16_kvauto short c=256 rc=0] Output token throughput (tok/s): 3571.12  Median TTFT (ms): 1737.73  Median TPOT (ms): 66.43  Median ITL (ms): 47.38 
+[bf16_kvauto short c=394 rc=0] Output token throughput (tok/s): 3358.15  Median TTFT (ms): 3324.71  Median TPOT (ms): 107.91  Median ITL (ms): 75.22 
+DONE bf16_kvauto
+kv_tokens=895024 max_fit_long=102 max_fit_short=512
+[w8a8_kvfp8 declong c=1 rc=0] Output token throughput (tok/s): 107.48  Median TPOT (ms): 8.71  Median ITL (ms): 8.72 
+[w8a8_kvfp8 declong c=8 rc=0] Output token throughput (tok/s): 506.13  Median TPOT (ms): 13.32  Median ITL (ms): 11.81 
+[w8a8_kvfp8 declong c=32 rc=0] Output token throughput (tok/s): 761.29  Median TPOT (ms): 32.96  Median ITL (ms): 26.56 
+[w8a8_kvfp8 declong c=64 rc=0] Output token throughput (tok/s): 877.79  Median TPOT (ms): 54.01  Median ITL (ms): 41.66 
+[w8a8_kvfp8 declong c=96 rc=0] Output token throughput (tok/s): 914.47  Median TPOT (ms): 75.11  Median ITL (ms): 57.90 
+[w8a8_kvfp8 declong c=102 rc=0] Output token throughput (tok/s): 919.74  Median TPOT (ms): 78.89  Median ITL (ms): 60.69 
+[w8a8_kvfp8 decshort c=1 rc=0] Output token throughput (tok/s): 119.32  Median TPOT (ms): 8.31  Median ITL (ms): 8.18 
+[w8a8_kvfp8 decshort c=64 rc=0] Output token throughput (tok/s): 4620.76  Median TPOT (ms): 12.73  Median ITL (ms): 12.14 
+[w8a8_kvfp8 decshort c=128 rc=0] Output token throughput (tok/s): 6370.87  Median TPOT (ms): 17.93  Median ITL (ms): 16.78 
+[w8a8_kvfp8 decshort c=256 rc=0] Output token throughput (tok/s): 7295.93  Median TPOT (ms): 30.70  Median ITL (ms): 28.31 
+[w8a8_kvfp8 decshort c=384 rc=0] Output token throughput (tok/s): 7748.13  Median TPOT (ms): 42.84  Median ITL (ms): 39.22 
+[w8a8_kvfp8 decshort c=512 rc=0] Output token throughput (tok/s): 7735.62  Median TPOT (ms): 56.64  Median ITL (ms): 52.50 
+[w8a8_kvfp8 long c=1 rc=0] Output token throughput (tok/s): 101.20  Median TPOT (ms): 8.74  Median ITL (ms): 8.75 
+[w8a8_kvfp8 long c=2 rc=0] Output token throughput (tok/s): 177.82  Median TPOT (ms): 9.56  Median ITL (ms): 9.09 
+[w8a8_kvfp8 long c=4 rc=0] Output token throughput (tok/s): 278.77  Median TPOT (ms): 11.64  Median ITL (ms): 10.06 
+[w8a8_kvfp8 long c=8 rc=0] Output token throughput (tok/s): 393.34  Median TPOT (ms): 17.63  Median ITL (ms): 11.96 
+[w8a8_kvfp8 long c=16 rc=0] Output token throughput (tok/s): 463.87  Median TPOT (ms): 31.39  Median ITL (ms): 17.95 
+[w8a8_kvfp8 long c=32 rc=0] Output token throughput (tok/s): 527.53  Median TPOT (ms): 55.53  Median ITL (ms): 27.95 
+[w8a8_kvfp8 long c=64 rc=0] Output token throughput (tok/s): 588.84  Median TPOT (ms): 97.54  Median ITL (ms): 43.23 
+[w8a8_kvfp8 long c=102 rc=0] Output token throughput (tok/s): 608.21  Median TPOT (ms): 145.74  Median ITL (ms): 153.99 
+[w8a8_kvfp8 short c=1 rc=0] Output token throughput (tok/s): 120.85  Median TPOT (ms): 8.18  Median ITL (ms): 8.18 
+[w8a8_kvfp8 short c=2 rc=0] Output token throughput (tok/s): 237.69  Median TPOT (ms): 8.27  Median ITL (ms): 8.26 
+[w8a8_kvfp8 short c=4 rc=0] Output token throughput (tok/s): 462.04  Median TPOT (ms): 8.42  Median ITL (ms): 8.38 
+[w8a8_kvfp8 short c=8 rc=0] Output token throughput (tok/s): 873.92  Median TPOT (ms): 8.78  Median ITL (ms): 8.70 
+[w8a8_kvfp8 short c=16 rc=0] Output token throughput (tok/s): 1584.53  Median TPOT (ms): 9.50  Median ITL (ms): 9.23 
+[w8a8_kvfp8 short c=32 rc=0] Output token throughput (tok/s): 2611.58  Median TPOT (ms): 11.19  Median ITL (ms): 10.65 
+[w8a8_kvfp8 short c=64 rc=0] Output token throughput (tok/s): 3925.54  Median TPOT (ms): 15.08  Median ITL (ms): 13.21 
+[w8a8_kvfp8 short c=128 rc=0] Output token throughput (tok/s): 5185.83  Median TPOT (ms): 22.96  Median ITL (ms): 18.51 
+[w8a8_kvfp8 short c=256 rc=0] Output token throughput (tok/s): 5798.83  Median TPOT (ms): 41.31  Median ITL (ms): 32.70 
+[w8a8_kvfp8 short c=512 rc=0] Output token throughput (tok/s): 6061.71  Median TPOT (ms): 75.94  Median ITL (ms): 61.29 
+DONE w8a8_kvfp8 all
+kv_tokens=801744 max_fit_long=92 max_fit_short=512
+[bf16_kvfp8 declong c=1 rc=0] Output token throughput (tok/s): 79.86  Median TPOT (ms): 11.75  Median ITL (ms): 11.75 
+[bf16_kvfp8 declong c=8 rc=0] Output token throughput (tok/s): 394.58  Median TPOT (ms): 16.83  Median ITL (ms): 14.65 
+[bf16_kvfp8 declong c=32 rc=0] Output token throughput (tok/s): 616.16  Median TPOT (ms): 39.34  Median ITL (ms): 30.07 
+[bf16_kvfp8 declong c=64 rc=0] Output token throughput (tok/s): 717.85  Median TPOT (ms): 63.25  Median ITL (ms): 44.66 
+[bf16_kvfp8 declong c=92 rc=0] Output token throughput (tok/s): 738.59  Median TPOT (ms): 85.96  Median ITL (ms): 60.81 
+[bf16_kvfp8 decshort c=1 rc=0] Output token throughput (tok/s): 88.52  Median TPOT (ms): 11.21  Median ITL (ms): 11.15 
+[bf16_kvfp8 decshort c=64 rc=0] Output token throughput (tok/s): 3637.79  Median TPOT (ms): 15.98  Median ITL (ms): 14.90 
+[bf16_kvfp8 decshort c=128 rc=0] Output token throughput (tok/s): 4991.77  Median TPOT (ms): 22.46  Median ITL (ms): 20.55 
+[bf16_kvfp8 decshort c=256 rc=0] Output token throughput (tok/s): 5546.43  Median TPOT (ms): 39.65  Median ITL (ms): 35.87 
+[bf16_kvfp8 decshort c=384 rc=0] Output token throughput (tok/s): 5795.03  Median TPOT (ms): 56.43  Median ITL (ms): 51.64 
+[bf16_kvfp8 decshort c=512 rc=0] Output token throughput (tok/s): 5861.33  Median TPOT (ms): 73.81  Median ITL (ms): 66.61 
+[bf16_kvfp8 long c=1 rc=0] Output token throughput (tok/s): 75.04  Median TPOT (ms): 11.74  Median ITL (ms): 11.76 
+[bf16_kvfp8 long c=2 rc=0] Output token throughput (tok/s): 133.47  Median TPOT (ms): 12.68  Median ITL (ms): 11.96 
+[bf16_kvfp8 long c=4 rc=0] Output token throughput (tok/s): 211.52  Median TPOT (ms): 15.47  Median ITL (ms): 12.95 
+[bf16_kvfp8 long c=8 rc=0] Output token throughput (tok/s): 301.09  Median TPOT (ms): 23.17  Median ITL (ms): 14.83 
+[bf16_kvfp8 long c=16 rc=0] Output token throughput (tok/s): 360.34  Median TPOT (ms): 40.50  Median ITL (ms): 21.01 
+[bf16_kvfp8 long c=32 rc=0] Output token throughput (tok/s): 412.66  Median TPOT (ms): 71.12  Median ITL (ms): 31.21 
+[bf16_kvfp8 long c=64 rc=0] Output token throughput (tok/s): 458.78  Median TPOT (ms): 126.23  Median ITL (ms): 46.25 
+[bf16_kvfp8 long c=92 rc=0] Output token throughput (tok/s): 468.89  Median TPOT (ms): 174.13  Median ITL (ms): 198.86 
+[bf16_kvfp8 short c=1 rc=0] Output token throughput (tok/s): 88.71  Median TPOT (ms): 11.16  Median ITL (ms): 11.16 
+[bf16_kvfp8 short c=2 rc=0] Output token throughput (tok/s): 177.38  Median TPOT (ms): 11.08  Median ITL (ms): 11.07 
+[bf16_kvfp8 short c=4 rc=0] Output token throughput (tok/s): 344.81  Median TPOT (ms): 11.21  Median ITL (ms): 11.21 
+[bf16_kvfp8 short c=8 rc=0] Output token throughput (tok/s): 654.95  Median TPOT (ms): 11.66  Median ITL (ms): 11.55 
+[bf16_kvfp8 short c=16 rc=0] Output token throughput (tok/s): 1196.74  Median TPOT (ms): 12.51  Median ITL (ms): 12.10 
+[bf16_kvfp8 short c=32 rc=0] Output token throughput (tok/s): 1968.75  Median TPOT (ms): 14.96  Median ITL (ms): 13.80 
+[bf16_kvfp8 short c=64 rc=0] Output token throughput (tok/s): 3067.61  Median TPOT (ms): 19.04  Median ITL (ms): 16.07 
+[bf16_kvfp8 short c=128 rc=0] Output token throughput (tok/s): 3997.12  Median TPOT (ms): 29.74  Median ITL (ms): 22.43 
+[bf16_kvfp8 short c=256 rc=0] Output token throughput (tok/s): 4355.11  Median TPOT (ms): 54.94  Median ITL (ms): 40.12 
+[bf16_kvfp8 short c=512 rc=0] Output token throughput (tok/s): 4529.02  Median TPOT (ms): 102.07  Median ITL (ms): 76.69 
+DONE bf16_kvfp8 all
+kv_tokens=451040 max_fit_long=51 max_fit_short=440
+[w8a8_kvauto declong c=1 rc=0] Output token throughput (tok/s): 106.93  Median TPOT (ms): 8.79  Median ITL (ms): 8.79 
+[w8a8_kvauto declong c=8 rc=0] Output token throughput (tok/s): 439.33  Median TPOT (ms): 15.79  Median ITL (ms): 14.27 
+[w8a8_kvauto declong c=32 rc=0] Output token throughput (tok/s): 555.54  Median TPOT (ms): 47.79  Median ITL (ms): 39.44 
+[w8a8_kvauto declong c=51 rc=0] Output token throughput (tok/s): 612.54  Median TPOT (ms): 65.87  Median ITL (ms): 48.29 
+[w8a8_kvauto decshort c=1 rc=0] Output token throughput (tok/s): 122.79  Median TPOT (ms): 8.09  Median ITL (ms): 7.99 
+[w8a8_kvauto decshort c=64 rc=0] Output token throughput (tok/s): 4457.54  Median TPOT (ms): 13.16  Median ITL (ms): 12.52 
+[w8a8_kvauto decshort c=128 rc=0] Output token throughput (tok/s): 6097.46  Median TPOT (ms): 18.83  Median ITL (ms): 17.36 
+[w8a8_kvauto decshort c=256 rc=0] Output token throughput (tok/s): 6782.53  Median TPOT (ms): 33.25  Median ITL (ms): 30.67 
+[w8a8_kvauto decshort c=384 rc=0] Output token throughput (tok/s): 6962.42  Median TPOT (ms): 47.88  Median ITL (ms): 42.97 
+[w8a8_kvauto decshort c=440 rc=0] Output token throughput (tok/s): 6612.28  Median TPOT (ms): 58.00  Median ITL (ms): 52.87 
+[w8a8_kvauto long c=1 rc=0] Output token throughput (tok/s): 100.94  Median TPOT (ms): 8.82  Median ITL (ms): 8.84 
+[w8a8_kvauto long c=2 rc=0] Output token throughput (tok/s): 169.83  Median TPOT (ms): 10.18  Median ITL (ms): 9.72 
+[w8a8_kvauto long c=4 rc=0] Output token throughput (tok/s): 259.01  Median TPOT (ms): 13.07  Median ITL (ms): 11.33 
+[w8a8_kvauto long c=8 rc=0] Output token throughput (tok/s): 348.31  Median TPOT (ms): 20.48  Median ITL (ms): 14.56 
+[w8a8_kvauto long c=16 rc=0] Output token throughput (tok/s): 402.95  Median TPOT (ms): 36.10  Median ITL (ms): 21.04 
+[w8a8_kvauto long c=32 rc=0] Output token throughput (tok/s): 376.53  Median TPOT (ms): 77.71  Median ITL (ms): 41.13 
+[w8a8_kvauto long c=51 rc=0] Output token throughput (tok/s): 367.17  Median TPOT (ms): 125.65  Median ITL (ms): 50.01 
+[w8a8_kvauto short c=1 rc=0] Output token throughput (tok/s): 123.39  Median TPOT (ms): 8.02  Median ITL (ms): 8.02 
+[w8a8_kvauto short c=2 rc=0] Output token throughput (tok/s): 238.50  Median TPOT (ms): 8.25  Median ITL (ms): 8.24 
+[w8a8_kvauto short c=4 rc=0] Output token throughput (tok/s): 460.67  Median TPOT (ms): 8.45  Median ITL (ms): 8.43 
+[w8a8_kvauto short c=8 rc=0] Output token throughput (tok/s): 869.03  Median TPOT (ms): 8.82  Median ITL (ms): 8.74 
+[w8a8_kvauto short c=16 rc=0] Output token throughput (tok/s): 1545.80  Median TPOT (ms): 9.75  Median ITL (ms): 9.52 
+[w8a8_kvauto short c=32 rc=0] Output token throughput (tok/s): 2474.73  Median TPOT (ms): 12.20  Median ITL (ms): 11.35 
+[w8a8_kvauto short c=64 rc=0] Output token throughput (tok/s): 3618.19  Median TPOT (ms): 16.44  Median ITL (ms): 14.44 
+[w8a8_kvauto short c=128 rc=0] Output token throughput (tok/s): 4597.37  Median TPOT (ms): 25.84  Median ITL (ms): 20.68 
+[w8a8_kvauto short c=256 rc=0] Output token throughput (tok/s): 4685.78  Median TPOT (ms): 50.54  Median ITL (ms): 37.25 
+[w8a8_kvauto short c=440 rc=0] Output token throughput (tok/s): 4291.52  Median TPOT (ms): 93.29  Median ITL (ms): 65.26 
+DONE w8a8_kvauto all
+kv_tokens=411600 max_fit_long=47 max_fit_short=401
+[bf16_kvauto declong c=1 rc=0] Output token throughput (tok/s): 79.36  Median TPOT (ms): 11.86  Median ITL (ms): 11.85 
+[bf16_kvauto declong c=8 rc=0] Output token throughput (tok/s): 352.37  Median TPOT (ms): 19.31  Median ITL (ms): 17.15 
+[bf16_kvauto declong c=32 rc=0] Output token throughput (tok/s): 473.10  Median TPOT (ms): 54.27  Median ITL (ms): 42.95 
+[bf16_kvauto declong c=47 rc=0] Output token throughput (tok/s): 517.36  Median TPOT (ms): 70.01  Median ITL (ms): 50.20 
+[bf16_kvauto decshort c=1 rc=0] Output token throughput (tok/s): 89.63  Median TPOT (ms): 11.08  Median ITL (ms): 11.03 
+[bf16_kvauto decshort c=64 rc=0] Output token throughput (tok/s): 3519.91  Median TPOT (ms): 16.48  Median ITL (ms): 15.38 
+[bf16_kvauto decshort c=128 rc=0] Output token throughput (tok/s): 4684.63  Median TPOT (ms): 24.15  Median ITL (ms): 22.03 
+[bf16_kvauto decshort c=256 rc=0] Output token throughput (tok/s): 5117.68  Median TPOT (ms): 43.68  Median ITL (ms): 39.21 
+[bf16_kvauto decshort c=384 rc=0] Output token throughput (tok/s): 5225.49  Median TPOT (ms): 63.03  Median ITL (ms): 56.62 
+[bf16_kvauto decshort c=401 rc=0] Output token throughput (tok/s): 4927.73  Median TPOT (ms): 70.41  Median ITL (ms): 64.33 
+DONE bf16_kvauto dec
