@@ -43,7 +43,7 @@ for job in jobs:
     for bit,sinks in loads.items():
         names=aliases[bit];reset=any('rst' in n or 'reset_landing' in n or 'reset_' in n for n in names)
         clock_names=set(job.get('clock_ports',[]))|{job.get('clock_port','clk'),'clk_desc'}
-        clock=any(n in clock_names for n in names) or all(c[2].upper() in ['CLK','CK','CLOCK'] or (c[2].upper()=='C' and c[1].upper().startswith(('DFF','SDFF','ADFF','LATCH'))) for c in sinks)
+        clock=any(n in clock_names for n in names) or all((c[1].startswith(('DFF','SDFF','DFFHQ','DFFASR','ot_sram_')) and c[2].upper() in ['CLK','CK','C','CLOCK']) for c in sinks)
         nets.append(dict(bit=bit,fanout=len(sinks),names=names,drivers=drivers[bit],reset=reset,clock=clock,sinks=sinks))
     nets.sort(key=lambda x:x['fanout'],reverse=True)
     # Collapse buffers/inverters recursively, including QN->INV->Q, without
