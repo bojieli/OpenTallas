@@ -46,7 +46,7 @@ proc st_group {name pats cx cy expect} {
   odb::dbGroup_destroy $gr
   puts "RP4_STATION $name $n flops at ($cx, $cy)"
 }
-st_group gl0_mid {u.u_gn.g_gl[0].u_v2/ u.u_gn.g_gl[0].u_d2/ u.u_gn.g_gl\[0\].u_v2/ u.u_gn.g_gl\[0\].u_d2/} 205 799.6 50
-st_group gl1_mid {u.u_gn.g_gl[1].u_v2/ u.u_gn.g_gl[1].u_d2/ u.u_gn.g_gl\[1\].u_v2/ u.u_gn.g_gl\[1\].u_d2/} 265 799.6 50
-st_group lf0_mid {u.u_gn.u_grv2/ u.u_gn.u_grd2/} 325 734.6 50
+st_group gl0_mid {u_gn.g_gl[0].u_v2/ u_gn.g_gl[0].u_d2/ u_gn.g_gl\[0\].u_v2/ u_gn.g_gl\[0\].u_d2/} 205 799.6 50
+st_group gl1_mid {u_gn.g_gl[1].u_v2/ u_gn.g_gl[1].u_d2/ u_gn.g_gl\[1\].u_v2/ u_gn.g_gl\[1\].u_d2/} 265 799.6 50
+st_group lf0_mid {u_gn.u_grv2/ u_gn.u_grd2/} 325 734.6 50
 puts "RP4_STATION fixed $::sr_fixed"

@@ -1,6 +1,6 @@
 {
  "name": "smh_tile_rp4lp",
- "top": "ot_hbm_smh_rp4_lpt",
+ "top": "ot_hbm_smh_rp4_flat_lp",
  "kind": "cluster",
  "sources": [
   "rtl/lib/ot_hdly.sv",
@@ -46,8 +46,7 @@
   "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv",
   "rtl/hbm_accel/sm/repack/ot_rp4l_children.sv",
   "rtl/common/landed_parent/ot_pl_land.sv",
-  "rtl/hbm_accel/sm/repack/lp/ot_hbm_smh_rp4_flat_lp.sv",
-  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_lpt.sv"
+  "rtl/hbm_accel/sm/repack/lp/ot_hbm_smh_rp4_flat_lp.sv"
  ],
  "params": {},
  "defines": [
@@ -86,7 +85,7 @@
     1170.72
    ],
    "orient": "R0",
-   "inst": "u.u_lf0.u_lh.u_xs",
+   "inst": "u_lf0.u_lh.u_xs",
    "region": "n"
   },
   {
@@ -97,7 +96,7 @@
     1356.48
    ],
    "orient": "R0",
-   "inst": "u.u_lf0.u_lh.u_bdc",
+   "inst": "u_lf0.u_lh.u_bdc",
    "region": "n"
   },
   {
@@ -108,7 +107,7 @@
     1451.52
    ],
    "orient": "R0",
-   "inst": "u.u_lf0.u_lh.u_tcc.u_h0",
+   "inst": "u_lf0.u_lh.u_tcc.u_h0",
    "region": "n"
   },
   {
@@ -119,7 +118,7 @@
     1451.52
    ],
    "orient": "R0",
-   "inst": "u.u_lf0.u_lh.u_tcc.u_h1",
+   "inst": "u_lf0.u_lh.u_tcc.u_h1",
    "region": "n"
   },
   {
@@ -130,7 +129,7 @@
     1356.48
    ],
    "orient": "R0",
-   "inst": "u.u_lf0.u_lh.u_tcc.u_tr",
+   "inst": "u_lf0.u_lh.u_tcc.u_tr",
    "region": "n"
   },
   {
@@ -141,7 +140,7 @@
     267.864
    ],
    "orient": "MX",
-   "inst": "u.u_lf1.u_lh.u_xs",
+   "inst": "u_lf1.u_lh.u_xs",
    "region": "s"
   },
   {
@@ -152,7 +151,7 @@
     99.36
    ],
    "orient": "MX",
-   "inst": "u.u_lf1.u_lh.u_bdc",
+   "inst": "u_lf1.u_lh.u_bdc",
    "region": "s"
   },
   {
@@ -163,7 +162,7 @@
     25.92
    ],
    "orient": "MX",
-   "inst": "u.u_lf1.u_lh.u_tcc.u_h0",
+   "inst": "u_lf1.u_lh.u_tcc.u_h0",
    "region": "s"
   },
   {
@@ -174,7 +173,7 @@
     25.92
    ],
    "orient": "MX",
-   "inst": "u.u_lf1.u_lh.u_tcc.u_h1",
+   "inst": "u_lf1.u_lh.u_tcc.u_h1",
    "region": "s"
   },
   {
@@ -185,7 +184,7 @@
     168.576
    ],
    "orient": "R0",
-   "inst": "u.u_lf1.u_lh.u_tcc.u_tr",
+   "inst": "u_lf1.u_lh.u_tcc.u_tr",
    "region": "s"
   },
   {
@@ -196,7 +195,7 @@
     479.544
    ],
    "orient": "MX",
-   "inst": "u.u_land_s",
+   "inst": "u_land_s",
    "region": "s"
   },
   {
@@ -207,7 +206,7 @@
     544.344
    ],
    "orient": "MX",
-   "inst": "u.u_row1",
+   "inst": "u_row1",
    "region": "s"
   },
   {
@@ -218,7 +217,7 @@
     725.76
    ],
    "orient": "R0",
-   "inst": "u.u_beat_t",
+   "inst": "u_beat_t",
    "region": "n"
   },
   {
@@ -229,7 +228,7 @@
     963.36
    ],
    "orient": "R0",
-   "inst": "u.u_row0",
+   "inst": "u_row0",
    "region": "n"
   },
   {
@@ -240,7 +239,7 @@
     1075.68
    ],
    "orient": "R0",
-   "inst": "u.u_land_n",
+   "inst": "u_land_n",
    "region": "n"
   },
   {
@@ -251,7 +250,7 @@
     544.344
    ],
    "orient": "MX",
-   "inst": "u.u_rowe1",
+   "inst": "u_rowe1",
    "region": "s"
   },
   {
@@ -262,7 +261,7 @@
     725.76
    ],
    "orient": "R0",
-   "inst": "u.u_beate",
+   "inst": "u_beate",
    "region": "n"
   },
   {
@@ -273,17 +272,19 @@
     963.36
    ],
    "orient": "R0",
-   "inst": "u.u_rowe0",
+   "inst": "u_rowe0",
    "region": "n"
   }
  ],
  "pins": {
   "W": [
-   "rin",
+   "rin_n",
+   "rin_s",
    "bin"
   ],
   "E": [
-   "rout",
+   "rout_n",
+   "rout_s",
    "bout"
   ],
   "S": [
@@ -307,8 +308,7 @@
  "io_tcl": "physical/ref_tile_specs/smh/smh_tile_rp4lp_pins.tcl",
  "orfs_vars": {
   "OT_IO_REF_CLASS": "1",
-  "POST_TAPCELL_TCL": "physical/ref_tile_specs/smh/smh_tile_rp4lp_stations.tcl",
-  "OT_SPINE_PORTS": "ck_n,ck_s"
+  "POST_TAPCELL_TCL": "physical/ref_tile_specs/smh/smh_tile_rp4lp_stations.tcl"
  },
  "refglob": "*",
  "io_flop_at_pins": {
@@ -332,7 +332,7 @@
   "branch": "claude/pl-smt-1018",
   "tag": "rp4lp",
   "purpose": "MATVEC body clock-structure closure as LANDED REGIONS (landed-regions-standard-1018); not attention/fullSM/native chip qualification.",
-  "structural_change": "rp4lp (PL-SMT 10-18, landed-regions-standard-1018): rp4m ran ONE balanced spine over 457.92 x 1529.28 um (TT insertion 1.53 ns, child-flop boundary ~91 ps). Now 2 clock regions from tools/landed_parent/lp.py (spec results/arch/landed_parent_1018/pl_smt/rp4_lp_spec.json): n = leaf 0 + row 0 + the whole bin beat path (pin flops, beat_t, pte beat, land_n) + N gather relays; s = leaf 1 + row 1 + land_s + S-edge gather outputs. Minimum-crossing cut (bin is broadcast to land_n, beat_t and land_s): 3 landings (bin_l->land_s 2,069 b, leaf-0 gather 50 b, pass gather 100 b; ring D4/E=K=2, +3 edges), pads 3 x (818 + 26) b in front of leaf 1, reset runs depth 3 replace the 5-stage u_rt tree. Ports: data names unchanged (wrapper ot_hbm_smh_rp4_lpt), clk -> ck_n + ck_s; offsets gout +3, all others 0. Outline h 1529.28 -> 1598.4 (GEN2 SM frame row): N half +69.12. Same 18 CLOSED child views.",
+  "structural_change": "rp4lp (PL-SMT 10-18, landed-regions-standard-1018): rp4m ran ONE balanced spine over 457.92 x 1529.28 um (TT insertion 1.53 ns, child-flop boundary ~91 ps). Now 2 clock regions from tools/landed_parent/lp.py (spec results/arch/landed_parent_1018/pl_smt/rp4_lp_spec.json): n = leaf 0 + row 0 + the whole bin beat path (pin flops, beat_t, pte beat, land_n) + N gather relays; s = leaf 1 + row 1 + land_s + S-edge gather outputs. Minimum-crossing cut (bin is broadcast to land_n, beat_t and land_s): 3 landings (bin_l->land_s 2,069 b, leaf-0 gather 50 b, pass gather 100 b; ring D4/E=K=2, +3 edges), pads 3 x (818 + 26) b in front of leaf 1, reset runs depth 3 replace the 5-stage u_rt tree. Ports: kit top = lp output ot_hbm_smh_rp4_flat_lp (rin / rout split per region: rin_n / rout_n = old 817:0, rin_s / rout_s = old 1635:818), clk -> ck_n + ck_s; offsets gout +3, all others 0. PL-KIT landed-cluster clock (multiple_cts_roots per region, landed_record) replaces the gate-1 spine form, whose S-root IO latency mismatch gave FF hold -957 ps on 1,282 S-region input endpoints. Outline h 1529.28 -> 1598.4 (GEN2 SM frame row): N half +69.12. Same 18 CLOSED child views.",
   "extra_paths": [
    "physical/common_flow/anchor_row_packing.tcl",
    "tools/hbm_sm_repack_1015",
@@ -359,15 +359,61 @@
   "ck_n",
   "ck_s"
  ],
- "sdc_extra": [
-  "physical/ref_tile_specs/smh/smh_tile_rp4lp_regions.sdc"
- ],
- "child_clock_ref": "boundary",
- "landed_parent": {
-  "record": "results/arch/landed_parent_1018/pl_smt/ot_hbm_smh_rp4_flat_lp_record.json",
-  "regions": {
-   "n": "ck_n",
-   "s": "ck_s"
+ "clock": "multiple_cts_roots",
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_n"
+   ],
+   "inputs": [
+    "rst_n",
+    "xs_a1",
+    "xs_g1",
+    "xs_a2",
+    "xs_g2",
+    "rin_n",
+    "bin",
+    "gin"
+   ],
+   "outputs": [
+    "rout_n",
+    "bout"
+   ]
+  },
+  "s": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_s"
+   ],
+   "inputs": [
+    "xss_a1",
+    "xss_g1",
+    "xss_a2",
+    "xss_g2",
+    "rin_s"
+   ],
+   "outputs": [
+    "rout_s",
+    "gout"
+   ]
   }
- }
+ },
+ "landed_record": "results/arch/landed_parent_1018/pl_smt/ot_hbm_smh_rp4_flat_lp_record.json",
+ "child_clock_ref": "boundary"
 }
