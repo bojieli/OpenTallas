@@ -1,0 +1,10 @@
+read_json post_mut.json
+rename top gate
+read_verilog gold.v
+proc
+async2sync
+miter -equiv -flatten -make_assert gold gate miter
+hierarchy -top miter
+flatten
+opt_clean
+sat -verify -tempinduct -prove-asserts -set-init-zero -seq 1 -maxsteps 12 miter
