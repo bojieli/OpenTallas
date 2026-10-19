@@ -98,6 +98,7 @@ proc ot_mm_scene_shim {on} {
 # Recreating the existing clock updates its waveform in place; IO constraints,
 # latency and uncertainty remain attached. Other virtual/window clocks stay put.
 proc ot_mm_sync_link_periods {} {
+  if {[llength [info commands ot_single_clock_check]]} { ot_single_clock_check }
   foreach c [all_clocks] {
     set vn [get_full_name $c]
     if {![regexp {^ot_lb_v_(.+)$} $vn -> rn] || [llength [get_property $c sources]]} continue
