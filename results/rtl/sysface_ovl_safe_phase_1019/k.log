@@ -1,0 +1,41 @@
+ot-run: ot-epyc4       admits  1030 GB (avail 815, growth 94, headroom 0, waiters 0/0 GB) load 80/128 running 31 disk 317 GB 
+ot-run: ot-epyc5       admits   603 GB (avail 536, growth 113, headroom 0, waiters 0/0 GB) load 78/128 running 11 disk 1038 GB 
+ot-run: ot-epyc6       admits   266 GB (avail 299, growth 113, headroom 0, waiters 0/0 GB) load 30/128 running 16 disk 6046 GB 
+ot-run: ot-epyc7       admits   701 GB (avail 592, growth 101, headroom 0, waiters 0/0 GB) load 55/96 running 18 disk 6433 GB 
+ot-run: ot-epyc8       admits  1163 GB (avail 927, growth 113, headroom 0, waiters 0/0 GB) load 48/128 running 34 disk 319 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-k-ovl-phase-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-k-ovl-phase-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-169501-1792428839 after 1 s
+PHASE K TX0 go_sample300
+PHASE K TX0 cseq_FACE_wire_publication308
+PHASE K TX0 FACE_wire_external_sample309
+PHASE K TX0 internal_start_sample310
+PHASE K TX0 calendar_event_sample331
+PHASE K checked_RX_pin_sample334
+PHASE_PASS K TX0 MUT0 G300 P308 X309 I310 V331 O334
+- rtl/test/qwen_split/tb_k_ovl_phase.sv:130: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.000 s; speed 11.121 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+PHASE K TX0 go_sample300
+PHASE K TX0 cseq_FACE_wire_publication308
+PHASE K TX0 FACE_wire_external_sample309
+PHASE K TX0 internal_start_sample310
+PHASE K TX0 calendar_event_sample331
+PHASE_PASS K TX0 MUT1 G300 P308 X309 I310 V331 O-1
+- rtl/test/qwen_split/tb_k_ovl_phase.sv:130: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.000 s; speed 11.167 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+PHASE K TX1 go_sample300
+PHASE K TX1 cseq_FACE_wire_publication308
+PHASE K TX1 FACE_wire_external_sample309
+PHASE K TX1 internal_start_sample310
+PHASE K TX1 calendar_event_sample331
+PHASE_PASS K TX1 MUT0 G300 P308 X309 I310 V331 O-1
+- rtl/test/qwen_split/tb_k_ovl_phase.sv:130: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.000 s; speed 10.659 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-169501-1792428839): exit 0

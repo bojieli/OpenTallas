@@ -1,0 +1,129 @@
+{
+  "schema": "opentallas.mu.ovl-safe-phase-components.v1",
+  "source_commit": "ce0a6e668",
+  "status": "PASS four directions and two expected early-FDI faults",
+  "tool": "Verilator5.050",
+  "profiles": {
+    "c": {
+      "target_commit": "b30f8454c6db1309ee4ec7a154943f6c737b43f2",
+      "unit": "oth-ubuntu-169453-1792428839",
+      "host": "ot-epyc6",
+      "source_hashes": {
+        "rtl/lib/ot_rst_pipe.sv": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+        "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+        "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a6c49228700d1956ca5618e1bd1130d58f23972d273f0258007380025a8b1dd",
+        "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+        "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "82bb11f1151e044dae4e1bfe3dad7d9128dabdf2bb2fe51b723061db9fa4e369",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv": "7de748addb336855cd9f1f3622dd59cff6ac6ff598a06f74e41a6963cceeb07b",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv": "b9088cd55b37d6a41476db6af7cf0f6d35c851659366a7aed9345439c6051d88",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv": "6927365f6d204079b19780ce74bbc1dddc6bd051a03d30061d6f6de2a15eb3bd",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv": "a1be7be2441e149a90d7a4365789df89b1d3f7cc5bfe0b808bb8c34f5b9ded2c",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688",
+        "rtl/test/qwen_split/tb_c_ovl_phase.sv": "3ef9a7682f1b5f165a8d50b6339fa47865cc49d54c25e21569f86661824a42ef"
+      }
+    },
+    "k": {
+      "target_commit": "353123a8d",
+      "unit": "oth-ubuntu-169501-1792428839",
+      "host": "ot-epyc6",
+      "source_hashes": {
+        "rtl/lib/ot_rst_pipe.sv": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+        "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+        "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a6c49228700d1956ca5618e1bd1130d58f23972d273f0258007380025a8b1dd",
+        "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+        "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "82bb11f1151e044dae4e1bfe3dad7d9128dabdf2bb2fe51b723061db9fa4e369",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv": "88d7c9f0f441e1827b56b5f0bb7996872073011cabbf52a38e45deac89bbb614",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv": "99df5a4fa2213760a65db2fca365d02d6bc70c807ca31933b4ee87a07a231153",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv": "b96568a31a4cd8c4dc0c99dfce1a146bade6ea846f9be3fe4395a6a763eef6b4",
+        "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv": "a1be7be2441e149a90d7a4365789df89b1d3f7cc5bfe0b808bb8c34f5b9ded2c",
+        "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688",
+        "rtl/test/qwen_split/tb_k_ovl_phase.sv": "26347178ad9447b52052675dd55ee448e81cb5630c0f36c9225e0c425239bf4b"
+      }
+    }
+  },
+  "per_calendar": {
+    "C_tx": {
+      "go_sample": 300,
+      "list_first_dt": 8,
+      "cseq_start_publication": 308,
+      "direct_wire_external_SAFE_start_sample": 309,
+      "SAFE_internal_calendar_start_sample": 310,
+      "encoded_calendar_dt": 20,
+      "calendar_event_publication": 330,
+      "calendar_event_sample": 331,
+      "raw_direct_wire_reference_minus_core_publication": 2,
+      "reference_definition": "calendar_event_publication minus encoded_calendar_dt",
+      "raw_component_qualified": true,
+      "physical_launch_binding_qualified": false
+    },
+    "C_rx": {
+      "go_sample": 300,
+      "list_first_dt": 8,
+      "cseq_start_publication": 308,
+      "direct_wire_external_SAFE_start_sample": 309,
+      "SAFE_internal_calendar_start_sample": 310,
+      "encoded_calendar_dt": 20,
+      "calendar_event_publication": 330,
+      "calendar_event_sample": 331,
+      "raw_direct_wire_reference_minus_core_publication": 2,
+      "reference_definition": "calendar_event_publication minus encoded_calendar_dt",
+      "raw_component_qualified": true,
+      "physical_launch_binding_qualified": false,
+      "checked_RX_pin_sample": 334,
+      "calendar_event_sample_to_checked_pin": 3,
+      "early_FDI_mutant": "caught abort08/no checked RX"
+    },
+    "K_tx": {
+      "go_sample": 300,
+      "list_first_dt": 8,
+      "cseq_start_publication": 308,
+      "direct_wire_external_SAFE_start_sample": 309,
+      "SAFE_internal_calendar_start_sample": 310,
+      "encoded_calendar_dt": 20,
+      "calendar_event_publication": 330,
+      "calendar_event_sample": 331,
+      "raw_direct_wire_reference_minus_core_publication": 2,
+      "reference_definition": "calendar_event_publication minus encoded_calendar_dt",
+      "raw_component_qualified": true,
+      "physical_launch_binding_qualified": false
+    },
+    "K_rx": {
+      "go_sample": 300,
+      "list_first_dt": 8,
+      "cseq_start_publication": 308,
+      "direct_wire_external_SAFE_start_sample": 309,
+      "SAFE_internal_calendar_start_sample": 310,
+      "encoded_calendar_dt": 20,
+      "calendar_event_publication": 330,
+      "calendar_event_sample": 331,
+      "raw_direct_wire_reference_minus_core_publication": 2,
+      "reference_definition": "calendar_event_publication minus encoded_calendar_dt",
+      "raw_component_qualified": true,
+      "physical_launch_binding_qualified": false,
+      "checked_RX_pin_sample": 334,
+      "calendar_event_sample_to_checked_pin": 3,
+      "early_FDI_mutant": "caught abort08/no checked RX"
+    }
+  },
+  "scope": "Actual shared raw OVL cseq with synthetic dt8 lists, ADM0, synchronous ROM plus capture; direct output wire into exact SAFE wrappers. No full programme required; TX stops before producer deadline.",
+  "direct_compute_FACE_source_hashes": {
+    "rtl/qwen_split/qfd_sys_face.sv": "0bd5c4948524c78b948f7eb88b09d435d494897228c221e708db142574640ac2",
+    "rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl.sv": "b388f9eb36f8c3609b525a59212e8c32479cfe12c9b37dd915dd86381cf5c8a1"
+  },
+  "direct_FACE_source_commit": "07174adb1",
+  "unbound": [
+    "KV bootcfg/pin sequencer wrapper registers are excluded",
+    "compute/KV die lane and clock phase",
+    "T/calendar source frame reference versus raw component reference",
+    "production programme and cap1 image",
+    "absolute FIRST"
+  ],
+  "absolute_FIRST_selected": false,
+  "production_bound": false
+}
