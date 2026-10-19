@@ -18,8 +18,8 @@
   "rst"
  ],
  "outline": {
-  "w": 1080.0,
-  "h": 1080.0
+  "w": 1058.4,
+  "h": 1101.6
  },
  "macros": [
   {
@@ -85,6 +85,7 @@
   "views_to": "physical/ref_tile/s81dv_idxrg/views",
   "record_to": "results/rtl/ref_tile/s81dv_idxrg"
  },
+ "why_floorplan": "Region pair column of the p4l svc grid is 1,062.5 um wide (2 x the 531.25 um dsfd_ctrl_rg2 pitch): one reader a region, two stacked a column (A over rg2 2c, B over A for rg2 2c+1, B's rq/rd lanes over A on die layers M6/M7 with landed relays). N face = svc_rs side (rqi, rdo), S face = rg2 side (rqo, rdi), W/E = the neighbour-only query / score chains. First gate sizes the outline from the synthesized area (util 0.52).",
  "children": [],
  "inter": [],
  "recipe": 4,

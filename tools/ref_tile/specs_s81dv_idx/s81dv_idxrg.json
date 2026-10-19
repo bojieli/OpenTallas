@@ -10,21 +10,58 @@
   "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
  ],
- "params": {"SRAM_MACRO": 1},
+ "params": {
+  "SRAM_MACRO": 1
+ },
  "clock_port": "ck",
- "reset_ports": ["rst"],
- "outline": {"w": 1080.0, "h": 1080.0},
- "macros": [{"view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2", "count": 4}],
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 1058.4,
+  "h": 1101.6
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 4
+  }
+ ],
  "pins": {
-  "N": ["rqi", "rdo"],
-  "S": ["rqo", "rdi"],
-  "W": ["qi", "si", "sid", "rst", "ck"],
-  "E": ["qo", "so", "st"]
+  "N": [
+   "rqi",
+   "rdo"
+  ],
+  "S": [
+   "rqo",
+   "rdi"
+  ],
+  "W": [
+   "qi",
+   "si",
+   "sid",
+   "rst",
+   "ck"
+  ],
+  "E": [
+   "qo",
+   "so",
+   "st"
+  ]
  },
  "clock": "cts",
  "layer_cap": "M5",
- "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 64, "hold_margin_ns": 0.03, "io_hold_margin_ns": 0.025},
- "pin_regs": {"enable": false, "reason": "Source-registered: dsdv_idx_rg lands every input in a flop at the pin and drives every output from a flop (header 'Pins'); the 2-edge chain hops (qi->qo, si->so) and the +1 station register on rq/rd are the priced static schedule, a recipe pin stage would shift every compiled beat."},
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.025
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: dsdv_idx_rg lands every input in a flop at the pin and drives every output from a flop (header 'Pins'); the 2-edge chain hops (qi->qo, si->so) and the +1 station register on rq/rd are the priced static schedule, a recipe pin stage would shift every compiled beat."
+ },
  "keep_pin_regs": true,
  "structural_change": "S81-IDXRD (MU.BAL.SX.3, release blocker): NEW element. p4l (bind9) has no index reader/scorer; this is the regional reader x16 (one per dsfd_ctrl_rg2 region), a station on the region's rq/rd link, exact engine ot_hdc_v41x_idx_engine NK 1, selector-native BK beats on a neighbour-only score chain into dsdv_bk_sel.",
  "job": {
@@ -46,5 +83,6 @@
   "benches": [],
   "views_to": "physical/ref_tile/s81dv_idxrg/views",
   "record_to": "results/rtl/ref_tile/s81dv_idxrg"
- }
+ },
+ "why_floorplan": "Region pair column of the p4l svc grid is 1,062.5 um wide (2 x the 531.25 um dsfd_ctrl_rg2 pitch): one reader a region, two stacked a column (A over rg2 2c, B over A for rg2 2c+1, B's rq/rd lanes over A on die layers M6/M7 with landed relays). N face = svc_rs side (rqi, rdo), S face = rg2 side (rqo, rdi), W/E = the neighbour-only query / score chains. First gate sizes the outline from the synthesized area (util 0.52)."
 }

@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  1080.0,
-  1080.0
+  1058.4,
+  1101.6
  ],
  "core": [
   2.16,
   2.16,
-  1077.84,
-  1077.84
+  1056.24,
+  1099.4399999999998
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -58,8 +58,8 @@
    "master": "ot_sram_1r1w_256x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 163.728,
-   "y": 518.4,
+   "x": 152.928,
+   "y": 529.2,
    "w": 172.8,
    "h": 41.04,
    "orient": "R0",
@@ -71,8 +71,8 @@
    "master": "ot_sram_1r1w_256x256_m2_r2c2",
    "inst": null,
    "idx": 1,
-   "x": 356.832,
-   "y": 518.4,
+   "x": 346.032,
+   "y": 529.2,
    "w": 172.8,
    "h": 41.04,
    "orient": "R0",
@@ -84,8 +84,8 @@
    "master": "ot_sram_1r1w_256x256_m2_r2c2",
    "inst": null,
    "idx": 2,
-   "x": 549.936,
-   "y": 518.4,
+   "x": 539.136,
+   "y": 529.2,
    "w": 172.8,
    "h": 41.04,
    "orient": "R0",
@@ -97,8 +97,8 @@
    "master": "ot_sram_1r1w_256x256_m2_r2c2",
    "inst": null,
    "idx": 3,
-   "x": 743.04,
-   "y": 518.4,
+   "x": 732.24,
+   "y": 529.2,
    "w": 172.8,
    "h": 41.04,
    "orient": "R0",
@@ -109,7 +109,7 @@
   [
    "WARN",
    "clock_span",
-   "1080.0 x 1080.0 um: one clock root over > 600 um",
+   "1058.4 x 1101.6 um: one clock root over > 600 um",
    "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
   ]
  ],

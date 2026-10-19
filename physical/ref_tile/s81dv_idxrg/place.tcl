@@ -29,16 +29,16 @@ proc ot_ref_pick {by master pat} {
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(163.728 * $dbu)}] [expr {round(518.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 163.728 518.4 R0"
+$i setOrient R0; $i setLocation [expr {round(152.928 * $dbu)}] [expr {round(529.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 152.928 529.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(356.832 * $dbu)}] [expr {round(518.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 356.832 518.4 R0"
+$i setOrient R0; $i setLocation [expr {round(346.032 * $dbu)}] [expr {round(529.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 346.032 529.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(549.936 * $dbu)}] [expr {round(518.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 549.936 518.4 R0"
+$i setOrient R0; $i setLocation [expr {round(539.136 * $dbu)}] [expr {round(529.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 539.136 529.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(743.04 * $dbu)}] [expr {round(518.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 743.04 518.4 R0"
+$i setOrient R0; $i setLocation [expr {round(732.24 * $dbu)}] [expr {round(529.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 732.24 529.2 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 4} { error "ref_tile place: expected 4 macros, netlist has $nb" }
