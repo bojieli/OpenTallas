@@ -87,12 +87,17 @@ def model_lite(m):
     # chain sources / masters for the relay-domain audit
     pp = plan_paths(m)
     fl_fin = (KSD.FACE_LAND_TILES.get('kvs_attn') or {}).get('fin', 0) if 'kvs_attn' in KSD.FACE_LAND_SEL else 0
-    bus_src = {}
+    bus_src, sinks = {}, {}
     for b in m['buses']:
         if b is not None and b[1] not in ('clock_trunk', 'reset', 'constant') and len(b[3]) >= 2:
             base = re.sub(r'(__(r\d+|pinfix\d+|beq\d+))+$', '', b[0])
             if base == b[0]:
-                bus_src[base] = [b[3][0][0], b[3][0][1].lstrip('*'), b[3][1][0], b[3][1][1].lstrip('*')]
+                bus_src[base] = [b[3][0][0], b[3][0][1].lstrip('*')]
+            for e in b[3][1:]:                          # the chain's first non-relay sink (the launch domain fallback)
+                if not str(e[0]).startswith('rly_') and base not in sinks:
+                    sinks[base] = [e[0], e[1].lstrip('*')]
+    for base, v in bus_src.items():
+        v += sinks.get(base, [])
     return dict(schema=SCHEMA_MODEL, relay_stages=rs, fork_stages=fs, forks=forks, seq_kvn=seq, hub=hub, plan=plan, dsts=dsts,
                 static_schedule=dict(paths=pp, schedule=schedule(pp, face_land_fin=fl_fin)), tile_ages=KSD.tile_ages(),
                 bindings=m.get('static_bindings') or {}, bus_src=bus_src,
