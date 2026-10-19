@@ -364,11 +364,14 @@ def main():
     ap.add_argument('--survey', action='store_true', help='plan around unhomable sinks and list them all (still no layer)')
     ap.add_argument('--relay-rows', action='store_true', help='HBM-RSTROW: relay rows carry their reset; heads only')
     ap.add_argument('--diag', action='store_true', help='compatibility: failures still refuse layer emission and exit 3')
+    ap.add_argument('--max-root-tries', type=int, default=40,
+                    help='LH-GEN2CD 10-19: regional-root alternative sites tried (rings 0..3240 um, 8 per ring = 57 sites); '
+                         'the reach budget of every route is unchanged')
     a = ap.parse_args()
     try:
         survey = [] if a.survey else None
         spec, rep = build(load(a.contract), load(a.manifest), a.views, a.relay_views,
-                          a.reach, a.fanout, a.zones, a.mut_skew, survey=survey,
+                          a.reach, a.fanout, a.zones, a.mut_skew, max_root_tries=a.max_root_tries, survey=survey,
                           relay_rows=a.relay_rows)
     except GeometryError as e:
         a.report.write_text(json.dumps(dict(schema='opentallas.hbm.reset_forest.v2', geometry_gate='FAIL', reach_gate='FAIL',
