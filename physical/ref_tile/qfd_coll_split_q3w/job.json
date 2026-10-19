@@ -70,7 +70,7 @@
      "verilator"
     ],
     "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_LEAD",
-    "fail_witness": "results/rtl/coll_split_1019/witness/mut_lead.log"
+    "fail_witness": "results/rtl/coll_split_1019/safe3/witness/mut_lead.log"
    },
    {
     "name": "split_mut_ex",
@@ -82,7 +82,7 @@
      "verilator"
     ],
     "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_EX",
-    "fail_witness": "results/rtl/coll_split_1019/witness/mut_ex.log"
+    "fail_witness": "results/rtl/coll_split_1019/safe3/witness/mut_ex.log"
    },
    {
     "name": "split_mut_sbank",
@@ -94,7 +94,7 @@
      "verilator"
     ],
     "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_SBANK",
-    "fail_witness": "results/rtl/coll_split_1019/witness/mut_sbank.log"
+    "fail_witness": "results/rtl/coll_split_1019/safe3/witness/mut_sbank.log"
    },
    {
     "name": "split_mut_rerr",
@@ -106,7 +106,19 @@
      "verilator"
     ],
     "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_RERR",
-    "fail_witness": "results/rtl/coll_split_1019/witness/mut_rerr.log"
+    "fail_witness": "results/rtl/coll_split_1019/safe3/witness/mut_rerr.log"
+   },
+   {
+    "name": "split_mut_dr",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/mut_dr --only reduce_8w_x16 --mutant-define OT_COLL_FOLD_MUT_DR",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_FOLD_MUT_DR",
+    "fail_witness": "results/rtl/coll_split_1019/safe3/witness/mut_dr.log"
    }
   ],
   "calibrate": {

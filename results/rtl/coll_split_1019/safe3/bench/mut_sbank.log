@@ -1,0 +1,4 @@
+Verilator 5.050 2026-07-01 rev v5.050
+case reduce_8w_x16 kind=pos latu=66 lats=391 xu=0 xs=0 mutant=OT_COLL_SPLIT_MUT_SBANK FAIL mismatches=0 extra=0 out_err=0 fault=11111111 code=0100001000010000100001000010000100001000 words_out=0 compiled_span=710
+COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_SBANK failed=reduce_8w_x16
+RC mut_sbank 1
