@@ -1,0 +1,421 @@
+{
+ "schema": "opentallas.hbm_d4g_price5.v1",
+ "generated_utc": "2026-10-18T11:52:16Z",
+ "rule": "HBM-PRICE5 (10-18): numerics-preserving options to win back the d4g cross-quadrant gather cost, priced on the\nHBM-B-RTL3 d4g pricer (hgi_sim.d4g_quadrant_1017: plan_study machinery + quadrant placement + static-schedule adders).\n\nBASE = the adopted d4g (coordinator 0dr): two rings + QBG (quantize-before-gather, bit-exact bench PASS) on every\nd4g adder (AG, XQT, D2, SU, SFUD, SFUC, BD; RTL1/2 ledger latencies).  Every option keeps the golden rounding points\nand reduction orders (owner 10-18 03:50: accept the loss rather than change numerics); options that would reorder a\nsum (K-split w2 / wo_b with partial sums, per-quadrant partial moe_sum) or lower precision (FP8 on a gather whose\nconsumer is not an FP8 linear) are excluded.\n\nOPTIONS (knob `p5` on the d4g knob; cost transforms on top of d4g_quadrant_1017.d4g_added):\n (1) EP  expert-parallel inside the die: expert slot k's w1 / w3 / w2 die slices all live in ONE quadrant q(k), so the\n     expert-intermediate gather is addressed by the sender dies to quadrant q(k)'s COLL endpoint only (one delivery\n     lane: + 3 D, D = (G - 1) f / 4 lanes) and never enters the ring (AG = 0).  The quadrant runs the slot on its 4 SMs:\n     rows per SM R = ceil(m_die / 16) -> R' = ceil(m_die / 4) (w1 / w3: m_die = 2304 / 192 = 12 -> 1 -> 3; w2: 5120 / 192\n     = 27 -> 2 -> 7), cost c' = (R' / R) c (the native expert records, weights staged in SMEM, cost 32.6 / 43.6\n     cycles at AR: no fixed part is assumed, the conservative bound).  The four quadrants run\n     different slots at once: the serial SM-unit model is charged share = n_max / n_slots of each slot record\n     (n_slots = the layer's expert-slot instances incl. the shared expert; AR 7, MTP P = 6 the union slots + shared).\n     moe_sum (golden order e0 + e1, + e2 + e3, ...) gathers the die's e_k.d rows (27 x 4 B a slot) from their quadrants:\n     + 1 XQ crossing per moe_sum record.  COLL records stay serial (the base convention; no credit for overlapping\n     four quadrant gathers) EXCEPT the delivery lane occupancy: slot k's whole gather rides quadrant q(k)'s lane (4 D)\n     while the other lanes carry other slots, so the record pays 4 D x n_max / n_slots - D (ep_serial_coll: + 3 D).\n       ep_repl   every expert's die slice REPLICATED in all 4 quadrants (x4 expert bytes), slot k -> quadrant k mod 4\n                 (compile-time, routing-independent): n_max = ceil(n_slots / 4)  [static-schedule legal]\n       ep_part   experts PARTITIONED by id (no replication).  A static schedule must reserve the worst case: all routed\n                 slots of a position in one quadrant (measured max 6 of 6, ep_quadrant_stats.json): n_max = n_slots - 1\n       ep_part_mean  information only (needs a routing-dependent schedule = forbidden): n_max = measured mean\n (2) CM  collective matmul, K-ordered: an SM linear fed by a gathered C1 operand (QBG_TAGS consumers: w2, wo_b,\n     engram.wkv) is issued at its static slot BEFORE the remote quarters land and streams the quarters in the golden K\n     order (quarter 0 first; the ring injects the quarters in K order), so the FP32 accumulation order is unchanged.\n     It can hide at most 3/4 of its own K stream (c_cons = the consumer record's base cost) under the SERIALISATION part\n     of the exposed gather: hidden = min(ser_exposed, 0.75 c_cons).  The hop latency is never hidden (the last quarter\n     still has to arrive).  An UPPER bound (it assumes the K-ordered injection costs no extra ring time).  Rotating the K\n     order to start on the local quarter would reorder the FP32 sum: excluded.  Buffer: one quarter of the operand a\n     position staged at the x-load (FP8 codes + 1/32 scales).\n (3) MESH 2x2 full mesh: diagonal COLL links coll_SW<->coll_NE, coll_SE<->coll_NW (Manhattan 9.1-9.3 mm = 2 ring\n     edges -> 2 r relay stages).  Direct all-gather on the mesh: each quadrant sends its quarter to the 3 others at once.\n       mesh_1w   ring A (1 x 280 b / direction) + 1-wide diagonals (replaces ring B; same bit-mm as two rings):\n                 AG = min(ring-1 schedules, F + hop_d)\n       mesh_2w   two rings + 2-wide diagonals: min(ring-2 schedules, ceil(F / 2) + hop_d)\n       r2d_1w    two rings + 1-wide diagonals: edges 2 lanes, diagonal 1 lane; the diagonal destination's quarter is\n                 split diagonal / 2-hop over the edges: t = 2 F / 3 (edge load 2 F - t = 2 t): ceil(2F/3) + max(hop_d, 2 hop)\n     hop = 2 + r, hop_d = 2 + 2 r (r = COLL_RING stages).\n (4) RINGS k = 3, 4 (each ring is already bidirectional: CW + CCW 280 b a link, MODE 0 / MODE 1): flits split over k.\n (5) RECOMPUTE the o-group producer per quadrant: every quadrant COLL engine receives all 8 contributors' FULL partial\n     (not its quarter) and reduces them in the golden tree order itself -> no ring AG, 4x ingress (+ 3 D).  Router /\n     wq_a / wkv producers are split over 192 dies (2-12 rows a die), so a per-quadrant recompute would re-read the full\n     weight matrix (e.g. router 384 x 5120: ~10k cycles at a quadrant's 4 PCs) -- not priced as viable.\n\n    PYTHONPATH=tools python3 -m hgi_sim.d4g_price5_1018 --out results/arch/hbm_d4g_price_1017/price5/price5.json\n",
+ "base_knob": {
+  "on": [
+   "AG",
+   "BD",
+   "D2",
+   "SFUC",
+   "SFUD",
+   "SU",
+   "XQT"
+  ],
+  "xq": 9.38,
+  "r_hop": 9.38,
+  "G1": 192,
+  "lanes": 4,
+  "nominal": true,
+  "stages": {
+   "HBM_K": 0.0,
+   "SM_X": 10.16,
+   "SM_HBM": 4.5,
+   "LG_SU": 0.09,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 15.56,
+   "VM_RING": 9.5,
+   "COLL_VM": 14.91,
+   "VM_HUB": 16.41,
+   "HC_ENG": 5.54,
+   "COLL_RING": 9.38,
+   "COLL_EP": 9.6,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SM_OUT": 9.0,
+   "HBM_VM": 18.88,
+   "VM_HBM": 18.69,
+   "SFU_CORE": 9.25,
+   "SU_CORE": 3.67,
+   "KV_DESC": 8.94
+  },
+  "su_start": 4.0,
+  "sfu_d": 1.0,
+  "sfu_chain": 6.0,
+  "su_tree": 28.0,
+  "hc_tree": 46.760000000000005,
+  "idx_merge": 17.380000000000003,
+  "rings": 2,
+  "ag_qbg": true
+ },
+ "variants": {
+  "b_plan": null,
+  "d4g_2ring_qbg": null,
+  "o1_ep_repl": {
+   "ep": "repl",
+   "_": 1
+  },
+  "o1_ep_part_static": {
+   "ep": "part",
+   "_": 1
+  },
+  "o1_ep_part_mean_info": {
+   "ep": "mean",
+   "ep_mean_ar": 2.7532,
+   "ep_mean_mtp": 8.3296,
+   "_": 1
+  },
+  "o1_ep_repl_serial_coll": {
+   "ep": "repl",
+   "ep_serial_coll": true,
+   "_": 1
+  },
+  "o2_cm": {
+   "cm": true,
+   "_": 1
+  },
+  "o3_mesh_1w": {
+   "topo": "mesh_1w",
+   "_": 1
+  },
+  "o3_mesh_2w": {
+   "topo": "mesh_2w",
+   "_": 1
+  },
+  "o3_r2d_1w": {
+   "topo": "r2d_1w",
+   "_": 1
+  },
+  "o4_3ring": {
+   "rings": 3,
+   "_": 1
+  },
+  "o4_4ring": {
+   "rings": 4,
+   "_": 1
+  },
+  "o5_ogroup_recompute": {
+   "ogroup_recompute": true,
+   "_": 1
+  },
+  "c12_ep_cm": {
+   "ep": "repl",
+   "cm": true,
+   "_": 1
+  },
+  "c14_ep_4ring": {
+   "ep": "repl",
+   "rings": 4,
+   "_": 1
+  },
+  "c24_cm_4ring": {
+   "cm": true,
+   "rings": 4,
+   "_": 1
+  },
+  "c23_cm_mesh2w": {
+   "cm": true,
+   "topo": "mesh_2w",
+   "_": 1
+  },
+  "c124_ep_cm_4ring": {
+   "ep": "repl",
+   "cm": true,
+   "rings": 4,
+   "_": 1
+  },
+  "c1245_all_ring4": {
+   "ep": "repl",
+   "cm": true,
+   "rings": 4,
+   "ogroup_recompute": true,
+   "_": 1
+  },
+  "c1235_all_mesh2w": {
+   "ep": "repl",
+   "cm": true,
+   "topo": "mesh_2w",
+   "ogroup_recompute": true,
+   "_": 1
+  }
+ },
+ "table": {
+  "b_plan": {
+   "ar_cycles": 606563.8,
+   "ar_tok_s": 1978.4,
+   "mtp_step_cycles": 1480624.1,
+   "mtp_design_tok_s": 3370.7,
+   "qwen_tok_s": 955.2,
+   "d_ar_pct_vs_b_plan": 0.0,
+   "d_ar_pct_vs_d4g": 3.83,
+   "d_mtp_pct_vs_b_plan": 0.0,
+   "d_mtp_pct_vs_d4g": 3.44,
+   "d_qwen_pct_vs_b_plan": 0.0,
+   "d_qwen_pct_vs_d4g": 0.95
+  },
+  "d4g_2ring_qbg": {
+   "ar_cycles": 629775.1,
+   "ar_tok_s": 1905.4,
+   "mtp_step_cycles": 1531513.5,
+   "mtp_design_tok_s": 3258.7,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -3.69,
+   "d_ar_pct_vs_d4g": 0.0,
+   "d_mtp_pct_vs_b_plan": -3.32,
+   "d_mtp_pct_vs_d4g": 0.0,
+   "d_qwen_pct_vs_b_plan": -0.94,
+   "d_qwen_pct_vs_d4g": 0.0
+  },
+  "o1_ep_repl": {
+   "ar_cycles": 622909.3,
+   "ar_tok_s": 1926.4,
+   "mtp_step_cycles": 1511366.4,
+   "mtp_design_tok_s": 3302.2,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -2.63,
+   "d_ar_pct_vs_d4g": 1.1,
+   "d_mtp_pct_vs_b_plan": -2.03,
+   "d_mtp_pct_vs_d4g": 1.33,
+   "d_qwen_pct_vs_b_plan": -0.94,
+   "d_qwen_pct_vs_d4g": 0.0
+  },
+  "o1_ep_part_static": {
+   "ar_cycles": 699555.7,
+   "ar_tok_s": 1715.4,
+   "mtp_step_cycles": 2118600.1,
+   "mtp_design_tok_s": 2355.7,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -13.29,
+   "d_ar_pct_vs_d4g": -9.97,
+   "d_mtp_pct_vs_b_plan": -30.11,
+   "d_mtp_pct_vs_d4g": -27.71,
+   "d_qwen_pct_vs_b_plan": -0.94,
+   "d_qwen_pct_vs_d4g": 0.0
+  },
+  "o1_ep_part_mean_info": {
+   "ar_cycles": 655170.3,
+   "ar_tok_s": 1831.6,
+   "mtp_step_cycles": 1601187.3,
+   "mtp_design_tok_s": 3116.9,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -7.42,
+   "d_ar_pct_vs_d4g": -3.87,
+   "d_mtp_pct_vs_b_plan": -7.53,
+   "d_mtp_pct_vs_d4g": -4.35,
+   "d_qwen_pct_vs_b_plan": -0.94,
+   "d_qwen_pct_vs_d4g": 0.0
+  },
+  "o1_ep_repl_serial_coll": {
+   "ar_cycles": 661063.4,
+   "ar_tok_s": 1815.3,
+   "mtp_step_cycles": 1936501.8,
+   "mtp_design_tok_s": 2577.2,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -8.24,
+   "d_ar_pct_vs_d4g": -4.73,
+   "d_mtp_pct_vs_b_plan": -23.54,
+   "d_mtp_pct_vs_d4g": -20.91,
+   "d_qwen_pct_vs_b_plan": -0.94,
+   "d_qwen_pct_vs_d4g": 0.0
+  },
+  "o2_cm": {
+   "ar_cycles": 629775.1,
+   "ar_tok_s": 1905.4,
+   "mtp_step_cycles": 1531423.5,
+   "mtp_design_tok_s": 3258.9,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -3.69,
+   "d_ar_pct_vs_d4g": 0.0,
+   "d_mtp_pct_vs_b_plan": -3.32,
+   "d_mtp_pct_vs_d4g": 0.01,
+   "d_qwen_pct_vs_b_plan": -0.94,
+   "d_qwen_pct_vs_d4g": 0.0
+  },
+  "o3_mesh_1w": {
+   "ar_cycles": 629122.1,
+   "ar_tok_s": 1907.4,
+   "mtp_step_cycles": 1532101.7,
+   "mtp_design_tok_s": 3257.5,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -3.59,
+   "d_ar_pct_vs_d4g": 0.1,
+   "d_mtp_pct_vs_b_plan": -3.36,
+   "d_mtp_pct_vs_d4g": -0.04,
+   "d_qwen_pct_vs_b_plan": -0.94,
+   "d_qwen_pct_vs_d4g": 0.0
+  },
+  "o3_mesh_2w": {
+   "ar_cycles": 628610.1,
+   "ar_tok_s": 1909.0,
+   "mtp_step_cycles": 1524572.0,
+   "mtp_design_tok_s": 3273.6,
+   "qwen_tok_s": 947.7,
+   "d_ar_pct_vs_b_plan": -3.51,
+   "d_ar_pct_vs_d4g": 0.19,
+   "d_mtp_pct_vs_b_plan": -2.88,
+   "d_mtp_pct_vs_d4g": 0.46,
+   "d_qwen_pct_vs_b_plan": -0.79,
+   "d_qwen_pct_vs_d4g": 0.16
+  },
+  "o3_r2d_1w": {
+   "ar_cycles": 629604.0,
+   "ar_tok_s": 1906.0,
+   "mtp_step_cycles": 1529114.8,
+   "mtp_design_tok_s": 3263.8,
+   "qwen_tok_s": 946.4,
+   "d_ar_pct_vs_b_plan": -3.66,
+   "d_ar_pct_vs_d4g": 0.03,
+   "d_mtp_pct_vs_b_plan": -3.17,
+   "d_mtp_pct_vs_d4g": 0.16,
+   "d_qwen_pct_vs_b_plan": -0.92,
+   "d_qwen_pct_vs_d4g": 0.02
+  },
+  "o4_3ring": {
+   "ar_cycles": 629527.1,
+   "ar_tok_s": 1906.2,
+   "mtp_step_cycles": 1527456.8,
+   "mtp_design_tok_s": 3267.4,
+   "qwen_tok_s": 946.9,
+   "d_ar_pct_vs_b_plan": -3.65,
+   "d_ar_pct_vs_d4g": 0.04,
+   "d_mtp_pct_vs_b_plan": -3.06,
+   "d_mtp_pct_vs_d4g": 0.27,
+   "d_qwen_pct_vs_b_plan": -0.87,
+   "d_qwen_pct_vs_d4g": 0.07
+  },
+  "o4_4ring": {
+   "ar_cycles": 629391.1,
+   "ar_tok_s": 1906.6,
+   "mtp_step_cycles": 1526029.2,
+   "mtp_design_tok_s": 3270.4,
+   "qwen_tok_s": 947.8,
+   "d_ar_pct_vs_b_plan": -3.63,
+   "d_ar_pct_vs_d4g": 0.06,
+   "d_mtp_pct_vs_b_plan": -2.98,
+   "d_mtp_pct_vs_d4g": 0.36,
+   "d_qwen_pct_vs_b_plan": -0.77,
+   "d_qwen_pct_vs_d4g": 0.17
+  },
+  "o5_ogroup_recompute": {
+   "ar_cycles": 634594.7,
+   "ar_tok_s": 1891.0,
+   "mtp_step_cycles": 1536604.6,
+   "mtp_design_tok_s": 3247.9,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -4.42,
+   "d_ar_pct_vs_d4g": -0.76,
+   "d_mtp_pct_vs_b_plan": -3.64,
+   "d_mtp_pct_vs_d4g": -0.33,
+   "d_qwen_pct_vs_b_plan": -0.94,
+   "d_qwen_pct_vs_d4g": 0.0
+  },
+  "c12_ep_cm": {
+   "ar_cycles": 622909.3,
+   "ar_tok_s": 1926.4,
+   "mtp_step_cycles": 1511276.4,
+   "mtp_design_tok_s": 3302.4,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -2.63,
+   "d_ar_pct_vs_d4g": 1.1,
+   "d_mtp_pct_vs_b_plan": -2.03,
+   "d_mtp_pct_vs_d4g": 1.34,
+   "d_qwen_pct_vs_b_plan": -0.94,
+   "d_qwen_pct_vs_d4g": 0.0
+  },
+  "c14_ep_4ring": {
+   "ar_cycles": 622525.3,
+   "ar_tok_s": 1927.6,
+   "mtp_step_cycles": 1505882.1,
+   "mtp_design_tok_s": 3314.2,
+   "qwen_tok_s": 947.8,
+   "d_ar_pct_vs_b_plan": -2.57,
+   "d_ar_pct_vs_d4g": 1.17,
+   "d_mtp_pct_vs_b_plan": -1.68,
+   "d_mtp_pct_vs_d4g": 1.7,
+   "d_qwen_pct_vs_b_plan": -0.77,
+   "d_qwen_pct_vs_d4g": 0.17
+  },
+  "c24_cm_4ring": {
+   "ar_cycles": 629391.1,
+   "ar_tok_s": 1906.6,
+   "mtp_step_cycles": 1526029.2,
+   "mtp_design_tok_s": 3270.4,
+   "qwen_tok_s": 947.8,
+   "d_ar_pct_vs_b_plan": -3.63,
+   "d_ar_pct_vs_d4g": 0.06,
+   "d_mtp_pct_vs_b_plan": -2.98,
+   "d_mtp_pct_vs_d4g": 0.36,
+   "d_qwen_pct_vs_b_plan": -0.77,
+   "d_qwen_pct_vs_d4g": 0.17
+  },
+  "c23_cm_mesh2w": {
+   "ar_cycles": 628610.1,
+   "ar_tok_s": 1909.0,
+   "mtp_step_cycles": 1524572.0,
+   "mtp_design_tok_s": 3273.6,
+   "qwen_tok_s": 947.7,
+   "d_ar_pct_vs_b_plan": -3.51,
+   "d_ar_pct_vs_d4g": 0.19,
+   "d_mtp_pct_vs_b_plan": -2.88,
+   "d_mtp_pct_vs_d4g": 0.46,
+   "d_qwen_pct_vs_b_plan": -0.79,
+   "d_qwen_pct_vs_d4g": 0.16
+  },
+  "c124_ep_cm_4ring": {
+   "ar_cycles": 622525.3,
+   "ar_tok_s": 1927.6,
+   "mtp_step_cycles": 1505882.1,
+   "mtp_design_tok_s": 3314.2,
+   "qwen_tok_s": 947.8,
+   "d_ar_pct_vs_b_plan": -2.57,
+   "d_ar_pct_vs_d4g": 1.17,
+   "d_mtp_pct_vs_b_plan": -1.68,
+   "d_mtp_pct_vs_d4g": 1.7,
+   "d_qwen_pct_vs_b_plan": -0.77,
+   "d_qwen_pct_vs_d4g": 0.17
+  },
+  "c1245_all_ring4": {
+   "ar_cycles": 627344.9,
+   "ar_tok_s": 1912.8,
+   "mtp_step_cycles": 1511063.2,
+   "mtp_design_tok_s": 3302.8,
+   "qwen_tok_s": 947.8,
+   "d_ar_pct_vs_b_plan": -3.32,
+   "d_ar_pct_vs_d4g": 0.39,
+   "d_mtp_pct_vs_b_plan": -2.01,
+   "d_mtp_pct_vs_d4g": 1.35,
+   "d_qwen_pct_vs_b_plan": -0.77,
+   "d_qwen_pct_vs_d4g": 0.17
+  },
+  "c1235_all_mesh2w": {
+   "ar_cycles": 627199.8,
+   "ar_tok_s": 1913.3,
+   "mtp_step_cycles": 1511718.0,
+   "mtp_design_tok_s": 3301.4,
+   "qwen_tok_s": 947.7,
+   "d_ar_pct_vs_b_plan": -3.29,
+   "d_ar_pct_vs_d4g": 0.41,
+   "d_mtp_pct_vs_b_plan": -2.06,
+   "d_mtp_pct_vs_d4g": 1.31,
+   "d_qwen_pct_vs_b_plan": -0.79,
+   "d_qwen_pct_vs_d4g": 0.16
+  }
+ },
+ "ep_capacity": {
+  "expert_params_total": 544997376000,
+  "expert_bytes_total": 289529856000,
+  "expert_bytes_per_die": 1507968000,
+  "per_quadrant_partitioned": 376992000,
+  "per_quadrant_replicated": 1507968000,
+  "replication_extra_per_die": 4523904000,
+  "die_hbm_bytes": 45000000000.0,
+  "die_hbm_usable_0p9": 40500000000,
+  "quadrant_hbm_usable_0p9": 10125000000,
+  "note": "d4g: 2 stacks x 22.5 GB (8 PCs each), quadrant = 4 PCs = half a stack"
+ },
+ "ep_mean_used": {
+  "ep_mean_ar": 2.7532,
+  "ep_mean_mtp": 8.3296
+ }
+}

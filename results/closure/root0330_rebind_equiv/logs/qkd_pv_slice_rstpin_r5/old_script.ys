@@ -1,0 +1,16 @@
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/src/01_ot_qwen_tp8_pv16_slice_gen.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/src/02_ot_qwen_nearhbm_prod.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/src/03_ot_hdc_fp32_add_lat.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/src/04_ot_hdc_prefix.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/src/05_ot_hdc_fastfp.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/src/06_ot_hdc_fpu.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/src/07_ot_sram_1r1w_32x128_m1_bb.v
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/old/ot_hbm_svc_wb_cutthrough_cdc.sv
+hierarchy -top ot_qwen_tp8_pv_slice_t -chparam RESET_PIN 1
+tee -o /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/out_old/modules.txt ls
+proc; flatten; opt_clean -purge
+rename -enumerate
+tee -o /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/out_old/stat.txt stat
+write_rtlil /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/out_old/netlist.il
+write_verilog -noattr /tmp/r0330_eqv/qkd_pv_slice_rstpin_r5/out_old/netlist.v

@@ -1,0 +1,9 @@
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/src/00_ot_qwen_tp8_pv_wide_pair.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/new/ot_hbm_svc_wb_cutthrough_cdc.sv
+hierarchy -top ot_qwen_tp8_pv_wide_ctl -chparam FIRST_INPUT_AGE 20 -chparam RESET_PIN 1
+tee -o /tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/out_new/modules.txt ls
+proc; flatten; opt_clean -purge
+rename -enumerate
+tee -o /tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/out_new/stat.txt stat
+write_rtlil /tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/out_new/netlist.il
+write_verilog -noattr /tmp/r0330_eqv/qkd_pv_ctl_rstpin_r5/out_new/netlist.v

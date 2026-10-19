@@ -131,6 +131,16 @@ proc ot_ck_macro_owned {p selected} {
   set owners {}
   foreach c [get_property $p clocks] { lappend owners [get_full_name $c] }
   set owners [lsort -unique $owners]
+  # CLOCK-ROOT (ELEM-GAPS/HBMN2 2026-10-18, hfd_ckgen): the unclocked reference input of a macro that is itself a clock
+  # SOURCE (the PLL refclk: the SDC creates the domain clocks on the PLL OUTPUT pins) is no sink of any measured clock --
+  # skipped and recorded.  Any other unclocked macro clock pin stays an error.
+  if {![llength $owners]} {
+    set ot_mc_inst [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[catch {all_clocks} ot_mc_all]} { set ot_mc_all {} }
+    foreach c $ot_mc_all { foreach s [get_property $c sources] {
+      if {[string first "$ot_mc_inst/" [get_full_name $s]] == 0} { puts "OT_MC_UNCLOCKED [get_full_name $p] (clock source [get_full_name $s])"; return 0 }
+    } }
+  }
   if {[llength $owners] != 1} {
     error "CK_INSERTION: macro clock pin '[get_full_name $p]' requires one timing clock, found $owners"
   }
@@ -166,7 +176,10 @@ set ot_ck_clk [lindex $ot_ck_selected 0]
 dict for {{i cp}} $regs {{
   set a [ot_ck_arr [get_pins $cp] $ot_ck_clk]
   if {{$a eq "" || $a eq "INF" || $a eq "-INF"}} continue
-  puts "OT_CK [expr {{[dict exists $bnd $i] ? 1 : 0}}] $a"
+  set ot_ck_m ""
+  set ot_ck_c [get_cells -quiet -of_objects [get_pins $cp]]
+  if {{[llength $ot_ck_c]}} {{ set ot_ck_dm [[ord::get_db] findMaster [get_property $ot_ck_c ref_name]]; if {{$ot_ck_dm ne "NULL" && [$ot_ck_dm isBlock]}} {{ set ot_ck_m [$ot_ck_dm getName] }} }}
+  puts "OT_CK [expr {{[dict exists $bnd $i] ? 1 : 0}}] $a $ot_ck_m"
 }}
 foreach inst [[ord::get_db_block] getInsts] {{
   if {{![[$inst getMaster] isBlock]}} continue
@@ -242,6 +255,50 @@ def macro_outliers(rec, slew_ps=MC_SLEW_PS, late_ps=MC_LATE_PS):
                 outliers=[dict(pin=k, why="; ".join(v)) for k, v in sorted(out.items())])
 
 
+CTP_RE = re.compile(r"timing_type\s*:\s*max_clock_tree_path\s*;.*?values\(\"([\d.]+)\"\).*?values\(\"([\d.]+)\"\)", re.S)
+
+
+def child_refs(root, mlibs, corner):
+    """CHILD-FLOP (SM-RP4 2026-10-18, owner 0dq "child-flop spread for a cluster"): {block master: (R ps, basis)} at this
+    corner for every hard child whose liberty the route reads.  R = the child's routed boundary-register insertion
+    (views/<child>/insertion.json <corner>.boundary.mean, the reference its pin flops launch / capture at), else the
+    lib's max_clock_tree_path.  A hard child's clock pin is a register to all_registers (its ETM carries the setup /
+    hold checks), so its RAW pin arrival -- placed EARLY by the spine by exactly this R -- is not a flop arrival."""
+    out = {}
+    for lib in mlibs:
+        host = Path(root) / lib[len("/src/"):]
+        name = re.sub(rf"_{corner}\.lib$", "", host.name)
+        ij = host.parent / "insertion.json"
+        try:
+            b = ((json.loads(ij.read_text()).get(corner) or {}).get("boundary") or {}) if ij.is_file() else {}
+        except (OSError, ValueError):
+            b = {}
+        if b.get("n") and b.get("mean") is not None:
+            out[name] = (float(b["mean"]), "insertion.json boundary mean")
+            continue
+        try:
+            vals = [float(x) for m in CTP_RE.finditer(host.read_text(errors="replace")) for x in m.groups()]
+        except OSError:
+            vals = []
+        if vals:
+            out[name] = (max(vals), "lib max_clock_tree_path")
+    return out
+
+
+def pin_sourced_clocks(sdc_text):
+    """CLOCK-ROOT (ELEM-GAPS/HBMN2 2026-10-18, hfd_ckgen): a clock-root view (PLL hard core) creates its domain clocks on
+    the PLL OUTPUT pins and forwards each to an output port as a divide_by 1 generated clock.  Its measured clock is the
+    pin clock; the Liberty pin it maps to is the forwarded port.  [(master clock name, port)] for each such pair; a pin
+    clock forwarded to no port, or to several, is not mapped (no record rather than a guessed one)."""
+    pins = {m[1]: m[0] for m in re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_pins\s+\{([^}]+)\}\]", sdc_text, re.M)}
+    fwd = {}
+    for m in re.finditer(r"^create_generated_clock\s+[^\n]*-source\s+\[get_pins\s+\{([^}]+)\}\][^\n]*-divide_by\s+1\b[^\n]*"
+                         r"\[get_ports\s+\{([^}]+)\}\]\s*$", sdc_text, re.M):
+        if m[1] in pins:
+            fwd.setdefault(pins[m[1]], []).append(m[2])
+    return [(name, ports[0]) for name, ports in fwd.items() if len(ports) == 1]
+
+
 def stats(v):
     return dict(n=len(v), mean=round(sum(v) / len(v), 1), min=round(min(v), 1), max=round(max(v), 1)) if v else None
 
@@ -280,11 +337,14 @@ def main():
         sdc = "6_final.sdc" if a.routed else next((s for s in ("4_cts.sdc", "3_place.sdc", "2_floorplan.sdc", "1_synth.sdc") if (base / s).exists()), None)
         if sdc is None:
             raise SystemExit(f"no CTS SDC under {base}")
-        clocks = re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_ports\s+\{([^}]+)\}\]", (base / sdc).read_text(), re.M)
+        stext = (base / sdc).read_text()
+        clocks = re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_ports\s+\{([^}]+)\}\]", stext, re.M)
+        clocks += pin_sourced_clocks(stext)
         if not clocks or any(len(pin.split()) != 1 for name, pin in clocks):
             raise SystemExit("write_sdc must identify each external clock's single source port")
         if len({pin for name, pin in clocks}) != len(clocks):
             raise SystemExit("multiple external clocks on one pin: select their references explicitly")
+        pin_src = {m[0]: m[1] for m in re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_pins\s+\{([^}]+)\}\]", stext, re.M)}
         records = {}
         with tempfile.TemporaryDirectory() as td:
             for index, (name, pin) in enumerate(clocks):
@@ -298,7 +358,9 @@ def main():
                 subprocess.run(cmd, check=True)
                 rec = json.loads(out.read_text())
                 rec["lib_clock_pin"] = pin
-                rec["clock_mapping_basis"] = f"{sdc} create_clock -name {name} [get_ports {{{pin}}}]"
+                rec["clock_mapping_basis"] = (f"{sdc} create_clock -name {name} [get_ports {{{pin}}}]" if name not in pin_src
+                                              else f"{sdc} create_clock -name {name} [get_pins {{{pin_src[name]}}}] -> "
+                                                   f"create_generated_clock -divide_by 1 [get_ports {{{pin}}}] (clock root)")
                 records[pin] = rec
         rec = dict(next(iter(records.values())))
         rec["clock_measurements"] = records
@@ -328,17 +390,34 @@ def main():
             out = result.stdout
             if result.returncode:
                 raise SystemExit(f"{corner}: clock insertion replay failed ({result.returncode})\n{out[-1500:]}\n{result.stderr[-1500:]}")
-        b, al = [], []
-        for m in re.finditer(r"^OT_CK (\d) (\S+)", out, re.M):
+        b, al, cb, cal, craw, sb, sal = [], [], [], [], {}, [], []
+        refs = child_refs(sroot, mlibs, corner) if sroot else {}
+        for m in re.finditer(r"^OT_CK (\d) (\S+)(?: (\S+))?[ \t]*$", out, re.M):
             x = float(m[2])
             al.append(x)
             if m[1] == "1":
                 b.append(x)
+            if m[3]:                         # a hard child's clock pin: its flops sit R later (unknown R: kept raw)
+                r = refs.get(m[3])
+                craw.setdefault(m[3], [r[1] if r else "no reference: raw pin arrival", r[0] if r else 0.0, 0])[2] += 1
+                x = x + (r[0] if r else 0.0)
+            else:                            # a soft (glue) register of this root
+                sal.append(x)
+                if m[1] == "1":
+                    sb.append(x)
+            cal.append(x)
+            if m[1] == "1":
+                cb.append(x)
         mrows = [(m[1], float(m[2]), float(m[3]), m[4])
                  for m in re.finditer(r"^OT_MC (\S+) (\S+) (\S+) (\S+)", out, re.M)]
         rec[corner] = dict(boundary=stats(b), all=stats(al), errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
                            macros=macro_summary(mrows, round(sum(al) / len(al), 1) if al else None),
                            macro_libs=len(mlibs))
+        if craw:
+            rec[corner]["child_flop"] = dict(boundary=stats(cb), all=stats(cal),
+                                             refs={k: dict(basis=v[0], ref_ps=round(v[1], 1), pins=v[2])
+                                                   for k, v in sorted(craw.items())},
+                                             soft=dict(boundary=stats(sb), all=stats(sal)))   # PL-GATE: per-root glue
         if not al and corner == "tt" and not need_tt:
             continue                     # TT is informational for an SS-corner route
         if not al:

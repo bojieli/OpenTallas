@@ -22,7 +22,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 NAME = 'hv16_dbk_cpl'
 OUT = ROOT / 'results/arch/hbm_die_v16_d4f/dbk_cpl_1017'
-W, H = 604.8, 540.0
+W, H = 606.96, 542.16   # OWNERS-HBM/STK 10-18: +2.16 each way (604.8x540 left the top bank row 18.4 um and the collar 19.4 um
+                         # from the N/E core edges, pin faces need >= 20; gen FAIL macro_edge). Children/pins unchanged.
 BW, BH = 140.4, 87.48
 COLS = [86.4, 259.2, 432.0]
 ROWS = [43.2, 172.8, 302.4, 432.0]
@@ -99,7 +100,9 @@ def main():
          [f'cfg_addr[{i}]' for i in range(12)] + [f'cfg_data[{i}]' for i in range(256)] + ['desc_v'] +
          [f'desc_base[{i}]' for i in range(12)] + [f'desc_limit[{i}]' for i in range(13)] + [f'desc_loops[{i}]' for i in range(16)] +
          ['launch_v', 'cp_configured', 'cp_fault', 'cp_active', 'mv_src', 'mv_done', 'mv_fault', 'quiet', 'busy'])
-    for n, v in zip(e, grid(200.0, 362.0, len(e), avoid['E'])): pins[n] = ('E', v)
+    # OWNERS-HBM/STK 10-18: full E face (was 200..362 beside the leaf: a partial-face cluster); the leaf sits mid-face, so
+    # the farthest host pin is <= ~330 um from it (one registered F20 hop, reach 405)
+    for n, v in zip(e, grid(2.4, H - 2.4, len(e), avoid['E'])): pins[n] = ('E', v)
     lines = ['# HCDMA-DBK hv16_dbk_cpl: exact pin plan (tools/hbm_v15_harden/make_dbk_cpl_parent.py); ODB readback mandatory.',
              'source /src/physical/common_flow/assigned_pin_exact.tcl']
     for n, (f, v) in sorted(pins.items()):
@@ -141,8 +144,9 @@ def main():
             'clk_bank on the nearest face (W x3, N x3, S x1, E x1).'),
         structural_change=why,
         reroute_reason=dict(kind='slot_change', source='physical/ref_tile/hv15_dbk_cp (gate 1f18141cb, structural FAIL)', why=why))
-    spec['job'] = dict(owner='Claude:HBM-HCDMA/HCDMA-DBK', branch='claude/hcdma-dbk-1017', tag='l1', record_to=f'results/rtl/ref_tile/{NAME}',
-        purpose=why,
+    spec['job'] = dict(owner='Claude:OWNERS-HBM/STK', branch='claude/owners-hbm-1018-stk', tag='q1', record_to=f'results/rtl/ref_tile/{NAME}',
+        purpose=('HBM die d4g hb_dbk_<q> x4 (per quadrant, master unchanged; F20 tgt 104+QID: SW 104 / SE 105 / NW 106 / NE 107; '
+                 'RBH-STK). ' + why),
         extra_paths=sorted(['physical/common_flow/assigned_pin_exact.tcl', BANK, CTLV, LEAFV,
                             'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2',
                             'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2',
@@ -154,11 +158,14 @@ def main():
                       threads=1, peak_ram_gb=4, needs=['iverilog'], pass_regex='DMA_CP_FOLD_GATE PASS',
                       min_count_regex='CP_FOLD PASS commands=(\\d+)'),
                  dict(name='reset_latency_mutant', cmd='bash tools/hbm_v15_harden/bench_dma_vp4_banks_cp.sh {RUN}/bench/rst rst',
-                      expect='fail', threads=1, peak_ram_gb=4, needs=['iverilog'], pass_regex='CP_FOLD PASS'),
+                      expect='fail', threads=1, peak_ram_gb=4, needs=['iverilog'], pass_regex='CP_FOLD PASS',
+                      fail_regex='DMA absolute cycle did not advance by one',
+                      fail_witness=f'results/rtl/ref_tile/{NAME}/witness/reset_latency_mutant.log'),
                  dict(name='exact', cmd='bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/exact 0', expect='pass',
                       threads=1, peak_ram_gb=4, needs=['iverilog'], pass_regex='DMA_VP4_BANKS_BENCH_PASS'),
                  dict(name='strap_mutant', cmd='bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut4 4', expect='fail',
-                      threads=1, peak_ram_gb=4, needs=['iverilog'])],
+                      threads=1, peak_ram_gb=4, needs=['iverilog'], fail_regex='FATAL: .*dispatcher/engine fault at\\d+',
+                      fail_witness=f'results/rtl/ref_tile/{NAME}/witness/strap_mutant.log')],
         reroute_reason=spec['reroute_reason'])
     d = ROOT / 'physical/ref_tile' / NAME; d.mkdir(parents=True, exist_ok=True)
     (d / 'spec.json').write_text(json.dumps(spec, indent=1) + '\n')

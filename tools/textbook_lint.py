@@ -129,8 +129,19 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 CLK_SPREAD_MAX_PS) with unchanged RTL / outline / pin faces (pin positions may move along the same
 #                 faces): "source" (a COMMITTED native audit receipt that the gate reads: a record of "cell"), "cell",
 #                 and "fix" (what the new kit changes: input pin flops / clock entry / insertion / boundary registers)
+#   native_spread (ROOT-0745 2026-10-18) as native_capture, for a view whose committed receipt FAILS on the TT / FF
+#                 pin-flop spread (> CLK_SPREAD_MAX_PS).  For native_launch / native_capture / native_spread an RTL
+#                 difference from the closed commit no longer refuses when "source" is a COMMITTED receipt (a path on the
+#                 job's commit / origin/main, not an absolute local file) that records the closed view's FAIL: such a
+#                 view cannot bind into the die, so the re-route is not a repeat (Gate-Rule: relaxing, submit lint only).
+#   flow_failure  (ROOT-0945 2026-10-18) a re-route of the same or a fixed source after a harness / OOM / flow failure of
+#                 an ADMITTED re-route: "failed_job" (the failed job's id, in the loop's history: same block, not CLOSED,
+#                 not active, and its own spec carried a valid "reroute_reason" -- the retry inherits that admission;
+#                 a failed job that was never admitted gives none), optional "failure" (what failed).  The daemon's
+#                 earlyoom retry (main a1f06d7f2) and lanes resubmitting after an OOM / harness crash use it
+#                 (Gate-Rule: relaxing, submit-time CLOSED-STANDS only).
 CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register",
-                       "native_launch", "native_capture")
+                       "native_launch", "native_capture", "native_spread", "flow_failure")
 DIE_WINDOW_CUT_MIN = 0.6
 PIN_LAUNCH_MAX_PS = 220.0             # tile defect: first-load launch beyond phi - R (header 10-13 die clock rule)
 PIN_CAPTURE_MAX_PS = 190.0            # tile defect: setup at the pin plus R
@@ -145,7 +156,10 @@ CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it ag
                          "\"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ "
                          "\"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > "
                          "683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; "
-                         "tools/ref_tile/rekit_native_launch.py)}")
+                         "tools/ref_tile/rekit_native_launch.py) | \"native_capture\" / \"native_spread\" (+ "
+                         "\"source\" COMMITTED native audit receipt recording the closed view's FAIL, \"cell\", "
+                         "\"fix\") | \"flow_failure\" (+ \"failed_job\": the id of the failed, ADMITTED re-route "
+                         "being retried)}")
 
 
 def _num(x):
@@ -204,6 +218,55 @@ def clock_rule_eval(max_sinks, evidence=None):
     if warn:
         return "WARN", f"{head}; WARN: " + "; ".join(warn)
     return "PASS", head + (f" (spread <= {CLK_SPREAD_MAX_PS:.0f} ps)" if sp else "")
+
+
+CLOCK_WAIVER_MAX_PS = 2.0     # HANDOFF 0ga 2026-10-18: largest recorded per-pair excess over CLK_SPREAD_MAX_PS
+
+
+def clock_waiver_eval(evidence, waiver):
+    """HANDOFF 0ga 2026-10-18 (s81lk_kp4_dec syn-dly 80.5 FF vs 80): a coordinator-recorded per-pair excess, the job
+    spec's "clock_rule_waiver" {"pair": "a-b", "ff_ps"|"tt_ps": measured, "limit_ps", "by"}.  Applies only when every
+    over-limit corner spread of the evidence is <= limit + CLOCK_WAIVER_MAX_PS, <= the recorded value, and (child-pair
+    basis) comes from the named pair alone.  One rule for pre_route_gate and the in-flow textbook_lint.
+    Returns (applied, note, why): note is the printable waiver, why the reasons it was not applied."""
+    if not isinstance(waiver, dict):
+        return False, "", ["no clock_rule_waiver"]
+    ev = evidence if isinstance(evidence, dict) else {}
+    lim = CLK_SPREAD_MAX_PS
+    pair = {x.strip().removeprefix("u_") for x in str(waiver.get("pair", "")).split("-") if x.strip()}
+    why = []
+    if not str(waiver.get("by", "")).strip():
+        why.append("no 'by'")
+    if not _num(waiver.get("limit_ps")) or float(waiver["limit_ps"]) != lim:
+        why.append(f"limit_ps must be {lim:.0f}")
+
+    def named(p):     # waiver tokens name the child instance (u_dly / dly) or its block suffix (s81lk_kp4_ddly / ddly)
+        inst = [str(p.get(k, "")).removeprefix("u_") for k in ("a", "b")]
+        return len(pair) == 2 and all(any(t.endswith(x) for t in pair) for x in inst) \
+            and all(any(t.endswith(x) for x in inst) for t in pair)
+    over = 0
+    for c, (v, basis) in clock_spreads(ev).items():
+        if v <= lim:
+            continue
+        over += 1
+        rec_ps = waiver.get(f"{c}_ps")
+        if not _num(rec_ps) or v > float(rec_ps) + 1e-6:
+            why.append(f"{c.upper()} {v:.1f} ps not recorded in the waiver ({c}_ps={rec_ps})")
+        if v > lim + CLOCK_WAIVER_MAX_PS:
+            why.append(f"{c.upper()} {v:.1f} ps exceeds limit + {CLOCK_WAIVER_MAX_PS:.0f}")
+        if basis == "pin-flop" and ev.get(f"{c}_pin_spread_basis") == "child_pair":
+            bad = [p for p in ev.get("child_pairs") or () if p.get("corner") == c and float(p.get("ps", 0)) > lim
+                   and not named(p)]
+            if bad:
+                why.append(f"{c.upper()} pair(s) {', '.join(b['a'] + '-' + b['b'] for b in bad)} over {lim:.0f} too")
+    if not over:
+        why.append("no over-limit spread in the evidence")
+    if why:
+        return False, "", why
+    note = (f"clock_rule_waiver by {waiver['by']}: pair {waiver.get('pair')} "
+            + ", ".join(f"{c}_ps {waiver[c + '_ps']}" for c in ("tt", "ff") if f"{c}_ps" in waiver)
+            + f" vs limit {lim:.0f}")
+    return True, note, []
 
 
 def clock_rule(max_sinks, evidence=None):
@@ -1199,6 +1262,13 @@ def verdict(res, mode="warn", waive=(), refuse_checks=REFUSE_CHECKS, clock=None)
     clock = clock or {}
     n = res.get("metrics", {}).get("clock_max_root_sinks")
     ok, text = clock_rule(n, clock.get("evidence"))
+    if not ok and clock.get("waiver"):
+        # the pre_route_gate's recorded per-pair waiver (HANDOFF 0ga), judged on the same evidence by the same rule
+        applied, note, why = clock_waiver_eval(clock.get("evidence"), clock.get("waiver"))
+        if applied:
+            ok, text = True, f"{text}; WARN: WAIVED: {note}"
+        else:
+            text += f" (clock_rule_waiver NOT applied: {'; '.join(why)})"
     res["clock_rule"] = dict(max_root_sinks=n, root=res.get("metrics", {}).get("clock_max_root"), ok=ok, text=text,
                              enforce=bool(clock.get("enforce")), closed_stands=bool(clock.get("closed_stands")),
                              limits=dict(sinks=CLK_ROOT_SINKS_MAX, insertion_ps=CLK_INSERTION_MAX_PS,

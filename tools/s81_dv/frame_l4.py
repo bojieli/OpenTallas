@@ -77,6 +77,7 @@ def main():
     mx = mx.replace('col_h9 #(.INSTANCE(INSTANCE)) u_f (', 'col_h9_l4 #(.INSTANCE(INSTANCE)) u_f (').replace('.xk(xk), ', '.xk(xk), .lk(lk), ')
     assert 'col_h9_MX_l4' in mx and 'col_h9_l4 #' in mx and '.lk(lk)' in mx
     (a.out_rtl / 'col_h9_MX_l4.sv').write_text(mx)
+    (a.out_rtl / 'col_h9_MX_l4_b.sv').write_text(bench_wrap('col_h9_MX'))   # LANDFIX-SQ/F: MX bench wrapper
     for f in sorted(a.out_rtl.glob('*.sv')):
         rec[f.name] = hashlib.sha256(f.read_bytes()).hexdigest()
     src = {f'{m}.sv': hashlib.sha256((SRC / f'{m}.sv').read_bytes()).hexdigest() for m in BASE + ('col_h9_MX',)}

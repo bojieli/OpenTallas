@@ -20,6 +20,26 @@ Rules (DIE-CLOCK F1 + H-DIE 10-17, binding):
   * The last lane / tile of a width that is not a multiple of W carries REAL driver bits in its spare positions (bit
     j >= bits takes driver bit j % bits): no tied input (strict bind), the spare lanes reach no load.
   * rs = the domain reset (reset forest leaf); never forwarded.
+LANDING mode (--land, HBM-LANDING 10-18, lanes/LANDING-CONTRACT.md sections 2/3/7; default off = byte-identical output):
+  * every F1 forwarded station becomes a HALF-CYCLE lane station with an in-band lane EPOCH bit (cores
+    rtl/qwen_split/qfd_fwd_lane.sv): the root station (parent None) = hbfd_lh0_<W>_<dir>[_f<N>] on the SOURCE root
+    (ck = domain clock, en = source domain reset leaf: the inverting hop-0 ICG), every other = hbfd_lh_<W>_<dir>[_f<N>]
+    (ckf / ea = the parent's ck_o<k> / eb<k>); no rs on lane stations (data flushed by the producer).
+  * the FIRST sink-root stage becomes the LANDING hbfd_land_<W>_<dir of the feeding station> (ckf / ea / a from the
+    feeding station, ck = sink domain clock = sink regional root, rs = sink domain reset leaf, K strap k2..k0); a
+    0-station forwarded sink gets hbfd_land0_<W>_<dir> (ck_s / en = source root / source reset); the remaining
+    equal-age pad stages after it are PLAIN root-clocked hbfd_rly_<W>_WE (ck / rs on the sink root).
+  * K strap per link (= bus row x sink, all lanes share it) from --land-plan {links: [{link: '<driver row>-><sink>', E,
+    K?, stations?}]}: K = (ceil(N/2) + E) mod 8 with the layer's REAL N (source and sink regional resets released on the
+    same root edge; 0 encodes 8); a plan K is used only when the entry's 'stations' equals the real N (a K is valid for
+    one N only: the DCC pilot plan's K uses its model N); no plan entry -> E = 1 (the ideal-clock value) placeholder,
+    listed NO_E in the report.  Checked on RTL 2e482a69f (non-inverting hop 0): relay lockstep 120 buses / 230 landings
+    PASS at E = 1 for both parities of N (results/arch/hbm_die_d4g/landing/chain_smoke/lockstep120_rtl2e48).
+  * fault: --land-fault pins (default) puts every landing fault on a die status pin <landing>__fault (contract
+    die_pins, as S81 dv_bind land_fault); aggregation into the regional fault tree is gap G-D4G-LAND-FAULT.
+  * compiler constants per sink (half-cycle): ceil(N/2) + 1 + E + pads edges from the driver pin to the sink pin, N = lane
+    stations (contract N/2 + 1 + E + 1 counts the sink input flop too); latency is constant for dL inside the window.
+
 Output: layer json (instances, clocks, edges = clock chains, relay_splice_v2 = data trees for full_die_v16) + report
 (tile counts, per-domain equal-age depth, hops > reach, regions used).
     relay_layer_d4f.py --stations S.json[.gz] --contract C.json[.gz] --manifest M.json --root-sites R.json
@@ -34,6 +54,8 @@ SRC_FCF = 'rtl/hbm_accel/die_glue/hbfd_rly_fcf_masters.sv'
 DEPS_FC = ['rtl/hbm_accel/die_glue/ot_hbm_rly_fc.sv', 'rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
 DEPS_FCF = ['rtl/hbm_accel/die_glue/ot_hbm_rly_fcf.sv', 'rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
 DEPS_OLD = ['rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
+SRC_LANE = 'rtl/hbm_accel/die_glue/hbfd_lane_masters.sv'
+DEPS_LANE = ['rtl/hbm_accel/die_glue/ot_hbm_lane.sv', 'rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc/ot_hdc_cg.sv']
 
 
 def load(p):
@@ -54,7 +76,15 @@ def main():
                          "sink PIN centroid (row 'pins', relay_lanes_d4f.py), not the sink instance centre")
     ap.add_argument('--exclude-re', help='rows whose driver or any sink instance matches are left to another layer '
                     '(e.g. ^(rfr|sfr)_: the fixed-depth SU RF / SFU chains, su_chain_rehome_d4f.py)')
+    ap.add_argument('--land', action='store_true', help='HBM-LANDING 10-18: half-cycle lane stations + LANDINGS (module doc)')
+    ap.add_argument('--land-plan', help="--land: per-link E / K JSON {links: [{link: '<driver row>-><sink>', E, K?}]}")
+    ap.add_argument('--land-fault', choices=('pins', 'open'), default='pins',
+                    help='--land: landing fault outputs -> die status pins (default) or left open (diagnostic only)')
     a = ap.parse_args()
+    LP = {}
+    if a.land and a.land_plan:
+        LP = {x['link']: x for x in load(a.land_plan).get('links', [])}
+    land_rows, straps, die_pins = [], [], []
     st = load(a.stations); c = load(a.contract); man = load(a.manifest)
     R = st['reach_um']; pl = man['placement']; inst = c['instances']
     sites = load(a.root_sites)['sites']
@@ -238,11 +268,21 @@ def main():
                     m, src, deps = f'hbfd_rly_{W}_{dr}_fc_f{ncons}', SRC_FCF, DEPS_FCF; outs = [f'o{k}' for k in range(ncons)]
                 else:
                     problems.append(f'{r["driver"]}: station {i} has {ncons} consumers (> 4)'); m, src, deps, outs = None, None, None, []
+            lane = a.land and kind != 'old'
+            iport = 'i'
+            if lane and m:
+                hop0 = s['parent'] is None
+                nb = len(outs)
+                m = f"hbfd_lh{'0' if hop0 else ''}_{W}_{dr}" + (f'_f{nb}' if nb > 1 else '')
+                src, deps, iport = SRC_LANE, DEPS_LANE, 'a'
+                outs = ['b'] if nb == 1 else [['b', k * W, (k + 1) * W] for k in range(nb)]
             names = [f'{tag}_s{i:03d}_l{t}' for t in range(T)]
             pb = None
             if s['parent'] is not None:
                 pb = cons[s['parent']].index(('s', i))
             nodes[i] = dict(id=i, parent=s['parent'], pbranch=pb, names=names, outs=outs)
+            if lane:
+                nodes[i]['iport'] = iport
             for t in range(T if m else 0):
                 site = (f'lane row {tag}_s{i:03d} {t}/{T} {dr}; site ({s["x"]}, {s["y"]}) um' if a.lane_rows
                         else f'home ({s["x"]}, {s["y"]}) um')
@@ -250,6 +290,17 @@ def main():
                                   owner='H-DIE relay route / H-NETLIST',
                                   note=f'{kind} station depth {s["depth"]} lane/tile {t}/{T} toward {s["toward"]}; {site}'))
                 tiles[m] += 1
+                if lane:
+                    if s['parent'] is None:      # hop 0: inverting ICG on the source root, opened by the source reset
+                        clocks.append(dict(inst=names[t], port='ck', domain=dom, kind='clock'))
+                        clocks.append(dict(inst=names[t], port='en', domain=dom, kind='reset'))
+                    else:
+                        pn = nodes[s['parent']]; br_ = [] if len(pn['outs']) == 1 else [pb, pb + 1]
+                        edges.append(dict(src=[pn['names'][t], 'ck_o'] + br_, dst=[names[t], 'ckf'], bits=1, clock=dom,
+                                          basis='half-cycle lane clock (station k+1 ckf = station k ck_o = ~cap)'))
+                        edges.append(dict(src=[pn['names'][t], 'eb'] + br_, dst=[names[t], 'ea'], bits=1, clock=dom,
+                                          basis='lane epoch (source released reset, one station per forwarded edge)'))
+                    continue
                 clocks.append(dict(inst=names[t], port='rs', domain=dom, kind='reset'))
                 if kind == 'old':
                     clocks.append(dict(inst=names[t], port='ck', domain=dom, kind='clock'))
@@ -271,10 +322,63 @@ def main():
             pin_ = (r.get('pins') or {}).get('sinks', {}).get(s_) if a.lane_rows else None
             if pin_:
                 xy = tuple(pin_)
+            lane = a.land and kind != 'old'
+            cports = []
+            if lane:
+                lk = f'{r["driver"]}->{s_}'; pe = LP.get(lk)
+                E_ = pe.get('E') if pe else None
+                N_ = 0 if src is None else tdep(src)
+                # K: the read offset counts from the common reset release; the lane epoch reaches the ring ceil(N/2)
+                # edges later (half-cycle stations), so K = ceil(N/2) + E (mod 8, 0 encodes 8) -- bench-calibrated
+                # (relay_lockstep_bench.py: ideal clocks give E = 1, latency ceil(N/2) + 2 at the sink pin)
+                K_ = (pe['K'] % 8) if (pe and pe.get('K') is not None and pe.get('stations') == N_) \
+                    else ((-(-N_ // 2) + (E_ if E_ is not None else 1)) % 8)
+                if src is None:
+                    sx = cen(di) or xy
+                    dx, dy = xy[0] - sx[0], xy[1] - sx[1]
+                    ldir = ('WE' if dx >= 0 else 'EW') if abs(dx) >= abs(dy) else ('SN' if dy >= 0 else 'NS')
+                else:
+                    ldir = dir_of(sl[src])
             for k in range(stages[s_]):
                 names = [f'{tag}_k{sinks.index(s_):02d}_{k:02d}_l{t}' for t in range(T)]
                 chain.append(names)
+                if lane:
+                    cports.append(['a', 'b'] if k == 0 else ['i', 'o'])
                 for t in range(T):
+                    if lane:
+                        if k == 0:
+                            m = f'hbfd_land{"0" if src is None else ""}_{W}_{ldir}'; src_f, deps = SRC_LANE, DEPS_LANE
+                            what = f'LANDING (K {K_}{"" if E_ is not None else " NO_E placeholder"}) N {N_}'
+                        else:
+                            m, src_f, deps = f'hbfd_rly_{W}_WE', SRC_OLD, DEPS_OLD; what = f'equal-age pad (sink root) {k}/{stages[s_] - 1}'
+                        insts.append(dict(name=names[t], master=m, source=src_f, rtl_deps=deps, params={}, slot=f'd4f_relay_sink:{r["driver"]}->{s_}',
+                                          owner='HBM-LANDING / H-NETLIST',
+                                          note=f'{what} at {s_} lane/tile {t}/{T}; '
+                                               + (f'lane row {tag}_k{sinks.index(s_):02d}_{k:02d} {t}/{T} {ldir if k == 0 else "WE"}; site ({round(xy[0], 1)}, {round(xy[1], 1)}) um'
+                                                  if a.lane_rows else f'home ({round(xy[0], 1)}, {round(xy[1], 1)}) um')))
+                        tiles[m] += 1
+                        if k == 0:
+                            if src is None:
+                                clocks.append(dict(inst=names[t], port='ck_s', domain=dom, kind='clock'))   # source root
+                                clocks.append(dict(inst=names[t], port='en', domain=dom, kind='reset'))
+                            else:
+                                pn = nodes[src]; br_ = [] if len(pn['outs']) == 1 else [br, br + 1]
+                                edges.append(dict(src=[pn['names'][t], 'ck_o'] + br_, dst=[names[t], 'ckf'], bits=1, clock=dom,
+                                                  basis='landing ring write clock = last station ck_o'))
+                                edges.append(dict(src=[pn['names'][t], 'eb'] + br_, dst=[names[t], 'ea'], bits=1, clock=dom,
+                                                  basis='landing write epoch = lane epoch'))
+                            clocks.append(dict(inst=names[t], port='ck', domain=dom, kind='clock'))   # SINK regional root
+                            clocks.append(dict(inst=names[t], port='rs', domain=dom, kind='reset'))
+                            for j_ in range(3):
+                                straps.append(dict(inst=names[t], port=f'k{j_}', value=(K_ >> j_) & 1, lo=0, hi=1, master=m,
+                                                   reason=f'identity: landing K strap bit {j_} of link {lk} (K {K_}, E {E_}; '
+                                                          f'{"land plan" if pe else "NO_E placeholder"})'))
+                            if a.land_fault == 'pins':
+                                die_pins.append(dict(name=f'{names[t]}__fault', direction='output', bits=1, instance=names[t], port='fault'))
+                        else:
+                            clocks.append(dict(inst=names[t], port='ck', domain=dom, kind='clock'))
+                            clocks.append(dict(inst=names[t], port='rs', domain=dom, kind='reset'))
+                        continue
                     rdr = 'WE'
                     if kind == 'old':
                         m, src_f, deps = f'hbfd_rly_{W}_WE', SRC_OLD, DEPS_OLD
@@ -295,24 +399,46 @@ def main():
                         edges.append(dict(src=[chain[k - 1][t], 'clk_out'], dst=[names[t], 'clk_in'], bits=1, clock=dom,
                                           basis='F1 sink-root chain (forwarded)'))
             sk[s_] = dict(src=[src, br], chain=chain)
+            if lane and chain:
+                sk[s_]['chain_ports'] = cports
+                lat = (-(-N_ // 2) + 1 + E_ + (stages[s_] - 1)) if E_ is not None else None
+                land_rows.append(dict(link=lk, bus=tag, sink=s_, master=f'hbfd_land{"0" if src is None else ""}_{W}_{ldir}', width=W,
+                                      lanes=T, stations=N_, E=E_, K=K_, pads=stages[s_] - 1, latency_edges=lat,
+                                      latency_formula='ceil(N/2) + 1 + E + pads edges to the sink pin (+1 = the sink input flop: '
+                                                      'contract N/2 + 1 + E + 1)', K_source='land plan' if pe else 'NO_E placeholder',
+                                      domain=dom, cls=cls))
         splice.append(dict(bus=tag, driver=di, cls=cls, domain=dom, width=W, tiles=T, bits=n,
                            driver_bits=[[p, k] for p, k, _ in bits], loads=[[list(x) for x in ls] for _, _, ls in bits],
                            nodes=[nodes[i] for i in order], sinks=sk, kind=kind, inter_region=bool(inter)))
+        if a.land and kind != 'old':
+            lr = {x['sink']: x for x in land_rows if x['bus'] == tag}
+            depth_eff = {s_: (lr[s_]['latency_edges'] if s_ in lr else depth_eff[s_]) for s_ in sinks}
         consts.append(dict(bus=tag, driver=r['driver'], cls=cls, domain=dom, bits=n, kind=kind, lanes=T, inter_region=bool(inter),
                            fork=fork, sink_edges=depth_eff))
     eq = collections.defaultdict(int)
     for x in consts:
         if x['cls'] == 'equal_age_pad':
-            eq[x['domain']] = max(eq[x['domain']], max(x['sink_edges'].values()))
+            v_ = [v for v in x['sink_edges'].values() if v is not None]   # --land without E: latency open (NO_E)
+            if v_:
+                eq[x['domain']] = max(eq[x['domain']], max(v_))
     spec = dict(region='relays_d4f', author='Claude H-NETLIST/D4F-RELAY 1017', basis_commit=f'H-DIE station list {a.stations}',
-                instances=insts, clocks=clocks, edges=edges, straps=[], gaps=[], relay_splice_v2=splice,
+                instances=insts, clocks=clocks, edges=edges, straps=straps, gaps=[], relay_splice_v2=splice,
                 relay_excluded=st.get('not_relayed', {}), notes=__doc__.split('\n\n')[1])
+    if a.land:
+        spec['die_pins'] = die_pins
+        spec['gaps'].append(dict(id='G-D4G-LAND-FAULT', what=f'{len(die_pins)} landing fault outputs on die status pins '
+                                 '(<landing>__fault), not yet ORed into the regional fault tree (hbm_fault_1017.py fr_<Q>)',
+                                 owner='HBM-LANDING / HBM-FAULT') if a.land_fault == 'pins' else
+                         dict(id='G-D4G-LAND-FAULT', what='landing fault outputs left OPEN (diagnostic --land-fault open)'))
     with gzip.open(a.out, 'wt') as f:
         json.dump(spec, f)
     import re as _re
     cat = collections.Counter()
     for m_, v in tiles.items():
         mm = _re.match(r'hbfd_rly_(\d+)_[A-Z]+(_fc)?(_f(\d))?$', m_ or '')
+        ml = _re.match(r'hbfd_(lh0|lh|land0|land)_(\d+)_[A-Z]+(_f(\d))?$', m_ or '')
+        if ml:
+            cat[ml.group(1) + ml.group(2) + (f'_f{ml.group(4)}' if ml.group(4) else '')] += v; continue
         if not mm:
             cat['unknown'] += v; continue
         cat[('fc' if mm.group(2) else 'old') + mm.group(1) + (f'_f{mm.group(4)}' if mm.group(4) else '')] += v
@@ -320,6 +446,12 @@ def main():
                tiles=dict(sorted(tiles.items())), kinds=dict(collections.Counter(x['kind'] for x in consts)),
                fork_buses=sum(1 for x in consts if x['fork']), inter_region_buses=sum(1 for x in consts if x['inter_region']),
                equal_age_max_depth_by_domain=dict(eq), hops_over_reach=hops_over, problems=problems, notes=notes, compiler=consts)
+    if a.land:
+        rep['landing'] = dict(links=len(land_rows), landing_tiles=sum(x['lanes'] for x in land_rows),
+                              by_master=dict(collections.Counter(x['master'] for x in land_rows for _ in range(x['lanes']))),
+                              by_width=dict(collections.Counter(str(x['width']) for x in land_rows for _ in range(x['lanes']))),
+                              no_E=sum(1 for x in land_rows if x['E'] is None), land_plan=a.land_plan, fault=a.land_fault,
+                              rows=land_rows)
     Path(a.report).write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps({k: rep[k] for k in ('buses', 'tile_categories', 'kinds', 'fork_buses', 'inter_region_buses', 'equal_age_max_depth_by_domain')}),
           len(hops_over), 'hops over reach,', len(problems), 'problems', problems[:4])

@@ -1,0 +1,25 @@
+{
+  "build": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-j",
+    "4",
+    "-Wno-fatal",
+    "--top-module",
+    "tb_qnt_cb",
+    "-GMUT=6",
+    "--Mdir",
+    "/srv/opentallas-scratch/claude/s81-qntkeep-1018/gate_b7358a8b8/m6/obj",
+    "--output-split",
+    "20000",
+    "--output-split-cfuncs",
+    "200",
+    "/srv/opentallas-scratch/claude/s81-qntkeep-1018/gate_b7358a8b8/reference_qnt.sv",
+    "/srv/opentallas-scratch/claude/s81-qntkeep-1018/gate_b7358a8b8/candidate_qnt.sv",
+    "/srv/opentallas-scratch/claude/s81-qntkeep-1018/gate_b7358a8b8/tb_qnt_cb.sv"
+  ],
+  "run": [
+    "/srv/opentallas-scratch/claude/s81-qntkeep-1018/gate_b7358a8b8/m6/obj/Vtb_qnt_cb"
+  ]
+}

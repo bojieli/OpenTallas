@@ -1,0 +1,220 @@
+{
+ "schema": "opentallas.hbm.d4g.gen2_set2.v1",
+ "by": "H-D4G-GEN2 fork SET2 (HANDOFF 0gl), 10-18",
+ "grants": {
+  "tool": "tools/hbm_die_v16/d4g_gen2_grants_set2.py",
+  "changed": [
+   "hb_dbk_SW",
+   "hb_dbk_NW",
+   "idx_sel",
+   "idx_q",
+   "vmh_SW (new slot)",
+   "vmh_NW (new slot)",
+   "quant_NW_dec (new planning slot)"
+  ],
+  "clearance": {
+   "hb_dbk_SW": [
+    [
+     55.3,
+     "sfucore_SW"
+    ],
+    [
+     57.89,
+     "hc_SW"
+    ],
+    [
+     60.05,
+     "calendar_SW"
+    ]
+   ],
+   "hb_dbk_NW": [
+    [
+     28.08,
+     "hc_NW"
+    ],
+    [
+     55.08,
+     "sfucore_NW"
+    ],
+    [
+     225.72,
+     "cij_NW"
+    ]
+   ],
+   "idx_sel": [
+    [
+     50.04,
+     "idx_link"
+    ],
+    [
+     600.1,
+     "tkm_SW"
+    ],
+    [
+     641.3,
+     "collks_SW"
+    ]
+   ],
+   "idx_q": [
+    [
+     17.28,
+     "hb_ckgen"
+    ],
+    [
+     22.31,
+     "host_N"
+    ],
+    [
+     52.06,
+     "idx_op"
+    ]
+   ],
+   "vmh_SW": [
+    [
+     228.26,
+     "calendar_SW"
+    ],
+    [
+     253.62,
+     "cij_SW"
+    ],
+    [
+     359.38,
+     "hb_dbk_SW"
+    ]
+   ],
+   "vmh_NW": [
+    [
+     20.02,
+     "calendar_NW"
+    ],
+    [
+     251.93,
+     "cij_NW"
+    ],
+    [
+     359.5,
+     "hb_dbk_NW"
+    ]
+   ],
+   "quant_NW_dec": [
+    [
+     20.0,
+     "quant_NW_xp"
+    ],
+    [
+     21.6,
+     "su_NW1"
+    ],
+    [
+     534.51,
+     "su_NW3"
+    ]
+   ],
+   "cij_SW": [
+    [
+     20.0,
+     "hc_SW"
+    ],
+    [
+     22.01,
+     "sfup_SW"
+    ],
+    [
+     253.62,
+     "vmh_SW"
+    ]
+   ],
+   "cij_SE": [
+    [
+     23.2,
+     "hc_SE"
+    ],
+    [
+     25.21,
+     "sfup_SE"
+    ],
+    [
+     265.25,
+     "vm_status4"
+    ]
+   ],
+   "cij_NW": [
+    [
+     21.6,
+     "hc_NW"
+    ],
+    [
+     23.61,
+     "sfup_NW"
+    ],
+    [
+     130.9,
+     "calendar_NW"
+    ]
+   ],
+   "cij_NE": [
+    [
+     23.2,
+     "hc_NE"
+    ],
+    [
+     25.21,
+     "sfup_NE"
+    ],
+    [
+     555.21,
+     "sfucore_NE"
+    ]
+   ]
+  },
+  "violations": [],
+  "region_map": "grants_d4g.py --regions-only: 45 regions / 280 instances / 130 neighbour pairs, assignments unchanged"
+ },
+ "netlist": {
+  "layer": "tools/hbm_die_v16/d4g_layers/l5b_cij4.py (run_layers after l5_host_ep, before l6_collq)",
+  "log": {
+   "edges_dropped": 3,
+   "instances_added": 3,
+   "edges_added": 99,
+   "fr_SE_N": 10,
+   "fr_NW_N": 10,
+   "fr_NE_N": 11,
+   "vm_tile_slots": 2
+  },
+  "cij": "cij_SE/NW/NE = ot_hgi_coll_inj_idx_join_rg INJLAT 12, wired as cij_SW (cxij -> cij -> hb_coll inj_d; hb_coll inj_idx; cic addr/rd); slot coll_<q> region (as cij_SW)",
+  "idx_tx_tree": {
+   "form": "4-sink fork bus from hb_idx__link.tx_v/tx (no split master): station planner Prim tree + relay_layer_d4f fork stations hbfd_rly_*_fc_f<N> at the branch points (IDX -> quadrant split -> per-quadrant cij); landing step lands each branch",
+   "sinks": [
+    "cij_NE",
+    "cij_NW",
+    "cij_SE",
+    "cij_SW"
+   ],
+   "fork_edge_bits": 9248,
+   "added_bits_vs_sw_only": 6936
+  },
+  "fault": "fr_SE N 9->10, fr_NW 9->10, fr_NE 10->11 (new bit async, as cij_SW)",
+  "vm_tiles": "hb_vms_SW/NW slot -> vmh_SW/NW",
+  "argmax": {
+   "bound": "ot_hbm_argmax_static_sw_vm (r1)",
+   "r2_bound": false,
+   "why": "no HBM-IDXAM branch / ot_hbm_idx_vm_share_static_am (IDX-side 8:1 merged word) at write time; r2 vm_rr 264 b is not port-identical"
+  }
+ },
+ "smoke": {
+  "input": "GEN0 contract + run_layers l1..l5_host_ep (scratch set2_base) + l5b",
+  "bind": "DIE_PORT_BIND PASS masters=93 instances=1178 input_unconnected=0 input_tied=0",
+  "contract_modules": "CONTRACT_MODULES PASS masters=93 modules=417 missing=0",
+  "exposed_inputs": 0,
+  "log": "/home/ubuntu/scratch/hd4g-gen2/set2_smoke/pb/port_bind.log"
+ },
+ "open": [
+  "vmks_<q><k> 432 x 388.8 own slots NOT granted: pc box 1036.8 x 637.2 holds 4 ctl (155.52^2) + svg (SYNTH size unknown) -> fits only if svg <= ~38 um tall; vmks stay in the pc_<q><k> shared region (die_case OVERFLOW is reported)",
+  "qdq program_leaf: no instance in the GEN contract (inside the hb_quant_NW soft split) -> no slot; needs its own kit (H-SM/QUANT)",
+  "quant_NW_dec is a planning slot only (hb_quant_NW is one soft instance in die_case)",
+  "argmax r2: keep r1 until HBM-IDXAM pushes the IDX-side merged word (ot_hbm_idx_vm_share_static_am)",
+  "E VM tile NC0, fr_/fcx thin wrappers at d4g params, root_h5 CPIN1: unchanged (SET2 netlist_items_not_in_gen1)",
+  "smoke ran without l6_collq (COLLQ fork); parent reruns the full run_layers + strict bind"
+ ]
+}
