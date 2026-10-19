@@ -83,7 +83,7 @@ module tb_qfd_dv2 (input wire ck);
             for (i = 0; i < N; i = i + 1) begin
                 if (scu[i+1][47]) $fdisplay(lg, "%0d S%0dSU %h", cyc, i, scu[i+1]);
                 if (scd[i][47])   $fdisplay(lg, "%0d S%0dSD %h", cyc, i, scd[i]);
-                if (st[i][24])    $fdisplay(lg, "%0d S%0dTOK %h", cyc, i, st[i][23:0]);
+                if (st[i][24])    $fdisplay(lg, "%0d S%0dTOK %h", cyc, i, st[i][27:0]);   // [27:26] token user (MU_NU > 1)
                 if (cc[i][49])    $fdisplay(lg, "%0d S%0dCC %h", cyc, i, cc[i]);
             end
             if (stu[N][1087]) $fdisplay(lg, "%0d S%0dE %h", cyc, N - 1, stu[N]);
