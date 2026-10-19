@@ -52,6 +52,16 @@
 //   check: start_cnt 0, start_first not 4-aligned (one store row = 4 entries), or start_first + start_cnt > nent ->
 //   fault_code[0] and the start is refused (as any bad start).  start_rng = 0 (tie it so where unused): identical.
 //   MUT 21 (bench only): the range is ignored (the stage class's descriptor plays).
+// TLOAD (MU-DIE-QW 10-19: QLB-C4b d8b6a157e qfd_dv_cmd_cal LOCAL kind 3 carried to the MU calendar, same entry format,
+//   same edges): one DV slice stream TABLE word on `tl` (W5 st_wi) per TLOAD entry: [9:4] PW block row r (payload =
+//   PW 16r .. 16r+15, one read of both store macros), [12:10] kind (1 CROM, 2 BTAB, 3 PROG), [16:13] dst slice, [20:17]
+//   src, [44:21] eaddr, [72:45] tag, [111:73] 0.  tl = {1, kind, dst, src, eaddr, tag, payload} is a register loaded 2
+//   edges after the issue edge, for one edge; 0 otherwise.  The block read takes the shared store read port on the
+//   issue edge's next edge, so NO playhead is granted a fetch read on the issue edge (compiler: TLOAD entries >= 2 edges
+//   apart, fetch modelled in ctlm_image.py cal_model; in practice TLOADs are BOOT entries on playhead 0).  The word is
+//   not relocated per user (shared tables).  FAULT (fault_code[4]): kind 0 / 4..7, [111:73] != 0, a block inside the ME
+//   programme rows, the entry area or the ME control rows (>= 976).
+//   MUT 4 (bench only): TLOAD payload macro halves swapped; MUT 5: the table word leaves one edge late.
 // =====================================================================================================================
 module qfd_dv_cmd_cal_mu #(
     parameter integer MUT = 0,
@@ -79,6 +89,7 @@ module qfd_dv_cmd_cal_mu #(
     input  wire [9:0]    start_first,
     input  wire [9:0]    start_cnt,
     output reg  [115:0]  cmd,
+    output reg  [1087:0] tl,                        // TLOAD stream table word (W5 st_wi), one edge, else 0
     output reg  [UB-1:0] cmd_user,                  // the user of cmd / loc_* / su_issue / xc_issue (0 at NU = 1)
     output reg           loc_emb,
     output reg           loc_seg,
@@ -158,6 +169,7 @@ module qfd_dv_cmd_cal_mu #(
 
     // store read port: shared, one playhead's read an edge (a second one only after a faulted start: fault_code[5])
     reg          m_rce, m_rbank; reg [5:0] m_rrow; reg m_dbl;
+    reg          tl_rce_q, tl_v2, tl_v3; reg [5:0] tl_row_q; reg [63:0] tl_ctl_q, tl_ctl2, tl_ctl3; reg [1023:0] tl_pay3;
     integer      a;
     always @* begin
         m_rce = 1'b0; m_rbank = 1'b0; m_rrow = 6'd0; m_dbl = 1'b0;
@@ -169,7 +181,8 @@ module qfd_dv_cmd_cal_mu #(
     end
     wire [511:0] rd [0:1];
     generate for (g = 0; g < 2; g = g + 1) begin : g_m
-        ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(ck), .r_ce_in(m_rce && (m_rbank == g[0])), .r_addr_in(m_rrow), .rd_out(rd[g]),
+        ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(ck), .r_ce_in((m_rce && (m_rbank == g[0])) || tl_rce_q),
+            .r_addr_in(tl_rce_q ? tl_row_q : m_rrow), .rd_out(rd[g]),
             .w_ce_in(m_ce[g]), .w_addr_in(pw_row2), .wd_in(m_data[512*g +: 512]), .w_mask_in(m_mask[512*g +: 512]),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     end endgenerate
@@ -208,7 +221,6 @@ module qfd_dv_cmd_cal_mu #(
     reg  [NU-1:0]  zd;
     reg  [115:0]   hc [0:NU-1];
     reg  [TW-1:0]  ht [0:NU-1];
-    reg            any_gnt;
     integer        u, j;
     always @* begin
         any_gnt = 1'b0;
@@ -216,9 +228,6 @@ module qfd_dv_cmd_cal_mu #(
             waddr[u] = base + {f_idx[u][8:0], 1'b0};
             f_n[u] = (f_rem[u] >= 10'd4) ? 3'd4 : f_rem[u][2:0];
             can_read[u] = run_q[u] && f_rem[u] != 10'd0 && ({1'b0, fifo_n[u]} + {1'b0, infl[u]} + 5'd4 <= 5'd8);
-            // lowest-index playhead that is not being (re)started this edge takes the read port
-            gnt[u] = can_read[u] && !frz_u[u] && !any_gnt;
-            if (can_read[u] && !frz_u[u]) any_gnt = 1'b1;
             zd[u] = 1'b0;
             for (j = 0; j < 4; j = j + 1) begin
                 ent[u][j] = (MUT == 2) ? {rd[rd_bank[u]][128*j +: 64], rd[rd_bank[u]][128*j + 64 +: 64]}
@@ -247,6 +256,23 @@ module qfd_dv_cmd_cal_mu #(
     wire [115:0]  ic = hc[iu];
     wire [2:0]    i_kind = ic[3:1];
     wire          i_loc = ic[115:112] == 4'hE;
+    // TLOAD (LOCAL kind 3) of the issuing playhead: block row / header / checks
+    wire          tl_fire = i_any && i_loc && i_kind == 3'd3;
+    wire [5:0]    tl_row = ic[9:4];
+    wire [2:0]    tl_kind = ic[12:10];
+    wire [10:0]   tl_lo = {1'b0, tl_row, 4'd0}, tl_hi = tl_lo + 11'd16;
+    wire          tl_bad = tl_kind == 3'd0 || tl_kind[2] || ic[111:73] != 39'd0 || {4'd0, tl_row} < meta_rows ||
+                           tl_row >= 6'd61 || (tl_lo < {1'b0, base} + {1'b0, nent, 1'b0} && tl_hi > {1'b0, base});
+    // store read grant: lowest-index playhead that is not being (re)started this edge; none on a TLOAD issue edge
+    reg           any_gnt;
+    integer       gu;
+    always @* begin
+        any_gnt = 1'b0;
+        for (gu = 0; gu < NU; gu = gu + 1) begin
+            gnt[gu] = can_read[gu] && !frz_u[gu] && !any_gnt && !tl_fire;
+            if (can_read[gu] && !frz_u[gu]) any_gnt = 1'b1;
+        end
+    end
     wire [UB-1:0] ru = (MUT == 11 && NU > 1) ? ((iu == NU - 1) ? {UB{1'b0}} : iu + 1'b1) : iu;
     wire [24:0]   ub = (NU > 1 && MUT != 12) ? 25'(ru) * 25'(UVM_STRIDE) : 25'd0;
     wire [9:0]    up = (NU > 1 && MUT != 12) ? 10'(ru) * 10'(PIDX_STRIDE) : 10'd0;
@@ -299,6 +325,8 @@ module qfd_dv_cmd_cal_mu #(
             rce_q <= {NU{1'b0}}; rbank_q <= {NU{1'b0}}; rd_v <= {NU{1'b0}}; rd_bank <= {NU{1'b0}};
             cmd <= 116'd0; cmd_user <= {UB{1'b0}}; loc_emb <= 1'b0; loc_seg <= 1'b0; loc_base <= 12'd0;
             su_issue <= 1'b0; su_pidx <= 9'd0; xc_issue <= 1'b0;
+            tl <= 1088'd0; tl_rce_q <= 1'b0; tl_v2 <= 1'b0; tl_v3 <= 1'b0; tl_row_q <= 6'd0;
+            tl_ctl_q <= 64'd0; tl_ctl2 <= 64'd0; tl_ctl3 <= 64'd0; tl_pay3 <= 1024'd0;
         end else begin
             sealed_d <= sealed;
             done <= 1'b0;
@@ -374,12 +402,23 @@ module qfd_dv_cmd_cal_mu #(
             // ---------------- issue register (one word an edge, all playheads)
             cmd <= 116'd0; loc_emb <= 1'b0; loc_seg <= 1'b0; su_issue <= 1'b0; xc_issue <= 1'b0;
             if (NU > 1 && i_col) begin fault <= 1'b1; fault_code[1] <= 1'b1; end
+            // TLOAD pipeline: issue edge (read decision) -> macro read -> tl register (-> +1 edge under MUT 5)
+            tl_rce_q <= tl_fire; tl_v2 <= tl_rce_q; tl_v3 <= tl_v2;
+            if (tl_fire) begin
+                tl_row_q <= tl_row;
+                tl_ctl_q <= {1'b1, tl_kind, ic[16:13], ic[20:17], ic[44:21], ic[72:45]};
+            end
+            tl_ctl2 <= tl_ctl_q; tl_ctl3 <= tl_ctl2;
+            tl_pay3 <= (MUT == 4) ? {rd[0], rd[1]} : {rd[1], rd[0]};
+            if (MUT == 5) tl <= tl_v3 ? {tl_ctl3, tl_pay3} : 1088'd0;
+            else          tl <= tl_v2 ? {tl_ctl2, (MUT == 4) ? {rd[0], rd[1]} : {rd[1], rd[0]}} : 1088'd0;
             if (i_any) begin
                 if (NU > 1) cmd_user <= ru;
                 if (NU > 1 && r_bad) begin fault <= 1'b1; fault_code[3] <= 1'b1; end
                 if (i_loc) begin
                     if (i_kind == 3'd1) loc_emb <= 1'b1;
                     else if (i_kind == 3'd2) begin loc_seg <= 1'b1; loc_base <= ic[15:4]; end
+                    else if (i_kind == 3'd3) begin if (tl_bad) begin fault <= 1'b1; fault_code[4] <= 1'b1; end end
                     else begin fault <= 1'b1; fault_code[4] <= 1'b1; end
                 end else begin
                     cmd <= rc;

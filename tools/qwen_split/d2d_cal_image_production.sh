@@ -5,11 +5,13 @@
 # Inputs (committed): the LAYERBENCH-QWEN compiled token path (tools/qwen_layerbench/layer_compile.py at e016b38e4: the priced
 # 36-layer path with the KV-programme window law applied -- L1..L35 attn_kv +X, L0 attn_kv shortened to the implemented
 # KV service, TOKEN-XDIE-QWEN F7) and the die seam stages below (bundle ages: dv2f14bn tx_slot / rx_record / x3_slot /
-# x3_record landed 2, tx_record direct 0; kvs14c every bundle at its member max, F5 / F6).  The die GEN sets the masters'
+# x3_record landed 2, tx_record direct 0; kvs14c every bundle at its member max, F5 / F6).  QLB-C4 10-18: QXF-SEAMC lands
+# C.tx_record at age 2 (dv2f14bq, SC_TX 2 -> TXD C [8,3,1,9]); the token path is compiled_L1 recompiled on the dv2f14bq
+# die-run table (layer_compile.py: attn_kv X 7).  The die GEN sets the masters'
 # TXDP from the D2D_TXDP_C / D2D_TXDP_K lines of the image.  Run from the repository root.
 set -eu
 OUT=$1
-STAGES=${D2D_DIE_STAGES:-2,2,2,2,0,2/11,11,9,9,9,11,11}
+STAGES=${D2D_DIE_STAGES:-2,2,2,2,2,2/11,11,9,9,9,11,11}
 TP=results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz
 mkdir -p "$OUT"
 gunzip -c "$TP" > "$OUT/token_path_compiled.json"

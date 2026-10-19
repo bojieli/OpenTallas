@@ -44,7 +44,7 @@ def test_transport_value():
 
 def test_txdp_image():
     v, r = P.txdp_from_image()
-    assert v == 0x09010306 and r['ports'] == [6, 3, 1, 9] and r['die_stages'], r
+    assert v == 0x09010308 and r['ports'] == [8, 3, 1, 9] and r['die_stages'], r
 
 
 def test_trapped_sentinels():
@@ -64,21 +64,23 @@ def _audit(params, E=3):
 
 
 def test_audit_pass_and_fail_closed():
-    good = {'qfd_tt_ctlm_dv': dict(XPF_TRANSPORT_EDGES=5), 'qfd_d2d_static': dict(TXDP=0x09010306)}
+    good = {'qfd_tt_ctlm_dv': dict(XPF_TRANSPORT_EDGES=5, STAGE_ME=1), 'qfd_d2d_static': dict(TXDP=0x09010308)}
     r = _audit(good)
     assert r['verdict'] == 'PASS' and r['xpf']['XPF_TRANSPORT_EDGES'] == 5 and r['xpf']['sinks'] == ['dvs_W5.hr_wi'], r
     r = _audit(None)                                                   # as built before G-C1: no sidecar
-    assert r['verdict'] == 'FAIL' and len(r['fails']) == 2, r['fails']
-    r = _audit(dict(good, qfd_tt_ctlm_dv=dict(XPF_TRANSPORT_EDGES=26)))  # the smoke's relay count (wrong for a fwd lane)
+    assert r['verdict'] == 'FAIL' and len(r['fails']) == 3, r['fails']
+    r = _audit(dict(good, qfd_tt_ctlm_dv=dict(XPF_TRANSPORT_EDGES=26, STAGE_ME=1)))  # the smoke's relay count (wrong for a fwd lane)
     assert r['verdict'] == 'FAIL' and 'XPF_TRANSPORT_EDGES 26 != 5' in r['fails'][0], r['fails']
-    r = _audit(dict(good, qfd_d2d_static=dict(TXDP=0x09010308)))
+    r = _audit(dict(good, qfd_d2d_static=dict(TXDP=0x09010306)))   # dv2f14bq as GEN'd on the SC_TX 0 image
     assert r['verdict'] == 'FAIL' and 'TXDP' in r['fails'][0], r['fails']
+    r = _audit(dict(good, qfd_tt_ctlm_dv=dict(XPF_TRANSPORT_EDGES=5)))   # Q-DIE14: as built STAGE_ME 0 (no deployment image)
+    assert r['verdict'] == 'FAIL' and 'STAGE_ME' in r['fails'][0], r['fails']
 
 
 def test_gen_params():
     out, rec = P.gen_params([('tt_ctlm', 'qfd_tt_ctlm_dv'), ('d2d_rom', 'qfd_d2d_static')],
                             [('dvw_hr_wi', dict(n=25, E=13, K=5))])
-    assert out['qfd_tt_ctlm_dv']['XPF_TRANSPORT_EDGES'] == 15 and out['qfd_d2d_static']['TXDP'] == 0x09010306
+    assert out['qfd_tt_ctlm_dv']['XPF_TRANSPORT_EDGES'] == 15 and out['qfd_tt_ctlm_dv']['STAGE_ME'] == 1 and out['qfd_d2d_static']['TXDP'] == 0x09010308
     assert P.gen_params([('x', 'other')], [])[0] == {}
 
 
