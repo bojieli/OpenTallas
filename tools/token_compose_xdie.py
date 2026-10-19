@@ -56,6 +56,8 @@ INPUTS = {
     's81_p4l_layers': ('results/arch/token_path_1018/inputs/s81_layer_price_p4l.json',
                        'snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json'),
     's81_p4l_price': ('results/arch/s81_dv_1016/p4l/price_land.json', 'main (S81-DIE7/PRICE ec38691d6)'),
+    's81_scand': ('results/arch/s81_scand_1018/scand.json',
+                  'claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)'),
     'q_1013': ('results/rtl/qwen_layer_tput_1013/record.json', 'main'),
     'q_1013_terms': ('results/rtl/qwen_layer_tput_1013/die_terms.json', 'main'),
     'q_tp8_coll': ('results/rtl/qwen_layer_tput_1013/native_tp8_collective/positive/record.json', 'main'),
@@ -136,6 +138,7 @@ def union_overlap(s, e, ivs):
 
 # ---------------------------------------------------------------- DS ROM (S81 array)
 GRADE_DAG = {'measured': 'measured-old-RTL', 'measured+vendor': 'modelled-PHY'}
+SCAN_GROUP = 'S81.SCAN_STACKS_P4L'      # accepted-cost ledger group of the 1-stack scan correction
 
 
 def ds_rom(wl):
@@ -195,8 +198,42 @@ def ds_rom(wl):
                       src('s81_p4l_price', f'scenarios.dv_base.workloads.{wl}.dv_tok_s = hop_only x (1 - (ledger_kept + dv_dag_loss)/100)'),
                       note='hop-only basis + accepted-cost ledger rows + DAG re-solve: the part of the S81 price of record '
                            'that is not a per-node term'))
-    return dict(terms=terms, tau=tau, price_of_record=dict(tok_s=rec['dv_tok_s'], cycles=round(T_rec, 1),
-                                                          source=INPUTS['s81_p4l_price'][0] + f' dv_base.{wl}'),
+    # MU.S81.SCANCHK (10-18): the DAG's idx.score nodes and so the price of record charge the 10-04 reader on FOUR
+    # HBM3E stacks a rank die; p4l has ONE (plan.json: one phy block, NPC 32).  Charge the 1-stack scan here until
+    # dv_price carries the ledger row (then price_land.json lists the group and the residual already holds it).
+    # S81-SCAND (10-18, coordinator 0iq: option D adopted): the full-scan layers' keys are spread over k = 3 adjacent
+    # TP4 stages; the reader term is the MEASURED 1-stack reader at the per-die key count (scand.json, measured-old-RTL:
+    # the W11 reader is not bound on p4l), the q fan-out legs + wider final merge are priced; re-index gathers keep the
+    # SCANCHK 1-stack price.  Charged here until dv_price carries the ledger row (then the residual already holds it).
+    sd = load('s81_scand')
+    led_rows = {r['group'] for r in load('s81_p4l_price')['scenarios']['dv_base'].get('ledger_rows', [])}
+    sc_add = 0.0
+    if SCAN_GROUP not in led_rows:
+        k = str(sd['adopted_k'])
+        st = sd['by_k'][k]
+        for L, d in st['idx_score_delta_cycles'].items():
+            pl = st['per_layer'].get(L)
+            parts = ([('measured-old-RTL', pl['reader_1stack'] - pl['reader_4stack_basis'], 'reader'),
+                      ('priced', pl['legs_and_merge'], 'legs_merge')] if pl else [('priced', d, 'reindex')])
+            for g, c, nm in parts:
+                if abs(c) > 1e-9:
+                    terms.append(term(f'{L}.scan_d_{nm}', 'layer', 1, c, g,
+                                      src('s81_scand', f'by_k.{k}.per_layer.{L}' if pl else f'by_k.{k}.idx_score_delta_cycles.{L}'),
+                                      layer=L, note='option D k=%s: index scan at 1 HBM stack a p4l die, keys over %d dies (%s)'
+                                      % (k, st['dies'], nm)))
+                    sc_add += c
+        wave = st['dag_1009'][wl]['added_cycles'] - sum(st['idx_score_delta_cycles'].values())
+        if abs(wave) > 1e-9:
+            terms.append(term('wave.scan_d', 'layer', 1, wave, 'priced', src('s81_scand', f'by_k.{k}.dag_1009.{wl}'),
+                              layer='wave', note='MTP wavefront: the slowest verify stage after option D, +delta per position'))
+            sc_add += wave
+    T_por = T_rec + sc_add
+    por = dict(tok_s=round(F_CLK * (tau if mtp else 1.0) / T_por, 1), cycles=round(T_por, 1),
+               source=INPUTS['s81_p4l_price'][0] + f' dv_base.{wl}' + (' + S81-SCAND option D 1-stack scan (ledger %s, '
+                                                                     'not yet in dv_price)' % SCAN_GROUP if sc_add else ''))
+    if sc_add:
+        por.update(uncorrected_tok_s=rec['dv_tok_s'], scan_stacks_correction_cycles=round(sc_add, 1))
+    return dict(terms=terms, tau=tau, price_of_record=por,
                 title='DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, ' + ('MTP (DSpark, tau %.3f)' % tau if mtp else 'AR'),
                 o_rule='O from the token-path DAG solve (critical / slack); no S81 die-run compiler schedule exists yet (TOKEN-PASS-S81 BLOCKED)')
 

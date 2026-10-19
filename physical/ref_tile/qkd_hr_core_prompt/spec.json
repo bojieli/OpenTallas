@@ -87,23 +87,72 @@
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
   "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
-  "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v"
+  "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_axi_packet_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_control_prompt_observed_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_csr_service_pins_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_ctl_service_pins_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_fullcontrol_observed_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_hc_station_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_if_pins_observed_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_program_loader_target_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_program_rx_target_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_prompt_capture_pins_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_record_port_rr.sv"
  ],
  "params": {},
  "clock_port": "ck_core",
  "reset_ports": [],
  "outline": {
-  "w": 259.2,
-  "h": 259.2
+  "w": 280.8,
+  "h": 280.8
  },
  "macros": [
   {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "count": 1
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    86.4
+   ],
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
-   "count": 4
+   "count": 1,
+   "at": [
+    43.2,
+    104.256
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    122.112
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    139.968
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    157.824
+   ],
+   "at_exact": true
   }
  ],
  "pins": {
@@ -224,7 +273,7 @@
    "link_up"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_prompt (core family, one ck_core entry): members u_control, u_hc, u_axi, u_program, u_program_rx, u_records + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_prompt (core family, one ck_core entry): members u_control, u_hc, u_axi, u_program, u_program_rx, u_records + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | p3 (KV-TILES-D): clock entry ck_core at the S-face centre beside the S pin-flop mass (was the SW corner: TT 545/spread 175.5); SRAMs moved to the empty NW quadrant (1024x256 at the N face band, 4x 256x64 2x2 below it) so the logic is one L band along S and E | p4 (KV-PROMPT4 10-18, coordinator review of gate p3 FAIL: pin-flop spread 114.9 TT, W/E 6.2 pins/um, SRAMs in two places + logic ring, host_rst_n 4,924 / rst_n_i 1,496 loads): (1) outline 259.2 -> 280.8 (W/E <= ~5.8 pins/um); (2) the five SRAMs in ONE abutted N-S column at the NW (x 43.2: four 256x64 at y 86.4 + k*17.856 (M4-track pitch, 36-nm abutment), the 1024x256 on top at 157.824; pins on W/E faces only, so the stack is legal with no channel), the rest of the tile one contiguous std-cell region; (3) boundary pin registers on their own balanced clock branch (bnd_branch.tcl, the dsdv_sh_vc technique, depth 6); ck_core at the S-face centre 136.8-144.0; (4) every host_rst_n consumer of the child behind a local ot_rst_relay at its rst_n pin (tools/qwen_kv_die/host_cluster/gen_prompt_rr.py; release +3 ck edges uniformly inside the child, assert immediate; members unchanged files)",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -252,9 +301,9 @@
   "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
-  "owner": "Claude:KV-HOSTCL",
-  "branch": "claude/kvj-a3-1017",
-  "tag": "r2",
+  "owner": "Claude:KV-PROMPT4",
+  "branch": "claude/kv-prompt4-1018",
+  "tag": "p4",
   "purpose": "HOST root cluster r2 child qkd_hr_core_prompt (pre-route gate + route; parent qkd_host_root is CRITICAL)",
   "benches": [
    {
@@ -280,9 +329,31 @@
     "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py mutant --out {RUN}/bench/cg_mut --child core_prompt",
     "fail_regex": "CLUSTER_GATE FAIL mutant",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_mutant_qkd_hr_core_prompt.log"
+   },
+   {
+    "name": "cluster_rr_mutant",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py rrmutant --out {RUN}/bench/cg_rrmut --define QKD_HR_PR_RR_MUTANT",
+    "fail_regex": "CLUSTER_GATE FAIL rrmutant",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_rrmutant_qkd_hr_core_prompt.log",
+    "note": "core_prompt reset relays bypassed in the cluster (flat reference keeps them): the composition must FAIL"
    }
   ]
  },
+ "pin_ranges": {
+  "ck_core": [
+   136.8,
+   144.0
+  ]
+ },
+ "pre_cts_extra": [
+  "physical/ref_tile/qkd_hr_core_prompt/bnd_branch.tcl"
+ ],
  "children": [],
  "inter": [],
  "io_flop_at_pins": {

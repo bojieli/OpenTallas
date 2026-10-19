@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hgi_coll_kq_share2_leaf",
+ "view": "physical/ref_tile/hcoll_kqs_leaf_1018/views/ot_hgi_coll_kq_share2_leaf",
+ "lib_cell": "ot_hgi_coll_kq_share2_leaf",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 164.7,
+ "spread_ps": 44.5,
+ "outputs": 563,
+ "inputs": 1125,
+ "launch_ps": 115.7,
+ "launch_pin": "fault",
+ "capture_ps": 81.7,
+ "capture_pin": "a_kq[143]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 42.9,
+ "ff_launch_min_ps": 48.2,
+ "ff_hold_need_ps": -4.5,
+ "pass": true,
+ "fail_why": ""
+}
