@@ -4,17 +4,20 @@
 // LH-PGVM 2026-10-19: PGSTREAM SAFE2 -- the 14 roots > 32 loads left by the regional bridge source (47d9b210c, r3 census:
 // bridge_rst_n 1,726; tap write/read selects 564/564/36/36; tap reset 92; leaf reset 73; inject decode/select
 // 83/82/81/81/41/41/35) are removed by SOURCE structure, with every data, valid, fault, reset and seam edge unchanged:
-//   * bridge_rst_n / rst_n: the kit lands both in ONE face stage (spec reset_landing.stages 1); this source adds the two
-//     remaining stages as a balanced tree: face flop -> NA kept stage-A cells -> one kept terminal cell PER LOAD REGION
-//     (bridge request/return regions, done/monitor copies, inject regions, MUT14 term).  1 + 2 = the old 3 serial edges.
-//     Plain flops on clk_ctl as the kit landing (assertion and release both delayed 3 serial edges, as before).
+//   * bridge_rst_n / rst_n: the kit lands both in ONE face stage (spec reset_landing.stages 1); this source adds a
+//     balanced tree: face flop -> kept stage-A cells -> one kept terminal cell PER LOAD REGION (bridge request/return
+//     regions, done/monitor, inject regions, MUT14 term).  Serial-domain terminals are clk_ctl flops; stream-domain
+//     terminals are pg_clk flops fed by serial feeders, so BOTH domains leave reset on the same coincident edge 12q
+//     after the face flop (the seam windows' assumption).  rst_n: two serial source stages (serial loads only).
 //   * leaf / tap stream reset synchronisers: stage 1 unchanged, stage 2 replicated as kept cells, one per load group
 //     (leaf: read calendar+fault / write calendar per bank leaf, fault publication; tap: control, read calendar, write
 //     calendar, write-select copies per tap bank).  Same two pg_clk ages.
 //   * tap selects: write_d / read_d payload muxes use kept per-region select copies (14-bit write regions, 8-bit read
 //     regions) sampled from local_write / local_read on the same edge as write_d / read_d (same reset).
-//   * inject: three kept 14/14/13-bit regions per side; each region owns its own slot counter (sp / sq, same reset and
-//     recurrence) and, on the stream side, its own copy of the slot decode, so no decode net spans the 41-bit word.
+//   * inject: three kept group-aligned regions per side ({v1:0,row g0-1}, {v3:2,row g2-3}, {bad}); each owns its slot
+//     counter (sp / sq, same reset and recurrence) and, on the stream side, its own decode cone, so no decode net spans
+//     the 41-bit word and each inj_addr bit reaches at most the two group cones plus the conflict cone.
+//   * bridge_s monitor: verbatim equations with two reset groups (r3: 46 loads on one terminal).
 // Equivalence: tb_hbm_su_pg_stream_safe2 (lockstep against the current two-root ot_hbm_su_static_pg_stream, the kit's
 // remaining reset stages modelled in the bench for the reference) + the per-group seam windows + all causal mutants.
 // Kept cells are distinct keep_hierarchy paramodules (ID), so no optimisation merges them back.
@@ -75,7 +78,7 @@ endmodule
 
 module ot_hbm_pgs_bridge_s_safe2 #(
  parameter integer RQ_BITS=17,WQ_BITS=281,RR_BITS=257,READ_RETURN=10,WRITE_RETURN=7,MUT=0,
- parameter integer NREQ=(RQ_BITS+WQ_BITS+14)/15, NRET=(RR_BITS+14)/15, NT=NREQ+NRET+1
+ parameter integer NREQ=(RQ_BITS+WQ_BITS+14)/15, NRET=(RR_BITS+14)/15, NT=NREQ+NRET+2
 )(input wire stream_clk, input wire [NT-1:0] rst_t,
  input wire [RQ_BITS-1:0] rq_b0,rq_b1,input wire [WQ_BITS-1:0] wq_b0,wq_b1,
  output wire [RR_BITS-1:0] rr_b0,rr_b1,output wire dn_b0,dn_b1,
@@ -95,12 +98,75 @@ module ot_hbm_pgs_bridge_s_safe2 #(
   ot_hbm_pgs_return_s_region #(.W(W),.ID(r),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT)) u_copy(
    .clk(stream_clk),.rst_n(rst_t[NREQ+r]),.d(stream_rr[r*15+:W]),.b0(rr_b0[r*15+:W]),.b1(rr_b1[r*15+:W]));
  end
- ot_hbm_su_multirate_bridge_s #(.RQ_BITS(1),.WQ_BITS(1),.RR_BITS(1),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT)) u_monitor(
-  .stream_clk(stream_clk),.rst_n(rst_t[NT-1]),.rq_b0(rq_b0[RQ_BITS-1]),.rq_b1(rq_b1[RQ_BITS-1]),
+ ot_pgs_bridge_s_mon2 #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT)) u_monitor(
+  .stream_clk(stream_clk),.rst_a(rst_t[NT-2]),.rst_b(rst_t[NT-1]),.rq_b0(rq_b0[RQ_BITS-1]),.rq_b1(rq_b1[RQ_BITS-1]),
   .wq_b0(wq_b0[WQ_BITS-1]),.wq_b1(wq_b1[WQ_BITS-1]),.rr_b0(),.rr_b1(),.dn_b0(dn_b0),.dn_b1(dn_b1),
   .stream_rq(),.stream_wq(),.stream_rr(stream_rr[RR_BITS-1]),.stream_done(stream_done),.fault(fault));
  wire rd_v = req[0].u_copy.u_s.rd_v;
  wire rd_b = req[0].u_copy.u_s.rd_b;
+endmodule
+
+// ---- bridge_s valid/calendar monitor (ot_hbm_su_multirate_bridge_s at 1-bit widths, verbatim equations) with two reset
+//      groups: rst_a phase / warm / read pipe, rst_b write pipe / active pipe / fault (r3 census: one 46-load reset)
+module ot_pgs_bridge_s_mon2 #(parameter integer READ_RETURN=10,WRITE_RETURN=7,MUT=0)(
+ input wire stream_clk, input wire rst_a, input wire rst_b,
+ input wire rq_b0,rq_b1,wq_b0,wq_b1,
+ output reg rr_b0,rr_b1,output reg dn_b0,dn_b1,
+ output reg stream_rq,output reg stream_wq,
+ input wire stream_rr,input wire stream_done,
+ output reg fault);
+ localparam integer RP=READ_RETURN+2, WP=WRITE_RETURN+2;
+ reg [3:0] phase;
+ reg [4:0] stream_warm;
+ reg [RP-1:0] active_pipe,read_pipe;
+ reg [WP-1:0] write_pipe;
+ function automatic [1:0] slot_for_phase(input [3:0] p);
+  reg [3:0] n;
+  begin
+   n=3*{2'b0,p[3:2]};
+   if(p[1:0]==3)n=n+1;
+   if(p[1:0]==0)n=n-1;
+   slot_for_phase=n[1:0];
+  end
+ endfunction
+ wire active=phase[1:0]!=1 && stream_warm>=2;
+ wire [1:0] lslot=slot_for_phase(phase), rslot=slot_for_phase(phase-4'(RP)), dslot=slot_for_phase(phase-4'(WP));
+ wire lsel=lslot[0] ^ (MUT==2);
+ wire rsel=rslot[0];
+ wire dsel=dslot[0];
+ wire rq_sel = lsel ? rq_b1 : rq_b0;
+ wire wq_sel = lsel ? wq_b1 : wq_b0;
+ wire [1:0] nslot=slot_for_phase(phase+4'd1);
+ wire nsel=nslot[0];
+ reg rq_pre, wq_pre;
+ always @(posedge stream_clk) begin rq_pre <= nsel ? rq_b1 : rq_b0; wq_pre <= nsel ? wq_b1 : wq_b0; end
+ wire rq_pick = (MUT==12) ? rq_pre : rq_sel;
+ wire wq_pick = (MUT==12) ? wq_pre : wq_sel;
+ always @(posedge stream_clk) begin
+  stream_rq<=active ? rq_pick : 1'b0;
+  stream_wq<=active ? wq_pick : 1'b0;
+ end
+ always @(posedge stream_clk)begin
+  if(active_pipe[RP-1])begin if(rsel)rr_b1<=stream_rr; else rr_b0<=stream_rr; end
+  if(active_pipe[WP-1])begin if(dsel)dn_b1<=stream_done; else dn_b0<=stream_done; end
+ end
+ always @(posedge stream_clk or negedge rst_a)begin
+  if(!rst_a)begin
+   phase<=0;stream_warm<=0;read_pipe<=0;
+  end else begin
+   phase<=phase+1'b1;if(stream_warm<16)stream_warm<=stream_warm+1'b1;
+   read_pipe<={read_pipe[RP-2:0],active && rq_pick};
+  end
+ end
+ always @(posedge stream_clk or negedge rst_b)begin
+  if(!rst_b)begin
+   active_pipe<=0;write_pipe<=0;fault<=0;
+  end else begin
+   active_pipe<={active_pipe[RP-2:0],active};
+   write_pipe<={write_pipe[WP-2:0],active && wq_pick};
+   if(stream_rr!==read_pipe[RP-1] || stream_done!==write_pipe[WP-1])fault<=1;
+  end
+ end
 endmodule
 
 // ---- VM bank leaf (ot_hbm_su_static_vm_bank_leaf_s) with two reset groups: read calendar + fault / write calendar
@@ -210,9 +276,13 @@ module ot_pgs_tap_bank_safe2 #(parameter integer READ_RETURN=10,WRITE_RETURN=7,I
 endmodule
 
 // ---- inject regions (41-bit word {bad,row36,v4} -> bits [LO +: W])
-(* keep_hierarchy = 1 *) module ot_pgs_inj_s_region #(parameter integer LO=0,W=14,MUT=0)(
+// Regions are group-aligned (M = the bits a region owns): {v[1:0], row groups 0-1}, {v[3:2], row groups 2-3}, {bad};
+// unowned bits are masked at the parent, so synthesis drops their flops and their decode cone.
+(* keep_hierarchy = 1 *) module ot_pgs_inj_s_region #(parameter [40:0] M=41'h0,parameter integer MUT=0)(
  input wire clk, input wire rst_n, input wire [161:0] ij, input wire [1:0] g_id, input wire b39_on,
- output reg [W-1:0] b0, output reg [W-1:0] b1, output reg [W-1:0] b2);
+ output wire [40:0] b0, output wire [40:0] b1, output wire [40:0] b2);
+ reg [40:0] q0, q1, q2;
+ assign b0 = q0 & M; assign b1 = q1 & M; assign b2 = q2 & M;
  reg [1:0] sp;
  always @(posedge clk or negedge rst_n) if(!rst_n) sp<=2'd0; else sp<=sp+2'd1;
  reg [3:0] v; reg [35:0] row; reg bad; integer k;
@@ -231,20 +301,22 @@ endmodule
  end
  wire [40:0] w = {bad,row,v};
  always @(posedge clk) begin
-  if(sp==2'd0) b0 <= w[LO+:W];
-  if(sp==2'd1) b1 <= w[LO+:W];
-  if(sp==2'd3) b2 <= w[LO+:W];
+  if(sp==2'd0) q0 <= w;
+  if(sp==2'd1) q1 <= w;
+  if(sp==2'd3) q2 <= w;
  end
 endmodule
 
-(* keep_hierarchy = 1 *) module ot_pgs_inj_q_region #(parameter integer LO=0,W=14,MUT=0)(
- input wire clk, input wire rst_n, input wire [W-1:0] b0, input wire [W-1:0] b1, input wire [W-1:0] b2,
- output reg [W-1:0] q, output wire [1:0] ib_o);
+(* keep_hierarchy = 1 *) module ot_pgs_inj_q_region #(parameter [40:0] M=41'h0,parameter integer MUT=0)(
+ input wire clk, input wire rst_n, input wire [40:0] b0, input wire [40:0] b1, input wire [40:0] b2,
+ output wire [40:0] q, output wire [1:0] ib_o);
+ reg [40:0] qr;
+ assign q = qr & M;
  reg [1:0] sq;
  always @(posedge clk or negedge rst_n) if(!rst_n) sq<=2'd0; else sq<=(sq==2'd2)?2'd0:sq+2'd1;
  wire [1:0] ib0 = (sq==2'd1)?2'd0:(sq==2'd2)?2'd1:2'd2;
  wire [1:0] ib = (MUT==8) ? ((ib0==2'd2)?2'd0:ib0+2'd1) : ib0;
- always @(posedge clk) q <= (ib==2'd0)?b0:(ib==2'd1)?b1:b2;
+ always @(posedge clk) qr <= (ib==2'd0)?b0:(ib==2'd1)?b1:b2;
  assign ib_o = ib;
 endmodule
 
@@ -281,13 +353,15 @@ module ot_hbm_su_static_pg_stream_q_safe2 #(
    .rq_b0(rq_b0[h*17+:17]),.rq_b1(rq_b1[h*17+:17]),.wq_b0(wq_b0[h*281+:281]),.wq_b1(wq_b1[h*281+:281]),
    .rr_b0(rr_b0[h*257+:257]),.rr_b1(rr_b1[h*257+:257]),.dn_b0(1'b0),.dn_b1(1'b0));
  end
- wire [40:0] ijq;
+ localparam [40:0] IM0 = 41'h00_003F_FFF3, IM1 = 41'h0FF_FFC0_000C, IM2 = 41'h100_0000_0000;
+ wire [40:0] ijr [0:2];
  wire [1:0] ibr [0:2];
  for(genvar r=0;r<3;r=r+1)begin:g_ij
-  localparam integer LO=r*14, W=(r==2)?13:14;
-  ot_pgs_inj_q_region #(.LO(LO),.W(W),.MUT(MUT==8?8:0)) u_r(.clk(clk_ctl),.rst_n(brt_i[r]),
-   .b0(ijb0[LO+:W]),.b1(ijb1[LO+:W]),.b2(ijb2[LO+:W]),.q(ijq[LO+:W]),.ib_o(ibr[r]));
+  localparam [40:0] M = (r==0)?IM0:(r==1)?IM1:IM2;
+  ot_pgs_inj_q_region #(.M(M),.MUT(MUT==8?8:0)) u_r(.clk(clk_ctl),.rst_n(brt_i[r]),
+   .b0(ijb0 & M),.b1(ijb1 & M),.b2(ijb2 & M),.q(ijr[r]),.ib_o(ibr[r]));
  end
+ wire [40:0] ijq = ijr[0] | ijr[1] | ijr[2];
  wire [1:0] ib = ibr[0];                 // bench window probe (all three regions are exact copies)
  assign ij_v=ijq[3:0]; assign ij_row=ijq[39:4]; assign ij_bad=ijq[40];
  reg [1:0] fs;
@@ -297,7 +371,7 @@ endmodule
 
 // ---- stream half
 module ot_hbm_su_static_pg_stream_s_safe2 #(
- parameter integer QID=1,G=2,READ_RETURN=10,WRITE_RETURN=7,MUT=0,B39_NOOP=(QID==0),STRAP=1,FAULT_REG=0,NTS=39
+ parameter integer QID=1,G=2,READ_RETURN=10,WRITE_RETURN=7,MUT=0,B39_NOOP=(QID==0),STRAP=1,FAULT_REG=0,NTS=40
 )(
  input wire pg_clk,
  input wire [2*NTS-1:0] brt,
@@ -368,11 +442,16 @@ module ot_hbm_su_static_pg_stream_s_safe2 #(
  end
  assign lg_fault=|tf;
  wire [161:0] ij = {inj_rd, inj_addr};
+ localparam [40:0] IM0 = 41'h00_003F_FFF3, IM1 = 41'h0FF_FFC0_000C, IM2 = 41'h100_0000_0000;
+ wire [40:0] s0 [0:2], s1 [0:2], s2 [0:2];
  for(genvar r=0;r<3;r=r+1)begin:g_ij
-  localparam integer LO=r*14, W=(r==2)?13:14;
-  ot_pgs_inj_s_region #(.LO(LO),.W(W),.MUT(MUT==9?9:0)) u_r(.clk(pg_clk),.rst_n(brt_i[r]),.ij(ij),.g_id(g_id),
-   .b39_on(b39_on),.b0(ijb0[LO+:W]),.b1(ijb1[LO+:W]),.b2(ijb2[LO+:W]));
+  localparam [40:0] M = (r==0)?IM0:(r==1)?IM1:IM2;
+  ot_pgs_inj_s_region #(.M(M),.MUT(MUT==9?9:0)) u_r(.clk(pg_clk),.rst_n(brt_i[r]),.ij(ij),.g_id(g_id),
+   .b39_on(b39_on),.b0(s0[r]),.b1(s1[r]),.b2(s2[r]));
  end
+ assign ijb0 = s0[0] | s0[1] | s0[2];
+ assign ijb1 = s1[0] | s1[1] | s1[2];
+ assign ijb2 = s2[0] | s2[1] | s2[2];
 endmodule
 
 // ---- tile top (same ports as ot_hbm_su_static_pg_stream_split; kit lands rst_n / bridge_rst_n in ONE face stage)
@@ -403,25 +482,34 @@ module ot_hbm_su_static_pg_stream_split_safe2 #(
  output wire lg_fault
 );
  localparam integer NTQ=(17+281+6)/7+(257+14)/15+1;    // 62
- localparam integer NTS=(17+281+14)/15+(257+14)/15+1;  // 39
- localparam integer NB=2*NTQ+3+2*NTS+3+1;              // 209 bridge reset terminals
+ localparam integer NTS=(17+281+14)/15+(257+14)/15+2;  // 40 (monitor has two reset groups)
+ localparam integer NQT=2*NTQ+3;                         // 127 serial-domain bridge reset terminals
+ localparam integer NST=2*NTS+3+1;                       // 84 stream-domain terminals (bridge_s regions, inject_s, MUT14)
+ localparam integer NBS=(NST+31)/32;                     // 3 serial feeders of the stream terminals
  // rst_n: two source stages after the face flop (old kit: 3 face stages)
  wire rst_a, rst_core;
  ot_pgs_rst_cell #(.ID(9900)) u_rst_a(.clk(clk_ctl),.d(rst_n),.q(rst_a));
  ot_pgs_rst_cell #(.ID(9901)) u_rst_t(.clk(clk_ctl),.d(rst_a),.q(rst_core));
- // bridge_rst_n: face flop -> stage A -> one terminal per load region
- wire [NB-1:0] bt;
- ot_pgs_rst_tree #(.N(NB),.BR(32),.BASE(10000)) u_brt(.clk(clk_ctl),.rin(bridge_rst_n),.t(bt));
+ // bridge_rst_n: face flop (C) -> stage A (C+4q) -> serial terminals (C+8q; serial loads count from C+12q)
+ //                                              -> serial feeders (C+8q) -> pg_clk terminals (C+9q; stream loads count
+ //                                                 from C+12q).  Both domains leave reset on the SAME coincident edge,
+ //                                                 as the seam calendar assumes (a clk_ctl-released stream reset would
+ //                                                 let the stream side start one stream edge early: windows break).
+ wire [NQT+NBS-1:0] bq; wire [NST-1:0] bs;
+ ot_pgs_rst_tree #(.N(NQT+NBS),.BR(32),.BASE(10000)) u_brt(.clk(clk_ctl),.rin(bridge_rst_n),.t(bq));
+ for(genvar i=0;i<NST;i=i+1)begin:g_bst
+  ot_pgs_rst_cell #(.ID(20000+i)) u(.clk(pg_clk),.d(bq[NQT+(i%NBS)]),.q(bs[i]));
+ end
  wire [33:0] rq_b0, rq_b1; wire [561:0] wq_b0, wq_b1; wire [513:0] rr_b0, rr_b1;
  wire [40:0] ijb0, ijb1, ijb2; wire pgf_s, rc_leaf, rc_tap;
  ot_hbm_su_static_pg_stream_q_safe2 #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT),.NTQ(NTQ)) u_q(
-  .clk_ctl(clk_ctl),.rst_n(rst_core),.brt(bt[0+:2*NTQ]),.brt_i(bt[2*NTQ+:3]),.vmr_cmd(vmr_cmd),.su_wq(su_wq),.su_rr(su_rr),
+  .clk_ctl(clk_ctl),.rst_n(rst_core),.brt(bq[0+:2*NTQ]),.brt_i(bq[2*NTQ+:3]),.vmr_cmd(vmr_cmd),.su_wq(su_wq),.su_rr(su_rr),
   .ij_v(ij_v),.ij_row(ij_row),.ij_bad(ij_bad),.pg_fault(pg_fault),
   .rq_b0(rq_b0),.rq_b1(rq_b1),.wq_b0(wq_b0),.wq_b1(wq_b1),.rr_b0(rr_b0),.rr_b1(rr_b1),
   .ijb0(ijb0),.ijb1(ijb1),.ijb2(ijb2),.pgf_s(pgf_s),.rc_leaf(rc_leaf),.rc_tap(rc_tap));
  ot_hbm_su_static_pg_stream_s_safe2 #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT),
   .B39_NOOP(B39_NOOP),.STRAP(STRAP),.FAULT_REG(FAULT_REG),.NTS(NTS)) u_s(
-  .pg_clk(pg_clk),.brt(bt[2*NTQ+3+:2*NTS]),.brt_i(bt[2*NTQ+3+2*NTS+:3]),.brt_m(bt[NB-1]),.pos(pos),
+  .pg_clk(pg_clk),.brt(bs[0+:2*NTS]),.brt_i(bs[2*NTS+:3]),.brt_m(bs[NST-1]),.pos(pos),
   .rq_b0(rq_b0),.rq_b1(rq_b1),.wq_b0(wq_b0),.wq_b1(wq_b1),.rr_b0(rr_b0),.rr_b1(rr_b1),
   .ijb0(ijb0),.ijb1(ijb1),.ijb2(ijb2),.pgf_s(pgf_s),.rc_leaf(rc_leaf),.rc_tap(rc_tap),
   .inj_rd(inj_rd),.inj_addr(inj_addr),.lg_rq(lg_rq),.lg_wq(lg_wq),.lg_rr(lg_rr),.lg_w_done(lg_w_done),
