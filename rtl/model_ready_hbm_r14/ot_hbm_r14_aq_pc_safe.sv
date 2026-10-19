@@ -55,9 +55,24 @@ module ot_hbm_r14_aq_pc_safe #(
   wire [255:0] qm;
   wire [WQW-1:0] qwp = WQW'(q_rp + q_n);
   wire qpush=wr_v&&wr_r;
-  wire [WQW-1:0] qread=wr_ok ? q_rp+1'b1 : q_rp;
+  // Keep the current head in flops and prefetch its successor. On a pop,
+  // request the following successor while capturing the SRAM's old output.
+  // SRAM clk->q therefore ends at the head flops, outside column eligibility.
+  // The two overlapped heads sustain one pop per edge, including ring wrap.
+  wire [WQW-1:0] qread=wr_ok ? q_rp+WQW'(2) : q_rp+WQW'(1);
   reg qfresh; reg [WQW-1:0] qfresh_addr; reg [29:0] qfresh_data;
-  wire [29:0] qhead=(qfresh&&qfresh_addr==q_rp)?qfresh_data:qm[29:0];
+  reg [29:0] qhead;
+  reg [31:0] hb_oh;
+  wire [WQW-1:0] qsuccessor=q_rp+WQW'(1);
+  wire [29:0] qprefetch=(qfresh&&qfresh_addr==qsuccessor)?qfresh_data:qm[29:0];
+  wire head_from_push=qpush&&((q_n==0)||(wr_ok&&q_n==1));
+  wire [29:0] head_next=head_from_push?{wr_bank,wr_col,wr_row,wr_rd}:qprefetch;
+  always @(posedge clk)begin
+    if(head_from_push||(wr_ok&&q_n>1))begin
+      qhead<=head_next;
+      hb_oh<=32'b1<<head_next[29:25];
+    end
+  end
   ot_sram_1r1w_128x256_m1_r2c2 u_queue(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(qread)),.rd_out(qm),
     .w_ce_in(qpush),.w_addr_in(7'(qwp)),.wd_in({226'b0,wr_bank,wr_col,wr_row,wr_rd}),.w_mask_in({256{1'b1}}),
     .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
@@ -206,9 +221,14 @@ module ot_hbm_r14_aq_pc_safe #(
   end
   assign bkey=rk[5][0];assign bsel=rs[5][0];
   // ---- column: the head entry, strictly in order --------------------------------------------------------------------
-  wire [31:0] hb_oh = 32'b1 << hb;
   wire [31:0] pre_fl = (c_v && c_op == PRE) ? c_oh : 32'b0;
-  wire head_bank_rdy = q_ne && |(hb_oh & open & (hr ? rcd_z : rcdw_z) & ~blk & ~pre_fl) && orow[hb] == hrow;
+  // Compare rows locally in parallel instead of selecting a 19-bit word
+  // through a 32:1 mux before comparing it. Each head-row bit has 32 loads.
+  wire [31:0] head_row_match;
+  for(genvar b=0;b<32;b=b+1)begin:HEAD_ROW
+    assign head_row_match[b]=(orow[b]==hrow);
+  end
+  wire head_bank_rdy = q_ne && |(hb_oh & open & (hr ? rcd_z : rcdw_z) & ~blk & ~pre_fl & head_row_match);
   wire wr_ok = head_bank_rdy && ccdl_z[hb[1:0]] && (hr ? (wtr_c == 0) : (rtw_c == 0));
   assign col_v = wr_ok; assign col_we = wr_ok && !hr; assign col_aq = wr_ok && hr;
   assign col_bank = hb; assign col_col = hc;
