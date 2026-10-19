@@ -4,5 +4,5 @@ FAULT slices 0000 core 1
 FAIL tb_hbm_su_red_pretree MUT=3: 3 errors
 - rtl/test/hbm_accel/generic/tb_hbm_su_red_pretree.sv:68: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 0.188 s; speed 8.637 us/s
-- Verilator: cpu 0.180 s on 1 threads; allocated 16 MB
+- Verilator: $finish at 2us; walltime 0.139 s; speed 11.699 us/s
+- Verilator: cpu 0.139 s on 1 threads; allocated 16 MB
