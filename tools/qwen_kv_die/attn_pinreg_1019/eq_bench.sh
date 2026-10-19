@@ -17,3 +17,4 @@ verilator --binary -j 8 --x-initial 0 -Wno-fatal -Wno-lint -Wno-style -Wno-MULTI
 set +e; "$RUN/obj/vtb" > $RUN/sim.log 2>&1; rc=$?; set -e
 cat $RUN/sim.log | tail -3
 echo "PR_EQ_RC $rc"
+exit $rc

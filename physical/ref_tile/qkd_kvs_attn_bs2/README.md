@@ -19,7 +19,8 @@ ufk_{ES,EN} -> OR2 -> 2 async-reset fault-root DFFs; 107 output bits are tie con
   used internally get a cloned flop + buffer chain (same D/CLK/RESETN/SETN; constant set/reset via fresh tie cells; any clone
   load on a net already at 24 rides a BUF copy); 395 load-less old chain cells (incl. 1 flop) deleted.  0 cycles.
 Result: 34,576 cells / 6,390 FF; every input pin -> flop D only; every output <- an EXCLUSIVE flop chain (<= 1 BUF/INV) or
-tie; max non-clock fanout 24; max FF->FF combinational levels 18 (was 17); 0 undriven nets.
+tie; flops (6,390) and the 1,547 output-face BUF/INV are keep-only (not dont_touch: the iohold / pin hooks and CTS hold
+repair reconnect them -- gate aecfc7ed7 ODB-0370); every other native cell stays dont_touch (buffer partition kept); max non-clock fanout 24; max FF->FF combinational levels 18 (was 17); 0 undriven nets.
 Equivalence: tools/qwen_kv_die/attn_pinreg_1019/eq_bench.sh (Verilator 5.050, actual Liberty models): lockstep vs 6326ff81a on all
 11 outputs AND all 6,040 original flop QN nets every edge, 48 reset trials x 160 cycles, biased RX payload; mutants 1 (one
 retimed leaf from the raw pin) and 2 (wrong split recombination) FAIL -- witnesses results/rtl/kv_attn_pinreg_1019/.
