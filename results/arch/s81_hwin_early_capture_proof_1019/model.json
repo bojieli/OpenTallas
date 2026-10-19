@@ -4,6 +4,16 @@
   "source_commit": "1e057b7bf",
   "kit_commit": "281ec8898",
   "region_commit": "21cbb79ac",
+  "original_gold": {
+    "source_path": "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin.sv",
+    "source_commit": "1e057b7bf",
+    "sha256": "6b9ca53fa2774f52fd8bafa2d4ebff1bba8b00e993c873a7287853eed9c4653b",
+    "event_observation": "stc+D+2",
+    "collision_first_fault": "stc+D+3",
+    "minimum_D": "NS+2+13*event",
+    "snapshot_unchanged": true,
+    "executed_here": false
+  },
   "hashes": {
     "/home/ubuntu/artifacts/s81-endpoint-physical-pickup-1019/dsdv_mu_hwin.sv": "9be6f5e15bc0c89804b565f67c4211b4e1b4dbef30cf3f276a1ecef3421fc971",
     "/home/ubuntu/artifacts/s81-hwin-region-calendar-1019/memory_source_snapshot.sv": "6034771d826ddcadf9fdfab3247e92d13e991b66d424316851161cb3b7e91e25",

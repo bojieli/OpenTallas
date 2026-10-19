@@ -1,0 +1,159 @@
+`timescale 1ns/1ps
+// MU-S81-2/DIE bench (port of MU-S81/DIE tb_dsdv_mu_win, 908a67c18) for the NEW leaf dsdv_mu_hwin BESIDE the CLOSED
+// dsdv_mu_hslot (NEV-free, source untouched): both tap the same start pin f_ks and the same S / RL boot words f_mc;
+// the window rows come on hwin's own word stream f_mw (die: host CSR 0x16), so hslot never sees a window word.
+// NU users on an NP-slot shift calendar (slot S), 3 events {TX ep0 D 20, TX ep1 D 33, replay ep0 D 47}, per-slot
+// {land, ab} attributes.  The unit's return is the stand-in loopback t_kd done = t_ku valid.  Checks:
+//   * every event of every start fires exactly once, at start + D + K (K the same constant for every event / start),
+//     on its endpoint, with the start's {pos, user} and the slot's {land, ab}; a replay only where land = 1;
+//   * RX tags (mu_rt) of outstanding {user, pos} raise no fault; t_ku trace ("KU ...") is printed for the NEV 0 diff;
+//   * hslot t_mf stays 0 and hwin t_wf stays 0 (no window word reaches hslot; both tables agree);
+//   * BADRT 1: one RX tag of a user that is not outstanding -> hwin t_wf[0] must rise.
+// WMUT (RTL mutants of dsdv_mu_hwin): 3 = ab bit dropped, 4 = replay enable ignored -> both must FAIL.
+// PASS line "MUWIN PASS".
+module tb_dsdv_mu_hwin;
+`ifndef NEV
+    localparam integer NEV = 16;
+`else
+    localparam integer NEV = `NEV;
+`endif
+`ifndef BADRT
+    localparam integer BADRT = 0;
+`else
+    localparam integer BADRT = `BADRT;
+`endif
+`ifndef WMUT
+    localparam integer WMUT = 0;
+`else
+    localparam integer WMUT = `WMUT;
+`endif
+    `ifndef NSLOT_TEST
+    localparam integer NS=8;
+`else
+    localparam integer NS=`NSLOT_TEST;
+`endif
+    localparam integer NU=NS, S=64, ROUNDS=4, T0=1000+32*NS;
+    localparam integer RL = NS * S - S / 2 - 3;
+    localparam integer NE = NEV;
+    integer DK [0:NE-1], KD [0:NE-1], EP [0:NE-1];        // D / kind / endpoint per event
+    integer cfg_e; initial begin
+      for(cfg_e=0;cfg_e<NE;cfg_e=cfg_e+1) begin DK[cfg_e]=20+13*cfg_e; KD[cfg_e]=(cfg_e%3==2); EP[cfg_e]=cfg_e%4; end
+`ifdef MIN_D
+      for(cfg_e=0;cfg_e<NE;cfg_e=cfg_e+1) DK[cfg_e]=NS+2+13*cfg_e;
+`endif
+`ifdef BAD_D
+      DK[0]=NS+1;
+`endif
+`ifdef BAD_D_HIGH
+      DK[0]=RL-1;
+`endif
+`ifdef COLLIDE_EVENTS
+      DK[1]=DK[0]; KD[1]=0; EP[1]=EP[0];
+`endif
+    end
+    integer first_cfg_fault=-1;
+    reg ck = 0, rst_n = 0;
+    always #0.5 ck = ~ck;
+    integer cyc = 0, errs = 0, i, e, nfire = 0, nexp = 0;
+    reg [52:0] f_ks = 0; reg [25:0] f_mc = 0, f_mw = 0; reg [2*32-1:0] mu_rt = 0;
+    wire [31:0] ku; wire [3:0] hmf; wire [1:0] wf; wire [4*34-1:0] mu_c; wire [4*11-1:0] mu_rc;
+    wire [3:0] mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};      // the die master's t_mf fold
+    dsdv_mu_hslot #(.NSLOT(NS), .MUT(0)) u_hs (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
+        .f_kd({ku[31], 53'd0}), .f_mc(f_mc), .t_ku(ku), .t_mf(hmf));
+    dsdv_mu_hwin #(.NSLOT(NS), .NEV(NEV), .NEP(4), .NRT(2), .MUT(WMUT), .HEAD_STAGE(1), .COMPACT_PTR(1), .CHECK_STAGE(1), .LIVE_COUNT(1), .RAW_SELECT(1), .LOCAL_BOOT(1)) dut (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
+        .f_mc(f_mc), .f_mw(f_mw), .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(mu_rt), .t_wf(wf));
+`ifdef HEAD_COMPARE
+    wire [4*34-1:0] ref_c; wire [4*11-1:0] ref_rc; wire [1:0] ref_wf;
+    integer head_compares=0;
+    dsdv_mu_hwin #(.NSLOT(NS),.NEV(NEV),.NEP(4),.NRT(2),.MUT(WMUT),.HEAD_STAGE(0),.COMPACT_PTR(0),.CHECK_STAGE(0),.LIVE_COUNT(0),.RAW_SELECT(0)) ref_direct
+        (.ck(ck),.rst_n(rst_n),.f_ks(f_ks),.f_mc(f_mc),.f_mw(f_mw),.mu_c(ref_c),.mu_rc(ref_rc),.mu_rt(mu_rt),.t_wf(ref_wf));
+    always @(negedge ck) if(rst_n) begin
+        if({mu_c,mu_rc,wf} !== {ref_c,ref_rc,ref_wf})
+            $fatal(1,"HEAD_STAGE edge mismatch cycle%0d staged=%h direct=%h",cyc,{mu_c,mu_rc,wf},{ref_c,ref_rc,ref_wf});
+        head_compares=head_compares+1;
+    end
+    final $display("HEAD_STAGE_EQUIV comparisons %0d",head_compares);
+`endif
+    // slot attributes: land = slot[0], ab = slot[1]
+    function automatic [1:0] att(input integer sl); att = {sl[0] ? 1'b1 : 1'b0, sl[1] ? 1'b1 : 1'b0}; endfunction
+    integer stc [0:NU*ROUNDS-1]; integer stu [0:NU*ROUNDS-1]; integer stp [0:NU*ROUNDS-1]; integer nst = 0;
+    integer kconst = -1;
+    task automatic cfg(input [25:0] w); begin f_mc = w; @(posedge ck); #0.1; f_mc = 0;
+`ifndef FAST_CFG
+        @(posedge ck); #0.1;
+`endif
+    end endtask
+    task automatic wcfg(input [25:0] w); begin f_mw = w; @(posedge ck); #0.1; f_mw = 0;
+`ifndef FAST_CFG
+        @(posedge ck); #0.1;
+`endif
+    end endtask
+    always @(posedge ck) cyc <= cyc + 1;
+    // ---- monitor: match every output against the starts
+    integer s, d, hit, port; reg [1:0] aa; reg [33:0] want_c; reg [10:0] want_r;
+    always @(posedge ck) if (rst_n) begin
+        if(wf[1] && first_cfg_fault<0) first_cfg_fault=cyc;
+        for(port=0;port<4;port=port+1) begin
+            want_c=0; want_r=0;
+            for(e=0;e<NE;e=e+1) for(s=0;s<nst;s=s+1)
+                if(EP[e]==port && cyc==stc[s]+DK[e]+2) begin
+                    aa=att(stu[s]);
+                    if(KD[e]==0) want_c={stp[s][20:0],stu[s][9:0],aa,1'b1};
+                    else if(aa[1]) want_r={stu[s][9:0],1'b1};
+                end
+            if(mu_c[34*port] || want_c[0]) begin
+                if(mu_c[34*port+:34] !== want_c) begin errs=errs+1; $display("ERR c%0d ev0 start0 mu_c %h",cyc,mu_c[34*port+:34]); end
+                if(mu_c[34*port]) nfire=nfire+1;
+            end
+            if(mu_rc[11*port] || want_r[0]) begin
+                if(mu_rc[11*port+:11] !== want_r) begin errs=errs+1; $display("ERR c%0d ev2 start0 mu_rc %h",cyc,mu_rc[11*port+:11]); end
+                if(mu_rc[11*port]) nfire=nfire+1;
+            end
+        end
+        kconst=2;
+        if(ku[31]) $display("KU c%0d user %0d pos %0d",cyc,ku[30:21],ku[20:0]);
+    end
+    integer r, u, q, j;
+    initial begin
+        repeat (4) @(posedge ck); #0.1; rst_n = 1; repeat (4) @(posedge ck); #0.1;
+        cfg({1'b1, 1'b0, 24'(S)}); cfg({1'b1, 1'b1, 24'(RL)});
+        for (q = 0; q < NE; q = q + 1) begin
+            wcfg({1'b1, 1'b0, 1'b0, 2'd0, 10'd0, 2'(EP[q]), 1'(KD[q]), 3'd0, 5'(q)});
+            wcfg({1'b1, 1'b0, 1'b0, 2'd1, 21'(DK[q])});
+            for (j = 0; j < NS; j = j + 1) wcfg({1'b1, 1'b0, 1'b0, 2'd2, 9'd0, att(j), 10'(j)});
+        end
+        while (cyc < T0) begin @(posedge ck); #0.1; end
+        for (r = 0; r < ROUNDS; r = r + 1)
+            for (u = 0; u < NU; u = u + 1) begin
+                while (cyc < T0 + (r * NS + u) * S) begin @(posedge ck); #0.1; end
+                f_ks = {1'b1, 10'(u), 21'd0, 21'(r)};
+                stc[nst] = cyc; stu[nst] = u; stp[nst] = r; nst = nst + 1;
+                // RX tag of an outstanding start (the previous user), on both returning end slices
+                if (nst > 1) mu_rt = {{1'b1, 10'(stu[nst-2]), 21'(stp[nst-2])}, {1'b1, 10'(stu[nst-2]), 21'(stp[nst-2])}};
+                if (BADRT && r == 2 && u == 3) mu_rt[31:0] = {1'b1, 10'd77, 21'd5};
+                @(posedge ck); #0.1; f_ks = 0; mu_rt = 0;
+            end
+        repeat (RL + 100) @(posedge ck);
+        for(j=0;j<nst;j=j+1) for(e=0;e<NE;e=e+1) if(KD[e]==0 || att(stu[j])/2) nexp=nexp+1;
+`ifdef COLLIDE_EVENTS
+        nexp=nexp-nst; // two TX rows target one output at the same edge
+`endif
+        $display("MUWIN starts %0d fires %0d expected %0d K %0d t_mf %b hslot %b hwin %b", nst, nfire, nexp, kconst, mf, hmf, wf);
+`ifdef BAD_D
+        if(wf[1] && hmf==0) $display("MUWIN BADD PASS"); else $display("MUWIN BADD FAIL");
+`elsif BAD_D_HIGH
+        if(wf[1] && hmf==0) $display("MUWIN BADD_HIGH PASS"); else $display("MUWIN BADD_HIGH FAIL");
+`elsif COLLIDE_EVENTS
+        $display("MUWIN COLLISION first %0d expected %0d",first_cfg_fault,stc[0]+DK[0]+3);
+        if(errs==0 && nfire==nexp && hmf==0 && wf==2'b10 && first_cfg_fault==stc[0]+DK[0]+3)
+            $display("MUWIN COLLISION PASS");
+        else $display("MUWIN COLLISION FAIL");
+`else
+        if (BADRT) begin
+            if (wf[0] && mf[2] && hmf == 4'd0) $display("MUWIN BADRT PASS (fault raised)"); else $display("MUWIN BADRT FAIL (no fault)");
+        end else if (errs == 0 && nfire == nexp && mf == 4'd0) $display("MUWIN PASS");
+        else $display("MUWIN FAIL errs %0d", errs);
+ `endif
+        $finish;
+    end
+endmodule
