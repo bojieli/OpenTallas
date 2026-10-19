@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 module pad_case #(parameter W=17,N=3,ID=0)(input ck,rs,input [31:0] seqno,output reg[3:0] caught);
  reg[W-1:0] din; wire[W-1:0] gold,actual; wire[W-1:0] bad[1:4];
- integer b;
+ integer b; integer assert_mutant=0;
+ initial begin if($value$plusargs("ASSERT_MUTANT=%d",assert_mutant)) begin end end
  if(W*N>2048 && N>=3) begin:g_poison
    for(genvar bank=0;bank<(W+255)/256;bank=bank+1) begin:g_bank
      initial for(integer row=0;row<130;row=row+1)
@@ -17,6 +18,7 @@ module pad_case #(parameter W=17,N=3,ID=0)(input ck,rs,input [31:0] seqno,output
  always @(negedge rs) begin #0.02; if(actual!==gold) $fatal(1,"ASYNC_RESET_FAIL W=%0d N=%0d",W,N); end
  initial caught=0;
  always @(negedge ck) begin
+   if(assert_mutant>=1 && assert_mutant<=4 && N>=3 && rs && bad[assert_mutant]!==gold) $fatal(1,"PAD_MUTANT_WITNESS mutant=%0d W=%0d N=%0d seq=%0d",assert_mutant,W,N,seqno);
    if(actual!==gold) $fatal(1,"PAD_DIFFERENTIAL_FAIL W=%0d N=%0d seq=%0d got=%h expected=%h",W,N,seqno,actual,gold);
    if(rs && N>=3) for(integer m=1;m<=4;m=m+1) if(bad[m]!==gold) caught[m-1]=1;
  end
