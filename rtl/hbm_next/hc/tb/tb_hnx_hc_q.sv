@@ -12,9 +12,19 @@
 // engine's pin level, i.e. after ot_hnx_hc_xw_rx #(XWB) (the hc_eng receiver), and every wave prints
 // "XWAVE t=<edge> word=<w>" so the XWB=4 run is compared edge-for-edge against the XWB=1 run.
 // The programme target is folded into the DUT (TGT_PIN, strap tgt=108); the F20 broadcast drives the DUT directly.
-module tb_hnx_hc_q_static;
+// HBM-NEXT-UNITS 2026-10-19 (hnx fork): N-row records.  SPR = issue slots a row (80 = the split engine's quarter
+// slice, 320 = the d4g dense form), RNPOS = rows of the residual launch, RSTRIDE / SSTRIDE = the residual / result row
+// strides in sectors (0 = the d4g dense form; RNPOS 2, SPR 320, strides 0 reproduce the d4g bench exactly).  Waves are
+// checked against row r = w / (SPR/4) at RBASE + r*stride + (w % (SPR/4))*32; stores at SBASE + p*sstride + j.
+// MUT 7 = residual reader ignores the row stride, 8 = result store ignores the row stride (both must FAIL with
+// strides set).
+module tb_hnx_hc_q;
     parameter integer MUT=0;
     parameter integer XWB=4;
+    parameter integer SPR=80;
+    parameter integer RNPOS=4;
+    parameter integer RSTRIDE=1024;
+    parameter integer SSTRIDE=64;
     localparam integer TAP_MUT=(MUT==4)?2:0, DUT_MUT=(MUT>=1&&MUT<=3)?MUT:(MUT==5)?4:(MUT==6)?5:(MUT==7)?6:(MUT==8)?7:0;
     localparam integer WPR=SPR/4, RST_E=(RSTRIDE==0)?SPR*8:RSTRIDE, SST_E=(SSTRIDE==0)?3:SSTRIDE;
     localparam integer VM_RD=15, VM_WR=12;

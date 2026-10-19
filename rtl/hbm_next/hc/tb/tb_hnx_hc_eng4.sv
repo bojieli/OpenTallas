@@ -17,7 +17,7 @@
 // 164, table 165; F20 cfg rows, descriptor, launch); the x_wave link is XW_BEATS (default 4): beat b of wave n sits on
 // the pins at t == T + 4n - 3 + b (the whole wave at T + 4n in the XW_BEATS=1 form). Sources are driven at negedge
 // from the programme edge counter t (equivalent to a combinational function of t, no array sensitivity).
-module tb_hnx_hc_eng4_static;
+module tb_hnx_hc_eng4;
     localparam integer K = 20480;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;

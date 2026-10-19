@@ -32,15 +32,6 @@ qbuild(){ # tag "-G..."
   ( cd $O && $d/V$1 > $O/$1.log 2>&1; echo RUN_RC=$? >> $O/$1.log )
   V "$1: $(grep -h 'TB_HNX_HC_Q' $O/$1.log | head -1)"; rm -rf $d
 }
-NS="-GSPR=80 -GRNPOS=4 -GRSTRIDE=1024 -GSSTRIDE=64"
-if [ "$ST" = q ]; then
-  qbuild q_n4s "$NS -GMUT=0" & qbuild q_d4g "-GSPR=320 -GRNPOS=2 -GRSTRIDE=0 -GSSTRIDE=0 -GMUT=0" &
-  qbuild q_m7 "$NS -GMUT=7" & qbuild q_m8 "$NS -GMUT=8" &
-  wait; V "done"; exit 0
-fi
-# ---- HC_MIX N-row cases
-case $ST in e0) NL="1 2 3 4 6 8";; *) NL="4";; esac
-for n in $NL; do python3 tools/rtl_hbm_hc_eng_static_gate.py --run $O/cases_$ST/n$n --split --npos $n --raw0 167 --rs 104 > $O/cases_${ST}_n$n.log 2>&1 || V "vector gen n$n FAILED"; done
 ESRC=(rtl/hbm_next/hc/tb/tb_hnx_hc_eng4.sv $H/ot_hnx_hc_root.sv $H/ot_hnx_hc_qeng.sv $H/ot_hnx_hc_qcen.sv $H/ot_hnx_hc_bankq.sv
   $H/ot_hnx_hc_eng_seq.sv $H/ot_hnx_hc_bank.sv $H/ot_hnx_hc_tail_unit.sv $H/ot_hnx_hcp_sys1.sv $H/ot_hnx_hgi_hc_tail.sv
   $H/ot_hnx_hc_xw_rx.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv rtl/hdc/v41x/ot_hdc_v41x_hcp.sv rtl/hdc/ot_hdc_prefix.sv
@@ -49,6 +40,20 @@ ESRC=(rtl/hbm_next/hc/tb/tb_hnx_hc_eng4.sv $H/ot_hnx_hc_root.sv $H/ot_hnx_hc_qen
   rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv "${COMMON[@]}"
   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
   physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
+NS="-GSPR=80 -GRNPOS=4 -GRSTRIDE=1024 -GSSTRIDE=64"
+if [ "$ST" = q ]; then
+  qbuild q_n4s "$NS -GMUT=0" & qbuild q_d4g "-GSPR=320 -GRNPOS=2 -GRSTRIDE=0 -GSSTRIDE=0 -GMUT=0" &
+  qbuild q_m7 "$NS -GMUT=7" & qbuild q_m8 "$NS -GMUT=8" &
+  wait
+  # lint of the eng4 lockstep sources (catches elaboration errors before the 50 GB hierarchical builds)
+  verilator --lint-only --timing -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN --top-module tb_hnx_hc_eng4 \
+    +define+MUT=0 +define+OT_FP_DATA_NORST +define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_QDRLY=2 "${ESRC[@]}" > $O/lint_eng4.log 2>&1
+  V "lint eng4 rc=$? errors=$(grep -c '%Error' $O/lint_eng4.log)"
+  V "done"; exit 0
+fi
+# ---- HC_MIX N-row cases
+case $ST in e0) NL="1 2 3 4 6 8";; *) NL="4";; esac
+for n in $NL; do python3 tools/rtl_hbm_hc_eng_static_gate.py --run $O/cases_$ST/n$n --split --npos $n --raw0 167 --rs 104 > $O/cases_${ST}_n$n.log 2>&1 || V "vector gen n$n FAILED"; done
 ebuild(){ # tag mut cases...
   local t=$1 m=$2; shift 2; local d=$O/obj_$t; rm -rf $d
   verilator --binary --timing --hierarchical -j 16 -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN \
