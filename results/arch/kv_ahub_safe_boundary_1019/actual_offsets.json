@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.ahub.actual_offsets.v1",
+  "source": "4db0974030714ac3f3745ccadd6c0a234dfeb3c4",
+  "table": "qwen-kvsys/codex-canonical-landlag/gen7-seam/kv_table.gen7.json",
+  "table_sha256": "37a3a3491495230bbac5fbb755c7b2c4c18b45ff80d7449b91fdc8fac6c66c31",
+  "relay_ages": {
+    "ks_ahs": 47,
+    "ks_pvfst": 41,
+    "ks_ahfr": 0,
+    "ap_WS_WN_ES_EN": [
+      5,
+      5,
+      7,
+      6
+    ]
+  },
+  "assumptions": {
+    "PV_LEAD": 0,
+    "stack_start_lag": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "formula": "AP=2+L+D(ap)-D(hs); FR=D(pvfst)-PV_LEAD-D(fr)-D(hs)-1",
+  "required": {
+    "Z_IN_STRIDE": 4,
+    "AP_OFS": [
+      -40,
+      -40,
+      -38,
+      -39
+    ],
+    "FR_OFS": -7
+  },
+  "historical_closed": {
+    "AP_OFS": [
+      -36,
+      -36,
+      -34,
+      -35
+    ],
+    "FR_OFS": -7
+  },
+  "qualified_view": false
+}

@@ -1,0 +1,192 @@
+{
+  "schema": "opentallas.ahub.structural_summary.v1",
+  "qualified": false,
+  "registers": 3396,
+  "hard_sequential_entries": 5,
+  "sta_sequential_entries": 3401,
+  "mapped_nonfiller_cells": 30942,
+  "unresolved_mapped_names": 0,
+  "std_area_um2": 3887.3050200003236,
+  "full_core_band_um": [
+    21.6,
+    226.8,
+    712.8,
+    237.6
+  ],
+  "core_band_area_um2": 7464.960000000001,
+  "all_std_charged_core_band_density_upper_bound_percent": 52.07402343750432,
+  "signal_ports": 627,
+  "actual_boundary_data_flops": 623,
+  "source_constant_outputs": {
+    "am0[1]": "TIELOx1_ASAP7_75t_R",
+    "am1[1]": "TIELOx1_ASAP7_75t_R",
+    "am2[1]": "TIELOx1_ASAP7_75t_R",
+    "am3[1]": "TIELOx1_ASAP7_75t_R"
+  },
+  "fanout_over32": [
+    {
+      "inst": "u_io.start$_DFF_PN0_",
+      "loads": 544,
+      "targets": {
+        "A": 141,
+        "A1": 136,
+        "A2": 121,
+        "B": 135,
+        "C": 8,
+        "D": 3
+      }
+    },
+    {
+      "inst": "u_core.mh\\[1\\]$_DFF_P_",
+      "loads": 529,
+      "targets": {
+        "B": 256,
+        "A2": 256,
+        "A1": 8,
+        "A": 8,
+        "D": 1
+      }
+    },
+    {
+      "inst": "u_core.start_b$_DFF_PN0_",
+      "loads": 292,
+      "targets": {
+        "B": 272,
+        "A": 3,
+        "C": 16,
+        "D": 1
+      }
+    },
+    {
+      "inst": "u_io.em_w$_DFF_PN0_",
+      "loads": 291,
+      "targets": {
+        "B": 140,
+        "C": 1,
+        "D": 1,
+        "A2": 142,
+        "A": 5,
+        "A1": 2
+      }
+    },
+    {
+      "inst": "u_core.mh\\[0\\]$_DFF_P_",
+      "loads": 265,
+      "targets": {
+        "C": 132,
+        "D": 1,
+        "A1": 132
+      }
+    },
+    {
+      "inst": "u_core.u_rr.rst_n\\[1\\]$_DFF_P_",
+      "loads": 171,
+      "targets": {
+        "RESETN": 171
+      }
+    },
+    {
+      "inst": "u_core.q_th\\[1\\]$_DFF_P_",
+      "loads": 128,
+      "targets": {
+        "A": 32,
+        "B": 96
+      }
+    },
+    {
+      "inst": "u_core.u_rr.rst_n\\[4\\]$_DFF_P_",
+      "loads": 127,
+      "targets": {
+        "RESETN": 127
+      }
+    },
+    {
+      "inst": "u_core.first_q$_DFF_PN1_",
+      "loads": 61,
+      "targets": {
+        "A": 11,
+        "A1": 16,
+        "B": 27,
+        "A2": 3,
+        "B2": 2,
+        "B1": 2
+      }
+    },
+    {
+      "inst": "u_core.u_rr.rst_n\\[0\\]$_DFF_P_",
+      "loads": 50,
+      "targets": {
+        "RESETN": 48,
+        "SETN": 2
+      }
+    },
+    {
+      "inst": "u_core.active$_DFFE_PN0P_",
+      "loads": 47,
+      "targets": {
+        "A": 18,
+        "A1": 8,
+        "C": 10,
+        "B": 9,
+        "A2": 1,
+        "D": 1
+      }
+    },
+    {
+      "inst": "u_core.u_rr.rst_n\\[3\\]$_DFF_P_",
+      "loads": 40,
+      "targets": {
+        "RESETN": 40
+      }
+    },
+    {
+      "inst": "u_core.age\\[1\\]$_DFFE_PN0P_",
+      "loads": 36,
+      "targets": {
+        "B2": 4,
+        "A": 7,
+        "A1": 6,
+        "B": 14,
+        "A2": 5
+      }
+    }
+  ],
+  "clock_refs_ps": {
+    "zh": {
+      "tt": 246.5,
+      "ff": 202.9
+    },
+    "recip": {
+      "tt": 238.7,
+      "ff": 194.4
+    }
+  },
+  "native_budgets_ps": {
+    "launch": 220,
+    "capture": 190,
+    "spread": 80
+  },
+  "routed_worst_native_pin_paths": {
+    "FR18": {
+      "tt_clock": 981.8472,
+      "tt_Q": 1037.396,
+      "tt_port": 1410.5175,
+      "tt_Q_to_port": 373.1215,
+      "ff_hold_slack": 249.1886,
+      "direct_manhattan_um": 8.167,
+      "through_cells_manhattan_um": 84.951
+    },
+    "AP3_42": {
+      "tt_port_to_D": 165.2102,
+      "ff_hold_slack": 30.5666,
+      "direct_manhattan_um": 4.887
+    }
+  },
+  "blockers": [
+    "13 source flop roots above32 first-logic sinks",
+    "exact successor TT/FF electrical budgets unresolved",
+    "MX child native contact off lattice",
+    "source-safe placement and actual reach/native access/PG unmeasured",
+    "actual GEN7 AP constants differ from historical hardened view"
+  ]
+}

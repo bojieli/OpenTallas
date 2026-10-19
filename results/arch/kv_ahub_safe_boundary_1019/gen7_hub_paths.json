@@ -1,0 +1,398 @@
+[
+  {
+    "id": "ahub.am0 -> astk_WS__u_strip_u_strip_u_ctl.am",
+    "src": {
+      "inst": "ahub",
+      "port": "am0",
+      "master": "qkd_ahub_static_dw"
+    },
+    "dst": {
+      "inst": "astk_WS__u_strip_u_strip_u_ctl",
+      "port": "am",
+      "master": "qkd_astk_ctl_s"
+    },
+    "age_edges": 7,
+    "stages": 9,
+    "src_nets": [
+      "n_am_WS"
+    ]
+  },
+  {
+    "id": "ahub.am1 -> astk_WN__u_strip_u_strip_u_ctl.am",
+    "src": {
+      "inst": "ahub",
+      "port": "am1",
+      "master": "qkd_ahub_static_dw"
+    },
+    "dst": {
+      "inst": "astk_WN__u_strip_u_strip_u_ctl",
+      "port": "am",
+      "master": "qkd_astk_ctl_s"
+    },
+    "age_edges": 34,
+    "stages": 36,
+    "src_nets": [
+      "n_am_WN"
+    ]
+  },
+  {
+    "id": "ahub.am2 -> astk_ES__u_strip_u_strip_u_ctl.am",
+    "src": {
+      "inst": "ahub",
+      "port": "am2",
+      "master": "qkd_ahub_static_dw"
+    },
+    "dst": {
+      "inst": "astk_ES__u_strip_u_strip_u_ctl",
+      "port": "am",
+      "master": "qkd_astk_ctl_s"
+    },
+    "age_edges": 5,
+    "stages": 6,
+    "src_nets": [
+      "n_am_ES"
+    ]
+  },
+  {
+    "id": "ahub.am3 -> astk_EN__u_strip_u_strip_u_ctl.am",
+    "src": {
+      "inst": "ahub",
+      "port": "am3",
+      "master": "qkd_ahub_static_dw"
+    },
+    "dst": {
+      "inst": "astk_EN__u_strip_u_strip_u_ctl",
+      "port": "am",
+      "master": "qkd_astk_ctl_s"
+    },
+    "age_edges": 5,
+    "stages": 7,
+    "src_nets": [
+      "n_am_EN"
+    ]
+  },
+  {
+    "id": "ahub.fr_epoch -> pvfin.rz_epoch",
+    "src": {
+      "inst": "ahub",
+      "port": "fr_epoch",
+      "master": "qkd_ahub_static_dw"
+    },
+    "dst": {
+      "inst": "pvfin",
+      "port": "rz_epoch",
+      "master": "qkd_pv_fin_s"
+    },
+    "age_edges": 0,
+    "stages": 0,
+    "src_nets": [
+      "n_ks_ahfr"
+    ]
+  },
+  {
+    "id": "ahub.fr_rz -> pvfin.rz",
+    "src": {
+      "inst": "ahub",
+      "port": "fr_rz",
+      "master": "qkd_ahub_static_dw"
+    },
+    "dst": {
+      "inst": "pvfin",
+      "port": "rz",
+      "master": "qkd_pv_fin_s"
+    },
+    "age_edges": 0,
+    "stages": 0,
+    "src_nets": [
+      "n_ks_ahfr"
+    ]
+  },
+  {
+    "id": "ahub.fr_valid -> pvfin.rz_valid",
+    "src": {
+      "inst": "ahub",
+      "port": "fr_valid",
+      "master": "qkd_ahub_static_dw"
+    },
+    "dst": {
+      "inst": "pvfin",
+      "port": "rz_valid",
+      "master": "qkd_pv_fin_s"
+    },
+    "age_edges": 0,
+    "stages": 0,
+    "src_nets": [
+      "n_ks_ahfr"
+    ]
+  },
+  {
+    "id": "ahub.hf -> kvs_attn.ufh",
+    "src": {
+      "inst": "ahub",
+      "port": "hf",
+      "master": "qkd_ahub_static_dw"
+    },
+    "dst": {
+      "inst": "kvs_attn",
+      "port": "ufh",
+      "master": "qkd_kvs_attn"
+    },
+    "age_edges": 34,
+    "stages": 34,
+    "src_nets": [
+      "n_hf"
+    ]
+  },
+  {
+    "id": "ahub.hf -> seq__u_core.hf",
+    "src": {
+      "inst": "ahub",
+      "port": "hf",
+      "master": "qkd_ahub_static_dw"
+    },
+    "dst": {
+      "inst": "seq__u_core",
+      "port": "hf",
+      "master": "qkd_seq_core_static_s"
+    },
+    "age_edges": 37,
+    "stages": 37,
+    "src_nets": [
+      "n_hf"
+    ]
+  },
+  {
+    "id": "astk_EN__u_strip_u_strip_u_ctl.ap -> ahub.ap3",
+    "src": {
+      "inst": "astk_EN__u_strip_u_strip_u_ctl",
+      "port": "ap",
+      "master": "qkd_astk_ctl_s"
+    },
+    "dst": {
+      "inst": "ahub",
+      "port": "ap3",
+      "master": "qkd_ahub_static_dw"
+    },
+    "age_edges": 6,
+    "stages": 9,
+    "src_nets": [
+      "n_ap_EN"
+    ]
+  },
+  {
+    "id": "astk_ES__u_strip_u_strip_u_ctl.ap -> ahub.ap2",
+    "src": {
+      "inst": "astk_ES__u_strip_u_strip_u_ctl",
+      "port": "ap",
+      "master": "qkd_astk_ctl_s"
+    },
+    "dst": {
+      "inst": "ahub",
+      "port": "ap2",
+      "master": "qkd_ahub_static_dw"
+    },
+    "age_edges": 7,
+    "stages": 10,
+    "src_nets": [
+      "n_ap_ES"
+    ]
+  },
+  {
+    "id": "astk_WN__u_strip_u_strip_u_ctl.ap -> ahub.ap1",
+    "src": {
+      "inst": "astk_WN__u_strip_u_strip_u_ctl",
+      "port": "ap",
+      "master": "qkd_astk_ctl_s"
+    },
+    "dst": {
+      "inst": "ahub",
+      "port": "ap1",
+      "master": "qkd_ahub_static_dw"
+    },
+    "age_edges": 5,
+    "stages": 7,
+    "src_nets": [
+      "n_ap_WN"
+    ]
+  },
+  {
+    "id": "astk_WS__u_strip_u_strip_u_ctl.ap -> ahub.ap0",
+    "src": {
+      "inst": "astk_WS__u_strip_u_strip_u_ctl",
+      "port": "ap",
+      "master": "qkd_astk_ctl_s"
+    },
+    "dst": {
+      "inst": "ahub",
+      "port": "ap0",
+      "master": "qkd_ahub_static_dw"
+    },
+    "age_edges": 5,
+    "stages": 7,
+    "src_nets": [
+      "n_ap_WS"
+    ]
+  },
+  {
+    "id": "kvs_attn.ahs -> ahub.hs_cal_lo",
+    "src": {
+      "inst": "kvs_attn",
+      "port": "ahs",
+      "master": "qkd_kvs_attn"
+    },
+    "dst": {
+      "inst": "ahub",
+      "port": "hs_cal_lo",
+      "master": "qkd_ahub_static_dw"
+    },
+    "age_edges": 47,
+    "stages": 47,
+    "src_nets": [
+      "n_ks_ahs"
+    ]
+  },
+  {
+    "id": "kvs_attn.ahs -> ahub.hs_cal_r",
+    "src": {
+      "inst": "kvs_attn",
+      "port": "ahs",
+      "master": "qkd_kvs_attn"
+    },
+    "dst": {
+      "inst": "ahub",
+      "port": "hs_cal_r",
+      "master": "qkd_ahub_static_dw"
+    },
+    "age_edges": 47,
+    "stages": 47,
+    "src_nets": [
+      "n_ks_ahs"
+    ]
+  },
+  {
+    "id": "kvs_attn.ahs -> ahub.hs_ctx",
+    "src": {
+      "inst": "kvs_attn",
+      "port": "ahs",
+      "master": "qkd_kvs_attn"
+    },
+    "dst": {
+      "inst": "ahub",
+      "port": "hs_ctx",
+      "master": "qkd_ahub_static_dw"
+    },
+    "age_edges": 47,
+    "stages": 47,
+    "src_nets": [
+      "n_ks_ahs"
+    ]
+  },
+  {
+    "id": "kvs_attn.ahs -> ahub.hs_ep",
+    "src": {
+      "inst": "kvs_attn",
+      "port": "ahs",
+      "master": "qkd_kvs_attn"
+    },
+    "dst": {
+      "inst": "ahub",
+      "port": "hs_ep",
+      "master": "qkd_ahub_static_dw"
+    },
+    "age_edges": 47,
+    "stages": 47,
+    "src_nets": [
+      "n_ks_ahs"
+    ]
+  },
+  {
+    "id": "kvs_attn.ahs -> ahub.hs_layer",
+    "src": {
+      "inst": "kvs_attn",
+      "port": "ahs",
+      "master": "qkd_kvs_attn"
+    },
+    "dst": {
+      "inst": "ahub",
+      "port": "hs_layer",
+      "master": "qkd_ahub_static_dw"
+    },
+    "age_edges": 47,
+    "stages": 47,
+    "src_nets": [
+      "n_ks_ahs"
+    ]
+  },
+  {
+    "id": "kvs_attn.ahs -> ahub.hs_start",
+    "src": {
+      "inst": "kvs_attn",
+      "port": "ahs",
+      "master": "qkd_kvs_attn"
+    },
+    "dst": {
+      "inst": "ahub",
+      "port": "hs_start",
+      "master": "qkd_ahub_static_dw"
+    },
+    "age_edges": 47,
+    "stages": 47,
+    "src_nets": [
+      "n_ks_ahs"
+    ]
+  },
+  {
+    "id": "kvs_attn.pvfst -> pvfin.cal",
+    "src": {
+      "inst": "kvs_attn",
+      "port": "pvfst",
+      "master": "qkd_kvs_attn"
+    },
+    "dst": {
+      "inst": "pvfin",
+      "port": "cal",
+      "master": "qkd_pv_fin_s"
+    },
+    "age_edges": 41,
+    "stages": 41,
+    "src_nets": [
+      "n_ks_pvfst"
+    ]
+  },
+  {
+    "id": "kvs_attn.pvfst -> pvfin.epoch",
+    "src": {
+      "inst": "kvs_attn",
+      "port": "pvfst",
+      "master": "qkd_kvs_attn"
+    },
+    "dst": {
+      "inst": "pvfin",
+      "port": "epoch",
+      "master": "qkd_pv_fin_s"
+    },
+    "age_edges": 41,
+    "stages": 41,
+    "src_nets": [
+      "n_ks_pvfst"
+    ]
+  },
+  {
+    "id": "kvs_attn.pvfst -> pvfin.start",
+    "src": {
+      "inst": "kvs_attn",
+      "port": "pvfst",
+      "master": "qkd_kvs_attn"
+    },
+    "dst": {
+      "inst": "pvfin",
+      "port": "start",
+      "master": "qkd_pv_fin_s"
+    },
+    "age_edges": 41,
+    "stages": 41,
+    "src_nets": [
+      "n_ks_pvfst"
+    ]
+  }
+]

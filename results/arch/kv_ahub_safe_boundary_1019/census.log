@@ -1,0 +1,12 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+READING_EXACT_ODB
+ODB_LOADED
+MISSING_FUNCTIONAL_NAMES 0
+FUNCTIONAL 30942
+REGISTERS 3396 PORTS 627 FANOUT_GT32 13 STD_AREA 3887.3050200003236
+INPUT WORST_GEOMETRY [(14.510999999999942, 'ap1[0]', 'ap\\[43\\]$_DFF_P_', 3), (11.564000000000021, 'ap3[29]', 'ap\\[158\\]$_DFF_P_', 4), (11.438000000000036, 'ap1[1]', 'ap\\[44\\]$_DFF_P_', 3), (10.611000000000047, 'hs_cal_lo[54]', 'u_io.cal_q\\[54\\]$_DFF_P_', 4), (10.107000000000028, 'hs_cal_lo[47]', 'u_io.cal_q\\[47\\]$_DFF_P_', 4), (10.056000000000097, 'ap2[35]', 'ap\\[121\\]$_DFF_P_', 4), (10.005999999999915, 'ap3[17]', 'ap\\[146\\]$_DFF_P_', 4), (9.908999999999935, 'hs_cal_lo[62]', 'u_io.cal_q\\[62\\]$_DFF_P_', 4)]
+OUTPUT WORST_GEOMETRY [(89.859, 'fr_rz[104]', 'u_rw.q\\[121\\]$_DFF_P_', 16), (89.29700000000008, 'fr_rz[112]', 'u_rw.q\\[129\\]$_DFF_P_', 16), (86.5180000000002, 'fr_rz[5]', 'u_rw.q\\[22\\]$_DFF_P_', 16), (84.95099999999992, 'fr_rz[18]', 'u_rw.q\\[35\\]$_DFF_P_', 17), (84.62300000000012, 'fr_rz[12]', 'u_rw.q\\[29\\]$_DFF_P_', 16), (81.90299999999988, 'fr_rz[4]', 'u_rw.q\\[21\\]$_DFF_P_', 17), (79.62600000000006, 'fr_rz[7]', 'u_rw.q\\[24\\]$_DFF_P_', 16), (79.45700000000005, 'fr_rz[14]', 'u_rw.q\\[31\\]$_DFF_P_', 17)]
+FANOUT_TOP [('u_io.start$_DFF_PN0_', 544, Counter({'A': 141, 'A1': 136, 'B': 135, 'A2': 121, 'C': 8, 'D': 3})), ('u_core.mh\\[1\\]$_DFF_P_', 529, Counter({'B': 256, 'A2': 256, 'A1': 8, 'A': 8, 'D': 1})), ('u_core.start_b$_DFF_PN0_', 292, Counter({'B': 272, 'C': 16, 'A': 3, 'D': 1})), ('u_io.em_w$_DFF_PN0_', 291, Counter({'A2': 142, 'B': 140, 'A': 5, 'A1': 2, 'C': 1, 'D': 1})), ('u_core.mh\\[0\\]$_DFF_P_', 265, Counter({'C': 132, 'A1': 132, 'D': 1})), ('u_core.u_rr.rst_n\\[1\\]$_DFF_P_', 171, Counter({'RESETN': 171})), ('u_core.q_th\\[1\\]$_DFF_P_', 128, Counter({'B': 96, 'A': 32})), ('u_core.u_rr.rst_n\\[4\\]$_DFF_P_', 127, Counter({'RESETN': 127})), ('u_core.first_q$_DFF_PN1_', 61, Counter({'B': 27, 'A1': 16, 'A': 11, 'A2': 3, 'B2': 2, 'B1': 2})), ('u_core.u_rr.rst_n\\[0\\]$_DFF_P_', 50, Counter({'RESETN': 48, 'SETN': 2})), ('u_core.active$_DFFE_PN0P_', 47, Counter({'A': 18, 'C': 10, 'B': 9, 'A1': 8, 'A2': 1, 'D': 1})), ('u_core.u_rr.rst_n\\[3\\]$_DFF_P_', 40, Counter({'RESETN': 40})), ('u_core.age\\[1\\]$_DFFE_PN0P_', 36, Counter({'B': 14, 'A': 7, 'A1': 6, 'A2': 5, 'B2': 4}))]
