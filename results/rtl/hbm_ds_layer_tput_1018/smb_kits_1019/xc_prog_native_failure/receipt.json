@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.xcal-native-programme-failure.v1",
+  "source_commit": "ab29e6c2b",
+  "kit": "physical/ref_tile/hsm_xcal_prog_native_1019",
+  "remote": "ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hsm_xcal_prog_native_1019-20261019-092853",
+  "cts_log_sha256": "4033cf2e332eb3b0e9286c99e964729c7945ab24b5558dd62397e259f44e3f27",
+  "result": "FAIL GPL-0305 placement divergence",
+  "elapsed": "9:46.96",
+  "original_std_area_um2": 622.6,
+  "routability_inflation_um2": 1268.4,
+  "timing_delta_um2": 47.86,
+  "final_placement_area_um2": 1997.5,
+  "reset_landing": "REFUSE raw rst_n reaches8 flop reset pins under literal max2; explicit balanced two-level source proof/tool scope under investigation",
+  "grt_collector": "still active when CTS receipt captured; terminal full gate receipt to follow",
+  "next": "model genuine per-SRAM bank leaves plus registered central select/RELOC; no density-only retry, no approval or physical claim"
+}
