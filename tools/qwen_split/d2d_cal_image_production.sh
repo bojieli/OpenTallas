@@ -15,6 +15,6 @@ mkdir -p "$OUT"
 gunzip -c "$TP" > "$OUT/token_path_compiled.json"
 python3 tools/qwen_split/d2d_link_calendar.py --out "$OUT/program" --txl 6 --phy 5 --profile program --die-stages "$STAGES" \
   --host-stages 0 --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg \
-  --token-path "$OUT/token_path_compiled.json" > "$OUT/program.log"
+  --token-path "$OUT/token_path_compiled.json" ${D2D_MU:+--mu} > "$OUT/program.log"   # D2D_MU=1: MU-KV-CTX 10-19 MU context slot
 python3 tools/qwen_split/d2d_cal_seq_image.py "$OUT/program" "$OUT/d2d_cal_image.svh"
 echo "image: $OUT/d2d_cal_image.svh (die stages $STAGES)"
