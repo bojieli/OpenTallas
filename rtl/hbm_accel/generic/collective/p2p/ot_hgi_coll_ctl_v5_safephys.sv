@@ -75,7 +75,10 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
  // capture edge). VM_RT 0 = the V7 leaf, edge- and bit-identical (vm_sel_d tied 0, unused by the v5 wrappers).
  parameter integer VM_RT=0,SAFE_DELAY=0
 )(
- input wire clk_control,rst_n,
+ input wire clk_control,
+ // LH-SMATT 10-19 SAFE item 1/3: eight KEPT same-age reset copies (core u_rst*), each <=32 loads:
+ // [0] protocol leaf, [1] cycles, [2]/[3] observed-input captures, [4] u_vm, [5] u_se, [6] u_sl, [7] u_inj
+ input wire [7:0] rst_v,
  input wire [1535:0] inst,
  // registered iteration products from ot_hgi_coll_iter_mul_safephys (aligned with inst):
  input wire [15:0] m_idx,m_vm,
@@ -213,10 +216,10 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
  end
  generate if(SAFE_DELAY!=0)begin:g_safe_delay
  wire [139:0] vm_mv;wire [67:0] inj_mv;reg [131:0] vm_meta_q;
- ot_hgi_coll_fixed_delay_sram_safephys #(.W(140),.D(9+VM_RT)) u_vm(.clk(clk_control),.rst_n(rst_n),.din({p_vm_meta,{p_vm_rq[135],p_vm_rq[118],p_vm_rq[101],p_vm_rq[84],p_vm_rq[67],p_vm_rq[50],p_vm_rq[33],p_vm_rq[16]}}),.dout(vm_mv));
- ot_hgi_coll_fixed_delay_sram_safephys #(.W(24),.D(VM_RT)) u_se(.clk(clk_control),.rst_n(rst_n),.din(p_vm_pair_select),.dout(vm_select_early_safe));
- ot_hgi_coll_fixed_delay_sram_safephys #(.W(24),.D(9)) u_sl(.clk(clk_control),.rst_n(rst_n),.din(vm_select_early_safe),.dout(vm_select_late_safe));
- ot_hgi_coll_fixed_delay_sram_safephys #(.W(68),.D(INJLAT)) u_inj(.clk(clk_control),.rst_n(rst_n),.din({inj_meta_in,p_inj_rd}),.dout(inj_mv));
+ ot_hgi_coll_fixed_delay_sram_safephys #(.W(140),.D(9+VM_RT)) u_vm(.clk(clk_control),.rst_n(rst_v[4]),.din({p_vm_meta,{p_vm_rq[135],p_vm_rq[118],p_vm_rq[101],p_vm_rq[84],p_vm_rq[67],p_vm_rq[50],p_vm_rq[33],p_vm_rq[16]}}),.dout(vm_mv));
+ ot_hgi_coll_fixed_delay_sram_safephys #(.W(24),.D(VM_RT)) u_se(.clk(clk_control),.rst_n(rst_v[5]),.din(p_vm_pair_select),.dout(vm_select_early_safe));
+ ot_hgi_coll_fixed_delay_sram_safephys #(.W(24),.D(9)) u_sl(.clk(clk_control),.rst_n(rst_v[6]),.din(vm_select_early_safe),.dout(vm_select_late_safe));
+ ot_hgi_coll_fixed_delay_sram_safephys #(.W(68),.D(INJLAT)) u_inj(.clk(clk_control),.rst_n(rst_v[7]),.din({inj_meta_in,p_inj_rd}),.dout(inj_mv));
  always @(posedge clk_control)vm_meta_q<=vm_mv[139:8];
  assign vm_meta_safe=vm_meta_q;assign vm_valid_safe=vm_mv[7:0];
  assign inj_meta_safe=inj_mv[67:2];assign inj_valid_safe=inj_mv[1:0];
@@ -279,26 +282,32 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
   for(integer b=0;b<8;b=b+1)
    vm_req_sector[b*16+:16]<=p_vm_rq[b*17+:16]+m_vm;
  end
- always @(posedge clk_control or negedge rst_n)begin
-  if(!rst_n)begin
-   protocol_fault<=0;cycles<=0;arg_active<=0;wr_sequence_overflow<=0;rd_sequence_overflow<=0;rx_sequence_overflow<=0;inj_req_pin<=0;vm_assembled_v<=0;vm_raw_valid<=0;
+ // LH-SMATT 10-19: plain captures / counter moved out of the protocol block so each reset copy drives <=32 flops.
+ // Same edges, same reset values, same async-assert / sync-release age (all copies are the core's D1 flop).
+ always @(posedge clk_control or negedge rst_v[1])
+  if(!rst_v[1])cycles<=0;
+  else if(hgi_start)cycles<=0;else if(hgi_busy)cycles<=cycles+1;
+ always @(posedge clk_control or negedge rst_v[2])
+  if(!rst_v[2])begin dest_q<=0;rc_v_q<=0;rc_tag_q<=0;tkm_done_q<=0;tkm_busy_q<=0;issue_done_q<=0;inj_req_pin<=0;end
+  else begin dest_q<=dest_v;rc_v_q<=rc_v;rc_tag_q<=rc_tag;tkm_done_q<=tkm_done;tkm_busy_q<=tkm_busy;issue_done_q<=issue_done;
+   inj_req_pin<=p_inj_rd;end
+ always @(posedge clk_control or negedge rst_v[3])
+  if(!rst_v[3])begin lk_wr_v_e<=0;lp_we_e<=0;lp_tag_e<=0;tkm_done_slot_e<=0;arg_active_e<=0;arg_start_e<=0;
+   vm_raw_valid<=0;vm_req_valid<=0;end
+  else begin lk_wr_v_e<=3'(p_lk_wr_v);lp_we_e<=r_lp_we;lp_tag_e<=r_lp_tag;tkm_done_slot_e<=p_tkm_done_slot;
+   arg_active_e<=arg_active;arg_start_e<=a_arg_start;
+   for(integer b=0;b<8;b=b+1)begin vm_raw_valid[b]<=vm_rv[b];vm_req_valid[b]<=p_vm_rq[b*17+16];end
+  end
+ always @(posedge clk_control or negedge rst_v[0])begin
+  if(!rst_v[0])begin
+   protocol_fault<=0;arg_active<=0;wr_sequence_overflow<=0;rd_sequence_overflow<=0;rx_sequence_overflow<=0;vm_assembled_v<=0;
    if(SAFE_DELAY==0)for(integer j=0;j<INJLAT;j=j+1)inj_valid_pipe[j]<=0;
    if(SAFE_DELAY==0)for(integer j=0;j<9+VM_RT;j=j+1)vm_valid_pipe[j]<=0;
-   dest_q<=0;rc_v_q<=0;rc_tag_q<=0;tkm_done_q<=0;tkm_busy_q<=0;issue_done_q<=0;
-   lk_wr_v_e<=0;lp_we_e<=0;lp_tag_e<=0;tkm_done_slot_e<=0;arg_active_e<=0;arg_start_e<=0;
-   for(integer b=0;b<8;b=b+1)vm_req_valid[b]<=0;
    for(integer k=0;k<NPT;k=k+1)link_epoch[k]<=0;
   end else begin
-   if(hgi_start)cycles<=0;else if(hgi_busy)cycles<=cycles+1;
-   dest_q<=dest_v;rc_v_q<=rc_v;rc_tag_q<=rc_tag;tkm_done_q<=tkm_done;tkm_busy_q<=tkm_busy;issue_done_q<=issue_done;
-   lk_wr_v_e<=3'(p_lk_wr_v);lp_we_e<=r_lp_we;lp_tag_e<=r_lp_tag;tkm_done_slot_e<=p_tkm_done_slot;
-   arg_active_e<=arg_active;arg_start_e<=a_arg_start;
-   inj_req_pin<=p_inj_rd;
-   for(integer b=0;b<8;b=b+1)vm_raw_valid[b]<=vm_rv[b];
    if(SAFE_DELAY==0)inj_valid_pipe[0]<=p_inj_rd;
    if(SAFE_DELAY==0)for(integer j=1;j<INJLAT;j=j+1)inj_valid_pipe[j]<=inj_valid_pipe[j-1];
    for(integer b=0;b<8;b=b+1)begin
-    vm_req_valid[b]<=p_vm_rq[b*17+16];
     if(SAFE_DELAY==0)vm_valid_pipe[0][b]<=p_vm_rq[b*17+16];
 `ifdef OT_COLL_V7_MUT_OBS_NOALIGN
     if(vm_raw_valid[b]!=vm_valid_pipe[7+VM_RT][b])protocol_fault<=1;   // mutant: observed captured, expected not delayed
