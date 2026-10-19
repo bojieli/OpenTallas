@@ -1,0 +1,20 @@
+{
+ "same_original2647_fields": {
+  "top": true,
+  "sources": true,
+  "params": true,
+  "children": true,
+  "clock_port": true,
+  "reset_ports": true,
+  "pins": true,
+  "outline": true,
+  "recipe": true,
+  "registered_cluster_candidate": true
+ },
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv": "79aa525581808396118c7dec4362d6234263f7fcad75ce9620112ed58ad40f95",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_p1.sv": "4caf66d4125734ec0963bded290f5fd38a668a313b9c810deedecf605743cf0c"
+ },
+ "budgets": "C25 Uhold25 Usetup60 margin30 io_hold>=.03 unchanged",
+ "reset": "same PINPIPE1 two-stage local landing; no added edge since golden bench"
+}

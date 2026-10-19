@@ -1,0 +1,145 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_rc_order-20261019-102231
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_rc_order-20261019-102231
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_rc_order-20261019-102231
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_rc_order-20261019-102231
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_rc_order-20261019-102231
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_rc_order-20261019-102231
+ot-run: ot-agidock128  admits    99 GB (avail 82, growth 13, headroom 0, waiters 2/24 GB) load 14/64 running 9 disk 271 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1506969-1792431142 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt/ot_s81sl_cap_rt.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 723 input pin flops (0 hard-child clock pins at +insertion), median arrival 605.486816 (range 594.214478 .. 624.574524)
+QDM reference pin g_pin.eq[121]$_DFF_P_/CLK clock arrival max 605.486816 min 581.743103 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 581.743103 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/s81sl_capc_p1_die_rc_order/signoff.sdc (TT placement RC; diagnostic)
+Startpoint: cw_s_d[1]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: cw_s_d[1] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+Fanout       Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------------
+                              0.0000    0.0000   clock core_clk (rise edge)
+                              0.0000    0.0000   clock source latency
+     1    9.2129    0.0000    0.0000    0.0000 ^ clk (in)
+                                                 clk (net)
+                   13.4071    4.2295    4.2295 ^ clkbuf_sp_N162_r1/A (BUFx24_ASAP7_75t_R)
+     1   22.9814   11.0017   20.3053   24.5347 ^ clkbuf_sp_N162_r1/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N162_r1_net (net)
+                   89.5530   28.1022   52.6369 ^ clkbuf_sp_N162/A (BUFx24_ASAP7_75t_R)
+     2   45.4454   19.7809   37.5001   90.1370 ^ clkbuf_sp_N162/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N162_net (net)
+                   94.3836   28.9802  119.1172 ^ clkbuf_sp_N80/A (BUFx24_ASAP7_75t_R)
+     2   45.2177   20.0738   38.0392  157.1564 ^ clkbuf_sp_N80/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N80_net (net)
+                  102.6593   31.7948  188.9512 ^ clkbuf_sp_N39/A (BUFx24_ASAP7_75t_R)
+     2   33.1868   18.5128   37.9561  226.9073 ^ clkbuf_sp_N39/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N39_net (net)
+                   52.9203   15.4190  242.3264 ^ clkbuf_sp_N19/A (BUFx24_ASAP7_75t_R)
+     2   24.7684   15.2593   30.1888  272.5151 ^ clkbuf_sp_N19/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N19_net (net)
+                   32.1987    8.8581  281.3732 ^ clkbuf_sp_N18/A (BUFx24_ASAP7_75t_R)
+     2   16.0359   12.3384   25.3068  306.6801 ^ clkbuf_sp_N18/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N18_net (net)
+                   17.2897    3.9677  310.6477 ^ clkbuf_sp_N17/A (BUFx24_ASAP7_75t_R)
+     2   10.0440    9.8489   20.8359  331.4836 ^ clkbuf_sp_N17/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N17_net (net)
+                   10.5016    1.1990  332.6826 ^ clkbuf_sp_N16/A (BUFx24_ASAP7_75t_R)
+     2    4.0447    7.5386   17.9416  350.6242 ^ clkbuf_sp_N16/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_N16_net (net)
+                    7.5459    0.2532  350.8774 ^ clkbuf_sp_L124_p1/A (HB4xp67_ASAP7_75t_R)
+     1    0.6041   13.8684   36.2940  387.1714 ^ clkbuf_sp_L124_p1/Y (HB4xp67_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p1_net (net)
+                   13.8685    0.0217  387.1931 ^ clkbuf_sp_L124_p2/A (HB4xp67_ASAP7_75t_R)
+     1    0.7239   15.0451   38.9929  426.1860 ^ clkbuf_sp_L124_p2/Y (HB4xp67_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p2_net (net)
+                   15.0453    0.0350  426.2210 ^ clkbuf_sp_L124_p3/A (HB4xp67_ASAP7_75t_R)
+     1    0.6598   14.4127   38.8836  465.1046 ^ clkbuf_sp_L124_p3/Y (HB4xp67_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p3_net (net)
+                   14.4129    0.0276  465.1322 ^ clkbuf_sp_L124_p4/A (HB4xp67_ASAP7_75t_R)
+     1    0.6924   14.7345   38.9303  504.0625 ^ clkbuf_sp_L124_p4/Y (HB4xp67_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p4_net (net)
+                   14.7347    0.0313  504.0938 ^ clkbuf_sp_L124_p5/A (HB4xp67_ASAP7_75t_R)
+     1    0.5557   13.3910   38.0426  542.1364 ^ clkbuf_sp_L124_p5/Y (HB4xp67_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p5_net (net)
+                   13.3911    0.0212  542.1576 ^ clkbuf_sp_L124_p6/A (BUFx2_ASAP7_75t_R)
+     1    0.6271    5.3668   13.9977  556.1553 ^ clkbuf_sp_L124_p6/Y (BUFx2_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p6_net (net)
+                    5.3675    0.0284  556.1837 ^ clkbuf_sp_L124_p7/A (BUFx2_ASAP7_75t_R)
+     1    0.5608    5.0345   11.5311  567.7148 ^ clkbuf_sp_L124_p7/Y (BUFx2_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p7_net (net)
+                    5.0350    0.0217  567.7365 ^ clkbuf_sp_L124_p8/A (BUFx2_ASAP7_75t_R)
+     1    2.1065    9.5484   13.8776  581.6141 ^ clkbuf_sp_L124_p8/Y (BUFx2_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_p8_net (net)
+                    9.5517    0.0847  581.6988 ^ clkbuf_sp_L124/A (BUFx24_ASAP7_75t_R)
+     8    5.2726    8.0169   17.8743  599.5731 ^ clkbuf_sp_L124/Y (BUFx24_ASAP7_75t_R)
+                                                 clkbuf_sp_L124_net (net)
+                    8.0230    0.2372  599.8103 ^ cw_s_d[1]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.5233   11.3797   32.1646  631.9749 v cw_s_d[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+                                                 _0083_ (net)
+                   11.3798    0.0147  631.9896 v _1259_/A (INVx1_ASAP7_75t_R)
+     1    0.6334    7.3091    6.6199  638.6096 ^ _1259_/Y (INVx1_ASAP7_75t_R)
+                                                 net1091 (net)
+                    7.3096    0.0303  638.6399 ^ output1092/A (BUFx2_ASAP7_75t_R)
+     1    0.3979    4.6281   11.8720  650.5118 ^ output1092/Y (BUFx2_ASAP7_75t_R)
+                                                 cw_s_d[1] (net)
+                    4.6282    0.0179  650.5298 ^ cw_s_d[1] (out)
+                                      650.5298   data arrival time
+
+                              0.0000    0.0000   clock core_clk (rise edge)
+                              0.0000    0.0000   clock network delay (propagated)
+                             25.0000   25.0000   clock uncertainty
+                              0.0000   25.0000   clock reconvergence pessimism
+                            581.7431  606.7431   output external delay
+                                      606.7431   data required time
+-------------------------------------------------------------------------------------
+                                      606.7431   data required time
+                                     -650.5298   data arrival time
+-------------------------------------------------------------------------------------
+                                       43.7867   slack (MET)
+
+
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1506969-1792431142): exit 0
