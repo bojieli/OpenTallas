@@ -2560,14 +2560,24 @@ module ot_hbm_accel_smh_leaf #(
     wire [NXL*256-1:0] ring_rd;
     genvar rw;
     generate for (rw=0; rw<NXL; rw=rw+1) begin : g_wr_ring
-        reg [1:0] wa_n, ra_n;
+        reg[1:0]wa_n;
+`ifdef OT_SMH_RING_LOCAL_ADDR
+        wire[1:0]ra_n;
+        // Previous posedge slot is exactly current negedge(slot-1). Native
+        // kept local captures add no data edge and prevent cross-macro merging.
+        ot_hbm_accel_smh_ring_raddr u_ra(.clk(clk),.rst_n(rst_n),.slot(wr_slot),.addr(ra_n));
+`else
+        reg[1:0]ra_n;
+`endif
         reg [255:0] wd_n;
         always @(negedge clk) begin
             wa_n <= wr_slot;
+`ifndef OT_SMH_RING_LOCAL_ADDR
 `ifdef OT_SMH_MUT_XSRING
             ra_n <= wr_slot - 2'd2;
 `else
             ra_n <= wr_slot - 2'd1;
+`endif
 `endif
             wd_n <= ring_wd[256*rw +: 256];
         end
@@ -3610,4 +3620,19 @@ module ot_hbm_accel_smh_strap_region #(parameter integer W = 26, parameter integ
     end
     // Negative control corrupts one offset bit at the final regional station.
     assign q = s4 ^ {{(W-1){1'b0}}, (MUT != 0)};
+endmodule
+
+// Opt-in source-owned macro-address capture. Clock-region hardening remains a
+// separate requirement; this module alone does not qualify the failed tree.
+(* keep_hierarchy="yes" *)
+module ot_hbm_accel_smh_ring_raddr(input wire clk,rst_n,input wire[1:0]slot,output wire[1:0]addr);
+    (* keep="true",dont_touch="true" *)reg[1:0]a;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)a<=2'd3;
+`ifdef OT_SMH_MUT_XSRING
+        else a<=slot-2'd1;
+`else
+        else a<=slot;
+`endif
+    assign addr=a;
 endmodule

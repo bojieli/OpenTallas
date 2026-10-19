@@ -15,7 +15,19 @@ module tb_xs_ring_equiv;
     ot_hbm_accel_smh_xs #(.TAGW(16), .NBEAT(13)) u_dut (`XS_PORTS(od));
     ref_ot_hbm_accel_smh_xs #(.TAGW(16), .NBEAT(13)) u_ref (`XS_PORTS(orf));
     always #1 clk = ~clk;
-    integer c, i, mism, tog, nzv, seed;
+    integer c,i,mism,tog,nzv,seed;
+`ifdef OT_SMH_RING_LOCAL_CHECK
+    integer addr_checks=0,addr_mismatches=0;
+    generate for(genvar g=0;g<4;g=g+1)begin:g_address_check
+        always @(posedge clk)if(u_dut.u_leaf.rst_n)begin
+            addr_checks=addr_checks+1;
+            if(u_dut.u_leaf.g_wr_ring[g].u_w.r_addr_in !== u_ref.u_leaf.g_wr_ring[g].u_w.r_addr_in)begin
+                addr_mismatches=addr_mismatches+1;
+                if(addr_mismatches<5)$display("XS_RING_MACRO_ADDR_MISMATCH macro%0d new%0d old%0d",g,u_dut.u_leaf.g_wr_ring[g].u_w.r_addr_in,u_ref.u_leaf.g_wr_ring[g].u_w.r_addr_in);
+            end
+        end
+    end endgenerate
+`endif
     reg [15:0] tprev;
     task rnd;
         begin
@@ -44,6 +56,10 @@ module tb_xs_ring_equiv;
             end
         end
         $display("XS_RING_EQUIV cycles=%0d seed=%0d mismatches=%0d itag_e_toggles=%0d valid_cycles=%0d", NC, seed, mism, tog, nzv);
+`ifdef OT_SMH_RING_LOCAL_CHECK
+        $display("XS_RING_MACRO_ADDR checks%0d mismatches%0d resetstartup_wrap",addr_checks,addr_mismatches);
+        if(addr_mismatches!=0 || addr_checks<NC*2)mism=mism+1;
+`endif
         if (mism == 0 && tog > NC/4 && nzv > 0) $display("XS_RING_EQUIV PASS");
         else $display("XS_RING_EQUIV FAIL");
         $finish;

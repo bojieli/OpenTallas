@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/smhxs-localaddr-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/smhxs-localaddr-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/smhxs-localaddr-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/smhxs-localaddr-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/smhxs-localaddr-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/smhxs-localaddr-1019
+ot-run: ot-agidock128  admits    99 GB (avail 82, growth 13, headroom 0, waiters 0/0 GB) load 14/64 running 8 disk 271 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1506822-1792431142 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+XS_RING_MACRO_ADDR_MISMATCH macro0 new3 old0
+XS_RING_MACRO_ADDR_MISMATCH macro1 new3 old0
+XS_RING_MACRO_ADDR_MISMATCH macro2 new3 old0
+XS_RING_MACRO_ADDR_MISMATCH macro3 new3 old0
+XS_RING_EQUIV MISMATCH cycle=24 itag_e dut=959e ref=959e first_e 1/1 last_e 1/1 other_diff=1
+XS_RING_EQUIV MISMATCH cycle=25 itag_e dut=ed77 ref=ed77 first_e 0/0 last_e 0/0 other_diff=1
+XS_RING_EQUIV MISMATCH cycle=26 itag_e dut=2865 ref=2865 first_e 1/1 last_e 0/0 other_diff=1
+XS_RING_EQUIV MISMATCH cycle=27 itag_e dut=6b0f ref=6b0f first_e 0/0 last_e 0/0 other_diff=1
+XS_RING_EQUIV MISMATCH cycle=28 itag_e dut=5533 ref=5533 first_e 0/0 last_e 0/0 other_diff=1
+XS_RING_EQUIV cycles=5000 seed=31 mismatches=4520 itag_e_toggles=4520 valid_cycles=3416
+XS_RING_MACRO_ADDR checks19496 mismatches19416 resetstartup_wrap
+XS_RING_EQUIV FAIL
+- rtl/hbm_accel/sm/xs_ring/tb_xs_ring_equiv.sv:65: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.125 s; speed 80.199 us/s
+- Verilator: cpu 0.125 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1506822-1792431142): exit 1
