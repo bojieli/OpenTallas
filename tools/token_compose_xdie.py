@@ -568,6 +568,12 @@ def overrides(paths):
         ent = dict(record=rel, family=_family(rel), used=bool(tc and tc.get('terms')), n_terms=len((tc or {}).get('terms', [])),
                    why=None if tc and tc.get('terms') else ((tc or {}).get('note') or 'no token_compose block (record not yet in the override format)'),
                    rejected=[])
+        if tc and tc.get('active', True) is False:
+            ent.update(used=False, why=tc.get('selection_note') or 'explicitly inactive composition record',
+                       superseded_by=tc.get('superseded_by'))
+            ent.pop('rejected')
+            seen.append(ent)
+            continue
         commit = git('log', '-1', '--format=%h', '--', str(p)) or 'uncommitted'
         for i, o in enumerate((tc or {}).get('terms', [])):
             o = dict(o, _record=rel, _commit=commit, _i=i)

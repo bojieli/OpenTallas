@@ -43,6 +43,9 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 
 ON = os.environ.get('OT_KV_STATIC_DIE', '0') == '1'
+# KV-DCAL-BOOTCFG 10-19 (= kv_die.DCAL_BC / DCAL_BC_LINK): the D2D end's cfg port <- dcal cfg; boot link_cfg_* -> dcal bcfg
+DCAL_BC = os.environ.get('OT_KV_DCAL_BC', '0') == '1'
+DCAL_BC_LINK = dict(cfg_tx_we='btx', cfg_rx_we='brx', cfg_addr='bad', cfg_data='bdt')
 # KV-PLAN 10-17 (HANDOFF 0cx+4 decision 1): one control root per die half (kvs_hroot_N / kvs_hroot_S), each serving its
 # own two stacks (es chain heads, fan words, group gathers, embedding return trains); off = the single top-centre root
 HROOT = os.environ.get('OT_KV_HROOT', '0') == '1'
@@ -66,13 +69,36 @@ FANFOLD = HROOT and os.environ.get('OT_KV_FANFOLD', '0') == '1'
 #     parameters on a hard child);
 #   KITS-B replicated grp / grp_h / pc / pc_h / hroot (KIT_KINDS, faces KIT_FACE): FLAT leaf kits (kit_clocks).
 KITS = os.environ.get('OT_KV_TILE_KITS', os.environ.get('OT_KV_KVS_CK1', '0')) == '1'
+# Stage 1 private ABI pruning only; no physical/register or schedule adoption.
+GRP_PRIVATE0 = os.environ.get('OT_KV_GRP_PRIVATE0', '0') == '1'
+if GRP_PRIVATE0 and not (ON and HROOT and FANFOLD and KITS and
+        os.environ.get('OT_KV_MU', '0') == '1' and os.environ.get('OT_KV_BOOT_AGES', '0') == '1' and
+        os.environ.get('OT_KV_DOMSPLIT', '0') != '1'):
+    raise ValueError('GRP_PRIVATE0 requires selected static HROOT/FANFOLD/KITS/MU/BOOT_AGES without DOMSPLIT')
 KVS_CK1 = KITS
 CK1_KINDS = ('ctl', 'attn', 'emb')
 KIT_HARD = ('qkd_embedding_row_tx',)
 KIT_KINDS = ('grp', 'grp_h', 'pc', 'pc_h', 'hroot')
-RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
+# KV-DOMSPLIT 10-19 (OT_KV_DOMSPLIT=1; default off: every existing design point and tile file is
+# unchanged; tile file suffix '_ds'): no die word mixes the core clock ck and the HBM clock hck.  The group <-> PC bundles
+# (slg o_pc<j> -> kvpc i_grp, kvpc o_grp -> slg i_pc<j>) are split per launch domain: the ck fields keep the port name, the
+# hck fields ride '<port>_h' (its own die bus, so its relay chain runs on the clk_hbm_<region> trunk: kv_die.py relay
+# clock = the launching pin's domain).  The group gather o_ctl (-> the stack root, a ck-only relay tile, -> kvs_ctl boot /
+# ownership observers) keeps one ck word: its 10 hck status levels (the five boot CDCs' applied_hbm / fault_hbm, sticky)
+# LAND inside the group (qkd_kv_lvl_land: 2-flop async_reg synchroniser on ck, +2 ck edges on the boot observation; the
+# observer's own 2-flop stage stays).  Field domains: the measured per-bit launch domains of the base tiles
+# (kvs_port_domains bit_domains -> DOMSPLIT_TABLE, `kv_static_die.py --domsplit-table`), fail closed on a field without one.
+DOMSPLIT = os.environ.get('OT_KV_DOMSPLIT', '0') == '1'
+DOMSPLIT_DIR = 'results/arch/qwen_kv_domsplit_1019'
+DOMSPLIT_TABLE = DOMSPLIT_DIR + '/producer_domains.json'
+LVL_LAND_RTL = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_lvl_land.sv'
+PUBLIC_RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
-            ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') + '.sv')   # MU-ADOPT-KV 10-19 (kv_static.MU)
+            ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +
+            ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
+            ('_ds' if DOMSPLIT else '') + '.sv')   # KV-DOMSPLIT
+RTL_FILE = PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + '.sv'
+GRP_PRIVATE0_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_private0.sv'
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -114,6 +140,8 @@ RESETS = ('rst_n', 'rsi', 'hrst_n', 'hrst', 'cal_rst_n')
 HBM_RST = ('hrst_n', 'hrst', 'cal_rst_n')
 KIND_MASTER = dict(fan='qkd_kvs_fan', grp='qkd_kvs_grp', grp_h='qkd_kvs_grp_h', pc='qkd_kvs_pc', pc_h='qkd_kvs_pc_h', ctl='qkd_kvs_ctl', attn='qkd_kvs_attn',
                    emb='qkd_kvs_emb', hroot='qkd_kvs_hroot')
+if GRP_PRIVATE0:
+    KIND_MASTER.update(grp='qkd_kvs_grp_private0', grp_h='qkd_kvs_grp_h_private0')
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
                  boot_obs='bobs', diecfg='dcfg')
@@ -150,6 +178,15 @@ AFAULT_D = [('ufs_WS', ('astk_WS', 'af')), ('ufs_WN', ('astk_WN', 'af')), ('ufs_
             ('ufs_EN', ('astk_EN', 'af')), ('ufh', ('ahub', 'hf')), ('ufp0', ('pvw_0', 'pf')), ('ufp1', ('pvw_1', 'pf')),
             ('uff', ('pvfin', 'ff'))]
 AFAULT_C = [f'ufk_{st}' for st in ('WS', 'WN', 'ES', 'EN')]
+# KV-DCAL 10-19 (OT_KV_DCAL_FLT=1, needs OT_KV_DCAL_BC=1 + OT_KV_DCAL_BC4=1 + AFAULT; default off): the KV calendar
+# sequencer's sticky fault (qkd_d2d_cal_seq_pin_bc4 `fault` = sequencer | COL | RUN | STALE | EARLY, registered, cleared only
+# by the tile reset) becomes afr lane d[8] `ufd` on its own relayed kv_oneway bus ks_af_ufd (dcal flt -> kvs_attn ufd):
+# afr ND 9, attn_face NF 11, folded into service_fault like every other unit fault (continuous sticky OR, no gating at
+# cutoff).  Its latency is priced by record()['attn_fault'] (leaf 'dcal.flt').  STATUS contract owner: KV-RETIRE.
+DCAL_FLT = (AFAULT and DCAL_BC and os.environ.get('OT_KV_DCAL_BC4', '0') == '1'
+            and os.environ.get('OT_KV_DCAL_FLT', '0') == '1')
+if DCAL_FLT:
+    AFAULT_D = AFAULT_D + [('ufd', ('dcal', 'flt'))]
 PVFIN_FILE = 'rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv'
 PVFIN_FRAME = (259.2, 259.2)            # kit qkd_pv_fin_s outline (gate pending)
 # KV-INTEG/AHUB 10-18 (RTL-BUILD-KV M2 + P6; OT_KV_AHUB_STATIC, default ON with PVFIN): the die hub `ahub` (master
@@ -204,6 +241,47 @@ PRG_W, ARH_W = 537, 8
 # K.tx_record +1 (attn__tx_valid / attn__tx_payload), ks_prg +1, ks_arh +1; RX bundles K.rx_record / K.tx_slot +0.
 ATTN_LAND = os.environ.get('OT_KV_ATTN_LAND', '0') == '1'
 ATTN_LAND_EDGES = {'K.tx_record': 1, 'ks_prg': 1, 'ks_arh': 1, 'K.rx_record': 0, 'K.tx_slot': 0}
+# HKV-RSTCAP 10-19 (lanes/HKV-RSTCAP.md): face-landed tile wrappers <kit>_fl (reset_ports landed at the face: +3 reset-release
+# edges, tile clock; zero steady-state cycles) and, on kvs_attn, fin (pvfin stream) / i_ctl (ctl -> attn issue / run / cal go /
+# authority) landed at +1 edge each.  OT_KV_FACE_LAND=1 binds the _fl views (ONLY once CLOSED) and the compiler takes the
+# edges (kv_static_programme profile die: att += i_ctl; F_DLY += fin; startup: reset release + 3 per landed tile);
+# kv_static_params FAILS when the die.v masters and this flag disagree.
+# HKV-DIE3 10-19: PER-TILE selection.  OT_KV_FACE_LAND = 0 (none) | 1 (every tile below) | comma list of tile keys
+# (production kvs14r: astk_rly_296 -- the only CLOSED _fl view, qkd_astk_rly_296-fl1-bd369b99e).  A selected tile binds
+# its <master>_fl view, which must be CLOSED (face_land_require_closed fails closed on a missing view); the compiler takes
+# the edges of the selected tiles only (kv_static_programme._face_land) and kv_static_params checks die.v per tile.
+FACE_LAND_TILES = {'kvs_attn': dict(master='qkd_kvs_attn', kit='qkd_kvs_attn', rst_release=3, fin=1, i_ctl=1),
+                   'astk_rly_296': dict(master='qkd_astk_rly_296', kit='qkd_astk_rly_296', rst_release=3),
+                   'hr_core_queue': dict(master='qkd_hr_core_queue', kit='qkd_hr_core_queue', rst_release=3)}
+if os.environ.get('OT_KV_BOOT_AGES', '0') == '1':     # KV-BOOTAGE 10-19: the boot-age attention tile's landed view
+    FACE_LAND_TILES['kvs_attn'] = dict(FACE_LAND_TILES['kvs_attn'], kit='qkd_kvs_attn_ba1')
+_FL_ENV = os.environ.get('OT_KV_FACE_LAND', '0').strip()
+FACE_LAND_SEL = (set(FACE_LAND_TILES) if _FL_ENV == '1' else set() if _FL_ENV in ('', '0')
+                 else {t.strip() for t in _FL_ENV.split(',') if t.strip()})
+if FACE_LAND_SEL - set(FACE_LAND_TILES):
+    raise ValueError(f'kv_static_die: OT_KV_FACE_LAND names unknown tiles {sorted(FACE_LAND_SEL - set(FACE_LAND_TILES))}')
+FACE_LAND = bool(FACE_LAND_SEL)
+
+
+def face_land_view(tile):
+    t = FACE_LAND_TILES[tile]
+    return f"physical/ref_tile/{t['kit']}/views/{t['master']}_fl"
+
+
+def face_land_require_closed(root=ROOT):
+    """every selected tile's <master>_fl view must exist (closure record: LEF + TT/FF libs + insertion.json)"""
+    miss = {}
+    for tl in sorted(FACE_LAND_SEL):
+        vd = Path(root) / face_land_view(tl)
+        m = FACE_LAND_TILES[tl]['master'] + '_fl'
+        need = [vd / f'{m}.lef', vd / f'{m}_tt.lib', vd / f'{m}_ff.lib', vd / 'insertion.json']
+        bad = [str(p.relative_to(root)) for p in need if not p.exists()]
+        if bad:
+            miss[tl] = bad
+    if miss:
+        raise ValueError(f'kv_static_die: face-landed tiles selected without a CLOSED _fl view (bind only CLOSED): {miss}')
+    return {tl: face_land_view(tl) for tl in sorted(FACE_LAND_SEL)}
+FACE_LAND_RST_BUDGET = 128 - 2     # region roots hold reset >= RELAY_FLUSH 128 cycles after the clock runs (kv_rst_window), E_r 2
 # KV-WIRE2 10-18 (RTL-BUILD-KV/ASTK (a)-(d), lanes/RTL-BUILD-KV.md ASTK; OT_KV_ASTK_ST, default ON with the static hub): the
 # static ASTK strip with its inline e-read (die face qkd_astk_strip_er_die = qkd_astk_strip_er_st + the vh -> read request
 # slicing + af | er_fault), the ECTL frames on qkd_ectl3_kiss_st (C = qkd_ectl_c_st: so 413 b, si 633 b, no nb_cr), heads
@@ -213,6 +291,13 @@ ATTN_LAND_EDGES = {'K.tx_record': 1, 'ks_prg': 1, 'ks_arh': 1, 'K.rx_record': 0,
 # stack's PV pair in_e lanes: W stacks pvw_<p>.ie = in_e[255:0], E stacks .iee = in_e[511:256]).  ASTK_W re-cut: not done
 # (the frame keeps 220.32 um; the P.V tree columns are gone, so the strip has slack -- follow-up with its kit).
 ASTK_ST = AHUB_STATIC and os.environ.get('OT_KV_ASTK_ST', '1') == '1'
+# Owner-selected physical strip successor: parameters and read ages must move together.
+# Legacy/default sources keep their existing one-edge internal links and centralized e-read.
+ASTK_EXPAND = ASTK_ST and os.environ.get('OT_KV_ASTK_EXPAND', '1') == '1'   # HKV-DIE3 10-19: production default ON
+ASTK_RL = int(os.environ.get('OT_KV_ASTK_RL', '3' if ASTK_EXPAND else '1'))
+ASTK_Z_STRIDE = 4     # actual CLOSED qkd_astk_ctl_s parameter; stride-16 benches are separate evidence
+if ASTK_RL < 1 or (not ASTK_EXPAND and ASTK_RL != 1):
+    raise ValueError('kv_static_die: ASTK RL changes require OT_KV_ASTK_EXPAND=1 and positive RTL link latency')
 ASTK_FILE = 'rtl/qwen_sys/split_20261014/qkd_astk_strip_er_die.sv'
 ACAL = ['cal[31:16]', 'cal[47:32]', 'cal[15:0]']            # astk cal = {EXP base, Z start, LMAX start} (LSB first: LMAX)
 ECTL_ST_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv'
@@ -229,6 +314,64 @@ import kv_static_ages as _AGES   # noqa: E402
 ECTLK_RESPONSE_LAT = _AGES.K_RT_BUDGET
 ECTLK_QK_ISSUE_AGE = ECTLK_RESPONSE_LAT + _AGES.QK_WRITE_BEFORE_READ
 ECTLK_ROW_RETURN_LAT = ECTLK_RESPONSE_LAT + 7
+# KVR-DERIVE 10-19 (coordinator decision): the static-schedule ages HARD-CODED in closed tiles.  This die binds exactly
+# these values; the generator pads a faster path up to the value where that is legal (core-clock pad relays) and
+# kv_static_params FAILS every path whose relay-plan age differs (never a mismatch bound; a path already longer than the
+# value needs the ONE later re-harden: boot-programmable static-schedule registers, spec in lanes/KVR-DERIVE.md).
+#   ECTL_RESPONSE_LAT  qkd_ectl3_kiss_st children (rt80 kit)        8 + krq + krs                 (kv_k_rt_eq pads krq)
+#   VPORT_RT           qkd_pv16_vport kit (r6: RT 8)                 9 + pvvq_g + pvrs_g, both sides (pads: pvvq, 15 b)
+#   PV_FIRST_INPUT_AGE ot_qwen_tp8_pv_wide_ctl_t kit (OT_KV_PV_T_CTL_KIT spec)   4 + W + DQ + RT_die + 1, all 16 ports
+#   PV_LEAD / F_DLY    qkd_kvs_attn (generated tile text: attn_root / attn_face join parameters)
+#                      PV_LEAD = D(ks_pvst) to pvw_0 and pvw_1; F_DLY = 1 + (D(ks_pvfst) - PV_LEAD) + D(ks_pvfin) [+ face land]
+VPORT_KIT = os.environ.get('OT_KV_VPORT_KIT', 'physical/ref_tile/qkd_pv16_vport_r6/spec.json')
+VPORT_RT_SEG = 9          # landing seg vreq capture 1 + VREQ latency 8 (KVJ-F tb_static_landing_vport)
+LANDING_SEG = 8           # K request -> response latency of the landing seg
+
+
+def _kit_params(rel):
+    """a kit spec's params from the worktree, else from git HEAD (sparse checkouts); None when absent"""
+    f = ROOT / rel
+    try:
+        txt = f.read_text() if f.exists() else __import__('subprocess').run(
+            ['git', '-C', str(ROOT), 'show', f'HEAD:{rel}'], capture_output=True, text=True, check=True).stdout
+        return json.loads(txt).get('params') or {}
+    except Exception:              # noqa: BLE001
+        return None
+
+
+def tile_ages():
+    """the hard-coded tile ages this die binds (+ where each comes from)"""
+    vk = _kit_params(VPORT_KIT) or {}
+    ck = os.environ.get('OT_KV_PV_T_CTL_KIT', 'qkd_pv_ctl_t_d54f58a95')
+    cp = _kit_params(f'physical/ref_tile/{ck}/spec.json') or {}
+    at = attn_tile_params()
+    return dict(ECTL_RESPONSE_LAT=ECTLK_RESPONSE_LAT, ECTL_QK_ISSUE_AGE=ECTLK_QK_ISSUE_AGE,
+                VPORT_RT=int(vk.get('RT', 8)), VPORT_DQ=int(vk.get('DQ', 0)),
+                PV_FIRST_INPUT_AGE=int(cp['FIRST_INPUT_AGE']) if 'FIRST_INPUT_AGE' in cp else None,
+                PV_LEAD=at.get('PV_LEAD'), F_DLY=at.get('F_DLY'),
+                source=dict(ECTL='kv_static_ages.K_RT_BUDGET (qkd_ectl3_kiss_st rt80 children)', VPORT=VPORT_KIT,
+                            PV_CTL=f'physical/ref_tile/{ck}/spec.json', ATTN=f'{RTL_FILE} module qkd_kvs_attn'))
+
+
+def attn_tile_params(text=None):
+    """PV_LEAD / F_DLY as the generated qkd_kvs_attn tile binds them (the tile text; the closed kit is that text)"""
+    if text is None:
+        p = ROOT / RTL_FILE
+        if not p.exists():
+            return {}
+        text = p.read_text()
+    m = re.search(r'module\s+qkd_kvs_attn\b(.*?)endmodule', text, re.S)
+    if not m:
+        return {}
+    out = {}
+    for k, mod in (('PV_LEAD', 'qkd_attn_service_root'), ('F_DLY', 'qkd_attn_result_face_s')):
+        mm = re.search(mod + r'\s*#\s*\((.*?)\)\s*\w+\s*\(', m.group(1), re.S)
+        v = re.search(r'\.' + k + r'\((\d+)\)', mm.group(1)) if mm else None
+        if v:
+            out[k] = int(v.group(1))
+    return out
+
+
 FIN = [('out_valid', 1), ('out_beat', 5), ('out_epoch', 16), ('out_data', 512)]    # pvfin fo = kvs_attn fin (LSB first)
 PVFST = ['start_pv', 'ep', 'cal[175:128]']                                        # kvs_attn pvfst = pvfin fs (65 b)
 # per-tile frames (um, ASSUMED until kits close): see place()
@@ -262,6 +405,9 @@ def graph():
             _afault_join(g)
         if ATTN_LAND:
             _attn_land_join(g)
+        import kv_bootage as _KB              # KV-BOOTAGE 10-19 (OT_KV_BOOT_AGES=1): boot-programmable schedule ages
+        if _KB.ON:
+            _KB.boot_ages_join(g)
         _G['g'], _G['unpriced'] = g, left
         _G['ins'] = {i['name']: i for i in g['instances']}
         _G['spec'] = {}
@@ -360,6 +506,8 @@ def _afault_join(g):
     add('afr', AFAULT_ROOT, dict(ND=len(AFAULT_D), NC=len(AFAULT_C), MUT=0))
     face = by['attn_face']
     nf = face['parameters']['NF']
+    if DCAL_FLT and nf == len(AFAULT_D) - 1 + len(AFAULT_C) // 2:     # KV-DCAL: + the calendar sequencer's fault lane
+        nf = face['parameters']['NF'] = nf + 1
     if nf != len(AFAULT_D) + len(AFAULT_C) // 2 or face['inputs'].get('unit_fault', 0) is not None:
         raise ValueError(f'kv_static_die AFAULT: attn_face NF {nf} / unit_fault already bound')
     face['inputs']['unit_fault'] = [dict(instance='afr', port='unit_fault', lo=0, width=nf)]
@@ -643,6 +791,10 @@ def tile(die_inst):
                 if ckind == 'ectl' and it['port'] in KG and kind == 'ctl':
                     outs.setdefault('kg', (rsp_expr('lprg', KG), 23, []))[2].append((cd, 'kg'))
                     continue
+                if ckind == 'vport' and p == 'cfg_age':          # KV-BOOTAGE: die cfg {DQ, RT} -> the V port's cfg pin
+                    pn = f'{loc[src]}__{it["port"]}__{lo}_{w}'
+                    outs.setdefault(pn, (f'w_{loc[src]}__{it["port"]}[{lo + w - 1}:{lo}]', w, []))[2].append((cd, 'cfg'))
+                    continue
                 if ckind == 'ectl' and p == 'cfg':
                     pn = f'{loc[src]}__{it["port"]}__{lo}_{w}'
                     outs.setdefault(pn, (f'w_{loc[src]}__{it["port"]}[{lo + w - 1}:{lo}]', w, []))[2].append((cd, 'cfg'))
@@ -753,6 +905,9 @@ if SEQ_S:         # KV-WIRE2 SEQ: the attention programme's request / Q beat fac
 if BOOT:    # the pc_path's slice-facing outputs (note s5.5)
     DIE_EXPORTS['pc'].update({('pc', p[4:]): (p, w) for _b, p, _s, w, out in BOOT_HSL if out})
 DIE_EXPORTS['pc_h'] = DIE_EXPORTS['pc']
+import kv_bootage as KB   # noqa: E402  KV-BOOTAGE 10-19 (OT_KV_BOOT_AGES=1)
+if KB.ON:   # the pair FIRST_INPUT_AGE bytes {pair 1, pair 0} -> both PV pair clusters (pvw cfa, a die join: kv_bootage)
+    DIE_EXPORTS['ctl'][('dcfg', 'age_pv')] = ('dcfg__age_pv', 16)
 if AFAULT:   # P7: each group's chain node -> the next slot's group (or, slot 7, the attention control tile)
     DIE_EXPORTS['grp'] = {('af', 'fault'): ('af__fault', 1)}
 
@@ -832,7 +987,7 @@ def module_text(t, name):
          f'module {name} (']
     pl = []
     for pn, v in t['ports'].items():
-        if KITS and t['kind'] in CK1_KINDS + KIT_KINDS and v['cls'] in ('clock', 'reset') and v['width'] == 1:
+        if v.get('scalar') or (KITS and t['kind'] in CK1_KINDS + KIT_KINDS and v['cls'] in ('clock', 'reset') and v['width'] == 1):
             pl.append(f'    {v["dir"]} wire {pn}')         # the kit's CTS root / reset pin: a scalar port
             continue
         pl.append(f'    {v["dir"]} wire [{v["width"] - 1}:0] {pn}')
@@ -903,24 +1058,131 @@ def pack(tiles):
                 continue
             new[pn] = v
         ins_ = sorted(((rel(T, S), S, lst) for (TT, S), lst in layout.items() if TT == T))
-        for r, S, lst in ins_:
-            name, off = f'i_{r}', 0
-            for pn, w, key in lst:
-                packed.append((pn, w, name, off))
-                off += w
-            if name in new:
-                raise ValueError(f'kv_static_die: {T} bundle {name} twice')
-            new[name] = dict(dir='input', width=off, cls='bundle', peer=S, layout=lst)
+        for r, S, lst0 in ins_:
+            for sfx, lst in ds_parts(T, S, lst0):
+                name, off = f'i_{r}{sfx}', 0
+                for pn, w, key in lst:
+                    packed.append((pn, w, name, off))
+                    off += w
+                if name in new:
+                    raise ValueError(f'kv_static_die: {T} bundle {name} twice')
+                new[name] = dict(dir='input', width=off, cls='bundle', peer=S, layout=lst)
         outs_ = sorted(((rel(T, C), C, lst) for (C, S), lst in layout.items() if S == T))
-        for r, C, lst in outs_:
-            name = f'o_{r}'
-            if name in new:
-                raise ValueError(f'kv_static_die: {T} bundle {name} twice')
-            new[name] = dict(dir='output', width=sum(w for _, w, _ in lst), cls='bundle', peer=C,
-                             peer_port=f'i_{rel(C, T)}', consumers=[], layout=lst,
-                             expr='{' + ', '.join(reversed([keyexpr[key] for _, _, key in lst])) + '}')
+        for r, C, lst0 in outs_:
+            lexpr = ds_land(t, T, C, lst0, keyexpr)
+            for sfx, lst in ds_parts(C, T, lst0):
+                name = f'o_{r}{sfx}'
+                if name in new:
+                    raise ValueError(f'kv_static_die: {T} bundle {name} twice')
+                new[name] = dict(dir='output', width=sum(w for _, w, _ in lst), cls='bundle', peer=C,
+                                 peer_port=f'i_{rel(C, T)}{sfx}', consumers=[], layout=lst,
+                                 expr='{' + ', '.join(reversed([lexpr.get(key, keyexpr[key]) for _, _, key in lst])) + '}')
         t['ports'], t['packed'], t['keyexpr'] = new, packed, keyexpr
     return tiles
+
+
+# ------------------------------------------------------------------------------------------------ KV-DOMSPLIT 10-19
+def _ds_bkind(kind):
+    return {'grp_h': 'grp', 'pc_h': 'pc'}.get(kind, kind)
+
+
+def ds_key(key):
+    """replica-generic name of a producer field (src join inst, port, lo, w): '<local>.<port>[lo+:w]'"""
+    return f'{cluster_of(key[0])[2]}.{key[1]}[{key[2]}+:{key[3]}]'
+
+
+def _ds_table():
+    if 'ds_table' not in _G:
+        _G['ds_table'] = json.loads((ROOT / DOMSPLIT_TABLE).read_text())['fields']
+    return _G['ds_table']
+
+
+def ds_domain(key):
+    """'ck' | 'hck': the measured launch domain of one producer field (fail closed)"""
+    bk = _ds_bkind(cluster_of(key[0])[1])
+    d = _ds_table().get(bk, {}).get(ds_key(key))
+    if d not in ('ck', 'hck'):
+        raise ValueError(f'kv_static_die DOMSPLIT: no measured launch domain for {bk} field {ds_key(key)} ({DOMSPLIT_TABLE})')
+    return d
+
+
+def ds_parts(T, S, lst):
+    """[(port suffix, fields)] of the bundle S -> T: one part (suffix '') unless DOMSPLIT splits a group <-> PC word into
+    its ck part ('') and its hck part ('_h'); the field order inside each part is the bundle's (LSB first)"""
+    if not (DOMSPLIT and {_ds_bkind(kind_of(T)), _ds_bkind(kind_of(S))} == {'grp', 'pc'}):
+        return [('', lst)]
+    ck = [e for e in lst if ds_domain(e[2]) == 'ck']
+    hk = [e for e in lst if ds_domain(e[2]) == 'hck']
+    return [(sfx, p_) for sfx, p_ in (('', ck), ('_h', hk)) if p_]
+
+
+def ds_land(t, T, C, lst, keyexpr):
+    """DOMSPLIT: the group gather word (slg -> kvs_ctl) stays ONE ck word; its hck fields land in the group on a 2-flop
+    async_reg synchroniser (qkd_kv_lvl_land u_hland, clocked by the group's core clock, reset rst_n).  Returns
+    {field key: landed expression}; records t['domsplit_land'] = landed bit offsets in the gather word"""
+    if not (DOMSPLIT and _ds_bkind(kind_of(T)) == 'grp' and kind_of(C) == 'ctl'):
+        return {}
+    hk = [(w, key) for _pn, w, key in lst if ds_domain(key) == 'hck']
+    if not hk:
+        return {}
+    P = t['ports']
+    ckp = next((pn for pn, v in P.items() if v['cls'] == 'clock' and v.get('domain') == 'core'), None)
+    if ckp is None or 'rst_n' not in P:
+        raise ValueError(f'kv_static_die DOMSPLIT: {T} has no core clock / rst_n port for the gather landing')
+    n = sum(w for w, _ in hk)
+    lexpr, o_ = {}, 0
+    for w, key in hk:
+        lexpr[key] = f'w_hland__q[{o_ + w - 1}:{o_}]'
+        o_ += w
+    t['wires'].append(f'    wire [{n - 1}:0] w_hland__q;')
+    t['body'].append(f'    qkd_kv_lvl_land #(.W({n})) u_hland (.ck({ckp}), .rst_n(rst_n), .d('
+                     + '{' + ', '.join(reversed([keyexpr[key] for _, key in hk])) + '}), .q(w_hland__q));')
+    bits, o_ = [], 0
+    for _pn, w, key in lst:
+        if key in lexpr:
+            bits += list(range(o_, o_ + w))
+        o_ += w
+    t['domsplit_land'] = dict(word_width=o_, bits=bits, delay_edges=2)
+    return lexpr
+
+
+def domsplit_table(ports_dir):
+    """(run with OT_KV_DOMSPLIT unset, at the design point being split) -> {kind: {field: 'ck'|'hck'}} from the measured
+    per-bit launch domains (kvs_port_domains bit_domains) of the base tiles' group <-> PC words and the group gather"""
+    if DOMSPLIT:
+        raise SystemExit('domsplit_table: run on the base design point (OT_KV_DOMSPLIT unset)')
+    T = all_tiles()
+    rec = {k: json.loads((Path(ports_dir) / f'{k}_ports.json').read_text())['ports'] for k in ('grp', 'grp_h', 'pc', 'pc_h')}
+    out, src = {'grp': {}, 'pc': {}}, []
+
+    def bitdom(kind, port, b):
+        v = rec[kind][port]
+        for hi, lo, ds in v.get('bit_domains', []):
+            if lo <= b <= hi:
+                return ds
+        return [d for d in v['domains'] if d not in ('none', '?const')]
+
+    for d, t in T.items():
+        k = t['kind']
+        if k not in rec:
+            continue
+        for pn, v in t['ports'].items():
+            if v['dir'] != 'output' or not v.get('layout'):
+                continue
+            if not ((k in ('grp', 'grp_h') and (pn == 'o_ctl' or re.fullmatch(r'o_pc\d', pn))) or
+                    (k in ('pc', 'pc_h') and pn == 'o_grp')):
+                continue
+            o_ = 0
+            for _pn, w, key in v['layout']:
+                ds = {x for b in range(o_, o_ + w) for x in bitdom(k, pn, b)}
+                o_ += w
+                if len(ds) != 1 or not ds <= {'ck', 'hck'}:
+                    raise ValueError(f'domsplit_table: {d}.{pn} field {ds_key(key)} has launch domains {sorted(ds)}')
+                bk, fk = _ds_bkind(cluster_of(key[0])[1]), ds_key(key)
+                if out[bk].setdefault(fk, ds.copy().pop()) != next(iter(ds)):
+                    raise ValueError(f'domsplit_table: {fk} differs between replicas')
+                src.append((k, pn))
+    return dict(fields=out, measured_ports=sorted(set(src)))
 
 
 SIDES = {st: (st,) for st in STACKS}       # one fan per stack, in the stack's group column middle
@@ -1160,7 +1422,11 @@ def kit_clocks(tiles):
 def all_tiles():
     if 'tiles' not in _G:
         t_ = add_fans(pack({d: tile(d) for d in members()}))
-        _G['tiles'] = kit_clocks(t_) if KITS else t_
+        t_ = kit_clocks(t_) if KITS else t_
+        if GRP_PRIVATE0:
+            import kv_grp_private0
+            kv_grp_private0.apply_tiles(t_, module_text)
+        _G['tiles'] = t_
     return _G['tiles']
 
 
@@ -1196,6 +1462,8 @@ def sources():
     s.update(K.EMB_SOURCES)
     if K.MU:
         s.update(K.MU_DEPS)
+    if DOMSPLIT:
+        s.add(LVL_LAND_RTL)
     return sorted(s)
 
 
@@ -1211,7 +1479,8 @@ def bindings():
         seen[mst] = d
         ports = {pn: [pn] for pn, v in t['ports'].items() if v['cls'] != 'pad'}
         cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] else {}
-        out[mst] = dict(module=mst, file=RTL_FILE, ports=ports, sliced={}, classed=cls)
+        source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else PUBLIC_RTL_FILE
+        out[mst] = dict(module=mst, file=source_file, ports=ports, sliced={}, classed=cls)
     # ECTL frame re-bound to the fused A + K issuer composition (qkd_ectl3_kiss_s)
     out['qkd_ectlk'] = dict(module='qkd_ectl3_kiss_st' if ASTK_ST else 'qkd_ectl3_kiss_s',
         file=ECTL_ST_FILE if ASTK_ST else 'rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv',
@@ -1229,6 +1498,7 @@ def bindings():
     if ASTK_ST:
         for mn in ('qkd_astk', 'qkd_astk_n'):
             out[mn] = dict(module='qkd_astk_strip_er_die', file=ASTK_FILE,
+                parameters=dict(RL=ASTK_RL, Z_STRIDE=ASTK_Z_STRIDE, **(dict(DISTRIBUTED_ER=1) if ASTK_EXPAND else {})),
                 ports=dict(st=['st'], aq=['aq'], am=['am'], ap=['ap'], af=['af'], lt=['lt'], cal=['cal'], erd=['erd'],
                            **{f'e{e}i': [f'so{e}'] for e in range(8)}, **{f'e{e}o': [f'si{e}'] for e in range(8)},
                            **{f'vh{k}': [f'vh{k}'] for k in range(4)},
@@ -1251,7 +1521,41 @@ def bindings():
                        **{f'am_{st}': [f'am{k}'] for k, st in enumerate(STACKS)},
                        fr=['fr_valid', 'fr_epoch', 'fr_rz'], hf=['hf'], ck_c=['ck'], rst_n=['rst_n']),
             sliced={}, classed={})
+        # HKV-DIE 10-19 (HKV-ASTK finding): the hub's Z input stride must be the strip's (closed qkd_astk_ctl_s Z_STRIDE 4);
+        # the RTL default 16 put every Z word on the wrong hub slot.  The hub kit must be (re)hardened at this value.
+        if ASTK_ST:
+            out['qkd_ahub']['parameters'] = dict(Z_IN_STRIDE=ASTK_Z_STRIDE)
+        # HKV-DIE3 10-19 (HOURLY-KV decision (c)): the die binds the ACTUAL AP_OFS / FR_OFS of the post-station netlist
+        # table (kv_static_params ahub_ages), never the RTL defaults while the table disagrees; the hub kit (a5) is
+        # hardened at the same constants and kv_static_params AHUB_OFS_BOUND checks kit == die binding == table.
+        ofs = ahub_ofs_bound()
+        if ofs:
+            out['qkd_ahub']['parameters'] = dict(out['qkd_ahub'].get('parameters') or {}, AP_OFS=ofs['AP_OFS_hex'],
+                                                 FR_OFS=ofs['FR_OFS'])
     return out
+
+
+def ahub_ofs_bound(spec=None):
+    """OT_KV_AHUB_OFS: a static_params.json (params.ahub_ages) / ahub_ages JSON, or 'a0,a1,a2,a3:fr' (stacks WS WN ES
+    EN, two's complement 16-bit each).  None when unset (the die then binds the RTL defaults and kv_static_params FAILS
+    AHUB_OFS_BOUND wherever the table needs other values)."""
+    spec = spec if spec is not None else os.environ.get('OT_KV_AHUB_OFS', '')
+    if not spec:
+        return None
+    if ':' in spec and not Path(spec).exists():
+        ap_s, fr = spec.split(':')
+        ap = [int(x, 0) for x in ap_s.split(',')]
+        fr = int(fr, 0)
+        src = 'literal'
+    else:
+        p = Path(spec) if Path(spec).is_absolute() else ROOT / spec
+        d = json.loads(p.read_text())
+        d = (d.get('params') or {}).get('ahub_ages') or d.get('ahub_ages') or d
+        ap, fr, src = [int(x) for x in d['AP_OFS']], int(d['FR_OFS']), str(spec)
+    if len(ap) != 4 or any(not -32768 <= x < 32768 for x in ap) or not -(1 << 17) < fr < (1 << 17):
+        raise ValueError(f'kv_static_die: OT_KV_AHUB_OFS {spec!r}: need 4 16-bit AP_OFS values and an FR_OFS')
+    return dict(AP_OFS=ap, FR_OFS=fr, source=src,
+                AP_OFS_hex='{' + ', '.join(f"16'h{x & 0xffff:04x}" for x in reversed(ap)) + '}')
 
 
 # ------------------------------------------------------------------------------------------------ die integration
@@ -1393,6 +1697,13 @@ def inject(m, K):
             continue
         if bits is None:
             raise ValueError(f'kv_static_die: no width for {dinst}.{dport}')
+        if DCAL_BC and any(l_[0] == 'd2d_kv' and l_[1] in DCAL_BC_LINK for l_ in loads):
+            # KV-DCAL-BOOTCFG (OT_KV_DCAL_BC=1): boot target 11 (link_cfg_*) ends on the calendar sequencer's bcfg pins;
+            # the sequencer's merged cfg word (dcal_dcfg, kv_die) is the D2D end's only cfg producer
+            if 'dcal' not in {i_.name for i_ in m['insts']}:
+                raise ValueError('OT_KV_DCAL_BC needs the dcal instance (OT_KV_DCAL=1)')
+            loads = [('dcal', DCAL_BC_LINK[l_[1]]) if l_[0] == 'd2d_kv' and l_[1] in DCAL_BC_LINK else l_ for l_ in loads]
+            rec.setdefault('dcal_bc', []).append(f'{dinst}.{dport} -> ' + ', '.join(f'{a}.{b}' for a, b in loads))
         bid = _bid(dinst, dport, seen_buses)
         add((bid, 'kv_oneway', bits, [(dinst, dport), loads[0]]))
         if len(loads) > 1:
@@ -1461,6 +1772,10 @@ def _die_joins(m, K, B, add, fk, rec):
     if 'pvw_0' in by and 'pvw_1' in by:
         bus('ks_pvst', 'kv_oneway', 31, [('kvs_attn', 'pvst'), ('pvw_0', 'st')])
         fk['ks_pvst'] = [('pvw_1', 'st')]
+    # KV-BOOTAGE: the sealed die cfg's pair ages -> both PV pair clusters (static configuration word, no handshake)
+    if KB.ON and 'pvw_0' in by and 'pvw_1' in by:
+        bus('ks_age_pv', 'kv_oneway', 16, [('kvs_ctl', 'dcfg__age_pv'), ('pvw_0', 'cfa')])
+        fk['ks_age_pv'] = [('pvw_1', 'cfa')]
     # KV-PLAN-FIN: attention root -> final join command word; final join beat stream -> the stream face (kvs_attn fin)
     if PVFIN and 'pvfin' in by:
         bus('ks_pvfst', 'kv_oneway', 65, [('kvs_attn', 'pvfst'), ('pvfin', 'fs')])
@@ -1503,7 +1818,7 @@ def _die_joins(m, K, B, add, fk, rec):
                 fk.setdefault(f'pvh_{st}_{k}', []).append((f'astk_{st}', f'vh{k}'))
             bus(f'pve_{st}', 'kv_oneway', 256, [(f'astk_{st}', 'erd'), (f'pvw_{p_}', 'ie' if st[0] == 'W' else 'iee')])
         rec['notes'].append('astk = qkd_astk_strip_er_die (KV-WIRE2 ASTK): e-read request = fork of pvh_<st>_<k> (V header), '
-                            'e quad -> pvw in_e at ASTK_ERL (7: ERL 3 + 4 tap pin-register edges, KV-ERTAP) after the fork; record astk_eread: fork + 7 + pve stages vs the '
+                            f'e quad -> pvw in_e at ASTK_ERL {ASTK_ERL} after the fork; record astk_eread: fork + ASTK_ERL + pve stages vs the '
                             'pair header path (compiler: the pair takes in_e that many edges after vh, or pad)')
     # KV-WIRE2 SEQ: the static sequencer qkd_seq_static_s reads the attention programme and the result stream header
     if SEQ_S and 'seq' in by:
@@ -1718,7 +2033,7 @@ def place(m, K, geo, F):
         for g in range(8):
             idx = ORDER.index(g)
             y0 = up(cy + PC_PITCH * 4 * idx + (PC_PITCH * 4 - GH) / 2, GY)
-            m['insts'].append(F.Inst(f'slg_{st}_{g}', 'qkd_kvs_grp_h' if (FANFOLD and idx == 0) else 'qkd_kvs_grp', round(x_g, 4), round(y0, 4), gw - SH, GH - SH,
+            m['insts'].append(F.Inst(f'slg_{st}_{g}', KIND_MASTER['grp_h' if (FANFOLD and idx == 0) else 'grp'], round(x_g, 4), round(y0, 4), gw - SH, GH - SH,
                                      'R0' if west else 'MY', kind='static', region='strip', domain='hbm'))
         fh = 172.8                  # the stack fan: between groups at slots 3 and 4 (the stack middle)
         yf = up(cy + PC_PITCH * 16 - fh / 2, GY)
@@ -1847,12 +2162,15 @@ KIT_FACE = {
     'qkd_kvs_hroot': dict(i_ctl='N', o_ctl='N', o_emb='N', o_pc='S', i_r='S', o_ch0='S', i_g='S', o_kg='E',
                           **{f'o_c{e}': 'E' for e in range(8)}),
 }
+if DOMSPLIT:     # KV-DOMSPLIT: the hck half of a split word sits beside its ck half (same face)
+    KIT_FACE['qkd_kvs_pc'].update(i_grp_h='N', o_grp_h='N')
 KIT_FACE['qkd_kvs_grp_h'] = KIT_FACE['qkd_kvs_grp']
 KIT_FACE['qkd_kvs_pc_h'] = KIT_FACE['qkd_kvs_pc']
 KIT_DEFAULT_FACE = dict(qkd_kvs_grp='W', qkd_kvs_grp_h='W', qkd_kvs_pc='E', qkd_kvs_pc_h='E', qkd_kvs_hroot='W')
 
 
 def pin_face(master, port):
+    master = master.removesuffix('_private0')
     if KITS and master in KIT_FACE:
         return KIT_FACE[master].get(port, KIT_DEFAULT_FACE[master])
     return _pin_face(master, port)
@@ -1862,6 +2180,7 @@ def _pin_face(master, port):
     """canonical (R0) face of a static tile's port, or None (auto): the K / V words on the group's engine-side face (the
     landing <-> V port / ECTL channel), every control word (fan, PC bundles) on its PHY-side face (the control channel
     between the HOST slices and the groups), so the control traffic never takes the K / V channel's relay spots"""
+    master = master.removesuffix('_private0')
     if master == 'qkd_ectlk':
         return _ECTL_FACE.get(port, 'W')
     if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h'):
@@ -1884,7 +2203,8 @@ def _pin_face(master, port):
         # the facing N / S faces: auto-placed on a side face they were 515.7 um per hop (> reach) once the pin-hinted
         # re-plan stopped, 114 of the 127 unrepaired hops (t_302).  N: i_next 779 + o_next 299 + pc__ki 33, S: the
         # mirror set = 1,111 b on a 270-um face (4.1 /um)
-        f_ = dict(i_next='N', o_next='N', pc__ki='N', o_prev='S', i_prev='S', pc__ko='S', i_grp='N', o_grp='N').get(port)
+        f_ = dict(i_next='N', o_next='N', pc__ki='N', o_prev='S', i_prev='S', pc__ko='S', i_grp='N', o_grp='N',
+                  i_grp_h='N', o_grp_h='N').get(port)
         if f_:
             return f_
     if ASTK_ST and master in ('qkd_astk', 'qkd_astk_n') and (port in ('erd', 'cal') or re.fullmatch(r'vh\d', port)):
@@ -1922,27 +2242,36 @@ def kvs_face(master, port):
     raise ValueError(f'kvs_face: no face for {master}.{port}')
 
 
+def _pc_pair(p):
+    """group W-face PC word pair index j of i_pc<j> / o_pc<j> (and the DOMSPLIT hck halves i_pc<j>_h / o_pc<j>_h)"""
+    m_ = re.fullmatch(r'[io]_pc(\d)(?:_h)?', p)
+    return int(m_.group(1)) if m_ else None
+
+
 def face_order(master, face, ports):
     """KV-PLAN3: along-face order (from the face origin) of a static tile's pins, or the given order.  The group's W face
     carries its four PCs' words: interleave i_pc<j> / o_pc<j> bottom-up so pair j sits level with PC j (PC k of the
     slot = 4 slot + j, bottom-up; the even spread puts pair j's centre within ~125 um of PC j's centre)"""
+    master = master.removesuffix('_private0')
     if KITS and master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'W':
         # kit: PC pairs 0 / 1 below, the clocks / resets / straps / pass words mid-face (beside the register mass), 2 / 3 above
         def key(p):
-            if p[:4] in ('i_pc', 'o_pc') and p[4:].isdigit():
-                return (int(p[4:]) + (1 if int(p[4:]) >= 2 else 0), p[0] == 'o', p)
+            j = _pc_pair(p)
+            if j is not None:
+                return (j + (1 if j >= 2 else 0), p[0] == 'o', p)
             return (2, p not in ('ck', 'hck'), p)
         return sorted(ports, key=key)
     if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'W':
         def key(p):
-            if p[:4] in ('i_pc', 'o_pc') and p[4:].isdigit():
-                return (int(p[4:]), p[0] == 'o', p)
+            j = _pc_pair(p)
+            if j is not None:
+                return (j, p[0] == 'o', p)
             return (99, False, p)
         return sorted(ports, key=key)
     if master in ('qkd_kvs_pc', 'qkd_kvs_pc_h') and face == 'N':
         # the group words at the N face's E end (canonical E = toward the group column, through the slice gap):
         # k2 left ks_kvpc_EN_29__o_grp at 633 um with o_grp mid-face
-        return sorted(ports, key=lambda p: (p in ('i_grp', 'o_grp'), p == 'o_grp', p))
+        return sorted(ports, key=lambda p: (p in ('i_grp', 'o_grp', 'i_grp_h', 'o_grp_h'), p.startswith('o_grp'), p))
     if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'E' and os.environ.get('OT_KV_GRP_RSP_LOW', '0') == '1':
         # variant: the V response word rsp on the lower half (odd groups: their V port sits just below the group)
         return sorted(ports, key=lambda p: (p != 'rsp', p))
@@ -2043,13 +2372,25 @@ def record(m):
                 open_tile_inputs=sorted(opens.values(), key=lambda r: (r['owner'] or '', r['master'], r['port'])),
                 **({'ahub_ages': ahub_ages(m)} if AHUB_STATIC and 'ks_ahs' in m.get('relay_stages', {}) else {}),
                 attn_fault=afault_latency(m),
-                **({'astk_eread': astk_eread(m)} if ASTK_ST else {}),
+                face_land=dict(enabled=FACE_LAND, selected=sorted(FACE_LAND_SEL),
+                               tiles={k: v for k, v in FACE_LAND_TILES.items() if k in FACE_LAND_SEL},
+                               note='views bound only when CLOSED (lanes/HKV-RSTCAP.md)'),
+                attn_landing=dict(enabled=ATTN_LAND, added_edges=ATTN_LAND_EDGES if ATTN_LAND else {},
+                                  codec_edges=2 if ATTN_LAND else 1,
+                                  schedule_binding='compiler must compose launch edges with actual die relay/land ages'),
+                **({'astk_eread': astk_eread(m), 'astk_internal': dict(
+                    expanded=ASTK_EXPAND, relay_edges=ASTK_RL, z_stride=ASTK_Z_STRIDE,
+                    eread_edges=ASTK_ERL, fault_join_edges=1 if ASTK_EXPAND else 0,
+                    owner_issue_edges=[2 + e * (2 + ASTK_RL) for e in range(8)] if ASTK_EXPAND else None,
+                    calendar_status='MEASURED results/arch/qwen_kv_die/hkv_astk_calendar_1018/astk_calendar_law.json (kv_static_programme applies it under OT_KV_ASTK_EXPAND=1; T8192 slot +42 edges)' if ASTK_EXPAND else 'LEGACY',
+                    eread_law='7 + 7*(2+RL): 8 owner leaves with input/output flops and resettable inter-owner relays'
+                              if ASTK_EXPAND else 'EP3 + request2 + response2')} if ASTK_ST else {}),
                 **{k: v for k, v in m.get('static_die', {}).items()})
 
 
 # KV-ERTAP 2026-10-18: qkd_astk_er_tap_st registers every pin (route b18fa696b NEEDS_RTL, I2O hold): read pin -> response
 # pin = the EP's ERL 3 + 2 request-side + 2 response-side pin-register edges.
-ASTK_ERL = 7
+ASTK_ERL = 7 + 7 * (2 + ASTK_RL) if ASTK_EXPAND else 7
 
 
 def astk_eread(m):
@@ -2164,7 +2505,17 @@ def main():
     ap.add_argument('--rtl', action='store_true', help=f'write {RTL_FILE}')
     ap.add_argument('--check', action='store_true', help='the committed RTL equals the generated text')
     ap.add_argument('--summary', action='store_true')
+    ap.add_argument('--domsplit-table', metavar='PORTS_DIR',
+                    help=f'KV-DOMSPLIT: write {DOMSPLIT_TABLE} from the measured base tile ports (kvs_port_domains)')
     a = ap.parse_args()
+    if a.domsplit_table:
+        tab = domsplit_table(a.domsplit_table)
+        tab.update(design_point=dict(rtl_file=RTL_FILE, ports_dir=a.domsplit_table))
+        (ROOT / DOMSPLIT_TABLE).parent.mkdir(parents=True, exist_ok=True)
+        (ROOT / DOMSPLIT_TABLE).write_text(json.dumps(tab, indent=1, sort_keys=True) + '\n')
+        print(f'wrote {DOMSPLIT_TABLE}: ' + ', '.join(f'{k} {sum(v == "hck" for v in f.values())} hck / '
+                                                      f'{sum(v == "ck" for v in f.values())} ck' for k, f in tab['fields'].items()))
+        return 0
     txt = rtl_text()
     p = ROOT / RTL_FILE
     if a.rtl:

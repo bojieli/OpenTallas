@@ -34,10 +34,23 @@ module tb_vs_lowered;
     wire u_v, um_v, um_q, um_b; wire [2:0] u_i; wire [255:0] u; wire [7:0] um_i;
     wire swv, swvi, swfi; wire [255:0] swd; wire [31:0] sww, swl; wire [63:0] swri;
     wire rav, ravi, rafi, rfv, rff; wire [31:0] rax, rari, rfu, rfu2, rfmx;
+`ifdef OT_FINAL_FFN_POST
+    wire hw_v, hw_hf, hr_v, hr_hf, hq_v, fn;
+    wire [2:0] hw_j, hr_j;
+    wire [255:0] hw_d, hq_d;
+    ot_s81sl_vn u_n (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
+        .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(1'b0), .n_pre(128'd0),
+        .wl_v(1'b0), .wl_i(3'd0), .wl_d(256'd0), .rb_v(1'b0), .rb_d(32'd0),
+        .p_v(), .p_d(), .y_v(), .y_i(), .y(), .fault(fn));
+`endif
     ot_s81sl_vp u_p (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(2'b00), .cw_a(24'd0), .cw_d(64'd0), .lo_v(lo_v), .lo_d(lo_d),
         .s_v(s_v), .s_d(s_d), .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
+`ifdef OT_FINAL_FFN_POST
+        .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d), .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d),
+`else
         .hw_v(), .hw_j(), .hw_hf(), .hw_d(), .hr_v(), .hr_j(), .hr_hf(), .hq_v(1'b0), .hq_d(256'd0),
+`endif
         .n_go(), .n_pre(), .m_v(), .m_q(), .m_b(), .m_i(), .wl_v(), .wl_i(), .wl_d(), .fault(fp));
     ot_s81sl_vs u_s (.clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d(s_d),
         .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
@@ -66,7 +79,11 @@ module tb_vs_lowered;
     end
     integer cyc = 0, pc = 0, st = 0, wt = 0, idl = 0, k, w, nxq = 0, npair = 0, cidx = 0, cpair = 0, cop = 0;
     integer errs = 0, slot_err = 0, miss = 0, ncmd = 0, nrw = 0, nck = 0, tc = -1, tl = 0, cdur = 0, top = 0;
+`ifdef OT_FINAL_FFN_POST
+    always @(posedge clk) if (x_wv || u_v || hw_v) tl <= cyc;
+`else
     always @(posedge clk) if (x_wv || u_v) tl <= cyc;
+`endif
     task close_cmd;
         begin
             if (tc >= 0) begin
@@ -87,13 +104,17 @@ module tb_vs_lowered;
         case (st)
             0: if (cyc >= 530) begin
                    // timed beats: kind 1 vp command (target 0), kind 3 row write (target 5), at their calendar edge
-                   if (prog[pc][255:252] == 4'd1 || prog[pc][255:252] == 4'd3) begin
+                   if (prog[pc][255:252] == 4'd1 || prog[pc][255:252] == 4'd3 || prog[pc][255:252] == 4'd4 || prog[pc][255:252] == 4'd5) begin
                        if (prog[pc][251:228] < cyc) begin miss = miss + 1; $display("MISSED beat %0d at %0d", pc, prog[pc][251:228]); pc = pc + 1; end
                        else if (prog[pc][251:228] == cyc) begin
                            if (prog[pc][255:252] == 4'd1) begin
                                close_cmd();
                                c_v <= 1'b1; c_d <= prog[pc][159:0]; tc = cyc; tl = cyc; top = prog[pc][227:224];
                                cdur = prog[pc][201:186]; ncmd = ncmd + 1;
+                           end else if (prog[pc][255:252] == 4'd5) begin
+                               // Fixed calendar idle edge; never waits on runtime ready/busy.
+                           end else if (prog[pc][255:252] == 4'd4) begin
+                               close_cmd(); tc = -1; c_v <= 1'b1; c_d <= prog[pc][159:0]; ncmd = ncmd + 1;
                            end else begin
                                sw_v <= 1'b1; sw_a <= prog[pc][9:0]; sw_m <= {4'd0, prog[pc][13:10]};
                                sw_d <= {128'd0, prog[pc][141:14]}; nrw = nrw + 1;
@@ -131,7 +152,11 @@ module tb_vs_lowered;
                    if (wt == 100) begin
                        $display("SLVSL sid=%0d k=%0d cmds=%0d rowwrites=%0d checked_pairs=%0d xq=%0d/%0d errors=%0d slot_overruns=%0d missed=%0d fault=vp%b/vs%b/vq%b",
                                 SID, KL, ncmd, nrw, nck, nxq, NXQ, errs, slot_err, miss, fp, fs, fq);
-                       if (errs == 0 && slot_err == 0 && miss == 0 && nxq == NXQ && !fp && !fs && !fq && nck > 0) $display("PASS");
+                       if (errs == 0 && slot_err == 0 && miss == 0 && nxq == NXQ && !fp && !fs && !fq && nck > 0
+`ifdef OT_FINAL_FFN_POST
+                           && !fn
+`endif
+                           ) $display("PASS");
                        else $display("FAIL");
                        $finish;
                    end
