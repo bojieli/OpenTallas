@@ -31,6 +31,10 @@ CASE PINS (QK-FWD 2026-10-18, coordinator 0gs (b)): --case PAT[,PAT...] (fnmatch
 k0,k1,k2) names input pins the die holds CONSTANT and declares so with set_case_analysis in the die SDC (strap / ID pins
 driven from tie outputs).  Die STA has no timing check on a case-constant pin, so these pins leave the launch / capture
 metric; they are listed in the record (case_pins, case_pins_raw = their unwaived metric) and never hide a data pin.
+--static-pins is an alias of --case (S81-MISC 10-18 receipts used that name; ONE mechanism, record field case_pins), and
+--case-evidence / --static-evidence records where the die ties the pins (case_evidence).  A pattern that matches no input
+pin of the view is an error (a typo must not silently pass a pin).  DIE OBLIGATION: the die netlist ties these pins and
+the die SDC set_case_analysis-es them; tools/fleet_viz/native_sync.py accepts a case-pin receipt PASS over an own FAIL.
 """
 from __future__ import annotations
 
@@ -181,6 +185,9 @@ def audit_one(arg):
                capture_ps=round(wc[1], 1) if wc else None, capture_pin=wc[0] if wc else None, launch_over=nl, capture_over=nc,
                comb_pins=len(comb), comb_first=sorted(comb)[:3])
     if case:
+        miss = [c for c in case if not any(fnmatch.fnmatchcase(n, c) or fnmatch.fnmatchcase(n.split('[')[0], c) for n in case_raw)]
+        if miss:
+            return dict(cell=cell, view=view, error=f"case patterns match no input pin of the view: {miss}")
         rec.update(case_patterns=list(case), case_pins=sorted(case_raw), case_pins_raw_capture_ps=case_raw)
     # DIE HOLD BUDGET inputs (FLOW-HOLD 2026-10-16, results/arch/boundary_hold_budget_1016/RULE.md): at FF, the
     # sender's guaranteed launch (min over outputs of O_min - R) and the receiver's pin hold need (max over inputs of
@@ -292,16 +299,21 @@ def main(argv=None) -> int:
     ap.add_argument("--cell", help="cell of --view (default: the only <cell>_tt.lib in it)")
     ap.add_argument("--relative-to", help="parent compensation C: ps, tt=PS,ff=PS, a neighbour view dir or its "
                                           "insertion.json (boundary mean); launch O - C, capture S + C, boundary match")
-    ap.add_argument("--case", help="comma list of input pin patterns held constant by die-SDC set_case_analysis "
-                                   "(strap / ID pins): excluded from the launch / capture metric and listed")
+    ap.add_argument("--case", "--static-pins", dest="case",
+                    help="comma list of input pin patterns held constant by die-SDC set_case_analysis "
+                         "(strap / ID pins): excluded from the launch / capture metric and listed (alias --static-pins)")
+    ap.add_argument("--case-evidence", "--static-evidence", dest="case_evidence",
+                    help="--view: where the die ties the case pins (bind table / RTL contract); recorded as case_evidence")
     a = ap.parse_args(argv)
     root = Path(a.root).resolve()
     comp = PA.compensation(a.relative_to) if a.relative_to else None
     if a.view:
         vd = root / a.view
         cell = a.cell or next(p.name[:-7] for p in sorted(vd.glob("*_tt.lib")))
-        case = [c for c in (a.case or "").split(",") if c]
+        case = [c.strip() for c in (a.case or "").split(",") if c.strip()]
         r = audit_one((str(root), cell, a.view, comp, case))
+        if case and a.case_evidence and not r.get("error"):
+            r["case_evidence"] = a.case_evidence
         print(json.dumps(r, indent=1))
         return 0 if r.get("pass") else 1
     if not a.out:

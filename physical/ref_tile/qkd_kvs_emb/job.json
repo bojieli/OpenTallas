@@ -2,7 +2,7 @@
  "name": "qkd_kvs_emb-e1-COMMIT",
  "block": "qkd_kvs_emb",
  "ref_tile": true,
- "owner": "Claude:HOURLY-KV/HKV-EMBHOLD",
+ "owner": "Claude:HOURLY-KV/HKV-EMBHOLD2",
  "purpose": "NATIVE-SWEEP/NS-KVEMB 10-18: native re-kit of qkd_kvs_emb (closed i2 fails native capture 465.2/95 pins, 34 comb pins, spread TT 341.9 / FF 240.7): recipe-3 pin registers on every pin incl. rst_n. KV-INTEG/KITS-A 10-18 (RTL-BUILD-KV M1): kit of the generated singleton static tile qkd_kvs_emb.  Bench: LOCKSTEP of the kit top (one ck) against the die-bound tile of the same design point without OT_KV_TILE_KITS (per-child clock ports, all on the one die trunk), random inputs from reset + a phase with every child output wire forced random; mutants: a dropped child wire (1), two swapped wire slices (2), a missing child (3).",
  "threads": 8,
  "peak_ram_gb": 24,
@@ -153,7 +153,8 @@
   "fix": "recipe-3 pin flops at the faces on every pin incl. registered rst_n (as e1), PLUS the hard u_rowtx clock tapped at its routed boundary-register insertion (spec child_clock_ref boundary: spine target 226.0 TT instead of lib max 293.5): e1-939c4f0de NEEDS_RTL FF hold -6.74 was 41 reg->reg pairs u_rowtx/emb_tx_payload -> rowtx__emb_tx_payload pin flops with the child launching ~67 ps TT early (classified in results/arch/hkv_embhold_1018); io_hold_margin 0.03",
   "previous_attempts": [
    "qkd_kvs_emb-e1-d99def0cd (flow failure, no TT overlay)",
-   "qkd_kvs_emb-e1-939c4f0de (NEEDS_RTL FF hold -6.74 child->pin-flop skew)"
+   "qkd_kvs_emb-e1-939c4f0de (NEEDS_RTL FF hold -6.74 child->pin-flop skew)",
+   "qkd_kvs_emb gate 1202b0612 WARN 0 fail (GRT 0) refused at daemon check: stale overlay tools (orfs_hold_mm.tcl RC-CAL 594825ff5, textbook_lint RESET-LANDING d4c49c8d3); tools re-taken from origin/main, reset_landing opt-out recorded"
   ]
  }
 }
