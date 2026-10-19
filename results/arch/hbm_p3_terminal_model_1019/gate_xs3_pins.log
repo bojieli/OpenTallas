@@ -1,0 +1,31 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers on every data input and output (+1 cycle each; kit pin_regs.json)
+GATE INFO layer: tile: PG M6 stripes as pins, signals M2-M6, parent strap M7, cap M6 (granted)
+GATE INFO oflop: E face 10.5 pins/um (o_iv_f, o_ifirst_e, o_ilast_e): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO oflop: N face 10.5 pins/um (clk, rst_a, xs_a1): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (bk1, ohl1, rl1): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: W face 10.5 pins/um (o_iv_fw, o_ifirst_w, o_ilast_w): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc8 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hnx_rp3lp3_xs3_20261019-112917.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hnx_rp3lp3_xs3_20261019-112917.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/hnx_rp3lp3_xs3-20261019-112917
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc8 in 93 s (gate total 5261 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 6397, 'pin_rectangles': 6397, 'pin_track_checked': 6397, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 8ed5779ce39b083900eda66a5ccd65af7c5792c74404e8b491080ebcae85ae9d
+GATE INFO util: synthesized std area 14777 um2 + macros 46699 in core 158892: util 16% (std-cell density 15.9% of placeable 93185 um2; total fill 38.7%)
+GATE INFO port_latency: elaborated pin registers: 8 input / 19 output ports +1 edge; 2 ports pass through (clock/reset/excluded/inout)
+GATE INFO textbook: WARN hnx_xs3 cells 106,118 flops 32,050 depth 276.7 ps util 0.3866 reach 0.0 um (3.3 s)
+GATE WARN textbook.clock_domain: clock root port clk: 32,050 flops > 15,000 on one root (+0 ICGs, 12 macro clock pins; e.g. bk1__ot_q[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.clock_guidance: clock root port:clk: 32,062 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 32,062 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE INFO cts_calibration: ss insertion all 552.8..741.0 ps (spread 188.2), boundary mean 631.9; tt insertion all 416.0..550.2 ps (spread 134.2), boundary mean 484.9; ff insertion all 335.4..443.4 ps (spread 108.0), boundary mean 396.4; macro_clk flag True
+GATE INFO density: effective global-placement target density 0.450 vs spec PD 0.45
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hnx_rp3lp3_xs3/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->macro    299 paths, worst slack 5.6 ps (e.g. u_ot_pr_core.u_leaf.g_ln[1].g_xm[1].u_x/wd_in[91])
+GATE INFO path_classes: reg->reg       71 paths, worst slack 88.0 ps (e.g. u_ot_pr_core.u_leaf.g_ln[0].g_xm[0].rce3$_DFF_NN0_/RESETN)
+GATE INFO path_classes: macro->reg      1 paths, worst slack 112.4 ps (e.g. u_ot_pr_core.u_leaf.o_ix[323]$_DFF_P_/D)
+GATE INFO path_classes: setup WNS 5.597522445555114e-12 hold WNS 4.612255022351519e-11
+GATE WARN clock_rule: root port:clk: 32,062 sinks on the largest root; measured TT insertion 550.2 ps, FF insertion 443.4 ps, TT pin-flop spread 43.8 ps, FF pin-flop spread 44.1 ps; WARN: 32,062 sinks on one clock root > 15,000 (guidance); insertion 550.2 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-hnext-p3sm-1019/physical/ref_tile/hnx_rp3lp3_xs3/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-hnext-p3sm-1019/physical/ref_tile/hnx_rp3lp3_xs3/gate_layout/density.png
+GATE WARN fill: fill 38% = (hard macros 46698.9 + synthesized std cells 14732.0) / outline 162549.5 um2; pin demand per face: S 2930 pins over 552.8/561.6 um (98%), N 2203 pins over 552.7/561.6 um (98%), W 787 pins over 280.5/289.4 um (97%), E 531 pins over 280.3/289.4 um (97%) (< 50%)
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 46.28% used; GRT 2548 s
+PRE_ROUTE_GATE: WARN (0 fail, 5 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/codex-hnext-p3sm-1019/physical/ref_tile/hnx_rp3lp3_xs3/source_binding_history/391898c7a4947dc93b83be34c4f36f6af642ded0212ea948f41244f599ad6362.json
+GATE: hnx_rp3lp3_xs3/gate_result.json written (exact staged source binding; commit it with the kit)

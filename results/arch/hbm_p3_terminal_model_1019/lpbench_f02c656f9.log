@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/lh_p3die/lpbench_f02c656f9
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/lh_p3die/lpbench_f02c656f9
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/lh_p3die/lpbench_f02c656f9
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/lh_p3die/lpbench_f02c656f9
+ot-run: ot-epyc8       admits   950 GB (avail 779, growth 113, headroom 0, waiters 0/0 GB) load 49/128 running 36 disk 132 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/lh_p3die/lpbench_f02c656f9
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/lh_p3die/lpbench_f02c656f9
+ot-run: -> ot-epyc8
+ot-heavy: request 64G is charged 17G (class 'hnx_rp#lp#x_flat_lp_bench.sh:out' measured peak 8.5G, n=3+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1287021-1792435470 after 0 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 3: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1287021-1792435470): exit 0
