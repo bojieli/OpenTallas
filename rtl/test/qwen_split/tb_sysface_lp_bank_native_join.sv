@@ -58,8 +58,20 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
 
  reg[15:0]face_epoch=0;
  always @(posedge ck)if(!rst_n)face_epoch<=0;else if(es&&MUT!=5)face_epoch<=ce;
+ // Negative boundary MODEL only: physical FACE input1/coreepoch1/output1.
+ // These proposed ports are absent from the frozen source; no ABI is enabled.
+ reg[1:0]physical_reset=0;reg physical_start=0;reg[1:0]physical_user=0;
+ reg[15:0]physical_core_epoch=0,physical_epoch_out=0;
+ always @(posedge ck)begin
+  physical_reset<={physical_reset[0],rst_n};
+  physical_start<=es;physical_user<=eu;
+  if(!physical_reset[1])physical_core_epoch<=0;
+  else if(physical_start)physical_core_epoch<=ledger.active[physical_user];
+  physical_epoch_out<=physical_core_epoch;
+ end
+ wire epoch_to_arm=(MUT==10)?physical_epoch_out:face_epoch;
  wire validation_start,arm_fault;wire[17:0]validation_token;wire[15:0]validation_epoch;
- qfd_embedding_validation_arm #(.ENABLE(1)) arm(.ck(ck),.rst_n(rst_n),.core_start(es),.core_user(eu),.core_token(et),.registered_epoch(face_epoch),.native_read(e_cre||e_sre),.release_slot(release_row),.validation_start(validation_start),.validation_token(validation_token),.validation_epoch(validation_epoch),.fault(arm_fault));
+ qfd_embedding_validation_arm #(.ENABLE(1)) arm(.ck(ck),.rst_n(rst_n),.core_start(es),.core_user(eu),.core_token(et),.registered_epoch(epoch_to_arm),.native_read(e_cre||e_sre),.release_slot(release_row),.validation_start(validation_start),.validation_token(validation_token),.validation_epoch(validation_epoch),.fault(arm_fault));
  qfd_embedding_word_provider prov(.ck(ck),.rst_n(rst_n),.word_v(pw_v),.word_data(pw_data),.word_token(ETOK),.word_index(pw_idx),.word_scale(pw_scale),.word_epoch(re),.expected_word_slot(cyc>=1402&&cyc<1467),.expected_token(ledger.resident_token),.expected_word(pw_idx),.expected_scale(pw_scale),.expected_epoch(re),.fill_begin(fetch),.fill_token(mt),.fill_epoch(fe),.core_start(validation_start),.core_token(validation_token),.core_epoch(validation_epoch),.embed_code_re(e_cre),.embed_code_addr(e_caddr),.embed_code_q(e_cq),.embed_scale_re(e_sre),.embed_scale_addr(e_saddr),.embed_scale_q(e_sq),.fault(p_fault));
  function automatic[547:0]rec(input integer user,input integer tok,input integer gen);
  reg[547:0]v;reg[58:0]tag;begin tag={14'h123,2'(user),6'd0,18'(tok),13'd7,6'd0};if(user==0&&tok==ETOK)tag[18:6]=13'd5;v=0;v[542:539]=12;v[538:533]=63;v[532:517]=tag[58:43];v[141:78]=64'h123456789abcdef0;v[77:62]=16'hbeef;v[61]=1;v[60:59]=2'(gen);v[58:0]=tag;return v;end endfunction
@@ -87,6 +99,9 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
  if(actual_init)begin init_edges++;check(cyc==1670,"external INIT sample-to-actual bank sample must be4");$display("LP_INIT input_sample1666 bank_sample%0d age%0d",cyc,cyc-1666);end
  if(es)begin consume_edges++;check(cyc==1736&&et==ETOK&&eu==0,"external emb command sample must be70 with aligned token/user");check(re==16'h48c&&ce==16'h48c,"selected cold pending promoted before actual command sample");$display("LP_COMMAND sample%0d input_to_command%0d epoch%h token%0d user%0d",cyc,cyc-1666,ce,et,eu);end
  if(validation_start)begin validations++;check(cyc==1737&&validation_token==ETOK&&validation_epoch==16'h48c,"actual provider validation at command+1");$display("LP_NATIVE_VALIDATION sample%0d",cyc);end
+ if(ledger.reserved)check(re==16'h48c&&ledger.resident_token==ETOK&&ledger.resident_generation==2,"immutable reserved identity through native read/output lifetime");
+ if(e_cre||e_sre||(dr[519]&&dr[518]))check(ledger.reserved&&prov.store.resident_token==ETOK&&prov.store.resident_epoch==16'h48c,"actual provider identity held through every code/scale read/output");
+ if(cyc==1743)check(ledger.pending_valid[0]&&ledger.pending[0]==16'h490&&ledger.active[0]==16'h48c,"actual future pending epoch does not publish over executing row");
  if(e_cre)begin check(e_caddr=={ETOK,6'(reads)}&&cyc==1739+reads,"native code read age/address unchanged");if(reads==0)$display("LP_NATIVE_FIRST_CODE sample%0d",cyc);reads++;end
  if(e_sre)begin scale_reads++;check(cyc==1803,"actual scale read at command+67");$display("LP_NATIVE_SCALE_READ sample%0d",cyc);end
  if(dr[519]&&dr[518])begin
