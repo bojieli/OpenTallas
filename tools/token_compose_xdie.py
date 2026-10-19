@@ -18,9 +18,14 @@ Every term carries one grade, a source record and the commit that holds it:
 A mixed exchange (current-RTL transport + modelled off-chip + priced on-die COLL stages) is split into one part per
 grade; the exposed cycles max(0, E - O) are shared over the parts in proportion to E.
 
-Higher-grade records override base terms by slot (see README "Override records"): pass --pass-records /
---xdie-records with any results/rtl/*_1018/record.json that carries a "token_compose" block.  Records without one are
-listed as seen and ignored.
+Higher-grade records override base terms by slot (see README "Override records").  By default EVERY record is found
+by discovery (no path list): results/rtl/*_layer_tput_*/** (TOKEN-PASS / LAYERBENCH / LB2), results/rtl/xdie_*/**
+(TOKEN-XDIE) and any committed results/**/*.json with a "token_compose" block.  Records without a block are listed in
+index.json records_seen and ignored.  An exchange override must carry O_meas read from the compiler schedule / record
+(O + O_source, or O_ref {record, pointer}); one without it is rejected (listed) and the base term kept.
+--pass-records / --xdie-records replace discovery with exactly the given files (what-ifs, tests).
+
+  python3 tools/token_compose_xdie.py --list-records         # show the discovered records
 
   python3 tools/token_compose_xdie.py                        # compose all designs from the pinned inputs, write outputs
   python3 tools/token_compose_xdie.py --check                # recompute and compare with the committed outputs
@@ -387,40 +392,128 @@ def hbm_qwen():
                               note='TOKEN-PASS-HBMQ proposes re-basing on the compiled D4G8 programme (coordinator decision)'))
 
 
+# ---------------------------------------------------------------- record discovery (ROOT-TOKTOOL 10-18)
+# Every TOKEN-PASS / LAYERBENCH / LB2 (per-layer layer-bench) record and every TOKEN-XDIE record is found by discovery,
+# never by a hand-kept path list:
+#   (1) the record families on disk, at any depth: results/rtl/*_layer_tput_*/**/*.json (TOKEN-PASS, LAYERBENCH, LB2 write
+#       their records there) and results/rtl/xdie_*/**/*.json (TOKEN-XDIE, incl. xdie_qwen_1018/pair_r1);
+#   (2) every committed results/**/*.json that carries a "token_compose" block (git grep), wherever a lane put it.
+# A family's top-level record.json is always listed in records_seen (used false when it has no block yet); a deeper file
+# is listed only when it carries a block (the 75 xdie_qtp8 case records, fixtures, calendars ... are not records of the
+# composition).
+FAMILIES = {'pass': 'results/rtl/*_layer_tput_*', 'xdie': 'results/rtl/xdie_*'}
+TC_KEY = b'"token_compose"'
+
+
+def _has_block(p):
+    try:
+        raw = Path(p).read_bytes()
+        return TC_KEY in raw and bool(json.loads(raw).get('token_compose'))
+    except Exception:
+        return False
+
+
+def _family(rel):
+    for f, pat in FAMILIES.items():
+        if re.match(pat.replace('*', '[^/]*') + '/', rel):
+            return f
+    return 'other'
+
+
+def discover_records(root=None):
+    """-> sorted list of (repo-relative path, family); see the block comment above."""
+    root = Path(root or ROOT)
+    found = {}
+    for fam, pat in FAMILIES.items():
+        for d in sorted(glob.glob(str(root / pat))):
+            top = Path(d) / 'record.json'
+            if top.is_file():
+                found[str(top.relative_to(root))] = fam
+            for q in sorted(glob.glob(str(Path(d) / '**' / '*.json'), recursive=True)):
+                rel = str(Path(q).relative_to(root))
+                if rel not in found and _has_block(q):
+                    found[rel] = fam
+    try:
+        out = subprocess.run(['git', '-C', str(root), 'grep', '-l', '-F', '"token_compose"', '--', 'results/*.json'],
+                             capture_output=True, text=True).stdout.split()
+    except Exception:
+        out = []
+    for rel in out:
+        if rel not in found and (root / rel).is_file() and _has_block(root / rel):
+            found[rel] = _family(rel)
+    return sorted(found.items())
+
+
 def default_xdie_records():
-    """the lane-level xdie records plus any sub-run record that carries a token_compose block (ROOT-QLINE 10-18: the
-    paired Qwen record results/rtl/xdie_qwen_1018/pair_r1/record.json sits one level down; sub-runs without a block,
-    e.g. the 75 xdie_qtp8 case records, are not listed)"""
-    top = sorted(glob.glob(str(ROOT / 'results/rtl/xdie_*_1018/record.json')))
-    sub = []
-    for p in sorted(glob.glob(str(ROOT / 'results/rtl/xdie_*_1018/*/record.json'))):
-        try:
-            if json.loads(Path(p).read_text()).get('token_compose'):
-                sub.append(p)
-        except Exception:
-            continue
-    return top + sub
+    """compatibility: the discovered TOKEN-XDIE records (absolute paths)"""
+    return [str(ROOT / r) for r, f in discover_records() if f == 'xdie']
 
 
 # ---------------------------------------------------------------- overrides from higher-grade records
+def _resolve(doc, pointer):
+    cur = doc
+    for k in pointer.split('.'):
+        cur = cur[int(k)] if isinstance(cur, list) else cur[k]
+    return cur
+
+
+def _o_meas(o, rec_path, rec_doc):
+    """O of an exchange override: from the record itself (O + O_source naming the compiler schedule / calendar it was read
+    from) or from O_ref {record?, pointer} into a schedule/record file. Never assumed: no O or no O_source -> None."""
+    ref = o.get('O_ref')
+    if ref:
+        tgt = rec_doc
+        if ref.get('record'):
+            rp = Path(ref['record'])
+            rp = rp if rp.is_absolute() else ((ROOT / rp) if (ROOT / rp).exists() else Path(rec_path).parent / rp)
+            tgt = json.loads(rp.read_text())
+        v = _resolve(tgt, ref['pointer'])
+        src_txt = o.get('O_source') or f'{ref.get("record", "this record")}:{ref["pointer"]}'
+        return float(v), src_txt
+    if isinstance(o.get('O'), (int, float)) and str(o.get('O_source') or '').strip():
+        return float(o['O']), o['O_source']
+    return None
+
+
 def overrides(paths):
     seen, ov = [], []
     for p in paths:
+        p = Path(p)
+        rel = str(p.resolve().relative_to(ROOT)) if p.resolve().is_relative_to(ROOT) else str(p)
         try:
-            d = json.loads(Path(p).read_text())
+            d = json.loads(p.read_text())
         except Exception as e:
-            seen.append(dict(record=str(p), used=False, why=f'unreadable: {e}'))
+            seen.append(dict(record=rel, family=_family(rel), used=False, why=f'unreadable: {e}'))
             continue
-        tc = d.get('token_compose')
-        seen.append(dict(record=str(Path(p).resolve().relative_to(ROOT)) if Path(p).resolve().is_relative_to(ROOT) else str(p),
-                         used=bool(tc), why=None if tc else 'no token_compose block (record not yet in the override format)'))
-        for o in (tc or {}).get('terms', []):
-            ov.append(dict(o, _record=seen[-1]['record'], _commit=git('log', '-1', '--format=%h', '--', str(p)) or 'uncommitted'))
+        tc = d.get('token_compose') if isinstance(d, dict) else None
+        ent = dict(record=rel, family=_family(rel), used=bool(tc and tc.get('terms')), n_terms=len((tc or {}).get('terms', [])),
+                   why=None if tc and tc.get('terms') else ((tc or {}).get('note') or 'no token_compose block (record not yet in the override format)'),
+                   rejected=[])
+        commit = git('log', '-1', '--format=%h', '--', str(p)) or 'uncommitted'
+        for i, o in enumerate((tc or {}).get('terms', [])):
+            o = dict(o, _record=rel, _commit=commit, _i=i)
+            if 'E' in o:
+                try:
+                    om = _o_meas(o, p, d)
+                except Exception as e:
+                    om, o['_why'] = None, f'O_ref unresolved: {e}'
+                if om is None:
+                    ent['rejected'].append(dict(i=i, slot=o.get('slot', o.get('slot_re')), why=o.get('_why') or
+                                                'exchange override without O_meas (O + O_source from the compiler schedule, '
+                                                'or O_ref): O is never assumed; base term kept'))
+                    continue
+                o['O'], o['O_source'] = om
+            ov.append(o)
+        if not ent['rejected']:
+            ent.pop('rejected')
+        elif not any(x['_record'] == rel for x in ov):
+            ent['used'] = False
+        seen.append(ent)
     return seen, ov
 
 
 def apply_overrides(design, wl, terms, ov):
-    used = []
+    used, owner = [], {}
     for o in ov:
         if o.get('design') != design or o.get('workload', wl) not in (wl, '*'):
             continue
@@ -432,10 +525,13 @@ def apply_overrides(design, wl, terms, ov):
         for slot in slots:
             n = o.get('n', next((t['n'] for t in hit if t['slot'] == slot), 1))
             if 'E' in o:
-                terms += xdie(slot, n, [(p['grade'], p['E'], p.get('note', '')) for p in o['E']], o.get('O', 0.0), o.get('O_source', ''), s)
+                terms += xdie(slot, n, [(p['grade'], p['E'], p.get('note', '')) for p in o['E']], o['O'], o['O_source'], s)
             else:
                 terms.append(term(slot, o.get('kind', 'layer'), n, o['cycles'], o['grade'], s, note=o.get('note')))
-        used.append(dict(slots=slots, record=o['_record']))
+        conflicts = sorted({owner[sl] for sl in slots if sl in owner and owner[sl] != o['_record']})
+        for sl in slots:
+            owner[sl] = o['_record']
+        used.append(dict(slots=slots, record=o['_record'], **({'replaces_override_from': conflicts} if conflicts else {})))
     return used
 
 
@@ -502,8 +598,13 @@ def compose(design, wl, ov):
                 layers=lay, overrides_used=used, evidence=b.get('evidence'), terms=terms)
 
 
-def run(pass_records, xdie_records):
-    seen, ov = overrides(pass_records + xdie_records)
+def run(pass_records=None, xdie_records=None):
+    """records: None -> discovery (every TOKEN-PASS / LB2 / XDIE record); lists -> exactly those (tests, what-ifs)"""
+    if pass_records is None and xdie_records is None:
+        paths = [str(ROOT / r) for r, _ in discover_records()]
+    else:
+        paths = list(pass_records or []) + list(xdie_records or [])
+    seen, ov = overrides(paths)
     out = {}
     for d, (_, wls) in DESIGNS.items():
         out[d] = {wl: compose(d, wl, ov) for wl in wls}
@@ -560,14 +661,19 @@ def patch_page(pd, out):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--pass-records', nargs='*', default=None, help='TOKEN-PASS records (default: results/rtl/*_layer_tput_1018/record.json)')
-    ap.add_argument('--xdie-records', nargs='*', default=None, help='TOKEN-XDIE records (default: results/rtl/xdie_*_1018/record.json + every results/rtl/xdie_*_1018/*/record.json '
-                    'that carries a token_compose block, e.g. xdie_qwen_1018/pair_r1)')
+    ap.add_argument('--pass-records', nargs='*', default=None, help='replace discovery with exactly these TOKEN-PASS records '
+                    '(default: discovery, see discover_records)')
+    ap.add_argument('--xdie-records', nargs='*', default=None, help='replace discovery with exactly these TOKEN-XDIE records')
+    ap.add_argument('--list-records', action='store_true', help='print the discovered records and exit')
     ap.add_argument('--page-data', nargs='*', default=[], help='token page data dirs to patch (banner per design)')
     ap.add_argument('--check', action='store_true', help='recompute; fail if it differs from the committed outputs')
     a = ap.parse_args()
-    pr = a.pass_records if a.pass_records is not None else sorted(glob.glob(str(ROOT / 'results/rtl/*_layer_tput_1018/record.json')))
-    xr = a.xdie_records if a.xdie_records is not None else default_xdie_records()
+    if a.list_records:
+        for r, f in discover_records():
+            print(f'{f:5s} {"BLOCK" if _has_block(ROOT / r) else "-    "} {r}')
+        return
+    explicit = a.pass_records is not None or a.xdie_records is not None
+    pr, xr = (a.pass_records, a.xdie_records) if explicit else (None, None)
     out, seen = run(pr, xr)
     if a.check:
         bad = 0

@@ -23,16 +23,26 @@ if {[llength [get_ports -quiet ck_o]]} {
     }
   }
 } else {
+  # Q-DIE11b 10-18: idempotent.  The sign-off session reads 6_final.sdc (lane_ckf at the ROUTE period, 770) and then
+  # re-creates core_clk at 833.333 and replaces every input delay on core_clk (unset_input_delay [all_inputs]), so a
+  # skip-if-exists left lane_ckf at the route period and the lane inputs a / ea on core_clk (false-pathed to the ring):
+  # always (re)define lane_ckf at the CURRENT core_clk period and re-apply the lane inputs' budget on it.
   set ot_fl_wp [expr {[llength [get_ports -quiet ckf]] ? "ckf" : "ck_s"}]
-  if {[llength [get_ports -quiet $ot_fl_wp]] && ![llength [get_clocks -quiet lane_ckf]]} {
+  if {[llength [get_ports -quiet $ot_fl_wp]]} {
     create_clock -name lane_ckf -period $ot_fl_T [get_ports $ot_fl_wp]
     set_propagated_clock [get_clocks lane_ckf]
     set ot_fl_in [get_ports -quiet {a[*] ea[*] ea en[*] en}]
     if {[llength $ot_fl_in]} {
-      set_input_delay [expr {0.2 * $ot_fl_T}] -clock lane_ckf $ot_fl_in
+      unset_input_delay $ot_fl_in
+      # max: the tile's 0.2 T outside share; min: the sender's guaranteed launch C + this tile's hold uncertainty U
+      # (OT_BH_LAUNCH_MIN_PS + OT_BH_TILE_HOLD_UNC_PS, 25 + 25; the forwarded edge is the reference, no tree term)
+      set ot_fl_c [expr {[info exists ::env(OT_BH_LAUNCH_MIN_PS)] ? $::env(OT_BH_LAUNCH_MIN_PS) : 25}]
+      set ot_fl_u [expr {[info exists ::env(OT_BH_TILE_HOLD_UNC_PS)] ? $::env(OT_BH_TILE_HOLD_UNC_PS) : 25}]
+      set_input_delay -max [expr {0.2 * $ot_fl_T}] -clock lane_ckf $ot_fl_in
+      set_input_delay -min [expr {$ot_fl_c + $ot_fl_u}] -clock lane_ckf $ot_fl_in
     }
     set_false_path -from [get_clocks lane_ckf] -to $ot_fl_ck
     set_false_path -from $ot_fl_ck -to [get_clocks lane_ckf]
-    puts "OT_FWD_LANE: landing write clock lane_ckf on $ot_fl_wp; ring -> o window = die STA landing MCP"
+    puts "OT_FWD_LANE: landing write clock lane_ckf on $ot_fl_wp (period $ot_fl_T); ring -> o window = die STA landing MCP"
   }
 }

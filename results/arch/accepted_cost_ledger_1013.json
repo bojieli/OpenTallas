@@ -638,8 +638,14 @@
    "evidence": "results/arch/s81_hub_parents_1016/native_audit_capture_1316/native_audit_cd_split1016p.json (job dsfd_capt_cd_split1016p-split1p-4d451d0fb CLOSED TT +342.86/FF +26.90, native PASS 170.1/123.9); RTL ab1d77b6d; capcd_eq PINREG=1 16/16 + capc_split eq 9/9 at a75a12947",
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-VM 2026-10-16 (S-FUNC not running; priced by S-VM per coordinator). Old cd views failed native capture (214.2 / 203.7 ps on f_st[2] -> ICG ENA); no zero-cycle structure (hold select on arrival edge). Conservative: +2 stream cycles (ceil of 1.333) on EVERY field matvec node incl idx.q/eng.dot/wkv/accept.seed and lm_head, assuming the field sequencer waits on t_cd before the next phase. Exact +1.333 sensitivity: 0.047 % AR / 0.040 % MTP."
+   "status": "superseded",
+   "note": "S-VM 2026-10-16 (S-FUNC not running; priced by S-VM per coordinator). Old cd views failed native capture (214.2 / 203.7 ps on f_st[2] -> ICG ENA); no zero-cycle structure (hold select on arrival edge). Conservative: +2 stream cycles (ceil of 1.333) on EVERY field matvec node incl idx.q/eng.dot/wkv/accept.seed and lm_head, assuming the field sequencer waits on t_cd before the next phase. Exact +1.333 sensitivity: 0.047 % AR / 0.040 % MTP.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -845,11 +851,17 @@
    "evidence": "results/rtl/s81_layer_tput_1013/record.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "per-layer die run at production shape: COEF 17 cycles, serial in front of every NORM (hc_pre node), with the --coef-split program (COEF-a reads the previous block's pre row; COEF-b after the NORM is off the NORM's start). The die program and the coefficient producers' row map MUST be written as --coef-split: the single-COEF program of the first bench serialises the block's whole coefficient chain in front of its NORM (1,555-1,560 cycles, 11.7 % AR) and is not accepted",
    "share_basis": "modelled",
    "accepted_date": "2026-10-14",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -895,8 +907,14 @@
    "evidence": "",
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-ENGRAM+NORM HC-COLUMN (coordinator-approved 10-16), measured on the proven RTL claude/s81-hccol-0600 YB_STAGE=1; supersedes the +1 proposal. Charged +3 (request +1, return +2) on every hc_pre token-path node (one chain traversal per NORM pre job; upper, no overlap credit). Native/physical column views not yet built."
+   "status": "superseded",
+   "note": "S-ENGRAM+NORM HC-COLUMN (coordinator-approved 10-16), measured on the proven RTL claude/s81-hccol-0600 YB_STAGE=1; supersedes the +1 proposal. Charged +3 (request +1, return +2) on every hc_pre token-path node (one chain traversal per NORM pre job; upper, no overlap credit). Native/physical column views not yet built.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -928,11 +946,17 @@
    "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-14",
-   "status": "accepted",
+   "status": "superseded",
    "note": "COUNT (fact): 2 a token (L1, L14 Engram layers: S001 / S020 hold Ln.ffn.hc_post -> L(n+1).eng.dot / eng.hh reading raw h from the VM, and eng.add -> attn.hc_pre needs the Engram-updated h reloaded into the HC cache); both on the critical path. Cost per pair = the measured store-and-forward H_STORE 387 + H_LOAD 336 (r6 pA, production shape): the streaming landing and the cut-through do not serve this path (the Engram writes are not the landing tee). Modelled share: node delta on L1/L14.eng.add (the chain is serial). Removal: a POST -> VM row tap (the POST write-back emits the h rows the hop store would) and a tee of the Engram VM writes into the landing streamer.",
    "share_basis": "modelled",
    "accepted_date": "2026-10-14",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -978,11 +1002,17 @@
    "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-14",
-   "status": "accepted",
+   "status": "superseded",
    "note": "MEASURED AFTER THE STRUCTURAL FIX (main: cseq PIPE default 1 + FD16 registered H landing streamer ot_s81_hc_hland + cut-through hand-off at an 8-row ARMN watermark): per h transfer H_STORE head 233 + H_LOAD tail 5 = 238 (r6 pC, 64-row landing) + 8 (FD16 pin registers: r8 original order 8,060 / 16,966 vs pC 8,052 / 16,970) = 246 cycles, was 723 (store-and-forward, r6 pA). Production shape NG 256 hierarchical HC, bit-exact NORM rows + 640 H_STORE rows + 640 hand-off flits; mutants mut_hl / mut_tx / HLMUT FAIL. COUNT (fact, round_1014.json h_transfer_count): 41 hop transfers a token on the critical path (40 substage_hop0 + head.hop; programs results/rtl/s81_ctrl_20261008 + h_materialization_audit.json); the 2 Engram materializations are row HC.H_MAT_ENGRAM; the 37 same-stage coefficient materializations are off-critical (>= 6,483 cycles slack, 0 e2e if issued after the NORM). QUALIFIER: streaming needs H_LOAD issued before the 16-row FIFO fills (r8 used PGAP 600; a cold payload falls back to the VM path at 723) and the native 120-stage programs do not exist yet; cseq/comb have no CLOSED view and no die slot (v17): the route waits for the S81 die lead's slot.",
    "share_basis": "modelled",
    "accepted_date": "2026-10-14",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1028,8 +1058,14 @@
    "evidence": "/home/ubuntu/claude-takeover-20261007/el1015-s81-surx-engram.log",
    "evidence_grade": "interim_log",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-ELEM 1315 retcol a4 decision GO-22 (14:36): retcol c2/c3 a3 CLOSED but native capture 276.8/299.8 (hrq_col same-cycle bank round-trip merge). Charged +24 per HC chain on EVERY hc_pre AND hc_post token-path node (upper: one chain traversal per HC job, no overlap credit; hc_pre only would be 0.234 % AR / 0.197 % MTP). RTL a4 not yet built: re-price on the measured exact HC gate cycles when it lands. Priced by S81-PRICE helper (S-FUNC not running)."
+   "status": "superseded",
+   "note": "S-ELEM 1315 retcol a4 decision GO-22 (14:36): retcol c2/c3 a3 CLOSED but native capture 276.8/299.8 (hrq_col same-cycle bank round-trip merge). Charged +24 per HC chain on EVERY hc_pre AND hc_post token-path node (upper: one chain traversal per HC job, no overlap credit; hc_pre only would be 0.234 % AR / 0.197 % MTP). RTL a4 not yet built: re-price on the measured exact HC gate cycles when it lands. Priced by S81-PRICE helper (S-FUNC not running).",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1075,8 +1111,14 @@
    "evidence": "/home/ubuntu/claude-takeover-20261007/el1015-s81-surx-engram.log",
    "evidence_grade": "interim_log",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-ENGRAM+NORM HC-HOMES 10-16 10:22: exact HC gate program 4695 -> 4700 (+5 over 20 jobs incl 4 POST), lag-only control PASS 0/1940. Charged +2 (y +1, cs +1, summed) on every hc_post node (upper vs measured ~1.25 per POST). Previously unpriced. Priced by S81-PRICE helper."
+   "status": "superseded",
+   "note": "S-ENGRAM+NORM HC-HOMES 10-16 10:22: exact HC gate program 4695 -> 4700 (+5 over 20 jobs incl 4 POST), lag-only control PASS 0/1940. Charged +2 (y +1, cs +1, summed) on every hc_post node (upper vs measured ~1.25 per POST). Previously unpriced. Priced by S81-PRICE helper.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1122,8 +1164,14 @@
    "evidence": "",
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-ENGRAM+NORM MIX4-PARENT claude/s81-mix4-parent-0600 1ce30c65c/e1a3198b2/880dc9d88: exact 20480 w/640 wr/4161 rd PASS at 811 cycles (plain + VM-banked), MUT1/26/27/28 rejected; 0 TT-negative joins (was 248, worst -146.99 ps). Priced +1 on every eng.gate/hh/add node (upper). Compiler: die_layer_stim --mix-p2p 811 once the banded cluster is on main."
+   "status": "superseded",
+   "note": "S-ENGRAM+NORM MIX4-PARENT claude/s81-mix4-parent-0600 1ce30c65c/e1a3198b2/880dc9d88: exact 20480 w/640 wr/4161 rd PASS at 811 cycles (plain + VM-banked), MUT1/26/27/28 rejected; 0 TT-negative joins (was 248, worst -146.99 ps). Priced +1 on every eng.gate/hh/add node (upper). Compiler: die_layer_stim --mix-p2p 811 once the banded cluster is on main.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (in-slice Engram mix, ENG slice op)",
+    "reason": "mix4_w / mix4_e deleted with the hub design (HANDOFF 0dv, owner 10-18; results/arch/s81_dv_1016/p4j/engram_mix_verdict.json): Engram mix is the in-slice ENG path",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1169,8 +1217,14 @@
    "evidence": "results/arch/s81_mix4_banded_1016/native_rq_audit_p17b_1016.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-ELEM COMB+ENGRAM 1315: RTL d11a778b4, rq0/rq1 p17c CLOSED + native PASS, main 9b53d0594; bench flat 879 PASS / MUT2 FAIL. Banded MIX4 (870) does not instantiate ot_s81_mx4_rq. Priced +1 on every eng.gate/hh/add node (upper, same method as MIX4.BANDED_COPY). Priced by S81-PRICE helper."
+   "status": "superseded",
+   "note": "S-ELEM COMB+ENGRAM 1315: RTL d11a778b4, rq0/rq1 p17c CLOSED + native PASS, main 9b53d0594; bench flat 879 PASS / MUT2 FAIL. Banded MIX4 (870) does not instantiate ot_s81_mx4_rq. Priced +1 on every eng.gate/hh/add node (upper, same method as MIX4.BANDED_COPY). Priced by S81-PRICE helper.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (in-slice Engram mix, ENG slice op)",
+    "reason": "mix4_w / mix4_e deleted with the hub design (HANDOFF 0dv, owner 10-18; results/arch/s81_dv_1016/p4j/engram_mix_verdict.json): Engram mix is the in-slice ENG path",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1347,11 +1401,17 @@
    "evidence": "results/rtl/s81hc_throughput_20261013/baseline.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "twelve production POST jobs at 286-287 cycles against the immutable 112.9 (source 3c62573d5); 80 runs a token (attn + ffn x 40 layers), all on the critical path; in MTP the slowest verify stage holds two, paid again at each of the 5 wave positions; the 6 draft-block hc_post nodes (641.3, another vehicle) are not touched.  CURRENT BASELINE: to be replaced by the POST express measurement (post_express_spec.json).",
    "accepted_date": "2026-10-13",
    "share_basis": "modelled",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1397,11 +1457,17 @@
    "evidence": "results/rtl/s81_layer_tput_1013/record.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "per-layer die run tb_s81_die_layer HCH=1 NG=256 nominal link, L0 / L2 / L14 bit-exact, mut_hc + mut_coll fail: NORM 713 cycles in all 6 jobs against the fused price 327.0-333.9 (hc_pre + quant [+ norm.scale]); hc_gate --hier 3 unit bench 727. REPLACES the row at 449 (1.361x, 1.178 %), which was the FLAT engine at the reduced NG 16 shape; the flat engine at NG 256 measures 235-237 (0.71x): the excess is the hierarchical slab's serial forward / return chains, not arithmetic DECOMPOSITION (Codex trace 7eb398556, hc_gate NG 256 hier3, 4 NORMs identical, exact 0/1940): accept -> sum_return 339 (mix forward + partial sums back over the 22-half-tile chain) + rsqrt 74 + rsqrt -> first row 238 (scale broadcast forward + scaled rows back) + 40 rows 39 + writer 22 + done 15 = 727; the two chain traversal pairs are 577 of 727. Structural fix (not built): registered regional reduction collectors + a narrow registered rsqrt broadcast tree instead of the serial chains (no FP reassociation). | MEASURED 2026-10-14 T3 (results/rtl/s81_layer_tput_1013/variants_1014, same bench, LVM 54): NORM tree NTREE 1 NT_K 67 (7d904baa4) L0/L2/L14 8,276/17,190/18,752 vs default 8,702/17,610/19,183 = -426/-420/-431 a layer (2 NORMs), -2.04 % AR by layer delta (accepted_cost node delta 383.1 -> 167.1: 3.609 -> 1.607 %); all exact, mut_hc FAIL. Row status unchanged (swap only when every variant tile closes).",
    "share_basis": "modelled",
    "accepted_date": "2026-10-14",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated); owner ~06:55 PT 2026-10-14: stays accepted at its CURRENT measured figure (serial chain); the NORM tree replaces it only if it closes"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated); owner ~06:55 PT 2026-10-14: stays accepted at its CURRENT measured figure (serial chain); the NORM tree replaces it only if it closes",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1447,11 +1513,17 @@
    "evidence": "results/rtl/ref_tile/s81su_full_gate_9e37b21b2/run_full_dpi_m0_a0_h.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.z_quant) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
    "accepted_date": "2026-10-13",
    "share_basis": "modelled",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1497,11 +1569,17 @@
    "evidence": "results/rtl/ref_tile/s81su_full_gate_9e37b21b2/run_full_dpi_m0_a0_h.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.normalize) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
    "accepted_date": "2026-10-13",
    "share_basis": "modelled",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1547,11 +1625,17 @@
    "evidence": "results/rtl/ref_tile/s81su_full_gate_9e37b21b2/run_full_dpi_m0_a0_h.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.ffn.quant2) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
    "accepted_date": "2026-10-13",
    "share_basis": "modelled",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1618,8 +1702,14 @@
    "evidence": "results/rtl/s81_vm_a2f_parent_bc297977c/record.json; results/arch/s81_mtp_ledger_1016/summary.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-FUNC 2026-10-16: re-priced on the measured A2-F hop-1 parent (bc297977c gate: write raw P+11+n, commit P+12+n, read raw Q+6, return Q+14; legacy w1 P+10/P+12/Q+7/Q+16) and the 5,037 screen commit relay 5. Hop-2 (P+14/Q+16) would be +7 = 1.438 % AR / 1.26 % MTP. Previous +5 basis (VM.RELAY +25) superseded. Compiler profile s81_vm_a2f_hop1_r4_c2_w1 enforces Q >= P+6+n."
+   "status": "superseded",
+   "note": "S-FUNC 2026-10-16: re-priced on the measured A2-F hop-1 parent (bc297977c gate: write raw P+11+n, commit P+12+n, read raw Q+6, return Q+14; legacy w1 P+10/P+12/Q+7/Q+16) and the 5,037 screen commit relay 5. Hop-2 (P+14/Q+16) would be +7 = 1.438 % AR / 1.26 % MTP. Previous +5 basis (VM.RELAY +25) superseded. Compiler profile s81_vm_a2f_hop1_r4_c2_w1 enforces Q >= P+6+n.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1650,7 +1740,7 @@
    "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-14",
-   "status": "accepted",
+   "status": "superseded",
    "note": "CURRENT DESIGN (leaf hop 2): MEASURED unit latency flat dsfd_vm_bgr 41 (master gate s81_vm_gate tp, price basis) -> 81 at leaf hop 2 (claude/s81-bgq28-1013 1640f47fb) + 4 from the vm_fe hierarchy FRL 6 (693940a56) = 85. Per-layer MEASURED part: tb_s81_die_layer LVM 10/30/54 (3 serial HC reads a layer, +139 a layer at +44); su_gate --lvm 54: two serial VM read round trips a SU job (+87..89). Token share MODELLED (upper bound) -> 9.093 % AR / 7.556 % MTP (round_1014.json vm_read.model_upper_bound_pct.hop2_fe). Hop-1 variant (a841984b9, 53 cycles, 2.654 %) built in parallel; replaces this row only if it closes (then re-measured). | MEASURED 2026-10-14 T3 (results/rtl/s81_layer_tput_1013/variants_1014, tb_s81_die_layer NG256 HCH1 nom --coef-split --h-stream PIPE/HST/HTX2): layer L0/L2/L14 at LVM 54 (this row) 8,702/17,610/19,183; XGOS-equivalent LVM 38 (unit 107->91) 8,688/17,594/19,130 = -14/-16/-53 a layer = -0.082 % AR (HC share only, not the ~45 estimated: with the H landing stream only the attn COEF-a VM read stays serial); LVM 10 -42/-44/-133. Field/SU VM-read shares remain modelled. Row status unchanged.",
    "share_basis": "modelled",
    "supersedes": {
@@ -1666,7 +1756,13 @@
    },
    "accepted_date": "2026-10-14",
    "owner_exception": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces",
-   "acceptance_note": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces; S81 accepted total 17.485 % is OVER the 15 % design limit: owner-accepted exception (owner ~06:55 PT 2026-10-14 accepts the CURRENT VM read (leaf hop 2) and HC NORM (serial chain) designs as long as they close)"
+   "acceptance_note": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces; S81 accepted total 17.485 % is OVER the 15 % design limit: owner-accepted exception (owner ~06:55 PT 2026-10-14 accepts the CURRENT VM read (leaf hop 2) and HC NORM (serial chain) designs as long as they close)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1714,12 +1810,18 @@
    "evidence": "results/arch/s81_vm_a2f_1015/reach_price_a2f_midcapd.json; results/arch/s81_vm_hub_faces_2210/summary.json; results/arch/s81_mtp_ledger_1016/hub_faces_5037_hop1.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
-   "status": "accepted",
+   "status": "superseded",
    "note": "MEASURED on the committed pin-accurate A2-F floorplan screen (tools/s81_vm/a2f_route_plan.py midcapd, 4,104 x 4,115 um; longest connection per hop class -> ceil(L/R)-1 relays; tools/s81_vm/a2f_reach_price.py), NOT a routed die: basis R = 900 um/stage (TT 0.76 ps/um minus clk-q/setup/80-ps spread) -> +25 = 5.133 % AR / 4.565 % MTP (charged); R = 1,118 um/stage (raw TT wire) -> +18 = 3.75 % AR / 3.329 % MTP. Same method on the A2 v4 floorplan: +33 = 6.666 % AR. Base 30 = write commit P+14 + read return P+16. Possible partial overlap with VM.READ (leaf-chain RTL latency of the legacy front); re-price both from real relay reach once the A2-F pilots and die routing land. | S-FUNC 2026-10-15 23:2x: re-priced to the honest 28 edges (S-VM hub-face screen bccc12fc2, results/arch/s81_vm_hub_faces_2210): 5.714 % AR / 5.096 % MTP (same tool, same node set; the 25-edge row re-solves to 5.133 / 4.575 on today's path). | S-FUNC 2026-10-16 ~07:30: re-screened on main 834efdae2 with today's leaf shapes: front_scatter 2,326 um -> 2 relays (was 1) -> W11/R18 = 29 edges: 5.906 % AR / 5.257 % MTP (same tool and node set). Commit relay b8->seq is 5 (never in this row; see VM.A2_COMMIT_REMAINDER). Hop-1 does not change any relay count (b8->bank 695 um < 900).",
    "share_basis": "modelled",
    "accepted_date": "2026-10-15",
    "owner_exception": "owner floor rule via coordinator 2026-10-15 21:20: accepted above 5 %/unit and with S81 over 15 % as long as S81 MTP stays well above 3,000 tok/s",
-   "acceptance_note": "coordinator 21:20 PT 2026-10-15: A2-F adopted as production S81 VM front; relay cost accepted under the owner floor (S81 MTP well above 3,000 tok/s: ~4,235 -> ~4,040)"
+   "acceptance_note": "coordinator 21:20 PT 2026-10-15: A2-F adopted as production S81 VM front; relay cost accepted under the owner floor (S81 MTP well above 3,000 tok/s: ~4,235 -> ~4,040)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "r25gq",
@@ -2506,18 +2608,22 @@
    "proposed_rows": 12,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
-   "over_limit_by_owner_exception": false
+   "over_limit_by_owner_exception": false,
+   "superseded_rows": 0,
+   "superseded_pct_not_counted": 0
   },
   "s81": {
-   "accepted_pct": 25.295,
-   "proposed_pct": 2.074,
-   "accepted_plus_proposed_pct": 27.369,
+   "accepted_pct": 2.063,
+   "proposed_pct": 0.871,
+   "accepted_plus_proposed_pct": 2.934,
    "limit_pct": 15.0,
-   "accepted_rows": 12,
-   "proposed_rows": 13,
-   "headroom_pct": -10.295,
-   "owner_exception_rows": 3,
-   "over_limit_by_owner_exception": true
+   "accepted_rows": 2,
+   "proposed_rows": 6,
+   "headroom_pct": 12.937,
+   "owner_exception_rows": 1,
+   "over_limit_by_owner_exception": false,
+   "superseded_rows": 17,
+   "superseded_pct_not_counted": 24.435
   },
   "r25gq": {
    "accepted_pct": 0.895,
@@ -2528,7 +2634,9 @@
    "proposed_rows": 24,
    "headroom_pct": 14.105,
    "owner_exception_rows": 0,
-   "over_limit_by_owner_exception": false
+   "over_limit_by_owner_exception": false,
+   "superseded_rows": 0,
+   "superseded_pct_not_counted": 0
   }
  }
 }

@@ -68,4 +68,83 @@ module qkd_pv_rs_hd (
 `endif
     end
 endmodule
+// KV-KITS/NATIVE 2026-10-18: native-pin successors of the two leaves (pv_trunk_gen default; --rs-legacy keeps the r1 pair).
+// The r1 views close (TT +256.8 / +240.0) but fail the native capture budget (S + R <= 190 ps) on their mux SELECT pins
+// only: qkd_rlyi_258 s 259.3 ps (one pin fanning out to 258 2:1 muxes), qkd_pv_rs_hd a0/a1[256] 274.5 / 267.5 (va: 512
+// data muxes) and a0/a1[257] 221.8 / 221.3 (t: 42 loads); every data pin is <= 140 / 160 ps.  Same schedule, 0 cycles:
+// qkd_rlyi_258s: the select is REGISTERED AT ITS PIN (s_r <= s) and the generator drives s from the T shift chain one
+//   edge EARLIER (delay line tap n-2, or the previous node's T bit for n = 1), so s_r equals the r1 select in every cycle;
+//   y[256] keeps the r1 wiring (the same-cycle select).  A head node has a = y, so b <= y whatever s_r is (unchanged).
+//     s_r <= s;   b <= s_r ? y : a
+// qkd_pv_rs_hd_r: the T0 V / T bits arrive REPLICATED from the last strip relay (its 38 spare bits carry copies of the
+//   word's V / T, registered with the word, so every copy equals a<q>[256] / a<q>[257] in every cycle): a<q>v[k-1] = copy k
+//   of V (copy 0 = a<q>[256]); va_k selects data bits [16k +: 16] of each half; a<q>t[0] = copy 1 of T (t_1 -> epoch).
+//   Function identical to qkd_pv_rs_hd whenever the copies equal their bit (the generator wires them so).
+module qkd_rlyi_258s (
+    input  wire         ck,
+    input  wire         s,
+    input  wire [257:0] a,
+    input  wire [257:0] y,
+    output wire [257:0] b
+);
+    reg s_r;
+    reg [257:0] r;
+    always @(posedge ck) begin
+        s_r <= s;
+`ifdef OT_QKD_RLYI_MUT
+        r <= (s_r ? y : a) ^ 258'd1;             // bench mutant: bit 0 inverted
+`elsif OT_QKD_RLYI_SMUT
+        r <= s ? y : a;                          // bench mutant: the r1 (unregistered) select -- one edge early
+`else
+        r <= s_r ? y : a;
+`endif
+    end
+    assign b = r;
+endmodule
+
+module qkd_pv_rs_hd_r #(
+    parameter integer KV = 32                    // V copies per T0 half (copy 0 = a<q>[256]); 512 / KV data bits each
+)(
+    input  wire          ck,
+    input  wire [257:0]  a0,
+    input  wire [257:0]  a1,
+    input  wire [KV-2:0] a0v,
+    input  wire [KV-2:0] a1v,
+    input  wire          a0t,
+    input  wire          a1t,
+    input  wire [257:0]  b0,
+    input  wire [257:0]  b1,
+    input  wire [15:0]   ep,
+    output reg           o_valid,
+    output reg  [4:0]    o_beat,
+    output reg  [15:0]   o_epoch,
+    output reg  [511:0]  o_data
+);
+    localparam integer HB = 256 / KV;            // data bits of one half per V copy
+    wire [KV-1:0] v0 = {a0v, a0[256]};
+    wire [KV-1:0] v1 = {a1v, a1[256]};
+    wire [KV-1:0] va = v0 & v1;
+    wire t0 = a0[257] & a1[257];                 // beat / count
+    wire t1 = a0t & a1t;                         // epoch
+    wire vb = b0[256] & b1[256];
+    reg [4:0] cnt;
+    reg [15:0] er;
+    integer k;
+    always @(posedge ck) begin
+        o_valid <= va[0] | vb;
+        o_beat  <= t0 ? 5'd0 : cnt;
+        cnt     <= t0 ? 5'd1 : cnt + 5'd1;
+        er      <= t1 ? ep : er;
+        o_epoch <= t1 ? ep : er;
+        for (k = 0; k < KV; k = k + 1) begin
+`ifdef OT_QKD_RSHD_MUT
+            o_data[k*HB +: HB]       <= va[k] ? a1[k*HB +: HB] : b0[k*HB +: HB];   // bench mutant: T0 halves swapped
+            o_data[256 + k*HB +: HB] <= va[k] ? a0[k*HB +: HB] : b1[k*HB +: HB];
+`else
+            o_data[k*HB +: HB]       <= va[k] ? a0[k*HB +: HB] : b0[k*HB +: HB];
+            o_data[256 + k*HB +: HB] <= va[k] ? a1[k*HB +: HB] : b1[k*HB +: HB];
+`endif
+        end
+    end
+endmodule
 `default_nettype wire
