@@ -60,15 +60,27 @@ module ot_s81sl_vn #(
     // ---------------------------------------------------------------- input pin flops
     reg hw_v_c, hr_v_c, go_c, wl_v_c, rb_v_c;
     reg [2:0] hw_j_c, hr_j_c, wl_i_c; reg hw_hf_c, hr_hf_c;
-    reg [255:0] hw_d_c, wl_d_c; reg [127:0] pre_c; reg [31:0] rb_d_c;
+    reg [255:0] hw_d_c, wl_d_c; reg [127:0] pre_in, pre_c; reg [31:0] rb_d_c;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin hw_v_c <= 1'b0; hr_v_c <= 1'b0; go_c <= 1'b0; wl_v_c <= 1'b0; rb_v_c <= 1'b0; end
         else begin hw_v_c <= hw_v; hr_v_c <= hr_v; go_c <= n_go; wl_v_c <= wl_v; rb_v_c <= rb_v; end
     always @(posedge clk) begin
         hw_j_c <= hw_j; hw_hf_c <= hw_hf; hw_d_c <= hw_d; hr_j_c <= hr_j; hr_hf_c <= hr_hf;
-        if (n_go) pre_c <= n_pre;
+        pre_in <= n_pre;
         wl_i_c <= wl_i; wl_d_c <= wl_d; rb_d_c <= rb_d;
     end
+    // NATIVE-SWEEP/NS-VN 10-18 (native capture n_go 205.4 > 190 on fa3312cfc): n_go used to be the load-enable of the
+    // 128 pre_c flops (fanout 129 straight from the pin).  Now n_go lands in go_c alone (fanout 1) and n_pre in its own
+    // pin flops pre_in; the coefficients move pre_in -> pre_c one edge later under the go_c enable.  pre_c is new one
+    // edge before g_go, and the norm group first reads it with in_v (g_inv = run + 2 edges): 0 cycles on the schedule,
+    // same values (the coefficients only change one edge later, never earlier).
+    always @(posedge clk)
+`ifdef OT_S81SL_MUT_PRESTALE
+        // NEGATIVE CONTROL: the enable taken from the pin (n_go) one edge early -> pre_c takes the PREVIOUS coefficients
+        if (n_go) pre_c <= pre_in;
+`else
+        if (go_c) pre_c <= pre_in;
+`endif
 
     // ---------------------------------------------------------------- norm issue state (drives the h read port)
     reg       run; reg [2:0] nj; reg g_go, g_inv, g_inv0; reg [1023:0] g_x;

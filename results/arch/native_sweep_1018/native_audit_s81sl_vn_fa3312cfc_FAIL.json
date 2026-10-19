@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "lane": "NATIVE-SWEEP/NS-VN",
+ "generated": "2026-10-18 PT",
+ "tool": "tools/hier_contract/native_pin_audit.py @ origin/main 76b82c3a2 (--view, own R)",
+ "note": "FAIL receipt of the closed view (main 8ff0c2ccb): capture n_go 205.4 > 190 (1 pin). No routed parent (ot_s81sl_slice/_lepe/_lepw are unbuilt, lanes/S81-SLICEP.md NEXT 3) and n_go comes from vp inside the same beat leaf (no landed neighbour view), so no real reference exists for --relative-to. Cause: n_go was the load-enable of 128 pre_c flops (fanout 129 from the pin). Structural fix on claude/ns-vn-1018 (n_go -> go_c only; n_pre -> pre_in pin flops; pre_c <= pre_in under go_c), 0 schedule cycles.",
+ "records": [
+  {
+   "cell": "ot_s81sl_vn",
+   "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+   "lib_cell": "ot_s81sl_vn",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 467.8,
+   "spread_ps": 48.7,
+   "outputs": 423,
+   "inputs": 689,
+   "launch_ps": 180.8,
+   "launch_pin": "fault",
+   "capture_ps": 205.4,
+   "capture_pin": "n_go",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 46.5,
+   "ff_launch_min_ps": 36.3,
+   "ff_hold_need_ps": -7.4,
+   "pass": false,
+   "fail_why": "capture 205.39644 > 190 (1 pins)",
+   "job": "s81sl_vn-s81sl_vn-fa3312cfc"
+  }
+ ]
+}
