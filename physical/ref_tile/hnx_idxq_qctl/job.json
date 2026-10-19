@@ -1,20 +1,26 @@
 {
- "name": "hnx_idxq_qctl-q1-COMMIT",
+ "name": "hnx_idxq_qctl-q1-4e1e604b1",
  "block": "ot_hnx_idxq_qctl",
  "ref_tile": true,
  "owner": "Claude:HBM-NEXT-UNITS",
- "purpose": "HBM-NEXT P=4 IDXN quad: idx_ctl<q> = IDXN issuer copy (8 pipelined row streams over one frame SRAM, per-class routing, collision = fault) for the quadrant's operand reader / query / key buffer / quarter scorer",
+ "purpose": "HBM-NEXT IDXQ quad: idx_ctl<q> = IDXN issuer copy (8 pipelined row streams, CW=2 compact windows, per-class routing, collision = fault). Geometry rebuilt for the SAFE-DESIGN checklist: frame SRAM on the 43.2 lattice (43.2, 43.2), outline 241.92 x 88.56, one std band, clk at S centre. Behaviour: quad lockstep 859b27b6b (results/arch/hbm_next_1019/units/idxq/lockstep_859b27b6b, N 1/2/4/6 PASS, 7 mutants FAIL) + calendar CW bench below.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/hbm-next-units-idxq-1019",
-  "commit": "COMMIT",
+  "commit": "4e1e604b1",
   "extra_paths": [
-   "rtl/hbm_next/idxq",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "results/arch/hbm_next_1019/units/idxq/cw/witness",
+   "results/arch/hbm_next_1019/units/idxq/lockstep_859b27b6b",
    "rtl/hbm_next/idxn",
+   "rtl/hbm_next/idxn/tb/tb_hnx_idxn_cw.sv",
+   "rtl/hbm_next/idxq",
+   "tools/hbm_idx_static_calendar.py",
+   "tools/hbm_next/hnx_idxn_calendar.py",
+   "tools/hbm_next/hnx_idxn_cw_bench.sh",
    "tools/hbm_next/hnx_idxq_bench.sh",
-   "tools/hbm_next/hnx_idxq_vectors.py",
-   "tools/hbm_next/hnx_idxn_calendar.py"
+   "tools/hbm_next/hnx_idxq_vectors.py"
   ]
  },
  "stages": {
@@ -28,6 +34,59 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "idxn_cw_pos",
+    "cmd": "bash tools/hbm_next/hnx_idxn_cw_bench.sh {RUN}/bench/cw_pos pos",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "SUMMARY pos unexpected=0"
+   },
+   {
+    "name": "idxn_cw_m4",
+    "cmd": "bash tools/hbm_next/hnx_idxn_cw_bench.sh {RUN}/bench/cw_m4 m4",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "pass_regex": "m4: IDXN_CW PASS",
+    "fail_regex": "CW2BAD cyc",
+    "fail_witness": "results/arch/hbm_next_1019/units/idxq/cw/witness/m4.log",
+    "note": "CW=2 ring write slot pinned 0"
+   },
+   {
+    "name": "idxn_cw_m5",
+    "cmd": "bash tools/hbm_next/hnx_idxn_cw_bench.sh {RUN}/bench/cw_m5 m5",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "pass_regex": "m5: IDXN_CW PASS",
+    "fail_regex": "CW2BAD cyc",
+    "fail_witness": "results/arch/hbm_next_1019/units/idxq/cw/witness/m5.log",
+    "note": "CW=2 shared head rows 0-1 dropped"
+   },
+   {
+    "name": "idxn_cw_m6",
+    "cmd": "bash tools/hbm_next/hnx_idxn_cw_bench.sh {RUN}/bench/cw_m6 m6",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "pass_regex": "m6: IDXN_CW PASS",
+    "fail_regex": "CW2BAD cyc",
+    "fail_witness": "results/arch/hbm_next_1019/units/idxq/cw/witness/m6.log",
+    "note": "CW=2 ring read slot pinned 0"
    }
   ],
   "calibrate": {
@@ -80,7 +139,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hnx_idxq_qctl/hnx_idxq_qctl-q1-COMMIT"
+   "to": "results/rtl/ref_tile/hnx_idxq_qctl/hnx_idxq_qctl-q1-4e1e604b1"
   }
  ],
  "cycles_added": 0,
