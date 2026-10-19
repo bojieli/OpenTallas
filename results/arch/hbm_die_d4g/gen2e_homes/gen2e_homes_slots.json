@@ -1,0 +1,631 @@
+{
+ "tool": "tools/hbm_die_v16/d4g_gen2e_grants_homes.py",
+ "lane": "TW5-GEN2E 10-19",
+ "clearance_um": 21.6,
+ "renamed": {
+  "xq_SW_p2_eg": "xq_SE_p0_eg",
+  "xq_SW_p2_bd": "xq_SE_p0_bd",
+  "xq_SW_p2_bfq0": "xq_SE_p0_bfq0",
+  "xq_SW_p2_bfq1": "xq_SE_p0_bfq1",
+  "xq_SW_p2_bfq2": "xq_SE_p0_bfq2",
+  "xq_SW_p2_bfq3": "xq_SE_p0_bfq3",
+  "xq_SW_p3_eg": "xq_SE_p1_eg",
+  "xq_SW_p3_bd": "xq_SE_p1_bd",
+  "xq_SW_p3_bfq0": "xq_SE_p1_bfq0",
+  "xq_SW_p3_bfq1": "xq_SE_p1_bfq1",
+  "xq_SW_p3_bfq2": "xq_SE_p1_bfq2",
+  "xq_SW_p3_bfq3": "xq_SE_p1_bfq3",
+  "xq_NW_p2_eg": "xq_NE_p0_eg",
+  "xq_NW_p2_bd": "xq_NE_p0_bd",
+  "xq_NW_p2_bfq0": "xq_NE_p0_bfq0",
+  "xq_NW_p2_bfq1": "xq_NE_p0_bfq1",
+  "xq_NW_p2_bfq2": "xq_NE_p0_bfq2",
+  "xq_NW_p2_bfq3": "xq_NE_p0_bfq3",
+  "xq_NW_p3_eg": "xq_NE_p1_eg",
+  "xq_NW_p3_bd": "xq_NE_p1_bd",
+  "xq_NW_p3_bfq0": "xq_NE_p1_bfq0",
+  "xq_NW_p3_bfq1": "xq_NE_p1_bfq1",
+  "xq_NW_p3_bfq2": "xq_NE_p1_bfq2",
+  "xq_NW_p3_bfq3": "xq_NE_p1_bfq3"
+ },
+ "moved": {
+  "hc_eng": {
+   "was": [
+    14775.696,
+    32.4,
+    5223.269,
+    1952.8
+   ],
+   "now": [
+    10303.2,
+    14256.0,
+    496.8,
+    540.0
+   ],
+   "why": "ring-hub centroid"
+  },
+  "wbk_SW": {
+   "was": [
+    14240.016,
+    668.088,
+    520.0,
+    520.0
+   ],
+   "now": [
+    7452.648,
+    1877.688,
+    475.2,
+    475.2
+   ],
+   "why": "SM pair gap above the PC band"
+  },
+  "wbk_NW": {
+   "was": [
+    14618.016,
+    30013.2,
+    520.0,
+    520.0
+   ],
+   "now": [
+    7452.648,
+    29420.712,
+    475.2,
+    475.2
+   ],
+   "why": "SM pair gap above the PC band"
+  },
+  "host_cp_ingress": {
+   "was": [
+    21.6,
+    21.6,
+    216.0,
+    216.0
+   ],
+   "now": [
+    9676.8,
+    14580.0,
+    216.0,
+    216.0
+   ],
+   "why": "peer centroid, 1500 um off"
+  }
+ },
+ "new": {
+  "hb_idx__s_SW": {
+   "at": [
+    4028.832,
+    484.056,
+    1512.0,
+    1512.0
+   ],
+   "why": "idxs plan block, PHY edge"
+  },
+  "hb_idx__q_SW": {
+   "at": [
+    3790.8,
+    1815.696,
+    180.0,
+    180.36
+   ],
+   "why": "beside scorer"
+  },
+  "hb_idx__op_SW": {
+   "at": [
+    3790.8,
+    1631.664,
+    216.0,
+    162.0
+   ],
+   "why": "beside scorer"
+  },
+  "hb_idx__s_SE": {
+   "at": [
+    14657.112,
+    484.056,
+    1512.0,
+    1512.0
+   ],
+   "why": "idxs plan block, PHY edge"
+  },
+  "hb_idx__q_SE": {
+   "at": [
+    16191.144,
+    1815.696,
+    180.0,
+    180.36
+   ],
+   "why": "beside scorer"
+  },
+  "hb_idx__op_SE": {
+   "at": [
+    16191.144,
+    1631.664,
+    216.0,
+    162.0
+   ],
+   "why": "beside scorer"
+  },
+  "hb_idx__s_NW": {
+   "at": [
+    4028.832,
+    29777.544,
+    1512.0,
+    1512.0
+   ],
+   "why": "idxs plan block, PHY edge"
+  },
+  "hb_idx__q_NW": {
+   "at": [
+    3790.8,
+    29777.544,
+    180.0,
+    180.36
+   ],
+   "why": "beside scorer"
+  },
+  "hb_idx__op_NW": {
+   "at": [
+    3790.8,
+    29979.936,
+    216.0,
+    162.0
+   ],
+   "why": "beside scorer"
+  },
+  "hb_idx__s_NE": {
+   "at": [
+    14657.112,
+    29777.544,
+    1512.0,
+    1512.0
+   ],
+   "why": "idxs plan block, PHY edge"
+  },
+  "hb_idx__q_NE": {
+   "at": [
+    16191.144,
+    29777.544,
+    180.0,
+    180.36
+   ],
+   "why": "beside scorer"
+  },
+  "hb_idx__op_NE": {
+   "at": [
+    16191.144,
+    29979.936,
+    216.0,
+    162.0
+   ],
+   "why": "beside scorer"
+  },
+  "wbk_SE": {
+   "at": [
+    12272.04,
+    1877.688,
+    475.2,
+    475.2
+   ],
+   "why": "SM pair gap above the PC band"
+  },
+  "wbk_NE": {
+   "at": [
+    12272.04,
+    29420.712,
+    475.2,
+    475.2
+   ],
+   "why": "SM pair gap above the PC band"
+  },
+  "xl_SW_ctl": {
+   "at": [
+    3024.0,
+    6944.4,
+    388.8,
+    388.8
+   ],
+   "why": "peer centroid, 2518 um off"
+  },
+  "xl_NW_ctl": {
+   "at": [
+    3024.0,
+    24440.4,
+    388.8,
+    388.8
+   ],
+   "why": "peer centroid, 2523 um off"
+  },
+  "xl_SE_ctl": {
+   "at": [
+    16783.2,
+    6944.4,
+    388.8,
+    388.8
+   ],
+   "why": "peer centroid, 2488 um off"
+  },
+  "xl_NE_ctl": {
+   "at": [
+    16783.2,
+    24440.4,
+    388.8,
+    388.8
+   ],
+   "why": "peer centroid, 2496 um off"
+  },
+  "hb_dbk_SE": {
+   "at": [
+    12506.4,
+    2894.4,
+    239.976,
+    240.84
+   ],
+   "why": "peer centroid, 415 um off"
+  },
+  "hb_dbk_NE": {
+   "at": [
+    12506.4,
+    28630.8,
+    239.976,
+    240.84
+   ],
+   "why": "peer centroid, 409 um off"
+  },
+  "hb_quant_NW": {
+   "at": [
+    3164.4,
+    20768.4,
+    239.544,
+    239.76
+   ],
+   "why": "peer centroid, 71 um off"
+  },
+  "hb_idx__qctl_SW": {
+   "at": [
+    9687.6,
+    14212.8,
+    194.832,
+    195.48
+   ],
+   "why": "peer centroid, 857 um off"
+  },
+  "hb_idx__qctl_SE": {
+   "at": [
+    9450.0,
+    14212.8,
+    194.832,
+    195.48
+   ],
+   "why": "peer centroid, 1178 um off"
+  },
+  "hb_idx__qctl_NW": {
+   "at": [
+    9212.4,
+    14212.8,
+    194.832,
+    195.48
+   ],
+   "why": "peer centroid, 1113 um off"
+  },
+  "hb_idx__qctl_NE": {
+   "at": [
+    9439.2,
+    14439.6,
+    194.832,
+    195.48
+   ],
+   "why": "peer centroid, 1197 um off"
+  },
+  "epcal_SW": {
+   "at": [
+    7635.6,
+    7095.6,
+    241.92,
+    116.64
+   ],
+   "why": "peer centroid, 58 um off"
+  },
+  "epcal_NW": {
+   "at": [
+    7603.2,
+    24462.0,
+    241.92,
+    116.64
+   ],
+   "why": "peer centroid, 177 um off"
+  },
+  "epcal_SE": {
+   "at": [
+    12484.8,
+    6048.0,
+    241.92,
+    116.64
+   ],
+   "why": "peer centroid, 6 um off"
+  },
+  "epcal_NE": {
+   "at": [
+    12268.8,
+    25088.4,
+    241.92,
+    116.64
+   ],
+   "why": "peer centroid, 107 um off"
+  },
+  "xl_SW_aqlo": {
+   "at": [
+    3229.2,
+    6804.0,
+    183.6,
+    108.0
+   ],
+   "why": "peer centroid, 616 um off"
+  },
+  "xl_SW_aqhi": {
+   "at": [
+    3229.2,
+    6663.6,
+    183.6,
+    108.0
+   ],
+   "why": "peer centroid, 756 um off"
+  },
+  "xl_NW_aqlo": {
+   "at": [
+    3229.2,
+    24850.8,
+    183.6,
+    108.0
+   ],
+   "why": "peer centroid, 605 um off"
+  },
+  "xl_NW_aqhi": {
+   "at": [
+    3229.2,
+    24980.4,
+    183.6,
+    108.0
+   ],
+   "why": "peer centroid, 734 um off"
+  },
+  "xl_SE_aqlo": {
+   "at": [
+    16783.2,
+    6804.0,
+    183.6,
+    108.0
+   ],
+   "why": "peer centroid, 661 um off"
+  },
+  "xl_SE_aqhi": {
+   "at": [
+    16783.2,
+    6663.6,
+    183.6,
+    108.0
+   ],
+   "why": "peer centroid, 802 um off"
+  },
+  "xl_NE_aqlo": {
+   "at": [
+    16783.2,
+    24850.8,
+    183.6,
+    108.0
+   ],
+   "why": "peer centroid, 651 um off"
+  },
+  "xl_NE_aqhi": {
+   "at": [
+    16783.2,
+    24980.4,
+    183.6,
+    108.0
+   ],
+   "why": "peer centroid, 780 um off"
+  },
+  "hb_idx__nwsh": {
+   "at": [
+    2538.0,
+    22593.6,
+    131.76,
+    131.76
+   ],
+   "why": "peer centroid, 830 um off"
+  },
+  "cxij_SW": {
+   "at": [
+    4557.6,
+    12063.6,
+    105.84,
+    105.84
+   ],
+   "why": "peer centroid, 190 um off"
+  },
+  "cxij_SE": {
+   "at": [
+    15660.0,
+    12063.6,
+    105.84,
+    105.84
+   ],
+   "why": "peer centroid, 219 um off"
+  },
+  "cxij_NW": {
+   "at": [
+    4600.8,
+    19602.0,
+    105.84,
+    105.84
+   ],
+   "why": "peer centroid, 219 um off"
+  },
+  "cxij_NE": {
+   "at": [
+    15660.0,
+    19602.0,
+    105.84,
+    105.84
+   ],
+   "why": "peer centroid, 221 um off"
+  }
+ },
+ "kept_gen2a": [
+  [
+   "epcal_SW",
+   58.0,
+   0.0
+  ]
+ ],
+ "rescanned": [
+  [
+   "xl_SW_ctl",
+   2517.7,
+   32.4
+  ],
+  [
+   "xl_NW_ctl",
+   2522.6,
+   32.4
+  ],
+  [
+   "xl_SE_ctl",
+   2488.4,
+   4330.8
+  ],
+  [
+   "xl_NE_ctl",
+   2495.7,
+   4330.8
+  ],
+  [
+   "hb_dbk_SE",
+   414.5,
+   81.0
+  ],
+  [
+   "hb_dbk_NE",
+   408.6,
+   81.0
+  ],
+  [
+   "hb_quant_NW",
+   71.0,
+   172.8
+  ],
+  [
+   "host_cp_ingress",
+   1500.2,
+   1814.4
+  ],
+  [
+   "hb_idx__qctl_SW",
+   857.0,
+   896.4
+  ],
+  [
+   "hb_idx__qctl_SE",
+   1178.1,
+   820.8
+  ],
+  [
+   "hb_idx__qctl_NW",
+   1113.3,
+   1198.8
+  ],
+  [
+   "hb_idx__qctl_NE",
+   1196.9,
+   1603.8
+  ],
+  [
+   "epcal_NW",
+   177.3,
+   253.8
+  ],
+  [
+   "epcal_SE",
+   6.2,
+   64.8
+  ],
+  [
+   "epcal_NE",
+   107.0,
+   75.6
+  ],
+  [
+   "xl_SW_aqlo",
+   615.7,
+   43.2
+  ],
+  [
+   "xl_SW_aqhi",
+   756.1,
+   356.4
+  ],
+  [
+   "xl_NW_aqlo",
+   604.9,
+   32.4
+  ],
+  [
+   "xl_NW_aqhi",
+   734.5,
+   334.8
+  ],
+  [
+   "xl_SE_aqlo",
+   661.4,
+   4233.6
+  ],
+  [
+   "xl_SE_aqhi",
+   801.8,
+   4168.8
+  ],
+  [
+   "xl_NE_aqlo",
+   650.6,
+   4222.8
+  ],
+  [
+   "xl_NE_aqhi",
+   780.2,
+   4147.2
+  ],
+  [
+   "hb_idx__nwsh",
+   830.3,
+   2435.4
+  ],
+  [
+   "cxij_SW",
+   190.3,
+   901.8
+  ],
+  [
+   "cxij_SE",
+   218.8,
+   799.2
+  ],
+  [
+   "cxij_NW",
+   219.2,
+   939.6
+  ],
+  [
+   "cxij_NE",
+   220.7,
+   804.6
+  ]
+ ],
+ "violations": [],
+ "summary": {
+  "renamed": 24,
+  "moved": 4,
+  "new": 42,
+  "kept_gen2a": 1,
+  "rescanned": 28,
+  "violations": 0
+ }
+}

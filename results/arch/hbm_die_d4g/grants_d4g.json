@@ -6045,121 +6045,37 @@
   },
   {
    "name": "hc_eng",
-   "cell": "ot_hbm_hc_eng_static",
+   "cell": "ot_hbm_hc_root_static",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 5223.269,
-    "h": 1952.8
+    "w": 496.8,
+    "h": 540.0
    },
    "origin": {
-    "x": 14775.696,
-    "y": 32.4,
+    "x": 10303.2,
+    "y": 14256.0,
     "orient": "R0"
    },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: HC root (ot_hbm_hc_root_static; std 0.144 mm2 + 2 SRAM) re-homed from the old 5,223 x 1,953 HC engine slot at the SE die corner (on plan idxs_SE) to the free site nearest the 4 ring-hub centroid (10109, 15757); area-sized outline; v15 pin windows dropped (die tools assign pins top-down)",
    "clock_entry": {
     "pin": "clk",
     "face": "W",
     "layer": "M4"
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
    "rtl_owner": "HC owner: HC engine",
-   "notes": "HC:ot_hbm_hc_eng_static (H-NETLIST 406a2d5f9, ~9.5 mm2 model hbm_hc_eng_0030) centre-column void; H-DIE-V790 centre-column home, pins from the plan pin windows (v16 widths)",
-   "pin_windows": [
-    {
-     "face": "S",
-     "layer": "M5",
-     "offset": 0.0,
-     "span_um": 210.0,
-     "bits": 2100,
-     "peer": "hc_SW",
-     "cls": "HC_ENG",
-     "link": "hc_SW>hc_eng:HC_ENG"
-    },
-    {
-     "face": "S",
-     "layer": "M5",
-     "offset": 210.0,
-     "span_um": 77.2,
-     "bits": 772,
-     "peer": "hc_SW",
-     "cls": "HC_ENG",
-     "link": "hc_eng>hc_SW:HC_ENG"
-    },
-    {
-     "face": "W",
-     "layer": "M4",
-     "offset": 0.0,
-     "span_um": 210.0,
-     "bits": 2100,
-     "peer": "hc_SE",
-     "cls": "HC_ENG",
-     "link": "hc_SE>hc_eng:HC_ENG"
-    },
-    {
-     "face": "W",
-     "layer": "M4",
-     "offset": 210.0,
-     "span_um": 77.2,
-     "bits": 772,
-     "peer": "hc_SE",
-     "cls": "HC_ENG",
-     "link": "hc_eng>hc_SE:HC_ENG"
-    },
-    {
-     "face": "W",
-     "layer": "M4",
-     "offset": 2777.32,
-     "span_um": 210.0,
-     "bits": 2100,
-     "peer": "hc_NE",
-     "cls": "HC_ENG",
-     "link": "hc_NE>hc_eng:HC_ENG"
-    },
-    {
-     "face": "W",
-     "layer": "M4",
-     "offset": 2987.32,
-     "span_um": 77.2,
-     "bits": 772,
-     "peer": "hc_NE",
-     "cls": "HC_ENG",
-     "link": "hc_eng>hc_NE:HC_ENG"
-    },
-    {
-     "face": "N",
-     "layer": "M5",
-     "offset": 0.0,
-     "span_um": 210.0,
-     "bits": 2100,
-     "peer": "hc_NW",
-     "cls": "HC_ENG",
-     "link": "hc_NW>hc_eng:HC_ENG"
-    },
-    {
-     "face": "N",
-     "layer": "M5",
-     "offset": 210.0,
-     "span_um": 77.2,
-     "bits": 772,
-     "peer": "hc_NW",
-     "cls": "HC_ENG",
-     "link": "hc_eng>hc_NW:HC_ENG"
-    }
-   ],
-   "rtl_pending": "HC owner: HC engine",
-   "plan_block": "hc_eng",
-   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_static.sv",
-   "note_r7": "H-DIE-R7 10-17 coordinator 0dc+ 15:50: square for the 3x3 bank-tile ring (11.35 mm2 >= 10.4 measured min); 3.37 mm = the free height between the ep_S and ep_N SerDes endpoint rows (3.41 mm); full 3.5 mm needs those rows moved"
+   "version": 5
   },
   {
    "name": "lk_N0",
@@ -15093,404 +15009,36 @@
   {
    "name": "host_cp_ingress",
    "cell": "ot_hbm_host_static_ingress",
-   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
-   "source_sha256": "0ffcaf501a08d69ffe4af48cad2aa4f2eacd0cebd0dffbd6b4ed3e78c502a0ee",
-   "source_prerequisite": "4e16b003e",
-   "params": {},
    "kind": "tile",
-   "parent": "host_cp",
-   "instance_pending": "hostingress front component; host packet bridge and programme target adapters not yet joined",
+   "parent": "die",
    "outline": {
     "w": 216.0,
     "h": 216.0
    },
    "origin": {
-    "x": 21.6,
-    "y": 21.6,
+    "x": 9676.8,
+    "y": 14580.0,
     "orient": "R0"
    },
-   "pins": [
-    {
-     "name": "clk",
-     "face": "N",
-     "layer": "M5",
-     "offset": 107.808,
-     "span_um": [
-      107.76,
-      107.856
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "rst_n",
-     "face": "N",
-     "layer": "M5",
-     "offset": 107.904,
-     "span_um": [
-      107.856,
-      107.952
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "block_ready",
-     "face": "N",
-     "layer": "M5",
-     "offset": 108.0,
-     "span_um": [
-      107.952,
-      108.048
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "program_active",
-     "face": "N",
-     "layer": "M5",
-     "offset": 108.096,
-     "span_um": [
-      108.048,
-      108.144
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "program_fault",
-     "face": "N",
-     "layer": "M5",
-     "offset": 108.192,
-     "span_um": [
-      108.144,
-      108.24
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_awvalid",
-     "face": "W",
-     "layer": "M4",
-     "offset": 103.056,
-     "span_um": [
-      103.008,
-      103.104
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_awready",
-     "face": "W",
-     "layer": "M4",
-     "offset": 103.152,
-     "span_um": [
-      103.104,
-      103.2
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_awaddr[11:0]",
-     "face": "W",
-     "layer": "M4",
-     "offset": 103.776,
-     "span_um": [
-      103.2,
-      104.352
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_wvalid",
-     "face": "W",
-     "layer": "M4",
-     "offset": 104.4,
-     "span_um": [
-      104.352,
-      104.448
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_wready",
-     "face": "W",
-     "layer": "M4",
-     "offset": 104.496,
-     "span_um": [
-      104.448,
-      104.544
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_wdata[31:0]",
-     "face": "W",
-     "layer": "M4",
-     "offset": 106.08,
-     "span_um": [
-      104.544,
-      107.616
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_wstrb[3:0]",
-     "face": "W",
-     "layer": "M4",
-     "offset": 107.808,
-     "span_um": [
-      107.616,
-      108.0
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_bvalid",
-     "face": "W",
-     "layer": "M4",
-     "offset": 108.048,
-     "span_um": [
-      108.0,
-      108.096
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_bready",
-     "face": "W",
-     "layer": "M4",
-     "offset": 108.144,
-     "span_um": [
-      108.096,
-      108.192
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_bresp[1:0]",
-     "face": "W",
-     "layer": "M4",
-     "offset": 108.288,
-     "span_um": [
-      108.192,
-      108.384
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_arvalid",
-     "face": "W",
-     "layer": "M4",
-     "offset": 108.432,
-     "span_um": [
-      108.384,
-      108.48
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_arready",
-     "face": "W",
-     "layer": "M4",
-     "offset": 108.528,
-     "span_um": [
-      108.48,
-      108.576
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_araddr[11:0]",
-     "face": "W",
-     "layer": "M4",
-     "offset": 109.152,
-     "span_um": [
-      108.576,
-      109.728
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_rvalid",
-     "face": "W",
-     "layer": "M4",
-     "offset": 109.776,
-     "span_um": [
-      109.728,
-      109.824
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_rready",
-     "face": "W",
-     "layer": "M4",
-     "offset": 109.872,
-     "span_um": [
-      109.824,
-      109.92
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "s_rdata[31:0]",
-     "face": "W",
-     "layer": "M4",
-     "offset": 111.456,
-     "span_um": [
-      109.92,
-      112.992
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "cfg_v",
-     "face": "S",
-     "layer": "M5",
-     "offset": 92.64,
-     "span_um": [
-      92.592,
-      92.688
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "cfg_target[7:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 93.072,
-     "span_um": [
-      92.688,
-      93.456
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "cfg_addr[11:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 94.032,
-     "span_um": [
-      93.456,
-      94.608
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "cfg_data[255:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 106.896,
-     "span_um": [
-      94.608,
-      119.184
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "desc_v",
-     "face": "S",
-     "layer": "M5",
-     "offset": 119.232,
-     "span_um": [
-      119.184,
-      119.28
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "desc_base[11:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 119.856,
-     "span_um": [
-      119.28,
-      120.432
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "desc_limit[12:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 121.056,
-     "span_um": [
-      120.432,
-      121.68
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "desc_loops[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 122.448,
-     "span_um": [
-      121.68,
-      123.216
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "launch_v",
-     "face": "S",
-     "layer": "M5",
-     "offset": 123.264,
-     "span_um": [
-      123.216,
-      123.312
-     ],
-     "offset_pending_view": true
-    },
-    {
-     "name": "fault",
-     "face": "S",
-     "layer": "M5",
-     "offset": 123.36,
-     "span_um": [
-      123.312,
-      123.408
-     ],
-     "offset_pending_view": true
-    }
-   ],
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 9 placed peers (2664 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 10 peers at their GEN2e positions (10175, 15798), 1500 um off it; 1814 um from its GEN2a site",
    "clock_entry": {
     "pin": "clk",
     "face": "N",
     "layer": "M5",
     "offset": 107.808
    },
-   "clock_domain": "stream",
-   "clock_period_ps": 833.333333,
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
-   "layer_rule": "tile",
-   "version": 1,
-   "grant": "diagnostic_component_child",
-   "assigned_pin_file": "physical/ref_tile/hbm_host_static_ingress_pin2_ref/views/ot_hbm_host_static_ingress/ot_hbm_host_static_ingress.lef",
-   "assigned_pin_file_sha256": "708ec7cc90a79c5ae3568264f0494dea775cf65f41111299f3cf066d12cc3107",
-   "measured_std_um2": 354.52728,
-   "supported_targets": [
-    48
-   ],
-   "supported_target_scope": "default target-mask VM calendar only; actual local full-row readiness validation required",
-   "qualification_scope": "Independent exact-source native child: TT181.40 FF23.86 DRC0,L196.4/C184.8,0comb. ActualroutedLEFis authoritativechildpinmap. Hostparent/nativepacket/heterotarget/readiness/clock and all incidentdie paths remain OPEN. Historicalb69view notaliased.",
-   "source_dependencies_sha256": {
-    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv": "0ffcaf501a08d69ffe4af48cad2aa4f2eacd0cebd0dffbd6b4ed3e78c502a0ee"
-   },
-   "view": "physical/ref_tile/hbm_host_static_ingress_pin2_ref/views/ot_hbm_host_static_ingress",
-   "view_files_sha256": {
-    "ot_hbm_host_static_ingress.lef": "708ec7cc90a79c5ae3568264f0494dea775cf65f41111299f3cf066d12cc3107",
-    "ot_hbm_host_static_ingress_tt.lib": "b5a3a30eff0eb095fcfaf409f7c121c6bb664fcff429daad21bdeaa74138135f",
-    "ot_hbm_host_static_ingress_ff.lib": "2493a2c729f260a7e876c5bfd144d4d3711e668fb74eb0009662735429c87174",
-    "insertion.json": "df589feb8d66e6d966c155ba7b1e54fc2a0394d4e8b59a2cb453f7ce811a9d7f"
-   },
-   "native_audit": "results/arch/hbm_die_v15/views_v5/host_ingress_pin2_native_1417.json",
-   "native_leaf_qualified": true
+   "version": 1
   },
   {
    "name": "hb_ckgen",
@@ -18733,7 +18281,7 @@
    "notes": "XQL pair store SW p1 in the SM pair gap (d4f r4)"
   },
   {
-   "name": "xq_SW_p2_eg",
+   "name": "xq_SE_p0_eg",
    "cell": "ot_hgi_sm_xload_xq_pegress",
    "kind": "tile",
    "parent": "die",
@@ -18760,10 +18308,10 @@
     "S": "rwq 1,024 from the bfq stack",
     "E": "43 ctl"
    },
-   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p2_eg -> xq_SE_p0_eg (contract name; slot had no user)"
   },
   {
-   "name": "xq_SW_p2_bd",
+   "name": "xq_SE_p0_bd",
    "cell": "ot_hgi_sm_xload_cl2_bdring",
    "kind": "tile",
    "parent": "die",
@@ -18785,10 +18333,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p2_bd -> xq_SE_p0_bd (contract name; slot had no user)"
   },
   {
-   "name": "xq_SW_p2_bfq0",
+   "name": "xq_SE_p0_bfq0",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -18810,10 +18358,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p2_bfq0 -> xq_SE_p0_bfq0 (contract name; slot had no user)"
   },
   {
-   "name": "xq_SW_p2_bfq1",
+   "name": "xq_SE_p0_bfq1",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -18835,10 +18383,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p2_bfq1 -> xq_SE_p0_bfq1 (contract name; slot had no user)"
   },
   {
-   "name": "xq_SW_p2_bfq2",
+   "name": "xq_SE_p0_bfq2",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -18860,10 +18408,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p2_bfq2 -> xq_SE_p0_bfq2 (contract name; slot had no user)"
   },
   {
-   "name": "xq_SW_p2_bfq3",
+   "name": "xq_SE_p0_bfq3",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -18885,10 +18433,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p2_bfq3 -> xq_SE_p0_bfq3 (contract name; slot had no user)"
   },
   {
-   "name": "xq_SW_p3_eg",
+   "name": "xq_SE_p1_eg",
    "cell": "ot_hgi_sm_xload_xq_pegress",
    "kind": "tile",
    "parent": "die",
@@ -18915,10 +18463,10 @@
     "S": "rwq 1,024 from the bfq stack",
     "E": "43 ctl"
    },
-   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p3_eg -> xq_SE_p1_eg (contract name; slot had no user)"
   },
   {
-   "name": "xq_SW_p3_bd",
+   "name": "xq_SE_p1_bd",
    "cell": "ot_hgi_sm_xload_cl2_bdring",
    "kind": "tile",
    "parent": "die",
@@ -18940,10 +18488,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p3_bd -> xq_SE_p1_bd (contract name; slot had no user)"
   },
   {
-   "name": "xq_SW_p3_bfq0",
+   "name": "xq_SE_p1_bfq0",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -18965,10 +18513,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p3_bfq0 -> xq_SE_p1_bfq0 (contract name; slot had no user)"
   },
   {
-   "name": "xq_SW_p3_bfq1",
+   "name": "xq_SE_p1_bfq1",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -18990,10 +18538,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p3_bfq1 -> xq_SE_p1_bfq1 (contract name; slot had no user)"
   },
   {
-   "name": "xq_SW_p3_bfq2",
+   "name": "xq_SE_p1_bfq2",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -19015,10 +18563,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p3_bfq2 -> xq_SE_p1_bfq2 (contract name; slot had no user)"
   },
   {
-   "name": "xq_SW_p3_bfq3",
+   "name": "xq_SE_p1_bfq3",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -19040,7 +18588,7 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store SW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_SW_p3_bfq3 -> xq_SE_p1_bfq3 (contract name; slot had no user)"
   },
   {
    "name": "xq_NW_p0_eg",
@@ -19353,7 +18901,7 @@
    "notes": "XQL pair store NW p1 in the SM pair gap (d4f r4)"
   },
   {
-   "name": "xq_NW_p2_eg",
+   "name": "xq_NE_p0_eg",
    "cell": "ot_hgi_sm_xload_xq_pegress",
    "kind": "tile",
    "parent": "die",
@@ -19380,10 +18928,10 @@
     "S": "rwq 1,024 from the bfq stack",
     "E": "43 ctl"
    },
-   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p2_eg -> xq_NE_p0_eg (contract name; slot had no user)"
   },
   {
-   "name": "xq_NW_p2_bd",
+   "name": "xq_NE_p0_bd",
    "cell": "ot_hgi_sm_xload_cl2_bdring",
    "kind": "tile",
    "parent": "die",
@@ -19405,10 +18953,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p2_bd -> xq_NE_p0_bd (contract name; slot had no user)"
   },
   {
-   "name": "xq_NW_p2_bfq0",
+   "name": "xq_NE_p0_bfq0",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -19430,10 +18978,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p2_bfq0 -> xq_NE_p0_bfq0 (contract name; slot had no user)"
   },
   {
-   "name": "xq_NW_p2_bfq1",
+   "name": "xq_NE_p0_bfq1",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -19455,10 +19003,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p2_bfq1 -> xq_NE_p0_bfq1 (contract name; slot had no user)"
   },
   {
-   "name": "xq_NW_p2_bfq2",
+   "name": "xq_NE_p0_bfq2",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -19480,10 +19028,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p2_bfq2 -> xq_NE_p0_bfq2 (contract name; slot had no user)"
   },
   {
-   "name": "xq_NW_p2_bfq3",
+   "name": "xq_NE_p0_bfq3",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -19505,10 +19053,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p2 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p2_bfq3 -> xq_NE_p0_bfq3 (contract name; slot had no user)"
   },
   {
-   "name": "xq_NW_p3_eg",
+   "name": "xq_NE_p1_eg",
    "cell": "ot_hgi_sm_xload_xq_pegress",
    "kind": "tile",
    "parent": "die",
@@ -19535,10 +19083,10 @@
     "S": "rwq 1,024 from the bfq stack",
     "E": "43 ctl"
    },
-   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p3_eg -> xq_NE_p1_eg (contract name; slot had no user)"
   },
   {
-   "name": "xq_NW_p3_bd",
+   "name": "xq_NE_p1_bd",
    "cell": "ot_hgi_sm_xload_cl2_bdring",
    "kind": "tile",
    "parent": "die",
@@ -19560,10 +19108,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p3_bd -> xq_NE_p1_bd (contract name; slot had no user)"
   },
   {
-   "name": "xq_NW_p3_bfq0",
+   "name": "xq_NE_p1_bfq0",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -19585,10 +19133,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p3_bfq0 -> xq_NE_p1_bfq0 (contract name; slot had no user)"
   },
   {
-   "name": "xq_NW_p3_bfq1",
+   "name": "xq_NE_p1_bfq1",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -19610,10 +19158,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p3_bfq1 -> xq_NE_p1_bfq1 (contract name; slot had no user)"
   },
   {
-   "name": "xq_NW_p3_bfq2",
+   "name": "xq_NE_p1_bfq2",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -19635,10 +19183,10 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p3_bfq2 -> xq_NE_p1_bfq2 (contract name; slot had no user)"
   },
   {
-   "name": "xq_NW_p3_bfq3",
+   "name": "xq_NE_p1_bfq3",
    "cell": "ot_hgi_sm_xload_cl2_bfqg",
    "kind": "tile",
    "parent": "die",
@@ -19660,55 +19208,53 @@
    "pins": [],
    "pin_status": "MACRO_LEF_PINS",
    "faces": null,
-   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4)"
+   "notes": "XQL pair store NW p3 in the SM pair gap (d4f r4) | TW5-GEN2E 10-19: renamed xq_NW_p3_bfq3 -> xq_NE_p1_bfq3 (contract name; slot had no user)"
   },
   {
    "name": "wbk_SW",
-   "cell": "ot_hbm_svc_wb_kport",
+   "cell": "ot_hbm_svc_wb_kport_q",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 520.0,
-    "h": 520.0
+    "w": 475.2,
+    "h": 475.2
    },
    "origin": {
-    "x": 14240.016,
-    "y": 668.088,
+    "x": 7452.648,
+    "y": 1877.688,
     "orient": "R0"
    },
    "pins": [],
    "pin_status": "FACES_ONLY",
-   "grant": "d4f_own_slot_1017",
-   "notes": "own slot (was sharing hb_dbk_SW); contract slot retarget requested from H-NETLIST",
-   "fit_r2": {
-    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
-    "moved_um": 0.0
-   },
-   "r6": "PC band E end, beside its 8 vmks consumers (H-DIE-R6 coordinator item 7)"
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: write-back K port SW in the SM pair gap sm_SW2/sm_SW3 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_SW (2,405 b); old slot sat E of the PHY beside nothing it talks to"
   },
   {
    "name": "wbk_NW",
-   "cell": "ot_hbm_svc_wb_kport",
+   "cell": "ot_hbm_svc_wb_kport_q",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 520.0,
-    "h": 520.0
+    "w": 475.2,
+    "h": 475.2
    },
    "origin": {
-    "x": 14618.016,
-    "y": 30013.2,
-    "orient": "MX"
+    "x": 7452.648,
+    "y": 29420.712,
+    "orient": "R0"
    },
    "pins": [],
    "pin_status": "FACES_ONLY",
-   "grant": "d4f_own_slot_1017",
-   "notes": "own slot (was sharing hb_dbk_NW); contract slot retarget requested from H-NETLIST",
-   "fit_r2": {
-    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
-    "moved_um": 0.0
-   },
-   "r6": "PC band E end, beside its 8 vmks consumers (H-DIE-R6 coordinator item 7)"
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: write-back K port NW in the SM pair gap sm_NW2/sm_NW3 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_NW (2,405 b); old slot sat E of the PHY beside nothing it talks to"
   },
   {
    "name": "sfup_SW",
@@ -22477,6 +22023,972 @@
    "pin_status": "KIT_FACES",
    "ring_block": "hcr_NE",
    "notes": "HC-RINGPLAN 10-19: HC ring bank 7 of NE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_cb_1017 R180"
+  },
+  {
+   "name": "hb_idx__s_SW",
+   "cell": "ot_hbm_idx_score_quarter_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 1512.0,
+    "h": 1512.0
+   },
+   "origin": {
+    "x": 4028.832,
+    "y": 484.056,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX quarter scorer SW in plan idxs_SW, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner"
+  },
+  {
+   "name": "hb_idx__q_SW",
+   "cell": "ot_hbm_idx_query_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 180.0,
+    "h": 180.36
+   },
+   "origin": {
+    "x": 3790.8,
+    "y": 1815.696,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX query core SW beside its scorer hb_idx__s_SW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+  },
+  {
+   "name": "hb_idx__op_SW",
+   "cell": "ot_hbm_idx_vm_query_static_n12",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 216.0,
+    "h": 162.0
+   },
+   "origin": {
+    "x": 3790.8,
+    "y": 1631.664,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX VM operand reader SW beside its scorer hb_idx__s_SW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+  },
+  {
+   "name": "hb_idx__s_SE",
+   "cell": "ot_hbm_idx_score_quarter_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 1512.0,
+    "h": 1512.0
+   },
+   "origin": {
+    "x": 14657.112,
+    "y": 484.056,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX quarter scorer SE in plan idxs_SE, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner"
+  },
+  {
+   "name": "hb_idx__q_SE",
+   "cell": "ot_hbm_idx_query_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 180.0,
+    "h": 180.36
+   },
+   "origin": {
+    "x": 16191.144,
+    "y": 1815.696,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX query core SE beside its scorer hb_idx__s_SE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+  },
+  {
+   "name": "hb_idx__op_SE",
+   "cell": "ot_hbm_idx_vm_query_static_n12",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 216.0,
+    "h": 162.0
+   },
+   "origin": {
+    "x": 16191.144,
+    "y": 1631.664,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX VM operand reader SE beside its scorer hb_idx__s_SE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+  },
+  {
+   "name": "hb_idx__s_NW",
+   "cell": "ot_hbm_idx_score_quarter_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 1512.0,
+    "h": 1512.0
+   },
+   "origin": {
+    "x": 4028.832,
+    "y": 29777.544,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX quarter scorer NW in plan idxs_NW, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner"
+  },
+  {
+   "name": "hb_idx__q_NW",
+   "cell": "ot_hbm_idx_query_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 180.0,
+    "h": 180.36
+   },
+   "origin": {
+    "x": 3790.8,
+    "y": 29777.544,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX query core NW beside its scorer hb_idx__s_NW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+  },
+  {
+   "name": "hb_idx__op_NW",
+   "cell": "ot_hbm_idx_vm_query_static_n12",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 216.0,
+    "h": 162.0
+   },
+   "origin": {
+    "x": 3790.8,
+    "y": 29979.936,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX VM operand reader NW beside its scorer hb_idx__s_NW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+  },
+  {
+   "name": "hb_idx__s_NE",
+   "cell": "ot_hbm_idx_score_quarter_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 1512.0,
+    "h": 1512.0
+   },
+   "origin": {
+    "x": 14657.112,
+    "y": 29777.544,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX quarter scorer NE in plan idxs_NE, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner"
+  },
+  {
+   "name": "hb_idx__q_NE",
+   "cell": "ot_hbm_idx_query_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 180.0,
+    "h": 180.36
+   },
+   "origin": {
+    "x": 16191.144,
+    "y": 29777.544,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX query core NE beside its scorer hb_idx__s_NE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+  },
+  {
+   "name": "hb_idx__op_NE",
+   "cell": "ot_hbm_idx_vm_query_static_n12",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 216.0,
+    "h": 162.0
+   },
+   "origin": {
+    "x": 16191.144,
+    "y": 29979.936,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: IDX VM operand reader NE beside its scorer hb_idx__s_NE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+  },
+  {
+   "name": "wbk_SE",
+   "cell": "ot_hbm_svc_wb_kport_q",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 475.2,
+    "h": 475.2
+   },
+   "origin": {
+    "x": 12272.04,
+    "y": 1877.688,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: write-back K port SE in the SM pair gap sm_SW4/sm_SW5 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_SE (2,405 b); old slot sat E of the PHY beside nothing it talks to"
+  },
+  {
+   "name": "wbk_NE",
+   "cell": "ot_hbm_svc_wb_kport_q",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 475.2,
+    "h": 475.2
+   },
+   "origin": {
+    "x": 12272.04,
+    "y": 29420.712,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: write-back K port NE in the SM pair gap sm_NW4/sm_NW5 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_NE (2,405 b); old slot sat E of the PHY beside nothing it talks to"
+  },
+  {
+   "name": "xl_SW_ctl",
+   "cell": "ot_hgi_sm_xload_cl2_ctlx",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 388.8,
+    "h": 388.8
+   },
+   "origin": {
+    "x": 3024.0,
+    "y": 6944.4,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 20 placed peers (11004 b, bits^2 weighted) (>= 0): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (4928, 7947), 2518 um off it; 32 um from its GEN2a site"
+  },
+  {
+   "name": "xl_NW_ctl",
+   "cell": "ot_hgi_sm_xload_cl2_ctlx",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 388.8,
+    "h": 388.8
+   },
+   "origin": {
+    "x": 3024.0,
+    "y": 24440.4,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 20 placed peers (11004 b, bits^2 weighted) (>= 0): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (4932, 23826), 2523 um off it; 32 um from its GEN2a site"
+  },
+  {
+   "name": "xl_SE_ctl",
+   "cell": "ot_hgi_sm_xload_cl2_ctlx",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 388.8,
+    "h": 388.8
+   },
+   "origin": {
+    "x": 16783.2,
+    "y": 6944.4,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 11 placed peers (2599 b, bits^2 weighted) (>= 0.): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (15679, 8328), 2488 um off it; 4331 um from its GEN2a site"
+  },
+  {
+   "name": "xl_NE_ctl",
+   "cell": "ot_hgi_sm_xload_cl2_ctlx",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 388.8,
+    "h": 388.8
+   },
+   "origin": {
+    "x": 16783.2,
+    "y": 24440.4,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 11 placed peers (2599 b, bits^2 weighted) (>= 0.): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (15675, 23442), 2496 um off it; 4331 um from its GEN2a site"
+  },
+  {
+   "name": "hb_dbk_SE",
+   "cell": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 239.976,
+    "h": 240.84
+   },
+   "origin": {
+    "x": 12506.4,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 10 placed peers (4598 b, bits^2 weighted) -> out): nearest clear site to the bits^2 centroid of 11 peers at their GEN2e positions (13040, 3014), 415 um off it; 81 um from its GEN2a site"
+  },
+  {
+   "name": "hb_dbk_NE",
+   "cell": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 239.976,
+    "h": 240.84
+   },
+   "origin": {
+    "x": 12506.4,
+    "y": 28630.8,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 10 placed peers (4598 b, bits^2 weighted) -> out): nearest clear site to the bits^2 centroid of 11 peers at their GEN2e positions (13033, 28753), 409 um off it; 81 um from its GEN2a site"
+  },
+  {
+   "name": "hb_quant_NW",
+   "cell": "ot_hgi_qdq_host_split",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 239.544,
+    "h": 239.76
+   },
+   "origin": {
+    "x": 3164.4,
+    "y": 20768.4,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 9 placed peers (2571 b, bits^2 weighted) OWNER-B): nearest clear site to the bits^2 centroid of 10 peers at their GEN2e positions (3217, 20885), 71 um off it; 173 um from its GEN2a site"
+  },
+  {
+   "name": "hb_idx__qctl_SW",
+   "cell": "ot_hbm_idx_qctl_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 194.832,
+    "h": 195.48
+   },
+   "origin": {
+    "x": 9687.6,
+    "y": 14212.8,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (9984, 13652), 857 um off it; 896 um from its GEN2a site"
+  },
+  {
+   "name": "hb_idx__qctl_SE",
+   "cell": "ot_hbm_idx_qctl_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 194.832,
+    "h": 195.48
+   },
+   "origin": {
+    "x": 9450.0,
+    "y": 14212.8,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (10067, 13652), 1178 um off it; 821 um from its GEN2a site"
+  },
+  {
+   "name": "hb_idx__qctl_NW",
+   "cell": "ot_hbm_idx_qctl_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 194.832,
+    "h": 195.48
+   },
+   "origin": {
+    "x": 9212.4,
+    "y": 14212.8,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (9984, 13871), 1113 um off it; 1199 um from its GEN2a site"
+  },
+  {
+   "name": "hb_idx__qctl_NE",
+   "cell": "ot_hbm_idx_qctl_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 194.832,
+    "h": 195.48
+   },
+   "origin": {
+    "x": 9439.2,
+    "y": 14439.6,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (10067, 13871), 1197 um off it; 1604 um from its GEN2a site"
+  },
+  {
+   "name": "epcal_SW",
+   "cell": "hfd_hgi_vm_calendar_f20",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 241.92,
+    "h": 116.64
+   },
+   "origin": {
+    "x": 7635.6,
+    "y": 7095.6,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (362 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (7757, 7096), 58 um off it; 0 um from its GEN2a site"
+  },
+  {
+   "name": "epcal_NW",
+   "cell": "hfd_hgi_vm_calendar_f20",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 241.92,
+    "h": 116.64
+   },
+   "origin": {
+    "x": 7603.2,
+    "y": 24462.0,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 2 placed peers (343 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 2 peers at their GEN2e positions (7897, 24525), 177 um off it; 254 um from its GEN2a site"
+  },
+  {
+   "name": "epcal_SE",
+   "cell": "hfd_hgi_vm_calendar_f20",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 241.92,
+    "h": 116.64
+   },
+   "origin": {
+    "x": 12484.8,
+    "y": 6048.0,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 2 placed peers (343 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 2 peers at their GEN2e positions (12611, 6108), 6 um off it; 65 um from its GEN2a site"
+  },
+  {
+   "name": "epcal_NE",
+   "cell": "hfd_hgi_vm_calendar_f20",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 241.92,
+    "h": 116.64
+   },
+   "origin": {
+    "x": 12268.8,
+    "y": 25088.4,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 2 placed peers (343 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 2 peers at their GEN2e positions (12284, 25147), 107 um off it; 76 um from its GEN2a site"
+  },
+  {
+   "name": "xl_SW_aqlo",
+   "cell": "ot_hbm_xp_aq_tree13_fmt",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 183.6,
+    "h": 108.0
+   },
+   "origin": {
+    "x": 3229.2,
+    "y": 6804.0,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 7338), 616 um off it; 43 um from its GEN2a site"
+  },
+  {
+   "name": "xl_SW_aqhi",
+   "cell": "ot_hbm_xp_aq_tree13_fmt",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 183.6,
+    "h": 108.0
+   },
+   "origin": {
+    "x": 3229.2,
+    "y": 6663.6,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 7338), 756 um off it; 356 um from its GEN2a site"
+  },
+  {
+   "name": "xl_NW_aqlo",
+   "cell": "ot_hbm_xp_aq_tree13_fmt",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 183.6,
+    "h": 108.0
+   },
+   "origin": {
+    "x": 3229.2,
+    "y": 24850.8,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 24435), 605 um off it; 32 um from its GEN2a site"
+  },
+  {
+   "name": "xl_NW_aqhi",
+   "cell": "ot_hbm_xp_aq_tree13_fmt",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 183.6,
+    "h": 108.0
+   },
+   "origin": {
+    "x": 3229.2,
+    "y": 24980.4,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 24435), 734 um off it; 335 um from its GEN2a site"
+  },
+  {
+   "name": "xl_SE_aqlo",
+   "cell": "ot_hbm_xp_aq_tree13_fmt",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 183.6,
+    "h": 108.0
+   },
+   "origin": {
+    "x": 16783.2,
+    "y": 6804.0,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 7338), 661 um off it; 4234 um from its GEN2a site"
+  },
+  {
+   "name": "xl_SE_aqhi",
+   "cell": "ot_hbm_xp_aq_tree13_fmt",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 183.6,
+    "h": 108.0
+   },
+   "origin": {
+    "x": 16783.2,
+    "y": 6663.6,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 7338), 802 um off it; 4169 um from its GEN2a site"
+  },
+  {
+   "name": "xl_NE_aqlo",
+   "cell": "ot_hbm_xp_aq_tree13_fmt",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 183.6,
+    "h": 108.0
+   },
+   "origin": {
+    "x": 16783.2,
+    "y": 24850.8,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 24435), 651 um off it; 4223 um from its GEN2a site"
+  },
+  {
+   "name": "xl_NE_aqhi",
+   "cell": "ot_hbm_xp_aq_tree13_fmt",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 183.6,
+    "h": 108.0
+   },
+   "origin": {
+    "x": 16783.2,
+    "y": 24980.4,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 24435), 780 um off it; 4147 um from its GEN2a site"
+  },
+  {
+   "name": "hb_idx__nwsh",
+   "cell": "ot_hbm_idx_vm_share2_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 131.76,
+    "h": 131.76
+   },
+   "origin": {
+    "x": 2538.0,
+    "y": 22593.6,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 9 placed peers (4384 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 14 peers at their GEN2e positions (2606, 21831), 830 um off it; 2435 um from its GEN2a site"
+  },
+  {
+   "name": "cxij_SW",
+   "cell": "ot_hbm_su_static_cxport_ij",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 105.84,
+    "h": 105.84
+   },
+   "origin": {
+    "x": 4557.6,
+    "y": 12063.6,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (4609, 11928), 190 um off it; 902 um from its GEN2a site"
+  },
+  {
+   "name": "cxij_SE",
+   "cell": "ot_hbm_su_static_cxport_ij",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 105.84,
+    "h": 105.84
+   },
+   "origin": {
+    "x": 15660.0,
+    "y": 12063.6,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (15711, 11900), 219 um off it; 799 um from its GEN2a site"
+  },
+  {
+   "name": "cxij_NW",
+   "cell": "ot_hbm_su_static_cxport_ij",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 105.84,
+    "h": 105.84
+   },
+   "origin": {
+    "x": 4600.8,
+    "y": 19602.0,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (4650, 19870), 219 um off it; 940 um from its GEN2a site"
+  },
+  {
+   "name": "cxij_NE",
+   "cell": "ot_hbm_su_static_cxport_ij",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 105.84,
+    "h": 105.84
+   },
+   "origin": {
+    "x": 15660.0,
+    "y": 19602.0,
+    "orient": "R0"
+   },
+   "pins": [],
+   "pin_status": "FACES_ONLY",
+   "grant": "d4g_gen2e_homes_1019",
+   "layer_cap": "M5",
+   "signal_max_layer": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (15711, 19874), 221 um off it; 805 um from its GEN2a site"
   }
  ],
  "sub_layouts": {
