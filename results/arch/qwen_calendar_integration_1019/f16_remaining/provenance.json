@@ -1,0 +1,10 @@
+{
+  "original_mapper": "Yosys 0.67 (git 2d1509d1b); openroad/orfs:asap7lock; no remap in this packet",
+  "original_native_command": "read_liberty -lib libsource/all.lib; read_json generic.json; dfflibmap -liberty libsource/seq.lib; abc -liberty libsource/comb.lib; clean; stat -liberty libsource/all.lib; write_verilog -noattr native.v; write_json native.json",
+  "original_census_py_sha256": "5bd056a325eac721741c1763c113dfb1df1411928e9d6ecc14276dd08f24f236",
+  "original_tools": {
+    "generic.ys": "7f70aa49753e77a255f091cd9410a5bda93d050d48ee3972f976bf6e5760c658",
+    "native.sh": "209758e7c68240ec310d460bcb4d516b53e3d0484cfae010ddabaa563b40b231",
+    "native_wrapper.sv": "2670cfa1154fd9e00aad9946f5bedde9a44785961cc8f0f7c86cec91d22422b1"
+  }
+}

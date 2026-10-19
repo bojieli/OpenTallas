@@ -1,0 +1,251 @@
+{
+  "scope": "16 finite Boolean recurrence cases; not an RTL or parent reset proof",
+  "common_D_converges": 16,
+  "private_feedback_failure": {
+    "canonical": 0,
+    "clone": 1,
+    "enable": 0,
+    "data": 0,
+    "same_canonical_D_next": [
+      0,
+      0
+    ],
+    "private_feedback_next": [
+      0,
+      1
+    ]
+  },
+  "first_edge_equivalence_counterexample": {
+    "original_Q": 0,
+    "clone_Q": 1,
+    "baseline_hold_D": 0,
+    "rerouted_shared_D": 1
+  },
+  "required_contract": "Either a real reset establishes equal copies before use, or protect canonical D dependencies and prove externally invalid startup until equality. No parent contract is assumed.",
+  "cases": [
+    {
+      "canonical": 0,
+      "clone": 0,
+      "enable": 0,
+      "data": 0,
+      "same_canonical_D_next": [
+        0,
+        0
+      ],
+      "private_feedback_next": [
+        0,
+        0
+      ]
+    },
+    {
+      "canonical": 0,
+      "clone": 0,
+      "enable": 0,
+      "data": 1,
+      "same_canonical_D_next": [
+        0,
+        0
+      ],
+      "private_feedback_next": [
+        0,
+        0
+      ]
+    },
+    {
+      "canonical": 0,
+      "clone": 0,
+      "enable": 1,
+      "data": 0,
+      "same_canonical_D_next": [
+        0,
+        0
+      ],
+      "private_feedback_next": [
+        0,
+        0
+      ]
+    },
+    {
+      "canonical": 0,
+      "clone": 0,
+      "enable": 1,
+      "data": 1,
+      "same_canonical_D_next": [
+        1,
+        1
+      ],
+      "private_feedback_next": [
+        1,
+        1
+      ]
+    },
+    {
+      "canonical": 0,
+      "clone": 1,
+      "enable": 0,
+      "data": 0,
+      "same_canonical_D_next": [
+        0,
+        0
+      ],
+      "private_feedback_next": [
+        0,
+        1
+      ]
+    },
+    {
+      "canonical": 0,
+      "clone": 1,
+      "enable": 0,
+      "data": 1,
+      "same_canonical_D_next": [
+        0,
+        0
+      ],
+      "private_feedback_next": [
+        0,
+        1
+      ]
+    },
+    {
+      "canonical": 0,
+      "clone": 1,
+      "enable": 1,
+      "data": 0,
+      "same_canonical_D_next": [
+        0,
+        0
+      ],
+      "private_feedback_next": [
+        0,
+        0
+      ]
+    },
+    {
+      "canonical": 0,
+      "clone": 1,
+      "enable": 1,
+      "data": 1,
+      "same_canonical_D_next": [
+        1,
+        1
+      ],
+      "private_feedback_next": [
+        1,
+        1
+      ]
+    },
+    {
+      "canonical": 1,
+      "clone": 0,
+      "enable": 0,
+      "data": 0,
+      "same_canonical_D_next": [
+        1,
+        1
+      ],
+      "private_feedback_next": [
+        1,
+        0
+      ]
+    },
+    {
+      "canonical": 1,
+      "clone": 0,
+      "enable": 0,
+      "data": 1,
+      "same_canonical_D_next": [
+        1,
+        1
+      ],
+      "private_feedback_next": [
+        1,
+        0
+      ]
+    },
+    {
+      "canonical": 1,
+      "clone": 0,
+      "enable": 1,
+      "data": 0,
+      "same_canonical_D_next": [
+        0,
+        0
+      ],
+      "private_feedback_next": [
+        0,
+        0
+      ]
+    },
+    {
+      "canonical": 1,
+      "clone": 0,
+      "enable": 1,
+      "data": 1,
+      "same_canonical_D_next": [
+        1,
+        1
+      ],
+      "private_feedback_next": [
+        1,
+        1
+      ]
+    },
+    {
+      "canonical": 1,
+      "clone": 1,
+      "enable": 0,
+      "data": 0,
+      "same_canonical_D_next": [
+        1,
+        1
+      ],
+      "private_feedback_next": [
+        1,
+        1
+      ]
+    },
+    {
+      "canonical": 1,
+      "clone": 1,
+      "enable": 0,
+      "data": 1,
+      "same_canonical_D_next": [
+        1,
+        1
+      ],
+      "private_feedback_next": [
+        1,
+        1
+      ]
+    },
+    {
+      "canonical": 1,
+      "clone": 1,
+      "enable": 1,
+      "data": 0,
+      "same_canonical_D_next": [
+        0,
+        0
+      ],
+      "private_feedback_next": [
+        0,
+        0
+      ]
+    },
+    {
+      "canonical": 1,
+      "clone": 1,
+      "enable": 1,
+      "data": 1,
+      "same_canonical_D_next": [
+        1,
+        1
+      ],
+      "private_feedback_next": [
+        1,
+        1
+      ]
+    }
+  ]
+}

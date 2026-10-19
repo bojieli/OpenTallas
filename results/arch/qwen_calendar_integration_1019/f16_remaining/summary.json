@@ -1,0 +1,113 @@
+{
+  "conditional_added_clock_cap_fF": 3.2402930000000003,
+  "conditional_added_clock_sinks": 7,
+  "conditional_additional_cells": {
+    "comb": 135,
+    "ff": 7,
+    "tie": 0
+  },
+  "conditional_fixed_point_iterations": [
+    {
+      "additional_by_role": {
+        "comb": 132,
+        "ff": 2,
+        "tie": 0
+      },
+      "changed_roots": 48,
+      "iteration": 0
+    },
+    {
+      "additional_by_role": {
+        "comb": 135,
+        "ff": 4,
+        "tie": 0
+      },
+      "changed_roots": 5,
+      "iteration": 1
+    },
+    {
+      "additional_by_role": {
+        "comb": 135,
+        "ff": 7,
+        "tie": 0
+      },
+      "changed_roots": 3,
+      "iteration": 2
+    },
+    {
+      "additional_by_role": {
+        "comb": 135,
+        "ff": 7,
+        "tie": 0
+      },
+      "changed_roots": 0,
+      "iteration": 3
+    }
+  ],
+  "conditional_native_cell_area_um2": 13.296960000000002,
+  "conditions": [
+    "Useful canonical gate duplication and actual same-canonical-D FF copies, no independent feedback muxes.",
+    "This is a logical endpoint partition model, not synthesis survival or a placement.",
+    "Copies add endpoints upstream; fixed point includes every original root, including safe roots.",
+    "Inputs and constants are never treated as clonable storage or fictional ties.",
+    "Existing parent two-stage reset replacement and complete PW input face capture remain unbound."
+  ],
+  "external_unresolved": [
+    {
+      "loads": 927,
+      "role": "input",
+      "root": "port:rst_n[0]"
+    },
+    {
+      "loads": 56,
+      "role": "input",
+      "root": "port:pw_v[0]"
+    },
+    {
+      "loads": 903,
+      "role": "constant",
+      "root": "constant:1"
+    }
+  ],
+  "families": {
+    "PW partial-word capture": 2,
+    "PW template common admission": 1,
+    "PW template record write": 26,
+    "constant": 1,
+    "context counter update/start": 8,
+    "context start acceptance": 4,
+    "ff": 2,
+    "input": 2,
+    "pending-user decode": 4,
+    "round-robin pick": 1
+  },
+  "geometry": null,
+  "inputs_sha256": {
+    "comb.lib": "377a3a261542fb9defb41e3d3df3a0ecce9888629bb16bb4ef735007e66536b8",
+    "generic.json": "2ae8bbc65f94c00c8edcee6f031ba3b2074ea68cdc7d7e09d56bf1318477b6b1",
+    "native.json": "d5d3e5a82538e4df7203cd8b5eaff2e8ce43e359b3c340bd0692c7381ffa9e2d",
+    "seq.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+  },
+  "internal_copy_added_edges": 0,
+  "native_timing": null,
+  "parent_capture_added_edges": null,
+  "polarity_inverter_reserve_area_um2": 6.21108,
+  "polarity_inverter_reserve_cells": 142,
+  "reset_release_added_edges": null,
+  "roles": {
+    "comb": 15781,
+    "constant": 1,
+    "ff": 4172,
+    "input": 225
+  },
+  "roots": 20179,
+  "source_commit": "ff1a7c518",
+  "source_sha256": "8536070ddb594a5b6ae98c3f9ff2d78371cc50ec159ea72d7466142eccd97640",
+  "violating_roles": {
+    "comb": 46,
+    "constant": 1,
+    "ff": 2,
+    "input": 2
+  },
+  "violations": 51
+}
