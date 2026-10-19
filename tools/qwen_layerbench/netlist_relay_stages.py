@@ -247,17 +247,18 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
                         stack.append((nx[1], n, seen, lands))
                     continue
                 if is_relay(lm) and lp == 'a':
-                    if li in seen:
-                        problems.append(f'relay loop at {li} from {si}.{sp}'); continue
+                    node = (li, lpos)
+                    if node in seen:
+                        problems.append(f'relay loop at {li}.a[{lpos}] from {si}.{sp}'); continue
                     nx = relay_out.get((li, 'a', lpos))
                     if nx is None or nx[0] in ('CONST', 'Z', 'UNDECL'):
                         problems.append(f'relay {li}.b bit {lpos} open (chain from {si}.{sp})'); continue
-                    stack.append((nx, n + 1, seen | {li}, lands + ((li,) if re.match(r'^(qfd_land|qkd_land)', lm) else ())))
+                    stack.append((nx, n + 1, seen | {node}, lands + ((li,) if re.match(r'^(qfd_land|qkd_land)', lm) else ())))
                     continue
                 if skip_pin(li, lp, lm):
                     continue
                 if seen not in path_kinds:
-                    forwarded = frozenset(q for q in seen if FORWARDED_RE.match(inst_master[q]))
+                    forwarded = frozenset(q[0] for q in seen if FORWARDED_RE.match(inst_master[q[0]]))
                     path_kinds[seen] = (forwarded, len(seen) - len(forwarded))
                 forwarded, plain = path_kinds[seen]
                 r = pairs.setdefault((si, sp, li, lp), dict(st=set(), bits=set(), sm=sm, lm=lm, lands=set(),

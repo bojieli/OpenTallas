@@ -37,6 +37,22 @@ endmodule
 
 
 class NetlistWalk(unittest.TestCase):
+    def test_packed_relay_bits_are_distinct_pipeline_flops(self):
+        rtl = RTL + 'module qkd_rlys_4(input wire ck, input wire [3:0] a, output wire [3:0] b); endmodule'
+        die = '''module die();
+wire n_clk_core_c, n_d, n_out; wire [3:0] q;
+src s (.ck(n_clk_core_c), .v(n_d));
+qkd_rlys_4 pipe (.ck(n_clk_core_c), .a({q[2:0],n_d}), .b(q));
+dst d (.ck(n_clk_core_c), .v(q[3]));
+endmodule'''
+        with tempfile.TemporaryDirectory() as t:
+            Path(t, 'm.sv').write_text(rtl)
+            Path(t, 'die.v').write_text(die)
+            pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real') for m in ('src', 'dst', 'qkd_rlys_4')}, defines=[])
+            doc = N.export(f'{t}/die.v', pb, 'qwen_kv', 'HEAD', [], [t], 'packed')
+        self.assertEqual(doc['problem_count'], 0, doc['problems'])
+        self.assertEqual(doc['buses'][0]['age_edges'], 4)
+
     def test_stages_from_netlist(self):
         with tempfile.TemporaryDirectory() as t:
             (Path(t) / 'm.sv').write_text(RTL)
