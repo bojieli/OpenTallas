@@ -7,7 +7,7 @@
 # Usage (repo root): tools/s81_dv/layer_prog/svc/run_svc_bench.sh OUTDIR IMGDIR      (IMGDIR/{base,slot,late}/)
 set -euo pipefail
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-O=$1; IMG=$2; JOBS=${JOBS:-8}
+O=$(realpath -m "$1"); IMG=$2; JOBS=${JOBS:-8}   # absolute: the tb link runs inside $O/obj
 source tools/s81_dv/svc_rs/rs_files.sh
 mkdir -p "$O"
 "$VL" --version > "$O/verilator.version"

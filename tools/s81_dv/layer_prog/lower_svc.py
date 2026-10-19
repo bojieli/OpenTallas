@@ -43,11 +43,14 @@ Status (L0, sliding window, TP4 rank 0 = heads 0..15):
   attn.own_row_write / window_load / scores: LOWERED with the committed slice-set bench
       (results/rtl/s81_layer_tput_1018/compiler/bench_svc: the 16 real dsdv_svc_rs, the images and cycles emitted here,
       bit-exact vs the L0 fixtures).
-  attn.pv: PARTIAL -- the P.V words of quarter ST are bit-exact, but die.v instantiates every u_rsv_* with ST = 0
-      (no parameter override), so only dims 0..127 of the rank's 16 heads leave the die (dsdv_svc_att.sv:313 pvown).
-  attn.max / exp / den / sink / normalize: GAP -- the SM head computes them inside each slice, but its write face
-      w_v / w_a / w_m / w_d / w_st is unconnected on all 16 u_rsv_* in die.v: no on-die path from the SM rows to the
-      PV-frame p operand (the q pin is fed only by u_s_3S / u_s_4S xr band bo) nor to the normalisation.
+  attn.max / exp: LOWERED (TOK-S81-GAPS/SVCP 10-19, PPATH): the SE job's e rows feed the on-die P path (SM -> BF16
+      pbuf -> score-exchange P beats -> fold root PV frame -> entries' dn stream -> owners' p feed); bench_svc_p checks
+      every P word at the root and on both entries' dn streams = bf16(fixture attn.exp) and the P.V bit-exact.
+  attn.den / sink: PARTIAL -- computed on-die by the same SE job (SM head), consumed only by the SO normalisation.
+  attn.normalize: GAP G9b -- the SO job's o rows leave only on w_* (no on-die consumer; the SO operand rows = P.V by
+      head would come back as SMJ frames from the slice band, and the other 3 quarters need the cross-die exchange).
+  attn.pv: PARTIAL -- the P.V words of quarter ST are bit-exact; ST is now the CFG field (G10 strap part fixed), but
+      the other 3 quarters of the rank's 512 dims reach wo_a only through an unpriced cross-die exchange (G10).
   The q words reach the entry q pins from u_s_3S (W) / u_s_4S (E) ot_s81sl_xr band bo (pk[511:0], same cycle on both
   sides); producing those rows (header rows + q / own-row payload) is the slice families' send programme.
 """
@@ -67,6 +70,7 @@ for p in (ROOT / 'tools', ROOT / 'tools/s81_dv', ROOT):
 
 OPS = [r'^attn\.(own_row_write|window_load|scores|max|exp|den|sink|pv|normalize)$']
 BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc'
+BENCH_P = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc_p'   # TOK-S81-GAPS/SVCP: on-die P path (PPATH)
 UNIT = 'svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4'
 INSTS = [f'u_rsv_{i:02d}' for i in range(16)] + ['u_seqhost']
 
@@ -431,15 +435,24 @@ def lower(die, op, ctx):
         st = 'LOWERED'
     elif name in ('attn.window_load', 'attn.scores'):
         st = 'LOWERED'
+    elif name in ('attn.max', 'attn.exp') and PPATH:
+        st = 'LOWERED'
+        r['bench'] = BENCH_P
+    elif name in ('attn.den', 'attn.sink') and PPATH:
+        st = 'PARTIAL'
+        r['gap'] = dict(module='dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b',
+                        port='w_v / w_a / w_m / w_d (SO o rows)',
+                        missing='den / sink are computed on-die by the layer\'s SE job (the same SMJ frame as max / exp, '
+                                'lowered), but their only consumer is the SO normalisation, whose o rows have no on-die '
+                                'consumer (G9b): no bench checks den / sink')
     elif name == 'attn.pv':
         st = 'PARTIAL'
-        r['gap'] = dict(module='results/arch/s81_dv_1016/bind_p4l3_g8/die.v u_rsv_00..15 (dsdv_svc_att ST) -- die gap G10',
-                        port='ST (compile-time parameter = the die\'s HBM-stack position)',
+        r['gap'] = dict(module='dsdv_svc_att quarter ST (pvown) -- die gap G10 (cross-die part)',
+                        port='P.V quarters 4 ST .. 4 ST + 3 (one die) -> wo_a (all 512 dims of the rank)',
                         missing='by design (results/arch/s81_dv_1016/svc_rs/decisions.json, svc_c rule) a die emits the P.V '
-                                'of its stack\'s output quarter only (tiles 4 ST .. 4 ST + 3, dsdv_svc_att.sv:313 pvown); '
-                                'the quarter-0 words are bench-exact, so for the die at stack position 0 the on-die op is '
-                                'complete. GAP G10: ST is a parameter, not a strap or CFG field, so one die netlist '
-                                'cannot take stack positions 1..3 (every array die emits quarter 0), and the other 3 '
+                                'of its stack\'s output quarter only (tiles 4 ST .. 4 ST + 3, dsdv_svc_att pvown); the '
+                                'quarter words are bench-exact with P produced ON-DIE (PPATH).  ST is the CFG frame field '
+                                '[32] / [31:30] since TOK-S81-GAPS/SVCP (one die netlist, 4 stack positions); the other 3 '
                                 'quarters reach wo_a only through a cross-die exchange that no layer op prices or lowers '
                                 '(TOK.DS.XDIE / S81-DIE8 decision)')
     else:
@@ -452,7 +465,15 @@ def lower(die, op, ctx):
                                 'PASSes and synthesis would remove the SM): the P operand of the PV frame (16 heads x 2 '
                                 'rows BF16 a word, from 16 different slices) and the normalised o rows have no on-die '
                                 'path; the bench feeds P = bf16(fixture attn.exp) as runtime data. Needs an RTL dataflow '
-                                'decision (gaps.json G9 options), not a lowering')
+                                'decision (gaps.json G9 options), not a lowering') if not PPATH else dict(
+                        module='dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b',
+                        port='w_v / w_a / w_m / w_d (SO o rows; die.v: open)',
+                        missing='the SO job (den divide + inverse RoPE -> BF16 o rows) runs in slice g, but its o rows '
+                                'leave only on w_*, which nothing on the die reads, and its operand rows (P.V of head g, '
+                                'all dims) exist on-die only as the owners\' P.V quarter words at the entry pv pins: '
+                                'needs (a) the SO operand rows back as SMJ frames (slice band send programme) or an '
+                                'in-grid head gather, (b) an o-row exit (return tree -> pv pins), (c) the cross-die '
+                                'quarters (G10)')
     return dict(r, status=st)
 
 
