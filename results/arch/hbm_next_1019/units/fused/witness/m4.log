@@ -1,18 +1,5 @@
-2026-10-19T02:49:01-07:00 start host=ot-epyc5 bundle=f6d6de957
-2026-10-19T03:22:37-07:00 build m4 rc=0 bin=ok
-2026-10-19T03:22:54-07:00 m4 pre_n4_g0: MISMATCH word 168192: got 3f900000 exp 3f920000 MISMATCH word 168193: got 3f220000 exp 3f240000 MISMATCH word 168194: got bf5f0000 exp bf610000 
-2026-10-19T03:22:54-07:00 done
-verilator: /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator Verilator 5.050 2026-07-01 rev v5.050
---- run_m4_pre_n4_g0/run.log
-MISMATCH word 168192: got 3f900000 exp 3f920000
-MISMATCH word 168193: got 3f220000 exp 3f240000
-MISMATCH word 168194: got bf5f0000 exp bf610000
-MISMATCH word 168195: got bcef0000 exp bcf20000
-MISMATCH word 168196: got bede0000 exp bee10000
-HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=4 cycles=471 done=0 fault=1 reads=10884 writes=4160
-HNX_FUSED FAIL op=pre N=4 mism=15816 fault=1 done=0 bankerr=0 writes=4160 expect_sectors=2560
-- rtl/hbm_next/fused/tb/tb_hnx_fused.sv:78: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 16.249 s; speed 65.911 ns/s
-- Verilator: cpu 16.249 s on 1 threads; allocated 313 MB
-RUN_RC=0
+2026-10-19T04:45:39-07:00 start host=ot-epyc8 bundle=5e2b4ea95
+2026-10-19T05:22:51-07:00 build m4 rc=0 bin=ok
+2026-10-19T05:22:59-07:00 m4 pre_n4_g0: HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=4 cycles=471 done=0 fault=1 reads=10884 writes=4160 HNX_FUSED FAIL op=pre N=4 mism=15816 fault=1 done=0 bankerr=0 writes=4160 expect_sectors=2560  MISMATCH word 168192: got 3f900000 exp 3f920000
+2026-10-19T05:23:00-07:00 m4 SUMMARY pass=0 fail=1 noresult=0
+2026-10-19T05:23:00-07:00 done

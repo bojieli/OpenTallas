@@ -187,7 +187,7 @@ module ot_hnx_fused_lane #(
     // ---- datapath (the LL lane's flat element pipelines, unchanged)
     wire [7:0] hv; wire [255:0] ho; wire [7:0] hf;
     wire [255:0] xl; wire [7:0] mf, sf; wire [255:0] sq;
-    wire [255:0] pp, qq; wire [7:0] f1, f2;
+    wire [255:0] qq; wire [7:0] f1, f2;
     localparam integer DM = LM + 3 * LA + 1;
     wire [DM:0] vm;
     ot_hdc_vline #(.D(DM)) u_vm (.clk(clk), .rst_n(rl), .v(mx_v), .vd(vm));
@@ -210,17 +210,13 @@ module ot_hnx_fused_lane #(
     wire [639:0] wsw = ws[sws];
     genvar e;
     generate for (e = 0; e < 8; e = e + 1) begin : g_el
-        ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL)) u_h (.clk(clk), .rst_n(rl), .v(sw),
-            .r0(op[1][32*e +: 32]), .r1(op[2][32*e +: 32]), .r2(op[3][32*e +: 32]), .r3(op[4][32*e +: 32]),
-            .y(op[0][32*e +: 32]), .c0(wsw[32*(4 + 0 + kk) +: 32]), .c1(wsw[32*(4 + 4 + kk) +: 32]),
-            .c2(wsw[32*(4 + 8 + kk) +: 32]), .c3(wsw[32*(4 + 12 + kk) +: 32]), .p(wsw[32*kk +: 32]),
-            .vo(hv[e]), .o(ho[32*e +: 32]), .fault(hf[e]));
-        ot_dsrom_su_norm_mix #(.LM(LM), .LA(LA)) u_mix (.clk(clk), .rst_n(rl), .v(mx_v), .h0(op[0][32*e +: 32]),
-            .h1(op[1][32*e +: 32]), .h2(op[2][32*e +: 32]), .h3(op[3][32*e +: 32]), .pre(pre_q),
-            .x(xl[32*e +: 32]), .fault(mf[e]));
-        ot_hdc_qmul_lat #(LM) u_sq (clk, rl, x_v, xl[32*e +: 32], xl[32*e +: 32], sq[32*e +: 32], sf[e]);
-        ot_hdc_qmul_lat #(LMS) u_xr (clk, rl, xo_v, xo[32*e +: 32], rh, pp[32*e +: 32], f1[e]);
-        ot_hdc_qmul_lat #(LMS) u_w  (clk, rl, vx[LMS], wo[32*e +: 32], pp[32*e +: 32], qq[32*e +: 32], f2[e]);
+        ot_hnx_fused_el u_e (.clk(clk), .rst_n(rl), .sw(sw), .mx_v(mx_v), .x_v(x_v), .xo_v(xo_v), .wv(vx[LMS]),
+            .y(op[0][32*e +: 32]), .r0(op[1][32*e +: 32]), .r1(op[2][32*e +: 32]), .r2(op[3][32*e +: 32]),
+            .r3(op[4][32*e +: 32]), .pre(pre_q), .c0(wsw[32*(4 + 0 + kk) +: 32]), .c1(wsw[32*(4 + 4 + kk) +: 32]),
+            .c2(wsw[32*(4 + 8 + kk) +: 32]), .c3(wsw[32*(4 + 12 + kk) +: 32]), .pc(wsw[32*kk +: 32]),
+            .xo(xo[32*e +: 32]), .rh(rh), .wo(wo[32*e +: 32]),
+            .hv(hv[e]), .ho(ho[32*e +: 32]), .hf(hf[e]), .xl(xl[32*e +: 32]), .mf(mf[e]), .sq(sq[32*e +: 32]),
+            .sf(sf[e]), .qq(qq[32*e +: 32]), .f1(f1[e]), .f2(f2[e]));
     end endgenerate
     // the chunk chain (ot_dsrom_su_norm's, N = 8) over the squares
     localparam integer DS = LM + 7 * LA;
@@ -344,6 +340,58 @@ module ot_hnx_fused_lane #(
             if ((|hf) || (|mf) || (|sf) || (|cf) || (|f1) || (|f2)) flt <= 1'b1;
         end
     end
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// one FUSED element (lane column e of 8): the LL lane's per-element pipelines, unchanged (HC_POST sweep lane, norm mix,
+// square, x * r, w * (x r)).  (* keep_hierarchy *) + no parameter override: the 8 identical columns are synthesised
+// and ABC-mapped ONCE (the flat lane, 852k cells, ran yosys SHARE 1,476 s + ABC 1,385 s > the 2,700 s gate cap).
+// Latencies are the lane's: ML 7, AL 6 (hcpost), LM 5, LA 6 (mix / square), LMS 6 (scale multipliers).
+// ---------------------------------------------------------------------------------------------------------------------
+(* keep_hierarchy *)
+module ot_hnx_fused_el (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         sw,
+    input  wire         mx_v,
+    input  wire         x_v,
+    input  wire         xo_v,
+    input  wire         wv,
+    input  wire [31:0]  y,
+    input  wire [31:0]  r0,
+    input  wire [31:0]  r1,
+    input  wire [31:0]  r2,
+    input  wire [31:0]  r3,
+    input  wire [127:0] pre,
+    input  wire [31:0]  c0,
+    input  wire [31:0]  c1,
+    input  wire [31:0]  c2,
+    input  wire [31:0]  c3,
+    input  wire [31:0]  pc,
+    input  wire [31:0]  xo,
+    input  wire [31:0]  rh,
+    input  wire [31:0]  wo,
+    output wire         hv,
+    output wire [31:0]  ho,
+    output wire         hf,
+    output wire [31:0]  xl,
+    output wire         mf,
+    output wire [31:0]  sq,
+    output wire         sf,
+    output wire [31:0]  qq,
+    output wire         f1,
+    output wire         f2
+);
+    localparam integer LM = 5, LA = 6, LMS = 6, ML = 7, AL = 6;
+    wire [31:0] pp;
+    ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL)) u_h (.clk(clk), .rst_n(rst_n), .v(sw),
+        .r0(r0), .r1(r1), .r2(r2), .r3(r3), .y(y), .c0(c0), .c1(c1), .c2(c2), .c3(c3), .p(pc),
+        .vo(hv), .o(ho), .fault(hf));
+    ot_dsrom_su_norm_mix #(.LM(LM), .LA(LA)) u_mix (.clk(clk), .rst_n(rst_n), .v(mx_v), .h0(y), .h1(r0), .h2(r1),
+        .h3(r2), .pre(pre), .x(xl), .fault(mf));
+    ot_hdc_qmul_lat #(LM) u_sq (clk, rst_n, x_v, xl, xl, sq, sf);
+    ot_hdc_qmul_lat #(LMS) u_xr (clk, rst_n, xo_v, xo, rh, pp, f1);
+    ot_hdc_qmul_lat #(LMS) u_w  (clk, rst_n, wv, wo, pp, qq, f2);
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------

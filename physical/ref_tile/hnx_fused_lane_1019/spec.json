@@ -30,8 +30,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 259.2,
-  "h": 259.2
+  "w": 475.2,
+  "h": 475.2
  },
  "layer_cap": "M5",
  "pins": {
@@ -72,12 +72,15 @@
   },
   "io_hold_margin_ns": 0.03,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "synth_keep_modules": [
+   "ot_hnx_fused_el"
+  ]
  },
  "job": {
   "owner": "Claude:HBM-NEXT-UNITS-FUSED-SRAM",
   "branch": "claude/hbm-next-units-fusedsram-1019",
-  "tag": "n2",
+  "tag": "n3",
   "purpose": "HBM-NEXT P=4 FUSED HC_PRE_NORM/HC_POST N-row lane (new static engine, one per VM bank, x32 replicated, hardened once): static calendar, fixed-edge VM returns, KX=4 x slots, 2 row-tagged coefficient slots; measured row II PRE 81 / POST 103 (m0 bench); n2: x store 80x256 + gain store 20x256 moved from runtime-indexed flop arrays into 1R1W SRAM macros (n1 gate yosys stall)",
   "benches": [
    {
@@ -208,7 +211,7 @@
   ],
   "views_to": "physical/ref_tile/hnx_fused_lane_1019/views",
   "record_to": "results/arch/hbm_next_1019/units/fused/route_hnx_fused_lane_1019",
-  "structural_change": "HBM-NEXT-UNITS-FUSED-SRAM: n1 gate FAILED synth_smoke (yosys OPT stall > 2,700 s on the 80x256 runtime-indexed x-store flop array); n2 moves xb and gb into ot_sram_1r1w_128x256_m1_r2c2 macros (registered read = the same 1-edge read, calendar and row II unchanged)"
+  "structural_change": "HBM-NEXT-UNITS-FUSED-SRAM: n1 gate FAILED synth_smoke (yosys OPT stall > 2,700 s on the 80x256 runtime-indexed x-store flop array); n2 moves xb and gb into ot_sram_1r1w_128x256_m1_r2c2 macros (registered read = the same 1-edge read, calendar and row II unchanged); n3: element columns kept as ot_hnx_fused_el (synthesised once), -noshare, outline 259.2 -> 475.2 from the measured n2 synthesis (852,881 cells)"
  },
  "pin_regs": {
   "enable": false,
@@ -222,7 +225,7 @@
    "inst": "*u_xb",
    "at": [
     22.464,
-    140.4
+    248.4
    ]
   },
   {
@@ -231,7 +234,7 @@
    "inst": "*u_gb",
    "at": [
     22.464,
-    77.76
+    185.76
    ]
   }
  ],
@@ -250,5 +253,8 @@
   "enable": true,
   "stages": 2
  },
- "floorplan_note": "x store u_xb (KX NM = 80 of 128 rows) and gain store u_gb (NM = 20 rows) are 1R1W 128x256 macros (94.824 x 41.064) stacked at the W face (no W pins), 21.6 um channel, 20 um from the W core edge, stack centred N-S; std cells one band E of them, N face command/r/up, S face VM bank"
+ "floorplan_note": "n2 gate (259.2 outline) synthesised in 4,438 s (> 2,700 cap: SHARE 1,476 s + ABC 1,385 s) to 852,881 cells / 94,740 flops, ~104k um2 std area (72.6k comb + ~31k seq est.) -> outline 475.2 x 475.2 (util ~0.47 + 2 macros); the 8 element columns are one kept module ot_hnx_fused_el (synthesised once) and SYNTH_ARGS -noshare (the hbm norm production precedent, tools/hbm_norm_noshare.py). x store u_xb and gain store u_gb 1R1W 128x256 macros stacked at the W face (no W pins), 20 um from the core edge, 21.6 um channel, centred N-S.",
+ "orfs_vars": {
+  "SYNTH_ARGS": "-noshare"
+ }
 }
