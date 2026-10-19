@@ -21,7 +21,11 @@ module ot_hbm_idx_score_qw_static #(parameter integer TP=96,RANK_W=(TP<=1?1:$clo
  input wire[RANK_W-1:0]rank,input wire[10:0]first_ord,input wire[11:0]nkeys,
  input wire keep_en,input wire[170:0]keep_bitmap,
  input wire ql_v,input wire[7:0]ql_head,input wire[511:0]ql_codes,input wire[31:0]ql_sc,input wire[15:0]ql_w,
- input wire beat_v,input wire[7:0]beat_index,input wire[4395:0]key_lines,
+ input wire beat_v,input wire[7:0]beat_index,
+ // key lines split per leaf row (chunks 0,1 -> row 0, chunks 2,3 -> row 1): each half gets its own W-face section beside
+ // its row's E-face key pins, so no key bit crosses the 1.12 mm tile height (TW4-IDXSCORE 10-19: r2 trial GRT overflow
+ // 147,829 on M3 at the row boundary came from one 4,396-bit W port centred on the face feeding both rows' E sections).
+ input wire[2197:0]key_lines0,input wire[2197:0]key_lines1,
  // E face = two row sections (row 0 bottom, row 1 top), each in the leaf's W pin order qv,q,kv,kkv,key,aux,bus, so every
  // row's pins face its own leaf (0,e) W pins: the query / valid / zero-bus words are REPLICATED per row (one flop set
  // per row, beside its pins) instead of one pin driving both rows across the 1.12 mm tile height (TW3-IDXSCORE 10-19).
@@ -44,7 +48,7 @@ module ot_hbm_idx_score_qw_static #(parameter integer TP=96,RANK_W=(TP<=1?1:$clo
  always @(posedge clk_ctl)begin
   h_r<=half;rk_r<=rank;fo_r<=first_ord;nk_r<=nkeys;ke_r<=keep_en;kb_r<=keep_bitmap;
   qv_r<=ql_v;qh_r<=ql_head;qc_r<=ql_codes;qs_r<=ql_sc;qw_r<=ql_w;
-  bv_r<=beat_v;bi_r<=beat_index;kl_r<=key_lines;
+  bv_r<=beat_v;bi_r<=beat_index;kl_r<={key_lines1,key_lines0};
  end
  wire[19:0]g0=20'(8*TP)*20'(fo_r)+20'(8)*20'(rk_r)+20'(16*TP)*20'(bi_r);
  reg wf;
@@ -173,7 +177,8 @@ module ot_hbm_idx_score_quarter_wo #(parameter integer TP=96,RANK_W=(TP<=1?1:$cl
  wire[AUXW-1:0]w_aux0,w_aux1;wire[4*SW-1:0]w_bus0,w_bus1;
  ot_hbm_idx_score_qw_static #(.TP(TP)) u_w(.clk_ctl(clk_ctl),.rst_n(rst_n),.half(half),.rank(rank),.first_ord(first_ord),
   .nkeys(nkeys),.keep_en(keep_en),.keep_bitmap(keep_bitmap),.ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),
-  .ql_w(ql_w),.beat_v(beat_v),.beat_index(beat_index),.key_lines(key_lines),.rst_c0(rst_c0),.rst_c1(rst_c1),
+  .ql_w(ql_w),.beat_v(beat_v),.beat_index(beat_index),.key_lines0(key_lines[2197:0]),
+  .key_lines1(key_lines[4395:2198]),.rst_c0(rst_c0),.rst_c1(rst_c1),
   .o_qv0(w_qv0),.o_q0(w_q0),.o_kv0(w_kv0),.o_kkv0(w_kkv0),.o_key0(w_key0),.o_aux0(w_aux0),.o_bus0(w_bus0),
   .o_qv1(w_qv1),.o_q1(w_q1),.o_kv1(w_kv1),.o_kkv1(w_kkv1),.o_key1(w_key1),.o_aux1(w_aux1),.o_bus1(w_bus1));
  wire r_qv[0:1],r_kv[0:1];wire[AUXW-1:0]r_aux[0:1];wire[4*SW-1:0]r_bus[0:1];

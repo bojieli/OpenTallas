@@ -1,0 +1,13 @@
+QSPLIT_BAD cyc132 new{ev0 last1 f0 idx0 00003 val0 ff80} old_d1{ev0 last0 f0 idx0 00003 val0 ff80}
+QSPLIT_BAD cyc184 new{ev0 last0 f0 idx0 00007 val0 0000} old_d1{ev0 last1 f0 idx0 00007 val0 0000}
+QSPLIT_BAD cyc225 new{ev1 last0 f0 idx0 0123f val0 0000} old_d1{ev1 last0 f0 idx0 0123f val0 0000}
+QSPLIT_BAD cyc226 new{ev1 last0 f0 idx0 01e3f val0 0000} old_d1{ev1 last0 f0 idx0 01e3f val0 0000}
+QSPLIT_BAD cyc227 new{ev1 last0 f0 idx0 02a3f val0 0000} old_d1{ev1 last0 f0 idx0 02a3f val0 0000}
+QSPLIT_BAD cyc228 new{ev1 last0 f0 idx0 0363f val0 0000} old_d1{ev1 last0 f0 idx0 0363f val0 0000}
+QSPLIT_BAD cyc229 new{ev1 last0 f0 idx0 0423f val0 0000} old_d1{ev1 last0 f0 idx0 0423f val0 0000}
+QSPLIT_BAD cyc230 new{ev1 last0 f0 idx0 04e3f val0 0000} old_d1{ev1 last0 f0 idx0 04e3f val0 0000}
+IDX_QUARTER_SPLIT half0 errors52 old_events49 nonzero20 new_events49 old_first_fault_cyc-1
+IDX_QUARTER_SPLIT coverage row0_nonzero_events20 row1_nonzero_events20 lane_fault_events0
+IDX_QUARTER_SPLIT FAIL
+%Error: rtl/test/hbm_idx_static/tb_idx_quarter_split.sv:105: Verilog $stop
+Aborting...

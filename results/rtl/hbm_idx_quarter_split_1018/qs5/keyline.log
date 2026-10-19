@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       admits   399 GB (avail 440, growth 161, headroom 0, waiters 1/288 GB) load 90/128 running 32 disk 577 GB 
+ot-run: ot-epyc5       admits   648 GB (avail 628, growth 174, headroom 0, waiters 0/0 GB) load 165/128 running 22 disk 1534 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/own-idxscore/src6
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/own-idxscore/src6
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/own-idxscore/src6
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/own-idxscore/src6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/own-idxscore/src6
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-733319-1792405201 after 0 s
+BUILDS_DONE
+[keyline] QSPLIT_BAD cyc226 new{ev1 last0 f0 idx0 01e3f val0 0000} old_d1{ev1 last0 f0 idx0 01e3f val0 0000}
+[keyline] QSPLIT_BAD cyc230 new{ev1 last0 f0 idx0 04e3f val0 0000} old_d1{ev1 last0 f0 idx0 04e3f val0 0000}
+[keyline] QSPLIT_BAD cyc236 new{ev1 last0 f0 idx0 0963f val0 0000} old_d1{ev1 last0 f0 idx0 0963f val0 0000}
+[keyline] QSPLIT_BAD cyc239 new{ev1 last0 f0 idx0 0ba3f val0 0000} old_d1{ev1 last0 f0 idx0 0ba3f val0 0000}
+[keyline] QSPLIT_BAD cyc1176 new{ev1 last0 f0 idx0 0744f val0 4582} old_d1{ev1 last0 f0 idx0 0744f val0 4548}
+[keyline] mutant rejected
+IDX_QUARTER_SPLIT_GATE_PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-733319-1792405201): exit 0

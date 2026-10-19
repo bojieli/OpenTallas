@@ -30,20 +30,22 @@
  },
  "pins": {
   "W": [
-   "half",
-   "rank",
-   "first_ord",
-   "nkeys",
-   "keep_en",
-   "keep_bitmap",
+   "clk_ctl",
    "ql_v",
    "ql_head",
    "ql_codes",
    "ql_sc",
    "ql_w",
    "beat_v",
+   "key_lines0",
+   "keep_bitmap",
    "beat_index",
-   "key_lines"
+   "nkeys",
+   "first_ord",
+   "rank",
+   "half",
+   "keep_en",
+   "key_lines1"
   ],
   "E": [
    "o_qv0",
@@ -63,7 +65,6 @@
    "rst_c0"
   ],
   "N": [
-   "clk_ctl",
    "rst_n",
    "rst_c1"
   ]

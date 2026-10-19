@@ -1,0 +1,9 @@
+IDX_QUARTER_SPLIT_GATE_PASS (qs5, src6 610a4e371 = W/E glue re-pin with per-row replicated outputs + reset relay regions;
+ot-epyc4, Verilator 5.050). All 68 sources.sha256 entries == git show 610a4e371:<path>.
+Bench: rtl/test/hbm_idx_static/run_quarter_split_lockstep.sh (wires-only quarter W+8 leaves+E vs flat quarter, +1 cycle).
+  pos0/pos1          PASS errors0, 49/49 events, row0/row1 nonzero 20/20 and 20/19, lane faults 0
+  pos0/pos1_poison   PASS errors0
+  keyline  mutant rejected (24 errors)   witness qs5/keyline.log  (^[keyline] QSPLIT_BAD cyc)
+  auxearly mutant rejected (52 errors)   witness qs5/auxearly.log
+  rowswap  mutant rejected (748 errors)  witness qs5/rowswap.log
+<c>.log = ot-run wrapper stdout (the bench output the closure loop sees); <c>/run_*.log = per-case sim logs.

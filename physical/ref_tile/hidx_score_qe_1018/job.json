@@ -42,7 +42,8 @@
     "peak_ram_gb": 54,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/qs5/rowswap.log"
    }
   ],
   "calibrate": {

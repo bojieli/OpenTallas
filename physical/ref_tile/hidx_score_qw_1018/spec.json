@@ -49,7 +49,8 @@
     "peak_ram_gb": 54,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/qs5/keyline.log"
    },
    {
     "name": "qsplit_auxearly",
@@ -60,7 +61,8 @@
     "peak_ram_gb": 54,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/qs5/auxearly.log"
    }
   ]
  },
@@ -84,20 +86,22 @@
  },
  "pins": {
   "W": [
-   "half",
-   "rank",
-   "first_ord",
-   "nkeys",
-   "keep_en",
-   "keep_bitmap",
+   "clk_ctl",
    "ql_v",
    "ql_head",
    "ql_codes",
    "ql_sc",
    "ql_w",
    "beat_v",
+   "key_lines0",
+   "keep_bitmap",
    "beat_index",
-   "key_lines"
+   "nkeys",
+   "first_ord",
+   "rank",
+   "half",
+   "keep_en",
+   "key_lines1"
   ],
   "E": [
    "o_qv0",
@@ -117,7 +121,6 @@
    "rst_c0"
   ],
   "N": [
-   "clk_ctl",
    "rst_n",
    "rst_c1"
   ]
@@ -126,7 +129,7 @@
   "enable": false,
   "reason": "the RTL registers every pin: input pin flops *_r (flop-first, no reset), every output o_* from the registered output stage; rst_c from the ot_rst_relay flop; o_bus0 is the constant zero sum-bus head word"
  },
- "structural_change": "OWN-IDXSCORE 2026-10-18: W glue column of the wires-only IDX quarter scorer (landed-regions standard: the 1.12 x 2.25 mm quarter is dissolved into the die, not hardened with one tree). Input pin flops + W glue (key line split, valid/keep lanes, meta input, W fault cause) + registered output stage (+1 edge on every leaf input) + reset relay. Height = the two leaf rows (2 x 561.6); E face feeds leaf (0,0) and (1,0) W faces. TW3-IDXSCORE 10-19: E face re-pinned to the leaf W pins: two row sections (row 0 bottom, row 1 top), each in the leaf W order qv,q,kv,kkv,key,aux,bus with per-port pin_ranges from the shared leaf face table; query/valid/zero-bus and the reset relay replicated per row (no pin drives both rows). cycles_added 1 = the registered output stage (+1 edge on every leaf input).",
+ "structural_change": "OWN-IDXSCORE 2026-10-18: W glue column of the wires-only IDX quarter scorer (landed-regions standard: the 1.12 x 2.25 mm quarter is dissolved into the die, not hardened with one tree). Input pin flops + W glue (key line split, valid/keep lanes, meta input, W fault cause) + registered output stage (+1 edge on every leaf input) + reset relay. Height = the two leaf rows (2 x 561.6); E face feeds leaf (0,0) and (1,0) W faces. TW3-IDXSCORE 10-19: E face re-pinned to the leaf W pins: two row sections (row 0 bottom, row 1 top), each in the leaf W order qv,q,kv,kkv,key,aux,bus with per-port pin_ranges from the shared leaf face table; query/valid/zero-bus and the reset relay replicated per row (no pin drives both rows). cycles_added 1 = the registered output stage (+1 edge on every leaf input). TW4-IDXSCORE 10-19: r2 trial GRT overflow 147,829 (M3, y 394-566 um) = the 4,396-bit key_lines W port centred on the face and feeding both rows' E key sections (~2.2k bits crossing the row boundary vertically in an 86 um column). Fix: key_lines split per row (key_lines0 = chunks 0,1, key_lines1 = chunks 2,3) and every W port pin_ranged level with its E consumer (query beside o_q0, key halves beside o_key0/o_key1, control in the row-0 zero-bus window); clk_ctl moved to the W face at the row boundary (centre of the register mass; r2 TT pin-flop spread 82.2 ps from the N-face entry). No logic or cycle change.",
  "pin_ranges": {
   "o_qv0": [
    2.16,
@@ -191,6 +194,70 @@
   "rst_c1": [
    75.6,
    81.0
+  ],
+  "ql_v": [
+   2.16,
+   3.24
+  ],
+  "ql_head": [
+   3.24,
+   4.573
+  ],
+  "ql_codes": [
+   4.573,
+   89.862
+  ],
+  "ql_sc": [
+   89.862,
+   95.193
+  ],
+  "ql_w": [
+   95.193,
+   97.857
+  ],
+  "beat_v": [
+   97.857,
+   98.937
+  ],
+  "key_lines0": [
+   98.937,
+   467.489
+  ],
+  "keep_bitmap": [
+   467.489,
+   520.0
+  ],
+  "beat_index": [
+   520.0,
+   525.0
+  ],
+  "nkeys": [
+   525.0,
+   530.0
+  ],
+  "first_ord": [
+   530.0,
+   535.0
+  ],
+  "rank": [
+   535.0,
+   540.0
+  ],
+  "half": [
+   540.0,
+   541.08
+  ],
+  "keep_en": [
+   541.08,
+   542.16
+  ],
+  "clk_ctl": [
+   561.06,
+   562.14
+  ],
+  "key_lines1": [
+   660.537,
+   1029.089
   ]
  }
 }
