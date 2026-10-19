@@ -1,0 +1,389 @@
+{
+ "name": "qfd_dv_lane_h_safe1w",
+ "top": "qfd_dv_lane_h_safe1",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 172.8
+ },
+ "std_area_um2": 11000,
+ "pins": {
+  "W": [
+   "emit0",
+   "live",
+   "i",
+   "fin_th",
+   "i_last_r",
+   "cura0",
+   "curb0",
+   "curc0",
+   "curd0",
+   "rrow",
+   "asi",
+   "bsi",
+   "csi",
+   "dsi",
+   "asrc",
+   "bsrc",
+   "csrc",
+   "mc",
+   "md",
+   "redsq",
+   "ma",
+   "mb",
+   "dst",
+   "red",
+   "ad",
+   "imm1",
+   "imm2",
+   "cls",
+   "accept",
+   "i_sfu"
+  ],
+  "S": [
+   "va_re",
+   "va_addr",
+   "vb_re",
+   "vb_addr",
+   "vc_re",
+   "vc_addr",
+   "wrom_re",
+   "wrom_addr",
+   "crom_re",
+   "crom_addr",
+   "va_q",
+   "vb_q",
+   "vc_q",
+   "wrom_q",
+   "crom_q"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "vm_we",
+   "vm_waddr",
+   "vm_wdata",
+   "kv_we",
+   "kv_waddr",
+   "kv_wdata",
+   "l_ov",
+   "l_out",
+   "l_red",
+   "l_redsq",
+   "l_raddr",
+   "l_last",
+   "retire",
+   "l_fault",
+   "sx_exp_v",
+   "sx_exp_x",
+   "sy_exp_y",
+   "sy_exp_vo",
+   "sy_exp_f",
+   "sx_rcp_v",
+   "sx_rcp_x",
+   "sy_rcp_y",
+   "sy_rcp_f",
+   "sx_rsq_v",
+   "sx_rsq_x",
+   "sy_rsq_y",
+   "sy_rsq_f"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_ml_head*g_bank?0?*u_mem",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_ml_s2*g_bank?0?*u_mem",
+   "at": [
+    43.2,
+    60.48
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_ml_s2*g_bank?1?*u_mem",
+   "at": [
+    43.2,
+    77.76
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_ml_s2*g_bank?2?*u_mem",
+   "at": [
+    43.2,
+    95.04
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_d38*g_bank?0?*u_mem",
+   "at": [
+    43.2,
+    112.32
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_d38*g_bank?1?*u_mem",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_d38*g_bank?2?*u_mem",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_d914*g_bank?0?*u_mem",
+   "at": [
+    129.6,
+    60.48
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_tap0_ring*g_bank?0?*u_mem",
+   "at": [
+    129.6,
+    77.76
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_tap0_ring*g_bank?1?*u_mem",
+   "at": [
+    129.6,
+    95.04
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_dmc*g_bank?0?*u_mem",
+   "at": [
+    129.6,
+    112.32
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_dmc*g_bank?1?*u_mem",
+   "at": [
+    129.6,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*g_native_bank?0?*u_tlm",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*g_native_bank?1?*u_tlm",
+   "at": [
+    216.0,
+    70.8
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_dmd*g_bank?0?*u_mem",
+   "at": [
+    216.0,
+    98.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_dmd*g_bank?1?*u_mem",
+   "at": [
+    216.0,
+    115.68
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 1,
+   "inst": "*u_dadr*g_bank?0?*u_mem",
+   "at": [
+    216.0,
+    132.96
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin at the face: qfd_dv_safe1_head lands every input in exactly one pin flop (q_*) and drives every output from a flop (head out flops; sx_* from the lane launch flops lv/lx_*); flow pin registers would add unpriced cycles"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: qfd_dv_s1_rst_land (two stages, async assert, sync release) is rst_n's only sink; it feeds 3 qfd_dv_s1_rst_relay branches -> 11 leaf relays (all at depth 4), every leaf <= 32 sinks (kept hierarchy)"
+ },
+ "keep_pin_regs": true,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "macro_halo_x_um": 10.8,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 3
+ },
+ "children": [],
+ "inter": [],
+ "structural_change": "QW-CLUSTER3/HEAD safe1: new tile for the opt-in ML5 native head (qfd_dv_head_native_b64 CONTROL_SAFE=1 @5cd31ebb8, never gated): face reset landing + balanced relay tree (rt 1603 sinks -> 11 leaves <= 32), kept same-edge copies for ring_on (130) / class one-hot / S1 lane (128/64) / bsrc (65) / mc flag (33), S2-age tag ring + daddr ring replace the 97+36+24 SRAM-capture holding chains, FPU payload reset off; 0 added steady-state cycles; 15 x 32x64 + 2 x 128x64 native macros on the 43.2 lattice; checklist results/arch/qwen_native_head_1019/safe1/README.md",
+ "job": {
+  "owner": "Claude:QW-CLUSTER3/HEAD",
+  "branch": "claude/qw-cluster3-head-1019",
+  "tag": "safe1w",
+  "purpose": "QW-CLUSTER3/HEAD Q.SAFE.HEAD safe1: structurally safe native ML5 head (reset tree, kept copies, SRAM rings for holding chains)",
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_native_head_1019",
+   "tools/hdc_golden.py",
+   "results/arch/qwen_native_head_1019/safe1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1"
+  ],
+  "benches": [
+   {
+    "name": "head_safe1_production",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && python3 tools/qwen_native_head_1019/run_safe1_production.py e a c f g k q m o n --work {RUN}/positive --vflags \"+define+OT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=1\"",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "head_safe1_mut_tls_bank",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && python3 tools/qwen_native_head_1019/run_safe1_production.py e --work {RUN}/bank_mut --vflags \"+define+OT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=1 +define+OT_HEAD_B64_BANK_MUT\"",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "bench2 \\(e\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_native_head_1019/safe1/witness/mut_bank.log"
+   },
+   {
+    "name": "head_safe1_mut_tls_slot",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && python3 tools/qwen_native_head_1019/run_safe1_production.py e --work {RUN}/slot_mut --vflags \"+define+OT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=1 +define+OT_TLS_MUT\"",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "bench2 \\(e\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_native_head_1019/safe1/witness/mut_slot.log"
+   },
+   {
+    "name": "head_safe1_mut_ron_copy",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && python3 tools/qwen_native_head_1019/run_safe1_production.py e --work {RUN}/ron_mut --vflags \"+define+OT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=1 +define+OT_HS1_RON_MUT\"",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "bench2 \\(e\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_native_head_1019/safe1/witness/mut_ron.log"
+   }
+  ]
+ }
+}
