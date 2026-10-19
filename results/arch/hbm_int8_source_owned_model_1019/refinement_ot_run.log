@@ -1,0 +1,111 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-epyc7       admits  1085 GB (avail 810, growth 42, headroom 0, waiters 0/0 GB) load 17/96 running 12 disk 6260 GB 
+ot-run: ot-epyc8       admits  1340 GB (avail 994, growth 38, headroom 0, waiters 0/0 GB) load 14/128 running 11 disk 44 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2314179-1792450975 after 0 s
+{
+  "status": "REFUSED_FOR_BUILD_WHOLE_PATH_AND_JOINT_ROUTING_UNQUALIFIED",
+  "source_atoms": {
+    "rows": 3,
+    "all544source_firstHB_atoms": true,
+    "firstHB_owned_cells": 616,
+    "total_source_tree_budget": true,
+    "max_firstHB_tree_um": 3.5860000000000127,
+    "max_firstHB_nominal_wire_fF": 0.594522940000002,
+    "max_whole_source_nominal_wire_fF": 11.776395280000004,
+    "old0p5_total_budget_refusals": 12,
+    "old0p5_firstHB_only_refusals": 4
+  },
+  "downstream": {
+    "max_native_pin_Manhattan_um": 112.34850000000003,
+    "all_branch_legs": 616,
+    "wire_RC": "nominal signal model only; actual layers/vias/extraction remain NULL"
+  },
+  "capacity": {
+    "old_PG_projected_M2_M4_clear_rays": 2436,
+    "signal_peak": 1434,
+    "remaining_before_clock_newPG_vias": 1002,
+    "canonical_PG_method_commit": "5b100ce330bd619261dfdf087e5a2df3bc6fff7d",
+    "fresh_PG_contact_deduction": null,
+    "clock_track_deduction": null,
+    "joint_track_assignment": null,
+    "verdict": "REFUSE no independent subtraction or free residual asserted"
+  }
+}
+{
+  "schema": "int8.source_owned.native_whole_path_budget.v1",
+  "status": "REFUSED_ACTUAL_WIRE_WAVEFORM_AND_UPSTREAM_CLOCK_UNBOUND",
+  "units": {
+    "TT": [
+      {
+        "file": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      }
+    ],
+    "FF": [
+      {
+        "file": "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      }
+    ]
+  },
+  "corner_branch_rows": 1232,
+  "load_domain_refused_rows": 0,
+  "waveform_domain_refused_rows": 0,
+  "native_budget_evaluated_rows": 1232,
+  "actual_SS_slack": null,
+  "actual_FF_hold": null,
+  "all3186endpoint_coverage": null,
+  "old_headroom_reused": false,
+  "source_table_slew_policy": "entire actual characterized slew axis, no old observed slew transfer; unsupported load refuses",
+  "wire_capacitance_policy": "nominal geometrical model only; never minimum actual extracted capacitance",
+  "symbolic_clock": "capture_clock minus launch_clock remains unknown; no old phases or ideal skew credit",
+  "physical_qualification": false
+}
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2314179-1792450975): exit 0

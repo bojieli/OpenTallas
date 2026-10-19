@@ -1,0 +1,22 @@
+{
+  "status": "NATIVE_CELL_INTERVAL_BOUND_ONLY_NO_WIRE_PHASE_QUALIFICATION",
+  "real_sinks": 2892,
+  "common_root_cancelled_spread_upper_bound_ps": {
+    "TT": 140.336185958617,
+    "FF": 109.44657925864092
+  },
+  "native_cell_total_arrival_range_ps": {
+    "TT": [
+      162.46741676061976,
+      360.0245229849998
+    ],
+    "FF": [
+      119.43939266713627,
+      270.4928434258204
+    ]
+  },
+  "actual_wire_delay": null,
+  "actual_wire_slew": null,
+  "root_actual_input_waveform": null,
+  "actual_spread80_qualification": false
+}

@@ -1,0 +1,1538 @@
+[
+  {
+    "upstream_net": 9796,
+    "driver": {
+      "cell": "$abc$36464$auto$blifparse.cc:397:parse_blif$42507",
+      "pin": "Y",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$42508"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          6.208413759999999,
+          6.210697759999999
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          6.67608476,
+          6.679964759999999
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$27417",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27424",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27431",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6261",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6262",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6263",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6264",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6265",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6266",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6267",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6268",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6269",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6270",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6271",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6272",
+        "D"
+      ]
+    ],
+    "affected_FF_pins": 15,
+    "coupled_cell_cone": 79,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  },
+  {
+    "upstream_net": 2273,
+    "driver": {
+      "cell": "$auto$ff.cc:337:slice$5067",
+      "pin": "QN",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$36545"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.170774820000001,
+          4.1717948200000015
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.553604820000001,
+          4.555884820000001
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$5003",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5003",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5003",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5004",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5004",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5004",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5005",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5005",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5005",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5006",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5006",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5006",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5007",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5007",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5007",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5008",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5008",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5008",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5009",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5009",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5009",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5010",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5010",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5010",
+        "SETN"
+      ]
+    ],
+    "affected_FF_pins": 24,
+    "coupled_cell_cone": 24,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  },
+  {
+    "upstream_net": 2255,
+    "driver": {
+      "cell": "$auto$ff.cc:337:slice$5070",
+      "pin": "QN",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$36535"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          3.9648636399999995,
+          3.9658836399999995
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.347693639999999,
+          4.349973639999999
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$5027",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5027",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5027",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5028",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5028",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5028",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5029",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5029",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5029",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5030",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5030",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5030",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5031",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5031",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5031",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5032",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5032",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5032",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5033",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5033",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5033",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5034",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5034",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5034",
+        "SETN"
+      ]
+    ],
+    "affected_FF_pins": 24,
+    "coupled_cell_cone": 30,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  },
+  {
+    "upstream_net": 5422,
+    "driver": {
+      "cell": "$auto$ff.cc:337:slice$5071",
+      "pin": "QN",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$38616"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          3.8842897,
+          3.8853097
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.2671197,
+          4.2693997
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$5035",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5035",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5035",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5036",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5036",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5036",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5037",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5037",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5037",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5038",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5038",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5038",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5039",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5039",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5039",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5040",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5040",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5040",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5041",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5041",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5041",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5042",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5042",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5042",
+        "SETN"
+      ]
+    ],
+    "affected_FF_pins": 24,
+    "coupled_cell_cone": 15,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  },
+  {
+    "upstream_net": 5440,
+    "driver": {
+      "cell": "$auto$ff.cc:337:slice$5069",
+      "pin": "QN",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$38627"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          3.8842897,
+          3.8853097
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.2671197,
+          4.2693997
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$5019",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5019",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5019",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5020",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5020",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5020",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5021",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5021",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5021",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5022",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5022",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5022",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5023",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5023",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5023",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5024",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5024",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5024",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5025",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5025",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5025",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5026",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5026",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$5026",
+        "SETN"
+      ]
+    ],
+    "affected_FF_pins": 24,
+    "coupled_cell_cone": 21,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  },
+  {
+    "upstream_net": 5474,
+    "driver": {
+      "cell": "$auto$ff.cc:337:slice$6099",
+      "pin": "QN",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$38647"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          5.271951999999999,
+          5.272971999999999
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          5.654781999999999,
+          5.657062
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$6100",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6101",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6102",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6103",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6104",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6105",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6106",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6107",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$6108",
+        "D"
+      ]
+    ],
+    "affected_FF_pins": 9,
+    "coupled_cell_cone": 37,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  },
+  {
+    "upstream_net": 5504,
+    "driver": {
+      "cell": "$auto$ff.cc:337:slice$5065",
+      "pin": "QN",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$38662"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.833271659999999,
+          4.834291659999999
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          5.21610166,
+          5.2183816599999995
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$4987",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4987",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4987",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4988",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4988",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4988",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4989",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4989",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4989",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4990",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4990",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4990",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4991",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4991",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4991",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4992",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4992",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4992",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4993",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4993",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4993",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4994",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4994",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4994",
+        "SETN"
+      ]
+    ],
+    "affected_FF_pins": 24,
+    "coupled_cell_cone": 33,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  },
+  {
+    "upstream_net": 5548,
+    "driver": {
+      "cell": "$auto$ff.cc:337:slice$6108",
+      "pin": "QN",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$38684"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.269254079999997,
+          4.2702740799999965
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.652084079999997,
+          4.654364079999997
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$11967",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$11967",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$11967",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$11968",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$11968",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$11968",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$11969",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$11969",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$11969",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27137",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27137",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27137",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27144",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27144",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27144",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27151",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27151",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27151",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27158",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27158",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27158",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27165",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27165",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27165",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27193",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27193",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27193",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27207",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27207",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$27207",
+        "SETN"
+      ]
+    ],
+    "affected_FF_pins": 30,
+    "coupled_cell_cone": 41,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  },
+  {
+    "upstream_net": 5271,
+    "driver": {
+      "cell": "$auto$ff.cc:337:slice$5062",
+      "pin": "QN",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$38516"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          3.9201003400000003,
+          3.92112034
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.3029303400000005,
+          4.30521034
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$4963",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4963",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4963",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4964",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4964",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4964",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4965",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4965",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4965",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4966",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4966",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4966",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4967",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4967",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4967",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4968",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4968",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4968",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4969",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4969",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4969",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4970",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4970",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4970",
+        "SETN"
+      ]
+    ],
+    "affected_FF_pins": 24,
+    "coupled_cell_cone": 30,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  },
+  {
+    "upstream_net": 5350,
+    "driver": {
+      "cell": "$auto$ff.cc:337:slice$5057",
+      "pin": "QN",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$38572"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          5.997117459999998,
+          5.998137459999999
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          6.379947459999999,
+          6.382227459999999
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$4923",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4923",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4923",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4924",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4924",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4924",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4925",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4925",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4925",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4926",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4926",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4926",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4927",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4927",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4927",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4928",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4928",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4928",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4929",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4929",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4929",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4930",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4930",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4930",
+        "SETN"
+      ]
+    ],
+    "affected_FF_pins": 24,
+    "coupled_cell_cone": 30,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  },
+  {
+    "upstream_net": 5392,
+    "driver": {
+      "cell": "$auto$ff.cc:337:slice$5058",
+      "pin": "QN",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$38598"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.099153540000005,
+          4.100173540000005
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.481983540000005,
+          4.484263540000004
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$4931",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4931",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4931",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4932",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4932",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4932",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4933",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4933",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4933",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4934",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4934",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4934",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4935",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4935",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4935",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4936",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4936",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4936",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4937",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4937",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4937",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4938",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4938",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4938",
+        "SETN"
+      ]
+    ],
+    "affected_FF_pins": 24,
+    "coupled_cell_cone": 33,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  },
+  {
+    "upstream_net": 5482,
+    "driver": {
+      "cell": "$auto$ff.cc:337:slice$5060",
+      "pin": "QN",
+      "direction": "output"
+    },
+    "replaced_inv_inputs": [
+      "$abc$36464$auto$blifparse.cc:397:parse_blif$38651"
+    ],
+    "corner": {
+      "TT": {
+        "upstream_input_cap_increment_fF": [
+          2.861773,
+          2.8625119999999997
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          3.9201003400000047,
+          3.9211203400000048
+        ]
+      },
+      "FF": {
+        "upstream_input_cap_increment_fF": [
+          3.180572,
+          3.182814
+        ],
+        "new_all_sink_pin_cap_plus_nominal_wire_fF": [
+          4.302930340000005,
+          4.305210340000005
+        ]
+      }
+    },
+    "downstream_native_FF_pins_affected": [
+      [
+        "$auto$ff.cc:337:slice$4947",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4947",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4947",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4948",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4948",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4948",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4949",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4949",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4949",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4950",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4950",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4950",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4951",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4951",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4951",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4952",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4952",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4952",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4953",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4953",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4953",
+        "SETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4954",
+        "D"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4954",
+        "RESETN"
+      ],
+      [
+        "$auto$ff.cc:337:slice$4954",
+        "SETN"
+      ]
+    ],
+    "affected_FF_pins": 24,
+    "coupled_cell_cone": 30,
+    "incoming_output_waveform_fixedpoint": "OPEN actual fresh graph waveforms/RC; no one-pass qualification"
+  }
+]

@@ -1,0 +1,72 @@
+{
+  "schema": "int8.source_owned.native_whole_path_budget.v1",
+  "status": "REFUSED_ACTUAL_WIRE_WAVEFORM_AND_UPSTREAM_CLOCK_UNBOUND",
+  "units": {
+    "TT": [
+      {
+        "file": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      }
+    ],
+    "FF": [
+      {
+        "file": "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      }
+    ]
+  },
+  "corner_branch_rows": 1232,
+  "load_domain_refused_rows": 0,
+  "waveform_domain_refused_rows": 0,
+  "native_budget_evaluated_rows": 1232,
+  "actual_SS_slack": null,
+  "actual_FF_hold": null,
+  "all3186endpoint_coverage": null,
+  "old_headroom_reused": false,
+  "source_table_slew_policy": "entire actual characterized slew axis, no old observed slew transfer; unsupported load refuses",
+  "wire_capacitance_policy": "nominal geometrical model only; never minimum actual extracted capacitance",
+  "symbolic_clock": "capture_clock minus launch_clock remains unknown; no old phases or ideal skew credit",
+  "physical_qualification": false
+}

@@ -1,0 +1,2755 @@
+{
+  "schema": "int8.source_owned_atoms.model.v1",
+  "status": "REFUSED_FOR_BUILD_WHOLE_PATH_AND_JOINT_ROUTING_UNQUALIFIED",
+  "source_groups": 544,
+  "branches": 616,
+  "D_branches": 594,
+  "RESETN_branches": 10,
+  "reset_split_branches": 12,
+  "all_cells": 12491,
+  "FF": 2782,
+  "native_area_um2": 1669.2933600000001,
+  "PG_terminals": 24982,
+  "band_um": [
+    10.8,
+    55.62,
+    216,
+    18.36
+  ],
+  "band_fill": 0.42092647058823535,
+  "whole_outline_fill": 0.05421022727272728,
+  "all464rows_retained": true,
+  "source_atoms": {
+    "rows": 3,
+    "all544source_firstHB_atoms": true,
+    "firstHB_owned_cells": 616,
+    "total_source_tree_budget": true,
+    "max_firstHB_tree_um": 3.5860000000000127,
+    "max_firstHB_nominal_wire_fF": 0.594522940000002,
+    "max_whole_source_nominal_wire_fF": 11.776395280000004,
+    "old0p5_total_budget_refusals": 12,
+    "old0p5_firstHB_only_refusals": 4
+  },
+  "downstream": {
+    "max_native_pin_Manhattan_um": 112.34850000000003,
+    "all_branch_legs": 616,
+    "wire_RC": "nominal signal model only; actual layers/vias/extraction remain NULL"
+  },
+  "cuts": [
+    {
+      "x_um": 24.3,
+      "actual_signal_net_demand": 241
+    },
+    {
+      "x_um": 37.8,
+      "actual_signal_net_demand": 542
+    },
+    {
+      "x_um": 51.3,
+      "actual_signal_net_demand": 797
+    },
+    {
+      "x_um": 64.8,
+      "actual_signal_net_demand": 989
+    },
+    {
+      "x_um": 78.3,
+      "actual_signal_net_demand": 1217
+    },
+    {
+      "x_um": 91.8,
+      "actual_signal_net_demand": 1405
+    },
+    {
+      "x_um": 105.3,
+      "actual_signal_net_demand": 1434
+    },
+    {
+      "x_um": 118.8,
+      "actual_signal_net_demand": 1372
+    },
+    {
+      "x_um": 132.3,
+      "actual_signal_net_demand": 1417
+    },
+    {
+      "x_um": 145.8,
+      "actual_signal_net_demand": 1359
+    },
+    {
+      "x_um": 159.3,
+      "actual_signal_net_demand": 1309
+    },
+    {
+      "x_um": 172.8,
+      "actual_signal_net_demand": 1158
+    },
+    {
+      "x_um": 186.3,
+      "actual_signal_net_demand": 925
+    },
+    {
+      "x_um": 199.8,
+      "actual_signal_net_demand": 625
+    },
+    {
+      "x_um": 213.3,
+      "actual_signal_net_demand": 351
+    }
+  ],
+  "capacity": {
+    "old_PG_projected_M2_M4_clear_rays": 2436,
+    "signal_peak": 1434,
+    "remaining_before_clock_newPG_vias": 1002,
+    "canonical_PG_method_commit": "5b100ce330bd619261dfdf087e5a2df3bc6fff7d",
+    "fresh_PG_contact_deduction": null,
+    "clock_track_deduction": null,
+    "joint_track_assignment": null,
+    "verdict": "REFUSE no independent subtraction or free residual asserted"
+  },
+  "fresh_clock": {
+    "levels": [
+      1,
+      16,
+      128
+    ],
+    "functional_buffers": 145,
+    "retained_genuine_open_loads": 110,
+    "real_sinks": 2892,
+    "max_leaf_sinks": 23,
+    "all_clock_area_um2": 76.73454,
+    "clock_leaf_models": [
+      {
+        "driver": "MODEL_clock_l2_0",
+        "sinks": 23,
+        "RMST_um": 20.575999999999993,
+        "native_pin_cap_fF": {
+          "TT": 22.287084,
+          "FF": 24.47577600000002
+        },
+        "nominal_clock_wire_fF": 2.992285375999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 25.279369376,
+          "FF": 27.46806137600002
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_1",
+        "sinks": 23,
+        "RMST_um": 11.446000000000007,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.664545996000001,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.583473996,
+          "FF": 13.670775996
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_2",
+        "sinks": 22,
+        "RMST_um": 16.578000000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.4108722280000006,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.855064228,
+          "FF": 13.895092228
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_3",
+        "sinks": 23,
+        "RMST_um": 12.310000000000004,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.7901940600000006,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.70912206,
+          "FF": 13.79642406
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_4",
+        "sinks": 22,
+        "RMST_um": 6.5679999999999925,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 0.9551579679999989,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.399349967999997,
+          "FF": 12.439377967999997
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_5",
+        "sinks": 23,
+        "RMST_um": 22.62399999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 3.290117823999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 14.209045823999999,
+          "FF": 15.296347823999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_6",
+        "sinks": 23,
+        "RMST_um": 14.451999999999998,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.101696552,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.020624552,
+          "FF": 14.107926551999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_7",
+        "sinks": 22,
+        "RMST_um": 15.874,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.308492324,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.752684323999999,
+          "FF": 13.792712323999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_8",
+        "sinks": 23,
+        "RMST_um": 39.31400000000003,
+        "native_pin_cap_fF": {
+          "TT": 26.432097,
+          "FF": 29.19036400000001
+        },
+        "nominal_clock_wire_fF": 5.717277764000004,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 32.149374764,
+          "FF": 34.90764176400001
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_9",
+        "sinks": 22,
+        "RMST_um": 14.062000000000012,
+        "native_pin_cap_fF": {
+          "TT": 10.408681,
+          "FF": 11.427645999999998
+        },
+        "nominal_clock_wire_fF": 2.044980412000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.453661412000002,
+          "FF": 13.472626412
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_10",
+        "sinks": 23,
+        "RMST_um": 13.663999999999998,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.9871008639999996,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.906028864,
+          "FF": 13.993330863999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_11",
+        "sinks": 23,
+        "RMST_um": 10.294,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.497015244,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.415943244,
+          "FF": 13.503245243999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_12",
+        "sinks": 22,
+        "RMST_um": 8.188000000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.1907480880000003,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.634940088,
+          "FF": 12.674968088
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_13",
+        "sinks": 23,
+        "RMST_um": 14.668,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.133108568,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.052036567999998,
+          "FF": 14.139338568
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_14",
+        "sinks": 22,
+        "RMST_um": 13.768000000000015,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.002225168000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.446417168000002,
+          "FF": 13.486445168000001
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_15",
+        "sinks": 23,
+        "RMST_um": 10.942,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.591251292,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.510179292,
+          "FF": 13.597481291999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_16",
+        "sinks": 23,
+        "RMST_um": 42.628000000000014,
+        "native_pin_cap_fF": {
+          "TT": 18.50679,
+          "FF": 20.387721
+        },
+        "nominal_clock_wire_fF": 6.199219528000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 24.706009528000003,
+          "FF": 26.586940528
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_17",
+        "sinks": 22,
+        "RMST_um": 10.174000000000007,
+        "native_pin_cap_fF": {
+          "TT": 12.319716,
+          "FF": 13.569559999999997
+        },
+        "nominal_clock_wire_fF": 1.479564124000001,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.799280124000001,
+          "FF": 15.049124123999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_18",
+        "sinks": 23,
+        "RMST_um": 14.474000000000004,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.1048959240000005,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.023823924,
+          "FF": 14.111125924
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_19",
+        "sinks": 22,
+        "RMST_um": 20.932000000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 3.0440570320000004,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.488249031999999,
+          "FF": 14.528277031999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_20",
+        "sinks": 23,
+        "RMST_um": 7.720000000000013,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.122688720000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.04161672,
+          "FF": 13.128918720000001
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_21",
+        "sinks": 23,
+        "RMST_um": 16.090000000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.3399043400000004,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.25883234,
+          "FF": 14.346134339999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_22",
+        "sinks": 22,
+        "RMST_um": 22.065999999999995,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 3.2089701159999993,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.653162115999999,
+          "FF": 14.693190115999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_23",
+        "sinks": 23,
+        "RMST_um": 14.722000000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.140961572,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.059889572,
+          "FF": 14.147191571999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_24",
+        "sinks": 22,
+        "RMST_um": 37.47400000000002,
+        "native_pin_cap_fF": {
+          "TT": 13.073808999999999,
+          "FF": 14.388947999999996
+        },
+        "nominal_clock_wire_fF": 5.449693924000003,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 18.523502924000002,
+          "FF": 19.838641923999997
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_25",
+        "sinks": 23,
+        "RMST_um": 10.390000000000015,
+        "native_pin_cap_fF": {
+          "TT": 10.824232,
+          "FF": 11.855365999999998
+        },
+        "nominal_clock_wire_fF": 1.5109761400000021,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.335208140000002,
+          "FF": 13.36634214
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_26",
+        "sinks": 23,
+        "RMST_um": 9.074000000000005,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.3195955240000008,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.238523524,
+          "FF": 13.325825523999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_27",
+        "sinks": 22,
+        "RMST_um": 20.120000000000005,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.9259711200000007,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.37016312,
+          "FF": 14.41019112
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_28",
+        "sinks": 23,
+        "RMST_um": 8.134000000000022,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.1828950840000032,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.101823084000003,
+          "FF": 13.189125084000002
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_29",
+        "sinks": 22,
+        "RMST_um": 9.34000000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.3582788400000014,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.802470840000002,
+          "FF": 12.842498840000001
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_30",
+        "sinks": 23,
+        "RMST_um": 21.958000000000006,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 3.1932641080000006,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 14.112192108,
+          "FF": 15.199494108
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_31",
+        "sinks": 22,
+        "RMST_um": 13.642000000000017,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.9839014920000024,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.428093492000002,
+          "FF": 13.468121492000002
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_32",
+        "sinks": 23,
+        "RMST_um": 40.71400000000001,
+        "native_pin_cap_fF": {
+          "TT": 13.660996999999998,
+          "FF": 15.033888999999995
+        },
+        "nominal_clock_wire_fF": 5.9208741640000015,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 19.581871164,
+          "FF": 20.954763163999996
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_33",
+        "sinks": 23,
+        "RMST_um": 15.772000000000006,
+        "native_pin_cap_fF": {
+          "TT": 17.614894,
+          "FF": 19.40604800000001
+        },
+        "nominal_clock_wire_fF": 2.293658872000001,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 19.908552872,
+          "FF": 21.69970687200001
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_34",
+        "sinks": 22,
+        "RMST_um": 12.58400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.8300407840000015,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.274232784,
+          "FF": 13.314260784
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_35",
+        "sinks": 23,
+        "RMST_um": 21.685999999999993,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 3.153708235999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 14.072636235999997,
+          "FF": 15.159938235999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_36",
+        "sinks": 22,
+        "RMST_um": 6.567999999999998,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 0.9551579679999996,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.399349968,
+          "FF": 12.439377967999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_37",
+        "sinks": 23,
+        "RMST_um": 7.10799999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.0336880079999986,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.952616007999998,
+          "FF": 13.039918007999997
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_38",
+        "sinks": 23,
+        "RMST_um": 23.685999999999993,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 3.444560235999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 14.363488235999998,
+          "FF": 15.450790235999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_39",
+        "sinks": 22,
+        "RMST_um": 7.701999999999998,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.1200710519999997,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.564263052,
+          "FF": 12.604291051999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_40",
+        "sinks": 23,
+        "RMST_um": 39.526,
+        "native_pin_cap_fF": {
+          "TT": 18.868152000000002,
+          "FF": 20.813742
+        },
+        "nominal_clock_wire_fF": 5.748108076,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 24.616260076000003,
+          "FF": 26.561850076000002
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_41",
+        "sinks": 22,
+        "RMST_um": 11.395999999999994,
+        "native_pin_cap_fF": {
+          "TT": 12.189509000000001,
+          "FF": 13.362122
+        },
+        "nominal_clock_wire_fF": 1.657274695999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.846783696,
+          "FF": 15.019396695999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_42",
+        "sinks": 23,
+        "RMST_um": 16.492000000000026,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.3983655920000038,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.317293592000002,
+          "FF": 14.404595592000003
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_43",
+        "sinks": 23,
+        "RMST_um": 19.224000000000018,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.7956694240000024,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.714597424,
+          "FF": 14.801899424000002
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_44",
+        "sinks": 22,
+        "RMST_um": 10.41999999999998,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.5153389199999971,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.959530919999997,
+          "FF": 12.999558919999997
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_45",
+        "sinks": 23,
+        "RMST_um": 6.837999999999994,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 0.9944229879999991,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.913350987999998,
+          "FF": 13.000652987999997
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_46",
+        "sinks": 22,
+        "RMST_um": 21.25600000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 3.091175056000003,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.535367056000002,
+          "FF": 14.575395056000001
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_47",
+        "sinks": 23,
+        "RMST_um": 16.683999999999997,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.4262873839999997,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.345215384,
+          "FF": 14.432517383999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_48",
+        "sinks": 23,
+        "RMST_um": 44.20599999999999,
+        "native_pin_cap_fF": {
+          "TT": 21.962064000000005,
+          "FF": 24.290010000000006
+        },
+        "nominal_clock_wire_fF": 6.428701755999998,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 28.390765756000004,
+          "FF": 30.718711756000005
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_49",
+        "sinks": 22,
+        "RMST_um": 18.704000000000015,
+        "native_pin_cap_fF": {
+          "TT": 10.195615000000002,
+          "FF": 11.088202
+        },
+        "nominal_clock_wire_fF": 2.720047904000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.915662904000005,
+          "FF": 13.808249904000004
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_50",
+        "sinks": 23,
+        "RMST_um": 14.990000000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.859743,
+          "FF": 11.91194
+        },
+        "nominal_clock_wire_fF": 2.1799357400000003,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.03967874,
+          "FF": 14.091875739999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_51",
+        "sinks": 22,
+        "RMST_um": 20.87800000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.396844,
+          "FF": 11.408787999999998
+        },
+        "nominal_clock_wire_fF": 3.036204028000004,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.433048028000004,
+          "FF": 14.444992028000001
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_52",
+        "sinks": 23,
+        "RMST_um": 17.365999999999985,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.525467915999998,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.444395915999998,
+          "FF": 14.531697915999997
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_53",
+        "sinks": 23,
+        "RMST_um": 16.07199999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.3372866719999985,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.256214671999999,
+          "FF": 14.343516671999996
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_54",
+        "sinks": 22,
+        "RMST_um": 21.54400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 3.1330577440000016,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.577249744000001,
+          "FF": 14.617277744
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_55",
+        "sinks": 23,
+        "RMST_um": 21.25600000000002,
+        "native_pin_cap_fF": {
+          "TT": 12.211051999999999,
+          "FF": 13.44367
+        },
+        "nominal_clock_wire_fF": 3.091175056000003,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 15.302227056000001,
+          "FF": 16.534845056
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_56",
+        "sinks": 22,
+        "RMST_um": 34.580000000000005,
+        "native_pin_cap_fF": {
+          "TT": 11.659376000000002,
+          "FF": 12.742863
+        },
+        "nominal_clock_wire_fF": 5.028831080000001,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 16.68820708,
+          "FF": 17.77169408
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_57",
+        "sinks": 23,
+        "RMST_um": 17.40999999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.729536000000001,
+          "FF": 11.704502
+        },
+        "nominal_clock_wire_fF": 2.5318666599999986,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.26140266,
+          "FF": 14.236368659999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_58",
+        "sinks": 23,
+        "RMST_um": 15.983999999999995,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.324489183999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.243417183999998,
+          "FF": 14.330719183999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_59",
+        "sinks": 22,
+        "RMST_um": 18.662000000000013,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.713940012000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.158132012000001,
+          "FF": 14.198160012
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_60",
+        "sinks": 23,
+        "RMST_um": 12.940000000000012,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.8818124400000018,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.800740440000002,
+          "FF": 13.88804244
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_61",
+        "sinks": 22,
+        "RMST_um": 20.87600000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 3.035913176000003,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.480105176000002,
+          "FF": 14.520133176000002
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_62",
+        "sinks": 23,
+        "RMST_um": 20.98600000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 3.0519100360000015,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.970838036,
+          "FF": 15.058140036000001
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_63",
+        "sinks": 22,
+        "RMST_um": 10.671999999999997,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.5519862719999995,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.996178271999998,
+          "FF": 13.036206271999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_64",
+        "sinks": 23,
+        "RMST_um": 33.698000000000036,
+        "native_pin_cap_fF": {
+          "TT": 17.788565000000002,
+          "FF": 19.583855
+        },
+        "nominal_clock_wire_fF": 4.900565348000005,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 22.689130348000006,
+          "FF": 24.484420348000004
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_65",
+        "sinks": 23,
+        "RMST_um": 9.58000000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.895254,
+          "FF": 11.968513999999997
+        },
+        "nominal_clock_wire_fF": 1.3931810800000028,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.288435080000003,
+          "FF": 13.36169508
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_66",
+        "sinks": 22,
+        "RMST_um": 18.68400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.7171393840000015,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.161331384,
+          "FF": 14.201359384
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_67",
+        "sinks": 23,
+        "RMST_um": 7.809999999999974,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.1357770599999961,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.054705059999996,
+          "FF": 13.142007059999994
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_68",
+        "sinks": 22,
+        "RMST_um": 7.989999999999995,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.1619537399999993,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.606145739999999,
+          "FF": 12.646173739999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_69",
+        "sinks": 23,
+        "RMST_um": 20.281999999999996,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.9495301319999996,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.868458131999999,
+          "FF": 14.955760131999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_70",
+        "sinks": 23,
+        "RMST_um": 17.547999999999995,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.551935447999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.470863448,
+          "FF": 14.558165447999997
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_71",
+        "sinks": 22,
+        "RMST_um": 48.32799999999996,
+        "native_pin_cap_fF": {
+          "TT": 20.174670999999996,
+          "FF": 22.290302
+        },
+        "nominal_clock_wire_fF": 7.028147727999994,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 27.20281872799999,
+          "FF": 29.318449727999994
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_72",
+        "sinks": 23,
+        "RMST_um": 9.146000000000015,
+        "native_pin_cap_fF": {
+          "TT": 10.87158,
+          "FF": 11.930798
+        },
+        "nominal_clock_wire_fF": 1.3300661960000022,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.201646196000002,
+          "FF": 13.260864196000002
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_73",
+        "sinks": 22,
+        "RMST_um": 11.288000000000046,
+        "native_pin_cap_fF": {
+          "TT": 16.297495,
+          "FF": 17.900470000000006
+        },
+        "nominal_clock_wire_fF": 1.6415686880000067,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 17.939063688000008,
+          "FF": 19.542038688000012
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_74",
+        "sinks": 23,
+        "RMST_um": 18.792,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.732845392,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.651773391999999,
+          "FF": 14.739075391999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_75",
+        "sinks": 23,
+        "RMST_um": 12.84999999999998,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.868724099999997,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.787652099999995,
+          "FF": 13.874954099999997
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_76",
+        "sinks": 22,
+        "RMST_um": 11.806000000000047,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.7168993560000068,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.161091356000005,
+          "FF": 13.201119356000005
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_77",
+        "sinks": 23,
+        "RMST_um": 20.390000000000015,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.9652361400000022,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.884164140000001,
+          "FF": 14.97146614
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_78",
+        "sinks": 22,
+        "RMST_um": 16.288000000000025,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.368698688000004,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.812890688000003,
+          "FF": 13.852918688000003
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_79",
+        "sinks": 23,
+        "RMST_um": 38.15800000000001,
+        "native_pin_cap_fF": {
+          "TT": 14.352117999999999,
+          "FF": 15.812439999999999
+        },
+        "nominal_clock_wire_fF": 5.549165308000001,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 19.901283308,
+          "FF": 21.361605308
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_80",
+        "sinks": 23,
+        "RMST_um": 7.453999999999979,
+        "native_pin_cap_fF": {
+          "TT": 10.895254,
+          "FF": 11.968513999999997
+        },
+        "nominal_clock_wire_fF": 1.084005403999997,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.979259403999997,
+          "FF": 13.052519403999995
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_81",
+        "sinks": 22,
+        "RMST_um": 9.019999999999996,
+        "native_pin_cap_fF": {
+          "TT": 17.613304000000003,
+          "FF": 19.281576
+        },
+        "nominal_clock_wire_fF": 1.3117425199999995,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 18.925046520000002,
+          "FF": 20.59331852
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_82",
+        "sinks": 23,
+        "RMST_um": 20.607999999999983,
+        "native_pin_cap_fF": {
+          "TT": 10.895254,
+          "FF": 11.968513999999997
+        },
+        "nominal_clock_wire_fF": 2.9969390079999974,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.892193007999996,
+          "FF": 14.965453007999994
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_83",
+        "sinks": 22,
+        "RMST_um": 10.420000000000009,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.5153389200000014,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.95953092,
+          "FF": 12.99955892
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_84",
+        "sinks": 23,
+        "RMST_um": 16.79200000000005,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.4419933920000076,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.360921392000007,
+          "FF": 14.448223392000006
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_85",
+        "sinks": 23,
+        "RMST_um": 19.635999999999996,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.855584935999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.774512935999999,
+          "FF": 14.861814935999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_86",
+        "sinks": 22,
+        "RMST_um": 12.022000000000027,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.7483113720000039,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.192503372000003,
+          "FF": 13.232531372000002
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_87",
+        "sinks": 23,
+        "RMST_um": 41.091999999999985,
+        "native_pin_cap_fF": {
+          "TT": 17.963168,
+          "FF": 19.829936
+        },
+        "nominal_clock_wire_fF": 5.975845191999998,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 23.939013191999997,
+          "FF": 25.805781191999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_88",
+        "sinks": 22,
+        "RMST_um": 15.085999999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.37317,
+          "FF": 11.371072
+        },
+        "nominal_clock_wire_fF": 2.193896636,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.567066636,
+          "FF": 13.564968636
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_89",
+        "sinks": 23,
+        "RMST_um": 8.499999999999986,
+        "native_pin_cap_fF": {
+          "TT": 10.907091,
+          "FF": 11.987371999999997
+        },
+        "nominal_clock_wire_fF": 1.236120999999998,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.143211999999998,
+          "FF": 13.223492999999994
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_90",
+        "sinks": 23,
+        "RMST_um": 18.54399999999996,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.6967797439999943,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.615707743999995,
+          "FF": 14.703009743999992
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_91",
+        "sinks": 22,
+        "RMST_um": 20.985999999999954,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 3.0519100359999936,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.496102035999993,
+          "FF": 14.536130035999992
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_92",
+        "sinks": 23,
+        "RMST_um": 8.458000000000013,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.2300131080000019,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.148941108,
+          "FF": 13.236243108
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_93",
+        "sinks": 22,
+        "RMST_um": 19.851999999999983,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.8869969519999974,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.331188951999996,
+          "FF": 14.371216951999996
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_94",
+        "sinks": 23,
+        "RMST_um": 22.98400000000008,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 3.3424711840000114,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 14.26139918400001,
+          "FF": 15.34870118400001
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_95",
+        "sinks": 22,
+        "RMST_um": 23.974000000000032,
+        "native_pin_cap_fF": {
+          "TT": 15.756711999999997,
+          "FF": 17.39342
+        },
+        "nominal_clock_wire_fF": 3.4864429240000048,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 19.243154924000002,
+          "FF": 20.879862924000005
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_96",
+        "sinks": 23,
+        "RMST_um": 27.23599999999999,
+        "native_pin_cap_fF": {
+          "TT": 11.378804,
+          "FF": 12.485222999999998
+        },
+        "nominal_clock_wire_fF": 3.9608225359999985,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 15.339626535999999,
+          "FF": 16.446045535999996
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_97",
+        "sinks": 23,
+        "RMST_um": 9.579999999999984,
+        "native_pin_cap_fF": {
+          "TT": 10.87158,
+          "FF": 11.930797999999998
+        },
+        "nominal_clock_wire_fF": 1.3931810799999977,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.264761079999998,
+          "FF": 13.323979079999996
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_98",
+        "sinks": 22,
+        "RMST_um": 17.873999999999995,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.599344323999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.043536323999998,
+          "FF": 14.083564323999997
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_99",
+        "sinks": 23,
+        "RMST_um": 11.319999999999965,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.6462223199999948,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.565150319999994,
+          "FF": 13.652452319999993
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_100",
+        "sinks": 22,
+        "RMST_um": 6.640000000000008,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 0.9656286400000011,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.40982064,
+          "FF": 12.449848639999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_101",
+        "sinks": 23,
+        "RMST_um": 19.47200000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.831735072000001,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.750663072,
+          "FF": 14.837965072
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_102",
+        "sinks": 23,
+        "RMST_um": 11.986000000000047,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.7430760360000068,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.662004036000006,
+          "FF": 13.749306036000005
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_103",
+        "sinks": 22,
+        "RMST_um": 37.09599999999994,
+        "native_pin_cap_fF": {
+          "TT": 13.233629,
+          "FF": 14.545974
+        },
+        "nominal_clock_wire_fF": 5.394722895999991,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 18.62835189599999,
+          "FF": 19.94069689599999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_104",
+        "sinks": 23,
+        "RMST_um": 14.582,
+        "native_pin_cap_fF": {
+          "TT": 12.747104,
+          "FF": 14.016137999999998
+        },
+        "nominal_clock_wire_fF": 2.120601932,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 14.867705932,
+          "FF": 16.136739931999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_105",
+        "sinks": 22,
+        "RMST_um": 8.134,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.182895084,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.627087084,
+          "FF": 12.667115083999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_106",
+        "sinks": 23,
+        "RMST_um": 20.357999999999976,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.9605825079999963,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.879510507999996,
+          "FF": 14.966812507999995
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_107",
+        "sinks": 23,
+        "RMST_um": 7.45000000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.0834237000000015,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.0023517,
+          "FF": 13.0896537
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_108",
+        "sinks": 22,
+        "RMST_um": 12.850000000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.8687241,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.312916099999999,
+          "FF": 13.352944099999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_109",
+        "sinks": 23,
+        "RMST_um": 23.002000000000045,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 3.3450888520000066,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 14.264016852000006,
+          "FF": 15.351318852000006
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_110",
+        "sinks": 22,
+        "RMST_um": 13.444000000000017,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.9551071440000025,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.399299144000002,
+          "FF": 13.439327144000002
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_111",
+        "sinks": 23,
+        "RMST_um": 27.284000000000027,
+        "native_pin_cap_fF": {
+          "TT": 14.365273999999998,
+          "FF": 15.838989999999997
+        },
+        "nominal_clock_wire_fF": 3.967802984000004,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 18.333076984,
+          "FF": 19.806792984
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_112",
+        "sinks": 23,
+        "RMST_um": 34.940000000000055,
+        "native_pin_cap_fF": {
+          "TT": 12.386292000000001,
+          "FF": 13.588370999999999
+        },
+        "nominal_clock_wire_fF": 5.081184440000008,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 17.46747644000001,
+          "FF": 18.669555440000007
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_113",
+        "sinks": 22,
+        "RMST_um": 9.14599999999998,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.330066195999997,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.774258195999996,
+          "FF": 12.814286195999996
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_114",
+        "sinks": 23,
+        "RMST_um": 19.601999999999975,
+        "native_pin_cap_fF": {
+          "TT": 10.907091,
+          "FF": 11.987371999999999
+        },
+        "nominal_clock_wire_fF": 2.8506404519999964,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.757731451999996,
+          "FF": 14.838012451999996
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_115",
+        "sinks": 22,
+        "RMST_um": 15.424000000000014,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.243050624000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.687242624000001,
+          "FF": 13.727270624
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_116",
+        "sinks": 23,
+        "RMST_um": 11.230000000000004,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.6331339800000007,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.55206198,
+          "FF": 13.639363979999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_117",
+        "sinks": 23,
+        "RMST_um": 21.200000000000017,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 3.0830312000000024,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 14.001959200000002,
+          "FF": 15.089261200000001
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_118",
+        "sinks": 22,
+        "RMST_um": 13.714000000000041,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.994372164000006,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.438564164000006,
+          "FF": 13.478592164000005
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_119",
+        "sinks": 23,
+        "RMST_um": 26.76399999999999,
+        "native_pin_cap_fF": {
+          "TT": 11.573857999999998,
+          "FF": 12.731651999999997
+        },
+        "nominal_clock_wire_fF": 3.8921814639999983,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 15.466039463999996,
+          "FF": 16.623833463999993
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_120",
+        "sinks": 22,
+        "RMST_um": 29.863999999999997,
+        "native_pin_cap_fF": {
+          "TT": 12.065457,
+          "FF": 13.270177999999998
+        },
+        "nominal_clock_wire_fF": 4.343002063999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 16.408459064,
+          "FF": 17.613180063999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_121",
+        "sinks": 23,
+        "RMST_um": 10.496000000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 1.5263912960000003,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.445319296,
+          "FF": 13.532621295999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_122",
+        "sinks": 23,
+        "RMST_um": 18.110000000000014,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.633664860000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.55259286,
+          "FF": 14.63989486
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_123",
+        "sinks": 22,
+        "RMST_um": 16.55800000000005,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.407963708000007,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 12.852155708000007,
+          "FF": 13.892183708000006
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_124",
+        "sinks": 23,
+        "RMST_um": 6.838000000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 0.9944229880000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 11.913350988,
+          "FF": 13.000652987999999
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_125",
+        "sinks": 22,
+        "RMST_um": 19.202000000000012,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 2.792470052000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 13.236662052000002,
+          "FF": 14.276690052000001
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_126",
+        "sinks": 23,
+        "RMST_um": 12.831999999999987,
+        "native_pin_cap_fF": {
+          "TT": 15.054762,
+          "FF": 16.60561
+        },
+        "nominal_clock_wire_fF": 1.866106431999998,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 16.920868432,
+          "FF": 18.471716431999997
+        }
+      },
+      {
+        "driver": "MODEL_clock_l2_127",
+        "sinks": 22,
+        "RMST_um": 27.73599999999999,
+        "native_pin_cap_fF": {
+          "TT": 18.046342,
+          "FF": 19.939500000000002
+        },
+        "nominal_clock_wire_fF": 4.033535535999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 22.079877535999998,
+          "FF": 23.973035536
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_0",
+        "sinks": 8,
+        "RMST_um": 18.650000000000013,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 2.712194900000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 21.514274900000004,
+          "FF": 23.570994900000002
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_1",
+        "sinks": 8,
+        "RMST_um": 8.858000000000008,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 1.288183508000001,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 20.090263508,
+          "FF": 22.146983507999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_2",
+        "sinks": 8,
+        "RMST_um": 10.820000000000014,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 1.573509320000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 20.375589320000003,
+          "FF": 22.43230932
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_3",
+        "sinks": 8,
+        "RMST_um": 19.657999999999994,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 2.8587843079999993,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 21.660864308,
+          "FF": 23.717584308
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_4",
+        "sinks": 8,
+        "RMST_um": 27.560000000000016,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 4.007940560000002,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 22.81002056,
+          "FF": 24.86674056
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_5",
+        "sinks": 8,
+        "RMST_um": 22.160000000000018,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 3.2226401600000028,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 22.02472016,
+          "FF": 24.08144016
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_6",
+        "sinks": 8,
+        "RMST_um": 24.860000000000028,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 3.615290360000004,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 22.417370360000003,
+          "FF": 24.47409036
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_7",
+        "sinks": 8,
+        "RMST_um": 18.740000000000023,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 2.7252832400000035,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 21.527363240000003,
+          "FF": 23.584083240000002
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_8",
+        "sinks": 8,
+        "RMST_um": 12.980000000000011,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 1.8876294800000015,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 20.68970948,
+          "FF": 22.74642948
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_9",
+        "sinks": 8,
+        "RMST_um": 8.588000000000008,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 1.2489184880000013,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 20.050998488,
+          "FF": 22.107718488
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_10",
+        "sinks": 8,
+        "RMST_um": 16.49000000000003,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 2.398074740000004,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 21.200154740000006,
+          "FF": 23.256874740000004
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_11",
+        "sinks": 8,
+        "RMST_um": 12.709999999999994,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 1.848364459999999,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 20.65044446,
+          "FF": 22.707164459999998
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_12",
+        "sinks": 8,
+        "RMST_um": 3.2600000000000335,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 0.4740887600000049,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 19.276168760000004,
+          "FF": 21.332888760000003
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_13",
+        "sinks": 8,
+        "RMST_um": 16.22,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 2.35880972,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 21.16088972,
+          "FF": 23.21760972
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_14",
+        "sinks": 8,
+        "RMST_um": 17.839999999999996,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 2.5943998399999995,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 21.396479839999998,
+          "FF": 23.453199839999996
+        }
+      },
+      {
+        "driver": "MODEL_clock_l1_15",
+        "sinks": 8,
+        "RMST_um": 10.28000000000003,
+        "native_pin_cap_fF": {
+          "TT": 18.80208,
+          "FF": 20.8588
+        },
+        "nominal_clock_wire_fF": 1.4949792800000044,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 20.297059280000006,
+          "FF": 22.353779280000005
+        }
+      },
+      {
+        "driver": "MODEL_clock_l0_0",
+        "sinks": 16,
+        "RMST_um": 295.9920000000001,
+        "native_pin_cap_fF": {
+          "TT": 37.60415999999999,
+          "FF": 41.71759999999999
+        },
+        "nominal_clock_wire_fF": 43.04493259200001,
+        "native_max_cap_fF": {
+          "TT": 1474.56,
+          "FF": 1474.56
+        },
+        "total_model_fF": {
+          "TT": 80.649092592,
+          "FF": 84.762532592
+        }
+      }
+    ],
+    "early_late_arrivals": null,
+    "TT_FF_spread": null,
+    "pulse_domain": null,
+    "phase": "old253 phases discarded"
+  },
+  "whole_path_budget": {
+    "old34p62293_headroom_discarded": true,
+    "old_source_input_slew_not_transferred": true,
+    "fresh_native_driver_waveforms": null,
+    "source_HB_D_RESETN_whole_path_minmax": null,
+    "SS_setup": null,
+    "FF_hold": null,
+    "seven_feedback_conditions": "OPEN",
+    "TT292lower_wire_predicates": "OPEN; nominal model is not minimum actual wire",
+    "native_CQ_domain": "OPEN"
+  },
+  "actual_physical_capacitance": null,
+  "actual_pin_via_access": null,
+  "source_implementation": false,
+  "EDA": false,
+  "placement_grant": false,
+  "full_token_rate": null
+}

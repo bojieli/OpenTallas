@@ -1,0 +1,60 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-epyc7       admits  1097 GB (avail 819, growth 34, headroom 0, waiters 0/0 GB) load 21/96 running 9 disk 6258 GB 
+ot-run: ot-epyc8       admits  1334 GB (avail 990, growth 32, headroom 0, waiters 0/0 GB) load 13/128 running 10 disk 48 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2318175-1792451195 after 0 s
+{
+  "schema": "int8.source_owned.finite_clock_family.v1",
+  "status": "NOMINAL_TABLE_COMPARISON_ONLY_ACTUAL_RC_PHASE_PG_OPEN",
+  "families_considered": [
+    "BUFx2_ASAP7_75t_R",
+    "BUFx3_ASAP7_75t_R",
+    "BUFx4_ASAP7_75t_R",
+    "BUFx4f_ASAP7_75t_R",
+    "BUFx5_ASAP7_75t_R",
+    "BUFx6f_ASAP7_75t_R",
+    "BUFx8_ASAP7_75t_R",
+    "BUFx10_ASAP7_75t_R",
+    "BUFx12_ASAP7_75t_R",
+    "BUFx12f_ASAP7_75t_R",
+    "BUFx16f_ASAP7_75t_R",
+    "BUFx24_ASAP7_75t_R"
+  ],
+  "native_function_TT_FF": true,
+  "selected_trees": 145,
+  "refused_trees": 0,
+  "inventory": {
+    "BUFx2_ASAP7_75t_R": 145
+  },
+  "all_real_sink_inputs": 2892,
+  "genuine_unary_open_loads": 110,
+  "functional_clock_area_um2": 10.570500000000001,
+  "total_clock_area_including_retained_loads_um2": 23.882040000000003,
+  "total_model_area_um2": 1616.4408600000002,
+  "all_cells": 12491,
+  "native_PG_terms": 24982,
+  "RMST_clock_wire_um": 2862.4140000000016,
+  "clock_root_native_input_cap_fF": {
+    "TT": [
+      0.53423,
+      0.534279
+    ],
+    "FF": [
+      0.576706,
+      0.577042
+    ]
+  },
+  "actual_root_waveform": null,
+  "allFF_early_late_arrivals": null,
+  "allFF_TT_FF_spread": null,
+  "actual_wire_minmax_delay": null,
+  "actual_wire_waveform": null,
+  "joint_clock_signal_PG_tracks": null,
+  "all_native_pulse_checks": null,
+  "qualification": false
+}
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2318175-1792451195): exit 0

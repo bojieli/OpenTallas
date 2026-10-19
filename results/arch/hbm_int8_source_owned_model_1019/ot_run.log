@@ -1,0 +1,39 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019
+ot-run: ot-epyc7       admits  1072 GB (avail 801, growth 37, headroom 0, waiters 0/0 GB) load 18/96 running 13 disk 6261 GB 
+ot-run: ot-epyc8       admits  1339 GB (avail 994, growth 54, headroom 0, waiters 0/0 GB) load 17/128 running 14 disk 41 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-232973-1792450736 after 0 s
+{
+  "status": "REFUSED_FOR_BUILD_WHOLE_PATH_AND_JOINT_ROUTING_UNQUALIFIED",
+  "source_atoms": {
+    "rows": 3,
+    "all544source_firstHB_atoms": true,
+    "firstHB_owned_cells": 616,
+    "total_source_tree_budget": true,
+    "max_firstHB_tree_um": 3.563999999999993,
+    "max_firstHB_nominal_wire_fF": 0.5908755599999989,
+    "max_whole_source_nominal_wire_fF": 17.9948466,
+    "old0p5_total_budget_refusals": 12,
+    "old0p5_firstHB_only_refusals": 4
+  },
+  "downstream": {
+    "max_native_pin_Manhattan_um": 116.63250000000001,
+    "all_branch_legs": 616,
+    "wire_RC": "nominal signal model only; actual layers/vias/extraction remain NULL"
+  },
+  "capacity": {
+    "old_PG_projected_M2_M4_clear_rays": 2436,
+    "signal_peak": 1412,
+    "remaining_before_clock_newPG_vias": 1024,
+    "canonical_PG_method_commit": "5b100ce330bd619261dfdf087e5a2df3bc6fff7d",
+    "fresh_PG_contact_deduction": null,
+    "clock_track_deduction": null,
+    "joint_track_assignment": null,
+    "verdict": "REFUSE no independent subtraction or free residual asserted"
+  }
+}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-232973-1792450736): exit 0

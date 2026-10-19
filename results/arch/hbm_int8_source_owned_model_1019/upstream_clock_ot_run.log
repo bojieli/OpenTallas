@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-epyc7       admits  1100 GB (avail 820, growth 30, headroom 0, waiters 0/0 GB) load 14/96 running 9 disk 6259 GB 
+ot-run: ot-epyc8       admits  1331 GB (avail 988, growth 38, headroom 0, waiters 0/0 GB) load 18/128 running 11 disk 43 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019/refined
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-242355-1792451067 after 0 s
+{
+  "schema": "int8.source_owned.upstream_clock_native.v1",
+  "upstream_owners": 12,
+  "upstream_native_refused": 0,
+  "full_clock_output_trees": 145,
+  "clock_native_refused": 263,
+  "clock_RMST_um": 2814.744000000001,
+  "clock_RMST_nominal_wire_fF": 409.3369609440001,
+  "phase_and_actual_RC_qualification": false,
+  "PG_and_joint_cut_qualification": false,
+  "actual_upstream_fixedpoint": false
+}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-242355-1792451067): exit 0

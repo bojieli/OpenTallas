@@ -1,0 +1,82 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019
+ot-run: ot-epyc7       admits  1077 GB (avail 804, growth 37, headroom 0, waiters 0/0 GB) load 18/96 running 13 disk 6261 GB 
+ot-run: ot-epyc8       admits  1340 GB (avail 995, growth 53, headroom 0, waiters 0/0 GB) load 17/128 running 13 disk 45 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-int8-source-owned-model-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-234539-1792450820 after 0 s
+{
+  "schema": "int8.source_owned.native_whole_path_budget.v1",
+  "status": "REFUSED_ACTUAL_WIRE_WAVEFORM_AND_UPSTREAM_CLOCK_UNBOUND",
+  "units": {
+    "TT": [
+      {
+        "file": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      }
+    ],
+    "FF": [
+      {
+        "file": "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      },
+      {
+        "file": "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+        "time_unit": "1ps",
+        "capacitance_unit": "1,ff"
+      }
+    ]
+  },
+  "corner_branch_rows": 1232,
+  "load_domain_refused_rows": 0,
+  "waveform_domain_refused_rows": 0,
+  "native_budget_evaluated_rows": 1232,
+  "actual_SS_slack": null,
+  "actual_FF_hold": null,
+  "all3186endpoint_coverage": null,
+  "old_headroom_reused": false,
+  "source_table_slew_policy": "entire actual characterized slew axis, no old observed slew transfer; unsupported load refuses",
+  "wire_capacitance_policy": "nominal geometrical model only; never minimum actual extracted capacitance",
+  "symbolic_clock": "capture_clock minus launch_clock remains unknown; no old phases or ideal skew credit",
+  "physical_qualification": false
+}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-234539-1792450820): exit 0

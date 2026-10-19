@@ -1,0 +1,1425 @@
+{
+  "schema": "int8.source_owned_atoms.model.v1",
+  "status": "REFUSED_FOR_BUILD_WHOLE_PATH_AND_JOINT_ROUTING_UNQUALIFIED",
+  "source_groups": 544,
+  "branches": 616,
+  "D_branches": 594,
+  "RESETN_branches": 10,
+  "reset_split_branches": 12,
+  "all_cells": 12491,
+  "FF": 2782,
+  "native_area_um2": 1668.41856,
+  "PG_terminals": 24982,
+  "band_um": [
+    10.8,
+    55.62,
+    216,
+    18.36
+  ],
+  "band_fill": 0.4207058823529412,
+  "whole_outline_fill": 0.054181818181818185,
+  "all464rows_retained": true,
+  "source_atoms": {
+    "rows": 3,
+    "all544source_firstHB_atoms": true,
+    "firstHB_owned_cells": 616,
+    "total_source_tree_budget": true,
+    "max_firstHB_tree_um": 3.563999999999993,
+    "max_firstHB_nominal_wire_fF": 0.5908755599999989,
+    "max_whole_source_nominal_wire_fF": 17.9948466,
+    "old0p5_total_budget_refusals": 12,
+    "old0p5_firstHB_only_refusals": 4
+  },
+  "downstream": {
+    "max_native_pin_Manhattan_um": 116.63250000000001,
+    "all_branch_legs": 616,
+    "wire_RC": "nominal signal model only; actual layers/vias/extraction remain NULL"
+  },
+  "cuts": [
+    {
+      "x_um": 24.3,
+      "actual_signal_net_demand": 251
+    },
+    {
+      "x_um": 37.8,
+      "actual_signal_net_demand": 542
+    },
+    {
+      "x_um": 51.3,
+      "actual_signal_net_demand": 813
+    },
+    {
+      "x_um": 64.8,
+      "actual_signal_net_demand": 999
+    },
+    {
+      "x_um": 78.3,
+      "actual_signal_net_demand": 1215
+    },
+    {
+      "x_um": 91.8,
+      "actual_signal_net_demand": 1401
+    },
+    {
+      "x_um": 105.3,
+      "actual_signal_net_demand": 1412
+    },
+    {
+      "x_um": 118.8,
+      "actual_signal_net_demand": 1376
+    },
+    {
+      "x_um": 132.3,
+      "actual_signal_net_demand": 1406
+    },
+    {
+      "x_um": 145.8,
+      "actual_signal_net_demand": 1371
+    },
+    {
+      "x_um": 159.3,
+      "actual_signal_net_demand": 1317
+    },
+    {
+      "x_um": 172.8,
+      "actual_signal_net_demand": 1182
+    },
+    {
+      "x_um": 186.3,
+      "actual_signal_net_demand": 964
+    },
+    {
+      "x_um": 199.8,
+      "actual_signal_net_demand": 638
+    },
+    {
+      "x_um": 213.3,
+      "actual_signal_net_demand": 352
+    }
+  ],
+  "capacity": {
+    "old_PG_projected_M2_M4_clear_rays": 2436,
+    "signal_peak": 1412,
+    "remaining_before_clock_newPG_vias": 1024,
+    "canonical_PG_method_commit": "5b100ce330bd619261dfdf087e5a2df3bc6fff7d",
+    "fresh_PG_contact_deduction": null,
+    "clock_track_deduction": null,
+    "joint_track_assignment": null,
+    "verdict": "REFUSE no independent subtraction or free residual asserted"
+  },
+  "fresh_clock": {
+    "levels": [
+      1,
+      16,
+      128
+    ],
+    "functional_buffers": 145,
+    "retained_genuine_open_loads": 110,
+    "real_sinks": 2892,
+    "max_leaf_sinks": 23,
+    "all_clock_area_um2": 76.73454,
+    "clock_leaf_models": [
+      {
+        "leaf": "MODEL_clock_l2_0",
+        "sinks": 23,
+        "RMST_um": 127.76600000000002,
+        "native_pin_cap_fF": {
+          "TT": 22.287084,
+          "FF": 24.475776000000018
+        },
+        "nominal_clock_wire_fF": 18.580498316000003
+      },
+      {
+        "leaf": "MODEL_clock_l2_1",
+        "sinks": 23,
+        "RMST_um": 113.83400000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 16.554423284000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_2",
+        "sinks": 22,
+        "RMST_um": 115.994,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 16.868543444
+      },
+      {
+        "leaf": "MODEL_clock_l2_3",
+        "sinks": 23,
+        "RMST_um": 127.01000000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 18.470556260000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_4",
+        "sinks": 22,
+        "RMST_um": 114.10400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 16.593688304
+      },
+      {
+        "leaf": "MODEL_clock_l2_5",
+        "sinks": 23,
+        "RMST_um": 128.16200000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 18.638087012000003
+      },
+      {
+        "leaf": "MODEL_clock_l2_6",
+        "sinks": 23,
+        "RMST_um": 128.792,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 18.729705392
+      },
+      {
+        "leaf": "MODEL_clock_l2_7",
+        "sinks": 22,
+        "RMST_um": 115.39999999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 16.7821604
+      },
+      {
+        "leaf": "MODEL_clock_l2_8",
+        "sinks": 23,
+        "RMST_um": 137.864,
+        "native_pin_cap_fF": {
+          "TT": 22.056464000000002,
+          "FF": 24.370358000000003
+        },
+        "nominal_clock_wire_fF": 20.049010064
+      },
+      {
+        "leaf": "MODEL_clock_l2_9",
+        "sinks": 22,
+        "RMST_um": 106.742,
+        "native_pin_cap_fF": {
+          "TT": 14.784314,
+          "FF": 16.247652
+        },
+        "nominal_clock_wire_fF": 15.523062092
+      },
+      {
+        "leaf": "MODEL_clock_l2_10",
+        "sinks": 23,
+        "RMST_um": 103.84400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.907091,
+          "FF": 11.987371999999997
+        },
+        "nominal_clock_wire_fF": 15.101617544000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_11",
+        "sinks": 23,
+        "RMST_um": 114.77000000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 16.690542020000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_12",
+        "sinks": 22,
+        "RMST_um": 109.622,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 15.941888972
+      },
+      {
+        "leaf": "MODEL_clock_l2_13",
+        "sinks": 23,
+        "RMST_um": 108.38,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 15.761269879999999
+      },
+      {
+        "leaf": "MODEL_clock_l2_14",
+        "sinks": 22,
+        "RMST_um": 111.13400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 16.161773084000004
+      },
+      {
+        "leaf": "MODEL_clock_l2_15",
+        "sinks": 23,
+        "RMST_um": 104.294,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 15.167059243999999
+      },
+      {
+        "leaf": "MODEL_clock_l2_16",
+        "sinks": 23,
+        "RMST_um": 115.418,
+        "native_pin_cap_fF": {
+          "TT": 18.656732,
+          "FF": 20.612810000000003
+        },
+        "nominal_clock_wire_fF": 16.784778068
+      },
+      {
+        "leaf": "MODEL_clock_l2_17",
+        "sinks": 22,
+        "RMST_um": 105.302,
+        "native_pin_cap_fF": {
+          "TT": 12.169774000000002,
+          "FF": 13.344470999999999
+        },
+        "nominal_clock_wire_fF": 15.313648652000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_18",
+        "sinks": 23,
+        "RMST_um": 92.036,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 13.384427336
+      },
+      {
+        "leaf": "MODEL_clock_l2_19",
+        "sinks": 22,
+        "RMST_um": 97.36400000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 14.159257064000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_20",
+        "sinks": 23,
+        "RMST_um": 100.92800000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 14.677555328000004
+      },
+      {
+        "leaf": "MODEL_clock_l2_21",
+        "sinks": 23,
+        "RMST_um": 91.17200000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 13.258779272000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_22",
+        "sinks": 22,
+        "RMST_um": 96.77000000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 14.072874020000004
+      },
+      {
+        "leaf": "MODEL_clock_l2_23",
+        "sinks": 23,
+        "RMST_um": 99.47000000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 14.465524220000004
+      },
+      {
+        "leaf": "MODEL_clock_l2_24",
+        "sinks": 22,
+        "RMST_um": 94.55600000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 13.750900856000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_25",
+        "sinks": 23,
+        "RMST_um": 110.882,
+        "native_pin_cap_fF": {
+          "TT": 13.548545,
+          "FF": 14.910957999999997
+        },
+        "nominal_clock_wire_fF": 16.125125732
+      },
+      {
+        "leaf": "MODEL_clock_l2_26",
+        "sinks": 23,
+        "RMST_um": 87.98599999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.836069,
+          "FF": 11.874223999999998
+        },
+        "nominal_clock_wire_fF": 12.795452035999999
+      },
+      {
+        "leaf": "MODEL_clock_l2_27",
+        "sinks": 22,
+        "RMST_um": 76.376,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 11.107056176
+      },
+      {
+        "leaf": "MODEL_clock_l2_28",
+        "sinks": 23,
+        "RMST_um": 86.40200000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 12.565097252000003
+      },
+      {
+        "leaf": "MODEL_clock_l2_29",
+        "sinks": 22,
+        "RMST_um": 86.618,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 12.596509267999998
+      },
+      {
+        "leaf": "MODEL_clock_l2_30",
+        "sinks": 23,
+        "RMST_um": 73.87400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 10.743200324000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_31",
+        "sinks": 22,
+        "RMST_um": 88.508,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 12.871364408
+      },
+      {
+        "leaf": "MODEL_clock_l2_32",
+        "sinks": 23,
+        "RMST_um": 87.32000000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 12.69859832
+      },
+      {
+        "leaf": "MODEL_clock_l2_33",
+        "sinks": 23,
+        "RMST_um": 89.76800000000003,
+        "native_pin_cap_fF": {
+          "TT": 15.558221999999997,
+          "FF": 17.161752999999994
+        },
+        "nominal_clock_wire_fF": 13.054601168000005
+      },
+      {
+        "leaf": "MODEL_clock_l2_34",
+        "sinks": 22,
+        "RMST_um": 63.92,
+        "native_pin_cap_fF": {
+          "TT": 17.116484,
+          "FF": 18.846322000000008
+        },
+        "nominal_clock_wire_fF": 9.29562992
+      },
+      {
+        "leaf": "MODEL_clock_l2_35",
+        "sinks": 23,
+        "RMST_um": 65.018,
+        "native_pin_cap_fF": {
+          "TT": 10.883417,
+          "FF": 11.949655999999997
+        },
+        "nominal_clock_wire_fF": 9.455307668
+      },
+      {
+        "leaf": "MODEL_clock_l2_36",
+        "sinks": 22,
+        "RMST_um": 79.00400000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 11.489235704000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_37",
+        "sinks": 23,
+        "RMST_um": 68.22200000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 9.921252572000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_38",
+        "sinks": 23,
+        "RMST_um": 63.668,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 9.258982568
+      },
+      {
+        "leaf": "MODEL_clock_l2_39",
+        "sinks": 22,
+        "RMST_um": 78.41000000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 11.402852660000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_40",
+        "sinks": 23,
+        "RMST_um": 66.00800000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 9.599279408000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_41",
+        "sinks": 22,
+        "RMST_um": 67.68199999999999,
+        "native_pin_cap_fF": {
+          "TT": 13.451896,
+          "FF": 14.82874
+        },
+        "nominal_clock_wire_fF": 9.842722531999998
+      },
+      {
+        "leaf": "MODEL_clock_l2_42",
+        "sinks": 23,
+        "RMST_um": 67.66400000000002,
+        "native_pin_cap_fF": {
+          "TT": 17.083523000000003,
+          "FF": 18.788705999999998
+        },
+        "nominal_clock_wire_fF": 9.840104864000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_43",
+        "sinks": 23,
+        "RMST_um": 50.438,
+        "native_pin_cap_fF": {
+          "TT": 10.847906,
+          "FF": 11.893081999999998
+        },
+        "nominal_clock_wire_fF": 7.334996588
+      },
+      {
+        "leaf": "MODEL_clock_l2_44",
+        "sinks": 22,
+        "RMST_um": 47.738000000000014,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 6.942346388000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_45",
+        "sinks": 23,
+        "RMST_um": 62.98400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 9.159511184000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_46",
+        "sinks": 22,
+        "RMST_um": 47.108,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 6.850728008
+      },
+      {
+        "leaf": "MODEL_clock_l2_47",
+        "sinks": 23,
+        "RMST_um": 53.35400000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 7.759058804000003
+      },
+      {
+        "leaf": "MODEL_clock_l2_48",
+        "sinks": 23,
+        "RMST_um": 61.724000000000004,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 8.976274424
+      },
+      {
+        "leaf": "MODEL_clock_l2_49",
+        "sinks": 22,
+        "RMST_um": 53.80400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 7.824500504000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_50",
+        "sinks": 23,
+        "RMST_um": 72.146,
+        "native_pin_cap_fF": {
+          "TT": 22.577544,
+          "FF": 24.938793000000004
+        },
+        "nominal_clock_wire_fF": 10.491904196
+      },
+      {
+        "leaf": "MODEL_clock_l2_51",
+        "sinks": 22,
+        "RMST_um": 46.44200000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.278474000000001,
+          "FF": 11.220208
+        },
+        "nominal_clock_wire_fF": 6.753874292000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_52",
+        "sinks": 23,
+        "RMST_um": 41.87000000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.765047000000001,
+          "FF": 11.761076
+        },
+        "nominal_clock_wire_fF": 6.088986620000003
+      },
+      {
+        "leaf": "MODEL_clock_l2_53",
+        "sinks": 23,
+        "RMST_um": 43.85000000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 6.376930100000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_54",
+        "sinks": 22,
+        "RMST_um": 44.408000000000044,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 6.458077808000007
+      },
+      {
+        "leaf": "MODEL_clock_l2_55",
+        "sinks": 23,
+        "RMST_um": 43.59800000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 6.340282748000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_56",
+        "sinks": 22,
+        "RMST_um": 41.52800000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 6.039250928000003
+      },
+      {
+        "leaf": "MODEL_clock_l2_57",
+        "sinks": 23,
+        "RMST_um": 49.48400000000002,
+        "native_pin_cap_fF": {
+          "TT": 11.782193999999999,
+          "FF": 12.966375999999999
+        },
+        "nominal_clock_wire_fF": 7.196260184000003
+      },
+      {
+        "leaf": "MODEL_clock_l2_58",
+        "sinks": 23,
+        "RMST_um": 44.282000000000025,
+        "native_pin_cap_fF": {
+          "TT": 12.726578000000003,
+          "FF": 13.913832
+        },
+        "nominal_clock_wire_fF": 6.439754132000004
+      },
+      {
+        "leaf": "MODEL_clock_l2_59",
+        "sinks": 22,
+        "RMST_um": 28.478000000000023,
+        "native_pin_cap_fF": {
+          "TT": 10.231126000000001,
+          "FF": 11.144776
+        },
+        "nominal_clock_wire_fF": 4.1414416280000035
+      },
+      {
+        "leaf": "MODEL_clock_l2_60",
+        "sinks": 23,
+        "RMST_um": 29.162,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 4.240913012
+      },
+      {
+        "leaf": "MODEL_clock_l2_61",
+        "sinks": 22,
+        "RMST_um": 34.12999999999998,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 4.963389379999997
+      },
+      {
+        "leaf": "MODEL_clock_l2_62",
+        "sinks": 23,
+        "RMST_um": 27.614000000000026,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 4.0157935640000035
+      },
+      {
+        "leaf": "MODEL_clock_l2_63",
+        "sinks": 22,
+        "RMST_um": 25.598000000000006,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 3.7226147480000007
+      },
+      {
+        "leaf": "MODEL_clock_l2_64",
+        "sinks": 23,
+        "RMST_um": 33.103999999999985,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 4.814182303999998
+      },
+      {
+        "leaf": "MODEL_clock_l2_65",
+        "sinks": 23,
+        "RMST_um": 27.02000000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 3.9294105200000047
+      },
+      {
+        "leaf": "MODEL_clock_l2_66",
+        "sinks": 22,
+        "RMST_um": 35.13199999999999,
+        "native_pin_cap_fF": {
+          "TT": 15.972527999999999,
+          "FF": 17.621255
+        },
+        "nominal_clock_wire_fF": 5.1091062319999985
+      },
+      {
+        "leaf": "MODEL_clock_l2_67",
+        "sinks": 23,
+        "RMST_um": 18.338000000000022,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.6668219880000033
+      },
+      {
+        "leaf": "MODEL_clock_l2_68",
+        "sinks": 22,
+        "RMST_um": 11.96800000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 1.7404583680000016
+      },
+      {
+        "leaf": "MODEL_clock_l2_69",
+        "sinks": 23,
+        "RMST_um": 18.770000000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 2.7296460200000006
+      },
+      {
+        "leaf": "MODEL_clock_l2_70",
+        "sinks": 23,
+        "RMST_um": 35.77999999999998,
+        "native_pin_cap_fF": {
+          "TT": 16.792342,
+          "FF": 18.527880000000007
+        },
+        "nominal_clock_wire_fF": 5.203342279999997
+      },
+      {
+        "leaf": "MODEL_clock_l2_71",
+        "sinks": 22,
+        "RMST_um": 21.57999999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.420518,
+          "FF": 11.446503999999997
+        },
+        "nominal_clock_wire_fF": 3.1382930799999986
+      },
+      {
+        "leaf": "MODEL_clock_l2_72",
+        "sinks": 23,
+        "RMST_um": 25.30600000000001,
+        "native_pin_cap_fF": {
+          "TT": 14.920381,
+          "FF": 16.374855999999998
+        },
+        "nominal_clock_wire_fF": 3.6801503560000017
+      },
+      {
+        "leaf": "MODEL_clock_l2_73",
+        "sinks": 22,
+        "RMST_um": 30.81400000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 4.481156764000003
+      },
+      {
+        "leaf": "MODEL_clock_l2_74",
+        "sinks": 23,
+        "RMST_um": 25.53999999999997,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 3.7141800399999956
+      },
+      {
+        "leaf": "MODEL_clock_l2_75",
+        "sinks": 23,
+        "RMST_um": 29.35600000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 4.269125656000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_76",
+        "sinks": 22,
+        "RMST_um": 30.598000000000006,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 4.4497447480000005
+      },
+      {
+        "leaf": "MODEL_clock_l2_77",
+        "sinks": 23,
+        "RMST_um": 52.107999999999976,
+        "native_pin_cap_fF": {
+          "TT": 14.909348,
+          "FF": 16.43351
+        },
+        "nominal_clock_wire_fF": 7.577858007999996
+      },
+      {
+        "leaf": "MODEL_clock_l2_78",
+        "sinks": 22,
+        "RMST_um": 30.886000000000024,
+        "native_pin_cap_fF": {
+          "TT": 14.147892,
+          "FF": 15.579467999999999
+        },
+        "nominal_clock_wire_fF": 4.4916274360000035
+      },
+      {
+        "leaf": "MODEL_clock_l2_79",
+        "sinks": 23,
+        "RMST_um": 36.91600000000001,
+        "native_pin_cap_fF": {
+          "TT": 14.908544,
+          "FF": 16.355998
+        },
+        "nominal_clock_wire_fF": 5.368546216000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_80",
+        "sinks": 23,
+        "RMST_um": 47.247999999999934,
+        "native_pin_cap_fF": {
+          "TT": 10.812395,
+          "FF": 11.836507999999998
+        },
+        "nominal_clock_wire_fF": 6.871087647999991
+      },
+      {
+        "leaf": "MODEL_clock_l2_81",
+        "sinks": 22,
+        "RMST_um": 41.56000000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 6.043904560000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_82",
+        "sinks": 23,
+        "RMST_um": 38.878000000000036,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 5.653872028000005
+      },
+      {
+        "leaf": "MODEL_clock_l2_83",
+        "sinks": 22,
+        "RMST_um": 46.05999999999994,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 6.698321559999991
+      },
+      {
+        "leaf": "MODEL_clock_l2_84",
+        "sinks": 23,
+        "RMST_um": 34.378000000000014,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 4.999455028000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_85",
+        "sinks": 23,
+        "RMST_um": 40.551999999999964,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 5.897315151999995
+      },
+      {
+        "leaf": "MODEL_clock_l2_86",
+        "sinks": 22,
+        "RMST_um": 71.52999999999997,
+        "native_pin_cap_fF": {
+          "TT": 13.340760999999999,
+          "FF": 14.689687999999999
+        },
+        "nominal_clock_wire_fF": 10.402321779999996
+      },
+      {
+        "leaf": "MODEL_clock_l2_87",
+        "sinks": 23,
+        "RMST_um": 56.014000000000046,
+        "native_pin_cap_fF": {
+          "TT": 14.086587000000002,
+          "FF": 15.434959999999998
+        },
+        "nominal_clock_wire_fF": 8.145891964000006
+      },
+      {
+        "leaf": "MODEL_clock_l2_88",
+        "sinks": 22,
+        "RMST_um": 50.81200000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 7.3893859120000025
+      },
+      {
+        "leaf": "MODEL_clock_l2_89",
+        "sinks": 23,
+        "RMST_um": 57.72399999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 8.394570423999998
+      },
+      {
+        "leaf": "MODEL_clock_l2_90",
+        "sinks": 23,
+        "RMST_um": 57.003999999999984,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 8.289863703999998
+      },
+      {
+        "leaf": "MODEL_clock_l2_91",
+        "sinks": 22,
+        "RMST_um": 44.26,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 6.43655476
+      },
+      {
+        "leaf": "MODEL_clock_l2_92",
+        "sinks": 23,
+        "RMST_um": 61.432000000000016,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 8.933810032000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_93",
+        "sinks": 22,
+        "RMST_um": 57.70600000000004,
+        "native_pin_cap_fF": {
+          "TT": 14.580026,
+          "FF": 16.0836
+        },
+        "nominal_clock_wire_fF": 8.391952756000006
+      },
+      {
+        "leaf": "MODEL_clock_l2_94",
+        "sinks": 23,
+        "RMST_um": 75.43599999999999,
+        "native_pin_cap_fF": {
+          "TT": 17.433072,
+          "FF": 19.230579
+        },
+        "nominal_clock_wire_fF": 10.970355735999998
+      },
+      {
+        "leaf": "MODEL_clock_l2_95",
+        "sinks": 22,
+        "RMST_um": 59.59599999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.408681,
+          "FF": 11.427645999999998
+        },
+        "nominal_clock_wire_fF": 8.666807895999998
+      },
+      {
+        "leaf": "MODEL_clock_l2_96",
+        "sinks": 23,
+        "RMST_um": 56.89600000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.87158,
+          "FF": 11.930797999999998
+        },
+        "nominal_clock_wire_fF": 8.274157696000005
+      },
+      {
+        "leaf": "MODEL_clock_l2_97",
+        "sinks": 23,
+        "RMST_um": 71.26000000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 10.363056760000003
+      },
+      {
+        "leaf": "MODEL_clock_l2_98",
+        "sinks": 22,
+        "RMST_um": 57.760000000000005,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 8.399805760000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_99",
+        "sinks": 23,
+        "RMST_um": 66.02199999999995,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 9.601315371999993
+      },
+      {
+        "leaf": "MODEL_clock_l2_100",
+        "sinks": 22,
+        "RMST_um": 75.868,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 11.033179768
+      },
+      {
+        "leaf": "MODEL_clock_l2_101",
+        "sinks": 23,
+        "RMST_um": 62.512,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 9.090870112
+      },
+      {
+        "leaf": "MODEL_clock_l2_102",
+        "sinks": 23,
+        "RMST_um": 86.02000000000004,
+        "native_pin_cap_fF": {
+          "TT": 13.073149999999998,
+          "FF": 14.401549999999997
+        },
+        "nominal_clock_wire_fF": 12.509544520000006
+      },
+      {
+        "leaf": "MODEL_clock_l2_103",
+        "sinks": 22,
+        "RMST_um": 94.10200000000003,
+        "native_pin_cap_fF": {
+          "TT": 12.919420000000002,
+          "FF": 14.179419999999999
+        },
+        "nominal_clock_wire_fF": 13.684877452000004
+      },
+      {
+        "leaf": "MODEL_clock_l2_104",
+        "sinks": 23,
+        "RMST_um": 79.95400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 11.627390404000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_105",
+        "sinks": 22,
+        "RMST_um": 73.81600000000002,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 10.734765616000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_106",
+        "sinks": 23,
+        "RMST_um": 92.76999999999998,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 13.491170019999997
+      },
+      {
+        "leaf": "MODEL_clock_l2_107",
+        "sinks": 23,
+        "RMST_um": 74.338,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 10.810677987999998
+      },
+      {
+        "leaf": "MODEL_clock_l2_108",
+        "sinks": 22,
+        "RMST_um": 77.30799999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 11.242593207999999
+      },
+      {
+        "leaf": "MODEL_clock_l2_109",
+        "sinks": 23,
+        "RMST_um": 90.12400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 13.106372824000001
+      },
+      {
+        "leaf": "MODEL_clock_l2_110",
+        "sinks": 22,
+        "RMST_um": 75.47200000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 10.975591072000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_111",
+        "sinks": 23,
+        "RMST_um": 114.24399999999994,
+        "native_pin_cap_fF": {
+          "TT": 15.899721000000001,
+          "FF": 17.514214000000003
+        },
+        "nominal_clock_wire_fF": 16.614047943999992
+      },
+      {
+        "leaf": "MODEL_clock_l2_112",
+        "sinks": 23,
+        "RMST_um": 96.69400000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.859743,
+          "FF": 11.911939999999998
+        },
+        "nominal_clock_wire_fF": 14.061821644000004
+      },
+      {
+        "leaf": "MODEL_clock_l2_113",
+        "sinks": 22,
+        "RMST_um": 86.434,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 12.569750884
+      },
+      {
+        "leaf": "MODEL_clock_l2_114",
+        "sinks": 23,
+        "RMST_um": 101.41,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 14.74765066
+      },
+      {
+        "leaf": "MODEL_clock_l2_115",
+        "sinks": 22,
+        "RMST_um": 99.12400000000001,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 14.415206824000002
+      },
+      {
+        "leaf": "MODEL_clock_l2_116",
+        "sinks": 23,
+        "RMST_um": 87.838,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 12.773928988
+      },
+      {
+        "leaf": "MODEL_clock_l2_117",
+        "sinks": 23,
+        "RMST_um": 102.79599999999996,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 14.949211095999996
+      },
+      {
+        "leaf": "MODEL_clock_l2_118",
+        "sinks": 22,
+        "RMST_um": 98.58400000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 14.336676784000005
+      },
+      {
+        "leaf": "MODEL_clock_l2_119",
+        "sinks": 23,
+        "RMST_um": 118.41999999999999,
+        "native_pin_cap_fF": {
+          "TT": 13.187224999999998,
+          "FF": 14.518816999999997
+        },
+        "nominal_clock_wire_fF": 17.22134692
+      },
+      {
+        "leaf": "MODEL_clock_l2_120",
+        "sinks": 22,
+        "RMST_um": 106.954,
+        "native_pin_cap_fF": {
+          "TT": 10.420518,
+          "FF": 11.446504
+        },
+        "nominal_clock_wire_fF": 15.553892403999999
+      },
+      {
+        "leaf": "MODEL_clock_l2_121",
+        "sinks": 23,
+        "RMST_um": 101.62599999999999,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 14.779062675999999
+      },
+      {
+        "leaf": "MODEL_clock_l2_122",
+        "sinks": 23,
+        "RMST_um": 111.32799999999997,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 16.189985727999996
+      },
+      {
+        "leaf": "MODEL_clock_l2_123",
+        "sinks": 22,
+        "RMST_um": 109.88800000000003,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 15.980572288000005
+      },
+      {
+        "leaf": "MODEL_clock_l2_124",
+        "sinks": 23,
+        "RMST_um": 103.768,
+        "native_pin_cap_fF": {
+          "TT": 10.918928,
+          "FF": 12.006229999999999
+        },
+        "nominal_clock_wire_fF": 15.090565168
+      },
+      {
+        "leaf": "MODEL_clock_l2_125",
+        "sinks": 22,
+        "RMST_um": 113.056,
+        "native_pin_cap_fF": {
+          "TT": 10.444192,
+          "FF": 11.484219999999999
+        },
+        "nominal_clock_wire_fF": 16.441281856
+      },
+      {
+        "leaf": "MODEL_clock_l2_126",
+        "sinks": 23,
+        "RMST_um": 108.75399999999999,
+        "native_pin_cap_fF": {
+          "TT": 15.054762,
+          "FF": 16.60561
+        },
+        "nominal_clock_wire_fF": 15.815659204
+      },
+      {
+        "leaf": "MODEL_clock_l2_127",
+        "sinks": 22,
+        "RMST_um": 124.50399999999999,
+        "native_pin_cap_fF": {
+          "TT": 18.046342,
+          "FF": 19.939500000000002
+        },
+        "nominal_clock_wire_fF": 18.106118704
+      }
+    ],
+    "early_late_arrivals": null,
+    "TT_FF_spread": null,
+    "pulse_domain": null,
+    "phase": "old253 phases discarded"
+  },
+  "whole_path_budget": {
+    "old34p62293_headroom_discarded": true,
+    "old_source_input_slew_not_transferred": true,
+    "fresh_native_driver_waveforms": null,
+    "source_HB_D_RESETN_whole_path_minmax": null,
+    "SS_setup": null,
+    "FF_hold": null,
+    "seven_feedback_conditions": "OPEN",
+    "TT292lower_wire_predicates": "OPEN; nominal model is not minimum actual wire",
+    "native_CQ_domain": "OPEN"
+  },
+  "actual_physical_capacitance": null,
+  "actual_pin_via_access": null,
+  "source_implementation": false,
+  "EDA": false,
+  "placement_grant": false,
+  "full_token_rate": null
+}
