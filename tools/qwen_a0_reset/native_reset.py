@@ -1,11 +1,13 @@
 """Create an isolated actual-native A0 reset source from the pinned REGROOT5 ODB.
 Run in OpenROAD's Python interpreter. No placement/timing qualification is implied.
 The original face state is retained as stage two using a native asynchronous-clear master. Only reset-cone endpoint inputs
-and its D input change; every old cell/master and all other equations survive.
+and the face reset state master/D input change; every old cell/master and all other equations survive.
 """
 import collections,hashlib,json,os,re
 import odb
 path=os.environ['A0_ODB']; out=os.environ['A0_OUT']; os.makedirs(out,exist_ok=True)
+PINNED_INPUT_SHA256='c07b6bc766314f270d5c7889ba7891f9e431d99de536716b75ff6d651d80bd5b'
+assert hashlib.sha256(open(path,'rb').read()).hexdigest()==PINNED_INPUT_SHA256, 'refuse a different native source snapshot'
 db=odb.dbDatabase.create(); odb.read_db(db,path); block=db.getChip().getBlock()
 seq=re.compile(r'DFF|LATCH|DHL'); trans=re.compile(r'^(BUF|INV|HB).*ASAP7')
 def key(p):return p.getInst().getName()+'/'+p.getMTerm().getName()
