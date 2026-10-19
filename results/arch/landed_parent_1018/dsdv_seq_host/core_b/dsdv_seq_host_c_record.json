@@ -40,6 +40,6 @@
   "script": "rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_c_bench.sh (S81U-SEQ golden tb on dsdv_seq_host_bw = core + 2-stage lane stand-in)",
   "witnesses": "results/arch/landed_parent_1018/dsdv_seq_host/core_b/run_*.log",
   "result_prev": "SEQHOST_C_GATE PASS (ot-epyc5, Verilator 5.050, 10-18 07:22): seeds 1-4 PASS 0 mismatches, collide + W-drop fault, mutants 1-6 detected, lint clean",
-  "result": "PENDING S81-GUSEQ rerun with lk RL 1 + mutants 7..9 (ot-epyc5, Verilator 5.050)"
+  "result": "SEQHOST_C_GATE PASS (S81-GUSEQ 10-18, ot-epyc5, Verilator 5.050, source b3a09a7ab: lk RL 1 + APIPE 7): seeds 1-4 0 mismatches, collide + W-drop fault, mutants 1-9 detected, lint clean"
  }
 }
