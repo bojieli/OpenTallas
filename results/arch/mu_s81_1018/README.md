@@ -1,4 +1,6 @@
-> Codex recovery: the owner target remains **47 AR users on 520 dies**. The 46-user calendar below is a diagnostic result on the checkpoint's model, not target completion or release qualification. `target47_bound.json` gives the fixed-copy necessary bound (993676 cycles versus 980428) and a hypothetical 47-user opportunity within 520 dies: twelve nonduplicated stage occupancies must fall from 20754 to at most 20468 cycles. No RTL speedup is measured. Current main's S81-SCAND pricing corrections remain authoritative; the historical composition figures below are not regenerated into main's price records by this recovery.
+> **Coordinator decision 2026-10-19 (MU-S81b): the S81 multi-user AR target is 46 users** (the proven calendar), not 47. No third copy of the four full-scan groups (~+40 dies) is added for one user. 47 is recorded only if the twelve non-duplicated FFN-pair stages (S005..S027) measure >= 1.4% faster in RTL (20,754 -> <= 20,468 cycles; `target47_bound.json` keeps that bound). Composition of record: **46 x 1,224.1 = 56,309 tok/s** AR, MTP 10 x 3,711.7 + 1 filler = 38,009 (token_path_1018 `multi_user`).
+>
+> (Superseded) Codex recovery 10-18: the owner target remained 47 AR users on 520 dies; the 46-user calendar was called diagnostic. Current main's S81-SCAND pricing corrections remain authoritative.
 
 # MU-S81 2026-10-18: the S81 multi-user static calendar, chain plan and pricing
 
@@ -26,10 +28,10 @@ reproduction. Regenerate the records with `dv_mu_calendar.py`, then `dv_mu_chain
 
 | mode | users | per-user | aggregate | slot (cycles) | period (cycles) | lemma |
 |---|---|---|---|---|---|---|
-| AR | **46** (model said 47) | 1,224.0 (calendar model) / 1,243.0 (composition) | **56.3k** / **57.2k** | 21,313.7 (P/46 on the 4-edge issuer grid) | 980,428 | PASS, 5,474 windows, 0 collisions |
-| MTP | 10 + 1 AR filler | 3,829.1 / 3,806.2; filler 920.7 | 39.2k / 39.0k | 124,524 | 1,303,400 | PASS, 1,309 windows, 0 collisions |
+| AR | **46** (model said 47) | 1,224.0 (calendar model) / 1,224.1 (composition) | **56.3k** / **56.3k** | 21,313.7 (P/46 on the 4-edge issuer grid) | 980,428 | PASS, 5,474 windows, 0 collisions |
+| MTP | 10 + 1 AR filler | 3,829.1 / 3,711.7; filler | 39.2k / 38.0k | 124,524 | 1,303,400 | PASS, 1,309 windows, 0 collisions |
 
-**Diagnostic finding: existing model windows and fixed-copy assignments do not fit 47 AR users at the target period. The owner target remains 47; the current proven model calendar has 46.**
+**Finding: existing model windows and fixed-copy assignments do not fit 47 AR users at the target period. Target = 46 (coordinator 10-19).**
 - The study's `floor(T / II)` treats a duplicated group as one stage with half the occupancy. A real copy holds one
   position for its full window: S029 38,900, S020 35,325, S011 34,394, S002 31,144 cycles.
 - Users must alternate copies, so that on each copy the gap between consecutive users is at least the window. With an
@@ -106,8 +108,8 @@ The `multi_user` block of `token_path_1018/ds_rom.json` is priced as follows:
 - **per-user rate:** this composition's single-user rate, which the lemma keeps;
 - **aggregate:** users x per-user, plus the MTP-calendar fillers at f / step.
 
-On main today this gives AR 46 x 1,243.0 = 57,178 and MTP 10 x 3,806.2 + 1 x 915.2 = 38,977. When S81-SCANCHK and
-S81-SCAND re-price the single-user rate (1,186 corrected, 1,224 B3), the block follows automatically.
+On main (10-19, after S81-SCAND B3) this gives AR 46 x 1,224.1 = 56,309 and MTP 10 x 3,711.7 + 1 filler = 38,009 (was
+46 x 1,243.0 = 57,178 before S81-SCANCHK / S81-SCAND re-priced the single-user rate).
 
 ## Issuer grid (MU-S81/TOK, 10-19)
 
