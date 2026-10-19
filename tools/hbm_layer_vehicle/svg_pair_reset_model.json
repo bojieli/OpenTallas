@@ -1,0 +1,57 @@
+{
+  "status": "PROPOSED before RTL;7aeca767d raw-collapse FAIL despite max27 ordinary load PASS",
+  "clocks": {
+    "HBM": "pair_hbm_clk",
+    "pair": "pair_clk",
+    "return": "return_clk"
+  },
+  "first_stage_copies": {
+    "HBM": 4,
+    "pair": 2,
+    "return": 2
+  },
+  "phase_equation": "p0_i async clears from raw_i; at each clock E p0_i<=1",
+  "second_stage_equation": "branch_j async clears from p0[j%N]; at each clock E branch_j<=1",
+  "release_proof": [
+    "raw assertion clears p0 immediately, cascades asynchronous clear to every branch and owned control",
+    "after raw deassertion first active edge E1 raises all p0, branches remain0 because preedge p0=0",
+    "E2 raises all branch Q; owned functional control sees previous branch0 and starts E3, exactly matching prior two-stage release",
+    "no fake BUF or combinational delay stage; actual preserved one-FF modules map to RVT async-clear cells"
+  ],
+  "expected_raw_async_ff": {
+    "HBM": 4,
+    "pair": 2,
+    "return": 2
+  },
+  "expected_first_branch_max": {
+    "HBM": 19,
+    "pair": 19,
+    "return": 18
+  },
+  "strict_limits": {
+    "raw": 12,
+    "first": 24,
+    "final": 30
+  },
+  "existing_FIFO_equations": {
+    "both_reset": "hreset && sreset",
+    "FIFO_wr_release": "two extra wr_clk reset_sync edges after both_reset",
+    "FIFO_rd_release": "two extra rd_clk reset_sync edges after both_reset",
+    "scope": "unchanged internal CDC reset contract; no latency altered"
+  },
+  "proof_required": [
+    "mapped raw/first/final counts through INV/BUF",
+    "clock of every first/second FF",
+    "D constant1 equation from mapped netlist",
+    "explicit resetassert/E1/E2 witness in componentbench",
+    "all-J oldmaster miter andmutants",
+    "all273output Q;maxnonclock<=32"
+  ],
+  "physical_open": [
+    "sourcebound strictshape canonicaltool review",
+    "reset slew/reach",
+    "clock skew/phase",
+    "TT/FF timing",
+    "macro native access"
+  ]
+}
