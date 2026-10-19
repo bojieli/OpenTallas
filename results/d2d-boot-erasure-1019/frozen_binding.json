@@ -1,0 +1,238 @@
+{
+  "source": "5f2ce19bc",
+  "driver": "cda9d9f9d",
+  "run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-cda9d9f9d-gen8v4mub",
+  "dependencies": [
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh",
+      "manifest_sha256": "e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae",
+      "actual_sha256": "e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv",
+      "manifest_sha256": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688",
+      "actual_sha256": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv",
+      "manifest_sha256": "5ed298078d7e2592628e0d70b64129254731664a3601b13efb6a8af2d0bd68a1",
+      "actual_sha256": "5ed298078d7e2592628e0d70b64129254731664a3601b13efb6a8af2d0bd68a1"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bootcfg.sv",
+      "manifest_sha256": "9c43fc17792f780f3b53d635437ed9a6da37737480e480a2ce95b122c4960ae4",
+      "actual_sha256": "9c43fc17792f780f3b53d635437ed9a6da37737480e480a2ce95b122c4960ae4"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+      "manifest_sha256": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6",
+      "actual_sha256": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+      "manifest_sha256": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97",
+      "actual_sha256": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97"
+    },
+    {
+      "path": "tools/qwen_kv_die/kv_die.py",
+      "manifest_sha256": "517ada21587fdb68d87f55530a0b80402f3888d4d46f617e60f7949f23f73903",
+      "actual_sha256": "517ada21587fdb68d87f55530a0b80402f3888d4d46f617e60f7949f23f73903"
+    }
+  ],
+  "preexp_sha256": "00a3de7cd445198b147af744e5dd3c00f824a3222767b3fb4c8274392dd8b36e",
+  "instances": [
+    {
+      "line": 25772,
+      "text": "  qkd_d2ds d2d_kv (.ck0(n_clk_core_c), .fdi(n_d2d_fdi), .phy_rst_n(n_rst_phyd2d), .svc(n_hsvc), .lup(n_hlup), .rec_tx(n_hrec_tx), .rec_rx(n_hrec_rx), .lrc(n_hlrc), .status_epoch16(n_hsep), .host_drained_local(n_hhdl), .lpf(n_hlpf), .fwd_epoch(n_hfwd_epoch), .fwd_link_rst_n(n_hfwd_link_rst_n), .cal(n_dcal_cfg), .dcfg(n_dcal_dcfg), .eab(n_dcal_hlt), .skw(n_seqst_kw), .kvi(n_ks_kvs_ctl__kvi__r2), .kv_drained_local(n_ks_kvs_ctl__oobs__kv_drained_local__r2), .kv_flush_local(n_ks_kvs_ctl__oobs__kv_flush_local__r2), .kv_active_local(n_ks_kvs_ctl__oobs__kv_active_local__r2), .att_tx_payload(n_ks_kvs_attn__attn__tx_payload__r8__pinfix1), .emb_tx_v(n_ks_kvs_emb__rowtx__emb_tx_v), .emb_tx_payload(n_ks_kvs_emb__rowtx__emb_tx_payload), .srx(n_seqst_rx), .kvn_word_identity(n_ks_d2d_kv__kvn_word_identity), .kvn_word_generation(n_ks_d2d_kv__kvn_word_generation), .rx_payload(n_ks_d2d_kv__rx_payload), .att_tx_slot(n_ks_d2d_kv__att_tx_slot), .att_tx_kind(n_ks_d2d_kv__att_tx_kind), .att_tx_beat(n_ks_d2d_kv__att_tx_beat), .emb_tx_slot(n_ks_d2d_kv__emb_tx_slot), .rst_n(n_rst_link_t0__m), .host_boot_begin(n_hboot_t0), .att_tx_v(n_ks_kvs_attn__attn__tx_valid__r6__beq3), .serdes_up(n_host_fdi[0]));"
+    },
+    {
+      "line": 26040,
+      "text": "  qkd_dcal dcal (.ck(n_clk_core_c), .cal(n_dcal_cfg), .dcfg(n_dcal_dcfg), .hlt(n_dcal_hlt), .rld(n_dcal_rld__pinfix3), .btx(n_ks_kvs_ctl__boot__link_cfg_tx_we__r2), .brx(n_ks_kvs_ctl__boot__link_cfg_rx_we__r2), .bad(n_ks_kvs_ctl__boot__link_cfg_addr__r2), .bdt(n_ks_kvs_ctl__boot__link_cfg_data__r2), .tks(n_ks_lprg_st), .rst_n(n_rst_link_t0__m), .ego(n_hfwd_epoch));"
+    }
+  ],
+  "exporter_excerpt": [
+    {
+      "line": 1004,
+      "text": "# die nets n_ks_kvs_ctl__boot__link_cfg_* reach the d2ds identity pins). The calendar sequencer qkd_dcal drives only the"
+    },
+    {
+      "line": 1005,
+      "text": "# run strobes cal_start / cal_seg; its own cfg_* outputs (a compile-time image, stale whenever TXDP changes) are load-less."
+    },
+    {
+      "line": 1006,
+      "text": "DCAL_CS = ['cal_start', 'cal_seg']"
+    },
+    {
+      "line": 1007,
+      "text": "DCAL_CFGW = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data']"
+    },
+    {
+      "line": 1008,
+      "text": "DCAL_WH = (18.792, 28.08)"
+    },
+    {
+      "line": 1009,
+      "text": "# KV-DCAL-BOOTCFG 10-19 (OT_KV_DCAL_BC=1, needs OT_KV_DCAL=1 + OT_KV_STATIC_DIE=1; default off): the boot-only producer above"
+    },
+    {
+      "line": 1010,
+      "text": "# lost the sequencer's RUNTIME segment-1 base writes (SEG1 after each admission, SEG2 at each epoch), so every KV token run"
+    },
+    {
+      "line": 1011,
+      "text": "# replayed the admission segment.  With DCAL_BC the dcal slot is qkd_d2d_cal_seq_pin_bc (qkd_d2d_cal_seq_bootcfg.sv, kit"
+    },
+    {
+      "line": 1012,
+      "text": "# physical/ref_tile/qkd_d2d_cal_seq_pin_bc): the boot dispatcher's link_cfg_* die nets end on its bcfg_* pins"
+    },
+    {
+      "line": 1013,
+      "text": "# (kv_static_die re-targets the four ks_kvs_ctl__boot__link_cfg_* buses), and its cfg_* word (the boot write, else the"
+    },
+    {
+      "line": 1014,
+      "text": "# sequencer's runtime base write) drives the D2D end's cfg port: one producer per pin, no load-less cfg output."
+    },
+    {
+      "line": 1015,
+      "text": "DCAL_BC = __import__('os').environ.get('OT_KV_DCAL_BC', '0') == '1'"
+    },
+    {
+      "line": 1016,
+      "text": "DCAL_BC_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bootcfg.sv'"
+    },
+    {
+      "line": 1017,
+      "text": "DCAL_BC_GROUPS = dict(btx='bcfg_tx_we', brx='bcfg_rx_we', bad='bcfg_addr', bdt='bcfg_data')   # die group -> RTL port"
+    },
+    {
+      "line": 1018,
+      "text": "DCAL_BC_LINK = dict(cfg_tx_we='btx', cfg_rx_we='brx', cfg_addr='bad', cfg_data='bdt')         # d2ds cfg port -> dcal group"
+    },
+    {
+      "line": 1019,
+      "text": "if DCAL_BC:"
+    },
+    {
+      "line": 1020,
+      "text": "    DCAL_FILE = DCAL_BC_FILE"
+    },
+    {
+      "line": 1021,
+      "text": "    DCAL_WH = (21.6, 34.56)          # the bc kit outline (+94 flops vs ep3 / _mu; MU-DIE-KV2 notified)"
+    },
+    {
+      "line": 1022,
+      "text": ""
+    },
+    {
+      "line": 1023,
+      "text": ""
+    },
+    {
+      "line": 1024,
+      "text": "def dcal_binding():"
+    },
+    {
+      "line": 1025,
+      "text": "    if DCAL_BC:"
+    },
+    {
+      "line": 1026,
+      "text": "        return dict(module='qkd_d2d_cal_seq_pin_bc', file=DCAL_BC_FILE, parameters=dict(EP_SKEW=3, GO_OFS=0, MUT=0),"
+    },
+    {
+      "line": 1027,
+      "text": "                    ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CS), dcfg=list(DCAL_CFGW), ego=['epoch_go'],"
+    },
+    {
+      "line": 1028,
+      "text": "                               hlt=['halt'], rld=['reload'], **{g: [p] for g, p in DCAL_BC_GROUPS.items()}),"
+    },
+    {
+      "line": 1029,
+      "text": "                    sliced={}, classed={})"
+    },
+    {
+      "line": 1030,
+      "text": "    return dict(module='qkd_d2d_cal_seq_pin', file=DCAL_FILE, parameters=dict(EP_SKEW=3, GO_OFS=0),"
+    },
+    {
+      "line": 1031,
+      "text": "                ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CS), dcfg=list(DCAL_CFGW), ego=['epoch_go'], hlt=['halt'],"
+    },
+    {
+      "line": 1032,
+      "text": "                           rld=['reload']),"
+    },
+    {
+      "line": 1033,
+      "text": "                sliced={}, classed={})"
+    },
+    {
+      "line": 1034,
+      "text": ""
+    },
+    {
+      "line": 1035,
+      "text": ""
+    },
+    {
+      "line": 1036,
+      "text": "def _d2ds_binding_dcal():"
+    },
+    {
+      "line": 1037,
+      "text": "    # always bound (a die without the dcal instance has no cal / eab pins, so the groups are unused): the post-prep"
+    },
+    {
+      "line": 1038,
+      "text": "    # chain re-runs the strict bind without the OT_KV_* environment and must see the same bindings"
+    },
+    {
+      "line": 1039,
+      "text": "    # (KV-DCAL-BOOTCFG: dcfg only under OT_KV_DCAL_BC, which kvsys_prep records in kv_flags.env for the re-run)"
+    },
+    {
+      "line": 1040,
+      "text": "    b = d2ds_binding()"
+    },
+    {
+      "line": 1041,
+      "text": "    b['ports'].update(cal=list(DCAL_CS), eab=['epoch_abort'])"
+    },
+    {
+      "line": 1042,
+      "text": "    if DCAL_BC:"
+    },
+    {
+      "line": 1043,
+      "text": "        b['ports'].update(dcfg=list(DCAL_CFGW))"
+    },
+    {
+      "line": 1044,
+      "text": "    return b"
+    },
+    {
+      "line": 1045,
+      "text": ""
+    },
+    {
+      "line": 1046,
+      "text": ""
+    }
+  ],
+  "d2ds_view": {
+    "schema": "opentallas.qwen_kv.d2ds_view_select.v1",
+    "mode": "auto",
+    "kit": "qkd_d2d_static_r7v",
+    "bind": null,
+    "die_txdp": "0x03030416",
+    "die_ntx": 3,
+    "decision": "FRAME",
+    "why": "no CLOSED view of qkd_d2d_static_r7v on the branch (missing physical/ref_tile/qkd_d2d_static_r7v/views/qkd_d2d_static/qkd_d2d_static.lef): frame kept"
+  },
+  "flags": "export OT_KV_HOST_NORTH='1'\nexport OT_KV_LANDSLOT='1'\nexport OT_KV_BOOT_AGES='1'\nexport OT_KV_HOST_V14='1'\nexport OT_KV_RST_PER_TREE='1'\nexport OT_KV_PVT_HUB_CLEAR='172.8'\nexport OT_KV_KVNC='1'\nexport OT_KV_SN_LIFT='432'\nexport OT_KV_STATIC_DIE='1'\nexport OT_KV_REACH_W='36:400,296:370,100000:340'\nexport OT_KV_PV_AGE='96'\nexport OT_KV_TILE_KITS='1'\nexport OT_KV_PV_T='1'\nexport OT_KV_PV_W='82'\nexport OT_KV_V144_R6='1'\nexport OT_KV_FANFOLD='1'\nexport OT_KV_RLY_STD='1'\nexport OT_KV_FACE_LAND='astk_rly_296'\nexport OT_KV_REACH_FIX='1'\nexport OT_KV_PVFORK_GAP='64.8'\nexport OT_KV_PV_PINY='1'\nexport OT_KV_SEQ_STATIC='1'\nexport OT_KV_TREES='1'\nexport OT_KV_DCAL_BC='1'\nexport OT_KV_PVT_HDR_CTL='1'\nexport OT_KV_ATTN_LAND='1'\nexport OT_KV_FWD='1'\nexport OT_KV_RST_REGIONAL='1'\nexport OT_KV_V144_DW='2462.4'\nexport OT_KV_SCHED_STRICT='1'\nexport OT_KV_V143C='1'\nexport OT_KV_PV_CTL_KIT='qkd_pv_ctl_rstpin_a72'\nexport OT_KV_REACH='400'\nexport OT_KV_HROOT='1'\nexport OT_KV_V144='1'\nexport OT_KV_V143='1'\nexport OT_KV_MU='1'\nexport OT_KV_EXPAND='qkd_rhead,qkd_rhead_ft,qkd_ectl,qkd_ctrl,qkd_ctrl_n,qkd_pvfork,qkd_pvtap2,qkd_pvtap3,qkd_pvtap4,qkd_seq_st,qkd_pvw_s,qkd_pvw_n'\nexport OT_KV_PARAM_DIAG='1'\nexport OT_KV_HOP='1'\nexport OT_KV_CTL_BAND='302.4'\nexport OT_KV_BUNDLE_EQ='1'\nexport OT_KV_DCAL='1'\nexport OT_KV_ECTL_H13='1'\nexport OT_KV_PV_T_CTL_KIT='qkd_pv_ctl_t_d54f58a95'\nexport OT_KV_D2DS_VIEW='auto'\nexport OT_KV_PVT_PINS='1'\nexport OT_KV_HROOT_VIEW='auto'\nexport OT_KV_KV_CHAN_EXTRA='86.4'\nexport OT_KV_STATIC_DIE_STRICT='1'\nexport OT_KV_SEAM='1'\nexport OT_KV_RST_PIN_REG='1'\nexport OT_KV_D2D_NTX='3'\nexport OT_KV_PVT_SOFT_SLACK='0'\nexport OT_KV_V144_RLY_FIRST='pvin_,krs_,kvn_,ap_,aq_,am_,ks_acal_,pve_'\nexport OT_KV_PHY_REG='1'\nexport OT_KV_SERDES_N='1'\n"
+}

@@ -1,0 +1,1 @@
+Read-only diagnosis complete. HOLD: no certified nonempty clone partition, no live jobs. Preserve canonical endpoints. Exact frozen BC boot suppresses constant init; emitted66 != accepted66. Need real host/reset/accepted-write/valid composition and SRAM ownership noninterference before ROOT source-guard review. No constructors/integration/EDA authorized.

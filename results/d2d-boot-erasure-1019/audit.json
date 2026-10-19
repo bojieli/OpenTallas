@@ -1,0 +1,577 @@
+{
+  "status": "HOLD_UNCONDITIONAL_ERASURE_NOT_PROVEN",
+  "qualification": "Static source and image inventory only; no simulation, constructor, source integration or EDA",
+  "certified_clone_partition": [],
+  "dispatcher_emission_coverage": [
+    {
+      "word": 0,
+      "side": "TX",
+      "address": 0
+    },
+    {
+      "word": 1,
+      "side": "RX",
+      "address": 0
+    },
+    {
+      "word": 2,
+      "side": "TX",
+      "address": 1
+    },
+    {
+      "word": 3,
+      "side": "RX",
+      "address": 1
+    },
+    {
+      "word": 4,
+      "side": "TX",
+      "address": 2
+    },
+    {
+      "word": 5,
+      "side": "RX",
+      "address": 2
+    },
+    {
+      "word": 6,
+      "side": "TX",
+      "address": 3
+    },
+    {
+      "word": 7,
+      "side": "RX",
+      "address": 3
+    },
+    {
+      "word": 8,
+      "side": "TX",
+      "address": 4
+    },
+    {
+      "word": 9,
+      "side": "RX",
+      "address": 4
+    },
+    {
+      "word": 10,
+      "side": "TX",
+      "address": 5
+    },
+    {
+      "word": 11,
+      "side": "RX",
+      "address": 5
+    },
+    {
+      "word": 12,
+      "side": "TX",
+      "address": 6
+    },
+    {
+      "word": 13,
+      "side": "RX",
+      "address": 6
+    },
+    {
+      "word": 14,
+      "side": "TX",
+      "address": 7
+    },
+    {
+      "word": 15,
+      "side": "RX",
+      "address": 7
+    },
+    {
+      "word": 16,
+      "side": "TX",
+      "address": 8
+    },
+    {
+      "word": 17,
+      "side": "RX",
+      "address": 8
+    },
+    {
+      "word": 18,
+      "side": "TX",
+      "address": 9
+    },
+    {
+      "word": 19,
+      "side": "RX",
+      "address": 9
+    },
+    {
+      "word": 20,
+      "side": "TX",
+      "address": 10
+    },
+    {
+      "word": 21,
+      "side": "RX",
+      "address": 10
+    },
+    {
+      "word": 22,
+      "side": "TX",
+      "address": 11
+    },
+    {
+      "word": 23,
+      "side": "RX",
+      "address": 11
+    },
+    {
+      "word": 24,
+      "side": "TX",
+      "address": 12
+    },
+    {
+      "word": 25,
+      "side": "RX",
+      "address": 12
+    },
+    {
+      "word": 26,
+      "side": "TX",
+      "address": 13
+    },
+    {
+      "word": 27,
+      "side": "RX",
+      "address": 13
+    },
+    {
+      "word": 28,
+      "side": "TX",
+      "address": 14
+    },
+    {
+      "word": 29,
+      "side": "RX",
+      "address": 14
+    },
+    {
+      "word": 30,
+      "side": "TX",
+      "address": 15
+    },
+    {
+      "word": 31,
+      "side": "RX",
+      "address": 15
+    },
+    {
+      "word": 32,
+      "side": "TX",
+      "address": 16
+    },
+    {
+      "word": 33,
+      "side": "RX",
+      "address": 16
+    },
+    {
+      "word": 34,
+      "side": "TX",
+      "address": 17
+    },
+    {
+      "word": 35,
+      "side": "RX",
+      "address": 17
+    },
+    {
+      "word": 36,
+      "side": "TX",
+      "address": 18
+    },
+    {
+      "word": 37,
+      "side": "RX",
+      "address": 18
+    },
+    {
+      "word": 38,
+      "side": "TX",
+      "address": 19
+    },
+    {
+      "word": 39,
+      "side": "RX",
+      "address": 19
+    },
+    {
+      "word": 40,
+      "side": "TX",
+      "address": 20
+    },
+    {
+      "word": 41,
+      "side": "RX",
+      "address": 20
+    },
+    {
+      "word": 42,
+      "side": "TX",
+      "address": 21
+    },
+    {
+      "word": 43,
+      "side": "RX",
+      "address": 21
+    },
+    {
+      "word": 44,
+      "side": "TX",
+      "address": 22
+    },
+    {
+      "word": 45,
+      "side": "RX",
+      "address": 22
+    },
+    {
+      "word": 46,
+      "side": "TX",
+      "address": 23
+    },
+    {
+      "word": 47,
+      "side": "RX",
+      "address": 23
+    },
+    {
+      "word": 48,
+      "side": "TX",
+      "address": 24
+    },
+    {
+      "word": 49,
+      "side": "RX",
+      "address": 24
+    },
+    {
+      "word": 50,
+      "side": "TX",
+      "address": 25
+    },
+    {
+      "word": 51,
+      "side": "RX",
+      "address": 25
+    },
+    {
+      "word": 52,
+      "side": "TX",
+      "address": 26
+    },
+    {
+      "word": 53,
+      "side": "RX",
+      "address": 26
+    },
+    {
+      "word": 54,
+      "side": "TX",
+      "address": 27
+    },
+    {
+      "word": 55,
+      "side": "RX",
+      "address": 27
+    },
+    {
+      "word": 56,
+      "side": "TX",
+      "address": 28
+    },
+    {
+      "word": 57,
+      "side": "RX",
+      "address": 28
+    },
+    {
+      "word": 58,
+      "side": "TX",
+      "address": 29
+    },
+    {
+      "word": 59,
+      "side": "RX",
+      "address": 29
+    },
+    {
+      "word": 60,
+      "side": "TX",
+      "address": 30
+    },
+    {
+      "word": 61,
+      "side": "RX",
+      "address": 30
+    },
+    {
+      "word": 62,
+      "side": "TX",
+      "address": 31
+    },
+    {
+      "word": 63,
+      "side": "RX",
+      "address": 31
+    },
+    {
+      "word": 64,
+      "side": "TX",
+      "address": 32
+    },
+    {
+      "word": 65,
+      "side": "RX",
+      "address": 32
+    }
+  ],
+  "calendar_events": {
+    "TX_segment0": [
+      {
+        "entry": 0,
+        "calendar_edge_offset": 2371,
+        "port": 0,
+        "kind": 3,
+        "first_beat": 0,
+        "extra_beats": 31,
+        "last": false
+      },
+      {
+        "entry": 1,
+        "calendar_edge_offset": 2404,
+        "port": 0,
+        "kind": 4,
+        "first_beat": 0,
+        "extra_beats": 0,
+        "last": true
+      }
+    ],
+    "TX_segment1": [
+      {
+        "entry": 2,
+        "calendar_edge_offset": 2,
+        "port": 1,
+        "kind": 12,
+        "first_beat": 1,
+        "extra_beats": 0,
+        "last": false
+      },
+      {
+        "entry": 3,
+        "calendar_edge_offset": 3,
+        "port": 1,
+        "kind": 12,
+        "first_beat": 0,
+        "extra_beats": 0,
+        "last": false
+      },
+      {
+        "entry": 4,
+        "calendar_edge_offset": 191,
+        "port": 2,
+        "kind": 8,
+        "first_beat": 0,
+        "extra_beats": 0,
+        "last": false
+      },
+      {
+        "entry": 5,
+        "calendar_edge_offset": 192,
+        "port": 2,
+        "kind": 6,
+        "first_beat": 0,
+        "extra_beats": 31,
+        "last": false
+      },
+      {
+        "entry": 6,
+        "calendar_edge_offset": 224,
+        "port": 2,
+        "kind": 7,
+        "first_beat": 0,
+        "extra_beats": 31,
+        "last": false
+      },
+      {
+        "entry": 7,
+        "calendar_edge_offset": 2643,
+        "port": 0,
+        "kind": 3,
+        "first_beat": 0,
+        "extra_beats": 31,
+        "last": false
+      },
+      {
+        "entry": 8,
+        "calendar_edge_offset": 2676,
+        "port": 0,
+        "kind": 4,
+        "first_beat": 0,
+        "extra_beats": 0,
+        "last": true
+      }
+    ],
+    "TX_segment2": [
+      {
+        "entry": 9,
+        "calendar_edge_offset": 3,
+        "port": 1,
+        "kind": 13,
+        "first_beat": 1,
+        "extra_beats": 1,
+        "last": true
+      }
+    ],
+    "RX_segment0": [
+      {
+        "entry": 0,
+        "calendar_edge_offset": 619,
+        "port": 0,
+        "kind": 1,
+        "first_beat": 0,
+        "extra_beats": 0,
+        "last": false
+      },
+      {
+        "entry": 1,
+        "calendar_edge_offset": 620,
+        "port": 0,
+        "kind": 2,
+        "first_beat": 0,
+        "extra_beats": 31,
+        "last": false
+      },
+      {
+        "entry": 2,
+        "calendar_edge_offset": 652,
+        "port": 2,
+        "kind": 15,
+        "first_beat": 0,
+        "extra_beats": 0,
+        "last": false
+      },
+      {
+        "entry": 3,
+        "calendar_edge_offset": 654,
+        "port": 3,
+        "kind": 5,
+        "first_beat": 0,
+        "extra_beats": 3,
+        "last": true
+      }
+    ],
+    "RX_segment1": [
+      {
+        "entry": 4,
+        "calendar_edge_offset": 15,
+        "port": 2,
+        "kind": 15,
+        "first_beat": 0,
+        "extra_beats": 0,
+        "last": false
+      },
+      {
+        "entry": 5,
+        "calendar_edge_offset": 45,
+        "port": 1,
+        "kind": 14,
+        "first_beat": 0,
+        "extra_beats": 0,
+        "last": false
+      },
+      {
+        "entry": 6,
+        "calendar_edge_offset": 891,
+        "port": 0,
+        "kind": 1,
+        "first_beat": 0,
+        "extra_beats": 0,
+        "last": false
+      },
+      {
+        "entry": 7,
+        "calendar_edge_offset": 892,
+        "port": 0,
+        "kind": 2,
+        "first_beat": 0,
+        "extra_beats": 31,
+        "last": false
+      },
+      {
+        "entry": 8,
+        "calendar_edge_offset": 924,
+        "port": 2,
+        "kind": 15,
+        "first_beat": 0,
+        "extra_beats": 0,
+        "last": false
+      },
+      {
+        "entry": 9,
+        "calendar_edge_offset": 926,
+        "port": 3,
+        "kind": 5,
+        "first_beat": 0,
+        "extra_beats": 3,
+        "last": true
+      }
+    ],
+    "RX_segment2": [
+      {
+        "entry": 10,
+        "calendar_edge_offset": 1094,
+        "port": 1,
+        "kind": 14,
+        "first_beat": 1,
+        "extra_beats": 0,
+        "last": true
+      }
+    ]
+  },
+  "inputs": {
+    "input/current_dies_sfo.sv": {
+      "sha256": "8cc1bca311e9aecbe054b7ee8a3667d860374d110dbe752ee7f5db04f51fb7bb",
+      "bytes": 59074
+    },
+    "input/current_safe_fo.sv": {
+      "sha256": "9b3694353d39abc17f83e52f2f6de4273fa3dbe498a138dbee147e436bcefb67",
+      "bytes": 43557
+    },
+    "input/d2d_cal_image_mu.svh": {
+      "sha256": "e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae",
+      "bytes": 2812
+    },
+    "input/ot_qwen_d2d_cal_seq.sv": {
+      "sha256": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688",
+      "bytes": 10555
+    },
+    "input/ot_qwen_d2d_cal_seq_dies_mu.sv": {
+      "sha256": "5ed298078d7e2592628e0d70b64129254731664a3601b13efb6a8af2d0bd68a1",
+      "bytes": 4176
+    },
+    "input/qkd_d2d_cal_seq_bootcfg.sv": {
+      "sha256": "9c43fc17792f780f3b53d635437ed9a6da37737480e480a2ce95b122c4960ae4",
+      "bytes": 7313
+    },
+    "input/qkd_static_kv_boot_dispatch.sv": {
+      "sha256": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6",
+      "bytes": 11942
+    }
+  },
+  "prerequisite_status": {
+    "full_emission": "Source supports 66 ordered words",
+    "actual_acceptance": "OPEN: stopped/reset/write frontier not established",
+    "no_early_start": "OPEN: BC EARLY faults but does not suppress start",
+    "full_macro_noninterference": "OPEN: stale memory must be dominated by real written ownership and age bypass",
+    "first_authoritative_boundary": "OPEN: FRAME D2D has no native binding; absolute reset/phase composition missing"
+  }
+}
