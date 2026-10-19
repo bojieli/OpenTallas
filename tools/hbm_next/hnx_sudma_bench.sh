@@ -39,6 +39,11 @@
 #      PASS + SFU_ROWS_II (row arith-start spacing = P); DP sweep 0..3 (programme restart spacing, outcome only);
 #      BADSTRIDE (s_rd[2:0] != 0 -> row-step FAULT, must FAIL); MUT 1 drain / 2 prefetch stride, 3 early wrap, 4 no
 #      ordinal-0 clear -> SFU_ROWS FAIL (witnesses)
+#  q   (SUDMA2 10-19) FUSED.QDQ_* N-row records on the d4g static QDQ engine (ot_hgi_qdq_program_static + 8 real
+#      ot_vms_bank_static pipelines, unchanged; tb_hnx_qdq_rows = d4g tb_hgi_qdq_static with the programme cross-check
+#      reported, not fatal): vectors hnx_qdq_rows_vectors.py; MUT 0 LG 0 and LG 1 TSPLIT 1 (the die's split form):
+#      QDQ_FP8 e 512 N = 1,2,3,4,6 + QDQ_FP4_E4M3 N 4 -> PASS + QDQ_ROWS (cycles(N)); stride witness (programme drops the
+#      row stride, golden per row) and d4g MUT 1 (sector map) at N 4 -> FAIL (witnesses)
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -141,6 +146,33 @@ if [ "$ST" = f ]; then
     for rr in $RUNS; do t=${rr%%:*}; a=${rr#*:}; a=${a//,/ }
       $d/Vf$m $a > $O/f_m${m}_$t.log 2>&1; echo RUN_RC=$? >> $O/f_m${m}_$t.log
       V "f_m$m $t: $(grep -h 'SFU_ROWS PASS\|SFU_ROWS FAIL\|SFU_ROWS_II\|SFU_ROWS RESTART\|RUN_RC' $O/f_m${m}_$t.log | head -3 | tr '\n' ' ')"
+    done
+    rm -rf $d ) &
+  done
+  wait; V "done"; exit 0
+fi
+if [ "$ST" = q ]; then
+  QS=(rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv
+   rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv
+   physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv
+   rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv rtl/hbm_accel/generic/ot_hgi_quant_decode.sv rtl/lib/ot_rst_relay.sv
+   rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv
+   rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_program_static.sv rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_lg_port_group.sv
+   rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r2.sv
+   rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv
+   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+   rtl/hbm_next/qdq/tb/tb_hnx_qdq_rows.sv)
+  qv(){ local c=$1; shift; python3 tools/hbm_next/hnx_qdq_rows_vectors.py $O/qvec_$c "$@" > $O/qvec_$c.log 2>&1 || V "vector gen $c FAILED"; }
+  for n in 1 2 3 4 6; do qv n$n --n $n; done
+  qv fp4_n4 --n 4 --op QDQ_FP4_E4M3; qv mstride_n4 --n 4 --mut-stride
+  for b in "m0 0 0 0" "lg1 0 1 1" "m1 1 0 0"; do ( set -- $b
+    d=$O/obj_q$1; rm -rf $d
+    verilator --binary --timing -O2 -j 4 -Wno-fatal -Wno-lint -Wno-style -GMUT=$2 -GLG=$3 -GTSPLIT=$4 --top-module tb_hnx_qdq_rows \
+      -Mdir $d -o Vq "${QS[@]}" > $O/build_q$1.log 2>&1
+    case $1 in m1) CS=n4;; *) CS="n1 n2 n3 n4 n6 fp4_n4 mstride_n4";; esac
+    for c in $CS; do
+      $d/Vq +DIR=$O/qvec_$c +PROGRAM=$O/qvec_$c/program.hex > $O/q_$1_$c.log 2>&1; echo RUN_RC=$? >> $O/q_$1_$c.log
+      V "q_$1 $c: $(grep -h 'QDQ_ROWS rows\|^PASS HGI_QDQ\|Fatal\|RUN_RC' $O/q_$1_$c.log | head -3 | cut -c1-220 | tr '\n' ' ')"
     done
     rm -rf $d ) &
   done
