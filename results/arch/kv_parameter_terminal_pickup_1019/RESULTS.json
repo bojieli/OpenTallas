@@ -1,0 +1,270 @@
+{
+  "schema": "opentallas.original_parameter_terminal_pickup.v1",
+  "predecessors": [
+    "e27a57fbf",
+    "dd27f95b8"
+  ],
+  "collected_at": "2026-10-19T23:04:55.205777+00:00",
+  "runs": [
+    {
+      "run": "ot_qwen_tp8_pv_join_t",
+      "parameters": {
+        "J_LAT": 7,
+        "MUT": 0,
+        "RESET_PIN": 1
+      },
+      "expect": "pass",
+      "proven": false,
+      "equiv": {
+        "cells": 16293,
+        "log_sha256": "3867464535f98d569df04ec9a2f928417d32a21f44fca5486bf5b3d9bc5a43d6",
+        "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+        "proven_cells": 16277,
+        "rc": 1,
+        "seconds": [
+          3.3,
+          6687.5
+        ],
+        "unproven_cells": 16,
+        "unproven_sample": [
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573633: \\S__g_join_0__u_add_err_1__gold \\S__g_join_0__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573032: \\S__g_join_10__u_add_err_1__gold \\S__g_join_10__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$572431: \\S__g_join_11__u_add_err_1__gold \\S__g_join_11__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$571830: \\S__g_join_12__u_add_err_1__gold \\S__g_join_12__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$571229: \\S__g_join_13__u_add_err_1__gold \\S__g_join_13__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$570628: \\S__g_join_14__u_add_err_1__gold \\S__g_join_14__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$570027: \\S__g_join_15__u_add_err_1__gold \\S__g_join_15__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$569426: \\S__g_join_1__u_add_err_1__gold \\S__g_join_1__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$568825: \\S__g_join_2__u_add_err_1__gold \\S__g_join_2__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$568224: \\S__g_join_3__u_add_err_1__gold \\S__g_join_3__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$567623: \\S__g_join_4__u_add_err_1__gold \\S__g_join_4__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$567022: \\S__g_join_5__u_add_err_1__gold \\S__g_join_5__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$566421: \\S__g_join_6__u_add_err_1__gold \\S__g_join_6__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$565820: \\S__g_join_7__u_add_err_1__gold \\S__g_join_7__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$565219: \\S__g_join_8__u_add_err_1__gold \\S__g_join_8__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$564618: \\S__g_join_9__u_add_err_1__gold \\S__g_join_9__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573633: \\S__g_join_0__u_add_err_1__gold \\S__g_join_0__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573032: \\S__g_join_10__u_add_err_1__gold \\S__g_join_10__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$572431: \\S__g_join_11__u_add_err_1__gold \\S__g_join_11__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$571830: \\S__g_join_12__u_add_err_1__gold \\S__g_join_12__u_add_err_1__gate"
+        ]
+      },
+      "audit_sha256": "48074ea3809888a13cf49261c6c7b417f2da5cc3208b116adcfd02d0feebe6aa",
+      "log_hash_verified": true,
+      "terminal_log_tail": [
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$565219: \\S__g_join_8__u_add_err_1__gold \\S__g_join_8__u_add_err_1__gate",
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$564618: \\S__g_join_9__u_add_err_1__gold \\S__g_join_9__u_add_err_1__gate",
+        "Found a total of 16 unproven $equiv cells.",
+        "ERROR: Found 16 unproven $equiv cells in 'equiv_status -assert'."
+      ]
+    },
+    {
+      "run": "ot_qwen_tp8_pv_join_t.mut",
+      "parameters": {
+        "J_LAT": 7,
+        "MUT": 1,
+        "RESET_PIN": 1
+      },
+      "expect": "fail",
+      "proven": false,
+      "equiv": {
+        "cells": 16293,
+        "log_sha256": "e6cd2ba6a292642114fddad93e3fc0e2e3aac1701a50d48b874c4baaf8cfcc74",
+        "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+        "proven_cells": 14389,
+        "rc": 1,
+        "seconds": [
+          3.5,
+          7553.8
+        ],
+        "unproven_cells": 1904,
+        "unproven_sample": [
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573633: \\S__g_join_0__u_add_err_1__gold \\S__g_join_0__u_add_err_1__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573464: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_0__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_0__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573463: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_100__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_100__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573462: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_101__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_101__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573461: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_102__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_102__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573460: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_103__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_103__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573459: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_104__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_104__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573458: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_105__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_105__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573457: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_106__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_106__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573456: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_107__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_107__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573455: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_108__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_108__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573454: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_109__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_109__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573453: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_10__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_10__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573452: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_110__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_110__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573451: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_111__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_111__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573450: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_112__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_112__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573449: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_113__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_113__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573448: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_114__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_114__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573447: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_115__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_115__gate",
+          "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$573446: \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_117__gold \\S__g_join_0__u_add_u_ca_genblk1_g_rv_rd_117__gate"
+        ]
+      },
+      "audit_sha256": "c358c75860cded17673a81e5aec141fee6d0c9801aedf19e210cea0d89231d64",
+      "log_hash_verified": true,
+      "terminal_log_tail": [
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$564333: \\S__g_join_9__u_add_u_ca_genblk1_g_rv_rd_99__gold \\S__g_join_9__u_add_u_ca_genblk1_g_rv_rd_99__gate",
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$564332: \\S__g_join_9__u_add_u_ca_genblk1_g_rv_rd_9__gold \\S__g_join_9__u_add_u_ca_genblk1_g_rv_rd_9__gate",
+        "Found a total of 1904 unproven $equiv cells.",
+        "ERROR: Found 1904 unproven $equiv cells in 'equiv_status -assert'."
+      ]
+    },
+    {
+      "run": "qkd_seq_xs_s",
+      "parameters": {
+        "MUT": 0
+      },
+      "expect": "pass",
+      "proven": false,
+      "equiv": {
+        "cells": 6075,
+        "log_sha256": "c8bb0a4c2cc7eb42ba64a1f1b148f6ec3a071330acbcd9f2c10737d9ec6a5f91",
+        "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+        "proven_cells": 5307,
+        "rc": 1,
+        "seconds": [
+          0.7,
+          6444.1
+        ],
+        "unproven_cells": 768,
+        "unproven_sample": [
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230751: \\q_w_gold [127] \\q_w_gate [127]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230750: \\q_w_gold [126] \\q_w_gate [126]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230749: \\q_w_gold [125] \\q_w_gate [125]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230748: \\q_w_gold [124] \\q_w_gate [124]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230747: \\q_w_gold [123] \\q_w_gate [123]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230746: \\q_w_gold [122] \\q_w_gate [122]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230745: \\q_w_gold [121] \\q_w_gate [121]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230744: \\q_w_gold [120] \\q_w_gate [120]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230743: \\q_w_gold [119] \\q_w_gate [119]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230742: \\q_w_gold [118] \\q_w_gate [118]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230741: \\q_w_gold [117] \\q_w_gate [117]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230740: \\q_w_gold [116] \\q_w_gate [116]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230739: \\q_w_gold [115] \\q_w_gate [115]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230738: \\q_w_gold [114] \\q_w_gate [114]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230737: \\q_w_gold [113] \\q_w_gate [113]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230736: \\q_w_gold [112] \\q_w_gate [112]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230735: \\q_w_gold [111] \\q_w_gate [111]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230734: \\q_w_gold [110] \\q_w_gate [110]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230733: \\q_w_gold [109] \\q_w_gate [109]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230732: \\q_w_gold [108] \\q_w_gate [108]"
+        ]
+      },
+      "audit_sha256": "268d14200761e6c7e38de778a1281870312d35b1d13dae8270c97ebdccdb2150",
+      "log_hash_verified": true,
+      "terminal_log_tail": [
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$229985: \\S__q_w_9__gold \\S__q_w_9__gate",
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$229984: \\S__q_w_9___rep__ot_prs_00255_ff_gold \\S__q_w_9___rep__ot_prs_00255_ff_gate",
+        "Found a total of 768 unproven $equiv cells.",
+        "ERROR: Found 768 unproven $equiv cells in 'equiv_status -assert'."
+      ]
+    },
+    {
+      "run": "qkd_seq_xs_s.causal_mut8",
+      "parameters": {
+        "MUT": 8
+      },
+      "expect": "fail",
+      "proven": false,
+      "equiv": {
+        "cells": 6074,
+        "log_sha256": "523567d2a1c956aeec24d118c9c84957e5fc0b570fbad9326aa64d1e6125b2e7",
+        "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+        "proven_cells": 180,
+        "rc": 1,
+        "seconds": [
+          0.6,
+          6802.8
+        ],
+        "unproven_cells": 5894,
+        "unproven_sample": [
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230746: \\q_w_gold [127] \\q_w_gate [127]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230745: \\q_w_gold [126] \\q_w_gate [126]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230744: \\q_w_gold [125] \\q_w_gate [125]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230743: \\q_w_gold [124] \\q_w_gate [124]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230742: \\q_w_gold [123] \\q_w_gate [123]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230741: \\q_w_gold [122] \\q_w_gate [122]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230740: \\q_w_gold [121] \\q_w_gate [121]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230739: \\q_w_gold [120] \\q_w_gate [120]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230738: \\q_w_gold [119] \\q_w_gate [119]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230737: \\q_w_gold [118] \\q_w_gate [118]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230736: \\q_w_gold [117] \\q_w_gate [117]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230735: \\q_w_gold [116] \\q_w_gate [116]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230734: \\q_w_gold [115] \\q_w_gate [115]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230733: \\q_w_gold [114] \\q_w_gate [114]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230732: \\q_w_gold [113] \\q_w_gate [113]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230731: \\q_w_gold [112] \\q_w_gate [112]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230730: \\q_w_gold [111] \\q_w_gate [111]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230729: \\q_w_gold [110] \\q_w_gate [110]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230728: \\q_w_gold [109] \\q_w_gate [109]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230727: \\q_w_gold [108] \\q_w_gate [108]"
+        ]
+      },
+      "audit_sha256": "014693f4762cee54edc3374ca02f8c5e064f0fc6eecc04352db5b88e4f8d0bff",
+      "log_hash_verified": true,
+      "terminal_log_tail": [
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$224805: \\S__u_q_wp_4__gold \\S__u_q_wp_4__gate",
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$224804: \\S__u_q_wp_5__gold \\S__u_q_wp_5__gate",
+        "Found a total of 5894 unproven $equiv cells.",
+        "ERROR: Found 5894 unproven $equiv cells in 'equiv_status -assert'."
+      ]
+    },
+    {
+      "run": "qkd_seq_xs_s.mut",
+      "parameters": {
+        "MUT": 1
+      },
+      "expect": "fail",
+      "proven": false,
+      "equiv": {
+        "cells": 6075,
+        "log_sha256": "240b18faa9143929d8ca190f64a94994b70259e56680d606152544073c2ea9ac",
+        "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+        "proven_cells": 5307,
+        "rc": 1,
+        "seconds": [
+          0.7,
+          6424.7
+        ],
+        "unproven_cells": 768,
+        "unproven_sample": [
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230751: \\q_w_gold [127] \\q_w_gate [127]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230750: \\q_w_gold [126] \\q_w_gate [126]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230749: \\q_w_gold [125] \\q_w_gate [125]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230748: \\q_w_gold [124] \\q_w_gate [124]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230747: \\q_w_gold [123] \\q_w_gate [123]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230746: \\q_w_gold [122] \\q_w_gate [122]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230745: \\q_w_gold [121] \\q_w_gate [121]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230744: \\q_w_gold [120] \\q_w_gate [120]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230743: \\q_w_gold [119] \\q_w_gate [119]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230742: \\q_w_gold [118] \\q_w_gate [118]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230741: \\q_w_gold [117] \\q_w_gate [117]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230740: \\q_w_gold [116] \\q_w_gate [116]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230739: \\q_w_gold [115] \\q_w_gate [115]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230738: \\q_w_gold [114] \\q_w_gate [114]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230737: \\q_w_gold [113] \\q_w_gate [113]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230736: \\q_w_gold [112] \\q_w_gate [112]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230735: \\q_w_gold [111] \\q_w_gate [111]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230734: \\q_w_gold [110] \\q_w_gate [110]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230733: \\q_w_gold [109] \\q_w_gate [109]",
+          "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$230732: \\q_w_gold [108] \\q_w_gate [108]"
+        ]
+      },
+      "audit_sha256": "60dc2212a37555db8d42e0e21446a8e042dbd95e7823afea7cc8fd075ba973e1",
+      "log_hash_verified": true,
+      "terminal_log_tail": [
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$229985: \\S__q_w_9__gold \\S__q_w_9__gate",
+        "  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$229984: \\S__q_w_9___rep__ot_prs_00255_ff_gold \\S__q_w_9___rep__ot_prs_00255_ff_gate",
+        "Found a total of 768 unproven $equiv cells.",
+        "ERROR: Found 768 unproven $equiv cells in 'equiv_status -assert'."
+      ]
+    }
+  ],
+  "native_qualified": false,
+  "receipt_issued": false,
+  "new_jobs_launched": 0,
+  "causal_counterexample_proven": false,
+  "original_job_terminal": true,
+  "separate_joint_jobs": "Not collected or cancelled here; lane8 JOINT base and comparator replay are separate."
+}

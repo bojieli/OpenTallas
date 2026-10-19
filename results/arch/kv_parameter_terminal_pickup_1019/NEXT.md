@@ -1,0 +1,1 @@
+No remaining original kv-params-1019 process or audit pickup. Keep all refusals. Do not rerun, mask errors, supply synthetic SRAM behavior, issue a receipt, or treat replacement JOINT proofs as these originals. Any next proof or source/view adoption requires a separate scoped owner decision.
