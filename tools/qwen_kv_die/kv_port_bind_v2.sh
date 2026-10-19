@@ -25,6 +25,10 @@ grep -qE "qkd_(rlysh0?|landsh0?)_" "$D" && F+=(--rtl-file "$R/rtl/qwen_sys/kv_fw
 if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
   KT=$(cd $R/tools/qwen_kv_die && python3 -c 'import kv_static_die as S; print(S.RTL_FILE)' 2>/dev/null | tail -1)
   [ -n "$KT" ] && [ -f "$R/$KT" ] && F+=(--rtl-file "$R/$KT")
+  # KV-FACELAND-WIRE 10-19: face-landed top tiles bind their kit's wrapper (<master>_fl; two files define qkd_kvs_attn_fl)
+  for FLW in $(cd $R/tools/qwen_kv_die && python3 -c 'import kv_static_die as S; print(" ".join(sorted({b["file"] for b in S.bindings().values() if b["module"].endswith("_fl")})))' 2>/dev/null | tail -1); do
+    [ -f "$R/$FLW" ] && F+=(--rtl-file "$R/$FLW" --rtl-file "$R/rtl/lib/ot_rst_relay.sv" --rtl-file "$R/rtl/lib/ot_pin_land.sv")
+  done
 fi
 python3 $R/tools/die_port_bind.py $O/die_bound.v "${F[@]}" --rtl-file $O/kv_hard_models.sv --rtl-file $O/kv_relays_dir.sv \
   --rtl-file $R/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v \

@@ -1503,7 +1503,24 @@ def bindings():
         if ofs:
             out['qkd_ahub']['parameters'] = dict(out['qkd_ahub'].get('parameters') or {}, AP_OFS=ofs['AP_OFS_hex'],
                                                  FR_OFS=ofs['FR_OFS'])
+    # KV-FACELAND-WIRE 10-19: a top-level tile selected in OT_KV_FACE_LAND binds its face-landed wrapper module
+    # <master>_fl (same ports; the kit's rtl/lib/face_land file), so the bound netlist carries the edges the compiler
+    # charges (kv_tile_views.py binds the matching CLOSED _fl view, kv_static_params FACE_LAND_BINDING checks die_bound.v)
+    for tl in sorted(FACE_LAND_SEL):
+        t = FACE_LAND_TILES[tl]
+        if t['master'] in out:
+            out[t['master']] = dict(out[t['master']], module=t['master'] + '_fl', file=face_land_rtl(tl))
     return out
+
+
+def face_land_rtl(tile):
+    """the face-land wrapper file of the selected tile's kit (spec sources rtl/lib/face_land/*), fail closed"""
+    t = FACE_LAND_TILES[tile]
+    sp = Path(ROOT) / f"physical/ref_tile/{t['kit']}/spec.json"
+    src = [s for s in (json.loads(sp.read_text()).get('sources', []) if sp.exists() else []) if s.startswith('rtl/lib/face_land/')]
+    if len(src) != 1:
+        raise ValueError(f"kv_static_die: face-landed tile {tile}: kit {t['kit']} names {len(src)} face_land wrapper sources")
+    return src[0]
 
 
 def ahub_ofs_bound(spec=None):

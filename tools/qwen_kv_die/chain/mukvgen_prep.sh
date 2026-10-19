@@ -72,6 +72,8 @@ say "LAND_LAG: $(tail -1 $R/land_lag.log 2>/dev/null | head -c 400)"
 say "D2DS VIEW: $(grep -m1 'OT_KV_D2DS_VIEW' $R/prep.log | head -c 300)"
 say "BUNDLE_EQ: $(grep -m1 -i 'bundle' $R/prep.log | head -c 400)"
 say "prep done: $(tail -1 $R/prep.log | head -c 300)"
+# KV-FACELAND-WIRE 10-19: the kvs_* control tiles' CLOSED views (identity + edges, kv_tile_views.py) bound vs ASSUMED
+say "TILE VIEWS: $(grep -m1 'KV_TILE_VIEWS:' $R/prep.log | head -c 400) | $(head -c 400 $R/tile_views_check.log 2>/dev/null)"
 say "LANDSLOT: $(python3 -c "import json;d=json.load(open('$R/case_kv/land_slots.json'));print(d['crossings'],'crossing runs, tiers',d['tiers'],'legality',d['legality']['overlaps'],'/',d['legality']['outside'])" 2>&1)"
 say "FWD: $(tail -1 $R/fwd_lanes.log | head -c 600)"
 say "STATIONS + REACH GATE: $(python3 -c "import json;d=json.load(open('$R/fwd_lanes.json'));print(json.dumps(dict(stations=d.get('stations'),reach_gate=d.get('reach_gate'))))" 2>&1 | head -c 900)"

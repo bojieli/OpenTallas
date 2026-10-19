@@ -106,6 +106,17 @@ fi
 # (ctl_s / ep_s / ex_s / zn / rly_296[_fl] / fault_join / er_owner_st) with the other die-placed frames (--astk-static)
 ASTKX=
 if [ "${OT_KV_ASTK_EXPAND:-1}" = 1 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then H14="$H14 --reserve-native-astk"; V14=$V14,reserve_native_astk; ASTKX=--astk-static; fi
+# KV-FACELAND-WIRE 10-19 (OT_KV_TILE_VIEWS = 1 default on the static kit die | 0): the generated control tiles qkd_kvs_attn /
+# _ctl / _emb / _grp(_h) / _pc(_h) bind their CLOSED views (the _fl view when OT_KV_FACE_LAND selects the tile) ONLY when the
+# view's tile RTL equals the die's tile file module, its other sources are unchanged, and the face edges it adds (pin
+# registers, face-land landed buses) equal what the die schedule charges (kv_tile_views.py, RUN/tile_views.json); every
+# other tile stays an ASSUMED frame with its reason.  A tile selected in OT_KV_FACE_LAND with no passing _fl view or no die
+# instance (hr_core_queue: inside the qkd_host_rt frame) FAILS the prep (exit 10): the compiler would charge edges no netlist has.
+if [ "${OT_KV_TILE_VIEWS:-1}" = 1 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ] && [ "${OT_KV_TILE_KITS:-0}" = 1 ]; then
+  TVB=$(python3 tools/qwen_kv_die/kv_tile_views.py select --out $O/tile_views.json 2> $O/tile_views.log) || {
+    cat $O/tile_views.log; echo "KV_TILE_VIEWS FAIL (tile_views.json)"; exit 10; }
+  BV="$BV $TVB"; echo "KV_TILE_VIEWS: bind [$TVB] assumed $(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['assumed'])" $O/tile_views.json)"
+fi
 python3 tools/qwen_kv_die/kv_die.py case --kv-wq-mirror --split $H14 --out $O/case_kv > $O/case.log
 git rev-parse --short=9 HEAD > $O/case_kv/SOURCE_COMMIT
 python3 tools/die_top_lint.py lint --die qwen_kv --variant kv_wq_mirror,split$V14 --out $O/lint > $O/lint.log 2>&1
@@ -179,6 +190,13 @@ python3 tools/qwen_kv_die/kvsys_clocks.py --case $O/case_kv --views $O/libs/view
 python3 tools/qwen_kv_die/die_port_bind_kv.py $O/case_kv/die.v --split --relay-rtl $O/case_kv/qkd_kv_relays.sv $EXP --out $O/port_bind.json > $O/port_bind.log
 # Q-KVSYS-NETLIST 2026-10-16: the STRICT bit-level bind (die_port_bind v2 on the BINDINGS-bound netlist), recorded
 bash tools/qwen_kv_die/kv_port_bind_v2.sh $O/case_kv/die.v $O/port_bind_v2 $O/case_kv/qkd_kv_relays.sv $O/expand.json > $O/port_bind_v2.log 2>&1 || true
+# KV-FACELAND-WIRE 10-19: every passing tile view bound, every face-landed tile on its _fl view AND module (die_bound.v)
+if [ -f $O/tile_views.json ]; then
+  python3 tools/qwen_kv_die/kv_tile_views.py check --record $O/tile_views.json --views $O/libs/views.json \
+    $( [ -f $O/port_bind_v2/die_bound.v ] && echo --die-bound $O/port_bind_v2/die_bound.v ) > $O/tile_views_check.log 2>&1 || {
+    cat $O/tile_views_check.log; exit 10; }
+  cut -c1-400 $O/tile_views_check.log
+fi
 # KV-CASE2 10-18: the stub / tie / open-input audit of the strict bind (0da classes, owner lane per gap) lands in the run
 # dir every prep (stub_audit.json; the die_top_lint stub lint is $O/lint).  Recorded, never a prep failure.
 [ -f $O/port_bind_v2/port_bind_v2.json ] && { python3 tools/qwen_kv_die/kvjg_gap_list.py --bind $O/port_bind_v2/port_bind_v2.json \
