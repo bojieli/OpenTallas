@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  75.6,
-  75.6
+  77.76,
+  77.76
  ],
  "core": [
   2.16,
   2.16,
-  73.44,
-  73.44
+  75.60000000000001,
+  75.60000000000001
  ],
- "why": "util 0.52 of std 2500 + macros 0 um2",
- "std_area_um2": 2500.0,
+ "why": "util 0.52 of std 2700 + macros 0 um2",
+ "std_area_um2": 2700.0,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -52,7 +52,6 @@
   "physical/ref_tile/dsdv_mu_hslot/kit.env",
   "physical/ref_tile/dsdv_mu_hslot/clock.sdc",
   "physical/ref_tile/dsdv_mu_hslot/signoff.sdc",
-  "physical/ref_tile/dsdv_mu_hslot/signoff_ffrepair.sdc",
   "physical/ref_tile/dsdv_mu_hslot/pdn.tcl",
   "physical/ref_tile/dsdv_mu_hslot/pre_cts.tcl",
   "physical/ref_tile/dsdv_mu_hslot/post_cts.tcl",

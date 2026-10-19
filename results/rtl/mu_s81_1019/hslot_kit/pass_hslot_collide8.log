@@ -1,8 +1,9 @@
 Verilator 5.050 2026-07-01 rev v5.050
-ERR return at 1098 tag {user 0 pos 0} != start {user 0 pos 500}
-ERR return at 1162 tag {user 0 pos 0} != start {user 1 pos 511}
-ERR return at 1226 tag {user 0 pos 0} != start {user 2 pos 522}
-ERR return at 1290 tag {user 0 pos 0} != start {user 3 pos 533}
-ERR return at 1354 tag {user 0 pos 0} != start {user 4 pos 544}
-MUHSLOT COLLIDE NS 8 PASS (fault raised) t_mf 0101
+ERR return at 1098 tag {user 0 pos 501} != start {user 0 pos 500}
+ERR return at 1162 tag {user 1 pos 512} != start {user 1 pos 511}
+ERR return at 1226 tag {user 2 pos 523} != start {user 2 pos 522}
+ERR return at 1290 tag {user 3 pos 534} != start {user 3 pos 533}
+ERR return at 1354 tag {user 4 pos 545} != start {user 4 pos 544}
+MUHSLOT COLLIDE NS 8 PASS (fault raised) t_mf 1101
 BENCH_PASS hslot MUT=none NS 8 COLLIDE 1
+exit 0

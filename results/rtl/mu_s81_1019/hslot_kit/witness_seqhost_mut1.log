@@ -1,3 +1,4 @@
+Verilator 5.050 2026-07-01 rev v5.050
 SEQHOST_MU FAIL starts=92 users=46 user0_identical=True zero_latency_vs_plain=True kd_tagged=92/92 events=1444 max_outstanding=1 (b) 90 expected events missing (first ('KD', 23796, '2003ef004000ce')); (b) 90 unexpected events (first ('KD', 23796, '2003ef000000ce'))
 ---- run_mut1_ar.log
 PROG MUX 1 MU 92 starts CFG 431 words
@@ -1541,8 +1542,9 @@ PROG FCODE 0 fault 0 jobs 92
 PROG STATUS 1944960 t_host 10000000000000000000
 PROG TMF 0000
 PROG END
-- /srv/opentallas-scratch/claude/mu-s81-2-hslot/src/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host_mu.sv:131: Verilog $finish
+- /srv/opentallas-scratch/claude/mu-s81-2-hslot2/src/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host_mu.sv:131: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2ms; walltime 72.884 s; speed 26.686 us/s
-- Verilator: cpu 72.853 s on 1 threads; allocated 8 MB
+- Verilator: $finish at 2ms; walltime 85.783 s; speed 22.673 us/s
+- Verilator: cpu 78.721 s on 1 threads; allocated 9 MB
 SEQHOST_MU_MUT 1 detected (FAIL as required)
+exit 1

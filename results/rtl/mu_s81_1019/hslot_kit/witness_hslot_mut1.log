@@ -12,3 +12,4 @@ ERR user 4 final tok 1148 != golden 1774181
 ERR user 5 final tok 1185 != golden 651722
 ERR user 6 final tok 1222 != golden 1626415
 BENCH_FAIL hslot MUT=1 NS 8 COLLIDE 0
+exit 1

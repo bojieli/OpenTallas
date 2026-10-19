@@ -23,16 +23,16 @@
 // No queue with ready, no credit, no stall: a start into an occupied slot (two users in one slot = compiler error) is a
 // sticky fault and is NOT recorded; nothing is rescheduled.
 // Faults t_mf (sticky): [0] slot collision (start into an occupied slot), [1] off-calendar start (not at slot phase 0)
-// or the user already outstanding, [2] return mismatch (t_kd done without a due entry or vice versa, or an entry past
-// its due edge), [3] config (f_mc while armed / outstanding, no gap or a gap < nw, RL <= nw at the first start, or more
-// than NSLOT gaps; nw = the slot entries in use, NSLOT for one gap word, else the gap count -- MU-S81-2/SEQ).
+// or the user already outstanding, [2] return mismatch (t_kd done without an announced return or vice versa), [3] config
+// (f_mc while armed / outstanding, no gap or a gap < nw, RL <= nw at the first start, more than NSLOT gaps, or RL - 1 >=
+// the calendar period (HSLOT2); nw = the slot entries in use, NSLOT for one gap word, else the gap count -- MU-S81-2/SEQ).
 // Boot config f_mc = {v, sel, d 24} (host lane block CSR, boot only): sel 0 = slot gap (cycles; one word = uniform period
 // S, n words = the gap table g[0..n-1] of a non-uniform calendar, MU-S81-2/SEQ), sel 1 = RL (edges
-// from the f_ks capture edge to the t_kd pin edge).  Return order = start order (same RL for every start), so the
-// return pointer rp only stops on valid entries and sweeps empty ones one an edge (needs RL > nw, checked).
+// from the f_ks capture edge to the t_kd pin edge).  Return order = start order (same RL for every start): HSLOT2 walks
+// the gap table a second time RL - 1 edges behind (return slot timer), see the module body.
 // Timing: f_ks / f_kd / f_mc land in pin flops; t_ku / t_mf leave flops.  Single clock ck (stream), ot_rst_relay.
-// Area (NSLOT 47): 47 x 63 b entry flops + 47 10-b user compares + ~110 control flops ~ 3.9k flops; modelled
-// ~0.004 mm^2 (design study item 6: 0.001 mm^2 for the field alone).
+// Area (NSLOT 47, HSLOT2): 47 x {user 10, pos 21, gap 24} flops + 47 10-b user compares + ~400 control / pointer /
+// kept-copy flops ~ 3.0k flops.
 // NSLOT = 1 (default of dsdv_seq_host_mu): the leaf is not instantiated, t_kd / every pin = dsdv_seq_host exactly.
 // MUT (bench negative controls): 1 user field dropped from t_ku (user 0 on every return), 2 slot-collision check
 // dropped (the occupied entry is overwritten, no fault), 5 gap table index stuck at 0 (uniform g[0] slots).
@@ -46,94 +46,131 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
     output reg  [31:0]   t_ku,            // {v, user 10, pos 21}: same edge as the unit's t_kd done
     output reg  [3:0]    t_mf             // sticky faults
 );
+    // MU-S81-2/HSLOT2 (10-19, safe-design checklist): structural re-design of the table, same pins / boot words /
+    // t_ku edge / faults.  (a) No per-entry due field and no return pointer: return order = start order and RL is the
+    // same for every start, so the returns follow a SECOND walk of the same slot gap table started RL - 1 edges after
+    // the arming start (return timer); return slot k's boundary is exactly start slot k's boundary + RL - 1, i.e. every
+    // recorded start's due edge.  The 47 x 32 b due table, the 32 b edge counter, the 47:1 x 32 b compare and the
+    // sweep pointer rp (3,007 loads) are gone.  Needs RL - 1 < the calendar period (an AR user's next start waits for
+    // its return, so this always holds on a valid calendar; RL - 1 >= period raises t_mf[3] on the slot-0 wrap edge).
+    // (b) Every pointer is a registered ONE-HOT vector (start slot sl, return slot rn, gap read gx / rgx, gap write
+    // gw): each pointer bit enables only its own entry (<= 32 loads), reads are AND-OR trees into REGISTERS (ng / rng
+    // gap prefetch, rq = the entry of the next return boundary, loaded every edge: a write lands >= 2 edges before its
+    // return because RL > nw >= 2).  (c) The start payload {user, pos} and the gap word land in KEPT pin-flop copies,
+    // one per <= 16 entries (payload) / <= 24 entries (gap), so no register drives more than ~32 loads.
+    // Tables (flops, written only at a start / at boot, read only through the registered one-hot reads above): user
+    // 47 x 10 b (also the outstanding-user compare), pos 47 x 21 b, gap 47 x 24 b = 2.6 kb (was 4.1 kb + a 32 b timer).
+    // Schedule: zero added cycles on any pin path; t_ku leaves its flop on the same edge as before.
     localparam integer SI = (NSLOT > 1) ? $clog2(NSLOT) : 1;
     localparam integer SJ = SI + 1;
+    localparam integer NG = (NSLOT + 15) / 16;           // payload copies (<= 16 entries each)
+    localparam integer NC = (NSLOT + 23) / 24;           // gap word copies (<= 24 entries each)
+    localparam [NSLOT-1:0] ONE = {{(NSLOT-1){1'b0}}, 1'b1};
+    localparam [NSLOT-1:0] LAST = {1'b1, {(NSLOT-1){1'b0}}};
 `ifndef SYNTHESIS
     initial if (NSLOT < 2 || NSLOT > 1023) $fatal(1, "dsdv_mu_hslot: NSLOT must be 2..1023 (NSLOT 1 = leaf absent)");
 `endif
-    wire [0:0] rr; ot_rst_relay #(.REGIONS(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
-    // ---- pin flops (valid bits gated by the relayed reset, payload not)
-    reg [52:0] ks_q; reg kd_q; reg [25:0] mc_q;
+    wire [0:0] rr; ot_rst_relay #(.REGIONS(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn_ = rr[0];
+    // ---- pin flops (valid bits gated by the relayed reset, payload not); payload / gap word in kept copies
+    reg st_q, kd_q, mv_q, ms_q;
+    (* keep *) reg [31*NG-1:0] kp_q;                     // NG x {user 10, pos 21}
+    (* keep *) reg [24*NC-1:0] md_q;                     // NC x gap / RL word
     always @(posedge ck) begin
-        ks_q <= {rn & f_ks[52], f_ks[51:0]}; kd_q <= rn & f_kd[53]; mc_q <= {rn & f_mc[25], f_mc[24:0]};
+        st_q <= rn_ & f_ks[52]; kd_q <= rn_ & f_kd[53]; mv_q <= rn_ & f_mc[25]; ms_q <= f_mc[24];
+        kp_q <= {NG{f_ks[51:42], f_ks[20:0]}}; md_q <= {NC{f_mc[23:0]}};
     end
-    wire st = ks_q[52]; wire [9:0] su = ks_q[51:42]; wire [20:0] sp = ks_q[20:0];
+    wire [23:0] md = md_q[23:0];
     // ---- state
-    reg [23:0] cs, crl; reg [31:0] tm; reg armed; reg [23:0] ph; reg [SI-1:0] sl, rp; reg kv_d;
-    // MU-S81-2/SEQ (10-19): slot gap table.  The record calendar (dv_mu_calendar --phase-q 4) has NON-uniform slots
-    // (AR 46: shift_k = 4 floor(k (P/4) / 46) -> gaps 21,312 / 21,316; MTP 10 + filler: 10 x 124,524 then 58,160), so
-    // one period S cannot hold it (user 3's start lands 4 edges off a uniform 21,312 grid -> t_mf[1] on the real unit).
-    // Each sel-0 word APPENDS one slot gap g[k] (cycles from slot k's start edge to slot k+1's); the slot timer walks
-    // g[0..n-1] cyclically (n = words written), and the slot entries wrap at nw = n (n >= 2) so the entry index IS the
-    // calendar slot.  One sel-0 word (n = 1) = the former uniform period S with nw = NSLOT: the previous behaviour.
-    // cs = the smallest gap.
-    reg [23:0] gt [0:NSLOT-1]; reg [SI:0] gn; reg [SI-1:0] gx, lw; reg [23:0] cg, ng;
-    reg [NSLOT-1:0] vld; reg [9:0] eu [0:NSLOT-1]; reg [20:0] ep [0:NSLOT-1]; reg [31:0] ed [0:NSLOT-1];
-    wire [SI-1:0] ss = armed ? sl : {SI{1'b0}};          // the start's calendar slot
-    wire on_cal = !armed || ph == 24'd0;
-    reg udup; integer i;
-    always @* begin udup = 1'b0; for (i = 0; i < NSLOT; i = i + 1) if (vld[i] && eu[i] == su) udup = 1'b1; end
-    wire col = vld[ss];
-    wire [23:0] nw = {{(23-SI){1'b0}}, lw} + 24'd1;     // slot entries in use
-    wire cfg_bad = gn == 0 || cs < nw || crl <= nw;
-    wire m2c = MUT == 2 && col;                          // MUT 2: the collision (and the dup it implies) goes unchecked
-    wire rec = st && on_cal && ((!col && !udup) || m2c) && !(!armed && cfg_bad);    // the start is recorded
-    wire [31:0] rd = ed[rp];
-    wire hit = vld[rp] && rd == tm;
-    wire late = vld[rp] && rd != tm && rd - tm > 32'h7fffffff;                     // due edge already passed
-    function automatic [SI-1:0] nxt(input [SI-1:0] p);
-        nxt = (p == lw) ? {SI{1'b0}} : p + 1'b1;
+    reg [23:0] cs, crl; reg armed; reg [23:0] ph, cg, ng; reg kv_d;
+    reg [NSLOT-1:0] sl, gx, gw, gwo, lwo; reg [SJ-1:0] gn; reg [SI-1:0] lw;
+    reg rpend, rarmed; reg [23:0] rc, rph, rcg, rng; reg [NSLOT-1:0] rn, rgx;
+    reg [NSLOT-1:0] vld; reg [10*NSLOT-1:0] eu; reg [21*NSLOT-1:0] ep; reg [24*NSLOT-1:0] gt;   // gt holds gap - 1
+    reg rq_v; reg [30:0] rq;
+    function automatic [NSLOT-1:0] onx(input [NSLOT-1:0] p, input [NSLOT-1:0] last);   // one-hot next, wrap at last
+        onx = (|(p & last)) ? ONE : {p[NSLOT-2:0], 1'b0};
     endfunction
-    wire [SI-1:0] gxn = (MUT == 5 || {1'b0, gx} == gn - 1'b1) ? {SI{1'b0}} : gx + 1'b1;   // MUT 5: gap table index stuck at 0
-    always @(posedge ck) ng <= gt[gx] - 24'd1;          // next slot's gap, prefetched (gx = the slot after the current one)
-    always @(posedge ck) if (mc_q[25] && !mc_q[24] && !armed && !(|vld) && gn != SJ'(NSLOT)) gt[gn[SI-1:0]] <= mc_q[23:0];
-    always @(posedge ck or negedge rn)
-        if (!rn) begin
-            tm <= 32'd0; armed <= 1'b0; ph <= 24'd0; sl <= {SI{1'b0}}; rp <= {SI{1'b0}}; vld <= {NSLOT{1'b0}};
-            t_ku <= 32'd0; kv_d <= 1'b0; t_mf <= 4'd0; cs <= 24'd0; crl <= 24'd0;
-            gn <= {SJ{1'b0}}; gx <= {SI{1'b0}}; lw <= SI'(NSLOT - 1); cg <= 24'd0;
+    // ---- start side: the start's calendar slot is sl (slot 0 before arming)
+    wire on_cal = !armed || ph == 24'd0;
+    wire col = |(vld & sl);
+    reg udup; reg [23:0] ngd, rngd; reg [30:0] rqd; integer i;
+    always @* begin
+        udup = 1'b0; ngd = 24'd0; rngd = 24'd0; rqd = 31'd0;
+        for (i = 0; i < NSLOT; i = i + 1) begin
+            if (vld[i] && eu[10*i +: 10] == kp_q[31*(i/16) + 21 +: 10]) udup = 1'b1;
+            ngd  = ngd  | ({24{gx[i]}}  & gt[24*i +: 24]);
+            rngd = rngd | ({24{rgx[i]}} & gt[24*i +: 24]);
+            rqd  = rqd  | ({31{rn[i]}}  & {eu[10*i +: 10], ep[21*i +: 21]});
+        end
+    end
+    wire [23:0] nw = {{(23-SI){1'b0}}, lw} + 24'd1;     // slot entries in use
+    wire cfg_bad = gn == {SJ{1'b0}} || cs < nw || crl <= nw;
+    wire m2c = MUT == 2 && col;                          // MUT 2: the collision (and the dup it implies) goes unchecked
+    wire rec = st_q && on_cal && ((!col && !udup) || m2c) && !(!armed && cfg_bad);    // the start is recorded
+    wire arm = st_q && !armed && !cfg_bad;
+    wire gwr = mv_q && !ms_q && !armed && !(|vld) && gn != SJ'(NSLOT);              // boot gap word write
+    wire [NSLOT-1:0] gxn  = (MUT == 5 || |(gx & gwo))  ? ONE : {gx[NSLOT-2:0], 1'b0};  // MUT 5: gap index stuck at 0
+    wire [NSLOT-1:0] rgxn = (MUT == 5 || |(rgx & gwo)) ? ONE : {rgx[NSLOT-2:0], 1'b0};
+    // ---- return side: boundary of return slot rn (rarm = slot 0's, RL - 1 edges after the arming start)
+    wire rarm = rpend && rc == 24'd1;
+    wire rb = rarm || (rarmed && rph == 24'd0);
+    wire ret = rb && rq_v;
+    always @(posedge ck) begin                          // registered reads (data, no reset)
+        ng <= ngd; rng <= rngd; rq <= rqd; rq_v <= |(vld & rn);
+    end
+    genvar k;
+    generate for (k = 0; k < NSLOT; k = k + 1) begin : g_e
+        always @(posedge ck) begin                      // entry payload: written at its start / boot word only
+            if (rec && sl[k]) begin eu[10*k +: 10] <= kp_q[31*(k/16) + 21 +: 10]; ep[21*k +: 21] <= kp_q[31*(k/16) +: 21]; end
+            if (gwr && gw[k]) gt[24*k +: 24] <= md_q[24*(k/24) +: 24] - 24'd1;
+        end
+    end endgenerate
+    always @(posedge ck or negedge rn_)
+        if (!rn_) begin
+            armed <= 1'b0; ph <= 24'd0; cg <= 24'd0; sl <= ONE; gx <= ONE; gw <= ONE; gwo <= ONE; lwo <= LAST;
+            gn <= {SJ{1'b0}}; lw <= SI'(NSLOT - 1); cs <= 24'd0; crl <= 24'd0;
+            rpend <= 1'b0; rarmed <= 1'b0; rc <= 24'd0; rph <= 24'd0; rcg <= 24'd0; rn <= ONE; rgx <= ONE;
+            vld <= {NSLOT{1'b0}}; t_ku <= 32'd0; kv_d <= 1'b0; t_mf <= 4'd0;
         end else begin
-            tm <= tm + 32'd1;
             // boot config
-            if (mc_q[25]) begin
+            if (mv_q) begin
                 if (armed || |vld) t_mf[3] <= 1'b1;
-                else if (mc_q[24]) crl <= mc_q[23:0];
+                else if (ms_q) crl <= md;
                 else if (gn == SJ'(NSLOT)) t_mf[3] <= 1'b1;                          // more gaps than slots
                 else begin
-                    begin
-                        gn <= gn + 1'b1;
-                        if (gn == 0 || mc_q[23:0] < cs) cs <= mc_q[23:0];
-                        lw <= (gn == 0) ? SI'(NSLOT - 1) : gn[SI-1:0];             // nw = n for n >= 2
-                    end
+                    gn <= gn + 1'b1; gw <= {gw[NSLOT-2:0], 1'b0}; gwo <= gw;
+                    if (gn == {SJ{1'b0}} || md < cs) cs <= md;
+                    lw <= (gn == {SJ{1'b0}}) ? SI'(NSLOT - 1) : gn[SI-1:0];        // nw = n for n >= 2
+                    lwo <= (gn == {SJ{1'b0}}) ? LAST : gw;
                 end
             end
-            // slot timer: phase of the current edge, slot index advanced at the period wrap
+            // start slot timer: phase of the current edge, slot advanced at the gap end
             if (armed) begin
-                if (ph == cg) begin ph <= 24'd0; sl <= nxt(sl); cg <= ng; gx <= gxn; end else ph <= ph + 24'd1;
+                if (ph == cg) begin ph <= 24'd0; sl <= onx(sl, lwo); cg <= ng; gx <= gxn; end else ph <= ph + 24'd1;
+                if (ph == 24'd0 && sl[0] && !rarmed) t_mf[3] <= 1'b1;                // RL - 1 >= calendar period
             end
-            // start: record in its slot, or fault (never queued, never retried)
-            if (st) begin
-                if (!armed) begin
-                    if (cfg_bad) t_mf[3] <= 1'b1;
-                    else begin armed <= 1'b1; ph <= 24'd1; cg <= ng; gx <= gxn; end     // slot 0 = g[0]
-                end
+            if (st_q) begin
+                if (!armed && cfg_bad) t_mf[3] <= 1'b1;
                 if (col && MUT != 2) t_mf[0] <= 1'b1;                            // (a slot collision is also a user dup)
                 else if (!on_cal || (udup && !m2c)) t_mf[1] <= 1'b1;
             end
-            // return of the oldest outstanding start, on its due edge
+            if (arm) begin armed <= 1'b1; ph <= 24'd1; cg <= ng; gx <= gxn; rpend <= 1'b1; rc <= crl - 24'd1; end
+            // return slot timer: the same gap walk, RL - 1 edges behind
+            if (rpend) begin
+                rc <= rc - 24'd1;
+                if (rc == 24'd1) begin rpend <= 1'b0; rarmed <= 1'b1; rph <= 24'd1; rcg <= rng; rgx <= rgxn; end
+            end
+            if (rarmed) begin
+                if (rph == rcg) begin rph <= 24'd0; rcg <= rng; rgx <= rgxn; end else rph <= rph + 24'd1;
+            end
+            // return of the start recorded in slot rn, on its due edge (rq = that entry, read the edge before)
             t_ku <= 32'd0;
-            if (hit) begin
-                t_ku <= {1'b1, (MUT == 1) ? 10'd0 : eu[rp], ep[rp]};
-                vld[rp] <= 1'b0; rp <= nxt(rp);
-            end else if (!vld[rp] && !(rec && ss == rp)) rp <= nxt(rp);              // sweep an empty entry
-            if (late) t_mf[2] <= 1'b1;
-            if (rec) vld[ss] <= 1'b1;                                                // (rec && ss == rp && hit) is a collision: not recorded
+            if (rb) rn <= onx(rn, lwo);
+            if (ret) t_ku <= {1'b1, (MUT == 1) ? 10'd0 : rq[30:21], rq[20:0]};
+            vld <= (vld & ~(ret ? rn : {NSLOT{1'b0}})) | (rec ? sl : {NSLOT{1'b0}});
             // the unit's done must land on exactly the edge t_ku announced
             kv_d <= t_ku[31];
             if (kd_q != kv_d) t_mf[2] <= 1'b1;
         end
-    // entry payload (no reset: written at the start that sets vld, read only while vld)
-    always @(posedge ck) if (rec) begin eu[ss] <= su; ep[ss] <= sp; ed[ss] <= tm + {8'd0, crl} - 32'd1; end
 endmodule
 
 // ---------------------------------------------------------------- the unit with the multi-user host slot table
