@@ -283,3 +283,31 @@ return ports, RETIRE and capture-slot lifetimes before imagewriter approval.
 Other matvec placements also assume eight frames, so whole-layer phase count
 remains NULL. Header and address component passes do not establish row or
 programme coverage.
+
+
+Measured return and epoch admission (component model only)
+---------------------------------------------------------
+
+The original `actual_wqb_pv.log` ends with fault4/status11 and eleven returns;
+it is observational flag evidence only. It must never be treated as a healthy
+producer. The separately pinned healthy `bench_xsp4` p1 trace has eight genuine
+return words at edges350..359, four complete rows plus four partial words,
+fault0. Replaying those exact data/tags through existing CAP model (one lane,
+relative timing, unchanged original BF16 gold) produces all six rows at
+relative write edges397..410. Missing payload, wrong CAP row flag and CFG while
+a partial remains open are rejected. Remote unpinned job
+oth-ubuntu-3668820-1792442357 on ot-epyc4 exited0. This is a Python component
+model; selected die native ARR phase and 122-frame collisions remain NULL.
+
+The committed healthy XS p1 packet exposes a source epoch hazard: its measured
+returns are671..680 (original trace shifted by D321), but its last stream row
+is166, fixed RETIRE row198 and PHASE_END row202. The compiler's exact controller
+formula is343+row, so RETIRE is541 and PHASE_END545; declared end_iter585 is
+86 edges before the first measured frame return. RETIRE precedes it by130.
+The XS controller explicitly removed return-count checks. An XS pass or fixed
+retirement therefore cannot certify CAP drainage or permit a new capture
+configuration/row-slot reuse. This is an admission blocker, not a deadline
+relaxation: no existing production calendar was changed. `return_calendar/`
+pins the measured XS packet and records the required actual native delivery,
+slot/key lifetime, dual-port, final-write and MU retirement proof before a
+production imagewriter grant. Whole-source and token qualification remain open.
