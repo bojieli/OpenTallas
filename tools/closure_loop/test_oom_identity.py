@@ -134,3 +134,13 @@ def test_shipped_helper_cli_preserves_owned_and_unknown_records(tmp_path):
                     str(owned), str(unknown), "route.a1"], check=True)
     assert owned.read_text().splitlines() == [events[0]["MESSAGE"]]
     assert json.loads(unknown.read_text())["event"] == events[1]
+
+
+def test_missing_old_kill_cannot_reuse_companion_before_new_pid_birth():
+    old = kernel()[0]
+    old["__REALTIME_TIMESTAMP"] = "50"
+    # The old kill is absent (journal loss). A new sampled incarnation begins
+    # at100; matching cgroup text from50 cannot prove ownership of the kill200.
+    later = kernel()[1]
+    owned, unknown = attribute([old, later], [sample(birth=100, observed=150)], RUN)
+    assert not owned and len(unknown) == 1

@@ -2150,8 +2150,11 @@ def attribute(events, samples, run, stage_tag):
         # A root/user/session shared cgroup is not stage ownership evidence.
         def private(c):
             return c not in ('/', '/user.slice') and ('.scope' in c or '/docker/' in c or 'docker-' in c)
-        cg_owned = bool(cg and private(cg) and any(cg in s.get('exclusive_cgroups', []) for s in identities))
-        mismatch = bool(cg and identities and not any(cg in s['cgroups'] for s in identities))
+        # Missing journal kill records must not carry a previous incarnation's
+        # companion into a later PID reuse, even when the cgroup text matches.
+        context_identities = [s for s in identities if chosen and chosen[0] >= s['birth_us']]
+        cg_owned = bool(cg and private(cg) and any(cg in s.get('exclusive_cgroups', []) for s in context_identities))
+        mismatch = bool(cg and context_identities and not any(cg in s['cgroups'] for s in context_identities))
         if (path_owned or cg_owned) and not mismatch:
             owned.append(msg)
         else:

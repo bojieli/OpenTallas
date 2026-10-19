@@ -1,5 +1,9 @@
 # Stage OOM attribution correction
 
+> This packet records candidate `489ae20ee`. The subsequent kernel companion
+> incarnation lower bound and its focused validation are recorded in
+> `context_review/README.md`; the full-cohort results below apply to `489ae20ee`.
+
 The daemon attributed the October 19 04:16:27 PT kill of PID 1022170 to
 `bfh_compact199_col_pinreg_prepabs_1019` route.a1 at 14:34:36 PT. The
 attempt actually began 04:11:38 PT, so the event was inside its time window.
