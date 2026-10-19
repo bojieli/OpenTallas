@@ -35,7 +35,8 @@ module ot_hnx_hc_q #(
     parameter integer DONE_LAT=19,
     parameter integer XW_BEATS=4,
     parameter integer SPR=320,
-    parameter integer MUT=0 // 6 residual reader ignores the row stride, 7 result store ignores the row stride, 1 residual wave word mutant, 2 result store one sector late, 3 capture edge early,
+    parameter integer XFC=0,  // HUBFIX 10-19: 1 = per-face copies of the x_wave beat-control register on x_wave_vf / x_wave_beatf
+    parameter integer MUT=0 // 8 the E face copy is a relay one edge late (HUBFIX), 6 residual reader ignores the row stride, 7 result store ignores the row stride, 1 residual wave word mutant, 2 result store one sector late, 3 capture edge early,
                             // 4 x_wave beats 1/2 sent swapped, 5 x_wave beat 3 one edge late
 )(
     input wire clk,rst_n,
@@ -58,6 +59,8 @@ module ot_hnx_hc_q #(
     output wire [9:0] x_wave_word,
     output wire [8192/XW_BEATS-1:0] x_wave,
     output wire [1:0] x_wave_beat,
+    output wire [3:0] x_wave_vf,       // per-face copies W, N, E, S (same edge as x_wave_v; XFC 0 = wires of it)
+    output wire [7:0] x_wave_beatf,
     output wire residual_done,
     output wire gathered_mix_v,
     output wire [4:0] gathered_mix_row,
@@ -122,10 +125,11 @@ module ot_hnx_hc_q #(
     wire [7:0] res_read,gat_read,write_sel;
     wire res_fault,gat_fault,wr_fault;
     ot_hnx_hgi_hc_residual_vm #(.CAPTURE_LAT(RD_CAPTURE-((MUT==3)?1:0)),.MUT_POSITION((MUT==1)?1:0),.BEATS(XW_BEATS),
-        .MUT_BEAT((MUT==4)?1:(MUT==5)?2:0),.SPR(SPR),.MUT_STRIDE((MUT==6)?1:0)) residual(
+        .MUT_BEAT((MUT==4)?1:(MUT==5)?2:0),.SPR(SPR),.MUT_STRIDE((MUT==6)?1:0),.XFC(XFC),.MUT_FC((MUT==8)?1:0)) residual(
         .clk(clk),.rst_n(rr_n[2]),.launch(residual_launch),.npos(residual_npos),.base_sector(residual_base),.row_stride(residual_stride),
         .local_rq(res_rq),.local_read(res_read),.local_rr(gather_phase?2056'd0:rr_q),
-        .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.x_wave_beat(x_wave_beat),.done(residual_done),.fault(res_fault));
+        .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.x_wave_beat(x_wave_beat),.x_wave_vf(x_wave_vf),.x_wave_beatf(x_wave_beatf),
+        .done(residual_done),.fault(res_fault));
     ot_hnx_hgi_hc_gathered_mix_reader #(.RESP_PHASE(GATHER_PHASE)) gather(
         .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.npos(gather_npos),
         .base_sector(gather_base),.position_stride_sector(gather_stride),

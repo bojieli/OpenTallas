@@ -118,22 +118,6 @@ def landed_cluster(spec):
     return spec.get("clock") == "multiple_cts_roots" and spec.get("kind") == "cluster"
 
 
-def landed_counts_tcl(spec):
-    """QO-RP4LP 10-18: `set ::ot_ce_counts ...` for a landed cluster's PRE-CTS hook.  clock_entries.tcl admits a bound hard
-    child's clock pin as a region-root sink only when its master is in ::ot_ce_counts, but the entry SDC that defines it
-    is sourced AFTER CTS, and ORFS re-writes 3_place.sdc without Tcl variables -- so every child clock pin was refused
-    ("CTS source ck_n must reach only standard-cell clock pins", smh_tile_rp4lp gate 2).  Same counts as the entry SDC."""
-    if not landed_cluster(spec):
-        return ''
-    counts = {}
-    for child in spec.get('children', []):
-        master = Path(child['view']).name
-        counts[master] = counts.get(master, 0) + int(child.get('count', 1))
-    if not counts:
-        return ''
-    return 'set ::ot_ce_counts [dict create ' + ' '.join(f'{{{m}}} {n}' for m, n in counts.items()) + ']\n'
-
-
 def landed_record(spec, root):
     """The lp.py record (<top>_lp_record.json) of a landed cluster, validated against the spec (fail closed)."""
     if not landed_cluster(spec):
@@ -275,6 +259,24 @@ def landed_raw_targets(spec, root):
             for c in CORNERS:
                 row[c] = round(float(cm[info['ref']][c]['boundary']['mean']) - info['refs'][c][1], 3)
             out[f'{view.name}/{pin}'] = row
+    return out
+
+
+_TIMING_HDR = re.compile(r'timing\s*\(\s*\)\s*\{([^{}]*)')
+_CHECK_TYPE = re.compile(r'timing_type\s*:\s*"?(setup|hold|recovery|removal)_(rising|falling)"?\s*;')
+_RELATED = re.compile(r'related_pin\s*:\s*"?([^";\s]+)"?\s*;')
+
+
+def liberty_check_pins(text):
+    """clock pins named as related_pin of a timing CHECK (setup/hold/recovery/removal) in a Liberty text (the ETM of a
+    hard child): the capture clocks whose sinks STA times through check arcs (ROOT-LANDEDHC 10-19)"""
+    out = set()
+    for m in _TIMING_HDR.finditer(text):
+        hdr = m[1]
+        if _CHECK_TYPE.search(hdr):
+            r = _RELATED.search(hdr)
+            if r:
+                out.add(r[1])
     return out
 
 
@@ -479,7 +481,7 @@ def _generate(spec, root):
     if spec.get('clock') == 'hybrid_entries' and (not isinstance(roots, list) or not roots or
             not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(spec['clock_ports'])):
         raise ValueError('hybrid_entries requires a nonempty proper subset of distinct clock_cts_roots')
-    refs, counts, raw = {}, {}, {}
+    refs, counts, raw, check_only = {}, {}, {}, {}
     landed = landed_cluster(spec)
     for child in spec.get('children', []):
         view = Path(root) / child['view']
@@ -505,6 +507,13 @@ def _generate(spec, root):
         # HF-4d 10-19: a landed cluster's hard child may carry raw SRAM clock entries (no ETM arcs, no routed boundary);
         # their reference and tolerance come from the leaf's CLOSED RECORD (landed_raw_pins), never from the ETM
         child_raw = landed_raw_pins(view, root) if landed else {}
+        if landed:
+            # ROOT-LANDEDHC 10-19: the child clock pins that carry Liberty TIMING CHECKS (setup/hold/recovery/removal
+            # related_pin) may be reached by net trace as check-only sinks (TW-HBM-COLLP); a pin with no check arc (a raw
+            # SRAM entry) never is, so a raw pin can never pass as an ordinary child sink
+            for pin in sorted(liberty_check_pins((view / f'{master}_tt.lib').read_text())):
+                if pin in pins and pin not in child_raw:
+                    check_only[f'{master}/{pin}'] = 1
         for pin, info in child_raw.items():
             raw[f'{master}/{pin}'] = info
         for pin, measured in pins.items():
@@ -565,7 +574,9 @@ def _generate(spec, root):
             + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n' if landed else '')
             + ('set ::ot_ce_landed_raw [dict create ' + ' '.join(
                 f'{{{k}}} {{ref {v["ref"]} tol {v["tol"]:g} record {v["record"]}}}' for k, v in sorted(raw.items())) + ']\n'
-               if raw else '') +
+               if raw else '')
+            + ('set ::ot_ce_check_only [dict create ' + ' '.join(f'{{{k}}} 1' for k in sorted(check_only)) + ']\n'
+               if check_only else '') +
             'set ::ot_ce_refs [dict create ' + ' '.join(rows) + ']\n'
             'set ::ot_ce_counts [dict create ' + ' '.join(f'{{{m}}} {n}' for m, n in counts.items()) + ']\n'
             'set ::ot_ce_domains [dict create ' + ' '.join(domain_rows) + ']\n'
@@ -1232,6 +1243,33 @@ def landed_body():
          '      if {![dict exists $::ot_ce_refs $key] || $::ot_ce_landed_cluster} continue\n'),
         ('  set boundary_cells {}; set boundary_cells_ready 0\n',
          '  set boundary_cells {}; set boundary_cells_ready 0\n  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]\n'),
+        # TW-HBM-COLLP 10-19: bound CHECK-ONLY child clock pins (no clk->Q arc, so not in all_registers) are sinks of the
+        # region root their net is wired to (ot_ce_net_root_port: structural, mode-independent), measured like the others
+        ('    set pins [all_registers -clock [get_full_name $clock] -clock_pins]\n'
+         '    if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }\n',
+         '    set pins [all_registers -clock [get_full_name $clock] -clock_pins]\n'
+         '    set ot_ce_pin_seen [dict create]\n'
+         '    foreach pin $pins {dict set ot_ce_pin_seen [get_full_name $pin] 1}\n'
+         '    foreach cell [get_cells -quiet -hierarchical *] {\n'
+         '      set master [get_property $cell ref_name]\n'
+         '      if {![dict exists $::ot_ce_counts $master]} continue\n'
+         '      foreach pin [get_pins -quiet -of_objects $cell] {\n'
+         '        set key "$master/[get_property $pin lib_pin_name]"\n'
+         '        if {![dict exists $::ot_ce_refs $key] || [dict exists $ot_ce_pin_seen [get_full_name $pin]]} continue\n'
+         '        if {![info exists ::ot_ce_check_only] || ![dict exists $::ot_ce_check_only $key]} continue\n'
+         '        if {[ot_ce_net_root_port $pin] ne $name} continue\n'
+         '        lappend pins $pin; dict set ot_ce_pin_seen [get_full_name $pin] 1\n'
+         '        puts "OT_LANDED CHECK_CLOCK_PIN $name [get_full_name $pin] (timing-check-only child clock pin)"\n'
+         '      }\n'
+         '    }\n'
+         '    if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }\n'),
+        # a hard child with several clock pins on ONE region root (writer clk_body + clk_bank0-7) is one owner, not a
+        # duplicate; pins of one child on different roots still fail ("clock pins on different region roots")
+        ('      if {[dict exists $cells $cell]} { error "OT_MULTI_ROOT: duplicate clock ownership $cell" }\n',
+         '      if {[dict exists $cells $cell] && ([dict get $cells $cell] ne $domain'
+         ' || ![dict exists $::ot_ce_counts [get_property [get_cells -of_objects $pin] ref_name]])} {\n'
+         '        error "OT_MULTI_ROOT: duplicate clock ownership $cell"\n'
+         '      }\n'),
         ('    set arrivals {}; set measured {}; set total 0.0\n',
          '    set arrivals {}; set measured {}; set total 0.0; set ot_ce_child_ext [dict create]\n'),
         ('      if {[dict exists $::ot_ce_counts $master]} { error "OT_HYBRID: CTS root $name reaches a hard child" }\n'
@@ -1263,7 +1301,33 @@ def landed_body():
     return body
 
 
-LANDED_BODY = landed_body()
+# TW-HBM-COLLP 10-19: a hard child's CHECK-ONLY clock pins (setup/hold arcs, no clk->Q in the ETM, e.g. the COLL
+# writer's clk_rgx_data0-3 / clk_rgx_ctrl / clk_meta / clk_tkw landing captures) are not register clock pins for
+# OpenSTA (all_registers -clock_pins needs a clk->Q arc).  The root that drives such a pin is found STRUCTURALLY: walk
+# the pin's net back through single-input standard cells (CTS buffers / inverters) to a top port.  Never ask the
+# timing graph (get_property <pin> clocks): its answer depends on the command mode, and the ORFS multi-mode load
+# (orfs_hold_mm.tcl read_sdc -mode ss) returns no clocks there (AD-HBM-COLLP lpk4: 47 of 54 although the pins sit on
+# ck_wr).
+LANDED_ROOT_PROC = r"""proc ot_ce_net_root_port {pin} {
+  set net [get_nets -quiet -of_objects $pin]
+  for {set i 0} {$i < 256 && [llength $net] == 1} {incr i} {
+    set ports [get_ports -quiet -of_objects $net]
+    if {[llength $ports] == 1} { return [get_full_name [lindex $ports 0]] }
+    if {[llength $ports]} { return "" }
+    set drv [get_pins -quiet -of_objects $net -filter "direction == output"]
+    if {[llength $drv] != 1} { return "" }
+    set cell [get_cells -quiet -of_objects $drv]
+    if {[llength $cell] != 1 || [dict exists $::ot_ce_counts [get_property $cell ref_name]]} { return "" }
+    set ins [get_pins -quiet -of_objects $cell -filter "direction == input"]
+    if {[llength $ins] != 1} { return "" }
+    set net [get_nets -quiet -of_objects $ins]
+  }
+  return ""
+}
+"""
+
+
+LANDED_BODY = LANDED_ROOT_PROC + landed_body()
 
 
 def landed_raw_body(body):
@@ -1291,6 +1355,11 @@ def landed_raw_body(body):
         '        error "OT_LANDED: raw child clock pin [get_full_name $pin]: its co-timed pin $cname/$refpin was not reached from a region root"\n'
         '      }\n'
         '      lassign [dict get $ot_ce_landed_eff "$cname/$refpin"] rclock rname reff\n'
+        '      # TW-HBM-COLLP net trace (structural, mode-independent): a raw pin wired to another region root fails\n'
+        '      set rport [ot_ce_net_root_port $pin]\n'
+        '      if {$rport ne "" && $rport ne $rname} {\n'
+        '        error "OT_LANDED: raw child clock pin [get_full_name $pin] is wired to region root $rport, its co-timed pin $cname/$refpin to $rname"\n'
+        '      }\n'
         '      set wire [ot_ce_clock_wire $pin [get_clocks $rclock]]\n'
         '      lassign [dict get $::ot_ce_refs $key $corner] rlo rmean rhi\n'
         '      set eff [expr {$wire + $rmean}]; set skew [expr {$eff - $reff}]\n'
@@ -1304,6 +1373,10 @@ def landed_raw_body(body):
         '    error "OT_LANDED: raw child clock pin arrival vs its co-timed CTS-root pin beyond the leaf sign-off tolerance at $corner: [join $ot_ce_raw_fail {, }]"\n'
         '  }\n')
     substitutions = [
+        # a raw SRAM pin is visited on its co-timed pin's root below, never as a check-only pin
+        ('        if {![info exists ::ot_ce_check_only] || ![dict exists $::ot_ce_check_only $key]} continue\n',
+         '        if {[dict exists $::ot_ce_landed_raw $key]} continue\n'
+         '        if {![info exists ::ot_ce_check_only] || ![dict exists $::ot_ce_check_only $key]} continue\n'),
         ('  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]\n',
          '  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]; set ot_ce_landed_eff [dict create]\n'),
         ('        if {![dict exists $::ot_ce_refs $key]} { error "OT_LANDED: CTS root $name reaches unbound hard-child pin [get_full_name $pin]" }\n',
