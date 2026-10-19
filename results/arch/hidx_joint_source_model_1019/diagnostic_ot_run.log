@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits  1143 GB (avail 857, growth 47, headroom 0, waiters 0/0 GB) load 35/128 running 15 disk 430 GB 
+ot-run: ot-epyc5       admits   640 GB (avail 505, growth 18, headroom 0, waiters 0/0 GB) load 39/128 running 7 disk 908 GB 
+ot-run: ot-epyc6       admits  1286 GB (avail 957, growth 33, headroom 0, waiters 0/0 GB) load 15/128 running 11 disk 5723 GB 
+ot-run: ot-epyc7       admits  1073 GB (avail 801, growth 41, headroom 0, waiters 0/0 GB) load 18/96 running 14 disk 6261 GB 
+ot-run: ot-epyc8       admits  1333 GB (avail 990, growth 52, headroom 0, waiters 0/0 GB) load 16/128 running 14 disk 41 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-joint-source-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-joint-source-model-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2307030-1792450765 after 1 s
+{
+  "status": "FAIL_NATIVE_PACKING",
+  "overfull_regions": {}
+}
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2307030-1792450765): exit 0

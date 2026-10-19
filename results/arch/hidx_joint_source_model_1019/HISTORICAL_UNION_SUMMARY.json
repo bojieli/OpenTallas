@@ -1,0 +1,19 @@
+{
+  "status": "FAIL",
+  "construction_verdict": "FAIL",
+  "counts": {
+    "leads_M3": 21548,
+    "nets_complete": 7948,
+    "nets_incomplete": 3501,
+    "union_wire_cap_excess_TT": 164,
+    "union_wire_cap_excess_FF": 174
+  },
+  "native_base_vias": 63385,
+  "native_via_count_scope": "Per-contact transition ledger only, NOT unique implemented vias; boundary M4/M5 jog stacks and exact shared cuts remain HOLD",
+  "wire_cap_scope": "Same-net collinear H/local-jog and M3/M5 segments UNIONED before native-wire cap; old per-contact summed cap values preserved but superseded as geometry capacitance",
+  "max_complete_root_path_um": 189.894,
+  "missing_native_contact_records": 9836,
+  "geometry_sha256": "20bce752bbb0cbf65e7672cfa2b49d9fbf3f9737277dc5fa671edced71bf59ad",
+  "all_via_fringe_waveform_setup_hold_clock_PG": "HOLD",
+  "new_drive_buffers": 0
+}

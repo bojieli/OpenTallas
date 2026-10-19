@@ -1,0 +1,11 @@
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib: OK
+/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz: OK
+{"nets": 11449, "corners": {"TT": {"total_RMST_length_um": 252884.4995000008, "max_tree_root_path_um": 252.76800000000003, "cap_over_limit": 0}, "FF": {"total_RMST_length_um": 252884.4995000008, "max_tree_root_path_um": 252.76800000000003, "cap_over_limit": 0}}, "TT_outside": 0, "FF_outside": 0, "cuts": {"M4_full": {"max_segment_crossings": 1145, "cut_um": 62.126999999999995}, "M4_inside_band": {"max_segment_crossings": 952, "cut_um": 83.34899999999999}, "M3_full": {"max_segment_crossings": 2215, "cut_um": 83.5455}, "gross_M4_tracks_full_face": 2925, "gross_M4_tracks_core": 2835, "gross_M4_tracks_inside_band": 585, "gross_M3_tracks_full_face": 2925, "gross_M3_tracks_core": 2835, "scope": "Gross pitch-only capacities before real PG/cell blockage/spacing/access, not a routability PASS"}, "clock": {"TT": {"real_sink_input_cap_fF": 1378.6333439999328, "budget265_BUFx24_input_cap_fF": 622.8189, "total_model_input_cap_before_wire_fF": 2001.4522439999328, "clock_wire": "UNIMPLEMENTED; no actual tree/clock slew/spread"}, "FF": {"real_sink_input_cap_fF": 1515.9170399999464, "budget265_BUFx24_input_cap_fF": 690.9477499999999, "total_model_input_cap_before_wire_fF": 2206.8647899999464, "clock_wire": "UNIMPLEMENTED; no actual tree/clock slew/spread"}}}

@@ -1,0 +1,39 @@
+ot-run: ot-epyc4       admits  1143 GB (avail 857, growth 47, headroom 0, waiters 0/0 GB) load 35/128 running 15 disk 430 GB 
+ot-run: ot-epyc5       admits   643 GB (avail 507, growth 18, headroom 0, waiters 0/0 GB) load 52/128 running 7 disk 908 GB 
+ot-run: ot-epyc6       admits  1285 GB (avail 956, growth 33, headroom 0, waiters 0/0 GB) load 15/128 running 11 disk 5723 GB 
+ot-run: ot-epyc7       admits  1073 GB (avail 802, growth 45, headroom 0, waiters 0/0 GB) load 19/96 running 14 disk 6261 GB 
+ot-run: ot-epyc8       admits  1337 GB (avail 993, growth 54, headroom 0, waiters 0/0 GB) load 18/128 running 14 disk 42 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-joint-source-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-joint-source-model-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2305073-1792450701 after 0 s
+construct.py: OK
+run.sh: OK
+input/clock_reserve.json: OK
+input/cells.lef: OK
+input/make_tracks.tcl: OK
+input/native_pin_geometry.json.gz: OK
+input/tech.lef: OK
+input/setRC.tcl: OK
+input/positions.json: OK
+input/native_arc_domains.json: OK
+input/metal.json.gz: OK
+input/native_clock_cell.json: OK
+input/pg_ledger.json: OK
+input/loaded_caps.json.gz: OK
+kit/cut_diagnose.py: OK
+kit/lib_SHA256SUMS: OK
+kit/bundle_headroom_model.py: OK
+kit/model.py: OK
+kit/joint_model.py: OK
+kit/bundle_model.py: OK
+kit/clock_candidate.py: OK
+kit/refine.sh: OK
+kit/render.py: OK
+kit/render_bundle.py: OK
+kit/tree_refinement.py: OK
+kit/run.sh: OK
+kit/vendor/strict_contract.py: OK
+kit/dft/__init__.py: OK
+kit/dft/liberty.py: OK
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2305073-1792450701): exit 1

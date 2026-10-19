@@ -1,0 +1,26 @@
+ot-run: ot-epyc4       admits  1134 GB (avail 851, growth 49, headroom 0, waiters 0/0 GB) load 31/128 running 15 disk 428 GB 
+ot-run: ot-epyc5       admits   644 GB (avail 507, growth 18, headroom 0, waiters 0/0 GB) load 42/128 running 7 disk 908 GB 
+ot-run: ot-epyc6       admits  1199 GB (avail 952, growth 113, headroom 0, waiters 0/0 GB) load 13/128 running 25 disk 5722 GB 
+ot-run: ot-epyc7       admits  1097 GB (avail 818, growth 34, headroom 0, waiters 0/0 GB) load 14/96 running 10 disk 6259 GB 
+ot-run: ot-epyc8       admits  1332 GB (avail 989, growth 38, headroom 0, waiters 0/0 GB) load 17/128 running 11 disk 48 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-joint-source-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-joint-source-model-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2316000-1792451094 after 0 s
+{
+  "status": "FAIL",
+  "construction_verdict": "FAIL",
+  "counts": {
+    "leads_M3": 17233,
+    "nets_complete": 8683,
+    "leads_M5": 13303,
+    "nets_incomplete": 2766
+  },
+  "native_base_vias": 139560,
+  "max_complete_root_path_um": 199.524,
+  "missing_native_contact_records": 848,
+  "geometry_sha256": "2f0dee7174d347628327bed379078848b25bdd489e9b21d7fb63b74a7b3f04a3",
+  "all_via_fringe_waveform_setup_hold_clock_PG": "HOLD",
+  "new_drive_buffers": 0
+}
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2316000-1792451094): exit 0

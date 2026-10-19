@@ -1,0 +1,104 @@
+{
+  "status": "FAIL",
+  "counts": {
+    "H_M4_south": 912,
+    "H_M2_band": 5117,
+    "H_M4_band": 4,
+    "H_M4_north": 763,
+    "H_M2_south": 2415,
+    "H_extension_fail": 2290,
+    "H_M2_north": 2238,
+    "cap_violation_TT": 229,
+    "cap_violation_FF": 233,
+    "V_contact_fail": 848,
+    "V_net_fail": 476,
+    "nets_total": 11449,
+    "H_assigned": 11449,
+    "contacts_total": 31384,
+    "contacts_assigned": 30536,
+    "short_local_nets": 5596
+  },
+  "maxrss_kb": 153988,
+  "first_failures": [
+    {
+      "net_index": 9848,
+      "reason": "H_EXTENSION_COLLIDES_AFTER_M3_OWNERSHIP",
+      "original_interval_nm": [
+        106796,
+        140352
+      ],
+      "extended_interval_nm": [
+        106776,
+        140352
+      ],
+      "H_trunk": [
+        "M4",
+        9288
+      ]
+    },
+    {
+      "net_index": 9838,
+      "reason": "H_EXTENSION_COLLIDES_AFTER_M3_OWNERSHIP",
+      "original_interval_nm": [
+        110198,
+        132312
+      ],
+      "extended_interval_nm": [
+        109608,
+        132360
+      ],
+      "H_trunk": [
+        "M4",
+        127032
+      ]
+    },
+    {
+      "net_index": 9837,
+      "reason": "H_EXTENSION_COLLIDES_AFTER_M3_OWNERSHIP",
+      "original_interval_nm": [
+        110198,
+        132120
+      ],
+      "extended_interval_nm": [
+        109608,
+        132120
+      ],
+      "H_trunk": [
+        "M4",
+        128088
+      ]
+    },
+    {
+      "net_index": 10142,
+      "reason": "H_EXTENSION_COLLIDES_AFTER_M3_OWNERSHIP",
+      "original_interval_nm": [
+        124238,
+        140352
+      ],
+      "extended_interval_nm": [
+        124152,
+        140352
+      ],
+      "H_trunk": [
+        "M2",
+        65496
+      ]
+    },
+    {
+      "net_index": 4472,
+      "reason": "H_EXTENSION_COLLIDES_AFTER_M3_OWNERSHIP",
+      "original_interval_nm": [
+        113265,
+        119853
+      ],
+      "extended_interval_nm": [
+        112536,
+        120120
+      ],
+      "H_trunk": [
+        "M2",
+        73848
+      ]
+    }
+  ]
+}

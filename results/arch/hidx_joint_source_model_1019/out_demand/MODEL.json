@@ -1,0 +1,461 @@
+{
+  "scope": "SOURCE_ONLY_DEMAND_PACKING_NOT_IMPLEMENTATION",
+  "cells": 11145,
+  "ff": 2904,
+  "regions": {
+    "slice[0]": {
+      "x0": 0,
+      "x1": 191,
+      "row0": 0,
+      "rows": 36,
+      "bucket": 0,
+      "area_um2": 44.87724,
+      "capacity_um2": 100.25208,
+      "ordinary_fill": 0.4476439790575916,
+      "minimum_constructed_width_sites": 163,
+      "actual_atom_reservations": 5220,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[8]": {
+      "x0": 191,
+      "x1": 514,
+      "row0": 0,
+      "rows": 36,
+      "bucket": 0,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 169.53624000000002,
+      "ordinary_fill": 0.44857241142070864,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[9]": {
+      "x0": 514,
+      "x1": 837,
+      "row0": 0,
+      "rows": 36,
+      "bucket": 0,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 169.53624000000002,
+      "ordinary_fill": 0.44857241142070864,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[10]": {
+      "x0": 837,
+      "x1": 1160,
+      "row0": 0,
+      "rows": 36,
+      "bucket": 0,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 169.53624000000002,
+      "ordinary_fill": 0.44857241142070864,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    },
+    "slice[1]": {
+      "x0": 1360,
+      "x1": 1551,
+      "row0": 0,
+      "rows": 36,
+      "bucket": 1,
+      "area_um2": 44.87724,
+      "capacity_um2": 100.25208,
+      "ordinary_fill": 0.4476439790575916,
+      "minimum_constructed_width_sites": 163,
+      "actual_atom_reservations": 5220,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[11]": {
+      "x0": 1551,
+      "x1": 1874,
+      "row0": 0,
+      "rows": 36,
+      "bucket": 1,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 169.53624000000002,
+      "ordinary_fill": 0.44857241142070864,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[1]": {
+      "x0": 1874,
+      "x1": 2197,
+      "row0": 0,
+      "rows": 36,
+      "bucket": 1,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 169.53624000000002,
+      "ordinary_fill": 0.44857241142070864,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[2]": {
+      "x0": 2197,
+      "x1": 2520,
+      "row0": 0,
+      "rows": 36,
+      "bucket": 1,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 169.53624000000002,
+      "ordinary_fill": 0.44857241142070864,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    },
+    "pair[0]": {
+      "x0": 0,
+      "x1": 252,
+      "row0": 36,
+      "rows": 32,
+      "bucket": 2,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 117.57312000000002,
+      "ordinary_fill": 0.47445436507936506,
+      "minimum_constructed_width_sites": 240,
+      "actual_atom_reservations": 6718,
+      "side_routing_reserve_sites": 16
+    },
+    "pair[1]": {
+      "x0": 252,
+      "x1": 504,
+      "row0": 36,
+      "rows": 32,
+      "bucket": 2,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 117.57312000000002,
+      "ordinary_fill": 0.47445436507936506,
+      "minimum_constructed_width_sites": 240,
+      "actual_atom_reservations": 6718,
+      "side_routing_reserve_sites": 16
+    },
+    "slice[2]": {
+      "x0": 504,
+      "x1": 706,
+      "row0": 36,
+      "rows": 32,
+      "bucket": 2,
+      "area_um2": 44.87724,
+      "capacity_um2": 94.24512,
+      "ordinary_fill": 0.47617574257425743,
+      "minimum_constructed_width_sites": 182,
+      "actual_atom_reservations": 5220,
+      "side_routing_reserve_sites": 16
+    },
+    "pair[2]": {
+      "x0": 706,
+      "x1": 958,
+      "row0": 36,
+      "rows": 32,
+      "bucket": 2,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 117.57312000000002,
+      "ordinary_fill": 0.47445436507936506,
+      "minimum_constructed_width_sites": 240,
+      "actual_atom_reservations": 6718,
+      "side_routing_reserve_sites": 16
+    },
+    "slice[3]": {
+      "x0": 958,
+      "x1": 1160,
+      "row0": 36,
+      "rows": 32,
+      "bucket": 2,
+      "area_um2": 44.87724,
+      "capacity_um2": 94.24512,
+      "ordinary_fill": 0.47617574257425743,
+      "minimum_constructed_width_sites": 182,
+      "actual_atom_reservations": 5220,
+      "side_routing_reserve_sites": 16
+    },
+    "pair[3]": {
+      "x0": 1360,
+      "x1": 1612,
+      "row0": 36,
+      "rows": 32,
+      "bucket": 3,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 117.57312000000002,
+      "ordinary_fill": 0.47445436507936506,
+      "minimum_constructed_width_sites": 240,
+      "actual_atom_reservations": 6718,
+      "side_routing_reserve_sites": 16
+    },
+    "pair[4]": {
+      "x0": 1612,
+      "x1": 1864,
+      "row0": 36,
+      "rows": 32,
+      "bucket": 3,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 117.57312000000002,
+      "ordinary_fill": 0.47445436507936506,
+      "minimum_constructed_width_sites": 240,
+      "actual_atom_reservations": 6718,
+      "side_routing_reserve_sites": 16
+    },
+    "pair[5]": {
+      "x0": 1864,
+      "x1": 2116,
+      "row0": 36,
+      "rows": 32,
+      "bucket": 3,
+      "area_um2": 55.783080000000005,
+      "capacity_um2": 117.57312000000002,
+      "ordinary_fill": 0.47445436507936506,
+      "minimum_constructed_width_sites": 240,
+      "actual_atom_reservations": 6718,
+      "side_routing_reserve_sites": 16
+    },
+    "slice[4]": {
+      "x0": 2116,
+      "x1": 2318,
+      "row0": 36,
+      "rows": 32,
+      "bucket": 3,
+      "area_um2": 44.87724,
+      "capacity_um2": 94.24512,
+      "ordinary_fill": 0.47617574257425743,
+      "minimum_constructed_width_sites": 182,
+      "actual_atom_reservations": 5220,
+      "side_routing_reserve_sites": 16
+    },
+    "slice[5]": {
+      "x0": 2318,
+      "x1": 2520,
+      "row0": 36,
+      "rows": 32,
+      "bucket": 3,
+      "area_um2": 44.87724,
+      "capacity_um2": 94.24512,
+      "ordinary_fill": 0.47617574257425743,
+      "minimum_constructed_width_sites": 182,
+      "actual_atom_reservations": 5220,
+      "side_routing_reserve_sites": 16
+    },
+    "slice[7]": {
+      "x0": 0,
+      "x1": 164,
+      "row0": 68,
+      "rows": 36,
+      "bucket": 4,
+      "area_um2": 44.87724,
+      "capacity_um2": 86.08032,
+      "ordinary_fill": 0.5213414634146342,
+      "minimum_constructed_width_sites": 163,
+      "actual_atom_reservations": 5220,
+      "side_routing_reserve_sites": 16
+    },
+    "slice[6]": {
+      "x0": 164,
+      "x1": 328,
+      "row0": 68,
+      "rows": 36,
+      "bucket": 4,
+      "area_um2": 44.87724,
+      "capacity_um2": 86.08032,
+      "ordinary_fill": 0.5213414634146342,
+      "minimum_constructed_width_sites": 163,
+      "actual_atom_reservations": 5220,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[7]": {
+      "x0": 328,
+      "x1": 606,
+      "row0": 68,
+      "rows": 36,
+      "bucket": 4,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 145.91664,
+      "ordinary_fill": 0.5211830535571543,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[6]": {
+      "x0": 606,
+      "x1": 883,
+      "row0": 68,
+      "rows": 36,
+      "bucket": 4,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 145.39176,
+      "ordinary_fill": 0.5230645808263137,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[0]": {
+      "x0": 883,
+      "x1": 1160,
+      "row0": 68,
+      "rows": 36,
+      "bucket": 4,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 145.39176,
+      "ordinary_fill": 0.5230645808263137,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    },
+    "slice[8]": {
+      "x0": 1360,
+      "x1": 1551,
+      "row0": 68,
+      "rows": 36,
+      "bucket": 5,
+      "area_um2": 44.87724,
+      "capacity_um2": 100.25208,
+      "ordinary_fill": 0.4476439790575916,
+      "minimum_constructed_width_sites": 163,
+      "actual_atom_reservations": 5220,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[4]": {
+      "x0": 1551,
+      "x1": 1874,
+      "row0": 68,
+      "rows": 36,
+      "bucket": 5,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 169.53624000000002,
+      "ordinary_fill": 0.44857241142070864,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[5]": {
+      "x0": 1874,
+      "x1": 2197,
+      "row0": 68,
+      "rows": 36,
+      "bucket": 5,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 169.53624000000002,
+      "ordinary_fill": 0.44857241142070864,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    },
+    "quad[3]": {
+      "x0": 2197,
+      "x1": 2520,
+      "row0": 68,
+      "rows": 36,
+      "bucket": 5,
+      "area_um2": 76.04928000000001,
+      "capacity_um2": 169.53624000000002,
+      "ordinary_fill": 0.44857241142070864,
+      "minimum_constructed_width_sites": 273,
+      "actual_atom_reservations": 9188,
+      "side_routing_reserve_sites": 16
+    }
+  },
+  "density_windows": [
+    {
+      "window_um": [
+        2.7,
+        2.7
+      ],
+      "maximum_fill": 0.7,
+      "origin_um": [
+        14.742,
+        56.16
+      ]
+    },
+    {
+      "window_um": [
+        5.4,
+        5.4
+      ],
+      "maximum_fill": 0.67,
+      "origin_um": [
+        15.444,
+        56.16
+      ]
+    },
+    {
+      "window_um": [
+        10.8,
+        10.8
+      ],
+      "maximum_fill": 0.57125,
+      "origin_um": [
+        35.316,
+        73.44
+      ]
+    },
+    {
+      "window_um": [
+        5.4,
+        0.27
+      ],
+      "maximum_fill": 0.67,
+      "origin_um": [
+        15.444,
+        56.16
+      ]
+    }
+  ],
+  "allocation": {
+    "0": [
+      "quad[10]",
+      "quad[8]",
+      "quad[9]",
+      "slice[0]"
+    ],
+    "1": [
+      "quad[11]",
+      "quad[1]",
+      "quad[2]",
+      "slice[1]"
+    ],
+    "2": [
+      "slice[2]",
+      "slice[3]",
+      "pair[0]",
+      "pair[1]",
+      "pair[2]"
+    ],
+    "3": [
+      "slice[4]",
+      "slice[5]",
+      "pair[3]",
+      "pair[4]",
+      "pair[5]"
+    ],
+    "4": [
+      "quad[0]",
+      "quad[6]",
+      "quad[7]",
+      "slice[7]",
+      "slice[6]"
+    ],
+    "5": [
+      "quad[3]",
+      "quad[4]",
+      "quad[5]",
+      "slice[8]"
+    ]
+  },
+  "demand_driven_reassignments": [
+    {
+      "cohort": "slice[6]",
+      "from": 3,
+      "to": 4,
+      "native_port_cost_delta": -206722.79606879997
+    }
+  ],
+  "clock_spine_um": [
+    64.8,
+    75.6
+  ],
+  "new_drive_buffers": 0,
+  "lower_bound_note": "Native area /60%, atom area /rowcount and widest atom are necessary bounds; stored width is a verified finite constructive packing, not a proof of global minimum.",
+  "routing_cost": "Every functional atom carries real native widths and explicit free sites; 8-site margins on each region side are physical candidates only. Complete native ownership/PG/defaultvia/RC/clock obligations remain OPEN until constructor.",
+  "source_sha256": "21ff7e79ceb7aea62af77bf622ccc9cd1a5d5022c21c69aa1e62cc18df8e1f46"
+}

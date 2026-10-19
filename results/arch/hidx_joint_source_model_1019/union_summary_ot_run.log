@@ -1,0 +1,30 @@
+ot-run: ot-epyc4       admits  1135 GB (avail 851, growth 49, headroom 0, waiters 0/0 GB) load 29/128 running 15 disk 428 GB 
+ot-run: ot-epyc5       admits   641 GB (avail 506, growth 18, headroom 0, waiters 0/0 GB) load 40/128 running 7 disk 908 GB 
+ot-run: ot-epyc6       admits  1291 GB (avail 960, growth 31, headroom 0, waiters 0/0 GB) load 18/128 running 10 disk 5719 GB 
+ot-run: ot-epyc7       admits  1099 GB (avail 820, growth 29, headroom 0, waiters 0/0 GB) load 32/96 running 9 disk 6259 GB 
+ot-run: ot-epyc8       admits  1330 GB (avail 988, growth 38, headroom 0, waiters 0/0 GB) load 14/128 running 11 disk 48 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-joint-source-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-joint-source-model-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2316550-1792451143 after 0 s
+{
+  "status": "FAIL",
+  "construction_verdict": "FAIL",
+  "counts": {
+    "leads_M3": 17233,
+    "nets_complete": 8683,
+    "leads_M5": 13303,
+    "nets_incomplete": 2766,
+    "union_wire_cap_excess_TT": 124,
+    "union_wire_cap_excess_FF": 127
+  },
+  "native_base_vias": 139560,
+  "native_via_count_scope": "Per-contact transition ledger only, NOT unique implemented vias; boundary M4/M5 jog stacks and exact shared cuts remain HOLD",
+  "wire_cap_scope": "Same-net collinear H/local-jog and M3/M5 segments UNIONED before native-wire cap; old per-contact summed cap values preserved but superseded as geometry capacitance",
+  "max_complete_root_path_um": 199.524,
+  "missing_native_contact_records": 848,
+  "geometry_sha256": "2f0dee7174d347628327bed379078848b25bdd489e9b21d7fb63b74a7b3f04a3",
+  "all_via_fringe_waveform_setup_hold_clock_PG": "HOLD",
+  "new_drive_buffers": 0
+}
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2316550-1792451143): exit 0

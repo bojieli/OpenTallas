@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/hidx-joint-source-model-1019/kit/joint_model.py", line 227, in <module>
+    assert best is not None,('NO_NATIVE_INTERVAL',g,it['id'],it['w'])
+           ^^^^^^^^^^^^^^^^
+AssertionError: ('NO_NATIVE_INTERVAL', 'pair[0]', '$flatten\\on.pair[0].own.$auto$ff.cc:337:slice$23603', 39)

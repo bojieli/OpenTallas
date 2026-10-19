@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       admits  1143 GB (avail 857, growth 47, headroom 0, waiters 0/0 GB) load 34/128 running 15 disk 430 GB 
+ot-run: ot-epyc5       admits   644 GB (avail 508, growth 18, headroom 0, waiters 0/0 GB) load 46/128 running 7 disk 908 GB 
+ot-run: ot-epyc6       admits  1285 GB (avail 956, growth 33, headroom 0, waiters 0/0 GB) load 14/128 running 11 disk 5723 GB 
+ot-run: ot-epyc7       admits  1076 GB (avail 804, growth 37, headroom 0, waiters 0/0 GB) load 18/96 running 13 disk 6260 GB 
+ot-run: ot-epyc8       admits  1338 GB (avail 993, growth 50, headroom 0, waiters 0/0 GB) load 16/128 running 14 disk 41 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-joint-source-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-joint-source-model-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-233830-1792450798 after 0 s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-233830-1792450798): exit 0
