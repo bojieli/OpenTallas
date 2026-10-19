@@ -47,7 +47,8 @@ module dsdv_gunit_l5 #(
     parameter integer PIN_COPY = `OT_S81_GUNIT_PIN_COPY,
     parameter integer CONTROL_SAFE = `OT_S81_GUNIT_CONTROL_SAFE,
     parameter integer Q4 = `OT_S81_GUNIT_Q4,
-    parameter integer FANOUT_SAFE = `OT_S81_GUNIT_FANOUT_SAFE
+    parameter integer FANOUT_SAFE = `OT_S81_GUNIT_FANOUT_SAFE,
+    parameter integer TABLE_LIFETIME_SAFE = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -173,12 +174,26 @@ module dsdv_gunit_l5 #(
         end
         // lifetime check: a base write to the currently selected word arms a 4-edge window; the tail taking the bases
         // (ln) inside it is a sticky fault.
+        if (TABLE_LIFETIME_SAFE) begin : g_lifetime_safe
+            // Four independent logical-row histories: writes remain visible across selector changes.
+            // +9 FF, same capture age; reject a simultaneous selected write without relying on SRAM collision order.
+            reg [2:0] recent [0:3];
+            for (genvar lr = 0; lr < 4; lr = lr + 1) begin : g_row
+                always @(posedge clk or negedge rr[3])
+                    if (!rr[3]) recent[lr] <= 3'd0;
+                    else if (wbase && wrow == 2'(lr)) recent[lr] <= 3'd4;
+                    else if (recent[lr] != 3'd0) recent[lr] <= recent[lr] - 3'd1;
+            end
+            assign tbl_f = ln_c[0] && ((recent[{ss[24], sw[24]}] != 3'd0) ||
+                (wbase && wrow == {ss[24], sw[24]}));
+        end else begin : g_lifetime_legacy
         reg [2:0] hit;
         always @(posedge clk or negedge rr[3])
             if (!rr[3]) hit <= 3'd0;
             else if (wbase && wrow == {ss[24], sw[24]}) hit <= 3'd4;
             else if (hit != 3'd0) hit <= hit - 3'd1;
         assign tbl_f = ln_c[0] && hit != 3'd0;
+        end
     end else begin : g_tbl_legacy
         reg [31:0] base_t [0:NSET*48-1];                    // [set][which][24]
         reg [95:0] scl_t  [0:NSET*2-1];
