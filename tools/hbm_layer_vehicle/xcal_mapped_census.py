@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Fleet-only standalone TT/RVT mapped census, not a physical gate or STA."""
-import collections,gzip,json,pathlib,re,subprocess,sys
-root=pathlib.Path.cwd();out=pathlib.Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
+import argparse,collections,gzip,hashlib,json,pathlib,re,subprocess,sys
+ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('output');ap.add_argument('--spec',action='append',default=[]);args=ap.parse_args()
+root=pathlib.Path.cwd();out=pathlib.Path(args.output).resolve();out.mkdir(parents=True,exist_ok=True)
 libroot=pathlib.Path('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM')
 libs=[];areas={}
 for group in ['AO','OA','SIMPLE','INVBUF','SEQ']:
@@ -15,11 +16,13 @@ base='rtl/hbm_accel/loader/service_native/'
 common=[base+n for n in ['ot_hbm_xcal_desc_host_native.sv','ot_hbm_xcal_desc_native.sv','ot_hbm_xcal_prog_native.sv','ot_hbm_xcal_calendar_native.sv','ot_hbm_xcal_target_native.sv','ot_hbm_xcal_kept_bits.sv']]
 bbs=['physical/asap7_memory_macros/'+n+'/'+n+'_bb.v' for n in ['ot_sram_1r1w_128x256_m1_r2c2','ot_sram_1r1w_1024x256_m2_r2c2']]
 yosys='/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys'
-for top,params in [('ot_hbm_xcal_desc_host_native',{'PAW':11,'PREL':1,'DD':256,'DAW':8}),('ot_hbm_xcal_prog_native',{'PAW':11,'PREL':1})]:
+jobs=[json.loads(pathlib.Path(p).read_text()) for p in args.spec] if args.spec else [dict(top='ot_hbm_xcal_desc_host_native',params={'PAW':11,'PREL':1,'DD':256,'DAW':8}),dict(top='ot_hbm_xcal_prog_native',params={'PAW':11,'PREL':1})]
+for job in jobs:
+    top=job['top'];params=job.get('params',{});sources=job.get('sources',common+bbs)
     dst=out/top;dst.mkdir(exist_ok=True)
     la=''.join(' -liberty '+str(p) for p in libs)
     script=['read_liberty -lib '+str(p) for p in libs]
-    script+=['read_verilog -sv '+p for p in common+bbs]
+    script+=['read_verilog -sv '+p for p in sources]
     script+=['hierarchy -check -top '+top+''.join(' -chparam '+k+' '+str(v) for k,v in params.items()),'synth -top '+top+' -flatten','dfflibmap -liberty '+str(libs[-1]),'abc'+la+' -D 833.333','setundef -zero','setattr -mod -unset keep_hierarchy','flatten','opt_clean -purge','tee -o '+str(dst/'stat.txt')+' stat'+la,'write_json '+str(dst/'mapped.json'),'write_verilog '+str(dst/'mapped.v')]
     (dst/'synth.ys').write_text('\n'.join(script)+'\n')
     with (dst/'yosys.log').open('w') as log:subprocess.run([yosys,'-s',str(dst/'synth.ys')],stdout=log,stderr=subprocess.STDOUT,check=True)
@@ -41,7 +44,7 @@ for top,params in [('ot_hbm_xcal_desc_host_native',{'PAW':11,'PREL':1,'DD':256,'
         nets.append(dict(bit=bit,fanout=len(sinks),names=names,drivers=drivers[bit],reset=reset,clock=clock,sinks=sinks))
     nets.sort(key=lambda x:x['fanout'],reverse=True)
     counts=collections.Counter(c['type'] for c in mod['cells'].values());unknown={k:v for k,v in counts.items() if k not in areas and not k.startswith('ot_sram_')}
-    report=dict(top=top,tool='ORFS docker Yosys + ABC, RVT TT,833.333ps target',physical_claim=False,std_area_liberty_units=sum(areas.get(k,0)*v for k,v in counts.items()),macro_counts={k:v for k,v in counts.items() if k.startswith('ot_sram_')},unmapped_or_unknown=unknown,cell_counts=counts,over32_data_control=[n for n in nets if n['fanout']>32 and not n['reset'] and not n['clock']],top50=nets[:50])
+    report=dict(top=top,tool='ORFS docker Yosys + ABC, RVT TT,833.333ps target',physical_claim=False,std_area_um2=sum(areas.get(k,0)*v for k,v in counts.items()),source_sha256={p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in sources},macro_counts={k:v for k,v in counts.items() if k.startswith('ot_sram_')},unmapped_or_unknown=unknown,cell_counts=counts,over32_data_control=[n for n in nets if n['fanout']>32 and not n['reset'] and not n['clock']],top50=nets[:50])
     (dst/'census.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k not in ['top50','over32_data_control','cell_counts']},indent=2),flush=True)
     print('OVER32',[(n['names'],n['fanout']) for n in report['over32_data_control']],flush=True)
