@@ -1091,6 +1091,12 @@ def landed_body():
          '    }\n'
          '    set arrivals [lsort -real $arrivals]\n'
          '    set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]\n    set tree_mean'),
+        # a hard child with several clock pins on ONE region root (e86: clk + clk_r0..r3) is one owner; on two roots FAIL
+        ('      if {[dict exists $cells $cell]} { error "OT_MULTI_ROOT: duplicate clock ownership $cell" }\n',
+         '      if {[dict exists $cells $cell]} {\n'
+         '        if {[dict get $cells $cell] eq $domain && [dict exists $::ot_ce_counts [get_property [get_cells $cell] ref_name]]} continue\n'
+         '        error "OT_MULTI_ROOT: duplicate clock ownership $cell"\n'
+         '      }\n'),
         ('  if {[dict size $seen] != [llength $::ot_ce_ports]} { error "OT_ENTRIES: incomplete actual child/source coverage" }\n',
          '  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins} { error "OT_LANDED: $ot_ce_landed_hits of $::ot_ce_landed_child_pins'
          ' bound hard-child clock pins reached from the region roots" }\n'

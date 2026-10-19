@@ -61,16 +61,27 @@ def view(root):
     return v
 
 
-def internal_child(root):
-    """the fixture child with a second, arc-less clock pin CLK2 (internal flops only: insertion 'all', no boundary)"""
+def internal_child(root, arcs=False):
+    """the fixture child with a second clock pin CLK2: arc-less (internal flops only: insertion 'all', no boundary), or
+    with arcs=True a boundary input E timed on CLK2 (two boundary clock pins on one child)"""
     v = root / 'hard'
+    e = ('    pin(E) { direction : input; capacitance : 1;\n'
+         '      timing() { related_pin : "CLK2"; timing_type : setup_rising; rise_constraint(scalar) { values("20"); } fall_constraint(scalar) { values("20"); } }\n'
+         '      timing() { related_pin : "CLK2"; timing_type : hold_rising; rise_constraint(scalar) { values("10"); } fall_constraint(scalar) { values("10"); } } }\n'
+         '    pin(F) { direction : output;\n'
+         '      timing() { related_pin : "CLK2"; timing_type : rising_edge; cell_rise(scalar) { values("100"); } cell_fall(scalar) { values("100"); } } }\n'
+         if arcs else '')
     for c in CE.CORNERS:
         lib = v / f'hard_{c}.lib'
-        lib.write_text(lib.read_text().replace('pin(D) {', 'pin(CLK2) { direction : input; clock : true; capacitance : 1; }\n    pin(D) {'))
+        lib.write_text(lib.read_text().replace('pin(D) {', 'pin(CLK2) { direction : input; clock : true; capacitance : 1; }\n' + e + '    pin(D) {'))
     lef = (v / 'hard.lef').read_text()
-    (v / 'hard.lef').write_text(lef.replace('PIN D ', 'PIN CLK2 DIRECTION INPUT ; USE CLOCK ; PORT LAYER M4 ; RECT 0.1 0.7 0.2 0.8 ; END END CLK2\nPIN D ', 1))
+    (v / 'hard.lef').write_text(lef.replace('PIN D ', 'PIN CLK2 DIRECTION INPUT ; USE CLOCK ; PORT LAYER M4 ; RECT 0.1 0.7 0.2 0.8 ; END END CLK2\n'
+                                            + ('PIN E DIRECTION INPUT ; USE SIGNAL ; PORT LAYER M4 ; RECT 0.1 1.0 0.2 1.1 ; END END E\n'
+                                               'PIN F DIRECTION OUTPUT ; USE SIGNAL ; PORT LAYER M4 ; RECT 9.8 1.0 9.9 1.1 ; END END F\n' if arcs else '')
+                                            + 'PIN D ', 1))
     one = {c: dict(boundary=dict(n=4, min=90, mean=100, max=110)) for c in CE.CORNERS}
-    two = {c: dict(boundary=dict(n=0), all=dict(n=8, min=140, mean=150, max=160)) for c in CE.CORNERS}
+    two = {c: (dict(boundary=dict(n=2, min=140, mean=150, max=160)) if arcs else
+               dict(boundary=dict(n=0), all=dict(n=8, min=140, mean=150, max=160))) for c in CE.CORNERS}
     (v / 'insertion.json').write_text(json.dumps(dict(lib_clock_pin='CLK', clock='ck', **one, clock_measurements=dict(
         CLK=dict(lib_clock_pin='CLK', **one), CLK2=dict(lib_clock_pin='CLK2', **two)))))
 
@@ -186,10 +197,11 @@ class LandedClusterOpenroad(unittest.TestCase):
             s['landed_record'] = 'top_lp_record.json'
             if mutant == 'two_children':
                 s['children'][0]['count'] = 2
-            if mutant.startswith('internal_pin'):
-                internal_child(w)
-            rtl = (RTL.replace('hard h(.CLK(ck_ra),', 'hard h(.CLK(ck_ra), .CLK2(%s),' % ('ck_rb' if mutant == 'internal_pin_other_root' else 'ck_ra'))
-                   if mutant.startswith('internal_pin') else RTL)
+            if mutant.startswith(('internal_pin', 'two_pins')):
+                internal_child(w, arcs=mutant.startswith('two_pins'))
+            rtl = (RTL.replace('hard h(.CLK(ck_ra),', 'hard h(.CLK(ck_ra), .CLK2(%s),%s' % (
+                       'ck_rb' if mutant.endswith('_other_root') else 'ck_ra', ' .E(d), .F(),' if mutant.startswith('two_pins') else ''))
+                   if mutant.startswith(('internal_pin', 'two_pins')) else RTL)
             rtl = rtl.replace('u_lpl_0_w.bank_reg', '\\u_lpl_0_w.bank_reg ').replace('u_lpl_0_r.o_reg', '\\u_lpl_0_r.o_reg ')
             (w / 't.v').write_text(rtl)
             entries = 'set ::ot_ce_require_wire 1\n' + CE.generate(s, w) + CE.landed_sdc(s, w)
@@ -257,9 +269,18 @@ puts "LANDED_RESULT PASS"
         self.assertRegex(out, r'OT_LANDED CHILD_INTERNAL tt ck_ra h/CLK2 wire=[\d.eE+-]+ R=150(?:\.0)? ')
         self.assertIn('LANDED_RESULT PASS', out)
 
+    def test_two_boundary_clock_pins_one_owner(self):
+        # e86 shape: several boundary clock pins of one hard child on one region root = one owner (not a duplicate)
+        rc, out = self.run_flow('two_pins')
+        self.assertEqual(rc, 0, out[-6500:])
+        self.assertRegex(out, r'OT_LANDED CHILD_SINK tt ck_ra h/CLK2 wire=[\d.eE+-]+ R=150(?:\.0)? ')
+        self.assertIn('OT_MULTI_ROOT OWNERSHIP PASS roots=2', out)
+        self.assertIn('LANDED_RESULT PASS', out)
+
     def test_mutants_fail_closed(self):
         for mutant, why in (('two_children', 'OT_ENTRIES: bound child count mismatch|OT_LANDED'),
                             ('internal_pin_other_root', 'missing unique finite propagated clock arrival on h/CLK2'),
+                            ('two_pins_other_root', 'duplicate clock ownership h|clock pins on different region roots|missing unique finite propagated clock arrival on h/CLK2'),
                             ('leaf_tile_body', 'OT_HYBRID')):
             with self.subTest(mutant=mutant):
                 rc, out = self.run_flow(mutant)

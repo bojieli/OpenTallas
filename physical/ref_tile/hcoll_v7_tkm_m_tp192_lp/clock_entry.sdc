@@ -115,7 +115,10 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
     foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {
       set cell [get_full_name [get_cells -of_objects $pin]]
-      if {[dict exists $cells $cell]} { error "OT_MULTI_ROOT: duplicate clock ownership $cell" }
+      if {[dict exists $cells $cell]} {
+        if {[dict get $cells $cell] eq $domain && [dict exists $::ot_ce_counts [get_property [get_cells $cell] ref_name]]} continue
+        error "OT_MULTI_ROOT: duplicate clock ownership $cell"
+      }
       dict set cells $cell $domain
     }
   }
