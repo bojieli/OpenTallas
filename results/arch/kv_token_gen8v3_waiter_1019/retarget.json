@@ -1,0 +1,18 @@
+{
+  "old_pid": 2029982,
+  "old_script_sha256": "2fa9f6373e944fc24c864d58a11b88106674fbfb200b886ccd880a24fe080826",
+  "replacement_source": "5f2ce19bc",
+  "replacement_run": "kvs14r-5f2ce19bc-gen8v3mub",
+  "old_cmdline": "bash /home/ubuntu/artifacts/kv-token-pickup-1019/gen8_waiter.sh ",
+  "terminated_children": [
+    2244929
+  ],
+  "replacement_script_sha256": "f7547d73c4b58340f118355240db5d7d312b26734ba43fe1e229a5dd158424ec",
+  "spill_policy": "--no-spill: vehicle script references frozen source+generated inputs outside staged lane; data locality, no host pin",
+  "replacement_waiter": {
+    "pid": 2264729,
+    "detached_new_session": true,
+    "ppid": 1,
+    "session_id": 2264729
+  }
+}
