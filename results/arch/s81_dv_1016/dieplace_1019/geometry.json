@@ -3,7 +3,7 @@
   "source_commit": "f282cac9e",
   "base_commit": "6050bfac9",
   "default_plan_sha256": "a92f7ab89fd50423d6f3b8d34885bba752d7dc86f1f16635712ce31ff1e419d5",
-  "placefix_plan_sha256": "a97bb62d4f49e4517b9f9e6dfd3a9ea55d9f6156e7e793b2fcd86293ac3175ce",
+  "placefix_plan_sha256": "6465d75e46038e1763f262abc082df272e5201425e17b681cbfb37568b07423d",
   "default_byte_identical": true,
   "service_slots_preserved": true,
   "every_block_size_preserved": true,
@@ -123,5 +123,6 @@
       "after": 0
     }
   },
-  "state": "GEOMETRY_PASS_PHYSICAL_REPLAY_PENDING_NOT_A_GATE"
+  "state": "GEOMETRY_PASS_PHYSICAL_REPLAY_PENDING_NOT_A_GATE",
+  "lane_summary_ages_match_links": true
 }

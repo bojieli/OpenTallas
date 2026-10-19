@@ -1494,6 +1494,12 @@ def main():
             service_slots_preserved=True, die_outline_preserved=True,
             north_frame_clearance_um=round(DIE_H - facts['frame_top_um'], 2))
         facts['placefix']['station_moves'] = legalize_stations(P)
+        # Lane-summary ages must describe the same stations as plan.links.
+        actual = {l['i']: l for l in P.links}
+        for section in ('unit_lanes', 'host_lanes', 'mu_lanes'):
+            for name, row in facts.get(section, {}).items():
+                row['stations'] = actual[name]['s']
+                row['um'] = actual[name]['L']
     geometry_facts(P, facts)
     if P4I:
         p4i_facts(P, facts)
