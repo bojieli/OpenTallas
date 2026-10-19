@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/codex-qw-geometry-native-grid-1019/results/arch/qwen_dualclk_native_grid_1019/model.py", line 171, in <module>
+    if __name__=='__main__':main()
+  File "/home/ubuntu/wt/codex-qw-geometry-native-grid-1019/results/arch/qwen_dualclk_native_grid_1019/model.py", line 155, in main
+    rr=check(q);mutants[name]=dict(errors=rr['errors'],terminal=rr['terminal']['status'])
+  File "/home/ubuntu/wt/codex-qw-geometry-native-grid-1019/results/arch/qwen_dualclk_native_grid_1019/model.py", line 123, in check
+    vias=len(vias),minimum_cross_net_axis_gaps_nm=min_gap,terminal=checker.audit(m),
+  File "/home/ubuntu/wt/codex-qw-geometry-native-grid-1019/results/arch/qwen_dualclk_native_grid_1019/source/reference_checker.py", line 43, in audit
+    spacing = m['proof']['native_PRL_thin_spacing_nm']
+KeyError: 'native_PRL_thin_spacing_nm'

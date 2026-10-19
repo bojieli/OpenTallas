@@ -1,0 +1,249 @@
+{
+  "cost_scope": "Exact rectangle-union area/24nm conservative passive RC surrogate, with original pad union counted once. Via fringe/coupling/extracted RC unavailable. No CQ minimum, silicon timing, macro internals, PG route or parent cost qualification.",
+  "mutants": {
+    "blocked_terminal": {
+      "errors": [],
+      "terminal": "FAIL"
+    },
+    "disconnect_contact": {
+      "errors": [
+        [
+          "CONTACT_DISCONNECTED",
+          "rclk"
+        ],
+        [
+          "CONNECTED_MINAREA",
+          "rclk",
+          "M4"
+        ],
+        [
+          "CROSS_NET_SCALAR48",
+          "rclk",
+          "r_ce_in",
+          23
+        ],
+        [
+          "CROSS_NET_SCALAR48",
+          "rclk",
+          "r_ce_in",
+          32
+        ]
+      ],
+      "terminal": "PASS"
+    },
+    "wrong_M4_phase": {
+      "errors": [
+        [
+          "VIA_ENCLOSURE",
+          "rclk",
+          "M4"
+        ],
+        [
+          "CONTACT_DISCONNECTED",
+          "rclk"
+        ],
+        [
+          "LONG_LEAD_GRID",
+          "rclk",
+          {
+            "layer": "M4",
+            "net": "rclk",
+            "rect_nm": [
+              265,
+              856,
+              10248,
+              880
+            ],
+            "role": "source_horizontal"
+          }
+        ]
+      ],
+      "terminal": "PASS"
+    },
+    "wrong_M5_phase": {
+      "errors": [
+        [
+          "VIA_GRID",
+          "rclk"
+        ]
+      ],
+      "terminal": "PASS"
+    }
+  },
+  "native_R0_transform_scenario": {
+    "M4_horizontal_track_phase_nm": 3,
+    "M5_vertical_track_phase_nm": 0,
+    "actual_master_orientation_and_parent_tracks": null,
+    "bank_origin_pitch_mod48_nm": [
+      0,
+      0
+    ],
+    "bank_origin_pitch_nm": [
+      86400,
+      43200
+    ],
+    "core_offset_unchanged_nm": [
+      10224,
+      0
+    ],
+    "master_origin_nm": [
+      0,
+      0
+    ],
+    "mirror_X_residual_M5_nm": 24,
+    "mirror_Y_residual_M4_nm": 21
+  },
+  "native_join": "206 exact original pads retained. 15nm same-layer overlap establishes abstract connectivity only; local 33nm union/9nm notch, EOL, corner, widthtable and native pin access remain HOLD.",
+  "original_commit": "693ac5af4",
+  "original_cost": {
+    "ff": {
+      "clock_access_energy_fj": 2.1875394943402,
+      "clock_lead_delay_upper_ps": 3.7736356345667286,
+      "clock_pin_cap_ff_by_pin": {
+        "rclk": 12.233747138,
+        "wclk": 12.2022118
+      },
+      "complete_boundary_clock_driver_energy_fj": 14.488080054340198,
+      "core_source_leakage_nw": 2767.9478400000003,
+      "input_lead_delay_upper_ps": 3.8298369343148027,
+      "leakage_nw": 5543.9568,
+      "output_lead_delay_upper_ps_by_load_ff": {
+        "0.72": 3.13213079822724,
+        "11.52": 6.79982298062724,
+        "2.88": 3.86566923470724,
+        "23.04": 10.71202797518724,
+        "46.08": 18.53643796430724
+      },
+      "read_energy_fj": 392.6680333181483,
+      "read_plus_clock_access_energy_fj": 394.85557281248845,
+      "simultaneous_read_write_plus_clock_access_energy_fj": 531.9888732306209,
+      "write_energy_fj": 458.47078941414827,
+      "write_plus_clock_access_energy_fj": 460.65832890848844
+    },
+    "ss": {
+      "clock_access_energy_fj": 1.4643859424922,
+      "clock_lead_delay_upper_ps": 4.870855970711306,
+      "clock_pin_cap_ff_by_pin": {
+        "rclk": 10.544307137999999,
+        "wclk": 10.5127718
+      },
+      "complete_boundary_clock_driver_energy_fj": 8.3575546304922,
+      "core_source_leakage_nw": 2767.9478400000003,
+      "input_lead_delay_upper_ps": 6.489400437966038,
+      "leakage_nw": 5543.9568,
+      "output_lead_delay_upper_ps_by_load_ff": {
+        "0.72": 5.450888920309196,
+        "11.52": 9.118581102709197,
+        "2.88": 6.184427356789196,
+        "23.04": 13.030786097269196,
+        "46.08": 20.8551960863892
+      },
+      "read_energy_fj": 264.3214398562811,
+      "read_plus_clock_access_energy_fj": 265.7858257987733,
+      "simultaneous_read_write_plus_clock_access_energy_fj": 357.58580376463055,
+      "write_energy_fj": 306.91019787228106,
+      "write_plus_clock_access_energy_fj": 308.3745838147733
+    },
+    "tt": {
+      "clock_access_energy_fj": 1.8078838796199996,
+      "clock_lead_delay_upper_ps": 4.073128754468129,
+      "clock_pin_cap_ff_by_pin": {
+        "rclk": 11.206347138,
+        "wclk": 11.1748118
+      },
+      "complete_boundary_clock_driver_energy_fj": 10.966767879619997,
+      "core_source_leakage_nw": 2767.9478400000003,
+      "input_lead_delay_upper_ps": 4.764635080982336,
+      "leakage_nw": 5543.9568,
+      "output_lead_delay_upper_ps_by_load_ff": {
+        "0.72": 3.9562879660022046,
+        "11.52": 7.623980148402204,
+        "2.88": 4.689826402482204,
+        "23.04": 11.536185142962205,
+        "46.08": 19.360595132082207
+      },
+      "read_energy_fj": 325.33071405466796,
+      "read_plus_clock_access_energy_fj": 327.138597934288,
+      "simultaneous_read_write_plus_clock_access_energy_fj": 440.47190406497594,
+      "write_energy_fj": 378.90147885466797,
+      "write_plus_clock_access_energy_fj": 380.709362734288
+    }
+  },
+  "pg": "44 original rectangles retained; no PG added/priced. Same-net M4 PIN/OBS exception not established from supplied tech. Candidate VIA45 fit is insufficient to prove accessibility/binding. PG HOLD.",
+  "rule_applicability": "Tech offset/pitch supplies nominal R0 parent-track scenario only. No master ORIGIN/orientation, parent TRACKS or native RIGHTWAYONGRIDONLY interpreter receipt establishes applicability to original internal metal. Original 614 phase discrepancies remain analytical HOLD, not manufactured DRC failures.",
+  "source_sha256": {
+    "model.py": "bfef78aa1ee28aea0fc2f375ec8f98b1dee22b2d783d8cf985efe3ae608e9523",
+    "source/asap7_tech.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+    "source/input.json": "ab1e4fb47eae23de60375ac3ad804c0d7a817163f05b73777cc8ddcf30108412",
+    "source/model.json": "d81b497862daa6bee0b9db569764490645c144c49ea589c95c023d32eca387d1",
+    "source/platform_rules.txt": "b7103a10b644df04034273636db50599cd41cc452339c317c282fb80e04d5184",
+    "source/reference_checker.py": "5ae2dcf6efef7750339f15cfeeff0bfdd192ef5b3434682ddc7457fd0d657ea8"
+  },
+  "status": "MODEL_ONLY_HOLD",
+  "terminal_review_commit": "7814bb23a",
+  "unchanged_26_bank_area_um2": 28828.57536,
+  "unchanged_outline_nm": [
+    52440,
+    21144
+  ],
+  "unchanged_pg_rectangles": 44,
+  "variant_cost": {
+    "ff": {
+      "clock_lead_delay_upper_ps": 3.7769814317412944,
+      "clock_pin_cap_ff_by_pin": {
+        "rclk": 12.235353413,
+        "wclk": 12.203818075000001
+      },
+      "complete_boundary_clock_driver_energy_fj": 14.489984775235198,
+      "hybrid_clock_cap_ff": 635.418458688,
+      "hybrid_full_activity_energy_pj": 13.836811546552955,
+      "input_lead_delay_upper_ps": 3.8321642064673065,
+      "output_lead_delay_upper_ps_by_load_ff": {
+        "0.72": 3.134293811932539,
+        "11.52": 6.803739142132539,
+        "2.88": 3.868182877972539,
+        "23.04": 10.717814161012539,
+        "46.08": 18.545964198772538
+      },
+      "simultaneous_read_write_plus_clock_access_energy_fj": 532.185059482806
+    },
+    "ss": {
+      "clock_lead_delay_upper_ps": 4.875183953820559,
+      "clock_pin_cap_ff_by_pin": {
+        "rclk": 10.545913413,
+        "wclk": 10.514378075
+      },
+      "complete_boundary_clock_driver_energy_fj": 8.3588296915872,
+      "hybrid_clock_cap_ff": 547.5675786879999,
+      "hybrid_full_activity_energy_pj": 9.300645511492805,
+      "input_lead_delay_upper_ps": 6.492967103938195,
+      "output_lead_delay_upper_ps_by_load_ff": {
+        "0.72": 5.454308364210223,
+        "11.52": 9.123753694410222,
+        "2.88": 6.188197430250223,
+        "23.04": 13.037828713290223,
+        "46.08": 20.86597875105022
+      },
+      "simultaneous_read_write_plus_clock_access_energy_fj": 357.7171350574156
+    },
+    "tt": {
+      "clock_lead_delay_upper_ps": 4.0767543488510185,
+      "clock_pin_cap_ff_by_pin": {
+        "rclk": 11.207953413,
+        "wclk": 11.176418075
+      },
+      "complete_boundary_clock_driver_energy_fj": 10.968342029119999,
+      "hybrid_clock_cap_ff": 581.993658688,
+      "hybrid_full_activity_energy_pj": 11.456485078050372,
+      "input_lead_delay_upper_ps": 4.767398572033706,
+      "output_lead_delay_upper_ps_by_load_ff": {
+        "0.72": 3.958897553216727,
+        "11.52": 7.628342883416726,
+        "2.88": 4.692786619256727,
+        "23.04": 11.542417902296727,
+        "46.08": 19.370567940056723
+      },
+      "simultaneous_read_write_plus_clock_access_energy_fj": 440.6340414634759
+    }
+  }
+}
