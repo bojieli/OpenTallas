@@ -1,0 +1,996 @@
+{
+  "top": "ot_hbm_static_cfg_collar_idx256",
+  "netlist_sha256": "616fd4f09261de1afe7a1f8199919e0440992dc857707588147bc9e4542bb64c",
+  "all_roots": 15985,
+  "over32": [
+    {
+      "net": "_21211_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 261,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_rst_same.rc[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 158,
+      "flops": 119,
+      "example": "active$_DFF_PN0_",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "_21847_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_21908_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_21970_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_22031_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_22092_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_22153_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_22254_/Y (AND5x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23097_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23158_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23219_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23280_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23341_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23402_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24441_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24502_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24563_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24624_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24685_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24746_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_25853_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_25914_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_25976_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_26037_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_26098_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_26159_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_26260_/Y (AND5x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27198_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27259_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27321_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27382_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27443_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27504_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28571_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28632_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28694_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28755_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28816_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28877_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28978_/Y (AND5x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_29915_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_29976_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30038_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30099_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30160_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30221_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30322_/Y (AND5x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30900_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30964_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31088_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31152_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31213_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31275_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31336_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31458_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31519_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31580_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31704_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31765_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "run$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 54,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    }
+  ],
+  "top80": [
+    {
+      "net": "_21211_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 261,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_rst_same.rc[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 158,
+      "flops": 119,
+      "example": "active$_DFF_PN0_",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "_21847_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_21908_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_21970_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_22031_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_22092_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_22153_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_22254_/Y (AND5x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23097_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23158_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23219_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23280_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23341_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23402_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24441_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24502_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24563_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24624_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24685_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24746_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_25853_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_25914_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_25976_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_26037_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_26098_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_26159_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_26260_/Y (AND5x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27198_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27259_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27321_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27382_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27443_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27504_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28571_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28632_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28694_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28755_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28816_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28877_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_28978_/Y (AND5x2_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_29915_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_29976_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30038_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30099_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30160_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30221_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30322_/Y (AND5x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30900_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_30964_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31088_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31152_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31213_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31275_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31336_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31458_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31519_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31580_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31704_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_31765_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 56,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "run$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 54,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[7].cv$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 31,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].cv$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 30,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[1].cv$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 30,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[2].cv$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 30,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[3].cv$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 30,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[4].cv$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 30,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[5].cv$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 30,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[6].cv$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 30,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[8].cv$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 30,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "_23476_/Y (AND5x1_ASAP7_75t_R)",
+      "loads": 29,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_23503_/Y (AND5x1_ASAP7_75t_R)",
+      "loads": 29,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24820_/Y (AND5x1_ASAP7_75t_R)",
+      "loads": 29,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_24847_/Y (AND5x1_ASAP7_75t_R)",
+      "loads": 29,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27578_/Y (AND4x1_ASAP7_75t_R)",
+      "loads": 29,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "_27605_/Y (AND5x1_ASAP7_75t_R)",
+      "loads": 29,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "comb"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].g_payload.rd_oh[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 29,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].g_payload.rd_oh[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 29,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].g_payload.rd_oh[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 29,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    },
+    {
+      "net": "g_fan32.u_banks.g_bank[0].g_payload.rd_oh[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 29,
+      "flops": 0,
+      "example": "None",
+      "driver_kind": "ff"
+    }
+  ]
+}

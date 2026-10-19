@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.hbm.idx256.fan32.model.v2",
+  "baseline": "6ad actual mapped census failed61roots>32: bankenable56/globalprogrammeaccept261/run54/reset158; exactbenchPASS",
+  "optin": "FAN32=1 in separate IDX256 master; default0 preserves previous guard behavior",
+  "mechanism": [
+    "sixteen constant16-bit payload banks protected by keep_hierarchy; local ABC cannot absorb shared programme_accept into every payloadbit",
+    "each bank has existing-edge cfgvalid/address/target FFcopies, onehot8bit reader and localcounter; maxmuxenable2loads/bit=32",
+    "parent run/programmeaccept fanout count is actual bank inputpins plus control logic, never inferred source expression loads",
+    "same-release2nd-stage reset copies grouped by actual reset ownership; no new reset/data edge; source implementation and exactmapped proof required"
+  ],
+  "budgets": {
+    "record_banks": 16,
+    "bank_bits_max": 16,
+    "cfg_landing_copies": 17,
+    "cfg_state_bits_added": 337,
+    "onehot_selection_bits_added": 128,
+    "counter_bits_added": 448,
+    "total_estimated_added_state_bits": 913,
+    "held_record_bits": 2048,
+    "held_operand_bits": 1536,
+    "successful_install_added_edges": 0,
+    "successful_data_added_edges": 0,
+    "output_hold_semantics": "preserved even outside valid pulses",
+    "critical_fanout_target": 32,
+    "note": "14payloadbanks overlap record bits35..255; reset-localcopies additionally sized after exactmain-control fieldownership; estimate is lowerbound until final resetplan"
+  },
+  "retention": "canonical physical/common_flow/ot_keep_regs.tcl marks FF drivers of keep wires beforeopt_merge and per-bit techmap; actual mapped copies/fanout must be counted",
+  "qualification": "modelbeforebuild; no CTS until full differentialrecord/operand/programme proof and actualfanout/depth/area/IOcensus"
+}
