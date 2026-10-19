@@ -82,5 +82,62 @@
     "reset_equations": "P_i(t+)=rst_n?1:0 asynchronously0; R_j(t+)=P_(j%8)?1:0 asynchronously0. R_j releases on second common clk edge; constantD1 is equivalent to sampled P because P0 asynchronously holdsR0.",
     "policy": "root-approved raw<=12/first<=24/final<=30 profile; needs source-bound strict2level checker and ROOTreview beforegate",
     "reach": "OPEN until physical clock/reset audit"
+  },
+  "measured": {
+    "source_rtl_commit": "bb7c14755",
+    "std_area_um2": 5751.503819999999,
+    "macro_area_um2": 19469.26368,
+    "total_area_um2": 25220.767499999998,
+    "std_ff_count": 8323,
+    "clock_pin_count": 8328,
+    "max_nonclock_pin_fanout": 31,
+    "max_data_logic_cell_levels": 17,
+    "unknown_cells": 0,
+    "over32_nets": 0
+  },
+  "reset_actual": {
+    "raw": 8,
+    "max_first": 23,
+    "max_final": 25,
+    "second_stage_live": 177,
+    "release_edges": 2,
+    "buffers": 0,
+    "profile": "raw<=12/first<=24/final<=30 strict2level, rootreviewrequired"
+  },
+  "area_cost": {
+    "predecessor_std_um2": 3532.48614,
+    "std_increase_um2": 2219.017679999999,
+    "die_replicas": 16,
+    "die_std_area_increase_mm2": 0.03550428287999999
+  },
+  "macro_physical": {
+    "canonical_json": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
+    "signal_pins": 819,
+    "macro_pin_face_height_um": 41.064,
+    "pins_per_signal_face": 410,
+    "face_pins_per_um": 9.98441457237483,
+    "canonical_macro_access_status": "OPEN/root-owned denseface+PG/via repair; no macro modified"
+  },
+  "floorplan_contract": {
+    "no_granted_slot": true,
+    "max_stage_reach_um": 405,
+    "standard_cell_target_utilization": 0.5,
+    "outline_area_lower_bound_um2": 30972.27132,
+    "macro_lattice_um": 43.2,
+    "face_limit_pins_per_um": 6,
+    "proposed_floorplan_status": "OPEN: synthesis-sized area and actual macro channels must be reconciled after root canonical repair"
+  },
+  "schedule_contract": {
+    "input_edges": 2,
+    "packet_edges": 2,
+    "open_to_rowcommit_delta": 2,
+    "sector_to_rowcommit_delta": 2,
+    "read_to_packet_delta": 2,
+    "retire_to_owned_clear_delta": 2,
+    "cache_ready_delta": 2,
+    "read_issue": "unchanged",
+    "external_command": "parent adds2",
+    "retire_issue": "unchanged; captured cache2 matches command2",
+    "padding": "parent composition model b9c85f2dd owns19, no independent whole-rate claim"
   }
 }
