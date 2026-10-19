@@ -46,10 +46,10 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // Identical-depth KEPT relay copies release on the existing edge. Region
     // zero owns accounting and the AQ port; the remaining copies stay local
     // to return capture, native K, native KR, metadata, PHY, and diagnostics.
-    // Region seven is spare; regions 8..39 reserve same-edge AQ bank resets.
-    wire [39:0] region_rst_n;
+    // Region seven is spare; regions 8..71 feed same-edge AQ bank/tournament resets.
+    wire [71:0] region_rst_n;
     wire lrst_n=region_rst_n[0];
-    ot_rst_relay #(.REGIONS(40)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(region_rst_n));
+    ot_rst_relay #(.REGIONS(72)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(region_rst_n));
     // Native PHY-return pin capture: valid and all payload bits enter flops
     // together before response FIFO accounting/address/identity logic. This
     // adds one HBM edge before block-ready; normal on-die calendars do not
@@ -231,7 +231,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       .w_ce_in(response_write),.w_addr_in(7'(response_wp)),.wd_in({235'b0,pending_meta[20:0]}),.w_mask_in({256{1'b1}}),
       .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
     ot_hbm_r14_aq_pc_safe #(.WQ(QD),.MRKEY(MRKEY)) controller(
-        .clk(clk),.rst_n(lrst_n),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
+        .clk(clk),.rst_n(lrst_n),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         .col_v(cv),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),
         .wr_v(enqueue),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_rd(push_read),.wr_r(wr),

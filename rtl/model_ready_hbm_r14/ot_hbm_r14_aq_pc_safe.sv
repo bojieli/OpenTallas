@@ -31,7 +31,7 @@ module ot_hbm_r14_aq_pc_safe #(
   parameter integer MRKEY = 1,
   parameter integer PULLIN = 8
 )(
-  input  wire        clk, rst_n,
+  input  wire        clk, rst_n, input wire[63:0]reset_regions,
   input  wire        slot_parity, input wire [7:0] refresh_reload,
   output wire        row_v, output wire [2:0] row_op, output wire [4:0] row_bank, output wire [RW_ROW-1:0] row_row,
   output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
@@ -78,23 +78,18 @@ module ot_hbm_r14_aq_pc_safe #(
     .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
   reg [WQW:0] bank_n[0:31];
   reg [RW_ROW-1:0] look_row[0:31];
-  always @(posedge clk or negedge rst_n)begin
-    if(!rst_n)begin qfresh<=0;qfresh_addr<=0;qfresh_data<=0;
-      for(integer b=0;b<32;b=b+1)begin bank_n[b]<=0;end
-    end else begin
-      qfresh<=qpush;qfresh_addr<=qwp;qfresh_data<={wr_bank,wr_col,wr_row,wr_rd};
-      for(integer b=0;b<32;b=b+1)begin
-        case({qpush&&wr_bank==b,wr_ok&&hb==b})
-          2'b10:bank_n[b]<=bank_n[b]+1'b1;
-          2'b01:bank_n[b]<=bank_n[b]-1'b1;
-          default:bank_n[b]<=bank_n[b];
-        endcase
-        // The globally oldest head is authoritative across row conflicts. Incoming
-        // traffic establishes lookahead while a bank has no outstanding sectors.
-
-      end
-    end
+  // Same-edge reset copies from the parent relay: each bank resets its own
+  // 27 timer flops and seven count bits rather than a thousand-sink reset net.
+  for(genvar b=0;b<32;b=b+1)begin:BCOUNT
+    always @(posedge clk or negedge reset_regions[b])if(!reset_regions[b])bank_n[b]<=0;
+    else case({qpush&&wr_bank==b,wr_ok&&hb==b})
+      2'b10:bank_n[b]<=bank_n[b]+1'b1;
+      2'b01:bank_n[b]<=bank_n[b]-1'b1;
+      default:bank_n[b]<=bank_n[b];
+    endcase
   end
+  always @(posedge clk or negedge rst_n)if(!rst_n)qfresh<=0;else qfresh<=qpush;
+  always @(posedge clk)begin qfresh_addr<=qwp;qfresh_data<={wr_bank,wr_col,wr_row,wr_rd};end
   always @(posedge clk)begin
     for(integer b=0;b<32;b=b+1)begin
       if(q_ne&&hb==b)look_row[b]<=hrow;
@@ -160,8 +155,8 @@ module ot_hbm_r14_aq_pc_safe #(
     wire rfp_e = row_fire && c_op == REFPB && c_oh[b];
     wire rd_e = hit_rd && hb == 5'(b);
     wire wr_e = hit_wr && hb == 5'(b);
-    always @(posedge clk or negedge rst_n)
-      if (!rst_n) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; wrr <= 0; end
+    always @(posedge clk or negedge reset_regions[b])
+      if (!reset_regions[b]) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; wrr <= 0; end
       else begin
         if (wr_e) wrr <= 5'(T_WRR - 1); else if (wrr != 0) wrr <= wrr - 1'b1;
         if (act_e) begin rcd <= 5'(T_RCD - 1); ras <= 5'(T_RAS - 1); end
@@ -213,7 +208,7 @@ module ot_hbm_r14_aq_pc_safe #(
   for(genvar l=0;l<5;l=l+1)begin:KL
     for(genvar k=0;k<(16>>l);k=k+1)begin:KP
       reg[6:0]key_q;reg[4:0]sel_q;
-      always @(posedge clk or negedge rst_n)if(!rst_n)begin key_q<=127;sel_q<=0;end
+      always @(posedge clk or negedge reset_regions[32+(32-(32>>l))+k])if(!reset_regions[32+(32-(32>>l))+k])begin key_q<=127;sel_q<=0;end
       else if(rk[l][2*k]<=rk[l][2*k+1])begin key_q<=rk[l][2*k];sel_q<=rs[l][2*k];end
       else begin key_q<=rk[l][2*k+1];sel_q<=rs[l][2*k+1];end
       assign rk[l+1][k]=key_q;assign rs[l+1][k]=sel_q;
