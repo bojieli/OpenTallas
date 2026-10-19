@@ -16,21 +16,21 @@
    "composition_1018": {
     "ar": {
      "available": true,
-     "banner": "0.0% of token cycles measured on current RTL (99.3% on older RTL, 0.0% modelled PHY, 0.7% priced)",
-     "pct_measured_current_rtl": 0.0,
-     "tok_s": 4767.1,
-     "T_token_cycles": 251723.0,
-     "per_accepted_cycles": 251723.0,
+     "banner": "0.8% of token cycles measured on current RTL (98.4% on older RTL, 0.1% modelled PHY, 0.7% priced)",
+     "pct_measured_current_rtl": 0.8,
+     "tok_s": 4766.5,
+     "T_token_cycles": 251759.0,
+     "per_accepted_cycles": 251759.0,
      "tau": null,
      "by_grade": {
-      "measured-current-RTL": 0,
-      "measured-old-RTL": 250083.0,
-      "modelled-PHY": 0,
+      "measured-current-RTL": 2016.0,
+      "measured-old-RTL": 247743.0,
+      "modelled-PHY": 360.0,
       "priced": 1640.0
      },
      "by_kind": {
       "layer": 170487.0,
-      "xdie": 81236.0,
+      "xdie": 81272.0,
       "adjust": 0
      },
      "price_of_record": {
@@ -38,7 +38,7 @@
       "cycles": 249431.0,
       "source": "results/rtl/qwen_layer_tput_1013/record.json end_to_end.base_cycles (6,835-cycle production layer)"
      },
-     "vs_price_pct": -0.91,
+     "vs_price_pct": -0.92,
      "o_rule": "O from the 10-13 die run op-fetch window partition (TP4 reference vehicle); no dv2f14+kvs14c co-sim yet",
      "title": "Qwen3-8B ROM (compute dies + KV die + D2D), 8K context, AR",
      "xdie_top": [
@@ -51,9 +51,10 @@
       },
       {
        "x": "d2d_attention",
-       "exposed": 2340.0,
+       "exposed": 2376.0,
        "by_grade": {
-        "measured-old-RTL": 2340.0
+        "measured-current-RTL": 2016.0,
+        "modelled-PHY": 360.0
        }
       },
       {
@@ -91,86 +92,104 @@
    "composition_1018": {
     "ar": {
      "available": true,
-     "banner": "0.0% of token cycles measured on current RTL (80.3% on older RTL, 14.0% modelled PHY, 5.7% priced)",
-     "pct_measured_current_rtl": 0.0,
-     "tok_s": 1365.7,
-     "T_token_cycles": 878670.3,
-     "per_accepted_cycles": 878670.3,
+     "banner": "10.2% of token cycles measured on current RTL (60.9% on older RTL, 17.6% modelled PHY, 11.3% priced)",
+     "pct_measured_current_rtl": 10.18,
+     "tok_s": 1224.1,
+     "T_token_cycles": 980312.6,
+     "per_accepted_cycles": 980312.6,
      "tau": null,
      "by_grade": {
-      "measured-current-RTL": 0,
-      "measured-old-RTL": 705675.2,
-      "modelled-PHY": 123191.2,
-      "priced": 49803.9
+      "measured-current-RTL": 99813.0,
+      "measured-old-RTL": 596814.7,
+      "modelled-PHY": 172975.0,
+      "priced": 110709.9
      },
      "by_kind": {
-      "layer": 615525.0,
-      "xdie": 236597.7,
+      "layer": 630459.0,
+      "xdie": 323306.0,
       "adjust": 26547.6
      },
      "price_of_record": {
-      "tok_s": 1365.7,
-      "cycles": 878670.3,
-      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar"
+      "tok_s": 1342.9,
+      "cycles": 893604.3,
+      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+      "uncorrected_tok_s": 1365.7,
+      "scan_stacks_correction_cycles": 14934.0
      },
-     "vs_price_pct": -0.0,
+     "vs_price_pct": -8.85,
      "o_rule": "O from the token-path DAG solve (critical / slack); no S81 die-run compiler schedule exists yet (TOKEN-PASS-S81 BLOCKED)",
      "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, AR",
      "xdie_top": [
       {
        "x": "unplaced_hops",
-       "exposed": 62649.2,
+       "exposed": 69130.0,
        "by_grade": {
-        "modelled-PHY": 62649.2
-       }
-      },
-      {
-       "x": "substage_hop0",
-       "exposed": 40240.0,
-       "by_grade": {
-        "modelled-PHY": 40240.0
+        "measured-current-RTL": 32736.0,
+        "modelled-PHY": 28086.0,
+        "priced": 8308.0
        }
       },
       {
        "x": "attn.out_allreduce",
-       "exposed": 33080.0,
+       "exposed": 59200.0,
        "by_grade": {
-        "measured-old-RTL": 33080.0
+        "measured-current-RTL": 12240.0,
+        "modelled-PHY": 36240.0,
+        "priced": 10720.0
        }
       },
       {
        "x": "ffn.combine_allreduce",
-       "exposed": 33080.0,
+       "exposed": 59200.0,
        "by_grade": {
-        "measured-old-RTL": 33080.0
+        "measured-current-RTL": 12240.0,
+        "modelled-PHY": 36240.0,
+        "priced": 10720.0
+       }
+      },
+      {
+       "x": "substage_hop0",
+       "exposed": 44600.0,
+       "by_grade": {
+        "measured-current-RTL": 21120.0,
+        "modelled-PHY": 18120.0,
+        "priced": 5360.0
        }
       },
       {
        "x": "attn.a_allgather",
-       "exposed": 17360.0,
+       "exposed": 27880.0,
        "by_grade": {
-        "measured-old-RTL": 17360.0
-       }
-      },
-      {
-       "x": "substage_hop1",
-       "exposed": 17102.0,
-       "by_grade": {
-        "modelled-PHY": 17102.0
+        "measured-current-RTL": 4400.0,
+        "modelled-PHY": 18120.0,
+        "priced": 5360.0
        }
       },
       {
        "x": "ffn.router_allgather",
-       "exposed": 16876.0,
+       "exposed": 27600.0,
        "by_grade": {
-        "measured-old-RTL": 16876.0
+        "measured-current-RTL": 4120.0,
+        "modelled-PHY": 18120.0,
+        "priced": 5360.0
+       }
+      },
+      {
+       "x": "substage_hop1",
+       "exposed": 18955.0,
+       "by_grade": {
+        "measured-current-RTL": 8976.0,
+        "modelled-PHY": 7701.0,
+        "priced": 2278.0
        }
       },
       {
        "x": "attn.rows_allgather",
-       "exposed": 8227.6,
+       "exposed": 6904.0,
        "by_grade": {
-        "measured-old-RTL": 8227.6
+        "measured-current-RTL": 2208.0,
+        "modelled-PHY": 3624.0,
+        "priced": 1072.0
        }
       }
      ],
@@ -179,86 +198,102 @@
     },
     "mtp": {
      "available": true,
-     "banner": "0.0% of token cycles measured on current RTL (84.1% on older RTL, 10.9% modelled PHY, 4.9% priced)",
-     "pct_measured_current_rtl": 0.0,
-     "tok_s": 4045.4,
-     "T_token_cycles": 1233697.5,
-     "per_accepted_cycles": 296633.2,
+     "banner": "7.9% of token cycles measured on current RTL (67.4% on older RTL, 14.0% modelled PHY, 10.7% priced)",
+     "pct_measured_current_rtl": 7.92,
+     "tok_s": 3711.7,
+     "T_token_cycles": 1344614.8,
+     "per_accepted_cycles": 323302.4,
      "tau": 4.159,
      "by_grade": {
-      "measured-current-RTL": 0,
-      "measured-old-RTL": 1038127.0,
-      "modelled-PHY": 134991.1,
-      "priced": 60579.4
+      "measured-current-RTL": 106512.0,
+      "measured-old-RTL": 906844.8,
+      "modelled-PHY": 187823.6,
+      "priced": 143434.4
      },
      "by_kind": {
-      "layer": 929953.1,
-      "xdie": 270819.3,
+      "layer": 963352.1,
+      "xdie": 348337.6,
       "adjust": 32925.1
      },
      "price_of_record": {
-      "tok_s": 4045.4,
-      "cycles": 1233697.5,
-      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp"
+      "tok_s": 3938.8,
+      "cycles": 1267096.5,
+      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+      "uncorrected_tok_s": 4045.4,
+      "scan_stacks_correction_cycles": 33399.0
      },
-     "vs_price_pct": 0.0,
+     "vs_price_pct": -5.77,
      "o_rule": "O from the token-path DAG solve (critical / slack); no S81 die-run compiler schedule exists yet (TOKEN-PASS-S81 BLOCKED)",
      "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, MTP (DSpark, tau 4.159)",
      "xdie_top": [
       {
        "x": "V.unplaced_hops",
-       "exposed": 62649.2,
+       "exposed": 69130.0,
        "by_grade": {
-        "modelled-PHY": 62649.2
+        "measured-current-RTL": 32736.0,
+        "modelled-PHY": 28086.0,
+        "priced": 8308.0
        }
       },
       {
-       "x": "mtp.0.hop_in",
-       "exposed": 3673.3,
+       "x": "V.token.return",
+       "exposed": 2194.0,
        "by_grade": {
-        "modelled-PHY": 3673.3
+        "modelled-PHY": 2194.0
        }
       },
       {
        "x": "mtp.0.attn.out_allreduce",
-       "exposed": 3154.9,
+       "exposed": 1480.0,
        "by_grade": {
-        "measured-old-RTL": 3154.9
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
        }
       },
       {
        "x": "mtp.0.ffn.combine_allreduce",
-       "exposed": 3154.9,
+       "exposed": 1480.0,
        "by_grade": {
-        "measured-old-RTL": 3154.9
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
        }
       },
       {
        "x": "mtp.1.attn.out_allreduce",
-       "exposed": 3154.9,
+       "exposed": 1480.0,
        "by_grade": {
-        "measured-old-RTL": 3154.9
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
        }
       },
       {
        "x": "mtp.1.ffn.combine_allreduce",
-       "exposed": 3154.9,
+       "exposed": 1480.0,
        "by_grade": {
-        "measured-old-RTL": 3154.9
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
        }
       },
       {
        "x": "mtp.2.attn.out_allreduce",
-       "exposed": 3154.9,
+       "exposed": 1480.0,
        "by_grade": {
-        "measured-old-RTL": 3154.9
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
        }
       },
       {
        "x": "mtp.2.ffn.combine_allreduce",
-       "exposed": 3154.9,
+       "exposed": 1480.0,
        "by_grade": {
-        "measured-old-RTL": 3154.9
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
        }
       }
      ],

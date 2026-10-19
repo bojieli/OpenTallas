@@ -74,7 +74,7 @@ TREE_LAST = 200.0               # v1.4.2: a reset / boot tree chain ends <= this
 RST_REGION_IGNORE = 255          # v1.4.3 qkd_rst_region IGNORE: a region's chain depth limit (the host holds reset >= this + 4)
 # KVPLAN 1815: regional reset roots + post-expansion local trees (kv_rst_regional.py); region box (um)
 RST_REGIONAL = __import__('os').environ.get('OT_KV_RST_REGIONAL', '0') == '1'
-RST_PIN_REG = __import__('os').environ.get('OT_KV_RST_PIN_REG', '0') == '1'
+RST_PIN_REG = __import__('os').environ.get('OT_KV_RST_PIN_REG', '1') == '1'   # KV-KITS/NATIVE 10-18: default ON (qkd_rst_region_pr CLOSED native PASS; ec1 view fails native capture 239.9 on its unregistered dly straps); 0 = legacy plans
 RST_REGION_BOX = float(__import__('os').environ.get('OT_KV_RST_REGION_BOX', '4800'))
 # KVPLAN 1815 (OT_KV_PHY_REG=1): REGISTERED PHY BOUNDARY -- a relay chain that starts or ends at a hard PHY macro
 # (HBM PHY, host SerDes, UCIe) puts its first / last register within PHY_REACH um of the PHY pin (kvs12b TT: real -> phy
