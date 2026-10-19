@@ -37,8 +37,8 @@
  ],
  "clock_port": "clk_program",
  "outline": {
-  "w": 241.92,
-  "h": 131.76
+  "w": 222.48,
+  "h": 99.36
  },
  "pins": {
   "W": [
@@ -81,12 +81,12 @@
  },
  "pin_ranges": {
   "clk_program": [
-   119.0,
-   123.0
+   109.0,
+   113.0
   ],
   "clk_program_mem": [
-   104.0,
-   108.0
+   72.0,
+   76.0
   ]
  },
  "route": {
@@ -114,8 +114,8 @@
    "count": 1,
    "inst": "*calendar.store",
    "at": [
-    43.2,
-    86.4
+    25.92,
+    54.0
    ],
    "at_exact": true,
    "clock_entry": {

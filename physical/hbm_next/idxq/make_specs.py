@@ -65,20 +65,22 @@ specs.append(kb)
 qctl = dict(COMMON, name="hnx_idxq_qctl", top="ot_hnx_idxq_qctl",
     sources=["rtl/hbm_next/idxq/ot_hnx_idxq_qctl.sv", "rtl/hbm_next/idxn/ot_hnx_idxn_calendar.sv", "rtl/lib/ot_rst_relay.sv",
              M256 + "/ot_sram_1r1w_256x256_m2_r2c2_bb.v"],
-    clock_port="clk_program", reset_ports=["rst_n"], outline={"w": 241.92, "h": 131.76},
+    clock_port="clk_program", reset_ports=["rst_n"], outline={"w": 222.48, "h": 99.36},
     # QCTL 10-19 (gate 2: spread 104 ps > 80 TT; review: macro centred splitting the std cells, macro pins W, clk pin NW
     # corner): the frame SRAM sits against the pin-free N face on the lattice (43.2, 86.4) (its N/S faces are bare; read
     # data / control on its W edge, write mask + half the write data on its E edge -> >= 20 um channels W and E); the std
     # cells form ONE band around it (W strip 43 um, E strip 24 um, full-width S band 86 um); inputs on W, outputs on S,
     # clk_program pin mid-S under the register mass, clk_program_mem on W beside the macro W edge; CW=1 calendar.
+    # gate 3 (241.92 x 131.76, macro (43.2, 86.4)): spread 26.4 TT / 24.6 FF PASS, std density 17%, cross-clock
+    # rd_out -> stream w1 -19 ps -> shrunk to 222.48 x 99.36 (macro (25.92, 54.0), W strip 24 um, S band 48 um).
     pins={"W": ["clk_program_mem", "rst_n", "slot", "program_we", "program_addr", "program_data", "start", "length", "n_rows",
                 "row_pitch", "nkeys"],
           "S": ["clk_program", "weight_slot", "query_slot", "query_index", "query_emit", "query_emit_head", "key_slot", "key_v",
                 "key_index", "key_row", "pre_v", "pre_index", "nq", "frame_start", "row_start", "vf", "qf", "scf", "kbf", "fault"],
           "N": [], "E": []},
-    pin_ranges={"clk_program": [119.0, 123.0], "clk_program_mem": [104.0, 108.0]},
+    pin_ranges={"clk_program": [109.0, 113.0], "clk_program_mem": [72.0, 76.0]},
     route=dict(ROUTE, cts_sink={"size": 16, "diameter_um": 30, "extra": "-balance_levels"}), macros=[{"view": M256, "count": 1, "inst": "*calendar.store",
-        "at": [43.2, 86.4], "at_exact": True,
+        "at": [25.92, 54.0], "at_exact": True,
         "clock_entry": {"port": "clk_program_mem", "pin": "clk", "reference": "raw_liberty_clock_pin"}}],
     clock="hybrid_entries", clock_ports=["clk_program", "clk_program_mem"],
     clock_entry_domains={"core": {"ratio": [1, 1], "ports": ["clk_program"], "inputs": ["rst_n", "slot", "program_we", "program_addr",
