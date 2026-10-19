@@ -22,17 +22,20 @@ def compile_fixture(mutation=''):
     dt=t;arm=dt+2*len(modes)+8;launch=arm+2;rc0=launch+S.OFF
     mem={};gos=(1000,1100,1200)
     for i,(mode,(pb,pl),go) in enumerate(zip(modes,programmes,gos)):
-        metadata_mode=mode^(4 if mutation=='descriptor_class' and i==1 else 0)
+        metadata_mode=mode
         d=S.desc_row(i,row_base=i*8,landing=i,epoch=i+1,rows=1,tag_base=0,prog_base=pb,prog_limit=pl,go_at=go,row_off=0,loops=1,lstep=0,mode=metadata_mode,mrel=0,fl=0)
         for j,target in enumerate((S.SVG_TGT,S.XC_TGT)):
-            ing.append((dt+2*i+j,S.ingress(cfg=((1<<10)|i,d),target=target)))
+            # Mutate only SVG metadata so the real assembled-command guard,
+            # rather than the earlier XC-local class guard, must reject it.
+            target_d=d^((1<<197) if mutation=='descriptor_class' and i==1 and target==S.SVG_TGT else 0)
+            ing.append((dt+2*i+j,S.ingress(cfg=((1<<10)|i,target_d),target=target)))
         alloc=dict(pcs=[0,1,2,3],row_base=i,stack_bytes=1<<35)
         for offset in range(8):
             address=sector_address(offset,alloc);assert address not in mem;mem[address]=0
     for j,target in enumerate((S.SVG_TGT,S.XC_TGT)):
         ing.append((arm+j,S.ingress(desc=(0,3,1),target=target)))
     ing.append((launch,S.ingress(launch=True)));ing.sort()
-    return dict(ing=ing,xw=[],ids=[],mem=mem,n_end=rc0+gos[-1]+256),[(p[0],g) for p,g in zip(programmes,gos)],dict(literal_modes=modes,distinct_programmes=len(store.progs),resident_words=store.top,descriptors=3,sectors=24,launch=launch,run_origin=rc0)
+    return dict(ing=ing,xw=[],ids=[],mem=mem,n_end=rc0+gos[-1]+256),[(p[0],g) for p,g in zip(programmes,gos)],dict(literal_modes=modes,distinct_programmes=len(store.progs),resident_words=store.top,descriptors=3,sectors=24,launch=launch,run_origin=rc0,mutation_target='SVG descriptor197 only; XC and literal commands unchanged' if mutation else None)
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--work',required=True);p.add_argument('--exe');p.add_argument('--out',required=True);p.add_argument('--service-build-revision',required=True);p.add_argument('--mut',choices=['','descriptor_class'],default='');a=p.parse_args()
@@ -43,7 +46,9 @@ def main():
         log=r.stdout+r.stderr;(work/'run.log').write_text(log);results,gos,runs,fault,done=S.parse(log)
         exact=[(g[1],g[2]) for g in gos]==expected
         positive=r.returncode==0 and exact and bool(done) and not fault and not results and len(runs)==1
-        report.update(pass_=positive,rc=r.returncode,go_exact=exact,go_count=len(gos),done=done,fault=fault,run_count=len(runs),sm_results=len(results),executable_sha256=S.sha(exe),negative_causal_review_required=bool(a.mut))
+        first_fault=next((line for line in log.splitlines() if line.startswith('FAULT ')),None)
+        assembled_class_causal=bool(a.mut and first_fault and first_fault.startswith('FAULT svg ') and 'issuer 0 feed 0 ' in first_fault)
+        report.update(first_fault=first_fault,assembled_class_causal=assembled_class_causal,pass_=positive,rc=r.returncode,go_exact=exact,go_count=len(gos),done=done,fault=fault,run_count=len(runs),sm_results=len(results),executable_sha256=S.sha(exe),negative_causal_review_required=bool(a.mut))
     Path(a.out).write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
     if a.exe:raise SystemExit(0 if report['pass_'] else 1)
 if __name__=='__main__':main()

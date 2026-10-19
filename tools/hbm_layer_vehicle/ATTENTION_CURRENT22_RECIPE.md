@@ -59,7 +59,7 @@ programmes with literal modes0,4,0, no READ, and three independently addressed
 one-row HBM blocks (eight zero sectors each). Fixed GO1000/1100/1200 are relative
 to launch+OFF. Programme storage deduplicates identical mode0 words. Expected
 positive: three exact GO, one run completion, no SM result and no fault.
-`--mut descriptor_class` flips metadata mode197 only for the middle programme;
+`--mut descriptor_class` flips SVG metadata mode197 only for the middle programme while XC metadata stays correct;
 literals remain unchanged. Retain its first actual assembled-class fault before
 accepting the causal negative. The selected frozen binary can run this fixture
 without SMB_ATTENTION because every literal low83 field is zero. This fixture
