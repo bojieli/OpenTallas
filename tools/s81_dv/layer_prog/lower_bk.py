@@ -586,7 +586,7 @@ def job_rank_tree(fx, rank=0, k_dies=None, layer='L20', t_q=0, tag0=0x30, boot_d
 #   * the parent's drain waits for the RESERVED end of every child grid (static: data never moves a compiled edge).
 CHILD_LANES = (2, 3)
 TX_UID, TX_OP = 0x5C, 2
-TX_SM = 1540             # worst-case tx beats: HDR + 512 x (REBASE + 2 BEAT) = 1,537 (+ margin)
+TX_SM = 1600             # worst-case tx beats: HDR + 512 x (REBASE + 2 BEAT) = 1,537 + the first-IDX lead (~15) + margin
 TX_R = 1
 TX_OFF = 5               # tx-job CTL at the bk_sel vi_n pin edge c -> first grid slot printed (lo) at c + TX_OFF + DLY
 TX_LINK = 3              # tx lo printed at t -> parent bk_sel vi_s ingress edge t + TX_LINK + leg (vmux 2 + pin 1)
@@ -778,6 +778,29 @@ def write_tree_bench(fx, out, k_dies, t_q=200, leg=LEG, mutant=None, layer='L20'
                 golden=[p['golden_ok'] for p in plans.values()])
 
 
+def idx_tree_frame(plans, tag, user=0, uids=None, kb=0, t0=READER_T0, p=READER_P, ik=4):
+    """the IDX job source (S81-L20DIE): the type-10 TREE FRAME the root's dsdv_idx_qf receives (header + NS spec words;
+    the 64 query words follow, produced by the slice's index-q op) -- every die's reader spec (B, N, k, KB, T0, P, ik,
+    om) keyed by the die's tree uid (uids[d], default d).  Returns the header + spec words (512-b ints)."""
+    ent = []
+    for d in sorted(plans):
+        pl = plans[d]
+        spec = (pl['base'] & 0xFFFFF) | (pl['keys'] & 0x1FFFFF) << 20 | (K_MAX & 0x3FF) << 41 | (kb & 0x3FFFFFFF) << 51 \
+            | (t0 & 0xFFFF) << 81 | (p & 0xF) << 97 | (ik & 7) << 101 | (pl['om'] & 7) << 104
+        u = (uids or {}).get(d, d)
+        ent.append(1 << 127 | (u & 0xFF) << 119 | spec)
+    ns = -(-len(ent) // 4)
+    hdr = 10 << 508 | (tag & 0xFF) << 495 | (64 + ns) << 480 | (user & 0x3FF) << 449 | ns
+    words = [hdr]
+    for i in range(ns):
+        w = 0
+        for e, x in enumerate(ent[4 * i:4 * i + 4]):
+            w |= x << (128 * e)
+        words.append(w)
+    return words
+
+
+
 def check_tree_bench(run_log, out_dir):
     out_dir = Path(out_dir)
     X = json.loads((out_dir / 'exp.json').read_text())
@@ -807,12 +830,12 @@ def check_tree_bench(run_log, out_dir):
             if gb != eb:
                 i = next((i for i, (a, b) in enumerate(zip(gb, eb)) if a != b), min(len(gb), len(eb)))
                 bad.append(dict(die=d, kind='tx-seq', n_got=len(gb), n_exp=len(eb), first_diff=i))
-            if got_tx[d] and (got_tx[d][0][0] < ex['tx']['first'] or got_tx[d][-1][0] > ex['tx']['last_slot']):
+            if got_tx[d] and (got_tx[d][0][0] != ex['tx']['first'] or got_tx[d][-1][0] > ex['tx']['last_slot']):
                 bad.append(dict(die=d, kind='tx-window', got=[got_tx[d][0][0], got_tx[d][-1][0]],
                                 exp=[ex['tx']['first'], ex['tx']['last_slot']]))
         elif got_tx[d]:
             bad.append(dict(die=d, kind='tx-unexpected', n=len(got_tx[d])))
-    tx_span = {d: [v[0][0], v[-1][0], len(v)] for d, v in got_tx.items()}
+    tx_span = {d: [v[0][0], v[-1][0], len(v)] for d, v in got_tx.items() if v}
     return dict(pass_=not bad and not faults, mismatches=len(bad), first=bad[:8], faults=faults[:8], tx_span=tx_span)
 
 
@@ -862,7 +885,19 @@ def lower(die, op, ctx):
     ops = {o['op']: o for o in (ctx.get('sched') or {}).get('ops', [])}
     key = (str(fx), str(ctx.get('layer')))
     try:
-        if name.endswith('topk_local') and kd > 1:
+        if name.endswith('topk_local') and kd > 1 and ctx.get('idx_tree') == 'rd':
+            # S81-L20DIE: the die-RTL tree (readers + vmux + bk_sel + tx); plan shaped like plan_select's
+            t_q = int(math.floor(ops['attn.idx.score']['start'])) if 'attn.idx.score' in ops else t_issue
+            plans, tree = job_rank_tree_rd(fx, k_dies=kd, layer=ctx.get('layer'), t_q=t_q + READER_T0)
+            pr = plans[sd]
+            plan = dict(pr, ingress=sorted(pr['reader']), golden=f'golden rule over the subtree of die {sd}',
+                        shard=dict(k_dies=kd, die=sd, children=pr['children'], child_arrive=pr['child_arrive']))
+            res['rank_tree'] = {k: v for k, v in tree.items() if k not in ('tree', 'par')}
+            res['idx_frame'] = [f'{w:x}' for w in idx_tree_frame(plans, tag=0x30)]
+            if 'tx' in pr:
+                res['tx_job'] = {k: v for k, v in pr['tx'].items() if k not in ('words', 'beat')}
+            _TREE_DONE[key] = plans[0]['egress'][-1][0]
+        elif name.endswith('topk_local') and kd > 1:
             # S81-L20SPLIT: this die's job in the static rank tree (default die 0 = the rank's home / tree root:
             # its own shard + the children's merged candidates; the root's selection is the rank's topk_local).
             # The tree's readers ARE attn.idx.score: the query reaches the home die at the score op's start.
@@ -892,6 +927,11 @@ def lower(die, op, ctx):
     v_cmd_to_vo = 11      # dv_layer_compile SEQ['v_cmd_to_vo'] (calendar issue -> seq_host vo pin), checked below
     issue = plan['drain']['vi_n_edge'] - v_cmd_to_vo - int(math.ceil(age))
     res['rows'] = [dict(eng=1, issue=issue, arg=0, what=f'{name}: bk_sel drain CTL n {plan["drain"]["n"]} d {D_DRAIN}')]
+    if res.get('tx_job'):
+        tj = res['tx_job']
+        res['templates'].append((f'{name}.tx', tj['payload']))
+        res['rows'].append(dict(eng=1, issue=tj['ctl_vi_n'] - v_cmd_to_vo - int(math.ceil(age)), arg=0,
+                                what=f'{name}: dsdv_idx_tx job CTL lane {tj["lane"]} -> die {tj["parent"]} DLY {tj["dly"]}'))
     hexw = lambda b: f'{b:x}'
     res['events'].append(dict(cycle=plan['ingress'][0][0], inst=INST, port='vi_s', ports=['vi_s'], dir='in', kind='BK',
                               tag=f'{name}.ingress', valid_bit=0, payload=f'{len(plan["ingress"])} BK beats',

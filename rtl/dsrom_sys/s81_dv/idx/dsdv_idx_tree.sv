@@ -284,7 +284,7 @@ module dsdv_idx_tx #(
     wire [19:0] r_i = rh[35:16];
     wire        r_in = wv && r_i[19:4] == w0[19:4];
     wire        bq_pop;
-    wire        flush_ok = bq_n == 3'd0 && !bq_pop;
+    wire        flush_ok = (bq_n == 3'd0 && !bq_pop) || (bq_n == 3'd1 && bq_pop);   // staging empty after this edge
     assign rf_pop = rf_n != 0 && armed && hdr_q && !fin && (!wv || r_in || flush_ok);
     wire        in_done = in_end && lk_idle && rf_n == 0;
     function automatic [V-1:0] bk(input [1:0] lane, input part, input single, input [11:0] tt, input [255:0] dd);
