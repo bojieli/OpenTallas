@@ -35,8 +35,10 @@
   "static_calendar": false
  },
  "area_mm2": null,
- "SS_FF_closed": false,
  "loader_cycles": null,
  "dispatch_binding": false,
- "adoption": false
+ "adoption": false,
+ "TT_FF_closed": false,
+ "SS_sensitivity_only": true,
+ "signoff_policy": "current HANDOFF sec2: TT setup + FF hold >=0; SS sensitivity"
 }

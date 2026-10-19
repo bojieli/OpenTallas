@@ -17,6 +17,9 @@ module ot_hnx_union_calendar #(
     output reg [AW-1:0] selected_base,
     output reg launch_v, output reg [15:0] launch_mask, output reg [31:0] launch_record
 );
+    // Architectural simulation storage. Production adoption MUST replace this array with
+    // existing SRAM macros, validate installation, and price ports/area/load timing.
+    // This component has no physical qualification and must not be submitted as-is.
     reg [80:0] mem [0:(1<<AW)-1];
     reg [80:0] rd, event_q;
     reg [AW-1:0] pc, limit_q;
