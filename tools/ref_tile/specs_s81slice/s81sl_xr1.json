@@ -1,0 +1,353 @@
+{
+  "name": "s81sl_xr1",
+  "top": "ot_s81sl_xr1",
+  "kind": "tile",
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "macros": [],
+  "pins": {
+    "E": [
+      "dl_ev",
+      "dl_e",
+      "clk",
+      "rst_n",
+      "ci_dir",
+      "ci_b"
+    ],
+    "N": [
+      "sid",
+      "dl_wv",
+      "dl_w",
+      "dl_vv",
+      "dl_vb",
+      "is_v",
+      "is_d",
+      "cfg_v",
+      "cfg_d"
+    ],
+    "W": [
+      "c_v",
+      "c_d",
+      "sw_v",
+      "sw_a",
+      "sw_m",
+      "sw_d",
+      "e_v",
+      "e_c",
+      "e_d",
+      "g_v",
+      "g_c",
+      "g_d"
+    ],
+    "S": [
+      "lo_v",
+      "lo_d",
+      "p_v",
+      "p_d",
+      "rb_v",
+      "rb_d",
+      "x_go",
+      "x_eps",
+      "x_sv",
+      "x_si",
+      "x_s",
+      "x_rbv",
+      "x_rbd",
+      "fault",
+      "x_mode",
+      "x_scale",
+      "eg_v",
+      "eg_c",
+      "eg_d"
+    ]
+  },
+  "recipe": 4,
+  "hold_budget": "die",
+  "inhold": false,
+  "outhold": false,
+  "clock": "cts",
+  "layer_cap": "M5",
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M3 M5"
+    },
+    "cts_sink": {
+      "size": 24,
+      "diameter_um": 30,
+      "extra": "-distance_between_buffers 15 -balance_levels"
+    }
+  },
+  "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new control-plane sub-leaf (centre leaf, C1 master, 14 per die) of the distributed-vector slice; flop-first pins, die hold budget; pin-bound square outline (7.8k pins, <= 6/um on full faces). XR2 (10-17, after EARLY_FAIL_SETUP -611 ps / 9.3k endpoints of 1dd564c6f): classify stage (+1 cycle on CTL / RD / lo / V / SC) registers the source select, CTL payload, RD row pairs and decoded per-target / per-leaf enables before any wide write (was one cycle E/N pin flop -> 1.1k-bit select -> 5x1024 unpacker enables); keep port registers for c_d / is_d / cfg_d / rb_d (synthesis had folded 960 + 160 pins onto 160 + 32 flops driving W and N faces); fixed-index pk pair writes. OWNERS-S81/XR (10-18): ported onto RTL-BUILD-S81's xr (ENG collector e_*/eg_* -> xfin s, g_* gate fan-out, CTL target 1 x_mode/x_scale; +738 pins -> 8.6k) -- outline 432 x 518.4 (W face c/sw/e/g 2,850 pins on 505 um = 5.6/um, S + x_mode/x_scale/eg). XR3 (OWNERS-S81/XR2 10-18, after --cts gate 6fe7b4ea6 pin-flop spread TT 113 / FF 103 and gate ba880f813 TT 135 / FF 120 with the late flops (+80..+135 ps, 451 of 16.2k) on the S-face pin band and the SW / SE corners): c_d / rb_* / g_* single copies fanned out in ot_s81sl_slice glue (-908 pins), clk / rst_n ranged at the E-face centre, outline 345.6 x 432, explicit CTS sink clustering (size 24 / 30 um, distance_between_buffers 15, balance_levels) so the edge pin-band leaves hang off short leaf nets.",
+  "job": {
+    "owner": "Claude:OWNERS-S81/XR",
+    "branch": "claude/owners-s81-xr-1018",
+    "tag": "s81sl_xr1",
+    "purpose": "S81-SLICE control-plane sub-leaf ot_s81sl_xr1 to closure (TT setup / FF hold / DRC 0 + native audit).",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_dv/slice",
+      "tools/s81_slice",
+      "results/rtl/s81_slice_1018/xr4"
+    ],
+    "benches": [
+      {
+        "name": "slxr_exact",
+        "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_exact base 1 0 6000",
+        "expect": "pass",
+        "pass_regex": "^PASS xr base hb=0 seed=1$",
+        "threads": 4,
+        "peak_ram_gb": 4
+      },
+      {
+        "name": "slxr_muthops",
+        "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_muthops hops 1 0 6000 raw",
+        "expect": "fail",
+        "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
+        "fail_witness": "results/rtl/s81_slice_1018/xr4/m_hops/run.log",
+        "threads": 4,
+        "peak_ram_gb": 4
+      },
+      {
+        "name": "slxr_mutrow",
+        "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutrow row 1 0 6000 raw",
+        "expect": "fail",
+        "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
+        "fail_witness": "results/rtl/s81_slice_1018/xr4/m_row/run.log",
+        "threads": 4,
+        "peak_ram_gb": 4
+      },
+      {
+        "name": "slxr_mutporder",
+        "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutporder porder 1 0 6000 raw",
+        "expect": "fail",
+        "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
+        "fail_witness": "results/rtl/s81_slice_1018/xr4/m_porder/run.log",
+        "threads": 4,
+        "peak_ram_gb": 4
+      },
+      {
+        "name": "slxr_mutnocol",
+        "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutnocol nocol 1 0 6000 raw",
+        "expect": "fail",
+        "fail_regex": "^XRILL missed=[1-9][0-9]* of 13$",
+        "fail_witness": "results/rtl/s81_slice_1018/xr4/m_nocol/run.log",
+        "threads": 4,
+        "peak_ram_gb": 4
+      }
+    ],
+    "views_to": "physical/ref_tile/s81sl_xr1/views",
+    "record_to": "results/rtl/ref_tile/s81sl_xr1"
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "Source-registered (S81-SLICE): every input lands in a flop at the pin and every output is a flop (ot_s81sl_xr header); recipe-3 pin_regs would add a second unpriced stage on every slice seam."
+  },
+  "outline": {
+    "w": 345.6,
+    "h": 432.0
+  },
+  "std_area_um2": 12000,
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "keep_pin_regs": true,
+  "pin_ranges": {
+    "dl_ev": [
+      6.48,
+      8.824
+    ],
+    "dl_e": [
+      8.824,
+      213.656
+    ],
+    "clk": [
+      213.656,
+      215.816
+    ],
+    "rst_n": [
+      215.816,
+      217.976
+    ],
+    "ci_dir": [
+      217.976,
+      220.687
+    ],
+    "ci_b": [
+      220.687,
+      425.52
+    ],
+    "sid": [
+      6.48,
+      9.373
+    ],
+    "dl_wv": [
+      9.373,
+      11.717
+    ],
+    "dl_w": [
+      11.717,
+      216.32
+    ],
+    "dl_vv": [
+      216.32,
+      218.663
+    ],
+    "dl_vb": [
+      218.663,
+      271.434
+    ],
+    "is_v": [
+      271.434,
+      273.777
+    ],
+    "is_d": [
+      273.777,
+      305.277
+    ],
+    "cfg_v": [
+      305.277,
+      307.62
+    ],
+    "cfg_d": [
+      307.62,
+      339.12
+    ],
+    "c_v": [
+      6.48,
+      9.59
+    ],
+    "c_d": [
+      9.59,
+      42.136
+    ],
+    "sw_v": [
+      42.136,
+      45.245
+    ],
+    "sw_a": [
+      45.245,
+      56.901
+    ],
+    "sw_m": [
+      56.901,
+      66.657
+    ],
+    "sw_d": [
+      66.657,
+      311.906
+    ],
+    "e_v": [
+      311.906,
+      315.016
+    ],
+    "e_c": [
+      315.016,
+      319.075
+    ],
+    "e_d": [
+      319.075,
+      412.393
+    ],
+    "g_v": [
+      412.393,
+      414.743
+    ],
+    "g_c": [
+      414.743,
+      417.283
+    ],
+    "g_d": [
+      417.283,
+      425.52
+    ],
+    "lo_v": [
+      6.48,
+      9.519
+    ],
+    "lo_d": [
+      9.519,
+      236.663
+    ],
+    "p_v": [
+      236.663,
+      239.701
+    ],
+    "p_d": [
+      239.701,
+      269.984
+    ],
+    "rb_v": [
+      269.984,
+      272.32
+    ],
+    "rb_d": [
+      272.32,
+      280.105
+    ],
+    "x_go": [
+      280.105,
+      282.441
+    ],
+    "x_eps": [
+      282.441,
+      290.225
+    ],
+    "x_sv": [
+      290.225,
+      292.561
+    ],
+    "x_si": [
+      292.561,
+      296.127
+    ],
+    "x_s": [
+      296.127,
+      303.912
+    ],
+    "x_rbv": [
+      303.912,
+      306.247
+    ],
+    "x_rbd": [
+      306.247,
+      314.032
+    ],
+    "fault": [
+      314.032,
+      316.368
+    ],
+    "x_mode": [
+      316.368,
+      318.704
+    ],
+    "x_scale": [
+      318.704,
+      326.488
+    ],
+    "eg_v": [
+      326.488,
+      328.824
+    ],
+    "eg_c": [
+      328.824,
+      331.335
+    ],
+    "eg_d": [
+      331.335,
+      339.12
+    ]
+  }
+}

@@ -18,7 +18,8 @@
  "params": {
   "TAGW": 16,
   "LV": 4,
-  "PUBLISH": 1
+  "PUBLISH": 1,
+  "TURNREG": 1
  },
  "clock_port": "clk",
  "reset_ports": [
@@ -64,15 +65,15 @@
   "pd": 0.45,
   "threads": 16,
   "peak_ram_gb": 32,
-  "io_hold_margin_ns": 0.0,
+  "io_hold_margin_ns": 0.03,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Claude:HH-2",
   "branch": "claude/hh2-pvm-1019",
-  "tag": "r1",
-  "purpose": "HF-5 rp4a blocker: ot_hbm_sm_pv_merge (PUBLISH 1, LV 4, TAGW 16: real 64x512 1R1W stack macro + 16 LAT-7 RNE FP32 adders + publication / fold) gets its own hard view (smh_pvm) for the attn leaf band of rp4a. New element, no prior view. Recipe 4 (pin registers at every data pin, +1 cycle per input and per output, absorbed by the static calendar; die hold budget). Macro W-face pins (rd_out / wd) face the logic band; inputs from sum_capture on N, merged node on S, publication / fold control on W.",
+  "tag": "r2",
+  "purpose": "HF-5 rp4a blocker: ot_hbm_sm_pv_merge (PUBLISH 1, LV 4, TAGW 16: real 64x512 1R1W stack macro + 16 LAT-7 RNE FP32 adders + publication / fold) gets its own hard view (smh_pvm) for the attn leaf band of rp4a. New element, no prior view. Recipe 4 (pin registers at every data pin, +1 cycle per input and per output, absorbed by the static calendar; die hold budget). Macro W-face pins (rd_out / wd) face the logic band; inputs from sum_capture on N, merged node on S, publication / fold control on W. HH-12 10-19: gate r1 @becbf4946 (CTS) setup -341 ps @770 ps TT: bp -> 8:1 entry-state mux (e_busy/e_fl/e_k/e_c/e_n[r]) -> operand select -> 1,024-bit operand mux -> g_madd u_ca (adder decode); repair stuck at -290. Fix TURNREG 1 = the turn entry's state registered at nb one cycle ahead (entry nb is written only at its own turn, so the copy equals e_*[r]; cycle-identical, no calendar change; sim assertion checks the copy every cycle). io_hold_margin_ns 0.0 -> 0.03 (KITS rule), reset_landing default (rst_n, 2 stages).",
   "benches": [
    {
     "name": "pvm_exact",
@@ -101,6 +102,15 @@
     "fail_witness": "results/arch/hh2_pvm_1019/bench/mut4.log",
     "threads": 4,
     "peak_ram_gb": 8
+   },
+   {
+    "name": "pvm_mut5",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_bench.sh {RUN}/pvm_mut5 5",
+    "expect": "fail",
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hh2_pvm_1019/bench/mut5.log",
+    "threads": 4,
+    "peak_ram_gb": 8
    }
   ],
   "extra_paths": [
@@ -122,5 +132,9 @@
  "pin_regs": {
   "enable": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
 }

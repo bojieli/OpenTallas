@@ -15,7 +15,11 @@
 // Every illegal request (entry not finished, pending write, merge or publication active, port collision) is a sticky
 // fault; nothing waits.  MUT 4 = the fold reads entry b in place of a (b + b: bench negative control).
 module ot_hbm_sm_pv_merge #(
-    parameter integer L=16, IL=8, TAGW=16, ALAT=7, LV=4, MUT=0, PUBLISH=0
+    parameter integer L=16, IL=8, TAGW=16, ALAT=7, LV=4, MUT=0, PUBLISH=0,
+    // TURNREG 1 (HH-12 2026-10-19, smh_pvm gate: setup -341 ps at 770 ps on bp -> 8:1 entry-state mux -> operand select ->
+    // 1,024-bit operand mux -> adder decode): the turn entry's state is registered one cycle ahead (entry nb = bp+1 is
+    // only written at its own turn, 8 cycles earlier, so the copy equals e_*[r] exactly).  Cycle-identical; 0 = old form.
+    parameter integer TURNREG=0
 )(
     input wire clk, rst_n,
     input wire ev,
@@ -91,7 +95,31 @@ module ot_hbm_sm_pv_merge #(
     always @(posedge clk) vreg <= my;
     // turn logic (combinational) for entry r = bp
     wire [2:0] r = bp;
-    assign finish=e_busy[r] && e_fl[r] && !(e_k[r]<LV) && !ev;
+    // turn state of entry r (TURNREG 1: registered at nb one cycle earlier; 0: read through the 8:1 entry mux)
+    wire [2:0] qe = (MUT == 5) ? bp : nb;             // MUT 5: copy sampled one entry late (negative control)
+    reg        q_busy, q_fl, q_klt, q_k0, q_kl1, q_ck, q_nk;
+    reg  [7:0] q_n8;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin q_busy<=1'b0;q_fl<=1'b0;q_klt<=1'b1;q_k0<=1'b1;q_kl1<=(LV==1);q_ck<=1'b0;q_nk<=1'b0;q_n8<=8'd0; end
+        else begin
+            q_busy<=e_busy[qe]; q_fl<=e_fl[qe]; q_klt<=(e_k[qe]<LV); q_k0<=(e_k[qe]==0); q_kl1<=(e_k[qe]==LV-1);
+            q_ck<=e_c[qe][e_k[qe][2:0]]; q_nk<=e_n[qe][e_k[qe][2:0]]; q_n8<=e_n[qe][7:0];
+        end
+    wire       t_busy = TURNREG ? q_busy : e_busy[r];
+    wire       t_fl   = TURNREG ? q_fl   : e_fl[r];
+    wire       t_klt  = TURNREG ? q_klt  : (e_k[r] < LV);
+    wire       t_k0   = TURNREG ? q_k0   : (e_k[r] == 0);
+    wire       t_kl1  = TURNREG ? q_kl1  : (e_k[r] == LV - 1);
+    wire       t_ck   = TURNREG ? q_ck   : e_c[r][e_k[r][2:0]];
+    wire       t_nk   = TURNREG ? q_nk   : e_n[r][e_k[r][2:0]];
+    wire [7:0] t_n8   = TURNREG ? q_n8   : e_n[r][7:0];
+`ifndef SYNTHESIS
+    always @(posedge clk) if (TURNREG && rst_n &&
+        ({q_busy,q_fl,q_klt,q_k0,q_kl1,q_ck,q_nk,q_n8} !== {e_busy[r],e_fl[r],(e_k[r]<LV),(e_k[r]==0),(e_k[r]==LV-1),
+          e_c[r][e_k[r][2:0]],e_n[r][e_k[r][2:0]],e_n[r][7:0]}))
+        $fatal(1, "pv_merge TURNREG copy differs from entry %0d state", r);
+`endif
+    assign finish=t_busy && t_fl && !t_klt && !ev;
     assign finish_slot=e_tag[r][2:0];
     assign stack_read_addr=publish_request ? {pub_slot,3'd7} : fold_request ? {((MUT==4) ? fold_b : fold_a),3'd7} : fd0 ? {fb0,3'd7} : sr_a;
     assign stack_write_en=sw_ce || (PUBLISH && finish) || fold_write;
@@ -99,7 +127,7 @@ module ot_hbm_sm_pv_merge #(
     assign stack_write_data=fold_write ? my : (PUBLISH && finish) ? vreg : sw_d;
 
     wire       ev_first = tag_d[TAGW-2], ev_last = tag_d[TAGW-3];
-    wire [7:0] ev_c = ev_first ? 8'd0 : e_n[r][7:0];
+    wire [7:0] ev_c = ev_first ? 8'd0 : t_n8;
     reg        m_fault;
     always @(*) begin
         mv = 1'b0; ma = {L*32{1'b0}}; mb = {L*32{1'b0}};
@@ -108,13 +136,13 @@ module ot_hbm_sm_pv_merge #(
         else if (ev) begin
             if (ev_c[0]) begin mv = 1'b1; ma = st_rd; mb = sum; end
             else begin sw_ce = 1'b1; sw_a = {r, 3'd0}; sw_d = sum; end
-        end else if (e_busy[r] && !e_fl[r]) begin
-            if (e_c[r][e_k[r][2:0]]) begin mv = 1'b1; ma = st_rd; mb = vreg; end
+        end else if (t_busy && !t_fl) begin
+            if (t_ck) begin mv = 1'b1; ma = st_rd; mb = vreg; end
             else begin sw_ce = 1'b1; sw_a = {r, e_k[r][2:0]}; sw_d = vreg; end
-        end else if (e_busy[r] && e_fl[r] && e_k[r] < LV) begin
+        end else if (t_busy && t_fl && t_klt) begin
             mv = 1'b1;
-            if (e_n[r][e_k[r][2:0]]) begin ma = st_rd; mb = (e_k[r] == 0) ? {L*32{1'b0}} : vreg; end
-            else begin ma = (e_k[r] == 0 || (MUT == 2 && e_k[r] == LV - 1)) ? {L*32{1'b0}} : vreg; mb = {L*32{1'b0}}; end
+            if (t_nk) begin ma = st_rd; mb = t_k0 ? {L*32{1'b0}} : vreg; end
+            else begin ma = (t_k0 || (MUT == 2 && t_kl1)) ? {L*32{1'b0}} : vreg; mb = {L*32{1'b0}}; end
         end
     end
     integer i;
@@ -143,7 +171,7 @@ module ot_hbm_sm_pv_merge #(
             end
         end
     end
-    always @(posedge clk) if (e_busy[r] && e_fl[r] && !(e_k[r] < LV) && !ev) begin pv_y <= vreg; pv_tag <= e_tag[r]; end
+    always @(posedge clk) if (finish) begin pv_y <= vreg; pv_tag <= e_tag[r]; end
     // The unused level7 stores one final512bit node for each logical slot.
     // Publication shares the existing1R1W macro after the merge is quiescent.
     // Macro read -> buffer capture -> first scalar is exactly2edges. Requests

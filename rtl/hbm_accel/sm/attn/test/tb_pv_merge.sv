@@ -7,6 +7,7 @@
 // checked bit for bit by pv_merge_golden.py check; fault must stay 0.  MUT = ot_hbm_sm_pv_merge MUT (negative controls).
 module tb_pv_merge;
     parameter integer MUT = 0;
+    parameter integer TURNREG = 1;                    // HH-12: the smh_pvm kit form (registered turn state)
     localparam integer R0 = 4;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
@@ -14,7 +15,7 @@ module tb_pv_merge;
     reg pub_start = 0; reg [2:0] pub_slot = 0; reg fold_start = 0; reg [2:0] fold_a = 0, fold_b = 0;
     wire pv_v, pub_v, fault; wire [511:0] pv_y; wire [15:0] pv_tag, pub_tag; wire [31:0] pub_data; wire [3:0] pub_word;
     wire [2:0] pub_out_slot;
-    ot_hbm_sm_pv_merge #(.TAGW(16), .LV(4), .MUT(MUT), .PUBLISH(1)) dut (.clk(clk), .rst_n(rst_n), .ev(ev), .sum(sum),
+    ot_hbm_sm_pv_merge #(.TAGW(16), .LV(4), .MUT(MUT), .PUBLISH(1), .TURNREG(TURNREG)) dut (.clk(clk), .rst_n(rst_n), .ev(ev), .sum(sum),
         .tag_d(tag_d), .pv_v(pv_v), .pv_y(pv_y), .pv_tag(pv_tag), .fault(fault), .pub_start(pub_start), .pub_slot(pub_slot),
         .pub_v(pub_v), .pub_data(pub_data), .pub_word(pub_word), .pub_out_slot(pub_out_slot), .pub_tag(pub_tag),
         .fold_start(fold_start), .fold_a(fold_a), .fold_b(fold_b));

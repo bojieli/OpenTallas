@@ -1,0 +1,225 @@
+{
+ "name": "hidx_rootctl_am_1018",
+ "top": "ot_hbm_idx_rootctl_static_am",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv",
+  "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_am.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "clock": "spine",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "index_rq",
+   "index_rr"
+  ],
+  "S": [
+   "vm_rq",
+   "vm_rr",
+   "share_fault"
+  ],
+  "E": [
+   "argmax_rq",
+   "argmax_m",
+   "cq",
+   "cq_seq",
+   "cr"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "program_we",
+   "program_addr",
+   "program_data",
+   "start",
+   "length",
+   "sel_op",
+   "sel_pass",
+   "sel_addr",
+   "link_flush",
+   "link_emit",
+   "link_group",
+   "link_clear",
+   "selected_v",
+   "ingest_v",
+   "tree_ev",
+   "qfault",
+   "sf",
+   "lf",
+   "done",
+   "fault",
+   "topk_go",
+   "topk_k",
+   "topk_order",
+   "topk_n",
+   "topk_m",
+   "topk_a_mirror",
+   "topk_a_base",
+   "topk_a_str",
+   "topk_o_mirror",
+   "topk_o_base",
+   "topk_o_str",
+   "topk_has_r",
+   "topk_r_base",
+   "topk_r_str",
+   "topk_busy",
+   "topk_done",
+   "topk_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    108.0
+   ],
+   "at_exact": true
+  }
+ ],
+ "outline": {
+  "w": 475.2,
+  "h": 259.2,
+  "exact": true
+ },
+ "route": {
+  "pd": 0.4,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL as ot_hbm_idx_rootctl_static: programme bus/start/length/qfault land in keep pin flops, sel/link/done leave flops, argmax_m leaves the merge-chain flop; the INDEX/TOPK/VM share faces are the zero-latency static share (requests pass to the bank, responses steered by the n+7 owner flop) and ingest_v/fault are the verbatim rootctl glue: pin registers there would shift the IDX operand timeline (IDX owner item, not this binding)."
+ },
+ "children": [],
+ "inter": [],
+ "slot_change_request": "d4g idx_ctl 300x260 (GEN0/GEN1 SYNTH, no view) -> 475.2x259.2 hard tile, same origin, grows E toward hb_argmax (x 12105)",
+ "structural_change": "d4g argmax r2 binding (coordinator 0gl (3), lane HBM-IDXAM 10-18): ot_hbm_idx_rootctl_static with the share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-edge equal-latency OR chain in the 4 bank-pair leaves): argmax face 2,056 b -> one 264-b word {lane valid8, data256} for ot_hbm_argmax_static_sw_vm_r2 (closed r3). One clock pin (the 8 IDX ctl clock nets were the same stream clock; tile < 0.5 mm), rst_n -> ot_rst_relay 3 regions. First hardening of idx_ctl (no view existed: GEN0/GEN1 bound SYNTH). Slot change for H-D4G-GEN2: 300x260 -> 475.2x259.2 (N index face 2,192 pins and S VM face 2,192 pins at 4.6/um; E argmax 400 + cq/cr 614 at 3.9/um; W control/TOPK 478).",
+ "job": {
+  "owner": "Claude:HBM-IDXAM",
+  "branch": "claude/hbm-idxam-1018",
+  "tag": "r2",
+  "purpose": "d4g argmax r2 binding (coordinator 0gl (3), lane HBM-IDXAM 10-18): ot_hbm_idx_rootctl_static with the share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-edge equal-latency OR chain in the 4 bank-pair leaves): argmax face 2,056 b -> one 264-b word {lane valid8, data256} for ot_hbm_argmax_static_sw_vm_r2 (closed r3). One clock pin (the 8 IDX ctl clock nets were the same stream clock; tile < 0.5 mm), rst_n -> ot_rst_relay 3 regions. First hardening of idx_ctl (no view existed: GEN0/GEN1 bound SYNTH). Slot change for H-D4G-GEN2: 300x260 -> 475.2x259.2 (N index face 2,192 pins and S VM face 2,192 pins at 4.6/um; E argmax 400 + cq/cr 614 at 3.9/um; W control/TOPK 478).",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv",
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv",
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
+   "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+   "rtl/gpu/ot_gpu_fadd.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+  ],
+  "record_to": "results/rtl/ref_tile/hidx_rootctl_am_1018",
+  "views_to": "physical/ref_tile/hidx_rootctl_am_1018/views",
+  "benches": [
+   {
+    "name": "idx_rootctl_am_bench",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/bench",
+    "expect": "pass",
+    "pass_regex": "^IDX_ROOTCTL_AM_BENCH PASS$",
+    "pass_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_bench.log",
+    "min_count_regex": "^EQ AMMUT=0 cycles \\d+ checked \\d+ argmax_resp (\\d+) ",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut1 eq 1",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=1 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_eq_mut1.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut2",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut2 eq 2",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=2 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_eq_mut2.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut3",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut3 eq 3",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=3 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_eq_mut3.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut4",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut4 eq 4",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=4 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_eq_mut4.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_path_ties1_mut4",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_path_ties1_mut4 path 1 4",
+    "expect": "fail",
+    "fail_regex": "^PATH TIES=1 AMMUT=4 .* errors [1-9][0-9]* IDX_AM_PATH FAIL",
+    "fail_witness": "results/rtl/hbm_idxam_1018/idx_rootctl_am_path_ties1_mut4.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "floorplan_note": "HBM-IDXAM r2 10-18: gate r1 FAIL pin-flop spread TT 94.1 / FF 87.7 ps (> 80) with the default CTS tree over 10.5k flops across 475 um from the W clock pin -> clock 'spine' (balanced spine, leaf targets equalised; the KV hub's spine measured 25/60 ps)."
+}
