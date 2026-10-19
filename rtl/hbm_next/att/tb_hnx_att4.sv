@@ -15,7 +15,7 @@ module tb_hnx_att4;
     parameter integer SHARED = 0;
     parameter integer STORE = 0;
     parameter integer SMUT = 0;
-    localparam integer NLN = 4;
+    parameter integer NLN = 3;          // query lanes = SM lanes P (P3 default, owner 10-19)
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
     reg [1087:0] lines [0:8191];
@@ -82,7 +82,7 @@ module tb_hnx_att4;
         @(posedge clk); mclr <= 0;
         for (b = 0; b < 16; b = b + 1) begin @(posedge clk); mw_en <= 1; mw_addr <= b[3:0]; mw_data <= ms[b]; end
         @(posedge clk); mw_en <= 0;
-        for (b = 0; b < 4 * 128; b = b + 1) begin
+        for (b = 0; b < NLN * 128; b = b + 1) begin
             @(posedge clk); xw_en <= 1; xw_lane <= b / 128; xw_addr <= b % 128; xw_data <= xs[b];
         end
         @(posedge clk); xw_en <= 0;

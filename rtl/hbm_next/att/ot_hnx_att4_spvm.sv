@@ -8,18 +8,22 @@
 // delay only rotates which residue a slot owns (every lane's slot keeps one residue).  The reset lands in one kept
 // register (RSTPIN style).  Lanes 0-1 enter on the N face, lanes 2-3 on the S face (beside the two lane pairs' tcl
 // columns).  No credit / ready / stall; faults are sticky.  Replaces 4 x hnx_rp4a4_pvm per column.
+// P3 (owner 10-19 0le, lane HBM-NEXT-P3-UNITS): NL = P query lanes, production default 3 (generic 3..4): lanes 0-1 on
+// the N face (sum_lo / tag_lo, unchanged), lanes 2..NL-1 on the S face (sum_hi / tag_hi = (NL - 2) lanes); the merge
+// datapath (16 adders) is the same, the per-lane LV 3 flop rings scale with NL.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hnx_att4_spvm #(
+    parameter integer NL  = 3,
     parameter integer LV  = 3,
     parameter integer MUT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
-    input  wire [3:0]        ev,
+    input  wire [NL-1:0]     ev,
     input  wire [1023:0]     sum_lo,     // lanes 0, 1 chunk sums (N face)
     input  wire [31:0]       tag_lo,
-    input  wire [1023:0]     sum_hi,     // lanes 2, 3 chunk sums (S face)
-    input  wire [31:0]       tag_hi,
+    input  wire [(NL-2)*512-1:0] sum_hi, // lanes 2 .. NL-1 chunk sums (S face)
+    input  wire [(NL-2)*16-1:0]  tag_hi,
     input  wire              pub_start,
     input  wire [1:0]        pub_lane,
     input  wire [2:0]        pub_slot,
@@ -31,7 +35,7 @@ module ot_hnx_att4_spvm #(
     output reg  [15:0]       pub_tag,
     output reg               fault
 );
-    localparam integer NL = 4;
+    initial if (NL < 3 || NL > 4) $fatal(1, "ot_hnx_att4_spvm: 3 <= NL <= 4 (2 lanes N face + NL - 2 S face)");
     (* keep *) reg rq;
     always @(posedge clk) rq <= rst_n;
     reg [NL-1:0]     ev_q;
