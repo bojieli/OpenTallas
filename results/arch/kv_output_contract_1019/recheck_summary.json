@@ -1,0 +1,3300 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_sha256": "726f9a08bb3bf497ebe778a0b59f4e1746b9bd8bfbce58eeebcf7848bcd71c21",
+ "summary": {
+  "masters": 68,
+  "instances": 43967,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 4,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 293925,
+  "output_open_ports": 73,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 36,
+  "pad_bits": 196115,
+  "spare_out_bits": 306920,
+  "unresolved_children": 0,
+  "ambiguous_children": 0,
+  "variant_children": 11
+ },
+ "unread_classes": {
+  "n_head_WS_N_N__nb_t": {
+   "bits": 32768,
+   "nets": 32,
+   "example": "n_head_WS_0_0__nb_t"
+  },
+  "n_head_WN_N_N__nb_t": {
+   "bits": 32768,
+   "nets": 32,
+   "example": "n_head_WN_0_0__nb_t"
+  },
+  "n_head_ES_N_N__nb_t": {
+   "bits": 32768,
+   "nets": 32,
+   "example": "n_head_ES_0_0__nb_t"
+  },
+  "n_head_EN_N_N__nb_t": {
+   "bits": 32768,
+   "nets": 32,
+   "example": "n_head_EN_0_0__nb_t"
+  },
+  "n_pvw_N__w_SNbN": {
+   "bits": 10624,
+   "nets": 512,
+   "example": "n_pvw_0__w_S0b0"
+  },
+  "n_pvw_N__w_TNQN_N": {
+   "bits": 9904,
+   "nets": 264,
+   "example": "n_pvw_0__w_T0Q0_10"
+  },
+  "n_pvw_N__w_KNcNgN": {
+   "bits": 9152,
+   "nets": 96,
+   "example": "n_pvw_0__w_K1c0g0"
+  },
+  "n_pvw_N__w_VENcNdN": {
+   "bits": 7680,
+   "nets": 96,
+   "example": "n_pvw_0__w_VE0c0d1"
+  },
+  "n_pvw_N__w_VENcNpN": {
+   "bits": 7680,
+   "nets": 96,
+   "example": "n_pvw_0__w_VE0c0p1"
+  },
+  "n_pvw_N__w_VENcNuN": {
+   "bits": 7680,
+   "nets": 96,
+   "example": "n_pvw_0__w_VE0c0u1"
+  },
+  "n_pvw_N__w_VWNcNdN": {
+   "bits": 7680,
+   "nets": 96,
+   "example": "n_pvw_0__w_VW0c0d1"
+  },
+  "n_pvw_N__w_VWNcNpN": {
+   "bits": 7680,
+   "nets": 96,
+   "example": "n_pvw_0__w_VW0c0p1"
+  },
+  "n_pvw_N__w_VWNcNuN": {
+   "bits": 7680,
+   "nets": 96,
+   "example": "n_pvw_0__w_VW0c0u1"
+  },
+  "n_pvw_N__w_WNcNgNE": {
+   "bits": 7680,
+   "nets": 96,
+   "example": "n_pvw_0__w_W0c0g0E"
+  },
+  "n_pvw_N__w_WNcNgNW": {
+   "bits": 7680,
+   "nets": 96,
+   "example": "n_pvw_0__w_W0c0g0W"
+  },
+  "n_pvw_N__w_CPNgNcN_N": {
+   "bits": 6240,
+   "nets": 288,
+   "example": "n_pvw_0__w_CP10g4c0_0"
+  },
+  "n_pvw_N__w_FNpN": {
+   "bits": 3264,
+   "nets": 96,
+   "example": "n_pvw_0__w_F0p0"
+  },
+  "n_pvtap_WS_N_N__q": {
+   "bits": 2624,
+   "nets": 24,
+   "example": "n_pvtap_WS_0_7__q"
+  },
+  "n_pvtap_ES_N_N__q": {
+   "bits": 2624,
+   "nets": 24,
+   "example": "n_pvtap_ES_0_7__q"
+  },
+  "n_pvtap_WN_N_N__q": {
+   "bits": 2624,
+   "nets": 24,
+   "example": "n_pvtap_WN_0_7__q"
+  },
+  "n_pvtap_EN_N_N__q": {
+   "bits": 2624,
+   "nets": 24,
+   "example": "n_pvtap_EN_0_7__q"
+  },
+  "n_pvw_N__w_VENcNt": {
+   "bits": 2560,
+   "nets": 32,
+   "example": "n_pvw_0__w_VE0c0t"
+  },
+  "n_pvw_N__w_VWNcNt": {
+   "bits": 2560,
+   "nets": 32,
+   "example": "n_pvw_0__w_VW0c0t"
+  },
+  "n_pvw_N__w_FNa": {
+   "bits": 2176,
+   "nets": 64,
+   "example": "n_pvw_0__w_F0a"
+  },
+  "n_pvw_N__w_FNb": {
+   "bits": 2176,
+   "nets": 64,
+   "example": "n_pvw_0__w_F0b"
+  },
+  "n_astk_WS__u_strip_g_er_chain_u_er_g_owner_N__g_link_u_rsp_line_N_": {
+   "bits": 2009,
+   "nets": 7,
+   "example": "n_astk_WS__u_strip_g_er_chain_u_er_g_owner_0__g_link_u_rsp_line_3_"
+  },
+  "n_astk_WN__u_strip_g_er_chain_u_er_g_owner_N__g_link_u_rsp_line_N_": {
+   "bits": 2009,
+   "nets": 7,
+   "example": "n_astk_WN__u_strip_g_er_chain_u_er_g_owner_0__g_link_u_rsp_line_3_"
+  },
+  "n_astk_ES__u_strip_g_er_chain_u_er_g_owner_N__g_link_u_rsp_line_N_": {
+   "bits": 2009,
+   "nets": 7,
+   "example": "n_astk_ES__u_strip_g_er_chain_u_er_g_owner_0__g_link_u_rsp_line_3_"
+  },
+  "n_astk_EN__u_strip_g_er_chain_u_er_g_owner_N__g_link_u_rsp_line_N_": {
+   "bits": 2009,
+   "nets": 7,
+   "example": "n_astk_EN__u_strip_g_er_chain_u_er_g_owner_0__g_link_u_rsp_line_3_"
+  },
+  "n_astk_WS__u_strip_g_er_chain_u_er_g_owner_N__g_link_u_req_line_N_": {
+   "bits": 1736,
+   "nets": 7,
+   "example": "n_astk_WS__u_strip_g_er_chain_u_er_g_owner_0__g_link_u_req_line_3_"
+  },
+  "n_astk_WN__u_strip_g_er_chain_u_er_g_owner_N__g_link_u_req_line_N_": {
+   "bits": 1736,
+   "nets": 7,
+   "example": "n_astk_WN__u_strip_g_er_chain_u_er_g_owner_0__g_link_u_req_line_3_"
+  },
+  "n_astk_ES__u_strip_g_er_chain_u_er_g_owner_N__g_link_u_req_line_N_": {
+   "bits": 1736,
+   "nets": 7,
+   "example": "n_astk_ES__u_strip_g_er_chain_u_er_g_owner_0__g_link_u_req_line_3_"
+  },
+  "n_astk_EN__u_strip_g_er_chain_u_er_g_owner_N__g_link_u_req_line_N_": {
+   "bits": 1736,
+   "nets": 7,
+   "example": "n_astk_EN__u_strip_g_er_chain_u_er_g_owner_0__g_link_u_req_line_3_"
+  },
+  "n_pvw_N__w_VENa": {
+   "bits": 1280,
+   "nets": 16,
+   "example": "n_pvw_0__w_VE0a"
+  },
+  "n_pvw_N__w_VENb": {
+   "bits": 1280,
+   "nets": 16,
+   "example": "n_pvw_0__w_VE0b"
+  },
+  "n_pvw_N__w_VENe": {
+   "bits": 1280,
+   "nets": 16,
+   "example": "n_pvw_0__w_VE0e"
+  },
+  "n_pvw_N__w_VWNa": {
+   "bits": 1280,
+   "nets": 16,
+   "example": "n_pvw_0__w_VW0a"
+  },
+  "n_pvw_N__w_VWNb": {
+   "bits": 1280,
+   "nets": 16,
+   "example": "n_pvw_0__w_VW0b"
+  },
+  "n_pvw_N__w_VWNe": {
+   "bits": 1280,
+   "nets": 16,
+   "example": "n_pvw_0__w_VW0e"
+  },
+  "n_pvw_N__w_FDmN_N": {
+   "bits": 1136,
+   "nets": 60,
+   "example": "n_pvw_0__w_FDm0_1"
+  },
+  "n_pvw_N__w_XNcN": {
+   "bits": 1008,
+   "nets": 68,
+   "example": "n_pvw_0__w_X0c0"
+  },
+  "n_astk_WS__u_strip_u_strip_g_ep_N__u_z_line_N_": {
+   "bits": 948,
+   "nets": 4,
+   "example": "n_astk_WS__u_strip_u_strip_g_ep_0__u_z_line_3_"
+  },
+  "n_astk_WN__u_strip_u_strip_g_ep_N__u_z_line_N_": {
+   "bits": 948,
+   "nets": 4,
+   "example": "n_astk_WN__u_strip_u_strip_g_ep_0__u_z_line_3_"
+  },
+  "n_astk_ES__u_strip_u_strip_g_ep_N__u_z_line_N_": {
+   "bits": 948,
+   "nets": 4,
+   "example": "n_astk_ES__u_strip_u_strip_g_ep_0__u_z_line_3_"
+  },
+  "n_astk_EN__u_strip_u_strip_g_ep_N__u_z_line_N_": {
+   "bits": 948,
+   "nets": 4,
+   "example": "n_astk_EN__u_strip_u_strip_g_ep_0__u_z_line_3_"
+  },
+  "n_pvw_N__w_MN_NcN": {
+   "bits": 896,
+   "nets": 128,
+   "example": "n_pvw_0__w_M0_1c0"
+  },
+  "n_pvw_N__w_FDN": {
+   "bits": 584,
+   "nets": 32,
+   "example": "n_pvw_0__w_FD0"
+  },
+  "n_astk_WS__u_strip_u_strip_g_ep_N__u_r_line_N_": {
+   "bits": 560,
+   "nets": 8,
+   "example": "n_astk_WS__u_strip_u_strip_g_ep_0__u_r_line_3_"
+  },
+  "n_astk_WN__u_strip_u_strip_g_ep_N__u_r_line_N_": {
+   "bits": 560,
+   "nets": 8,
+   "example": "n_astk_WN__u_strip_u_strip_g_ep_0__u_r_line_3_"
+  },
+  "n_astk_ES__u_strip_u_strip_g_ep_N__u_r_line_N_": {
+   "bits": 560,
+   "nets": 8,
+   "example": "n_astk_ES__u_strip_u_strip_g_ep_0__u_r_line_3_"
+  },
+  "n_astk_EN__u_strip_u_strip_g_ep_N__u_r_line_N_": {
+   "bits": 560,
+   "nets": 8,
+   "example": "n_astk_EN__u_strip_u_strip_g_ep_0__u_r_line_3_"
+  },
+  "n_pvfork_WS_N__q": {
+   "bits": 516,
+   "nets": 4,
+   "example": "n_pvfork_WS_0__q"
+  },
+  "n_pvfork_ES_N__q": {
+   "bits": 516,
+   "nets": 4,
+   "example": "n_pvfork_ES_0__q"
+  },
+  "n_pvfork_WN_N__q": {
+   "bits": 516,
+   "nets": 4,
+   "example": "n_pvfork_WN_0__q"
+  },
+  "n_pvfork_EN_N__q": {
+   "bits": 516,
+   "nets": 4,
+   "example": "n_pvfork_EN_0__q"
+  },
+  "n_pvw_N__w_FUmN_N": {
+   "bits": 512,
+   "nets": 64,
+   "example": "n_pvw_0__w_FUm0_1"
+  },
+  "n_head_WS_N_N__kpv_k": {
+   "bits": 480,
+   "nets": 32,
+   "example": "n_head_WS_0_0__kpv_k"
+  },
+  "n_head_WN_N_N__kpv_k": {
+   "bits": 480,
+   "nets": 32,
+   "example": "n_head_WN_0_0__kpv_k"
+  },
+  "n_head_ES_N_N__kpv_k": {
+   "bits": 480,
+   "nets": 32,
+   "example": "n_head_ES_0_0__kpv_k"
+  },
+  "n_head_EN_N_N__kpv_k": {
+   "bits": 480,
+   "nets": 32,
+   "example": "n_head_EN_0_0__kpv_k"
+  },
+  "n_rly_ks_acal_WS_N__sN_yN_pN_N__o": {
+   "bits": 420,
+   "nets": 16,
+   "example": "n_rly_ks_acal_WS_43__s0_y2_p1_2__o"
+  },
+  "n_rly_ks_acal_WN_N__sN_yN_pN_N__o": {
+   "bits": 396,
+   "nets": 15,
+   "example": "n_rly_ks_acal_WN_8__s0_y2_p1_3__o"
+  },
+  "n_rly_ks_acal_EN_N__sN_yN_pN_N__o": {
+   "bits": 396,
+   "nets": 15,
+   "example": "n_rly_ks_acal_EN_19__s0_y2_p1_2__o"
+  },
+  "n_pvw_N__w_FUN": {
+   "bits": 272,
+   "nets": 34,
+   "example": "n_pvw_0__w_FU0"
+  },
+  "n_astk_WS__u_strip_u_strip_g_ep_N__u_x_line_N_": {
+   "bits": 232,
+   "nets": 8,
+   "example": "n_astk_WS__u_strip_u_strip_g_ep_0__u_x_line_3_"
+  },
+  "n_astk_WN__u_strip_u_strip_g_ep_N__u_x_line_N_": {
+   "bits": 232,
+   "nets": 8,
+   "example": "n_astk_WN__u_strip_u_strip_g_ep_0__u_x_line_3_"
+  },
+  "n_astk_ES__u_strip_u_strip_g_ep_N__u_x_line_N_": {
+   "bits": 232,
+   "nets": 8,
+   "example": "n_astk_ES__u_strip_u_strip_g_ep_0__u_x_line_3_"
+  },
+  "n_astk_EN__u_strip_u_strip_g_ep_N__u_x_line_N_": {
+   "bits": 232,
+   "nets": 8,
+   "example": "n_astk_EN__u_strip_u_strip_g_ep_0__u_x_line_3_"
+  },
+  "n_astk_WS__u_strip_u_strip_g_ep_N__u_q_line_N_": {
+   "bits": 160,
+   "nets": 8,
+   "example": "n_astk_WS__u_strip_u_strip_g_ep_0__u_q_line_3_"
+  },
+  "n_astk_WN__u_strip_u_strip_g_ep_N__u_q_line_N_": {
+   "bits": 160,
+   "nets": 8,
+   "example": "n_astk_WN__u_strip_u_strip_g_ep_0__u_q_line_3_"
+  },
+  "n_astk_ES__u_strip_u_strip_g_ep_N__u_q_line_N_": {
+   "bits": 160,
+   "nets": 8,
+   "example": "n_astk_ES__u_strip_u_strip_g_ep_0__u_q_line_3_"
+  },
+  "n_astk_EN__u_strip_u_strip_g_ep_N__u_q_line_N_": {
+   "bits": 160,
+   "nets": 8,
+   "example": "n_astk_EN__u_strip_u_strip_g_ep_0__u_q_line_3_"
+  },
+  "n_el_WS_N": {
+   "bits": 96,
+   "nets": 8,
+   "example": "n_el_WS_0"
+  },
+  "n_el_WN_N": {
+   "bits": 96,
+   "nets": 8,
+   "example": "n_el_WN_0"
+  },
+  "n_el_ES_N": {
+   "bits": 96,
+   "nets": 8,
+   "example": "n_el_ES_0"
+  },
+  "n_el_EN_N": {
+   "bits": 96,
+   "nets": 8,
+   "example": "n_el_EN_0"
+  },
+  "n_rly_pvh_WS_N__fN_N__sN_yN_cN__o": {
+   "bits": 96,
+   "nets": 4,
+   "example": "n_rly_pvh_WS_0__f0_6__s0_y2_c24__o"
+  },
+  "n_hsvc__fN__rN__pinfixN": {
+   "bits": 86,
+   "nets": 1,
+   "example": "n_hsvc__f0__r4__pinfix1"
+  },
+  "n_pvw_N__w_CLN_N": {
+   "bits": 84,
+   "nets": 12,
+   "example": "n_pvw_0__w_CL0_0"
+  },
+  "n_pvh_ES_N__fN__rN": {
+   "bits": 76,
+   "nets": 4,
+   "example": "n_pvh_ES_0__f0__r6"
+  },
+  "n_pvh_EN_N__fN__rN": {
+   "bits": 76,
+   "nets": 4,
+   "example": "n_pvh_EN_0__f0__r6"
+  },
+  "n_pvw_N__w_DLN": {
+   "bits": 62,
+   "nets": 62,
+   "example": "n_pvw_0__w_DL10"
+  },
+  "n_pvw_N__cmd_w": {
+   "bits": 56,
+   "nets": 2,
+   "example": "n_pvw_0__cmd_w"
+  },
+  "n_rly_ks_acal_WN_N__sN_yN_cN__o": {
+   "bits": 56,
+   "nets": 2,
+   "example": "n_rly_ks_acal_WN_8__s0_y2_c27__o"
+  },
+  "n_rly_ks_acal_EN_N__sN_yN_cN__o": {
+   "bits": 56,
+   "nets": 2,
+   "example": "n_rly_ks_acal_EN_19__s0_y2_c24__o"
+  },
+  "n_astk_WS__u_strip_g_er_chain_u_er_req_out_N_": {
+   "bits": 48,
+   "nets": 1,
+   "example": "n_astk_WS__u_strip_g_er_chain_u_er_req_out_7_"
+  },
+  "n_astk_WN__u_strip_g_er_chain_u_er_req_out_N_": {
+   "bits": 48,
+   "nets": 1,
+   "example": "n_astk_WN__u_strip_g_er_chain_u_er_req_out_7_"
+  },
+  "n_astk_ES__u_strip_g_er_chain_u_er_req_out_N_": {
+   "bits": 48,
+   "nets": 1,
+   "example": "n_astk_ES__u_strip_g_er_chain_u_er_req_out_7_"
+  },
+  "n_astk_EN__u_strip_g_er_chain_u_er_req_out_N_": {
+   "bits": 48,
+   "nets": 1,
+   "example": "n_astk_EN__u_strip_g_er_chain_u_er_req_out_7_"
+  },
+  "n_rly_pvh_WN_N__fN_N__sN_yN_cN__o": {
+   "bits": 48,
+   "nets": 2,
+   "example": "n_rly_pvh_WN_2__f0_6__s0_y2_c1__o"
+  },
+  "n_astk_WS__response_addr": {
+   "bits": 44,
+   "nets": 1,
+   "example": "n_astk_WS__response_addr"
+  },
+  "n_astk_WN__response_addr": {
+   "bits": 44,
+   "nets": 1,
+   "example": "n_astk_WN__response_addr"
+  },
+  "n_astk_ES__response_addr": {
+   "bits": 44,
+   "nets": 1,
+   "example": "n_astk_ES__response_addr"
+  },
+  "n_astk_EN__response_addr": {
+   "bits": 44,
+   "nets": 1,
+   "example": "n_astk_EN__response_addr"
+  },
+  "n_pvw_N__out_age": {
+   "bits": 32,
+   "nets": 2,
+   "example": "n_pvw_0__out_age"
+  },
+  "n_rly_ks_acal_WS_N__sN_yN_cN__o": {
+   "bits": 32,
+   "nets": 1,
+   "example": "n_rly_ks_acal_WS_43__s0_y2_c27__o"
+  },
+  "n_ks_kvs_ctl__boot__link_cfg_data__rN": {
+   "bits": 32,
+   "nets": 1,
+   "example": "n_ks_kvs_ctl__boot__link_cfg_data__r2"
+  },
+  "n_rly_pinfix_est_fN_rN_N__sN__flt": {
+   "bits": 32,
+   "nets": 32,
+   "example": "n_rly_pinfix_est_f0_r69_1__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_emb_px_tok_fN_rN_N__sN__flt": {
+   "bits": 31,
+   "nets": 31,
+   "example": "n_rly_pinfix_ks_kvs_emb_px_tok_f0_r68_1__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_emb_px_tep_fN_rN_N__sN__flt": {
+   "bits": 31,
+   "nets": 31,
+   "example": "n_rly_pinfix_ks_kvs_emb_px_tep_f0_r69_1__s0__flt"
+  },
+  "n_astk_WS__u_strip_u_strip_u_cx_line_N_": {
+   "bits": 29,
+   "nets": 1,
+   "example": "n_astk_WS__u_strip_u_strip_u_cx_line_3_"
+  },
+  "n_astk_WN__u_strip_u_strip_u_cx_line_N_": {
+   "bits": 29,
+   "nets": 1,
+   "example": "n_astk_WN__u_strip_u_strip_u_cx_line_3_"
+  },
+  "n_astk_ES__u_strip_u_strip_u_cx_line_N_": {
+   "bits": 29,
+   "nets": 1,
+   "example": "n_astk_ES__u_strip_u_strip_u_cx_line_3_"
+  },
+  "n_astk_EN__u_strip_u_strip_u_cx_line_N_": {
+   "bits": 29,
+   "nets": 1,
+   "example": "n_astk_EN__u_strip_u_strip_u_cx_line_3_"
+  },
+  "n_rly_pvh_WN_N__fN_N__sN_yN__o": {
+   "bits": 24,
+   "nets": 1,
+   "example": "n_rly_pvh_WN_0__f0_6__s0_y2__o"
+  },
+  "n_rly_aq_WS_N__sN_yN_pN_N__o": {
+   "bits": 24,
+   "nets": 1,
+   "example": "n_rly_aq_WS_73__s1_y2_p0_0__o"
+  },
+  "n_rly_aq_WN_N__sN_yN__o": {
+   "bits": 24,
+   "nets": 1,
+   "example": "n_rly_aq_WN_15__s1_y2__o"
+  },
+  "n_rly_aq_EN_N__sN_yN__o": {
+   "bits": 24,
+   "nets": 1,
+   "example": "n_rly_aq_EN_12__s1_y2__o"
+  },
+  "n_astk_WS__lt": {
+   "bits": 21,
+   "nets": 1,
+   "example": "n_astk_WS__lt"
+  },
+  "n_astk_WN__lt": {
+   "bits": 21,
+   "nets": 1,
+   "example": "n_astk_WN__lt"
+  },
+  "n_astk_ES__lt": {
+   "bits": 21,
+   "nets": 1,
+   "example": "n_astk_ES__lt"
+  },
+  "n_astk_EN__lt": {
+   "bits": 21,
+   "nets": 1,
+   "example": "n_astk_EN__lt"
+  },
+  "n_rly_pvrq_WN_N_N__sN_yN__o": {
+   "bits": 21,
+   "nets": 1,
+   "example": "n_rly_pvrq_WN_3_40__s0_y2__o"
+  },
+  "n_astk_WS__u_strip_u_strip_u_cq_line_N_": {
+   "bits": 20,
+   "nets": 1,
+   "example": "n_astk_WS__u_strip_u_strip_u_cq_line_3_"
+  },
+  "n_astk_WN__u_strip_u_strip_u_cq_line_N_": {
+   "bits": 20,
+   "nets": 1,
+   "example": "n_astk_WN__u_strip_u_strip_u_cq_line_3_"
+  },
+  "n_astk_ES__u_strip_u_strip_u_cq_line_N_": {
+   "bits": 20,
+   "nets": 1,
+   "example": "n_astk_ES__u_strip_u_strip_u_cq_line_3_"
+  },
+  "n_astk_EN__u_strip_u_strip_u_cq_line_N_": {
+   "bits": 20,
+   "nets": 1,
+   "example": "n_astk_EN__u_strip_u_strip_u_cq_line_3_"
+  },
+  "n_pvh_WN_N__fN__rN": {
+   "bits": 19,
+   "nets": 1,
+   "example": "n_pvh_WN_1__f0__r7"
+  },
+  "n_rly_pvin_WS_N_N__sN__flt": {
+   "bits": 8,
+   "nets": 8,
+   "example": "n_rly_pvin_WS_0_31__s0__flt"
+  },
+  "n_rly_pvin_WN_N_N__sN__flt": {
+   "bits": 8,
+   "nets": 8,
+   "example": "n_rly_pvin_WN_0_21__s0__flt"
+  },
+  "n_rly_pvin_ES_N_N__sN__flt": {
+   "bits": 8,
+   "nets": 8,
+   "example": "n_rly_pvin_ES_0_35__s0__flt"
+  },
+  "n_rly_pvin_EN_N_N__sN__flt": {
+   "bits": 8,
+   "nets": 8,
+   "example": "n_rly_pvin_EN_0_25__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_WS_o_cN_rN_N__sN__flt": {
+   "bits": 8,
+   "nets": 8,
+   "example": "n_rly_pinfix_ks_kvs_hroot_WS_o_c0_r26_0__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_WN_o_cN_rN_N__sN__flt": {
+   "bits": 8,
+   "nets": 8,
+   "example": "n_rly_pinfix_ks_kvs_hroot_WN_o_c0_r30_1__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_ES_o_cN_rN_N__sN__flt": {
+   "bits": 8,
+   "nets": 8,
+   "example": "n_rly_pinfix_ks_kvs_hroot_ES_o_c0_r26_1__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_EN_o_cN_rN_N__sN__flt": {
+   "bits": 8,
+   "nets": 8,
+   "example": "n_rly_pinfix_ks_kvs_hroot_EN_o_c0_r31_0__s0__flt"
+  },
+  "n_ks_kvs_ctl__boot__link_cfg_addr__rN": {
+   "bits": 6,
+   "nets": 1,
+   "example": "n_ks_kvs_ctl__boot__link_cfg_addr__r2"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_WN_o_kg_fN_rN_N__sN__flt": {
+   "bits": 6,
+   "nets": 6,
+   "example": "n_rly_pinfix_ks_kvs_hroot_WN_o_kg_f0_r23_0__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_EN_o_kg_fN_rN_N__sN__flt": {
+   "bits": 6,
+   "nets": 6,
+   "example": "n_rly_pinfix_ks_kvs_hroot_EN_o_kg_f0_r23_0__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_emb_px_tep_fN_rN_N__sN__hi": {
+   "bits": 6,
+   "nets": 6,
+   "example": "n_rly_pinfix_ks_kvs_emb_px_tep_f2_r60_2__s0__hi"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_WS_o_kg_fN_rN_N__sN__flt": {
+   "bits": 5,
+   "nets": 5,
+   "example": "n_rly_pinfix_ks_kvs_hroot_WS_o_kg_f0_r19_0__s0__flt"
+  },
+  "n_astk_WS__response_v": {
+   "bits": 4,
+   "nets": 1,
+   "example": "n_astk_WS__response_v"
+  },
+  "n_astk_WN__response_v": {
+   "bits": 4,
+   "nets": 1,
+   "example": "n_astk_WN__response_v"
+  },
+  "n_astk_ES__response_v": {
+   "bits": 4,
+   "nets": 1,
+   "example": "n_astk_ES__response_v"
+  },
+  "n_astk_EN__response_v": {
+   "bits": 4,
+   "nets": 1,
+   "example": "n_astk_EN__response_v"
+  },
+  "n_rly_pvh_WS_N__fN_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pvh_WS_0__f0_6__s0__flt"
+  },
+  "n_rly_pvh_WN_N__fN_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pvh_WN_0__f0_6__s0__flt"
+  },
+  "n_rly_pvh_ES_N__fN_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pvh_ES_0__f0_5__s0__flt"
+  },
+  "n_rly_pvh_EN_N__fN_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pvh_EN_0__f0_5__s0__flt"
+  },
+  "n_rly_ks_slg_WN_N__o_ctl_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_ks_slg_WN_7__o_ctl_0__s0__flt"
+  },
+  "n_rly_ks_slg_EN_N__o_ctl_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_ks_slg_EN_7__o_ctl_0__s0__flt"
+  },
+  "n_rly_pvrq_WS_N_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pvrq_WS_0_46__s0__flt"
+  },
+  "n_rly_pvrq_WN_N_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pvrq_WN_0_56__s0__flt"
+  },
+  "n_rly_pvrq_ES_N_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pvrq_ES_0_41__s0__flt"
+  },
+  "n_rly_pvrq_EN_N_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pvrq_EN_0_51__s0__flt"
+  },
+  "n_rly_pinfix_est_fN_rN_N__sN__lo": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pinfix_est_f3_r57_1__s0__lo"
+  },
+  "n_rly_pinfix_est_fN_rN_N__sN__hi": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pinfix_est_f10_r27_1__s0__hi"
+  },
+  "n_rly_pinfix_ks_slg_WS_N_o_ctl_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pinfix_ks_slg_WS_7_o_ctl_0__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_ES_o_kg_fN_rN_N__sN__flt": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pinfix_ks_kvs_hroot_ES_o_kg_f3_r33_0__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_emb_px_tok_fN_rN_N__sN__hi": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pinfix_ks_kvs_emb_px_tok_f2_r60_1__s0__hi"
+  },
+  "n_rly_pinfix_ks_kvs_emb_px_tok_fN_rN_N__sN__lo": {
+   "bits": 4,
+   "nets": 4,
+   "example": "n_rly_pinfix_ks_kvs_emb_px_tok_f10_r26_1__s0__lo"
+  },
+  "n_rly_ks_kvs_hroot_ES__o_kg__fN_N__sN__flt": {
+   "bits": 3,
+   "nets": 3,
+   "example": "n_rly_ks_kvs_hroot_ES__o_kg__f0_19__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_emb_px_tep_fN_rN_N__sN__lo": {
+   "bits": 3,
+   "nets": 3,
+   "example": "n_rly_pinfix_ks_kvs_emb_px_tep_f10_r26_1__s0__lo"
+  },
+  "n_pvw_N__busy": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_pvw_0__busy"
+  },
+  "n_rly_pvin_WS_N_N__sN__hi": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_pvin_WS_3_14__s0__hi"
+  },
+  "n_rly_pvin_WN_N_N__sN__hi": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_pvin_WN_2_13__s0__hi"
+  },
+  "n_rly_pvin_ES_N_N__sN__hi": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_pvin_ES_1_28__s0__hi"
+  },
+  "n_rly_pvin_EN_N_N__sN__lo": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_pvin_EN_3_43__s0__lo"
+  },
+  "n_rly_aq_WS_N__sN__hi": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_aq_WS_73__s0__hi"
+  },
+  "n_rly_aq_WS_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_aq_WS_73__s0__flt"
+  },
+  "n_rly_ap_WS_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ap_WS_5__s0__flt"
+  },
+  "n_rly_aq_WN_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_aq_WN_15__s0__flt"
+  },
+  "n_rly_ap_WN_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ap_WN_6__s0__flt"
+  },
+  "n_rly_aq_ES_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_aq_ES_72__s0__flt"
+  },
+  "n_rly_ap_ES_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ap_ES_6__s0__flt"
+  },
+  "n_rly_aq_EN_N__sN__hi": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_aq_EN_12__s0__hi"
+  },
+  "n_rly_aq_EN_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_aq_EN_12__s0__flt"
+  },
+  "n_rly_ap_EN_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ap_EN_7__s0__flt"
+  },
+  "n_rly_ks_acal_WS_N__sN__lo": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_acal_WS_43__s0__lo"
+  },
+  "n_rly_ks_acal_WS_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_acal_WS_43__s0__flt"
+  },
+  "n_rly_ks_acal_WN_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_acal_WN_8__s0__flt"
+  },
+  "n_rly_ks_acal_ES_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_acal_ES_47__s0__flt"
+  },
+  "n_rly_ks_acal_EN_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_acal_EN_19__s0__flt"
+  },
+  "n_rly_ks_kvpc_WS_N__o_next_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_kvpc_WS_31__o_next_0__s0__flt"
+  },
+  "n_rly_ks_kvpc_WN_N__o_next_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_kvpc_WN_31__o_next_0__s0__flt"
+  },
+  "n_rly_ks_kvpc_ES_N__o_next_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_kvpc_ES_31__o_next_0__s0__flt"
+  },
+  "n_rly_ks_kvs_hroot_WS__o_pc_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_kvs_hroot_WS__o_pc_0__s0__flt"
+  },
+  "n_rly_ks_kvs_hroot_WS__o_kg__fN_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_kvs_hroot_WS__o_kg__f5_18__s0__flt"
+  },
+  "n_rly_ks_kvs_hroot_ES__o_pc_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_kvs_hroot_ES__o_pc_0__s0__flt"
+  },
+  "n_rly_ks_kvs_hroot_EN__o_pc_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_ks_kvs_hroot_EN__o_pc_0__s0__flt"
+  },
+  "n_rly_pvrq_WS_N_N__sN__hi": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_pvrq_WS_0_46__s0__hi"
+  },
+  "n_rly_pinfix_ks_kvpc_EN_N_o_next_rN_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_pinfix_ks_kvpc_EN_31_o_next_r1_0__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_WS_o_cN_rN_N__sN__lo": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_pinfix_ks_kvs_hroot_WS_o_c0_r26_0__s0__lo"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_WS_o_cN_rN_N__sN__hi": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_pinfix_ks_kvs_hroot_WS_o_c2_r12_1__s0__hi"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_WN_o_pc_rN_N__sN__flt": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_pinfix_ks_kvs_hroot_WN_o_pc_r1_0__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_ES_o_cN_rN_N__sN__hi": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_pinfix_ks_kvs_hroot_ES_o_c0_r26_1__s0__hi"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_EN_o_cN_rN_N__sN__lo": {
+   "bits": 2,
+   "nets": 2,
+   "example": "n_rly_pinfix_ks_kvs_hroot_EN_o_c1_r23_1__s0__lo"
+  },
+  "n_astk_WS__u_strip_u_strip_zo_N_": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_astk_WS__u_strip_u_strip_zo_8_"
+  },
+  "n_astk_WN__u_strip_u_strip_zo_N_": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_astk_WN__u_strip_u_strip_zo_8_"
+  },
+  "n_astk_ES__u_strip_u_strip_zo_N_": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_astk_ES__u_strip_u_strip_zo_8_"
+  },
+  "n_astk_EN__u_strip_u_strip_zo_N_": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_astk_EN__u_strip_u_strip_zo_8_"
+  },
+  "n_seq__hs": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_seq__hs"
+  },
+  "n_rly_am_WN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_am_WN_6__s0__flt"
+  },
+  "n_rly_am_ES_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_am_ES_5__s0__flt"
+  },
+  "n_rly_am_EN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_am_EN_6__s0__flt"
+  },
+  "n_rly_af_WS_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_af_WS_42__s0__flt"
+  },
+  "n_rly_af_WS__fN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_af_WS__f0_37__s0__flt"
+  },
+  "n_rly_af_WN_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_af_WN_11__s0__lo"
+  },
+  "n_rly_af_WN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_af_WN_11__s0__flt"
+  },
+  "n_rly_af_ES_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_af_ES_43__s0__lo"
+  },
+  "n_rly_af_ES_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_af_ES_43__s0__flt"
+  },
+  "n_rly_af_ES__fN_N__sN__hi": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_af_ES__f0_45__s0__hi"
+  },
+  "n_rly_af_ES__fN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_af_ES__f0_45__s0__flt"
+  },
+  "n_rly_af_EN_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_af_EN_11__s0__lo"
+  },
+  "n_rly_af_EN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_af_EN_11__s0__flt"
+  },
+  "n_rly_hchc_WS_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hchc_WS_82__s0__flt"
+  },
+  "n_rly_hcha_WS_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hcha_WS_82__s0__flt"
+  },
+  "n_rly_hchf_WN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hchf_WN_18__s0__flt"
+  },
+  "n_rly_hchc_WN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hchc_WN_15__s0__flt"
+  },
+  "n_rly_hcha_WN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hcha_WN_15__s0__flt"
+  },
+  "n_rly_hchx_WN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hchx_WN_15__s0__flt"
+  },
+  "n_rly_hchc_ES_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hchc_ES_87__s0__flt"
+  },
+  "n_rly_hcha_ES_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hcha_ES_85__s0__flt"
+  },
+  "n_rly_hchx_ES_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hchx_ES_86__s0__flt"
+  },
+  "n_rly_hchf_EN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hchf_EN_16__s0__flt"
+  },
+  "n_rly_hchc_EN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hchc_EN_17__s0__flt"
+  },
+  "n_rly_hcha_EN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hcha_EN_17__s0__flt"
+  },
+  "n_rly_hchx_EN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_hchx_EN_17__s0__flt"
+  },
+  "n_ks_kvs_ctl__boot__link_cfg_tx_we__rN": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_ks_kvs_ctl__boot__link_cfg_tx_we__r2"
+  },
+  "n_ks_kvs_ctl__boot__link_cfg_rx_we__rN": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_ks_kvs_ctl__boot__link_cfg_rx_we__r2"
+  },
+  "n_rly_ks_kvs_hroot_WS__o_kg_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_kvs_hroot_WS__o_kg_25__s0__flt"
+  },
+  "n_rly_ks_kvs_hroot_WS__o_kg__fN_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_kvs_hroot_WS__o_kg__f6_11__s0__lo"
+  },
+  "n_rly_ks_kvs_hroot_WN__o_chN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_kvs_hroot_WN__o_ch0_0__s0__flt"
+  },
+  "n_rly_ks_kvs_hroot_WN__o_kg__fN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_kvs_hroot_WN__o_kg__f2_8__s0__flt"
+  },
+  "n_rly_ks_kvs_hroot_ES__o_kg_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_kvs_hroot_ES__o_kg_26__s0__lo"
+  },
+  "n_rly_ks_kvs_hroot_ES__o_kg_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_kvs_hroot_ES__o_kg_26__s0__flt"
+  },
+  "n_rly_ks_kvs_hroot_ES__o_kg__fN_N__sN__hi": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_kvs_hroot_ES__o_kg__f1_12__s0__hi"
+  },
+  "n_rly_ks_kvs_hroot_EN__o_chN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_kvs_hroot_EN__o_ch0_0__s0__flt"
+  },
+  "n_rly_ks_kvs_hroot_EN__o_kg_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_kvs_hroot_EN__o_kg_30__s0__flt"
+  },
+  "n_rly_ks_kvs_hroot_EN__o_kg__fN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_kvs_hroot_EN__o_kg__f6_16__s0__flt"
+  },
+  "n_rly_ks_afe_WS_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_afe_WS_42__s0__lo"
+  },
+  "n_rly_ks_afe_WS_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_afe_WS_42__s0__flt"
+  },
+  "n_rly_ks_afe_WN_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_afe_WN_8__s0__lo"
+  },
+  "n_rly_ks_afe_WN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_afe_WN_8__s0__flt"
+  },
+  "n_rly_ks_afe_ES_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_afe_ES_53__s0__lo"
+  },
+  "n_rly_ks_afe_ES_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_ks_afe_ES_53__s0__flt"
+  },
+  "n_rly_kc_WS_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_kc_WS_82__s0__flt"
+  },
+  "n_rly_kc_WN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_kc_WN_23__s0__flt"
+  },
+  "n_rly_kc_ES_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_kc_ES_79__s0__flt"
+  },
+  "n_rly_kc_EN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_kc_EN_20__s0__flt"
+  },
+  "n_rly_pvrq_WN_N_N__sN__hi": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pvrq_WN_1_46__s0__hi"
+  },
+  "n_rly_pvrq_EN_N_N__sN__hi": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pvrq_EN_2_14__s0__hi"
+  },
+  "n_rly_pinfix_am_WS_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_am_WS_r6_0__s0__flt"
+  },
+  "n_rly_pinfix_pve_WS_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_pve_WS_r6_1__s0__flt"
+  },
+  "n_rly_pinfix_pve_WN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_pve_WN_r7_1__s0__flt"
+  },
+  "n_rly_pinfix_pve_ES_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_pve_ES_r7_1__s0__flt"
+  },
+  "n_rly_pinfix_pve_EN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_pve_EN_r7_2__s0__flt"
+  },
+  "n_rly_pinfix_af_WN_fN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_af_WN_f0_r7_0__s0__flt"
+  },
+  "n_rly_pinfix_af_EN_fN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_af_EN_f0_r20_0__s0__flt"
+  },
+  "n_rly_pinfix_pll_lock_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_pll_lock_0__s0__flt"
+  },
+  "n_rly_pinfix_hchf_WS_rN_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hchf_WS_r89_0__s0__lo"
+  },
+  "n_rly_pinfix_hchf_WS_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hchf_WS_r89_0__s0__flt"
+  },
+  "n_rly_pinfix_hchx_WS_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hchx_WS_r83_0__s0__flt"
+  },
+  "n_rly_pinfix_hsak_WS_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsak_WS_r83_0__s0__flt"
+  },
+  "n_rly_pinfix_hsbd_WS_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbd_WS_r83_0__s0__flt"
+  },
+  "n_rly_pinfix_hsbo_WS_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbo_WS_r85_0__s0__flt"
+  },
+  "n_rly_pinfix_hsbf_WS_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbf_WS_r84_0__s0__flt"
+  },
+  "n_rly_pinfix_hsak_WN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsak_WN_r16_0__s0__flt"
+  },
+  "n_rly_pinfix_hsbd_WN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbd_WN_r16_0__s0__flt"
+  },
+  "n_rly_pinfix_hsbo_WN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbo_WN_r16_0__s0__flt"
+  },
+  "n_rly_pinfix_hsbf_WN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbf_WN_r16_0__s0__flt"
+  },
+  "n_rly_pinfix_hchf_ES_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hchf_ES_r87_0__s0__flt"
+  },
+  "n_rly_pinfix_hsak_ES_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsak_ES_r86_0__s0__flt"
+  },
+  "n_rly_pinfix_hsbd_ES_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbd_ES_r86_0__s0__flt"
+  },
+  "n_rly_pinfix_hsbo_ES_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbo_ES_r86_0__s0__flt"
+  },
+  "n_rly_pinfix_hsbf_ES_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbf_ES_r87_0__s0__flt"
+  },
+  "n_rly_pinfix_hsak_EN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsak_EN_r17_1__s0__flt"
+  },
+  "n_rly_pinfix_hsbd_EN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbd_EN_r18_0__s0__flt"
+  },
+  "n_rly_pinfix_hsbo_EN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbo_EN_r18_0__s0__flt"
+  },
+  "n_rly_pinfix_hsbf_EN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_hsbf_EN_r18_0__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_WS_o_kg_fN_rN_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_kvs_hroot_WS_o_kg_f1_r12_0__s0__lo"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_WN_o_kg_rN_N__sN__hi": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_kvs_hroot_WN_o_kg_r30_0__s0__hi"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_WN_o_kg_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_kvs_hroot_WN_o_kg_r30_0__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_WN_o_kg_fN_rN_N__sN__hi": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_kvs_hroot_WN_o_kg_f4_r29_0__s0__hi"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_ES_o_kg_fN_rN_N__sN__hi": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_kvs_hroot_ES_o_kg_f6_r13_0__s0__hi"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_EN_o_cN_rN_N__sN__hi": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_kvs_hroot_EN_o_c3_r9_1__s0__hi"
+  },
+  "n_rly_pinfix_ks_kvs_hroot_EN_o_kg_fN_rN_N__sN__hi": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_kvs_hroot_EN_o_kg_f4_r30_0__s0__hi"
+  },
+  "n_rly_pinfix_ks_kvs_emb_px_tok_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_kvs_emb_px_tok_r72_2__s0__flt"
+  },
+  "n_rly_pinfix_ks_kvs_emb_px_tep_rN_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_kvs_emb_px_tep_r73_1__s0__lo"
+  },
+  "n_rly_pinfix_ks_kvs_emb_px_tep_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_kvs_emb_px_tep_r73_1__s0__flt"
+  },
+  "n_rly_pinfix_ks_afe_EN_rN_N__sN__lo": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_afe_EN_r22_0__s0__lo"
+  },
+  "n_rly_pinfix_ks_afe_EN_rN_N__sN__flt": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rly_pinfix_ks_afe_EN_r22_0__s0__flt"
+  },
+  "n_rrs_n_rst_die_tN__m_N__gN_sN": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_rrs_n_rst_die_t14__m_0__g0_s13"
+  }
+ },
+ "masters": {
+  "ot_qfd_serdes_112g_x12_phy": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "serdes_host"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qkh_head_frontq_native": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 512,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__g_front_0__u_front",
+    "head_WS_0_0__g_front_1__u_front",
+    "head_WS_0_0__g_front_2__u_front"
+   ],
+   "param_sets": {
+    "{}": 512
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "hid"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qkh_head_score4_native": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__u_score",
+    "head_WS_0_1__u_score",
+    "head_WS_0_2__u_score"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qkh_head_stin_native": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2048,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__g_t_0__u_stin",
+    "head_WS_0_0__g_t_10__u_stin",
+    "head_WS_0_0__g_t_11__u_stin"
+   ],
+   "param_sets": {
+    "{}": 2048
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qkh_head_stk_native": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2048,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__g_t_0__u_stk",
+    "head_WS_0_0__g_t_10__u_stk",
+    "head_WS_0_0__g_t_11__u_stk"
+   ],
+   "param_sets": {
+    "{}": 2048
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qkh_ktree": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__u_kt",
+    "head_WS_0_1__u_kt",
+    "head_WS_0_2__u_kt"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qkh_lane8": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2048,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__g_t_0__u_l8",
+    "head_WS_0_0__g_t_10__u_l8",
+    "head_WS_0_0__g_t_11__u_l8"
+   ],
+   "param_sets": {
+    "{}": 2048
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "bsel"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "ucie_rom"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qwen_tp8_pv_join_t": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 64,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "pvw_0__u_s0_j",
+    "pvw_0__u_s10_j",
+    "pvw_0__u_s11_j"
+   ],
+   "param_sets": {
+    "{}": 64
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qwen_tp8_pv_slice_t": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 512,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "pvw_0__u_s0_b0",
+    "pvw_0__u_s0_b1",
+    "pvw_0__u_s0_b2"
+   ],
+   "param_sets": {
+    "{}": 512
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_qwen_tp8_pv_wide_ctl_t": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_t.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "pvw_0__u_ctl",
+    "pvw_1__u_ctl"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "pair_id"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_ahub_static_dw": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ahub"
+   ],
+   "param_sets": {
+    "{\"Z_IN_STRIDE\": \"4\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_astk_ctl_s": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "astk_WS__u_strip_u_strip_u_ctl",
+    "astk_WN__u_strip_u_strip_u_ctl",
+    "astk_ES__u_strip_u_strip_u_ctl"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "st"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_astk_ep_s": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 32,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "astk_WS__u_strip_u_strip_g_ep_0__u_ep",
+    "astk_WS__u_strip_u_strip_g_ep_1__u_ep",
+    "astk_WS__u_strip_u_strip_g_ep_2__u_ep"
+   ],
+   "param_sets": {
+    "{}": 32
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "eo",
+    "sq"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_astk_er_owner_st": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 32,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "astk_WS__u_strip_g_er_chain_u_er_g_owner_0__u_owner",
+    "astk_WS__u_strip_g_er_chain_u_er_g_owner_1__u_owner",
+    "astk_WS__u_strip_g_er_chain_u_er_g_owner_2__u_owner"
+   ],
+   "param_sets": {
+    "{}": 32
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "owner_id",
+    "prev_addr",
+    "prev_data",
+    "prev_fault",
+    "prev_v"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_astk_ex_s": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "astk_WS__u_strip_u_strip_g_ep_0__g_ex_0__u_ex",
+    "astk_WS__u_strip_u_strip_g_ep_0__g_ex_1__u_ex",
+    "astk_WS__u_strip_u_strip_g_ep_0__g_ex_2__u_ex"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_astk_fault_join": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_astk_phys.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "astk_WS__g_phys_fault_u_fault",
+    "astk_WN__g_phys_fault_u_fault",
+    "astk_ES__g_phys_fault_u_fault"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_astk_rly_296_fl": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 912,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "astk_WS__u_strip_g_er_chain_u_er_g_owner_0__g_link_u_req_g_stage_0__g_chunk_0__u_r",
+    "astk_WS__u_strip_g_er_chain_u_er_g_owner_0__g_link_u_req_g_stage_1__g_chunk_0__u_r",
+    "astk_WS__u_strip_g_er_chain_u_er_g_owner_0__g_link_u_req_g_stage_2__g_chunk_0__u_r"
+   ],
+   "param_sets": {
+    "{}": 912
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "a"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_astk_zn": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "astk_WS__u_strip_u_strip_g_zn_0__u_zn",
+    "astk_WS__u_strip_u_strip_g_zn_1__u_zn",
+    "astk_WS__u_strip_u_strip_g_zn_2__u_zn"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "fi",
+    "zc"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_ckbump": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-219049242-mu/port_bind_v2/kv_hard_models.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "ckb_kv"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_ctrl_kc": {
+   "verdict": "FAIL",
+   "fails": [
+    "OUTPUT_OPEN"
+   ],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "kc_WS",
+    "kc_WN",
+    "kc_ES"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "kf"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_d2d_cal_seq_pin": {
+   "verdict": "FAIL",
+   "fails": [
+    "OUTPUT_OPEN"
+   ],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "dcal"
+   ],
+   "param_sets": {
+    "{\"EP_SKEW\": \"3\", \"GO_OFS\": \"0\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "adm_done",
+    "cal_ready",
+    "cfg_addr",
+    "cfg_data",
+    "cfg_rx_we",
+    "cfg_tx_we",
+    "fault",
+    "layer",
+    "running"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_d2d_static": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED",
+    "OUTPUT_OPEN"
+   ],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "d2d_kv"
+   ],
+   "param_sets": {
+    "{\"NL\": \"2\", \"NTX\": \"3\", \"TXDP\": \"50529301\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "cfg_addr",
+    "cfg_data",
+    "cfg_rx_we",
+    "cfg_tx_we"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "att_rx_slot",
+    "kvn_word_index",
+    "kvn_word_slot",
+    "recovery_cycles"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_ectl3_kiss_st": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 32,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ectl_WS_0",
+    "ectl_WS_1",
+    "ectl_WS_2"
+   ],
+   "param_sets": {
+    "{\"HXK\": \"13\", \"MUT\": \"0\", \"QK_ISSUE_AGE\": \"91\", \"RESPONSE_LAT\": \"80\"}": 32
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_embgw_boot_s": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "embgw"
+   ],
+   "param_sets": {
+    "{\"BD\": \"4\", \"GAP\": \"1\", \"HOLD\": \"64\", \"MUT\": \"0\", \"ROW0\": \"24427\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_fwdbump": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-219049242-mu/port_bind_v2/kv_hard_models.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "fwb_ep",
+    "fwb_rs"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_hbm3e_phy_pc": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-219049242-mu/port_bind_v2/kv_hard_models.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "phy_WN",
+    "phy_WS",
+    "phy_EN"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_host_pc_slice_die": {
+   "verdict": "FAIL",
+   "fails": [
+    "OUTPUT_OPEN"
+   ],
+   "instances": 128,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hsl_WS_0",
+    "hsl_WS_1",
+    "hsl_WS_2"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "ai",
+    "ci",
+    "fault_i",
+    "lpc",
+    "sdi",
+    "sfi",
+    "ski",
+    "soi"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "bgo",
+    "fo"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_host_root_admission": {
+   "verdict": "FAIL",
+   "fails": [
+    "OUTPUT_OPEN"
+   ],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "host"
+   ],
+   "param_sets": {
+    "{\"ENABLE_NATIVE\": \"1\", \"ENABLE_SERVICE\": \"1\", \"ENABLE_TOKEN\": \"1\", \"NL\": \"2\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "accepted_ranks",
+    "available",
+    "coordinator_fault",
+    "dispatch_valid",
+    "dispatched",
+    "engine_result_cr",
+    "fault_src",
+    "hc",
+    "host_admission_open",
+    "host_deferred",
+    "ingest_permission",
+    "irq",
+    "issued",
+    "landed",
+    "local_service_epoch",
+    "marker",
+    "marker_v",
+    "native_pr",
+    "package_abort",
+    "participant_pos",
+    "participant_token",
+    "participant_trace",
+    "peer_protocol_fault",
+    "physical_ack_n",
+    "program_auth_digest",
+    "program_auth_epoch",
+    "program_auth_v",
+    "program_authorized_footer64",
+    "program_authorized_footer_v",
+    "program_consensus",
+    "program_expected_dw",
+    "program_expected_pw",
+    "record_fault",
+    "record_tx_v",
+    "recovery_complete",
+    "seen",
+    "service_abort",
+    "service_diag_raw",
+    "service_faults",
+    "service_ready"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_kvs_attn": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "kvs_attn"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_kvs_ctl": {
+   "verdict": "FAIL",
+   "fails": [
+    "OUTPUT_OPEN"
+   ],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "kvs_ctl"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "kg"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_kvs_emb": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "kvs_emb"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_kvs_grp": {
+   "verdict": "FAIL",
+   "fails": [
+    "OUTPUT_OPEN"
+   ],
+   "instances": 28,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "slg_WS_0",
+    "slg_WS_1",
+    "slg_WS_2"
+   ],
+   "param_sets": {
+    "{}": 28
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "slg__cfg_group",
+    "slg__cfg_stack"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "y__tep",
+    "y__tok"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_kvs_grp_h": {
+   "verdict": "FAIL",
+   "fails": [
+    "OUTPUT_OPEN"
+   ],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "slg_WS_4",
+    "slg_WN_4",
+    "slg_ES_4"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "slg__cfg_group",
+    "slg__cfg_stack"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "o_dn",
+    "y__tep",
+    "y__tok"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_kvs_hroot": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "kvs_hroot_WS",
+    "kvs_hroot_ES",
+    "kvs_hroot_WN"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "esh__stack"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_kvs_pc": {
+   "verdict": "FAIL",
+   "fails": [
+    "OUTPUT_OPEN"
+   ],
+   "instances": 124,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "kvpc_WS_1",
+    "kvpc_WS_2",
+    "kvpc_WS_3"
+   ],
+   "param_sets": {
+    "{}": 124
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "pc__cfg_stack",
+    "pc__fi",
+    "pc__pc"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "pc__completion_v",
+    "pc__completion_we",
+    "pc__er",
+    "pc__ko"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_kvs_pc_h": {
+   "verdict": "FAIL",
+   "fails": [
+    "OUTPUT_OPEN"
+   ],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "kvpc_WS_0",
+    "kvpc_WN_0",
+    "kvpc_ES_0"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "pc__cfg_stack",
+    "pc__fi",
+    "pc__pc"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "pc__completion_v",
+    "pc__completion_we",
+    "pc__er",
+    "pc__ko"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_landsh0_1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_pinfix_pll_lock_0__s0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_landsh0_296": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ks_kvpc_WS_31__o_next_0__s0",
+    "rly_ks_kvs_hroot_ES__o_pc_0__s1"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 44
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_landsh0_36": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ks_kvpc_WS_31__o_next_0__s1",
+    "rly_ks_slg_EN_7__o_ctl_0__s0",
+    "rly_ks_slg_EN_7__o_ctl_0__s1"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 33
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_landsh0_528": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ks_kvs_hroot_ES__o_pc_0__s0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_landsh_1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_af_WS_42__s0",
+    "rly_af_WS__f0_37__s0",
+    "rly_af_WN_11__s0"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_landsh_296": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_hchf_WN_18__s0",
+    "rly_hchf_EN_16__s0",
+    "rly_ks_kvpc_WN_31__o_next_0__s0"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 184
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_landsh_36": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 251,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_pvh_WS_0__f0_6__s0",
+    "rly_pvh_WS_1__f0_6__s0",
+    "rly_pvh_WS_2__f0_7__s0"
+   ],
+   "param_sets": {
+    "{}": 251
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 2792
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_landsh_528": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 39,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_pvin_WS_0_31__s0",
+    "rly_pvin_WS_0_31__s1",
+    "rly_pvin_WS_1_22__s0"
+   ],
+   "param_sets": {
+    "{}": 39
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 7
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_pll_analog_model": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "pll"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_pv16_vport": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_20261014/qkd_pv16_vport.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "vport_WS_0",
+    "vport_WS_1",
+    "vport_WS_2"
+   ],
+   "param_sets": {
+    "{\"DQ\": \"0\", \"MUT\": \"0\", \"RT\": \"8\"}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_pv_fin_s": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "pvfin"
+   ],
+   "param_sets": {
+    "{\"ADD_LAT\": \"7\", \"MUL_LAT\": \"6\", \"MUT\": \"0\", \"SKEW\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_pv_rs_hd_f": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "pvw_0__u_RH_r0",
+    "pvw_1__u_RH_r0"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlyi_258s": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "pvw_0__u_T0Q0_0_r0",
+    "pvw_0__u_T0Q0_12_r0",
+    "pvw_0__u_T0Q0_15_r0"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlys_1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5975,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "pvw_0__u_R0b0_r0",
+    "pvw_0__u_R0b1_r0",
+    "pvw_0__u_R0b2_r0"
+   ],
+   "param_sets": {
+    "{}": 5975
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlys_296": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4299,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "pvw_0__g_ok_u_K1c0g0_r0",
+    "pvw_0__u_CL0_0_r0",
+    "pvw_0__u_CL0_0_r0_x2"
+   ],
+   "param_sets": {
+    "{}": 4299
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "a"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlys_36": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 10321,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "pvw_0__u_DL10_r0",
+    "pvw_0__u_DL11_r0",
+    "pvw_0__u_DL12_r0"
+   ],
+   "param_sets": {
+    "{}": 10321
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "a"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlys_528": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2115,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_host_fdi_0__s0",
+    "rly_host_fdi_0__s1",
+    "rly_host_fdi_0__s2"
+   ],
+   "param_sets": {
+    "{}": 2115
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 31046
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlysh0_1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_af_WS_0__s0",
+    "rly_af_WS__f0_0__s0",
+    "rly_af_WN_0__s0"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlysh0_296": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_pve_WS_0__s0",
+    "rly_pve_WN_0__s0",
+    "rly_pve_ES_0__s0"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 362
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlysh0_36": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 251,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_pvh_WS_0__f0_0__s0",
+    "rly_pvh_WS_1__f0_0__s0",
+    "rly_pvh_WS_2__f0_0__s0"
+   ],
+   "param_sets": {
+    "{}": 251
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 4291
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlysh0_528": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 39,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_pvin_WS_0_0__s0",
+    "rly_pvin_WS_0_0__s1",
+    "rly_pvin_WS_1_0__s0"
+   ],
+   "param_sets": {
+    "{}": 39
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 16
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlysh_1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 553,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_af_WS_1__s0",
+    "rly_af_WS_2__s0",
+    "rly_af_WS_3__s0"
+   ],
+   "param_sets": {
+    "{}": 553
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlysh_296": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 255,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_pve_WS_1__s0",
+    "rly_pve_WS_2__s0",
+    "rly_pve_WS_3__s0"
+   ],
+   "param_sets": {
+    "{}": 255
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 2392
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlysh_36": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 8821,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_pvh_WS_0__f0_1__s0",
+    "rly_pvh_WS_0__f0_2__s0",
+    "rly_pvh_WS_0__f0_3__s0"
+   ],
+   "param_sets": {
+    "{}": 8821
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 154456
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rlysh_528": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1169,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_pvin_WS_0_1__s0",
+    "rly_pvin_WS_0_1__s1",
+    "rly_pvin_WS_0_2__s0"
+   ],
+   "param_sets": {
+    "{}": 1169
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "a": 492
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_rst_region_pr": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 42,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_rst_region_pr.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_die_t0_76",
+    "rly_rst_die_t1_64",
+    "rly_rst_die_t2_48"
+   ],
+   "param_sets": {
+    "{}": 42
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "dly"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_seq_core_static_s": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "seq__u_core"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_seq_fan_s": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "seq__g_fan_0__u_fan",
+    "seq__g_fan_1__u_fan",
+    "seq__g_fan_2__u_fan"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkd_seq_xs_s": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "seq__g_xs_0__u_xs",
+    "seq__g_xs_1__u_xs",
+    "seq__g_xs_2__u_xs"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkh_head_gather_stage": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 384,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_1__u_ftg",
+    "head_WS_0_2__u_ftg",
+    "hst_WS_0_1_g"
+   ],
+   "param_sets": {
+    "{}": 384
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "qkh_head_sstage": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 256,
+   "rtl": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_1__u_fts",
+    "head_WS_0_2__u_fts",
+    "hst_WS_0_1_s1"
+   ],
+   "param_sets": {
+    "{}": 256
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  }
+ },
+ "failing": [
+  "input_unconnected",
+  "unread_net_bits",
+  "output_open_ports"
+ ]
+}

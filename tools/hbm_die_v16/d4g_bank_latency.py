@@ -24,6 +24,14 @@ REQUIRED ROUND TRIP of a client on bank b:  RT_b = BANK + PIN + lane(rq) + lane(
 Clients behind a SHARE (a request mux in front of a bank group) are checked through the share: the share's own rule
 gives its excess over its reference, and the downstream client adds that excess plus its own lanes to the share.
 Clients without a fixed capture (fire-and-forget writers) and hub/calendar ports are listed as INFO, not checked.
+LG TAP CHAIN (HBM-BANKLAT-SU 10-19): the SFU / HC LG pair taps are not bank clients themselves -- each reaches its two
+banks THROUGH the next tap's far port (bank <- su_<q><g> pgslice_lg <- sfu_<q><g> tap_leaf <- hc_<q><g> tap_leaf_term).
+A tap forwards far traffic with 2 edges each way (pin + mux register out, rr + return register back) and no calendar
+of its own, so the upstream tap's round trip on bank b is
+    RT_up_b = RT_down_b(padded) + 4 + lane(up.near_rq -> down.far_rq) + lane(down.far_rr -> up.near_rr)
+where RT_down_b(padded) = the downstream SCALAR tap's padded round trip (max over its banks: the die pads the short
+bank lanes once, below the SU) or its own per-bank RT for a VECTOR downstream. Ref: SFU 14/11 at RT 6+4 / 3+4
+(zero-lane SU in front), HC 18/15 at 6+8 / 3+8 (header of ot_hbm_vm_lg_static_bank: near SU 10/7, SFU 14/11, HC 18/15).
 
     d4g_bank_latency.py CONTRACT.json[.gz] [--report R.json]      (standalone; d4g_functional_bind.py imports check())
 Output line: BANK_LATENCY PASS|FAIL clients=N checked=C fail=F unequal=U unresolved_landings=L
@@ -63,6 +71,13 @@ RULES = {
         ('vm_rq', 'share', 'BANK_RT', 6, 6, BANK_RD, 'REG 0 owner own[BANK_RT]: bank answer at n+1+BANK_RT (own[6] = n+6 bank)')],
     'ot_hbm_idx_vm_share2_static_r': [
         ('vm_rq', 'share', 'BANK_RT', 6, 6, BANK_RD, 'REG 1 (pin-registered leaf): same owner rule behind its own pins')],
+    # LG tap chain (TAP_CHAIN): reached through the downstream tap's far port, not directly from a bank
+    'ot_hgi_sfu_lg_pair_tap_leaf': [
+        ('near_rq', 'rd', 'READ_RETURN', 14, 14, BANK_RD + 4, 'SFU LG pair tap: 14 = own 4 + SU tap 4 + bank read 6'),
+        ('near_wq', 'wr', 'WRITE_RETURN', 11, 11, BANK_WR + 4, 'SFU LG pair tap: 11 = own 4 + SU tap 4 + commit 3')],
+    'ot_hgi_sfu_lg_pair_tap_leaf_term': [
+        ('near_rq', 'rd', 'READ_RETURN', 18, 18, BANK_RD + 8, 'HC LG pair tap (term): 18 = own 4 + SFU 4 + SU 4 + read 6'),
+        ('near_wq', 'wr', 'WRITE_RETURN', 15, 15, BANK_WR + 8, 'HC LG pair tap (term): 15 = own 4 + SFU 4 + SU 4 + commit 3')],
     # HBM-BANKLAT-DMA 10-19: drain_rel (descriptor, compiler-owned) does NOT absorb the round trip: the controller's
     # landing write slot and response-valid check are presented RR_RT edges after the request.  RR_RT = rq launch ->
     # rr launch at the controller pins; 7 = closed design point (production bench: ot_vms_bank_static wired directly =
@@ -84,6 +99,12 @@ def dma_min_drain_lag(rr_rt=DMA_RR_RT_BUDGET):
 
 # masters whose RTL accepts a per-bank VECTOR (contract list) for the rule's param; a list on any other master FAILS
 VECTOR_OK = {('ot_hgi_sm_xload_cl2_ctlx', 'RD_LAT')}
+# LG tap chain: master -> {client request port: (far request port, near return port, far return port, req bits, ret bits)}
+# (pair records: rq 17 b / wq 281 b per bank, rr 257 b / done 1 b per bank; bank h of the pair = request bit // width)
+TAP_CHAIN = {m: {'rd': (rq, 'far_rq', rr, 'far_rr', 17, 257), 'wr': (wq, 'far_wq', wd, 'far_w_done', 281, 1)}
+             for m, rq, rr, wq, wd in (('ot_hbm_su_static_pgslice_lg', 'lg_rq', 'lg_rr', 'lg_wq', 'lg_w_done'),
+                                       ('ot_hgi_sfu_lg_pair_tap_leaf', 'near_rq', 'near_rr', 'near_wq', 'near_w_done'))}
+TAP_EDGES = 4
 # downstream clients of a share: (share master, share request port) -> (client param, RTL default, ref value, ref lanes, why)
 SHARE_PORTS = {
     ('ot_hbm_idx_rootctl_static_am', 'index_rq'): ('VM_RT_EXTRA', 4, 4, 2, 'n12 SW behind the registered share: 2 fixed edges'),
@@ -191,12 +212,44 @@ def check(c):
             lq, nq = G.lane_latency(hq)
             ret = [(s, h) for s, h in G.fwd(bk, rr, 0) if s[0] == d[0]] if rr in I[bk]['ports'] else []
             if ret:
-                lr, nr = G.lane_latency(ret[0][1]); rport = ret[0][0][1]
+                lr, nr = G.lane_latency(ret[0][1]); rport = ret[0][0][1]; rbit = ret[0][0][2]
             else:
-                lr, nr, rport = None, [], None
+                lr, nr, rport, rbit = None, [], None, None
             base = (BANK_RD if kind == 'rd' else BANK_WR) + pin
             paths[(d[0], d[1], kind)].append(dict(bank=bk, bank_port=rq, ret_port=rport, lane_rq=lq, lane_rr=lr,
-                                                  rt=None if lr is None else base + lq + lr, pin=pin, notes=nq + nr))
+                                                  rt=None if lr is None else base + lq + lr, pin=pin, notes=nq + nr,
+                                                  req_bit=d[2], ret_bit=rbit))
+    # LG tap chain: extend every tap's bank paths to the tap in front of its far port (repeat: SU -> SFU -> HC)
+    todo = [k for k in paths if I[k[0]]['master'] in TAP_CHAIN]
+    while todo:
+        ci, cp, kind = todo.pop()
+        spec = TAP_CHAIN[I[ci]['master']].get(kind)
+        if spec is None or spec[0] != cp:
+            continue
+        _, far_q, _, far_r, wq_bits, wr_bits = spec
+        ps = paths[(ci, cp, kind)]
+        rts = [p['rt'] for p in ps if p['rt'] is not None]
+        scalar = not isinstance(I[ci].get('params', {}).get(next((r[2] for r in RULES.get(I[ci]['master'], [])
+                                                                    if r[0] == cp), ''), None), list)
+        for p in ps:
+            if p['rt'] is None or far_q not in I[ci]['ports']:
+                continue
+            h = p['req_bit'] // wq_bits
+            d, hq = G.back(ci, far_q, p['req_bit'])
+            if d is None:
+                continue
+            lq, nq = G.lane_latency(hq)
+            ret = [(s, hh) for s, hh in G.fwd(ci, far_r, h * wr_bits) if s[0] == d[0]] if far_r in I[ci]['ports'] else []
+            lr, nr = G.lane_latency(ret[0][1]) if ret else (None, [])
+            down = max(rts) if scalar else p['rt']
+            key = (d[0], d[1], kind)
+            new = key not in paths
+            paths[key].append(dict(bank=p['bank'], bank_port=p['bank_port'], ret_port=ret[0][0][1] if ret else None,
+                                   lane_rq=lq, lane_rr=lr, via=ci, down_rt=down, down_pad=down - p['rt'],
+                                   rt=None if lr is None else down + TAP_EDGES + lq + lr, pin=p['pin'],
+                                   notes=p['notes'] + nq + nr, req_bit=d[2], ret_bit=ret[0][0][2] if ret else None))
+            if new and I[d[0]]['master'] in TAP_CHAIN:
+                todo.append(key)
     rows = []
     excess = {}                                  # share inst -> its actual RT excess over ref_rt
     for (ci, cp, kind), ps in sorted(paths.items()):
@@ -256,7 +309,7 @@ def check(c):
             row['bad'].append(f'{ci}.{pname} = {have}, bank contract + lanes need {want} '
                               + (f'(budget: pad every bank lane to it: {row["pads_to_param"]}) ' if have > want else '')
                               + f'(ref {ref} at round trip {ref_rt}; actual {need} = bank {BANK_RD if kind == "rd" else BANK_WR}'
-                              f' + pin {ps[0]["pin"]} + lanes)')
+                              f' + pin {ps[0]["pin"]} + lanes' + (f' + taps via {ps[0]["via"]} (padded {ps[0]["down_rt"]} + 4)' if 'via' in ps[0] else '') + ')')
         row['status'] = 'FAIL' if row['bad'] else 'PASS'
         rows.append(row)
     # downstream clients of shares

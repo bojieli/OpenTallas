@@ -1,0 +1,7 @@
+MEM sectors=8300
+D 14801
+DONE cycles=16001 results=93 gos=39 runs=1 ing=305/305 xw=9048/9048 ids=1/1 dram_reads=8300
+- /srv/opentallas-scratch/claude/hbm-smbudget-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_svg_rel_sm.sv:117: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 13us; walltime 179.678 s; speed 74.246 ns/s
+- Verilator: cpu 177.807 s on 1 threads; allocated 88 MB
