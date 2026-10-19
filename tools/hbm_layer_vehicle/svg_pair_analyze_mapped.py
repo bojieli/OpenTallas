@@ -21,7 +21,7 @@ for b,sinks in loads.items():
 report.sort(key=lambda a:a['loads'],reverse=True)
 ff=collections.Counter(c['type'] for c in cells.values() if seq(c['type']));groups=collections.Counter()
 for name,c in cells.items():
- if seq(c['type']):groups['ingress_slices' if '.g_pin[' in name else 'return_slices' if 'u_ring.g_slice[' in name else 'pair_slices' if 'u_pair.g_slice[' in name else 'other_native_control']]+=1
+ if seq(c['type']):groups['ingress_slices' if '.g_pin[' in name else 'return_slices' if 'u_ring.g_slice[' in name else 'pair_slices' if 'u_pair.g_slice[' in name else 'other_native_control']+=1
 qoutputs={};outputs_not_q=[]
 for p,v in m['ports'].items():
  if v['direction']!='output':continue
