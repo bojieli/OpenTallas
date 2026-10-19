@@ -314,5 +314,11 @@
    "failure": "TT -12.30: u_control/bank_read_addr[166] -> L[5].read_addr[6] -12.30 (S-face pin, ~457 um U-turn), u_control/bank_write_slot[6] -> L[2].write_slot[6] -11.73 (one W-face 7-bit star to 8 banks), L[4].wd[277] -> wd[1433] -7.63 / wd[1415] -6.15 (N wd order inverted in column 0); DRC 1 M4 Metal Spacing inside u_dbk.L[0].u_bank (parent wire in the bank M4 OBS pocket)",
    "why": "controller bank_read_addr / slot copies leave on the face of the bank group they serve (S 0-2, W 3-4, N 5-7; worst leg ~457 -> ~343 um); column-0 N wd: farther bank on the channel side; parent M2-M4 obstructed over hard children between GRT and DRT (child_pocket_guard.tcl). 0 cycles, exact."
   }
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "clk_rst",
+  "why": "ROOT-RST 2026-10-19: rst_n reaches the async clears of both ot_rst_relay copies (u_rst_bk 2 sync + 9 relay, u_rst_ctl 2 sync + 2 relay = 15 sinks > 2); land it at the E face in 2 clk_rst stages first (reset assert/release +2 clk_rst cycles, a scheduled constant; data latency unchanged)"
  }
 }
