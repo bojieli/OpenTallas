@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits  1297 GB (avail 985, growth 77, headroom 0, waiters 0/0 GB) load 32/128 running 15 disk 415 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hd4g/rstcarrier/bench_492abd2b5
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hd4g/rstcarrier/bench_492abd2b5
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hd4g/rstcarrier/bench_492abd2b5
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hd4g/rstcarrier/bench_492abd2b5
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hd4g/rstcarrier/bench_492abd2b5
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hd4g/rstcarrier/bench_492abd2b5
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-681050-1792452918 after 0 s
+RESET_CARRIER PASS checks=635316 trials=12 csync_age=3 chop_age=1 cpad_ages=1..255
+/tmp/hbfd_rrlc_96t9t0s2/tb.sv:279: $finish called at 24840000 (1ps)
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-681050-1792452918): exit 0
+RC 0
