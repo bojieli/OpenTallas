@@ -56,6 +56,13 @@ SPECIAL = ('mtp_draft', 'head')
 SEQ = dict(fks_to_job=3, job_to_age0=4, v_cmd_to_vo=7, svc_to_sj=2, gunit_to_cw=3, kit_to_tkd=3, done_v=5)
 # ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop.
 RSTOP_HOP = 2
+# TOK-S81-GAPS/CTL (10-19, measured on the G8 cut_3S_ctl L0 replay: every S-line CTL word +5 vs this model, vo_n on time):
+# a CTL beat on a slice's V pin reaches its tier line out pins 6 edges later, not RSTOP_HOP: rstop iv (1) -> dl_vb (2) ->
+# xr vb (3) -> xr ci_r (4, v_ctl re-inject) -> rstop ci_q (5) -> ro_e / ro_w (6) (ot_s81sl_rstop + ot_s81sl_xr).
+V_CTL_INJECT = 6
+# dsdv_bk_sel rung transit vi -> vo: 3 edges since S81-TILES8/bk (10-18: one 276-b relay per input direction inside the
+# cluster, u_rn on vi_n; was ot_dsdv_vstop's 2).
+BKSEL_TRANSIT = 3
 # tb_s81sl_beat on the current vp (S81-SLICE NORMR, Verilator 5.050): results/rtl/s81_slice_1017/beat/g_b37 (op 7 NORMR,
 # hc_pre = G-unit leaf row R: SLBEAT go_to_partial=115 rstd_to_y0=18 rstd_to_xq=59 post_cmd_to_last_hw=63, PASS) and g_b37i
 # (op 5 NORM imm: go_to_partial=112); mutants g_mni (NORMR ignores the row) / g_mpl (old POST row order) FAIL.  (Was the
@@ -516,7 +523,8 @@ class Prog:
 def ctl_path(die, sl):
     """seq_host vo_n / vo_s -> the slice's control plane: per-hop edges (contract model, asserted by the bench).
     V north reaches s_4N (tvN_seqhost), V south bk_sel then s_4S (tvS_seqhost, tvS_bk_sel); the column-4 slice
-    re-injects on its tier line both ways, rstop 2 edges a stop + the xr / xrE link ages between slices."""
+    re-injects on its tier line both ways (V pin -> line out V_CTL_INJECT edges through xr), rstop 2 edges a stop + the
+    xr / xrE link ages between slices."""
     info = die.slices()[sl]
     sid = info['sid']
     tier = 'N' if sl.endswith('N') else 'S'
@@ -537,10 +545,14 @@ def ctl_path(die, sl):
         path.append(dict(at=f'{lk} landed' if L else f'{lk} (abutted, no station / landing)', link=lk, edge=t,
                          stations=L['stations'] if L else 0, E=L['E'] if L else None))
         if where == 'u_seqhost.vo_s':
-            t += 2                                   # bk_sel rung transit: ot_dsdv_vstop forward 2 edges (dsdv_bk_g)
-    # the column-4 slice: rstop V deliver -> line inject (2 edges), then one stop per column
-    t += RSTOP_HOP
+            t += BKSEL_TRANSIT                       # bk_sel rung transit: relay u_rn + ot_dsdv_vstop (dsdv_bk_sel)
+    # the column-4 slice: V pin -> control plane -> line out (V_CTL_INJECT edges), then one stop per column.  An event edge
+    # is the slice's landed CTL pin + RSTOP_HOP (dv_cut_replay PIN_OFFSET), so the column-4 slice's own event is vi + 2.
+    t_vi = t
+    t += V_CTL_INJECT
     path.append(dict(at=f'{entry} line inject', edge=t))
+    if col == 4:
+        t = t_vi + RSTOP_HOP
     step = -1 if col < 4 else 1
     c = 4
     while c != col:
@@ -555,7 +567,7 @@ def ctl_path(die, sl):
         c = nxt
     port = 'ri_e' if col < 4 else ('ri_w' if col > 4 else 'vi')
     return dict(slice=sl, sid=sid, entry_port=port, edges=t, path=path, model='contract (dsdv_seq_host header + '
-                'ot_s81_land E + 1 + half-cycle stations + rstop 2/stop); the bench asserts the arrival edge')
+                'ot_s81_land E + 1 + half-cycle stations + bk_sel 3 + V inject 6 + rstop 2/stop; G8 cut_3S_ctl L0 replay measured)')
 
 
 def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which='attn'):
@@ -734,7 +746,7 @@ def finish(prog, stage=0, kit_lead=20):
     return rows, hs, endage
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0):
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
@@ -744,7 +756,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     prog = Prog(die)
     low = []
     fams = family_lowerings()
-    ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None)
+    ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag)
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
@@ -789,6 +801,16 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             jobs = [(0, prog, finish(prog))]
         except CalendarFull:
             jobs = [(t0, jp, finish(jp)) for t0, jp in split_jobs(prog)]
+        # TOK-S81-GAPS/CTL (10-19): the svc job tag is {issuer context slot, calendar row index} (dsdv_seq_host j_o =
+        # {v, arg, cd[83] slot, cd[6:0] op}; ot_dsdv_fixed_issue OP_BASE 0), known only once the calendar is sorted;
+        # the q-frame headers and the SVCJ words carry it (lower_svc tag_rule).  G8 cut_3S_ctl L0: s_j left with tag
+        # 0x5c (row 92) against the compiled 0x00.  Re-lower once with the final tag (row order does not depend on it).
+        need = {(k & 1) << 7 | i for k, (_, _, (rows, _, _)) in enumerate(jobs) for i, r in enumerate(rows)
+                if r['eng'] == ENG['SVC']}
+        assert len(need) <= 1, f'more than one svc job row ({sorted(need)}): one tag per layer is modelled'
+        if need and need != {svc_tag} and prog.svc:
+            return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
+                                 svc_tag=need.pop())
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
