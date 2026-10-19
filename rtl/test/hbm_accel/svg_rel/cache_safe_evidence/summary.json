@@ -1,0 +1,57 @@
+{
+  "verdict": "PASS_COMPONENT_EXACT_AND_MAPPED_STRUCTURE",
+  "source_commit": "e3642b697",
+  "rtl_freeze_commit": "bb7c14755",
+  "bench_tool": "Verilator5.050",
+  "bench_host": "ot-epyc8",
+  "bench_root": "/srv/opentallas-scratch/claude/codex-cache-native-safe-e3642b697",
+  "positive": "CACHE_NATIVE_SAFE PASS native_latency=2 safe_packets=4319 maxlive=8 recycled=10390 cycles=10445 exact_reference_rows=4243 cache_reads=4323 crossbank_cycles=80 packed_source_edges=5380 packed_sectors=18292 bytes_per_record=136 faults=8",
+  "mutants": [
+    {
+      "mut": 1,
+      "witness": "m1.log",
+      "fail_regex": "SAFE_EQUIV packet cycle=29",
+      "cause": "wrong read quarter"
+    },
+    {
+      "mut": 2,
+      "witness": "m2.log",
+      "fail_regex": "SAFE_EQUIV packet cycle=29",
+      "cause": "wrong registered write-slot qualification"
+    }
+  ],
+  "mapped_host": "ot-epyc8",
+  "mapped_root": "/srv/opentallas-scratch/claude/codex-cache-map-bb7c14755",
+  "mapped_tool": "ORFS Docker16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29, RVT TT833.333ps ABC target",
+  "mapped_reclassified_without_resynthesis": true,
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136_native_safe.sv": "14a8482745e48507123de72a42f54c22b12b3cb3a7994a0fc1a3a8ebba51b3e1",
+    "rtl/hbm_accel/loader/service_native/ot_cache_safe_cells.sv": "1d7a6c41be8dbd659a02bfdb70b3f6fd64bde55599a1fdcd3597663b1b58272c",
+    "rtl/hbm_accel/loader/service_native/newcache_kept_read.sv": "ad0debcb386a63a82e59ddb0b3d0db7720a3cfa1e004def3aa9e493150a281ed",
+    "rtl/test/hbm_accel/svg_rel/tb_cache_native_safe.sv": "e9194faceb337976ecd486ca742f30582845ed4cec8c9181be93c7e30384f8d7",
+    "rtl/test/hbm_accel/svg_rel/run_cache_native_safe.sh": "217927a72616f72503715316c42bbe682efb9f870fc946d9eb593d69a7dffdd9",
+    "tools/hbm_layer_vehicle/xcal_mapped_census.py": "b9767970b28e907e3ed758fe78e1d7c3a94ce4eafd1e9475d2f35f45467fbe1c",
+    "tools/hbm_layer_vehicle/cache_safe_mapped_audit.py": "8633be640caeaad9b044ab6fe077795633d94c2b81d6fb8dadf97ec5e3ba382e"
+  },
+  "source_macro_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136_native_safe.sv": "14a8482745e48507123de72a42f54c22b12b3cb3a7994a0fc1a3a8ebba51b3e1",
+    "rtl/hbm_accel/loader/service_native/newcache_kept_read.sv": "ad0debcb386a63a82e59ddb0b3d0db7720a3cfa1e004def3aa9e493150a281ed",
+    "rtl/hbm_accel/loader/service_native/ot_cache_safe_cells.sv": "1d7a6c41be8dbd659a02bfdb70b3f6fd64bde55599a1fdcd3597663b1b58272c",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571"
+  },
+  "std_area_um2": 5751.503819999999,
+  "macro_count": 5,
+  "unknown_cells": {},
+  "reset_profile": {
+    "raw": 8,
+    "first": 23,
+    "final": 25,
+    "levels": 2
+  },
+  "max_data_fanout": 31,
+  "max_mapped_logic_levels": 17,
+  "all_outputs_native_q": true,
+  "clock_rule": "physical gate OPEN",
+  "physical_scope": "No gate/REVIEW/submission; macrofacePGaccess/resetclearreach/slew/CTS/actualtiming OPEN; strictresetprofile needs rootreview",
+  "added_cycles": 2
+}

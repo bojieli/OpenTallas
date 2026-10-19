@@ -1,0 +1,3583 @@
+{
+  "top": "ot_hbm_svc_static_sm_packed136_native_safe",
+  "analyzer_sha256": "b9767970b28e907e3ed758fe78e1d7c3a94ce4eafd1e9475d2f35f45467fbe1c",
+  "reused_mapped": true,
+  "tool": "ORFS docker Yosys + ABC, RVT TT,833.333ps target",
+  "physical_claim": false,
+  "std_area_um2": 5751.503819999999,
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136_native_safe.sv": "14a8482745e48507123de72a42f54c22b12b3cb3a7994a0fc1a3a8ebba51b3e1",
+    "rtl/hbm_accel/loader/service_native/newcache_kept_read.sv": "ad0debcb386a63a82e59ddb0b3d0db7720a3cfa1e004def3aa9e493150a281ed",
+    "rtl/hbm_accel/loader/service_native/ot_cache_safe_cells.sv": "1d7a6c41be8dbd659a02bfdb70b3f6fd64bde55599a1fdcd3597663b1b58272c",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571"
+  },
+  "macro_counts": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 5
+  },
+  "unmapped_or_unknown": {},
+  "cell_counts": {
+    "INVx1_ASAP7_75t_R": 8642,
+    "NAND2xp33_ASAP7_75t_R": 813,
+    "OAI21xp33_ASAP7_75t_R": 165,
+    "NOR2xp33_ASAP7_75t_R": 944,
+    "AOI21xp33_ASAP7_75t_R": 85,
+    "OA21x2_ASAP7_75t_R": 20,
+    "AND2x2_ASAP7_75t_R": 48,
+    "XNOR2xp5_ASAP7_75t_R": 126,
+    "OR2x2_ASAP7_75t_R": 1020,
+    "XOR2xp5_ASAP7_75t_R": 115,
+    "OR3x1_ASAP7_75t_R": 697,
+    "O2A1O1Ixp33_ASAP7_75t_R": 572,
+    "AO21x1_ASAP7_75t_R": 25,
+    "MAJIxp5_ASAP7_75t_R": 3,
+    "A2O1A1O1Ixp25_ASAP7_75t_R": 6,
+    "NOR3xp33_ASAP7_75t_R": 54,
+    "AO31x2_ASAP7_75t_R": 2,
+    "NAND3xp33_ASAP7_75t_R": 47,
+    "OA211x2_ASAP7_75t_R": 6,
+    "OAI211xp5_ASAP7_75t_R": 2070,
+    "OR4x1_ASAP7_75t_R": 152,
+    "AND3x1_ASAP7_75t_R": 8,
+    "OAI31xp33_ASAP7_75t_R": 17,
+    "NAND5xp2_ASAP7_75t_R": 298,
+    "NAND4xp25_ASAP7_75t_R": 3891,
+    "AND5x1_ASAP7_75t_R": 8,
+    "AOI22xp33_ASAP7_75t_R": 19494,
+    "A2O1A1Ixp33_ASAP7_75t_R": 38,
+    "AO32x1_ASAP7_75t_R": 3,
+    "AOI31xp33_ASAP7_75t_R": 14,
+    "OAI221xp5_ASAP7_75t_R": 14,
+    "AOI211xp5_ASAP7_75t_R": 31,
+    "OAI22xp33_ASAP7_75t_R": 40,
+    "NOR4xp25_ASAP7_75t_R": 44,
+    "OAI311xp33_ASAP7_75t_R": 4,
+    "OAI321xp33_ASAP7_75t_R": 2,
+    "AOI32xp33_ASAP7_75t_R": 7,
+    "AND4x1_ASAP7_75t_R": 10,
+    "AO22x1_ASAP7_75t_R": 1,
+    "AOI311xp33_ASAP7_75t_R": 3,
+    "NOR5xp2_ASAP7_75t_R": 38,
+    "AOI221xp5_ASAP7_75t_R": 35,
+    "OAI32xp33_ASAP7_75t_R": 2,
+    "AO221x1_ASAP7_75t_R": 2,
+    "OAI222xp33_ASAP7_75t_R": 4,
+    "OR5x1_ASAP7_75t_R": 5,
+    "AOI33xp33_ASAP7_75t_R": 1,
+    "OA22x2_ASAP7_75t_R": 1,
+    "DFFHQNx1_ASAP7_75t_R": 7378,
+    "DFFASRHQNx1_ASAP7_75t_R": 945,
+    "AOI222xp33_ASAP7_75t_R": 1295,
+    "ot_sram_1r1w_128x256_m1_r2c2": 5
+  },
+  "over32_data_control": [],
+  "clock_networks": [
+    {
+      "bit": 2,
+      "fanout": 8328,
+      "names": [
+        "clk"
+      ],
+      "drivers": [],
+      "reset": false,
+      "clock": true
+    }
+  ],
+  "reset_networks": [
+    {
+      "bit": 47021,
+      "fanout": 9,
+      "names": [
+        "g_on.u_bankmeta0.g_m[0].u_m.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r2.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47080,
+      "fanout": 9,
+      "names": [
+        "g_on.u_bankmeta0.g_m[1].u_m.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r3.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47132,
+      "fanout": 9,
+      "names": [
+        "g_on.u_bankmeta0.g_m[2].u_m.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r6.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47191,
+      "fanout": 9,
+      "names": [
+        "g_on.u_bankmeta0.g_m[3].u_m.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r8.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47430,
+      "fanout": 9,
+      "names": [
+        "g_on.u_bankmeta1.g_m[0].u_m.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r4.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47481,
+      "fanout": 9,
+      "names": [
+        "g_on.u_bankmeta1.g_m[1].u_m.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r5.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47532,
+      "fanout": 9,
+      "names": [
+        "g_on.u_bankmeta1.g_m[2].u_m.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r7.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47583,
+      "fanout": 9,
+      "names": [
+        "g_on.u_bankmeta1.g_m[3].u_m.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r10.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47625,
+      "fanout": 9,
+      "names": [
+        "g_on.u_head_0.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r25.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47611,
+      "fanout": 8,
+      "names": [
+        "g_on.u_elapsed_0.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r28.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47642,
+      "fanout": 8,
+      "names": [
+        "g_on.u_load_epoch_0.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r15.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47651,
+      "fanout": 8,
+      "names": [
+        "g_on.u_load_epoch_8.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r16.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47788,
+      "fanout": 8,
+      "names": [
+        "g_on.u_out_tag_0.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r33.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 3,
+      "fanout": 8,
+      "names": [
+        "rst_n"
+      ],
+      "drivers": [],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47821,
+      "fanout": 8,
+      "names": [
+        "g_on.u_present_0.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r31.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47621,
+      "fanout": 7,
+      "names": [
+        "g_on.u_emitted_0.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r18.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47659,
+      "fanout": 7,
+      "names": [
+        "g_on.u_load_rows_0.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r17.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 36367,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[0].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r35.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 36505,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[10].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r45.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 36643,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[11].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r46.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 36781,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[12].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r47.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 36919,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[13].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r48.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 37057,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[14].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r49.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 37195,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[15].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r50.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 37333,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[1].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r36.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 37471,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[2].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r37.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 37609,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[3].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r38.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 37747,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[4].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r39.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 37885,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[5].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r40.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 38023,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[6].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r41.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 38161,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[7].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r42.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 38299,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[8].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r43.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 38437,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[0].g_word[9].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r44.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 38511,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[0].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r51.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 38585,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[10].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r61.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 38659,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[11].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r62.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 38733,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[12].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r63.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 38807,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[13].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r64.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 38881,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[14].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r65.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 38955,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[15].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r66.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39029,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[1].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r52.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39103,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[2].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r53.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39177,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[3].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r54.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39251,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[4].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r55.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39325,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[5].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r56.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39399,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[6].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r57.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39473,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[7].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r58.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39547,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[8].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r59.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39621,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[1].g_word[9].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r60.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39695,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[0].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r67.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39769,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[10].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r77.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39843,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[11].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r78.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39917,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[12].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r79.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 39991,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[13].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r80.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40065,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[14].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r81.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40139,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[15].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r82.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40213,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[1].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r68.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40287,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[2].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r69.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40361,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[3].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r70.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40435,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[4].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r71.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40509,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[5].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r72.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40583,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[6].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r73.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40657,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[7].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r74.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40731,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[8].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r75.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40805,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[2].g_word[9].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r76.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40879,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[0].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r83.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 40953,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[10].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r93.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41027,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[11].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r94.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41101,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[12].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r95.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41175,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[13].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r96.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41249,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[14].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r97.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41323,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[15].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r98.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41397,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[1].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r84.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41471,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[2].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r85.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41545,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[3].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r86.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41619,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[4].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r87.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41693,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[5].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r88.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41767,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[6].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r89.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41841,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[7].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r90.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41915,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[8].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r91.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 41989,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[3].g_word[9].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r92.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42063,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[0].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r99.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42137,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[10].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r109.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42211,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[11].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r110.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42285,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[12].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r111.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42359,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[13].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r112.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42433,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[14].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r113.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42507,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[15].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r114.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42581,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[1].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r100.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42655,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[2].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r101.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42729,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[3].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r102.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42803,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[4].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r103.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42877,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[5].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r104.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 42951,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[6].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r105.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43025,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[7].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r106.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43099,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[8].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r107.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43173,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[4].g_word[9].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r108.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43247,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[0].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r115.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43321,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[10].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r125.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43395,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[11].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r126.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43469,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[12].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r127.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43543,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[13].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r128.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43617,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[14].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r129.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43691,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[15].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r130.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43765,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[1].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r116.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43839,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[2].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r117.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43913,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[3].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r118.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 43987,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[4].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r119.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44061,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[5].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r120.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44135,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[6].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r121.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44209,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[7].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r122.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44283,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[8].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r123.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44357,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[5].g_word[9].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r124.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44431,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[0].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r131.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44505,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[10].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r141.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44579,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[11].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r142.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44653,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[12].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r143.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44727,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[13].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r144.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44801,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[14].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r145.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44875,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[15].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r146.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 44949,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[1].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r132.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45023,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[2].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r133.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45097,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[3].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r134.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45171,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[4].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r135.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45245,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[5].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r136.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45319,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[6].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r137.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45393,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[7].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r138.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45467,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[8].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r139.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45541,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[6].g_word[9].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r140.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45615,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[0].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r147.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45689,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[10].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r157.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45763,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[11].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r158.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45837,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[12].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r159.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45911,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[13].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r160.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 45985,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[14].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r161.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 46059,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[15].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r162.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 46133,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[1].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r148.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 46207,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[2].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r149.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 46281,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[3].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r150.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 46355,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[4].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r151.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 46429,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[5].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r152.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 46503,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[6].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r153.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 46577,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[7].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r154.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 46651,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[8].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r155.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 46725,
+      "fanout": 4,
+      "names": [
+        "g_on.g_slot[7].g_word[9].u_word.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r156.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 4275,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[0].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r163.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 8092,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[10].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r173.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 9859,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[11].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r174.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 11626,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[12].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r175.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 13393,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[13].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r176.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 15160,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[14].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r177.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 16927,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[15].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r178.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 18694,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[16].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r179.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 20461,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[1].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r164.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 22228,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[2].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r165.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 23995,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[3].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r166.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 25762,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[4].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r167.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 27529,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[5].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r168.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 29296,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[6].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r169.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 31063,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[7].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r170.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 32830,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[8].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r171.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 34597,
+      "fanout": 3,
+      "names": [
+        "g_on.g_quarter[9].u_read.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r172.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47208,
+      "fanout": 2,
+      "names": [
+        "g_on.u_bankmeta0.g_m[4].u_m.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r9.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47599,
+      "fanout": 2,
+      "names": [
+        "g_on.u_bankmeta1.g_m[4].u_m.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r11.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47791,
+      "fanout": 2,
+      "names": [
+        "g_on.u_out_tag_8.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r34.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47796,
+      "fanout": 2,
+      "names": [
+        "g_on.u_owned_0.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r0.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47613,
+      "fanout": 1,
+      "names": [
+        "g_on.u_elapsed_8.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r29.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47633,
+      "fanout": 1,
+      "names": [
+        "g_on.u_load_bank_0.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r13.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    },
+    {
+      "bit": 47793,
+      "fanout": 1,
+      "names": [
+        "g_on.u_out_valid_0.rst_n"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r32.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": true,
+      "clock": false
+    }
+  ],
+  "top50": [
+    {
+      "bit": 2,
+      "fanout": 8328,
+      "names": [
+        "clk"
+      ],
+      "drivers": [],
+      "reset": false,
+      "clock": true
+    },
+    {
+      "bit": 4206,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[0].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[0].u_read.$abc$28568$auto$blifparse.cc:397:parse_blif$28601",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 8023,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[10].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[10].u_read.$abc$27568$auto$blifparse.cc:397:parse_blif$27601",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 9790,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[11].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[11].u_read.$abc$27468$auto$blifparse.cc:397:parse_blif$27501",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 11557,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[12].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[12].u_read.$abc$27368$auto$blifparse.cc:397:parse_blif$27401",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 13324,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[13].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[13].u_read.$abc$27268$auto$blifparse.cc:397:parse_blif$27301",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 15091,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[14].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[14].u_read.$abc$27168$auto$blifparse.cc:397:parse_blif$27201",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 16858,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[15].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[15].u_read.$abc$30933$auto$blifparse.cc:397:parse_blif$30966",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 18625,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[16].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[16].u_read.$abc$30456$auto$blifparse.cc:397:parse_blif$30489",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 20392,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[1].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[1].u_read.$abc$28468$auto$blifparse.cc:397:parse_blif$28501",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 22159,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[2].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[2].u_read.$abc$28368$auto$blifparse.cc:397:parse_blif$28401",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 23926,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[3].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[3].u_read.$abc$28268$auto$blifparse.cc:397:parse_blif$28301",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 25693,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[4].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[4].u_read.$abc$28168$auto$blifparse.cc:397:parse_blif$28201",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 27460,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[5].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[5].u_read.$abc$28068$auto$blifparse.cc:397:parse_blif$28101",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 29227,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[6].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[6].u_read.$abc$27968$auto$blifparse.cc:397:parse_blif$28001",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 30994,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[7].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[7].u_read.$abc$27868$auto$blifparse.cc:397:parse_blif$27901",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 32761,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[8].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[8].u_read.$abc$27768$auto$blifparse.cc:397:parse_blif$27801",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 34528,
+      "fanout": 31,
+      "names": [
+        "g_on.g_quarter[9].u_read.open_q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[9].u_read.$abc$27668$auto$blifparse.cc:397:parse_blif$27701",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2797,
+      "fanout": 26,
+      "names": [
+        "g_on.read_ok"
+      ],
+      "drivers": [
+        [
+          "$abc$29026$auto$blifparse.cc:397:parse_blif$29300",
+          "AOI211xp5_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2676,
+      "fanout": 25,
+      "names": [
+        "$abc$29026$new_n808"
+      ],
+      "drivers": [
+        [
+          "$abc$29026$auto$blifparse.cc:397:parse_blif$29190",
+          "AND2x2_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 47920,
+      "fanout": 25,
+      "names": [
+        "g_on.u_r22.q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_r22.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 47798,
+      "fanout": 23,
+      "names": [
+        "g_on.u_p0_0.q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_p0_0.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 47800,
+      "fanout": 23,
+      "names": [
+        "g_on.u_p0_1.q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_p0_1.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2914,
+      "fanout": 22,
+      "names": [
+        "g_on.received_present"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_received_present.$abc$28668$auto$blifparse.cc:397:parse_blif$28669",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 3591,
+      "fanout": 22,
+      "names": [
+        "g_on.received_error"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_received_error.$abc$28668$auto$blifparse.cc:397:parse_blif$28669",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 47802,
+      "fanout": 22,
+      "names": [
+        "g_on.u_p0_2.q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_p0_2.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 47808,
+      "fanout": 22,
+      "names": [
+        "g_on.u_p0_5.q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_p0_5.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 47810,
+      "fanout": 22,
+      "names": [
+        "g_on.u_p0_6.q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_p0_6.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 47812,
+      "fanout": 22,
+      "names": [
+        "g_on.u_p0_7.q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_p0_7.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 47804,
+      "fanout": 22,
+      "names": [
+        "g_on.u_p0_3.q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_p0_3.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2848,
+      "fanout": 21,
+      "names": [
+        "$abc$29026$new_n956"
+      ],
+      "drivers": [
+        [
+          "$abc$29026$auto$blifparse.cc:397:parse_blif$29338",
+          "OR4x1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2831,
+      "fanout": 21,
+      "names": [
+        "$abc$29026$new_n941"
+      ],
+      "drivers": [
+        [
+          "$abc$29026$auto$blifparse.cc:397:parse_blif$29323",
+          "A2O1A1Ixp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 47806,
+      "fanout": 21,
+      "names": [
+        "g_on.u_p0_4.q"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_p0_4.$abc$30450$auto$blifparse.cc:397:parse_blif$30451",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2908,
+      "fanout": 20,
+      "names": [
+        "g_on.received_present_pop"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_received_present_pop.$abc$28668$auto$blifparse.cc:397:parse_blif$28669",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2642,
+      "fanout": 19,
+      "names": [
+        "g_on.open_ok1"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_open1.$abc$30304$auto$blifparse.cc:397:parse_blif$30315",
+          "AOI211xp5_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 3705,
+      "fanout": 19,
+      "names": [
+        "g_on.open_v_q1"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_open_v_q1.$abc$30454$auto$blifparse.cc:397:parse_blif$30455",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2423,
+      "fanout": 17,
+      "names": [
+        "g_on.open_ok3"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_open3.$abc$30304$auto$blifparse.cc:397:parse_blif$30315",
+          "AOI211xp5_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2500,
+      "fanout": 17,
+      "names": [
+        "g_on.open_bank_q2"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_open_bank_q2_0.$abc$29024$auto$blifparse.cc:397:parse_blif$29025",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2572,
+      "fanout": 17,
+      "names": [
+        "g_on.received_error_pop"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_received_error_pop.$abc$28668$auto$blifparse.cc:397:parse_blif$28669",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2616,
+      "fanout": 17,
+      "names": [
+        "g_on.open_ok5"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_open5.$abc$30304$auto$blifparse.cc:397:parse_blif$30315",
+          "AOI211xp5_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2677,
+      "fanout": 17,
+      "names": [
+        "$abc$29026$new_n809"
+      ],
+      "drivers": [
+        [
+          "$abc$29026$auto$blifparse.cc:397:parse_blif$29191",
+          "NAND2xp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 2790,
+      "fanout": 17,
+      "names": [
+        "g_on.retire_bank_q2"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_retire_bank_q2_0.$abc$29024$auto$blifparse.cc:397:parse_blif$29025",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 3449,
+      "fanout": 17,
+      "names": [
+        "g_on.open_count_q2"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_open_count_q2_0.$abc$28999$auto$blifparse.cc:397:parse_blif$29001",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 4199,
+      "fanout": 17,
+      "names": [
+        "$flatten\\g_on.g_quarter[0].u_read.$abc$28568$auto$dfflibmap.cc:546:dfflibmap$26740"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[0].u_read.$auto$ff.cc:337:slice$18511",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 4201,
+      "fanout": 17,
+      "names": [
+        "$flatten\\g_on.g_quarter[0].u_read.$abc$28568$auto$dfflibmap.cc:546:dfflibmap$26742"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_quarter[0].u_read.$auto$ff.cc:337:slice$18512",
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "QN"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 4276,
+      "fanout": 17,
+      "names": [
+        "g_on.advance_next0"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_advance0.$abc$30345$auto$blifparse.cc:397:parse_blif$30369",
+          "O2A1O1Ixp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 4277,
+      "fanout": 17,
+      "names": [
+        "g_on.advance_next1"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.u_advance1.$abc$30345$auto$blifparse.cc:397:parse_blif$30369",
+          "O2A1O1Ixp33_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 4342,
+      "fanout": 17,
+      "names": [
+        "g_on.g_quarter[0].u_read.g_slice[0].slices"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_slot[6].g_word[4].u_word.$abc$30384$auto$blifparse.cc:397:parse_blif$30394",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 4343,
+      "fanout": 17,
+      "names": [
+        "g_on.g_quarter[0].u_read.g_slice[0].slices"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_slot[5].g_word[0].u_word.$abc$30384$auto$blifparse.cc:397:parse_blif$30394",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    },
+    {
+      "bit": 4345,
+      "fanout": 17,
+      "names": [
+        "g_on.g_quarter[0].u_read.g_slice[0].slices"
+      ],
+      "drivers": [
+        [
+          "$flatten\\g_on.g_slot[7].g_word[8].u_word.$abc$30384$auto$blifparse.cc:397:parse_blif$30394",
+          "INVx1_ASAP7_75t_R",
+          "Y"
+        ]
+      ],
+      "reset": false,
+      "clock": false
+    }
+  ],
+  "full_census_sha256": "2e0e705233861422e1b22add94d3eb6b80273d6beba8b6aede192b6632b9b7fc",
+  "full_census_artifact": "mapped_census.json.gz"
+}
