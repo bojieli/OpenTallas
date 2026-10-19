@@ -334,7 +334,7 @@ def _elaborate_sources(spec, root):
 
 
 @lru_cache(maxsize=16)
-def elaborate(root, top, sources, params, yosys):
+def elaborate(root, top, sources, params, yosys, defer=False):
     # Byte hashes are part of the key; no caller-supplied graph or receipt can stand in for this elaboration.
     root = Path(root)
     if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', top):
@@ -352,7 +352,9 @@ def elaborate(root, top, sources, params, yosys):
         args += f' -chparam {name} {value}'
     with tempfile.TemporaryDirectory(prefix='ot-gray-fifo-') as tmp:
         out = Path(tmp) / 'netlist.json'
-        cmd = (f'read_verilog -sv -DSYNTHESIS {" ".join(paths)}; hierarchy -check -top {top}{args}; '
+        # (d) mode reads -defer (as the census / KV-HOSTCL-CDC2 lint): modules elaborate only with their actual
+        # parameters, so a default-parameter elaboration guard ($fatal in an initial) does not fire
+        cmd = (f'read_verilog{" -defer" if defer else ""} -sv -DSYNTHESIS {" ".join(paths)}; hierarchy -check -top {top}{args}; '
                f'proc; flatten; memory; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}')
         run = subprocess.run([yosys, '-Q', '-T', '-p', cmd], capture_output=True, text=True)
         if run.returncode:
@@ -799,7 +801,7 @@ def _lint(spec, root):
     ext = extensions(spec)
     hashes, reviewed_files = _elaborate_sources(spec, root)
     document = elaborate(str(Path(root).resolve()), spec['top'], hashes,
-                         tuple(sorted(spec.get('params', {}).items())), _yosys())
+                         tuple(sorted(spec.get('params', {}).items())), _yosys(), spec.get(S.KEY) is not None)
     net = _netlist(document, spec, _macro_clock_pins(spec, root), True) if ext is not None else _netlist(document, spec)
     ds = spec['clock_entry_domains']
     period = {n: FAMILIES[n] for n in ds}
