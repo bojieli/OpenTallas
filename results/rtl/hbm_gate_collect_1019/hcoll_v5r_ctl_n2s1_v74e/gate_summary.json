@@ -1,0 +1,131 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: V6 (H-ELEM 14:20, +1 issue edge): inst/hgi_start/hgi_busy arrive at the issuer's d2 edge and are captured at this leaf's pins (= the d3 edge of the other children); tap_iteration/tap_steps are pin-captured by ot_hgi_coll_iter_mul, then 16x8 partial products, then a registered combine, so only field ",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc8 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hcoll_v5r_ctl_n2s1_v74e_20261019-120958.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hcoll_v5r_ctl_n2s1_v74e_20261019-120958.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/hcoll_v5r_ctl_n2s1_v74e-20261019-120958",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc8 in 76 s (gate total 1697 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2713, 'pin_rectangles': 2713, 'pin_track_checked': 2713, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 73f1acc85dd7a5655e3f764fdaa911bbc59b4a6b8495e19a7aaab4e8869cd469",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 3349 um2 + macros 19370 in core 72242: util 7% (std-cell density 7.2% of placeable 46646 um2; total fill 31.4%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hgi_coll_ctl_v5r_n2s1_safephys cells 27,101 flops 3,443 depth 646.8 ps util 0.3123 reach 0.0 um (0.7 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_ot_pr_core.u.u_mul.pc[1][2]$_DFF_P_ -> u_ot_pr_core.u.u_mul.m_del_l[31]$_DFF_P_/D: ~647 ps estimated (18 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "3 macro channel(s) narrower than 20 um with placement rows (e.g. u_ot_pr_core.u.u.g_safe_delay.u_inj.g_small.u_mem|u_ot_pr_core.u.u.g_safe_delay.u_se.g_large.u_mem 0.0 um, u_ot_pr_core.u.u.g_safe_delay.u_inj.g_small.u_mem|u_ot_pr_core.u.u.g_safe_delay.u_sl.g_small.u_mem 0.0 um, u_ot_pr_core.u.u.g_safe_delay.u_se.g_large.u_mem|u_ot_pr_core.u.u.g_safe_delay.u_vm.g_large.u_mem 0.0 um): widen to >= 20 um or block the channel",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 430.3..472.2 ps (spread 41.9), boundary mean 450.5; tt insertion all 322.4..371.3 ps (spread 48.9), boundary mean 342.0; ff insertion all 257.8..308.9 ps (spread 51.1), boundary mean 276.6; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hcoll_v5r_ctl_n2s1_v74e/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      522 paths, worst slack -92.7 ps (e.g. u_ot_pr_core.u.u_mul.pb[2][14]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -9.274070400522305e-11 hold WNS 4.800046471409303e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk_control: 3,447 sinks on the largest root; measured TT insertion 371.3 ps, FF insertion 308.9 ps, TT pin-flop spread 34.2 ps, FF pin-flop spread 38.6 ps; WARN: insertion 371.3 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/hbm-coll-v74e-1019/physical/ref_tile/hcoll_v5r_ctl_n2s1_v74e/gate_layout/floorplan.png; density /home/ubuntu/wt/hbm-coll-v74e-1019/physical/ref_tile/hcoll_v5r_ctl_n2s1_v74e/gate_layout/density.png; congestion /home/ubuntu/wt/hbm-coll-v74e-1019/physical/ref_tile/hcoll_v5r_ctl_n2s1_v74e/gate_layout/congestion.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 30% = (hard macros 19369.9 + synthesized std cells 3192.6) / outline 74649.6 um2; pin demand per face: S 204 pins over 40.5/216.0 um (19%), N 53 pins over 12.1/216.0 um (6%), W 1701 pins over 331.6/345.6 um (96%), E 835 pins over 236.4/345.6 um (68%) (pin-bound: LH-COLLPVM 10-19: pin- and macro-limited outline 216 x 345.6. W face 1,661 pins at pin_min_tracks 4 (0.192 um, <= 5.2 pins/um everywhere, no 10.5/um clusters) need >= 319 um of face, so 345.6 (8 x 43.2). The four delay SRAMs (2x 94.8x80.5 p192_mir + 2x 51.4x40.0 p192_rc, 410/199 M4 pins on BOTH W and E faces) stay one abutted N-S stack on the 43.2 lattice at x 86.4 with a real 6.48 um row halo (MACRO_ROWS_HALO_X) on both pin faces; std area ~3.9k um2 -> ~10% std fill.)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 270; worst layer M2 14.16% used; worst-overflow layer M4 (270); worst gcell Horizontal congestion overflow 1 (cap 0 use 1) at (86.07,103.17)-(86.64,103.74) um; 2442 markers span (86.07,98.61)-(139.08,281.58) um; congestion map /home/ubuntu/wt/hbm-coll-v74e-1019/physical/ref_tile/hcoll_v5r_ctl_n2s1_v74e/gate_layout/congestion.png; GRT 1047 s",
+   "fix": "regroup macros / widen the congested channels / move pins to their consumers; look at congestion.png and density.png"
+  }
+ ]
+}

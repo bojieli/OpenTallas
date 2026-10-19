@@ -1,0 +1,664 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/ref_gate/hcoll_v5r_ctl_n1s0_v74e-20261019-120958/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_ctl_v5r_n1s0_safephys_asap7_ref_gate/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "raw_source": true,
+ "ss": {
+  "clock_family": {
+   "core_clk": 3382
+  },
+  "boundary": {
+   "n": 2213,
+   "mean": 449.5,
+   "min": 419.8,
+   "max": 476.0
+  },
+  "all": {
+   "n": 3382,
+   "mean": 448.3,
+   "min": 416.7,
+   "max": 476.6
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 4,
+   "max_per_net": 1,
+   "reg_mean": 448.3,
+   "max_slew": 32.3,
+   "max_late": -2.5,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_inj.g_small.u_mem/clk",
+     "arr": 445.8,
+     "slew": 32.3,
+     "late": -2.5,
+     "net": "clknet_1_0__leaf_ot_ckkm_7_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_se.g_large.u_mem/clk",
+     "arr": 439.4,
+     "slew": 28.8,
+     "late": -8.9,
+     "net": "clknet_1_0__leaf_ot_ckkm_1_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_sl.g_small.u_mem/clk",
+     "arr": 445.5,
+     "slew": 31.2,
+     "late": -2.8,
+     "net": "clknet_1_1__leaf_ot_ckkm_7_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_vm.g_large.u_mem/clk",
+     "arr": 429.3,
+     "slew": 26.7,
+     "late": -19.0,
+     "net": "clknet_1_0__leaf_ot_ckkm_3_clk"
+    }
+   ]
+  },
+  "macro_libs": 2,
+  "child_flop": {
+   "boundary": {
+    "n": 2213,
+    "mean": 449.5,
+    "min": 419.8,
+    "max": 476.0
+   },
+   "all": {
+    "n": 3382,
+    "mean": 448.3,
+    "min": 416.7,
+    "max": 476.6
+   },
+   "refs": {
+    "ot_sram_1r1w_128x256_m1_r2c2_p192_mir": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    },
+    "ot_sram_1r1w_32x128_m1_p192_rc": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 2213,
+     "mean": 449.5,
+     "min": 419.8,
+     "max": 476.0
+    },
+    "all": {
+     "n": 3378,
+     "mean": 448.3,
+     "min": 416.7,
+     "max": 476.6
+    }
+   }
+  }
+ },
+ "tt": {
+  "clock_family": {
+   "core_clk": 3382
+  },
+  "boundary": {
+   "n": 2213,
+   "mean": 347.0,
+   "min": 319.7,
+   "max": 374.3
+  },
+  "all": {
+   "n": 3382,
+   "mean": 344.6,
+   "min": 316.4,
+   "max": 374.3
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 4,
+   "max_per_net": 1,
+   "reg_mean": 344.6,
+   "max_slew": 27.8,
+   "max_late": -7.0,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_inj.g_small.u_mem/clk",
+     "arr": 337.6,
+     "slew": 27.8,
+     "late": -7.0,
+     "net": "clknet_1_0__leaf_ot_ckkm_7_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_se.g_large.u_mem/clk",
+     "arr": 330.9,
+     "slew": 22.4,
+     "late": -13.7,
+     "net": "clknet_1_0__leaf_ot_ckkm_1_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_sl.g_small.u_mem/clk",
+     "arr": 337.3,
+     "slew": 26.6,
+     "late": -7.3,
+     "net": "clknet_1_1__leaf_ot_ckkm_7_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_vm.g_large.u_mem/clk",
+     "arr": 327.7,
+     "slew": 20.1,
+     "late": -16.9,
+     "net": "clknet_1_0__leaf_ot_ckkm_3_clk"
+    }
+   ]
+  },
+  "macro_libs": 2,
+  "child_flop": {
+   "boundary": {
+    "n": 2213,
+    "mean": 347.0,
+    "min": 319.7,
+    "max": 374.3
+   },
+   "all": {
+    "n": 3382,
+    "mean": 344.6,
+    "min": 316.4,
+    "max": 374.3
+   },
+   "refs": {
+    "ot_sram_1r1w_128x256_m1_r2c2_p192_mir": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    },
+    "ot_sram_1r1w_32x128_m1_p192_rc": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 2213,
+     "mean": 347.0,
+     "min": 319.7,
+     "max": 374.3
+    },
+    "all": {
+     "n": 3378,
+     "mean": 344.6,
+     "min": 316.4,
+     "max": 374.3
+    }
+   }
+  }
+ },
+ "ff": {
+  "clock_family": {
+   "core_clk": 3382
+  },
+  "boundary": {
+   "n": 2213,
+   "mean": 284.1,
+   "min": 258.9,
+   "max": 310.7
+  },
+  "all": {
+   "n": 3382,
+   "mean": 281.3,
+   "min": 255.4,
+   "max": 310.7
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 4,
+   "max_per_net": 1,
+   "reg_mean": 281.3,
+   "max_slew": 26.6,
+   "max_late": -8.8,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_inj.g_small.u_mem/clk",
+     "arr": 272.5,
+     "slew": 26.6,
+     "late": -8.8,
+     "net": "clknet_1_0__leaf_ot_ckkm_7_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_se.g_large.u_mem/clk",
+     "arr": 265.4,
+     "slew": 19.7,
+     "late": -15.9,
+     "net": "clknet_1_0__leaf_ot_ckkm_1_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_sl.g_small.u_mem/clk",
+     "arr": 272.2,
+     "slew": 25.3,
+     "late": -9.1,
+     "net": "clknet_1_1__leaf_ot_ckkm_7_clk"
+    },
+    {
+     "pin": "u_ot_pr_core.u.u.g_safe_delay.u_vm.g_large.u_mem/clk",
+     "arr": 265.4,
+     "slew": 17.1,
+     "late": -15.9,
+     "net": "clknet_1_0__leaf_ot_ckkm_3_clk"
+    }
+   ]
+  },
+  "macro_libs": 2,
+  "child_flop": {
+   "boundary": {
+    "n": 2213,
+    "mean": 284.1,
+    "min": 258.9,
+    "max": 310.7
+   },
+   "all": {
+    "n": 3382,
+    "mean": 281.3,
+    "min": 255.4,
+    "max": 310.7
+   },
+   "refs": {
+    "ot_sram_1r1w_128x256_m1_r2c2_p192_mir": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    },
+    "ot_sram_1r1w_32x128_m1_p192_rc": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 2213,
+     "mean": 284.1,
+     "min": 258.9,
+     "max": 310.7
+    },
+    "all": {
+     "n": 3378,
+     "mean": 281.3,
+     "min": 255.4,
+     "max": 310.7
+    }
+   }
+  }
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 4,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 450,
+  "CK_SS_ALL_MEAN": 448,
+  "CK_SS_MIN": 420,
+  "CK_SS_ALL_MIN": 417,
+  "CK_SS_MAX": 476,
+  "CK_SS_ALL_MAX": 477,
+  "CK_TT_MEAN": 347,
+  "CK_TT_ALL_MEAN": 345,
+  "CK_TT_MIN": 320,
+  "CK_TT_ALL_MIN": 316,
+  "CK_TT_MAX": 374,
+  "CK_TT_ALL_MAX": 374,
+  "CK_FF_MEAN": 284,
+  "CK_FF_ALL_MEAN": 281,
+  "CK_FF_MIN": 259,
+  "CK_FF_ALL_MIN": 255,
+  "CK_FF_MAX": 311,
+  "CK_FF_ALL_MAX": 311,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk_control",
+ "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk_control}]",
+ "clock_measurements": {
+  "clk_control": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/ref_gate/hcoll_v5r_ctl_n1s0_v74e-20261019-120958/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_ctl_v5r_n1s0_safephys_asap7_ref_gate/base",
+   "db": "4_1_cts.odb",
+   "sdc": "4_cts.sdc",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "raw_source": true,
+   "ss": {
+    "clock_family": {
+     "core_clk": 3382
+    },
+    "boundary": {
+     "n": 2213,
+     "mean": 449.5,
+     "min": 419.8,
+     "max": 476.0
+    },
+    "all": {
+     "n": 3382,
+     "mean": 448.3,
+     "min": 416.7,
+     "max": 476.6
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 4,
+     "max_per_net": 1,
+     "reg_mean": 448.3,
+     "max_slew": 32.3,
+     "max_late": -2.5,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_inj.g_small.u_mem/clk",
+       "arr": 445.8,
+       "slew": 32.3,
+       "late": -2.5,
+       "net": "clknet_1_0__leaf_ot_ckkm_7_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_se.g_large.u_mem/clk",
+       "arr": 439.4,
+       "slew": 28.8,
+       "late": -8.9,
+       "net": "clknet_1_0__leaf_ot_ckkm_1_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_sl.g_small.u_mem/clk",
+       "arr": 445.5,
+       "slew": 31.2,
+       "late": -2.8,
+       "net": "clknet_1_1__leaf_ot_ckkm_7_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_vm.g_large.u_mem/clk",
+       "arr": 429.3,
+       "slew": 26.7,
+       "late": -19.0,
+       "net": "clknet_1_0__leaf_ot_ckkm_3_clk"
+      }
+     ]
+    },
+    "macro_libs": 2,
+    "child_flop": {
+     "boundary": {
+      "n": 2213,
+      "mean": 449.5,
+      "min": 419.8,
+      "max": 476.0
+     },
+     "all": {
+      "n": 3382,
+      "mean": 448.3,
+      "min": 416.7,
+      "max": 476.6
+     },
+     "refs": {
+      "ot_sram_1r1w_128x256_m1_r2c2_p192_mir": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      },
+      "ot_sram_1r1w_32x128_m1_p192_rc": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 2213,
+       "mean": 449.5,
+       "min": 419.8,
+       "max": 476.0
+      },
+      "all": {
+       "n": 3378,
+       "mean": 448.3,
+       "min": 416.7,
+       "max": 476.6
+      }
+     }
+    }
+   },
+   "tt": {
+    "clock_family": {
+     "core_clk": 3382
+    },
+    "boundary": {
+     "n": 2213,
+     "mean": 347.0,
+     "min": 319.7,
+     "max": 374.3
+    },
+    "all": {
+     "n": 3382,
+     "mean": 344.6,
+     "min": 316.4,
+     "max": 374.3
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 4,
+     "max_per_net": 1,
+     "reg_mean": 344.6,
+     "max_slew": 27.8,
+     "max_late": -7.0,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_inj.g_small.u_mem/clk",
+       "arr": 337.6,
+       "slew": 27.8,
+       "late": -7.0,
+       "net": "clknet_1_0__leaf_ot_ckkm_7_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_se.g_large.u_mem/clk",
+       "arr": 330.9,
+       "slew": 22.4,
+       "late": -13.7,
+       "net": "clknet_1_0__leaf_ot_ckkm_1_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_sl.g_small.u_mem/clk",
+       "arr": 337.3,
+       "slew": 26.6,
+       "late": -7.3,
+       "net": "clknet_1_1__leaf_ot_ckkm_7_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_vm.g_large.u_mem/clk",
+       "arr": 327.7,
+       "slew": 20.1,
+       "late": -16.9,
+       "net": "clknet_1_0__leaf_ot_ckkm_3_clk"
+      }
+     ]
+    },
+    "macro_libs": 2,
+    "child_flop": {
+     "boundary": {
+      "n": 2213,
+      "mean": 347.0,
+      "min": 319.7,
+      "max": 374.3
+     },
+     "all": {
+      "n": 3382,
+      "mean": 344.6,
+      "min": 316.4,
+      "max": 374.3
+     },
+     "refs": {
+      "ot_sram_1r1w_128x256_m1_r2c2_p192_mir": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      },
+      "ot_sram_1r1w_32x128_m1_p192_rc": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 2213,
+       "mean": 347.0,
+       "min": 319.7,
+       "max": 374.3
+      },
+      "all": {
+       "n": 3378,
+       "mean": 344.6,
+       "min": 316.4,
+       "max": 374.3
+      }
+     }
+    }
+   },
+   "ff": {
+    "clock_family": {
+     "core_clk": 3382
+    },
+    "boundary": {
+     "n": 2213,
+     "mean": 284.1,
+     "min": 258.9,
+     "max": 310.7
+    },
+    "all": {
+     "n": 3382,
+     "mean": 281.3,
+     "min": 255.4,
+     "max": 310.7
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 4,
+     "max_per_net": 1,
+     "reg_mean": 281.3,
+     "max_slew": 26.6,
+     "max_late": -8.8,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_inj.g_small.u_mem/clk",
+       "arr": 272.5,
+       "slew": 26.6,
+       "late": -8.8,
+       "net": "clknet_1_0__leaf_ot_ckkm_7_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_se.g_large.u_mem/clk",
+       "arr": 265.4,
+       "slew": 19.7,
+       "late": -15.9,
+       "net": "clknet_1_0__leaf_ot_ckkm_1_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_sl.g_small.u_mem/clk",
+       "arr": 272.2,
+       "slew": 25.3,
+       "late": -9.1,
+       "net": "clknet_1_1__leaf_ot_ckkm_7_clk"
+      },
+      {
+       "pin": "u_ot_pr_core.u.u.g_safe_delay.u_vm.g_large.u_mem/clk",
+       "arr": 265.4,
+       "slew": 17.1,
+       "late": -15.9,
+       "net": "clknet_1_0__leaf_ot_ckkm_3_clk"
+      }
+     ]
+    },
+    "macro_libs": 2,
+    "child_flop": {
+     "boundary": {
+      "n": 2213,
+      "mean": 284.1,
+      "min": 258.9,
+      "max": 310.7
+     },
+     "all": {
+      "n": 3382,
+      "mean": 281.3,
+      "min": 255.4,
+      "max": 310.7
+     },
+     "refs": {
+      "ot_sram_1r1w_128x256_m1_r2c2_p192_mir": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      },
+      "ot_sram_1r1w_32x128_m1_p192_rc": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 2213,
+       "mean": 284.1,
+       "min": 258.9,
+       "max": 310.7
+      },
+      "all": {
+       "n": 3378,
+       "mean": 281.3,
+       "min": 255.4,
+       "max": 310.7
+      }
+     }
+    }
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 4,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 450,
+    "CK_SS_ALL_MEAN": 448,
+    "CK_SS_MIN": 420,
+    "CK_SS_ALL_MIN": 417,
+    "CK_SS_MAX": 476,
+    "CK_SS_ALL_MAX": 477,
+    "CK_TT_MEAN": 347,
+    "CK_TT_ALL_MEAN": 345,
+    "CK_TT_MIN": 320,
+    "CK_TT_ALL_MIN": 316,
+    "CK_TT_MAX": 374,
+    "CK_TT_ALL_MAX": 374,
+    "CK_FF_MEAN": 284,
+    "CK_FF_ALL_MEAN": 281,
+    "CK_FF_MIN": 259,
+    "CK_FF_ALL_MIN": 255,
+    "CK_FF_MAX": 311,
+    "CK_FF_ALL_MAX": 311,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk_control",
+   "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk_control}]"
+  }
+ }
+}
