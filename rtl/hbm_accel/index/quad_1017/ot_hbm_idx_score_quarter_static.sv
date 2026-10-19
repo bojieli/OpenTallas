@@ -21,7 +21,7 @@ module ot_hbm_idx_score_quarter_static #(parameter integer TP=96,RANK_W=(TP<=1?1
  input wire keep_en,input wire[170:0]keep_bitmap,          // stack bitmap bit 2*beat+half (this quarter's lanes)
  input wire ql_v,input wire[7:0]ql_head,input wire[511:0]ql_codes,input wire[31:0]ql_sc,input wire[15:0]ql_w,
  input wire beat_v,input wire[7:0]beat_index,input wire[4395:0]key_lines,   // stack key lines 4*half .. 4*half+3
- output reg[305:0]score,output reg fault
+ output reg[305:0]score,output wire fault
 );
  localparam integer QW = 8 + 512 + 32 + 16, KW4 = 4 * 544, SW = 1 + 1 + 4 + 128 + 4, AUXW = 30, NK = 4, NCH = 4;
  // ---------------- reset relay
@@ -122,9 +122,10 @@ module ot_hbm_idx_score_quarter_static #(parameter integer TP=96,RANK_W=(TP<=1?1
  always @(posedge clk_ctl or negedge rst_c)
   if(!rst_c)score[0]<=1'b0; else score[0]<=ev[0];
  always @(posedge clk_ctl)score[305:1]<={idx,val,kv,fl,last[0]};
- always @(posedge clk_ctl or negedge rst_c)begin
-  if(!rst_c)fault<=0;
-  else if((|efault)||(ev[1]!=ev[0])||wf_d[0])fault<=1;
- end
+ // Diagnostic-only checker consumes the registered score metadata. Data lanes and
+ // their valid/ordinal cycles are unchanged; the existing sticky fault gains
+ // valid-key arithmetic errors which formerly remained only in score.fl.
+ ot_hbm_idx_score_fault_static score_fault_check(.clk(clk_ctl),.rst_n(rst_c),
+  .score_status(score[17:0]),.protocol_fault({wf_d[0],(ev[1]!=ev[0]),efault}),.fault(fault));
 endmodule
 `default_nettype wire
