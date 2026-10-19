@@ -1,0 +1,45 @@
+{
+ "cell": "ot_s81sl_vs",
+ "view": "2b6dabee8:physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+ "lib_cell": "ot_s81sl_vs",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean -> relative C 247.5"
+ ],
+ "R_ps": 247.5,
+ "spread_ps": 29.3,
+ "relative_to": "neighbour 2b6dabee8:physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/insertion.json boundary mean",
+ "outputs": 1752,
+ "inputs": 779,
+ "launch_ps": 100.9,
+ "launch_pin": "ve_ag[17]",
+ "capture_ps": 84.1,
+ "capture_pin": "x_qv",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 27.3,
+ "ff_launch_min_ps": 45.6,
+ "ff_hold_need_ps": -9.3,
+ "relative": {
+  "tt": {
+   "clock_pin": "clk",
+   "rel_min_ps": -13.5,
+   "rel_max_ps": 15.8,
+   "mismatch_ps": 15.8,
+   "offset_ps": 0.0,
+   "comp_ps": 247.5
+  },
+  "ff": {
+   "clock_pin": "clk",
+   "rel_min_ps": -12.2,
+   "rel_max_ps": 15.1,
+   "mismatch_ps": 15.1,
+   "offset_ps": 0.0,
+   "comp_ps": 203.8
+  }
+ },
+ "pass": true,
+ "fail_why": ""
+}
