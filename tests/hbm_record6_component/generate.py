@@ -125,6 +125,7 @@ def generate(a):
  receipt=dict(scope='SOURCE ONLY until real fleet RTL receipts',source_pgslice_sha256='32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567',episodes=2,gold=[f'{v:08x}'for v in gold],fills=ledger,native_banks=24,command_edges=672,root_prediction=591,native_done_prediction=670,producer='fixture-owned original1280words; second exactpower2 scaled input',physical_hold=['RFcoherentstorage','native timing','reach','reset/fanout','parent H'])
  (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
  # The bench generator only consumes these actual source-derived images.
+ (out/'station_ledger.json').write_text(a.station_ledger.read_text())
  addition_trace(out,json.loads(a.station_ledger.read_text()),original,second)
  from tb_generate import emit
  emit(out,receipt,json.loads(a.source_binding.read_text()))

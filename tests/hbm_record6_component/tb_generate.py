@@ -91,6 +91,72 @@ end
 end
 ''')
   s.append('default:begin end endcase end\n')
+ # Exact held-result -> fixed fragment entry ownership at D+1.
+ byresult={o['result']:(oi,o)for oi,o in enumerate(ops)}
+ globalops=[o for o in ops if o['station']==40]
+ globalinputs={d for o in globalops for d in o['operands']}
+ fragmentops=sorted([o for o in ops if o['station']!=40 and o['result']in globalinputs],key=lambda o:(o['source_done'],o['name']))
+ assert len(fragmentops)==26
+ def localmeta(o):
+  import re
+  m=re.search(r'subtree(\d+):(\d+)',o['name'])
+  base,size=(int(m[1]),int(m[2])-int(m[1]))if m else(int(re.search(r'chunk(\d+)',o['name'])[1]),1)
+  return base,size.bit_length()-1,int(o['name'][1])
+ versions={};writes=[];reads=[]
+ for slot,o in enumerate(fragmentops):
+  oi,_=byresult[o['result']];base,size,group=localmeta(o);D=o['source_done'];si=o['station']
+  stationrows=[x for x in ops if x['station']==si];ordinal=stationrows.index(o)%32
+  expected=f"{{8'(episode+1),5'd{size},8'd{base},2'd{group},1'b1,adds[episode*1281+{oi}][31:0]}}"
+  s.append(f'''always @(posedge clk)if(runrq&&cycle=={D+1})begin
+ if(!station.g_on.result_v[{si}]||station.g_on.result_x[{si}]!==adds[episode*1281+{oi}][31:0]||station.g_on.result_epoch[{si}]!=8'(episode+1)||station.g_on.result_op[{si}]!=5'd{ordinal}||station.g_on.result_group[{si}]!=2'd{group})$fatal(1,"FRAGMENT_OWNERSHIP slot={slot} producer={oi} cycle=%0d",cycle);
+ #0.001;
+ if(station.g_on.fragment_{slot}!=={expected})$fatal(1,"FRAGMENT_CAPTURE_ID slot={slot} producer={oi}");
+ $display("FRAGMENT_CAPTURE slot={slot} producer={oi} episode=%0d aborted=%0d value=%h",episode,(abort_mode&&qt<6100),station.g_on.fragment_{slot});
+end
+''')
+  writes.append(dict(time=D+1,slot=slot,version=o['result'],kind='local_fragment'))
+ # Global selector IDs come from the exact source ledger, not inferred slots.
+ ledger=json.loads((out/'station_ledger.json').read_text())
+ for raw in ledger['global_schedule']:
+  oi,o=byresult[raw['result']];S=o['source_start'];D=o['source_done'];slot=raw['slot']
+  import re
+  m=re.search(r'global(\d+):(\d+)',o['name']);base=int(m[1]);n=int(m[2])-base
+  for side,(ref,key)in enumerate(zip(raw['selectors'],o['operands'])):
+   reads.append(dict(time=S,slot=ref,version=key,consumer=o['name']))
+   if ref==26:continue
+   prodid,prod=byresult[key]
+   if prod['station']==40:
+    pm=re.search(r'global(\d+):(\d+)',prod['name']);pb=int(pm[1]);ps=(int(pm[2])-pb).bit_length()-1;pg=0
+   else:pb,ps,pg=localmeta(prod)
+   entry=f"{{8'(episode+1),5'd{ps},8'd{pb},2'd{pg},1'b1,adds[episode*1281+{prodid}][31:0]}}"
+   s.append(f'''always @(posedge clk)if(runrq&&station.g_on.active&&cycle=={S})begin
+ if(station.g_on.fs[{ref}]!=={entry})$fatal(1,"GLOBAL_FRAGMENT_CONSUMER_ID op={oi} slot={ref}");
+ $display("GLOBAL_FRAGMENT_READ op={oi} slot={ref} episode=%0d cycle=%0d",episode,cycle);
+end
+''')
+  writes.append(dict(time=D,slot=slot,version=o['result'],kind='global_result'))
+  entry=f"{{8'(episode+1),5'd{n.bit_length()-1},8'd{base},2'd0,1'b1,adds[episode*1281+{oi}][31:0]}}"
+  s.append(f'''always @(posedge clk)if(runrq&&station.g_on.active&&cycle=={D})begin #0.001;
+ if(station.g_on.fragment_{slot}!=={entry})$fatal(1,"GLOBAL_FRAGMENT_OVERWRITE_ID op={oi} slot={slot}");
+ $display("GLOBAL_FRAGMENT_WRITE op={oi} slot={slot} episode=%0d value=%h",episode,station.g_on.fragment_{slot});
+end
+''')
+ # Source fs bypass makes a same-edge completed replacement visible before
+ # first-stage selector capture: verify writes before reads at a shared edge.
+ events=[(v['time'],0,v)for v in writes]+[(v['time'],1,v)for v in reads if v['slot']!=26]
+ overwrites=[]
+ for t,kind,e in sorted(events,key=lambda z:(z[0],z[1])):
+  slot=e['slot']
+  if kind==0:
+   old=versions.get(slot)
+   if old:
+    uses=[r['time']for r in reads if r['slot']==slot and r['version']==old]
+    assert uses and max(uses)<t,('premature overwrite',slot,old,t,uses)
+    overwrites.append(dict(slot=slot,old_version=old,last_consumer_capture=max(uses),overwrite=t,new_version=e['version']))
+   versions[slot]=e['version']
+  else:assert versions.get(slot)==e['version'],('slot version mismatch',e,versions.get(slot))
+ assert len(overwrites)==27
+ (out/'fragment_lifetimes.json').write_text(json.dumps(dict(scope='INTEGER SOURCE OWNERSHIP; real RTL checks emitted separately',overwrites=overwrites,writes=writes,reads=reads),indent=2)+'\n')
  s.append('''integer roots=0,scalars=0,checked=0,fillcount=0,retired=0;integer startqt=0;integer abortfills=0;reg root_seen=0;
 always @(posedge clk)begin
  if(station_start)begin startqt=qt;root_seen=0;
