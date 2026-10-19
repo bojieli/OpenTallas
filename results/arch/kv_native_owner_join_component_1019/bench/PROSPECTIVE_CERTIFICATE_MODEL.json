@@ -1,0 +1,79 @@
+{
+  "kind": "MODEL_ONLY prospective certificate gate before RTL edit",
+  "state_added_bits": 0,
+  "current_declared_H512": 1830,
+  "event_indexed_bits": 2912,
+  "source_inputs": {
+    "qkd_host_if_pins_observed_rc.sv": "bbc64263e3552e1f5152f171a9c0cad714fd69dc900dd183219e53ac9c170be6",
+    "ot_host_if_pb2_observed_rc.sv": "dd3d4c7d4252812394d960490e6cdef4af599f928390e94bd2fe49fcf01a5ed9"
+  },
+  "ports": {
+    "core_existing_certificate_key87": "same actual scheduler pending owner/terminal/nativegen tuple, independent of certificate_v; reuse exact input",
+    "core_existing_certificate_health_bound": "actual health-valid prerequisite; scheduler retains exact health TAG/gen checks",
+    "core_new_output_certificate_key_ok": "default0 returns1; enabled uses active ownership/key/raw/terminal/health predicates independent of certificate_v",
+    "scheduler_new_input_native_certificate_key_ok": "used only ENABLE_NATIVE_OWNER_JOIN at cut_now identity_bad; disabled ignores",
+    "scheduler_optional_diagnostic_certificate_cut_v": "ENABLE_NATIVE_OWNER_JOIN&&cut_now, zero-state first authoritative cut event for negative assertions"
+  },
+  "shared_predicates": {
+    "certificate_key_match": "certificate_key == {a_q.client,a_q.slot,a_q.desc_gen,terminal37(a_q.request_tag),a_q.native_gen}",
+    "raw_seen_now": "a_q.raw_seen || (raw_done_v && !raw_unready && raw_active_match)",
+    "terminal_seen_now": "a_q.terminal_seen || (terminal_v && terminal_tag==expected_terminal && terminal_gen==a_q.native_gen)",
+    "enabled_eligible": "a_q.valid && !fault_q && !a_q.cert_seen && certificate_health_bound && certificate_key_match && raw_seen_now && terminal_seen_now",
+    "certificate_key_ok": "!ENABLE_NATIVE_OWNER_JOIN || enabled_eligible"
+  },
+  "DAG": [
+    [
+      "registered active/pending records + actual raw/terminal/health input events",
+      "shared key/raw/terminal equality predicates"
+    ],
+    [
+      "shared predicates + pre-edge state",
+      "certificate_key_ok"
+    ],
+    [
+      "cut_now + existing identity/health checks + !native_certificate_key_ok",
+      "identity_bad"
+    ],
+    [
+      "identity_bad + existing independent bad causes",
+      "bad_next"
+    ],
+    [
+      "cut_now + !bad_next",
+      "certify"
+    ],
+    [
+      "certify",
+      "actual certificate_v / mirror update / certified event / prompt certification"
+    ],
+    [
+      "actual certificate_v + shared eligibility",
+      "existing core cert_seen update or protocol rejection"
+    ]
+  ],
+  "forbidden_edges": [
+    "certificate_v -> certificate_key_ok",
+    "certify -> prospective key",
+    "a_d including certificate branch -> certificate_key_ok",
+    "late rc_bad mask -> already committed mirror"
+  ],
+  "authoritative_cut": "pending_v && pending_age+1==H, unchanged actual edge",
+  "same_edge_boundary": "D==H allowed by original scheduler. Use genuine validated raw/terminal events in OR with retained seen bits, preserving existing a_d same-edge semantics without circular dependency. Pure retained-only eligibility would reject a previously legal rawdone-at-H trace. Parent review required.",
+  "logical_cost": {
+    "existing_key_compare_bits_reused": 87,
+    "existing_raw_owner_compare_bits_reused": 44,
+    "existing_terminal_compare_bits_reused": 61,
+    "additional_equality_comparator_bits_if_shared_exactly": 0,
+    "predicate_glue": "about12 two-input AND/OR equivalents plus input inversions, mode/default and bad-next insertion; exact mapping OPEN",
+    "key87_tree_if_duplicated": "87XNOR plus22+6+2+1 reduction nodes, five logic levels including XNOR; duplicate is not priced as zero",
+    "fanout": "key bits one shared comparator each; existing seen/match flags gain roughly1 eligibility load; eligibility drives scheduler cut veto and core certification guard, bounded logical2 plus optional diagnostic1. Strict all-driver <=32/copy/route census remains required before physical adoption."
+  },
+  "preserves": [
+    "healthy actual certification edge; no extra wait",
+    "default0 original scheduler/core behavior",
+    "actual rawdone/credit/accepted DMA cleanup independent of eligibility",
+    "old CQ/event keys immutable across next unbound issue",
+    "no production H/calendar/native health/CDC/physical claims"
+  ],
+  "negative_witness_before_repair": "On current first prompt malformed certificate cases10..13, initial committed pos/tok/ngen must stay0 after the genuine attempted certification edge. Current source is expected to fail; preserve exact source/log before repair."
+}
