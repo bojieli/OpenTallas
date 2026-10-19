@@ -14,7 +14,7 @@
  "reset_ports": [
   "rst_n"
  ],
- "std_area_um2": 2500.0,
+ "std_area_um2": 2515.0,
  "pins": {
   "W": [
    "f_ks",
@@ -44,7 +44,7 @@
   "macro_halo_um": 10.8,
   "io_hold_margin_ns": 0.025
  },
- "structural_change": "MU-S81/KIT 10-19: NEW leaf dsdv_mu_hslot (MU-S81/HOST f9e3b8412 / 4fce073bd): the S81 host plane's static outstanding-token slot table, NSLOT 47 (47 AR users) x {user 10, pos 21, due 32}; taps f_ks / f_kd beside dsdv_seq_host's L0 (sh_lk), emits t_ku {v, user, pos} on the edge of the unit's t_kd done (0 added cycles), sticky faults t_mf (collision / off-calendar or dup / return mismatch / config). The unit wrapper dsdv_seq_host_mu (= dsdv_seq_host + this leaf, t_kd spare 32 bits) is soft glue in the seq_host parent: no closed leaf of dsdv_seq_host (sh_lk / sh_sq / sh_vc CLOSED / sh_ft) changes. Faces: taps + boot config W, t_ku / t_mf E (to the wrapper's t_kd merge), ck / rst_n S.",
+ "structural_change": "MU-S81/KIT 10-19: NEW leaf dsdv_mu_hslot (MU-S81/HOST f9e3b8412 / 4fce073bd): the S81 host plane's static outstanding-token slot table, NSLOT 47 (47 AR users) x {user 10, pos 21, due 32}; taps f_ks / f_kd beside dsdv_seq_host's L0 (sh_lk), emits t_ku {v, user, pos} on the edge of the unit's t_kd done (0 added cycles), sticky faults t_mf (collision / off-calendar or dup / return mismatch / config). The unit wrapper dsdv_seq_host_mu (= dsdv_seq_host + this leaf, t_kd spare 32 bits) is soft glue in the seq_host parent: no closed leaf of dsdv_seq_host (sh_lk / sh_sq / sh_vc CLOSED / sh_ft) changes. Faces: taps + boot config W, t_ku / t_mf E (to the wrapper's t_kd merge), ck / rst_n S. Gate @03a026073 WARN: high_fanout rp[1] 3,137 loads (47:1 read mux select, 0 flops; placement slack +61 ps); clock spread TT 5.7 / FF 4.7 ps, insertion TT 140 / FF 112, util 50%.",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered: f_ks / f_kd / f_mc land in pin flops (ks_q / kd_q / mc_q), t_ku / t_mf leave flops."
