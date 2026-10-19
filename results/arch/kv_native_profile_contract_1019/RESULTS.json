@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.kv_native_profile_contract_review.v1",
+ "native_qualified": false,
+ "receipt_issued": false,
+ "production_source_changed": false,
+ "helper_changed": false,
+ "positive_audit_files": 13,
+ "proven_positive_files": 12,
+ "unique_proven_modules": [
+  "ot_qkh_head_frontq_native",
+  "ot_qkh_head_score4_native",
+  "ot_qkh_head_stin_native",
+  "ot_qkh_head_stk_native",
+  "qkd_astk_ctl_s",
+  "qkd_astk_er_owner_st",
+  "qkd_astk_rly_296_fl",
+  "qkd_pv_rs_hd_f",
+  "qkd_seq_core_static_s",
+  "qkd_seq_fan_s",
+  "qkh_head_gather_stage"
+ ],
+ "unproven_positive_modules": [
+  "ot_qwen_tp8_pv_wide_ctl_tb"
+ ],
+ "terminal_audit_files": 28,
+ "pending": [
+  "ot_qkh_ktree",
+  "ot_qkh_lane8",
+  "ot_qwen_tp8_pv_join_t",
+  "ot_qwen_tp8_pv_slice_t",
+  "qkd_seq_xs_s",
+  "qkd_seq_xs_s.causal_mut8"
+ ],
+ "pv_mut1_causal_witness": {
+  "verdict": "EXPECTED_FAIL",
+  "first_divergence_edge": 14,
+  "differing_comparisons": 30,
+  "original_reset_low_edges": 6,
+  "observer_unit": "oth-ubuntu-49310-1792440188",
+  "observer_session": 28295,
+  "first_observer_vector_decode_bug_preserved": true
+ }
+}

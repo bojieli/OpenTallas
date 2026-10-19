@@ -1,0 +1,4557 @@
+[
+ {
+  "A": "$auto$rename.cc:496:execute$7253_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.wage[7]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$37996"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7253_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.wage[6]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38001"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [86]",
+  "B": "$auto$rename.cc:496:execute$13686_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42381"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7253_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.wage[5]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38006"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[1]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41036"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7253_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.wage[4]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38011"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7253_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.wage[3]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38016"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [19]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$42046"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7253_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.wage[2]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38021"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[13]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41041"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7253_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.wage[1]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38026"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7253_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.wage[0]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38031"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[9]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38036"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[12]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41046"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[8]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38041"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[7]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38046"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[6]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38051"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[11]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41051"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[5]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38056"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[4]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38061"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [20]",
+  "B": "$auto$rename.cc:496:execute$13818_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42051"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[3]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38066"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[10]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41056"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[2]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38071"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[1]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38076"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[15]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38081"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[0]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41061"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[14]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38086"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[13]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38091"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [4]",
+  "B": "$auto$rename.cc:496:execute$13648_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42531"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[12]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38096"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.cmd[9]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41066"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[11]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38101"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[10]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38106"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [21]",
+  "B": "$auto$rename.cc:496:execute$13816_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42056"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7248_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.u_req.q[0]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38111"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.cmd[8]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41071"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[9]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38116"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[8]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38121"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[7]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38126"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.cmd[7]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41076"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[6]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38131"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[5]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38136"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [87]",
+  "B": "$auto$rename.cc:496:execute$13684_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42386"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[4]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38141"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.cmd[6]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41081"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[15]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38146"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[14]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38151"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [22]",
+  "B": "$auto$rename.cc:496:execute$13814_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42061"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[13]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38156"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.cmd[5]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41086"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[12]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38161"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[11]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38166"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7246_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.u_req.nq[10]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38171"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.cmd[4]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41091"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[9]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38176"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[8]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38181"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[7]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38186"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.cmd[3]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41096"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[6]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38191"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[5]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38196"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [23]",
+  "B": "$auto$rename.cc:496:execute$13812_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42066"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[4]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38201"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [31]",
+  "B": "$flatten\\u_ot_pr_core.cmd[31]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41101"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[3]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38206"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[2]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38211"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[1]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38216"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [30]",
+  "B": "$flatten\\ot_prs_00003_ff.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41106"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[13]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38221"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[12]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38226"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [109]",
+  "B": "$auto$rename.cc:496:execute$13844_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42496"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[11]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38231"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [30]",
+  "B": "$flatten\\u_ot_pr_core.cmd[30]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41111"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[10]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38236"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7245_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.u_req.lim[0]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38241"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [24]",
+  "B": "$auto$rename.cc:496:execute$13810_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42071"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7242_gold",
+  "B": "$flatten\\u_ot_pr_core.u_req.active$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38246"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.cmd[2]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41116"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7241_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.ti[2]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38251"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7241_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.ti[1]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38256"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7241_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.ti[0]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38261"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [29]",
+  "B": "$flatten\\ot_prs_00002_ff.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41121"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7240_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.state[2]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38266"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7240_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.state[1]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38271"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [88]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$42391"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7240_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.state[0]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38276"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [29]",
+  "B": "$flatten\\u_ot_pr_core.cmd[29]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41126"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7239_gold",
+  "B": "$flatten\\u_ot_pr_core.start_r$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38281"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.req_valid[7]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38286"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [25]",
+  "B": "$auto$rename.cc:496:execute$13808_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42076"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.req_valid[6]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38291"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [28]",
+  "B": "$flatten\\ot_prs_00001_ff.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41131"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.req_valid[5]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38296"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.req_valid[4]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38301"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.req_valid[3]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38306"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [28]",
+  "B": "$flatten\\u_ot_pr_core.cmd[28]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41136"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.req_valid[2]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38311"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.req_valid[1]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38316"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.req_valid[0]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38321"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [27]",
+  "B": "$flatten\\u_ot_pr_core.cmd[27]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41141"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.req_t[9]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38326"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [99]",
+  "B": "$flatten\\u_ot_pr_core.req_t[99]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38331"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [26]",
+  "B": "$auto$rename.cc:496:execute$13806_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42081"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [98]",
+  "B": "$flatten\\u_ot_pr_core.req_t[98]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38336"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [26]",
+  "B": "$flatten\\ot_prs_00000_ff.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41146"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [97]",
+  "B": "$flatten\\u_ot_pr_core.req_t[97]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38341"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [96]",
+  "B": "$flatten\\u_ot_pr_core.req_t[96]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38346"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [95]",
+  "B": "$flatten\\u_ot_pr_core.req_t[95]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38351"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [26]",
+  "B": "$flatten\\u_ot_pr_core.cmd[26]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41151"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [94]",
+  "B": "$flatten\\u_ot_pr_core.req_t[94]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38356"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [93]",
+  "B": "$flatten\\u_ot_pr_core.req_t[93]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38361"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [92]",
+  "B": "$flatten\\ot_prs_00008_ff.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38366"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [25]",
+  "B": "$flatten\\u_ot_pr_core.cmd[25]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41156"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [92]",
+  "B": "$flatten\\u_ot_pr_core.req_t[92]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38371"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [91]",
+  "B": "$flatten\\u_ot_pr_core.req_t[91]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38376"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [27]",
+  "B": "$auto$rename.cc:496:execute$13804_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42086"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [90]",
+  "B": "$flatten\\u_ot_pr_core.req_t[90]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38381"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [20]",
+  "B": "$flatten\\u_ot_pr_core.cmd[20]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41161"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.req_t[8]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38386"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [87]",
+  "B": "$flatten\\u_ot_pr_core.req_t[87]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38391"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [86]",
+  "B": "$flatten\\u_ot_pr_core.req_t[86]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38396"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.cmd[1]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41166"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [85]",
+  "B": "$flatten\\u_ot_pr_core.req_t[85]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38401"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [84]",
+  "B": "$flatten\\u_ot_pr_core.req_t[84]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38406"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [89]",
+  "B": "$flatten\\ot_prs_00008_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42396"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [83]",
+  "B": "$flatten\\u_ot_pr_core.req_t[83]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38411"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [19]",
+  "B": "$flatten\\u_ot_pr_core.cmd[19]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41171"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [82]",
+  "B": "$flatten\\u_ot_pr_core.req_t[82]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38416"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [81]",
+  "B": "$flatten\\u_ot_pr_core.req_t[81]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38421"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [28]",
+  "B": "$auto$rename.cc:496:execute$13802_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42091"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [80]",
+  "B": "$flatten\\u_ot_pr_core.req_t[80]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38426"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [18]",
+  "B": "$flatten\\u_ot_pr_core.cmd[18]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41176"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.req_t[7]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38431"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [79]",
+  "B": "$flatten\\u_ot_pr_core.req_t[79]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38436"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [78]",
+  "B": "$flatten\\ot_prs_00007_ff.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38441"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [17]",
+  "B": "$flatten\\u_ot_pr_core.cmd[17]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41181"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [78]",
+  "B": "$flatten\\u_ot_pr_core.req_t[78]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38446"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [77]",
+  "B": "$flatten\\u_ot_pr_core.req_t[77]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38451"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [76]",
+  "B": "$flatten\\u_ot_pr_core.req_t[76]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38456"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [16]",
+  "B": "$flatten\\u_ot_pr_core.cmd[16]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41186"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [73]",
+  "B": "$flatten\\u_ot_pr_core.req_t[73]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38461"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [72]",
+  "B": "$flatten\\u_ot_pr_core.req_t[72]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38466"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [29]",
+  "B": "$auto$rename.cc:496:execute$13800_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42096"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [71]",
+  "B": "$flatten\\u_ot_pr_core.req_t[71]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38471"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.cmd[15]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41191"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [70]",
+  "B": "$flatten\\u_ot_pr_core.req_t[70]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38476"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.req_t[6]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38481"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [69]",
+  "B": "$flatten\\u_ot_pr_core.req_t[69]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38486"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.cmd[14]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41196"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [68]",
+  "B": "$flatten\\u_ot_pr_core.req_t[68]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38491"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [67]",
+  "B": "$flatten\\u_ot_pr_core.req_t[67]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38496"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [66]",
+  "B": "$flatten\\u_ot_pr_core.req_t[66]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38501"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.cmd[13]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41201"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [65]",
+  "B": "$flatten\\u_ot_pr_core.req_t[65]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38506"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [64]",
+  "B": "$flatten\\u_ot_pr_core.req_t[64]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38511"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [30]",
+  "B": "$auto$rename.cc:496:execute$13796_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42101"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [63]",
+  "B": "$flatten\\u_ot_pr_core.req_t[63]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38516"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.cmd[12]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41206"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [62]",
+  "B": "$flatten\\u_ot_pr_core.req_t[62]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38521"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [59]",
+  "B": "$flatten\\u_ot_pr_core.req_t[59]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38526"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [58]",
+  "B": "$flatten\\u_ot_pr_core.req_t[58]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38531"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.cmd[11]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41211"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [57]",
+  "B": "$flatten\\u_ot_pr_core.req_t[57]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38536"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [56]",
+  "B": "$flatten\\u_ot_pr_core.req_t[56]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38541"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [90]",
+  "B": "$auto$rename.cc:496:execute$13678_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42401"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [55]",
+  "B": "$flatten\\u_ot_pr_core.req_t[55]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38546"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.cmd[10]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41216"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [54]",
+  "B": "$flatten\\u_ot_pr_core.req_t[54]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38551"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [53]",
+  "B": "$flatten\\u_ot_pr_core.req_t[53]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38556"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [31]",
+  "B": "$auto$rename.cc:496:execute$13794_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42106"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [52]",
+  "B": "$flatten\\u_ot_pr_core.req_t[52]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38561"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.cmd[0]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41221"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [51]",
+  "B": "$flatten\\u_ot_pr_core.req_t[51]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38566"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [50]",
+  "B": "$flatten\\u_ot_pr_core.req_t[50]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38571"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [49]",
+  "B": "$flatten\\u_ot_pr_core.req_t[49]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38576"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[9]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41226"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [48]",
+  "B": "$flatten\\u_ot_pr_core.req_t[48]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38581"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [47]",
+  "B": "$flatten\\ot_prs_00006_ff.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38586"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [47]",
+  "B": "$flatten\\u_ot_pr_core.req_t[47]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38591"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[8]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41231"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [45]",
+  "B": "$flatten\\u_ot_pr_core.req_t[45]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38596"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [44]",
+  "B": "$flatten\\u_ot_pr_core.req_t[44]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38601"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [32]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$42111"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [43]",
+  "B": "$flatten\\u_ot_pr_core.req_t[43]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38606"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[7]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41236"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [42]",
+  "B": "$flatten\\u_ot_pr_core.req_t[42]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38611"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [41]",
+  "B": "$flatten\\u_ot_pr_core.req_t[41]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38616"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [40]",
+  "B": "$flatten\\u_ot_pr_core.req_t[40]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38621"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[6]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41241"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.req_t[3]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38626"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [39]",
+  "B": "$flatten\\u_ot_pr_core.req_t[39]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38631"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [110]",
+  "B": "$auto$rename.cc:496:execute$13840_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42501"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [38]",
+  "B": "$flatten\\u_ot_pr_core.req_t[38]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38636"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[5]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41246"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [37]",
+  "B": "$flatten\\u_ot_pr_core.req_t[37]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38641"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [36]",
+  "B": "$flatten\\u_ot_pr_core.req_t[36]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38646"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [33]",
+  "B": "$auto$rename.cc:496:execute$13792_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42116"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [35]",
+  "B": "$flatten\\u_ot_pr_core.req_t[35]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38651"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[4]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41251"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [34]",
+  "B": "$flatten\\u_ot_pr_core.req_t[34]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38656"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [33]",
+  "B": "$flatten\\u_ot_pr_core.req_t[33]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38661"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [31]",
+  "B": "$flatten\\u_ot_pr_core.req_t[31]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38666"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[3]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41256"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [30]",
+  "B": "$flatten\\u_ot_pr_core.req_t[30]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38671"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.req_t[2]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38676"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [91]",
+  "B": "$auto$rename.cc:496:execute$13676_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42406"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [29]",
+  "B": "$flatten\\u_ot_pr_core.req_t[29]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38681"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [31]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[31]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41261"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [28]",
+  "B": "$flatten\\u_ot_pr_core.req_t[28]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38686"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [27]",
+  "B": "$flatten\\u_ot_pr_core.req_t[27]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38691"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [34]",
+  "B": "$auto$rename.cc:496:execute$13790_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42121"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [26]",
+  "B": "$flatten\\u_ot_pr_core.req_t[26]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38696"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [30]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[30]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41266"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [25]",
+  "B": "$flatten\\u_ot_pr_core.req_t[25]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38701"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [24]",
+  "B": "$flatten\\u_ot_pr_core.req_t[24]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38706"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [23]",
+  "B": "$flatten\\u_ot_pr_core.req_t[23]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38711"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[2]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41271"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [22]",
+  "B": "$flatten\\u_ot_pr_core.req_t[22]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38716"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [21]",
+  "B": "$flatten\\u_ot_pr_core.req_t[21]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38721"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [20]",
+  "B": "$flatten\\u_ot_pr_core.req_t[20]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38726"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [29]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[29]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41276"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.req_t[1]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38731"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [18]",
+  "B": "$flatten\\u_ot_pr_core.req_t[18]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38736"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [35]",
+  "B": "$auto$rename.cc:496:execute$13788_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42126"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [17]",
+  "B": "$flatten\\u_ot_pr_core.req_t[17]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38741"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [28]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[28]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41281"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [16]",
+  "B": "$flatten\\u_ot_pr_core.req_t[16]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38746"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.req_t[15]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38751"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.req_t[14]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38756"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [27]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[27]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41286"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.req_t[13]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38761"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.req_t[12]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38766"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.req_t[11]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38771"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [26]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[26]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41291"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [111]",
+  "B": "$flatten\\u_ot_pr_core.req_t[111]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38776"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [110]",
+  "B": "$flatten\\u_ot_pr_core.req_t[110]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38781"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [36]",
+  "B": "$auto$rename.cc:496:execute$13786_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42131"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.req_t[10]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38786"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [25]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[25]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41296"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [109]",
+  "B": "$flatten\\u_ot_pr_core.req_t[109]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38791"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [108]",
+  "B": "$flatten\\u_ot_pr_core.req_t[108]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38796"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [107]",
+  "B": "$flatten\\u_ot_pr_core.req_t[107]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38801"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [24]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[24]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41301"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [106]",
+  "B": "$flatten\\ot_prs_00005_ff.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38806"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [106]",
+  "B": "$flatten\\ot_prs_00004_ff.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38811"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [92]",
+  "B": "$flatten\\ot_prs_00008_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42411"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [106]",
+  "B": "$flatten\\u_ot_pr_core.req_t[106]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38816"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [23]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[23]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41306"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [105]",
+  "B": "$flatten\\u_ot_pr_core.req_t[105]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38821"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [104]",
+  "B": "$flatten\\u_ot_pr_core.req_t[104]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38826"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [37]",
+  "B": "$auto$rename.cc:496:execute$13784_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42136"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [101]",
+  "B": "$flatten\\u_ot_pr_core.req_t[101]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38831"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [22]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[22]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41311"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [100]",
+  "B": "$flatten\\u_ot_pr_core.req_t[100]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38836"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.req_t[0]$_SDFF_PN0_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38841"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7231_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.reduce_left[3]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38846"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [21]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[21]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41316"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7231_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.reduce_left[2]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38851"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7231_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.reduce_left[1]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38856"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7231_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.reduce_left[0]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38861"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [20]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[20]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41321"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7227_gold",
+  "B": "$flatten\\u_ot_pr_core.pid$_DFF_P_.$not$cells.v:442$212_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38866"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[9]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38871"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [38]",
+  "B": "$auto$rename.cc:496:execute$13782_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42141"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[8]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38876"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[1]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41326"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[7]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38881"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[6]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38886"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[5]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38891"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [19]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[19]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41331"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[4]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38896"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[3]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38901"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[2]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38906"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [18]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[18]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41336"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[1]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38911"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[15]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38916"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [39]",
+  "B": "$auto$rename.cc:496:execute$13780_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42146"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[14]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38921"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [17]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[17]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41341"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[13]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38926"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[12]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38931"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[11]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38936"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [16]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[16]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41346"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[10]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38941"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.out_epoch[0]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38946"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [93]",
+  "B": "$auto$rename.cc:496:execute$13672_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42416"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.out_age[9]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38951"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[15]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41351"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.out_age[8]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38956"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.out_age[7]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38961"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [40]",
+  "B": "$auto$rename.cc:496:execute$13776_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42151"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.out_age[6]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38966"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[14]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41356"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.out_age[5]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38971"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.out_age[4]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38976"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.out_age[3]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38981"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[13]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41361"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.out_age[2]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38986"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.out_age[1]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38991"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.out_age[15]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$38996"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[12]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41366"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.out_age[14]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39001"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.out_age[13]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39006"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [41]",
+  "B": "$auto$rename.cc:496:execute$13774_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42156"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.out_age[12]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39011"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[11]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41371"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.out_age[11]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39016"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.out_age[10]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39021"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.out_age[0]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39026"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[10]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41376"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.nq[9]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39031"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.nq[8]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39036"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [111]",
+  "B": "$auto$rename.cc:496:execute$13838_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42506"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.nq[7]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39041"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7172_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.cf_r[0]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41381"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.nq[6]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39046"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.nq[5]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39051"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [42]",
+  "B": "$auto$rename.cc:496:execute$13772_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42161"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.nq[4]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39056"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7170_gold",
+  "B": "$flatten\\u_ot_pr_core.busy$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41386"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.nq[15]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39061"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.nq[14]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39066"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.nq[13]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39071"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.age[9]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41391"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.nq[12]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39076"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.nq[11]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39081"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [94]",
+  "B": "$auto$rename.cc:496:execute$13670_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42421"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7212_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.nq[10]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39086"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.age[8]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41396"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7211_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.nodes[4]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39091"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7211_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.nodes[3]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39096"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [43]",
+  "B": "$auto$rename.cc:496:execute$13770_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42166"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7211_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.nodes[2]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39101"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.age[7]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41401"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7211_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.nodes[1]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39106"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7211_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.nodes[0]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39111"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.lim[9]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39116"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.age[6]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41406"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.lim[8]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39121"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.lim[7]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39126"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.lim[6]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39131"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.age[5]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41411"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.lim[5]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39136"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.lim[4]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39141"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [44]",
+  "B": "$auto$rename.cc:496:execute$13768_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42171"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.lim[3]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39146"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.age[4]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41416"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.lim[2]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39151"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.lim[1]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39156"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.lim[13]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39161"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.age[3]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41421"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.lim[12]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39166"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.lim[11]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39171"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.lim[10]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39176"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.age[2]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41426"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7206_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.lim[0]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39181"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7204_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.k_qn[7]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39186"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [45]",
+  "B": "$auto$rename.cc:496:execute$13766_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42176"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7204_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.k_qn[6]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39191"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.age[1]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41431"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7204_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.k_qn[5]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39196"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7204_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.k_qn[4]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39201"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7204_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.k_qn[3]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39206"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.age[15]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41436"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7204_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.k_qn[2]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39211"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7204_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.k_qn[1]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39216"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [95]",
+  "B": "$auto$rename.cc:496:execute$13668_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42426"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7204_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.k_qn[0]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39221"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.age[14]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41441"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7202_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.k_oa[9]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39226"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7202_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.k_oa[8]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39231"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [46]",
+  "B": "$flatten\\ot_prs_00006_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42181"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7202_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.k_oa[7]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39236"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.age[13]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41446"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7202_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.k_oa[6]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39241"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7202_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.k_oa[5]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39246"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7202_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.k_oa[4]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39251"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.age[12]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41451"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7202_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.k_oa[3]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39256"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7202_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.k_oa[2]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39261"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7202_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.k_oa[1]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39266"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.age[11]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41456"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7202_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.k_oa[0]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39271"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7200_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.k_fi[8]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39276"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [47]",
+  "B": "$flatten\\ot_prs_00006_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42186"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7200_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.k_fi[7]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39281"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.age[10]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41461"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7200_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.k_fi[6]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39286"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7200_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.k_fi[5]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39291"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7200_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.k_fi[4]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39296"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7168_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.age[0]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41466"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7200_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.k_fi[3]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39301"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7200_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.k_fi[2]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39306"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [5]",
+  "B": "$auto$rename.cc:496:execute$13646_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42536"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7200_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.k_fi[1]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39311"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7166_gold",
+  "B": "$flatten\\rst_n__ot_rl1$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41471"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7201_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.k_fi1[8]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39316"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7201_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.k_fi1[7]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39321"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [48]",
+  "B": "$auto$rename.cc:496:execute$13760_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42191"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7201_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.k_fi1[6]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39326"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7165_gold",
+  "B": "$flatten\\rst_n__ot_rl0$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41476"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7201_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.k_fi1[5]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39331"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7201_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.k_fi1[4]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39336"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7201_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.k_fi1[3]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39341"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7170_gold",
+  "B": "$auto$rename.cc:496:execute$13996_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41481"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7201_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.k_fi1[2]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39346"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7201_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.k_fi1[1]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39351"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [96]",
+  "B": "$auto$rename.cc:496:execute$13666_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42431"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7197_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.iv_r[7]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39356"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [0]",
+  "B": "$auto$rename.cc:496:execute$13994_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41486"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7197_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.iv_r[6]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39361"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7197_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.iv_r[5]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39366"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [49]",
+  "B": "$auto$rename.cc:496:execute$13758_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42196"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7197_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.iv_r[4]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39371"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [1]",
+  "B": "$auto$rename.cc:496:execute$13972_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41491"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7197_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.iv_r[3]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39376"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7197_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.iv_r[2]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39381"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7197_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.iv_r[1]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39386"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [2]",
+  "B": "$auto$rename.cc:496:execute$13950_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41496"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7197_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.iv_r[0]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39391"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.it_r[9]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39396"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [99]",
+  "B": "$flatten\\u_ot_pr_core.it_r[99]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39401"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [3]",
+  "B": "$auto$rename.cc:496:execute$13944_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41501"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [98]",
+  "B": "$flatten\\u_ot_pr_core.it_r[98]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39406"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [97]",
+  "B": "$flatten\\u_ot_pr_core.it_r[97]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39411"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [50]",
+  "B": "$auto$rename.cc:496:execute$13756_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42201"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [96]",
+  "B": "$flatten\\u_ot_pr_core.it_r[96]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39416"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [4]",
+  "B": "$auto$rename.cc:496:execute$13942_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41506"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [95]",
+  "B": "$flatten\\u_ot_pr_core.it_r[95]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39421"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [94]",
+  "B": "$flatten\\u_ot_pr_core.it_r[94]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39426"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [93]",
+  "B": "$flatten\\u_ot_pr_core.it_r[93]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39431"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [5]",
+  "B": "$auto$rename.cc:496:execute$13940_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41511"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [92]",
+  "B": "$flatten\\u_ot_pr_core.it_r[92]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39436"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [91]",
+  "B": "$flatten\\u_ot_pr_core.it_r[91]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39441"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [0]",
+  "B": "$auto$rename.cc:496:execute$13656_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42511"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [90]",
+  "B": "$flatten\\u_ot_pr_core.it_r[90]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39446"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [6]",
+  "B": "$auto$rename.cc:496:execute$13938_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41516"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.it_r[8]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39451"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [89]",
+  "B": "$flatten\\u_ot_pr_core.it_r[89]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39456"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [51]",
+  "B": "$auto$rename.cc:496:execute$13754_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42206"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [88]",
+  "B": "$flatten\\u_ot_pr_core.it_r[88]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39461"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [7]",
+  "B": "$auto$rename.cc:496:execute$13936_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41521"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [87]",
+  "B": "$flatten\\u_ot_pr_core.it_r[87]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39466"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [86]",
+  "B": "$flatten\\u_ot_pr_core.it_r[86]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39471"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [85]",
+  "B": "$flatten\\u_ot_pr_core.it_r[85]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39476"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [8]",
+  "B": "$auto$rename.cc:496:execute$13934_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41526"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [84]",
+  "B": "$flatten\\u_ot_pr_core.it_r[84]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39481"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [83]",
+  "B": "$flatten\\u_ot_pr_core.it_r[83]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39486"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [97]",
+  "B": "$auto$rename.cc:496:execute$13664_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42436"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [82]",
+  "B": "$flatten\\u_ot_pr_core.it_r[82]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39491"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [9]",
+  "B": "$auto$rename.cc:496:execute$13932_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41531"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [81]",
+  "B": "$flatten\\u_ot_pr_core.it_r[81]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39496"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [80]",
+  "B": "$flatten\\u_ot_pr_core.it_r[80]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39501"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [52]",
+  "B": "$auto$rename.cc:496:execute$13752_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42211"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.it_r[7]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39506"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [10]",
+  "B": "$auto$rename.cc:496:execute$13992_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41536"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [79]",
+  "B": "$flatten\\u_ot_pr_core.it_r[79]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39511"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [78]",
+  "B": "$flatten\\u_ot_pr_core.it_r[78]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39516"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [77]",
+  "B": "$flatten\\u_ot_pr_core.it_r[77]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39521"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [11]",
+  "B": "$auto$rename.cc:496:execute$13990_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41541"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [76]",
+  "B": "$flatten\\u_ot_pr_core.it_r[76]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39526"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [75]",
+  "B": "$flatten\\u_ot_pr_core.it_r[75]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39531"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [74]",
+  "B": "$flatten\\u_ot_pr_core.it_r[74]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39536"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [12]",
+  "B": "$auto$rename.cc:496:execute$13988_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41546"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [73]",
+  "B": "$flatten\\u_ot_pr_core.it_r[73]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39541"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [72]",
+  "B": "$flatten\\u_ot_pr_core.it_r[72]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39546"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [53]",
+  "B": "$auto$rename.cc:496:execute$13750_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42216"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [71]",
+  "B": "$flatten\\u_ot_pr_core.it_r[71]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39551"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [13]",
+  "B": "$auto$rename.cc:496:execute$13986_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41551"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [70]",
+  "B": "$flatten\\u_ot_pr_core.it_r[70]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39556"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.it_r[6]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39561"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [69]",
+  "B": "$flatten\\u_ot_pr_core.it_r[69]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39566"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [14]",
+  "B": "$auto$rename.cc:496:execute$13984_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41556"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [68]",
+  "B": "$flatten\\u_ot_pr_core.it_r[68]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39571"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [67]",
+  "B": "$flatten\\u_ot_pr_core.it_r[67]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39576"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [66]",
+  "B": "$flatten\\u_ot_pr_core.it_r[66]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39581"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [15]",
+  "B": "$auto$rename.cc:496:execute$13982_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41561"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [65]",
+  "B": "$flatten\\u_ot_pr_core.it_r[65]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39586"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [64]",
+  "B": "$flatten\\u_ot_pr_core.it_r[64]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39591"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [54]",
+  "B": "$auto$rename.cc:496:execute$13748_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42221"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [63]",
+  "B": "$flatten\\u_ot_pr_core.it_r[63]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39596"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [16]",
+  "B": "$auto$rename.cc:496:execute$13980_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41566"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [62]",
+  "B": "$flatten\\u_ot_pr_core.it_r[62]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39601"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [61]",
+  "B": "$flatten\\u_ot_pr_core.it_r[61]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39606"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [60]",
+  "B": "$flatten\\u_ot_pr_core.it_r[60]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39611"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [17]",
+  "B": "$auto$rename.cc:496:execute$13978_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41571"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.it_r[5]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39616"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [59]",
+  "B": "$flatten\\u_ot_pr_core.it_r[59]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39621"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [98]",
+  "B": "$auto$rename.cc:496:execute$13662_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42441"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [58]",
+  "B": "$flatten\\u_ot_pr_core.it_r[58]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39626"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [18]",
+  "B": "$auto$rename.cc:496:execute$13976_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41576"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [57]",
+  "B": "$flatten\\u_ot_pr_core.it_r[57]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39631"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [56]",
+  "B": "$flatten\\u_ot_pr_core.it_r[56]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39636"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [55]",
+  "B": "$auto$rename.cc:496:execute$13746_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42226"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [55]",
+  "B": "$flatten\\u_ot_pr_core.it_r[55]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39641"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [19]",
+  "B": "$auto$rename.cc:496:execute$13974_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41581"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [54]",
+  "B": "$flatten\\u_ot_pr_core.it_r[54]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39646"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [53]",
+  "B": "$flatten\\u_ot_pr_core.it_r[53]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39651"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [52]",
+  "B": "$flatten\\u_ot_pr_core.it_r[52]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39656"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [20]",
+  "B": "$auto$rename.cc:496:execute$13970_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41586"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [51]",
+  "B": "$flatten\\u_ot_pr_core.it_r[51]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39661"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [50]",
+  "B": "$flatten\\u_ot_pr_core.it_r[50]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39666"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.it_r[4]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39671"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [21]",
+  "B": "$flatten\\ot_prs_00000_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41591"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [49]",
+  "B": "$flatten\\u_ot_pr_core.it_r[49]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39676"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [48]",
+  "B": "$flatten\\u_ot_pr_core.it_r[48]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39681"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [56]",
+  "B": "$auto$rename.cc:496:execute$13744_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42231"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [47]",
+  "B": "$flatten\\u_ot_pr_core.it_r[47]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39686"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [22]",
+  "B": "$flatten\\ot_prs_00001_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41596"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [46]",
+  "B": "$flatten\\u_ot_pr_core.it_r[46]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39691"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [45]",
+  "B": "$flatten\\u_ot_pr_core.it_r[45]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39696"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [44]",
+  "B": "$flatten\\u_ot_pr_core.it_r[44]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39701"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [23]",
+  "B": "$flatten\\ot_prs_00002_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41601"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [43]",
+  "B": "$flatten\\u_ot_pr_core.it_r[43]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39706"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [42]",
+  "B": "$flatten\\u_ot_pr_core.it_r[42]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39711"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [41]",
+  "B": "$flatten\\u_ot_pr_core.it_r[41]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39716"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [24]",
+  "B": "$flatten\\ot_prs_00003_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41606"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [40]",
+  "B": "$flatten\\u_ot_pr_core.it_r[40]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39721"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.it_r[3]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39726"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [57]",
+  "B": "$auto$rename.cc:496:execute$13742_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42236"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [39]",
+  "B": "$flatten\\u_ot_pr_core.it_r[39]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39731"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [25]",
+  "B": "$auto$rename.cc:496:execute$13960_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41611"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [38]",
+  "B": "$flatten\\u_ot_pr_core.it_r[38]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39736"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [37]",
+  "B": "$flatten\\u_ot_pr_core.it_r[37]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39741"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [36]",
+  "B": "$flatten\\u_ot_pr_core.it_r[36]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39746"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [26]",
+  "B": "$flatten\\ot_prs_00000_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41616"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [35]",
+  "B": "$flatten\\u_ot_pr_core.it_r[35]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39751"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [34]",
+  "B": "$flatten\\u_ot_pr_core.it_r[34]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39756"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [99]",
+  "B": "$auto$rename.cc:496:execute$13660_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42446"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [33]",
+  "B": "$flatten\\u_ot_pr_core.it_r[33]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39761"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [27]",
+  "B": "$auto$rename.cc:496:execute$13956_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41621"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [32]",
+  "B": "$flatten\\u_ot_pr_core.it_r[32]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39766"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [31]",
+  "B": "$flatten\\u_ot_pr_core.it_r[31]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39771"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [58]",
+  "B": "$auto$rename.cc:496:execute$13740_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42241"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [30]",
+  "B": "$flatten\\u_ot_pr_core.it_r[30]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39776"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [28]",
+  "B": "$flatten\\ot_prs_00001_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41626"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.it_r[2]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39781"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [29]",
+  "B": "$flatten\\u_ot_pr_core.it_r[29]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39786"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [28]",
+  "B": "$flatten\\u_ot_pr_core.it_r[28]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39791"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [29]",
+  "B": "$flatten\\ot_prs_00002_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41631"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [27]",
+  "B": "$flatten\\u_ot_pr_core.it_r[27]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39796"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [26]",
+  "B": "$flatten\\u_ot_pr_core.it_r[26]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39801"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [25]",
+  "B": "$flatten\\u_ot_pr_core.it_r[25]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39806"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [30]",
+  "B": "$flatten\\ot_prs_00003_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41636"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [24]",
+  "B": "$flatten\\u_ot_pr_core.it_r[24]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39811"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [23]",
+  "B": "$flatten\\u_ot_pr_core.it_r[23]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39816"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [59]",
+  "B": "$auto$rename.cc:496:execute$13738_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42246"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [22]",
+  "B": "$flatten\\u_ot_pr_core.it_r[22]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39821"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [31]",
+  "B": "$auto$rename.cc:496:execute$13946_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41641"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [21]",
+  "B": "$flatten\\u_ot_pr_core.it_r[21]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39826"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [20]",
+  "B": "$flatten\\u_ot_pr_core.it_r[20]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39831"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.it_r[1]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39836"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [32]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41646"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [19]",
+  "B": "$flatten\\u_ot_pr_core.it_r[19]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39841"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [18]",
+  "B": "$flatten\\u_ot_pr_core.it_r[18]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39846"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [1]",
+  "B": "$auto$rename.cc:496:execute$13654_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42516"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [17]",
+  "B": "$flatten\\u_ot_pr_core.it_r[17]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39851"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [33]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41651"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [16]",
+  "B": "$flatten\\u_ot_pr_core.it_r[16]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39856"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.it_r[15]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39861"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [60]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$42251"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.it_r[14]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39866"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [34]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41656"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.it_r[13]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39871"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.it_r[12]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39876"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.it_r[11]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39881"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [35]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41661"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [111]",
+  "B": "$flatten\\u_ot_pr_core.it_r[111]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39886"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [110]",
+  "B": "$flatten\\u_ot_pr_core.it_r[110]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39891"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [100]",
+  "B": "$auto$rename.cc:496:execute$13862_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42451"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.it_r[10]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39896"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [36]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41666"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [109]",
+  "B": "$flatten\\u_ot_pr_core.it_r[109]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39901"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [108]",
+  "B": "$flatten\\u_ot_pr_core.it_r[108]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39906"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [61]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$42256"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [107]",
+  "B": "$flatten\\u_ot_pr_core.it_r[107]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39911"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [37]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41671"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [106]",
+  "B": "$flatten\\u_ot_pr_core.it_r[106]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39916"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [105]",
+  "B": "$flatten\\u_ot_pr_core.it_r[105]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39921"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [104]",
+  "B": "$flatten\\u_ot_pr_core.it_r[104]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39926"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [38]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41676"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [103]",
+  "B": "$flatten\\u_ot_pr_core.it_r[103]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39931"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [102]",
+  "B": "$flatten\\u_ot_pr_core.it_r[102]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39936"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [101]",
+  "B": "$flatten\\u_ot_pr_core.it_r[101]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39941"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [39]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41681"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [100]",
+  "B": "$flatten\\u_ot_pr_core.it_r[100]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39946"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7196_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.it_r[0]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39951"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [62]",
+  "B": "$auto$rename.cc:496:execute$13736_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42261"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[9]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39956"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [40]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41686"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [99]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[99]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39961"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [98]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[98]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39966"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [97]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[97]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39971"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [41]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41691"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [96]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[96]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39976"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [95]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[95]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39981"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [94]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[94]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39986"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [42]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41696"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [93]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[93]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39991"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [92]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[92]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$39996"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [63]",
+  "B": "$auto$rename.cc:496:execute$13734_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42266"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [91]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[91]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40001"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [43]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41701"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [90]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[90]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40006"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[8]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40011"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [89]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[89]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40016"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [44]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41706"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [88]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[88]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40021"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [87]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[87]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40026"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [101]",
+  "B": "$auto$rename.cc:496:execute$13860_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42456"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [86]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[86]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40031"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [45]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41711"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [85]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[85]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40036"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [84]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[84]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40041"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [64]",
+  "B": "$auto$rename.cc:496:execute$13732_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42271"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [83]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[83]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40046"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [46]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41716"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [82]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[82]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40051"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [81]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[81]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40056"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [80]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[80]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40061"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [47]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41721"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[7]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40066"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [79]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[79]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40071"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [78]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[78]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40076"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [48]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41726"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [77]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[77]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40081"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [76]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[76]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40086"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [65]",
+  "B": "$auto$rename.cc:496:execute$13730_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42276"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [75]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[75]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40091"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [49]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41731"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [74]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[74]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40096"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [73]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[73]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40101"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [72]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[72]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40106"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [50]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41736"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [71]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[71]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40111"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [70]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[70]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40116"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [7]",
+  "B": "$auto$rename.cc:496:execute$13642_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42546"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[6]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40121"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [51]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41741"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [69]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[69]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40126"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [68]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[68]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40131"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [66]",
+  "B": "$auto$rename.cc:496:execute$13728_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42281"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [67]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[67]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40136"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [52]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41746"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [66]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[66]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40141"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [65]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[65]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40146"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [64]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[64]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40151"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [53]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41751"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [63]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[63]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40156"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [62]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[62]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40161"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [102]",
+  "B": "$flatten\\ot_prs_00004_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42461"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [61]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[61]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40166"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [54]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41756"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [60]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[60]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40171"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[5]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40176"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [67]",
+  "B": "$auto$rename.cc:496:execute$13726_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42286"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [59]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[59]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40181"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [55]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41761"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [58]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[58]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40186"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [57]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[57]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40191"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [56]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[56]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40196"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [56]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41766"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [55]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[55]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40201"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [54]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[54]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40206"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [53]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[53]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40211"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [57]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41771"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [52]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[52]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40216"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [51]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[51]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40221"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [68]",
+  "B": "$auto$rename.cc:496:execute$13724_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42291"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [50]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[50]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40226"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [58]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41776"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[4]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40231"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [49]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[49]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40236"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [48]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[48]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40241"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7176_gold [59]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41781"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [47]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[47]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40246"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [46]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[46]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40251"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [2]",
+  "B": "$auto$rename.cc:496:execute$13652_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42521"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [45]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[45]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40256"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7187_gold",
+  "B": "$auto$rename.cc:496:execute$13930_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41786"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [44]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[44]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40261"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [43]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[43]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40266"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [69]",
+  "B": "$auto$rename.cc:496:execute$13722_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42296"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [42]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[42]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40271"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [0]",
+  "B": "$auto$rename.cc:496:execute$13928_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41791"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [41]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[41]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40276"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [40]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[40]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40281"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[3]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40286"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [1]",
+  "B": "$auto$rename.cc:496:execute$13914_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41796"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [39]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[39]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40291"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [38]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[38]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40296"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [103]",
+  "B": "$flatten\\ot_prs_00005_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42466"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [37]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[37]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40301"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [2]",
+  "B": "$auto$rename.cc:496:execute$13912_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41801"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [36]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[36]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40306"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [35]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[35]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40311"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [70]",
+  "B": "$auto$rename.cc:496:execute$13718_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42301"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [34]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[34]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40316"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [3]",
+  "B": "$auto$rename.cc:496:execute$13910_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41806"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [33]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[33]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40321"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [32]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[32]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40326"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [31]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[31]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40331"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [4]",
+  "B": "$auto$rename.cc:496:execute$13908_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41811"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [30]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[30]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40336"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[2]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40341"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [29]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[29]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40346"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [5]",
+  "B": "$auto$rename.cc:496:execute$13906_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41816"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [28]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[28]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40351"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [27]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[27]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40356"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [71]",
+  "B": "$auto$rename.cc:496:execute$13716_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42306"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [26]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[26]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40361"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [6]",
+  "B": "$auto$rename.cc:496:execute$13904_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41821"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [25]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[25]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40366"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [24]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[24]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40371"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [23]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[23]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40376"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [7]",
+  "B": "$auto$rename.cc:496:execute$13902_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41826"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [22]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[22]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40381"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [21]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[21]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40386"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [20]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[20]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40391"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [8]",
+  "B": "$auto$rename.cc:496:execute$13900_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41831"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[1]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40396"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [19]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[19]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40401"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [72]",
+  "B": "$auto$rename.cc:496:execute$13714_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42311"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [18]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[18]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40406"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [9]",
+  "B": "$auto$rename.cc:496:execute$13898_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41836"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [17]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[17]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40411"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [16]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[16]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40416"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[15]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40421"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [10]",
+  "B": "$auto$rename.cc:496:execute$13926_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41841"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[14]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40426"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[13]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40431"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [104]",
+  "B": "$auto$rename.cc:496:execute$13854_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42471"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[12]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40436"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [11]",
+  "B": "$auto$rename.cc:496:execute$13924_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41846"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [127]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[127]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40441"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [126]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[126]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40446"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [73]",
+  "B": "$auto$rename.cc:496:execute$13712_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42316"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [125]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[125]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40451"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [12]",
+  "B": "$auto$rename.cc:496:execute$13922_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41851"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [124]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[124]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40456"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [123]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[123]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40461"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [122]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[122]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40466"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [13]",
+  "B": "$auto$rename.cc:496:execute$13920_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41856"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [121]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[121]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40471"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [120]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[120]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40476"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[11]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40481"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [14]",
+  "B": "$auto$rename.cc:496:execute$13918_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41861"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [119]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[119]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40486"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [118]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[118]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40491"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [74]",
+  "B": "$flatten\\ot_prs_00007_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42321"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [117]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[117]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40496"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7213_gold [15]",
+  "B": "$auto$rename.cc:496:execute$13916_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41866"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [116]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[116]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40501"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [115]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[115]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40506"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [114]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[114]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40511"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [0]",
+  "B": "$auto$rename.cc:496:execute$13896_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41871"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [113]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[113]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40516"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [112]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[112]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40521"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [6]",
+  "B": "$auto$rename.cc:496:execute$13644_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42541"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [111]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[111]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40526"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [1]",
+  "B": "$auto$rename.cc:496:execute$13882_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41876"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [110]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[110]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40531"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[10]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40536"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [75]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$42326"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [109]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[109]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40541"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [2]",
+  "B": "$auto$rename.cc:496:execute$13880_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41881"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [108]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[108]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40546"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [107]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[107]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40551"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [106]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[106]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40556"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [3]",
+  "B": "$auto$rename.cc:496:execute$13878_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41886"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [105]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[105]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40561"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [104]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[104]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40566"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [105]",
+  "B": "$auto$rename.cc:496:execute$13852_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42476"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [103]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[103]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40571"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [4]",
+  "B": "$auto$rename.cc:496:execute$13876_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41891"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [102]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[102]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40576"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [101]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[101]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40581"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [76]",
+  "B": "$auto$rename.cc:496:execute$13708_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42331"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [100]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[100]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40586"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [5]",
+  "B": "$auto$rename.cc:496:execute$13874_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41896"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7192_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.ie_r[0]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40591"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7191_gold",
+  "B": "$flatten\\u_ot_pr_core.g_reset_pin.rst_q$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40596"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7190_gold",
+  "B": "$flatten\\u_ot_pr_core.flt$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40601"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [6]",
+  "B": "$auto$rename.cc:496:execute$13872_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41901"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7189_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.fia_q[7]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40606"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7189_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.fia_q[6]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40611"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7189_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.fia_q[5]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40616"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [7]",
+  "B": "$auto$rename.cc:496:execute$13870_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41906"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7189_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.fia_q[4]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40621"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7189_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.fia_q[3]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40626"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [77]",
+  "B": "$auto$rename.cc:496:execute$13706_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42336"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7189_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.fia_q[2]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40631"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [8]",
+  "B": "$auto$rename.cc:496:execute$13868_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41911"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7189_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.fia_q[1]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40636"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7189_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.fia_q[0]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40641"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7188_gold",
+  "B": "$flatten\\u_ot_pr_core.fia_bad$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40646"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [9]",
+  "B": "$auto$rename.cc:496:execute$13866_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41916"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7187_gold",
+  "B": "$flatten\\u_ot_pr_core.fault$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40651"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[9]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40656"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7233_gold [3]",
+  "B": "$auto$rename.cc:496:execute$13650_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42526"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[8]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40661"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [10]",
+  "B": "$auto$rename.cc:496:execute$13894_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41921"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[7]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40666"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[6]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40671"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [78]",
+  "B": "$flatten\\ot_prs_00007_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42341"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[5]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40676"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [11]",
+  "B": "$auto$rename.cc:496:execute$13892_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41926"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[4]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40681"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[3]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40686"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[2]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40691"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [12]",
+  "B": "$auto$rename.cc:496:execute$13890_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41931"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[1]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40696"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[15]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40701"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [106]",
+  "B": "$flatten\\ot_prs_00004_b0.$not$cells.v:460$217_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42481"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[14]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40706"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [13]",
+  "B": "$auto$rename.cc:496:execute$13888_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41936"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[13]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40711"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[12]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40716"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [79]",
+  "B": "$auto$rename.cc:496:execute$13702_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42346"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[11]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40721"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [14]",
+  "B": "$auto$rename.cc:496:execute$13886_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41941"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[10]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40726"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7185_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.epoch_r[0]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40731"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.ep[9]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40736"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7214_gold [15]",
+  "B": "$auto$rename.cc:496:execute$13884_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41946"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.ep[8]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40741"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.ep[7]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40746"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.ep[6]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40751"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [0]",
+  "B": "$auto$rename.cc:496:execute$13864_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41951"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.ep[5]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40756"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.ep[4]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40761"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [80]",
+  "B": "$auto$rename.cc:496:execute$13698_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42351"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.ep[3]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40766"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [1]",
+  "B": "$auto$rename.cc:496:execute$13820_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41956"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.ep[2]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40771"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.ep[1]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40776"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.ep[15]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40781"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [2]",
+  "B": "$auto$rename.cc:496:execute$13798_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41961"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.ep[14]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40786"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.ep[13]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40791"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.ep[12]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40796"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [3]",
+  "B": "$auto$rename.cc:496:execute$13778_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41966"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.ep[11]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40801"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.ep[10]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40806"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [81]",
+  "B": "$auto$rename.cc:496:execute$13696_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42356"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7183_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.ep[0]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40811"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [4]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41971"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7182_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.drain_left[3]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40816"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7182_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.drain_left[2]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40821"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7182_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.drain_left[1]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40826"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [5]",
+  "B": "1'0",
+  "Y": "$auto$rtlil.cc:3321:Eq$41976"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7182_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.drain_left[0]$_DFFE_PN0P_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40831"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[9]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40836"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [107]",
+  "B": "$auto$rename.cc:496:execute$13848_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42486"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[8]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40841"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [6]",
+  "B": "$auto$rename.cc:496:execute$13720_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41981"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[7]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40846"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[6]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40851"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [82]",
+  "B": "$auto$rename.cc:496:execute$13694_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42361"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[5]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40856"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [7]",
+  "B": "$auto$rename.cc:496:execute$13700_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41986"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[4]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40861"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[3]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40866"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [31]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[31]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40871"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [8]",
+  "B": "$auto$rename.cc:496:execute$13680_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41991"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [30]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[30]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40876"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[2]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40881"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [29]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[29]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40886"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [9]",
+  "B": "$auto$rename.cc:496:execute$13658_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41996"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [28]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[28]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40891"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [27]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[27]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40896"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [83]",
+  "B": "$auto$rename.cc:496:execute$13692_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42366"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [26]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[26]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40901"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [10]",
+  "B": "$auto$rename.cc:496:execute$13842_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42001"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [25]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[25]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40906"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [24]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[24]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40911"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [23]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[23]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40916"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [11]",
+  "B": "$auto$rename.cc:496:execute$13836_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42006"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [22]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[22]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40921"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [21]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[21]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40926"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [20]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[20]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40931"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [12]",
+  "B": "$auto$rename.cc:496:execute$13834_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42011"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [1]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[1]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40936"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [19]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[19]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40941"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [84]",
+  "B": "$auto$rename.cc:496:execute$13690_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42371"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [18]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[18]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40946"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [13]",
+  "B": "$auto$rename.cc:496:execute$13832_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42016"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [17]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[17]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40951"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [16]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[16]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40956"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [15]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[15]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40961"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [14]",
+  "B": "$auto$rename.cc:496:execute$13830_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42021"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [14]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[14]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40966"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [13]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[13]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40971"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [108]",
+  "B": "$auto$rename.cc:496:execute$13846_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42491"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [12]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[12]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40976"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [15]",
+  "B": "$auto$rename.cc:496:execute$13828_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42026"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [11]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[11]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40981"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [10]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[10]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40986"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [85]",
+  "B": "$auto$rename.cc:496:execute$13688_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42376"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7181_gold [0]",
+  "B": "$flatten\\u_ot_pr_core.cv_r[0]$_DFF_PN0_.$not$cells.v:418$202_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40991"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [16]",
+  "B": "$auto$rename.cc:496:execute$13826_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42031"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [9]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[9]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$40996"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [8]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[8]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41001"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [7]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[7]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41006"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [17]",
+  "B": "$auto$rename.cc:496:execute$13824_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42036"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [6]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[6]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41011"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [5]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[5]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41016"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [4]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[4]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41021"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7232_gold [18]",
+  "B": "$auto$rename.cc:496:execute$13822_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$42041"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [3]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[3]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41026"
+ },
+ {
+  "A": "$auto$rename.cc:496:execute$7180_gold [2]",
+  "B": "$flatten\\u_ot_pr_core.ctx_r[2]$_DFF_P_.$not$cells.v:431$208_Y_gate",
+  "Y": "$auto$rtlil.cc:3321:Eq$41031"
+ }
+]
