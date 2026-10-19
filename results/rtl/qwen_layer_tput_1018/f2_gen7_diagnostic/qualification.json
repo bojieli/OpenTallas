@@ -1,0 +1,41 @@
+{
+ "production_bound": false,
+ "qualified_release": false,
+ "compute_table_source": "4d2cb6301:results/rtl/qwen_layer_tput_1018/compiled_L1/die_run/compute_dv2f18dh2_relay_stages.json",
+ "compute_source_files_match_original_netlist_walker": {
+  "die.v": true,
+  "die.v.params.json": true,
+  "fwd_lanes.json": true
+ },
+ "kv_table_sha256": "37a3a3491495230bbac5fbb755c7b2c4c18b45ff80d7449b91fdc8fac6c66c31",
+ "kv_limits": [
+  "45863 functional unread bits",
+  "69 open ports",
+  "fault/reset/nativeclock/standin closure pending"
+ ],
+ "compiler_source": "1f01732c3",
+ "sourcepack_rule": "Only git-show lookup is replaced with SHA-validated original bytes; no compiler/relay/readiness result overridden",
+ "compiler_findings": [
+  "SEAM_AGE_SOURCE",
+  "TXDP K",
+  "L0_WINDOW"
+ ],
+ "relay_check": {
+  "compute": "PASS",
+  "kv": "PASS"
+ },
+ "txd": {
+  "C": [
+   8,
+   3,
+   1,
+   10
+  ],
+  "K": [
+   22,
+   4,
+   3,
+   3
+  ]
+ }
+}

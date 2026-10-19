@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.die_relay_check.v1",
+ "verdict": "FAIL",
+ "design": "qwen_compute",
+ "die_run": {
+  "plan": {
+   "id": "dv2f18dh2-mudiequ2",
+   "commit": null,
+   "generator": "tools/qwen_split/relay_stages_export.py",
+   "sources": [
+    "tools/qwen_rom_fulldie_b3r2.py"
+   ],
+   "kind": "generator model (after the relay plan)"
+  },
+  "digest": "sha256:e9a23074756af7a4165cb6fa57794d7cef944737ac6cc06e933db62427f531d7",
+  "buses": 622
+ },
+ "schedule": {
+  "plan": {
+   "id": "dv2f18dh2-mudiequ2",
+   "commit": null,
+   "generator": "tools/qwen_split/relay_stages_export.py",
+   "sources": [
+    "tools/qwen_rom_fulldie_b3r2.py"
+   ],
+   "kind": "generator model (after the relay plan)"
+  },
+  "role": "compiled_schedule",
+  "digest": "sha256:e9a23074756af7a4165cb6fa57794d7cef944737ac6cc06e933db62427f531d7",
+  "buses": 622,
+  "consumer": "tools/qwen_layerbench/layer_compile.py"
+ },
+ "fails": [
+  "die run reports unresolved export problems",
+  "schedule reports unresolved export problems"
+ ],
+ "warnings": [],
+ "only_in_die_run": [],
+ "only_in_schedule": [],
+ "stage_diffs": [],
+ "width_diffs": [],
+ "domain_diffs": [],
+ "torn_bundles": {},
+ "bundles_checked": true
+}

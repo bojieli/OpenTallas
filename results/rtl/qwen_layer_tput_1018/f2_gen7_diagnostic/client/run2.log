@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-f2-gen7-1019/src
+ot-run: ot-epyc5       admits   555 GB (avail 502, growth 113, headroom 0, waiters 0/0 GB) load 70/128 running 13 disk 1032 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-f2-gen7-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-f2-gen7-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-f2-gen7-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-f2-gen7-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-f2-gen7-1019/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1725786-1792429462 after 0 s
+layer_compile: /usr/bin/python3 tools/qwen_static_kv/layer_roots_from_link.py failed (rc 1): see ../run2/kv_programme.log
+"/srv/opentallas-scratch/claude/qw-f2-gen7-1019/src/tools/qwen_kv_die/static_qk_calendar.py", line 63, in compile_calendar
+    sources={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in SOURCES}, engines=engines)
+                               ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qw-f2-gen7-1019/src/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv'
+
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1725786-1792429462): exit 1

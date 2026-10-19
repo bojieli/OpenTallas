@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.qwen_layerbench.q_readiness.v1",
+ "verdict": "BLOCKED",
+ "production_bound": false,
+ "advance_admitted": false,
+ "source_commit": "0d4c9808fe7d2370185a4313e831b6f59f7a2f75",
+ "inputs": {
+  "die_v_sha256": "7b1bdfc5fd26c2e6f17fe6aa5b1d68bd9e2fa05bc3ecf408b9f163eb600bbde7",
+  "fwd_lanes_sha256": "70297479d3dd2550525995a8b68bda9b560e530ba7b8bfd5d8f6d6a98155a862"
+ },
+ "pins": {
+  "dvw_dd_wo": {
+   "source": "dvs_W5.dd_wo",
+   "consumer": "native59.dd_i",
+   "source_net": "n_dvw_dd_wo",
+   "consumer_net": "n_dvw_dd_wo__r26",
+   "frames": 26,
+   "E": 19,
+   "K": 2,
+   "age_edges": 20
+  },
+  "sf_q_slot": {
+   "source": "sys_face.q_slot",
+   "consumer": "native59.q_slot",
+   "source_net": "n_sf_q_slot",
+   "consumer_net": "n_sf_q_slot__r1",
+   "frames": 1,
+   "E": 1,
+   "K": 3,
+   "age_edges": 2
+  },
+  "sf_q_slot_beat": {
+   "source": "sys_face.q_slot_beat",
+   "consumer": "native59.q_slot_beat",
+   "source_net": "n_sf_q_slot_beat",
+   "consumer_net": "n_sf_q_slot_beat__r1",
+   "frames": 1,
+   "E": 1,
+   "K": 3,
+   "age_edges": 2
+  }
+ },
+ "request_edges": 2,
+ "ready_reference": "native59_qdd_pin",
+ "producer_ready": null,
+ "request_ages": null,
+ "required_coverage": {
+  "beats": 32,
+  "seats_per_beat": 16,
+  "total_seats": 512
+ },
+ "blockers": [
+  "production PW1024/DW8 compute program is not emitted (bench_program is filler)",
+  "no production W5 Q write edges/seat coverage or all32 QSLOT events",
+  "SAFE2 source/kit must be bound by a new GEN; existing die is not its production proof"
+ ],
+ "rule": "For each beat b: old_qslot[b] - 1 + request_edges >= max(W5_Qwrite[b,seat] + Qdata_age for seat in 0..15); SAFE2 same-edge forwarding permits equality; all512 seats and all32 requests required"
+}

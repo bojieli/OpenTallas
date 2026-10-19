@@ -1,0 +1,11 @@
+# Actual GEN7 KV / dv2f18dh2 seam diagnostic
+
+Both compiled relay checks PASS:637 compute buses from the authoritative netlist walker and51,606 actual GEN7 KV buses. Compute die.v,params andfwd-lanes bytes exactly match the original4d2cb6301 walker inputs; current chain is immutable. GEN7 KV table SHA37a3a349..., source4db097403, exporter/proof in inputarchive. Sourcepack validates exact git-show content before replaying the unchanged1f01732c3 compiler onfleet; no compiler checks are bypassed.
+
+Required producer vectors are C[8,3,1,10] (unchanged) and K[22,4,3,3], whereas current image binds K[21,4,3,3]. This is an explicit TXDP K FAIL finding, not a deployed fix. K seam ages are RX11, TXslot9 and TXrecord9, plus source codec2. All bundle members have coherent ages. Link window outputs L0-215 and L1+7 are old analytical diagnostic values only; no headline token rate or lifecycle claim follows.
+
+The table is NOT production qualified: KV45863unread/69open/fault/reset/native clocks/stand-ins remain open. Existing compiler also reports six deployment gaps including real PW body, production Q seat readiness, E calendar/embedding and complete land plan; newer body/embedding recovery is owned separately and does not retroactively qualify this legacy link pass. No actual compiled image is bound into either running die chain.
+
+The original generator-model622-bus input had two unresolved exporter problems and relayFAIL; generator_table_diagnostic preserves that result. The authoritative637-bus table was selected only after verifying exact original/current source bytes; no problem flag was suppressed. Initial missingrefresh and missing QK-source staging failures remain in client logs. Terminal actual replay unit1731197 exit0. Compiler process exit0 means artifacts emitted, not findings clean or production ready. The explicit TXDP failure remains visible.
+
+Reproduce: extract inputs.tar.gz here; stage the committed tools at1f01732c3, sourcepack and exact ancillary sources listed in ancillary_sources.json, then invoke run_sourcepack.py with the argument list in client/run4.log. The sourcepack is required because fleet staging has no git object database. Outputs/manifest.json pins all35 generated artifacts.

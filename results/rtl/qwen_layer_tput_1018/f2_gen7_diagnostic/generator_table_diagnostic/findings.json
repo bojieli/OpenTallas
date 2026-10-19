@@ -1,0 +1,318 @@
+{
+ "findings": [
+  {
+   "id": "SEAM_AGE_SOURCE",
+   "severity": "INFO",
+   "owner": "QW-L1SEAM",
+   "what": "9 compute seam buses: the die table age (relay hops / exporter age_fields) differs from the as-built lane cycles; compiled with record_bundles.seam_stages (the strict-bind DIE_PARAM_AUDIT / RECORD_BUNDLE_AUDIT source)",
+   "lanes": [
+    "d2d_rom.native_rx_slot -> native59.rx_slot: table 1 -> seam 2",
+    "d2d_rom.native_rx_slot_beat -> native59.rx_slot_beat: table 1 -> seam 2",
+    "d2d_rom.native_rx_slot_kind -> native59.rx_slot_kind: table 1 -> seam 2",
+    "d2d_rom.native_rx_v -> native59.native_rx_v: table 1 -> seam 2",
+    "d2d_rom.native_tx_slot -> native59.tx_slot: table 1 -> seam 2",
+    "d2d_rom.native_tx_slot_beat -> native59.tx_slot_beat: table 1 -> seam 2",
+    "d2d_rom.native_tx_slot_kind -> native59.tx_slot_kind: table 1 -> seam 2",
+    "native59.native_tx_payload -> d2d_rom.native_tx_payload: table 1 -> seam 2",
+    "native59.native_tx_v -> d2d_rom.native_tx_v: table 1 -> seam 2"
+   ]
+  },
+  {
+   "id": "TXDP K",
+   "severity": "FAIL",
+   "owner": "Q-LINK / die leads",
+   "what": "qkd_d2d_static is elaborated with TXDP [21, 4, 3, 3] (ports 0..3); the die stages need [22, 4, 3, 3]",
+   "fix": "make TXDP a parameter of the die master set from this compiler (d2d/txdp.svh), or re-harden with the compiled vector"
+  },
+  {
+   "id": "L0_WINDOW",
+   "severity": "INFO",
+   "owner": "Q-LINK + KV",
+   "what": "L0 (token run) priced attn_kv 2038 is 215 edges LONGER than the fixed KV service needs (TX_FIRST 1750): compiled with the window shortened",
+   "note": "TOKEN-XDIE-QWEN F7 (222 at the stimulus codecs); the cold-fill price is not in the RTL service"
+  }
+ ],
+ "gaps": [
+  {
+   "module": "qfd_tt_ctlm_dv (qfd_tt_ctlm_head_static program store + qfd_dv_cmd_cal) via qfd_sys_face config ROM rows 0..1031",
+   "port": "sys_face ROM / dh pw,dw (program copy)",
+   "missing": "the deployment PW1024 + DW8 program image of a Qwen layer (ME program rows, XPF, DV slice-command calendar entries + CALD descriptor): no committed compiler emits it; every bench and layer_roots_from_link.py use tools/qwen_split/sys_face_image.py bench_program() (a deterministic filler)"
+  },
+  {
+   "module": "qfd_native59_dv_service",
+   "port": "parameter LAND_EDGES (+ NATIVE_PROFILE, LAND_QUALIFIED)",
+   "missing": "dv2f14bn binds the default LAND_EDGES 8 (NATIVE_PROFILE 0); the dr_o return chain is [('native59.dr_o -> dvs_W5.dr_wi', 27, None)] relay instances to the W5 slice (a landed lane n > 1: E = K mod 8) then the W5..E5 chain -- the compiled value needs the die land plan"
+  },
+  {
+   "module": "qfd_sys_face",
+   "port": "L calendar class 2 QSLOT (q_slot / q_slot_beat to native59)",
+   "missing": "no compiler relation between the Q seat-bank commit (dd_i Q landings from the W5 slices) and q_slot; the xdie vehicle drives it as a declared stimulus"
+  },
+  {
+   "module": "qfd_sys_face",
+   "port": "E calendar (EMBW / FILL)",
+   "missing": "embedding row slots not compiled by this pass"
+  },
+  {
+   "module": "dv2f14bn landed lanes (57 buses, n > 1)",
+   "port": "ot_qfd_land K straps",
+   "missing": "land_plan.json (lane age E per landing) is not produced by the dv2f14bn chain; E = K mod 8 only, so no compiler can schedule those buses (incl. dvs_W5.dd_wo -> native59.dd_i and native59.dr_o)"
+  },
+  {
+   "module": "qfd_native59_dv_service / qkd_native_attention_static_ctl",
+   "port": "CMD -> Q beat 0 spacing",
+   "missing": "TOKEN-XDIE-QWEN F1: native59 needs >= 1 idle slot after CMD, the KV static ctl needs Q contiguous; compiled here with the production gap 0 (KV side) -- one side must change its compiled gap"
+  }
+ ],
+ "relay_check": {
+  "compute": {
+   "verdict": "FAIL",
+   "fails": [
+    "die run reports unresolved export problems",
+    "schedule reports unresolved export problems"
+   ],
+   "stage_diffs": [],
+   "schedule": "compute_compiled.json"
+  },
+  "kv": {
+   "verdict": "PASS",
+   "fails": [],
+   "stage_diffs": [],
+   "schedule": "kv_compiled.json.gz"
+  }
+ },
+ "bundles": {
+  "C.tx_slot": {
+   "design": "qwen_compute",
+   "members": [
+    {
+     "bus": "d2d_rom.native_tx_slot -> native59.tx_slot",
+     "stages": 1,
+     "age": 2,
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
+    },
+    {
+     "bus": "d2d_rom.native_tx_slot_kind -> native59.tx_slot_kind",
+     "stages": 1,
+     "age": 2,
+     "width": 4,
+     "age_source": "record_bundles.seam_stages"
+    },
+    {
+     "bus": "d2d_rom.native_tx_slot_beat -> native59.tx_slot_beat",
+     "stages": 1,
+     "age": 2,
+     "width": 5,
+     "age_source": "record_bundles.seam_stages"
+    }
+   ],
+   "age": 2,
+   "consistent": true,
+   "ages": [
+    2
+   ]
+  },
+  "C.rx_record": {
+   "design": "qwen_compute",
+   "members": [
+    {
+     "bus": "d2d_rom.native_rx_v -> native59.native_rx_v",
+     "stages": 1,
+     "age": 2,
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
+    },
+    {
+     "bus": "d2d_rom.native_rx_slot -> native59.rx_slot",
+     "stages": 1,
+     "age": 2,
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
+    },
+    {
+     "bus": "d2d_rom.native_rx_slot_kind -> native59.rx_slot_kind",
+     "stages": 1,
+     "age": 2,
+     "width": 4,
+     "age_source": "record_bundles.seam_stages"
+    },
+    {
+     "bus": "d2d_rom.native_rx_slot_beat -> native59.rx_slot_beat",
+     "stages": 1,
+     "age": 2,
+     "width": 5,
+     "age_source": "record_bundles.seam_stages"
+    },
+    {
+     "bus": "d2d_rom.rx_payload -> native59.native_rx_payload",
+     "stages": 2,
+     "age": 2,
+     "width": 548,
+     "age_source": "record_bundles.seam_stages"
+    }
+   ],
+   "age": 2,
+   "consistent": true,
+   "ages": [
+    2
+   ]
+  },
+  "C.tx_record": {
+   "design": "qwen_compute",
+   "members": [
+    {
+     "bus": "native59.native_tx_v -> d2d_rom.native_tx_v",
+     "stages": 1,
+     "age": 2,
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
+    },
+    {
+     "bus": "native59.native_tx_payload -> d2d_rom.native_tx_payload",
+     "stages": 1,
+     "age": 2,
+     "width": 548,
+     "age_source": "record_bundles.seam_stages"
+    }
+   ],
+   "age": 2,
+   "consistent": true,
+   "ages": [
+    2
+   ]
+  },
+  "C.x3_record": {
+   "design": "qwen_compute",
+   "members": [
+    {
+     "bus": "native59.x3 -> d2d_rom.x3",
+     "stages": 2,
+     "age": 2,
+     "width": 524,
+     "age_source": "record_bundles.seam_stages"
+    },
+    {
+     "bus": "native59.x3_identity -> d2d_rom.x3_identity",
+     "stages": 2,
+     "age": 2,
+     "width": 59,
+     "age_source": "record_bundles.seam_stages"
+    },
+    {
+     "bus": "native59.x3_generation -> d2d_rom.x3_generation",
+     "stages": 2,
+     "age": 2,
+     "width": 2,
+     "age_source": "record_bundles.seam_stages"
+    }
+   ],
+   "age": 2,
+   "consistent": true,
+   "ages": [
+    2
+   ]
+  },
+  "C.x3_slot": {
+   "design": "qwen_compute",
+   "members": [
+    {
+     "bus": "d2d_rom.kv_x3_slot -> native59.kv_x3_slot",
+     "stages": 3,
+     "age": 3,
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
+    }
+   ],
+   "age": 3,
+   "consistent": true,
+   "ages": [
+    3
+   ]
+  },
+  "K.rx_record": {
+   "design": "qwen_kv",
+   "members": [
+    {
+     "bus": "d2d_kv.att_rx_v -> kvs_attn.d2d__srx__0_0",
+     "stages": 11,
+     "age": 11,
+     "width": 1
+    },
+    {
+     "bus": "d2d_kv.att_rx_kind -> kvs_attn.d2d__srx__4_1",
+     "stages": 11,
+     "age": 11,
+     "width": 4
+    },
+    {
+     "bus": "d2d_kv.att_rx_beat -> kvs_attn.d2d__srx__9_5",
+     "stages": 11,
+     "age": 11,
+     "width": 5
+    },
+    {
+     "bus": "d2d_kv.rx_payload -> kvs_attn.d2d__rx_payload",
+     "stages": 11,
+     "age": 11,
+     "width": 548
+    }
+   ],
+   "age": 11,
+   "consistent": true,
+   "ages": [
+    11
+   ]
+  },
+  "K.tx_slot": {
+   "design": "qwen_kv",
+   "members": [
+    {
+     "bus": "d2d_kv.att_tx_slot -> kvs_attn.d2d__att_tx_slot",
+     "stages": 9,
+     "age": 9,
+     "width": 1
+    },
+    {
+     "bus": "d2d_kv.att_tx_kind -> kvs_attn.d2d__att_tx_kind",
+     "stages": 9,
+     "age": 9,
+     "width": 4
+    },
+    {
+     "bus": "d2d_kv.att_tx_beat -> kvs_attn.d2d__att_tx_beat",
+     "stages": 9,
+     "age": 9,
+     "width": 5
+    }
+   ],
+   "age": 9,
+   "consistent": true,
+   "ages": [
+    9
+   ]
+  },
+  "K.tx_record": {
+   "design": "qwen_kv",
+   "members": [
+    {
+     "bus": "kvs_attn.attn__tx_valid -> d2d_kv.att_tx_v",
+     "stages": 9,
+     "age": 9,
+     "width": 1
+    },
+    {
+     "bus": "kvs_attn.attn__tx_payload -> d2d_kv.att_tx_payload",
+     "stages": 9,
+     "age": 9,
+     "width": 548
+    }
+   ],
+   "age": 9,
+   "consistent": true,
+   "ages": [
+    9
+   ]
+  }
+ }
+}
