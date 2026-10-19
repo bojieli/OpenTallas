@@ -1,0 +1,29 @@
+ot-run: ot-epyc4       admits  1025 GB (avail 820, growth 102, headroom 0, waiters 0/0 GB) load 83/128 running 32 disk 307 GB 
+ot-run: ot-epyc5       admits   829 GB (avail 693, growth 113, headroom 0, waiters 0/0 GB) load 57/128 running 12 disk 1049 GB 
+ot-run: ot-epyc6       admits   315 GB (avail 319, growth 98, headroom 0, waiters 0/0 GB) load 30/128 running 15 disk 6055 GB 
+ot-run: ot-epyc7       admits   537 GB (avail 477, growth 101, headroom 0, waiters 0/0 GB) load 66/96 running 17 disk 6477 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-native-head-1019/bank64_r3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-native-head-1019/bank64_r3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-native-head-1019/bank64_r3
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-80147-1792427287 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+  (measured) fused root: last PSUM out of slice 1 -> r out of the root = [61] cycles
+bench2 (a) MUT=0: PASS 24/24
+bench2 (c) MUT=0: PASS 640/640
+bench2 (f) MUT=0: PASS 3/3
+  op                                     priced beats  measured span  issue->last out
+  residual + sum of squares (6 x 128)          96             96         189
+  consumer norm / scale (683 rows)             86             86         140
+  QK sum of squares (128)                      16             16         110
+  QK norm (128)                                16             16          70
+  SiLU * up (128)                              16             16         196
+bench2 (g) MUT=0: PASS 5/5
+bench2 (k) MUT=0: PASS 512/512
+bench2 (q) MUT=0: PASS 512/512
+    bench2 (m): seed 21 gap 18 MU_NU 4 FACE 1 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1680
+bench2 (m) MUT=0: PASS 8/8
+    bench2 (o): ovl gap 4 MU_NU 4 FACE 1 AM_MUT 0
+bench2 (o) MUT=0: PASS 2/2
+    bench2 (n): MU_NU 4 FACE 1 AM_MUT 0
+bench2 (n) MUT=0: PASS 2/2

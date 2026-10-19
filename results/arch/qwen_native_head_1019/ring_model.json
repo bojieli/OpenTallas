@@ -1,0 +1,95 @@
+{
+  "status": "SOURCE_DESIGN_MODEL_NOT_PHYSICAL_ADMISSION",
+  "top": "qfd_dv_lane_h_native_b64",
+  "replicas": 96,
+  "II_edges": 1,
+  "added_data_edges": 0,
+  "unchanged_parent_delta_edges": 6,
+  "memory_ports": {
+    "each_bank_read_bytes_per_edge": 8,
+    "each_bank_write_bytes_per_edge": 8,
+    "fixed_same_clock_read_write": true
+  },
+  "rings": [
+    {
+      "name": "ml_tag",
+      "width": 140,
+      "delay_edges": 11,
+      "banks_32x64": 3,
+      "useful_bits": 1540
+    },
+    {
+      "name": "d38",
+      "width": 133,
+      "delay_edges": 5,
+      "banks_32x64": 3,
+      "useful_bits": 665
+    },
+    {
+      "name": "d914",
+      "width": 35,
+      "delay_edges": 4,
+      "banks_32x64": 1,
+      "useful_bits": 140
+    },
+    {
+      "name": "tls_tap0",
+      "width": 126,
+      "delay_edges": 10,
+      "banks_32x64": 2,
+      "useful_bits": 1260
+    },
+    {
+      "name": "dmc",
+      "width": 126,
+      "delay_edges": 5,
+      "banks_32x64": 2,
+      "useful_bits": 630
+    },
+    {
+      "name": "dmd",
+      "width": 94,
+      "delay_edges": 5,
+      "banks_32x64": 2,
+      "useful_bits": 470
+    }
+  ],
+  "native_bank_geometry_um": [
+    31.968,
+    17.28
+  ],
+  "native_bank_area_um2": 552.40704,
+  "new_banks": 13,
+  "new_hard_area_um2": 7181.291520000001,
+  "existing_TLS_banks_128x64": 2,
+  "total_hard_area_um2": 9041.01696,
+  "tracks": {
+    "each_bank_data_in": 64,
+    "data_out": 64,
+    "addresses": 10,
+    "clock_sinks": 1,
+    "per_bank_ptr_FF": 5,
+    "critical_fanout_target": 32
+  },
+  "floorplan": "UNSIZED; mapped standard area and legal macro channels required; provisional216x172.8 not admission",
+  "latency_semantics": "wp advances each edge; read address wp-(D-2); registered SRAM read then output capture equals D original stages; no same-slot collision D>=3",
+  "open": [
+    "all valid and nested FPU delay shifts",
+    "reset tree and root fanout",
+    "mapped area/band/replica fit",
+    "macro escape access",
+    "native TT/FF and boundary"
+  ],
+  "measured_generic_FF": 7034,
+  "baseline_FF": 10434,
+  "measured_delta_FF": -3400,
+  "new_banks_macro": "ot_sram_1r1w_32x64_m1",
+  "production_status": "live ep6 ring2 session20614 (first90925 packaging failure missinghdc_golden preserved)",
+  "total_new_hard_area_96_heads_mm2": 0.6894039859200001,
+  "original_TLS_proof": {
+    "positive_e": "1024/1024",
+    "wrong_bank_e": "FAIL0/1024",
+    "wrong_slot_e": "FAIL1/1024",
+    "g_negative_inadequate": "TLS-slot mutant PASS5/5; throughput only"
+  }
+}

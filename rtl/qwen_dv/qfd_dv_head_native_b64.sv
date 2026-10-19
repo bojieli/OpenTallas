@@ -417,7 +417,7 @@ module qfd_dv_native_lane_b64 #(
     wire [2:0]    t_p;
     wire [AW-1:0] t_daddr, t_raddr;
     wire [FT-1:0] e_tag_m;
-    ot_hdc_delay #(.W(FT), .D(ML)) u_ml_tag (.clk(clk), .rst_n(rst_n), .d(e_tag), .q(e_tag_m));
+    qfd_dv_head_sram_delay #(.W(FT), .D(ML)) u_ml_tag (.clk(clk), .rst_n(rst_n), .d(e_tag), .q(e_tag_m));
     always @(posedge clk) s1_tag <= e_tag_m;
     assign {t_asrc, t_bsrc, t_csrc, t_mc, t_md, t_redsq, t_ma, t_mb, t_dst, t_red, t_ad, t_imm1, t_imm2,
             t_lane, t_ifirst, t_first8, t_final, t_last, t_p, t_daddr, t_raddr} = s1_tag;
@@ -457,7 +457,7 @@ module qfd_dv_native_lane_b64 #(
     wire [31:0] a8, blo8, c8, imm2_8;
     wire [1:0]  ma8;
     wire [2:0]  ad8;
-    ot_hdc_delay #(.W(32*4 + 2 + 3), .D(LM)) u_d38 (.clk(clk), .rst_n(rst_n),
+    qfd_dv_head_sram_delay #(.W(32*4 + 2 + 3), .D(LM)) u_d38 (.clk(clk), .rst_n(rst_n),
         .d({s3_a, s3_blo, s3_c, s3_imm2, s3_ma, s3_ad}), .q({a8, blo8, c8, imm2_8, ma8, ad8}));
     wire [LM+1:0] v3;
     ot_hdc_vline #(.D(LM+1)) u_v3 (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(v3));   // v3[k] = S3+k
@@ -479,7 +479,7 @@ module qfd_dv_native_lane_b64 #(
     wire fad;
     ot_hdc_qadd #(.L(LA)) u_ad (clk, rst_n, v3[LM+1] && ad9 != AD_BYP, ad_x, ad_y, r_add, fad);
     wire [2:0] ad14;
-    ot_hdc_delay #(.W(35), .D(LA)) u_d914 (.clk(clk), .rst_n(rst_n), .d({ad_x, ad9}), .q({px14, ad14}));
+    qfd_dv_head_sram_delay #(.W(35), .D(LA)) u_d914 (.clk(clk), .rst_n(rst_n), .d({ad_x, ad9}), .q({px14, ad14}));
     wire [LA:0] v9;
     ot_hdc_vline #(.D(LA)) u_v9 (.clk(clk), .rst_n(rst_n), .v(v3[LM+1]), .vd(v9));    // v9[LA] = R
     wire [31:0] r14 = (ad14 == AD_BYP) ? px14 : r_add;
@@ -562,9 +562,9 @@ module qfd_dv_native_lane_b64 #(
         //: the macro, then one capture flop at its output.  The class is constant while an element of it is in
         //: flight (a class switch waits for the unit to drain), so rp has followed the class for >= D_RECIP - 3
         //: cycles before the first valid tap.  D in [3, 129] (128 words, rp != wp).
-        reg [LT*TAP0-1:0] tl0;
-        always @(posedge clk) tl0 <= {tl0[LT*(TAP0-1)-1:0], s3_blo, s3_c, s3_tail};
-        wire [LT-1:0] t0 = tl0[LT*TAP0-1 -: LT];
+        wire [LT-1:0] t0;
+        qfd_dv_head_sram_delay #(.W(LT),.D(TAP0)) u_tap0_ring (
+          .clk(clk),.rst_n(rst_n),.d({s3_blo,s3_c,s3_tail}),.q(t0));
         reg [7:0] dsel;
         always @(*) begin
             case (cls)
@@ -639,7 +639,7 @@ module qfd_dv_native_lane_b64 #(
     wire [TT-1:0] c_tail;
     wire [LM:0] vmc;
     ot_hdc_vline #(.D(LM)) u_vmc (.clk(clk), .rst_n(rst_n), .v(mc_v), .vd(vmc));
-    ot_hdc_delay #(.W(64 + TT), .D(LM)) u_dmc (.clk(clk), .rst_n(rst_n), .d({mc_x, mc_b, mc_tail}),
+    qfd_dv_head_sram_delay #(.W(64 + TT), .D(LM)) u_dmc (.clk(clk), .rst_n(rst_n), .d({mc_x, mc_b, mc_tail}),
                                              .q({byp5, b5, c_tail}));
     reg [31:0] md_x, md_y;
     reg        md_v;
@@ -657,7 +657,7 @@ module qfd_dv_native_lane_b64 #(
     wire [TT-1:0] o_tail;
     wire [LM:0] vmd;
     ot_hdc_vline #(.D(LM)) u_vmd (.clk(clk), .rst_n(rst_n), .v(md_v), .vd(vmd));
-    ot_hdc_delay #(.W(32 + TT), .D(LM)) u_dmd (.clk(clk), .rst_n(rst_n), .d({md_x, md_tail}), .q({dbyp5, o_tail}));
+    qfd_dv_head_sram_delay #(.W(32 + TT), .D(LM)) u_dmd (.clk(clk), .rst_n(rst_n), .d({md_x, md_tail}), .q({dbyp5, o_tail}));
     wire          o_mc, o_md;
     wire [1:0]    o_dst, o_red;
     wire          o_redsq;
@@ -696,4 +696,40 @@ module qfd_dv_native_lane_b64 #(
         else lf <= fa | fb_ | fad | f_exp | f_e1 | f_rcp | f_rsq | fmc | fmd;
     end
     assign l_fault = lf;
+endmodule
+
+// Fixed-age same-clock native SRAM ring, isolated to this candidate.
+// No reset of data or additional validity stages. The existing valid paths
+// qualify startup contents exactly as with the replaced unreset data shifts.
+module qfd_dv_head_sram_delay #(parameter integer W=32,D=3)(
+ input wire clk,rst_n,input wire[W-1:0] d,output wire[W-1:0] q
+);
+ localparam integer NB=(W+63)/64;
+ wire[NB*64-1:0] di={{(NB*64-W){1'b0}},d};
+ wire[NB*64-1:0] qo;
+ for(genvar b=0;b<NB;b=b+1) begin:g_bank
+  (* keep_hierarchy="yes" *) qfd_dv_head_sram_delay_bank #(.D(D),.BANK_ID(b),.USED_BITS((W-64*b<64)?W-64*b:64)) u_bank(
+   .clk(clk),.rst_n(rst_n),.d(di[b*64+:64]),.q(qo[b*64+:64]));
+ end
+ assign q=qo[W-1:0];
+`ifndef SYNTHESIS
+ initial if(D<3||D>32||W<1) $fatal(1,"HEAD_SRAM_DELAY unsupported shape");
+`endif
+endmodule
+module qfd_dv_head_sram_delay_bank #(parameter integer D=3,BANK_ID=0,USED_BITS=64)(
+ input wire clk,rst_n,input wire[63:0] d,output reg[63:0] q
+);
+ (* keep *) reg[4:0] wp;
+ `ifdef OT_HEAD_RING_AGE_MUT
+ wire[4:0] rp=wp-5'(D-3);
+`else
+ wire[4:0] rp=wp-5'(D-2);
+`endif
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n) wp<=0; else wp<=wp+1'b1;
+ wire[63:0] rq;
+ ot_sram_1r1w_32x64_m1 u_mem(.clk(clk),
+  .r_ce_in(1'b1),.r_addr_in(rp),.rd_out(rq),
+  .w_ce_in(1'b1),.w_addr_in(wp),.wd_in(d),.w_mask_in(64'hffffffffffffffff >> (64-USED_BITS)));
+ always @(posedge clk) q<=rq;
 endmodule

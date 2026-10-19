@@ -1,0 +1,229 @@
+{
+  "status": "GENERIC_SOURCE_CENSUS_NOT_MAPPED_AREA",
+  "top": "qfd_dv_lane_h_native_b64",
+  "flops": 7034,
+  "leaf_cells": 43754,
+  "cell_types": {
+    "$_DFF_PN0_": 1752,
+    "$_DFF_P_": 5125,
+    "$_SDFF_PP0_": 92,
+    "$_SDFF_PN1_": 8,
+    "$_SDFF_PN0_": 57,
+    "$_NOT_": 1278,
+    "$_AND_": 15551,
+    "$_OR_": 7911,
+    "$_XOR_": 5783,
+    "$_MUX_": 6078,
+    "$scopeinfo": 104,
+    "ot_sram_1r1w2c_128x64_m1": 2,
+    "ot_sram_1r1w_32x64_m1": 13
+  },
+  "FF_fanout_over32": [
+    {
+      "driver": "head.$auto$ff.cc:337:slice$65527",
+      "net": "u_h.u_lane.u_vmd.rst_n",
+      "loads": 1699
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$48547",
+      "net": "u_h.u_lane.t_lane",
+      "loads": 128
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$48630",
+      "net": "u_h.u_lane.t_bsrc",
+      "loads": 65
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$48548",
+      "net": "u_h.u_lane.t_lane",
+      "loads": 64
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$50972",
+      "net": "u_h.u_lane.u_ma.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$50973",
+      "net": "u_h.u_lane.u_ma.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$50974",
+      "net": "u_h.u_lane.u_ma.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$50975",
+      "net": "u_h.u_lane.u_ma.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$53377",
+      "net": "u_h.u_lane.u_mb.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$53378",
+      "net": "u_h.u_lane.u_mb.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$53379",
+      "net": "u_h.u_lane.u_mb.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$53380",
+      "net": "u_h.u_lane.u_mb.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$61049",
+      "net": "u_h.u_lane.u_mc.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$61050",
+      "net": "u_h.u_lane.u_mc.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$61051",
+      "net": "u_h.u_lane.u_mc.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$61052",
+      "net": "u_h.u_lane.u_mc.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$63459",
+      "net": "u_h.u_lane.u_md.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$63460",
+      "net": "u_h.u_lane.u_md.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$63461",
+      "net": "u_h.u_lane.u_md.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$63462",
+      "net": "u_h.u_lane.u_md.g_l.u.s2_sh",
+      "loads": 48
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$50875",
+      "net": "u_h.u_lane.u_ma.g_l.u.top",
+      "loads": 43
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$53280",
+      "net": "u_h.u_lane.u_mb.g_l.u.top",
+      "loads": 43
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$60952",
+      "net": "u_h.u_lane.u_mc.g_l.u.top",
+      "loads": 43
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$63362",
+      "net": "u_h.u_lane.u_md.g_l.u.top",
+      "loads": 43
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$50976",
+      "net": "u_h.u_lane.u_ma.g_l.u.s2_sh",
+      "loads": 40
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$53381",
+      "net": "u_h.u_lane.u_mb.g_l.u.s2_sh",
+      "loads": 40
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$61053",
+      "net": "u_h.u_lane.u_mc.g_l.u.s2_sh",
+      "loads": 40
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$63463",
+      "net": "u_h.u_lane.u_md.g_l.u.s2_sh",
+      "loads": 40
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$39186",
+      "net": "u_h.u_lane.u_ad.g_l.u.w_sub",
+      "loads": 36
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$39287",
+      "net": "u_h.u_lane.u_e1.g_l.u.w_sub",
+      "loads": 36
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$38954",
+      "net": "u_h.u_lane.u_mc.g_l.u.u_c6.q",
+      "loads": 34
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$38996",
+      "net": "u_h.u_lane.u_ma.g_l.u.u_c6.q",
+      "loads": 34
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$39038",
+      "net": "u_h.u_lane.u_mb.g_l.u.u_c6.q",
+      "loads": 34
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$39080",
+      "net": "u_h.u_lane.u_md.g_l.u.u_c6.q",
+      "loads": 34
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$56506",
+      "net": "u_h.u_lane.u_ad.g_l.u.u_cc.q",
+      "loads": 34
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$58793",
+      "net": "u_h.u_lane.u_e1.g_l.u.u_cc.q",
+      "loads": 34
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$38951",
+      "net": "u_h.u_lane.u_mc.g_l.u.u_c4.q",
+      "loads": 33
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$38993",
+      "net": "u_h.u_lane.u_ma.g_l.u.u_c4.q",
+      "loads": 33
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$39035",
+      "net": "u_h.u_lane.u_mb.g_l.u.u_c4.q",
+      "loads": 33
+    },
+    {
+      "driver": "head.$auto$ff.cc:337:slice$39077",
+      "net": "u_h.u_lane.u_md.g_l.u.u_c4.q",
+      "loads": 33
+    }
+  ],
+  "source_macro_count": {
+    "ot_sram_1r1w2c_128x64_m1": 2,
+    "ot_sram_1r1w_32x64_m1": 13
+  },
+  "baseline_FF": 10434,
+  "caveat": "Hierarchy counted recursively; macro clocks share one clock. Load census counts exact mapped-generic input pins, not routed capacitance. Actual reset and mapped standard area remain unqualified."
+}

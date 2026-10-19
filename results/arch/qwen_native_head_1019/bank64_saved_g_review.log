@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-head-close-1019/ring2
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-head-close-1019/ring2
+ot-run: ot-epyc6       admits   257 GB (avail 293, growth 113, headroom 0, waiters 0/0 GB) load 31/128 running 16 disk 6047 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-head-close-1019/ring2
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-head-close-1019/ring2
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-head-close-1019/ring2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-head-close-1019/ring2
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-167849-1792428807 after 1 s
+  op                                     priced beats  measured span  issue->last out
+  residual + sum of squares (6 x 128)          96             96         189
+  consumer norm / scale (683 rows)             86             86         140
+  QK sum of squares (128)                      16             16         110
+  QK norm (128)                                16             16          70
+SAVED_ACTUAL_MUTANT old_bank.log SHA256 51072c7b3af11e85d4c9c63d0a5167a1fc1bcbb75d3681577af67eedb9431332
+bench2(g) verdict FAIL 4/5
+SiLU * up (128): no output
+  op                                     priced beats  measured span  issue->last out
+  residual + sum of squares (6 x 128)          96             96         189
+  consumer norm / scale (683 rows)             86             86         140
+  QK sum of squares (128)                      16             16         110
+  QK norm (128)                                16             16          70
+  SiLU * up (128)                              16             16         196
+SAVED_ACTUAL_MUTANT old_slot.log SHA256 75f277215aae8ed7f09f06f27f8e3c5c826ca496fc9e835773646dccfbfa7377
+bench2(g) verdict PASS 5/5
+MUTANT_UNEXPECTED_PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-167849-1792428807): exit 1
