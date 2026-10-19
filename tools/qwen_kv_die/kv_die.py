@@ -4745,7 +4745,11 @@ def main(argv=None):
     a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s
     a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
     if a.mode == 'case' and a.reserve_native_astk:
-        ap.error('native ASTK envelope reservation is plan-only until selected profile/clock/pin binding closes')
+        if not KSD.ON or not KSD.ASTK_ST or os.environ.get('OT_KV_ASTK_EXPAND', '0') != '1':
+            ap.error('native ASTK case requires the actual static ASTK EXPAND profile (OT_KV_ASTK_EXPAND=1)')
+        import kv_astk_expand
+        kv_astk_expand.require_views(ROOT)
+        ap.error('expanded ASTK production calendar qualification remains required before physical case generation')
     if a.mode == 'case' and a.kv_wq_leaves and not a.kv_wq_mirror:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
     m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split, reserve_static_memory=a.reserve_static_memory, reserve_native_astk=a.reserve_native_astk)
