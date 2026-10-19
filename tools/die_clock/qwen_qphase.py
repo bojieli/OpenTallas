@@ -150,21 +150,27 @@ def measure(a):
     d.tcl(f'''set fi [open {{{dest}.pins}}]; set fo [open {{{clock_file}}} w]
 while {{[gets $fi n] >= 0}} {{
  set p [get_pins -quiet [string map {{[ \\[ ] \\]}} $n]]
- # OpenSTA has no get_clocks -of_objects. Preserve unresolved identities;
- # numeric arrivals alone must never qualify a generated-clock family.
- puts $fo "$n\\t0\\tUNRESOLVED_PIN_CLOCK_TAG"
+ # Native pin property includes generated/gated clock families. Unsupported
+ # or missing tags remain empty; numeric arrivals alone never qualify them.
+ set cs {{}}; catch {{set cs [get_property $p clocks]}}
+ set names {{}}; foreach c $cs {{lappend names [get_full_name $c]}}
+ puts $fo "$n\\t[llength $cs]\\t$names"
 }}
 close $fi; close $fo''')
-    clocked=[]
+    clocked=[];owners={}
     for line in clock_file.read_text().splitlines():
         f=line.split('\t')
-        if len(f)>=2 and int(f[1])>0:clocked.append(f[0][:-3] if f[0].endswith('[0]') else f[0])
+        if len(f)>=3:
+            pin=f[0][:-3] if f[0].endswith('[0]') else f[0]
+            owners[pin]=dict(count=int(f[1]),clock_names_tcl=f[2])
+            if int(f[1])==1:clocked.append(pin)
     d.tcl(f'report_check_types -max_slew -max_capacitance -violators > {out}/drv_{a.corner}.rpt')
     write(out/f'qphase_{a.corner}.json',dict(schema='opentallas.qwen.q_phase_measure.v1',corner=a.corner,
           plan_sha256=sha(a.plan),manifest_sha256=sha(a.manifest),odb_sha256=sha(a.odb),
           libraries={s:sha(s) for s in Path(a.libs).read_text().split()},arrivals_sha256=sha(dest),
           pins_with_propagated_clocks=clocked,clock_identity_sha256=sha(clock_file),
-          clock_identity_status='unresolved: pin clock tags need native OpenSTA path-tag extraction',
+          clock_pin_owners=owners,
+          clock_identity_status='native get_property pin clocks; empty/missing tags block qualification',
           parasitics='placement estimate on completed physical clock ODB',
           scope='actual die clock pin arrivals; single-corner early/late; not native flop or production admission'))
 

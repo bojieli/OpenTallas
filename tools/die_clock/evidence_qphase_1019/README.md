@@ -47,3 +47,11 @@ receipt remains BLOCKED: GEN mismatch, missing SAFE2 clock ports, assumed native
 references, and unresolved propagated pin-clock tags. No prefetch advance or
 production phase is admitted. Production still owes a source-bound programme,
 512 Q writes/all32 requests and an actual per-endpoint phase replay.
+
+The initial unresolved-tag receipt is retained. The subsequent collector uses
+the clock-family owner's validated native `get_property $pin clocks`, followed
+by `get_full_name`, and requires exactly one owner. The actual TT runtime control
+in `physical/native_tag_control_tt` records those names and hash-bound arrivals;
+its clocks are propagated and the timing search precedes property extraction.
+FF/SS control collection and the new whole-spine geometry replay are pending.
+This fixes tag collection, without removing the other production blockers.
