@@ -193,9 +193,11 @@ def _place_pads(K, m, staged, prev_pt, sink_pt, n, w, h, cap, grid=10.8, rmax=60
     """n pad frames: each within cap of the previous point, the last within cap of the sink pin; nearest the sink first"""
     out, pt = [], prev_pt
     span = rmax * grid + 2 * cap + 400.0
+    lo_x, hi_x = min(prev_pt[0], sink_pt[0]) - span, max(prev_pt[0], sink_pt[0]) + span
+    lo_y, hi_y = min(prev_pt[1], sink_pt[1]) - span, max(prev_pt[1], sink_pt[1]) + span
     near = [i for i in list(m['insts']) + staged + [K.F.Inst(kn, 'keepout', kx, ky, kw, kh, 'R0')
                                                      for kn, kx, ky, kw, kh in m.get('keepouts', [])]
-            if abs(i.x + i.w / 2 - sink_pt[0]) < span + i.w / 2 and abs(i.y + i.h / 2 - sink_pt[1]) < span + i.h / 2]
+            if i.x < hi_x and i.x + i.w > lo_x and i.y < hi_y and i.y + i.h > lo_y]
     for k in range(n):
         last = k == n - 1
         cands = []
@@ -209,7 +211,11 @@ def _place_pads(K, m, staged, prev_pt, sink_pt, n, w, h, cap, grid=10.8, rmax=60
                 b_ = (x + w, y + h / 2)
                 din = abs(a_[0] - pt[0]) + abs(a_[1] - pt[1])
                 dout = abs(b_[0] - sink_pt[0]) + abs(b_[1] - sink_pt[1])
-                if din > cap or dout > cap:
+                # Every individual wire stays within cap. Intermediate frames
+                # may bridge a long branch; only the final output must already
+                # be within one hop of the sink. Do not demand that all frames
+                # sit in the source/sink overlap when n provides a real route.
+                if din > cap or dout > cap * (n - k):
                     continue
                 cands.append((dout + 0.01 * din, x, y))
         cands.sort()

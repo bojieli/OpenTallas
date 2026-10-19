@@ -11,6 +11,20 @@ from test_kv_bundle_eq import _model, _stub_K
 
 
 class PvStartEquality(unittest.TestCase):
+    def test_long_branch_uses_legal_successive_hops(self):
+        K, F = _stub_K()
+        source, sink, cap = (1000.0, 1000.0), (2600.0, 1000.0), 400.0
+        obstacle = F.Inst('obstacle', 'hard', 1700.0, 900.0, 200.0, 200.0, 'R0')
+        m = dict(insts=[obstacle], die=dict(w=6000.0, h=6000.0))
+        pads = BEQ._place_pads(K, m, [], source, sink, 6, 52.68, 30.24, cap)
+        previous = source
+        for p in pads:
+            a, b = (p.x, p.y + (p.h + K.SHAVE) / 2), (p.x + p.w + K.SHAVE, p.y + (p.h + K.SHAVE) / 2)
+            self.assertLessEqual(abs(a[0] - previous[0]) + abs(a[1] - previous[1]), cap + 1e-6)
+            self.assertTrue(BEQ._free(m, [obstacle], p.x, p.y, p.w + K.SHAVE, p.h + K.SHAVE))
+            previous = b
+        self.assertLessEqual(abs(previous[0] - sink[0]) + abs(previous[1] - sink[1]), cap + 1e-6)
+
     def test_fork_is_physically_padded_and_recorded(self):
         K, F = _stub_K()
         # This inherited bundle fixture has a long direct fork; allow space
