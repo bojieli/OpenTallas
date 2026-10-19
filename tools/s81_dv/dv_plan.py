@@ -61,7 +61,11 @@ P4K = False                       # p4k (10-18, S81-DIE5, coordinator 0dt): the 
                                   # beside the column-3 E and column-4 W slices open the enclosed unit voids to the streets
 P4L = False                       # p4l (10-18, S81-DIE6): p4k + --no-mix4 + the built end-slice link endpoint masters
 MU = 0                            # MU-S81/DIE (10-19): 0 single-user p4l (default, byte-identical); 1 multi-user (MU_EN);
-                                  # 2 multi-user copy-A/B rank-die variant (MU_EN + AB_EN on s_0N, +2 SerDes lanes)
+                                  # 2 multi-user copy-A/B rank-die variant (MU_EN + AB_EN on s_0S, +2 SerDes lanes lk_WS2/3;
+                                  # MU-S81-2/DIE 10-19: copy-B relay plan results/arch/mu_s81_1018/copyb_relay_plan.json)
+LK_SLOTS = None                   # MU-S81-2/DIE (10-19): --lk-slots PLAN copies the lk_* SerDes column slot geometry of PLAN
+                                  # (p4l_lkcol rev2, 259.2 x 3596.4) onto the built plan after every fact (post-hoc, exactly
+                                  # as p4l_lkcol was derived from p4l: --mu 0 --lk-slots p4l_lkcol/plan.json == p4l_lkcol)
                                   # dsdv_slice_lepw (column 0) / dsdv_slice_lepe (column 7; rtl ot_s81sl_slice_lep{w,e}):
                                   # rx lanes 514 b {st 2, rx 512} on the 562 relay master; the HOST PLANE of the cross-die link
                                   # (f_host 515 + f_lf 4 + f_ks 53 = 572 b -> seqhost on 3 x 276 lanes hf_7N_l*; t_host 77 + t_kd 54
@@ -577,17 +581,20 @@ def mu_lanes(P, facts, colx, streets):
             the regional controllers -> under the frames (y < 1.7 mm) -> column-0 / column-7 slice channel -> S face
     The S-tier RX tags are not returned (the column-4 margin has 2 free tracks below the seqhost; the S-tier slices
     receive the same {user, pos} as the N tier).  f_mc boot config = host-stream CSR 0x15 decoded from f_host (0 wires).
-    MU 2 adds lk_WN2 (W edge above lk_WN1) and lk_WN3 (W edge below lk_WN0) and their tx2 / rx2 / tx3 / rx3 lanes along
-    the N street and the PHY faces: vertical 512 / 562 legs need relay masters dsfd_dvrlyh_512_SN / _NS and
-    562_NS that have NO closed view yet (stand-ins; edge-strip gap 40 um between frame and PHY -- COORD slot decision
-    shared with AD-S81-LINK's landed serdes column)."""
+    MU 2 (MU-S81-2/DIE 10-19, copy-B relay plan results/arch/mu_s81_1018/copyb_relay_plan.json if_slot_3596): the
+    copy-A/B endpoint is s_0S (dsdv_slice_lepw_mab; s_0N keeps the copy-A endpoint): lk_WS2 (W edge above lk_WS1, y
+    11332.32) and lk_WS3 (W edge below lk_WS0, y 243.12), 259.2 x 3596.4 landed SerDes column slots (as the rev2 A slots);
+    tx2 / rx2 / tx3 / rx3 leave the s_0S W face in the S street (y 7510.9 / 7540.9 / 7630.9 / 7660.9), run W to the
+    frame/PHY gap (x 280), then N / S along the gap to the slot's E-face attach point.  Vertical stations are the soft
+    forwarded-clock relay masters dsfd_dvrlyh_512_SN / _NS and 562_NS (no hard NS relay fits the 40-um gap; die-level
+    flops placed by the repeater flow)."""
     Q = P.blocks[P.idx['seqhost']]
     B = lambda n: P.blocks[P.idx[n]]
     xm4 = lambda k: colx(4) - 30.0 - 16.0 * k
     ftop = max(b['y'] + b['h'] for b in P.blocks if b['kind'] == 'frame')
     qw = Q['x']
     # ---- masters
-    sm = {'s_0N': 'dsdv_slice_lepw_mab' if MU == 2 else 'dsdv_slice_lepw_mu', 's_0S': 'dsdv_slice_lepw_mus',
+    sm = {'s_0N': 'dsdv_slice_lepw_mu', 's_0S': 'dsdv_slice_lepw_mab' if MU == 2 else 'dsdv_slice_lepw_mus',
           's_7N': 'dsdv_slice_lepe_mu', 's_7S': 'dsdv_slice_lepe_nh_mus', 'seqhost': 'dsdv_seq_host_mux'}
     for n, m in sm.items():
         B(n)['master'] = m
@@ -627,26 +634,34 @@ def mu_lanes(P, facts, colx, streets):
     L = {l['i']: l for l in P.links}
     facts['mu_lanes'] = {n: dict(bits=L[n]['b'], stations=L[n]['s'], um=L[n]['L'])
                          for n in ('mu_0N', 'rt_0N', 'mu_0S', 'mu_7S')}
-    facts['mu'] = dict(variant={1: 'MU_EN (multi-user)', 2: 'MU_EN + AB_EN on s_0N (copy-A/B rank die)'}[MU],
+    facts['mu'] = dict(variant={1: 'MU_EN (multi-user)', 2: 'MU_EN + AB_EN on s_0S (copy-A/B rank die)'}[MU],
                        masters=sm, packed=dict(s_7N='mu in ht_7N bits 131..175, rt in hf_7N_l2 bits 20..51'),
                        f_mc='host-stream CSR 0x15 decoded from f_host in dsdv_seq_host_mux (0 wires)')
     if MU == 2:
-        # copy-B lane pair of s_0N: two more SerDes PHYs on the W edge (above lk_WN1 / below lk_WN0)
-        WN0, WN1 = B('lk_WN0'), B('lk_WN1')
-        P.block('lk_WN2', 'ot_pdie_serdes', 'link', 'edge', 0.0, WN1['y'] + WN1['h'] + 100.0, 260, 2250)
-        P.block('lk_WN3', 'ot_pdie_serdes', 'link', 'edge', 0.0, WN0['y'] - 100.0 - 2250.0, 260, 2250)
-        sxf = S0['x']
-        yc = S0['y'] + SLICE_H / 2
-        for k, sgn in (('2', 1), ('3', -1)):
-            lk = f'lk_WN{k}'; LK = B(lk)
-            yst = yc + sgn * 165.0
-            lx = LK['x'] + LK['w']
-            ly = LK['y'] + 20.0 if sgn > 0 else LK['y'] + LK['h'] - 20.0
-            P.link(f'lt_{lk}', 'coll', COLL_LANE, ('s_0N', 'tx' + k, (sxf, yst)), (lk, 'tx', (lx, ly)),
-                   [(sxf, yst), (lx, yst), (lx, ly)], 'MU copy-B link lane tx (street + PHY face)')
-            P.link(f'lr_{lk}', 'coll', COLL_LANE + 50, (lk, 'rx', (lx, ly + 10 * sgn)), ('s_0N', 'rx' + k, (sxf, yst + 10 * sgn)),
-                   [(lx, ly + 10 * sgn), (lx, yst + 10 * sgn), (sxf, yst + 10 * sgn)], 'MU copy-B link lane rx (PHY face + street)')
-        facts['mu']['ab'] = dict(endpoint='s_0N', phys=['lk_WN2', 'lk_WN3'], owed='512/562 vertical relay views + edge slot (COORD)')
+        # copy-B lane pair of s_0S (copy-B relay plan, if_slot_3596): two more landed SerDes column slots on the W edge
+        WS0, WS1, WN0 = B('lk_WS0'), B('lk_WS1'), B('lk_WN0')
+        LW, LH = 259.2, 3596.4
+        y2 = round(WS1['y'] + LH + 100.0, 2)           # 11332.32 (rev2 WS1 top 11232.32 + 100)
+        y3 = round(3939.52 - 100.0 - LH, 2)            # 243.12 (rev2 WS0 bottom 3939.52 - 100)
+        assert y2 + LH + 100.0 <= 15391.68 + 1e-6, 'lk_WS2 overlaps the rev2 lk_WN0 slot'
+        P.block('lk_WS2', 'ot_pdie_serdes', 'link', 'edge', 0.0, y2, LW, LH)
+        P.block('lk_WS3', 'ot_pdie_serdes', 'link', 'edge', 0.0, y3, LW, LH)
+        S0S = B('s_0S'); sxf = S0S['x']; xg = 280.0
+        att = {'2': (y2 + 85.0, y2 + 115.0), '3': (y3 + LH - 85.0, y3 + LH - 115.0)}     # (tx, rx) E-face attach y
+        ys = {'2': (7510.9, 7540.9), '3': (7630.9, 7660.9)}                              # s_0S W-face (tx, rx) y
+        for k in ('2', '3'):
+            lk = f'lk_WS{k}'; LX = LW
+            (ytx, yrx), (atx, arx) = ys[k], att[k]
+            P.link(f'lt_{lk}', 'coll', COLL_LANE, ('s_0S', 'tx' + k, (sxf, ytx)), (lk, 'tx', (LX, atx)),
+                   [(sxf, ytx), (xg, ytx), (xg, atx), (LX, atx)], 'MU copy-B link lane tx (S street + frame/PHY gap)')
+            P.link(f'lr_{lk}', 'coll', COLL_LANE + 50, (lk, 'rx', (LX, arx)), ('s_0S', 'rx' + k, (sxf, yrx)),
+                   [(LX, arx), (xg, arx), (xg, yrx), (sxf, yrx)], 'MU copy-B link lane rx (frame/PHY gap + S street)')
+        L = {l['i']: l for l in P.links}
+        facts['mu']['ab'] = dict(endpoint='s_0S', phys=['lk_WS2', 'lk_WS3'], slots={'lk_WS2': y2, 'lk_WS3': y3},
+                                 lanes={n: dict(bits=L[n]['b'], stations=L[n]['s'], um=L[n]['L'])
+                                        for n in ('lt_lk_WS2', 'lr_lk_WS2', 'lt_lk_WS3', 'lr_lk_WS3')},
+                                 source='results/arch/mu_s81_1018/copyb_relay_plan.json if_slot_3596',
+                                 owed='vertical 512/562 gap stations = soft relay masters (no closed NS view)')
 
 
 def build():
@@ -1250,7 +1265,8 @@ def main():
     ap.add_argument('--p4j', action='store_true', help='p4j: p4i + RET 70 (frame/slice RTL return width) + q/P.V entry under the slice-column voids (0 um of lane over a block)')
     ap.add_argument('--p4k', action='store_true', help='p4k: p4j + svc_rs RTL faces, q / P.V format lanes, unit lanes, column-3 E / column-4 W lane margins')
     ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
-    ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0N (+2 SerDes)')
+    ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0S (+2 SerDes lk_WS2/3)')
+    ap.add_argument('--lk-slots', default=None, help='MU-S81-2/DIE: copy the lk_* slot geometry of this plan.json (p4l_lkcol rev2) onto the output plan (post-hoc, after every fact)')
     ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
     ap.add_argument('--lane-margin', type=float, default=120.0, help='p4k: extra column width beside the column-3 E / column-4 W slices (um)')
     ap.add_argument('--p4h-drop', type=int, default=4, choices=(4, 6), help='p4h: row-0 S-tier frames given to the service region (4: 3L-4R; 6: 2R-5L)')
@@ -1265,6 +1281,8 @@ def main():
     global P4K, P4L, MU
     P4L = a.p4l
     MU = a.mu
+    global LK_SLOTS
+    LK_SLOTS = a.lk_slots
     assert not MU or P4L, '--mu needs --p4l'
     NO_MIX4 = NO_MIX4 or P4L
     P4K = a.p4k or P4L
@@ -1327,7 +1345,12 @@ def main():
                  relay_bit_stages=m['relay_bit_stages'], bit_mm=round(m['sum_bit_um_hops'] / 1000),
                  cut_windows_over_limit=m['cut_windows_over_limit'],
                  slice_area_mm2=SLICE_W * SLICE_H / 1e6, n_frames=sum(b['kind'] == 'frame' for b in P.blocks))
-    (out / 'plan.json').write_text(json.dumps(dict(facts=facts, blocks=P.blocks, links=P.links), indent=0))
+    if LK_SLOTS:   # MU-S81-2/DIE: p4l_lkcol rev2 slot geometry, post-hoc (facts unchanged, as p4l -> p4l_lkcol)
+        ref = {b['name']: b for b in json.load(open(LK_SLOTS))['blocks'] if b['name'].startswith('lk_')}
+        for b in P.blocks:
+            if b['name'] in ref:
+                b.update({k: ref[b['name']][k] for k in ('x', 'y', 'w', 'h')})
+    (out / 'plan.json').write_text(json.dumps(dict(facts=facts, blocks=P.blocks, links=P.links), indent=0 if not LK_SLOTS else None))
     (out / 'dv_links_record.json').write_text(json.dumps(record(P, facts, a)))
     draw(P, facts, out / 'dv_flow.png', a.revision.replace('dv-', ''))
     print(json.dumps(facts, indent=1))
