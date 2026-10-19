@@ -525,6 +525,23 @@ def landed_sdc(spec, root):
     seam = seam_window_sdc(spec)
     if rec is None:
         return seam
+    impl = rec.get("landing_implementation") or {}
+    if impl.get("direct_quarter_period_timing"):
+        if (rec["D"], rec["E"]) != (4, 2) or not 1 <= int(impl.get("chunk_bits", 0)) <= 24:
+            raise ValueError("direct landing requires proven D4/E2 and chunk_bits1..24")
+        residual = int(spec.get("landing_direct_residual_ps", -1))
+        if residual < 150:
+            raise ValueError("direct landing must explicitly preserve high-entry210/hold100 reserves: residual>=150ps")
+        # This block follows ot_ce_apply. Charge the full existing high-entry
+        # reserve plus the conservative default phase envelope; no MCP survives.
+        return ("# PL-KIT direct D4/E2; diagnostic/adoption requires source-pinned native phase receipt.\n"
+                "set ot_lp_direct_T [get_property [get_clocks core_clk] period]\n"
+                "foreach a [get_clocks ot_entry_*] {\n"
+                " foreach b [get_clocks ot_entry_*] {\n"
+                "  if {[get_full_name $a] eq [get_full_name $b]} continue\n"
+                f"  set_clock_uncertainty -setup [expr {{{60 + residual}.0 + 0.75 * $ot_lp_direct_T}}] -from $a -to $b\n"
+                f"  set_clock_uncertainty -hold {25 + residual}.0 -from $a -to $b\n"
+                " }\n}\n" + seam)
     D, E = rec["D"], rec["E"]
     names = [L["name"] for L in rec.get("landings") or []]
     # TW2-PSLICE2 10-19 (lp.py share_rings): a landing may read ANOTHER landing's ring ("ring": "u_lpl_<g>_w (ck_<r>)")
