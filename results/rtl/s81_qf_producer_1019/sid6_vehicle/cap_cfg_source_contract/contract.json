@@ -1,0 +1,136 @@
+{
+  "scope": "READ-ONLY real source/ABI/ownership preparation, no programme installed, no numerical rerun",
+  "source_files": [
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+      "ref": "ceaed19c4",
+      "sha256": "cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3",
+      "bytes": 21909
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+      "ref": "ceaed19c4",
+      "sha256": "526a95589c304844c5757b257c37b08a8546586ce8ec713a3f50d9eb5eebe28b",
+      "bytes": 17783
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+      "ref": "ceaed19c4",
+      "sha256": "72f97dbdf311a075174fe6a1fc8845c86a159c8fa48180d53414b875cbcce09c",
+      "bytes": 8690
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv",
+      "ref": "ceaed19c4",
+      "sha256": "b4add20455f231ff8597ecf19bb9254ca608efbf0457ac6edeaf96c69e5a9a83",
+      "bytes": 49007
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+      "ref": "ceaed19c4",
+      "sha256": "a42280979ba82db0db0ea6753e4213aa155617d5b5d3f18fd40710e723ff21b7",
+      "bytes": 18157
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+      "ref": "ceaed19c4",
+      "sha256": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+      "bytes": 6679
+    }
+  ],
+  "existing_control": {
+    "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_program_model/source_ctl.txt",
+    "sha256": "ddcd5a459ce58b8467d6eb3f37e624560468a20c81aca918457858766b1a5aed",
+    "commands": 387,
+    "targets": {
+      "2": 47,
+      "5": 320,
+      "0": 20
+    },
+    "target3_commands": 0
+  },
+  "symbolic_backend_tag": "tau_e = actual captured runtime operation tag for epoch e; no guessed sequence, CFG7 counter equality not assumed",
+  "CAP_body": {
+    "obase": 0,
+    "ops": 0,
+    "np": 0,
+    "fmt": 2,
+    "rbase": "(tau_e << 14) | 0x1800",
+    "rcnt": 828,
+    "rsplit": 0,
+    "lo32": 0,
+    "hi32": 0,
+    "reserved_high_bits": 0,
+    "encoding": "B_e = (2<<27) | (((tau_e<<14)|0x1800)<<29) | (828<<45)",
+    "qualification": "Representation for existing sparse head6 tag map only; legal tag all0..3 independent of configured SENT; no dates or healthy writes proved"
+  },
+  "packet": {
+    "slice_mask": "1<<6",
+    "target": 3,
+    "leaf_mask": 0,
+    "CTL_payload186": "P_e=(1<<6)|(3<<16)|(B_e<<26)",
+    "XR_DL_word1104": "W_e=1|(0<<1)|(P_e<<21); sideband dl_ev=1 for one fixed scheduled slot",
+    "existing_packet_kind": "K_CTL0",
+    "payload_bits": "slice[15:0],target[20:16],leafmask[25:21],body[185:26]"
+  },
+  "producer": "Existing compiler CTL packet/source programme using real configured state; actual XR target3 drives cfg_v/cfg_d. No finalvalue/return/golden payload stimulus.",
+  "control_route": [
+    "XR input pin register eb/ev",
+    "XR stage1 actual sid/CTL/target3 classify tg/body",
+    "XR cfg_v/cfg_d output registers",
+    "CAP shared cfg pin cfgv_q/cfgd_q",
+    "CAP active c_obase/c_ops/c_np/c_fmt/c_rbase/c_rcnt/c_rsplit/c_lo32/c_hi32 registers",
+    "CAP D2 range/format uses active config",
+    "CW direct registered output, actual DL4 leaf route, VP cwv pin register, actual macro write"
+  ],
+  "edge_convention": "c is posedge sampling the genuine XR dl_e/dl_ev CTL. Dates below are source register algebra only until measured; after-edge state and before-edge consumption distinguished.",
+  "structural_edges": {
+    "XR_input_sample": "c",
+    "XR_stage1_after": "c+1",
+    "XR_cfg_launch_after": "c+2",
+    "CAP_cfg_pin_sample": "c+3",
+    "CAP_active_config_after": "c+4",
+    "earliest_D2_using_new_config": "c+5"
+  },
+  "ownership": [
+    "One existing shared CAP configuration owner, no per-user context or new capacity",
+    "Previous epoch ownership includes every old-tag frame return, all seven tree/node queues, FIN/store/reentry, complete-word D1/D2/D3, CW, DL4, VP pin/read/write/queued commands and actual macro commits",
+    "Only change shared rbase/format after previous owner fully drains; any_open0 alone is insufficient because completed words can still occupy decoder/write pipes",
+    "Keep new config stable through the last new-owner D2 consumer, and reserve destination bank/word lifetimes until all dependent VP/VS reads finish",
+    "Preserve actual selector/phase/lane/tag identities and original static deadlines; choose fixed source slots after chronology, never wait on observed completion"
+  ],
+  "acceptance": [
+    "All partials of each real row carry the same actual tau_e; source configured SENT bit remains idle metadata, never synthesized into an operation",
+    "No XR multi-source CTL or source-programme slot collision; all original387 command dates remain unchanged",
+    "CFG reaches active registers before first new-epoch D2 range/format consumption and after final old-owner D2 consumer; independently prove full drain around the boundary",
+    "F5..F11/tree/lane/VP faults clear, no missing/duplicate/foreign rows, fixed per-leaf port rule, correct masked SRAM data and independent readback at actual commits",
+    "Original512 real rows/gold/deadlines checked before any component numerical qualification"
+  ],
+  "costs": {
+    "new_datapath_RTL": 0,
+    "new_FF": 0,
+    "new_macros": 0,
+    "new_gates": 0,
+    "existing_shared_cfg_body_bits": 160,
+    "potential_extra_CTL_slots_up_to": 15,
+    "after_15_distinct_epoch_commands_count": 402,
+    "CTL_payload_bits_per_command": 186,
+    "XR_input_word_bits_per_command": 1104,
+    "dates_and_free_slots": null,
+    "real_return_and_VP_calendar": null,
+    "production_MU_free_capacity": null
+  },
+  "causal_obligations": [
+    "Wrong actual op-tag/rbase owner",
+    "Early config while old partial/store/complete pipe/CW/VPwrite live",
+    "Late config after first new D2 consumer",
+    "Missing/duplicate CFG",
+    "Two target3 CTLs or collision with genuine source command",
+    "Reset invalidates configuration; genuine fixed reinstall before use",
+    "Early/late/missing row or source payload and capture-port collision"
+  ],
+  "numerical_PASS": null,
+  "native_physical_phase": null,
+  "production_programme_adopted": false,
+  "original_deadline_unchanged": true
+}
