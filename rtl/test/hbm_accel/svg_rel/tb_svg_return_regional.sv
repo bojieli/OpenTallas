@@ -1,11 +1,11 @@
 `timescale 1ps/1ps
 module tb_svg_return_regional;
- parameter integer MUT=0;
+ parameter integer MUT=0,CPROFILE=0;
  reg cache_clk=0;wire [3:0] pair_clk,return_clk;
  always #417 cache_clk=~cache_clk;
  genvar c;generate for(c=0;c<4;c=c+1)begin:g_clk
-  reg clk=0;initial begin #(c*10);forever #417 clk=~clk;end
-  reg rclk=0;initial begin #(40+c*10);forever #417 rclk=~rclk;end
+  reg clk=0;initial begin #(CPROFILE==0?30+c*10:0);forever #417 clk=~clk;end
+  reg rclk=0;initial begin #(CPROFILE==0?10+c*5:0);forever #417 rclk=~rclk;end
   assign pair_clk[c]=clk;assign return_clk[c]=rclk;
  end endgenerate
  reg [3:0] pair_rst_n=0,return_rst_n=0;reg cache_rst_n=0;
@@ -86,13 +86,13 @@ module tb_svg_return_regional;
    end
   end
   if(outputs!=1632||windows!=3||warm_checks!=3||latency_min!=7||latency_max!=7)begin errors=errors+1;$display("RETURN_COUNTS_FAIL outputs=%0d windows=%0d warm_checks=%0d",outputs,windows,warm_checks);end
-  $display("RETURN_ROOTS pair_ps=0,10,20,30 return_ps=40,50,60,70 cache_ps=0 physical_stream_trees=9");
+  $display("RETURN_ROOTS profile=%0d pair_ps=30,40,50,60_or_aligned0 return_ps=10,15,20,25_or_aligned0 cache_ps=0 physical_stream_trees=9",CPROFILE);
   $display("RETURN_LATENCY samples=%0d minimum_edges=%0d maximum_edges=%0d",latency_samples,latency_min,latency_max);
   // Deliberate ordinal disagreement must trip the cache slip guard.
   check_nominal=0;drive(5,1,3);in_ordinal[8:6]=2;@(negedge cache_clk);
   drive(0,0,3);repeat(12)@(negedge cache_clk);
   if(!fault)begin errors=errors+1;$display("ORDINAL_GUARD_FAIL");end
-  $display("SVG_RETURN %s mut=%0d errors=%0d outputs=%0d windows=%0d warm_checks=%0d latency_stages=7",errors==0?"PASS":"FAIL",MUT,errors,outputs,windows,warm_checks);
+  $display("SVG_RETURN %s mut=%0d profile=%0d errors=%0d outputs=%0d windows=%0d warm_checks=%0d latency_stages=7",errors==0?"PASS":"FAIL",MUT,CPROFILE,errors,outputs,windows,warm_checks);
   if(errors)$fatal(1,"regional return mismatch");$finish;
  end
 endmodule
