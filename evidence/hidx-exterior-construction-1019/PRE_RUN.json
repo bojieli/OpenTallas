@@ -1,0 +1,12 @@
+{
+  "mode": "SOURCE_PYTHON_CONSTRUCTION_ONLY_NO_ENGINE",
+  "command": "ot-run --mem 16 --threads 2 --dir /srv/opentallas-scratch/claude/hidx-exterior-construction-1019 -- python3 construct.py",
+  "source_sha256": "9657b79fa1fea695f621dd01fa8d5bf682babf050090200e47ca196441a725b4",
+  "inputs": {
+    "clock_reserve.json": "1c32ecbf747a4620b9146dc15931a469c699544c485587c5de78e940eb9d8a9f",
+    "site_plan.json.gz": "0c7ca2c997ea6198b149a9fe7007efdadff19264f6966847c8ef7e8997020075",
+    "native_RMST_tree_ledger.json.gz": "57dd3e64e09561b6baaa9f90068d0f6e67c6dc62d3d7bb0a82684f2760c991c4",
+    "pg_ledger.json": "127cf4671fef39613aaa1e8264ea78b8ac08d18cc03771ebcd81d69de1806a62",
+    "loaded_caps.json.gz": "7caf230df64dcfc5903dc5a043ff7a17e0729c4bdaa23a824991736f10853054"
+  }
+}
