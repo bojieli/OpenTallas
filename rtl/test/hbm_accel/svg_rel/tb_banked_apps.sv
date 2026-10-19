@@ -7,10 +7,10 @@ module banked_app_case #(parameter SVG=1,PREL=1,W=SVG?135:173,XW=SVG?46:5,TW=62+
  wire[W-1:0]oldapp,newapp;wire ov,nv,oa,na,od,nd,ofault,nfault;
  generate if(SVG)begin:g_svg
  banked_app_reference_svg #(.PREL(PREL)) refapp(.*,.app(oldapp),.app_v(ov),.active(oa),.done(od),.fault(ofault));
- ot_smh_banked_svg_central #(.PREL(PREL)) dut(.*,.cfg0_we(cw0),.cfg1_we(cw1),.bank_cfg_addr(ca),.bank_cfg_data(cd),.request0(rq0),.request1(rq1),.row0(r0),.row1(r1),.ok0(ok0),.ok1(ok1),.token0(t0),.token1(t1),.programme(newapp),.programme_v(nv),.active(na),.done(nd),.fault(nfault));
+ ot_smh_banked_svg_central #(.PREL(PREL)) dut(.*,.cfg0_we(cw0),.cfg1_we(cw1),.bank_cfg_addr(ca),.bank_cfg_data(cd),.request0(rq0),.request1(rq1),.row0(r0),.row1(r1),.ok0(ok0),.ok1(ok1),.token0(t0),.token1(t1),.programme(newapp),.programme_v(nv),.active(na),.done(nd),.fault(nfault),.command_class_observe(),.command_context_valid_observe(),.command_envelope());
  end else begin:g_xc
  banked_app_reference_xc #(.PREL(PREL)) refapp(.*,.app(oldapp),.app_v(ov),.active(oa),.done(od),.fault(ofault));
- ot_smh_banked_xc_central #(.PREL(PREL)) dut(.*,.cfg0_we(cw0),.cfg1_we(cw1),.bank_cfg_addr(ca),.bank_cfg_data(cd),.request0(rq0),.request1(rq1),.row0(r0),.row1(r1),.ok0(ok0),.ok1(ok1),.token0(t0),.token1(t1),.cmd_ext(newapp[108:0]),.kv_desc(newapp[172:109]),.active(na),.done(nd),.fault(nfault));
+ ot_smh_banked_xc_central #(.PREL(PREL)) dut(.*,.cfg0_we(cw0),.cfg1_we(cw1),.bank_cfg_addr(ca),.bank_cfg_data(cd),.request0(rq0),.request1(rq1),.row0(r0),.row1(r1),.ok0(ok0),.ok1(ok1),.token0(t0),.token1(t1),.cmd_ext(newapp[108:0]),.kv_desc(newapp[172:109]),.active(na),.done(nd),.fault(nfault),.command_class_observe(),.command_context_valid_observe(),.command_envelope());
  assign nv=0;
  end endgenerate
  ot_smh_calendar_bank_leaf #(.W(W),.XW(XW),.BANK(0)) b0(.clk(clk),.rst_n(rst_n),.cfg_we(cw0),.cfg_addr(ca),.cfg_data(cd),.read_token(rq0),.row(r0),.word_ok(ok0),.row_token(t0));
