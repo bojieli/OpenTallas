@@ -30,7 +30,7 @@ module tb_idx_quarter_split #(parameter integer TP=192, parameter integer HALF=0
  bit finite_frame=0;
  always @(posedge clk) begin
   so_d<=so; fo_d<=fo; cyc<=cyc+1;
-  if (cyc>2) begin
+  begin
    if ((!rst_n && ({sn[0],so[0],fn,fo} !== 4'b0)) ||
        (rst_n && (sn!==so_d || fn!==fo_d))) begin
     errs<=errs+1;
