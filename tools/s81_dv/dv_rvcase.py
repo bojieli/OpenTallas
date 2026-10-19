@@ -28,7 +28,7 @@ Top-port nets (clock roots, rst_n, PMA, land_fault) are special (not die-top rou
       -> CASE/{views/, die.v, place.tcl, run.tcl, run.sh, sta_<c>.tcl, sta.sh, landing.sdc, classify.py, case.json}
 Labels: NOT_A_DIE_RESULT while case.json census lists stand-ins.
 """
-import argparse, collections, json, math, re, shutil, subprocess, sys
+import argparse, collections, heapq, json, math, re, shutil, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -250,24 +250,87 @@ class Placer:
                         return True
         return False
 
-    def put(self, x, y, w, h, prefer=None, step=None, rmax=400.0):
+    def put(self, x, y, w, h, prefer=None, step=None, rmax=400.0, max_distance=None, exact_edges=False, origin_grid=None):
         """lower-left nearest (x, y) with no overlap: first along `prefer` (unit vector list), then a square spiral"""
         step = step or max(2.0, min(w, h) / 2)
-        cands = [(0.0, 0.0)]
-        for k in range(1, int(rmax / step) + 1):
-            d = k * step
-            for ux, uy in (prefer or []):
-                cands.append((ux * d, uy * d))
-            for t in range(-k, k + 1):
-                cands += [(t * step, d), (t * step, -d), (d, t * step), (-d, t * step)]
-        for dx, dy in cands:
+        def candidates():
+            yield 0.0, 0.0
+            if exact_edges:
+                # A 17.28um cell fits an18.8um corridor, but a4um sampling
+                # phase may miss every legal y. Enumerate actual keepout edges,
+                # ordered by true Manhattan displacement, without widening reach.
+                xs,ys={x,1.2,self.W-1.2-w},{y,1.2,self.H-1.2-h}
+                seen=set()
+                for bx in range(int((x-rmax-w)//self.B),int((x+rmax+w)//self.B)+1):
+                    for by in range(int((y-rmax-h)//self.B),int((y+rmax+h)//self.B)+1):
+                        for a in self.buck.get((bx,by),()):
+                            if a in seen:continue
+                            seen.add(a)
+                            xs.update((a[0]-w-.500001,a[2]+.500001))
+                            ys.update((a[1]-h-.500001,a[3]+.500001))
+                if origin_grid:
+                    gx,gy,ox,oy=origin_grid
+                    def snap(values,g,o):
+                        return {o+k*g for v in values for k in (math.floor((v-o)/g),math.ceil((v-o)/g))}
+                    xs,ys=snap(xs,gx,ox),snap(ys,gy,oy)
+                xs=sorted((v-x for v in xs if abs(v-x)<=rmax),key=lambda v:(abs(v),v))
+                ys=sorted((v-y for v in ys if abs(v-y)<=rmax),key=lambda v:(abs(v),v))
+                queue=[(0.0,0,0)];visited={(0,0)}
+                while queue:
+                    _,i,j=heapq.heappop(queue)
+                    dx,dy=xs[i],ys[j]
+                    if max_distance is None or abs(dx)+abs(dy)<=max_distance:
+                        yield dx,dy
+                    for a,b in ((i+1,j),(i,j+1)):
+                        if a<len(xs) and b<len(ys) and (a,b) not in visited:
+                            visited.add((a,b));heapq.heappush(queue,(abs(xs[a])+abs(ys[b]),a,b))
+            for k in range(1, int(rmax / step) + 1):
+                d = k * step
+                for ux, uy in (prefer or []):
+                    yield ux * d, uy * d
+                for t in range(-k, k + 1):
+                    yield t * step, d
+                    yield t * step, -d
+                    yield d, t * step
+                    yield -d, t * step
+        for dx, dy in candidates():
+            if max_distance is not None and abs(dx) + abs(dy) > max_distance:
+                continue
+            if origin_grid:
+                gx,gy,ox,oy=origin_grid
+                if any(abs(v-round(v))>1e-6 for v in ((x+dx-ox)/gx,(y+dy-oy)/gy)):
+                    continue
             r = (x + dx, y + dy, x + dx + w, y + dy + h)
             if not self.hits(r):
                 self.add(r)
                 return r[0], r[1], abs(dx) + abs(dy)
-        r = (x, y, x + w, y + h)
-        self.add(r)
-        return x, y, None
+        raise ValueError(f'no legal {w}x{h} placement within {rmax} um of {(x, y)}')
+
+
+def landing_footprint(master, vsize, bits, depth, face):
+    """Use the immutable R0 LEF size; only an unclosed tile is analytical."""
+    if master in vsize:
+        return vsize[master]
+    area = (depth + 1) * bits * 0.29 / 0.45
+    long_ = max(bits * PITCH + 6.0, math.sqrt(area))
+    short = max(area / long_, 12.0)
+    return (long_, short) if face in 'SN' else (short, long_)
+
+
+def reserve_lanes(placer, links):
+    """Keep reset stations out of payload/forward-clock bands, including their pin span.
+
+    Reserve the realized band, not just station bodies: an otherwise legal reset
+    station between two payload stations can displace hundreds of die repeaters.
+    """
+    for L in links.values():
+        half = max(3.0, L['bits'] * PITCH / 2 + 1.5)
+        for x0, y0, x1, y1, *_ in L['hops']:
+            if abs(y0 - y1) < 1e-6:
+                placer.add((min(x0, x1), y0 - half, max(x0, x1), y0 + half))
+            else:
+                placer.add((x0 - half, min(y0, y1), x0 + half, max(y0, y1)))
+
 
 
 def lef_pins(path):
@@ -465,29 +528,30 @@ def main():
     land = {r['inst']: r for r in hints['landings']}
     for i, r in sorted(land.items()):
         L = links[r['link']]; b = blocks[r['dst']]
-        nb = r['bits']; flops = (r['D'] + 1) * nb
-        area = flops * 0.29 / 0.45
-        long_ = max(nb * PITCH + 6.0, math.sqrt(area)); short = max(area / long_, 12.0)
         x, y = L['dxy']; f = face_of(b, x, y)
+        w_, h_ = landing_footprint(mst_of[i], vsize, r['bits'], r['D'], f)
         if f in 'SN':
-            w_, h_ = long_, short; xx = x - w_ / 2; yy = b['y'] - h_ - 2.0 if f == 'S' else b['y'] + b['h'] + 2.0
+            xx = x - w_ / 2; yy = b['y'] - h_ - 2.0 if f == 'S' else b['y'] + b['h'] + 2.0
             pref = [(1, 0), (-1, 0), (0, -1 if f == 'S' else 1)]
         else:
-            w_, h_ = short, long_; yy = y - h_ / 2; xx = b['x'] - w_ - 2.0 if f == 'W' else b['x'] + b['w'] + 2.0
+            yy = y - h_ / 2; xx = b['x'] - w_ - 2.0 if f == 'W' else b['x'] + b['w'] + 2.0
             pref = [(0, 1), (0, -1), (-1 if f == 'W' else 1, 0)]
         px_, py_, dd = placer.put(xx, yy, w_, h_, prefer=pref)
         loc[i] = (px_, py_, w_, h_, 'FIRM'); moved['landing'] += dd is not None and dd > 0
         if dd is None or dd > 200:
             far.append((i, dd))
+    # Landings are allocated first (their endpoint attachment is intentional).
+    # Reset stations then avoid every lane, not only the sparse relay bodies.
+    reserve_lanes(placer, links)
     for p in hints['reset_place']:
         i = p['inst']; x, y = p['xy']
-        px_, py_, dd = placer.put(x - rw / 2, y - rh / 2, rw, rh, step=4.0)
+        px_, py_, dd = placer.put(x - rw / 2, y - rh / 2, rw, rh, step=4.0, rmax=1200.0)
         loc[i] = (px_, py_, rw, rh, 'FIRM'); moved['reset'] += dd is not None and dd > 0
         if dd is None or dd > 100:
             far.append((i, dd))
     rx, ry = hints['reset_root_xy']
     for k, i in enumerate(('rst_root0', 'rst_root1')):
-        px_, py_, dd = placer.put(rx - rw / 2 + k * (rw + 1), max(ry, 2.0), rw, rh, step=4.0)
+        px_, py_, dd = placer.put(rx - rw / 2 + k * (rw + 1), max(ry, 2.0), rw, rh, step=4.0, rmax=1200.0)
         loc[i] = (px_, py_, rw, rh, 'FIRM')
     for mst, i, _, _ in insts:
         if i.startswith('fwd_'):
@@ -536,9 +600,15 @@ def main():
                 pn = f'{p}[{wdt - 1 - k}]' if bus else p
                 # ---- role of the bit -> pin location
                 f = t = None
-                if n_ in ('CONST', 'Z', 'UNDECL') or (n_ not in top and touch.get(n_, set()) <= {nm}):
+                if n_ == 'CONST' and d == 'input':
+                    kinds.add('data')
+                    f, t = 'S', 0.3 + PITCH * slot['const']
+                    slot['const'] += 1
+                elif n_ in ('CONST', 'Z', 'UNDECL') or (n_ not in top and touch.get(n_, set()) <= {nm}):
                     inner.append(pn); continue
-                if n_ in top:
+                if f is not None:
+                    pass
+                elif n_ in top:
                     kinds.add('clock' if n_.startswith('ck_') else 'data')
                     if bname:
                         f, t = 'S', w / 2 + PITCH * (3 + slot['top']); slot['top'] += 1

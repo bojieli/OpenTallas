@@ -1,0 +1,281 @@
+ot-run: die-level command (DIE_RE): --priority die
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc7       admits   856 GB (avail 698, growth 99, headroom 0, waiters 0/0 GB) load 43/96 running 16 disk 6393 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3144806-1792429500 after 0 s
+{
+  "scope": "LOWER_BOUND_GEOMETRY_REPLAY_OF_OLD_RESET_NETLIST_NOT_NEW_TOPOLOGY",
+  "edges_checked": 5183,
+  "unmodeled_root_or_other": 3,
+  "over405": 1003,
+  "max_lower_bound_um": 5107.624,
+  "first20": [
+    {
+      "src": "st_rs_34_42_2",
+      "dst": "st_rsg_rs_34_42_2_cl3N_0",
+      "minimum_rect_distance_um": 5107.624
+    },
+    {
+      "src": "st_rs_5_13",
+      "dst": "st_rsg_rs_5_13_cl0S_0",
+      "minimum_rect_distance_um": 4713.912
+    },
+    {
+      "src": "st_rs_74_13",
+      "dst": "st_rsg_rs_74_13_cl7S_0",
+      "minimum_rect_distance_um": 4660.936
+    },
+    {
+      "src": "st_rs_34_13_2",
+      "dst": "st_rsg_rs_34_13_2_cl3S_0",
+      "minimum_rect_distance_um": 4648.888
+    },
+    {
+      "src": "st_rsg_rs_45_42_1_cl4N_0",
+      "dst": "st_rsg_rs_45_42_1_cl4N_1",
+      "minimum_rect_distance_um": 4544.104
+    },
+    {
+      "src": "st_rsg_rs_74_42_cl7N_1",
+      "dst": "st_rsg_rs_74_42_cl7N_2",
+      "minimum_rect_distance_um": 4544.104
+    },
+    {
+      "src": "st_rsg_rs_5_42_cl0N_8",
+      "dst": "st_rsg_rs_5_42_cl0N_9",
+      "minimum_rect_distance_um": 4467.976
+    },
+    {
+      "src": "st_rs_15_25",
+      "dst": "st_rsg_rs_15_25_void1_0",
+      "minimum_rect_distance_um": 4303.912
+    },
+    {
+      "src": "st_rs_34_29",
+      "dst": "st_rsg_rs_34_29_void3_0",
+      "minimum_rect_distance_um": 4281.048
+    },
+    {
+      "src": "st_rs_10_47_1",
+      "dst": "st_rsg_rs_10_47_1_cl0N_0",
+      "minimum_rect_distance_um": 4155.893
+    },
+    {
+      "src": "st_rs_0_38",
+      "dst": "st_rsg_rs_0_38_edge0_0",
+      "minimum_rect_distance_um": 3537.832
+    },
+    {
+      "src": "st_rs_45_33_3",
+      "dst": "st_rsg_rs_45_33_3_void4_0",
+      "minimum_rect_distance_um": 3233.08
+    },
+    {
+      "src": "st_rsg_rs_64_42_cl6N_7",
+      "dst": "st_rsg_rs_64_42_cl6N_8",
+      "minimum_rect_distance_um": 3187.096
+    },
+    {
+      "src": "st_rsg_rs_54_42_2_cl5N_6",
+      "dst": "st_rsg_rs_54_42_2_cl5N_7",
+      "minimum_rect_distance_um": 3083.128
+    },
+    {
+      "src": "st_rs_45_25_2",
+      "dst": "st_rsg_rs_45_25_2_void4_0",
+      "minimum_rect_distance_um": 2970.264
+    },
+    {
+      "src": "st_rs_15_42",
+      "dst": "st_rsg_rs_15_42_cl1N_0",
+      "minimum_rect_distance_um": 2964.568
+    },
+    {
+      "src": "st_rs_15_13",
+      "dst": "st_rsg_rs_15_13_cl1S_0",
+      "minimum_rect_distance_um": 2958.52
+    },
+    {
+      "src": "st_rs_64_42",
+      "dst": "st_rsg_rs_64_42_cl6N_0",
+      "minimum_rect_distance_um": 2956.392
+    },
+    {
+      "src": "st_rs_64_13",
+      "dst": "st_rsg_rs_64_13_cl6S_0",
+      "minimum_rect_distance_um": 2949.96
+    },
+    {
+      "src": "st_rs_54_42_2",
+      "dst": "st_rsg_rs_54_42_2_cl5N_0",
+      "minimum_rect_distance_um": 2922.328
+    }
+  ],
+  "remaining": "Regenerate graph from physically legalized actual-pin nodes, then regenerate coherent reset and gate calendars; no reach pass/adoption."
+}
+{
+  "scope": "DIRECTED_RECT_DISTANCE_LOWER_BOUND_GRAPH_NOT_ROUTED_OR_CALENDAR_BOUND",
+  "root": "st_rs_39_0_2",
+  "candidate_bodies": 5184,
+  "connected_to_root": 4635,
+  "unreachable_candidates": 549,
+  "max_depth": 215,
+  "largest_selected_min_rect_edge_um": 404.93300000000045,
+  "first_unreachable": [
+    "st_rs_27_0",
+    "st_rs_26_0",
+    "st_rs_27_1",
+    "st_rs_25_0",
+    "st_rs_26_1",
+    "st_rs_27_2",
+    "st_rs_24_0",
+    "st_rs_25_1",
+    "st_rs_26_2",
+    "st_rs_23_0",
+    "st_rs_24_1",
+    "st_rs_25_2",
+    "st_rs_22_0",
+    "st_rs_24_2",
+    "st_rs_21_0",
+    "st_rs_20_0",
+    "st_rs_27_7_2",
+    "st_rs_19_0",
+    "st_rs_20_1",
+    "st_rs_31_7"
+  ]
+}
+{
+  "scope": "ORIGINAL_PLANNED_RESET_BODY_PIN_LOWER_BOUND_NOT_PLACED",
+  "edges_checked": 5183,
+  "over405": 456,
+  "max_lower_bound_um": 5130.392,
+  "first20": [
+    {
+      "src": "st_rs_34_42_2",
+      "dst": "st_rsg_rs_34_42_2_cl3N_0",
+      "minimum_rect_distance_um": 5130.392
+    },
+    {
+      "src": "st_rs_74_13",
+      "dst": "st_rsg_rs_74_13_cl7S_0",
+      "minimum_rect_distance_um": 4666.052
+    },
+    {
+      "src": "st_rs_5_13",
+      "dst": "st_rsg_rs_5_13_cl0S_0",
+      "minimum_rect_distance_um": 4648.792
+    },
+    {
+      "src": "st_rs_34_13_2",
+      "dst": "st_rsg_rs_34_13_2_cl3S_0",
+      "minimum_rect_distance_um": 4630.352
+    },
+    {
+      "src": "st_rsg_rs_5_42_cl0N_8",
+      "dst": "st_rsg_rs_5_42_cl0N_9",
+      "minimum_rect_distance_um": 4598.072
+    },
+    {
+      "src": "st_rsg_rs_45_42_1_cl4N_0",
+      "dst": "st_rsg_rs_45_42_1_cl4N_1",
+      "minimum_rect_distance_um": 4598.072
+    },
+    {
+      "src": "st_rsg_rs_74_42_cl7N_1",
+      "dst": "st_rsg_rs_74_42_cl7N_2",
+      "minimum_rect_distance_um": 4598.072
+    },
+    {
+      "src": "st_rs_34_29",
+      "dst": "st_rsg_rs_34_29_void3_0",
+      "minimum_rect_distance_um": 4303.312
+    },
+    {
+      "src": "st_rs_15_25",
+      "dst": "st_rsg_rs_15_25_void1_0",
+      "minimum_rect_distance_um": 4261.852
+    },
+    {
+      "src": "st_rs_10_47_1",
+      "dst": "st_rsg_rs_10_47_1_cl0N_0",
+      "minimum_rect_distance_um": 3911.957
+    },
+    {
+      "src": "st_rs_0_38",
+      "dst": "st_rsg_rs_0_38_edge0_0",
+      "minimum_rect_distance_um": 3619.732
+    },
+    {
+      "src": "st_rsg_rs_54_42_2_cl5N_6",
+      "dst": "st_rsg_rs_54_42_2_cl5N_7",
+      "minimum_rect_distance_um": 3292.072
+    },
+    {
+      "src": "st_rsg_rs_64_42_cl6N_7",
+      "dst": "st_rsg_rs_64_42_cl6N_8",
+      "minimum_rect_distance_um": 3292.072
+    },
+    {
+      "src": "st_rs_45_33_3",
+      "dst": "st_rsg_rs_45_33_3_void4_0",
+      "minimum_rect_distance_um": 3126.372
+    },
+    {
+      "src": "st_rs_45_25_2",
+      "dst": "st_rsg_rs_45_25_2_void4_0",
+      "minimum_rect_distance_um": 2895.492
+    },
+    {
+      "src": "st_rs_15_42",
+      "dst": "st_rsg_rs_15_42_cl1N_0",
+      "minimum_rect_distance_um": 2808.492
+    },
+    {
+      "src": "st_rs_15_13",
+      "dst": "st_rsg_rs_15_13_cl1S_0",
+      "minimum_rect_distance_um": 2808.452
+    },
+    {
+      "src": "st_rsg_rs_25_13_1_cl2S_9",
+      "dst": "st_rsg_rs_25_13_1_cl2S_10",
+      "minimum_rect_distance_um": 2806.312
+    },
+    {
+      "src": "st_rsg_rs_54_13_2_cl5S_7",
+      "dst": "st_rsg_rs_54_13_2_cl5S_8",
+      "minimum_rect_distance_um": 2792.072
+    },
+    {
+      "src": "st_rsg_rs_64_13_cl6S_8",
+      "dst": "st_rsg_rs_64_13_cl6S_9",
+      "minimum_rect_distance_um": 2792.072
+    }
+  ]
+}
+{
+  "scope": "R0_BODY_BRIDGES_BOTH_I_RS_GRID_ESCAPE_LENGTH_ONLY_NO_OBSTRUCTION_RC_OR_CALENDAR_ADOPTION",
+  "original_nodes": 5184,
+  "bridges": 127,
+  "total_nodes": 5311,
+  "connected": 5310,
+  "unreachable": 1,
+  "max_depth": 227,
+  "max_selected_escape_path_um": 404.9820000000018,
+  "failure": [
+    {
+      "iteration": 127,
+      "connected": 5310,
+      "remaining": 1,
+      "candidate_pairs": 3
+    }
+  ],
+  "first_unreachable": [
+    "st_rs_38_7_1"
+  ]
+}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3144806-1792429500): exit 0

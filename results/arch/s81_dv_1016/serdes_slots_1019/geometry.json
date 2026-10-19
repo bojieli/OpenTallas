@@ -1,0 +1,64 @@
+{
+  "scope": "DIAGNOSTIC_NOT_FIT_OR_CLOCK_CLOSURE",
+  "slots": 8,
+  "slot_um": [
+    518.4,
+    3844.8
+  ],
+  "min_data_face_band_clearance_um": 3.9239999999990687,
+  "array_shift_x_um": 259.2,
+  "die_width_add_um": 518.4,
+  "max_hop_um": 403.10000000000036,
+  "over_405": 0,
+  "changed_station_ages": [],
+  "block_overlaps": [],
+  "lane_band_um": 0,
+  "relay_overlap_count": 0,
+  "old_reticle_margin_um": [
+    515.7,
+    500.0
+  ],
+  "new_reticle_margin_um": [
+    256.55,
+    500.0
+  ],
+  "margin_policy_um": 500.0,
+  "margin_policy_pass": false,
+  "native_children_and_parent_clock": "OWED: actual per-root TT/FF, reset/status and <=405um internal timed transport",
+  "coll_storage_successor": {
+    "status": "prospective_not_qualified",
+    "required_um": [
+      561.6,
+      561.6
+    ],
+    "std_um2": 7357.69494,
+    "macros": 15
+  },
+  "global_routing_metrics": {
+    "worst_cut": {
+      "before": 0.5663,
+      "after": 0.5663
+    },
+    "over_reach_bits": {
+      "before": 0,
+      "after": 0
+    },
+    "relays": {
+      "before": 3185,
+      "after": 3185
+    },
+    "relay_bit_stages": {
+      "before": 863424,
+      "after": 863424
+    },
+    "sum_bit_um_hops": {
+      "before": 395674256,
+      "after": 395681181
+    },
+    "cut_windows_over_limit": {
+      "before": 0,
+      "after": 0
+    }
+  },
+  "source_plan_sha256": "6465d75e46038e1763f262abc082df272e5201425e17b681cbfb37568b07423d"
+}

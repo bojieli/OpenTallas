@@ -1,0 +1,41 @@
+ot-run: die-level command (DIE_RE): --priority die
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc7       admits   904 GB (avail 712, growth 79, headroom 0, waiters 0/0 GB) load 39/96 running 17 disk 6422 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3170156-1792429995 after 0 s
+{
+  "scope": "BLOCK_RESET_SOURCE_PIN_GEOMETRY_DIAGNOSTIC_NOT_NEW_BIND_OR_HARDENED_PARENT_FIT",
+  "reset_blocks": 183,
+  "served": 183,
+  "failures": [],
+  "models": {
+    "flexible_STANDIN_no_hardened_parent_fit": 182,
+    "actual_closed_LEF": 1
+  },
+  "max_min_rect_um": 343.171999999998,
+  "inverter_required": [
+    "rsv_00",
+    "rsv_01",
+    "rsv_02",
+    "rsv_03",
+    "rsv_04",
+    "rsv_05",
+    "rsv_06",
+    "rsv_07",
+    "rsv_08",
+    "rsv_09",
+    "rsv_10",
+    "rsv_11",
+    "rsv_12",
+    "rsv_13",
+    "rsv_14",
+    "rsv_15"
+  ],
+  "remaining": "Standin port geometry/active-high inverter must be emitted and physically checked; root2/new calendars/actual wire obstacles, RC, native clocks and child slot fit remain OWED."
+}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3170156-1792429995): exit 0

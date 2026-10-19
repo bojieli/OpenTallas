@@ -1,0 +1,40 @@
+ot-run: die-level command (DIE_RE): --priority die
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc7       admits   866 GB (avail 700, growth 94, headroom 0, waiters 0/0 GB) load 40/96 running 18 disk 6435 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3173671-1792430141 after 0 s
+{
+  "scope": "ROOT_TWO_FLOP_BODY_AND_INTERNAL_TRACK_ESCAPE_GEOMETRY_ONLY_NO_RC_CALENDAR_BIND",
+  "original_tree_root": "st_rs_39_0_2",
+  "root_stages": 2,
+  "placed": [
+    {
+      "inst": "rst_root1",
+      "origin": [
+        16192.56,
+        2.208
+      ],
+      "child": "st_rs_39_0_2",
+      "both_child_inputs_escape_length_um": 34.65999999999905
+    },
+    {
+      "inst": "rst_root0",
+      "origin": [
+        16174.56,
+        2.208
+      ],
+      "child": "rst_root1",
+      "both_child_inputs_escape_length_um": 34.65999999999905
+    }
+  ],
+  "external_reset_pad_to_root0": "OWED reset source/pad/async assertion physical network; no timing mask added",
+  "clock": "Same regional root as tree root, actual native clock network still OWED",
+  "candidate_nodes": 5314,
+  "connected_nodes": 5313
+}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3173671-1792430141): exit 0

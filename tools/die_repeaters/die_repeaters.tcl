@@ -99,7 +99,7 @@ proc ot_die_rep_spread {insts report {util 0.30} {bin_um 8.64} {util_hard 0.60} 
   }
   if {![info exists ::ot_die_rep_obs]} { set ::ot_die_rep_obs $obs; array set ::ot_die_rep_ob [array get ob] }
   if {![info exists ::ot_die_rep_occ]} { set ::ot_die_rep_occ [dict create] }
-  array set cap {}; array set hcap {}; array set used {}; array set fl {}; array set memoS {}; array set memoH {}; set nhard 0; set onobs 0
+  array set cap {}; array set hcap {}; array set used {}; array set fl {}; array set memoS {}; array set memoH {}; set nhard 0; set onobs 0; set centerobs 0; set deepobs 0
   set nbins 0; set placed 0; set unplaced 0; set dsum 0.0; set dmax 0.0; set ringmax 0; set full 0
   set maxring [expr {int(4000.0 / $bin_um) + 1}]
   foreach inst $insts {
@@ -179,6 +179,23 @@ proc ot_die_rep_spread {insts report {util 0.30} {bin_um 8.64} {util_hard 0.60} 
      if {$got ne ""} { if {$hard} { incr nhard }; break }
     }
     if {[info exists hcap($bi,$bj)] && $hcap($bi,$bj) == 0} { incr onobs }
+    # The historical onobs counter is a ZERO-CAPACITY BIN count (8.64 um),
+    # not a geometric point-in-macro test. Keep it for comparison, and count
+    # true centre containment separately; <=1 um edge cases include ordinary
+    # pin-adjacent first/last buffers and are not proof of a lane crossing.
+    set oi [expr {$ix / $cb}]; set oj [expr {$iy / $cb}]
+    set inside 0; set deep 0
+    if {[info exists ob($oi,$oj)]} {
+      foreach ok $ob($oi,$oj) {
+        lassign [lindex $obs $ok] ax ay az aw
+        if {$ax < $ix && $ix < $az && $ay < $iy && $iy < $aw} {
+          set inside 1
+          if {min($ix-$ax, $az-$ix, $iy-$ay, $aw-$iy) > $dbu} { set deep 1 }
+        }
+      }
+    }
+    incr centerobs $inside; incr deepobs $deep
+
     if {$got eq ""} { incr unplaced; continue }
     if {$d > $ringmax} { set ringmax $d }
     lassign [lindex $fl($got) $used($got)] x y odd
@@ -195,10 +212,10 @@ proc ot_die_rep_spread {insts report {util 0.30} {bin_um 8.64} {util_hard 0.60} 
   if {![info exists ::ot_die_rep_onobs]} { set ::ot_die_rep_onobs 0 }
   incr ::ot_die_rep_onobs $onobs
   set f [open $report w]
-  puts $f "{\"schema\": \"opentallas.die_repeaters.spread.v1\", \"placed\": $placed, \"unplaced\": $unplaced, \"util\": $util, \"util_hard\": $util_hard, \"soft_rings\": $soft_rings, \"placed_at_hard_cap\": $nhard, \"ideal_on_obstacle\": $onobs, \"bin_um\": $bin_um, \"slot_width_um\": [expr {$slw / double($dbu)}], \"bins_initialised\": $nbins, \"bins_full\": $full, \"max_ring\": $ringmax, \"mean_disp_um\": [format %.2f [expr {$placed ? $dsum / $placed : 0}]], \"max_disp_um\": [format %.2f $dmax], \"seconds\": [expr {[clock seconds] - $t0}]}"
+  puts $f "{\"schema\": \"opentallas.die_repeaters.spread.v1\", \"placed\": $placed, \"unplaced\": $unplaced, \"util\": $util, \"util_hard\": $util_hard, \"soft_rings\": $soft_rings, \"placed_at_hard_cap\": $nhard, \"ideal_on_obstacle\": $onobs, \"source_bin_blocked\": $onobs, \"ideal_center_in_obstacle\": $centerobs, \"ideal_center_deeper_than_1um\": $deepobs, \"bin_um\": $bin_um, \"slot_width_um\": [expr {$slw / double($dbu)}], \"bins_initialised\": $nbins, \"bins_full\": $full, \"max_ring\": $ringmax, \"mean_disp_um\": [format %.2f [expr {$placed ? $dsum / $placed : 0}]], \"max_disp_um\": [format %.2f $dmax], \"seconds\": [expr {[clock seconds] - $t0}]}"
   close $f
   if {![info exists ::ot_die_rep_maxdisp] || $dmax > $::ot_die_rep_maxdisp} { set ::ot_die_rep_maxdisp $dmax }
-  ot_die_rep_log "spread placed=$placed unplaced=$unplaced util=$util/$util_hard hard=$nhard on_obstacle=$onobs bin_um=$bin_um bins=$nbins full=$full max_ring=$ringmax mean_disp_um=[format %.2f [expr {$placed ? $dsum / $placed : 0}]] max_disp_um=[format %.2f $dmax] s=[expr {[clock seconds] - $t0}]"
+  ot_die_rep_log "spread placed=$placed unplaced=$unplaced util=$util/$util_hard hard=$nhard source_bin_blocked=$onobs center_in_obstacle=$centerobs center_deeper_than_1um=$deepobs bin_um=$bin_um bins=$nbins full=$full max_ring=$ringmax mean_disp_um=[format %.2f [expr {$placed ? $dsum / $placed : 0}]] max_disp_um=[format %.2f $dmax] s=[expr {[clock seconds] - $t0}]"
   return $unplaced
 }
 
@@ -471,7 +488,7 @@ proc ot_die_repeaters {cfg} {
   puts $f "{\"schema\": \"opentallas.die_repeaters.v1\", \"design\": [ot_die_rep_json_str $design], \"verdict\": \"$verdict\", \"violations\": $viol,"
   puts $f " \"rule\": \"repair_design on die nets only, buffers only, between relay registers; one repeater from ~175 um then every ~160 um (owner 0cl, H-REACH)\","
   puts $f " \"max_wire_um\": $max_wire_um, \"max_transition_ps\": $slew, \"max_transition_source\": [ot_die_rep_json_str $slew_src], \"rc_layer\": [ot_die_rep_json_str $rc_layer],"
-  puts $f " \"repair_args\": [ot_die_rep_json_str $repair_args], \"legalize\": [ot_die_rep_json_str $legal], \"repeaters_ideal_on_obstacle\": $::ot_die_rep_onobs, \"on_obstacle_note\": \"repair_design put these on a macro / relay body: the net crosses a block (plan path over a block, routed on M7+ or detoured) -- a planning defect, the spread moves them to the nearest free channel\","
+  puts $f " \"repair_args\": [ot_die_rep_json_str $repair_args], \"legalize\": [ot_die_rep_json_str $legal], \"repeaters_ideal_on_obstacle\": $::ot_die_rep_onobs, \"on_obstacle_note\": \"historical zero-capacity source-bin count, not geometric point containment; consult spread exact-center counters before attributing a plan defect\","
   puts $f " \"instances_pre\": [dict size $pre], \"instances_post\": [dict size $post], \"repeaters\": $repeaters, \"repeaters_by_master\": {[join $bm {, }]},"
   puts $f " \"removed\": $removed, \"resized\": $changed, \"non_buffer_inserted\": $bad_new, \"skip_nets\": [llength $skip_names], \"skip_nets_modified\": $skip_changed,"
   puts $f " \"skip_by\": {\"sigtype\": $n_sig, \"clock_pin\": $n_ck, \"glob\": [expr {[llength $skip_names] - $n_sig - $n_ck + $n_rep}]}, \"repeated_clock_nets\": $n_rep, \"masters_without_liberty\": [llength $nolib],"

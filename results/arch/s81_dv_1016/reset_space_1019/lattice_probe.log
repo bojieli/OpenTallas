@@ -1,0 +1,207 @@
+ot-run: die-level command (DIE_RE): --priority die
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc7       admits   449 GB (avail 413, growth 99, headroom 0, waiters 0/0 GB) load 63/96 running 17 disk 6463 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3076718-1792428211 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /reset.lef, created 1 library cells
+[INFO IFP-0001] Added 3695 rows of 18478 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 1000.000 1000.000 ) um
+[INFO IFP-0101] Core BBox: (  1.080  1.080 ) ( 998.892 998.730 ) um
+[INFO IFP-0102] Core area:                       995467.142 um^2
+[INFO IFP-0103] Total instances area:                 0.000 um^2
+[INFO IFP-0104] Effective utilization:                0.000
+[INFO IFP-0105] Number of instances:                      0
+[WARNING DPL-0404] Macro r_0 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_1 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_10 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_100 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_101 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_102 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_103 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_104 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_105 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_106 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_107 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_108 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_109 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_11 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_110 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_111 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_112 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_113 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_114 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_115 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_116 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_117 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_118 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_119 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_12 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_120 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_121 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_122 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_123 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_124 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_125 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_126 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_127 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_128 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_129 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_13 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_130 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_131 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_132 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_133 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_134 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_135 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_136 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_137 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_138 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_139 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_14 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_140 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_141 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_142 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_143 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_144 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_145 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_146 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_147 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_148 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_149 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_15 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_150 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_151 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_152 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_153 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_154 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_155 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_156 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_157 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_158 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_159 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_16 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_160 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_161 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_162 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_163 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_164 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_165 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_166 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_167 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_168 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_169 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_17 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_170 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_171 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_172 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_173 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_174 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_175 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_176 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_177 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_178 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_179 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_18 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_19 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_2 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_20 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_21 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_22 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_23 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_24 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_25 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_26 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_27 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_28 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_29 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_3 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_30 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_31 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_32 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_33 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_34 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_35 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_36 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_37 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_38 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_39 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_4 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_40 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_41 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_42 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_43 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_44 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_45 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_46 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_47 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_48 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_49 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_5 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_50 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_51 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_52 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_53 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_54 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_55 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_56 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_57 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_58 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_59 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_6 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_60 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_61 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_62 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_63 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_64 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_65 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_66 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_67 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_68 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_69 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_7 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_70 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_71 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_72 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_73 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_74 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_75 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_76 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_77 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_78 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_79 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_8 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_80 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_81 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_82 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_83 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_84 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_85 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_86 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_87 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_88 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_89 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_9 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_90 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_91 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_92 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_93 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_94 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_95 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_96 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_97 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_98 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+[WARNING DPL-0404] Macro r_99 is placed but not fixed; treating it as fixed during legalization. Mark it FIXED to silence this warning.
+CHECK_RESULT '' ROWS 3695
+RESET_LATTICE_OPENROAD_PASS 180 R0 BLOCK origins cover joint site0.054 row0.27 M4M5_0.048 M6_0.064 phases; PG network not built
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3076718-1792428211): exit 0

@@ -1,0 +1,43 @@
+{
+ "scope": "NEGATIVE original diagnostic BFS is not source fanout-safe",
+ "max_child_relays": 33,
+ "max_logical_i_and_rs_loads": 66,
+ "parents_over16children": [
+  {
+   "inst": "st_rs_54_24_1",
+   "children": 22,
+   "minimum_logical_loads": 44
+  },
+  {
+   "inst": "st_rs_44_11_3",
+   "children": 23,
+   "minimum_logical_loads": 46
+  },
+  {
+   "inst": "st_rs_43_39",
+   "children": 30,
+   "minimum_logical_loads": 60
+  },
+  {
+   "inst": "st_rsg_rs_74_13_cl7S_24",
+   "children": 30,
+   "minimum_logical_loads": 60
+  },
+  {
+   "inst": "st_rs_34_24_1",
+   "children": 18,
+   "minimum_logical_loads": 36
+  },
+  {
+   "inst": "st_rs_25_25_1",
+   "children": 21,
+   "minimum_logical_loads": 42
+  },
+  {
+   "inst": "st_rsg_rs_5_13_cl0S_28",
+   "children": 33,
+   "minimum_logical_loads": 66
+  }
+ ],
+ "replacement": "reset_degree8_graph: max8children/16child-inputloads, actual production sinks/ICG/native clock/fanout still owed"
+}

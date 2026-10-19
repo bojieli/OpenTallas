@@ -1,0 +1,143 @@
+{
+  "schema": "opentallas.serdes_parent_recovery.v1",
+  "status": "BLOCKED_NOT_A_PHYSICAL_OR_CYCLE_PASS",
+  "analog": {
+    "outline_um": [
+      250,
+      2250
+    ],
+    "at_um": [
+      43.2,
+      43.2
+    ],
+    "area_um2": 562500,
+    "note": "Unshrunk analog model only; all digital children remain real."
+  },
+  "children": [
+    {
+      "top": "ot_s81_kp4_dsyn",
+      "view": "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn/ot_s81_kp4_dsyn.lef",
+      "sha256": "9790e910a21c6fe8650fc0b018bbc86620052b88e489513e311fe56208142bbf",
+      "at_um": [
+        43.2,
+        2376.0
+      ],
+      "outline_um": [
+        216.0,
+        216.0
+      ],
+      "area_um2": 46656.0
+    },
+    {
+      "top": "ot_s81_kp4_ddly",
+      "view": "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly/ot_s81_kp4_ddly.lef",
+      "sha256": "42e917ddf5d2227b3a1b17fa3fbc3e888b979d8849f2ceaed4e09e420e6dd07c",
+      "at_um": [
+        43.2,
+        2635.2
+      ],
+      "outline_um": [
+        237.6,
+        146.88
+      ],
+      "area_um2": 34898.687999999995
+    },
+    {
+      "top": "ot_s81_kp4_dchn",
+      "view": "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn/ot_s81_kp4_dchn.lef",
+      "sha256": "e07d6e43c5e631cde6e561177f33c7facef2a128de2122b924150a5cf1f9400e",
+      "at_um": [
+        43.2,
+        2851.2
+      ],
+      "outline_um": [
+        216.0,
+        194.4
+      ],
+      "area_um2": 41990.4
+    },
+    {
+      "top": "ot_s81_kp4_dout",
+      "view": "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout/ot_s81_kp4_dout.lef",
+      "sha256": "e5456a558313e2dcd64a76330cc158996f9bec7b234df0f251078531bad0a361",
+      "at_um": [
+        43.2,
+        3110.4
+      ],
+      "outline_um": [
+        248.4,
+        233.28
+      ],
+      "area_um2": 57946.752
+    },
+    {
+      "top": "ot_s81_rate_match",
+      "view": "physical/ref_tile/s81lk_rate_match/views/ot_s81_rate_match/ot_s81_rate_match.lef",
+      "sha256": "38efc53e9ade9fd8b8bb7a01c8d61aa37c95d1f846f967f09fd5b0b52134c154",
+      "at_um": [
+        43.2,
+        3412.8
+      ],
+      "outline_um": [
+        69.12,
+        95.04
+      ],
+      "area_um2": 6569.1648000000005
+    },
+    {
+      "top": "ot_s81_kp4_enc",
+      "view": "physical/ref_tile/s81lk_kp4_enc/views/ot_s81_kp4_enc/ot_s81_kp4_enc.lef",
+      "sha256": "09785e6777fd6cb754b70f7888095a67e576cad501a150c4544914019a662177",
+      "at_um": [
+        43.2,
+        3585.6
+      ],
+      "outline_um": [
+        216.0,
+        216.0
+      ],
+      "area_um2": 46656.0
+    }
+  ],
+  "candidate": {
+    "outline_um": [
+      518.4,
+      3844.8
+    ],
+    "area_um2": 1993144.32,
+    "digital_child_area_um2": 234717.0048,
+    "grid_um": 43.2,
+    "minimum_child_gap_um": 43.2,
+    "vertical_track_lower_bound": {
+      "bits": 3456,
+      "pitch_um": 0.048,
+      "channel_um": 165.888
+    },
+    "note": "Conservative channel reserve, not GRT proof. Relay placement and PG/via capacity remain open."
+  },
+  "current_die_slot_um": [
+    259.2,
+    3596.4
+  ],
+  "area_delta_per_slot_mm2": 1.06095744,
+  "arithmetic": {
+    "mac_per_cycle": 0,
+    "payload_bits_per_cycle": 512,
+    "bytes_per_cycle": 64,
+    "encoded_bits_per_cycle": 544,
+    "decoder_raw_cycles": 60,
+    "predecessor_candidate_cycles": 74,
+    "predecessor_added_vs68_cycles": 6,
+    "successor_cycles": null,
+    "measured_throughput": null,
+    "note": "No rate credit. Actual per-edge relay layout determines successor compiler offsets."
+  },
+  "blockers": [
+    "Die lead must assign legal wider/taller slot for all release replicas; no outline change implied.",
+    "Replace predecessor data multicycles with physically timed per-edge relay transport.",
+    "Native rate_match capture budget failed five pins at 458ps in historical audit; remeasure current view.",
+    "Harden real two-domain reset/status glue and retain gray FIFO CDC; asynchronous data must not use synchronous landing.",
+    "PMA TX forwarded clock and per-cycle wires must be implemented with <=405um hops.",
+    "Run real framed traffic at Verilator5.050 with fail witnesses, native-pin/wire audit, then critical gate review."
+  ]
+}
