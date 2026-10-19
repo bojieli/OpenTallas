@@ -13,7 +13,7 @@ with (root/'compile.log').open('wb') as log:rc=subprocess.run(['/usr/bin/time','
 (root/'compile.rc').write_text(str(rc)+'\n')
 if rc:raise SystemExit(rc)
 receipts=[]
-for case in range(4):
+for case in [int(x) for x in os.environ.get("NATIVE_JOIN_CASES","0,1,2,3").split(",")]:
  with (root/f'case{case}.log').open('wb') as log:rc=subprocess.run(['/usr/bin/time','-v','obj/Vnative_join_bench',f'+CASE={case}'],stdout=log,stderr=subprocess.STDOUT).returncode
  content=(root/f'case{case}.log').read_text(errors='replace')
  passed=rc==0 and 'NATIVE_JOIN_PASS FUNCTIONAL_ONLY' in content and '%Error' not in content
