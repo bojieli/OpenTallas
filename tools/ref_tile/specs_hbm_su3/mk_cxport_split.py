@@ -42,7 +42,7 @@ def mk(name, top, params, W, H, pins, B, core_in, core_out, ser_in, ser_out, std
          'outline': {'w': W, 'h': H, 'exact': True}, 'std_area_um2': std, 'layer_cap': 'M5', 'recipe': 4,
          'macros': [], 'children': [], 'inter': [], 'pins': pins, 'pin_ranges': pr,
          'route': {'pd': 0.5, 'period_ps': 833.333, 'threads': 8, 'peak_ram_gb': 12, 'hold_margin_ns': 0.03, 'macro_halo_um': 5.4,
-                   'pin_h': 'M4', 'pin_v': 'M3 M5', 'pin_balance': {'h': 'M4', 'v': 'M3 M5', 'group_max': 1}, 'io_hold_margin_ns': 0.0,
+                   'pin_h': 'M4', 'pin_v': 'M3 M5', 'pin_balance': {'h': 'M4', 'v': 'M3 M5', 'group_max': 1}, 'io_hold_margin_ns': 0.03,
                    **(route_extra or {})},
          'io_flop_at_pins': {'cols': 4, 'allow_none': True}, 'inhold': False, 'outhold': False, 'keep_pin_regs': True, 'hold_budget': 'die',
          'pin_regs': {'enable': False, 'reason': 'Every pin is registered in RTL (cxport rule: stream inputs land in phase-indexed '
