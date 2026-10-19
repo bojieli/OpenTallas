@@ -44,13 +44,13 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy #(
     input wire dram_rvalid,input wire[255:0]dram_rdata,
     output wire pc_fault,output reg[5:0]owner_fault_split
 );
-    wire core_rst_n;
+    wire core_rst_n,bridge_rst_n;
     generate if(RESET_LANDING==2)begin:g_reset_face
-      (* keep="true",dont_touch="true" *) reg rst_l0,rst_l1;
-      always @(posedge clk)begin rst_l0<=rst_n;rst_l1<=rst_l0;end
-      assign core_rst_n=rst_l1;
+      (* keep="true",dont_touch="true" *) reg rst_l0,rst_l1,rst_l1_bridge;
+      always @(posedge clk)begin rst_l0<=rst_n;rst_l1<=rst_l0;rst_l1_bridge<=rst_l0;end
+      assign core_rst_n=rst_l1;assign bridge_rst_n=rst_l1_bridge;
     end else begin:g_reset_diagnostic
-      assign core_rst_n=rst_n;
+      assign core_rst_n=rst_n;assign bridge_rst_n=rst_n;
     end endgenerate
     initial if(RESET_LANDING!=0&&RESET_LANDING!=2)$fatal(1,"RESET_LANDING must be0 or2");
     wire native_v,native_rdy,native_fault,bridge_fault;
@@ -96,7 +96,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy #(
     // validity per region. These17 additional local wires stay inside the PC
     // physical master; the outer configuration/data pin ABI is unchanged.
     ot_hbm_svc_kr_ready_bridge #(.REGIONAL_VALID(1)) u_kr_bridge(
-      .clk(clk),.rst_n(core_rst_n),.in_v(native_v),.in_v_regions(native_v_regions),
+      .clk(clk),.rst_n(bridge_rst_n),.in_v(native_v),.in_v_regions(native_v_regions),
       .in_rdy(native_rdy),.in_data({native_tag,native_beat,native_data}),
       .out_v(kr_v),.out_rdy(kr_rdy),.out_data({kr_tag,kr_beat,kr_data}),
       .fault(bridge_fault),.occupancy());

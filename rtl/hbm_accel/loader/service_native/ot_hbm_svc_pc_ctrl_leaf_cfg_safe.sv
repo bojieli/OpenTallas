@@ -53,9 +53,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // zero owns accounting and the AQ port; the remaining copies stay local
     // to return capture, native K, native KR, metadata, PHY, and diagnostics.
     // Region seven is spare; regions 8..71 feed same-edge AQ bank/tournament resets.
-    wire [71:0] region_rst_n;
+    wire [93:0] region_rst_n;
     wire lrst_n=region_rst_n[0];
-    ot_rst_relay #(.REGIONS(72)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(region_rst_n));
+    ot_rst_relay #(.REGIONS(94)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(region_rst_n));
     // Native PHY-return pin capture: valid and all payload bits enter flops
     // together before response FIFO accounting/address/identity logic. This
     // adds one HBM edge before block-ready; normal on-die calendars do not
@@ -125,11 +125,12 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
           {1'b0,kp_addr[1:0]}+kp_len<=4&&(kp_addr[6:2]^kp_addr[11:7]^kp_addr[16:12])==pc_id_q&&
           {1'b0,kp_addr}+kp_len<=31'd703125000;
         wire[2:0]n,nn;
-        ot_hbm_svc_ring_bw_safe #(.WIDTH(341),.DEPTH(3),.REGIONAL(1)) u_kring(.clk(clk),.rst_n(region_rst_n[2]),
+        ot_hbm_svc_ring_bw_safe #(.WIDTH(341),.DEPTH(3),.REGIONAL(1),.REGIONAL_RESET(1)) u_kring(.clk(clk),.rst_n(region_rst_n[2]),
           .in_v(push_regions[0]),.in_data({kp_legal,kp_we,kp_addr,kp_len,kp_tag,kp_strb,kp_data}),
           .out_v(i_v),.pop(i_v&&i_rdy),.out_data({legal,i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}),
           .cnt(n),.cnt_next(nn),.fault(kfront_fault),
-          .in_v_regions(push_regions),.pop_regions(pop_regions),.out_v_regions(valid_regions));
+          .in_v_regions(push_regions),.pop_regions(pop_regions),.out_v_regions(valid_regions),
+          .rst_n_regions(region_rst_n[93:72]));
         for(genvar r=0;r<KREGIONS;r=r+1)begin:g_control
           // Same-edge replicas of architectural queue accounting. Local
           // acceptance uses independent state; shared next-count arithmetic
@@ -138,10 +139,10 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
           wire ready_local=!sticky&&!pc_fault&&legal&&count_q+length<=QD;
           assign push_regions[r]=kv_regions[r]&&ready_seen_regions[r];
           assign pop_regions[r]=valid_regions[r]&&ready_local;
-          always @(posedge clk or negedge lrst_n)
-            if(!lrst_n)count_q<=0;
+          always @(posedge clk or negedge region_rst_n[72+r])
+            if(!region_rst_n[72+r])count_q<=0;
             else count_q<=queue_count_next;
-          always @(posedge clk)if(!region_rst_n[2])begin
+          always @(posedge clk)if(!region_rst_n[72+r])begin
             kv_regions[r]<=0;ready_seen_regions[r]<=0;
           end else begin kv_regions[r]<=k_v;ready_seen_regions[r]<=k_rdy_q;end
         end

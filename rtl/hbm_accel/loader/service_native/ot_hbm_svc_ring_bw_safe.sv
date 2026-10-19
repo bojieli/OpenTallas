@@ -6,12 +6,13 @@
 // flops. rp is replicated per 64-bit slice (each slice reads mem[rp_s] through a DEPTH:1 mux). cnt is a register.
 // The caller guarantees no push when full (k_rdy credit / in_r); an overflow or a pop when empty latches fault.
 // MUT 1 (bench): every slice except slice 0 reads the entry one behind (rp-1).
-module ot_hbm_svc_ring_bw_safe #(parameter integer WIDTH=1,DEPTH=3,MUT=0,REGIONAL=0)(
+module ot_hbm_svc_ring_bw_safe #(parameter integer WIDTH=1,DEPTH=3,MUT=0,REGIONAL=0,REGIONAL_RESET=0)(
  input wire clk,rst_n,
  input wire in_v,input wire [WIDTH-1:0]in_data,
  output wire out_v,input wire pop,output wire [WIDTH-1:0]out_data,
  output reg [2:0]cnt,output wire [2:0]cnt_next,output reg fault,
  input wire [(WIDTH+15)/16-1:0] in_v_regions,pop_regions,
+ input wire [(WIDTH+15)/16-1:0] rst_n_regions,
  output wire [(WIDTH+15)/16-1:0] out_v_regions
 );
  localparam N=(WIDTH+7)/8;
@@ -27,9 +28,10 @@ module ot_hbm_svc_ring_bw_safe #(parameter integer WIDTH=1,DEPTH=3,MUT=0,REGIONA
  // Regional occupancies track identical transactions but remain independent
  // state cones. A region's count drives only its local consumer decision.
  for(genvar r=0;r<(WIDTH+15)/16;r=r+1)begin:g_control
+  wire local_rst_n=(REGIONAL_RESET!=0)?rst_n_regions[r]:rst_n;
   if(REGIONAL!=0)begin:g_local
    (* keep="true",dont_touch="true" *) reg[2:0] count_q;
-   always @(posedge clk)if(!rst_n)count_q<=0;
+   always @(posedge clk)if(!local_rst_n)count_q<=0;
     else count_q<=cnt_next;
    assign out_v_regions[r]=count_q!=0;
   end else begin:g_common
@@ -37,6 +39,7 @@ module ot_hbm_svc_ring_bw_safe #(parameter integer WIDTH=1,DEPTH=3,MUT=0,REGIONA
   end
  end
  for(genvar s=0;s<N;s=s+1)begin:g_slice
+  wire slice_rst_n=(REGIONAL_RESET!=0)?rst_n_regions[s/2]:rst_n;
   wire push_s=(REGIONAL!=0)?in_v_regions[s/2]:in_v;
   wire pop_s=(REGIONAL!=0)?pop_regions[s/2]:pop;
   localparam B=(WIDTH-s*8<8)?WIDTH-s*8:8;
@@ -44,11 +47,11 @@ module ot_hbm_svc_ring_bw_safe #(parameter integer WIDTH=1,DEPTH=3,MUT=0,REGIONA
   // WIDTH payload muxes. A decode controls at most8 bits per bank.
   (* keep="true",dont_touch="true" *) reg [1:0] wp;
   always @(posedge clk)if(push_s)mem[wp][s*8+:B]<=in_data[s*8+:B];
-  always @(posedge clk)if(!rst_n)wp<=0;
+  always @(posedge clk)if(!slice_rst_n)wp<=0;
    else if(push_s)wp<=(wp==DEPTH-1)?2'd0:wp+2'd1;
   (* keep="true",dont_touch="true" *) reg [1:0] rp;
   always @(posedge clk)
-   if(!rst_n) rp<=0; else if(pop_s) rp<=(rp==DEPTH-1)?2'd0:rp+2'd1;
+   if(!slice_rst_n) rp<=0; else if(pop_s) rp<=(rp==DEPTH-1)?2'd0:rp+2'd1;
   wire [1:0] rs=(MUT==1&&s!=0)?((rp==0)?2'(DEPTH-1):rp-2'd1):rp;
   assign out_data[s*8+:B]=mem[rs][s*8+:B];
  end

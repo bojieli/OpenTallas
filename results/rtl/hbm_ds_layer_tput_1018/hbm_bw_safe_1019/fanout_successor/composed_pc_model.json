@@ -24,5 +24,16 @@
   ],
   "estimated_bridge_ff_area_um2": 779.8,
   "floorplan": "Priorcoreband9006.94um2 mayneedlarger band forfullcombinedstdarea; actualarea/placement/fanout/access/TTFF OPEN. Noarbitrary util squeeze.",
-  "all_eight": "Model beforebuild; sourcehardwareboundary/finiteoccupancy+reset/proof obligations retained; noCTS/adoption untilrootreview."
+  "all_eight": "Model beforebuild; sourcehardwareboundary/finiteoccupancy+reset/proof obligations retained; noCTS/adoption untilrootreview.",
+  "reset_refinement": {
+    "native_regions": 94,
+    "added_relay_ff_bits": 22,
+    "native_K_regions": 22,
+    "local_reset_groups": "22same-edge copies eachownringpointer/count +consumer-count +valid/priorready; moves154countresetloads off accountingregion0 andKpointerloads offregion2",
+    "face_landing_second_stage_copies": 2,
+    "added_face_ff_bits": 1,
+    "release_edges_unchanged": 5,
+    "reset_root_targets": "nativeface secondstage drives96asyncrelay/sync pins, bridgeface secondstage~165loads; localresetroots expected<64 and all<256, classify actualstaticrelease separately fromcriticaldata32.",
+    "no_data_edge_change": true
+  }
 }
