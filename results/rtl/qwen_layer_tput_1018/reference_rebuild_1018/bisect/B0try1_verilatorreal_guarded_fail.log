@@ -1,0 +1,9 @@
+make: Entering directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB0/die'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB0'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB0/die/Vot_hdc_fmul__hierMkArgs.f
+/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB0/die: loops_checked=689 INPLACE_NBA_LOOPS=4
+  INPLACE_NBA_LOOP x1 ot_qwen_rom_rt_die_w12_stream4_tagged_ar__DOT__u_hbm__DOT__t_rd_sectors
+  INPLACE_NBA_LOOP x1 kvw_ce
+  INPLACE_NBA_LOOP x1 st_rsp_stall
+  INPLACE_NBA_LOOP x1 ot_qwen_rom_rt_die_w12_stream4_tagged_ar__DOT__u_kv__DOT__unnamedblk5__DOT__n
+VERILATOR_NBA_GUARD FAIL: Verilator applied non-blocking loop writes in place (non-unrolled NBA loop miscompile). Raise --unroll-count above the largest NBA loop trip count or rewrite the loop. Simulation results from this model are invalid.
