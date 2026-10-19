@@ -1,9 +1,11 @@
-# PVM whole-macro mirror successor
+# PVM whole-macro mirror successor, mapped budget
 
-Source-bound analytical geometry packet: `results/arch/hbm_pvm_safe2_1019/mirror_geometry/`. This new kit uses ot_hbm_sm_pv_merge_s3 and distinct ot_sram_1r1w_64x512_m1_r2c2_p192_mir with complete compiler-generated boundary/PG/contact/RC/Lib. The original p192 macro and failed s2 physical evidence are immutable.
+The current packet is results/arch/hbm_pvm_safe2_1019/mirror_geometry_mapped. Earlier mirror_geometry is retained historical model-only review evidence. All canonical failed s2 physical artifacts and macros remain immutable.
 
-Entire macro R180 at43.2/43.2 moves the real modeled clock contact to214.476/196.332,19.668um from the only legal north driver band. Mirror-compatible H153.912 restores all1585 M4contact centres to actual tracks; old H153.900 R180 has1585offtrack. Clock/data core timing and actual addedleadcap are regenerated, not reduced to assume closure. SRAMbehavior/arithmetic/calendar unchanged. Same302.4square slot, per-macro area+2.055456um², no addedexternaledge.
+Same302.4square outline and43.2lattice origin, complete SRAM171.288x153.912 R180, all1585contacts onactualtracks. Actual clockcontact214.476/196.332 is32.898um from the one legal band. No data/calendar edge change; coherent fullcontact/PG/OBS/RC/Lib views and actual newmacro nativebehavior exact240/tight192 plus4mutants PASS expected.
 
-Actual-core row band[2.16,216,300.24,300.24], synthesisstd10343um² yields41.19%. Original gate41.3% was totalfill; it was not the standardcell-band metric. Actual cells/rows after mapping must be measured again. Canonical 24x24nm contacts need real route patches to satisfy minimum area; trackalignment alone does not prove external escape/PG/DRC.
+ActualOpenDB measured stdcellmass9023.13918um2 AFTER standardtie-repair. Current oneband realcore[2.16,229.23,300.24,300.24] gives42.63% modeledfill; actualafterplacement cell/row census is stillrequired. Prior41.19% used Yosysarea10343 and is notactualplacedmass. The old gate41.3% was totalcorefill.
 
-Read design_review.json for all eight checklist findings. Model PNG is geometry only, not placed-cell evidence. Functional newmacro/nativebehavior proof runs before gate. Actual TTsetup/FFhold, relative nativeclock/parent, reach and critical PNG rootreview remain required. No REVIEW.json or submit.
+16 kept final-reset landing copies use the existing proven synthesistransform, retain2edge release and split391coarseloads max25. ActualASAP7 mappedOpenDB allnonclockfunctional/reset loads<=25. Standardrepair_tie_fanout split801HIGH+34LOW into835localties; every835sink/value binding is exactlyidentical. This proves fanout/source semantics; externalPG/via/DRC access remains open. Raw24x24nm macrocontacts require minimumarea patches.
+
+No CTS/gate/adoption. TTsetup/FFhold, nativeclock references, registeredreach, actualoneband and criticallayoutreview remainrequired. Read design_review.json and mapped_census/record.json. No REVIEW.json or submit.

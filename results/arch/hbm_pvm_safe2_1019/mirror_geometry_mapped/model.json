@@ -1,0 +1,231 @@
+{
+  "schema": "opentallas.pvm_mirror_geometry_1019.v1",
+  "immutable_source": "eda0b1540",
+  "macro": "ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+  "size_um": [
+    171.288,
+    153.912
+  ],
+  "origin_um": [
+    43.2,
+    43.2
+  ],
+  "orientation": "R180",
+  "macro_bbox_um": [
+    43.2,
+    43.2,
+    214.488,
+    197.112
+  ],
+  "std_band_um": [
+    2.16,
+    229.23,
+    300.24,
+    300.24
+  ],
+  "nominal_band_um": [
+    0,
+    229.23,
+    302.4,
+    302.4
+  ],
+  "outline_um": [
+    302.4,
+    302.4
+  ],
+  "std_area_um2": 9023.139179999886,
+  "std_band_fill": 0.4262901581528573,
+  "face_contacts": {
+    "W": 792,
+    "E": 793
+  },
+  "fullface_density_per_um": {
+    "W": 5.145797598627787,
+    "E": 5.152294817817974
+  },
+  "power_rectangles": 400,
+  "clock_xy_um": [
+    214.476,
+    196.332
+  ],
+  "clock_gap_to_band_um": 32.897999999999996,
+  "macro_area_um2": 26363.278656000002,
+  "macro_area_delta_um2": 2.0554559999982303,
+  "outline_area_delta_um2": 0,
+  "external_data_edge_delta": 0,
+  "pair": "SRAM rd_out -> existing operand capture; whole SRAM R180; source data contract remains unchanged",
+  "timing": {
+    "ff": {
+      "breakdown": {
+        "bitline_cap_ff": 4.11048,
+        "bitline_ps": 16.627928833804088,
+        "cell_current_ua": 24.720336736368004,
+        "column_mux_ps": 0.0,
+        "control_ps": 44.33172322666667,
+        "decode_ps": 85.70799823822223,
+        "fo4_ps": 14.777241075555557,
+        "output_ps": 44.33172322666667,
+        "pin_access_cap_ff": 23.694490337068117,
+        "pin_access_lead_um": 132.76083673942074,
+        "pin_access_total_ps": 36.59430685377865,
+        "pin_access_wire_ps": 21.560221348759313,
+        "precharge_ps": 30.454272392771145,
+        "read_cycle_ps": 291.5345584989724,
+        "sense_ps": 29.554482151111113,
+        "wordline_cap_ff": 133.40619551786668,
+        "wordline_ps": 84.85815365639715,
+        "write_cycle_ps": 290.58366098238383,
+        "write_ps": 260.1293885896127
+      },
+      "clk_cap_ff": 34.067690337068115,
+      "clk_to_q_ps": 342.23473514416855,
+      "corner": "ff",
+      "hold_ps": 19.67222053777778,
+      "leakage_nw": 131816.39328,
+      "min_period_ps": 364.7231722065297,
+      "min_pulse_ps": 145.88926888261187,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 58.76016846711198,
+      "pin_cap_ff": 24.378206337068118,
+      "read_energy_fj": 7806.223197260559,
+      "setup_ps": 61.289077929334205,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 8891.968672844558
+    },
+    "ss": {
+      "breakdown": {
+        "bitline_cap_ff": 4.11048,
+        "bitline_ps": 26.548036478110394,
+        "cell_current_ua": 15.483178966509284,
+        "column_mux_ps": 0.0,
+        "control_ps": 70.7797235075,
+        "decode_ps": 136.84079878116668,
+        "fo4_ps": 23.593241169166667,
+        "output_ps": 70.77972350750001,
+        "pin_access_cap_ff": 23.694490337068117,
+        "pin_access_lead_um": 132.76083673942074,
+        "pin_access_total_ps": 55.1281650859436,
+        "pin_access_wire_ps": 21.560221348759313,
+        "precharge_ps": 49.19552427156082,
+        "read_cycle_ps": 438.29072905621655,
+        "sense_ps": 47.186482338333334,
+        "wordline_cap_ff": 133.40619551786668,
+        "wordline_ps": 107.74016367954528,
+        "write_cycle_ps": 437.3449756805003,
+        "write_ps": 388.14945140893946
+      },
+      "clk_cap_ff": 32.37825033706812,
+      "clk_to_q_ps": 515.5131047593732,
+      "corner": "ss",
+      "hold_ps": 30.074020584583334,
+      "leakage_nw": 131816.39328,
+      "min_period_ps": 548.5470592281038,
+      "min_pulse_ps": 219.41882369124153,
+      "out_r_kohm": 0.7083491406580278,
+      "out_slew_intrinsic_ps": 90.51802683969359,
+      "pin_cap_ff": 24.27325633706812,
+      "read_energy_fj": 5249.854556793598,
+      "setup_ps": 94.92870625511026,
+      "temperature": 100.0,
+      "voltage": 0.63,
+      "write_energy_fj": 5952.569064057598
+    },
+    "tt": {
+      "breakdown": {
+        "bitline_cap_ff": 4.11048,
+        "bitline_ps": 20.552400000000002,
+        "cell_current_ua": 20.0,
+        "column_mux_ps": 0.0,
+        "control_ps": 54.79475631333334,
+        "decode_ps": 105.93652887244447,
+        "fo4_ps": 18.264918771111113,
+        "output_ps": 54.79475631333334,
+        "pin_access_cap_ff": 23.694490337068117,
+        "pin_access_lead_um": 132.76083673942074,
+        "pin_access_total_ps": 43.18180382601519,
+        "pin_access_wire_ps": 21.560221348759313,
+        "precharge_ps": 37.82388957590177,
+        "read_cycle_ps": 348.2812425626137,
+        "sense_ps": 36.529837542222225,
+        "wordline_cap_ff": 133.40619551786668,
+        "wordline_ps": 92.64383025871196,
+        "write_cycle_ps": 347.2878133674044,
+        "write_ps": 309.4639237915026
+      },
+      "clk_cap_ff": 33.040290337068114,
+      "clk_to_q_ps": 408.7624185963653,
+      "corner": "tt",
+      "hold_ps": 21.600259385555557,
+      "leakage_nw": 131816.39328,
+      "min_period_ps": 434.6448502146441,
+      "min_pulse_ps": 173.85794008585765,
+      "out_r_kohm": 0.4562575976456151,
+      "out_slew_intrinsic_ps": 70.57918198268186,
+      "pin_cap_ff": 24.31441833706812,
+      "read_energy_fj": 6464.869136367403,
+      "setup_ps": 71.43798259712631,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 7348.786755567403
+    }
+  },
+  "pin_checks": {
+    "M4": {
+      "preferred_direction": "H",
+      "pin_width_nm": [
+        24,
+        24
+      ],
+      "min_width_nm": 24,
+      "below_min_width": 0,
+      "pin_area_nm2": [
+        576,
+        576
+      ],
+      "min_area_nm2": 2000,
+      "below_min_area": 1585,
+      "pins_on_macro_edge": 1585,
+      "same_layer_obs_min_gap_nm": 48,
+      "same_layer_obs_overlap_or_within_spacing": 0,
+      "adjacent_layer_obs_covers_pin": {
+        "M5": 0,
+        "M3": 1585
+      },
+      "pin_centre_steps_nm": [
+        192
+      ],
+      "pref_track_pitch_nm": 48
+    }
+  },
+  "localdriver_assessment": {
+    "old_clock_xy_um": [
+      43.212,
+      43.98
+    ],
+    "old_nearest_legal_driver_gap_um": 172.02,
+    "actual_final_clock_wire_ps": 163.821,
+    "actual_macro_clock_slew_ps": 519.859,
+    "actual_TT_setup_ps": -59.94449,
+    "actual_FF_hold_ps": 20.63885,
+    "source": "Immutable gatefixedrows+standalone GRT-coordinate estimated-RC STA; not extracted SPEF",
+    "finding": "Old orientation cannot place local driver beside clock without leaving soleNband; capture-only delay is not assumed safe given FFhold. R180 permits nearclock driver inside sameband; actual CTS/native proof owed"
+  },
+  "remaining": [
+    "actual external access/via/PG/DRC; raw24x24nm contacts require routepatches for2000nm2 M4 minarea",
+    "actual mapped geometry/reach/band census",
+    "native TTsetup/FFhold and final parent clockreference",
+    "Analytical compiler has no transistor/GDS view; no foundry claim"
+  ],
+  "qualification": false,
+  "views_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_ss.lib": "009690926e315148207706e48019965f37a81af8c3c9950ff29b8539858470ae",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_ff.lib": "22360037e639207b501d54a64baac66893af84d24d61dacab937d32c1b341d7f",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.v": "fd3ad8c97191d4482473bd761a19c34d2067696f840b42db4fa68bc977ec94db",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_tt.lib": "642e090b72ab9d166f6dfded41bbc9d8cbed381676eed9c26c183ce2fcfe3190",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.json": "af0b6da56ff85db23c330cd97a1557c5ca820c41d013d937dda59e31f33e9edd",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v": "ffac4f90bcffc22577ee7129705bdfd5b733fa54b49b5123180f6f4dc1bebd3f",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+  },
+  "canonical_macro_unchanged": true
+}
