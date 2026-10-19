@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: ot-epyc6       admits   813 GB (avail 682, growth 113, headroom 0, waiters 0/0 GB) load 64/128 running 17 disk 6011 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1959607-1792431537 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+CREDIT_SRAM_EQ PASS checks=19994 takes=7113 fault_cycles=9885 MUT=0 blocked=772 current=1010 previous=772
+- /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src/rtl/common/test/bank64_coupon/tb_credit_bank64_coupon.sv:46: Verilog $finish
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1959607-1792431537): exit 0

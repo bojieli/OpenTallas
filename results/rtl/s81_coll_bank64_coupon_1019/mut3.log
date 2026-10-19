@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: ot-epyc6       admits   813 GB (avail 683, growth 113, headroom 0, waiters 0/0 GB) load 60/128 running 17 disk 6011 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1960645-1792431548 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+[0] %Fatal: ot_sram_showahead_bank64_coupon.sv:58: Assertion failed in TOP.tb_credit_bank64_coupon.g[0].b.u_head: COLL_COLLISION_UNSAFE macro read/write same address
+%Error: /srv/opentallas-scratch/claude/codex-s81-coll-bank64-coupon-1019/src/rtl/lib/ot_sram_showahead_bank64_coupon.sv:58: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1960645-1792431548): exit 1

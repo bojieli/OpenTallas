@@ -1,0 +1,40 @@
+{
+  "status": "FUNCTIONAL_COMPONENT_PASS_NOT_ADOPTED",
+  "source_sha256": {
+    "rtl/lib/ot_sram_showahead_bank64_coupon.sv": "ada606ec652e9c6fffd3f8d678f4fc2bb93a06235fa855701017a6a14138894e",
+    "rtl/common/ot_link_credit_rx_bank64_coupon.sv": "39e5b8137cef79fa271bf9535f8cd48ef5b698caea877a72a7df53fe9b75597f",
+    "rtl/common/test/bank64_coupon/run.sh": "4a460faa20bfc02eb6af0b24423045602bd50a381ad5d4cf45810b23bab7cfe8",
+    "rtl/common/test/bank64_coupon/tb_credit_bank64_coupon.sv": "bff08b73197e0a96617fc5208d70396e14320893325bae973b6064c9fbdc7574",
+    "rtl/common/test/bank64_coupon/tb_credit_bank64_coupon.cpp": "3047d31f9347f1c4d19b65e91a4977e3ad7dbb062559d5eec5704c057f0a583c",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e"
+  },
+  "verilator": "5.050",
+  "positive": {
+    "comparisons": 19994,
+    "takes": 7113,
+    "physical_collision_reads_blocked": 772,
+    "current_logical_write_hits": 1010,
+    "previous_logical_write_hits": 772,
+    "reset_epochs": 2,
+    "WFREE_values": [
+      1,
+      2
+    ]
+  },
+  "mutants": {
+    "missing_current_forward_errors": 1766,
+    "missing_previous_forward_errors": 1862,
+    "unsafe_macro_collision_read": "COLL_COLLISION_UNSAFE fatal on enabled same-address dual-clock read/write"
+  },
+  "LEF_pin_face_density": {
+    "W": 5.9523809523809526,
+    "E": 5.9523809523809526,
+    "scope": "nearest-face census only, routed primitive escape unproved"
+  },
+  "constraints": [
+    "No production migration/gate from coupon",
+    "Actual mapped proof pending",
+    "No claim that tied clocks define same-address collision output",
+    "Macro read disabled on every physical same-address write; cache/forward wins at identical edge"
+  ]
+}
