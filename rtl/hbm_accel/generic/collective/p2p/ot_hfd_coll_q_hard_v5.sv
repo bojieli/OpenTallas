@@ -272,7 +272,7 @@ endmodule
 // Protocol leaves (V5 issue timing, INJLAT 12; parameters fixed by name for hardening): one leaf = the pipelined
 // iteration-product unit (pin capture of the early tap at E+3, registered partials at E+4) + ot_hgi_coll_q_static_ctl_v5
 // on the 2-edge-delayed instruction (valid E+4..E+5): only field+partial adders remain in the cycle.
-module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
+module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13,VM_RT=0)(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [ND-1:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
@@ -281,7 +281,7 @@ module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
  output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
  output wire [3:0] vm_assembled_v,output wire [NPT*8-1:0] held_epoch,
  output wire [NPT*16-1:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
- output wire protocol_fault,output wire [31:0] cycles);
+ output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
  wire [15:0] m_idx,m_vm,m_iaddr_h,m_del_h,m_rgx_h;wire [31:0] m_iaddr_l,m_del_l,m_rgx_l;wire [23:0] m_lk_l,m_lk_h;
  ot_hgi_coll_iter_mul u_mul(.clk(clk_control),.iteration(tap_iteration),.s_idx(tap_steps[0+:16]),
   .s_vm(tap_steps[16+:16]),.s_iaddr(tap_steps[32+:16]),.s_del(tap_steps[48+:16]),.s_rgx(tap_steps[64+:16]),
@@ -295,7 +295,7 @@ module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
  always @(posedge clk_control or negedge rst_n) if(!rst_n)rst_l<=1'b0;else rst_l<=1'b1;
  always @(posedge clk_control) inst_q<=inst;
  always @(posedge clk_control or negedge rst_l) if(!rst_l)begin hs_q<=0;hb_q<=0;end else begin hs_q<=hgi_start;hb_q<=hgi_busy;end
- ot_hgi_coll_q_static_ctl_v5 #(.NPT(NPT),.SOLO(SOLO),.INJLAT(12)) u(.clk_control(clk_control),.rst_n(rst_l),
+ ot_hgi_coll_q_static_ctl_v5 #(.NPT(NPT),.SOLO(SOLO),.INJLAT(12),.VM_RT(VM_RT)) u(.clk_control(clk_control),.rst_n(rst_l),
   .inst(inst_q),.m_idx(m_idx),.m_vm(m_vm),.m_iaddr_l(m_iaddr_l),.m_del_l(m_del_l),.m_rgx_l(m_rgx_l),
   .m_iaddr_h(m_iaddr_h),.m_del_h(m_del_h),.m_rgx_h(m_rgx_h),.m_lk_l(m_lk_l),.m_lk_h(m_lk_h),
   .hgi_start(hs_q),.hgi_busy(hb_q),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
@@ -304,7 +304,7 @@ module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
   .rgx_addr_pin(rgx_addr_pin),.inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),
   .vm_source_meta(vm_source_meta),.vm_assembled_v(vm_assembled_v),
   .held_epoch(held_epoch),.wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),
-  .rx_sequence_pin(rx_sequence_pin),.protocol_fault(protocol_fault),.cycles(cycles));
+  .rx_sequence_pin(rx_sequence_pin),.protocol_fault(protocol_fault),.cycles(cycles),.vm_sel_d(vm_sel_d));
 endmodule
 
 module ot_hgi_coll_ctl_v5_q3(
@@ -317,7 +317,7 @@ module ot_hgi_coll_ctl_v5_q3(
  output wire [3:0] vm_assembled_v,output wire [23:0] held_epoch,
  output wire [47:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles);
- ot_hgi_coll_ctl_v5_core #(.NPT(3),.SOLO(1)) u(.*);
+ ot_hgi_coll_ctl_v5_core #(.NPT(3),.SOLO(1)) u(.*,.vm_sel_d());
 endmodule
 
 module ot_hgi_coll_ctl_v5_q2(
@@ -330,7 +330,7 @@ module ot_hgi_coll_ctl_v5_q2(
  output wire [3:0] vm_assembled_v,output wire [15:0] held_epoch,
  output wire [31:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles);
- ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(0)) u(.*);
+ ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(0)) u(.*,.vm_sel_d());
 endmodule
 module ot_hgi_coll_ctl_v5_n2s1(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
@@ -342,7 +342,7 @@ module ot_hgi_coll_ctl_v5_n2s1(
  output wire [3:0] vm_assembled_v,output wire [15:0] held_epoch,
  output wire [31:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles);
- ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(1)) u(.*);
+ ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(1)) u(.*,.vm_sel_d());
 endmodule
 module ot_hgi_coll_ctl_v5_n1s0(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
@@ -354,7 +354,59 @@ module ot_hgi_coll_ctl_v5_n1s0(
  output wire [3:0] vm_assembled_v,output wire [7:0] held_epoch,
  output wire [15:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles);
- ot_hgi_coll_ctl_v5_core #(.NPT(1),.SOLO(0)) u(.*);
+ ot_hgi_coll_ctl_v5_core #(.NPT(1),.SOLO(0)) u(.*,.vm_sel_d());
+endmodule
+
+// HBM-BANKLAT-COLL 10-19: VM_RT variants of the four protocol leaves (new hardened views, one per NPT/SOLO shape;
+// parameter fixed by name for hardening, default = the d4g GEN2c/GEN2d scalar budget 74). Ports = the v5 leaf + vm_sel_d
+// (24 flop-Q outputs: the VM pair select delayed VM_RT edges, to the vmasm slices). The v5 leaves above are unchanged.
+module ot_hgi_coll_ctl_v5r_q3 #(parameter integer VM_RT=74)(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
+ input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [15:0] dest_v,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
+ output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
+ output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
+ output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
+ output wire [3:0] vm_assembled_v,output wire [23:0] held_epoch,
+ output wire [47:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
+ output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
+ ot_hgi_coll_ctl_v5_core #(.NPT(3),.SOLO(1),.VM_RT(VM_RT)) u(.*);
+endmodule
+module ot_hgi_coll_ctl_v5r_q2 #(parameter integer VM_RT=74)(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
+ input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [14:0] dest_v,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
+ output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
+ output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
+ output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
+ output wire [3:0] vm_assembled_v,output wire [15:0] held_epoch,
+ output wire [31:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
+ output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
+ ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(0),.VM_RT(VM_RT)) u(.*);
+endmodule
+module ot_hgi_coll_ctl_v5r_n2s1 #(parameter integer VM_RT=74)(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
+ input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [14:0] dest_v,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
+ output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
+ output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
+ output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
+ output wire [3:0] vm_assembled_v,output wire [15:0] held_epoch,
+ output wire [31:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
+ output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
+ ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(1),.VM_RT(VM_RT)) u(.*);
+endmodule
+module ot_hgi_coll_ctl_v5r_n1s0 #(parameter integer VM_RT=74)(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
+ input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [13:0] dest_v,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
+ output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
+ output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
+ output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
+ output wire [3:0] vm_assembled_v,output wire [7:0] held_epoch,
+ output wire [15:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
+ output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
+ ot_hgi_coll_ctl_v5_core #(.NPT(1),.SOLO(0),.VM_RT(VM_RT)) u(.*);
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------

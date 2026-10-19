@@ -56,14 +56,20 @@ WR = CAP + 3                                         # registered sink C+2 visib
 DRD = 4                                              # read reservation after the native SRAM write (E+4)
 RD = WR + DRD
 TXLAT = 7                                            # rd sampled E -> registered TX pin E+6, visible E+7
+VM_RT = 0                                            # HBM-BANKLAT-COLL 10-19: COLL parent VM_RT (VM capture P+10+VM_RT);
+                                                     # set by --vm-rt; the VM request leads by VM_RT more edges
 
 
-def stages(npt, wire):
-    rxe = RD + TXLAT + wire                          # instruction cycle the RX pin is driven = rx_expect edge
-    st = dict(REQ=REQ, CAP=CAP, SINK=SINK, WRSEQ=WR - 1, WR=WR, RDSEQ=RD - 1, RD=RD,
+def stages(npt, wire, vm_rt=None):
+    # VM_RT > 2 (q3 only: the VM rail): the VM request cannot lead the SU request by more than CAP - 10, so the whole
+    # stream shifts by SH = VM_RT - 2 edges (SU request at SH, both captures at CAP + SH); VM_RT 0 = the v4/v8 schedule.
+    vm_rt = VM_RT if vm_rt is None else vm_rt
+    sh = max(0, vm_rt - (CAP - 10)) if npt == 3 else 0
+    rxe = RD + sh + TXLAT + wire                     # instruction cycle the RX pin is driven = rx_expect edge
+    st = dict(REQ=REQ + sh, CAP=CAP + sh, SINK=SINK + sh, WRSEQ=WR + sh - 1, WR=WR + sh, RDSEQ=RD + sh - 1, RD=RD + sh,
               RXSEQ=rxe - 1, RXE=rxe, RXCAP=rxe + 3, DSINK=rxe + 4, DADDR=rxe + 5)
     if npt == 3:
-        st['REQV'] = REQV
+        st['REQV'] = REQV + sh - vm_rt
     return st
 
 
@@ -258,9 +264,12 @@ def main():
     ap.add_argument('--R', type=int, default=R_PROD)
     ap.add_argument('--wire', type=int, default=453)
     ap.add_argument('--mutant', choices=('row_stride', 'link_step'))
+    ap.add_argument('--vm-rt', type=int, default=0, help='COLL parent VM_RT (extra VM read edges beyond P+10 capture)')
     a = ap.parse_args()
+    global VM_RT
+    VM_RT = a.vm_rt
     a.out.mkdir(parents=True, exist_ok=True)
-    man = dict(schema='hcoll.rows.row_gather.v1', P=a.P, R=a.R, wire=a.wire, mutant=a.mutant,
+    man = dict(schema='hcoll.rows.row_gather.v1', P=a.P, R=a.R, wire=a.wire, mutant=a.mutant, vm_rt=a.vm_rt,
                shape=dict(G=G, max_owned_rows=M_OWNED, row_bytes=ROW_BYTES, rank_flits=RANK_FLITS, flits_per_position=FLITS_POS, rails_die=RAILS_DIE,
                           R_production=R_PROD, flit_bytes=FLIT_B, obase=OBASE, position_stride=RS),
                layout_sha256=hashlib.sha256(LAYOUT.read_bytes()).hexdigest(), parents={})
