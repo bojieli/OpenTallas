@@ -1,0 +1,15 @@
+SCOREBAD row1 ord0 expected3fc0 got4075
+SCOREBAD row1 ord1 expectedc04b gotbf08
+SCOREBAD row1 ord2 expected4064 got4024
+SCOREBAD row1 ord3 expectedbfda gotc03b
+SCOREBAD row1 ord4 expectedc036 got3e8c
+SCOREBAD row1 ord5 expected4078 gotbfb7
+SCOREBAD row1 ord6 expected40dd got3fb5
+IDX_ROW r0 firstkey219 firsttx1176 lasttx1296 scores10928 records512 errors0
+IDX_ROW r1 firstkey451 firsttx1408 lasttx1528 scores10928 records512 errors12397
+IDX_ROWS_CYCLES rows2 pitch232 frame1301 record_edges_last_tx1529 done1535 live_key_beats171 scored_beats342
+IDX_HNX_ROWS rows2 mutation0 scores21856 records1024 flits128 errors12397 fault0 faultedge-1 status0
+[21590000000] %Fatal: tb_hnx_idxn_rows.sv:160: Assertion failed in tb_hnx_idxn_rows.unnamedblk8: IDX_HNX_ROWS FAIL: N-row one-key-stream INDEX mismatch
+%Error: rtl/hbm_next/idxn/tb/tb_hnx_idxn_rows.sv:160: Verilog $stop
+Aborting...
+RUN_RC=1

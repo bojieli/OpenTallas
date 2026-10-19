@@ -46,7 +46,12 @@ SRC = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hdc/ot_hdc_fp3
        "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
        "rtl/hbm_next/att/ot_hnx_att_kv_line.sv", "rtl/hbm_next/att/ot_hnx_att4_issue.sv",
        "rtl/hbm_next/att/ot_hnx_att_pv_merge.sv", "rtl/hbm_next/att/ot_hnx_att_tcpv_col.sv",
+       "rtl/hbm_next/att/ot_hnx_att_stack_flop.sv", "rtl/hbm_next/att/ot_hnx_att4_smerge.sv",
        "rtl/hbm_next/att/ot_hnx_att4_slice.sv", "rtl/hbm_next/att/tb_hnx_att4.sv"]
+# A1 merge variants (2026-10-19): base = per-lane merges on the 64x512 macro (LV 4, step 1); shared = ONE shared 4-lane
+# merge a column (ot_hnx_att4_smerge, LV 3 flop rings, PRIMARY); flop = per-lane merges on LV 3 flop stacks (fallback)
+VARIANTS = {"base": dict(SHARED=0, STORE=0, LV=4), "shared": dict(SHARED=1, STORE=0, LV=3),
+            "flop": dict(SHARED=0, STORE=1, LV=3)}
 VERILATOR = os.environ.get("VERILATOR") or next(
     (c for c in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(c)),
     "verilator")
@@ -130,20 +135,22 @@ def op_files(rec, job, d):
     return lf, xf, mf, len(lines)
 
 
-def build(work, imut, pvmut, kvmut):
-    obj = work / f"obj_i{imut}_p{pvmut}_k{kvmut}"
+def build(work, imut, pvmut, kvmut, variant="base", smut=0):
+    vtag = "" if variant == "base" and not smut else f"_{variant}_s{smut}"
+    obj = work / f"obj_i{imut}_p{pvmut}_k{kvmut}{vtag}"
     exe = obj / "Vtb_hnx_att4"
     if exe.exists():
         return exe
     cmd = [VERILATOR, "--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint",
            "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "128", "--top-module", "tb_hnx_att4",
-           f"-GIMUT={imut}", f"-GPVMUT={pvmut}", f"-GKVMUT={kvmut}", "--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
+           f"-GIMUT={imut}", f"-GPVMUT={pvmut}", f"-GKVMUT={kvmut}", f"-GSMUT={smut}"] + \
+          [f"-G{k}={v}" for k, v in VARIANTS[variant].items()] + ["--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
     for attempt in range(2):                           # one retry on a precompiled-header race
         r = subprocess.run(cmd, capture_output=True, text=True)
-        (work / f"build_i{imut}_p{pvmut}_k{kvmut}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
+        (work / f"build_i{imut}_p{pvmut}_k{kvmut}{vtag}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
         if r.returncode == 0:
             return exe
-    raise SystemExit(f"build failed (see {work}/build_i{imut}_p{pvmut}_k{kvmut}.log)")
+    raise SystemExit(f"build failed (see {work}/build_i{imut}_p{pvmut}_k{kvmut}{vtag}.log)")
 
 
 def run_job(exe, rec, job, d):
@@ -217,10 +224,16 @@ def main(argv=None):
     p.add_argument("--imut", type=int, default=0)
     p.add_argument("--pvmut", type=int, default=0)
     p.add_argument("--kvmut", type=int, default=0)
+    p.add_argument("--variant", choices=sorted(VARIANTS), default="base", help="A1 merge variant")
+    p.add_argument("--smut", type=int, default=0, help="shared-merge mutant (variant shared)")
     p.add_argument("--only", default="")
     p.add_argument("--p1", action="store_true", help="also run every lane alone on the same slice (P = 1 spans)")
     p.add_argument("--jobs", type=int, default=16)
+    p.add_argument("--topk", type=int, default=512, help="top-k a lane (512 = DS; other values give partial last runs: "
+                   "T mod 32 in (0,8] / (8,16] / (16,24] -> a last run of 1 / 2 / 3 chunks, the merge flush paths)")
     a = ap.parse_args(argv)
+    global K
+    K = a.topk
     work = Path(a.work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
@@ -233,13 +246,14 @@ def main(argv=None):
         jobs = [j for j in jobs if j[0] in a.only.split(",")]
     if not jobs:
         ap.error("--only matched no job")
-    exe = build(work, a.imut, a.pvmut, a.kvmut)
-    vec = work / f"vec_s{a.sigma}_i{a.imut}_p{a.pvmut}_k{a.kvmut}"
+    exe = build(work, a.imut, a.pvmut, a.kvmut, a.variant, a.smut)
+    vec = work / f"vec_k{K}_s{a.sigma}_i{a.imut}_p{a.pvmut}_k{a.kvmut}_{a.variant}_s{a.smut}"
     vec.mkdir(exist_ok=True)
     with cf.ThreadPoolExecutor(a.jobs) as ex:
         res = list(ex.map(lambda j: run_job(exe, rec, j, vec), jobs))
-    mut = a.imut or a.pvmut or a.kvmut
-    summ = dict(seed=a.seed, sigma=a.sigma, imut=a.imut, pvmut=a.pvmut, kvmut=a.kvmut, verilator=VERILATOR,
+    mut = a.imut or a.pvmut or a.kvmut or a.smut
+    summ = dict(seed=a.seed, sigma=a.sigma, topk=K, imut=a.imut, pvmut=a.pvmut, kvmut=a.kvmut, variant=a.variant, smut=a.smut,
+                verilator=VERILATOR,
                 union_lines=len(rec["union"]), lane_lines=[len(ln["rows"]) for ln in rec["lanes"]],
                 ops=len(res), passed=sum(r["pass"] for r in res), wall_s=round(time.time() - t0, 1))
     main_jobs = [r for r in res if "_l" not in r["name"]]

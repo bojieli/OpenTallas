@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hnx_att4_spvm",
+ "enable": false,
+ "reason": "the RTL (ot_hnx_att4_spvm) already registers every data input and every output at its pin (one flop each, +1 edge each way, counted in the schedule); the reset lands in one kept register rq. A wrapper flop would add a second cycle per pin."
+}

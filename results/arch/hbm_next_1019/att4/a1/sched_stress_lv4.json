@@ -1,0 +1,125 @@
+{
+ "trials": 5000,
+ "kinds": {
+  "aligned": 100,
+  "stagger": 100,
+  "random": 4800
+ },
+ "nl": 4,
+ "lv": 4,
+ "seed": 1019,
+ "nodes": 49778,
+ "faults": 77,
+ "fault_examples": [
+  {
+   "trial": 3,
+   "kind": "aligned",
+   "faults": [
+    [
+     72,
+     2,
+     "event on an entry with an unissued step"
+    ],
+    [
+     72,
+     3,
+     "event on an entry with an unissued step"
+    ]
+   ]
+  },
+  {
+   "trial": 6,
+   "kind": "aligned",
+   "faults": [
+    [
+     72,
+     2,
+     "event on an entry with an unissued step"
+    ],
+    [
+     72,
+     3,
+     "event on an entry with an unissued step"
+    ],
+    [
+     136,
+     2,
+     "event on an entry with an unissued step"
+    ]
+   ]
+  },
+  {
+   "trial": 9,
+   "kind": "aligned",
+   "faults": [
+    [
+     72,
+     2,
+     "event on an entry with an unissued step"
+    ],
+    [
+     72,
+     3,
+     "event on an entry with an unissued step"
+    ],
+    [
+     136,
+     2,
+     "event on an entry with an unissued step"
+    ]
+   ]
+  },
+  {
+   "trial": 12,
+   "kind": "aligned",
+   "faults": [
+    [
+     72,
+     2,
+     "event on an entry with an unissued step"
+    ],
+    [
+     72,
+     3,
+     "event on an entry with an unissued step"
+    ],
+    [
+     136,
+     2,
+     "event on an entry with an unissued step"
+    ]
+   ]
+  },
+  {
+   "trial": 18,
+   "kind": "aligned",
+   "faults": [
+    [
+     72,
+     2,
+     "event on an entry with an unissued step"
+    ],
+    [
+     72,
+     3,
+     "event on an entry with an unissued step"
+    ],
+    [
+     136,
+     2,
+     "event on an entry with an unissued step"
+    ]
+   ]
+  }
+ ],
+ "worst_node_latency_turns": 204,
+ "worst_node_latency_cycles": 1632,
+ "worst_case": {
+  "trial": 6,
+  "kind": "aligned",
+  "lane": 3,
+  "event_turn": 64,
+  "out_turn": 268
+ },
+ "illegal_record_faults": true
+}

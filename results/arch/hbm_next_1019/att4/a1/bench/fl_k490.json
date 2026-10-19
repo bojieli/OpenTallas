@@ -1,0 +1,1192 @@
+{
+ "summary": {
+  "seed": 1019,
+  "sigma": 0.3,
+  "topk": 490,
+  "imut": 0,
+  "pvmut": 0,
+  "kvmut": 0,
+  "variant": "flop",
+  "smut": 0,
+  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "union_lines": 829,
+  "lane_lines": [
+   618,
+   618,
+   618,
+   618
+  ],
+  "ops": 40,
+  "passed": 40,
+  "wall_s": 262.8,
+  "pv_cross_sm_merge_equals_att_pv_every_lane": true,
+  "qk_scores_checked": 2472,
+  "qk_span_max": 597,
+  "qk_union_rows_max": 58,
+  "pv_span_max": 561,
+  "pv_union_rows_max": 58,
+  "verdict": "PASS"
+ },
+ "ops": [
+  {
+   "name": "q0",
+   "kind": "qk",
+   "kv4": 0,
+   "union_rows": 35,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 35,
+    "qk": 1,
+    "kv4": 0,
+    "lines": 136,
+    "first_in": 544,
+    "last_in": 791,
+    "last_out": 966,
+    "span": 422,
+    "beats": 280
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p0",
+   "kind": "pv",
+   "kv4": 0,
+   "union_rows": 35,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 35,
+    "qk": 0,
+    "kv4": 0,
+    "lines": 136,
+    "first_in": 544,
+    "last_in": 791,
+    "last_out": 937,
+    "span": 393,
+    "beats": 280
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q1",
+   "kind": "qk",
+   "kv4": 0,
+   "union_rows": 35,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 35,
+    "qk": 1,
+    "kv4": 0,
+    "lines": 136,
+    "first_in": 544,
+    "last_in": 791,
+    "last_out": 966,
+    "span": 422,
+    "beats": 280
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p1",
+   "kind": "pv",
+   "kv4": 0,
+   "union_rows": 35,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 35,
+    "qk": 0,
+    "kv4": 0,
+    "lines": 136,
+    "first_in": 544,
+    "last_in": 791,
+    "last_out": 937,
+    "span": 393,
+    "beats": 280
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q2",
+   "kind": "qk",
+   "kv4": 0,
+   "union_rows": 35,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 35,
+    "qk": 1,
+    "kv4": 0,
+    "lines": 136,
+    "first_in": 544,
+    "last_in": 791,
+    "last_out": 966,
+    "span": 422,
+    "beats": 280
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p2",
+   "kind": "pv",
+   "kv4": 0,
+   "union_rows": 35,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 35,
+    "qk": 0,
+    "kv4": 0,
+    "lines": 136,
+    "first_in": 544,
+    "last_in": 791,
+    "last_out": 937,
+    "span": 393,
+    "beats": 280
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q3",
+   "kind": "qk",
+   "kv4": 0,
+   "union_rows": 35,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 35,
+    "qk": 1,
+    "kv4": 0,
+    "lines": 136,
+    "first_in": 544,
+    "last_in": 791,
+    "last_out": 966,
+    "span": 422,
+    "beats": 280
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p3",
+   "kind": "pv",
+   "kv4": 0,
+   "union_rows": 35,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 35,
+    "qk": 0,
+    "kv4": 0,
+    "lines": 136,
+    "first_in": 544,
+    "last_in": 791,
+    "last_out": 937,
+    "span": 393,
+    "beats": 280
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q4",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 43,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 43,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 92,
+    "first_in": 544,
+    "last_in": 832,
+    "last_out": 1014,
+    "span": 470,
+    "beats": 344
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p4",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 43,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 43,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 92,
+    "first_in": 544,
+    "last_in": 832,
+    "last_out": 985,
+    "span": 441,
+    "beats": 344
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q5",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 57,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 57,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 121,
+    "first_in": 544,
+    "last_in": 913,
+    "last_out": 1140,
+    "span": 596,
+    "beats": 456
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p5",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 57,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 57,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 121,
+    "first_in": 544,
+    "last_in": 913,
+    "last_out": 1097,
+    "span": 553,
+    "beats": 456
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q6",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 47,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 47,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 100,
+    "first_in": 544,
+    "last_in": 843,
+    "last_out": 1018,
+    "span": 474,
+    "beats": 376
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p6",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 47,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 47,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 100,
+    "first_in": 544,
+    "last_in": 843,
+    "last_out": 1017,
+    "span": 473,
+    "beats": 376
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q7",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 53,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 53,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 113,
+    "first_in": 544,
+    "last_in": 902,
+    "last_out": 1080,
+    "span": 536,
+    "beats": 424
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p7",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 53,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 53,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 113,
+    "first_in": 544,
+    "last_in": 902,
+    "last_out": 1065,
+    "span": 521,
+    "beats": 424
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q8",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 47,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 47,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 100,
+    "first_in": 544,
+    "last_in": 843,
+    "last_out": 1018,
+    "span": 474,
+    "beats": 376
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p8",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 47,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 47,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 100,
+    "first_in": 544,
+    "last_in": 843,
+    "last_out": 1017,
+    "span": 473,
+    "beats": 376
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q9",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 52,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 52,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 111,
+    "first_in": 544,
+    "last_in": 899,
+    "last_out": 1079,
+    "span": 535,
+    "beats": 416
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p9",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 52,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 52,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 111,
+    "first_in": 544,
+    "last_in": 899,
+    "last_out": 1057,
+    "span": 513,
+    "beats": 416
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q10",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 57,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 57,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 121,
+    "first_in": 544,
+    "last_in": 913,
+    "last_out": 1140,
+    "span": 596,
+    "beats": 456
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p10",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 57,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 57,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 121,
+    "first_in": 544,
+    "last_in": 913,
+    "last_out": 1097,
+    "span": 553,
+    "beats": 456
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q11",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 54,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 54,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 115,
+    "first_in": 544,
+    "last_in": 905,
+    "last_out": 1081,
+    "span": 537,
+    "beats": 432
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p11",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 54,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 54,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 115,
+    "first_in": 544,
+    "last_in": 905,
+    "last_out": 1073,
+    "span": 529,
+    "beats": 432
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q12",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 58,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 58,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 123,
+    "first_in": 544,
+    "last_in": 916,
+    "last_out": 1141,
+    "span": 597,
+    "beats": 464
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p12",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 58,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 58,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 123,
+    "first_in": 544,
+    "last_in": 916,
+    "last_out": 1105,
+    "span": 561,
+    "beats": 464
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q13",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 55,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 55,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 117,
+    "first_in": 544,
+    "last_in": 907,
+    "last_out": 1082,
+    "span": 538,
+    "beats": 440
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p13",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 55,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 55,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 117,
+    "first_in": 544,
+    "last_in": 907,
+    "last_out": 1081,
+    "span": 537,
+    "beats": 440
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q14",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 55,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 55,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 117,
+    "first_in": 544,
+    "last_in": 907,
+    "last_out": 1082,
+    "span": 538,
+    "beats": 440
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p14",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 55,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 55,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 117,
+    "first_in": 544,
+    "last_in": 907,
+    "last_out": 1081,
+    "span": 537,
+    "beats": 440
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q15",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 51,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 51,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 108,
+    "first_in": 544,
+    "last_in": 895,
+    "last_out": 1078,
+    "span": 534,
+    "beats": 408
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p15",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 51,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 51,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 108,
+    "first_in": 544,
+    "last_in": 895,
+    "last_out": 1049,
+    "span": 505,
+    "beats": 408
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q16",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 49,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 49,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 104,
+    "first_in": 544,
+    "last_in": 848,
+    "last_out": 1076,
+    "span": 532,
+    "beats": 392
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p16",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 49,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 49,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 104,
+    "first_in": 544,
+    "last_in": 848,
+    "last_out": 1033,
+    "span": 489,
+    "beats": 392
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q17",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 54,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 54,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 115,
+    "first_in": 544,
+    "last_in": 905,
+    "last_out": 1081,
+    "span": 537,
+    "beats": 432
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p17",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 54,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 54,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 115,
+    "first_in": 544,
+    "last_in": 905,
+    "last_out": 1073,
+    "span": 529,
+    "beats": 432
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q18",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 50,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 50,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 106,
+    "first_in": 544,
+    "last_in": 851,
+    "last_out": 1077,
+    "span": 533,
+    "beats": 400
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p18",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 50,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 50,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 106,
+    "first_in": 544,
+    "last_in": 851,
+    "last_out": 1041,
+    "span": 497,
+    "beats": 400
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "q19",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 17,
+   "lane_rows": {
+    "0": 10,
+    "1": 10,
+    "2": 10,
+    "3": 10
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 17,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 36,
+    "first_in": 544,
+    "last_in": 592,
+    "last_out": 820,
+    "span": 276,
+    "beats": 136
+   },
+   "results": 40,
+   "expected": 40,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p19",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 17,
+   "lane_rows": {
+    "0": 10,
+    "1": 10,
+    "2": 10,
+    "3": 10
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 17,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 36,
+    "first_in": 544,
+    "last_in": 592,
+    "last_out": 769,
+    "span": 225,
+    "beats": 136
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  }
+ ]
+}

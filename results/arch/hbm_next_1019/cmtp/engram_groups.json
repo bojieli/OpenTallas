@@ -1,0 +1,159 @@
+{
+ "schema": "opentallas.hbm_next_1019.cmtp.engram_groups.v1",
+ "generated_utc": "2026-10-19T09:13:38Z",
+ "rule": "HBM-NEXT-CMTP: price the DS Engram layers (1, 14) of the N = 6 MTP verify against the VM size.\n\nProblem (static_check C4, results/arch/hbm_next_1019/cmtp/static): at N = 6 the normal layers peak at ~327k live VM\nwords, the Engram layers at 470k / 486k; the grown VM (D1: 2^18 + 5 x 30k = 412,144 words) holds all but the two\nEngram layers.  Two ways out:\n  VM490   grow the VM to >= the Engram peak (~490k words): no cycle cost, area for DIE.\n  RGk     issue the two Engram layer segments in ROW GROUPS of k positions (6 / k sequential groups, each an N = k\n          programme of that layer; positions in order, so every group sees the KV appends of the groups before it --\n          the causal rule is unchanged); weights / experts are re-read per group.  Cost = sum over groups of the\n          N = k segment cycles - the N = 6 segment cycles; the VM need = the N = k segment peak + the h / PRE columns\n          (20,484 words each) of the 6 - k positions not in the group (they stay resident between groups).\nThis module measures both on the scheduled timeline (the C4 word-level liveness of static_check, plus a breakdown of\nthe live words at the peak by writer record, so the cause is named), under the CMTP headline knobs (P = 4, L5 COLL,\nunion histogram, M1, rpl, HC II 250, grown VM).\n\n    PYTHONPATH=tools python3 tools/hbm_next/engram_groups.py --out results/arch/hbm_next_1019/cmtp/engram_groups.json\n",
+ "knobs": "rpl1_uh1_m11_L5_hc250_vmG_P4_bf4",
+ "vm_grown_words": 412144,
+ "column_words": 20484,
+ "n6": {
+  "0": {
+   "cycles": 23783.4,
+   "PASS": true,
+   "counts": {
+    "C1": 0,
+    "C2": 0,
+    "C3": 0,
+    "C5": 0
+   },
+   "vm_peak": 300038,
+   "vm_peak_at": 8564.5,
+   "live_at_peak_by_writer": {
+    "live-in (entering columns h/PRE + constants)": 667374,
+    "SU.VOP attn.res_copy": 122880,
+    "SM.MATVEC wo_a K-split: the die's head against its o-group": 6144
+   }
+  },
+  "1": {
+   "cycles": 31499.7,
+   "PASS": true,
+   "counts": {
+    "C1": 0,
+    "C2": 0,
+    "C3": 0,
+    "C5": 0
+   },
+   "vm_peak": 441398,
+   "vm_peak_at": 6251.2,
+   "live_at_peak_by_writer": {
+    "live-in (entering columns h/PRE + constants)": 678042,
+    "COLL.ALL_GATHER engram.kv_gather.eg_kv": 153600,
+    "SU.VOP engram.hw": 122880,
+    "COLL.ALL_GATHER engram.rows_gather.eg_rows": 36864,
+    "SU.VOP engram.rH": 24
+   }
+  },
+  "14": {
+   "cycles": 58772.5,
+   "PASS": true,
+   "counts": {
+    "C1": 0,
+    "C2": 0,
+    "C3": 0,
+    "C5": 0
+   },
+   "vm_peak": 452534,
+   "vm_peak_at": 6253.2,
+   "live_at_peak_by_writer": {
+    "live-in (entering columns h/PRE + constants)": 708642,
+    "COLL.ALL_GATHER engram.kv_gather.eg_kv": 153600,
+    "SU.VOP engram.hw": 122880,
+    "COLL.ALL_GATHER engram.rows_gather.eg_rows": 36864,
+    "DMA.LOAD q_norm.gain": 7680,
+    "DMA.LOAD kv_norm.gain": 3072,
+    "DMA.LOAD kv_rope.table": 384,
+    "SU.VOP engram.rH": 24
+   }
+  }
+ },
+ "groups": {
+  "RG2": {
+   "group_rows": 2,
+   "groups": 3,
+   "union": 10.435,
+   "union_basis": "MTP-STATS consecutive_verify",
+   "layers": {
+    "1": {
+     "seg_cycles_N": 21992.4,
+     "grouped_cycles": 65977.2,
+     "n6_cycles": 31499.7,
+     "delta_cycles": 34477.5,
+     "vm_peak_group": 138268,
+     "vm_need": 220204,
+     "fits_grown": true,
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     }
+    },
+    "14": {
+     "seg_cycles_N": 33321.4,
+     "grouped_cycles": 99964.2,
+     "n6_cycles": 58772.5,
+     "delta_cycles": 41191.7,
+     "vm_peak_group": 142750,
+     "vm_need": 224686,
+     "fits_grown": true,
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     }
+    }
+   },
+   "delta_cycles_per_verify": 75669.2
+  },
+  "RG3": {
+   "group_rows": 3,
+   "groups": 2,
+   "union": 14.238,
+   "union_basis": "interpolated N = 2 / 4",
+   "layers": {
+    "1": {
+     "seg_cycles_N": 24865.8,
+     "grouped_cycles": 49731.6,
+     "n6_cycles": 31499.7,
+     "delta_cycles": 18231.9,
+     "vm_peak_group": 204842,
+     "vm_need": 266294,
+     "fits_grown": true,
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     }
+    },
+    "14": {
+     "seg_cycles_N": 40270.3,
+     "grouped_cycles": 80540.6,
+     "n6_cycles": 58772.5,
+     "delta_cycles": 21768.1,
+     "vm_peak_group": 211565,
+     "vm_need": 273017,
+     "fits_grown": true,
+     "PASS": true,
+     "counts": {
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C5": 0
+     }
+    }
+   },
+   "delta_cycles_per_verify": 40000.0
+  }
+ },
+ "sources_sha256": {
+  "tools/hbm_next/engram_groups.py": "51a8dfeb32afca6aaac681beb071ddf92656f5c2fac48061276cf72cef4156aa",
+  "tools/hbm_next/static_check.py": "49ec67d1effcb578d3e560f3c7e5ce06f85852c758d6702ae8514daf2f492e40",
+  "tools/hbm_next/plane_compiler.py": "9f5c8f57edcf8826ba005f115f2cade0a6ef574c266d54e1b0348a971e1287b4",
+  "tools/hgi_sim/ds_mtp_verify.py": "35613f56f3f93633e3c5381d2bc3b8c3123734678b038914240078a3c1dff400",
+  "tools/hgi_sim/timing.py": "b53ac4b726e0de68bd4a8c81f675a3ddabe7bf03170228debd5fcfc6839b0826"
+ }
+}

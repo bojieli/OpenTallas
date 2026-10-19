@@ -24,7 +24,12 @@ module ot_hnx_hgi_hc_residual_vm #(
     parameter integer BEATS=1,
     parameter integer MUT_BEAT=0,
     parameter integer SPR=320,
-    parameter integer MUT_STRIDE=0
+    parameter integer MUT_STRIDE=0,
+    // HUBFIX 10-19: XFC 1 = four per-face copies of the x_wave_v / x_wave_beat output register (ot_hnx_hc_xbrep, same edge,
+    // same next-state) on x_wave_vf / x_wave_beatf (face f = W, N, E, S); XFC 0 = the copies are wires of the original.
+    // MUT_FC (bench) 1 = the E copy (f 2) is loaded from the original register's Q (a relay one edge late).
+    parameter integer XFC=0,
+    parameter integer MUT_FC=0
 )(
     input wire clk,rst_n,launch,
     input wire [3:0] npos,
@@ -37,6 +42,8 @@ module ot_hnx_hgi_hc_residual_vm #(
     output reg [9:0] x_wave_word,
     output reg [8192/BEATS-1:0] x_wave,
     output reg [1:0] x_wave_beat,
+    output wire [3:0] x_wave_vf,
+    output wire [7:0] x_wave_beatf,
     output reg done,fault
 );
     reg active;
@@ -81,28 +88,42 @@ module ot_hnx_hgi_hc_residual_vm #(
     wire [9:0] cap_word=10'(order[CAPTURE_LAT-1]>>2)^(MUT_POSITION?10'd80:10'd0);
     wire [2047:0] cap_d;
     for(genvar b=0;b<8;b=b+1)assign cap_d[b*256+:256]=local_rr[b*257+:256];
+    wire nx_v,nx_en; wire [1:0] nx_beat;   // next-state of x_wave_v / x_wave_beat (shared with the face copies)
     generate if(BEATS==1)begin:g_wave
         reg [6143:0] assembly;
         always @(posedge clk)
             if(valid[CAPTURE_LAT-1]&&cap_beat!=3)assembly[cap_beat*2048+:2048]<=cap_d;
+        assign nx_v=valid[CAPTURE_LAT-1]&&cap_beat==3; assign nx_en=1'b1; assign nx_beat=2'd0;
         always @(posedge clk or negedge rst_n)
             if(!rst_n)x_wave_v<=0;
-            else x_wave_v<=valid[CAPTURE_LAT-1]&&cap_beat==3;
+            else x_wave_v<=nx_v;
         always @(posedge clk)begin
-            x_wave_beat<=2'd0;
+            x_wave_beat<=nx_beat;
             if(valid[CAPTURE_LAT-1]&&cap_beat==3)begin x_wave_word<=cap_word;x_wave<={cap_d,assembly};end
         end
     end else begin:g_beats
         reg late_v; reg [9:0] late_word; reg [2047:0] late_d;
         wire send=valid[CAPTURE_LAT-1]&&!(MUT_BEAT==2&&cap_beat==3);
+        assign nx_v=send||late_v; assign nx_en=send||late_v; assign nx_beat=late_v?2'd3:mut_beat;
         always @(posedge clk or negedge rst_n)
             if(!rst_n)begin x_wave_v<=0;late_v<=0;end
-            else begin x_wave_v<=send||late_v;late_v<=valid[CAPTURE_LAT-1]&&MUT_BEAT==2&&cap_beat==3;end
+            else begin x_wave_v<=nx_v;late_v<=valid[CAPTURE_LAT-1]&&MUT_BEAT==2&&cap_beat==3;end
         always @(posedge clk)begin
-            if(late_v)begin x_wave_beat<=2'd3;x_wave_word<=late_word;x_wave<=late_d;end
-            else if(send)begin x_wave_beat<=mut_beat;x_wave_word<=cap_word;x_wave<=cap_d;end
+            if(nx_en)x_wave_beat<=nx_beat;
+            if(late_v)begin x_wave_word<=late_word;x_wave<=late_d;end
+            else if(send)begin x_wave_word<=cap_word;x_wave<=cap_d;end
             late_word<=cap_word;late_d<=cap_d;
         end
+    end endgenerate
+    // ---- per-face copies (HUBFIX 10-19)
+    generate if(XFC!=0)begin:g_fc
+        for(genvar f=0;f<4;f=f+1)begin:g_f
+            wire dv=(MUT_FC==1&&f==2)?x_wave_v:nx_v, de=(MUT_FC==1&&f==2)?1'b1:nx_en;
+            wire [1:0] db=(MUT_FC==1&&f==2)?x_wave_beat:nx_beat;
+            ot_hnx_hc_xbrep u_rep(.clk(clk),.rst_n(rst_n),.d_v(dv),.en(de),.d_beat(db),.q_v(x_wave_vf[f]),.q_beat(x_wave_beatf[2*f+:2]));
+        end
+    end else begin:g_nofc
+        assign x_wave_vf={4{x_wave_v}}; assign x_wave_beatf={4{x_wave_beat}};
     end endgenerate
 endmodule
 `default_nettype wire

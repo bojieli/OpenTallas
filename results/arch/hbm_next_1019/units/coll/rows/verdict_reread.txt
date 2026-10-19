@@ -1,0 +1,15 @@
+# verdicts re-read 10-19 with the corrected regex '^ *TAG (PASS|FAIL)' (Verilator pads the %s of the tb's final line; the run's
+# anchored grep missed the ARGMAX lines). Same logs; tools/hbm_next/hnx_coll_rows_bench.sh fixed for future runs.
+P1: ROWGATHER_ROWS PASS P1 R623 W453 parents2 q3x1 q2x1
+P2: ROWGATHER_ROWS PASS P2 R623 W453 parents2 q3x1 q2x1
+P3: ROWGATHER_ROWS PASS P3 R623 W453 parents2 q3x1 q2x1
+P4: ROWGATHER_ROWS PASS P4 R623 W453 parents2 q3x1 q2x1
+P6: ROWGATHER_ROWS PASS P6 R623 W453 parents2 q3x1 q2x1
+A1: ARGMAX_ROWS PASS P1 R623 W453 parents2 q3x1 q2x1
+A2: ARGMAX_ROWS PASS P2 R623 W453 parents2 q3x1 q2x1
+A3: ARGMAX_ROWS PASS P3 R623 W453 parents2 q3x1 q2x1
+A4: ARGMAX_ROWS PASS P4 R623 W453 parents2 q3x1 q2x1
+A6: ARGMAX_ROWS PASS P6 R623 W453 parents2 q3x1 q2x1
+P4_row_stride: ROWGATHER_ROWS FAIL P4 errors0 data0 addr9345 stray0 fault_first-1
+P4_link_step: ROWGATHER_ROWS FAIL P4 errors0 data12450 addr0 stray0 fault_first26
+A4_vm_step: ARGMAX_ROWS FAIL P4 errors0 data3 addr0 stray0 fault_first-1
