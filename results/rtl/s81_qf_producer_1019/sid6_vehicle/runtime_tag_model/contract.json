@@ -1,0 +1,175 @@
+{
+  "scope": "ACTUAL SOURCE MODEL ONLY; runtime tag/CFG edge trace pending",
+  "source_ref": "ceaed19c4",
+  "source_hashes": {
+    "rtl/v41die/ot_s81_cfg7_seq.sv": "bb89a1970734008e238547af70af68cb1d0f02ab5cab89e0bc1a607898cb7e5a",
+    "rtl/v41rom/ot_v41_elem_pq_tags.sv": "ebb7c771a180813761a6f0fb690e59571924c4ed82633872645421089371fe58",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv": "b4add20455f231ff8597ecf19bb9254ca608efbf0457ac6edeaf96c69e5a9a83"
+  },
+  "actual_cfg_tag_rule": "tag resets0; increments on every go_x broadcast before class gate; go_tag_c=tag",
+  "actual_element_rule": "q_idle=r[15] from configured row; runtime q_row={otag[bk],r[13:0]}",
+  "configured_SENT_bit15": "idle property of cfg, preserved; never converted into a real row",
+  "runtime_row_bits15_14": "two-bit op tag0..3, all legal when actual source is non-idle",
+  "old_model_limit": "head_local_contract.py retag_return/config reject flags2/3 and conflate runtime tag with configured SENT. Historical0/1 checks remain bounded; do not apply that restriction to these15 runtime epochs.",
+  "private_serializer": "already preserves configured SENT and uses low14 real row6144+storage_offset; no serializer/data-path change required",
+  "per_epoch_CAP_CFG_required": true,
+  "epoch_contracts": [
+    {
+      "epoch": 0,
+      "expected_broadcast_GO_count": 0,
+      "conditional_actual_op_tag": 0,
+      "CAP_rbase": 6144,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 1,
+      "expected_broadcast_GO_count": 1,
+      "conditional_actual_op_tag": 1,
+      "CAP_rbase": 22528,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 2,
+      "expected_broadcast_GO_count": 2,
+      "conditional_actual_op_tag": 2,
+      "CAP_rbase": 38912,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 3,
+      "expected_broadcast_GO_count": 3,
+      "conditional_actual_op_tag": 3,
+      "CAP_rbase": 55296,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 4,
+      "expected_broadcast_GO_count": 4,
+      "conditional_actual_op_tag": 0,
+      "CAP_rbase": 6144,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 5,
+      "expected_broadcast_GO_count": 5,
+      "conditional_actual_op_tag": 1,
+      "CAP_rbase": 22528,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 6,
+      "expected_broadcast_GO_count": 6,
+      "conditional_actual_op_tag": 2,
+      "CAP_rbase": 38912,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 7,
+      "expected_broadcast_GO_count": 7,
+      "conditional_actual_op_tag": 3,
+      "CAP_rbase": 55296,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 8,
+      "expected_broadcast_GO_count": 8,
+      "conditional_actual_op_tag": 0,
+      "CAP_rbase": 6144,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 9,
+      "expected_broadcast_GO_count": 9,
+      "conditional_actual_op_tag": 1,
+      "CAP_rbase": 22528,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 10,
+      "expected_broadcast_GO_count": 10,
+      "conditional_actual_op_tag": 2,
+      "CAP_rbase": 38912,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 11,
+      "expected_broadcast_GO_count": 11,
+      "conditional_actual_op_tag": 3,
+      "CAP_rbase": 55296,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 12,
+      "expected_broadcast_GO_count": 12,
+      "conditional_actual_op_tag": 0,
+      "CAP_rbase": 6144,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 13,
+      "expected_broadcast_GO_count": 13,
+      "conditional_actual_op_tag": 1,
+      "CAP_rbase": 22528,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    },
+    {
+      "epoch": 14,
+      "expected_broadcast_GO_count": 14,
+      "conditional_actual_op_tag": 2,
+      "CAP_rbase": 38912,
+      "actual_runtime_go_tag": null,
+      "actual_CFG_install_edge": null,
+      "release": "after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return",
+      "configured_idle_is_separate": true
+    }
+  ],
+  "address_and_wrong_tag_checks": 7680,
+  "source_GO_delivery_all6_verified": false,
+  "actual_CFG_slot_port_lifetime": false,
+  "source_reader_retire_END_is_completion": false,
+  "native_phase": null,
+  "whole_token_deadline_pass": null,
+  "new_hardware": false
+}
