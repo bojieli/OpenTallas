@@ -202,7 +202,8 @@ module ot_hbm_static_cfg_collar_idx256 #(
     reg [AW:0] need [0:NS-1];
     reg need_set, wait_mask, wait_done;
     reg [NPR-1:0] loaded;
-    reg armed, run;
+    reg armed;
+    (* keep *) reg run;
     wire [15:0] run_copies;
     wire run_next_phase;
     generate if(FAN32!=0)begin:g_run_copies
@@ -510,6 +511,7 @@ module ot_hbm_idx256_banks #(parameter integer AW=12,MUT=0)(
  output wire [1535:0] prm,
  output wire [220:0] rec
 );
+ wire [7:0] next_onehot=(rptr_next<8)?(8'd1<<rptr_next):8'd0;
  genvar g,r;
  generate for(g=0;g<16;g=g+1)begin:g_bank
   wire [95:0] local_prm;
@@ -518,7 +520,7 @@ module ot_hbm_idx256_banks #(parameter integer AW=12,MUT=0)(
    .clk(clk),.rst_c_n(regional_reset[g]),.cfg_v(cfg_v),.run(run_state[g]),.recs_done(recs_done),
    .programme_accept(programme_accept),.cfg_target(cfg_target),.tg(tg),
    .cfg_addr(cfg_addr),.cd(cd[g*16+:16]),.valid_data(cd[32]),
-   .cur_off(cur_off),.cnt_next(cnt_next),.rptr_next(rptr_next),
+   .cur_off(cur_off),.cnt_next(cnt_next),.onehot_next(next_onehot),
    .selected_record(selected_record[g*16+:16]),.pw_data(pw_data[g*16+:16]),
    .prm(local_prm),.rec(local_rec));
   for(r=0;r<6;r=r+1)begin:g_operand_wires
@@ -538,9 +540,9 @@ endmodule
  input wire [11:0] cfg_addr,
  input wire [15:0] cd,
  input wire [31:0] cur_off,cnt_next,
- input wire [3:0] rptr_next,
+ input wire [7:0] onehot_next,
  output wire [15:0] selected_record,
- output reg [15:0] pw_data,
+ output wire [15:0] pw_data,
  output wire [95:0] prm,
  output wire [15:0] rec
 );
@@ -549,14 +551,13 @@ endmodule
  (* keep *) reg [11:0] ca;
  always @(posedge clk or negedge rst_c_n)if(!rst_c_n)cv<=0;else cv<=cfg_v;
  always @(posedge clk)begin ct<=cfg_target;ca<=cfg_addr;end
- (* keep *) reg [3:0] local_rptr;
- always @(posedge clk)local_rptr<=rptr_next;
- wire [3:0] rp=(MUT==12 && LO==32)?{1'b0,local_rptr[2:0]+3'd1}:local_rptr;
- wire [7:0] rd_oh=(local_rptr<8)?(8'b1<<rp):8'd0;
+ (* keep *) reg [7:0] rd_oh;
+ wire [7:0] bad_onehot={onehot_next[6:0],onehot_next[7]};
+ always @(posedge clk)rd_oh<=(MUT==12 && LO==32)?bad_onehot:onehot_next;
  wire [15:0] rows[0:7];
  wire record_cfg=cv && ct==tg && !run && ca[11:9]==3'b110 && ca[8:0]<8;
  wire operand_cfg=cv && ct==tg && !run && ca[11:10]==2'b10 && ca[9:0]<6;
- always @(posedge clk)if(programme_accept && cv)pw_data<=cd;
+ (* keep_hierarchy *) ot_hbm_idx256_word u_programme(.clk(clk),.en(programme_accept && cv),.d(cd),.q(pw_data));
  genvar r,b;
  generate for(r=0;r<8;r=r+1)begin:g_record
   (* keep_hierarchy *) ot_hbm_idx256_word u_word(.clk(clk),.en(record_cfg && ca[8:0]==r),.d(cd),.q(rows[r]));
