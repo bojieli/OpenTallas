@@ -1,0 +1,23 @@
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1424945-1792417738 after 0 s
+lf P1 MUT0 THR0 exit 0: BENCH PASS p1_m0_t0
+lfx P1 MUT0 THR0 exit 0: BENCH PASS p1_m0_t0
+lf P2 MUT0 THR0 exit 0: BENCH PASS p2_m0_t0
+lf P3 MUT0 THR0 exit 0: BENCH PASS p3_m0_t0
+lf P3 MUT1 THR0 exit 0: MUTANT CAUGHT p3_m1_t0
+lf P3 MUT2 THR0 exit 0: MUTANT CAUGHT p3_m2_t0
+lf P3 MUT3 THR0 exit 0: MUTANT CAUGHT p3_m3_t0
+lfx P2 MUT0 THR0 exit 0: BENCH PASS p2_m0_t0
+lfx P3 MUT0 THR0 exit 0: BENCH PASS p3_m0_t0
+lfx P3 MUT1 THR0 exit 0: MUTANT CAUGHT p3_m1_t0
+lfx P3 MUT2 THR0 exit 0: MUTANT CAUGHT p3_m2_t0
+lfx P3 MUT3 THR0 exit 0: MUTANT CAUGHT p3_m3_t0
+thr16 P1 MUT0 THR1 exit 0: BENCH PASS p1_m0_t1
+lfx P3 MUT4 THR0 exit 0: MUTANT CAUGHT p3_m4_t0
+thr4 P1 MUT0 THR1 exit 0: BENCH PASS p1_m0_t1
+lfx P4 MUT0 THR0 exit 0: BENCH PASS p4_m0_t0
+thr16 P3 MUT0 THR1 exit 0: BENCH PASS p3_m0_t1
+thr4 P3 MUT0 THR1 exit 0: BENCH PASS p3_m0_t1
+LP exit 0: BENCH_EXIT 0
+P3_BENCHES_DONE
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1424945-1792417738): exit 0
