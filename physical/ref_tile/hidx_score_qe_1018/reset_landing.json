@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_idx_score_qe_static",
+ "enable": false,
+ "reason": "the RTL lands it: rst_n enters ot_rst_relay u_rst (2 synchroniser stages + relay tree, per-region copies) at the face; extra physical stages would shift the scheduled reset release vs the leaves and the qsplit lockstep bench"
+}
