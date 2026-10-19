@@ -1,0 +1,86 @@
+{
+  "scope": "PRIVATE OPT-IN MODEL; no production/native/SAFE qualification",
+  "source_hashes": 19,
+  "PW_allocation_half_open": {
+    "isa": [
+      0,
+      400
+    ],
+    "wtn1": [
+      400,
+      439
+    ],
+    "reserved_zero": [
+      439,
+      976
+    ],
+    "ME": [
+      976,
+      984
+    ],
+    "reserved_zero2": [
+      984,
+      1004
+    ],
+    "XPF": [
+      1004,
+      1016
+    ],
+    "footer": [
+      1016,
+      1024
+    ]
+  },
+  "changed_PW_words": 39,
+  "template_bits": 1742,
+  "calendar_entries": 1009,
+  "calendar_ranges": {
+    "embed": {
+      "first": 0,
+      "count": 67
+    },
+    "decode": {
+      "first": 68,
+      "count": 406
+    },
+    "head": {
+      "first": 476,
+      "count": 320
+    },
+    "boot": {
+      "first": 796,
+      "count": 1
+    },
+    "init": {
+      "first": 800,
+      "count": 67
+    }
+  },
+  "computed_asset_hashes_uninstalled": {
+    "expected.hex": "be976ca5f216084b66dc4375d019fb938884b3b145872a88a59e6f8d037a56f7",
+    "calendar_m0.viamap.hex": "7e26a346942755fbb220562eddaedc3975fce2440e25b83cf303eaf412cd950e",
+    "calendar_m1.viamap.hex": "9d9b953c7608bd852276be523e65b70a62fdb57aa4ba5d7ccd6613fafc9fb067"
+  },
+  "pinned_programme_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+  "template_PW_sha256": "6a8549d158c7879189833f438b5cdd2574b868430d33140b71da300efc3d1525",
+  "minimum_vehicle_increment_logical_state_bits": {
+    "source_install_sideband_capture": 84,
+    "destination_install_sideband_capture": 84,
+    "existing_four_slot_crossing_sideband_payload": 336,
+    "two_complete_local_PW_captures": 150,
+    "held_install_metadata_ready": 82,
+    "context_identity_extra": 516,
+    "identity_qualified_start_capture": 154,
+    "witness_event_capture": 54,
+    "final_receipt_capture_two_minimum_readers": 82,
+    "minimum_reader_identity_ownership_one_ME_two_XPF_epochs": 120,
+    "per_context_seen_flags": 8
+  },
+  "minimum_vehicle_increment_total": 1670,
+  "whole_parent_added_FF": null,
+  "native_phase": null,
+  "first_use": null,
+  "source_ME_edge_mismatch_count": 4,
+  "finite_identity_cases": 144,
+  "actual_RTL_simulation": false
+}

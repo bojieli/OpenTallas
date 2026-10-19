@@ -1,0 +1,200 @@
+{
+  "schema": "opentallas.qwen.witness-template-PW-model-packet.v1",
+  "production_bound": false,
+  "RTL_loader_implemented": false,
+  "source": {
+    "model": {
+      "path": "held_user_witness_model.json",
+      "sha256": "671c84c3f46d4c510a676b4ea8b2d051c48c05cffb1bdf232bb6e8cfe9c9942e"
+    },
+    "pw": {
+      "path": "pw_metadata.hex",
+      "sha256": "a3ee4a0eb1774e3c2dc00ee1bbedb21e723211758e7529bc8466284829d8c07d"
+    },
+    "calendar": {
+      "path": "image_cap1/descriptor.json",
+      "sha256": "1271ecf3f99204e35e07cc7d93a54362241b4a5ffe7358e2bc81cdc083a0c5e1"
+    }
+  },
+  "profile": "WTN1 revision1 source406 diagnostic only",
+  "programme_PW_unchanged": [
+    0,
+    399
+  ],
+  "witness_PW_first": 400,
+  "witness_PW_last": 438,
+  "witness_PW_words": 39,
+  "metadata_PW_total": 439,
+  "ME_XPF_controls_and_footers_unchanged": [
+    976,
+    1023
+  ],
+  "records": [
+    {
+      "family_id": 0,
+      "family": "SSQ",
+      "local_pidx": 0,
+      "first_PW": 400,
+      "words": [
+        "2024282fffc0001a",
+        "0004080c1014181c",
+        "57544e3101640340"
+      ]
+    },
+    {
+      "family_id": 1,
+      "family": "qk",
+      "local_pidx": 4,
+      "first_PW": 403,
+      "words": [
+        "000400015540812e",
+        "00140010000c0008",
+        "0000000000000004"
+      ]
+    },
+    {
+      "family_id": 2,
+      "family": "qk",
+      "local_pidx": 5,
+      "first_PW": 406,
+      "words": [
+        "000400005540a189",
+        "00000010000c0008",
+        "0000000000000008"
+      ]
+    },
+    {
+      "family_id": 3,
+      "family": "qk",
+      "local_pidx": 6,
+      "first_PW": 409,
+      "words": [
+        "000400005540c1d0",
+        "00000010000c0008",
+        "000000000000000c"
+      ]
+    },
+    {
+      "family_id": 4,
+      "family": "qk",
+      "local_pidx": 7,
+      "first_PW": 412,
+      "words": [
+        "000400005540e201",
+        "000000b4000c0008",
+        "0000000000000010"
+      ]
+    },
+    {
+      "family_id": 5,
+      "family": "qk",
+      "local_pidx": 8,
+      "first_PW": 415,
+      "words": [
+        "000400005541022a",
+        "000000b4000c0008",
+        "0000000000000014"
+      ]
+    },
+    {
+      "family_id": 6,
+      "family": "attn",
+      "local_pidx": 11,
+      "first_PW": 418,
+      "words": [
+        "00381c0009c16940",
+        "0000000000004c00",
+        "0000000000000018"
+      ]
+    },
+    {
+      "family_id": 7,
+      "family": "resid1",
+      "local_pidx": 1,
+      "first_PW": 421,
+      "words": [
+        "f4d8bca3ffc02ccf",
+        "54381c0165492d10",
+        "000000000000001c"
+      ]
+    },
+    {
+      "family_id": 8,
+      "family": "resid1",
+      "local_pidx": 3,
+      "first_PW": 424,
+      "words": [
+        "3114f8dfffc06d3b",
+        "5a3c2401e1c5a98d",
+        "0000000000000022"
+      ]
+    },
+    {
+      "family_id": 9,
+      "family": "silu",
+      "local_pidx": 9,
+      "first_PW": 427,
+      "words": [
+        "0c080403ffc1306b",
+        "2c2824201c181410",
+        "0000000000000024"
+      ]
+    },
+    {
+      "family_id": 10,
+      "family": "silu",
+      "local_pidx": 10,
+      "first_PW": 430,
+      "words": [
+        "0c080403ffc150ac",
+        "6c6864603c383430",
+        "0000000000000028"
+      ]
+    },
+    {
+      "family_id": 11,
+      "family": "resid2",
+      "local_pidx": 1,
+      "first_PW": 433,
+      "words": [
+        "f4d8bca3ffc03490",
+        "54381c0165492d10",
+        "000000000000002c"
+      ]
+    },
+    {
+      "family_id": 12,
+      "family": "resid2",
+      "local_pidx": 3,
+      "first_PW": 436,
+      "words": [
+        "3114f8dfffc074fc",
+        "5a3c2401e1c5a98d",
+        "0000000000000032"
+      ]
+    }
+  ],
+  "model_pw_sha256": "6a8549d158c7879189833f438b5cdd2574b868430d33140b71da300efc3d1525",
+  "calendar_copy_candidate_digest": "198f7708b478a667",
+  "previous_calendar_copy_digest": "b8de77b060896115",
+  "same_ascending_PW_transfers": 1024,
+  "same_DW_transfers": 8,
+  "loader_model": {
+    "atomic_seal_after_PW": 438,
+    "execution_permitted_only_after": "all PW/DW copies committed and compiled profile/digest matches",
+    "reject_partial_duplicate_outoforder_padding_or_header": true,
+    "partial_record_register_bits": 128,
+    "template_storage_bits": 1742,
+    "candidate_additional_state_cost_unpriced": [
+      "128bit partial assembly",
+      "13bit loaded mask",
+      "sequence/index/seal/fault registers",
+      "lookup/capture pipeline"
+    ],
+    "source_native_read_ports_added": 0,
+    "source_external_bus_bits_added": 0
+  },
+  "exact_bit_layout": "first13,pidx9,mask12,delta_by_slice96,family4; record0 thirdPW[63:32]WTN1,[31:24]rev1,[23:14]base400,[13:6]count13,[5:0]recordtail",
+  "physical_admission": false,
+  "execution_and_role_bindings": false
+}

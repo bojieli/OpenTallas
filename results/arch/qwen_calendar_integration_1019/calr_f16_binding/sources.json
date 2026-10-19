@@ -1,0 +1,116 @@
+[
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/descriptor_cap1.json",
+    "copy": "results__arch__qwen_calendar_integration_1019__witness__descriptor_cap1.json",
+    "sha256": "1271ecf3f99204e35e07cc7d93a54362241b4a5ffe7358e2bc81cdc083a0c5e1"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/body.json",
+    "copy": "results__arch__qwen_calendar_integration_1019__witness__body.json",
+    "sha256": "f51cb382222c6f9fff9a6a0a742f70667683a63f8eb7be6d6eb3bdb9681b08a6"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/composition.json",
+    "copy": "results__arch__qwen_calendar_integration_1019__witness__composition.json",
+    "sha256": "481388860be6b08ef0582a35f2327b93cb1d240fd3c089845f63b693cf672102"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/ctlm_metadata_source.json",
+    "copy": "results__arch__qwen_calendar_integration_1019__witness__ctlm_metadata_source.json",
+    "sha256": "24979d3fc1555becdf14c3e098cec3ca4ff348e190cffe5888e828ff24cb9ce7"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/pw_metadata.hex",
+    "copy": "results__arch__qwen_calendar_integration_1019__witness__pw_metadata.hex",
+    "sha256": "a3ee4a0eb1774e3c2dc00ee1bbedb21e723211758e7529bc8466284829d8c07d"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/witness_template_packet/model_pw.hex",
+    "copy": "results__arch__qwen_calendar_integration_1019__witness__witness_template_packet__model_pw.hex",
+    "sha256": "6a8549d158c7879189833f438b5cdd2574b868430d33140b71da300efc3d1525"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/witness_template_packet/manifest.json",
+    "copy": "results__arch__qwen_calendar_integration_1019__witness__witness_template_packet__manifest.json",
+    "sha256": "0de94c99a8f78cae9cf23a4eb34daf65d86c65959ed6d44d3d91cd0a09dda496"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/programme_integration_model.json",
+    "copy": "results__arch__qwen_calendar_integration_1019__witness__programme_integration_model.json",
+    "sha256": "a4d32cd6a739b1c623dcb50085c77ac3190c9b3b60c02ef4bef2ac21d6bc4f06"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/calendar_rom_image.py",
+    "copy": "tools__qwen_layerbench__calendar_rom_image.py",
+    "sha256": "6a751cee20d02722668be793cad05a883c4b55a1cead1c16b6f91e1833a50ec4"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/ctlm_image.py",
+    "copy": "tools__qwen_layerbench__ctlm_image.py",
+    "sha256": "066b33f5a909de0580eb4c64131659e2557e4367909e07402de993933bccacbd"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/finite_calendar_body.py",
+    "copy": "tools__qwen_layerbench__finite_calendar_body.py",
+    "sha256": "2fadcbf569a8d771fe03bf4cecd664dfa811034d850d77d2f7cd42b264f32a61"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
+    "copy": "rtl__qwen_dv__qfd_dv_cmd_cal_mu.sv",
+    "sha256": "846ff155dfc024d1ab74b727d5050278870cb869dca30da211535cc957638414"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/qwen_dv/qfd_dv_calendar_rom.sv",
+    "copy": "rtl__qwen_dv__qfd_dv_calendar_rom.sv",
+    "sha256": "40bcb5c65a08f295ec5be2fe9ad00ab585922e169a1f14870bf149ae2e00dfff"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "results/arch/qwen_calendar_integration_1019/witness/table_sources_binary_payload.sha256",
+    "copy": "results__arch__qwen_calendar_integration_1019__witness__table_sources_binary_payload.sha256",
+    "sha256": "1110cf710d907895cd8d1e35c78d4323f64b34df4f18b3e4b0d0635a0d400e9b"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "tools/qwen_layerbench/programme_store.py",
+    "copy": "tools__qwen_layerbench__programme_store.py",
+    "sha256": "dc7c106ffa145507f8c7699183ba65337797f0dea35d43b0eea617bbc70813f7"
+  },
+  {
+    "rev": "ff1a7c518",
+    "path": "rtl/qwen_dv/qfd_dv_typed_witness_control.sv",
+    "copy": "rtl__qwen_dv__qfd_dv_typed_witness_control.sv",
+    "sha256": "8536070ddb594a5b6ae98c3f9ff2d78371cc50ec159ea72d7466142eccd97640"
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+    "copy": "rtl__qwen_sys__dvm_20261014__ot_qfd_xslice.sv",
+    "sha256": "130030210c83ba14c47e745c6ba5e547676b7309f8589e45bc2e98255feabb77"
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/hdc/ot_qwen_w12_matvec.sv",
+    "copy": "rtl__hdc__ot_qwen_w12_matvec.sv",
+    "sha256": "a20886ebd3e345aa1633b460d07bb97466be0283b1618a2341b44ef2ca2f1bd9"
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qwen_me_array_dvm_w12.sv",
+    "copy": "rtl__qwen_sys__dvm_20261014__ot_qwen_me_array_dvm_w12.sv",
+    "sha256": "16a32a4051d9cafb31d02c6c2809842f947213fc825268a7aedcd911fefc9ad8"
+  }
+]
