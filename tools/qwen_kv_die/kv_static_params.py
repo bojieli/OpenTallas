@@ -84,7 +84,7 @@ def model_lite(m):
                 if not str(e[0]).startswith('rly_'):
                     dsts.setdefault(base, []).append(list(e))
     return dict(schema=SCHEMA_MODEL, relay_stages=rs, fork_stages=fs, forks=forks, seq_kvn=seq, hub=hub, plan=plan, dsts=dsts,
-                face_land=dict(enabled=KSD.FACE_LAND, tiles=KSD.FACE_LAND_TILES),
+                face_land=dict(enabled=KSD.FACE_LAND, selected=sorted(KSD.FACE_LAND_SEL), tiles=KSD.FACE_LAND_TILES),
                 flags=dict(attn_land=KSD.ATTN_LAND, astk_expand=KSD.ASTK_EXPAND, astk_rl=KSD.ASTK_RL,
                            astk_erl=KSD.ASTK_ERL, afault=KSD.AFAULT, ahub_static=KSD.AHUB_STATIC))
 
@@ -283,15 +283,19 @@ def check(model, rs, fs, unresolved, actual, die_v=None):
     fl = model.get('face_land') or {}
     if die_v and Path(die_v).exists() and fl.get('tiles'):
         txt = Path(die_v).read_text(errors='replace')
-        for inst, t in fl['tiles'].items():
-            mm = re.search(r'^\s*(\w+)\s+(?:#\s*\(.*?\)\s*)?' + re.escape(inst) + r'\s*\(', txt, re.M | re.S)
-            if not mm:
+        sel = set(fl.get('selected', fl['tiles'] if fl.get('enabled') else ()))
+        for tl, t in (fl.get('all_tiles') or fl['tiles']).items():
+            # HKV-DIE3 10-19: per tile, by master (expanded children such as the ASTK strip's rly_296 relays included)
+            ms = re.findall(r'^\s*(' + re.escape(t['master']) + r'(?:_fl)?)\s+(?:#\s*\(.*?\)\s*)?\w+\s*\(', txt, re.M | re.S)
+            if not ms:
                 continue
-            landed = mm.group(1).endswith('_fl')
-            if landed != bool(fl.get('enabled')):
-                fails.append(dict(id='FACE_LAND_BINDING', what=f'{inst} binds {mm.group(1)} but OT_KV_FACE_LAND='
-                                  f'{int(bool(fl.get("enabled")))}: the compiler ages / startup calendar disagree with the tile',
-                                  fix='bind the _fl view (CLOSED only) together with OT_KV_FACE_LAND=1, or neither'))
+            landed = {m.endswith('_fl') for m in ms}
+            want = tl in sel
+            if landed != {want}:
+                fails.append(dict(id='FACE_LAND_BINDING', what=f'{tl}: die.v binds {sorted(set(ms))} ({len(ms)} instances) but '
+                                  f'the tile is {"" if want else "NOT "}selected (OT_KV_FACE_LAND): the compiler ages / '
+                                  'startup calendar disagree with the tile',
+                                  fix='bind the _fl view (CLOSED only) together with the tile in OT_KV_FACE_LAND, or neither'))
     plan = model.get('plan') or {}
     stale = []
     for k in ('ahub_ages', 'astk_eread', 'attn_fault'):
@@ -306,10 +310,37 @@ def check(model, rs, fs, unresolved, actual, die_v=None):
     return fails, info
 
 
-def run(model, doc, fwd=None, die_v=None):
+def attn_calendar_check(actual, rs, Ts=range(1, 8193)):
+    """HKV-DIE3 10-19 (coordinator (b)): the compiled attention calendar of EVERY context against the bound hub / pvfin
+    refusals, with the table's actual FR_OFS and pvw -> pvfin pair ages (kv_static_programme.attention_checks)"""
+    root = str(Path(__file__).resolve().parents[2])
+    if root not in sys.path:
+        sys.path.insert(0, root)
+    from tools.qwen_kv_die import kv_static_programme as KP
+    pr = KP.profile('die', json.loads((KP.ROOT / KP.AGES).read_text()))
+    fr = (actual.get('ahub_ages') or {}).get('FR_OFS')
+    d0, d1 = rs.get('ks_pvp0'), rs.get('ks_pvp1')
+    delta = (d0 - d1) if d0 is not None and d1 is not None else 0
+    return KP.attention_checks(pr, KP.service_end_of(pr), fr, pair_delta=delta, Ts=Ts)
+
+
+def run(model, doc, fwd=None, die_v=None, attn=False):
     rs, fs, unresolved, src = post_stages(model, doc, fwd)
     actual = params(model, rs, fs)
     fails, info = check(model, rs, fs, unresolved, actual, die_v)
+    if attn:
+        ac = attn_calendar_check(actual, rs)
+        actual['attention_checks'] = ac
+        for f in ac['fails']:
+            fails.append(dict(id=f'ATTN_CALENDAR {f["id"]}', what=f'{f["contexts"]} of {ac["contexts"]} contexts: '
+                              + json.dumps(f['examples'][:3]),
+                              fix={'PVFIN_PAIR_SKEW': 'RTL: the pair skew 0/16/32 is set by the pair issue count (w16_nq); '
+                                   'qkd_pv_fin_s SKEW 1 cannot absorb it -- a 32-beat pair-1 deskew line in pvfin or a '
+                                   'pair end floor (decision, lanes/HKV-DIE.md); no compiled field moves it',
+                                   'HUB_FR_EXPORT': 'compiler: the minimal R / PV_START use max(RZ_MARGIN, 3 - FR_OFS) with '
+                                   'the BOUND FR_OFS (OT_KV_AHUB_OFS); re-GEN with the table value',
+                                   'CALENDAR_UNMEETABLE': 'the link RESULT slot is too early for this context',
+                                   'PVFIN_CAL_RANGE': 'calendar field outside qkd_pv_fin_s range'}.get(f['id'])))
     return dict(schema=SCHEMA, status='FAIL' if fails else 'PASS', table_digest=doc.get('digest'),
                 table_plan=doc.get('plan', {}).get('id'), params=actual, fails=fails, info=info,
                 dependent_stages={k: rs.get(k, fs.get(k)) for k in _deps(model)},
@@ -331,13 +362,15 @@ def main(argv=None):
     ap.add_argument('--table', type=Path, required=True, help='die netlist relay table (netlist_relay_stages.py)')
     ap.add_argument('--fwd-lanes', type=Path)
     ap.add_argument('--die-v', type=Path)
+    ap.add_argument('--no-attn', action='store_true', help='skip the ATTN_CALENDAR sweep (unit use only)')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args(argv)
     import die_relay_stages as DRS
     model = json.loads(a.model.read_text())
     if model.get('schema') != SCHEMA_MODEL:
         raise SystemExit(f'kv_static_params: {a.model} is not {SCHEMA_MODEL}')
-    rec = run(model, DRS.load(a.table), json.loads(a.fwd_lanes.read_text()) if a.fwd_lanes else None, a.die_v)
+    rec = run(model, DRS.load(a.table), json.loads(a.fwd_lanes.read_text()) if a.fwd_lanes else None, a.die_v,
+              attn=not a.no_attn)
     a.out.write_text(json.dumps(rec, indent=1, default=str) + '\n')
     print(f"KV_STATIC_PARAMS {rec['status']}: " + '; '.join(f"{f['id']}: {f['what'][:200]}" for f in rec['fails'])
           + (f" | AP_OFS {rec['params']['ahub_ages']['AP_OFS']} FR_OFS {rec['params']['ahub_ages']['FR_OFS']}"

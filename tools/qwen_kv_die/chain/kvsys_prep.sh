@@ -76,6 +76,11 @@ if [ "${OT_KV_V144:-0}" = 1 ]; then
   [ -f $VP/qkd_pv16_vport.lef ] || { echo "v1.4.4: no closed V port view at $VP"; exit 4; }
   BV="$BV --view qkd_pv16_vport=$VP"
 fi
+# HKV-DIE3 10-19 (coordinator: OT_KV_ASTK_EXPAND production, option B; default ON = kv_static_die): the ASTK strip slots
+# reserve the actual 328.32-um two-column envelope (case + lint), and kv_expand places the strip's CLOSED leaves
+# (ctl_s / ep_s / ex_s / zn / rly_296[_fl] / fault_join / er_owner_st) with the other die-placed frames (--astk-static)
+ASTKX=
+if [ "${OT_KV_ASTK_EXPAND:-1}" = 1 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then H14="$H14 --reserve-native-astk"; V14=$V14,reserve_native_astk; ASTKX=--astk-static; fi
 python3 tools/qwen_kv_die/kv_die.py case --kv-wq-mirror --split $H14 --out $O/case_kv > $O/case.log
 git rev-parse --short=9 HEAD > $O/case_kv/SOURCE_COMMIT
 python3 tools/die_top_lint.py lint --die qwen_kv --variant kv_wq_mirror,split$V14 --out $O/lint > $O/lint.log 2>&1
@@ -101,7 +106,8 @@ if [ -n "$D2DSV" ]; then python3 -c "import json,sys; d=json.load(open(sys.argv[
 # (OT_KV_EXPAND = comma list of frame masters, default all that kv_expand.py knows; 'none' keeps the frames)
 EXP=
 if [ "${OT_KV_EXPAND:-all}" != none ]; then
-  python3 tools/qwen_kv_die/kv_expand.py --run $O $( [ "${OT_KV_EXPAND:-all}" = all ] || echo --only ${OT_KV_EXPAND} ) > $O/expand.log
+  XO=${OT_KV_EXPAND:-all}; [ -n "$ASTKX" ] && [ "$XO" != all ] && XO=$XO,qkd_astk,qkd_astk_n
+  python3 tools/qwen_kv_die/kv_expand.py --run $O $ASTKX $( [ "$XO" = all ] || echo --only $XO ) > $O/expand.log
   EXP="--expanded $O/expand.json"
 fi
 # KVPLAN 1815 (OT_KV_RST_REGIONAL=1, also read by kv_die.py): every reset / boot fan-out of the flattened die -> a local

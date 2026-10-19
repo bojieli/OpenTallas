@@ -19,18 +19,30 @@ LEAVES={'qkd_astk_ctl_s':f'{SR}/qkd_astk_static_leaves.sv',
         'qkd_astk_er_owner_st':f'{SR}/qkd_astk_er_owner_st.sv'}
 
 
-def configure(K, views, rtl, sublevels):
+FL_MASTER='qkd_astk_rly_296_fl'
+FL_RTL='rtl/lib/face_land/qkd_astk_rly_296_fl.sv'   # generated wrapper (tools/ref_tile/face_land.py) + rtl/lib/ot_rst_relay.sv
+
+
+def configure(K, views, rtl, sublevels, alias=None):
     if not K.KSD.ON:
         raise ValueError('physical ASTK expansion requires the static source graph')
     import kv_static_die as S
     import os
-    if os.environ.get('OT_KV_ASTK_EXPAND','0')!='1':
+    if not S.ASTK_EXPAND:
         raise ValueError('physical ASTK source requires OT_KV_ASTK_EXPAND=1')
     if not S.ASTK_ST:
         raise ValueError('physical ASTK expansion requires OT_KV_ASTK_ST')
     for m,p in LEAVES.items():
         views[m]=f'physical/ref_tile/{m}/views/{m}'
         rtl[m]=p
+    # HKV-DIE3 10-19: the relay child binds its CLOSED face-landed view (qkd_astk_rly_296_fl, reset landed at the face,
+    # +3 reset-release edges, same ports) when kv_static_die selects tile astk_rly_296 (OT_KV_FACE_LAND).
+    if 'astk_rly_296' in getattr(S,'FACE_LAND_SEL',()):
+        S.face_land_require_closed()
+        views[FL_MASTER]=S.face_land_view('astk_rly_296')
+        rtl[FL_MASTER]=FL_RTL
+        if alias is not None:
+            alias['qkd_astk_rly_296']=FL_MASTER
     sublevels['qkd_astk_strip_er_die']=tuple((p,m) for p,m in (
         (f'{SR}/qkd_astk_strip_er_st.sv','qkd_astk_strip_er_st'),
         (f'{SR}/qkd_astk_strip_st.sv','qkd_astk_strip_st'),

@@ -1,5 +1,6 @@
 """HKV-DIE2 10-19: kv_static_params recomputes the stage-derived static KV parameters from the die NETLIST table and
 fails when they disagree with what is bound / recorded (synthetic table; no die build)."""
+import json
 import sys
 from pathlib import Path
 
@@ -114,3 +115,43 @@ def test_face_land_compiler_ages():
     finally:
         os.environ.pop('OT_KV_FACE_LAND')
         importlib.reload(K2)
+
+
+# ---- HKV-DIE3 10-19 ------------------------------------------------------------------------------------------------
+def test_face_land_per_tile_by_master(tmp_path):
+    v = tmp_path / 'die.v'
+    v.write_text('module qkd_die;\n  qkd_astk_rly_296_fl astk_WS__g_owner_0__u_r (.ck(n_ck));\n'
+                 '  qkd_astk_rly_296_fl astk_WN__g_owner_0__u_r (.ck(n_ck));\n  qkd_kvs_attn kvs_attn (.ck(n_ck));\nendmodule\n')
+    m = model(dict(RS))
+    m['face_land'] = dict(enabled=True, selected=['astk_rly_296'], tiles=KSD.FACE_LAND_TILES)
+    assert not any(f['id'] == 'FACE_LAND_BINDING' for f in KSP.run(m, table(), die_v=v)['fails'])
+    m['face_land']['selected'] = ['astk_rly_296', 'kvs_attn']          # kvs_attn selected but bound unlanded
+    assert any(f['id'] == 'FACE_LAND_BINDING' for f in KSP.run(m, table(), die_v=v)['fails'])
+    m['face_land'] = dict(enabled=False, selected=[], tiles=KSD.FACE_LAND_TILES)   # landed relays, tile not selected
+    assert any(f['id'] == 'FACE_LAND_BINDING' and 'astk_rly_296' in f['what'] for f in KSP.run(m, table(), die_v=v)['fails'])
+
+
+def test_ahub_ofs_binding_literal_and_json(tmp_path):
+    b = KSD.ahub_ofs_bound('-36,-36,-34,-35:-7')
+    assert b['AP_OFS'] == [-36, -36, -34, -35] and b['FR_OFS'] == -7 and KSP._ap_list(b['AP_OFS_hex']) == b['AP_OFS']
+    p = tmp_path / 'sp.json'
+    p.write_text(json.dumps(dict(params=dict(ahub_ages=dict(AP_OFS=[1, 2, 3, 4], FR_OFS=-9)))))
+    assert KSD.ahub_ofs_bound(str(p))['FR_OFS'] == -9 and KSD.ahub_ofs_bound('') is None
+    m = model(dict(RS), hub_params=dict(AP_OFS=b['AP_OFS_hex'], FR_OFS=b['FR_OFS']))
+    r = KSP.run(m, table())
+    assert any(f['id'] == 'AHUB_OFS_BOUND' and 'generator binding' in f['what'] for f in r['fails'])   # != table values
+
+
+def test_attention_checks_hub_margin_and_pair_skew():
+    sys.path.insert(0, str(HERE.parents[1]))
+    from tools.qwen_kv_die import kv_static_programme as KP
+    pr = KP.profile('die', json.loads((KP.ROOT / KP.AGES).read_text()))
+    assert KP.rz_margin(dict(fr_ofs=-7)) == 10 and KP.rz_margin(dict(fr_ofs=None)) == KP.AC.RZ_MARGIN
+    c = KP.attention_calendar(8192, dict(pr, fr_ofs=-7))                       # minimal R: hub export exactly after pub
+    assert c['PV_START'] + c['R'] - 7 >= c['HUB_PUB'] + KP.HUB_EXPORT_AFTER_PUB
+    r = KP.attention_checks(pr, None, -7, Ts=(1, 300, 1000, 8192))
+    ids = {f['id']: f for f in r['fails']}
+    assert 'HUB_FR_EXPORT' not in ids
+    assert ids['PVFIN_PAIR_SKEW']['contexts'] == 2 and r['worst']['pvfin_skew'] == 32   # T 1 (32), T 300 (16)
+    r = KP.attention_checks(dict(pr, d_rl=pr['d_rl']), None, -7, pvfin_skew=32, Ts=(1, 300))
+    assert not r['fails']

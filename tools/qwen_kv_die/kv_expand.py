@@ -98,6 +98,9 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
                                                                      'qkd_pv_rs_hd_f')},
            **{m_: 'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv' for m_ in
               ('qkd_seq_core_static_s', 'qkd_seq_xs_s', 'qkd_seq_fan_s')})
+# HKV-DIE3 10-19: child master -> the view master it is bound to (face-landed _fl successors: same ports, the RTL child
+# keeps its core name; kv_astk_expand.configure fills it for the selected kv_static_die.FACE_LAND_SEL tiles)
+ALIAS = {}
 # v1.4.4: wires-only sub-levels of an expanded parent (flattened with the parent; never a die instance)
 SUBLEVELS = dict(qkd_pvw_die=(('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_wide_pair'),
                              ('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_col')))
@@ -347,8 +350,9 @@ def main(argv=None):
     case, libs = a.run / 'case_kv', a.run / 'libs'
     FR = frames()
     if a.astk_static:
+        # HKV-DIE3 10-19 (production OT_KV_ASTK_EXPAND=1): the ASTK strips expand TOGETHER with the other frames
         import kv_astk_expand as ASTK
-        FR = ASTK.configure(K, VIEWS, RTL, SUBLEVELS)
+        FR = dict(FR, **ASTK.configure(K, VIEWS, RTL, SUBLEVELS, ALIAS))
         ASTK.require_views(ROOT)
     only = [x for x in a.only.split(',') if x] or list(FR)
     dv = (case / 'die.v').read_text()
@@ -476,6 +480,7 @@ def main(argv=None):
         for cname, c in J['cells'].items():
             cell = cname.lstrip('\\')
             ct = base_type(c['type'])
+            ct = ALIAS.get(ct, ct)            # HKV-DIE3: a child bound to its face-landed successor view (same ports)
             if ct not in leaf:
                 raise ValueError(f'{mst}: child {cell} ({ct}) has no closed view (glue is not expanded)')
             used_leaf.add(ct)

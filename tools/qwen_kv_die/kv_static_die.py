@@ -208,10 +208,39 @@ ATTN_LAND_EDGES = {'K.tx_record': 1, 'ks_prg': 1, 'ks_arh': 1, 'K.rx_record': 0,
 # authority) landed at +1 edge each.  OT_KV_FACE_LAND=1 binds the _fl views (ONLY once CLOSED) and the compiler takes the
 # edges (kv_static_programme profile die: att += i_ctl; F_DLY += fin; startup: reset release + 3 per landed tile);
 # kv_static_params FAILS when the die.v masters and this flag disagree.
-FACE_LAND = os.environ.get('OT_KV_FACE_LAND', '0') == '1'
-FACE_LAND_TILES = {'kvs_attn': dict(master='qkd_kvs_attn', rst_release=3, fin=1, i_ctl=1),
-                   'astk_rly_296': dict(master='qkd_astk_rly_296', rst_release=3),
-                   'hr_core_queue': dict(master='qkd_hr_core_queue', rst_release=3)}
+# HKV-DIE3 10-19: PER-TILE selection.  OT_KV_FACE_LAND = 0 (none) | 1 (every tile below) | comma list of tile keys
+# (production kvs14r: astk_rly_296 -- the only CLOSED _fl view, qkd_astk_rly_296-fl1-bd369b99e).  A selected tile binds
+# its <master>_fl view, which must be CLOSED (face_land_require_closed fails closed on a missing view); the compiler takes
+# the edges of the selected tiles only (kv_static_programme._face_land) and kv_static_params checks die.v per tile.
+FACE_LAND_TILES = {'kvs_attn': dict(master='qkd_kvs_attn', kit='qkd_kvs_attn', rst_release=3, fin=1, i_ctl=1),
+                   'astk_rly_296': dict(master='qkd_astk_rly_296', kit='qkd_astk_rly_296', rst_release=3),
+                   'hr_core_queue': dict(master='qkd_hr_core_queue', kit='qkd_hr_core_queue', rst_release=3)}
+_FL_ENV = os.environ.get('OT_KV_FACE_LAND', '0').strip()
+FACE_LAND_SEL = (set(FACE_LAND_TILES) if _FL_ENV == '1' else set() if _FL_ENV in ('', '0')
+                 else {t.strip() for t in _FL_ENV.split(',') if t.strip()})
+if FACE_LAND_SEL - set(FACE_LAND_TILES):
+    raise ValueError(f'kv_static_die: OT_KV_FACE_LAND names unknown tiles {sorted(FACE_LAND_SEL - set(FACE_LAND_TILES))}')
+FACE_LAND = bool(FACE_LAND_SEL)
+
+
+def face_land_view(tile):
+    t = FACE_LAND_TILES[tile]
+    return f"physical/ref_tile/{t['kit']}/views/{t['master']}_fl"
+
+
+def face_land_require_closed(root=ROOT):
+    """every selected tile's <master>_fl view must exist (closure record: LEF + TT/FF libs + insertion.json)"""
+    miss = {}
+    for tl in sorted(FACE_LAND_SEL):
+        vd = Path(root) / face_land_view(tl)
+        m = FACE_LAND_TILES[tl]['master'] + '_fl'
+        need = [vd / f'{m}.lef', vd / f'{m}_tt.lib', vd / f'{m}_ff.lib', vd / 'insertion.json']
+        bad = [str(p.relative_to(root)) for p in need if not p.exists()]
+        if bad:
+            miss[tl] = bad
+    if miss:
+        raise ValueError(f'kv_static_die: face-landed tiles selected without a CLOSED _fl view (bind only CLOSED): {miss}')
+    return {tl: face_land_view(tl) for tl in sorted(FACE_LAND_SEL)}
 FACE_LAND_RST_BUDGET = 128 - 2     # region roots hold reset >= RELAY_FLUSH 128 cycles after the clock runs (kv_rst_window), E_r 2
 # KV-WIRE2 10-18 (RTL-BUILD-KV/ASTK (a)-(d), lanes/RTL-BUILD-KV.md ASTK; OT_KV_ASTK_ST, default ON with the static hub): the
 # static ASTK strip with its inline e-read (die face qkd_astk_strip_er_die = qkd_astk_strip_er_st + the vh -> read request
@@ -224,7 +253,7 @@ FACE_LAND_RST_BUDGET = 128 - 2     # region roots hold reset >= RELAY_FLUSH 128 
 ASTK_ST = AHUB_STATIC and os.environ.get('OT_KV_ASTK_ST', '1') == '1'
 # Owner-selected physical strip successor: parameters and read ages must move together.
 # Legacy/default sources keep their existing one-edge internal links and centralized e-read.
-ASTK_EXPAND = ASTK_ST and os.environ.get('OT_KV_ASTK_EXPAND', '0') == '1'
+ASTK_EXPAND = ASTK_ST and os.environ.get('OT_KV_ASTK_EXPAND', '1') == '1'   # HKV-DIE3 10-19: production default ON
 ASTK_RL = int(os.environ.get('OT_KV_ASTK_RL', '3' if ASTK_EXPAND else '1'))
 ASTK_Z_STRIDE = 4     # actual CLOSED qkd_astk_ctl_s parameter; stride-16 benches are separate evidence
 if ASTK_RL < 1 or (not ASTK_EXPAND and ASTK_RL != 1):
@@ -1268,7 +1297,37 @@ def bindings():
         # the RTL default 16 put every Z word on the wrong hub slot.  The hub kit must be (re)hardened at this value.
         if ASTK_ST:
             out['qkd_ahub']['parameters'] = dict(Z_IN_STRIDE=ASTK_Z_STRIDE)
+        # HKV-DIE3 10-19 (HOURLY-KV decision (c)): the die binds the ACTUAL AP_OFS / FR_OFS of the post-station netlist
+        # table (kv_static_params ahub_ages), never the RTL defaults while the table disagrees; the hub kit (a5) is
+        # hardened at the same constants and kv_static_params AHUB_OFS_BOUND checks kit == die binding == table.
+        ofs = ahub_ofs_bound()
+        if ofs:
+            out['qkd_ahub']['parameters'] = dict(out['qkd_ahub'].get('parameters') or {}, AP_OFS=ofs['AP_OFS_hex'],
+                                                 FR_OFS=ofs['FR_OFS'])
     return out
+
+
+def ahub_ofs_bound(spec=None):
+    """OT_KV_AHUB_OFS: a static_params.json (params.ahub_ages) / ahub_ages JSON, or 'a0,a1,a2,a3:fr' (stacks WS WN ES
+    EN, two's complement 16-bit each).  None when unset (the die then binds the RTL defaults and kv_static_params FAILS
+    AHUB_OFS_BOUND wherever the table needs other values)."""
+    spec = spec if spec is not None else os.environ.get('OT_KV_AHUB_OFS', '')
+    if not spec:
+        return None
+    if ':' in spec and not Path(spec).exists():
+        ap_s, fr = spec.split(':')
+        ap = [int(x, 0) for x in ap_s.split(',')]
+        fr = int(fr, 0)
+        src = 'literal'
+    else:
+        p = Path(spec) if Path(spec).is_absolute() else ROOT / spec
+        d = json.loads(p.read_text())
+        d = (d.get('params') or {}).get('ahub_ages') or d.get('ahub_ages') or d
+        ap, fr, src = [int(x) for x in d['AP_OFS']], int(d['FR_OFS']), str(spec)
+    if len(ap) != 4 or any(not -32768 <= x < 32768 for x in ap) or not -(1 << 17) < fr < (1 << 17):
+        raise ValueError(f'kv_static_die: OT_KV_AHUB_OFS {spec!r}: need 4 16-bit AP_OFS values and an FR_OFS')
+    return dict(AP_OFS=ap, FR_OFS=fr, source=src,
+                AP_OFS_hex='{' + ', '.join(f"16'h{x & 0xffff:04x}" for x in reversed(ap)) + '}')
 
 
 # ------------------------------------------------------------------------------------------------ die integration
@@ -2060,7 +2119,8 @@ def record(m):
                 open_tile_inputs=sorted(opens.values(), key=lambda r: (r['owner'] or '', r['master'], r['port'])),
                 **({'ahub_ages': ahub_ages(m)} if AHUB_STATIC and 'ks_ahs' in m.get('relay_stages', {}) else {}),
                 attn_fault=afault_latency(m),
-                face_land=dict(enabled=FACE_LAND, tiles=FACE_LAND_TILES if FACE_LAND else {},
+                face_land=dict(enabled=FACE_LAND, selected=sorted(FACE_LAND_SEL),
+                               tiles={k: v for k, v in FACE_LAND_TILES.items() if k in FACE_LAND_SEL},
                                note='views bound only when CLOSED (lanes/HKV-RSTCAP.md)'),
                 attn_landing=dict(enabled=ATTN_LAND, added_edges=ATTN_LAND_EDGES if ATTN_LAND else {},
                                   codec_edges=2 if ATTN_LAND else 1,

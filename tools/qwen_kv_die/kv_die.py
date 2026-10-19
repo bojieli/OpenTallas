@@ -4839,11 +4839,18 @@ def main(argv=None):
     a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s
     a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
     if a.mode == 'case' and a.reserve_native_astk:
-        if not KSD.ON or not KSD.ASTK_ST or os.environ.get('OT_KV_ASTK_EXPAND', '0') != '1':
+        if not KSD.ON or not KSD.ASTK_ST or not KSD.ASTK_EXPAND:
             ap.error('native ASTK case requires the actual static ASTK EXPAND profile (OT_KV_ASTK_EXPAND=1)')
         import kv_astk_expand
         kv_astk_expand.require_views(ROOT)
-        ap.error('expanded ASTK production calendar qualification remains required before physical case generation')
+        # HKV-DIE3 10-19 (coordinator: OT_KV_ASTK_EXPAND production, option B): the production calendar is the measured
+        # RL3 / stride-4 / distributed e-read law (kv_static_programme.astk_law, HKV-ASTK 62b812e04); its consistency with
+        # the bound hub / pvfin (hub export after the publication, pvfin pair skew) is checked fail-closed on the
+        # post-station netlist by kv_static_params ATTN_CALENDAR (kv_relay_check / layer_compile), not refused here.
+        if str(ROOT) not in sys.path:
+            sys.path.insert(0, str(ROOT))
+        from tools.qwen_kv_die import kv_static_programme as _KSP
+        _KSP.astk_law()
     if a.mode == 'case' and a.kv_wq_leaves and not a.kv_wq_mirror:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
     m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split, reserve_static_memory=a.reserve_static_memory, reserve_native_astk=a.reserve_native_astk)

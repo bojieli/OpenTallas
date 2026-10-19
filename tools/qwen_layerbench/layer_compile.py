@@ -409,7 +409,7 @@ def main(argv=None):
         sys.path.insert(0, str(ROOT / 'tools/qwen_kv_die'))
         import kv_static_params as KSP
         ksp = KSP.run(json.load(open(a.kv_static_model)), docs['qwen_kv'],
-                      json.load(open(a.kv_fwd_lanes)) if a.kv_fwd_lanes else None)
+                      json.load(open(a.kv_fwd_lanes)) if a.kv_fwd_lanes else None, attn=True)   # HKV-DIE3: + ATTN_CALENDAR
         write_json(out / 'kv_static_params.json', ksp)
         for f in ksp['fails']:
             findings.append(dict(id=f'KV_STATIC_PARAMS {f["id"]}', severity='FAIL', owner='KV die lead (HKV-DIE)',
