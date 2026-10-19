@@ -65,6 +65,7 @@ endmodule'''
                                    for m in ('src', 'dst2', 'qkd_rlysh0_1', 'qkd_rlysh_1', 'qkd_landsh_1')}, defines=[])
                 doc = N.export(f'{t}/die.v', pb, 'qwen_kv', 'HEAD', [], [t], 'bits', land_e=rows)
             self.assertEqual(doc['buses'][0]['age_edges'], expected)
+            self.assertEqual(doc['buses'][0]['src_nets'], ['n_src'])
             self.assertEqual(doc['problem_count'] == 0, expected is not None, doc['problems'])
 
     def test_native_trunk_inject_has_independent_v_and_token_ages(self):

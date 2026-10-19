@@ -1,0 +1,30 @@
+{
+ "reviewer": "codex coordinator (delegated by /root and /root/qwen_coordinator)",
+ "time": "2026-10-19T16:56:08.370628+00:00",
+ "gate_commit": "cbb09ff421a1381fc8fa83e1ac07214f95aba842",
+ "geometry_sha256": "916078bc6f16aef11c397962bfa12b6d89a9f57eded8eddf94a2533fc291c648",
+ "geometry": {
+  "schema": "opentallas.ref_tile.review_geometry.v1",
+  "sha256": "916078bc6f16aef11c397962bfa12b6d89a9f57eded8eddf94a2533fc291c648",
+  "components": {
+   "outline": "425676d66f3f3a85cfdfb8eff1bbf4f74428c1ba4c1f179a802920ff62251ead",
+   "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+   "pins": "0c294ec240b8cb66d75cd0748328ed5fbe50ed422dbc52ee4eba8112f7fef75e",
+   "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
+  }
+ },
+ "verdict": "APPROVED",
+ "scope": "Only this hard column-station component detailed routing. ROOT personally reviewed original and coordinator fresh PNGs; parent reach/reset+2/compiler/clock/age/window remain open.",
+ "snapshot_manifest_sha256": "c15d05f6d106dc5f40fb9b697ac7f40407e24a5798611f32f84daa5fcea26942",
+ "snapshot_archive_sha256": "b6de3ea9c68a1ab5f40576b78cc7b530df44db4c2d8bbb64f1a18eac3a48cb7f",
+ "checklist": {
+  "lattice": "90.72x129.6 on track lattice; all four fresh PNGs viewed",
+  "std_cell_band": "continuous standard rows, no macros; full-face pin bound low utilization explicitly scoped by ROOT",
+  "pin_spread": "516 data pins/86.94um<=5.94pins/um,508tap/128.52um<=3.96; kept full-face access",
+  "clock_entry": "ck planned south landing,699sinks,TT/FFspread<=34.6ps;current structural clock boundary rule passes",
+  "shape": "aspect1.43; explicit pin-bound lowutil rationale; native all-drivermax23/reset1sink",
+  "fanout": "699FF,maximumFFdriver5,maximumALLnonclockdriver23,rawreset1sink",
+  "timing": "TTsetup/FFhold positive in unchanged native GRT_RC;detailed-route final still owed",
+  "admission": "Separate committed primary PASS and mutant FAIL5994; same normal TDM calendar and reset+2 explicit"
+ }
+}

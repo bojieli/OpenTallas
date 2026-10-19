@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.hbm_vm_fault_l16_1019.v1",
+ "verdict": "PASS",
+ "source_sha256": {
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv": "40425bc3e56317db3a1fcf6dee3f53a1adb137ff9414ddc5571f0996fd1661ff",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv": "f63a819c48d8db4f1b973fd43748defada7d6f27724a534239bcabb4b15468f4",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv": "c40691e286850538bf7d03f353d332e90aefb35eaf1b04225c58b96c494da851",
+  "tools/hbm_die_v16/d4g_layers/l16_vm_fault.py": "e47b2fc69068e7229d1a46790eb218eba07fc7f272bf9f7dde65531a78c2bc80",
+  "tools/hbm_die_v16/bench_vm_fault_l16.py": "86f50728287c1acc91d17d1d02bba94b4a7fe229ffa221065075597255981f06",
+  "tools/hbm_die_v16/run_vm_fault_l16.sh": "11b3116f1cac0b55c2333298c65a1b2094e9ffd10f02969276f1537d59529e5f"
+ },
+ "input_contract_sha256": "0f6cd7b6ca4cc2fa0a71d1578d9c72d61c08755d0a3b1ef4abee50543f885523",
+ "positive_cases": 84,
+ "coverage": "all32bankUE+protocol flags;12hubprotocol/maskflags;4legacyserialsync;4CEcount-only nonfatal",
+ "latency": {
+  "vm_status_input_to_host_fault": 8,
+  "existing_serial_input_to_host_fault": 6,
+  "die_relays": "additional physical-stage count, not in minimum bench"
+ },
+ "mutants": {
+  "1": "drop new flags: FAIL first bankUE age8",
+  "2": "ignore existing SYNC_MASK: FAIL early serial fault age5 instead6"
+ },
+ "successful_data_added_cycles": 0,
+ "layer_idempotence": true,
+ "physical_qualification": "fr parameter variants need fresh source-bound physical qualification; this is functional proof, no view bound",
+ "audit_gate_relaxed": false
+}

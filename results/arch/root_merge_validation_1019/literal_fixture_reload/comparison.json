@@ -1,0 +1,19 @@
+{
+  "before": {
+    "failed": 72,
+    "passed": 1122,
+    "skipped": 17,
+    "subtests": 196
+  },
+  "after": {
+    "failed": 71,
+    "passed": 1123,
+    "skipped": 17,
+    "subtests": 196
+  },
+  "new_failure_ids": [],
+  "removed": [
+    "FAILED tools/ref_tile/test_literal_bit_pin_plan.py::LiteralPinPlan::test_synthesized_gate_uses_actual_index_bounds"
+  ],
+  "scope": "Same159-file1196-test prefix; only literal fixture ROOT context changed. Positive and wrong-bounds negative both retained; productioncore unchanged."
+}

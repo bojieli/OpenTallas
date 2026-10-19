@@ -1,0 +1,15 @@
+{
+ "host": "ot-epyc4",
+ "verilator": "5.050",
+ "shape": "W258 D4 K2",
+ "cmd": "bash tools/qwen_cluster/bench_land_safe.sh out_safe",
+ "pass_regex": "SAFE_LAND_EXIT 0",
+ "mutant": {
+  "witness": "mut1.log",
+  "fail_regex": "SAFE_LAND_FAIL MUT1",
+  "mechanism": "K=3 reads wrong static ring slot"
+ },
+ "normal_latency_edges": 2,
+ "reset_epoch_added_edges": 1,
+ "reference": "historical qfd_c_land_{w,r}, rsi delayed one edge to match 2stage reset"
+}

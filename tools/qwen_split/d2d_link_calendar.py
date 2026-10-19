@@ -227,12 +227,18 @@ def parse_stages(s):
     return dict(zip(STAGE_NAMES, v))
 
 
+def producer_txd_c(S):
+    """Compute-die producer edges, independent of the KV die's codec."""
+    return [S["CS_TXS"] + N59_TX + S["SC_TX"], 1, 1,
+            S["CS_X3S"] + N59_X3 + 1 + S["SC_X3"]]
+
+
 def producer_txd(S, host_stages=0, kv_codec=None):
     """raw producer latency per TX port (before the PR pin flops) from the die seam stages S.  kv_codec = the attention
     programme's codec edges as instantiated (HKV-DIE 10-19: OT_KV_ATTN_LAND / .LAND(1) -> 2); never silently 1."""
     if kv_codec is None:
         raise SystemExit("producer_txd: kv_codec required (layer_compile.kv_codec_edges of the KV die's qkd_kvs_attn)")
-    return {"C": [S["CS_TXS"] + N59_TX + S["SC_TX"], 1, 1, S["CS_X3S"] + N59_X3 + 1 + S["SC_X3"]],
+    return {"C": producer_txd_c(S),
             "K": [S["KS_TXS"] + kv_codec + S["SK_TXP"], 2 + host_stages, 1, 1]}
 
 

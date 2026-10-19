@@ -1,0 +1,42 @@
+{
+ "tt": {
+  "bits": 1173,
+  "all_registered": true,
+  "all_table_min_launch": [
+   74.21273999999994,
+   "cw_s_a[14]"
+  ],
+  "refs": {
+   "clk": {
+    "rise": 679.6,
+    "fall": 886.1066350000001,
+    "min": 405.33112,
+    "max": 418.02322,
+    "src": "insertion.json child_flop boundary mean",
+    "bmin": 662.2,
+    "bmax": 704.1,
+    "n": 1172
+   }
+  }
+ },
+ "ff": {
+  "bits": 1173,
+  "all_registered": true,
+  "all_table_min_launch": [
+   54.663760000000025,
+   "cw_s_a[14]"
+  ],
+  "refs": {
+   "clk": {
+    "rise": 523.5,
+    "fall": 462.831525,
+    "min": 341.62595,
+    "max": 488.2511,
+    "src": "insertion.json child_flop boundary mean",
+    "bmin": 511.9,
+    "bmax": 541.9,
+    "n": 1172
+   }
+  }
+ }
+}

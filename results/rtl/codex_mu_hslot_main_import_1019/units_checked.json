@@ -1,0 +1,32 @@
+{
+ "source_commit": "bb7d4e5c9",
+ "all_five_expected": true,
+ "checks": {
+  "unit47": {
+   "passed": true,
+   "pattern": "^MUHSLOT PASS$",
+   "sha256": "03b51fac2c655d1f62f712f7db597078d67c6e96068761006b67230f1d80a67c"
+  },
+  "unit8": {
+   "passed": true,
+   "pattern": "^MUHSLOT PASS$",
+   "sha256": "88de10e07a53788b0b7eb6ab9c93ad84a2f1fdf7425683acdd2779e27b1773a2"
+  },
+  "collide8": {
+   "passed": true,
+   "pattern": "^MUHSLOT COLLIDE NS 8 PASS \\(fault raised\\)",
+   "sha256": "ac1124a2dd8b0fcd170216e1411262dd3de995283b92839d02e73487a2d90845"
+  },
+  "mut1": {
+   "passed": true,
+   "pattern": "^MUHSLOT FAIL",
+   "sha256": "f26b011afce7ed2d4ec77b64e680e6644c5dd4b06dd942657f90791f3db524f4"
+  },
+  "mut2": {
+   "passed": true,
+   "pattern": "^MUHSLOT COLLIDE NS 47 FAIL \\(no fault\\)",
+   "sha256": "9300a6bb55865f60776720c7a67cfdc83fb1704f1b715a854a700fea3f137ff6"
+  }
+ },
+ "aggregator_note": "original units.sh reached expected mut2 rc1 but its final grep only matched plain MUHSLOT FAIL, not MUHSLOT COLLIDE NS47 FAIL; raw outputs above verify the correct expected failure. No test expectation or source changed."
+}

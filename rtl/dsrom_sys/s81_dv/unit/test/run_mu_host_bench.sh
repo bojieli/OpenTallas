@@ -16,7 +16,7 @@ build() { n=$1; top=$2; shift 2
     --Mdir "$O/obj_$n" -o tb > "$O/build_$n.log" 2>&1 || { echo "BUILD_FAIL $n"; tail -20 "$O/build_$n.log"; return 2; }
 }
 run() { n=$1; "$O/obj_$n/tb" > "$O/run_$n.log" 2>&1; grep -E '^(MUHSLOT|MUSEED|ERR)' "$O/run_$n.log" | head -8 | sed "s/^/[$n] /"; }
-HS="$R/rtl/lib/ot_rst_relay.sv $U/dsdv_mu_hslot.sv $U/test/tb_dsdv_mu_hslot.sv"
+HS="$R/rtl/lib/ot_rst_relay.sv $R/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v $U/dsdv_mu_hslot.sv $U/test/tb_dsdv_mu_hslot.sv"
 SD="$R/rtl/lib/ot_rst_relay.sv $U/dsdv_mu_seed.sv $U/test/tb_dsdv_mu_seed.sv"
 # ---- (a) host slot table: NS 8 / NS 47 (47 outstanding) vs the single-user NS 1 of the same round
 for cfg in "hs8 8 8" "hs47 47 47" "hs1p8 1 8" "hs1p47 1 47"; do set -- $cfg
@@ -65,9 +65,9 @@ F="$R/rtl/lib/ot_async_fifo.sv $R/rtl/lib/ot_reset_sync.sv $R/rtl/lib/ot_rst_rel
    $R/rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv $R/rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv $R/rtl/hdc/ingest/ot_hdc_kv_ingest.sv
    $R/rtl/hdc/ingest/ot_rom_host_ingest.sv $R/physical/rom_host_ingest/rtl/dsfd_host.sv
    $R/rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv
-   $R/rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv $U/ot_dsdv_fixed_issue.sv $U/ot_dsdv_vstop.sv $U/dsdv_sh_sd.sv $U/dsdv_seq_host.sv
-   $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v $U/dsdv_mu_hslot.sv"
-for t in "dsdv_mu_hslot -GNSLOT=47 $R/rtl/lib/ot_rst_relay.sv $U/dsdv_mu_hslot.sv" \
+   $R/rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv $U/ot_dsdv_fixed_issue.sv $U/ot_dsdv_walk_issue.sv $U/ot_dsdv_vstop.sv $U/dsdv_sh_sd.sv $U/dsdv_seq_host.sv
+   $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v $R/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v $U/dsdv_mu_hslot.sv"
+for t in "dsdv_mu_hslot -GNSLOT=47 $R/rtl/lib/ot_rst_relay.sv $R/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v $U/dsdv_mu_hslot.sv" \
          "dsdv_mu_seed -GNUSER=10 $R/rtl/lib/ot_rst_relay.sv $U/dsdv_mu_seed.sv" \
          "dsdv_seq_host_mu -GNSLOT=47 $F" "dsdv_seq_host_mu -GNSLOT=1 $F"; do set -- $t; top=$1; g=$2; shift 2
   verilator --lint-only -Wall -Wno-fatal --top-module $top $g "$@" > "$O/lint_${top}_${g#-G}.log" 2>&1
