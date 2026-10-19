@@ -1,0 +1,7 @@
+BW_RING_OCCUPIED_RESET_PASS
+BW_SAFE_TXN_DATA_PASS reqs=6000 beats=12944 wcols=759 wdone=759
+BW_SAFE_TXN PASS reqs=6000 beats=12944 wcols=759 wdone=759 edges_h9b=168926 edges_safe=168926
+- /srv/opentallas-scratch/claude/bw-ring-control-1019/release-reset/tb.sv:115: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 173us; walltime 5.084 s; speed 34.068 us/s
+- Verilator: cpu 5.080 s on 1 threads; allocated 12 MB

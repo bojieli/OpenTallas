@@ -1,0 +1,24 @@
+{
+  "case": "pop",
+  "occupied_reset": false,
+  "verdict": "PASS",
+  "returncode": 1,
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv": "b33f6c27d7c995cef1a3b15c33ab4f7d774122fc79ac5a8d83fc9bc37adbc815",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv": "a9bbf9fd7e443ee83c40d87e4b5447627405f433118eb6f2a3f348ca04539cd2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv": "76555784c8d56a3d2e4406912b09f859dd60c779e790f460d92abf847f265711",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv": "8f0d721820339b0e7a697af0b6f457b6dcaa8c58936c8071a41c411214ad9750",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv": "a9783830202fbbb4cb1f8fd54b809c45d6be7755ad486e79ad2e14cb04818f69",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/test/hbm_accel/bw_ring_control/ref_ot_hbm_svc_pc_ctrl_leaf_cfg_safe_80d.sv": "5d6e3052e5ea63d321b613a8bf292a7667ebaeb0bfea482909190e36784caeec",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_safe_txn.sv": "9f2c385499493641f714567ced8caeafdacd0a07a81b9801f7ca54d6b117fee4",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv": "90a6e6a672f107cdd05109b76ee01f5750ad9e8acceaf73f7fb1eac9242afbcc",
+    "tools/hbm_layer_vehicle/hbm_pc_bw_safe_txn.py": "29223011020395df421edee9256c8447885c8102ec07424bfda1007568a327e8",
+    "tools/hbm_layer_vehicle/run_bw_ring_control_equiv.py": "0663dd3bcf57eaa6815b7dd98cbd174114583a34779760d52d8c1db1dd35adeb"
+  },
+  "generated_cfg_sha256": "5b90b154427d2dec7b08852d98743920664fd9e3321ec7fab0a6dc7cfed7b851",
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "fail_regex": "BW_RING_REGIONAL_MISMATCH|BW_RING_CYCLE_MISMATCH|BW_SAFE_TXN_(?:BEAT|WCOL)_MISMATCH"
+}

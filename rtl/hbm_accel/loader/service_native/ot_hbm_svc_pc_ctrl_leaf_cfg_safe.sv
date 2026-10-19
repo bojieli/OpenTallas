@@ -101,28 +101,51 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire push_read=!push[319];
     wire enqueue=unposted!=0 && (!push_read || read_reserved<RQ) && !sticky;
     wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
+    // One arithmetic cone feeds kept same-edge count captures. At22 regions
+    // the shared next-count bus drives23 D pins per bit, including count.
+    wire[QW:0]queue_count_next=count+(accepted?6'(length):6'd0)-(cv?6'd1:6'd0);
     wire posted_read=posted&&push_read;
     wire column_read=cv&&!cwe;
     wire j_v,j_rdy;
+    wire head_valid_next=response_read?1'b1:response_take?1'b0:head_valid;
     wire response_take=j_v&&j_rdy;
     assign i_rdy=!sticky&&!pc_fault&&legal&&count+length<=QD;
     wire kfront_fault;
     generate if(KREG!=0)begin:g_kreg
         // Released H9b native pin contract: pure data/valid capture, then a
         // three-entry ring. No external pin controls a wide payload mux.
-        reg kp_we,kv_q,k_rdy_seen,k_rdy_q;
+        reg kp_we,k_rdy_q;
+        localparam integer KREGIONS=(341+15)/16;
+        (* keep="true",dont_touch="true" *) reg[KREGIONS-1:0]kv_regions,ready_seen_regions;
+        wire[KREGIONS-1:0]push_regions,pop_regions,valid_regions;
         reg[29:0]kp_addr;reg[3:0]kp_len;reg[16:0]kp_tag;reg[31:0]kp_strb;reg[255:0]kp_data;
         always @(posedge clk)begin kp_we<=k_we;kp_addr<=k_addr;kp_len<=k_len;kp_tag<=k_tag;kp_strb<=k_wstrb;kp_data<=k_wdata;end
         wire kp_legal=kp_len>=1&&kp_len<=4&&(!kp_we||kp_len==1)&&
           {1'b0,kp_addr[1:0]}+kp_len<=4&&(kp_addr[6:2]^kp_addr[11:7]^kp_addr[16:12])==pc_id_q&&
           {1'b0,kp_addr}+kp_len<=31'd703125000;
         wire[2:0]n,nn;
-        ot_hbm_svc_ring_bw_safe #(.WIDTH(341),.DEPTH(3)) u_kring(.clk(clk),.rst_n(region_rst_n[2]),
-          .in_v(kv_q&&k_rdy_seen),.in_data({kp_legal,kp_we,kp_addr,kp_len,kp_tag,kp_strb,kp_data}),
+        ot_hbm_svc_ring_bw_safe #(.WIDTH(341),.DEPTH(3),.REGIONAL(1)) u_kring(.clk(clk),.rst_n(region_rst_n[2]),
+          .in_v(push_regions[0]),.in_data({kp_legal,kp_we,kp_addr,kp_len,kp_tag,kp_strb,kp_data}),
           .out_v(i_v),.pop(i_v&&i_rdy),.out_data({legal,i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}),
-          .cnt(n),.cnt_next(nn),.fault(kfront_fault));
-        always @(posedge clk)if(!region_rst_n[2])begin kv_q<=0;k_rdy_seen<=0;k_rdy_q<=0;end
-          else begin kv_q<=k_v;k_rdy_seen<=k_rdy_q;k_rdy_q<=k_rdy_q?(nn<3'd2):(nn<=3'd2);end
+          .cnt(n),.cnt_next(nn),.fault(kfront_fault),
+          .in_v_regions(push_regions),.pop_regions(pop_regions),.out_v_regions(valid_regions));
+        for(genvar r=0;r<KREGIONS;r=r+1)begin:g_control
+          // Same-edge replicas of architectural queue accounting. Local
+          // acceptance uses independent state; shared next-count arithmetic
+          // drives only23 D pins per bit, never wide pointer enables.
+          (* keep="true",dont_touch="true" *) reg[QW:0]count_q;
+          wire ready_local=!sticky&&!pc_fault&&legal&&count_q+length<=QD;
+          assign push_regions[r]=kv_regions[r]&&ready_seen_regions[r];
+          assign pop_regions[r]=valid_regions[r]&&ready_local;
+          always @(posedge clk or negedge lrst_n)
+            if(!lrst_n)count_q<=0;
+            else count_q<=queue_count_next;
+          always @(posedge clk)if(!region_rst_n[2])begin
+            kv_regions[r]<=0;ready_seen_regions[r]<=0;
+          end else begin kv_regions[r]<=k_v;ready_seen_regions[r]<=k_rdy_q;end
+        end
+        always @(posedge clk)if(!region_rst_n[2])begin k_rdy_q<=0;end
+          else begin k_rdy_q<=k_rdy_q?(nn<3'd2):(nn<=3'd2);end
         assign k_rdy=k_rdy_q;
     end else begin:g_raw_k
         assign i_v=k_v;assign i_we=k_we;assign i_addr=k_addr;assign i_len=k_len;assign i_tag=k_tag;
@@ -135,11 +158,19 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         // Raw ready sees18 FF D pins; each retained copy feeds only local
         // valid/update logic, preserving the released previous-edge ABI.
         (* keep="true",dont_touch="true" *) reg[17:0]ready_q;
+        (* keep="true",dont_touch="true" *) reg[17:0]head_valid_regions;
+        wire[17:0]admission_regions;
+        for(genvar r=0;r<18;r=r+1)begin:g_control
+          always @(posedge clk or negedge lrst_n)
+            if(!lrst_n)head_valid_regions[r]<=0;
+            else head_valid_regions[r]<=head_valid_next;
+          assign admission_regions[r]=head_valid_regions[r]&&!sticky&&!pc_fault;
+        end
         always @(posedge clk)if(!region_rst_n[3])ready_q<=0;else ready_q<={18{kr_rdy}};
-        ot_hbm_svc_pin_skid2_bw_safe #(.WIDTH(277)) u_skid(
+        ot_hbm_svc_pin_skid2_bw_safe #(.WIDTH(277),.REGIONAL(1)) u_skid(
             .clk(clk),.rst_n(region_rst_n[3]),.in_v(j_v),.in_r(j_rdy),
             .in_data({head_identity[20:4],head_identity[3:0],response_data}),
-            .out_v(kr_v),.out_r_regions(ready_q),.out_data({kr_tag,kr_beat,kr_data}));
+            .out_v(kr_v),.out_r_regions(ready_q),.out_data({kr_tag,kr_beat,kr_data}),.in_v_regions(admission_regions));
     end else begin:g_raw_kr
         assign kr_v=j_v;assign j_rdy=kr_rdy;
         assign kr_tag=head_identity[20:4];assign kr_beat=head_identity[3:0];assign kr_data=response_data;
@@ -263,7 +294,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
             k_wr_done<=0;
             if((i_v&&!legal)||kfront_fault)sticky<=1;
             if(accepted)wp<=wp+QW'(length);
-            count<=count+(accepted?6'(length):6'd0)-(cv?6'd1:6'd0);
+            count<=queue_count_next;
             unposted<=unposted+(accepted?6'(length):6'd0)-(posted?6'd1:6'd0);
             read_reserved<=read_reserved+(posted_read?6'd1:6'd0)-(response_take?6'd1:6'd0);
             pending_count<=pending_count+(column_read?6'd1:6'd0)-(ret_v?6'd1:6'd0);
@@ -284,8 +315,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
                 if(pending_count==0 || (response_count>=RQ&&!response_take))sticky<=1;
                 else begin pending_rp<=pending_rp+1'b1;response_wp<=response_wp+1'b1;end
             end
-            if(response_read)begin head_valid<=1;end
-            else if(response_take)head_valid<=0;
+            head_valid<=head_valid_next;
             if(response_take)begin
                 if(read_reserved==0||response_count==0)sticky<=1;
                 response_rp<=response_rp+1'b1;
