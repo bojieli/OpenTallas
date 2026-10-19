@@ -30,7 +30,10 @@ CLK_TCL = 'physical/qwen_fwd_lane/fwd_lane_clocks.tcl'
 WIT = 'results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench_r2'   # Q-DIE11 10-18: witnesses of the rising-hop-0 RTL
 # QK-LANDEN 10-19: witnesses of the registered-en landh0 RTL (+ calendar) for every family's bench at widths 1/128/548/600
 WIT_LANDEN = 'results/arch/qwen_split_compute_1014/qk_landen_1019/bench'
-MUTANTS = {'qfd_rlyh0_': ('full',), 'qfd_rlyh_': ('full',), 'qfd_landh_': ('sel', 'naive'),
+# RLYH0-EN 10-19: witnesses of the registered-en rlyh0 RTL (every lane's write epoch G + 1) at widths 1/128/548/600
+WIT_RLYH0EN = 'results/arch/qwen_split_compute_1014/rlyh0_en_1019/bench'
+MUTANTS = {'qfd_rlyh0_': ('full', 'rlyencomb'),   # RLYH0-EN 10-19: rlyencomb = the hop-0 station's en unregistered
+           'qfd_rlyh_': ('full',), 'qfd_landh_': ('sel', 'naive'),
            'qfd_landh0_': ('sel', 'naive', 'encomb'),   # QK-LANDEN 10-19: encomb = en unregistered (closed-view form)
            # Q-H16C 10-18: forwarded RESET lanes (bench_fwd_rst_lane.sh): stations full-cycle forward, landing double register
            'qfd_rlyr0_': ('full',), 'qfd_rlyr_': ('full',), 'qfd_rlyrl_': ('land2',)}
