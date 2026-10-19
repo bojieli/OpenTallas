@@ -1,0 +1,60 @@
+--- coupled_original.py
++++ coupled_optimized.py
+@@ -1,5 +1,6 @@
+ """Default-off SOURCE MODEL. No EDA engines; no production graph changes."""
+ import collections,gzip,hashlib,json,resource,time
++from interval_successor import optimum_pair
+ from pathlib import Path
+ P=Path('input'); O=Path('output');O.mkdir(exist_ok=True)
+ def load(n):
+@@ -17,9 +18,9 @@
+ def seg(l,axis,c,a,b):return (l,axis,c,min(a,b),max(a,b))
+ def joglayer(p):return 'M4' if p[0]<2160 or p[0]>138240 or p[1]<2160 or p[1]>138240 else 'M2'
+ def branch(a,b,n):
+- """Exhaust finite H-ray / V-column domain, pruning only proven length bounds.
+- Atomic acceptance includes full trunk, both V leads and both local jogs.
+- This is shortest candidate for this selected pair, not global routing optimality.
++ """Same finite SOURCE branch domain; exact interval minimum replaces pairs.
++ A/B ranks preserve original native layer duplicate identity and ties.
++ Endpoint pruning only removes candidates that cannot strictly improve best.
+  """
+  ax,ay=a;bx,by=b;best=None;bestlen=float('inf')
+  av=sorted(V,key=lambda z:(abs(z[1]-ax),z));bv=sorted(V,key=lambda z:(abs(z[1]-bx),z))
+@@ -27,20 +28,26 @@
+  for hl,hy in hs:
+   vertical=abs(ay-hy)+abs(by-hy)
+   if vertical+abs(ax-bx)>=bestlen:break
+-  for al,vx in av:
++  aa=[];bb=[]
++  for ar,(al,vx) in enumerate(av):
+    ja=abs(ax-vx)
+    if vertical+ja>=bestlen:break
+    if not free(al,'V',vx,ay,hy,n) or not free(joglayer(a),'H',ay,ax,vx,n):continue
+-   for bl,wx in bv:
+-    jb=abs(bx-wx)
+-    if vertical+ja+jb>=bestlen:break
+-    length=vertical+ja+jb+abs(vx-wx)
+-    if length>=bestlen:continue
+-    if not free(bl,'V',wx,by,hy,n) or not free(joglayer(b),'H',by,bx,wx,n):continue
+-    if not free(hl,'H',hy,vx,wx,n):continue
+-    ss=[seg(joglayer(a),'H',ay,ax,vx),seg(al,'V',vx,ay,hy),seg(hl,'H',hy,vx,wx),seg(bl,'V',wx,by,hy),seg(joglayer(b),'H',by,bx,wx)]
+-    waypoints=[a,(vx,ay),(vx,hy),(wx,hy),(wx,by),b]
+-    best=(ss,length,waypoints);bestlen=length
++   aa.append((al,vx,ar))
++  if not aa:continue
++  for br,(bl,wx) in enumerate(bv):
++   jb=abs(bx-wx)
++   if vertical+jb>=bestlen:break
++   if not free(bl,'V',wx,by,hy,n) or not free(joglayer(b),'H',by,bx,wx,n):continue
++   bb.append((bl,wx,br))
++  blocked=[(e-100,d+100) for e,d,q in owned[hl,'H',hy] if q!=n]
++  choice=optimum_pair(aa,bb,blocked,ax,bx)
++  if choice is None:continue
++  cost,ar,br,al,vx,bl,wx=choice;length=vertical+cost
++  if length>=bestlen:continue
++  ss=[seg(joglayer(a),'H',ay,ax,vx),seg(al,'V',vx,ay,hy),seg(hl,'H',hy,vx,wx),seg(bl,'V',wx,by,hy),seg(joglayer(b),'H',by,bx,wx)]
++  waypoints=[a,(vx,ay),(vx,hy),(wx,hy),(wx,by),b]
++  best=(ss,length,waypoints);bestlen=length
+  return best
+ def union_length(items):
+  end=None;total=0
