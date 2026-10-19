@@ -61,6 +61,9 @@ if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
   BV="$BV --view qkd_hgs=physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage --view qkd_hss=physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage"; fi
 # OT_KV_DCAL=1 (Q-KVSYS-DIE 10-16): the link calendar sequencer qkd_d2d_cal_seq_pin on its CLOSED view (kv_die.py DCAL)
 [ "${OT_KV_DCAL:-0}" = 1 ] && BV="$BV --view qkd_dcal=physical/ref_tile/qkd_d2d_cal_seq_pin_ep3/views/qkd_d2d_cal_seq_pin"
+# MU-DIE-KV2 10-19: the MU die's calendar sequencer must be hardened from ot_qwen_d2d_cal_seq_dies_mu.sv (d2d_cal_image_mu.svh:
+# C RX / K TX +1 entry, SEG2 8 -> 9); until that kit closes the ep3 view (production image) is a LABELLED STAND-IN
+[ "${OT_KV_DCAL:-0}" = 1 ] && [ "${OT_KV_MU:-0}" = 1 ] && echo "OT_KV_DCAL STAND-IN: qkd_dcal bound to qkd_d2d_cal_seq_pin_ep3 (production image), MU image kit owed (ot_qwen_d2d_cal_seq_dies_mu.sv)"
 # OT_KV_KVNC=1 (Q-KVSYS PVJOIN 10-16, needs OT_KV_DCAL=1): the KVN context leaf qkd_kvn_ctx_cal (kv_die.py KVNC) on its view
 # when the kit has closed (OT_KV_KVNC_KIT, default qkd_kvn_ctx_cal_r2); without a view the frame stays ASSUMED (diagnostic)
 if [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_cal_r2}/views/qkd_kvn_ctx_cal
@@ -91,8 +94,11 @@ fi
 # by kv_expand) + the 16 V ports qkd_pv16_vport bound to their closed view (r5, the V issuer)
 if [ "${OT_KV_V144:-0}" = 1 ]; then
   VPK=qkd_pv16_vport_r5; [ "${OT_KV_V144_R6:-0}" = 1 ] && VPK=qkd_pv16_vport_r6   # kvs13d: r6 (DQ 0 / RT 8, epoch on the V word)
-  VP=physical/ref_tile/${OT_KV_VPORT_KIT:-$VPK}/views/qkd_pv16_vport
-  [ -f $VP/qkd_pv16_vport.lef ] || { echo "v1.4.4: no closed V port view at $VP"; exit 4; }
+  VPM=qkd_pv16_vport
+  # MU-DIE-KV2 10-19: OT_KV_BOOT_AGES=1 binds the boot-age successor qkd_pv16_vport_b (CLOSED qkd_pv16_vport_b1-b1-cebb296c4)
+  [ "${OT_KV_BOOT_AGES:-0}" = 1 ] && { VPK=qkd_pv16_vport_b1; VPM=qkd_pv16_vport_b; }
+  VP=physical/ref_tile/${OT_KV_VPORT_KIT:-$VPK}/views/$VPM
+  [ -f $VP/$VPM.lef ] || { echo "v1.4.4: no closed V port view at $VP"; exit 4; }
   BV="$BV --view qkd_pv16_vport=$VP"
 fi
 # HKV-DIE3 10-19 (coordinator: OT_KV_ASTK_EXPAND production, option B; default ON = kv_static_die): the ASTK strip slots
