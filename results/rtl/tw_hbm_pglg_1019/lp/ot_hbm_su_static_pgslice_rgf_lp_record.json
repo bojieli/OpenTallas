@@ -8,8 +8,10 @@
   "s": {
    "clock_port": "ck_s",
    "children": [
+    "u_erly",
     "u_sin",
-    "u_sout"
+    "u_sout",
+    "u_wrly"
    ]
   },
   "r0": {
@@ -183,41 +185,6 @@
   },
   {
    "name": "4",
-   "net": "control",
-   "src_region": "s",
-   "dst_region": "r1",
-   "src_nodes": [
-    "port:control"
-   ],
-   "width": 1742,
-   "readers": [
-    "u_rly1.d",
-    "u_rg1.control"
-   ],
-   "ring": "u_lpl_4_w (ck_s)",
-   "read": "u_lpl_4_r (ck_r1)",
-   "added_edges": 2,
-   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_4_w.* -to u_lpl_4_r.*"
-  },
-  {
-   "name": "5",
-   "net": "di0",
-   "src_region": "s",
-   "dst_region": "r1",
-   "src_nodes": [
-    "u_sin"
-   ],
-   "width": 542,
-   "readers": [
-    "u_rly1.d"
-   ],
-   "ring": "u_lpl_5_w (ck_s)",
-   "read": "u_lpl_5_r (ck_r1)",
-   "added_edges": 2,
-   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_5_w.* -to u_lpl_5_r.*"
-  },
-  {
-   "name": "6",
    "net": "rf_u",
    "src_region": "s",
    "dst_region": "r1",
@@ -228,6 +195,41 @@
    "readers": [
     "u_rly1.d",
     "u_rg1.rf_u"
+   ],
+   "ring": "u_lpl_4_w (ck_s)",
+   "read": "u_lpl_4_r (ck_r1)",
+   "added_edges": 2,
+   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+  },
+  {
+   "name": "5",
+   "net": "control_f",
+   "src_region": "s",
+   "dst_region": "r1",
+   "src_nodes": [
+    "u_wrly"
+   ],
+   "width": 1742,
+   "readers": [
+    "u_rly1.d",
+    "u_rg1.control"
+   ],
+   "ring": "u_lpl_5_w (ck_s)",
+   "read": "u_lpl_5_r (ck_r1)",
+   "added_edges": 2,
+   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+  },
+  {
+   "name": "6",
+   "net": "di0",
+   "src_region": "s",
+   "dst_region": "r1",
+   "src_nodes": [
+    "u_sin"
+   ],
+   "width": 542,
+   "readers": [
+    "u_rly1.d"
    ],
    "ring": "u_lpl_6_w (ck_s)",
    "read": "u_lpl_6_r (ck_r1)",
@@ -270,24 +272,6 @@
   },
   {
    "name": "9",
-   "net": "control",
-   "src_region": "s",
-   "dst_region": "r2",
-   "src_nodes": [
-    "port:control"
-   ],
-   "width": 1742,
-   "readers": [
-    "u_rly2.d",
-    "u_rg2.control"
-   ],
-   "ring": "u_lpl_9_w (ck_s)",
-   "read": "u_lpl_9_r (ck_r2)",
-   "added_edges": 2,
-   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_9_w.* -to u_lpl_9_r.*"
-  },
-  {
-   "name": "10",
    "net": "rf_u",
    "src_region": "s",
    "dst_region": "r2",
@@ -298,6 +282,24 @@
    "readers": [
     "u_rly2.d",
     "u_rg2.rf_u"
+   ],
+   "ring": "u_lpl_9_w (ck_s)",
+   "read": "u_lpl_9_r (ck_r2)",
+   "added_edges": 2,
+   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_9_w.* -to u_lpl_9_r.*"
+  },
+  {
+   "name": "10",
+   "net": "control_f",
+   "src_region": "s",
+   "dst_region": "r2",
+   "src_nodes": [
+    "u_wrly"
+   ],
+   "width": 1742,
+   "readers": [
+    "u_rly2.d",
+    "u_rg2.control"
    ],
    "ring": "u_lpl_10_w (ck_s)",
    "read": "u_lpl_10_r (ck_r2)",
@@ -411,7 +413,7 @@
    "stages": 8
   },
   {
-   "net": "vmw_cmd",
+   "net": "vmw_cmd_f",
    "reader": "u_sout",
    "stages": 8
   }
@@ -451,6 +453,8 @@
  "compiler": {
   "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
   "child_offset_edges": {
+   "u_wrly": 0,
+   "u_erly": 0,
    "u_sin": 0,
    "u_sout": 8,
    "u_rly1": 2,

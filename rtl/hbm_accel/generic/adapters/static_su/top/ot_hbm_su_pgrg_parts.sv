@@ -24,6 +24,20 @@ module ot_hbm_su_pgrg_dly #(parameter integer W=1, N=1)(input wire ck, input wir
  assign q=r[N-1];
 endmodule
 
+// HBM-PGLG2 2026-10-19: FACE relay (S region, clock ck_s): one plain register stage between a die face (W command side /
+// E stream side) and the S-band service u_sin / u_sout / the S landings. The kit --cts gate (f5d151f2e) found 113 stages
+// whose fixed terminals sat on BOTH faces (W pin -> S register -> E pin, 1235.52 um outline): u_sin.cp (pos/vmw + ij_v),
+// u_sout.slice_x (red_sel -> slice_x) and the di landing slots (vmw_cmd + ij_v/ij_row). Every S-bound input now crosses
+// one face relay, so no S register sees pins of both faces and each face->relay->S->face hop is ~1/3 of the width
+// (<= ~410 um). Uniform +1 on EVERY S-bound input (both faces): the core is the previous core delayed one edge, so all
+// internal alignments hold; u_sout WQ_PAD 2 -> 1 keeps the VM write (su_wq) offset unchanged. BYP 1 = relay bypassed
+// (glue mutant GMUT 23 on the E relay: must FAIL lockstep).
+module ot_hbm_su_pgrg_frly #(parameter integer W=1, BYP=0)(input wire ck, input wire [W-1:0] d, output wire [W-1:0] q);
+ reg [W-1:0] r;
+ always @(posedge ck) r<=d;
+ assign q=(BYP!=0)?d:r;
+endmodule
+
 // ------------------------------------------------------------------------------------------------ S: inbound service
 // di<r> = {fw, row9, data256, rv5, row9, dwn, row9, words256} = the store-command bundle of store group r (h r%2, hi r/2)
 module ot_hbm_su_pgrg_sin #(
@@ -209,14 +223,16 @@ endmodule
 // are issued by the compiler with the same total offset.
 module ot_hbm_su_pgrg_sout #(
  parameter integer QID=1,G=2,STRAP=1,PRETREE=0,RF_LOCAL=1,MUT=0,
- parameter integer WQ_PAD=2               // VM-write alignment stages: total drain offset a multiple of 3 (4:3 bridge)
+ parameter integer WQ_PAD=2,              // VM-write alignment stages: total drain offset a multiple of 3 (4:3 bridge)
+ parameter integer FRLY=0                 // HBM-PGLG2: 1 = W-face relay stage on rf_dsec / red_sel / tree_cmd (u_sout-only
+                                          // issue ports; the other S-bound inputs cross ot_hbm_su_pgrg_frly in the parent)
 )(
  input wire ck, input wire rst_n,
  input wire [3:0] pos,
  input wire [2*39-1:0] vmw_cmd,
- input wire [255:0] rf_dsec,
- input wire [11:0] red_sel,
- input wire [11:0] tree_cmd,
+ input wire [255:0] rf_dsec_p,
+ input wire [11:0] red_sel_p,
+ input wire [11:0] tree_cmd_p,
  input wire [520:0] ret0, ret1, ret2, ret3,
  input wire s_cond,
  output reg [31:0] slice_x,
@@ -228,6 +244,13 @@ module ot_hbm_su_pgrg_sout #(
  output reg fault
 );
  wire [1:0] g_id=(STRAP!=0&&MUT!=11)?pos[1:0]:2'(G);
+ wire [255:0] rf_dsec; wire [11:0] red_sel, tree_cmd;
+ if(FRLY!=0)begin:g_frly
+  reg [279:0] fr; always @(posedge ck) fr<={rf_dsec_p,red_sel_p,tree_cmd_p};
+  assign {rf_dsec,red_sel,tree_cmd}=fr;
+ end else begin:g_nofrly
+  assign rf_dsec=rf_dsec_p; assign red_sel=red_sel_p; assign tree_cmd=tree_cmd_p;
+ end
  localparam integer DDL=3+2-((MUT==21)?1:0);
  wire [520:0] rt [0:3]; assign rt[0]=ret0; assign rt[1]=ret1; assign rt[2]=ret2; assign rt[3]=ret3;
  wire [3:0] rflt; wire [31:0] ro_v; wire [1023:0] ro_x, q5;

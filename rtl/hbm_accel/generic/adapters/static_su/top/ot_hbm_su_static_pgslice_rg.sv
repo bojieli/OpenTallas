@@ -12,8 +12,8 @@
 // Port list = ot_hbm_su_static_pgslice_lg's minus the per-child clock / reset entries (clk_lane, clk_insert, clk_bcast,
 // clk_bank, clk_bank_macro, clk_side, rst_lane_n, rst_bcast_n: children are sinks of their region root and take the
 // region reset runs) plus the region roots ck_s (= clk_ctl), ck_r0..3 and the pre-tree operands (HH-6 su_pt sibling).
-// Offsets vs pgslice_lg (bench tb_hbm_su_pgslice_rg; compiler): region frames r1/r2 +2, r0/r3 +5; red_sel, tree_cmd,
-// rf_dsec issued +10; slice_x, tree_o, pt_ro_*, inj_q +10; fault +11; VM write (su_wq) +12 serial = +16 stream.
+// Offsets vs pgslice_lg (bench tb_hbm_su_pgslice_rg; compiler; HBM-PGLG2 face relays +1 incl.): frames r1/r2 +3, r0/r3 +6; red_sel, tree_cmd,
+// rf_dsec issued +10; slice_x, tree_o, pt_ro_*, inj_q +11; fault +12; VM write (su_wq) +12 serial = +16 stream.
 // MUT: < 100 = glue mutants (GMUT: 1/2/4/10/11 as pgslice, 20 outer relay 2 stages, 21 drain line short);
 //      101..104 = lp.py landing mutants 1..4 (1 landing 0 bypassed, 2 read K+1, 3 pad 0 short, 4 u_sout reset late).
 // ---------------------------------------------------------------------------------------------------------------------

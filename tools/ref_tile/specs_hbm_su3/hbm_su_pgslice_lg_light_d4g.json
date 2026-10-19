@@ -985,11 +985,11 @@
   }
  },
  "landed_record": "results/rtl/tw_hbm_pglg_1019/lp/ot_hbm_su_static_pgslice_rgf_lp_record.json",
- "landed_note": "TW-HBM-PGLG 10-19: lp.py landed parent of the wires-only flat parent ot_hbm_su_static_pgslice_rgf (5 regions, 16 landings D 2 / E 1, reset runs depth 4); offsets vs ot_hbm_su_static_pgslice_lg: frames r1/r2 +2, r0/r3 +5; red_sel / tree_cmd / rf_dsec +10; slice_x / tree_o / pt_ro / inj_q +10; fault +11; VM write +12 serial (+16 stream). Lockstep bench tb_hbm_su_pgslice_rg (vs pgslice_lg) + mutants.",
+ "landed_note": "TW-HBM-PGLG 10-19: lp.py landed parent of the wires-only flat parent ot_hbm_su_static_pgslice_rgf (5 regions, 16 landings D 2 / E 1, reset runs depth 4) + HBM-PGLG2 face relays u_wrly / u_erly (+1 on every S-bound input); offsets vs ot_hbm_su_static_pgslice_lg: frames r1/r2 +3, r0/r3 +6; red_sel / tree_cmd / rf_dsec issued +10 (relative to the other inputs); slice_x / tree_o / pt_ro / inj_q +11; fault +12; VM write +12 serial (+16 stream, WQ_PAD 1). Lockstep bench tb_hbm_su_pgslice_rg (vs pgslice_lg) + mutants.",
  "job": {
   "owner": "Claude:TW-HBM-PGLG",
   "branch": "claude/tw-hbm-pglg-1019",
-  "tag": "r1",
+  "tag": "r2",
   "purpose": "HBM die d4g LIGHT SU port-group slice su_<q>2/3 as a LANDED region parent (landed-regions-standard-1018): 32 KIND0 r2 leaves + 32 CLOSED bank6_clock banks, 5 region roots, 16 landings",
   "record_to": "results/rtl/ref_tile/hbm_su_pgslice_lg_light_d4g",
   "views_to": "physical/ref_tile/hbm_su_pgslice_lg_light_d4g/views",
@@ -1085,6 +1085,19 @@
      "verilator"
     ],
     "why": "drain delay line one short"
+   },
+   {
+    "name": "rg_mut23",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m23 23 300",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/tw_hbm_pglg_1019/m23/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "E-face relay u_erly bypassed (HBM-PGLG2)"
    },
    {
     "name": "rg_mut101",

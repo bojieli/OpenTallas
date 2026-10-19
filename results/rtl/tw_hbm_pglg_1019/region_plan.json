@@ -68,10 +68,10 @@
  },
  "latency_vs_pgslice_lg": {
   "region_frames": {
-   "r1": 2,
-   "r2": 2,
-   "r0": 5,
-   "r3": 5,
+   "r1": 3,
+   "r2": 3,
+   "r0": 6,
+   "r3": 6,
    "note": "all region inputs (control, RF classes 0..3, fill, port-5 reads, delivery) arrive with the same delay: fill->lane, delivery->lane, RF->lane timing unchanged inside a region"
   },
   "compiler_issue_later": {
@@ -80,17 +80,50 @@
    "rf_dsec_class5": 10
   },
   "outputs_later": {
-   "slice_x": 10,
-   "tree_o": 10,
-   "pt_ro_x": 10,
-   "pt_ro_v": 10,
-   "inj_q": 10,
-   "fault": 11,
+   "slice_x": 11,
+   "tree_o": 11,
+   "pt_ro_x": 11,
+   "pt_ro_v": 11,
+   "inj_q": 11,
+   "fault": 12,
    "su_wq_serial": 12,
    "lg_wq_stream": 16
   },
   "reset_release_added_edges": 4,
-  "derivation": "flat parent ot_hbm_su_static_pgslice_rgf: outer frame +1 (relay), returns +2 at u_sout (dly2 / relay+frame), VM write +2 alignment; lp.py landings E+1 = 2 each: u_rg1/2 t=2, u_rg0/3 t=4, u_sout t=8"
+  "derivation": "flat parent ot_hbm_su_static_pgslice_rgf: outer frame +1 (relay), returns +2 at u_sout (dly2 / relay+frame), VM write +2 alignment; lp.py landings E+1 = 2 each: u_rg1/2 t=2, u_rg0/3 t=4, u_sout t=8; HBM-PGLG2 10-19: + face relay 1 edge on every S-bound input (frames +1, serial outputs +1, VM write WQ_PAD 1)",
+  "face_relays": {
+   "date": "2026-10-19",
+   "lane": "HBM-PGLG2",
+   "why": "light kit --cts gate f5d151f2e wire_reach FAIL: 113 S-band stages with fixed terminals on BOTH faces (1235.52 um): u_sin.cp (pos + ij_v), u_sout.slice_x[0..31] (red_sel -> slice_x), di landing slots u_lpl_5/8/13/14_w (vmw_cmd + ij_v)",
+   "relays": {
+    "u_wrly (W, S region)": [
+     "control",
+     "vmr_cmd",
+     "vmw_cmd",
+     "rf_bword",
+     "rf_bcmd",
+     "dw_v",
+     "dw_row",
+     "dw_d"
+    ],
+    "u_sout FRLY (W)": [
+     "rf_dsec",
+     "red_sel",
+     "tree_cmd"
+    ],
+    "u_erly (E, S region)": [
+     "su_rr",
+     "ij_v",
+     "ij_row",
+     "ij_bad",
+     "pg_fault"
+    ]
+   },
+   "flops": 3924,
+   "added_edges_every_S_bound_input": 1,
+   "effect": "the core = the previous core with every input delayed 1 edge: serial outputs +1, fault +1, VM write unchanged (u_sout WQ_PAD 2 -> 1); stream read half (s_rq / lg_rq / far_rr) unchanged; inj_q vs inj_rd +1; pos / pos_r* static straps not relayed",
+   "lp_offsets": "unchanged (lp.py record: same port offsets, pads 4,800, landings 42,150)"
+  }
  },
  "flops": {
   "landing": 42150,

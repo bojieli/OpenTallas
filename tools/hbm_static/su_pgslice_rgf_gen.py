@@ -18,6 +18,16 @@ S = "rtl/hbm_accel/generic/adapters/static_su"
 RTL_OUT = f"{S}/top/{TOP}.sv"
 LP_SPEC = "tools/landed_parent/specs/ot_hbm_su_static_pgslice_rgf.json"
 # control word fields, MSB first (ot_hbm_su_static_pgslice g_lane concatenation)
+# HBM-PGLG2 10-19: face relays (S region): every S-bound input crosses one register next to its face (W command side /
+# E stream side) -- the --cts gate f5d151f2e wire_reach found 113 S-band stages with pins on BOTH faces (1235.52 um).
+# u_wrly feeds u_sin / the S landings; the u_sout-only issue ports rf_dsec / red_sel / tree_cmd get their face relay
+# INSIDE u_sout (FRLY 1): a separate port-fed relay child would sit at lp offset 0 and force 8-stage pads in front of
+# u_sout (lp.py schedules children ASAP), the in-child relay keeps those ports at u_sout's offset (issued +8, no pads).
+W_RLY = [("control", 1742), ("vmr_cmd", 60), ("vmw_cmd", 78), ("rf_bword", 128), ("rf_bcmd", 36), ("dw_v", 2),
+         ("dw_row", 18), ("dw_d", 1024)]
+WO_RLY = [("rf_dsec", 256), ("red_sel", 12), ("tree_cmd", 12)]   # u_sout FRLY 1
+E_RLY = [("su_rr", 514), ("ij_v", 4), ("ij_row", 36), ("ij_bad", 1), ("pg_fault", 1)]
+FACE_EDGES = 1                                  # added serial edges on every S-bound input (uniform)
 CTL = [("ld", 1), ("ld_bank", 1), ("ld_c", 1200), ("emit", 1), ("bank", 1), ("o_v", 24), ("i_v", 24), ("no", 24),
        ("ni", 24), ("ls", 4), ("lvw", 4), ("vb", 120), ("krow", 24), ("obase", 24), ("aibase", 24), ("aind", 2),
        ("gsh", 5), ("cpair", 1), ("dst", 2), ("srcs", 8), ("cx_arnd", 1), ("cx_arelu", 1), ("cx_amin", 1),
@@ -56,6 +66,8 @@ def rtl():
     w("// WIRES-ONLY flat parent of the LIGHT SU port-group slice in region form (lp.py input; the kit top is the lp.py output")
     w(f"// {TOP}_lp). Glue: ot_hbm_su_pgrg_parts.sv. Flat timing vs ot_hbm_su_static_pgslice_lg: inner regions r1/r2 equal,")
     w("// outer r0/r3 +1 (relay), returns at u_sout +2, red_sel / tree_cmd / rf_dsec issued +2, VM write +2+WQ_PAD.")
+    w("// HBM-PGLG2 10-19: plus ONE face relay (u_wrly W / u_erly E, S region) on every S-bound input: all outputs +1 except")
+    w("// the VM write su_wq (u_sout WQ_PAD 2 -> 1 keeps it), i.e. this parent == the previous one with its inputs delayed 1.")
     w(f"module {TOP} #(")
     w(" parameter integer QID=1, G=2, STRAP=1, PRETREE=0, GMUT=0")
     w(")(")
@@ -76,23 +88,30 @@ def rtl():
         w(f" wire [1741:0] " + ", ".join(f"ctl_r{r}_{j}" for j in range(8)) + ";")
         w(f" wire [87:0] lid_r{r}; wire [1023:0] rdq_r{r}; wire [{8 * LOW - 1}:0] lo_r{r}; wire [47:0] brv_r{r};"
           f" wire [431:0] bra_r{r}; wire [7:0] bwv_r{r}; wire [71:0] bwa_r{r}; wire [255:0] bwd_r{r}; wire [1535:0] bq_r{r};")
+    w(" // ---- face relays (S region, +1 edge on every S-bound input; GMUT 23: E relay bypassed)")
+    for nm, lst, byp in (("u_wrly", W_RLY, "0"), ("u_erly", E_RLY, "(GMUT==23)?1:0")):
+        tot = sum(wd for _, wd in lst)
+        for n, wd in lst:
+            w(f" wire [{wd - 1}:0] {n}_f;")
+        w(f" ot_hbm_su_pgrg_frly #(.W({tot}),.BYP({byp})) {nm}(.ck(ck),.d({{{','.join(n for n, _ in lst)}}}),"
+          f".q({{{','.join(n + '_f' for n, _ in lst)}}}));")
     w(" // ---- S")
-    w(" ot_hbm_su_pgrg_sin #(.QID(QID),.G(G),.STRAP(STRAP),.MUT(GMUT)) u_sin(.ck(ck),.rst_n(rst_n),.pos(pos),.vmr_cmd(vmr_cmd),"
-      ".vmw_cmd(vmw_cmd),.su_rr(su_rr),.ij_v(ij_v),.ij_row(ij_row),.ij_bad(ij_bad),.pg_fault(pg_fault),.rf_bword(rf_bword),"
-      ".rf_bcmd(rf_bcmd),.dw_v(dw_v),.dw_row(dw_row),.dw_d(dw_d),.rf_u(rf_u),.di0(di0),.di1(di1),.di2(di2),.di3(di3),"
+    w(" ot_hbm_su_pgrg_sin #(.QID(QID),.G(G),.STRAP(STRAP),.MUT(GMUT)) u_sin(.ck(ck),.rst_n(rst_n),.pos(pos),.vmr_cmd(vmr_cmd_f),"
+      ".vmw_cmd(vmw_cmd_f),.su_rr(su_rr_f),.ij_v(ij_v_f),.ij_row(ij_row_f),.ij_bad(ij_bad_f),.pg_fault(pg_fault_f),"
+      ".rf_bword(rf_bword_f),.rf_bcmd(rf_bcmd_f),.dw_v(dw_v_f),.dw_row(dw_row_f),.dw_d(dw_d_f),.rf_u(rf_u),.di0(di0),.di1(di1),.di2(di2),.di3(di3),"
       ".s_cond(s_cond));")
-    w(" ot_hbm_su_pgrg_sout #(.QID(QID),.G(G),.STRAP(STRAP),.PRETREE(PRETREE),.MUT(GMUT)) u_sout(.ck(ck),.rst_n(rst_n),"
-      ".pos(pos),.vmw_cmd(vmw_cmd),.rf_dsec(rf_dsec),.red_sel(red_sel),.tree_cmd(tree_cmd),.ret0(ret0b),.ret1(ret1d),"
+    w(" ot_hbm_su_pgrg_sout #(.QID(QID),.G(G),.STRAP(STRAP),.PRETREE(PRETREE),.MUT(GMUT),.WQ_PAD(1),.FRLY(1)) u_sout(.ck(ck),"
+      ".rst_n(rst_n),.pos(pos),.vmw_cmd(vmw_cmd_f),.rf_dsec_p(rf_dsec),.red_sel_p(red_sel),.tree_cmd_p(tree_cmd),.ret0(ret0b),.ret1(ret1d),"
       ".ret2(ret2d),.ret3(ret3b),.s_cond(s_cond),.slice_x(slice_x),.tree_o(tree_o),.pt_ro_x(pt_ro_x),.pt_ro_v(pt_ro_v),"
       ".inj_q(inj_q),.su_wq(su_wq),.fault(fault));")
     w(" // ---- inner regions: relays of the outer region (inbound 1 stage; GMUT 20: 2) and the return path alignment")
     for inner, outer in ((1, 0), (2, 3)):
-        w(f" ot_hbm_su_pgrg_dly #(.W(2448),.N((GMUT==20)?2:1)) u_rly{inner}(.ck(ck),.d({{control,rf_u,di{outer}}}),.q(rly{inner}_q));")
+        w(f" ot_hbm_su_pgrg_dly #(.W(2448),.N((GMUT==20)?2:1)) u_rly{inner}(.ck(ck),.d({{control_f,rf_u,di{outer}}}),.q(rly{inner}_q));")
         w(f" ot_hbm_su_pgrg_dly #(.W(521),.N(1)) u_rlyb{inner}(.ck(ck),.d(ret_r{outer}),.q(ret{outer}b));")
         w(f" ot_hbm_su_pgrg_dly #(.W(521),.N(2)) u_dly{inner}(.ck(ck),.d(ret_r{inner}),.q(ret{inner}d));")
     for r in range(4):
         inner = r in (1, 2)
-        c_in = "control" if inner else f"rly{1 if r == 0 else 2}_q[2447:706]"
+        c_in = "control_f" if inner else f"rly{1 if r == 0 else 2}_q[2447:706]"
         rf_in = "rf_u" if inner else f"rly{1 if r == 0 else 2}_q[705:542]"
         di_in = f"di{r}" if inner else f"rly{1 if r == 0 else 2}_q[541:0]"
         w(f" // ---- region r{r} (store group {r}: h {r % 2}, hi {r // 2}; lanes / banks {8 * r}..{8 * r + 7})")
@@ -146,7 +165,7 @@ def centres():
 
 def lp_spec():
     cen = centres()
-    regions = [dict(name="s", insts=["u_sin", "u_sout"], centre=cen["s"])]
+    regions = [dict(name="s", insts=["u_sin", "u_sout", "u_wrly", "u_erly"], centre=cen["s"])]
     for r in range(4):
         ins = [f"u_rg{r}", f"u_ln_r{r}_*", f"u_bk_r{r}_*"]
         if r in (1, 2):
@@ -185,7 +204,7 @@ PITCH = 0.2                                    # um per pin on the data ranges (
 BENCH = "tools/hbm_static/su_pgslice_rg_vl_run.sh"
 WIT = "results/rtl/tw_hbm_pglg_1019"
 MUTANTS = [(1, "fill registered early"), (2, "drain group select flipped"), (20, "outer-region relay 2 stages"),
-           (21, "drain delay line one short"), (101, "lp landing 0 bypassed (unlanded)"), (103, "lp pad 0 one stage short")]
+           (21, "drain delay line one short"), (23, "E-face relay u_erly bypassed (HBM-PGLG2)"), (101, "lp landing 0 bypassed (unlanded)"), (103, "lp pad 0 one stage short")]
 
 
 def ranges(ports, centre):
@@ -252,10 +271,11 @@ def kit_spec(ram_gb=56):  # 10-19: 24 GB was SIGTERMed (24.5 GB RSS, 2 instances
                              **{f"r{r}": dict(ratio=[1, 1], ports=[f"ck_r{r}"], inputs=[f"pos_r{r}"], outputs=[]) for r in range(4)}},
         landed_record=f"{WIT}/lp/{TOP}_lp_record.json",
         landed_note=("TW-HBM-PGLG 10-19: lp.py landed parent of the wires-only flat parent " + TOP + " (5 regions, 16 "
-                     "landings D 2 / E 1, reset runs depth 4); offsets vs ot_hbm_su_static_pgslice_lg: frames r1/r2 +2, "
-                     "r0/r3 +5; red_sel / tree_cmd / rf_dsec +10; slice_x / tree_o / pt_ro / inj_q +10; fault +11; VM write "
-                     "+12 serial (+16 stream). Lockstep bench tb_hbm_su_pgslice_rg (vs pgslice_lg) + mutants."),
-        job=dict(owner="Claude:TW-HBM-PGLG", branch="claude/tw-hbm-pglg-1019", tag="r1",
+                     "landings D 2 / E 1, reset runs depth 4) + HBM-PGLG2 face relays u_wrly / u_erly (+1 on every S-bound input); "
+                     "offsets vs ot_hbm_su_static_pgslice_lg: frames r1/r2 +3, r0/r3 +6; red_sel / tree_cmd / rf_dsec issued "
+                     "+10 (relative to the other inputs); slice_x / tree_o / pt_ro / inj_q +11; fault +12; VM write +12 serial "
+                     "(+16 stream, WQ_PAD 1). Lockstep bench tb_hbm_su_pgslice_rg (vs pgslice_lg) + mutants."),
+        job=dict(owner="Claude:TW-HBM-PGLG", branch="claude/tw-hbm-pglg-1019", tag="r2",
                  purpose=("HBM die d4g LIGHT SU port-group slice su_<q>2/3 as a LANDED region parent (landed-regions-standard-"
                           "1018): 32 KIND0 r2 leaves + 32 CLOSED bank6_clock banks, 5 region roots, 16 landings"),
                  record_to="results/rtl/ref_tile/hbm_su_pgslice_lg_light_d4g",

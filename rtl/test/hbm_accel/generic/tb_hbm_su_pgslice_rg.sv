@@ -18,10 +18,14 @@
 //  inputs. (r1 compared far_w_done/lg_fault at +0 with un-retimed write inputs -> 1086 stream mismatches, bench bug.)
 //  Class check: a wrong-class strap latches the DUT fault (ref clean).
 // MUT (DUT only, must FAIL): 1 fill early; 2 drain group flip; 4 RF select early; 10 delivery order; 11 strap g ignored;
-//  20 outer chain relay missing; 21 drain delay line short; 22 R2 inbound unlanded.
+//  20 outer chain relay missing; 21 drain delay line short; 22 R2 inbound unlanded; 23 E-face relay bypassed (HBM-PGLG2).
 module tb_hbm_su_pgslice_rg;
  parameter integer MUT=0, NRST=2, EDGES=1200, LK=1;
  localparam integer A=LK+1, RT=(2*A+1)+2*A+1, SWQ=((RT+2)/3)*4;    // RT 10, VM write 12 serial = 16 stream edges
+ // HBM-PGLG2 10-19: IR = face relay edges (u_wrly / u_erly / u_sout FRLY: +1 on every S-bound input). Serial outputs
+ // (slice_x, inj_q, tree_o) compare at +RT+IR, fault at +RT+IR+1; the VM write stays at +SWQ (u_sout WQ_PAD 2 -> 1);
+ // red_sel / tree_cmd / rf_dsec keep their RT re-timing (relative to the other inputs).
+ localparam integer IR=1, RS=RT+IR;
  localparam integer TS=1200, TP=900, T0=600;
  reg sclk=0, pclk=0;
  initial begin #(T0); forever begin sclk=1; #(TS/2); sclk=0; #(TS/2); end end
@@ -129,16 +133,16 @@ module tb_hbm_su_pgslice_rg;
   hs0[ks%HN]=sr_ref0; hs1[ks%HN]=sr_ref1; hf0[ks%HN]=ref0_f; hf1[ks%HN]=ref1_f; hsv[ks%HN]=cmp;
   if(cmp && (|ref0_sx || |ref0_iq || |ref1_sx)) data_seen=data_seen+1;
   if(cmp && ref0_f) ref_faults=ref_faults+1;
-  if(cmpd && ks>=RT+1) begin
-   if(hsv[(ks-RT)%HN]) begin
+  if(cmpd && ks>=RS+1) begin
+   if(hsv[(ks-RS)%HN]) begin
     checks=checks+2;
-    if(sr_dut0!==hs0[(ks-RT)%HN]) begin e_ser=e_ser+1; mism("serial(sx/iq/to)",0); end
-    if(sr_dut1!==hs1[(ks-RT)%HN]) begin e_ser=e_ser+1; mism("serial(sx/iq/to)",1); end
+    if(sr_dut0!==hs0[(ks-RS)%HN]) begin e_ser=e_ser+1; mism("serial(sx/iq/to)",0); end
+    if(sr_dut1!==hs1[(ks-RS)%HN]) begin e_ser=e_ser+1; mism("serial(sx/iq/to)",1); end
    end
-   if(hsv[(ks-RT-1)%HN]) begin
+   if(hsv[(ks-RS-1)%HN]) begin
     checks=checks+2;
-    if(dut0_f!==hf0[(ks-RT-1)%HN]) begin e_flt=e_flt+1; mism("fault",0); end
-    if(dut1_f!==hf1[(ks-RT-1)%HN]) begin e_flt=e_flt+1; mism("fault",1); end
+    if(dut0_f!==hf0[(ks-RS-1)%HN]) begin e_flt=e_flt+1; mism("fault",0); end
+    if(dut1_f!==hf1[(ks-RS-1)%HN]) begin e_flt=e_flt+1; mism("fault",1); end
    end
   end
   ks=ks+1;
@@ -167,7 +171,7 @@ module tb_hbm_su_pgslice_rg;
  integer r, k, class_ok=0;
  initial begin
   if(!$value$plusargs("NRST=%d", r)) r=NRST;
-  $display("PGSLICE_RG bench MUT=%0d LK=%0d RT=%0d SWQ=%0d EDGES=%0d", MUT, LK, RT, SWQ, EDGES);
+  $display("PGSLICE_RG bench MUT=%0d LK=%0d RT=%0d IR=%0d SWQ=%0d EDGES=%0d", MUT, LK, RT, IR, SWQ, EDGES);
   repeat(5) @(negedge sclk);
   por=1; repeat(3) @(negedge sclk); por=0;
   for(k=0;k<r;k=k+1) begin
@@ -178,13 +182,13 @@ module tb_hbm_su_pgslice_rg;
    repeat(EDGES) @(negedge sclk);
    active=0; quiet;
    repeat(48) @(negedge sclk);                         // drain the in-flight calendar (lanes, fill, landings)
-   cmp=0; repeat(RT+4) @(negedge sclk); cmpd=0;
+   cmp=0; repeat(RS+4) @(negedge sclk); cmpd=0;
    por=0; brst=0;
   end
   repeat(16) @(negedge sclk); por=1; repeat(2) @(negedge pclk); brst=1; repeat(40) @(negedge sclk);
   if(dut0_f!==1'b0 || ref0_f!==1'b0) $display("CLASS PRECHECK: quiet fault dut0/ref0 %b/%b", dut0_f, ref0_f);
   else begin
-   pos0={2'd0,2'd0}; repeat(RT+6) @(negedge sclk);
+   pos0={2'd0,2'd0}; repeat(RS+6) @(negedge sclk);
    if(dut0_f===1'b1) class_ok=1;
    else $display("CLASS CHECK FAIL: wrong-class strap fault dut0 %b", dut0_f);
   end
