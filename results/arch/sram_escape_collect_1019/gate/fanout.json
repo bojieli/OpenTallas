@@ -1,0 +1,58 @@
+{
+  "scope": "Mapped scalar DFF Q/QN exact net connections; coupon only",
+  "source_sha256": "d1b29cc69720ac6b8c025f71f9883b1d506bb91672f5f5953ab75a3bbb53e393",
+  "flops": 206,
+  "max_data_fanout": 1,
+  "worst": [
+    {
+      "instance": "\\r_addr_in__ot_q[0]$_DFF_P_",
+      "net": "_196_",
+      "loads": 1
+    },
+    {
+      "instance": "\\r_addr_in__ot_q[1]$_DFF_P_",
+      "net": "_197_",
+      "loads": 1
+    },
+    {
+      "instance": "\\r_addr_in__ot_q[2]$_DFF_P_",
+      "net": "_198_",
+      "loads": 1
+    },
+    {
+      "instance": "\\r_addr_in__ot_q[3]$_DFF_P_",
+      "net": "_199_",
+      "loads": 1
+    },
+    {
+      "instance": "\\r_addr_in__ot_q[4]$_DFF_P_",
+      "net": "_200_",
+      "loads": 1
+    },
+    {
+      "instance": "\\r_ce_in__ot_q$_DFF_P_",
+      "net": "_202_",
+      "loads": 1
+    },
+    {
+      "instance": "\\rd_out[0]$_DFF_P_",
+      "net": "_000_",
+      "loads": 1
+    },
+    {
+      "instance": "\\rd_out[10]$_DFF_P_",
+      "net": "_009_",
+      "loads": 1
+    },
+    {
+      "instance": "\\rd_out[11]$_DFF_P_",
+      "net": "_010_",
+      "loads": 1
+    },
+    {
+      "instance": "\\rd_out[12]$_DFF_P_",
+      "net": "_011_",
+      "loads": 1
+    }
+  ]
+}

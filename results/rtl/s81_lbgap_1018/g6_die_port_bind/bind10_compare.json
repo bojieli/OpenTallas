@@ -1,0 +1,267 @@
+{
+ "schema": "opentallas.s81_lbgap.g6_bind10.v1",
+ "die_v": "/home/ubuntu/scratch/s81die7/bind10/bind/die.v (S81-DIE7 bind10, sha in port_bind json)",
+ "note": "same die.v + args as bind10 port_bind_cmd, rtl roots/files from this branch tree; old = origin/main 9f59d96e3 die_port_bind; new = G6 default; newp = G6 + --ref-tile-prefer --prefer-list tools/s81_dv/frame_bench.f --prefer-list tools/s81_dv/svc_rs/rs_files.sh (what dv_bind.py now passes)",
+ "old": {
+  "verdict": "PASS",
+  "die_sha256": "d0222e67dc3da5c5c163a959aafdbfe2858613d3c609e05eece77467cfbf7fc8",
+  "closure_modules": 247,
+  "unresolved": {},
+  "ambiguous_children": {},
+  "variant_children": {},
+  "elab_traps": null,
+  "ref_tile_specs_used": 0
+ },
+ "new": {
+  "verdict": "FAIL",
+  "die_sha256": "d0222e67dc3da5c5c163a959aafdbfe2858613d3c609e05eece77467cfbf7fc8",
+  "closure_modules": 361,
+  "unresolved": {},
+  "ambiguous_children": {
+   "dsfd_coll_lane_e": {
+    "chosen": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "by": "first",
+    "iface_differ": [
+     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv",
+     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv",
+     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv"
+    ]
+   },
+   "dsfd_coll_lane_w": {
+    "chosen": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "by": "first",
+    "iface_differ": [
+     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv",
+     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv",
+     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv"
+    ]
+   },
+   "ot_hdc_fp32_mul_lat": {
+    "chosen": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "by": "first",
+    "iface_differ": [
+     "rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv"
+    ]
+   },
+   "ot_hdc_fsqrt": {
+    "chosen": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "by": "first",
+    "iface_differ": [
+     "rtl/hdc/v41/ot_hdc_fsqrt_prefix_round.sv",
+     "rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv"
+    ]
+   },
+   "ot_hdc_v41x_attn_staging": {
+    "chosen": "rtl/chip/physical/ot_v41_attn_eng_ctl_endpoint_phys.sv",
+    "by": "first",
+    "iface_differ": [
+     "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv"
+    ]
+   },
+   "ot_hdc_v41x_attn_tile_l": {
+    "chosen": "rtl/chip/physical/ot_v41_attn_eng_s_ctl_phys.sv",
+    "by": "first",
+    "iface_differ": [
+     "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv"
+    ]
+   },
+   "ot_s81ph_coll_lane": {
+    "chosen": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "by": "first",
+    "iface_differ": [
+     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv",
+     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv",
+     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv"
+    ]
+   },
+   "ot_v41_bf16_lanes2": {
+    "chosen": "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "by": "first",
+    "iface_differ": [
+     "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv"
+    ]
+   },
+   "ot_v41_rom_elem_w10": {
+    "chosen": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+    "by": "first",
+    "iface_differ": [
+     "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+     "rtl/v41rom/ot_v41_rom_elem_w10_rowfix_prepare.sv"
+    ]
+   }
+  },
+  "variant_children": {
+   "dsfd_coll_lane_e": {
+    "chosen": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "by": "first"
+   },
+   "dsfd_coll_lane_w": {
+    "chosen": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "by": "first"
+   },
+   "ot_hdc_fp32_mul_lat": {
+    "chosen": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "by": "first"
+   },
+   "ot_hdc_fsqrt": {
+    "chosen": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "by": "first"
+   },
+   "ot_hdc_qadd_lat": {
+    "chosen": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "by": "first"
+   },
+   "ot_hdc_qmul_lat": {
+    "chosen": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "by": "first"
+   },
+   "ot_hdc_v41x_attn_merge_phs": {
+    "chosen": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "by": "first"
+   },
+   "ot_hdc_v41x_attn_staging": {
+    "chosen": "rtl/chip/physical/ot_v41_attn_eng_ctl_endpoint_phys.sv",
+    "by": "first"
+   },
+   "ot_hdc_v41x_attn_tile_l": {
+    "chosen": "rtl/chip/physical/ot_v41_attn_eng_s_ctl_phys.sv",
+    "by": "first"
+   },
+   "ot_hdc_v41x_fdiv": {
+    "chosen": "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+    "by": "first"
+   },
+   "ot_hdc_v41x_qaddf": {
+    "chosen": "rtl/chip/physical/ot_v41_attn_eng_s_ctl_phys.sv",
+    "by": "first"
+   },
+   "ot_hdc_v41x_qaddl": {
+    "chosen": "rtl/chip/physical/ot_v41_attn_eng_s_ctl_phys.sv",
+    "by": "first"
+   },
+   "ot_s81ph_coll_lane": {
+    "chosen": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "by": "first"
+   },
+   "ot_sram_1r1w_128x256_m1_r2c2": {
+    "chosen": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "by": "macro_dir"
+   },
+   "ot_v41_bf16_lanes2": {
+    "chosen": "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "by": "first"
+   },
+   "ot_v41_rom_elem_w10": {
+    "chosen": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+    "by": "first"
+   }
+  },
+  "elab_traps": {
+   "ot_hdc_fp32_add_lat_CUTS_must_match_LAT": [
+    "ot_hdc_fp32_add_lat"
+   ],
+   "ot_hdc_fp32_mul_lat_CUTS_must_match_LAT": [
+    "ot_hdc_fp32_mul_lat"
+   ]
+  },
+  "ref_tile_specs_used": 0
+ },
+ "newp": {
+  "verdict": "PASS",
+  "die_sha256": "d0222e67dc3da5c5c163a959aafdbfe2858613d3c609e05eece77467cfbf7fc8",
+  "closure_modules": 364,
+  "unresolved": {},
+  "ambiguous_children": {},
+  "variant_children": {
+   "dsfd_coll_lane_e": {
+    "chosen": "physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "by": "prefer"
+   },
+   "dsfd_coll_lane_w": {
+    "chosen": "physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "by": "prefer"
+   },
+   "ot_hdc_fp32_mul_lat": {
+    "chosen": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "by": "prefer"
+   },
+   "ot_hdc_fsqrt": {
+    "chosen": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "by": "prefer"
+   },
+   "ot_hdc_qadd": {
+    "chosen": "rtl/hdc/ot_hdc_fastfp.sv",
+    "by": "prefer"
+   },
+   "ot_hdc_qadd_lat": {
+    "chosen": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "by": "prefer"
+   },
+   "ot_hdc_qmul_lat": {
+    "chosen": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "by": "prefer"
+   },
+   "ot_hdc_v41x_attn_merge_phs": {
+    "chosen": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "by": "prefer"
+   },
+   "ot_hdc_v41x_attn_staging": {
+    "chosen": "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+    "by": "prefer"
+   },
+   "ot_hdc_v41x_attn_tile_l": {
+    "chosen": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+    "by": "prefer"
+   },
+   "ot_hdc_v41x_fdiv": {
+    "chosen": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "by": "prefer"
+   },
+   "ot_hdc_v41x_qaddf": {
+    "chosen": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+    "by": "prefer"
+   },
+   "ot_hdc_v41x_qaddl": {
+    "chosen": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+    "by": "prefer"
+   },
+   "ot_s81ph_coll_lane": {
+    "chosen": "physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "by": "prefer"
+   },
+   "ot_s81ph_link_ep": {
+    "chosen": "physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
+    "by": "prefer"
+   },
+   "ot_s81ph_link_gbx": {
+    "chosen": "physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
+    "by": "prefer"
+   },
+   "ot_s81ph_mem1r1w": {
+    "chosen": "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+    "by": "prefer"
+   },
+   "ot_sram_1r1w_128x256_m1_r2c2": {
+    "chosen": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "by": "macro_dir"
+   },
+   "ot_v41_bf16_lanes2": {
+    "chosen": "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+    "by": "prefer"
+   },
+   "ot_v41_rom_elem_w10": {
+    "chosen": "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+    "by": "prefer"
+   }
+  },
+  "elab_traps": {
+   "ot_hdc_fp32_add_lat_CUTS_must_match_LAT": [
+    "ot_hdc_fp32_add_lat"
+   ],
+   "ot_hdc_fp32_mul_lat_CUTS_must_match_LAT": [
+    "ot_hdc_fp32_mul_lat"
+   ]
+  },
+  "ref_tile_specs_used": 119
+ }
+}

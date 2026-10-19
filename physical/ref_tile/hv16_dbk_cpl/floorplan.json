@@ -33,11 +33,9 @@
  },
  "pins": {
   "W": [
-   "rr",
    "rq"
   ],
   "N": [
-   "wd",
    "wb_reserve_v",
    "wb_reserve_bank",
    "wb_fill_bank",
@@ -53,8 +51,10 @@
    "clk",
    "clk_cp",
    "clk_rst",
-   "rst_n",
+   "busy",
+   "quiet",
    "stk",
+   "rst_n",
    "tgt",
    "cfg_v",
    "cfg_target",
@@ -70,12 +70,12 @@
    "cp_active",
    "mv_src",
    "mv_done",
-   "mv_fault",
-   "quiet",
-   "busy"
+   "mv_fault"
   ],
   "ANY": [
-   "clk_bank"
+   "clk_bank",
+   "rr",
+   "wd"
   ]
  },
  "clock_port": "clk",
@@ -243,6 +243,7 @@
   "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
   "rtl/lib/ot_rst_relay.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/common_flow/child_pocket_guard.tcl",
   "physical/ref_tile/hv16_dbk_cpl/kit.env",
   "physical/ref_tile/hv16_dbk_cpl/clock.sdc",
   "physical/ref_tile/hv16_dbk_cpl/signoff.sdc",

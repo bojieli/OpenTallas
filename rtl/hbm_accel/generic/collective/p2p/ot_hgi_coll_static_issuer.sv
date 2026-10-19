@@ -118,17 +118,56 @@ endmodule
 // True hardenable macro leaf: one actual catalog SRAM, registered face data.
 // Request/address and write command originate at control registers. Each leaf
 // clock must have the same logical edge, with physical insertion compensated.
-module ot_hgi_coll_static_program_bank #(parameter integer MUT_DATA=0)(
+// XDIE-HBM4 (10-19): ROWS 128 = two 64-row macros (row[6] selects; the read half is registered with the macro read so
+// the output select is a flop -> 2:1 mux -> face flop). ROWS 64 (default): the original single macro, unchanged.
+// TW2-COLLAR (10-19): the low macro is ALWAYS u_sram, outside any generate block, so ROWS 64 elaborates to the pre-XDIE
+// instance path (u_bank.u_sram: closed hcoll_v5_issuer / q2-q3 LP kits place it by that exact name); only the upper
+// macro and the hi_q select flop live in g128 (u_bank.g128.u_sram_hi). The row-6 gate is a constant 0 at ROWS 64.
+module ot_hgi_coll_static_program_bank #(parameter integer MUT_DATA=0, parameter integer ROWS=64,
+    parameter integer PW=(ROWS>128)?8:(ROWS>64)?7:6)(   // PW derived; never override
     input wire clk,read_v,write_v,
-    input wire [5:0] read_row,write_row,
+    input wire [PW-1:0] read_row,write_row,
     input wire [511:0] write_data,
     output reg [511:0] data
 );
-    wire [511:0] rq;
+    wire [511:0] rq,rq_lo,rq_lohi;
+    wire [7:0] rrow=read_row,wrow=write_row;          // zero-extended: bit 6 exists only for ROWS 128/256, bit 7 for 256
+    // macro select row[7:6] (ROWS 256) / {0,row[6]} (ROWS 128) / 0 (ROWS 64)
+    wire [1:0] rs=(ROWS>128)?rrow[7:6]:{1'b0,(ROWS>64)&&rrow[6]},ws=(ROWS>128)?wrow[7:6]:{1'b0,(ROWS>64)&&wrow[6]};
+    wire r_hi=rs==2'd1,w_hi=ws==2'd1;
     ot_sram_1r1w_64x512_m1_r2c2 u_sram(
-        .clk(clk),.r_ce_in(read_v),.r_addr_in(read_row),.rd_out(rq),
-        .w_ce_in(write_v),.w_addr_in(write_row),.wd_in(write_data),.w_mask_in({512{1'b1}}),
+        .clk(clk),.r_ce_in(read_v && rs==2'd0),.r_addr_in(rrow[5:0]),.rd_out(rq_lo),
+        .w_ce_in(write_v && ws==2'd0),.w_addr_in(wrow[5:0]),.wd_in(write_data),.w_mask_in({512{1'b1}}),
         .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(18'b0));
+    generate if(ROWS>64)begin:g128
+    wire [511:0] rq_hi;reg hi_q;
+    always @(posedge clk)if(read_v)hi_q<=r_hi;
+    ot_sram_1r1w_64x512_m1_r2c2 u_sram_hi(
+        .clk(clk),.r_ce_in(read_v && r_hi),.r_addr_in(rrow[5:0]),.rd_out(rq_hi),
+        .w_ce_in(write_v && w_hi),.w_addr_in(wrow[5:0]),.wd_in(write_data),.w_mask_in({512{1'b1}}),
+        .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(18'b0));
+    assign rq_lohi=hi_q?rq_hi:rq_lo;
+    end else begin:g64
+    assign rq_lohi=rq_lo;
+    end endgenerate
+    // HBM-ARGMAX (10-19, coordinator 0kj): ROWS 256 (8-bit pc) = rows 128..191 / 192..255 in two more 64-row macros
+    // (g256.u_sram_h2 / g256.u_sram_h3) beside u_sram (0..63) and g128.u_sram_hi (64..127); the h2/h3 select flops load
+    // with the macro read like hi_q, so the output path stays flop -> mux -> face flop. ROWS 64/128: rq = rq_lohi.
+    generate if(ROWS>128)begin:g256
+    wire [511:0] rq_h2,rq_h3;reg h2_q,h3_q;
+    always @(posedge clk)if(read_v)begin h2_q<=rs==2'd2;h3_q<=rs==2'd3;end
+    ot_sram_1r1w_64x512_m1_r2c2 u_sram_h2(
+        .clk(clk),.r_ce_in(read_v && rs==2'd2),.r_addr_in(rrow[5:0]),.rd_out(rq_h2),
+        .w_ce_in(write_v && ws==2'd2),.w_addr_in(wrow[5:0]),.wd_in(write_data),.w_mask_in({512{1'b1}}),
+        .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(18'b0));
+    ot_sram_1r1w_64x512_m1_r2c2 u_sram_h3(
+        .clk(clk),.r_ce_in(read_v && rs==2'd3),.r_addr_in(rrow[5:0]),.rd_out(rq_h3),
+        .w_ce_in(write_v && ws==2'd3),.w_addr_in(wrow[5:0]),.wd_in(write_data),.w_mask_in({512{1'b1}}),
+        .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(18'b0));
+    assign rq=h3_q?rq_h3:h2_q?rq_h2:rq_lohi;
+    end else begin:g_le128
+    assign rq=rq_lohi;
+    end endgenerate
     always @(posedge clk)data<=rq^(MUT_DATA?512'b1:512'b0);
 endmodule
 `default_nettype wire

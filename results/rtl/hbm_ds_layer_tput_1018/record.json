@@ -191,9 +191,20 @@
     "flat (one namespace): MODDUP/param clashes -> per-master namespaces + per-master DEFINES (views.json env) + same-name variant uniquify (die_filelist/flatten_masters)",
     "flat, per-master namespaces: parse+link+width PASS (0 errors); elaboration OOM at 96 GB (ot-epyc4, 3 min) and at 380 GB (ot-epyc5, 13 min) -> a flat whole-die Verilator model is not tractable",
     "--hierarchical (one hier_block per master parametrisation): ~120 blocks verilate at 0.3-14 GB / 2-220 s each; NBA guard needed --unroll-count 16384; OOM at 200 GB (j32) and 300 GB (j12) -> relaunched j6 / 300 GB (pending)"
-   ]
+   ],
+   "result_1018": "hierarchical j6 / 300 GB: OOM after 14.6 min (stage0/stage0.json) -> whole-die Verilator abandoned (simulate-minimum-component)"
   },
-  "interface": "lanes/TOKEN-PASS-HBMDS.md + tools/hbm_layer_vehicle/"
+  "interface": "lanes/TOKEN-PASS-HBMDS.md + tools/hbm_layer_vehicle/",
+  "slice": {
+   "what": "ONE QUADRANT (SW) slice cut from the GEN2 die.v of record (e92f4d03) by tools/hbm_layer_vehicle/cut_slice.py: 328 die instances verbatim (327 SW + hb_ckgen), 67 masters; boundary 98 in / 189 out (slice_sw/boundary.json) driven/checked by the replay model of gen_slice_tb.py at scheduled cycles; HBM PHY+DRAM = off-chip model rtl/test/hbm_layer/ot_hbm3e_phy_rc_e8p5_dram_model.sv",
+   "images": "tools/hbm_layer_vehicle/layer_images.py (compiler (a)): DS L0 8 SU.VOP records emit runnable SU images (su_prog port) + VM preload/checks; images/l*_manifest.json",
+   "composition": "layer cycles = the slowest quadrant slice under the fixed static schedule (slices run the same schedule; quadrants are not symmetric: SM/xload only in SW/NW) -- all four quadrants to be cut once SW runs",
+   "builds_1018": [
+    "SW j8/200 GB OOM, j6/320 GB OOM, j4/480 GB OOM: ot_hgi_coll_tkm_m_tp192 verilated flat (32 tile bodies) + 5.050 _hier.mk double-runs blocks under make -j",
+    "sw2 (pending): nested hier_block for the TKM tiles + serial hier verilation (make -j1 hier_verilation, parallel hier_build), 240 GB, ot-epyc4 /srv/opentallas-scratch/claude/layerbench-hbm/sw2, replay ds_l0"
+   ],
+   "status": "NOT RUN yet (build pending)"
+  }
  },
  "behavioural": [
   "HBM PHY ot_hbm3e_phy_rc_e8p5: (* blackbox *) abstract, no DRAM model yet (allowed: PHY/off-chip)",
@@ -275,7 +286,7 @@
  },
  "token_compose": {
   "terms": [],
-  "note": "no measured layer term yet: every DS representative layer is NOT RUN on d4g GEN2 RTL (coverage.json); the composition keeps the priced terms"
+  "note": "no measured layer term yet: SW slice build pending (sw2); the composition keeps the priced terms"
  },
  "wall_time_cost": {
   "priced_layers_s": 270,

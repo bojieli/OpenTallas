@@ -1,0 +1,57 @@
+SVC-PV3 2026-10-18 svc_rs 16-slice bench (Verilator 5.050, rs_bench_pl.sh), three sources:
+  cred8     b109174d1  pvq 8, P.V credit 8, score credit 8 (svc-pv; its 7 short PROG/mutant jobs died in the lib build on ot-epyc5: cc1plus terminated -- full base runs only)
+  nocred    8dcf8fcac  P.V credit removed (svc-pv2)
+  nocred_sc 9e3f9583e  P.V AND score credits removed (svc-pv3)
+Diff vs cred8, Verilator wall-time lines ('- ...') stripped:
+  nocred base_d0s0/run_full1m_s1_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s0/run_full1m_s1_obj_m40000.log: last_score=5913 last_score=5305 
+  nocred base_d0s0/run_full1m_s2_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s0/run_full1m_s2_obj_m40000.log: last_score=5905 last_score=5297 
+  nocred base_d0s0/run_short300_s1_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s0/run_short300_s1_obj_m40000.log: last_score=5036 last_score=4620 
+  nocred base_d0s0/run_short300_s2_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s0/run_short300_s2_obj_m40000.log: last_score=5043 last_score=4627 
+  nocred base_d0s0/run_skew1m_s1_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s0/run_skew1m_s1_obj_m40000.log: last_score=6218 last_score=5610 
+  nocred base_d0s0/run_skew1m_s2_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s0/run_skew1m_s2_obj_m40000.log: last_score=6250 last_score=5642 
+  nocred base_d0s0/run_tail46_s1_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s0/run_tail46_s1_obj_m40000.log: last_score=1624 last_score=1592 
+  nocred base_d0s0/run_tail46_s2_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s0/run_tail46_s2_obj_m40000.log: last_score=1656 last_score=1624 
+  nocred base_d0s2/run_full1m_s1_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s2/run_full1m_s1_obj_m40000.log: last_score=5830 last_score=5222 
+  nocred base_d0s2/run_full1m_s2_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s2/run_full1m_s2_obj_m40000.log: last_score=5837 last_score=5229 
+  nocred base_d0s2/run_short300_s1_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s2/run_short300_s1_obj_m40000.log: last_score=4916 last_score=4500 
+  nocred base_d0s2/run_short300_s2_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s2/run_short300_s2_obj_m40000.log: last_score=4866 last_score=4450 
+  nocred base_d0s2/run_skew1m_s1_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s2/run_skew1m_s1_obj_m40000.log: last_score=6212 last_score=5604 
+  nocred base_d0s2/run_skew1m_s2_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s2/run_skew1m_s2_obj_m40000.log: last_score=6202 last_score=5594 
+  nocred base_d0s2/run_tail46_s1_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s2/run_tail46_s1_obj_m40000.log: last_score=1659 last_score=1627 
+  nocred base_d0s2/run_tail46_s2_obj_m40000.log: IDENTICAL
+  nocred_sc base_d0s2/run_tail46_s2_obj_m40000.log: last_score=1663 last_score=1631 
+Short PROG + mutant runs (tail46 s1):
+  nocred base_d0s0/run_tail46_s1_obj_m4500_prog.log: verdict=PASS
+  nocred base_d0s2/run_tail46_s1_obj_m8000_prog.log: verdict=PASS
+  nocred mut1_d0s0/run_tail46_s1_obj_m8000_prog.log: verdict=FAIL
+  nocred mut3_d0s0/run_tail46_s1_obj_m8000_prog.log: verdict=FAIL
+  nocred mutgd_d0s0/run_tail46_s1_obj_m8000_prog.log: verdict=FAIL
+  nocred mutro_d0s0/run_tail46_s1_obj_m8000_prog.log: verdict=FAIL
+  nocred mutro_d0s2/run_tail46_s1_obj_m8000_prog.log: verdict=FAIL
+  nocred_sc base_d0s0/run_tail46_s1_obj_m4500_prog.log: verdict=PASS
+  nocred_sc base_d0s2/run_tail46_s1_obj_m8000_prog.log: verdict=PASS
+  nocred_sc mut1_d0s0/run_tail46_s1_obj_m8000_prog.log: verdict=FAIL
+  nocred_sc mut3_d0s0/run_tail46_s1_obj_m8000_prog.log: verdict=FAIL
+  nocred_sc mutgd_d0s0/run_tail46_s1_obj_m8000_prog.log: verdict=FAIL
+  nocred_sc mutro_d0s0/run_tail46_s1_obj_m8000_prog.log: verdict=FAIL
+  nocred_sc mutro_d0s2/run_tail46_s1_obj_m8000_prog.log: verdict=FAIL
+RESULT: nocred = cred8 on every line (P.V credit never bound). nocred_sc = cred8 on every line (go, end, outputs, P.V schedule,
+faults, SCHED) EXCEPT last_score / last_fold_score: the score credit DID bind (8 credits, ~38-cycle return loop -> ~1 beat per 4.8
+cycles); credit-free the engine issues 1 score beat/cycle and the last score lands 32 (T 46) / 416 (T 428) / 608 (T 640) cycles
+EARLIER; the exchange takes every beat (sc/se/order errors 0, no faults), end and P.V unchanged (PVO compiled from PO).
+Every mutant FAILs in both credit-free sets.

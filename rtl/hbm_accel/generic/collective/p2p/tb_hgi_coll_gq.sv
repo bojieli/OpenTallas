@@ -40,6 +40,7 @@ module tb_hgi_coll_gq;
     // ---------------------------------------------------------------- rings, masters, shares, VM
     wire [279:0] aco [0:3], ano [0:3], bco [0:3], bno [0:3];
     wire [3:0] f_gq, f_ra, f_rb, f_rs, f_ks, conf;
+    wire [3:0] f_ld;   // landing-leaf fault alone (NATIVE-SWEEP 10-18: fault 4 must reach the land fault face register)
     reg [57:0] isa [0:3]; reg [255:0] isa_d [0:3];
     wire [135:0] g_rq [0:3]; wire [2055:0] g_rr [0:3]; wire [2247:0] g_kq [0:3];
     wire [135:0] v_rq [0:3]; wire [2055:0] v_rr [0:3]; wire [2247:0] v_kq [0:3];
@@ -52,7 +53,7 @@ module tb_hgi_coll_gq;
         wire rb_lp_we, rb_rd; wire [2:0] rb_lp_tag, rb_rdt, rb_tag; wire [255:0] rb_lp_d; wire [1:0] rb_inj, rb_fwd, rb_rx;
         wire [3:0] rb_ttl, rb_kind, rb_src; wire [5:0] rb_rtag;
         wire [1:0] pa_v, pb_v; wire [3:0] pa_s, pb_s; wire [5:0] pa_t, pb_t; wire [511:0] pa_d, pb_d;
-        wire act, dn, tf, fi, fl; assign f_gq[q] = fi | fl;
+        wire act, dn, tf, fi, fl; assign f_gq[q] = fi | fl; assign f_ld[q] = fl;
         ot_hgi_coll_gq #(.MUT(MUT)) gq(.clk_issue(clk), .clk_land(clk), .rst_n(rst_n), .qid(2'(q)), .tgt(8'hb0 + 8'(q)),
             .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v),
             .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
@@ -135,6 +136,7 @@ module tb_hgi_coll_gq;
     end
     // ---------------------------------------------------------------- descriptors
     localparam integer NR = 6, PERIOD = 900, LOOPS = 2;
+    localparam integer KS = 2;   // HBM-NSFIX/KQS 10-18: registered kq share (pin flops + vm_kq flops): every COLL kq bank sample +2 edges
     integer r_qbg [0:NR-1] = '{0, 0, 1, 1, 1, 0};
     integer r_r2 [0:NR-1] = '{1, 0, 1, 0, 1, 1};
     integer r_self [0:NR-1] = '{1, 0, 1, 1, 1, 1};
@@ -146,6 +148,7 @@ module tb_hgi_coll_gq;
     integer r_str [0:NR-1] = '{72, 24, 24, 16, 56, 8};
     string r_vec [0:NR-1] = '{"", "", "expert_intermediate", "o_group", "engram_rows", ""};
     reg [255:0] srcw [0:NR-1][0:3][0:191]; reg [255:0] recw [0:NR-1][0:3][0:63];
+    reg [255:0] srct [0:191]; reg [255:0] rect [0:63];
     function automatic [15:0] sec(input integer q, input integer w); return {1'b0, 2'(q), 13'(w)}; endfunction
     task automatic frame_cfg(input integer q, input integer row, input [223:0] payload);
         @(negedge clk); cfg_v = 1; cfg_target = 8'hb0 + 8'(q); cfg_addr = 12'(row); cfg_data = {16'hc7a1, 4'b0, 12'(row), payload};
@@ -167,9 +170,9 @@ module tb_hgi_coll_gq;
                 if (!r_qbg[row]) begin a = r_src[row] + i; rres[q][a%8][ie+16] = 1; rsec[q][a%8][ie+16] = sec(q, a); end
                 for (integer h = 1; h <= 3; h = h + 1) begin
                     integer s; s = srcof(q, d, h); a = r_dst[row] + s * r_str[row] + i;
-                    wres[q][a%8][ie+32+2*h] = 1; wsec[q][a%8][ie+32+2*h] = sec(q, a);
+                    wres[q][a%8][ie+32+KS+2*h] = 1; wsec[q][a%8][ie+32+KS+2*h] = sec(q, a);
                 end
-                if (r_self[row] || r_qbg[row]) begin a = r_dst[row] + q * r_str[row] + i; wres[q][a%8][ie+27] = 1; wsec[q][a%8][ie+27] = sec(q, a); end
+                if (r_self[row] || r_qbg[row]) begin a = r_dst[row] + q * r_str[row] + i; wres[q][a%8][ie+27+KS] = 1; wsec[q][a%8][ie+27+KS] = sec(q, a); end
             end
     endtask
     // ---------------------------------------------------------------- ISA pass-through master (not on a ring)
@@ -210,8 +213,11 @@ module tb_hgi_coll_gq;
         // source data
         for (integer row = 0; row < NR; row = row + 1) for (integer q = 0; q < 4; q = q + 1) begin
             if (r_qbg[row]) begin
-                $readmemh({VEC, "/", r_vec[row], "_q", $sformatf("%0d", q), "_src.hex"}, srcw[row][q], 0, 4 * r_bs[row] - 1);
-                $readmemh({VEC, "/", r_vec[row], "_q", $sformatf("%0d", q), "_rec.hex"}, recw[row][q], 0, r_f[row] - 1);
+                // the closure daemon simulator (v5.050) refuses $readmemh into a sub-array: load 1-D temporaries, then copy
+                $readmemh({VEC, "/", r_vec[row], "_q", $sformatf("%0d", q), "_src.hex"}, srct, 0, 4 * r_bs[row] - 1);
+                $readmemh({VEC, "/", r_vec[row], "_q", $sformatf("%0d", q), "_rec.hex"}, rect, 0, r_f[row] - 1);
+                for (integer w = 0; w < 4 * r_bs[row]; w = w + 1) srcw[row][q][w] = srct[w];
+                for (integer w = 0; w < r_f[row]; w = w + 1) recw[row][q][w] = rect[w];
                 for (integer w = 0; w < 4 * r_bs[row]; w = w + 1) mem[q][r_src[row] + w] = srcw[row][q][w];
             end else for (integer w = 0; w < r_f[row]; w = w + 1) mem[q][r_src[row] + w] = payload(q, 100 * row + w);
         end
@@ -254,7 +260,8 @@ module tb_hgi_coll_gq;
         while (cyc < last_edge) @(negedge clk);
         // checks
         if (scenario != 0) begin
-            if (|f_gq || |f_ra || |f_rb || |f_ks) $display("COLLQ FAULT PASS scenario=%0d gq%b ra%b rb%b ks%b", scenario, f_gq, f_ra, f_rb, f_ks);
+            if ((|f_gq || |f_ra || |f_rb || |f_ks) && (scenario != 4 || |f_ld))
+                $display("COLLQ FAULT PASS scenario=%0d gq%b ra%b rb%b ks%b ld%b", scenario, f_gq, f_ra, f_rb, f_ks, f_ld);
             else $display("COLLQ FAULT ESCAPED scenario=%0d", scenario);
             $finish;
         end

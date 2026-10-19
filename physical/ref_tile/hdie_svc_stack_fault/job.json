@@ -1,25 +1,28 @@
 {
- "name": "hdie_svc_stack_fault-hbmasvc-sf-COMMIT",
+ "name": "hdie_svc_stack_fault-hkb-sf-COMMIT",
  "block": "ot_hbm_svc_stack_fault",
  "ref_tile": true,
- "owner": "Claude:HBMA-SVC",
- "purpose": "HBM d4f stack fault glue sfault_<q> (x2, OWN_W=6 d4f binding): first kit. Structural CDC fix: the hbm->stream sticky classes ca/pc/owner cross through the audited ot_hbm_svc_fault_cdc (was an ad hoc two-flop level synchroniser, refused by the async_gray_fifo profile); reset pins land on ot_reset_sync; pin flops carry no reset. Outline 43.2 x 43.2 (pin-bound, slot 21.6 too small; reported to H-DIE).",
+ "owner": "Claude:HBM-KITS-B",
+ "purpose": "HBM d4g per-quadrant stack fault sfault_<q>/fs_<q> (x4, #(MUT0,OWN_W6,NPC16,NG4,ND8) per d4g_gen2 port_bind). HBM-KITS-B 10-18: RTL CDC body restored (merge e37520d6c had dropped ot_hbm_svc_fault_cdc/ot_reset_sync from the parameterised module: undeclared ca_s/pc_s/ow_s); kit at the d4g params, 21.6 x 21.6 slot; benches on Verilator 5.050. QF-SFAULT 10-18: ot_hbm_svc_fault_cdc per-domain ot_reset_sync (was: pending/sent/sticky cleared from both resets unsynchronised, 13 recovery paths -241 ps) + async_gray_fifo reset-synchroniser-input Gate-Rule.",
  "threads": 4,
  "peak_ram_gb": 8,
  "source": {
-  "branch": "claude/hbma-svc-1017",
+  "branch": "claude/qf-sfault-1018",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_stack_fault.sv",
    "rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh",
-   "results/rtl/ref_tile/hbmasvc_witness_1017/"
+   "results/rtl/ref_tile/hbmkb_sfault_1018/",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_fault_cdc.sv",
+   "rtl/hbm_accel/loader/service_native/run_svc_fault_cdc_bench.sh",
+   "results/rtl/ref_tile/qf_sfault_1018/"
   ]
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_svc_stack_fault #(.MUT(0), .OWN_W(6)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_stack_fault.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_svc_stack_fault #(.MUT(0), .OWN_W(6), .NPC(16), .NG(4), .ND(8)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_stack_fault.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -29,44 +32,57 @@
    },
    {
     "name": "sf_exact",
-    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/exact 0 6",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/exact 0 6 16 4 8",
     "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 2,
+    "threads": 2,
+    "peak_ram_gb": 4,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
-    "pass_regex": "^PASS tb_hbm_svc_stack_fault MUT=0 OWN_W=6",
+    "pass_regex": "^PASS tb_hbm_svc_stack_fault MUT=0 OWN_W=6 NPC=16 NG=4 ND=8",
     "min_count_regex": "checks=(\\d+)",
-    "pass_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/sf_mut0.log"
+    "pass_witness": "results/rtl/ref_tile/qf_sfault_1018/sf_mut0.txt"
    },
    {
     "name": "sf_mut_pair",
-    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/m1 1 6",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/m1 1 6 16 4 8",
     "expect": "fail",
-    "threads": 1,
-    "peak_ram_gb": 2,
+    "threads": 2,
+    "peak_ram_gb": 4,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "pass_regex": "^PASS tb_hbm_svc_stack_fault",
     "fail_regex": "^FAIL tb_hbm_svc_stack_fault MUT=1",
-    "note": "CA pair rule 2c/2c+2",
-    "fail_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/sf_mut1.log"
+    "note": "CA pair rule 2c/(2c+2) mod 16",
+    "fail_witness": "results/rtl/ref_tile/qf_sfault_1018/sf_mut1.txt"
    },
    {
     "name": "sf_mut_owner_cdc",
-    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/m2 2 6",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/m2 2 6 16 4 8",
     "expect": "fail",
-    "threads": 1,
-    "peak_ram_gb": 2,
+    "threads": 2,
+    "peak_ram_gb": 4,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "pass_regex": "^PASS tb_hbm_svc_stack_fault",
     "fail_regex": "^FAIL tb_hbm_svc_stack_fault MUT=2",
     "note": "owner class fault_cdc crossing dropped",
-    "fail_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/sf_mut2.log"
+    "fail_witness": "results/rtl/ref_tile/qf_sfault_1018/sf_mut2.txt"
+   },
+   {
+    "name": "fault_cdc_unit",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_svc_fault_cdc_bench.sh {RUN}/bench/fault_cdc",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^FAULT_CDC_BENCH PASS",
+    "note": "QF-SFAULT 10-18: ot_hbm_svc_fault_cdc per-domain reset sync; 2 clock directions x MUT0 PASS + MUT1..5 rejected",
+    "pass_witness": "results/rtl/ref_tile/qf_sfault_1018/fault_cdc.txt"
    }
   ],
   "calibrate": {
@@ -117,7 +133,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hdie_svc_stack_fault/hdie_svc_stack_fault-hbmasvc-sf-COMMIT"
+   "to": "results/rtl/ref_tile/hdie_svc_stack_fault/hdie_svc_stack_fault-hkb-sf-COMMIT"
   }
  ],
  "cycles_added": 0,

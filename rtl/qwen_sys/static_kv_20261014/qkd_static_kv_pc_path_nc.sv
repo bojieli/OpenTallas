@@ -6,7 +6,12 @@
 // them) is removed logic, and the return ring's controller_co pins are the 282 it reads.  Otherwise identical to
 // qkd_static_kv_pc_path / qkd_kv_hbm_elastic_front_mc / qkd_static_kv_return_slots_mc (unchanged; the nc front / ring
 // reuse their pointer-copy children qkd_kvef_mc_rp / qkd_ksr_mc_rp from those files).
-module qkd_static_kv_pc_path_nc (
+// MU-ADOPT-KV 10-19 (R6 read side, opt-in MU, default 0 = unchanged): the qkd_kv_mu_rrow map between the HBM calendar's
+// static_cmd and the PC controller puts the stage user into row[9:8] of KV descriptors (op 0 / 3 on rows < 256; row of
+// user u, layer l = 64 + l + 256*u).  The stage user is the calendar's own per-command epoch: static_epoch[1:0]
+// (static_epoch is registered on the same edge as static_cmd from the epoch latched at the layer go; the MU epoch
+// allocator puts the host step's user in epoch[1:0]).  Combinational, 0 added edges.  MU 0: wires.
+module qkd_static_kv_pc_path_nc #(parameter integer MU = 0) (
     input wire pll_hbm,
     input wire pll_hbm_port,  // u_ctrl.u_port HBM clock entry (same clock as pll_hbm; separate die entry)
     input wire pll_hbm_ecc,   // u_ctrl.u_ecc HBM clock entry (same clock as pll_hbm; separate die entry)
@@ -82,6 +87,7 @@ module qkd_static_kv_pc_path_nc (
     wire [281:0] controller_co;
     wire static_cmd_owner;
     wire [42:0] static_cmd;
+    wire [42:0] static_cmd_mu;
     wire reserved_rd;
     wire reserved_static_col;
     wire reserved_write_col;
@@ -109,7 +115,7 @@ module qkd_static_kv_pc_path_nc (
         .fi(fi),
         .fo(fo),
         .static_cmd_owner(static_cmd_owner),
-        .static_cmd(static_cmd),
+        .static_cmd(static_cmd_mu),
         .reserved_rd(reserved_rd),
         .reserved_static_col(reserved_static_col),
         .reserved_write_col(reserved_write_col),
@@ -154,6 +160,10 @@ module qkd_static_kv_pc_path_nc (
         .fault(cal_fault_hbm),
         .idle(cal_idle_hbm)
     );
+    // qkd_kv_mu_rrow map, inline (no new source file in the parent's source lists): static_cmd = {first sector10,
+    // command32 = {op2, n11, row19}, bit0}; KV descriptor = op 0 / 3 with row[18:8] == 0 -> row[9:8] |= user
+    wire mu_kv = (MU != 0) && (static_cmd[32:31] == 2'd0 || static_cmd[32:31] == 2'd3) && static_cmd[19:9] == 11'd0;
+    assign static_cmd_mu = {static_cmd[42:11], static_cmd[10:9] | (mu_kv ? static_epoch[1:0] : 2'd0), static_cmd[8:0]};
     qkd_kv_hbm_elastic_front_mc_nc #(.NBLK(4), .BLK(8), .STRIDE(1), .MUT(0)) u_front (
         .pll_hbm(front_hck),
         .hrst(hrst),

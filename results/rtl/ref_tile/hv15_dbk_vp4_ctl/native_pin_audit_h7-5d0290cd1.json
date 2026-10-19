@@ -1,0 +1,45 @@
+{
+ "cell": "ot_hgi_dma_back_static_vp4_controller",
+ "view": "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
+ "lib_cell": "ot_hgi_dma_back_static_vp4_controller",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean -> relative C 138"
+ ],
+ "R_ps": 138.0,
+ "spread_ps": 14.5,
+ "relative_to": "neighbour physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller/insertion.json boundary mean",
+ "outputs": 511,
+ "inputs": 365,
+ "launch_ps": 210.0,
+ "launch_pin": "bank_read_addr_n[60]",
+ "capture_ps": 145.1,
+ "capture_pin": "issue_at[11]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 13.6,
+ "ff_launch_min_ps": 105.7,
+ "ff_hold_need_ps": -60.1,
+ "relative": {
+  "tt": {
+   "clock_pin": "clk",
+   "rel_min_ps": -7.2,
+   "rel_max_ps": 7.3,
+   "mismatch_ps": 7.3,
+   "offset_ps": 0.0,
+   "comp_ps": 138.0
+  },
+  "ff": {
+   "clock_pin": "clk",
+   "rel_min_ps": -6.2,
+   "rel_max_ps": 7.4,
+   "mismatch_ps": 7.4,
+   "offset_ps": 0.0,
+   "comp_ps": 111.1
+  }
+ },
+ "pass": true,
+ "fail_why": ""
+}

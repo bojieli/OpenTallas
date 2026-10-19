@@ -1,0 +1,7 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_ctl_mu2-mu2-9105d74ed bench bench_ctl_mu2_c3 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_ctl_mu2-mu2-9105d74ed log cl/bench_ctl_mu2_c3.a1b1.log captured 2026-10-19T04:29:40-07:00
+# fail_regex 'FAIL lockstep own_diffs0 boot_diffs0 setup_ready_diffs[1-9]'
+KV_CTL_MU2 c3 rc=1: %Error: rtl/test/mu_qwen_1018/tb_kv_ctl_mu2_lockstep.sv:106: Verilog $stop
+[4335116000] %Fatal: tb_kv_ctl_mu2_lockstep.sv:106: Assertion failed in tb_kv_ctl_mu2_lockstep: FAIL lockstep own_diffs0 boot_diffs0 setup_ready_diffs70
+%Error: rtl/test/mu_qwen_1018/tb_kv_ctl_mu2_lockstep.sv:106: Verilog $stop
+Aborting...

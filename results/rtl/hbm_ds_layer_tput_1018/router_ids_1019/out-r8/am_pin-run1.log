@@ -1,0 +1,4 @@
+CQ t=1610000 age=141 due=142 packet=30000300000000000000000000000017f0000017e0000017d0000017c0000017b0000017a00ffffff0910 idsbad=1
+[1630000] %Fatal: tb_hbm_router_ids_static.sv:64: Assertion failed in tb_hbm_router_ids_static: ROUTER_IDS wrong layer 3 expected 2
+%Error: rtl/test/hbm_idx_static/tb_hbm_router_ids_static.sv:64: Verilog $stop
+Aborting...

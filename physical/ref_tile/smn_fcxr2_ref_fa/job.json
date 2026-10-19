@@ -1,0 +1,122 @@
+{
+ "name": "smn_fcxr2_ref_fa-r4-f03c4eab3",
+ "block": "ot_hbm_accel_smh_fc_xr2",
+ "ref_tile": true,
+ "owner": "Claude:TW2-NATIVE-FCX",
+ "purpose": "HF-5a: native-view fix of the front_c x-write / PR1-line relay. Routed native audit of fc_xr (record 1e78e63ef, smn_fcxr_ref_fa-r2-c1dfe3d51): launch 409 ps on 2,642 xo/lo pins (budget 220) because the ONE register stage sits at the input faces (DEF: u_xd y 141-149 of 151, u_ld at li) and every output wire crosses the 151 um tile. fc_xr2 = same ports / exact pin plan / outline / recipe 2, one more stage: A at xi/li/fi faces, B at xo/lo/fo faces (reg->reg across the tile). +1 cycle on xo, lo, fo equally (fc_b xi stays aligned with li/fi); front_c calendar edge recorded in lanes/HF-5.md (HF-5a). HH-2 10-19: r1 793270d4b EARLY_FAIL_CONGESTION GRT-0116 = S face (xo, 10.5 pins/um on M5 only) y 0-3 um: 2,642 FIRM BUF+HB2+BUF output stacks (3.21 um, 100% row fill) under the 26-column stage-B flop band; M3 V overflow 1,746 / total 2,795, all 746 hot gcells at y<15 um. The stage-B flops are now at the face (fc_xr had them at the far N face, so S held only the stacks). OT_OUTHOLD_FREE=1: hold pad stays one dont_touch HB2 per pin, only its location is free (m5a/m5b class). HH-10 10-19: r2 dd7fca4ca NEEDS_RTL TT +261.98 / FF -4.46 (hold ECO missed, -8.54). Classified FF hold: ALL 9 violators internal reg->reg u_xad -> u_xbd (stage A -> stage B, 97 paths < 0 ps class, worst -4.46); IO input->reg +19.64, output +39.42 (OUTHOLD_FREE did NOT strip the output pads). Cause: A->B data min 83 ps at FF vs 56 ps capture-later leaf skew (leaf_130 behind a 53 ps / 167 ps-slew clock wire at the S band); GRT repair reached +30.00 (margin 30) and sign-off lost 34.5 ps (> the 22 ps KITS figure), with NO route hold buffer left on the worst path. Fix: core reg->reg repair margin 30 -> 65 ps (route.hold_margin_ns 0.065; reg->reg setup +484 TT, so the pads are free), boundary kept at route.io_hold_margin_ns 0.03 (>= 0.025 rule; IO passed at +19.6/+39.4). Same RTL/pins/outline/SDC. TW2-NATIVE-FCX 10-19 r4: CLOSED smn_fcxr2_ref_fa-r2-dd7fca4ca-arg2 (TT +283.65 / FF +15.49) FAILS the native pin audit: launch 250.1 > 220 on 2,241 xo/lo/fo, capture 215.4 > 190 on 330 li/xi/fi, TT spread 80.1 (FF 76.0), R 267.2; O+S ~465 > 410 so no parent C passes. Classified from 6_final.def: every pin flop IS at its pin (u_xbd y 2-9 of 151 at xo, u_lbd x 213.6 at lo, u_lad/u_xad at li/xi) -- the budget is eaten by boundary HOLD padding on top of the flop: output DFF -> 2-3 route hold BUFx2 -> INV -> hold BUFx2 -> BUFx4f + HB2 pad + BUFx4f -> hold BUFx2 -> output BUFx2 (~10 cells); input HB2 pad + BUFx4f + 2-5 route hold BUFx2 (22.3k BUFx2 + 5.3k HB2 + 8.0k BUFx4f for 5,250 flops). Native receipt FF launch min 141.2 vs receiver hold need -65.7: ~200 ps over-padded (the tile-SDC sender hold skew 50 + uncertainty 25 + io margin carried on BOTH faces). Fix = recipe 4 hold_budget die (FLOW-HOLD 10-16 rule, results/arch/boundary_hold_budget_1016/RULE.md): no inhold/outhold pads, boundary min delays credit launch C=25, link skew/uncertainty are the die's; io_hold_margin 0.03 kept (KITS rule), internal reg->reg hold margin 0.065 kept (HH-10). Same RTL / outline / pins / setup SDC. Reset landing ON (gate r4a: rst_a reached 3 async flops of u_rr without a landing): reset release +2 cycles, scheduled constant; data latency unchanged.",
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/tw2-nfcx-1019",
+  "commit": "f03c4eab3bd6e355354a736c26d81b1ddab8b994",
+  "extra_paths": [
+   "results/arch/hbm_native_1013/sm"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_accel_smh_fc_xr2 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_SMH_FC_HIER --top-module ot_lint_top {RUN}/ot_lint_top.sv results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_prefix.sv results/arch/hbm_native_1013/sm/source/rtl/v41rom/ot_v41_bterm.sv results/arch/hbm_native_1013/sm/source/rtl/v41rom/ot_v41_bterm2.sv results/arch/hbm_native_1013/sm/source/rtl/gpu/ot_gpu_fadd.sv results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_fp32_add_lat.sv results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_fp32_mul_lat.sv results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_fastfp.sv results/arch/hbm_native_1013/sm/source/rtl/gpu/ot_gpu_tree.sv results/arch/hbm_native_1013/sm/source/rtl/gpu/ot_gpu_issue.sv results/arch/hbm_native_1013/sm/source/rtl/gpu/ot_gpu_stack.sv results/arch/hbm_native_1013/sm/source/rtl/gpu/ot_gpu_tc_col.sv results/arch/hbm_native_1013/sm/source/rtl/gpu/ot_gpu_bd_col.sv results/arch/hbm_native_1013/sm/source/rtl/hdc/v41/ot_hdc_blockdot.sv results/arch/hbm_native_1013/sm/source/rtl/gpu/ot_gpu_bulk_copy.sv results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_fpu.sv results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv results/arch/hbm_native_1013/sm/source/rtl/proto/ot_fp32_add_rne_pipe.sv results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_sfu.sv results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_delay.sv results/arch/hbm_native_1013/sm/source/rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv results/arch/hbm_native_1013/sm/source/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv results/arch/hbm_native_1013/sm/source/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv results/arch/hbm_native_1013/sm/source/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv results/arch/hbm_native_1013/sm/source/rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv results/arch/hbm_native_1013/sm/source/rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv results/arch/hbm_native_1013/sm/source/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv results/arch/hbm_native_1013/sm/source/rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv results/arch/hbm_native_1013/sm/source/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv results/arch/hbm_native_1013/sm/source/rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv results/arch/hbm_native_1013/sm/source/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv results/arch/hbm_native_1013/sm/source/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v results/arch/hbm_native_1013/sm/source/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v results/arch/hbm_native_1013/sm/source/rtl/lib/ot_rst_relay.sv rtl/hbm_accel/sm/ot_hbm_accel_smh_fc_xr2.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "fcxr2_exact",
+    "cmd": "bash rtl/hbm_accel/sm/test/run_fc_xr2_bench.sh {RUN}/fcxr2_exact",
+    "expect": "pass",
+    "pass_regex": "^FCXR2 PASS checked=",
+    "min_count_regex": "^FCXR2 PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hf5_1018/fcxr2/exact.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "fcxr2_mut_x1",
+    "cmd": "bash rtl/hbm_accel/sm/test/run_fc_xr2_bench.sh {RUN}/fcxr2_mut_x1 MUT_X1",
+    "expect": "fail",
+    "fail_regex": "^FCXR2 FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hf5_1018/fcxr2/mut_x1.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "fcxr2_mut_l1",
+    "cmd": "bash rtl/hbm_accel/sm/test/run_fc_xr2_bench.sh {RUN}/fcxr2_mut_l1 MUT_L1",
+    "expect": "fail",
+    "fail_regex": "^FCXR2 FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hf5_1018/fcxr2/mut_l1.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.065 OT_MM_FF_SDC='physical/ref_tile/smn_fcxr2_ref_fa/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/smn_fcxr2_ref_fa/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/smn_fcxr2_ref_fa --out {RUN}/record/views/ot_hbm_accel_smh_fc_xr2  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/smn_fcxr2_ref_fa/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/smn_fcxr2_ref_fa/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/smn_fcxr2_ref_fa/smn_fcxr2_ref_fa-r4-f03c4eab3"
+  }
+ ],
+ "cycles_added": 1,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.065,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "new master ot_hbm_accel_smh_fc_xr2 (rtl/hbm_accel/sm/ot_hbm_accel_smh_fc_xr2.sv): 2-stage relay, pin flop at each face; the closed one-stage fc_xr master stays byte-identical",
+ "reroute_reason": {
+  "kind": "native_capture",
+  "why": "CLOSED smn_fcxr2_ref_fa-r2-dd7fca4ca-arg2 (record 1a1dc1acb) fails the native pin audit: launch 250.1 > 220 (2,241 pins), capture 215.4 > 190 (330 pins), TT spread 80.1 > 80; launch+capture ~465 > 410, no parent compensation passes both: boundary hold padding (pad + route hold BUF chains) on every pin flop",
+  "source": "results/arch/hf5_1018/native/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg2_native.json",
+  "cell": "ot_hbm_accel_smh_fc_xr2",
+  "fix": "recipe 4 hold_budget die: no input/output hold pads (inhold/outhold off, OT_OUTHOLD_FREE dropped), boundary FF repair against the credited pin-flop launch C=25 at io margin 30 ps, so the pin flops at the pins drive/capture the pins directly (no ~10-cell hold chain); same RTL, outline, pin plan, setup SDC"
+ }
+}

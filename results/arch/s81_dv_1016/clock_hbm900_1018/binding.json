@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.s81_phy_clock_binding.v1",
+ "phy_instances": 1,
+ "ctrl_instances": 16,
+ "phy_clock": "ck_hbm",
+ "phy_period_ps": 900,
+ "core_period_ps": 833.333,
+ "sdc": "create_clock -name clk -period 833.333 [get_ports {ck_cl0N ck_cl0S ck_cl1N ck_cl1S ck_cl2N ck_cl2S ck_cl3N ck_cl3S ck_cl4N ck_cl4S ck_cl5N ck_cl5S ck_cl6N ck_cl6S ck_cl7N ck_cl7S ck_edge0 ck_edge8 ck_south2 ck_south3 ck_south4 ck_south5 ck_void1 ck_void3 ck_void4}]\ncreate_clock -name ck_hbm -period 900.0 [get_ports {ck_hbm}]\nset_clock_groups -asynchronous -group [get_clocks clk] -group [get_clocks ck_hbm]",
+ "missing_clock_mutant": "REJECTED",
+ "status": "PASS",
+ "strict_bind_rc": 0,
+ "strict_bind_log": "DIE_PORT_BIND PASS masters=40 instances=8391 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=37 pad_bits=209817 unresolved_children=0 ambiguous_children=0 variant_children=17\n"
+}

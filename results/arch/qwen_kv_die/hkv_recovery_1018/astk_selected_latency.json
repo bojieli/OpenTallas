@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.kv_astk.selected_latency.v1",
+  "status": "INTEGRATION_PENDING_PHYSICAL_VIEWS_AND_PRODUCTION_CALENDAR",
+  "selection": "OT_KV_ASTK_EXPAND=1",
+  "default_legacy": {
+    "RL": 1,
+    "eread_edges": 7
+  },
+  "candidate": {
+    "RL": 3,
+    "Z_STRIDE": 4,
+    "eread_edges": 42,
+    "owner_issue_edges": [
+      2,
+      7,
+      12,
+      17,
+      22,
+      27,
+      32,
+      37
+    ],
+    "fault_join_edges": 1
+  },
+  "basis": "HKV-ERTAP measured actual8EP32mappedSRAM; ERL=7+7*(2+RL); raw test evidence owned codex HKV-ERTAP",
+  "checks": [
+    "legacy synthetic fork4/header3/pve5 =>e_after_header13",
+    "expanded same actual external stages =>e_after_header48",
+    "binding explicitRL3/Z_STRIDE4"
+  ],
+  "limitations": [
+    "production closedCTL4 profile needs production calendar actualRTL measurement",
+    "Z1016 RL3 positive historical bench wasZ_STRIDE16; does not qualify closedCTL4",
+    "new resettable relay/fault/distributed tap views required",
+    "no native die qualification claimed"
+  ]
+}

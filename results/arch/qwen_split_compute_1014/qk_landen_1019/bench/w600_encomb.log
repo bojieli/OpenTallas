@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits    33 GB (avail 500, growth 478, headroom 0, waiters 2/112 GB) load 135/128 running 40 disk 653 GB 
+ot-run: ot-agidock128  admits    10 GB (avail 32, growth 25, headroom 0, waiters 5/30 GB) load 54/64 running 9 disk 82 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3508946-1792394320 after 0 s
+FWD_LANE NF=27 CD=4.50 XL=0.00 DOFF=2.00 G=12 R0=11 L=26 K=2
+FWD_LANE NF=8 CD=4.00 XL=0.00 DOFF=2.00 G=10 R0=14 L=8 K=3
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=9 R0=45 L=5 K=0
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=40 R0=9 L=7 K=5
+FWD_LANE NF=5 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=7 K=4
+FWD_LANE NF=5 CD=3.60 XL=20.00 DOFF=2.00 G=10 R0=12 L=7 K=4
+FWD_LANE NF=2 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=2 K=7
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=9 R0=45 L=2 K=6
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=40 R0=9 L=2 K=1
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=10 R0=12 L=2 K=0
+FWD_BENCH FAIL 1677 errors in 5709 checks (faults 0)
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3508946-1792394320): exit 1

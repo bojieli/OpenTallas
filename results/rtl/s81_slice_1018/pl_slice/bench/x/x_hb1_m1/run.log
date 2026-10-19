@@ -1,0 +1,10 @@
+SLX_MISMATCH cycle=1814 ro_e 1 ro_w 0 bo 0 vo 1 xc 0 f 0
+SLX_MISMATCH cycle=1818 ro_e 1 ro_w 0 bo 0 vo 1 xc 0 f 0
+SLX_MISMATCH cycle=1822 ro_e 0 ro_w 0 bo 0 vo 1 xc 0 f 0
+SLX_MISMATCH cycle=1826 ro_e 1 ro_w 0 bo 0 vo 1 xc 0 f 0
+SLX_MISMATCH cycle=1834 ro_e 0 ro_w 0 bo 0 vo 1 xc 0 f 0
+SLX FAIL HB=1 MUT=1 mismatches=7 of 2989
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_x.sv:48: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 73.607 s; speed 40.757 ns/s
+- Verilator: cpu 73.605 s on 1 threads; allocated 228 MB

@@ -920,20 +920,6 @@
     }
    ]
   },
-  "dsfd_ctrl": {
-   "module": "dsfd_ctrl",
-   "view": null,
-   "view_note": "dsfd_ctrl_pc_m5 is a child kit; 8500x250 strip REJECTED (p4g reshapes)",
-   "clk": "ckh",
-   "clk_extra": [
-    "cks"
-   ],
-   "rst": [
-    "rst",
-    "low"
-   ],
-   "ports": {}
-  },
   "dsfd_bk_selector": {
    "view": null,
    "clk": "clk",
@@ -1086,64 +1072,6 @@
     }
    ]
   },
-  "ot_pdie_ucie": {
-   "clk": "clk",
-   "rst": [
-    "rst",
-    "low"
-   ],
-   "ports": {
-    "tx.i": {
-     "port": "tx",
-     "lane": 512
-    },
-    "rx.o": {
-     "lanes": [
-      {
-       "split": [
-        [
-         "rx",
-         0,
-         0,
-         512
-        ],
-        [
-         "st",
-         0,
-         512,
-         2
-        ]
-       ]
-      }
-     ]
-    }
-   },
-   "module": "ot_pdie_ucie",
-   "view": null,
-   "phy": true,
-   "top_ports": [
-    {
-     "port": "pma_tx",
-     "dir": "output",
-     "bits": 513
-    },
-    {
-     "port": "pma_tck",
-     "dir": "output",
-     "bits": 1
-    },
-    {
-     "port": "pma_rx",
-     "dir": "input",
-     "bits": 513
-    },
-    {
-     "port": "pma_rck",
-     "dir": "input",
-     "bits": 1
-    }
-   ]
-  },
   "ot_hbm3e_phy_v41x_aw30_e8p5": {
    "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
    "view": null,
@@ -1181,7 +1109,8 @@
      "when": "always",
      "reason": "PHY W port = the QE weight region; unused on S81 (weights in the ROM field), as dsfd_ctrl tied it (S81-CTRL bind_entry phy_unused)"
     }
-   ]
+   ],
+   "clock_port": "ck_hbm"
   },
   "dsfd_ctrl_rg2": {
    "module": "dsfd_ctrl_rg2",
@@ -2859,8 +2788,6 @@
  "child_views_owed": {
   "dsfd_ctrl_rg2": "s81ctrl_rg2-c1-6e188c155 READY at verdict/benches, NOT CLOSED: RTL bound, view not yet",
   "dsdv_gunit_l5": "L5 gate pending, no CLOSED record",
-  "ot_s81_kp4_deca": "no CLOSED record",
-  "ot_s81_kp4_decb": "no CLOSED record",
   "ot_s81sl_lep": "kit s81sl_lep critical gate under coordinator review (03afd8c1a)",
   "ot_s81sl_lep_nh": "kit s81sl_lepnh (HOST_EN 0 leaf of s_0S / s_0N / s_7S, S81-LEPV) critical gate",
   "dsfd_dvland_pvrd": "hardened view owed (S81-DIE5)",
@@ -2872,5 +2799,12 @@
  "relay_prefix": "dsfd_dvrlyh",
  "defines": [
   "DSFD_PQ_STATIC_X2"
- ]
+ ],
+ "clock_domains": {
+  "ck_hbm": {
+   "period_ps": 900.0,
+   "asynchronous_to_core": true,
+   "reason": "PHY min_period 900 ps; ctrl_rg2 ckh uses its signed-off hclk domain through the existing async FIFO"
+  }
+ }
 }

@@ -1,0 +1,368 @@
+%Warning-PINMISSING: release18_tb.sv:5:11: Instance has missing pin: 'pll_hbm'
+    5 | hfd_ckgen cg(.refclk(refclk),.por_n(por_n),.pll_stream(stream),.pll_serial(clk),.por_serial(rq),.por_stream(rs));
+      |           ^~
+                     ckgen.sv:6:65: ... Location of port declaration
+    6 |     output wire pll_stream, output wire pll_serial, output wire pll_hbm, output wire pll_link,
+      |                                                                 ^~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: release18_tb.sv:5:11: Instance has missing pin: 'pll_link'
+    5 | hfd_ckgen cg(.refclk(refclk),.por_n(por_n),.pll_stream(stream),.pll_serial(clk),.por_serial(rq),.por_stream(rs));
+      |           ^~
+                     ckgen.sv:6:86: ... Location of port declaration
+    6 |     output wire pll_stream, output wire pll_serial, output wire pll_hbm, output wire pll_link,
+      |                                                                                      ^~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:5:11: Instance has missing pin: 'por_hbm'
+    5 | hfd_ckgen cg(.refclk(refclk),.por_n(por_n),.pll_stream(stream),.pll_serial(clk),.por_serial(rq),.por_stream(rs));
+      |           ^~
+                     ckgen.sv:7:65: ... Location of port declaration
+    7 |     output wire por_stream, output wire por_serial, output wire por_hbm, output wire por_link
+      |                                                                 ^~~~~~~
+%Warning-PINMISSING: release18_tb.sv:5:11: Instance has missing pin: 'por_link'
+    5 | hfd_ckgen cg(.refclk(refclk),.por_n(por_n),.pll_stream(stream),.pll_serial(clk),.por_serial(rq),.por_stream(rs));
+      |           ^~
+                     ckgen.sv:7:86: ... Location of port declaration
+    7 |     output wire por_stream, output wire por_serial, output wire por_hbm, output wire por_link
+      |                                                                                      ^~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:9:28: Instance has missing pin: 'serial_rr'
+    9 | ot_hbm_su_multirate_bridge bridge(.serial_clk(clk),.stream_clk(stream),.rst_n(br),.serial_rq(srq_unused),.serial_wq(281'b0),.stream_rq(rrq_unused),.stream_rr(257'b0),.stream_done(1'b0),.fault(bf));
+      |                            ^~~~~~
+                     bridge.sv:19:27: ... Location of port declaration
+   19 |  output reg [RR_BITS-1:0] serial_rr,output reg serial_done,
+      |                           ^~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:9:28: Instance has missing pin: 'serial_done'
+    9 | ot_hbm_su_multirate_bridge bridge(.serial_clk(clk),.stream_clk(stream),.rst_n(br),.serial_rq(srq_unused),.serial_wq(281'b0),.stream_rq(rrq_unused),.stream_rr(257'b0),.stream_done(1'b0),.fault(bf));
+      |                            ^~~~~~
+                     bridge.sv:19:48: ... Location of port declaration
+   19 |  output reg [RR_BITS-1:0] serial_rr,output reg serial_done,
+      |                                                ^~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:9:28: Instance has missing pin: 'stream_wq'
+    9 | ot_hbm_su_multirate_bridge bridge(.serial_clk(clk),.stream_clk(stream),.rst_n(br),.serial_rq(srq_unused),.serial_wq(281'b0),.stream_rq(rrq_unused),.stream_rr(257'b0),.stream_done(1'b0),.fault(bf));
+      |                            ^~~~~~
+                     bridge.sv:20:62: ... Location of port declaration
+   20 |  output reg [RQ_BITS-1:0] stream_rq,output reg [WQ_BITS-1:0] stream_wq,
+      |                                                              ^~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 'b_cfg_v'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:116:17: ... Location of port declaration
+  116 |     output wire b_cfg_v, output wire [7:0] b_cfg_target, output wire [11:0] b_cfg_addr, output wire [255:0] b_cfg_data,
+      |                 ^~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 'b_cfg_target'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:116:44: ... Location of port declaration
+  116 |     output wire b_cfg_v, output wire [7:0] b_cfg_target, output wire [11:0] b_cfg_addr, output wire [255:0] b_cfg_data,
+      |                                            ^~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 'b_cfg_addr'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:116:77: ... Location of port declaration
+  116 |     output wire b_cfg_v, output wire [7:0] b_cfg_target, output wire [11:0] b_cfg_addr, output wire [255:0] b_cfg_data,
+      |                                                                             ^~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 'b_cfg_data'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:116:109: ... Location of port declaration
+  116 |     output wire b_cfg_v, output wire [7:0] b_cfg_target, output wire [11:0] b_cfg_addr, output wire [255:0] b_cfg_data,
+      |                                                                                                             ^~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 'b_desc_v'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:117:17: ... Location of port declaration
+  117 |     output wire b_desc_v, output wire [11:0] b_desc_base, output wire [12:0] b_desc_limit, output wire [15:0] b_desc_loops,
+      |                 ^~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 'b_desc_base'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:117:46: ... Location of port declaration
+  117 |     output wire b_desc_v, output wire [11:0] b_desc_base, output wire [12:0] b_desc_limit, output wire [15:0] b_desc_loops,
+      |                                              ^~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 'b_desc_limit'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:117:78: ... Location of port declaration
+  117 |     output wire b_desc_v, output wire [11:0] b_desc_base, output wire [12:0] b_desc_limit, output wire [15:0] b_desc_loops,
+      |                                                                              ^~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 'b_desc_loops'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:117:111: ... Location of port declaration
+  117 |     output wire b_desc_v, output wire [11:0] b_desc_base, output wire [12:0] b_desc_limit, output wire [15:0] b_desc_loops,
+      |                                                                                                               ^~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 'b_launch_v'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:118:17: ... Location of port declaration
+  118 |     output wire b_launch_v,
+      |                 ^~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 's_ready'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:120:24: ... Location of port declaration
+  120 |     output wire [17:0] s_ready, s_active, output wire [28:0] s_fault
+      |                        ^~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 's_active'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:120:33: ... Location of port declaration
+  120 |     output wire [17:0] s_ready, s_active, output wire [28:0] s_fault
+      |                                 ^~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:29:25: Instance has missing pin: 's_fault'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                         ^~~~
+                     ot_hbm_host_cfg_leaf_sw.sv:120:62: ... Location of port declaration
+  120 |     output wire [17:0] s_ready, s_active, output wire [28:0] s_fault
+      |                                                              ^~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'tgt_configured'
+                     hfd_hgi_vm_calendar_f20.sv:188:17: ... Location of port declaration
+  188 |     output wire tgt_configured,tgt_fault,
+      |                 ^~~~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'active'
+                     hfd_hgi_vm_calendar_f20.sv:189:28: ... Location of port declaration
+  189 |     output wire calendar_v,active,done,fault,
+      |                            ^~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'done'
+                     hfd_hgi_vm_calendar_f20.sv:189:35: ... Location of port declaration
+  189 |     output wire calendar_v,active,done,fault,
+      |                                   ^~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'client_seq'
+                     hfd_hgi_vm_calendar_f20.sv:191:23: ... Location of port declaration
+  191 |     output wire [9:0] client_seq,
+      |                       ^~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'response_enable'
+                     hfd_hgi_vm_calendar_f20.sv:192:23: ... Location of port declaration
+  192 |     output wire [4:0] response_enable,
+      |                       ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'response_seq'
+                     hfd_hgi_vm_calendar_f20.sv:193:23: ... Location of port declaration
+  193 |     output wire [9:0] response_seq,
+      |                       ^~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'bank_enable'
+                     hfd_hgi_vm_calendar_f20.sv:194:23: ... Location of port declaration
+  194 |     output wire [7:0] bank_enable,
+      |                       ^~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'bank_client'
+                     hfd_hgi_vm_calendar_f20.sv:195:24: ... Location of port declaration
+  195 |     output wire [23:0] bank_client,
+      |                        ^~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'hub_ring_enable'
+                     hfd_hgi_vm_calendar_f20.sv:196:23: ... Location of port declaration
+  196 |     output wire [1:0] hub_ring_enable,
+      |                       ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'hub_ring_client'
+                     hfd_hgi_vm_calendar_f20.sv:197:23: ... Location of port declaration
+  197 |     output wire [5:0] hub_ring_client,
+      |                       ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'ring_tx_enable'
+                     hfd_hgi_vm_calendar_f20.sv:202:23: ... Location of port declaration
+  202 |     output wire [1:0] ring_tx_enable,
+      |                       ^~~~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'ring_tx_source'
+                     hfd_hgi_vm_calendar_f20.sv:203:23: ... Location of port declaration
+  203 |     output wire [5:0] ring_tx_source,
+      |                       ^~~~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'replay_enable'
+                     hfd_hgi_vm_calendar_f20.sv:204:17: ... Location of port declaration
+  204 |     output wire replay_enable,
+      |                 ^~~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:31:25: Instance has missing pin: 'replay_source'
+                     hfd_hgi_vm_calendar_f20.sv:205:17: ... Location of port declaration
+  205 |     output wire replay_source,
+      |                 ^~~~~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:53:69: Instance has missing pin: 'far_rr'
+   53 |  ot_hbm_vm_lg_static_bank_m60 #(.READ_RETURN(RR),.WRITE_RETURN(WR)) tap(.clk(stream),.rst_n(rs),.rret(5'b0),.wret(5'b0),.local_rq(leaf_rq),.local_wq(leaf_wq),.far_rq(17'b0),.far_wq(281'b0),.local_read(lr[b]),.local_write(lw[b]),.near_rq(nrq),.near_wq(nwq),.near_rr(nrr),.near_w_done(ndone),.local_rr(rr),.local_w_done(done),.fault(t_fault[b]));
+      |                                                                     ^~~
+                     tap_exact.sv:82:34: ... Location of port declaration
+   82 |     output wire [256:0] local_rr,far_rr,
+      |                                  ^~~~~~
+%Warning-PINMISSING: release18_tb.sv:53:69: Instance has missing pin: 'far_w_done'
+   53 |  ot_hbm_vm_lg_static_bank_m60 #(.READ_RETURN(RR),.WRITE_RETURN(WR)) tap(.clk(stream),.rst_n(rs),.rret(5'b0),.wret(5'b0),.local_rq(leaf_rq),.local_wq(leaf_wq),.far_rq(17'b0),.far_wq(281'b0),.local_read(lr[b]),.local_write(lw[b]),.near_rq(nrq),.near_wq(nwq),.near_rr(nrr),.near_w_done(ndone),.local_rr(rr),.local_w_done(done),.fault(t_fault[b]));
+      |                                                                     ^~~
+                     tap_exact.sv:83:35: ... Location of port declaration
+   83 |     output reg [0:0] local_w_done,far_w_done,
+      |                                   ^~~~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'rr1'
+                     vmb.sv:115:53: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                     ^~~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'rr2'
+                     vmb.sv:115:63: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                               ^~~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'rr3'
+                     vmb.sv:115:73: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                                         ^~~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'rr4'
+                     vmb.sv:115:83: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                                                   ^~~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'wq_done1'
+                     vmb.sv:115:108: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                                                                            ^~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'dq_done'
+                     vmb.sv:115:240: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                                                                                                                                                                                                                ^~~~~~~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'kq_done'
+                     vmb.sv:115:253: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                                                                                                                                                                                                                             ^~~~~~~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'xq_done'
+                     vmb.sv:115:266: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                                                                                                                                                                                                                                          ^~~~~~~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'xq2_done'
+                     vmb.sv:115:280: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                                                                                                                                                                                                                                                        ^~~~~~~~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'eg'
+                     vmb.sv:115:290: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                                                                                                                                                                                                                                                                  ^~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'pr'
+                     vmb.sv:115:298: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                                                                                                                                                                                                                                                                          ^~
+%Warning-PINMISSING: release18_tb.sv:54:31: Instance has missing pin: 'status'
+                     vmb.sv:115:302: ... Location of port declaration
+  115 | module hfd_vms_bank_native_q0_faces (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |                                                                                                                                                                                                                                                                                                              ^~~~~~
+%Warning-WIDTHEXPAND: pgp.sv:486:34: Operator VAR 'MUT' expects 32 bits on the Initial value, but Initial value's CONST '1'h0' generates 1 bits.
+  486 |   parameter integer NC=10, XP=4, MUT=0, OREG=1, FREG=1, CLAT=2, HRLY=1, DLAT=1
+      |                                  ^~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: pgp.sv:486:41: Operator VAR 'OREG' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+  486 |   parameter integer NC=10, XP=4, MUT=0, OREG=1, FREG=1, CLAT=2, HRLY=1, DLAT=1
+      |                                         ^~~~
+%Warning-WIDTHEXPAND: pgp.sv:486:49: Operator VAR 'FREG' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+  486 |   parameter integer NC=10, XP=4, MUT=0, OREG=1, FREG=1, CLAT=2, HRLY=1, DLAT=1
+      |                                                 ^~~~
+%Warning-WIDTHEXPAND: pgp.sv:486:65: Operator VAR 'HRLY' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+  486 |   parameter integer NC=10, XP=4, MUT=0, OREG=1, FREG=1, CLAT=2, HRLY=1, DLAT=1
+      |                                                                 ^~~~
+%Warning-WIDTHEXPAND: pgp.sv:431:54: Operator VAR 'PMUT' expects 32 bits on the Initial value, but Initial value's CONST '1'h0' generates 1 bits.
+  431 |   parameter integer DB=3, EDGES=7111, CFGR=1, MUT=0, PMUT=0,
+      |                                                      ^~~~
+%Warning-WIDTHEXPAND: pgp.sv:432:21: Operator VAR 'CPIN' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+  432 |   parameter integer CPIN=0, RRLY=0, FADV=1    
+      |                     ^~~~
+%Warning-WIDTHEXPAND: pgp.sv:432:29: Operator VAR 'RRLY' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+  432 |   parameter integer CPIN=0, RRLY=0, FADV=1    
+      |                             ^~~~
+%Warning-WIDTHEXPAND: pgp.sv:161:49: Operator VAR 'MUT' expects 32 bits on the Initial value, but Initial value's CONST '1'h0' generates 1 bits.
+  161 |   parameter integer BANKS=1, OG=2, GRP=0, RS=4, MUT=0
+      |                                                 ^~~
+%Warning-WIDTHEXPAND: pgp.sv:194:78: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'bank_a' generates 9 bits.
+                                   : ... note: In instance 'tb.dut.g_c[3].u_c.u_p.g_m4.dt[0].mem'
+  194 |       always_ff @(posedge clk) if(ren) h1[o][r] <= (bank_a>>LOG)==o && bank_a<BANKS;
+      |                                                                              ^
+%Warning-WIDTHEXPAND: pgp.sv:291:48: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'length' generates 16 bits.
+                                   : ... note: In instance 'tb.dut.g_c[3].u_c.u_p'
+  291 |     if(start && !(busy_i || length==0 || length>EDGES || (PIPE==2 && cfg_we))) nb=1;
+      |                                                ^
+%Warning-WIDTHEXPAND: pgp.sv:299:50: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cfg_bank' generates 16 bits.
+                                   : ... note: In instance 'tb.dut.g_c[3].u_c.u_p'
+  299 |   wire write_enable=cfg_we && !busy_i && cfg_bank<TOTAL_BANKS;
+      |                                                  ^
+%Warning-WIDTHEXPAND: pgp.sv:320:82: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_bank' generates 16 bits.
+                                   : ... note: In instance 'tb.dut.g_c[3].u_c.u_p'
+  320 |       else for(wb=0;wb<TOTAL_BANKS;wb=wb+1) wce_r[wb] <= write_enable && cfg_bank==wb;
+      |                                                                                  ^~
+%Warning-WIDTHEXPAND: pgp.sv:402:39: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'cfg_bank' generates 16 bits.
+                                   : ... note: In instance 'tb.dut.g_c[3].u_c.u_p'
+  402 |       if(cfg_we && (busy_i || cfg_bank>=TOTAL_BANKS)) fault_i<=1;
+      |                                       ^~
+%Warning-WIDTHEXPAND: pgp.sv:405:41: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'length' generates 16 bits.
+                                   : ... note: In instance 'tb.dut.g_c[3].u_c.u_p'
+  405 |         if(busy_i || length==0 || length>EDGES || (PIPE==2 && cfg_we)) fault_i<=1;
+      |                                         ^
+%Warning-WIDTHTRUNC: tap_exact.sv:99:53: Bit extraction of array[14:0] requires 4 bit index, not 5 bits.
+                                       : ... note: In instance 'tb.B[7].tap'
+   99 |     wire [0:0] write_due=(RET_PIN!=0)?write_calendar[wret_q-5'd1]:write_calendar[WRITE_RETURN-1];
+      |                                                     ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: hfd_hgi_vm_calendar_f20.sv:308:41: Operator EQ expects 12 bits on the RHS, but RHS's VARREF 'stored_base' generates 10 bits.
+                                                       : ... note: In instance 'tb.cal.u_target'
+  308 |                     if(validated && base==stored_base && limit==stored_limit)begin
+      |                                         ^~
+%Warning-WIDTHEXPAND: hfd_hgi_vm_calendar_f20.sv:308:63: Operator EQ expects 13 bits on the RHS, but RHS's VARREF 'stored_limit' generates 11 bits.
+                                                       : ... note: In instance 'tb.cal.u_target'
+  308 |                     if(validated && base==stored_base && limit==stored_limit)begin
+      |                                                               ^~
+%Warning-WIDTHTRUNC: pgp.sv:527:59: Operator ASSIGNDLY expects 2 bits on the Assign RHS, but Assign RHS's REPLICATE generates 3 bits.
+                                  : ... note: In instance 'tb.dut.u_h'
+  527 |     always_ff @(posedge clk) if(!hr) oor_d<='0; else oor_d<={oor_d,d_oor};
+      |                                                           ^~
+%Warning-WIDTHTRUNC: pgp.sv:542:11: Operator ASSIGNDLY expects 3 bits on the Assign RHS, but Assign RHS's REPLICATE generates 4 bits.
+                                  : ... note: In instance 'tb.dut.u_h'
+  542 |       hf_d<={hf_d,hf};
+      |           ^~
+%Warning-WIDTHEXPAND: release18_tb.sv:22:16: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'edge_index' generates 16 bits.
+                                           : ... note: In instance 'tb'
+   22 |   if(edge_index!=n || command!==exp[n] || fault)$fatal(1,"PRODUCER FAIL edge=%0d n=%0d fault=%b",edge_index,n,fault);
+      |                ^~
+%Warning-WIDTHEXPAND: release18_tb.sv:29:345: Input port connection 't_ready' expects 18 bits on the pin connection, but pin connection's CONST '14'h0' generates 14 bits.
+                                            : ... note: In instance 'tb'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                                                                                                                                                                                                                                                                                                                                                         ^~~~~~~
+%Warning-WIDTHEXPAND: release18_tb.sv:29:361: Input port connection 't_active' expects 18 bits on the pin connection, but pin connection's CONST '14'h0' generates 14 bits.
+                                            : ... note: In instance 'tb'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                                                                                                                                                                                                                                                                                                                                                                         ^~~~~~~~
+%Warning-WIDTHEXPAND: release18_tb.sv:29:378: Input port connection 't_fault' expects 29 bits on the pin connection, but pin connection's CONST '23'h0' generates 23 bits.
+                                            : ... note: In instance 'tb'
+   29 | ot_hbm_host_cfg_leaf_sw leaf(.clk(stream),.rst_n(rs),.cfg_v(cv),.cfg_target(ct),.cfg_addr(ca),.cfg_data(cd),.desc_v(dv),.desc_base(12'b0),.desc_limit(dl),.desc_loops(16'd1),.launch_v(lv),.a_cfg_v(acv),.a_cfg_target(act),.a_cfg_addr(aca),.a_cfg_data(acd),.a_desc_v(adv),.a_desc_base(adb),.a_desc_limit(adl),.a_desc_loops(adlp),.a_launch_v(alv),.t_ready(14'b0),.t_active(14'b0),.t_fault(23'b0));
+      |                                                                                                                                                                                                                                                                                                                                                                                          ^~~~~~~
+%Warning-WIDTHTRUNC: release18_tb.sv:35:41: Operator ASSIGN expects 12 bits on the Assign RHS, but Assign RHS's VARREF 'i' generates 32 bits.
+                                          : ... note: In instance 'tb'
+   35 |  for(integer i=0;i<160;i++)begin cv=1;ca=i;cd=image[i];if(mut==1)cd[162:139]=0;if(mut==2)cd[88:81]=8'h01;@(negedge stream);end
+      |                                         ^
+%Warning-WIDTHEXPAND: release18_tb.sv:58:47: Operator ADD expects 32 bits on the LHS, but LHS's CONST '16'h118' generates 16 bits.
+                                           : ... note: In instance 'tb'
+   58 |     if(serrr[255:0]!=={8{16'had51,16'(16'h0118+(local_reads-2)*8+b)}})$fatal(1,"NATIVE_DATA FAIL readback b=%d n=%d got=%h",b,read_count,serrr[255:0]);
+      |                                               ^
+%Warning-WIDTHTRUNC: release18_tb.sv:74:19: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'faults' generates 8 bits.
+                                          : ... note: In instance 'tb'
+   74 |  if(n!=N || fault || faults || leaf_fault || tf || cf || brfault || read_count!=32 || write_count!=16)$fatal(1,"PRODUCER FAIL count=%0d fault=%b",n,fault);
+      |                   ^~
+%Warning-WIDTHTRUNC: release18_tb.sv:74:29: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'leaf_fault' generates 8 bits.
+                                          : ... note: In instance 'tb'
+   74 |  if(n!=N || fault || faults || leaf_fault || tf || cf || brfault || read_count!=32 || write_count!=16)$fatal(1,"PRODUCER FAIL count=%0d fault=%b",n,fault);
+      |                             ^~
+%Warning-MULTIDRIVEN: vmb.sv:644:30: Signal has multiple driving blocks with different clocking: 'u_ot_pr_core.wq_done'
+                                   : ... note: In instance 'tb.B[7].vm'
+                      vmb.sv:525:20: ... Location of first driving block
+  525 |         else begin wq_done[1] <= s2w_v && s2w_p == 1;
+      |                    ^~~~~~~
+                      vmb.sv:521:20: ... Location of other driving block
+  521 |         else begin wq_done[0] <= s2w_v && s2w_p == 0;
+      |                    ^~~~~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+make: Entering directory '/srv/opentallas-scratch/codex/root-native-producer-calendar-1019/review/calendar/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb_vm_classes_0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb_vm_classes_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb_hfd_vms_bank_native_q0_faces__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb_hfd_vms_bank_native_q0_faces__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb_hfd_vms_bank_native_q0_faces__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o Vtb
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/codex/root-native-producer-calendar-1019/review/calendar/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.733 MB sources in 44 modules, into 20.315 MB in 28 C++ files needing 0.170 MB
+- Verilator: Walltime 20.149 s (elab=0.077, cvt=2.464, bld=17.306); cpu 3.129 s on 2 threads; allocated 182.430 MB

@@ -16,6 +16,7 @@ module ot_hbm_hc_qcen_static #(
     parameter integer K    = 20480,
     parameter integer DRLY = 1,
     parameter integer TLA  = 7,
+    parameter integer CHX  = 0,     // HH-9 10-19: extra chain edges (bank chain pin registers, ot_hbm_hc_qeng_static CPR)
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -117,7 +118,7 @@ module ot_hbm_hc_qcen_static #(
     assign {bd_v, bd_ss, bd_nv, bd_wa, bd_xa} = dr[DRLY-1];
 
     // 6-level subtree over the chunk sums of the task whose valid entered bank 0 SB + DRLY edges ago
-    localparam integer VD = SB + DRLY;
+    localparam integer VD = SB + DRLY + CHX;
     reg [VD-1:0] vl;
     always @(posedge clk or negedge rc) if (!rc) vl <= 0; else vl <= {vl[VD-2:0], bd_v};
     wire leaf_v = vl[VD-1];

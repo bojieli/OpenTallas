@@ -1,0 +1,3 @@
+core split hi=['u_core_peer']: 97 same-family crossing nets, 5407 b -> ~27035 ring flops (D 4, +3 edges each); 6 cross-region 2-cycles (lp.py cannot keep the flat schedule):
+  loop u_cdc_pc <-> u_core_peer  (530 b / 530 b)
+  loop u_core_guard <-> u_core_peer  (244 b / 476 b)

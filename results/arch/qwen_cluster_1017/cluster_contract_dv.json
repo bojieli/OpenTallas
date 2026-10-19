@@ -50,68 +50,68 @@
  },
  "register_centroid": {
   "c0r0": [
-   43.3,
-   590.3
+   350.5,
+   579.5
   ],
   "c0r1": [
-   43.2,
-   2005.2
+   287.6,
+   1929.8
   ],
   "c0r2": [
-   43.2,
-   3301.5
+   287.0,
+   3238.3
   ],
   "c0r3": [
-   43.2,
-   4635.1
+   362.9,
+   4345.5
   ],
   "c1r0": [
-   812.8,
-   749.9
+   789.0,
+   732.6
   ],
   "c1r1": [
-   832.8,
-   2025.2
+   847.5,
+   1948.8
   ],
   "c1r2": [
-   768.5,
-   3385.3
+   767.3,
+   3277.2
   ],
   "c1r3": [
-   905.2,
-   4552.0
+   834.4,
+   4450.8
   ],
   "c2r0": [
-   1303.9,
-   736.4
+   1455.3,
+   828.0
   ],
   "c2r1": [
-   1311.8,
-   2153.7
+   1495.9,
+   2013.6
   ],
   "c2r2": [
-   1302.7,
-   3452.0
+   1486.9,
+   3259.3
   ],
   "c2r3": [
-   1247.1,
-   4601.0
+   1465.6,
+   4353.2
   ],
   "c3r0": [
-   2187.8,
-   699.0
+   2087.2,
+   825.4
   ],
   "c3r1": [
-   1981.7,
-   2013.3
+   1971.1,
+   1913.6
   ],
   "c3r2": [
-   2058.3,
-   3199.6
+   2000.5,
+   3154.6
   ],
   "c3r3": [
-   2211.0,
-   4429.7
+   1967.0,
+   4197.5
   ]
  },
  "tiles": [
@@ -247,7 +247,7 @@
  "clocks": {
   "c0r0": {
    "pin": "ck_c0r0",
-   "fabric_flops": 2598,
+   "fabric_flops": 11391,
    "tiles": [
     "0_0"
    ],
@@ -255,7 +255,7 @@
   },
   "c0r1": {
    "pin": "ck_c0r1",
-   "fabric_flops": 2076,
+   "fabric_flops": 8810,
    "tiles": [
     "0_1"
    ],
@@ -263,7 +263,7 @@
   },
   "c0r2": {
    "pin": "ck_c0r2",
-   "fabric_flops": 2072,
+   "fabric_flops": 8810,
    "tiles": [
     "0_2"
    ],
@@ -271,7 +271,7 @@
   },
   "c0r3": {
    "pin": "ck_c0r3",
-   "fabric_flops": 2066,
+   "fabric_flops": 6736,
    "tiles": [
     "0_3"
    ],
@@ -279,7 +279,7 @@
   },
   "c1r0": {
    "pin": "ck_c1r0",
-   "fabric_flops": 9778,
+   "fabric_flops": 21698,
    "tiles": [
     "1_0"
    ],
@@ -287,7 +287,7 @@
   },
   "c1r1": {
    "pin": "ck_c1r1",
-   "fabric_flops": 6690,
+   "fabric_flops": 18612,
    "tiles": [
     "1_1"
    ],
@@ -295,7 +295,7 @@
   },
   "c1r2": {
    "pin": "ck_c1r2",
-   "fabric_flops": 8746,
+   "fabric_flops": 22208,
    "tiles": [
     "1_2"
    ],
@@ -303,7 +303,7 @@
   },
   "c1r3": {
    "pin": "ck_c1r3",
-   "fabric_flops": 4634,
+   "fabric_flops": 12417,
    "tiles": [
     "1_3"
    ],
@@ -311,7 +311,7 @@
   },
   "c2r0": {
    "pin": "ck_c2r0",
-   "fabric_flops": 5687,
+   "fabric_flops": 15000,
    "tiles": [
     "2_0"
    ],
@@ -319,7 +319,7 @@
   },
   "c2r1": {
    "pin": "ck_c2r1",
-   "fabric_flops": 5164,
+   "fabric_flops": 19654,
    "tiles": [
     "2_1"
    ],
@@ -327,7 +327,7 @@
   },
   "c2r2": {
    "pin": "ck_c2r2",
-   "fabric_flops": 4646,
+   "fabric_flops": 20685,
    "tiles": [
     "2_2"
    ],
@@ -335,7 +335,7 @@
   },
   "c2r3": {
    "pin": "ck_c2r3",
-   "fabric_flops": 4126,
+   "fabric_flops": 12423,
    "tiles": [
     "2_3"
    ],
@@ -343,7 +343,7 @@
   },
   "c3r0": {
    "pin": "ck_c3r0",
-   "fabric_flops": 4140,
+   "fabric_flops": 10873,
    "tiles": [
     "3_0"
    ],
@@ -351,7 +351,7 @@
   },
   "c3r1": {
    "pin": "ck_c3r1",
-   "fabric_flops": 7730,
+   "fabric_flops": 22220,
    "tiles": [
     "3_1"
    ],
@@ -359,7 +359,7 @@
   },
   "c3r2": {
    "pin": "ck_c3r2",
-   "fabric_flops": 5156,
+   "fabric_flops": 17070,
    "tiles": [
     "3_2"
    ],
@@ -367,25 +367,26 @@
   },
   "c3r3": {
    "pin": "ck_c3r3",
-   "fabric_flops": 3094,
+   "fabric_flops": 12936,
    "tiles": [
     "3_3"
    ],
    "tile_entry_pins": 39
   }
  },
- "fabric_flops": 78403,
+ "fabric_flops": 241543,
  "latency_edges": {
   "tap": {
    "0": 3,
-   "1": 7,
-   "2": 11,
-   "3": 15
+   "1": 10,
+   "2": 17,
+   "3": 24
   },
-  "bco": 17,
-  "rs_fabric": 35,
-  "rs_i_to_rs_o": 17,
-  "reset": 19
+  "bco": 26,
+  "rs_fabric": 74,
+  "rs_i_to_rs_o": 29,
+  "reset": 19,
+  "landing_warm_after_rst": 25
  },
  "hop_um": {
   "limit": 405.0,
@@ -545,23 +546,24 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    177.32,
-    177.62
+    344.465,
+    344.765
    ],
    "pins_per_um": null,
-   "note": "region c0r0 entry island (register centroid x 43, y 590)"
+   "note": "region c0r0 entry island (register centroid x 350, y 580)"
   },
   {
-   "port": "rst_n",
+   "port": "rst_c0r0",
    "bits": 1,
    "face": "S",
    "layer": "M5",
    "range_um": [
-    178.32,
-    178.62
+    345.465,
+    345.765
    ],
    "pins_per_um": null,
-   "note": "region c0r0 entry island (register centroid x 43, y 590)"
+   "region": "c0r0",
+   "note": "region c0r0 entry island (register centroid x 350, y 580)"
   },
   {
    "port": "far",
@@ -569,11 +571,11 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    179.32,
-    179.62
+    346.465,
+    346.765
    ],
    "pins_per_um": null,
-   "note": "region c0r0 entry island (register centroid x 43, y 590)"
+   "note": "region c0r0 entry island (register centroid x 350, y 580)"
   },
   {
    "port": "cid",
@@ -581,11 +583,11 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    180.32,
-    186.32
+    347.465,
+    353.465
    ],
    "pins_per_um": null,
-   "note": "region c0r0 entry island (register centroid x 43, y 590)"
+   "note": "region c0r0 entry island (register centroid x 350, y 580)"
   },
   {
    "port": "tie_hi",
@@ -593,11 +595,11 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    187.02,
-    187.32
+    354.165,
+    354.465
    ],
    "pins_per_um": null,
-   "note": "region c0r0 entry island (register centroid x 43, y 590)"
+   "note": "region c0r0 entry island (register centroid x 350, y 580)"
   },
   {
    "port": "tie_lo",
@@ -605,11 +607,11 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    188.02,
-    188.32
+    355.165,
+    355.465
    ],
    "pins_per_um": null,
-   "note": "region c0r0 entry island (register centroid x 43, y 590)"
+   "note": "region c0r0 entry island (register centroid x 350, y 580)"
   },
   {
    "port": "ck_c1r0",
@@ -617,11 +619,24 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    812.258,
-    812.558
+    787.955,
+    788.255
    ],
    "pins_per_um": null,
-   "note": "region c1r0 entry island (register centroid x 813, y 750)"
+   "note": "region c1r0 entry island (register centroid x 789, y 733)"
+  },
+  {
+   "port": "rst_c1r0",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    788.955,
+    789.255
+   ],
+   "pins_per_um": null,
+   "region": "c1r0",
+   "note": "region c1r0 entry island (register centroid x 789, y 733)"
   },
   {
    "port": "ck_c2r0",
@@ -633,7 +648,20 @@
     1482.527
    ],
    "pins_per_um": null,
-   "note": "region c2r0 entry island (register centroid x 1304, y 736)"
+   "note": "region c2r0 entry island (register centroid x 1455, y 828)"
+  },
+  {
+   "port": "rst_c2r0",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1483.227,
+    1483.527
+   ],
+   "pins_per_um": null,
+   "region": "c2r0",
+   "note": "region c2r0 entry island (register centroid x 1455, y 828)"
   },
   {
    "port": "ck_c3r0",
@@ -641,11 +669,24 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    2187.346,
-    2187.646
+    2086.233,
+    2086.533
    ],
    "pins_per_um": null,
-   "note": "region c3r0 entry island (register centroid x 2188, y 699)"
+   "note": "region c3r0 entry island (register centroid x 2087, y 825)"
+  },
+  {
+   "port": "rst_c3r0",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    2087.233,
+    2087.533
+   ],
+   "pins_per_um": null,
+   "region": "c3r0",
+   "note": "region c3r0 entry island (register centroid x 2087, y 825)"
   },
   {
    "port": "bco0",
@@ -718,11 +759,24 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    177.32,
-    177.62
+    361.89,
+    362.19
    ],
    "pins_per_um": null,
-   "note": "region c0r3 entry island (register centroid x 43, y 4635)"
+   "note": "region c0r3 entry island (register centroid x 363, y 4346)"
+  },
+  {
+   "port": "rst_c0r3",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    362.89,
+    363.19
+   ],
+   "pins_per_um": null,
+   "region": "c0r3",
+   "note": "region c0r3 entry island (register centroid x 363, y 4346)"
   },
   {
    "port": "ck_c1r3",
@@ -730,11 +784,24 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    904.664,
-    904.964
+    833.426,
+    833.726
    ],
    "pins_per_um": null,
-   "note": "region c1r3 entry island (register centroid x 905, y 4552)"
+   "note": "region c1r3 entry island (register centroid x 834, y 4451)"
+  },
+  {
+   "port": "rst_c1r3",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    834.426,
+    834.726
+   ],
+   "pins_per_um": null,
+   "region": "c1r3",
+   "note": "region c1r3 entry island (register centroid x 834, y 4451)"
   },
   {
    "port": "ck_c2r3",
@@ -742,11 +809,24 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    1396.06,
-    1396.36
+    1464.588,
+    1464.888
    ],
    "pins_per_um": null,
-   "note": "region c2r3 entry island (register centroid x 1247, y 4601)"
+   "note": "region c2r3 entry island (register centroid x 1466, y 4353)"
+  },
+  {
+   "port": "rst_c2r3",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1465.588,
+    1465.888
+   ],
+   "pins_per_um": null,
+   "region": "c2r3",
+   "note": "region c2r3 entry island (register centroid x 1466, y 4353)"
   },
   {
    "port": "ck_c3r3",
@@ -754,11 +834,24 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    2210.519,
-    2210.819
+    1965.973,
+    1966.273
    ],
    "pins_per_um": null,
-   "note": "region c3r3 entry island (register centroid x 2211, y 4430)"
+   "note": "region c3r3 entry island (register centroid x 1967, y 4197)"
+  },
+  {
+   "port": "rst_c3r3",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1966.973,
+    1967.273
+   ],
+   "pins_per_um": null,
+   "region": "c3r3",
+   "note": "region c3r3 entry island (register centroid x 1967, y 4197)"
   },
   {
    "port": "ck_c0r1",
@@ -766,11 +859,24 @@
    "face": "W",
    "layer": "M4",
    "range_um": [
-    2005.158,
-    2005.458
+    1929.772,
+    1930.072
    ],
    "pins_per_um": null,
-   "note": "region c0r1 entry (register centroid y 2005, x 43)"
+   "note": "region c0r1 entry (register centroid y 1930, x 288)"
+  },
+  {
+   "port": "rst_c0r1",
+   "bits": 1,
+   "face": "W",
+   "layer": "M4",
+   "range_um": [
+    1930.772,
+    1931.072
+   ],
+   "pins_per_um": null,
+   "region": "c0r1",
+   "note": "region c0r1 reset (Q-CB16RST: beside ck_c0r1; pin register u_fab.u_rpin_c0r1 on ck_c0r1)"
   },
   {
    "port": "ck_c1r1",
@@ -778,11 +884,24 @@
    "face": "W",
    "layer": "M4",
    "range_um": [
-    2028.18,
-    2028.48
+    1951.785,
+    1952.085
    ],
    "pins_per_um": null,
-   "note": "region c1r1 entry (register centroid y 2025, x 833)"
+   "note": "region c1r1 entry (register centroid y 1949, x 848)"
+  },
+  {
+   "port": "rst_c1r1",
+   "bits": 1,
+   "face": "W",
+   "layer": "M4",
+   "range_um": [
+    1952.785,
+    1953.085
+   ],
+   "pins_per_um": null,
+   "region": "c1r1",
+   "note": "region c1r1 reset (Q-CB16RST: beside ck_c1r1; pin register u_fab.u_rpin_c1r1 on ck_c1r1)"
   },
   {
    "port": "ck_c2r1",
@@ -790,11 +909,24 @@
    "face": "E",
    "layer": "M4",
    "range_um": [
-    2156.731,
-    2157.031
+    2016.644,
+    2016.944
    ],
    "pins_per_um": null,
-   "note": "region c2r1 entry (register centroid y 2154, x 1312)"
+   "note": "region c2r1 entry (register centroid y 2014, x 1496)"
+  },
+  {
+   "port": "rst_c2r1",
+   "bits": 1,
+   "face": "E",
+   "layer": "M4",
+   "range_um": [
+    2017.644,
+    2017.944
+   ],
+   "pins_per_um": null,
+   "region": "c2r1",
+   "note": "region c2r1 reset (Q-CB16RST: beside ck_c2r1; pin register u_fab.u_rpin_c2r1 on ck_c2r1)"
   },
   {
    "port": "ck_c3r1",
@@ -802,11 +934,24 @@
    "face": "E",
    "layer": "M4",
    "range_um": [
-    2013.266,
-    2013.566
+    1913.61,
+    1913.91
    ],
    "pins_per_um": null,
-   "note": "region c3r1 entry (register centroid y 2013, x 1982)"
+   "note": "region c3r1 entry (register centroid y 1914, x 1971)"
+  },
+  {
+   "port": "rst_c3r1",
+   "bits": 1,
+   "face": "E",
+   "layer": "M4",
+   "range_um": [
+    1914.61,
+    1914.91
+   ],
+   "pins_per_um": null,
+   "region": "c3r1",
+   "note": "region c3r1 reset (Q-CB16RST: beside ck_c3r1; pin register u_fab.u_rpin_c3r1 on ck_c3r1)"
   },
   {
    "port": "ck_c0r2",
@@ -814,11 +959,24 @@
    "face": "W",
    "layer": "M4",
    "range_um": [
-    3301.52,
-    3301.82
+    3238.284,
+    3238.584
    ],
    "pins_per_um": null,
-   "note": "region c0r2 entry (register centroid y 3302, x 43)"
+   "note": "region c0r2 entry (register centroid y 3238, x 287)"
+  },
+  {
+   "port": "rst_c0r2",
+   "bits": 1,
+   "face": "W",
+   "layer": "M4",
+   "range_um": [
+    3239.284,
+    3239.584
+   ],
+   "pins_per_um": null,
+   "region": "c0r2",
+   "note": "region c0r2 reset (Q-CB16RST: beside ck_c0r2; pin register u_fab.u_rpin_c0r2 on ck_c0r2)"
   },
   {
    "port": "ck_c1r2",
@@ -826,11 +984,24 @@
    "face": "W",
    "layer": "M4",
    "range_um": [
-    3388.277,
-    3388.577
+    3280.163,
+    3280.463
    ],
    "pins_per_um": null,
-   "note": "region c1r2 entry (register centroid y 3385, x 769)"
+   "note": "region c1r2 entry (register centroid y 3277, x 767)"
+  },
+  {
+   "port": "rst_c1r2",
+   "bits": 1,
+   "face": "W",
+   "layer": "M4",
+   "range_um": [
+    3281.163,
+    3281.463
+   ],
+   "pins_per_um": null,
+   "region": "c1r2",
+   "note": "region c1r2 reset (Q-CB16RST: beside ck_c1r2; pin register u_fab.u_rpin_c1r2 on ck_c1r2)"
   },
   {
    "port": "ck_c2r2",
@@ -838,11 +1009,24 @@
    "face": "E",
    "layer": "M4",
    "range_um": [
-    3455.015,
-    3455.315
+    3262.289,
+    3262.589
    ],
    "pins_per_um": null,
-   "note": "region c2r2 entry (register centroid y 3452, x 1303)"
+   "note": "region c2r2 entry (register centroid y 3259, x 1487)"
+  },
+  {
+   "port": "rst_c2r2",
+   "bits": 1,
+   "face": "E",
+   "layer": "M4",
+   "range_um": [
+    3263.289,
+    3263.589
+   ],
+   "pins_per_um": null,
+   "region": "c2r2",
+   "note": "region c2r2 reset (Q-CB16RST: beside ck_c2r2; pin register u_fab.u_rpin_c2r2 on ck_c2r2)"
   },
   {
    "port": "ck_c3r2",
@@ -850,11 +1034,24 @@
    "face": "E",
    "layer": "M4",
    "range_um": [
-    3199.584,
-    3199.884
+    3154.607,
+    3154.907
    ],
    "pins_per_um": null,
-   "note": "region c3r2 entry (register centroid y 3200, x 2058)"
+   "note": "region c3r2 entry (register centroid y 3155, x 2001)"
+  },
+  {
+   "port": "rst_c3r2",
+   "bits": 1,
+   "face": "E",
+   "layer": "M4",
+   "range_um": [
+    3155.607,
+    3155.907
+   ],
+   "pins_per_um": null,
+   "region": "c3r2",
+   "note": "region c3r2 reset (Q-CB16RST: beside ck_c3r2; pin register u_fab.u_rpin_c3r2 on ck_c3r2)"
   }
  ],
  "stations": {
@@ -865,7 +1062,7 @@
    "qfd_c_xstn": 8,
    "qfd_c_xstnw": 8
   },
-  "soft_reset_flops": 139,
+  "soft_reset_flops": 700,
   "hop_pin_to_pin": {
    "max_um": 388.8,
    "pair": [
@@ -2488,8 +2685,2208 @@
    "rs_i->rs_o": 17
   }
  },
+ "regional_resets": {
+  "rule": "Q-CB16RST (10-19): 16 die-delivered regional resets rst_<q> (pin beside ck_<q>); pin register u_fab.u_rpin_<q> on ck_<q> at the region entry nearest the pin; in-region trees only (corridor / channel lanes, never over the A0 tile); every tile / xstn rst_n exactly reset edges after its region pin, every landing half at the landing's reset_depth.  Die obligation: release all 16 of an instance on the SAME calendar edge (each timed against its own region tree, the die reset tree lands each); MUT 8 (bench) = one region one edge late.",
+  "pins": {
+   "c0r0": "rst_c0r0",
+   "c0r1": "rst_c0r1",
+   "c0r2": "rst_c0r2",
+   "c0r3": "rst_c0r3",
+   "c1r0": "rst_c1r0",
+   "c1r1": "rst_c1r1",
+   "c1r2": "rst_c1r2",
+   "c1r3": "rst_c1r3",
+   "c2r0": "rst_c2r0",
+   "c2r1": "rst_c2r1",
+   "c2r2": "rst_c2r2",
+   "c2r3": "rst_c2r3",
+   "c3r0": "rst_c3r0",
+   "c3r1": "rst_c3r1",
+   "c3r2": "rst_c3r2",
+   "c3r3": "rst_c3r3"
+  },
+  "pin_register_um": {
+   "c0r0": 47.9,
+   "c1r0": 54.5,
+   "c2r0": 43.2,
+   "c3r0": 46.9,
+   "c0r3": 47.2,
+   "c1r3": 51.6,
+   "c2r3": 49.3,
+   "c3r3": 54.1,
+   "c0r1": 4.3,
+   "c1r1": 631.3,
+   "c2r1": 627.3,
+   "c3r1": 7.5,
+   "c0r2": 4.3,
+   "c1r2": 622.3,
+   "c2r2": 629.2,
+   "c3r2": 8.8
+  },
+  "pin_register_sites": {
+   "c0r0": [
+    340.915,
+    43.2
+   ],
+   "c0r1": [
+    4.32,
+    1930.926
+   ],
+   "c0r2": [
+    4.32,
+    3239.437
+   ],
+   "c0r3": [
+    359.077,
+    5184.0
+   ],
+   "c1r0": [
+    777.824,
+    43.2
+   ],
+   "c1r1": [
+    622.08,
+    1943.74
+   ],
+   "c1r2": [
+    622.08,
+    3281.111
+   ],
+   "c1r3": [
+    826.139,
+    5184.0
+   ],
+   "c2r0": [
+    1483.377,
+    43.2
+   ],
+   "c2r1": [
+    1823.04,
+    2023.013
+   ],
+   "c2r2": [
+    1823.04,
+    3270.586
+   ],
+   "c2r3": [
+    1459.624,
+    5184.0
+   ],
+   "c3r0": [
+    2083.685,
+    43.2
+   ],
+   "c3r1": [
+    2440.8,
+    1917.929
+   ],
+   "c3r2": [
+    2440.8,
+    3151.321
+   ],
+   "c3r3": [
+    1956.261,
+    5184.0
+   ]
+  },
+  "flops": 547,
+  "depth_edges": 19
+ },
  "far_position": "ONE master: in the far bands (0 / 3) rs_i is a declared-idle terminus tied to the instance's own tie_lo by the die (valid bit 0 every cycle) and rs_o is left unconnected (output only)",
  "gating": [
   "A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"
- ]
+ ],
+ "landings": {
+  "mode": "all",
+  "resets": "region",
+  "rule": "every region-seam crossing landed (Q-CLUSTER-LANDALL, coordinator 0fy; Q-CB16RST 10-19: no reset hop crosses a seam: 16 die-delivered regional resets rst_<q>, each registered at its region entry with an in-region tree)",
+  "D": 4,
+  "E": 2,
+  "K": 2,
+  "added_edges_per_crossing": 3,
+  "window_ps": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup (T = 833.3: about -1666 .. +1666 ps)",
+  "epochs": "released reset (L3): each half's rsi = a run in its OWN region's reset tree (from rst_<q>), both halves at the landing's common depth after their pins; the die releases the 16 rst_<q> on the same calendar edge: G == R0, E = K",
+  "fault": "assertion only ($error LAND_FAULT in simulation; synthesis drops the epoch tags)",
+  "rtl": "rtl/physical/qcluster/qfd_c_land.sv",
+  "count": 54,
+  "bits": 27780,
+  "flops": 139602,
+  "list": [
+   {
+    "name": "dn0_rly3",
+    "crossing": "dn0_rly2 (c0r0) -> u_fab.u_dn0_rly3 (c0r1)",
+    "src_region": "c0r0",
+    "dst_region": "c0r1",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn0_rly3_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c0r0",
+     "site": [
+      43.2,
+      1244.532
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn0_rly3_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c0r1",
+     "site": [
+      43.2,
+      1471.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 226.8,
+    "reset_depth": 11,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn0_rly3_w.* -to u_fab.u_land_dn0_rly3_r.*"
+   },
+   {
+    "name": "dn0_rly6",
+    "crossing": "dn0_rly5 (c0r1) -> u_fab.u_dn0_rly6 (c0r2)",
+    "src_region": "c0r1",
+    "dst_region": "c0r2",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn0_rly6_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c0r1",
+     "site": [
+      43.2,
+      2540.532
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn0_rly6_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c0r2",
+     "site": [
+      43.2,
+      2767.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 226.8,
+    "reset_depth": 15,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn0_rly6_w.* -to u_fab.u_land_dn0_rly6_r.*"
+   },
+   {
+    "name": "dn0_rly9",
+    "crossing": "dn0_rly8 (c0r2) -> u_fab.u_dn0_rly9 (c0r3)",
+    "src_region": "c0r2",
+    "dst_region": "c0r3",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn0_rly9_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c0r2",
+     "site": [
+      43.2,
+      3836.532
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn0_rly9_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c0r3",
+     "site": [
+      43.2,
+      4063.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 226.8,
+    "reset_depth": 19,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn0_rly9_w.* -to u_fab.u_land_dn0_rly9_r.*"
+   },
+   {
+    "name": "dn1_rly3",
+    "crossing": "dn1_rly2 (c1r0) -> u_fab.u_dn1_rly3 (c1r1)",
+    "src_region": "c1r0",
+    "dst_region": "c1r1",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn1_rly3_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r0",
+     "site": [
+      1173.6,
+      1153.972
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn1_rly3_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r1",
+     "site": [
+      1173.6,
+      1415.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 261.4,
+    "reset_depth": 7,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn1_rly3_w.* -to u_fab.u_land_dn1_rly3_r.*"
+   },
+   {
+    "name": "dn1_rly6",
+    "crossing": "dn1_rly5 (c1r1) -> u_fab.u_dn1_rly6 (c1r2)",
+    "src_region": "c1r1",
+    "dst_region": "c1r2",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn1_rly6_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r1",
+     "site": [
+      1173.6,
+      2484.532
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn1_rly6_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r2",
+     "site": [
+      1173.6,
+      2711.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 226.8,
+    "reset_depth": 11,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn1_rly6_w.* -to u_fab.u_land_dn1_rly6_r.*"
+   },
+   {
+    "name": "dn1_rly9",
+    "crossing": "dn1_rly8 (c1r2) -> u_fab.u_dn1_rly9 (c1r3)",
+    "src_region": "c1r2",
+    "dst_region": "c1r3",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn1_rly9_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r2",
+     "site": [
+      1173.6,
+      3780.532
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn1_rly9_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r3",
+     "site": [
+      1173.6,
+      4007.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 226.8,
+    "reset_depth": 15,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn1_rly9_w.* -to u_fab.u_land_dn1_rly9_r.*"
+   },
+   {
+    "name": "dn2_rly3",
+    "crossing": "dn2_rly2 (c2r0) -> u_fab.u_dn2_rly3 (c2r1)",
+    "src_region": "c2r0",
+    "dst_region": "c2r1",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn2_rly3_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r0",
+     "site": [
+      1297.44,
+      1300.532
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn2_rly3_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r1",
+     "site": [
+      1271.52,
+      1527.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 252.7,
+    "reset_depth": 7,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn2_rly3_w.* -to u_fab.u_land_dn2_rly3_r.*"
+   },
+   {
+    "name": "dn2_rly6",
+    "crossing": "dn2_rly5 (c2r1) -> u_fab.u_dn2_rly6 (c2r2)",
+    "src_region": "c2r1",
+    "dst_region": "c2r2",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn2_rly6_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r1",
+     "site": [
+      1271.52,
+      2596.532
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn2_rly6_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r2",
+     "site": [
+      1271.52,
+      2823.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 226.8,
+    "reset_depth": 11,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn2_rly6_w.* -to u_fab.u_land_dn2_rly6_r.*"
+   },
+   {
+    "name": "dn2_rly9",
+    "crossing": "dn2_rly8 (c2r2) -> u_fab.u_dn2_rly9 (c2r3)",
+    "src_region": "c2r2",
+    "dst_region": "c2r3",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn2_rly9_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r2",
+     "site": [
+      1258.56,
+      3892.532
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn2_rly9_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r3",
+     "site": [
+      1271.52,
+      4119.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 239.8,
+    "reset_depth": 15,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn2_rly9_w.* -to u_fab.u_land_dn2_rly9_r.*"
+   },
+   {
+    "name": "dn3_rly3",
+    "crossing": "dn3_rly2 (c3r0) -> u_fab.u_dn3_rly3 (c3r1)",
+    "src_region": "c3r0",
+    "dst_region": "c3r1",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn3_rly3_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r0",
+     "site": [
+      2401.92,
+      1244.532
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn3_rly3_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r1",
+     "site": [
+      2401.92,
+      1471.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 226.8,
+    "reset_depth": 11,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn3_rly3_w.* -to u_fab.u_land_dn3_rly3_r.*"
+   },
+   {
+    "name": "dn3_rly6",
+    "crossing": "dn3_rly5 (c3r1) -> u_fab.u_dn3_rly6 (c3r2)",
+    "src_region": "c3r1",
+    "dst_region": "c3r2",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn3_rly6_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r1",
+     "site": [
+      2401.92,
+      2540.532
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn3_rly6_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r2",
+     "site": [
+      2401.92,
+      2767.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 226.8,
+    "reset_depth": 15,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn3_rly6_w.* -to u_fab.u_land_dn3_rly6_r.*"
+   },
+   {
+    "name": "dn3_rly9",
+    "crossing": "dn3_rly8 (c3r2) -> u_fab.u_dn3_rly9 (c3r3)",
+    "src_region": "c3r2",
+    "dst_region": "c3r3",
+    "bits": 516,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_dn3_rly9_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r2",
+     "site": [
+      2401.92,
+      3836.532
+     ],
+     "flops": 2072
+    },
+    "read": {
+     "inst": "u_fab.u_land_dn3_rly9_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r3",
+     "site": [
+      2401.92,
+      4063.332
+     ],
+     "flops": 521
+    },
+    "hop_um": 226.8,
+    "reset_depth": 19,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_dn3_rly9_w.* -to u_fab.u_land_dn3_rly9_r.*"
+   },
+   {
+    "name": "leg_1_0a_y",
+    "crossing": "msw_1_0a (c0r0) -> u_fab.u_leg_1_0a_y (c1r0)",
+    "src_region": "c0r0",
+    "dst_region": "c1r0",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_1_0a_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c0r0",
+     "site": [
+      566.352,
+      368.244
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_1_0a_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r0",
+     "site": [
+      669.168,
+      227.46
+     ],
+     "flops": 519
+    },
+    "hop_um": 243.6,
+    "reset_depth": 6,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_1_0a_y_w.* -to u_fab.u_land_leg_1_0a_y_r.*"
+   },
+   {
+    "name": "leg_1_1b_y",
+    "crossing": "t_out_1_1 (c1r1) -> u_fab.u_leg_1_1b_y (c0r1)",
+    "src_region": "c1r1",
+    "dst_region": "c0r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_1_1b_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r1",
+     "site": [
+      669.168,
+      1679.335
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_1_1b_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c0r1",
+     "site": [
+      566.352,
+      1608.977
+     ],
+     "flops": 519
+    },
+    "hop_um": 173.2,
+    "reset_depth": 12,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_1_1b_y_w.* -to u_fab.u_land_leg_1_1b_y_r.*"
+   },
+   {
+    "name": "leg_1_2b_y",
+    "crossing": "t_out_3_0 (c3r0) -> u_fab.u_leg_1_2b_y (c2r0)",
+    "src_region": "c3r0",
+    "dst_region": "c2r0",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_1_2b_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r0",
+     "site": [
+      1878.768,
+      383.335
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_1_2b_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r0",
+     "site": [
+      1775.952,
+      312.977
+     ],
+     "flops": 519
+    },
+    "hop_um": 173.2,
+    "reset_depth": 6,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_1_2b_y_w.* -to u_fab.u_land_leg_1_2b_y_r.*"
+   },
+   {
+    "name": "leg_1_3a_y",
+    "crossing": "t_out_2_1 (c2r1) -> u_fab.u_leg_1_3a_y (c3r1)",
+    "src_region": "c2r1",
+    "dst_region": "c3r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_1_3a_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r1",
+     "site": [
+      1775.952,
+      1664.244
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_1_3a_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r1",
+     "site": [
+      1878.768,
+      1523.46
+     ],
+     "flops": 519
+    },
+    "hop_um": 243.6,
+    "reset_depth": 12,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_1_3a_y_w.* -to u_fab.u_land_leg_1_3a_y_r.*"
+   },
+   {
+    "name": "leg_1_4b_y",
+    "crossing": "t_out_1_2 (c1r2) -> u_fab.u_leg_1_4b_y (c0r2)",
+    "src_region": "c1r2",
+    "dst_region": "c0r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_1_4b_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r2",
+     "site": [
+      669.168,
+      2975.335
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_1_4b_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c0r2",
+     "site": [
+      566.352,
+      2904.977
+     ],
+     "flops": 519
+    },
+    "hop_um": 173.2,
+    "reset_depth": 16,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_1_4b_y_w.* -to u_fab.u_land_leg_1_4b_y_r.*"
+   },
+   {
+    "name": "leg_1_5b_y",
+    "crossing": "t_out_1_3 (c1r3) -> u_fab.u_leg_1_5b_y (c0r3)",
+    "src_region": "c1r3",
+    "dst_region": "c0r3",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_1_5b_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r3",
+     "site": [
+      669.168,
+      4271.335
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_1_5b_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c0r3",
+     "site": [
+      566.352,
+      4200.977
+     ],
+     "flops": 519
+    },
+    "hop_um": 173.2,
+    "reset_depth": 20,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_1_5b_y_w.* -to u_fab.u_land_leg_1_5b_y_r.*"
+   },
+   {
+    "name": "leg_1_6a_y",
+    "crossing": "t_out_2_2 (c2r2) -> u_fab.u_leg_1_6a_y (c3r2)",
+    "src_region": "c2r2",
+    "dst_region": "c3r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_1_6a_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r2",
+     "site": [
+      1775.952,
+      2960.244
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_1_6a_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r2",
+     "site": [
+      1878.768,
+      2819.46
+     ],
+     "flops": 519
+    },
+    "hop_um": 243.6,
+    "reset_depth": 16,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_1_6a_y_w.* -to u_fab.u_land_leg_1_6a_y_r.*"
+   },
+   {
+    "name": "leg_1_7a_y",
+    "crossing": "t_out_2_3 (c2r3) -> u_fab.u_leg_1_7a_y (c3r3)",
+    "src_region": "c2r3",
+    "dst_region": "c3r3",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_1_7a_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r3",
+     "site": [
+      1775.952,
+      4256.244
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_1_7a_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r3",
+     "site": [
+      1878.768,
+      4115.46
+     ],
+     "flops": 519
+    },
+    "hop_um": 243.6,
+    "reset_depth": 20,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_1_7a_y_w.* -to u_fab.u_land_leg_1_7a_y_r.*"
+   },
+   {
+    "name": "leg_2_0a_3",
+    "crossing": "leg_2_0a_2 (c1r0) -> u_fab.u_leg_2_0a_3 (c1r1)",
+    "src_region": "c1r0",
+    "dst_region": "c1r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_0a_3_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r0",
+     "site": [
+      656.64,
+      1144.47
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_0a_3_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r1",
+     "site": [
+      695.52,
+      1321.525
+     ],
+     "flops": 519
+    },
+    "hop_um": 215.9,
+    "reset_depth": 7,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_0a_3_w.* -to u_fab.u_land_leg_2_0a_3_r.*"
+   },
+   {
+    "name": "leg_2_0b_y",
+    "crossing": "n_y_0_1 (c0r1) -> u_fab.u_leg_2_0b_y (c1r1)",
+    "src_region": "c0r1",
+    "dst_region": "c1r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_0b_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c0r1",
+     "site": [
+      566.352,
+      1764.77
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_0b_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r1",
+     "site": [
+      669.168,
+      1624.054
+     ],
+     "flops": 519
+    },
+    "hop_um": 243.5,
+    "reset_depth": 13,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_0b_y_w.* -to u_fab.u_land_leg_2_0b_y_r.*"
+   },
+   {
+    "name": "leg_2_1a_0",
+    "crossing": "n_y_2_0 (c2r0) -> u_fab.u_leg_2_1a_0 (c3r0)",
+    "src_region": "c2r0",
+    "dst_region": "c3r0",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_1a_0_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r0",
+     "site": [
+      1773.576,
+      522.145
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_1a_0_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r0",
+     "site": [
+      1842.264,
+      621.873
+     ],
+     "flops": 519
+    },
+    "hop_um": 168.4,
+    "reset_depth": 9,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_1a_0_w.* -to u_fab.u_land_leg_2_1a_0_r.*"
+   },
+   {
+    "name": "leg_2_1a_3",
+    "crossing": "leg_2_1a_2 (c3r0) -> u_fab.u_leg_2_1a_3 (c3r1)",
+    "src_region": "c3r0",
+    "dst_region": "c3r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_1a_3_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r0",
+     "site": [
+      1840.32,
+      1153.11
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_1a_3_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r1",
+     "site": [
+      1866.24,
+      1321.525
+     ],
+     "flops": 519
+    },
+    "hop_um": 194.3,
+    "reset_depth": 12,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_1a_3_w.* -to u_fab.u_land_leg_2_1a_3_r.*"
+   },
+   {
+    "name": "leg_2_1a_y",
+    "crossing": "leg_2_1a_3 (c3r1) -> u_fab.u_leg_2_1a_y (c2r1)",
+    "src_region": "c3r1",
+    "dst_region": "c2r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_1a_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r1",
+     "site": [
+      1868.184,
+      1361.704
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_1a_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r1",
+     "site": [
+      1773.576,
+      1470.071
+     ],
+     "flops": 519
+    },
+    "hop_um": 203.0,
+    "reset_depth": 12,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_1a_y_w.* -to u_fab.u_land_leg_2_1a_y_r.*"
+   },
+   {
+    "name": "leg_2_1b_y",
+    "crossing": "n_y_3_1 (c3r1) -> u_fab.u_leg_2_1b_y (c2r1)",
+    "src_region": "c3r1",
+    "dst_region": "c2r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_1b_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r1",
+     "site": [
+      1878.768,
+      1764.77
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_1b_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r1",
+     "site": [
+      1775.952,
+      1624.054
+     ],
+     "flops": 519
+    },
+    "hop_um": 243.5,
+    "reset_depth": 13,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_1b_y_w.* -to u_fab.u_land_leg_2_1b_y_r.*"
+   },
+   {
+    "name": "leg_2_2a_0",
+    "crossing": "n_y_0_2 (c0r2) -> u_fab.u_leg_2_2a_0 (c1r2)",
+    "src_region": "c0r2",
+    "dst_region": "c1r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_2a_0_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c0r2",
+     "site": [
+      563.976,
+      3114.146
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_2a_0_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r2",
+     "site": [
+      632.664,
+      3196.592
+     ],
+     "flops": 519
+    },
+    "hop_um": 151.1,
+    "reset_depth": 17,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_2a_0_w.* -to u_fab.u_land_leg_2_2a_0_r.*"
+   },
+   {
+    "name": "leg_2_2a_3",
+    "crossing": "leg_2_2a_2 (c1r2) -> u_fab.u_leg_2_2a_3 (c1r3)",
+    "src_region": "c1r2",
+    "dst_region": "c1r3",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_2a_3_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r2",
+     "site": [
+      630.72,
+      3753.75
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_2a_3_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r3",
+     "site": [
+      630.72,
+      3922.165
+     ],
+     "flops": 519
+    },
+    "hop_um": 168.4,
+    "reset_depth": 19,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_2a_3_w.* -to u_fab.u_land_leg_2_2a_3_r.*"
+   },
+   {
+    "name": "leg_2_2b_y",
+    "crossing": "n_y_0_3 (c0r3) -> u_fab.u_leg_2_2b_y (c1r3)",
+    "src_region": "c0r3",
+    "dst_region": "c1r3",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_2b_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c0r3",
+     "site": [
+      566.352,
+      4356.77
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_2b_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r3",
+     "site": [
+      669.168,
+      4216.054
+     ],
+     "flops": 519
+    },
+    "hop_um": 243.5,
+    "reset_depth": 21,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_2b_y_w.* -to u_fab.u_land_leg_2_2b_y_r.*"
+   },
+   {
+    "name": "leg_2_3a_3",
+    "crossing": "leg_2_3a_2 (c3r2) -> u_fab.u_leg_2_3a_3 (c3r3)",
+    "src_region": "c3r2",
+    "dst_region": "c3r3",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_3a_3_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r2",
+     "site": [
+      1840.32,
+      3745.11
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_3a_3_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r3",
+     "site": [
+      1866.24,
+      3913.525
+     ],
+     "flops": 519
+    },
+    "hop_um": 194.3,
+    "reset_depth": 20,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_3a_3_w.* -to u_fab.u_land_leg_2_3a_3_r.*"
+   },
+   {
+    "name": "leg_2_3a_y",
+    "crossing": "leg_2_3a_3 (c3r3) -> u_fab.u_leg_2_3a_y (c2r3)",
+    "src_region": "c3r3",
+    "dst_region": "c2r3",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_3a_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r3",
+     "site": [
+      1842.264,
+      3975.304
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_3a_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r3",
+     "site": [
+      1773.576,
+      4062.07
+     ],
+     "flops": 519
+    },
+    "hop_um": 155.5,
+    "reset_depth": 20,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_3a_y_w.* -to u_fab.u_land_leg_2_3a_y_r.*"
+   },
+   {
+    "name": "leg_2_3b_y",
+    "crossing": "n_y_3_3 (c3r3) -> u_fab.u_leg_2_3b_y (c2r3)",
+    "src_region": "c3r3",
+    "dst_region": "c2r3",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_2_3b_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r3",
+     "site": [
+      1878.768,
+      4356.77
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_2_3b_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r3",
+     "site": [
+      1775.952,
+      4216.054
+     ],
+     "flops": 519
+    },
+    "hop_um": 243.5,
+    "reset_depth": 21,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_2_3b_y_w.* -to u_fab.u_land_leg_2_3b_y_r.*"
+   },
+   {
+    "name": "leg_3_0a_4",
+    "crossing": "leg_3_0a_3 (c1r1) -> u_fab.u_leg_3_0a_4 (c2r1)",
+    "src_region": "c1r1",
+    "dst_region": "c2r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_3_0a_4_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r1",
+     "site": [
+      1119.361,
+      2600.64
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_3_0a_4_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r1",
+     "site": [
+      1354.446,
+      2609.28
+     ],
+     "flops": 519
+    },
+    "hop_um": 243.7,
+    "reset_depth": 10,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_3_0a_4_w.* -to u_fab.u_land_leg_3_0a_4_r.*"
+   },
+   {
+    "name": "leg_3_0a_y",
+    "crossing": "leg_3_0a_5 (c2r1) -> u_fab.u_leg_3_0a_y (c2r2)",
+    "src_region": "c2r1",
+    "dst_region": "c2r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_3_0a_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r1",
+     "site": [
+      1690.806,
+      2596.754
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_3_0a_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r2",
+     "site": [
+      1773.531,
+      2762.938
+     ],
+     "flops": 519
+    },
+    "hop_um": 248.9,
+    "reset_depth": 12,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_3_0a_y_w.* -to u_fab.u_land_leg_3_0a_y_r.*"
+   },
+   {
+    "name": "leg_3_0b_0",
+    "crossing": "n_y_2_1 (c2r1) -> u_fab.u_leg_3_0b_0 (c3r1)",
+    "src_region": "c2r1",
+    "dst_region": "c3r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_3_0b_0_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r1",
+     "site": [
+      1773.576,
+      1810.519
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_3_0b_0_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r1",
+     "site": [
+      1842.264,
+      1866.017
+     ],
+     "flops": 519
+    },
+    "hop_um": 124.2,
+    "reset_depth": 13,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_3_0b_0_w.* -to u_fab.u_land_leg_3_0b_0_r.*"
+   },
+   {
+    "name": "leg_3_0b_5",
+    "crossing": "leg_3_0b_4 (c3r1) -> u_fab.u_leg_3_0b_5 (c3r2)",
+    "src_region": "c3r1",
+    "dst_region": "c3r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_3_0b_5_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r1",
+     "site": [
+      1866.24,
+      2600.575
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_3_0b_5_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r2",
+     "site": [
+      1840.32,
+      2746.361
+     ],
+     "flops": 519
+    },
+    "hop_um": 171.7,
+    "reset_depth": 16,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_3_0b_5_w.* -to u_fab.u_land_leg_3_0b_5_r.*"
+   },
+   {
+    "name": "leg_3_0b_y",
+    "crossing": "leg_3_0b_5 (c3r2) -> u_fab.u_leg_3_0b_y (c2r2)",
+    "src_region": "c3r2",
+    "dst_region": "c2r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_3_0b_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r2",
+     "site": [
+      1842.264,
+      2827.447
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_3_0b_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r2",
+     "site": [
+      1773.576,
+      2874.305
+     ],
+     "flops": 519
+    },
+    "hop_um": 115.5,
+    "reset_depth": 16,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_3_0b_y_w.* -to u_fab.u_land_leg_3_0b_y_r.*"
+   },
+   {
+    "name": "leg_3_1a_2",
+    "crossing": "leg_3_1a_1 (c1r3) -> u_fab.u_leg_3_1a_2 (c1r2)",
+    "src_region": "c1r3",
+    "dst_region": "c1r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_3_1a_2_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r3",
+     "site": [
+      656.64,
+      3991.526
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_3_1a_2_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r2",
+     "site": [
+      630.72,
+      3847.522
+     ],
+     "flops": 519
+    },
+    "hop_um": 169.9,
+    "reset_depth": 19,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_3_1a_2_w.* -to u_fab.u_land_leg_3_1a_2_r.*"
+   },
+   {
+    "name": "leg_3_1b_0",
+    "crossing": "n_y_2_3 (c2r3) -> u_fab.u_leg_3_1b_0 (c3r3)",
+    "src_region": "c2r3",
+    "dst_region": "c3r3",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_3_1b_0_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r3",
+     "site": [
+      1773.576,
+      4344.437
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_3_1b_0_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r3",
+     "site": [
+      1842.264,
+      4146.163
+     ],
+     "flops": 519
+    },
+    "hop_um": 267.0,
+    "reset_depth": 20,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_3_1b_0_w.* -to u_fab.u_land_leg_3_1b_0_r.*"
+   },
+   {
+    "name": "leg_3_1b_1",
+    "crossing": "leg_3_1b_0 (c3r3) -> u_fab.u_leg_3_1b_1 (c2r2)",
+    "src_region": "c3r3",
+    "dst_region": "c2r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_3_1b_1_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r3",
+     "site": [
+      1841.848,
+      4057.285
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_3_1b_1_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r2",
+     "site": [
+      1710.74,
+      3904.151
+     ],
+     "flops": 519
+    },
+    "hop_um": 284.2,
+    "reset_depth": 20,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_3_1b_1_w.* -to u_fab.u_land_leg_3_1b_1_r.*"
+   },
+   {
+    "name": "leg_3_1b_3",
+    "crossing": "leg_3_1b_2 (c2r2) -> u_fab.u_leg_3_1b_3 (c1r2)",
+    "src_region": "c2r2",
+    "dst_region": "c1r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_3_1b_3_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r2",
+     "site": [
+      1297.757,
+      3879.36
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_3_1b_3_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r2",
+     "site": [
+      1004.875,
+      3905.28
+     ],
+     "flops": 519
+    },
+    "hop_um": 318.8,
+    "reset_depth": 14,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_3_1b_3_w.* -to u_fab.u_land_leg_3_1b_3_r.*"
+   },
+   {
+    "name": "leg_4_0a_0",
+    "crossing": "n_y_2_2 (c2r2) -> u_fab.u_leg_4_0a_0 (c3r2)",
+    "src_region": "c2r2",
+    "dst_region": "c3r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_4_0a_0_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r2",
+     "site": [
+      1773.576,
+      3064.439
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_4_0a_0_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r2",
+     "site": [
+      1842.264,
+      2945.162
+     ],
+     "flops": 519
+    },
+    "hop_um": 188.0,
+    "reset_depth": 16,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_4_0a_0_w.* -to u_fab.u_land_leg_4_0a_0_r.*"
+   },
+   {
+    "name": "leg_4_0a_2",
+    "crossing": "leg_4_0a_1 (c3r2) -> u_fab.u_leg_4_0a_2 (c3r1)",
+    "src_region": "c3r2",
+    "dst_region": "c3r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_4_0a_2_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r2",
+     "site": [
+      1866.24,
+      2631.17
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_4_0a_2_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c3r1",
+     "site": [
+      1840.32,
+      2451.845
+     ],
+     "flops": 519
+    },
+    "hop_um": 205.2,
+    "reset_depth": 16,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_4_0a_2_w.* -to u_fab.u_land_leg_4_0a_2_r.*"
+   },
+   {
+    "name": "leg_4_0a_7",
+    "crossing": "leg_4_0a_6 (c3r1) -> u_fab.u_leg_4_0a_7 (c2r0)",
+    "src_region": "c3r1",
+    "dst_region": "c2r0",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_4_0a_7_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c3r1",
+     "site": [
+      1869.167,
+      1399.81
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_4_0a_7_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r0",
+     "site": [
+      1718.664,
+      1310.508
+     ],
+     "flops": 519
+    },
+    "hop_um": 239.8,
+    "reset_depth": 12,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_4_0a_7_w.* -to u_fab.u_land_leg_4_0a_7_r.*"
+   },
+   {
+    "name": "leg_4_0a_9",
+    "crossing": "leg_4_0a_8 (c2r0) -> u_fab.u_leg_4_0a_9 (c1r0)",
+    "src_region": "c2r0",
+    "dst_region": "c1r0",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_4_0a_9_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r0",
+     "site": [
+      1382.244,
+      1304.64
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_4_0a_9_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r0",
+     "site": [
+      1207.239,
+      1313.28
+     ],
+     "flops": 519
+    },
+    "hop_um": 183.6,
+    "reset_depth": 6,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_4_0a_9_w.* -to u_fab.u_land_leg_4_0a_9_r.*"
+   },
+   {
+    "name": "leg_4_0a_y",
+    "crossing": "leg_4_0a_15 (c1r0) -> u_fab.u_leg_4_0a_y (c0r0)",
+    "src_region": "c1r0",
+    "dst_region": "c0r0",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_4_0a_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r0",
+     "site": [
+      658.584,
+      347.374
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_4_0a_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c0r0",
+     "site": [
+      563.976,
+      223.777
+     ],
+     "flops": 519
+    },
+    "hop_um": 218.2,
+    "reset_depth": 6,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_4_0a_y_w.* -to u_fab.u_land_leg_4_0a_y_r.*"
+   },
+   {
+    "name": "leg_4_0b_1",
+    "crossing": "leg_4_0b_0 (c1r2) -> u_fab.u_leg_4_0b_1 (c1r1)",
+    "src_region": "c1r2",
+    "dst_region": "c1r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_4_0b_1_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r2",
+     "site": [
+      630.72,
+      2741.753
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_4_0b_1_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r1",
+     "site": [
+      630.72,
+      2506.111
+     ],
+     "flops": 519
+    },
+    "hop_um": 235.6,
+    "reset_depth": 16,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_4_0b_1_w.* -to u_fab.u_land_leg_4_0b_1_r.*"
+   },
+   {
+    "name": "leg_4_0b_5",
+    "crossing": "leg_4_0b_4 (c1r1) -> u_fab.u_leg_4_0b_5 (c1r0)",
+    "src_region": "c1r1",
+    "dst_region": "c1r0",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_4_0b_5_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r1",
+     "site": [
+      656.64,
+      1358.201
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_4_0b_5_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r0",
+     "site": [
+      630.72,
+      992.959
+     ],
+     "flops": 519
+    },
+    "hop_um": 391.2,
+    "reset_depth": 8,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_4_0b_5_w.* -to u_fab.u_land_leg_4_0b_5_r.*"
+   },
+   {
+    "name": "leg_4_0b_y",
+    "crossing": "leg_4_0b_6 (c1r0) -> u_fab.u_leg_4_0b_y (c0r0)",
+    "src_region": "c1r0",
+    "dst_region": "c0r0",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_leg_4_0b_y_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r0",
+     "site": [
+      632.664,
+      547.841
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_leg_4_0b_y_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c0r0",
+     "site": [
+      563.976,
+      342.007
+     ],
+     "flops": 519
+    },
+    "hop_um": 274.5,
+    "reset_depth": 6,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_leg_4_0b_y_w.* -to u_fab.u_land_leg_4_0b_y_r.*"
+   },
+   {
+    "name": "rs_0",
+    "crossing": "n_y_0_0 (c0r0) -> u_fab.u_rs_0 (c1r0)",
+    "src_region": "c0r0",
+    "dst_region": "c1r0",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_rs_0_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c0r0",
+     "site": [
+      563.976,
+      470.253
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_rs_0_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c1r0",
+     "site": [
+      658.584,
+      323.493
+     ],
+     "flops": 519
+    },
+    "hop_um": 241.4,
+    "reset_depth": 9,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_rs_0_w.* -to u_fab.u_land_rs_0_r.*"
+   },
+   {
+    "name": "ft_2",
+    "crossing": "ft_1 (c1r3) -> u_fab.u_ft_2 (c2r3)",
+    "src_region": "c1r3",
+    "dst_region": "c2r3",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_ft_2_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c1r3",
+     "site": [
+      1022.355,
+      5166.99
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_ft_2_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r3",
+     "site": [
+      1237.545,
+      5109.21
+     ],
+     "flops": 519
+    },
+    "hop_um": 273.0,
+    "reset_depth": 18,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_ft_2_w.* -to u_fab.u_land_ft_2_r.*"
+   },
+   {
+    "name": "ft_6",
+    "crossing": "ft_5 (c2r3) -> u_fab.u_ft_6 (c2r2)",
+    "src_region": "c2r3",
+    "dst_region": "c2r2",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_ft_6_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r3",
+     "site": [
+      1235.52,
+      3939.435
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_ft_6_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r2",
+     "site": [
+      1235.52,
+      3688.065
+     ],
+     "flops": 519
+    },
+    "hop_um": 251.4,
+    "reset_depth": 15,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_ft_6_w.* -to u_fab.u_land_ft_6_r.*"
+   },
+   {
+    "name": "ft_9",
+    "crossing": "ft_m4 (c2r2) -> u_fab.u_ft_9 (c2r1)",
+    "src_region": "c2r2",
+    "dst_region": "c2r1",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_ft_9_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r2",
+     "site": [
+      1235.52,
+      2823.255
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_ft_9_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r1",
+     "site": [
+      1235.52,
+      2589.165
+     ],
+     "flops": 519
+    },
+    "hop_um": 234.1,
+    "reset_depth": 11,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_ft_9_w.* -to u_fab.u_land_ft_9_r.*"
+   },
+   {
+    "name": "ft_13",
+    "crossing": "ft_12 (c2r1) -> u_fab.u_ft_13 (c2r0)",
+    "src_region": "c2r1",
+    "dst_region": "c2r0",
+    "bits": 514,
+    "D": 4,
+    "E": 2,
+    "K": 2,
+    "added_edges": 3,
+    "ring": {
+     "inst": "u_fab.u_land_ft_13_w",
+     "master": "qfd_c_land_w",
+     "clock": "ck_c2r1",
+     "site": [
+      1239.84,
+      1425.735
+     ],
+     "flops": 2064
+    },
+    "read": {
+     "inst": "u_fab.u_land_ft_13_r",
+     "master": "qfd_c_land_r",
+     "clock": "ck_c2r0",
+     "site": [
+      1239.84,
+      1174.365
+     ],
+     "flops": 519
+    },
+    "hop_um": 251.4,
+    "reset_depth": 7,
+    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_fab.u_land_ft_13_w.* -to u_fab.u_land_ft_13_r.*"
+   }
+  ],
+  "realigned_legs": {
+   "1_0a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_0b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_1a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_1b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_2a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_2b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_3a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_3b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_4a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_4b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_5a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_5b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_6a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_6b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "1_7a": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "1_7b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 0
+   },
+   "2_0a": {
+    "added_edges": 6,
+    "relay_stations": 4,
+    "soft_pad_stages": 3,
+    "landed_crossings": 1
+   },
+   "2_0b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "2_1a": {
+    "added_edges": 9,
+    "relay_stations": 4,
+    "soft_pad_stages": 0,
+    "landed_crossings": 3
+   },
+   "2_1b": {
+    "added_edges": 6,
+    "relay_stations": 0,
+    "soft_pad_stages": 3,
+    "landed_crossings": 1
+   },
+   "2_2a": {
+    "added_edges": 6,
+    "relay_stations": 4,
+    "soft_pad_stages": 0,
+    "landed_crossings": 2
+   },
+   "2_2b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "2_3a": {
+    "added_edges": 6,
+    "relay_stations": 4,
+    "soft_pad_stages": 0,
+    "landed_crossings": 2
+   },
+   "2_3b": {
+    "added_edges": 3,
+    "relay_stations": 0,
+    "soft_pad_stages": 0,
+    "landed_crossings": 1
+   },
+   "3_0a": {
+    "added_edges": 12,
+    "relay_stations": 6,
+    "soft_pad_stages": 6,
+    "landed_crossings": 2
+   },
+   "3_0b": {
+    "added_edges": 9,
+    "relay_stations": 6,
+    "soft_pad_stages": 0,
+    "landed_crossings": 3
+   },
+   "3_1a": {
+    "added_edges": 9,
+    "relay_stations": 7,
+    "soft_pad_stages": 6,
+    "landed_crossings": 1
+   },
+   "3_1b": {
+    "added_edges": 9,
+    "relay_stations": 7,
+    "soft_pad_stages": 0,
+    "landed_crossings": 3
+   },
+   "4_0a": {
+    "added_edges": 15,
+    "relay_stations": 16,
+    "soft_pad_stages": 0,
+    "landed_crossings": 5
+   },
+   "4_0b": {
+    "added_edges": 12,
+    "relay_stations": 7,
+    "soft_pad_stages": 3,
+    "landed_crossings": 3
+   }
+  },
+  "port_added_edges": {
+   "n_a_1_0": 3,
+   "n_b_1_0": 3,
+   "n_a_0_1": 3,
+   "n_b_0_1": 3,
+   "n_a_2_0": 3,
+   "n_b_2_0": 3,
+   "n_a_3_1": 3,
+   "n_b_3_1": 3,
+   "n_a_0_2": 3,
+   "n_b_0_2": 3,
+   "n_a_0_3": 3,
+   "n_b_0_3": 3,
+   "n_a_3_2": 3,
+   "n_b_3_2": 3,
+   "n_a_3_3": 3,
+   "n_b_3_3": 3,
+   "n_a_1_1": 6,
+   "n_b_1_1": 3,
+   "n_a_2_1": 9,
+   "n_b_2_1": 6,
+   "n_a_1_3": 6,
+   "n_b_1_3": 3,
+   "n_a_2_3": 6,
+   "n_b_2_3": 3,
+   "n_a_2_2": 12,
+   "n_b_2_2": 9,
+   "n_a_1_2": 9,
+   "n_b_1_2": 9,
+   "n_a_0_0": 15,
+   "n_b_0_0": 12
+  },
+  "latency_edges": {
+   "tap": {
+    "0": 3,
+    "1": 10,
+    "2": 17,
+    "3": 24
+   },
+   "bco": 26,
+   "rs_fabric": 74,
+   "rs_i_to_rs_o": 29,
+   "reset": 19,
+   "landing_warm_after_rst": 25
+  },
+  "latency_edges_unlanded": {
+   "tap": {
+    "0": 3,
+    "1": 7,
+    "2": 11,
+    "3": 15
+   },
+   "bco": 17,
+   "rs_fabric": 35,
+   "rs_i_to_rs_o": 17,
+   "reset": 19
+  }
+ }
 }

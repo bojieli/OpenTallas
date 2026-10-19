@@ -9,7 +9,10 @@
  ],
  "params": {
   "MUT": 0,
-  "OWN_W": 6
+  "OWN_W": 6,
+  "NPC": 16,
+  "NG": 4,
+  "ND": 8
  },
  "clock": "multiple_cts_roots",
  "clock_port": "stream_clk",
@@ -95,10 +98,10 @@
  "inhold": false,
  "outhold": false,
  "outline": {
-  "w": 43.2,
-  "h": 43.2
+  "w": 21.6,
+  "h": 21.6
  },
- "slot_change_request": "HBMA-SVC 10-17: d4f slot 21.6 x 21.6 cannot hold 293 pins (owner_fault[191:0] alone = 8.9 pins/um on one 21.6 um face); 43.2 x 43.2 (one lattice cell, <= 4.4 pins/um) for H-DIE",
+ "slot_change_request": "HBM-KITS-B/SFAULT 10-18: d4g sfault_<q> binding NPC 16 / NG 4 / ND 8 / OWN_W 6 has 157 pin bits (owner_fault[95:0] = 4.4 pins/um on the 21.6 um E face); back to the 21.6 x 21.6 slot (the 10-17 43.2 outline was for the 293-pin per-stack d4f binding, util 10%)",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every pin: row_v/pc_fault/owner_fault land in hbm pin flops rv_q/pf_q/of_q, svg/share/del/cal faults in stream pin flops; fault/status leave from stream flops; each reset pin lands on one ot_reset_sync. A kit pin-register stage cannot be applied across the two clock domains of the async_gray_fifo profile and would add an unpriced edge"
@@ -112,58 +115,58 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:HBMA-SVC",
-  "branch": "claude/hbma-svc-1017",
-  "tag": "hbmasvc-sf",
-  "purpose": "HBM d4f stack fault glue sfault_<q> (x2, OWN_W=6 d4f binding): first kit. Structural CDC fix: the hbm->stream sticky classes ca/pc/owner cross through the audited ot_hbm_svc_fault_cdc (was an ad hoc two-flop level synchroniser, refused by the async_gray_fifo profile); reset pins land on ot_reset_sync; pin flops carry no reset. Outline 43.2 x 43.2 (pin-bound, slot 21.6 too small; reported to H-DIE).",
+  "owner": "Claude:HBM-KITS-B",
+  "branch": "claude/hbm-kits-b-sfault-1018",
+  "tag": "hkb-sf",
+  "purpose": "HBM d4g per-quadrant stack fault sfault_<q>/fs_<q> (x4, #(MUT0,OWN_W6,NPC16,NG4,ND8) per d4g_gen2 port_bind). HBM-KITS-B 10-18: RTL CDC body restored (merge e37520d6c had dropped ot_hbm_svc_fault_cdc/ot_reset_sync from the parameterised module: undeclared ca_s/pc_s/ow_s); kit at the d4g params, 21.6 x 21.6 slot; benches on Verilator 5.050.",
   "record_to": "results/rtl/ref_tile/hdie_svc_stack_fault",
   "benches": [
    {
     "name": "sf_exact",
-    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/exact 0 6",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/exact 0 6 16 4 8",
     "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 2,
+    "threads": 2,
+    "peak_ram_gb": 4,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
-    "pass_regex": "^PASS tb_hbm_svc_stack_fault MUT=0 OWN_W=6",
+    "pass_regex": "^PASS tb_hbm_svc_stack_fault MUT=0 OWN_W=6 NPC=16 NG=4 ND=8",
     "min_count_regex": "checks=(\\d+)",
-    "pass_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/sf_mut0.log"
+    "pass_witness": "results/rtl/ref_tile/hbmkb_sfault_1018/sf_mut0.log"
    },
    {
     "name": "sf_mut_pair",
-    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/m1 1 6",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/m1 1 6 16 4 8",
     "expect": "fail",
-    "threads": 1,
-    "peak_ram_gb": 2,
+    "threads": 2,
+    "peak_ram_gb": 4,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "pass_regex": "^PASS tb_hbm_svc_stack_fault",
     "fail_regex": "^FAIL tb_hbm_svc_stack_fault MUT=1",
-    "note": "CA pair rule 2c/2c+2",
-    "fail_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/sf_mut1.log"
+    "note": "CA pair rule 2c/(2c+2) mod 16",
+    "fail_witness": "results/rtl/ref_tile/hbmkb_sfault_1018/sf_mut1.log"
    },
    {
     "name": "sf_mut_owner_cdc",
-    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/m2 2 6",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/m2 2 6 16 4 8",
     "expect": "fail",
-    "threads": 1,
-    "peak_ram_gb": 2,
+    "threads": 2,
+    "peak_ram_gb": 4,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "pass_regex": "^PASS tb_hbm_svc_stack_fault",
     "fail_regex": "^FAIL tb_hbm_svc_stack_fault MUT=2",
     "note": "owner class fault_cdc crossing dropped",
-    "fail_witness": "results/rtl/ref_tile/hbmasvc_witness_1017/sf_mut2.log"
+    "fail_witness": "results/rtl/ref_tile/hbmkb_sfault_1018/sf_mut2.log"
    }
   ],
   "extra_paths": [
    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_stack_fault.sv",
    "rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh",
-   "results/rtl/ref_tile/hbmasvc_witness_1017/"
+   "results/rtl/ref_tile/hbmkb_sfault_1018/"
   ]
  },
  "macros": [],

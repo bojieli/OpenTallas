@@ -34,20 +34,20 @@
    "inj_q1"
   ],
   "S": [
+   "clk_q",
+   "rst_q_n",
    "inj_q2",
-   "inj_q3"
+   "inj_q3",
+   "fault"
   ],
   "E": [
-   "inj_d",
+   "inj_addr",
    "inj_rd",
-   "inj_addr"
+   "inj_d"
   ],
   "N": [
    "clk_s",
-   "clk_q",
-   "rst_s_n",
-   "rst_q_n",
-   "fault"
+   "rst_s_n"
   ]
  },
  "clock_port": "clk_s",

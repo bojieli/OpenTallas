@@ -1,0 +1,2144 @@
+{
+ "schema": "opentallas.qwen_kv_fwd_lane_price.v1",
+ "lanes": "/home/ubuntu/scratch/kvclock/fwd_lanes.dry.json",
+ "lanes_total": 302,
+ "rule": "landed = 1 + (n-2)/2 + 1 + E + 1 vs today n + 1; worst lane per bundle; c->st + st->c bundles in series on every L*.attn_kv (conservative)",
+ "bundles": {
+  "af_EN|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 1.5,
+   "worst_n": 15,
+   "E": 8,
+   "dir": "st->c"
+  },
+  "af_EN_f0|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 2.0,
+   "worst_n": 18,
+   "E": 10,
+   "dir": "st->c"
+  },
+  "af_ES|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 1.5,
+   "worst_n": 45,
+   "E": 23,
+   "dir": "st->c"
+  },
+  "af_ES__f0|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 2.0,
+   "worst_n": 48,
+   "E": 25,
+   "dir": "st->c"
+  },
+  "af_WN|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 2.0,
+   "worst_n": 12,
+   "E": 7,
+   "dir": "st->c"
+  },
+  "af_WN_f0|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 2.0,
+   "worst_n": 8,
+   "E": 5,
+   "dir": "st->c"
+  },
+  "af_WS|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 1.5,
+   "worst_n": 45,
+   "E": 23,
+   "dir": "st->c"
+  },
+  "af_WS_f0|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 1.5,
+   "worst_n": 39,
+   "E": 20,
+   "dir": "st->c"
+  },
+  "am_EN|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 8,
+   "E": 5,
+   "dir": "c->st"
+  },
+  "am_ES|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 8,
+   "E": 5,
+   "dir": "c->st"
+  },
+  "am_WN|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 9,
+   "E": 5,
+   "dir": "c->st"
+  },
+  "am_WS|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 9,
+   "E": 5,
+   "dir": "c->st"
+  },
+  "ap_EN|st->c": {
+   "lanes": 2,
+   "bits": 72,
+   "worst_added": 2.0,
+   "worst_n": 10,
+   "E": 6,
+   "dir": "st->c"
+  },
+  "ap_ES|st->c": {
+   "lanes": 2,
+   "bits": 72,
+   "worst_added": 1.5,
+   "worst_n": 11,
+   "E": 6,
+   "dir": "st->c"
+  },
+  "ap_WN|st->c": {
+   "lanes": 2,
+   "bits": 72,
+   "worst_added": 2.0,
+   "worst_n": 8,
+   "E": 5,
+   "dir": "st->c"
+  },
+  "ap_WS|st->c": {
+   "lanes": 2,
+   "bits": 72,
+   "worst_added": 1.5,
+   "worst_n": 9,
+   "E": 5,
+   "dir": "st->c"
+  },
+  "aq_EN|c->st": {
+   "lanes": 2,
+   "bits": 564,
+   "worst_added": 1.5,
+   "worst_n": 15,
+   "E": 8,
+   "dir": "c->st"
+  },
+  "aq_ES|c->st": {
+   "lanes": 2,
+   "bits": 564,
+   "worst_added": 2.0,
+   "worst_n": 72,
+   "E": 37,
+   "dir": "c->st"
+  },
+  "aq_WN|c->st": {
+   "lanes": 2,
+   "bits": 564,
+   "worst_added": 2.0,
+   "worst_n": 18,
+   "E": 10,
+   "dir": "c->st"
+  },
+  "aq_WS|c->st": {
+   "lanes": 2,
+   "bits": 564,
+   "worst_added": 2.0,
+   "worst_n": 74,
+   "E": 38,
+   "dir": "c->st"
+  },
+  "est_f0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 70,
+   "E": 36,
+   "dir": "c->st"
+  },
+  "est_f1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 66,
+   "E": 34,
+   "dir": "c->st"
+  },
+  "est_f10|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 28,
+   "E": 15,
+   "dir": "c->st"
+  },
+  "est_f11|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 24,
+   "E": 13,
+   "dir": "c->st"
+  },
+  "est_f12|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 45,
+   "E": 23,
+   "dir": "c->st"
+  },
+  "est_f13|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 40,
+   "E": 21,
+   "dir": "c->st"
+  },
+  "est_f14|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 20,
+   "E": 11,
+   "dir": "c->st"
+  },
+  "est_f15|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 16,
+   "E": 9,
+   "dir": "c->st"
+  },
+  "est_f16|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 68,
+   "E": 35,
+   "dir": "c->st"
+  },
+  "est_f17|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 64,
+   "E": 33,
+   "dir": "c->st"
+  },
+  "est_f18|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 60,
+   "E": 31,
+   "dir": "c->st"
+  },
+  "est_f19|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 56,
+   "E": 29,
+   "dir": "c->st"
+  },
+  "est_f2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 62,
+   "E": 32,
+   "dir": "c->st"
+  },
+  "est_f20|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 77,
+   "E": 39,
+   "dir": "c->st"
+  },
+  "est_f21|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 73,
+   "E": 37,
+   "dir": "c->st"
+  },
+  "est_f22|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 52,
+   "E": 27,
+   "dir": "c->st"
+  },
+  "est_f23|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 48,
+   "E": 25,
+   "dir": "c->st"
+  },
+  "est_f24|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 35,
+   "E": 18,
+   "dir": "c->st"
+  },
+  "est_f25|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 30,
+   "E": 16,
+   "dir": "c->st"
+  },
+  "est_f26|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 26,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "est_f27|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 22,
+   "E": 12,
+   "dir": "c->st"
+  },
+  "est_f28|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 43,
+   "E": 22,
+   "dir": "c->st"
+  },
+  "est_f29|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 39,
+   "E": 20,
+   "dir": "c->st"
+  },
+  "est_f3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 58,
+   "E": 30,
+   "dir": "c->st"
+  },
+  "est_f30|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 18,
+   "E": 10,
+   "dir": "c->st"
+  },
+  "est_f31|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 14,
+   "E": 8,
+   "dir": "c->st"
+  },
+  "est_f4|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 79,
+   "E": 40,
+   "dir": "c->st"
+  },
+  "est_f5|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 75,
+   "E": 38,
+   "dir": "c->st"
+  },
+  "est_f6|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 54,
+   "E": 28,
+   "dir": "c->st"
+  },
+  "est_f7|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 50,
+   "E": 26,
+   "dir": "c->st"
+  },
+  "est_f8|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 36,
+   "E": 19,
+   "dir": "c->st"
+  },
+  "est_f9|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 32,
+   "E": 17,
+   "dir": "c->st"
+  },
+  "hcha_EN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 17,
+   "E": 9,
+   "dir": "st->c"
+  },
+  "hcha_ES|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 85,
+   "E": 43,
+   "dir": "st->c"
+  },
+  "hcha_WN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 16,
+   "E": 9,
+   "dir": "st->c"
+  },
+  "hcha_WS|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 85,
+   "E": 43,
+   "dir": "st->c"
+  },
+  "hchc_EN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 18,
+   "E": 10,
+   "dir": "st->c"
+  },
+  "hchc_ES|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 85,
+   "E": 43,
+   "dir": "st->c"
+  },
+  "hchc_WN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 16,
+   "E": 9,
+   "dir": "st->c"
+  },
+  "hchc_WS|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 85,
+   "E": 43,
+   "dir": "st->c"
+  },
+  "hchf_EN|c->st": {
+   "lanes": 1,
+   "bits": 296,
+   "worst_added": 2.0,
+   "worst_n": 16,
+   "E": 9,
+   "dir": "c->st"
+  },
+  "hchf_ES|c->st": {
+   "lanes": 1,
+   "bits": 296,
+   "worst_added": 2.0,
+   "worst_n": 88,
+   "E": 45,
+   "dir": "c->st"
+  },
+  "hchf_WN|c->st": {
+   "lanes": 1,
+   "bits": 296,
+   "worst_added": 1.5,
+   "worst_n": 19,
+   "E": 10,
+   "dir": "c->st"
+  },
+  "hchf_WS|c->st": {
+   "lanes": 1,
+   "bits": 296,
+   "worst_added": 2.0,
+   "worst_n": 90,
+   "E": 46,
+   "dir": "c->st"
+  },
+  "hchx_EN|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 2.0,
+   "worst_n": 18,
+   "E": 10,
+   "dir": "st->c"
+  },
+  "hchx_ES|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 1.5,
+   "worst_n": 85,
+   "E": 43,
+   "dir": "st->c"
+  },
+  "hchx_WN|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 2.0,
+   "worst_n": 16,
+   "E": 9,
+   "dir": "st->c"
+  },
+  "hchx_WS|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 1.5,
+   "worst_n": 87,
+   "E": 44,
+   "dir": "st->c"
+  },
+  "hsak_EN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 19,
+   "E": 10,
+   "dir": "st->c"
+  },
+  "hsak_ES|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 87,
+   "E": 44,
+   "dir": "st->c"
+  },
+  "hsak_WN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 17,
+   "E": 9,
+   "dir": "st->c"
+  },
+  "hsak_WS|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 87,
+   "E": 44,
+   "dir": "st->c"
+  },
+  "hsbd_EN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 19,
+   "E": 10,
+   "dir": "st->c"
+  },
+  "hsbd_ES|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 86,
+   "E": 44,
+   "dir": "st->c"
+  },
+  "hsbd_WN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 17,
+   "E": 9,
+   "dir": "st->c"
+  },
+  "hsbd_WS|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 89,
+   "E": 45,
+   "dir": "st->c"
+  },
+  "hsbf_EN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 19,
+   "E": 10,
+   "dir": "st->c"
+  },
+  "hsbf_ES|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 87,
+   "E": 44,
+   "dir": "st->c"
+  },
+  "hsbf_WN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 16,
+   "E": 9,
+   "dir": "st->c"
+  },
+  "hsbf_WS|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 81,
+   "E": 41,
+   "dir": "st->c"
+  },
+  "hsbo_EN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 19,
+   "E": 10,
+   "dir": "st->c"
+  },
+  "hsbo_ES|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 86,
+   "E": 44,
+   "dir": "st->c"
+  },
+  "hsbo_WN|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 17,
+   "E": 9,
+   "dir": "st->c"
+  },
+  "hsbo_WS|st->c": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 82,
+   "E": 42,
+   "dir": "st->c"
+  },
+  "kc_EN|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 24,
+   "E": 13,
+   "dir": "c->st"
+  },
+  "kc_ES|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 81,
+   "E": 41,
+   "dir": "c->st"
+  },
+  "kc_WN|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 25,
+   "E": 13,
+   "dir": "c->st"
+  },
+  "kc_WS|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 83,
+   "E": 42,
+   "dir": "c->st"
+  },
+  "ks_afe_EN|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 2.0,
+   "worst_n": 18,
+   "E": 10,
+   "dir": "st->c"
+  },
+  "ks_afe_ES|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 2.0,
+   "worst_n": 50,
+   "E": 26,
+   "dir": "st->c"
+  },
+  "ks_afe_WN|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 2.0,
+   "worst_n": 8,
+   "E": 5,
+   "dir": "st->c"
+  },
+  "ks_afe_WS|st->c": {
+   "lanes": 1,
+   "bits": 1,
+   "worst_added": 1.5,
+   "worst_n": 41,
+   "E": 21,
+   "dir": "st->c"
+  },
+  "ks_kvpc_EN_31_o_next|st->c": {
+   "lanes": 2,
+   "bits": 332,
+   "worst_added": 2.0,
+   "worst_n": 2,
+   "E": 2,
+   "dir": "st->c"
+  },
+  "ks_kvpc_ES_31__o_next|st->c": {
+   "lanes": 2,
+   "bits": 332,
+   "worst_added": 2,
+   "worst_n": 1,
+   "E": 2,
+   "dir": "st->c"
+  },
+  "ks_kvpc_WN_31__o_next|st->c": {
+   "lanes": 2,
+   "bits": 332,
+   "worst_added": 2,
+   "worst_n": 1,
+   "E": 2,
+   "dir": "st->c"
+  },
+  "ks_kvpc_WS_31__o_next|st->c": {
+   "lanes": 2,
+   "bits": 332,
+   "worst_added": 2,
+   "worst_n": 1,
+   "E": 2,
+   "dir": "st->c"
+  },
+  "ks_kvs_emb_px_tep|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 74,
+   "E": 38,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 70,
+   "E": 36,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 66,
+   "E": 34,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f10|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 27,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f11|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 48,
+   "E": 25,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f12|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 44,
+   "E": 23,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f13|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 24,
+   "E": 13,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f14|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 19,
+   "E": 10,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f15|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 76,
+   "E": 39,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f16|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 71,
+   "E": 36,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f17|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 68,
+   "E": 35,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f18|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 64,
+   "E": 33,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f19|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 84,
+   "E": 43,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 62,
+   "E": 32,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f20|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 80,
+   "E": 41,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f21|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 60,
+   "E": 31,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f22|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 55,
+   "E": 28,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f23|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 42,
+   "E": 22,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f24|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 38,
+   "E": 20,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f25|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 34,
+   "E": 18,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f26|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 29,
+   "E": 15,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f27|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 51,
+   "E": 26,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f28|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 47,
+   "E": 24,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f29|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 25,
+   "E": 13,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 83,
+   "E": 42,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f30|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 21,
+   "E": 11,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f4|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 78,
+   "E": 40,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f5|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 58,
+   "E": 30,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f6|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 54,
+   "E": 28,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f7|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 39,
+   "E": 20,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f8|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 35,
+   "E": 18,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tep_f9|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 31,
+   "E": 16,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 74,
+   "E": 38,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 70,
+   "E": 36,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 66,
+   "E": 34,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f10|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 27,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f11|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 48,
+   "E": 25,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f12|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 44,
+   "E": 23,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f13|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 23,
+   "E": 12,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f14|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 19,
+   "E": 10,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f15|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 75,
+   "E": 38,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f16|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 71,
+   "E": 36,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f17|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 67,
+   "E": 34,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f18|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 63,
+   "E": 32,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f19|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 84,
+   "E": 43,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 61,
+   "E": 31,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f20|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 79,
+   "E": 40,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f21|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 59,
+   "E": 30,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f22|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 55,
+   "E": 28,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f23|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 41,
+   "E": 21,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f24|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 38,
+   "E": 20,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f25|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 33,
+   "E": 17,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f26|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 29,
+   "E": 15,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f27|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 50,
+   "E": 26,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f28|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 46,
+   "E": 24,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f29|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 25,
+   "E": 13,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 82,
+   "E": 42,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f30|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 21,
+   "E": 11,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f4|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 78,
+   "E": 40,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f5|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 57,
+   "E": 29,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f6|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 53,
+   "E": 27,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f7|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 40,
+   "E": 21,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f8|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 36,
+   "E": 19,
+   "dir": "c->st"
+  },
+  "ks_kvs_emb_px_tok_f9|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 31,
+   "E": 16,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_c0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 32,
+   "E": 17,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_c2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 18,
+   "E": 10,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_c3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 12,
+   "E": 7,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_c4|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 41,
+   "E": 21,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_c5|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 33,
+   "E": 17,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_c6|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 26,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_c7|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 19,
+   "E": 10,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_ch0|c->st": {
+   "lanes": 1,
+   "bits": 296,
+   "worst_added": 2.0,
+   "worst_n": 2,
+   "E": 2,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_kg__f0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 24,
+   "E": 13,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_kg__f1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 17,
+   "E": 9,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_kg__f2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 10,
+   "E": 6,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_kg__f5|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 27,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_kg__f6|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 17,
+   "E": 9,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN__o_pc|c->st": {
+   "lanes": 2,
+   "bits": 824,
+   "worst_added": 2.0,
+   "worst_n": 2,
+   "E": 2,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN_o_c1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 26,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN_o_kg|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 31,
+   "E": 16,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN_o_kg_f3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 43,
+   "E": 22,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_EN_o_kg_f4|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 33,
+   "E": 17,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES__o_c1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 21,
+   "E": 11,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES__o_c2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 14,
+   "E": 8,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES__o_c4|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 34,
+   "E": 18,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES__o_c7|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 15,
+   "E": 8,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES__o_kg|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 27,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES__o_kg__f0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 20,
+   "E": 11,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES__o_kg__f3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 34,
+   "E": 18,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES__o_kg__f4|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 27,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES__o_kg__f6|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 14,
+   "E": 8,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES__o_pc|c->st": {
+   "lanes": 2,
+   "bits": 824,
+   "worst_added": 2,
+   "worst_n": 1,
+   "E": 2,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES_o_c0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 28,
+   "E": 15,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES_o_c3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 8,
+   "E": 5,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES_o_c5|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 28,
+   "E": 15,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES_o_c6|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 23,
+   "E": 12,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES_o_kg_f1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 14,
+   "E": 8,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES_o_kg_f2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 8,
+   "E": 5,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_ES_o_kg_f5|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 21,
+   "E": 11,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN__o_c0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 31,
+   "E": 16,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN__o_c1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 24,
+   "E": 13,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN__o_c2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 17,
+   "E": 9,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN__o_c3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 11,
+   "E": 6,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN__o_ch0|c->st": {
+   "lanes": 1,
+   "bits": 296,
+   "worst_added": 2.0,
+   "worst_n": 2,
+   "E": 2,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN__o_kg|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 31,
+   "E": 16,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN__o_kg__f0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 22,
+   "E": 12,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN__o_kg__f1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 16,
+   "E": 9,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN__o_kg__f2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 10,
+   "E": 6,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN__o_kg__f4|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 30,
+   "E": 16,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN__o_kg__f6|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 16,
+   "E": 9,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN_o_c4|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 38,
+   "E": 20,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN_o_c5|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 31,
+   "E": 16,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN_o_c6|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 24,
+   "E": 13,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN_o_c7|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 18,
+   "E": 10,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN_o_kg_f3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 37,
+   "E": 19,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN_o_kg_f5|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 23,
+   "E": 12,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WN_o_pc|c->st": {
+   "lanes": 2,
+   "bits": 824,
+   "worst_added": 1.5,
+   "worst_n": 3,
+   "E": 2,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS__o_c0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 27,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS__o_c2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 14,
+   "E": 8,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS__o_c4|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 33,
+   "E": 17,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS__o_kg|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 26,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS__o_kg__f0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 21,
+   "E": 11,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS__o_kg__f2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 7,
+   "E": 4,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS__o_kg__f3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 33,
+   "E": 17,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS__o_kg__f5|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 21,
+   "E": 11,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS__o_kg__f6|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 13,
+   "E": 7,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS__o_pc|c->st": {
+   "lanes": 2,
+   "bits": 824,
+   "worst_added": 2.0,
+   "worst_n": 2,
+   "E": 2,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS_o_c1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 21,
+   "E": 11,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS_o_c3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 8,
+   "E": 5,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS_o_c5|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 27,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS_o_c6|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 21,
+   "E": 11,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS_o_c7|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 14,
+   "E": 8,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS_o_kg_f1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 14,
+   "E": 8,
+   "dir": "c->st"
+  },
+  "ks_kvs_hroot_WS_o_kg_f4|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 27,
+   "E": 14,
+   "dir": "c->st"
+  },
+  "ks_slg_EN_7__o_ctl|st->c": {
+   "lanes": 4,
+   "bits": 144,
+   "worst_added": 2,
+   "worst_n": 1,
+   "E": 2,
+   "dir": "st->c"
+  },
+  "ks_slg_WN_7__o_ctl|st->c": {
+   "lanes": 4,
+   "bits": 144,
+   "worst_added": 2,
+   "worst_n": 1,
+   "E": 2,
+   "dir": "st->c"
+  },
+  "pvin_EN_0|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 2.0,
+   "worst_n": 22,
+   "E": 12,
+   "dir": "st->c"
+  },
+  "pvin_EN_1|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 1.5,
+   "worst_n": 31,
+   "E": 16,
+   "dir": "st->c"
+  },
+  "pvin_EN_2|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 2.0,
+   "worst_n": 12,
+   "E": 7,
+   "dir": "st->c"
+  },
+  "pvin_EN_3|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 2.0,
+   "worst_n": 38,
+   "E": 20,
+   "dir": "st->c"
+  },
+  "pvin_ES_0|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 2.0,
+   "worst_n": 30,
+   "E": 16,
+   "dir": "st->c"
+  },
+  "pvin_ES_1|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 1.5,
+   "worst_n": 21,
+   "E": 11,
+   "dir": "st->c"
+  },
+  "pvin_ES_2|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 1.5,
+   "worst_n": 41,
+   "E": 21,
+   "dir": "st->c"
+  },
+  "pvin_ES_3|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 2.0,
+   "worst_n": 12,
+   "E": 7,
+   "dir": "st->c"
+  },
+  "pvin_WN_0|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 1.5,
+   "worst_n": 19,
+   "E": 10,
+   "dir": "st->c"
+  },
+  "pvin_WN_1|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 2.0,
+   "worst_n": 28,
+   "E": 15,
+   "dir": "st->c"
+  },
+  "pvin_WN_2|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 2.0,
+   "worst_n": 10,
+   "E": 6,
+   "dir": "st->c"
+  },
+  "pvin_WN_3|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 1.5,
+   "worst_n": 39,
+   "E": 20,
+   "dir": "st->c"
+  },
+  "pvin_WS_0|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 2.0,
+   "worst_n": 28,
+   "E": 15,
+   "dir": "st->c"
+  },
+  "pvin_WS_1|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 1.5,
+   "worst_n": 19,
+   "E": 10,
+   "dir": "st->c"
+  },
+  "pvin_WS_2|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 2.0,
+   "worst_n": 38,
+   "E": 20,
+   "dir": "st->c"
+  },
+  "pvin_WS_3|st->c": {
+   "lanes": 2,
+   "bits": 1056,
+   "worst_added": 2.0,
+   "worst_n": 10,
+   "E": 6,
+   "dir": "st->c"
+  },
+  "pvrq_EN_0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 56,
+   "E": 29,
+   "dir": "c->st"
+  },
+  "pvrq_EN_1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 47,
+   "E": 24,
+   "dir": "c->st"
+  },
+  "pvrq_EN_2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 66,
+   "E": 34,
+   "dir": "c->st"
+  },
+  "pvrq_EN_3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 40,
+   "E": 21,
+   "dir": "c->st"
+  },
+  "pvrq_ES_0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 48,
+   "E": 25,
+   "dir": "c->st"
+  },
+  "pvrq_ES_1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 57,
+   "E": 29,
+   "dir": "c->st"
+  },
+  "pvrq_ES_2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 38,
+   "E": 20,
+   "dir": "c->st"
+  },
+  "pvrq_ES_3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 66,
+   "E": 34,
+   "dir": "c->st"
+  },
+  "pvrq_WN_0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 60,
+   "E": 31,
+   "dir": "c->st"
+  },
+  "pvrq_WN_1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 51,
+   "E": 26,
+   "dir": "c->st"
+  },
+  "pvrq_WN_2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 68,
+   "E": 35,
+   "dir": "c->st"
+  },
+  "pvrq_WN_3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 40,
+   "E": 21,
+   "dir": "c->st"
+  },
+  "pvrq_WS_0|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 1.5,
+   "worst_n": 51,
+   "E": 26,
+   "dir": "c->st"
+  },
+  "pvrq_WS_1|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 60,
+   "E": 31,
+   "dir": "c->st"
+  },
+  "pvrq_WS_2|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 40,
+   "E": 21,
+   "dir": "c->st"
+  },
+  "pvrq_WS_3|c->st": {
+   "lanes": 1,
+   "bits": 36,
+   "worst_added": 2.0,
+   "worst_n": 68,
+   "E": 35,
+   "dir": "c->st"
+  }
+ },
+ "charged_per_layer": {
+  "c->st": {
+   "bundle": "am_EN",
+   "added_edges": 2.0,
+   "n": 8,
+   "E": 5
+  },
+  "st->c": {
+   "bundle": "af_ES__f0",
+   "added_edges": 2.0,
+   "n": 48,
+   "E": 25
+  }
+ },
+ "added_edges_per_layer": 4.0,
+ "layers_charged": 36,
+ "token": {
+  "base_cycles": 249431.0,
+  "new_cycles": 249575.0,
+  "base_tok_s": 4810.95,
+  "new_tok_s": 4808.17,
+  "loss_pct": 0.058
+ },
+ "note": "E planned (S81 p4j half-cycle fit) until the KV die STA measures S1 per landing at TT and FF; the accepted-cost ledger takes the measured figure"
+}

@@ -74,7 +74,7 @@ module tb_xdie_s81 #(
                                 (P == 2) ? (((ge / NP) + 2) % ND) * NP + 3 : (((ge / NP) + 2) % ND) * NP + 2;
         xdie_s81_ep #(.SIDE(P % 2), .HOST(P == 3 ? 1 : 0), .PHY0(((P < 2 && S_UCIE != 0) || FORCE_UCIE != 0) ? 0 : 1), .PHY1(FORCE_UCIE != 0 ? 0 : 1), .DMUT(DMUT),
             .LOVR(LOVR), .CHB_OVR(CHB_OVR), .CRED_OVR(CRED_OVR), .SEQW_OVR(SEQW_OVR), .LSRAM(LSRAM)) u_ep (
-            .clk(clk), .rst_n(rst_n), .sid({P >= 2 ? 1'b1 : 1'b0, P % 2 ? 3'd7 : 3'd0}), .ch_b(CHB[0]),
+            .clk(clk), .rst_n(rst_n), .sid(4'((P % 2 ? 14 : 0) + (P >= 2 ? 1 : 0))), .ch_b(CHB[0]),
             .ri_n(ri[ge]), .ro_n(ro[ge]), .pma_tx0(ptx0[ge]), .pma_tx1(ptx1[ge]), .pma_rx0(prx0[ge]), .pma_rx1(prx1[ge]),
             .fault(flt[ge]), .live(lv[2*ge +: 2]));
         // link-layer statistics (hierarchical reads of ot_s81ph_link_ep's counters; no logic is added to the DUT)

@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hcoll_ring_ag_ctln_1018",
+ "reviewer": "coordinator (2026-10-18 ~20:00)",
+ "verdict": "APPROVED",
+ "time": "2026-10-18T20:00:00-07:00",
+ "gate_commit": "3f665774a",
+ "checklist": {
+  "lattice": "PASS: no macros",
+  "std_cell_band": "ACCEPT: pin-register rim on all faces plus a small accumulator cluster; diagonal streaks are face-to-face paths; fill 0.055 (pin-limited)",
+  "pin_spread": "PASS: N/S/W/E faces, <= 5.2 pins/um; 3,160 pins",
+  "clock_entry": "PASS: N face centre; pin-flop spread 41.7 TT / 40.1 FF",
+  "shape": "ACCEPT: 216x129.6 (1.67:1) is the fixed slot of the closed view; GRT overflow 0; setup +179 / hold +32"
+ },
+ "notes": "r5c: acc_rr pin flops (rr-read commands issue 2 edges early; parents must apply the extra lead), carry_write as an AND of two flops, acc_we output copy. Native probe passes: capture 177.0 / launch 156.8.",
+ "geometry_sha256": "ddeb17e3df498da652ad84d418b2442d192ca298bc55591dfe7cbde4d2253fc8"
+}

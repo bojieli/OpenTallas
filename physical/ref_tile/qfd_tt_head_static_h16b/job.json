@@ -1,0 +1,258 @@
+{
+ "name": "qfd_tt_head_static_h16b-h16b-COMMIT",
+ "block": "ot_qfd_tt_ctlm_static_hr",
+ "ref_tile": true,
+ "owner": "Claude:Q-TTH16",
+ "purpose": "Static TT head-side leaf h16: H15 RTL, SRAM stack in the NW corner, one std-cell L beside the read edge, W I/O moved to S",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/q-tth16",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/qwen_tt_static_cluster_1015",
+   "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_tt_ctlm_static_hr u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv rtl/hdc/ot_hdc_delay.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv rtl/hdc/ot_qwen_me_spine_h_w12.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_arith.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/physical/ot_qfd_tt_ctlm_split.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_dyn_ttiles.sv rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bench_tt_regroup_m0",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m0 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "REGROUP_PASS"
+   },
+   {
+    "name": "bench_tt_regroup_m1",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m1 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 1 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_regroup_m1.log"
+   },
+   {
+    "name": "bench_tt_regroup_m2",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m2 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 2 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_regroup_m2.log"
+   },
+   {
+    "name": "bench_tt_regroup_rawrst",
+    "cmd": "RG_OBJ={RUN}/bench/rg_r0 RG_DEFS=-DTB_RSTN=0 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_regroup_rawrst.log"
+   },
+   {
+    "name": "bench_tt_dpre_mut",
+    "cmd": "RG_OBJ={RUN}/bench/rg_dm RG_DEFS=-DOT_DPRE_MUT bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL|Assertion failed in tb_tt_static_regroup\\S*: DTIL me_tiles [0-9a-f]+ != [0-9a-f]+",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_dpre_mut.log"
+   },
+   {
+    "name": "bench_tt_dsel_mut",
+    "cmd": "RG_OBJ={RUN}/bench/rg_ds RG_DEFS=-DOT_DSEL_MUT bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_dsel_mut.log"
+   },
+   {
+    "name": "bench_tt_h15_pwcp_mut",
+    "cmd": "RG_OBJ={RUN}/bench/rg_pwcp RG_DEFS=-DOT_PWCP_MUT bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_pwcp_mut.log"
+   },
+   {
+    "name": "bench_tt_h15_prec_mut",
+    "cmd": "RG_OBJ={RUN}/bench/rg_prec RG_DEFS=-DOT_PREC_MUT bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_prec_mut.log"
+   },
+   {
+    "name": "bench_tt_h15_slate_mut",
+    "cmd": "RG_OBJ={RUN}/bench/rg_slate RG_DEFS=-DOT_SLATE_MUT bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_slate_mut.log"
+   },
+   {
+    "name": "bench_tt_h15_ctrl_m0",
+    "cmd": "RG_OBJ={RUN}/bench/h15c_m0 bash physical/qwen_tt_static_cluster_1015/run_h15_ctrl.sh 1000000",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "H15CTRL_PASS"
+   },
+   {
+    "name": "bench_tt_h15_ctrl_fqwe_mut",
+    "cmd": "RG_OBJ={RUN}/bench/h15c_fqwe RG_DEFS=-DOT_FQWE_MUT bash physical/qwen_tt_static_cluster_1015/run_h15_ctrl.sh 200000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_fqwe_mut.log"
+   },
+   {
+    "name": "bench_tt_h15_ctrl_oinc_mut",
+    "cmd": "RG_OBJ={RUN}/bench/h15c_oinc RG_DEFS=-DOT_OINC_MUT bash physical/qwen_tt_static_cluster_1015/run_h15_ctrl.sh 200000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_oinc_mut.log"
+   },
+   {
+    "name": "bench_tt_h15_ctrl_dtil_mut",
+    "cmd": "RG_OBJ={RUN}/bench/h15c_dtil RG_DEFS=-DOT_DTIL_MUT bash physical/qwen_tt_static_cluster_1015/run_h15_ctrl.sh 200000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_dtil_mut.log"
+   },
+   {
+    "name": "bench_tt_h15_ctrl_amwc_mut",
+    "cmd": "RG_OBJ={RUN}/bench/h15c_amwc RG_DEFS=-DOT_AMWC_MUT bash physical/qwen_tt_static_cluster_1015/run_h15_ctrl.sh 200000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "H15CTRL_FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16b/bench_witness/bench_tt_h15_ctrl_amwc_mut.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_tt_head_static_h16b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tt_head_static_h16b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tt_head_static_h16b --out {RUN}/record/views/ot_qfd_tt_ctlm_static_hr --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_tt_head_static_h16b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_tt_head_static_h16b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_tt_head_static_h16b/qfd_tt_head_static_h16b-h16b-COMMIT"
+  }
+ ],
+ "cycles_added": 1,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "h16b (Q-TTH16 10-17): h16 --cts gate reg->reg -136.0 / macro->reg -154.0 / spread 133: GPL spread the prog_q / hq / po_me mux cones into the empty SW S-band (x 6-90, no pins there) 250 um from their flops in the NE E band (single 570-850 ps wires). h16b also blocks the SW S band (x < 95, 0.5% GPL blockage, released pre-DPL) and moves the former W-face I/O to S x 98-192 (5.2/um), so the std-cell region is the E band + SE S band only. h16 ( 10-17, re-floorplan only, same H15 RTL): coordinator review of h15/h15a (HANDOFF 0de+11): the two 64x512 SRAMs sat in the CENTRE (x 43.2-214.5, y 43.2-198.7), logic formed a donut, controller split W/E, fq->hq/store/prog_addr wrapped ~200 um of macro (h15a reg->reg -283.4, reg->macro -186.3). h16: abutted MY stack pushed into the NW corner (x 22.464, y 43.2 / 121.008; W and N 20-um macro-edge channels carry only the 146 far-edge write nets and get 0.5% GPL blockages, released pre-DPL), read/clk edge faces E; std cells get ONE contiguous L (E band x 199-257 + S band y 2-38, corner SE) beside the read pins; W-face I/O (rom_cmd/rom_ret_i/me_observe/me_clk_en, 492 bits) moved to the S face x 66-192 (3.9/um) -- DIE-PLAN PIN CHANGE for Q-DIEPLAN8; E face, ck_head S 194-198 (L corner), rst_n, ck_pm0 S 224-228, ck_pm1 E 120-124 unchanged. Outline 259.2 x 222.48 (die slot kept). h15a (Q-TTH15 10-17): h15 RTL + MY macros, NO home blockages (h15 gate: E band routability overflow 46% tiles pushed the controller into the W strip anyway, reg->reg -642). h15 (Q-TTH15 2026-10-17, coordinator-approved structure) after the h14d --cts gate (WARN, never submitted): TT placement-RC reg->macro -128.7 (one pw_d2 flop -> 16 wd_in pins on both edges of both macros, 4 repeaters 484 ps), reg->reg -116.8 (pend2 -> 1,024-load fq enable tree), o_cnt ripple -110.4, me_tiles dsel+add -103.6, sched_q -86.9/-115.5, am_wins -107.5, recovery -47.8; root cause = std cells smeared at 17.5% density as a ring around a centred macro stack whose read pins (W) and write pins (W+E) face opposite edges. h15: (1) both macros MIRRORED (MY) at the same lattice origins, so the read/clk edge (rd_out, r_addr, clk, w_addr, wd_in[265:0]) faces the E band; (2) the controller is packed into the E band + SE S band (home, ~14.1k um2) by 15% partial placement blockages on the N band and the SW S band; W strip = pin flops + the macros' W-edge write copies; (3) RTL H15=1 (ot_qfd_tt_ctlm_static_hr): PWCP write-pin copies per macro x pin edge, FQWE registered one-hot FIFO write enables + prog_q capture-enable slice copies, OINC, DTIL, SLATE, AMWC, RRH (12 reset copies) -- all exact, 0 edges, ~+560 flops; regroup bench m0 vs the original head + negative controls; (4) clocks: ck_head S x 194-198 under the home register mass; raw SRAM entries ck_pm0 S x 224-228 and ck_pm1 E y 120-124 (die-plan slots granted, HANDOFF). Outline 259.2 x 222.48 unchanged. h14d (Q-TTH14 2026-10-17) after the h14/h14c --cts gates (ot-agidock128 10:25): h14 TT reg->reg -110.5 (h14c -182.5), clock 8,960 sinks ins 488.6 / spread 232.7 (h13 413/52). po_me_i_obase class GONE; its siblings mbase/ojs/ots remain (-62/-57/-55) and the new worst class is u_ctrl_me.st -> g_hfc run_c / fq[*][*] (316 endpoints, -94): 3 logic gates + 5-8 repeaters of 60-140 ps each (wire) plus 123 ps launch/capture skew (372 vs 249). Cause = the h14 outline: 63.1k um2 (+46% vs h13) for ~5.8k um2 of std cells (std region ~16% full), a 24-um N sliver above the stack, i.e. a ring around the macros. h14d keeps the h14 RTL (DSEL=1, exact, 0 edges) and fixes the floorplan: 259.2x222.48 (1.17:1, 57.7k um2, -9%), SRAM stack on the 43.2 lattice (43.2,43.2)/(43.2,121.008) abutted_stack as h14, N channel 21.7 um (tool minimum 20 on a pin-free face), ONE S band (255x35.6 um) + W leg 35.6 (493 W pins) + E leg 37.2 (was 15.5; 1,088 E pins, <=5.0/um); ck_head at the S band centre. Regional roots NOT used: h6/t6 split ck_me_sched cost sched<->core -429 ps (die-skew reserve on every cross-root hop); one root on a compact outline instead. | h14 (Q-TTH14 2026-10-17) after the h13 REJECT on current main: (1) path class of the h13 gate worst (po_me_i_obase -64.8): NOT memory inference / fanout / an RTL depth increase -- the h13 synthesized netlist is identical before and after the main merge (45,451 cells, 32,466.2046 um2; BAND=1 keeps BITS_PER_BAND 3, matvec_part not in this tile); it is placement wire: dyn[2] -> ~400 ps of repeaters across the ring -> 8:1 dyn select -> KS add. RTL DSEL=1: the DPRE adds' DYN operand is registered per head word (dq0/dq1) on the hq/hq1 fill edge by a kept fill slice (dyn fixed in S_RUN): exact, 0 edges (m0 REGROUP_PASS 65120; OT_DSEL_MUT REGROUP_FAIL 390702). (2) floorplan: SRAM stack on the 43.2 lattice at (43.2, 86.4 / 164.208 abutted), N edge; ONE std-cell band S (233 x 79 um) beside the S clock entry with the macro read face (W) on a 41-um leg, write face (E) on a 21-um leg; W/E pins over the full 265.7-um faces (E 1,089 = 4.2/um). Outline 216.0x200.88 -> 237.6x265.68 (slot request to Q-COMPUTE-DIE). | h13 (Q-IO-1815 TTH 2026-10-17): outline 259.2x259.2 -> 216.0x200.88 (-35%): the ref_tile rules keep >= 20 um between each SRAM and every core edge, so the minimum outline is the abutted pair (171.288 x 155.568, at_exact 22.464, 22.176 / 99.984) + 20-um channels; logic = one 20-um ring beside its pins; every W/E pin balanced over the full face (E 1,089 = 5.6/um at 1 track), ck_head/rst_n moved N -> S face (logic band), ck_pm at the SRAM clk y; pin regs; CMDREG=1. | h11 (Q-IO-1815 TTH 2026-10-16): h10 RTL (RSTREP) + f10 macro placement (both program SRAMs abutted at the S edge, x 43.2) + EVERY W/E data pin banded to y 60-255 (PPL ordered groups failed PPL-0086 in 19-um sections at 105-255 and 60-255; balanced placer, disjoint per-bus ranges proportional to width, 1-track minimum: E 1,089 pins need >=105 um at 1 track / 209 um at 2) beside the N logic band (E 1,089 M4 pins = 7.3/um, W 494 = 3.3/um); ck_head/rst_n stay N. f10 failed (-514) because its pins stayed at y 3-173 beside the SRAMs while the logic sat N; h10 (centred SRAMs) is a thin ring (-223). Pin registers per the owner rule (recipe-3 ot_pin_regs, clock ck_head): +1 edge on every port not already registered at its pin (per-port table ot_pin_regs.tsv; compiler schedule absorbs; die/ledger to be told). | h10 (Q-IO-1815 TTH 2026-10-16): h9b + RSTREP=1: the reset station flop drove 481 async clears (380 = rom_cmd_q, W face; gate high_fanout warn, recovery -154..-197 ps); three kept station copies of the identical function (rsl ~120 loads, rom_cmd_q halves 190 each), release unchanged, 0 edges (m0 REGROUP_PASS 65120 identical, OT_DPRE_MUT FAIL 19964). Control for the h10k two-root measurement. | h9 (Q-ELEM 1315): h8 gate worst moved to controller decode h_rd_c -> ir mux -> F(BASE)+dyn[F(D)] -> me_obase/xbase (-565.5). DPRE=1: the 10 base+DYN adds are computed per FIFO head word (hq, hq1) from flops and selected by h_rd copies after the add; exact, 0 edges. h8 (Q-ELEM 1315): h7 gate placement TT reg->reg -470.7 ps over 2,648 flops: u_issue.cycle -> 32-bit cycle==head compare (~410 ps OR tree) -> controller fan-out (~650 ps incl. cross-tile buffering) -> kvd fields / pin regs. Fix: SREG=1 (ot_qwen_fixed_issue): 'scheduled' is a register loaded with the exact next-state value; bit-identical every cycle (sim self-check + regroup bench vs ref), 0 edges. h3 (Q-COMPUTE-ELEM r14): h2 CTS refused by the strict multiple-CTS profile (ck_head drove 4,831 std FF + 2 raw SRAM clock pins: mixed source). The two program SRAMs now take explicit raw-macro clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk, derived by tools/qwen_split/derive_tt_head_rawck.py; shared source unchanged), W-face pins at the SRAM clk heights; std roots ck_head / ck_me_sched unchanged (clock hybrid_entries, flow 891a5f188). Parent delivers ck_pm0/1 from the same PLL phase as ck_head (same_pll_fixed_phase 0 ps). Logic, edges and outline unchanged. NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
+ "early_fail": false,
+ "early_fail_reason": "Q-TTH18 10-18: a3ca3975a EARLY_FAIL_HOLD was a stuckscan false positive. Replay of the same 3_place.odb (ot-agidock128, OT_HOLD_CHUNK=500): chunk 1 -73.91 -> -56.84 ps (4815 margin endpoints padded, 5925 buffers; the per-iteration WNS/TNS columns stay flat while repair_timing pads the 0..30 ps margin set), chunk 2 -> +30.00 ps, 0 violators (+309 buffers, 17 s); TT setup +4.08. The flow's own OT_HOLD_GUARD (chunked, writes ot_hold_stall_cts.rpt on a real stall) stays on."
+}

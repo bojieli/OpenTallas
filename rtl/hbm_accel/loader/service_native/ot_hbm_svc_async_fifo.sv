@@ -57,12 +57,20 @@ endmodule
 // Resetting either interface flushes the token and permits resending a still
 // asserted source fault. Detection takes the FIFO online/synchronizer latency
 // plus one source edge and one destination capture edge, rather than two flops.
+// QF-SFAULT 2026-10-18 (regional reset, RTL defect fix): pending/sent and sticky were cleared straight from the
+// combinational AND of both interface resets, so the release of the OTHER domain's reset reached their async pins
+// with no synchroniser (13 cross-domain recovery paths -241 ps, hdie_svc_stack_fault).  Each side now owns a reviewed
+// ot_reset_sync of that AND (assert asynchronous, release synchronous to its own clock), exactly as the FIFO's own
+// u_wr_reset/u_rd_reset; pending/sent clear from the wr_clk one, sticky from the rd_clk one.  Either interface reset
+// still flushes both sides.  Source contract: src_fault is sampled from the second wr_clk edge after the source-side
+// reset release (ot_reset_sync latency); every user drives it from sticky fault state, so nothing is dropped.
 module ot_hbm_svc_fault_cdc #(parameter integer MUT=0)(
  input wire wr_clk,wr_rst_n,rd_clk,rd_rst_n,input wire src_fault,
  output wire dst_fault,output wire wr_overflow,rd_underflow
 );
- wire both_reset=wr_rst_n&&rd_rst_n;
- wire src_reset=(MUT==3)?wr_rst_n:both_reset;
+ wire both_reset=wr_rst_n&&rd_rst_n;wire src_reset,dst_reset;
+ ot_reset_sync u_src_reset(.clk(wr_clk),.async_rst_n((MUT==3)?wr_rst_n:both_reset),.sync_rst_n(src_reset));
+ ot_reset_sync u_dst_reset(.clk(rd_clk),.async_rst_n(both_reset),.sync_rst_n(dst_reset));
  reg pending,sent;
  wire ready,valid;wire[0:0]data;
  wire offer=(MUT==1)?1'b0:((MUT==4)?pending:((MUT==5)?(src_fault&&!sent&&ready):(pending&&!sent&&ready)));
@@ -77,8 +85,8 @@ module ot_hbm_svc_fault_cdc #(parameter integer MUT=0)(
   .wr_clk(wr_clk),.wr_rst_n(wr_rst_n),.wr_valid(offer),.wr_ready(ready),.wr_data(1'b1),.wr_overflow(wr_overflow),
   .rd_clk(rd_clk),.rd_rst_n(rd_rst_n),.rd_valid(valid),.rd_ready(valid),.rd_data(data),.rd_underflow(rd_underflow));
  reg sticky;
- always @(posedge rd_clk or negedge both_reset)begin
-  if(!both_reset)sticky<=0;
+ always @(posedge rd_clk or negedge dst_reset)begin
+  if(!dst_reset)sticky<=0;
   else if(valid&&data[0])sticky<=1;
  end
  assign dst_fault=(MUT==2)?valid:sticky;

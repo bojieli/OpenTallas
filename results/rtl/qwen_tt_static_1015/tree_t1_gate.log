@@ -1,0 +1,20 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (cmd, ret, me_acc_o): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (mx_we, mx_addr, mx_mask): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO oflop: W face 10.5 pins/um (p_am, p_fault, scale_addr): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-pve1 for 16 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_tt_tree_static_20261015-060329.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_tt_tree_static_20261015-060329.log; host dir ot-pve1:/srv/opentallas-scratch/claude/ref_gate/qfd_tt_tree_static-20261015-060329
+GATE INFO remote: synth + floorplan + PDN OK on ot-pve1 in 2158 s (gate total 4700 s)
+GATE WARN util: synthesized std area 8833 um2 + macros 15566 in core 63098: util 39%  -> FIX: set "std_area_um2": 8833 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN qfd_tt_ctlm_tree_static cells 76,685 flops 10,622 depth 463.4 ps util 0.3495 reach 14.6 um (16.2 s)
+GATE WARN textbook.high_fanout: reset u_rs.rst_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 905 loads (898 flops, e.g. me_acc[0]$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.util_channel: utilisation 34.9% outside 45%-65% (std 6485 + macro 15566 um2 in 63098 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 383.6..516.0 ps (spread 132.4), boundary mean 441.4; tt insertion all 290.6..412.3 ps (spread 121.7), boundary mean 341.5; ff insertion all 237.1..348.6 ps (spread 111.5), boundary mean 280.6; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qfd_tt_tree_static/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      600 paths, worst slack -16.1 ps (e.g. u_tt.u_ctl.mx_data[373]$_DFFE_PP_/D)
+GATE INFO path_classes: setup WNS -1.6069812147634366e-11 hold WNS 2.6125712704327952e-11
+GATE INFO clock_rule: root port:clk: 10,626 sinks on the largest root <= 15,000; measured TT insertion 412.3 ps, leaf spread 121.7 ps
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: qfd_tt_tree_static/gate_result.json written (exact staged source binding; commit it with the kit)

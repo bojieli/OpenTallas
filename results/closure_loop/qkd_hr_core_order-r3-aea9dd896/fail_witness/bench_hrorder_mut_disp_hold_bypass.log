@@ -1,0 +1,50 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_hr_core_order-r3-aea9dd896 bench bench_hrorder_mut_disp_hold_bypass host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_order-r3-aea9dd896 log cl/bench_hrorder_mut_disp_hold_bypass.a1b1.log captured 2026-10-18T18:55:52-07:00
+# fail_regex 'HRORDER_EQUIV FAIL mutant disp_hold_bypass'
+HRORDER_EQUIV verilator Verilator 5.050 2026-07-01 rev v5.050
+HRORDER_EQUIV MISMATCH cyc=4 disp.ing_cr
+HRORDER_EQUIV MISMATCH cyc=4 disp.kv
+HRORDER_EQUIV MISMATCH cyc=4 disp.fault
+HRORDER_EQUIV MISMATCH cyc=5 disp.kv
+HRORDER_EQUIV MISMATCH cyc=5 disp.fault
+HRORDER_EQUIV MISMATCH cyc=6 disp.kv
+HRORDER_EQUIV MISMATCH cyc=6 disp.fault
+HRORDER_EQUIV MISMATCH cyc=7 disp.kv
+HRORDER_EQUIV MISMATCH cyc=7 disp.fault
+HRORDER_EQUIV MISMATCH cyc=8 disp.kv
+HRORDER_EQUIV FAIL seed=1 cycles=200000 mismatches=1269815 map_emits=52008 order_pops=65552 disp_sends=79198 disp_pops=77389 fault_cycles=1492 (map 582 order 14 disp 904) resets=351
+- /srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_order-r3-aea9dd896/bench_src_a1/tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv:125: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 2.973 s; speed 134.563 us/s
+- Verilator: cpu 2.973 s on 1 threads; allocated 7 MB
+HRORDER_EQUIV MISMATCH cyc=4 disp.ing_cr
+HRORDER_EQUIV MISMATCH cyc=4 disp.kv
+HRORDER_EQUIV MISMATCH cyc=4 disp.issued
+HRORDER_EQUIV MISMATCH cyc=4 disp.fault
+HRORDER_EQUIV MISMATCH cyc=5 disp.kv
+HRORDER_EQUIV MISMATCH cyc=5 disp.issued
+HRORDER_EQUIV MISMATCH cyc=5 disp.fault
+HRORDER_EQUIV MISMATCH cyc=5 disp.order_quiet
+HRORDER_EQUIV MISMATCH cyc=6 disp.ing_cr
+HRORDER_EQUIV MISMATCH cyc=6 disp.kv
+HRORDER_EQUIV FAIL seed=2 cycles=200000 mismatches=1291025 map_emits=44858 order_pops=65642 disp_sends=78908 disp_pops=77304 fault_cycles=1104 (map 355 order 33 disp 716) resets=286
+- /srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_order-r3-aea9dd896/bench_src_a1/tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv:125: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 2.641 s; speed 151.450 us/s
+- Verilator: cpu 2.640 s on 1 threads; allocated 7 MB
+HRORDER_EQUIV MISMATCH cyc=4 disp.ing_cr
+HRORDER_EQUIV MISMATCH cyc=4 disp.hb
+HRORDER_EQUIV MISMATCH cyc=4 disp.issued
+HRORDER_EQUIV MISMATCH cyc=4 disp.fault
+HRORDER_EQUIV MISMATCH cyc=5 disp.hb
+HRORDER_EQUIV MISMATCH cyc=5 disp.issued
+HRORDER_EQUIV MISMATCH cyc=5 disp.fault
+HRORDER_EQUIV MISMATCH cyc=5 disp.order_quiet
+HRORDER_EQUIV MISMATCH cyc=6 disp.ing_cr
+HRORDER_EQUIV MISMATCH cyc=6 disp.kv
+HRORDER_EQUIV FAIL seed=3 cycles=200000 mismatches=1293057 map_emits=40987 order_pops=65615 disp_sends=79353 disp_pops=77816 fault_cycles=1006 (map 368 order 2 disp 636) resets=279
+- /srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_order-r3-aea9dd896/bench_src_a1/tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv:125: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 2.601 s; speed 153.791 us/s
+- Verilator: cpu 2.601 s on 1 threads; allocated 7 MB
+HRORDER_EQUIV FAIL mutant disp_hold_bypass runs_pass=0/3

@@ -12,6 +12,16 @@
 // every slice's 2 PCs (request queue, DQ 8 credits, latency lat + rand, in-order
 // beats) on the compiler's dim-sliced image (the owned compressed rows pre-written per slice; the window rows only
 // through the slices' own OWN_ROW writes).
+// MU-S81/SVC (10-18, multi-user per-user HBM bases; TB only, defaults = the single-user bench unchanged):
+//   +u0=<user> (default 3) +sb0=<SB> (default 0x1000): the latency user's id and compressed-row region base.
+//   +dir2=<case> +u1=<user> +sb1=<SB>: a SECOND job (user u1, its own vectors, its owned rows pre-written at sb1 in the
+//   same HBM image before job 0) runs after job 0 is checked; each job is checked vs its own golden (SVCRS job=<n> line;
+//   SVCRS_MU = both). +start2 fixes the second launch (default 8192), never completion-driven.
+//   +static_io=1 fixes command issue and external HBM response delay for exact shift comparisons.
+//   This is a two-job component isolation gate, not full-shape native token qualification.
+//   +trace prints every output event (root beats, SE rows, P.V words, PC requests) with its cycle
+//   (SVCRS_TR <job> <cyc> ...): job 0 must be cycle-identical to the single-user run.  Mutants (+mumut=, job 1 only):
+//   1 = WIN_LOAD SB = sb0 (user 0's compressed rows), 2 = WIN_LOAD user = u0 (user 0's window ring).
 // Checks (PASS = all zero):
 //   root   every complete score beat (16 heads x 4 rows) of the HELD rows bit-exact (flags as expected; value
 //          unless flagged), beats in row order, exactly ceil(T / 4) beats;
@@ -25,20 +35,37 @@
 `ifndef RS_OBS
 `define RS_OBS
 `endif
+// S81U-SVC6: RS_PL = the slices are pre-built Verilator protect-libs (rs_bench_pl.sh; MUT / DIE_ID / ST and the RS_MUT_*
+// defines are baked into the libs), so the top build sees only the wrappers -- the --hierarchical top re-elaborated the full
+// slice hierarchy in V3Param (> 4 h single-thread at 66 GB, never finished)
+`ifdef RS_PL
+`define RS_ENT_MOD dsdv_svc_rs_entry_pl
+`define RS_SL_MOD dsdv_svc_rs_pl
+`define RS_PRM
+`else
+`define RS_ENT_MOD dsdv_svc_rs_entry
+`define RS_SL_MOD dsdv_svc_rs
+`define RS_PRM #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST), .SRAM_MACRO(SRAM_MACRO))
+`endif
 module tb_dsdv_svc_rs;
+    parameter bit SRAM_MACRO = 0;
     parameter integer DIE = 0;
     parameter integer ST = 0;
     parameter integer MAXCYC = 400000;
     parameter integer GODLY = 400;
     parameter integer PVS0 = 150;          // compiled PV send: GO + ceil(5 T / 4) + PVS0 (the D = 32 share scores
                                            // 1.25 cycles a row: tb_dsdv_svc_pfeed last score 1.25 T + 40; + tree + gd)
-    parameter integer KPV = 112;           // compiled P.V drain base: PO + ceil(T / 4) + KPV (probe: the last P.V word
-                                           // of a continuous drain <= p0 + ceil(T / 4) + 157, 40 words)
+    parameter integer KPV = 55;            // compiled P.V drain base: PO + 8 ceil(T / 32) + KPV (SVC-PV 10-18, PV_CRED 8:
+                                           // tb_dsdv_svc_pvdrain, all 8 beats in pvq by p0 + 53 + 8 ceil(T / 32); was
+                                           // PO + ceil(T / 4) + 112 for the 4-deep pvq, which faulted 15 / 19)
 `ifndef MUT
 `define MUT 0
 `endif
 `include "dsdv_svc_rs_roles.svh"
     localparam integer H = 16, D = 512, NHBM = 32768, WB = 30'h100, SB = 30'h1000, WFIRST = 1000, WUSER = 3;
+    integer static_io = 0, start2 = 8192; bit j0_checked = 0;
+    integer cur_user = WUSER, u1 = 4, cur_sb = SB, sb1 = SB + 30'h9000, cur_job = 0, mumut = 0, trace = 0;
+    integer u0 = WUSER, sb0 = SB; reg [7:0] cur_tag = 8'h5a; reg [1023:0] dir2; bit mu = 0;
     reg ck = 0; always #0.5 ck = ~ck;
     reg rst = 0;
     reg [31:0] cfg [0:31];
@@ -77,18 +104,37 @@ module tb_dsdv_svc_rs;
         if (!$value$plusargs("dir=%s", dir)) begin $display("+dir missing"); $finish; end
         if ($value$plusargs("seed=%d", seed)) ;
         if ($value$plusargs("lat=%d", lat)) ;
-        $readmemh({dir, "/cfg.hex"}, cfg);
-        $readmemh({dir, "/sel.hex"}, selm);
-        $readmemh({dir, "/win.hex"}, winm);
-        $readmemh({dir, "/hkey.hex"}, hkey);
-        $readmemh({dir, "/hdat.hex"}, hdat);
-        $readmemh({dir, "/q.hex"}, qm);
-        $readmemh({dir, "/p.hex"}, pm);
-        $readmemh({dir, "/sc.hex"}, scm);
-        $readmemh({dir, "/pv.hex"}, pvm);
+        if ($value$plusargs("u0=%d", u0)) ; if ($value$plusargs("sb0=%h", sb0)) ;
+        if ($value$plusargs("u1=%d", u1)) ; if ($value$plusargs("sb1=%h", sb1)) ;
+        if ($value$plusargs("mumut=%d", mumut)) ; if ($value$plusargs("trace=%d", trace)) ;
+        mu = $value$plusargs("dir2=%s", dir2);
+        if ($value$plusargs("static_io=%d", static_io)) ;
+        if ($value$plusargs("tag0=%h", cur_tag)) ;
+        if ($value$plusargs("start2=%d", start2)) ;
+        if (mu && (u0 == u1 || start2 <= 40 || start2 >= MAXCYC - 40))
+            $fatal(1, "MU invalid distinct users or fixed start2");
+        $display("SVCRS_CONFIG sram_macro=%0d static_io=%0d start2=%0d", SRAM_MACRO, static_io, start2);
+        // MU: the second user's owned rows go into the same HBM image first (no $urandom: job 0 sees the same sequence)
+        if (mu) begin load_vec(dir2); preload(sb1); img.delete(); end
+        load_vec(dir);
+        cur_user = u0; cur_sb = sb0;
+        void'($urandom(seed));
+        preload(sb0);
+    end
+    task automatic load_vec(input reg [1023:0] dd);
+        $readmemh({dd, "/cfg.hex"}, cfg);
+        $readmemh({dd, "/sel.hex"}, selm);
+        $readmemh({dd, "/win.hex"}, winm);
+        $readmemh({dd, "/hkey.hex"}, hkey);
+        $readmemh({dd, "/hdat.hex"}, hdat);
+        $readmemh({dd, "/q.hex"}, qm);
+        $readmemh({dd, "/p.hex"}, pm);
+        $readmemh({dd, "/sc.hex"}, scm);
+        $readmemh({dd, "/pv.hex"}, pvm);
         wcount = cfg[0]; nsel = cfg[1]; nh = cfg[3]; T = cfg[4];
         for (i = 0; i < nh; i = i + 1) img[hkey[i]] = hdat[i];
-        void'($urandom(seed));
+    endtask
+    task automatic preload(input integer sbase);
         // compiler layout: every owned compressed row's block (16 rows x 144 b per tile, 9 sectors on PC g[8])
         for (i = 0; i < nsel; i = i + 1) if (own_sel(i)) begin
             integer g0, kk, sd, t, b; reg [2303:0] blk; reg [2303:0] row;
@@ -100,10 +146,10 @@ module tb_dsdv_svc_rs;
                     blk[144*kk +: 144] = {row[2048 + 16*t +: 16], row[128*t +: 128]};
                 end
                 for (b = 0; b < 9; b = b + 1)
-                    hbm[(longint'(2 * sd + ((g0 >> 8) & 1)) << 32) | longint'(SB + 9 * (g0 >> 9) + b)] = blk[256*b +: 256];
+                    hbm[(longint'(2 * sd + ((g0 >> 8) & 1)) << 32) | longint'(sbase + 9 * (g0 >> 9) + b)] = blk[256*b +: 256];
             end
         end
-    end
+    endtask
 
     // ---------------- 16 slices ----------------
     localparam integer W = 2132, SW = 1076, DW = 805, UW = 16;
@@ -151,7 +197,7 @@ module tb_dsdv_svc_rs;
         end
         if (gs == RS_ENTRY_W || gs == RS_ENTRY_E) begin : g_r
             localparam integer HX = (gs == RS_ENTRY_E) ? 1 : 0;
-            dsdv_svc_rs_entry #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST)) u (.ck(ck), .rst(rst), .sid(4'(gs)),
+            `RS_ENT_MOD `RS_PRM u (.ck(ck), .rst(rst), .sid(4'(gs)),
                 .j(jcmd), .jd(jdx[HX]), .q({1'b0, 1'b1, q_d, q_v}), .hw(hwx[HX]), .hc(hcx[HX]), .fault(rfx[HX]), .st_rg(stx[HX]),
                 .dn_i(dn_i[gs]), .dn_o(dn_o[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]), .ri(ri[gs]), .ro(ro[gs]),
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
@@ -160,7 +206,7 @@ module tb_dsdv_svc_rs;
                 .r_beat(r_beat[gs]), .hs(hsv[gs]), .pv_v(pv_v[gs]), .pv_d(pv_d[gs]),
                 .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]), .obs(obs[gs]));
         end else begin : g_n
-            dsdv_svc_rs #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST)) u (.ck(ck), .rst(rst), .sid(4'(gs)),
+            `RS_SL_MOD `RS_PRM u (.ck(ck), .rst(rst), .sid(4'(gs)),
                 .dn_i(dn_i[gs]), .dn_o(dn_o[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]), .ri(ri[gs]), .ro(ro[gs]),
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
                 .si_v(si_v[gs]), .si_d(si_d[gs]), .so_v(so_v[gs]), .so_d(so_d[gs]),
@@ -186,7 +232,7 @@ module tb_dsdv_svc_rs;
     integer pvs_c = 0, po_c = 0, pvo_c = 0;          // the compiled PV send, p-feed start and P.V drain base
     integer order [0:4095];
     function automatic [511:0] hdr(input [3:0] typ, input [11:0] len, input [448:0] spec);
-        hdr = {typ, 1'b0, 4'b0001, 8'h5a, 3'd0, len, 21'd777, 10'd3, spec};
+        hdr = {typ, 1'b0, 4'b0001, cur_tag, 3'd0, len, 21'd777, 10'(cur_user), spec};
         nframes = nframes + 1; last_hdr = nq;
     endfunction
     task automatic build_frames();
@@ -197,17 +243,17 @@ module tb_dsdv_svc_rs;
         n = (T + 1) / 2;
         pvs_c = (5 * T + 3) / 4 + PVS0;
         po_c = pvs_c + (n + 1) / 2 + (n + 249) / 250 + 4;
-        pvo_c = po_c + (T + 3) / 4 + KPV;
+        pvo_c = po_c + 8 * ((T + 31) / 32) + KPV;
         sp = 0; sp[29:0] = WB;
         qw[nq] = hdr(4'd12, 0, sp); nq = nq + 1;
         for (r = 0; r < wcount; r = r + 1) begin
-            qw[nq] = hdr(4'd3, 12'd16, 449'd0); qw[nq][479:459] = WFIRST + r; qw[nq][458:449] = WUSER; nq = nq + 1;
+            qw[nq] = hdr(4'd3, 12'd16, 449'd0); qw[nq][479:459] = WFIRST + r; qw[nq][458:449] = 10'(cur_user); nq = nq + 1;
             for (b = 0; b < 16; b = b + 1) begin
                 qw[nq] = 0; qw[nq][255:0] = winm[r][256*b +: 256]; qw[nq][263:256] = winm[r][4096 + 8*b +: 8]; nq = nq + 1;
             end
         end
-        sp = 0; sp[29:0] = SB; sp[88:81] = wcount; sp[98:89] = nsel; sp[119:99] = WFIRST;
-        qw[nq] = hdr(4'd2, 0, sp); qw[nq][458:449] = WUSER; nq = nq + 1;
+        sp = 0; sp[29:0] = (cur_job == 1 && mumut == 1) ? 30'(sb0) : 30'(cur_sb); sp[88:81] = wcount; sp[98:89] = nsel; sp[119:99] = WFIRST;
+        qw[nq] = hdr(4'd2, 0, sp); qw[nq][458:449] = (cur_job == 1 && mumut == 2) ? 10'(u0) : 10'(cur_user); nq = nq + 1;
         n = (nsel + 15) / 16;
         sp = 0; sp[19:10] = nsel;
         if (nsel > 0) begin
@@ -276,7 +322,7 @@ module tb_dsdv_svc_rs;
         integer hh;
         hwx[0] <= 0; hwx[1] <= 0;
         for (hh = 0; hh < 2; hh = hh + 1) begin h_cred[hh] = h_cred[hh] + hcx[hh][0]; h_ack = h_ack + hcx[hh][8:1]; end
-        if (rst && cyc > 30 && ($urandom % 4) == 0) begin
+        if (rst && cyc > 30 && (static_io != 0 ? (cyc % 4 == 0) : (($urandom % 4) == 0))) begin
             if (h_sent < NHW) begin
                 hh = (pcmap(h_adr[h_sent][29:0]) >= 5'd16) ? 1 : 0;
                 if (h_cred[hh] > 0) begin
@@ -310,7 +356,7 @@ module tb_dsdv_svc_rs;
         for (pc = 0; pc < 32; pc = pc + 1) begin
             sd = pc / 2; pp = pc % 2;
             if (rq[sd][341*pp]) begin
-                pq_t[pc][(pq_h[pc] + pq_n[pc]) % PQ] = cyc + lat + ($urandom % 16);
+                pq_t[pc][(pq_h[pc] + pq_n[pc]) % PQ] = cyc + lat + (static_io != 0 ? 0 : ($urandom % 16));
                 pq_w[pc][(pq_h[pc] + pq_n[pc]) % PQ] = rq[sd][341*pp +: 341];
                 pq_n[pc] = pq_n[pc] + 1;
                 if (pq_n[pc] > 8) cred_err = cred_err + 1;
@@ -335,7 +381,7 @@ module tb_dsdv_svc_rs;
     end
 
     // ---------------- run + checks ----------------
-    integer qi = 0, t_pre = -1;
+    integer qi = 0, t_pre = -1, j_cyc = 8, q_cyc = 40, j0_pass = 0;
     integer rt_beats = 0, sc_err = 0, sc_chk = 0, ord_err = 0;
     integer se_rows [0:15], se_err = 0, se_chk = 0, wrows [0:15];
     integer pv_words [0:15], pv_err = 0, pv_chk = 0;
@@ -347,16 +393,19 @@ module tb_dsdv_svc_rs;
     localparam integer PVH = (ST >= 2) ? 0 : 1;      // the half whose entry carries quarter ST's P.V (tiles 4 ST .. 4 ST + 3)
     always @(posedge ck) begin
         cyc <= cyc + 1;
+`ifdef RS_PROG
+        if (cyc % 500 == 0) begin $display("SVCRS_PROG cyc=%0d qi=%0d done=%0d/%0d rt_beats=%0d pv_n=%0d rfx=%0h sflt=%04x jd=%0d%0d", cyc, qi, n_done_x[0], n_done_x[1], rt_beats, pv_n, rfx, sflt, jdx[0][1], jdx[1][1]); $fflush; end
+`endif
         if (cyc == 3) rst <= 1;
         jcmd <= 0;
         if (cyc == 1) build_frames();
-        if (cyc == 8) jcmd <= {1'b1, 9'd0, 8'(nframes), 2'b00, 5'b00001, 8'h5a};
+        if (cyc == j_cyc) jcmd <= {1'b1, 9'd0, 8'(nframes), 2'b00, 5'b00001, cur_tag};
         for (k = 0; k < 2; k = k + 1) if (jdx[k][0]) begin n_done_x[k] = n_done_x[k] + 1; if (cyc > end_cyc) end_cyc = cyc; end
         // q stream: pre-GO frames back to back with random gaps; GO GODLY cycles after the last; PV after the last score
         q_v <= 0;
-        if (rst && cyc > 40 && qi < nq) begin
+        if (rst && cyc > q_cyc && qi < nq) begin
             if (qi < nq_go) begin
-                if (($urandom % 8) != 0) begin q_v <= 1; q_d <= qw[qi]; qi = qi + 1; if (qi == nq_go) t_pre = cyc; end
+                if (static_io != 0 || ($urandom % 8) != 0) begin q_v <= 1; q_d <= qw[qi]; qi = qi + 1; if (qi == nq_go) t_pre = cyc; end
             end else if (qi == nq_go) begin
                 if (cyc >= t_pre + GODLY) begin q_v <= 1; q_d <= qw[qi]; qi = qi + 1; go_cyc = cyc; end
             end else if (cyc >= go_cyc + pvs_c) begin
@@ -429,8 +478,8 @@ module tb_dsdv_svc_rs;
                 end
             end
         end
-        if ((n_done_x[0] > 0 && n_done_x[1] > 0 && cyc > end_cyc + 300) || cyc >= MAXCYC) begin
-            integer bad_se, bad_pv, bad_w, nown, st_bad; reg [15:0] fl; reg [31:0] fc0;
+        if ((!j0_checked && n_done_x[0] > 0 && n_done_x[1] > 0 && cyc > end_cyc + 300) || cyc >= MAXCYC) begin
+            integer bad_se, bad_pv, bad_w, nown, st_bad; reg [15:0] fl; reg [31:0] fc0; bit jpass;
             bad_se = 0; bad_pv = 0; bad_w = 0; nown = 0; fl = 0; fc0 = 0;
             for (s = 0; s < 16; s = s + 1) begin
                 if (se_rows[s] != (T + 15) / 16) bad_se = bad_se + 1;
@@ -454,7 +503,50 @@ module tb_dsdv_svc_rs;
                  bad_se == 0 && bad_w == 0 && pv_err == 0 && pv_chk == 4 * 8 * 4 * 16 && bad_pv == 0 &&
                  n_done_x[0] == 1 && n_done_x[1] == 1 && pv_early == 0 &&
                  !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 && h_err == 0 && cred_err == 0 && st_bad == 0 && cyc < MAXCYC) ? "PASS" : "FAIL");
-            $finish;
+            jpass = sc_err == 0 && ord_err == 0 && rt_beats == (T + 3) / 4 && sc_chk > 0 && se_err == 0 && se_chk > 0 &&
+                    bad_se == 0 && bad_w == 0 && pv_err == 0 && pv_chk == 4 * 8 * 4 * 16 && bad_pv == 0 &&
+                    n_done_x[0] == 1 && n_done_x[1] == 1 && pv_early == 0 &&
+                    !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 && h_err == 0 && cred_err == 0 && st_bad == 0 && cyc < MAXCYC;
+            if (mu) $display("SVCRS_JOB job=%0d user=%0d sb=%08x wb=%08x mumut=%0d T=%0d sc_checked=%0d sc_errors=%0d se_errors=%0d pv_checked=%0d pv_errors=%0d slice_faults=%04x verdict=%s",
+                cur_job, cur_user, cur_sb, WB, mumut, T, sc_chk, sc_err, se_err, pv_chk, pv_err, fl, jpass ? "PASS" : "FAIL");
+            if (mu && cur_job == 0 && cyc < MAXCYC) begin j0_pass = jpass; j0_checked = 1; end
+            else begin
+                if (mu) $display("SVCRS_MU users=%0d,%0d job0=%s job1=%s verdict=%s", u0, u1, j0_pass ? "PASS" : "FAIL",
+                    (cur_job == 1 && jpass) ? "PASS" : "FAIL", (j0_pass && cur_job == 1 && jpass) ? "PASS" : "FAIL");
+                $finish;
+            end
+        end
+        // Fixed compiled launch: completion is checked but cannot move this boundary.
+        if (mu && cur_job == 0 && cyc == start2) begin
+            if (!j0_checked || !j0_pass) $fatal(1, "MU job0 missed fixed boundary");
+            for (k = 0; k < 32; k = k + 1)
+                if (pq_n[k] != 0 || pq_b[k] != 0) $fatal(1, "MU HBM not drained at fixed boundary");
+            next_job();
+        end
+    end
+    // MU-S81/SVC: the second job (user u1, vectors dir2, owned rows at sb1): reload the golden, reset the checkers, re-arm
+    task automatic next_job();
+        img.delete(); load_vec(dir2);
+        j0_checked = 0;
+        cur_job = 1; cur_user = u1; cur_sb = sb1; cur_tag = 8'h5b;
+        qi = 0; nq = 0; nq_go = 0; nq_pv = 0; nframes = 0; last_hdr = 0; t_pre = -1;
+        rt_beats = 0; sc_err = 0; sc_chk = 0; ord_err = 0; se_err = 0; se_chk = 0; pv_err = 0; pv_chk = 0;
+        go_cyc = -1; first_rt = -1; last_rt = -1; end_cyc = -1; pv_early = 0; pv_sent = -1;
+        n_done_x[0] = 0; n_done_x[1] = 0; pv_first = -1; pv_last = -1; pv_gap = 0; pv_other = 0; pv_n = 0;
+        for (i = 0; i < 16; i = i + 1) begin se_rows[i] = 0; pv_words[i] = 0; wrows[i] = 0; end
+        build_frames();
+        j_cyc = start2 + 8; q_cyc = start2 + 40;
+    endtask
+    // +trace: every output event with its cycle (job 0 of a MU run must equal the single-user run line for line)
+    always @(posedge ck) if (trace != 0) begin
+        integer ts, tp;
+        if (rt_vv[RS_FOLD]) $display("SVCRS_TR %0d %0d RT %h", cur_job, cyc, rt_dd[RS_FOLD]);
+        for (ts = 0; ts < 16; ts = ts + 1) begin
+            if (se_v[ts]) $display("SVCRS_TR %0d %0d SE %0d %h", cur_job, cyc, ts, se_d[ts]);
+            if (pv_v[ts]) $display("SVCRS_TR %0d %0d PV %0d %h", cur_job, cyc, ts, pv_d[ts]);
+            if (w_v[ts]) $display("SVCRS_TR %0d %0d W %0d %h %h %h", cur_job, cyc, ts, w_a[ts], w_m[ts], w_d[ts]);
+            for (tp = 0; tp < 2; tp = tp + 1)
+                if (rq[ts][341*tp]) $display("SVCRS_TR %0d %0d RQ %0d %h", cur_job, cyc, 2 * ts + tp, rq[ts][341*tp +: 341]);
         end
     end
 endmodule

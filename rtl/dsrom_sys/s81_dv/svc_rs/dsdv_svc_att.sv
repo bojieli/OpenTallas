@@ -19,7 +19,8 @@
 // slices on the half's P.V return tree to the p4j entry slice, in compiled windows).
 //
 // q frames (SVC FRAME PROTOCOL v1.1 header; payload as svc_c unless stated):
-//   12 CFG      [29:0] WB (window ring base)
+//   12 CFG      [29:0] WB (window ring base); TOK-S81-GAPS/SVCP (10-19, G10): [32] ST valid, [31:30] ST = the die's HBM
+//               stack position (P.V quarter / held-row stack); [32] = 0 keeps the parameter ST (legacy frames)
 //    3 OWN_ROW  [479:459] pos, [458:449] user; payload block b = {scale 8, codes 256}: block t is written (2 writes)
 //    2 WIN_LOAD as svc_c ([29:0] SB, [88:81] wcount, [98:89] nsel, [119:99] first window pos, [458:449] user, tag)
 //    7 SEL_IDS  as svc_c; the slice records per rank whether the row is this stack's (held) and fetches its own rows
@@ -27,7 +28,10 @@
 //    6 ROWS     as svc_c; the slice keeps pair t / 2, half t % 2
 //    5 PV       as svc_c (stored by every slice, used by the 4 slices of quarter ST, which emit P.V)
 //   13 GO       (new, len 0) the compiled start: the engine share starts gd cycles after GO reaches this slice;
-//               [15:0] PO = the p-feed start, [31:16] PVO = the P.V drain base, both in cycles after the share's start
+//               [15:0] PO = the p-feed start, [31:16] PVO = the P.V drain base, both in cycles after the share's start;
+//               TOK-S81-GAPS/SVCP (10-19): [47:32] PIO = the on-die P injection start (dsdv_svc_rs_c P path: the SM's e
+//               rows enter the score exchange as P beats from PIO, the fold root packs the PV frame and the entries
+//               put it on the dn stream); PIO = 0 = legacy (the PV frame comes from the host q stream)
 //    9 SMJ      (new) SM head job / rows: [0] start, [4:1] kind, [12:5] jid, [13] operand rows (else parameter rows,
 //               r_j = payload index), [29:14] head mask (operand rows only)
 //
@@ -38,12 +42,24 @@
 // The HBM boundary is elastic (owner 10-15): per-PC DQ request credits from the controller, reads into slot-addressed
 // landing (no overflow possible), writes before reads per PC.  The closed engine's local valid / ready never stalls
 // on this program; any refusal is a fault.
-// Score beats go straight to the score exchange leaf (no FIFO; the engine credit is returned the next cycle).
+// Score beats go straight to the score exchange leaf (no FIFO, valid-only).  SVC-PV3 (10-18, owner rule): the score
+// credit is REMOVED -- the engine runs with SC_CRED 0 (q.k issue never waits on a credit, no sc_cr); the exchange takes
+// every beat the cycle it is produced, and a beat outside an active job is still fault 18.
 // P.V (S81U-SVC4, owner rule): the p feed is COMPILED -- from cycle PO of the share it offers one step (2 p words) every
 // cycle, never looking at the engine's p_ready; a step whose words have not landed (fault 20) or that the engine does
 // not take (fault 21) is a sticky fault.  The 4 owner slices drain their 8 P.V beats (5 words each) in 40 consecutive
 // cycles from PVO + pvs (rs_pvslot: owner k's window on the half's P.V return tree); a beat not produced by its slot is
 // fault 19.  pvs puts the 4 owners of a quarter in disjoint windows at the entry's pv pins (no arbitration).
+// SVC-PV (10-18): the P.V buffer pvq holds ALL 8 beats of a job (PVQ 8 = 8 beats x PVB bits).  The engine emits
+// the 8 final-block beats as one 8-cycle burst; with 4 entries its pv_cr credit loop (~45 cycles) left a gap inside
+// the 40-cycle drain window (fault 19, then the pointer wrap gave fault 15) and no p-feed offset can fix that
+// (tb_dsdv_svc_pvdrain: depth 4 fails at every drain distance and T).  With 8 entries the credit never binds (the same
+// probe passes with pv_cr never returned): the drain is purely static.  Compiler rule (tb_dsdv_svc_rs build_frames):
+// PVO >= PO + 8 ceil(T / 32) + 55 (probe minimum 53 + 8 ceil(T / 32), every owner's slot pvs >= 0 on top).
+// SVC-PV2 (10-18, owner rule: no runtime credit on ROM production paths): the P.V credit is REMOVED.  The engine runs
+// with PV_CRED 0 (final-block p.v issue never waits on a credit, no pv_cr); pvq (PVQ 8) is sized by the compiler for
+// one job's 8 beats and only the static checks remain: fault 15 = pvq overflow (a 9th beat before the drain popped),
+// fault 19 = underflow (the drain slot finds no beat).
 // MUT (bench negative controls): 1 = window scale byte of the neighbouring slot, 2 = ROWS half of the other tile of
 // the pair, 3 = q chunk of the neighbouring tile.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -52,8 +68,7 @@ module dsdv_svc_att #(
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
     parameter integer PFIFO = 512,
-    parameter integer SC_CRED = 8,
-    parameter integer PV_CRED = 4,
+    parameter integer PVQ = 8,                    // P.V buffer = the beats of one job (static drain, no credit)
     parameter integer DQ = 8,
     parameter bit SRAM_MACRO = 0
 ) (
@@ -100,13 +115,20 @@ module dsdv_svc_att #(
     output reg  [1:0]           hcr,
     output reg  [1:0]           hack,
     output wire                 fault,
-    output wire [31:0]          fault_code
+    output wire [31:0]          fault_code,
+    // TOK-S81-GAPS/SVCP (10-19): the compiled P path offsets of the job (GO frame), the share's cycle counter and the
+    // stack position (CFG) for the slice's P path / P.V slot
+    output wire [15:0]          pio_o,
+    output wire [15:0]          pvo_o,
+    output wire [15:0]          jc_o,
+    output wire [1:0]           st_o
 );
     localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam integer PFW = $clog2(PFIFO);
     localparam integer TR = 640;
     reg [31:0] fc;
     assign fault_code = fc;
+    assign pio_o = pio; assign pvo_o = pvo; assign jc_o = jc; assign st_o = st_r;
     assign fault = |fc;
 
     // ------------------------------------------------------------------ frame parser (as ot_s81_svch_attq)
@@ -130,14 +152,15 @@ module dsdv_svc_att #(
 
     // ------------------------------------------------------------------ CFG / job state
     reg [29:0] wb, sb;
+    reg [1:0] st_r;                                 // stack position: CFG [31:30] when [32], else the parameter ST
     reg [7:0] wcount; reg [9:0] nsel; reg [20:0] wfirst; reg [9:0] wuser;
     reg job_open, job_active;                       // job_open: WIN_LOAD seen, engine program not yet done
     wire start = hdr_mine && h_type == 4'd2;
     wire [9:0] tjob = 10'(wcount) + nsel;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wuser <= 0; tagj <= 0; end
+        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
         else begin
-            if (hdr_mine && h_type == 4'd12) wb <= q_d[29:0];
+            if (hdr_mine && h_type == 4'd12) begin wb <= q_d[29:0]; if (q_d[32]) st_r <= q_d[31:30]; end
             if (start && !job_open) begin
                 sb <= q_d[29:0]; wcount <= q_d[88:81]; nsel <= q_d[98:89]; wfirst <= q_d[119:99];
                 wuser <= q_d[458:449]; tagj <= q_d[502:495];
@@ -197,7 +220,7 @@ module dsdv_svc_att #(
     wire [31:0] sid_g = swd[32*sw_i +: 32];
     wire [9:0] s_rank = sw_base[sw_r[4:0]] + 10'(sw_i);
     wire sw_have = sw_w != sw_r;
-    wire g_own = sid_g[5:4] == 2'(DIE_ID) && sid_g[7:6] == 2'(ST);
+    wire g_own = sid_g[5:4] == 2'(DIE_ID) && sid_g[7:6] == st_r;
     wire f_full = (fq_w[sid_g[8]] - fq_r[sid_g[8]]) >= 5'd16;
     wire sw_step = sw_have && !(g_own && f_full);    // the fetch side waits on the elastic HBM boundary only
     always @(posedge clk) if (sel_pay) begin
@@ -260,7 +283,7 @@ module dsdv_svc_att #(
 
     // ------------------------------------------------------------------ static program (GO + gd)
     reg [7:0] go_cnt; reg go_arm; reg go;
-    reg [15:0] po, pvo, jc;                         // compiled p-feed start / P.V drain base; cycles since the share's start
+    reg [15:0] po, pvo, pio, jc;                    // compiled p-feed start / P.V drain base / P injection start; cycles since the share's start
     reg dr_arm, dr_on; reg [2:0] dbeat;
     reg [9:0] rc; reg run;                           // program cycle
     wire [9:0] nbeat = (tjob + 10'd3) >> 2;
@@ -285,7 +308,7 @@ module dsdv_svc_att #(
             row = 4 * (32'(rc) - 1) + j; need = 1'b0; ok = 1'b0;
             if (row < 32'(tjob)) begin
                 kc_m[j] = 1'b1;
-                need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == 2'(ST);
+                need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r;
                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
                 kc_w[265*j +: 265] = rowword(row, land[row], wsc, wcount, wfirst, need);
                 rel_bad[j] = need && !ok;
@@ -299,7 +322,7 @@ module dsdv_svc_att #(
     wire [PFW:0] pcnt = pw - pr;
     reg [15:0] p_left;
     wire [1:0] pstep = (p_left >= 16'd2) ? 2'd2 : 2'(p_left);
-    wire pvown = tile[3:2] == 2'(ST);
+    wire pvown = tile[3:2] == st_r;
     wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
     wire ep_ready;
     wire [2*TD*16-1:0] ep_w = pvown ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
@@ -307,7 +330,6 @@ module dsdv_svc_att #(
     // ------------------------------------------------------------------ engine (unchanged, D = 32: S = 1, LS = 0)
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f;
-    reg sc_cr, pv_cr;
 `ifdef SVCQ_ENG_FG3
     localparam integer E_FPL = 3, E_FML = 3, E_TS = 0, E_NAR = 0, E_MF = 0, E_TRX = 0, E_F12 = 0, E_FX = 0;
 `else
@@ -316,21 +338,21 @@ module dsdv_svc_att #(
     ot_hdc_v41x_attn_s #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TR), .SRAM_MACRO(SRAM_MACRO), .PWORDS(2),
                          .ILV(1), .REPL(2), .NSTAGE(2), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
                          .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX),
-                         .SC_CRED(SC_CRED), .PV_CRED(PV_CRED)) u_eng (
+                         .SC_CRED(0), .PV_CRED(0)) u_eng (
         .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
         .q_v(eq_v), .q_w(eq_w), .q_ready(eq_ready),
         .kv_v(ekv_v), .kv_m(ekv_m), .kv_w(ekv_w), .kv_ready(kv_ready),
-        .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),
+        .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(1'b0),
         .p_v(ep_v), .p_w(ep_w), .p_ready(ep_ready),
-        .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f), .pv_cr(pv_cr),
+        .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f), .pv_cr(1'b0),
         .qk_iss(), .pv_iss());
     assign l_v = sc_v;
     assign l_d = {sc_row, sc_m, sc_y, sc_f};
 
     // ------------------------------------------------------------------ P.V words (owner slices)
     localparam integer PVB = 8 + NT*H*32 + NT*H;
-    localparam integer PA = $clog2(PV_CRED);
-    reg [PVB-1:0] pvq [0:PV_CRED-1];
+    localparam integer PA = $clog2(PVQ);
+    reg [PVB-1:0] pvq [0:PVQ-1];
     reg [PA:0] pvw, pvr;
     reg [2:0] p_i;
     reg [3:0] pv_n;
@@ -389,8 +411,8 @@ module dsdv_svc_att #(
             end
             sw_w <= 0; sw_r <= 0; sw_i <= 0; sel_held <= 0; pres <= 0; spres <= 0; q_have <= 0;
             job_open <= 0; job_active <= 0; go_arm <= 0; go_cnt <= 0; go <= 0; run <= 0; rc <= 0;
-            po <= 0; pvo <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
-            ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0; sc_cr <= 0; pv_cr <= 0;
+            po <= 0; pvo <= 0; pio <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
+            ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0;
             pvw <= 0; pvr <= 0; p_i <= 0; pv_n <= 0; pv_ov <= 0; done <= 0; go_o <= 0;
             hcr <= 0; hack <= 0; iss_host <= 0; fc <= 0;
             sm_st <= 0; sm_rv <= 0; sm_rp <= 0; sm_rj <= 0; sm_kind <= 0; sm_jid <= 0; sm_rd <= 0;
@@ -443,7 +465,7 @@ module dsdv_svc_att #(
             if (sel_pay) begin sw_w <= sw_w + 1'b1; if (sw_w - sw_r >= 6'd32) fc[5] <= 1'b1; end
             if (sw_step) begin
                 if (sw_i < sw_n[sw_r[4:0]]) begin
-                    sel_held[s_rank] <= sid_g[7:6] == 2'(ST);
+                    sel_held[s_rank] <= sid_g[7:6] == st_r;
                     if (g_own) fq_w[sid_g[8]] <= fq_w[sid_g[8]] + 1'b1;
                 end
                 if (sw_i == 5'd15 || sw_i + 1'b1 >= sw_n[sw_r[4:0]]) begin sw_i <= 0; sw_r <= sw_r + 1'b1; end
@@ -463,7 +485,7 @@ module dsdv_svc_att #(
             go <= 1'b0; go_o <= 1'b0;
             if (hdr_mine && h_type == 4'd13) begin
                 if (!job_open || go_arm || run) fc[8] <= 1'b1;
-                go_arm <= 1'b1; go_cnt <= gd; po <= q_d[15:0]; pvo <= q_d[31:16];
+                go_arm <= 1'b1; go_cnt <= gd; po <= q_d[15:0]; pvo <= q_d[31:16]; pio <= q_d[47:32];
             end else if (go_arm) begin
                 if (go_cnt == 0) begin go_arm <= 1'b0; go <= 1'b1; go_o <= 1'b1; end
                 else go_cnt <= go_cnt - 1'b1;
@@ -495,16 +517,15 @@ module dsdv_svc_att #(
                 if (pcnt < (PFW+1)'(pstep)) fc[20] <= 1'b1;                   // p words not landed at the step's cycle
                 if (!ep_ready) fc[21] <= 1'b1;                                // the engine did not take the compiled step
             end
-            // ---- scores: straight to the score exchange, engine credit back the next cycle
-            sc_cr <= sc_v;
+            // ---- scores: straight to the score exchange (valid-only, no credit)
             // ---- P.V words: owner slices emit 5 words a beat (valid-only, never stalled)
-            pv_cr <= 1'b0; pv_ov <= 1'b0;
+            pv_ov <= 1'b0;
             if (pv_v) begin
                 pv_n <= pv_n + 1'b1;
                 if (pv_n == 4'd7) begin job_active <= 1'b0; job_open <= 1'b0; done <= !pvown; end   // owners: at drain end
             end
             if (pvown) begin
-                if (pv_v) begin pvw <= pvw + 1'b1; if (32'(pvw - pvr) >= PV_CRED) fc[15] <= 1'b1; end
+                if (pv_v) begin pvw <= pvw + 1'b1; if ((PA+1)'(pvw - pvr) >= (PA+1)'(PVQ)) fc[15] <= 1'b1; end
                 // compiled drain window: 8 beats x 5 words from PVO + pvs, back to back
                 if (dr_arm && !go && jc == pvo + 16'(pvs)) begin dr_arm <= 1'b0; dr_on <= 1'b1; p_i <= 0; dbeat <= 0; end
                 if (dr_on) begin
@@ -512,11 +533,11 @@ module dsdv_svc_att #(
                     if (p_i == 3'd0 && pvw == pvr) fc[19] <= 1'b1;            // the beat is not produced at its slot
                     p_i <= (p_i == 3'd4) ? 3'd0 : p_i + 1'b1;
                     if (p_i == 3'd4) begin
-                        pvr <= pvr + 1'b1; pv_cr <= 1'b1; dbeat <= dbeat + 1'b1;
+                        pvr <= pvr + 1'b1; dbeat <= dbeat + 1'b1;
                         if (dbeat == 3'd7) begin dr_on <= 1'b0; done <= 1'b1; end
                     end
                 end
-            end else pv_cr <= pv_v;
+            end
             // ---- SMJ frames -> SM head
             sm_st <= 1'b0; sm_rv <= 1'b0;
             if (hdr_mine && h_type == 4'd9) begin

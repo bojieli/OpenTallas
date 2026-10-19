@@ -9,7 +9,12 @@
 //                control composition (qkd_native_attention_programme + qkd_attn_cal_gen STRETCH=1 + qkd_attn_service_root,
 //                wired as in kvs14c qkd_kvs_attn) with its RESULT pins driven on the reserved ages (the result face
 //                qkd_attn_result_face_s is NOT on the link path; K_REAL=2 instantiates the as-built qkd_kvs_attn incl.
-//                the face and drives pvfin's beat stream into the face window: diagnostic, see the lane file)
+//                the face and drives pvfin's beat stream into the face window: diagnostic, see the lane file;
+//                QXF-FACE 10-18: K_REAL=3 = the as-built qkd_kvs_attn + the REAL stream final join qkd_pv_fin_s
+//                (pvfin, fed from kvs_attn pvfst; fo -> fin; fault -> uff) with the PV pair streams on their compiled
+//                slots P0 / P1 and the hub reciprocals on R (qkd_ahub_static_dw fr contract) as stimuli; POS_P sets
+//                the context T = POS_P + 1; FIN_MUT = the pvfin MUT; RESULT golden = obeat with a normal exponent
+//                (pairs x 2^h, reciprocal 2^-(h+1): (p0 + p1) * rz == obeat exactly))
 //   Calendars: the compiler images of tools/qwen_split/xdie_exchange_cal.py (d2d_link_calendar layer law with the real
 //   producer latencies), loaded through the cfg ports; one cal_start per layer, segment 0.
 // Modelled (declared): the UCIe PHY pair ot_qkvd_ucie_x64_phy_model at LAT = PHY FDI cycles (3.5 ns measured
@@ -28,8 +33,16 @@
 // Measured (per layer, edges of the 1.2 GHz core clock): XQ_MEAS lines; summary XQ_E lines.
 // MUT: 1 KV programme run one edge late (calendar slot shift), 2 one PHY bit corrupted in a Q frame (CRC -> abort),
 //      3 one RESULT word corrupted at the KV producer pins (golden mismatch at the compute consumer),
-//      4 compute sys_face q_slot one edge late, 5 (K_REAL=0) KV STATUS word = 0, as qkd_native_attention_static_ctl
-//      encodes it (tx_data = 0 on the status slot): native59 needs the done bit rd[3] (finding witness).
+//      4 compute sys_face q_slot one edge late, 5 (K_REAL=0) KV STATUS word = 0 (the pre-F2 static_ctl encoding):
+//      native59 needs the done bit rd[3]; 6 (C_REAL=1) native59 MUT 4 = the pre-F1 Q window (opens one edge after the
+//      request: Q beat 0 one link slot late against the compiled calendar); 7 (K_REAL=1) static_ctl MUT 3 = the pre-F2
+//      all-zero STATUS word from the real KV programme; 8 STATUS done bit (data bit 3) cleared at the KV producer pins
+//      (layer 4; any K_REAL); 9 RESULT beat 7 data bit 0 flipped at the KV producer pins (layer 5; any K_REAL).
+// K_TEAR (QXF-PAIR mutant, K_REAL != 0): one member of a KV seam bundle one stage short of its bundle's landed age
+//      (1: att_rx_v of K.rx_record = KS_RXV - 1 vs rx_payload KS_RXP; 2: tx_v of K.tx_record = SK_TXV - 1 vs tx_payload).
+// QXF-PAIR 10-18: C_REAL=1 + K_REAL=3 = the PAIRED co-sim (both die masters + native59 + as-built kvs_attn + real pvfin).
+// QXF-LINK 2026-10-18: the die masters take TXDP from the compiler (xdie_params.svh P_TXDP_C / P_TXDP_K = the calendar's
+//      TXD; F4), STATUS words come from qkd_native_status_word (F2), QGAP default 0 = the compiler's CMD->Q law (F1).
 // =====================================================================================================================
 module xq_dly #(parameter integer W = 1, parameter integer D = 0) (input wire ck, input wire [W-1:0] a, output wire [W-1:0] b);
     generate if (D == 0) begin : g0
@@ -44,12 +57,14 @@ endmodule
 
 module tb_xdie_qwen_exchange;
     `include "xdie_params.svh"
-    parameter integer MUT = 0, C_REAL = 1, K_REAL = 1, NL = 35, QGAP = 1;
+    parameter integer MUT = 0, C_REAL = 1, K_REAL = 1, NL = 35, QGAP = 0, POS_P = 255, FIN_MUT = 0, K_TEAR = 0;
+    parameter integer K_NTX = 4;           // Q-XDIE-GEN 10-18: KV die binds qkd_d2d_static .NTX(3) (S-QTIES QC-12, kvs14p)
+    parameter integer XQ_TXDP_UNSET = 0;   // F4 witness: build the masters without the compiled TXDP (must not elaborate)
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583, PR = 1, LEAD = 2 * PR;
     localparam [15:0] EP = 16'd9;
     localparam [17:0] TOK = 18'd50994;
-    localparam [12:0] POS = 13'd255;
+    localparam [12:0] POS = 13'(POS_P);
     localparam [1:0] GEN = 2'd1;
     localparam [379:0] TEMPLATE = 380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
     reg ck = 0; always #0.4167 ck = ~ck;
@@ -69,7 +84,12 @@ module tb_xdie_qwen_exchange;
     function automatic [511:0] qbeat(input integer b, input integer l);
         integer j; begin for (j = 0; j < 16; j = j + 1) qbeat[32*j +: 32] = qval(16 * b + j, l); end endfunction
     function automatic [511:0] obeat(input integer b, input integer l);
-        integer j; begin for (j = 0; j < 16; j = j + 1) obeat[32*j +: 32] = 32'(b * 16 + j) * 32'h85EBCA6B + 32'h1234567 + 32'(l) * 32'h27D4EB2F; end endfunction
+        integer j; begin for (j = 0; j < 16; j = j + 1) obeat[32*j +: 32] = 32'(b * 16 + j) * 32'h85EBCA6B + 32'h1234567 + 32'(l) * 32'h27D4EB2F;
+            if (K_REAL == 3) for (j = 0; j < 16; j = j + 1) obeat[32*j+29 +: 2] = 2'b01; end endfunction   // normal exponent 64..127
+    // K_REAL=3 pair partial: obeat with exponent + h (h = b / 8, the head of beat b); (p0 + p1) * 2^-(h+1) == obeat
+    function automatic [511:0] pbeat(input integer b, input integer l);
+        integer j; reg [511:0] o; begin o = obeat(b, l); pbeat = o;
+            for (j = 0; j < 16; j = j + 1) pbeat[32*j+23 +: 8] = o[32*j+23 +: 8] + 8'(b / 8); end endfunction
     function automatic [7:0] code(input integer k, input integer h, input integer d);
         integer x; begin x = (k * 91 + h * 37 + d) % 254; if (x >= 127) x = x + 1; code = x[7:0]; end endfunction
     function automatic [31:0] decode(input [7:0] b);
@@ -121,7 +141,7 @@ module tb_xdie_qwen_exchange;
     wire kw_v, kw_slot; wire [10:0] kw_tag; wire [511:0] kw_data; wire [58:0] kw_id; wire [1:0] kw_gen, kw_idx;
     wire c_prog_rxv, c_prog_auth, c_prog_ctx, c_prog_wslot, c_emb_v, c_emb_s, k_emb_slot;
     wire st_res = act && rel == 20;
-    qfd_d2d_static #(.MUT(0), .PR(PR)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    qfd_d2d_static #(.MUT(0), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_C)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_c_tx), .cfg_rx_we(cfg_c_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dc), .cal_start(cstart), .cal_seg(1'b0),
         .fwd_epoch(bump_ep[2]), .fwd_link_rst_n(bump_lr[2]),
         .native_tx_slot(c_txs0), .native_tx_slot_kind(c_tk), .native_tx_slot_beat(c_tb), .native_tx_v(c_tv0),
@@ -136,7 +156,7 @@ module tb_xdie_qwen_exchange;
         .result_gen(GEN), .result_token(TOK), .result_value(32'(lay * 77)), .result_cycles(32'(lay)),
         .fdi_tx_up(c_up), .fdi_tx_v(c_ptx_v), .fdi_tx_flit(c_ptx), .fdi_rx_v(c_prx_v), .fdi_rx_flit(c_prx),
         .phy_rst_n(c_phy_rst_n), .epoch_abort(c_abort), .transport_fault(c_tf), .fault(c_f));
-    qkd_d2d_static #(.MUT(0), .PR(PR)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    qkd_d2d_static #(.MUT(0), .NTX(K_NTX), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_K)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(1'b0),
         .host_link_reset_req(1'b0), .host_recovery_clear(1'b0), .host_boot_begin(host_boot),
         .fwd_epoch(fwd_ep), .fwd_link_rst_n(fwd_lrst_n),
@@ -214,7 +234,7 @@ module tb_xdie_qwen_exchange;
             end
         end
         wire[94:0] n_ret; wire e_cre, e_sre; wire [23:0] e_caddr; wire [17:0] e_saddr;
-        qfd_native59_dv_service #(.MUT(0)) native59 (.ck(ck), .rst_n(rst_n),
+        qfd_native59_dv_service #(.MUT(MUT == 6 ? 4 : 0)) native59 (.ck(ck), .rst_n(rst_n),
             .host_epoch_valid(1'b1), .host_fused_capability(1'b1), .host_epoch(EP), .host_tag(host_tag), .host_generation(GEN),
             .layer_context_v(ctxv), .command_stage(stage), .native_token(TOK), .native_position(18'(POS)), .native_cmd(cmd),
             .dd_i(dd), .kv_word_slot(kvs), .kv_word_index(kvi), .kv_x3_slot(n_x3s),
@@ -248,7 +268,10 @@ module tb_xdie_qwen_exchange;
             .fault(ca_f), .fault_cause(ca_fc));
         assign p_tv = c_tv0; assign p_tp = c_tp0;
         assign dr = (ca_rv && ca_rk == 4'd3) ? {1'b1, 1'b0, 1'b0, ca_rb, ca_rd} : 520'd0;
-        assign n_fault = ca_f; assign n_done = ca_rv && ca_rk == 4'd4;
+        assign n_fault = ca_f; assign n_done = ca_rv && ca_rk == 4'd4 && ca_rd[3];
+        // the KV producer's STATUS word, bit-exact against the namespace (F2: the consumer completes on done)
+        always @(posedge ck) if (rst_n && act && ca_rv && ca_rk == 4'd4 && ca_rd !== {507'd0, 5'b01001})
+            err("STATUS word != namespace {q_ready 0, done 1, fault 0, busy 0, ready 1}");
         wire kvn_push = act && rel >= P_KS - 1 && rel < P_KS + 3;
         wire kvt_f;
         qfd_kvn_static_transport u_kvt (.ck(ck), .rst_n(rst_n & ~c_eb), .word_v(kvn_push), .word_tag({3'd2, 8'(rel - (P_KS - 1))}),
@@ -262,22 +285,25 @@ module tb_xdie_qwen_exchange;
     // ================================================================== KV end producer / consumer
     wire a_rxe; wire [FW-1:0] a_rxp; wire a_txs; wire [3:0] a_tk; wire [4:0] a_tb; wire a_tv; wire [FW-1:0] a_tp;
     wire kq_v, kreq_v, k_pf; wire [4:0] kq_b; wire [511:0] kq_d;
+    // MUT 8 / 9: corrupt the KV producer's record at its output pins (before the seam relays and the link CRC)
+    wire [FW-1:0] a_tpx = a_tp ^ ((MUT == 8 && lay == 4 && a_tv && a_tp[542:539] == 4'd4) ? {{(FW-4){1'b0}}, 4'b1000} : {FW{1'b0}})
+                               ^ ((MUT == 9 && lay == 5 && a_tv && a_tp[542:539] == 4'd3 && a_tp[516:512] == 5'd7) ? {{(FW-1){1'b0}}, 1'b1} : {FW{1'b0}});
     // authority / layer programme (compiled stimulus; kvs_ctl u_lprg in the die)
     wire kv_go = act && rel == P_KV_RUN - 30 + (MUT == 1 ? 1 : 0);
     wire kv_issue = act && rel == P_KV_RUN - 8 + (MUT == 1 ? 1 : 0);
     wire kv_run = act && rel == P_KV_RUN + (MUT == 1 ? 1 : 0);
     integer kage; always @* kage = rel - (P_KV_RUN + 1);     // programme age (age 0 = the cycle after the run edge)
     generate if (K_REAL != 0) begin : g_kreal
-        xq_dly #(1, KS_RXV) d_rxe (.ck(ck), .a(k_rxe0), .b(a_rxe));
+        xq_dly #(1, KS_RXV - (K_TEAR == 1 ? 1 : 0)) d_rxe (.ck(ck), .a(k_rxe0), .b(a_rxe));
         xq_dly #(FW, KS_RXP) d_rxp (.ck(ck), .a(k_rxp), .b(a_rxp));
         xq_dly #(1, KS_TXS) d_txs (.ck(ck), .a(k_txs0), .b(a_txs));
         xq_dly #(4, KS_TXK) d_txk (.ck(ck), .a(k_tk), .b(a_tk));
         xq_dly #(5, KS_TXB) d_txb (.ck(ck), .a(k_tb), .b(a_tb));
-        xq_dly #(1, SK_TXV) d_tv (.ck(ck), .a(a_tv), .b(k_tv0));
-        xq_dly #(FW, SK_TXP) d_tp (.ck(ck), .a(a_tp), .b(k_tp0));
+        xq_dly #(1, SK_TXV - (K_TEAR == 2 ? 1 : 0)) d_tv (.ck(ck), .a(a_tv), .b(k_tv0));
+        xq_dly #(FW, SK_TXP) d_tp (.ck(ck), .a(a_tpx), .b(k_tp0));
     end else begin : g_kstub_w
         assign a_rxe = k_rxe0; assign a_rxp = k_rxp; assign a_txs = k_txs0; assign a_tk = k_tk; assign a_tb = k_tb;
-        assign k_tv0 = a_tv; assign k_tp0 = a_tp;
+        assign k_tv0 = a_tv; assign k_tp0 = a_tpx;
     end endgenerate
     generate if (K_REAL == 1) begin : g_kprog
         // the kvs_attn control composition (qkd_kvs_attn wiring of u_attn / u_attn_cal / u_attn_root; face bypassed)
@@ -292,7 +318,7 @@ module tb_xdie_qwen_exchange;
         wire [4:0] res_b = 5'(kage - P_TX_FIRST);
         wire [511:0] res_d = obeat(kage - P_TX_FIRST, lay) ^ ((MUT == 3 && lay == 5 && kage == P_TX_FIRST + 7) ? 512'd1 : 512'd0);
         wire res_done = act && kage == P_TX_FIRST + 32;
-        qkd_native_attention_programme #(.MUT(0)) u_attn (.ck(ck), .rst_n(rst_n), .issue(kv_issue), .run(kv_run),
+        qkd_native_attention_programme #(.MUT(MUT == 7 ? 3 : 0)) u_attn (.ck(ck), .rst_n(rst_n), .issue(kv_issue), .run(kv_run),
             .fused_program_capability(1'b1), .authority_valid(1'b1), .authority_epoch(EP), .authority_token(TOK),
             .authority_position(18'(POS)), .authority_stage(stage), .compiled_calendar(cal), .compiled_rx_cmd(rx_cmd),
             .compiled_tx_first(tx_first), .compiled_end(end_age), .rx_event(a_rxe), .rx_payload(a_rxp),
@@ -310,7 +336,7 @@ module tb_xdie_qwen_exchange;
         reg sf = 0;
         always @(posedge ck) if (rst_n && (k_pf || lf || iof) && !sf) begin sf <= 1;
             $display("XQ_CAUSE KV programme cyc %0d rel %0d age %0d: ctl local %0d guard %0d record %0d (codec cause {rx_rec,tx_rec,rx_time,tx_time}=%b) slot %0d producer %0d | root lf %0d iof %0d",
-                cyc, rel, age, u_attn.ctl.local_fault, u_attn.ctl.guard_fault, u_attn.ctl.record_fault, u_attn.ctl.codec.fault_cause,
+                cyc, rel, age, u_attn.ctl.local_fault, u_attn.ctl.guard_fault, u_attn.ctl.record_fault, u_attn.ctl.g_cd.codec.fault_cause,
                 u_attn.ctl.slot_fault, u_attn.producer_fault, lf, iof); end
         always @(posedge ck) if (rst_n && (lf || iof || cal_f)) err("KV attention root / calendar fault");
         always @(posedge ck) if (rst_n && kq_v && !q_rdy) err("q_valid without q_ready (no wait exists)");
@@ -340,13 +366,58 @@ module tb_xdie_qwen_exchange;
         always @(posedge ck) if (rst_n && (k_pf || u_kattn.w_attn_face__result_fault) && !sf) begin sf <= 1;
             $display("XQ_CAUSE kvs_attn cyc %0d rel %0d: programme ctl local %0d guard %0d record %0d (codec cause %b) slot %0d | face result_fault %0d RESULT_AGE %0d (P0 %0d P1 %0d PV %0d R %0d) root age %0d | ctl tx_first %0d",
                 cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.guard_fault, u_kattn.u_attn.ctl.record_fault,
-                u_kattn.u_attn.ctl.codec.fault_cause, u_kattn.u_attn.ctl.slot_fault, u_kattn.w_attn_face__result_fault, fres, fp0, fp1, fpv,
+                u_kattn.u_attn.ctl.g_cd.codec.fault_cause, u_kattn.u_attn.ctl.slot_fault, u_kattn.w_attn_face__result_fault, fres, fp0, fp1, fpv,
                 fcal[175:160], fage, u_kattn.w_attn_cal__tx_first); end
+    end else if (K_REAL == 3) begin : g_kfin
+        // QXF-FACE: as-built qkd_kvs_attn + real qkd_pv_fin_s (0 die relays on pvfst / fin: PV_LEAD 0, F_DLY 1 as built)
+        wire [30:0] pvst; wire [64:0] pvfst; wire [164:0] ahs; wire [536:0] prg; wire [47:0] ac0, ac1, ac2, ac3; wire [7:0] arh;
+        wire [76:0] i_ctl = {TOK, kv_go, stage, 18'(POS), EP, 14'(POS + 1), kv_run, kv_issue, 1'b1, 1'b1};
+        wire [521:0] srx = {512'd0, 5'd0, 4'd0, a_rxe};
+        wire [533:0] fin; wire uff;
+        qkd_kvs_attn u_kattn (.ck(ck), .rst_n(rst_n), .ufs_WS(1'b0), .ufs_WN(1'b0), .ufs_ES(1'b0), .ufs_EN(1'b0), .ufh(1'b0),
+            .ufp0(1'b0), .ufp1(1'b0), .uff(uff), .ufk_WS(1'b0), .ufk_WN(1'b0), .ufk_ES(1'b0), .ufk_EN(1'b0),
+            .d2d__srx(srx), .d2d__rx_payload(a_rxp), .d2d__att_tx_slot(a_txs), .d2d__att_tx_kind(a_tk), .d2d__att_tx_beat(a_tb),
+            .fin(fin), .attn__tx_valid(a_tv), .attn__tx_payload(a_tp), .pvst(pvst), .pvfst(pvfst), .ahs(ahs), .prg(prg),
+            .acal_WS(ac0), .acal_WN(ac1), .acal_ES(ac2), .acal_EN(ac3), .arh(arh), .i_ctl(i_ctl));
+        // pair / reciprocal stimuli on pvfin's compiled slots: input for edge k after the start edge (pvfst start sampled)
+        integer fk = -1; reg [15:0] s_p0 = 0, s_p1 = 0, s_r = 0, s_ep = 0;
+        always @(posedge ck) if (rst_n) begin
+            if (pvfst[0]) begin fk <= 1; s_p0 <= pvfst[32:17]; s_p1 <= pvfst[48:33]; s_r <= pvfst[64:49]; s_ep <= pvfst[16:1]; end
+            else if (fk >= 1 && fk < 20000) fk <= fk + 1;
+        end
+        wire f0v = fk >= 1 && fk >= s_p0 && fk < s_p0 + 32, f1v = fk >= 1 && fk >= s_p1 && fk < s_p1 + 32, frv = fk >= 1 && fk == s_r;
+        wire [4:0] f0b = 5'(fk - s_p0), f1b = 5'(fk - s_p1);
+        wire [127:0] rzw = {1'b0, 8'd123, 23'd0, 1'b0, 8'd124, 23'd0, 1'b0, 8'd125, 23'd0, 1'b0, 8'd126, 23'd0};   // head h: 2^-(h+1)
+        wire fo_v; wire [4:0] fo_b; wire [15:0] fo_e; wire [511:0] fo_d;
+        qkd_pv_fin_s #(.ADD_LAT(7), .MUL_LAT(6), .SKEW(1), .MUT(FIN_MUT)) u_fin (.ck(ck), .rst_n(rst_n),
+            .start(pvfst[0]), .epoch(pvfst[16:1]), .cal(pvfst[64:17]),
+            .p0_valid(f0v), .p0_beat(f0b), .p0_epoch(s_ep), .p0_data(f0v ? pbeat(f0b, lay) : 512'd0),
+            .p1_valid(f1v), .p1_beat(f1b), .p1_epoch(s_ep), .p1_data(f1v ? pbeat(f1b, lay) : 512'd0),
+            .rz_valid(frv), .rz_epoch(s_ep), .rz(rzw),
+            .out_valid(fo_v), .out_beat(fo_b), .out_epoch(fo_e), .out_data(fo_d), .fault(uff));
+        assign fin = {fo_d, fo_e, fo_b, fo_v};
+        wire [175:0] fcal = u_kattn.w_attn_root__cal;
+        wire [15:0] fpv = fcal[127:112], fp0 = fcal[143:128], fp1 = fcal[159:144], fr = fcal[175:160];
+        assign kq_v = prg[19]; assign kq_b = prg[24:20]; assign kq_d = prg[536:25];
+        assign kreq_v = prg[0];
+        assign k_pf = u_kattn.w_attn__fault;
+        reg sf = 0, fl = 0;
+        always @(posedge ck) if (rst_n && act && fo_v && fo_b == 0 && !fl) begin fl <= 1;
+            $display("XQ_FIN layer %0d T %0d: pvfin beat0 at root age %0d = PV %0d + max(P0 %0d, P1 %0d, R %0d) + 17 -> %0d | programme tx_first %0d",
+                lay, POS + 1, u_kattn.w_attn_root__age, fpv, fp0, fp1, fr,
+                fpv + ((fp0 > fp1) ? ((fp0 > fr) ? fp0 : fr) : ((fp1 > fr) ? fp1 : fr)) + 17, u_kattn.w_attn_cal__tx_first); end
+        always @(posedge ck) if (rst_n && (k_pf || u_kattn.w_attn_face__result_fault || uff) && !sf) begin sf <= 1;
+            $display("XQ_CAUSE kvs_attn+pvfin cyc %0d rel %0d: programme ctl local %0d record %0d (codec cause %b) | face result_fault %0d | pvfin fault %0d | cal P0 %0d P1 %0d PV %0d R %0d root age %0d | ctl tx_first %0d",
+                cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.record_fault, u_kattn.u_attn.ctl.g_cd.codec.fault_cause,
+                u_kattn.w_attn_face__result_fault, uff, fp0, fp1, fpv, fr, u_kattn.w_attn_root__age, u_kattn.w_attn_cal__tx_first); end
+        always @(posedge ck) if (rst_n && act && (uff || u_kattn.w_attn_face__result_fault || u_kattn.w_attn_cal__fault)) err("pvfin / result face / calendar fault");
     end else begin : g_kstub
         wire r_ev = act && (rel >= P_RS && rel < P_RS + 32 || rel == P_RE);
         wire [3:0] r_kind = rel == P_RE ? 4'd4 : 4'd3;
         wire [4:0] r_beat = rel == P_RE ? 5'd0 : 5'(rel - P_RS);
-        wire [511:0] r_data = rel == P_RE ? ((MUT == 5) ? 512'd0 : {507'd0, 5'b01001}) : obeat(rel - P_RS, lay) ^ ((MUT == 3 && lay == 5 && rel == P_RS + 7) ? 512'd1 : 512'd0);
+        wire [511:0] st_word;    // the producers' STATUS encoder (namespace {q_ready, done, fault, busy, ready})
+        qkd_native_status_word u_st_word (.q_ready(1'b0), .done(1'b1), .fault(1'b0), .busy(1'b0), .ready(1'b1), .word(st_word));
+        wire [511:0] r_data = rel == P_RE ? ((MUT == 5) ? 512'd0 : st_word) : obeat(rel - P_RS, lay) ^ ((MUT == 3 && lay == 5 && rel == P_RS + 7) ? 512'd1 : 512'd0);
         wire ka_rv; wire [3:0] ka_rk, ka_fc; wire [15:0] ka_re; wire [5:0] ka_rl; wire [4:0] ka_rb; wire [511:0] ka_rd;
         qkd_native_attention_record #(.KV_SIDE(1)) u_ka (.ck(ck), .rst_n(rst_n & ~k_eb),
             .tx_event(r_ev), .tx_expected(k_txs0), .tx_kind(r_kind), .tx_expected_kind(k_tk),
@@ -402,6 +473,11 @@ module tb_xdie_qwen_exchange;
             nr_land = nr_land + 1;
         end
         if (n_done) m_done = rel;
+        // STATUS at the compute consumer pins: bit-exact against the namespace word {q_ready 0, done 1, fault 0, busy 0, ready 1}
+        if (C_REAL != 0 && n_rxv && n_rxp[542:539] == 4'd4) begin
+            m_st_land = rel;
+            if (n_rxp[511:0] !== {507'd0, 5'b01001}) err("STATUS word at the compute consumer != namespace {0,1,0,0,1}");
+        end
         // KVN: compute x3 out -> KV d2d word
         if (p_x3[523]) begin
             if (nk_iss < 4) kvq[nk_iss] = {p_x3g, p_x3id, p_x3};
@@ -430,13 +506,13 @@ module tb_xdie_qwen_exchange;
         begin
             cur[0] = m_cmd_iss; cur[1] = m_q0_iss; cur[2] = m_q31_iss; cur[3] = m_cmd_land; cur[4] = m_q0_land; cur[5] = m_q31_land;
             cur[6] = m_r0_iss; cur[7] = m_r31_iss; cur[8] = m_st_iss; cur[9] = m_r0_land; cur[10] = m_r31_land;
-            cur[11] = m_k0_iss; cur[12] = m_k3_iss; cur[13] = m_k0_land; cur[14] = m_k3_land; cur[15] = m_done; cur[16] = 0;
-            $display("XQ_MEAS layer=%0d cmd_issue=%0d q0_issue=%0d q31_issue=%0d cmd_land=%0d q0_land=%0d q31_land=%0d r0_issue=%0d r31_issue=%0d status_issue=%0d r0_land=%0d r31_land=%0d kvn0_issue=%0d kvn3_issue=%0d kvn0_land=%0d kvn3_land=%0d done=%0d nq=%0d/%0d nr=%0d/%0d nk=%0d/%0d st=%0d",
-                L, cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], cur[6], cur[7], cur[8], cur[9], cur[10], cur[11], cur[12], cur[13], cur[14], cur[15],
+            cur[11] = m_k0_iss; cur[12] = m_k3_iss; cur[13] = m_k0_land; cur[14] = m_k3_land; cur[15] = m_done; cur[16] = (C_REAL != 0) ? m_st_land : 0;
+            $display("XQ_MEAS layer=%0d cmd_issue=%0d q0_issue=%0d q31_issue=%0d cmd_land=%0d q0_land=%0d q31_land=%0d r0_issue=%0d r31_issue=%0d status_issue=%0d r0_land=%0d r31_land=%0d kvn0_issue=%0d kvn3_issue=%0d kvn0_land=%0d kvn3_land=%0d done=%0d status_land=%0d nq=%0d/%0d nr=%0d/%0d nk=%0d/%0d st=%0d",
+                L, cur[0], cur[1], cur[2], cur[3], cur[4], cur[5], cur[6], cur[7], cur[8], cur[9], cur[10], cur[11], cur[12], cur[13], cur[14], cur[15], cur[16],
                 nq_iss, nq_land, nr_iss, nr_land, nk_iss, nk_land, ns_res);
             if (nq_iss != 32 || nq_land != 32 || nr_iss != 32 || nr_land != 32 || nk_iss != 4 || nk_land != 4 || ns_res != 1 || m_done < 0)
                 err("per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)");
-            for (k = 0; k < 16; k = k + 1) begin
+            for (k = 0; k < 17; k = k + 1) begin
                 if (cur[k] < 0) err("an exchange event never happened");
                 if (L == 1) ref_v[k] = cur[k]; else if (cur[k] != ref_v[k]) err("latency differs between layers (not static)");
             end
@@ -470,9 +546,9 @@ module tb_xdie_qwen_exchange;
             layer_end(l);
         end
         lay = -1; tick(20);
-        $display("XQ_E C2K_cmd_issue_to_land=%0d C2K_q31_issue_to_land=%0d C2K_q_first_issue_to_last_land=%0d K2C_r31_issue_to_land=%0d K2C_r0_issue_to_land=%0d K2C_r_first_issue_to_last_land=%0d KVN_k3_issue_to_land=%0d roundtrip_cmd_issue_to_r31_land=%0d kv_service_cmd_land_to_r31_issue=%0d compute_done_after_r31_land=%0d",
+        $display("XQ_E C2K_cmd_issue_to_land=%0d C2K_q31_issue_to_land=%0d C2K_q_first_issue_to_last_land=%0d K2C_r31_issue_to_land=%0d K2C_r0_issue_to_land=%0d K2C_r_first_issue_to_last_land=%0d KVN_k3_issue_to_land=%0d roundtrip_cmd_issue_to_r31_land=%0d kv_service_cmd_land_to_r31_issue=%0d compute_done_after_r31_land=%0d K2C_status_issue_to_land=%0d",
             ref_v[3] - ref_v[0], ref_v[5] - ref_v[2], ref_v[5] - ref_v[0], ref_v[10] - ref_v[7], ref_v[9] - ref_v[6], ref_v[10] - ref_v[6],
-            ref_v[14] - ref_v[12], ref_v[10] - ref_v[0], ref_v[7] - ref_v[3], ref_v[15] - ref_v[10]);
+            ref_v[14] - ref_v[12], ref_v[10] - ref_v[0], ref_v[7] - ref_v[3], ref_v[15] - ref_v[10], ref_v[16] - ref_v[8]);
         $display("XQ_CFG C_REAL=%0d K_REAL=%0d QGAP=%0d PHY=%0d TXL=%0d X=%0d period=%0d stages C %0d,%0d,%0d,%0d,%0d,%0d K %0d,%0d,%0d,%0d,%0d,%0d,%0d MUT=%0d layers=%0d",
             C_REAL, K_REAL, QGAP, P_PHY, P_TXL, P_X, P_PERIOD, CS_TXS, CS_RXV, CS_RXP, CS_X3S, SC_TX, SC_X3,
             KS_RXV, KS_RXP, KS_TXS, KS_TXK, KS_TXB, SK_TXV, SK_TXP, MUT, NL);

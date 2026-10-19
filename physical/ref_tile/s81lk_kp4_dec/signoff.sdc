@@ -8,7 +8,7 @@ set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set ::env(OT_IO_SKEW) 90
 set ::env(OT_IO_HOLD_SKEW) 50
-set ::env(OT_REF_GLOB) {*}
+set ::env(OT_REF_GLOB) {p_d__ot_q*}
 set ::env(OT_IO_INTER) {none_*}
 set ::env(OT_IO_SKEW_INTER) 150
 # Die-context boundary (post-CTS only; OpenROAD 26Q3 crashes on -reference_pin, so it is applied numerically):

@@ -1,0 +1,7 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hnx_gq_land_1019-n1-be0562a05 bench bench_hnx_gq_mut_m8 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hnx_gq_land_1019-n1-be0562a05 log cl/bench_hnx_gq_mut_m8.a1b1.log captured 2026-10-19T03:16:20-07:00
+# fail_regex 'm8: COLLQ FAIL set=1 errors='
+2026-10-19T03:05:39-07:00 start host=vm-xry57mhfyn bundle=
+2026-10-19T03:15:32-07:00 build m8 rc=0 bin=ok
+2026-10-19T03:15:32-07:00 m8: COLLQ FAIL set=1 errors=22037
+2026-10-19T03:15:32-07:00 done
