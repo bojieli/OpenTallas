@@ -148,7 +148,12 @@
    "h": "M4",
    "v": "M5"
   },
-  "io_hold_margin_ns": 0.025
+  "io_hold_margin_ns": 0.025,
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
+  }
  },
  "slot_change_request": "NEW leaf of the d4g split hb_quant_NW (ot_hgi_qdq_host_split_r2 .program_leaf): no d4g slot yet. Same outline 220.32 x 129.6 and pin faces as the CLOSED SW twin hgi_qdq_program_sw125_r6 (cfg/desc/launch W, command/status E, clk/rst N); home: beside quant_NW_xp W face (command 48 b + command_v to the transport ctl, 0 relays) -> H-D4G-GEN2.",
  "job": {
@@ -211,7 +216,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "NW target48 programme leaf for the d4g split: the closed SW leaf (sw125_r6, PIN_BOUNDARY=1: reset collar, sticky fault flop, no producer-side output hold trio) with target id 48; the monolith leaf ot_hgi_qdq_native_program_leaf has no closed view and no collar.",
+ "structural_change": "NW target48 programme leaf for the d4g split: the closed SW leaf (sw125_r6, PIN_BOUNDARY=1: reset collar, sticky fault flop, no producer-side output hold trio) with target id 48; the monolith leaf ot_hgi_qdq_native_program_leaf has no closed view and no collar. r1 gate b: CTS gate 1 measured pin-flop spread 93.0/85.8 ps (TT/FF) on one 2,577-sink root over the 220 um outline with an unbalanced default tree; balanced-level clustered CTS (as the ctl kits: size 16, 30 um, -balance_levels).",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every pin already (cfg/desc/launch enter the target's capture flops, command/status leave registers, rst_n only the reset collar, fault the sticky flop): the identical SW twin sw125_r6 (recipe 2) is native PASS (launch 199.0, capture 123.1, 0 comb, spread 69.0/60.9). Extra tool pin registers would add edges the split r2 lockstep does not price."
