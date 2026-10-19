@@ -10,6 +10,10 @@ src = open(orig).read()
 hdr = src[:src.index(';', src.index('module '))]
 ports = re.findall(r'^\s*(input|output)\s+wire\s+(?:\[(\d+):(\d+)\]\s+)?(\w+);', src, re.M)
 ff_qn = re.findall(r'^\s*\(\*[^*]*\*\)\s*DFF\w+\s+c\d+\s*\(.*?\.QN\((n\d+)\)', src, re.M)
+prsrc = open(pr).read()
+prnets = set(re.findall(r'\.(?:QN|Y|H|L)\((n\d+)\)', prsrc))
+dropped = [q for q in ff_qn if q not in prnets]      # QN nets of old output-chain flops deleted by outclone (load-less)
+ff_qn = [q for q in ff_qn if q in prnets]
 ins = [(n, int(h) - int(l) + 1 if h else 1) for d, h, l, n in ports if d == 'input' and n not in ('ck',)]
 outs = [(n, int(h) - int(l) + 1 if h else 1) for d, h, l, n in ports if d == 'output']
 s = ['`timescale 1ns/1ps', 'module tb_pr;', 'reg ck=0; always #0.416667 ck=~ck;']
@@ -44,4 +48,4 @@ s += ['   #0.1; chk(trial,cycle);', '  end', ' end',
       ' $display("PR_EQ PASS checks=%0d ff_net_checks=%0d outputs=%0d ff_nets=%0d", checks, ffchecks, ' + str(len(outs)) + ', ' + str(len(ff_qn)) + ');',
       ' $finish;', 'end', 'endmodule']
 (od / 'tb_pr.sv').write_text('\n'.join(s) + '\n')
-print('tb_pr.sv', len(outs), 'outputs', len(ff_qn), 'ff nets')
+print('tb_pr.sv', len(outs), 'outputs', len(ff_qn), 'ff nets compared', len(dropped), 'dropped (deleted load-less output-chain flops)', dropped)

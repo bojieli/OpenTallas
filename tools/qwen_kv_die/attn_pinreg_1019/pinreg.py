@@ -18,7 +18,7 @@ import json, re, sys, collections
 src_path, out_path, rep_path = sys.argv[1:4]
 MUT = int(sys.argv[4]) if len(sys.argv) > 4 else 0
 lines = open(src_path).read().split('\n')
-CELL = re.compile(r'^(\s*\(\*[^*]*\*\)\s*)(\w+)\s+(c\d+)\s*\((.*)\);\s*$')
+CELL = re.compile(r'^(\s*\(\*[^*]*\*\)\s*)(\w+)\s+(c\w+)\s*\((.*)\);\s*$')
 ASG = re.compile(r'^\s*assign\s+(\S+)\s*=\s*(\S+?)\s*;\s*$')
 OUTS = {'Y', 'QN', 'Q', 'H', 'L', 'CON', 'SN'}
 cells, cell_line = {}, {}
@@ -98,6 +98,114 @@ for net in port_of_net:
     for c, pin in loads.get(net, []):
         if c != 'PORT' and cells[c][0] == 'DFFHQNx1_ASAP7_75t_R' and pin == 'D' and cells[c][1]['CLK'] == CLK:
             landing.setdefault(net, c)
+
+
+def outclone(lines, rep):
+    """OUTPUT side (pin_reg_split.tcl semantics, done in the SOURCE so the dont_touch native cells are never destroyed by the
+    hook): every output port gets an EXCLUSIVE launch chain -- flop -> <= 3 BUF/INV/HB -> this one port, nothing else on the
+    chain.  A shared / internally used chain is cloned for the port (same D / CLK / RESETN / SETN nets, fresh buffer copies,
+    0 cycles); old chain cells left without loads are deleted.  Deterministic port order (sorted) = the hook's order."""
+    text = '\n'.join(lines)
+    cl = {}
+    for i, ln in enumerate(lines):
+        m = CELL.match(ln)
+        if m:
+            cl[m.group(3)] = (i, m.group(2), {k: v.strip() for k, v in re.findall(r'\.(\w+)\(([^()]*)\)', m.group(4))})
+    asg = {}
+    for i, ln in enumerate(lines):
+        m = ASG.match(ln)
+        if m and not re.fullmatch(r'n\d+', m.group(1)):
+            asg[m.group(1)] = (i, m.group(2))
+    drv_, nload = {}, collections.Counter()
+    for n, (i, ms, p) in cl.items():
+        for k, v in p.items():
+            if k in OUTS:
+                drv_[v] = n
+            else:
+                nload[v] += 1
+    nbt = collections.Counter(v for _, v in asg.values())
+    claimed, add, nclone, touched = set(), [], 0, set()
+    fan, fan_all = {}, []
+    for port in sorted(asg):
+        li, net = asg[port]
+        chain, nets, ff, cn = [], [], None, net
+        for hop in range(4):
+            c = drv_.get(cn)
+            if not c:
+                break
+            ms = cl[c][1]
+            if ms.startswith('DFF'):
+                ff = c; nets.append(cn); break
+            if not ms.startswith(('BUF', 'INV', 'HB')):
+                break
+            chain.append(c); nets.append(cn); cn = cl[c][2]['A']
+        if ff is None:
+            continue
+        excl = all((nload[n] == 0 and nbt[n] == 1) if k == 0 else (nload[n] == 1 and nbt[n] == 0) for k, n in enumerate(nets))
+        if excl and ff not in claimed:
+            claimed.add(ff); continue
+        i, ms, p = cl[ff]
+        q = next(k for k, v in p.items() if k in OUTS and v == nets[-1])
+        cur = f'npo{nclone}_q'
+        np_ = {k: (cur if k == q else v) for k, v in p.items() if not (k in OUTS and k != q)}
+        for k, v in list(np_.items()):
+            if k in OUTS or k == 'CLK':
+                continue
+            dv = drv_.get(v)
+            if dv and cl[dv][1].startswith('TIE'):     # constant set/reset: a fresh tie cell per <= 24 clone loads
+                key = ('tie', v)
+            elif nload[v] >= 24:                        # keep every driver <= 24 loads: clone loads ride a BUF copy
+                key = ('buf', v)
+            else:
+                nload[v] += 1
+                continue
+            g = fan.get(key)
+            if g is None or g[1] >= 24:
+                tn = f'npo_f{len(fan_all)}'
+                if key[0] == 'tie':
+                    tpin = next(kk for kk, vv in cl[dv][2].items() if kk in OUTS)
+                    add.append(cell_text(cl[dv][1], f'cpo_f{len(fan_all)}', {tpin: tn}))
+                else:
+                    add.append(cell_text('BUFx2_ASAP7_75t_R', f'cpo_f{len(fan_all)}', {'A': v, 'Y': tn}))
+                    nload[v] += 1
+                add.append(f'  wire {tn};')
+                g = [tn, 0]; fan[key] = g; fan_all.append(tn)
+            g[1] += 1
+            np_[k] = g[0]
+        add.append(cell_text(ms, f'cpo{nclone}_ff', np_)); add.append(f'  wire {cur};')
+        for b, ci in enumerate(reversed(chain)):
+            nxt = f'npo{nclone}_n{b}'
+            add.append(cell_text(cl[ci][1], f'cpo{nclone}_b{b}', {'A': cur, 'Y': nxt})); add.append(f'  wire {nxt};')
+            cur = nxt
+        lines[li] = f'  assign {port} = {cur};'
+        touched.update(chain + [ff])
+        nbt[net] -= 1
+        nclone += 1
+    # delete load-less cells (old chains), iterate to a fixed point; flops too (their QN then drives nothing)
+    nbt2 = collections.Counter(re.match(r'^\s*assign\s+\S+\s*=\s*(\S+?)\s*;', ln).group(1) for ln in lines
+                               if ASG.match(ln) and not re.fullmatch(r'n\d+', ASG.match(ln).group(1)))
+    gone = set()
+    changed = True
+    while changed:
+        changed = False
+        for n, (i, ms, p) in cl.items():
+            if n in gone or n not in touched:
+                continue
+            outsn = [v for k, v in p.items() if k in OUTS]
+            if not ms.startswith(('BUF', 'INV', 'HB', 'DFF')):
+                continue
+            if all(nload[o] == 0 and nbt2[o] == 0 for o in outsn):
+                gone.add(n); changed = True
+                for k, v in p.items():
+                    if k not in OUTS:
+                        nload[v] -= 1
+    out = [ln for ln in lines if not (CELL.match(ln) and CELL.match(ln).group(3) in gone)]
+    end = max(i for i, ln in enumerate(out) if ln.strip() == 'endmodule')
+    out[end:end] = add
+    rep['out_clones'] = nclone
+    rep['out_deleted'] = sorted(gone)
+    return out
+
 
 new_lines, removed, added, inv_of = [], set(), [], {}
 rep = {'source': src_path, 'retime': [], 'split': [], 'mut': MUT}
@@ -182,6 +290,11 @@ for n, (ms, p) in cells.items():
             live_loads[v] += 1
 for lhs, rhs in out_assign.items():
     live_loads[rhs] += 1
+for t in added:      # the replacement cells' inputs (e.g. the split flops' RESETN) keep their original drivers alive
+    m = CELL.match(t)
+    for k, v in re.findall(r'\.(\w+)\(([^()]*)\)', m.group(4)):
+        if k not in OUTS:
+            live_loads[v.strip()] += 1
 dead = set()
 changed = True
 while changed:
@@ -210,7 +323,8 @@ for i, ln in enumerate(lines):
     out.append(ln)
 out[0:0] = ['// GENERATED by tools/qwen_kv_die/attn_pinreg_1019/pinreg.py from %s (MUT %d) -- do not edit; re-run.' % (src_path.split('/')[-1], MUT),
             '// Every public input pin lands first in a flop D pin; zero added edges (see pinreg.py docstring).']
+out = outclone(out, rep)
 open(out_path, 'w').write('\n'.join(out))
 rep.update(removed_ff=len([c for c in removed if isff(cells[c][0])]), added_cells=len(added), retimed=len(rep['retime']), nsplit=len(rep['split']))
 json.dump(rep, open(rep_path, 'w'), indent=1)
-print('PINREG retime=%d split=%d dead=%d added=%d' % (rep['retimed'], rep['nsplit'], len(dead), len(added)))
+print('PINREG retime=%d split=%d dead=%d added=%d out_clones=%d out_deleted=%d' % (rep['retimed'], rep['nsplit'], len(dead), len(added), rep['out_clones'], len(rep['out_deleted'])))

@@ -46,9 +46,11 @@ def lv(net):
     if isff(ms) or ms.startswith('TIE'): memo[net] = 0; return 0
     memo[net] = 1 + max([lv(v) for k, v in p.items() if k not in OUTS] or [0]); return memo[net]
 dl = [(lv(p['D']), c) for c, (ms, p) in cells.items() if isff(ms)]
-res = dict(cells=len(cells), ff=sum(isff(m) for m, _ in cells.values()), bad_inputs=len(bad_in), bad_outputs=len(bad_out),
+undriven = sorted(n for n in loads if n not in drv and n not in inp and not n.startswith("1'"))
+undriven += sorted(n for n in outp.values() if n not in drv and n not in inp)
+res = dict(undriven=len(undriven), undriven_examples=undriven[:10], cells=len(cells), ff=sum(isff(m) for m, _ in cells.values()), bad_inputs=len(bad_in), bad_outputs=len(bad_out),
            bad_input_examples=bad_in[:10], bad_output_examples=bad_out[:10], tie_outputs=sum(1 for p, n in outp.items() if n in drv and cells[drv[n][0]][0].startswith('TIE')),
            fanout_max_nonclock=fo_max, fanout_max_net=max(fo, key=fo.get), ff_d_levels_max=max(dl)[0], ff_d_levels_worst=sorted(dl)[-5:])
 print(json.dumps(res))
 if len(sys.argv) > 3 and sys.argv[2] == '--json': json.dump(res, open(sys.argv[3], 'w'), indent=1)
-print('CHECK_PINREG', 'PASS' if not bad_in and not bad_out else 'FAIL')
+print('CHECK_PINREG', 'PASS' if not bad_in and not bad_out and not undriven else 'FAIL')
