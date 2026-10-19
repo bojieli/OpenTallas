@@ -29,6 +29,7 @@ module tb_mu_opseg_dv;
     wire [1087:0] tl;
     // ---- D2D kind-12 context record path (MU-DQ-BOOTCTX): real face receiver + the die-top ctx leaf
     localparam [15:0] PEP = 16'h0042; localparam [63:0] PDG = 64'h5eed_0bad_c0de_0001;
+    reg observer_fault = 1'b0;
     reg ctx_slot = 1'b0; reg [547:0] rx_rec = 548'd0; reg [13:0] kseq = 14'd0;
     wire hev, rx_cf, lf_f; wire [15:0] hep; wire [58:0] htag; wire [1:0] hgen, xu; wire hcap; wire [15:0] hiep; wire [63:0] hidg;
     wire [128:0] ctx_x;
@@ -41,7 +42,7 @@ module tb_mu_opseg_dv;
         .prog_rx_v(ctx_slot), .rx_payload(rx_rec), .ctx_x(ctx_x), .ctx_user(xu), .mu_fault(lf_f));
     reg rxf_l = 0;
     qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(1), .MUT(MUT), .NU(NU), .STAGE_ME(1), .OPSEG(OPSEG), .CTX_SRC(CTX_SRC), .FCTX(FCTX)) dut (.ck(ck), .rst_n(rst_n),
-        .pw(pw), .dh(dh), .dh_user(dh_user), .mu_fault(1'b0), .ctx_x(ctx_x), .kok(1'b0), .kwd(1'b1), .fab(1'b0), .program_obs(pobs),
+        .pw(pw), .dh(dh), .dh_user(dh_user), .mu_fault(observer_fault), .ctx_x(ctx_x), .init_u0(1'b0), .kok(1'b0), .kwd(1'b1), .fab(1'b0), .program_obs(pobs),
         .control_stores_ready(csr), .layer_context_v(lcv), .native_tok(ntk), .native_pos(nps), .command_stage(cst),
         .cal_program_obs(cobs), .cal_descriptor_obs(dobs), .cal_image_ready(cir), .dc(dc), .native_cmd(ncmd),
         .native_ret(95'd0), .hr(hr), .cmd(cmd), .ss5(ss5), .ag5(10'd0), .emb_start(emb_start), .emb_token(emb_token),
@@ -96,7 +97,7 @@ module tb_mu_opseg_dv;
             if (dut.c_emb) eu_l = dut.c_user;
             if (dut.c_seg) su_l = dut.c_user;
             // inputs for the next posedge (cyc + 1)
-            pw[74] = 1'b0; dh[118] = 1'b0; dh[186] = 1'b0; dh[42] = 1'b0; ss5 = 107'd0; ctx_slot = 1'b0;
+            pw[74] = 1'b0; dh[118] = 1'b0; dh[186] = 1'b0; dh[42] = 1'b0; ss5 = 107'd0; ctx_slot = 1'b0; observer_fault = 1'b0;
             while (have && ec == cyc + 1) begin
                 case (ek)
                     0: begin pw = {1'b1, ev[73:0]}; dh[118:44] = {1'b1, ev[73:0]}; end
@@ -108,6 +109,7 @@ module tb_mu_opseg_dv;
                         rx_rec = {5'd0, 4'd12, 6'd63, kseq, ev[37:36], 5'd0, 370'd0, PDG, PEP, 1'b1, 2'd1,
                                   kseq, ev[37:36], 6'd0, ev[35:18], ev[12:0], 6'd0};
                     end
+                    5: observer_fault = ev[0];
                     default: $fatal(1, "bad kind %0d", ek);
                 endcase
                 r = $fscanf(fd, "%d %d %h\n", ec, ek, ev); have = (r == 3);
@@ -147,7 +149,7 @@ module tb_mu_opseg_dv;
     wire [75:0] l_pobs, l_cobs; wire [68:0] l_dobs; wire l_csr, l_cir, l_lcv; wire [17:0] l_ntk, l_nps; wire [5:0] l_cst;
     wire [379:0] l_ncmd; wire [1087:0] l_tl;
     qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(1), .STAGE_ME(1), .NU(NU), .OPSEG(OPSEG), .CTX_SRC(CTX_SRC), .FCTX(FCTX), .MUT(LMUT)) u_lp (.ck_core(ck),
-        .ck_hr(ck), .rst_n(rst_early), .pw(pw_dl[LIN_PW-1]), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .mu_fault(1'b0), .kok(1'b0), .kwd(1'b1), .fab(1'b0),
+        .ck_hr(ck), .rst_n(rst_early), .pw(pw_dl[LIN_PW-1]), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .init_u0(1'b0), .mu_fault(observer_fault), .kok(1'b0), .kwd(1'b1), .fab(1'b0),
         .program_obs(l_pobs), .control_stores_ready(l_csr), .layer_context_v(l_lcv), .native_tok(l_ntk), .native_pos(l_nps),
         .command_stage(l_cst), .cal_program_obs(l_cobs), .cal_descriptor_obs(l_dobs), .cal_image_ready(l_cir), .dc(l_dc),
         .native_cmd(l_ncmd), .native_ret(95'd0), .hr(l_hr), .cmd(l_cmd), .tl(l_tl), .ss5(ss5), .ag5(10'd0),

@@ -33,7 +33,11 @@ module qfd_tt_ctlm_dv_lpf #(
     parameter integer UTAG_LSB = 6,              // = DV_UTAG_LSB
     parameter integer CTX_SRC = 0, FCTX = 0,
     parameter [11:0] NCTX_BASE = 12'h010,
-    parameter integer OPSEG = 0,                 // MU-QW-DIE 10-19: 1 = op-start leaf + boot context (Qwen ROM 4 users)
+    parameter integer INIT_U0 = 0, INIT_FIRST = -1, INIT_CNT = 0,
+    parameter integer OPSEG = 0,
+    parameter integer OPSEG_EXPANDED = 0,
+    parameter OPSEG_VIAMAP1 = "", OPSEG_VIAMAP2 = "",
+    parameter OPSEG_INST1 = "qfd_tt_ctlm_opseg_b1", OPSEG_INST2 = "qfd_tt_ctlm_opseg_b2",                 // MU-QW-DIE 10-19: 1 = op-start leaf + boot context (Qwen ROM 4 users)
     parameter OPSEG_VIAMAP = ""       ,
     parameter OPSEG_INST = "qfd_tt_ctlm_opseg"         
 ) (
@@ -41,6 +45,7 @@ module qfd_tt_ctlm_dv_lpf #(
     input  wire          rst_n,
     input  wire [74:0]   pw,
     input  wire [186:0]  dh,
+    input  wire          init_u0,                  // explicit static admission INIT selector, aligned to DH stage0
     input  wire [128:0]  ctx_x,
     input  wire          mu_fault,
     input  wire [1:0]    dh_user,                // user of the dh stage start (qfd_sys_face seq_dh_user; tie 0 = user 0)
@@ -92,8 +97,8 @@ module qfd_tt_ctlm_dv_lpf #(
     wire [72:0]  hr_lo;
     wire [379:0] ib_hr;
     qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
-        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .CTX_SRC(CTX_SRC), .FCTX(FCTX), .NCTX_BASE(NCTX_BASE), .OPSEG(OPSEG), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST))
-        u_gi (.ck(ck), .rst_n(rst_n), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .mu_fault(mu_fault), .ss5(ss5),
+        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .INIT_U0(INIT_U0), .INIT_FIRST(INIT_FIRST), .INIT_CNT(INIT_CNT), .CTX_SRC(CTX_SRC), .FCTX(FCTX), .NCTX_BASE(NCTX_BASE), .OPSEG(OPSEG), .OPSEG_EXPANDED(OPSEG_EXPANDED), .OPSEG_VIAMAP1(OPSEG_VIAMAP1), .OPSEG_VIAMAP2(OPSEG_VIAMAP2), .OPSEG_INST1(OPSEG_INST1), .OPSEG_INST2(OPSEG_INST2), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST))
+        u_gi (.ck(ck), .rst_n(rst_n), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .init_u0(init_u0), .mu_fault(mu_fault), .ss5(ss5),
         .ag5(ag5), .fab(fab), .cmd(g_cmd), .tl(tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
         .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start),
         .s_stage(s_stage), .st(st), .hu(hu), .fctx(fctx), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows),

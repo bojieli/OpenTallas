@@ -1,0 +1,426 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: ot-epyc6       admits   661 GB (avail 576, growth 113, headroom 0, waiters 0/0 GB) load 36/128 running 23 disk 6099 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4057530-1792423720 after 0 s
+...........
+----------------------------------------------------------------------
+Ran 11 tests in 0.209s
+
+OK
+{
+  "schema": "opentallas.qwen.admission.capacity_model.v1",
+  "production_bound": false,
+  "blockers": [
+    "fullfaceidentitycontextload+3RTLmeasurementnotbound",
+    "realPW/DW512seatQreadinessabsent",
+    "cyclicadmissionhostrecordprogrammeandphasewrappernotimplemented"
+  ],
+  "frame_tokens": 16,
+  "phase_count": 2,
+  "H": 4026816,
+  "T": 251676,
+  "superframe": 8053632,
+  "emb_t": 61,
+  "root_capture": 1,
+  "tokens_per_H": {
+    "0": 16,
+    "1": 15,
+    "2": 8,
+    "3": 7
+  },
+  "baseline_tok_s": 13708.100891622562,
+  "normal_tokens_per_superframe": {
+    "0": 32,
+    "1": 29,
+    "2": 15,
+    "3": 12
+  },
+  "lifecycle_tok_s": 13112.096505030277,
+  "leaf_base": 4521,
+  "leaf_min_gap": 3,
+  "leaf_expanded": 8216,
+  "leaf_banks_mask": 2,
+  "leaf_banks_expanded": 3,
+  "leaf_counter_bits_expanded": 23,
+  "leaf_time_bits_per_H": 22,
+  "boundaries": {
+    "1": {
+      "init": 261098,
+      "retire": 7907159,
+      "retire_end": 7907492,
+      "load_slot": {
+        "id": 0,
+        "source_user": 0,
+        "head": 251343,
+        "mu_wire_arrive": 251422,
+        "bank_load": 251425
+      },
+      "quiet_to_next_load": 397565
+    },
+    "2": {
+      "init": 513849,
+      "retire": 8037993,
+      "retire_end": 8038326,
+      "load_slot": {
+        "id": 1,
+        "source_user": 0,
+        "head": 503019,
+        "mu_wire_arrive": 503098,
+        "bank_load": 503101
+      },
+      "quiet_to_next_load": 518407
+    },
+    "3": {
+      "init": 1084658,
+      "retire": 7838594,
+      "retire_end": 7838927,
+      "load_slot": {
+        "id": 3,
+        "source_user": 0,
+        "head": 1006371,
+        "mu_wire_arrive": 1006450,
+        "bank_load": 1006453
+      },
+      "quiet_to_next_load": 1221158
+    }
+  },
+  "context_slot_binding": {
+    "logical_kind": 12,
+    "logical_beat": 1,
+    "K_cyc": 2,
+    "wire_beat": 0,
+    "wire_arrive_offset": 18,
+    "provisional_bank_extra": 3
+  },
+  "expanded_lists": {
+    "origin": 247497,
+    "D0": 16,
+    "period": 8053632,
+    "lists": {
+      "C_tx": {
+        "starts": 3259,
+        "words": 3260,
+        "first": 3924,
+        "last": 8047934
+      },
+      "C_rx": {
+        "starts": 3259,
+        "words": 3260,
+        "first": 3940,
+        "last": 8049740
+      },
+      "K_tx": {
+        "starts": 3259,
+        "words": 3260,
+        "first": 3924,
+        "last": 8049706
+      },
+      "K_rx": {
+        "starts": 3259,
+        "words": 3260,
+        "first": 3937,
+        "last": 8047954
+      }
+    }
+  },
+  "init_range": {
+    "first": 52,
+    "cnt": 3,
+    "entries": [
+      [
+        8,
+        0
+      ],
+      [
+        12,
+        77884452878022414427957444938301469
+      ],
+      [
+        61,
+        72692156019487586799426948609081347
+      ]
+    ]
+  },
+  "init_image_added_words": 5,
+  "rom_area_per_macro": 2391.5865599999997
+}
+{
+  "schema": "opentallas.qwen.admission.capacity_model.v1",
+  "production_bound": false,
+  "blockers": [
+    "fullfaceidentitycontextload+3RTLmeasurementnotbound",
+    "realPW/DW512seatQreadinessabsent",
+    "cyclicadmissionhostrecordprogrammeandphasewrappernotimplemented"
+  ],
+  "frame_tokens": 16,
+  "phase_count": 4,
+  "H": 4026816,
+  "T": 251676,
+  "superframe": 16107264,
+  "emb_t": 61,
+  "root_capture": 1,
+  "tokens_per_H": {
+    "0": 16,
+    "1": 15,
+    "2": 8,
+    "3": 7
+  },
+  "baseline_tok_s": 13708.100891622562,
+  "normal_tokens_per_superframe": {
+    "0": 64,
+    "1": 59,
+    "2": 31,
+    "3": 26
+  },
+  "lifecycle_tok_s": 13410.09869832642,
+  "leaf_base": 4521,
+  "leaf_min_gap": 3,
+  "leaf_expanded": 17258,
+  "leaf_banks_mask": 2,
+  "leaf_banks_expanded": 5,
+  "leaf_counter_bits_expanded": 24,
+  "leaf_time_bits_per_H": 22,
+  "boundaries": {
+    "1": {
+      "init": 261098,
+      "retire": 15960791,
+      "retire_end": 15961124,
+      "load_slot": {
+        "id": 0,
+        "source_user": 0,
+        "head": 251343,
+        "mu_wire_arrive": 251422,
+        "bank_load": 251425
+      },
+      "quiet_to_next_load": 397565
+    },
+    "2": {
+      "init": 513849,
+      "retire": 16091625,
+      "retire_end": 16091958,
+      "load_slot": {
+        "id": 1,
+        "source_user": 0,
+        "head": 503019,
+        "mu_wire_arrive": 503098,
+        "bank_load": 503101
+      },
+      "quiet_to_next_load": 518407
+    },
+    "3": {
+      "init": 1084658,
+      "retire": 15892226,
+      "retire_end": 15892559,
+      "load_slot": {
+        "id": 3,
+        "source_user": 0,
+        "head": 1006371,
+        "mu_wire_arrive": 1006450,
+        "bank_load": 1006453
+      },
+      "quiet_to_next_load": 1221158
+    }
+  },
+  "context_slot_binding": {
+    "logical_kind": 12,
+    "logical_beat": 1,
+    "K_cyc": 2,
+    "wire_beat": 0,
+    "wire_arrive_offset": 18,
+    "provisional_bank_extra": 3
+  },
+  "expanded_lists": {
+    "origin": 247497,
+    "D0": 16,
+    "period": 16107264,
+    "lists": {
+      "C_tx": {
+        "starts": 6663,
+        "words": 6664,
+        "first": 3924,
+        "last": 16101566
+      },
+      "C_rx": {
+        "starts": 6663,
+        "words": 6664,
+        "first": 3940,
+        "last": 16103372
+      },
+      "K_tx": {
+        "starts": 6663,
+        "words": 6664,
+        "first": 3924,
+        "last": 16103338
+      },
+      "K_rx": {
+        "starts": 6663,
+        "words": 6664,
+        "first": 3937,
+        "last": 16101586
+      }
+    }
+  },
+  "init_range": {
+    "first": 52,
+    "cnt": 3,
+    "entries": [
+      [
+        8,
+        0
+      ],
+      [
+        12,
+        77884452878022414427957444938301469
+      ],
+      [
+        61,
+        72692156019487586799426948609081347
+      ]
+    ]
+  },
+  "init_image_added_words": 5,
+  "rom_area_per_macro": 2391.5865599999997
+}
+{
+  "schema": "opentallas.qwen.admission.capacity_model.v1",
+  "production_bound": false,
+  "blockers": [
+    "fullfaceidentitycontextload+3RTLmeasurementnotbound",
+    "realPW/DW512seatQreadinessabsent",
+    "cyclicadmissionhostrecordprogrammeandphasewrappernotimplemented"
+  ],
+  "frame_tokens": 16,
+  "phase_count": 8,
+  "H": 4026816,
+  "T": 251676,
+  "superframe": 32214528,
+  "emb_t": 61,
+  "root_capture": 1,
+  "tokens_per_H": {
+    "0": 16,
+    "1": 15,
+    "2": 8,
+    "3": 7
+  },
+  "baseline_tok_s": 13708.100891622562,
+  "normal_tokens_per_superframe": {
+    "0": 128,
+    "1": 119,
+    "2": 63,
+    "3": 54
+  },
+  "lifecycle_tok_s": 13559.09979497449,
+  "leaf_base": 4521,
+  "leaf_min_gap": 3,
+  "leaf_expanded": 35342,
+  "leaf_banks_mask": 2,
+  "leaf_banks_expanded": 9,
+  "leaf_counter_bits_expanded": 25,
+  "leaf_time_bits_per_H": 22,
+  "boundaries": {
+    "1": {
+      "init": 261098,
+      "retire": 32068055,
+      "retire_end": 32068388,
+      "load_slot": {
+        "id": 0,
+        "source_user": 0,
+        "head": 251343,
+        "mu_wire_arrive": 251422,
+        "bank_load": 251425
+      },
+      "quiet_to_next_load": 397565
+    },
+    "2": {
+      "init": 513849,
+      "retire": 32198889,
+      "retire_end": 32199222,
+      "load_slot": {
+        "id": 1,
+        "source_user": 0,
+        "head": 503019,
+        "mu_wire_arrive": 503098,
+        "bank_load": 503101
+      },
+      "quiet_to_next_load": 518407
+    },
+    "3": {
+      "init": 1084658,
+      "retire": 31999490,
+      "retire_end": 31999823,
+      "load_slot": {
+        "id": 3,
+        "source_user": 0,
+        "head": 1006371,
+        "mu_wire_arrive": 1006450,
+        "bank_load": 1006453
+      },
+      "quiet_to_next_load": 1221158
+    }
+  },
+  "context_slot_binding": {
+    "logical_kind": 12,
+    "logical_beat": 1,
+    "K_cyc": 2,
+    "wire_beat": 0,
+    "wire_arrive_offset": 18,
+    "provisional_bank_extra": 3
+  },
+  "expanded_lists": {
+    "origin": 247497,
+    "D0": 16,
+    "period": 32214528,
+    "lists": {
+      "C_tx": {
+        "starts": 13471,
+        "words": 13472,
+        "first": 3924,
+        "last": 32208830
+      },
+      "C_rx": {
+        "starts": 13471,
+        "words": 13472,
+        "first": 3940,
+        "last": 32210636
+      },
+      "K_tx": {
+        "starts": 13471,
+        "words": 13472,
+        "first": 3924,
+        "last": 32210602
+      },
+      "K_rx": {
+        "starts": 13471,
+        "words": 13472,
+        "first": 3937,
+        "last": 32208850
+      }
+    }
+  },
+  "init_range": {
+    "first": 52,
+    "cnt": 3,
+    "entries": [
+      [
+        8,
+        0
+      ],
+      [
+        12,
+        77884452878022414427957444938301469
+      ],
+      [
+        61,
+        72692156019487586799426948609081347
+      ]
+    ]
+  },
+  "init_image_added_words": 5,
+  "rom_area_per_macro": 2391.5865599999997
+}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4057530-1792423720): exit 0

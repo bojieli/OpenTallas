@@ -1,0 +1,3 @@
+case neg_observer done: 1 fails so far
+MU_OPSEG_FAIL mut 37: neg_observer: required fault not raised at ~1601 (opf log [])
+{"mut": 37, "cases": ["neg_observer"], "emb_t": null, "res_skew": 0, "observer_status": {"core_fault": true, "cf": true, "first_status": [[1021, "50000000000000"]]}, "neg_observer": {"want_edge": 1601, "opf": [], "raised": false}, "verdict": "FAIL"}
