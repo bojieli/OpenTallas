@@ -1,20 +1,24 @@
-// Opt-in pin boundary. Two-entry HBM elasticity is admission-safe with registered ready.
+// Opt-in pin boundary. Three-entry HBM ring is admission-safe with registered ready.
 // No production master changes. Native reset release takes two edges in each domain.
 `default_nettype none
 (* keep_hierarchy = "yes" *) module ot_hbm_landing_pin_segment #(parameter integer W=16)(
  input wire clk,rst_n,push,pop,input wire [W-1:0] data_in,output wire [W-1:0] data_out);
- (* keep = "true" *) reg wp,rp,push_q;
+ (* keep = "true" *) reg [1:0] wp,rp;
+ (* keep = "true" *) reg push_q;
  reg [W-1:0] pin_data;
- reg [W-1:0] slot0,slot1;
+ reg [W-1:0] slot0,slot1,slot2;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin wp<=0;rp<=0;push_q<=0;end
   else begin
    pin_data<=data_in;push_q<=push;
-   if(push_q)begin if(wp)slot1<=pin_data;else slot0<=pin_data;wp<=!wp;end
-   if(pop)rp<=!rp;
+   if(push_q)begin
+    case(wp)0:slot0<=pin_data;1:slot1<=pin_data;default:slot2<=pin_data;endcase
+    wp<=wp==2?0:wp+1'b1;
+   end
+   if(pop)rp<=rp==2?0:rp+1'b1;
   end
  end
- assign data_out=rp?slot1:slot0;
+ assign data_out=rp==0?slot0:rp==1?slot1:slot2;
 endmodule
 
 module ot_hbm_svc_sm8_landing_boundary #(
@@ -48,8 +52,8 @@ module ot_hbm_svc_sm8_landing_boundary #(
   if(!hreset)begin used<=0;pending<=0;in_ready<=0;ingress_fault<=0;overflow<=0;end
   else begin
    used<=used_next;pending<=push;
-   // BMUT=1 deliberately omits occupancy reservation; bench must catch loss.
-   in_ready<=BMUT==1?core_ready:(used_next<2);
+   // BMUT=1 deliberately omits the pending pin reservation; bench must catch loss.
+   in_ready<=BMUT==1?(used_next-{1'b0,pending}<3):(used_next<3);
    if(in_v&&!in_ready)ingress_fault<=1;
    overflow<=ingress_fault||core_overflow;
   end
