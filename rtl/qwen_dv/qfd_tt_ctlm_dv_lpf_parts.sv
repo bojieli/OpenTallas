@@ -16,11 +16,16 @@
 // =====================================================================================================================
 module qfd_tt_ctlm_dv_gi #(
     parameter integer LAST_STAGE = 37,
-    parameter integer STAGE_ME = 0
+    parameter integer STAGE_ME = 0,
+    parameter integer NU = 4,
+    parameter integer UVM_STRIDE = 4096,
+    parameter integer PIDX_STRIDE = 128,
+    parameter integer UTAG_LSB = 6
 ) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [186:0]  dh,
+    input  wire [1:0]    dh_user,
     input  wire [106:0]  ss5,
     input  wire [9:0]    ag5,
     input  wire          fab,
@@ -30,7 +35,7 @@ module qfd_tt_ctlm_dv_gi #(
     output wire          cal_image_ready,
     output reg           emb_start,
     output reg  [17:0]   emb_token,
-    output wire          s_start,
+    output wire          s_start,                // head stage start (u_hr stage_start; NU > 1 see hd_start)
     output wire [5:0]    s_stage,
     output wire [48:0]   st,
     output wire [15:0]   su_obs_o,
@@ -46,11 +51,14 @@ module qfd_tt_ctlm_dv_gi #(
     reg  [106:0] ss_q;
     reg  [9:0]   ag_q;
     reg          fab_q;
+    reg  [1:0]   dhu_q;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin dh_q <= 187'd0; ss_q <= 107'd0; ag_q <= 10'd0; fab_q <= 1'b0; end
-        else begin dh_q <= dh; ss_q <= ss5; ag_q <= ag5; fab_q <= fab; end
-    assign s_start = dh_q[42];
-    assign s_stage = dh_q[41:36];
+        if (!rst_n) begin dh_q <= 187'd0; ss_q <= 107'd0; ag_q <= 10'd0; fab_q <= 1'b0; dhu_q <= 2'd0; end
+        else begin dh_q <= dh; ss_q <= ss5; ag_q <= ag5; fab_q <= fab; dhu_q <= (NU > 1) ? dh_user : 2'd0; end
+    localparam integer UB = (NU > 1) ? $clog2(NU) : 1;
+    wire [UB-1:0] s_user = dhu_q[UB-1:0];
+    wire        d_start = dh_q[42];
+    wire [5:0]  d_stage = dh_q[41:36];
     wire [17:0] s_tok = dh_q[35:18], s_pos = dh_q[17:0];
     wire [15:0] ss_prog = ss_q[60:45], ss_rows = ss_q[44:29];
     wire        ss_arl = ss_q[25], ss_tokv = ss_q[24];
@@ -62,29 +70,50 @@ module qfd_tt_ctlm_dv_gi #(
 
     wire        c_emb, c_seg, c_su, c_xc, c_run, c_done, c_fault, c_ready;
     wire [11:0] c_base; wire [8:0] c_pidx;
-    qfd_dv_cmd_cal #(.MUT(0), .LAST_STAGE(LAST_STAGE)) u_cal (.ck(ck), .rst_n(rst_n),
+    wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
+    qfd_dv_cmd_cal_mu #(.MUT(0), .LAST_STAGE(LAST_STAGE), .NU(NU), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE),
+        .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0)) u_cal (.ck(ck), .rst_n(rst_n),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
-        .start(s_start), .stage(s_stage), .cmd(cmd), .loc_emb(c_emb), .loc_seg(c_seg), .loc_base(c_base),
+        .start(d_start), .stage(d_stage), .start_user(s_user), .start_rng(1'b0), .start_first(10'd0), .start_cnt(10'd0), .cmd(cmd), .cmd_user(c_user), .loc_emb(c_emb),
+        .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
-        .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .done(c_done), .fault(c_fault));
+        .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),
+        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode));
+    wire        c_u0 = (NU == 1) || (c_user == {UB{1'b0}});
+    wire        s_u0 = (NU == 1) || (s_user == {UB{1'b0}});
     assign cal_image_ready = c_ready;
 
-    wire        s_me = (STAGE_ME == 0) ? s_start : (s_start && s_stage != 6'd0 && s_stage < LAST_STAGE[5:0]);
-    reg  [17:0] tok_r, pos_r;
+    // head running stage (NU > 1): the hard leaf has ONE loaded stage (ROM relocation).  Latch it on user 0's dh start
+    // (as today) and on every LOCAL SEG start with the stage of the SEGMENT's user (per-user stage bank), so each ME
+    // segment reads its own user's layer.  A filler's dh start does not touch it.  NU = 1: hd = the dh start / stage.
+    reg  [5:0]  stg_b [0:NU-1];
+    integer     sg_i;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin for (sg_i = 0; sg_i < NU; sg_i = sg_i + 1) stg_b[sg_i] <= 6'd0; end
+        else if (d_start) stg_b[s_user] <= d_stage;
+    wire        hd_start = (NU == 1 || 1'b0) ? d_start : ((d_start && s_u0) || c_seg);
+    wire [5:0]  hd_stage = (NU == 1 || 1'b0) ? d_stage : ((d_start && s_u0) ? d_stage : stg_b[c_user]);
+    assign s_start = hd_start;                   // to u_hr stage_start / stage (the head running stage)
+    assign s_stage = hd_stage;
+    wire        s_me0 = (STAGE_ME == 0) ? d_start : (d_start && d_stage != 6'd0 && d_stage < LAST_STAGE[5:0]);
+    wire        s_me = s_me0 && s_u0;
+    reg  [17:0] tok_b [0:NU-1], pos_b [0:NU-1];
     reg         st_h; reg [17:0] st_tok, st_pos; reg [11:0] st_base;
     reg         start_fault;
+    integer     ub_i;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
-            tok_r <= 18'd0; pos_r <= 18'd0; st_h <= 1'b0; st_tok <= 18'd0; st_pos <= 18'd0; st_base <= 12'd0;
+            for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0; end
+            st_h <= 1'b0; st_tok <= 18'd0; st_pos <= 18'd0; st_base <= 12'd0;
             start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0;
         end else begin
-            if (s_start) begin tok_r <= s_tok; pos_r <= s_pos; end
+            if (d_start) begin tok_b[s_user] <= s_tok; pos_b[s_user] <= s_pos; end
             st_h <= s_me | c_seg;
             if (s_me) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end
-            else if (c_seg) begin st_tok <= tok_r; st_pos <= pos_r; st_base <= c_base; end
+            else if (c_seg) begin st_tok <= tok_b[c_user]; st_pos <= pos_b[c_user]; st_base <= c_base; end
             if (s_me && c_seg) start_fault <= 1'b1;
-            emb_start <= c_emb; emb_token <= tok_r;
+            emb_start <= c_emb; emb_token <= tok_b[c_user];
         end
     assign st = {st_h, st_tok, st_pos, st_base};
 
@@ -93,8 +122,8 @@ module qfd_tt_ctlm_dv_gi #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin su_acc <= 24'd0; su_obs <= 16'd0; end
         else begin
-            if (c_su) su_acc <= su_acc + 24'd1;
-            su_obs <= {c_su, c_su, 2'd2, 3'd0, c_pidx};
+            if (c_su && c_u0) su_acc <= su_acc + 24'd1;
+            su_obs <= {c_su && c_u0, c_su && c_u0, 2'd2, 3'd0, c_pidx};
         end
     assign su_obs_o = su_obs;
     assign su_acc_o = su_acc;
@@ -103,9 +132,9 @@ module qfd_tt_ctlm_dv_gi #(
     assign x_oidle = !ag_su_busy;
     // rom_ret = {ag_stn, 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, !ag_stn_busy, 1'b1}: constants assembled at the head pin
     assign rom_ret_v = {ag_stn, !ag_stn_busy};
-    assign dcs = {s_start && s_stage == 6'd0, ss_tokv, ss_tok[17:0], ss_tval, ss_arl, ss_arland,
+    assign dcs = {d_start && d_stage == 6'd0, ss_tokv, ss_tok[17:0], ss_tval, ss_arl, ss_arland,
                   c_xc, ag_vm, ag_su_busy, ag_any, fab_q, c_fault, start_fault, c_ready};
-    wire unused = &{1'b0, c_run, c_done, ss_q[73:61], ss_q[28:26], ss_tok[23:18], dh_q[43]};
+    wire unused = &{1'b0, c_run, c_done, ss_q[73:61], ss_q[28:26], ss_tok[23:18], dh_q[43], c_run_u, c_done_user, c_fcode};
 endmodule
 
 module qfd_tt_ctlm_dv_go #(

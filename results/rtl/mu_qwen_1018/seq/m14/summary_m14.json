@@ -1,0 +1,30 @@
+{
+ "mut": 14,
+ "verdict": "FAIL",
+ "fails": [
+  "C1 lockstep mismatches lock 712 solo1 0",
+  "C6 busy4 restart not faulted (fault_code 000000)"
+ ],
+ "C_issue_offset": 0,
+ "lock": {
+  "mismatches": 712,
+  "faults": [
+   [
+    22858,
+    "010000"
+   ]
+  ]
+ },
+ "solo1_events": 72,
+ "mu4_events": 288,
+ "mu4_done_per_user": {
+  "0": 3,
+  "1": 3,
+  "2": 3,
+  "3": 3
+ },
+ "landed_words": 1536,
+ "busy4_fault_code": "000000",
+ "coll4_fault_code": "000010",
+ "mu4_fault_code": "000000"
+}

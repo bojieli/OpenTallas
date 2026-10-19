@@ -28,7 +28,19 @@ This module is the single source both the GEN (tools/qwen_rom_fulldie_b3r2.py, O
                         calendar knob: any UCIe lane cycle is a fail.  The die GEN writes it as case/coll_lane_latency.json
                         and as the io_collective master's elaboration parameters (die.v.params.json LX0..2).
 
+  collective_calendar(LX, params)   Q-COLLCAL3 10-18: the COMPILED collective calendar from the lane cycles (no hand-set
+                        LS).  The SerDes face rx calendar (rtl/rom/ot_coll_static_linkcal.sv ot_coll_lcal_rx) writes a peer
+                        frame at exp + KC + KW + 10 + PHY + R_peer - R and reads it at exp + L - 4 - 2R; the static CDC needs
+                        3 cycles between them, so face j needs
+                            L_j = KC + KW + 17 + PS + LX_j + R_j + R_peer(j)       (R_j = RS<j> on-die relays, PHY = PS + LX_j)
+                        and LS = max_j L_j (UCIe LU = KC + KW + 17 + PU + 2 RU).  Real-lane TP8 bench on GEN dv2f14bq (LX
+                        10/0/9, RS 0/0/5): port 0 needs 4+2+17+339+10+0+5 = 377 -> LS 376 FAILS (port 0 RX xfifo read
+                        before its write), 377 PASSES.  The GEN emits LS in coll_lane_latency.json 'calendar' and as the
+                        io_collective elaboration parameter (die.v.params.json LS); lane_latency_audit.py fails the strict
+                        bind when the elaborated LS (default 376) < this need.
+
     lane_groups.py emit --lanes case/fwd_lanes.json [--land-plan land_plan.json] --out coll_lane_latency.json
+    lane_groups.py calendar --cll coll_lane_latency.json [--out calendar.json]   (LS of an existing GEN's lanes)
         (re-derives what the GEN emits from an existing GEN's lanes: equalize + coll_lane_latency)
 """
 import argparse
@@ -156,6 +168,45 @@ def lane_cycles(row):
     return int(row.get('n') or 0)          # plain relay chain: one cycle per frame
 
 
+ROOT = Path(__file__).resolve().parents[2]
+COLL_RTL = 'rtl/physical/ot_qfd_collective_static_io_production.sv'
+FACE_RTL = 'rtl/physical/ot_qfd_coll_static_face.sv'
+COLL_DEFAULTS = dict(PU=20, PS=339, LU=53, LS=376, RU=5, RS0=0, RS1=0, RS2=5, KC=4, KW=2)
+CDC_PUB = 3                                  # static CDC: write slot -> first legal read slot (ot_coll_lcal_rx, r5 L_min)
+
+
+def coll_rtl_defaults(root=ROOT):
+    """parameter defaults of the production collective master + the face KC/KW, read from the RTL (fallback: constants)."""
+    d = dict(COLL_DEFAULTS)
+    for f, keys in ((COLL_RTL, ('PU', 'PS', 'LU', 'LS', 'RU', 'RS0', 'RS1', 'RS2')), (FACE_RTL, ('KC', 'KW'))):
+        p = Path(root) / f
+        if not p.exists():
+            continue
+        head = p.read_text().split(')(')[0]
+        for k in keys:
+            m = re.search(r'\b' + k + r'\s*=\s*(\d+)', head)
+            if m:
+                d[k] = int(m.group(1))
+    return d
+
+
+def collective_calendar(LX, params=None, root=ROOT):
+    """the compiled collective calendar for SerDes lane cycles LX (see the module doc).  params = the io_collective
+    elaboration parameters (die.v.params.json; RS*/PS/... override the RTL defaults; LS = the elaborated period)."""
+    d = coll_rtl_defaults(root)
+    d.update({k: int(v) for k, v in (params or {}).items() if k in d})
+    per = {}
+    for j in range(3):
+        R, PR = d[f'RS{j}'], d[f'RS{PEER_PORT[j]}']
+        per[j] = dict(LX=int(LX[j]), R=R, R_peer=PR, L_min=d['KC'] + d['KW'] + 14 + CDC_PUB + d['PS'] + int(LX[j]) + R + PR)
+    ls = max(p['L_min'] for p in per.values())
+    lu = d['KC'] + d['KW'] + 14 + CDC_PUB + d['PU'] + 2 * d['RU']
+    return dict(rule='L_j = KC + KW + 17 + PS + LX_j + R_j + R_peer(j); LS = max_j L_j; LU = KC + KW + 17 + PU + 2 RU',
+                KC=d['KC'], KW=d['KW'], PS=d['PS'], PU=d['PU'], RU=d['RU'], RS=[d['RS0'], d['RS1'], d['RS2']],
+                ports=per, LS=ls, LU=lu, binding_port=max(per, key=lambda j: per[j]['L_min']),
+                rtl_default_LS=coll_rtl_defaults(root)['LS'], delta_vs_default=ls - coll_rtl_defaults(root)['LS'])
+
+
 def coll_lane_latency(rows, plain=None, source=''):
     """rows: forwarded lanes (fwd_lanes.json 'lanes'); plain: [{bid, src, dst, n}] buses carried by plain relays (or
     zero-frame).  Returns the record with LX0..2 and a verdict."""
@@ -181,10 +232,13 @@ def coll_lane_latency(rows, plain=None, source=''):
     ucie = {d: cyc(f'ucie_{d}')[0] for d in ('tx', 'txv', 'rx', 'rxv')}
     if any(ucie.values()):
         bad.append(f'UCIe lane cycles {ucie}: the UCIe calendar (LU) has no lane knob')
+    cal = collective_calendar(LX)
+    if cal['LU'] > coll_rtl_defaults()['LU']:
+        bad.append(f'UCIe calendar needs LU {cal["LU"]} > the production LU (no GEN LU knob)')
     return dict(schema='opentallas.qwen_split.coll_lane_latency.v1', source=source, master=COLL_MASTER, instance=COLL_INST,
                 rule='LX_j = TX(peer port of j) + RX(j); lane cycles = E + 1 (forwarded lane, o register) | n (plain relays)',
-                peer_port=PEER_PORT, land_o=LAND_O, ports=ports, ucie=ucie, LX=LX,
-                params={f'LX{j}': LX[j] for j in range(3)}, verdict='FAIL' if bad else 'PASS', fails=bad)
+                peer_port=PEER_PORT, land_o=LAND_O, ports=ports, ucie=ucie, LX=LX, calendar=cal,
+                params=dict({f'LX{j}': LX[j] for j in range(3)}, LS=cal['LS']), verdict='FAIL' if bad else 'PASS', fails=bad)
 
 
 def main():
@@ -195,7 +249,20 @@ def main():
     e.add_argument('--land-plan', type=Path, help='land plan whose E_sta / calendar the GEN would take (OT_SPLIT_LAND_PLAN)')
     e.add_argument('--out', required=True, type=Path)
     e.add_argument('--lanes-out', type=Path, help='write the equalized lanes too')
+    c = sp.add_parser('calendar')
+    c.add_argument('--cll', required=True, type=Path, help='a GEN case/coll_lane_latency.json (LX)')
+    c.add_argument('--params', type=Path, help='die.v.params.json (io_collective RS* overrides)')
+    c.add_argument('--out', type=Path)
     a = ap.parse_args()
+    if a.cmd == 'calendar':
+        cll = json.loads(a.cll.read_text())
+        prm = (json.loads(a.params.read_text()).get('masters', {}).get(COLL_MASTER, {}) if a.params else {})
+        cal = dict(collective_calendar(cll['LX'], {k: v for k, v in prm.items() if k != 'LS'}), source=str(a.cll), LX=cll['LX'])
+        if a.out:
+            a.out.write_text(json.dumps(cal, indent=1) + '\n')
+        print(f"COLL_CALENDAR LS={cal['LS']} LU={cal['LU']} LX={cal['LX']} binding_port={cal['binding_port']} "
+              f"delta_vs_default={cal['delta_vs_default']:+d}")
+        return 0
     fl = json.loads(a.lanes.read_text())
     rows = fl['lanes']
     cal, h0 = {}, {}

@@ -1,0 +1,8 @@
+ot-run: ot-epyc4       admits   123 GB (avail 302, growth 216, headroom 0, waiters 1/288 GB) load 152/128 running 40 disk 606 GB 
+ot-run: ot-epyc5       admits    62 GB (avail 344, growth 301, headroom 0, waiters 0/0 GB) load 155/128 running 29 disk 1560 GB 
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-100602-1792402880 after 0 s
+COLL_CALENDAR compiled LS=378 (binding port 0, LX [11, 0, 10], RS [0, 0, 5]) -> lats 378
+case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RLAT FAIL (expected FAIL) mismatches=30720 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138
+COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-100602-1792402880): exit 0

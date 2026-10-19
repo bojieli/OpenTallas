@@ -1,0 +1,5 @@
+PASS users4 x stages36 x positions8192 identities1179648 sectors9437184 unique-addresses9437184 alias0 inverse{user,layer,pos,kind,dim}+raw256 exact; read rows 576/1728 commands, tag row[7:0]-64=layer, embedding/go/write unchanged; MU0 wires
+- rtl/test/mu_qwen_1018/tb_qkd_kv_mu_rowoff.sv:98: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17ms; walltime 6.687 s; speed 2.470 ms/s
+- Verilator: cpu 6.682 s on 1 threads; allocated 135 MB

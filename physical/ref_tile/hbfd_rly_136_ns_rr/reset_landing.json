@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "hbfd_rly_136_NS_rr",
+ "enable": false,
+ "reason": "the RTL lands rs (HBM-RSTROW row reset, coordinator 0jp Proposal A): rs drives the row-reset flop rq (rso = rs + exactly 1 edge) + the registered reset relay ot_rst_relay (2 sync + 1 relay flops, async assert) = 4 sinks inside the 21.6 x 21.6 um strip; a 2-stage kit landing would make every station of a relay row release 3 edges after its upstream instead of 1 (the row head-age condition head + k + S <= D + 1 + k fails on long rows)"
+}
