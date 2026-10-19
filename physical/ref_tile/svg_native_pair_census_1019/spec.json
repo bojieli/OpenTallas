@@ -15,5 +15,11 @@
     "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_bb.v",
     "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
   ],
-  "purpose": "standalone synthesis area/fanout census; NOT a gate, PPA closure or submission"
+  "purpose": "standalone synthesis area/fanout census; NOT a gate, PPA closure or submission",
+  "clock_port": "pair_clk",
+  "clock_ports": [
+    "pair_hbm_clk",
+    "pair_clk",
+    "return_clk"
+  ]
 }

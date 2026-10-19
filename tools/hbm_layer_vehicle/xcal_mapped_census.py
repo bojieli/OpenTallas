@@ -23,7 +23,7 @@ for job in jobs:
     la=''.join(' -liberty '+str(p) for p in libs)
     script=['read_liberty -lib '+str(p) for p in libs]
     script+=['read_verilog -sv '+p for p in sources]
-    script+=['hierarchy -check -top '+top+''.join(' -chparam '+k+' '+str(v) for k,v in params.items()),'synth -top '+top+' -flatten','dfflibmap -liberty '+str(libs[-1]),'abc'+la+' -D 833.333','setundef -zero','setattr -mod -unset keep_hierarchy','flatten','opt_clean -purge','tee -o '+str(dst/'stat.txt')+' stat'+la,'write_json '+str(dst/'mapped.json'),'write_verilog '+str(dst/'mapped.v')]
+    script+=['hierarchy -check -top '+top+''.join(' -chparam '+k+' '+str(v) for k,v in params.items()),'synth -top '+top+' -flatten','dfflibmap -liberty '+str(libs[-1]),'abc'+la+' -D 833.333','setundef -zero','setattr -mod -unset keep_hierarchy','setattr -unset keep_hierarchy','flatten','opt_clean -purge','tee -o '+str(dst/'stat.txt')+' stat'+la,'write_json '+str(dst/'mapped.json'),'write_verilog '+str(dst/'mapped.v')]
     (dst/'synth.ys').write_text('\n'.join(script)+'\n')
     with (dst/'yosys.log').open('w') as log:subprocess.run([yosys,'-s',str(dst/'synth.ys')],stdout=log,stderr=subprocess.STDOUT,check=True)
     design=json.loads((dst/'mapped.json').read_text());mod=design['modules'][top]
@@ -40,11 +40,12 @@ for job in jobs:
     nets=[]
     for bit,sinks in loads.items():
         names=aliases[bit];reset=any('rst' in n or 'reset_landing' in n or 'reset_' in n for n in names)
-        clock=any(n in ['clk','clk_desc'] for n in names)
+        clock_names=set(job.get('clock_ports',[]))|{job.get('clock_port','clk'),'clk_desc'}
+        clock=any(n in clock_names for n in names) or all(c[2].upper() in ['CLK','CK','C','CLOCK'] for c in sinks)
         nets.append(dict(bit=bit,fanout=len(sinks),names=names,drivers=drivers[bit],reset=reset,clock=clock,sinks=sinks))
     nets.sort(key=lambda x:x['fanout'],reverse=True)
     counts=collections.Counter(c['type'] for c in mod['cells'].values());unknown={k:v for k,v in counts.items() if k not in areas and not k.startswith('ot_sram_')}
-    report=dict(top=top,tool='ORFS docker Yosys + ABC, RVT TT,833.333ps target',physical_claim=False,std_area_um2=sum(areas.get(k,0)*v for k,v in counts.items()),source_sha256={p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in sources},macro_counts={k:v for k,v in counts.items() if k.startswith('ot_sram_')},unmapped_or_unknown=unknown,cell_counts=counts,over32_data_control=[n for n in nets if n['fanout']>32 and not n['reset'] and not n['clock']],top50=nets[:50])
+    report=dict(top=top,tool='ORFS docker Yosys + ABC, RVT TT,833.333ps target',physical_claim=False,std_area_um2=sum(areas.get(k,0)*v for k,v in counts.items()),source_sha256={p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in sources},macro_counts={k:v for k,v in counts.items() if k.startswith('ot_sram_')},unmapped_or_unknown=unknown,cell_counts=counts,over32_data_control=[n for n in nets if n['fanout']>32 and not n['reset'] and not n['clock']],clock_networks=[n for n in nets if n['clock']],reset_networks=[n for n in nets if n['reset']],top50=nets[:50])
     (dst/'census.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k not in ['top50','over32_data_control','cell_counts']},indent=2),flush=True)
     print('OVER32',[(n['names'],n['fanout']) for n in report['over32_data_control']],flush=True)
