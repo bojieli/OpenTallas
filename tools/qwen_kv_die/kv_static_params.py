@@ -27,6 +27,7 @@ the SAME kv_static_die formulas, and FAILS when:
 import argparse
 import json
 import math
+import os
 import re
 import sys
 from pathlib import Path
@@ -619,6 +620,10 @@ def relay_domains(die_v, model):
             bad.append(dict(relay=inst, bus=bid, clock=ck.group(1), launch=dom, src=sp[:2]))
     fails = [dict(id='RELAY_DOMAIN', what=f'{len(bad)} relays clocked off their launching pin domain', rows=bad[:64],
                   fix='kv_pin_repair.relay_trunk (pin repair + bundle / K_RT_EQ pads)')] if bad else []
+    if mixed and os.environ.get('OT_KV_DOMSPLIT', '0') == '1':
+        # KV-DOMSPLIT 10-19: with the split tiles no die word may mix ck and hck bits (fail closed)
+        fails.append(dict(id='RELAY_DOMAIN_MIXED', what=f'{len(mixed)} die words still mix ck and hck bits under OT_KV_DOMSPLIT=1',
+                          rows=sorted(mixed)[:64], fix='kv_static_die DOMSPLIT table / tile records'))
     return fails, dict(relays_checked=n, mixed_domain_buses={k: sorted(v) for k, v in sorted(mixed.items())})
 
 

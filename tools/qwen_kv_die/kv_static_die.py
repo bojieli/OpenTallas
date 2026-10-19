@@ -70,10 +70,24 @@ KVS_CK1 = KITS
 CK1_KINDS = ('ctl', 'attn', 'emb')
 KIT_HARD = ('qkd_embedding_row_tx',)
 KIT_KINDS = ('grp', 'grp_h', 'pc', 'pc_h', 'hroot')
+# KV-DOMSPLIT 10-19 (OT_KV_DOMSPLIT=1; default off: every existing design point and tile file is
+# unchanged; tile file suffix '_ds'): no die word mixes the core clock ck and the HBM clock hck.  The group <-> PC bundles
+# (slg o_pc<j> -> kvpc i_grp, kvpc o_grp -> slg i_pc<j>) are split per launch domain: the ck fields keep the port name, the
+# hck fields ride '<port>_h' (its own die bus, so its relay chain runs on the clk_hbm_<region> trunk: kv_die.py relay
+# clock = the launching pin's domain).  The group gather o_ctl (-> the stack root, a ck-only relay tile, -> kvs_ctl boot /
+# ownership observers) keeps one ck word: its 10 hck status levels (the five boot CDCs' applied_hbm / fault_hbm, sticky)
+# LAND inside the group (qkd_kv_lvl_land: 2-flop async_reg synchroniser on ck, +2 ck edges on the boot observation; the
+# observer's own 2-flop stage stays).  Field domains: the measured per-bit launch domains of the base tiles
+# (kvs_port_domains bit_domains -> DOMSPLIT_TABLE, `kv_static_die.py --domsplit-table`), fail closed on a field without one.
+DOMSPLIT = os.environ.get('OT_KV_DOMSPLIT', '0') == '1'
+DOMSPLIT_DIR = 'results/arch/qwen_kv_domsplit_1019'
+DOMSPLIT_TABLE = DOMSPLIT_DIR + '/producer_domains.json'
+LVL_LAND_RTL = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_lvl_land.sv'
 RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
             ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +
-            ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') + '.sv')   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
+            ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
+            ('_ds' if DOMSPLIT else '') + '.sv')   # KV-DOMSPLIT
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -1020,24 +1034,131 @@ def pack(tiles):
                 continue
             new[pn] = v
         ins_ = sorted(((rel(T, S), S, lst) for (TT, S), lst in layout.items() if TT == T))
-        for r, S, lst in ins_:
-            name, off = f'i_{r}', 0
-            for pn, w, key in lst:
-                packed.append((pn, w, name, off))
-                off += w
-            if name in new:
-                raise ValueError(f'kv_static_die: {T} bundle {name} twice')
-            new[name] = dict(dir='input', width=off, cls='bundle', peer=S, layout=lst)
+        for r, S, lst0 in ins_:
+            for sfx, lst in ds_parts(T, S, lst0):
+                name, off = f'i_{r}{sfx}', 0
+                for pn, w, key in lst:
+                    packed.append((pn, w, name, off))
+                    off += w
+                if name in new:
+                    raise ValueError(f'kv_static_die: {T} bundle {name} twice')
+                new[name] = dict(dir='input', width=off, cls='bundle', peer=S, layout=lst)
         outs_ = sorted(((rel(T, C), C, lst) for (C, S), lst in layout.items() if S == T))
-        for r, C, lst in outs_:
-            name = f'o_{r}'
-            if name in new:
-                raise ValueError(f'kv_static_die: {T} bundle {name} twice')
-            new[name] = dict(dir='output', width=sum(w for _, w, _ in lst), cls='bundle', peer=C,
-                             peer_port=f'i_{rel(C, T)}', consumers=[], layout=lst,
-                             expr='{' + ', '.join(reversed([keyexpr[key] for _, _, key in lst])) + '}')
+        for r, C, lst0 in outs_:
+            lexpr = ds_land(t, T, C, lst0, keyexpr)
+            for sfx, lst in ds_parts(C, T, lst0):
+                name = f'o_{r}{sfx}'
+                if name in new:
+                    raise ValueError(f'kv_static_die: {T} bundle {name} twice')
+                new[name] = dict(dir='output', width=sum(w for _, w, _ in lst), cls='bundle', peer=C,
+                                 peer_port=f'i_{rel(C, T)}{sfx}', consumers=[], layout=lst,
+                                 expr='{' + ', '.join(reversed([lexpr.get(key, keyexpr[key]) for _, _, key in lst])) + '}')
         t['ports'], t['packed'], t['keyexpr'] = new, packed, keyexpr
     return tiles
+
+
+# ------------------------------------------------------------------------------------------------ KV-DOMSPLIT 10-19
+def _ds_bkind(kind):
+    return {'grp_h': 'grp', 'pc_h': 'pc'}.get(kind, kind)
+
+
+def ds_key(key):
+    """replica-generic name of a producer field (src join inst, port, lo, w): '<local>.<port>[lo+:w]'"""
+    return f'{cluster_of(key[0])[2]}.{key[1]}[{key[2]}+:{key[3]}]'
+
+
+def _ds_table():
+    if 'ds_table' not in _G:
+        _G['ds_table'] = json.loads((ROOT / DOMSPLIT_TABLE).read_text())['fields']
+    return _G['ds_table']
+
+
+def ds_domain(key):
+    """'ck' | 'hck': the measured launch domain of one producer field (fail closed)"""
+    bk = _ds_bkind(cluster_of(key[0])[1])
+    d = _ds_table().get(bk, {}).get(ds_key(key))
+    if d not in ('ck', 'hck'):
+        raise ValueError(f'kv_static_die DOMSPLIT: no measured launch domain for {bk} field {ds_key(key)} ({DOMSPLIT_TABLE})')
+    return d
+
+
+def ds_parts(T, S, lst):
+    """[(port suffix, fields)] of the bundle S -> T: one part (suffix '') unless DOMSPLIT splits a group <-> PC word into
+    its ck part ('') and its hck part ('_h'); the field order inside each part is the bundle's (LSB first)"""
+    if not (DOMSPLIT and {_ds_bkind(kind_of(T)), _ds_bkind(kind_of(S))} == {'grp', 'pc'}):
+        return [('', lst)]
+    ck = [e for e in lst if ds_domain(e[2]) == 'ck']
+    hk = [e for e in lst if ds_domain(e[2]) == 'hck']
+    return [(sfx, p_) for sfx, p_ in (('', ck), ('_h', hk)) if p_]
+
+
+def ds_land(t, T, C, lst, keyexpr):
+    """DOMSPLIT: the group gather word (slg -> kvs_ctl) stays ONE ck word; its hck fields land in the group on a 2-flop
+    async_reg synchroniser (qkd_kv_lvl_land u_hland, clocked by the group's core clock, reset rst_n).  Returns
+    {field key: landed expression}; records t['domsplit_land'] = landed bit offsets in the gather word"""
+    if not (DOMSPLIT and _ds_bkind(kind_of(T)) == 'grp' and kind_of(C) == 'ctl'):
+        return {}
+    hk = [(w, key) for _pn, w, key in lst if ds_domain(key) == 'hck']
+    if not hk:
+        return {}
+    P = t['ports']
+    ckp = next((pn for pn, v in P.items() if v['cls'] == 'clock' and v.get('domain') == 'core'), None)
+    if ckp is None or 'rst_n' not in P:
+        raise ValueError(f'kv_static_die DOMSPLIT: {T} has no core clock / rst_n port for the gather landing')
+    n = sum(w for w, _ in hk)
+    lexpr, o_ = {}, 0
+    for w, key in hk:
+        lexpr[key] = f'w_hland__q[{o_ + w - 1}:{o_}]'
+        o_ += w
+    t['wires'].append(f'    wire [{n - 1}:0] w_hland__q;')
+    t['body'].append(f'    qkd_kv_lvl_land #(.W({n})) u_hland (.ck({ckp}), .rst_n(rst_n), .d('
+                     + '{' + ', '.join(reversed([keyexpr[key] for _, key in hk])) + '}), .q(w_hland__q));')
+    bits, o_ = [], 0
+    for _pn, w, key in lst:
+        if key in lexpr:
+            bits += list(range(o_, o_ + w))
+        o_ += w
+    t['domsplit_land'] = dict(word_width=o_, bits=bits, delay_edges=2)
+    return lexpr
+
+
+def domsplit_table(ports_dir):
+    """(run with OT_KV_DOMSPLIT unset, at the design point being split) -> {kind: {field: 'ck'|'hck'}} from the measured
+    per-bit launch domains (kvs_port_domains bit_domains) of the base tiles' group <-> PC words and the group gather"""
+    if DOMSPLIT:
+        raise SystemExit('domsplit_table: run on the base design point (OT_KV_DOMSPLIT unset)')
+    T = all_tiles()
+    rec = {k: json.loads((Path(ports_dir) / f'{k}_ports.json').read_text())['ports'] for k in ('grp', 'grp_h', 'pc', 'pc_h')}
+    out, src = {'grp': {}, 'pc': {}}, []
+
+    def bitdom(kind, port, b):
+        v = rec[kind][port]
+        for hi, lo, ds in v.get('bit_domains', []):
+            if lo <= b <= hi:
+                return ds
+        return [d for d in v['domains'] if d not in ('none', '?const')]
+
+    for d, t in T.items():
+        k = t['kind']
+        if k not in rec:
+            continue
+        for pn, v in t['ports'].items():
+            if v['dir'] != 'output' or not v.get('layout'):
+                continue
+            if not ((k in ('grp', 'grp_h') and (pn == 'o_ctl' or re.fullmatch(r'o_pc\d', pn))) or
+                    (k in ('pc', 'pc_h') and pn == 'o_grp')):
+                continue
+            o_ = 0
+            for _pn, w, key in v['layout']:
+                ds = {x for b in range(o_, o_ + w) for x in bitdom(k, pn, b)}
+                o_ += w
+                if len(ds) != 1 or not ds <= {'ck', 'hck'}:
+                    raise ValueError(f'domsplit_table: {d}.{pn} field {ds_key(key)} has launch domains {sorted(ds)}')
+                bk, fk = _ds_bkind(cluster_of(key[0])[1]), ds_key(key)
+                if out[bk].setdefault(fk, ds.copy().pop()) != next(iter(ds)):
+                    raise ValueError(f'domsplit_table: {fk} differs between replicas')
+                src.append((k, pn))
+    return dict(fields=out, measured_ports=sorted(set(src)))
 
 
 SIDES = {st: (st,) for st in STACKS}       # one fan per stack, in the stack's group column middle
@@ -1313,6 +1434,8 @@ def sources():
     s.update(K.EMB_SOURCES)
     if K.MU:
         s.update(K.MU_DEPS)
+    if DOMSPLIT:
+        s.add(LVL_LAND_RTL)
     return sorted(s)
 
 
@@ -2003,6 +2126,8 @@ KIT_FACE = {
     'qkd_kvs_hroot': dict(i_ctl='N', o_ctl='N', o_emb='N', o_pc='S', i_r='S', o_ch0='S', i_g='S', o_kg='E',
                           **{f'o_c{e}': 'E' for e in range(8)}),
 }
+if DOMSPLIT:     # KV-DOMSPLIT: the hck half of a split word sits beside its ck half (same face)
+    KIT_FACE['qkd_kvs_pc'].update(i_grp_h='N', o_grp_h='N')
 KIT_FACE['qkd_kvs_grp_h'] = KIT_FACE['qkd_kvs_grp']
 KIT_FACE['qkd_kvs_pc_h'] = KIT_FACE['qkd_kvs_pc']
 KIT_DEFAULT_FACE = dict(qkd_kvs_grp='W', qkd_kvs_grp_h='W', qkd_kvs_pc='E', qkd_kvs_pc_h='E', qkd_kvs_hroot='W')
@@ -2040,7 +2165,8 @@ def _pin_face(master, port):
         # the facing N / S faces: auto-placed on a side face they were 515.7 um per hop (> reach) once the pin-hinted
         # re-plan stopped, 114 of the 127 unrepaired hops (t_302).  N: i_next 779 + o_next 299 + pc__ki 33, S: the
         # mirror set = 1,111 b on a 270-um face (4.1 /um)
-        f_ = dict(i_next='N', o_next='N', pc__ki='N', o_prev='S', i_prev='S', pc__ko='S', i_grp='N', o_grp='N').get(port)
+        f_ = dict(i_next='N', o_next='N', pc__ki='N', o_prev='S', i_prev='S', pc__ko='S', i_grp='N', o_grp='N',
+                  i_grp_h='N', o_grp_h='N').get(port)
         if f_:
             return f_
     if ASTK_ST and master in ('qkd_astk', 'qkd_astk_n') and (port in ('erd', 'cal') or re.fullmatch(r'vh\d', port)):
@@ -2078,6 +2204,12 @@ def kvs_face(master, port):
     raise ValueError(f'kvs_face: no face for {master}.{port}')
 
 
+def _pc_pair(p):
+    """group W-face PC word pair index j of i_pc<j> / o_pc<j> (and the DOMSPLIT hck halves i_pc<j>_h / o_pc<j>_h)"""
+    m_ = re.fullmatch(r'[io]_pc(\d)(?:_h)?', p)
+    return int(m_.group(1)) if m_ else None
+
+
 def face_order(master, face, ports):
     """KV-PLAN3: along-face order (from the face origin) of a static tile's pins, or the given order.  The group's W face
     carries its four PCs' words: interleave i_pc<j> / o_pc<j> bottom-up so pair j sits level with PC j (PC k of the
@@ -2085,20 +2217,22 @@ def face_order(master, face, ports):
     if KITS and master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'W':
         # kit: PC pairs 0 / 1 below, the clocks / resets / straps / pass words mid-face (beside the register mass), 2 / 3 above
         def key(p):
-            if p[:4] in ('i_pc', 'o_pc') and p[4:].isdigit():
-                return (int(p[4:]) + (1 if int(p[4:]) >= 2 else 0), p[0] == 'o', p)
+            j = _pc_pair(p)
+            if j is not None:
+                return (j + (1 if j >= 2 else 0), p[0] == 'o', p)
             return (2, p not in ('ck', 'hck'), p)
         return sorted(ports, key=key)
     if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'W':
         def key(p):
-            if p[:4] in ('i_pc', 'o_pc') and p[4:].isdigit():
-                return (int(p[4:]), p[0] == 'o', p)
+            j = _pc_pair(p)
+            if j is not None:
+                return (j, p[0] == 'o', p)
             return (99, False, p)
         return sorted(ports, key=key)
     if master in ('qkd_kvs_pc', 'qkd_kvs_pc_h') and face == 'N':
         # the group words at the N face's E end (canonical E = toward the group column, through the slice gap):
         # k2 left ks_kvpc_EN_29__o_grp at 633 um with o_grp mid-face
-        return sorted(ports, key=lambda p: (p in ('i_grp', 'o_grp'), p == 'o_grp', p))
+        return sorted(ports, key=lambda p: (p in ('i_grp', 'o_grp', 'i_grp_h', 'o_grp_h'), p.startswith('o_grp'), p))
     if master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'E' and os.environ.get('OT_KV_GRP_RSP_LOW', '0') == '1':
         # variant: the V response word rsp on the lower half (odd groups: their V port sits just below the group)
         return sorted(ports, key=lambda p: (p != 'rsp', p))
@@ -2332,7 +2466,17 @@ def main():
     ap.add_argument('--rtl', action='store_true', help=f'write {RTL_FILE}')
     ap.add_argument('--check', action='store_true', help='the committed RTL equals the generated text')
     ap.add_argument('--summary', action='store_true')
+    ap.add_argument('--domsplit-table', metavar='PORTS_DIR',
+                    help=f'KV-DOMSPLIT: write {DOMSPLIT_TABLE} from the measured base tile ports (kvs_port_domains)')
     a = ap.parse_args()
+    if a.domsplit_table:
+        tab = domsplit_table(a.domsplit_table)
+        tab.update(design_point=dict(rtl_file=RTL_FILE, ports_dir=a.domsplit_table))
+        (ROOT / DOMSPLIT_TABLE).parent.mkdir(parents=True, exist_ok=True)
+        (ROOT / DOMSPLIT_TABLE).write_text(json.dumps(tab, indent=1, sort_keys=True) + '\n')
+        print(f'wrote {DOMSPLIT_TABLE}: ' + ', '.join(f'{k} {sum(v == "hck" for v in f.values())} hck / '
+                                                      f'{sum(v == "ck" for v in f.values())} ck' for k, f in tab['fields'].items()))
+        return 0
     txt = rtl_text()
     p = ROOT / RTL_FILE
     if a.rtl:

@@ -2744,6 +2744,7 @@ def _relays(m):
         return path[::-1]
     nb, stages, lengths = [], {}, {}
     rly_ends = {}                                  # relay inst -> (driver inst, load inst) of the bus it stages
+    rly_dom = {}                                   # KV-DOMSPLIT: relay inst -> launching pin domain of its chain
     order_ = list(m['buses'])
     # v1.4.2 (kvs7c TT: host boot_go -550 ns on one 25.8-mm net, die_rst_n -4.8 ns / hbm_rst_n -1.9 ns: the die top has
     # no buffering, so a die-wide fan-out net cannot be one wire): every HOST reset / boot fan-out net becomes a
@@ -3286,6 +3287,9 @@ def _relays(m):
                 m['insts'].append(it)
                 by[nm] = it                       # v1.4.2: a tree's next-level chain starts at this relay
                 rly_ends[nm] = (tree_meta[bid]['rdrv'] if bid in tree_meta else a, b)   # tree: the HOST's trunk
+                if KSD.DOMSPLIT and bid not in tree_meta:
+                    import kv_pin_repair as _kpr
+                    rly_dom[nm] = _kpr.launch_domain(by, (a, pa), (b, pb))
                 if SEAM and bid in tree_meta:
                     rly_ends[nm] = (b, b)          # KVPLAN3 0230: a reset station runs on the tree of the tiles it feeds
                 for gx in range(int(it.x // G), int((it.x + fw) // G) + 1):
@@ -3483,8 +3487,23 @@ def _relays(m):
             for inst_, _p in eps_[1:]:
                 trunk.setdefault(inst_, i)
     adds = {}
+    m['relay_domain_split'] = dict(hbm=sorted(n_ for n_ in rly_ends if rly_dom.get(n_) == 'hbm'),
+                                   mixed=sorted(n_ for n_ in rly_ends if rly_dom.get(n_) == 'mixed')) if KSD.DOMSPLIT else None
+    htrunk = {}                    # KV-DOMSPLIT: instance -> its HBM clock trunk (clk_hbm_<region>)
+    if KSD.DOMSPLIT:
+        for i, (bid_, cl_, _b, eps_) in enumerate(nb):
+            if cl_ == 'clock_trunk' and bid_.startswith('clk_hbm_'):
+                for inst_, _p in eps_[1:]:
+                    htrunk.setdefault(inst_, i)
     for nm_, (drv, rcv) in rly_ends.items():
-        i = trunk.get(drv, trunk.get(rcv, next(j for j, e in enumerate(nb) if e[0] == 'clk_core_c')))
+        if rly_dom.get(nm_) == 'hbm':
+            # KV-DOMSPLIT 10-19: an HBM-launched word (the split group <-> PC hck halves) is relayed on the HBM clock trunk
+            # of its driver (else its load): the crossing stays at the consumer's synchroniser, never inside the chain
+            i = htrunk.get(drv, htrunk.get(rcv))
+            if i is None:
+                raise ValueError(f'kv die relays (DOMSPLIT): HBM-launched relay {nm_} ({drv} -> {rcv}) has no clk_hbm_* trunk')
+        else:
+            i = trunk.get(drv, trunk.get(rcv, next(j for j, e in enumerate(nb) if e[0] == 'clk_core_c')))
         adds.setdefault(i, []).append((nm_, 'ck'))
     for i, extra in adds.items():
         bid_, cl_, bits_, eps_ = nb[i]
