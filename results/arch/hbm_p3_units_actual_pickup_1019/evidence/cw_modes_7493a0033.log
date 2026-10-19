@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx-idxq-cw-7493a0033/b
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx-idxq-cw-7493a0033/b
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hnx-idxq-cw-7493a0033/b
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hnx-idxq-cw-7493a0033/b
+ot-run: ot-epyc8       admits   942 GB (avail 773, growth 113, headroom 0, waiters 0/0 GB) load 58/128 running 33 disk 132 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx-idxq-cw-7493a0033/b
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx-idxq-cw-7493a0033/b
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1282669-1792435414 after 0 s
+POS_RC=0
+M4_RC=1
+RUN_RC=1
+m4: IDXN_CW FAIL (mutant caught)
+2026-10-19T11:43:51-07:00 r2 [OK want PASS got PASS]: IDXN_CW rows6 pitch236 phase0 len2048 mut0 errors0 active_edges3267 row_starts6 dones1 bypass_edges255 fault_cw0 1 fault_cw1 1 
+2026-10-19T11:43:51-07:00 SUMMARY pos unexpected=0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1282669-1792435414): exit 0

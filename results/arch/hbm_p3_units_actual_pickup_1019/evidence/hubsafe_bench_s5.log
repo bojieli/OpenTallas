@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   798 GB (avail 672, growth 113, headroom 0, waiters 0/0 GB) load 86/128 running 32 disk 374 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-epyc6       admits   896 GB (avail 740, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 33 disk 5874 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-997259-1792436710 after 0 s
+2026-10-19T12:05:10-07:00 start host=regular-crane bundle=bb0f6ffe1
+2026-10-19T12:32:57-07:00 build s5 rc=0 bin=ok
+2026-10-19T12:34:00-07:00 s5 n4: HC_ENG_FAULT t=2169 seq=0 ev=0 ps=1 qf=0000 core=0 mix=0 tbl=0 tail=0 tfl=0 RUN_RC=1 
+2026-10-19T12:34:01-07:00 HNX_HC_RING SIREG=1 MUT=5 FAIL 0/1 (HC_ENG FAIL)
+2026-10-19T12:34:01-07:00 done
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-997259-1792436710): exit 0

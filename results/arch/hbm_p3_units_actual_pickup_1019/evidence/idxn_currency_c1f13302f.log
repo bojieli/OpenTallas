@@ -1,0 +1,34 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx-idxq-c1f13302f/b
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx-idxq-c1f13302f/b
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hnx-idxq-c1f13302f/b
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hnx-idxq-c1f13302f/b
+ot-run: ot-epyc8       admits  1210 GB (avail 960, growth 113, headroom 0, waiters 0/0 GB) load 87/128 running 28 disk 135 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx-idxq-c1f13302f/b
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx-idxq-c1f13302f/b
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1247343-1792435116 after 0 s
+2026-10-19T11:38:36-07:00 start host=ot-epyc8 bundle=c1f13302f
+2026-10-19T11:38:38-07:00 vectors: row 0: top512 threshold score 408c, distinct from row 0: 512 row 1: top512 threshold score 405c, distinct from row 0: 482 row 2: top512 threshold score 40c7, distinct from row 0: 482 row 3: top512 threshold score 410f, distinct from row 0: 476 row 4: top512 threshold score 40a8, distinct from row 0: 497 row 5: top512 threshold score 4039, distinct from row 0: 483 
+2026-10-19T11:38:38-07:00 calendar: {"F": 1301, "gap": 4, "g2": 23, "row_ii": 232, "pitch": 232, "binding": "array", "spans": {"array": {"first": 177, "last": 408, "span": 232}, "query_unit": {"first": 0, "last": 224, "span": 225}, "operand": {"first": 0, "last": 156, "span": 157}, "link_ingest": {"first": 991, "last": 1165, "span": 175}, "selector": {"first": 336, "last": 1165, "span": 830, "per_row": 208}}, "collisions_at_pitch": 0, "key0": 219, "tx0": 1176}
+2026-10-19T11:38:38-07:00 calendar g2=8 (mutant): {"F": 1301, "gap": 4, "g2": 8, "row_ii": 225, "pitch": 225, "binding": "query_unit", "spans": {"array": {"first": 177, "
+2026-10-19T12:08:22-07:00 build hnx rc=0 bin=ok maxrss_kb=28896708
+2026-10-19T12:36:21-07:00 build d4g rc=0 bin=ok maxrss_kb=28896148
+2026-10-19T12:36:46-07:00 n1 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows1 pitch232 frame1301 record_edges_last_tx1297 done1303 live_key_beats171 scored_beats171 IDX_HNX_ROWS rows1 mutation0 scores10928 records512 flits64 errors0 fault0 faultedge-1 status0 
+2026-10-19T12:36:46-07:00 d4g_n1 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows1 pitch0 frame1397 record_edges_last_tx1393 done1399 live_key_beats171 scored_beats171 IDX_HNX_ROWS rows1 mutation0 scores10928 records512 flits64 errors0 fault0 faultedge-1 status0 
+2026-10-19T12:36:46-07:00 n1_d4gprog [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows1 pitch0 frame1397 record_edges_last_tx1393 done1399 live_key_beats171 scored_beats171 IDX_HNX_ROWS rows1 mutation0 scores10928 records512 flits64 errors0 fault0 faultedge-1 status0 
+2026-10-19T12:36:49-07:00 n4 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows4 pitch232 frame1301 record_edges_last_tx1993 done1999 live_key_beats171 scored_beats684 IDX_HNX_ROWS rows4 mutation0 scores43712 records2048 flits256 errors0 fault0 faultedge-1 status0 
+2026-10-19T12:36:49-07:00 n2 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows2 pitch232 frame1301 record_edges_last_tx1529 done1535 live_key_beats171 scored_beats342 IDX_HNX_ROWS rows2 mutation0 scores21856 records1024 flits128 errors0 fault0 faultedge-1 status0 
+2026-10-19T12:36:50-07:00 n3 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows3 pitch232 frame1301 record_edges_last_tx1761 done1767 live_key_beats171 scored_beats513 IDX_HNX_ROWS rows3 mutation0 scores32784 records1536 flits192 errors0 fault0 faultedge-1 status0 
+2026-10-19T12:36:54-07:00 n5 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows5 pitch232 frame1301 record_edges_last_tx2225 done2231 live_key_beats171 scored_beats855 IDX_HNX_ROWS rows5 mutation0 scores54640 records2560 flits320 errors0 fault0 faultedge-1 status0 
+2026-10-19T12:36:58-07:00 n6 [OK want PASS got PASS rc=0]: IDX_ROWS_CYCLES rows6 pitch232 frame1301 record_edges_last_tx2457 done2463 live_key_beats171 scored_beats1026 IDX_HNX_ROWS rows6 mutation0 scores65568 records3072 flits384 errors0 fault0 faultedge-1 status0 
+2026-10-19T12:37:24-07:00 mstride [OK want FAIL got FAIL rc=1]: SCOREBAD row1 ord0 expected3fc0 got4075 SCOREBAD row1 ord1 expectedc04b gotbf08 SCOREBAD row1 ord2 expected4064 got4024 SCOREBAD row1 ord3 expectedbfda gotc03b SCOREBAD row1 ord4 expectedc036 got3e8c 
+2026-10-19T12:37:24-07:00 mg2 [OK want FAIL got FAIL rc=1]: SCOREBAD row0 ord2624 expectedbf58 gotbf78 SCOREBAD row0 ord2626 expectedbf0e gotbf5a SCOREBAD row0 ord2628 expected407a got404a SCOREBAD row0 ord2629 expectedbeaf gotbf62 SCOREBAD row0 ord2630 expectedbe7c gotbf46 
+2026-10-19T12:37:25-07:00 mii1 [OK want FAIL got FAIL rc=1]: SCOREBAD row0 ord2721 expected3ffe got3ff8 SCOREBAD row0 ord2722 expected3fa0 got3f03 SCOREBAD row0 ord2723 expected4008 got3f8b SCOREBAD row0 ord2729 expectedbe0b gotbe86 SCOREBAD row0 ord2730 expected3f7b got3f62 
+2026-10-19T12:37:29-07:00 m21 [OK want FAIL got FAIL rc=1]: SCOREBAD row1 ord0 expected3fc0 got0000 SCOREBAD row1 ord1 expectedc04b got0000 SCOREBAD row1 ord2 expected4064 got0000 SCOREBAD row1 ord3 expectedbfda got0000 SCOREBAD row1 ord4 expectedc036 got0000 
+2026-10-19T12:37:29-07:00 m23 [OK want FAIL got FAIL rc=1]: IDX_ROWS_CYCLES rows4 pitch232 frame1301 record_edges_last_tx1993 done1999 live_key_beats171 scored_beats684 IDX_HNX_ROWS rows4 mutation23 scores43712 records2048 flits256 errors0 fault1 faultedge1221 status0 
+2026-10-19T12:37:30-07:00 m22 [OK want FAIL got FAIL rc=1]: TXBAD row0 edge1176 ord10251 gold0 seen0 TXBAD row0 edge1176 ord10255 gold0 seen0 TXBAD row0 edge1176 ord2044 gold0 seen0 TXBAD row0 edge1176 ord4773 gold0 seen0 TXBAD row0 edge1176 ord7510 gold0 seen0 
+2026-10-19T12:37:31-07:00 msel [OK want FAIL got FAIL rc=1]: SCOREBAD row0 ord0 expected4075 got400f SCOREBAD row0 ord1 expectedbf08 gotbd98 SCOREBAD row0 ord2 expected4024 got3ffd SCOREBAD row0 ord3 expectedc03b gotc05d SCOREBAD row0 ord4 expected3e8c got3fc8 
+2026-10-19T12:37:31-07:00 EQUIV n1_d4gprog == d4g_n1: IDENTICAL (700 score/TX lines, every edge)
+2026-10-19T12:37:31-07:00 EQUIV n1 (row frame) payload == d4g_n1: IDENTICAL (700 score/TX lines); edge shift first score 342 vs 438
+2026-10-19T12:37:32-07:00 done
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1247343-1792435116): exit 0

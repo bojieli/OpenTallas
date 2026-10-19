@@ -1,0 +1,24 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx_fushub_e69ccdbbf
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx_fushub_e69ccdbbf
+ot-run: ot-epyc6       admits   945 GB (avail 775, growth 113, headroom 0, waiters 0/0 GB) load 67/128 running 36 disk 5833 GB 
+ot-run: ot-epyc7       admits   934 GB (avail 754, growth 101, headroom 0, waiters 0/0 GB) load 78/96 running 29 disk 6336 GB 
+ot-run: ot-epyc8       admits  1072 GB (avail 859, growth 109, headroom 0, waiters 0/0 GB) load 39/128 running 28 disk 127 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx_fushub_e69ccdbbf
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx_fushub_e69ccdbbf
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1409772-1792437218 after 0 s
+2026-10-19T12:13:38-07:00 start host=ot-epyc8 bundle=e69ccdbbf verilator: /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator Verilator 5.050 2026-07-01 rev v5.050
+2026-10-19T12:38:55-07:00 build t0 rc=0 bin=ok
+2026-10-19T12:53:23-07:00 t0 pre_n2_g0_p0: HNX_FUSED_CYCLES op=pre N=2 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=5762 writes=0 HNX_FUSED FAIL op=pre N=2 mism=10240 fault=0 done=0 bankerr=0 writes=0 expect_sectors=1280  MISMATCH word 163840: got 00000000 exp bdef0000
+2026-10-19T12:53:25-07:00 t0 pre_n6_g0_p0: HNX_FUSED_CYCLES op=pre N=6 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=16006 writes=0 HNX_FUSED FAIL op=pre N=6 mism=30720 fault=0 done=0 bankerr=0 writes=0 expect_sectors=3840  MISMATCH word 163840: got 00000000 exp bf9b0000
+2026-10-19T12:53:28-07:00 t0 pre_n3_g0_p0: HNX_FUSED_CYCLES op=pre N=3 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=8323 writes=0 HNX_FUSED FAIL op=pre N=3 mism=15360 fault=0 done=0 bankerr=0 writes=0 expect_sectors=1920  MISMATCH word 163840: got 00000000 exp 3f0a0000
+2026-10-19T12:53:31-07:00 t0 post_n2_g0_p0: HNX_FUSED_CYCLES op=post N=2 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=6406 writes=5120 HNX_FUSED FAIL op=post N=2 mism=40960 fault=0 done=0 bankerr=0 writes=5120 expect_sectors=5120  MISMATCH word 196608: got 00000000 exp 3f620000
+2026-10-19T12:53:32-07:00 t0 pre_n4_g0_p0: HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=10884 writes=0 HNX_FUSED FAIL op=pre N=4 mism=20480 fault=0 done=0 bankerr=0 writes=0 expect_sectors=2560  MISMATCH word 163840: got 00000000 exp bf630000
+2026-10-19T12:53:33-07:00 t0 pre_n1_g0_p0: HNX_FUSED_CYCLES op=pre N=1 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=3201 writes=0 HNX_FUSED FAIL op=pre N=1 mism=5120 fault=0 done=0 bankerr=0 writes=0 expect_sectors=640  MISMATCH word 163840: got 00000000 exp 3e8b0000
+2026-10-19T12:53:34-07:00 t0 post_n1_g0_p0: HNX_FUSED_CYCLES op=post N=1 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=3203 writes=2560 HNX_FUSED FAIL op=post N=1 mism=20480 fault=0 done=0 bankerr=0 writes=2560 expect_sectors=2560  MISMATCH word 196608: got 00000000 exp bebe0000
+2026-10-19T12:53:34-07:00 t0 post_n6_g0_p0: HNX_FUSED_CYCLES op=post N=6 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=19218 writes=15360 HNX_FUSED FAIL op=post N=6 mism=122865 fault=0 done=0 bankerr=0 writes=15360 expect_sectors=15360  MISMATCH word 196608: got 00000000 exp 40340000
+2026-10-19T12:53:35-07:00 t0 post_n4_g0_p0: HNX_FUSED_CYCLES op=post N=4 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=12812 writes=10240 HNX_FUSED FAIL op=post N=4 mism=81907 fault=0 done=0 bankerr=0 writes=10240 expect_sectors=10240  MISMATCH word 196608: got 00000000 exp 3f260000
+2026-10-19T12:53:35-07:00 t0 post_n3_g0_p0: HNX_FUSED_CYCLES op=post N=3 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=9609 writes=7680 HNX_FUSED FAIL op=post N=3 mism=61440 fault=0 done=0 bankerr=0 writes=7680 expect_sectors=7680  MISMATCH word 196608: got 00000000 exp 40260000
+2026-10-19T12:53:36-07:00 t0 SUMMARY pass=0 fail=10 noresult=0
+2026-10-19T12:53:36-07:00 done
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1409772-1792437218): exit 0

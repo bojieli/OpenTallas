@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx_fushub_e69ccdbbf
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx_fushub_e69ccdbbf
+ot-run: ot-epyc6       admits   945 GB (avail 775, growth 113, headroom 0, waiters 0/0 GB) load 67/128 running 36 disk 5833 GB 
+ot-run: ot-epyc7       admits   934 GB (avail 754, growth 101, headroom 0, waiters 0/0 GB) load 78/96 running 29 disk 6336 GB 
+ot-run: ot-epyc8       admits  1072 GB (avail 859, growth 109, headroom 0, waiters 0/0 GB) load 39/128 running 28 disk 127 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx_fushub_e69ccdbbf
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx_fushub_e69ccdbbf
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1409775-1792437218 after 0 s
+2026-10-19T12:13:38-07:00 start host=ot-epyc8 bundle=e69ccdbbf verilator: /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator Verilator 5.050 2026-07-01 rev v5.050
+2026-10-19T12:38:58-07:00 build phr rc=0 bin=ok
+2026-10-19T12:38:59-07:00 phr pre_n4_g0_p3: HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=0 cycles=1 done=0 fault=1 reads=0 writes=0 HNX_FUSED FAIL op=pre N=4 mism=20480 fault=1 done=0 bankerr=0 writes=0 expect_sectors=2560  PH_REFUSE PASS MISMATCH word 163864: got 00000000 exp bf630000
+2026-10-19T12:54:06-07:00 phr post_n2_g0_p5: HNX_FUSED_CYCLES op=post N=2 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=6406 writes=5120 HNX_FUSED FAIL op=post N=2 mism=40960 fault=0 done=0 bankerr=0 writes=5120 expect_sectors=5120  MISMATCH word 196648: got 00000000 exp 3f620000
+2026-10-19T12:54:06-07:00 phr SUMMARY refuse=1 accept=0 post_pass=0
+2026-10-19T12:54:06-07:00 done
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1409775-1792437218): exit 0

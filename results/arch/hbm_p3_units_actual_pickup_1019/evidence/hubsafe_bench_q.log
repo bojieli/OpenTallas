@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       admits   798 GB (avail 672, growth 113, headroom 0, waiters 0/0 GB) load 86/128 running 32 disk 374 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-epyc6       admits   896 GB (avail 740, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 33 disk 5874 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-997261-1792436710 after 0 s
+2026-10-19T12:05:10-07:00 start host=regular-crane bundle=bb0f6ffe1
+2026-10-19T12:05:17-07:00 q_m9: TB_HNX_HC_Q FAIL MUT=9 XWB=4 errors=1
+2026-10-19T12:05:17-07:00 q_m7: TB_HNX_HC_Q FAIL MUT=7 XWB=4 errors=1920
+2026-10-19T12:05:17-07:00 q_n4s: TB_HNX_HC_Q PASS MUT=0 XWB=4 SPR=80 RNPOS=4 RSTRIDE=1024 SSTRIDE=64 waves=80 mixes=72 stores=12
+2026-10-19T12:05:18-07:00 q_m8: TB_HNX_HC_Q FAIL MUT=8 XWB=4 errors=18
+2026-10-19T12:05:18-07:00 q_d4g: TB_HNX_HC_Q PASS MUT=0 XWB=4 SPR=320 RNPOS=2 RSTRIDE=0 SSTRIDE=0 waves=160 mixes=72 stores=12
+Terminated                 /usr/local/bin/ot-heavy --mem 16 --tag otrun-ubuntu-1148411-436709927 --max-wait 120 -- bash tools/hbm_next/hnx_hc_bench.sh /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1/out/q q
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-997261-1792436710): exit 143

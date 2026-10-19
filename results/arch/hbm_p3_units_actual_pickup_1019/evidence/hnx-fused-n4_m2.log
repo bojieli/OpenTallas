@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: ot-epyc6       admits   710 GB (avail 610, growth 113, headroom 0, waiters 0/0 GB) load 39/128 running 18 disk 5945 GB 
+ot-run: ot-epyc7       admits  1027 GB (avail 820, growth 101, headroom 0, waiters 0/0 GB) load 66/96 running 25 disk 6385 GB 
+ot-run: ot-epyc8       admits  1220 GB (avail 963, growth 109, headroom 0, waiters 0/0 GB) load 79/128 running 28 disk 134 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1249202-1792435135 after 1 s
+2026-10-19T11:38:56-07:00 start host=ot-epyc8 bundle=4028eb45b
+2026-10-19T12:06:41-07:00 build m2 rc=0 bin=ok
+2026-10-19T12:06:47-07:00 m2 post_n4_g0: HNX_FUSED_CYCLES op=post N=4 rgap=0 KX=4 MUT=2 cycles=510 done=1 fault=0 reads=12812 writes=10240 HNX_FUSED FAIL op=post N=4 mism=61337 fault=0 done=1 bankerr=0 writes=10240 expect_sectors=10240  MISMATCH word 217088: got 3f000000 exp 40ed0000
+2026-10-19T12:06:48-07:00 m2 pre_n4_g0: HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=2 cycles=650 done=1 fault=0 reads=10884 writes=2560 HNX_FUSED FAIL op=pre N=4 mism=15343 fault=0 done=1 bankerr=0 writes=2560 expect_sectors=2560  MISMATCH word 168960: got bf5d0000 exp bf8d0000
+2026-10-19T12:06:49-07:00 m2 SUMMARY pass=0 fail=2 noresult=0
+2026-10-19T12:06:49-07:00 done
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1249202-1792435135): exit 0

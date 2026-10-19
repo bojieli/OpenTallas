@@ -1,0 +1,11 @@
+GATE WARN clock_span: 388.8 x 820.8 um: one clock root over > 600 um  -> FIX: split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: the IDXN link is the d4g pin-register shell (ot_hnx_idxn_link: one kept flop per data bit in and out); the 4-selector merge (OR of one + collision fault) sits before the shell's input flops; a synthesis wrapper would add an unpriced stage
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN rtl: runtime_partselect: 3 runtime-indexed part-select(s), 4,208 bits (2 >= 64 b; e.g. ot_hnx_idxn_link_core: packed_next[n*64+:64] (64 b write), ot_hnx_idxn_link_core: wd[bank*512+:512] (4096 b write)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory  -> FIX: decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)
+GATE INFO remote: ot-run selected ot-epyc6 for 72 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hnx_idxq_link_20261019-061948.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hnx_idxq_link_20261019-061948.log; host dir ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/hnx_idxq_link-20261019-061948
+GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; Error: 1_2_yosys.sdc, 756 OT_DIRECT_MACRO: instance ownership is not unique: link.core.gm[0].mem; Error: 1_2_yosys.sdc, 756 OT_DIRECT_MACRO: instance ownership is not unique: link.core.gm[0].mem  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
+GATE WARN layout_images: the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log
+PRE_ROUTE_GATE: FAIL (1 fail, 4 warn)

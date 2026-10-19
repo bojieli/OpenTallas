@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: ot-epyc6       admits   784 GB (avail 662, growth 113, headroom 0, waiters 0/0 GB) load 28/128 running 17 disk 5978 GB 
+ot-run: ot-epyc7       admits  1099 GB (avail 852, growth 83, headroom 0, waiters 0/0 GB) load 69/96 running 20 disk 6393 GB 
+ot-run: ot-epyc8       admits  1085 GB (avail 873, growth 113, headroom 0, waiters 0/0 GB) load 55/128 running 39 disk 157 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4134789-1792434941 after 0 s
+2026-10-19T11:35:41-07:00 start host=ot-epyc7 bundle=4028eb45b
+ot-run: interrupted (signal 15 from pid 583883 (/bin/bash -c source /home/ubuntu/.claude/shell-snapshots/snapshot-bash-1792434070513-07stj4.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'kill 518054 518057 2>/dev/null; sleep 2;; parent 87852 (claude bg-spare --bg-spare /tmp/cc-daemon-1000/5c860797/spare/cd09f173.claim.sock))); the command is STILL RUNNING on ot-epyc7 (unit oth-ubuntu-4134789-1792434941): NOT COMPLETED

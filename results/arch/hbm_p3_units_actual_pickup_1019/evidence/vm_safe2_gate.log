@@ -1,0 +1,71 @@
+GATE WARN fill: fill 40% = (macros/children 49269 + std 3711) / outline 133436 um2 < 50%
+GATE INFO pin_regs: pin registers opted out: Actual source wrapper explicitly preserves exact recipe3 input registers; no additional automatic stage.
+GATE INFO layer: tile: PG M6 stripes as pins, signals M2-M6, parent strap M7, cap M6 (granted)
+GATE FAIL sources: 2 committed input(s) absent from the working-tree archive: ['tools/run_abi3_physical.py', 'tools/w18/corner_sta_ref.py']  -> FIX: materialize the referenced files in the sparse checkout before rerunning the gate
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)
+GATE WARN fill: fill 40% = (macros/children 49269 + std 3711) / outline 133436 um2 < 50%
+GATE INFO pin_regs: pin registers opted out: Actual source wrapper explicitly preserves exact recipe3 input registers; no additional automatic stage.
+GATE INFO layer: tile: PG M6 stripes as pins, signals M2-M6, parent strap M7, cap M6 (granted)
+GATE INFO remote: ot-run selected ot-epyc6 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hnx_vms_bank_safe2_20261019-080702.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hnx_vms_bank_safe2_20261019-080702.log; host dir ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/hnx_vms_bank_safe2-20261019-080702
+GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS synthesis failed with exit 2:  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
+GATE WARN layout_images: the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log
+PRE_ROUTE_GATE: FAIL (1 fail, 2 warn)
+GATE WARN fill: fill 40% = (macros/children 49269 + std 3711) / outline 133436 um2 < 50%
+GATE INFO pin_regs: pin registers opted out: Actual source wrapper explicitly preserves exact recipe3 input registers; no additional automatic stage.
+GATE INFO layer: tile: PG M6 stripes as pins, signals M2-M6, parent strap M7, cap M6 (granted)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hnx_vms_bank_safe2_20261019-080952.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hnx_vms_bank_safe2_20261019-080952.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hnx_vms_bank_safe2-20261019-080952
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 49 s (gate total 2839 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 3933, 'pin_rectangles': 3933, 'pin_track_checked': 3933, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 3ec3609b456fb5f06bc51d017000f2b16e75ba627fa5c796609a38cfe4207715
+GATE INFO util: synthesized std area 3711 um2 + macros 49269 in core 130189: util 5% (std-cell density 5.3% of placeable 69859 um2; total fill 40.7%)
+GATE INFO textbook: PASS hnx_vms_bank_q0_faces cells 23,978 flops 8,295 depth 408.4 ps util 0.4064 reach 0.0 um (0.5 s)
+GATE INFO cts_calibration: ss insertion all 338.3..380.3 ps (spread 42.0), boundary mean 375.3; tt insertion all 259.0..299.9 ps (spread 40.9), boundary mean 295.2; ff insertion all 210.3..250.7 ps (spread 40.4), boundary mean 245.8; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hnx_vms_bank_safe2/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: macro->reg    300 paths, worst slack -10.9 ps (e.g. u_ot_pr_core.u_ot_pr_core.bank.c_b[30]$_DFF_P_/D)
+GATE INFO path_classes: reg->reg     1172 paths, worst slack 34.8 ps (e.g. u_ot_pr_core.u_ot_pr_core.bank.pr_d[83]$_SDFF_PN0_/D)
+GATE INFO path_classes: reg->out     1176 paths, worst slack 105.1 ps (e.g. pr[263])
+GATE INFO path_classes: reg->macro   1200 paths, worst slack 141.3 ps (e.g. u_ot_pr_core.u_ot_pr_core.bank.u_c/w_addr_in[3])
+GATE INFO path_classes: in->reg       126 paths, worst slack 162.3 ps (e.g. u_ot_pr_core.xq__ot_q[261]$_DFF_P_/D)
+GATE INFO path_classes: setup WNS -1.0887846180196448e-11 hold WNS 3.409586502023387e-11
+GATE INFO cross_clock: ot_entry_0->ot_entry_1 max: 276 undeclared timed path(s), worst 141.6 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_1 min: 276 undeclared timed path(s), worst 89.7 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_2 max: 524 undeclared timed path(s), worst 34.8 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_2 min: 524 undeclared timed path(s), worst 88.2 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_3 max: 536 undeclared timed path(s), worst 40.1 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_3 min: 536 undeclared timed path(s), worst 89.2 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_4 max: 516 undeclared timed path(s), worst 109.6 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_4 min: 516 undeclared timed path(s), worst 88.5 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_5 max: 534 undeclared timed path(s), worst 170.4 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_5 min: 534 undeclared timed path(s), worst 64.8 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_6 max: 358 undeclared timed path(s), worst 195.0 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_6 min: 358 undeclared timed path(s), worst 81.8 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_7 max: 534 undeclared timed path(s), worst 141.3 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_7 min: 534 undeclared timed path(s), worst 55.3 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_8 max: 534 undeclared timed path(s), worst 271.4 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_8 min: 534 undeclared timed path(s), worst 87.0 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_1->ot_entry_0 max: 313 undeclared timed path(s), worst 57.2 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_1->ot_entry_0 min: 313 undeclared timed path(s), worst 64.3 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_2->ot_entry_0 max: 598 undeclared timed path(s), worst 106.8 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_2->ot_entry_0 min: 598 undeclared timed path(s), worst 67.1 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_3->ot_entry_0 max: 577 undeclared timed path(s), worst 205.2 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_3->ot_entry_0 min: 577 undeclared timed path(s), worst 63.0 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_4->ot_entry_0 max: 595 undeclared timed path(s), worst 19.4 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_4->ot_entry_0 min: 595 undeclared timed path(s), worst 61.5 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_5->ot_entry_0 max: 256 undeclared timed path(s), worst 42.0 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_5->ot_entry_0 min: 256 undeclared timed path(s), worst 463.1 ps (uncertainty 100.0 ps)
+GATE FAIL cross_clock: 23 undeclared ot_entry_6->ot_entry_0 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 150.0 ps): worst -10.9 ps u_ot_pr_core.u_ot_pr_core.bank.u_b/rd_out[30] -> u_ot_pr_core.u_ot_pr_core.bank.c_b[30]$_DFF_P_/D  -> FIX: a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule
+GATE INFO cross_clock: ot_entry_6->ot_entry_0 min: 168 undeclared timed path(s), worst 528.0 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_7->ot_entry_0 max: 256 undeclared timed path(s), worst 63.3 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_7->ot_entry_0 min: 256 undeclared timed path(s), worst 443.6 ps (uncertainty 100.0 ps)
+GATE FAIL cross_clock: 1 undeclared ot_entry_8->ot_entry_0 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 150.0 ps): worst -1.1 ps u_ot_pr_core.u_ot_pr_core.bank.u_a1/rd_out[172] -> u_ot_pr_core.u_ot_pr_core.bank.c_a1[172]$_DFF_P_/D  -> FIX: a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule
+GATE INFO cross_clock: ot_entry_8->ot_entry_0 min: 256 undeclared timed path(s), worst 515.1 ps (uncertainty 100.0 ps)
+GATE INFO clock_rule: root port:clk: 4,372 sinks on the largest root; measured TT insertion 299.9 ps, FF insertion 250.7 ps, TT pin-flop spread 0.0 ps, FF pin-flop spread 0.0 ps (spread <= 80 ps)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-hnx-units-collect-1019/physical/ref_tile/hnx_vms_bank_safe2/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-hnx-units-collect-1019/physical/ref_tile/hnx_vms_bank_safe2/gate_layout/density.png
+GATE WARN fill: fill 40% = (hard macros 49269.4 + synthesized std cells 3644.4) / outline 133436.2 um2; pin demand per face: S 1137 pins over 466.5/475.2 um (98%), N 618 pins over 466.5/475.2 um (98%), W 1114 pins over 250.5/280.8 um (89%), E 1116 pins over 250.5/280.8 um (89%) (< 50%)
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M4 27.58% used; GRT 1863 s
+PRE_ROUTE_GATE: FAIL (2 fail, 2 warn)
+GATE: hnx_vms_bank_safe2/gate_result.json written (exact staged source binding; commit it with the kit)

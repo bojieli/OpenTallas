@@ -1,0 +1,24 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: ot-epyc6       admits   710 GB (avail 610, growth 113, headroom 0, waiters 0/0 GB) load 39/128 running 18 disk 5945 GB 
+ot-run: ot-epyc7       admits  1027 GB (avail 820, growth 101, headroom 0, waiters 0/0 GB) load 66/96 running 25 disk 6385 GB 
+ot-run: ot-epyc8       admits  1220 GB (avail 963, growth 109, headroom 0, waiters 0/0 GB) load 79/128 running 28 disk 134 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx_fused_n4_4028eb45b
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1249200-1792435135 after 0 s
+2026-10-19T11:38:56-07:00 start host=ot-epyc8 bundle=4028eb45b
+2026-10-19T12:06:42-07:00 build m0 rc=0 bin=ok
+2026-10-19T12:06:45-07:00 m0 post_n1_g0: HNX_FUSED_CYCLES op=post N=1 rgap=0 KX=4 MUT=0 cycles=196 done=1 fault=0 reads=3203 writes=2560 HNX_FUSED PASS op=post N=1 words=20480  
+2026-10-19T12:06:46-07:00 m0 post_n2_g0: HNX_FUSED_CYCLES op=post N=2 rgap=0 KX=4 MUT=0 cycles=304 done=1 fault=0 reads=6406 writes=5120 HNX_FUSED PASS op=post N=2 words=40960  
+2026-10-19T12:06:47-07:00 m0 post_n3_g0: HNX_FUSED_CYCLES op=post N=3 rgap=0 KX=4 MUT=0 cycles=407 done=1 fault=0 reads=9609 writes=7680 HNX_FUSED PASS op=post N=3 words=61440  
+2026-10-19T12:06:47-07:00 m0 pre_n1_g0: HNX_FUSED_CYCLES op=pre N=1 rgap=0 KX=4 MUT=0 cycles=406 done=1 fault=0 reads=3201 writes=640 HNX_FUSED PASS op=pre N=1 words=5120  
+2026-10-19T12:06:48-07:00 m0 pre_n2_g0: HNX_FUSED_CYCLES op=pre N=2 rgap=0 KX=4 MUT=0 cycles=488 done=1 fault=0 reads=5762 writes=1280 HNX_FUSED PASS op=pre N=2 words=10240  
+2026-10-19T12:06:49-07:00 m0 post_n4_g0: HNX_FUSED_CYCLES op=post N=4 rgap=0 KX=4 MUT=0 cycles=510 done=1 fault=0 reads=12812 writes=10240 HNX_FUSED PASS op=post N=4 words=81920  
+2026-10-19T12:06:49-07:00 m0 pre_n3_g0: HNX_FUSED_CYCLES op=pre N=3 rgap=0 KX=4 MUT=0 cycles=569 done=1 fault=0 reads=8323 writes=1920 HNX_FUSED PASS op=pre N=3 words=15360  
+2026-10-19T12:06:49-07:00 m0 pre_n4_g0: HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=0 cycles=650 done=1 fault=0 reads=10884 writes=2560 HNX_FUSED PASS op=pre N=4 words=20480  
+2026-10-19T12:06:50-07:00 m0 post_n6_g0: HNX_FUSED_CYCLES op=post N=6 rgap=0 KX=4 MUT=0 cycles=716 done=1 fault=0 reads=19218 writes=15360 HNX_FUSED PASS op=post N=6 words=122880  
+2026-10-19T12:06:51-07:00 m0 pre_n6_g0: HNX_FUSED_CYCLES op=pre N=6 rgap=0 KX=4 MUT=0 cycles=812 done=1 fault=0 reads=16006 writes=3840 HNX_FUSED PASS op=pre N=6 words=30720  
+2026-10-19T12:06:52-07:00 m0 SUMMARY pass=10 fail=0 noresult=0
+2026-10-19T12:06:52-07:00 done
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1249200-1792435135): exit 0

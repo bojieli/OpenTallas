@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       admits   798 GB (avail 672, growth 113, headroom 0, waiters 0/0 GB) load 86/128 running 32 disk 374 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-epyc6       admits   896 GB (avail 740, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 33 disk 5874 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hubsafe/b_bb0f6ffe1
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-997258-1792436710 after 0 s
+2026-10-19T12:05:10-07:00 start host=regular-crane bundle=bb0f6ffe1
+2026-10-19T12:32:43-07:00 build s0 rc=0 bin=ok
+2026-10-19T12:34:02-07:00 s0 n1: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=0 TB=1944 last_mix_t=2443 first_out_t=2942 last_out_t=2942 HC_MIX_CYCLES=998 HC_ENG PASS RUN_RC=0 
+2026-10-19T12:34:06-07:00 s0 n2: HC_ENG_DONE mode=0 npos=2 mixes=48 mixbad=0 outs=8 outbad=0 TB=1944 last_mix_t=2693 first_out_t=2943 last_out_t=3192 HC_MIX_CYCLES=1248 HC_ENG PASS RUN_RC=0 
+2026-10-19T12:34:19-07:00 s0 n3: HC_ENG_DONE mode=0 npos=3 mixes=72 mixbad=0 outs=12 outbad=0 TB=1944 last_mix_t=2943 first_out_t=2943 last_out_t=3442 HC_MIX_CYCLES=1498 HC_ENG PASS RUN_RC=0 
+2026-10-19T12:34:24-07:00 s0 n4: HC_ENG_DONE mode=0 npos=4 mixes=96 mixbad=0 outs=16 outbad=0 TB=1944 last_mix_t=3193 first_out_t=2943 last_out_t=3692 HC_MIX_CYCLES=1748 HC_ENG PASS RUN_RC=0 
+2026-10-19T12:34:41-07:00 s0 n6: HC_ENG_DONE mode=0 npos=6 mixes=144 mixbad=0 outs=24 outbad=0 TB=1944 last_mix_t=3693 first_out_t=2943 last_out_t=4192 HC_MIX_CYCLES=2248 HC_ENG PASS RUN_RC=0 
+2026-10-19T12:34:55-07:00 s0 n8: HC_ENG_DONE mode=0 npos=8 mixes=192 mixbad=0 outs=32 outbad=0 TB=1944 last_mix_t=4193 first_out_t=2943 last_out_t=4692 HC_MIX_CYCLES=2748 HC_ENG PASS RUN_RC=0 
+2026-10-19T12:34:55-07:00 HNX_HC_RING SIREG=1 MUT=0 PASS 6/6
+2026-10-19T12:34:55-07:00 HNX_HC_ROW_II 250.0 cycles/row; points N1=998 N2=1248 N3=1498 N4=1748 N6=2248 N8=2748
+2026-10-19T12:34:55-07:00 done
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-997258-1792436710): exit 0
