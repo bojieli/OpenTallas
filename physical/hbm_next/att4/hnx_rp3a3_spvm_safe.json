@@ -1,0 +1,322 @@
+{
+ "name": "hnx_rp3a3_spvm_safe",
+ "top": "ot_hnx_att4_spvm",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hbm_next/att/ot_hnx_att4_smerge.sv",
+  "rtl/hbm_next/att/ot_hnx_att4_spvm.sv",
+  "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43/hnx_sram_1r1w_128x256_r43_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "inst": "*g_lane?0?.g_lv?0?.g_half?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    172.8,
+    43.2
+   ],
+   "inst": "*g_lane?0?.g_lv?0?.g_half?1?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    302.4,
+    43.2
+   ],
+   "inst": "*g_lane?0?.g_lv?1?.g_half?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    43.2,
+    86.4
+   ],
+   "inst": "*g_lane?0?.g_lv?1?.g_half?1?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    172.8,
+    86.4
+   ],
+   "inst": "*g_lane?0?.g_lv?2?.g_half?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    302.4,
+    86.4
+   ],
+   "inst": "*g_lane?0?.g_lv?2?.g_half?1?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    43.2,
+    129.6
+   ],
+   "inst": "*g_lane?1?.g_lv?0?.g_half?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    172.8,
+    129.6
+   ],
+   "inst": "*g_lane?1?.g_lv?0?.g_half?1?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    302.4,
+    129.6
+   ],
+   "inst": "*g_lane?1?.g_lv?1?.g_half?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    43.2,
+    259.2
+   ],
+   "inst": "*g_lane?1?.g_lv?1?.g_half?1?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    172.8,
+    259.2
+   ],
+   "inst": "*g_lane?1?.g_lv?2?.g_half?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    302.4,
+    259.2
+   ],
+   "inst": "*g_lane?1?.g_lv?2?.g_half?1?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    43.2,
+    302.4
+   ],
+   "inst": "*g_lane?2?.g_lv?0?.g_half?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    172.8,
+    302.4
+   ],
+   "inst": "*g_lane?2?.g_lv?0?.g_half?1?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    302.4,
+    302.4
+   ],
+   "inst": "*g_lane?2?.g_lv?1?.g_half?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    43.2,
+    345.6
+   ],
+   "inst": "*g_lane?2?.g_lv?1?.g_half?1?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    172.8,
+    345.6
+   ],
+   "inst": "*g_lane?2?.g_lv?2?.g_half?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    302.4,
+    345.6
+   ],
+   "inst": "*g_lane?2?.g_lv?2?.g_half?1?.u_ring"
+  }
+ ],
+ "pins": {
+  "N": [
+   "rst_n",
+   "ev",
+   "sum_lo",
+   "tag_lo",
+   "pub_start",
+   "pub_lane",
+   "pub_slot"
+  ],
+  "S": [
+   "sum_hi",
+   "tag_hi",
+   "pub_v",
+   "pub_data",
+   "pub_word",
+   "pub_out_slot",
+   "pub_out_lane",
+   "pub_tag",
+   "fault"
+  ],
+  "E": [
+   "clk"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 0.0,
+  "macro_halo_x_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:HBM-NEXT-P3-ATT",
+  "branch": "codex/hnext-p3att-safe-1019",
+  "tag": "sreset1",
+  "purpose": "Independent P3 shared merge SAFE reset variant: valid-only adder reset, explicit kept identical reset vectors at existing edges, post-synthesis max32 resetload distribution; zero extra edges. Critical noREVIEW/no submit.",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/gpu",
+   "rtl/hbm_next/att",
+   "rtl/proto",
+   "tools/hbm_next",
+   "tools/hbm_sm_attention",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hgi_sim",
+   "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "physical/hbm_next/att4/p3_spvm_band.tcl",
+   "tools/orfs_allcorner_spef.py",
+   "physical/common_flow/ot_keep_regs.tcl",
+   "physical/common_flow/ot_rst_copies.tcl",
+   "physical/common_flow/ot_rst_copies.py"
+  ],
+  "benches": [
+   {
+    "name": "att4_slice_shared_exact",
+    "cmd": "HNX_ATT_SAFE_RESET=1 python3 tools/hbm_next/att4_bench.py run --nl 3 --work {RUN}/bench/pos --out {RUN}/bench/pos.json --variant shared --only q4,p4,q10,p10",
+    "expect": "pass",
+    "pass_regex": "^PASS HNX_ATT4",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "att4_slice_shared_smut1",
+    "cmd": "HNX_ATT_SAFE_RESET=1 python3 tools/hbm_next/att4_bench.py run --nl 3 --work {RUN}/bench/neg --out {RUN}/bench/neg.json --variant shared --smut 1 --only p0,p1,p2,p3",
+    "expect": "fail",
+    "fail_regex": "^FAIL HNX_ATT4",
+    "fail_witness": "results/arch/hbm_next_1019/units/p3/att4/witness/sh_smut1.log",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "att4_spvm_publish_exact",
+    "cmd": "HNX_ATT_SAFE_RESET=1 python3 tools/hbm_next/att4_pub_bench.py run --nl 3 --work {RUN}/bench/pub --out {RUN}/bench/pub.json --mut 0",
+    "expect": "pass",
+    "pass_regex": "^PASS HNX_ATT4_PUB",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "att4_spvm_publish_mut5",
+    "cmd": "HNX_ATT_SAFE_RESET=1 python3 tools/hbm_next/att4_pub_bench.py run --nl 3 --work {RUN}/bench/pubneg --out {RUN}/bench/pubneg.json --mut 5",
+    "expect": "fail",
+    "fail_regex": "^FAIL HNX_ATT4",
+    "fail_witness": "results/arch/hbm_next_1019/units/p3/att4/witness/pub_m5.log",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hnx_rp3a3_spvm_safe/views",
+  "record_to": "results/arch/hbm_next_1019/att4/p3_sram_safe/tile",
+  "hold_merge": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL (ot_hnx_att4_spvm) already registers every data input and every output at its pin (one flop each, +1 edge each way, counted in the schedule); the reset lands in one kept register rq. A wrapper flop would add a second cycle per pin."
+ },
+ "std_area_um2": 11277.25092,
+ "util": 0.55,
+ "outline": {
+  "w": 432,
+  "h": 432
+ },
+ "params": {
+  "NL": 3
+ },
+ "recipe": 4,
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL rst_n -> spvm.rq -> smerge kept rst_c/rst_e/rst_m = two registered stages; data pins already registered"
+ },
+ "pin_hook_before_flops": [
+  "physical/hbm_next/att4/p3_spvm_band.tcl"
+ ],
+ "io_flop_at_pins": {
+  "enable": true
+ },
+ "defines": [
+  "OT_HNX_ATT_SAFE_RESET",
+  "OT_FP_DATA_NORST"
+ ],
+ "reset_relay_split": {
+  "max_loads": 32
+ }
+}

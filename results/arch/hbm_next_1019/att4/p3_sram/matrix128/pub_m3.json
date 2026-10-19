@@ -1,0 +1,103 @@
+{
+ "bench": "att4_pub",
+ "nl": 3,
+ "mut": 3,
+ "seed": 1019,
+ "rounds": 24,
+ "nodes": 576,
+ "streams": 576,
+ "node_mismatches": 470,
+ "word_mismatches": 7448,
+ "fault": false,
+ "rc": 0,
+ "runs_by_chunks": {
+  "1": 106,
+  "2": 79,
+  "3": 108,
+  "4": 283
+ },
+ "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+ "examples": [
+  {
+   "exp": {
+    "round": 0,
+    "lane": 0,
+    "slot": 0,
+    "tag": 40960,
+    "n": 4,
+    "req": 272
+   },
+   "got": {
+    "lane": 0,
+    "slot": 0,
+    "tag": 40960,
+    "bad": null
+   }
+  },
+  {
+   "exp": {
+    "round": 0,
+    "lane": 1,
+    "slot": 0,
+    "tag": 40968,
+    "n": 4,
+    "req": 288
+   },
+   "got": {
+    "lane": 1,
+    "slot": 0,
+    "tag": 40968,
+    "bad": null
+   }
+  },
+  {
+   "exp": {
+    "round": 0,
+    "lane": 2,
+    "slot": 0,
+    "tag": 40976,
+    "n": 4,
+    "req": 304
+   },
+   "got": {
+    "lane": 2,
+    "slot": 0,
+    "tag": 40976,
+    "bad": null
+   }
+  },
+  {
+   "exp": {
+    "round": 0,
+    "lane": 0,
+    "slot": 1,
+    "tag": 40961,
+    "n": 4,
+    "req": 329
+   },
+   "got": {
+    "lane": 0,
+    "slot": 1,
+    "tag": 40961,
+    "bad": null
+   }
+  },
+  {
+   "exp": {
+    "round": 0,
+    "lane": 1,
+    "slot": 1,
+    "tag": 40969,
+    "n": 4,
+    "req": 345
+   },
+   "got": {
+    "lane": 1,
+    "slot": 1,
+    "tag": 40969,
+    "bad": null
+   }
+  }
+ ],
+ "pass_": false
+}

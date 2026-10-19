@@ -1,18 +1,15 @@
 `timescale 1ns/1ps
 `default_nettype none
 // ---------------------------------------------------------------------------------------------------------------------
-// ot_hnx_att4_smerge: SHARED 4-LANE PV MERGE of one BF16 column (HBM-NEXT-ATT4 2026-10-19, risk A1 PRIMARY; PROG decision:
-// do not replicate the per-lane merge).  ONE merge datapath (16 FP32 RNE adders ot_gpu_fadd LAT 7, the release merge's
-// adders) serves the NL query lanes' 8 ring slots each; per-lane state is a FLOP RING of LV levels x 8 slots x 512 b
-// (LV 3 = 24 words a lane).  Arithmetic = the golden's csum8 pairwise tree over a lane's chunk sums, exactly as
-// ot_hnx_att_pv_merge (binary counter + flush), so every lane's node is bit-identical to its single-query run.
-//
-// RESIDUE STRUCTURE (static, no arbitration across slots): the tcpv rings emit slot s's chunk sums on one fixed cycle
-// residue r (mod 8) for EVERY lane (all lanes share the beat timing).  Entry (lane l, residue r) lives in lane l's ring:
-// level k of all 8 entries is an 8-stage shift register whose head (stage 0) is entry (l, ph) on the cycle with residue
-// ph.  Everything an entry does happens at its head turn: its event write, its add issue, and its result write (the
-// adder is LAT 7 behind one operand register = 8 cycles = exactly one ring turn).  Reads and writes therefore touch only
-// the head stage: no slot-addressed read mux and no write decode (the other 7 stages are plain shift flops).
+// ot_hnx_att4_smerge: shared NL-lane (production P3) PV merge, one16-adder datapath.
+// Each lane/level stores eight512-bit residue words in two128x256 1R1W SRAMs.
+// Only rows0..7 are used. At edge t, write the current head ph and read ph+1;
+// the registered SRAM output therefore presents the next head after ph advances.
+// This has exactly the logical shift ring's eight-edge recurrence with no added latency.
+// Independent lane/level banks preserve concurrent arrivals; unused rows do not alias.
+// Arithmetic follows the golden csum8 pairwise tree, with LV3 binary-counter levels.
+// Bulk storage is stationary: no shift-chain hold repair or runtime-indexed flop memory.
+// Return metadata is an eight-entry addressed ring below2kb; only validity is reset.
 //
 // EVENT HOLDING, SOLVED STRUCTURALLY: chunk c of a run is written AT ARRIVAL into its own entry's free level -- level 0
 // for even c, level j = (trailing ones of c) for odd c (bit j of c is clear, so that level is free in the binary
@@ -93,9 +90,12 @@ module ot_hnx_att4_smerge #(
     localparam [2:0] TOP = 3'(LV - 1);
 
     // ---------------- reset landing: kept control copies (the adders take their own copy in g_madd) ----------------
-    (* keep *) reg rst_c;
-    (* keep *) reg rst_e;
-    always @(posedge clk) begin rst_c <= rst_n; rst_e <= rst_n; end
+    localparam integer RST_COPIES = `ifdef OT_HNX_ATT_SAFE_RESET 16 `else 1 `endif;
+    // Identical kept vectors at the EXISTING reset edge; synthesis proves identity and distributes at most32loads.
+    (* keep = "true", ot_rst_split = 1 *) reg [RST_COPIES-1:0] rst_cv, rst_ev;
+    wire rst_c = rst_cv[0];
+    wire rst_e = rst_ev[0];
+    always @(posedge clk) begin rst_cv <= {RST_COPIES{rst_n}}; rst_ev <= {RST_COPIES{rst_n}}; end
 
     // ---------------- input registers (STEP 4: +2 edges, uniform) -------------------------------------------------------
     // Stage 1 = LANDING registers: the decode reads ev / tag only from ev_q / tag_q, which the placer puts beside the
@@ -132,29 +132,36 @@ module ot_hnx_att4_smerge #(
     reg [TAGW-1:0] e_tag [0:NE-1];
     reg [NE-1:0]   node_valid;
 
-    // ---------------- result return pipeline (issue at t -> stage ALAT during t + ALAT + 1 = the next turn) -------------
+    // ---------------- stationary return metadata ring (issue now -> same ph in eight edges) ----------------
     reg [ALAT:0]   rp_v;
     reg [1:0]      rp_l   [0:ALAT];
     reg [2:0]      rp_t   [0:ALAT];
     reg            rp_f   [0:ALAT];
     reg [TAGW-1:0] rp_tag [0:ALAT];
-    wire           ret_v = rp_v[ALAT];
-    wire [1:0]     ret_l = rp_l[ALAT];
-    wire [2:0]     ret_t = rp_t[ALAT];
-    wire           nret_v = rp_v[ALAT-1];                // the result that returns at the NEXT head turn
-    wire [1:0]     nret_l = rp_l[ALAT-1];
-    wire [2:0]     nret_t = rp_t[ALAT-1];
+    wire           ret_v = rp_v[ph];
+    wire [1:0]     ret_l = rp_l[ph];
+    wire [2:0]     ret_t = rp_t[ph];
+    wire           nret_v = rp_v[phn];                // the result that returns at the NEXT head turn
+    wire [1:0]     nret_l = rp_l[phn];
+    wire [2:0]     nret_t = rp_t[phn];
     wire [W-1:0]   my;
 
-    // ---------------- lane rings: LV levels x 8 stages x 512 b; head = stage 0 ----------------
+    // ---------------- stationary SRAM rings: read ph+1, write ph; no shifting storage ----------------
     wire [NW*W-1:0] hw;                                  // head words
     wire [NW*W-1:0] hn;                                  // head next (into stage 7)
     genvar gl, gq;
     generate for (gl = 0; gl < NL; gl = gl + 1) begin : g_lane
         for (gq = 0; gq < LV; gq = gq + 1) begin : g_lv
-            reg [8*W-1:0] rg;
-            always @(posedge clk) rg <= {hn[(gl*LV+gq)*W +: W], rg[8*W-1:W]};
-            assign hw[(gl*LV+gq)*W +: W] = rg[W-1:0];
+            // Each bank needs one read and write per edge; independent banks preserve simultaneous lane events.
+            // Registered SRAM output is the next head. Distinct read/write addresses avoid collision semantics.
+            // MUT 6 reads one residue early: a storage-specific negative control.
+            for (genvar half = 0; half < 2; half = half + 1) begin : g_half
+                hnx_sram_1r1w_128x256_r43 u_ring (
+                    .clk(clk), .r_ce_in(1'b1), .r_addr_in({4'b0, (MUT == 6 ? ph : phn)}),
+                    .rd_out(hw[(gl*LV+gq)*W + half*256 +: 256]),
+                    .w_ce_in(1'b1), .w_addr_in({4'b0, ph}), .wd_in(hn[(gl*LV+gq)*W + half*256 +: 256]),
+                    .w_mask_in({256{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
+            end
         end
     end endgenerate
 
@@ -313,10 +320,11 @@ module ot_hnx_att4_smerge #(
         (* keep *) reg [NW-1:0] ka_hw, kb_hw, kw_ev, kw_rt;
         (* keep *) reg          ka_my, kb_my;
         (* keep *) reg [NL-1:0] ka_ev, kb_ev;
-        (* keep *) reg          rst_m;
+        (* keep = "true", ot_rst_split = 1 *) reg [RST_COPIES-1:0] rst_mv;
+        wire rst_m = rst_mv[0];
         always @(posedge clk) begin
             ka_hw <= da_hw; kb_hw <= db_hw; kw_ev <= dw_ev; kw_rt <= dw_rt;
-            ka_my <= da_my; kb_my <= db_my; ka_ev <= da_ev; kb_ev <= db_ev; rst_m <= rst_n;
+            ka_my <= da_my; kb_my <= db_my; ka_ev <= da_ev; kb_ev <= db_ev; rst_mv <= {RST_COPIES{rst_n}};
         end
         reg [31:0] a_w, b_w;
         integer j;
@@ -353,9 +361,9 @@ module ot_hnx_att4_smerge #(
                 e_fb[k] <= {LV{1'b0}}; e_n[k] <= {(LV+1){1'b0}};
             end
         end else begin
-            rp_v <= {rp_v[ALAT-1:0], x_iss};
-            pv_v <= ret_v && rp_f[ALAT];
-            if (ret_v && rp_f[ALAT]) node_valid[{ret_l, ph}] <= 1'b1;
+            rp_v[ph] <= x_iss;
+            pv_v <= ret_v && rp_f[ph];
+            if (ret_v && rp_f[ph]) node_valid[{ret_l, ph}] <= 1'b1;
             if ((|mf) || (|x_flt)) m_fault <= 1'b1;
             for (l2 = 0; l2 < NL; l2 = l2 + 1) begin
                 ix2 = {l2[1:0], ph};
@@ -367,11 +375,8 @@ module ot_hnx_att4_smerge #(
     end
     always @(posedge clk) begin
         for (l2 = 0; l2 < NL; l2 = l2 + 1) begin ix3 = {l2[1:0], ph}; e_tag[ix3] <= x_tag[l2]; end
-        rp_l[0] <= x_sel; rp_t[0] <= x_st; rp_f[0] <= x_sf; rp_tag[0] <= x_stag;
-        for (k = 1; k <= ALAT; k = k + 1) begin
-            rp_l[k] <= rp_l[k-1]; rp_t[k] <= rp_t[k-1]; rp_f[k] <= rp_f[k-1]; rp_tag[k] <= rp_tag[k-1];
-        end
-        if (ret_v && rp_f[ALAT]) begin pv_y <= my; pv_tag <= rp_tag[ALAT]; pv_lane <= ret_l; end
+        rp_l[ph] <= x_sel; rp_t[ph] <= x_st; rp_f[ph] <= x_sf; rp_tag[ph] <= x_stag;
+        if (ret_v && rp_f[ph]) begin pv_y <= my; pv_tag <= rp_tag[ph]; pv_lane <= ret_l; end
     end
 
     // ---------------- publication (PUBLISH = 1): node = level LV-1 of entry (pl_q, ph), request through the input reg ----

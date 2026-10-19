@@ -39,7 +39,7 @@ _spec.loader.exec_module(SB)
 
 F = np.float32
 NLN, W, K, HD = 3, 128, 512, 512   # NLN = query lanes = SM lanes P (P3 default, owner 10-19; --nl 1..4)
-SRC = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/gpu/ot_gpu_tree.sv",
+SRC = ["physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43/hnx_sram_1r1w_128x256_r43.v", "rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/gpu/ot_gpu_tree.sv",
        "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
        "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
        "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
@@ -52,6 +52,7 @@ SRC = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hdc/ot_hdc_fp3
 # merge a column (ot_hnx_att4_smerge, LV 3 flop rings, PRIMARY); flop = per-lane merges on LV 3 flop stacks (fallback)
 VARIANTS = {"base": dict(SHARED=0, STORE=0, LV=4), "shared": dict(SHARED=1, STORE=0, LV=3),
             "flop": dict(SHARED=0, STORE=1, LV=3)}
+SAFE_RESET = os.environ.get("HNX_ATT_SAFE_RESET") == "1"
 VERILATOR = os.environ.get("VERILATOR") or next(
     (c for c in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(c)),
     "verilator")
@@ -139,9 +140,12 @@ def build(work, imut, pvmut, kvmut, variant="base", smut=0):
     vtag = ("" if variant == "base" and not smut else f"_{variant}_s{smut}") + ("" if NLN == 4 else f"_nl{NLN}")
     obj = work / f"obj_i{imut}_p{pvmut}_k{kvmut}{vtag}"
     exe = obj / "Vtb_hnx_att4"
+    if SAFE_RESET:
+        obj = Path(str(obj) + "_safe")
+        exe = obj / exe.name
     if exe.exists():
         return exe
-    cmd = [VERILATOR, "--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint",
+    cmd = [VERILATOR] + (["-DOT_HNX_ATT_SAFE_RESET", "-DOT_FP_DATA_NORST"] if SAFE_RESET else []) + ["--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint",
            "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "128", "--top-module", "tb_hnx_att4",
            f"-GIMUT={imut}", f"-GPVMUT={pvmut}", f"-GKVMUT={kvmut}", f"-GSMUT={smut}", f"-GNLN={NLN}"] + \
           [f"-G{k}={v}" for k, v in VARIANTS[variant].items()] + ["--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
@@ -256,7 +260,7 @@ def main(argv=None):
         res = list(ex.map(lambda j: run_job(exe, rec, j, vec), jobs))
     mut = a.imut or a.pvmut or a.kvmut or a.smut
     summ = dict(nl=NLN, seed=a.seed, sigma=a.sigma, topk=K, imut=a.imut, pvmut=a.pvmut, kvmut=a.kvmut, variant=a.variant, smut=a.smut,
-                verilator=VERILATOR,
+                verilator=VERILATOR, safe_reset=SAFE_RESET,
                 union_lines=len(rec["union"]), lane_lines=[len(ln["rows"]) for ln in rec["lanes"]],
                 ops=len(res), passed=sum(r["pass"] for r in res), wall_s=round(time.time() - t0, 1))
     main_jobs = [r for r in res if "_l" not in r["name"]]

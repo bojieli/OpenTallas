@@ -1,0 +1,2 @@
+FAIL HNX_ATT4 {"nl": 3, "seed": 1019, "sigma": 0.3, "topk": 512, "imut": 0, "pvmut": 0, "kvmut": 0, "variant": "shared", "smut": 1, "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator", "union_lines": 809, "lane_lines": [640, 640, 640], "ops": 4, "passed": 0, "wall_s": 140.4, "pv_span_max": 371, "pv_union_rows_max": 34, "verdict": "FAIL", "mutant_detected": true}
+rc=1

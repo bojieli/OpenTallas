@@ -1,0 +1,143 @@
+{
+ "summary": {
+  "nl": 3,
+  "seed": 1019,
+  "sigma": 0.3,
+  "topk": 512,
+  "imut": 3,
+  "pvmut": 0,
+  "kvmut": 0,
+  "variant": "shared",
+  "smut": 0,
+  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "union_lines": 809,
+  "lane_lines": [
+   640,
+   640,
+   640
+  ],
+  "ops": 4,
+  "passed": 2,
+  "wall_s": 152.5,
+  "qk_span_max": 532,
+  "qk_union_rows_max": 49,
+  "pv_span_max": 459,
+  "pv_union_rows_max": 49,
+  "verdict": "FAIL",
+  "mutant_detected": true
+ },
+ "ops": [
+  {
+   "name": "q4",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 42,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 42,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 89,
+    "first_in": 416,
+    "last_in": 660,
+    "last_out": 885,
+    "span": 469,
+    "beats": 336
+   },
+   "results": 96,
+   "expected": 96,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p4",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 42,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 42,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 89,
+    "first_in": 416,
+    "last_in": 660,
+    "last_out": 843,
+    "span": 427,
+    "beats": 336
+   },
+   "results": 96,
+   "expected": 96,
+   "mismatches": 1536,
+   "pass": false
+  },
+  {
+   "name": "q10",
+   "kind": "qk",
+   "kv4": 1,
+   "union_rows": 49,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 49,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 104,
+    "first_in": 416,
+    "last_in": 720,
+    "last_out": 948,
+    "span": 532,
+    "beats": 392
+   },
+   "results": 96,
+   "expected": 96,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p10",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 49,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 49,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 104,
+    "first_in": 416,
+    "last_in": 720,
+    "last_out": 875,
+    "span": 459,
+    "beats": 392
+   },
+   "results": 96,
+   "expected": 96,
+   "mismatches": 1536,
+   "pass": false
+  }
+ ]
+}
