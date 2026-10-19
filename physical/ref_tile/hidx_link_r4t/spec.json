@@ -1,0 +1,291 @@
+{
+ "name": "hidx_link_r4t",
+ "top": "ot_hbm_idx_topk_link_static_p",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clear",
+   "ingest_v",
+   "flush",
+   "emit_v",
+   "emit_group",
+   "rank",
+   "gbase",
+   "tx_v",
+   "tx",
+   "fault",
+   "selected_count"
+  ],
+  "S": [
+   "selected_line"
+  ],
+  "E": [
+   "clk",
+   "clk_mem",
+   "rst_n"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv, OWNER RULE 19:50; one kept flop per bit, +1/+1 edge, scheduled by tools/hbm_idx_static_calendar.py and proven by rtl/test/hbm_idx_static/run_scheduled.sh); a synthesis wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+ },
+ "pin_ranges": {
+  "clear": [
+   10.0,
+   10.2
+  ],
+  "ingest_v": [
+   10.2,
+   10.4
+  ],
+  "flush": [
+   10.4,
+   10.6
+  ],
+  "emit_v": [
+   10.6,
+   10.8
+  ],
+  "emit_group": [
+   10.8,
+   11.4
+  ],
+  "rank": [
+   11.4,
+   12.6
+  ],
+  "gbase": [
+   12.6,
+   13.8
+  ],
+  "tx_v": [
+   14.0,
+   14.6
+  ],
+  "tx": [
+   15.0,
+   636.0
+  ],
+  "fault": [
+   636.5,
+   636.8
+  ],
+  "selected_count": [
+   637.0,
+   640.0
+  ],
+  "selected_line": [
+   10.0,
+   640.0
+  ],
+  "clk": [
+   445.0,
+   445.2
+  ],
+  "clk_mem": [
+   445.2,
+   446.4
+  ],
+  "rst_n": [
+   446.4,
+   446.6
+  ]
+ },
+ "outline": {
+  "w": 650.0,
+  "h": 500.0,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[0].mem",
+   "at": [
+    23.76,
+    64.8
+   ],
+   "at_exact": false,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[1].mem",
+   "at": [
+    23.76,
+    164.184
+   ],
+   "at_exact": false,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[2].mem",
+   "at": [
+    23.76,
+    263.568
+   ],
+   "at_exact": false,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[3].mem",
+   "at": [
+    23.76,
+    362.952
+   ],
+   "at_exact": false,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[4].mem",
+   "at": [
+    454.896,
+    64.8
+   ],
+   "at_exact": false,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[5].mem",
+   "at": [
+    454.896,
+    164.184
+   ],
+   "at_exact": false,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[6].mem",
+   "at": [
+    454.896,
+    263.568
+   ],
+   "at_exact": false,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[7].mem",
+   "at": [
+    454.896,
+    362.952
+   ],
+   "at_exact": false,
+   "orient": "R0"
+  }
+ ],
+ "clock": "cts",
+ "hold_budget": "die",
+ "slot_change_request": "HBM-IDXPIPE 10-18: d4g slot idx_link 650x500 (grants_d4g.json, FACES_ONLY) is kept; faces change from the v15 contract (all data W, clock E) to: S selected_line (faces idx_sel, which sits directly S of idx_link), N tx/tx_v/fault/selected_count + the 7 control inputs, E clk/clk_mem/rst_n at y~445 (above bank stack B). W face is the secondary (wd 266..287 + tie) face of bank stack A and carries no port. H-D4G re-plans the idx_link faces (N toward the collective/TKM path) when binding ot_hbm_idx_topk_link_static_p.",
+ "job": {
+  "owner": "Claude LEAD2-HBM/L2H-IDX",
+  "branch": "claude/l2h-idx-link-r4-1019",
+  "tag": "r4t",
+  "purpose": "L2H-IDX r4 SAFE successor r4t 10-19 (route hidx_link_g4p-r3-e11cba3a3 NEEDS_RTL TT -0.62 / FF -47.62 classified: 23 wd_r->SRAM wd_in hold -41.5, 12 s4_r->wd_r -41.1, 79 wr->wd_r -36.4, grp_d tap -0.62; GRT hold repair stopped at 62 buffers): SRAM write port through a negative-edge isolation stage beside each macro (hold ~T/2 by construction, same write edge), per-bank kept registered read enable/address from tap RT-1 (one local load each), TritonCTS single root (parallel clock-construction variant). No function/latency change: outputs historical +5 (calendar --link-pipe 5). Benches run_link_pipe.sh (V5.050) m0 PASS, MUT1-4 FAIL. Prior: HBM-TOPKLINK r3 10-19 (route hidx_link_g4p-g4p-c94204038 NEEDS_RTL TT -78.45 / FF -30.81 classified): S1 = per-group compaction only from 4 kept lane-valid pin-flop copies; S2 = pair + quad merge with every shift select from kept registered region copies; per-bank kept fill/f0 copies for the ring-W selects; banks get 21.6-um N-S channels (far-face wd_in detour); SRAM clock pin shares the wd_r bin leaf (spine_macro_leaf false). No latency or function change: outputs historical +5 (calendar --link-pipe 5). Benches run_link_pipe.sh (V5.050): m0 PASS, MUT1-4 FAIL. Base: HBM-IDXPIPE 10-18: pipeline",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "results/rtl/hbm_idx_static/link_pipe_1018"
+  ],
+  "benches": [
+   {
+    "name": "link_pipe_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m0 0",
+    "expect": "pass",
+    "pass_regex": "IDX_LINK_PIPE_TOTAL MUT0 records3072 miter1954 errors0 fillsff maxpack71 first_tx ref187 dut192 fault ref1954 dut1959",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "pass_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m0.log"
+   },
+   {
+    "name": "link_pipe_mut1_halves",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m1 1",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m1.log"
+   },
+   {
+    "name": "link_pipe_mut2_seq",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m2 2",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m2.log"
+   },
+   {
+    "name": "link_pipe_mut3_carry",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m3 3",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m3.log"
+   },
+   {
+    "name": "link_pipe_mut4_latency",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m4 4",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m4.log"
+   }
+  ],
+  "structural_change": "L2H-IDX r4 SAFE successor r4t 10-19 (route hidx_link_g4p-r3-e11cba3a3 NEEDS_RTL TT -0.62 / FF -47.62 classified: 23 wd_r->SRAM wd_in hold -41.5, 12 s4_r->wd_r -41.1, 79 wr->wd_r -36.4, grp_d tap -0.62; GRT hold repair stopped at 62 buffers): SRAM write port through a negative-edge isolation stage beside each macro (hold ~T/2 by construction, same write edge), per-bank kept registered read enable/a"
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "floorplan_note": "HBM-TOPKLINK r3 10-19: bank stacks get 21.6-um N-S channels (y 64.8 + k*99.384): wd_in[266..287] sit on the macro's FAR face (LEF E, y 0.8-3 um); with abutted stacks their M4 legs detoured around the whole stack (route c94204038: max-slew 260->374 ps, TT setup -36 on gm[2].wd_in[284]). spine_macro_leaf false: the SRAM has no internal clock insertion, so its clock pin shares the bin leaf with the wd_r flops beside it (own leaf ran +75 ps late at FF -> wd_r->wd_in hold -30.8).",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

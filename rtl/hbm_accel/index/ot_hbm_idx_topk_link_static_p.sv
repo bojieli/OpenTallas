@@ -213,11 +213,31 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0)(
   wa_r<=wa_c;wd_r<=wd_c;
  end
  // ---------------- SRAM banks (one clock root) + emit read (historical logic at the +5 tap)
+ // r4h (L2H-IDX 10-19, route hidx_link_g4p-r3-e11cba3a3 NEEDS_RTL TT -0.62 / FF -47.62 classified: 23 wd_r -> SRAM wd_in
+ // hold -41.5 (flop -> macro pin, 1 INV, macro clock pin vs flop leaf skew at FF), grp_d -> grp_d -0.62 (control tap
+ // fanned to 8 SRAMs across 650 um)). No function or latency change (outputs still historical +5):
+ //   * WRITE-PORT HOLD ISOLATION: we/wa/wd pass a NEGATIVE-EDGE stage (we_n/wa_n/wd_n) beside each macro. The SRAM
+ //     still captures at the same rising edge as before (wd_r launched at edge e, wd_n at e+T/2, SRAM samples at e+1),
+ //     but its input now changes half a period after the macro edge: hold margin ~T/2 instead of ~0 by construction.
+ //   * PER-BANK REGISTERED READ PORT: re/raddr of bank b come from a kept per-bank register loaded from the tap one
+ //     edge earlier (RT-1), so the same value reaches the macro on the same edge with ONE local load per register.
+ reg[7:0]we_n;reg[47:0]wa_n;reg[8*288-1:0]wd_n;
+ always @(negedge clk or negedge rst_n)begin
+  if(!rst_n)we_n<=0;else we_n<=we_r;
+ end
+ always @(negedge clk)begin wa_n<=wa_r;wd_n<=wd_r;end
+ wire em4=em_d[RT-1];wire[3:0]grp4=grp_d[(RT-1)*4+:4];
+ (* keep *) reg[7:0]re_b;(* keep *) reg[8*3-1:0]ra_b;
+ integer bb;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)re_b<=0;
+  else begin re_b[3:0]<={4{em4&&!grp4[0]}};re_b[7:4]<={4{em4&&grp4[0]}};end
+ end
+ always @(posedge clk)for(bb=0;bb<8;bb=bb+1)ra_b[bb*3+:3]<=grp4[3:1];
  wire[4095:0]rd;
  for(b=0;b<8;b=b+1)begin:gm
-  wire re=em5&&(b/4==int'(grp5[0]));
-  ot_sram_1r1w_64x512_m1_r2c2 mem(.clk(clk),.r_ce_in(re),.r_addr_in({3'd0,grp5[3:1]}),.rd_out(rd[b*512+:512]),
-   .w_ce_in(we_r[b]),.w_addr_in(wa_r[b*6+:6]),.wd_in({224'd0,wd_r[b*288+:288]}),.w_mask_in({512{1'b1}}),
+  ot_sram_1r1w_64x512_m1_r2c2 mem(.clk(clk),.r_ce_in(re_b[b]),.r_addr_in({3'd0,ra_b[b*3+:3]}),.rd_out(rd[b*512+:512]),
+   .w_ce_in(we_n[b]),.w_addr_in(wa_n[b*6+:6]),.wd_in({224'd0,wd_n[b*288+:288]}),.w_mask_in({512{1'b1}}),
    .rr_en(2'd0),.rr_addr(12'd0),.cr_en(2'd0),.cr_sel(18'd0));
  end
  reg read_v;reg[3:0]read_group;reg[7:0]read_rank,read_gbase;
