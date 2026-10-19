@@ -38,7 +38,7 @@ assert len(rows) == 97
 counts = {g: sum(r['group'] == g for r in rows) for g in ('tail', 'imm2', 'ad')}
 assert counts == {'tail': 62, 'imm2': 32, 'ad': 3}
 with (OUT / 'paths.csv').open('w') as f:
-    writer = csv.DictWriter(f, fieldnames=rows[0].keys())
+    writer = csv.DictWriter(f, fieldnames=rows[0].keys(), lineterminator='\n')
     writer.writeheader()
     writer.writerows(rows)
 
