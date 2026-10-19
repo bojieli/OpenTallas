@@ -13,6 +13,7 @@ module tb;
    s.sram.banks[b].mem.rd_out={$urandom,$urandom};
   end
  end
+ integer aliasmode=0;
  integer ws=0,rs=0,wa=0,ra=0,warm=0,checks=0,accepted=0,rejects=0;
  integer stamp[0:7];reg [452:0] history[0:7];
  reg pending=0;reg [452:0] pendingdata=0;reg pendingvalid=0;
@@ -45,7 +46,7 @@ module tb;
    ok=re && allwritten && warm>=((k==0)?16:k) && ((stamp[slot]&15)==(target&15));
    data=ok?history[slot]:0;
    // Absolute identity is distinct from four-bit equality; stale alias is rejected as a lifecycle violation.
-   if(ok && stamp[slot]!=target)begin rejects++;$display("LIFECYCLE_REJECT target=%0d actual=%0d K=%0d",target,stamp[slot],k);end
+   if(ok && stamp[slot]!=target)begin rejects++;if(aliasmode)$fatal(1,"LIFECYCLE_ALIAS target=%0d actual=%0d",target,stamp[slot]);$display("LIFECYCLE_REJECT target=%0d actual=%0d K=%0d",target,stamp[slot],k);end
   end
   rc=1;#1;
   checks++;
@@ -76,6 +77,16 @@ module tb;
      end
     end
    end
+  end
+  if($test$plusargs("ALIAS"))begin
+   k=4;reset_all();for(integer n=0;n<32;n++)begin wstep();rstep();end
+   we=0;aliasmode=1;for(integer n=0;n<40;n++)rstep();$fatal(1,"HOLLOW_ALIAS");
+  end
+  if($test$plusargs("COLLISION"))begin
+   k=0;reset_all();for(integer n=0;n<32;n++)begin wstep();rstep();end
+   // At aligned preedge counters and K0, same row is selected. Reject BEFORE touching behavioral master.
+   if((wa%8)==(ra%8))$fatal(1,"FORBIDDEN_SAME_ADDRESS_COLLISION");
+   $fatal(1,"HOLLOW_COLLISION");
   end
   if(accepted<100)$fatal(1,"HOLLOW");
   $display("PASS fullW10 fullW453 K0..15 phases3 checks=%0d accepted=%0d lifecycle_rejects=%0d",checks,accepted,rejects);
