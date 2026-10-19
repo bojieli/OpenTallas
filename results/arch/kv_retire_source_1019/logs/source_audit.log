@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-retire-source-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-retire-source-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-retire-source-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-retire-source-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-retire-source-1019
+ot-run: ot-pve1        admits   123 GB (avail 98, growth 4, headroom 0, waiters 0/0 GB) load 12/28 running 2 disk 1209 GB 
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-retire-source-1019
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-1211132-1792439064 after 0 s
+test_exact_chain_and_real_state (test_kv_retained_export.RetainedExport) ... ok
+test_export_does_not_change_sequential_equations (test_kv_retained_export.RetainedExport) ... ok
+test_shape_drift_refused (test_kv_retained_export.RetainedExport) ... ok
+test_source_and_emitted_identities (test_kv_retained_export.RetainedExport) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.026s
+
+OK
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1211132-1792439064): exit 0

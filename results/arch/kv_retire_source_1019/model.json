@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.kv_retained_export_model.v1",
+  "release": "SOURCE_ONLY_DEFAULT_OFF",
+  "selected_current_packet": "SU; nested MU0, not MU1",
+  "retained_export": {
+    "producer": "POR-domain retained_request in collected packet",
+    "path": [
+      "packet.retained_context",
+      "bundle.retained_context",
+      "control.retained_context",
+      "rank.retained_context",
+      "guard_wh.retained_ctx"
+    ],
+    "added_state_bits": 0,
+    "added_cycles": 0,
+    "reset": "producer POR only; warm rst_n does not clear",
+    "single_user": "existing 1-bit registered retained_request",
+    "multi_user": "OR of four existing POR rr bits, separate source only, not current binding",
+    "pin_registration": "SU registered producer; MU four-input combinational summary requires physical landing review",
+    "native_reach_fanout": "unqualified; no geometry, CTS or gate requested"
+  },
+  "warm_wrapper": {
+    "existing_source": "qkd_host_service_guard_wh",
+    "additional_POR_FF": 4,
+    "observation": "raw source pm,ps,hist,warm_lost; retained_ctx sampled directly",
+    "CDC_phase": "NULL; producer ck_ctrl versus ck_guard must be proven or landed/priced",
+    "whole_reset_stopped_clock": "NULL"
+  },
+  "continuous_health_model": {
+    "additional_FF_reservation": 48,
+    "external_summary_bits": 16,
+    "primitive_source_inventory": "NOT COMPLETE; do not OR based on names",
+    "hardware_generated": false,
+    "observation_edges_reservation": 3,
+    "host_retirement_callback": "NOT CONNECTED; closure HOLD"
+  },
+  "fault_plane": {
+    "minimum_sources": 357,
+    "breakdown": {
+      "landing": 351,
+      "kc": 4,
+      "ufh": 1,
+      "dcal": 1
+    },
+    "source_native_phases": "NULL",
+    "bound_GEN8_installation": false
+  },
+  "retirement": {
+    "policy": "PER_LAYER",
+    "old_token_period": 249600,
+    "new_token_period": 257280,
+    "added_edges": 7680,
+    "status_age": 1982,
+    "compiled_end": 1983,
+    "qualification": "MODEL_ONLY; actual per-path phases/ages/reset/native absent"
+  },
+  "reset": {
+    "existing_sized_counter_source": "qkd_rst_region",
+    "HOLD_candidate": 273,
+    "HW": 9,
+    "DW_candidate": 9,
+    "diagnostic_skew64_adopted": false,
+    "native_required_HOLD": null
+  }
+}

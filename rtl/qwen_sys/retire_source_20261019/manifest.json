@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.kv_retained_export.v1",
+  "production_selected": false,
+  "added_export_FF": 0,
+  "added_export_edges": 0,
+  "native_CDC_qualified": false,
+  "complete_health_retirement_qualified": false,
+  "files": [
+    {
+      "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+      "source_sha256": "544639e6add23a4f106f6ff67960c7f02496d8835f06d860b4bdde1f1dc7c470",
+      "output": "rtl/qwen_sys/retire_source_20261019/qkd_host_ctrl_token_service_packet_collected_rh.sv",
+      "output_sha256": "98b0d138e923844f315d4af6a3d53cf669f7720669174dcc64b61c735114168c"
+    },
+    {
+      "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_admission.sv",
+      "source_sha256": "8216a88b0850a74747cc2402775e9189414182aa0178895caa930b79c7b766c8",
+      "output": "rtl/qwen_sys/retire_source_20261019/qkd_host_packet_bundle_admission_rh.sv",
+      "output_sha256": "7803cb7f6837a1ff7132617f7077a5a4673c350c90bcbc1d6c32467ba314d7f0"
+    },
+    {
+      "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv",
+      "source_sha256": "6413323907a589970013f744dca1f7f3af5859c4739264cd9864b35371801031",
+      "output": "rtl/qwen_sys/retire_source_20261019/qkd_host_control_packet_admission_rh.sv",
+      "output_sha256": "d9d2c0ac513a6e9a4ed599ab0cfbdcee004373c181c16b82416c90cd6cb1c9e1"
+    },
+    {
+      "source": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+      "source_sha256": "84cdc01c1382edbca0b7c9e26e60a487401ec31dbcd9004e8f2e4d91f77ef38f",
+      "output": "rtl/qwen_sys/retire_source_20261019/qkd_host_root_admission_rh.sv",
+      "output_sha256": "38ac1a59e148a637e77458f1b1d097320d5c52093ec7c196e1f6f75e0ca3969c"
+    },
+    {
+      "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+      "source_sha256": "7b35c728e8c0a719ae01ea50db5c185b0c6141b77620e5b934b799fb7d333637",
+      "output": "rtl/qwen_sys/retire_source_20261019/qkd_host_ctrl_token_service_packet_collected_mu_rh.sv",
+      "output_sha256": "5d168a1840589e890ac0a02f95a6cfdfaeb327e0a1b423d90c964ca1bbfd9615"
+    }
+  ]
+}
