@@ -42,6 +42,14 @@ def test():
     assert status(c)[0] == 'PASS'
     c['instances']['xl']['params']['RD_LAT'] = [10, 12]
     assert status(c)[0] == 'FAIL'
+    c['instances']['xl']['params']['RD_LAT'] = [10, 13]                                       # vector on a scalar-only
+    c['instances']['xl']['master'] = 'ot_hgi_sm_xload_cl2p_ctlx'                              # master (cl2p) -> FAIL
+    assert status(c)[0] == 'FAIL'
+    c['instances']['xl']['params']['RD_LAT'] = 13
+    assert status(c)[0] == 'FAIL'                                                             # scalar, unequal lanes
+    import contract_die_v as CV                                                                # list -> packed Verilog
+    assert CV.vparam([10, 13, 23, 25, 26, 29, 39, 41]) == "{8'd41, 8'd39, 8'd29, 8'd26, 8'd25, 8'd23, 8'd13, 8'd10}"
+    assert CV.vparam(6) == '6'
     print('test_d4g_bank_latency PASS')
 
 
