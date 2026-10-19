@@ -52,6 +52,10 @@ def check_run(replay, run_log):
         for field, n in (("events", len(events)), ("drives", expected["drives"]), ("checks", expected["checks"])):
             if index.get(field) != n:
                 errors.append(f"replay index {field} differs from hdr.mem")
+        if "vm_preload_words" in index:
+            loaded = re.findall(r"^SLICE_VM_PRELOAD words=(\d+)$", log, re.M)
+            if loaded != [str(index["vm_preload_words"])]:
+                errors.append(f"VM preload words: executed {loaded}, expected {index['vm_preload_words']}")
     return {"schema": "opentallas.hbm_slice_run_check.v1", "scope": "slice replay only",
             "passed": not errors, "errors": errors, "expected": dict(expected),
             "last_scheduled_cycles": last, "summary": summary,

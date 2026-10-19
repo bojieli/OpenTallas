@@ -40,6 +40,12 @@ class CompletenessTest(unittest.TestCase):
                 f.write(f"\n{(2 << 62) | (1 << 60) | (1 << 32) | 110:016x}\n")
             self.assertFalse(check_run(p, p / "run.log")["passed"])
 
+    def test_missing_vm_preload(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d); self.fixture(p)
+            (p / "index.json").write_text(json.dumps(dict(events=2, drives=1, checks=1, vm_preload_words=1)))
+            self.assertFalse(check_run(p, p / "run.log")["passed"])
+
 
 if __name__ == "__main__":
     unittest.main()
