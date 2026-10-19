@@ -32,8 +32,8 @@ endmodule
 )(input wire src_clk,src_rst_n,dst_clk,dst_rst_n,input wire [W-1:0] data_in,
  input wire valid_allow,output reg [W-1:0] data_out);
  wire sr,dr;
- ot_hbm_svg_return_reset u_source_reset(.clk(src_clk),.rst_n(src_rst_n),.landed_n(sr));
- ot_hbm_svg_return_reset u_dest_reset(.clk(dst_clk),.rst_n(dst_rst_n),.landed_n(dr));
+ ot_hbm_landing_reset_active u_source_reset(.clk(src_clk),.active_reset(src_rst_n),.landed_n(sr));
+ ot_hbm_landing_reset_active u_dest_reset(.clk(dst_clk),.active_reset(dst_rst_n),.landed_n(dr));
  reg [W-1:0] slots[0:3];
  (* keep="true" *) reg [1:0] wp,rp;
  wire [1:0] ra=rp+(MUT!=0?2'd1:2'd0);
@@ -67,10 +67,15 @@ module ot_hbm_svg_return_safe_ring4 #(parameter integer MUT=0)(
    if(warm[1]&&landed[259]&&landed[262:260]!=expected_q)phase_fault<=1;
   end
  end
+ wire [4:0] sa,da;
+ genvar r;generate for(r=0;r<5;r=r+1)begin:g_reset_branch
+  ot_hbm_landing_field_inverse #(.W(1)) u_source(.field(src_raw_rst_n),.inverse(sa[r]));
+  ot_hbm_landing_field_inverse #(.W(1)) u_dest(.field(dst_raw_rst_n),.inverse(da[r]));
+ end endgenerate
  genvar g;generate for(g=0;g<33;g=g+1)begin:g_slice
   localparam integer W=g==32?7:8;
   (* keep_hierarchy="yes" *) ot_hbm_svg_return_safe_ring_slice #(.W(W),.MUT(MUT),.HASVALID(g==32)) u_slice(
-   .src_clk(src_clk),.src_rst_n(src_raw_rst_n),.dst_clk(dst_clk),.dst_rst_n(dst_raw_rst_n),
+   .src_clk(src_clk),.src_rst_n(sa[g/8]),.dst_clk(dst_clk),.dst_rst_n(da[g/8]),
    .data_in(payload[g*8+:W]),.valid_allow(warm[0]),.data_out(landed[g*8+:W]));
  end endgenerate
  assign data_out=landed[255:0];assign ordinal_out=landed[258:256];

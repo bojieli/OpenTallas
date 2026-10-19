@@ -4,6 +4,10 @@
  input wire [W-1:0] field,output wire [W-1:0] inverse);
  assign inverse=~field;
 endmodule
+(* keep_hierarchy="yes" *) module ot_hbm_landing_safe_epoch #(parameter integer INDEX=0)(
+ input wire clk,reserve_v,input wire [1:0] negative_bank,input wire [15:0] reserve_epoch,output reg [15:0] epoch_q);
+ always @(posedge clk)if(reserve_v&&negative_bank==(~2'(INDEX)))epoch_q<=reserve_epoch;
+endmodule
 (* keep_hierarchy="yes" *) module ot_hbm_landing_safe_metadata #(
  parameter integer INDEX=0,parameter [2:0] BANK=0)(
  input wire clk,rst_n,reserve_v,input wire [1:0] reserve_bank,
@@ -13,16 +17,18 @@ endmodule
  wire [9:0] n;
  ot_hbm_landing_field_inverse u_fields(.field({reserve_bank,packet_bank,row}),.inverse(n));
  wire mine=n[7:6]==(~2'(INDEX));wire reserve_mine=n[9:8]==(~2'(INDEX));
- reg valid_q;reg [15:0] epoch_q;reg [6:0] count_q,received_q;
+ wire [15:0] epoch_q;reg valid_q;reg [6:0] count_q,received_q;
  always @(posedge clk or negedge rst_n)
   if(!rst_n)valid_q<=0;else if(reserve_v&&reserve_mine)valid_q<=1;
  // Reservation always initializes the complete metadata tuple before valid ownership.
  always @(posedge clk)begin
   if(reserve_v&&reserve_mine)begin
-   epoch_q<=reserve_epoch;count_q<=reserve_total>BANK?(reserve_total+7-BANK)/8:0;received_q<=0;
+   count_q<=reserve_total>BANK?(reserve_total+7-BANK)/8:0;received_q<=0;
   end
   if(landing_write&&mine)received_q<=received_q+1'b1;
  end
+ ot_hbm_landing_safe_epoch #(.INDEX(INDEX)) u_epoch(.clk(clk),.reserve_v(reserve_v),
+  .negative_bank(n[9:8]),.reserve_epoch(reserve_epoch),.epoch_q(epoch_q));
  assign identity=mine&&valid_q&&epoch_q==epoch&&{1'b0,~n[5:0]}<count_q;
  assign last_packet=mine&&valid_q&&received_q+1'b1==count_q;
 endmodule

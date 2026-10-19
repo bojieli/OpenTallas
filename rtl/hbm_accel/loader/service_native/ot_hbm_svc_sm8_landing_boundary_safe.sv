@@ -1,9 +1,14 @@
 // Opt-in structural fanout candidate; original masters preserved. See fanout model.
 `default_nettype none
+(* keep_hierarchy="yes" *) module ot_hbm_landing_reset_active(input wire clk,active_reset,output wire landed_n);
+ (* async_reg="true" *) reg [1:0] q;
+ always @(posedge clk or posedge active_reset)if(active_reset)q<=0;else q<={q[0],1'b1};
+ assign landed_n=q[1];
+endmodule
 (* keep_hierarchy="yes" *) module ot_hbm_landing_safe_slice #(parameter integer W=8)(
- input wire clk,raw_rst_n,push,pop,input wire [W-1:0] data_in,output wire [W-1:0] data_out);
+ input wire clk,active_reset,push,pop,input wire [W-1:0] data_in,output wire [W-1:0] data_out);
  wire rst_n;
- ot_hbm_svg_return_reset u_reset(.clk(clk),.rst_n(raw_rst_n),.landed_n(rst_n));
+ ot_hbm_landing_reset_active u_reset(.clk(clk),.active_reset(active_reset),.landed_n(rst_n));
  (* keep="true" *) reg [1:0] wp,rp;
  reg push_q;reg [W-1:0] pin_data,slot0,slot1,slot2;
  always @(posedge clk)begin
@@ -23,15 +28,17 @@ endmodule
 (* keep_hierarchy="yes" *) module ot_hbm_landing_safe_group #(parameter integer W=32)(
  input wire clk,raw_rst_n,in_v,in_ready,input wire [1:0] used,input wire pending,core_ready,
  input wire [W-1:0] data_in,output wire [W-1:0] data_out);
+ wire active_reset;
+ ot_hbm_landing_field_inverse #(.W(1)) u_reset_polarity(.field(raw_rst_n),.inverse(active_reset));
  wire push=in_v&&in_ready;
  wire pop=(used[1]||(used[0]&&!pending))&&core_ready;
  genvar i;generate for(i=0;i<(W+7)/8;i=i+1)begin:g_slice
   localparam integer SW=W-8*i>=8?8:W-8*i;
-  ot_hbm_landing_safe_slice #(.W(SW)) u_slice(.clk(clk),.raw_rst_n(raw_rst_n),.push(push),.pop(pop),
+  ot_hbm_landing_safe_slice #(.W(SW)) u_slice(.clk(clk),.active_reset(active_reset),.push(push),.pop(pop),
    .data_in(data_in[8*i+:SW]),.data_out(data_out[8*i+:SW]));
  end endgenerate
 endmodule
-module ot_hbm_svc_sm8_landing_boundary_safe #(
+(* keep_hierarchy="yes" *) module ot_hbm_svc_sm8_landing_boundary_safe #(
  parameter [2:0] BANK=0, parameter integer RESPONSE_DEPTH=8,LBANKS=4,FMUT=0,
  parameter integer BMUT=0,LB=(LBANKS>2)?2:1,IW=283+LB
 )(
