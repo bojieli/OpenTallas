@@ -13,17 +13,20 @@
 //   drain_vm_sector[j] (io[436 + 16 j +: 16], j = 0..1) += row x s_wr  when drain_v[j]      (row results)
 // Local store / scalar / lane fields (prefetch_local_addr, scalar_addr, drain_addr, prefetch_word/group) and the
 // arithmetic programme (compiler_control, started once a row by the IO word's arith-start bit, d4g) are unchanged.
-// Row index: from the store's io_ordinal (registered with io_word, r10 IO side): ordinal 0 = row 0 (a new launch);
+// Row index: from the store's io_ordinal: ordinal 0 = row 0 (a new launch);
 // ordinal = next wrap (k x P, P = the record's IO period in words) = the next row. Incremental (one adder a stride, no
 // multiplier, no divider). Broadcast operands go in a prologue launch of P0 <= P words before the row-body launch
 // (ordinal restarts at 0, so the prologue stays on row 0 = unstepped).
 // Strides are record-static (CP: rs_k in sectors; s[2:0] must be 0 so a sector keeps its bank / port id).
 // Checks (sticky FAULT): a stepped sector carries out of 16 b; a stepped sector with s[2:0] != 0 (row > 0).
+// OLAG 1 (MEASURED, tb_hnx_sfu_rows first run, bundle 1ec36302d): the r10 store's io_ordinal LEADS its io_word by one
+// edge (with OLAG 0 exactly the last word of every row took the next row's offset: N mismatches a record), so the stage
+// delays the ordinal one edge (ord_q) to align it with io_word.
 // REG 1: io_word and compiler_control registered together (+1 edge both; the core's pin registers are unchanged).
 // MUT (bench only, must FAIL): 1 drain stride dropped; 2 prefetch stride dropped; 3 wrap one word early;
 // 4 row not cleared at ordinal 0 (a second record keeps the first record's row).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_hnx_sfu_rowstep #(parameter integer REG=1,MUT=0)(
+module ot_hnx_sfu_rowstep #(parameter integer REG=1,OLAG=1,MUT=0)(
  input wire clk,rst_n,
  input wire [470:0] io_in,
  input wire [1741:0] ctl_in,
@@ -36,8 +39,10 @@ module ot_hnx_sfu_rowstep #(parameter integer REG=1,MUT=0)(
  output reg fault
 );
  reg [15:0] row; reg [31:0] nxt; reg [15:0] off_r,off_w;
- wire zero=(ordinal==32'd0)&&(MUT!=4);
- wire wrap=(ordinal!=32'd0)&&(ordinal==((MUT==3)?nxt-32'd1:nxt))&&(period!=12'd0);
+ reg [31:0] ord_q; always @(posedge clk)ord_q<=ordinal;
+ wire [31:0] ord=(OLAG!=0)?ord_q:ordinal;
+ wire zero=(ord==32'd0)&&(MUT!=4);
+ wire wrap=(ord!=32'd0)&&(ord==((MUT==3)?nxt-32'd1:nxt))&&(period!=12'd0);
  wire [15:0] row_c=zero?16'd0:(wrap?row+16'd1:row);
  wire [16:0] or_c=zero?17'd0:(wrap?{1'b0,off_r}+{1'b0,s_rd}:{1'b0,off_r});
  wire [16:0] ow_c=zero?17'd0:(wrap?{1'b0,off_w}+{1'b0,s_wr}:{1'b0,off_w});
