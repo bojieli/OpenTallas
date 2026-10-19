@@ -6729,7 +6729,10 @@ def _gen16_clock_refile(m, regs, by, per):
                                                             rep_segments=0))
     # (c) OT_SPLIT_CK_COROOT='a,b,c;d,e': abutting W-column blocks with direct (unlanded) buses share ONE local region
     #     (dv2f14bi: tt_ctlm <-> native59 423 + 95 b direct, embed_prov <-> native59 / tt_ctlm on r54 vs r55)
+    dho = (m.get('q3h') or {}).get('dv_dhobs')
     for grp in [g.split(',') for g in os.environ.get('OT_SPLIT_CK_COROOT', '').split(';') if g.strip()]:
+        if dho and 'tt_ctlm' in grp and dho['inst'] not in grp:
+            grp = grp + [dho['inst']]     # MU-DQ-DHUSER: the dh_user observer drives tt_ctlm.dh_user direct (same root)
         loc = {}
         for k, l in per.items():
             for i, p in l:
