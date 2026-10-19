@@ -48,69 +48,69 @@ end else begin:g_on
  wire [4:0] result_op[0:39];wire [1:0] result_group[0:39];wire [7:0] result_epoch[0:39];
 
  (* keep=1,dont_touch=1 *) reg cap_ancestor_0;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_0<=0; else cap_ancestor_0<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_0<=0; else cap_ancestor_0<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_1;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_1<=0; else cap_ancestor_1<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_1<=0; else cap_ancestor_1<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_2;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_2<=0; else cap_ancestor_2<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_2<=0; else cap_ancestor_2<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_3;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_3<=0; else cap_ancestor_3<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_3<=0; else cap_ancestor_3<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_4;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_4<=0; else cap_ancestor_4<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_4<=0; else cap_ancestor_4<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_5;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_5<=0; else cap_ancestor_5<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_5<=0; else cap_ancestor_5<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_6;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_6<=0; else cap_ancestor_6<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_6<=0; else cap_ancestor_6<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_7;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_7<=0; else cap_ancestor_7<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_7<=0; else cap_ancestor_7<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_8;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_8<=0; else cap_ancestor_8<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_8<=0; else cap_ancestor_8<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_9;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_9<=0; else cap_ancestor_9<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_9<=0; else cap_ancestor_9<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_10;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_10<=0; else cap_ancestor_10<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_10<=0; else cap_ancestor_10<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_11;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_11<=0; else cap_ancestor_11<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_11<=0; else cap_ancestor_11<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_12;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_12<=0; else cap_ancestor_12<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_12<=0; else cap_ancestor_12<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_13;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_13<=0; else cap_ancestor_13<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_13<=0; else cap_ancestor_13<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_14;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_14<=0; else cap_ancestor_14<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_14<=0; else cap_ancestor_14<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_15;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_15<=0; else cap_ancestor_15<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_15<=0; else cap_ancestor_15<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_16;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_16<=0; else cap_ancestor_16<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_16<=0; else cap_ancestor_16<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_17;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_17<=0; else cap_ancestor_17<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_17<=0; else cap_ancestor_17<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_18;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_18<=0; else cap_ancestor_18<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_18<=0; else cap_ancestor_18<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_19;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_19<=0; else cap_ancestor_19<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_19<=0; else cap_ancestor_19<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_20;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_20<=0; else cap_ancestor_20<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_20<=0; else cap_ancestor_20<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_21;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_21<=0; else cap_ancestor_21<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_21<=0; else cap_ancestor_21<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_22;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_22<=0; else cap_ancestor_22<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_22<=0; else cap_ancestor_22<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_23;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_23<=0; else cap_ancestor_23<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_23<=0; else cap_ancestor_23<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_24;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_24<=0; else cap_ancestor_24<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_24<=0; else cap_ancestor_24<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_25;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_25<=0; else cap_ancestor_25<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_25<=0; else cap_ancestor_25<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_26;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_26<=0; else cap_ancestor_26<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_26<=0; else cap_ancestor_26<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_27;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_27<=0; else cap_ancestor_27<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_27<=0; else cap_ancestor_27<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_28;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_28<=0; else cap_ancestor_28<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_28<=0; else cap_ancestor_28<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_29;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_29<=0; else cap_ancestor_29<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_29<=0; else cap_ancestor_29<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_30;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_30<=0; else cap_ancestor_30<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_30<=0; else cap_ancestor_30<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg cap_ancestor_31;
- always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_31<=0; else cap_ancestor_31<=active&&(tick==62||tick==174||tick==286||tick==398);
+ always @(posedge clk or negedge run_rst_n) if(!run_rst_n) cap_ancestor_31<=0; else cap_ancestor_31<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));
  (* keep=1,dont_touch=1 *) reg ce_0_lo,ce_0_hi;
  reg [31:0] word_0; reg valid_0;
  always @(posedge clk or negedge run_rst_n) if(!run_rst_n) begin ce_0_lo<=0;ce_0_hi<=0;valid_0<=0;end else begin ce_0_lo<=cap_ancestor_0;ce_0_hi<=cap_ancestor_0;if(ce_0_lo)valid_0<=lane_v[0];end
@@ -2210,7 +2210,8 @@ end else begin:g_on
  reg issue,p_issue,asel; reg [3:0] bsel; reg [4:0] next_ordinal;
  always @* begin p_issue=0;asel=0;bsel=0;next_ordinal=0;case(tick+1)
  10'd65:begin p_issue=active;asel=1'b0;bsel=4'd1;next_ordinal=5'd0;end
- 10'd74:begin p_issue=active;asel=1'b1;bsel=4'd2;next_ordinal=5'd1;end
+ 10'd74:begin p_issue=active&&(MUT!=6);asel=1'b1;bsel=4'd2;next_ordinal=5'd1;end
+ 10'd73:begin p_issue=active&&(MUT==6);asel=1'b1;bsel=4'd2;next_ordinal=5'd1;end
  10'd83:begin p_issue=active;asel=1'b1;bsel=4'd3;next_ordinal=5'd2;end
  10'd92:begin p_issue=active;asel=1'b1;bsel=4'd4;next_ordinal=5'd3;end
  10'd101:begin p_issue=active;asel=1'b1;bsel=4'd5;next_ordinal=5'd4;end
@@ -5764,6 +5765,8 @@ end else begin:g_on
  if(active&&(nv[16]!=expected_retire))bad<=1;
  if(nv[16]&&(pending_op!=expected_op||pending_group!=expected_group))bad<=1;
  if(nv[16])begin held_v<=1;held_epoch<=pending_epoch;held_op<=pending_op;held_group<=pending_group;if(ne[16]||pending_epoch!=epoch)bad<=1;end
+ // Causal-only premature clear: slot0 still requires this held owner at D+1=147.
+ if(MUT==5&&active&&tick==146&&nv[16])held_v<=0;
  if(active&&(tick==64||tick==176||tick==288||tick==400))begin group<=capture_group;local_epoch<=epoch;held_v<=0;end
  end end
  wire mode_unused;ot_hbm_r6_add_node u_node(.clk(clk),.rst_n(run_rst_n),.v(av2&&bv2),.a(a2),.b(b2),.vy(nv[16]),.y(nx[16]),.err(ne[16]));

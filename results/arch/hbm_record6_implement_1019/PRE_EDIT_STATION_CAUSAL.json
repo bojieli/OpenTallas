@@ -1,0 +1,17 @@
+{
+  "scope": "PRE_EDIT future station-only causal source variants; current c7 fullnative fleet snapshot frozen and unchanged",
+  "existing_edit_allowlist": {
+    "tools/hbm_record6_station41/generate.py": "887958985958bd73c1d09577bcd99e8ebaca6381155b1b294726e0ca0ec9d86a",
+    "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_r6_station41.sv": "7d63f6224c27aa5df60761c9e0f5f5b16bf333bbcfe105ed943b44f1173b3d1b"
+  },
+  "new_parameters": false,
+  "existing_MUT_default": 0,
+  "planned_static_mutants": {
+    "4": "first capture one edge before true lane output availability by advancing actual ancestor control",
+    "5": "clear station16 held validity on D146 before actual required fragment-slot0 capture D147",
+    "6": "station0 word2 feedback selector74 advances to73, before first real result available74"
+  },
+  "default_source_behavior": "all new conditions statically false at MUT0; preserve41nodes, instructionorder and591root calendar; no production compiler change",
+  "cost": "same declared state reservation; actual synthesized fanout/area/clock remain HOLD",
+  "qualification": "station-only actualcausal evidence; bind seeded square input bits to first fullnativepositive actual capturetrace before combined proof claim"
+}

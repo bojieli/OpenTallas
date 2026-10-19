@@ -100,7 +100,7 @@ end else begin:g_on
 # prediction precedes capture by two edges, preserving the source age.
 for a in range(32):
     emit(f' (* keep=1,dont_touch=1 *) reg cap_ancestor_{a};')
-    emit(f' always @(posedge clk or negedge rst_n) if(!rst_n) cap_ancestor_{a}<=0; else cap_ancestor_{a}<=active&&(tick==62||tick==174||tick==286||tick==398);')
+    emit(f' always @(posedge clk or negedge rst_n) if(!rst_n) cap_ancestor_{a}<=0; else cap_ancestor_{a}<=active&&(tick==(MUT==4?61:62)||tick==(MUT==4?173:174)||tick==(MUT==4?285:286)||tick==(MUT==4?397:398));')
 for w in range(512):
     a=(2*w)//32
     emit(f' (* keep=1,dont_touch=1 *) reg ce_{w}_lo,ce_{w}_hi;')
@@ -137,7 +137,10 @@ for name in NAMES:
         else:
             pn=PROD[b]['resource']; assert pn in peers
             bb=8+peers.index(pn)
-        emit(f' 10\'d{tm(o)}:begin p_issue=active;asel=1\'b{aa};bsel=4\'d{bb};next_ordinal=5\'d{ordinal%32};end')
+        enable='active&&(MUT!=6)' if si==0 and ordinal==1 else 'active'
+        emit(f' 10\'d{tm(o)}:begin p_issue={enable};asel=1\'b{aa};bsel=4\'d{bb};next_ordinal=5\'d{ordinal%32};end')
+        if si==0 and ordinal==1:
+            emit(f' 10\'d{tm(o)-1}:begin p_issue=active&&(MUT==6);asel=1\'b{aa};bsel=4\'d{bb};next_ordinal=5\'d{ordinal%32};end')
         schedule.append(dict(**o,source_start=tm(o),source_done=tm(o,'done'),station=si,a_select=aa,b_select=bb))
     emit(' default:begin end endcase end')
     # Explicit per-segment selector controls: four bits bsel each only controls
@@ -188,6 +191,9 @@ for name in NAMES:
     emit(f' if(active&&(nv[{si}]!=expected_retire))bad<=1;')
     emit(f' if(nv[{si}]&&(pending_op!=expected_op||pending_group!=expected_group))bad<=1;')
     emit(f' if(nv[{si}])begin held_v<=1;held_epoch<=pending_epoch;held_op<=pending_op;held_group<=pending_group;if(ne[{si}]||pending_epoch!=epoch)bad<=1;end')
+    if si==16:
+        emit(" // Causal-only premature clear: slot0 still requires this held owner at D+1=147.")
+        emit(" if(MUT==5&&active&&tick==146&&nv[16])held_v<=0;")
     emit(' if(active&&(tick==64||tick==176||tick==288||tick==400))begin group<=capture_group;local_epoch<=epoch;held_v<=0;end')
     emit(' end end')
     emit(f' wire mode_unused;ot_hbm_r6_add_node u_node(.clk(clk),.rst_n(rst_n),.v(av2&&bv2),.a(a2),.b(b2),.vy(nv[{si}]),.y(nx[{si}]),.err(ne[{si}]));')
