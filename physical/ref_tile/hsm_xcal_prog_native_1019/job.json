@@ -1,0 +1,175 @@
+{
+ "name": "hsm_xcal_prog_native_1019-r1-COMMIT",
+ "block": "ot_hbm_xcal_prog_native",
+ "ref_tile": true,
+ "owner": "Codex:HBM-SMB-KITS",
+ "purpose": "Native2SRAM programme/RELOC partition after two preserved4SRAM GPL0305 failures. Exact external launch+29 and successive9/12GO calendars proven; bounded mapped control/reset max32/28 with unchanged reset release. Physical diagnostic only; root PNG review and native parent audit before submission/adoption.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/hbm-smb-kits-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh",
+   "rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv",
+   "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence",
+   "rtl/test/hbm_accel/svg_rel/xcal_mapped_evidence",
+   "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_partition_t.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_host_native.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_native.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_target_native.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_xcal_prog_native #(.PAW(11), .PREL(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/loader/service_native/ot_hbm_xcal_prog_native.sv rtl/hbm_accel/loader/service_native/ot_hbm_xcal_calendar_native.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v rtl/hbm_accel/loader/service_native/ot_hbm_xcal_kept_bits.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "partition_exact",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/exact 0 0 0 12",
+    "expect": "pass",
+    "pass_regex": "XCAL_PARTITION PASS mut=0 errors=0 words=4 first_delta=29 fault=0",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_early",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/early 0 1 0 12",
+    "expect": "pass",
+    "pass_regex": "XCAL_PARTITION PASS mut=0 errors=0 words=0 .*fault=1",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_multi",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/multi 0 0 1 12",
+    "expect": "pass",
+    "pass_regex": "XCAL_PARTITION PASS mut=0 errors=0 words=8 first_delta=29 fault=0",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_tight",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/tight 0 0 1 9",
+    "expect": "pass",
+    "pass_regex": "XCAL_PARTITION PASS mut=0 errors=0 words=8 first_delta=29 fault=0",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_mut1",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "fail_regex": "XCAL_PARTITION FAIL mut=1 errors=[1-9]",
+    "fail_witness": "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence/mut1.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_mut2",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "fail_regex": "XCAL_PARTITION FAIL mut=2 errors=[1-9]",
+    "fail_witness": "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence/mut2.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_mut3",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "fail_regex": "XCAL_PARTITION FAIL mut=3 errors=[1-9]",
+    "fail_witness": "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence/mut3.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_mut4",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/mut4 4",
+    "expect": "fail",
+    "fail_regex": "XCAL_PARTITION FAIL mut=4 errors=[1-9]",
+    "fail_witness": "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence/mut4.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_mut5",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/mut5 5",
+    "expect": "fail",
+    "fail_regex": "XCAL_PARTITION FAIL mut=5 errors=[1-9]",
+    "fail_witness": "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence/mut5.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hsm_xcal_prog_native_1019/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hsm_xcal_prog_native_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hsm_xcal_prog_native_1019 --out {RUN}/record/views/ot_hbm_xcal_prog_native --macro-view physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hsm_xcal_prog_native_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hsm_xcal_prog_native_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hsm_xcal_prog_native_1019/hsm_xcal_prog_native_1019-r1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

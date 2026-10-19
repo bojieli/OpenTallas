@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_xcal_prog_native",
+ "enable": false,
+ "reason": "Native RTL already registers every data input/output; adding automatic collars changes the qualified +2 GO-crossing schedule."
+}

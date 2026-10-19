@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_xcal_prog_native",
+ "enable": false,
+ "reason": "Native two-stage release uses kept same-edge second-stage branch replicas. Mapped max reset fanout28; qualified unchanged release edge."
+}

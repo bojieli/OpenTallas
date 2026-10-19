@@ -1,0 +1,125 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hsm_xcal_prog_native_1019",
+ "top": "ot_hbm_xcal_prog_native",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  241.92,
+  267.84
+ ],
+ "core": [
+  2.16,
+  2.16,
+  239.76,
+  265.67999999999995
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": 658.9431,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "cfg_we",
+   "cfg_addr",
+   "cfg_data",
+   "start_v",
+   "start_base",
+   "start_limit",
+   "start_loops",
+   "start_ctx",
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "cmd_ext",
+   "kv_desc"
+  ],
+  "S": [
+   "active",
+   "done",
+   "fault"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_cal.g_m2.u_program_lo",
+   "idx": 0,
+   "x": 43.2,
+   "y": 43.2,
+   "w": 174.744,
+   "h": 70.47,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_cal.g_m2.u_program_hi",
+   "idx": 0,
+   "x": 43.2,
+   "y": 172.8,
+   "w": 174.744,
+   "h": 70.47,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_prog_native.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_calendar_native.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_kept_bits.sv",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/kit.env",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/clock.sdc",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/signoff.sdc",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/signoff_ffrepair.sdc",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/pdn.tcl",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/pre_cts.tcl",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/post_cts.tcl",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/post_grt.tcl",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/pre_drt.tcl",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/pre_fill.tcl",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/post_fill.tcl",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/pre_grt.tcl",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib",
+  "physical/ref_tile/hsm_xcal_prog_native_1019/place.tcl"
+ ]
+}
