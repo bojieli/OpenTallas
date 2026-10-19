@@ -837,6 +837,77 @@ def reset_sinks(g, A, x):
     return tot, ff, mac, ex
 
 
+def balanced_reset_proof(g, A, port, net, profile):
+    """Opt-in mapped proof, never a threshold waiver: exactly two plain-FF levels.
+
+    The source-pinned profile supplies exact counts; the actual netlist proves
+    data, clock, polarity, depth and all fanouts. Unprofiled designs retain the
+    existing <=2 root-sink rule. BUF/INV paths are counted with exact polarity on both publication edges.
+    """
+    def fail(why):
+        return {"pass": False, "reason": why}
+    if not isinstance(profile, dict) or profile.get('schema') != 'opentallas.ref_tile.reset_landing.v1':
+        return fail('missing/foreign profile')
+    if profile.get('enable') is not True or profile.get('stages') != 2:
+        return fail('profile must enable exactly two edges')
+    f = (profile.get('first_copies') or {}).get(port)
+    l = (profile.get('copies') or {}).get(port)
+    if (not isinstance(f,int) or isinstance(f,bool) or not 1<=f<=32 or
+            not isinstance(l,int) or isinstance(l,bool) or not 1<=l<=32*f):
+        return fail('invalid exact first/final counts')
+    cp=profile.get('clock');clock=[x for n,(d,x) in g.ports.items() if n==cp and d=='input']
+    if len(clock)!=1:return fail('missing literal clock port')
+    first=set();last=set();qfirst=set();qlast=set();master=None
+    def terminals(q):
+        stack=[(q,0)];seen=set();ends=[];ports=0
+        while stack:
+            y,inv=stack.pop()
+            if (y,inv) in seen:continue
+            seen.add((y,inv));ports+=len(A['out_ports'].get(y,()))
+            for ci,pn,_ in A['loads'].get(y,()):
+                if A['kind'][ci]=='buf':
+                    neg=bool(re.match(r'^(INV|CKINV)',g.cells[ci][0]))
+                    for z in _out_nets(g,A,ci):stack.append((z,inv^neg))
+                else:ends.append((ci,pn,y,inv))
+        return ends,ports
+    def plain(ci,pn,d):
+        nonlocal master
+        typ,_,pins=g.cells[ci]
+        if (A['kind'][ci]!='ff' or not re.fullmatch(r'DFFHQNx[0-9]+_ASAP7_75t_[RSL]',typ)
+                or pn!='D' or pins.get('D')!=[d] or pins.get('CLK')!=clock):
+            return False
+        if any(k in pins for k in ASYNC_PINS) or set(pins)-{'CLK','D','QN','Q'}:
+            return False
+        if master is None:master=typ
+        return typ==master and len(list(_out_nets(g,A,ci)))==1
+    if A['out_ports'].get(net):return fail('reset input also exported')
+    for ci,pn,_ in A['loads'].get(net,()):
+        if not plain(ci,pn,net):return fail('root reaches non-identical/plain first D')
+        first.add(ci);qfirst.update(_out_nets(g,A,ci))
+    if len(first)!=f:return fail('stale first count')
+    first_max=0
+    for q in qfirst:
+        if A['out_ports'].get(q):return fail('first stage also exported')
+        children,ports=terminals(q);first_max=max(first_max,len(children))
+        if ports:return fail('first stage also exported through buffers')
+        if len(children)>32:return fail('first output exceeds32')
+        for ci,pn,d,inv in children:
+            # ASAP7 DFFHQN exposes inverted Q; exactly one net inversion restores
+            # the logical first-stage value at every final-stage D.
+            if ci in first or inv!=1 or not plain(ci,pn,d):return fail('first reaches non-identical/plain final D or wrong polarity')
+            last.add(ci);qlast.update(_out_nets(g,A,ci))
+    if len(last)!=l:return fail('stale final count')
+    final_max=0
+    for q in qlast:
+        ends,ports=terminals(q);n=len(ends)+ports;final_max=max(final_max,n)
+        if n>32:return fail('final output exceeds32')
+        if ports:return fail('final stage exported outside declared core')
+        if any(ci in first|last for ci,_,_,_ in ends):return fail('extra landing stage/feedback')
+        if any(inv!=1 for _,_,_,inv in ends):return fail('wrong final reset publication polarity')
+    return {"pass":True,"first":f,"final":l,"root_loads":f,
+            "first_max_loads":first_max,"final_max_loads":final_max,"edges":2}
+
+
 def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
     T = th
     A = build(g, dump)
@@ -933,6 +1004,13 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
             continue
         tot, ff, mac, ex = reset_sinks(g, A, x)
         land.append({"port": b, "sinks": tot, "flops": ff, "macros": mac})
+        profile = T.get('_balanced_reset_profile')
+        if profile and base in (profile.get('first_copies') or {}):
+            proof=balanced_reset_proof(g,A,base,x,profile)
+            land[-1]['balanced_proof']=proof
+            if proof['pass']:
+                continue
+            bad.append(f"reset port {b}: balanced landing refused: {proof['reason']}")
         if tot > T["rst_land_max"]:
             bad.append(f"reset port {b}: {tot:,} sinks ({ff:,} flops, {mac} hard-child / macro pins, e.g. {ex}) reached "
                        f"without a landing register (> {T['rst_land_max']}): land it at the face in 2 registered stages "
@@ -1368,6 +1446,9 @@ def run(netlist_path, dump_path, th=None, top=None, mode="warn", waive=(), refus
             dump = json.load(f)
     g, top = flatten(mods, top)
     del mods
+    profile=T.get('_balanced_reset_profile')
+    if profile and profile.get('top')!=top:
+        raise ValueError('balanced reset profile top does not match actual netlist')
     res = analyse(g, dump, T)
     res["top"] = top
     res["netlist"] = netlist_path
@@ -1627,6 +1708,7 @@ def main(argv=None):
     c = sub.add_parser("check")
     c.add_argument("--netlist", required=True)
     c.add_argument("--dump")
+    c.add_argument("--balanced-reset-profile", help="source-bound reset_landing.json; exact mapped two-edge/count/clock/load proof")
     c.add_argument("--top")
     c.add_argument("--out")
     c.add_argument("--mode", choices=("warn", "refuse"), default="warn")
@@ -1646,6 +1728,11 @@ def main(argv=None):
         return rtl_main(a)
     mode, th, waive, rc = a.mode, parse_set(a.set), list(a.waive), tuple(x for x in a.refuse_checks.split(",") if x)
     clock = None
+    if a.balanced_reset_profile:
+        try:
+            with open(a.balanced_reset_profile) as f:th['_balanced_reset_profile']=json.load(f)
+        except (OSError,ValueError) as ex:
+            print(f'textbook_lint: invalid balanced reset profile: {ex}');return 2
     if a.cfg:
         try:
             with open(a.cfg) as f:

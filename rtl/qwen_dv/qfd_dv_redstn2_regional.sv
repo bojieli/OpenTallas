@@ -19,7 +19,9 @@
 //     diagnostic, not a scheduled data value; the 28-edge visibility bound is handed to the compiler schedule.
 //   * outputs: r_d / nb_o data slices from every region (in ck_r[r]); r_v, r_idx, r_last, bt_re, bt_word,
 //     nb_o[513:512] and fault from region 0 (identical copies are computed in every region; the tile is one master).
-// Steady data latency is unchanged (0 added edges).  Reset: every region has its own two-stage reset tree.
+// Steady data latency: PIN_IN=0 identical to the monolith; PIN_IN=1 (the hardened tile) +1 edge on every input (all
+// outputs are already flop Q) and BT_LAT extra scale-wait edges for the bt round trip (pin reg + parent landing).
+// Reset: rst_n lands in two registered stages (rst_l0/rst_l1, release +2 edges) before each region's own trees.
 // The compatibility module qfd_dv_redstn2 (OT_STATION_REGIONAL) fans single ports into the 8 copies and ties all
 // ck_r to ck: it is the BENCH / interim-parent wrapper only.  The physical parent instantiates qfd_dv_redstn2_rg and
 // lands every per-region copy into its region clock (Q.STA.SLICE.1).
@@ -28,25 +30,27 @@ module qfd_dv_redstn2_region #(
     parameter integer SKEW      = 14,
     parameter integer SCALE_LAT = 6,
     parameter integer MUT       = 0,
-    parameter integer JB        = 8
+    parameter integer JB        = 8,
+    parameter integer PIN_IN    = 1,       // 1: every data/control input lands in one pin register (+1 edge, all inputs)
+    parameter integer BT_LAT    = PIN_IN   // extra edges of the bt_word -> bt_q round trip beyond the monolith's
 ) (
     input  wire          ck,
     input  wire          rst_n,
-    input  wire          cfg_v,
-    input  wire [1:0]    cfg_mode,
-    input  wire          cfg_wsrc,
-    input  wire [7:0]    cfg_nwords,
-    input  wire [8:0]    cfg_sbase,
-    input  wire [7:0]    cfg_kcm1,
-    input  wire [63:0]   rs_s_lo, rs_s_hi, rs_n_lo, rs_n_hi,   // rs_x[64r +: 64], rs_x[514 + 64r +: 64]
-    input  wire [3:0]    rs_s_c, rs_n_c,                       // {rs_x[1027], rs_x[1026], rs_x[513], rs_x[512]}
-    input  wire [63:0]   nb_d,                                 // nb_i[64r +: 64]
-    input  wire [1:0]    nb_c,                                 // nb_i[513:512]
+    input  wire          cfg_v_p,
+    input  wire [1:0]    cfg_mode_p,
+    input  wire          cfg_wsrc_p,
+    input  wire [7:0]    cfg_nwords_p,
+    input  wire [8:0]    cfg_sbase_p,
+    input  wire [7:0]    cfg_kcm1_p,
+    input  wire [63:0]   rs_s_lo_p, rs_s_hi_p, rs_n_lo_p, rs_n_hi_p,   // rs_x[64r +: 64], rs_x[514 + 64r +: 64]
+    input  wire [3:0]    rs_s_c_p, rs_n_c_p,                       // {rs_x[1027], rs_x[1026], rs_x[513], rs_x[512]}
+    input  wire [63:0]   nb_d_p,                                 // nb_i[64r +: 64]
+    input  wire [1:0]    nb_c_p,                                 // nb_i[513:512]
     output wire [63:0]   nb_od,
     output wire [1:0]    nb_oc,
     output reg           bt_re,
     output reg  [8:0]    bt_word,
-    input  wire [31:0]   bt_q,                                 // bt_q[32r +: 32]
+    input  wire [31:0]   bt_q_p,                                 // bt_q[32r +: 32]
     output reg           r_v,
     output reg  [7:0]    r_idx,
     output reg           r_last,
@@ -58,10 +62,27 @@ module qfd_dv_redstn2_region #(
     output reg           fault
 );
 localparam integer NL = 2, NZ = 2*NL, DW = 32*NL;
+// Reset lands at the face in two registered stages (rst_l0 -> rst_l1), then the equal-depth trees: release +2 edges.
+reg rst_l0, rst_l1;
+always @(posedge ck) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
 wire [43:0] sr_reset;
-qfd_dv_reset_tree #(.N(44)) u_safe_reset (.ck(ck),.rst_n(rst_n),.q(sr_reset));
+qfd_dv_reset_tree #(.N(44)) u_safe_reset (.ck(ck),.rst_n(rst_l1),.q(sr_reset));
 wire [9:0] math_reset;
-qfd_dv_reset_tree #(.N(10)) u_math_reset (.ck(ck),.rst_n(rst_n),.q(math_reset));
+qfd_dv_reset_tree #(.N(10)) u_math_reset (.ck(ck),.rst_n(rst_l1),.q(math_reset));
+// Pin registers (PIN_IN): every data / control input is one flop at its pin; the landed fault-ring inputs are read by the
+// landing reader (its output register is the capture) and are not re-registered (that would shift the K=2 read).
+wire cfg_v; wire [1:0] cfg_mode; wire cfg_wsrc; wire [7:0] cfg_nwords; wire [8:0] cfg_sbase; wire [7:0] cfg_kcm1;
+wire [63:0] rs_s_lo, rs_s_hi, rs_n_lo, rs_n_hi, nb_d; wire [3:0] rs_s_c, rs_n_c; wire [1:0] nb_c; wire [31:0] bt_q;
+localparam integer PW = 1+2+1+8+9+8 + 5*64 + 4+4+2 + 32;
+wire [PW-1:0] pin_d = {cfg_v_p, cfg_mode_p, cfg_wsrc_p, cfg_nwords_p, cfg_sbase_p, cfg_kcm1_p, rs_s_lo_p, rs_s_hi_p, rs_n_lo_p,
+                       rs_n_hi_p, nb_d_p, rs_s_c_p, rs_n_c_p, nb_c_p, bt_q_p};
+wire [PW-1:0] pin_q;
+generate if (PIN_IN) begin : g_pin
+    reg [PW-1:0] r; always @(posedge ck) r <= pin_d; assign pin_q = r;
+end else begin : g_nopin
+    assign pin_q = pin_d;
+end endgenerate
+assign {cfg_v, cfg_mode, cfg_wsrc, cfg_nwords, cfg_sbase, cfg_kcm1, rs_s_lo, rs_s_hi, rs_n_lo, rs_n_hi, nb_d, rs_s_c, rs_n_c, nb_c, bt_q} = pin_q;
 
 reg[27:0] cfg_payload0,cfg_payload1;
 wire[1:0] safe_cfg_mode; wire[0:0] safe_cfg_wsrc; wire[7:0] safe_cfg_nwords; wire[8:0] safe_cfg_sbase; wire[7:0] safe_cfg_kcm1;
@@ -247,9 +268,9 @@ end
         else bt_word <= sbase + {1'b0, j} + ((MUT == 3) ? 9'd1 : 9'd0);
 
     wire [DW-1:0] fd3;
-    qfd_dv_sram_delay #(.W(DW), .D(3)) u_scale_wait (.ck(ck), .rst_n(sr_reset[39]), .d(fd), .q(fd3));
+    qfd_dv_sram_delay #(.W(DW), .D(3+BT_LAT)) u_scale_wait (.ck(ck), .rst_n(sr_reset[39]), .d(fd), .q(fd3));
     wire fv3,ls3;wire[7:0] j3;
-    qfd_dv_ring_delay #(.W(10),.D(3)) u_meta(.clk(ck),.rst_n(sr_reset[40]),.d({fv,j,j+8'd1==nwords}),.q({fv3,j3,ls3}));
+    qfd_dv_ring_delay #(.W(10),.D(3+BT_LAT)) u_meta(.clk(ck),.rst_n(sr_reset[40]),.d({fv,j,j+8'd1==nwords}),.q({fv3,j3,ls3}));
     wire [DW-1:0] y;
     wire [NL-1:0]  vs;
     wire [2*NL-1:0]  es;
@@ -281,7 +302,9 @@ endmodule
 
 // Eight regions + the landed fault ring.  Every port group r is in clock ck_r[r]; the parent lands each copy.
 module qfd_dv_redstn2_rg #(
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer PIN_IN = 1,
+    parameter integer BT_LAT = PIN_IN
 ) (
     input  wire [7:0]      ck_r,
     input  wire [7:0]      rst_n_r,
@@ -310,11 +333,11 @@ module qfd_dv_redstn2_rg #(
     for (genvar r = 0; r < 8; r = r + 1) begin : g_r
         localparam integer U = up_of(r);
         wire [28:0] c = cfg_r[29*r +: 29];
-        (* keep_hierarchy = "yes" *) qfd_dv_redstn2_region #(.MUT(MUT)) u_rg (.ck(ck_r[r]), .rst_n(rst_n_r[r]),
-            .cfg_v(c[28]), .cfg_mode(c[27:26]), .cfg_wsrc(c[25]), .cfg_nwords(c[24:17]), .cfg_sbase(c[16:8]), .cfg_kcm1(c[7:0]),
-            .rs_s_lo(rs_s_lo[64*r +: 64]), .rs_s_hi(rs_s_hi[64*r +: 64]), .rs_n_lo(rs_n_lo[64*r +: 64]), .rs_n_hi(rs_n_hi[64*r +: 64]),
-            .rs_s_c(rs_s_c[4*r +: 4]), .rs_n_c(rs_n_c[4*r +: 4]), .nb_d(nb_d[64*r +: 64]), .nb_c(nb_c[2*r +: 2]),
-            .nb_od(nb_od[64*r +: 64]), .nb_oc(oc[r]), .bt_re(bre[r]), .bt_word(bw[r]), .bt_q(bt_q[32*r +: 32]),
+        (* keep_hierarchy = "yes" *) qfd_dv_redstn2_region #(.MUT(MUT),.PIN_IN(PIN_IN),.BT_LAT(BT_LAT)) u_rg (.ck(ck_r[r]), .rst_n(rst_n_r[r]),
+            .cfg_v_p(c[28]), .cfg_mode_p(c[27:26]), .cfg_wsrc_p(c[25]), .cfg_nwords_p(c[24:17]), .cfg_sbase_p(c[16:8]), .cfg_kcm1_p(c[7:0]),
+            .rs_s_lo_p(rs_s_lo[64*r +: 64]), .rs_s_hi_p(rs_s_hi[64*r +: 64]), .rs_n_lo_p(rs_n_lo[64*r +: 64]), .rs_n_hi_p(rs_n_hi[64*r +: 64]),
+            .rs_s_c_p(rs_s_c[4*r +: 4]), .rs_n_c_p(rs_n_c[4*r +: 4]), .nb_d_p(nb_d[64*r +: 64]), .nb_c_p(nb_c[2*r +: 2]),
+            .nb_od(nb_od[64*r +: 64]), .nb_oc(oc[r]), .bt_re(bre[r]), .bt_word(bw[r]), .bt_q_p(bt_q[32*r +: 32]),
             .r_v(rv[r]), .r_idx(ri[r]), .r_last(rl[r]), .r_d(r_d[64*r +: 64]),
             .flt_bank_i(fb[U]), .flt_vld_i(fv[U]), .flt_bank_o(fb[r]), .flt_vld_o(fv[r]), .fault(fl[r]));
     end
@@ -350,7 +373,7 @@ module qfd_dv_redstn2 #(
 );
     initial if (ADD_LAT != 7 || SKEW != 14 || SCALE_LAT != 6 || JB != 8) $fatal(1, "REGIONAL_STATION_SHAPE");
     wire [28:0] c = {cfg_v, cfg_mode, cfg_wsrc, cfg_nwords, cfg_sbase, cfg_kcm1};
-    qfd_dv_redstn2_rg #(.MUT(MUT)) u_rg (.ck_r({8{ck}}), .rst_n_r({8{rst_n}}), .cfg_r({8{c}}),
+    qfd_dv_redstn2_rg #(.MUT(MUT),.PIN_IN(0),.BT_LAT(0)) u_rg (.ck_r({8{ck}}), .rst_n_r({8{rst_n}}), .cfg_r({8{c}}),
         .rs_s_lo(rs_s[511:0]), .rs_s_hi(rs_s[1025:514]), .rs_n_lo(rs_n[511:0]), .rs_n_hi(rs_n[1025:514]),
         .rs_s_c({8{rs_s[1027:1026], rs_s[513:512]}}), .rs_n_c({8{rs_n[1027:1026], rs_n[513:512]}}),
         .nb_d(nb_i[511:0]), .nb_c({8{nb_i[513:512]}}), .nb_od(nb_o[511:0]), .nb_oc(nb_o[513:512]),
