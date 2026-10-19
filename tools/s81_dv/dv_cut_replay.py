@@ -186,11 +186,22 @@ class DieBuild:
             k = self.strap(ld[lk], 'k') if lk in ld else None
             if lk in ld and k is None:
                 raise ValueError(f'landing {ld[lk]} has no .k strap')
-            age = (math.ceil(n / 2) + k + 1) if lk in ld else n / 2
+            # TOK-S81-GAPS/INT 10-19: an x_frame lane without a die-top ld_ lands INSIDE its receiving frame (crs4 with the
+            # receiver's lk strap, 3 b per lane; G8R2 frame_lk derived from the land plan K) -- same model as
+            # dv_layer_compile Die._links (internal_landing), else every frame lane reads STALE against the compiler
+            internal = None
+            mi = re.fullmatch(r'x_f_.+_l(\d+)', lk)
+            if lk not in ld and mi:
+                for dn, _ in users.get((lk, 'dst'), []):
+                    sv = self.strap(dn, 'lk')
+                    if sv is not None:
+                        k, internal = (sv >> (3 * int(mi.group(1)))) & 7, dn
+                        break
+            age = (math.ceil(n / 2) + k + 1) if (lk in ld or internal) else n / 2
             first = st[lk][min(st[lk])] if n else ld.get(lk)
             src_bits = self.port_bits(first, 'i') if first else []
             out_net = f'w_{lk}_lnd' if lk in ld else f'w_{lk}_dst'
-            self.links[lk] = dict(stations=n, landing=ld.get(lk), K=k, age=age, out_net=out_net,
+            self.links[lk] = dict(stations=n, landing=ld.get(lk), internal_landing=internal, K=k, age=age, out_net=out_net,
                                   src=sorted(users.get((lk, 'src'), [])),
                                   dst=sorted(users.get((lk, 'lnd'), []) + users.get((lk, 'dst'), [])),
                                   src_bits=src_bits)

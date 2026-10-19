@@ -64,7 +64,9 @@ def real_die(tmp):
         print('SKIP real-die tests (bind9_g1 not checked out)')
         return
     o = tmp / 'new'
-    rc = run(['gen', '--die-v', str(die), '--prog', str(prog), '--cut', str(VT / 'cut3S_g1'), '--out', str(o)])
+    # TOK-S81-GAPS/INT 10-19: prog_L0_s3S predates the frame-internal landing model (x_frame lanes land in the receiver
+    # frame, lk strap; dv_layer_compile + DieBuild agree): its 8 cut-internal frame lanes read STALE, none is a cut boundary
+    rc = run(['gen', '--die-v', str(die), '--prog', str(prog), '--cut', str(VT / 'cut3S_g1'), '--out', str(o), '--allow-stale'])
     ok(rc == 0, 'gen on the G1 cut_3S vehicle')
     old = tmp / 'old'
     dv = tmp / 'die.v'
@@ -85,8 +87,10 @@ def real_die(tmp):
         rc = run(['gen', '--die-v', str(die3), '--prog', str(ROOT / 'results/rtl/s81_layer_tput_1018/compiler/prog_L0_s0S'),
                   '--cut', str(VT / 'cut3S_g1'), '--out', str(tmp / 'stale')])
         st = json.loads((tmp / 'stale/replay.json').read_text())
-        ok(rc == 2 and st['verdict_kind'] == 'STALE' and len(st['stale']['link_age_diffs']) == 14,
-           'L0 programme compiled on bind9 is STALE on bind_p4l3_g123 (14 lane ages)')
+        # 14 relay/landing lane ages + 8 x_frame lanes that land inside the receiving frame (lk strap; INT 10-19)
+        nfr = sum(1 for d in st['stale']['link_age_diffs'] if D.links[d['link']].get('internal_landing'))
+        ok(rc == 2 and st['verdict_kind'] == 'STALE' and len(st['stale']['link_age_diffs']) == 22 and nfr == 8,
+           'L0 programme compiled on bind9 is STALE on bind_p4l3_g123 (14 lane ages + 8 frame-internal landings)')
 
 
 def witnesses(tmp):
