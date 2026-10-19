@@ -585,7 +585,39 @@ def extend(body, spec, root):
                           '    ot_cdc_seam_crossing $start $pin $source $target $source_domain $target_domain\n'
                           '    return\n  }\n  if {$sg eq "" || $sg ne $tg}')
         body = body.replace('  ot_cdc_complete $cells\n', '  ot_cdc_complete $cells\n  ot_cdc_seam_complete\n')
+    # The flow's sole top wrapper (ref_tile.pin_wrapper / ot_pin_regs.tcl) adds this exact namespace once.
+    # The original RTL lint has no wrapper, so admit its identities after stripping ONLY that known prefix.
+    wrapped = any(isinstance(spec.get(k), dict) and spec[k].get('enable') is True
+                  for k in ('pin_regs', 'reset_landing'))
+    if wrapped:
+        for key in ('pin_regs', 'reset_landing'):
+            if isinstance(spec.get(key), dict) and spec[key].get('enable') not in (True, False, None):
+                raise CdcError('CDC flow wrapper enable must be a boolean')
+        def normalize(text):
+            text = text.replace('  set names [list $full]\n',
+                                '  set names [ot_cdc_flow_names $full]\n')
+            text = text.replace('        if {[dict exists $::ot_cdc_roles $n]} {dict set roles [dict get $::ot_cdc_roles $n] 1}',
+                                '        foreach name [ot_cdc_flow_names $n] {\n'
+                                '          if {[dict exists $::ot_cdc_roles $name]} {dict set roles [dict get $::ot_cdc_roles $name] 1}\n        }')
+            text = text.replace('        if {[dict exists $::ot_cdc_seam_roles $n]} {dict set roles [dict get $::ot_cdc_seam_roles $n] 1}',
+                                '        foreach name [ot_cdc_flow_names $n] {\n'
+                                '          if {[dict exists $::ot_cdc_seam_roles $name]} {dict set roles [dict get $::ot_cdc_seam_roles $name] 1}\n        }')
+            return text
+        extra = FLOW_WRAPPER_TCL + normalize(extra)
+        tcl = normalize(tcl)
     return bindings(record) + extra + tcl + '\n' + body
+
+
+FLOW_WRAPPER_TCL = r'''
+proc ot_cdc_flow_names {name} {
+  set names [list $name]
+  if {[regsub {^u_ot_pr_core[./]} $name {} core]} {
+    lappend names $core
+    if {[regexp {^([^$]+)\$} $core -> base]} {lappend names $base}
+  }
+  return $names
+}
+'''
 
 
 MIXED_TCL = r'''

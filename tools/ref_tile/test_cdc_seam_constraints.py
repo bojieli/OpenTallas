@@ -76,6 +76,35 @@ class MixedLint(Fixture):
 
 @unittest.skipUnless(Path(YOSYS).exists() and Path(STA).exists(), 'fleet Yosys and OpenSTA required')
 class MixedGraph(Fixture):
+    def test_actual_flow_wrapper_and_forged_nested_namespace(self):
+        direct = FIXTURE.replace('integer MUT = 0', 'integer MUT = 6')
+        (self.root / 'cdc_fix.sv').write_text(direct)
+        ports = '''input ck_a, input ck_b, input rst_n, input ev_in, input [3:0] d_in,
+                   output [3:0] d_out, output v_out, output s_out'''
+        conns = '.ck_a(ck_a),.ck_b(ck_b),.rst_n(rst_n),.ev_in(ev_in),.d_in(d_in),.d_out(d_out),.v_out(v_out),.s_out(s_out)'
+        core = direct.replace('module cdc_fix #', 'module cdc_core #')
+        wrapper = f'module cdc_fix ({ports}); cdc_core u_ot_pr_core ({conns}); endmodule\n'
+        out = self.root / 'wrapped'
+        out.mkdir()
+        def wrapped_spec():
+            s = mixed_spec()
+            s['reset_landing'] = dict(enable=True, stages=2, clock='ck_a')
+            return s
+        rc, log = sta_case(self.root, out, 'wrapped', wrapped_spec, graph_source=core+wrapper)
+        self.assertEqual(rc, 0, log)
+        self.assertIn('OT_CDC_SEAM STRUCTURAL_PASS', log)
+        self.assertIn('OT_CDC STRUCTURAL_PASS', log)
+        # A familiar prefix does not gain authority without the explicit flow wrapper setting.
+        rc, log = sta_case(self.root, out, 'not_enabled', mixed_spec, graph_source=core+wrapper)
+        self.assertNotEqual(rc, 0, log)
+        self.assertRegex(log, 'undeclared crossing|unapproved actual crossing')
+        mid = f'module cdc_mid ({ports}); cdc_core u_ot_pr_core ({conns}); endmodule\n'
+        nested = wrapper.replace('cdc_core u_ot_pr_core', 'cdc_mid u_ot_pr_core')
+        rc, log = sta_case(self.root, out, 'nested_forgery', wrapped_spec, graph_source=core+mid+nested)
+        self.assertNotEqual(rc, 0, log)
+        self.assertRegex(log, 'undeclared crossing|unapproved actual crossing')
+        self.assertNotIn('ACTUAL_CDC_GRAPH_PASS', log)
+
     def test_mapped_both_dispatches_and_bad_window_is_timed(self):
         (self.root / 'cdc_fix.sv').write_text(FIXTURE.replace('integer MUT = 0', 'integer MUT = 6'))
         out = self.root / 'sta_mixed'
