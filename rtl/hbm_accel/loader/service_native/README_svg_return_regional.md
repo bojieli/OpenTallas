@@ -5,6 +5,11 @@
 Call `uarch_model.hbm_svg_return_regional_model()` for the seven-edge price.
 No SDC, gate, submission, or physical closure is supplied.
 
+This document preserves the separate seven-edge regional prototype contract.
+The selected combined landing/pair leaf now adds a native processing capture,
+uses eight-edge metadata and has separate whole-service receipts; see
+README_svg_landing_pair_native.md and svg_processing_composition_model.json.
+
 ## Mapping and timing
 
 There are four pair stream trees, four local forwarded return trees, and one

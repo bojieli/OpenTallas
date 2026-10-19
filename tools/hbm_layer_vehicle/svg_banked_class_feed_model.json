@@ -69,5 +69,15 @@
     "dense SRAM native access, physical and die grants OPEN"
   ],
   "mixed_transport_receipt": "results/rtl/hbm_ds_layer_tput_1018/mixed_class_service_1019/positive_74a9d4303.json",
-  "mixed_class_mutant_receipt": "results/rtl/hbm_ds_layer_tput_1018/mixed_class_service_1019/descriptor_class_74a9d4303.json"
+  "mixed_class_mutant_receipt": "results/rtl/hbm_ds_layer_tput_1018/mixed_class_service_1019/descriptor_class_74a9d4303.json",
+  "pending_native_frontend_delta": {
+    "owner": "native_frontend via HBM coordinator",
+    "reported_2026_10_19_PDT": "11:11",
+    "return_HBM_edges": 8,
+    "conditional_issue_HBM_edges": 3,
+    "conditional_request_II_HBM_edges": 2,
+    "conservative_extra_STREAM_edges": 18,
+    "status": "MODEL ONLY pending exact issue/burst/tail proof; supersedes early12/17 notes",
+    "relation_to_tested_prefetch22": "Separate and unadopted; no folding, overlap credit or selected total here"
+  }
 }

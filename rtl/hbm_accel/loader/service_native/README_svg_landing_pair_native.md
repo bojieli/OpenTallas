@@ -175,3 +175,32 @@ clock/pin-flop spread and reset-clear slew; canonical macro face/PG/via audit;
 and parent whole-service causal early/late metadata tests/shared prefetch18
 integration remain required. This leaf does not imply whole-SVG closure. Legacy packed-row assembly is outside this leaf; the current native cache
 component is qualified separately by its owner.
+
+## Whole-service functional receipts
+
+Integration f35dc08a0 instantiates four exact leaf48fa0a785 copies, eight-edge
+OPEN/drain metadata and the safe row cache with conservative prefetch22. Whole
+L00 passes20 operations,81 result rows and29 exact fixed GO slots. Final command
+11802 and result11914 are each27 stream edges later than the historical cache-only
+receipt. Early/late read metadata mutants fail in the CDC return path at401/402
+before the first GO. Receipts live in results/rtl/hbm_ds_layer_tput_1018/
+smb_kits_1019/processing_*_f35dc08a0.{json,log}. This is the frozen old-issuer
+fixture and baseline controller, not the later native frontend/BW successor.
+
+Flagged composition f2a07fb05 retains these leaves and adds actual two-bank SVG
+and XC calendars, the accepted context[46:0]/class bit46 issuer clone and
+ID_COHORT1. Its two L00 runs pass40 operations,162 results and58 exact GO slots
+with two scheduled matched-cohort ID broadcasts. The physical READ edge is8,
+command edge11 and completion/BUSY tail is independently priced. The separate
+attention compiler retains historical admission reference7 while recording the
+same physical READ8. Both use prefetch22. No token-throughput or native TOPK
+producer-deadline claim follows from these fixture schedules.
+
+The same binary passes an explicit three-programme mode-only0/4/0 transport
+fixture. A single SVG descriptor197 mutation leaves XC metadata and command
+words unchanged and trips the actual assembled guard at1146. A matched-class
+mode3 variant trips the actual SM schedule fault at1146 without arithmetic.
+These drained mode-only splits do not qualify arbitrary stateful calendar
+rescheduling. See mixed_class_service_1019 receipts. Physical frontend/reset/clock,
+dense SRAM pin access, production controller/bridge integration and die binding
+remain OPEN.
