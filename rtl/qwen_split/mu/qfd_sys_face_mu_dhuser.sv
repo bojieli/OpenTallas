@@ -72,8 +72,8 @@ module qfd_sys_face_mu_dhuser #(
     parameter integer MUT = 0,
     parameter integer OPSEG = 0,                   // 1: the op-start leaf (NU 2..4), see the header
     parameter integer LAST_STAGE = 37,
-    parameter string  VIAMAP = "",                 // OPSEG: ot_rom_4096x72_m8 via-mask image ($readmemh)
-    parameter string  INSTANCE = "",               // OPSEG: ROM instance name (+OT_ROM_DIR=<dir>/<INSTANCE>.viamap.hex)
+    parameter         VIAMAP = "",                 // OPSEG: ot_rom_4096x72_m8 via-mask image ($readmemh)
+    parameter         INSTANCE = "",               // OPSEG: ROM instance name (+OT_ROM_DIR=<dir>/<INSTANCE>.viamap.hex)
     parameter integer PINREG = 0                   // OPSEG: 1 = pin flop on dh_run[42:36], compensated (see the header)
 ) (
     input  wire        ck,
