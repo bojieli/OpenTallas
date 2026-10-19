@@ -1,0 +1,1 @@
+Source80d7987a4 actual fullproductionQD64, CFG8bit+AQ188FF successor, OP_GAP384/PACE88/64+8/FETCH96.66/66 bitexact,154/154 exactGO,4runs,301results,35372reads PASS END47428, same endpoint as57c5. Physicalactualfanout142>32 rejects80d; noSAFE/adoption. Latermetadata4/AQdecode/regionalring successors mustqualifytheirfinalfrozenbytes independently.
