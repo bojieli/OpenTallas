@@ -475,5 +475,9 @@
   "GPL_ROUTABILITY_DRIVEN": "0",
   "ENABLE_DPO": "0"
  },
- "hold_merge": "DIAGNOSTIC GATE: route only after all soft roots <=220/190, spread<=80, neighbour skew<=80 TT/FF (node-less twin)."
+ "hold_merge": "DIAGNOSTIC GATE: route only after all soft roots <=220/190, spread<=80, neighbour skew<=80 TT/FF (node-less twin).",
+ "reset_landing": {
+  "enable": false,
+  "reason": "Q-A0FIX2 10-19 (ROOT-RST rule postdates this kit): the RTL already lands rst_n natively -- sampled on the face root ck_fa4 per pin_regs.reason, then REGROOT 2 regional reset relays (one kept async-assert/sync-release flop per ROM leaf on its gutter root, one per LSL on its TX root, LRST copies in the engine); a generic 2-stage wrapper landing would add reset-release cycles to the proved native calendar."
+ }
 }
