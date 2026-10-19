@@ -5,9 +5,18 @@ src=Path(sys.argv[1]);out=Path(sys.argv[2]);out.mkdir(parents=True,exist_ok=True
 db=odb.dbDatabase.create();odb.read_db(db,str(src));b=db.getChip().getBlock()
 def box(r):return [r.xMin(),r.yMin(),r.xMax(),r.yMax()]
 def overlap(a,c):return max(a[0],c[0])<min(a[2],c[2]) and max(a[1],c[1])<min(a[3],c[3])
+def transformed(i,rect):
+ # Exact OpenDB orthogonal orientation and native origin, independently checked
+ # below against the instance's native bounding rectangle before any pin use.
+ x0,y0=i.getOrigin();orient=str(i.getOrient())
+ matrices={'R0':(1,0,0,1),'R90':(0,-1,1,0),'R180':(-1,0,0,-1),'R270':(0,1,-1,0),'MX':(1,0,0,-1),'MY':(-1,0,0,1),'MXR90':(0,1,1,0),'MYR90':(0,-1,-1,0)}
+ a,c,d,e=matrices[orient]
+ corners=[(x0+a*x+c*y,y0+d*x+e*y) for x,y in [(rect[0],rect[1]),(rect[0],rect[3]),(rect[2],rect[1]),(rect[2],rect[3])]]
+ return [min(x for x,y in corners),min(y for x,y in corners),max(x for x,y in corners),max(y for x,y in corners)]
 pg=[];native=[];rows=[box(r.getBBox()) for r in b.getRows()];cells=[];terms=[]
 for i in b.getInsts():
  m=i.getMaster();it={t.getMTerm().getName():t for t in i.getITerms()}
+ assert transformed(i,[0,0,m.getWidth(),m.getHeight()])==box(i.getBBox()),('native orientation/bbox mismatch',i.getName())
  assert set(it)=={t.getName() for t in m.getMTerms()}
  cells.append({'name':i.getName(),'master':m.getName(),'xy':list(i.getLocation()),'orient':str(i.getOrient()),'bbox':box(i.getBBox()),'status':str(i.getPlacementStatus())})
  for mt in m.getMTerms():
@@ -16,9 +25,7 @@ for i in b.getInsts():
   for p in mt.getMPins():
    for g in p.getGeometry():
     assert not g.isVia()
-    # Use the native returned Rect type (the image exposes two Python Rect wrappers).
-    r=g.getBox();i.getTransform().apply(r)
-    entry['geometry'].append({'layer':g.getTechLayer().getName(),'box':box(r)})
+    entry['geometry'].append({'layer':g.getTechLayer().getName(),'box':transformed(i,box(g))})
   terms.append(entry)
   if entry['role'] in ('POWER','GROUND'):pg.append(entry)
 shapes=[];via_count=0
