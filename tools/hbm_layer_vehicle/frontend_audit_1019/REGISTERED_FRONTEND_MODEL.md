@@ -59,7 +59,7 @@ For the source testbench periods stream833.333ps and HBM1024ps, the modeled pref
 
 `required additional old slack >= Δreserve + Δstart + ceil((Δissue + Δresponse)*1024/833.333) - ΔGO`.
 
-For the conservative examples Δreserve3, Δstart3, ΔGO2 and Δissue2: fused-flop response3 requires11 extra stream edges; SRAM/separate-lookup response4 requires12. These are conditional bounds, not adopted padding. Actual static compiler deadline, variable HBM bound, concurrency, ready reservation and response buffering must close before selecting padding or implementing RTL. The current parent padding19 remains a separate existing composition contract.
+For the conservative examples Δreserve3, Δstart3, ΔGO2 and Δissue2: fused-flop response3 requires11 extra stream edges; SRAM/separate-lookup response4 requires12. These are conditional bounds, not adopted padding. Actual static compiler deadline, variable HBM bound, concurrency, ready reservation and response buffering must close before selecting padding or implementing RTL. The historical parent padding19 belongs to the old return7/cache composition. New leaf8/metadata8 integration f35dc08a0 conservatively uses22; that remains separate from any proposed frontend latency.
 
 ## Reset/ownership split and local-control budget
 

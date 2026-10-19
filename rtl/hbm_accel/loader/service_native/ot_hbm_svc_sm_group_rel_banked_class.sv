@@ -9,7 +9,7 @@
 // ot_hbm_svc_sm_group_id; FIXED_GO always (static schedule).  New ports vs ot_hbm_svc_sm_group_id: run_layer (with the run
 // launch, from the host collar), ids_v / ids_layer / ids (router top-k broadcast), PAW-bit programme address, DD-row
 // descriptor table (DD 256: 8-bit descriptor address / run base, 9-bit run count).
-module ot_hbm_svc_sm_group_rel_banked_class #(parameter integer CLASS_ENABLE=0,CLASS_MUT=0,ENVELOPE_MUT=0,ID_COHORT=0,NATIVE_CACHE_SAFE=0,ATTENTION=0,NATIVE_RETURN=0,RETURN_MUT=0,NATIVE_LANDING=0,FIFOMUT=0,LBANKS=4,parameter integer LB=(LBANKS>2)?2:1,
+module ot_hbm_svc_sm_group_rel_banked_class #(parameter integer CLASS_ENABLE=0,CLASS_MUT=0,ISSUER_CLASS_MUT=0,ENVELOPE_MUT=0,ID_COHORT=0,NATIVE_CACHE_SAFE=0,ATTENTION=0,NATIVE_RETURN=0,RETURN_MUT=0,NATIVE_LANDING=0,FIFOMUT=0,LBANKS=4,parameter integer LB=(LBANKS>2)?2:1,
  parameter integer NID=6,parameter integer IDW=9,parameter integer PAW=11,parameter integer PREL=1,parameter integer DD=256,parameter integer IMUT=0,
  parameter integer DAW=(DD>128)?8:7)(
  // strap identity: id_stack = HBM stack / quadrant (SW0 SE1 NW2 NE3), id_sm = SM index k (PCs 4k..4k+3)
@@ -23,6 +23,7 @@ module ot_hbm_svc_sm_group_rel_banked_class #(parameter integer CLASS_ENABLE=0,C
  input wire run_v,input wire[DAW-1:0]run_base,input wire[DAW:0]run_count,input wire[7:0]run_layer,
  input wire ids_v,input wire[7:0]ids_layer,input wire[IDW*NID-1:0]ids,input wire[15:0]ids_cohort,
  output wire running,run_done,program_active,fault,
+ input wire[108:0]extension_command_at_sm,
  output wire[1098:0]sm_packet,output wire[82:0]sm_command,output wire[84:0]sm_command_envelope,
  output wire[42:0]expected_request,output wire[1081:0]lt0,lt1,output wire[569:0]lb0,lb1,output wire[11:0]fm,
  output wire[3:0]k_v,input wire[3:0]k_rdy,output wire[119:0]k_addr,
@@ -34,8 +35,12 @@ module ot_hbm_svc_sm_group_rel_banked_class #(parameter integer CLASS_ENABLE=0,C
  wire[31:0]reserve_base;wire[14:0]reserve_row_base;wire[11:0]reserve_total;wire[LB-1:0]reserve_bank,start_bank;
  wire[15:0]reserve_epoch,start_epoch,program_start_loops;wire[6:0]reserve_rows;wire[9:0]reserve_tag_base;
  wire[PAW-1:0]program_start_base;wire[PAW:0]program_start_limit;wire[46:0]program_start_ctx;wire[LBANKS-1:0]block_ready;wire[1:0]cache_ready,cache_owned;
- assign fault=feed_fault||issuer_fault;
- ot_hbm_svc_sm_issuer_rel_class #(.ID_COHORT(ID_COHORT),.CLASS_MUT(CLASS_MUT),.LBANKS(LBANKS),.NID(NID),.IDW(IDW),.PAW(PAW),.DD(DD),.MUT(IMUT)) issuer(
+ wire command_class_fault;
+ ot_hbm_svc_command_class_guard #(.ENABLE(CLASS_ENABLE)) u_command_class_guard(
+  .clk(stream_clk),.app_reset_n(stream_rst_n),.assembled_command({extension_command_at_sm,sm_command}),
+  .descriptor_class_at_command(sm_command_envelope[83]),.context_valid_at_command(sm_command_envelope[84]),.fault(command_class_fault));
+ assign fault=feed_fault||issuer_fault||command_class_fault;
+ ot_hbm_svc_sm_issuer_rel_class #(.ID_COHORT(ID_COHORT),.CLASS_MUT(ISSUER_CLASS_MUT),.LBANKS(LBANKS),.NID(NID),.IDW(IDW),.PAW(PAW),.DD(DD),.MUT(IMUT)) issuer(
   .clk(stream_clk),.rst_n(stream_rst_n),.desc_we(desc_we),.desc_addr(desc_addr),.desc_data(desc_data),
   .run_v(run_v),.run_base(run_base),.run_count(run_count),.run_layer(run_layer),
   .ids_v(ids_v),.ids_layer(ids_layer),.ids(ids),.ids_cohort(ids_cohort),.running(running),.run_done(run_done),.fault(issuer_fault),

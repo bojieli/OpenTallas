@@ -47,5 +47,16 @@
     "actual invalid mode witnesses and legal mixed-programme split pricing",
     "mapped native reset source and <=32 loads; all new composition frontend unqualified"
   ],
-  "physical_claim": "NONE"
+  "physical_claim": "NONE",
+  "assembled_guard": {
+    "scope": "group receives exact109bit extension_command_at_sm, compares class and valid at full192bit actual SM command",
+    "source": "ot_hbm_svc_command_class_guard ENABLE default0",
+    "fault_edge": "one registered sticky observation edge; no command data retiming",
+    "native_reset_and_feedback_faces": "OPEN; semantic composition only",
+    "separate_mutant_parameters": [
+      "ISSUER_CLASS_MUT",
+      "CLASS_MUT",
+      "ENVELOPE_MUT"
+    ]
+  }
 }
