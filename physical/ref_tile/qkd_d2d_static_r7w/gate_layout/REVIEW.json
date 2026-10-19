@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_d2d_static_r7w",
+ "reviewer": "coordinator (2026-10-19 ~03:30)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T03:30:00-07:00",
+ "gate_commit": "e4138da64",
+ "checklist": {
+  "lattice": "PASS: 4 SRAM 2x2 on lattice, identical to approved r7u",
+  "std_cell_band": "PASS: std cells in channels around/between the SRAM quad, fill 0.447",
+  "pin_spread": "ACCEPT: S face 2,291 pins over 331 um (~6.9/um, slightly above 6/um guidance; inherited from die pin plan, identical to r7u), N/W/E used",
+  "clock_entry": "PASS: E-face centre; pin-flop spread TT 71.2 / FF 64.7 (<=80)",
+  "shape": "PASS: 475.2x280.8 = r7u; trial GRT ovf 0"
+ },
+ "notes": "r7u geometry with TXDP 0x03030418 only; hash differs from r7u only by kit-path keying (now fixed on main). | TW7-KVD2D 10-19: carried unchanged from qkd_d2d_static_r7v (identical geometry_sha256 83ff32c7; only TXDP 0x03030418 -> 0x03030415 changes, rtl_change).",
+ "geometry_sha256": "83ff32c71964bc7ca44601dec650df6cf0905d54a4596c95da874942fae3caf6"
+}
