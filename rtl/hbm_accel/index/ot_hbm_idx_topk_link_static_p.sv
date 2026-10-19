@@ -116,7 +116,7 @@ module ot_hbm_idx_link_p_rot #(parameter integer N=64,parameter integer RW=36,pa
  assign y=st[SW*W+:W];
 endmodule
 
-module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter integer SAFE_RING=0)(
+module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter integer SAFE_RING=0,parameter integer SAFE_CARRY=0)(
  input wire clk,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,input wire[4*64-1:0]lane_vc,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -224,6 +224,17 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter in
  (* keep *) reg[8*3-1:0]s4_fillc,s4_f0c;      // r3: per-bank copies of fill / f0[2:0] for the ring-W slot selects
  // ---------------- S5 (write formation) + ring register W
  reg[64*RW-1:0]wr;
+ reg[8*RW-1:0]partial_flit;
+ wire[2:0]partial_bank=s4_f0[2:0]+s4_nf[2:0]+((MUT==6)?3'd1:3'd0);
+ generate if(SAFE_CARRY)begin:g_partial_carry
+  // Only the last incomplete flit survives between beats; every completed bank
+  // is committed at this same edge and never read from W again.
+  genvar cq;
+  for(cq=0;cq<8;cq=cq+1)begin:record
+   always @(posedge clk)if(s4_v&&s4_m[partial_bank*8+cq])
+    partial_flit[cq*RW+:RW]<=s4_r[(partial_bank*8+cq)*RW+:RW];
+  end
+ end endgenerate
  wire[7:0]we_c;wire[47:0]wa_c;wire[8*288-1:0]wd_c;
  for(b=0;b<8;b=b+1)begin:wb
   wire[2:0]k=3'(b)-s4_f0[2:0];
@@ -232,7 +243,7 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter in
   assign wa_c[b*6+:6]={1'b0,fr[7:3]};
   for(q=0;q<8;q=q+1)begin:wq
    wire old=(MUT!=3)&&(s4_f0c[b*3+:3]==3'(b))&&(3'(q)<s4_fillc[b*3+:3]);
-   assign wd_c[b*288+q*RW+:RW]=old?wr[(b*8+q)*RW+:RW]:s4_r[(b*8+q)*RW+:RW];
+   assign wd_c[b*288+q*RW+:RW]=old?(SAFE_CARRY?partial_flit[q*RW+:RW]:wr[(b*8+q)*RW+:RW]):s4_r[(b*8+q)*RW+:RW];
   end
  end
  reg[7:0]we_r;reg[47:0]wa_r;reg[8*288-1:0]wd_r;
@@ -259,7 +270,7 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter in
   s3_c<=cm;s3_n<=ccnt;
   s4_r<=rot;s4_m<=mk&{64{s3_v}};s4_fill<=fill;s4_nf<=nsum[6:3];s4_f0<=f0;
   s4_fillc<={8{fill}};s4_f0c<={8{f0[2:0]}};
-  for(pp=0;pp<64;pp=pp+1)if(s4_v&&s4_m[pp])wr[pp*RW+:RW]<=s4_r[pp*RW+:RW];
+  if(!SAFE_CARRY)for(pp=0;pp<64;pp=pp+1)if(s4_v&&s4_m[pp])wr[pp*RW+:RW]<=s4_r[pp*RW+:RW];
   wa_r<=wa_c;wd_r<=wd_c;
  end
  // ---------------- SRAM banks (one clock root) + emit read (historical logic at the +5 tap)
@@ -310,7 +321,7 @@ endmodule
 // PIN-REGISTERED TILE (owner rule 19:50 PT 10-15): die master ot_hbm_idx_topk_link_static_p. Every data input and
 // every output passes ONE kept flop at the pin (+1/+1 edge, as the historical shell); rst_n enters a 2-flop release
 // synchroniser on clk. Port list identical to ot_hbm_idx_topk_link_static (drop-in); outputs = historical +5 edges.
-module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0,parameter integer SAFE_RING=0)(
+module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0,parameter integer SAFE_RING=0,parameter integer SAFE_CARRY=0)(
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -339,7 +350,7 @@ module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0,parameter integer
   for(vj=0;vj<64;vj=vj+1)begin vrep[vj]<=selected_line[vj*37];vrep[64+vj]<=selected_line[vj*37];vrep[128+vj]<=selected_line[vj*37];end
   tx_v<=c_tx_v;tx<=c_tx;fault<=c_fault;selected_count<=c_count;
  end
- ot_hbm_idx_topk_link_static_p_core #(.MUT(MUT),.SAFE_RING(SAFE_RING)) core(.clk(clk),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
+ ot_hbm_idx_topk_link_static_p_core #(.MUT(MUT),.SAFE_RING(SAFE_RING),.SAFE_CARRY(SAFE_CARRY)) core(.clk(clk),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
   .selected_line(line_r),.lane_vc(lane_vc),.flush(flush_r),.emit_v(emit_r),.emit_group(group_r),.rank(rank_r),.gbase(gbase_r),
   .tx_v(c_tx_v),.tx(c_tx),.fault(c_fault),.selected_count(c_count));
 endmodule

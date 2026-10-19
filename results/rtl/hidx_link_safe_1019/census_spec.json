@@ -1,7 +1,8 @@
 {
   "top": "ot_hbm_idx_topk_link_static_p",
   "params": {
-    "SAFE_RING": 1
+    "SAFE_RING": 1,
+    "SAFE_CARRY": 1
   },
   "sources": [
     "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv",

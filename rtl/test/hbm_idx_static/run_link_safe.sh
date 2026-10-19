@@ -10,9 +10,9 @@ sha256sum rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv rtl/test/hbm_idx_
 "$vl" --binary --timing -j 4 -O1 -Wno-fatal --top-module tb_idx_control_ring --Mdir "$out/ring_obj" rtl/test/hbm_idx_static/tb_idx_control_ring.sv rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv > "$out/ring_build.log" 2>&1
 "$out/ring_obj/Vtb_idx_control_ring" > "$out/ring.log" 2>&1
 cat "$out/ring.log"
-for m in 0 1 2 3 4 5;do
+for m in 0 1 2 3 4 5 6;do
  set +e
- SAFE_RING=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh "$out/m$m" "$m" > "$out/m$m.log" 2>&1
+ SAFE_RING=1 SAFE_CARRY=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh "$out/m$m" "$m" > "$out/m$m.log" 2>&1
  rc=$?
  set -e
  if [ "$m" = 0 ];then [ "$rc" = 0 ];grep -q 'IDX_LINK_PIPE PASS' "$out/m$m.log"
