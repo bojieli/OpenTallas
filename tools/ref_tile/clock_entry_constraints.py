@@ -1195,6 +1195,33 @@ def landed_body():
          '      if {![dict exists $::ot_ce_refs $key] || $::ot_ce_landed_cluster} continue\n'),
         ('  set boundary_cells {}; set boundary_cells_ready 0\n',
          '  set boundary_cells {}; set boundary_cells_ready 0\n  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]\n'),
+        # TW-HBM-COLLP 10-19: bound CHECK-ONLY child clock pins (no clk->Q arc, so not in all_registers) are sinks of the
+        # region root their net is wired to (ot_ce_net_root_port: structural, mode-independent), measured like the others
+        ('    set pins [all_registers -clock [get_full_name $clock] -clock_pins]\n'
+         '    if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }\n',
+         '    set pins [all_registers -clock [get_full_name $clock] -clock_pins]\n'
+         '    set ot_ce_pin_seen [dict create]\n'
+         '    foreach pin $pins {dict set ot_ce_pin_seen [get_full_name $pin] 1}\n'
+         '    foreach cell [get_cells -quiet -hierarchical *] {\n'
+         '      set master [get_property $cell ref_name]\n'
+         '      if {![dict exists $::ot_ce_counts $master]} continue\n'
+         '      foreach pin [get_pins -quiet -of_objects $cell] {\n'
+         '        set key "$master/[get_property $pin lib_pin_name]"\n'
+         '        if {![dict exists $::ot_ce_refs $key] || [dict exists $ot_ce_pin_seen [get_full_name $pin]]} continue\n'
+         '        if {[info exists ::ot_ce_landed_raw] && [dict exists $::ot_ce_landed_raw $key]} continue\n'
+         '        if {[ot_ce_net_root_port $pin] ne $name} continue\n'
+         '        lappend pins $pin; dict set ot_ce_pin_seen [get_full_name $pin] 1\n'
+         '        puts "OT_LANDED CHECK_CLOCK_PIN $name [get_full_name $pin] (timing-check-only child clock pin)"\n'
+         '      }\n'
+         '    }\n'
+         '    if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }\n'),
+        # a hard child with several clock pins on ONE region root (writer clk_body + clk_bank0-7) is one owner, not a
+        # duplicate; pins of one child on different roots still fail ("clock pins on different region roots")
+        ('      if {[dict exists $cells $cell]} { error "OT_MULTI_ROOT: duplicate clock ownership $cell" }\n',
+         '      if {[dict exists $cells $cell] && ([dict get $cells $cell] ne $domain'
+         ' || ![dict exists $::ot_ce_counts [get_property [get_cells -of_objects $pin] ref_name]])} {\n'
+         '        error "OT_MULTI_ROOT: duplicate clock ownership $cell"\n'
+         '      }\n'),
         ('    set arrivals {}; set measured {}; set total 0.0\n',
          '    set arrivals {}; set measured {}; set total 0.0; set ot_ce_child_ext [dict create]\n'),
         ('      if {[dict exists $::ot_ce_counts $master]} { error "OT_HYBRID: CTS root $name reaches a hard child" }\n'
@@ -1226,7 +1253,33 @@ def landed_body():
     return body
 
 
-LANDED_BODY = landed_body()
+# TW-HBM-COLLP 10-19: a hard child's CHECK-ONLY clock pins (setup/hold arcs, no clk->Q in the ETM, e.g. the COLL
+# writer's clk_rgx_data0-3 / clk_rgx_ctrl / clk_meta / clk_tkw landing captures) are not register clock pins for
+# OpenSTA (all_registers -clock_pins needs a clk->Q arc).  The root that drives such a pin is found STRUCTURALLY: walk
+# the pin's net back through single-input standard cells (CTS buffers / inverters) to a top port.  Never ask the
+# timing graph (get_property <pin> clocks): its answer depends on the command mode, and the ORFS multi-mode load
+# (orfs_hold_mm.tcl read_sdc -mode ss) returns no clocks there (AD-HBM-COLLP lpk4: 47 of 54 although the pins sit on
+# ck_wr).
+LANDED_ROOT_PROC = r"""proc ot_ce_net_root_port {pin} {
+  set net [get_nets -quiet -of_objects $pin]
+  for {set i 0} {$i < 256 && [llength $net] == 1} {incr i} {
+    set ports [get_ports -quiet -of_objects $net]
+    if {[llength $ports] == 1} { return [get_full_name [lindex $ports 0]] }
+    if {[llength $ports]} { return "" }
+    set drv [get_pins -quiet -of_objects $net -filter "direction == output"]
+    if {[llength $drv] != 1} { return "" }
+    set cell [get_cells -quiet -of_objects $drv]
+    if {[llength $cell] != 1 || [dict exists $::ot_ce_counts [get_property $cell ref_name]]} { return "" }
+    set ins [get_pins -quiet -of_objects $cell -filter "direction == input"]
+    if {[llength $ins] != 1} { return "" }
+    set net [get_nets -quiet -of_objects $ins]
+  }
+  return ""
+}
+"""
+
+
+LANDED_BODY = LANDED_ROOT_PROC + landed_body()
 
 
 def landed_raw_body(body):
