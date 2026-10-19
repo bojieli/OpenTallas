@@ -1,0 +1,23 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-unread-term/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-unread-term/src
+ot-run: ot-epyc6       admits   951 GB (avail 779, growth 113, headroom 0, waiters 0/0 GB) load 211/128 running 46 disk 5809 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-unread-term/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-unread-term/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-unread-term/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-unread-term/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1767390-1792437986 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc=3 f 0/1 wfault 0/0 sum_eq=1
+MISMATCH cyc=4 f 0/1 wfault 0/0 sum_eq=1
+MISMATCH cyc=5 f 0/1 wfault 0/0 sum_eq=1
+MISMATCH cyc=6 f 0/1 wfault 0/0 sum_eq=1
+MISMATCH cyc=7 f 0/1 wfault 0/0 sum_eq=1
+TB_HC_BANKQ_TERM TMUT=3 checks=4000 mismatches=3997 nonzero_sum_cycles=3996 f_out_ones=1880 wfault_ones=3984
+FAIL tb_hc_bankq_term_eq
+- rtl/hbm_accel/generic/peers/static_hc/tb/tb_hc_bankq_term_eq.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.779 s; speed 10.283 us/s
+- Verilator: cpu 0.766 s on 1 threads; allocated 19 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1767390-1792437986): exit 0
+rc=0
