@@ -3,7 +3,7 @@
  "block": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy",
  "ref_tile": true,
  "owner": "Claude:LEAD-HBM/LH-BW",
- "purpose": "SAFE n64 structural redesign: 27 right-width 128x64 SRAM macros (3.8 pins/um faces) on the 43.2 lattice, 7 columns x 4 rows at 86.4 um pitch (52.7 um pin channels, 58.8 um row gaps), full-width central std-cell band y157.2..216; replaces the 13 mostly-tied 128x256 macros (10 pins/um). Gate first; submit only after production bench + mutants bound.",
+ "purpose": "SAFE n64 structural redesign: 23 right-width (head replica upper 15b unused -> 4 macros removed by synthesis) 128x64 SRAM macros (3.8 pins/um faces) on the 43.2 lattice, 6 columns x 4 rows at 86.4 um pitch (52.7 um pin channels, 58.8 um row gaps), full-width central std-cell band y157.2..216; replaces the 13 mostly-tied 128x256 macros (10 pins/um). Gate first; submit only after production bench + mutants bound.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {

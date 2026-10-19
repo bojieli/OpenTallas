@@ -122,15 +122,6 @@
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
       "count": 1,
       "at": [
-        561.6,
-        43.2
-      ],
-      "at_exact": true
-    },
-    {
-      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
-      "count": 1,
-      "at": [
         43.2,
         129.6
       ],
@@ -177,15 +168,6 @@
       "count": 1,
       "at": [
         475.2,
-        129.6
-      ],
-      "at_exact": true
-    },
-    {
-      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
-      "count": 1,
-      "at": [
-        561.6,
         129.6
       ],
       "at_exact": true
@@ -248,15 +230,6 @@
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
       "count": 1,
       "at": [
-        561.6,
-        216.0
-      ],
-      "at_exact": true
-    },
-    {
-      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
-      "count": 1,
-      "at": [
         43.2,
         302.4
       ],
@@ -294,15 +267,6 @@
       "count": 1,
       "at": [
         388.8,
-        302.4
-      ],
-      "at_exact": true
-    },
-    {
-      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
-      "count": 1,
-      "at": [
-        475.2,
         302.4
       ],
       "at_exact": true
@@ -326,7 +290,7 @@
     "owner": "Claude:LEAD-HBM/LH-BW",
     "branch": "claude/lh-bw-n64-1019",
     "tag": "n64",
-    "purpose": "SAFE n64 structural redesign: 27 right-width 128x64 SRAM macros (3.8 pins/um faces) on the 43.2 lattice, 7 columns x 4 rows at 86.4 um pitch (52.7 um pin channels, 58.8 um row gaps), full-width central std-cell band y157.2..216; replaces the 13 mostly-tied 128x256 macros (10 pins/um). Gate first; submit only after production bench + mutants bound.",
+    "purpose": "SAFE n64 structural redesign: 23 right-width (head replica upper 15b unused -> 4 macros removed by synthesis) 128x64 SRAM macros (3.8 pins/um faces) on the 43.2 lattice, 6 columns x 4 rows at 86.4 um pitch (52.7 um pin channels, 58.8 um row gaps), full-width central std-cell band y157.2..216; replaces the 13 mostly-tied 128x256 macros (10 pins/um). Gate first; submit only after production bench + mutants bound.",
     "extra_paths": [
       "physical/hbm_bw_n64_1019",
       "physical/dsrom_window_source",
@@ -358,7 +322,7 @@
   "clock": "spine",
   "spine_macro_leaf": true,
   "outline": {
-    "w": 648.0,
+    "w": 561.6,
     "h": 367.2
   },
   "orfs_vars": {
@@ -381,10 +345,10 @@
     "enable": false,
     "reason": "RTL top g_reset_face.rst_l0/rst_l1 are two kept same-clock registered face landing stages; native relay adds3; physical release5. Disable duplicate tool2. Source-owned fullnative/adversephase proof required."
   },
-  "util_waiver": "Macro/channel-bound outline 648x367.2 (238.0k um2, was 205.3k): 52.7 um vertical pin channels, 58.8 um row gaps, aspect 1.76; std area ~6.5k um2 => low fill, as accepted for the 432x475.2 composed outline (coordinator 10-19).",
+  "util_waiver": "Macro/channel-bound outline 561.6x367.2 (206.2k um2, composed was 205.3k): 52.7 um vertical pin channels, 58.8 um row gaps, aspect 1.53; std area ~6.5k um2 => low fill, as accepted for the 432x475.2 composed outline (coordinator 10-19).",
   "fill_reason": {
     "lattice_channel_bound": {
-      "why": "27 128x64 macros on the 43.2 lattice, 7x4 at 86.4 um pitch (tool channel rule >=20 um and track alignment forbid 43.2 row pitch or abutted stacks); outline 648x367.2 (1.76:1) from macro faces/channels, not std area.",
+      "why": "23 128x64 macros on the 43.2 lattice, 6x4 at 86.4 um pitch (43.2 row pitch fails the >=20 um channel rule; abutted stacks are off-track); outline 561.6x367.2 (1.53:1, clock span <600) from macro faces/channels, not std area.",
       "approved_by": "LH-BW SAFE review 10-19 (low fill precedent: coordinator 10-19 composed outline)",
       "std_band_y_um": [
         157.176,
