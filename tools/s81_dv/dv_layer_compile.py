@@ -770,7 +770,7 @@ def finish(prog, stage=0, kit_lead=20):
     return rows, hs, endage
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, bk_indexed13=False):
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
@@ -781,7 +781,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     prog.mu_ctx = mu_ctx
     low = []
     fams = family_lowerings()
-    ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag)
+    ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag, bk_indexed13=bk_indexed13)
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
@@ -867,6 +867,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
              or k.startswith(('tvS_seqhost', 'tvN_seqhost', 'tvS_bk_sel'))}
     (out / 'schedule.json').write_text(json.dumps(dict(
         schema='opentallas.s81_dv.layer_schedule.v1', layer=layer, workload=wl, slice=sl,
+        bk_indexed13=bool(bk_indexed13),
         composition='the layer = the slowest (critical) slice under the fixed schedule: every slice runs the same '
                     'calendar shifted by its CTL arrival; the layer span is max over slices and units of the last '
                     'scheduled event (op schedule span below = the priced critical slice)',
@@ -942,6 +943,7 @@ def main(argv=None):
     ap.add_argument('--workload', default=None, choices=('ar', 'mtp'))
     ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
     ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
+    ap.add_argument('--bk-indexed13', action='store_true', help='opt-in packed final-select type8; requires INDEXED13 RTL')
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
     a = ap.parse_args(argv)
     if a.mu_cal:
@@ -953,7 +955,7 @@ def main(argv=None):
         if a.layer not in LAYERS:
             return
     tree = die_tree(a.die_ref, a.die_src)
-    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx)
+    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx, bk_indexed13=a.bk_indexed13)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']

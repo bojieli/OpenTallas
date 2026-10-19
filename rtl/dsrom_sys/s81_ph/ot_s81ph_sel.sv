@@ -33,7 +33,12 @@
 
 // one input lane: pin register + STG transport stages + decode into the native beat
 module ot_s81ph_sel_in #(
-    parameter integer STG = 6
+    parameter integer STG = 6,
+`ifdef OT_S81PH_SEL_INDEXED13
+    parameter integer INDEXED13 = 1
+`else
+    parameter integer INDEXED13 = 0
+`endif
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -56,8 +61,11 @@ module ot_s81ph_sel_in #(
     output reg          e_link
 );
     // used bits: {fault, live, type 4, tag 8, data [272:0], valid} = 288
-    localparam integer UW = 288;
-    wire [UW-1:0] u = {lane[514], lane[513], lane[512:501], lane[273:1], lane[0]};
+    // Type 8 (opt-in): 13 original-index/score tuples, mask and last.
+    // Original indices preserve golden tie/order semantics; no ordinal remap RAM.
+    localparam integer DW = INDEXED13 ? 482 : 273;
+    localparam integer UW = DW + 15;
+    wire [UW-1:0] u = {lane[514], lane[513], lane[512:501], lane[DW:1], lane[0]};
     reg  [UW-1:0] s [0:STG];
     integer i;
     always @(posedge clk) begin
@@ -66,9 +74,9 @@ module ot_s81ph_sel_in #(
     end
     wire [UW-1:0] w = s[STG];
     wire          v    = w[0];
-    wire [272:0]  d    = w[273:1];
-    wire [7:0]    tag  = w[281:274];
-    wire [3:0]    t4   = w[285:282];
+    wire [481:0] d = {{(482-DW){1'b0}}, w[DW:1]};
+    wire [7:0] tag = w[DW+8:DW+1];
+    wire [3:0] t4 = w[DW+12:DW+9];
     reg  [19:0]   cur;
     wire [20:0]   nxt = {1'b0, cur} + 21'd16;
     always @(posedge clk or negedge rst_n) begin
@@ -86,6 +94,14 @@ module ot_s81ph_sel_in #(
                     4'd6: begin
                         if (!act) e_orphan <= 1'b1;
                         cur <= d[19:0];
+                    end
+                    4'd8: begin
+                        if (!INDEXED13) e_fmt <= 1'b1;
+                        else if (!act) e_orphan <= 1'b1;
+                        else begin
+                            b_v <= 1'b1;
+                            if (d[481]) act <= 1'b0;
+                        end
                     end
                     4'd2: begin
                         if (!act) e_orphan <= 1'b1;
@@ -112,6 +128,19 @@ module ot_s81ph_sel_in #(
 `else
         for (l = 0; l < 16; l = l + 1) b_idx[20*l +: 20] <= cur + l[19:0];
 `endif
+        if (INDEXED13 && t4 == 4'd8) begin
+            b_lv <= {3'b000, d[480:468]};
+            b_last <= d[481];
+            for (l = 0; l < 16; l = l + 1) begin
+                if (l < 13) begin
+                    b_val[16*l +: 16] <= d[36*l +: 16];
+                    b_idx[20*l +: 20] <= d[36*l+16 +: 20];
+                end else begin
+                    b_val[16*l +: 16] <= 16'd0;
+                    b_idx[20*l +: 20] <= 20'd0;
+                end
+            end
+        end
         h_k <= d[29:20];
         h_tag <= tag;
         h_q <= d[31:30];

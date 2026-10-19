@@ -210,6 +210,25 @@ def lane_words_sparse(keys, pos, base, k, qslot, tag):
     return ws
 
 
+def lane_words_indexed13(keys, pos, base, k, qslot, tag):
+    """Type 8: 13 x (BF16 score + ORIGINAL 20-bit index), mask [480:468], last [481].
+    Requires RTL OT_S81PH_SEL_INDEXED13; off by default until physical closure.
+    Quarter positions must be strictly ascending, so native output order is unchanged.
+    """
+    assert len(keys) == len(pos)
+    assert all(0 <= int(p) < (1 << 20) for p in pos)
+    assert all(int(a) < int(b) for a, b in zip(pos, pos[1:]))
+    ws = [hdr_word(base, k, qslot, tag)]
+    nb = max(1, math.ceil(len(pos) / 13))
+    for b in range(nb):
+        pp, kk = pos[13*b:13*b+13], keys[13*b:13*b+13]
+        w = 8 << 508 | (tag & 255) << 500 | int(b == nb-1) << 481 | ((1 << len(pp))-1) << 468
+        for i, (p, key) in enumerate(zip(pp, kk)):
+            w |= (int(key) & 0xffff) << (36*i) | int(p) << (36*i+16)
+        ws.append(w)
+    return ws
+
+
 def ingress_schedule(lanes, t0, ik=4, avail=None):
     """lane words -> [(edge, beat)] on vi_s: HDRs first (one per lane), then the lanes' words round-robin, each word's
     beats in consecutive slots, one V beat per edge.  avail(lane, word index, word) -> earliest edge of that word or None
@@ -373,7 +392,7 @@ def shard_candidates(fx, k_dies):
     return cand, closure
 
 
-def job_topk_final(fx, t0=100, tag=0x22, boot_done=False, mut=None, k_dies=1):
+def job_topk_final(fx, t0=100, tag=0x22, boot_done=False, mut=None, k_dies=1, indexed13=False):
     """the final select over the 4 ranks' candidates: k_dies 1 = 4 x 512 (the ranks' topk_local, TP4 merge);
     k_dies > 1 = 4 x k_dies x 512 die-local selections (option D / L20 split: the all-gather widens, one select)."""
     s = load_op(fx, 'attn.idx.score')
@@ -392,7 +411,9 @@ def job_topk_final(fx, t0=100, tag=0x22, boot_done=False, mut=None, k_dies=1):
         bases.append(int(p[0]) // 16 * 16 if p.size else r * q4)
     if mut:
         kl = mut(kl, pl, np.sort(load_op(fx, 'attn.idx.topk_final')))
-    plan = plan_select(kl, pl, bases, k, tag, t0, sparse=True, boot_done=boot_done)
+    lanes = [lane_words_indexed13(kl[q], pl[q], bases[q], k, q, tag) for q in range(4)] if indexed13 else None
+    plan = plan_select(kl, pl, bases, k, tag, t0, sparse=True, boot_done=boot_done, lanes=lanes)
+    plan['indexed13'] = bool(indexed13)
     gold = np.sort(load_op(fx, 'attn.idx.topk_final'))
     plan['golden_ok'] = bool(np.array_equal(np.asarray(plan['selection']), gold)) and \
         (closure is None or all(closure.values()))
@@ -637,7 +658,7 @@ def lower(die, op, ctx):
             mg = ops.get('attn.idx.topk_merge')
             ready = _TREE_DONE.get(key)
             t0 = t_issue if ready is None else max(t_issue, ready + 1 + int(math.ceil(mg['end'] - mg['start']) if mg else 0))
-            plan = job_topk_final(fx, t0=t0, boot_done=False)
+            plan = job_topk_final(fx, t0=t0, boot_done=False, indexed13=bool(ctx.get('bk_indexed13')))
     except KeyError as x:
         res['gap'] = dict(module='lower_bk', port='fixtures', missing=f'fixture op {x} missing')
         return res
@@ -662,7 +683,7 @@ def lower(die, op, ctx):
                                                                               if k != 'beat'),
         calendar_issue=issue, words=len(plan['words']), sel_per_quarter=plan['sel_per_quarter'],
         golden_ok=plan['golden_ok'], golden=plan['golden'], tail_budget=TAIL_BUDGET, shard=plan.get('shard'),
-        span_edges=plan['egress'][-1][0] - plan['ingress'][0][0] + 1, price_cycles=round(op['end'] - op['start'], 1)),
+        indexed13=plan.get('indexed13', False), span_edges=plan['egress'][-1][0] - plan['ingress'][0][0] + 1, price_cycles=round(op['end'] - op['start'], 1)),
         indent=1) + '\n'
     res['deps'] += ['BK ingress producer (scores at vi_s, see gap)', 'IDX egress consumer (s_4S -> TP4 merge)',
                     'calendar: no southbound V CTL may land in the drain window slots on vo_s']
@@ -718,7 +739,7 @@ def write_bench(plan, out, mutant=None, mplan=None):
                                                    drain=dict((k, v) for k, v in plan['drain'].items() if k != 'beat'),
                                                    words=len(plan['words']), sel_per_quarter=plan['sel_per_quarter'],
                                                    golden_ok=plan['golden_ok'], golden=plan['golden'],
-                                                   shard=plan.get('shard')), indent=1) + '\n')
+                                                   shard=plan.get('shard'), indexed13=plan.get('indexed13', False)), indent=1) + '\n')
     return ncyc
 
 
@@ -758,6 +779,7 @@ def main(argv=None):
     g.add_argument('--job', choices=('topk_local', 'topk_final', 'tree'), default='topk_local')
     g.add_argument('--out', required=True)
     g.add_argument('--mutant', default=None, choices=(None, 'corrupt', 'early'))
+    g.add_argument('--indexed13', action='store_true', help='opt-in type8 explicit-index candidate packing')
     g.add_argument('--t0', type=int, default=100)
     g.add_argument('--k-dies', type=int, default=1, help='dies holding a rank\'s keys (record: SHARD_K[layer])')
     g.add_argument('--die', type=int, default=0, help='topk_local: which die of --k-dies')
@@ -779,7 +801,7 @@ def main(argv=None):
         else:
             job = (lambda **k: job_topk_local(a.fixtures, t0=a.t0, k_dies=a.k_dies, die=a.die, **k)) \
                 if a.job == 'topk_local' else \
-                (lambda **k: job_topk_final(a.fixtures, t0=a.t0, boot_done=True, k_dies=a.k_dies, **k))
+                (lambda **k: job_topk_final(a.fixtures, t0=a.t0, boot_done=True, k_dies=a.k_dies, indexed13=a.indexed13, **k))
             plan = job()
             mplan = job(mut=mut_drop_selected) if a.mutant == 'corrupt' else None
         n = write_bench(plan, a.out, a.mutant, mplan)

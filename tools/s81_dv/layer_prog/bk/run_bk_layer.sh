@@ -32,7 +32,7 @@ tools/s81_dv/layer_prog/bk/tb_bk_layer.sv"
 ( sha256sum $SRC; $VL --version ) > "$OUT/sources.sha256"
 $VL --version > "$OUT/verilator.version"
 if [ ! -x "$OUT/obj/Vtb_bk_layer" ]; then
-  /usr/bin/time -v -o "$OUT/build.time" $VL --binary --timing -j "${J:-16}" -Wno-fatal -Wno-lint -Wno-style \
+  /usr/bin/time -v -o "$OUT/build.time" $VL ${VL_EXTRA:-} --binary --timing -j "${J:-16}" -Wno-fatal -Wno-lint -Wno-style \
     -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE \
     --top-module tb_bk_layer $SRC -Mdir "$OUT/obj" > "$OUT/build.log" 2>&1 || { tail -20 "$OUT/build.log"; echo "BK_LAYER BUILD FAIL"; exit 2; }
 fi
