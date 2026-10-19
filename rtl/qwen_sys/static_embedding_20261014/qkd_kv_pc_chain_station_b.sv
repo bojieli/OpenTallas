@@ -57,12 +57,21 @@ module qkd_kv_pc_chain_station_b #(parameter integer MUT = 0) (
         if (!rs_q) begin ev0 <= 1'b0; ev1 <= 1'b0; ss <= 1'b0; cv <= 1'b0; bt <= 1'b0; end
         else begin ev0 <= di[F_EV]; ev1 <= di[F_EV + 1]; ss <= di[F_SS]; cv <= di[F_CV]; bt <= di[F_BT]; end
     assign dout = {bt, c[F_BT-1:F_CV+1], cv, c[F_CV-1:F_SS+1], ss, c[F_SS-1:F_EV+2], ev1, ev0, c[F_EV-1:0]};
+    // ---- identity strap registers (HKV-PCH 2026-10-19) ----
+    // pc / cfg_stack are die-top identity straps (kv_static_die cls strap: constants on the die).  Unregistered they
+    // reached ~1,100 tap enables (wes / land_es / ctx / eid / r[] / emb_*) straight from the tile pins inside the
+    // 0.2 T input budget (qkd_kvs_pc_h_k1 route eb7cbd435: TT -50.35, 1,131 input->register endpoints, all strap).
+    // Registered here, every tap compare starts at a local flop.  Constant straps: identical behaviour from the first
+    // edge (reset is held far longer); no edge age, calendar slot or die relay stage changes.
+    (* keep *) reg [4:0] spc;
+    (* keep *) reg [1:0] sst;
+    always @(posedge ck) begin spc <= pc; sst <= cfg_stack; end
     // ---- (1) fan-out tap ----
     wire [4:0] pm = (MUT == 1) ? 5'h0f : 5'h1f;
-    wire h0 = c[F_V]     && ((c[F_PC0 +: 5] & pm) == (pc & pm));
-    wire h1 = c[F_V + 1] && ((c[F_PC1 +: 5] & pm) == (pc & pm));
-    wire x0 = ev0 && c[F_EPC0 +: 5] == pc;
-    wire x1 = ev1 && c[F_EPC1 +: 5] == pc;
+    wire h0 = c[F_V]     && ((c[F_PC0 +: 5] & pm) == (spc & pm));
+    wire h1 = c[F_V + 1] && ((c[F_PC1 +: 5] & pm) == (spc & pm));
+    wire x0 = ev0 && c[F_EPC0 +: 5] == spc;
+    wire x1 = ev1 && c[F_EPC1 +: 5] == spc;
     reg        hit;                       // context valid (bit 317), lagged
     reg [60:0] ctx_id;
     // lag stage (CTX_LAG = 1): context / expected computed from the hop register one edge later than wes
@@ -99,7 +108,7 @@ module qkd_kv_pc_chain_station_b #(parameter integer MUT = 0) (
     //      flagged there, exactly) or a counter overflow latch fault.  Static: no ready / wait (the gateway paces the
     //      boot stream; note.md).
     wire [4:0] bpm = (MUT == 6) ? 5'h0f : 5'h1f;
-    wire bh = bt && ((c[F_PC0 +: 5] & bpm) == (pc & bpm));
+    wire bh = bt && ((c[F_PC0 +: 5] & bpm) == (spc & bpm));
     always @(posedge ck) if (bh) land_es[287:1] <= {1'b1, 1'b1, c[F_AD +: 29], c[F_D0 +: 256]};
     always @(posedge ck or negedge rs_q) if (!rs_q) land_es[0] <= 1'b0; else land_es[0] <= bh;
     (* keep *) reg ler_v, ler_cr, ler_f;
@@ -118,8 +127,8 @@ module qkd_kv_pc_chain_station_b #(parameter integer MUT = 0) (
     // ---- (2) embedding slot player ----
     reg [15:0] r [0:7];
     reg [15:0] cnt, last; reg act; reg [17:0] tok; reg [15:0] ep;
-    wire home = tok[8:4] == pc && (MUT == 4 || tok[10:9] == cfg_stack);
-    wire [15:0] trn = (MUT == 3 && pc == 5'd5) ? r[3] + 16'd1 : r[3];
+    wire home = tok[8:4] == spc && (MUT == 4 || tok[10:9] == sst);
+    wire [15:0] trn = (MUT == 3 && spc == 5'd5) ? r[3] + 16'd1 : r[3];
     integer k;
     always @(posedge ck) if (ss) begin tok <= c[F_TOK +: 18]; ep <= c[F_EP +: 16]; end
     always @(posedge ck or negedge rs_q)
@@ -129,7 +138,7 @@ module qkd_kv_pc_chain_station_b #(parameter integer MUT = 0) (
             emb_issue_v <= 1'b0; emb_return_slot <= 1'b0; capture_slot <= 1'b0; transfer_slot <= 1'b0;
             emb_token <= 18'd0; emb_epoch <= 16'd0; emb_word_index <= 6'd0; emb_half <= 1'b0; emb_scale <= 1'b0;
         end else begin
-            if (cv && c[F_CPC +: 5] == pc) begin
+            if (cv && c[F_CPC +: 5] == spc) begin
                 r[c[F_CRG +: 3]] <= c[F_CVL +: 16];
                 if (c[F_CVL +: 16] != 16'hffff && c[F_CVL +: 16] > last) last <= c[F_CVL +: 16];
                 if (act) fault <= 1'b1;
@@ -146,7 +155,7 @@ module qkd_kv_pc_chain_station_b #(parameter integer MUT = 0) (
             emb_return_slot <= act && (cnt == r[1] || (home && cnt == r[5]));
             capture_slot    <= act && (cnt == r[2] || (home && cnt == r[6]));
             transfer_slot   <= act && (cnt == trn  || (home && cnt == r[7]));
-            if (act && cnt == r[0]) begin emb_word_index <= {cfg_stack, pc[4:1]}; emb_half <= pc[0]; emb_scale <= 1'b0; end
+            if (act && cnt == r[0]) begin emb_word_index <= {sst, spc[4:1]}; emb_half <= spc[0]; emb_scale <= 1'b0; end
             else if (act && home && cnt == r[4]) begin emb_word_index <= 6'd0; emb_half <= 1'b0; emb_scale <= 1'b1; end
             if ((h0 && h1) || (x0 && x1) || bfault || (bh && (h0 || h1))) fault <= 1'b1;
         end
