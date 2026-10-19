@@ -75,9 +75,10 @@ def cmd_su(pidx):
 
 
 def cmd_stn(mode, wsrc, nwords, sbase, dst, dbase, amax=0, kcm1=0):
-    # kcm1 [58:51] = kc - 1 (slice2 redstn2 last-k selection, QW-DIEFIX 10-19; the step-1 slice ignores it)
+    # kcm1 [66:59] = kc - 1 (slice2 redstn2 last-k selection, QW-DIEFIX 10-19; the step-1 slice ignores it).  [58:51] stay
+    # spare / MU: [52:51] is the MU-QWEN R4 STN user (MU-SLICE-GATE 10-19 moved kcm1 off it)
     return pack([(1, 1), (2, 3), (mode, 2), (wsrc, 1), (nwords, 8), (sbase, 9), (dst, 2), (dbase, 24), (amax, 1),
-                 (kcm1, 8)])
+                 (0, 8), (kcm1, 8)])
 
 
 def cmd_root(root, nb, ss, fuse=0, rx=0, eps=0.0, k=0, amnb=0):

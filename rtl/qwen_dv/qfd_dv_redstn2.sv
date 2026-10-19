@@ -14,7 +14,7 @@
 // LAST-K SELECTION (QW-DIEFIX 10-19, QW-XHEAD XT1 finding): the tiles stream their running accumulator once per k step,
 //   so a cluster pair delivers JB (8) words per (round, k): rounds x kc x 8 words, and only the k = kc - 1 block is the
 //   level-6 result (XT1 measured qkv 64 / o 48 / gu 256 / down 144 rs words for 8 / 24 / 8 / 24 results).  cfg_kcm1 =
-//   kc - 1 (STN cmd [58:51]; 0 = every word is a result, the pre-fix behaviour for kc = 1).  Each pair stream (lo = rs_s,
+//   kc - 1 (STN cmd [66:59], moved off the MU user [52:51]; 0 = every word is a result, the pre-fix behaviour for kc = 1).  Each pair stream (lo = rs_s,
 //   hi = rs_n) counts its words in blocks of JB and passes only the last block of every kc to level 7; the dropped words
 //   are still checked (valid pairing, fault bits).  Pure counters on the input valids: no data-path flop, no new edge.
 //   MUT 14 (negative control): kcm1 ignored (every word passes: wrong sums + too many result words -> must FAIL).
