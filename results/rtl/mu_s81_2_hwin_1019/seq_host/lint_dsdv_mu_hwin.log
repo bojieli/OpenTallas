@@ -1,0 +1,84 @@
+%Warning-DECLFILENAME: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv:22:8: Filename 'ot_s81_secded' does not match MODULE name: 'ot_s81_secded_enc72'
+   22 | module ot_s81_secded_enc72 #(parameter integer MUT = 0) (
+      |        ^~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.050
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-DECLFILENAME: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:55:8: Filename 'dsdv_seq_host' does not match MODULE name: 'dsdv_sh_ft'
+   55 | module dsdv_sh_ft #(parameter integer V = 276) (
+      |        ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:213:97: Instance pin connected by name with empty reference: 'job_rdy'
+  213 |         .job_v(ks_q[52]), .job_user(ks_q[51:42]), .job_pos(ks_q[20:0]), .job_tok(ks_q[41:21]), .job_rdy(), .busy(busy),
+      |                                                                                                 ^~~~~~~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:216:44: Instance pin connected by name with empty reference: 'st_jobs'
+  216 |         .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase());
+      |                                            ^~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:216:56: Instance pin connected by name with empty reference: 'st_cmds'
+  216 |         .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase());
+      |                                                        ^~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:216:68: Instance pin connected by name with empty reference: 'phase'
+  216 |         .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase());
+      |                                                                    ^~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:345:36: Instance pin connected by name with empty reference: 'dl_nv'
+  345 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                    ^~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:345:46: Instance pin connected by name with empty reference: 'dl_n'
+  345 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                              ^~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:345:55: Instance pin connected by name with empty reference: 'dl_sv'
+  345 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                                       ^~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:345:65: Instance pin connected by name with empty reference: 'dl_s'
+  345 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                                                 ^~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:346:10: Instance pin connected by name with empty reference: 'ra_s'
+  346 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |          ^~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:346:19: Instance pin connected by name with empty reference: 'ra_n'
+  346 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |                   ^~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:346:28: Instance pin connected by name with empty reference: 'dk_n'
+  346 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |                            ^~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:346:37: Instance pin connected by name with empty reference: 'dk_s'
+  346 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |                                     ^~~~
+%Warning-DECLFILENAME: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv:142:8: Filename 'dsdv_mu_hslot' does not match MODULE name: 'dsdv_seq_host_mu'
+  142 | module dsdv_seq_host_mu #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0,
+      |        ^~~~~~~~~~~~~~~~
+%Warning-DECLFILENAME: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:257:8: Filename 'dsdv_mu_hwin' does not match MODULE name: 'dsdv_seq_host_mux'
+  257 | module dsdv_seq_host_mux (
+      |        ^~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:72:16: Bits of signal are not used: 'ks_q'[41:21]
+                                                                                                                  : ... note: In instance 'dsdv_mu_hwin'
+   72 |     reg [52:0] ks_q; reg [25:0] mc_q, mw_q; reg [NRT*32-1:0] rt_q; integer r;
+      |                ^~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:72:39: Bits of signal are not used: 'mw_q'[24:23]
+                                                                                                                  : ... note: In instance 'dsdv_mu_hwin'
+   72 |     reg [52:0] ks_q; reg [25:0] mc_q, mw_q; reg [NRT*32-1:0] rt_q; integer r;
+      |                                       ^~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:141:16: Bits of signal are not used: 'dl'[30:0]
+                                                                                                                   : ... note: In instance 'dsdv_mu_hwin'
+  141 |     reg [31:0] dl;
+      |                ^~
+%Warning-UNUSEDPARAM: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/lib/ot_rst_relay.sv:25:24: Parameter is not used: 'RELEASE_CYCLES'
+                                                                                               : ... note: In instance 'dsdv_mu_hwin.u_rr'
+   25 |     localparam integer RELEASE_CYCLES = SYNC_STAGES + TREE_STAGES;
+      |                        ^~~~~~~~~~~~~~
+                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.050
+                      ... Use "/* verilator lint_off UNUSEDPARAM */" and lint_on around source to disable this message.
+%Warning-SYNCASYNCNET: /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'dsdv_mu_hwin.u_rr.relay_q'
+                       /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       /home/ubuntu/scratch/mu-s81-2-hwin-1019/src/rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       ... For warning description see https://verilator.org/warn/SYNCASYNCNET?v=5.050
+                       ... Use "/* verilator lint_off SYNCASYNCNET */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 1.754 MB sources in 31 modules, into 0.818 MB in 4 C++ files needing 0.000 MB
+- Verilator: Walltime 0.419 s (elab=0.026, cvt=0.177, bld=0.000); cpu 0.271 s on 1 threads; allocated 48.387 MB
