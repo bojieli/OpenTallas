@@ -1,0 +1,23 @@
+GATE WARN macro_grid: qfd_static_ch546#0: origin (129.624, 302.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)  -> FIX: build the child on the common lattice
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'qfd_static_ch546': 'M5', 'ot_qkvd_llr_replay_sram_leaf': 'M5'}
+GATE WARN children: qfd_static_ch546: (f) face-pin access: 1112 of 1115 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. i_data[0] M4 (0.060,48.000), i_data[100] M4 (0.060,48.000), i_data[101] M4 (0.060,48.000))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: qfd_static_ch546: (f) face-pin access: 1112 of 1115 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. i_data[0] M4 (0.060,48.000), i_data[100] M4 (0.060,48.000), i_data[101] M4 (0.060,48.000))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE INFO remote: ot-run selected ot-epyc8 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_coll_face_s1_safe_20261019-084346.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_coll_face_s1_safe_20261019-084346.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s1_safe-20261019-084346
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc8 in 89 s (gate total 511 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2320, 'pin_rectangles': 2320, 'pin_track_checked': 2320, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 e41a0aa9ca4ca57751967344b2045eca8e80045a6a64e30512120ce281cc42cd
+GATE INFO util: synthesized std area 3160 um2 + macros 219843 in core 527231: util 1% (std-cell density 1.1% of placeable 281588 um2; total fill 42.3%)
+GATE INFO textbook: PASS qfd_coll_face_s1_safe cells 21,014 flops 4,076 depth 483.4 ps util 0.423 reach 0.0 um (0.6 s)
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE WARN cross_clock: multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)  -> FIX: fix the signoff SDC read and re-gate with --cts
+GATE INFO clock_rule: root port:codec0: 2,406 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+GATE FAIL remote_script: remote script completed with exit 1  -> FIX: read the original terminal log and fix the reported failure
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-safe-qw-coll-1019/physical/ref_tile/qfd_coll_face_s1_safe/gate_layout/floorplan.png
+GATE WARN fill: fill 42% = (hard macros 219843.1 + synthesized std cells 3169.5) / outline 533744.6 um2; pin demand per face: S 76 pins over 477.1/950.4 um (50%), N 2 pins over 319.0/950.4 um (34%), W 1157 pins over 513.6/561.6 um (92%), E 1261 pins over 513.6/561.6 um (92%) (< 50%)
+GATE FAIL trial_route: trial global route produced no congestion table (GATE_GRT_RC=2)  -> FIX: read the remote grt.log
+PRE_ROUTE_GATE: FAIL (3 fail, 7 warn)
+GATE: qfd_coll_face_s1_safe/gate_result.json written (exact staged source binding; commit it with the kit)

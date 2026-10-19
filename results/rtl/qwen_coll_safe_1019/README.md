@@ -1,6 +1,6 @@
 # SAFE collective structural candidate (2026-10-19)
 
-This is a candidate, with no REVIEW.json or submit authorization. Default SAFE=0 behavior is retained. SAFE=1 replaces delay chains of depth >=3 with exact stationary rings, lands core/link tokens, partitions reset copies, removes unobserved metadata resets, and captures PHY-up. PHY-up fault observation adds one diagnostic edge. No throughput/data calendar stages are added in the recorded phase-0 production test: LU=53, LS=378. The generated physical wrapper adds two startup reset guard edges. A separate real 0.2T core/link phase production test FAILED (phase1/): AR2048/argmax48 mismatches, all8 faulted; SAFE0 comparator pending. Candidate is not mesochronous qualified; the previous duty50 harness ignored phi and has been corrected.
+This is a candidate, with no REVIEW.json or submit authorization. Default SAFE=0 behavior is retained. SAFE=1 replaces delay chains of depth >=3 with exact stationary rings, lands core/link tokens, partitions reset copies, removes unobserved metadata resets, and captures PHY-up. PHY-up fault observation adds one diagnostic edge. No throughput/data calendar stages are added in the recorded phase-0 production test: LU=53, LS=378. The generated physical wrapper adds two startup reset guard edges. A separate real 0.2T core/link phase production test FAILED (phase1/): AR2048/argmax48 mismatches, all8 faulted; SAFE0 comparator completed with identical failure (phase_baseline/); inherited integration phase contract remains a release blocker. Candidate is not mesochronous qualified; the previous duty50 harness ignored phi and has been corrected.
 
 Evidence:
 - ring/: sixteen depths (0..378), 4096 edges and repeated reset, golden shift equivalence; early-ring mutant caught.
@@ -28,3 +28,7 @@ ROOT explicitly accepted only the RX MY child origin X129.600 ->129.624um, Y302.
 8. Integration: production RTL passes; source-bound production physical parent rekit and final visual acceptance remain open. Only S1 kit is gate-ready. Other profile specs are explicitly DRAFT with no independent wrapper bench.
 
 qfd_coll_bank137 view dependency was restored unchanged from commit3dbaaf169 because absent at the adopted branch base. Clock-tool main synchronization is commit7a820e1ee, separable from this RTL candidate.
+
+## Core physical dependency candidates
+
+qfd_io_collective_safe_lattice keeps s4 rawSRAM origins and diagnoses R0 folds at43.2 grid. Its separate gate is a comparison, not the final all-grid candidate. qfd_io_collective_safe_r0 compresses the width to734.4um and expands height to1036.8um, puts all8folds+9rawSRAMs R0 on43.2um origins, and puts rawclock rootpins beside each owning row onW/E. Full-width softband y950.4..1036.8; all macro channels>=20um. core_r0_grid_proof.json checks immutable view hashes, all pin tracks, and nominal raw-clock Manhattan reach<=405um. Actual pin placement, routes, reset census, TT/FF and native spread remain gate obligations. This is not the production physical view: closed five-profile faces and core must still be integrated with the paid relay calendar.

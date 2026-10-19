@@ -1,0 +1,700 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf/ot_qkvd_llr_replay_sram_leaf_tt.lib
+read_liberty /src/physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546/qfd_static_ch546_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf/ot_qkvd_llr_replay_sram_leaf_ff.lib
+read_liberty /src/physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546/qfd_static_ch546_ff.lib
+read_db /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_2_place_iop.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_place_pre_gpl.tcl
+OT_PRS: 584 output pins already on a dedicated flop, 16 pins split onto a cloned flop (33 cells added, 7 load-less cells removed), 560 outputs not flop-driven
+INHOLD: 1148 input hold cells (HB2xp67_ASAP7_75t_R; 0 strong pads by OT_HOLD_PAD_STRONG_RE, dont_touch; driver 'BUFx4f_ASAP7_75t_R', 2296 FIRM for GPL), 12 inputs skipped (clock / reset-only / non-DFF)
+OUTHOLD: 600 output hold stages (BUF + HB2xp67_ASAP7_75t_R + BUF FIRM at the pin, 0 with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), 560 outputs skipped (not flop-driven), 0 QN inverters absorbed FIRM at the pin
+OT_ANCHOR_PACK: legally packed 5844 owned anchors; maximum Manhattan displacement 1066.0 DBU
+OT_IOFLOP fixed 600 output-port and 1148 input-port flops at their pins (572 ports not single-flop)
+[INFO RSZ-0026] Removed 909 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 1 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 1147 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 948.240 559.440 ) um
+[INFO GPL-0016] Core area:                  527231.462 um^2
+[INFO GPL-0036] Movable instances area:       2671.712 um^2
+[INFO GPL-0037] Total instances area:       224381.928 um^2
+[INFO GPL-0035] Pin density area adjust:       -16.771 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             65545
+[INFO GPL-0007] Movable instances:               19766
+[INFO GPL-0008] Fixed instances:                 38323
+[INFO GPL-0009] Dummy instances:                  7456
+[INFO GPL-0010] Number of nets:                  28416
+[INFO GPL-0011] Number of pins:                  77142
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 950.400 561.600 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 948.240 559.440 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                527231.462 um^2
+[INFO GPL-0017] Fixed instances area:       231625.782 um^2
+[INFO GPL-0018] Movable instances area:       2654.942 um^2
+[INFO GPL-0019] Utilization:                     0.898 %
+[INFO GPL-0020] Standard cells area:          2654.942 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 19766	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00316249 HPWL: 5023050352
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00001715 HPWL: 2287539689
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00000978 HPWL: 2212996238
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00000403 HPWL: 2206202508
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000319 HPWL: 2203733017
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.134 um^2
+[INFO GPL-0025] Ideal bin area:                  0.269 um^2
+[INFO GPL-0026] Ideal bin count:               1962624
+[INFO GPL-0027] Total bin area:             527231.462 um^2
+[INFO GPL-0028] Bin count (X, Y):        1024 ,   1024
+[INFO GPL-0029] Bin size (W * H):       0.924 *  0.544 um
+[INFO GPL-0030] Number of bins:                1048576
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9253 |  1.123098e+06 |   +0.00% |  2.26e-14 |      
+       10 |   0.9038 |  1.157916e+06 |   +3.10% |  3.65e-14 |      
+       20 |   0.9000 |  1.152641e+06 |   -0.46% |  5.95e-14 |      
+       30 |   0.9077 |  1.149974e+06 |   -0.23% |  9.68e-14 |      
+       40 |   0.9066 |  1.148866e+06 |   -0.10% |  1.58e-13 |      
+       50 |   0.9089 |  1.148582e+06 |   -0.02% |  2.57e-13 |      
+       60 |   0.9101 |  1.148218e+06 |   -0.03% |  4.19e-13 |      
+       70 |   0.9100 |  1.148346e+06 |   +0.01% |  6.82e-13 |      
+       80 |   0.9088 |  1.149252e+06 |   +0.08% |  1.11e-12 |      
+       90 |   0.9004 |  1.150564e+06 |   +0.11% |  1.81e-12 |      
+      100 |   0.8969 |  1.151091e+06 |   +0.05% |  2.95e-12 |      
+      110 |   0.8380 |  1.149945e+06 |   -0.10% |  4.80e-12 |      
+      120 |   0.7780 |  1.146509e+06 |   -0.30% |  7.81e-12 |      
+      130 |   0.7771 |  1.145711e+06 |   -0.07% |  1.27e-11 |      
+      140 |   0.7818 |  1.148839e+06 |   +0.27% |  2.07e-11 |      
+      150 |   0.8679 |  1.151485e+06 |   +0.23% |  3.38e-11 |      
+      160 |   0.8836 |  1.157692e+06 |   +0.54% |  5.49e-11 |      
+      170 |   0.8830 |  1.169320e+06 |   +1.00% |  8.94e-11 |      
+      180 |   0.8566 |  1.185669e+06 |   +1.40% |  1.45e-10 |      
+      190 |   0.7784 |  1.202048e+06 |   +1.38% |  2.36e-10 |      
+      200 |   0.7627 |  1.215492e+06 |   +1.12% |  3.84e-10 |      
+      210 |   0.7580 |  1.231034e+06 |   +1.28% |  6.25e-10 |      
+      220 |   0.7955 |  1.225130e+06 |   -0.48% |  1.02e-09 |      
+      230 |   0.8041 |  1.219970e+06 |   -0.42% |  1.66e-09 |      
+      240 |   0.7929 |  1.218749e+06 |   -0.10% |  2.70e-09 |      
+      250 |   0.7808 |  1.213190e+06 |   -0.46% |  4.40e-09 |      
+      260 |   0.7508 |  1.206031e+06 |   -0.59% |  7.16e-09 |      
+      270 |   0.7311 |  1.197608e+06 |   -0.70% |  1.17e-08 |      
+      280 |   0.6902 |  1.190817e+06 |   -0.57% |  1.90e-08 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 288, overflow: 0.629, keep resizer changes at: 1, HPWL: 1189376250
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     28416
+    final |     +0.7% |    1004 |    5126 |          2094 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1961 slew violations.
+[INFO RSZ-0035] Found 4 fanout violations.
+[INFO RSZ-0036] Found 125 capacitance violations.
+[INFO RSZ-0037] Found 1780 long wires.
+[INFO RSZ-0039] Resized 1004 instances.
+[INFO RSZ-0038] Inserted 5126 buffers in 2094 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     22900
+     2200 |     +0.0% |      10 |       70 |     20700
+     4400 |     +0.0% |      10 |      120 |     18500
+     6600 |     +0.0% |      11 |      210 |     16300
+     8800 |     +0.0% |      13 |      321 |     14100
+    11000 |     +0.0% |      19 |      675 |     11900
+    13200 |     +0.0% |      22 |      770 |      9700
+    15400 |     +0.0% |     129 |     1044 |      7500
+    17600 |     -0.0% |     928 |     2099 |      5300
+    19800 |     -0.0% |    1273 |     2357 |      3100
+    22000 |     -0.2% |    4262 |     6636 |       900
+    final |     -0.2% |    5266 |     7841 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -5.556443e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: 966.773 um^2 (+36.41%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 7701 (+38.96%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 12967, deleted: 5266
+[INFO GPL-0110] Timing-driven: new target density: 0.50327045
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      290 |   0.6014 |  1.223322e+06 |   +2.73% |  3.09e-08 |      
+[INFO GPL-0038] Routability snapshot saved at iter = 292
+      291 |   0.5909 |  1.228629e+06 |          |           |      
+      300 |   0.5417 |  1.229363e+06 |   +0.49% |  5.01e-08 |      
+      310 |   0.5704 |  1.218869e+06 |   -0.85% |  8.17e-08 |      
+      320 |   0.5326 |  1.219885e+06 |   +0.08% |  1.33e-07 |      
+      330 |   0.4610 |  1.213217e+06 |   -0.55% |  2.17e-07 |      
+      340 |   0.3554 |  1.191377e+06 |   -1.80% |  3.53e-07 |      
+[INFO GPL-0040] Routability iteration: 1
+[WARNING GRT-0281] Net cal_ck has a large fanout of 1107 terminals.
+[WARNING GRT-0281] Net codec0 has a large fanout of 2422 terminals.
+[INFO GPL-0041] Total routing overflow: 53.5719
+[INFO GPL-0042] Number of overflowed tiles: 1389 (0.08%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 0.9760
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.9530
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.9339
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.9042
+[INFO GPL-0047] Routability iteration weighted routing congestion: 0.9645
+[INFO GPL-0050] Weighted routing congestion is lower than target routing congestion(1.0100), end routability optimization.
+[INFO GPL-0090] Routability finished. Target routing congestion achieved succesfully.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      350 |   0.2789 |  1.183241e+06 |   -0.68% |  5.30e-07 |      
+      360 |   0.2483 |  1.181152e+06 |   -0.18% |  7.81e-07 |      
+      370 |   0.2105 |  1.185304e+06 |   +0.35% |  1.15e-06 |      
+      380 |   0.1954 |  1.185907e+06 |   +0.05% |  1.69e-06 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 382, overflow: 0.194, keep resizer changes at: 1, HPWL: 1185980039
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     36117
+    final |     +0.5% |     211 |    3928 |          2029 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1769 slew violations.
+[INFO RSZ-0036] Found 5 capacitance violations.
+[INFO RSZ-0037] Found 1949 long wires.
+[INFO RSZ-0039] Resized 211 instances.
+[INFO RSZ-0038] Inserted 3928 buffers in 2029 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     22900
+     2200 |     -0.0% |      77 |       37 |     20700
+     4400 |     -0.0% |     129 |       67 |     18500
+     6600 |     -0.0% |     219 |      122 |     16300
+     8800 |     -0.0% |     330 |      207 |     14100
+    11000 |     -0.0% |     680 |      446 |     11900
+    13200 |     -0.0% |     862 |      793 |      9700
+    15400 |     -0.1% |    1783 |     1615 |      7500
+    17600 |     -0.1% |    3162 |     2726 |      5300
+    19800 |     -0.2% |    3943 |     3102 |      3100
+    22000 |     -0.4% |    9847 |     6791 |       900
+    final |     -0.5% |   11821 |     8198 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -2.404399e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: 11.809 um^2 (+0.33%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 305 (+1.11%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 12126, deleted: 11821
+[INFO GPL-0110] Timing-driven: new target density: 0.50331044
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      390 |   0.2308 |  1.187690e+06 |   +0.15% |  2.50e-06 |      
+      400 |   0.1989 |  1.184087e+06 |   -0.30% |  3.68e-06 |      
+      410 |   0.1632 |  1.186595e+06 |   +0.21% |  5.42e-06 |      
+      420 |   0.1349 |  1.189266e+06 |   +0.23% |  7.98e-06 |      
+      430 |   0.1155 |  1.184998e+06 |   -0.36% |  1.18e-05 |      
+      440 |   0.1014 |  1.181391e+06 |   -0.30% |  1.73e-05 |      
+      441 |   0.0998 |  1.181219e+06 |          |  1.87e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 441
+[INFO GPL-1017] Routability mode iteration count: 55
+[INFO GPL-1005] Routability final weighted congestion: 0.9378
+[INFO GPL-1002] Placed Cell Area             3633.5241
+[INFO GPL-1003] Available Free Area         295605.6800
+[INFO GPL-1004] Minimum Feasible Density        0.0100 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0137
+[INFO GPL-1008]     - For 80% usage of free space: 0.0154
+[INFO GPL-1009]     - For 50% usage of free space: 0.0246
+[INFO GPL-1011] Original area (um^2): 2654.94
+[INFO GPL-1012] Total routability artificial inflation: 0.00 (+0.00%)
+[INFO GPL-1013] Total timing-driven delta area: 978.58 (+36.86%)
+[INFO GPL-1014] Final placement area: 3633.52 (+36.86%)
+Took 269 seconds: global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 225357 um^2 43% utilization.
+write_db /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_3_place_gp.odb
+Elapsed time: 4:45.18[h:]min:sec. CPU time: user 719.20 sys 203.98 (323%). Peak memory: 3399628KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb          285           3319 cb878c8882fb0d16a3f7
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+Running resize.tcl, stage 3_4_place_resized
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf/ot_qkvd_llr_replay_sram_leaf_tt.lib
+read_liberty /src/physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546/qfd_static_ch546_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf/ot_qkvd_llr_replay_sram_leaf_ff.lib
+read_liberty /src/physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546/qfd_static_ch546_ff.lib
+read_db /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_3_place_gp.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+estimate_parasitics -placement
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     36422
+     1000 |     +0.0% |       2 |       2 |             2 |     35422
+     2000 |     +0.0% |       3 |      35 |            32 |     34422
+     3000 |     +0.0% |       8 |      47 |            44 |     33422
+     4000 |     +0.0% |       8 |      94 |            90 |     32422
+     5000 |     +0.0% |      14 |     105 |           100 |     31422
+     6000 |     +0.0% |      14 |     186 |           177 |     30422
+     7000 |     +0.0% |      14 |     186 |           177 |     29422
+     8000 |     +0.0% |      14 |     186 |           177 |     28422
+     9000 |     +0.0% |      14 |     201 |           189 |     27422
+    10000 |     +0.1% |      14 |     403 |           359 |     26422
+    11000 |     +0.1% |      14 |     403 |           359 |     25422
+    12000 |     +0.1% |      15 |     431 |           383 |     24422
+    13000 |     +0.1% |      15 |     538 |           451 |     23422
+    14000 |     +0.1% |      15 |     670 |           552 |     22422
+    15000 |     +0.1% |      15 |     676 |           558 |     21422
+    16000 |     +0.1% |      17 |     695 |           575 |     20422
+    17000 |     +0.1% |      17 |     836 |           671 |     19422
+    18000 |     +0.1% |      17 |     931 |           733 |     18422
+    19000 |     +0.1% |      17 |    1039 |           820 |     17422
+    20000 |     +0.1% |      17 |    1039 |           820 |     16422
+    21000 |     +0.1% |      17 |    1040 |           821 |     15422
+    22000 |     +0.2% |      17 |    1554 |          1177 |     14422
+    23000 |     +0.2% |      17 |    1608 |          1230 |     13422
+    24000 |     +0.2% |      17 |    1627 |          1256 |     12422
+    25000 |     +0.2% |      17 |    1627 |          1256 |     11422
+    26000 |     +0.2% |      28 |    1638 |          1267 |     10422
+    27000 |     +0.2% |      72 |    1693 |          1322 |      9422
+    28000 |     +0.2% |      75 |    1710 |          1339 |      8422
+    29000 |     +0.2% |      76 |    1742 |          1370 |      7422
+    30000 |     +0.2% |      77 |    1768 |          1391 |      6422
+    31000 |     +0.2% |      84 |    1790 |          1411 |      5422
+    32000 |     +0.3% |      96 |    1908 |          1489 |      4422
+    33000 |     +0.3% |      98 |    1967 |          1529 |      3422
+    34000 |     +0.3% |     111 |    2105 |          1621 |      2422
+    35000 |     +0.3% |     111 |    2105 |          1621 |      1422
+    36000 |     +0.3% |     111 |    2105 |          1621 |       422
+    final |     +0.3% |     111 |    2105 |          1621 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1684 slew violations.
+[INFO RSZ-0039] Resized 111 instances.
+[INFO RSZ-0038] Inserted 2105 buffers in 1621 nets.
+[INFO RSZ-0504] Runtime: 6.95s
+Took 7 seconds: repair_design -verbose -slew_margin 30
+Floating nets: 
+[WARNING RSZ-0020] found 2 floating nets.
+Report metrics stage 3, resizer...
+
+==========================================================================
+resizer report_design_area
+--------------------------------------------------------------------------
+Design area 225989 um^2 43% utilization.
+Instance count before 66095, after 68200
+Pin count before 90834, after 95044
+write_db /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_4_place_resized.odb
+Elapsed time: 0:26.62[h:]min:sec. CPU time: user 40.52 sys 7.52 (180%). Peak memory: 574224KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_4_place_resized         .odb           26            560 3797831691a84779a340
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+Running detail_place.tcl, stage 3_5_place_dp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf/ot_qkvd_llr_replay_sram_leaf_tt.lib
+read_liberty /src/physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546/qfd_static_ch546_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf/ot_qkvd_llr_replay_sram_leaf_ff.lib
+read_liberty /src/physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546/qfd_static_ch546_ff.lib
+read_db /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_4_place_resized.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_detail_place_pre_dpl.tcl
+INHOLD released 4096 FIRM hold cells / drivers for DPL
+OT_OFLOP released 1748 output-port flops for DPL
+detailed_placement
+[INFO DPL-0006] Core area: 527231.46 um^2
+[INFO DPL-0007] Movable instances area: 5198.56 um^2
+[INFO DPL-0008] Fixed instances area within core: 220789.98 um^2
+[INFO DPL-0009] Utilization: 42.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 68194 cells
+[INFO DPL-0393]   height 560 row(s): 2 cells
+[INFO DPL-0393]   height 640 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        644 |       146 |       498
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 2.41s
+Placement Analysis
+---------------------------------
+total displacement      64522.0 u
+average displacement        0.9 u
+max displacement           89.6 u
+original HPWL         1181824.6 u
+legalized HPWL        1248221.4 u
+delta HPWL                    6 %
+
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 38575 fixed cells.
+[INFO DPL-0318] Collected 35721 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (2160, 2160) - (948240, 559440)
+[INFO DPL-0310] Assigned 35721 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 1.248197e+09.
+[INFO DPL-0302] End of matching; objective is 1.247573e+09, improvement is 0.05 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 1.241979e+09.
+[INFO DPL-0307] End of global swaps; objective is 1.241979e+09, improvement is 0.45 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 1.241182e+09.
+[INFO DPL-0309] End of vertical swaps; objective is 1.241182e+09, improvement is 0.06 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 1.240579e+09.
+[INFO DPL-0305] End of reordering; objective is 1.240579e+09, improvement is 0.05 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 714420 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 714420, swaps 42393, moves 253326 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 1.237561e+09, Scratch cost 1.233748e+09, Incremental cost 1.233748e+09, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 1.233748e+09.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.31 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.308074 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 13694 cell flips.
+[INFO DPL-0384] End of flipping; objective is 1.230073e+09, improvement is 0.54 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL          1248221.4 u (  866896.9,   381324.4)
+Final HPWL             1229209.7 u (  851256.2,   377953.5)
+Delta HPWL                  -1.5 % (      -1.8,       -0.9)
+
+Took 14 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 1608 instances
+[INFO DPL-0021] HPWL before          1229209.7 u
+[INFO DPL-0022] HPWL after           1229173.0 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring
+detailed_placement
+[INFO DPL-0006] Core area: 527231.46 um^2
+[INFO DPL-0007] Movable instances area: 5198.56 um^2
+[INFO DPL-0008] Fixed instances area within core: 220789.98 um^2
+[INFO DPL-0009] Utilization: 42.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 68194 cells
+[INFO DPL-0393]   height 560 row(s): 2 cells
+[INFO DPL-0393]   height 640 row(s): 4 cells
+[INFO DPL-0500] Runtime: 1.13s
+Placement Analysis
+---------------------------------
+total displacement       7652.4 u
+average displacement        0.1 u
+max displacement            1.4 u
+original HPWL         1229173.0 u
+legalized HPWL        1236676.3 u
+delta HPWL                    1 %
+
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 225989 um^2 43% utilization.
+write_db /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_place.sdc
+Elapsed time: 0:39.47[h:]min:sec. CPU time: user 44.66 sys 3.75 (122%). Peak memory: 2439972KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb           39           2382 78aa3049f5f6265e5320
+cp /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_5_place_dp.odb /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_place.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf/ot_qkvd_llr_replay_sram_leaf_tt.lib
+read_liberty /src/physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546/qfd_static_ch546_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf/ot_qkvd_llr_replay_sram_leaf_ff.lib
+read_liberty /src/physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546/qfd_static_ch546_ff.lib
+read_db /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_ENTRIES entry tx_wck -> u_ot_pr_core.u_body.u_tx/wck (qfd_static_ch546) wire 263.8 um LONG
+OT_ENTRIES entry rx_rck -> u_ot_pr_core.u_body.u_rx/rck (qfd_static_ch546) wire 305.8 um LONG
+OT_ENTRIES entry tx_rck -> u_ot_pr_core.u_body.u_tx/rck (qfd_static_ch546) wire 247.8 um LONG
+OT_ENTRIES entry rx_wck -> u_ot_pr_core.u_body.u_rx/wck (qfd_static_ch546) wire 287.4 um LONG
+OT_ENTRIES entry codec1 -> u_ot_pr_core.u_body.u_codec.g_bank\[0\].u_store/ck (ot_qkvd_llr_replay_sram_leaf) wire 44.0 um
+OT_ENTRIES entry codec2 -> u_ot_pr_core.u_body.u_codec.g_bank\[1\].u_store/ck (ot_qkvd_llr_replay_sram_leaf) wire 266.4 um LONG
+OT_ENTRIES entry codec3 -> u_ot_pr_core.u_body.u_codec.g_bank\[2\].u_store/ck (ot_qkvd_llr_replay_sram_leaf) wire 43.2 um
+OT_ENTRIES entry codec4 -> u_ot_pr_core.u_body.u_codec.g_bank\[3\].u_store/ck (ot_qkvd_llr_replay_sram_leaf) wire 267.2 um LONG
+OT_HYBRID excluded hard entries: in-CTS -repair_clock_nets disabled; selected-root trees repaired after CTS
+OT_MACRO_CTS 6 clocked macros: -macro_clustering_size 2 -macro_clustering_max_diameter 40
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0001] Running TritonCTS with user-specified clock roots: cal_ck cal_lck codec0.
+[INFO CTS-0095] Net "cal_ck" found.
+[INFO CTS-0010]  Clock net "cal_ck" has 1106 sinks.
+[INFO CTS-0095] Net "cal_lck" found.
+[INFO CTS-0010]  Clock net "cal_lck" has 563 sinks.
+[INFO CTS-0095] Net "codec0" found.
+[INFO CTS-0010]  Clock net "codec0" has 2421 sinks.
+[INFO CTS-0008] TritonCTS found 3 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 6 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net cal_ck.
+[INFO CTS-0028]  Total number of sinks: 1106.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 39.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 63.
+[INFO CTS-0024]  Normalized sink region: [(3.85985, 15.0905), (284.128, 400.9)].
+[INFO CTS-0025]     Width:  280.2680.
+[INFO CTS-0026]     Height: 385.8095.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 32
+    Sub-region size: 280.2680 X 192.9048
+[INFO CTS-0034]     Segment length (rounded): 96.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 16
+    Sub-region size: 140.1340 X 192.9048
+[INFO CTS-0034]     Segment length (rounded): 70.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 8
+    Sub-region size: 140.1340 X 96.4524
+[INFO CTS-0034]     Segment length (rounded): 48.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 4
+    Sub-region size: 70.0670 X 96.4524
+[INFO CTS-0034]     Segment length (rounded): 36.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 2
+    Sub-region size: 70.0670 X 48.2262
+[INFO CTS-0034]     Segment length (rounded): 24.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 63.
+[INFO CTS-0201] 6 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net cal_lck.
+[INFO CTS-0028]  Total number of sinks: 563.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 81.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 36.
+[INFO CTS-0024]  Normalized sink region: [(272.98, 111.921), (699.434, 370.6)].
+[INFO CTS-0025]     Width:  426.4544.
+[INFO CTS-0026]     Height: 258.6790.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 18
+    Sub-region size: 213.2272 X 258.6790
+[INFO CTS-0034]     Segment length (rounded): 106.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 213.2272 X 129.3395
+[INFO CTS-0034]     Segment length (rounded): 64.
+ Level 3
+    Direction: Horizontal
+    Sinks per sub-region: 5
+    Sub-region size: 106.6136 X 129.3395
+[INFO CTS-0034]     Segment length (rounded): 54.
+[INFO CTS-0054]  Stop criterion found. Sink region hpwl (919.722 um) did not improve and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 36.
+[INFO CTS-0201] 6 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net codec0.
+[INFO CTS-0028]  Total number of sinks: 2421.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 97.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 183.
+[INFO CTS-0024]  Normalized sink region: [(271.347, 13.6091), (699.404, 390.147)].
+[INFO CTS-0025]     Width:  428.0575.
+[INFO CTS-0026]     Height: 376.5380.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 92
+    Sub-region size: 214.0287 X 376.5380
+[INFO CTS-0034]     Segment length (rounded): 108.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 46
+    Sub-region size: 214.0287 X 188.2690
+[INFO CTS-0034]     Segment length (rounded): 94.
+ Level 3
+    Direction: Horizontal
+    Sinks per sub-region: 23
+    Sub-region size: 107.0144 X 188.2690
+[INFO CTS-0034]     Segment length (rounded): 54.
+ Level 4
+    Direction: Vertical
+    Sinks per sub-region: 12
+    Sub-region size: 107.0144 X 94.1345
+[INFO CTS-0034]     Segment length (rounded): 48.
+ Level 5
+    Direction: Horizontal
+    Sinks per sub-region: 6
+    Sub-region size: 53.5072 X 94.1345
+[INFO CTS-0034]     Segment length (rounded): 26.
+ Level 6
+    Direction: Vertical
+    Sinks per sub-region: 3
+    Sub-region size: 53.5072 X 47.0672
+[INFO CTS-0034]     Segment length (rounded): 24.
+[INFO CTS-0054]  Stop criterion found. Sink region hpwl (709.443 um) did not improve and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 183.
+[INFO CTS-0018]     Created 150 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 11.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 11.
+[INFO CTS-0015]     Created 150 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:9, 2:19, 3:5, 4:1, 6:1, 7:2, 8:2, 12:1, 13:2, 14:1, 15:3, 16:2, 17:4, 18:5, 19:10, 20:11, 21:10, 22:3, 23:2, 24:2..
+[INFO CTS-0017]     Max level of the clock tree: 5.
+[INFO CTS-0018]     Created 67 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 9.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 9.
+[INFO CTS-0015]     Created 67 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 2:2, 3:1, 4:3, 5:1, 6:3, 7:3, 8:3, 9:1, 10:3, 13:1, 14:1, 16:1, 17:1, 18:1, 19:3, 20:4, 21:6, 22:6..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0018]     Created 329 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 13.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 13.
+[INFO CTS-0015]     Created 329 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:4, 2:29, 3:20, 4:13, 5:10, 6:8, 7:9, 8:9, 9:10, 10:9, 11:7, 12:9, 13:5, 14:7, 15:10, 16:27, 17:30, 18:9, 19:11, 20:7, 21:2, 24:1..
+[INFO CTS-0017]     Max level of the clock tree: 6.
+[INFO CTS-0098] Clock net "cal_ck"
+[INFO CTS-0099]  Sinks 1141
+[INFO CTS-0100]  Leaf buffers 63
+[INFO CTS-0101]  Average sink wire length 617.79 um
+[INFO CTS-0102]  Path depth 10 - 11
+[INFO CTS-0207]  Dummy loads inserted 35
+[INFO CTS-0098] Clock net "cal_lck"
+[INFO CTS-0099]  Sinks 590
+[INFO CTS-0100]  Leaf buffers 36
+[INFO CTS-0101]  Average sink wire length 804.60 um
+[INFO CTS-0102]  Path depth 9 - 9
+[INFO CTS-0207]  Dummy loads inserted 27
+[INFO CTS-0098] Clock net "codec0"
+[INFO CTS-0099]  Sinks 2541
+[INFO CTS-0100]  Leaf buffers 183
+[INFO CTS-0101]  Average sink wire length 995.79 um
+[INFO CTS-0102]  Path depth 11 - 13
+[INFO CTS-0207]  Dummy loads inserted 120
+[INFO CTS-0500] Runtime: 2.84s
+[INFO RSZ-0058] Using max wire length 163um.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 1 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 1 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 1 buffers in 1 nets.
+OT_HYBRID post-CTS scoped net repair on selected roots; 8 hard entries unchanged
+OT_HYBRID CTS roots cal_ck cal_lck codec0; hard-child entries excluded
+OT_ENTRIES done: 8 independent hard entries, 3 glue CTS roots, 6 entry wires over 60.0 um
+QDM PINFLOP reference: 1148 input pin flops (0 hard-child clock pins at +insertion), median arrival 1143.858032 (range 869.724548 .. 1548.282715)
+QDM reference pin u_ot_pr_core.u_body.u_codec.u_ctl.rf[25]$_DFF_P_/CLK clock arrival max 1143.858032 min 1013.427368 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_HYBRID CLOCK_RULE tt cal_ck WARN pin_spread=38.9 scope=boundary sinks=1106 WARN: insertion all_mean 429.0 / pin_mean 432.0 ps > 300 (guidance)
+OT_HYBRID CTS_MEASURE tt cal_ck sinks=1106 reference_scope=boundary boundary_sinks=554 min=422.12450370645354 mean=431.9717961015849 max=461.03909763153865 all_mean=428.96811259604533
+OT_HYBRID CLOCK_RULE tt cal_lck WARN pin_spread=0.6 scope=boundary sinks=563 WARN: insertion all_mean 622.7 / pin_mean 710.0 ps > 300 (guidance)
+OT_HYBRID CTS_MEASURE tt cal_lck sinks=563 reference_scope=boundary boundary_sinks=2 min=709.7083504817978 mean=710.0067784320095 max=710.3052063822212 all_mean=622.6772190656162
+OT_HYBRID CLOCK_RULE tt codec0 FAIL pin_spread=450.8 scope=boundary sinks=2421 WARN: insertion all_mean 715.0 / pin_mean 793.3 ps > 300 (guidance)
+Error: cts.tcl, 36 OT_HYBRID: glue root codec0 pin-flop spread 450.8 ps > 80 at tt (boundary, 1193 of 2421 sinks)
+Elapsed time: 0:16.23[h:]min:sec. CPU time: user 25.52 sys 2.74 (174%). Peak memory: 710432KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_qfd_coll_face_s1_safe_asap7_ref_gate/base/4_1_cts.odb] Error 2

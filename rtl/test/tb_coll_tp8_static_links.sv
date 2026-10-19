@@ -279,6 +279,30 @@ module tb_coll_tp8_static_links #(
                     .i(pd), .o(srx[(R2*3 + J2)*FP +: FP]), .fault(lflt[R2*12 + J2*4 + 2]));
                 tb_fwd_lane #(.W(1), .N(NRVJ), .K(KRVJ)) u_lrv (.cks(lck), .ens(rst_n), .ckd(clk), .rsd(rst_n),
                     .i(pv_), .o(srxv[R2*3 + J2]), .fault(lflt[R2*12 + J2*4 + 3]));
+                // Diagnostic receipts keep each source/destination arrival and full frame identity.
+                // No summed-age compensation: roots are counted independently.
+                if(g==0)begin:g_phase_receipt
+                    integer ntxs=0,ntxd=0,nrxs=0,nrxd=0,lc=0;
+                    always @(posedge lck)begin
+                        lc<=lc+1;
+                        if($test$plusargs("PHASE_TRACE"))begin
+                            if(ltv && ntxd<2)begin
+                                $display("PHASE_FRAME port=%0d edge=TX_DEST corecyc=%0d linkcyc=%0d seq=%0d frame=%h",j,cyc,lc,ntxd,ltd);ntxd<=ntxd+1;
+                            end
+                            if(pv_ && nrxs<2)begin
+                                $display("PHASE_FRAME port=%0d edge=RX_SOURCE corecyc=%0d linkcyc=%0d seq=%0d frame=%h",j,cyc,lc,nrxs,pd);nrxs<=nrxs+1;
+                            end
+                        end
+                    end
+                    always @(posedge clk)if($test$plusargs("PHASE_TRACE"))begin
+                        if(stxv[g*3+j] && ntxs<2)begin
+                            $display("PHASE_FRAME port=%0d edge=TX_SOURCE corecyc=%0d linkcyc=%0d seq=%0d frame=%h",j,cyc,lc,ntxs,stx[(g*3+j)*FP+:FP]);ntxs<=ntxs+1;
+                        end
+                        if(srxv[R2*3+J2] && nrxd<2)begin
+                            $display("PHASE_FRAME port=%0d edge=RX_DEST destdie=%0d destport=%0d corecyc=%0d linkcyc=%0d seq=%0d frame=%h",j,R2,J2,cyc,lc,nrxd,srx[(R2*3+J2)*FP+:FP]);nrxd<=nrxd+1;
+                        end
+                    end
+                end
                 // measured lane latency (die 0 only): first valid frame in -> out, TX and RX
                 integer c_ti = -1, c_to = -1, c_ri = -1, c_ro = -1;
                 always @(posedge clk) begin
@@ -350,7 +374,7 @@ module tb_coll_tp8_static_links #(
                     end else exp = sum[`C_SB(rm) + rk];
                     if (od[g*FW +: FW] !== exp) begin
                         bad = bad + 1;
-                        if (bad < 5) $display("MISMATCH die=%0d msg=%0d word=%0d", g, rm, rk);
+                        if (bad < 5) $display("MISMATCH die=%0d msg=%0d word=%0d cyc=%0d expected_cyc=%0d actual=%h expected=%h", g, rm, rk, cyc, `C_OUT(rm)+rk, od[g*FW +: FW], exp);
                     end
                     if (ol[g] != (rk == per - 1)) bad = bad + 1;
                     words_out = words_out + 1;

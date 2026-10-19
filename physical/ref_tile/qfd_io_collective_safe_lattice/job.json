@@ -1,0 +1,129 @@
+{
+ "name": "qfd_io_collective_safe_lattice-lat1-COMMIT",
+ "block": "qfd_io_collective_static",
+ "ref_tile": true,
+ "owner": "Codex:SAFE-QW-COLL",
+ "purpose": "DRAFT SAFE collective core lattice dependency diagnostic; no submit",
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "codex/safe-qw-coll-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "rtl/test",
+   "rtl/hdc",
+   "tools/hdc_golden.py",
+   "tools/qwen_coll_tp8_bench.py",
+   "tools/qwen_coll_tp8_static_bench.py",
+   "tools/qwen_coll_tp8_static_links_bench.py",
+   "rtl/qwen_sys/static_schedule_20261014",
+   "rtl/qwen_sys/split_20261014",
+   "rtl/physical",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+   "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+   "rtl/qwen_split/qfd_seq_su_collective_calendar.sv",
+   "tools/orfs_allcorner_spef.py",
+   "results/rtl/qwen_coll_safe_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_io_collective_static #(.LU(53), .LS(378)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qfd_io_collective_static.sv rtl/rom/ot_coll_tp8_static.sv rtl/rom/ot_coll_rst_leaf.sv rtl/rom/ot_coll_fold_slice.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "static_exact_qfd",
+    "cmd": "python3 tools/qwen_coll_tp8_static_links_bench.py --six-five --duty50 --production --safe-face --tok-reg 1 --real-lanes results/rtl/qwen_coll_safe_1019/dv2f18dh2_coll_lane_latency.json --latu 53 --lats 378 --relays 5 0 0 5 --out {RUN}/bench/static_exact_qfd",
+    "expect": "pass",
+    "pass_regex": "^COLL_TP8SL PASS cases=4",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/qwen_coll_safe_1019/integration/qwen_ar_256w.log"
+   },
+   {
+    "name": "static_mut_rank",
+    "cmd": "python3 tools/qwen_coll_tp8_static_links_bench.py --six-five --duty50 --production --safe-face --tok-reg 1 --real-lanes results/rtl/qwen_coll_safe_1019/dv2f18dh2_coll_lane_latency.json --latu 53 --lats 378 --relays 5 0 0 5 --mutant-define OT_TP8S_MUT_RANK --out {RUN}/bench/static_mut_rank",
+    "expect": "fail",
+    "fail_regex": "^COLL_TP8SL FAIL failed=",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_io_collective_safe_lattice/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_io_collective_safe_lattice/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_io_collective_safe_lattice --out {RUN}/record/views/qfd_io_collective_static --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2 --macro-view physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_io_collective_safe_lattice/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_io_collective_safe_lattice/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_io_collective_safe_lattice/qfd_io_collective_safe_lattice-lat1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "DRAFT diagnostic core rekit: fixed LU53/LS378; all eight immutable fold children R0 on43.2um lattice (pre-fold X604.8 instead of MY X600.456). MY at any lattice X has two M5 pin centers24nm offtrack; R0 all645 pins legal. Full-width soft band y907.2..950.4; pin grouping and physical reaches/TTFF clock pending. Two-edge boundary reset guard, no data stages. Not a production view or release qualification."
+}
