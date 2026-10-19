@@ -30,6 +30,10 @@ if [[ $mode = *_gated ]]; then
   mode=${mode%_gated}
   DEF="$DEF +define+OT_QFD_LAND_GATED_BANKS"
 fi
+if [[ $mode = phase ]]; then
+  mode=pass
+  DEF="$DEF +define+OT_QFD_LAND_PHASE_SWEEP"
+fi
 case $mode in
   pass) ;; wsel) DEF="$DEF +define+OT_QFD_LAND_MUT_WSEL" ;; rsel) DEF="$DEF +define+OT_QFD_LAND_MUT_RSEL" ;; sel) DEF="$DEF +define+OT_QFD_LAND_MUT_SEL" ;; naive) DEF="$DEF +define+OT_QFD_LAND_MUT_NAIVE" ;;
   vld) DEF="$DEF +define+OT_QFD_LAND_MUT_VLD" ;; full) DEF="$DEF +define+OT_QFD_LANE_MUT_FULL" ;; hop0inv) DEF="$DEF +define+OT_QFD_LANE_MUT_HOP0INV" ;;
@@ -187,14 +191,22 @@ module bank_window_monitor(input wire [3:0] w,r,input wire we,rs,input wire[2:0]
     genvar b;
     generate for(b=0;b<4;b=b+1) begin:g
         real last_w=-1.0,last_r=-1.0,age,min_age=1e9,max_age=-1.0,min_hold=1e9;
-        integer checks=0;
+        real first_w=-1.0,first_r=-1.0,wrise=-1.0,rrise=-1.0;
+        integer checks=0,phase_case;
+        real phase_residual;
+        always @(negedge w[b]) if(wrise>=0 && (($realtime-wrise<4.9999)||($realtime-wrise>5.0001))) begin
+            $display("FWD_BENCH FAIL writepulse %m width=%f",$realtime-wrise);$fatal(1);
+        end
+        always @(negedge r[b]) if(rrise>=0 && (($realtime-rrise<4.9999)||($realtime-rrise>5.0001))) begin
+            $display("FWD_BENCH FAIL readpulse %m width=%f",$realtime-rrise);$fatal(1);
+        end
         always @(posedge w[b] or negedge we) begin
             if(!we) last_w=-1.0;
             else begin
                 if(last_w>=0 && (($realtime-last_w<39.9999)||($realtime-last_w>40.0001))) begin
                     $display("FWD_BENCH FAIL nonperiod4 write %m delta=%f",$realtime-last_w);$fatal(1);
                 end
-                last_w=$realtime;
+                last_w=$realtime;wrise=$realtime;if(first_w<0)first_w=$realtime;
             end
         end
         always @(posedge r[b] or negedge we or negedge rs) begin
@@ -207,12 +219,30 @@ module bank_window_monitor(input wire [3:0] w,r,input wire we,rs,input wire[2:0]
                 if(last_r>=0 && (($realtime-last_r<39.9999)||($realtime-last_r>40.0001))) begin
                     $display("FWD_BENCH FAIL nonperiod4 read %m delta=%f",$realtime-last_r);$fatal(1);
                 end
-                last_r=$realtime;checks=checks+1;
+                last_r=$realtime;rrise=$realtime;if(first_r<0)first_r=$realtime;checks=checks+1;
                 if(age<min_age)min_age=age;if(age>max_age)max_age=age;if(40.0-age<min_hold)min_hold=40.0-age;
             end
         end
-        final $display("GATED_BANK_WINDOW %m K=%0d checks=%0d min_age_T=%f max_age_T=%f min_overwrite_gap_T=%f",k,checks,min_age/10.0,max_age/10.0,min_hold/10.0);
+        final begin
+            phase_case=$rtoi($ceil(min_age/10.0-0.25));if(phase_case<1)phase_case=1;if(phase_case>3)phase_case=3;
+            phase_residual=min_age/10.0-phase_case;
+            $display("GATED_BANK_WINDOW %m K=%0d checks=%0d min_age_T=%f max_age_T=%f min_overwrite_gap_T=%f E_case=%0d phase_residual_T=%f first_w_ns=%f first_r_ns=%f",k,checks,min_age/10.0,max_age/10.0,min_hold/10.0,phase_case,phase_residual,first_w,first_r);
+        end
     end endgenerate
+endmodule
+`endif
+
+`ifdef OT_QFD_LAND_PHASE_SWEEP
+module gated_phase_case #(parameter integer P=0, KK=0, EXTRA=0, ORDER=0)(
+    input wire cks,input wire[31:0]es,output integer err,chk,output wire flt);
+    localparam real PH=P*1.25;
+    localparam integer EB=(P<2?1:0)+EXTRA;
+    localparam integer GG=16, RR=GG+EB-KK+(ORDER?16:-8);
+    reg ckd=0;reg[31:0]ed=0;
+    initial begin #(PH);forever #5 ckd=~ckd;end
+    always @(posedge ckd)ed<=ed+1;
+    lane #(.W(1),.NF(1),.CD(0),.DOFF(PH),.G(GG),.R0(RR),.LADD(EXTRA))
+        u_lane(cks,ckd,es,ed,err,chk,flt);
 endmodule
 `endif
 
@@ -237,6 +267,14 @@ module tb;
     lane #(.NF(1),  .CD(0.0), .G(9),  .R0(45))               l9 (cks, ckd, es, ed, e[9], c[9], f[9]);   // n = 1, receiver releases LATE
     lane #(.NF(1), .CD(0.0), .G(12), .R0(12)) l10 (cks, ckd, es, ed, e[10], c[10], f[10]);
     lane #(.NF(1), .CD(0.0), .G(9), .R0(12)) l11 (cks, ckd, es, ed, e[11], c[11], f[11]);
+`ifdef OT_QFD_LAND_PHASE_SWEEP
+    integer ep[0:255],cp[0:255];wire fp[0:255];
+    genvar v;
+    generate for(v=0;v<256;v=v+1)begin:g_phase
+        gated_phase_case #(.P((v/8)%8),.KK(v%8),.EXTRA(2*((v/64)%2)),.ORDER(v/128))
+            u_case(cks,es,ep[v],cp[v],fp[v]);
+    end endgenerate
+`endif
     initial begin
         #0.1; l3.K = l2.K; l3.L = l2.L;                                 // the window lane reuses lane 2's strap
         #6000;
@@ -245,6 +283,9 @@ module tb;
             te = 0; tc = 0; tf = 0;
             for (i = 0; i < 12; i = i + 1) begin te = te + e[i]; tc = tc + c[i]; tf = tf + (f[i] === 1'b1 ? 1 : 0);
                 if (f[i] !== 1'b0) $display("FWD_LANE FAULT lane %0d", i); end
+`ifdef OT_QFD_LAND_PHASE_SWEEP
+            for(i=0;i<256;i=i+1)begin te=te+ep[i];tc=tc+cp[i];tf=tf+(fp[i]===1'b1?1:0);end
+`endif
             if (l3.L != l2.L) te = te + 1;
             $display("FWD_BENCH %s %0d errors in %0d checks (faults %0d)", (te || tf || tc < 4000) ? "FAIL" : "PASS", te + tf, tc, tf);
         end
