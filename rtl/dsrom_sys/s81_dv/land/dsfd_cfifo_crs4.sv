@@ -1,15 +1,15 @@
 // S81-LAND2 (2026-10-17, HANDOFF 0dm+ decision (1)): SUCCESSOR of dsfd_cfifo_crs with the two landing gaps of the
 // S81-LAND audit closed (results/arch/s81_dv_1016/landing/audit.json, LANDING-CONTRACT.md section 4):
 //   gap 1  lanes 0 and 3 were captured on the NEIGHBOUR lane's forwarded clock (xd = lanes 0, 1 + 14 b of lane 2 on
-//          xf = xk[1]; xd2 = 262 b of lane 2 + lane 3 on xf2 = xk[2]).  Here every 276-b lane k = {xd2, xd}[276k +: 276]
-//          lands on ITS OWN forwarded clock xk[k] (one ot_s81_land ring per lane, contract L1).
+//          xf = xk[1]; xd2 = 262 b of lane 2 + lane 3 on xf2 = xk[2]).  Here every 276-b lane k = port xl<k> (= the old
+//          {xd2, xd}[276k +: 276]) lands on ITS OWN forwarded clock xk[k] (one ot_s81_land ring per lane, contract L1).
 //   gap 2  the read epoch was a 2-flop sample of the in-band marker on cr_s, so the column epoch followed the lane phase
 //          (fixed only while the marker edge stays out of the sampling aperture).  Here the read epoch is the contract
 //          L3 one: rc counts cr edges from the release of the frame's regional reset (rsync); the write epoch counts
 //          each lane's forwarded edges from its first one (hop-0 ICG at the source, opened at or after the frame's
 //          release).  The latency is the compile-time E + 1 of each lane, the same at every corner (L4); lk[3k +: 3] =
 //          lane k's K, an identity strap tied by the die binder (L7).
-// The marker bits ({xd2, xd}[0] and [566], the source's released reset) are no longer epochs: a word read while its
+// The marker bits (xin[0] = xl0[0] and xin[566] = xl2[14], the source's released reset) are no longer epochs: a word read while its
 // bundle's marker is 0 is a bubble (masked to zero, exactly the words dsfd_cfifo_crs never wrote).  Everything after
 // the lane rings -- xa / xb / cc / x2 registers on cr, the south status path ri -> rr -> rd on cr_s, the fault OR -- is
 // dsfd_cfifo_crs's, line for line.  Default die instances and dsfd_cfifo_crs stay byte-identical (opt-in successor).
@@ -26,9 +26,11 @@ module dsfd_cfifo_crs4 (
     input wire [1:0] st,
     output wire [282:0] xa,
     output wire [265:0] xb,
-    input wire [565:0] xd,
     output wire [535:0] x2,
-    input wire [537:0] xd2,
+    input wire [275:0] xl0,      // lane k word = {old xd2, xd}[276k +: 276] (S81-DIE7/CRS4 10-18: one port per lane, so
+    input wire [275:0] xl1,      // every lane port belongs to exactly ONE forwarded-clock domain xk[k] in the hardened
+    input wire [275:0] xl2,      // view's multi-root ownership check; dsfd_cfifo_crs's xd / xd2 split lane 2 across
+    input wire [275:0] xl3,      // two ports).  Bit order and S-face pin order unchanged.
     input wire [3:0] xk,         // lane k forwarded clock (lane k's last station ck_o)
     input wire [11:0] lk         // lane k read offset K = lk[3k +: 3] (identity strap, die STA window rule L5)
 );
@@ -40,7 +42,7 @@ module dsfd_cfifo_crs4 (
     assign rs = rsync;
     reg [1:0] sti; always @(posedge cr) sti <= st;
     // ---- per-lane landing (contract L1-L3): ring on xk[k], read on cr from the rsync release
-    wire [1103:0] xin = {xd2, xd};
+    wire [1103:0] xin = {xl3, xl2, xl1, xl0};
     wire [1103:0] xl;
     wire [3:0] lf;
     genvar g;

@@ -26,8 +26,13 @@ def ld(p):
 
 
 def vparam(v):
+    """contract param value -> Verilog.  A LIST is a per-element vector packed 8 bits per element, element 0 at the
+    LSB (HBM-BANKLAT-XL 10-19: ot_hgi_sm_xload_cl2_ctlx RD_LAT [l0..l7] -> {8'd l7, ..., 8'd l0} = RD_LAT[8b +: 8])."""
     if isinstance(v, bool):
         return str(int(v))
+    if isinstance(v, (list, tuple)):
+        assert v and all(isinstance(x, int) and 0 <= x < 256 for x in v), f'list param needs 8-bit ints: {v}'
+        return '{' + ', '.join(f"8'd{int(x)}" for x in reversed(v)) + '}'
     return str(v)
 
 

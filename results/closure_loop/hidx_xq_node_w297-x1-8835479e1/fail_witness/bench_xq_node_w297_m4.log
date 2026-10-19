@@ -1,0 +1,9 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hidx_xq_node_w297-x1-8835479e1 bench bench_xq_node_w297_m4 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hidx_xq_node_w297-x1-8835479e1 log cl/bench_xq_node_w297_m4.a1b1.log captured 2026-10-18T18:50:41-07:00
+# fail_regex '^IDX_XQ_NODE WI297 MUT4 checks3998 errors[1-9][0-9]* FAIL$'
+Verilator 5.050 2026-07-01 rev v5.050
+IDX_XQ_NODE WI297 MUT4 checks3998 errors5 FAIL
+- /srv/opentallas-scratch2/claude/closure-loop/hidx_xq_node_w297-x1-8835479e1/bench_src_a1/rtl/test/hbm_idx_static/tb_xq_node.sv:50: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.004 s; speed 2.115 ms/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB

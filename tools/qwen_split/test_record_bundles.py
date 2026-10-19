@@ -46,14 +46,18 @@ class RecordBundles(unittest.TestCase):
         B = rec['bundles']
         c = {k: v['cycles'] for k, v in B['C.rx_record']['members'].items()}
         # F5: rx_payload a 1-frame landing (K 2, +3) beside direct native_rx_v / slot / kind / beat (+0)
-        self.assertEqual(c, {'lnk_rx_payload': 3, 'lnk_native_rx_v': 0, 'lnk_native_rx_slot': 0,
+        # QK-LANDEN: the as-built one-frame landing (K 2) reads E = K - 1 = 1 under the registered-en RTL -> 2 cycles
+        self.assertEqual(c, {'lnk_rx_payload': 2, 'lnk_native_rx_v': 0, 'lnk_native_rx_slot': 0,
                              'lnk_native_rx_slot_kind': 0, 'lnk_native_rx_slot_beat': 0})
         s = {k: v['cycles'] for k, v in B['SF.rx_record']['members'].items()}
-        # G-C2 (measured at the face pins by LAYERBENCH-QWEN): prog_auth_slot +5, prog_witness_slot +4, the rest +3
+        # G-C2 (measured at the face pins by LAYERBENCH-QWEN on the old RTL): prog_auth_slot +5, prog_witness_slot +4, the
+        # rest +3.  RLYH0-EN 10-19: under the registered-en rlyh0 RTL every as-built strap reads E = K - 1 -> one less each
         self.assertEqual((s['sf_prog_auth_slot'], s['sf_prog_witness_slot'], s['sf_prog_rx_v'], s['sf_prog_context_slot'],
-                          s['lnk_rx_payload__fo1']), (5, 4, 3, 3, 3))
+                          s['lnk_rx_payload__fo1']), (4, 3, 2, 2, 2))
         self.assertTrue(B['C.tx_slot']['consistent'] and B['C.x3_record']['consistent'])
         self.assertFalse(B['SF.status']['consistent'])          # same class: levels +3 vs result_* +4
+        # QK-LANDEN 10-19 made SF.tx_record fail (only its one-frame member moved); RLYH0-EN 10-19 moves every forwarded
+        # member by the same edge (hop-0 en registered on every lane) -> SF.tx_record is consistent again
         self.assertEqual(sorted(f.split(':')[0] for f in rec['fails']), ['C.rx_record', 'SF.rx_record', 'SF.status'])
 
     def test_fixed_dv2f14bn_netlist_passes(self):
@@ -64,7 +68,7 @@ class RecordBundles(unittest.TestCase):
         self.assertEqual(rec['verdict'], 'PASS', rec['fails'])
         by = {r['bid']: r for r in fixed}
         for b in ('lnk_native_rx_v', 'lnk_native_rx_slot', 'lnk_native_rx_slot_kind', 'lnk_native_rx_slot_beat'):
-            self.assertEqual((by[b]['n'], by[b]['E'], by[b]['K']), (1, 2, 2), b)       # landed with the payload
+            self.assertEqual((by[b]['n'], by[b]['E'], by[b]['K']), (1, 2, 3), b)       # landed with the payload (landh0: K = E + 1)
         self.assertEqual({by[b]['K'] for b in bmap if bmap[b] == 'SF.rx_record'}, {4})
         self.assertTrue(all(by[b]['E_sta'] <= 3 for b in bmap if bmap[b] == 'SF.rx_record'))  # inside the D 4 window
         # the fixed lanes emitted in the GEN's instance form re-audit PASS from the netlist (round trip)
@@ -97,7 +101,8 @@ class RecordBundles(unittest.TestCase):
         LG.equalize([r for r in q if r.get('E') is not None], 4, cal, h0)
         a = audit(q)
         self.assertEqual(sorted(f.split(':')[0] for f in a['fails']), ['C.rx_record', 'SF.cfg', 'SF.rx_record', 'SF.status'])
-        self.assertEqual({k: v['K'] for k, v in a['bundles']['C.rx_record']['members'].items()}['lnk_rx_payload'], 1)
+        # RLYH0-EN 10-19: the multi-frame lane's K carries the hop-0 en register edge (+1; was 1)
+        self.assertEqual({k: v['K'] for k, v in a['bundles']['C.rx_record']['members'].items()}['lnk_rx_payload'], 2)
         fixed = RB.fix_lanes(copy.deepcopy(rows), bmap, 4, cal, h0)
         self.assertEqual(audit(fixed)['verdict'], 'PASS')
 
