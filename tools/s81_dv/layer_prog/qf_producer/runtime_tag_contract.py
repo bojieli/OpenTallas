@@ -23,12 +23,13 @@ def main():
    badtagcfg=dict(cfg,rbase=(((tag+1)%4)<<14)+6144)
    assert decode(full,0,badtagcfg)[0]
    checks+=1
-  epochs.append(dict(epoch=e,expected_broadcast_GO_count=e,conditional_actual_op_tag=tag,CAP_rbase=rb,
+  epochs.append(dict(epoch=e,expected_broadcast_GO_count=e,cfg7_counter_before_GO=tag,actual_backend_op_tag=None,CAP_rbase_if_tag_matches_counter=rb,
    actual_runtime_go_tag=None,actual_CFG_install_edge=None,
    release='after previous conflicting partial/decoder/CW/VP drain; before this epoch first actual return',
    configured_idle_is_separate=True))
  rec=dict(scope='ACTUAL SOURCE MODEL ONLY; runtime tag/CFG edge trace pending',source_ref='ceaed19c4',source_hashes=sources,
   actual_cfg_tag_rule='tag resets0; increments on every go_x broadcast before class gate; go_tag_c=tag',
+  backend_temporal_seam='Actual qbank registers GO but go_tag bypasses it; FAST backend captures both. Counter-before-GO is NOT an asserted backend tag. Possible next-counter capture requires actual trace; no CAP date selected.',
   actual_element_rule='q_idle=r[15] from configured row; runtime q_row={otag[bk],r[13:0]}',
   configured_SENT_bit15='idle property of cfg, preserved; never converted into a real row',
   runtime_row_bits15_14='two-bit op tag0..3, all legal when actual source is non-idle',
