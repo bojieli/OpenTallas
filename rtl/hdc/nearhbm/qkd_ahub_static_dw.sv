@@ -426,6 +426,12 @@ module qkd_ahub_static_core_la #(
         q_rh<=start?2'(2'd1-c_ria[1:0]):n_rh;
         q_th<=start?2'(2'd1-c_rra[1:0]):n_th;
     end
+    // KV-AHUB6 10-19 (route a5 74c87116c TT -357.4: u_core.q_rh[0] -> 32 rc_x, 2 AO21 + ~650 ps of buffered wire: the
+    // 2-bit head reached a 4:1 mux spread between the four Z trees): the reciprocal root select is a REGISTERED ONE-HOT,
+    // one flop per Z tree (q_rs[a] == (q_rh == a), same D source, same edge), and rc_x is an AND-OR of the four roots, so
+    // each select flop drives only its own tree's 32 AND gates.  Edge-exact (q_rs == 4'b1 << q_rh on every edge).
+    (* keep *) reg [3:0] q_rs;
+    always @(posedge clk) q_rs<=4'd1<<(start?2'(2'd1-c_ria[1:0]):n_rh);
     wire [3:0] lm_slot=first_q?o_lm:q_lm, z_slot=first_q?o_z:q_z, done_slot=first_q?o_dn:q_dn, issue=first_q?o_is:q_is;
     wire [7:0] slot_h=first_q?o_sh:q_sh;
     wire [15:0] slot_k=first_q?o_sk:q_sk;
@@ -511,7 +517,8 @@ module qkd_ahub_static_core_la #(
             if(start)rz_seen<=0;else if(recip_return)rz_seen[return_head]<=1;
         end
     always @(posedge clk)begin
-        rc_x<=zroot_q[64*recip_head+:32];
+        rc_x<=({32{q_rs[0]}}&zroot_q[31:0])|({32{q_rs[1]}}&zroot_q[95:64])|
+              ({32{q_rs[2]}}&zroot_q[159:128])|({32{q_rs[3]}}&zroot_q[223:192]);
         rz_head<=return_head;rz_data<=rc_y;
         if(recip_return)rz[return_head]<=rc_y;
     end
@@ -522,14 +529,18 @@ module qkd_ahub_static_core_la #(
     // KV-AHUBDW2 10-18 gate a2c: the single gq flop was one deep AND chain from the Z-tree zh_err_q flops (y~43) to the
     // core (y~485): -278.5 ps.  gq is now five flops, one per term group (same edge, gq == |gqv): gqv[1] (Z/recip
     // errors) sits by the trees, the others by the core; fault ORs five flop outputs (one gate level, no added edge).
-    reg [3:0] tq;reg [4:0] gqv;reg sq,start_q,act_q;
+    // KV-AHUB6 10-19 (route a5 TT -59.4: zh_err_q -> gqv[1], an OR of 16 bits from the four trees): the Z-tree error term
+    // of gqv[1] is one flop per tree (gz[a] = |zh_err[4a+:4], beside that tree's zh_err_q); fault ORs gz with gqv / tq on
+    // the same edge as before (gqv[1] | |gz == the former gqv[1]).
+    reg [3:0] tq;reg [4:0] gqv;reg [3:0] gz;reg sq,start_q,act_q;
     always @(posedge clk or negedge rn[3])
-        if(!rn[3])begin tq<=0;gqv<=0;sq<=0;start_q<=0;act_q<=0;end
+        if(!rn[3])begin tq<=0;gqv<=0;gz<=0;sq<=0;start_q<=0;act_q<=0;end
         else begin
+            for(integer a=0;a<4;a=a+1)gz[a]<=|zh_err[4*a+:4];
             start_q<=start;act_q<=active;
             sq<=(T==0)||(T>8192)||(active_layer_parity!=active_layer[0])||mo_v;
             gqv[0]<=active_layer_parity!=parity || active_layer!=layer || request_epoch!=epoch;
-            gqv[1]<=|zh_err || rc_fault || (rc_vo!=recip_return);
+            gqv[1]<=rc_fault || (rc_vo!=recip_return);
             gqv[2]<=(m_issue && lm_seen!=16'hffff) ||
                 ((|issue) && (done_seen!=4'hf || zseen[0][63:0]!=zmask || zseen[1][63:0]!=zmask ||
                     zseen[2][63:0]!=zmask || zseen[3][63:0]!=zmask));
@@ -546,6 +557,6 @@ module qkd_ahub_static_core_la #(
     always @(posedge clk or negedge rn[3])
         if(!rn[3])fault<=0;
         else if(start_q)fault<=sq;
-        else if(act_q && (|gqv || |tq))fault<=1;
+        else if(act_q && (|gqv || |gz || |tq))fault<=1;
     initial if(Z_LEVEL_GAP<10 || Z_IN_STRIDE<4)$fatal(1,"invalid static AHUB geometry");
 endmodule
