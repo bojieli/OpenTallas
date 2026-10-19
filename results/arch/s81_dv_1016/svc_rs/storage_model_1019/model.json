@@ -1,0 +1,378 @@
+{
+  "verdict": "MODEL_ONLY_SEMANTICS_AND_FIT_OPEN",
+  "source_revision": "53ccd5927",
+  "source_hashes": {
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv": "73f7798e0503d13a576cdac82d58df6e50cecd9c74a5276fbdf07f1066d0cc72",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv": "4675ccc00253cc67d07a9820bcb7c8f6c8b5020cd18dd2118ec7dfae8a1ba32b",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv": "99ef793b16f7e41868214ce0d99f82eb6a5b7d4b60aa2bcc141c4b5448d64e84",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "642772e31fd5e48da976ff1840b91f1adac7095a7e7a527fd7212e51f093bc25",
+    "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smq.sv": "98ffbee4b8c7be7f1d11ffe839df6aeb9ecf4e7918630cfa16cab9643a7f7b56"
+  },
+  "families": {
+    "single_clock_32": {
+      "revision": "b65718325",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1",
+      "width_um": 31.968,
+      "height_um": 17.28,
+      "area_um2": 552.40704,
+      "contacts": {
+        "W": 103,
+        "E": 102,
+        "interior": 0
+      },
+      "contacts_per_full_face_um": {
+        "W": 5.960648148148148,
+        "E": 5.902777777777778
+      },
+      "hashes": {
+        ".json": "508f24ab33ae5843ff8c700345ebd76af18c299c0bbffd66dfab0d220448e076",
+        ".lef": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02",
+        ".v": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+        "_bb.v": "6fcf8a3b8584a9ea4c1c63cfc678f579fa40d5eb5159b8aa259f2c86d0a0059a",
+        "_tt.lib": "89e8a678c954a540f86a2c2571edfa312f8ff1ac3171a08556a7eeaa23670672",
+        "_ff.lib": "ebe2aed586912740f38d23fddb0751c032e3a5a04393b58d1a865ecaf0f3e963",
+        "_ss.lib": "c96a9d66a527f7570c497794b2839d65261e068e4ca3a29090a1961167de42f1"
+      }
+    },
+    "dual_clock_128": {
+      "revision": "bc42f77a8",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1",
+      "width_um": 33.72,
+      "height_um": 27.576,
+      "area_um2": 929.86272,
+      "contacts": {
+        "W": 105,
+        "E": 105,
+        "interior": 0
+      },
+      "contacts_per_full_face_um": {
+        "W": 3.8076588337684942,
+        "E": 3.8076588337684942
+      },
+      "hashes": {
+        ".json": "6af7def5e0c929cc4c049eab14310a8dbc8519216418e2a5cdef6bff02184b84",
+        ".lef": "737a650260dfd52a14003b0e0aad97378b81ebc1adb0b6b9383c256c67ea92d6",
+        ".v": "03a15da7f7691bfcf973a4d4e833fc4853c3d56bd8146092c8390705f0108083",
+        "_bb.v": "fa0158fc9b3bd261501646c89b8732603e9818a15251506f28a32daf2bade93b",
+        "_tt.lib": "419f4a06c07b54061a91db7b2faad842f4d05cf738c2ac60b4d384ca63bc736e",
+        "_ff.lib": "4d5bcb7447f037190288977e0b8297d93b6e11724a90ff93f25fe3f4402458a4",
+        "_ss.lib": "7f0a45ece83b5b24d6f13525464bbd2cfca0ed247194ecbedc66f996597a0680"
+      }
+    },
+    "legacy_256": {
+      "revision": "53ccd5927",
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2",
+      "width_um": 172.8,
+      "height_um": 41.04,
+      "area_um2": 7091.712,
+      "contacts": {
+        "W": 411,
+        "E": 410,
+        "interior": 0
+      },
+      "contacts_per_full_face_um": {
+        "W": 10.014619883040936,
+        "E": 9.990253411306043
+      },
+      "hashes": {
+        ".json": "f0e8d51af00ec806eddea2f031e4ecaab6316557c9c4a78c00827dc84323d2c5",
+        ".lef": "72036137c53eda29ac3b432fb704791ac864ad9b5c32dc81e2e71bbe906862bf",
+        ".v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+        "_bb.v": "682dcf8d41ea74d6a20276117ab47851fae0150cdc84862f442ea39fd38a6f01",
+        "_tt.lib": "267e994041e8d97e6ff1a470e618058a8c790b7e71be52d9ba83e94be9f5816a",
+        "_ff.lib": "592e1919daaac25556526000751db205eab1515a53fc0dc05ab3daae2958a12c",
+        "_ss.lib": "f08869109c2b5657c81d86d6fec22f4e5c8ce0811db8b551872fa85362e79258"
+      }
+    }
+  },
+  "pmem1_slice": [
+    {
+      "name": "land_lvt_data",
+      "stores": 12,
+      "depth": 160,
+      "width": 256,
+      "useful_bits": 491520,
+      "candidate_master": "ot_sram_1r1w2c_128x64_m1",
+      "bank_count": 96,
+      "physical_bits": 786432,
+      "raw_area_um2": 89266.82112,
+      "clock_pins": 192
+    },
+    {
+      "name": "probability_store",
+      "stores": 2,
+      "depth": 256,
+      "width": 512,
+      "useful_bits": 262144,
+      "candidate_master": "ot_sram_1r1w2c_128x64_m1",
+      "bank_count": 32,
+      "physical_bits": 262144,
+      "raw_area_um2": 29755.60704,
+      "clock_pins": 64
+    },
+    {
+      "name": "engine_staging",
+      "stores": 8,
+      "depth": 160,
+      "width": 265,
+      "useful_bits": 339200,
+      "candidate_master": "ot_sram_1r1w2c_128x64_m1",
+      "bank_count": 80,
+      "physical_bits": 655360,
+      "raw_area_um2": 74389.01759999999,
+      "clock_pins": 160
+    },
+    {
+      "name": "write_requests",
+      "stores": 6,
+      "depth": 8,
+      "width": 341,
+      "useful_bits": 16368,
+      "candidate_master": "ot_sram_1r1w_32x64_m1",
+      "bank_count": 36,
+      "physical_bits": 73728,
+      "raw_area_um2": 19886.653440000002,
+      "clock_pins": 36
+    },
+    {
+      "name": "selection_rows",
+      "stores": 1,
+      "depth": 32,
+      "width": 527,
+      "useful_bits": 16864,
+      "candidate_master": "ot_sram_1r1w_32x64_m1",
+      "bank_count": 9,
+      "physical_bits": 18432,
+      "raw_area_um2": 4971.6633600000005,
+      "clock_pins": 9
+    },
+    {
+      "name": "pv_results",
+      "stores": 1,
+      "depth": 8,
+      "width": 2120,
+      "useful_bits": 16960,
+      "candidate_master": "ot_sram_1r1w_32x64_m1",
+      "bank_count": 34,
+      "physical_bits": 69632,
+      "raw_area_um2": 18781.83936,
+      "clock_pins": 34
+    },
+    {
+      "name": "q_rows",
+      "stores": 1,
+      "depth": 16,
+      "width": 512,
+      "useful_bits": 8192,
+      "candidate_master": "ot_sram_1r1w_32x64_m1",
+      "bank_count": 8,
+      "physical_bits": 16384,
+      "raw_area_um2": 4419.25632,
+      "clock_pins": 8
+    }
+  ],
+  "all_sram_alternative": [
+    {
+      "name": "land_lvt_data",
+      "stores": 12,
+      "depth": 160,
+      "width": 256,
+      "useful_bits": 491520,
+      "candidate_master": "ot_sram_1r1w2c_128x64_m1",
+      "bank_count": 96,
+      "physical_bits": 786432,
+      "raw_area_um2": 89266.82112,
+      "clock_pins": 192
+    },
+    {
+      "name": "probability_store",
+      "stores": 2,
+      "depth": 256,
+      "width": 512,
+      "useful_bits": 262144,
+      "candidate_master": "ot_sram_1r1w2c_128x64_m1",
+      "bank_count": 32,
+      "physical_bits": 262144,
+      "raw_area_um2": 29755.60704,
+      "clock_pins": 64
+    },
+    {
+      "name": "engine_staging",
+      "stores": 8,
+      "depth": 160,
+      "width": 265,
+      "useful_bits": 339200,
+      "candidate_master": "ot_sram_1r1w2c_128x64_m1",
+      "bank_count": 80,
+      "physical_bits": 655360,
+      "raw_area_um2": 74389.01759999999,
+      "clock_pins": 160
+    },
+    {
+      "name": "write_requests",
+      "stores": 6,
+      "depth": 8,
+      "width": 341,
+      "useful_bits": 16368,
+      "candidate_master": "ot_sram_1r1w_32x64_m1",
+      "bank_count": 36,
+      "physical_bits": 73728,
+      "raw_area_um2": 19886.653440000002,
+      "clock_pins": 36
+    },
+    {
+      "name": "selection_rows",
+      "stores": 1,
+      "depth": 32,
+      "width": 527,
+      "useful_bits": 16864,
+      "candidate_master": "ot_sram_1r1w_32x64_m1",
+      "bank_count": 9,
+      "physical_bits": 18432,
+      "raw_area_um2": 4971.6633600000005,
+      "clock_pins": 9
+    },
+    {
+      "name": "pv_results",
+      "stores": 1,
+      "depth": 8,
+      "width": 2120,
+      "useful_bits": 16960,
+      "candidate_master": "ot_sram_1r1w_32x64_m1",
+      "bank_count": 34,
+      "physical_bits": 69632,
+      "raw_area_um2": 18781.83936,
+      "clock_pins": 34
+    },
+    {
+      "name": "q_rows",
+      "stores": 1,
+      "depth": 16,
+      "width": 512,
+      "useful_bits": 8192,
+      "candidate_master": "ot_sram_1r1w_32x64_m1",
+      "bank_count": 8,
+      "physical_bits": 16384,
+      "raw_area_um2": 4419.25632,
+      "clock_pins": 8
+    },
+    {
+      "name": "merge_rings",
+      "stores": 20,
+      "depth": 8,
+      "width": 528,
+      "useful_bits": 84480,
+      "candidate_master": "ot_sram_1r1w_32x64_m1",
+      "bank_count": 180,
+      "physical_bits": 368640,
+      "raw_area_um2": 99433.2672,
+      "clock_pins": 180
+    },
+    {
+      "name": "transposer_row_banks",
+      "stores": 128,
+      "depth": 16,
+      "width": 18,
+      "useful_bits": 36864,
+      "candidate_master": "ot_sram_1r1w_32x64_m1",
+      "bank_count": 128,
+      "physical_bits": 262144,
+      "raw_area_um2": 70708.10112,
+      "clock_pins": 128
+    },
+    {
+      "name": "stationary_mod8_banks",
+      "stores": 512,
+      "depth": 5,
+      "width": 64,
+      "useful_bits": 163840,
+      "candidate_master": "ot_sram_1r1w_32x64_m1",
+      "bank_count": 512,
+      "physical_bits": 1048576,
+      "raw_area_um2": 282832.40448,
+      "clock_pins": 512
+    }
+  ],
+  "totals": {
+    "useful_bits": 1151248,
+    "bank_count": 295,
+    "physical_bits": 1882112,
+    "raw_area_um2": 241470.85823999997,
+    "clock_pins": 503,
+    "lattice_cell_sum_um2": 550540.8
+  },
+  "all_sram_totals": {
+    "useful_bits": 1436432,
+    "bank_count": 1115,
+    "physical_bits": 3561472,
+    "raw_area_um2": 694444.63104,
+    "clock_pins": 1323
+  },
+  "single_clock_only_candidate": [
+    {
+      "name": "land_lvt_data",
+      "bank_count": 240,
+      "physical_bits": 491520,
+      "raw_area_um2": 132577.6896,
+      "clock_pins": 240
+    },
+    {
+      "name": "probability_store",
+      "bank_count": 128,
+      "physical_bits": 262144,
+      "raw_area_um2": 70708.10112,
+      "clock_pins": 128
+    },
+    {
+      "name": "engine_staging",
+      "bank_count": 200,
+      "physical_bits": 409600,
+      "raw_area_um2": 110481.40800000001,
+      "clock_pins": 200
+    },
+    {
+      "name": "write_requests",
+      "bank_count": 36,
+      "physical_bits": 73728,
+      "raw_area_um2": 19886.653440000002,
+      "clock_pins": 36
+    },
+    {
+      "name": "selection_rows",
+      "bank_count": 9,
+      "physical_bits": 18432,
+      "raw_area_um2": 4971.6633600000005,
+      "clock_pins": 9
+    },
+    {
+      "name": "pv_results",
+      "bank_count": 34,
+      "physical_bits": 69632,
+      "raw_area_um2": 18781.83936,
+      "clock_pins": 34
+    },
+    {
+      "name": "q_rows",
+      "bank_count": 8,
+      "physical_bits": 16384,
+      "raw_area_um2": 4419.25632,
+      "clock_pins": 8
+    }
+  ],
+  "single_clock_only_totals": {
+    "bank_count": 655,
+    "physical_bits": 1341440,
+    "raw_area_um2": 361826.61120000004,
+    "clock_pins": 655
+  },
+  "distributed_compute_state_bits": {
+    "merge_pointer_rings": 84480,
+    "transposer_rows": 36864,
+    "stationary_lanes": 163840
+  },
+  "lattice_pitch_um": 43.2,
+  "claimed_slot_um2": 1491000,
+  "physical_qualification": false,
+  "added_edges": null,
+  "note": "Counts are a banking candidate, not implemented wrappers. Data masks/repairs/collision/age/census remain proof obligations."
+}
