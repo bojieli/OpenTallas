@@ -1,0 +1,17 @@
+TXBAD cyc1853 new1111 old0000
+TXBAD cyc1854 new0000 old1111
+TXBAD cyc1861 new1111 old0000
+TXBAD cyc1862 new0000 old1111
+TXBAD cyc1869 new1111 old0000
+TXBAD cyc1870 new0000 old1111
+TXBAD cyc1877 new1111 old0000
+TXBAD cyc1878 new0000 old1111
+TXBAD cyc1885 new1111 old0000
+TXBAD cyc1886 new0000 old1111
+TXBAD cyc1893 new1111 old0000
+IDXQ_LOCKSTEP rows2 pitch232 chainNew6 mut0 errors66 oracle_errors0 scores_new10912 scores_old10912 records_old1024 flits_new128 flits_old128 live_beats old171 new171 row_beats old342 new342 fault_old0 fault_new1 status0 | edges from start: key old219 new221 tx old1184 new1191 done old1543 new1550
+IDXQ_ROWS_CYCLES rows2 pitch232 new_done_edge1550 old_done_edge1543
+[22690000000] %Fatal: tb_hnx_idxq_lockstep.sv:181: Assertion failed in tb_hnx_idxq_lockstep.unnamedblk14: IDXQ_LOCKSTEP FAIL: IDXN quad vs stack mismatch
+%Error: rtl/hbm_next/idxq/tb/tb_hnx_idxq_lockstep.sv:181: Verilog $stop
+Aborting...
+RUN_RC=1

@@ -1,0 +1,213 @@
+{
+ "kind": "tile",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 4,
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "clk_program"
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "name": "hnx_idxq_qctl",
+ "top": "ot_hnx_idxq_qctl",
+ "sources": [
+  "rtl/hbm_next/idxq/ot_hnx_idxq_qctl.sv",
+  "rtl/hbm_next/idxn/ot_hnx_idxn_calendar.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk_program",
+ "outline": {
+  "w": 222.48,
+  "h": 99.36
+ },
+ "pins": {
+  "W": [
+   "clk_program_mem",
+   "rst_n",
+   "slot",
+   "program_we",
+   "program_addr",
+   "program_data",
+   "start",
+   "length",
+   "n_rows",
+   "row_pitch",
+   "nkeys"
+  ],
+  "S": [
+   "clk_program",
+   "weight_slot",
+   "query_slot",
+   "query_index",
+   "query_emit",
+   "query_emit_head",
+   "key_slot",
+   "key_v",
+   "key_index",
+   "key_row",
+   "pre_v",
+   "pre_index",
+   "nq",
+   "frame_start",
+   "row_start",
+   "vf",
+   "qf",
+   "scf",
+   "kbf",
+   "fault"
+  ],
+  "N": [],
+  "E": []
+ },
+ "pin_ranges": {
+  "clk_program": [
+   109.0,
+   113.0
+  ],
+  "clk_program_mem": [
+   72.0,
+   76.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  },
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
+  }
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "*calendar.store",
+   "at": [
+    25.92,
+    54.0
+   ],
+   "at_exact": true,
+   "clock_entry": {
+    "port": "clk_program_mem",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk_program",
+  "clk_program_mem"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_program"
+   ],
+   "inputs": [
+    "rst_n",
+    "slot",
+    "program_we",
+    "program_addr",
+    "program_data",
+    "start",
+    "length",
+    "n_rows",
+    "row_pitch",
+    "nkeys",
+    "vf",
+    "qf",
+    "scf",
+    "kbf"
+   ],
+   "outputs": [
+    "weight_slot",
+    "query_slot",
+    "query_index",
+    "query_emit",
+    "query_emit_head",
+    "key_slot",
+    "key_v",
+    "key_index",
+    "key_row",
+    "pre_v",
+    "pre_index",
+    "nq",
+    "frame_start",
+    "row_start",
+    "fault"
+   ]
+  },
+  "mem": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_program_mem"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_cts_roots": [
+  "clk_program"
+ ],
+ "cts_sink_note": "9,290 sinks in 259 x 130 um: gate 1 spread 118 / gate 2 104 ps > 80 at TT -> CW=1 windows (~4.4k sinks) + L band",
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input lands in a kept pin flop and every output leaves a flop in the RTL (+1/+1 edge, the d4g ot_hbm_idx_qctl_static pin rule, lockstep-proven); automatic pin registers would add an unpriced edge"
+ },
+ "job": {
+  "owner": "Claude:HBM-NEXT-UNITS",
+  "branch": "claude/hbm-next-units-idxq-1019",
+  "tag": "q1",
+  "purpose": "HBM-NEXT P=4 IDXN quad: idx_ctl<q> = IDXN issuer copy (8 pipelined row streams over one frame SRAM, per-class routing, collision = fault) for the quadrant's operand reader / query / key buffer / quarter scorer",
+  "benches": [],
+  "extra_paths": [
+   "rtl/hbm_next/idxq",
+   "rtl/hbm_next/idxn",
+   "tools/hbm_next/hnx_idxq_bench.sh",
+   "tools/hbm_next/hnx_idxq_vectors.py",
+   "tools/hbm_next/hnx_idxn_calendar.py"
+  ]
+ },
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false
+}

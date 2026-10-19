@@ -1,0 +1,194 @@
+{
+ "key": "max",
+ "status": "conditional model candidate; no RTL/native adoption",
+ "candidate_histograms": {
+  "6": {
+   "1": 0.0010631970106133176,
+   "2": 0.08989092386224448,
+   "3": 0.28992170061781486,
+   "4": 0.31235246328032545,
+   "5": 0.20277840528738444,
+   "6": 0.10399330994161743
+  },
+  "4": {
+   "1": 0.1678627151026143,
+   "2": 0.6665913999887672,
+   "3": 0.1486744719353976,
+   "4": 0.016871412973220992
+  }
+ },
+ "price": {
+  "knobs": {
+   "union_safe": false,
+   "rpl": false,
+   "union_hist": true,
+   "m1": true,
+   "coll_lanes": 5,
+   "hc_ii": 250.0,
+   "vm_grown": true,
+   "P": 3,
+   "bf16_lanes": 0,
+   "meas": [
+    "idxn",
+    "idx_topk",
+    "idx_union",
+    "su_vop2",
+    "kvwb",
+    "argmax2",
+    "coll_rg",
+    "coll_am",
+    "att4",
+    "sm4skew",
+    "fused",
+    "idx_frame",
+    "fused_frame",
+    "fused_tree",
+    "sm3"
+   ],
+   "att_single": "record"
+  },
+  "ar_cycles": 609810.7,
+  "ar_tok_s": 1967.8,
+  "mtp": {
+   "verify_cycles": 1439899.4,
+   "draft_cycles": 129154.4,
+   "draft_by_kind": {
+    "dsa": 18078.9,
+    "dsb": 85532.9,
+    "dhead": 8192.1,
+    "markov": 15579.0,
+    "demb": 1771.5
+   },
+   "seed_cycles": 11674.9,
+   "mh_ctl_cycles": 7818.0,
+   "overlap_credit": 1125.6,
+   "step_cycles": 1587421.1,
+   "tok_s": 3144.0,
+   "unit_busy": {
+    "FUSED": 173451.6,
+    "SM": 675035.6,
+    "COLL": 521581.5,
+    "SU": 194297.1,
+    "DMA": 58358.0,
+    "HC": 191652.0,
+    "IDX": 50325.6,
+    "CTL": 0.0,
+    "ARGMAX": 7491.6
+   },
+   "compile": {
+    "shared": 6992,
+    "per_position": 0,
+    "expert_slots": 25,
+    "union_records": 40,
+    "cmtp_frames": {
+     "FUSED.HC_PRE_NORM": -16872.3,
+     "SM.MATVEC": 13500.0,
+     "FUSED.HC_POST": 824.0,
+     "IDX.INDEX": 7276.4
+    },
+    "cmtp": {
+     "sm_shared": 375,
+     "sm_expert": 3000,
+     "x_loads": 443,
+     "m1_cycles": 37998.6,
+     "rpl_saved": -40598.6,
+     "att_single_records": 0,
+     "meas": {
+      "FUSED.HC_PRE_NORM": -31995.0,
+      "SM.MATVEC shared": 13378.1,
+      "SU.VOP shared": 37204.0,
+      "DMA.KVWB_DS": 1220.0,
+      "FUSED.HC_POST": 1200.0,
+      "IDX.TOPK": 440.0,
+      "IDX.TOPK expert_union": -5640.0,
+      "SM.MATVEC expert": 77796.0,
+      "COLL.ROW_GATHER": -32565.9,
+      "ARGMAX.LOCAL": 80.0,
+      "COLL.ARGMAX_MERGE": 41.5
+     }
+    },
+    "att_rows_records": 80,
+    "fused_pre_measured_ii_records": 81,
+    "idx_index_per_user_records": 0,
+    "att_lanes": 3,
+    "meas_post": {
+     "ATT.PV": -3200.0,
+     "IDX.INDEX": 4561.2
+    }
+   }
+  },
+  "mu": {
+   "users": 4,
+   "step_cycles": 1175599.0,
+   "per_user_tok_s": 1020.8,
+   "agg_tok_s": 4083.0,
+   "unit_busy": {
+    "FUSED": 123777.6,
+    "SM": 506415.1,
+    "COLL": 445669.7,
+    "SU": 167753.1,
+    "DMA": 53226.0,
+    "HC": 151652.0,
+    "IDX": 75891.7,
+    "CTL": 0.0,
+    "ARGMAX": 7388.8
+   },
+   "compile": {
+    "shared": 6512,
+    "per_position": 0,
+    "expert_slots": 22,
+    "union_records": 40,
+    "cmtp_frames": {
+     "FUSED.HC_PRE_NORM": -16872.3,
+     "SM.MATVEC": 12060.0,
+     "FUSED.HC_POST": 824.0,
+     "IDX.INDEX": 7276.4
+    },
+    "cmtp": {
+     "sm_shared": 375,
+     "sm_expert": 2640,
+     "x_loads": 443,
+     "m1_cycles": 20189.4,
+     "rpl_saved": -960.0,
+     "att_single_records": 0,
+     "meas": {
+      "FUSED.HC_PRE_NORM": -19197.0,
+      "SM.MATVEC shared": 13311.5,
+      "SU.VOP shared": 21566.0,
+      "DMA.KVWB_DS": 732.0,
+      "FUSED.HC_POST": 720.0,
+      "IDX.TOPK": 264.0,
+      "IDX.TOPK expert_union": -7280.0,
+      "SM.MATVEC expert": 22980.8,
+      "COLL.ROW_GATHER": -19539.6,
+      "ARGMAX.LOCAL": 48.0,
+      "COLL.ARGMAX_MERGE": 24.9
+     }
+    },
+    "att_rows_records": 80,
+    "fused_pre_measured_ii_records": 81,
+    "idx_index_per_user_records": 8,
+    "att_lanes": 3,
+    "meas_post": {
+     "ATT.PV": -3200.0
+    }
+   }
+  }
+ },
+ "preparation": "max reduction while route tables emit; registered selection, new cycles unmeasured",
+ "prep_cycles_per_layer": 1,
+ "store_area_mm2": null,
+ "all_layers_resident": false,
+ "native_dispatch": false,
+ "SS_FF": false,
+ "notes": [
+  "Unknown verify routing is the documented decorrelated estimator.",
+  "Noncaptured draft/seed use min(N,topk*N-U+1); no-sharing draft U15 implies c1 exactly.",
+  "All prices use actual compiled local SM shape ceilings; global row cardinality bounds every SM subset.",
+  "Pooled mean U/S2 schedule is an expectation proxy; exact bank-by-bank model proof still needed."
+ ],
+ "with_main_layer_prep_only": {
+  "mtp_tok_s": 3143.9207791611398,
+  "mu_agg_tok_s": 4082.8610798042596
+ }
+}

@@ -1,0 +1,6 @@
+IDXQ_LOCKSTEP rows4 pitch232 chainNew6 mut6 errors0 oracle_errors0 scores_new21824 scores_old21824 records_old2048 flits_new256 flits_old256 live_beats old171 new171 row_beats old684 new684 fault_old0 fault_new1 status0 | edges from start: key old219 new221 tx old1184 new1192 done old2007 new2015
+IDXQ_ROWS_CYCLES rows4 pitch232 new_done_edge2015 old_done_edge2007
+[27340000000] %Fatal: tb_hnx_idxq_lockstep.sv:181: Assertion failed in tb_hnx_idxq_lockstep.unnamedblk14: IDXQ_LOCKSTEP FAIL: IDXN quad vs stack mismatch
+%Error: rtl/hbm_next/idxq/tb/tb_hnx_idxq_lockstep.sv:181: Verilog $stop
+Aborting...
+RUN_RC=1
