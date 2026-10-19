@@ -90,7 +90,7 @@ PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10
 EARLY_FAIL = ("EARLY_FAIL_SETUP", "EARLY_FAIL_HOLD", "EARLY_FAIL_CONGESTION", "EARLY_FAIL_DRC", "EARLY_FAIL_STALL")
 TERMINAL = {"SMOKE_OK", "CLOSED", "LOST_CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID",
             "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", *EARLY_FAIL}
-RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
+RESOURCE_RE = re.compile(r"OT_FLOW_MISSING|Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
                          r"g\+\+: fatal error|cc1plus: .*(?:killed|error)|"
@@ -123,6 +123,31 @@ def bench_crashed(st, rc, tail):
     if rc in BENCH_CRASH_RC or RESOURCE_RE.search(tail):
         return st["expect"] == "fail" or not WORK_RE.search(tail)
     return False
+
+
+# BENCH-TOOL-RACE (ROOT-INF2 2026-10-18): Verilator 5.050 --hierarchical writes a two-target rule (<blk>.sv <blk>.mk) into
+# <top>_hier.mk; `make -j` runs that hier verilation twice in parallel, one copy rewrites the block's precompiled header
+# while the other compiles against it -> "one or more PCH files were found, but they were invalid" / "__pch.h.fast: No such
+# file".  The build exits 2 and the bench never ran: hcoll_v7_tkm_tile_e86 (HBM-TKM3 2/2 builds) would have been
+# NEEDS_RTL on a race.  A failing bench whose logs (stage log, spec logs, or any *.log written under the run's bench
+# tree during the stage) carry that signature is a tool crash: retried once, then NEEDS_HUMAN -- never an RTL verdict.
+TOOL_RACE_RE = re.compile(r"one or more PCH files were found, but they were invalid|"
+                          r"fatal error: \S*__pch\.h\.(?:fast|slow)\S*: No such file", re.M)
+
+
+def bench_tool_race(v, tail):
+    """the PCH-race line of a failed bench (tail first, then *.log under {run}/bench newer than the stage start), or ''"""
+    m = TOOL_RACE_RE.search(tail or "")
+    if m:
+        return m.group(0)
+    t, run = v.get("stage_tag"), v.get("run")
+    if not t or not run or not v.get("host"):
+        return ""
+    pat = TOOL_RACE_RE.pattern.replace("\\S", "[^[:space:]]").replace("(?:", "(")
+    r = ssh(v["host"], f"[ -f {run}/cl/{t}.start ] || exit 0; find {run}/bench -maxdepth 5 -name '*.log' -newer {run}/cl/{t}.start "
+                       f"-size -200M -print0 2>/dev/null | xargs -0 -r grep -hoE -m1 {shlex.quote(pat)} 2>/dev/null | head -1; true",
+            timeout=120)
+    return (r.stdout or "").strip()[:300] if not r.returncode else ""
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
 DEFAULT_SRC_PATHS = ["tools", "rtl", "physical", "Makefile", "configs", "src"]   # drive-1010: + configs (5 MB) / src (1 MB): benches importing tools/* need both
 FLEET_LOCK = threading.RLock()     # host choice / capacity check / launch are atomic across job threads
@@ -2013,14 +2038,54 @@ TT_OVERLAY_FLEET = ("/srv/opentallas-scratch/claude/ttbatch/26f14af32/tools/clos
 def tt_overlay_fallback(cmd):
     """2026-10-08: specs that call the snapshot's own tools/closure_loop/tt_overlay.py on a commit predating it (26f14af32;
     qfd_io_emb_tap-4b111850att, qfd_sp_*-e0370c82ctt: 'can't open file ... tt_overlay.py') run the fleet's tt-batch
-    overlay copy (kept at main on every host) instead; a snapshot that carries the file keeps its own."""
+    overlay copy (kept at main on every host) instead.
+    FLEET-FIRST 2026-10-15 23:2x: the fleet copy (kept at main) wins over the snapshot's own -- a snapshot's buggy
+    overlay (65529c027..3c31fb285 deleted GRT183_HOOK from run_abi3_physical.py) cannot be fixed by its pinned commit.
+    PATHPICK 2026-10-18 (ROOT-2130): the fleet copy is REQUIRED (ot_pick + the stage precheck), never a silent fallback."""
     if TT_OVERLAY_REL not in cmd:
         return cmd
-    # FLEET-FIRST 2026-10-15 23:2x: the fleet copy (kept at main) wins over the snapshot's own -- a snapshot's buggy
-    # overlay (65529c027..3c31fb285 deleted GRT183_HOOK from run_abi3_physical.py) cannot be fixed by its pinned commit
-    pick = (f"python3 \"$(ls -d {' '.join(TT_OVERLAY_FLEET)} 2>/dev/null | head -1 | grep . || "
-            "echo tools/closure_loop/tt_overlay.py)\" ")
-    return cmd.replace(TT_OVERLAY_REL, pick)
+    return cmd.replace(TT_OVERLAY_REL, f"python3 \"$(ot_pick {' '.join(TT_OVERLAY_FLEET)})\" ")
+
+
+# PATHPICK 2026-10-18 (ROOT-2130, QK-LAND600C): stage scripts run under `set -o pipefail`.  The fleet-path picks the
+# daemon and 2,000+ specs use -- `X=$(ls -d A B 2>/dev/null | head -1) && ...` and `$(ls -d A B | head -1 | grep . ||
+# echo rel)` -- break on a host that has only ONE of the candidates (ot-epyc5: no /home/ubuntu/closure-loop-local): ls
+# exits 2, so the assignment fails and the `&&`-chained TT overlay + OT_CTS_FIX_HOOKS are skipped while the route still
+# runs after `;` (or the `|| echo` also prints and the picked path is two lines).  qfwd_landh0_600_en, s81lk_kp4_dec-p1,
+# hcoll_ring_ag_ctln_1018-r5c, qkd_hr_core_guard-r4, qkd_kvs_emb-e1, hv16_dbk_cpl-q1 routed without the overlay.  Every
+# literal multi-path pick is rewritten to ot_pick (test -e each path in order; rc 0 when one exists), and the stage
+# script first checks that each pick resolves: none -> OT_FLOW_MISSING, exit 97, a FLOW failure (retried on another
+# host via RESOURCE_RE, then NEEDS_HUMAN) -- never a route without its overlay / hooks.
+OT_PICK_FN = ('ot_pick() { local p; for p in "$@"; do [ -e "$p" ] && { printf \'%s\\n\' "$p"; return 0; }; done; '
+              'echo "OT_FLOW_MISSING: none of $* exists on $(hostname)" >&2; return 1; }\n')
+PATH_PICK_RE = re.compile(r"\$\(ls -d((?:\s+/[^\s()$|;&*?\[{}'\"]+)+)\s*(?:2>/dev/null\s*)?\|\s*head -1"
+                          r"(?:\s*\|\s*grep \.\s*\|\|\s*echo\s+([^\s()$|;&]+))?\s*\)")
+OT_FLOW_MISSING_RC = 97
+
+
+def path_picks_safe(cmd):
+    """(cmd with every literal `$(ls -d P1 P2 .. | head -1 [| grep . || echo F])` -> `$(ot_pick P1 P2 ..)`,
+    [the candidate tuples]).  The `|| echo F` fallback is dropped: a required fleet path is checked, not guessed."""
+    groups = []
+
+    def rep(m):
+        paths = tuple(m.group(1).split())
+        if paths not in groups:
+            groups.append(paths)
+        return f"$(ot_pick {' '.join(paths)})"
+    cmd = PATH_PICK_RE.sub(rep, cmd)
+    for m in re.finditer(r"\$\(ot_pick ([^)]*)\)", cmd):
+        paths = tuple(m.group(1).split())
+        if paths not in groups:
+            groups.append(paths)
+    return cmd, groups
+
+
+def path_pick_precheck(groups):
+    """shell: fail the stage loudly (OT_FLOW_MISSING, rc 97) when a fleet path the command needs is absent on this host"""
+    return "".join(f"ot_pick {' '.join(shlex.quote(p) for p in g)} >/dev/null || {{ echo 'OT_FLOW_MISSING: stage needs one "
+                   f"of {' '.join(g)} (flow failure, reroute_reason flow_failure)'; exit {OT_FLOW_MISSING_RC}; }}\n"
+                   for g in groups)
 
 
 def subst(text, j):
@@ -2808,6 +2873,21 @@ def installed_helper_receipt(host, run, frozen):
         raise ValueError("original remote helper verification receipt unreadable") from ex
 
 
+def _publish_refresh(frozen):
+    """(current plan, payloads, modes, sanctioned rows) when the effective helper set differs from the frozen plan ONLY
+    in PUBLISH_ONLY paths drifted to exactly origin/main (compare_plans_sanctioned rules); else None."""
+    try:
+        current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
+        if HO.compare_plans(frozen, current)[0]:
+            return None
+        ok, _why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
+    except (ValueError, OSError, subprocess.SubprocessError, KeyError, TypeError):
+        return None
+    if not ok or not sanctioned or any(r.get("kind") != "publish" for r in sanctioned):
+        return None
+    return current, payloads, {f["path"]: f["mode"] for f in current["files"]}, sanctioned
+
+
 def ship_helpers(host, run, job=None):
     """Install new helpers, or verify and reuse an already executed frozen set."""
     # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
@@ -2827,9 +2907,29 @@ def ship_helpers(host, run, job=None):
                     HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
                     job["helper_overlay_verification"] = dict(receipt, verified_at=now_iso(),
                                                                host=host, run=run, mutation=False)
-                    return
+                    pub = _publish_refresh(frozen)
+                    if pub is None:
+                        return
+                    # PUBLISH REFRESH (RLYH0-FIN 2026-10-19): an installed, verified run dir is re-entered (resume-postroute
+                    # / re-collect) and ONLY publish helpers (view_export.py) drifted to exactly origin/main: ship the
+                    # current publish bytes into cl/ (the route's own helpers are byte-identical, nothing else changes).
+                    # Without this the PUBLISH_ONLY sanction never reached a preserved closed route: resume-postroute
+                    # of qfwd_rlyh0_128_ne_65x30-f1-fc2236d82 re-ran the frozen exporter and lost the CLOSED result again.
+                    current, payloads, modes, sanctioned = pub
+                    job.setdefault("route_overlay_plan_gate", frozen)
+                    job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run)
+                                                                           for r in sanctioned)
+                    for r in sanctioned:
+                        event(job, f"PUBLISH SANCTION (installed run): {r['path']} frozen {r['frozen_git_blob'][:9]} -> "
+                                   f"fleet/main {r['current_git_blob'][:9]} (origin/main {str(r['origin_main'])[:9]}); "
+                                   f"cl/ refreshed, route helpers unchanged")
+                    job["route_overlay_plan"] = frozen = current
+                    job["helper_overlay_verification"]["mutation"] = True
+                    HO.store_payloads(HELPER_STORE, frozen, payloads)
                 origin = job.get("bench_helper_origin")
-                if origin:
+                if payloads is not None:
+                    pass                                                   # publish refresh above
+                elif origin:
                     if origin == dict(host=host, run=run):
                         raise ValueError("bench helper origin must be a different execution location")
                     original = installed_helper_receipt(origin["host"], origin["run"], frozen)
@@ -2918,7 +3018,7 @@ def ship_helpers(host, run, job=None):
                 job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run)
                                                                        for r in sanctioned)
                 for r in sanctioned:
-                    event(job, f"FLEET-RUN SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} -> fleet/main "
+                    event(job, f"{'PUBLISH' if r.get('kind') == 'publish' else 'FLEET-RUN'} SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} -> fleet/main "
                                f"{r['current_git_blob'][:9]} (sha256 {r['current_sha256'][:16]}, origin/main "
                                f"{str(r['origin_main'])[:9]}); the route runs the fleet copy")
                 job["route_overlay_plan"] = frozen = current
@@ -3547,8 +3647,9 @@ def launch_stage(j, st, cmd):
         before, after = stage_script(j["export_lint_recovery"], j.get("stage_source", j["run"] + "/src"))
         env += before
         cmd = f"( {cmd} )\n_ot_export_rc=$?\n{after}exit $_ot_export_rc\n"
-    cmd = tt_overlay_fallback(cmd)
-    body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
+    cmd, picks = path_picks_safe(tt_overlay_fallback(cmd))
+    body = (f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n"
+            f"{OT_PICK_FN}{path_pick_precheck(picks)}{env}{subst(cmd, j)}\n")
     run = j["run"]
     # idempotent launch (2026-10-07): a daemon restart between a launch and the job-state save re-launched the same tag;
     # the second copy overwrote the script and rc (dsrom_softmax_safe_div2b: hold ECO 'rc=10 output exists' while the
@@ -4922,6 +5023,14 @@ def postroute_crash(j, st, fleet, why):
         j["attempt"] += 1
         j["status"] = "SYNC"
         return
+    # EXPORT-LINT REPEAT (RLYH0-NE 2026-10-19): a collect whose export fails child_lint is not a crash; the same lint
+    # FAIL on the same frozen helpers repeats on every retry (qfwd_rlyh0_128_ne_65x30-f1-fc2236d82: 4 identical
+    # '(i) pin access' collects).  Stop at the first repeat and name the lint.
+    lint = re.search(r"child_lint FAIL[^\n]{0,400}", tail or "")
+    prev = [x for x in j["crashes"][:-1] if x.get("postroute") and x.get("stage") == st["key"]]
+    if lint and prev and lint.group(0)[:200] in (prev[-1].get("tail") or ""):
+        why = f"export {lint.group(0)[:300]} (identical on retry: deterministic, not a crash)"
+        n = POSTROUTE_RETRY_MAX
     if n >= POSTROUTE_RETRY_MAX:
         c = (earlier_closed(j) or [{}])[-1]
         j["lost_closed"] = dict(closed=c, later_status="NEEDS_HUMAN", later_reason=why, at=now_iso(), preserved=where)
@@ -5425,6 +5534,16 @@ def bench_track(j, fleet, stl):
         if v.get("fail_witnesses") is not j.get("fail_witnesses"):
             j.setdefault("fail_witnesses", {}).update(v.get("fail_witnesses") or {})
         e["state"] = "done"
+        race = "" if passed else bench_tool_race(v, tail)
+        if race:
+            if e["n"] < 2:
+                e["state"] = "retry"
+                event(j, f"bench track: {k} tool race (rc={rc}; BENCH-TOOL-RACE: {race[:200]}); retry once")
+                return True
+            stop_main_for_bench(j)
+            finish(j, "NEEDS_HUMAN", f"{k} tool race twice in the bench track (rc={rc})",
+                   f"NEEDS_HUMAN: bench {k} hit a build tool race twice (rc={rc}): {race}; route stopped")
+            return False
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
             stop_main_for_bench(j)
@@ -6068,6 +6187,9 @@ def step(j, fleet):
                 return crash(j, st, fleet, f"bench tool crash: rc={rc} ({'negative control' if st['expect'] == 'fail' else 'positive bench'}"
                                            f" with no verdict evidence)")
             passed = bench_outcome(j, st, rc, ok_extra)
+            race = "" if passed else bench_tool_race(j, tail)
+            if race:
+                return crash(j, st, fleet, f"bench tool race: rc={rc} (BENCH-TOOL-RACE: {race[:200]})")
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:])
             if not passed:
                 finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
@@ -6255,6 +6377,25 @@ def precollect_cmd(spec):
 ROUTE_CORNER_CHECK = "ttb_routed_at_TC"
 
 
+def overlay_skipped(j):
+    """PATHPICK: True when the job's command runs the TT overlay but {CL}/ttb_corner.txt (its mark) was never written"""
+    cmds = " ".join(str((st or {}).get("cmd") or "") for st in ((j["spec"].get("stages") or {}).values())
+                    if isinstance(st, dict))
+    if "OT_TTB_CORNER_MARK={CL}/ttb_corner.txt" not in cmds or not j.get("host") or not j.get("run"):
+        return False
+    try:
+        # the mark can come from another overlay call in the same command (s81dvbk_sq-q1 route.a2: the resumed route's
+        # overlay failed "can't open file .../tt_overlay.py\ntools/..." while an earlier call had written TC): the
+        # newest route log naming a failed overlay / missing fleet path counts as skipped too
+        r = ssh(j["host"], f"L=$(ls {j['run']}/cl/route.a*.log 2>/dev/null | sort -V | tail -1); "
+                           f"if [ -n \"$L\" ] && grep -q -E \"can.t open file .*tt_overlay|OT_FLOW_MISSING\" \"$L\"; "
+                           f"then echo NOMARK; elif test -s {j['run']}/cl/ttb_corner.txt; then echo MARK; else echo NOMARK; fi",
+                timeout=60)
+    except Exception:  # noqa: BLE001
+        return False
+    return "NOMARK" in (r.stdout or "")
+
+
 def route_corner_check_cmd(c):
     """LOOP-CORNER 2026-10-10: the ttb_routed_at_TC check only grepped {CL}/ttb_corner.txt, where tt_overlay also writes
     'TC ...' for unrelated patches (direct config.mk); SM piece routes that loaded SS liberties passed it (and closed at
@@ -6301,6 +6442,15 @@ def do_verdict(j, fleet, stl):
         elif not ok:
             failed.append(c["name"])
     j["checks"], j["failed_checks"] = checks, failed
+    if ROUTE_CORNER_CHECK in failed and overlay_skipped(j):
+        # PATHPICK 2026-10-18: the route ran WITHOUT the TT overlay / CTS fix hooks (a fleet-path pick failed): its
+        # slacks are not a measurement of this design -- a FLOW failure, never NEEDS_RTL and never CLOSED
+        finish(j, "NEEDS_HUMAN", "FLOW_FAILURE: TT overlay did not run (no {CL}/ttb_corner.txt): resubmit with "
+                                 "reroute_reason flow_failure",
+               "NEEDS_HUMAN: FLOW_FAILURE: the route ran without the TT overlay / OT_CTS_FIX_HOOKS ({CL}/ttb_corner.txt "
+               "never written; see the route log for OT_FLOW_MISSING / can't open file); the slacks are not valid. "
+               "Resubmit with reroute_reason flow_failure.")
+        return
     if (j.get("eco") or {}).get("installed"):     # the post-route hold ECO replaced the route: its DRC counts
         m["drc"], m["eco"] = j["eco"]["result"]["drc"], j["eco"]["result"]
     ss, ff, drc = m.get("ss_ps"), m.get("ff_ps"), m.get("drc")

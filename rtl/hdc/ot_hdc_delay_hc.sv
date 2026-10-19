@@ -21,11 +21,19 @@
 // Storage = W*(D+1) flops (one extra W-bit negedge register) + B ICGs; no recirculating enable muxes (the ICGs do
 // the enabling), so the banks have no self-loop hold paths either.
 // MUT (bench mutant): 1 = one bank too few (delay D-1).
+// GATED (HBM-GQISSUE2 10-19): 1 (default, as before) = banks on ICG-gated clocks. 0 = banks on the plain clock with a
+// load enable (bk <= wp[i] ? xn : bk). Routed hcoll_gq_issue_1018-r2-a481cc848 (GATED 1): the 16 gated bank sub-trees
+// (cg_pushdown x32 ICG copies each) arrived ~70 ps EARLIER than the ungated read register r at FF (gated bank 240 ps,
+// r 310 ps), so bank -> AND-OR -> r failed hold by up to -27.7 ps (1,445 endpoints), and the ICG enables (wp, ~rst_n)
+// failed setup by up to -72 ps against the ICG's early clock pin. With GATED 0 bank and r share one tree (no
+// insertion step), the self-load loop is a same-flop path (skew 0) and wp -> bank is a full-cycle mux select.
+// Function and edge count identical (same wp rotation, same xn half-cycle hop).
 // ---------------------------------------------------------------------------
 module ot_hdc_delay_hc #(
     parameter integer W = 32,
     parameter integer D = 9,           // >= 3
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer GATED = 1
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -45,8 +53,13 @@ module ot_hdc_delay_hc #(
     generate
         for (i = 0; i < B; i = i + 1) begin : g_bank
             reg [W-1:0] bk;
-            ot_hdc_cg u_cg (.clk(clk), .en(wp[i] | ~rst_n), .gclk(gk[i]));
-            always @(posedge gk[i]) bk <= xn;
+            if (GATED != 0) begin : g_icg
+                ot_hdc_cg u_cg (.clk(clk), .en(wp[i] | ~rst_n), .gclk(gk[i]));
+                always @(posedge gk[i]) bk <= xn;
+            end else begin : g_en
+                assign gk[i] = 1'b0;
+                always @(posedge clk) if (wp[i]) bk <= xn;      // plain clock: no reset clocking needed
+            end
             assign bank[i*W +: W] = bk;
         end
     endgenerate

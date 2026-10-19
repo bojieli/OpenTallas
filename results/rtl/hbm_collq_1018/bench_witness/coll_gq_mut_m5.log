@@ -31,5 +31,5 @@ COLLQ DATA row0 q0 seg1 word57 got 9c243eed5ef6e8a003bb9a97c40c454a86def7014ba3a
 COLLQ FAIL errors=841
 - rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:284: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 0.103 s; speed 19.788 us/s
-- Verilator: cpu 0.098 s on 1 threads; allocated 14 MB
+- Verilator: $finish at 2us; walltime 0.117 s; speed 17.455 us/s
+- Verilator: cpu 0.114 s on 1 threads; allocated 14 MB

@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------------
 // ot_hgi_coll_aq13: the COLL gather master's quantiser = physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv
 // (the CLOSED tree13 body: same stages, same 13-edge latency, II 1, same numerics) with ONE change: the 1,024-bit x
-// 9-edge element line u_x is ot_hdc_delay_hc (rotating gated banks behind a negedge register, read through a
+// 9-edge element line u_x is ot_hdc_delay_hc GATED 0 (rotating load-enabled banks behind a negedge register, read through a
 // one-hot AND-OR) instead of the 9-deep flop shift line ot_hdc_delay.  Reason: the shift line's 9,216 bare
 // flop->flop hops per quantiser were a hold-buffer swamp in hcoll_gq_issue_1018 (CTS gate: 64,598 hold buffers,
 // +15% area); every hop of the new line is a half-cycle path or crosses >= 3 logic levels.  The diff against the
@@ -156,7 +156,7 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
 
     // elements, from S0 to S8 (nine registers: S1, S2, S2b, S3-S7, S8)
     wire [1023:0] x8;
-    ot_hdc_delay_hc #(.W(1024), .D(9), .MUT(LMUT)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x8));
+    ot_hdc_delay_hc #(.W(1024), .D(9), .MUT(LMUT), .GATED(0)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x8));
 
     // -- S8: e = ceil_log2(prod) ------------------------------------------------------------
     reg              s8_v, s8_fp4, s8_nf;

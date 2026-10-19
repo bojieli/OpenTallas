@@ -31,5 +31,5 @@ COLLQ DATA row2 q0 seg3 word13 got ee6158e17075daeeea6be9ed6bf86963e2f05aece95ae
 COLLQ FAIL errors=600
 - rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:284: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 0.075 s; speed 27.210 us/s
-- Verilator: cpu 0.075 s on 1 threads; allocated 13 MB
+- Verilator: $finish at 2us; walltime 0.134 s; speed 15.214 us/s
+- Verilator: cpu 0.100 s on 1 threads; allocated 14 MB

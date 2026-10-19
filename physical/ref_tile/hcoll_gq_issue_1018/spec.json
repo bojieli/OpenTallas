@@ -115,15 +115,15 @@
   "pin_balance": {
    "group_max": 32
   },
-  "io_hold_margin_ns": 0.025,
+  "io_hold_margin_ns": 0.03,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Claude:HBM-COLLQ",
   "branch": "claude/hbm-gqissue-1018",
-  "tag": "r2",
-  "purpose": "d4g plan (b) per-quadrant COLL gather master, ISSUE leaf: F20 target + descriptor calendar, static two-ring gather schedule, VM reads (COLL read share), 2 flat quantisers (QBG, ot_hgi_coll_aq13 = closed ot_hbm_xp_aq_tree13 RTL with its 1,024 x 9 element shift line replaced by the hold-safe ot_hdc_delay_hc: r1 CTS gate spent 64,598 hold buffers on the bare line hops), payload, ring-A merge register (ISA +2 edges) and ring-B commands; new element, no closed view",
+  "tag": "r3",
+  "purpose": "d4g plan (b) per-quadrant COLL gather master, ISSUE leaf: F20 target + descriptor calendar, static two-ring gather schedule, VM reads (COLL read share), 2 flat quantisers (QBG, ot_hgi_coll_aq13 = closed ot_hbm_xp_aq_tree13 RTL with its 1,024 x 9 element shift line replaced by the hold-safe ot_hdc_delay_hc: r1 CTS gate spent 64,598 hold buffers on the bare line hops), payload, ring-A merge register (ISA +2 edges) and ring-B commands; new element, no closed view; r3 (GQISSUE2 10-19): r2 a481cc848 NEEDS_RTL TT -98 (gather-state decode + select fan-out into ld_p_d / aq_x / vm_rq / ring commands) and FF -28 (gated quantiser-line banks 70 ps early vs the read register) -> flit flags decoded once at issue and piped with the entry, registered one-hot selects one edge ahead, one-hot calendar row select, ot_hdc_delay_hc GATED 0 (load-enabled banks on the plain clock); no edge moves",
   "benches": [
    {
     "name": "coll_gq_exact",
@@ -259,5 +259,9 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
 }
