@@ -16,7 +16,7 @@
     129.6,
     2246.4
   ],
-  "generator": "tools/mem_compiler/s81_pma_gen.py v1.0",
+  "generator": "tools/mem_compiler/s81_pma_gen.py v1.1",
   "name": "ot_s81_pma_txm",
   "pins": {
     "N": {
@@ -28,6 +28,13 @@
       "pins": 545,
       "pins_per_um": 4.339,
       "pitch_um": 0.192
+    },
+    "pg": {
+      "layer": "M5",
+      "offset_um": 0.3,
+      "pairs": 24,
+      "pitch_um": 5.4,
+      "width_um": 0.12
     }
   },
   "schema": "opentallas.s81-pma-abstract.v1",
@@ -94,7 +101,7 @@
     }
   },
   "views": {
-    "ot_s81_pma_txm.lef": "61de63139a0050f09f6fb828a6f693abed775015e04ff7d3eb2d6efc060550fa",
+    "ot_s81_pma_txm.lef": "77d4afb79b30038ea1a8fa10a0db9e34e4ef9e754a396e4fd4e9186f6574e6a0",
     "ot_s81_pma_txm_bb.v": "5ddb029e31436e6c84ffcc1bfe23363cd1ce38c7f8e302103dc59edbf667bb04",
     "ot_s81_pma_txm_ff.lib": "d5c0ec450480277163e4e4411bf174e53f54b13ed5ddadada9bf5b4e6d3ba84a",
     "ot_s81_pma_txm_ss.lib": "c9e1b47b6c0af2176fc7a03b83100531eb25c6c19a26d6a27093f04e53d5fa40",

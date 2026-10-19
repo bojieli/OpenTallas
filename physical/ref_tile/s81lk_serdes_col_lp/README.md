@@ -40,3 +40,11 @@ output register; TX: +1 face register, 2 relay rows, +3 edges landing tx -> ptx.
 
 Die obligations: drop rck (from the pma_rck pad / partner pma_tck) at ck_syn/ck_dly/ck_chn/ck_out (W face) and clk at
 ck_tx (N) / ck_ptx (E); the S81 die master port list changes from {clk, pma_rck} to these six roots.
+
+## lpk3 (LEAD2-S81/LINK 10-19): PMA PG access fix
+- lpk2 remote gate failed PDN-0006 before CTS: each PMA abstract (v1.0) had its M4 VDD/VSS stripes fully under its own
+  M5 OBS, so the parent M4->M5 "sram" connect had no legal via (structural defect of the abstract, not a squeeze).
+- Fix: tools/mem_compiler/s81_pma_gen.py v1.1 exposes PG as M5 vertical stripes (w 0.12, VDD 0.300 + k*5.4, VSS +0.192,
+  24 pairs per PMA, y 2.0..h-2.0 clear of the face pins), M5 OBS only between the stripes (0.072 clearance), M1-M4 OBS
+  unchanged; ref_tile macros[].pg_layer "M5" (opt-in) straps them M5->M6 exactly like the hard children (hard_m5).
+- Checklist delta: 6 (floorplan/PG) fixed; all other items unchanged from lpk2 above.

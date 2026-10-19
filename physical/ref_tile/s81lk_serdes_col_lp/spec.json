@@ -145,7 +145,8 @@
    "at": [
     43.2,
     43.2
-   ]
+   ],
+   "pg_layer": "M5"
   },
   {
    "view": "physical/asap7_memory_macros/ot_s81_pma_txm",
@@ -154,7 +155,8 @@
    "at": [
     345.6,
     43.2
-   ]
+   ],
+   "pg_layer": "M5"
   }
  ],
  "children": [
@@ -298,12 +300,12 @@
  "recipe": 4,
  "inhold": false,
  "outhold": false,
- "structural_change": "S81-SERDES 10-19 (S81.STA.OWN.7): the SerDes column as an lp.py LANDED parent (replaces the draft s81lk_serdes_col_e3, which could not gen: kind cluster + multiple_cts_roots needs an lp record). All glue moved into children (live flags, status CDC, TX face/relay rows); decoder tiles are direct children in 4 rck regions with 11 D4/E2 landings (+6 edges); TX lane enc -> 2 relay rows -> landing tx->ptx (+3 edges) -> PMA TX; rx/st output regs; PMA RX moved to the W half under dsyn, PMA TX to the E half under the TX lane drop; 518.4 x 3844.8 approved slot.",
+ "structural_change": "S81-SERDES 10-19 (S81.STA.OWN.7): the SerDes column as an lp.py LANDED parent (replaces the draft s81lk_serdes_col_e3, which could not gen: kind cluster + multiple_cts_roots needs an lp record). All glue moved into children (live flags, status CDC, TX face/relay rows); decoder tiles are direct children in 4 rck regions with 11 D4/E2 landings (+6 edges); TX lane enc -> 2 relay rows -> landing tx->ptx (+3 edges) -> PMA TX; rx/st output regs; PMA RX moved to the W half under dsyn, PMA TX to the E half under the TX lane drop; 518.4 x 3844.8 approved slot. lpk3 (LEAD2-S81/LINK 10-19): lpk2 failed PDN-0006 (PMA M4 PG fully under its own M5 OBS); PMA abstracts v1.1 expose PG as M5 stripes on the parent 5.4 um lattice with M5 OBS only between them, strapped M5->M6 like hard children (macros[].pg_layer M5).",
  "job": {
   "owner": "Claude:S81-SERDES",
-  "branch": "claude/s81-serdes-lpcol-1019",
-  "tag": "lpk2",
-  "purpose": "S81 SerDes column landed parent first kit (gate --cts)"
+  "branch": "claude/s81-serdes-lpk3-1019",
+  "tag": "lpk3",
+  "purpose": "S81 SerDes column landed parent lpk3: PMA PG as M5 stripes (lpk2 PDN-0006 fix), gate --cts"
  },
  "inter": [],
  "io_flop_at_pins": {

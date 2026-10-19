@@ -11,7 +11,8 @@ the HBM PHY -- this writes only what the column parent flow needs to reserve, pl
 Each macro: one clock, registered boundary (ASAP7 flop clk->q / setup + 3 FO4), footprint = half of the 250 x 2250 um
 analog model of results/arch/serdes_parent_recovery_1019/model.json, snapped to the 43.2 um lattice (129.6 x 2246.4).
 Behavioural model of the same interface: ot_s81_pma_txm / ot_s81_pma_rxm in rtl/dsrom_sys/s81_link/col/ (LAT 4 cycles).
-Pins: M5 (vertical layer: N / S faces), 0.024 x 0.192 um, pitch a multiple of the M5 pitch 0.048; M1-M4 + M5 interior OBS.
+Pins: M5 (vertical layer: N / S faces), 0.024 x 0.192 um, pitch a multiple of the M5 pitch 0.048; PG = M5 stripes on the
+parent 5.4 um M5 PG lattice (v1.1); M1-M4 OBS, M5 OBS between the PG stripes.
 
     python3 tools/mem_compiler/s81_pma_gen.py --out physical/asap7_memory_macros
 """
@@ -64,18 +65,38 @@ def write_lef(name, plist, face):
                   "    PORT", "      LAYER M5 ;", f"      RECT {x:.3f} {y0:.3f} {x + PW:.3f} {y1:.3f} ;", "    END",
                   f"  END {b}"]
         info[f] = {"pins": len(bits), "pitch_um": round(pitch, 3), "pins_per_um": round(len(bits) / span, 3)}
-    sw, sp = 0.288, 2.4
-    for k, (net, use) in enumerate((("VDD", "POWER"), ("VSS", "GROUND"))):
-        L += [f"  PIN {net}", "    DIRECTION INOUT ;", f"    USE {use} ;", "    PORT", "      LAYER M4 ;"]
-        y = 2.0 + k * sp / 2
-        while y + sw < h - 2.0:
-            L.append(f"      RECT 0.500 {y:.3f} {w - 0.5:.3f} {y + sw:.3f} ;")
-            y += sp
+    # PG (v1.1, 10-19 lpk2 PDN-0006 fix): VDD/VSS as M5 vertical stripes on the parent M5 PG lattice (width 0.12, VDD at
+    # 0.300 + k*5.4, VSS 0.192 to its right -- same as the cluster M5 grid, and 129.6 = 24 x 5.4 so the macro on the 43.2
+    # lattice lines up with it), y clear of the N/S face pins; M5 OBS only BETWEEN the stripes (0.072 clearance), so the
+    # parent M6 straps drop vias onto every stripe.  M1-M4 stay fully obstructed (analog interior).
+    pw5, pp5, off5, gap = 0.12, 5.4, 0.300, 0.072
+    y0p, y1p = 2.0, h - 2.0
+    stripes = {"VDD": [], "VSS": []}
+    x = off5
+    while x + pw5 + 0.192 + pw5 <= w - 0.3:
+        stripes["VDD"].append(round(x, 3))
+        stripes["VSS"].append(round(x + 0.192, 3))
+        x += pp5
+    for net, use in (("VDD", "POWER"), ("VSS", "GROUND")):
+        L += [f"  PIN {net}", "    DIRECTION INOUT ;", f"    USE {use} ;", "    PORT", "      LAYER M5 ;"]
+        L += [f"      RECT {sx:.3f} {y0p:.3f} {sx + pw5:.3f} {y1p:.3f} ;" for sx in stripes[net]]
         L += ["    END", f"  END {net}"]
+    info["pg"] = {"layer": "M5", "width_um": pw5, "pitch_um": pp5, "offset_um": off5, "pairs": len(stripes["VDD"])}
     L += ["  OBS"]
     for layer in ("M1", "M2", "M3", "M4"):
         L += [f"    LAYER {layer} ;", f"    RECT 0 0 {w:.3f} {h:.3f} ;"]
-    L += ["    LAYER M5 ;", f"    RECT 0 0.6 {w:.3f} {h - 0.6:.3f} ;"]
+    L += ["    LAYER M5 ;"]
+    xs = sorted(stripes["VDD"] + stripes["VSS"])
+    lo = 0.0
+    for sx in xs:  # OBS columns between PG stripes, full interior height
+        if sx - gap - lo > 0.05:
+            L.append(f"    RECT {lo:.3f} 0.600 {sx - gap:.3f} {h - 0.6:.3f} ;")
+        lo = sx + pw5 + gap
+    L.append(f"    RECT {lo:.3f} 0.600 {w:.3f} {h - 0.6:.3f} ;")
+    # stripe ends: obstruct the stripe columns outside the PG span (0.6..2.0 and h-2.0..h-0.6)
+    for sx in xs:
+        L.append(f"    RECT {sx:.3f} 0.600 {sx + pw5:.3f} {y0p - gap:.3f} ;")
+        L.append(f"    RECT {sx:.3f} {y1p + gap:.3f} {sx + pw5:.3f} {h - 0.6:.3f} ;")
     L += ["  END", f"END {name}", "", "END LIBRARY"]
     return "\n".join(L) + "\n", info
 
@@ -104,7 +125,7 @@ def generate(out: Path):
             (d / f"{name}_{c}.lib").write_text(write_liberty(name, t, plist, W_UM * H_UM, None, comment))
         (d / f"{name}_bb.v").write_text(blackbox_verilog(name, plist, comment + "; behavioural model: "
                                                          "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv"))
-        sheet = {"schema": "opentallas.s81-pma-abstract.v1", "generator": "tools/mem_compiler/s81_pma_gen.py v1.0",
+        sheet = {"schema": "opentallas.s81-pma-abstract.v1", "generator": "tools/mem_compiler/s81_pma_gen.py v1.1",
                  "name": name, "footprint_um": [W_UM, H_UM], "faces": faces[name], "pins": info,
                  "timing": {c: asdict(t) for c, t in per.items()},
                  "basis": "results/arch/serdes_parent_recovery_1019/model.json analog 250 x 2250 (two halves)",
