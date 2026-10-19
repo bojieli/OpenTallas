@@ -21,7 +21,7 @@
       {
         "name": "bfcol_txn_positive",
         "expect": "pass",
-        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --work {RUN}/bench_c199/positive --only positive; rc=$?; cat {RUN}/bench_c199/positive/positive/run.log 2>/dev/null; exit $rc",
+        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --work {RUN}/bench_c199/positive --only positive; rc=$?; cat {RUN}/bench_c199/positive/positive/run.log 2>/dev/null; exit $rc",
         "pass_regex": "^TXN MATCH$",
         "min_count_regex": "compared=(\\d+)",
         "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs",
@@ -32,7 +32,7 @@
       {
         "name": "bfcol_txn_mutant_dp",
         "expect": "fail",
-        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --work {RUN}/bench_c199/mutant_dp --only mutant_dp; rc=$?; cat {RUN}/bench_c199/mutant_dp/mutant_dp/run.log 2>/dev/null; exit $rc",
+        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --work {RUN}/bench_c199/mutant_dp --only mutant_dp; rc=$?; cat {RUN}/bench_c199/mutant_dp/mutant_dp/run.log 2>/dev/null; exit $rc",
         "fail_regex": "%Fatal: .*DIFF TXN lane=",
         "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/fail_witness/mutant_dp.log",
         "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs",
@@ -42,7 +42,7 @@
       {
         "name": "bfcol_txn_mutant_recut",
         "expect": "fail",
-        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --work {RUN}/bench_c199/mutant_recut --only mutant_recut; rc=$?; cat {RUN}/bench_c199/mutant_recut/mutant_recut/run.log 2>/dev/null; exit $rc",
+        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --work {RUN}/bench_c199/mutant_recut --only mutant_recut; rc=$?; cat {RUN}/bench_c199/mutant_recut/mutant_recut/run.log 2>/dev/null; exit $rc",
         "fail_regex": "%Fatal: .*DIFF TXN lane=",
         "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/fail_witness/mutant_recut.log",
         "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs",
@@ -52,7 +52,7 @@
       {
         "name": "bfcol_txn_mutant_pinlat",
         "expect": "fail",
-        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant mutant_pinlat=PINLAT_MUTANT_B0 --work {RUN}/bench_c199/mutant_pinlat --only mutant_pinlat; rc=$?; cat {RUN}/bench_c199/mutant_pinlat/mutant_pinlat/run.log 2>/dev/null; exit $rc",
+        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant mutant_pinlat=PINLAT_MUTANT_B0 --work {RUN}/bench_c199/mutant_pinlat --only mutant_pinlat; rc=$?; cat {RUN}/bench_c199/mutant_pinlat/mutant_pinlat/run.log 2>/dev/null; exit $rc",
         "fail_regex": "%Fatal: .*DIFF TXN lane=",
         "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/fail_witness/mutant_pinlat.log",
         "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs",
@@ -62,7 +62,7 @@
       {
         "name": "bfcol_txn_mutant_tcg",
         "expect": "fail",
-        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant mutant_tcg=TCG_MUTANT_EN --work {RUN}/bench_c199/mutant_tcg --only mutant_tcg; rc=$?; cat {RUN}/bench_c199/mutant_tcg/mutant_tcg/run.log 2>/dev/null; exit $rc",
+        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant mutant_tcg=TCG_MUTANT_EN --work {RUN}/bench_c199/mutant_tcg --only mutant_tcg; rc=$?; cat {RUN}/bench_c199/mutant_tcg/mutant_tcg/run.log 2>/dev/null; exit $rc",
         "fail_regex": "%Fatal: .*DIFF TXN lane=",
         "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/fail_witness/mutant_tcg.log",
         "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs",
@@ -72,7 +72,7 @@
       {
         "name": "bfcol_txn_mutant_xst",
         "expect": "fail",
-        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant mutant_xst=XST_MUTANT_TAG --work {RUN}/bench_c199/mutant_xst --only mutant_xst; rc=$?; cat {RUN}/bench_c199/mutant_xst/mutant_xst/run.log 2>/dev/null; exit $rc",
+        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant mutant_xst=XST_MUTANT_TAG --work {RUN}/bench_c199/mutant_xst --only mutant_xst; rc=$?; cat {RUN}/bench_c199/mutant_xst/mutant_xst/run.log 2>/dev/null; exit $rc",
         "fail_regex": "%Fatal: .*DIFF TXN lane=",
         "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/fail_witness/mutant_xst.log",
         "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs",
@@ -82,7 +82,7 @@
       {
         "name": "bfcol_txn_mutant_fxst",
         "expect": "fail",
-        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant mutant_fxst=FXST_MUTANT_TAG --work {RUN}/bench_c199/mutant_fxst --only mutant_fxst; rc=$?; cat {RUN}/bench_c199/mutant_fxst/mutant_fxst/run.log 2>/dev/null; exit $rc",
+        "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant mutant_fxst=FXST_MUTANT_TAG --work {RUN}/bench_c199/mutant_fxst --only mutant_fxst; rc=$?; cat {RUN}/bench_c199/mutant_fxst/mutant_fxst/run.log 2>/dev/null; exit $rc",
         "fail_regex": "%Fatal: .*DIFF TXN lane=",
         "fail_witness": "results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/fail_witness/mutant_fxst.log",
         "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs",
@@ -157,7 +157,7 @@
     "capture_ps": 206.7,
     "fix": "Dedicated boundary register placement on all four faces, including PQ south output band and east input capture band."
   },
-  "notes": "Gate2 PASS (CK_SS_MEAN 594); coordinator review required before submit. Source comparison proves ot_v41_bf_col and every v41rom/hdc/proto dependency identical to the closed commit. Only unused parent/front source files differ (native parent CPIN addition is outside this leaf). Closed exact full HCOL bench positive + six DIFF mutants therefore reused for identical leaf. Bench re-run 10-19 on Verilator 5.050 (bench_5050/): positive PASS + six DIFF mutant witnesses; stages.bench now runs it in the loop.",
+  "notes": "Gate2 PASS (CK_SS_MEAN 594); coordinator review required before submit. Source comparison proves ot_v41_bf_col and every v41rom/hdc/proto dependency identical to the closed commit. Only unused parent/front source files differ (native parent CPIN addition is outside this leaf). Closed exact full HCOL bench positive + six DIFF mutants therefore reused for identical leaf. Bench re-run 10-19 on Verilator 5.050 (bench_5050/): positive PASS + six DIFF mutant witnesses; stages.bench now runs it in the loop. | 10-19 C199-BENCH: daemon bench BUILD FAILED on a relative --prep path (verilator passes prep/dsrom_actual_element_numerical_rom.cpp relative; make in obj_bfcolumn cannot find it); --prep now {SRC}-absolute, all bench cmds exit $rc. RTL/geometry unchanged.",
   "sources": [
     "tools/s81/bf_txn_bench.py",
     "results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep/prepared.json",
