@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qfd_d2d_static_r9j",
+ "reviewer": "coordinator (2026-10-19 ~04:00)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T04:00:00-07:00",
+ "gate_commit": "7c8416786",
+ "checklist": {
+  "lattice": "ACCEPT: 4 SRAM 2x2 at x 45.8/257.9, off the 43.2 lattice but unchanged from the closed r8c view (snap at the next re-kit)",
+  "std_cell_band": "PASS: std cells in the channels, fill 44.5%",
+  "pin_spread": "ACCEPT: N 59% (5.98/um) and S 50% of face, W mid; follows the die pin plan",
+  "clock_entry": "PASS: N-face centre in the SRAM column channel; spread TT 52.3 / FF 47.3 (<=80, r8c 91.7/84.0)",
+  "shape": "PASS: 475.2x280.8 (1.69:1), GRT ovf 0"
+ },
+ "notes": "HF-2 N-face pin group + centred clock (Q.STA.D2D.1, critical).",
+ "geometry_sha256": "70fe988ef59ffd769c7d2071e55eb1cc562558d01db5f41aaf5d356238d8a834"
+}
