@@ -120,7 +120,11 @@
     "land_plan.json p4l: 31 of 125 multi-lane bundles have unequal E"
    ],
    "note": "fix: per bundle K_l = E_l + (max_bundle age - age_l) (age = ceil(N/2) + E + 1; equal N per bundle -> K = max E), re-check the landing window [K-D+1, K-1] at TT and FF per lane (long D8 tile where it does not fit), keep the gate calendar (it depends on N, not K); then dv_slice_replay g1_3S_replay must PASS 32/32 and shift1 FAIL",
-   "status": "OPEN"
+   "status": "FIXED in the generator (claude/s81-lbgap-g8-1018 bd3ed009b, 10-18): dv_land_pilot.py agebundle -> landing/p4l3 (K_l = E_l + max bundle age - age_l, window re-checked at K), dv_bind reads the plan K; strict bind PASS (results/arch/s81_dv_1016/bind_p4l3_g8, 44 .k straps vs g123). 16 of 17 unequal-age die bundles equalised. cut_3S replay 32/32 + shift1/hops witnesses RUNNING (fleet, Verilator 5.050). RESIDUAL: hf_7N (N 58/59/59: l0 at K29 leaves the D8 window at FF) and 24 x_frame bundles with N 6/7 lanes (crs4 D4: K cannot equalise) -> plan: equal N per bundle",
+   "residual": {
+    "hf_7N": "l0 N 58 vs 59: add one half-cycle station on l0 (plan) or a D16 tile",
+    "x_frame": "24 frames: lane N 6/6/6/7 at one E -> ages differ by 1; crs4 D4 window does not fit K+1; equal N per frame bundle in dv_plan (or a D8 crs4) -- frame owner; frame x lanes also lack the G1 hop-0 gate"
+   }
   }
  ]
 }
