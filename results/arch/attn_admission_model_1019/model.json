@@ -1,0 +1,59 @@
+{
+  "verdict": "ANALYTICAL_HOLD_NOT_SOURCE_READY",
+  "audit_commit": "548178937",
+  "source_sha256": "ac6af21580867b0e1224c7cf7e6476309d5b036cd2ba558ad5014737fbfeddde",
+  "graph_sha256": "c25873f257ee623bf55a36f495d817d0ecc39d5c102aa39d207412ab48626bf7",
+  "cuts": [
+    "c2168/Y",
+    "c2343/Y"
+  ],
+  "critical_path_segment_surrogates_ps": [
+    515.38,
+    401.94,
+    578.8699999999999
+  ],
+  "critical_path_segment_surrogates_are_closure": false,
+  "L": 2,
+  "transport": {
+    "metadata_bits": 216,
+    "q_bundle_bits": 518,
+    "exported_prg_bits": 537,
+    "transport_ff": 2544,
+    "plain_ff": 2536,
+    "resettable_valid_ff": 8,
+    "transport_clock_pins": 2544,
+    "transport_area_floor_um2": 742.53024,
+    "extra_reset_copies": null,
+    "predicate_ff": null,
+    "combinational_area": null,
+    "total_ff": null,
+    "total_area": null,
+    "clock_capacitance": null,
+    "reset_capacitance": null,
+    "dynamic_power": null
+  },
+  "schedule": {
+    "per_request_added_edges": 2,
+    "per_request_added_ns": 1.6666666666666667,
+    "serial_token_added_edges": "L * exact number of dependent ATTN admissions",
+    "scenario_32_admissions_added_edges": 64,
+    "scenario_32_admissions_added_ns": 53.333333333333336,
+    "scenario_257280_baseline_rate_loss_percent": 0.02486943546381497,
+    "scenario_4_users_added_work_edges": 256,
+    "actual_mu_wall_delta": null,
+    "no_overlap_service_initiation_interval": "old interval + L",
+    "actual_throughput": null
+  },
+  "unresolved": [
+    "full source predicate cutset",
+    "old-state feedback ownership",
+    "all side-cone timing",
+    "ready snapshot versus live readiness",
+    "continuous fault veto and exact fault observation contract",
+    "CAL_PIPE cohort and boot capability",
+    "compiler actual request count and Q/result/TX/STATUS/health calendar",
+    "native FF and reset clockcap and driver copies",
+    "521 unused inputs and 107 constant output ABI",
+    "PG contacts and clock matching"
+  ]
+}
