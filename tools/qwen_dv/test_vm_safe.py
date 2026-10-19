@@ -92,7 +92,42 @@ def prepare(work):
             check=(n>=8);tick();
         end
         if(checks!=6000) $fatal(1,"wrong comparison count");
-        $display("VM_SAFE_EQUIVALENCE PASS6000 exact-edge allports randomslots/priority/fault/reset");
+        // Independently reset the sticky flag before each bounds/collision
+        // class, so an earlier random fault cannot hide a missed predicate.
+        for(n=0;n<21;n=n+1) begin
+            a_re=0;b_re=0;c_re=0;cr_re=0;bs_re=0;bt_re=0;p_re=0;
+            a_addr=0;b_addr=0;c_addr=0;cr_addr=0;bs_addr=0;
+            w1_we=0;w1_addr=0;su_we=0;su_waddr=0;w16_we=0;w16_addr=0;
+            tw_we=0;tw_kind=0;tw_addr=0;
+            rst_n=0;tick();rst_n=1;
+            case(n)
+              0: begin end
+              1: begin a_re=1;a_addr[14]=1;end
+              2: a_re=2;
+              3: begin b_re=255;b_addr[24+4]=1;end
+              4: begin c_re=255;c_addr[24*7+3]=1;end
+              5: begin cr_re=1;cr_addr[18]=1;end
+              6: cr_re=2;
+              7: begin w1_we=1;w1_addr[14]=1;end
+              8: su_we=2;
+              9: begin su_we=3;su_waddr[24+4]=1;end
+             10: begin su_we=1;su_waddr[14]=1;end
+             11: begin w16_we=1;w16_addr=1;end
+             12: begin w1_we=1;su_we=1;end
+             13: begin w16_we=1;su_we=1;end
+             14: tw_we=1;
+             15: begin tw_we=1;tw_kind=2;tw_addr=1;end
+             16: begin tw_we=1;tw_kind=3;tw_addr=256;end
+             17: begin bs_re=1;bs_addr=512;end
+             18: su_we=3; // repeated slots retain highest-lane priority, legal
+             19: begin w1_we=1;w1_addr=8;su_we=1;end
+             20: w16_we=1;
+            endcase
+            tick();
+            if(fault_safe !== ((n!=0)&&(n!=18)&&(n!=19)&&(n!=20)))
+                $fatal(1,"VM_SAFE_FAULT_CLASS case%0d",n);
+        end
+        $display("VM_SAFE_EQUIVALENCE PASS6000 exact-edge allports plus21 isolatedfaultclasses");
         $finish;
     end
     endmodule
