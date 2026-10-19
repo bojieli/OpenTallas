@@ -1,0 +1,23 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: ot-epyc6       admits   530 GB (avail 484, growth 113, headroom 0, waiters 0/0 GB) load 27/128 running 14 disk 6039 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-200412-1792429292 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+COLL_CYCLE_ERR cycle=37 side=0 ready=1/1 ov=1/1 fv=1/1 rv=1/1
+COLL_CYCLE_ERR cycle=37 side=1 ready=1/1 ov=1/1 fv=1/1 rv=1/1
+COLL_CYCLE_ERR cycle=38 side=0 ready=1/1 ov=1/1 fv=1/1 rv=1/0
+COLL_CYCLE_ERR cycle=38 side=1 ready=1/1 ov=1/1 fv=1/1 rv=1/0
+COLL_CYCLE_ERR cycle=39 side=0 ready=1/1 ov=1/1 fv=1/1 rv=1/0
+COLL_CYCLE_ERR cycle=39 side=1 ready=1/1 ov=1/1 fv=1/1 rv=1/0
+COLL_CYCLE_ERR cycle=40 side=0 ready=1/1 ov=1/1 fv=1/1 rv=1/0
+COLL_CYCLES FAIL errors=23839 accepts=5199 returns=4862 refills=136 rb_hits=0 fifo_hits=300 MUT=1
+- rtl/dsrom_sys/s81_ph/test/tb_coll_safe2_cycles.sv:81: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.238 s; speed 50.328 us/s
+- Verilator: cpu 0.238 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-200412-1792429292): exit 1

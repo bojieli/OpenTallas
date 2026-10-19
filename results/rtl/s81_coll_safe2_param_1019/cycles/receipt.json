@@ -1,0 +1,39 @@
+{
+  "scope": "pre-oldread-helper integration exact behavior only; not SAFE or physical qualification",
+  "source_commit": "2822bc004",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/test/tb_coll_safe2_cycles.sv": "09b9e6a24b660a65924e64102be4709d083e25fafb267752a63bf64dd9e784c2",
+    "rtl/dsrom_sys/s81_ph/test/tb_coll_safe2_boundary.sv": "34def50c6c778bc1f08c4b21f69bd2250a6e44848cdec4ae2639c640a3abd1dc",
+    "tools/xdie_s81/coll_safe2_cycles.sh": "8b7aac34ba9ba7410836759f53ff1e73484bcd3216b9cb1942076ec958a15070",
+    "tools/xdie_s81/coll_safe2_boundary.sh": "0ea695f1723f187880717653fd0da62592474cf708e83b10f7115044ecea5f1e",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv": "93e76d1463224171114cc244caccd866ce012416fc6083db453c06e380c94086",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
+    "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe2.sv": "51af998729dc2825ec8b779113d2f75ed32658547d8e592738bfec0d95b06be4"
+  },
+  "positive": {
+    "comparisons": 23996,
+    "accepts": 5210,
+    "returns": 4873,
+    "refills": 138,
+    "fifo_previous_write_collisions": 1295,
+    "timeouts": 90,
+    "reset_epochs": 2
+  },
+  "mutants": {
+    "wrong_next_sequence_errors": 23839,
+    "missing_write_forward_errors": 4992,
+    "wrong_registered_timeout_errors": 22516
+  },
+  "full_lane_boundary": {
+    "comparisons": 27994,
+    "sent": 13700,
+    "received": 13585,
+    "reset_epochs": 2,
+    "tf_consumers": 0
+  },
+  "limitations": [
+    "Replay RAW hits zero in PIPE2 endpoint miter; standalone old-read collision proof required",
+    "Original WREG implementation used in these receipts; new helper integration requires replay",
+    "Complete critical fanout/reset and mapped geometry not yet qualified"
+  ]
+}

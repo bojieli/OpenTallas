@@ -1,0 +1,5 @@
+%Error: rtl/dsrom_sys/s81_ph/test/tb_coll_safe2_cycles.sv:9:10: syntax error, unexpected '.'
+    9 |  always #.5 clk=~clk;
+      |          ^
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Exiting due to 1 error(s)
