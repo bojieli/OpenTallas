@@ -69,7 +69,7 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
   else if(physical_start)physical_core_epoch<=ledger.active[physical_user];
   physical_epoch_out<=physical_core_epoch;
  end
- wire epoch_to_arm=(MUT==10)?physical_epoch_out:face_epoch;
+ wire[15:0]epoch_to_arm=(MUT==10)?physical_epoch_out:face_epoch;
  wire validation_start,arm_fault;wire[17:0]validation_token;wire[15:0]validation_epoch;
  qfd_embedding_validation_arm #(.ENABLE(1)) arm(.ck(ck),.rst_n(rst_n),.core_start(es),.core_user(eu),.core_token(et),.registered_epoch(epoch_to_arm),.native_read(e_cre||e_sre),.release_slot(release_row),.validation_start(validation_start),.validation_token(validation_token),.validation_epoch(validation_epoch),.fault(arm_fault));
  qfd_embedding_word_provider prov(.ck(ck),.rst_n(rst_n),.word_v(pw_v),.word_data(pw_data),.word_token(ETOK),.word_index(pw_idx),.word_scale(pw_scale),.word_epoch(re),.expected_word_slot(cyc>=1402&&cyc<1467),.expected_token(ledger.resident_token),.expected_word(pw_idx),.expected_scale(pw_scale),.expected_epoch(re),.fill_begin(fetch),.fill_token(mt),.fill_epoch(fe),.core_start(validation_start),.core_token(validation_token),.core_epoch(validation_epoch),.embed_code_re(e_cre),.embed_code_addr(e_caddr),.embed_code_q(e_cq),.embed_scale_re(e_sre),.embed_scale_addr(e_saddr),.embed_scale_q(e_sq),.fault(p_fault));
