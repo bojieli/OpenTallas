@@ -26,6 +26,12 @@
 //   exactly the historical output +5 edges. Calendar: tools/hbm_idx_static_calendar.py --link-pipe 5.
 // One clock root: clk clocks every pin flop, core flop and all 8 SRAMs (clk_mem ports kept, unloaded; same PLL
 // phase 0, as idx_q 1a7a712ce / idx_sel 6c9f86511). Datapath registers are not reset; control is.
+// AD-HBM-IDXK r2 (10-18 22:50, gate g4p FAIL classified: post-CTS reg->reg -446 ps = ingest_r -> s1_pm, a 1-flop
+// broadcast into all 64 lane masks (~700 ps of buffer chain), and total[5:0] (~7k loads: every rotate mux)):
+//   * the S1 lane mask is the lane valid bit only; ingest_v rides s1_v..s4_v. Exact: every use of a beat's counts or
+//     records (total, faults, ring W, bank writes) is already qualified by s3_v/s4_v.
+//   * the rotate selects come from 16 kept region copies of total[5:0] (trep, each 4 slots x 36 b per shift stage),
+//     loaded from the same next-state as total. No function or latency change (outputs still historical +5).
 // MUT (bench only): 1 record halves swapped (emit side), 2 flit sequence header, 3 carry slots from the beat instead of W,
 //                   4 emit read tap one edge early (latency mutant).
 // ---------------------------------------------------------------------------------------------------------------
@@ -44,16 +50,21 @@ module ot_hbm_idx_link_p_merge #(parameter integer NA=8,parameter integer NB=8,p
  assign y=st[CW*W+:W]|{{(NB*RW){1'b0}},a};
 endmodule
 
-module ot_hbm_idx_link_p_rot #(parameter integer N=64,parameter integer RW=36,parameter integer SW=6)(
- input wire[N*RW-1:0]x,input wire[SW-1:0]s,output wire[N*RW-1:0]y
+module ot_hbm_idx_link_p_rot #(parameter integer N=64,parameter integer RW=36,parameter integer SW=6,parameter integer NC=1)(
+ input wire[N*RW-1:0]x,input wire[NC*SW-1:0]s,output wire[N*RW-1:0]y
 );
+ // rotate up by s slots: y slot p = x slot (p-s) mod N. Stage i output slot p uses select copy p*NC/N (NC identical
+ // region copies of s, so each select bit drives N/NC slots x RW muxes per stage).
  localparam integer W=N*RW;
  wire[(SW+1)*W-1:0]st;
  assign st[0+:W]=x;
- genvar i;
+ genvar i,p;
  for(i=0;i<SW;i=i+1)begin:rt
-  localparam integer K=(1<<i)*RW;
-  assign st[(i+1)*W+:W]=s[i]?{st[i*W+:W-K],st[i*W+W-K+:K]}:st[i*W+:W];
+  for(p=0;p<N;p=p+1)begin:sl
+   localparam integer C=(p*NC)/N;
+   localparam integer PS=(p+N-((1<<i)%N))%N;
+   assign st[(i+1)*W+p*RW+:RW]=s[C*SW+i]?st[i*W+PS*RW+:RW]:st[i*W+p*RW+:RW];
+  end
  end
  assign y=st[SW*W+:W];
 endmodule
@@ -85,7 +96,7 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0)(
  // ---------------- S1
  wire[63:0]m;wire[64*RW-1:0]pay;
  for(j=0;j<64;j=j+1)begin:ln
-  assign m[j]=ingest_v&selected_line[j*37];
+  assign m[j]=selected_line[j*37];             // r2: lane valid only (ingest_v rides s1_v; see header)
   assign pay[j*RW+:RW]={selected_line[j*37+17+:20],selected_line[j*37+1+:16]};
  end
  wire[8*8*RW-1:0]gc;wire[8*4-1:0]gcnt;
@@ -128,14 +139,16 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0)(
  reg s3_v;reg[64*RW-1:0]s3_c;reg[6:0]s3_n;
  // ---------------- S4 (loop)
  reg[9:0]total;reg fault_c;
+ wire[9:0]total_nx=s3_v?(total+{3'd0,s3_n}):(clr3?10'd0:total);
+ (* keep *) reg[16*6-1:0]trep;                 // r2: 16 region copies of total[5:0] for the rotate selects
  wire[2:0]fill=total[2:0];
  wire[6:0]f0=total[9:3];
  wire[6:0]nsum={4'd0,fill}+s3_n;
  wire[64*RW-1:0]rot;
- ot_hbm_idx_link_p_rot #(.N(64),.RW(RW),.SW(6)) rr(.x(s3_c),.s(total[5:0]),.y(rot));
+ ot_hbm_idx_link_p_rot #(.N(64),.RW(RW),.SW(6),.NC(16)) rr(.x(s3_c),.s(trep),.y(rot));
  wire[63:0]mk0=(s3_n[6])?{64{1'b1}}:((64'd1<<s3_n[5:0])-64'd1);
  wire[63:0]mk;
- ot_hbm_idx_link_p_rot #(.N(64),.RW(1),.SW(6)) rm(.x(mk0),.s(total[5:0]),.y(mk));
+ ot_hbm_idx_link_p_rot #(.N(64),.RW(1),.SW(6),.NC(1)) rm(.x(mk0),.s(trep[0+:6]),.y(mk));
  reg s4_v;reg[64*RW-1:0]s4_r;reg[63:0]s4_m;reg[2:0]s4_fill;reg[3:0]s4_nf;reg[6:0]s4_f0;
  // ---------------- S5 (write formation) + ring register W
  reg[64*RW-1:0]wr;
@@ -153,12 +166,11 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0)(
  reg[7:0]we_r;reg[47:0]wa_r;reg[8*288-1:0]wd_r;
  // ---------------- registers
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin s1_v<=0;s2_v<=0;s3_v<=0;s4_v<=0;we_r<=0;total<=0;fault_c<=0;end
+  if(!rst_n)begin s1_v<=0;s2_v<=0;s3_v<=0;s4_v<=0;we_r<=0;total<=0;trep<=0;fault_c<=0;end
   else begin
    s1_v<=ingest_v;s2_v<=s1_v;s3_v<=s2_v;s4_v<=s3_v;we_r<=we_c;
-   if(clr3)total<=0;
+   total<=total_nx;trep<={16{total_nx[5:0]}};
    if(s3_v)begin
-    total<=total+{3'd0,s3_n};
     if({1'b0,total}+{4'd0,s3_n}>11'd512)fault_c<=1;
    end
    if(em3&&rk3<gb3)fault_c<=1;
