@@ -58,7 +58,9 @@ def audit(netlist, lanes, roots):
         _, source = instances[first]
         sink_master, sink = instances[row['landing']]
         g, r0 = release(source['en']), release(sink['rs'])
-        r0 += safe_land_reset_cycles(row, sink_master)
+        reset_cycles = safe_land_reset_cycles(row, sink_master)
+        r0 += reset_cycles
+        g += int(reset_cycles != 0)
         g += HOP0_EN_REG              # hop-0 en registered before the gate (landh0 QK-LANDEN, rlyh0 RLYH0-EN): epoch G + 1
         k = (int(row['E']) + g - r0) % 8
         rows.append(dict(bid=row['bid'], landing=row['landing'], E=row['E'], E_sta=row['E_sta'],
@@ -128,6 +130,7 @@ def finalize_model(model, root_release=None):
         rr, r0 = trace((row['landing'], 'rs'))
         reset_cycles = safe_land_reset_cycles(row, masters.get(row['landing']))
         r0 += reset_cycles
+        g += int(reset_cycles != 0)
         if gr != rr:
             raise ValueError(f"{row['bid']}: undeclared reset-root relationship {gr} vs {rr}; "
                              'OT_SPLIT_RESET_RELEASE must declare both fixed release edges')
@@ -144,7 +147,7 @@ def finalize_model(model, root_release=None):
         row.update(K=k, cal=g-r0, safe_land_reset_cycles=reset_cycles, G_reset_tree=g, R0_reset_tree=r0,
                    reset_calendar_root=gr, K_basis='post-reset-tree: (total E + G - R0) mod 8'
                    + ' with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)'
-                   + ('; R0 + 2 (safe300 receiver reset landing)' if row.get('safe_land_reset_cycles') else ''))
+                   + ('; G + 1 write epoch, R0 + 2 receiver reset (safe300 landing)' if row.get('safe_land_reset_cycles') else ''))
     model['buses'] = buses
     if proposals:
         model['fwd_lanes']['reset_calendar_finalized'] = True

@@ -112,7 +112,7 @@ HOP0_EN_REG = 1
 def hop0_en_reg(row):
     """release edges the hop-0 en register adds to the lane's write epoch: 1 for every forwarded data lane (n >= 1:
     landh0 or rlyh0 registers en on the source root before its clock gate), else 0"""
-    return HOP0_EN_REG if int(row.get('n') or 0) >= 1 else 0
+    return (HOP0_EN_REG + int(safe_land_reset_cycles(row) != 0)) if int(row.get('n') or 0) >= 1 else 0
 
 
 def safe_land_reset_cycles(row, master=None):
@@ -171,7 +171,7 @@ def equalize(rows, D=4, cal=None, h0=None):
         r['K'] = (int(r['E']) + r['cal']) % 8
         r['K_basis'] = ('Q-COLLCAL: K = (total E + G - R0) mod 8' + (' (land plan calendar)' if r['bid'] in cal else ' (G = R0)')
                         + (' + 1 (hop-0 en registered on the source root: QK-LANDEN landh0 / RLYH0-EN rlyh0)' if hop0_en_reg(r) else '')
-                        + (' - 2 (safe300 receiver reset landing)' if safe_land_reset_cycles(r) else ''))
+                        + (' + 1 write epoch - 2 receiver reset (safe300 landing)' if safe_land_reset_cycles(r) else ''))
     if bad:
         raise ValueError('bus groups: ' + '; '.join(bad))
     return rec

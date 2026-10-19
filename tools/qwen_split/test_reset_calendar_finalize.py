@@ -51,9 +51,9 @@ print('RESET_FINALIZE PASS: exact taps/straps, unknown-root refusal, idempotence
 ms=model();ms['insts'].append(SimpleNamespace(name='last',master='qfd_landh_300_EN_65x60'))
 finalize_model(ms,{'external.s':16,'external.r':20})
 rs=ms['fwd_lanes']['lanes'][0]
-assert (rs['G_reset_tree'],rs['R0_reset_tree'],rs['K'],rs['cal'],rs['safe_land_reset_cycles'])==(19,32,5,-13,2),rs
+assert (rs['G_reset_tree'],rs['R0_reset_tree'],rs['K'],rs['cal'],rs['safe_land_reset_cycles'])==(20,32,6,-12,2),rs
 finalize_model(ms,{'external.s':16,'external.r':20})
-assert ms['fwd_lanes']['lanes'][0]['K']==5
+assert ms['fwd_lanes']['lanes'][0]['K']==6
 assert LG.safe_land_reset_cycles({'class_master':'qfd_landh0_300_NS_65x60'})==2
 assert LG.safe_land_reset_cycles({'class_master':'qfd_landh0_600_NS_104x60'})==0
 try: LG.safe_land_reset_cycles({'safe_land_reset_cycles':0},'qfd_landh_300_EN_65x60')
@@ -61,5 +61,5 @@ except ValueError: pass
 else: raise AssertionError('safe master silently accepted legacy receiver epoch')
 srows=[dict(bid='a',n=1,E=3),dict(bid='b',n=3,E=3,class_master='qfd_landh_300_EN_65x60')]
 LG.equalize(srows,4,{})
-assert [(r['K'],r['cal']) for r in srows]==[(4,1),(2,7)],srows
-print('SAFE300_CALENDAR PASS: bound-master reset2, Kminus2, legacy unchanged, idempotence')
+assert [(r['K'],r['cal']) for r in srows]==[(4,1),(3,0)],srows
+print('SAFE300_CALENDAR PASS: bound-master reset2, Kminus1, legacy unchanged, idempotence')

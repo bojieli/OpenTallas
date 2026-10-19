@@ -205,7 +205,7 @@ def audit_rows(rows, bmap, source=''):
         cyc = sorted({v['cycles'] for v in mem.values()})
         # QK-LANDEN / RLYH0-EN 10-19: every forwarded member (hop-0 en registered) carries K + 1 for the SAME arrival edge:
         # compare the source-epoch K (K - lane_groups.hop0_en_reg)
-        ks = sorted({(v['K'] - LG.hop0_en_reg(v)) % 8 if v['K'] is not None else None
+        ks = sorted({(v['K'] - LG.hop0_en_reg(v) + LG.safe_land_reset_cycles(v)) % 8 if v['K'] is not None else None
                      for v in mem.values() if v['kind'] == 'fwd'}, key=str)
         ok = len(cyc) == 1 and len(ks) <= 1
         out[b] = dict(cycles=cyc, consistent=ok, members=mem)
@@ -276,7 +276,7 @@ def rows_from_netlist(die_v, lanes=None, bundles=None):
                 E, basis = int(r['E']), f'E from {Path(lanes).name}'
             elif L['K'] is not None:
                 # QK-LANDEN / RLYH0-EN 10-19: every forwarded landing is strapped K = E + 1 (hop-0 en registered)
-                E = (int(L['K']) - LG.hop0_en_reg(L)) % 8
+                E = (int(L['K']) - LG.hop0_en_reg(L) + LG.safe_land_reset_cycles(L)) % 8
                 basis = 'E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8; K - 1: hop-0 en registered)'
             else:
                 problems.append(f'{bid}: landing K straps not on tie cells'); continue

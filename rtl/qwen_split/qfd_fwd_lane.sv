@@ -109,24 +109,27 @@ endmodule
 // Ring cells are a fixed four-slot buffer, with constant slot addresses; no indexed flop memory.
 (* keep_hierarchy = "yes" *)
 module ot_qfd_land_region #(parameter integer W = 24) (
-    input wire wck, we, ck, rs, warm_next,
+    input wire wck, we, ck, rs, rs_source_q, warm_next,
     input wire [W-1:0] i,
     input wire [3:0] read_seed, read_next,
-    input wire [3:0] vld,
     output reg [W-1:0] o
 );
     // Kept region reset copies: two registered release stages, asynchronous assert.
-    (* keep = "true", dont_touch = "true" *) reg rs0, rs1, warm_q;
+    (* keep = "true", dont_touch = "true" *) reg rs1, warm_q, we_q;
     always @(posedge ck or negedge rs)
-        if (!rs) begin rs0 <= 1'b0; rs1 <= 1'b0; end
-        else begin rs0 <= 1'b1; rs1 <= rs0; end
+        if (!rs) rs1 <= 1'b0;
+        else rs1 <= rs_source_q;
     always @(posedge ck or negedge rs1)
         if (!rs1) warm_q <= 1'b0; else warm_q <= warm_next;
+    // One write-epoch capture per kept region bounds reset/enable fanout.
+    always @(posedge wck or negedge we)
+        if (!we) we_q <= 1'b0; else we_q <= 1'b1;
+    (* keep = "true", dont_touch = "true" *) reg [3:0] vld;
     (* keep = "true", dont_touch = "true" *) reg [3:0] ws_q;
     wire [3:0] ws = {ws_q[3:1], ~ws_q[0]};
     (* keep = "true", dont_touch = "true" *) reg [3:0] rdsel;
-    always @(posedge wck or negedge we)
-        if (!we) ws_q <= 4'b0000;
+    always @(posedge wck or negedge we_q)
+        if (!we_q) ws_q <= 4'b0000;
 `ifdef OT_QFD_LAND_MUT_WSEL
         else ws_q <= {ws[0], ws[3:2], ~ws[1]};
 `else
@@ -140,6 +143,8 @@ module ot_qfd_land_region #(parameter integer W = 24) (
 `else
         rdsel <= rs1 ? read_next : read_seed;
 `endif
+    always @(posedge wck or negedge we_q)
+        if (!we_q) vld <= 4'b0000; else vld <= vld | ws;
     reg [W-1:0] b0, b1, b2, b3;
     always @(posedge wck) begin
         if (ws[0]) b0 <= i;
@@ -171,7 +176,7 @@ module ot_qfd_land #(
     output reg          fault
 );
     // Receiver reset epoch is exactly two root edges later than the raw rs input.
-    // Compiler strap: K_safe = K_legacy - 2 (mod8); steady-state capture edges unchanged.
+    // Compiler strap: K_safe = K_legacy - 1 (mod8); steady-state capture edges unchanged.
     (* keep = "true", dont_touch = "true" *) reg rs0, rs1;
     always @(posedge ck or negedge rs)
         if (!rs) begin rs0 <= 1'b0; rs1 <= 1'b0; end
@@ -208,30 +213,33 @@ module ot_qfd_land #(
     wire [AW:0] next_exp = rc + 1'b1 - k_q;
     wire [3:0] read_seed = 4'b0001 << seed_exp[1:0];
     wire [3:0] read_next = 4'b0001 << next_exp[1:0];
-    localparam integer REGION_BITS = 24;
+    localparam integer REGION_BITS = 16;
     genvar c;
     generate for (c = 0; c < (W + REGION_BITS - 1) / REGION_BITS; c = c + 1) begin : g_region
         localparam integer LO = c * REGION_BITS;
         localparam integer N = (W - LO < REGION_BITS) ? W - LO : REGION_BITS;
         ot_qfd_land_region #(.W(N)) u_region (
-            .wck(wck), .we(we), .ck(ck), .rs(rs), .warm_next(warm_next), .i(i[LO +: N]),
-            .read_seed(read_seed), .read_next(read_next), .vld(vld), .o(ring_o[LO +: N]));
+            .wck(wck), .we(we), .ck(ck), .rs(rs), .rs_source_q(rs0), .warm_next(warm_next), .i(i[LO +: N]),
+            .read_seed(read_seed), .read_next(read_next), .o(ring_o[LO +: N]));
     end endgenerate
+    (* keep = "true", dont_touch = "true" *) reg meta_we;
+    always @(posedge wck or negedge we)
+        if (!we) meta_we <= 1'b0; else meta_we <= 1'b1;
     reg [AW:0]  epo  [0:D-1];
     wire [D-1:0] vld;
     reg [AW:0]  wc, rc;
     reg         warm;
     wire warm_next = warm || (rc == k_q - 1'b1);
     // ------------------------------------------------------------------ write side (wck), cleared by the lane epoch
-    always @(posedge wck or negedge we)
-        if (!we) wc <= {(AW + 1){1'b0}};
+    always @(posedge wck or negedge meta_we)
+        if (!meta_we) wc <= {(AW + 1){1'b0}};
         else     wc <= wc + 1'b1;
     genvar s;
     generate for (s = 0; s < D; s = s + 1) begin : g_slot
         always @(posedge wck) if (wc[AW-1:0] == s) epo[s] <= wc;
         reg v;                                                     // slot written since the lane epoch began
-        always @(posedge wck or negedge we)
-            if (!we) v <= 1'b0;
+        always @(posedge wck or negedge meta_we)
+            if (!meta_we) v <= 1'b0;
 `ifdef OT_QFD_LAND_MUT_VLD
             else v <= 1'b1;                                        // bench mutant: every slot valid at once
 `else

@@ -59,7 +59,7 @@ endmodule
 // source release edge G, receiver release edge R0, extra clock lag XL on the last hop
 module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.2, XL = 0.0, DOFF = 2.0,
               parameter integer G = 10, R0 = 12, LADD = 0, KFROM = -1,
-              parameter integer HREG = 1, RREG = 2) (       // hop-0 en registered on the source root (+1 edge): landh0 AND rlyh0
+              parameter integer HREG = 2, RREG = 2) (       // hop-0 en registered on the source root (+1 edge): landh0 AND rlyh0
     input wire cks, input wire ckd, input wire [31:0] es, input wire [31:0] ed, output integer err, output integer chk, output wire flt);
     localparam real T = 10.0;
     reg  [W-1:0] src = 0;
