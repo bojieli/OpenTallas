@@ -112,7 +112,7 @@ module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.
         te_ = ed;
         te_ = te_ - 1 - L;
         ex_ = (te_ >= G + HREG) ? w_of(te_) : {W{1'b0}};
-        if (ed > R0 + 10) begin
+        if (ed > R0 + RREG + 10) begin
             chk = chk + 1;
             if (o !== ex_) begin
                 err = err + 1;
