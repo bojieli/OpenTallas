@@ -13,7 +13,7 @@ F="$R/rtl/lib/ot_async_fifo.sv $R/rtl/lib/ot_reset_sync.sv $R/rtl/lib/ot_rst_rel
    $R/rtl/hdc/ingest/ot_rom_host_ingest.sv $R/physical/rom_host_ingest/rtl/dsfd_host.sv
    $R/rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv
    $R/rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv
-   $R/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv $U/ot_dsdv_fixed_issue.sv $U/ot_dsdv_vstop.sv $U/dsdv_sh_sd.sv $U/dsdv_seq_host.sv
+   $R/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv $U/ot_dsdv_fixed_issue.sv $U/ot_dsdv_walk_issue.sv $U/ot_dsdv_vstop.sv $U/dsdv_sh_sd.sv $U/dsdv_seq_host.sv
    $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
 build() { l=$1; shift
   verilator --binary --timing -j 16 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT +define+DSFD_HOST_C_STATIC \
@@ -39,7 +39,7 @@ done
 grep '^SEQHOST COLLIDE' "$O/run_collide.log"; grep -q 'PASS (fault raised)' "$O/run_collide.log" || { echo "collision not faulted"; bad=1; }
 "$O/base/tb" +seed=3 +stdrop=1 > "$O/run_stdrop.log" 2>&1
 grep '^SEQHOST STDROP' "$O/run_stdrop.log"; grep -q 'PASS (fault raised)' "$O/run_stdrop.log" || { echo "W region drop not faulted"; bad=1; }
-for m in 1 2 3 4 5 6 7 8 9; do
+for m in 1 2 3 4 5 6 7 8 9 10; do
   build mut$m $(mdef $m) || { bad=1; continue; }
   "$O/mut$m/tb" +seed=1 > "$O/run_mut$m.log" 2>&1
   if grep -q '^SEQHOST PASS' "$O/run_mut$m.log"; then echo "mutant $m NOT detected"; bad=1

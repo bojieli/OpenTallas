@@ -109,6 +109,24 @@ module tb_dsdv_seq_host;
         endage = endage + 4;
         r_eng[nrow] = 14; r_arg[nrow] = 0; r_iss[nrow] = endage - 20; r_done[nrow] = 0; nrow = nrow + 1;    // KIT
         r_eng[nrow] = 15; r_arg[nrow] = 0; r_iss[nrow] = endage;      r_done[nrow] = 0; nrow = nrow + 1;    // END
+        // S81-SAFE-FIX/SH 10-19 walker contract: rows in strictly increasing issue order (one row an edge): the KIT row
+        // moves to the first free edge at or after endage - 20, then every row is sorted by issue (row index = op tag)
+        begin : walk_order
+            integer a, b, ti; reg clash;
+            clash = 1;
+            while (clash) begin
+                clash = 0; for (a = 0; a < nrow - 2; a = a + 1) if (r_iss[a] == r_iss[nrow - 2]) clash = 1;
+                if (clash) r_iss[nrow - 2] = r_iss[nrow - 2] + 1;
+            end
+            // MUT 10 (walker negative control): rows left in generation order -> the unit's seal scan must fault (code 3)
+            if (MUT != 10) for (a = 1; a < nrow; a = a + 1)
+                for (b = a; b > 0 && r_iss[b - 1] > r_iss[b]; b = b - 1) begin
+                    ti = r_iss[b]; r_iss[b] = r_iss[b - 1]; r_iss[b - 1] = ti;
+                    ti = r_eng[b]; r_eng[b] = r_eng[b - 1]; r_eng[b - 1] = ti;
+                    ti = r_arg[b]; r_arg[b] = r_arg[b - 1]; r_arg[b - 1] = ti;
+                    ti = r_done[b]; r_done[b] = r_done[b - 1]; r_done[b - 1] = ti;
+                end
+        end
         if (2 * SPAC <= endage + 4) $fatal(1, "spacing too small for two live contexts");
         // host stream: length, BEGIN, rows (3 pages), SEAL, templates, RAW writes interleaved
         begin : hs

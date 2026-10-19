@@ -7,7 +7,7 @@
 //                                write decode (dsfd_host_sd STATIC = 1, unchanged), svc job / host-write port to the 16
 //                                regional service slices, kit (stage start / done) port, regional controller status
 //                                fold (the dsfd_ctrl_ctr status merge), the host status / completion word.
-//   L1 dsdv_sh_sq  sequencer     ot_dsdv_fixed_issue (= ot_s81_fixed_issue, pipelined seal scan; the compiled calendar {done, issue, engine, arg}, two
+//   L1 dsdv_sh_sq  sequencer     ot_dsdv_walk_issue (S81-SAFE-FIX/SH 10-19: ordered walker over 2 SRAM calendar copies; was ot_dsdv_fixed_issue = ot_s81_fixed_issue, pipelined seal scan; the compiled calendar {done, issue, engine, arg}, two
 //                                job contexts, KIT / END rows, boot seal scan) + the svc completion tag queue.
 //   L2 dsdv_sh_vc  middle leaf   ot_dsdv_vstop (the shared V-rung stop, unchanged) + the CTL packer: the calendar's V
 //                                commands become CTL beats (template table, 128 x 186 b, boot-loaded) injected N / S;
@@ -44,7 +44,8 @@
 // svc command = issue + 5 + LS, LS = s_j pin edge -> s_jd capture edge of the svc chain (compiler-priced, p4i).
 // MUT (bench negative controls): 1 context splice dropped, 2 svc tag {slot, op} -> {slot, op + 1}, 3 L4 rung hop
 // missing (latency 5), 4 V completion one edge late, 5 W svc half dropped from the job-done / status merge, 6 host
-// writes routed by the wrong PC bit, 9 L0 rung landing stage dropped (latency 6 + RL - 1).
+// writes routed by the wrong PC bit, 9 L0 rung landing stage dropped (latency 6 + RL - 1), 10 (bench only) calendar rows
+// out of issue order: the walker issuer (ot_dsdv_walk_issue) must refuse the seal (code 3).
 // Two svc halves (RTL-BUILD-S81 10-18, residual bind5 (b)/(c)): s_j is broadcast to both entries (W rsv_05, E rsv_11);
 // s_jd_w / s_jd_e merge in L0 (done when both halves reported, at the later half's edge; same pin -> jd_o edge count as
 // the one-half unit), s_hw_w / s_hw_e + s_hc_w / s_hc_e are dsfd_host_sd's two stacks (sector -> the half owning its PC,
@@ -226,12 +227,22 @@ module dsdv_sh_sq #(parameter integer V = 276, parameter integer STAGE = 0, para
     localparam integer NE = 5;
     wire [NE-1:0] cv; wire [NE*84-1:0] cd; wire done, kdone, dslot, busy, fault; wire [3:0] code; wire [20:0] ktok;
     reg [NE-1:0] dv; reg [NE*8-1:0] dt;
-    ot_dsdv_fixed_issue #(.NOPS(128), .NENG(NE), .STAGE(STAGE), .ENG_PRESENT(5'b10111)) u_iss (.clk(ck), .rst_n(rn),
+    // ---- the calendar: two identical SRAM copies (one read port per job context; S81-SAFE-FIX/SH ordered walker)
+    wire cal_wce; wire [6:0] cal_wa, cal_ra0, cal_ra1; wire [75:0] cal_wd, cal_wm; wire [255:0] cal_rd0, cal_rd1;
+    ot_sram_1r1w_128x256_m1_r2c2 u_cal0 (.clk(ck), .r_ce_in(1'b1), .r_addr_in(cal_ra0), .rd_out(cal_rd0),
+        .w_ce_in(cal_wce), .w_addr_in(cal_wa), .wd_in({180'd0, cal_wd}), .w_mask_in({180'd0, cal_wm}),
+        .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
+    ot_sram_1r1w_128x256_m1_r2c2 u_cal1 (.clk(ck), .r_ce_in(1'b1), .r_addr_in(cal_ra1), .rd_out(cal_rd1),
+        .w_ce_in(cal_wce), .w_addr_in(cal_wa), .wd_in({180'd0, cal_wd}), .w_mask_in({180'd0, cal_wm}),
+        .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
+    ot_dsdv_walk_issue #(.NOPS(128), .NENG(NE), .STAGE(STAGE), .ENG_PRESENT(5'b10111)) u_iss (.clk(ck), .rst_n(rn),
         .pw_v(pw_q[35]), .pw_a(pw_q[34:28]), .pw_d(pw_q[27:0]), .prog_len(plen),
         .job_v(ks_q[52]), .job_user(ks_q[51:42]), .job_pos(ks_q[20:0]), .job_tok(ks_q[41:21]), .job_rdy(), .busy(busy),
         .job_done(done), .job_kdone(kdone), .done_slot(dslot), .kit_tok(ktok),
         .cmd_v(cv), .cmd_d(cd), .engine_available({NE{1'b1}}), .dn_v(dv), .dn_tag(dt),
-        .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase());
+        .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase(),
+        .cal_w_ce(cal_wce), .cal_w_addr(cal_wa), .cal_wd(cal_wd), .cal_wm(cal_wm), .cal_r_addr0(cal_ra0), .cal_r_addr1(cal_ra1),
+        .cal_rd0(cal_rd0[75:0]), .cal_rd1(cal_rd1[75:0]));
     // command faces: straight from the issuer's command registers (flop-last)
     assign cn_o = {cv[0], cd[0 +: 84]};
     assign cs_o = {cv[1], cd[84 +: 84]};

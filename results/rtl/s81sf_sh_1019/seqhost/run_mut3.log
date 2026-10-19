@@ -1,0 +1,13 @@
+MISMATCH vo_n edge 6 res=0 got 119576f19e7
+MISMATCH vo_n edge 7 res=0 got 00000000000
+MISMATCH vo_s edge 9 res=0 got 05ccebfef19
+MISMATCH vo_s edge 10 res=0 got 077a76976d5
+MISMATCH vo_n edge 11 res=0 got 0cc5e1faa41
+MISMATCH vo_s edge 11 res=0 got 1d64af8e30a
+SEQHOST seed=1 MUT=3 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1617 frag N/S=167/184 mism n/s/j/k/hw/tc/cw=1834/1781/0/0/0/0/0 unit_st=10001000000 g_fault=0/0 busy=0/0
+SEQHOST HALVES hw W/E=12/8 markers=0
+SEQHOST FAIL
+- /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host.sv:316: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.044 s; speed 54.398 us/s
+- Verilator: cpu 0.044 s on 1 threads; allocated 9 MB
