@@ -1,0 +1,49 @@
+{
+  "status": "PLACEMENT_ONLY_DIAGNOSTIC_NO_CTS_OR_ADOPTION",
+  "outline_um": [
+    531.25,
+    250
+  ],
+  "macros": 22,
+  "instances": 34540,
+  "std_area_um2": 2953.630980001558,
+  "macro_area_um2": 12178.970495999998,
+  "areas_by_name_class_um2": {
+    "other std": 1712.945879999933,
+    "cloned face helpers": 229.7224800000074,
+    "physical": 393.864119999919,
+    "input hold": 235.59821999999826,
+    "macro": 12178.970495999998,
+    "output hold": 381.50028000001123
+  },
+  "counts_by_name_class": {
+    "other std": 13419,
+    "cloned face helpers": 1368,
+    "physical": 13507,
+    "input hold": 2486,
+    "macro": 22,
+    "output hold": 3738
+  },
+  "old_proposed_central_band_um": [
+    2.16,
+    129.6,
+    529.09,
+    133.92
+  ],
+  "actual_cells_centered_in_old_central_band": 214,
+  "actual_area_centered_in_old_central_band_um2": 7.0567200000000145,
+  "old_proposed_band_fill_actual": 0.003100032262349849,
+  "functional_std_area_um2": 2559.7668600016386,
+  "central_band_functional_area_um2": 1.22472,
+  "flow_exit": 0,
+  "placement_violations": 0,
+  "source_fifo": "de58d09a7",
+  "source_macro": "e26d92503",
+  "blockers": [
+    "No constrained standard-cell band; full-row diagnostic does not qualify fill",
+    "Source reset fanout and original protected-net CTS clone failure remain independent",
+    "CDC sampled-age/phase/collision and actual root-native TT/FF not qualified",
+    "PG contact/escape and actual parent fit/electrical not qualified",
+    "Old central-band arithmetic estimate cannot substitute measured placed mass"
+  ]
+}
