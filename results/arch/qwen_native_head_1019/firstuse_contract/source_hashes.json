@@ -1,0 +1,70 @@
+{
+  "rtl/qwen_dv/qfd_dv_slice2_landed_rsafe.sv": {
+    "sha256": "0ed8b53d34155cba493056d16f3186c1d4a0d3163d92bbbe67f8ddc1da8137dd",
+    "verified_present": true
+  },
+  "rtl/qwen_dv/qfd_dv_su8_landed.sv": {
+    "sha256": "e7780f891c2e18a0b9dfb7e7d15ae9a591a7666fbcae815bbe98ad4dad9b3ec1",
+    "verified_present": true
+  },
+  "rtl/qwen_dv/qfd_dv_reset_tree.sv": {
+    "sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+    "verified_present": true
+  },
+  "rtl/test/qwen_dv/qfd_dv_su_lane_native_b64_fixture.sv": {
+    "sha256": "fb4012513ceab19b57db4e5cce46e4ddcfa6631f8fb136b468e5aac027f54775",
+    "verified_present": true
+  },
+  "rtl/qwen_dv/qfd_dv_head_native_b64.sv": {
+    "sha256": "e42ab0024f36bf139459b2d0945e521549d457318be08f14106d7f783dc45016",
+    "verified_present": true
+  },
+  "rtl/common/landed_parent/ot_pl_stream_land.sv": {
+    "sha256": "5fefa666adf4533bf33e86601f40571cdf80f4755f60176ed65009e6034a7dab",
+    "verified_present": true
+  },
+  "rtl/common/landed_parent/ot_pl_land.sv": {
+    "sha256": "a9ed286c05de67a04586445f54e1522a508f10813cd0adb502e8e70812aa591f",
+    "verified_present": true
+  },
+  "rtl/test/qwen_dv/dv_bench.py": {
+    "sha256": "6f1e4bc01176d52b158ec8d5eff0c23480f9e05bc57b749dfbbc3e65df09bd7a",
+    "verified_present": true
+  },
+  "rtl/test/qwen_dv/dv_bench2.py": {
+    "sha256": "942b31cb8679b3340a4f0e3471aca6fefcaab90d28d6d7fb4a76d171aa3723e4",
+    "verified_present": true
+  },
+  "rtl/test/qwen_dv/tb_qfd_dv2.sv": {
+    "sha256": "bd6a1a480211a20e8ec5d1e446a848df56c3023fca1a95265debdf03b890dfb3",
+    "verified_present": true
+  },
+  "rtl/qwen_dv/qfd_dv_slice2_faces.sv": {
+    "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+    "verified_present": true
+  },
+  "tools/qwen_native_head_1019/run_production.py": {
+    "sha256": "5bfddf3591800230a93cb64da2c16472250d02ab7624085fe88e7ed6b5d41676",
+    "verified_present": true
+  },
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": {
+    "sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+    "verified_present": true
+  },
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v": {
+    "sha256": "03a15da7f7691bfcf973a4d4e833fc4853c3d56bd8146092c8390705f0108083",
+    "verified_present": true
+  },
+  "rtl/test/qwen_dv/tb_head_control_trim_equiv.sv": {
+    "sha256": "a70985ddba5982cf5a263ab5bc0437b06892207a1b75655e322e5506cf2dc2da",
+    "verified_present": true
+  },
+  "tools/qwen_native_head_1019/run_control_trim_equiv.sh": {
+    "sha256": "dc08f18295ee88e78b663d4cd1ae66ceeaba4014848d263b0de695b533e194e4",
+    "verified_present": true
+  },
+  "tools/qwen_native_head_1019/control_census.sh": {
+    "sha256": "0f52dcfdacb1f2970f270c58b3062857b676ebf67a5b1dce34dce5a9b59fd03d",
+    "verified_present": true
+  }
+}

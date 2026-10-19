@@ -1,0 +1,25 @@
+{
+  "status": "SOURCE_CONTRACT_MODEL_ONLY_NO_RTL_OR_JOBS",
+  "source": "5cd31ebb8",
+  "terminal": "cd660e13e",
+  "parent_ledger": "0dd6c84a7",
+  "holding_model": "f7659f090",
+  "paths": {
+    "tail": 62,
+    "imm2": 32,
+    "ad": 3
+  },
+  "captures_retained": 97,
+  "data_stages_under_discussion": 291,
+  "mixed_reset_FPU_chains_preserved": 24,
+  "mixed_reset_FPU_FF_preserved": 94,
+  "unused_tail_captures_preserved": 7,
+  "unsafe_roots_unresolved": 83,
+  "rt_loads_unresolved": 1603,
+  "local_checks": "97 exact four-stage unreset paths, same clock, endpoint consumers, source hashes",
+  "RTL_simulation": false,
+  "all_output_equivalence": null,
+  "actual_parent_native_first_use": null,
+  "actual_parent_stopped_clock_epoch": null,
+  "native_area_cap_depth": null
+}
