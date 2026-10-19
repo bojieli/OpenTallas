@@ -1,0 +1,10 @@
+{
+ "model": "dv_cut_replay landed_words (derive_line_events + derive_vctl_line_events) on the die build; slot = (slice, line face, landed edge); xr = (slice, landed edge) of the CTL beats a slice takes",
+ "line_delay": {
+  "ffn.softplus_sqrt": 3
+ },
+ "collisions": 0,
+ "line_slots": 1141,
+ "xr_slots": 382,
+ "shared_slots": []
+}

@@ -1,0 +1,46 @@
+{
+ "prog": "/home/ubuntu/scratch/mu-die-s81/linecol/prog_L2_mu",
+ "line_slots": 1113,
+ "collisions": 0,
+ "witness": [],
+ "line_delay": {
+  "ffn.softplus_sqrt": 3
+ },
+ "span": {
+  "last_event": 26111,
+  "calendar_end": 26052
+ },
+ "ra_cmd": [
+  22258
+ ],
+ "old": {
+  "collisions": 3,
+  "span": {
+   "last_event": 26111,
+   "calendar_end": 26052
+  },
+  "ra_cmd": [
+   22255
+  ]
+ },
+ "cost_edges": {
+  "last_event": 0,
+  "calendar_end": 0
+ },
+ "mu": {
+  "A": {
+   "users": 23,
+   "min_shift_gap": 42624,
+   "prog_span": 26111,
+   "collisions": 0,
+   "witness": []
+  },
+  "B": {
+   "users": 23,
+   "min_shift_gap": 42624,
+   "prog_span": 26111,
+   "collisions": 0,
+   "witness": []
+  }
+ }
+}
