@@ -335,13 +335,14 @@ reg allow_aw=1,allow_w=1;
    end
    if(native_certificate_v)certificates=certificates+1;
    if(event_insert_v&&event_native_valid)event_copies=event_copies+1;
-   if(cq_offer_v)begin
-    if(cq_native_valid&&case_id<=3)begin
+   if(cq_offer_v&&cq_native_valid)begin
+    if(case_id<=3||case_id==14)begin
      if(!native_cq_offer_ok)$fatal(1,"UNCERTIFIED_CQ_SUCCESS_OFFER");
      if(cq_native_tag!=={16'(cq_offers+1),6'd37,gold_input(cq_offers+1),13'(cq_offers+1),6'd0})$fatal(1,"SAVED_CQ_LINEAGE n=%0d tag=%h",cq_offers,cq_native_tag);
-     saved_cq_key={cq_offer_client,cq_offer_slot,cq_descgen,cq_native_tag,cq_native_gen};saved_cq_key_valid=1;
-     cq_offers=cq_offers+1;
     end
+    // Native failure records own the same immutable saved-key lifetime.
+    saved_cq_key={cq_offer_client,cq_offer_slot,cq_descgen,cq_native_tag,cq_native_gen};saved_cq_key_valid=1;
+    cq_offers=cq_offers+1;
    end
    if(report_drained_v&&report_drained_cq&&report_drained_native_valid)begin
     if(!saved_cq_key_valid||{report_drained_client,report_drained_slot,report_drained_descgen,report_drained_tag,report_drained_gen}!==saved_cq_key)$fatal(1,"CQB_SAVED_KEY");
