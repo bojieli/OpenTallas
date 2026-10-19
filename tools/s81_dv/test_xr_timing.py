@@ -16,5 +16,10 @@ class TimingTest(unittest.TestCase):
             p.write_text(c["xr_source_sha256"]+"  src/"+XR_PATH+"\n");check_run_source(c,d)
             p.write_text("0"*64+"  src/"+XR_PATH+"\n")
             with self.assertRaises(ValueError): check_run_source(c,d)
+    def test_matching_source_cannot_admit_wrong_latency_metadata(self):
+        with tempfile.TemporaryDirectory() as d:
+            c=self.contract();c['v_ctl_inject']=6
+            (Path(d)/'sources.sha256').write_text(c['xr_source_sha256']+'  src/'+XR_PATH+'\n')
+            with self.assertRaises(ValueError): check_run_source(c,d)
 
 if __name__ == "__main__": unittest.main()

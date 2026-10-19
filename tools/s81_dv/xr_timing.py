@@ -28,6 +28,7 @@ def inject_cycles(schedule):
 
 def check_run_source(contract, run):
     if contract is None: return
+    inject_cycles({'timing_contract': contract})
     p = Path(run) / "sources.sha256"
     inventory = [line.split() for line in p.read_text().splitlines()]
     actual = {parts[0] for parts in inventory if len(parts) == 2 and parts[1].endswith(XR_PATH)}
