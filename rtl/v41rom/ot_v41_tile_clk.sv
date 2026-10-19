@@ -18,6 +18,22 @@ module ot_v41_tile_clk (
 );
     wire ze_q;
     ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze (.clk(fclk), .arst_n(rst_pin), .d(ze_d), .q(ze_q));
+`ifdef OT_BF_TILE_FREECLK
+    // Explicit default-off BF candidate: use the real free-running root for
+    // every tile. Reset synchronisation stays on its original root/edge.
+    // Extra idle clocks are paid activity, not an added valid data edge.
+    // Full BF wake/drain and output-cycle equivalence is required before use.
+`ifdef OT_BF_TILE_FREECLK_MUT_HALF
+    reg test_half;
+    always @(negedge fclk or negedge rst_pin)
+        if (!rst_pin) test_half <= 1'b0;
+        else test_half <= ~test_half;
+    assign gclk = fclk & test_half;
+`else
+    assign gclk = fclk;
+`endif
+`else
     ot_hdc_cg u_cg (.clk(fclk), .en(ze_q), .gclk(gclk));
+`endif
     ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rs (.clk(fclk), .arst_n(rst_pin), .d(1'b1), .q(rst_n));
 endmodule
