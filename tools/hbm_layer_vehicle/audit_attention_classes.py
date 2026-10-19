@@ -62,9 +62,11 @@ def run(a):
         assert 'wire attention=mode[2];' in text and 'if(!attention && mode==3)schedule_fault<=1;' in text
         out['actual_frontend']=dict(path=str(front),sha256=hashlib.sha256(front.read_bytes()).hexdigest(),
                                     classification='mode[2]',invalid_mode=3,runtime_invalid_mode_witness='separate full-service run required')
+    first_rec=None
     if a.kv:
         for layer in a.layers.split(','):
             rec,src=A.load_ds(Path(a.kv),int(layer))
+            if first_rec is None:first_rec=rec
             counts=[]
             for sub in (0,8,32):
                 ops,_=A.plan_d4g(rec,sub=sub)
@@ -75,6 +77,16 @@ def run(a):
                     assert proof['extra_descriptors']==0 and all(int(m)>>2==1 for m in proof['mode_counts'])
                     counts.append(dict(name=op[0],subrun_rows=sub,word_count=proof['words'],magic_words=proof['magic_words'],mode_counts=proof['mode_counts'],literal_sha256=proof['literal_sha256']))
             out['fixtures'].append(dict(source=src,programmes=counts,total_programmes=len(counts),total_magic_words=sum(x['magic_words'] for x in counts)))
+    if a.compat_receipt:
+        import attention_prel_svg as P
+        import smb_unit as S
+        assert first_rec is not None
+        directory=Path(a.compat_dir);directory.mkdir(parents=True,exist_ok=True)
+        S.write_events(P.compile_attention(first_rec),directory)
+        got={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in directory.glob('*.hex')}
+        want=json.loads(Path(a.compat_receipt).read_text())['event_sha256']
+        assert got==want, 'default event bytes changed'
+        out['default_compatibility']=dict(exact=True,event_sha256=got,receipt=str(a.compat_receipt))
     w=lambda mode:(0xa2<<184)|(mode<<181)
     out['legal_mixed_mode_only_split']=analyse([w(0),w(4),w(0)],block_lines=64,calendar_extra=2,command_only_extra=2)
     out['post_mrel_generic_positive']=analyse([w(0),w(0)],descriptor_mode=4,mrel=True)
@@ -85,4 +97,5 @@ def run(a):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--kv');p.add_argument('--layers',default='2,14');p.add_argument('--out',required=True)
+    p.add_argument('--compat-receipt');p.add_argument('--compat-dir')
     run(p.parse_args())
