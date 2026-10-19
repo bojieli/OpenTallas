@@ -200,6 +200,19 @@ class RealRelayAlias(unittest.TestCase):
             self.expand(False)
         self.assertEqual((self.case / 'die.v').read_bytes(), before)
 
+    def test_invalid_receipt_refuses(self):
+        # Deliberately invalid negative input; never a qualified positive receipt.
+        receipt = self.root / 'invalid_receipt.json'
+        receipt.write_text('{}\n')
+        self.profiles[LANDED]['frozen_receipt'] = dict(path=receipt.name, sha256='0'*64)
+        self.write_profiles()
+        with self.assertRaisesRegex(ValueError, 'frozen receipt digest mismatch'):
+            self.expand(False)
+        self.profiles[LANDED]['frozen_receipt']['sha256'] = P.sha(receipt)
+        self.write_profiles()
+        with self.assertRaisesRegex(ValueError, 'frozen receipt lacks matching native qualification'):
+            self.expand(False)
+
     def test_missing_profile_refuses(self):
         self.profiles.clear()
         self.write_profiles()
