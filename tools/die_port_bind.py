@@ -264,7 +264,9 @@ class Module:
         generate-for / function-driven assign, or an instance of another known module."""
         if self._kind is not None:
             return self._kind
-        b = self.body
+        # a macro between master and instance name (`child `MUTP u_x (...)`, e.g. dsdv_gunit's `DSDV_GU_MUT) hid real
+        # instances from the regex below (S81-BIND3 10-17: dsdv_gunit reported STUB) -> drop `macro tokens first
+        b = re.sub(r'`\w+', ' ', self.body)
         if re.search(r'\balways(_ff|_comb|_latch)?\b', b) or re.search(r'\binitial\b[^;]*\$readmem', b):
             self._kind = 'real'; return 'real'
         for m in re.finditer(r'\bassign\b([^;]*)=([^;]*);', b):
@@ -767,6 +769,62 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                 top_assigns=findings['TOP_ASSIGN'][:20], params_not_in_rtl=findings['PARAM_NOT_IN_RTL'][:40])
 
 
+_SV_KW = frozenset("""always always_comb always_ff always_latch and assert assign assume automatic begin bit buf bufif0 bufif1
+byte case casex casez cover default defparam disable do else end endcase endfunction endgenerate endtask enum for force
+forever function generate genvar if initial inout input int integer localparam logic module nand negedge nor not or output
+parameter posedge property real reg repeat return signed string struct task typedef union unique unique0 unsigned var while
+wire wor xnor xor priority final import export bind class virtual static const supply0 supply1 tri tri0 tri1 wand
+""".split())
+
+
+def instantiated(body: str):
+    """module names instantiated in a (comment-stripped, preprocessed) module body: 'NAME [#(...)] INST [range] ('
+    at a statement boundary; keywords are not module names.  Used to resolve the FULL child closure (Q-STUB 10-17:
+    die_port_bind checked only the die-top masters, so 768 ROM-leaf children with no RTL in the run's source tree
+    passed)."""
+    masked = _lexical_mask(body, strings=True)
+    out = set()
+    for m in re.finditer(r'(?:^|;|\bbegin\b|\bend\b|\bendgenerate\b|\belse\b|\)|:)\s*([A-Za-z_]\w*)\s*', masked, re.M):
+        name = m.group(1)
+        if name in _SV_KW:
+            continue
+        i = m.end()
+        if masked.startswith('#', i):
+            j = masked.find('(', i)
+            if j < 0 or masked[i + 1:j].strip():
+                continue
+            try:
+                i = _closing_paren(masked, j) + 1
+            except ValueError:
+                continue
+        im = re.match(r'\s*([A-Za-z_]\w*|\\\S+)\s*(\[[^\]]*\]\s*)*\(', masked[i:])
+        if not im or im.group(1) in _SV_KW:
+            continue
+        out.add(name)
+    return out
+
+
+def child_closure(idx, tops, allow_model):
+    """walk every die master's RTL hierarchy: (unresolved {child: [parents]}, models {child: [parents]}, modules seen)"""
+    unres, models, seen, todo = defaultdict(set), defaultdict(set), set(), sorted(t for t in tops if t in idx)
+    while todo:
+        n = todo.pop()
+        if n in seen:
+            continue
+        seen.add(n)
+        mod = idx[n]
+        for c in sorted(instantiated(mod.body) - {n}):
+            if c not in idx:
+                unres[c].add(n)
+                continue
+            if c in allow_model or Path(idx[c].path).name.endswith('_bb.v'):
+                models[c].add(n)
+            if c not in seen:
+                todo.append(c)
+    return ({k: sorted(v) for k, v in sorted(unres.items())}, {k: sorted(v) for k, v in sorted(models.items())},
+            len(seen))
+
+
 def _classes(d):
     """net-name classes (digits collapsed) -> bits, all nets (the per-net lists above are capped)"""
     c = defaultdict(lambda: [0, 0, None])
@@ -854,6 +912,9 @@ def main(argv=None):
     ap.add_argument('--pad-file', help='JSON {"pads": {master: {"reason": ..., "ports": {port: [[lo, hi], ...] | '
                     '{"logical_width": L}}}}}: declared DEDUPE padding bits (spare inputs tied low, spare outputs open); '
                     'or {"instances": {inst: {"master": master, "reason": ..., "ports": ...}}}; instance entries bind each logical width independently; default DIE_V.pads.json')
+    ap.add_argument('--lib-root', action='append', default=[], help='hard-macro behavioural model tree indexed for the '
+                    'child closure (e.g. physical/asap7_memory_macros)')
+    ap.add_argument('--no-child-closure', action='store_true', help='check the die-top masters only (pre-Q-STUB behaviour)')
     ap.add_argument('--out')
     a = ap.parse_args(argv)
     a.pad_file = a.pad_file or (a.die_v + '.pads.json' if Path(a.die_v + '.pads.json').exists() else None)
@@ -873,7 +934,7 @@ def main(argv=None):
         defines[k] = v
     roots = a.rtl_root if a.rtl_root is not None else (['rtl'] + sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'physical').glob('**/rtl')
                                                                   if p.is_dir()))
-    roots = roots + libdirs
+    roots = roots + libdirs + a.lib_root
     idx, amb = rtl_index(roots, files, defines, a.prefer + files)
     if a.closure:
         seen, todo, files_ = set(), list(a.closure), []
@@ -890,6 +951,16 @@ def main(argv=None):
     pj = a.params or (a.die_v + '.params.json' if Path(a.die_v + '.params.json').exists() else None)
     mparams = json.loads(Path(pj).read_text()).get('masters', {}) if pj else {}
     rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams, straps=frozenset(straps), pads=pads)
+    if not a.no_child_closure:
+        # full RTL child closure (Q-STUB 10-17): every module instantiated anywhere under a die master must resolve
+        unres, models, nmods = child_closure(idx, set(rec['masters']), set(a.allow_model))
+        rec['child_closure'] = dict(modules=nmods, unresolved_children=unres, model_children=models)
+        rec['summary']['unresolved_children'] = len(unres)
+        if unres:
+            rec['verdict'] = 'FAIL'
+            rec['failing'].append('unresolved_children')
+            for c, ps in unres.items():
+                print(f"FAIL child {c} (no RTL) instantiated in {','.join(ps[:6])}")
     rec['pads_declared'] = sorted(':'.join(k) for k in pads)
     rec['die_sha256'] = hashlib.sha256(Path(a.die_v).read_bytes()).hexdigest()
     rec['straps_declared'] = sorted(':'.join(s) for s in straps)

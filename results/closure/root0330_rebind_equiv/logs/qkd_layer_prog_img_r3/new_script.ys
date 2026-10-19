@@ -1,0 +1,10 @@
+read_verilog -defer -sv -DSYNTHESIS -I/tmp/r0330_eqv/qkd_layer_prog_img_r3/inc /tmp/r0330_eqv/qkd_layer_prog_img_r3/src/00_qkd_static_kv_layer_programme_rom.sv
+read_verilog -defer -sv -DSYNTHESIS -I/tmp/r0330_eqv/qkd_layer_prog_img_r3/inc /tmp/r0330_eqv/qkd_layer_prog_img_r3/new/ot_hbm_svc_stack_fault.sv
+read_verilog -defer -sv -DSYNTHESIS -I/tmp/r0330_eqv/qkd_layer_prog_img_r3/inc /tmp/r0330_eqv/qkd_layer_prog_img_r3/new/ot_hbm_svc_wb_cutthrough_cdc.sv
+hierarchy -top qkd_static_kv_layer_programme_img -chparam MUT 0
+tee -o /tmp/r0330_eqv/qkd_layer_prog_img_r3/out_new/modules.txt ls
+proc; flatten; opt_clean -purge
+rename -enumerate
+tee -o /tmp/r0330_eqv/qkd_layer_prog_img_r3/out_new/stat.txt stat
+write_rtlil /tmp/r0330_eqv/qkd_layer_prog_img_r3/out_new/netlist.il
+write_verilog -noattr /tmp/r0330_eqv/qkd_layer_prog_img_r3/out_new/netlist.v

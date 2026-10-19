@@ -1,0 +1,10 @@
+SEQHOST seed=1 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1633 frag N/S=161/185 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+SEQHOST seed=2 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1525 frag N/S=168/168 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+SEQHOST COLLIDE at 2206 -> PASS (fault raised)
+mutant 1 detected: mism n/s/j/k/hw/tc/cw=60/48/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+mutant 2 detected: mism n/s/j/k/hw/tc/cw=0/0/72/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+mutant 3 detected: mism n/s/j/k/hw/tc/cw=1835/1786/0/0/0/0/0 unit_st=10001000000 g_fault=0/0 busy=0/0
+mutant 4 detected: mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=10000110000 g_fault=0/0 busy=0/0
+lint clean: verilator -Wall, 0 errors, 0 unwaived warnings in dsdv_seq_host.sv (reused modules unchanged)
+SEQHOST_GATE PASS
+exact_rc=0

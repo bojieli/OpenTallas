@@ -11,11 +11,15 @@ module qkd_static_k_issuer #(parameter integer RESPONSE_LAT=0, parameter integer
  output reg [15:0] req_epoch,output reg [5:0] req_layer,
  input wire rsp_valid,input wire [1023:0] rsp_data,input wire [13:0] rsp_t,
  input wire rsp_v,input wire [15:0] rsp_epoch,input wire [5:0] rsp_layer,
- output reg [1024:0] rs,output reg fault
+ output wire [1024:0] rs,output reg fault
 );
  initial if(RESPONSE_LAT<1) $fatal(1,"RESPONSE_LAT requires measured positive edge latency");
  (* keep *) reg rn;
  always @(posedge ck) rn<=rst_n;
+ // ECTLA-3 2026-10-17 (FLOW-HOLD flop-first): rsp_valid / rsp_v land ONLY on their pin flops rv_q / vv_q;
+ // rs[0] is rv_q&&!vv_q (bit-identical to the former rs[0]<=rsp_valid&&!rsp_v: same edge, same rn clear).
+ reg [1024:1] rs_d;reg rv_q,vv_q;
+ assign rs={rs_d,rv_q&&!vv_q};
  reg go_q;reg [15:0] ep_q,ep;reg [5:0] ly_q,ly;reg active;
  always @(posedge ck)begin ep_q<=epoch;ly_q<=layer;end
  always @(posedge ck or negedge rn)
@@ -25,16 +29,16 @@ module qkd_static_k_issuer #(parameter integer RESPONSE_LAT=0, parameter integer
  // Each boundary port terminates at a flop. Data is always the real response.
  always @(posedge ck) begin
   req_t<={1'b0,rq[15:3]};req_epoch<=ep;req_layer<=(MUT==1)?(ly^6'd1):ly;
-  rs[1024:1]<=(MUT==2)?(rsp_data^1024'd1):rsp_data;
+  rs_d<=(MUT==2)?(rsp_data^1024'd1):rsp_data;
  end
  always @(posedge ck or negedge rn)
-  if(!rn)begin req_valid<=0;rs[0]<=0;end
-  else begin req_valid<=rq[0];rs[0]<=rsp_valid&&!rsp_v;end
+  if(!rn)req_valid<=0;
+  else req_valid<=rq[0];
  // At edge c+L compare response to request sampled at edge c.  The peer's
  // registered response becomes visible before its next sampling edge.
  reg [RESPONSE_LAT:0] ev;
  reg [35:0] ident[0:RESPONSE_LAT];
- reg [35:0] returned;reg rv_q,vv_q;
+ reg [35:0] returned;
  integer j;
  always @(posedge ck)begin
   returned<={rsp_epoch,rsp_layer,rsp_t};

@@ -1,7 +1,7 @@
 #!/bin/bash
 # One cp2 / cp1 bench case per call (HBMA-HOST 2026-10-17, for closure-loop job benches; same sources and
 # parameters as run_cp2.sh / run_static_cmd_target.sh).  usage: run_cp2_one.sh OUT CASE
-#   CASE: status | status_mut<1-2> (die-shape join: NT67/NF105 d4f target list) | collar | collar_mut<1-4> | join_mut<1-2> | packet | packet_mut<1-3> | phy | phy_mut<1-2> | cmd | cmd_mut<1-2>
+#   CASE: status | status_mut<1-2> (die-shape join: NT67/NF105 d4f target list) | collar | collar_mut<1-7> | join_mut<1-2> | packet | packet_mut<1-3> | phy | phy_mut<1-2> | cmd | cmd_mut<1-2>
 # Prints the bench's own PASS/FAIL line prefixed by "CP2_ONE <CASE>: ".
 set -u
 cd "$(dirname "$0")/../../.."

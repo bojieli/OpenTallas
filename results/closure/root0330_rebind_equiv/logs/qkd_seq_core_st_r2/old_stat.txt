@@ -1,0 +1,33 @@
+
+11. Printing statistics.
+
+=== qkd_seq_core_static ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      580 wires
+     4887 wire bits
+      580 public wires
+     4887 public wire bits
+       36 ports
+      457 port bits
+      576 cells
+       21   $add
+       90   $adff
+       37   $dff
+       19   $eq
+        2   $ge
+        4   $gt
+        1   $le
+       61   $logic_and
+       27   $logic_not
+       11   $logic_or
+        7   $lt
+      236   $mux
+       15   $ne
+        7   $or
+        1   $reduce_and
+       15   $reduce_bool
+        3   $reduce_or
+       19   $sub
+

@@ -1,0 +1,417 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/tmp/r0330_eqv/qkd_pv16_vport_r5/out_old/script.ys' --
+
+1. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_pv16_vport'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_pv16_vport_r5/old/ot_hbm_svc_stack_fault.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_pv16_vport_r5/old/ot_hbm_svc_stack_fault.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_svc_stack_fault'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_pv16_vport_r5/old/ot_hbm_svc_wb_cutthrough_cdc.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_pv16_vport_r5/old/ot_hbm_svc_wb_cutthrough_cdc.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_svc_wb_cutthrough_cdc'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \MUT = 0
+Parameter \RL = 19
+Parameter \WP = 2
+Parameter \RT = 8
+
+5. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_pv16_vport'.
+Parameter \MUT = 0
+Parameter \RL = 19
+Parameter \WP = 2
+Parameter \RT = 8
+Generating RTLIL representation for module `$paramod$5ac7c1fc8345b598800dab3ce44e79db54c0dad8\qkd_pv16_vport'.
+
+5.1. Analyzing design hierarchy..
+Top module:  \qkd_pv16_vport
+
+5.2. Analyzing design hierarchy..
+Top module:  \qkd_pv16_vport
+Removing unused module `$paramod$5ac7c1fc8345b598800dab3ce44e79db54c0dad8\qkd_pv16_vport'.
+Removing unused module `$abstract\ot_hbm_svc_wb_cutthrough_cdc'.
+Removing unused module `$abstract\ot_hbm_svc_stack_fault'.
+Removing unused module `$abstract\qkd_pv16_vport'.
+Removed 4 unused modules.
+
+1 modules:
+  qkd_pv16_vport
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:56$13 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:67$18 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:84$25 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:104$41 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$44 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$47 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$50 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$53 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$56 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$59 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$62 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$65 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$68 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$71 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$74 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$77 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$80 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$83 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$86 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$89 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$92 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$95 in module qkd_pv16_vport.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$98 in module qkd_pv16_vport.
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 25 redundant assignments.
+Promoted 33 assignments to connections.
+
+6.4. Executing PROC_INIT pass (extract init attributes).
+
+6.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:56$13'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:67$18'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:84$25'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:104$41'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$44'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$47'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$50'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$53'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$56'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$59'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$62'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$65'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$68'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$71'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$74'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$77'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$80'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$83'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$86'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$89'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$92'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$95'.
+Found async reset \rn in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$98'.
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~1 debug messages>
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:52$12'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:56$13'.
+     1/1: $0\pr_v_q[0:0]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:57$15'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:59$16'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:67$18'.
+     1/2: $0\vq1_valid[0:0]
+     2/2: $0\vq0_valid[0:0]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:70$23'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:73$24'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:84$25'.
+     1/2: $0\val_q[1:0]
+     2/2: $0\slot_q[0:0]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:87$27'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:104$41'.
+     1/2: $0\out_valid[0:0]
+     2/2: $0\fault[0:0]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:107$43'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$44'.
+     1/1: $0\qv[1:1]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$46'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$47'.
+     1/1: $0\qv[2:2]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$49'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$50'.
+     1/1: $0\qv[3:3]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$52'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$53'.
+     1/1: $0\qv[4:4]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$55'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$56'.
+     1/1: $0\qv[5:5]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$58'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$59'.
+     1/1: $0\sv[1:1]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$61'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$62'.
+     1/1: $0\sv[2:2]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$64'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$65'.
+     1/1: $0\sv[3:3]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$67'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$68'.
+     1/1: $0\sv[4:4]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$70'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$71'.
+     1/1: $0\sv[5:5]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$73'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$74'.
+     1/1: $0\sv[6:6]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$76'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$77'.
+     1/1: $0\sv[7:7]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$79'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$80'.
+     1/1: $0\sv[8:8]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$82'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$83'.
+     1/1: $0\sv[9:9]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$85'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$86'.
+     1/1: $0\sv[10:10]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$88'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$89'.
+     1/1: $0\sv[11:11]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$91'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$92'.
+     1/1: $0\sv[12:12]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$94'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$95'.
+     1/1: $0\sv[13:13]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$97'.
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$98'.
+     1/1: $0\sv[14:14]
+Creating decoders for process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$100'.
+
+6.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\qkd_pv16_vport.\qv [0]' from process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:59$16'.
+No latch inferred for signal `\qkd_pv16_vport.\qt [13:0]' from process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:59$16'.
+No latch inferred for signal `\qkd_pv16_vport.\sv [0]' from process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:73$24'.
+No latch inferred for signal `\qkd_pv16_vport.\ss [0]' from process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:73$24'.
+
+6.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qkd_pv16_vport.\rst_q' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:52$12'.
+  created $dff cell `$procdff$103' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\pr_v_q' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:56$13'.
+  created $adff cell `$procdff$108' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\pr_t_q' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:57$15'.
+  created $dff cell `$procdff$109' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\vq0_valid' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:67$18'.
+  created $adff cell `$procdff$114' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\vq1_valid' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:67$18'.
+  created $adff cell `$procdff$119' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\vq0_t' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:70$23'.
+  created $dff cell `$procdff$120' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\vq1_t' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:70$23'.
+  created $dff cell `$procdff$121' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\slot_q' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:84$25'.
+  created $adff cell `$procdff$126' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\val_q' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:84$25'.
+  created $adff cell `$procdff$131' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\sel_q' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:87$27'.
+  created $dff cell `$procdff$132' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\vf_q' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:87$27'.
+  created $dff cell `$procdff$133' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\t_q' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:87$27'.
+  created $dff cell `$procdff$134' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\d_q' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:87$27'.
+  created $dff cell `$procdff$135' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\out_valid' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:104$41'.
+  created $adff cell `$procdff$140' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\fault' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:104$41'.
+  created $adff cell `$procdff$145' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\out_t' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:107$43'.
+  created $dff cell `$procdff$146' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\out_v_lo' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:107$43'.
+  created $dff cell `$procdff$147' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\out_v_hi' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:107$43'.
+  created $dff cell `$procdff$148' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\qv [1]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$44'.
+  created $adff cell `$procdff$153' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\qt [27:14]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$46'.
+  created $dff cell `$procdff$154' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\qv [2]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$47'.
+  created $adff cell `$procdff$159' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\qt [41:28]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$49'.
+  created $dff cell `$procdff$160' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\qv [3]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$50'.
+  created $adff cell `$procdff$165' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\qt [55:42]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$52'.
+  created $dff cell `$procdff$166' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\qv [4]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$53'.
+  created $adff cell `$procdff$171' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\qt [69:56]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$55'.
+  created $dff cell `$procdff$172' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\qv [5]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$56'.
+  created $adff cell `$procdff$177' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\qt [83:70]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$58'.
+  created $dff cell `$procdff$178' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [1]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$59'.
+  created $adff cell `$procdff$183' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [1]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$61'.
+  created $dff cell `$procdff$184' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [2]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$62'.
+  created $adff cell `$procdff$189' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [2]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$64'.
+  created $dff cell `$procdff$190' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [3]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$65'.
+  created $adff cell `$procdff$195' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [3]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$67'.
+  created $dff cell `$procdff$196' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [4]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$68'.
+  created $adff cell `$procdff$201' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [4]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$70'.
+  created $dff cell `$procdff$202' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [5]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$71'.
+  created $adff cell `$procdff$207' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [5]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$73'.
+  created $dff cell `$procdff$208' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [6]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$74'.
+  created $adff cell `$procdff$213' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [6]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$76'.
+  created $dff cell `$procdff$214' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [7]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$77'.
+  created $adff cell `$procdff$219' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [7]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$79'.
+  created $dff cell `$procdff$220' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [8]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$80'.
+  created $adff cell `$procdff$225' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [8]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$82'.
+  created $dff cell `$procdff$226' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [9]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$83'.
+  created $adff cell `$procdff$231' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [9]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$85'.
+  created $dff cell `$procdff$232' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [10]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$86'.
+  created $adff cell `$procdff$237' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [10]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$88'.
+  created $dff cell `$procdff$238' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [11]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$89'.
+  created $adff cell `$procdff$243' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [11]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$91'.
+  created $dff cell `$procdff$244' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [12]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$92'.
+  created $adff cell `$procdff$249' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [12]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$94'.
+  created $dff cell `$procdff$250' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [13]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$95'.
+  created $adff cell `$procdff$255' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [13]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$97'.
+  created $dff cell `$procdff$256' with positive edge clock.
+Creating register for signal `\qkd_pv16_vport.\sv [14]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$98'.
+  created $adff cell `$procdff$261' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pv16_vport.\ss [14]' using process `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$100'.
+  created $dff cell `$procdff$262' with positive edge clock.
+
+6.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:52$12'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:56$13'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:57$15'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:59$16'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:67$18'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:70$23'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:73$24'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:84$25'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:87$27'.
+Found and cleaned up 1 empty switch in `\qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:104$41'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:104$41'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:107$43'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$44'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$46'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$47'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$49'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$50'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$52'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$53'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$55'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:62$56'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:63$58'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$59'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$61'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$62'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$64'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$65'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$67'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$68'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$70'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$71'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$73'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$74'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$76'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$77'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$79'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$80'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$82'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$83'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$85'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$86'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$88'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$89'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$91'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$92'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$94'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$95'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$97'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:75$98'.
+Removing empty process `qkd_pv16_vport.$proc$/tmp/r0330_eqv/qkd_pv16_vport_r5/src/00_qkd_pv16_vport.sv:76$100'.
+Cleaned up 1 empty switch.
+
+6.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_pv16_vport.
+<suppressed ~54 debug messages>
+
+7. Executing FLATTEN pass (flatten design).
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_pv16_vport..
+Removed 49 unused cells and 148 unused wires.
+<suppressed ~53 debug messages>
+
+9. Printing statistics.
+
+=== qkd_pv16_vport ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       54 wires
+     6455 wire bits
+       54 public wires
+     6455 public wire bits
+       21 ports
+     3167 port bits
+       72 cells
+       26   $adff
+        1   $and
+       30   $dff
+        1   $eq
+        2   $logic_and
+        3   $logic_not
+        2   $logic_or
+        6   $mux
+        1   $reduce_or
+
+10. Executing RTLIL backend.
+Output filename: /tmp/r0330_eqv/qkd_pv16_vport_r5/out_old/netlist.il
+
+11. Executing Verilog backend.
+
+11.1. Executing BMUXMAP pass.
+
+11.2. Executing DEMUXMAP pass.
+Dumping module `\qkd_pv16_vport'.
+
+End of script. Logfile hash: 1016a083e4, time: 0.03s, user: 0.03s, system: 0.01s, MEM: 25.42 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 25% 1x hierarchy (0 sec), 24% 1x opt_clean (0 sec), ...

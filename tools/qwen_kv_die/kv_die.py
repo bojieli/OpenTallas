@@ -74,7 +74,7 @@ TREE_LAST = 200.0               # v1.4.2: a reset / boot tree chain ends <= this
 RST_REGION_IGNORE = 255          # v1.4.3 qkd_rst_region IGNORE: a region's chain depth limit (the host holds reset >= this + 4)
 # KVPLAN 1815: regional reset roots + post-expansion local trees (kv_rst_regional.py); region box (um)
 RST_REGIONAL = __import__('os').environ.get('OT_KV_RST_REGIONAL', '0') == '1'
-RST_PIN_REG = __import__('os').environ.get('OT_KV_RST_PIN_REG', '0') == '1'
+RST_PIN_REG = __import__('os').environ.get('OT_KV_RST_PIN_REG', '1') == '1'   # KV-KITS/NATIVE 10-18: default ON (qkd_rst_region_pr CLOSED native PASS; ec1 view fails native capture 239.9 on its unregistered dly straps); 0 = legacy plans
 RST_REGION_BOX = float(__import__('os').environ.get('OT_KV_RST_REGION_BOX', '4800'))
 # KVPLAN 1815 (OT_KV_PHY_REG=1): REGISTERED PHY BOUNDARY -- a relay chain that starts or ends at a hard PHY macro
 # (HBM PHY, host SerDes, UCIe) puts its first / last register within PHY_REACH um of the PHY pin (kvs12b TT: real -> phy
@@ -580,7 +580,8 @@ ECTL_CLK = ['ck_a', 'ck_b', 'ck_c']
 # v1.2: the attention hub is the wires-only composition ot_qkd_ahub_die (kvsys-elements 33048f31a): the CLOSED core
 # (qkd_ahub_core hd2) + 13 hardened tiles (4 ot_nhb_zh, ot_qkh_recip_leaf, 4 ot_nhb_pbst, 4 ot_nhb_pvlg), each its own clock
 # entry (die port -> RTL ck_core / ck_zh[i] / ck_recip / ck_pbst[i] / ck_pvlg[i]); am[143:0] = 4 registered per-stack copies
-AHUB_CLK = ['ck_c'] + [f'ck_z{i}' for i in range(4)] + ['ck_r'] + [f'ck_p{i}' for i in range(4)] + [f'ck_v{i}' for i in range(4)]
+# KV-AHUB hp4 2026-10-17: ONE regional entry ck (RTL QKD_AHUB_ONE_CK; the parent's spine H-tree reaches all 14 children)
+AHUB_CLK = ['ck_c']
 SPLIT_FRAMES = dict(qkd_seq=(604.8, 475.2), qkd_lnk=(777.6, 129.6), qkd_embgw=(172.8, 216.0), qkd_ahub=(1175.04, 760.32))
 # KV-CASE2 10-18 (OT_KV_AHUB_SDW=1, coordinator): the static hub qkd_ahub_static_dw hardened as kit qkd_ahub_sdw
 # (claude/kv-ahubdw-1018 22f997d7d): die frame = the kit outline 734.4 x 561.6 (legacy hub kit 1175.04 x 760.32), its die
@@ -603,9 +604,57 @@ BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink_se', file='rtl/qwen_sys/
 _BASE = dict(HEAD=HEAD, ECTL=ECTL, ENG_H=ENG_H, RENG=RENG, TILE_Y=dict(TILE_Y), FRAMES=dict(FRAMES))
 
 
+def _ectl_st_frame(split):
+    """KV-ECTL4 10-18 (coordinator 0gs (d), 'the KV die may grow'): the ECTL slot takes the hardened frame of
+    qkd_ectl3_kiss_st (physical/ref_tile/qkd_ectl3_kiss_st, 725.76 x 261.36: A k3 172.8 x 194.4 | B pg16 | C on the 43.2
+    lattice) instead of the 648 x 129.6 A | B | C abutment, and its pins at the kit's exact pin plan (_split_pins).
+    Default on with the static die's kiss_st binding (OT_KV_STATIC_DIE=1, OT_KV_ASTK_ST default 1); OT_KV_ECTL_ST_FRAME=0
+    keeps the old slot (comparison only)."""
+    d = '1' if (split and KSD.ON and KSD.ASTK_ST) else '0'
+    return os.environ.get('OT_KV_ECTL_ST_FRAME', d) == '1' and split and KSD.ON and KSD.ASTK_ST
+
+
+ECTL_ST = (725.76, 261.36)
+ECTL_ST_PINS = 'results/arch/qwen_kv_ectl3_kiss_st_1018/qkd_ectl3_kiss_st.tcl'
+# die port of qkd_ectlk -> kit pins (bases) of qkd_ectl3_kiss_st
+ECTL_ST_PORTS = dict(si=['si'], so=['so'], t0=['t0'], t1=['t1'], e0=['e0'], e1=['e1'], e2=['e2'], e3=['e3'], s0=['s0'],
+                     s1=['s1'], s2=['s2'], s3=['s3'], rq=['req_valid', 'req_t', 'req_v', 'req_epoch', 'req_layer'],
+                     rs=['rsp_valid', 'rsp_data', 'rsp_t', 'rsp_v', 'rsp_epoch', 'rsp_layer'], kg=['kgo', 'epoch', 'layer'],
+                     kf=['fault'], cfg=['cfg'], rst_n=['rst_n'], ck_a=['ck[0]'], ck_b=['ck[1]'], ck_c=['ck[2]'])
+
+
+def _ectl_st_ports():
+    """{die port: ('face', bits, face, layer, centre along the face, pitch tracks)} from the kit's exact io_tcl"""
+    pins = {}
+    for ln in (ROOT / ECTL_ST_PINS).read_text().splitlines():
+        mt = re.match(r'place_pin -pin_name \{(\S+)\} -layer (\S+) -location \{([\d.]+) ([\d.]+)\}', ln)
+        if not mt:
+            continue
+        n, lay, x, y = mt.group(1), mt.group(2), float(mt.group(3)), float(mt.group(4))
+        face = 'S' if y < 0.1 else 'N' if y > ECTL_ST[1] - 0.1 else 'W' if x < 0.1 else 'E'
+        pins[n] = (face, lay, x if face in 'NS' else y)
+    out = {}
+    for dp, bases in ECTL_ST_PORTS.items():
+        sel = [v for n, v in pins.items() if n in bases or re.sub(r'\[\d+\]$', '', n) in bases]
+        if not sel:
+            raise ValueError(f'kv_die: ECTL_ST port {dp}: no kit pin {bases} in {ECTL_ST_PINS}')
+        faces = {v[0] for v in sel}
+        if len(faces) != 1:
+            raise ValueError(f'kv_die: ECTL_ST port {dp} spans faces {faces}')
+        lays = sorted({v[1] for v in sel}, key=lambda L: -sum(1 for v in sel if v[1] == L))
+        a = [v[2] for v in sel]
+        span = max(a) - min(a)
+        pitch = max(1, int(round(span / (len(sel) * (0.064 if lays[0] == 'M6' else 0.048))))) if len(sel) > 1 else 1
+        out[dp] = ('face', len(sel), faces.pop(), lays[0], round((max(a) + min(a)) / 2, 3), pitch)
+    return out
+
+
 def _set_geometry(split, reserve_static_memory=False, reserve_native_astk=False):
     """module geometry for the plain KV die (split False) or the split KV/system die (split True)"""
-    global HEAD, ENG_H, RENG, TILE_Y, FRAMES, LAND_W, ASTK_W
+    global HEAD, ENG_H, RENG, TILE_Y, FRAMES, LAND_W, ASTK_W, ECTL
+    ECTL = ECTL_ST if _ectl_st_frame(split) else _BASE['ECTL']
+    if ECTL[0] > (SPLIT_HEAD_V11 if split else _BASE['HEAD'])[0]:
+        raise ValueError(f'kv_die: ECTL frame {ECTL} wider than the head column')
     if reserve_static_memory and not split:
         raise ValueError('native static memory reservation requires split KV/system die')
     if reserve_native_astk and not split:
@@ -686,11 +735,8 @@ SPLIT_BINDINGS = dict(
                   ports=dict(ap_WS=['si_valid', 'si_type', 'si_g', 'si_hh', 'si_k', 'si_any', 'si_data', 'pi_valid',
                                     'pi_g', 'pi_beat', 'pi_data'],
                              am_WS=['am'], ao=['out_valid', 'out_g', 'out_beat', 'out_data'], hs=['start'], hf=['fault'],
-                             ck_c=['ck_core'], ck_z0=['ck_zh'], ck_r=['ck_recip'], ck_p0=['ck_pbst'], ck_v0=['ck_pvlg'],
-                             rst_n=['rst_n']),
-                  sliced=dict(ap_WN='ap_WS', ap_ES='ap_WS', ap_EN='ap_WS', am_WN='am_WS', am_ES='am_WS', am_EN='am_WS',
-                              **{f'ck_z{i}': 'ck_z0' for i in range(1, 4)}, **{f'ck_p{i}': 'ck_p0' for i in range(1, 4)},
-                              **{f'ck_v{i}': 'ck_v0' for i in range(1, 4)}),
+                             ck_c=['ck'], rst_n=['rst_n']),
+                  sliced=dict(ap_WN='ap_WS', ap_ES='ap_WS', ap_EN='ap_WS', am_WN='am_WS', am_ES='am_WS', am_EN='am_WS'),
                   classed={'ev': 'debug: hub event word (unread on the die)'}))
 
 
@@ -815,8 +861,11 @@ HOST_CLK_FAMILY = dict(
     **{c: 'phy' for c in [f'ck_phy{i}' for i in range(8)] + ['ck_pad', 'ck_phy_rx_w', 'ck_phy_tx_r']})
 HOST_CLK_INFERRED = dict(
     **{c: 'core' for c in ('ck_program_rx', 'ck_program_loader', 'ck_dispatch', 'ck_retire', 'ck_bootbarrier',
-                           'ck_records', 'ck_coordinator_codec', 'ck_coordinator_lifecycle', 'ck_coordinator_post')},
-    **{c: 'host' for c in ('ck_peer', 'ck_root_mux')})     # board-link family (1 GHz = the host period; no board PLL output)
+                           'ck_records', 'ck_coordinator_codec', 'ck_coordinator_lifecycle', 'ck_coordinator_post',
+                           # COORD 0dd+ D2 (10-17, KVJ-A3 census): ck_peer / ck_root_mux talk to core blocks through direct
+                           # same-cycle valid/ready with no synchroniser (root_mux<->coordinator, peer_link.normal_rx ->
+                           # program_rx, token request/grant), so they are CORE, not the 1 GHz host family
+                           'ck_peer', 'ck_root_mux')})
 HOST_GROUPS = dict(chain_f='chf', chain_c='chc', chain_a='cha', chain_fault_i='chx', slice_ack='sak',
                    slice_boot_done='sbd', slice_boot_ok='sbo', slice_boot_fault='sbf')
 
@@ -852,7 +901,8 @@ def host_rt_binding():
 
 
 def slice_die_binding():
-    names = ['ck_station', 'ck_static', 'ck_boot', 'ck_boot_test', 'host_rst_n', 'hbm_rst_n', 'lpc', 'bgi', 'bgo', 'fi',
+    # KV-FIX3 es2 2026-10-17: one clock entry ck (the four former entries were taps of the same clk_core_<stack> net)
+    names = ['ck', 'host_rst_n', 'hbm_rst_n', 'lpc', 'bgi', 'bgo', 'fi',
              'fo', 'ci', 'co', 'ai', 'ao', 'fault_i', 'fault_o', 'land_es', 'land_er', 'ctrl_es', 'ctrl_er',
              'ctrl_completion_v', 'ctrl_completion_we', 'ski', 'sdi', 'soi', 'sfi', 'sko', 'sdo', 'soo', 'sfo']
     return dict(module='qkd_host_pc_slice_die', file=SLICE_DIE_FILE, ports={n: [n] for n in names}, classed={})
@@ -895,8 +945,13 @@ def d2d_txdp_k():
     return _ks.d2d_txdp_k()
 
 
+def _ks_ntx():
+    import kv_static as _ks          # KV-PLAN5: one source of the TX lane count (kv_static.d2d_ntx_k, closed r7t = 3)
+    return _ks.d2d_ntx_k()
+
+
 def d2ds_binding():
-    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2, TXDP=d2d_txdp_k()),
+    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k()),
                 ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
                            phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
@@ -1526,6 +1581,14 @@ def build(*args, **kwargs):
         print('kv die BUNDLE_EQ: ' + ', '.join(f"{n_} {r_.get('stages', r_.get('skipped'))}"
                                                for n_, r_ in m['bundle_eq']['bundles'].items())
               + f" ({len(m['bundle_eq']['added'])} pad relays)", file=sys.stderr)
+    # KV-ECTL4 10-18 (coordinator 0gs (d)): one K round trip (KSD.ECTLK_RESPONSE_LAT) for every ECTL frame -- the frame's
+    # hardened children carry RESPONSE_LAT / ROW_RETURN_LAT / QK_ISSUE_AGE as RTL parameters; pads on the 38-b request chain
+    import kv_k_rt_eq
+    if KSD.ON and kv_k_rt_eq.on() and kwargs.get('split', len(args) > 7 and args[7]):
+        m = kv_k_rt_eq.equalize(sys.modules[__name__], m)
+        r_ = m['k_rt_eq']
+        print(f"kv die K_RT_EQ: target {r_['target']} (QK_ISSUE_AGE {r_['qk_issue_age']}), natural "
+              f"{r_['natural_min']}..{r_['natural_max']}, {len(r_['added'])} pad relays", file=sys.stderr)
     if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
         if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
             raise ValueError('OT_KV_LANDSLOT=1 needs OT_KV_RLY_STD=1 and OT_KV_SEAM=1 (landing slots are relay-standard rows '
@@ -2294,7 +2357,7 @@ def _host_v14_buses(m):
         for st in STACKS:
             if bid == f'clk_core_{st}':
                 B[i_] = (bid, cl, bits, list(B[i_][3]) + [(sl(st, k), c) for k in range(32)
-                                                          for c in ('ck_station', 'ck_static', 'ck_boot', 'ck_boot_test')])
+                                                          for c in ('ck',)])
     for f_ in ('host', 'ingest', 'phy'):
         add((f'clk_{f_}', 'clock_trunk', 1, [('pll', f'pll_{f_}')] + [('host', c) for c, f in sorted(fam.items()) if f == f_]))
     for si, st in enumerate(STACKS):
@@ -3592,6 +3655,13 @@ def _split_pins(M, m=None):
                 mm.ports[x_] = ('area', 1, c_, ECTL[1] / 2, 1)
         if 'rst_n' in mm.ports:
             mm.ports['rst_n'] = ('area', 1, ECTL[0] / 2, ECTL[1] / 2 + 8.0, 1)
+        if ectl_ == 'qkd_ectlk' and ECTL == ECTL_ST:
+            # KV-ECTL4: the hardened qkd_ectl3_kiss_st frame's exact pins (kit io_tcl), every port it has
+            for p_, v_ in _ectl_st_ports().items():
+                if p_ in mm.ports:
+                    if mm.ports[p_][1] != v_[1]:
+                        raise ValueError(f'kv_die: qkd_ectlk {p_} {mm.ports[p_][1]} b vs kit {v_[1]} b')
+                    mm.ports[p_] = v_
     if ectls_:
         exo = up((HEAD[0] - ECTL[0]) / 2, GX)
         if 'qkd_rhead' in M:
@@ -4064,9 +4134,8 @@ def _slice_pins(m, mm, down=False):
         for p, size in zip(lst, span):
             mm.face(p, w[p], face, 'M5', round(pos + size / 2, 3), 4)
             pos += size + 2.0
-    centres = dict(ck_station=('W', -5), ck_static=('W', 5),
+    centres = dict(ck=('W', -5),
                    host_rst_n=('W', -15), hbm_rst_n=('W', 15),
-                   ck_boot=('E', -5), ck_boot_test=('E', 5),
                    ctrl_completion_v=('E', -15), ctrl_completion_we=('E', 15),
                    lpc=('W', 0))
     rest = sorted(p for p in w if p not in mm.ports)
@@ -4757,7 +4826,11 @@ def main(argv=None):
     a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s
     a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
     if a.mode == 'case' and a.reserve_native_astk:
-        ap.error('native ASTK envelope reservation is plan-only until selected profile/clock/pin binding closes')
+        if not KSD.ON or not KSD.ASTK_ST or os.environ.get('OT_KV_ASTK_EXPAND', '0') != '1':
+            ap.error('native ASTK case requires the actual static ASTK EXPAND profile (OT_KV_ASTK_EXPAND=1)')
+        import kv_astk_expand
+        kv_astk_expand.require_views(ROOT)
+        ap.error('expanded ASTK production calendar qualification remains required before physical case generation')
     if a.mode == 'case' and a.kv_wq_leaves and not a.kv_wq_mirror:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
     m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split, reserve_static_memory=a.reserve_static_memory, reserve_native_astk=a.reserve_native_astk)

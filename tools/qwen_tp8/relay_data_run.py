@@ -72,11 +72,78 @@ try:
 except Exception as e:   # noqa: BLE001
     import traceback
     rec['pin_align'] = dict(error=repr(e), trace=traceback.format_exc()[-1200:])
+# Q-DIEPLAN3 2026-10-16 (Codex 20:18 audit: 25 q3h data hops passed the centroid relay gate with worst-bit lengths
+# 422-444 um > the measured 414-um reach): OT_PIN_BIT_REACH_UM = the hard per-BIT reach of every data hop of the FINAL
+# (relayed) netlist, judged on the emitted pin rows (len_max = the longest bit of the bundle). Every row over it is
+# written to pin_bit_reach.json first; then the build fails (OT_PIN_BIT_REACH_GATE=warn records only). Relay-skip
+# smokes judge the unrelayed graph and only report.
+_lim = os.environ.get('OT_PIN_BIT_REACH_UM')
+if _lim and 'pin_align' in rec and not rec['pin_align'].get('error'):
+    _lim = float(_lim)
+    _over = sorted(({k: r_.get(k) for k in ('bus', 'cls', 'bits', 'drv', 'drv_port', 'load', 'load_port', 'kind',
+                                            'len_mean', 'len_max', 'jog_max', 'at')}
+                    for r_ in rows if r_.get('cls') not in ('clock_trunk', 'reset', 'constant')
+                    and float(r_.get('len_max') or 0) > _lim), key=lambda r_: -float(r_['len_max']))
+    _skip = os.environ.get('OT_RELAY_SKIP') == '1'
+    (out / 'pin_bit_reach.json').write_text(json.dumps(dict(limit_um=_lim, relay_skip=_skip, over=len(_over),
+                                                            rows=_over), indent=1, default=str) + '\n')
+    rec['pin_bit_reach'] = dict(limit_um=_lim, over=len(_over), worst=_over[:5], relay_skip=_skip)
+    if _over and not _skip and os.environ.get('OT_PIN_BIT_REACH_GATE', 'fail') != 'warn':
+        (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
+        raise SystemExit(f'pin bit reach: {len(_over)} data hops over {_lim} um (worst-bit), worst '
+                         f"{[(r_['bus'], r_['len_max']) for r_ in _over[:6]]}; see {out / 'pin_bit_reach.json'}")
 (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
 if '--case' in sys.argv:
     # r9: the chain-ready die case (real case + power abstracts + PDN r5, as `qwen_rom_fulldie_b3r2.py pdn --pdn-rev r5`)
     # of THIS build, so the audited plan and the routed die are one placement
     G.case_pdn(v, m, out / 'case', 63.64, 'r5')
+    if m.get('fwd_lanes'):
+        # Q-DIE11-RLY 10-18 (OT_SPLIT_FWD_LANES=1): the forwarded half-cycle lanes of this build + the die-STA landing
+        # model (LANDING-CONTRACT L5: the lane arrives at the landing's a / ea pins and is captured on the block root
+        # ck E edges later: set_multicycle_path -setup E -hold D-1, one E per link at TT and FF)
+        fl = m['fwd_lanes']
+        (out / 'case' / 'fwd_lanes.json').write_text(json.dumps(fl, indent=1) + '\n')
+        sdc = ['# Q-DIE11-RLY forwarded-lane landings (tools/qwen_tp8/relay_data_run.py): ring D %d, one E per link (TT and FF)'
+               % fl['D']]
+        for r_ in fl['lanes']:
+            if r_.get('lane') == 'reset':
+                continue          # LANDFIX-SQ forwarded reset lane: no ring, its landing is one single-cycle root capture
+            pins = f"{r_['landing']}/a[*]" + ('' if r_['n'] == 1 else f" {r_['landing']}/ea[*]")
+            # LANDFIX-SQ 10-18: the MCP is E_sta (the residual edges after the LAST station's launch, as the die STA counts
+            # them); dv2f14bn wrote the lane's total E (12-14 on the 26-frame lanes) -> hold edge E - D, FF hold -7.7 ns
+            sdc += [f"set_multicycle_path -setup {r_.get('E_sta', r_['E'])} -to [get_pins {{{pins}}}]",
+                    f"set_multicycle_path -hold {fl['D'] - 1} -to [get_pins {{{pins}}}]"]
+        # NS-CASE 10-18 (ROOT-2115): the landing's K straps k0..k2 are die constants (each on the instance's own
+        # tie_hi / tie_lo; lane_latency_audit (b) in the strict bind checks the netlist K == this K): the die STA
+        # case-analyses them, as the tile native audit --case k0,k1,k2 excludes them
+        sdc += ['set ::ot_case_n 0; set ::ot_case_miss 0',
+                'proc ot_case {v p} { set q [get_pins -quiet $p]; if {[llength $q]} { set_case_analysis $v $q; '
+                'incr ::ot_case_n } else { incr ::ot_case_miss } }']
+        n_case = 0
+        for r_ in fl['lanes']:
+            if r_.get('lane') == 'reset' or r_.get('K') is None:
+                continue
+            for i in range(3):
+                sdc.append(f"ot_case {(int(r_['K']) >> i) & 1} {{{r_['landing']}/k{i}}}"); n_case += 1
+        sdc.append('puts "OT_CASE_STRAPS set $::ot_case_n missing $::ot_case_miss of %d"' % n_case)
+        (out / 'case' / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
+        if m.get('coll_lane_latency'):
+            # Q-COLLCAL 10-18: the SerDes lane cycles of THIS build and the collective calendar that absorbs them
+            (out / 'case' / 'coll_lane_latency.json').write_text(json.dumps(m['coll_lane_latency'], indent=1) + '\n')
+            rec['coll_lane_latency'] = {k_: m['coll_lane_latency'][k_] for k_ in ('LX', 'verdict', 'fails')}
+    if m.get('die_master_params'):
+        # Q-COLLCAL 10-18: the elaboration parameters of the die's masters (tools/die_port_bind.py reads DIE_V.params.json:
+        # the strict bind elaborates io_collective with the GEN's LX0..2); merged over any sidecar the writer left
+        pj = out / 'case' / 'die.v.params.json'
+        cur = json.loads(pj.read_text()) if pj.exists() else dict(schema='opentallas.die_params.v1', netlist='die.v', masters={})
+        for mst_, prm_ in m['die_master_params'].items():
+            cur.setdefault('masters', {}).setdefault(mst_, {}).update(prm_)
+        pj.write_text(json.dumps(cur, indent=1, sort_keys=True) + '\n')
+        rec['die_master_params'] = m['die_master_params']
+        (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
+        rec['fwd_lanes'] = {k_: fl[k_] for k_ in ('lanes', 'stations', 'landings', 'masters', 'plain_relays_left',
+                                                  'reclassed_reset_hops')} | dict(lanes=len(fl['lanes']), skipped=len(fl['skipped']))
+        (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
     # r10: pin directions of every die master as the bus list has them (driver first), for the placeholder Liberty
     # views of the die STA (tools/qwen_tp8/die_sta_libs.py); a split bundle's 1-b _cr / _r part runs against its word
     byi = {i.name: i for i in m['insts']}
@@ -149,7 +216,8 @@ if '--case' in sys.argv:
     emit_saved = getattr(v, 'EMIT_SPLIT', False)
     v.EMIT_SPLIT = True
     for name, mst in sorted(M.items()):
-        if re.match(r'^(q[fk]d_rly|qfd_rst_rep)', name) or not any(getattr(i, 'master', '') == name for i in m['insts']):
+        # Q-DIE11-RLY: the forwarded-lane frames (qfd_rlyh*/qfd_landh*) DO get assigned pin files (their kits consume them)
+        if re.match(r'^(q[fk]d_rly(?!h0?_|r[0l]?_)|qfd_rst_rep)', name) or not any(getattr(i, 'master', '') == name for i in m['insts']):
             continue
         g = {}
         rects_ = list(v.pin_rects(mst, 1, {q: pw.get((name, q), 0) for q in mst.order}))

@@ -1,0 +1,403 @@
+{
+ "schema": "opentallas.s81_dv.frame_wrap.v1",
+ "provenance": {
+  "generator": "tools/dsrom_s81_fulldie.py (c26l, claude/sdie-1815 aacb894e4 + flags of S-DIE 1815 10-16) -> tools/s81/cluster_extract.py extract",
+  "plan_sha256": "2275d00c9c7929c25aae7e72a8b4c4ce8955c29a1d3c933d59b616c169e26a6f",
+  "die_v_sha256": "e0665824dd6cec413e7dbe1d3a6c53f6c3148e4d0a606900b67a8bcbaa644765",
+  "extract": "ot-epyc4:/srv/opentallas-scratch/claude/s81dv/ref_c26l_extract (die_hier.v c01d3527..., clusters.json 579e7370...; the c26l GEN scratch was deleted 10-17 with the hub trials, the extract is kept)"
+ },
+ "sources": {
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv": "711feddaee9446a08088936e6190d3920a6f5fc74e15da35cb32bcd12460ef6a",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv": "e3584dd29cf76543149415f65808a8525e9cf19e1858c2a5d56ad5a2e45185fc",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv": "23300ab7868673cca1ace623995db83a3f83961005efda3164f5058d05da5cee",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv": "6e922cfe663df02ff19aa121aa97dfd4d95c93e37ed38e5b21cfe1d7df5e24de",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv": "1312d4134029df6d419bdd45757ee17dca41eca738a7bb20199fcb09b9ff4e26",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv": "357ffbcd9ecf0e9f67ab6c1901d18e75dbc5d6e7c35a5d69529134327d118f4f",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv": "d48d1c3c613f6d1012fa9347589d87f925cfe60124b2fe2f8ac22c7c4565b7d2",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_payload536.sv": "642702e7299c6977317fccd991e0a6c3f6df736f134f6bd3a2bd3f97ebc986b3",
+  "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv": "2f4b3bf9c3ddd4ab04ae5f04e39e65fbc65692e0c26f199619a2694360e8bfeb",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "4b2fd9fc0a323bef02e84691517cdc3886ec60921aa7228c6ddd0a5a5bc6a8df",
+  "rtl/v41die/ot_s81_cfg7_seq.sv": "bb89a1970734008e238547af70af68cb1d0f02ab5cab89e0bc1a607898cb7e5a",
+  "rtl/v41die/ot_s81_cfg7_seq_bfp.sv": "35c2f3e0186c5ca793db5a228fff75a71a0a1f4d5f995219d51dadaa911b1fc4",
+  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "046c669ab87bfca7339e38e5f6e233129f2c1d3d0d6c2f6a7be853b11298a54f",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "f9606abe8f228ffbdf8ad3be5380abab6dbb9bac9bdc31af6b76abf99e502e2e",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfu.sv": "b3e9ee193f05c981baf3e38fdc4163ea60119fbc7992b761831f4d465a93ac27",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv": "66c7dac657cc3f060671a74cbf08d293c9c5644f99144a12ff91bfffcc191d25",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv": "976cba9f2a9a3a774dee119ab54fc351c9b2b1cd4370c2f82a7f4f5032efdc40",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv": "72bb6701509b62937ccb57116e4a2ed3b3f8b52b8c7bf3ddee0f46041b4af8a9",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv": "0c1238dc3f1938dae8fa2ed50f4df5e98c4202f7f78cc513e413761dc396bef9",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_rstg.sv": "240eea63e11cace472a2ba37c9f21147b2a593d1dddd8c28ae1afe26498b8e0f",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_sstn_e0e1c0c1_cp1.sv": "e9b0dfe0e45c2f3e41f138e429b0aceed4f6e748d7fb10997aecb66b294dc1ce",
+  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_N.sv": "1cd45a7d8bfab8880024cfdc093bf02f6419b37c6e35dc20990f50bcd6345cf7",
+  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv": "fe714548181c0ab2cb534a396bb7c264d1d3aeb1527fd9146e355dc07dc39736"
+ },
+ "ports": [
+  {
+   "dir": "input",
+   "name": "clk",
+   "width": 1
+  },
+  {
+   "dir": "input",
+   "name": "cr",
+   "width": 1
+  },
+  {
+   "dir": "input",
+   "name": "cr_s",
+   "width": 1
+  },
+  {
+   "dir": "input",
+   "name": "rst_n",
+   "width": 1
+  },
+  {
+   "dir": "input",
+   "name": "x",
+   "width": 1104
+  },
+  {
+   "dir": "input",
+   "name": "xk",
+   "width": 4
+  },
+  {
+   "dir": "output",
+   "name": "xo",
+   "width": 1104
+  },
+  {
+   "dir": "output",
+   "name": "xok",
+   "width": 4
+  },
+  {
+   "dir": "output",
+   "name": "ret",
+   "width": 70
+  }
+ ],
+ "lane_map": {
+  "x": "lane k = x[276k +: 276]; x[565:0] = xd, x[1103:566] = xd2",
+  "xf": "xk[1]",
+  "xf2": "xk[2]",
+  "xo": "dsfd_dvrly_276_NS per lane, ck = xk[k], ck_o = xok[k]"
+ },
+ "exact_relays": {
+  "dsfd_rly_38_WN": {
+   "width": 38,
+   "rsreg": 1,
+   "from_master": "dsfd_rly_63_WN"
+  }
+ },
+ "exact_relay_rtl": {
+  "path": "rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
+  "sha256": "df18dbcd870f952acb0f4fa4a3f77fb51641b283ff3879943e2601d35ab8963c"
+ },
+ "masters": {
+  "col_h9": {
+   "master": "col_h9",
+   "source": {
+    "file": "results/arch/s81_dv_1016/frame/src/c26l_h9_v10.v.gz",
+    "sha256": "86d37f1fe1115f37735f38af76025924bd10ec104a71b29e6957ac9fb714e6f3",
+    "module": "dsfd_column_h9_v10",
+    "roots": [
+     10,
+     23,
+     52,
+     58,
+     71,
+     90,
+     119
+    ],
+    "c26l_root": 10,
+    "pair0": 154
+   },
+   "slots": 9,
+   "pairs": {
+    "q": 12,
+    "bf": 3
+   },
+   "changes": [
+    {
+     "kind": "cfifo_rebind",
+     "old": "dsfd_cfifo (c26 glue: ck/co/rf pins, CFIFO_V2 + x2pair ingress)",
+     "new": "dsfd_cfifo_crs (main; r5f-507e1b0c3 CLOSED TT +71.04 / FF +17.32, native PASS)",
+     "note": "c26 co net n0 (= ck) -> frame port clk; rf (= cr) dropped (the die forwards the return clock from the region root); xf <- xk[1], xf2 <- xk[2]; cr, cr_s ports"
+    },
+    {
+     "kind": "constants_removed",
+     "counts": {
+      "base566.nf<-e0[1]": 8,
+      "base566.e1<-e0": 3,
+      "base566.c1<-c0": 3,
+      "base566.si<-e0": 1,
+      "dsfd_rly_63_WN->dsfd_rly_38_WN (25 pad bits)": 3
+     }
+    },
+    {
+     "kind": "bf_front_roots",
+     "count": 3,
+     "note": "dsfd_bf_front_static -> dsfd_bf_front_roots (same front, physical ABI: xb = {xb_data, xb_meta}; io_n / io_w / io_e face clock roots = the column clock); --bf-front static keeps the generator source"
+    },
+    {
+     "kind": "x_forward",
+     "note": "4 x dsfd_dvrly_276_NS (one flop-first stage, own lane forwarded clock in / ck_o out); +1 edge per frame on the x chain"
+    },
+    {
+     "kind": "return_r1_skew",
+     "counts": {
+      "dsfd_rly_63_NS": 12
+     },
+     "note": "one relay stage at every q leaf node b (r1) input: r1 reaches the leaf one edge after r0 (D2, ot_s81_retn_static F1); compiler calendar tools/s81_dv/frame_return_plan.py"
+    }
+   ],
+   "params": {
+    "ot_v41_rom_elem_q_qxpq_w10": {
+     "MTP": 1,
+     "EARLY": 1,
+     "NB": 2,
+     "FAST": 1,
+     "PP": 1,
+     "QTIMING_FIX": 1,
+     "QPIPE": 1,
+     "QP_XS": 1,
+     "QP_CAP": 0,
+     "QP_P1": 1,
+     "QP_CSAM": 10,
+     "QZ": 1,
+     "QZ_NS": 8,
+     "QZ_NE": 4,
+     "QY": 1,
+     "QX": 10,
+     "PQ": 1,
+     "QW": 0,
+     "QM": 5,
+     "QS": 5,
+     "INSTANCE": "{INSTANCE, \"_e0\"}"
+    },
+    "ot_s81_cfg7_seq": {
+     "PQ": 1,
+     "LAYOUT": 1,
+     "PINREG": 1
+    },
+    "ot_s81_cfg7_seq_bfp": {
+     "LAYOUT": 1,
+     "PINREG": 1
+    }
+   },
+   "members": {
+    "dsfd_bf_col": 6,
+    "dsfd_bf_front_roots": 3,
+    "dsfd_cfifo_crs": 1,
+    "dsfd_dvrly_276_NS": 4,
+    "dsfd_node_LLd": 1,
+    "dsfd_node_LLfd": 7,
+    "dsfd_node_LLfu": 7,
+    "dsfd_node_NNfd": 7,
+    "dsfd_node_NNfu": 7,
+    "dsfd_qbank_N": 12,
+    "dsfd_qbank_S": 12,
+    "dsfd_rly_15_EN": 2,
+    "dsfd_rly_15_NS": 2,
+    "dsfd_rly_15_SN": 4,
+    "dsfd_rly_1_EW": 2,
+    "dsfd_rly_1_WN": 3,
+    "dsfd_rly_266_EW": 8,
+    "dsfd_rly_283_EW": 8,
+    "dsfd_rly_2_ES": 6,
+    "dsfd_rly_2_NE": 3,
+    "dsfd_rly_2_NS": 6,
+    "dsfd_rly_2_NW": 5,
+    "dsfd_rly_2_WE": 6,
+    "dsfd_rly_2_WS": 6,
+    "dsfd_rly_38_WN": 3,
+    "dsfd_rly_536_EN": 2,
+    "dsfd_rly_536_SN": 3,
+    "dsfd_rly_536_SW": 3,
+    "dsfd_rly_54_WN": 3,
+    "dsfd_rly_63_ES": 1,
+    "dsfd_rly_63_NE": 9,
+    "dsfd_rly_63_NS": 29,
+    "dsfd_rly_63_SE": 5,
+    "dsfd_rly_63_WE": 46,
+    "dsfd_rly_63_WN": 5,
+    "dsfd_rly_63_WS": 31,
+    "dsfd_rly_66_EN": 1,
+    "dsfd_rly_66_ES": 1,
+    "dsfd_rly_66_NE": 1,
+    "dsfd_rly_66_NS": 7,
+    "dsfd_rly_66_SN": 4,
+    "dsfd_rly_66_SW": 1,
+    "dsfd_rstg": 3,
+    "ot_rom_4096x72_m8": 105,
+    "ot_s81_cfg7_seq": 12,
+    "ot_s81_cfg7_seq_bfp": 3,
+    "ot_s81_sstn_base566": 9,
+    "ot_s81_sstn_payload536": 9,
+    "ot_v41_rom_elem_q_qxpq_w10": 12
+   },
+   "rtl": {
+    "path": "rtl/dsrom_sys/s81_dv/frame/col_h9.sv",
+    "sha256": "89ee9d7eea2f769256db3e1511e52065072f69d76acfe10f84a4b636ebd6a3f1"
+   }
+  },
+  "col_h10": {
+   "master": "col_h10",
+   "source": {
+    "file": "results/arch/s81_dv_1016/frame/src/c26l_h10a_v17.v.gz",
+    "sha256": "a7097562373afc247174a26159df9ff7fea3975f5f86309804f219e331dc68ce",
+    "module": "dsfd_column_h10a_v17",
+    "roots": [
+     19,
+     38,
+     86
+    ],
+    "c26l_root": 19,
+    "pair0": 292
+   },
+   "slots": 10,
+   "pairs": {
+    "q": 12,
+    "bf": 4
+   },
+   "changes": [
+    {
+     "kind": "cfifo_rebind",
+     "old": "dsfd_cfifo (c26 glue: ck/co/rf pins, CFIFO_V2 + x2pair ingress)",
+     "new": "dsfd_cfifo_crs (main; r5f-507e1b0c3 CLOSED TT +71.04 / FF +17.32, native PASS)",
+     "note": "c26 co net n0 (= ck) -> frame port clk; rf (= cr) dropped (the die forwards the return clock from the region root); xf <- xk[1], xf2 <- xk[2]; cr, cr_s ports"
+    },
+    {
+     "kind": "constants_removed",
+     "counts": {
+      "base566.e1<-e0": 4,
+      "base566.c1<-c0": 4,
+      "base566.nf<-e0[1]": 9,
+      "base566.si<-e0": 1,
+      "dsfd_rly_63_WN->dsfd_rly_38_WN (25 pad bits)": 4
+     }
+    },
+    {
+     "kind": "bf_front_roots",
+     "count": 4,
+     "note": "dsfd_bf_front_static -> dsfd_bf_front_roots (same front, physical ABI: xb = {xb_data, xb_meta}; io_n / io_w / io_e face clock roots = the column clock); --bf-front static keeps the generator source"
+    },
+    {
+     "kind": "x_forward",
+     "note": "4 x dsfd_dvrly_276_NS (one flop-first stage, own lane forwarded clock in / ck_o out); +1 edge per frame on the x chain"
+    },
+    {
+     "kind": "return_r1_skew",
+     "counts": {
+      "dsfd_rly_63_WE": 2,
+      "dsfd_rly_63_NS": 10
+     },
+     "note": "one relay stage at every q leaf node b (r1) input: r1 reaches the leaf one edge after r0 (D2, ot_s81_retn_static F1); compiler calendar tools/s81_dv/frame_return_plan.py"
+    }
+   ],
+   "params": {
+    "ot_v41_rom_elem_q_qxpq_w10": {
+     "MTP": 1,
+     "EARLY": 1,
+     "NB": 2,
+     "FAST": 1,
+     "PP": 1,
+     "QTIMING_FIX": 1,
+     "QPIPE": 1,
+     "QP_XS": 1,
+     "QP_CAP": 0,
+     "QP_P1": 1,
+     "QP_CSAM": 10,
+     "QZ": 1,
+     "QZ_NS": 8,
+     "QZ_NE": 4,
+     "QY": 1,
+     "QX": 10,
+     "PQ": 1,
+     "QW": 0,
+     "QM": 5,
+     "QS": 5,
+     "INSTANCE": "{INSTANCE, \"_e0\"}"
+    },
+    "ot_s81_cfg7_seq": {
+     "PQ": 1,
+     "LAYOUT": 1,
+     "PINREG": 1
+    },
+    "ot_s81_cfg7_seq_bfp": {
+     "LAYOUT": 1,
+     "PINREG": 1
+    }
+   },
+   "members": {
+    "dsfd_bf_col": 8,
+    "dsfd_bf_front_roots": 4,
+    "dsfd_cfifo_crs": 1,
+    "dsfd_dvrly_276_NS": 4,
+    "dsfd_node_LLd": 1,
+    "dsfd_node_LLfd": 7,
+    "dsfd_node_LLfu": 8,
+    "dsfd_node_NNfd": 8,
+    "dsfd_node_NNfu": 7,
+    "dsfd_qbank_N": 12,
+    "dsfd_qbank_S": 12,
+    "dsfd_rly_15_EN": 2,
+    "dsfd_rly_15_NS": 4,
+    "dsfd_rly_15_SN": 3,
+    "dsfd_rly_1_EW": 2,
+    "dsfd_rly_1_WN": 4,
+    "dsfd_rly_266_EW": 9,
+    "dsfd_rly_283_EW": 9,
+    "dsfd_rly_2_ES": 5,
+    "dsfd_rly_2_NE": 4,
+    "dsfd_rly_2_NS": 6,
+    "dsfd_rly_2_NW": 5,
+    "dsfd_rly_2_WE": 6,
+    "dsfd_rly_2_WS": 7,
+    "dsfd_rly_38_WN": 4,
+    "dsfd_rly_536_EN": 3,
+    "dsfd_rly_536_SN": 2,
+    "dsfd_rly_536_SW": 4,
+    "dsfd_rly_54_WN": 4,
+    "dsfd_rly_63_NE": 8,
+    "dsfd_rly_63_NS": 50,
+    "dsfd_rly_63_SE": 8,
+    "dsfd_rly_63_SN": 1,
+    "dsfd_rly_63_WE": 49,
+    "dsfd_rly_63_WN": 5,
+    "dsfd_rly_63_WS": 32,
+    "dsfd_rly_66_ES": 1,
+    "dsfd_rly_66_EW": 3,
+    "dsfd_rly_66_NS": 7,
+    "dsfd_rly_66_SN": 4,
+    "dsfd_rstg": 3,
+    "ot_rom_4096x72_m8": 112,
+    "ot_s81_cfg7_seq": 12,
+    "ot_s81_cfg7_seq_bfp": 4,
+    "ot_s81_sstn_base566": 10,
+    "ot_s81_sstn_payload536": 10,
+    "ot_v41_rom_elem_q_qxpq_w10": 12
+   },
+   "rtl": {
+    "path": "rtl/dsrom_sys/s81_dv/frame/col_h10.sv",
+    "sha256": "578bb949520d91568eeffdddaed7a5fb418001811ceb7396f2ba90c60e7229f8"
+   }
+  },
+  "col_h9_MX": {
+   "master": "col_h9_MX",
+   "rtl": {
+    "path": "rtl/dsrom_sys/s81_dv/frame/col_h9_MX.sv",
+    "sha256": "0e401e6fec5e0e4f286ca801ea33d58c8f0fb61849cd34e0e502f8913b849720"
+   },
+   "same_rtl_as": "col_h9",
+   "placement": "MX (mirrored); one child instance of the base master, ports pass through"
+  }
+ },
+ "rstp": false,
+ "bf_front": "roots"
+}

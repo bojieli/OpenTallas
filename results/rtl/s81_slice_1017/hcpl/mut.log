@@ -1,0 +1,8 @@
+MISMATCH cyc=38 ref(vo=1 o=b5070000 f=1) dut(vo=1 o=b50b0000 f=1)
+MISMATCH cyc=39 ref(vo=1 o=39710000 f=1) dut(vo=1 o=3c550000 f=1)
+MISMATCH cyc=42 ref(vo=1 o=b87e0000 f=1) dut(vo=1 o=3a3f0000 f=1)
+FAIL_HCPOST_LANE_PR mismatches=6662 outputs=14822
+- rtl/test/tb_hcpost_lane_pr.sv:40: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.211 s; speed 95.145 us/s
+- Verilator: cpu 0.210 s on 1 threads; allocated 7 MB

@@ -1,0 +1,121 @@
+{
+ "name": "qfd_rst_rep",
+ "top": "qfd_rst_rep",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/reset_tree_20261013/ot_qwen_rst_rep.sv",
+  "physical/qwen_rst_rep/qfd_rst_rep_masters.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 12.96,
+  "h": 6.48,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "clk",
+   "d"
+  ],
+  "E": [
+   "q0"
+  ],
+  "N": [
+   "q1"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [
+  "*"
+ ],
+ "refglob": "*",
+ "io_budget": {
+  "in": 0.2,
+  "out": 0.2
+ },
+ "recipe": 1,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (as the coordinator-approved relays): ot_qwen_rst_rep IS pin-registered by construction -- one input flop at d, 0 pad flops, one flop per output (q0, q1); a flow pin register would add a reset-tree stage the die reset calendar (PAD + 2 = 2 edges per node) does not price"
+ },
+ "assigned_pin_source": {
+  "file": "physical/ref_tile/qfd_rst_rep/assigned_pins.lef",
+  "note": "die-assigned faces of the Qwen compute die dv2f14bn stand-in abstract (qfd_rst_rep 5.184 x 2.16, OBS M1-M3): clk + d on W (M4), q0 on E (M4), q1 on N (M5)",
+  "owner": "Q-DIE11b",
+  "sha256": "cf94a76950d008c6e38a06b84b205f8ab24e2f538bd67c9c4bea26f47eb9ffe2",
+  "extracted_from": {
+   "abstract": "Qwen compute die dv2f14bn stand-in elements.lef (case_r22k, host-resident 20.7 MB; not committed)",
+   "sha256": "55ae3f2cf7e79716c280c1bc3c561c6622c677e1980e52896304e227ce0959aa",
+   "regenerate": "tools/qwen_rom_fulldie.py abstract of dv2f14bn, then awk \"/^MACRO qfd_rst_rep$/,/^END qfd_rst_rep$/\" elements.lef"
+  }
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 2,
+  "peak_ram_gb": 4,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03
+ },
+ "structural_change": "ELEM-GAPS/QC 10-18: first hard view of the Qwen compute-die reset-tree repeater qfd_rst_rep (ot_qwen_rst_rep PAD 0, rtl/qwen_sys/reset_tree_20261013; die wrapper = tools/qwen_split/gen_relay_rtl.py output, committed in physical/qwen_rst_rep). 2-edge node d -> q0/q1, no reset (the tree is flushed by the root holding the level >= depth). Die instances in dv2f14bn: 1624. Frame 12.96 x 6.48 um, NOT the die stand-in 5.184 x 2.16: ref_tile CORE_MARGIN 2.16 per side + M5 PG at the 2.7 pitch need W >= 12.96 (>= 2 stripes/net spanning >= 52 %) and H >= 6.48 (8 rows); the die slot must grow (RST_W/RST_H in tools/qwen_rom_fulldie_b3r2.py; +0.18 mm2 over 2,458 instances), as qfd_rly_26 (8.64 -> 10.8).",
+ "job": {
+  "owner": "Claude:ELEM-GAPS/QC",
+  "branch": "claude/eg-qc-1018",
+  "tag": "a1",
+  "purpose": "Qwen compute die reset-tree repeater qfd_rst_rep (ot_qwen_rst_rep PAD 0, 2 edges, 1 b): first hard view for die binding (dv2f14bn 1624 instances)",
+  "benches": [
+   {
+    "name": "rstrep_exact",
+    "cmd": "bash tools/qwen_split/bench_rst_rep.sh pass qfd_rst_rep {RUN}/bench_p",
+    "expect": "pass",
+    "pass_regex": "RSTREP_BENCH PASS 0 errors in [0-9]+ checks",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/arch/qwen_split_compute_1014/eg_qc_1018/bench_rst_rep/qfd_rst_rep.pass.log"
+   },
+   {
+    "name": "rstrep_mut_q1_early",
+    "cmd": "bash tools/qwen_split/bench_rst_rep.sh mut qfd_rst_rep {RUN}/bench_m",
+    "expect": "fail",
+    "fail_regex": "RSTREP_BENCH FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qwen_split_compute_1014/eg_qc_1018/bench_rst_rep/qfd_rst_rep.mut.log"
+   },
+   {
+    "name": "rstrep_mut_depth",
+    "cmd": "bash tools/qwen_split/bench_rst_rep.sh lat qfd_rst_rep {RUN}/bench_l",
+    "expect": "fail",
+    "fail_regex": "RSTREP_BENCH FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qwen_split_compute_1014/eg_qc_1018/bench_rst_rep/qfd_rst_rep.lat.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_sys/reset_tree_20261013",
+   "physical/qwen_rst_rep",
+   "tools/qwen_split",
+   "results/arch/qwen_split_compute_1014/eg_qc_1018/bench_rst_rep",
+   "physical/ref_tile/qfd_rst_rep/assigned_pins.lef"
+  ],
+  "views_to": "physical/ref_tile/qfd_rst_rep/views",
+  "record_to": "results/rtl/ref_tile/qfd_rst_rep"
+ }
+}

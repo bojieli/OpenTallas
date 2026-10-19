@@ -3,9 +3,16 @@
 // the SO/SI bus.  qkd_astk_native_er_service_w passes 8 x (425 + 634) bits through unchanged and touches only
 // so[12:0] (the read-request field, which the service owns: a legacy ECTL read there is a fault) and si[632:569]
 // (the EP's registered e_rdq) of each EP owner.  This leaf carries exactly those bits (8 x 13 + 8 x 1 in,
-// 8 x 13 out, 8 x 64 in) instead of ~17k pass-through pins; the untouched bus stays a parent net.  Logic, edges
-// and fault law are those of qkd_astk_native_er_service_w (ERL 3, N <= 8): a cycle-exact replica proved by
-// tb_qkd_astk_er_tap against the service on the full bus.
+// 8 x 13 out, 8 x 64 in) instead of ~17k pass-through pins; the untouched bus stays a parent net.
+// ECTLA-2 2026-10-17 (coordinator 0co (3)): every pin is registered (owner rule pin-registers 10-15); no input reaches
+// an output or a deep cone without a flop at its own pin.  Edges, counted from read_v at the tap pin (cycle c):
+//   c+1 read_v/read_addr pin flops (collision check + fault from here), c+2 the so[12:0] request field leaves on the
+//   aso pin flops (the EP sees its request 2 edges later than through the combinational service), the EP's own ERL 3
+//   read stages put e_rdq on si at c+5, the esi pin flops hold it at c+6, the owner select (one-hot AND-OR on a
+//   registered tag) lands in the response pin flops at c+7.  Read latency TAP_RL = ERL + 4 = 7 (was ERL 3): +4 edges
+//   per e-read, priced by KVJ-E in the PV calendar.  Same fault law (owner collision on one edge, legacy ECTL read
+//   so[0]); it is raised 2 edges after the offending pin value.  Cycle-exact vs the service with the request delayed 2
+//   and the response delayed 2 more (tb_qkd_astk_er_tap).
 module qkd_astk_er_tap #(parameter integer N=4, ERL=3) (
     input  wire            ck, rst_n,
     input  wire [N-1:0]    read_v,
@@ -19,49 +26,60 @@ module qkd_astk_er_tap #(parameter integer N=4, ERL=3) (
     output wire [64*N-1:0] response_data,
     output reg             fault
 );
-    wire [7:0] eso_v = {eso_v_hi, eso_v_lo};
-    wire [64*8-1:0] esi = {esi_hi, esi_lo};
-    reg  [13*8-1:0] aso;
-    assign aso_lo = aso[0 +: 52]; assign aso_hi = aso[52 +: 52];
-    reg [N-1:0] val[0:ERL-1];
-    reg [10:0] tag[0:ERL-1][0:N-1];
+    localparam integer TAP_RL = ERL + 4;          // read_v pin -> response pin, edges
+    localparam integer PD = ERL + 2;              // tag/valid pipe behind the read pin flops
+    // pin flops (inputs)
+    reg [N-1:0] r_v; reg [11*N-1:0] r_a; reg [7:0] r_ev; reg [64*8-1:0] r_esi;
+    // pin flops (outputs)
+    reg [7:0] aso_vq; reg [12*8-1:0] aso_aq; wire [13*8-1:0] aso_q; reg [N-1:0] rv_q; reg [11*N-1:0] ra_q; reg [64*N-1:0] rd_q;
+    genvar ge;
+    generate for(ge=0;ge<8;ge=ge+1)begin:g_aso assign aso_q[13*ge+:13]={aso_aq[12*ge+:12],aso_vq[ge]}; end endgenerate
+    assign aso_lo = aso_q[0 +: 52]; assign aso_hi = aso_q[52 +: 52];
+    assign response_v = rv_q; assign response_addr = ra_q; assign response_data = rd_q;
+    reg [N-1:0] val[0:PD-1];
+    reg [10:0] tag[0:PD-1][0:N-1];
+    reg [13*8-1:0] aso_d;
     reg collide;
-    integer i,j,e;
+    reg [64*N-1:0] sel_d;
+    integer i,j,e,o;
     always @* begin
-        aso=104'd0;
+        aso_d=104'd0;
         collide=1'b0;
         for(j=0;j<N;j=j+1)
-            if(read_v[j]) begin
+            if(r_v[j]) begin
                 for(i=0;i<j;i=i+1)
-                    if(read_v[i] && read_addr[11*i+3+:3]==read_addr[11*j+3+:3]) collide=1'b1;
-                aso[13*read_addr[11*j+3+:3]+:13]={1'b0,read_addr[11*j+:11],1'b1};
+                    if(r_v[i] && r_a[11*i+3+:3]==r_a[11*j+3+:3]) collide=1'b1;
+                aso_d[13*r_a[11*j+3+:3]+:13]={1'b0,r_a[11*j+:11],1'b1};
             end
+        // decoded constant-index select (one-hot AND-OR on the registered tag; same function as esi[64*owner +: 64])
+        sel_d={64*N{1'b0}};
+        for(j=0;j<N;j=j+1)
+            for(o=0;o<8;o=o+1)
+                sel_d[64*j+:64]=sel_d[64*j+:64]|({64{tag[PD-1][j][5:3]==3'(o)}}&r_esi[64*o+:64]);
     end
     always @(posedge ck or negedge rst_n)
-        if(!rst_n)begin for(i=0;i<ERL;i=i+1)val[i]<=0;fault<=0;end
-        else begin
-            val[0]<=read_v;for(i=1;i<ERL;i=i+1)val[i]<=val[i-1];
+        if(!rst_n)begin
+            r_v<=0;r_ev<=0;rv_q<=0;fault<=0;
+            for(i=0;i<PD;i=i+1)val[i]<=0;
+            aso_vq<=8'd0;
+        end else begin
+            r_v<=read_v;r_ev<={eso_v_hi,eso_v_lo};
+            val[0]<=r_v;for(i=1;i<PD;i=i+1)val[i]<=val[i-1];
+            rv_q<=val[PD-1];
+            for(e=0;e<8;e=e+1)aso_vq[e]<=aso_d[13*e];
             if(collide)fault<=1;
-            for(e=0;e<8;e=e+1)if(eso_v[e])fault<=1;
+            if(|r_ev)fault<=1;
         end
     always @(posedge ck)begin
-        for(j=0;j<N;j=j+1)begin tag[0][j]<=read_addr[11*j+:11];for(i=1;i<ERL;i=i+1)tag[i][j]<=tag[i-1][j];end
+        r_a<=read_addr;r_esi<={esi_hi,esi_lo};
+        for(e=0;e<8;e=e+1)aso_aq[12*e+:12]<=aso_d[13*e+1+:12];
+        for(j=0;j<N;j=j+1)begin tag[0][j]<=r_a[11*j+:11];for(i=1;i<PD;i=i+1)tag[i][j]<=tag[i-1][j];ra_q[11*j+:11]<=tag[PD-1][j];end
+        rd_q<=sel_d;
     end
-    genvar g;
-    generate for(g=0;g<N;g=g+1)begin:g_rsp
-        wire [2:0] owner=tag[ERL-1][g][5:3];
-        assign response_v[g]=val[ERL-1][g];
-        assign response_addr[11*g+:11]=tag[ERL-1][g];
-        // decoded constant-index select (one-hot AND-OR; same function as esi[64*owner +: 64], no runtime part-select)
-        reg [63:0] sel;
-        integer o;
-        always @* begin sel=64'd0; for(o=0;o<8;o=o+1) sel=sel|({64{owner==3'(o)}}&esi[64*o+:64]); end
-        assign response_data[64*g+:64]=sel;
-    end endgenerate
     initial if(ERL!=3 || N<1 || N>8) $fatal(1,"native EP ABI requires ERL3, 1<=N<=8");
 endmodule
 
-// Wires-only strip successor: the die's ASTK strip with the e-read inline on its SO/SI bus.  Engine so[12:0] is
+// Wires-only strip successor: the die's ASTK strip with the e-read inline on its SO/SI bus (read latency TAP_RL = 7).  Engine so[12:0] is
 // replaced by the tap's request field; so[424:13] and the whole si bus are parent nets (si also feeds the tap's e_rdq).
 module qkd_astk_strip_er_s #(parameter integer RL = 1, N = 4) (
     input  wire          ck_c, input wire [3:0] ck_z, input wire [63:0] ck_v, input wire [31:0] ck_x, input wire [7:0] ck_e,

@@ -21,7 +21,12 @@ module ot_hbm_status_join #(
     parameter integer NH=6,                 // host/link fault inputs
     parameter [NT*8-1:0] TGTS=536'hd7d6d5d4d3d2d1d0c7c6c5c4c3c2c1c0a5a4a2a0878685846f6e6d6c6a68666463626160575655545352515047464544434241403b3a39387877767574703736353430,   // F20 target id per input (0 = always participating)
     parameter integer GUARD=8,
-    parameter integer MUT=0                 // bench: 1 ignores participation, 2 no guard
+    parameter integer MUT=0,                // bench: 1 ignores participation, 2 no guard
+    // HBMA-HOST2 2026-10-17 (coordinator 0dc+ (d)): RRELAY=1 -> rst_n drives only an ot_rst_relay (2 sync + 1 tree
+    // stage: assert immediate, release +3 edges, configuration-only latency); region 0 = pin flops cv/dv/lv/rdy/act,
+    // 1 = fault pin flops, 2 = participation/guard/output state. All regions release on the same edge, so the tile is
+    // cycle-exact with RRELAY=0 driven by the relayed reset (tb_hbm_status_join_relay). Default 0 = r1 behaviour.
+    parameter integer RRELAY=0
 )(
     input  wire clk, rst_n,
     input  wire cfg_v, desc_v, launch_v,
@@ -31,15 +36,24 @@ module ot_hbm_status_join #(
     input  wire [NH-1:0] h_fault,
     output reg  block_ready, program_active, program_fault, die_fault, irq
 );
+    wire [2:0] rr;
+    generate if (RRELAY != 0) begin : g_rr
+        ot_rst_relay #(.REGIONS(3), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    end else begin : g_rr0
+        assign rr = {3{rst_n}};
+    end endgenerate
     reg cv, dv, lv;
     reg [7:0] ct;
     reg [NT-1:0] rdy_q, act_q;
     reg [NF-1:0] tf_q;
     reg [NH-1:0] hf_q;
     always @(posedge clk) ct <= cfg_target;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cv <= 0; dv <= 0; lv <= 0; rdy_q <= 0; act_q <= 0; tf_q <= 0; hf_q <= 0; end
-        else begin cv <= cfg_v; dv <= desc_v; lv <= launch_v; rdy_q <= t_ready; act_q <= t_active; tf_q <= t_fault; hf_q <= h_fault; end
+    always @(posedge clk or negedge rr[0])
+        if (!rr[0]) begin cv <= 0; dv <= 0; lv <= 0; rdy_q <= 0; act_q <= 0; end
+        else begin cv <= cfg_v; dv <= desc_v; lv <= launch_v; rdy_q <= t_ready; act_q <= t_active; end
+    always @(posedge clk or negedge rr[1])
+        if (!rr[1]) begin tf_q <= 0; hf_q <= 0; end
+        else begin tf_q <= t_fault; hf_q <= h_fault; end
     reg [NT-1:0] part;
     reg [7:0] guard;
     reg launched, was_active;
@@ -51,8 +65,8 @@ module ot_hbm_status_join #(
         for (i = 0; i < NT; i = i + 1)
             if ((part[i] || TGTS[i*8 +: 8] == 8'd0 || MUT == 1) && !rdy_q[i]) all_ok = 0;
     end
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rr[2]) begin
+        if (!rr[2]) begin
             part <= 0; guard <= GUARD[7:0]; launched <= 0; was_active <= 0;
             block_ready <= 0; program_active <= 0; program_fault <= 0; die_fault <= 0; irq <= 0;
         end else begin

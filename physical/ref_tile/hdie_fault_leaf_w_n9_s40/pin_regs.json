@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_fault_leaf_n9_s40",
+ "enable": false,
+ "reason": "RTL registers every pin: every in bit lands in a reset pin flop (SYNC bits take a second synchroniser flop), fault is a flop Q; a kit flop stage would add an edge to the fixed fault latency"
+}

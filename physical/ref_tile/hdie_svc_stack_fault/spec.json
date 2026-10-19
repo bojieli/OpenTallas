@@ -1,0 +1,180 @@
+{
+ "name": "hdie_svc_stack_fault",
+ "top": "ot_hbm_svc_stack_fault",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_stack_fault.sv"
+ ],
+ "params": {
+  "MUT": 0,
+  "OWN_W": 6,
+  "NPC": 16,
+  "NG": 4,
+  "ND": 8
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "stream_clk",
+ "clock_ports": [
+  "stream_clk",
+  "hbm_clk"
+ ],
+ "reset_ports": [
+  "stream_rst_n",
+  "hbm_rst_n"
+ ],
+ "clock_data_paths": "async_gray_fifo",
+ "clock_relationship": {
+  "kind": "hbm_phy_async_gray_fifo",
+  "stream_period_ps": 833.333,
+  "hbm_period_ps": 1024.0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "stream_clk"
+   ],
+   "inputs": [
+    "stream_rst_n",
+    "svg_fault",
+    "share_fault",
+    "del_fault",
+    "cal_fault"
+   ],
+   "outputs": [
+    "fault",
+    "status"
+   ]
+  },
+  "hbm": {
+   "ratio": [
+    3072000,
+    2499999
+   ],
+   "ports": [
+    "hbm_clk"
+   ],
+   "inputs": [
+    "hbm_rst_n",
+    "row_v",
+    "pc_fault",
+    "owner_fault"
+   ],
+   "outputs": []
+  }
+ },
+ "pins": {
+  "E": [
+   "owner_fault"
+  ],
+  "N": [
+   "row_v",
+   "pc_fault",
+   "hbm_clk",
+   "hbm_rst_n"
+  ],
+  "S": [
+   "svg_fault",
+   "share_fault",
+   "del_fault",
+   "cal_fault",
+   "stream_clk",
+   "stream_rst_n"
+  ],
+  "W": [
+   "fault",
+   "status"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "tile",
+ "hold_budget_reason": "CDC leaf (hbm/stream async_gray_fifo profile, three ot_hbm_svc_fault_cdc crossings)",
+ "inhold": false,
+ "outhold": false,
+ "outline": {
+  "w": 21.6,
+  "h": 21.6
+ },
+ "slot_change_request": "HBM-KITS-B/SFAULT 10-18: d4g sfault_<q> binding NPC 16 / NG 4 / ND 8 / OWN_W 6 has 157 pin bits (owner_fault[95:0] = 4.4 pins/um on the 21.6 um E face); back to the 21.6 x 21.6 slot (the 10-17 43.2 outline was for the 293-pin per-stack d4f binding, util 10%)",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: row_v/pc_fault/owner_fault land in hbm pin flops rv_q/pf_q/of_q, svg/share/del/cal faults in stream pin flops; fault/status leave from stream flops; each reset pin lands on one ot_reset_sync. A kit pin-register stage cannot be applied across the two clock domains of the async_gray_fifo profile and would add an unpriced edge"
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:HBM-KITS-B",
+  "branch": "claude/hbm-kits-b-sfault-1018",
+  "tag": "hkb-sf",
+  "purpose": "HBM d4g per-quadrant stack fault sfault_<q>/fs_<q> (x4, #(MUT0,OWN_W6,NPC16,NG4,ND8) per d4g_gen2 port_bind). HBM-KITS-B 10-18: RTL CDC body restored (merge e37520d6c had dropped ot_hbm_svc_fault_cdc/ot_reset_sync from the parameterised module: undeclared ca_s/pc_s/ow_s); kit at the d4g params, 21.6 x 21.6 slot; benches on Verilator 5.050.",
+  "record_to": "results/rtl/ref_tile/hdie_svc_stack_fault",
+  "benches": [
+   {
+    "name": "sf_exact",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/exact 0 6 16 4 8",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_stack_fault MUT=0 OWN_W=6 NPC=16 NG=4 ND=8",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/ref_tile/hbmkb_sfault_1018/sf_mut0.log"
+   },
+   {
+    "name": "sf_mut_pair",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/m1 1 6 16 4 8",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_stack_fault",
+    "fail_regex": "^FAIL tb_hbm_svc_stack_fault MUT=1",
+    "note": "CA pair rule 2c/(2c+2) mod 16",
+    "fail_witness": "results/rtl/ref_tile/hbmkb_sfault_1018/sf_mut1.log"
+   },
+   {
+    "name": "sf_mut_owner_cdc",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh {RUN}/bench/m2 2 6 16 4 8",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_stack_fault",
+    "fail_regex": "^FAIL tb_hbm_svc_stack_fault MUT=2",
+    "note": "owner class fault_cdc crossing dropped",
+    "fail_witness": "results/rtl/ref_tile/hbmkb_sfault_1018/sf_mut2.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_stack_fault.sv",
+   "rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh",
+   "results/rtl/ref_tile/hbmkb_sfault_1018/"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

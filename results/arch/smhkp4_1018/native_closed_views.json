@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "by": "SMHKP4 10-18",
+ "note": "native audit of the CLOSED views s81su_smhq-65b8808ea, s81su_smhr-1ced40b32, s81lk_kp4_dec-p1-867a65ed7 (tools/hier_contract/native_pin_audit.py --view, origin/main 10-18)",
+ "records": [
+  {
+   "cell": "dsfd_su_t_smhq",
+   "view": "physical/ref_tile/s81su_smhq/views/dsfd_su_t_smhq",
+   "lib_cell": "dsfd_su_t_smhq",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 612.2,
+   "spread_ps": 39.7,
+   "outputs": 456,
+   "inputs": 341,
+   "launch_ps": 217.1,
+   "launch_pin": "q_e[40]",
+   "capture_ps": 441.9,
+   "capture_pin": "d[24]",
+   "launch_over": 0,
+   "capture_over": 341,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 26.5,
+   "ff_launch_min_ps": 103.4,
+   "ff_hold_need_ps": -227.4,
+   "pass": false,
+   "fail_why": "capture 441.93633 > 190 (341 pins)"
+  },
+  {
+   "cell": "dsfd_su_t_smhr",
+   "view": "physical/ref_tile/s81su_smhr/views/dsfd_su_t_smhr",
+   "lib_cell": "dsfd_su_t_smhr",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 638.4,
+   "spread_ps": 87.0,
+   "outputs": 67,
+   "inputs": 1033,
+   "launch_ps": 168.1,
+   "launch_pin": "den_v",
+   "capture_ps": 235.7,
+   "capture_pin": "q_e[446]",
+   "launch_over": 0,
+   "capture_over": 125,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 59.0,
+   "ff_launch_min_ps": 101.1,
+   "ff_hold_need_ps": -69.7,
+   "pass": false,
+   "fail_why": "capture 235.73752 > 190 (125 pins); TT pin-flop spread 87.0 > 80"
+  },
+  {
+   "cell": "ot_s81_kp4_dec",
+   "view": "physical/ref_tile/s81lk_kp4_dec/views/ot_s81_kp4_dec",
+   "lib_cell": "ot_s81_kp4_dec",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 415.1,
+   "spread_ps": 220.1,
+   "outputs": 625,
+   "inputs": 546,
+   "launch_ps": 387.8,
+   "launch_pin": "n_corr[25]",
+   "capture_ps": 337.0,
+   "capture_pin": "rst_n",
+   "launch_over": 625,
+   "capture_over": 546,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 149.5,
+   "ff_launch_min_ps": 232.2,
+   "ff_hold_need_ps": -104.1,
+   "pass": false,
+   "fail_why": "launch 387.84025 > 220 (625 pins); capture 337.01278 > 190 (546 pins); TT pin-flop spread 220.1 > 80; FF pin-flop spread 149.5 > 80"
+  }
+ ]
+}

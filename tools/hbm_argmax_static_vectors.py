@@ -6,7 +6,12 @@ The schedule is the compiler's, written from the timeline documented in rtl/hbm_
 wins and is flagged), global id = local + RANK * imm_a, value = the winner's FP32 bits (STREAM with bias: the FP32
 RNE sum, zeros canonical +0).
 
-  hbm_argmax_static_vectors.py OUTDIR [seed]
+  hbm_argmax_static_vectors.py OUTDIR [seed] [RANK] [r2]
+
+r2 (HBM-SU3 2026-10-17, d4f binding of ot_hbm_argmax_static_sw_vm_r2 + hb_idx__ctl AM_MERGE=1 share leaves): the
+successor's timeline (rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv header): input pin registers -> every
+edge after go +1 (S = G+4); VM response through the four-hop share merge + the argmax pin register -> capture, L, W0, W1
+and done +1+VMX (VMX 5); slice ACK counts the cr pin register (ACK 13). Default (no r2) = the original schedule.
 """
 import sys
 from pathlib import Path
@@ -14,6 +19,7 @@ from pathlib import Path
 import numpy as np
 
 ACK, ELAT, RANK = 12, 14, 3
+GO_PIN, VMX = 0, 0          # r2: 1, 5 (and ACK 13)
 HUB_TO_BANK, RESP = 2, 9
 SPECIAL = np.array([0x00000000, 0x80000000, 0x7f800000, 0xff800000, 0x00000001, 0x3f800000, 0xbf800000,
                     0x7f7fffff, 0xff7fffff], np.uint32)
@@ -30,8 +36,10 @@ def golden(v):
 
 def main():
     out = Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True)
-    global RANK
+    global RANK, ACK, GO_PIN, VMX
     RANK = int(sys.argv[3]) if len(sys.argv)>3 else 3
+    if len(sys.argv) > 4 and sys.argv[4] == 'r2':
+        ACK, GO_PIN, VMX = 13, 1, 5
     seed = int(sys.argv[2]) if len(sys.argv) > 2 else 0
     rng = np.random.default_rng(20261016 + seed)
     recs = []
@@ -79,15 +87,15 @@ def main():
                 mem = mirror_mem if rec['am'] else main_mem
                 for j, x in enumerate(v):
                     mem[rec['a'] + j] = int(x)
-                S = G + 3
+                S = G + 3 + GO_PIN
                 sec0, secl = rec['a'] >> 3, (rec['a'] + n - 1) >> 3
                 ns = secl - sec0 + 1
                 for j in range(ns):
                     ev.append(('R', S + j + 1, (sec0 + j) % 8))
-                L = S + ns + 9
+                L = S + ns + 9 + VMX
                 cand = v
             else:
-                X = G + 2
+                X = G + 2 + GO_PIN
                 words = n
                 nb = (words + 7) // 8
                 for b in range(nb):

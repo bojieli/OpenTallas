@@ -5,7 +5,7 @@
 # non-zero when the mutant is correctly rejected, i.e. a loop bench with expect "fail"); all = gate (default).
 # Positive: every scenario PASSes (lockstep identical non-fault outputs every cycle; documented fault edge delta;
 # fault_cause names the child). Mutants (each must FAIL): DROP_LINK (scen1), DROP_TKM (q2 scen3), NOMASK (scen0),
-# CAUSE_SWAP (scen4).
+# CAUSE_SWAP (scen4), COLLPIN ISS_NOPIN (scen0: issuer pin stage removed), ISS_NOHOLD (scen8: no busy cover).
 set -euo pipefail
 HERE=$(cd -- "$(dirname -- "$0")" && pwd)
 ROOT=${HCOLL_ROOT:-$(cd "$HERE/../../../../.." && pwd)}
@@ -73,7 +73,7 @@ run(){ # name scen expect
  fi
 }
 fail=0
-declare -A MS=([droplink]="OT_COLL_V5_MUT_DROP_LINK 1" [nomask]="OT_COLL_V5_MUT_NOMASK 0" [causeswap]="OT_COLL_V5_MUT_CAUSE_SWAP 4" [droptkm]="OT_COLL_V5_MUT_DROP_TKM 3" [vmsel]="OT_COLL_V6_MUT_VMSEL 7" [obsnoalign]="OT_COLL_V7_MUT_OBS_NOALIGN 7" [rcdrop]="OT_COLL_V7_MUT_RCDROP 2" [lastale]="OT_PT_MUT_LA_STALE 0")
+declare -A MS=([droplink]="OT_COLL_V5_MUT_DROP_LINK 1" [nomask]="OT_COLL_V5_MUT_NOMASK 0" [causeswap]="OT_COLL_V5_MUT_CAUSE_SWAP 4" [droptkm]="OT_COLL_V5_MUT_DROP_TKM 3" [vmsel]="OT_COLL_V6_MUT_VMSEL 7" [obsnoalign]="OT_COLL_V7_MUT_OBS_NOALIGN 7" [rcdrop]="OT_COLL_V7_MUT_RCDROP 2" [lastale]="OT_PT_MUT_LA_STALE 0" [issnopin]="OT_COLL_ISS_MUT_NOPIN 0" [issnohold]="OT_COLL_ISS_MUT_NOHOLD 8")
 if [ "$MODE" != all ] && [ "$MODE" != pos ] && [ "$MODE" != vmpos ]; then
  set -- ${MS[$MODE]:?unknown mode $MODE}
  build "m_$MODE" -D$1; run "m_$MODE" $2 pass; rm -rf "$OUT/obj_m_$MODE"
@@ -83,7 +83,7 @@ if [ "$MODE" != all ] && [ "$MODE" != pos ] && [ "$MODE" != vmpos ]; then
  [ $fail = 0 ] && { echo "HCOLL_Q_HARD_V5_MUTANT_SURVIVED $MODE"; exit 0; } || { echo "HCOLL_Q_HARD_V5_MUTANT_REJECTED $MODE"; exit 1; }
 fi
 build base
-if [ "$Q" = q3 ]; then SC="0 1 2 4 6 7"; else SC="0 1 2 3 4 5 6 7"; fi
+if [ "$Q" = q3 ]; then SC="0 1 2 4 6 7 8"; else SC="0 1 2 3 4 5 6 7 8"; fi
 [ "$MODE" = vmpos ] && SC="7"
 for s in $SC; do run base $s pass; done
 if [ "$MODE" = pos ] || [ "$MODE" = vmpos ]; then [ $fail = 0 ] && { echo "HCOLL_Q_HARD_V5_POS_PASS $Q"; exit 0; } || { echo "HCOLL_Q_HARD_V5_POS_FAIL $Q"; exit 1; }; fi
@@ -93,6 +93,8 @@ build mut_vmsel -DOT_COLL_V6_MUT_VMSEL; run mut_vmsel 7 fail
 build mut_causeswap -DOT_COLL_V5_MUT_CAUSE_SWAP; run mut_causeswap 4 fail
 build mut_obsnoalign -DOT_COLL_V7_MUT_OBS_NOALIGN; run mut_obsnoalign 7 fail
 build mut_rcdrop -DOT_COLL_V7_MUT_RCDROP; run mut_rcdrop 2 fail
+build mut_issnopin -DOT_COLL_ISS_MUT_NOPIN; run mut_issnopin 0 fail
+build mut_issnohold -DOT_COLL_ISS_MUT_NOHOLD; run mut_issnohold 8 fail
 if [ "$Q" = q2 ]; then build mut_droptkm -DOT_COLL_V5_MUT_DROP_TKM; run mut_droptkm 3 fail; fi
 rm -rf "$OUT"/obj_mut_*
 [ $fail = 0 ] && echo "HCOLL_Q_HARD_V5_GATE_PASS $Q" || { echo "HCOLL_Q_HARD_V5_GATE_FAIL $Q"; exit 1; }

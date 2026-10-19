@@ -78,7 +78,8 @@
   "RCW": 8,
   "NA": 2,
   "NF": 1,
-  "TGT_PIN": 1
+  "TGT_PIN": 1,
+  "RSYNC": 1
  },
  "route": {
   "pd": 0.5,
@@ -91,10 +92,10 @@
   "pin_min_tracks": 3
  },
  "job": {
-  "owner": "Claude:HBMA-HOST",
-  "branch": "claude/hbma-host-1017",
-  "tag": "r1",
-  "purpose": "HBM die d4f cp_svg_<Q><n> x16 (HBMA-HOST 2026-10-17): first hardening of ot_static_cmd_target MODE0 svg params (RTL unchanged, every pin registered). Pin-bound 918 pins; slot 26.1x27 was 20.8 pins/um. SW faces: host N, svg S; NW instances place MX.",
+  "owner": "Claude:HBM-NATIVE",
+  "branch": "claude/hbm-native-b-1017",
+  "tag": "r2",
+  "purpose": "HBM die d4f cp_svg_<Q><n> x16 (HBMA-HOST 2026-10-17): first hardening of ot_static_cmd_target MODE0 svg params -- HBM-NATIVE 10-17 r2: native pin audit of the closed r1 view (hdie_cp_svg_r1-r1-dcfed59ab): rst_n capture 402.6 ps > 190, the raw rst_n pin async-cleared every core flop. RSYNC=1 (kit param): the pin drives one plain clk flop, stage-2 Q is the core reset (col_su r3 shape, capture 65.3). Assert/release +2 edges; datapath, cfg->window write and launch->run_v latencies unchanged (cycles_added 0); the ",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
@@ -105,7 +106,10 @@
    "rtl/hbm_accel/host_static_20261015/tb_hbm_host_phy_adapt.sv",
    "rtl/hbm_accel/host_static_20261015/tb_hbm_static_cfg_collar.sv",
    "rtl/hbm_accel/host_static_20261015/tb_static_cmd_target.sv",
-   "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv"
+   "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+   "rtl/test/hbm_native_rsync_1017",
+   "results/rtl/hbm_native_rsync_1017",
+   "rtl/hbm_accel/host_static_20261015/ref_ot_static_cmd_target_r1.sv"
   ],
   "benches": [
    {
@@ -130,7 +134,8 @@
     ],
     "pass_regex": "TB_STATIC_CMD_TARGET PASS",
     "fail_regex": "TB_STATIC_CMD_TARGET FAIL mut=1",
-    "note": "fires one cycle late"
+    "note": "fires one cycle late",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_cmd_mut1.log"
    },
    {
     "name": "cmd_mut2",
@@ -143,11 +148,88 @@
     ],
     "pass_regex": "TB_STATIC_CMD_TARGET PASS",
     "fail_regex": "TB_STATIC_CMD_TARGET FAIL mut=2",
+    "note": "target id ignored",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cp2_cmd_mut2.log"
+   },
+   {
+    "name": "rsync_lockstep",
+    "cmd": "bash rtl/test/hbm_native_rsync_1017/run_rsync_lockstep.sh {RUN}/bench/rsync_lockstep cmd 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "errors 0 RSYNC_LOCKSTEP PASS$",
+    "min_count_regex": "resets (\\d+) ",
+    "min_count": 10,
+    "pass_witness": "results/rtl/hbm_native_rsync_1017/cmd_mut0.log",
+    "note": "old vs new, every output every edge outside the reset window"
+   },
+   {
+    "name": "rsync_lockstep_mutant",
+    "cmd": "bash rtl/test/hbm_native_rsync_1017/run_rsync_lockstep.sh {RUN}/bench/rsync_lockstep_mutant cmd 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "errors 0 RSYNC_LOCKSTEP PASS$",
+    "fail_regex": "errors [1-9][0-9]* RSYNC_LOCKSTEP FAIL",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cmd_mut1.log",
+    "note": "mid-run reset does not reach the core/body (power-on only)"
+   },
+   {
+    "name": "cmd_ingress_rsync",
+    "cmd": "bash rtl/test/hbm_native_rsync_1017/run_rsync_lockstep.sh {RUN}/bench/cmd_ingress_rsync cmd_ingress 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "TB_STATIC_CMD_TARGET PASS mut=0",
+    "pass_witness": "results/rtl/hbm_native_rsync_1017/cmd_ingress_mut0.log",
+    "note": "cp1 real-ingress bench, targets at RSYNC=1"
+   },
+   {
+    "name": "cmd_ingress_rsync_mut1",
+    "cmd": "bash rtl/test/hbm_native_rsync_1017/run_rsync_lockstep.sh {RUN}/bench/cmd_ingress_rsync_mut1 cmd_ingress 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "TB_STATIC_CMD_TARGET PASS mut=0",
+    "fail_regex": "TB_STATIC_CMD_TARGET FAIL mut=1 errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cmd_ingress_mut1.log",
+    "note": "fires one cycle late"
+   },
+   {
+    "name": "cmd_ingress_rsync_mut2",
+    "cmd": "bash rtl/test/hbm_native_rsync_1017/run_rsync_lockstep.sh {RUN}/bench/cmd_ingress_rsync_mut2 cmd_ingress 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "TB_STATIC_CMD_TARGET PASS mut=0",
+    "fail_regex": "TB_STATIC_CMD_TARGET FAIL mut=2 errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_native_rsync_1017/cmd_ingress_mut2.log",
     "note": "target id ignored"
    }
   ],
   "views_to": "physical/ref_tile/hdie_cp_svg_r1/views",
-  "record_to": "results/rtl/ref_tile/hdie_cp_svg_r1"
+  "record_to": "results/rtl/ref_tile/hdie_cp_svg_r1",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "vs": "hdie_cp_svg_r1-r1-dcfed59ab",
+   "why": "native audit rst_n capture 402.6 ps: raw pin fanout -> local reset sync at the pin"
+  }
  },
- "slot_change_request": "HBMA-HOST 10-17 -> H-DIE: d4f slot 26.136x27.0 is pin-bound (918 pins, E 506 at 20.8/um); needs 60.48x60.48 (N host 333, S svg-A 286, E svg-B 264 at <=5.5/um); cp_svg_NW* use orientation MX (host S, svg N)"
+ "slot_change_request": "HBMA-HOST 10-17 -> H-DIE: d4f slot 26.136x27.0 is pin-bound (918 pins, E 506 at 20.8/um); needs 60.48x60.48 (N host 333, S svg-A 286, E svg-B 264 at <=5.5/um); cp_svg_NW* use orientation MX (host S, svg N)",
+ "structural_change": "HBM-NATIVE 10-17 r2: native pin audit of the closed r1 view (hdie_cp_svg_r1-r1-dcfed59ab): rst_n capture 402.6 ps > 190, the raw rst_n pin async-cleared every core flop. RSYNC=1 (kit param): the pin drives one plain clk flop, stage-2 Q is the core reset (col_su r3 shape, capture 65.3). Assert/release +2 edges; datapath, cfg->window write and launch->run_v latencies unchanged (cycles_added 0); the free-running cycle export counts from the synchronised release (unconnected on cp_svg). Bench: lockstep r1 vs r2 (34 resets incl. mid-run, every output every edge outside the reset window) + RSMUT mutant; cp1 ingress bench with RSYNC=1 on its targets."
 }

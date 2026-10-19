@@ -1,0 +1,5 @@
+REGROUP_PASS cycles=60000 outputs=43
+- physical/qwen_tt_static_cluster_1015/tb_tt_static_regroup.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 60us; walltime 3.718 s; speed 17.113 us/s
+- Verilator: cpu 3.507 s on 1 threads; alloced 1019 MB

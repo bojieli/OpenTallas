@@ -1,0 +1,13 @@
+[Unit]
+Description=OpenTallas fleet-viz element truth sync: native pin audit of every CLOSED view + lane receipts -> margin_live.json; die contracts from the current die binds -> die_contracts_live.json (tools/fleet_viz/native_sync.py, die_contract_sync.py)
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/.local/share/fleet-viz
+ExecStart=/usr/bin/python3 -u %h/.local/share/fleet-viz/native_sync.py --jobs 6
+ExecStart=/usr/bin/python3 -u %h/.local/share/fleet-viz/die_contract_sync.py
+Nice=15
+IOSchedulingClass=idle
+MemoryMax=4G
+TimeoutStartSec=3000

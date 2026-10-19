@@ -183,6 +183,17 @@ def build(tiles_sel, tag, write_rtl=True):
             benches.append(dict(name=f'{t}_mut{mut}', cmd=bench.replace('{M}', str(mut)), expect='fail', threads=4,
                                 peak_ram_gb=8, needs=['verilator'], pass_regex=rf'^KVS_TILE PASS tile={t} ',
                                 fail_regex=rf'^KVS_TILE FAIL tile={t} .* mut={mut} ', fail_witness=f'{res}/{t}_m{mut}.log'))
+        if t == 'attn' and os.environ.get('OT_KV_ATTN_LAND', '0') == '1':
+            # KV-ATTNKIT 10-18: pair lockstep of the registered boundary vs the as-built chain (16 modes) + 4 mutants
+            pb = 'bash tools/qwen_kv_die/kvs_attn_land_pair_bench.sh {RUN}/bench/land_pair_%s %s %s "%s"'
+            benches.append(dict(name='attn_land_pair', cmd=pb % ('m0', 0, 0, ' '.join(map(str, range(16)))), expect='pass',
+                                threads=2, peak_ram_gb=4, needs=['verilator'], pass_regex=r'^KVS_LANDPAIR_ALL PASS bmut=0 fmut=0 ',
+                                min_count_regex=r'checks=(\d+)', pass_witness=f'{res}/land_pair_m0.log'))
+            for mt, bm, fm, md in (('b5', 5, 0, '0'), ('b6', 6, 0, '8'), ('b4', 4, 0, '13'), ('f5', 0, 5, '0')):
+                benches.append(dict(name=f'attn_land_pair_{mt}', cmd=pb % (mt, bm, fm, md), expect='fail', threads=2,
+                                    peak_ram_gb=4, needs=['verilator'], pass_regex=r'^KVS_LANDPAIR_ALL PASS ',
+                                    fail_regex=rf'^KVS_LANDPAIR_ALL FAIL bmut={bm} fmut={fm} ',
+                                    fail_witness=f'{res}/land_pair_{mt}.log'))
         spec = OrderedSpec(
             name=name, top=master, sources=srcs, params={}, reset_ports=['rst_n'] + [r for r in resets if r != 'rst_n'],
             pins={f: pins[f] for f in 'NSEW'},

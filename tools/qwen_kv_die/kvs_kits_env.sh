@@ -12,3 +12,6 @@ export OT_KV_TILE_KITS=1
 export OT_KV_V144_RLY_FIRST=pvin_,krs_,kvn_,ap_,aq_,am_,ks_acal_,pve_ OT_KV_STATIC_DIE_DIAGNOSTIC=1
 export OT_KV_EXPAND=qkd_rhead,qkd_rhead_ft,qkd_ectl,qkd_ctrl,qkd_ctrl_n,qkd_pvfork,qkd_pvtap2,qkd_pvtap3,qkd_pvtap4
 export OT_KV_RST_PER_TREE=1 OT_KV_FWD=1 OT_KV_LANDSLOT=1 OT_KV_RST_PIN_REG=1 OT_KV_BUNDLE_EQ=1
+# KV-ATTNKIT 10-18: registered kvs_attn boundary (kit qkd_kvs_attn-g1 EARLY_FAIL_SETUP); added edges K.tx_record / ks_prg /
+# ks_arh +1 each (kv_static_die.ATTN_LAND_EDGES) -> the die design point adopts it with that pricing (KV-PLAN5).
+export OT_KV_ATTN_LAND=1

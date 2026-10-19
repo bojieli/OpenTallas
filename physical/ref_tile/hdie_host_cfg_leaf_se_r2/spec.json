@@ -1,0 +1,248 @@
+{
+ "name": "hdie_host_cfg_leaf_se_r2",
+ "top": "ot_hbm_host_cfg_leaf_se2",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf_r2.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 69.12,
+  "h": 69.12,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v"
+  ],
+  "W": [
+   "a_cfg_v",
+   "a_cfg_target",
+   "a_cfg_addr",
+   "a_cfg_data",
+   "a_desc_v",
+   "a_desc_base",
+   "a_desc_limit",
+   "a_desc_loops",
+   "a_launch_v"
+  ],
+  "E": [
+   "b_cfg_v",
+   "b_cfg_target",
+   "b_cfg_addr",
+   "b_cfg_data",
+   "b_desc_v",
+   "b_desc_base",
+   "b_desc_limit",
+   "b_desc_loops",
+   "b_launch_v"
+  ],
+  "S": [
+   "t_ready",
+   "t_active",
+   "t_fault",
+   "s_ready",
+   "s_active",
+   "s_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: every input lands in a pin flop (payload unreset, valids/status on the synced reset), every output is a flop Q (copy registers / status output flops); a kit flop stage would add a redundant edge"
+ },
+ "params": {},
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:HBM-RTL5/host",
+  "branch": "claude/hbm-rtl5-host-1018",
+  "tag": "r2",
+  "purpose": "HBM d4g (plan b) host configuration/status leaf hleaf_SE re-hardened at NT 21 / NF 30 (r1: 18/26) so the three new SE targets of the d4g L1 layer (xl_SE_ctl, hb_dbk_SE, refcfg_SE) and wbk_SE.fault report through the leaf (coordinator 0fi) instead of straight into host_status. ot_hbm_host_cfg_leaf_se2 = ot_hbm_host_cfg_leaf2 at the exact width (every status input driven, no tie); CFG_LAT 2, ST_LAT 2, synced rst_n. Lockstep D4G=2 (4 leaves vs d4f, 75 targets / 115 fault bits) + SE-leaf mutants 1..7.",
+  "extra_paths": [
+   "results/arch/hbm_rtl5_host_1018/witness",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf_r2.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv",
+   "rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_cfg_leaf_lockstep.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "benches": [
+   {
+    "name": "leaf_d4g2_lockstep",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh {RUN}/bench/leaf_d4g2_lockstep 0 7 2 -1 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "pass_witness": "results/arch/hbm_rtl5_host_1018/witness/d4g2_pos_s7.log"
+   },
+   {
+    "name": "leaf_d4g2_lockstep_s11",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh {RUN}/bench/leaf_d4g2_lockstep_s11 0 11 2 -1 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "pass_witness": "results/arch/hbm_rtl5_host_1018/witness/d4g2_pos_s11.log"
+   },
+   {
+    "name": "leaf_d4g2_se_plast",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh {RUN}/bench/leaf_d4g2_se_plast 0 7 2 1 1",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "pass_witness": "results/arch/hbm_rtl5_host_1018/witness/d4g2_pos_se_plast.log"
+   },
+   {
+    "name": "leaf_se2_mut1",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh {RUN}/bench/leaf_se2_mut1 1 7 2 1 0",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
+    "note": "SE leaf only: copy B drops cfg_data bit 0",
+    "fail_witness": "results/arch/hbm_rtl5_host_1018/witness/leaf_se2_mut1.log"
+   },
+   {
+    "name": "leaf_se2_mut2",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh {RUN}/bench/leaf_se2_mut2 2 7 2 1 0",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
+    "note": "SE leaf only: copy B one stage short",
+    "fail_witness": "results/arch/hbm_rtl5_host_1018/witness/leaf_se2_mut2.log"
+   },
+   {
+    "name": "leaf_se2_mut3",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh {RUN}/bench/leaf_se2_mut3 3 7 2 1 0",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
+    "note": "SE leaf only: status ready bits 0/1 swapped",
+    "fail_witness": "results/arch/hbm_rtl5_host_1018/witness/leaf_se2_mut3.log"
+   },
+   {
+    "name": "leaf_se2_mut4",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh {RUN}/bench/leaf_se2_mut4 4 7 2 1 0",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
+    "note": "SE leaf only: status fault bit 0 dropped",
+    "fail_witness": "results/arch/hbm_rtl5_host_1018/witness/leaf_se2_mut4.log"
+   },
+   {
+    "name": "leaf_se2_mut5",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh {RUN}/bench/leaf_se2_mut5 5 7 2 1 0",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
+    "note": "SE leaf only: s_ready[20] inverted (new slot)",
+    "fail_witness": "results/arch/hbm_rtl5_host_1018/witness/leaf_se2_mut5.log"
+   },
+   {
+    "name": "leaf_se2_mut6",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh {RUN}/bench/leaf_se2_mut6 6 7 2 1 0",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
+    "note": "SE leaf only: s_fault[29] inverted (new slot)",
+    "fail_witness": "results/arch/hbm_rtl5_host_1018/witness/leaf_se2_mut6.log"
+   },
+   {
+    "name": "leaf_se2_mut7",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_host_cfg_leaf.sh {RUN}/bench/leaf_se2_mut7 7 7 2 1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HOST_CFG_LEAF_LOCKSTEP_PASS",
+    "fail_regex": "HOST_CFG_LEAF_LOCKSTEP_FAIL mism=[1-9]",
+    "note": "SE leaf only: s_fault[20] dropped (new target fault, PLAST poison)",
+    "fail_witness": "results/arch/hbm_rtl5_host_1018/witness/leaf_se2_mut7.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/hdie_host_cfg_leaf_se_r2/views",
+  "record_to": "results/rtl/ref_tile/hdie_host_cfg_leaf_se_r2"
+ },
+ "slot_change_request": "same pleaf_SE slot and 69.12 um square as hdie_host_cfg_leaf_se_r1; S face status pins 62+62 -> 72+72.",
+ "structural_change": "HBM-RTL5 10-18 (coordinator 0fi): SE leaf widths 18/26 -> 21/30 so the 3 new SE targets + wbk_SE.fault go through the leaf (d4g L1 layer otherwise wired them straight into host_status); same leaf2 RTL, exact widths, new top; r1 view stays for the r1 binding."
+}

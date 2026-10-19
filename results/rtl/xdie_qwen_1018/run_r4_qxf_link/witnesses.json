@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.fail_witnesses.v1",
+ "lane": "QXF-LINK (Q-XDIE-FIX) 2026-10-18",
+ "bench": "rtl/test/qwen_split/run_xdie_exchange.sh (Verilator 5.050, ot-epyc4) + rtl/test/qwen_split/run_qxf_link_slices.sh",
+ "pass": ["full/run.log", "full_phy9/run.log", "full_abut/run.log", "full_r3stages/run.log", "full_l0/run.log", "vc/run.log", "vk/run.log",
+          "../qxf_link_slices/ctl_m0_mode0.log", "../qxf_link_slices/face_result_face_s.log", "../qxf_link_slices/d2d_program_drv1/run.log"],
+ "pass_regex": "^XQ_PASS|^PASS mode0|^D2D_PROGRAM_PASS",
+ "mutants": [
+  {"finding": "F1", "witness": "f1_n59_legacy_window/run.log", "regex": "XQ_CAUSE native59 .* qtag 1"},
+  {"finding": "F1", "witness": "full_gap1/run.log", "regex": "XQ_CAUSE KV programme .*codec cause \\{rx_rec,tx_rec,rx_time,tx_time\\}=0010"},
+  {"finding": "F2", "witness": "f2_kv_status_legacy/run.log", "regex": "XQ_CAUSE native59 .* service 1"},
+  {"finding": "F2", "witness": "f2_vk_status_legacy/run.log", "regex": "XQ_ERR .*STATUS word != namespace"},
+  {"finding": "F2", "witness": "mut5_kv_status_zero/run.log", "regex": "XQ_CAUSE native59 .* service 1"},
+  {"finding": "F2", "witness": "../qxf_link_slices/ctl_m3_mode0.log", "regex": "STATUS corrupt \\(namespace"},
+  {"finding": "F4", "witness": "f4_masters_stale_txdp/run.log", "regex": "XQ_CAUSE d2d: compute fault 0 abort 1"},
+  {"finding": "F4", "witness": "f4_masters_uncompiled/run.log", "regex": "D2D_TXDP_NOT_COMPILED"},
+  {"finding": "F7", "witness": "f7_l0_priced_window/run.log", "regex": "XQ_CAUSE KV programme .* slot 1"}
+ ]
+}

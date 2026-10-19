@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_host_cp_rx",
+ "enable": false,
+ "reason": "RTL registers every pin: landing256 PINREG=1 (in_v/in_data pin flops, pop flop Q) and packet_static (AXI/status/t_cr pin flops, every output a flop Q; f_flit three reset-region data registers); the folded landing->packet word is internal (packet RXREG=0 reads the landing out_data flop Q); a kit flop stage would add a redundant edge"
+}

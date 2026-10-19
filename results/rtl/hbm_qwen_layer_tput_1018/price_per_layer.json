@@ -1,0 +1,1105 @@
+{
+ "schema": "opentallas.hbm_qwen_d4g_price.v1",
+ "lane": "TOKEN-PASS-HBMQ",
+ "generated_utc": "2026-10-18T14:45:16Z",
+ "rule": "TOKEN-PASS-HBMQ (10-18): price of record PER LAYER for Qwen3-8B on the d4g GEN2 die, and the compiler's fixed\nstatic schedule of the layer programmes the RTL vehicle runs (the schedule-assertion table).\n\nTwo programmes, one schedule machinery (hgi_sim.timing.schedule S2 = the CP as specified):\n  record  the price of record: the TP-4 r25 programme under ds_die_split._qwen_job's split transform (16 SM / TP-8:\n          SM rows per SM unchanged, DMA stream x 2, collective delivery G 4 -> 8 on 4 lanes) + the relay knob\n          (ds_relay_latency, v5 -> plan_b stages) + the d4g adders (d4g_quadrant_1017.d4g_added as patched by\n          d4g_price5_1018; two rings; Qwen without QBG) = HBM-PRICE5 d4g_2ring_qbg (Qwen 946.2 tok/s, reproduced).\n  d4g8    the programme that actually runs on d4g: hgi_sim.qwen_compiler Geometry(tp=8) (D4G8 mapping, bit-identical\n          to the TP-4 golden; see tools/hbm_qwen_layer/qwen_d4g_proof.py), priced NATIVELY on the same model:\n          SM.MATVEC  rows m on 16 SM at 99 B/cycle/SM == the 32-SM model at 2 m (same per-SM bytes / lines)\n          ATT.*      one KV head a die at half the die bandwidth: stream part x 2\n          DMA.LOAD   stream part x 2 (2 stacks), its own (TP-8) bytes\n          COLL.*     in-package base as perf.coll_cycles (AR-like 1,350 / gather 586) + the delivery delta G 4 -> 8\n                     (4 lanes) of ds_die_split._qwen_job; GROUP_REDUCE_MCAST priced as the all-reduce of its result\n          + the same relay knob and d4g adders (the D4G8 ACT gather is a C1 record: on-die ring all-gather).\nVariants of the stages: 'base' = plan_b (the price of record); 'landed' = plan_b shifted by the HBM-LANDING\nhalf-cycle land plan (results/arch/hbm_die_d4g/landing/land_plan_d4g.json, lanes/HBM-LANDING.md; Qwen 945.5).\n\nPer-layer cycles (token programme, position 8191): layer L = end of its last record - end of layer L-1's last record\n(L0 includes the pre-loop records); head = token end - end of layer 35.  Stage programmes (what the vehicle runs):\nL0 (one layer, parts=layers), chain (2-layer LOOP), head (parts=head): total cycles and the per-record\n(dispatch, start, end, cost) table = the static schedule the RTL must reproduce (commit cycles as assertions).\n\n    PYTHONPATH=tools python3 tools/hbm_qwen_layer/qwen_d4g_price.py --out-dir results/rtl/hbm_qwen_layer_tput_1018\n",
+ "position": 8191,
+ "summary": {
+  "base.record": {
+   "tok_s": 946.2,
+   "token_cycles": 1268221.8,
+   "L0": 33497.7,
+   "chained_mean": 33072.0,
+   "head": 77204.5,
+   "stage_L0": 33236.0,
+   "stage_chain": 66308.0,
+   "stage_head": 77362.5,
+   "races": 0
+  },
+  "base.d4g8": {
+   "tok_s": 949.7,
+   "token_cycles": 1263599.2,
+   "L0": 33341.8,
+   "chained_mean": 32944.4,
+   "head": 77204.5,
+   "stage_L0": 33111.4,
+   "stage_chain": 66055.7,
+   "stage_head": 77362.5,
+   "races": 0
+  },
+  "landed.record": {
+   "tok_s": 945.5,
+   "token_cycles": 1269124.0,
+   "L0": 33514.5,
+   "chained_mean": 33097.0,
+   "head": 77214.0,
+   "stage_L0": 33261.0,
+   "stage_chain": 66358.0,
+   "stage_head": 77372.0,
+   "races": 0
+  },
+  "landed.d4g8": {
+   "tok_s": 948.8,
+   "token_cycles": 1264699.3,
+   "L0": 33368.1,
+   "chained_mean": 32974.8,
+   "head": 77214.0,
+   "stage_L0": 33141.8,
+   "stage_chain": 66116.6,
+   "stage_head": 77372.0,
+   "races": 0
+  }
+ },
+ "source_sha256": {
+  "hgi_sim/qwen_compiler.py": "e31a03e5318f3aa9599a958014acf7f805dc3ff59d9a7613483bb0a5d49991c1",
+  "hgi_sim/timing.py": "b53ac4b726e0de68bd4a8c81f675a3ddabe7bf03170228debd5fcfc6839b0826",
+  "hgi_sim/d4g_quadrant_1017.py": "d88f006a98067585bef80fa4430fbd423f46d740b0891d0bb2d00b40d2e523fd",
+  "hgi_sim/d4g_price5_1018.py": "e680e506b807451746b68252c0e848e43a8ac41f12fdd41a29be0ff42912c038",
+  "hgi_sim/ds_die_split.py": "a38a098f6941a87d9c04cdd8e4fe9fd54405b02f13388e6303be269f7bd630ee",
+  "hbm_qwen_layer/qwen_d4g_price.py": "ff3b2b1d555456afcd18e2254d81a782a9b70cfdec3c1cdcf96b755feaab11e5"
+ },
+ "results": {
+  "base": {
+   "record": {
+    "token": {
+     "preamble_end": 535.1,
+     "layer_cycles": [
+      33497.7,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33071.9,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33071.9,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33071.9,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33072.0,
+      33071.9,
+      33072.0,
+      33072.0
+     ],
+     "segments": [
+      {
+       "L": 0,
+       "cycles": 33497.7
+      },
+      {
+       "L": 1,
+       "cycles": 33072.0
+      },
+      {
+       "L": 2,
+       "cycles": 33072.0
+      },
+      {
+       "L": 3,
+       "cycles": 33072.0
+      },
+      {
+       "L": 4,
+       "cycles": 33072.0
+      },
+      {
+       "L": 5,
+       "cycles": 33071.9
+      },
+      {
+       "L": 6,
+       "cycles": 33072.0
+      },
+      {
+       "L": 7,
+       "cycles": 33072.0
+      },
+      {
+       "L": 8,
+       "cycles": 33072.0
+      },
+      {
+       "L": 9,
+       "cycles": 33072.0
+      },
+      {
+       "L": 10,
+       "cycles": 33072.0
+      },
+      {
+       "L": 11,
+       "cycles": 33072.0
+      },
+      {
+       "L": 12,
+       "cycles": 33072.0
+      },
+      {
+       "L": 13,
+       "cycles": 33072.0
+      },
+      {
+       "L": 14,
+       "cycles": 33071.9
+      },
+      {
+       "L": 15,
+       "cycles": 33072.0
+      },
+      {
+       "L": 16,
+       "cycles": 33072.0
+      },
+      {
+       "L": 17,
+       "cycles": 33072.0
+      },
+      {
+       "L": 18,
+       "cycles": 33072.0
+      },
+      {
+       "L": 19,
+       "cycles": 33072.0
+      },
+      {
+       "L": 20,
+       "cycles": 33072.0
+      },
+      {
+       "L": 21,
+       "cycles": 33072.0
+      },
+      {
+       "L": 22,
+       "cycles": 33072.0
+      },
+      {
+       "L": 23,
+       "cycles": 33072.0
+      },
+      {
+       "L": 24,
+       "cycles": 33071.9
+      },
+      {
+       "L": 25,
+       "cycles": 33072.0
+      },
+      {
+       "L": 26,
+       "cycles": 33072.0
+      },
+      {
+       "L": 27,
+       "cycles": 33072.0
+      },
+      {
+       "L": 28,
+       "cycles": 33072.0
+      },
+      {
+       "L": 29,
+       "cycles": 33072.0
+      },
+      {
+       "L": 30,
+       "cycles": 33072.0
+      },
+      {
+       "L": 31,
+       "cycles": 33072.0
+      },
+      {
+       "L": 32,
+       "cycles": 33072.0
+      },
+      {
+       "L": 33,
+       "cycles": 33071.9
+      },
+      {
+       "L": 34,
+       "cycles": 33072.0
+      },
+      {
+       "L": 35,
+       "cycles": 33072.0
+      },
+      {
+       "L": "head",
+       "cycles": 77204.5
+      }
+     ],
+     "head_cycles": 77204.5,
+     "token_cycles": 1268221.8,
+     "tok_s": 946.2,
+     "chained_layer_mean": 33072.0,
+     "L1_record_costs": {
+      "prenorm.attn": 164.2,
+      "qkv": 3418.6,
+      "row_scale_qkv.load": 162.5,
+      "row_scale_qkv": 51.2,
+      "qknorm.q": 114.2,
+      "qknorm.k": 114.2,
+      "rope": 51.2,
+      "round_q": 50.2,
+      "kv_append.K": 25.9,
+      "kv_append.V": 25.9,
+      "kv_fence": 88.9,
+      "attention_qk.kv0": 649.7,
+      "attention_qk.kv1": 649.7,
+      "softmax.max": 319.2,
+      "softmax.exp_sum": 543.0,
+      "softmax.bf16_p": 176.2,
+      "attention_pv.kv0": 649.7,
+      "attention_pv.kv1": 649.7,
+      "pv_normalize": 67.2,
+      "o": 2394.6,
+      "all_reduce_o": 1394.5,
+      "row_scale_o.load": 165.7,
+      "row_scale_o+residual": 56.2,
+      "prenorm.ffn": 164.2,
+      "gu": 12634.6,
+      "row_scale_gu.load": 168.3,
+      "row_scale_gu": 60.2,
+      "swiglu": 121.8,
+      "down": 6490.6,
+      "all_reduce_down": 1394.5,
+      "row_scale_down.load": 165.7,
+      "row_scale_down+residual": 56.2
+     }
+    },
+    "races": 0,
+    "stages": {
+     "L0": {
+      "cycles": 33236.0,
+      "records": 35,
+      "executed": 35,
+      "image_sha256": "578ed08882da135793134aba3cddcfdbbfc7c677fdbfb13d18af637c1cce69eb",
+      "races": []
+     },
+     "chain": {
+      "cycles": 66308.0,
+      "records": 37,
+      "executed": 67,
+      "image_sha256": "6871e5453031784a0b6be0e6b9f65a26fd8eee42be5f0965003a32f5f286fbc5",
+      "races": [],
+      "per_layer": [
+       33236.0,
+       33072.0,
+       null
+      ]
+     },
+     "head": {
+      "cycles": 77362.5,
+      "records": 7,
+      "executed": 7,
+      "image_sha256": "dce25934fb09a2a2235ca9cdaf58c39438c1ee73c3f9ec1b08b801b222c21ce6",
+      "races": []
+     }
+    }
+   },
+   "d4g8": {
+    "token": {
+     "preamble_end": 482.6,
+     "layer_cycles": [
+      33341.8,
+      32944.4,
+      32944.4,
+      32944.3,
+      32944.4,
+      32944.4,
+      32944.3,
+      32944.4,
+      32944.4,
+      32944.3,
+      32944.4,
+      32944.4,
+      32944.3,
+      32944.4,
+      32944.4,
+      32944.4,
+      32944.3,
+      32944.4,
+      32944.4,
+      32944.3,
+      32944.4,
+      32944.4,
+      32944.3,
+      32944.4,
+      32944.4,
+      32944.3,
+      32944.4,
+      32944.4,
+      32944.4,
+      32944.3,
+      32944.4,
+      32944.4,
+      32944.3,
+      32944.4,
+      32944.4,
+      32944.3
+     ],
+     "segments": [
+      {
+       "L": 0,
+       "cycles": 33341.8
+      },
+      {
+       "L": 1,
+       "cycles": 32944.4
+      },
+      {
+       "L": 2,
+       "cycles": 32944.4
+      },
+      {
+       "L": 3,
+       "cycles": 32944.3
+      },
+      {
+       "L": 4,
+       "cycles": 32944.4
+      },
+      {
+       "L": 5,
+       "cycles": 32944.4
+      },
+      {
+       "L": 6,
+       "cycles": 32944.3
+      },
+      {
+       "L": 7,
+       "cycles": 32944.4
+      },
+      {
+       "L": 8,
+       "cycles": 32944.4
+      },
+      {
+       "L": 9,
+       "cycles": 32944.3
+      },
+      {
+       "L": 10,
+       "cycles": 32944.4
+      },
+      {
+       "L": 11,
+       "cycles": 32944.4
+      },
+      {
+       "L": 12,
+       "cycles": 32944.3
+      },
+      {
+       "L": 13,
+       "cycles": 32944.4
+      },
+      {
+       "L": 14,
+       "cycles": 32944.4
+      },
+      {
+       "L": 15,
+       "cycles": 32944.4
+      },
+      {
+       "L": 16,
+       "cycles": 32944.3
+      },
+      {
+       "L": 17,
+       "cycles": 32944.4
+      },
+      {
+       "L": 18,
+       "cycles": 32944.4
+      },
+      {
+       "L": 19,
+       "cycles": 32944.3
+      },
+      {
+       "L": 20,
+       "cycles": 32944.4
+      },
+      {
+       "L": 21,
+       "cycles": 32944.4
+      },
+      {
+       "L": 22,
+       "cycles": 32944.3
+      },
+      {
+       "L": 23,
+       "cycles": 32944.4
+      },
+      {
+       "L": 24,
+       "cycles": 32944.4
+      },
+      {
+       "L": 25,
+       "cycles": 32944.3
+      },
+      {
+       "L": 26,
+       "cycles": 32944.4
+      },
+      {
+       "L": 27,
+       "cycles": 32944.4
+      },
+      {
+       "L": 28,
+       "cycles": 32944.4
+      },
+      {
+       "L": 29,
+       "cycles": 32944.3
+      },
+      {
+       "L": 30,
+       "cycles": 32944.4
+      },
+      {
+       "L": 31,
+       "cycles": 32944.4
+      },
+      {
+       "L": 32,
+       "cycles": 32944.3
+      },
+      {
+       "L": 33,
+       "cycles": 32944.4
+      },
+      {
+       "L": 34,
+       "cycles": 32944.4
+      },
+      {
+       "L": 35,
+       "cycles": 32944.3
+      },
+      {
+       "L": "head",
+       "cycles": 77204.5
+      }
+     ],
+     "head_cycles": 77204.5,
+     "token_cycles": 1263599.2,
+     "tok_s": 949.7,
+     "chained_layer_mean": 32944.4,
+     "L1_record_costs": {
+      "prenorm.attn": 164.2,
+      "qkv": 3418.6,
+      "row_scale_qkv.load": 133.2,
+      "row_scale_qkv": 50.2,
+      "qknorm.q": 114.2,
+      "qknorm.k": 114.2,
+      "rope": 50.2,
+      "round_q": 49.2,
+      "kv_append.K": 25.9,
+      "kv_append.V": 25.9,
+      "kv_fence": 88.9,
+      "attention_qk.kv0": 980.8,
+      "softmax.max": 255.2,
+      "softmax.exp_sum": 415.0,
+      "softmax.bf16_p": 112.2,
+      "attention_pv.kv0": 980.8,
+      "pv_normalize": 65.2,
+      "o": 2394.6,
+      "all_reduce_o": 1394.5,
+      "row_scale_o.load": 137.4,
+      "row_scale_o+residual": 56.2,
+      "prenorm.ffn": 164.2,
+      "gu": 12634.6,
+      "row_scale_gu.load": 136.1,
+      "row_scale_gu": 54.2,
+      "swiglu": 121.8,
+      "act_all_gather": 810.5,
+      "down": 6490.6,
+      "all_reduce_down": 1352.5,
+      "row_scale_down.load": 137.4,
+      "row_scale_down+residual": 56.2
+     }
+    },
+    "races": 0,
+    "stages": {
+     "L0": {
+      "cycles": 33111.4,
+      "records": 35,
+      "executed": 35,
+      "image_sha256": "b271dc1bf41883d5e71e99f31e32f566d65da343d72b5e7f7598615103c0ffaf",
+      "races": []
+     },
+     "chain": {
+      "cycles": 66055.7,
+      "records": 37,
+      "executed": 66,
+      "image_sha256": "923df64d3cadd060464c91afb1d2437ff90e3e66080b25fbe26082caa560551f",
+      "races": [],
+      "per_layer": [
+       33111.4,
+       32944.3,
+       null
+      ]
+     },
+     "head": {
+      "cycles": 77362.5,
+      "records": 7,
+      "executed": 7,
+      "image_sha256": "a0ce1c154cc2e8b8fed96c4e056315b9a7add357a3c0134528dee62877a4d5d8",
+      "races": []
+     }
+    }
+   }
+  },
+  "landed": {
+   "record": {
+    "token": {
+     "preamble_end": 518.6,
+     "layer_cycles": [
+      33514.5,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.1,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.1,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.1,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.1,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.0,
+      33097.1,
+      33097.0,
+      33097.0,
+      33097.0
+     ],
+     "segments": [
+      {
+       "L": 0,
+       "cycles": 33514.5
+      },
+      {
+       "L": 1,
+       "cycles": 33097.0
+      },
+      {
+       "L": 2,
+       "cycles": 33097.0
+      },
+      {
+       "L": 3,
+       "cycles": 33097.0
+      },
+      {
+       "L": 4,
+       "cycles": 33097.0
+      },
+      {
+       "L": 5,
+       "cycles": 33097.1
+      },
+      {
+       "L": 6,
+       "cycles": 33097.0
+      },
+      {
+       "L": 7,
+       "cycles": 33097.0
+      },
+      {
+       "L": 8,
+       "cycles": 33097.0
+      },
+      {
+       "L": 9,
+       "cycles": 33097.0
+      },
+      {
+       "L": 10,
+       "cycles": 33097.0
+      },
+      {
+       "L": 11,
+       "cycles": 33097.0
+      },
+      {
+       "L": 12,
+       "cycles": 33097.1
+      },
+      {
+       "L": 13,
+       "cycles": 33097.0
+      },
+      {
+       "L": 14,
+       "cycles": 33097.0
+      },
+      {
+       "L": 15,
+       "cycles": 33097.0
+      },
+      {
+       "L": 16,
+       "cycles": 33097.0
+      },
+      {
+       "L": 17,
+       "cycles": 33097.0
+      },
+      {
+       "L": 18,
+       "cycles": 33097.1
+      },
+      {
+       "L": 19,
+       "cycles": 33097.0
+      },
+      {
+       "L": 20,
+       "cycles": 33097.0
+      },
+      {
+       "L": 21,
+       "cycles": 33097.0
+      },
+      {
+       "L": 22,
+       "cycles": 33097.0
+      },
+      {
+       "L": 23,
+       "cycles": 33097.0
+      },
+      {
+       "L": 24,
+       "cycles": 33097.0
+      },
+      {
+       "L": 25,
+       "cycles": 33097.1
+      },
+      {
+       "L": 26,
+       "cycles": 33097.0
+      },
+      {
+       "L": 27,
+       "cycles": 33097.0
+      },
+      {
+       "L": 28,
+       "cycles": 33097.0
+      },
+      {
+       "L": 29,
+       "cycles": 33097.0
+      },
+      {
+       "L": 30,
+       "cycles": 33097.0
+      },
+      {
+       "L": 31,
+       "cycles": 33097.0
+      },
+      {
+       "L": 32,
+       "cycles": 33097.1
+      },
+      {
+       "L": 33,
+       "cycles": 33097.0
+      },
+      {
+       "L": 34,
+       "cycles": 33097.0
+      },
+      {
+       "L": 35,
+       "cycles": 33097.0
+      },
+      {
+       "L": "head",
+       "cycles": 77214.0
+      }
+     ],
+     "head_cycles": 77214.0,
+     "token_cycles": 1269124.0,
+     "tok_s": 945.5,
+     "chained_layer_mean": 33097.0,
+     "L1_record_costs": {
+      "prenorm.attn": 164.2,
+      "qkv": 3420.6,
+      "row_scale_qkv.load": 154.2,
+      "row_scale_qkv": 51.2,
+      "qknorm.q": 114.2,
+      "qknorm.k": 114.2,
+      "rope": 51.2,
+      "round_q": 50.2,
+      "kv_append.K": 20.6,
+      "kv_append.V": 20.6,
+      "kv_fence": 85.9,
+      "attention_qk.kv0": 651.7,
+      "attention_qk.kv1": 651.7,
+      "softmax.max": 319.2,
+      "softmax.exp_sum": 543.0,
+      "softmax.bf16_p": 176.2,
+      "attention_pv.kv0": 651.7,
+      "attention_pv.kv1": 651.7,
+      "pv_normalize": 67.2,
+      "o": 2396.6,
+      "all_reduce_o": 1405.6,
+      "row_scale_o.load": 157.5,
+      "row_scale_o+residual": 56.2,
+      "prenorm.ffn": 164.2,
+      "gu": 12636.6,
+      "row_scale_gu.load": 160.0,
+      "row_scale_gu": 60.2,
+      "swiglu": 121.8,
+      "down": 6492.6,
+      "all_reduce_down": 1405.6,
+      "row_scale_down.load": 157.5,
+      "row_scale_down+residual": 56.2
+     }
+    },
+    "races": 0,
+    "stages": {
+     "L0": {
+      "cycles": 33261.0,
+      "records": 35,
+      "executed": 35,
+      "image_sha256": "578ed08882da135793134aba3cddcfdbbfc7c677fdbfb13d18af637c1cce69eb",
+      "races": []
+     },
+     "chain": {
+      "cycles": 66358.0,
+      "records": 37,
+      "executed": 67,
+      "image_sha256": "6871e5453031784a0b6be0e6b9f65a26fd8eee42be5f0965003a32f5f286fbc5",
+      "races": [],
+      "per_layer": [
+       33261.0,
+       33097.0,
+       null
+      ]
+     },
+     "head": {
+      "cycles": 77372.0,
+      "records": 7,
+      "executed": 7,
+      "image_sha256": "dce25934fb09a2a2235ca9cdaf58c39438c1ee73c3f9ec1b08b801b222c21ce6",
+      "races": []
+     }
+    }
+   },
+   "d4g8": {
+    "token": {
+     "preamble_end": 474.4,
+     "layer_cycles": [
+      33368.1,
+      32974.8,
+      32974.8,
+      32974.7,
+      32974.8,
+      32974.8,
+      32974.8,
+      32974.7,
+      32974.8,
+      32974.8,
+      32974.8,
+      32974.7,
+      32974.8,
+      32974.8,
+      32974.8,
+      32974.7,
+      32974.8,
+      32974.8,
+      32974.8,
+      32974.7,
+      32974.8,
+      32974.8,
+      32974.8,
+      32974.7,
+      32974.8,
+      32974.8,
+      32974.8,
+      32974.8,
+      32974.7,
+      32974.8,
+      32974.8,
+      32974.8,
+      32974.7,
+      32974.8,
+      32974.8,
+      32974.8
+     ],
+     "segments": [
+      {
+       "L": 0,
+       "cycles": 33368.1
+      },
+      {
+       "L": 1,
+       "cycles": 32974.8
+      },
+      {
+       "L": 2,
+       "cycles": 32974.8
+      },
+      {
+       "L": 3,
+       "cycles": 32974.7
+      },
+      {
+       "L": 4,
+       "cycles": 32974.8
+      },
+      {
+       "L": 5,
+       "cycles": 32974.8
+      },
+      {
+       "L": 6,
+       "cycles": 32974.8
+      },
+      {
+       "L": 7,
+       "cycles": 32974.7
+      },
+      {
+       "L": 8,
+       "cycles": 32974.8
+      },
+      {
+       "L": 9,
+       "cycles": 32974.8
+      },
+      {
+       "L": 10,
+       "cycles": 32974.8
+      },
+      {
+       "L": 11,
+       "cycles": 32974.7
+      },
+      {
+       "L": 12,
+       "cycles": 32974.8
+      },
+      {
+       "L": 13,
+       "cycles": 32974.8
+      },
+      {
+       "L": 14,
+       "cycles": 32974.8
+      },
+      {
+       "L": 15,
+       "cycles": 32974.7
+      },
+      {
+       "L": 16,
+       "cycles": 32974.8
+      },
+      {
+       "L": 17,
+       "cycles": 32974.8
+      },
+      {
+       "L": 18,
+       "cycles": 32974.8
+      },
+      {
+       "L": 19,
+       "cycles": 32974.7
+      },
+      {
+       "L": 20,
+       "cycles": 32974.8
+      },
+      {
+       "L": 21,
+       "cycles": 32974.8
+      },
+      {
+       "L": 22,
+       "cycles": 32974.8
+      },
+      {
+       "L": 23,
+       "cycles": 32974.7
+      },
+      {
+       "L": 24,
+       "cycles": 32974.8
+      },
+      {
+       "L": 25,
+       "cycles": 32974.8
+      },
+      {
+       "L": 26,
+       "cycles": 32974.8
+      },
+      {
+       "L": 27,
+       "cycles": 32974.8
+      },
+      {
+       "L": 28,
+       "cycles": 32974.7
+      },
+      {
+       "L": 29,
+       "cycles": 32974.8
+      },
+      {
+       "L": 30,
+       "cycles": 32974.8
+      },
+      {
+       "L": 31,
+       "cycles": 32974.8
+      },
+      {
+       "L": 32,
+       "cycles": 32974.7
+      },
+      {
+       "L": 33,
+       "cycles": 32974.8
+      },
+      {
+       "L": 34,
+       "cycles": 32974.8
+      },
+      {
+       "L": 35,
+       "cycles": 32974.8
+      },
+      {
+       "L": "head",
+       "cycles": 77214.0
+      }
+     ],
+     "head_cycles": 77214.0,
+     "token_cycles": 1264699.3,
+     "tok_s": 948.8,
+     "chained_layer_mean": 32974.8,
+     "L1_record_costs": {
+      "prenorm.attn": 164.2,
+      "qkv": 3420.6,
+      "row_scale_qkv.load": 129.1,
+      "row_scale_qkv": 50.2,
+      "qknorm.q": 114.2,
+      "qknorm.k": 114.2,
+      "rope": 50.2,
+      "round_q": 49.2,
+      "kv_append.K": 20.6,
+      "kv_append.V": 20.6,
+      "kv_fence": 85.9,
+      "attention_qk.kv0": 982.8,
+      "softmax.max": 255.2,
+      "softmax.exp_sum": 415.0,
+      "softmax.bf16_p": 112.2,
+      "attention_pv.kv0": 982.8,
+      "pv_normalize": 65.2,
+      "o": 2396.6,
+      "all_reduce_o": 1405.6,
+      "row_scale_o.load": 133.3,
+      "row_scale_o+residual": 56.2,
+      "prenorm.ffn": 164.2,
+      "gu": 12636.6,
+      "row_scale_gu.load": 132.0,
+      "row_scale_gu": 54.2,
+      "swiglu": 121.8,
+      "act_all_gather": 820.0,
+      "down": 6492.6,
+      "all_reduce_down": 1363.6,
+      "row_scale_down.load": 133.3,
+      "row_scale_down+residual": 56.2
+     }
+    },
+    "races": 0,
+    "stages": {
+     "L0": {
+      "cycles": 33141.8,
+      "records": 35,
+      "executed": 35,
+      "image_sha256": "b271dc1bf41883d5e71e99f31e32f566d65da343d72b5e7f7598615103c0ffaf",
+      "races": []
+     },
+     "chain": {
+      "cycles": 66116.6,
+      "records": 37,
+      "executed": 66,
+      "image_sha256": "923df64d3cadd060464c91afb1d2437ff90e3e66080b25fbe26082caa560551f",
+      "races": [],
+      "per_layer": [
+       33141.8,
+       32974.8,
+       null
+      ]
+     },
+     "head": {
+      "cycles": 77372.0,
+      "records": 7,
+      "executed": 7,
+      "image_sha256": "a0ce1c154cc2e8b8fed96c4e056315b9a7add357a3c0134528dee62877a4d5d8",
+      "races": []
+     }
+    }
+   }
+  }
+ }
+}

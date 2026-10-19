@@ -75,6 +75,12 @@ fi
 # The PDN stays FAIL in STATUS; nothing about the PG verdict is relaxed (like OT_PDN=skip, timing-only evidence).
 pg_open_diag() {
   [ "${OT_PG_OPEN_DIAG:-0}" = 1 ] && grep -q '^OT_PDN PASS' $C/run_pdn.log && [ -s $C/floorplan_pdn_prepg.odb ] || return 1
+  # A killed or incomplete PG check is not a measured connectivity failure. Require both the process verdict
+  # and an explicit completed check failure before taking the diagnostic continuation (Qwen recovery 10-18).
+  local pg_process_rc
+  pg_process_rc=$(cat "$C/run_pdn.log.process_exit" 2>/dev/null) || return 1
+  case "$pg_process_rc" in 0|1) ;; *) return 1;; esac
+  grep -Eq '^OT_PGCHECK (VDD|VSS) FAIL ' "$C/run_pdn.log" || return 1
   grep -E '^(OT_.*FAIL|Error:|\[ERROR)' $C/run_pdn.log | grep -v -E 'OT_PGCHECK (VDD|VSS) FAIL|PSM-0069|run_pdn.tcl, [0-9]+ PSM-0069' | grep -q . && return 1
   ln -f $C/floorplan_pdn_prepg.odb $C/floorplan_pdn.odb
   say "PDN PG OPEN -- DIAGNOSTIC ONLY (GRT/STA continue): islands by class: $(grep PSM-0039 $C/run_pdn.log | sed -E 's/.*instance ([^ /]+)\/.*/\1/; s/(_[0-9]+)+$//' | sort | uniq -c | sort -rn | awk '{printf "%s=%s ",$2,$1}')"
@@ -159,6 +165,13 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   if [ -s $C/fwd_lanes.json ] && [ "${OT_FWD_LAND_DUMP:-1}" = 1 ]; then
     python3 $SRC/tools/qwen_split/fwd_land_plan.py tcl --lanes $C/fwd_lanes.json --corner $c --out $D/land_$c.tcl > /dev/null && \
       printf 'if {[catch {source /work/land_%s.tcl} err]} { puts "OT_LAND_FAIL $err" }\n' $c >> $D/grt_$c.tcl
+  fi
+  # KV-LANDSLOT 10-18: reset release window of the cross-tree reset root hops (OT_RST_WINDOW_HOPS = kv_rst_window.py
+  # hops json): MCP setup E_r / hold E_r-1 per hop, worst path per hop net -> rst_window_<c>.tsv (after the reports)
+  if [ -n "${OT_RST_WINDOW_HOPS:-}" ] && [ -s "$OT_RST_WINDOW_HOPS" ]; then
+    python3 "$SRC/tools/qwen_kv_die/kv_rst_window.py" tcl --hops "$OT_RST_WINDOW_HOPS" --corner $c --out $D/rst_window.tcl \
+      && printf '%s\n' 'if {[catch {source /work/rst_window.tcl} err]} { puts "OT_RST_WINDOW_FAIL $err" }' >> $D/grt_$c.tcl \
+      || say "RST WINDOW $c: Tcl generation FAIL"
   fi
   # DIE-FLOW 10-17: post-GRT slew/cap audit of the repeated die nets (TT session; GRT detours are invisible pre-GRT)
   if [ "${OT_DIE_REPAIR:-0}" = 1 ] && [ "$c" = tt ] && [ -f $G/die_repeaters.tcl ]; then

@@ -1043,11 +1043,27 @@ def lef_text(mst, k, wmap):
             lv = int(layer[1:])
             for i in range(lv, mst.obs_top + 1):
                 holes.setdefault(i, []).append((a - 0.3, b - 0.3, c_ + 0.3, d + 0.3))
+    # Q-DIE11 10-18 (coordinator 0ea item 2; dv2f12 GRT overflow 72,022, all in capacity-0 GCells under the slice S
+    # face): an abstract with pin_window > 0 keeps a pin-access WINDOW free of OBS along every face that carries pins:
+    # a strip `pin_window` um deep from the face, spanning the face's pin clusters (+ pin_window at each end), on the
+    # die signal layers M4..obs_top.  M1-M3 stay obstructed (the block's cells and pin registers sit under the window);
+    # the hardened block must keep the window free on M4..obs_top (recorded with the die case).  Default 0: unchanged.
+    for i, r in pin_windows(mst, pins):
+        holes.setdefault(i, []).append(r)
     for i in range(1, mst.obs_top + 1):
         L += [f'    LAYER M{i} ;']
         L += [f'      RECT {a:.3f} {b:.3f} {c_:.3f} {d:.3f} ;' for a, b, c_, d in _minus(mst.w, mst.h, holes.get(i, []))]
     L += ['  END', f'END {mst.name}', '']
     return '\n'.join(L), len(pins)
+
+
+def pin_windows(mst, pins):
+    """[(layer index, rect)] pin-access windows of a master with pin_window > 0 (see lef_text; shared rule
+    tools/abstract_pin_windows.py).  Pins of one face closer than 2 x pin_window share one window."""
+    import abstract_pin_windows as APW
+    win = float(getattr(mst, 'pin_window', 0.0) or 0.0)
+    lo = int(getattr(mst, 'pin_window_layer_lo', 4))
+    return [(i, r) for i, rs in sorted(APW.windows(mst.w, mst.h, pins, win, lo, mst.obs_top).items()) for r in rs]
 
 
 def _minus(w, h, holes):

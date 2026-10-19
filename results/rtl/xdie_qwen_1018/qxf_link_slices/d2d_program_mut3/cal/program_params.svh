@@ -1,0 +1,11 @@
+localparam integer P_SS = 639;
+localparam integer P_QS = 599;
+localparam integer P_RS = 2364;
+localparam integer P_RE = 2397;
+localparam integer P_RDELTA = 222;
+localparam integer P_ES = 192;
+localparam integer P_EH = 191;
+localparam integer P_PK = 3;
+localparam integer P_PW = 30;
+localparam integer P_L0 = 272;
+localparam integer P_FINISH = 246329;
