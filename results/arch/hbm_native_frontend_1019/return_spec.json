@@ -1,0 +1,16 @@
+{
+  "top": "ot_hbm_owner_return_native",
+  "sources": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_four_owner_links.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_owner_metadata_native.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_owner_tags_native.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_owner_return_native.sv"
+  ],
+  "clock_ports": [
+    "clk"
+  ],
+  "params": {
+    "J": 2
+  },
+  "purpose": "actual32slot owner return composition; issuer/issue/collector unqualified"
+}
