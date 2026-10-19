@@ -38,7 +38,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[1].g_mac[0].u_mem"
+   "inst": "*u_s.g_bank?1?.g_mac?0?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -49,7 +49,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[1].g_mac[1].u_mem"
+   "inst": "*u_s.g_bank?1?.g_mac?1?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -60,7 +60,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[1].g_mac[2].u_mem"
+   "inst": "*u_s.g_bank?1?.g_mac?2?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -71,7 +71,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[1].g_mac[3].u_mem"
+   "inst": "*u_s.g_bank?1?.g_mac?3?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -82,7 +82,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[1].g_mac[4].u_mem"
+   "inst": "*u_s.g_bank?1?.g_mac?4?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -93,7 +93,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[1].g_mac[5].u_mem"
+   "inst": "*u_s.g_bank?1?.g_mac?5?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -104,7 +104,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[1].g_mac[6].u_mem"
+   "inst": "*u_s.g_bank?1?.g_mac?6?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -115,7 +115,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[1].g_mac[7].u_mem"
+   "inst": "*u_s.g_bank?1?.g_mac?7?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -126,7 +126,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[0].g_mac[0].u_mem"
+   "inst": "*u_s.g_bank?0?.g_mac?0?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -137,7 +137,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[0].g_mac[1].u_mem"
+   "inst": "*u_s.g_bank?0?.g_mac?1?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -148,7 +148,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[0].g_mac[2].u_mem"
+   "inst": "*u_s.g_bank?0?.g_mac?2?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -159,7 +159,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[0].g_mac[3].u_mem"
+   "inst": "*u_s.g_bank?0?.g_mac?3?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -170,7 +170,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[0].g_mac[4].u_mem"
+   "inst": "*u_s.g_bank?0?.g_mac?4?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -181,7 +181,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[0].g_mac[5].u_mem"
+   "inst": "*u_s.g_bank?0?.g_mac?5?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -192,7 +192,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[0].g_mac[6].u_mem"
+   "inst": "*u_s.g_bank?0?.g_mac?6?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -203,7 +203,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[0].g_mac[7].u_mem"
+   "inst": "*u_s.g_bank?0?.g_mac?7?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -214,7 +214,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[2].g_mac[0].u_mem"
+   "inst": "*u_s.g_bank?2?.g_mac?0?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -225,7 +225,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[2].g_mac[1].u_mem"
+   "inst": "*u_s.g_bank?2?.g_mac?1?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -236,7 +236,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[2].g_mac[2].u_mem"
+   "inst": "*u_s.g_bank?2?.g_mac?2?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -247,7 +247,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[2].g_mac[3].u_mem"
+   "inst": "*u_s.g_bank?2?.g_mac?3?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -258,7 +258,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[2].g_mac[4].u_mem"
+   "inst": "*u_s.g_bank?2?.g_mac?4?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -269,7 +269,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[2].g_mac[5].u_mem"
+   "inst": "*u_s.g_bank?2?.g_mac?5?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -280,7 +280,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[2].g_mac[6].u_mem"
+   "inst": "*u_s.g_bank?2?.g_mac?6?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -291,7 +291,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.g_bank[2].g_mac[7].u_mem"
+   "inst": "*u_s.g_bank?2?.g_mac?7?.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
@@ -302,7 +302,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.u_phase0"
+   "inst": "*u_s.u_phase0"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
@@ -313,7 +313,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.u_cal_action"
+   "inst": "*u_s.u_cal_action"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
@@ -324,7 +324,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.u_cal_time"
+   "inst": "*u_s.u_cal_time"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
@@ -335,7 +335,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.u_stream0"
+   "inst": "*u_s.u_stream0"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
@@ -346,7 +346,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.u_stream1"
+   "inst": "*u_s.u_stream1"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
@@ -357,7 +357,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.u_stream2"
+   "inst": "*u_s.u_stream2"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
@@ -368,7 +368,7 @@
    ],
    "at_exact": true,
    "orient": "R0",
-   "inst": "u_s.u_stream3"
+   "inst": "*u_s.u_stream3"
   }
  ],
  "pins": {
@@ -461,7 +461,7 @@
  "fill_reason": {
   "pin_bound": "Pin-bound: 11,914 signal pins (W 2,554 ring W + NX W, E 2,554, N 3,762 control-plane deliveries / inject / issuer word, S 3,047 own fragments + V rung + frame word); 648 x 561.6 keeps every face <= 5.8 pins/um (N 5.8, S 4.7, W/E 4.5). 31 macros (24 SRAM 128x256 x buffer, 7 ROM 4096x72) ~ 112k um2."
  },
- "structural_change": "S81-XG (10-19): new hardened gather sub-leaf of the S81 slice centre (C1 / C3 master child u_xg, 16 per die): ring stop data plane ot_s81sl_rstop (tier line E/W 1,104 b, V rung 276 b, NX snake ends, sid = 2*col + tier decode from S81-LBGAP G2 1b7c4b828) + x streamer ot_s81sl_xs (kit s81sl_xs floorplan v2 of 1dcaa1b20, never routed). The rstop -> xs gather port (3 x 1,031 b a cycle) stays internal. Floorplan: per-source x-buffer bank columns facing their ring faces (bank 1 = from W at x 86.4, bank 0 = own / V at 216, bank 2 = from E at 432), the 7 ROMs abutted in one column at 345.6 between bank 0 and bank 2 (calendar / phase / stream control in the middle), std-cell ring around the macros for the face pin-flop bands; clock + reset at the S-face centre. Same RTL cycles as the slice benches; reset landed at the face (2 stages, ROOT-RST).",
+ "structural_change": "S81-XG (10-19): new hardened gather sub-leaf of the S81 slice centre (C1 / C3 master child u_xg, 16 per die): ring stop data plane ot_s81sl_rstop (tier line E/W 1,104 b, V rung 276 b, NX snake ends, sid = 2*col + tier decode from S81-LBGAP G2 1b7c4b828) + x streamer ot_s81sl_xs (kit s81sl_xs floorplan v2 of 1dcaa1b20, never routed). The rstop -> xs gather port (3 x 1,031 b a cycle) stays internal. Floorplan: per-source x-buffer bank columns facing their ring faces (bank 1 = from W at x 86.4, bank 0 = own / V at 216, bank 2 = from E at 432), the 7 ROMs abutted in one column at 345.6 between bank 0 and bank 2 (calendar / phase / stream control in the middle), std-cell ring around the macros for the face pin-flop bands; clock + reset at the S-face centre. Same RTL cycles as the slice benches; reset landed at the face (2 stages, ROOT-RST). Gate1 (10-19, ot-agidock128) died at macro placement: the ROOT-RST landing-only wrapper (pin_regs off + reset_landing on) renames the core u_ot_pr_core, so the spec's u_s.* instance names matched nothing -> instance patterns are globs '*u_s.g_bank?b?.g_mac?m?.u_mem' / '*u_s.u_<rom>' (match with or without the wrapper).",
  "job": {
   "owner": "Claude:S81-XG",
   "branch": "claude/s81-xg-1019",
