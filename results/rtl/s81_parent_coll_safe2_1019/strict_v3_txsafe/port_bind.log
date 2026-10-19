@@ -1,0 +1,15 @@
+FAIL col_h10_l4                         x32     OUTPUT_OPEN 
+FAIL col_h9_l4                          x58     OUTPUT_OPEN 
+FAIL dsdv_bk_col                        x1      OUTPUT_OPEN 
+FAIL dsdv_bk_sel                        x1      OUTPUT_OPEN 
+FAIL dsdv_gunit                         x1      OUTPUT_OPEN 
+FAIL dsdv_seq_host_mux                  x1      OUTPUT_OPEN 
+FAIL dsdv_svc_rs                        x14     OUTPUT_OPEN 
+FAIL dsdv_svc_rs_entry                  x2      OUTPUT_OPEN 
+FAIL ot_hbm3e_phy_v41x_aw30_e8p5        x1      OUTPUT_OPEN 
+FAIL ot_s81sl_slice                     x12     OUTPUT_OPEN 
+FAIL ot_s81sl_slice_lepe_mu_coll_safe2  x1      OUTPUT_OPEN 
+FAIL ot_s81sl_slice_lepe_nh_mus_coll_safe2 x1      OUTPUT_OPEN 
+FAIL ot_s81sl_slice_lepw_mu_coll_safe2  x1      OUTPUT_OPEN 
+FAIL ot_s81sl_slice_lepw_mus_coll_safe2 x1      OUTPUT_OPEN 
+DIE_PORT_BIND FAIL masters=41 instances=9130 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=161694 output_open_ports=45 top_assigns=0 params_not_in_rtl=0 strap_ports=39 pad_bits=210677 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=15 landing_reset_mismatch=0 landing_reset_unresolved=0
