@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-d2d-broader-collect-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-d2d-broader-collect-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-d2d-broader-collect-1019
+ot-run: ot-epyc7       admits  1123 GB (avail 848, growth 62, headroom 0, waiters 0/0 GB) load 36/96 running 18 disk 6417 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-d2d-broader-collect-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-d2d-broader-collect-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-d2d-broader-collect-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3343496-1792434106 after 0 s
+r7w {'original_face_dump_sha256': '9af405c02aae26f1cd1d31b022374aef51914b9f45fc7e3aba25d7fef7a37456', 'all_output_ports_resolved': 2507, 'distinct_boundary_FFs': 1950, 'max_pin_rectangle_span_um': 206.70000000000005, 'qualified': False} crossface 0
+ovl {'original_face_dump_sha256': 'e7c8cd4f62c31d8a6bf9b7e385ad7883dacb93f0d68fbea077c06718a91f2ef1', 'all_output_ports_resolved': 2511, 'distinct_boundary_FFs': 1954, 'max_pin_rectangle_span_um': 206.31600000000003, 'qualified': False} crossface 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3343496-1792434106): exit 0

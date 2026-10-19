@@ -1,0 +1,5 @@
+PASS checks=5992 tx=32 rx=32 epochs=2 recovery=PASS aborted=5018
+- tb_ovl_lifecycle.sv:204: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 0.435 s; speed 137.878 us/s
+- Verilator: cpu 0.435 s on 1 threads; allocated 11 MB

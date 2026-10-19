@@ -1,0 +1,5 @@
+PASS checks=5992 tx=32 rx=32 epochs=2 recovery=PASS aborted=4963
+- tb_r7w_independent_init.sv:557: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 0.596 s; speed 100.673 us/s
+- Verilator: cpu 0.596 s on 1 threads; allocated 11 MB

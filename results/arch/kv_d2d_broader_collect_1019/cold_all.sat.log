@@ -1,0 +1,478 @@
+
+-- Running command `read_verilog functional_cells_fast.v cold_all.v; hierarchy -top cold_all; flatten; proc; opt; sat -prove same 1 -show-inputs -show-outputs -dump_json cold_all.counterexample.json' --
+
+1. Executing Verilog-2005 frontend: functional_cells_fast.v
+Parsing Verilog input from `functional_cells_fast.v' to AST representation.
+Generating RTLIL representation for module `\AO21x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO221x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO222x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO22x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO31x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO32x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO33x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI211x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI21x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI221x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI22x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA211x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA21x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA222x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA22x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA31x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI21x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI22x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND4x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND5x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\MAJx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR2x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR4x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR5x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\TIEHIx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\TIELOx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XNOR2x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XNOR2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XOR2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFASRHQNx1_ASAP7_75t_R'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: cold_all.v
+Parsing Verilog input from `cold_all.v' to AST representation.
+Generating RTLIL representation for module `\cold_all'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \cold_all
+Used module:     \INVx1_ASAP7_75t_R
+Used module:     \BUFx2_ASAP7_75t_R
+Used module:     \BUFx3_ASAP7_75t_R
+Used module:     \AND4x1_ASAP7_75t_R
+Used module:     \AOI21x1_ASAP7_75t_R
+Used module:     \OA21x2_ASAP7_75t_R
+Used module:     \NAND2x1_ASAP7_75t_R
+Used module:     \AND2x2_ASAP7_75t_R
+Used module:     \OR3x1_ASAP7_75t_R
+Used module:     \AND3x1_ASAP7_75t_R
+Used module:     \XNOR2x2_ASAP7_75t_R
+
+3.2. Analyzing design hierarchy..
+Top module:  \cold_all
+Used module:     \INVx1_ASAP7_75t_R
+Used module:     \BUFx2_ASAP7_75t_R
+Used module:     \BUFx3_ASAP7_75t_R
+Used module:     \AND4x1_ASAP7_75t_R
+Used module:     \AOI21x1_ASAP7_75t_R
+Used module:     \OA21x2_ASAP7_75t_R
+Used module:     \NAND2x1_ASAP7_75t_R
+Used module:     \AND2x2_ASAP7_75t_R
+Used module:     \OR3x1_ASAP7_75t_R
+Used module:     \AND3x1_ASAP7_75t_R
+Used module:     \XNOR2x2_ASAP7_75t_R
+Removing unused module `\DFFASRHQNx1_ASAP7_75t_R'.
+Removing unused module `\DFFHQNx1_ASAP7_75t_R'.
+Removing unused module `\XOR2x2_ASAP7_75t_R'.
+Removing unused module `\XNOR2x1_ASAP7_75t_R'.
+Removing unused module `\TIELOx1_ASAP7_75t_R'.
+Removing unused module `\TIEHIx1_ASAP7_75t_R'.
+Removing unused module `\OR5x1_ASAP7_75t_R'.
+Removing unused module `\OR4x1_ASAP7_75t_R'.
+Removing unused module `\OR2x2_ASAP7_75t_R'.
+Removing unused module `\NOR3x1_ASAP7_75t_R'.
+Removing unused module `\NOR2x1_ASAP7_75t_R'.
+Removing unused module `\NAND3x1_ASAP7_75t_R'.
+Removing unused module `\MAJx2_ASAP7_75t_R'.
+Removing unused module `\AND5x1_ASAP7_75t_R'.
+Removing unused module `\OAI22x1_ASAP7_75t_R'.
+Removing unused module `\OAI21x1_ASAP7_75t_R'.
+Removing unused module `\OA31x2_ASAP7_75t_R'.
+Removing unused module `\OA22x2_ASAP7_75t_R'.
+Removing unused module `\OA222x2_ASAP7_75t_R'.
+Removing unused module `\OA211x2_ASAP7_75t_R'.
+Removing unused module `\AOI22x1_ASAP7_75t_R'.
+Removing unused module `\AOI221x1_ASAP7_75t_R'.
+Removing unused module `\AOI211x1_ASAP7_75t_R'.
+Removing unused module `\AO33x2_ASAP7_75t_R'.
+Removing unused module `\AO32x1_ASAP7_75t_R'.
+Removing unused module `\AO31x2_ASAP7_75t_R'.
+Removing unused module `\AO22x1_ASAP7_75t_R'.
+Removing unused module `\AO222x2_ASAP7_75t_R'.
+Removing unused module `\AO221x1_ASAP7_75t_R'.
+Removing unused module `\AO21x1_ASAP7_75t_R'.
+Removed 30 unused modules.
+
+4. Executing FLATTEN pass (flatten design).
+Deleting now unused module BUFx2_ASAP7_75t_R.
+Deleting now unused module AND2x2_ASAP7_75t_R.
+Deleting now unused module XNOR2x2_ASAP7_75t_R.
+Deleting now unused module AOI21x1_ASAP7_75t_R.
+Deleting now unused module NAND2x1_ASAP7_75t_R.
+Deleting now unused module OR3x1_ASAP7_75t_R.
+Deleting now unused module AND4x1_ASAP7_75t_R.
+Deleting now unused module OA21x2_ASAP7_75t_R.
+Deleting now unused module AND3x1_ASAP7_75t_R.
+Deleting now unused module INVx1_ASAP7_75t_R.
+Deleting now unused module BUFx3_ASAP7_75t_R.
+<suppressed ~179 debug messages>
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module cold_all.
+<suppressed ~258 debug messages>
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module cold_all.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\cold_all'.
+Computing hashes of 496 cells of `\cold_all'.
+Finding duplicate cells in `\cold_all'.
+Computing hashes of 368 cells of `\cold_all'.
+Finding duplicate cells in `\cold_all'.
+Computing hashes of 352 cells of `\cold_all'.
+Finding duplicate cells in `\cold_all'.
+Computing hashes of 350 cells of `\cold_all'.
+Finding duplicate cells in `\cold_all'.
+<suppressed ~438 debug messages>
+Removed a total of 146 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \cold_all..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \cold_all.
+    New input vector for $reduce_and cell $reduce_and$cold_all.v:815$548: { $eq$cold_all.v:807$540_Y $eq$cold_all.v:806$539_Y $eq$cold_all.v:804$537_Y $eq$cold_all.v:803$536_Y $eq$cold_all.v:802$535_Y $eq$cold_all.v:800$533_Y $eq$cold_all.v:799$532_Y $eq$cold_all.v:770$503_Y $eq$cold_all.v:768$501_Y $eq$cold_all.v:566$299_Y $eq$cold_all.v:565$298_Y $eq$cold_all.v:562$295_Y $eq$cold_all.v:561$294_Y }
+  Optimizing cells in module \cold_all.
+Performed a total of 1 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\cold_all'.
+Computing hashes of 350 cells of `\cold_all'.
+Finding duplicate cells in `\cold_all'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \cold_all..
+Removed 46 unused cells and 699 unused wires.
+<suppressed ~185 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module cold_all.
+<suppressed ~11 debug messages>
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \cold_all..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \cold_all.
+    New input vector for $reduce_and cell $reduce_and$cold_all.v:815$548: { \matches [190] \matches [175] }
+  Optimizing cells in module \cold_all.
+Performed a total of 1 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\cold_all'.
+Computing hashes of 293 cells of `\cold_all'.
+Finding duplicate cells in `\cold_all'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \cold_all..
+Removed 78 unused cells and 198 unused wires.
+<suppressed ~267 debug messages>
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module cold_all.
+
+6.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \cold_all..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \cold_all.
+Performed a total of 0 changes.
+
+6.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\cold_all'.
+Computing hashes of 215 cells of `\cold_all'.
+Finding duplicate cells in `\cold_all'.
+Removed a total of 0 cells.
+
+6.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \cold_all..
+
+6.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module cold_all.
+
+6.23. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 215 cells to SAT database.
+Import proof-constraint: \same = 1'1
+Final proof equation: \same = 1'1
+Import show expression: \n108720
+Import show expression: \n108352
+Import show expression: \n108351
+Import show expression: \n108350
+Import show expression: \n106644
+Import show expression: \n105981
+Import show expression: \n103724
+Import show expression: \n103637
+Import show expression: \n94401
+Import show expression: \n94254
+Import show expression: \n93796
+Import show expression: \n92768
+Import show expression: \n91595
+Import show expression: \n87361
+Import show expression: \n69256
+Import show expression: \n40265
+Import show expression: \n40262
+Import show expression: \n40250
+Import show expression: \n40248
+Import show expression: \n40246
+Import show expression: \n40241
+Import show expression: \n40218
+Import show expression: \n39415
+Import show expression: \n39414
+Import show expression: \n39413
+Import show expression: \n39409
+Import show expression: \n39408
+Import show expression: \n39162
+Import show expression: \n36317
+Import show expression: \n36313
+Import show expression: \n36311
+Import show expression: \n36309
+Import show expression: \n36307
+Import show expression: \n36304
+Import show expression: \n35844
+Import show expression: \n35825
+Import show expression: \n34282
+Import show expression: \n28297
+Import show expression: \n21777
+Import show expression: \n21759
+Import show expression: \n21750
+Import show expression: \n19979
+Import show expression: \n17604
+Import show expression: \n17603
+Import show expression: \n17601
+Import show expression: \n17599
+Import show expression: \n17598
+Import show expression: \n17596
+Import show expression: \n17595
+Import show expression: \n17594
+Import show expression: \n12800
+Import show expression: \n12782
+Import show expression: \n12780
+Import show expression: \n48
+Import show expression: \n47
+Import show expression: \n46
+Import show expression: \n45
+Import show expression: \n44
+Import show expression: \n43
+Import show expression: \n42
+Import show expression: \n41
+Import show expression: \n40
+Import show expression: \n39
+Import show expression: \n38
+Import show expression: \n37
+Import show expression: \n36
+Import show expression: \n35
+Import show expression: \n34
+Import show expression: \n33
+Import show expression: \n32
+Import show expression: \n31
+Import show expression: \n30
+Import show expression: \n29
+Import show expression: \n28
+Import show expression: \n27
+Import show expression: \n26
+Import show expression: \n25
+Import show expression: \n24
+Import show expression: \n23
+Import show expression: \n22
+Import show expression: \n21
+Import show expression: \n20
+Import show expression: \n19
+Import show expression: \n18
+Import show expression: \n17
+Import show expression: \n16
+Import show expression: \n15
+Import show expression: \n14
+Import show expression: \n13
+Import show expression: \n12
+Import show expression: \n11
+Import show expression: \n10
+Import show expression: \matches
+Import show expression: \same
+
+Solving problem with 267 variables and 451 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Signal Name             Dec       Hex                                                                                                                                                                                                                                                                                                                                                                          Bin
+  --------------- ----------- ---------                                                                    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  \matches                 --        --    1111111111111101111011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000000000000001111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+  \n10                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n103637                  0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n103724                  1         1                                                                                                                                                                                                                                                                                                                                                                            1
+  \n105981                  0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n106644                  0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n108350                  1         1                                                                                                                                                                                                                                                                                                                                                                            1
+  \n108351                  0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n108352                  0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n108720                  0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n11                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n12                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n12780                   1         1                                                                                                                                                                                                                                                                                                                                                                            1
+  \n12782                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n12800                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n13                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n14                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n15                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n16                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n17                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n17594                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n17595                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n17596                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n17598                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n17599                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n17601                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n17603                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n17604                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n18                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n19                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n19979                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n20                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n21                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n21750                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n21759                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n21777                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n22                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n23                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n24                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n25                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n26                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n27                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n28                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n28297                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n29                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n30                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n31                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n32                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n33                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n34                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n34282                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n35                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n35825                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n35844                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n36                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n36304                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n36307                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n36309                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n36311                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n36313                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n36317                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n37                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n38                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n39                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n39162                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n39408                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n39409                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n39413                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n39414                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n39415                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n40                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n40218                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n40241                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n40246                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n40248                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n40250                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n40262                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n40265                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n41                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n42                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n43                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n44                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n45                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n46                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n47                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n48                      0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n69256                   1         1                                                                                                                                                                                                                                                                                                                                                                            1
+  \n87361                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n91595                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n92768                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n93796                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n94254                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \n94401                   0         0                                                                                                                                                                                                                                                                                                                                                                            0
+  \same                     0         0                                                                                                                                                                                                                                                                                                                                                                            0
+Dumping SAT model to WaveJSON file 'cold_all.counterexample.json'.
