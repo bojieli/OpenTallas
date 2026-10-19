@@ -64,7 +64,13 @@ def audit(netlist, lef, before_place, after_place, orientation, reach_classes, e
             }
         )
     incident = {}
-    for n in changed:
+    unmeasured = []
+    for n in sorted(changed):
+        if n not in insts:
+            # KVR-PLACE2 10-19: an inserted / moved station absent from the audited netlist is a netlist/record mismatch
+            # (kvs14r-f9ef813ab-kvrplace: KeyError on a chained AFTER stage) -- fail closed, never skip silently
+            unmeasured.append(dict(net=None, endpoint=(n, None, None), reason="audited instance missing from the netlist"))
+            continue
         for port, expr in insts[n][1].items():
             for bit, b in enumerate(expr_bits(expr, wires)):
                 if b not in ("0", "1") and b not in const:
@@ -101,7 +107,6 @@ def audit(netlist, lef, before_place, after_place, orientation, reach_classes, e
         return directions.get((mst, port + f"[{bit}]"), directions.get((mst, port)))
 
     rows = []
-    unmeasured = []
     for b, touched in incident.items():
         es = ends[b]
         drivers = [e for e in es if direction(e) in ("OUTPUT", "INOUT")]

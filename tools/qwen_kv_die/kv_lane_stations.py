@@ -37,6 +37,8 @@ PLACE = re.compile(r'^ot_mts::place \[\$_blk findInst (\S+)\] (\S+) (\S+) (\S+)\
 STD = re.compile(r'^qkd_rlys_(\d+)$')
 STEP_NM = 2160
 MARGIN_UM = 4.0
+SPINE_MAX = int(os.environ.get('OT_KV_AFTER_SPINE_MAX', '64'))   # stages on one AFTER spine (refuse beyond)
+PROGRESS_MIN_NM = 50000                                             # a progress stage gains >= 50 um on its target
 
 
 def reach_of(width, classes):
@@ -269,6 +271,111 @@ def plan_repairs(viol_pairs, pre_lines, lane_lines, new, lanes, geo, dirs, expr_
     def ck_of(inst):
         v = pre[inst][1].get('ck', '').strip()
         return v.split('[')[0]
+
+    # ---- AFTER planning (KVR-PLACE2 10-19): one frame / forks / tapped spine, then equal-depth pads ----
+    def _cen(ps):
+        return (sum(x for x, _ in ps) / len(ps), sum(y for _, y in ps) / len(ps))
+
+    def _dist(a, b):
+        return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+    def _lcons(nmst, r, loads, grp):
+        return [(geo.pin(nmst, f'b[{i}]') or geo.pin(nmst, 'b'), pts(*e), r) for l_ in grp for i, e in loads[l_]]
+
+    def _scons(nmst, r, src, smst, bits):
+        # every NET bit of the source output reaches the stage input (spare bits are nets too: the audit measures them)
+        return [(geo.pin(nmst, f'a[{i}]') or geo.pin(nmst, 'a'), geo.ep_points(src, smst, 'b', i), r) for i in bits]
+
+    def _take(nmst, name, xy, names):
+        m_ = geo.macros[nmst]
+        geo.put(xy[0], xy[1], m_['W'], m_['H'], name)
+        geo.place[name] = (xy[0], xy[1], 'R0')
+        names.append(name)
+
+    def _drop(name, names):
+        geo.remove(name)
+        geo.place.pop(name, None)
+        names.remove(name)
+
+    def after_stages(P, pmst, S, nmst, r, loads, tag, names):
+        """stage dicts (inst, at, loads = the loads rewired to it, taps, xy, depth, side, role) or None"""
+        sb = [i for i, b in enumerate(net.bits(P, 'b')) if b not in ('0', '1')]
+        lds = sorted(loads)
+        xy = geo.find(nmst, _scons(nmst, r, P, pmst, sb) + _lcons(nmst, r, loads, lds))
+        if xy is not None:
+            _take(nmst, f'{P}_y{tag}', xy, names)
+            return [dict(inst=f'{P}_y{tag}', at=P, loads=lds, taps=list(lds), xy=xy, depth=1, side='both', role='single')]
+        forks = []
+        for k, l_ in enumerate(lds):
+            xy = geo.find(nmst, _scons(nmst, r, P, pmst, sb) + _lcons(nmst, r, loads, [l_]))
+            if xy is None:
+                break
+            _take(nmst, f'{P}_y{tag}_{k}', xy, names)
+            forks.append(dict(inst=f'{P}_y{tag}_{k}', at=P, loads=[l_], taps=[l_], xy=xy, depth=1, side='both', role='fork'))
+        else:
+            return forks
+        for st in forks:
+            _drop(st['inst'], names)
+        if os.environ.get('OT_KV_STATIONS_AFTER_PROGRESS', '1') != '1':
+            return None
+        lpts = {l_: [q for i, e in loads[l_] for q in pts(*e)] for l_ in lds}
+        if any(not v for v in lpts.values()):
+            return None
+        stages, src, smst, bits, remaining = [], P, pmst, sb, lds
+        bofs = geo.pin(nmst, 'b[0]') or geo.pin(nmst, 'b')
+        while remaining:
+            if len(stages) >= SPINE_MAX:
+                return None
+            sp = [q for i in bits for q in geo.ep_points(src, smst, 'b', i)]
+            if not sp:
+                return None
+            sc = _cen(sp)
+            order = sorted(remaining, key=lambda l_: (_dist(_cen(lpts[l_]), sc), l_))
+            cin = _scons(nmst, r, src, smst, bits)
+            best = None
+            for k in range(1, len(order) + 1):
+                tw = _cen(lpts[order[k]]) if k < len(order) else None
+                xy = geo.find(nmst, cin + _lcons(nmst, r, loads, order[:k]), toward=tw)
+                if xy is None:
+                    break
+                best = (k, xy)
+            if best is None:
+                tgt = _cen(lpts[order[0]])
+                xy = geo.find(nmst, cin, toward=tgt)
+                if xy is None or not bofs:
+                    return None
+                if _dist(_cen([(xy[0] + a, xy[1] + b) for a, b in bofs]), tgt) > _dist(sc, tgt) - PROGRESS_MIN_NM:
+                    return None                      # no progress toward the nearest load: refuse, never loop
+                best = (0, xy)
+            k, xy = best
+            nm = f'{P}_y{tag}_c{len(stages)}'
+            _take(nmst, nm, xy, names)
+            stages.append(dict(inst=nm, at=src, loads=list(order), taps=order[:k], xy=xy, depth=len(stages) + 1,
+                               side='both' if k else 'driver', role='spine'))
+            remaining, src, smst, bits = order[k:], nm, nmst, list(range(S))
+        return stages
+
+    def pad_to(pl, D, tag, names):
+        """equal depth D on every load of the slice: PAD stages from each load's tap (each within reach of the
+        previous stage and of the load, so they sit beside the load)"""
+        nmst, S, loads, P = pl['nmst'], pl['S'], pl['loads'], pl['P']
+        r = reach_of(S, classes)
+        tapped = [(l_, st) for st in list(pl['stages']) for l_ in st['taps']]
+        for li_, (l_, st) in enumerate(sorted(tapped, key=lambda x: x[0])):
+            if st['depth'] >= D:
+                continue
+            st['taps'].remove(l_)
+            prev, tw = st['inst'], _cen([q for i, e in loads[l_] for q in pts(*e)])
+            for k in range(D - st['depth']):
+                xy = geo.find(nmst, _scons(nmst, r, prev, nmst, range(S)) + _lcons(nmst, r, loads, [l_]), toward=tw)
+                if xy is None:
+                    return False
+                nm = f'{P}_y{tag}_p{li_}_{k}'
+                _take(nmst, nm, xy, names)
+                pl['stages'].append(dict(inst=nm, at=prev, loads=[l_], taps=[l_] if k == D - st['depth'] - 1 else [],
+                                         xy=xy, depth=st['depth'] + k + 1, side='both', role='pad'))
+                prev = nm
+        return True
     for (src, dst) in sorted(viol_pairs):
         if dst in std:
             # BEFORE dst: every slice of dst's bus position, atomically (a torn bus is never emitted)
@@ -332,12 +439,17 @@ def plan_repairs(viol_pairs, pre_lines, lane_lines, new, lanes, geo, dirs, expr_
                                     predicted_master=nmst, within_reach=reach_side, x_um=xy[0] / 1000,
                                     y_um=xy[1] / 1000, w_um=m['W'] / 1000, h_um=m['H'] / 1000))
         elif src in std:
-            # AFTER src: a plain replica on the receiving root; one per load instance when one frame cannot reach them
-            # all; every slice of the bus, atomically
+            # AFTER src: a plain replica on the receiving root -- one frame for all loads, else one per load (forks),
+            # else (KVR-PLACE2 10-19) a TAPPED SPINE planned whole in this iteration: P -> c0 -> c1 -> ... toward the
+            # loads, each load tapped from the first stage that reaches it.  Every load of every slice of the bus then
+            # gets PAD stages up to the group's deepest tap, so the bus keeps ONE age (kv_static_die words carry one age;
+            # a held calendar word seen at two ages would be read outside its hold window).  kvs14r-f9ef813ab-kvrplace:
+            # ks_acal -> the 8 expanded ASTK eps span ~10 mm of strip; one progress stage per iteration and per load
+            # (596ce7008) left 420 bits over reach after 6 iterations.
             group = [P for P in siblings(src, std) if ('after', P) not in done]
             if not group:
                 continue
-            pend_e, pend_r, names, ok = [], [], [], True
+            plans, names, ok = [], [], True
             for P in group:
                 done.add(('after', P))
                 S = int(STD.match(pre[P][0]).group(1))
@@ -351,75 +463,55 @@ def plan_repairs(viol_pairs, pre_lines, lane_lines, new, lanes, geo, dirs, expr_
                     for e in net.lds.get(b, ()):
                         if e[0] != P:
                             loads[e[0]].append((i, e))
-                nmst = f'qkd_rlys_{S}'
-                r = reach_of(S, classes)
-                m = geo.macros[nmst]
-
-                def cons_for(group_):
-                    cs = []
-                    used = sorted({i for li_ in group_ for i, _ in loads[li_]})
-                    for i in used:
-                        cs.append((geo.pin(nmst, f'a[{i}]') or geo.pin(nmst, 'a'), pts(P, 'b', i), r))
-                    for li_ in group_:
-                        for i, e in loads[li_]:
-                            cs.append((geo.pin(nmst, f'b[{i}]') or geo.pin(nmst, 'b'), pts(*e), r))
-                    return cs
                 if not loads:
                     continue
-                clusters = [sorted(loads)]
-                progress = set()
-                xy = geo.find(nmst, cons_for(clusters[0]))
-                placed = [(clusters[0], xy)] if xy is not None else []
-                if xy is None:
-                    for li_ in sorted(loads):
-                        xy_ = geo.find(nmst, cons_for([li_]))
-                        if xy_ is None and os.environ.get('OT_KV_STATIONS_AFTER_PROGRESS', '1') == '1':
-                            # KVR-PLACE 10-19 (kvs14r-131a7af2c-base: rly_pinfix_af_ES_r74_1__s0 -> seq__g_fan_2__u_fan.af,
-                            # 954 um > 2 x 400: no ONE frame reaches both ends, refused 3 iterations running): a PROGRESS
-                            # stage as BEFORE has -- within reach of P, as close to the load as the free space allows; the
-                            # remaining N -> load span is repaired by a further AFTER stage in the next iteration
-                            lp_ = [q for i, e in loads[li_] for q in pts(*e)]
-                            used_ = sorted({i for i, _ in loads[li_]})
-                            cin_ = [(geo.pin(nmst, f'a[{i}]') or geo.pin(nmst, 'a'), pts(P, 'b', i), r) for i in used_]
-                            xy_ = geo.find(nmst, cin_, toward=(sum(q[0] for q in lp_) / len(lp_), sum(q[1] for q in lp_) / len(lp_)))
-                            if xy_ is not None:
-                                progress.add(li_)
-                        if xy_ is None:
-                            ok = False
-                            refused.append(dict(op='after', station=P, master=nmst, load=li_, group=group,
-                                                reason='no legal free frame within reach (bus slice group refused whole)'))
-                            break
-                        nm_ = f'{P}_y{tag}_{len(placed)}'
-                        geo.put(xy_[0], xy_[1], m['W'], m['H'], nm_)
-                        names.append(nm_)
-                        placed.append(([li_], xy_))
-                else:
-                    geo.put(xy[0], xy[1], m['W'], m['H'], f'{P}_y{tag}')
-                    names.append(f'{P}_y{tag}')
-                if not ok:
+                nmst = f'qkd_rlys_{S}'
+                stages = after_stages(P, pmst, S, nmst, reach_of(S, classes), loads, tag, names)
+                if stages is None:
+                    ok = False
+                    refused.append(dict(op='after', station=P, master=nmst, loads=sorted(loads), group=group,
+                                        reason='no legal free frame within reach / spine made no progress '
+                                               '(bus slice group refused whole)'))
                     break
-                for k, (grp, xy_) in enumerate(placed):
-                    N = f'{P}_y{tag}' if len(placed) == 1 else f'{P}_y{tag}_{k}'
-                    pend_e.append(dict(op='after', at=P, inst=N, ck=ck, S=S, xy=xy_, loads=grp))
-                    pend_r.append(dict(op='after', inst=N, of=P, pair=[src, dst], S=S, lane_kind='plain_receiving',
-                                       predicted_master=nmst, master_before=pmst, loads=grp,
-                                       within_reach='driver' if any(l_ in progress for l_ in grp) else 'both',
-                                       x_um=xy_[0] / 1000, y_um=xy_[1] / 1000, w_um=m['W'] / 1000, h_um=m['H'] / 1000))
+                plans.append(dict(P=P, S=S, ck=ck, pmst=pmst, nmst=nmst, loads=loads, stages=stages))
+            if ok and plans:
+                D = max(st['depth'] for pl in plans for st in pl['stages'] if st['taps'])
+                for pl in plans:
+                    if not pad_to(pl, D, tag, names):
+                        ok = False
+                        refused.append(dict(op='after', station=pl['P'], master=pl['nmst'], group=group,
+                                            reason=f'no legal free pad frame (equal depth {D})'))
+                        break
             if not ok:
                 for nm_ in names:
                     geo.remove(nm_)
+                    geo.place.pop(nm_, None)
                 continue
-            for e in pend_e:
-                geo.place[e['inst']] = (e['xy'][0], e['xy'][1], 'R0')
-            edits += pend_e
-            records += pend_r
+            for pl in plans:
+                m = geo.macros[pl['nmst']]
+                for st in pl['stages']:
+                    edits.append(dict(op='after', at=st['at'], inst=st['inst'], ck=pl['ck'], S=pl['S'], xy=st['xy'],
+                                      loads=st['loads'], level=st['depth'] - 1))
+                    records.append(dict(op='after', inst=st['inst'], of=st['at'], pair=[src, dst], S=pl['S'],
+                                        lane_kind='plain_receiving', predicted_master=pl['nmst'],
+                                        master_before=pl['pmst'] if st['at'] == pl['P'] else pl['nmst'],
+                                        loads=st['loads'], taps=st['taps'], depth=st['depth'], role=st['role'],
+                                        within_reach=st['side'], x_um=st['xy'][0] / 1000, y_um=st['xy'][1] / 1000,
+                                        w_um=m['W'] / 1000, h_um=m['H'] / 1000))
         else:
             refused.append(dict(op='none', pair=[src, dst], reason='neither end is a relay replica'))
     return edits, records, refused
 
 
 def apply_edits(pre_lines, place_text, edits, expr_bits):
-    """netlist + placement edits on the pre-lane replica netlist"""
+    """netlist + placement edits on the pre-lane replica netlist.  Chained AFTER stages (spine / pads: 'level' = depth - 1)
+    are applied level by level, so a stage planned AFTER another inserted stage finds its driver's line."""
+    levels = sorted({e.get('level', 0) for e in edits})
+    if len(levels) > 1:
+        lines_, pt_ = list(pre_lines), place_text
+        for lv in levels:
+            lines_, pt_ = apply_edits(lines_, pt_, [e for e in edits if e.get('level', 0) == lv], expr_bits)
+        return lines_, pt_
     wires = {}
     for ln in pre_lines:
         m = re.match(r'\s*wire\s+\[(\d+):0\]\s+(\S+);', ln)

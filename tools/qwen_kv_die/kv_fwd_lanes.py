@@ -298,6 +298,9 @@ def render(lines0, F):
     lines = list(lines0)
     for c, (mst, conn) in F['new'].items():
         li, ind = F['where'][c]
+        m = INST.match(lines[li])
+        if not m or m.group(3) != c:
+            raise ValueError(f'render: line {li} is not instance {c} (lane formation stale against the netlist)')
         lines[li] = f'{ind}{mst} {c} ({conn});'
     k = max(i for i, ln in enumerate(lines) if re.match(r'\s*wire\b', ln))
     lines[k + 1:k + 1] = F['add_wires']
@@ -337,8 +340,10 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
     slots = dict(slots)
     inserted, moved, records, refused, history = [], [], [], [], []
     F = incident = None
+    stale = True                                  # pre / place changed since F was formed
     for it in range(1, max_iter + 1):
         F = form(pre, dirs, slots)
+        stale = False
         lane_lines = render(pre, F)
         net = KS.Net(lane_lines, dirs, expr_bits)
         masters = {n: v[0] for n, v in net.insts.items()}
@@ -406,8 +411,16 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
         if not edits:
             break
         pre, place = KS.apply_edits(pre, place, edits, expr_bits)
+        stale = True
         inserted += [e['inst'] for e in edits]
         records += [dict(r, iteration=it) for r in recs]
+    if stale and F is not None:
+        # KVR-PLACE2 10-19: the last iteration's edits came after the last formation (max_iter reached); render() writes
+        # lane masters at F's LINE INDICES, so a stale F overwrote the inserted stations' lines (kvs14r-f9ef813ab-kvrplace:
+        # die.v lost 1,000+ AFTER stages that lane_stations / the audit scope still named -> KeyError).  Re-form on the
+        # final netlist; the final audit in main() measures it (the in-loop status is not final).
+        F = form(pre, dirs, slots)
+        incident = None
     # lane records: inserted stages and the receiving-side stage after a landing are fixed latency on the bus
     ins, post = set(inserted), defaultdict(int)
     # KVR-PLACE 10-19: an AFTER progress stage chains (P -> N1 -> N2 -> load): its depth counts on P's lane / bus

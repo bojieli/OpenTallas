@@ -76,5 +76,88 @@ class StationTest(unittest.TestCase):
         self.assertEqual(KS.siblings('rly_pvin_EN_0_21__s1', std), ['rly_pvin_EN_0_21__s0', 'rly_pvin_EN_0_21__s1'])
 
 
+def blk(name='blk'):
+    out = dict(name=name, W=12960, H=12960, pins=[dict(name='i', use='SIGNAL', rects=[('M3', (8100, 0, 8118, 37))])])
+    out['pd'] = {p['name']: p for p in out['pins']}
+    return out
+
+
+SPINE = """module die;
+  wire [0:0] n_x;
+  wire [0:0] n_y;
+  qkd_rlys_1 rly_q_0__s0 (.ck(n_clk_core_c), .a(n_x[0]), .b(n_y[0]));
+  blk u_l0 (.i(n_y[0]));
+  blk u_l1 (.i(n_y[0]));
+  blk u_l2 (.i(n_y[0]));
+endmodule""".split('\n')
+CLASSES = [(36, 400.0), (296, 370.0), (100000, 340.0)]
+
+
+class AfterSpineTest(unittest.TestCase):
+    """KVR-PLACE2 10-19: an AFTER fan-out spread far beyond reach (kvs14r ks_acal -> 8 expanded ASTK eps over ~10 mm)
+    is planned whole in ONE iteration as a tapped spine + pads; every load ends at the SAME depth (one bus age) and
+    every hop of the rendered chain is within reach."""
+
+    def plan(self):
+        place = {'rly_q_0__s0': (0, 0, 'R0'), 'u_l0': (0, 1500000, 'R0'), 'u_l1': (0, 2700000, 'R0'),
+                 'u_l2': (0, 3900000, 'R0')}
+        macros = {'qkd_rlys_1': relay('qkd_rlys_1'), 'blk': blk()}
+        geo = KS.Geo(macros, dict(place), (1000000, 5000000), {})
+        geo.build_bins({'rly_q_0__s0': 'qkd_rlys_1', 'u_l0': 'blk', 'u_l1': 'blk', 'u_l2': 'blk'})
+        dirs = {'blk': {'i': 'INPUT'}}
+        edits, recs, ref = KS.plan_repairs({('rly_q_0__s0', 'u_l0')}, SPINE, SPINE, {}, [], geo, dirs, expr_bits,
+                                           CLASSES, 2, None)
+        return geo, edits, recs, ref
+
+    def test_spine_equal_depth_and_reach(self):
+        geo, edits, recs, ref = self.plan()
+        self.assertEqual(ref, [])
+        lines, place = KS.apply_edits(SPINE, '', edits, expr_bits)
+        net = KS.Net(lines, {'blk': {'i': 'INPUT'}}, expr_bits)
+        # walk every load back to the original station: equal depth, every hop within the 1-b class reach
+        depths = {}
+        for ld in ('u_l0', 'u_l1', 'u_l2'):
+            d, cur, port = 0, ld, 'i'
+            while cur != 'rly_q_0__s0':
+                drv = net.drv[net.bits(cur, port)[0]]
+                a = geo.ep_points(drv[0], net.insts[drv[0]][0], 'b', 0)
+                b = geo.ep_points(cur, net.insts[cur][0], port, 0)
+                self.assertTrue(a and b)
+                self.assertLessEqual(min(abs(x - u) + abs(y - v) for x, y in a for u, v in b), 400000)
+                cur, port, d = drv[0], 'a', d + 1
+            depths[ld] = d - 1
+        self.assertEqual(len(set(depths.values())), 1, depths)
+        self.assertGreaterEqual(depths['u_l2'], 9)              # 3.9 mm at <= 400 um a hop
+        roles = {r['role'] for r in recs}
+        self.assertTrue({'spine', 'pad'} <= roles, roles)
+        self.assertEqual(len(recs), len(edits))
+        for e in edits:
+            self.assertIn(f'findInst {e["inst"]}]', place)
+
+    def test_progress_off_refuses(self):
+        import os
+        os.environ['OT_KV_STATIONS_AFTER_PROGRESS'] = '0'
+        try:
+            geo, edits, recs, ref = self.plan()
+        finally:
+            del os.environ['OT_KV_STATIONS_AFTER_PROGRESS']
+        self.assertEqual(edits, [])
+        self.assertEqual(ref[0]['op'], 'after')
+
+
+class StaleGuardTest(unittest.TestCase):
+    def test_render_refuses_stale_line_index(self):
+        import kv_fwd_lanes as FL
+        F = dict(new={'rly_q_0__s0': ('qkd_rlysh_1', '.a(n_x[0])')}, where={'rly_q_0__s0': (1, '  ')}, add_wires=[])
+        with self.assertRaises(ValueError):
+            FL.render(SPINE, F)
+
+    def test_audit_fails_closed_on_missing_instance(self):
+        import kv_lane_reach as LR
+        r = LR.audit('\n'.join(SPINE), '', '', '', dict(changes=[]), CLASSES, extra={'rly_gone_y3'})
+        self.assertEqual(r['status'], 'FAIL')
+        self.assertEqual(r['unmeasured'][0]['reason'], 'audited instance missing from the netlist')
+
+
 if __name__ == '__main__':
     unittest.main()
