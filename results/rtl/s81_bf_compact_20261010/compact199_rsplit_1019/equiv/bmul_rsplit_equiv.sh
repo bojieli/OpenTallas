@@ -10,7 +10,7 @@
 # usage: cd <src root> && MUT=0|1 bash results/rtl/s81_bf_compact_20261010/compact199_rsplit_1019/equiv/bmul_rsplit_equiv.sh <orig.sv>
 set -eo pipefail
 Y=${YOSYS:-/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys}
-ORIG=${1:?closed ot_v41_bmul2_rne_prepare.sv (git show 24cf7e2e3:rtl/v41rom/ot_v41_bmul2_rne_prepare.sv)}
+ORIG=${1:?the closed ot_v41_bmul2_rne_prepare.sv of source 24cf7e2e3, committed beside this script}
 W=$(mktemp -d); trap 'rm -rf $W' EXIT
 sed 's/module ot_v41_bmul2_rne_prepare/module bmul_gold/' "$ORIG" > $W/gold.sv
 sed 's/module ot_v41_bmul2_rne_prepare/module bmul_gate/' rtl/v41rom/ot_v41_bmul2_rne_prepare.sv > $W/gate.sv
