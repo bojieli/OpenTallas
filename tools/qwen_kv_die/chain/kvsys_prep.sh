@@ -34,10 +34,29 @@ fi
 # qkd_d2d_static_r7t-r7t-28642e9aa, TT +22.73 / FF +10.31; committed from its closure record).  The die binds .NTX(3) +
 # the compiled TXDP; the view was hardened at the r7t wrapper's TXDP {3,3,4,3} (port 0 shift 3 vs the die's 23: +20 one-bit
 # flops inside, same ports) -> re-harden owed (lanes/KV-PLAN5.md).  The prep FAILS if the view does not bind.
+# KVR-VIEWS 10-19: OT_KV_D2DS_VIEW = 0 (frame) | auto | 1 via d2ds_view_select.py: the kit OT_KV_D2DS_KIT (default the
+# r7v re-harden at the die's TXDP_K 0x03030418, lanes/HKV-D2D18.md) binds ONLY when its CLOSED view is on the branch AND
+# its spec params {TXDP, NTX} equal the die's compiled kv_static.d2d_txdp_k / d2d_ntx_k; a mismatched view FAILS CLOSED
+# (exit 7); auto keeps the frame while the view is absent, 1 refuses then.  RUN/d2ds_view.json records the decision.
 D2DSV=
-if [ "${OT_KV_D2DS_VIEW:-0}" = 1 ]; then D2DSV=physical/ref_tile/qkd_d2d_static_r5_native/views/qkd_d2d_static
-  [ -f $D2DSV/qkd_d2d_static.lef ] || { echo "OT_KV_D2DS_VIEW: no closed view at $D2DSV"; exit 7; }
-  BV="$BV --view qkd_d2ds=$D2DSV"; fi
+if [ "${OT_KV_D2DS_VIEW:-0}" != 0 ]; then
+  D2DSV=$(python3 tools/qwen_kv_die/d2ds_view_select.py --mode "${OT_KV_D2DS_VIEW}" --kit "${OT_KV_D2DS_KIT:-qkd_d2d_static_r7v}" \
+    --json $O/d2ds_view.json) || { echo "OT_KV_D2DS_VIEW: view selection FAILED ($(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['why'])" $O/d2ds_view.json))"; exit 7; }
+  echo "OT_KV_D2DS_VIEW=${OT_KV_D2DS_VIEW}: $(python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(d['decision'], d['why'])" $O/d2ds_view.json)"
+  if [ -n "$D2DSV" ]; then BV="$BV --view qkd_d2ds=$D2DSV"; fi; fi
+# KVR-VIEWS 10-19 (OT_KV_HROOT_VIEW = auto (default) | 0): the static die's per-stack control root tile qkd_kvs_hroot
+# (OT_KV_STATIC_DIE + OT_KV_TILE_KITS + OT_KV_HROOT + OT_KV_FANFOLD tile file qkd_kvs_tiles_hroot_ff_k.sv) binds the CLOSED
+# k1 view (qkd_kvs_hroot_k1-k1-6355d06bd, TT +77.62 / FF +16.39; native_pin_audit FAIL capture 452.7 -> a STAND-IN for
+# bind / GRT / STA, not a release view: results/rtl/ref_tile/qkd_kvs_hroot_k1/native_pin_audit_k1-6355d06bd.json).
+# The k1 kit's qkd_kvs_hroot module is byte-identical to this tile file's; never bound under OT_KV_HROOT_LAND=1 (the
+# pin-registered _hl tile is a different RTL: its own kit must close first).  Absent view -> frame (ASSUMED) as before.
+if [ "${OT_KV_HROOT_VIEW:-auto}" != 0 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ] && [ "${OT_KV_TILE_KITS:-0}" = 1 ] && \
+   [ "${OT_KV_HROOT:-0}" = 1 ] && [ "${OT_KV_FANFOLD:-0}" = 1 ] && [ "${OT_KV_HROOT_LAND:-0}" != 1 ]; then
+  HRV=physical/ref_tile/${OT_KV_HROOT_KIT:-qkd_kvs_hroot_k1}/views/qkd_kvs_hroot
+  if [ -f $HRV/qkd_kvs_hroot.lef ] && [ -f $HRV/qkd_kvs_hroot_tt.lib ] && [ -f $HRV/qkd_kvs_hroot_ff.lib ]; then
+    BV="$BV --view qkd_kvs_hroot=$HRV"; echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot -> $HRV (stand-in: native FAIL view, CLOSED)"
+  else echo "OT_KV_HROOT_VIEW: no closed view at $HRV (frame ASSUMED)"; fi
+fi
 if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
   BV="$BV --view qkd_hgs=physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage --view qkd_hss=physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage"; fi
 # OT_KV_DCAL=1 (Q-KVSYS-DIE 10-16): the link calendar sequencer qkd_d2d_cal_seq_pin on its CLOSED view (kv_die.py DCAL)
@@ -102,6 +121,11 @@ python3 tools/qwen_kv_die/bind_views.py --split --case $O/case_kv --libs $O/libs
   --out $O/libs/views.json > $O/bind.log
 if [ -n "$D2DSV" ]; then python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if 'qkd_d2ds' in d['bound'] else 1)" $O/libs/views.json \
   || { echo "OT_KV_D2DS_VIEW: qkd_d2ds view did not bind (bind.log)"; exit 7; }; echo "OT_KV_D2DS_VIEW: qkd_d2ds bound to $D2DSV"; fi
+if [ -n "${HRV:-}" ] && [ -f $HRV/qkd_kvs_hroot.lef ]; then
+  if python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if 'qkd_kvs_hroot' in d['bound'] else 1)" $O/libs/views.json; then
+    echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot bound to $HRV (stand-in)"
+  else echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot view did NOT bind (bind.log) -- frame kept"; [ "${OT_KV_HROOT_VIEW:-auto}" = 1 ] && exit 7; fi
+fi
 # v1.3: DIE-PLACED LEAVES: wires-only parent frames -> their CLOSED leaves at the planned sub-slots, each on its own view
 # (OT_KV_EXPAND = comma list of frame masters, default all that kv_expand.py knows; 'none' keeps the frames)
 EXP=
