@@ -28,7 +28,7 @@ LIB=(rtl/hbm_next/fused/ot_hnx_fused_eng.sv
 if [ "$ST" = ref ]; then
   SRC=(rtl/hbm_next/fused/tb/tb_hnx_fused.sv "${LIB[@]}"); TOP=tb_hnx_fused; VLT=tools/hbm_next/hnx_fused.vlt
 else
-  SRC=(rtl/hbm_next/fused/tb/tb_hnx_fused_tree.sv rtl/hbm_next/fused/ot_hnx_fused_tree.sv
+  SRC=(rtl/hbm_next/fused/tb/tb_hnx_fused_tree.sv rtl/hbm_next/fused/tb/ot_hnx_fused_tree_top.sv rtl/hbm_next/fused/ot_hnx_fused_tree.sv
        physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v "${LIB[@]}")
   TOP=tb_hnx_fused_tree; VLT=tools/hbm_next/hnx_fushub.vlt
 fi
