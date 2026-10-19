@@ -1,0 +1,772 @@
+{
+  "all_four_ports_each_variant": {
+    "0": {
+      "source": "bcdc sink_addr[4:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "1": {
+      "source": "bcdc sink_addr[4:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "2": {
+      "source": "bcdc sink_addr[4:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "3": {
+      "source": "bcdc sink_addr[4:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "4": {
+      "source": "bcdc sink_addr[4:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "5": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "6": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "7": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "8": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "9": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "10": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "11": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "12": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "13": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "14": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "15": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "16": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "17": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "18": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "19": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "20": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "21": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "22": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "23": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "24": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "25": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "26": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "27": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "28": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "29": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "30": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "31": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "32": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "33": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "34": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "35": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "36": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "37": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "38": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "39": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "40": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "41": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "42": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "43": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "44": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "45": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "46": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "47": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "48": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "49": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "50": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "51": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "52": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "53": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "54": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "55": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "56": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "57": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "58": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "59": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "60": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "61": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "62": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "63": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "64": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "65": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "66": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "67": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "68": {
+      "source": "bcdc sink_data[63:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "69": {
+      "source": "bcdc sink_seal",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "70": {
+      "source": "bcdc sink_we",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "71": {
+      "source": "fcal blk_go",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "72": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "73": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "74": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "75": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "76": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "77": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "78": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "79": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "80": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "81": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "82": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "83": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "84": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "85": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "86": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "87": {
+      "source": "lcal r_epoch[15:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "88": {
+      "source": "lcal r_layer[5:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "89": {
+      "source": "lcal r_layer[5:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "90": {
+      "source": "lcal r_layer[5:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "91": {
+      "source": "lcal r_layer[5:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "92": {
+      "source": "lcal r_layer[5:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "93": {
+      "source": "lcal r_layer[5:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "94": {
+      "source": "lcal r_put",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "95": {
+      "source": "lcal r_sector[9:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "96": {
+      "source": "lcal r_sector[9:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "97": {
+      "source": "lcal r_sector[9:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "98": {
+      "source": "lcal r_sector[9:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "99": {
+      "source": "lcal r_sector[9:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "100": {
+      "source": "lcal r_sector[9:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "101": {
+      "source": "lcal r_sector[9:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "102": {
+      "source": "lcal r_sector[9:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "103": {
+      "source": "lcal r_sector[9:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "104": {
+      "source": "lcal r_sector[9:0]",
+      "original_clock": "ck",
+      "new_output_capture_clock": "ck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "105": {
+      "source": "phase ctrl_go_h",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "106": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "107": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "108": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "109": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "110": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "111": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "112": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "113": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "114": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "115": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "116": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "117": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "118": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "119": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "120": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "121": {
+      "source": "phase epoch_h[15:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "122": {
+      "source": "phase layer_h[5:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "123": {
+      "source": "phase layer_h[5:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "124": {
+      "source": "phase layer_h[5:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "125": {
+      "source": "phase layer_h[5:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "126": {
+      "source": "phase layer_h[5:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    },
+    "127": {
+      "source": "phase layer_h[5:0]",
+      "original_clock": "hck",
+      "new_output_capture_clock": "hck",
+      "qualification": "must preserve cohort valid/metadata age and reprice crossing"
+    }
+  }
+}

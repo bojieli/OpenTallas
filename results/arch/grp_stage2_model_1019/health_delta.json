@@ -1,0 +1,106 @@
+{
+  "schema": "grp_stage2_health_delta_v1",
+  "qualification": "MODEL_ONLY_NO_SOURCE",
+  "rows": [
+    {
+      "signal": "w_slg__fault",
+      "domain": "ck",
+      "reset": "u_slg.u_rowctl.rn sampled rst_n; async assertion at local rn",
+      "clear": "reset only; sticky",
+      "ancestry": [
+        "4x u_slg.g_pc.u_pc.fault via 295-bit response hops and rowctl.ifault",
+        "rowctl iv consistency, request K/V collision, returned t/v/epoch/layer cohort mismatch"
+      ],
+      "validity": "PC checks qualified by put/get/arm; row metadata comparison qualified iv[0]; raw fault captures sticky independent retirement cutoff",
+      "source_lines": "leaves.sv:759-881,897-950; wrapper u_slg",
+      "current_wrapper_consumers": [],
+      "intentionally_unobservable_proof": null,
+      "classification": "output unconsumed in exact selected source; whether redundant under complete legal producer proof OPEN",
+      "proposed_distinct_port": "o_health_slg_fault",
+      "candidate_face_capture_edges": 1,
+      "collector_membership": "32 real selected group instances; never replace existing sources",
+      "clock_reset_bucket": "original group ck and original rst_n/hrst_n ancestry, cannot merge by name"
+    },
+    {
+      "signal": "w_lcal__fault",
+      "domain": "ck",
+      "reset": "u_lcal.rn sampled rst_n; async assertion at local rn",
+      "clear": "reset only; sticky",
+      "ancestry": [
+        "new start while active unless last emit",
+        "VGO before KGO have_layer",
+        "simultaneous KGO/VGO"
+      ],
+      "validity": "start=kgo_q|vgo_q; have_layer starts0 on reset",
+      "source_lines": "leaves.sv:373-390",
+      "current_wrapper_consumers": [],
+      "intentionally_unobservable_proof": null,
+      "classification": "output unconsumed in exact selected source; whether redundant under complete legal producer proof OPEN",
+      "proposed_distinct_port": "o_health_lcal_fault",
+      "candidate_face_capture_edges": 1,
+      "collector_membership": "32 real selected group instances; never replace existing sources",
+      "clock_reset_bucket": "original group ck and original rst_n/hrst_n ancestry, cannot merge by name"
+    },
+    {
+      "signal": "w_fcal__fault",
+      "domain": "hck",
+      "reset": "u_fcal.rn sampled hrst_n; async assertion at local rn",
+      "clear": "reset only; sticky",
+      "ancestry": [
+        "start while act",
+        "simultaneous KGO/VGO"
+      ],
+      "validity": "start=kgo_q|vgo_q; act records production block train",
+      "source_lines": "leaves.sv:48-64",
+      "current_wrapper_consumers": [],
+      "intentionally_unobservable_proof": null,
+      "classification": "output unconsumed in exact selected source; whether redundant under complete legal producer proof OPEN",
+      "proposed_distinct_port": "o_health_fcal_fault",
+      "candidate_face_capture_edges": 1,
+      "collector_membership": "32 real selected group instances; never replace existing sources",
+      "clock_reset_bucket": "original group hck and original rst_n/hrst_n ancestry, cannot merge by name"
+    },
+    {
+      "signal": "w_phase__fault_hbm",
+      "domain": "hck",
+      "reset": "u_phase.hr sampled hrst_n; async assertion at local hr",
+      "clear": "reset only; sticky",
+      "ancestry": [
+        "held ctx_t<1 or >8192",
+        "held layer>35"
+      ],
+      "validity": "event=observed tag_sync xor seen; reads held metadata only on |events",
+      "source_lines": "leaves.sv:175-189",
+      "current_wrapper_consumers": [],
+      "intentionally_unobservable_proof": null,
+      "classification": "output unconsumed in exact selected source; whether redundant under complete legal producer proof OPEN",
+      "proposed_distinct_port": "o_health_phase_fault_hbm",
+      "candidate_face_capture_edges": 1,
+      "collector_membership": "32 real selected group instances; never replace existing sources",
+      "clock_reset_bucket": "original group hck and original rst_n/hrst_n ancestry, cannot merge by name"
+    }
+  ],
+  "proposed_die_new_port_bits": 128,
+  "source_face_FF_floor": 128,
+  "collector_candidate": {
+    "core_direct_capture_FF": 64,
+    "HBM_two_stage_per_bit_FF": 128,
+    "group_sticky_OR_FF": 32,
+    "total_FF_floor": 224,
+    "source_plus_collector_FF_floor": 352,
+    "all_driver_copies_reset_and_full_primitive_boundaries_excluded": true,
+    "new_logical_members": 128,
+    "new_group_hbm_clock_reset_domains_max": 32,
+    "new_group_core_clock_reset_domains_max": 32,
+    "actual_new_unique_reset_bucket_count": null
+  },
+  "existing_1f424_389_connections_1320FF_are_complete_after_delta": false,
+  "valid_linearization_and_STATUS_admission_commit_poison_membership": "must rederive complete graph; no append-to-old-headline qualification",
+  "parenthesized_scope": "do not count slg aggregate and its 4 primitive PC leaves as5independent faults; aggregate tree membership not primitive cardinality",
+  "absolute_latency": null,
+  "relative_sample_ledger": {
+    "core": "existing stickyQ -> new faceQ(+1ck) -> collector capture(+1ck) -> groupsticky(+1ck)",
+    "hbm": "existing stickyQ -> new faceQ(+1hck) -> coremeta/core_sync(+2ck sampling) -> groupsticky(+1ck); absolute phase and metastability bound unresolved"
+  },
+  "counterexample_obligation": "for each cause drive actual legal antecedent then injected protocol/source mutant, require real port + collector sticky and STATUS/commit/admission veto; also first-use/reset/stoppedclock and unrelated-source controls"
+}

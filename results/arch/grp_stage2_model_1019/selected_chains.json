@@ -1,0 +1,2798 @@
+{
+  "GEN7_BOUND": {
+    "source_sha256": "18464a8b31042bea03b3fc5779d42803ab7b05bebbaab733a4d83d4a714c1ea6",
+    "status": "bound",
+    "groups": [
+      {
+        "instance": "slg_WS_0",
+        "ck": "n_clk_core_WS[0]",
+        "hck": "n_clk_hbm_WS[0]",
+        "reset": "n_rrs_n_rst_die_t0__m_0__g0_s9[0]",
+        "hreset": "n_rrs_n_rst_hbm_t0__m_0__s18[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_0",
+          "slg_WS_1",
+          "slg_WS_2",
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 11,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_WS_5__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103338,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_8"
+          },
+          {
+            "line": 103339,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_9"
+          },
+          {
+            "line": 103340,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_10"
+          },
+          {
+            "line": 103341,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_11"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_1",
+        "ck": "n_clk_core_WS[0]",
+        "hck": "n_clk_hbm_WS[0]",
+        "reset": "n_rrs_n_rst_die_t1__m_0__g0_s35[0]",
+        "hreset": "n_rrs_n_rst_hbm_t1__m_0__s24[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_1",
+          "slg_WS_2",
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 9,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_WS_0__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103342,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_12"
+          },
+          {
+            "line": 103343,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_13"
+          },
+          {
+            "line": 103344,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_14"
+          },
+          {
+            "line": 103345,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_15"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_2",
+        "ck": "n_clk_core_WS[0]",
+        "hck": "n_clk_hbm_WS[0]",
+        "reset": "n_rrs_n_rst_die_t1__m_0__g0_s7[0]",
+        "hreset": "n_rrs_n_rst_hbm_t1__m_0__s2[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_2",
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 7,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_WS_1__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103346,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_16"
+          },
+          {
+            "line": 103347,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_17"
+          },
+          {
+            "line": 103348,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_18"
+          },
+          {
+            "line": 103349,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_19"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_3",
+        "ck": "n_clk_core_WS[0]",
+        "hck": "n_clk_hbm_WS[0]",
+        "reset": "n_rrs_n_rst_die_t1__m_0__g0_s20[0]",
+        "hreset": "n_rrs_n_rst_hbm_t1__m_0__s11[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 5,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_WS_2__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103350,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_20"
+          },
+          {
+            "line": 103351,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_21"
+          },
+          {
+            "line": 103352,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_22"
+          },
+          {
+            "line": 103353,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_23"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_4",
+        "ck": "n_clk_core_WS[0]",
+        "hck": "n_clk_hbm_WS[0]",
+        "reset": "n_rrs_n_rst_die_t0__m_0__g0_s30[0]",
+        "hreset": "n_rrs_n_rst_hbm_t0__m_0__s21[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_4",
+          "slg_WS_5",
+          "slg_WS_0",
+          "slg_WS_1",
+          "slg_WS_2",
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 15,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0[270:0]",
+        "up_status_input": null,
+        "EST_consumers": [
+          {
+            "line": 103330,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc_h kvpc_WS_0"
+          },
+          {
+            "line": 103331,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_1"
+          },
+          {
+            "line": 103332,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_2"
+          },
+          {
+            "line": 103333,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_3"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_5",
+        "ck": "n_clk_core_WS[0]",
+        "hck": "n_clk_hbm_WS[0]",
+        "reset": "n_rrs_n_rst_die_t0__m_0__g0_s5[0]",
+        "hreset": "n_rrs_n_rst_hbm_t0__m_0__s0[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_5",
+          "slg_WS_0",
+          "slg_WS_1",
+          "slg_WS_2",
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 13,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_WS_4__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103334,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_4"
+          },
+          {
+            "line": 103335,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_5"
+          },
+          {
+            "line": 103336,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_6"
+          },
+          {
+            "line": 103337,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_7"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_6",
+        "ck": "n_clk_core_WS[0]",
+        "hck": "n_clk_hbm_WS[0]",
+        "reset": "n_rrs_n_rst_die_t2__m_0__g2_s32[0]",
+        "hreset": "n_rrs_n_rst_hbm_t2__m_0__g1_s13[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 3,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_WS_3__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103354,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_24"
+          },
+          {
+            "line": 103355,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_25"
+          },
+          {
+            "line": 103356,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_26"
+          },
+          {
+            "line": 103357,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_27"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_7",
+        "ck": "n_clk_core_WS[0]",
+        "hck": "n_clk_hbm_WS[0]",
+        "reset": "n_rrs_n_rst_die_t2__m_0__g2_s13[0]",
+        "hreset": "n_rrs_n_rst_hbm_t2__m_0__g1_s3[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 1,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_WS_6__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103358,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_28"
+          },
+          {
+            "line": 103359,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_29"
+          },
+          {
+            "line": 103360,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_30"
+          },
+          {
+            "line": 103361,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WS_31"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_0",
+        "ck": "n_clk_core_WN[0]",
+        "hck": "n_clk_hbm_WN[0]",
+        "reset": "n_rrs_n_rst_die_t3__m_0__g0_s9[0]",
+        "hreset": "n_rrs_n_rst_hbm_t3__m_0__s2[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_0",
+          "slg_WN_1",
+          "slg_WN_2",
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 11,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_WN_5__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103379,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_8"
+          },
+          {
+            "line": 103380,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_9"
+          },
+          {
+            "line": 103381,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_10"
+          },
+          {
+            "line": 103382,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_11"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_1",
+        "ck": "n_clk_core_WN[0]",
+        "hck": "n_clk_hbm_WN[0]",
+        "reset": "n_rrs_n_rst_die_t3__m_0__g0_s15[0]",
+        "hreset": "n_rrs_n_rst_hbm_t3__m_0__s11[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_1",
+          "slg_WN_2",
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 9,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_WN_0__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103383,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_12"
+          },
+          {
+            "line": 103384,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_13"
+          },
+          {
+            "line": 103385,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_14"
+          },
+          {
+            "line": 103386,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_15"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_2",
+        "ck": "n_clk_core_WN[0]",
+        "hck": "n_clk_hbm_WN[0]",
+        "reset": "n_rrs_n_rst_die_t4__m_0__g0_s41[0]",
+        "hreset": "n_rrs_n_rst_hbm_t4__m_0__s20[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_2",
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 7,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_WN_1__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103387,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_16"
+          },
+          {
+            "line": 103388,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_17"
+          },
+          {
+            "line": 103389,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_18"
+          },
+          {
+            "line": 103390,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_19"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_3",
+        "ck": "n_clk_core_WN[0]",
+        "hck": "n_clk_hbm_WN[0]",
+        "reset": "n_rrs_n_rst_die_t4__m_0__g0_s13[0]",
+        "hreset": "n_rrs_n_rst_hbm_t4__m_0__s3[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 5,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_WN_2__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103391,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_20"
+          },
+          {
+            "line": 103392,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_21"
+          },
+          {
+            "line": 103393,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_22"
+          },
+          {
+            "line": 103394,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_23"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_4",
+        "ck": "n_clk_core_WN[0]",
+        "hck": "n_clk_hbm_WN[0]",
+        "reset": "n_rrs_n_rst_die_t2__m_0__g0_s11[0]",
+        "hreset": "n_rrs_n_rst_hbm_t2__m_0__g0_s6[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_4",
+          "slg_WN_5",
+          "slg_WN_0",
+          "slg_WN_1",
+          "slg_WN_2",
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 15,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1[270:0]",
+        "up_status_input": null,
+        "EST_consumers": [
+          {
+            "line": 103371,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc_h kvpc_WN_0"
+          },
+          {
+            "line": 103372,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_1"
+          },
+          {
+            "line": 103373,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_2"
+          },
+          {
+            "line": 103374,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_3"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_5",
+        "ck": "n_clk_core_WN[0]",
+        "hck": "n_clk_hbm_WN[0]",
+        "reset": "n_rrs_n_rst_die_t3__m_0__g0_s32[0]",
+        "hreset": "n_rrs_n_rst_hbm_t3__m_0__s20[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_5",
+          "slg_WN_0",
+          "slg_WN_1",
+          "slg_WN_2",
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 13,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_WN_4__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103375,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_4"
+          },
+          {
+            "line": 103376,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_5"
+          },
+          {
+            "line": 103377,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_6"
+          },
+          {
+            "line": 103378,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_7"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_6",
+        "ck": "n_clk_core_WN[0]",
+        "hck": "n_clk_hbm_WN[0]",
+        "reset": "n_rrs_n_rst_die_t4__m_0__g0_s10[0]",
+        "hreset": "n_rrs_n_rst_hbm_t4__m_0__s11[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 3,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_WN_3__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103395,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_24"
+          },
+          {
+            "line": 103396,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_25"
+          },
+          {
+            "line": 103397,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_26"
+          },
+          {
+            "line": 103398,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_27"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_7",
+        "ck": "n_clk_core_WN[0]",
+        "hck": "n_clk_hbm_WN[0]",
+        "reset": "n_rrs_n_rst_die_t5__m_0__g0_s6[0]",
+        "hreset": "n_rrs_n_rst_hbm_t5__m_0__s3[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 1,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_WN_6__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103399,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_28"
+          },
+          {
+            "line": 103400,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_29"
+          },
+          {
+            "line": 103401,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_30"
+          },
+          {
+            "line": 103402,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_WN_31"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_0",
+        "ck": "n_clk_core_ES[0]",
+        "hck": "n_clk_hbm_ES[0]",
+        "reset": "n_rrs_n_rst_die_t12__m_0__g0_s9[0]",
+        "hreset": "n_rrs_n_rst_hbm_t6__m_0__s20[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_0",
+          "slg_ES_1",
+          "slg_ES_2",
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 11,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_ES_5__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103420,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_8"
+          },
+          {
+            "line": 103421,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_9"
+          },
+          {
+            "line": 103422,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_10"
+          },
+          {
+            "line": 103423,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_11"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_1",
+        "ck": "n_clk_core_ES[0]",
+        "hck": "n_clk_hbm_ES[0]",
+        "reset": "n_rrs_n_rst_die_t13__m_0__g0_s29[0]",
+        "hreset": "n_rrs_n_rst_hbm_t7__m_0__s26[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_1",
+          "slg_ES_2",
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 9,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_ES_0__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103424,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_12"
+          },
+          {
+            "line": 103425,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_13"
+          },
+          {
+            "line": 103426,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_14"
+          },
+          {
+            "line": 103427,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_15"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_2",
+        "ck": "n_clk_core_ES[0]",
+        "hck": "n_clk_hbm_ES[0]",
+        "reset": "n_rrs_n_rst_die_t13__m_0__g0_s7[0]",
+        "hreset": "n_rrs_n_rst_hbm_t7__m_0__s4[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_2",
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 7,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_ES_1__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103428,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_16"
+          },
+          {
+            "line": 103429,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_17"
+          },
+          {
+            "line": 103430,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_18"
+          },
+          {
+            "line": 103431,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_19"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_3",
+        "ck": "n_clk_core_ES[0]",
+        "hck": "n_clk_hbm_ES[0]",
+        "reset": "n_rrs_n_rst_die_t13__m_0__g0_s11[0]",
+        "hreset": "n_rrs_n_rst_hbm_t7__m_0__s11[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 5,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_ES_2__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103432,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_20"
+          },
+          {
+            "line": 103433,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_21"
+          },
+          {
+            "line": 103434,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_22"
+          },
+          {
+            "line": 103435,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_23"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_4",
+        "ck": "n_clk_core_ES[0]",
+        "hck": "n_clk_hbm_ES[0]",
+        "reset": "n_rrs_n_rst_die_t12__m_0__g0_s32[0]",
+        "hreset": "n_rrs_n_rst_hbm_t6__m_0__s21[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_4",
+          "slg_ES_5",
+          "slg_ES_0",
+          "slg_ES_1",
+          "slg_ES_2",
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 15,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0[270:0]",
+        "up_status_input": null,
+        "EST_consumers": [
+          {
+            "line": 103412,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc_h kvpc_ES_0"
+          },
+          {
+            "line": 103413,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_1"
+          },
+          {
+            "line": 103414,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_2"
+          },
+          {
+            "line": 103415,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_3"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_5",
+        "ck": "n_clk_core_ES[0]",
+        "hck": "n_clk_hbm_ES[0]",
+        "reset": "n_rrs_n_rst_die_t12__m_0__g0_s5[0]",
+        "hreset": "n_rrs_n_rst_hbm_t6__m_0__s0[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_5",
+          "slg_ES_0",
+          "slg_ES_1",
+          "slg_ES_2",
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 13,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_ES_4__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103416,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_4"
+          },
+          {
+            "line": 103417,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_5"
+          },
+          {
+            "line": 103418,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_6"
+          },
+          {
+            "line": 103419,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_7"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_6",
+        "ck": "n_clk_core_ES[0]",
+        "hck": "n_clk_hbm_ES[0]",
+        "reset": "n_rrs_n_rst_die_t14__m_0__g2_s20[0]",
+        "hreset": "n_rrs_n_rst_hbm_t8__m_0__g1_s14[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 3,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_ES_3__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103436,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_24"
+          },
+          {
+            "line": 103437,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_25"
+          },
+          {
+            "line": 103438,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_26"
+          },
+          {
+            "line": 103439,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_27"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_7",
+        "ck": "n_clk_core_ES[0]",
+        "hck": "n_clk_hbm_ES[0]",
+        "reset": "n_rrs_n_rst_die_t14__m_0__g2_s6[0]",
+        "hreset": "n_rrs_n_rst_hbm_t8__m_0__g1_s3[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 1,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0[270:0]",
+        "up_status_input": "n_ks_slg_ES_6__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103440,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_28"
+          },
+          {
+            "line": 103441,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_29"
+          },
+          {
+            "line": 103442,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_30"
+          },
+          {
+            "line": 103443,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_ES_31"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_0",
+        "ck": "n_clk_core_EN[0]",
+        "hck": "n_clk_hbm_EN[0]",
+        "reset": "n_rrs_n_rst_die_t15__m_0__g0_s9[0]",
+        "hreset": "n_rrs_n_rst_hbm_t9__m_0__s2[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_0",
+          "slg_EN_1",
+          "slg_EN_2",
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 11,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_EN_5__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103461,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_8"
+          },
+          {
+            "line": 103462,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_9"
+          },
+          {
+            "line": 103463,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_10"
+          },
+          {
+            "line": 103464,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_0__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_11"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_1",
+        "ck": "n_clk_core_EN[0]",
+        "hck": "n_clk_hbm_EN[0]",
+        "reset": "n_rrs_n_rst_die_t15__m_0__g0_s11[0]",
+        "hreset": "n_rrs_n_rst_hbm_t9__m_0__s14[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_1",
+          "slg_EN_2",
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 9,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_EN_0__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103465,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_12"
+          },
+          {
+            "line": 103466,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_13"
+          },
+          {
+            "line": 103467,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_14"
+          },
+          {
+            "line": 103468,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_1__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_15"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_2",
+        "ck": "n_clk_core_EN[0]",
+        "hck": "n_clk_hbm_EN[0]",
+        "reset": "n_rrs_n_rst_die_t16__m_0__g0_s37[0]",
+        "hreset": "n_rrs_n_rst_hbm_t10__m_0__s25[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_2",
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 7,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_EN_1__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103469,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_16"
+          },
+          {
+            "line": 103470,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_17"
+          },
+          {
+            "line": 103471,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_18"
+          },
+          {
+            "line": 103472,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_2__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_19"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_3",
+        "ck": "n_clk_core_EN[0]",
+        "hck": "n_clk_hbm_EN[0]",
+        "reset": "n_rrs_n_rst_die_t16__m_0__g0_s9[0]",
+        "hreset": "n_rrs_n_rst_hbm_t10__m_0__s5[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 5,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_EN_2__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103473,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_20"
+          },
+          {
+            "line": 103474,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_21"
+          },
+          {
+            "line": 103475,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_22"
+          },
+          {
+            "line": 103476,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_3__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_23"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_4",
+        "ck": "n_clk_core_EN[0]",
+        "hck": "n_clk_hbm_EN[0]",
+        "reset": "n_rrs_n_rst_die_t14__m_0__g0_s6[0]",
+        "hreset": "n_rrs_n_rst_hbm_t8__m_0__g0_s9[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_4",
+          "slg_EN_5",
+          "slg_EN_0",
+          "slg_EN_1",
+          "slg_EN_2",
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 15,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1[270:0]",
+        "up_status_input": null,
+        "EST_consumers": [
+          {
+            "line": 103453,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc_h kvpc_EN_0"
+          },
+          {
+            "line": 103454,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_1"
+          },
+          {
+            "line": 103455,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_2"
+          },
+          {
+            "line": 103456,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_4__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_3"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_5",
+        "ck": "n_clk_core_EN[0]",
+        "hck": "n_clk_hbm_EN[0]",
+        "reset": "n_rrs_n_rst_die_t15__m_0__g0_s31[0]",
+        "hreset": "n_rrs_n_rst_hbm_t9__m_0__s21[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_5",
+          "slg_EN_0",
+          "slg_EN_1",
+          "slg_EN_2",
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 13,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_EN_4__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103457,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_4"
+          },
+          {
+            "line": 103458,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_5"
+          },
+          {
+            "line": 103459,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_6"
+          },
+          {
+            "line": 103460,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_5__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_7"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_6",
+        "ck": "n_clk_core_EN[0]",
+        "hck": "n_clk_hbm_EN[0]",
+        "reset": "n_rrs_n_rst_die_t16__m_0__g0_s5[0]",
+        "hreset": "n_rrs_n_rst_hbm_t10__m_0__s11[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 3,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_EN_3__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103477,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_24"
+          },
+          {
+            "line": 103478,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_25"
+          },
+          {
+            "line": 103479,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_26"
+          },
+          {
+            "line": 103480,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_6__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_27"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_7",
+        "ck": "n_clk_core_EN[0]",
+        "hck": "n_clk_hbm_EN[0]",
+        "reset": "n_rrs_n_rst_die_t17__m_0__g0_s6[0]",
+        "hreset": "n_rrs_n_rst_hbm_t11__m_0__s5[0]",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 1,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1[270:0]",
+        "up_status_input": "n_ks_slg_EN_6__o_ctl__pinfix1[143:0]",
+        "EST_consumers": [
+          {
+            "line": 103481,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_28"
+          },
+          {
+            "line": 103482,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_29"
+          },
+          {
+            "line": 103483,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_30"
+          },
+          {
+            "line": 103484,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_7__y__est__0_1[0]",
+            "instance": "qkd_kvs_pc kvpc_EN_31"
+          }
+        ]
+      }
+    ]
+  },
+  "GEN8_PREP_NOT_FINAL": {
+    "source_sha256": "00a3de7cd445198b147af744e5dd3c00f824a3222767b3fb4c8274392dd8b36e",
+    "status": "PREP_NOT_FINAL",
+    "groups": [
+      {
+        "instance": "slg_WS_0",
+        "ck": "n_clk_core_WS",
+        "hck": "n_clk_hbm_WS",
+        "reset": "n_rst_die_t0__m",
+        "hreset": "n_rst_hbm_t0__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_0",
+          "slg_WS_1",
+          "slg_WS_2",
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 11,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0",
+        "up_status_input": "n_ks_slg_WS_5__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26049,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_8"
+          },
+          {
+            "line": 26050,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_9"
+          },
+          {
+            "line": 26051,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_10"
+          },
+          {
+            "line": 26052,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_11"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_1",
+        "ck": "n_clk_core_WS",
+        "hck": "n_clk_hbm_WS",
+        "reset": "n_rst_die_t1__m",
+        "hreset": "n_rst_hbm_t1__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_1",
+          "slg_WS_2",
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 9,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0",
+        "up_status_input": "n_ks_slg_WS_0__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26053,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_12"
+          },
+          {
+            "line": 26054,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_13"
+          },
+          {
+            "line": 26055,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_14"
+          },
+          {
+            "line": 26056,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_15"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_2",
+        "ck": "n_clk_core_WS",
+        "hck": "n_clk_hbm_WS",
+        "reset": "n_rst_die_t1__m",
+        "hreset": "n_rst_hbm_t1__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_2",
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 7,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0",
+        "up_status_input": "n_ks_slg_WS_1__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26057,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_16"
+          },
+          {
+            "line": 26058,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_17"
+          },
+          {
+            "line": 26059,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_18"
+          },
+          {
+            "line": 26060,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_19"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_3",
+        "ck": "n_clk_core_WS",
+        "hck": "n_clk_hbm_WS",
+        "reset": "n_rst_die_t1__m",
+        "hreset": "n_rst_hbm_t1__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 5,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0",
+        "up_status_input": "n_ks_slg_WS_2__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26061,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_20"
+          },
+          {
+            "line": 26062,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_21"
+          },
+          {
+            "line": 26063,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_22"
+          },
+          {
+            "line": 26064,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_23"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_4",
+        "ck": "n_clk_core_WS",
+        "hck": "n_clk_hbm_WS",
+        "reset": "n_rst_die_t0__m",
+        "hreset": "n_rst_hbm_t0__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_4",
+          "slg_WS_5",
+          "slg_WS_0",
+          "slg_WS_1",
+          "slg_WS_2",
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 15,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0",
+        "up_status_input": null,
+        "EST_consumers": [
+          {
+            "line": 26041,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_4__y__est__0_1",
+            "instance": "qkd_kvs_pc_h kvpc_WS_0"
+          },
+          {
+            "line": 26042,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_1"
+          },
+          {
+            "line": 26043,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_2"
+          },
+          {
+            "line": 26044,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_3"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_5",
+        "ck": "n_clk_core_WS",
+        "hck": "n_clk_hbm_WS",
+        "reset": "n_rst_die_t0__m",
+        "hreset": "n_rst_hbm_t0__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_5",
+          "slg_WS_0",
+          "slg_WS_1",
+          "slg_WS_2",
+          "slg_WS_3",
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 13,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0",
+        "up_status_input": "n_ks_slg_WS_4__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26045,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_4"
+          },
+          {
+            "line": 26046,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_5"
+          },
+          {
+            "line": 26047,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_6"
+          },
+          {
+            "line": 26048,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_7"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_6",
+        "ck": "n_clk_core_WS",
+        "hck": "n_clk_hbm_WS",
+        "reset": "n_rst_die_t2__m",
+        "hreset": "n_rst_hbm_t2__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_6",
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 3,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0",
+        "up_status_input": "n_ks_slg_WS_3__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26065,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_24"
+          },
+          {
+            "line": 26066,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_25"
+          },
+          {
+            "line": 26067,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_26"
+          },
+          {
+            "line": 26068,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_27"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WS_7",
+        "ck": "n_clk_core_WS",
+        "hck": "n_clk_hbm_WS",
+        "reset": "n_rst_die_t2__m",
+        "hreset": "n_rst_hbm_t2__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WS_7"
+        ],
+        "candidate_new_control_edges": 1,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WS__o_ch0",
+        "up_status_input": "n_ks_slg_WS_6__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26069,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_28"
+          },
+          {
+            "line": 26070,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_29"
+          },
+          {
+            "line": 26071,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_30"
+          },
+          {
+            "line": 26072,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WS_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WS_31"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_0",
+        "ck": "n_clk_core_WN",
+        "hck": "n_clk_hbm_WN",
+        "reset": "n_rst_die_t3__m",
+        "hreset": "n_rst_hbm_t3__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_0",
+          "slg_WN_1",
+          "slg_WN_2",
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 11,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_WN_5__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26090,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_8"
+          },
+          {
+            "line": 26091,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_9"
+          },
+          {
+            "line": 26092,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_10"
+          },
+          {
+            "line": 26093,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_11"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_1",
+        "ck": "n_clk_core_WN",
+        "hck": "n_clk_hbm_WN",
+        "reset": "n_rst_die_t3__m",
+        "hreset": "n_rst_hbm_t3__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_1",
+          "slg_WN_2",
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 9,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_WN_0__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26094,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_12"
+          },
+          {
+            "line": 26095,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_13"
+          },
+          {
+            "line": 26096,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_14"
+          },
+          {
+            "line": 26097,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_15"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_2",
+        "ck": "n_clk_core_WN",
+        "hck": "n_clk_hbm_WN",
+        "reset": "n_rst_die_t4__m",
+        "hreset": "n_rst_hbm_t4__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_2",
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 7,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_WN_1__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26098,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_16"
+          },
+          {
+            "line": 26099,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_17"
+          },
+          {
+            "line": 26100,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_18"
+          },
+          {
+            "line": 26101,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_19"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_3",
+        "ck": "n_clk_core_WN",
+        "hck": "n_clk_hbm_WN",
+        "reset": "n_rst_die_t4__m",
+        "hreset": "n_rst_hbm_t4__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 5,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_WN_2__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26102,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_20"
+          },
+          {
+            "line": 26103,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_21"
+          },
+          {
+            "line": 26104,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_22"
+          },
+          {
+            "line": 26105,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_23"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_4",
+        "ck": "n_clk_core_WN",
+        "hck": "n_clk_hbm_WN",
+        "reset": "n_rst_die_t2__m",
+        "hreset": "n_rst_hbm_t2__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_4",
+          "slg_WN_5",
+          "slg_WN_0",
+          "slg_WN_1",
+          "slg_WN_2",
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 15,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1",
+        "up_status_input": null,
+        "EST_consumers": [
+          {
+            "line": 26082,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_4__y__est__0_1",
+            "instance": "qkd_kvs_pc_h kvpc_WN_0"
+          },
+          {
+            "line": 26083,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_1"
+          },
+          {
+            "line": 26084,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_2"
+          },
+          {
+            "line": 26085,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_3"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_5",
+        "ck": "n_clk_core_WN",
+        "hck": "n_clk_hbm_WN",
+        "reset": "n_rst_die_t3__m",
+        "hreset": "n_rst_hbm_t3__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_5",
+          "slg_WN_0",
+          "slg_WN_1",
+          "slg_WN_2",
+          "slg_WN_3",
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 13,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_WN_4__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26086,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_4"
+          },
+          {
+            "line": 26087,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_5"
+          },
+          {
+            "line": 26088,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_6"
+          },
+          {
+            "line": 26089,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_7"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_6",
+        "ck": "n_clk_core_WN",
+        "hck": "n_clk_hbm_WN",
+        "reset": "n_rst_die_t4__m",
+        "hreset": "n_rst_hbm_t4__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_6",
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 3,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_WN_3__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26106,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_24"
+          },
+          {
+            "line": 26107,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_25"
+          },
+          {
+            "line": 26108,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_26"
+          },
+          {
+            "line": 26109,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_27"
+          }
+        ]
+      },
+      {
+        "instance": "slg_WN_7",
+        "ck": "n_clk_core_WN",
+        "hck": "n_clk_hbm_WN",
+        "reset": "n_rst_die_t5__m",
+        "hreset": "n_rst_hbm_t5__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_WN_7"
+        ],
+        "candidate_new_control_edges": 1,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_WN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_WN_6__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26110,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_28"
+          },
+          {
+            "line": 26111,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_29"
+          },
+          {
+            "line": 26112,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_30"
+          },
+          {
+            "line": 26113,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_WN_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_WN_31"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_0",
+        "ck": "n_clk_core_ES",
+        "hck": "n_clk_hbm_ES",
+        "reset": "n_rst_die_t12__m",
+        "hreset": "n_rst_hbm_t6__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_0",
+          "slg_ES_1",
+          "slg_ES_2",
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 11,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0",
+        "up_status_input": "n_ks_slg_ES_5__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26131,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_8"
+          },
+          {
+            "line": 26132,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_9"
+          },
+          {
+            "line": 26133,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_10"
+          },
+          {
+            "line": 26134,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_11"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_1",
+        "ck": "n_clk_core_ES",
+        "hck": "n_clk_hbm_ES",
+        "reset": "n_rst_die_t13__m",
+        "hreset": "n_rst_hbm_t7__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_1",
+          "slg_ES_2",
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 9,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0",
+        "up_status_input": "n_ks_slg_ES_0__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26135,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_12"
+          },
+          {
+            "line": 26136,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_13"
+          },
+          {
+            "line": 26137,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_14"
+          },
+          {
+            "line": 26138,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_15"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_2",
+        "ck": "n_clk_core_ES",
+        "hck": "n_clk_hbm_ES",
+        "reset": "n_rst_die_t13__m",
+        "hreset": "n_rst_hbm_t7__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_2",
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 7,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0",
+        "up_status_input": "n_ks_slg_ES_1__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26139,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_16"
+          },
+          {
+            "line": 26140,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_17"
+          },
+          {
+            "line": 26141,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_18"
+          },
+          {
+            "line": 26142,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_19"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_3",
+        "ck": "n_clk_core_ES",
+        "hck": "n_clk_hbm_ES",
+        "reset": "n_rst_die_t13__m",
+        "hreset": "n_rst_hbm_t7__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 5,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0",
+        "up_status_input": "n_ks_slg_ES_2__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26143,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_20"
+          },
+          {
+            "line": 26144,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_21"
+          },
+          {
+            "line": 26145,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_22"
+          },
+          {
+            "line": 26146,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_23"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_4",
+        "ck": "n_clk_core_ES",
+        "hck": "n_clk_hbm_ES",
+        "reset": "n_rst_die_t12__m",
+        "hreset": "n_rst_hbm_t6__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_4",
+          "slg_ES_5",
+          "slg_ES_0",
+          "slg_ES_1",
+          "slg_ES_2",
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 15,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0",
+        "up_status_input": null,
+        "EST_consumers": [
+          {
+            "line": 26123,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_4__y__est__0_1",
+            "instance": "qkd_kvs_pc_h kvpc_ES_0"
+          },
+          {
+            "line": 26124,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_1"
+          },
+          {
+            "line": 26125,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_2"
+          },
+          {
+            "line": 26126,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_3"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_5",
+        "ck": "n_clk_core_ES",
+        "hck": "n_clk_hbm_ES",
+        "reset": "n_rst_die_t12__m",
+        "hreset": "n_rst_hbm_t6__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_5",
+          "slg_ES_0",
+          "slg_ES_1",
+          "slg_ES_2",
+          "slg_ES_3",
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 13,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0",
+        "up_status_input": "n_ks_slg_ES_4__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26127,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_4"
+          },
+          {
+            "line": 26128,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_5"
+          },
+          {
+            "line": 26129,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_6"
+          },
+          {
+            "line": 26130,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_7"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_6",
+        "ck": "n_clk_core_ES",
+        "hck": "n_clk_hbm_ES",
+        "reset": "n_rst_die_t14__m",
+        "hreset": "n_rst_hbm_t8__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_6",
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 3,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0",
+        "up_status_input": "n_ks_slg_ES_3__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26147,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_24"
+          },
+          {
+            "line": 26148,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_25"
+          },
+          {
+            "line": 26149,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_26"
+          },
+          {
+            "line": 26150,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_27"
+          }
+        ]
+      },
+      {
+        "instance": "slg_ES_7",
+        "ck": "n_clk_core_ES",
+        "hck": "n_clk_hbm_ES",
+        "reset": "n_rst_die_t14__m",
+        "hreset": "n_rst_hbm_t8__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_ES_7"
+        ],
+        "candidate_new_control_edges": 1,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_ES__o_ch0",
+        "up_status_input": "n_ks_slg_ES_6__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26151,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_28"
+          },
+          {
+            "line": 26152,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_29"
+          },
+          {
+            "line": 26153,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_30"
+          },
+          {
+            "line": 26154,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_ES_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_ES_31"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_0",
+        "ck": "n_clk_core_EN",
+        "hck": "n_clk_hbm_EN",
+        "reset": "n_rst_die_t15__m",
+        "hreset": "n_rst_hbm_t9__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_0",
+          "slg_EN_1",
+          "slg_EN_2",
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 11,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_EN_5__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26172,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_8"
+          },
+          {
+            "line": 26173,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_9"
+          },
+          {
+            "line": 26174,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_10"
+          },
+          {
+            "line": 26175,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_0__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_11"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_1",
+        "ck": "n_clk_core_EN",
+        "hck": "n_clk_hbm_EN",
+        "reset": "n_rst_die_t15__m",
+        "hreset": "n_rst_hbm_t9__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_1",
+          "slg_EN_2",
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 9,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_EN_0__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26176,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_12"
+          },
+          {
+            "line": 26177,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_13"
+          },
+          {
+            "line": 26178,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_14"
+          },
+          {
+            "line": 26179,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_1__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_15"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_2",
+        "ck": "n_clk_core_EN",
+        "hck": "n_clk_hbm_EN",
+        "reset": "n_rst_die_t16__m",
+        "hreset": "n_rst_hbm_t10__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_2",
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 7,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_EN_1__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26180,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_16"
+          },
+          {
+            "line": 26181,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_17"
+          },
+          {
+            "line": 26182,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_18"
+          },
+          {
+            "line": 26183,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_2__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_19"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_3",
+        "ck": "n_clk_core_EN",
+        "hck": "n_clk_hbm_EN",
+        "reset": "n_rst_die_t16__m",
+        "hreset": "n_rst_hbm_t10__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 5,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_EN_2__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26184,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_20"
+          },
+          {
+            "line": 26185,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_21"
+          },
+          {
+            "line": 26186,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_22"
+          },
+          {
+            "line": 26187,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_3__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_23"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_4",
+        "ck": "n_clk_core_EN",
+        "hck": "n_clk_hbm_EN",
+        "reset": "n_rst_die_t14__m",
+        "hreset": "n_rst_hbm_t8__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_4",
+          "slg_EN_5",
+          "slg_EN_0",
+          "slg_EN_1",
+          "slg_EN_2",
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 15,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1",
+        "up_status_input": null,
+        "EST_consumers": [
+          {
+            "line": 26164,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_4__y__est__0_1",
+            "instance": "qkd_kvs_pc_h kvpc_EN_0"
+          },
+          {
+            "line": 26165,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_1"
+          },
+          {
+            "line": 26166,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_2"
+          },
+          {
+            "line": 26167,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_4__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_3"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_5",
+        "ck": "n_clk_core_EN",
+        "hck": "n_clk_hbm_EN",
+        "reset": "n_rst_die_t15__m",
+        "hreset": "n_rst_hbm_t9__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_5",
+          "slg_EN_0",
+          "slg_EN_1",
+          "slg_EN_2",
+          "slg_EN_3",
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 13,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_EN_4__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26168,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_4"
+          },
+          {
+            "line": 26169,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_5"
+          },
+          {
+            "line": 26170,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_6"
+          },
+          {
+            "line": 26171,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_5__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_7"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_6",
+        "ck": "n_clk_core_EN",
+        "hck": "n_clk_hbm_EN",
+        "reset": "n_rst_die_t16__m",
+        "hreset": "n_rst_hbm_t10__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_6",
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 3,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_EN_3__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26188,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_24"
+          },
+          {
+            "line": 26189,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_25"
+          },
+          {
+            "line": 26190,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_26"
+          },
+          {
+            "line": 26191,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_6__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_27"
+          }
+        ]
+      },
+      {
+        "instance": "slg_EN_7",
+        "ck": "n_clk_core_EN",
+        "hck": "n_clk_hbm_EN",
+        "reset": "n_rst_die_t17__m",
+        "hreset": "n_rst_hbm_t11__m",
+        "downstream_control_path_from_consumer_to_root": [
+          "slg_EN_7"
+        ],
+        "candidate_new_control_edges": 1,
+        "formula": "2 per upstream pass-through GRP plus 1 destination input; ROOT output cut excluded",
+        "source_root": "n_ks_kvs_hroot_EN__o_ch0__r1",
+        "up_status_input": "n_ks_slg_EN_6__o_ctl__pinfix1",
+        "EST_consumers": [
+          {
+            "line": 26192,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_28"
+          },
+          {
+            "line": 26193,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_29"
+          },
+          {
+            "line": 26194,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_30"
+          },
+          {
+            "line": 26195,
+            "port": "x__est__0_1",
+            "expression": "n_ks_slg_EN_7__y__est__0_1",
+            "instance": "qkd_kvs_pc kvpc_EN_31"
+          }
+        ]
+      }
+    ]
+  }
+}

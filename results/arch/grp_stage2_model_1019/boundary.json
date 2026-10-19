@@ -1,0 +1,249 @@
+{
+  "qkd_kvs_grp_private0": {
+    "ports": {
+      "ck": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "afk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "afv": {
+        "direction": "input",
+        "bits": 1
+      },
+      "afu": {
+        "direction": "input",
+        "bits": 1
+      },
+      "hck": {
+        "direction": "input",
+        "bits": 1
+      },
+      "hrst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "slg__cfg_stack": {
+        "direction": "input",
+        "bits": 2
+      },
+      "slg__cfg_group": {
+        "direction": "input",
+        "bits": 3
+      },
+      "kreq": {
+        "direction": "input",
+        "bits": 38
+      },
+      "vreq": {
+        "direction": "input",
+        "bits": 15
+      },
+      "x__est": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rsp": {
+        "direction": "output",
+        "bits": 1056
+      },
+      "krsp": {
+        "direction": "output",
+        "bits": 1062
+      },
+      "af__fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "y__est__0_1": {
+        "direction": "output",
+        "bits": 1
+      },
+      "i_ctl": {
+        "direction": "input",
+        "bits": 271
+      },
+      "i_pc0": {
+        "direction": "input",
+        "bits": 305
+      },
+      "i_pc1": {
+        "direction": "input",
+        "bits": 305
+      },
+      "i_pc2": {
+        "direction": "input",
+        "bits": 305
+      },
+      "i_pc3": {
+        "direction": "input",
+        "bits": 305
+      },
+      "o_pc0": {
+        "direction": "output",
+        "bits": 128
+      },
+      "o_pc1": {
+        "direction": "output",
+        "bits": 128
+      },
+      "o_pc2": {
+        "direction": "output",
+        "bits": 128
+      },
+      "o_pc3": {
+        "direction": "output",
+        "bits": 128
+      },
+      "o_dn": {
+        "direction": "output",
+        "bits": 271
+      },
+      "i_up": {
+        "direction": "input",
+        "bits": 144
+      },
+      "o_ctl": {
+        "direction": "output",
+        "bits": 144
+      }
+    },
+    "input_bits": 1701,
+    "output_bits": 3047,
+    "assignments": {
+      "rsp": "{w_slg__rsp_data, w_slg__rsp_epoch, w_slg__rsp_t, w_slg__rsp_v, w_slg__rsp_valid}",
+      "krsp": "{w_slg__rsp_layer, w_slg__rsp_epoch, w_slg__rsp_v, w_slg__rsp_t, w_slg__rsp_data, w_slg__rsp_valid}",
+      "af__fault": "w_af__fault",
+      "y__est__0_1": "x__est",
+      "o_pc0": "{w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_lcal__r_sector[9:0], w_lcal__r_put[0:0], w_lcal__r_layer, w_lcal__r_epoch, w_fcal__blk_go[0:0], w_bcdc0__sink_we, w_bcdc0__sink_seal, w_bcdc0__sink_data, w_bcdc0__sink_addr[4:0]}",
+      "o_pc1": "{w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_lcal__r_sector[19:10], w_lcal__r_put[1:1], w_lcal__r_layer, w_lcal__r_epoch, w_fcal__blk_go[1:1], w_bcdc1__sink_we, w_bcdc1__sink_seal, w_bcdc1__sink_data, w_bcdc1__sink_addr[4:0]}",
+      "o_pc2": "{w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_lcal__r_sector[29:20], w_lcal__r_put[2:2], w_lcal__r_layer, w_lcal__r_epoch, w_fcal__blk_go[2:2], w_bcdc2__sink_we, w_bcdc2__sink_seal, w_bcdc2__sink_data, w_bcdc2__sink_addr[4:0]}",
+      "o_pc3": "{w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_lcal__r_sector[39:30], w_lcal__r_put[3:3], w_lcal__r_layer, w_lcal__r_epoch, w_fcal__blk_go[3:3], w_bcdc3__sink_we, w_bcdc3__sink_seal, w_bcdc3__sink_data, w_bcdc3__sink_addr[4:0]}",
+      "o_dn": "{i_ctl[193:183], i_ctl[270:194], i_ctl[182:0]}",
+      "o_ctl": "{i_up[125:0], {w_drain__fault, w_drain__drained, w_cf1__fault, w_bcdcf__fault_hbm, w_bcdcf__fault_core, w_bcdcf__applied_hbm, w_bcdc3__fault_hbm, w_bcdc3__fault_core, w_bcdc3__applied_hbm, w_bcdc2__fault_hbm, w_bcdc2__fault_core, w_bcdc2__applied_hbm, w_bcdc1__fault_hbm, w_bcdc1__fault_core, w_bcdc1__applied_hbm, w_bcdc0__fault_hbm, w_bcdc0__fault_core, w_bcdc0__applied_hbm}}"
+    }
+  },
+  "qkd_kvs_grp_h_private0": {
+    "ports": {
+      "ck": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "afk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "afv": {
+        "direction": "input",
+        "bits": 1
+      },
+      "hck": {
+        "direction": "input",
+        "bits": 1
+      },
+      "hrst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "slg__cfg_stack": {
+        "direction": "input",
+        "bits": 2
+      },
+      "slg__cfg_group": {
+        "direction": "input",
+        "bits": 3
+      },
+      "kreq": {
+        "direction": "input",
+        "bits": 38
+      },
+      "vreq": {
+        "direction": "input",
+        "bits": 15
+      },
+      "x__est": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rsp": {
+        "direction": "output",
+        "bits": 1056
+      },
+      "krsp": {
+        "direction": "output",
+        "bits": 1062
+      },
+      "af__fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "y__est__0_1": {
+        "direction": "output",
+        "bits": 1
+      },
+      "i_ctl": {
+        "direction": "input",
+        "bits": 194
+      },
+      "i_pc0": {
+        "direction": "input",
+        "bits": 305
+      },
+      "i_pc1": {
+        "direction": "input",
+        "bits": 305
+      },
+      "i_pc2": {
+        "direction": "input",
+        "bits": 305
+      },
+      "i_pc3": {
+        "direction": "input",
+        "bits": 305
+      },
+      "o_pc0": {
+        "direction": "output",
+        "bits": 128
+      },
+      "o_pc1": {
+        "direction": "output",
+        "bits": 128
+      },
+      "o_pc2": {
+        "direction": "output",
+        "bits": 128
+      },
+      "o_pc3": {
+        "direction": "output",
+        "bits": 128
+      },
+      "o_ctl": {
+        "direction": "output",
+        "bits": 144
+      }
+    },
+    "input_bits": 1479,
+    "output_bits": 2776,
+    "assignments": {
+      "rsp": "{w_slg__rsp_data, w_slg__rsp_epoch, w_slg__rsp_t, w_slg__rsp_v, w_slg__rsp_valid}",
+      "krsp": "{w_slg__rsp_layer, w_slg__rsp_epoch, w_slg__rsp_v, w_slg__rsp_t, w_slg__rsp_data, w_slg__rsp_valid}",
+      "af__fault": "w_af__fault",
+      "y__est__0_1": "x__est",
+      "o_pc0": "{w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_lcal__r_sector[9:0], w_lcal__r_put[0:0], w_lcal__r_layer, w_lcal__r_epoch, w_fcal__blk_go[0:0], w_bcdc0__sink_we, w_bcdc0__sink_seal, w_bcdc0__sink_data, w_bcdc0__sink_addr[4:0]}",
+      "o_pc1": "{w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_lcal__r_sector[19:10], w_lcal__r_put[1:1], w_lcal__r_layer, w_lcal__r_epoch, w_fcal__blk_go[1:1], w_bcdc1__sink_we, w_bcdc1__sink_seal, w_bcdc1__sink_data, w_bcdc1__sink_addr[4:0]}",
+      "o_pc2": "{w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_lcal__r_sector[29:20], w_lcal__r_put[2:2], w_lcal__r_layer, w_lcal__r_epoch, w_fcal__blk_go[2:2], w_bcdc2__sink_we, w_bcdc2__sink_seal, w_bcdc2__sink_data, w_bcdc2__sink_addr[4:0]}",
+      "o_pc3": "{w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_lcal__r_sector[39:30], w_lcal__r_put[3:3], w_lcal__r_layer, w_lcal__r_epoch, w_fcal__blk_go[3:3], w_bcdc3__sink_we, w_bcdc3__sink_seal, w_bcdc3__sink_data, w_bcdc3__sink_addr[4:0]}",
+      "o_ctl": "{8{{w_drain__fault, w_drain__drained, w_cf1__fault, w_bcdcf__fault_hbm, w_bcdcf__fault_core, w_bcdcf__applied_hbm, w_bcdc3__fault_hbm, w_bcdc3__fault_core, w_bcdc3__applied_hbm, w_bcdc2__fault_hbm, w_bcdc2__fault_core, w_bcdc2__applied_hbm, w_bcdc1__fault_hbm, w_bcdc1__fault_core, w_bcdc1__applied_hbm, w_bcdc0__fault_hbm, w_bcdc0__fault_core, w_bcdc0__applied_hbm}}}"
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "schema": "selected_grp_private0_stage2_model_v1",
+  "verdict": "MODEL_HOLD_NO_SOURCE_OR_BUILD_GRANT",
+  "logical_state_per_variant": {
+    "landing_pc": {
+      "count": 4,
+      "used_state_bits_each": 1198,
+      "kept_unused_shadow_bits_each": 273
+    },
+    "rowctl": {
+      "count": 1,
+      "used_state_bits_each": 2380
+    },
+    "hop_bundle_and_reset": {
+      "count": 1,
+      "used_state_bits_each": 1344
+    },
+    "fcal": {
+      "count": 1,
+      "used_state_bits_each": 171
+    },
+    "lcal": {
+      "count": 1,
+      "used_state_bits_each": 465
+    },
+    "phase": {
+      "count": 1,
+      "used_state_bits_each": 274
+    },
+    "drain": {
+      "count": 1,
+      "used_state_bits_each": 110
+    },
+    "cfault": {
+      "count": 2,
+      "used_state_bits_each": 1
+    },
+    "boot_fifo_and_wrapper": {
+      "count": 5,
+      "used_state_bits_each": 1303
+    }
+  },
+  "logical_state_bits_each": 16053,
+  "kept_shadow_bits_each": 1092,
+  "native_FF_count": null,
+  "native_logic_count": null,
+  "baseline_macro_payload_bits_each": 131072,
+  "candidate_conservative_shell": {
+    "GRP_FF": 4744,
+    "GRP_H_FF": 4251,
+    "die_FF": 149836,
+    "is_minimum": false,
+    "includes_reset_distribution": false,
+    "new_input_edges": 1,
+    "new_output_edges": 1,
+    "all_shell_inputs_capture_ck": true,
+    "output_o_pc_clock_partition": {
+      "ck": 33,
+      "hck": 95
+    },
+    "domain_or_phase_proof": "OPEN"
+  },
+  "declared_state_plus_shell_bits": {
+    "GRP": 21889,
+    "GRP_H": 21396
+  },
+  "replicas": {
+    "GRP": 28,
+    "GRP_H": 4
+  },
+  "indexed_storage": {
+    "landing_payload": {
+      "count": 4,
+      "rows": 128,
+      "width": 256,
+      "clock": "ck",
+      "collision": "same-address OLD",
+      "replacement": "unqualified narrow single-clock bank family or new exact contact access",
+      "total_macro_bits": 131072
+    },
+    "landing_metadata_each": {
+      "valid_bits": 128,
+      "tk2_bits": 256,
+      "reset": "valid clear; ticket unreset",
+      "requires_SRAM_by_2kb_rule": false
+    },
+    "boot_fifo": {
+      "count": 5,
+      "rows": 16,
+      "width": 73,
+      "bits_each": 1168,
+      "already_pointer_ring": true,
+      "requires_SRAM_by_2kb_rule": false,
+      "optional_macro_conversion_requires": "real dualclock async-head timing/prefetch and boot lifetime proof"
+    },
+    "mandatory_delay_repair": {
+      "name": "lcal.dl",
+      "rows": 8,
+      "width": 11,
+      "bits": 88,
+      "candidate": "pointer ring with LD0 bypass and exact programmable old-tap read",
+      "same_age_proof": null
+    }
+  },
+  "compute_MAC_per_cycle": 0,
+  "memory_payload_bytes_per_cycle": {
+    "write": 128,
+    "read": 128,
+    "condition": "four32-byte banks concurrently active; actual valid calendar required"
+  },
+  "memory_metadata_bits_per_cycle": {
+    "tk2_max_writes": 8,
+    "tk2_two_checker_read_ports": 16,
+    "condition": "four PCs; k_wa and k_ra both read even if SRAM shared proposal rejected"
+  },
+  "original_request_response_intervals": 8,
+  "candidate_request_response_intervals": 10,
+  "absolute_SU_token_delta": null,
+  "absolute_MU_token_delta": null,
+  "STATUS_retirement_delta": null,
+  "clock_core_u": 625,
+  "clock_HBM_u": 768,
+  "q_recurrence": "(q+143)%768",
+  "unexported_faults": [
+    "w_slg__fault",
+    "w_lcal__fault",
+    "w_fcal__fault",
+    "w_phase__fault_hbm"
+  ],
+  "all_driver_copy_fixedpoint": null,
+  "reset_copy_fixedpoint": null,
+  "area_um2": null,
+  "outline": null,
+  "routing_tracks_capacity": null,
+  "local_macro_contacts_OBS_vias_PG": null,
+  "TT_FF_timing": null,
+  "native_clock_spread": null,
+  "GEN8_final_bound_receipt": null
+}
