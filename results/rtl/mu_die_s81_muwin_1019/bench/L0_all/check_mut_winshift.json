@@ -1,0 +1,29 @@
+{
+ "verdict": "FAIL",
+ "expected": 728,
+ "matched": 636,
+ "errors": [
+  "missing MC0 at 13085 value 6001",
+  "missing MC0 at 34397 value ce00d",
+  "missing MC0 at 55709 value 196015",
+  "missing MC0 at 77025 value 25e01d",
+  "missing MC0 at 98337 value 326025",
+  "missing MC0 at 119653 value 3ee02d",
+  "missing MC0 at 140965 value 4b6035",
+  "missing MC0 at 162277 value 57e03d",
+  "missing MC0 at 183593 value 646045",
+  "missing MC0 at 204905 value 70e04d",
+  "unexpected MC0 at 13086 value 6001",
+  "unexpected MC0 at 34398 value ce00d",
+  "unexpected MC0 at 55710 value 196015",
+  "unexpected MC0 at 77026 value 25e01d",
+  "unexpected MC0 at 98338 value 326025",
+  "unexpected MC0 at 119654 value 3ee02d",
+  "unexpected MC0 at 140966 value 4b6035",
+  "unexpected MC0 at 162278 value 57e03d",
+  "unexpected MC0 at 183594 value 646045",
+  "unexpected MC0 at 204906 value 70e04d"
+ ],
+ "log": "/srv/opentallas-scratch/claude/mu-die-s81-muwin/stage2/out_L0_all/run_mut_winshift.log",
+ "note": "issuer fault code 8 at 9085 = first start 5092 + svc done age 3987 + 6: no svc_rs responder in this bench (status only)"
+}

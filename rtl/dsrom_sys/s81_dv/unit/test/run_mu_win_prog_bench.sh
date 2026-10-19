@@ -28,7 +28,7 @@ F="$R/rtl/lib/ot_async_fifo.sv $R/rtl/lib/ot_reset_sync.sv $R/rtl/lib/ot_rst_rel
    $R/rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv $U/ot_dsdv_fixed_issue.sv $U/ot_dsdv_vstop.sv $U/dsdv_sh_sd.sv $U/dsdv_seq_host.sv
    $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v $M/dsdv_mu_hslot.sv $M/dsdv_mu_hwin.sv"
 python3 $R/tools/s81_dv/dv_mu_win.py cases --prog $P --out $O/cases --users $US > $O/cases.log || { echo "MU_WIN_PROG_GATE FAIL (cases)"; exit 2; }
-sha256sum $F $M/tb_dsdv_seq_host_mu.sv $R/tools/s81_dv/dv_mu_win.py $0 $HB $P/prog/mu_win.json $P/prog/mu_cfg.cfg $O/cases/* > $O/sources.sha256
+sha256sum $F $M/tb_dsdv_seq_host_mu.sv $R/tools/s81_dv/dv_mu_win.py $0 $HB $P/prog/mu_win.json $P/prog/mu_cfg.cfg $P/prog/calendar.json $O/cases/* > $O/sources.sha256
 RL=$(python3 -c "import json;print(json.load(open('$P/prog/mu_win.json'))['RL'])")
 verilator --binary --timing -j "${OT_THREADS:-8}" -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT \
   --top-module tb_dsdv_seq_host_mu --Mdir "$O/obj" -o tb $F $M/tb_dsdv_seq_host_mu.sv > "$O/build.log" 2>&1 \

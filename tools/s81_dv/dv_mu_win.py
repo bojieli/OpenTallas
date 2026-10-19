@@ -291,17 +291,31 @@ def check(a):
         errs.append('run incomplete (no PROG END)')
     if mf is None or mf.group(1) != '0000':
         errs.append(f't_mf {mf.group(1) if mf else "?"} (want 0000)')
-    if re.search(r'^PROG FAULT', t, re.M):
-        errs.append('issuer fault: ' + re.search(r'^PROG FAULT.*$', t, re.M).group(0))
-    return report(a, not errs, errs, len(exp), len(es & gs))
+    note = None
+    fl = [(int(m.group(1)), int(m.group(2))) for m in re.finditer(r'^PROG FAULT (\d+) code (\d+)', t, re.M)]
+    if fl:
+        # the bench has no svc_rs model: the compiled svc job's done (engine 4 row) never returns on s_jd, so the issuer
+        # raises run fault 8 (done row not matched) once, svc done age + 6 edges after the first start's capture.
+        # ot_dsdv_fixed_issue: run_fault is status only (no issue / KIT / END edge depends on it), so the windows and
+        # the KIT returns are unaffected.  Any other fault (code, edge) is an error.
+        cal = json.loads((Path(a.prog) / 'prog/calendar.json').read_text())
+        svc = [r['done'] for r in (cal['job'][0]['rows'] if cal.get('job') else cal['rows']) if r['engine'] == 4
+               and r['done']]
+        ok8 = len(fl) == 1 and fl[0][1] == 8 and svc and fl[0][0] == starts[0][0] + min(svc) + 6
+        if ok8:
+            note = f'issuer fault code 8 at {fl[0][0]} = first start {starts[0][0]} + svc done age {min(svc)} + 6: ' \
+                   f'no svc_rs responder in this bench (status only)'
+        else:
+            errs.append(f'issuer fault {fl} (svc done ages {svc})')
+    return report(a, not errs, errs, len(exp), len(es & gs), note)
 
 
-def report(a, ok, errs, nexp, nmatch):
-    r = dict(verdict='PASS' if ok else 'FAIL', expected=nexp, matched=nmatch, errors=errs, log=str(a.log))
+def report(a, ok, errs, nexp, nmatch, note=None):
+    r = dict(verdict='PASS' if ok else 'FAIL', expected=nexp, matched=nmatch, errors=errs, log=str(a.log), note=note)
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + '\n')
     print(f'MUWIN_PROG {"PASS" if ok else "FAIL"} {nmatch}/{nexp} compiled events on their edge' +
-          ('' if ok else '; ' + '; '.join(errs[:6])))
+          ('' if ok else '; ' + '; '.join(errs[:6])) + (f' [{note}]' if note else ''))
     return 0 if ok else 1
 
 

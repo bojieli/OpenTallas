@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+MUWIN_PROG PASS 360/360 compiled events on their edge
+MUWIN_PROG FAIL 314/360 compiled events on their edge; missing MC0 at 23707 value 6001; missing MC0 at 66331 value 196015; missing MC0 at 108959 value 326025; missing MC0 at 151587 value 4b6035; missing MC0 at 194215 value 646045; missing MC0 at 236843 value 7d6055
+MUWIN_PROG FAIL 316/360 compiled events on their edge; missing MR0 at 67198 value 5; missing MR0 at 109826 value 9; missing MR0 at 152454 value d; missing MR0 at 195082 value 11; missing MR0 at 237710 value 15; missing MR0 at 280334 value 19
+mutant winshift detected (FAIL as required)
+mutant replaydrop detected (FAIL as required)
+MU_WIN_PROG_GATE PASS

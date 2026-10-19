@@ -1,0 +1,14 @@
+{
+ "verdict": "FAIL",
+ "expected": 40,
+ "matched": 36,
+ "errors": [
+  "missing MR0 at 35148 value 3",
+  "missing MR0 at 56460 value 5",
+  "missing MR0 at 1015576 value 3",
+  "missing MR0 at 1036888 value 5",
+  "t_mf 1100 (want 0000)"
+ ],
+ "log": "/srv/opentallas-scratch/claude/mu-die-s81-muwin/stage2/out_L0_u012/run_mut_replaydrop.log",
+ "note": "issuer fault code 8 at 8845 = first start 4852 + svc done age 3987 + 6: no svc_rs responder in this bench (status only)"
+}

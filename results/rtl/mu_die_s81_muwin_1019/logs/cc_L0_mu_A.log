@@ -1,0 +1,4 @@
+LINE_SLOTS L0: 3 collisions [('line', ['u_s_2S', 'ri_e', 10635]), ('line', ['u_s_1S', 'ri_e', 10647]), ('line', ['u_s_0S', 'ri_e', 10659])] -> line_delay {'ffn.softplus_sqrt': 3}
+MU L0 S000: 46 slots, copies 1 {'A': 46, 'B': 0}, lemma PASS
+{"layer": "L0", "ops": 65, "status": {"PARTIAL": 32, "LOWERED": 23, "GAP": 10}, "rows": 131, "templates": 130, "line_delay": {"ffn.softplus_sqrt": 3}, "line_collisions": 0, "mu_win": {"copy": "A", "events": 8, "nw": 46, "RL": 11194, "verdict": "PASS", "failed": []}}
+SMOKE u_s_0S sid 0: CTL latency 68 edges, last partial 259, rstd 493, XQ at ring 572
