@@ -1,0 +1,199 @@
+{
+ "name": "dscoll_lane_w_s3-s3-COMMIT",
+ "block": "dsfd_coll_lane_w_safe3",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-S81/LINK-COLL",
+ "purpose": "S81-COLL bank64 safe3: all storage on 55 bank64 SRAMs, kept-hierarchy fanout copies, strip+band geometry. SAFE checklist (README): 1 pins RTL-registered + reset_landing 2; 2 reach <= 405 (tile 475x421, registered stages); 3 kept copies (kff1/kff10/kp20 kept hierarchy, census 0 >32 target); 4 depth <= 600 ps (census); 5 all storage in 55 bank64 SRAMs; 6 strips + one 44 um full-width band, 2.56 / 5.95 pins/um macro faces; 7 spine clock, io_hold 0.03; 8 static, 0 added cycles vs P1",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/s81-coll-s3-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl",
+   "tools/xdie_s81",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/ref_tile/dscoll_lane_w_ltr/kit.env",
+   "results/rtl/xdie_s81_1018/gate_g5"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_coll_lane_w_safe3 #(.CH_BOARD(700)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/link/ot_link_crc32.sv rtl/lib/ot_rst_relay_tree3.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/lib/ot_sram_oldread_b64.sv rtl/lib/ot_sram_showahead_b64.sv rtl/common/ot_link_credit_rx_b64.sv rtl/common/ot_link_credit_tx_rc.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe3.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe3.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xdie_switched_pass",
+    "cmd": "J=6 bash tools/xdie_s81/kit_bench_b64.sh {RUN}/pass pass",
+    "expect": "pass",
+    "threads": 6,
+    "peak_ram_gb": 30,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
+    "min_count_regex": "^PASS xdie_s81: (\\d+) beats",
+    "pass_witness": "results/rtl/s81_coll_bank64_safe3_1019/bench/xdie_pass.log"
+   },
+   {
+    "name": "xdie_mut_board400",
+    "cmd": "J=6 bash tools/xdie_s81/kit_bench_b64.sh {RUN}/board400 board400",
+    "expect": "fail",
+    "threads": 6,
+    "peak_ram_gb": 30,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
+    "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
+    "fail_witness": "results/rtl/s81_coll_bank64_safe3_1019/bench/xdie_board400.log"
+   },
+   {
+    "name": "xdie_mut_chb0",
+    "cmd": "J=6 bash tools/xdie_s81/kit_bench_b64.sh {RUN}/chb0 chb0",
+    "expect": "fail",
+    "threads": 6,
+    "peak_ram_gb": 30,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS xdie_s81: \\d+ beats of the TP4 calendar landed bit-exact",
+    "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
+    "fail_witness": "results/rtl/s81_coll_bank64_safe3_1019/bench/xdie_chb0.log"
+   },
+   {
+    "name": "lane_miter_m0",
+    "cmd": "bash tools/xdie_s81/coll_safe3_boundary.sh {RUN}/miter0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE3_BOUNDARY PASS checks=\\d+",
+    "pass_witness": "results/rtl/s81_coll_bank64_safe3_1019/bench/lane_miter_m0.log"
+   },
+   {
+    "name": "lane_miter_m1",
+    "cmd": "bash tools/xdie_s81/coll_safe3_boundary.sh {RUN}/miter1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE3_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "^COLL_SAFE3_BOUNDARY FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/s81_coll_bank64_safe3_1019/bench/lane_miter_m1.log"
+   },
+   {
+    "name": "lane_miter_m2",
+    "cmd": "bash tools/xdie_s81/coll_safe3_boundary.sh {RUN}/miter2 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE3_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "COLL_COLLISION_UNSAFE",
+    "fail_witness": "results/rtl/s81_coll_bank64_safe3_1019/bench/lane_miter_m2.log"
+   },
+   {
+    "name": "lane_miter_m3",
+    "cmd": "bash tools/xdie_s81/coll_safe3_boundary.sh {RUN}/miter3 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE3_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "^COLL_SAFE3_BOUNDARY FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/s81_coll_bank64_safe3_1019/bench/lane_miter_m3.log"
+   },
+   {
+    "name": "lane_miter_m4",
+    "cmd": "bash tools/xdie_s81/coll_safe3_boundary.sh {RUN}/miter4 4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE3_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "^COLL_SAFE3_BOUNDARY FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/s81_coll_bank64_safe3_1019/bench/lane_miter_m4.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dscoll_lane_w_s3/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dscoll_lane_w_s3/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dscoll_lane_w_s3 --out {RUN}/record/views/dsfd_coll_lane_w_safe3 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dscoll_lane_w_s3/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dscoll_lane_w_s3/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dscoll_lane_w_s3/dscoll_lane_w_s3-s3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}
