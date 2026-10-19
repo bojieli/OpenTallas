@@ -1,0 +1,7 @@
+AGE_CASE id=6 checks=512 mismatches=0 scope=ideal_root_register_cone
+AGE_CASE id=5 checks=512 mismatches=0 scope=ideal_root_register_cone
+PROVIDER_AGE_PASS cases=2 source=original_full_provider_and_store macro=original_64x512 faultchecks=1608
+- provider_tb.sv:28: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48us; walltime 0.007 s; speed 7.223 ms/s
+- Verilator: cpu 0.007 s on 1 threads; allocated 7 MB
