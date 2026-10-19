@@ -121,17 +121,24 @@ def layer_block(p, l0=False):
         if op == "qkv":
             n += extra                                             # L0 cold KV fill rides the compute-die front
             busy += extra
+        n0 = n
+        if unit == "kv":
+            n += p.get("attn_extra", 0)
         ops[op] = (t, t + n)
         if unit in ("me", "su"):
             bz = n if p.get("occupancy") == "priced" else min(busy, n)
             a0 = t + (n - bz) // 2
             add(unit, a0, a0 + bz)
         elif unit == "kv":
-            lat = (n - p["kv_service"] - 2 * p["d2d_record"]) // 2   # D2D flight each way (modelled split)
+            lat = (n0 - p["kv_service"] - 2 * p["d2d_record"]) // 2   # D2D flight each way (modelled split)
             add("d2d_q", t, t + p["d2d_record"])
             s0 = t + p["d2d_record"] + lat
             add("kvs", s0, s0 + p["kv_service"])
-            add("d2d_o", t + n - p["d2d_record"], t + n)
+            add("d2d_o", t + n0 - p["d2d_record"], t + n0)
+            # Reserve each independent link-calendar playhead at its compiled segment offsets.
+            for r, iv in p.get("att_windows", {}).items():
+                for a, b in iv:
+                    add(r, t + a, t + b)
         elif unit == "coll":
             for r, iv in coll_sets(t, p).items():                  # the command reaches the engine at the window start
                 for a, b in iv:
