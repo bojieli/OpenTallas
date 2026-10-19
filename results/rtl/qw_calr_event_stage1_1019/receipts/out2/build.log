@@ -1,0 +1,148 @@
+%Warning-PINMISSING: source/tb_qfd_dv_calendar_cap1_install.sv:21:176: Instance has missing pin: 'table_load'
+   21 |     qfd_dv_cmd_cal_mu #(.MUT(MUT), .NU(NU), .CALENDAR_ROM(CALENDAR_ROM), .CTX_DW(CTX_DW), .BOUNDARY_RELOC(BOUNDARY_RELOC), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE)) dut (.ck(ck), .rst_n(rst_n),
+      |                                                                                                                                                                                ^~~
+                     source/qfd_dv_cmd_cal_mu.sv:106:26: ... Location of port declaration
+  106 |     output reg           table_load,
+      |                          ^~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: source/tb_qfd_dv_calendar_cap1_install.sv:21:176: Instance has missing pin: 'table_stage'
+   21 |     qfd_dv_cmd_cal_mu #(.MUT(MUT), .NU(NU), .CALENDAR_ROM(CALENDAR_ROM), .CTX_DW(CTX_DW), .BOUNDARY_RELOC(BOUNDARY_RELOC), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE)) dut (.ck(ck), .rst_n(rst_n),
+      |                                                                                                                                                                                ^~~
+                     source/qfd_dv_cmd_cal_mu.sv:107:26: ... Location of port declaration
+  107 |     output reg [5:0]     table_stage,
+      |                          ^~~~~~~~~~~
+%Warning-PINMISSING: source/tb_qfd_dv_calendar_cap1_install.sv:21:176: Instance has missing pin: 'table_user'
+   21 |     qfd_dv_cmd_cal_mu #(.MUT(MUT), .NU(NU), .CALENDAR_ROM(CALENDAR_ROM), .CTX_DW(CTX_DW), .BOUNDARY_RELOC(BOUNDARY_RELOC), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE)) dut (.ck(ck), .rst_n(rst_n),
+      |                                                                                                                                                                                ^~~
+                     source/qfd_dv_cmd_cal_mu.sv:108:26: ... Location of port declaration
+  108 |     output reg [1:0]     table_user,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: source/tb_qfd_dv_calendar_cap1_install.sv:21:176: Instance has missing pin: 'ctx_dw'
+   21 |     qfd_dv_cmd_cal_mu #(.MUT(MUT), .NU(NU), .CALENDAR_ROM(CALENDAR_ROM), .CTX_DW(CTX_DW), .BOUNDARY_RELOC(BOUNDARY_RELOC), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE)) dut (.ck(ck), .rst_n(rst_n),
+      |                                                                                                                                                                                ^~~
+                     source/qfd_dv_cmd_cal_mu.sv:119:26: ... Location of port declaration
+  119 |     output wire [127:0]  ctx_dw,                     
+      |                          ^~~~~~
+%Warning-PINMISSING: source/tb_qfd_dv_calendar_cap1_install.sv:21:176: Instance has missing pin: 'ctx_load'
+   21 |     qfd_dv_cmd_cal_mu #(.MUT(MUT), .NU(NU), .CALENDAR_ROM(CALENDAR_ROM), .CTX_DW(CTX_DW), .BOUNDARY_RELOC(BOUNDARY_RELOC), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE)) dut (.ck(ck), .rst_n(rst_n),
+      |                                                                                                                                                                                ^~~
+                     source/qfd_dv_cmd_cal_mu.sv:120:26: ... Location of port declaration
+  120 |     output wire          ctx_load                    
+      |                          ^~~~~~~~
+%Warning-WIDTHEXPAND: source/qfd_dv_calendar_rom.sv:29:27: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 11 bits.
+                                                         : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut.g_calrom.u_rom'
+   29 |              ({1'b0,first}+count>NENT) || stage>37;
+      |                           ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: source/qfd_dv_calendar_rom.sv:29:27: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'count' generates 3 bits.
+                                                         : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut.g_calrom.u_rom'
+   29 |              ({1'b0,first}+count>NENT) || stage>37;
+      |                           ^
+%Warning-WIDTHEXPAND: source/ot_qwen_d2d_static.sv:95:33: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ptr' generates 6 bits.
+                                                        : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.u_cal_l'
+   95 |                         if (ptr == NE) fault <= 1'b1;
+      |                                 ^~
+%Warning-WIDTHTRUNC: source/qfd_dv_cmd_cal_mu.sv:133:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                       : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  133 |     wire [9:0]  nent = CALENDAR_ROM ? d0[9:0] : {1'b0,d0[8:0]};
+      |                                     ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: source/qfd_dv_cmd_cal_mu.sv:137:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                       : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  137 |         seal_bad = (CALENDAR_ROM ? (d0[63:32] != 32'h43414c52 || d0[31:10] != 22'd0) :
+      |                                  ^
+%Warning-WIDTHTRUNC: source/qfd_dv_cmd_cal_mu.sv:266:44: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                       : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  266 |         assign fetch_valid[g]=CALENDAR_ROM ? (rom_valid && rom_user==2'(g)) : rd_v[g];
+      |                                            ^
+%Warning-WIDTHTRUNC: source/qfd_dv_cmd_cal_mu.sv:267:44: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                       : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  267 |         assign fetch_count[g]=CALENDAR_ROM ? rom_count : rd_n[g];
+      |                                            ^
+%Warning-WIDTHTRUNC: source/qfd_dv_cmd_cal_mu.sv:283:42: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                       : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  283 |                 ent[u][j] = CALENDAR_ROM ? rom_data[128*j +: 128] : (MUT == 2) ? {rd[rd_bank[u]][128*j +: 64], rd[rd_bank[u]][128*j + 64 +: 64]}
+      |                                          ^
+%Warning-WIDTHEXPAND: source/qfd_dv_cmd_cal_mu.sv:315:54: Operator LT expects 12 bits on the LHS, but LHS's VARREF 'tl_lo' generates 11 bits.
+                                                        : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  315 |                            tl_row >= 6'd61 || (tl_lo < {1'b0, base} + {1'b0, nent, 1'b0} && tl_hi > {1'b0, base});
+      |                                                      ^
+%Warning-WIDTHEXPAND: source/qfd_dv_cmd_cal_mu.sv:316:53: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'iu' generates 2 bits.
+                                                        : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  316 |     wire [UB-1:0] ru = (MUT == 11 && NU > 1) ? ((iu == NU - 1) ? {UB{1'b0}} : iu + 1'b1) : iu;
+      |                                                     ^~
+%Warning-WIDTHEXPAND: source/qfd_dv_cmd_cal_mu.sv:349:49: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                        : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  349 |                 if (i_kind == 3'd4 && (ic[27:4] >= UVM_STRIDE || ic[51:28] >= UVM_STRIDE || ic[77:54] >= UVM_STRIDE)) r_bad = 1'b1;
+      |                                                 ^~
+%Warning-WIDTHEXPAND: source/qfd_dv_cmd_cal_mu.sv:349:76: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                        : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  349 |                 if (i_kind == 3'd4 && (ic[27:4] >= UVM_STRIDE || ic[51:28] >= UVM_STRIDE || ic[77:54] >= UVM_STRIDE)) r_bad = 1'b1;
+      |                                                                            ^~
+%Warning-WIDTHEXPAND: source/qfd_dv_cmd_cal_mu.sv:349:103: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                         : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  349 |                 if (i_kind == 3'd4 && (ic[27:4] >= UVM_STRIDE || ic[51:28] >= UVM_STRIDE || ic[77:54] >= UVM_STRIDE)) r_bad = 1'b1;
+      |                                                                                                       ^~
+%Warning-WIDTHEXPAND: source/qfd_dv_cmd_cal_mu.sv:350:59: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                        : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  350 |                 if (i_kind == 3'd2 && ic[24] && ic[49:26] >= UVM_STRIDE) r_bad = 1'b1;
+      |                                                           ^~
+%Warning-WIDTHEXPAND: source/qfd_dv_cmd_cal_mu.sv:351:48: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 9 bits.
+                                                        : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  351 |                 if (i_kind == 3'd1 && ic[12:4] >= PIDX_STRIDE) r_bad = 1'b1;
+      |                                                ^~
+%Warning-WIDTHEXPAND: source/qfd_dv_cmd_cal_mu.sv:354:35: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                        : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  354 |                     if (ic[34:11] >= UVM_STRIDE || ic[59:36] >= UVM_STRIDE ||
+      |                                   ^~
+%Warning-WIDTHEXPAND: source/qfd_dv_cmd_cal_mu.sv:354:62: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                        : ... note: In instance 'tb_qfd_dv_calendar_cap1_install.dut'
+  354 |                     if (ic[34:11] >= UVM_STRIDE || ic[59:36] >= UVM_STRIDE ||
+      |                                                              ^~
+make: Entering directory '/srv/opentallas-scratch/claude/qw-calr-event-stage1-1019/out2/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_qfd_dv_calendar_cap1_install__pch.h -o Vtb_qfd_dv_calendar_cap1_install__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_qfd_dv_calendar_cap1_install__pch.h -o Vtb_qfd_dv_calendar_cap1_install__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_dv_calendar_cap1_install__pch.h.fast -c Vtb_qfd_dv_calendar_cap1_install.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_dv_calendar_cap1_install__pch.h.fast -c Vtb_qfd_dv_calendar_cap1_install___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_dv_calendar_cap1_install__pch.h.fast -c Vtb_qfd_dv_calendar_cap1_install___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_dv_calendar_cap1_install__pch.h.fast -c Vtb_qfd_dv_calendar_cap1_install__main.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_dv_calendar_cap1_install__pch.h.slow -c Vtb_qfd_dv_calendar_cap1_install__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_dv_calendar_cap1_install__pch.h.slow -c Vtb_qfd_dv_calendar_cap1_install___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_dv_calendar_cap1_install__pch.h.slow -c Vtb_qfd_dv_calendar_cap1_install___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_dv_calendar_cap1_install__pch.h.slow -c Vtb_qfd_dv_calendar_cap1_install___024unit__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_dv_calendar_cap1_install__pch.h.slow -c Vtb_qfd_dv_calendar_cap1_install__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_qfd_dv_calendar_cap1_install__ALL.a    -pthread -lpthread -latomic   -o Vtb_qfd_dv_calendar_cap1_install
+rm Vtb_qfd_dv_calendar_cap1_install__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/qw-calr-event-stage1-1019/out2/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.535 MB sources in 16 modules, into 0.868 MB in 9 C++ files needing 0.005 MB
+- Verilator: Walltime 3.956 s (elab=0.014, cvt=0.082, bld=3.818); cpu 0.162 s on 4 threads; allocated 53.438 MB
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal -j 4 --top-module tb_qfd_dv_calendar_cap1_install -GNU=4 -GUVM_STRIDE=4096 -GPIDX_STRIDE=128 -Mdir /srv/opentallas-scratch/claude/qw-calr-event-stage1-1019/out2/obj source/ot_qwen_d2d_static.sv source/qfd_dv_calendar_rom.sv source/qfd_dv_cmd_cal.sv source/qfd_dv_cmd_cal_mu.sv source/qkd_program_commit.sv source/tb_qfd_dv_calendar_cap1_install.sv source/ot_rom_4096x266_m8.v source/ot_sram_1r1w_64x512_m1_r2c2.v boot_probes.sv"
+	User time (seconds): 12.21
+	System time (seconds): 1.85
+	Percent of CPU this job got: 340%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:04.12
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 319940
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 510801
+	Voluntary context switches: 237
+	Involuntary context switches: 26
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 337984
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

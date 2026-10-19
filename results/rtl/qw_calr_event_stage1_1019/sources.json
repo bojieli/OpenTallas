@@ -1,0 +1,50 @@
+[
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
+    "copy": "source/qfd_dv_cmd_cal_mu.sv",
+    "sha256": "846ff155dfc024d1ab74b727d5050278870cb869dca30da211535cc957638414"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/qwen_dv/qfd_dv_cmd_cal.sv",
+    "copy": "source/qfd_dv_cmd_cal.sv",
+    "sha256": "9be9a27a242b3aea0c6656f255c37cc5c4348b918a547015a24f337f7cb2d5f2"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+    "copy": "source/qkd_program_commit.sv",
+    "sha256": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+    "copy": "source/ot_sram_1r1w_64x512_m1_r2c2.v",
+    "sha256": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/qwen_dv/qfd_dv_calendar_rom.sv",
+    "copy": "source/qfd_dv_calendar_rom.sv",
+    "sha256": "40bcb5c65a08f295ec5be2fe9ad00ab585922e169a1f14870bf149ae2e00dfff"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+    "copy": "source/ot_rom_4096x266_m8.v",
+    "sha256": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/test/qwen_dv/tb_qfd_dv_calendar_cap1_install.sv",
+    "copy": "source/tb_qfd_dv_calendar_cap1_install.sv",
+    "sha256": "aecd9fe24e3a8fb28cb0f985dbe89c8f1d05cc90b33655b7cbb362a74e8dc4cd"
+  },
+  {
+    "rev": "7e5150af5",
+    "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+    "copy": "source/ot_qwen_d2d_static.sv",
+    "sha256": "713858300e2a534ca739afa5579d673f3acc0832cb97386d98a63f4adc53ae2a"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/hdc/ot_qwen_w12_matvec.sv",
+    "copy": "consumer_source/ot_qwen_w12_matvec.sv",
+    "sha256": "a20886ebd3e345aa1633b460d07bb97466be0283b1618a2341b44ef2ca2f1bd9",
+    "executed": false
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+    "copy": "consumer_source/ot_qfd_xslice.sv",
+    "sha256": "130030210c83ba14c47e745c6ba5e547676b7309f8589e45bc2e98255feabb77",
+    "executed": false
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+    "copy": "consumer_source/ot_qfd_xslice_slots.sv",
+    "sha256": "a17b86ea6228820b3bce17868271fb6de37d38f99e49f92a5c57007d2fe3fea7",
+    "executed": false
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_dv_heads.sv",
+    "copy": "consumer_source/qfd_dv_heads.sv",
+    "sha256": "5ece499c3deab99c6d71fdfbdcf64d1089786a2133662bb0ee5a610575fdf383",
+    "executed": false
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_dv_hr_pack.sv",
+    "copy": "consumer_source/qfd_dv_hr_pack.sv",
+    "sha256": "fcedaa3ec544cfd421b3f742e50a97b830c6c5cb1a55c0a5a7343da98700bb3b",
+    "executed": false
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+    "copy": "consumer_source/qfd_tt_ctlm_dv_lpf_parts.sv",
+    "sha256": "f351caf9db765adf8e19d00f539d92af88fcc269d0fd68532b65c5ba2d02cb0c",
+    "executed": false
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv",
+    "copy": "consumer_source/ot_qfd_tt_ctlm_static_hr.sv",
+    "sha256": "48304aa32d98b40342c932b9a982a989744a0d9099ad6f131919c422d892a66e",
+    "executed": false
+  },
+  {
+    "rev": "0d4c9808f",
+    "path": "rtl/qwen_split/qfd_sys_face.sv",
+    "copy": "consumer_source/qfd_sys_face.sv",
+    "sha256": "7e355ea683e92c351e26d786b5915c69622d13093c1d8e6c1b31353b73dc7421",
+    "executed": false
+  }
+]
