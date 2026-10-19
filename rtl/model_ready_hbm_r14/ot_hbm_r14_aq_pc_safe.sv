@@ -69,8 +69,28 @@ module ot_hbm_r14_aq_pc_safe #(
   (* keep="true",dont_touch="true" *) reg [19:0] head_local[0:7];
   // Canonical head mux owns hold/advance once. Local copies capture the
   // identical next state unconditionally at the original head edge.
-  wire head_capture=head_from_push||(wr_ok&&q_n>1);
-  wire [29:0] head_d=head_capture?head_next:qhead;
+  wire [1:0] head_capture_regions,head_push_regions;
+  wire [29:0] head_d;
+  (* keep="true",dont_touch="true" *) reg [WQW-1:0] fresh_addr_local[0:1],successor_local[0:1];
+  (* keep="true",dont_touch="true" *) reg [1:0] fresh_local;
+  for(genvar g=0;g<2;g=g+1)begin:HEAD_IDENTITY_LOCAL
+    always @(posedge clk)fresh_addr_local[g]<=qwp;
+    always @(posedge clk or negedge rst_n)if(!rst_n)begin
+      successor_local[g]<=1;fresh_local[g]<=0;
+    end else begin
+      successor_local[g]<=wr_ok?q_rp_plus1+1'b1:q_rp_plus1;
+      fresh_local[g]<=qpush;
+    end
+    assign head_push_regions[g]=qpush&&((q_n_local[g]==0)||(wr_ok&&q_n_local[g]==1));
+    assign head_capture_regions[g]=head_push_regions[g]||(wr_ok&&q_n_local[g]>1);
+  end
+  wire [29:0] head_prefetch_local={
+    ((fresh_local[1]&&fresh_addr_local[1]==successor_local[1])?qfresh_data[29:20]:qm[29:20]),
+    ((fresh_local[0]&&fresh_addr_local[0]==successor_local[0])?qfresh_data[19:0]:qm[19:0])};
+  assign head_d[19:0]=head_capture_regions[0]?
+      (head_push_regions[0]?{wr_row,wr_rd}:head_prefetch_local[19:0]):qhead[19:0];
+  assign head_d[29:20]=head_capture_regions[1]?
+      (head_push_regions[1]?{wr_bank,wr_col}:head_prefetch_local[29:20]):qhead[29:20];
   for(genvar g=0;g<8;g=g+1)begin:HEAD_LOCAL
     always @(posedge clk)
       `ifdef BW_AQ_MUT_HEAD
@@ -79,16 +99,15 @@ module ot_hbm_r14_aq_pc_safe #(
       head_local[g]<=head_d[19:0];
 `endif
   end
-  reg [31:0] hb_oh;
+  (* keep="true",dont_touch="true" *) reg [4:0] head_bank_local;
+  wire [31:0] hb_oh=32'b1<<head_bank_local;
   wire [WQW-1:0] qsuccessor=q_rp_plus1;
   wire [29:0] qprefetch=(qfresh&&qfresh_addr==qsuccessor)?qfresh_data:qm[29:0];
   wire head_from_push=qpush&&((q_n==0)||(wr_ok&&q_n==1));
   wire [29:0] head_next=head_from_push?{wr_bank,wr_col,wr_row,wr_rd}:qprefetch;
   always @(posedge clk)begin
-    if(head_from_push||(wr_ok&&q_n>1))begin
-      qhead<=head_next;
-      hb_oh<=32'b1<<head_next[29:25];
-    end
+    qhead<=head_d;
+    head_bank_local<=head_d[29:25];
   end
   ot_sram_1r1w_128x256_m1_r2c2 u_queue(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(qread)),.rd_out(qm),
     .w_ce_in(qpush),.w_addr_in(7'(qwp)),.wd_in({226'b0,wr_bank,wr_col,wr_row,wr_rd}),.w_mask_in({256{1'b1}}),
@@ -99,7 +118,7 @@ module ot_hbm_r14_aq_pc_safe #(
   // 27 timer flops and seven count bits rather than a thousand-sink reset net.
   for(genvar b=0;b<32;b=b+1)begin:BCOUNT
     always @(posedge clk or negedge reset_regions[b])if(!reset_regions[b])bank_n[b]<=0;
-    else case({qpush&&wr_bank==b,bank_col[b]})
+    else case({(wr_v&&(q_n_local[b/8]!=(WQW+1)'(WQ)))&&wr_bank==b,bank_col[b]})
       2'b10:bank_n[b]<=bank_n[b]+1'b1;
       2'b01:bank_n[b]<=bank_n[b]-1'b1;
       default:bank_n[b]<=bank_n[b];
@@ -117,6 +136,8 @@ module ot_hbm_r14_aq_pc_safe #(
   end
   reg [WQW:0] q_n; reg [WQW-1:0] q_rp;
   wire [4:0] hb=qhead[29:25], hc=qhead[24:20]; wire [RW_ROW-1:0] hrow=qhead[19:1]; wire hr=qhead[0];   // registered head (valid when q_n != 0)
+  (* keep="true",dont_touch="true" *) reg [2:0] tail_set_local;
+  always @(posedge clk or negedge rst_n)if(!rst_n)tail_set_local<=0;else if(qpush)tail_set_local<=wr_bank[4:2];
   reg [2:0] tail_set;                                   // bank-set of the newest pushed entry
   // ---- bank / group state ---------------------------------------------------------------
   reg [31:0] open, refreshed, blk;
@@ -268,7 +289,7 @@ module ot_hbm_r14_aq_pc_safe #(
   integer kb;
   always @* for (kb = 0; kb < 32; kb = kb + 1) begin : keyb
     reg [2:0] s, d; reg prot;
-    s = 3'(kb >> 2); d = s - tail_set; prot = (d >= 3'd6) || (d <= 3'd3);
+    s = 3'(kb >> 2); d = s - (kb<16?tail_set:tail_set_local); prot = (d >= 3'd6) || (d <= 3'd3);
     if (refreshed[kb]) keys[kb] = 7'd127;
     else if (MRKEY == 0) keys[kb] = 7'(idle_rank(s)) + (open[kb] ? 7'd32 : 7'd0) + ((!open[kb] && aok_busy[kb]) ? 7'd64 : 7'd0);
     else if (need[kb]) keys[kb] = 7'd120;
