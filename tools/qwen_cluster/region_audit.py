@@ -21,6 +21,8 @@ die: the communicating region pairs).
       the first landing's ring on its WRITE clock, 'unland' bypasses the first landing)
   R6  (Q-CLUSTER-LANDALL) with the contract's landings mode 'all', every multi-bit crossing is landed; only the 1-bit
       reset-tree hops cross a seam as plain registered hops.
+  R7  (Q-CB16RST 10-19) with landings resets 'region' (16 die-delivered regional resets), NO plain crossing remains:
+      every seam crossing is landed.  Mutant 'rsthop' feeds c1r2's reset pin register from c1r1's (R7 FAIL).
 Prints REGION_AUDIT_PASS / REGION_AUDIT_FAIL <n>.
 """
 from __future__ import annotations
@@ -46,7 +48,7 @@ def main():
     ap.add_argument("--fabric", default=str(RTL / "qfd_c_b16_dv_fabric.sv"))
     ap.add_argument("--cluster", default=str(RTL / "qfd_c_b16_dv.sv"))
     ap.add_argument("--out")
-    ap.add_argument("--mutate", choices=["station", "tile", "landclk", "unland"])
+    ap.add_argument("--mutate", choices=["station", "tile", "landclk", "unland", "rsthop"])
     a = ap.parse_args()
     fab = Path(a.fabric).read_text()
     clu = Path(a.cluster).read_text()
@@ -69,6 +71,11 @@ def main():
         L0 = next(iter(lands.values()))
         i0 = re.search(rf"u_land_{L0['name']}_w \(.*?\.i\((\w+)\)", fab).group(1)
         fab = fab.replace(f".o(land_{L0['name']}))", f".o(land_{L0['name']}_dead))") + f"\n    assign land_{L0['name']} = {i0};\n"
+    if a.mutate == "rsthop":
+        # Q-CB16RST fail witness: region c1r2's reset pin register fed from c1r1's (a plain 1-bit reset hop across a seam)
+        fab, n_ = re.subn(r"(u_rpin_c1r2 \(\.ck\(ck_c1r2\), \.d\()\w+\)", r"\1rpin_c1r1_q)", fab, count=1)
+        if not n_:
+            raise SystemExit("--mutate rsthop: no u_rpin_c1r2 (regional resets not generated)")
     xs, ys = C["region_seams"]["x"], C["region_seams"]["y"]
 
     def region_at(x, y):
@@ -149,7 +156,7 @@ def main():
         cons.append((m.group(1), f"u_t_{m.group(2)}_{m.group(3)}.tap", f"c{m.group(2)}r{m.group(3)}"))
     crossings, nreg = [], 0
     for net, dst, dreg in cons:
-        if net in ("rst_n", "far", "far_n") or net.startswith(("bc", "rs_i")):
+        if net in ("rst_n", "far", "far_n") or net.startswith(("bc", "rs_i")) or re.fullmatch(r"rst_c\dr\d", net):
             continue        # die ports: pin register in its own region (boundary matched by the die)
         if net not in prod:
             fails.append(f"R2 {dst} input {net} is not driven by a register / tile output (comb path across a seam?)")
@@ -204,6 +211,12 @@ def main():
             fails.append(f"R5 landing {nm}: {len(other)} other multi-bit {L['src_region']} -> {L['dst_region']} "
                          f"crossings, unlanded: {[o_['net'] for o_ in other][:4]}")
     # R6 (Q-CLUSTER-LANDALL): with landings 'all', EVERY multi-bit crossing is landed; only 1-bit reset hops cross plain
+    # R7 (Q-CB16RST): with regional resets, NO crossing is plain: every seam crossing is landed (1-bit reset hops included)
+    if C.get("landings", {}).get("resets") == "region":
+        for x in crossings:
+            if not x["landed"] and (x["bits"] or 0) <= 1:
+                fails.append(f"R7 unlanded 1-bit crossing {x['src']} ({x['src_region']}) -> {x['dst']} ({x['dst_region']}) "
+                             f"net {x['net']} (regional resets: no reset hop may cross a seam)")
     if C.get("landings", {}).get("mode") == "all":
         for x in crossings:
             if not x["landed"] and (x["bits"] or 0) > 1:

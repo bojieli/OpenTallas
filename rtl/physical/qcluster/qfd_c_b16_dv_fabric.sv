@@ -5,11 +5,14 @@
 // equal-depth reset tree.  Each register sits in one of 16 clock regions (one per A0 tile) and takes its root.
 // Q-CLUSTER-LANDALL: EVERY multi-bit region-seam crossing is LANDED (qfd_c_land_w ring on the source root ->
 // qfd_c_land_r read on the destination root, D 4, E = K = 2, +3 edges each); soft pad stages
-// re-align the tree.  Only the 1-bit reset-tree hops cross seams unlanded.  Static schedule: no ready / credit.
+// re-align the tree.  Q-CB16RST: NO register hop crosses a seam unlanded: each region has its own reset pin rst_<q>
+// (registered at its entry on ck_<q>) and its own in-region equal-depth tree; the die releases all 16 on the same
+// calendar edge.  Static schedule: no ready / credit.
 // MUT (bench only, default 0 = the design): 1 = one extra relay on leg a of node (2,0); 2 = leaves of nodes (1,0).a
 //   and (1,2).a exchanged; 3 = one extra relay on column 2's run before its row-1 station; 4 = one extra relay on
 //   the rs_i -> rs_o feedthrough; 5 = feedthrough bits 0 / 1 exchanged; landing mutants (on leg_3_1b_1): 6 = read
 //   slot K = E + 1 (wrong read slot), 7 = read-side epoch one edge late (released reset re-registered twice).
+//   8 = region c1r2's reset released one edge late (a die reset-calendar slip).
 module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     input  wire ck_c0r0,
     input  wire ck_c0r1,
@@ -27,7 +30,22 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     input  wire ck_c3r1,
     input  wire ck_c3r2,
     input  wire ck_c3r3,
-    input  wire rst_n,
+    input  wire rst_c0r0,
+    input  wire rst_c0r1,
+    input  wire rst_c0r2,
+    input  wire rst_c0r3,
+    input  wire rst_c1r0,
+    input  wire rst_c1r1,
+    input  wire rst_c1r2,
+    input  wire rst_c1r3,
+    input  wire rst_c2r0,
+    input  wire rst_c2r1,
+    input  wire rst_c2r2,
+    input  wire rst_c2r3,
+    input  wire rst_c3r0,
+    input  wire rst_c3r1,
+    input  wire rst_c3r2,
+    input  wire rst_c3r3,
     input  wire far,
     input  wire [515:0] bc0,
     output wire [515:0] bco0,
@@ -135,179 +153,382 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     input  wire [513:0] n_y_3_3
 );
     wire far_n = ~far;   // static strap complement
-    // ---- reset: pin register + pipelined runs; every tile / station sees rst_n exactly 19 edges after the pin
-    wire [0:0] rst_pin_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_pin (.ck(ck_c2r0), .d(rst_n), .q(rst_pin_q));   // (1222.56, 43.20) c2r0
-    wire [0:0] rst_L_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_1 (.ck(ck_c1r0), .d(rst_pin_q), .q(rst_L_1_q));   // (927.72, 43.20) c1r0
-    wire [0:0] rst_L_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_2 (.ck(ck_c1r0), .d(rst_L_1_q), .q(rst_L_2_q));   // (632.88, 43.20) c1r0
-    wire [0:0] rst_L_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_3 (.ck(ck_c0r0), .d(rst_L_2_q), .q(rst_L_3_q));   // (338.04, 43.20) c0r0
-    wire [0:0] rst_L_corner_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_corner (.ck(ck_c0r0), .d(rst_L_3_q), .q(rst_L_corner_q));   // (43.20, 43.20) c0r0
-    wire [0:0] rst_L_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_5 (.ck(ck_c0r0), .d(rst_L_corner_q), .q(rst_L_5_q));   // (43.20, 282.65) c0r0
-    wire [0:0] rst_L_r0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_r0 (.ck(ck_c0r0), .d(rst_L_5_q), .q(rst_L_r0_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rst_L_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_7 (.ck(ck_c0r0), .d(rst_L_r0_q), .q(rst_L_7_q));   // (43.20, 846.11) c0r0
-    wire [0:0] rst_L_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_8 (.ck(ck_c0r0), .d(rst_L_7_q), .q(rst_L_8_q));   // (43.20, 1170.11) c0r0
-    wire [0:0] rst_L_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_9 (.ck(ck_c0r1), .d(rst_L_8_q), .q(rst_L_9_q));   // (43.20, 1494.11) c0r1
-    wire [0:0] rst_L_r1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_r1 (.ck(ck_c0r1), .d(rst_L_9_q), .q(rst_L_r1_q));   // (43.20, 1818.11) c0r1
-    wire [0:0] rst_L_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_11 (.ck(ck_c0r1), .d(rst_L_r1_q), .q(rst_L_11_q));   // (43.20, 2142.11) c0r1
-    wire [0:0] rst_L_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_12 (.ck(ck_c0r1), .d(rst_L_11_q), .q(rst_L_12_q));   // (43.20, 2466.11) c0r1
-    wire [0:0] rst_L_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_13 (.ck(ck_c0r2), .d(rst_L_12_q), .q(rst_L_13_q));   // (43.20, 2790.11) c0r2
-    wire [0:0] rst_L_r2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_r2 (.ck(ck_c0r2), .d(rst_L_13_q), .q(rst_L_r2_q));   // (43.20, 3114.11) c0r2
-    wire [0:0] rst_L_15_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_15 (.ck(ck_c0r2), .d(rst_L_r2_q), .q(rst_L_15_q));   // (43.20, 3438.11) c0r2
-    wire [0:0] rst_L_16_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_16 (.ck(ck_c0r2), .d(rst_L_15_q), .q(rst_L_16_q));   // (43.20, 3762.11) c0r2
-    wire [0:0] rst_L_17_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_17 (.ck(ck_c0r3), .d(rst_L_16_q), .q(rst_L_17_q));   // (43.20, 4086.11) c0r3
-    wire [0:0] rst_L_r3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_L_r3 (.ck(ck_c0r3), .d(rst_L_17_q), .q(rst_L_r3_q));   // (43.20, 4410.11) c0r3
-    wire [0:0] rst_T_19_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_19 (.ck(ck_c2r0), .d(rst_pin_q), .q(rst_T_19_q));   // (1222.56, 282.65) c2r0
-    wire [0:0] rst_T_r0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_r0 (.ck(ck_c2r0), .d(rst_T_19_q), .q(rst_T_r0_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rst_T_21_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_21 (.ck(ck_c2r0), .d(rst_T_r0_q), .q(rst_T_21_q));   // (1222.56, 846.11) c2r0
-    wire [0:0] rst_T_22_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_22 (.ck(ck_c2r0), .d(rst_T_21_q), .q(rst_T_22_q));   // (1222.56, 1170.11) c2r0
-    wire [0:0] rst_T_23_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_23 (.ck(ck_c2r1), .d(rst_T_22_q), .q(rst_T_23_q));   // (1222.56, 1494.11) c2r1
-    wire [0:0] rst_T_r1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_r1 (.ck(ck_c2r1), .d(rst_T_23_q), .q(rst_T_r1_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rst_T_25_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_25 (.ck(ck_c2r1), .d(rst_T_r1_q), .q(rst_T_25_q));   // (1222.56, 2142.11) c2r1
-    wire [0:0] rst_T_26_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_26 (.ck(ck_c2r1), .d(rst_T_25_q), .q(rst_T_26_q));   // (1222.56, 2466.11) c2r1
-    wire [0:0] rst_T_27_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_27 (.ck(ck_c2r2), .d(rst_T_26_q), .q(rst_T_27_q));   // (1222.56, 2790.11) c2r2
-    wire [0:0] rst_T_r2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_r2 (.ck(ck_c2r2), .d(rst_T_27_q), .q(rst_T_r2_q));   // (1222.56, 3114.11) c2r2
-    wire [0:0] rst_T_29_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_29 (.ck(ck_c2r2), .d(rst_T_r2_q), .q(rst_T_29_q));   // (1222.56, 3438.11) c2r2
-    wire [0:0] rst_T_30_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_30 (.ck(ck_c2r2), .d(rst_T_29_q), .q(rst_T_30_q));   // (1222.56, 3762.11) c2r2
-    wire [0:0] rst_T_31_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_31 (.ck(ck_c2r3), .d(rst_T_30_q), .q(rst_T_31_q));   // (1222.56, 4086.11) c2r3
-    wire [0:0] rst_T_r3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_T_r3 (.ck(ck_c2r3), .d(rst_T_31_q), .q(rst_T_r3_q));   // (1222.56, 4410.11) c2r3
-    wire [0:0] rst_R_33_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_33 (.ck(ck_c2r0), .d(rst_pin_q), .q(rst_R_33_q));   // (1517.40, 43.20) c2r0
-    wire [0:0] rst_R_34_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_34 (.ck(ck_c2r0), .d(rst_R_33_q), .q(rst_R_34_q));   // (1812.24, 43.20) c2r0
-    wire [0:0] rst_R_35_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_35 (.ck(ck_c3r0), .d(rst_R_34_q), .q(rst_R_35_q));   // (2107.08, 43.20) c3r0
-    wire [0:0] rst_R_corner_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_corner (.ck(ck_c3r0), .d(rst_R_35_q), .q(rst_R_corner_q));   // (2401.92, 43.20) c3r0
-    wire [0:0] rst_R_37_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_37 (.ck(ck_c3r0), .d(rst_R_corner_q), .q(rst_R_37_q));   // (2401.92, 282.65) c3r0
-    wire [0:0] rst_R_r0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_r0 (.ck(ck_c3r0), .d(rst_R_37_q), .q(rst_R_r0_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rst_R_39_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_39 (.ck(ck_c3r0), .d(rst_R_r0_q), .q(rst_R_39_q));   // (2401.92, 846.11) c3r0
-    wire [0:0] rst_R_40_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_40 (.ck(ck_c3r0), .d(rst_R_39_q), .q(rst_R_40_q));   // (2401.92, 1170.11) c3r0
-    wire [0:0] rst_R_41_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_41 (.ck(ck_c3r1), .d(rst_R_40_q), .q(rst_R_41_q));   // (2401.92, 1494.11) c3r1
-    wire [0:0] rst_R_r1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_r1 (.ck(ck_c3r1), .d(rst_R_41_q), .q(rst_R_r1_q));   // (2401.92, 1818.11) c3r1
-    wire [0:0] rst_R_43_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_43 (.ck(ck_c3r1), .d(rst_R_r1_q), .q(rst_R_43_q));   // (2401.92, 2142.11) c3r1
-    wire [0:0] rst_R_44_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_44 (.ck(ck_c3r1), .d(rst_R_43_q), .q(rst_R_44_q));   // (2401.92, 2466.11) c3r1
-    wire [0:0] rst_R_45_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_45 (.ck(ck_c3r2), .d(rst_R_44_q), .q(rst_R_45_q));   // (2401.92, 2790.11) c3r2
-    wire [0:0] rst_R_r2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_r2 (.ck(ck_c3r2), .d(rst_R_45_q), .q(rst_R_r2_q));   // (2401.92, 3114.11) c3r2
-    wire [0:0] rst_R_47_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_47 (.ck(ck_c3r2), .d(rst_R_r2_q), .q(rst_R_47_q));   // (2401.92, 3438.11) c3r2
-    wire [0:0] rst_R_48_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_48 (.ck(ck_c3r2), .d(rst_R_47_q), .q(rst_R_48_q));   // (2401.92, 3762.11) c3r2
-    wire [0:0] rst_R_49_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_49 (.ck(ck_c3r3), .d(rst_R_48_q), .q(rst_R_49_q));   // (2401.92, 4086.11) c3r3
-    wire [0:0] rst_R_r3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rst_R_r3 (.ck(ck_c3r3), .d(rst_R_49_q), .q(rst_R_r3_q));   // (2401.92, 4410.11) c3r3
-    wire [0:0] rpad_L_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_0 (.ck(ck_c0r0), .d(rst_L_r0_q), .q(rpad_L_0_0_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rpad_L_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_1 (.ck(ck_c0r0), .d(rpad_L_0_0_q), .q(rpad_L_0_1_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rpad_L_0_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_2 (.ck(ck_c0r0), .d(rpad_L_0_1_q), .q(rpad_L_0_2_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rpad_L_0_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_3 (.ck(ck_c0r0), .d(rpad_L_0_2_q), .q(rpad_L_0_3_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rpad_L_0_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_4 (.ck(ck_c0r0), .d(rpad_L_0_3_q), .q(rpad_L_0_4_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rpad_L_0_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_5 (.ck(ck_c0r0), .d(rpad_L_0_4_q), .q(rpad_L_0_5_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rpad_L_0_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_6 (.ck(ck_c0r0), .d(rpad_L_0_5_q), .q(rpad_L_0_6_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rpad_L_0_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_7 (.ck(ck_c0r0), .d(rpad_L_0_6_q), .q(rpad_L_0_7_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rpad_L_0_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_8 (.ck(ck_c0r0), .d(rpad_L_0_7_q), .q(rpad_L_0_8_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rpad_L_0_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_9 (.ck(ck_c0r0), .d(rpad_L_0_8_q), .q(rpad_L_0_9_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rpad_L_0_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_10 (.ck(ck_c0r0), .d(rpad_L_0_9_q), .q(rpad_L_0_10_q));   // (43.20, 522.11) c0r0
-    wire [0:0] rpad_L_0_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_0_11 (.ck(ck_c0r0), .d(rpad_L_0_10_q), .q(rpad_L_0_11_q));   // (43.20, 522.11) c0r0
-    wire rstl_L_0 = rpad_L_0_11_q;
-    wire [0:0] rpad_L_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_1_0 (.ck(ck_c0r1), .d(rst_L_r1_q), .q(rpad_L_1_0_q));   // (43.20, 1818.11) c0r1
-    wire [0:0] rpad_L_1_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_1_1 (.ck(ck_c0r1), .d(rpad_L_1_0_q), .q(rpad_L_1_1_q));   // (43.20, 1818.11) c0r1
-    wire [0:0] rpad_L_1_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_1_2 (.ck(ck_c0r1), .d(rpad_L_1_1_q), .q(rpad_L_1_2_q));   // (43.20, 1818.11) c0r1
-    wire [0:0] rpad_L_1_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_1_3 (.ck(ck_c0r1), .d(rpad_L_1_2_q), .q(rpad_L_1_3_q));   // (43.20, 1818.11) c0r1
-    wire [0:0] rpad_L_1_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_1_4 (.ck(ck_c0r1), .d(rpad_L_1_3_q), .q(rpad_L_1_4_q));   // (43.20, 1818.11) c0r1
-    wire [0:0] rpad_L_1_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_1_5 (.ck(ck_c0r1), .d(rpad_L_1_4_q), .q(rpad_L_1_5_q));   // (43.20, 1818.11) c0r1
-    wire [0:0] rpad_L_1_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_1_6 (.ck(ck_c0r1), .d(rpad_L_1_5_q), .q(rpad_L_1_6_q));   // (43.20, 1818.11) c0r1
-    wire [0:0] rpad_L_1_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_1_7 (.ck(ck_c0r1), .d(rpad_L_1_6_q), .q(rpad_L_1_7_q));   // (43.20, 1818.11) c0r1
-    wire rstl_L_1 = rpad_L_1_7_q;
-    wire [0:0] rpad_L_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_2_0 (.ck(ck_c0r2), .d(rst_L_r2_q), .q(rpad_L_2_0_q));   // (43.20, 3114.11) c0r2
-    wire [0:0] rpad_L_2_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_2_1 (.ck(ck_c0r2), .d(rpad_L_2_0_q), .q(rpad_L_2_1_q));   // (43.20, 3114.11) c0r2
-    wire [0:0] rpad_L_2_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_2_2 (.ck(ck_c0r2), .d(rpad_L_2_1_q), .q(rpad_L_2_2_q));   // (43.20, 3114.11) c0r2
-    wire [0:0] rpad_L_2_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_L_2_3 (.ck(ck_c0r2), .d(rpad_L_2_2_q), .q(rpad_L_2_3_q));   // (43.20, 3114.11) c0r2
-    wire rstl_L_2 = rpad_L_2_3_q;
-    wire rstl_L_3 = rst_L_r3_q;
-    wire [0:0] rpad_R_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_0 (.ck(ck_c3r0), .d(rst_R_r0_q), .q(rpad_R_0_0_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rpad_R_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_1 (.ck(ck_c3r0), .d(rpad_R_0_0_q), .q(rpad_R_0_1_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rpad_R_0_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_2 (.ck(ck_c3r0), .d(rpad_R_0_1_q), .q(rpad_R_0_2_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rpad_R_0_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_3 (.ck(ck_c3r0), .d(rpad_R_0_2_q), .q(rpad_R_0_3_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rpad_R_0_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_4 (.ck(ck_c3r0), .d(rpad_R_0_3_q), .q(rpad_R_0_4_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rpad_R_0_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_5 (.ck(ck_c3r0), .d(rpad_R_0_4_q), .q(rpad_R_0_5_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rpad_R_0_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_6 (.ck(ck_c3r0), .d(rpad_R_0_5_q), .q(rpad_R_0_6_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rpad_R_0_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_7 (.ck(ck_c3r0), .d(rpad_R_0_6_q), .q(rpad_R_0_7_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rpad_R_0_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_8 (.ck(ck_c3r0), .d(rpad_R_0_7_q), .q(rpad_R_0_8_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rpad_R_0_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_9 (.ck(ck_c3r0), .d(rpad_R_0_8_q), .q(rpad_R_0_9_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rpad_R_0_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_10 (.ck(ck_c3r0), .d(rpad_R_0_9_q), .q(rpad_R_0_10_q));   // (2401.92, 522.11) c3r0
-    wire [0:0] rpad_R_0_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_0_11 (.ck(ck_c3r0), .d(rpad_R_0_10_q), .q(rpad_R_0_11_q));   // (2401.92, 522.11) c3r0
-    wire rstl_R_0 = rpad_R_0_11_q;
-    wire [0:0] rpad_R_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_1_0 (.ck(ck_c3r1), .d(rst_R_r1_q), .q(rpad_R_1_0_q));   // (2401.92, 1818.11) c3r1
-    wire [0:0] rpad_R_1_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_1_1 (.ck(ck_c3r1), .d(rpad_R_1_0_q), .q(rpad_R_1_1_q));   // (2401.92, 1818.11) c3r1
-    wire [0:0] rpad_R_1_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_1_2 (.ck(ck_c3r1), .d(rpad_R_1_1_q), .q(rpad_R_1_2_q));   // (2401.92, 1818.11) c3r1
-    wire [0:0] rpad_R_1_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_1_3 (.ck(ck_c3r1), .d(rpad_R_1_2_q), .q(rpad_R_1_3_q));   // (2401.92, 1818.11) c3r1
-    wire [0:0] rpad_R_1_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_1_4 (.ck(ck_c3r1), .d(rpad_R_1_3_q), .q(rpad_R_1_4_q));   // (2401.92, 1818.11) c3r1
-    wire [0:0] rpad_R_1_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_1_5 (.ck(ck_c3r1), .d(rpad_R_1_4_q), .q(rpad_R_1_5_q));   // (2401.92, 1818.11) c3r1
-    wire [0:0] rpad_R_1_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_1_6 (.ck(ck_c3r1), .d(rpad_R_1_5_q), .q(rpad_R_1_6_q));   // (2401.92, 1818.11) c3r1
-    wire [0:0] rpad_R_1_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_1_7 (.ck(ck_c3r1), .d(rpad_R_1_6_q), .q(rpad_R_1_7_q));   // (2401.92, 1818.11) c3r1
-    wire rstl_R_1 = rpad_R_1_7_q;
-    wire [0:0] rpad_R_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_2_0 (.ck(ck_c3r2), .d(rst_R_r2_q), .q(rpad_R_2_0_q));   // (2401.92, 3114.11) c3r2
-    wire [0:0] rpad_R_2_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_2_1 (.ck(ck_c3r2), .d(rpad_R_2_0_q), .q(rpad_R_2_1_q));   // (2401.92, 3114.11) c3r2
-    wire [0:0] rpad_R_2_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_2_2 (.ck(ck_c3r2), .d(rpad_R_2_1_q), .q(rpad_R_2_2_q));   // (2401.92, 3114.11) c3r2
-    wire [0:0] rpad_R_2_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_R_2_3 (.ck(ck_c3r2), .d(rpad_R_2_2_q), .q(rpad_R_2_3_q));   // (2401.92, 3114.11) c3r2
-    wire rstl_R_2 = rpad_R_2_3_q;
-    wire rstl_R_3 = rst_R_r3_q;
-    wire [0:0] rpad_T_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_0 (.ck(ck_c2r0), .d(rst_T_r0_q), .q(rpad_T_0_0_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_1 (.ck(ck_c2r0), .d(rpad_T_0_0_q), .q(rpad_T_0_1_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_2 (.ck(ck_c2r0), .d(rpad_T_0_1_q), .q(rpad_T_0_2_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_3 (.ck(ck_c2r0), .d(rpad_T_0_2_q), .q(rpad_T_0_3_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_4 (.ck(ck_c2r0), .d(rpad_T_0_3_q), .q(rpad_T_0_4_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_5 (.ck(ck_c2r0), .d(rpad_T_0_4_q), .q(rpad_T_0_5_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_6 (.ck(ck_c2r0), .d(rpad_T_0_5_q), .q(rpad_T_0_6_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_7 (.ck(ck_c2r0), .d(rpad_T_0_6_q), .q(rpad_T_0_7_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_8 (.ck(ck_c2r0), .d(rpad_T_0_7_q), .q(rpad_T_0_8_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_9 (.ck(ck_c2r0), .d(rpad_T_0_8_q), .q(rpad_T_0_9_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_10 (.ck(ck_c2r0), .d(rpad_T_0_9_q), .q(rpad_T_0_10_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_11 (.ck(ck_c2r0), .d(rpad_T_0_10_q), .q(rpad_T_0_11_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_12 (.ck(ck_c2r0), .d(rpad_T_0_11_q), .q(rpad_T_0_12_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_13 (.ck(ck_c2r0), .d(rpad_T_0_12_q), .q(rpad_T_0_13_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_14 (.ck(ck_c2r0), .d(rpad_T_0_13_q), .q(rpad_T_0_14_q));   // (1222.56, 522.11) c2r0
-    wire [0:0] rpad_T_0_15_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_0_15 (.ck(ck_c2r0), .d(rpad_T_0_14_q), .q(rpad_T_0_15_q));   // (1222.56, 522.11) c2r0
-    wire rstl_T_0 = rpad_T_0_15_q;
-    wire [0:0] rpad_T_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_0 (.ck(ck_c2r1), .d(rst_T_r1_q), .q(rpad_T_1_0_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rpad_T_1_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_1 (.ck(ck_c2r1), .d(rpad_T_1_0_q), .q(rpad_T_1_1_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rpad_T_1_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_2 (.ck(ck_c2r1), .d(rpad_T_1_1_q), .q(rpad_T_1_2_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rpad_T_1_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_3 (.ck(ck_c2r1), .d(rpad_T_1_2_q), .q(rpad_T_1_3_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rpad_T_1_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_4 (.ck(ck_c2r1), .d(rpad_T_1_3_q), .q(rpad_T_1_4_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rpad_T_1_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_5 (.ck(ck_c2r1), .d(rpad_T_1_4_q), .q(rpad_T_1_5_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rpad_T_1_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_6 (.ck(ck_c2r1), .d(rpad_T_1_5_q), .q(rpad_T_1_6_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rpad_T_1_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_7 (.ck(ck_c2r1), .d(rpad_T_1_6_q), .q(rpad_T_1_7_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rpad_T_1_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_8 (.ck(ck_c2r1), .d(rpad_T_1_7_q), .q(rpad_T_1_8_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rpad_T_1_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_9 (.ck(ck_c2r1), .d(rpad_T_1_8_q), .q(rpad_T_1_9_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rpad_T_1_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_10 (.ck(ck_c2r1), .d(rpad_T_1_9_q), .q(rpad_T_1_10_q));   // (1222.56, 1818.11) c2r1
-    wire [0:0] rpad_T_1_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_1_11 (.ck(ck_c2r1), .d(rpad_T_1_10_q), .q(rpad_T_1_11_q));   // (1222.56, 1818.11) c2r1
-    wire rstl_T_1 = rpad_T_1_11_q;
-    wire [0:0] rpad_T_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_2_0 (.ck(ck_c2r2), .d(rst_T_r2_q), .q(rpad_T_2_0_q));   // (1222.56, 3114.11) c2r2
-    wire [0:0] rpad_T_2_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_2_1 (.ck(ck_c2r2), .d(rpad_T_2_0_q), .q(rpad_T_2_1_q));   // (1222.56, 3114.11) c2r2
-    wire [0:0] rpad_T_2_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_2_2 (.ck(ck_c2r2), .d(rpad_T_2_1_q), .q(rpad_T_2_2_q));   // (1222.56, 3114.11) c2r2
-    wire [0:0] rpad_T_2_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_2_3 (.ck(ck_c2r2), .d(rpad_T_2_2_q), .q(rpad_T_2_3_q));   // (1222.56, 3114.11) c2r2
-    wire [0:0] rpad_T_2_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_2_4 (.ck(ck_c2r2), .d(rpad_T_2_3_q), .q(rpad_T_2_4_q));   // (1222.56, 3114.11) c2r2
-    wire [0:0] rpad_T_2_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_2_5 (.ck(ck_c2r2), .d(rpad_T_2_4_q), .q(rpad_T_2_5_q));   // (1222.56, 3114.11) c2r2
-    wire [0:0] rpad_T_2_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_2_6 (.ck(ck_c2r2), .d(rpad_T_2_5_q), .q(rpad_T_2_6_q));   // (1222.56, 3114.11) c2r2
-    wire [0:0] rpad_T_2_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_2_7 (.ck(ck_c2r2), .d(rpad_T_2_6_q), .q(rpad_T_2_7_q));   // (1222.56, 3114.11) c2r2
-    wire rstl_T_2 = rpad_T_2_7_q;
-    wire [0:0] rpad_T_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_3_0 (.ck(ck_c2r3), .d(rst_T_r3_q), .q(rpad_T_3_0_q));   // (1222.56, 4410.11) c2r3
-    wire [0:0] rpad_T_3_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_3_1 (.ck(ck_c2r3), .d(rpad_T_3_0_q), .q(rpad_T_3_1_q));   // (1222.56, 4410.11) c2r3
-    wire [0:0] rpad_T_3_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_3_2 (.ck(ck_c2r3), .d(rpad_T_3_1_q), .q(rpad_T_3_2_q));   // (1222.56, 4410.11) c2r3
-    wire [0:0] rpad_T_3_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpad_T_3_3 (.ck(ck_c2r3), .d(rpad_T_3_2_q), .q(rpad_T_3_3_q));   // (1222.56, 4410.11) c2r3
-    wire rstl_T_3 = rpad_T_3_3_q;
-    assign trst_0_0 = rstl_L_0;
-    assign trst_0_1 = rstl_L_1;
-    assign trst_0_2 = rstl_L_2;
-    assign trst_0_3 = rstl_L_3;
-    assign trst_1_0 = rstl_T_0;
-    assign trst_1_1 = rstl_T_1;
-    assign trst_1_2 = rstl_T_2;
-    assign trst_1_3 = rstl_T_3;
-    assign trst_2_0 = rstl_T_0;
-    assign trst_2_1 = rstl_T_1;
-    assign trst_2_2 = rstl_T_2;
-    assign trst_2_3 = rstl_T_3;
-    assign trst_3_0 = rstl_R_0;
-    assign trst_3_1 = rstl_R_1;
-    assign trst_3_2 = rstl_R_2;
-    assign trst_3_3 = rstl_R_3;
+    // ---- reset (Q-CB16RST): per region, the rst_<q> pin register + in-region runs; every tile / station sees its
+    // region's rst_<q> exactly 19 edges after the pin (the die releases the 16 pins on the same calendar edge)
+    wire [0:0] rpin_c0r0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c0r0 (.ck(ck_c0r0), .d(rst_c0r0), .q(rpin_c0r0_q));   // (340.92, 43.20) c0r0 region reset pin register
+    wire [0:0] rpin_c0r1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c0r1 (.ck(ck_c0r1), .d(rst_c0r1), .q(rpin_c0r1_q));   // (4.32, 1930.93) c0r1 region reset pin register
+    wire [0:0] rpin_c0r2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c0r2 (.ck(ck_c0r2), .d(rst_c0r2), .q(rpin_c0r2_q));   // (4.32, 3239.44) c0r2 region reset pin register
+    wire [0:0] rpin_c0r3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c0r3 (.ck(ck_c0r3), .d(rst_c0r3), .q(rpin_c0r3_q));   // (359.08, 5184.00) c0r3 region reset pin register
+    wire [0:0] rpin_c1r0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c1r0 (.ck(ck_c1r0), .d(rst_c1r0), .q(rpin_c1r0_q));   // (777.82, 43.20) c1r0 region reset pin register
+    wire [0:0] rpin_c1r1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c1r1 (.ck(ck_c1r1), .d(rst_c1r1), .q(rpin_c1r1_q));   // (622.08, 1943.74) c1r1 region reset pin register
+    wire rst_c1r2_m8;  qfd_q3h_run #(.W(1), .D(MUT == 8 ? 1 : 0)) u_m8 (.ck(ck_c1r2), .d(rst_c1r2), .q(rst_c1r2_m8));
+    wire [0:0] rpin_c1r2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c1r2 (.ck(ck_c1r2), .d(rst_c1r2_m8), .q(rpin_c1r2_q));   // (622.08, 3281.11) c1r2 region reset pin register
+    wire [0:0] rpin_c1r3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c1r3 (.ck(ck_c1r3), .d(rst_c1r3), .q(rpin_c1r3_q));   // (826.14, 5184.00) c1r3 region reset pin register
+    wire [0:0] rpin_c2r0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c2r0 (.ck(ck_c2r0), .d(rst_c2r0), .q(rpin_c2r0_q));   // (1483.38, 43.20) c2r0 region reset pin register
+    wire [0:0] rpin_c2r1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c2r1 (.ck(ck_c2r1), .d(rst_c2r1), .q(rpin_c2r1_q));   // (1823.04, 2023.01) c2r1 region reset pin register
+    wire [0:0] rpin_c2r2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c2r2 (.ck(ck_c2r2), .d(rst_c2r2), .q(rpin_c2r2_q));   // (1823.04, 3270.59) c2r2 region reset pin register
+    wire [0:0] rpin_c2r3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c2r3 (.ck(ck_c2r3), .d(rst_c2r3), .q(rpin_c2r3_q));   // (1459.62, 5184.00) c2r3 region reset pin register
+    wire [0:0] rpin_c3r0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c3r0 (.ck(ck_c3r0), .d(rst_c3r0), .q(rpin_c3r0_q));   // (2083.68, 43.20) c3r0 region reset pin register
+    wire [0:0] rpin_c3r1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c3r1 (.ck(ck_c3r1), .d(rst_c3r1), .q(rpin_c3r1_q));   // (2440.80, 1917.93) c3r1 region reset pin register
+    wire [0:0] rpin_c3r2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c3r2 (.ck(ck_c3r2), .d(rst_c3r2), .q(rpin_c3r2_q));   // (2440.80, 3151.32) c3r2 region reset pin register
+    wire [0:0] rpin_c3r3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rpin_c3r3 (.ck(ck_c3r3), .d(rst_c3r3), .q(rpin_c3r3_q));   // (1956.26, 5184.00) c3r3 region reset pin register
+    wire [0:0] rr_t_0_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_0_0_0 (.ck(ck_c0r0), .d(rpin_c0r0_q), .q(rr_t_0_0_0_q));   // (82.08, 153.24) c0r0 region reset run
+    wire [0:0] rr_t_0_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_0_0_1 (.ck(ck_c0r0), .d(rr_t_0_0_0_q), .q(rr_t_0_0_1_q));   // (82.08, 522.11) c0r0 region reset run
+    wire [0:0] rq_t_0_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_0 (.ck(ck_c0r0), .d(rr_t_0_0_1_q), .q(rq_t_0_0_0_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_1 (.ck(ck_c0r0), .d(rq_t_0_0_0_q), .q(rq_t_0_0_1_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_2 (.ck(ck_c0r0), .d(rq_t_0_0_1_q), .q(rq_t_0_0_2_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_3 (.ck(ck_c0r0), .d(rq_t_0_0_2_q), .q(rq_t_0_0_3_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_4 (.ck(ck_c0r0), .d(rq_t_0_0_3_q), .q(rq_t_0_0_4_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_5 (.ck(ck_c0r0), .d(rq_t_0_0_4_q), .q(rq_t_0_0_5_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_6 (.ck(ck_c0r0), .d(rq_t_0_0_5_q), .q(rq_t_0_0_6_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_7 (.ck(ck_c0r0), .d(rq_t_0_0_6_q), .q(rq_t_0_0_7_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_8 (.ck(ck_c0r0), .d(rq_t_0_0_7_q), .q(rq_t_0_0_8_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_9 (.ck(ck_c0r0), .d(rq_t_0_0_8_q), .q(rq_t_0_0_9_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_10 (.ck(ck_c0r0), .d(rq_t_0_0_9_q), .q(rq_t_0_0_10_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_11 (.ck(ck_c0r0), .d(rq_t_0_0_10_q), .q(rq_t_0_0_11_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_12 (.ck(ck_c0r0), .d(rq_t_0_0_11_q), .q(rq_t_0_0_12_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_13 (.ck(ck_c0r0), .d(rq_t_0_0_12_q), .q(rq_t_0_0_13_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_14 (.ck(ck_c0r0), .d(rq_t_0_0_13_q), .q(rq_t_0_0_14_q));   // (82.08, 522.11) c0r0 region reset pad
+    wire [0:0] rq_t_0_0_15_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_0_15 (.ck(ck_c0r0), .d(rq_t_0_0_14_q), .q(rq_t_0_0_15_q));   // (82.08, 522.11) c0r0 region reset pad
+    assign rstl_t_0_0 = rq_t_0_0_15_q;
+    wire [0:0] rr_x_0_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_0_0_0 (.ck(ck_c0r0), .d(rq_t_0_0_14_q), .q(rr_x_0_0_0_q));   // (43.20, 547.93) c0r0 region reset run
+    assign rstl_x_0_0 = rr_x_0_0_0_q;
+    assign trst_0_0 = rstl_t_0_0;
+    wire [0:0] rr_t_0_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_0_1_0 (.ck(ck_c0r1), .d(rpin_c0r1_q), .q(rr_t_0_1_0_q));   // (82.08, 1818.11) c0r1 region reset run
+    wire [0:0] rq_t_0_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_0 (.ck(ck_c0r1), .d(rr_t_0_1_0_q), .q(rq_t_0_1_0_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_1 (.ck(ck_c0r1), .d(rq_t_0_1_0_q), .q(rq_t_0_1_1_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_2 (.ck(ck_c0r1), .d(rq_t_0_1_1_q), .q(rq_t_0_1_2_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_3 (.ck(ck_c0r1), .d(rq_t_0_1_2_q), .q(rq_t_0_1_3_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_4 (.ck(ck_c0r1), .d(rq_t_0_1_3_q), .q(rq_t_0_1_4_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_5 (.ck(ck_c0r1), .d(rq_t_0_1_4_q), .q(rq_t_0_1_5_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_6 (.ck(ck_c0r1), .d(rq_t_0_1_5_q), .q(rq_t_0_1_6_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_7 (.ck(ck_c0r1), .d(rq_t_0_1_6_q), .q(rq_t_0_1_7_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_8 (.ck(ck_c0r1), .d(rq_t_0_1_7_q), .q(rq_t_0_1_8_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_9 (.ck(ck_c0r1), .d(rq_t_0_1_8_q), .q(rq_t_0_1_9_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_10 (.ck(ck_c0r1), .d(rq_t_0_1_9_q), .q(rq_t_0_1_10_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_11 (.ck(ck_c0r1), .d(rq_t_0_1_10_q), .q(rq_t_0_1_11_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_12 (.ck(ck_c0r1), .d(rq_t_0_1_11_q), .q(rq_t_0_1_12_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_13 (.ck(ck_c0r1), .d(rq_t_0_1_12_q), .q(rq_t_0_1_13_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_14 (.ck(ck_c0r1), .d(rq_t_0_1_13_q), .q(rq_t_0_1_14_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_15_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_15 (.ck(ck_c0r1), .d(rq_t_0_1_14_q), .q(rq_t_0_1_15_q));   // (82.08, 1818.11) c0r1 region reset pad
+    wire [0:0] rq_t_0_1_16_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_1_16 (.ck(ck_c0r1), .d(rq_t_0_1_15_q), .q(rq_t_0_1_16_q));   // (82.08, 1818.11) c0r1 region reset pad
+    assign rstl_t_0_1 = rq_t_0_1_16_q;
+    wire [0:0] rr_x_0_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_0_1_0 (.ck(ck_c0r1), .d(rq_t_0_1_15_q), .q(rr_x_0_1_0_q));   // (43.20, 1843.93) c0r1 region reset run
+    assign rstl_x_0_1 = rr_x_0_1_0_q;
+    assign trst_0_1 = rstl_t_0_1;
+    wire [0:0] rr_t_0_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_0_2_0 (.ck(ck_c0r2), .d(rpin_c0r2_q), .q(rr_t_0_2_0_q));   // (82.08, 3114.11) c0r2 region reset run
+    wire [0:0] rq_t_0_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_0 (.ck(ck_c0r2), .d(rr_t_0_2_0_q), .q(rq_t_0_2_0_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_1 (.ck(ck_c0r2), .d(rq_t_0_2_0_q), .q(rq_t_0_2_1_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_2 (.ck(ck_c0r2), .d(rq_t_0_2_1_q), .q(rq_t_0_2_2_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_3 (.ck(ck_c0r2), .d(rq_t_0_2_2_q), .q(rq_t_0_2_3_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_4 (.ck(ck_c0r2), .d(rq_t_0_2_3_q), .q(rq_t_0_2_4_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_5 (.ck(ck_c0r2), .d(rq_t_0_2_4_q), .q(rq_t_0_2_5_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_6 (.ck(ck_c0r2), .d(rq_t_0_2_5_q), .q(rq_t_0_2_6_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_7 (.ck(ck_c0r2), .d(rq_t_0_2_6_q), .q(rq_t_0_2_7_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_8 (.ck(ck_c0r2), .d(rq_t_0_2_7_q), .q(rq_t_0_2_8_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_9 (.ck(ck_c0r2), .d(rq_t_0_2_8_q), .q(rq_t_0_2_9_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_10 (.ck(ck_c0r2), .d(rq_t_0_2_9_q), .q(rq_t_0_2_10_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_11 (.ck(ck_c0r2), .d(rq_t_0_2_10_q), .q(rq_t_0_2_11_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_12 (.ck(ck_c0r2), .d(rq_t_0_2_11_q), .q(rq_t_0_2_12_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_13 (.ck(ck_c0r2), .d(rq_t_0_2_12_q), .q(rq_t_0_2_13_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_14 (.ck(ck_c0r2), .d(rq_t_0_2_13_q), .q(rq_t_0_2_14_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_15_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_15 (.ck(ck_c0r2), .d(rq_t_0_2_14_q), .q(rq_t_0_2_15_q));   // (82.08, 3114.11) c0r2 region reset pad
+    wire [0:0] rq_t_0_2_16_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_2_16 (.ck(ck_c0r2), .d(rq_t_0_2_15_q), .q(rq_t_0_2_16_q));   // (82.08, 3114.11) c0r2 region reset pad
+    assign rstl_t_0_2 = rq_t_0_2_16_q;
+    wire [0:0] rr_x_0_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_0_2_0 (.ck(ck_c0r2), .d(rq_t_0_2_15_q), .q(rr_x_0_2_0_q));   // (43.20, 3139.93) c0r2 region reset run
+    assign rstl_x_0_2 = rr_x_0_2_0_q;
+    assign trst_0_2 = rstl_t_0_2;
+    wire [0:0] rr_t_0_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_0_3_0 (.ck(ck_c0r3), .d(rpin_c0r3_q), .q(rr_t_0_3_0_q));   // (82.08, 5110.70) c0r3 region reset run
+    wire [0:0] rr_t_0_3_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_0_3_1 (.ck(ck_c0r3), .d(rr_t_0_3_0_q), .q(rr_t_0_3_1_q));   // (82.08, 4760.40) c0r3 region reset run
+    wire [0:0] rr_t_0_3_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_0_3_2 (.ck(ck_c0r3), .d(rr_t_0_3_1_q), .q(rr_t_0_3_2_q));   // (82.08, 4410.11) c0r3 region reset run
+    wire [0:0] rq_t_0_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_0 (.ck(ck_c0r3), .d(rr_t_0_3_2_q), .q(rq_t_0_3_0_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_1 (.ck(ck_c0r3), .d(rq_t_0_3_0_q), .q(rq_t_0_3_1_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_2 (.ck(ck_c0r3), .d(rq_t_0_3_1_q), .q(rq_t_0_3_2_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_3 (.ck(ck_c0r3), .d(rq_t_0_3_2_q), .q(rq_t_0_3_3_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_4 (.ck(ck_c0r3), .d(rq_t_0_3_3_q), .q(rq_t_0_3_4_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_5 (.ck(ck_c0r3), .d(rq_t_0_3_4_q), .q(rq_t_0_3_5_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_6 (.ck(ck_c0r3), .d(rq_t_0_3_5_q), .q(rq_t_0_3_6_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_7 (.ck(ck_c0r3), .d(rq_t_0_3_6_q), .q(rq_t_0_3_7_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_8 (.ck(ck_c0r3), .d(rq_t_0_3_7_q), .q(rq_t_0_3_8_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_9 (.ck(ck_c0r3), .d(rq_t_0_3_8_q), .q(rq_t_0_3_9_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_10 (.ck(ck_c0r3), .d(rq_t_0_3_9_q), .q(rq_t_0_3_10_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_11 (.ck(ck_c0r3), .d(rq_t_0_3_10_q), .q(rq_t_0_3_11_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_12 (.ck(ck_c0r3), .d(rq_t_0_3_11_q), .q(rq_t_0_3_12_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_13 (.ck(ck_c0r3), .d(rq_t_0_3_12_q), .q(rq_t_0_3_13_q));   // (82.08, 4410.11) c0r3 region reset pad
+    wire [0:0] rq_t_0_3_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_0_3_14 (.ck(ck_c0r3), .d(rq_t_0_3_13_q), .q(rq_t_0_3_14_q));   // (82.08, 4410.11) c0r3 region reset pad
+    assign rstl_t_0_3 = rq_t_0_3_14_q;
+    wire [0:0] rr_x_0_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_0_3_0 (.ck(ck_c0r3), .d(rq_t_0_3_13_q), .q(rr_x_0_3_0_q));   // (43.20, 4435.93) c0r3 region reset run
+    assign rstl_x_0_3 = rr_x_0_3_0_q;
+    assign trst_0_3 = rstl_t_0_3;
+    wire [0:0] rr_t_1_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_0_0 (.ck(ck_c1r0), .d(rpin_c1r0_q), .q(rr_t_1_0_0_q));   // (1062.66, 43.20) c1r0 region reset run
+    wire [0:0] rr_t_1_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_0_1 (.ck(ck_c1r0), .d(rr_t_1_0_0_q), .q(rr_t_1_0_1_q));   // (1153.44, 237.27) c1r0 region reset run
+    wire [0:0] rr_t_1_0_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_0_2 (.ck(ck_c1r0), .d(rr_t_1_0_1_q), .q(rr_t_1_0_2_q));   // (1153.44, 522.11) c1r0 region reset run
+    wire [0:0] rq_t_1_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_0 (.ck(ck_c1r0), .d(rr_t_1_0_2_q), .q(rq_t_1_0_0_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_1 (.ck(ck_c1r0), .d(rq_t_1_0_0_q), .q(rq_t_1_0_1_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_2 (.ck(ck_c1r0), .d(rq_t_1_0_1_q), .q(rq_t_1_0_2_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_3 (.ck(ck_c1r0), .d(rq_t_1_0_2_q), .q(rq_t_1_0_3_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_4 (.ck(ck_c1r0), .d(rq_t_1_0_3_q), .q(rq_t_1_0_4_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_5 (.ck(ck_c1r0), .d(rq_t_1_0_4_q), .q(rq_t_1_0_5_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_6 (.ck(ck_c1r0), .d(rq_t_1_0_5_q), .q(rq_t_1_0_6_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_7 (.ck(ck_c1r0), .d(rq_t_1_0_6_q), .q(rq_t_1_0_7_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_8 (.ck(ck_c1r0), .d(rq_t_1_0_7_q), .q(rq_t_1_0_8_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_9 (.ck(ck_c1r0), .d(rq_t_1_0_8_q), .q(rq_t_1_0_9_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_10 (.ck(ck_c1r0), .d(rq_t_1_0_9_q), .q(rq_t_1_0_10_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_11 (.ck(ck_c1r0), .d(rq_t_1_0_10_q), .q(rq_t_1_0_11_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_12 (.ck(ck_c1r0), .d(rq_t_1_0_11_q), .q(rq_t_1_0_12_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_13 (.ck(ck_c1r0), .d(rq_t_1_0_12_q), .q(rq_t_1_0_13_q));   // (1153.44, 522.11) c1r0 region reset pad
+    wire [0:0] rq_t_1_0_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_0_14 (.ck(ck_c1r0), .d(rq_t_1_0_13_q), .q(rq_t_1_0_14_q));   // (1153.44, 522.11) c1r0 region reset pad
+    assign rstl_t_1_0 = rq_t_1_0_14_q;
+    wire [0:0] rr_x_1_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_1_0_0 (.ck(ck_c1r0), .d(rq_t_1_0_13_q), .q(rr_x_1_0_0_q));   // (1173.60, 491.93) c1r0 region reset run
+    assign rstl_x_1_0 = rr_x_1_0_0_q;
+    assign trst_1_0 = rstl_t_1_0;
+    wire [0:0] rr_t_1_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_1_0 (.ck(ck_c1r1), .d(rpin_c1r1_q), .q(rr_t_1_1_0_q));   // (622.08, 1625.10) c1r1 region reset run
+    wire [0:0] rr_t_1_1_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_1_1 (.ck(ck_c1r1), .d(rr_t_1_1_0_q), .q(rr_t_1_1_1_q));   // (665.62, 1350.00) c1r1 region reset run
+    wire [0:0] rr_t_1_1_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_1_2 (.ck(ck_c1r1), .d(rr_t_1_1_1_q), .q(rr_t_1_1_2_q));   // (984.26, 1350.00) c1r1 region reset run
+    wire [0:0] rr_t_1_1_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_1_3 (.ck(ck_c1r1), .d(rr_t_1_1_2_q), .q(rr_t_1_1_3_q));   // (1153.44, 1499.47) c1r1 region reset run
+    wire [0:0] rr_t_1_1_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_1_4 (.ck(ck_c1r1), .d(rr_t_1_1_3_q), .q(rr_t_1_1_4_q));   // (1153.44, 1818.11) c1r1 region reset run
+    wire [0:0] rq_t_1_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_0 (.ck(ck_c1r1), .d(rr_t_1_1_4_q), .q(rq_t_1_1_0_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_1 (.ck(ck_c1r1), .d(rq_t_1_1_0_q), .q(rq_t_1_1_1_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_2 (.ck(ck_c1r1), .d(rq_t_1_1_1_q), .q(rq_t_1_1_2_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_3 (.ck(ck_c1r1), .d(rq_t_1_1_2_q), .q(rq_t_1_1_3_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_4 (.ck(ck_c1r1), .d(rq_t_1_1_3_q), .q(rq_t_1_1_4_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_5 (.ck(ck_c1r1), .d(rq_t_1_1_4_q), .q(rq_t_1_1_5_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_6 (.ck(ck_c1r1), .d(rq_t_1_1_5_q), .q(rq_t_1_1_6_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_7 (.ck(ck_c1r1), .d(rq_t_1_1_6_q), .q(rq_t_1_1_7_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_8 (.ck(ck_c1r1), .d(rq_t_1_1_7_q), .q(rq_t_1_1_8_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_9 (.ck(ck_c1r1), .d(rq_t_1_1_8_q), .q(rq_t_1_1_9_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_10 (.ck(ck_c1r1), .d(rq_t_1_1_9_q), .q(rq_t_1_1_10_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_11 (.ck(ck_c1r1), .d(rq_t_1_1_10_q), .q(rq_t_1_1_11_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    wire [0:0] rq_t_1_1_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_1_12 (.ck(ck_c1r1), .d(rq_t_1_1_11_q), .q(rq_t_1_1_12_q));   // (1153.44, 1818.11) c1r1 region reset pad
+    assign rstl_t_1_1 = rq_t_1_1_12_q;
+    wire [0:0] rr_x_1_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_1_1_0 (.ck(ck_c1r1), .d(rq_t_1_1_11_q), .q(rr_x_1_1_0_q));   // (1173.60, 1787.93) c1r1 region reset run
+    assign rstl_x_1_1 = rr_x_1_1_0_q;
+    assign trst_1_1 = rstl_t_1_1;
+    wire [0:0] rr_t_1_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_2_0 (.ck(ck_c1r2), .d(rpin_c1r2_q), .q(rr_t_1_2_0_q));   // (622.08, 2954.20) c1r2 region reset run
+    wire [0:0] rr_t_1_2_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_2_1 (.ck(ck_c1r2), .d(rr_t_1_2_0_q), .q(rr_t_1_2_1_q));   // (640.80, 2646.00) c1r2 region reset run
+    wire [0:0] rr_t_1_2_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_2_2 (.ck(ck_c1r2), .d(rr_t_1_2_1_q), .q(rr_t_1_2_2_q));   // (967.72, 2646.00) c1r2 region reset run
+    wire [0:0] rr_t_1_2_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_2_3 (.ck(ck_c1r2), .d(rr_t_1_2_2_q), .q(rr_t_1_2_3_q));   // (1153.44, 2787.19) c1r2 region reset run
+    wire [0:0] rr_t_1_2_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_2_4 (.ck(ck_c1r2), .d(rr_t_1_2_3_q), .q(rr_t_1_2_4_q));   // (1153.44, 3114.11) c1r2 region reset run
+    wire [0:0] rq_t_1_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_0 (.ck(ck_c1r2), .d(rr_t_1_2_4_q), .q(rq_t_1_2_0_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_1 (.ck(ck_c1r2), .d(rq_t_1_2_0_q), .q(rq_t_1_2_1_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_2 (.ck(ck_c1r2), .d(rq_t_1_2_1_q), .q(rq_t_1_2_2_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_3 (.ck(ck_c1r2), .d(rq_t_1_2_2_q), .q(rq_t_1_2_3_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_4 (.ck(ck_c1r2), .d(rq_t_1_2_3_q), .q(rq_t_1_2_4_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_5 (.ck(ck_c1r2), .d(rq_t_1_2_4_q), .q(rq_t_1_2_5_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_6 (.ck(ck_c1r2), .d(rq_t_1_2_5_q), .q(rq_t_1_2_6_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_7 (.ck(ck_c1r2), .d(rq_t_1_2_6_q), .q(rq_t_1_2_7_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_8 (.ck(ck_c1r2), .d(rq_t_1_2_7_q), .q(rq_t_1_2_8_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_9 (.ck(ck_c1r2), .d(rq_t_1_2_8_q), .q(rq_t_1_2_9_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_10 (.ck(ck_c1r2), .d(rq_t_1_2_9_q), .q(rq_t_1_2_10_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_11 (.ck(ck_c1r2), .d(rq_t_1_2_10_q), .q(rq_t_1_2_11_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    wire [0:0] rq_t_1_2_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_2_12 (.ck(ck_c1r2), .d(rq_t_1_2_11_q), .q(rq_t_1_2_12_q));   // (1153.44, 3114.11) c1r2 region reset pad
+    assign rstl_t_1_2 = rq_t_1_2_12_q;
+    wire [0:0] rr_x_1_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_1_2_0 (.ck(ck_c1r2), .d(rq_t_1_2_11_q), .q(rr_x_1_2_0_q));   // (1173.60, 3083.93) c1r2 region reset run
+    assign rstl_x_1_2 = rr_x_1_2_0_q;
+    assign trst_1_2 = rstl_t_1_2;
+    wire [0:0] rr_t_1_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_3_0 (.ck(ck_c1r3), .d(rpin_c1r3_q), .q(rr_t_1_3_0_q));   // (1153.44, 5144.24) c1r3 region reset run
+    wire [0:0] rr_t_1_3_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_3_1 (.ck(ck_c1r3), .d(rr_t_1_3_0_q), .q(rr_t_1_3_1_q));   // (1153.44, 4777.17) c1r3 region reset run
+    wire [0:0] rr_t_1_3_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_1_3_2 (.ck(ck_c1r3), .d(rr_t_1_3_1_q), .q(rr_t_1_3_2_q));   // (1153.44, 4410.11) c1r3 region reset run
+    wire [0:0] rq_t_1_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_0 (.ck(ck_c1r3), .d(rr_t_1_3_2_q), .q(rq_t_1_3_0_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_1 (.ck(ck_c1r3), .d(rq_t_1_3_0_q), .q(rq_t_1_3_1_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_2 (.ck(ck_c1r3), .d(rq_t_1_3_1_q), .q(rq_t_1_3_2_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_3 (.ck(ck_c1r3), .d(rq_t_1_3_2_q), .q(rq_t_1_3_3_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_4 (.ck(ck_c1r3), .d(rq_t_1_3_3_q), .q(rq_t_1_3_4_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_5 (.ck(ck_c1r3), .d(rq_t_1_3_4_q), .q(rq_t_1_3_5_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_6 (.ck(ck_c1r3), .d(rq_t_1_3_5_q), .q(rq_t_1_3_6_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_7 (.ck(ck_c1r3), .d(rq_t_1_3_6_q), .q(rq_t_1_3_7_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_8 (.ck(ck_c1r3), .d(rq_t_1_3_7_q), .q(rq_t_1_3_8_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_9 (.ck(ck_c1r3), .d(rq_t_1_3_8_q), .q(rq_t_1_3_9_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_10 (.ck(ck_c1r3), .d(rq_t_1_3_9_q), .q(rq_t_1_3_10_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_11 (.ck(ck_c1r3), .d(rq_t_1_3_10_q), .q(rq_t_1_3_11_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_12 (.ck(ck_c1r3), .d(rq_t_1_3_11_q), .q(rq_t_1_3_12_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_13 (.ck(ck_c1r3), .d(rq_t_1_3_12_q), .q(rq_t_1_3_13_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    wire [0:0] rq_t_1_3_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_1_3_14 (.ck(ck_c1r3), .d(rq_t_1_3_13_q), .q(rq_t_1_3_14_q));   // (1153.44, 4410.11) c1r3 region reset pad
+    assign rstl_t_1_3 = rq_t_1_3_14_q;
+    wire [0:0] rr_x_1_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_1_3_0 (.ck(ck_c1r3), .d(rq_t_1_3_13_q), .q(rr_x_1_3_0_q));   // (1173.60, 4379.93) c1r3 region reset run
+    assign rstl_x_1_3 = rr_x_1_3_0_q;
+    assign trst_1_3 = rstl_t_1_3;
+    wire [0:0] rr_t_2_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_0_0 (.ck(ck_c2r0), .d(rpin_c2r0_q), .q(rr_t_2_0_0_q));   // (1291.68, 186.81) c2r0 region reset run
+    wire [0:0] rr_t_2_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_0_1 (.ck(ck_c2r0), .d(rr_t_2_0_0_q), .q(rr_t_2_0_1_q));   // (1291.68, 522.11) c2r0 region reset run
+    wire [0:0] rq_t_2_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_0 (.ck(ck_c2r0), .d(rr_t_2_0_1_q), .q(rq_t_2_0_0_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_1 (.ck(ck_c2r0), .d(rq_t_2_0_0_q), .q(rq_t_2_0_1_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_2 (.ck(ck_c2r0), .d(rq_t_2_0_1_q), .q(rq_t_2_0_2_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_3 (.ck(ck_c2r0), .d(rq_t_2_0_2_q), .q(rq_t_2_0_3_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_4 (.ck(ck_c2r0), .d(rq_t_2_0_3_q), .q(rq_t_2_0_4_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_5 (.ck(ck_c2r0), .d(rq_t_2_0_4_q), .q(rq_t_2_0_5_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_6 (.ck(ck_c2r0), .d(rq_t_2_0_5_q), .q(rq_t_2_0_6_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_7 (.ck(ck_c2r0), .d(rq_t_2_0_6_q), .q(rq_t_2_0_7_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_8 (.ck(ck_c2r0), .d(rq_t_2_0_7_q), .q(rq_t_2_0_8_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_9 (.ck(ck_c2r0), .d(rq_t_2_0_8_q), .q(rq_t_2_0_9_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_10 (.ck(ck_c2r0), .d(rq_t_2_0_9_q), .q(rq_t_2_0_10_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_11 (.ck(ck_c2r0), .d(rq_t_2_0_10_q), .q(rq_t_2_0_11_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_12 (.ck(ck_c2r0), .d(rq_t_2_0_11_q), .q(rq_t_2_0_12_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_13 (.ck(ck_c2r0), .d(rq_t_2_0_12_q), .q(rq_t_2_0_13_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_14 (.ck(ck_c2r0), .d(rq_t_2_0_13_q), .q(rq_t_2_0_14_q));   // (1291.68, 522.11) c2r0 region reset pad
+    wire [0:0] rq_t_2_0_15_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_0_15 (.ck(ck_c2r0), .d(rq_t_2_0_14_q), .q(rq_t_2_0_15_q));   // (1291.68, 522.11) c2r0 region reset pad
+    assign rstl_t_2_0 = rq_t_2_0_15_q;
+    wire [0:0] rr_x_2_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_2_0_0 (.ck(ck_c2r0), .d(rq_t_2_0_14_q), .q(rr_x_2_0_0_q));   // (1271.52, 603.93) c2r0 region reset run
+    assign rstl_x_2_0 = rr_x_2_0_0_q;
+    assign trst_2_0 = rstl_t_2_0;
+    wire [0:0] rr_t_2_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_1_0 (.ck(ck_c2r1), .d(rpin_c2r1_q), .q(rr_t_2_1_0_q));   // (1823.04, 1688.52) c2r1 region reset run
+    wire [0:0] rr_t_2_1_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_1_1 (.ck(ck_c2r1), .d(rr_t_2_1_0_q), .q(rr_t_2_1_1_q));   // (1823.04, 1354.02) c2r1 region reset run
+    wire [0:0] rr_t_2_1_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_1_2 (.ck(ck_c2r1), .d(rr_t_2_1_1_q), .q(rr_t_2_1_2_q));   // (1492.56, 1350.00) c2r1 region reset run
+    wire [0:0] rr_t_2_1_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_1_3 (.ck(ck_c2r1), .d(rr_t_2_1_2_q), .q(rr_t_2_1_3_q));   // (1291.68, 1483.61) c2r1 region reset run
+    wire [0:0] rr_t_2_1_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_1_4 (.ck(ck_c2r1), .d(rr_t_2_1_3_q), .q(rr_t_2_1_4_q));   // (1291.68, 1818.11) c2r1 region reset run
+    wire [0:0] rq_t_2_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_0 (.ck(ck_c2r1), .d(rr_t_2_1_4_q), .q(rq_t_2_1_0_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_1 (.ck(ck_c2r1), .d(rq_t_2_1_0_q), .q(rq_t_2_1_1_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_2 (.ck(ck_c2r1), .d(rq_t_2_1_1_q), .q(rq_t_2_1_2_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_3 (.ck(ck_c2r1), .d(rq_t_2_1_2_q), .q(rq_t_2_1_3_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_4 (.ck(ck_c2r1), .d(rq_t_2_1_3_q), .q(rq_t_2_1_4_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_5 (.ck(ck_c2r1), .d(rq_t_2_1_4_q), .q(rq_t_2_1_5_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_6 (.ck(ck_c2r1), .d(rq_t_2_1_5_q), .q(rq_t_2_1_6_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_7 (.ck(ck_c2r1), .d(rq_t_2_1_6_q), .q(rq_t_2_1_7_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_8 (.ck(ck_c2r1), .d(rq_t_2_1_7_q), .q(rq_t_2_1_8_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_9 (.ck(ck_c2r1), .d(rq_t_2_1_8_q), .q(rq_t_2_1_9_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_10 (.ck(ck_c2r1), .d(rq_t_2_1_9_q), .q(rq_t_2_1_10_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_11 (.ck(ck_c2r1), .d(rq_t_2_1_10_q), .q(rq_t_2_1_11_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    wire [0:0] rq_t_2_1_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_1_12 (.ck(ck_c2r1), .d(rq_t_2_1_11_q), .q(rq_t_2_1_12_q));   // (1291.68, 1818.11) c2r1 region reset pad
+    assign rstl_t_2_1 = rq_t_2_1_12_q;
+    wire [0:0] rr_x_2_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_2_1_0 (.ck(ck_c2r1), .d(rq_t_2_1_11_q), .q(rr_x_2_1_0_q));   // (1271.52, 1899.93) c2r1 region reset run
+    assign rstl_x_2_1 = rr_x_2_1_0_q;
+    assign trst_2_1 = rstl_t_2_1;
+    wire [0:0] rr_t_2_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_2_0 (.ck(ck_c2r2), .d(rpin_c2r2_q), .q(rr_t_2_2_0_q));   // (1823.04, 2945.78) c2r2 region reset run
+    wire [0:0] rr_t_2_2_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_2_1 (.ck(ck_c2r2), .d(rr_t_2_2_0_q), .q(rr_t_2_2_1_q));   // (1798.00, 2646.00) c2r2 region reset run
+    wire [0:0] rr_t_2_2_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_2_2 (.ck(ck_c2r2), .d(rr_t_2_2_1_q), .q(rr_t_2_2_2_q));   // (1473.19, 2646.00) c2r2 region reset run
+    wire [0:0] rr_t_2_2_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_2_3 (.ck(ck_c2r2), .d(rr_t_2_2_2_q), .q(rr_t_2_2_3_q));   // (1291.68, 2789.30) c2r2 region reset run
+    wire [0:0] rr_t_2_2_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_2_4 (.ck(ck_c2r2), .d(rr_t_2_2_3_q), .q(rr_t_2_2_4_q));   // (1291.68, 3114.11) c2r2 region reset run
+    wire [0:0] rq_t_2_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_0 (.ck(ck_c2r2), .d(rr_t_2_2_4_q), .q(rq_t_2_2_0_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_1 (.ck(ck_c2r2), .d(rq_t_2_2_0_q), .q(rq_t_2_2_1_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_2 (.ck(ck_c2r2), .d(rq_t_2_2_1_q), .q(rq_t_2_2_2_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_3 (.ck(ck_c2r2), .d(rq_t_2_2_2_q), .q(rq_t_2_2_3_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_4 (.ck(ck_c2r2), .d(rq_t_2_2_3_q), .q(rq_t_2_2_4_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_5 (.ck(ck_c2r2), .d(rq_t_2_2_4_q), .q(rq_t_2_2_5_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_6 (.ck(ck_c2r2), .d(rq_t_2_2_5_q), .q(rq_t_2_2_6_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_7 (.ck(ck_c2r2), .d(rq_t_2_2_6_q), .q(rq_t_2_2_7_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_8 (.ck(ck_c2r2), .d(rq_t_2_2_7_q), .q(rq_t_2_2_8_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_9 (.ck(ck_c2r2), .d(rq_t_2_2_8_q), .q(rq_t_2_2_9_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_10 (.ck(ck_c2r2), .d(rq_t_2_2_9_q), .q(rq_t_2_2_10_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_11 (.ck(ck_c2r2), .d(rq_t_2_2_10_q), .q(rq_t_2_2_11_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    wire [0:0] rq_t_2_2_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_2_12 (.ck(ck_c2r2), .d(rq_t_2_2_11_q), .q(rq_t_2_2_12_q));   // (1291.68, 3114.11) c2r2 region reset pad
+    assign rstl_t_2_2 = rq_t_2_2_12_q;
+    wire [0:0] rr_x_2_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_2_2_0 (.ck(ck_c2r2), .d(rq_t_2_2_11_q), .q(rr_x_2_2_0_q));   // (1271.52, 3195.93) c2r2 region reset run
+    assign rstl_x_2_2 = rr_x_2_2_0_q;
+    assign trst_2_2 = rstl_t_2_2;
+    wire [0:0] rr_t_2_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_3_0 (.ck(ck_c2r3), .d(rpin_c2r3_q), .q(rr_t_2_3_0_q));   // (1291.68, 5038.00) c2r3 region reset run
+    wire [0:0] rr_t_2_3_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_3_1 (.ck(ck_c2r3), .d(rr_t_2_3_0_q), .q(rr_t_2_3_1_q));   // (1291.68, 4724.05) c2r3 region reset run
+    wire [0:0] rr_t_2_3_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_2_3_2 (.ck(ck_c2r3), .d(rr_t_2_3_1_q), .q(rr_t_2_3_2_q));   // (1291.68, 4410.11) c2r3 region reset run
+    wire [0:0] rq_t_2_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_0 (.ck(ck_c2r3), .d(rr_t_2_3_2_q), .q(rq_t_2_3_0_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_1 (.ck(ck_c2r3), .d(rq_t_2_3_0_q), .q(rq_t_2_3_1_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_2 (.ck(ck_c2r3), .d(rq_t_2_3_1_q), .q(rq_t_2_3_2_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_3 (.ck(ck_c2r3), .d(rq_t_2_3_2_q), .q(rq_t_2_3_3_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_4 (.ck(ck_c2r3), .d(rq_t_2_3_3_q), .q(rq_t_2_3_4_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_5 (.ck(ck_c2r3), .d(rq_t_2_3_4_q), .q(rq_t_2_3_5_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_6 (.ck(ck_c2r3), .d(rq_t_2_3_5_q), .q(rq_t_2_3_6_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_7 (.ck(ck_c2r3), .d(rq_t_2_3_6_q), .q(rq_t_2_3_7_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_8 (.ck(ck_c2r3), .d(rq_t_2_3_7_q), .q(rq_t_2_3_8_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_9 (.ck(ck_c2r3), .d(rq_t_2_3_8_q), .q(rq_t_2_3_9_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_10 (.ck(ck_c2r3), .d(rq_t_2_3_9_q), .q(rq_t_2_3_10_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_11 (.ck(ck_c2r3), .d(rq_t_2_3_10_q), .q(rq_t_2_3_11_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_12 (.ck(ck_c2r3), .d(rq_t_2_3_11_q), .q(rq_t_2_3_12_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_13 (.ck(ck_c2r3), .d(rq_t_2_3_12_q), .q(rq_t_2_3_13_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    wire [0:0] rq_t_2_3_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_2_3_14 (.ck(ck_c2r3), .d(rq_t_2_3_13_q), .q(rq_t_2_3_14_q));   // (1291.68, 4410.11) c2r3 region reset pad
+    assign rstl_t_2_3 = rq_t_2_3_14_q;
+    wire [0:0] rr_x_2_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_2_3_0 (.ck(ck_c2r3), .d(rq_t_2_3_13_q), .q(rr_x_2_3_0_q));   // (1271.52, 4491.93) c2r3 region reset run
+    assign rstl_x_2_3 = rr_x_2_3_0_q;
+    assign trst_2_3 = rstl_t_2_3;
+    wire [0:0] rr_t_3_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_3_0_0 (.ck(ck_c3r0), .d(rpin_c3r0_q), .q(rr_t_3_0_0_q));   // (2363.04, 142.98) c3r0 region reset run
+    wire [0:0] rr_t_3_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_3_0_1 (.ck(ck_c3r0), .d(rr_t_3_0_0_q), .q(rr_t_3_0_1_q));   // (2363.04, 522.11) c3r0 region reset run
+    wire [0:0] rq_t_3_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_0 (.ck(ck_c3r0), .d(rr_t_3_0_1_q), .q(rq_t_3_0_0_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_1 (.ck(ck_c3r0), .d(rq_t_3_0_0_q), .q(rq_t_3_0_1_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_2 (.ck(ck_c3r0), .d(rq_t_3_0_1_q), .q(rq_t_3_0_2_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_3 (.ck(ck_c3r0), .d(rq_t_3_0_2_q), .q(rq_t_3_0_3_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_4 (.ck(ck_c3r0), .d(rq_t_3_0_3_q), .q(rq_t_3_0_4_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_5 (.ck(ck_c3r0), .d(rq_t_3_0_4_q), .q(rq_t_3_0_5_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_6 (.ck(ck_c3r0), .d(rq_t_3_0_5_q), .q(rq_t_3_0_6_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_7 (.ck(ck_c3r0), .d(rq_t_3_0_6_q), .q(rq_t_3_0_7_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_8 (.ck(ck_c3r0), .d(rq_t_3_0_7_q), .q(rq_t_3_0_8_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_9 (.ck(ck_c3r0), .d(rq_t_3_0_8_q), .q(rq_t_3_0_9_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_10 (.ck(ck_c3r0), .d(rq_t_3_0_9_q), .q(rq_t_3_0_10_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_11 (.ck(ck_c3r0), .d(rq_t_3_0_10_q), .q(rq_t_3_0_11_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_12 (.ck(ck_c3r0), .d(rq_t_3_0_11_q), .q(rq_t_3_0_12_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_13 (.ck(ck_c3r0), .d(rq_t_3_0_12_q), .q(rq_t_3_0_13_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_14 (.ck(ck_c3r0), .d(rq_t_3_0_13_q), .q(rq_t_3_0_14_q));   // (2363.04, 522.11) c3r0 region reset pad
+    wire [0:0] rq_t_3_0_15_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_0_15 (.ck(ck_c3r0), .d(rq_t_3_0_14_q), .q(rq_t_3_0_15_q));   // (2363.04, 522.11) c3r0 region reset pad
+    assign rstl_t_3_0 = rq_t_3_0_15_q;
+    wire [0:0] rr_x_3_0_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_3_0_0 (.ck(ck_c3r0), .d(rq_t_3_0_14_q), .q(rr_x_3_0_0_q));   // (2401.92, 547.93) c3r0 region reset run
+    assign rstl_x_3_0 = rr_x_3_0_0_q;
+    assign trst_3_0 = rstl_t_3_0;
+    wire [0:0] rr_t_3_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_3_1_0 (.ck(ck_c3r1), .d(rpin_c3r1_q), .q(rr_t_3_1_0_q));   // (2363.04, 1818.11) c3r1 region reset run
+    wire [0:0] rq_t_3_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_0 (.ck(ck_c3r1), .d(rr_t_3_1_0_q), .q(rq_t_3_1_0_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_1 (.ck(ck_c3r1), .d(rq_t_3_1_0_q), .q(rq_t_3_1_1_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_2 (.ck(ck_c3r1), .d(rq_t_3_1_1_q), .q(rq_t_3_1_2_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_3 (.ck(ck_c3r1), .d(rq_t_3_1_2_q), .q(rq_t_3_1_3_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_4 (.ck(ck_c3r1), .d(rq_t_3_1_3_q), .q(rq_t_3_1_4_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_5 (.ck(ck_c3r1), .d(rq_t_3_1_4_q), .q(rq_t_3_1_5_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_6 (.ck(ck_c3r1), .d(rq_t_3_1_5_q), .q(rq_t_3_1_6_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_7 (.ck(ck_c3r1), .d(rq_t_3_1_6_q), .q(rq_t_3_1_7_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_8 (.ck(ck_c3r1), .d(rq_t_3_1_7_q), .q(rq_t_3_1_8_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_9 (.ck(ck_c3r1), .d(rq_t_3_1_8_q), .q(rq_t_3_1_9_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_10 (.ck(ck_c3r1), .d(rq_t_3_1_9_q), .q(rq_t_3_1_10_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_11 (.ck(ck_c3r1), .d(rq_t_3_1_10_q), .q(rq_t_3_1_11_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_12 (.ck(ck_c3r1), .d(rq_t_3_1_11_q), .q(rq_t_3_1_12_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_13 (.ck(ck_c3r1), .d(rq_t_3_1_12_q), .q(rq_t_3_1_13_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_14 (.ck(ck_c3r1), .d(rq_t_3_1_13_q), .q(rq_t_3_1_14_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_15_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_15 (.ck(ck_c3r1), .d(rq_t_3_1_14_q), .q(rq_t_3_1_15_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    wire [0:0] rq_t_3_1_16_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_1_16 (.ck(ck_c3r1), .d(rq_t_3_1_15_q), .q(rq_t_3_1_16_q));   // (2363.04, 1818.11) c3r1 region reset pad
+    assign rstl_t_3_1 = rq_t_3_1_16_q;
+    wire [0:0] rr_x_3_1_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_3_1_0 (.ck(ck_c3r1), .d(rq_t_3_1_15_q), .q(rr_x_3_1_0_q));   // (2401.92, 1843.93) c3r1 region reset run
+    assign rstl_x_3_1 = rr_x_3_1_0_q;
+    assign trst_3_1 = rstl_t_3_1;
+    wire [0:0] rr_t_3_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_3_2_0 (.ck(ck_c3r2), .d(rpin_c3r2_q), .q(rr_t_3_2_0_q));   // (2363.04, 3114.11) c3r2 region reset run
+    wire [0:0] rq_t_3_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_0 (.ck(ck_c3r2), .d(rr_t_3_2_0_q), .q(rq_t_3_2_0_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_1 (.ck(ck_c3r2), .d(rq_t_3_2_0_q), .q(rq_t_3_2_1_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_2 (.ck(ck_c3r2), .d(rq_t_3_2_1_q), .q(rq_t_3_2_2_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_3 (.ck(ck_c3r2), .d(rq_t_3_2_2_q), .q(rq_t_3_2_3_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_4 (.ck(ck_c3r2), .d(rq_t_3_2_3_q), .q(rq_t_3_2_4_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_5 (.ck(ck_c3r2), .d(rq_t_3_2_4_q), .q(rq_t_3_2_5_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_6 (.ck(ck_c3r2), .d(rq_t_3_2_5_q), .q(rq_t_3_2_6_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_7 (.ck(ck_c3r2), .d(rq_t_3_2_6_q), .q(rq_t_3_2_7_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_8 (.ck(ck_c3r2), .d(rq_t_3_2_7_q), .q(rq_t_3_2_8_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_9 (.ck(ck_c3r2), .d(rq_t_3_2_8_q), .q(rq_t_3_2_9_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_10 (.ck(ck_c3r2), .d(rq_t_3_2_9_q), .q(rq_t_3_2_10_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_11 (.ck(ck_c3r2), .d(rq_t_3_2_10_q), .q(rq_t_3_2_11_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_12 (.ck(ck_c3r2), .d(rq_t_3_2_11_q), .q(rq_t_3_2_12_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_13 (.ck(ck_c3r2), .d(rq_t_3_2_12_q), .q(rq_t_3_2_13_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_14_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_14 (.ck(ck_c3r2), .d(rq_t_3_2_13_q), .q(rq_t_3_2_14_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_15_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_15 (.ck(ck_c3r2), .d(rq_t_3_2_14_q), .q(rq_t_3_2_15_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    wire [0:0] rq_t_3_2_16_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_2_16 (.ck(ck_c3r2), .d(rq_t_3_2_15_q), .q(rq_t_3_2_16_q));   // (2363.04, 3114.11) c3r2 region reset pad
+    assign rstl_t_3_2 = rq_t_3_2_16_q;
+    wire [0:0] rr_x_3_2_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_3_2_0 (.ck(ck_c3r2), .d(rq_t_3_2_15_q), .q(rr_x_3_2_0_q));   // (2401.92, 3139.93) c3r2 region reset run
+    assign rstl_x_3_2 = rr_x_3_2_0_q;
+    assign trst_3_2 = rstl_t_3_2;
+    wire [0:0] rr_t_3_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_3_3_0 (.ck(ck_c3r3), .d(rpin_c3r3_q), .q(rr_t_3_3_0_q));   // (2251.43, 5184.00) c3r3 region reset run
+    wire [0:0] rr_t_3_3_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_3_3_1 (.ck(ck_c3r3), .d(rr_t_3_3_0_q), .q(rr_t_3_3_1_q));   // (2363.04, 5000.44) c3r3 region reset run
+    wire [0:0] rr_t_3_3_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_3_3_2 (.ck(ck_c3r3), .d(rr_t_3_3_1_q), .q(rr_t_3_3_2_q));   // (2363.04, 4705.28) c3r3 region reset run
+    wire [0:0] rr_t_3_3_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_t_3_3_3 (.ck(ck_c3r3), .d(rr_t_3_3_2_q), .q(rr_t_3_3_3_q));   // (2363.04, 4410.11) c3r3 region reset run
+    wire [0:0] rq_t_3_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_0 (.ck(ck_c3r3), .d(rr_t_3_3_3_q), .q(rq_t_3_3_0_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_1 (.ck(ck_c3r3), .d(rq_t_3_3_0_q), .q(rq_t_3_3_1_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_2 (.ck(ck_c3r3), .d(rq_t_3_3_1_q), .q(rq_t_3_3_2_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_3 (.ck(ck_c3r3), .d(rq_t_3_3_2_q), .q(rq_t_3_3_3_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_4 (.ck(ck_c3r3), .d(rq_t_3_3_3_q), .q(rq_t_3_3_4_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_5_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_5 (.ck(ck_c3r3), .d(rq_t_3_3_4_q), .q(rq_t_3_3_5_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_6_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_6 (.ck(ck_c3r3), .d(rq_t_3_3_5_q), .q(rq_t_3_3_6_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_7_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_7 (.ck(ck_c3r3), .d(rq_t_3_3_6_q), .q(rq_t_3_3_7_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_8_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_8 (.ck(ck_c3r3), .d(rq_t_3_3_7_q), .q(rq_t_3_3_8_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_9_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_9 (.ck(ck_c3r3), .d(rq_t_3_3_8_q), .q(rq_t_3_3_9_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_10_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_10 (.ck(ck_c3r3), .d(rq_t_3_3_9_q), .q(rq_t_3_3_10_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_11_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_11 (.ck(ck_c3r3), .d(rq_t_3_3_10_q), .q(rq_t_3_3_11_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_12_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_12 (.ck(ck_c3r3), .d(rq_t_3_3_11_q), .q(rq_t_3_3_12_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    wire [0:0] rq_t_3_3_13_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_t_3_3_13 (.ck(ck_c3r3), .d(rq_t_3_3_12_q), .q(rq_t_3_3_13_q));   // (2363.04, 4410.11) c3r3 region reset pad
+    assign rstl_t_3_3 = rq_t_3_3_13_q;
+    wire [0:0] rr_x_3_3_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_x_3_3_0 (.ck(ck_c3r3), .d(rq_t_3_3_12_q), .q(rr_x_3_3_0_q));   // (2401.92, 4435.93) c3r3 region reset run
+    assign rstl_x_3_3 = rr_x_3_3_0_q;
+    assign trst_3_3 = rstl_t_3_3;
     // ---- column runs {tag 8, xl 128, ib 379, go}: entry pin register, relays, one qfd_xcst_n per row, exit pin register
     wire [515:0] dn0_entry;  qfd_c_stn516 u_dn0_entry (.ck(ck_c0r0), .d(bc0), .q(dn0_entry));   // (43.20, 43.20) c0r0
     wire [515:0] dn0_rly0;  qfd_c_stn516 u_dn0_rly0 (.ck(ck_c0r0), .d(dn0_entry), .q(dn0_rly0));   // (43.20, 295.57) c0r0
     wire [515:0] dn0_xcst0;
-    qfd_c_xstn u_x_0_0 (.ck(ck_c0r0), .rst_n(rstl_L_0), .sidx({far, far, far}), .b_d(dn0_rly0), .a_d(dn0_xcst0), .tap_d(tap_0_0));   // (43.20, 547.93) c0r0
+    qfd_c_xstn u_x_0_0 (.ck(ck_c0r0), .rst_n(rstl_x_0_0), .sidx({far, far, far}), .b_d(dn0_rly0), .a_d(dn0_xcst0), .tap_d(tap_0_0));   // (43.20, 547.93) c0r0
     wire [515:0] dn0_rly1;  qfd_c_stn516 u_dn0_rly1 (.ck(ck_c0r0), .d(dn0_xcst0), .q(dn0_rly1));   // (43.20, 871.93) c0r0
     wire [515:0] dn0_rly2;  qfd_c_stn516 u_dn0_rly2 (.ck(ck_c0r0), .d(dn0_rly1), .q(dn0_rly2));   // (43.20, 1195.93) c0r0
     // ---- LANDING dn0_rly3: c0r0 -> c0r1, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -316,7 +537,7 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     qfd_c_land_r #(.W(516), .D(4), .K(2)) u_land_dn0_rly3_r (.ck(ck_c0r1), .rsi(lrst_dn0_rly3_r), .bank(land_dn0_rly3_bank), .epo(land_dn0_rly3_epo), .vld(land_dn0_rly3_vld), .o(land_dn0_rly3));   // (43.20, 1471.33) c0r1 read
     wire [515:0] dn0_rly3;  qfd_c_stn516 u_dn0_rly3 (.ck(ck_c0r1), .d(land_dn0_rly3), .q(dn0_rly3));   // (43.20, 1519.93) c0r1
     wire [515:0] dn0_xcst1;
-    qfd_c_xstn u_x_0_1 (.ck(ck_c0r1), .rst_n(rstl_L_1), .sidx({far, far, far_n}), .b_d(dn0_rly3), .a_d(dn0_xcst1), .tap_d(tap_0_1));   // (43.20, 1843.93) c0r1
+    qfd_c_xstn u_x_0_1 (.ck(ck_c0r1), .rst_n(rstl_x_0_1), .sidx({far, far, far_n}), .b_d(dn0_rly3), .a_d(dn0_xcst1), .tap_d(tap_0_1));   // (43.20, 1843.93) c0r1
     wire [515:0] dn0_rly4;  qfd_c_stn516 u_dn0_rly4 (.ck(ck_c0r1), .d(dn0_xcst1), .q(dn0_rly4));   // (43.20, 2167.93) c0r1
     wire [515:0] dn0_rly5;  qfd_c_stn516 u_dn0_rly5 (.ck(ck_c0r1), .d(dn0_rly4), .q(dn0_rly5));   // (43.20, 2491.93) c0r1
     // ---- LANDING dn0_rly6: c0r1 -> c0r2, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -325,7 +546,7 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     qfd_c_land_r #(.W(516), .D(4), .K(2)) u_land_dn0_rly6_r (.ck(ck_c0r2), .rsi(lrst_dn0_rly6_r), .bank(land_dn0_rly6_bank), .epo(land_dn0_rly6_epo), .vld(land_dn0_rly6_vld), .o(land_dn0_rly6));   // (43.20, 2767.33) c0r2 read
     wire [515:0] dn0_rly6;  qfd_c_stn516 u_dn0_rly6 (.ck(ck_c0r2), .d(land_dn0_rly6), .q(dn0_rly6));   // (43.20, 2815.93) c0r2
     wire [515:0] dn0_xcst2;
-    qfd_c_xstn u_x_0_2 (.ck(ck_c0r2), .rst_n(rstl_L_2), .sidx({far, far_n, far}), .b_d(dn0_rly6), .a_d(dn0_xcst2), .tap_d(tap_0_2));   // (43.20, 3139.93) c0r2
+    qfd_c_xstn u_x_0_2 (.ck(ck_c0r2), .rst_n(rstl_x_0_2), .sidx({far, far_n, far}), .b_d(dn0_rly6), .a_d(dn0_xcst2), .tap_d(tap_0_2));   // (43.20, 3139.93) c0r2
     wire [515:0] dn0_rly7;  qfd_c_stn516 u_dn0_rly7 (.ck(ck_c0r2), .d(dn0_xcst2), .q(dn0_rly7));   // (43.20, 3463.93) c0r2
     wire [515:0] dn0_rly8;  qfd_c_stn516 u_dn0_rly8 (.ck(ck_c0r2), .d(dn0_rly7), .q(dn0_rly8));   // (43.20, 3787.93) c0r2
     // ---- LANDING dn0_rly9: c0r2 -> c0r3, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -334,14 +555,14 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     qfd_c_land_r #(.W(516), .D(4), .K(2)) u_land_dn0_rly9_r (.ck(ck_c0r3), .rsi(lrst_dn0_rly9_r), .bank(land_dn0_rly9_bank), .epo(land_dn0_rly9_epo), .vld(land_dn0_rly9_vld), .o(land_dn0_rly9));   // (43.20, 4063.33) c0r3 read
     wire [515:0] dn0_rly9;  qfd_c_stn516 u_dn0_rly9 (.ck(ck_c0r3), .d(land_dn0_rly9), .q(dn0_rly9));   // (43.20, 4111.93) c0r3
     wire [515:0] dn0_xcst3;
-    qfd_c_xstn u_x_0_3 (.ck(ck_c0r3), .rst_n(rstl_L_3), .sidx({far, far_n, far_n}), .b_d(dn0_rly9), .a_d(dn0_xcst3), .tap_d(tap_0_3));   // (43.20, 4435.93) c0r3
+    qfd_c_xstn u_x_0_3 (.ck(ck_c0r3), .rst_n(rstl_x_0_3), .sidx({far, far_n, far_n}), .b_d(dn0_rly9), .a_d(dn0_xcst3), .tap_d(tap_0_3));   // (43.20, 4435.93) c0r3
     wire [515:0] dn0_rly10;  qfd_c_stn516 u_dn0_rly10 (.ck(ck_c0r3), .d(dn0_xcst3), .q(dn0_rly10));   // (43.20, 4809.97) c0r3
     wire [515:0] dn0_exit;  qfd_c_stn516 u_dn0_exit (.ck(ck_c0r3), .d(dn0_rly10), .q(dn0_exit));   // (43.20, 5184.00) c0r3
     assign bco0 = dn0_exit;
     wire [515:0] dn1_entry;  qfd_c_stn516 u_dn1_entry (.ck(ck_c1r0), .d(bc1), .q(dn1_entry));   // (1173.60, 43.20) c1r0
     wire [515:0] dn1_rly0;  qfd_c_stn516 u_dn1_rly0 (.ck(ck_c1r0), .d(dn1_entry), .q(dn1_rly0));   // (1173.60, 267.57) c1r0
     wire [515:0] dn1_xcst0;
-    qfd_c_xstnw u_x_1_0 (.ck(ck_c1r0), .rst_n(rstl_T_0), .sidx({far, far, far}), .b_d(dn1_rly0), .a_d(dn1_xcst0), .tap_d(tap_1_0));   // (1173.60, 491.93) c1r0
+    qfd_c_xstnw u_x_1_0 (.ck(ck_c1r0), .rst_n(rstl_x_1_0), .sidx({far, far, far}), .b_d(dn1_rly0), .a_d(dn1_xcst0), .tap_d(tap_1_0));   // (1173.60, 491.93) c1r0
     wire [515:0] dn1_rly1;  qfd_c_stn516 u_dn1_rly1 (.ck(ck_c1r0), .d(dn1_xcst0), .q(dn1_rly1));   // (1173.60, 815.93) c1r0
     wire [515:0] dn1_rly2;  qfd_c_stn516 u_dn1_rly2 (.ck(ck_c1r0), .d(dn1_rly1), .q(dn1_rly2));   // (1173.60, 1139.93) c1r0
     // ---- LANDING dn1_rly3: c1r0 -> c1r1, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -350,7 +571,7 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     qfd_c_land_r #(.W(516), .D(4), .K(2)) u_land_dn1_rly3_r (.ck(ck_c1r1), .rsi(lrst_dn1_rly3_r), .bank(land_dn1_rly3_bank), .epo(land_dn1_rly3_epo), .vld(land_dn1_rly3_vld), .o(land_dn1_rly3));   // (1173.60, 1415.33) c1r1 read
     wire [515:0] dn1_rly3;  qfd_c_stn516 u_dn1_rly3 (.ck(ck_c1r1), .d(land_dn1_rly3), .q(dn1_rly3));   // (1173.60, 1463.93) c1r1
     wire [515:0] dn1_xcst1;
-    qfd_c_xstnw u_x_1_1 (.ck(ck_c1r1), .rst_n(rstl_T_1), .sidx({far, far, far_n}), .b_d(dn1_rly3), .a_d(dn1_xcst1), .tap_d(tap_1_1));   // (1173.60, 1787.93) c1r1
+    qfd_c_xstnw u_x_1_1 (.ck(ck_c1r1), .rst_n(rstl_x_1_1), .sidx({far, far, far_n}), .b_d(dn1_rly3), .a_d(dn1_xcst1), .tap_d(tap_1_1));   // (1173.60, 1787.93) c1r1
     wire [515:0] dn1_rly4;  qfd_c_stn516 u_dn1_rly4 (.ck(ck_c1r1), .d(dn1_xcst1), .q(dn1_rly4));   // (1173.60, 2111.93) c1r1
     wire [515:0] dn1_rly5;  qfd_c_stn516 u_dn1_rly5 (.ck(ck_c1r1), .d(dn1_rly4), .q(dn1_rly5));   // (1173.60, 2435.93) c1r1
     // ---- LANDING dn1_rly6: c1r1 -> c1r2, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -359,7 +580,7 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     qfd_c_land_r #(.W(516), .D(4), .K(2)) u_land_dn1_rly6_r (.ck(ck_c1r2), .rsi(lrst_dn1_rly6_r), .bank(land_dn1_rly6_bank), .epo(land_dn1_rly6_epo), .vld(land_dn1_rly6_vld), .o(land_dn1_rly6));   // (1173.60, 2711.33) c1r2 read
     wire [515:0] dn1_rly6;  qfd_c_stn516 u_dn1_rly6 (.ck(ck_c1r2), .d(land_dn1_rly6), .q(dn1_rly6));   // (1173.60, 2759.93) c1r2
     wire [515:0] dn1_xcst2;
-    qfd_c_xstnw u_x_1_2 (.ck(ck_c1r2), .rst_n(rstl_T_2), .sidx({far, far_n, far}), .b_d(dn1_rly6), .a_d(dn1_xcst2), .tap_d(tap_1_2));   // (1173.60, 3083.93) c1r2
+    qfd_c_xstnw u_x_1_2 (.ck(ck_c1r2), .rst_n(rstl_x_1_2), .sidx({far, far_n, far}), .b_d(dn1_rly6), .a_d(dn1_xcst2), .tap_d(tap_1_2));   // (1173.60, 3083.93) c1r2
     wire [515:0] dn1_rly7;  qfd_c_stn516 u_dn1_rly7 (.ck(ck_c1r2), .d(dn1_xcst2), .q(dn1_rly7));   // (1173.60, 3407.93) c1r2
     wire [515:0] dn1_rly8;  qfd_c_stn516 u_dn1_rly8 (.ck(ck_c1r2), .d(dn1_rly7), .q(dn1_rly8));   // (1173.60, 3731.93) c1r2
     // ---- LANDING dn1_rly9: c1r2 -> c1r3, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -368,14 +589,14 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     qfd_c_land_r #(.W(516), .D(4), .K(2)) u_land_dn1_rly9_r (.ck(ck_c1r3), .rsi(lrst_dn1_rly9_r), .bank(land_dn1_rly9_bank), .epo(land_dn1_rly9_epo), .vld(land_dn1_rly9_vld), .o(land_dn1_rly9));   // (1173.60, 4007.33) c1r3 read
     wire [515:0] dn1_rly9;  qfd_c_stn516 u_dn1_rly9 (.ck(ck_c1r3), .d(land_dn1_rly9), .q(dn1_rly9));   // (1173.60, 4055.93) c1r3
     wire [515:0] dn1_xcst3;
-    qfd_c_xstnw u_x_1_3 (.ck(ck_c1r3), .rst_n(rstl_T_3), .sidx({far, far_n, far_n}), .b_d(dn1_rly9), .a_d(dn1_xcst3), .tap_d(tap_1_3));   // (1173.60, 4379.93) c1r3
+    qfd_c_xstnw u_x_1_3 (.ck(ck_c1r3), .rst_n(rstl_x_1_3), .sidx({far, far_n, far_n}), .b_d(dn1_rly9), .a_d(dn1_xcst3), .tap_d(tap_1_3));   // (1173.60, 4379.93) c1r3
     wire [515:0] dn1_rly10;  qfd_c_stn516 u_dn1_rly10 (.ck(ck_c1r3), .d(dn1_xcst3), .q(dn1_rly10));   // (1173.60, 4781.97) c1r3
     wire [515:0] dn1_exit;  qfd_c_stn516 u_dn1_exit (.ck(ck_c1r3), .d(dn1_rly10), .q(dn1_exit));   // (1173.60, 5184.00) c1r3
     assign bco1 = dn1_exit;
     wire [515:0] dn2_entry;  qfd_c_stn516 u_dn2_entry (.ck(ck_c2r0), .d(bc2), .q(dn2_entry));   // (1271.52, 43.20) c2r0
     wire [515:0] dn2_rly0;  qfd_c_stn516 u_dn2_rly0 (.ck(ck_c2r0), .d(dn2_entry), .q(dn2_rly0));   // (1271.52, 323.57) c2r0
     wire [515:0] dn2_xcst0;
-    qfd_c_xstn u_x_2_0 (.ck(ck_c2r0), .rst_n(rstl_T_0), .sidx({far, far, far}), .b_d(dn2_rly0), .a_d(dn2_xcst0), .tap_d(tap_2_0));   // (1271.52, 603.93) c2r0
+    qfd_c_xstn u_x_2_0 (.ck(ck_c2r0), .rst_n(rstl_x_2_0), .sidx({far, far, far}), .b_d(dn2_rly0), .a_d(dn2_xcst0), .tap_d(tap_2_0));   // (1271.52, 603.93) c2r0
     wire [515:0] dn2_rly1;  qfd_c_stn516 u_dn2_rly1 (.ck(ck_c2r0), .d(dn2_xcst0), .q(dn2_rly1));   // (1271.52, 927.93) c2r0
     wire [515:0] dn2_rly2;  qfd_c_stn516 u_dn2_rly2 (.ck(ck_c2r0), .d(dn2_rly1), .q(dn2_rly2));   // (1271.52, 1251.93) c2r0
     // ---- LANDING dn2_rly3: c2r0 -> c2r1, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -385,7 +606,7 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     wire [515:0] dn2_rly3;  qfd_c_stn516 u_dn2_rly3 (.ck(ck_c2r1), .d(land_dn2_rly3), .q(dn2_rly3));   // (1271.52, 1575.93) c2r1
     wire [515:0] dm3_2;  qfd_q3h_run #(.W(516), .D(MUT == 3 ? 1 : 0)) u_dm3_2 (.ck(ck_c2r1), .d(dn2_rly3), .q(dm3_2));
     wire [515:0] dn2_xcst1;
-    qfd_c_xstn u_x_2_1 (.ck(ck_c2r1), .rst_n(rstl_T_1), .sidx({far, far, far_n}), .b_d(dm3_2), .a_d(dn2_xcst1), .tap_d(tap_2_1));   // (1271.52, 1899.93) c2r1
+    qfd_c_xstn u_x_2_1 (.ck(ck_c2r1), .rst_n(rstl_x_2_1), .sidx({far, far, far_n}), .b_d(dm3_2), .a_d(dn2_xcst1), .tap_d(tap_2_1));   // (1271.52, 1899.93) c2r1
     wire [515:0] dn2_rly4;  qfd_c_stn516 u_dn2_rly4 (.ck(ck_c2r1), .d(dn2_xcst1), .q(dn2_rly4));   // (1271.52, 2223.93) c2r1
     wire [515:0] dn2_rly5;  qfd_c_stn516 u_dn2_rly5 (.ck(ck_c2r1), .d(dn2_rly4), .q(dn2_rly5));   // (1271.52, 2547.93) c2r1
     // ---- LANDING dn2_rly6: c2r1 -> c2r2, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -394,7 +615,7 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     qfd_c_land_r #(.W(516), .D(4), .K(2)) u_land_dn2_rly6_r (.ck(ck_c2r2), .rsi(lrst_dn2_rly6_r), .bank(land_dn2_rly6_bank), .epo(land_dn2_rly6_epo), .vld(land_dn2_rly6_vld), .o(land_dn2_rly6));   // (1271.52, 2823.33) c2r2 read
     wire [515:0] dn2_rly6;  qfd_c_stn516 u_dn2_rly6 (.ck(ck_c2r2), .d(land_dn2_rly6), .q(dn2_rly6));   // (1271.52, 2871.93) c2r2
     wire [515:0] dn2_xcst2;
-    qfd_c_xstn u_x_2_2 (.ck(ck_c2r2), .rst_n(rstl_T_2), .sidx({far, far_n, far}), .b_d(dn2_rly6), .a_d(dn2_xcst2), .tap_d(tap_2_2));   // (1271.52, 3195.93) c2r2
+    qfd_c_xstn u_x_2_2 (.ck(ck_c2r2), .rst_n(rstl_x_2_2), .sidx({far, far_n, far}), .b_d(dn2_rly6), .a_d(dn2_xcst2), .tap_d(tap_2_2));   // (1271.52, 3195.93) c2r2
     wire [515:0] dn2_rly7;  qfd_c_stn516 u_dn2_rly7 (.ck(ck_c2r2), .d(dn2_xcst2), .q(dn2_rly7));   // (1271.52, 3519.93) c2r2
     wire [515:0] dn2_rly8;  qfd_c_stn516 u_dn2_rly8 (.ck(ck_c2r2), .d(dn2_rly7), .q(dn2_rly8));   // (1271.52, 3843.93) c2r2
     // ---- LANDING dn2_rly9: c2r2 -> c2r3, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -403,14 +624,14 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     qfd_c_land_r #(.W(516), .D(4), .K(2)) u_land_dn2_rly9_r (.ck(ck_c2r3), .rsi(lrst_dn2_rly9_r), .bank(land_dn2_rly9_bank), .epo(land_dn2_rly9_epo), .vld(land_dn2_rly9_vld), .o(land_dn2_rly9));   // (1271.52, 4119.33) c2r3 read
     wire [515:0] dn2_rly9;  qfd_c_stn516 u_dn2_rly9 (.ck(ck_c2r3), .d(land_dn2_rly9), .q(dn2_rly9));   // (1271.52, 4167.93) c2r3
     wire [515:0] dn2_xcst3;
-    qfd_c_xstn u_x_2_3 (.ck(ck_c2r3), .rst_n(rstl_T_3), .sidx({far, far_n, far_n}), .b_d(dn2_rly9), .a_d(dn2_xcst3), .tap_d(tap_2_3));   // (1271.52, 4491.93) c2r3
+    qfd_c_xstn u_x_2_3 (.ck(ck_c2r3), .rst_n(rstl_x_2_3), .sidx({far, far_n, far_n}), .b_d(dn2_rly9), .a_d(dn2_xcst3), .tap_d(tap_2_3));   // (1271.52, 4491.93) c2r3
     wire [515:0] dn2_rly10;  qfd_c_stn516 u_dn2_rly10 (.ck(ck_c2r3), .d(dn2_xcst3), .q(dn2_rly10));   // (1271.52, 4837.97) c2r3
     wire [515:0] dn2_exit;  qfd_c_stn516 u_dn2_exit (.ck(ck_c2r3), .d(dn2_rly10), .q(dn2_exit));   // (1271.52, 5184.00) c2r3
     assign bco2 = dn2_exit;
     wire [515:0] dn3_entry;  qfd_c_stn516 u_dn3_entry (.ck(ck_c3r0), .d(bc3), .q(dn3_entry));   // (2401.92, 43.20) c3r0
     wire [515:0] dn3_rly0;  qfd_c_stn516 u_dn3_rly0 (.ck(ck_c3r0), .d(dn3_entry), .q(dn3_rly0));   // (2401.92, 295.57) c3r0
     wire [515:0] dn3_xcst0;
-    qfd_c_xstnw u_x_3_0 (.ck(ck_c3r0), .rst_n(rstl_R_0), .sidx({far, far, far}), .b_d(dn3_rly0), .a_d(dn3_xcst0), .tap_d(tap_3_0));   // (2401.92, 547.93) c3r0
+    qfd_c_xstnw u_x_3_0 (.ck(ck_c3r0), .rst_n(rstl_x_3_0), .sidx({far, far, far}), .b_d(dn3_rly0), .a_d(dn3_xcst0), .tap_d(tap_3_0));   // (2401.92, 547.93) c3r0
     wire [515:0] dn3_rly1;  qfd_c_stn516 u_dn3_rly1 (.ck(ck_c3r0), .d(dn3_xcst0), .q(dn3_rly1));   // (2401.92, 871.93) c3r0
     wire [515:0] dn3_rly2;  qfd_c_stn516 u_dn3_rly2 (.ck(ck_c3r0), .d(dn3_rly1), .q(dn3_rly2));   // (2401.92, 1195.93) c3r0
     // ---- LANDING dn3_rly3: c3r0 -> c3r1, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -419,7 +640,7 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     qfd_c_land_r #(.W(516), .D(4), .K(2)) u_land_dn3_rly3_r (.ck(ck_c3r1), .rsi(lrst_dn3_rly3_r), .bank(land_dn3_rly3_bank), .epo(land_dn3_rly3_epo), .vld(land_dn3_rly3_vld), .o(land_dn3_rly3));   // (2401.92, 1471.33) c3r1 read
     wire [515:0] dn3_rly3;  qfd_c_stn516 u_dn3_rly3 (.ck(ck_c3r1), .d(land_dn3_rly3), .q(dn3_rly3));   // (2401.92, 1519.93) c3r1
     wire [515:0] dn3_xcst1;
-    qfd_c_xstnw u_x_3_1 (.ck(ck_c3r1), .rst_n(rstl_R_1), .sidx({far, far, far_n}), .b_d(dn3_rly3), .a_d(dn3_xcst1), .tap_d(tap_3_1));   // (2401.92, 1843.93) c3r1
+    qfd_c_xstnw u_x_3_1 (.ck(ck_c3r1), .rst_n(rstl_x_3_1), .sidx({far, far, far_n}), .b_d(dn3_rly3), .a_d(dn3_xcst1), .tap_d(tap_3_1));   // (2401.92, 1843.93) c3r1
     wire [515:0] dn3_rly4;  qfd_c_stn516 u_dn3_rly4 (.ck(ck_c3r1), .d(dn3_xcst1), .q(dn3_rly4));   // (2401.92, 2167.93) c3r1
     wire [515:0] dn3_rly5;  qfd_c_stn516 u_dn3_rly5 (.ck(ck_c3r1), .d(dn3_rly4), .q(dn3_rly5));   // (2401.92, 2491.93) c3r1
     // ---- LANDING dn3_rly6: c3r1 -> c3r2, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -428,7 +649,7 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     qfd_c_land_r #(.W(516), .D(4), .K(2)) u_land_dn3_rly6_r (.ck(ck_c3r2), .rsi(lrst_dn3_rly6_r), .bank(land_dn3_rly6_bank), .epo(land_dn3_rly6_epo), .vld(land_dn3_rly6_vld), .o(land_dn3_rly6));   // (2401.92, 2767.33) c3r2 read
     wire [515:0] dn3_rly6;  qfd_c_stn516 u_dn3_rly6 (.ck(ck_c3r2), .d(land_dn3_rly6), .q(dn3_rly6));   // (2401.92, 2815.93) c3r2
     wire [515:0] dn3_xcst2;
-    qfd_c_xstnw u_x_3_2 (.ck(ck_c3r2), .rst_n(rstl_R_2), .sidx({far, far_n, far}), .b_d(dn3_rly6), .a_d(dn3_xcst2), .tap_d(tap_3_2));   // (2401.92, 3139.93) c3r2
+    qfd_c_xstnw u_x_3_2 (.ck(ck_c3r2), .rst_n(rstl_x_3_2), .sidx({far, far_n, far}), .b_d(dn3_rly6), .a_d(dn3_xcst2), .tap_d(tap_3_2));   // (2401.92, 3139.93) c3r2
     wire [515:0] dn3_rly7;  qfd_c_stn516 u_dn3_rly7 (.ck(ck_c3r2), .d(dn3_xcst2), .q(dn3_rly7));   // (2401.92, 3463.93) c3r2
     wire [515:0] dn3_rly8;  qfd_c_stn516 u_dn3_rly8 (.ck(ck_c3r2), .d(dn3_rly7), .q(dn3_rly8));   // (2401.92, 3787.93) c3r2
     // ---- LANDING dn3_rly9: c3r2 -> c3r3, 516 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
@@ -437,7 +658,7 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     qfd_c_land_r #(.W(516), .D(4), .K(2)) u_land_dn3_rly9_r (.ck(ck_c3r3), .rsi(lrst_dn3_rly9_r), .bank(land_dn3_rly9_bank), .epo(land_dn3_rly9_epo), .vld(land_dn3_rly9_vld), .o(land_dn3_rly9));   // (2401.92, 4063.33) c3r3 read
     wire [515:0] dn3_rly9;  qfd_c_stn516 u_dn3_rly9 (.ck(ck_c3r3), .d(land_dn3_rly9), .q(dn3_rly9));   // (2401.92, 4111.93) c3r3
     wire [515:0] dn3_xcst3;
-    qfd_c_xstnw u_x_3_3 (.ck(ck_c3r3), .rst_n(rstl_R_3), .sidx({far, far_n, far_n}), .b_d(dn3_rly9), .a_d(dn3_xcst3), .tap_d(tap_3_3));   // (2401.92, 4435.93) c3r3
+    qfd_c_xstnw u_x_3_3 (.ck(ck_c3r3), .rst_n(rstl_x_3_3), .sidx({far, far_n, far_n}), .b_d(dn3_rly9), .a_d(dn3_xcst3), .tap_d(tap_3_3));   // (2401.92, 4435.93) c3r3
     wire [515:0] dn3_rly10;  qfd_c_stn516 u_dn3_rly10 (.ck(ck_c3r3), .d(dn3_xcst3), .q(dn3_rly10));   // (2401.92, 4809.97) c3r3
     wire [515:0] dn3_exit;  qfd_c_stn516 u_dn3_exit (.ck(ck_c3r3), .d(dn3_rly10), .q(dn3_exit));   // (2401.92, 5184.00) c3r3
     assign bco3 = dn3_exit;
@@ -823,412 +1044,340 @@ module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
     wire [513:0] ft_15;  qfd_c_stn514 u_ft_15 (.ck(ck_c2r0), .d(ft_14), .q(ft_15));   // (1222.56, 402.30) c2r0
     wire [513:0] ft_16;  qfd_c_stn514 u_ft_16 (.ck(ck_c2r0), .d(ft_15), .q(ft_16));   // (1222.56, 43.20) c2r0 rs_o pin register
     assign rs_o = ft_16;
-    // ---- landing epochs: equal-depth reset runs per landing (both halves at the same depth: G == R0)
-    wire [0:0] lrs_dn0_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn0_rly3_w_0 (.ck(ck_c0r0), .d(rst_L_8_q), .q(lrs_dn0_rly3_w_0_q));   // (43.20, 1244.53) c0r0 landing reset run
-    wire [0:0] lrp_dn0_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn0_rly3_w_0 (.ck(ck_c0r0), .d(lrs_dn0_rly3_w_0_q), .q(lrp_dn0_rly3_w_0_q));   // (43.20, 1244.53) c0r0 landing reset pad
-    assign lrst_dn0_rly3_w = lrp_dn0_rly3_w_0_q;
-    wire [0:0] lrs_dn0_rly3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn0_rly3_r_0 (.ck(ck_c0r1), .d(rst_L_9_q), .q(lrs_dn0_rly3_r_0_q));   // (43.20, 1471.33) c0r1 landing reset run
-    assign lrst_dn0_rly3_r = lrs_dn0_rly3_r_0_q;
-    wire [0:0] lrs_dn0_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn0_rly6_w_0 (.ck(ck_c0r1), .d(rst_L_12_q), .q(lrs_dn0_rly6_w_0_q));   // (43.20, 2540.53) c0r1 landing reset run
-    wire [0:0] lrp_dn0_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn0_rly6_w_0 (.ck(ck_c0r1), .d(lrs_dn0_rly6_w_0_q), .q(lrp_dn0_rly6_w_0_q));   // (43.20, 2540.53) c0r1 landing reset pad
-    assign lrst_dn0_rly6_w = lrp_dn0_rly6_w_0_q;
-    wire [0:0] lrs_dn0_rly6_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn0_rly6_r_0 (.ck(ck_c0r2), .d(rst_L_13_q), .q(lrs_dn0_rly6_r_0_q));   // (43.20, 2767.33) c0r2 landing reset run
-    assign lrst_dn0_rly6_r = lrs_dn0_rly6_r_0_q;
-    wire [0:0] lrs_dn0_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn0_rly9_w_0 (.ck(ck_c0r2), .d(rst_L_16_q), .q(lrs_dn0_rly9_w_0_q));   // (43.20, 3836.53) c0r2 landing reset run
-    wire [0:0] lrp_dn0_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn0_rly9_w_0 (.ck(ck_c0r2), .d(lrs_dn0_rly9_w_0_q), .q(lrp_dn0_rly9_w_0_q));   // (43.20, 3836.53) c0r2 landing reset pad
-    assign lrst_dn0_rly9_w = lrp_dn0_rly9_w_0_q;
-    wire [0:0] lrs_dn0_rly9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn0_rly9_r_0 (.ck(ck_c0r3), .d(rst_L_17_q), .q(lrs_dn0_rly9_r_0_q));   // (43.20, 4063.33) c0r3 landing reset run
-    assign lrst_dn0_rly9_r = lrs_dn0_rly9_r_0_q;
-    wire [0:0] lrs_dn1_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn1_rly3_w_0 (.ck(ck_c1r0), .d(rst_L_1_q), .q(lrs_dn1_rly3_w_0_q));   // (927.72, 382.36) c1r0 landing reset run
-    wire [0:0] lrs_dn1_rly3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn1_rly3_w_1 (.ck(ck_c1r0), .d(lrs_dn1_rly3_w_0_q), .q(lrs_dn1_rly3_w_1_q));   // (927.72, 721.53) c1r0 landing reset run
-    wire [0:0] lrs_dn1_rly3_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn1_rly3_w_2 (.ck(ck_c1r0), .d(lrs_dn1_rly3_w_1_q), .q(lrs_dn1_rly3_w_2_q));   // (927.72, 1060.69) c1r0 landing reset run
-    wire [0:0] lrs_dn1_rly3_w_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn1_rly3_w_3 (.ck(ck_c1r0), .d(lrs_dn1_rly3_w_2_q), .q(lrs_dn1_rly3_w_3_q));   // (1173.60, 1153.97) c1r0 landing reset run
-    wire [0:0] lrp_dn1_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn1_rly3_w_0 (.ck(ck_c1r0), .d(lrs_dn1_rly3_w_3_q), .q(lrp_dn1_rly3_w_0_q));   // (1173.60, 1153.97) c1r0 landing reset pad
-    assign lrst_dn1_rly3_w = lrp_dn1_rly3_w_0_q;
-    wire [0:0] lrs_dn1_rly3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn1_rly3_r_0 (.ck(ck_c1r1), .d(rst_T_23_q), .q(lrs_dn1_rly3_r_0_q));   // (1173.60, 1415.33) c1r1 landing reset run
-    assign lrst_dn1_rly3_r = lrs_dn1_rly3_r_0_q;
-    wire [0:0] lrs_dn1_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn1_rly6_w_0 (.ck(ck_c1r1), .d(rst_T_26_q), .q(lrs_dn1_rly6_w_0_q));   // (1173.60, 2484.53) c1r1 landing reset run
-    wire [0:0] lrp_dn1_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn1_rly6_w_0 (.ck(ck_c1r1), .d(lrs_dn1_rly6_w_0_q), .q(lrp_dn1_rly6_w_0_q));   // (1173.60, 2484.53) c1r1 landing reset pad
-    assign lrst_dn1_rly6_w = lrp_dn1_rly6_w_0_q;
-    wire [0:0] lrs_dn1_rly6_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn1_rly6_r_0 (.ck(ck_c1r2), .d(rst_T_27_q), .q(lrs_dn1_rly6_r_0_q));   // (1173.60, 2711.33) c1r2 landing reset run
-    assign lrst_dn1_rly6_r = lrs_dn1_rly6_r_0_q;
-    wire [0:0] lrs_dn1_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn1_rly9_w_0 (.ck(ck_c1r2), .d(rst_T_30_q), .q(lrs_dn1_rly9_w_0_q));   // (1173.60, 3780.53) c1r2 landing reset run
-    wire [0:0] lrp_dn1_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn1_rly9_w_0 (.ck(ck_c1r2), .d(lrs_dn1_rly9_w_0_q), .q(lrp_dn1_rly9_w_0_q));   // (1173.60, 3780.53) c1r2 landing reset pad
-    assign lrst_dn1_rly9_w = lrp_dn1_rly9_w_0_q;
-    wire [0:0] lrs_dn1_rly9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn1_rly9_r_0 (.ck(ck_c1r3), .d(rst_T_31_q), .q(lrs_dn1_rly9_r_0_q));   // (1173.60, 4007.33) c1r3 landing reset run
-    assign lrst_dn1_rly9_r = lrs_dn1_rly9_r_0_q;
-    wire [0:0] lrs_dn2_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn2_rly3_w_0 (.ck(ck_c2r0), .d(rst_T_22_q), .q(lrs_dn2_rly3_w_0_q));   // (1297.44, 1300.53) c2r0 landing reset run
-    wire [0:0] lrp_dn2_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn2_rly3_w_0 (.ck(ck_c2r0), .d(lrs_dn2_rly3_w_0_q), .q(lrp_dn2_rly3_w_0_q));   // (1297.44, 1300.53) c2r0 landing reset pad
-    assign lrst_dn2_rly3_w = lrp_dn2_rly3_w_0_q;
-    wire [0:0] lrs_dn2_rly3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn2_rly3_r_0 (.ck(ck_c2r1), .d(rst_T_23_q), .q(lrs_dn2_rly3_r_0_q));   // (1271.52, 1527.33) c2r1 landing reset run
-    assign lrst_dn2_rly3_r = lrs_dn2_rly3_r_0_q;
-    wire [0:0] lrs_dn2_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn2_rly6_w_0 (.ck(ck_c2r1), .d(rst_T_26_q), .q(lrs_dn2_rly6_w_0_q));   // (1271.52, 2596.53) c2r1 landing reset run
-    wire [0:0] lrp_dn2_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn2_rly6_w_0 (.ck(ck_c2r1), .d(lrs_dn2_rly6_w_0_q), .q(lrp_dn2_rly6_w_0_q));   // (1271.52, 2596.53) c2r1 landing reset pad
-    assign lrst_dn2_rly6_w = lrp_dn2_rly6_w_0_q;
-    wire [0:0] lrs_dn2_rly6_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn2_rly6_r_0 (.ck(ck_c2r2), .d(rst_T_27_q), .q(lrs_dn2_rly6_r_0_q));   // (1271.52, 2823.33) c2r2 landing reset run
-    assign lrst_dn2_rly6_r = lrs_dn2_rly6_r_0_q;
-    wire [0:0] lrs_dn2_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn2_rly9_w_0 (.ck(ck_c2r2), .d(rst_T_30_q), .q(lrs_dn2_rly9_w_0_q));   // (1258.56, 3892.53) c2r2 landing reset run
-    wire [0:0] lrp_dn2_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn2_rly9_w_0 (.ck(ck_c2r2), .d(lrs_dn2_rly9_w_0_q), .q(lrp_dn2_rly9_w_0_q));   // (1258.56, 3892.53) c2r2 landing reset pad
-    assign lrst_dn2_rly9_w = lrp_dn2_rly9_w_0_q;
-    wire [0:0] lrs_dn2_rly9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn2_rly9_r_0 (.ck(ck_c2r3), .d(rst_T_31_q), .q(lrs_dn2_rly9_r_0_q));   // (1271.52, 4119.33) c2r3 landing reset run
-    assign lrst_dn2_rly9_r = lrs_dn2_rly9_r_0_q;
-    wire [0:0] lrs_dn3_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn3_rly3_w_0 (.ck(ck_c3r0), .d(rst_R_40_q), .q(lrs_dn3_rly3_w_0_q));   // (2401.92, 1244.53) c3r0 landing reset run
-    wire [0:0] lrp_dn3_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn3_rly3_w_0 (.ck(ck_c3r0), .d(lrs_dn3_rly3_w_0_q), .q(lrp_dn3_rly3_w_0_q));   // (2401.92, 1244.53) c3r0 landing reset pad
-    assign lrst_dn3_rly3_w = lrp_dn3_rly3_w_0_q;
-    wire [0:0] lrs_dn3_rly3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn3_rly3_r_0 (.ck(ck_c3r1), .d(rst_R_41_q), .q(lrs_dn3_rly3_r_0_q));   // (2401.92, 1471.33) c3r1 landing reset run
-    assign lrst_dn3_rly3_r = lrs_dn3_rly3_r_0_q;
-    wire [0:0] lrs_dn3_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn3_rly6_w_0 (.ck(ck_c3r1), .d(rst_R_44_q), .q(lrs_dn3_rly6_w_0_q));   // (2401.92, 2540.53) c3r1 landing reset run
-    wire [0:0] lrp_dn3_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn3_rly6_w_0 (.ck(ck_c3r1), .d(lrs_dn3_rly6_w_0_q), .q(lrp_dn3_rly6_w_0_q));   // (2401.92, 2540.53) c3r1 landing reset pad
-    assign lrst_dn3_rly6_w = lrp_dn3_rly6_w_0_q;
-    wire [0:0] lrs_dn3_rly6_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn3_rly6_r_0 (.ck(ck_c3r2), .d(rst_R_45_q), .q(lrs_dn3_rly6_r_0_q));   // (2401.92, 2767.33) c3r2 landing reset run
-    assign lrst_dn3_rly6_r = lrs_dn3_rly6_r_0_q;
-    wire [0:0] lrs_dn3_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn3_rly9_w_0 (.ck(ck_c3r2), .d(rst_R_48_q), .q(lrs_dn3_rly9_w_0_q));   // (2401.92, 3836.53) c3r2 landing reset run
-    wire [0:0] lrp_dn3_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_dn3_rly9_w_0 (.ck(ck_c3r2), .d(lrs_dn3_rly9_w_0_q), .q(lrp_dn3_rly9_w_0_q));   // (2401.92, 3836.53) c3r2 landing reset pad
-    assign lrst_dn3_rly9_w = lrp_dn3_rly9_w_0_q;
-    wire [0:0] lrs_dn3_rly9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_dn3_rly9_r_0 (.ck(ck_c3r3), .d(rst_R_49_q), .q(lrs_dn3_rly9_r_0_q));   // (2401.92, 4063.33) c3r3 landing reset run
-    assign lrst_dn3_rly9_r = lrs_dn3_rly9_r_0_q;
-    wire [0:0] lrs_leg_1_0a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_0a_y_w_0 (.ck(ck_c0r0), .d(rst_L_3_q), .q(lrs_leg_1_0a_y_w_0_q));   // (338.04, 319.88) c0r0 landing reset run
-    wire [0:0] lrs_leg_1_0a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_0a_y_w_1 (.ck(ck_c0r0), .d(lrs_leg_1_0a_y_w_0_q), .q(lrs_leg_1_0a_y_w_1_q));   // (566.35, 368.24) c0r0 landing reset run
-    assign lrst_leg_1_0a_y_w = lrs_leg_1_0a_y_w_1_q;
-    wire [0:0] lrs_leg_1_0a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_0a_y_r_0 (.ck(ck_c1r0), .d(rst_L_2_q), .q(lrs_leg_1_0a_y_r_0_q));   // (669.17, 227.46) c1r0 landing reset run
-    wire [0:0] lrp_leg_1_0a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_0a_y_r_0 (.ck(ck_c1r0), .d(lrs_leg_1_0a_y_r_0_q), .q(lrp_leg_1_0a_y_r_0_q));   // (669.17, 227.46) c1r0 landing reset pad
-    wire [0:0] lrp_leg_1_0a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_0a_y_r_1 (.ck(ck_c1r0), .d(lrp_leg_1_0a_y_r_0_q), .q(lrp_leg_1_0a_y_r_1_q));   // (669.17, 227.46) c1r0 landing reset pad
-    assign lrst_leg_1_0a_y_r = lrp_leg_1_0a_y_r_1_q;
-    wire [0:0] lrs_leg_1_1b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_1b_y_w_0 (.ck(ck_c1r1), .d(rst_T_r1_q), .q(lrs_leg_1_1b_y_w_0_q));   // (1015.25, 1679.34) c1r1 landing reset run
-    wire [0:0] lrs_leg_1_1b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_1b_y_w_1 (.ck(ck_c1r1), .d(lrs_leg_1_1b_y_w_0_q), .q(lrs_leg_1_1b_y_w_1_q));   // (669.17, 1679.34) c1r1 landing reset run
-    wire [0:0] lrp_leg_1_1b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_1b_y_w_0 (.ck(ck_c1r1), .d(lrs_leg_1_1b_y_w_1_q), .q(lrp_leg_1_1b_y_w_0_q));   // (669.17, 1679.34) c1r1 landing reset pad
-    wire [0:0] lrp_leg_1_1b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_1b_y_w_1 (.ck(ck_c1r1), .d(lrp_leg_1_1b_y_w_0_q), .q(lrp_leg_1_1b_y_w_1_q));   // (669.17, 1679.34) c1r1 landing reset pad
-    wire [0:0] lrp_leg_1_1b_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_1b_y_w_2 (.ck(ck_c1r1), .d(lrp_leg_1_1b_y_w_1_q), .q(lrp_leg_1_1b_y_w_2_q));   // (669.17, 1679.34) c1r1 landing reset pad
-    assign lrst_leg_1_1b_y_w = lrp_leg_1_1b_y_w_2_q;
-    wire [0:0] lrs_leg_1_1b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_1b_y_r_0 (.ck(ck_c0r1), .d(rst_L_9_q), .q(lrs_leg_1_1b_y_r_0_q));   // (247.34, 1608.98) c0r1 landing reset run
-    wire [0:0] lrs_leg_1_1b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_1b_y_r_1 (.ck(ck_c0r1), .d(lrs_leg_1_1b_y_r_0_q), .q(lrs_leg_1_1b_y_r_1_q));   // (566.35, 1608.98) c0r1 landing reset run
-    assign lrst_leg_1_1b_y_r = lrs_leg_1_1b_y_r_1_q;
-    wire [0:0] lrs_leg_1_2b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_2b_y_w_0 (.ck(ck_c3r0), .d(rst_R_35_q), .q(lrs_leg_1_2b_y_w_0_q));   // (2107.08, 327.42) c3r0 landing reset run
-    wire [0:0] lrs_leg_1_2b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_2b_y_w_1 (.ck(ck_c3r0), .d(lrs_leg_1_2b_y_w_0_q), .q(lrs_leg_1_2b_y_w_1_q));   // (1878.77, 383.33) c3r0 landing reset run
-    assign lrst_leg_1_2b_y_w = lrs_leg_1_2b_y_w_1_q;
-    wire [0:0] lrs_leg_1_2b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_2b_y_r_0 (.ck(ck_c2r0), .d(rst_R_34_q), .q(lrs_leg_1_2b_y_r_0_q));   // (1775.95, 312.98) c2r0 landing reset run
-    wire [0:0] lrp_leg_1_2b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_2b_y_r_0 (.ck(ck_c2r0), .d(lrs_leg_1_2b_y_r_0_q), .q(lrp_leg_1_2b_y_r_0_q));   // (1775.95, 312.98) c2r0 landing reset pad
-    wire [0:0] lrp_leg_1_2b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_2b_y_r_1 (.ck(ck_c2r0), .d(lrp_leg_1_2b_y_r_0_q), .q(lrp_leg_1_2b_y_r_1_q));   // (1775.95, 312.98) c2r0 landing reset pad
-    assign lrst_leg_1_2b_y_r = lrp_leg_1_2b_y_r_1_q;
-    wire [0:0] lrs_leg_1_3a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_3a_y_w_0 (.ck(ck_c2r1), .d(rst_T_r1_q), .q(lrs_leg_1_3a_y_w_0_q));   // (1422.32, 1664.24) c2r1 landing reset run
-    wire [0:0] lrs_leg_1_3a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_3a_y_w_1 (.ck(ck_c2r1), .d(lrs_leg_1_3a_y_w_0_q), .q(lrs_leg_1_3a_y_w_1_q));   // (1775.95, 1664.24) c2r1 landing reset run
-    wire [0:0] lrp_leg_1_3a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_3a_y_w_0 (.ck(ck_c2r1), .d(lrs_leg_1_3a_y_w_1_q), .q(lrp_leg_1_3a_y_w_0_q));   // (1775.95, 1664.24) c2r1 landing reset pad
-    wire [0:0] lrp_leg_1_3a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_3a_y_w_1 (.ck(ck_c2r1), .d(lrp_leg_1_3a_y_w_0_q), .q(lrp_leg_1_3a_y_w_1_q));   // (1775.95, 1664.24) c2r1 landing reset pad
-    wire [0:0] lrp_leg_1_3a_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_3a_y_w_2 (.ck(ck_c2r1), .d(lrp_leg_1_3a_y_w_1_q), .q(lrp_leg_1_3a_y_w_2_q));   // (1775.95, 1664.24) c2r1 landing reset pad
-    assign lrst_leg_1_3a_y_w = lrp_leg_1_3a_y_w_2_q;
-    wire [0:0] lrs_leg_1_3a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_3a_y_r_0 (.ck(ck_c3r1), .d(rst_R_41_q), .q(lrs_leg_1_3a_y_r_0_q));   // (2155.02, 1523.46) c3r1 landing reset run
-    wire [0:0] lrs_leg_1_3a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_3a_y_r_1 (.ck(ck_c3r1), .d(lrs_leg_1_3a_y_r_0_q), .q(lrs_leg_1_3a_y_r_1_q));   // (1878.77, 1523.46) c3r1 landing reset run
-    assign lrst_leg_1_3a_y_r = lrs_leg_1_3a_y_r_1_q;
-    wire [0:0] lrs_leg_1_4b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_4b_y_w_0 (.ck(ck_c1r2), .d(rst_T_r2_q), .q(lrs_leg_1_4b_y_w_0_q));   // (1015.25, 2975.34) c1r2 landing reset run
-    wire [0:0] lrs_leg_1_4b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_4b_y_w_1 (.ck(ck_c1r2), .d(lrs_leg_1_4b_y_w_0_q), .q(lrs_leg_1_4b_y_w_1_q));   // (669.17, 2975.34) c1r2 landing reset run
-    wire [0:0] lrp_leg_1_4b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_4b_y_w_0 (.ck(ck_c1r2), .d(lrs_leg_1_4b_y_w_1_q), .q(lrp_leg_1_4b_y_w_0_q));   // (669.17, 2975.34) c1r2 landing reset pad
-    wire [0:0] lrp_leg_1_4b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_4b_y_w_1 (.ck(ck_c1r2), .d(lrp_leg_1_4b_y_w_0_q), .q(lrp_leg_1_4b_y_w_1_q));   // (669.17, 2975.34) c1r2 landing reset pad
-    wire [0:0] lrp_leg_1_4b_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_4b_y_w_2 (.ck(ck_c1r2), .d(lrp_leg_1_4b_y_w_1_q), .q(lrp_leg_1_4b_y_w_2_q));   // (669.17, 2975.34) c1r2 landing reset pad
-    assign lrst_leg_1_4b_y_w = lrp_leg_1_4b_y_w_2_q;
-    wire [0:0] lrs_leg_1_4b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_4b_y_r_0 (.ck(ck_c0r2), .d(rst_L_13_q), .q(lrs_leg_1_4b_y_r_0_q));   // (247.34, 2904.98) c0r2 landing reset run
-    wire [0:0] lrs_leg_1_4b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_4b_y_r_1 (.ck(ck_c0r2), .d(lrs_leg_1_4b_y_r_0_q), .q(lrs_leg_1_4b_y_r_1_q));   // (566.35, 2904.98) c0r2 landing reset run
-    assign lrst_leg_1_4b_y_r = lrs_leg_1_4b_y_r_1_q;
-    wire [0:0] lrs_leg_1_5b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_5b_y_w_0 (.ck(ck_c1r3), .d(rst_T_r3_q), .q(lrs_leg_1_5b_y_w_0_q));   // (1015.25, 4271.34) c1r3 landing reset run
-    wire [0:0] lrs_leg_1_5b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_5b_y_w_1 (.ck(ck_c1r3), .d(lrs_leg_1_5b_y_w_0_q), .q(lrs_leg_1_5b_y_w_1_q));   // (669.17, 4271.34) c1r3 landing reset run
-    wire [0:0] lrp_leg_1_5b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_5b_y_w_0 (.ck(ck_c1r3), .d(lrs_leg_1_5b_y_w_1_q), .q(lrp_leg_1_5b_y_w_0_q));   // (669.17, 4271.34) c1r3 landing reset pad
-    wire [0:0] lrp_leg_1_5b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_5b_y_w_1 (.ck(ck_c1r3), .d(lrp_leg_1_5b_y_w_0_q), .q(lrp_leg_1_5b_y_w_1_q));   // (669.17, 4271.34) c1r3 landing reset pad
-    wire [0:0] lrp_leg_1_5b_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_5b_y_w_2 (.ck(ck_c1r3), .d(lrp_leg_1_5b_y_w_1_q), .q(lrp_leg_1_5b_y_w_2_q));   // (669.17, 4271.34) c1r3 landing reset pad
-    assign lrst_leg_1_5b_y_w = lrp_leg_1_5b_y_w_2_q;
-    wire [0:0] lrs_leg_1_5b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_5b_y_r_0 (.ck(ck_c0r3), .d(rst_L_17_q), .q(lrs_leg_1_5b_y_r_0_q));   // (247.34, 4200.98) c0r3 landing reset run
-    wire [0:0] lrs_leg_1_5b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_5b_y_r_1 (.ck(ck_c0r3), .d(lrs_leg_1_5b_y_r_0_q), .q(lrs_leg_1_5b_y_r_1_q));   // (566.35, 4200.98) c0r3 landing reset run
-    assign lrst_leg_1_5b_y_r = lrs_leg_1_5b_y_r_1_q;
-    wire [0:0] lrs_leg_1_6a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_6a_y_w_0 (.ck(ck_c2r2), .d(rst_T_r2_q), .q(lrs_leg_1_6a_y_w_0_q));   // (1422.32, 2960.24) c2r2 landing reset run
-    wire [0:0] lrs_leg_1_6a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_6a_y_w_1 (.ck(ck_c2r2), .d(lrs_leg_1_6a_y_w_0_q), .q(lrs_leg_1_6a_y_w_1_q));   // (1775.95, 2960.24) c2r2 landing reset run
-    wire [0:0] lrp_leg_1_6a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_6a_y_w_0 (.ck(ck_c2r2), .d(lrs_leg_1_6a_y_w_1_q), .q(lrp_leg_1_6a_y_w_0_q));   // (1775.95, 2960.24) c2r2 landing reset pad
-    wire [0:0] lrp_leg_1_6a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_6a_y_w_1 (.ck(ck_c2r2), .d(lrp_leg_1_6a_y_w_0_q), .q(lrp_leg_1_6a_y_w_1_q));   // (1775.95, 2960.24) c2r2 landing reset pad
-    wire [0:0] lrp_leg_1_6a_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_6a_y_w_2 (.ck(ck_c2r2), .d(lrp_leg_1_6a_y_w_1_q), .q(lrp_leg_1_6a_y_w_2_q));   // (1775.95, 2960.24) c2r2 landing reset pad
-    assign lrst_leg_1_6a_y_w = lrp_leg_1_6a_y_w_2_q;
-    wire [0:0] lrs_leg_1_6a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_6a_y_r_0 (.ck(ck_c3r2), .d(rst_R_45_q), .q(lrs_leg_1_6a_y_r_0_q));   // (2155.02, 2819.46) c3r2 landing reset run
-    wire [0:0] lrs_leg_1_6a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_6a_y_r_1 (.ck(ck_c3r2), .d(lrs_leg_1_6a_y_r_0_q), .q(lrs_leg_1_6a_y_r_1_q));   // (1878.77, 2819.46) c3r2 landing reset run
-    assign lrst_leg_1_6a_y_r = lrs_leg_1_6a_y_r_1_q;
-    wire [0:0] lrs_leg_1_7a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_7a_y_w_0 (.ck(ck_c2r3), .d(rst_T_r3_q), .q(lrs_leg_1_7a_y_w_0_q));   // (1422.32, 4256.24) c2r3 landing reset run
-    wire [0:0] lrs_leg_1_7a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_7a_y_w_1 (.ck(ck_c2r3), .d(lrs_leg_1_7a_y_w_0_q), .q(lrs_leg_1_7a_y_w_1_q));   // (1775.95, 4256.24) c2r3 landing reset run
-    wire [0:0] lrp_leg_1_7a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_7a_y_w_0 (.ck(ck_c2r3), .d(lrs_leg_1_7a_y_w_1_q), .q(lrp_leg_1_7a_y_w_0_q));   // (1775.95, 4256.24) c2r3 landing reset pad
-    wire [0:0] lrp_leg_1_7a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_7a_y_w_1 (.ck(ck_c2r3), .d(lrp_leg_1_7a_y_w_0_q), .q(lrp_leg_1_7a_y_w_1_q));   // (1775.95, 4256.24) c2r3 landing reset pad
-    wire [0:0] lrp_leg_1_7a_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_1_7a_y_w_2 (.ck(ck_c2r3), .d(lrp_leg_1_7a_y_w_1_q), .q(lrp_leg_1_7a_y_w_2_q));   // (1775.95, 4256.24) c2r3 landing reset pad
-    assign lrst_leg_1_7a_y_w = lrp_leg_1_7a_y_w_2_q;
-    wire [0:0] lrs_leg_1_7a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_7a_y_r_0 (.ck(ck_c3r3), .d(rst_R_49_q), .q(lrs_leg_1_7a_y_r_0_q));   // (2155.02, 4115.46) c3r3 landing reset run
-    wire [0:0] lrs_leg_1_7a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_1_7a_y_r_1 (.ck(ck_c3r3), .d(lrs_leg_1_7a_y_r_0_q), .q(lrs_leg_1_7a_y_r_1_q));   // (1878.77, 4115.46) c3r3 landing reset run
-    assign lrst_leg_1_7a_y_r = lrs_leg_1_7a_y_r_1_q;
-    wire [0:0] lrs_leg_2_0a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_0a_3_w_0 (.ck(ck_c1r0), .d(rst_L_2_q), .q(lrs_leg_2_0a_3_w_0_q));   // (632.88, 418.21) c1r0 landing reset run
-    wire [0:0] lrs_leg_2_0a_3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_0a_3_w_1 (.ck(ck_c1r0), .d(lrs_leg_2_0a_3_w_0_q), .q(lrs_leg_2_0a_3_w_1_q));   // (632.88, 793.22) c1r0 landing reset run
-    wire [0:0] lrs_leg_2_0a_3_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_0a_3_w_2 (.ck(ck_c1r0), .d(lrs_leg_2_0a_3_w_1_q), .q(lrs_leg_2_0a_3_w_2_q));   // (656.64, 1144.47) c1r0 landing reset run
-    wire [0:0] lrp_leg_2_0a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_0a_3_w_0 (.ck(ck_c1r0), .d(lrs_leg_2_0a_3_w_2_q), .q(lrp_leg_2_0a_3_w_0_q));   // (656.64, 1144.47) c1r0 landing reset pad
-    assign lrst_leg_2_0a_3_w = lrp_leg_2_0a_3_w_0_q;
-    wire [0:0] lrs_leg_2_0a_3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_0a_3_r_0 (.ck(ck_c1r1), .d(rst_T_22_q), .q(lrs_leg_2_0a_3_r_0_q));   // (1034.75, 1321.53) c1r1 landing reset run
-    wire [0:0] lrs_leg_2_0a_3_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_0a_3_r_1 (.ck(ck_c1r1), .d(lrs_leg_2_0a_3_r_0_q), .q(lrs_leg_2_0a_3_r_1_q));   // (695.52, 1321.53) c1r1 landing reset run
-    assign lrst_leg_2_0a_3_r = lrs_leg_2_0a_3_r_1_q;
-    wire [0:0] lrs_leg_2_0b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_0b_y_w_0 (.ck(ck_c0r1), .d(rst_L_r1_q), .q(lrs_leg_2_0b_y_w_0_q));   // (278.11, 1764.77) c0r1 landing reset run
-    wire [0:0] lrs_leg_2_0b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_0b_y_w_1 (.ck(ck_c0r1), .d(lrs_leg_2_0b_y_w_0_q), .q(lrs_leg_2_0b_y_w_1_q));   // (566.35, 1764.77) c0r1 landing reset run
-    assign lrst_leg_2_0b_y_w = lrs_leg_2_0b_y_w_1_q;
-    wire [0:0] lrs_leg_2_0b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_0b_y_r_0 (.ck(ck_c1r1), .d(rst_T_23_q), .q(lrs_leg_2_0b_y_r_0_q));   // (1010.84, 1624.05) c1r1 landing reset run
-    wire [0:0] lrs_leg_2_0b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_0b_y_r_1 (.ck(ck_c1r1), .d(lrs_leg_2_0b_y_r_0_q), .q(lrs_leg_2_0b_y_r_1_q));   // (669.17, 1624.05) c1r1 landing reset run
-    wire [0:0] lrp_leg_2_0b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_0b_y_r_0 (.ck(ck_c1r1), .d(lrs_leg_2_0b_y_r_1_q), .q(lrp_leg_2_0b_y_r_0_q));   // (669.17, 1624.05) c1r1 landing reset pad
-    wire [0:0] lrp_leg_2_0b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_0b_y_r_1 (.ck(ck_c1r1), .d(lrp_leg_2_0b_y_r_0_q), .q(lrp_leg_2_0b_y_r_1_q));   // (669.17, 1624.05) c1r1 landing reset pad
-    wire [0:0] lrp_leg_2_0b_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_0b_y_r_2 (.ck(ck_c1r1), .d(lrp_leg_2_0b_y_r_1_q), .q(lrp_leg_2_0b_y_r_2_q));   // (669.17, 1624.05) c1r1 landing reset pad
-    wire [0:0] lrp_leg_2_0b_y_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_0b_y_r_3 (.ck(ck_c1r1), .d(lrp_leg_2_0b_y_r_2_q), .q(lrp_leg_2_0b_y_r_3_q));   // (669.17, 1624.05) c1r1 landing reset pad
-    wire [0:0] lrp_leg_2_0b_y_r_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_0b_y_r_4 (.ck(ck_c1r1), .d(lrp_leg_2_0b_y_r_3_q), .q(lrp_leg_2_0b_y_r_4_q));   // (669.17, 1624.05) c1r1 landing reset pad
-    assign lrst_leg_2_0b_y_r = lrp_leg_2_0b_y_r_4_q;
-    wire [0:0] lrs_leg_2_1a_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_0_w_0 (.ck(ck_c2r0), .d(rst_R_34_q), .q(lrs_leg_2_1a_0_w_0_q));   // (1812.24, 302.00) c2r0 landing reset run
-    wire [0:0] lrs_leg_2_1a_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_0_w_1 (.ck(ck_c2r0), .d(lrs_leg_2_1a_0_w_0_q), .q(lrs_leg_2_1a_0_w_1_q));   // (1773.58, 522.14) c2r0 landing reset run
-    wire [0:0] lrp_leg_2_1a_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1a_0_w_0 (.ck(ck_c2r0), .d(lrs_leg_2_1a_0_w_1_q), .q(lrp_leg_2_1a_0_w_0_q));   // (1773.58, 522.14) c2r0 landing reset pad
-    wire [0:0] lrp_leg_2_1a_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1a_0_w_1 (.ck(ck_c2r0), .d(lrp_leg_2_1a_0_w_0_q), .q(lrp_leg_2_1a_0_w_1_q));   // (1773.58, 522.14) c2r0 landing reset pad
-    wire [0:0] lrp_leg_2_1a_0_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1a_0_w_2 (.ck(ck_c2r0), .d(lrp_leg_2_1a_0_w_1_q), .q(lrp_leg_2_1a_0_w_2_q));   // (1773.58, 522.14) c2r0 landing reset pad
-    wire [0:0] lrp_leg_2_1a_0_w_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1a_0_w_3 (.ck(ck_c2r0), .d(lrp_leg_2_1a_0_w_2_q), .q(lrp_leg_2_1a_0_w_3_q));   // (1773.58, 522.14) c2r0 landing reset pad
-    assign lrst_leg_2_1a_0_w = lrp_leg_2_1a_0_w_3_q;
-    wire [0:0] lrs_leg_2_1a_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_0_r_0 (.ck(ck_c3r0), .d(rst_R_r0_q), .q(lrs_leg_2_1a_0_r_0_q));   // (2171.97, 621.87) c3r0 landing reset run
-    wire [0:0] lrs_leg_2_1a_0_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_0_r_1 (.ck(ck_c3r0), .d(lrs_leg_2_1a_0_r_0_q), .q(lrs_leg_2_1a_0_r_1_q));   // (1842.26, 621.87) c3r0 landing reset run
-    assign lrst_leg_2_1a_0_r = lrs_leg_2_1a_0_r_1_q;
-    wire [0:0] lrs_leg_2_1a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_3_w_0 (.ck(ck_c3r0), .d(rst_R_40_q), .q(lrs_leg_2_1a_3_w_0_q));   // (2129.62, 1153.11) c3r0 landing reset run
-    wire [0:0] lrs_leg_2_1a_3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_3_w_1 (.ck(ck_c3r0), .d(lrs_leg_2_1a_3_w_0_q), .q(lrs_leg_2_1a_3_w_1_q));   // (1840.32, 1153.11) c3r0 landing reset run
-    wire [0:0] lrp_leg_2_1a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1a_3_w_0 (.ck(ck_c3r0), .d(lrs_leg_2_1a_3_w_1_q), .q(lrp_leg_2_1a_3_w_0_q));   // (1840.32, 1153.11) c3r0 landing reset pad
-    assign lrst_leg_2_1a_3_w = lrp_leg_2_1a_3_w_0_q;
-    wire [0:0] lrs_leg_2_1a_3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_3_r_0 (.ck(ck_c3r1), .d(rst_R_41_q), .q(lrs_leg_2_1a_3_r_0_q));   // (2220.37, 1321.53) c3r1 landing reset run
-    wire [0:0] lrs_leg_2_1a_3_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_3_r_1 (.ck(ck_c3r1), .d(lrs_leg_2_1a_3_r_0_q), .q(lrs_leg_2_1a_3_r_1_q));   // (1866.24, 1321.53) c3r1 landing reset run
-    assign lrst_leg_2_1a_3_r = lrs_leg_2_1a_3_r_1_q;
-    wire [0:0] lrs_leg_2_1a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_y_w_0 (.ck(ck_c3r1), .d(rst_R_41_q), .q(lrs_leg_2_1a_y_w_0_q));   // (2201.25, 1361.70) c3r1 landing reset run
-    wire [0:0] lrs_leg_2_1a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_y_w_1 (.ck(ck_c3r1), .d(lrs_leg_2_1a_y_w_0_q), .q(lrs_leg_2_1a_y_w_1_q));   // (1868.18, 1361.70) c3r1 landing reset run
-    assign lrst_leg_2_1a_y_w = lrs_leg_2_1a_y_w_1_q;
-    wire [0:0] lrs_leg_2_1a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_y_r_0 (.ck(ck_c2r1), .d(rst_T_23_q), .q(lrs_leg_2_1a_y_r_0_q));   // (1486.05, 1470.07) c2r1 landing reset run
-    wire [0:0] lrs_leg_2_1a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1a_y_r_1 (.ck(ck_c2r1), .d(lrs_leg_2_1a_y_r_0_q), .q(lrs_leg_2_1a_y_r_1_q));   // (1773.58, 1470.07) c2r1 landing reset run
-    wire [0:0] lrp_leg_2_1a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1a_y_r_0 (.ck(ck_c2r1), .d(lrs_leg_2_1a_y_r_1_q), .q(lrp_leg_2_1a_y_r_0_q));   // (1773.58, 1470.07) c2r1 landing reset pad
-    wire [0:0] lrp_leg_2_1a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1a_y_r_1 (.ck(ck_c2r1), .d(lrp_leg_2_1a_y_r_0_q), .q(lrp_leg_2_1a_y_r_1_q));   // (1773.58, 1470.07) c2r1 landing reset pad
-    wire [0:0] lrp_leg_2_1a_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1a_y_r_2 (.ck(ck_c2r1), .d(lrp_leg_2_1a_y_r_1_q), .q(lrp_leg_2_1a_y_r_2_q));   // (1773.58, 1470.07) c2r1 landing reset pad
-    wire [0:0] lrp_leg_2_1a_y_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1a_y_r_3 (.ck(ck_c2r1), .d(lrp_leg_2_1a_y_r_2_q), .q(lrp_leg_2_1a_y_r_3_q));   // (1773.58, 1470.07) c2r1 landing reset pad
-    assign lrst_leg_2_1a_y_r = lrp_leg_2_1a_y_r_3_q;
-    wire [0:0] lrs_leg_2_1b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1b_y_w_0 (.ck(ck_c3r1), .d(rst_R_r1_q), .q(lrs_leg_2_1b_y_w_0_q));   // (2167.01, 1764.77) c3r1 landing reset run
-    wire [0:0] lrs_leg_2_1b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1b_y_w_1 (.ck(ck_c3r1), .d(lrs_leg_2_1b_y_w_0_q), .q(lrs_leg_2_1b_y_w_1_q));   // (1878.77, 1764.77) c3r1 landing reset run
-    assign lrst_leg_2_1b_y_w = lrs_leg_2_1b_y_w_1_q;
-    wire [0:0] lrs_leg_2_1b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1b_y_r_0 (.ck(ck_c2r1), .d(rst_T_23_q), .q(lrs_leg_2_1b_y_r_0_q));   // (1434.28, 1624.05) c2r1 landing reset run
-    wire [0:0] lrs_leg_2_1b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_1b_y_r_1 (.ck(ck_c2r1), .d(lrs_leg_2_1b_y_r_0_q), .q(lrs_leg_2_1b_y_r_1_q));   // (1775.95, 1624.05) c2r1 landing reset run
-    wire [0:0] lrp_leg_2_1b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1b_y_r_0 (.ck(ck_c2r1), .d(lrs_leg_2_1b_y_r_1_q), .q(lrp_leg_2_1b_y_r_0_q));   // (1775.95, 1624.05) c2r1 landing reset pad
-    wire [0:0] lrp_leg_2_1b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1b_y_r_1 (.ck(ck_c2r1), .d(lrp_leg_2_1b_y_r_0_q), .q(lrp_leg_2_1b_y_r_1_q));   // (1775.95, 1624.05) c2r1 landing reset pad
-    wire [0:0] lrp_leg_2_1b_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1b_y_r_2 (.ck(ck_c2r1), .d(lrp_leg_2_1b_y_r_1_q), .q(lrp_leg_2_1b_y_r_2_q));   // (1775.95, 1624.05) c2r1 landing reset pad
-    wire [0:0] lrp_leg_2_1b_y_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1b_y_r_3 (.ck(ck_c2r1), .d(lrp_leg_2_1b_y_r_2_q), .q(lrp_leg_2_1b_y_r_3_q));   // (1775.95, 1624.05) c2r1 landing reset pad
-    wire [0:0] lrp_leg_2_1b_y_r_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_1b_y_r_4 (.ck(ck_c2r1), .d(lrp_leg_2_1b_y_r_3_q), .q(lrp_leg_2_1b_y_r_4_q));   // (1775.95, 1624.05) c2r1 landing reset pad
-    assign lrst_leg_2_1b_y_r = lrp_leg_2_1b_y_r_4_q;
-    wire [0:0] lrs_leg_2_2a_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2a_0_w_0 (.ck(ck_c0r2), .d(rst_L_r2_q), .q(lrs_leg_2_2a_0_w_0_q));   // (303.57, 3114.15) c0r2 landing reset run
-    wire [0:0] lrs_leg_2_2a_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2a_0_w_1 (.ck(ck_c0r2), .d(lrs_leg_2_2a_0_w_0_q), .q(lrs_leg_2_2a_0_w_1_q));   // (563.98, 3114.15) c0r2 landing reset run
-    assign lrst_leg_2_2a_0_w = lrs_leg_2_2a_0_w_1_q;
-    wire [0:0] lrs_leg_2_2a_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2a_0_r_0 (.ck(ck_c0r2), .d(rst_L_r2_q), .q(lrs_leg_2_2a_0_r_0_q));   // (296.69, 3196.59) c0r2 landing reset run
-    wire [0:0] lrs_leg_2_2a_0_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2a_0_r_1 (.ck(ck_c1r2), .d(lrs_leg_2_2a_0_r_0_q), .q(lrs_leg_2_2a_0_r_1_q));   // (632.66, 3196.59) c1r2 landing reset run
-    assign lrst_leg_2_2a_0_r = lrs_leg_2_2a_0_r_1_q;
-    wire [0:0] lrs_leg_2_2a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2a_3_w_0 (.ck(ck_c0r2), .d(rst_L_16_q), .q(lrs_leg_2_2a_3_w_0_q));   // (332.78, 3753.75) c0r2 landing reset run
-    wire [0:0] lrs_leg_2_2a_3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2a_3_w_1 (.ck(ck_c1r2), .d(lrs_leg_2_2a_3_w_0_q), .q(lrs_leg_2_2a_3_w_1_q));   // (630.72, 3753.75) c1r2 landing reset run
-    assign lrst_leg_2_2a_3_w = lrs_leg_2_2a_3_w_1_q;
-    wire [0:0] lrs_leg_2_2a_3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2a_3_r_0 (.ck(ck_c0r3), .d(rst_L_16_q), .q(lrs_leg_2_2a_3_r_0_q));   // (256.93, 3922.16) c0r3 landing reset run
-    wire [0:0] lrs_leg_2_2a_3_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2a_3_r_1 (.ck(ck_c1r3), .d(lrs_leg_2_2a_3_r_0_q), .q(lrs_leg_2_2a_3_r_1_q));   // (630.72, 3922.16) c1r3 landing reset run
-    assign lrst_leg_2_2a_3_r = lrs_leg_2_2a_3_r_1_q;
-    wire [0:0] lrs_leg_2_2b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2b_y_w_0 (.ck(ck_c0r3), .d(rst_L_r3_q), .q(lrs_leg_2_2b_y_w_0_q));   // (278.11, 4356.77) c0r3 landing reset run
-    wire [0:0] lrs_leg_2_2b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2b_y_w_1 (.ck(ck_c0r3), .d(lrs_leg_2_2b_y_w_0_q), .q(lrs_leg_2_2b_y_w_1_q));   // (566.35, 4356.77) c0r3 landing reset run
-    assign lrst_leg_2_2b_y_w = lrs_leg_2_2b_y_w_1_q;
-    wire [0:0] lrs_leg_2_2b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2b_y_r_0 (.ck(ck_c1r3), .d(rst_T_31_q), .q(lrs_leg_2_2b_y_r_0_q));   // (1010.84, 4216.05) c1r3 landing reset run
-    wire [0:0] lrs_leg_2_2b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_2b_y_r_1 (.ck(ck_c1r3), .d(lrs_leg_2_2b_y_r_0_q), .q(lrs_leg_2_2b_y_r_1_q));   // (669.17, 4216.05) c1r3 landing reset run
-    wire [0:0] lrp_leg_2_2b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_2b_y_r_0 (.ck(ck_c1r3), .d(lrs_leg_2_2b_y_r_1_q), .q(lrp_leg_2_2b_y_r_0_q));   // (669.17, 4216.05) c1r3 landing reset pad
-    wire [0:0] lrp_leg_2_2b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_2b_y_r_1 (.ck(ck_c1r3), .d(lrp_leg_2_2b_y_r_0_q), .q(lrp_leg_2_2b_y_r_1_q));   // (669.17, 4216.05) c1r3 landing reset pad
-    wire [0:0] lrp_leg_2_2b_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_2b_y_r_2 (.ck(ck_c1r3), .d(lrp_leg_2_2b_y_r_1_q), .q(lrp_leg_2_2b_y_r_2_q));   // (669.17, 4216.05) c1r3 landing reset pad
-    wire [0:0] lrp_leg_2_2b_y_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_2b_y_r_3 (.ck(ck_c1r3), .d(lrp_leg_2_2b_y_r_2_q), .q(lrp_leg_2_2b_y_r_3_q));   // (669.17, 4216.05) c1r3 landing reset pad
-    wire [0:0] lrp_leg_2_2b_y_r_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_2b_y_r_4 (.ck(ck_c1r3), .d(lrp_leg_2_2b_y_r_3_q), .q(lrp_leg_2_2b_y_r_4_q));   // (669.17, 4216.05) c1r3 landing reset pad
-    assign lrst_leg_2_2b_y_r = lrp_leg_2_2b_y_r_4_q;
-    wire [0:0] lrs_leg_2_3a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3a_3_w_0 (.ck(ck_c3r2), .d(rst_R_48_q), .q(lrs_leg_2_3a_3_w_0_q));   // (2129.62, 3745.11) c3r2 landing reset run
-    wire [0:0] lrs_leg_2_3a_3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3a_3_w_1 (.ck(ck_c3r2), .d(lrs_leg_2_3a_3_w_0_q), .q(lrs_leg_2_3a_3_w_1_q));   // (1840.32, 3745.11) c3r2 landing reset run
-    wire [0:0] lrp_leg_2_3a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_3a_3_w_0 (.ck(ck_c3r2), .d(lrs_leg_2_3a_3_w_1_q), .q(lrp_leg_2_3a_3_w_0_q));   // (1840.32, 3745.11) c3r2 landing reset pad
-    assign lrst_leg_2_3a_3_w = lrp_leg_2_3a_3_w_0_q;
-    wire [0:0] lrs_leg_2_3a_3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3a_3_r_0 (.ck(ck_c3r3), .d(rst_R_49_q), .q(lrs_leg_2_3a_3_r_0_q));   // (2220.37, 3913.53) c3r3 landing reset run
-    wire [0:0] lrs_leg_2_3a_3_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3a_3_r_1 (.ck(ck_c3r3), .d(lrs_leg_2_3a_3_r_0_q), .q(lrs_leg_2_3a_3_r_1_q));   // (1866.24, 3913.53) c3r3 landing reset run
-    assign lrst_leg_2_3a_3_r = lrs_leg_2_3a_3_r_1_q;
-    wire [0:0] lrs_leg_2_3a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3a_y_w_0 (.ck(ck_c3r3), .d(rst_R_49_q), .q(lrs_leg_2_3a_y_w_0_q));   // (2177.49, 3975.30) c3r3 landing reset run
-    wire [0:0] lrs_leg_2_3a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3a_y_w_1 (.ck(ck_c3r3), .d(lrs_leg_2_3a_y_w_0_q), .q(lrs_leg_2_3a_y_w_1_q));   // (1842.26, 3975.30) c3r3 landing reset run
-    assign lrst_leg_2_3a_y_w = lrs_leg_2_3a_y_w_1_q;
-    wire [0:0] lrs_leg_2_3a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3a_y_r_0 (.ck(ck_c2r3), .d(rst_T_31_q), .q(lrs_leg_2_3a_y_r_0_q));   // (1486.05, 4062.07) c2r3 landing reset run
-    wire [0:0] lrs_leg_2_3a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3a_y_r_1 (.ck(ck_c2r3), .d(lrs_leg_2_3a_y_r_0_q), .q(lrs_leg_2_3a_y_r_1_q));   // (1773.58, 4062.07) c2r3 landing reset run
-    wire [0:0] lrp_leg_2_3a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_3a_y_r_0 (.ck(ck_c2r3), .d(lrs_leg_2_3a_y_r_1_q), .q(lrp_leg_2_3a_y_r_0_q));   // (1773.58, 4062.07) c2r3 landing reset pad
-    wire [0:0] lrp_leg_2_3a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_3a_y_r_1 (.ck(ck_c2r3), .d(lrp_leg_2_3a_y_r_0_q), .q(lrp_leg_2_3a_y_r_1_q));   // (1773.58, 4062.07) c2r3 landing reset pad
-    wire [0:0] lrp_leg_2_3a_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_3a_y_r_2 (.ck(ck_c2r3), .d(lrp_leg_2_3a_y_r_1_q), .q(lrp_leg_2_3a_y_r_2_q));   // (1773.58, 4062.07) c2r3 landing reset pad
-    wire [0:0] lrp_leg_2_3a_y_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_3a_y_r_3 (.ck(ck_c2r3), .d(lrp_leg_2_3a_y_r_2_q), .q(lrp_leg_2_3a_y_r_3_q));   // (1773.58, 4062.07) c2r3 landing reset pad
-    assign lrst_leg_2_3a_y_r = lrp_leg_2_3a_y_r_3_q;
-    wire [0:0] lrs_leg_2_3b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3b_y_w_0 (.ck(ck_c3r3), .d(rst_R_r3_q), .q(lrs_leg_2_3b_y_w_0_q));   // (2167.01, 4356.77) c3r3 landing reset run
-    wire [0:0] lrs_leg_2_3b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3b_y_w_1 (.ck(ck_c3r3), .d(lrs_leg_2_3b_y_w_0_q), .q(lrs_leg_2_3b_y_w_1_q));   // (1878.77, 4356.77) c3r3 landing reset run
-    assign lrst_leg_2_3b_y_w = lrs_leg_2_3b_y_w_1_q;
-    wire [0:0] lrs_leg_2_3b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3b_y_r_0 (.ck(ck_c2r3), .d(rst_T_31_q), .q(lrs_leg_2_3b_y_r_0_q));   // (1434.28, 4216.05) c2r3 landing reset run
-    wire [0:0] lrs_leg_2_3b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_2_3b_y_r_1 (.ck(ck_c2r3), .d(lrs_leg_2_3b_y_r_0_q), .q(lrs_leg_2_3b_y_r_1_q));   // (1775.95, 4216.05) c2r3 landing reset run
-    wire [0:0] lrp_leg_2_3b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_3b_y_r_0 (.ck(ck_c2r3), .d(lrs_leg_2_3b_y_r_1_q), .q(lrp_leg_2_3b_y_r_0_q));   // (1775.95, 4216.05) c2r3 landing reset pad
-    wire [0:0] lrp_leg_2_3b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_3b_y_r_1 (.ck(ck_c2r3), .d(lrp_leg_2_3b_y_r_0_q), .q(lrp_leg_2_3b_y_r_1_q));   // (1775.95, 4216.05) c2r3 landing reset pad
-    wire [0:0] lrp_leg_2_3b_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_3b_y_r_2 (.ck(ck_c2r3), .d(lrp_leg_2_3b_y_r_1_q), .q(lrp_leg_2_3b_y_r_2_q));   // (1775.95, 4216.05) c2r3 landing reset pad
-    wire [0:0] lrp_leg_2_3b_y_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_3b_y_r_3 (.ck(ck_c2r3), .d(lrp_leg_2_3b_y_r_2_q), .q(lrp_leg_2_3b_y_r_3_q));   // (1775.95, 4216.05) c2r3 landing reset pad
-    wire [0:0] lrp_leg_2_3b_y_r_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_2_3b_y_r_4 (.ck(ck_c2r3), .d(lrp_leg_2_3b_y_r_3_q), .q(lrp_leg_2_3b_y_r_4_q));   // (1775.95, 4216.05) c2r3 landing reset pad
-    assign lrst_leg_2_3b_y_r = lrp_leg_2_3b_y_r_4_q;
-    wire [0:0] lrs_leg_3_0a_4_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0a_4_w_0 (.ck(ck_c1r1), .d(rst_T_26_q), .q(lrs_leg_3_0a_4_w_0_q));   // (1119.36, 2600.64) c1r1 landing reset run
-    assign lrst_leg_3_0a_4_w = lrs_leg_3_0a_4_w_0_q;
-    wire [0:0] lrs_leg_3_0a_4_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0a_4_r_0 (.ck(ck_c2r1), .d(rst_T_26_q), .q(lrs_leg_3_0a_4_r_0_q));   // (1354.45, 2609.28) c2r1 landing reset run
-    assign lrst_leg_3_0a_4_r = lrs_leg_3_0a_4_r_0_q;
-    wire [0:0] lrs_leg_3_0a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0a_y_w_0 (.ck(ck_c2r1), .d(rst_T_26_q), .q(lrs_leg_3_0a_y_w_0_q));   // (1391.36, 2596.75) c2r1 landing reset run
-    wire [0:0] lrs_leg_3_0a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0a_y_w_1 (.ck(ck_c2r1), .d(lrs_leg_3_0a_y_w_0_q), .q(lrs_leg_3_0a_y_w_1_q));   // (1690.81, 2596.75) c2r1 landing reset run
-    wire [0:0] lrp_leg_3_0a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_0a_y_w_0 (.ck(ck_c2r1), .d(lrs_leg_3_0a_y_w_1_q), .q(lrp_leg_3_0a_y_w_0_q));   // (1690.81, 2596.75) c2r1 landing reset pad
-    assign lrst_leg_3_0a_y_w = lrp_leg_3_0a_y_w_0_q;
-    wire [0:0] lrs_leg_3_0a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0a_y_r_0 (.ck(ck_c2r2), .d(rst_T_27_q), .q(lrs_leg_3_0a_y_r_0_q));   // (1484.46, 2762.94) c2r2 landing reset run
-    wire [0:0] lrs_leg_3_0a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0a_y_r_1 (.ck(ck_c2r2), .d(lrs_leg_3_0a_y_r_0_q), .q(lrs_leg_3_0a_y_r_1_q));   // (1773.53, 2762.94) c2r2 landing reset run
-    assign lrst_leg_3_0a_y_r = lrs_leg_3_0a_y_r_1_q;
-    wire [0:0] lrs_leg_3_0b_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_0_w_0 (.ck(ck_c2r1), .d(rst_T_r1_q), .q(lrs_leg_3_0b_0_w_0_q));   // (1494.27, 1810.52) c2r1 landing reset run
-    wire [0:0] lrs_leg_3_0b_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_0_w_1 (.ck(ck_c2r1), .d(lrs_leg_3_0b_0_w_0_q), .q(lrs_leg_3_0b_0_w_1_q));   // (1773.58, 1810.52) c2r1 landing reset run
-    wire [0:0] lrp_leg_3_0b_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_0b_0_w_0 (.ck(ck_c2r1), .d(lrs_leg_3_0b_0_w_1_q), .q(lrp_leg_3_0b_0_w_0_q));   // (1773.58, 1810.52) c2r1 landing reset pad
-    wire [0:0] lrp_leg_3_0b_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_0b_0_w_1 (.ck(ck_c2r1), .d(lrp_leg_3_0b_0_w_0_q), .q(lrp_leg_3_0b_0_w_1_q));   // (1773.58, 1810.52) c2r1 landing reset pad
-    wire [0:0] lrp_leg_3_0b_0_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_0b_0_w_2 (.ck(ck_c2r1), .d(lrp_leg_3_0b_0_w_1_q), .q(lrp_leg_3_0b_0_w_2_q));   // (1773.58, 1810.52) c2r1 landing reset pad
-    wire [0:0] lrp_leg_3_0b_0_w_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_0b_0_w_3 (.ck(ck_c2r1), .d(lrp_leg_3_0b_0_w_2_q), .q(lrp_leg_3_0b_0_w_3_q));   // (1773.58, 1810.52) c2r1 landing reset pad
-    assign lrst_leg_3_0b_0_w = lrp_leg_3_0b_0_w_3_q;
-    wire [0:0] lrs_leg_3_0b_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_0_r_0 (.ck(ck_c3r1), .d(rst_R_r1_q), .q(lrs_leg_3_0b_0_r_0_q));   // (2146.05, 1866.02) c3r1 landing reset run
-    wire [0:0] lrs_leg_3_0b_0_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_0_r_1 (.ck(ck_c3r1), .d(lrs_leg_3_0b_0_r_0_q), .q(lrs_leg_3_0b_0_r_1_q));   // (1842.26, 1866.02) c3r1 landing reset run
-    assign lrst_leg_3_0b_0_r = lrs_leg_3_0b_0_r_1_q;
-    wire [0:0] lrs_leg_3_0b_5_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_5_w_0 (.ck(ck_c3r1), .d(rst_R_44_q), .q(lrs_leg_3_0b_5_w_0_q));   // (2201.31, 2600.57) c3r1 landing reset run
-    wire [0:0] lrs_leg_3_0b_5_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_5_w_1 (.ck(ck_c3r1), .d(lrs_leg_3_0b_5_w_0_q), .q(lrs_leg_3_0b_5_w_1_q));   // (1866.24, 2600.57) c3r1 landing reset run
-    wire [0:0] lrp_leg_3_0b_5_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_0b_5_w_0 (.ck(ck_c3r1), .d(lrs_leg_3_0b_5_w_1_q), .q(lrp_leg_3_0b_5_w_0_q));   // (1866.24, 2600.57) c3r1 landing reset pad
-    assign lrst_leg_3_0b_5_w = lrp_leg_3_0b_5_w_0_q;
-    wire [0:0] lrs_leg_3_0b_5_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_5_r_0 (.ck(ck_c3r2), .d(rst_R_45_q), .q(lrs_leg_3_0b_5_r_0_q));   // (2142.99, 2746.36) c3r2 landing reset run
-    wire [0:0] lrs_leg_3_0b_5_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_5_r_1 (.ck(ck_c3r2), .d(lrs_leg_3_0b_5_r_0_q), .q(lrs_leg_3_0b_5_r_1_q));   // (1840.32, 2746.36) c3r2 landing reset run
-    assign lrst_leg_3_0b_5_r = lrs_leg_3_0b_5_r_1_q;
-    wire [0:0] lrs_leg_3_0b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_y_w_0 (.ck(ck_c3r2), .d(rst_R_45_q), .q(lrs_leg_3_0b_y_w_0_q));   // (2140.76, 2827.45) c3r2 landing reset run
-    wire [0:0] lrs_leg_3_0b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_y_w_1 (.ck(ck_c3r2), .d(lrs_leg_3_0b_y_w_0_q), .q(lrs_leg_3_0b_y_w_1_q));   // (1842.26, 2827.45) c3r2 landing reset run
-    assign lrst_leg_3_0b_y_w = lrs_leg_3_0b_y_w_1_q;
-    wire [0:0] lrs_leg_3_0b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_y_r_0 (.ck(ck_c2r2), .d(rst_T_27_q), .q(lrs_leg_3_0b_y_r_0_q));   // (1455.97, 2874.30) c2r2 landing reset run
-    wire [0:0] lrs_leg_3_0b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_0b_y_r_1 (.ck(ck_c2r2), .d(lrs_leg_3_0b_y_r_0_q), .q(lrs_leg_3_0b_y_r_1_q));   // (1773.58, 2874.30) c2r2 landing reset run
-    wire [0:0] lrp_leg_3_0b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_0b_y_r_0 (.ck(ck_c2r2), .d(lrs_leg_3_0b_y_r_1_q), .q(lrp_leg_3_0b_y_r_0_q));   // (1773.58, 2874.30) c2r2 landing reset pad
-    wire [0:0] lrp_leg_3_0b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_0b_y_r_1 (.ck(ck_c2r2), .d(lrp_leg_3_0b_y_r_0_q), .q(lrp_leg_3_0b_y_r_1_q));   // (1773.58, 2874.30) c2r2 landing reset pad
-    wire [0:0] lrp_leg_3_0b_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_0b_y_r_2 (.ck(ck_c2r2), .d(lrp_leg_3_0b_y_r_1_q), .q(lrp_leg_3_0b_y_r_2_q));   // (1773.58, 2874.30) c2r2 landing reset pad
-    wire [0:0] lrp_leg_3_0b_y_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_0b_y_r_3 (.ck(ck_c2r2), .d(lrp_leg_3_0b_y_r_2_q), .q(lrp_leg_3_0b_y_r_3_q));   // (1773.58, 2874.30) c2r2 landing reset pad
-    assign lrst_leg_3_0b_y_r = lrp_leg_3_0b_y_r_3_q;
-    wire [0:0] lrs_leg_3_1a_2_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1a_2_w_0 (.ck(ck_c1r3), .d(rst_T_31_q), .q(lrs_leg_3_1a_2_w_0_q));   // (986.89, 3991.53) c1r3 landing reset run
-    wire [0:0] lrs_leg_3_1a_2_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1a_2_w_1 (.ck(ck_c1r3), .d(lrs_leg_3_1a_2_w_0_q), .q(lrs_leg_3_1a_2_w_1_q));   // (656.64, 3991.53) c1r3 landing reset run
-    wire [0:0] lrp_leg_3_1a_2_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_1a_2_w_0 (.ck(ck_c1r3), .d(lrs_leg_3_1a_2_w_1_q), .q(lrp_leg_3_1a_2_w_0_q));   // (656.64, 3991.53) c1r3 landing reset pad
-    wire [0:0] lrp_leg_3_1a_2_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_1a_2_w_1 (.ck(ck_c1r3), .d(lrp_leg_3_1a_2_w_0_q), .q(lrp_leg_3_1a_2_w_1_q));   // (656.64, 3991.53) c1r3 landing reset pad
-    wire [0:0] lrp_leg_3_1a_2_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_1a_2_w_2 (.ck(ck_c1r3), .d(lrp_leg_3_1a_2_w_1_q), .q(lrp_leg_3_1a_2_w_2_q));   // (656.64, 3991.53) c1r3 landing reset pad
-    assign lrst_leg_3_1a_2_w = lrp_leg_3_1a_2_w_2_q;
-    wire [0:0] lrs_leg_3_1a_2_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1a_2_r_0 (.ck(ck_c0r2), .d(rst_L_16_q), .q(lrs_leg_3_1a_2_r_0_q));   // (294.25, 3847.52) c0r2 landing reset run
-    wire [0:0] lrs_leg_3_1a_2_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1a_2_r_1 (.ck(ck_c1r2), .d(lrs_leg_3_1a_2_r_0_q), .q(lrs_leg_3_1a_2_r_1_q));   // (630.72, 3847.52) c1r2 landing reset run
-    assign lrst_leg_3_1a_2_r = lrs_leg_3_1a_2_r_1_q;
-    wire [0:0] lrs_leg_3_1b_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_0_w_0 (.ck(ck_c2r3), .d(rst_T_r3_q), .q(lrs_leg_3_1b_0_w_0_q));   // (1465.23, 4344.44) c2r3 landing reset run
-    wire [0:0] lrs_leg_3_1b_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_0_w_1 (.ck(ck_c2r3), .d(lrs_leg_3_1b_0_w_0_q), .q(lrs_leg_3_1b_0_w_1_q));   // (1773.58, 4344.44) c2r3 landing reset run
-    wire [0:0] lrp_leg_3_1b_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_1b_0_w_0 (.ck(ck_c2r3), .d(lrs_leg_3_1b_0_w_1_q), .q(lrp_leg_3_1b_0_w_0_q));   // (1773.58, 4344.44) c2r3 landing reset pad
-    wire [0:0] lrp_leg_3_1b_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_1b_0_w_1 (.ck(ck_c2r3), .d(lrp_leg_3_1b_0_w_0_q), .q(lrp_leg_3_1b_0_w_1_q));   // (1773.58, 4344.44) c2r3 landing reset pad
-    wire [0:0] lrp_leg_3_1b_0_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_1b_0_w_2 (.ck(ck_c2r3), .d(lrp_leg_3_1b_0_w_1_q), .q(lrp_leg_3_1b_0_w_2_q));   // (1773.58, 4344.44) c2r3 landing reset pad
-    assign lrst_leg_3_1b_0_w = lrp_leg_3_1b_0_w_2_q;
-    wire [0:0] lrs_leg_3_1b_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_0_r_0 (.ck(ck_c3r3), .d(rst_R_49_q), .q(lrs_leg_3_1b_0_r_0_q));   // (2152.12, 4146.16) c3r3 landing reset run
-    wire [0:0] lrs_leg_3_1b_0_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_0_r_1 (.ck(ck_c3r3), .d(lrs_leg_3_1b_0_r_0_q), .q(lrs_leg_3_1b_0_r_1_q));   // (1842.26, 4146.16) c3r3 landing reset run
-    assign lrst_leg_3_1b_0_r = lrs_leg_3_1b_0_r_1_q;
-    wire [0:0] lrs_leg_3_1b_1_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_1_w_0 (.ck(ck_c3r3), .d(rst_R_49_q), .q(lrs_leg_3_1b_1_w_0_q));   // (2136.30, 4057.28) c3r3 landing reset run
-    wire [0:0] lrs_leg_3_1b_1_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_1_w_1 (.ck(ck_c3r3), .d(lrs_leg_3_1b_1_w_0_q), .q(lrs_leg_3_1b_1_w_1_q));   // (1841.85, 4057.28) c3r3 landing reset run
-    assign lrst_leg_3_1b_1_w = lrs_leg_3_1b_1_w_1_q;
-    wire [0:0] lrs_leg_3_1b_1_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_1_r_0 (.ck(ck_c2r2), .d(rst_T_30_q), .q(lrs_leg_3_1b_1_r_0_q));   // (1395.63, 3904.15) c2r2 landing reset run
-    wire [0:0] lrs_leg_3_1b_1_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_1_r_1 (.ck(ck_c2r2), .d(lrs_leg_3_1b_1_r_0_q), .q(lrs_leg_3_1b_1_r_1_q));   // (1710.74, 3904.15) c2r2 landing reset run
-    wire [0:0] lrp_leg_3_1b_1_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_1b_1_r_0 (.ck(ck_c2r2), .d(lrs_leg_3_1b_1_r_1_q), .q(lrp_leg_3_1b_1_r_0_q));   // (1710.74, 3904.15) c2r2 landing reset pad
-    wire [0:0] lrp_leg_3_1b_1_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_1b_1_r_1 (.ck(ck_c2r2), .d(lrp_leg_3_1b_1_r_0_q), .q(lrp_leg_3_1b_1_r_1_q));   // (1710.74, 3904.15) c2r2 landing reset pad
-    wire [0:0] lrp_leg_3_1b_1_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_1b_1_r_2 (.ck(ck_c2r2), .d(lrp_leg_3_1b_1_r_1_q), .q(lrp_leg_3_1b_1_r_2_q));   // (1710.74, 3904.15) c2r2 landing reset pad
-    wire [0:0] lrp_leg_3_1b_1_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_1b_1_r_3 (.ck(ck_c2r2), .d(lrp_leg_3_1b_1_r_2_q), .q(lrp_leg_3_1b_1_r_3_q));   // (1710.74, 3904.15) c2r2 landing reset pad
-    wire [0:0] lrp_leg_3_1b_1_r_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_3_1b_1_r_4 (.ck(ck_c2r2), .d(lrp_leg_3_1b_1_r_3_q), .q(lrp_leg_3_1b_1_r_4_q));   // (1710.74, 3904.15) c2r2 landing reset pad
-    assign lrst_leg_3_1b_1_r = lrp_leg_3_1b_1_r_4_q;
-    wire [0:0] lrs_leg_3_1b_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_3_w_0 (.ck(ck_c2r2), .d(rst_T_30_q), .q(lrs_leg_3_1b_3_w_0_q));   // (1297.76, 3879.36) c2r2 landing reset run
-    assign lrst_leg_3_1b_3_w = lrs_leg_3_1b_3_w_0_q;
-    wire [0:0] lrs_leg_3_1b_3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_3_1b_3_r_0 (.ck(ck_c1r2), .d(rst_T_30_q), .q(lrs_leg_3_1b_3_r_0_q));   // (1004.88, 3905.28) c1r2 landing reset run
-    assign lrst_leg_3_1b_3_r = lrs_leg_3_1b_3_r_0_q;
-    wire [0:0] lrs_leg_4_0a_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_0_w_0 (.ck(ck_c2r2), .d(rst_T_r2_q), .q(lrs_leg_4_0a_0_w_0_q));   // (1473.23, 3064.44) c2r2 landing reset run
-    wire [0:0] lrs_leg_4_0a_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_0_w_1 (.ck(ck_c2r2), .d(lrs_leg_4_0a_0_w_0_q), .q(lrs_leg_4_0a_0_w_1_q));   // (1773.58, 3064.44) c2r2 landing reset run
-    wire [0:0] lrp_leg_4_0a_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0a_0_w_0 (.ck(ck_c2r2), .d(lrs_leg_4_0a_0_w_1_q), .q(lrp_leg_4_0a_0_w_0_q));   // (1773.58, 3064.44) c2r2 landing reset pad
-    wire [0:0] lrp_leg_4_0a_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0a_0_w_1 (.ck(ck_c2r2), .d(lrp_leg_4_0a_0_w_0_q), .q(lrp_leg_4_0a_0_w_1_q));   // (1773.58, 3064.44) c2r2 landing reset pad
-    wire [0:0] lrp_leg_4_0a_0_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0a_0_w_2 (.ck(ck_c2r2), .d(lrp_leg_4_0a_0_w_1_q), .q(lrp_leg_4_0a_0_w_2_q));   // (1773.58, 3064.44) c2r2 landing reset pad
-    assign lrst_leg_4_0a_0_w = lrp_leg_4_0a_0_w_2_q;
-    wire [0:0] lrs_leg_4_0a_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_0_r_0 (.ck(ck_c3r2), .d(rst_R_45_q), .q(lrs_leg_4_0a_0_r_0_q));   // (2199.62, 2945.16) c3r2 landing reset run
-    wire [0:0] lrs_leg_4_0a_0_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_0_r_1 (.ck(ck_c3r2), .d(lrs_leg_4_0a_0_r_0_q), .q(lrs_leg_4_0a_0_r_1_q));   // (1842.26, 2945.16) c3r2 landing reset run
-    assign lrst_leg_4_0a_0_r = lrs_leg_4_0a_0_r_1_q;
-    wire [0:0] lrs_leg_4_0a_2_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_2_w_0 (.ck(ck_c3r2), .d(rst_R_45_q), .q(lrs_leg_4_0a_2_w_0_q));   // (2213.55, 2631.17) c3r2 landing reset run
-    wire [0:0] lrs_leg_4_0a_2_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_2_w_1 (.ck(ck_c3r2), .d(lrs_leg_4_0a_2_w_0_q), .q(lrs_leg_4_0a_2_w_1_q));   // (1866.24, 2631.17) c3r2 landing reset run
-    assign lrst_leg_4_0a_2_w = lrs_leg_4_0a_2_w_1_q;
-    wire [0:0] lrs_leg_4_0a_2_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_2_r_0 (.ck(ck_c3r1), .d(rst_R_44_q), .q(lrs_leg_4_0a_2_r_0_q));   // (2128.25, 2451.84) c3r1 landing reset run
-    wire [0:0] lrs_leg_4_0a_2_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_2_r_1 (.ck(ck_c3r1), .d(lrs_leg_4_0a_2_r_0_q), .q(lrs_leg_4_0a_2_r_1_q));   // (1840.32, 2451.84) c3r1 landing reset run
-    wire [0:0] lrp_leg_4_0a_2_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0a_2_r_0 (.ck(ck_c3r1), .d(lrs_leg_4_0a_2_r_1_q), .q(lrp_leg_4_0a_2_r_0_q));   // (1840.32, 2451.84) c3r1 landing reset pad
-    assign lrst_leg_4_0a_2_r = lrp_leg_4_0a_2_r_0_q;
-    wire [0:0] lrs_leg_4_0a_7_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_7_w_0 (.ck(ck_c3r1), .d(rst_R_41_q), .q(lrs_leg_4_0a_7_w_0_q));   // (2182.69, 1399.81) c3r1 landing reset run
-    wire [0:0] lrs_leg_4_0a_7_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_7_w_1 (.ck(ck_c3r1), .d(lrs_leg_4_0a_7_w_0_q), .q(lrs_leg_4_0a_7_w_1_q));   // (1869.17, 1399.81) c3r1 landing reset run
-    assign lrst_leg_4_0a_7_w = lrs_leg_4_0a_7_w_1_q;
-    wire [0:0] lrs_leg_4_0a_7_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_7_r_0 (.ck(ck_c2r0), .d(rst_T_22_q), .q(lrs_leg_4_0a_7_r_0_q));   // (1400.41, 1310.51) c2r0 landing reset run
-    wire [0:0] lrs_leg_4_0a_7_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_7_r_1 (.ck(ck_c2r0), .d(lrs_leg_4_0a_7_r_0_q), .q(lrs_leg_4_0a_7_r_1_q));   // (1718.66, 1310.51) c2r0 landing reset run
-    wire [0:0] lrp_leg_4_0a_7_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0a_7_r_0 (.ck(ck_c2r0), .d(lrs_leg_4_0a_7_r_1_q), .q(lrp_leg_4_0a_7_r_0_q));   // (1718.66, 1310.51) c2r0 landing reset pad
-    wire [0:0] lrp_leg_4_0a_7_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0a_7_r_1 (.ck(ck_c2r0), .d(lrp_leg_4_0a_7_r_0_q), .q(lrp_leg_4_0a_7_r_1_q));   // (1718.66, 1310.51) c2r0 landing reset pad
-    wire [0:0] lrp_leg_4_0a_7_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0a_7_r_2 (.ck(ck_c2r0), .d(lrp_leg_4_0a_7_r_1_q), .q(lrp_leg_4_0a_7_r_2_q));   // (1718.66, 1310.51) c2r0 landing reset pad
-    wire [0:0] lrp_leg_4_0a_7_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0a_7_r_3 (.ck(ck_c2r0), .d(lrp_leg_4_0a_7_r_2_q), .q(lrp_leg_4_0a_7_r_3_q));   // (1718.66, 1310.51) c2r0 landing reset pad
-    wire [0:0] lrp_leg_4_0a_7_r_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0a_7_r_4 (.ck(ck_c2r0), .d(lrp_leg_4_0a_7_r_3_q), .q(lrp_leg_4_0a_7_r_4_q));   // (1718.66, 1310.51) c2r0 landing reset pad
-    assign lrst_leg_4_0a_7_r = lrp_leg_4_0a_7_r_4_q;
-    wire [0:0] lrs_leg_4_0a_9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_9_w_0 (.ck(ck_c2r0), .d(rst_T_22_q), .q(lrs_leg_4_0a_9_w_0_q));   // (1382.24, 1304.64) c2r0 landing reset run
-    assign lrst_leg_4_0a_9_w = lrs_leg_4_0a_9_w_0_q;
-    wire [0:0] lrs_leg_4_0a_9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_9_r_0 (.ck(ck_c1r0), .d(rst_L_1_q), .q(lrs_leg_4_0a_9_r_0_q));   // (927.72, 430.60) c1r0 landing reset run
-    wire [0:0] lrs_leg_4_0a_9_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_9_r_1 (.ck(ck_c1r0), .d(lrs_leg_4_0a_9_r_0_q), .q(lrs_leg_4_0a_9_r_1_q));   // (927.72, 818.00) c1r0 landing reset run
-    wire [0:0] lrs_leg_4_0a_9_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_9_r_2 (.ck(ck_c1r0), .d(lrs_leg_4_0a_9_r_1_q), .q(lrs_leg_4_0a_9_r_2_q));   // (927.72, 1205.40) c1r0 landing reset run
-    wire [0:0] lrs_leg_4_0a_9_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_9_r_3 (.ck(ck_c1r0), .d(lrs_leg_4_0a_9_r_2_q), .q(lrs_leg_4_0a_9_r_3_q));   // (1207.24, 1313.28) c1r0 landing reset run
-    assign lrst_leg_4_0a_9_r = lrs_leg_4_0a_9_r_3_q;
-    wire [0:0] lrs_leg_4_0a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_y_w_0 (.ck(ck_c1r0), .d(rst_L_2_q), .q(lrs_leg_4_0a_y_w_0_q));   // (658.58, 347.37) c1r0 landing reset run
-    wire [0:0] lrp_leg_4_0a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0a_y_w_0 (.ck(ck_c1r0), .d(lrs_leg_4_0a_y_w_0_q), .q(lrp_leg_4_0a_y_w_0_q));   // (658.58, 347.37) c1r0 landing reset pad
-    wire [0:0] lrp_leg_4_0a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0a_y_w_1 (.ck(ck_c1r0), .d(lrp_leg_4_0a_y_w_0_q), .q(lrp_leg_4_0a_y_w_1_q));   // (658.58, 347.37) c1r0 landing reset pad
-    assign lrst_leg_4_0a_y_w = lrp_leg_4_0a_y_w_1_q;
-    wire [0:0] lrs_leg_4_0a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_y_r_0 (.ck(ck_c0r0), .d(rst_L_3_q), .q(lrs_leg_4_0a_y_r_0_q));   // (360.72, 223.78) c0r0 landing reset run
-    wire [0:0] lrs_leg_4_0a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0a_y_r_1 (.ck(ck_c0r0), .d(lrs_leg_4_0a_y_r_0_q), .q(lrs_leg_4_0a_y_r_1_q));   // (563.98, 223.78) c0r0 landing reset run
-    assign lrst_leg_4_0a_y_r = lrs_leg_4_0a_y_r_1_q;
-    wire [0:0] lrs_leg_4_0b_1_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_1_w_0 (.ck(ck_c0r2), .d(rst_L_13_q), .q(lrs_leg_4_0b_1_w_0_q));   // (312.78, 2741.75) c0r2 landing reset run
-    wire [0:0] lrs_leg_4_0b_1_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_1_w_1 (.ck(ck_c1r2), .d(lrs_leg_4_0b_1_w_0_q), .q(lrs_leg_4_0b_1_w_1_q));   // (630.72, 2741.75) c1r2 landing reset run
-    assign lrst_leg_4_0b_1_w = lrs_leg_4_0b_1_w_1_q;
-    wire [0:0] lrs_leg_4_0b_1_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_1_r_0 (.ck(ck_c0r1), .d(rst_L_12_q), .q(lrs_leg_4_0b_1_r_0_q));   // (316.96, 2506.11) c0r1 landing reset run
-    wire [0:0] lrs_leg_4_0b_1_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_1_r_1 (.ck(ck_c1r1), .d(lrs_leg_4_0b_1_r_0_q), .q(lrs_leg_4_0b_1_r_1_q));   // (630.72, 2506.11) c1r1 landing reset run
-    wire [0:0] lrp_leg_4_0b_1_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0b_1_r_0 (.ck(ck_c1r1), .d(lrs_leg_4_0b_1_r_1_q), .q(lrp_leg_4_0b_1_r_0_q));   // (630.72, 2506.11) c1r1 landing reset pad
-    assign lrst_leg_4_0b_1_r = lrp_leg_4_0b_1_r_0_q;
-    wire [0:0] lrs_leg_4_0b_5_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_5_w_0 (.ck(ck_c1r1), .d(rst_T_23_q), .q(lrs_leg_4_0b_5_w_0_q));   // (1007.55, 1358.20) c1r1 landing reset run
-    wire [0:0] lrs_leg_4_0b_5_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_5_w_1 (.ck(ck_c1r1), .d(lrs_leg_4_0b_5_w_0_q), .q(lrs_leg_4_0b_5_w_1_q));   // (656.64, 1358.20) c1r1 landing reset run
-    assign lrst_leg_4_0b_5_w = lrs_leg_4_0b_5_w_1_q;
-    wire [0:0] lrs_leg_4_0b_5_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_5_r_0 (.ck(ck_c1r0), .d(rst_L_2_q), .q(lrs_leg_4_0b_5_r_0_q));   // (632.88, 360.51) c1r0 landing reset run
-    wire [0:0] lrs_leg_4_0b_5_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_5_r_1 (.ck(ck_c1r0), .d(lrs_leg_4_0b_5_r_0_q), .q(lrs_leg_4_0b_5_r_1_q));   // (632.88, 677.81) c1r0 landing reset run
-    wire [0:0] lrs_leg_4_0b_5_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_5_r_2 (.ck(ck_c1r0), .d(lrs_leg_4_0b_5_r_1_q), .q(lrs_leg_4_0b_5_r_2_q));   // (630.72, 992.96) c1r0 landing reset run
-    wire [0:0] lrp_leg_4_0b_5_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0b_5_r_0 (.ck(ck_c1r0), .d(lrs_leg_4_0b_5_r_2_q), .q(lrp_leg_4_0b_5_r_0_q));   // (630.72, 992.96) c1r0 landing reset pad
-    wire [0:0] lrp_leg_4_0b_5_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0b_5_r_1 (.ck(ck_c1r0), .d(lrp_leg_4_0b_5_r_0_q), .q(lrp_leg_4_0b_5_r_1_q));   // (630.72, 992.96) c1r0 landing reset pad
-    assign lrst_leg_4_0b_5_r = lrp_leg_4_0b_5_r_1_q;
-    wire [0:0] lrs_leg_4_0b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_y_w_0 (.ck(ck_c1r0), .d(rst_L_2_q), .q(lrs_leg_4_0b_y_w_0_q));   // (632.88, 295.63) c1r0 landing reset run
-    wire [0:0] lrs_leg_4_0b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_y_w_1 (.ck(ck_c1r0), .d(lrs_leg_4_0b_y_w_0_q), .q(lrs_leg_4_0b_y_w_1_q));   // (632.66, 547.84) c1r0 landing reset run
-    wire [0:0] lrp_leg_4_0b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_leg_4_0b_y_w_0 (.ck(ck_c1r0), .d(lrs_leg_4_0b_y_w_1_q), .q(lrp_leg_4_0b_y_w_0_q));   // (632.66, 547.84) c1r0 landing reset pad
-    assign lrst_leg_4_0b_y_w = lrp_leg_4_0b_y_w_0_q;
-    wire [0:0] lrs_leg_4_0b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_y_r_0 (.ck(ck_c0r0), .d(rst_L_3_q), .q(lrs_leg_4_0b_y_r_0_q));   // (338.04, 305.57) c0r0 landing reset run
-    wire [0:0] lrs_leg_4_0b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_leg_4_0b_y_r_1 (.ck(ck_c0r0), .d(lrs_leg_4_0b_y_r_0_q), .q(lrs_leg_4_0b_y_r_1_q));   // (563.98, 342.01) c0r0 landing reset run
-    assign lrst_leg_4_0b_y_r = lrs_leg_4_0b_y_r_1_q;
-    wire [0:0] lrs_rs_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_rs_0_w_0 (.ck(ck_c0r0), .d(rst_L_r0_q), .q(lrs_rs_0_w_0_q));   // (277.66, 470.25) c0r0 landing reset run
-    wire [0:0] lrs_rs_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_rs_0_w_1 (.ck(ck_c0r0), .d(lrs_rs_0_w_0_q), .q(lrs_rs_0_w_1_q));   // (563.98, 470.25) c0r0 landing reset run
-    assign lrst_rs_0_w = lrs_rs_0_w_1_q;
-    wire [0:0] lrs_rs_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_rs_0_r_0 (.ck(ck_c1r0), .d(rst_L_2_q), .q(lrs_rs_0_r_0_q));   // (658.58, 323.49) c1r0 landing reset run
-    wire [0:0] lrp_rs_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_rs_0_r_0 (.ck(ck_c1r0), .d(lrs_rs_0_r_0_q), .q(lrp_rs_0_r_0_q));   // (658.58, 323.49) c1r0 landing reset pad
-    wire [0:0] lrp_rs_0_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_rs_0_r_1 (.ck(ck_c1r0), .d(lrp_rs_0_r_0_q), .q(lrp_rs_0_r_1_q));   // (658.58, 323.49) c1r0 landing reset pad
-    wire [0:0] lrp_rs_0_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_rs_0_r_2 (.ck(ck_c1r0), .d(lrp_rs_0_r_1_q), .q(lrp_rs_0_r_2_q));   // (658.58, 323.49) c1r0 landing reset pad
-    wire [0:0] lrp_rs_0_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_rs_0_r_3 (.ck(ck_c1r0), .d(lrp_rs_0_r_2_q), .q(lrp_rs_0_r_3_q));   // (658.58, 323.49) c1r0 landing reset pad
-    wire [0:0] lrp_rs_0_r_4_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_rs_0_r_4 (.ck(ck_c1r0), .d(lrp_rs_0_r_3_q), .q(lrp_rs_0_r_4_q));   // (658.58, 323.49) c1r0 landing reset pad
-    assign lrst_rs_0_r = lrp_rs_0_r_4_q;
-    wire [0:0] lrs_ft_2_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_ft_2_w_0 (.ck(ck_c2r3), .d(rst_T_r3_q), .q(lrs_ft_2_w_0_q));   // (1222.56, 4729.14) c2r3 landing reset run
-    wire [0:0] lrs_ft_2_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_ft_2_w_1 (.ck(ck_c2r3), .d(lrs_ft_2_w_0_q), .q(lrs_ft_2_w_1_q));   // (1222.56, 5048.17) c2r3 landing reset run
-    wire [0:0] lrs_ft_2_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_ft_2_w_2 (.ck(ck_c1r3), .d(lrs_ft_2_w_1_q), .q(lrs_ft_2_w_2_q));   // (1022.36, 5166.99) c1r3 landing reset run
-    assign lrst_ft_2_w = lrs_ft_2_w_2_q;
-    wire [0:0] lrs_ft_2_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_ft_2_r_0 (.ck(ck_c2r3), .d(rst_T_r3_q), .q(lrs_ft_2_r_0_q));   // (1222.56, 4767.15) c2r3 landing reset run
-    wire [0:0] lrs_ft_2_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_ft_2_r_1 (.ck(ck_c2r3), .d(lrs_ft_2_r_0_q), .q(lrs_ft_2_r_1_q));   // (1237.55, 5109.21) c2r3 landing reset run
-    wire [0:0] lrp_ft_2_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_ft_2_r_0 (.ck(ck_c2r3), .d(lrs_ft_2_r_1_q), .q(lrp_ft_2_r_0_q));   // (1237.55, 5109.21) c2r3 landing reset pad
-    assign lrst_ft_2_r = lrp_ft_2_r_0_q;
-    wire [0:0] lrs_ft_6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_ft_6_w_0 (.ck(ck_c2r3), .d(rst_T_31_q), .q(lrs_ft_6_w_0_q));   // (1235.52, 3939.43) c2r3 landing reset run
-    assign lrst_ft_6_w = lrs_ft_6_w_0_q;
-    wire [0:0] lrs_ft_6_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_ft_6_r_0 (.ck(ck_c2r2), .d(rst_T_30_q), .q(lrs_ft_6_r_0_q));   // (1235.52, 3688.07) c2r2 landing reset run
-    wire [0:0] lrp_ft_6_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_ft_6_r_0 (.ck(ck_c2r2), .d(lrs_ft_6_r_0_q), .q(lrp_ft_6_r_0_q));   // (1235.52, 3688.07) c2r2 landing reset pad
-    assign lrst_ft_6_r = lrp_ft_6_r_0_q;
-    wire [0:0] lrs_ft_9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_ft_9_w_0 (.ck(ck_c2r2), .d(rst_T_27_q), .q(lrs_ft_9_w_0_q));   // (1235.52, 2823.26) c2r2 landing reset run
-    assign lrst_ft_9_w = lrs_ft_9_w_0_q;
-    wire [0:0] lrs_ft_9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_ft_9_r_0 (.ck(ck_c2r1), .d(rst_T_26_q), .q(lrs_ft_9_r_0_q));   // (1235.52, 2589.16) c2r1 landing reset run
-    wire [0:0] lrp_ft_9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_ft_9_r_0 (.ck(ck_c2r1), .d(lrs_ft_9_r_0_q), .q(lrp_ft_9_r_0_q));   // (1235.52, 2589.16) c2r1 landing reset pad
-    assign lrst_ft_9_r = lrp_ft_9_r_0_q;
-    wire [0:0] lrs_ft_13_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_ft_13_w_0 (.ck(ck_c2r1), .d(rst_T_23_q), .q(lrs_ft_13_w_0_q));   // (1239.84, 1425.73) c2r1 landing reset run
-    assign lrst_ft_13_w = lrs_ft_13_w_0_q;
-    wire [0:0] lrs_ft_13_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrs_ft_13_r_0 (.ck(ck_c2r0), .d(rst_T_22_q), .q(lrs_ft_13_r_0_q));   // (1239.84, 1174.37) c2r0 landing reset run
-    wire [0:0] lrp_ft_13_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_lrp_ft_13_r_0 (.ck(ck_c2r0), .d(lrs_ft_13_r_0_q), .q(lrp_ft_13_r_0_q));   // (1239.84, 1174.37) c2r0 landing reset pad
-    assign lrst_ft_13_r = lrp_ft_13_r_0_q;
+    // ---- landing epochs: each half's rsi from its own region's reset tree, both halves at the landing's depth (G == R0)
+    wire [0:0] rr_l_dn0_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn0_rly3_w_0 (.ck(ck_c0r0), .d(rq_t_0_0_5_q), .q(rr_l_dn0_rly3_w_0_q));   // (82.08, 902.76) c0r0 region reset run
+    wire [0:0] rr_l_dn0_rly3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn0_rly3_w_1 (.ck(ck_c0r0), .d(rr_l_dn0_rly3_w_0_q), .q(rr_l_dn0_rly3_w_1_q));   // (43.20, 1244.53) c0r0 region reset run
+    assign lrst_dn0_rly3_w = rr_l_dn0_rly3_w_1_q;
+    wire [0:0] rr_l_dn0_rly3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn0_rly3_r_0 (.ck(ck_c0r1), .d(rq_t_0_1_7_q), .q(rr_l_dn0_rly3_r_0_q));   // (43.20, 1471.33) c0r1 region reset run
+    assign lrst_dn0_rly3_r = rr_l_dn0_rly3_r_0_q;
+    wire [0:0] rr_l_dn0_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn0_rly6_w_0 (.ck(ck_c0r1), .d(rq_t_0_1_10_q), .q(rr_l_dn0_rly6_w_0_q));   // (82.08, 2198.76) c0r1 region reset run
+    wire [0:0] rr_l_dn0_rly6_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn0_rly6_w_1 (.ck(ck_c0r1), .d(rr_l_dn0_rly6_w_0_q), .q(rr_l_dn0_rly6_w_1_q));   // (43.20, 2540.53) c0r1 region reset run
+    assign lrst_dn0_rly6_w = rr_l_dn0_rly6_w_1_q;
+    wire [0:0] rr_l_dn0_rly6_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn0_rly6_r_0 (.ck(ck_c0r2), .d(rq_t_0_2_11_q), .q(rr_l_dn0_rly6_r_0_q));   // (43.20, 2767.33) c0r2 region reset run
+    assign lrst_dn0_rly6_r = rr_l_dn0_rly6_r_0_q;
+    wire [0:0] rr_l_dn0_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn0_rly9_w_0 (.ck(ck_c0r2), .d(rq_t_0_2_14_q), .q(rr_l_dn0_rly9_w_0_q));   // (82.08, 3494.76) c0r2 region reset run
+    wire [0:0] rr_l_dn0_rly9_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn0_rly9_w_1 (.ck(ck_c0r2), .d(rr_l_dn0_rly9_w_0_q), .q(rr_l_dn0_rly9_w_1_q));   // (43.20, 3836.53) c0r2 region reset run
+    assign lrst_dn0_rly9_w = rr_l_dn0_rly9_w_1_q;
+    wire [0:0] rr_l_dn0_rly9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn0_rly9_r_0 (.ck(ck_c0r3), .d(rq_t_0_3_13_q), .q(rr_l_dn0_rly9_r_0_q));   // (43.20, 4063.33) c0r3 region reset run
+    assign lrst_dn0_rly9_r = rr_l_dn0_rly9_r_0_q;
+    wire [0:0] rr_l_dn1_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn1_rly3_w_0 (.ck(ck_c1r0), .d(rq_t_1_0_0_q), .q(rr_l_dn1_rly3_w_0_q));   // (1153.44, 848.12) c1r0 region reset run
+    wire [0:0] rr_l_dn1_rly3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn1_rly3_w_1 (.ck(ck_c1r0), .d(rr_l_dn1_rly3_w_0_q), .q(rr_l_dn1_rly3_w_1_q));   // (1173.60, 1153.97) c1r0 region reset run
+    assign lrst_dn1_rly3_w = rr_l_dn1_rly3_w_1_q;
+    wire [0:0] rr_l_dn1_rly3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn1_rly3_r_0 (.ck(ck_c1r1), .d(rr_t_1_1_3_q), .q(rr_l_dn1_rly3_r_0_q));   // (1173.60, 1415.33) c1r1 region reset run
+    wire [0:0] rq_l_dn1_rly3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_dn1_rly3_r_0 (.ck(ck_c1r1), .d(rr_l_dn1_rly3_r_0_q), .q(rq_l_dn1_rly3_r_0_q));   // (1173.60, 1415.33) c1r1 region reset pad
+    assign lrst_dn1_rly3_r = rq_l_dn1_rly3_r_0_q;
+    wire [0:0] rr_l_dn1_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn1_rly6_w_0 (.ck(ck_c1r1), .d(rq_t_1_1_2_q), .q(rr_l_dn1_rly6_w_0_q));   // (1153.44, 2161.40) c1r1 region reset run
+    wire [0:0] rr_l_dn1_rly6_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn1_rly6_w_1 (.ck(ck_c1r1), .d(rr_l_dn1_rly6_w_0_q), .q(rr_l_dn1_rly6_w_1_q));   // (1173.60, 2484.53) c1r1 region reset run
+    assign lrst_dn1_rly6_w = rr_l_dn1_rly6_w_1_q;
+    wire [0:0] rr_l_dn1_rly6_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn1_rly6_r_0 (.ck(ck_c1r2), .d(rq_t_1_2_2_q), .q(rr_l_dn1_rly6_r_0_q));   // (1153.44, 2902.64) c1r2 region reset run
+    wire [0:0] rr_l_dn1_rly6_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn1_rly6_r_1 (.ck(ck_c1r2), .d(rr_l_dn1_rly6_r_0_q), .q(rr_l_dn1_rly6_r_1_q));   // (1173.60, 2711.33) c1r2 region reset run
+    assign lrst_dn1_rly6_r = rr_l_dn1_rly6_r_1_q;
+    wire [0:0] rr_l_dn1_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn1_rly9_w_0 (.ck(ck_c1r2), .d(rq_t_1_2_6_q), .q(rr_l_dn1_rly9_w_0_q));   // (1153.44, 3457.40) c1r2 region reset run
+    wire [0:0] rr_l_dn1_rly9_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn1_rly9_w_1 (.ck(ck_c1r2), .d(rr_l_dn1_rly9_w_0_q), .q(rr_l_dn1_rly9_w_1_q));   // (1173.60, 3780.53) c1r2 region reset run
+    assign lrst_dn1_rly9_w = rr_l_dn1_rly9_w_1_q;
+    wire [0:0] rr_l_dn1_rly9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn1_rly9_r_0 (.ck(ck_c1r3), .d(rq_t_1_3_8_q), .q(rr_l_dn1_rly9_r_0_q));   // (1153.44, 4198.64) c1r3 region reset run
+    wire [0:0] rr_l_dn1_rly9_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn1_rly9_r_1 (.ck(ck_c1r3), .d(rr_l_dn1_rly9_r_0_q), .q(rr_l_dn1_rly9_r_1_q));   // (1173.60, 4007.33) c1r3 region reset run
+    assign lrst_dn1_rly9_r = rr_l_dn1_rly9_r_1_q;
+    wire [0:0] rr_l_dn2_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly3_w_0 (.ck(ck_c2r0), .d(rq_t_2_0_0_q), .q(rr_l_dn2_rly3_w_0_q));   // (1291.68, 783.50) c2r0 region reset run
+    wire [0:0] rr_l_dn2_rly3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly3_w_1 (.ck(ck_c2r0), .d(rr_l_dn2_rly3_w_0_q), .q(rr_l_dn2_rly3_w_1_q));   // (1291.68, 1044.90) c2r0 region reset run
+    wire [0:0] rr_l_dn2_rly3_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly3_w_2 (.ck(ck_c2r0), .d(rr_l_dn2_rly3_w_1_q), .q(rr_l_dn2_rly3_w_2_q));   // (1297.44, 1300.53) c2r0 region reset run
+    assign lrst_dn2_rly3_w = rr_l_dn2_rly3_w_2_q;
+    wire [0:0] rr_l_dn2_rly3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly3_r_0 (.ck(ck_c2r1), .d(rr_t_2_1_4_q), .q(rr_l_dn2_rly3_r_0_q));   // (1271.52, 1527.33) c2r1 region reset run
+    assign lrst_dn2_rly3_r = rr_l_dn2_rly3_r_0_q;
+    wire [0:0] rr_l_dn2_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly6_w_0 (.ck(ck_c2r1), .d(rq_t_2_1_1_q), .q(rr_l_dn2_rly6_w_0_q));   // (1291.68, 2084.30) c2r1 region reset run
+    wire [0:0] rr_l_dn2_rly6_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly6_w_1 (.ck(ck_c2r1), .d(rr_l_dn2_rly6_w_0_q), .q(rr_l_dn2_rly6_w_1_q));   // (1291.68, 2350.50) c2r1 region reset run
+    wire [0:0] rr_l_dn2_rly6_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly6_w_2 (.ck(ck_c2r1), .d(rr_l_dn2_rly6_w_1_q), .q(rr_l_dn2_rly6_w_2_q));   // (1271.52, 2596.53) c2r1 region reset run
+    assign lrst_dn2_rly6_w = rr_l_dn2_rly6_w_2_q;
+    wire [0:0] rr_l_dn2_rly6_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly6_r_0 (.ck(ck_c2r2), .d(rq_t_2_2_3_q), .q(rr_l_dn2_rly6_r_0_q));   // (1271.52, 2823.33) c2r2 region reset run
+    assign lrst_dn2_rly6_r = rr_l_dn2_rly6_r_0_q;
+    wire [0:0] rr_l_dn2_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly9_w_0 (.ck(ck_c2r2), .d(rq_t_2_2_5_q), .q(rr_l_dn2_rly9_w_0_q));   // (1291.68, 3384.62) c2r2 region reset run
+    wire [0:0] rr_l_dn2_rly9_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly9_w_1 (.ck(ck_c2r2), .d(rr_l_dn2_rly9_w_0_q), .q(rr_l_dn2_rly9_w_1_q));   // (1291.68, 3655.14) c2r2 region reset run
+    wire [0:0] rr_l_dn2_rly9_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly9_w_2 (.ck(ck_c2r2), .d(rr_l_dn2_rly9_w_1_q), .q(rr_l_dn2_rly9_w_2_q));   // (1258.56, 3892.53) c2r2 region reset run
+    assign lrst_dn2_rly9_w = rr_l_dn2_rly9_w_2_q;
+    wire [0:0] rr_l_dn2_rly9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn2_rly9_r_0 (.ck(ck_c2r3), .d(rq_t_2_3_9_q), .q(rr_l_dn2_rly9_r_0_q));   // (1271.52, 4119.33) c2r3 region reset run
+    assign lrst_dn2_rly9_r = rr_l_dn2_rly9_r_0_q;
+    wire [0:0] rr_l_dn3_rly3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn3_rly3_w_0 (.ck(ck_c3r0), .d(rq_t_3_0_5_q), .q(rr_l_dn3_rly3_w_0_q));   // (2363.04, 902.76) c3r0 region reset run
+    wire [0:0] rr_l_dn3_rly3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn3_rly3_w_1 (.ck(ck_c3r0), .d(rr_l_dn3_rly3_w_0_q), .q(rr_l_dn3_rly3_w_1_q));   // (2401.92, 1244.53) c3r0 region reset run
+    assign lrst_dn3_rly3_w = rr_l_dn3_rly3_w_1_q;
+    wire [0:0] rr_l_dn3_rly3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn3_rly3_r_0 (.ck(ck_c3r1), .d(rq_t_3_1_7_q), .q(rr_l_dn3_rly3_r_0_q));   // (2401.92, 1471.33) c3r1 region reset run
+    assign lrst_dn3_rly3_r = rr_l_dn3_rly3_r_0_q;
+    wire [0:0] rr_l_dn3_rly6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn3_rly6_w_0 (.ck(ck_c3r1), .d(rq_t_3_1_10_q), .q(rr_l_dn3_rly6_w_0_q));   // (2363.04, 2198.76) c3r1 region reset run
+    wire [0:0] rr_l_dn3_rly6_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn3_rly6_w_1 (.ck(ck_c3r1), .d(rr_l_dn3_rly6_w_0_q), .q(rr_l_dn3_rly6_w_1_q));   // (2401.92, 2540.53) c3r1 region reset run
+    assign lrst_dn3_rly6_w = rr_l_dn3_rly6_w_1_q;
+    wire [0:0] rr_l_dn3_rly6_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn3_rly6_r_0 (.ck(ck_c3r2), .d(rq_t_3_2_11_q), .q(rr_l_dn3_rly6_r_0_q));   // (2401.92, 2767.33) c3r2 region reset run
+    assign lrst_dn3_rly6_r = rr_l_dn3_rly6_r_0_q;
+    wire [0:0] rr_l_dn3_rly9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn3_rly9_w_0 (.ck(ck_c3r2), .d(rq_t_3_2_14_q), .q(rr_l_dn3_rly9_w_0_q));   // (2363.04, 3494.76) c3r2 region reset run
+    wire [0:0] rr_l_dn3_rly9_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn3_rly9_w_1 (.ck(ck_c3r2), .d(rr_l_dn3_rly9_w_0_q), .q(rr_l_dn3_rly9_w_1_q));   // (2401.92, 3836.53) c3r2 region reset run
+    assign lrst_dn3_rly9_w = rr_l_dn3_rly9_w_1_q;
+    wire [0:0] rr_l_dn3_rly9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_dn3_rly9_r_0 (.ck(ck_c3r3), .d(rq_t_3_3_12_q), .q(rr_l_dn3_rly9_r_0_q));   // (2401.92, 4063.33) c3r3 region reset run
+    assign lrst_dn3_rly9_r = rr_l_dn3_rly9_r_0_q;
+    wire [0:0] rr_l_leg_1_0a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_0a_y_w_0 (.ck(ck_c0r0), .d(rr_t_0_0_0_q), .q(rr_l_leg_1_0a_y_w_0_q));   // (278.50, 43.20) c0r0 region reset run
+    wire [0:0] rr_l_leg_1_0a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_0a_y_w_1 (.ck(ck_c0r0), .d(rr_l_leg_1_0a_y_w_0_q), .q(rr_l_leg_1_0a_y_w_1_q));   // (566.35, 61.79) c0r0 region reset run
+    wire [0:0] rr_l_leg_1_0a_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_0a_y_w_2 (.ck(ck_c0r0), .d(rr_l_leg_1_0a_y_w_1_q), .q(rr_l_leg_1_0a_y_w_2_q));   // (566.35, 368.24) c0r0 region reset run
+    wire [0:0] rq_l_leg_1_0a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_1_0a_y_w_0 (.ck(ck_c0r0), .d(rr_l_leg_1_0a_y_w_2_q), .q(rq_l_leg_1_0a_y_w_0_q));   // (566.35, 368.24) c0r0 region reset pad
+    assign lrst_leg_1_0a_y_w = rq_l_leg_1_0a_y_w_0_q;
+    wire [0:0] rr_l_leg_1_0a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_0a_y_r_0 (.ck(ck_c1r0), .d(rr_t_1_0_1_q), .q(rr_l_leg_1_0a_y_r_0_q));   // (1059.97, 43.20) c1r0 region reset run
+    wire [0:0] rr_l_leg_1_0a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_0a_y_r_1 (.ck(ck_c1r0), .d(rr_l_leg_1_0a_y_r_0_q), .q(rr_l_leg_1_0a_y_r_1_q));   // (772.44, 43.20) c1r0 region reset run
+    wire [0:0] rr_l_leg_1_0a_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_0a_y_r_2 (.ck(ck_c1r0), .d(rr_l_leg_1_0a_y_r_1_q), .q(rr_l_leg_1_0a_y_r_2_q));   // (669.17, 227.46) c1r0 region reset run
+    assign lrst_leg_1_0a_y_r = rr_l_leg_1_0a_y_r_2_q;
+    wire [0:0] rr_l_leg_1_1b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_1b_y_w_0 (.ck(ck_c1r1), .d(rq_t_1_1_1_q), .q(rr_l_leg_1_1b_y_w_0_q));   // (1153.44, 1497.68) c1r1 region reset run
+    wire [0:0] rr_l_leg_1_1b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_1b_y_w_1 (.ck(ck_c1r1), .d(rr_l_leg_1_1b_y_w_0_q), .q(rr_l_leg_1_1b_y_w_1_q));   // (980.69, 1350.00) c1r1 region reset run
+    wire [0:0] rr_l_leg_1_1b_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_1b_y_w_2 (.ck(ck_c1r1), .d(rr_l_leg_1_1b_y_w_1_q), .q(rr_l_leg_1_1b_y_w_2_q));   // (669.17, 1358.91) c1r1 region reset run
+    wire [0:0] rr_l_leg_1_1b_y_w_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_1b_y_w_3 (.ck(ck_c1r1), .d(rr_l_leg_1_1b_y_w_2_q), .q(rr_l_leg_1_1b_y_w_3_q));   // (669.17, 1679.34) c1r1 region reset run
+    assign lrst_leg_1_1b_y_w = rr_l_leg_1_1b_y_w_3_q;
+    wire [0:0] rr_l_leg_1_1b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_1b_y_r_0 (.ck(ck_c0r1), .d(rq_t_0_1_5_q), .q(rr_l_leg_1_1b_y_r_0_q));   // (82.08, 1515.27) c0r1 region reset run
+    wire [0:0] rr_l_leg_1_1b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_1b_y_r_1 (.ck(ck_c0r1), .d(rr_l_leg_1_1b_y_r_0_q), .q(rr_l_leg_1_1b_y_r_1_q));   // (219.65, 1350.00) c0r1 region reset run
+    wire [0:0] rr_l_leg_1_1b_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_1b_y_r_2 (.ck(ck_c0r1), .d(rr_l_leg_1_1b_y_r_1_q), .q(rr_l_leg_1_1b_y_r_2_q));   // (522.49, 1350.00) c0r1 region reset run
+    wire [0:0] rr_l_leg_1_1b_y_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_1b_y_r_3 (.ck(ck_c0r1), .d(rr_l_leg_1_1b_y_r_2_q), .q(rr_l_leg_1_1b_y_r_3_q));   // (566.35, 1608.98) c0r1 region reset run
+    assign lrst_leg_1_1b_y_r = rr_l_leg_1_1b_y_r_3_q;
+    wire [0:0] rr_l_leg_1_2b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_2b_y_w_0 (.ck(ck_c3r0), .d(rr_t_3_0_0_q), .q(rr_l_leg_1_2b_y_w_0_q));   // (2154.76, 43.20) c3r0 region reset run
+    wire [0:0] rr_l_leg_1_2b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_2b_y_w_1 (.ck(ck_c3r0), .d(rr_l_leg_1_2b_y_w_0_q), .q(rr_l_leg_1_2b_y_w_1_q));   // (1878.77, 75.27) c3r0 region reset run
+    wire [0:0] rr_l_leg_1_2b_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_2b_y_w_2 (.ck(ck_c3r0), .d(rr_l_leg_1_2b_y_w_1_q), .q(rr_l_leg_1_2b_y_w_2_q));   // (1878.77, 383.33) c3r0 region reset run
+    wire [0:0] rq_l_leg_1_2b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_1_2b_y_w_0 (.ck(ck_c3r0), .d(rr_l_leg_1_2b_y_w_2_q), .q(rq_l_leg_1_2b_y_w_0_q));   // (1878.77, 383.33) c3r0 region reset pad
+    assign lrst_leg_1_2b_y_w = rq_l_leg_1_2b_y_w_0_q;
+    wire [0:0] rr_l_leg_1_2b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_2b_y_r_0 (.ck(ck_c2r0), .d(rr_t_2_0_0_q), .q(rr_l_leg_1_2b_y_r_0_q));   // (1447.29, 43.20) c2r0 region reset run
+    wire [0:0] rr_l_leg_1_2b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_2b_y_r_1 (.ck(ck_c2r0), .d(rr_l_leg_1_2b_y_r_0_q), .q(rr_l_leg_1_2b_y_r_1_q));   // (1746.51, 43.20) c2r0 region reset run
+    wire [0:0] rr_l_leg_1_2b_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_2b_y_r_2 (.ck(ck_c2r0), .d(rr_l_leg_1_2b_y_r_1_q), .q(rr_l_leg_1_2b_y_r_2_q));   // (1775.95, 312.98) c2r0 region reset run
+    wire [0:0] rq_l_leg_1_2b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_1_2b_y_r_0 (.ck(ck_c2r0), .d(rr_l_leg_1_2b_y_r_2_q), .q(rq_l_leg_1_2b_y_r_0_q));   // (1775.95, 312.98) c2r0 region reset pad
+    assign lrst_leg_1_2b_y_r = rq_l_leg_1_2b_y_r_0_q;
+    wire [0:0] rr_l_leg_1_3a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_3a_y_w_0 (.ck(ck_c2r1), .d(rq_t_2_1_1_q), .q(rr_l_leg_1_3a_y_w_0_q));   // (1291.68, 1501.45) c2r1 region reset run
+    wire [0:0] rr_l_leg_1_3a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_3a_y_w_1 (.ck(ck_c2r1), .d(rr_l_leg_1_3a_y_w_0_q), .q(rr_l_leg_1_3a_y_w_1_q));   // (1456.88, 1350.00) c2r1 region reset run
+    wire [0:0] rr_l_leg_1_3a_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_3a_y_w_2 (.ck(ck_c2r1), .d(rr_l_leg_1_3a_y_w_1_q), .q(rr_l_leg_1_3a_y_w_2_q));   // (1773.54, 1350.00) c2r1 region reset run
+    wire [0:0] rr_l_leg_1_3a_y_w_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_3a_y_w_3 (.ck(ck_c2r1), .d(rr_l_leg_1_3a_y_w_2_q), .q(rr_l_leg_1_3a_y_w_3_q));   // (1775.95, 1664.24) c2r1 region reset run
+    assign lrst_leg_1_3a_y_w = rr_l_leg_1_3a_y_w_3_q;
+    wire [0:0] rr_l_leg_1_3a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_3a_y_r_0 (.ck(ck_c3r1), .d(rq_t_3_1_6_q), .q(rr_l_leg_1_3a_y_r_0_q));   // (2363.04, 1442.83) c3r1 region reset run
+    wire [0:0] rr_l_leg_1_3a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_3a_y_r_1 (.ck(ck_c3r1), .d(rr_l_leg_1_3a_y_r_0_q), .q(rr_l_leg_1_3a_y_r_1_q));   // (2080.59, 1350.00) c3r1 region reset run
+    wire [0:0] rr_l_leg_1_3a_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_3a_y_r_2 (.ck(ck_c3r1), .d(rr_l_leg_1_3a_y_r_1_q), .q(rr_l_leg_1_3a_y_r_2_q));   // (1878.77, 1523.46) c3r1 region reset run
+    assign lrst_leg_1_3a_y_r = rr_l_leg_1_3a_y_r_2_q;
+    wire [0:0] rr_l_leg_1_4b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_4b_y_w_0 (.ck(ck_c1r2), .d(rq_t_1_2_5_q), .q(rr_l_leg_1_4b_y_w_0_q));   // (1153.44, 2793.68) c1r2 region reset run
+    wire [0:0] rr_l_leg_1_4b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_4b_y_w_1 (.ck(ck_c1r2), .d(rr_l_leg_1_4b_y_w_0_q), .q(rr_l_leg_1_4b_y_w_1_q));   // (980.69, 2646.00) c1r2 region reset run
+    wire [0:0] rr_l_leg_1_4b_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_4b_y_w_2 (.ck(ck_c1r2), .d(rr_l_leg_1_4b_y_w_1_q), .q(rr_l_leg_1_4b_y_w_2_q));   // (669.17, 2654.91) c1r2 region reset run
+    wire [0:0] rr_l_leg_1_4b_y_w_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_4b_y_w_3 (.ck(ck_c1r2), .d(rr_l_leg_1_4b_y_w_2_q), .q(rr_l_leg_1_4b_y_w_3_q));   // (669.17, 2975.34) c1r2 region reset run
+    assign lrst_leg_1_4b_y_w = rr_l_leg_1_4b_y_w_3_q;
+    wire [0:0] rr_l_leg_1_4b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_4b_y_r_0 (.ck(ck_c0r2), .d(rq_t_0_2_9_q), .q(rr_l_leg_1_4b_y_r_0_q));   // (82.08, 2811.27) c0r2 region reset run
+    wire [0:0] rr_l_leg_1_4b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_4b_y_r_1 (.ck(ck_c0r2), .d(rr_l_leg_1_4b_y_r_0_q), .q(rr_l_leg_1_4b_y_r_1_q));   // (219.65, 2646.00) c0r2 region reset run
+    wire [0:0] rr_l_leg_1_4b_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_4b_y_r_2 (.ck(ck_c0r2), .d(rr_l_leg_1_4b_y_r_1_q), .q(rr_l_leg_1_4b_y_r_2_q));   // (522.49, 2646.00) c0r2 region reset run
+    wire [0:0] rr_l_leg_1_4b_y_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_4b_y_r_3 (.ck(ck_c0r2), .d(rr_l_leg_1_4b_y_r_2_q), .q(rr_l_leg_1_4b_y_r_3_q));   // (566.35, 2904.98) c0r2 region reset run
+    assign lrst_leg_1_4b_y_r = rr_l_leg_1_4b_y_r_3_q;
+    wire [0:0] rr_l_leg_1_5b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_5b_y_w_0 (.ck(ck_c1r3), .d(rq_t_1_3_11_q), .q(rr_l_leg_1_5b_y_w_0_q));   // (1153.44, 4089.68) c1r3 region reset run
+    wire [0:0] rr_l_leg_1_5b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_5b_y_w_1 (.ck(ck_c1r3), .d(rr_l_leg_1_5b_y_w_0_q), .q(rr_l_leg_1_5b_y_w_1_q));   // (980.69, 3942.00) c1r3 region reset run
+    wire [0:0] rr_l_leg_1_5b_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_5b_y_w_2 (.ck(ck_c1r3), .d(rr_l_leg_1_5b_y_w_1_q), .q(rr_l_leg_1_5b_y_w_2_q));   // (669.17, 3950.91) c1r3 region reset run
+    wire [0:0] rr_l_leg_1_5b_y_w_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_5b_y_w_3 (.ck(ck_c1r3), .d(rr_l_leg_1_5b_y_w_2_q), .q(rr_l_leg_1_5b_y_w_3_q));   // (669.17, 4271.34) c1r3 region reset run
+    assign lrst_leg_1_5b_y_w = rr_l_leg_1_5b_y_w_3_q;
+    wire [0:0] rr_l_leg_1_5b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_5b_y_r_0 (.ck(ck_c0r3), .d(rq_t_0_3_11_q), .q(rr_l_leg_1_5b_y_r_0_q));   // (82.08, 4107.27) c0r3 region reset run
+    wire [0:0] rr_l_leg_1_5b_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_5b_y_r_1 (.ck(ck_c0r3), .d(rr_l_leg_1_5b_y_r_0_q), .q(rr_l_leg_1_5b_y_r_1_q));   // (219.65, 3942.00) c0r3 region reset run
+    wire [0:0] rr_l_leg_1_5b_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_5b_y_r_2 (.ck(ck_c0r3), .d(rr_l_leg_1_5b_y_r_1_q), .q(rr_l_leg_1_5b_y_r_2_q));   // (522.49, 3942.00) c0r3 region reset run
+    wire [0:0] rr_l_leg_1_5b_y_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_5b_y_r_3 (.ck(ck_c0r3), .d(rr_l_leg_1_5b_y_r_2_q), .q(rr_l_leg_1_5b_y_r_3_q));   // (566.35, 4200.98) c0r3 region reset run
+    assign lrst_leg_1_5b_y_r = rr_l_leg_1_5b_y_r_3_q;
+    wire [0:0] rr_l_leg_1_6a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_6a_y_w_0 (.ck(ck_c2r2), .d(rq_t_2_2_5_q), .q(rr_l_leg_1_6a_y_w_0_q));   // (1291.68, 2797.45) c2r2 region reset run
+    wire [0:0] rr_l_leg_1_6a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_6a_y_w_1 (.ck(ck_c2r2), .d(rr_l_leg_1_6a_y_w_0_q), .q(rr_l_leg_1_6a_y_w_1_q));   // (1456.88, 2646.00) c2r2 region reset run
+    wire [0:0] rr_l_leg_1_6a_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_6a_y_w_2 (.ck(ck_c2r2), .d(rr_l_leg_1_6a_y_w_1_q), .q(rr_l_leg_1_6a_y_w_2_q));   // (1773.54, 2646.00) c2r2 region reset run
+    wire [0:0] rr_l_leg_1_6a_y_w_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_6a_y_w_3 (.ck(ck_c2r2), .d(rr_l_leg_1_6a_y_w_2_q), .q(rr_l_leg_1_6a_y_w_3_q));   // (1775.95, 2960.24) c2r2 region reset run
+    assign lrst_leg_1_6a_y_w = rr_l_leg_1_6a_y_w_3_q;
+    wire [0:0] rr_l_leg_1_6a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_6a_y_r_0 (.ck(ck_c3r2), .d(rq_t_3_2_10_q), .q(rr_l_leg_1_6a_y_r_0_q));   // (2363.04, 2738.83) c3r2 region reset run
+    wire [0:0] rr_l_leg_1_6a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_6a_y_r_1 (.ck(ck_c3r2), .d(rr_l_leg_1_6a_y_r_0_q), .q(rr_l_leg_1_6a_y_r_1_q));   // (2080.59, 2646.00) c3r2 region reset run
+    wire [0:0] rr_l_leg_1_6a_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_6a_y_r_2 (.ck(ck_c3r2), .d(rr_l_leg_1_6a_y_r_1_q), .q(rr_l_leg_1_6a_y_r_2_q));   // (1878.77, 2819.46) c3r2 region reset run
+    assign lrst_leg_1_6a_y_r = rr_l_leg_1_6a_y_r_2_q;
+    wire [0:0] rr_l_leg_1_7a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_7a_y_w_0 (.ck(ck_c2r3), .d(rq_t_2_3_11_q), .q(rr_l_leg_1_7a_y_w_0_q));   // (1291.68, 4093.45) c2r3 region reset run
+    wire [0:0] rr_l_leg_1_7a_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_7a_y_w_1 (.ck(ck_c2r3), .d(rr_l_leg_1_7a_y_w_0_q), .q(rr_l_leg_1_7a_y_w_1_q));   // (1456.88, 3942.00) c2r3 region reset run
+    wire [0:0] rr_l_leg_1_7a_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_7a_y_w_2 (.ck(ck_c2r3), .d(rr_l_leg_1_7a_y_w_1_q), .q(rr_l_leg_1_7a_y_w_2_q));   // (1773.54, 3942.00) c2r3 region reset run
+    wire [0:0] rr_l_leg_1_7a_y_w_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_7a_y_w_3 (.ck(ck_c2r3), .d(rr_l_leg_1_7a_y_w_2_q), .q(rr_l_leg_1_7a_y_w_3_q));   // (1775.95, 4256.24) c2r3 region reset run
+    assign lrst_leg_1_7a_y_w = rr_l_leg_1_7a_y_w_3_q;
+    wire [0:0] rr_l_leg_1_7a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_7a_y_r_0 (.ck(ck_c3r3), .d(rq_t_3_3_11_q), .q(rr_l_leg_1_7a_y_r_0_q));   // (2363.04, 4034.83) c3r3 region reset run
+    wire [0:0] rr_l_leg_1_7a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_7a_y_r_1 (.ck(ck_c3r3), .d(rr_l_leg_1_7a_y_r_0_q), .q(rr_l_leg_1_7a_y_r_1_q));   // (2080.59, 3942.00) c3r3 region reset run
+    wire [0:0] rr_l_leg_1_7a_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_1_7a_y_r_2 (.ck(ck_c3r3), .d(rr_l_leg_1_7a_y_r_1_q), .q(rr_l_leg_1_7a_y_r_2_q));   // (1878.77, 4115.46) c3r3 region reset run
+    assign lrst_leg_1_7a_y_r = rr_l_leg_1_7a_y_r_2_q;
+    wire [0:0] rr_l_leg_2_0a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_0a_3_w_0 (.ck(ck_c1r0), .d(rr_t_1_0_0_q), .q(rr_l_leg_2_0a_3_w_0_q));   // (685.84, 43.20) c1r0 region reset run
+    wire [0:0] rr_l_leg_2_0a_3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_0a_3_w_1 (.ck(ck_c1r0), .d(rr_l_leg_2_0a_3_w_0_q), .q(rr_l_leg_2_0a_3_w_1_q));   // (656.64, 390.82) c1r0 region reset run
+    wire [0:0] rr_l_leg_2_0a_3_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_0a_3_w_2 (.ck(ck_c1r0), .d(rr_l_leg_2_0a_3_w_1_q), .q(rr_l_leg_2_0a_3_w_2_q));   // (656.64, 767.65) c1r0 region reset run
+    wire [0:0] rr_l_leg_2_0a_3_w_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_0a_3_w_3 (.ck(ck_c1r0), .d(rr_l_leg_2_0a_3_w_2_q), .q(rr_l_leg_2_0a_3_w_3_q));   // (656.64, 1144.47) c1r0 region reset run
+    wire [0:0] rq_l_leg_2_0a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_2_0a_3_w_0 (.ck(ck_c1r0), .d(rr_l_leg_2_0a_3_w_3_q), .q(rq_l_leg_2_0a_3_w_0_q));   // (656.64, 1144.47) c1r0 region reset pad
+    assign lrst_leg_2_0a_3_w = rq_l_leg_2_0a_3_w_0_q;
+    wire [0:0] rr_l_leg_2_0a_3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_0a_3_r_0 (.ck(ck_c1r1), .d(rr_t_1_1_3_q), .q(rr_l_leg_2_0a_3_r_0_q));   // (1013.45, 1321.53) c1r1 region reset run
+    wire [0:0] rr_l_leg_2_0a_3_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_0a_3_r_1 (.ck(ck_c1r1), .d(rr_l_leg_2_0a_3_r_0_q), .q(rr_l_leg_2_0a_3_r_1_q));   // (695.52, 1321.53) c1r1 region reset run
+    assign lrst_leg_2_0a_3_r = rr_l_leg_2_0a_3_r_1_q;
+    wire [0:0] rr_l_leg_2_0b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_0b_y_w_0 (.ck(ck_c0r1), .d(rr_l_leg_1_1b_y_r_3_q), .q(rr_l_leg_2_0b_y_w_0_q));   // (566.35, 1764.77) c0r1 region reset run
+    assign lrst_leg_2_0b_y_w = rr_l_leg_2_0b_y_w_0_q;
+    wire [0:0] rr_l_leg_2_0b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_0b_y_r_0 (.ck(ck_c1r1), .d(rr_l_leg_1_1b_y_w_3_q), .q(rr_l_leg_2_0b_y_r_0_q));   // (669.17, 1624.05) c1r1 region reset run
+    assign lrst_leg_2_0b_y_r = rr_l_leg_2_0b_y_r_0_q;
+    wire [0:0] rr_l_leg_2_1a_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_1a_0_w_0 (.ck(ck_c2r0), .d(rq_l_leg_1_2b_y_r_0_q), .q(rr_l_leg_2_1a_0_w_0_q));   // (1773.58, 522.14) c2r0 region reset run
+    wire [0:0] rq_l_leg_2_1a_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_2_1a_0_w_0 (.ck(ck_c2r0), .d(rr_l_leg_2_1a_0_w_0_q), .q(rq_l_leg_2_1a_0_w_0_q));   // (1773.58, 522.14) c2r0 region reset pad
+    wire [0:0] rq_l_leg_2_1a_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_2_1a_0_w_1 (.ck(ck_c2r0), .d(rq_l_leg_2_1a_0_w_0_q), .q(rq_l_leg_2_1a_0_w_1_q));   // (1773.58, 522.14) c2r0 region reset pad
+    assign lrst_leg_2_1a_0_w = rq_l_leg_2_1a_0_w_1_q;
+    wire [0:0] rr_l_leg_2_1a_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_1a_0_r_0 (.ck(ck_c3r0), .d(rq_l_leg_1_2b_y_w_0_q), .q(rr_l_leg_2_1a_0_r_0_q));   // (1842.26, 621.87) c3r0 region reset run
+    wire [0:0] rq_l_leg_2_1a_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_2_1a_0_r_0 (.ck(ck_c3r0), .d(rr_l_leg_2_1a_0_r_0_q), .q(rq_l_leg_2_1a_0_r_0_q));   // (1842.26, 621.87) c3r0 region reset pad
+    wire [0:0] rq_l_leg_2_1a_0_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_2_1a_0_r_1 (.ck(ck_c3r0), .d(rq_l_leg_2_1a_0_r_0_q), .q(rq_l_leg_2_1a_0_r_1_q));   // (1842.26, 621.87) c3r0 region reset pad
+    assign lrst_leg_2_1a_0_r = rq_l_leg_2_1a_0_r_1_q;
+    wire [0:0] rr_l_leg_2_1a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_1a_3_w_0 (.ck(ck_c3r0), .d(rq_l_leg_2_1a_0_r_1_q), .q(rr_l_leg_2_1a_3_w_0_q));   // (1842.26, 888.46) c3r0 region reset run
+    wire [0:0] rr_l_leg_2_1a_3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_1a_3_w_1 (.ck(ck_c3r0), .d(rr_l_leg_2_1a_3_w_0_q), .q(rr_l_leg_2_1a_3_w_1_q));   // (1840.32, 1153.11) c3r0 region reset run
+    wire [0:0] rq_l_leg_2_1a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_2_1a_3_w_0 (.ck(ck_c3r0), .d(rr_l_leg_2_1a_3_w_1_q), .q(rq_l_leg_2_1a_3_w_0_q));   // (1840.32, 1153.11) c3r0 region reset pad
+    assign lrst_leg_2_1a_3_w = rq_l_leg_2_1a_3_w_0_q;
+    wire [0:0] rr_l_leg_2_1a_3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_1a_3_r_0 (.ck(ck_c3r1), .d(rr_l_leg_1_3a_y_r_1_q), .q(rr_l_leg_2_1a_3_r_0_q));   // (1866.24, 1321.53) c3r1 region reset run
+    assign lrst_leg_2_1a_3_r = rr_l_leg_2_1a_3_r_0_q;
+    wire [0:0] rr_l_leg_2_1a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_1a_y_w_0 (.ck(ck_c3r1), .d(rr_l_leg_1_3a_y_r_1_q), .q(rr_l_leg_2_1a_y_w_0_q));   // (1868.18, 1361.70) c3r1 region reset run
+    assign lrst_leg_2_1a_y_w = rr_l_leg_2_1a_y_w_0_q;
+    wire [0:0] rr_l_leg_2_1a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_1a_y_r_0 (.ck(ck_c2r1), .d(rr_l_leg_1_3a_y_w_2_q), .q(rr_l_leg_2_1a_y_r_0_q));   // (1773.58, 1470.07) c2r1 region reset run
+    assign lrst_leg_2_1a_y_r = rr_l_leg_2_1a_y_r_0_q;
+    wire [0:0] rr_l_leg_2_1b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_1b_y_w_0 (.ck(ck_c3r1), .d(rr_l_leg_1_3a_y_r_2_q), .q(rr_l_leg_2_1b_y_w_0_q));   // (1878.77, 1764.77) c3r1 region reset run
+    assign lrst_leg_2_1b_y_w = rr_l_leg_2_1b_y_w_0_q;
+    wire [0:0] rr_l_leg_2_1b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_1b_y_r_0 (.ck(ck_c2r1), .d(rr_l_leg_1_3a_y_w_3_q), .q(rr_l_leg_2_1b_y_r_0_q));   // (1775.95, 1624.05) c2r1 region reset run
+    assign lrst_leg_2_1b_y_r = rr_l_leg_2_1b_y_r_0_q;
+    wire [0:0] rr_l_leg_2_2a_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_2a_0_w_0 (.ck(ck_c0r2), .d(rr_l_leg_1_4b_y_r_3_q), .q(rr_l_leg_2_2a_0_w_0_q));   // (563.98, 3114.15) c0r2 region reset run
+    assign lrst_leg_2_2a_0_w = rr_l_leg_2_2a_0_w_0_q;
+    wire [0:0] rr_l_leg_2_2a_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_2a_0_r_0 (.ck(ck_c1r2), .d(rr_l_leg_1_4b_y_w_3_q), .q(rr_l_leg_2_2a_0_r_0_q));   // (632.66, 3196.59) c1r2 region reset run
+    assign lrst_leg_2_2a_0_r = rr_l_leg_2_2a_0_r_0_q;
+    wire [0:0] rr_l_leg_2_2a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_2a_3_w_0 (.ck(ck_c1r2), .d(rr_l_leg_2_2a_0_r_0_q), .q(rr_l_leg_2_2a_3_w_0_q));   // (632.66, 3476.14) c1r2 region reset run
+    wire [0:0] rr_l_leg_2_2a_3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_2a_3_w_1 (.ck(ck_c1r2), .d(rr_l_leg_2_2a_3_w_0_q), .q(rr_l_leg_2_2a_3_w_1_q));   // (630.72, 3753.75) c1r2 region reset run
+    assign lrst_leg_2_2a_3_w = rr_l_leg_2_2a_3_w_1_q;
+    wire [0:0] rr_l_leg_2_2a_3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_2a_3_r_0 (.ck(ck_c1r3), .d(rr_l_leg_1_5b_y_w_1_q), .q(rr_l_leg_2_2a_3_r_0_q));   // (630.72, 3922.16) c1r3 region reset run
+    assign lrst_leg_2_2a_3_r = rr_l_leg_2_2a_3_r_0_q;
+    wire [0:0] rr_l_leg_2_2b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_2b_y_w_0 (.ck(ck_c0r3), .d(rr_l_leg_1_5b_y_r_3_q), .q(rr_l_leg_2_2b_y_w_0_q));   // (566.35, 4356.77) c0r3 region reset run
+    assign lrst_leg_2_2b_y_w = rr_l_leg_2_2b_y_w_0_q;
+    wire [0:0] rr_l_leg_2_2b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_2b_y_r_0 (.ck(ck_c1r3), .d(rr_l_leg_1_5b_y_w_3_q), .q(rr_l_leg_2_2b_y_r_0_q));   // (669.17, 4216.05) c1r3 region reset run
+    assign lrst_leg_2_2b_y_r = rr_l_leg_2_2b_y_r_0_q;
+    wire [0:0] rr_l_leg_2_3a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_3a_3_w_0 (.ck(ck_c3r2), .d(rr_l_leg_1_6a_y_r_2_q), .q(rr_l_leg_2_3a_3_w_0_q));   // (1878.77, 3140.83) c3r2 region reset run
+    wire [0:0] rr_l_leg_2_3a_3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_3a_3_w_1 (.ck(ck_c3r2), .d(rr_l_leg_2_3a_3_w_0_q), .q(rr_l_leg_2_3a_3_w_1_q));   // (1878.77, 3462.19) c3r2 region reset run
+    wire [0:0] rr_l_leg_2_3a_3_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_3a_3_w_2 (.ck(ck_c3r2), .d(rr_l_leg_2_3a_3_w_1_q), .q(rr_l_leg_2_3a_3_w_2_q));   // (1840.32, 3745.11) c3r2 region reset run
+    wire [0:0] rq_l_leg_2_3a_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_2_3a_3_w_0 (.ck(ck_c3r2), .d(rr_l_leg_2_3a_3_w_2_q), .q(rq_l_leg_2_3a_3_w_0_q));   // (1840.32, 3745.11) c3r2 region reset pad
+    assign lrst_leg_2_3a_3_w = rq_l_leg_2_3a_3_w_0_q;
+    wire [0:0] rr_l_leg_2_3a_3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_3a_3_r_0 (.ck(ck_c3r3), .d(rr_l_leg_1_7a_y_r_1_q), .q(rr_l_leg_2_3a_3_r_0_q));   // (1866.24, 3913.53) c3r3 region reset run
+    assign lrst_leg_2_3a_3_r = rr_l_leg_2_3a_3_r_0_q;
+    wire [0:0] rr_l_leg_2_3a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_3a_y_w_0 (.ck(ck_c3r3), .d(rr_l_leg_1_7a_y_r_1_q), .q(rr_l_leg_2_3a_y_w_0_q));   // (1842.26, 3975.30) c3r3 region reset run
+    assign lrst_leg_2_3a_y_w = rr_l_leg_2_3a_y_w_0_q;
+    wire [0:0] rr_l_leg_2_3a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_3a_y_r_0 (.ck(ck_c2r3), .d(rr_l_leg_1_7a_y_w_2_q), .q(rr_l_leg_2_3a_y_r_0_q));   // (1773.58, 4062.07) c2r3 region reset run
+    assign lrst_leg_2_3a_y_r = rr_l_leg_2_3a_y_r_0_q;
+    wire [0:0] rr_l_leg_2_3b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_3b_y_w_0 (.ck(ck_c3r3), .d(rr_l_leg_1_7a_y_r_2_q), .q(rr_l_leg_2_3b_y_w_0_q));   // (1878.77, 4356.77) c3r3 region reset run
+    assign lrst_leg_2_3b_y_w = rr_l_leg_2_3b_y_w_0_q;
+    wire [0:0] rr_l_leg_2_3b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_2_3b_y_r_0 (.ck(ck_c2r3), .d(rr_l_leg_1_7a_y_w_3_q), .q(rr_l_leg_2_3b_y_r_0_q));   // (1775.95, 4216.05) c2r3 region reset run
+    assign lrst_leg_2_3b_y_r = rr_l_leg_2_3b_y_r_0_q;
+    wire [0:0] rr_l_leg_3_0a_4_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0a_4_w_0 (.ck(ck_c1r1), .d(rq_t_1_1_0_q), .q(rr_l_leg_3_0a_4_w_0_q));   // (1153.44, 2090.31) c1r1 region reset run
+    wire [0:0] rr_l_leg_3_0a_4_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0a_4_w_1 (.ck(ck_c1r1), .d(rr_l_leg_3_0a_4_w_0_q), .q(rr_l_leg_3_0a_4_w_1_q));   // (1153.44, 2362.51) c1r1 region reset run
+    wire [0:0] rr_l_leg_3_0a_4_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0a_4_w_2 (.ck(ck_c1r1), .d(rr_l_leg_3_0a_4_w_1_q), .q(rr_l_leg_3_0a_4_w_2_q));   // (1119.36, 2600.64) c1r1 region reset run
+    assign lrst_leg_3_0a_4_w = rr_l_leg_3_0a_4_w_2_q;
+    wire [0:0] rr_l_leg_3_0a_4_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0a_4_r_0 (.ck(ck_c2r1), .d(rq_t_2_1_0_q), .q(rr_l_leg_3_0a_4_r_0_q));   // (1291.68, 2102.75) c2r1 region reset run
+    wire [0:0] rr_l_leg_3_0a_4_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0a_4_r_1 (.ck(ck_c2r1), .d(rr_l_leg_3_0a_4_r_0_q), .q(rr_l_leg_3_0a_4_r_1_q));   // (1291.68, 2387.40) c2r1 region reset run
+    wire [0:0] rr_l_leg_3_0a_4_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0a_4_r_2 (.ck(ck_c2r1), .d(rr_l_leg_3_0a_4_r_1_q), .q(rr_l_leg_3_0a_4_r_2_q));   // (1354.45, 2609.28) c2r1 region reset run
+    assign lrst_leg_3_0a_4_r = rr_l_leg_3_0a_4_r_2_q;
+    wire [0:0] rr_l_leg_3_0a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0a_y_w_0 (.ck(ck_c2r1), .d(rr_l_leg_3_0a_4_r_2_q), .q(rr_l_leg_3_0a_y_w_0_q));   // (1690.81, 2596.75) c2r1 region reset run
+    wire [0:0] rq_l_leg_3_0a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_3_0a_y_w_0 (.ck(ck_c2r1), .d(rr_l_leg_3_0a_y_w_0_q), .q(rq_l_leg_3_0a_y_w_0_q));   // (1690.81, 2596.75) c2r1 region reset pad
+    assign lrst_leg_3_0a_y_w = rq_l_leg_3_0a_y_w_0_q;
+    wire [0:0] rr_l_leg_3_0a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0a_y_r_0 (.ck(ck_c2r2), .d(rq_t_2_2_2_q), .q(rr_l_leg_3_0a_y_r_0_q));   // (1291.68, 2758.48) c2r2 region reset run
+    wire [0:0] rr_l_leg_3_0a_y_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0a_y_r_1 (.ck(ck_c2r2), .d(rr_l_leg_3_0a_y_r_0_q), .q(rr_l_leg_3_0a_y_r_1_q));   // (1534.84, 2646.00) c2r2 region reset run
+    wire [0:0] rr_l_leg_3_0a_y_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0a_y_r_2 (.ck(ck_c2r2), .d(rr_l_leg_3_0a_y_r_1_q), .q(rr_l_leg_3_0a_y_r_2_q));   // (1773.53, 2762.94) c2r2 region reset run
+    assign lrst_leg_3_0a_y_r = rr_l_leg_3_0a_y_r_2_q;
+    wire [0:0] rr_l_leg_3_0b_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0b_0_w_0 (.ck(ck_c2r1), .d(rr_l_leg_1_3a_y_w_3_q), .q(rr_l_leg_3_0b_0_w_0_q));   // (1773.58, 1810.52) c2r1 region reset run
+    assign lrst_leg_3_0b_0_w = rr_l_leg_3_0b_0_w_0_q;
+    wire [0:0] rr_l_leg_3_0b_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0b_0_r_0 (.ck(ck_c3r1), .d(rr_l_leg_1_3a_y_r_2_q), .q(rr_l_leg_3_0b_0_r_0_q));   // (1842.26, 1866.02) c3r1 region reset run
+    assign lrst_leg_3_0b_0_r = rr_l_leg_3_0b_0_r_0_q;
+    wire [0:0] rr_l_leg_3_0b_5_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0b_5_w_0 (.ck(ck_c3r1), .d(rr_l_leg_3_0b_0_r_0_q), .q(rr_l_leg_3_0b_5_w_0_q));   // (1842.26, 2245.28) c3r1 region reset run
+    wire [0:0] rr_l_leg_3_0b_5_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0b_5_w_1 (.ck(ck_c3r1), .d(rr_l_leg_3_0b_5_w_0_q), .q(rr_l_leg_3_0b_5_w_1_q));   // (1866.24, 2600.57) c3r1 region reset run
+    wire [0:0] rq_l_leg_3_0b_5_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_3_0b_5_w_0 (.ck(ck_c3r1), .d(rr_l_leg_3_0b_5_w_1_q), .q(rq_l_leg_3_0b_5_w_0_q));   // (1866.24, 2600.57) c3r1 region reset pad
+    assign lrst_leg_3_0b_5_w = rq_l_leg_3_0b_5_w_0_q;
+    wire [0:0] rr_l_leg_3_0b_5_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0b_5_r_0 (.ck(ck_c3r2), .d(rr_l_leg_1_6a_y_r_1_q), .q(rr_l_leg_3_0b_5_r_0_q));   // (1840.32, 2746.36) c3r2 region reset run
+    assign lrst_leg_3_0b_5_r = rr_l_leg_3_0b_5_r_0_q;
+    wire [0:0] rr_l_leg_3_0b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0b_y_w_0 (.ck(ck_c3r2), .d(rq_t_3_2_9_q), .q(rr_l_leg_3_0b_y_w_0_q));   // (2363.04, 2821.53) c3r2 region reset run
+    wire [0:0] rr_l_leg_3_0b_y_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0b_y_w_1 (.ck(ck_c3r2), .d(rr_l_leg_3_0b_y_w_0_q), .q(rr_l_leg_3_0b_y_w_1_q));   // (2245.98, 2646.00) c3r2 region reset run
+    wire [0:0] rr_l_leg_3_0b_y_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0b_y_w_2 (.ck(ck_c3r2), .d(rr_l_leg_3_0b_y_w_1_q), .q(rr_l_leg_3_0b_y_w_2_q));   // (1953.40, 2646.00) c3r2 region reset run
+    wire [0:0] rr_l_leg_3_0b_y_w_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0b_y_w_3 (.ck(ck_c3r2), .d(rr_l_leg_3_0b_y_w_2_q), .q(rr_l_leg_3_0b_y_w_3_q));   // (1842.26, 2827.45) c3r2 region reset run
+    assign lrst_leg_3_0b_y_w = rr_l_leg_3_0b_y_w_3_q;
+    wire [0:0] rr_l_leg_3_0b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_0b_y_r_0 (.ck(ck_c2r2), .d(rr_l_leg_1_6a_y_w_2_q), .q(rr_l_leg_3_0b_y_r_0_q));   // (1773.58, 2874.30) c2r2 region reset run
+    assign lrst_leg_3_0b_y_r = rr_l_leg_3_0b_y_r_0_q;
+    wire [0:0] rr_l_leg_3_1a_2_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1a_2_w_0 (.ck(ck_c1r3), .d(rr_l_leg_1_5b_y_w_1_q), .q(rr_l_leg_3_1a_2_w_0_q));   // (656.64, 3991.53) c1r3 region reset run
+    assign lrst_leg_3_1a_2_w = rr_l_leg_3_1a_2_w_0_q;
+    wire [0:0] rr_l_leg_3_1a_2_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1a_2_r_0 (.ck(ck_c1r2), .d(rr_l_leg_2_2a_3_w_0_q), .q(rr_l_leg_3_1a_2_r_0_q));   // (630.72, 3847.52) c1r2 region reset run
+    assign lrst_leg_3_1a_2_r = rr_l_leg_3_1a_2_r_0_q;
+    wire [0:0] rr_l_leg_3_1b_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_0_w_0 (.ck(ck_c2r3), .d(rr_l_leg_1_7a_y_w_1_q), .q(rr_l_leg_3_1b_0_w_0_q));   // (1773.58, 3984.87) c2r3 region reset run
+    wire [0:0] rr_l_leg_3_1b_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_0_w_1 (.ck(ck_c2r3), .d(rr_l_leg_3_1b_0_w_0_q), .q(rr_l_leg_3_1b_0_w_1_q));   // (1773.58, 4344.44) c2r3 region reset run
+    assign lrst_leg_3_1b_0_w = rr_l_leg_3_1b_0_w_1_q;
+    wire [0:0] rr_l_leg_3_1b_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_0_r_0 (.ck(ck_c3r3), .d(rq_t_3_3_10_q), .q(rr_l_leg_3_1b_0_r_0_q));   // (2363.04, 4111.85) c3r3 region reset run
+    wire [0:0] rr_l_leg_3_1b_0_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_0_r_1 (.ck(ck_c3r3), .d(rr_l_leg_3_1b_0_r_0_q), .q(rr_l_leg_3_1b_0_r_1_q));   // (2234.62, 3942.00) c3r3 region reset run
+    wire [0:0] rr_l_leg_3_1b_0_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_0_r_2 (.ck(ck_c3r3), .d(rr_l_leg_3_1b_0_r_1_q), .q(rr_l_leg_3_1b_0_r_2_q));   // (1936.36, 3942.00) c3r3 region reset run
+    wire [0:0] rr_l_leg_3_1b_0_r_3_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_0_r_3 (.ck(ck_c3r3), .d(rr_l_leg_3_1b_0_r_2_q), .q(rr_l_leg_3_1b_0_r_3_q));   // (1842.26, 4146.16) c3r3 region reset run
+    assign lrst_leg_3_1b_0_r = rr_l_leg_3_1b_0_r_3_q;
+    wire [0:0] rr_l_leg_3_1b_1_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_1_w_0 (.ck(ck_c3r3), .d(rr_l_leg_3_1b_0_r_2_q), .q(rr_l_leg_3_1b_1_w_0_q));   // (1841.85, 4057.28) c3r3 region reset run
+    assign lrst_leg_3_1b_1_w = rr_l_leg_3_1b_1_w_0_q;
+    wire [0:0] rr_l_leg_3_1b_1_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_1_r_0 (.ck(ck_c2r2), .d(rr_l_leg_1_6a_y_w_3_q), .q(rr_l_leg_3_1b_1_r_0_q));   // (1775.95, 3296.62) c2r2 region reset run
+    wire [0:0] rr_l_leg_3_1b_1_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_1_r_1 (.ck(ck_c2r2), .d(rr_l_leg_3_1b_1_r_0_q), .q(rr_l_leg_3_1b_1_r_1_q));   // (1775.95, 3632.99) c2r2 region reset run
+    wire [0:0] rr_l_leg_3_1b_1_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_1_r_2 (.ck(ck_c2r2), .d(rr_l_leg_3_1b_1_r_1_q), .q(rr_l_leg_3_1b_1_r_2_q));   // (1710.74, 3904.15) c2r2 region reset run
+    wire [0:0] rq_l_leg_3_1b_1_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_3_1b_1_r_0 (.ck(ck_c2r2), .d(rr_l_leg_3_1b_1_r_2_q), .q(rq_l_leg_3_1b_1_r_0_q));   // (1710.74, 3904.15) c2r2 region reset pad
+    assign lrst_leg_3_1b_1_r = rq_l_leg_3_1b_1_r_0_q;
+    wire [0:0] rr_l_leg_3_1b_3_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_3_w_0 (.ck(ck_c2r2), .d(rq_t_2_2_5_q), .q(rr_l_leg_3_1b_3_w_0_q));   // (1291.68, 3499.77) c2r2 region reset run
+    wire [0:0] rr_l_leg_3_1b_3_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_3_w_1 (.ck(ck_c2r2), .d(rr_l_leg_3_1b_3_w_0_q), .q(rr_l_leg_3_1b_3_w_1_q));   // (1297.76, 3879.36) c2r2 region reset run
+    assign lrst_leg_3_1b_3_w = rr_l_leg_3_1b_3_w_1_q;
+    wire [0:0] rr_l_leg_3_1b_3_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_3_r_0 (.ck(ck_c1r2), .d(rq_t_1_2_4_q), .q(rr_l_leg_3_1b_3_r_0_q));   // (1153.44, 3427.35) c1r2 region reset run
+    wire [0:0] rr_l_leg_3_1b_3_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_3_r_1 (.ck(ck_c1r2), .d(rr_l_leg_3_1b_3_r_0_q), .q(rr_l_leg_3_1b_3_r_1_q));   // (1153.44, 3740.60) c1r2 region reset run
+    wire [0:0] rr_l_leg_3_1b_3_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_3_1b_3_r_2 (.ck(ck_c1r2), .d(rr_l_leg_3_1b_3_r_1_q), .q(rr_l_leg_3_1b_3_r_2_q));   // (1004.88, 3905.28) c1r2 region reset run
+    assign lrst_leg_3_1b_3_r = rr_l_leg_3_1b_3_r_2_q;
+    wire [0:0] rr_l_leg_4_0a_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_0_w_0 (.ck(ck_c2r2), .d(rr_l_leg_1_6a_y_w_1_q), .q(rr_l_leg_4_0a_0_w_0_q));   // (1773.58, 2696.87) c2r2 region reset run
+    wire [0:0] rr_l_leg_4_0a_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_0_w_1 (.ck(ck_c2r2), .d(rr_l_leg_4_0a_0_w_0_q), .q(rr_l_leg_4_0a_0_w_1_q));   // (1773.58, 3064.44) c2r2 region reset run
+    assign lrst_leg_4_0a_0_w = rr_l_leg_4_0a_0_w_1_q;
+    wire [0:0] rr_l_leg_4_0a_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_0_r_0 (.ck(ck_c3r2), .d(rr_l_leg_3_0b_y_w_1_q), .q(rr_l_leg_4_0a_0_r_0_q));   // (1894.54, 2646.00) c3r2 region reset run
+    wire [0:0] rr_l_leg_4_0a_0_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_0_r_1 (.ck(ck_c3r2), .d(rr_l_leg_4_0a_0_r_0_q), .q(rr_l_leg_4_0a_0_r_1_q));   // (1842.26, 2945.16) c3r2 region reset run
+    assign lrst_leg_4_0a_0_r = rr_l_leg_4_0a_0_r_1_q;
+    wire [0:0] rr_l_leg_4_0a_2_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_2_w_0 (.ck(ck_c3r2), .d(rr_l_leg_4_0a_0_r_0_q), .q(rr_l_leg_4_0a_2_w_0_q));   // (1866.24, 2631.17) c3r2 region reset run
+    assign lrst_leg_4_0a_2_w = rr_l_leg_4_0a_2_w_0_q;
+    wire [0:0] rr_l_leg_4_0a_2_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_2_r_0 (.ck(ck_c3r1), .d(rr_l_leg_3_0b_5_w_1_q), .q(rr_l_leg_4_0a_2_r_0_q));   // (1840.32, 2451.84) c3r1 region reset run
+    assign lrst_leg_4_0a_2_r = rr_l_leg_4_0a_2_r_0_q;
+    wire [0:0] rr_l_leg_4_0a_7_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_7_w_0 (.ck(ck_c3r1), .d(rr_l_leg_1_3a_y_r_1_q), .q(rr_l_leg_4_0a_7_w_0_q));   // (1869.17, 1399.81) c3r1 region reset run
+    assign lrst_leg_4_0a_7_w = rr_l_leg_4_0a_7_w_0_q;
+    wire [0:0] rr_l_leg_4_0a_7_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_7_r_0 (.ck(ck_c2r0), .d(rq_l_leg_2_1a_0_w_1_q), .q(rr_l_leg_4_0a_7_r_0_q));   // (1773.58, 803.24) c2r0 region reset run
+    wire [0:0] rr_l_leg_4_0a_7_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_7_r_1 (.ck(ck_c2r0), .d(rr_l_leg_4_0a_7_r_0_q), .q(rr_l_leg_4_0a_7_r_1_q));   // (1773.58, 1084.33) c2r0 region reset run
+    wire [0:0] rr_l_leg_4_0a_7_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_7_r_2 (.ck(ck_c2r0), .d(rr_l_leg_4_0a_7_r_1_q), .q(rr_l_leg_4_0a_7_r_2_q));   // (1718.66, 1310.51) c2r0 region reset run
+    assign lrst_leg_4_0a_7_r = rr_l_leg_4_0a_7_r_2_q;
+    wire [0:0] rr_l_leg_4_0a_9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_9_w_0 (.ck(ck_c2r0), .d(rr_t_2_0_1_q), .q(rr_l_leg_4_0a_9_w_0_q));   // (1291.68, 813.14) c2r0 region reset run
+    wire [0:0] rr_l_leg_4_0a_9_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_9_w_1 (.ck(ck_c2r0), .d(rr_l_leg_4_0a_9_w_0_q), .q(rr_l_leg_4_0a_9_w_1_q));   // (1291.68, 1104.17) c2r0 region reset run
+    wire [0:0] rr_l_leg_4_0a_9_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_9_w_2 (.ck(ck_c2r0), .d(rr_l_leg_4_0a_9_w_1_q), .q(rr_l_leg_4_0a_9_w_2_q));   // (1382.24, 1304.64) c2r0 region reset run
+    assign lrst_leg_4_0a_9_w = rr_l_leg_4_0a_9_w_2_q;
+    wire [0:0] rr_l_leg_4_0a_9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_9_r_0 (.ck(ck_c1r0), .d(rr_t_1_0_1_q), .q(rr_l_leg_4_0a_9_r_0_q));   // (1153.44, 613.87) c1r0 region reset run
+    wire [0:0] rr_l_leg_4_0a_9_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_9_r_1 (.ck(ck_c1r0), .d(rr_l_leg_4_0a_9_r_0_q), .q(rr_l_leg_4_0a_9_r_1_q));   // (1153.44, 990.48) c1r0 region reset run
+    wire [0:0] rr_l_leg_4_0a_9_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_9_r_2 (.ck(ck_c1r0), .d(rr_l_leg_4_0a_9_r_1_q), .q(rr_l_leg_4_0a_9_r_2_q));   // (1207.24, 1313.28) c1r0 region reset run
+    assign lrst_leg_4_0a_9_r = rr_l_leg_4_0a_9_r_2_q;
+    wire [0:0] rr_l_leg_4_0a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_y_w_0 (.ck(ck_c1r0), .d(rr_l_leg_2_0a_3_w_1_q), .q(rr_l_leg_4_0a_y_w_0_q));   // (658.58, 347.37) c1r0 region reset run
+    wire [0:0] rq_l_leg_4_0a_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_leg_4_0a_y_w_0 (.ck(ck_c1r0), .d(rr_l_leg_4_0a_y_w_0_q), .q(rq_l_leg_4_0a_y_w_0_q));   // (658.58, 347.37) c1r0 region reset pad
+    assign lrst_leg_4_0a_y_w = rq_l_leg_4_0a_y_w_0_q;
+    wire [0:0] rr_l_leg_4_0a_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0a_y_r_0 (.ck(ck_c0r0), .d(rr_l_leg_1_0a_y_w_2_q), .q(rr_l_leg_4_0a_y_r_0_q));   // (563.98, 223.78) c0r0 region reset run
+    assign lrst_leg_4_0a_y_r = rr_l_leg_4_0a_y_r_0_q;
+    wire [0:0] rr_l_leg_4_0b_1_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0b_1_w_0 (.ck(ck_c1r2), .d(rr_l_leg_1_4b_y_w_2_q), .q(rr_l_leg_4_0b_1_w_0_q));   // (630.72, 2741.75) c1r2 region reset run
+    assign lrst_leg_4_0b_1_w = rr_l_leg_4_0b_1_w_0_q;
+    wire [0:0] rr_l_leg_4_0b_1_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0b_1_r_0 (.ck(ck_c1r1), .d(rr_l_leg_2_0b_y_r_0_q), .q(rr_l_leg_4_0b_1_r_0_q));   // (669.17, 1930.89) c1r1 region reset run
+    wire [0:0] rr_l_leg_4_0b_1_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0b_1_r_1 (.ck(ck_c1r1), .d(rr_l_leg_4_0b_1_r_0_q), .q(rr_l_leg_4_0b_1_r_1_q));   // (669.17, 2237.72) c1r1 region reset run
+    wire [0:0] rr_l_leg_4_0b_1_r_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0b_1_r_2 (.ck(ck_c1r1), .d(rr_l_leg_4_0b_1_r_1_q), .q(rr_l_leg_4_0b_1_r_2_q));   // (630.72, 2506.11) c1r1 region reset run
+    assign lrst_leg_4_0b_1_r = rr_l_leg_4_0b_1_r_2_q;
+    wire [0:0] rr_l_leg_4_0b_5_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0b_5_w_0 (.ck(ck_c1r1), .d(rr_l_leg_2_0a_3_r_1_q), .q(rr_l_leg_4_0b_5_w_0_q));   // (656.64, 1358.20) c1r1 region reset run
+    assign lrst_leg_4_0b_5_w = rr_l_leg_4_0b_5_w_0_q;
+    wire [0:0] rr_l_leg_4_0b_5_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0b_5_r_0 (.ck(ck_c1r0), .d(rq_l_leg_2_0a_3_w_0_q), .q(rr_l_leg_4_0b_5_r_0_q));   // (630.72, 992.96) c1r0 region reset run
+    assign lrst_leg_4_0b_5_r = rr_l_leg_4_0b_5_r_0_q;
+    wire [0:0] rr_l_leg_4_0b_y_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0b_y_w_0 (.ck(ck_c1r0), .d(rr_l_leg_4_0a_y_w_0_q), .q(rr_l_leg_4_0b_y_w_0_q));   // (632.66, 547.84) c1r0 region reset run
+    assign lrst_leg_4_0b_y_w = rr_l_leg_4_0b_y_w_0_q;
+    wire [0:0] rr_l_leg_4_0b_y_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_leg_4_0b_y_r_0 (.ck(ck_c0r0), .d(rr_l_leg_1_0a_y_w_2_q), .q(rr_l_leg_4_0b_y_r_0_q));   // (563.98, 342.01) c0r0 region reset run
+    assign lrst_leg_4_0b_y_r = rr_l_leg_4_0b_y_r_0_q;
+    wire [0:0] rr_l_rs_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_rs_0_w_0 (.ck(ck_c0r0), .d(rq_l_leg_1_0a_y_w_0_q), .q(rr_l_rs_0_w_0_q));   // (563.98, 470.25) c0r0 region reset run
+    wire [0:0] rq_l_rs_0_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_rs_0_w_0 (.ck(ck_c0r0), .d(rr_l_rs_0_w_0_q), .q(rq_l_rs_0_w_0_q));   // (563.98, 470.25) c0r0 region reset pad
+    wire [0:0] rq_l_rs_0_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_rs_0_w_1 (.ck(ck_c0r0), .d(rq_l_rs_0_w_0_q), .q(rq_l_rs_0_w_1_q));   // (563.98, 470.25) c0r0 region reset pad
+    assign lrst_rs_0_w = rq_l_rs_0_w_1_q;
+    wire [0:0] rr_l_rs_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_rs_0_r_0 (.ck(ck_c1r0), .d(rq_l_leg_4_0a_y_w_0_q), .q(rr_l_rs_0_r_0_q));   // (658.58, 323.49) c1r0 region reset run
+    wire [0:0] rq_l_rs_0_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_rs_0_r_0 (.ck(ck_c1r0), .d(rr_l_rs_0_r_0_q), .q(rq_l_rs_0_r_0_q));   // (658.58, 323.49) c1r0 region reset pad
+    wire [0:0] rq_l_rs_0_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_rs_0_r_1 (.ck(ck_c1r0), .d(rq_l_rs_0_r_0_q), .q(rq_l_rs_0_r_1_q));   // (658.58, 323.49) c1r0 region reset pad
+    assign lrst_rs_0_r = rq_l_rs_0_r_1_q;
+    wire [0:0] rr_l_ft_2_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_2_w_0 (.ck(ck_c1r3), .d(rq_t_1_3_10_q), .q(rr_l_ft_2_w_0_q));   // (1153.44, 4706.10) c1r3 region reset run
+    wire [0:0] rr_l_ft_2_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_2_w_1 (.ck(ck_c1r3), .d(rr_l_ft_2_w_0_q), .q(rr_l_ft_2_w_1_q));   // (1153.44, 5002.09) c1r3 region reset run
+    wire [0:0] rr_l_ft_2_w_2_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_2_w_2 (.ck(ck_c1r3), .d(rr_l_ft_2_w_1_q), .q(rr_l_ft_2_w_2_q));   // (1022.36, 5166.99) c1r3 region reset run
+    assign lrst_ft_2_w = rr_l_ft_2_w_2_q;
+    wire [0:0] rr_l_ft_2_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_2_r_0 (.ck(ck_c2r3), .d(rq_t_2_3_11_q), .q(rr_l_ft_2_r_0_q));   // (1291.68, 4786.73) c2r3 region reset run
+    wire [0:0] rr_l_ft_2_r_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_2_r_1 (.ck(ck_c2r3), .d(rr_l_ft_2_r_0_q), .q(rr_l_ft_2_r_1_q));   // (1237.55, 5109.21) c2r3 region reset run
+    assign lrst_ft_2_r = rr_l_ft_2_r_1_q;
+    wire [0:0] rr_l_ft_6_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_6_w_0 (.ck(ck_c2r3), .d(rq_t_2_3_8_q), .q(rr_l_ft_6_w_0_q));   // (1291.68, 4146.69) c2r3 region reset run
+    wire [0:0] rr_l_ft_6_w_1_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_6_w_1 (.ck(ck_c2r3), .d(rr_l_ft_6_w_0_q), .q(rr_l_ft_6_w_1_q));   // (1235.52, 3939.43) c2r3 region reset run
+    assign lrst_ft_6_w = rr_l_ft_6_w_1_q;
+    wire [0:0] rr_l_ft_6_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_6_r_0 (.ck(ck_c2r2), .d(rr_l_dn2_rly9_w_1_q), .q(rr_l_ft_6_r_0_q));   // (1235.52, 3688.07) c2r2 region reset run
+    assign lrst_ft_6_r = rr_l_ft_6_r_0_q;
+    wire [0:0] rr_l_ft_9_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_9_w_0 (.ck(ck_c2r2), .d(rr_l_leg_3_0a_y_r_0_q), .q(rr_l_ft_9_w_0_q));   // (1235.52, 2823.26) c2r2 region reset run
+    assign lrst_ft_9_w = rr_l_ft_9_w_0_q;
+    wire [0:0] rr_l_ft_9_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_9_r_0 (.ck(ck_c2r1), .d(rr_l_leg_3_0a_4_r_2_q), .q(rr_l_ft_9_r_0_q));   // (1235.52, 2589.16) c2r1 region reset run
+    assign lrst_ft_9_r = rr_l_ft_9_r_0_q;
+    wire [0:0] rr_l_ft_13_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_13_w_0 (.ck(ck_c2r1), .d(rr_t_2_1_3_q), .q(rr_l_ft_13_w_0_q));   // (1239.84, 1425.73) c2r1 region reset run
+    wire [0:0] rq_l_ft_13_w_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rq_l_ft_13_w_0 (.ck(ck_c2r1), .d(rr_l_ft_13_w_0_q), .q(rq_l_ft_13_w_0_q));   // (1239.84, 1425.73) c2r1 region reset pad
+    assign lrst_ft_13_w = rq_l_ft_13_w_0_q;
+    wire [0:0] rr_l_ft_13_r_0_q;  qfd_q3h_stn #(.W(1), .N(1)) u_rr_l_ft_13_r_0 (.ck(ck_c2r0), .d(rr_l_dn2_rly3_w_1_q), .q(rr_l_ft_13_r_0_q));   // (1239.84, 1174.37) c2r0 region reset run
+    assign lrst_ft_13_r = rr_l_ft_13_r_0_q;
 endmodule

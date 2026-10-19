@@ -19,7 +19,7 @@ create_clock -name ck_c3r2 -period $ot_q_per [get_ports ck_c3r2]
 create_clock -name ck_c3r3 -period $ot_q_per [get_ports ck_c3r3]
 set_clock_uncertainty -setup 60 [get_clocks {ck_c0r1 ck_c0r2 ck_c0r3 ck_c1r0 ck_c1r1 ck_c1r2 ck_c1r3 ck_c2r0 ck_c2r1 ck_c2r2 ck_c2r3 ck_c3r0 ck_c3r1 ck_c3r2 ck_c3r3}]
 set_clock_uncertainty -hold 25 [get_clocks {ck_c0r1 ck_c0r2 ck_c0r3 ck_c1r0 ck_c1r1 ck_c1r2 ck_c1r3 ck_c2r0 ck_c2r1 ck_c2r2 ck_c2r3 ck_c3r0 ck_c3r1 ck_c3r2 ck_c3r3}]
-# Q-CL16-LAND: die delivery residual 60 ps between the 27 communicating region pairs (both directions), setup and hold, on top of 60 / 25 (die_clock_contract.json obligation 2)
+# Q-CL16-LAND: die delivery residual 60 ps between the 26 communicating region pairs (both directions), setup and hold, on top of 60 / 25 (die_clock_contract.json obligation 2)
 set_clock_uncertainty -setup 120 -from [get_clocks core_clk] -to [get_clocks ck_c0r1]
 set_clock_uncertainty -hold 85 -from [get_clocks core_clk] -to [get_clocks ck_c0r1]
 set_clock_uncertainty -setup 120 -from [get_clocks ck_c0r1] -to [get_clocks core_clk]
@@ -60,10 +60,6 @@ set_clock_uncertainty -setup 120 -from [get_clocks ck_c1r1] -to [get_clocks ck_c
 set_clock_uncertainty -hold 85 -from [get_clocks ck_c1r1] -to [get_clocks ck_c1r2]
 set_clock_uncertainty -setup 120 -from [get_clocks ck_c1r2] -to [get_clocks ck_c1r1]
 set_clock_uncertainty -hold 85 -from [get_clocks ck_c1r2] -to [get_clocks ck_c1r1]
-set_clock_uncertainty -setup 120 -from [get_clocks ck_c1r1] -to [get_clocks ck_c2r0]
-set_clock_uncertainty -hold 85 -from [get_clocks ck_c1r1] -to [get_clocks ck_c2r0]
-set_clock_uncertainty -setup 120 -from [get_clocks ck_c2r0] -to [get_clocks ck_c1r1]
-set_clock_uncertainty -hold 85 -from [get_clocks ck_c2r0] -to [get_clocks ck_c1r1]
 set_clock_uncertainty -setup 120 -from [get_clocks ck_c1r1] -to [get_clocks ck_c2r1]
 set_clock_uncertainty -hold 85 -from [get_clocks ck_c1r1] -to [get_clocks ck_c2r1]
 set_clock_uncertainty -setup 120 -from [get_clocks ck_c2r1] -to [get_clocks ck_c1r1]
@@ -139,21 +135,38 @@ foreach ot_ln $ot_qc_lands {
   set_multicycle_path -hold 3 -from $ot_lf -to $ot_lt
 }
 puts "OT_QC_LAND_SDC [expr {[llength $ot_qc_lands] - $ot_qc_land_miss}] of [llength $ot_qc_lands] landings constrained"
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c0r1 [get_ports {rst_c0r1}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c0r2 [get_ports {rst_c0r2}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c0r3 [get_ports {rst_c0r3}]
 set_output_delay [expr {0.2 * $ot_q_per}] -clock ck_c0r3 [get_ports {bco0[*]}]
 set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c1r0 [get_ports {bc1[*]}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c1r0 [get_ports {rst_c1r0}]
 set_output_delay [expr {0.2 * $ot_q_per}] -clock ck_c1r0 [get_ports {rs[*]}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c1r1 [get_ports {rst_c1r1}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c1r2 [get_ports {rst_c1r2}]
 set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c1r3 [get_ports {rs_i[*]}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c1r3 [get_ports {rst_c1r3}]
 set_output_delay [expr {0.2 * $ot_q_per}] -clock ck_c1r3 [get_ports {bco1[*]}]
 set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c2r0 [get_ports {bc2[*]}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c2r0 [get_ports {rst_c2r0}]
 set_output_delay [expr {0.2 * $ot_q_per}] -clock ck_c2r0 [get_ports {rs_o[*]}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c2r1 [get_ports {rst_c2r1}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c2r2 [get_ports {rst_c2r2}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c2r3 [get_ports {rst_c2r3}]
 set_output_delay [expr {0.2 * $ot_q_per}] -clock ck_c2r3 [get_ports {bco2[*]}]
 set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c3r0 [get_ports {bc3[*]}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c3r0 [get_ports {rst_c3r0}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c3r1 [get_ports {rst_c3r1}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c3r2 [get_ports {rst_c3r2}]
+set_input_delay [expr {0.2 * $ot_q_per}] -clock ck_c3r3 [get_ports {rst_c3r3}]
 set_output_delay [expr {0.2 * $ot_q_per}] -clock ck_c3r3 [get_ports {bco3[*]}]
 if {!$::ot_ref_pre_cts} { set_propagated_clock [get_clocks {ck_c0r1 ck_c0r2 ck_c0r3 ck_c1r0 ck_c1r1 ck_c1r2 ck_c1r3 ck_c2r0 ck_c2r1 ck_c2r2 ck_c2r3 ck_c3r0 ck_c3r1 ck_c3r2 ck_c3r3}] }
 if {!$::ot_ref_pre_cts} {
   proc ot_qc_pinreg_cks {bus dir} {
     set out {}; set seen [dict create]
-    foreach port [get_ports -quiet [format {%s[*]} $bus]] {
+    set pl [get_ports -quiet [format {%s[*]} $bus]]
+    if {![llength $pl]} { set pl [get_ports -quiet $bus] }
+    foreach port $pl {
       set nets [get_nets -quiet [get_full_name $port]]
       for {set hop 0} {$hop < 4 && [llength $nets]} {incr hop} {
         set next {}
@@ -193,7 +206,7 @@ if {!$::ot_ref_pre_cts} {
   set ot_qc_u [expr {[info exists ::env(OT_BH_TILE_HOLD_UNC_PS)] ? $::env(OT_BH_TILE_HOLD_UNC_PS) : 25}]
   set ot_qc_r [expr {[info exists ::env(OT_BH_ROUTE_RELIEF_PS)] ? $::env(OT_BH_ROUTE_RELIEF_PS) : 0}]
   set ot_qc_io_n 0
-  foreach {ot_qc_bus ot_qc_dir ot_qc_clk} {bco0 out ck_c0r3 bc1 in ck_c1r0 rs out ck_c1r0 rs_i in ck_c1r3 bco1 out ck_c1r3 bc2 in ck_c2r0 rs_o out ck_c2r0 bco2 out ck_c2r3 bc3 in ck_c3r0 bco3 out ck_c3r3} {
+  foreach {ot_qc_bus ot_qc_dir ot_qc_clk} {rst_c0r1 in ck_c0r1 rst_c0r2 in ck_c0r2 rst_c0r3 in ck_c0r3 bco0 out ck_c0r3 bc1 in ck_c1r0 rst_c1r0 in ck_c1r0 rs out ck_c1r0 rst_c1r1 in ck_c1r1 rst_c1r2 in ck_c1r2 rs_i in ck_c1r3 rst_c1r3 in ck_c1r3 bco1 out ck_c1r3 bc2 in ck_c2r0 rst_c2r0 in ck_c2r0 rs_o out ck_c2r0 rst_c2r1 in ck_c2r1 rst_c2r2 in ck_c2r2 rst_c2r3 in ck_c2r3 bco2 out ck_c2r3 bc3 in ck_c3r0 rst_c3r0 in ck_c3r0 rst_c3r1 in ck_c3r1 rst_c3r2 in ck_c3r2 rst_c3r3 in ck_c3r3 bco3 out ck_c3r3} {
     set ot_qc_a {}
     foreach p [ot_qc_pinreg_cks $ot_qc_bus $ot_qc_dir] {
       set a0 [get_property $p arrival_min_rise]; set a1 [get_property $p arrival_max_rise]
@@ -201,7 +214,8 @@ if {!$::ot_ref_pre_cts} {
     }
     if {![llength $ot_qc_a]} { error "OT_QC_IO: no pin register clock arrival found for $ot_qc_bus ($ot_qc_dir)" }
     set ot_qc_a [lsort -real $ot_qc_a]; set lmin [lindex $ot_qc_a 0]; set lmax [lindex $ot_qc_a end]
-    set pp [get_ports [format {%s[*]} $ot_qc_bus]]
+    set pp [get_ports -quiet [format {%s[*]} $ot_qc_bus]]
+    if {![llength $pp]} { set pp [get_ports $ot_qc_bus] }
     if {$ot_qc_dir eq "in"} {
       set_input_delay [expr {$ot_qc_ib + $lmax + $ot_qc_sk}] -max -clock $ot_qc_clk $pp
       set_input_delay [expr {$ot_qc_die ? $lmin + $ot_qc_c + $ot_qc_u + $ot_qc_r : $lmin - $ot_qc_hki}] -min -clock $ot_qc_clk $pp

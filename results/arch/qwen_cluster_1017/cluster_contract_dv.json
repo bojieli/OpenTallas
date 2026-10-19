@@ -50,68 +50,68 @@
  },
  "register_centroid": {
   "c0r0": [
-   350.4,
-   579.7
+   350.5,
+   579.5
   ],
   "c0r1": [
-   287.7,
-   1930.2
+   287.6,
+   1929.8
   ],
   "c0r2": [
-   287.3,
-   3238.7
+   287.0,
+   3238.3
   ],
   "c0r3": [
-   363.6,
-   4345.1
+   362.9,
+   4345.5
   ],
   "c1r0": [
-   788.6,
-   732.8
+   789.0,
+   732.6
   ],
   "c1r1": [
-   847.2,
-   1948.9
+   847.5,
+   1948.8
   ],
   "c1r2": [
-   767.0,
-   3277.4
+   767.3,
+   3277.2
   ],
   "c1r3": [
-   833.7,
-   4450.5
+   834.4,
+   4450.8
   ],
   "c2r0": [
    1455.3,
-   828.2
+   828.0
   ],
   "c2r1": [
-   1496.0,
+   1495.9,
    2013.6
   ],
   "c2r2": [
-   1487.0,
-   3259.5
+   1486.9,
+   3259.3
   ],
   "c2r3": [
-   1466.0,
-   4353.0
+   1465.6,
+   4353.2
   ],
   "c3r0": [
-   2087.4,
-   825.8
+   2087.2,
+   825.4
   ],
   "c3r1": [
-   1971.0,
-   1913.7
+   1971.1,
+   1913.6
   ],
   "c3r2": [
-   2000.3,
-   3154.8
+   2000.5,
+   3154.6
   ],
   "c3r3": [
-   1966.5,
-   4197.0
+   1967.0,
+   4197.5
   ]
  },
  "tiles": [
@@ -247,7 +247,7 @@
  "clocks": {
   "c0r0": {
    "pin": "ck_c0r0",
-   "fabric_flops": 11388,
+   "fabric_flops": 11391,
    "tiles": [
     "0_0"
    ],
@@ -255,7 +255,7 @@
   },
   "c0r1": {
    "pin": "ck_c0r1",
-   "fabric_flops": 8802,
+   "fabric_flops": 8810,
    "tiles": [
     "0_1"
    ],
@@ -263,7 +263,7 @@
   },
   "c0r2": {
    "pin": "ck_c0r2",
-   "fabric_flops": 8801,
+   "fabric_flops": 8810,
    "tiles": [
     "0_2"
    ],
@@ -271,7 +271,7 @@
   },
   "c0r3": {
    "pin": "ck_c0r3",
-   "fabric_flops": 6718,
+   "fabric_flops": 6736,
    "tiles": [
     "0_3"
    ],
@@ -279,7 +279,7 @@
   },
   "c1r0": {
    "pin": "ck_c1r0",
-   "fabric_flops": 21693,
+   "fabric_flops": 21698,
    "tiles": [
     "1_0"
    ],
@@ -287,7 +287,7 @@
   },
   "c1r1": {
    "pin": "ck_c1r1",
-   "fabric_flops": 18596,
+   "fabric_flops": 18612,
    "tiles": [
     "1_1"
    ],
@@ -295,7 +295,7 @@
   },
   "c1r2": {
    "pin": "ck_c1r2",
-   "fabric_flops": 22185,
+   "fabric_flops": 22208,
    "tiles": [
     "1_2"
    ],
@@ -303,7 +303,7 @@
   },
   "c1r3": {
    "pin": "ck_c1r3",
-   "fabric_flops": 12405,
+   "fabric_flops": 12417,
    "tiles": [
     "1_3"
    ],
@@ -311,7 +311,7 @@
   },
   "c2r0": {
    "pin": "ck_c2r0",
-   "fabric_flops": 15007,
+   "fabric_flops": 15000,
    "tiles": [
     "2_0"
    ],
@@ -319,7 +319,7 @@
   },
   "c2r1": {
    "pin": "ck_c2r1",
-   "fabric_flops": 19665,
+   "fabric_flops": 19654,
    "tiles": [
     "2_1"
    ],
@@ -327,7 +327,7 @@
   },
   "c2r2": {
    "pin": "ck_c2r2",
-   "fabric_flops": 20687,
+   "fabric_flops": 20685,
    "tiles": [
     "2_2"
    ],
@@ -335,7 +335,7 @@
   },
   "c2r3": {
    "pin": "ck_c2r3",
-   "fabric_flops": 12426,
+   "fabric_flops": 12423,
    "tiles": [
     "2_3"
    ],
@@ -343,7 +343,7 @@
   },
   "c3r0": {
    "pin": "ck_c3r0",
-   "fabric_flops": 10868,
+   "fabric_flops": 10873,
    "tiles": [
     "3_0"
    ],
@@ -351,7 +351,7 @@
   },
   "c3r1": {
    "pin": "ck_c3r1",
-   "fabric_flops": 22218,
+   "fabric_flops": 22220,
    "tiles": [
     "3_1"
    ],
@@ -359,7 +359,7 @@
   },
   "c3r2": {
    "pin": "ck_c3r2",
-   "fabric_flops": 17056,
+   "fabric_flops": 17070,
    "tiles": [
     "3_2"
    ],
@@ -367,14 +367,14 @@
   },
   "c3r3": {
    "pin": "ck_c3r3",
-   "fabric_flops": 12919,
+   "fabric_flops": 12936,
    "tiles": [
     "3_3"
    ],
    "tile_entry_pins": 39
   }
  },
- "fabric_flops": 241434,
+ "fabric_flops": 241543,
  "latency_edges": {
   "tap": {
    "0": 3,
@@ -546,22 +546,23 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    344.377,
-    344.677
+    344.465,
+    344.765
    ],
    "pins_per_um": null,
    "note": "region c0r0 entry island (register centroid x 350, y 580)"
   },
   {
-   "port": "rst_n",
+   "port": "rst_c0r0",
    "bits": 1,
    "face": "S",
    "layer": "M5",
    "range_um": [
-    345.377,
-    345.677
+    345.465,
+    345.765
    ],
    "pins_per_um": null,
+   "region": "c0r0",
    "note": "region c0r0 entry island (register centroid x 350, y 580)"
   },
   {
@@ -570,8 +571,8 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    346.377,
-    346.677
+    346.465,
+    346.765
    ],
    "pins_per_um": null,
    "note": "region c0r0 entry island (register centroid x 350, y 580)"
@@ -582,8 +583,8 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    347.377,
-    353.377
+    347.465,
+    353.465
    ],
    "pins_per_um": null,
    "note": "region c0r0 entry island (register centroid x 350, y 580)"
@@ -594,8 +595,8 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    354.077,
-    354.377
+    354.165,
+    354.465
    ],
    "pins_per_um": null,
    "note": "region c0r0 entry island (register centroid x 350, y 580)"
@@ -606,8 +607,8 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    355.077,
-    355.377
+    355.165,
+    355.465
    ],
    "pins_per_um": null,
    "note": "region c0r0 entry island (register centroid x 350, y 580)"
@@ -618,10 +619,23 @@
    "face": "S",
    "layer": "M5",
    "range_um": [
-    788.057,
-    788.357
+    787.955,
+    788.255
    ],
    "pins_per_um": null,
+   "note": "region c1r0 entry island (register centroid x 789, y 733)"
+  },
+  {
+   "port": "rst_c1r0",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    788.955,
+    789.255
+   ],
+   "pins_per_um": null,
+   "region": "c1r0",
    "note": "region c1r0 entry island (register centroid x 789, y 733)"
   },
   {
@@ -637,16 +651,42 @@
    "note": "region c2r0 entry island (register centroid x 1455, y 828)"
   },
   {
+   "port": "rst_c2r0",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1483.227,
+    1483.527
+   ],
+   "pins_per_um": null,
+   "region": "c2r0",
+   "note": "region c2r0 entry island (register centroid x 1455, y 828)"
+  },
+  {
    "port": "ck_c3r0",
    "bits": 1,
    "face": "S",
    "layer": "M5",
    "range_um": [
-    2086.858,
-    2087.158
+    2086.233,
+    2086.533
    ],
    "pins_per_um": null,
-   "note": "region c3r0 entry island (register centroid x 2087, y 826)"
+   "note": "region c3r0 entry island (register centroid x 2087, y 825)"
+  },
+  {
+   "port": "rst_c3r0",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    2087.233,
+    2087.533
+   ],
+   "pins_per_um": null,
+   "region": "c3r0",
+   "note": "region c3r0 entry island (register centroid x 2087, y 825)"
   },
   {
    "port": "bco0",
@@ -719,11 +759,24 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    363.089,
-    363.389
+    361.89,
+    362.19
    ],
    "pins_per_um": null,
-   "note": "region c0r3 entry island (register centroid x 364, y 4345)"
+   "note": "region c0r3 entry island (register centroid x 363, y 4346)"
+  },
+  {
+   "port": "rst_c0r3",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    362.89,
+    363.19
+   ],
+   "pins_per_um": null,
+   "region": "c0r3",
+   "note": "region c0r3 entry island (register centroid x 363, y 4346)"
   },
   {
    "port": "ck_c1r3",
@@ -731,10 +784,23 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    833.227,
-    833.527
+    833.426,
+    833.726
    ],
    "pins_per_um": null,
+   "note": "region c1r3 entry island (register centroid x 834, y 4451)"
+  },
+  {
+   "port": "rst_c1r3",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    834.426,
+    834.726
+   ],
+   "pins_per_um": null,
+   "region": "c1r3",
    "note": "region c1r3 entry island (register centroid x 834, y 4451)"
   },
   {
@@ -743,10 +809,23 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    1465.523,
-    1465.823
+    1464.588,
+    1464.888
    ],
    "pins_per_um": null,
+   "note": "region c2r3 entry island (register centroid x 1466, y 4353)"
+  },
+  {
+   "port": "rst_c2r3",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1465.588,
+    1465.888
+   ],
+   "pins_per_um": null,
+   "region": "c2r3",
    "note": "region c2r3 entry island (register centroid x 1466, y 4353)"
   },
   {
@@ -755,11 +834,24 @@
    "face": "N",
    "layer": "M5",
    "range_um": [
-    1965.97,
-    1966.27
+    1965.973,
+    1966.273
    ],
    "pins_per_um": null,
-   "note": "region c3r3 entry island (register centroid x 1966, y 4197)"
+   "note": "region c3r3 entry island (register centroid x 1967, y 4197)"
+  },
+  {
+   "port": "rst_c3r3",
+   "bits": 1,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1966.973,
+    1967.273
+   ],
+   "pins_per_um": null,
+   "region": "c3r3",
+   "note": "region c3r3 entry island (register centroid x 1967, y 4197)"
   },
   {
    "port": "ck_c0r1",
@@ -767,11 +859,24 @@
    "face": "W",
    "layer": "M4",
    "range_um": [
-    1930.159,
-    1930.459
+    1929.772,
+    1930.072
    ],
    "pins_per_um": null,
    "note": "region c0r1 entry (register centroid y 1930, x 288)"
+  },
+  {
+   "port": "rst_c0r1",
+   "bits": 1,
+   "face": "W",
+   "layer": "M4",
+   "range_um": [
+    1930.772,
+    1931.072
+   ],
+   "pins_per_um": null,
+   "region": "c0r1",
+   "note": "region c0r1 reset (Q-CB16RST: beside ck_c0r1; pin register u_fab.u_rpin_c0r1 on ck_c0r1)"
   },
   {
    "port": "ck_c1r1",
@@ -779,11 +884,24 @@
    "face": "W",
    "layer": "M4",
    "range_um": [
-    1951.924,
-    1952.224
+    1951.785,
+    1952.085
    ],
    "pins_per_um": null,
-   "note": "region c1r1 entry (register centroid y 1949, x 847)"
+   "note": "region c1r1 entry (register centroid y 1949, x 848)"
+  },
+  {
+   "port": "rst_c1r1",
+   "bits": 1,
+   "face": "W",
+   "layer": "M4",
+   "range_um": [
+    1952.785,
+    1953.085
+   ],
+   "pins_per_um": null,
+   "region": "c1r1",
+   "note": "region c1r1 reset (Q-CB16RST: beside ck_c1r1; pin register u_fab.u_rpin_c1r1 on ck_c1r1)"
   },
   {
    "port": "ck_c2r1",
@@ -791,11 +909,24 @@
    "face": "E",
    "layer": "M4",
    "range_um": [
-    2016.561,
-    2016.861
+    2016.644,
+    2016.944
    ],
    "pins_per_um": null,
    "note": "region c2r1 entry (register centroid y 2014, x 1496)"
+  },
+  {
+   "port": "rst_c2r1",
+   "bits": 1,
+   "face": "E",
+   "layer": "M4",
+   "range_um": [
+    2017.644,
+    2017.944
+   ],
+   "pins_per_um": null,
+   "region": "c2r1",
+   "note": "region c2r1 reset (Q-CB16RST: beside ck_c2r1; pin register u_fab.u_rpin_c2r1 on ck_c2r1)"
   },
   {
    "port": "ck_c3r1",
@@ -803,11 +934,24 @@
    "face": "E",
    "layer": "M4",
    "range_um": [
-    1913.693,
-    1913.993
+    1913.61,
+    1913.91
    ],
    "pins_per_um": null,
    "note": "region c3r1 entry (register centroid y 1914, x 1971)"
+  },
+  {
+   "port": "rst_c3r1",
+   "bits": 1,
+   "face": "E",
+   "layer": "M4",
+   "range_um": [
+    1914.61,
+    1914.91
+   ],
+   "pins_per_um": null,
+   "region": "c3r1",
+   "note": "region c3r1 reset (Q-CB16RST: beside ck_c3r1; pin register u_fab.u_rpin_c3r1 on ck_c3r1)"
   },
   {
    "port": "ck_c0r2",
@@ -815,11 +959,24 @@
    "face": "W",
    "layer": "M4",
    "range_um": [
-    3238.747,
-    3239.047
+    3238.284,
+    3238.584
    ],
    "pins_per_um": null,
-   "note": "region c0r2 entry (register centroid y 3239, x 287)"
+   "note": "region c0r2 entry (register centroid y 3238, x 287)"
+  },
+  {
+   "port": "rst_c0r2",
+   "bits": 1,
+   "face": "W",
+   "layer": "M4",
+   "range_um": [
+    3239.284,
+    3239.584
+   ],
+   "pins_per_um": null,
+   "region": "c0r2",
+   "note": "region c0r2 reset (Q-CB16RST: beside ck_c0r2; pin register u_fab.u_rpin_c0r2 on ck_c0r2)"
   },
   {
    "port": "ck_c1r2",
@@ -827,11 +984,24 @@
    "face": "W",
    "layer": "M4",
    "range_um": [
-    3280.387,
-    3280.687
+    3280.163,
+    3280.463
    ],
    "pins_per_um": null,
    "note": "region c1r2 entry (register centroid y 3277, x 767)"
+  },
+  {
+   "port": "rst_c1r2",
+   "bits": 1,
+   "face": "W",
+   "layer": "M4",
+   "range_um": [
+    3281.163,
+    3281.463
+   ],
+   "pins_per_um": null,
+   "region": "c1r2",
+   "note": "region c1r2 reset (Q-CB16RST: beside ck_c1r2; pin register u_fab.u_rpin_c1r2 on ck_c1r2)"
   },
   {
    "port": "ck_c2r2",
@@ -839,11 +1009,24 @@
    "face": "E",
    "layer": "M4",
    "range_um": [
-    3262.534,
-    3262.834
+    3262.289,
+    3262.589
    ],
    "pins_per_um": null,
-   "note": "region c2r2 entry (register centroid y 3260, x 1487)"
+   "note": "region c2r2 entry (register centroid y 3259, x 1487)"
+  },
+  {
+   "port": "rst_c2r2",
+   "bits": 1,
+   "face": "E",
+   "layer": "M4",
+   "range_um": [
+    3263.289,
+    3263.589
+   ],
+   "pins_per_um": null,
+   "region": "c2r2",
+   "note": "region c2r2 reset (Q-CB16RST: beside ck_c2r2; pin register u_fab.u_rpin_c2r2 on ck_c2r2)"
   },
   {
    "port": "ck_c3r2",
@@ -851,11 +1034,24 @@
    "face": "E",
    "layer": "M4",
    "range_um": [
-    3154.765,
-    3155.065
+    3154.607,
+    3154.907
    ],
    "pins_per_um": null,
-   "note": "region c3r2 entry (register centroid y 3155, x 2000)"
+   "note": "region c3r2 entry (register centroid y 3155, x 2001)"
+  },
+  {
+   "port": "rst_c3r2",
+   "bits": 1,
+   "face": "E",
+   "layer": "M4",
+   "range_um": [
+    3155.607,
+    3155.907
+   ],
+   "pins_per_um": null,
+   "region": "c3r2",
+   "note": "region c3r2 reset (Q-CB16RST: beside ck_c3r2; pin register u_fab.u_rpin_c3r2 on ck_c3r2)"
   }
  ],
  "stations": {
@@ -866,7 +1062,7 @@
    "qfd_c_xstn": 8,
    "qfd_c_xstnw": 8
   },
-  "soft_reset_flops": 591,
+  "soft_reset_flops": 700,
   "hop_pin_to_pin": {
    "max_um": 388.8,
    "pair": [
@@ -2489,19 +2685,127 @@
    "rs_i->rs_o": 17
   }
  },
+ "regional_resets": {
+  "rule": "Q-CB16RST (10-19): 16 die-delivered regional resets rst_<q> (pin beside ck_<q>); pin register u_fab.u_rpin_<q> on ck_<q> at the region entry nearest the pin; in-region trees only (corridor / channel lanes, never over the A0 tile); every tile / xstn rst_n exactly reset edges after its region pin, every landing half at the landing's reset_depth.  Die obligation: release all 16 of an instance on the SAME calendar edge (each timed against its own region tree, the die reset tree lands each); MUT 8 (bench) = one region one edge late.",
+  "pins": {
+   "c0r0": "rst_c0r0",
+   "c0r1": "rst_c0r1",
+   "c0r2": "rst_c0r2",
+   "c0r3": "rst_c0r3",
+   "c1r0": "rst_c1r0",
+   "c1r1": "rst_c1r1",
+   "c1r2": "rst_c1r2",
+   "c1r3": "rst_c1r3",
+   "c2r0": "rst_c2r0",
+   "c2r1": "rst_c2r1",
+   "c2r2": "rst_c2r2",
+   "c2r3": "rst_c2r3",
+   "c3r0": "rst_c3r0",
+   "c3r1": "rst_c3r1",
+   "c3r2": "rst_c3r2",
+   "c3r3": "rst_c3r3"
+  },
+  "pin_register_um": {
+   "c0r0": 47.9,
+   "c1r0": 54.5,
+   "c2r0": 43.2,
+   "c3r0": 46.9,
+   "c0r3": 47.2,
+   "c1r3": 51.6,
+   "c2r3": 49.3,
+   "c3r3": 54.1,
+   "c0r1": 4.3,
+   "c1r1": 631.3,
+   "c2r1": 627.3,
+   "c3r1": 7.5,
+   "c0r2": 4.3,
+   "c1r2": 622.3,
+   "c2r2": 629.2,
+   "c3r2": 8.8
+  },
+  "pin_register_sites": {
+   "c0r0": [
+    340.915,
+    43.2
+   ],
+   "c0r1": [
+    4.32,
+    1930.926
+   ],
+   "c0r2": [
+    4.32,
+    3239.437
+   ],
+   "c0r3": [
+    359.077,
+    5184.0
+   ],
+   "c1r0": [
+    777.824,
+    43.2
+   ],
+   "c1r1": [
+    622.08,
+    1943.74
+   ],
+   "c1r2": [
+    622.08,
+    3281.111
+   ],
+   "c1r3": [
+    826.139,
+    5184.0
+   ],
+   "c2r0": [
+    1483.377,
+    43.2
+   ],
+   "c2r1": [
+    1823.04,
+    2023.013
+   ],
+   "c2r2": [
+    1823.04,
+    3270.586
+   ],
+   "c2r3": [
+    1459.624,
+    5184.0
+   ],
+   "c3r0": [
+    2083.685,
+    43.2
+   ],
+   "c3r1": [
+    2440.8,
+    1917.929
+   ],
+   "c3r2": [
+    2440.8,
+    3151.321
+   ],
+   "c3r3": [
+    1956.261,
+    5184.0
+   ]
+  },
+  "flops": 547,
+  "depth_edges": 19
+ },
  "far_position": "ONE master: in the far bands (0 / 3) rs_i is a declared-idle terminus tied to the instance's own tie_lo by the die (valid bit 0 every cycle) and rs_o is left unconnected (output only)",
  "gating": [
   "A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"
  ],
  "landings": {
   "mode": "all",
-  "rule": "every multi-bit region-seam crossing landed (Q-CLUSTER-LANDALL, coordinator 0fy); 1-bit reset-tree hops stay single registered hops (they define the landing epochs)",
+  "resets": "region",
+  "rule": "every region-seam crossing landed (Q-CLUSTER-LANDALL, coordinator 0fy; Q-CB16RST 10-19: no reset hop crosses a seam: 16 die-delivered regional resets rst_<q>, each registered at its region entry with an in-region tree)",
   "D": 4,
   "E": 2,
   "K": 2,
   "added_edges_per_crossing": 3,
   "window_ps": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup (T = 833.3: about -1666 .. +1666 ps)",
-  "epochs": "released reset (L3): each half's rsi = an equal-depth run from the nearest reset-tree node, re-registered once in the half: G == R0, E = K",
+  "epochs": "released reset (L3): each half's rsi = a run in its OWN region's reset tree (from rst_<q>), both halves at the landing's common depth after their pins; the die releases the 16 rst_<q> on the same calendar edge: G == R0, E = K",
   "fault": "assertion only ($error LAND_FAULT in simulation; synthesis drops the epoch tags)",
   "rtl": "rtl/physical/qcluster/qfd_c_land.sv",
   "count": 54,

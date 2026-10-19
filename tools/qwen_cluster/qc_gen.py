@@ -215,6 +215,8 @@ class Emit:
         self.L, self.sites, self.regions = [], [], {q: 0 for q in QUADS}
         self.mode, self.over = mode, over or {}
         self.lands, self.alias, self.lrst = [], {}, []
+        self.rnodes = {q: [] for q in QUADS}      # Q-CB16RST region reset trees: {region: [(net, (x, y), depth)]}
+        self.rpins = {}                            # {region: (x, y) of its rst_<q> pin register}
 
     def w(self, s):
         self.L.append(s)
@@ -321,8 +323,178 @@ def emit_land_resets(E, rnodes, rdepth):
     return depth
 
 
-def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mode="off", over=None):
+# ---- Q-CB16RST (10-19): DIE-DELIVERED REGIONAL RESETS.  The diag16bt gate (TritonCTS per region) stopped in hold repair at
+# -1,333.6 ps on u_fab.u_lrs_leg_2_2a_3_r_0 = one of the 43 plain 1-bit reset hops between region trees: a single-cycle
+# hop between two independent region trees (insertion 0.9..2.3 ns) cannot hold at TT and FF, and landing it needs an
+# epoch, which is the reset itself.  So no reset hop crosses a region seam any more: each region q has its own reset pin
+# rst_<q> (beside ck_<q>), registered at its entry (ROOT-RST rule: reset-derived inputs registered at the face) on ck_<q>,
+# and its own equal-depth tree that stays inside the region (corridor / channel lanes only, never over the A0 tile).
+# Every consumer keeps its depth from the pin, so the static calendar is UNCHANGED: tiles / xstn 19 edges, each landing's
+# halves at the landing's old common depth (G == R0, E = K).  The die releases the 16 rst_<q> of an instance on the SAME
+# calendar edge (each in its own region's clock; the die reset tree lands each, die_clock_contract.json obligation).
+RST_REGION_MUT = "c1r2"
+REGIONAL = [True]           # main(): False for --landings off (the single-rst_n Q-CLUSTER16 fabric)     # bench mutant 8: region c1r2's reset released one edge late (the die calendar slip witness)
+
+
+def region_box(q):
+    c, r = int(q[1]), int(q[3])
+    xb = [0.0] + list(XSEAM) + [WIDTH]
+    yb = [0.0] + list(YSEAM) + [HEIGHT]
+    return xb[c], yb[r], xb[c + 1], yb[r + 1]
+
+
+def region_lanes(q):
+    """x of each corridor part inside region q's column band (vertical reset lanes)"""
+    x0, _, x1, _ = region_box(q)
+    out = []
+    for lo, hi in g.CORR.values():
+        lo2, hi2 = max(lo, x0), min(hi, x1)
+        if hi2 - lo2 > 1.0:
+            out.append(round((lo2 + hi2) / 2, 3))
+    return out
+
+
+def region_chans(q):
+    """y of each channel part (S / N strip, row gaps) inside region q's row band (horizontal reset lanes)"""
+    _, y0, _, y1 = region_box(q)
+    out = []
+    for lo, hi in g.CHANNELS:
+        lo2, hi2 = max(lo, y0), min(hi, y1)
+        if hi2 - lo2 > 1.0:
+            out.append(round((lo2 + hi2) / 2, 3))
+    return out
+
+
+def _seg_hits(a, b, box):
+    x0, y0, x1, y1 = box
+    if abs(a[1] - b[1]) < 1e-9:
+        return y0 < a[1] < y1 and max(a[0], b[0]) > x0 and min(a[0], b[0]) < x1
+    return x0 < a[0] < x1 and max(a[1], b[1]) > y0 and min(a[1], b[1]) < y1
+
+
+def rroute(a, b, q, relaxed=False):
+    """shortest Manhattan route a -> b that stays inside region q and never crosses its A0 tile (vertical in corridors,
+    horizontal in channels)"""
+    c, r = int(q[1]), int(q[3])
+    tile = (g.COLX[c][0] + 0.01, g.ROWY[r] + 0.01, g.COLX[c][1] - 0.01, g.ROWY[r] + g.TH - 0.01)
+    cands = [[a, (a[0], b[1]), b], [a, (b[0], a[1]), b]]
+    cands += [[a, (a[0], y), (b[0], y), b] for y in region_chans(q)]
+    cands += [[a, (x, a[1]), (x, b[1]), b] for x in region_lanes(q)]
+    cands += [[a, (a[0], y), (x, y), (x, b[1]), b] for y in region_chans(q) for x in region_lanes(q)]
+    cands += [[a, (x, a[1]), (x, y), (b[0], y), b] for y in region_chans(q) for x in region_lanes(q)]
+    ok = []
+    for P in cands:
+        if any(quad(*p_) != q for p_ in P):
+            continue
+        if any(_seg_hits(u, v, tile) for u, v in zip(P, P[1:])):
+            continue
+        ok.append(P)
+    if not ok and relaxed:
+        return cands[0]       # pass 1 only (provisional landing sites may sit over a tile); pass 2 is strict
+    if not ok:
+        raise SystemExit(f"region reset route {a} -> {b} in {q}: no in-region route clear of the A0 tile")
+    return min(ok, key=g.plen)
+
+
+def rpin_site(q, pin):
+    """the pin register of rst_<q>: the in-region point nearest its pin (pin = (face, coordinate))"""
+    x0, y0, x1, y1 = region_box(q)
+    f, v = pin
+    ins = 4.32
+    if f in ("S", "N"):
+        return (round(min(max(v, x0 + ins), x1 - ins), 3), round(g.STRIP / 2 if f == "S" else HEIGHT - g.STRIP / 2, 3))
+    return (round(x0 + ins if f == "W" else x1 - ins, 3), round(min(max(v, y0 + ins), y1 - ins), 3))
+
+
+def rpin_default(q):
+    """provisional pin (pass 1, before the pin plan): rows 0 / 3 on the S / N face at the band centre, rows 1 / 2 on the W
+    (columns 0 / 1) or E (2 / 3) face at the tile-row centre"""
+    c, r = int(q[1]), int(q[3])
+    x0, y0, x1, y1 = region_box(q)
+    if r in (0, 3):
+        return ("S" if r == 0 else "N", (x0 + x1) / 2)
+    return ("W" if c < 2 else "E", g.ROWY[r] + g.TH / 2)
+
+
+def emit_rpin(E, q, pin):
+    x, y = rpin_site(q, pin)
+    E.rpins[q] = (x, y)
+    d = f"rst_{q}"
+    if q == RST_REGION_MUT:
+        E.w(f"    wire rst_{q}_m8;  qfd_q3h_run #(.W(1), .D(MUT == 8 ? 1 : 0)) u_m8 (.ck(ck_{q}), .d(rst_{q}), .q(rst_{q}_m8));")
+        d = f"rst_{q}_m8"
+    E.stage(f"u_rpin_{q}", 1, d, f"rpin_{q}_q", x, y, "region reset pin register", region=q)
+    E.rnodes[q].append((f"rpin_{q}_q", (x, y), 1))
+
+
+def emit_rrun(E, q, net, at, target, tag):
+    """one consumer of region q's reset tree: a run of 1-bit stages from the in-region node that leaves the fewest new
+    stages (the deepest node whose route still reaches 'at' within 'target' edges), padded to exactly 'target' edges after
+    the pin (the static reset calendar).  Returns the depth reached before padding."""
+    if quad(*at) != q:
+        # only pass 1 (provisional, unlegalised landing sites): clamp into the region; pass 2 asserts E.rclamped == 0
+        x0, y0, x1, y1 = region_box(q)
+        at = (min(max(at[0], x0 + 4.32), x1 - 4.32), min(max(at[1], y0 + 4.32), y1 - 4.32))
+        E.rclamped = getattr(E, "rclamped", 0) + 1
+    best = None
+    for nn, xy, nd in E.rnodes[q]:
+        P = rroute(xy, at, q, relaxed=not E.over)
+        k = g.relays(g.plen(P))
+        if nd + k + 1 > target:
+            continue
+        key = (-nd, g.plen(P))
+        if best is None or key < best[0]:
+            best = (key, nn, nd, P, k)
+    if best is None:
+        raise SystemExit(f"region reset {q} -> {net} at {at}: no route within {target} edges")
+    _, nn, nd, P, k = best
+    prev, dep = nn, nd
+    for j in range(k + 1):
+        px, py = g.along(P, (j + 1) / (k + 1)) if j < k else (round(at[0], 3), round(at[1], 3))
+        E.stage(f"u_rr_{tag}_{j}", 1, prev, f"rr_{tag}_{j}_q", px, py, "region reset run", region=q)
+        prev, dep = f"rr_{tag}_{j}_q", dep + 1
+        E.rnodes[q].append((prev, (px, py), dep))
+    reached = dep
+    for j in range(target - dep):
+        E.stage(f"u_rq_{tag}_{j}", 1, prev, f"rq_{tag}_{j}_q", at[0], at[1], "region reset pad", region=q)
+        prev, dep = f"rq_{tag}_{j}_q", dep + 1
+        E.rnodes[q].append((prev, (round(at[0], 3), round(at[1], 3)), dep))
+    E.w(f"    assign {net} = {prev};")
+    return reached
+
+
+def tile_rst_at(c, r):
+    """tile (c, r)'s rst_n entry: its E-face corridor at RST_Y, 4.32 um off the tile face (inside the tile's region)"""
+    lo, hi = g.CORR[g.E_FACE_CORR[c]]
+    x = lo + 4.32 if abs(lo - g.COLX[c][1]) < 1.0 else hi - 4.32
+    return (round(x, 3), round(g.ROWY[r] + g.RST_Y, 3))
+
+
+def land_old_depth(E, rnodes, rdepth):
+    """each landing's common reset depth under the Q-CLUSTER-LANDALL single tree (the calendar the compiler holds)"""
+    pos = {nm: xy for nm, _, xy in rnodes}
+    depth = {}
+    for net, n, half, (hx, hy), reg in E.lrst:
+        best = min(pos, key=lambda nm: (quad(*pos[nm]) != reg, abs(pos[nm][0] - hx) + abs(pos[nm][1] - hy)))
+        tx, ty = pos[best]
+        k = g.relays(g.plen([(tx, ty), (tx, hy), (hx, hy)]))
+        depth[n] = max(depth.get(n, 0), rdepth[best] + k + 1)
+    return depth
+
+
+def emit_land_resets_region(E, rnodes, rdepth):
+    """Q-CB16RST: each landing half's rsi = a run in ITS OWN region's tree, padded to the landing's common depth (the
+    old single-tree depth: G == R0 and the warm-up calendar unchanged)"""
+    depth = land_old_depth(E, rnodes, rdepth)
+    E.w("    // ---- landing epochs: each half's rsi from its own region's reset tree, both halves at the landing's depth (G == R0)")
+    for net, n, half, (hx, hy), reg in E.lrst:
+        emit_rrun(E, reg, net, (hx, hy), depth[n], f"l_{n}_{half}")
+    return depth
+
+
+def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mode="off", over=None, rpins=None):
     E = Emit(mode, over)
+    regional = mode == "all"      # Q-CB16RST: die-delivered regional resets (16 rst_<q> pins) with the landed fabric
     w = E.w
     w("`timescale 1ns/1ps")
     w(f"// GENERATED by tools/qwen_cluster/qc_gen.py -- do not edit.  {FABRIC}: every register of qfd_c_b16_dv outside the")
@@ -332,15 +504,20 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mo
     if mode == "all":
         w(f"// Q-CLUSTER-LANDALL: EVERY multi-bit region-seam crossing is LANDED (qfd_c_land_w ring on the source root ->")
         w(f"// qfd_c_land_r read on the destination root, D {LAND_D}, E = K = {LAND_E}, +{LAND_A} edges each); soft pad stages")
-        w("// re-align the tree.  Only the 1-bit reset-tree hops cross seams unlanded.  Static schedule: no ready / credit.")
+        w("// re-align the tree.  Q-CB16RST: NO register hop crosses a seam unlanded: each region has its own reset pin rst_<q>")
+        w("// (registered at its entry on ck_<q>) and its own in-region equal-depth tree; the die releases all 16 on the same")
+        w("// calendar edge.  Static schedule: no ready / credit.")
     else:
         w("// Seams are crossed only by registered hops <= 405 um.  Static schedule: no ready / credit / backpressure.")
     w("// MUT (bench only, default 0 = the design): 1 = one extra relay on leg a of node (2,0); 2 = leaves of nodes (1,0).a")
     w("//   and (1,2).a exchanged; 3 = one extra relay on column 2's run before its row-1 station; 4 = one extra relay on")
     w(f"//   the rs_i -> rs_o feedthrough; 5 = feedthrough bits 0 / 1 exchanged; landing mutants (on {LAND_MUT}): 6 = read")
     w("//   slot K = E + 1 (wrong read slot), 7 = read-side epoch one edge late (released reset re-registered twice).")
+    if regional:
+        w(f"//   8 = region {RST_REGION_MUT}'s reset released one edge late (a die reset-calendar slip).")
     w(f"module {FABRIC} #(parameter integer MUT = 0) (")
-    ports = [f"    input  wire ck_{q}" for q in QUADS] + ["    input  wire rst_n", "    input  wire far"]
+    ports = [f"    input  wire ck_{q}" for q in QUADS] + \
+        ([f"    input  wire rst_{q}" for q in QUADS] if regional else ["    input  wire rst_n"]) + ["    input  wire far"]
     for c in range(4):
         ports += [f"    input  wire [{DW-1}:0] bc{c}", f"    output wire [{DW-1}:0] bco{c}"]
     ports += [f"    output wire [{BW-1}:0] rs", f"    input  wire [{BW-1}:0] rs_i", f"    output wire [{BW-1}:0] rs_o"]
@@ -355,12 +532,28 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mo
     w(");")
     w("    wire far_n = ~far;   // static strap complement")
     # reset
-    w(f"    // ---- reset: pin register + pipelined runs; every tile / station sees rst_n exactly {RD} edges after the pin")
+    if regional:
+        w(f"    // ---- reset (Q-CB16RST): per region, the rst_<q> pin register + in-region runs; every tile / station sees its")
+        w(f"    // region's rst_<q> exactly {RD} edges after the pin (the die releases the 16 pins on the same calendar edge)")
+        for q in QUADS:
+            emit_rpin(E, q, (rpins or {}).get(q) or rpin_default(q))
+        xst = {}
+        for c in range(4):
+            for nm, y in g.chain_for(c):
+                if nm.startswith("xcst"):
+                    xst[(c, int(nm[4:]))] = (g.run_x(c), y)
+        for c in range(4):
+            for r in range(4):
+                q = tile_quad(c, r)
+                emit_rrun(E, q, f"rstl_t_{c}_{r}", tile_rst_at(c, r), RD, f"t_{c}_{r}")
+                xq = quad(*xst[(c, r)])
+                emit_rrun(E, xq, f"rstl_x_{c}_{r}", xst[(c, r)], RD, f"x_{c}_{r}")
+                w(f"    assign trst_{g.sname(c, r)} = rstl_t_{c}_{r};")
     pos = {}
-    for nm, par, (x, y) in rnodes:
+    for nm, par, (x, y) in ([] if regional else rnodes):
         pos[nm] = (x, y)
         E.stage(f"u_{nm}", 1, "rst_n" if par is None else f"{par}_q", f"{nm}_q", x, y)
-    for (cor, r), nm in sorted(rleaves.items()):
+    for (cor, r), nm in ([] if regional else sorted(rleaves.items())):
         pad = RD - rdepth[nm]
         prev = f"{nm}_q"
         x, y = pos[nm]
@@ -369,7 +562,7 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mo
             prev = f"rpad_{cor}_{r}_{j}_q"
         w(f"    wire rstl_{cor}_{r} = {prev};")
     for c in range(4):
-        for r in range(4):
+        for r in range(0 if regional else 4):
             w(f"    assign trst_{g.sname(c, r)} = rstl_{g.E_FACE_CORR[c]}_{r};")
     # column runs
     w("    // ---- column runs {tag 8, xl 128, ib 379, go}: entry pin register, relays, one qfd_xcst_n per row, exit pin register")
@@ -386,13 +579,14 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mo
                 if c == 2 and r == 1:
                     w(f"    wire [{DW-1}:0] dm3_{c};  qfd_q3h_run #(.W({DW}), .D(MUT == 3 ? 1 : 0)) u_dm3_{c} (.ck(ck_{q}), .d({prev}), .q(dm3_{c}));")
                     cin = f"dm3_{c}"
+                xrst = f"rstl_x_{c}_{r}" if regional else f"rstl_{g.E_FACE_CORR[c]}_{r}"
                 b1 = "far_n" if (r >> 1) & 1 else "far"
                 b0 = "far_n" if r & 1 else "far"
                 E.regions[q] += DW
                 E.sites.append(dict(inst=f"u_fab.u_x_{s}", at=[round(x, 3), round(y, 3)], region=q, bits=DW, station=True,
                                     master="qfd_c_xstnw" if c in (1, 3) else "qfd_c_xstn", d=cin, q=f"dn{c}_{nm}", col=c, row=r))
                 w(f"    wire [{DW-1}:0] dn{c}_{nm};")
-                w(f"    {'qfd_c_xstnw' if c in (1, 3) else 'qfd_c_xstn'} u_x_{s} (.ck(ck_{q}), .rst_n(rstl_{g.E_FACE_CORR[c]}_{r}), .sidx({{far, {b1}, {b0}}}), .b_d({cin}),"
+                w(f"    {'qfd_c_xstnw' if c in (1, 3) else 'qfd_c_xstn'} u_x_{s} (.ck(ck_{q}), .rst_n({xrst}), .sidx({{far, {b1}, {b0}}}), .b_d({cin}),"
                   f" .a_d(dn{c}_{nm}), .tap_d(tap_{s}));   // ({x:.2f}, {y:.2f}) {q}")
             else:
                 E.stage(f"u_dn{c}_{nm}", DW, prev, f"dn{c}_{nm}", x, y)
@@ -462,7 +656,7 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mo
             w(f"    wire [{BW-1}:0] ft_m4;  qfd_q3h_run #(.W({BW}), .D(MUT == 4 ? 1 : 0)) u_m4 (.ck(ck_{q}), .d({prev}), .q(ft_m4));")
             prev = "ft_m4"
     w(f"    assign rs_o = {prev};")
-    E.ldepth = emit_land_resets(E, rnodes, rdepth) if E.lands else {}
+    E.ldepth = (emit_land_resets_region(E, rnodes, rdepth) if regional else emit_land_resets(E, rnodes, rdepth)) if E.lands else {}
     w("endmodule")
     return "\n".join(E.L) + "\n", E, len(ch)
 
@@ -476,8 +670,12 @@ def gen_cluster(spare):
     w("// Sixteen regional clock roots (Q-CLUSTER16): tile (c, r) takes ck_c<c>r<r> on every clock entry; each root is")
     w("// centre-fed (die area pin) and its tree balances to the child flops (A0 / station ETM insertion).  Straps cid /")
     w("// far come from the instance's own tie_hi / tie_lo (die); far clusters tie rs_i to tie_lo and leave rs_o open.")
+    w("// Q-CB16RST: sixteen regional resets rst_c<c>r<r> (one per region, beside its clock pin), released by the die on the")
+    w("// same calendar edge; each is registered at its region's entry on ck_c<c>r<r> (no reset hop crosses a region seam).")
     w(f"module {MASTER} (")
-    ports = [f"    input  wire ck_{q}" for q in QUADS] + ["    input  wire rst_n", "    input  wire far", "    input  wire [11:0] cid"]
+    rin = [f"rst_{q}" for q in QUADS] if REGIONAL[0] else ["rst_n"]
+    ports = [f"    input  wire ck_{q}" for q in QUADS] + [f"    input  wire {n}" for n in rin] + \
+        ["    input  wire far", "    input  wire [11:0] cid"]
     for c in range(4):
         ports += [f"    input  wire [{DW-1}:0] bc{c}", f"    output wire [{DW-1}:0] bco{c}"]
     ports += [f"    output wire [{BW-1}:0] rs", f"    input  wire [{BW-1}:0] rs_i", f"    output wire [{BW-1}:0] rs_o",
@@ -497,7 +695,8 @@ def gen_cluster(spare):
             if (c, r) != spare:
                 w(f"    wire [{BW-1}:0] n_a_{s}, n_b_{s}, n_y_{s};")
                 conn += [f".n_a_{s}(n_a_{s})", f".n_b_{s}(n_b_{s})", f".n_y_{s}(n_y_{s})"]
-    conn = [f".ck_{q}(ck_{q})" for q in QUADS] + [".rst_n(rst_n)", ".far(far)"] + [f".bc{c}(bc{c})" for c in range(4)] + \
+    conn = [f".ck_{q}(ck_{q})" for q in QUADS] + [f".{n}({n})" for n in rin] + [".far(far)"] + \
+           [f".bc{c}(bc{c})" for c in range(4)] + \
            [f".bco{c}(bco{c})" for c in range(4)] + [".rs(rs)", ".rs_i(rs_i)", ".rs_o(rs_o)"] + conn
     w(f"    {FABRIC} u_fab (\n        " + ",\n        ".join(conn) + ");")
     for c in range(4):
@@ -536,7 +735,8 @@ def gen_tb(spare):
             faces.append(f"    tb_q3h_tile_face #(.C({c}), .R({r}), .K({g.morton(c, r)}), .HOST({int(h)}), .TLD(TLD), "
                          f".LAT(Q3H_LAT_TAP{r}), .NOPS(NOPS)) u_f_{s} (.ck(ck), .rst_n(trst_{s}), .tap(tap_{s}), "
                          f".t_out(t_out_{s}), .n_a({na}), .n_b({nb}), .n_y({ny}));")
-    conn = [f".ck_{q}(ck)" for q in QUADS] + [".rst_n(rst_n)", ".far(far)"] + [f".bc{c}(bcw[{c}])" for c in range(4)] + \
+    conn = [f".ck_{q}(ck)" for q in QUADS] + ([f".rst_{q}(rst_n)" for q in QUADS] if REGIONAL[0] else [".rst_n(rst_n)"]) + [".far(far)"] + \
+           [f".bc{c}(bcw[{c}])" for c in range(4)] + \
            [f".bco{c}(bco{c})" for c in range(4)] + [".rs(rs)", ".rs_i(rsi)", ".rs_o(rso)"] + conn
     inst = f"    {FABRIC} #(.MUT(MUT)) u_fab (\n        " + ",\n        ".join(conn) + ");"
     gs = " + ".join(f"(u_f_{g.sname(c, r)}.gseen != NOPS)" for c in range(4) for r in range(4))
@@ -729,7 +929,9 @@ def gen_lockstep_tb(spare, delay=None, masked=(), mask_edges=0):
     for n, w_ in outs:
         L.append(f"    wire [{w_ - 1}:0] {n}_h, {n}_r;")
     def conn(sfx, qs=QUADS):
-        c_ = [f".ck_{q}(ck)" for q in qs] + [f".{n}({n})" for n, _ in ins] + [f".{n}({n}_{sfx})" for n, _ in outs]
+        rin = [f".rst_{q}(rst_n)" for q in QUADS] if (sfx == "h" and REGIONAL[0]) else [".rst_n(rst_n)"]   # Q-CB16RST: 16 regional resets
+        c_ = [f".ck_{q}(ck)" for q in qs] + rin + [f".{n}({n})" for n, _ in ins if n != "rst_n"] + \
+             [f".{n}({n}_{sfx})" for n, _ in outs]
         return ",\n        ".join(c_)
     L.append(f"    {FABRIC} #(.MUT(MUT)) u_h (\n        {conn('h')});")
     L.append(f"    {FABRIC}_ref8 #(.MUT(0)) u_r (\n        {conn('r', REF_QUADS)});")
@@ -845,12 +1047,14 @@ def landing_record(E, stations, legs, leg_add, port_add, lat, lat0, nflops_land,
             hop_um=hops[n], reset_depth=E.ldepth[n],
             sdc=f"set_multicycle_path -setup {LAND_E} / -hold {LAND_D - 1} -from u_fab.u_land_{n}_w.* -to u_fab.u_land_{n}_r.*"))
     return dict(
-        mode="all", rule="every multi-bit region-seam crossing landed (Q-CLUSTER-LANDALL, coordinator 0fy); 1-bit reset-tree "
-                         "hops stay single registered hops (they define the landing epochs)",
+        mode="all", resets="region",
+        rule="every region-seam crossing landed (Q-CLUSTER-LANDALL, coordinator 0fy; Q-CB16RST 10-19: no reset hop crosses a "
+             "seam: 16 die-delivered regional resets rst_<q>, each registered at its region entry with an in-region tree)",
         D=LAND_D, E=LAND_E, K=LAND_E, added_edges_per_crossing=LAND_A,
         window_ps=f"({LAND_E} - {LAND_D}) T + t_hold < dL < {LAND_E} T - t_cq - t_setup (T = 833.3: about -1666 .. +1666 ps)",
-        epochs="released reset (L3): each half's rsi = an equal-depth run from the nearest reset-tree node, re-registered "
-               "once in the half: G == R0, E = K",
+        epochs="released reset (L3): each half's rsi = a run in its OWN region's reset tree (from rst_<q>), both halves at "
+               "the landing's common depth after their pins; the die releases the 16 rst_<q> on the same calendar edge: "
+               "G == R0, E = K",
         fault="assertion only ($error LAND_FAULT in simulation; synthesis drops the epoch tags)",
         rtl="rtl/physical/qcluster/qfd_c_land.sv", count=len(rec), bits=sum(r["bits"] for r in rec), flops=nflops_land,
         list=rec,
@@ -877,9 +1081,10 @@ def pin_plan(rsx, E):
     note = {"bc": "column word (corridor run)", "bco": "registered feed-through to the far cluster",
             "rs": "block word {fault, valid, 512}", "rs_i": "DV: far-band rs word in", "rs_o": "DV: far-band rs word out (rs_i + 15 edges)"}
     faces = {"S": ["bc0", "rs", "bc1", "rs_o", "bc2", "bc3"], "N": ["bco0", "rs_i", "bco1", "bco2", "bco3"]}
-    islands = {"S": [(QUADS[0], [f"ck_{QUADS[0]}", "rst_n", "far", "cid", "tie_hi", "tie_lo"])] +
-                    [(f"c{c}r0", [f"ck_c{c}r0"]) for c in (1, 2, 3)],
-               "N": [(f"c{c}r3", [f"ck_c{c}r3"]) for c in range(4)]}
+    # Q-CB16RST: each region's reset pin rst_<q> sits in its clock entry island, beside ck_<q>
+    islands = {"S": [(QUADS[0], [f"ck_{QUADS[0]}", f"rst_{QUADS[0]}", "far", "cid", "tie_hi", "tie_lo"])] +
+                    [(f"c{c}r0", [f"ck_c{c}r0", f"rst_c{c}r0"]) for c in (1, 2, 3)],
+               "N": [(f"c{c}r3", [f"ck_c{c}r3", f"rst_c{c}r3"]) for c in range(4)]}
     pins = []
     lo0, hi0 = 4.32, WIDTH - 4.32
     for f, names in faces.items():
@@ -917,6 +1122,7 @@ def pin_plan(rsx, E):
                 w_ = 6.0 if n == "cid" else 0.3
                 pins.append(dict(port=n, bits=12 if n == "cid" else 1, face=f, layer="M5",
                                  range_um=[round(x0, 3), round(x0 + w_, 3)], pins_per_um=None,
+                                 **({"region": q} if n.startswith("rst_") else {}),
                                  note=f"region {q} entry island (register centroid x {cen[q]:.0f}, y {ceny[q]:.0f})"))
                 x0 += w_ + 0.7
     # interior rows 1 / 2 have no S / N face within 1.3 mm: their entry is on the W / E face (M4) at the region's
@@ -929,6 +1135,9 @@ def pin_plan(rsx, E):
         y0 = round(ceny[q] + (3.0 if c in (1, 2) else 0.0), 3)
         pins.append(dict(port=f"ck_{q}", bits=1, face=f, layer="M4", range_um=[y0, round(y0 + 0.3, 3)], pins_per_um=None,
                          note=f"region {q} entry (register centroid y {ceny[q]:.0f}, x {cen[q]:.0f})"))
+        pins.append(dict(port=f"rst_{q}", bits=1, face=f, layer="M4", range_um=[round(y0 + 1.0, 3), round(y0 + 1.3, 3)],
+                         pins_per_um=None, region=q,
+                         note=f"region {q} reset (Q-CB16RST: beside ck_{q}; pin register u_fab.u_rpin_{q} on ck_{q})"))
     for p_ in pins:
         if p_["pins_per_um"] and p_["pins_per_um"] > 6.0:
             raise SystemExit(f"pin density over 6/um: {p_}")
@@ -1006,6 +1215,7 @@ def main():
     ap.add_argument("--landings", choices=["all", "off"], default="all")
     a = ap.parse_args()
     mode = a.landings
+    REGIONAL[0] = mode == "all"
     host, spare = g.load_hosts(a.hosts)
     assert len(set(host.values())) == 15 and spare not in host.values()
     rs_t0, _, legs0, rsx0, t0 = evaluate(host)
@@ -1050,7 +1260,13 @@ def main():
     fab1, E1, _ = gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mode)
     st1, _ = place_stations(E1, fab1, spare)
     over = legalize_soft(E1, st1) if mode == "all" else {}
-    fab, E, nft = gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mode, over)
+    rpins = None
+    if mode == "all":
+        # Q-CB16RST: the region reset pin registers sit at the pins the plan gives rst_<q> (beside ck_<q>)
+        pins1, _, _ = pin_plan(rsx, E1)
+        rpins = {p_["region"]: (p_["face"], sum(p_["range_um"]) / 2) for p_ in pins1 if p_["port"].startswith("rst_")}
+    fab, E, nft = gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mode, over, rpins)
+    assert getattr(E, "rclamped", 0) == 0, "a pass-2 reset consumer lies outside its region"
     for st in E.sites:
         if not st.get("master") and st["bits"] > 1 and quad(*st["at"]) != st["region"]:
             raise SystemExit(f"soft site {st['inst']} at {st['at']} is not in its region {st['region']}")
@@ -1101,6 +1317,17 @@ def main():
            f"localparam integer QC_LAT_WARM = {warm};"]
     (ROOT / "rtl/test/qcluster_lat.svh").write_text("\n".join(hdr) + "\n")
     pins, cen, ceny = pin_plan(rsx, E)
+    rst_pin_um = {}
+    if mode == "all":
+        for p_ in pins:
+            if p_["port"].startswith("rst_"):
+                q = p_["region"]
+                v = sum(p_["range_um"]) / 2
+                assert abs(v - rpins[q][1]) < 30.0 and p_["face"] == rpins[q][0], ("rst pin moved between passes", p_, rpins[q])
+                px, py = ((v, 0.0) if p_["face"] == "S" else (v, HEIGHT) if p_["face"] == "N" else
+                          (0.0, v) if p_["face"] == "W" else (WIDTH, v))
+                rx, ry = E.rpins[q]
+                rst_pin_um[q] = round(abs(px - rx) + abs(py - ry), 1)
     stations, st_hops = place_stations(E, fab, spare)
     key = lambda P: [(p_["st"]["inst"], p_["x"], p_["y"], p_["orient"]) for p_ in P]
     assert key(stations) == key(st1), "hard station placement moved between the two passes"
@@ -1161,6 +1388,16 @@ def main():
                  "column; the only data that passes through a cluster is its own registered feedthroughs bc -> bco "
                  "(4 x 516 b, 17 edges) and rs_i -> rs_o (514 b, 15 edges).  No die feedthrough repeater sites are reserved.",
             registered_feedthroughs={"bc0..3->bco0..3": g.STAGE["exit"], "rs_i->rs_o": nft}),
+        regional_resets=(dict(
+            rule="Q-CB16RST (10-19): 16 die-delivered regional resets rst_<q> (pin beside ck_<q>); pin register u_fab.u_rpin_<q> "
+                 "on ck_<q> at the region entry nearest the pin; in-region trees only (corridor / channel lanes, never over "
+                 "the A0 tile); every tile / xstn rst_n exactly reset edges after its region pin, every landing half at the "
+                 "landing's reset_depth.  Die obligation: release all 16 of an instance on the SAME calendar edge (each "
+                 "timed against its own region tree, the die reset tree lands each); MUT 8 (bench) = one region one edge late.",
+            pins={q: f"rst_{q}" for q in QUADS}, pin_register_um=rst_pin_um,
+            pin_register_sites={q: list(v) for q, v in E.rpins.items()},
+            flops=sum(1 for st in E.sites if st["inst"].startswith(("u_fab.u_rpin_", "u_fab.u_rr_", "u_fab.u_rq_"))),
+            depth_edges=RD) if mode == "all" else None),
         far_position="ONE master: in the far bands (0 / 3) rs_i is a declared-idle terminus tied to the instance's own "
                      "tie_lo by the die (valid bit 0 every cycle) and rs_o is left unconnected (output only)",
         gating=["A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"],

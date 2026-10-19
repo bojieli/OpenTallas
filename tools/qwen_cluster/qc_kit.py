@@ -88,7 +88,9 @@ def main():
         # the pin register's region: S-face registers in tile row 0, N-face in row 3; side from the register lane
         # (qc_gen.quad: the T centre lane x == XT is E)
         x = p.get("lane_x", (p["range_um"][0] + p["range_um"][1]) / 2)
-        if sixteen:   # qc_gen.quad: column = #x-seams <= x (on-seam -> higher column); S-face pin registers row 0, N row 3
+        if p.get("region"):   # Q-CB16RST: regional reset pins name their region (pin register u_fab.u_rpin_<q> on ck_<q>)
+            q = p["region"]
+        elif sixteen:   # qc_gen.quad: column = #x-seams <= x (on-seam -> higher column); S-face pin registers row 0, N row 3
             q = f"c{sum(x >= v - 1e-6 for v in xs)}r{0 if p['face'] == 'S' else 3}"
         else:
             q = ("w" if x < xs[0] - 1e-6 else "e") + ("0" if p["face"] == "S" else "3")
@@ -159,12 +161,14 @@ def main():
             sdc.append(f"  set_multicycle_path -hold {D_ - 1} -from $ot_lf -to $ot_lt")
             sdc.append("}")
             sdc.append('puts "OT_QC_LAND_SDC [expr {[llength $ot_qc_lands] - $ot_qc_land_miss}] of [llength $ot_qc_lands] landings constrained"')
+    bits = {p["port"]: p["bits"] for p in ports}
+    pat = lambda n: n if bits.get(n, 2) == 1 else f"{n}[*]"     # Q-CB16RST: scalar ports (rst_<q>) have no [*]
     for q in rest:
         for n in sorted(dom[q]["inputs"]):
-            sdc.append(f"set_input_delay [expr {{0.2 * $ot_q_per}}] -clock ck_{q} [get_ports {{{n}[*]}}]")
+            sdc.append(f"set_input_delay [expr {{0.2 * $ot_q_per}}] -clock ck_{q} [get_ports {{{pat(n)}}}]")
         for n in sorted(dom[q]["outputs"]):
             # exact bus name ('rs*' would also catch rs_i / rs_o once rs leaves the core region)
-            sdc.append(f"set_output_delay [expr {{0.2 * $ot_q_per}}] -clock ck_{q} [get_ports {{{n}[*]}}]")
+            sdc.append(f"set_output_delay [expr {{0.2 * $ot_q_per}}] -clock ck_{q} [get_ports {{{pat(n)}}}]")
     sdc.append(f"if {{!$::ot_ref_pre_cts}} {{ set_propagated_clock [get_clocks {{{lst}}}] }}")
     # QK-CB16 (10-18): post-CTS, every non-core region's boundary is referenced to ITS OWN propagated tree, exactly as the
     # generic die boundary (signoff.sdc QDM block) references core_clk's ports to the core tree.  The plain 0.2 T above is
@@ -176,7 +180,9 @@ def main():
         "if {!$::ot_ref_pre_cts} {",
         "  proc ot_qc_pinreg_cks {bus dir} {",
         "    set out {}; set seen [dict create]",
-        "    foreach port [get_ports -quiet [format {%s[*]} $bus]] {",
+        "    set pl [get_ports -quiet [format {%s[*]} $bus]]",
+        "    if {![llength $pl]} { set pl [get_ports -quiet $bus] }",
+        "    foreach port $pl {",
         "      set nets [get_nets -quiet [get_full_name $port]]",
         "      for {set hop 0} {$hop < 4 && [llength $nets]} {incr hop} {",
         "        set next {}",
@@ -225,7 +231,8 @@ def main():
         "    }",
         "    if {![llength $ot_qc_a]} { error \"OT_QC_IO: no pin register clock arrival found for $ot_qc_bus ($ot_qc_dir)\" }",
         "    set ot_qc_a [lsort -real $ot_qc_a]; set lmin [lindex $ot_qc_a 0]; set lmax [lindex $ot_qc_a end]",
-        "    set pp [get_ports [format {%s[*]} $ot_qc_bus]]",
+        "    set pp [get_ports -quiet [format {%s[*]} $ot_qc_bus]]",
+        "    if {![llength $pp]} { set pp [get_ports $ot_qc_bus] }",
         "    if {$ot_qc_dir eq \"in\"} {",
         "      set_input_delay [expr {$ot_qc_ib + $lmax + $ot_qc_sk}] -max -clock $ot_qc_clk $pp",
         "      set_input_delay [expr {$ot_qc_die ? $lmin + $ot_qc_c + $ot_qc_u + $ot_qc_r : $lmin - $ot_qc_hki}] -min -clock $ot_qc_clk $pp",
@@ -268,7 +275,7 @@ def main():
         **({"pre_cts_extra": ["physical/qcluster/qfd_c_b16_dv_centre_feed.tcl"]} if a.feed == "centre" else {}),
         io_flop_at_pins=False,
         sdc_extra=["physical/qcluster/qfd_c_b16_dv_quadrants.sdc"],
-        reset_ports=["rst_n"],
+        reset_ports=[p["port"] for p in ports if p["port"].startswith("rst_")] or ["rst_n"],
         # 4.32: the station tiles sit on the 4.32 lattice (L / R strip stations 4.32 from the A0 faces and the edge cannot
         # be on 43.2); the A0 origins stay multiples of 43.2.  4.32 is track-safe for the station pins (M3 / M4 / M5).
         outline=dict(w=W, h=H, exact=True), child_lattice_um=4.32,
