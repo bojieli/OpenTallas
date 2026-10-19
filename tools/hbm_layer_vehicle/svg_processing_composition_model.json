@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.svg-processing-stage-composition.v1",
+  "status": "ROOT-approved bounded stage; model before integration RTL",
+  "baseline_whole_source": "a7da66a75",
+  "baseline_whole_receipt": "c4ee7b497",
+  "baseline_command_latency": 9,
+  "physical_added_stage": "One STREAM packet-processing capture after native FIFO read; HBM ingress unchanged",
+  "leaf_request_to_return_edges": {"old": 7, "new": 8},
+  "landing_read_to_final_cache_copy_captures": {"old": 10, "new": 11},
+  "per_path_extra_vs_original": {
+    "reserve_stream_edges": 2,
+    "completion_consumer_stream_edges": 2,
+    "read_result_stream_edges": 3,
+    "HBM_ingress_edges": 2,
+    "optional_KR_bridge_HBM_edges": 1
+  },
+  "conservative_prefetch": {
+    "HBM_to_stream_ceil_with_bridge": 4,
+    "native_sum": "4+2+2+3=11",
+    "regional_return_edges": 7,
+    "native_and_regional": 18,
+    "cache_safe_extra_margin": 4,
+    "selected_cache_safe_margin": 22,
+    "old_9_16_proposal": "SUPERSEDED: assumed unproved overlap of distinct reserve/completion/read paths",
+    "scope": "No overlap or token-throughput credit. Whole exact schedules must verify deadlines."
+  },
+  "metadata": {
+    "OPEN_and_drain_labels_extra_edges": 1,
+    "indexed_ring_delay": {"old": 7, "new": 8},
+    "slots": 8,
+    "payload_bits_each_ring": 280,
+    "output_bits_each_ring": 35,
+    "slice_bits": 6,
+    "pointer_counter_state_bits_each_ring": 54,
+    "reason": "Six-bit read slices avoid binary8slot read-selector fanout above32; use actual indexed storage, not an unchanged flop delaychain.",
+    "reset_and_clock_scope": "Existing frontend reset/clock integration remains OPEN; helper equivalence does not qualify the whole native frontend."
+  },
+  "SM_cache_read_command_timing": "UNCHANGED by this landing-to-rowcache-copy stage. Cache-only command latency remains9/read-admission7; future banked programme adds2 separately for READ8/command11.",
+  "required_proof": ["8capture metadata ring positive and wrongslot mutant", "exact latest leaf allJ/mutants and buffer-transparent loads", "whole L00 exact fixed GO and actual result timing", "whole early and late metadata mutants"],
+  "physical_claim": "NONE"
+}
