@@ -20,7 +20,8 @@ EXCLUDED = {"gate_result.json", "source_snapshot.json"}
 CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
-              "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py")
+              "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py",
+              "tools/ref_tile/measured_band_fill.py")
 # Non-Python source read by an imported generator and embedded in its kit.
 PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",)}
 PY_DIRS = ("tools", "tools/ref_tile", "tools/closure_loop", "tools/w18")

@@ -47,6 +47,7 @@ import pin_fit  # noqa: E402
 import cdc_fsm_guard  # noqa: E402
 import clock_entry_constraints  # noqa: E402
 import raw_macro_clocks  # noqa: E402
+from measured_band_fill import lattice_band_errors, measured_band_fill  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
@@ -1214,13 +1215,23 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
                 "pass --area-um2 / std_area_um2 from the synthesis smoke")
     mac = sum(b["w"] * b["h"] for b in blocks)
     fill = (mac + float(std_area)) / (W * H)
-    reason = str((s.get("fill_reason") or {}).get("pin_bound", "")).strip()
+    fr = s.get("fill_reason") or {}
+    reason = str(fr.get("pin_bound", "")).strip()
+    reason_kind = "pin-bound"
+    structural = fr.get("lattice_channel_bound")
+    if structural is not None:
+        errors = lattice_band_errors(s, W, H, blocks, float(std_area))
+        if errors:
+            return ("FAIL", "fill", "invalid lattice/channel band: " + "; ".join(errors),
+                    "fix measured sizing geometry; actual placement verification is also required")
+        reason = str(structural["why"]).strip()
+        reason_kind = "lattice/channel-bound gate-rule exception (placement verification required)"
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
                 "shrink the outline / regroup macros, or record fill_reason.pin_bound with the measured pin demand")
     if fill < FILL_WARN:
-        return ("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" < {FILL_WARN:.0%}"), "")
+        return ("WARN", "fill", msg + (f" ({reason_kind}: {reason})" if reason else f" < {FILL_WARN:.0%}"), "")
     return None
 
 

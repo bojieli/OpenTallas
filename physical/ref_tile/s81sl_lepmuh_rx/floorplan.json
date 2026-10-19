@@ -338,10 +338,10 @@
  ],
  "findings": [
   [
-   "FAIL",
+   "WARN",
    "fill",
-   "fill 26% = (macros/children 62464 + std 6465) / outline 266872 um2 < 35%",
-   "shrink the outline / regroup macros, or record fill_reason.pin_bound with the measured pin demand"
+   "fill 26% = (macros/children 62464 + std 6465) / outline 266872 um2 (lattice/channel-bound gate-rule exception (placement verification required): ROOT sizing-only approval2026-10-19 09:50 PT: actual kit std6464.63um2/20SRAM, paid475.2x561.6, full core width470.88 by32.40 standard band259.2..291.6 =>42.37%. Exact macro origins43.2lattice,minchannels22.41/24.84 orlarger. Actual placed mass,<=405hops,native clocks,PG/pin access,PNGs and parentfit remain open.)",
+   ""
   ]
  ],
  "referenced": [
