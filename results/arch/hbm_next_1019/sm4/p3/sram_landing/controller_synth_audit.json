@@ -1,0 +1,51 @@
+{
+  "pass": true,
+  "modules": {
+    "$paramod$02efd180daef2f92e40a101acc082431c37b4e9e\\hnx_land_valid_group": {
+      "max_data_loads": 21,
+      "cells": {
+        "$_SDFFE_PN0P_": 1,
+        "$_AND_": 1,
+        "$_MUX_": 3,
+        "hnx_land_valid_one": 21
+      },
+      "memories": 0
+    },
+    "$paramod$1d52b5adcbf3f32b959c456e5ea902c5330e1d5f\\hnx_land_valid_group": {
+      "max_data_loads": 22,
+      "cells": {
+        "$_SDFFE_PN0P_": 1,
+        "$_AND_": 1,
+        "$_MUX_": 3,
+        "hnx_land_valid_one": 22
+      },
+      "memories": 0
+    },
+    "hnx_land_valid_one": {
+      "max_data_loads": 1,
+      "cells": {
+        "$_DFF_P_": 1
+      },
+      "memories": 0
+    },
+    "hnx_pl_land_sram": {
+      "max_data_loads": 32,
+      "cells": {
+        "$_DFF_P_": 2,
+        "$_SDFF_PN0_": 9,
+        "$_NOT_": 10,
+        "$_AND_": 2075,
+        "$_XOR_": 4,
+        "$_OR_": 6,
+        "$_MUX_": 7,
+        "ot_sram_1r1w2c_16x546_m1": 4,
+        "$paramod$1d52b5adcbf3f32b959c456e5ea902c5330e1d5f\\hnx_land_valid_group": 2,
+        "$paramod$02efd180daef2f92e40a101acc082431c37b4e9e\\hnx_land_valid_group": 1
+      },
+      "memories": 0
+    }
+  },
+  "native_macro_count": 4,
+  "kept_valid_copies": 65,
+  "note": "Generic synth/techmap evidence; parent technology-mapped physical gate remains required"
+}

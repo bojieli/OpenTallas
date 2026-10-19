@@ -28,3 +28,11 @@ for installed capacity, area and outstanding physical obligations.
 A proposed no-growth floorplan is being analyzed separately. The interim
 630.72x2289.6 four-large-pad-macro layout on this branch is superseded and must
 not be gated or bound; final exact macro placement follows the analysis.
+
+Generic Yosys0.68 synthesis/techmap on the exact component preserves all65
+kept valid-register instances in three kept groups and all four native SRAMs.
+The committed JSON audit has maximum nonclock fanout32 (group internal22),
+zero inferred memories, and no runtime-addressed flop payload. This confirms
+the intended replication survives generic optimization. Technology mapping
+and physical parent closure remain separate checks. Reproduce with
+`python3 tools/hbm_next/sm4/audit_landing_synth.py results/arch/hbm_next_1019/sm4/p3/sram_landing/controller.json.gz`.
