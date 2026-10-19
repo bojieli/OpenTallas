@@ -86,7 +86,7 @@ def test_no_fixed_reach_across_wall(case):
     c, m, _ = case
     m['placement']['wall'] = dict(m='wall', x=700, y=0, w=300, h=1000, o='R0')
     c['instances']['wall'] = dict(master='wall')
-    with pytest.raises(GeometryError, match='no reset route|no legal reset relay'):
+    with pytest.raises(GeometryError, match='no reset route|no legal reset relay|no regional root home routes within reach'):
         run(case)
 
 
@@ -203,3 +203,74 @@ def test_real_kit_sized_relay_outlines(case):
         lef(v, 'hbfd_rrl_' + kind, 32.4, 32.4, {'clk': (0, 8), 'rst_n_in': (0, 24), 'rst_n': (32.4, 16)})
     spec, rep = run(case)
     assert_geometry(case, spec, rep)
+
+
+# FOREST2 10-19 (DIE-HBM-LEAD): equal-age padding inside the leaf; alternative regional-root homes.
+def test_pads_inside_leaf_no_pad_tiles(case):
+    spec, rep = run(case)
+    assert_geometry(case, spec, rep)
+    assert not any('equal-age pad' in t['note'] for t in spec['instances'])
+    pads = [t for t in spec['instances'] if t['master'].startswith('hbfd_rrl_pad')]
+    assert pads, 'the near region must be padded inside its leaf'
+    for t in pads:
+        n = int(t['master'][len('hbfd_rrl_pad'):])
+        assert 2 <= n <= 16 and f'{n} release stages' in t['note']
+
+
+def test_pads_fit_crowded_leaf(case):
+    # The near sink sits in a 60 um slot between two blocks: room for its leaf only, never for extra pad tiles.
+    c, m, v = case
+    m['placement']['a'] = dict(m='sink', x=500, y=100, w=100, h=100, o='R0')
+    m['placement']['lo'] = dict(m='wall', x=380, y=0, w=110, h=145, o='R0')
+    m['placement']['hi'] = dict(m='wall', x=380, y=155, w=110, h=845, o='R0')
+    m['placement']['lo2'] = dict(m='wall', x=0, y=0, w=380, h=10, o='R0')
+    for n in ('lo', 'hi', 'lo2'):
+        c['instances'][n] = dict(master='wall')
+    spec, rep = run(case)
+    assert_geometry(case, spec, rep)
+
+
+def walled_pocket(case):
+    """Two SW sinks whose centroid lies in a closed hollow box (walls thicker than the blocked-run budget)."""
+    c, m, v = case
+    lef(v, 'wall', 10, 10, {})
+    m['placement'] = {'hb_ckgen': m['placement']['hb_ckgen'],
+                      'a': dict(m='sink', x=120, y=200, w=100, h=100, o='MY'),
+                      'b': dict(m='sink', x=780, y=200, w=100, h=100, o='R0')}
+    walls = {'wS': (330, 30, 340, 200), 'wN': (330, 300, 340, 200), 'wW': (330, 230, 150, 70), 'wE': (520, 230, 150, 70)}
+    for n, (x, y, w, h) in walls.items():
+        m['placement'][n] = dict(m='wall', x=x, y=y, w=w, h=h, o='R0')
+    c['instances'] = {n: dict(master=v_['m']) for n, v_ in m['placement'].items()}
+    c['clock_resets'] = [dict(instance=n, port='rst_n', bits=1, kind='reset', domain='stream', source=['hb_ckgen', 'por_stream'])
+                         for n in ('a', 'b')]
+    return case
+
+
+def test_root_alternative_home_outside_pocket(case):
+    walled_pocket(case)
+    _, m, v = case
+    g = Geometry(m, v, v, 200)
+    root = g.reserve('sync', (500, 250), max_distance=200)
+    assert 470 <= root['home'][0] <= 530, 'the centroid site is inside the pocket'
+    mask = g.reach_mask(g.pin('hb_ckgen', 'por_stream'))
+    assert not mask[g.grid.cell(500, 260)[1] * g.grid.nx + g.grid.cell(500, 260)[0]], 'pocket not reachable in budget'
+    spec, rep = run(case)
+    assert_geometry(case, spec, rep)
+    roots = [h for n, h in rep['homes'].items() if '_SW_' in n and h['m'] == 'hbfd_rrl_sync']
+    assert roots and all(not (480 <= h['x'] <= 520 and 230 <= h['y'] <= 300) for h in roots)
+    assert rep['reach_um'] == 200
+
+
+def test_root_alternatives_exhausted_fail_closed(case, monkeypatch):
+    walled_pocket(case)
+    c, m, v = case
+    monkeypatch.setattr(Geometry, 'reach_mask', lambda self, point: bytearray(self.grid.nx * self.grid.ny))
+    with pytest.raises(GeometryError, match='no regional root home routes within reach'):
+        build(c, m, v, reach=200, zones='quadrant')
+
+
+def test_pad_stage_cap_fail_closed(case, monkeypatch):
+    import reset_forest_layer as L
+    monkeypatch.setattr(L, 'MAX_PAD', 1)
+    with pytest.raises(GeometryError, match='release stages'):
+        run(case)

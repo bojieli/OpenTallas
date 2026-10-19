@@ -48,6 +48,13 @@ class Geometry:
             if o not in ('R0', 'MX', 'MY', 'R180'):
                 raise GeometryError(f'{n}: unsupported placement orientation {o}')
             obstacles.append((v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']))
+        # spatial bins for the buried-pin check (post-landing cases place ~57k instances x ~31k reset pins)
+        self.BIN = 500.0
+        self.bins = {}
+        for n, v in self.pl.items():
+            for i in range(int(v['x'] // self.BIN), int((v['x'] + v['w']) // self.BIN) + 1):
+                for j in range(int(v['y'] // self.BIN), int((v['y'] + v['h']) // self.BIN) + 1):
+                    self.bins.setdefault((i, j), []).append(n)
         self.half_w = max(w / 2 for w, _, _ in self.relay.values())
         self.half_h = max(h / 2 for _, h, _ in self.relay.values())
         self.grid = Grid(self.W, self.H, [])
@@ -118,17 +125,81 @@ class Geometry:
         xy = (v['x'] + x, v['y'] + y)
         if not (0 <= xy[0] <= self.W and 0 <= xy[1] <= self.H):
             raise GeometryError(f'reset pin outside die: {name}.{p}')
-        for other, q in self.pl.items():
+        for other in self.bins.get((int(xy[0] // self.BIN), int(xy[1] // self.BIN)), ()):
+            q = self.pl[other]
             if other != name and q['x'] + .5 < xy[0] < q['x'] + q['w'] - .5 and q['y'] + .5 < xy[1] < q['y'] + q['h'] - .5:
                 raise GeometryError(f'buried reset pin {name}.{p} under {other}')
         return xy
 
+    def reach_mask(self, point):
+        """Free grid cells reachable from point by a path whose every blocked (overflown) run is within the SAME fixed
+        budget chain() routes with (budget - 4 GRID).  One flood per source; a regional root is only homed on a reachable
+        cell, so walled pockets are never tried.  Minimal-run labels: a cell is relaxed at most R + 1 times."""
+        R = int((self.budget - 4 * GRID) // GRID)
+        nx, ny, blk = self.grid.nx, self.grid.ny, self.grid.blk
+        best = bytearray(b'\xff') * (nx * ny)
+        a = self.grid.cell(*point)
+        s0 = a[1] * nx + a[0]
+        best[s0] = 0
+        # lowest-run-first buckets: a free cell is final at run 0 the first time it is reached; a blocked cell is
+        # relaxed only from a lower bucket, so almost every cell is expanded once
+        buckets = [[] for _ in range(R + 2)]
+        buckets[0].append(s0)
+        lo = 0
+        while lo <= R:
+            if not buckets[lo]:
+                lo += 1
+                continue
+            k = buckets[lo].pop()
+            r = best[k]
+            if r != lo:
+                continue
+            i, j = k % nx, k // nx
+            for n, ok in ((k + 1, i + 1 < nx), (k - 1, i > 0), (k + nx, j + 1 < ny), (k - nx, j > 0)):
+                if not ok:
+                    continue
+                nr = 0 if not blk[n] else r + 1
+                if nr <= R and nr < best[n]:
+                    best[n] = nr
+                    buckets[nr].append(n)
+                    if nr < lo:
+                        lo = nr
+        return bytearray(1 if (b == 0 and not blk[k]) else 0 for k, b in enumerate(best))
+
+    def snapshot(self):
+        """Undo point for a speculative plan (alternative regional-root homes)."""
+        return bytes(self.grid.blk), dict(self.reserved)
+
+    def restore(self, snap):
+        self.grid.blk[:] = snap[0]
+        self.reserved = dict(snap[1])
+
+    def root_sites(self, point, rings=(0., 200., 405., 810., 1215., 1620., 2430., 3240.), per_ring=8):
+        """Alternative regional-root target points: the sink centroid first, then rings around it.
+        Each point is a target for reserve(); the reach budget of every later route is unchanged."""
+        out = []
+        for r in rings:
+            if r == 0:
+                out.append(point)
+                continue
+            for k in range(per_ring):
+                a = 2 * math.pi * k / per_ring
+                x, y = point[0] + r * math.cos(a), point[1] + r * math.sin(a)
+                if self.half_w <= x <= self.W - self.half_w and self.half_h <= y <= self.H - self.half_h:
+                    out.append((x, y))
+        return out
+
+    def relay_lef(self, kind):
+        """hbfd_rrl_pad<N> (multi-stage leaf) is planned on the hbfd_rrl_hop footprint and pins: same 32.4 um kit
+        outline, N <= 32 flops; its own routed view must keep that outline and pin set."""
+        return self.relay['hop' if kind.startswith('pad') else kind]
+
     def centre(self, tile):
-        w, h, _ = self.relay[tile['kind']]
+        w, h, _ = self.relay_lef(tile['kind'])
         return tile['home'][0] + w / 2, tile['home'][1] + h / 2
 
     def tile_pin(self, tile, p):
-        x, y = self.relay[tile['kind']][2][p]
+        x, y = self.relay_lef(tile['kind'])[2][p]
         return tile['home'][0] + x, tile['home'][1] + y
 
     def candidates(self, point, max_distance):
@@ -145,9 +216,11 @@ class Geometry:
                             choices.append((d, c))
             yield from (c for _, c in sorted(choices))
 
-    def reserve(self, kind, point, targets=(), max_distance=None):
+    def reserve(self, kind, point, targets=(), max_distance=None, allowed=None):
         w, h, pins = self.relay[kind]
         for cell in self.candidates(point, max_distance if max_distance is not None else self.reach):
+            if allowed is not None and not allowed[cell[1] * self.grid.nx + cell[0]]:
+                continue
             cx, cy = self.grid.xy(cell)
             tile = dict(kind=kind, home=(round(cx - w / 2, 6), round(cy - h / 2, 6)))
             if cx - w / 2 < 0 or cy - h / 2 < 0 or cx + w / 2 > self.W or cy + h / 2 > self.H:

@@ -18,4 +18,106 @@ module hbfd_rrl_hop (input wire clk, input wire rst_n_in, output wire rst_n);
         if (!rst_n_in) q <= 1'b0; else q <= 1'b1;
     assign rst_n = q;
 endmodule
+// FOREST2 10-19 (DIE-HBM-LEAD): equal-age padding inside the leaf.  hbfd_rrl_pad<N> = N registered release stages in one
+// tile (same pins/footprint as hbfd_rrl_hop): asynchronous assertion of every stage, release age N edges.  The leaf of a
+// short regional path takes pad<1 + pads> instead of 1 + pads separate hop tiles (no pad homes in crowded strips).
+module hbfd_rrl_stages #(parameter integer N = 2) (input wire clk, input wire rst_n_in, output wire rst_n);
+    (* keep = "true", dont_touch = "true" *) reg [N-1:0] q;
+    always @(posedge clk or negedge rst_n_in)
+        if (!rst_n_in) q <= {N{1'b0}}; else q <= {q[N-2:0], 1'b1};
+    assign rst_n = q[N-1];
+endmodule
+module hbfd_rrl_pad2 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(2)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad3 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(3)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad4 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(4)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad5 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(5)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad6 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(6)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad7 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(7)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad8 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(8)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad9 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(9)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad10 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(10)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad11 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(11)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad12 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(12)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad13 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(13)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad14 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(14)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad15 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(15)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad16 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(16)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad17 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(17)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad18 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(18)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad19 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(19)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad20 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(20)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad21 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(21)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad22 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(22)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad23 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(23)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad24 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(24)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad25 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(25)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad26 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(26)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad27 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(27)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad28 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(28)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad29 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(29)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad30 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(30)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad31 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(31)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+module hbfd_rrl_pad32 (input wire clk, input wire rst_n_in, output wire rst_n);
+    hbfd_rrl_stages #(.N(32)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
 `default_nettype wire

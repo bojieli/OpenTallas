@@ -15,7 +15,18 @@ import hashlib
 import json
 from pathlib import Path
 
+import os
+import sys
+import time
+
 from reset_forest_geometry import Geometry, GeometryError, md
+
+T0 = time.time()
+
+
+def log(*a):
+    if os.environ.get('OT_FOREST_LOG'):
+        print(f'[{time.time() - T0:8.1f}s]', *a, file=sys.stderr, flush=True)
 
 CB0, CB1 = 14970.0, 18831.0
 SRC = 'rtl/hbm_accel/die_glue/hbfd_rrl.sv'
@@ -26,7 +37,10 @@ def load(p):
     return json.loads(gzip.open(p).read() if str(p).endswith('.gz') else Path(p).read_text())
 
 
-def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False):
+MAX_PAD = 32   # rtl/hbm_accel/die_glue/hbfd_rrl.sv defines hbfd_rrl_pad2 .. hbfd_rrl_pad32
+
+
+def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False, max_root_tries=40):
     if reach <= 0 or fanout < 1:
         raise GeometryError('reach and fanout must be positive')
     if any(i['master'].startswith('hbfd_rrl_') for i in c['instances'].values()):
@@ -41,7 +55,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                   clock_requirement='downstream regional clock binding and phase validation required',
                   compiler_requirement='bind age constants after physical clock/phase proof; no runtime scheduling/backpressure',
                   age_reference='ideal common-phase RTL edge model; physical recovery/removal and arrival phases OPEN',
-                  homes={}, consumed_lef_sha256=g.hashes)
+                  homes={}, root_alternatives=[], consumed_lef_sha256=g.hashes)
 
     def zone(xy):
         x, y = xy
@@ -52,6 +66,12 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
     def centre(points):
         return tuple(sum(p[i] for p in points) / len(points) for i in (0, 1))
 
+    def set_stages(t, n):
+        if n < 1 or n > MAX_PAD:
+            raise GeometryError(f'leaf needs {n} release stages; hbfd_rrl_pad<N> exists for N <= {MAX_PAD}')
+        if n > 1:
+            t['kind'] = f'pad{n}'
+
     def emit(t, dom, tag, note):
         n = f'rrf_{tag}_{len(tiles) + 1:06d}'
         t['name'] = n
@@ -59,7 +79,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         tiles.append(dict(name=n, master='hbfd_rrl_' + t['kind'], source=SRC, rtl_deps=DEPS, params={}, slot=None,
                           owner='H-NETLIST reset forest', note=f'{note}; home ({x:.6f}, {y:.6f}) um'))
         clocks.append(dict(inst=n, port='clk', domain=dom, kind='clock'))
-        w, h, _ = g.relay[t['kind']]
+        w, h, _ = g.relay_lef(t['kind'])
         report['homes'][n] = dict(x=x, y=y, w=w, h=h, o='R0', m='hbfd_rrl_' + t['kind'])
         return n
 
@@ -73,6 +93,30 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             edge(prev, [n, 'rst_n_in'], dom)
             prev = [n, 'rst_n']
         return prev
+
+    def plan_region(z, Z, site, distributed_source, allowed):
+        root = g.reserve('sync', site, max_distance=reach, allowed=allowed)
+        pre = g.chain(distributed_source, root)
+        cells = collections.defaultdict(list)
+        for ref, xy in Z:
+            cells[(int(xy[0] // (reach / 2)), int(xy[1] // (reach / 2)))].append((ref, xy))
+        leaves = []
+        for _, cell in sorted(cells.items()):
+            pending = [cell[k:k + fanout] for k in range(0, len(cell), fanout)]
+            while pending:
+                chunk = pending.pop(0)
+                try:
+                    leaf = g.reserve('hop', centre([s[1] for s in chunk]),
+                                     targets=[('rst_n', s[1]) for s in chunk], allowed=allowed)
+                except GeometryError:
+                    if len(chunk) == 1:
+                        raise
+                    mid = len(chunk) // 2
+                    pending[0:0] = [chunk[:mid], chunk[mid:]]
+                    continue
+                chain = g.chain(g.tile_pin(root, 'rst_n'), leaf)
+                leaves.append(dict(tile=leaf, chain=chain, sinks=chunk, age=3 + len(pre) + 3 + len(chain) + 1))
+        return dict(zone=z, root=root, pre=pre, leaves=leaves)
 
     sinks = collections.defaultdict(list)
     seen = set()
@@ -90,33 +134,35 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         source = g.pin('hb_ckgen', por)
         ingress = g.reserve('sync', source, targets=[('rst_n_in', source)])
         distributed_source = g.tile_pin(ingress, 'rst_n')
+        log('domain', dom, por, 'sinks', len(S), 'flood start')
+        allowed = g.reach_mask(distributed_source)
+        log('flood done, reachable cells', sum(allowed))
         groups = collections.defaultdict(list)
         for ref, xy in S:
             groups[zone(xy)].append((ref, xy))
         plans = []
         for z, Z in sorted(groups.items()):
-            root = g.reserve('sync', centre([s[1] for s in Z]), max_distance=max(W, H))
-            pre = g.chain(distributed_source, root)
-            cells = collections.defaultdict(list)
-            for ref, xy in Z:
-                cells[(int(xy[0] // (reach / 2)), int(xy[1] // (reach / 2)))].append((ref, xy))
-            leaves = []
-            for _, cell in sorted(cells.items()):
-                pending = [cell[k:k + fanout] for k in range(0, len(cell), fanout)]
-                while pending:
-                    chunk = pending.pop(0)
-                    try:
-                        leaf = g.reserve('hop', centre([s[1] for s in chunk]),
-                                         targets=[('rst_n', s[1]) for s in chunk])
-                    except GeometryError:
-                        if len(chunk) == 1:
-                            raise
-                        mid = len(chunk) // 2
-                        pending[0:0] = [chunk[:mid], chunk[mid:]]
-                        continue
-                    chain = g.chain(g.tile_pin(root, 'rst_n'), leaf)
-                    leaves.append(dict(tile=leaf, chain=chain, sinks=chunk, age=3 + len(pre) + 3 + len(chain) + 1))
-            plans.append(dict(zone=z, root=root, pre=pre, leaves=leaves))
+            plan, errs = None, []
+            # Regional-root home: try the sink centroid, then alternative homes around it, and keep the FIRST site whose
+            # whole region (POR hop chain + every leaf chain) routes inside the fixed reach budget.  A pocket that is
+            # walled off within the budget is skipped; the budget is never relaxed.
+            for k, site in enumerate(g.root_sites(centre([s[1] for s in Z]))[:max_root_tries]):
+                snap = g.snapshot()
+                log('  region', z, 'try', k, 'site', [round(v) for v in site])
+                try:
+                    plan = plan_region(z, Z, site, distributed_source, allowed)
+                    plan['root_try'] = k
+                    break
+                except GeometryError as e:
+                    g.restore(snap)
+                    errs.append(f'{k}@({site[0]:.0f},{site[1]:.0f}): {e}')
+            if plan is None:
+                raise GeometryError(f'{dom} {z}: no regional root home routes within reach after {len(errs)} sites; '
+                                    f'first {errs[0]}; last {errs[-1]}')
+            if plan['root_try']:
+                report['root_alternatives'].append(dict(domain=dom, por=por, zone=z, try_index=plan['root_try'],
+                                                        rejected=errs))
+            plans.append(plan)
         age = max(l['age'] for p in plans for l in p['leaves'])
         ingress_name = emit(ingress, dom, f'{dom}_por', 'local POR synchronization before registered distribution')
         edge(['hb_ckgen', por], [ingress_name, 'rst_n_in'], dom)
@@ -136,12 +182,10 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                 if mut_skew and not mutated:
                     pads += 1
                     mutated = True
-                for _ in range(pads):
-                    pad = g.reserve('hop', g.centre(tile), targets=[('rst_n_in', point),
-                                                                     ('rst_n', g.tile_pin(tile, 'rst_n_in'))])
-                    prev = wire_chain(prev, [pad], dom, tag, 'equal-age pad')
-                    point = g.tile_pin(pad, 'rst_n')
-                lf = emit(tile, dom, tag, f'leaf: {len(leaf["sinks"])} reset pins')
+                # Equal-age padding lives INSIDE the leaf tile (hbfd_rrl_pad<N>: N registered stages, same footprint
+                # and pins as hbfd_rrl_hop): no extra pad homes to find in crowded strips.
+                set_stages(tile, 1 + pads)
+                lf = emit(tile, dom, tag, f'leaf: {len(leaf["sinks"])} reset pins, {1 + pads} release stages')
                 edge(prev, [lf, 'rst_n_in'], dom)
                 for (i, p, b, nb), _ in leaf['sinks']:
                     edge([lf, 'rst_n'], [i, p, b, b + 1] if nb > 1 else [i, p], dom)
@@ -167,13 +211,8 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         age = max(len(p[2]) + 1 for p in paths)
         for dst, leaf, chain in paths:
             prev = wire_chain([src, 'bridge_rst_n'], chain, 'stream', 'br_' + src, 'bridge reach hop')
-            point = g.tile_pin(chain[-1], 'rst_n') if chain else source
-            for _ in range(age - len(chain) - 1):
-                pad = g.reserve('hop', g.centre(leaf), targets=[('rst_n_in', point),
-                                                                  ('rst_n', g.tile_pin(leaf, 'rst_n_in'))])
-                prev = wire_chain(prev, [pad], 'stream', 'br_' + src, 'bridge equal-age pad')
-                point = g.tile_pin(pad, 'rst_n')
-            prev = wire_chain(prev, [leaf], 'stream', 'br_' + src, 'bridge leaf')
+            set_stages(leaf, age - len(chain))
+            prev = wire_chain(prev, [leaf], 'stream', 'br_' + src, f'bridge leaf, {age - len(chain)} release stages')
             edge(prev, dst, 'stream')
             drop.append([src, 'bridge_rst_n', dst[0]])
         report['domains'][f'bridge:{src}'] = dict(sinks=len(dsts), age=age, actual_leaf_ages=[age])
