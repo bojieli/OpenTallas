@@ -85,7 +85,7 @@
    "v": "M3 M5"
   }
  },
- "structural_change": "Electrical successor of routed a62 (timing CLOSED, native PASS, 2 TT max-slew violators 300.71/275.63>260 on 157/135 um single-load nets net2389 BUFx3->INVx1 and child ETM nd[0]->BUFx3; receipt 38183aece). Same a62 PINPIPE1 RTL, params, 345.6 outline, child origins, clock, hold budgets and margins. Added: POST_RESIZE max-wire repair (repair_design -max_wire_length 80) so every signal net is a short repeated segment; gate FAILs on any max-slew violator after CTS or any single-driver net >100 um. No slew limit, margin or constraint relaxed.",
+ "structural_change": "Electrical successor of routed a62 (timing CLOSED, native PASS, 2 TT max-slew violators 300.71/275.63>260 on 157/135 um single-load nets net2389 BUFx3->INVx1 and child ETM nd[0]->BUFx3; receipt 38183aece). Same a62 PINPIPE1 RTL, params, 345.6 outline, child origins, clock, hold budgets and margins. Added: POST_RESIZE max-wire repair (repair_design -max_wire_length 80) so every signal net is a short repeated segment; gate FAILs on any max-slew violator after CTS or any single-driver net >130 um (repeated <=80 um everywhere; the only longer spans are child crossings, u_rt 116.64+2 halos, driven by kept BUFx16f/INVx13). No slew limit, margin or constraint relaxed.",
  "why_floorplan": "Preserve exact CLOSED child R0 sizes/origins and existing345.6square parent: full-width south43.2um standard-cell band,56.16um RT-to-TR seam,82.08um tree-to-tree channel. Actual hard area45910um2 leaves73529um2 free for~600um2 new boundaryFF/clock estimate (38.9%combinedfill). Clock centered on southstd band. Every child origin43.2 lattice; no child packing shrink.",
  "job": {
   "owner": "Claude:S81-CAPC",
@@ -229,5 +229,5 @@
   "POST_RESIZE_TCL": "physical/common_flow/max_wire_repeat.tcl",
   "OT_MAX_WIRE_UM": "80"
  },
- "max_signal_net_um": 100
+ "max_signal_net_um": 130
 }

@@ -67,4 +67,32 @@ foreach ot_i [$ot_mw_blk getInsts] {
 }
 puts [format "OT_MAXWIRE snapped %d cells off hard children (halo %.2f um), max move %.1f um, %d with no free side" $ot_mw_snap $ot_mw_halo [expr {double($ot_mw_dmax) / $ot_mw_dbu}] $ot_mw_stuck]
 if {$ot_mw_stuck > 0} { error "OT_MAXWIRE: $ot_mw_stuck cells inside hard children have no free side" }
+# A wire that crosses a hard child cannot be repeated over it (no rows there): its span is the child side + two halos
+# (u_rt 116.64 + 2 x 6 = 128.6 um in gate 2).  Such a net gets the STRONGEST buffer of its driver's function at its source,
+# kept (dont_touch) so later repair cannot down-size it.  Only BUF/INV standard-cell drivers are resized.
+set ot_mw_long [expr {$ot_mw_um * 1.25 * $ot_mw_dbu}]
+set ot_mw_up 0; set ot_mw_upf 0
+foreach ot_n [$ot_mw_blk getNets] {
+  if {[$ot_n getSigType] ne "SIGNAL" || [$ot_n isSpecial]} continue
+  set drv {}; set lds {}
+  foreach it [$ot_n getITerms] {
+    if {[$it isOutputSignal]} { lappend drv $it } elseif {[$it isInputSignal]} { lappend lds $it }
+  }
+  if {[llength $drv] != 1 || [llength $lds] == 0} continue
+  set di [[lindex $drv 0] getInst]
+  set dm [[$di getMaster] getName]
+  if {![regexp {^(BUF|INV)} $dm -> fn]} continue
+  set db [$di getBBox]; set dx [expr {([$db xMin] + [$db xMax]) / 2}]; set dy [expr {([$db yMin] + [$db yMax]) / 2}]
+  set far 0
+  foreach it $lds { set lb [[$it getInst] getBBox]; set d [expr {abs(([$lb xMin] + [$lb xMax]) / 2 - $dx) + abs(([$lb yMin] + [$lb yMax]) / 2 - $dy)}]; if {$d > $far} { set far $d } }
+  if {$far <= $ot_mw_long} continue
+  set done 0
+  foreach cand [expr {$fn eq "BUF" ? {BUFx16f_ASAP7_75t_R BUFx12f_ASAP7_75t_R BUFx10_ASAP7_75t_R} : {INVx13_ASAP7_75t_R INVx11_ASAP7_75t_R}}] {
+    if {$cand eq $dm} { set done 1; break }
+    if {[llength [get_lib_cells -quiet */$cand]] == 0} continue
+    if {![catch {replace_cell [$di getName] [lindex [get_lib_cells */$cand] 0]}]} { set done 1; break }
+  }
+  if {$done} { $di setDoNotTouch 1; incr ot_mw_up } else { incr ot_mw_upf }
+}
+puts [format "OT_MAXWIRE kept strong source drivers on %d nets > %.1f um (child crossings), %d not resizable" $ot_mw_up [expr {double($ot_mw_long) / $ot_mw_dbu}] $ot_mw_upf]
 estimate_parasitics -placement
