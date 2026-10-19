@@ -128,6 +128,7 @@ module tb_cache_native_safe #(parameter MUT=0);
   reset_dut;open_block(0,16);set_read(0,0);set_sectors(0,0,4,16);expect_fault(5);
   reset_dut;open_block(0,16);set_sectors(0,0,3,16);expect_fault(6);
   reset_dut;sector_v=1;expect_fault(7);
+  reset_dut;load_block(0,3,0);open_block(1,16);set_sectors(1,0,4,16);sector_epoch[0+:16]=~ep1;set_read(0,0);expect_fault(8);
   repeat(4)tick;
   $display("CACHE_NATIVE_SAFE PASS native_latency=2 safe_packets=%0d maxlive=%0d recycled=%0d cycles=%0d exact_reference_rows=%0d cache_reads=%0d crossbank_cycles=%0d packed_source_edges=%0d packed_sectors=%0d bytes_per_record=136 faults=%0d",safe_packets,maxlive,recycles,cycles,compared,read_vectors,overlap_cycles,source_edges,source_sectors,faults);$finish;
  end
