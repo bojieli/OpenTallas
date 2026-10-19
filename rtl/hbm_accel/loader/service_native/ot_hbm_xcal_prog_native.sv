@@ -18,7 +18,7 @@ module ot_hbm_xcal_prog_native #(parameter integer MUT=0, PAW=11, PREL=1)(
  always @(posedge clk or negedge rst_q)
   if(!rst_q)begin cw<=0;sv<=0;end else begin cw<=cfg_we;sv<=start_v;end
  wire [172:0] word0;wire [4:0] wctx;wire [31:0] word_ord;wire cal_v;
- ot_smh_calendar_static_x #(.W(173),.AW(PAW),.XW(5)) u_cal(
+ ot_hbm_xcal_calendar_native #(.W(173),.AW(PAW),.XW(5)) u_cal(
   .clk(clk),.rst_n(rst_q),.cfg_we(cw),.cfg_addr(ca),.cfg_data(cd),
   .start_v(sv),.start_base(sb),.start_limit(sl),.start_loops(sn),.start_ctx(sx),
   .calendar(word0),.calendar_ctx(wctx),.calendar_iter(),.calendar_lastit(),

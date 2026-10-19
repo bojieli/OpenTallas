@@ -51,7 +51,11 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
         ot_sram_1r1w_128x256_m1_r2c2 u_tab_hi (.clk(clk), .r_ce_in(rd_go && rp[7]), .r_addr_in(rp[6:0]), .rd_out(rd_hi),
             .w_ce_in(desc_we_q && !running && desc_addr_q[7]), .w_addr_in(desc_addr_q[6:0]), .wd_in(desc_data_q),
             .w_mask_in({256{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
-        assign rd = rp_q[7] ? rd_hi : rd_lo;
+        for(genvar slice=0;slice<16;slice=slice+1)begin:g_read_slice
+            (* keep = 1 *) reg bank_q;
+            always @(posedge clk)bank_q<=rp[7];
+            assign rd[16*slice+:16]=bank_q?rd_hi[16*slice+:16]:rd_lo[16*slice+:16];
+        end
     end endgenerate
     // Sender capture plus receiver native capture costs exactly two extra edges.
     // Refuse unpayable lead; never fall back to a late GO.
@@ -72,7 +76,7 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
             done <= 1'b0;
             active <= running || outstanding;
             if (run_q) begin
-                if (running || run_count_q == 0 || {1'b0, run_base_q} + run_count_q > DD) fault <= 1'b1;
+                if (running || outstanding || run_count_q == 0 || {1'b0, run_base_q} + run_count_q > DD) fault <= 1'b1;
                 else begin
                     running <= 1'b1; outstanding <= 1'b1; rp <= run_base_q; n_rd <= run_count_q; n_go <= run_count_q;
                     rc <= (MUT == 1) ? 24'd0 : 24'd1;

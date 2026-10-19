@@ -17431,3 +17431,9 @@ def hbm_svg_return_regional_model():
     """Opt-in seven-edge source-pair/ring/cache SVG return prototype."""
     from hbm_layer_vehicle.svg_return_model import model
     return model()
+
+
+def hbm_xcal_partition_model():
+    """Opt-in native XC descriptor/programme partition; physical checks remain OPEN."""
+    from hbm_layer_vehicle.xcal_partition_model import model
+    return model()
