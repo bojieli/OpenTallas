@@ -1,0 +1,86 @@
+{
+  "status": "PREBUILD_COMPONENT_ONLY_NOT_ADOPTED",
+  "macro_source_commit": "e26d92503",
+  "shape": {
+    "logical_width": 553,
+    "logical_depth": 8,
+    "banks": 9,
+    "bank_width": 64,
+    "bank_depth": 32,
+    "physical_bits": 18432,
+    "logical_bits": 4424,
+    "unused_paid_bits": 14008,
+    "unused_tail_bits_per_word": 23
+  },
+  "area": {
+    "bank_um": [
+      31.992,
+      17.304
+    ],
+    "bank_um2": 553.589568,
+    "nine_bank_um2": 4982.306112,
+    "baseline_five32x128_um2": 5343.8616,
+    "delta_um2": -361.55548799999997
+  },
+  "clock": {
+    "baseline_macro_clock_pins": 5,
+    "candidate_macro_clock_pins": 18,
+    "candidate_roots": 1,
+    "note": "wclk/rclk tied to identical root; collision read explicitly disabled, never rely on same-address macro ordering"
+  },
+  "control": {
+    "current_previous_flags": 70,
+    "payload_ff": 1106,
+    "write_address_ff": 3,
+    "write_valid_ff": 1,
+    "total_ff": 1180,
+    "added_collision_compare": 1,
+    "added_collision_read_gate": 1,
+    "macro_we_loads": 9,
+    "macro_read_enable_loads": 9,
+    "same_depth_caller_reset_outputs": 35,
+    "actual_mapped_counts_required": true
+  },
+  "channel_geometry_coupon": {
+    "macro_lattice_um": 43.2,
+    "x_origin_um": 475.2,
+    "y_origins_um": [
+      43.2,
+      86.4,
+      129.6,
+      172.8,
+      302.4,
+      345.6,
+      388.8,
+      432,
+      475.2
+    ],
+    "minimum_vertical_channel_um": 25.896,
+    "minimum_gap_to_candidate_std_band_um": 25.896,
+    "outline_candidate_um": [
+      561.6,
+      561.6
+    ],
+    "paid_outline_delta_um": [
+      0,
+      0
+    ],
+    "qualification": "arithmetic component reservation only; actual LEF pin access/fill/parentfit unqualified"
+  },
+  "boundary": {
+    "peak_read_bits_per_cycle": 553,
+    "peak_write_bits_per_cycle": 553,
+    "peak_bytes_per_port": 69.125,
+    "physical_port_bits_per_cycle": 576,
+    "added_read_edges": 0,
+    "added_write_edges": 0,
+    "added_startup_capture_edges": 0,
+    "proof_required": "exact showahead current/previous forwarding and both WFREE1/2 receiver boundary cycles plus mutants"
+  },
+  "collision_contract": {
+    "physical_collision": "mw && mwa==ra",
+    "action": "disable macro read on physical collision and return registered previous-write data; current logical write wins if both hit",
+    "macro_same_address_read_write_reliance": false
+  },
+  "gating": "NO production migration, gate, route, REVIEW or submit from coupon"
+}
