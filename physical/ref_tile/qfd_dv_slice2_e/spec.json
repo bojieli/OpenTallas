@@ -1634,6 +1634,18 @@
     "fail_witness": "results/rtl/mu_qwen_1018/adopt_slice/runs_gate/b2k14.out"
    },
    {
+    "name": "b2q_m15",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh b2q15 {RUN}/bench/b2q_m15",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "bench2 \\(q\\) MUT=15: FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/adopt_slice/runs_gate/b2q15.out"
+   },
+   {
     "name": "b2n_am7",
     "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh b2n7 {RUN}/bench/b2n_am7",
     "expect": "fail",

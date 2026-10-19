@@ -131,10 +131,8 @@ def landed_record(spec, root):
     if spec.get("clock_data_paths") != "related_same_frequency":
         raise ValueError('landed cluster: landings and reset runs cross region roots; requires clock_data_paths '
                          '"related_same_frequency" (same_pll_fixed_phase ratio1/1 phase0)')
-    # TW2-QCTLM 10-19: raw-memory sinks of a region root are allowed (raw_macro_clocks.contract: exact instance / master /
-    # clock pin / region root); CDC synchronizers stay a leaf-tile feature (regions are related same-frequency roots)
-    if spec.get("cdc_synchronizers") is not None:
-        raise ValueError("landed cluster: CDC synchronizers are leaf-tile features")
+    if spec.get("soft_root_macro_masters") or spec.get("soft_root_macro_bindings") or spec.get("cdc_synchronizers") is not None:
+        raise ValueError("landed cluster: raw-memory sinks / CDC synchronizers are leaf-tile features")
     rec = json.loads((Path(root) / path).read_text())
     if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") != spec.get("top"):
         raise ValueError(f'{path}: not the lp.py record of {spec.get("top")}')

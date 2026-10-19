@@ -592,17 +592,13 @@ def validate_literal_pin_plan(s: dict, ports=None, root=None) -> dict:
     raw-DEF/LEF geometry, PG/vias and native timing still need their normal gates.
     """
     root = Path(root or ROOT)
-    # QK-SLICE 10-18: an exact literal plan with every pin on M1-M5 (an M5 re-kit of an M6-grant leaf, qfd_xs_leaf_w130m5)
-    # needs no M6 grant: granted = {} and the exhaustive-IO check below then refuses any M6 assignment.
-    if not s.get("io_tcl"):
-        raise SpecError("literal pin bits require exact io_tcl (and a named M6 contact grant for M6 pins); scalar [0] aliases remain forbidden")
+    if not s.get("io_tcl") or not s.get("m6_pin_grant"):
+        raise SpecError("literal pin bits require exact io_tcl and a named M6 contact grant; scalar [0] aliases remain forbidden")
     import m6_pin_grant as M6
-    granted = {}
-    if s.get("m6_pin_grant"):
-        try:
-            granted = M6.validate(s["m6_pin_grant"], s["top"])
-        except ValueError as e:
-            raise SpecError(f"literal pin grant: {e}") from e
+    try:
+        granted = M6.validate(s["m6_pin_grant"], s["top"])
+    except ValueError as e:
+        raise SpecError(f"literal pin grant: {e}") from e
     if ports is None:
         if s.get("defines"):
             raise SpecError("literal pin plan needs resolved actual port widths; conditional interfaces are not admitted by this parser")

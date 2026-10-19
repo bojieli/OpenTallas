@@ -62,8 +62,8 @@ def core():
     a = body.index("    always @(posedge ck or negedge rst)\n        if (!rst) ag_dn_o <= 10'd0;\n")
     body = sub1(body, "    always @(posedge ck or negedge rst)\n        if (!rst) ag_dn_o <= 10'd0;\n        else ag_dn_o <= agu_q | ",
                 "    assign ag_n = agu_q | ")
-    body = sub1(body, "    initial if (MUT < 0 || (MUT > 12 && MUT != 14)) $fatal(1, \"qfd_dv_slice2: MUT %0d undefined\", MUT);  // 14 = redstn2 kcm1 ignored",
-                "    initial if (MUT < 0 || (MUT > 12 && MUT != 14)) $fatal(1, \"qfd_dv_slice2_lpc: MUT %0d undefined\", MUT);\n"
+    body = sub1(body, "    initial if (MUT < 0 || (MUT > 12 && MUT != 14 && MUT != 15)) $fatal(1, \"qfd_dv_slice2: MUT %0d undefined\", MUT);  // 14 = redstn2 kcm1 ignored, 15 = kcm1 at [58:51]",
+                "    initial if (MUT < 0 || (MUT > 12 && MUT != 14 && MUT != 15)) $fatal(1, \"qfd_dv_slice2_lpc: MUT %0d undefined\", MUT);\n"
                 "    initial if (HD_W130 != 1) $fatal(1, \"qfd_dv_slice2_lpc: the landed re-cut is the HD_W130 = 1 slice\");")
     return body
 
