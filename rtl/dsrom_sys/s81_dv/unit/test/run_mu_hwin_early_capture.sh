@@ -75,8 +75,31 @@ stress)
 four_state)
  mkdir "$O/four_state"
  iverilog -V > "$O/four_state/iverilog_version.txt" 2>&1
+ python3 - "$U" "$O/four_state" <<'PYPROJECT'
+import difflib, hashlib, json, pathlib, sys
+u=pathlib.Path(sys.argv[1]); out=pathlib.Path(sys.argv[2]); records=[]
+for name in ('dsdv_mu_mem.sv','dsdv_mu_mem_early_capture.sv'):
+    src=(u/name).read_text(); projected=src
+    for net,value,tail in [('padded','wdata','raw'),('forwarded','fd','picked')]:
+        old=" wire [N*16-1:0] "+net+"={{(N*16-W){1'b0}},"+value+"}, "+tail+";"
+        new=" wire [N*16-1:0] "+net+", "+tail+";\n assign "+net+"={{(N*16-W){1'b0}},"+value+"};"
+        if projected.count(old)!=1: raise SystemExit('REFUSE declaration match count '+name+' '+net)
+        projected=projected.replace(old,new)
+        if projected.count(new)!=1: raise SystemExit('REFUSE projected count')
+    (out/name).write_text(projected)
+    (out/(name+'.diff')).write_text(''.join(difflib.unified_diff(src.splitlines(True),projected.splitlines(True),fromfile=name,tofile='parser/'+name)))
+    records.append({'source':str(u/name),'source_sha256':hashlib.sha256(src.encode()).hexdigest(),'projected_sha256':hashlib.sha256(projected.encode()).hexdigest(),'change':'exact declaration split to same-width nets and identical continuous assignment; no other edits'})
+(out/'parser_projection.json').write_text(json.dumps(records,indent=2)+'\n')
+PYPROJECT
+ projected_files=()
+ for file in "${files[@]}"; do
+  case "$file" in
+   "$U/dsdv_mu_mem.sv"|"$U/dsdv_mu_mem_early_capture.sv") projected_files+=("$O/four_state/$(basename "$file")");;
+   *) projected_files+=("$file");;
+  esac
+ done
  iverilog -g2012 -s tb_dsdv_mu_hwin_early_capture -DOT_MEM_NO_INIT -DFOUR_STATE_GUARDS \
-  -DNSLOT_TEST=2 -DNEV=1 -DMIN_D -DOCCUPIED_RESET_STRESS -o "$O/four_state/tb.vvp" "${files[@]}" \
+  -DNSLOT_TEST=2 -DNEV=1 -DMIN_D -DOCCUPIED_RESET_STRESS -o "$O/four_state/tb.vvp" "${projected_files[@]}" \
   > "$O/four_state/build.log" 2>&1
  for phase in 0 1 2 3 4 5 6 7 8 90 93; do
   log="$O/four_state/run_phase${phase}.log"
