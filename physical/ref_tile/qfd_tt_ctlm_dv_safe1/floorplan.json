@@ -54,7 +54,9 @@
    "kok",
    "kwd",
    "program_obs",
-   "pw"
+   "pw",
+   "ctx_x",
+   "mu_fault"
   ],
   "S": [
    "tl",
@@ -198,6 +200,7 @@
   "rtl/qwen_dv/qfd_dv_hr_pack.sv",
   "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
   "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+  "rtl/qwen_dv/qfd_mu_context_guard.sv",
   "physical/ref_tile/qfd_tt_ctlm_dv_safe1/lp_reset_copies.tcl",
   "physical/common_flow/same_edge_reset_copies.tcl",
   "physical/ref_tile/qfd_tt_ctlm_dv_safe1/lp_cone_regions.tcl",
@@ -222,6 +225,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/qfd_tt_ctlm_dv_safe1/assigned_pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",

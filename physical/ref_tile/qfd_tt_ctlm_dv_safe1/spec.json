@@ -15,7 +15,8 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
   "rtl/qwen_dv/qfd_dv_hr_pack.sv",
   "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
-  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+  "rtl/qwen_dv/qfd_mu_context_guard.sv"
  ],
  "params": {
   "XPF_TRANSPORT_EDGES": 20,
@@ -23,7 +24,9 @@
   "LAST_STAGE": 37,
   "MUT": 0,
   "NU": 4,
-  "OPSEG": 1
+  "OPSEG": 1,
+  "CTX_SRC": 1,
+  "FCTX": 1
  },
  "clock_port": "ck_core",
  "reset_ports": [
@@ -145,7 +148,9 @@
    "kok",
    "kwd",
    "program_obs",
-   "pw"
+   "pw",
+   "ctx_x",
+   "mu_fault"
   ],
   "S": [
    "tl",
@@ -473,7 +478,9 @@
     "fab",
     "native_ret",
     "ss5",
-    "ag5"
+    "ag5",
+    "ctx_x",
+    "mu_fault"
    ],
    "outputs": [
     "program_obs",
@@ -571,5 +578,31 @@
  ],
  "views_to": "physical/ref_tile/qfd_tt_ctlm_dv_safe1/views",
  "record_to": "results/rtl/ref_tile/qfd_tt_ctlm_dv_safe1",
- "structural_recut_status": "DRAFT: awaits unified CALPIPE FIFO SRAM + ctx_x + hu RTL and updated synthesis area/physical ownership proof before gate. Does not inherit clk2 readiness."
+ "structural_recut_status": "Unifiedctx/FCTX+guard+CALPIPE integrated; direct LP timing/chunktool corrected proof pending; finite release programme capacity not yet qualified. This is a component candidate only.",
+ "io_tcl": "physical/ref_tile/qfd_tt_ctlm_dv_safe1/assigned_pins.tcl",
+ "reserved_rom_slots": {
+  "status": "Await actual expanded OPSEG generator instance paths; not declared macro instances yet",
+  "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+  "size_um": [
+   38.016,
+   62.91
+  ],
+  "origins_um": [
+   [
+    475.2,
+    302.4
+   ],
+   [
+    561.6,
+    302.4
+   ],
+   [
+    648.0,
+    302.4
+   ]
+  ],
+  "horizontal_gap_um": 48.384,
+  "child_gap_um": 36.72,
+  "north_band_um": 66.69
+ }
 }
