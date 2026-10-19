@@ -75,6 +75,16 @@ if [ "$MODE" = spine ]; then
     | tee -a $D/STATUS.log || exit 1
   MODE=build
 fi
+if [ "$MODE" = regional ]; then
+  # QW-DIECLK 10-19 (landed-regions standard): local region trees at regional entries, fed by ONE forwarded UNPADDED
+  # spine (DC_REGIONAL_IDEAL=1: ideal entries, control); every region its own family; cross-region crossings LANDED
+  python3 $D/$TL/die_clock/qwen_landed_pairs.py --geom $D/geom --lanes $D/fwd_lanes.json --out $D/landed_pairs_pre.json \
+    | tee -a $D/STATUS.log || exit 1
+  python3 $D/$TL/die_clock/qwen_regional_spec.py --spec $D/spec.json --pairs $D/landed_pairs_pre.json --out-spec $D/spec_$3.json \
+    --out-families $D/families_$3.json --out-owed $D/land_owed_$3.json ${DC_SPINE_SOURCE:+--source $DC_SPINE_SOURCE} \
+    $([ "${DC_REGIONAL_IDEAL:-0}" = 1 ] && echo --ideal) | tee -a $D/STATUS.log || exit 1
+  MODE=build; PER_REGION=--per-region
+fi
 V=$3; O=$D/$V; mkdir -p $O/ff; chmod a+rwx $O $O/ff   # measure_only does not create its --out dir
 DK="docker run --rm --cpus=${DC_CPUS:-8} --memory=${DC_MEM:-90}g -v $D:/work -w /work $IMG bash -lc"
 PRE='source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; for c in tt ff; do for g in $(cat /work/libs_$c.glob); do ls $g; done > /work/libs_$c.txt; done;'
@@ -90,11 +100,13 @@ AT=tt/arrivals_tt.tsv; AF=$(ls ff/arrivals_ff.tsv 2>/dev/null || ls ff/*.tsv | h
 python3 $D/$TL/die_clock/to_dump.py tt/manifest.json $AT dump_tt.tsv --pairs-from $D/geom/pairs.tsv
 python3 $D/$TL/die_clock/to_dump.py tt/manifest.json $AF dump_ff.tsv --pairs-from $D/geom/pairs.tsv
 python3 $D/$TL/die_clock_check.py report dump_tt.tsv --ff-dump dump_ff.tsv --targets $D/targets.json --budget-ps 80 \
-  --region-map $D/spec_$V.json --families $D/families_$V.json --out die_clock_check.json > die_clock_check.txt 2>&1 \
+  --region-map $D/spec_$V.json --families $D/families_$V.json ${PER_REGION:-} --out die_clock_check.json > die_clock_check.txt 2>&1 \
   && say "$V CHECK TT+FF: $(grep -m1 'NEIGHBOUR CHECK' die_clock_check.txt)" || say "$V CHECK report FAIL ($V/die_clock_check.txt)"
 python3 $D/$TL/die_clock/qwen_landed_pairs.py --geom $D/geom --lanes $D/fwd_lanes.json --arr-tt $AT --arr-ff $AF \
   --out landed_pairs.json > landed_pairs.log 2>&1; say "$V $(tail -1 landed_pairs.log | cut -c1-500)"
-grep -q '"spine"' $D/spec_$V.json && { python3 $D/$TL/die_clock/spine_neighbour_report.py die_clock_check.json $D/spec_$V.json \
+[ -n "${PER_REGION:-}" ] && { python3 $D/$TL/die_clock/regional_verdict.py die_clock_check.json landed_pairs.json tt/manifest.json \
+  --out regional_verdict.json > regional_verdict.log 2>&1; say "$V $(tail -1 regional_verdict.log | cut -c1-700)"; }
+[ -z "${PER_REGION:-}" ] && grep -q '"spine"' $D/spec_$V.json && { python3 $D/$TL/die_clock/spine_neighbour_report.py die_clock_check.json $D/spec_$V.json \
   --out spine_neighbour.json > spine_neighbour.log 2>&1; say "$V $(tail -1 spine_neighbour.log | cut -c1-600)"
   python3 - tt/manifest.json >> spine_neighbour.log 2>&1 <<'PY'
 import json, sys
