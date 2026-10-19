@@ -16,6 +16,14 @@
 // compiler's expected list (ag: the peer frame; rs: binary32 RNE local + peer) in order, and its delivery offset;
 // block_ready CHECKED at the static release edge (never waited for); no fault anywhere.
 // Plusargs: +DIR +NR0/1 +NC0/1 +NSEC +NF +NPUB +SWD +T0 +NEND.  Prints XDIE2_* / XDIE3_* events and "XDIE2 ... PASS|FAIL".
+// XDIE-HBM4 (10-19): build defines XDIE_AR_ITER (v8g #(.AR_ITER), iterated reduce tags) and XDIE_ROWS (64 | 128, issuer
+// rows); defaults 0 / 64 = the XDIE-HBM3 vehicle. Programmes compiled without --ar-iter carry step 0 and behave identically.
+`ifndef XDIE_AR_ITER
+ `define XDIE_AR_ITER 0
+`endif
+`ifndef XDIE_ROWS
+ `define XDIE_ROWS 64
+`endif
 module tb_xdie2_rly #(parameter integer W = 613, parameter integer N = 10) (input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
     reg [W-1:0] s [1:N];
     always @(posedge clk) s[1] <= d;
@@ -64,7 +72,7 @@ module tb_xdie2_die #(parameter integer D = 0, parameter integer RLY = 10, param
     wire [1:0] ra_rx_slot; wire [3:0] ra_rx_kind, ra_rx_src; wire [5:0] ra_rx_tag; wire ra_rr_local; wire [2:0] ra_rr_local_tag;
     wire [1:0] ag_v; wire [3:0] ag_src; wire [5:0] ag_tag; wire [511:0] ag_d;
     wire [135:0] vm_rq; wire [2055:0] vm_rr; wire [2247:0] vm_kq;
-    ot_hfd_coll_q2_hard_v8g #(.NLINK(1), .TP(192)) hb (.rst_n(rst_n), .qid(QID), .clk_program(clk), .clk_control(clk),
+    ot_hfd_coll_q2_hard_v8g #(.NLINK(1), .TP(192), .AR_ITER(`XDIE_AR_ITER), .ROWS(`XDIE_ROWS)) hb (.rst_n(rst_n), .qid(QID), .clk_program(clk), .clk_control(clk),
         .clk_vmasm({16{clk}}), .clk_upipe({16{clk}}), .clk_issue(clk), .clk_qslots({26{clk}}), .clk_ring({17{clk}}),
         .clk_reduce({33{clk}}), .clk_vmwrite({16{clk}}), .clk_link({5{clk}}),
         .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
@@ -271,7 +279,7 @@ module tb_xdie_hbm_step;
     wire [2:0] gph [0:1]; wire [12:0] ggc [0:1];
     assign gph[0] = dA.u_ep.u_tx.ph; assign ggc[0] = dA.u_ep.u_tx.gc; assign gph[1] = dB.u_ep.u_tx.ph; assign ggc[1] = dB.u_ep.u_tx.gc;
     string dir;
-    reg [255:0] coll0 [0:447]; reg [255:0] coll1 [0:447]; reg [186:0] cal0 [0:1023]; reg [186:0] cal1 [0:1023];
+    reg [255:0] coll0 [0:`XDIE_ROWS*7-1]; reg [255:0] coll1 [0:`XDIE_ROWS*7-1]; reg [186:0] cal0 [0:1023]; reg [186:0] cal1 [0:1023];
     integer loaded [0:1], launched [0:1];
     localparam [7:0] TGT_COLL = 8'd55, TGT_CAL = 8'd135;       // 52 + QID(3); 132 + k(NE = 3)
     for (genvar s = 0; s < 2; s = s + 1) begin : g_host
@@ -294,7 +302,7 @@ module tb_xdie_hbm_step;
             end
             @(negedge ck[s]); cv[s] = 0; repeat (8) @(negedge ck[s]);
             @(negedge ck[s]); dv[s] = 1; tg[s] = TGT_COLL; db[s] = 0; dl[s] = 13'(NR[s]); dlp[s] = 1;
-            @(negedge ck[s]); dv[s] = 0; repeat (66) @(negedge ck[s]);
+            @(negedge ck[s]); dv[s] = 0; repeat (`XDIE_ROWS + 2) @(negedge ck[s]);
             @(negedge ck[s]); dv[s] = 1; tg[s] = TGT_CAL; db[s] = 0; dl[s] = 13'(NC[s]); dlp[s] = 1;
             @(negedge ck[s]); dv[s] = 0; repeat (NC[s] + 16) @(negedge ck[s]);
             if (!cconf[s] || !kconf[s]) begin $display("XDIE2 FAIL die%0d descriptors not configured coll=%b cal=%b", s, cconf[s], kconf[s]); $finish; end
@@ -322,7 +330,8 @@ module tb_xdie_hbm_step;
         begin
             reg ok; integer e0, e1;
             e0 = dA.pub_edge; e1 = dB.pub_edge;
-            ok = dA.npub == dA.NPUB && dB.npub == dB.NPUB && dA.pub_ok == dA.NPUB && dB.pub_ok == dB.NPUB &&
+            ok = (!$test$plusargs("ADRCHK") || (dA.adr_bad == 0 && dB.adr_bad == 0)) &&   // XDIE-HBM4: offset checked
+                 dA.npub == dA.NPUB && dB.npub == dB.NPUB && dA.pub_ok == dA.NPUB && dB.pub_ok == dB.NPUB &&
                  dA.nrx == dA.NF && dB.nrx == dB.NF && !af[0] && !af[1] && dA.cal_done_seen && dB.cal_done_seen &&
                  dA.coll_done_seen && dB.coll_done_seen;
             $display("XDIE3_STEP d0 first_vm=%0d first_wr=%0d last_rx=%0d first_pub=%0d last_pub=%0d vm_reqs=%0d | d1 first_vm=%0d first_wr=%0d last_rx=%0d first_pub=%0d last_pub=%0d vm_reqs=%0d",

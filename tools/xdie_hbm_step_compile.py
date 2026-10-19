@@ -41,6 +41,7 @@ F = dict(capture_slot=(0, 10), sink_slot=(10, 16), sink_select=(26, 64), lk_wr_v
          lk_wr_seq_high=(1415, 30), lk_rd_seq_high=(1445, 30), lk_rx_seq_high=(1475, 30))
 AR = dict(load_v=(0, 1), load_tag=(1, 4), add_read=(5, 1), read_tag=(6, 4), add_issue=(10, 1), pub_read=(11, 1),
           pub_tag_a=(12, 4), pub_release=(21, 1), pub_issue=(22, 1), pub_src=(23, 8), pub_index=(31, 16))
+AR_STEP_LSB = 714          # AR_ITER (XDIE-HBM4): reserved ring[87:84] = iter_ar_tag_step (v8g #(.AR_ITER(1)) only)
 ORM = ('capture_slot', 'sink_slot', 'sink_select')   # bit-mask fields: several events may share a row
 
 
@@ -118,6 +119,12 @@ class Sched:
         assert k not in r or r[k] == v, ('iter conflict', u, k, r.get(k), v)
         r[k] = v
 
+    def ar(self, u, k, v):            # AR_ITER: reduce tag / publication index as the frame number (iterated)
+        assert u >= 0, (k, u)
+        r = self.I.setdefault(u, {}).setdefault('ar', {})
+        assert k not in r or r[k] == v, ('ar conflict', u, k, r.get(k), v)
+        r[k] = v
+
     def seq(self, u, kind, s):        # sequence fields one row BEFORE the reservation (ctl_v5 registers them)
         self.i(u - 1, kind, s)
 
@@ -134,7 +141,7 @@ class Sched:
         return tuple(sorted(self.S.get(u, {}).items()))
 
 
-def compile_die(d, C, kind, P, rel_w, early=0, mut=''):
+def compile_die(d, C, kind, P, rel_w, early=0, mut='', ar_iter=False, del_edge=0):
     K1, K2, gcl = C['K1'], C['K2'], C['gcL']
     Sd = Sched()
     Sd.s(0, 'lk_epoch_begin', 1); Sd.s(0, 'lk_epoch', EPOCH)
@@ -168,7 +175,7 @@ def compile_die(d, C, kind, P, rel_w, early=0, mut=''):
             Sd.s(ux, 'lk_rx_expect', 1); Sd.seq(ux, 'rx', f)
             Sd.s(ux + RX_CAP, 'capture_slot', 1 << SRC_RAIL0)
             Sd.s(ux + RX_CAP + 1, 'sink_slot', 1 << DST_DEL0); Sd.s(ux + RX_CAP + 1, 'sink_select', SRC_RAIL0 << (4 * DST_DEL0))
-            Sd.i(ux + RX_CAP + 1, 'del', DB + 64 * f)
+            Sd.i(ux + RX_CAP + 1 + del_edge, 'del', DB + 64 * f)
             rx.append(dict(f=f, w=w, ux=ux)); pub.append(ux + RX_CAP + 1)
     else:
         R0 = K2 + (rel_w + 1) + 16 - K1 + 5
@@ -182,18 +189,24 @@ def compile_die(d, C, kind, P, rel_w, early=0, mut=''):
             Sd.vm(R - 13, f, d, lambda _f, fl=fl: sec(fl))
             Sd.s(R - 3, 'capture_slot', 1 << SRC_VM0)
             Sd.s(R - 2, 'sink_slot', 1 << DST_RED); Sd.s(R - 2, 'sink_select', SRC_VM0 << (4 * DST_RED))
-            Sd.s(R, 'load_v', 1); Sd.s(R, 'load_tag', tag)
+            Sd.s(R, 'load_v', 1)
+            tg = (lambda u, k, ff=f: Sd.ar(u, k, ff)) if ar_iter else (lambda u, k, t=tag: Sd.s(u, k, t))
+            tg(R, 'load_tag')
             Sd.s(ux, 'lk_rx_expect', 1); Sd.seq(ux, 'rx', f)
             Sd.s(ux + RX_CAP, 'capture_slot', 1 << SRC_RAIL0)
             Sd.s(R - 1, 'sink_slot', 1 << DST_RED); Sd.s(R - 1, 'sink_select', SRC_RAIL0 << (4 * DST_RED))
-            Sd.s(R + 1, 'add_read', 1); Sd.s(R + 1, 'read_tag', tag)
+            Sd.s(R + 1, 'add_read', 1); tg(R + 1, 'read_tag')
             Sd.s(R + 2, 'add_issue', 1)
-            Sd.s(R + 11, 'pub_read', 1); Sd.s(R + 11, 'pub_tag_a', tag); Sd.s(R + 11, 'pub_release', 1)
-            Sd.s(R + 11, 'pub_src', d); Sd.s(R + 11, 'pub_index', f % 8)
+            Sd.s(R + 11, 'pub_read', 1); tg(R + 11, 'pub_tag_a'); Sd.s(R + 11, 'pub_release', 1)
+            Sd.s(R + 11, 'pub_src', d)
+            if ar_iter:
+                Sd.ar(R + 11, 'pub_index', f)
+            else:
+                Sd.s(R + 11, 'pub_index', f % 8)
             Sd.s(R + 12, 'pub_issue', 1)
             Sd.s(R + 13, 'capture_slot', 1 << SRC_RED)
             Sd.s(R + 14, 'sink_slot', 1 << DST_DEL0); Sd.s(R + 14, 'sink_select', SRC_RED << (4 * DST_DEL0))
-            Sd.i(R + 14, 'del', DB + 64 * f)
+            Sd.i(R + 14 + del_edge, 'del', DB + 64 * f)
             rx.append(dict(f=f, w=w, ux=ux, R=R)); pub.append(R + 14)
     end = max(max(Sd.S), max(Sd.I)) + 3
     return dict(S=Sd, end=end, tx=tx, rx=rx, pub=pub, rel_w=rel_w, cal=cal)
@@ -204,7 +217,7 @@ SEQK = ('wr', 'rd', 'rx')
 
 
 def steps_between(a, b):
-    """iterated values a (iteration m) -> b (m + 1): per-row steps (k, vm, del) or None when not one consistent step"""
+    """iterated values a (iteration m) -> b (m + 1): per-row steps (k, vm, del, ar) or None when not one consistent step"""
     if set(a) != set(b):
         return None
     k = {b[x] - a[x] for x in SEQK if x in a}
@@ -228,7 +241,17 @@ def steps_between(a, b):
         dv = b['del'] - a['del']
         if not 0 <= dv < 65536:
             return None
-    return (k, sv, dv)
+    sa = 0
+    if 'ar' in a:                         # AR_ITER: every reduce tag + the publication index advance by ONE 4-bit step
+        if set(a['ar']) != set(b['ar']):
+            return None
+        s = {b['ar'][x] - a['ar'][x] for x in a['ar']}
+        if len(s) != 1:
+            return None
+        sa = s.pop()
+        if not 0 <= sa < 16:
+            return None
+    return (k, sv, dv, sa)
 
 
 def lower(Sd, end, cap=64):
@@ -267,34 +290,39 @@ def lower(Sd, end, cap=64):
                 best = (saved, T, n, st)
         saved, T, n, st = best
         if n == 1:
-            rows.append(dict(u=u, T=1, n=1, step=(0, 0, 0), body_start=None))
+            rows.append(dict(u=u, T=1, n=1, step=(0, 0, 0, 0), body_start=None))
             u += 1
             continue
         r0 = len(rows)
         for i in range(T):
             rows.append(dict(u=u + i, T=T, n=n, step=st[i], body_start=r0))
         u += n * T
-    assert len(rows) <= cap, ('programme capacity', len(rows))
-    # metadata: next | target << 6 | count << 12 | halt << 44 | lid << 45
+    lower.nrows = len(rows)
+    assert len(rows) <= cap, ('programme capacity', len(rows), cap)
+    # metadata: next | target << 6 | count << 12 | halt << 44 | lid << 45; ROWS 128 (cap > 64): pc bit 6 of
+    # next / target / lid at 51 / 52 / 53 (ot_hgi_coll_static_issuer_v6 #(ROWS 128))
+    pm = 127 if cap > 64 else 63
+    pc7 = lambda v, lo, hi: ((v & 63) << lo) | (((v >> 6) & 1) << hi)
     meta, words = [], []
     for r, row in enumerate(rows):
-        m = (r + 1) & 63
+        m = pc7((r + 1) & pm, 0, 51)
         if row['body_start'] is not None:
             last = row['body_start'] + row['T'] - 1
-            m |= last << 45
+            m |= pc7(last, 45, 53)
             if r == last:
-                m |= (row['body_start'] << 6) | (row['n'] << 12)
+                m |= pc7(row['body_start'], 6, 52) | (row['n'] << 12)
         meta.append(m)
         words.append(encode(Sd, row['u'], row['step']))
     meta[-1] |= 1 << 44
     # independent unroll of the issuer_v6 metadata/counter ISA + the ctl_v5 iteration offsets -> compare every cycle
-    pc, cnt = 0, [0] * 64
+    pc, cnt = 0, [0] * 128
+    fld = lambda m, lo, hi: ((m >> lo) & 63) | (((m >> hi) & 1) << 6)
     for c in range(end + 1):
         m = meta[pc]
-        it = cnt[(m >> 45) & 63]
+        it = cnt[fld(m, 45, 53)]
         row = rows[pc]
         assert Sd.key(row['u']) == keys[c], ('unroll static mismatch', c, pc)
-        k, sv, dv = row['step']
+        k, sv, dv, sa = row['step']
         base = Sd.I.get(row['u'], {})
         got = {}
         for x in SEQK:
@@ -304,17 +332,19 @@ def lower(Sd, end, cap=64):
             got['vm'] = {bk: s + it * sv for bk, s in base['vm'].items()}
         if 'del' in base:
             got['del'] = base['del'] + it * dv
+        if 'ar' in base:
+            got['ar'] = {x: v + it * sa for x, v in base['ar'].items()}
         assert got == its[c], ('unroll iter mismatch', c, pc, it, got, its[c])
         if m >> 44 & 1:
             assert c == end, ('early halt', c, end)
             break
-        count, lid = (m >> 12) & 0xffffffff, (m >> 45) & 63
+        count, lid = (m >> 12) & 0xffffffff, fld(m, 45, 53)
         if count and cnt[lid] < count - 1:
-            cnt[lid] += 1; pc = (m >> 6) & 63
+            cnt[lid] += 1; pc = fld(m, 6, 52)
         else:
             if count:
                 cnt[lid] = 0
-            pc = m & 63
+            pc = fld(m, 0, 51)
     else:
         raise AssertionError('no halt')
     lower.rowmap = rows
@@ -324,7 +354,7 @@ def lower(Sd, end, cap=64):
 def encode(Sd, u, step):
     st = dict(Sd.S.get(u, {}))
     base = Sd.I.get(u, {})
-    k, sv, dv = step
+    k, sv, dv, sa = step
     w, a = 0, 0
 
     def put(name, v):
@@ -350,6 +380,10 @@ def encode(Sd, u, step):
         put('del_obase', base['del'])
     if dv:
         put('iter_del_step', dv)
+    for name, v in base.get('ar', {}).items():   # AR_ITER base values (iteration 0): tags mod 16, index 16 b
+        st[name] = v & 15 if name != 'pub_index' else v
+    if sa:
+        w |= sa << AR_STEP_LSB
     for name, v in st.items():
         if name in AR:
             lsb, wd = AR[name]
@@ -400,7 +434,11 @@ def main():
     ap.add_argument('--swd', type=int, default=4)
     ap.add_argument('--guard', type=int, default=8)
     ap.add_argument('--release-early', type=int, default=0)
-    ap.add_argument('--mut', default='', choices=['', 'vmstep', 'flip', 'rsrc'])
+    ap.add_argument('--mut', default='', choices=['', 'vmstep', 'flip', 'rsrc', 'arstep'])
+    ap.add_argument('--ar-iter', action='store_true', help='iterated reduce tags (v8g AR_ITER=1, iter_ar_tag_step)')
+    ap.add_argument('--del-edge', type=int, default=0, help='XDIE-HBM4 item 3: del_obase row = sink row + N (1: the '
+                    'ctl_v5 delivery_obase pin then lands on the DEL0 valid edge; 0 = XDIE-HBM3 programmes)')
+    ap.add_argument('--rows', type=int, default=64, choices=[64, 128], help='issuer ROWS (v8g #(.ROWS))')
     a = ap.parse_args()
     check_layout()
     a.out.mkdir(parents=True, exist_ok=True)
@@ -415,13 +453,18 @@ def main():
         C = dict(K1=K1, K2=m.get('K2', a.k2), gcL=m.get('gcL', a.gcl))
         ready = m.get('READY') or a.ready or (480 + 2 * P + 60 if a.swd > 100 else 150 + 2 * P + 60)
         rel_w = ready + a.guard - C['K2']
-        c = compile_die(d, C, a.kind, P, rel_w, early=a.release_early if d == 1 else 0, mut=a.mut)
-        words, meta = lower(c['S'], c['end'])
+        c = compile_die(d, C, a.kind, P, rel_w, early=a.release_early if d == 1 else 0, mut=a.mut, ar_iter=a.ar_iter, del_edge=a.del_edge)
+        words, meta = lower(c['S'], c['end'], cap=a.rows)
         rows = lower.rowmap
         if a.mut == 'vmstep' and d == 1:          # TX loop body: VM sector step off by one (wrong frames read)
             hit = [r for r, row in enumerate(rows) if row['step'][1] and row['T'] > 1 and row['u'] < c['tx'][-1]['vm'] + 1]
             assert hit, 'no TX VM loop row to mutate'
             words[hit[0]] ^= ((rows[hit[0]]['step'][1]) ^ (rows[hit[0]]['step'][1] + 1)) << F['iter_vm_step'][0]
+        if a.mut == 'arstep' and d == 1:          # RS loop body: iter_ar_tag_step off by one (tags/index of later frames wrong)
+            hit = [r for r, row in enumerate(rows) if row['step'][3] and row['T'] > 1]
+            assert hit, 'no AR loop row to mutate'
+            sa = rows[hit[0]]['step'][3]
+            words[hit[0]] ^= (sa ^ ((sa + 1) & 15)) << AR_STEP_LSB
         if a.mut == 'flip' and d == 1:            # first rx_expect reservation bit cleared
             ux = c['rx'][0]['ux']
             r = max(i for i, row in enumerate(rows) if row['u'] <= ux)
@@ -448,7 +491,7 @@ def main():
         if a.kind == 'ag':
             pubs = rxe
         else:
-            pubs = [(meta33(d, f % 8) << 512) | vec([f32(x + y) for x, y in zip(xs[d][f], xs[peer][f])]) for f in range(P)]
+            pubs = [(meta33(d, f if a.ar_iter else f % 8) << 512) | vec([f32(x + y) for x, y in zip(xs[d][f], xs[peer][f])]) for f in range(P)]
         (a.out / f'pub_d{d}.hex').write_text(''.join('%0137x\n' % x for x in pubs))
         (a.out / f'adr_d{d}.hex').write_text(''.join('%010x\n' % (DB + 64 * f) for f in range(P)))
         plan[d] = dict(C=C, ready_assumed=ready, release_word=c['rel_w'], guard=a.guard, rows=len(words), unrolled=c['end'] + 1,
