@@ -1,0 +1,31 @@
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: $auto$ff.cc:337:slice$6099
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 166.67  166.67 ^ input external delay
+   0.00  166.67 ^ rst_n (in)
+  20.71  187.38 ^ $auto$ff.cc:337:slice$6099/D (DFFHQNx1_ASAP7_75t_R)
+         187.38   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+2451.10 3284.43 ^ $auto$ff.cc:337:slice$6099/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00 3224.43   clock uncertainty
+   0.00 3224.43   clock reconvergence pessimism
+ 177.32 3401.75   library setup time
+        3401.75   data required time
+---------------------------------------------------------
+        3401.75   data required time
+        -187.38   data arrival time
+---------------------------------------------------------
+        3214.37   slack (MET)
+
+
+

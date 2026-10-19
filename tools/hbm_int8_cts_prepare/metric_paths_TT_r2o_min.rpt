@@ -1,0 +1,901 @@
+Startpoint: $auto$ff.cc:337:slice$28474
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[720] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2175.74 2175.74 ^ $auto$ff.cc:337:slice$28474/CLK (DFFHQNx1_ASAP7_75t_R)
+ 628.45 2804.20 ^ $auto$ff.cc:337:slice$28474/QN (DFFHQNx1_ASAP7_75t_R)
+ 215.29 3019.49 v $abc$36464$auto$blifparse.cc:397:parse_blif$37291/Y (INVx1_ASAP7_75t_R)
+  93.65 3113.14 v o_data[720] (out)
+        3113.14   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3113.14   data arrival time
+---------------------------------------------------------
+        3254.81   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$28390
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[672] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2175.72 2175.72 ^ $auto$ff.cc:337:slice$28390/CLK (DFFHQNx1_ASAP7_75t_R)
+ 628.37 2804.09 ^ $auto$ff.cc:337:slice$28390/QN (DFFHQNx1_ASAP7_75t_R)
+ 202.51 3006.60 v $abc$36464$auto$blifparse.cc:397:parse_blif$37243/Y (INVx1_ASAP7_75t_R)
+ 116.86 3123.46 v o_data[672] (out)
+        3123.46   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3123.46   data arrival time
+---------------------------------------------------------
+        3265.12   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$28250
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[592] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2175.73 2175.73 ^ $auto$ff.cc:337:slice$28250/CLK (DFFHQNx1_ASAP7_75t_R)
+ 628.37 2804.10 ^ $auto$ff.cc:337:slice$28250/QN (DFFHQNx1_ASAP7_75t_R)
+ 183.61 2987.71 v $abc$36464$auto$blifparse.cc:397:parse_blif$37163/Y (INVx1_ASAP7_75t_R)
+ 152.77 3140.48 v o_data[592] (out)
+        3140.48   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3140.48   data arrival time
+---------------------------------------------------------
+        3282.14   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6672
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[527] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2196.48 2196.48 ^ $auto$ff.cc:337:slice$6672/CLK (DFFHQNx1_ASAP7_75t_R)
+ 633.45 2829.93 ^ $auto$ff.cc:337:slice$6672/QN (DFFHQNx1_ASAP7_75t_R)
+ 194.35 3024.27 v $abc$36464$auto$blifparse.cc:397:parse_blif$37098/Y (INVx1_ASAP7_75t_R)
+ 130.58 3154.86 v o_data[527] (out)
+        3154.86   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3154.86   data arrival time
+---------------------------------------------------------
+        3296.52   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$28131
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[515] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2197.11 2197.11 ^ $auto$ff.cc:337:slice$28131/CLK (DFFHQNx1_ASAP7_75t_R)
+ 633.95 2831.06 ^ $auto$ff.cc:337:slice$28131/QN (DFFHQNx1_ASAP7_75t_R)
+ 195.55 3026.62 v $abc$36464$auto$blifparse.cc:397:parse_blif$37086/Y (INVx1_ASAP7_75t_R)
+ 128.67 3155.29 v o_data[515] (out)
+        3155.29   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3155.29   data arrival time
+---------------------------------------------------------
+        3296.95   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$28334
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[640] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2204.92 2204.92 ^ $auto$ff.cc:337:slice$28334/CLK (DFFHQNx1_ASAP7_75t_R)
+ 636.07 2841.00 ^ $auto$ff.cc:337:slice$28334/QN (DFFHQNx1_ASAP7_75t_R)
+ 208.44 3049.44 v $abc$36464$auto$blifparse.cc:397:parse_blif$37211/Y (INVx1_ASAP7_75t_R)
+ 107.05 3156.49 v o_data[640] (out)
+        3156.49   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3156.49   data arrival time
+---------------------------------------------------------
+        3298.16   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6662
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[517] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2197.60 2197.60 ^ $auto$ff.cc:337:slice$6662/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.08 2831.68 ^ $auto$ff.cc:337:slice$6662/QN (DFFHQNx1_ASAP7_75t_R)
+ 194.19 3025.87 v $abc$36464$auto$blifparse.cc:397:parse_blif$37088/Y (INVx1_ASAP7_75t_R)
+ 131.03 3156.90 v o_data[517] (out)
+        3156.90   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3156.90   data arrival time
+---------------------------------------------------------
+        3298.57   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$28117
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[513] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2198.20 2198.20 ^ $auto$ff.cc:337:slice$28117/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.24 2832.44 ^ $auto$ff.cc:337:slice$28117/QN (DFFHQNx1_ASAP7_75t_R)
+ 193.98 3026.41 v $abc$36464$auto$blifparse.cc:397:parse_blif$37084/Y (INVx1_ASAP7_75t_R)
+ 131.39 3157.81 v o_data[513] (out)
+        3157.81   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3157.81   data arrival time
+---------------------------------------------------------
+        3299.47   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$28194
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[560] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2204.72 2204.72 ^ $auto$ff.cc:337:slice$28194/CLK (DFFHQNx1_ASAP7_75t_R)
+ 636.02 2840.74 ^ $auto$ff.cc:337:slice$28194/QN (DFFHQNx1_ASAP7_75t_R)
+ 198.97 3039.70 v $abc$36464$auto$blifparse.cc:397:parse_blif$37131/Y (INVx1_ASAP7_75t_R)
+ 122.88 3162.58 v o_data[560] (out)
+        3162.58   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3162.58   data arrival time
+---------------------------------------------------------
+        3304.25   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6668
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[523] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2199.17 2199.17 ^ $auto$ff.cc:337:slice$6668/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.49 2833.66 ^ $auto$ff.cc:337:slice$6668/QN (DFFHQNx1_ASAP7_75t_R)
+ 191.95 3025.61 v $abc$36464$auto$blifparse.cc:397:parse_blif$37094/Y (INVx1_ASAP7_75t_R)
+ 137.71 3163.32 v o_data[523] (out)
+        3163.32   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3163.32   data arrival time
+---------------------------------------------------------
+        3304.98   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6670
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[525] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2199.01 2199.01 ^ $auto$ff.cc:337:slice$6670/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.85 2833.86 ^ $auto$ff.cc:337:slice$6670/QN (DFFHQNx1_ASAP7_75t_R)
+ 191.39 3025.25 v $abc$36464$auto$blifparse.cc:397:parse_blif$37096/Y (INVx1_ASAP7_75t_R)
+ 138.92 3164.17 v o_data[525] (out)
+        3164.17   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3164.17   data arrival time
+---------------------------------------------------------
+        3305.83   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6667
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[522] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2199.17 2199.17 ^ $auto$ff.cc:337:slice$6667/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.89 2834.06 ^ $auto$ff.cc:337:slice$6667/QN (DFFHQNx1_ASAP7_75t_R)
+ 191.21 3025.27 v $abc$36464$auto$blifparse.cc:397:parse_blif$37093/Y (INVx1_ASAP7_75t_R)
+ 139.23 3164.50 v o_data[522] (out)
+        3164.50   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3164.50   data arrival time
+---------------------------------------------------------
+        3306.17   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6699
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[554] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2200.77 2200.77 ^ $auto$ff.cc:337:slice$6699/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.91 2835.68 ^ $auto$ff.cc:337:slice$6699/QN (DFFHQNx1_ASAP7_75t_R)
+ 180.28 3015.97 v $abc$36464$auto$blifparse.cc:397:parse_blif$37125/Y (INVx1_ASAP7_75t_R)
+ 158.94 3174.91 v o_data[554] (out)
+        3174.91   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3174.91   data arrival time
+---------------------------------------------------------
+        3316.58   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6700
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[555] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2200.82 2200.82 ^ $auto$ff.cc:337:slice$6700/CLK (DFFHQNx1_ASAP7_75t_R)
+ 635.72 2836.54 ^ $auto$ff.cc:337:slice$6700/QN (DFFHQNx1_ASAP7_75t_R)
+ 179.97 3016.51 v $abc$36464$auto$blifparse.cc:397:parse_blif$37126/Y (INVx1_ASAP7_75t_R)
+ 159.98 3176.49 v o_data[555] (out)
+        3176.49   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3176.49   data arrival time
+---------------------------------------------------------
+        3318.16   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6702
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[557] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2200.66 2200.66 ^ $auto$ff.cc:337:slice$6702/CLK (DFFHQNx1_ASAP7_75t_R)
+ 635.28 2835.94 ^ $auto$ff.cc:337:slice$6702/QN (DFFHQNx1_ASAP7_75t_R)
+ 178.60 3014.54 v $abc$36464$auto$blifparse.cc:397:parse_blif$37128/Y (INVx1_ASAP7_75t_R)
+ 162.33 3176.86 v o_data[557] (out)
+        3176.86   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3176.86   data arrival time
+---------------------------------------------------------
+        3318.53   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6701
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[556] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2200.68 2200.68 ^ $auto$ff.cc:337:slice$6701/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.87 2835.54 ^ $auto$ff.cc:337:slice$6701/QN (DFFHQNx1_ASAP7_75t_R)
+ 177.79 3013.33 v $abc$36464$auto$blifparse.cc:397:parse_blif$37127/Y (INVx1_ASAP7_75t_R)
+ 163.63 3176.96 v o_data[556] (out)
+        3176.96   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3176.96   data arrival time
+---------------------------------------------------------
+        3318.62   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6698
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[553] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2200.69 2200.69 ^ $auto$ff.cc:337:slice$6698/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.89 2835.58 ^ $auto$ff.cc:337:slice$6698/QN (DFFHQNx1_ASAP7_75t_R)
+ 176.14 3011.72 v $abc$36464$auto$blifparse.cc:397:parse_blif$37124/Y (INVx1_ASAP7_75t_R)
+ 166.72 3178.44 v o_data[553] (out)
+        3178.44   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3178.44   data arrival time
+---------------------------------------------------------
+        3320.11   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6703
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[558] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2200.69 2200.69 ^ $auto$ff.cc:337:slice$6703/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.89 2835.58 ^ $auto$ff.cc:337:slice$6703/QN (DFFHQNx1_ASAP7_75t_R)
+ 175.05 3010.62 v $abc$36464$auto$blifparse.cc:397:parse_blif$37129/Y (INVx1_ASAP7_75t_R)
+ 168.76 3179.38 v o_data[558] (out)
+        3179.38   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3179.38   data arrival time
+---------------------------------------------------------
+        3321.05   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6697
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[552] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2201.54 2201.54 ^ $auto$ff.cc:337:slice$6697/CLK (DFFHQNx1_ASAP7_75t_R)
+ 635.11 2836.65 ^ $auto$ff.cc:337:slice$6697/QN (DFFHQNx1_ASAP7_75t_R)
+ 174.92 3011.57 v $abc$36464$auto$blifparse.cc:397:parse_blif$37123/Y (INVx1_ASAP7_75t_R)
+ 168.99 3180.56 v o_data[552] (out)
+        3180.56   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3180.56   data arrival time
+---------------------------------------------------------
+        3322.23   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$27998
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[448] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2175.74 2175.74 ^ $auto$ff.cc:337:slice$27998/CLK (DFFHQNx1_ASAP7_75t_R)
+ 628.45 2804.19 ^ $auto$ff.cc:337:slice$27998/QN (DFFHQNx1_ASAP7_75t_R)
+ 154.65 2958.84 v $abc$36464$auto$blifparse.cc:397:parse_blif$37019/Y (INVx1_ASAP7_75t_R)
+ 221.88 3180.73 v o_data[448] (out)
+        3180.73   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3180.73   data arrival time
+---------------------------------------------------------
+        3322.39   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6696
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[551] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2201.58 2201.58 ^ $auto$ff.cc:337:slice$6696/CLK (DFFHQNx1_ASAP7_75t_R)
+ 635.12 2836.71 ^ $auto$ff.cc:337:slice$6696/QN (DFFHQNx1_ASAP7_75t_R)
+ 173.20 3009.91 v $abc$36464$auto$blifparse.cc:397:parse_blif$37122/Y (INVx1_ASAP7_75t_R)
+ 172.23 3182.14 v o_data[551] (out)
+        3182.14   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3182.14   data arrival time
+---------------------------------------------------------
+        3323.81   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6524
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[379] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2199.41 2199.41 ^ $auto$ff.cc:337:slice$6524/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.56 2833.97 ^ $auto$ff.cc:337:slice$6524/QN (DFFHQNx1_ASAP7_75t_R)
+ 174.30 3008.27 v $abc$36464$auto$blifparse.cc:397:parse_blif$36950/Y (INVx1_ASAP7_75t_R)
+ 175.32 3183.59 v o_data[379] (out)
+        3183.59   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3183.59   data arrival time
+---------------------------------------------------------
+        3325.26   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6527
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[382] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2199.42 2199.42 ^ $auto$ff.cc:337:slice$6527/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.56 2833.97 ^ $auto$ff.cc:337:slice$6527/QN (DFFHQNx1_ASAP7_75t_R)
+ 174.16 3008.13 v $abc$36464$auto$blifparse.cc:397:parse_blif$36953/Y (INVx1_ASAP7_75t_R)
+ 175.65 3183.78 v o_data[382] (out)
+        3183.78   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3183.78   data arrival time
+---------------------------------------------------------
+        3325.44   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$28173
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[545] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2201.68 2201.68 ^ $auto$ff.cc:337:slice$28173/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.81 2836.48 ^ $auto$ff.cc:337:slice$28173/QN (DFFHQNx1_ASAP7_75t_R)
+ 175.75 3012.24 v $abc$36464$auto$blifparse.cc:397:parse_blif$37116/Y (INVx1_ASAP7_75t_R)
+ 172.84 3185.08 v o_data[545] (out)
+        3185.08   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3185.08   data arrival time
+---------------------------------------------------------
+        3326.74   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6525
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[380] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2198.51 2198.51 ^ $auto$ff.cc:337:slice$6525/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.32 2832.83 ^ $auto$ff.cc:337:slice$6525/QN (DFFHQNx1_ASAP7_75t_R)
+ 172.04 3004.87 v $abc$36464$auto$blifparse.cc:397:parse_blif$36951/Y (INVx1_ASAP7_75t_R)
+ 180.50 3185.37 v o_data[380] (out)
+        3185.37   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3185.37   data arrival time
+---------------------------------------------------------
+        3327.04   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6869
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[724] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2188.41 2188.41 ^ $auto$ff.cc:337:slice$6869/CLK (DFFHQNx1_ASAP7_75t_R)
+ 631.68 2820.09 ^ $auto$ff.cc:337:slice$6869/QN (DFFHQNx1_ASAP7_75t_R)
+ 156.79 2976.88 v $abc$36464$auto$blifparse.cc:397:parse_blif$37295/Y (INVx1_ASAP7_75t_R)
+ 208.69 3185.58 v o_data[724] (out)
+        3185.58   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3185.58   data arrival time
+---------------------------------------------------------
+        3327.24   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6523
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[378] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2198.81 2198.81 ^ $auto$ff.cc:337:slice$6523/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.80 2833.61 ^ $auto$ff.cc:337:slice$6523/QN (DFFHQNx1_ASAP7_75t_R)
+ 172.58 3006.18 v $abc$36464$auto$blifparse.cc:397:parse_blif$36949/Y (INVx1_ASAP7_75t_R)
+ 179.55 3185.73 v o_data[378] (out)
+        3185.73   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3185.73   data arrival time
+---------------------------------------------------------
+        3327.40   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6526
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[381] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2197.88 2197.88 ^ $auto$ff.cc:337:slice$6526/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.23 2832.11 ^ $auto$ff.cc:337:slice$6526/QN (DFFHQNx1_ASAP7_75t_R)
+ 170.72 3002.83 v $abc$36464$auto$blifparse.cc:397:parse_blif$36952/Y (INVx1_ASAP7_75t_R)
+ 183.62 3186.45 v o_data[381] (out)
+        3186.45   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3186.45   data arrival time
+---------------------------------------------------------
+        3328.12   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$6522
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[377] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2198.81 2198.81 ^ $auto$ff.cc:337:slice$6522/CLK (DFFHQNx1_ASAP7_75t_R)
+ 634.80 2833.61 ^ $auto$ff.cc:337:slice$6522/QN (DFFHQNx1_ASAP7_75t_R)
+ 172.00 3005.61 v $abc$36464$auto$blifparse.cc:397:parse_blif$36948/Y (INVx1_ASAP7_75t_R)
+ 180.87 3186.48 v o_data[377] (out)
+        3186.48   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3186.48   data arrival time
+---------------------------------------------------------
+        3328.15   slack (MET)
+
+
+Startpoint: $auto$ff.cc:337:slice$28187
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: o_data[547] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+2201.69 2201.69 ^ $auto$ff.cc:337:slice$28187/CLK (DFFHQNx1_ASAP7_75t_R)
+ 635.53 2837.22 ^ $auto$ff.cc:337:slice$28187/QN (DFFHQNx1_ASAP7_75t_R)
+ 174.53 3011.75 v $abc$36464$auto$blifparse.cc:397:parse_blif$37118/Y (INVx1_ASAP7_75t_R)
+ 175.05 3186.80 v o_data[547] (out)
+        3186.80   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+-166.67 -141.67   output external delay
+        -141.67   data required time
+---------------------------------------------------------
+        -141.67   data required time
+        -3186.80   data arrival time
+---------------------------------------------------------
+        3328.47   slack (MET)
+
+
+

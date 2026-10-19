@@ -4,11 +4,11 @@
   "native_pins_per_corner": 2782,
   "placed_odb_sha256": "95dcd07da7a966ccf351a556ed952bf6460c5a81570b846f88786396adb86341",
   "fleet_host": "ot-epyc8",
-  "fleet_unit": "oth-ubuntu-1815054-1792443105",
+  "fleet_unit": "oth-ubuntu-1819790-1792443307",
   "ot_run_actual_exit": 0,
   "scope": "Original placed ODB, propagated unbuffered physical clock; API smoke only, no CTS/repair/ODB writes or timing qualification.",
   "api_inputs_sha256": {
-    "report_timing.tcl": "fcbaa1f9839f68efb22bdc1330c46b6a019f2702debd7b7dc25a03d3b6aaf8b6",
+    "report_timing.tcl": "3f506b6e2731c5adb1052e0adf259a892e9416e6562bc28f54981451e0a3df02",
     "metric_smoke.tcl": "c2c9e3bb5d3edc72ad9603cf1d950d75b3fac4da74e7ad0860391291486b4afb",
     "vendor/clock_family.tcl": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78",
     "constraints.sdc": "d192a6f102eca63267c43cc42a07fc89e4db9fe9592502180002f9687e77e53e",
@@ -17,10 +17,30 @@
   },
   "witness_sha256": {
     "metric_clock_pins_TT.tsv": "0ea25b4c3feef4dfcfb5483e552bb072e2c3bf69f046979991ba0c2ec117b76d",
-    "metric_smoke_TT.log": "edac0c74b7c5f5fee6a6f1174f9549904333c512844c7af9c77331c964414181",
+    "metric_smoke_TT.log": "f5ddc48627f0af07afaf8214da9d359469af3b617dbbda1fcf89b59d1275765c",
     "metric_clock_pins_FF.tsv": "f24672818ff45fe55a4fc8b415b82dc9fa47a0b1183cb7fe86a7a10eae38b9d5",
-    "metric_smoke_FF.log": "5f5fb04470dc02af9094349d92086cf65404d81c24ff97ea10cc47b12315dc01",
-    "metric_ot_run.log": "a87118e6fdadee2ed81c93ea36e8e1f285b8f6d7b0fa0520524378ed4f2d2992"
+    "metric_smoke_FF.log": "532be99353ae9f46f4c80461f2648804dab49ea0ff6e9b2b9a29d6cafb9a4565",
+    "metric_ot_run.log": "9315ea076afb5598f965ac46278ca98e51e72e98e7f23e3e1aa1ee30a9926137",
+    "metric_paths_TT_r2r_max.rpt": "e87b43a83ff1213b366f3ed6a899a2a5be2be6ba608eb1124622a0daa8f6c2f5",
+    "metric_paths_TT_r2r_min.rpt": "9265ec5bdf4d933beef4747a36357c7b6a46c5a41b8ff63ca7edd2aae042cadf",
+    "metric_paths_TT_i2r_max.rpt": "013d158ea6cf72572ef3247a0d16254a487ce3548909c11b0464e7e105a17211",
+    "metric_paths_TT_i2r_min.rpt": "31a2592e182b7351711ed2b0308a210ebe0039c3b3b1547d50983ad98ad961aa",
+    "metric_paths_TT_r2o_max.rpt": "1cb5d1a88f0cbeb36d85939ad5743de6339fc3b176a2fbc53347e1a5bfce2a24",
+    "metric_paths_TT_r2o_min.rpt": "51105bdb4c647e209c044e538a040962dd9fd1f30fb2d931c4cf0856f0743ecf",
+    "metric_paths_TT_reset_input_max.rpt": "db31d44616fce04231a459a1588584ee98ec57550f6751ac0667c6f53d9b94ea",
+    "metric_paths_TT_reset_input_min.rpt": "c72c7fb12d37b4b2f08075c1820186bf95fe7ae7d789045719c0dca1dac75c65",
+    "metric_paths_TT_async_recovery_removal_max.rpt": "8a19712b94988cb4fb8148aa4f78aa9e5f42cebe0cc5cca648138671dcebdc81",
+    "metric_paths_TT_async_recovery_removal_min.rpt": "e721c5546feec9b9233714723689501d0eee6bf9f7160ac0aac5647b4bcdf458",
+    "metric_paths_FF_r2r_max.rpt": "ac188d4c607fbd96b0bca7df1fb5d34f72210a735924455b75e71c9b2b79f2c6",
+    "metric_paths_FF_r2r_min.rpt": "3ab800eda3aa9d6f12f24a372a5927340e9aca5a2253cbbc98a30dbc5f75da0e",
+    "metric_paths_FF_i2r_max.rpt": "f78e9063b5e35e26fd3fda9d669caeb4b9484a452e8dc1361844a16018cbd891",
+    "metric_paths_FF_i2r_min.rpt": "b8a18a43428ca6722b802a9d325ea8f52864ecf8fdac4dafb7764fd7e028bee6",
+    "metric_paths_FF_r2o_max.rpt": "1134a706b4524f94c1a41ffc94ef59dbefda7f713aa9255550367650216a22ae",
+    "metric_paths_FF_r2o_min.rpt": "fd1e27ea593e566c9a9a2c6422db289f64f4a25a5460abd848ba428f570c1046",
+    "metric_paths_FF_reset_input_max.rpt": "007eb27bf2758f66d875d3c357a7fa9afbc84cc53477caf85cc62741daea7665",
+    "metric_paths_FF_reset_input_min.rpt": "d65143f2b238a43e8e9b9821003d1215851239b6c171d9f316685aefb0a999c1",
+    "metric_paths_FF_async_recovery_removal_max.rpt": "92a0879039a48d865c4c91f05b688e9e0a929749eecb72022dd64a42aaf0a9f7",
+    "metric_paths_FF_async_recovery_removal_min.rpt": "35be1a8b89b89bea5a89a76880f2aca059673ba35707dd5d6e2b48ab56f3c50e"
   },
   "measurements": {
     "TT": {
@@ -32,6 +52,108 @@
       "rows": 2782,
       "wire_arrival_min_report_units": 2744.0001491862195,
       "wire_arrival_max_report_units": 3389.8248787970388
+    }
+  },
+  "path_class_reports": {
+    "paths_TT_r2r_max.rpt": {
+      "reported_paths": 60,
+      "worst_slack_report_units": -1428.5,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_TT_r2r_min.rpt": {
+      "reported_paths": 60,
+      "worst_slack_report_units": -1196.98,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_TT_i2r_max.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": 2781.55,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_TT_i2r_min.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": -3889.55,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_TT_r2o_max.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": -4135.63,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_TT_r2o_min.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": 3254.81,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_TT_reset_input_max.rpt": {
+      "reported_paths": 1,
+      "worst_slack_report_units": 3214.37,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_TT_reset_input_min.rpt": {
+      "reported_paths": 1,
+      "worst_slack_report_units": -3714.26,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_TT_async_recovery_removal_max.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": -560.07,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_TT_async_recovery_removal_min.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": -798.29,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_FF_r2r_max.rpt": {
+      "reported_paths": 60,
+      "worst_slack_report_units": -1097.66,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_FF_r2r_min.rpt": {
+      "reported_paths": 60,
+      "worst_slack_report_units": -977.92,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_FF_i2r_max.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": 2845.29,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_FF_i2r_min.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": -3692.94,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_FF_r2o_max.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": -3905.6,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_FF_r2o_min.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": 3161.28,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_FF_reset_input_max.rpt": {
+      "reported_paths": 1,
+      "worst_slack_report_units": 3293.37,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_FF_reset_input_min.rpt": {
+      "reported_paths": 1,
+      "worst_slack_report_units": -3493.96,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_FF_async_recovery_removal_max.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": -385.64,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
+    },
+    "paths_FF_async_recovery_removal_min.rpt": {
+      "reported_paths": 30,
+      "worst_slack_report_units": -642.47,
+      "scope": "unbuffered preCTS placed-ODB API smoke only"
     }
   }
 }

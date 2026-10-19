@@ -1,17 +1,37 @@
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-int8-metric-smoke-1019
-ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-int8-metric-smoke-1019
-ot-run: ot-epyc6       admits  1135 GB (avail 875, growth 81, headroom 0, waiters 0/0 GB) load 35/128 running 25 disk 5727 GB 
-ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-int8-metric-smoke-1019
-ot-run: ot-epyc8       admits  1322 GB (avail 982, growth 33, headroom 0, waiters 0/0 GB) load 17/128 running 11 disk 112 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-int8-metric-smoke-1019
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-int8-metric-smoke-1019
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-int8-metric-classes-smoke-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-int8-metric-classes-smoke-1019
+ot-run: ot-epyc6       admits  1081 GB (avail 869, growth 112, headroom 0, waiters 0/0 GB) load 39/128 running 27 disk 5723 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-int8-metric-classes-smoke-1019
+ot-run: ot-epyc8       admits  1323 GB (avail 982, growth 34, headroom 0, waiters 0/0 GB) load 20/128 running 11 disk 112 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-int8-metric-classes-smoke-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-int8-metric-classes-smoke-1019
 ot-run: -> ot-epyc8
-ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1815054-1792443105 after 0 s
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1819790-1792443307 after 0 s
 95dcd07da7a966ccf351a556ed952bf6460c5a81570b846f88786396adb86341  input/placed.odb
-fcbaa1f9839f68efb22bdc1330c46b6a019f2702debd7b7dc25a03d3b6aaf8b6  kit/report_timing.tcl
+3f506b6e2731c5adb1052e0adf259a892e9416e6562bc28f54981451e0a3df02  kit/report_timing.tcl
 c2c9e3bb5d3edc72ad9603cf1d950d75b3fac4da74e7ad0860391291486b4afb  kit/metric_smoke.tcl
 f24672818ff45fe55a4fc8b415b82dc9fa47a0b1183cb7fe86a7a10eae38b9d5  output/clock_pins_FF.tsv
 0ea25b4c3feef4dfcfb5483e552bb072e2c3bf69f046979991ba0c2ec117b76d  output/clock_pins_TT.tsv
-5f5fb04470dc02af9094349d92086cf65404d81c24ff97ea10cc47b12315dc01  output/smoke_FF.log
-edac0c74b7c5f5fee6a6f1174f9549904333c512844c7af9c77331c964414181  output/smoke_TT.log
-ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1815054-1792443105): exit 0
+92a0879039a48d865c4c91f05b688e9e0a929749eecb72022dd64a42aaf0a9f7  output/paths_FF_async_recovery_removal_max.rpt
+35be1a8b89b89bea5a89a76880f2aca059673ba35707dd5d6e2b48ab56f3c50e  output/paths_FF_async_recovery_removal_min.rpt
+f78e9063b5e35e26fd3fda9d669caeb4b9484a452e8dc1361844a16018cbd891  output/paths_FF_i2r_max.rpt
+b8a18a43428ca6722b802a9d325ea8f52864ecf8fdac4dafb7764fd7e028bee6  output/paths_FF_i2r_min.rpt
+1134a706b4524f94c1a41ffc94ef59dbefda7f713aa9255550367650216a22ae  output/paths_FF_r2o_max.rpt
+fd1e27ea593e566c9a9a2c6422db289f64f4a25a5460abd848ba428f570c1046  output/paths_FF_r2o_min.rpt
+ac188d4c607fbd96b0bca7df1fb5d34f72210a735924455b75e71c9b2b79f2c6  output/paths_FF_r2r_max.rpt
+3ab800eda3aa9d6f12f24a372a5927340e9aca5a2253cbbc98a30dbc5f75da0e  output/paths_FF_r2r_min.rpt
+007eb27bf2758f66d875d3c357a7fa9afbc84cc53477caf85cc62741daea7665  output/paths_FF_reset_input_max.rpt
+d65143f2b238a43e8e9b9821003d1215851239b6c171d9f316685aefb0a999c1  output/paths_FF_reset_input_min.rpt
+8a19712b94988cb4fb8148aa4f78aa9e5f42cebe0cc5cca648138671dcebdc81  output/paths_TT_async_recovery_removal_max.rpt
+e721c5546feec9b9233714723689501d0eee6bf9f7160ac0aac5647b4bcdf458  output/paths_TT_async_recovery_removal_min.rpt
+013d158ea6cf72572ef3247a0d16254a487ce3548909c11b0464e7e105a17211  output/paths_TT_i2r_max.rpt
+31a2592e182b7351711ed2b0308a210ebe0039c3b3b1547d50983ad98ad961aa  output/paths_TT_i2r_min.rpt
+1cb5d1a88f0cbeb36d85939ad5743de6339fc3b176a2fbc53347e1a5bfce2a24  output/paths_TT_r2o_max.rpt
+51105bdb4c647e209c044e538a040962dd9fd1f30fb2d931c4cf0856f0743ecf  output/paths_TT_r2o_min.rpt
+e87b43a83ff1213b366f3ed6a899a2a5be2be6ba608eb1124622a0daa8f6c2f5  output/paths_TT_r2r_max.rpt
+9265ec5bdf4d933beef4747a36357c7b6a46c5a41b8ff63ca7edd2aae042cadf  output/paths_TT_r2r_min.rpt
+db31d44616fce04231a459a1588584ee98ec57550f6751ac0667c6f53d9b94ea  output/paths_TT_reset_input_max.rpt
+c72c7fb12d37b4b2f08075c1820186bf95fe7ae7d789045719c0dca1dac75c65  output/paths_TT_reset_input_min.rpt
+532be99353ae9f46f4c80461f2648804dab49ea0ff6e9b2b9a29d6cafb9a4565  output/smoke_FF.log
+f5ddc48627f0af07afaf8214da9d359469af3b617dbbda1fcf89b59d1275765c  output/smoke_TT.log
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1819790-1792443307): exit 0

@@ -15,6 +15,9 @@ assert not s['violations'], 'native fanout violations'
 
 import csv,math
 for corner in ('TT','FF'):
+ for path_class in ('r2r','i2r','r2o','reset_input','async_recovery_removal'):
+  for delay in ('max','min'):
+   assert (p/f'paths_{corner}_{path_class}_{delay}.rpt').is_file(), 'missing path class report'
  rows=list(csv.DictReader((p/f'clock_pins_{corner}.tsv').open(),delimiter='\t'))
  assert len(rows)==2782 and len({r['pin'] for r in rows})==2782
  assert all(math.isfinite(float(r['active_edge_wire_arrival'])) and math.isfinite(float(r['slew_max_rise'])) for r in rows)
