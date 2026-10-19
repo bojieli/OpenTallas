@@ -289,6 +289,46 @@ def derive_line_events(S, die):
     return out
 
 
+def derive_vctl_line_events(S, die):
+    """TOK-S81-GAPS 10-19 (G8R2 cut_3S L0: 15 unscheduled line words on xrW_2S_l0 / xrE_3S_l0): a CTL beat the G-unit
+    sends on vo_s / vo_n lands on the V face of the slice its lane reaches (u_s_3S / u_s_3N), and ot_s81sl_xr re-injects
+    EVERY V CTL beat on the tier line both ways (ci_dir 3'b011, hops 0 = line default) -- the same path as the column-4
+    seq_host V injection in derive_line_events, from the receiving slice's column.  The beat on each stop's line face is
+    the G-unit word with the hops / src fields rewritten as ctl_beat does (hops = col + 1 W-bound on ri_e, 8 - col
+    E-bound on ri_w; src = the injecting slice's sid).  Timing = derive_line_events: line out = V landed edge
+    - RSTOP_HOP + V_CTL_INJECT, then line_link_age + RSTOP_HOP per stop (measured: row 1000 lands 3S 1489, 2S / 4S 1505)."""
+    out = []
+    for e in S['events']:
+        if e.get('inst') != 'u_gunit' or e.get('dir') != 'out' or e.get('kind') != 'CTL' or not e.get('words'):
+            continue
+        try:
+            lw = event_words(e, die)
+        except ValueError:
+            continue
+        for w in lw:
+            m = re.fullmatch(r'u_s_(\d)([NS])', w['inst'])
+            if not m:
+                continue
+            col, tier = int(m.group(1)), m.group(2)
+            src = die.sid(w['inst'])
+            hop = lambda a, b: line_link_age(die, f'u_s_{a}{tier}', f'u_s_{b}{tier}')[0] + RSTOP_HOP
+            t_out = w['cycle_land'] - RSTOP_HOP + V_CTL_INJECT
+            for path, port in ((range(col - 1, -1, -1), 'ri_e'), (range(col + 1, 8), 'ri_w')):
+                t, prev = t_out, col
+                for c in path:
+                    t += hop(prev, c)
+                    prev = c
+                    hops = c + 1 if port == 'ri_e' else 8 - c
+                    ws = []
+                    for edge, v, mk in e['words']:
+                        v = int(v, 16)
+                        v = (v & ~(0x1F << 4) & ~(0xF << 9)) | (hops & 0x1F) << 4 | (src & 0xF) << 9
+                        ws.append([t, f'{v:x}', mk])
+                    out.append(dict(e, cycle=t, inst=f'u_s_{c}{tier}', port=port, ports=[port], dir='in', words=ws,
+                                    derived_from=f'u_gunit.{e["port"]}@{e["cycle"]} via {w["inst"]}'))
+    return out
+
+
 def lane_of_net(die, net):
     m = re.fullmatch(r'w_(\w+?)_(src|lnd|dst)', net)
     return m.group(1) if m and m.group(1) in die.links else None
@@ -356,11 +396,36 @@ def valid_refs(S, die):
     return ref
 
 
+HP_PRODUCER_GAP = ('the slices\' HC partial roots (hc.fn / hc.sumsq chunk sums, kind-7 HP send on tv to the G-unit) are '
+                   'not lowered (lowering PARTIAL: ot_s81sl_xr / frames cfg7 / ot_s81sl_vn send config): the HP words '
+                   'are fixture-model values, so a cut holding the producer slice cannot be checked for them (a cut '
+                   'holding the G-unit is driven with them)')
+
+
+SC_PRODUCER_GAP = ('the router scores the slices send the G-unit (sqrt(softplus) of the ffn.router gate rows after '
+                   'ffn.router_allgather) have no compiled producer (ffn.router / ffn.router_allgather GAP on this '
+                   'programme): the SC words are fixture values, so a cut holding the producer slice cannot be checked '
+                   'for them (a cut holding the G-unit is driven with them)')
+
+
+def hp_gap(evs):
+    """TOK-S81-GAPS 10-19 (G8R2 cut_3S L0: 827 tvN_s_3S words all-zero): HP beats into the G-unit come from the slices'
+    unlowered HC send (lower_gu payload 'fixture slice model') -> producer_gap, like the svc QF q stream; SC (router
+    scores, fixture) likewise (27 tvN_s_3S words)"""
+    for e in evs:
+        if e.get('inst') == 'u_gunit' and e.get('dir') == 'in' and not e.get('producer_gap'):
+            if e.get('kind') == 'HP':
+                e['producer_gap'] = HP_PRODUCER_GAP
+            elif e.get('kind') == 'SC':
+                e['producer_gap'] = SC_PRODUCER_GAP
+
+
 def landed_words(S, T, die):
     """(consumer inst, port) words at the consumer pin: [{event, inst, port, cycle_land, bits {(net, bit): v}}];
     the events no cut can check at a fixed cycle (offdie) and the slice-internal ones are returned apart"""
     words, unenc, offdie, internal = [], [], [], []
-    evs = S['events'] + derive_line_events(S, die)
+    evs = S['events'] + derive_line_events(S, die) + derive_vctl_line_events(S, die)
+    hp_gap(evs)
     for e in evs:
         if e.get('boundary') == 'offdie':
             offdie.append(e)
