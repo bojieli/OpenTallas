@@ -103,9 +103,15 @@ ROLES = {
 # qkd_kv_static_writer_native_mu (closed writer + qkd_kv_mu_wrow, glue of the RTL-only parent kvs_ctl); read side: every
 # pc_path gets MU=1 (the inline qkd_kv_mu_rrow map in qkd_static_kv_pc_path_nc).  Tile file suffix '_mu'.
 MU = __import__('os').environ.get('OT_KV_MU', '0') == '1'
-MU_DEPS = ['rtl/physical/ot_qkd_kv_static_writer_native.sv', 'rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv']
+MU_DEPS = ['rtl/physical/ot_qkd_kv_static_writer_native.sv', 'rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv',
+           # MU-KV-BOOT 10-19: the multi-context layer programme / boot dispatcher wrappers instantiate the originals
+           S + 'qkd_static_kv_layer_programme.sv', S + 'qkd_static_kv_boot_dispatch.sv']
 if MU:
     ROLES['writer'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv', 'qkd_kv_static_writer_native_mu', 1)
+    # MU-KV-BOOT 10-19 (hroot README section 3): 4 token contexts (user = authority_epoch[1:0]) on the one boot-loaded
+    # stage table + the compiled GAP[4][36] block (boot image MU form, kv_static_boot_join.BOOT_MU dispatcher)
+    ROLES['layer_programme'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv',
+                                'qkd_static_kv_layer_programme_mu', 1)
 # return-train beat record (qkd_embedding_static_return_head / _hop capture_record, unpacked by join4), MSB first
 EMB_RECORD = (('emb_beat_epoch', 16), ('emb_beat_scale', 1), ('emb_beat_half', 1), ('emb_beat_word', 6),
               ('emb_beat_token', 18), ('emb_beat_data', 256))
@@ -433,7 +439,7 @@ def template(root=ROOT):
     netlist. Unknown measured latencies are null, not guessed physical values.
     """
     params={
-        'layer_programme':dict(MUT=0),'attention_programme':dict(MUT=0,LAND=1 if __import__('os').environ.get('OT_KV_ATTN_LAND','0')=='1' else 0),
+        'layer_programme':dict(MUT=0,**({'MU':1} if MU else {})),'attention_programme':dict(MUT=0,LAND=1 if __import__('os').environ.get('OT_KV_ATTN_LAND','0')=='1' else 0),
         'phase_launch':dict(PH0=None,SAFE_LOW_U=None,SAFE_HIGH_U=None,META_HOLD_CORE=None,MUT=0),
         'ownership':dict(MUT=0),'drain_guard':dict(MUT=0),
         'pc_path':dict(MU=1 if MU else 0),'landing':dict(MUT=0,HOP_MUT=0),
