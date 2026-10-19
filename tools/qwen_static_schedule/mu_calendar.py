@@ -457,6 +457,39 @@ def kv_user_dimension(cal, T=8192, kvp=None):
                      "stream of a user-layer starts at its kvs window start, so prefetch never spans another user's window")
 
 
+# ---- DV compute-die command calendar user relocation (MU-ADOPT-CTLM 10-19) ---------------------------------------------
+# qfd_tt_ctlm_dv / qfd_tt_ctlm_dv_lpf NU 4: u_cal = qfd_dv_cmd_cal_mu #(UVM_STRIDE, PIDX_STRIDE, UTAG_LSB, UFOLD 1).  ONE shared
+# image is written with user-0 absolute fields and all user fields 0; the playhead of user u adds / inserts:
+DV_UVM_STRIDE = 4096      # VM words: the slice VM is 16,384 32-bit words (qfd_dv_vm addr[23:14] == 0) -> 4 users x 4,096
+DV_PIDX_STRIDE = 128      # SU program index: the slice PROG store is 512 instructions (9-bit pidx) -> 4 users x 128
+DV_UTAG_LSB = 6           # XC (kind 0 sub 0) collective tag bit of the 2-bit user (cmd[23 + 6 +: 2])
+DV_VM_WORDS, DV_PIDX_WORDS = 16384, 512
+
+
+def dv_user_fields(users=4):
+    """the per-user command fields the DV calendar writes (qfd_dv_cmd_cal_mu at NU = users, UFOLD 1), for the lowering:
+    every relocated region of user 0 must fit [0, stride) so users never overlap and no field carries (carry = fault)."""
+    if users < 1 or users > 4:
+        raise ScheduleError(f"dv_user_fields: {users} users, the cmd user fields are 2 bits")
+    if users * DV_UVM_STRIDE > DV_VM_WORDS or users * DV_PIDX_STRIDE > DV_PIDX_WORDS:
+        raise ScheduleError("dv_user_fields: strides x users exceed the slice VM / PROG store")
+    return dict(
+        users=users, uvm_stride=DV_UVM_STRIDE, pidx_stride=DV_PIDX_STRIDE, utag_lsb=DV_UTAG_LSB,
+        user0_vm_window=[0, DV_UVM_STRIDE], user0_pidx_window=[0, DV_PIDX_STRIDE],
+        relocated={"PORTS kind 4": "ar_base [27:4], dd_base [51:28], em_base [77:54] += u*UVM_STRIDE",
+                   "STN kind 2 dst VM (cmd[24])": "dbase [49:26] += u*UVM_STRIDE",
+                   "SU kind 1": "pidx [12:4] += u*PIDX_STRIDE",
+                   "XC kind 0 sub 0": "tag bits [23+UTAG_LSB +: 2] = u (image 0)",
+                   "STN kind 2 (UFOLD)": "cmd[52:51] = u (image 0; R4 qfd_dv_amax_mu stn_user)",
+                   "AMAX kind 6 (UFOLD)": "cmd[9:8] = u (image 0; R4 qfd_dv_amax_mu am_user)"},
+        rules=["user-0 VM footprint of every relocated write / landing region < UVM_STRIDE words",
+               "user-0 SU programme (pidx) < PIDX_STRIDE; per-user copies at pidx + u*PIDX_STRIDE (loaded per user)",
+               "XC tags < 2**UTAG_LSB (user bits 0 in the image); STN cmd[52:51] = AMAX cmd[9:8] = 0 in the image",
+               "a filler's first entry T_0 >= 4 + (NU - 1); no two users' entries / segment ends on one edge",
+               "fillers' ME work = LOCAL SEG entries of their own segments (the dh start runs the ME programme for user 0 "
+               "only) at a non-zero base, without SU o-sync waits (the head's SU accepted count is user 0's)"])
+
+
 def summary(cal):
     s = {k: v for k, v in cal.items() if k != "schedule"}
     s["schedule_blocks"] = {u: len(v) for u, v in cal["schedule"].items()}
