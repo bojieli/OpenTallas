@@ -68,15 +68,9 @@ class T(unittest.TestCase):
   with tempfile.TemporaryDirectory() as td:
    p=Path(td);a=p/'a';b=p/'b';a.mkdir();b.mkdir()
    self.assertEqual(old.generate(a).returncode,0)
-   prior=subprocess.check_output(['git','show','646351cb0:physical/common_flow/ot_pin_regs.tcl'],text=True)
-   t=p/'prior.tcl';t.write_text(prior)
-   # The existing mock generator chooses its source relative to module ROOT.
-   script=old.generate.__code__
-   src=Path(old.__file__).read_text();start=src.index('def generate(');end=src.index('\n\nSPEC',start)
-   f=src[start:end].replace("ROOT / 'physical/common_flow/ot_pin_regs.tcl'","t")
-   env=dict(old.__dict__,t=t);exec(f,env)
-   self.assertEqual(env['generate'](b).returncode,0)
-   self.assertEqual((a/'ot_pin_regs_wrapper.v').read_text(),(b/'ot_pin_regs_wrapper.v').read_text())
+   expected=(ROOT/'tools/ref_tile/tests/fixtures/default_reset_wrapper.v').read_text()
+   self.assertEqual((a/'ot_pin_regs_wrapper.v').read_text(),expected)
+
  def test_schema(self):
   s=dict(top='example',clock_port='ck',reset_ports=['rst_n'],reset_landing=dict(enable=True,stages=2,copies=dict(rst_n=288),first_copies=dict(rst_n=12)),reset_relay_split=dict(max_loads=32))
   self.assertEqual(RT.reset_landing_plan(s)['first_copies'],dict(rst_n=12))

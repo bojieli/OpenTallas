@@ -168,7 +168,7 @@ class SourceBindingTest(unittest.TestCase):
 
     def test_remote_script_verifies_archive_before_extracting(self):
         script = PG.REMOTE_SH.format(R='/tmp/test', ARCHIVE_SHA256='a' * 64, COMMIT='snapshot-sha256:abc', CAP=1,
-                                    KIT='kit', IMG='unused', RC='', TOP='test', CTS=0, PGM=1, CLK='clk',
+                                    KIT='kit', IMG='unused', RC='', TBX='', BRP='', TOP='test', CTS=0, PGM=1, CLK='clk',
                                     TRIAL=0, GRTX='', CLKS='clk', STEP_CAP=1)
         self.assertLess(script.index('sha256sum'), script.index('tar -xzf'))
         self.assertIn('GATE_SOURCE_ARCHIVE_SHA256=$ACTUAL', script)

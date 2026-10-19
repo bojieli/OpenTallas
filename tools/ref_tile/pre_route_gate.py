@@ -978,7 +978,8 @@ ot_layout() {{  # ot_layout ODB TAG: tools/ref_tile/layout_dump.tcl on the odb, 
   [ -s $C/gate_layout_$2.json ] && python3 -c "import zlib,base64,sys;print('GATE_LAYOUT_B64 '+sys.argv[2]+' '+base64.b64encode(zlib.compress(open(sys.argv[1],'rb').read(),9)).decode())" $C/gate_layout_$2.json $2
 }}
 ot_layout $NB/3_2_place_iop.odb floorplan
-python3 tools/textbook_lint.py check --netlist $B/1_2_yosys.v --dump $C/gate_dump.json --out $R/textbook.json --mode refuse --refuse-checks {RC} {BRP} | sed 's/^/GATE_TB /'
+python3 tools/textbook_lint.py check --netlist $B/1_2_yosys.v --dump $C/gate_dump.json --out $R/textbook.json --mode refuse --refuse-checks {RC}{TBX}{BRP} | sed 's/^/GATE_TB /'
+echo "GATE_TB_RC=${{PIPESTATUS[0]}}"
 python3 - $B/1_2_yosys.v {TOP} <<'EOP'
 import re,sys,json
 t=open(sys.argv[1]).read(); m=re.search(r"module\s+\\?"+re.escape(sys.argv[2])+r"\s*\((.*?)\);(.*?)endmodule",t,re.S)
@@ -1259,13 +1260,9 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     g.source_binding = binding
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
-                          RC=",".join(GATE_REFUSE), BRP=("--balanced-reset-profile $R/src/{}/reset_landing.json".format(kd.relative_to(ROOT)) if (spec.get('reset_landing') or {}).get('first_copies') else ""), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
+                          RC=",".join(GATE_REFUSE), TBX=textbook_reset_args(spec) + reset_landing_args(spec), BRP=(" --balanced-reset-profile $R/src/{}/reset_landing.json".format(kd.relative_to(ROOT)) if (spec.get('reset_landing') or {}).get('first_copies') else ""), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           TRIAL=1, GRTX=trial_grt_make_args(spec), CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
-    tbx = textbook_reset_args(spec) + reset_landing_args(spec)
-    if tbx:
-        tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
-        sh = sh.replace(tb, tb.replace(" | sed", tbx + " | sed", 1), 1)
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
     binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
@@ -1514,11 +1511,27 @@ def check_actual_pin_geometry(g: Gate, out: str):
               "rerun the actual placed-IO dump and fp_margin_lint pins check; old CTS measurements alone cannot qualify geometry")
 
 
+def check_textbook_execution(g: Gate, out: str):
+    """A missing/failed lint process cannot silently become an unknown-clock warning.
+
+    Historical frozen logs predate the RC marker, but still need a real unique
+    verdict. New scripts emit PIPESTATUS[0], preserving argparse/tool failures.
+    """
+    codes=re.findall(r'^GATE_TB_RC=(\S+)$',out,re.M)
+    verdicts=re.findall(r'^GATE_TB textbook_lint: (PASS|WARN|REFUSE) \S+ cells ',out,re.M)
+    if len(verdicts)!=1 or (codes and (len(codes)!=1 or codes[0] not in ('0','3'))):
+        g.add('FAIL','textbook_execution','missing unique actual textbook verdict or failed lint execution; RC='+str(codes),
+              'inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate')
+        return False
+    return True
+
+
 def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
                    cap: int, host: str, secs: int = 0, local_snapshot: Path | None = None):
     """One parser for live runs and fully verified frozen-run recovery."""
     fp = json.loads((kd / "floorplan.json").read_text())
     kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
+    check_textbook_execution(g,out)
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
     if binding.get("staged_remeasurement"):
         if not SB.staged_remeasurement_matches_log(binding, out.encode()):
