@@ -8,7 +8,10 @@
   "qkd_host_axi_packet": "qkd_host_axi_packet_rr",
   "qkd_host_program_loader_target": "qkd_host_program_loader_target_rr",
   "qkd_host_program_rx_target": "qkd_host_program_rx_target_rr",
-  "qkd_host_record_port": "qkd_host_record_port_rr"
+  "qkd_host_record_port": "qkd_host_record_port_rr",
+  "qkd_host_ingest_chain_pt": "qkd_host_ingest_chain_pt_rr",
+  "qkd_host_boot_dispatch_debt": "qkd_host_boot_dispatch_debt_rr"
  },
- "why_prompt_rr": "KV-PROMPT4 10-18: qkd_hr_core_prompt local reset relays (coordinator decision 4; tools/qwen_kv_die/host_cluster/gen_prompt_rr.py): every host_rst_n consumer of the child behind ot_rst_relay at its rst_n pin (direct members here; u_pkg/u_csr/u_host/u_prompt through the renamed copies qkd_host_control_prompt_observed_rr -> qkd_host_fullcontrol_observed_rr). Release +3 ck edges uniformly for the child; assert immediate."
+ "why_prompt_rr": "KV-PROMPT4 10-18: qkd_hr_core_prompt local reset relays (coordinator decision 4; tools/qwen_kv_die/host_cluster/gen_prompt_rr.py): every host_rst_n consumer of the child behind ot_rst_relay at its rst_n pin (direct members here; u_pkg/u_csr/u_host/u_prompt through the renamed copies qkd_host_control_prompt_observed_rr -> qkd_host_fullcontrol_observed_rr). Release +3 ck edges uniformly for the child; assert immediate.",
+ "why_order_rr": "HKV-HRORD: both order members have uniform local ot_rst_relay release +3 core edges, immediate assertion, no steady-state latency; member bench proves delayed-reset equivalence."
 }

@@ -85,7 +85,10 @@
   "rtl/qwen_sys/static_kv_20261014/qkd_host_native_quiet.sv",
   "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
-  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv"
+  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/host_cluster_20261017/order_rr/qkd_host_ingest_chain_pt_rr.sv",
+  "rtl/qwen_sys/host_cluster_20261017/order_rr/qkd_host_boot_dispatch_debt_rr.sv"
  ],
  "params": {},
  "clock_port": "ck_core",
@@ -132,7 +135,7 @@
    "hb_cr"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_order (core family, one ck_core entry): members u_chain, u_dispatch + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json; HRORDER r3 10-18: route r2-c420f015e TT -112 = logic depth (map rp->q[rp]->sector decode->128:1 credit mux->emit->1164-b out enable; commit_order fr->front[fr]->128 compares->pop; dispatch rp->decode->send): decode moved to enqueue + write-bypassed head registers (map/dispatch), one-hot head register (commit_order); cycle-exact, 0 added cycles",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_order (core family, one ck_core entry): members u_chain, u_dispatch + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json; HRORDER r3 10-18: route r2-c420f015e TT -112 = logic depth (map rp->q[rp]->sector decode->128:1 credit mux->emit->1164-b out enable; commit_order fr->front[fr]->128 compares->pop; dispatch rp->decode->send): decode moved to enqueue + write-bypassed head registers (map/dispatch), one-hot head register (commit_order); cycle-exact, 0 added cycles; HKV-HRORD r4: closed r3 native capture host_rst_n 386.9 ps exceeds 190 ps. Replace its two raw reset member connections with member-local 2-sync + 1 kept relay flops. Raw pin now drives six relay/sync flops, rather than every order/map/dispatch state bit. Uniform asynchronous assertion and +3 core edges release; compiler startup waits three edges before dispatch; zero steady-state latency/bandwidth change and six reset flops cost. Full 128-PC shape retained.",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -160,9 +163,9 @@
   "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
-  "owner": "Claude:KV-HOSTCL",
-  "branch": "claude/kv-hrorder-1018",
-  "tag": "r3",
+  "owner": "Codex:HKV-HRORD",
+  "branch": "codex/kv-hrord-reset-1019",
+  "tag": "r4",
   "purpose": "HOST root cluster r2 child qkd_hr_core_order (pre-route gate + route; parent qkd_host_root is CRITICAL)",
   "benches": [
    {
@@ -355,6 +358,29 @@
      "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv",
      "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv"
     ]
+   },
+   {
+    "name": "order_reset_exact",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/order_reset.py exact --out {RUN}/bench/order_reset_exact",
+    "pass_regex": "ORDER_RESET PASS"
+   },
+   {
+    "name": "order_reset_mutant",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/order_reset.py mutant --out {RUN}/bench/order_reset_mutant",
+    "fail_regex": "ORDER_RESET FAIL",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/order_reset_mutant.log"
    }
   ]
  },
@@ -364,5 +390,9 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Two new local reset relay member wrappers eliminate tile-wide raw reset fanout measured at 386.9 ps capture"
+ }
 }

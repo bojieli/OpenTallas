@@ -158,7 +158,7 @@ module qkd_hr_core_order(ck_core, host_upstream_quiet, host_rst_n, hb, hb_cr, ch
   wire u_rank__u_phy__rst_n;
   wire u_rank__u_phy__rx_rck;
   wire u_rank__u_phy__tx_wck;
-  qkd_host_ingest_chain_pt #(.ORDER_MUT(0))  u_rank__u_chain  (
+  qkd_host_ingest_chain_pt_rr #(.ORDER_MUT(0))  u_rank__u_chain  (
     .ack_n(u_rank__prefix_ack_n),
     .all_acks(u_rank__all_acks),
     .chain_a(chain_a),
@@ -182,7 +182,7 @@ module qkd_hr_core_order(ck_core, host_upstream_quiet, host_rst_n, hb, hb_cr, ch
     .rst_n(host_rst_n),
     .slice_ack(slice_ack)
   );
-  qkd_host_boot_dispatch_debt u_rank__u_dispatch  (
+  qkd_host_boot_dispatch_debt_rr u_rank__u_dispatch  (
     .acks(u_rank__all_acks),
     .boot_release(u_rank__local_marker_cr),
     .ck(ck_core),

@@ -114,3 +114,6 @@ rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_program_loader_target_rr.s
 rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_program_rx_target_rr.sv
 rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_prompt_capture_pins_rr.sv
 rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_record_port_rr.sv
+
+rtl/qwen_sys/host_cluster_20261017/order_rr/qkd_host_ingest_chain_pt_rr.sv
+rtl/qwen_sys/host_cluster_20261017/order_rr/qkd_host_boot_dispatch_debt_rr.sv
