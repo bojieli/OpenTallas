@@ -1,0 +1,60 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctrl-bank64
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctrl-bank64
+ot-run: ot-epyc6       admits   273 GB (avail 304, growth 113, headroom 0, waiters 0/0 GB) load 35/128 running 16 disk 6052 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctrl-bank64
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctrl-bank64
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-ctrl-bank64
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-ctrl-bank64
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-89524-1792427485 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+- rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_fifo_sram.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.017 s; speed 293.798 us/s
+- Verilator: cpu 0.017 s on 1 threads; allocated 7 MB
+- rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_fifo_sram.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.015 s; speed 332.088 us/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB
+- rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_fifo_sram.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.015 s; speed 329.297 us/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB
+- rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_fifo_sram.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.015 s; speed 326.151 us/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB
+- rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_fifo_sram.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.013 s; speed 377.579 us/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB
+- rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_fifo_sram.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.013 s; speed 376.150 us/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB
+CTRL_FIFO_EXACT FAIL errors3314 reads5540
+[5010314] %Fatal: tb_ctrl_fifo_sram.sv:39: Assertion failed in tb_ctrl_fifo_sram
+%Error: rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_fifo_sram.sv:39: Verilog $stop
+Aborting...
+[9000] %Fatal: ot_s81ph_afifo_g_sram.sv:105: Assertion failed in tb_ctrl_fifo_sram.newq: CTRL_SRAM_FIFO_COLLISION address 0
+%Error: rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv:105: Verilog $stop
+Aborting...
+CTRL_PCR_MIN PASS schecks2798 hchecks2274 accepts192 refuses152 reads323 wd206
+- rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_pcr_min.sv:85: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.005 s; speed 426.934 us/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB
+CTRL_PCR_MIN FAIL PHY refusal re-presentation sent8 accepts1 refuses1
+[20993] %Fatal: tb_ctrl_pcr_min.sv:39: Assertion failed in tb_ctrl_pcr_min.check
+%Error: rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_pcr_min.sv:39: Verilog $stop
+Aborting...
+CTRL_PCR_MIN FAIL stream valid/credit/write-done/status sent8 accepts1 refuses1
+[21217] %Fatal: tb_ctrl_pcr_min.sv:39: Assertion failed in tb_ctrl_pcr_min.check
+%Error: rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_pcr_min.sv:39: Verilog $stop
+Aborting...
+CTRL_PCR_MIN FAIL PHY request payload sent5 accepts0 refuses0
+[16897] %Fatal: tb_ctrl_pcr_min.sv:39: Assertion failed in tb_ctrl_pcr_min.check
+%Error: rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_pcr_min.sv:39: Verilog $stop
+Aborting...
+BANK64_MATRIX_STATUS 0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-89524-1792427485): exit 0
