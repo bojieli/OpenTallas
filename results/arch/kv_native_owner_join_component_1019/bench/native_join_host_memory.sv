@@ -71,7 +71,7 @@ module native_join_host_memory(
         cq_word1_pending=0;last_cq_w0=tx_d[159:96];cq_entries=cq_entries+1;
         if(tx_d[98:97]==2'd3)cq_errors=cq_errors+1;else cq_successes=cq_successes+1;
         if(tx_d[127:112]!=16'h91e3)$fatal(1,"CQ_CLIENT_TAG_GOLD got=%h",tx_d[127:112]);
-        $display("CQ_PACKET edge=%0d entry=%0d w0=%h w1=%h",edge_count,cq_entries,last_cq_w0,last_cq_w1);
+        $display("CQ_PACKET time=%0t edge=%0d entry=%0d w0=%h w1=%h",$time,edge_count,cq_entries,last_cq_w0,last_cq_w1);
        end
       end
       packet[7:0]=8'h15;reply_queue.push_back(packet);

@@ -259,7 +259,7 @@ reg allow_aw=1,allow_w=1;
  integer native_cq_retirements=0;
  integer edges=0,issues=0,allocations=0,dispatches=0,raw_completions=0,post_completions=0,certificates=0,event_copies=0,cq_offers=0,terminal_accepts=0;
  integer request_counts[8],request_returns[8],result_returns[8],transport_returns[8],releases[8],raw_cleanup_due[8];
- integer engine_credits=0;reg rank7_return_stalled=0;reg[511:0]held_rank7_return;
+ integer engine_credits=0;reg old_rc_bad=0,native_binding_seen=0;reg rank7_return_stalled=0;reg[511:0]held_rank7_return;
  integer response_due=-1,response_step=-1,first_issue_edge=0,max_response=0;
  integer case_id=0;
  // Selected one-beat pin-channel protocol: first acceptance owns request;
@@ -320,12 +320,18 @@ reg allow_aw=1,allow_w=1;
     if(cohort_tag!=={16'(dispatches),6'd0,gold_input(dispatches),13'(dispatches),6'd0})$fatal(1,"DISPATCH_GOLD");
     response_step=dispatches;dispatches=dispatches+1;response_due=edges+24;
    end
+   if(binding_valid)native_binding_seen=1;
+   if((case_id==6||case_id==8)&&native_binding_seen&&raw_completions==0&&!binding_valid)$fatal(1,"ALLOCATED_CANCEL_OWNER_LOST_BEFORE_RAWDONE");
+   if((case_id==6||case_id==8)&&cq_errors!=0&&raw_completions==0)$fatal(1,"ACTIVE_FAILURE_REPORT_BEFORE_RAW_CLEANUP");
+   if(rc_bad&&!old_rc_bad)$display("RETAINED_BAD time=%0t e=%0d raw=%0d errorCQ=%0d",$time,edges,raw_completions,cq_errors);
+   old_rc_bad=rc_bad;
    if(raw_done_v)begin
+    if((case_id==6||case_id==8)&&(!raw_done_native_valid||raw_done_unready))$fatal(1,"ALLOCATED_CANCEL_RELABELLED_NO_NATIVE");
     if(!raw_done_native_valid&&case_id!=5)$fatal(1,"UNEXPECTED_NO_NATIVE");
     raw_completions=raw_completions+1;
     if(edges-first_issue_edge>max_response)max_response=edges-first_issue_edge;
     first_issue_edge=edges;
-    $display("RAW_DONE e=%0d native=%b needed=%b",edges,raw_done_native_valid,raw_done_report_needed);
+    $display("RAW_DONE time=%0t e=%0d native=%b unready=%b needed=%b",$time,edges,raw_done_native_valid,raw_done_unready,raw_done_report_needed);
    end
    if(native_certificate_v)certificates=certificates+1;
    if(event_insert_v&&event_native_valid)event_copies=event_copies+1;
@@ -341,6 +347,7 @@ reg allow_aw=1,allow_w=1;
     if(!saved_cq_key_valid||{report_drained_client,report_drained_slot,report_drained_descgen,report_drained_tag,report_drained_gen}!==saved_cq_key)$fatal(1,"CQB_SAVED_KEY");
     saved_cq_key_valid=0;native_cq_retirements=native_cq_retirements+1;
    end
+   if(cq_dma_retired_v)$display("REAL_CQB time=%0t e=%0d native=%b",$time,edges,native_cq_prospective_native_valid);
    if(post_retired)begin
     if(post_completions>=1&&case_id<=3&&native_cq_retirements<post_completions)$fatal(1,"POST_BEFORE_REAL_CQB");
     post_completions=post_completions+1;$display("POST e=%0d tag=%h",edges,post_tag);end
