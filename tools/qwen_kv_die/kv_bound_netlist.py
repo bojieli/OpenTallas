@@ -53,10 +53,12 @@ HARD_MODELS = ('qkd_hbm3e_phy_pc', 'qkd_ckbump', 'qkd_fwdbump')
 PHY_BINDINGS = {
     'ot_qkvd_ucie_x64_phy': dict(module='ot_qkvd_ucie_x64_phy',
         file='physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v',
-        ports=dict(clk=['clk'], rst_n=['rst_n'], fdi=['tx_up','tx_v','tx_flit','rx_v','rx_flit'])),
+        ports=dict(clk=['clk'], rst_n=['rst_n'], fdi=['tx_up','tx_v','tx_flit','rx_v','rx_flit'],
+                   tx_up=['tx_up'], tx_v=['tx_v'], tx_flit=['tx_flit'], rx_v=['rx_v'], rx_flit=['rx_flit'])),
     'ot_qfd_serdes_112g_x12_phy': dict(module='ot_qfd_serdes_112g_x12_phy',
         file='physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v',
-        ports=dict(clk=['clk'], rst_n=['rst_n'], fdi=['tx_up','tx_v','tx_flit','rx_v','rx_flit'])),
+        ports=dict(clk=['clk'], rst_n=['rst_n'], fdi=['tx_up','tx_v','tx_flit','rx_v','rx_flit'],
+                   tx_up=['tx_up'], tx_v=['tx_v'], tx_flit=['tx_flit'], rx_v=['rx_v'], rx_flit=['rx_flit'])),
 }
 
 # classed inputs driven from OFF the die (package pads / package straps)
@@ -230,6 +232,11 @@ def main(argv=None):
             rows.append((mst, inst, params, conns))
             continue
         if mst in bindings and not (mst.startswith('qkd_rly') or mst in exp):
+            # kv_native_phy may have split this bundle already. Preserve the exact scalar
+            # ports on a second binding pass; mixed forms would assign the same bit twice.
+            if mst in PHY_BINDINGS and 'fdi' in conns and any(
+                    p in conns for p in ('tx_up','tx_v','tx_flit','rx_v','rx_flit')):
+                raise SystemExit(f'{inst}: licensed PHY mixes bundled and native FDI ports')
             b = bindings[mst]
             mod = idx.get(b['module'])
             if mod is None:

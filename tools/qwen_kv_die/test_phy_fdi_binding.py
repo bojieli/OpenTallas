@@ -1,14 +1,28 @@
 """Canonical licensed PHY FDI slicing uses actual native ports and every bit once."""
 import json
+import importlib.util
 import shutil
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-import kv_bound_netlist as B
+_spec=importlib.util.spec_from_file_location('_kv_bound_netlist_under_test',
+    Path(__file__).with_name('kv_bound_netlist.py'))
+B=importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(B)
 
 class PhyFdi(unittest.TestCase):
     def test_native_main_splits_both_licensed_phy_bundles(self):
+        self.check_binding()
+
+    def test_main_preserves_already_scalarized_native_phy_ports(self):
+        self.check_binding(native=True)
+
+    def test_main_rejects_mixed_bundle_and_native_ports(self):
+        with self.assertRaisesRegex(SystemExit, 'mixes bundled and native'):
+            self.check_binding(mixed=True)
+
+    def check_binding(self, native=False, mixed=False):
         with tempfile.TemporaryDirectory() as tmp:
             p=Path(tmp); die=p/'die.v'; out=p/'bound'
             die.write_text("""module die();
@@ -20,6 +34,16 @@ class PhyFdi(unittest.TestCase):
   ot_qfd_serdes_112g_x12_phy serdes_host (.clk(refclk[0]), .rst_n(por_n[0]), .fdi(n_host[2088:0]));
 endmodule
 """)
+            if native:
+                text=die.read_text()
+                for net,fw in [('n_ucie',583),('n_host',1043)]:
+                    text=text.replace(f'.fdi({net}[{2*fw+2}:0])',
+                        f'.tx_up({net}[0]), .tx_v({net}[1]), .tx_flit({net}[{fw+1}:2]), '
+                        f'.rx_v({net}[{fw+2}]), .rx_flit({net}[{2*fw+2}:{fw+3}])')
+                die.write_text(text)
+            if mixed:
+                die.write_text(die.read_text().replace('.fdi(n_ucie[1168:0])',
+                    '.fdi(n_ucie[1168:0]), .tx_v(n_ucie[1])'))
             for entry in B.PHY_BINDINGS.values():
                 dst=p/entry['file'];dst.parent.mkdir(parents=True,exist_ok=True)
                 shutil.copyfile(B.K.ROOT/entry['file'],dst)
@@ -39,4 +63,4 @@ endmodule
                 self.assertEqual(len(used),2*fw+3)
                 self.assertEqual(len(set(used)),len(used))
             rec=json.loads((out/'bound_netlist.json').read_text())
-            self.assertTrue(all(r['how']=='bound' and r['unassigned_bits']==0 for r in rec['masters'].values()))
+            self.assertTrue(all(r['how']==('identity' if native else 'bound') and r['unassigned_bits']==0 for r in rec['masters'].values()))
