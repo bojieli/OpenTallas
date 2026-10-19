@@ -124,7 +124,7 @@ module ot_v41_bf16_lanes3 #(
 `ifdef OT_BF_TAGREP
         (* keep *) reg [TW-1:0] t_lr;
 `ifdef TAGREP_MUTANT_LANE
-        always @(posedge lclk) t_lr <= (l == 5) ? t_p ^ {{(TW-1){1'b0}}, 1'b1} : t_p;   // negative control: lane 5's copy corrupt
+        always @(posedge lclk) t_lr <= (l == 5) ? t_p ^ ({{(TW-1){1'b0}}, 1'b1} << (TRW + 2)) : t_p;   // negative control: lane 5's copy of `first` inverted
 `else
         always @(posedge lclk) t_lr <= t_p;
 `endif

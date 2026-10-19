@@ -13,6 +13,10 @@
    - Stage 4a registers `{retained, increment, zero}` instead of the 32-bit encoded result.
    - The 24-bit increment and zero select move in front of the existing stage-4 result select.
    - Exact by construction: `rounded == 0 <=> retained == 0 && !increment`, because `retained = sig24 >> shift` with shift >= 1 is below 2^23.
+1b. **Fanout (item 3): TAGREP** (opt-in define `OT_BF_TAGREP`, `ot_v41_bf16_lanes3`).
+   - The first gate's lint (@69048c352) found the BF tag line `u_pt line[..]` driving 4,272 loads.
+   - Its last stage is now a kept per-lane register on the lane's own gated clock (same enable function), so each copy drives about 270 loads.
+   - Same delay PL, same edges: 0 cycles.
 2. **Flow:** the bespoke `route_hier.sh` recipe is replaced by the mandatory ref_tile kit. It sets reset landing, io_hold 0.03, the lattice, pin faces and util by construction.
 3. **Floorplan (item 6):**
    - Outline 432.0 x 216.0 (2:1). It was 450.144 x 198.72 (2.27).
@@ -27,8 +31,8 @@
 
 | case | result | witness |
 |---|---|---|
-| rsplit (positive, `+define+OT_BMUL_RSPLIT`) | TXN MATCH, compared=456; lag 5.831/14.994/9.090 ns n=456, **identical to the closed full.json** (0 cycles) | bench_5050/positive_run.log |
-| rs_mutant_{dp,recut,pinlat,tcg,xst,fxst} (each with RSPLIT) | 6/6 `%Fatal ... DIFF TXN lane=` | bench_5050/fail_witness/*.log |
+| rsplit (positive, `+define+OT_BMUL_RSPLIT+OT_BF_TAGREP`) | TXN MATCH, compared=456; lag 5.831/14.994/9.090 ns n=456, **identical to the closed full.json** (0 cycles) | bench_5050/positive_run.log |
+| rs_mutant_{dp,recut,pinlat,tcg,xst,fxst,tagrep} (each with RSPLIT+TAGREP; tagrep = lane 5's `first` copy inverted) | 7/7 `%Fatal ... DIFF TXN lane=` | bench_5050/fail_witness/*.log |
 | formal miter vs closed `ot_v41_bmul2_rne_prepare` (24cf7e2e3), GRADUAL_RNE=1 XS=1, BMC 20 steps, outputs from step 10 | `SAT proof finished - no model found: SUCCESS` | equiv/equiv_mut0.log |
 | formal miter with RSPLIT_MUTANT_INC (round-up inverted) | `model found: FAIL` (counterexample) | equiv/equiv_mut1.log |
 
@@ -40,8 +44,8 @@ The formal check is the exactness proof for the moved logic. The TXN bench vecto
 |---|---|---|
 | 1 | Pins / reset | **PASS + fixed.** Every input is registered at the face in RTL (`g_pin.r_*` kregs, incl. ze_d and the reset synchroniser), and every output comes from a register (gate2: 839/840 register-at-pin; a_ctr[13] is unused). Kit `pin_regs` is opted out with that reason, so no second layer and 0 edges. io_flop_at_pins anchors the RTL pin flops. Reset now lands in 2 stages (kit). |
 | 2 | Reach <= 405 um | **PASS.** The textbook lint reach is 0.0 um (running route). The longest face is 432 um, and every pin goes to a face register. |
-| 3 | Fanout | **PASS** (no textbook high_fanout finding on the running route; QZ select/enable copies are kept registers). Re-check in the gate lint. |
-| 4 | Depth <= ~600 ps | **fixed.** The 626.8 ps stage is retimed (RSPLIT, 0 cycles). The gate's textbook lint reports the new maximum. |
+| 3 | Fanout | **fixed** (TAGREP: tag line 4,272 -> about 270 loads per copy). Residual lint WARNs are the tile reset synchroniser outputs (u_tt.u_rs 552 and g_mz.u_rst 285 async-reset loads > 256): an async assert with release timed by recovery/removal STA, not a datapath cone; repair_design buffers them. Waived for this kit; a regional ot_rst_relay is the next step if the gate's recovery check shows them. |
+| 4 | Depth <= ~600 ps | **fixed.** The 626.8 ps stage is retimed (RSPLIT, 0 cycles). The gate lint @69048c352 gives a maximum of **493.4 ps / 13 levels** (u_c.u_add c6 -> c8). |
 | 5 | Storage | **PASS.** Weights are in 2 ROM macros. BXST/FXST input stages are 2 deep (< 3), so there are no long flop delay lines. |
 | 6 | Floorplan | **fixed.** 43.2 lattice, 2:1 aspect, density 0.556, full-face pins at <= 6 pins/um, one contiguous std-cell band (ROMs at the W edge, cells over the rest). |
 | 7 | Clock | **PASS / waived-with-reason (regional landed roots).** The clock is centre-fed: N pin above the register mass, one TritonCTS tree with the per-lane TCG gate tiles as sub-roots. The rule check is pin-flop spread <= 80 TT+FF; gate2 measured 48.5/48.6 on this RTL. Regional roots with LANDED crossings are waived: the tile is 0.43 mm, below the ~1 mm parent/die-link threshold of the landed-regions standard. Its only hard children are the 2 ROMs (raw macro clock entries). Landing the ROM->lane and lane->tree crossings inside the tile would add >= 3 cycles on about 1k internal bits and about 4k ring flops with no clock-rule benefit. If the routed view of the running route or of this kit shows spread > 80, the split becomes mandatory and is the next successor. io_hold_margin is 0.03. |

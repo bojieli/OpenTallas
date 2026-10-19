@@ -1,4 +1,4 @@
-ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-747098-1792416955 after 0 s
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2427405-1792418879 after 0 s
 rsplit ok ['PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448', 'PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350', 'PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418', 'TXN LAG ns min=5.831 max=14.994 mean=9.090 n=456']
 ORACLE phase=1 positions=1 active_segments=8 nseg=1 cumulative_public_rows=16 value_assertions=32
 ORACLE phase=2 positions=1 active_segments=8 nseg=1 cumulative_public_rows=32 value_assertions=64
@@ -20,6 +20,6 @@ TXN LAG ns min=5.831 max=14.994 mean=9.090 n=456
 TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0
 TXN MATCH
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 104us; walltime 21.999 s; speed 4.711 us/s
-- Verilator: cpu 21.998 s on 1 threads; allocated 22 MB
-ot-run: RAN on ot-agidock128 (unit oth-ubuntu-747098-1792416955): exit 0
+- Verilator: $finish at 104us; walltime 27.797 s; speed 3.729 us/s
+- Verilator: cpu 27.788 s on 1 threads; allocated 22 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2427405-1792418879): exit 0
