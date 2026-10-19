@@ -1,0 +1,5 @@
+sel m2 base:  | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 449634, ingress words 550, drain CTL 449635, egress words 3, errors 0
+sel m2 thru:  | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 3147801, ingress words 596, drain CTL 449635, egress words 3, errors 0
+sel m2 odd:  | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 449634, ingress words 582, drain CTL 449635, egress words 3, errors 0
+sel m2 thruodd:  | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 3147810, ingress words 481, drain CTL 449635, egress words 3, errors 0
+DSDV_BK_SEL FAIL mut=2

@@ -41,7 +41,8 @@ SPEC (JSON; paths relative to the repo root):
   D, E           ring depth / read offset (default 4 / 2: as Q-CLUSTER-LANDALL)
   reach_um       reset-run hop reach (default 405)         residual_ps: inter-region die residual on the 1-bit reset hops (60)
   bench          {cycles, reset_cycles, sim: iverilog|verilator}
-  mut_reset_child  inst whose reset run MUT 4 lengthens (default: the first child with a reset pin)
+  mut_child      (alias mut_reset_child) child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
+                 outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
   split_nodes    {inst: {group: [pins]}}  (PL-SEQ 10-18) time a RESET-FREE pure-pipeline child per pin group: each group's
                  outputs depend only on that group's inputs (e.g. a bidirectional registered rung hop: N-bound and S-bound
                  registers), so the two directions get their own offsets and a bidirectional neighbour pair is not a
@@ -551,10 +552,10 @@ class Parent:
     def mut_child(self, P):
         kids = [ins["inst"] for ins in self.insts
                 if any(pin in (self.S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items())]
-        want = self.S.get("mut_reset_child")    # MUT 4 target (default: the first reset child); pick one whose state
-        if want:                                # outlives the warm-up under random stimulus (PL-SEQ 10-18)
+        want = self.S.get("mut_reset_child") or self.S.get("mut_child")   # MUT 4 target (default: the first reset
+        if want:                             # child); pick one whose state outlives the reset (a sticky flag / counter)
             if want not in kids:
-                raise SystemExit(f"mut_reset_child {want} is not a child with a reset pin on {self.rst}: {kids}")
+                raise SystemExit(f"mut_child {want} is not a child with a reset pin on {self.rst}: {kids}")
             return want
         return kids[0] if kids else None
 

@@ -22,6 +22,13 @@ top-level contract instances, so the banks must be die instances.  This tool wri
 The composition glue + banks + merges is the same netlist as the STRAP_BANKS=1 (Q2_MERGE=1) wrapper, bit for bit
 (the bench tools/hbm_die_v16/vms_hoist_equiv: lockstep of both forms).
 SE/NE (_core, client slots absent) are NOT hoisted: their q1 banks would expose the absent client ports unconnected.
+H-D4G3b 10-18 (plan (b) d4g, HBM-B-RTL1 claude/hbm-b-rtl1-vm-1017): the E-quadrant hubs WITH the SM client side,
+hfd_hgi_vms_static_{SE,NE}b_glue (rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_qb.sv, hand-written over the same
+ot_vms_slice_static_glue: SW slice shape NC 1 / RG 5 / WG 2, sid 1 / 3) with 8 q0_faces banks each, are emitted as a
+SECOND layer from the same per-quadrant code:
+  * tools/hbm_die_v15/v16_layers/vm_hoist_qb_d4g.json (QB below; the d4f layer above is byte-identical).  Contract
+    post-layer tools/hbm_die_v16/d4g_layers/l3_vm_hc_coll.py takes the bank masters / clocks / straps / internal edges /
+    client port_split of SE / NE from it (bench: run_vms_qb_equiv.sh, glue + 8 q0_faces banks == full SEb / NEb slice).
     gen_vms_hoist.py [--check]
 """
 import json, re, sys
@@ -30,12 +37,16 @@ ROOT = Path(__file__).resolve().parents[2]
 D = ROOT / 'rtl/hbm_accel/generic/vm/static'
 OUT = D / 'hfd_hgi_vms_static_glue.sv'
 LAYER = ROOT / 'tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json'
+LAYER_QB = ROOT / 'tools/hbm_die_v15/v16_layers/vm_hoist_qb_d4g.json'
 SRC = 'rtl/hbm_accel/generic/vm/static/'
 Q = dict(SW=dict(sid=0, RG=5, WG=2, merge=False), NW=dict(sid=2, RG=5, WG=3, merge=True),
          # core-only hubs (hfd_hgi_vms_static_{SE,NE}_core, H-NETLIST 1940): hub rq/rr groups = old slice groups (0, 3),
          # wq group 0 only, no dq; banks = hfd_vms_bank_native_q1_core (q1 with the SM-side client ports absent)
          SE=dict(sid=1, RG=4, WG=2, merge=False, core=dict(rg=(0, 3), wg=(0,))),
          NE=dict(sid=3, RG=4, WG=2, merge=False, core=dict(rg=(0, 3), wg=(0,))))
+# d4g plan (b) E-quadrant hubs with the SM client side (SW shape, sid 1 / 3; glue = hfd_hgi_vms_static_<Q>b_glue)
+QB = dict(SE=dict(sid=1, RG=5, WG=2, merge=False), NE=dict(sid=3, RG=5, WG=2, merge=False))
+HUB_DEPS = ('ot_vms_hub_static.sv', 'ot_vms_rstop_static.sv', 'ot_vms_rcl_static.sv', 'ot_vms_status_static.sv')
 REMOVED = ('clk_bank', 'rslot_v', 'wslot_v', 'rslot', 'wslot', 'rq', 'rr', 'wq', 'wq_done', 'dq', 'kq', 'dq_done', 'kq_done')
 
 
@@ -102,11 +113,13 @@ def wrapper_glue(t, q, cfg):
     return s
 
 
-def layer():
+def layer(quads=None, qb=False):
+    """qb=False: the d4f layer (Q, hfd_hgi_vms_static_<Q>_glue); qb=True: the d4g E-quadrant layer (QB, <Q>b_glue)"""
+    quads = (QB if qb else Q) if quads is None else quads
     inst, edges, clocks, straps, rem = [], [], [], [], {}
     def E(src, dst, bits):
         edges.append(dict(src=src, dst=dst, bits=bits, clock='stream', basis='gen_vms_hoist (slice g_bank wiring)'))
-    for q, cfg in Q.items():
+    for q, cfg in quads.items():
         hub = f'hb_vms_{q}'; RG, WG = cfg['RG'], cfg['WG']; RB, WB = 3, 3
         ps = {}
         for b in range(8):
@@ -162,9 +175,18 @@ def layer():
             ps[p] = [[f'vmb_{q}{b}', p, b * 281, b * 281 + 281] for b in range(8)]
         for p in (('kq_done',) if cfg.get('core') else ('dq_done', 'kq_done')):
             ps[p] = [[f'vmb_{q}{b}', p, b, b + 1] for b in range(8)]
-        rem[hub] = dict(master=f'hfd_hgi_vms_static_{q}_glue', source=SRC + 'hfd_hgi_vms_static_glue.sv', params={},
-                        rtl_deps=[SRC + x for x in ('ot_vms_hub_static.sv', 'ot_vms_rstop_static.sv', 'ot_vms_rcl_static.sv', 'ot_vms_status_static.sv')],
-                        port_split=ps)
+        if qb:
+            rem[hub] = dict(master=f'hfd_hgi_vms_static_{q}b_glue', source=SRC + 'hfd_hgi_vms_static_qb.sv', params={},
+                            rtl_deps=[SRC + 'hfd_hgi_vms_static_glue.sv'] + [SRC + x for x in HUB_DEPS], port_split=ps)
+        else:
+            rem[hub] = dict(master=f'hfd_hgi_vms_static_{q}_glue', source=SRC + 'hfd_hgi_vms_static_glue.sv', params={},
+                            rtl_deps=[SRC + x for x in HUB_DEPS], port_split=ps)
+    if qb:
+        return dict(region='vm_hoist_qb_d4g', author='Claude H-D4G3b (HBM-B-RTL1 SEb/NEb glue)',
+                    basis_commit='d4g plan (b) vm_quadrant_map (results/rtl/hbm_b_rtl1_1017/vm_quadrant_map.json)',
+                    instances=inst, edges=edges, clocks=clocks, straps=straps, gaps=[], remaster=rem,
+                    drop_clocks=[[f'hb_vms_{q}', 'clk_bank'] for q in quads],
+                    notes='d4g E-quadrant VM hubs hfd_hgi_vms_static_<Q>b_glue (NC 1, RG 5, WG 2) + 8 hoisted q0_faces banks each')
     return dict(region='vm_hoist_d4f', author='Claude H-NETLIST 2200', basis_commit='H-DIE d4f vmb_<Q>b plan blocks',
                 instances=inst, edges=edges, clocks=clocks, straps=straps, gaps=[], remaster=rem,
                 drop_clocks=[[f'hb_vms_{q}', 'clk_bank'] for q in Q], notes=__doc__.split('\n\n')[0])
@@ -176,10 +198,12 @@ def main():
            '// die-level instances (vmb_<Q>b; NW write merges vmm_NWb).  See the tool docstring.\n'
            + slice_glue(t) + ''.join(wrapper_glue(w, q, c) for q, c in Q.items()) + '`default_nettype wire\n')
     lay = json.dumps(layer(), indent=1) + '\n'
+    lay_qb = json.dumps(layer(qb=True), indent=1) + '\n'
     if '--check' in sys.argv:
-        ok = OUT.read_text() == rtl and LAYER.read_text() == lay
+        ok = OUT.read_text() == rtl and LAYER.read_text() == lay and LAYER_QB.is_file() and LAYER_QB.read_text() == lay_qb
         print('VMS_HOIST_GEN', 'CHECK_PASS' if ok else 'CHECK_FAIL'); sys.exit(0 if ok else 1)
-    OUT.write_text(rtl); LAYER.write_text(lay); print('VMS_HOIST_GEN WROTE', OUT.relative_to(ROOT), LAYER.relative_to(ROOT))
+    OUT.write_text(rtl); LAYER.write_text(lay); LAYER_QB.write_text(lay_qb)
+    print('VMS_HOIST_GEN WROTE', OUT.relative_to(ROOT), LAYER.relative_to(ROOT), LAYER_QB.relative_to(ROOT))
 
 
 if __name__ == '__main__':

@@ -12,7 +12,8 @@
 // epochs; recovery scenario: one corrupted PHY bit -> KV CRC abort -> compute missing-frame abort -> drain -> HOST link
 // reset -> retrain -> forwarded epoch -> exact replay of the layer; witnesses and typed faults checked.
 // MUT: 1 compute write slot +1, 2 KV RX demux swap, 3 producer fires 1 cycle late, 4 calendar compiled with a wrong TXL
-//      (run script), 5 kind-15 status levels forced stale (fresh gating mutant in the bench reference) -> must FAIL.
+//      (run script), 5 kind-15 status record STALE from layer 7 on: the compute die stamps its status record with the
+//      previous epoch (op_epoch-1) -> the KV ot_qwen_d2d_status_rx epoch16 header check must fault (LAYERBENCH 10-18).
 module tb_qwen_d2d_program;
     `include "program_params.svh"
     wire integer qs = P_QS;
@@ -136,7 +137,7 @@ module tb_qwen_d2d_program;
         .prog_witness_slot(c_prog_wslot), .prog_auth_slot(c_prog_auth), .prog_context_slot(c_prog_ctx), .prog_tx_observed_v(c_wit_v), .prog_tx_record(c_wit_p),
         .prog_rx_v(c_prog_rxv), .emb_rx_v(c_emb_v), .emb_rx_slot(c_emb_s),
         .kv_x3_slot(kv_x3_slot), .x3(x3), .x3_identity(x3_id), .x3_generation(x3_gen),
-        .status_epoch16(op_epoch), .vm_drained(lay[0]), .collective_drained(~lay[0]), .collective_busy(lay[1]),
+        .status_epoch16((MUT == 5 && lay >= 7) ? op_epoch - 16'd1 : op_epoch), .vm_drained(lay[0]), .collective_drained(~lay[0]), .collective_busy(lay[1]),
         .crom_fault(1'b0), .execution_active(1'b1), .admit_ready(lay[0] ^ lay[1]),
         .result_v(st_res), .result_done(1'b1), .result_fault(1'b0), .result_cause(4'd0), .result_tag(59'(lay * 4093 + 11)),
         .result_gen(2'(lay)), .result_token(18'(lay * 1001)), .result_value(32'(lay * 77)), .result_cycles(32'(lay * 1052)),

@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hsm_smvm_wrq_t4_r1",
+ "reviewer": "coordinator (2026-10-18 ~07:15)",
+ "verdict": "APPROVED",
+ "time": "2026-10-18T07:15:00-07:00",
+ "gate_commit": "897c50d3e",
+ "checklist": {
+  "lattice": "ACCEPT: the single 128x256 SRAM at x=23.328 (pinless-face gap), not on 43.2; internal to the tile, no die-level effect",
+  "std_cell_band": "PASS: one region, fill 0.16 (pin-limited); W/E pin bands visible in density.png",
+  "pin_spread": "PASS: W and E faces full height, N bus; 3,725 pins",
+  "clock_entry": "PASS: regional clock entries along W plus N",
+  "shape": "ACCEPT: 142.6x388.8 (2.7:1) set by the W/E pin count (pin-limited); gate PASS 0 fail / 0 warn"
+ },
+ "notes": "q5 = q4 geometry + CTS -no_obstruction_aware only (ELEM-GAPS/HBMN2): lane-3 replay 71.6->47.8 TT / 62.2->36.3 FF; native capture fix. Floorplan and density PNGs checked: outline, SRAM, pins and clock entries identical to the approved q4. The routed native audit decides the closure.",
+ "geometry_sha256": "7b2d6617592b8f75e16bd0651442817fe0e0603e9c35fe792c119cf94a06509b"
+}

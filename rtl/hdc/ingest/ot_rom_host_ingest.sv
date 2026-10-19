@@ -58,6 +58,14 @@ module ot_rom_host_ingest #(
     // count ofree (= 2^OFA - requests issued + u_ox wfreed returns; conservative, so the registered write can never meet a
     // full FIFO) instead of the combinational wfull.  Same requests, same order; each lands one clk_i edge later.
     // APIPE < 6: unchanged.
+    // APIPE >= 7 (S81-SHLK 2026-10-18, dsdv_sh_lk route ef442ffba TT -36.2, 173 endpoints): (a) the host receive FIFO's
+    // first-word-fall-through head is REGISTERED in clk_i (hr_v / hr_d, a standard FWFT output register: refilled on the
+    // edge the consumer pops it, so one word per clk_i edge is kept).  Every head decode (class, CSR, descriptor checks,
+    // hx_pop) then starts from a clk_i flop instead of u_hx.mem (clk_h, written on the other CTS root) through the
+    // 16:1 x 514-b read mux: 86 endpoints u_hx.mem -> hx_pop -> rbin_c / ofree (ck_ih -> ck_ic, 150-ps root-pair
+    // uncertainty) and 73 u_hx.rbin_c -> read mux -> u_eng.dq.  Cost: every host word reaches the engine ONE clk_i edge
+    // later (host path f_host -> s_hw / t_host +1 edge; same words, same order, same rate).  (b) the engine (APIPE 7)
+    // replicates its realigner head pointer (ot_hdc_kv_ingest).  APIPE <= 6: unchanged.
     parameter integer APIPE  = 0,
     // QPIPE = 1 (qwen-1010/c 2026-10-10, qfd_io_host): the engine's pipelined, lane-banked QKV path (ot_hdc_kv_ingest
     // QPIPE).  It is write-only, so it implies RMW_EN 0 here (an rmw descriptor fails closed, code 2).  MUT 3 / 4 = the
@@ -109,9 +117,33 @@ module ot_rom_host_ingest #(
     wire [HFA:0] hx_freed, hx_cnt;
     wire [513:0] hx_head;
     reg          hx_pop;
+    wire         hx_rd, hx_fempty;                // FIFO-side pop / empty (= hx_pop / hx_empty when APIPE < 7)
+    wire [513:0] hx_fhead;
     ot_link_afifo #(.W(514), .AW(HFA), .RCOPY(32)) u_hx (   // 32 kept read-address copies (8,230-load select)
         .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
-        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_pop), .rempty(hx_empty), .rdata(hx_head), .rcount(hx_cnt));
+        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_rd), .rempty(hx_fempty), .rdata(hx_fhead), .rcount(hx_cnt));
+    if (APIPE >= 7) begin : g_hreg
+        // APIPE >= 7: registered FWFT head (see the parameter note).  hr_d is data only (no reset): hr_v qualifies it.
+        reg          hr_v;
+        reg  [513:0] hr_d;
+        wire         hr_take = !hr_v || hx_pop;  // the slot is free on this edge
+        assign hx_rd = hr_take && !hx_fempty;
+        always @(posedge clk_i or negedge rn_i)
+`ifdef OT_ING_MUT_HREGV
+            if (!rn_i) hr_v <= 1'b0; else if (hr_take && !hx_fempty) hr_v <= 1'b1;  // mutant: a popped head stays valid
+`else
+            if (!rn_i) hr_v <= 1'b0; else if (hr_take) hr_v <= !hx_fempty;
+`endif
+`ifdef OT_ING_MUT_HREG
+        always @(posedge clk_i) if (hx_rd && !hx_pop) hr_d <= hx_fhead;     // mutant: a pop-and-refill keeps the old word
+`else
+        always @(posedge clk_i) if (hx_rd) hr_d <= hx_fhead;
+`endif
+        assign hx_empty = !hr_v;
+        assign hx_head  = hr_d;
+    end else begin : g_hdir
+        assign hx_rd = hx_pop; assign hx_empty = hx_fempty; assign hx_head = hx_fhead;
+    end
     always @(posedge clk_h or negedge rn_h) if (!rn_h) h_crn <= 0; else h_crn <= hx_freed;
 
     // =============================================================================================================

@@ -1,0 +1,10 @@
+ERR original mismatch cyc=9 got=100 want=000
+ERR original mismatch cyc=10 got=100 want=000
+ERR early/unflushed release region 2 cyc 130
+ERR original mismatch cyc=140 got=100 want=000
+ERR original mismatch cyc=141 got=100 want=000
+ERR early/unflushed release region 2 cyc 260
+ERR early/unflushed release region 2 cyc 261
+RST_REGION_PR_FAIL errors=7
+FATAL: rtl/test/qwen_split/tb_qkd_rst_region_pr.sv:69: 
+       Time: 1445000  Scope: tb_qkd_rst_region_pr

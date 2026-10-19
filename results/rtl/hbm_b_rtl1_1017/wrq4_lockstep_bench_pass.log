@@ -1,0 +1,14 @@
+TB_WRQ4_LOCKSTEP PASS MUT=0
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_lanes4_lockstep.sv:169: $finish called at 12578000 (1ps)
+TB_WRQ4_LOCKSTEP FAIL MUT=1 mismatches+faults=832
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_lanes4_lockstep.sv:169: $finish called at 12578000 (1ps)
+TB_WRQ4_LOCKSTEP FAIL MUT=2 mismatches+faults=1284
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_lanes4_lockstep.sv:169: $finish called at 12578000 (1ps)
+TB_WRQ4_LOCKSTEP FAIL MUT=3 mismatches+faults=23418
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_lanes4_lockstep.sv:169: $finish called at 12578000 (1ps)
+TB_WRQ4_LOCKSTEP FAIL MUT=4 mismatches+faults=12
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_lanes4_lockstep.sv:169: $finish called at 12578000 (1ps)
+TB_WRQ4_LOCKSTEP FAIL MUT=6 mismatches+faults=23702
+rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_lanes4_lockstep.sv:169: $finish called at 12578000 (1ps)
+WRQ4_LOCKSTEP BENCH PASS (positive PASS; E-writer mutants 1/2/3/4/6 FAIL)
+lockstep lane-edges 100564, SM-writer emissions 2368, half-1 emissions 768/768

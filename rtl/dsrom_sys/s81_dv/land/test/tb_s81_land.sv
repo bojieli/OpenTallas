@@ -6,7 +6,16 @@
 // Prints: OT_LAND n=.. dh=.. lr=.. dl=.. k=.. pred=<compile-time latency> meas=<measured latency or -1> mism=.. fault=..
 // Latency = ck edges from the source launch edge of a word to the ck edge that registers it in o.
 module tb_s81_land;
-    localparam integer W = `TB_W, T = 834, NMAX = 16;
+`ifndef TB_D
+`define TB_D 4
+`endif
+`ifndef TB_KW
+`define TB_KW 3
+`endif
+`ifndef TB_NMAX
+`define TB_NMAX 16
+`endif
+    localparam integer W = `TB_W, T = 834, NMAX = `TB_NMAX;   // LANDFIX-SQ: TB_D / TB_KW / TB_NMAX for the long-lane tile
     integer N, DH, LR, K, R0, G, SLIP, CYC;
     reg cks = 1'b0, ck = 1'b0;
     integer n = -1, m = -1;
@@ -53,8 +62,8 @@ module tb_s81_land;
     initial #1 rs = 1'b0;                                // power-on reset assert (async clear of both pointers)
     always @(posedge ck) begin m = m + 1; if (m == R0 - 1) rs <= #10 1'b1; end
     wire [W-1:0] o; wire fault;
-    wire [2:0] kk = K;
-    ot_s81_land #(.W(W), .D(4)) dut (.ck_f(ck_f), .i(li), .ck(ck), .rs(rs), .k(kk), .o(o), .fault(fault));
+    wire [`TB_KW-1:0] kk = K;
+    ot_s81_land #(.W(W), .D(`TB_D), .KW(`TB_KW)) dut (.ck_f(ck_f), .i(li), .ck(ck), .rs(rs), .k(kk), .o(o), .fault(fault));
     // ---------------------------------------------------------------- checker (samples o half a period after each ck edge)
     integer pred, mism, chk, L, best, okL;
     reg [W-1:0] hist [0:4095];
@@ -69,7 +78,7 @@ module tb_s81_land;
         for (q = 0; q < nh; q = q + 1)
             if (mh[q] >= R0 + K && mh[q] - pred >= G - 1) begin chk = chk + 1; if (hist[q] !== f(mh[q] - pred)) mism = mism + 1; end
         best = -1;
-        for (L = 0; L < 40 && best < 0; L = L + 1) begin
+        for (L = 0; L < 120 && best < 0; L = L + 1) begin
             okL = 1;
             for (q = nh - 64; q < nh; q = q + 1) if (hist[q] !== f(mh[q] - L)) okL = 0;
             if (okL) best = L;

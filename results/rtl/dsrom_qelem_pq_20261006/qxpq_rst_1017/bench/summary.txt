@@ -1,0 +1,6 @@
+pass seed 1 expect pass -> QXPQ_RSTP PASS OK | QXPQ_RSTP cycles=1773914 windows=51 rel_ref=1 rel_dut=2 rel_bad=0 mism=0 first_mism=-1 phases=300 resets=50 early=25 go=300 cfg=7511 xs=140300 pv_cycles=2790 busy=1769810 fault=0 bank_free=1761228 walking=1752835
+pass seed 2 expect pass -> QXPQ_RSTP PASS OK | QXPQ_RSTP cycles=1806452 windows=43 rel_ref=1 rel_dut=2 rel_bad=0 mism=0 first_mism=-1 phases=300 resets=42 early=21 go=300 cfg=7510 xs=142435 pv_cycles=2850 busy=1802770 fault=0 bank_free=1793728 walking=1785190
+pass seed 3 expect pass -> QXPQ_RSTP PASS OK | QXPQ_RSTP cycles=1849282 windows=27 rel_ref=1 rel_dut=2 rel_bad=0 mism=0 first_mism=-1 phases=300 resets=26 early=13 go=300 cfg=7506 xs=145874 pv_cycles=2841 busy=1846765 fault=0 bank_free=1835826 walking=1828797
+mut_bypass seed 1 expect fail -> QXPQ_RSTP FAIL OK | QXPQ_RSTP cycles=1773914 windows=51 rel_ref=1 rel_dut=1 rel_bad=51 mism=394 first_mism=86 phases=300 resets=50 early=25 go=300 cfg=7511 xs=140300 pv_cycles=2790 busy=1769810 fault=0 bank_free=1761228 walking=1752835
+mut_late seed 1 expect fail -> QXPQ_RSTP FAIL OK | QXPQ_RSTP cycles=1773914 windows=51 rel_ref=1 rel_dut=2 rel_bad=0 mism=41674 first_mism=69 phases=300 resets=50 early=25 go=300 cfg=7511 xs=140300 pv_cycles=2790 busy=1769810 fault=0 bank_free=1761228 walking=1752835
+BENCH_RC 0

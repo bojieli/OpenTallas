@@ -1,0 +1,5 @@
+slice_smoke: /srv/opentallas-scratch/claude/layerbench-qwen-1018/smoke/c_ctl_xpf_comp2/tb_qwc_slice_ctl.sv: 32 inputs (9 clock, 5 reset), 77 outputs
+SMOKE_FAIL qwc_slice_ctl MUT=0 errors 4234
+RESET_DET ports 77 nondet 2 undeclared_nondet 0
+SMOKE_RESET_DETERMINISTIC qwc_slice_ctl (every output, except the declared SMOKE_UNRESET_OK ones listed in reset_det_m0.txt)
+SMOKE_RESULT FAIL qwc_slice_ctl MUT=0
