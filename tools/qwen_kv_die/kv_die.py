@@ -2583,6 +2583,9 @@ def _relays(m):
 
     def route(a, b, pa='', pb=''):
         wps_ = KSD.waypoints(m, a, pa, b, pb) if (KSD.ON and m['geo'].get('static_die')) else None
+        # DIE-KV-REPLACE 10-19: the top engine's K response word runs through its OWN relay band (see _krs_top_lane),
+        # on the first placement and on every retry
+        wps_ = _krs_top_lane(m, bid) or wps_
         if wps_:
             # KVJ-G2b: a static-die long word (ctl -> S-stack chain root / fan) runs through its planned waypoints (the
             # PV-side channel, the stack seam row, the stack's control channel) instead of the shortest corridor, which is
@@ -2827,7 +2830,14 @@ def _relays(m):
                 raise ValueError(f'kv die fork {nm_f}: bus name collision')
             fork_names.add(nm_f)
             forks_[nm_f] = bid_f
-            order_.append((nm_f, 'kv_oneway', bits_f, [src_f, ld_f]))
+            br_ = (nm_f, 'kv_oneway', bits_f, [src_f, ld_f])
+            if __import__('os').environ.get('OT_KV_FORK_PRIO', '1' if _ectl_st_frame(True) else '0') == '1':
+                # DIE-KV-REPLACE 10-19: a fork branch is planned right after its trunk (it keeps the trunk's priority:
+                # pvh_<st>_<k>__f0 -> astk vh<k> was planned LAST and found the group-top corner full on the grown ECTL)
+                j_ = max(i_ for i_, e_ in enumerate(order_) if e_[0] == bid_f or e_[0].startswith(bid_f + '__f'))
+                order_.insert(j_ + 1, br_)
+            else:
+                order_.append(br_)
     for bid, cl, bits, eps in order_:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
@@ -3214,7 +3224,9 @@ def _relays(m):
                     st_['pscale'] = sc_
                     chain_()
                 break
-            except ValueError:
+            except ValueError as e_att_:
+                if _krs_top_lane(m, bid) is not None:
+                    print(f'kv die KRS_TOP_LANE: {bid} attempt {attempt} failed: {str(e_att_)[:300]}', file=sys.stderr)
                 if attempt == 3 or not m['geo'].get('split') or (attempt and bid not in tree_meta
                                                                     and __import__('os').environ.get('OT_KV_RLY_STD', '0') != '1'):
                     raise
@@ -3384,6 +3396,37 @@ def _relays(m):
 
 
 _LANES = {}
+
+
+def _krs_top_lane(m, bid):
+    """DIE-KV-REPLACE 10-19: waypoints (die um, in order driver -> load) of the top engine's K response word krs_<st>_7,
+    or None.  With the grown 725.76 x 261.36 ECTL frame (KV-ECTL5 / coordinator: keep the frame) each engine group is
+    4 x 131.76 um taller; the shortest path slg_<st>_7.krsp -> ectl_<st>_7.rs (1,062 b) hugs the group's top edge and then
+    the far head column's outer edge, the one-relay-deep rows every other stack chain already fills (prep e5g1..8: no spot
+    krs_ES_7 / krs_WN_7 for any SN_LIFT / KV_CHAN_EXTRA / V143_EXTRA knob), while the band above the group and the channel
+    between the far column and the PV column stay empty.  The word gets its own relay band: across the stack OT_KV_KRS_TOP_DY
+    um (default 259.2) beyond the group top (S stacks: up into the S|N seam band; N stacks: the band above the N group,
+    where slg_<st>_7 sits), then down / up the middle of the far channel (OT_KV_KRS_TOP_CH um outward of the ECTL's rs
+    face, default 648) to the rs pin's row.  OT_KV_KRS_TOP_LANE=0 turns it off; default on with the grown ECTL frame."""
+    import os as _os
+    if _os.environ.get('OT_KV_KRS_TOP_LANE', '1' if ECTL == ECTL_ST else '0') != '1':
+        return None
+    mt = re.fullmatch(r'krs_(WS|WN|ES|EN)_7(?:__f\d+)?', bid or '')
+    g = m['geo'].get('grp_y', {})
+    if not mt or mt.group(1) not in g:
+        return None
+    st = mt.group(1)
+    dy = float(_os.environ.get('OT_KV_KRS_TOP_DY', '259.2'))
+    dch = float(_os.environ.get('OT_KV_KRS_TOP_CH', '648'))
+    by = {i.name: i for i in m['insts']}
+    ak, ec = by.get(f'astk_{st}'), by.get(f'ectl_{st}_7')
+    if ak is None or ec is None:
+        return None
+    ly = g[st][1] + dy
+    rs_x = ec.x + (ec.w if ec.orient in ('MY', 'R180') else 0.0)
+    cx = rs_x + (dch if rs_x > ak.x + ak.w / 2 else -dch)
+    ry = ec.y + ec.h / 2
+    return [(ak.x + ak.w / 2, ly), (cx, ly), (cx, ry)]
 
 
 def _kv_lane(m, bid):
