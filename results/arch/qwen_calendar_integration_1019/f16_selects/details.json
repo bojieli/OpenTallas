@@ -1,0 +1,32 @@
+{
+  "clock_cap_units": "capacitive_load_unit (1,ff)",
+  "ff_clock_cap": {
+    "DFFHQNx1_ASAP7_75t_R": {
+      "count": 3276,
+      "clock_cap": 0.474736
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "count": 896,
+      "clock_cap": 0.462899
+    }
+  },
+  "total_clock_cap": 1969.99264,
+  "remaining_ff_violations": [
+    {
+      "root": "$auto$ff.cc:337:slice$36444/QN[0]",
+      "loads": 54,
+      "aliases": [
+        "$abc$47435$auto$dfflibmap.cc:539:dfflibmap$42285[0]",
+        "$abc$47435$new_n9686[0]"
+      ]
+    },
+    {
+      "root": "$auto$ff.cc:337:slice$36445/QN[0]",
+      "loads": 34,
+      "aliases": [
+        "$abc$47435$auto$dfflibmap.cc:539:dfflibmap$42287[0]",
+        "$abc$47435$new_n9687[0]"
+      ]
+    }
+  ]
+}

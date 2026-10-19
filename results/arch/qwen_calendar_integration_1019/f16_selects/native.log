@@ -1,0 +1,229 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command `read_liberty -lib libsource/all.lib; read_json generic.json; dfflibmap -liberty libsource/seq.lib; abc -liberty libsource/comb.lib; clean; stat -liberty libsource/all.lib; write_verilog -noattr native.v; write_json native.json' --
+
+1. Executing Liberty frontend: libsource/all.lib
+Imported 202 cell types from liberty file.
+
+2. Executing JSON frontend.
+Importing module qfd_dv_typed_witness_control from JSON tree.
+
+3. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+3.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\qfd_dv_typed_witness_control':
+  mapped 896 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 3276 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+4. Executing ABC pass (technology mapping using ABC).
+
+4.1. Extracting gate netlist of module `\qfd_dv_typed_witness_control' to `<abc-temp-dir>/input.blif'..
+
+4.1.1. Executed ABC.
+Extracted 31291 gates and 35688 wires to a netlist network with 4397 inputs and 4522 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_69e88426.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.1.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:      142
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:       73
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:      186
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:       81
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:       64
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:       32
+ABC RESULTS:   AO211x2_ASAP7_75t_R cells:        6
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:      624
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:        4
+ABC RESULTS:   AO222x2_ASAP7_75t_R cells:        7
+ABC RESULTS:   AO22x1_ASAP7_75t_R cells:       71
+ABC RESULTS:   AO31x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO32x1_ASAP7_75t_R cells:       21
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:      133
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:      335
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:       67
+ABC RESULTS:   AOI222xp33_ASAP7_75t_R cells:       19
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:      446
+ABC RESULTS:   AOI311xp33_ASAP7_75t_R cells:       18
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:       69
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:       10
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:     1631
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:       81
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:        5
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:     2364
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:      235
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:      163
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:       88
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:      805
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:      602
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:      158
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:      104
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:      171
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:       40
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:       81
+ABC RESULTS:   OA222x2_ASAP7_75t_R cells:       30
+ABC RESULTS:   OA22x2_ASAP7_75t_R cells:       24
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:      150
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:     3584
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:      135
+ABC RESULTS:   OAI222xp33_ASAP7_75t_R cells:      410
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:     1865
+ABC RESULTS:   OAI311xp33_ASAP7_75t_R cells:       10
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:       69
+ABC RESULTS:   OAI321xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   OAI32xp33_ASAP7_75t_R cells:       91
+ABC RESULTS:   OAI33xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:     1256
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:      169
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:      142
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:       38
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:      301
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:      196
+ABC RESULTS:        internal signals:    26769
+ABC RESULTS:           input signals:     4397
+ABC RESULTS:          output signals:     4522
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 32323 unused wires.
+
+5. Printing statistics.
+
+=== qfd_dv_typed_witness_control ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    21675        - wires
+    23664        - wire bits
+      749        - public wires
+     2738        - public wire bits
+       26        - ports
+      243        - port bits
+    21712 2.66E+03 cells
+      128        -   $scopeinfo
+      142   12.422   A2O1A1Ixp33_ASAP7_75t_R
+       73    9.579   A2O1A1O1Ixp25_ASAP7_75t_R
+      186   16.271   AND2x2_ASAP7_75t_R
+       81    7.086   AND3x1_ASAP7_75t_R
+       64    6.532   AND4x1_ASAP7_75t_R
+       32    3.732   AND5x1_ASAP7_75t_R
+        6      1.4   AO211x2_ASAP7_75t_R
+      624   54.588   AO21x1_ASAP7_75t_R
+        4    0.583   AO221x1_ASAP7_75t_R
+        7    1.225   AO222x2_ASAP7_75t_R
+       71    9.317   AO22x1_ASAP7_75t_R
+        2    0.467   AO31x2_ASAP7_75t_R
+       21    2.449   AO32x1_ASAP7_75t_R
+      133   11.635   AOI211xp5_ASAP7_75t_R
+      335   24.422   AOI21xp33_ASAP7_75t_R
+       67    6.838   AOI221xp5_ASAP7_75t_R
+       19     2.77   AOI222xp33_ASAP7_75t_R
+      446   39.016   AOI22xp33_ASAP7_75t_R
+       18    1.837   AOI311xp33_ASAP7_75t_R
+       69    6.036   AOI31xp33_ASAP7_75t_R
+       10    1.021   AOI32xp33_ASAP7_75t_R
+      896  339.656   DFFASRHQNx1_ASAP7_75t_R
+     3276  955.282   DFFHQNx1_ASAP7_75t_R
+     1631    71.34   INVx1_ASAP7_75t_R
+       81    8.267   MAJIxp5_ASAP7_75t_R
+        5    0.656   MAJx2_ASAP7_75t_R
+     2364  137.868   NAND2xp33_ASAP7_75t_R
+      235   17.132   NAND3xp33_ASAP7_75t_R
+      163   14.259   NAND4xp25_ASAP7_75t_R
+       88    8.981   NAND5xp2_ASAP7_75t_R
+      805   46.948   NOR2xp33_ASAP7_75t_R
+      602   43.886   NOR3xp33_ASAP7_75t_R
+      158   13.822   NOR4xp25_ASAP7_75t_R
+      104   10.614   NOR5xp2_ASAP7_75t_R
+      171   14.959   O2A1O1Ixp33_ASAP7_75t_R
+       40    4.666   OA211x2_ASAP7_75t_R
+       81    8.267   OA21x2_ASAP7_75t_R
+       30    5.249   OA222x2_ASAP7_75t_R
+       24    3.499   OA22x2_ASAP7_75t_R
+      150   13.122   OAI211xp5_ASAP7_75t_R
+     3584  261.274   OAI21xp33_ASAP7_75t_R
+      135   13.778   OAI221xp5_ASAP7_75t_R
+      410   59.778   OAI222xp33_ASAP7_75t_R
+     1865   163.15   OAI22xp33_ASAP7_75t_R
+       10    1.021   OAI311xp33_ASAP7_75t_R
+       69    6.036   OAI31xp33_ASAP7_75t_R
+        2    0.233   OAI321xp33_ASAP7_75t_R
+       91    9.287   OAI32xp33_ASAP7_75t_R
+        2    0.233   OAI33xp33_ASAP7_75t_R
+     1256  109.875   OR2x2_ASAP7_75t_R
+      169   14.784   OR3x1_ASAP7_75t_R
+      142   14.493   OR4x1_ASAP7_75t_R
+       38    4.432   OR5x1_ASAP7_75t_R
+      301   39.497   XNOR2xp5_ASAP7_75t_R
+      196   25.719   XOR2xp5_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\qfd_dv_typed_witness_control': 2661.287400
+     of which used for sequential elements: 1294.937280 (48.66%)
+
+6. Executing Verilog backend.
+
+6.1. Executing BMUXMAP pass.
+
+6.2. Executing DEMUXMAP pass.
+Dumping module `\qfd_dv_typed_witness_control'.
+
+7. Executing JSON backend.
+
+End of script. Logfile hash: 2296a93c0e, time: 6.23s, user: 1.68s, system: 0.20s, MEM: 239.70 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 75% 1x abc (4 sec), 8% 2x read_json (0 sec), ...

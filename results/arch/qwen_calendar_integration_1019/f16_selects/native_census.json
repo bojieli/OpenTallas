@@ -1,0 +1,938 @@
+{
+  "source": "native.json",
+  "scope": "all emitted roles including top/reset, BUF/INV transparent, clock-only pins excluded",
+  "roots": 20179,
+  "violations_over32": 51,
+  "role_counts": {
+    "input": 225,
+    "constant": 1,
+    "comb": 15781,
+    "ff": 4172
+  },
+  "role_max": {
+    "input": 899,
+    "constant": 896,
+    "comb": 523,
+    "ff": 54
+  },
+  "ff_cells": 4172,
+  "cells": 21712,
+  "counter_vectors": {},
+  "top50": [
+    {
+      "root": "port:rst_n[0]",
+      "role": "input",
+      "loads": 899,
+      "aliases": [
+        "dut.gs.bank[0].sector[0].ff.rst_n",
+        "dut.gs.bank[0].sector[10].ff.rst_n",
+        "dut.gs.bank[0].sector[11].ff.rst_n",
+        "dut.gs.bank[0].sector[12].ff.rst_n",
+        "dut.gs.bank[0].sector[13].ff.rst_n",
+        "dut.gs.bank[0].sector[1].ff.rst_n",
+        "dut.gs.bank[0].sector[2].ff.rst_n",
+        "dut.gs.bank[0].sector[3].ff.rst_n"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$48934/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$48935/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54169/B[0]",
+        "$auto$ff.cc:337:slice$36358/RESETN[0]",
+        "$auto$ff.cc:337:slice$36359/RESETN[0]",
+        "$auto$ff.cc:337:slice$36360/RESETN[0]",
+        "$auto$ff.cc:337:slice$36361/RESETN[0]",
+        "$auto$ff.cc:337:slice$36362/RESETN[0]"
+      ]
+    },
+    {
+      "root": "constant:1",
+      "role": "constant",
+      "loads": 896,
+      "aliases": [
+        "dut.gs.due_sel[0].ti[0]",
+        "dut.gs.due_sel[0].ti[2]",
+        "dut.gs.due_sel[0].ti[3]",
+        "dut.gs.due_sel[10].ti[0]",
+        "dut.gs.due_sel[10].ti[2]",
+        "dut.gs.due_sel[10].ti[3]",
+        "dut.gs.due_sel[11].ti[0]",
+        "dut.gs.due_sel[11].ti[2]"
+      ],
+      "examples": [
+        "$auto$ff.cc:337:slice$36358/SETN[0]",
+        "$auto$ff.cc:337:slice$36359/SETN[0]",
+        "$auto$ff.cc:337:slice$36360/SETN[0]",
+        "$auto$ff.cc:337:slice$36361/SETN[0]",
+        "$auto$ff.cc:337:slice$36362/SETN[0]",
+        "$auto$ff.cc:337:slice$36363/SETN[0]",
+        "$auto$ff.cc:337:slice$36372/SETN[0]",
+        "$auto$ff.cc:337:slice$36373/SETN[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$48934/Y[0]",
+      "role": "comb",
+      "loads": 523,
+      "aliases": [
+        "$abc$47435$new_n10418"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49033/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49034/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49164/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49165/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49426/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49689/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49690/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49698/A1[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$49425/Y[0]",
+      "role": "comb",
+      "loads": 133,
+      "aliases": [
+        "$abc$47435$new_n10909"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49428/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49429/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49430/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49431/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49432/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49433/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49434/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49436/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$50214/Y[0]",
+      "role": "comb",
+      "loads": 133,
+      "aliases": [
+        "$abc$47435$new_n11698"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50216/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50217/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50219/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50220/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50221/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50222/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50223/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50225/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62377/Y[0]",
+      "role": "comb",
+      "loads": 133,
+      "aliases": [
+        "$abc$47435$new_n23861"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64195/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64196/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64197/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64198/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64199/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64200/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64201/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64203/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$49033/Y[0]",
+      "role": "comb",
+      "loads": 132,
+      "aliases": [
+        "$abc$47435$new_n10517"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49035/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49042/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49044/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49046/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49048/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49050/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49052/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49054/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$49164/Y[0]",
+      "role": "comb",
+      "loads": 132,
+      "aliases": [
+        "$abc$47435$new_n10648"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49167/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49169/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49170/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49171/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49172/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49173/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49175/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49177/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62381/Y[0]",
+      "role": "comb",
+      "loads": 132,
+      "aliases": [
+        "$abc$47435$new_n23865"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63936/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63937/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63939/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63940/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63941/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63942/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63943/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63945/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62385/Y[0]",
+      "role": "comb",
+      "loads": 132,
+      "aliases": [
+        "$abc$47435$new_n23869"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63677/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63679/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63680/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63681/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63682/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63683/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63685/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63687/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62392/Y[0]",
+      "role": "comb",
+      "loads": 132,
+      "aliases": [
+        "$abc$47435$new_n23876"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63160/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63161/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63162/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63163/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63164/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63165/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63167/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63169/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62371/Y[0]",
+      "role": "comb",
+      "loads": 131,
+      "aliases": [
+        "$abc$47435$new_n23855"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62373/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64457/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64458/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64459/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64460/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64461/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64463/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64465/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$49688/Y[0]",
+      "role": "comb",
+      "loads": 129,
+      "aliases": [
+        "$abc$47435$new_n11172"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49689/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49690/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49698/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49700/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49702/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49704/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49706/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49708/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$49950/Y[0]",
+      "role": "comb",
+      "loads": 129,
+      "aliases": [
+        "$abc$47435$new_n11434"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49951/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49952/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49960/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49962/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49964/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49966/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49968/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49970/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$50475/Y[0]",
+      "role": "comb",
+      "loads": 129,
+      "aliases": [
+        "$abc$47435$new_n11959"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50476/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50477/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50485/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50487/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50489/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50491/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50493/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50495/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62372/Y[0]",
+      "role": "comb",
+      "loads": 129,
+      "aliases": [
+        "$abc$47435$new_n23856"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64454/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64455/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64456/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64462/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64464/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64466/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64468/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64470/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62388/Y[0]",
+      "role": "comb",
+      "loads": 129,
+      "aliases": [
+        "$abc$47435$new_n23872"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62389/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62390/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62405/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63425/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63427/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63429/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63431/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63433/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62390/Y[0]",
+      "role": "comb",
+      "loads": 129,
+      "aliases": [
+        "$abc$47435$new_n23874"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62391/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63419/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63420/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63426/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63428/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63430/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63432/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63434/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$49034/Y[0]",
+      "role": "comb",
+      "loads": 128,
+      "aliases": [
+        "$abc$47435$new_n10518"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49041/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49043/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49045/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49047/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49049/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49051/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49053/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49055/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$49165/Y[0]",
+      "role": "comb",
+      "loads": 128,
+      "aliases": [
+        "$abc$47435$new_n10649"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49166/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49168/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49174/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49176/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49178/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49180/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49182/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49184/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$49690/Y[0]",
+      "role": "comb",
+      "loads": 128,
+      "aliases": [
+        "$abc$47435$new_n11174"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49692/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49693/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49699/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49701/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49703/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49705/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49707/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49709/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$54039/Y[0]",
+      "role": "comb",
+      "loads": 128,
+      "aliases": [
+        "$abc$47435$new_n15523"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54040/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54041/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54042/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54043/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54044/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54045/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54046/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54047/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$54169/Y[0]",
+      "role": "comb",
+      "loads": 128,
+      "aliases": [
+        "$abc$47435$new_n15653"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54170/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54171/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54172/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54173/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54174/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54175/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54176/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54177/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62382/Y[0]",
+      "role": "comb",
+      "loads": 128,
+      "aliases": [
+        "$abc$47435$new_n23866"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62383/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63938/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63944/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63946/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63948/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63950/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63952/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63954/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62386/Y[0]",
+      "role": "comb",
+      "loads": 128,
+      "aliases": [
+        "$abc$47435$new_n23870"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62387/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63678/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63684/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63686/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63688/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63690/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63692/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63694/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62393/Y[0]",
+      "role": "comb",
+      "loads": 128,
+      "aliases": [
+        "$abc$47435$new_n23877"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62394/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63159/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63166/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63168/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63170/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63172/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63174/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$63176/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$49426/Y[0]",
+      "role": "comb",
+      "loads": 127,
+      "aliases": [
+        "$abc$47435$new_n10910"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49427/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49435/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49437/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49439/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49441/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49443/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49445/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49447/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$49952/Y[0]",
+      "role": "comb",
+      "loads": 127,
+      "aliases": [
+        "$abc$47435$new_n11436"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49954/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49961/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49963/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49965/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49967/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49969/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49971/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$49973/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$50215/Y[0]",
+      "role": "comb",
+      "loads": 127,
+      "aliases": [
+        "$abc$47435$new_n11699"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50218/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50224/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50226/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50228/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50230/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50232/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50234/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50236/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62378/Y[0]",
+      "role": "comb",
+      "loads": 127,
+      "aliases": [
+        "$abc$47435$new_n23862"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62379/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64202/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64204/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64206/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64208/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64210/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64212/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$64214/B[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$50477/Y[0]",
+      "role": "comb",
+      "loads": 126,
+      "aliases": [
+        "$abc$47435$new_n11961"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50486/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50488/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50490/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50492/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50494/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50496/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50498/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50500/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$53913/Y[0]",
+      "role": "comb",
+      "loads": 61,
+      "aliases": [
+        "dut.pick"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53931/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53932/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53935/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53936/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53939/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53940/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53943/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53944/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62457/Y[0]",
+      "role": "comb",
+      "loads": 60,
+      "aliases": [
+        "$abc$47435$new_n23941"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62459/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62461/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62463/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62465/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62468/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62470/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62472/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62474/B1[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62625/Y[0]",
+      "role": "comb",
+      "loads": 60,
+      "aliases": [
+        "$abc$47435$new_n24109"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62627/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62629/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62631/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62633/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62636/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62638/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62640/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62642/B1[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62793/Y[0]",
+      "role": "comb",
+      "loads": 60,
+      "aliases": [
+        "$abc$47435$new_n24277"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62795/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62797/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62799/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62801/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62804/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62806/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62808/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62810/B1[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$53620/Y[0]",
+      "role": "comb",
+      "loads": 58,
+      "aliases": [
+        "$abc$47435$new_n15104"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53622/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53623/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53624/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53625/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53626/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53627/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53628/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53629/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$53652/Y[0]",
+      "role": "comb",
+      "loads": 57,
+      "aliases": [
+        "$abc$47435$new_n15136"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53654/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53655/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53656/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53657/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53658/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53659/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53660/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53661/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$53684/Y[0]",
+      "role": "comb",
+      "loads": 57,
+      "aliases": [
+        "$abc$47435$new_n15168"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53686/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53687/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53688/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53689/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53690/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53691/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53692/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53693/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$53716/Y[0]",
+      "role": "comb",
+      "loads": 57,
+      "aliases": [
+        "$abc$47435$new_n15200"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53718/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53719/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53720/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53721/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53722/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53723/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53724/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53725/A2[0]"
+      ]
+    },
+    {
+      "root": "$auto$ff.cc:337:slice$36444/QN[0]",
+      "role": "ff",
+      "loads": 54,
+      "aliases": [
+        "$abc$47435$auto$dfflibmap.cc:539:dfflibmap$42285"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53788/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53789/A1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53790/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53791/A1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53793/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53794/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53797/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$53798/A[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$60239/Y[0]",
+      "role": "comb",
+      "loads": 47,
+      "aliases": [
+        "$abc$47435$new_n21723"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60246/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60247/C[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62454/A1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62457/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62461/A1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62463/A1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62465/B2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62470/B2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$60420/Y[0]",
+      "role": "comb",
+      "loads": 47,
+      "aliases": [
+        "$abc$47435$new_n21904"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60427/C[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62955/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62959/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62962/B2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62966/A1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62968/A1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62970/B2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62974/B2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$60299/Y[0]",
+      "role": "comb",
+      "loads": 46,
+      "aliases": [
+        "$abc$47435$new_n21783"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60306/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60307/C[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62625/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62629/A1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62631/A1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62633/B2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62638/B2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62640/B2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$60359/Y[0]",
+      "role": "comb",
+      "loads": 46,
+      "aliases": [
+        "$abc$47435$new_n21843"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60366/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60367/C[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62793/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62797/A1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62799/A1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62801/B2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62806/B2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62808/B2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$62959/Y[0]",
+      "role": "comb",
+      "loads": 40,
+      "aliases": [
+        "$abc$47435$new_n24443"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62962/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62966/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62968/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62970/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62974/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62978/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62980/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$62984/B1[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$51535/Y[0]",
+      "role": "comb",
+      "loads": 38,
+      "aliases": [
+        "$abc$47435$new_n13019"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$51536/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$51901/C[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60908/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60919/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60932/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60943/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60955/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60973/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$50738/Y[0]",
+      "role": "comb",
+      "loads": 37,
+      "aliases": [
+        "$abc$47435$new_n12222"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$50739/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60908/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60919/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60932/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60943/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60955/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60972/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60975/A2[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$52150/Y[0]",
+      "role": "comb",
+      "loads": 37,
+      "aliases": [
+        "$abc$47435$new_n13634"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$52151/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60907/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60918/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60931/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60944/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60956/A2[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60972/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60974/B1[0]"
+      ]
+    },
+    {
+      "root": "$abc$47435$auto$blifparse.cc:397:parse_blif$52963/Y[0]",
+      "role": "comb",
+      "loads": 37,
+      "aliases": [
+        "$abc$47435$new_n14447"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$52964/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60907/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60918/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60931/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60944/B1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60955/C1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60972/C1[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60975/B1[0]"
+      ]
+    },
+    {
+      "root": "port:pw_v[0]",
+      "role": "input",
+      "loads": 35,
+      "aliases": [
+        "dut.pw_v",
+        "pw_v"
+      ],
+      "examples": [
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$48929/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$48934/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$48935/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54012/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54016/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$54169/A[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60221/B[0]",
+        "$abc$47435$auto$blifparse.cc:397:parse_blif$60494/A[0]"
+      ]
+    }
+  ]
+}

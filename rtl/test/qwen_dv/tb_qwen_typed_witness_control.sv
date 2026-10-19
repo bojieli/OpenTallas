@@ -5,7 +5,7 @@
 //  0 PW addr data_hi data_lo   1 AUTH level   2 PROFILE digest_hi digest_lo epoch fusedcap
 //  3 START user stage epoch    4 ISSUE user slice pidx stage epoch   5 RETIRE user mexpf
 //  9 END
-module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0);
+module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0,SELECT=0);
  reg ck=0,rst_n=0;always #1 ck=~ck;
  reg pw_v=0;reg[9:0]pw_addr=0;reg[63:0]pw_data=0;reg auth=0,fusedcap=0;reg[63:0]dig=0;reg[15:0]pep=0;
  reg start_v=0;reg[1:0]start_user=0;reg[5:0]start_stage=0;reg[15:0]start_epoch=0;
@@ -15,7 +15,7 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0);
  wire[15:0]observation;wire obs_fault;
  wire template_ready;wire[3:0]context_active,all_complete;wire group_complete;wire[1:0]complete_user;wire[3:0]complete_group;wire fault;
  qfd_dv_typed_su_observer #(.ENABLE(EN)) obs(.ck(ck),.rst_n(rst_n),.su_issue(su_issue),.cmd_user(cmd_user),.su_pidx(su_pidx),.cmd_slice(cmd_slice),.observation(observation),.fault(obs_fault));
- qfd_dv_typed_witness_control #(.ENABLE(EN),.SAFE_COMPARE(SAFE)) dut(.ck(ck),.rst_n(rst_n),.pw_v(pw_v),.pw_addr(pw_addr),.pw_data(pw_data),
+ qfd_dv_typed_witness_control #(.ENABLE(EN),.SAFE_COMPARE(SAFE),.SAFE_SELECT(SELECT)) dut(.ck(ck),.rst_n(rst_n),.pw_v(pw_v),.pw_addr(pw_addr),.pw_data(pw_data),
   .all_copies_authenticated(auth),.fusedcap(fusedcap),.installed_digest(dig),.installed_epoch(pep),
   .start_v(start_v),.start_user(start_user),.start_stage(start_stage),.start_epoch(start_epoch),
   .retire_v(retire_v),.retire_user(retire_user),.ME_XPF_retired(mexpf),
@@ -64,6 +64,64 @@ module tb_qwen_typed_witness_control #(parameter integer EN=1,SAFE=0,PAIR=0);
     dut.cache_due[0][mi]=dut.cache_due[0][mi]+13'd1;mech_injected=1;$display("F16_INJECT_DUE_CORRUPT slice=%0d",mi);
    end
   end
+ end
+ integer select_injected=0,si,sj;reg[12:0] select_coverage=0;reg[7:0] bank_coverage=0;reg[3:0] user_coverage=0;integer consecutive=0;reg previous_pending=0;
+ generate if(SELECT)begin:inject_sectors
+ for(genvar xi=0;xi<15;xi=xi+1)begin:select_fault
+  reg done=0;
+  always@(negedge ck)if(dut.pending&&!done)begin
+   if($test$plusargs("SELECT_WRONG"))begin dut.gs.sel[xi].ff.q=13'b1<<((dut.pending_group+1)%13);done=1;end
+   if($test$plusargs("SELECT_CLEAR"))begin dut.gs.sel[xi].ff.q=0;done=1;end
+  end
+ end
+ for(genvar xi=0;xi<8;xi=xi+1)begin:bank_fault
+ for(genvar xj=0;xj<14;xj=xj+1)begin:sector_fault
+  reg done=0;
+  always@(negedge ck)if(dut.pending&&!done&&$test$plusargs("BANK_WRONG"))begin
+   dut.gs.bank[xi].sector[xj].ff.q=(xi==((2*dut.pending_user+dut.pending_slot+1)%8));done=1;
+  end
+ end end
+ end endgenerate
+ always@(negedge ck)if(SELECT&&dut.pending&&!select_injected)begin
+  if($test$plusargs("SELECT_WRONG"))begin
+   
+   select_injected=1;$display("F16_SELECT_WRONG_INJECT");
+  end
+  if($test$plusargs("SELECT_CLEAR"))begin
+   
+   select_injected=1;$display("F16_SELECT_CLEAR_INJECT");
+  end
+  if($test$plusargs("BANK_WRONG"))begin
+   
+   select_injected=1;$display("F16_BANK_WRONG_INJECT");
+  end
+  if($test$plusargs("RESET_CLEAR"))begin
+   rst_n=0;select_injected=1;#0.1;
+   for(si=0;si<15;si=si+1)if(dut.template_select[si]!==0)$fatal(1,"F16_RESET_SELECT_NOT_CLEAR");
+   for(si=0;si<8;si=si+1)for(sj=0;sj<14;sj=sj+1)if(dut.publish_enable[si][sj]!==0)$fatal(1,"F16_RESET_BANK_NOT_CLEAR");
+   if(dut.pending!==0||dut.cache_valid!==0||template_ready!==0)$fatal(1,"F16_RESET_OWNERSHIP_NOT_CLEAR");
+   $display("F16_PENDING_ASYNC_CLEAR_PASS");$finish;
+  end
+ end
+ always@(posedge ck)begin
+ #0.1;
+ if(SELECT&&$test$plusargs("CHECK_SECTORS")&&rst_n)begin
+  if(dut.pending)begin
+   select_coverage[dut.pending_group]=1;bank_coverage[2*dut.pending_user+dut.pending_slot]=1;user_coverage[dut.pending_user]=1;
+   if(previous_pending)consecutive++;
+  end
+  for(integer vi=0;vi<15;vi=vi+1)
+   if(dut.template_select[vi]!== (dut.pending?(13'b1<<dut.pending_group):13'd0))$fatal(1,"F16_SECTOR_GROUP_PHASE_FAIL");
+  for(integer vi=0;vi<8;vi=vi+1)for(integer vj=0;vj<14;vj=vj+1)
+   if(dut.publish_enable[vi][vj]!== (dut.pending&&vi==2*dut.pending_user+dut.pending_slot))$fatal(1,"F16_SECTOR_BANK_PHASE_FAIL");
+  previous_pending=dut.pending;
+ end
+ end
+ final begin
+ if(SELECT&&$test$plusargs("CHECK_SECTORS"))begin
+  $display("F16_SELECT_COVERAGE groups=%h banks=%h users=%h consecutive=%0d",select_coverage,bank_coverage,user_coverage,consecutive);
+  if(select_coverage!==13'h1fff||bank_coverage!==8'hff||user_coverage!==4'hf||consecutive==0)$error("F16_SELECT_COVERAGE_FAIL");
+ end
  end
  integer fd,r,edge_i,t,kind,completions,retired,first_fault,ready_seen,starts,maxlive;reg[63:0]a,b,c,d,e;reg done,have;
  reg[3:0]ngrp[0:3];integer q;

@@ -8,7 +8,7 @@
 // The 13-bit context cycle faults at 8191 only while witnesses are outstanding;
 // a completed context holds its cycle until retirement (long stage periods).
 module qfd_dv_typed_witness_control #(
- parameter integer ENABLE=0,SAFE_COMPARE=0,GROUPS=13,TEMPLATE_BITS=134,
+ parameter integer ENABLE=0,SAFE_COMPARE=0,SAFE_SELECT=0,GROUPS=13,TEMPLATE_BITS=134,
  parameter[63:0] PROFILE_DIGEST=64'h198f7708b478a667,
  parameter[15:0] PROFILE_EPOCH=16'd7
 )(
@@ -21,6 +21,7 @@ module qfd_dv_typed_witness_control #(
  output reg group_complete,output reg[1:0]complete_user,output reg[3:0]complete_group,
  output reg fault
 );
+ initial if(SAFE_SELECT&&!SAFE_COMPARE) $error("SAFE_SELECT requires SAFE_COMPARE");
  initial if(GROUPS!=13||TEMPLATE_BITS!=134||GROUPS*TEMPLATE_BITS>2048)
   $error("exact WTN1 source profile and <=2048-bit template required; growth needs real SRAM");
  reg[133:0]templates[0:12]; // unreset data, guarded by loaded/atomicseal
@@ -36,6 +37,55 @@ module qfd_dv_typed_witness_control #(
  reg pick;reg[1:0]pick_user;reg pick_slot;integer k,u,s,b,sl,c;reg[1:0]scan;
  reg matched;reg[11:0]new_seen;reg[12:0]due;reg[133:0]record_word;
  wire[1:0]obs_user=observation[14:13];wire[3:0]obs_slice=observation[12:9];wire[8:0]obs_pc=observation[8:0];
+ // Physical source candidate: useful per-sector selects, no added edge.
+ (* keep=1 *) wire[12:0] template_select[0:14];
+ (* keep=1 *) wire publish_enable[0:7][0:13];
+ wire[12:0] selected_base[0:11];wire[7:0] selected_delta[0:11];
+ wire[24:0] selected_meta;wire[12:0] selected_first_due;
+ genvar ss,tt,bb,ee;
+ generate if(SAFE_SELECT)begin:gs
+  for(ss=0;ss<15;ss=ss+1)begin:sel
+   wire[12:0] decoded;
+   for(tt=0;tt<13;tt=tt+1)begin:decode
+    assign decoded[tt]=ENABLE&&pick&&next_group[pick_user]==tt;
+   end
+   (* keep=1, keep_hierarchy=1 *) qfd_wtn_kept_select #(.W(13),.ID(ss)) ff(.ck(ck),.rst_n(rst_n),.d(decoded),.q(template_select[ss]));
+  end
+  for(ss=0;ss<12;ss=ss+1)begin:due_sel
+   reg[20:0] selected;integer ti;
+   always@*begin
+    selected=0;
+    for(ti=0;ti<13;ti=ti+1)selected=selected|({21{template_select[ss][ti]}}&{templates[ti][34+8*ss+:8],templates[ti][12:0]});
+   end
+   assign selected_base[ss]=selected[12:0];assign selected_delta[ss]=selected[20:13];
+  end
+  for(ss=0;ss<3;ss=ss+1)begin:other_sel
+   reg[12:0] selected;integer ti;
+   always@*begin
+    selected=0;
+    for(ti=0;ti<13;ti=ti+1)begin
+     if(ss==0)selected=selected|({13{template_select[12][ti]}}&templates[ti][25:13]);
+     else if(ss==1)selected=selected|({13{template_select[13][ti]}}&{1'b0,templates[ti][133:130],templates[ti][33:26]});
+     else selected=selected|({13{template_select[14][ti]}}&templates[ti][12:0]);
+    end
+   end
+   if(ss==0)assign selected_meta[12:0]=selected;
+   else if(ss==1)assign selected_meta[24:13]=selected[11:0];
+   else assign selected_first_due=selected;
+  end
+  for(bb=0;bb<8;bb=bb+1)begin:bank
+   for(ee=0;ee<14;ee=ee+1)begin:sector
+    (* keep=1, keep_hierarchy=1 *) qfd_wtn_kept_select #(.W(1),.ID(15+bb*14+ee)) ff(.ck(ck),.rst_n(rst_n),.d(ENABLE&&pick&&pick_user==bb/2&&pick_slot==bb%2),.q(publish_enable[bb][ee]));
+    if(ee<12)begin:due_write
+     always@(posedge ck)if(ENABLE&&publish_enable[bb][ee])cache_due[bb][ee]<=selected_base[ee]+{5'd0,selected_delta[ee]};
+    end else if(ee==12)begin:meta_lo
+     always@(posedge ck)if(ENABLE&&publish_enable[bb][ee])cache_meta[bb][12:0]<=selected_meta[12:0];
+    end else begin:meta_hi
+     always@(posedge ck)if(ENABLE&&publish_enable[bb][ee])cache_meta[bb][24:13]<=selected_meta[24:13];
+    end
+   end
+  end
+ end endgenerate
  genvar m;generate for(m=0;m<8;m=m+1)begin:gm
   assign cache_mask[m]=SAFE_COMPARE?cache_meta[m][20:9]:cache[m][33:22];
   assign cache_pc[m]=SAFE_COMPARE?cache_meta[m][6:0]:cache[m][19:13];
@@ -115,11 +165,11 @@ module qfd_dv_typed_witness_control #(
    end
    if(pending)begin
     b=2*pending_user+pending_slot;
-    if(!active[pending_user]||stage[pending_user]!=pending_stage||epoch[pending_user]!=pending_epoch||cache_valid[b]||cycle[pending_user][0]>=templates[pending_group][12:0])fault<=1;
-    if(SAFE_COMPARE)begin
+    if(!active[pending_user]||stage[pending_user]!=pending_stage||epoch[pending_user]!=pending_epoch||cache_valid[b]||cycle[pending_user][0]>=(SAFE_SELECT?selected_first_due:templates[pending_group][12:0]))fault<=1;
+    if(SAFE_COMPARE&&!SAFE_SELECT)begin
      cache_meta[b]<={templates[pending_group][133:130],templates[pending_group][33:13]};
      for(c=0;c<12;c=c+1)cache_due[b][c]<=templates[pending_group][12:0]+{5'd0,templates[pending_group][34+8*c+:8]};
-    end else cache[b]<=templates[pending_group];
+    end else if(!SAFE_COMPARE)cache[b]<=templates[pending_group];
     seen[b]<=0;cache_valid[b]<=1;
    end
    matched=0;
@@ -145,4 +195,11 @@ module qfd_dv_typed_witness_control #(
    end
   end
  end
+endmodule
+
+// Unique parameter identities preserve same-age useful copies through synthesis.
+// This is actual resettable storage, never a black box or functional stub.
+(* keep_hierarchy=1 *) module qfd_wtn_kept_select #(parameter integer W=1,ID=0)(
+ input wire ck,rst_n,input wire[W-1:0]d,output reg[W-1:0]q);
+ always@(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=d;
 endmodule

@@ -1,0 +1,14 @@
+read_verilog -sv src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv
+read_verilog -sv native_wrapper.sv
+hierarchy -top qfd_f16_native
+synth -top qfd_f16_native -flatten -noabc
+setattr -mod -unset keep_hierarchy
+setattr -unset keep_hierarchy
+flatten
+dffunmap
+abc -g simple
+clean
+stat
+rename qfd_f16_native qfd_dv_typed_witness_control
+write_json generic.json
+write_verilog generic.v

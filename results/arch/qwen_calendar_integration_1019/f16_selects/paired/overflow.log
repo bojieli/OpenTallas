@@ -1,0 +1,16 @@
+F16_INJECT_OVERFLOW expected_due=253
+F16_ACTUAL_CACHE_OVERFLOW_PASS due=253
+TWC_FIRST_FAULT edge=1127 ctl=1 obs=0
+TWC_ORDER_ERROR edge=1408 user=0 group=1 expect=0
+TWC_ORDER_ERROR edge=1424 user=1 group=1 expect=0
+TWC_RETIRE_EARLY edge=6632 user=0
+TWC_RETIRE_EARLY edge=6648 user=1
+TWC_RETIRE_EARLY edge=6664 user=2
+TWC_RETIRE_EARLY edge=12167 user=0
+TWC_RETIRE_EARLY edge=26800 user=3
+TWC_SUMMARY en=1 fault=1 obs_fault=0 ready_seen=1 ready_end=0 completions=8 retired=0 starts=5 max_live=2 active_end=0011 first_fault=1127 edges=26821
+TWC_RESULT_FAULT
+- src/rtl/test/qwen_dv/tb_qwen_typed_witness_control.sv:169: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 54us; walltime 0.057 s; speed 940.264 us/s
+- Verilator: cpu 0.057 s on 1 threads; allocated 7 MB
