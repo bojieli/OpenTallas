@@ -1,0 +1,105 @@
+{
+ "schema": "opentallas.hbm_dma_busy_review_1019.v1",
+ "manifest_adopted": false,
+ "bits": 4,
+ "entries": [
+  {
+   "instance": "hb_dbk_NE",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "busy",
+   "net": "hb_dbk_NE__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 24697,
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
+   "classification": "internally_consumed_busy_observation_review",
+   "reason": "Exact busy signal already feeds own host collar tgt_active; external copy unused. cp_active is the registered host status copy. Busy describes programmed issue interval, not all pending HBM write commitment.",
+   "evidence": [
+    "ot_hgi_dma_back_static_vp4_banks_cp.sv .tgt_active(busy) .active(cp_active)"
+   ],
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "busy",
+   "net": "hb_dbk_NW__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7613,
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
+   "classification": "internally_consumed_busy_observation_review",
+   "reason": "Exact busy signal already feeds own host collar tgt_active; external copy unused. cp_active is the registered host status copy. Busy describes programmed issue interval, not all pending HBM write commitment.",
+   "evidence": [
+    "ot_hgi_dma_back_static_vp4_banks_cp.sv .tgt_active(busy) .active(cp_active)"
+   ],
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "busy",
+   "net": "hb_dbk_SE__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 24658,
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
+   "classification": "internally_consumed_busy_observation_review",
+   "reason": "Exact busy signal already feeds own host collar tgt_active; external copy unused. cp_active is the registered host status copy. Busy describes programmed issue interval, not all pending HBM write commitment.",
+   "evidence": [
+    "ot_hgi_dma_back_static_vp4_banks_cp.sv .tgt_active(busy) .active(cp_active)"
+   ],
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "busy",
+   "net": "hb_dbk_SW__busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7574,
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
+   "classification": "internally_consumed_busy_observation_review",
+   "reason": "Exact busy signal already feeds own host collar tgt_active; external copy unused. cp_active is the registered host status copy. Busy describes programmed issue interval, not all pending HBM write commitment.",
+   "evidence": [
+    "ot_hgi_dma_back_static_vp4_banks_cp.sv .tgt_active(busy) .active(cp_active)"
+   ],
+   "allowlist_candidate": true,
+   "root_review_required": true
+  }
+ ],
+ "source_commit": "d517a76ad",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv": "8ecb2a27377ffad4c091c94819eda42df0787c46b506d0d036a7812c90ef1c88",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv": "1e47ee8115671a990f2b814d5e81b974fb3cf23d3c2bfa4225082d34d7042f8e"
+ },
+ "validation": "Read-only direct internal feedback source proof, not WB drain proof."
+}

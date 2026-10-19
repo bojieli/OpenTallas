@@ -1,0 +1,57 @@
+{
+ "schema": "opentallas.hbm_unread_review_index_1019.v1",
+ "manifest_adopted": false,
+ "current_strict_total_bits": 70320,
+ "base_candidates": 69442,
+ "followup_candidates": 860,
+ "held_bits": 18,
+ "followup_packets": [
+  {
+   "path": "fault_cause_review.json",
+   "bits": 130,
+   "sha256": "5ad27e1d6b6bf0e1453d6475a115769618b01676a1f5f3d9c053d563d259610c"
+  },
+  {
+   "path": "status_review.json",
+   "bits": 272,
+   "sha256": "adcf916fc204970579d4ec9fd7e805e17f3d5f4fbfc93ea6b4ff40dd87de14a9"
+  },
+  {
+   "path": "su_status_review.json",
+   "bits": 70,
+   "sha256": "27f1a3927c400f9e1513e6f6661c3252b30c3cd94f7389e743c431dfb87136df"
+  },
+  {
+   "path": "bank_done_review.json",
+   "bits": 88,
+   "sha256": "3bdf831f73ca4395b7a2db2a111bec83a94994658ff5409480b06ddca2990cca"
+  },
+  {
+   "path": "calendar_client_status_review.json",
+   "bits": 164,
+   "sha256": "d4d87e228650dd9e9351e8272924b0d494a75d410ea7ee8c5a21d16359eeeccc"
+  },
+  {
+   "path": "checked_diagnostics_review.json",
+   "bits": 47,
+   "sha256": "b42b5adb3a426212339d18a28217df2279b56f60c51db9deeaf4fc61b258511b"
+  },
+  {
+   "path": "completion_review.json",
+   "bits": 53,
+   "sha256": "3be9a0f455839adfe9038e069171e78e22745623d8b1ea796a9e49f373b0008b"
+  },
+  {
+   "path": "write_marker_review.json",
+   "bits": 32,
+   "sha256": "b0ca5be8bf00d5bf2727bbab652b9014b08112f1af1035f2fac843de3a235812"
+  },
+  {
+   "path": "dma_busy_review.json",
+   "bits": 4,
+   "sha256": "90a33624757c634fbd168d35e6ed3ee05ce21b89c05d3f459aff72701abde9bd"
+  }
+ ],
+ "held": "held.json",
+ "warning": "All candidates require explicit exact per-instance source/consumer/bit review. Counts are candidate coverage, not admitted manifest. Root has independently reviewed/adopted only its own subset. No permaster union."
+}
