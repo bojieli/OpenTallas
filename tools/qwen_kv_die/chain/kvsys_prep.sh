@@ -129,6 +129,18 @@ fi
 if [ "${OT_KV_FWD:-0}" = 1 ]; then
   python3 tools/qwen_kv_die/kv_fwd_lanes.py --run $O ${OT_KV_FWD_NETLIST_ONLY:+--netlist-only} > $O/fwd_lanes.log 2>&1 || { tail -5 $O/fwd_lanes.log; exit 7; }
   EXP="--expanded $O/expand.json"
+  # KVR-LANDLAG 10-19: every forwarded-clock landed crossing of the laned netlist (qkd_landsh* / qkd_landsh0*) checked
+  # against its compiled age, FAIL CLOSED: lane traced on die.v == fwd_lanes.json row, K straps from the landing's own
+  # tie cells == (E + cal + h0(n)) mod 8, the strap age inside the ring window, and the latency the hardware delivers
+  # (E_hw + 1 + post) == the age the static compiler charges (ceil(landed - 1)) -> case_kv/land_lag.json.
+  # OT_KV_LAND_LAG_DIAG=1 (explicit, never default): record, write RUN/LAND_LAG_DIAGNOSTIC and continue (NOT a die result).
+  python3 tools/qwen_split/land_lag_sim.py kv-check --die-v $O/case_kv/die.v --lanes $O/fwd_lanes.json \
+    $( [ -f $O/case_kv/relay_stages.json ] && echo --relay-stages $O/case_kv/relay_stages.json ) \
+    $( [ -f $O/lane_stations.json ] && echo --lane-stations $O/lane_stations.json ) \
+    --out $O/case_kv/land_lag.json > $O/land_lag.log 2>&1 || {
+    if [ "${OT_KV_LAND_LAG_DIAG:-0}" = 1 ]; then tail -1 $O/land_lag.log > $O/LAND_LAG_DIAGNOSTIC
+    else tail -4 $O/land_lag.log; echo "LAND_LAG_KV FAIL: landed crossings vs compiled ages ($O/case_kv/land_lag.json)"; exit 9; fi; }
+  tail -1 $O/land_lag.log | cut -c1-400
 fi
 # v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)
 [ -n "$H14" ] && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv > $O/native_phy.log \
