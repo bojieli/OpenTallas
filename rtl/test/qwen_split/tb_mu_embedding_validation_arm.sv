@@ -17,7 +17,7 @@ module tb_mu_embedding_validation_arm;
  wire[547:0]dd=0,rxdata=0;wire kvslot=0,xslot=0,qslot=0,txslot=0,rxv=0,rxslot=0,visibility_slot=0,complete_slot=0;
  wire[1:0]kvindex=0;wire[4:0]qb=0,tb=0,rb=0;wire[3:0]tk=0,rk=0;
  reg[379:0]cmd; reg pw_v,pw_scale,fill_begin,core_start;reg[5:0]pw_idx;reg[511:0]pw_data;
- integer round=0;
+ integer round=0; integer first_fault=-1;
  wire [1:0] user_id=2'(round%4);
  wire [31:0] base=32'(round*200);
  wire [31:0] FILL=base+20,CORE=base+90,EMB=base+90;
@@ -76,6 +76,8 @@ module tb_mu_embedding_validation_arm;
  .fault(p_fault));
 
  always @(posedge clk)if(rst_n)begin
+  if(validation_start)$display("VALIDATION_SAMPLE cycle=%0d token=%0d epoch=%0d command_sample=%0d",cyc,validation_token,validation_epoch,CORE);
+  if(first_fault<0&&(p_fault||arm_fault||ledger_fault||ep_fault))begin first_fault=cyc;$display("FIRST_FAULT_SAMPLE cycle=%0d provider=%0d arm=%0d ledger=%0d epoch=%0d",cyc,p_fault,arm_fault,ledger_fault,ep_fault);end
   if(e_cre)begin
    if(e_caddr!={ETOK,6'(reads)})$fatal(1,"JOIN_FAIL read token/index cycle=%0d",cyc);
    if(reads==0&&cyc!=EMB+3)$fatal(1,"JOIN_FAIL changed firstread edge");
