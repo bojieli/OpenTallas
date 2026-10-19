@@ -247,7 +247,7 @@ proc ot_die_repeaters {cfg} {
            skip_nets {} repeat_nets {} skip_sigtypes {CLOCK POWER GROUND} skip_clock_pins 1 reach_um 0 over_reach report \
            long_wire_scan 5000 post_drv report rc_layer M4 repair_args "" legalize spread bounds_tcl /work/cluster_bounds.tcl \
            libs {} std_corner "" design "" spread_util 0.30 spread_util_hard 0.60 soft_rings 3 bin_um 8.64 repair_passes 1 slew_margin 0 post_grt_rounds 2 \
-           resize_cells {BUFx8_ASAP7_75t_R BUFx12f_ASAP7_75t_R BUFx16f_ASAP7_75t_R}]
+           resize_cells {BUFx8_ASAP7_75t_R BUFx12f_ASAP7_75t_R BUFx16f_ASAP7_75t_R} skip_short_um 0]
   set d [dict merge $d $cfg]
   dict with d {}
   if {![info exists report]} { error "ot_die_repeaters: cfg has no report path" }
@@ -380,6 +380,32 @@ proc ot_die_repeaters {cfg} {
     }
     ot_die_rep_log "long wires scanned=$scanned longest_um=[format %.1f $longest] over_reach($reach_um)=[llength $over]"
     if {[llength $over] && $over_reach eq "fail"} { incr viol [llength $over]; lappend notes "over_reach nets: missing relay registers" }
+  }
+
+  # ---- L2H-P3 10-19 (die-scale): nets whose pin bounding box (half-perimeter) is below skip_short_um need no repeater
+  # (one repeater from ~175 um); mark them do-not-touch so repair_design walks only candidate nets.  The HBM P3 die has
+  # 18.7 M signal nets (S8 f4c_t9p3: repair_design SIGSEGV at iteration 0, RSS 75 GB).  Short nets keep their placed
+  # wire; the post-GRT audit still judges every non-skip net.  Default 0 = off (unchanged behaviour).
+  if {$skip_short_um > 0} {
+    set n_short 0; set n_cand 0; set s0 [clock seconds]
+    foreach net [$blk getNets] {
+      if {[$net isSpecial] || [$net isDoNotTouch]} { continue }
+      set x0 1e30; set y0 1e30; set x1 -1e30; set y1 -1e30
+      foreach it [$net getITerms] {
+        set b [$it getBBox]
+        set cx [expr {([$b xMin] + [$b xMax]) / 2.0}]; set cy [expr {([$b yMin] + [$b yMax]) / 2.0}]
+        if {$cx < $x0} { set x0 $cx }; if {$cx > $x1} { set x1 $cx }; if {$cy < $y0} { set y0 $cy }; if {$cy > $y1} { set y1 $cy }
+      }
+      foreach bt [$net getBTerms] {
+        set b [$bt getBBox]
+        set cx [expr {([$b xMin] + [$b xMax]) / 2.0}]; set cy [expr {([$b yMin] + [$b yMax]) / 2.0}]
+        if {$cx < $x0} { set x0 $cx }; if {$cx > $x1} { set x1 $cx }; if {$cy < $y0} { set y0 $cy }; if {$cy > $y1} { set y1 $cy }
+      }
+      if {$x1 < $x0} { continue }
+      set hp [expr {(($x1 - $x0) + ($y1 - $y0)) / double([[ord::get_db_block] getDbUnitsPerMicron])}]
+      if {$hp < $skip_short_um} { $net setDoNotTouch 1; incr n_short } else { incr n_cand }
+    }
+    ot_die_rep_log "skip_short_um=$skip_short_um short_nets_dont_touch=$n_short candidate_nets=$n_cand ([expr {[clock seconds] - $s0}] s)"
   }
 
   # ---- buffers only: everything else dont_use for this step (restored after)
