@@ -1,0 +1,27 @@
+N59MU_ERR cycle 1327 op 5: KVN x3 identity epoch / token
+N59MU_ERR cycle 1328 op 5: KVN x3 identity epoch / token
+N59MU_ERR cycle 1329 op 5: KVN x3 identity epoch / token
+N59MU_ERR cycle 1330 op 5: KVN x3 identity epoch / token
+N59MU_TAG_ERR cycle 1335 op 5 user 3 kind 1 beat 0 epoch 0024 want 0027
+N59MU_TAG_ERR cycle 1339 op 5 user 3 kind 2 beat 0 epoch 0024 want 0027
+N59MU_TAG_ERR cycle 1340 op 5 user 3 kind 2 beat 1 epoch 0024 want 0027
+N59MU_TAG_ERR cycle 1341 op 5 user 3 kind 2 beat 2 epoch 0024 want 0027
+N59MU_TAG_ERR cycle 1342 op 5 user 3 kind 2 beat 3 epoch 0024 want 0027
+N59MU_TAG_ERR cycle 1343 op 5 user 3 kind 2 beat 4 epoch 0024 want 0027
+N59MU_TAG_ERR cycle 1344 op 5 user 3 kind 2 beat 5 epoch 0024 want 0027
+N59MU_FAULT first at cycle 1373 op 5 user 3
+N59MU_ERR cycle 1575 op 6: user-0 tx record != NU 1
+N59MU_ERR cycle 1579 op 6: user-0 tx record != NU 1
+N59MU_ERR cycle 1580 op 6: user-0 tx record != NU 1
+N59MU_ERR cycle 1581 op 6: user-0 tx record != NU 1
+N59MU_ERR cycle 1582 op 6: user-0 tx record != NU 1
+N59MU_ERR cycle 1583 op 6: user-0 tx record != NU 1
+N59MU_ERR cycle 1584 op 6: user-0 tx record != NU 1
+N59MU_ERR cycle 1585 op 6: user-0 tx record != NU 1
+N59MU_ERR cycle 1586 op 6: user-0 tx record != NU 1
+N59MU_ERR cycle 1587 op 6: user-0 tx record != NU 1
+N59MU_ERR cycle 1588 op 6: user-0 tx record != NU 1
+N59MU_FAIL errors=213 tag_errors=33 first_fault=1373 records u0..3 99/33/33/33
+[0] %Fatal: tb_qfd_native59_dv_mu.sv:192: Assertion failed in TOP.tb_qfd_native59_dv_mu
+%Error: /srv/opentallas-scratch/claude/mu-dq-d2duser/src_ebcdb3aa5/rtl/test/qwen_split/tb_qfd_native59_dv_mu.sv:192: Verilog $stop
+Aborting...
