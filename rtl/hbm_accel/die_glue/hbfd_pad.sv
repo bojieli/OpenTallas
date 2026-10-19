@@ -7,7 +7,7 @@ module hbfd_pad #(parameter integer W=17, N=1, SAFE_STORAGE=0,
  generate if (!SAFE_STORAGE || N<3) begin:g_compat
    ot_hdc_delay #(.W(W),.D(N),.RESET(1)) u_dly(.clk(ck),.rst_n(rs),.d(i),.q(o));
  end else begin:g_ring
-   localparam integer AW=$clog2(N), DEPTH=1<<AW;
+   localparam integer AW=$clog2(N), DEPTH=N;
    localparam integer CW=$clog2(N+1), NB=(W+255)/256;
    reg [AW-1:0] ptr;
    localparam integer NG=(W+31)/32;
@@ -23,14 +23,15 @@ module hbfd_pad #(parameter integer W=17, N=1, SAFE_STORAGE=0,
    end
    always @(posedge ck or negedge rs)
      if (!rs) ptr<='0;
-     else ptr<=ptr+1'b1;
+     else ptr<=(ptr==AW'(N-1)) ? '0 : ptr+1'b1;
    // Data array and ingress need no reset: the finite age certificate suppresses stale epochs.
    always @(posedge ck) ingress<=i;
    if (W*N>2048) begin:g_macro
      wire [6:0] wa=7'(ptr);
      // The extra synchronous macro read edge is paid by this lookahead, never added to N.
      wire [6:0] ra= TEST_MUTANT==4 ? wa :
-          7'((ptr-AW'(N-3+(TEST_MUTANT==1))) & AW'(DEPTH-1));
+          7'((ptr>=AW'(N-3+(TEST_MUTANT==1))) ?
+             ptr-AW'(N-3+(TEST_MUTANT==1)) : ptr+AW'(N-(N-3+(TEST_MUTANT==1))));
      wire [NB*256-1:0] padded={{(NB*256-W){1'b0}},ingress};
      wire [NB*256-1:0] rd;
      for(genvar b=0;b<NB;b=b+1) begin:g_bank
@@ -49,9 +50,17 @@ module hbfd_pad #(parameter integer W=17, N=1, SAFE_STORAGE=0,
    end else begin:g_small
      // Finite circular array: only one row is written per edge, no shift chain or bulk reset.
      reg [W-1:0] mem [0:DEPTH-1];
+     localparam integer NI=(N+15)/16;
+     (* keep = 1 *) reg [W-1:0] ingress_local [0:NI-1];
+     for(genvar g=0;g<NI;g=g+1) begin:g_ingress
+       always @(posedge ck) ingress_local[g]<=i;
+     end
      wire [AW-1:0] ra = TEST_MUTANT==4 ? ptr :
-         ptr-AW'(N-2+(TEST_MUTANT==1));
-     always @(posedge ck) if(rs) mem[ptr]<=ingress;
+         ((ptr>=AW'(N-2+(TEST_MUTANT==1))) ?
+          ptr-AW'(N-2+(TEST_MUTANT==1)) : ptr+AW'(N-(N-2+(TEST_MUTANT==1))));
+     for(genvar row=0;row<N;row=row+1) begin:g_row
+       always @(posedge ck) if(rs && ptr==AW'(row)) mem[row]<=ingress_local[row/16];
+     end
      always @(posedge ck or negedge rs)
        if(!rs) capture<='0;
        else for(integer k=0;k<W;k=k+1) capture[k]<=ready[k/32] ? mem[ra][k] : 1'b0;

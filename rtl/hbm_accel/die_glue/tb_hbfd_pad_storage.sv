@@ -2,6 +2,12 @@
 module pad_case #(parameter W=17,N=3,ID=0)(input ck,rs,input [31:0] seqno,output reg[3:0] caught);
  reg[W-1:0] din; wire[W-1:0] gold,actual; wire[W-1:0] bad[1:4];
  integer b;
+ if(W*N>2048 && N>=3) begin:g_poison
+   for(genvar bank=0;bank<(W+255)/256;bank=bank+1) begin:g_bank
+     initial for(integer row=0;row<130;row=row+1)
+       dut.g_ring.g_macro.g_bank[bank].u_sram.arr[row]='1;
+   end
+ end
  always @* for(integer k=0;k<W;k=k+1) din[k]=((seqno*32'h9e3779b9)>>(k%31))^((seqno+ID*79)>>((k+7)%29));
  hbfd_pad #(.W(W),.N(N)) refpad(ck,rs,din,gold);
  hbfd_pad #(.W(W),.N(N),.SAFE_STORAGE(1)) dut(ck,rs,din,actual);
