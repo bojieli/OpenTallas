@@ -18,10 +18,11 @@
 //   * the calendar is written by the PW words into TWO identical 1R1W SRAM copies (one read port per context; the caller
 //     instantiates ot_sram_1r1w_128x256 x 2) as ROW PAIRS: word w = {row 2w + 1 [151:76], row 2w [75:0]}, written with
 //     a field mask; the boot seal scan reads copy 0, one row an edge, as before (S0 read / S1 accumulate / F check);
-//   * per context: the current pair word CW (index k) and a half pointer h; the SRAM read port always holds word k + 1
-//     (N).  The next row A = CW[h] and the one after it B = (h ? N.lo : CW.hi): A issues when age == A.issue, B with it
-//     when B.issue == age too (two rows an edge, any alignment); CW <= N (address k + 2) once both halves are used, so
-//     one pair read an edge always keeps up.  An idle context reads word 0, so an accept loads CW at once;
+//   * per context: the current pair word CW (index k), the next word NW (k + 1) in a register, and a half pointer h;
+//     the SRAM read port holds word k + 2 and feeds only NW (no logic behind the macro output).  The next row A = CW[h] and the one after it B = (h ? NW.lo : CW.hi): A issues when age == A.issue, B with it
+//     when B.issue == age too (two rows an edge, any alignment); CW <= NW <= rd (address k + 3) once both halves are used,
+//     so one pair read an edge always keeps up.  Word 0 is kept from the seal scan (W0) and an idle context reads word 1,
+//     so an accept loads CW / NW at once.  The seal scan row is registered once (S0b) before its checks;
 //   * per context and present engine: an 8-deep FIFO of {done 24, op 7} pushed at issue, checked (one edge after
 //     age == done, as dm_q was) against the registered completion {dv_q, dt_q} and popped.
 // MUT is not used here (dsdv_sh_sq instantiates the issuer with MUT 0).
@@ -57,27 +58,26 @@ module ot_dsdv_walk_issue #(
  reg[1:0]active;reg next_slot;
  reg[9:0]users[0:1];reg[20:0]positions[0:1],tokens[0:1];
  reg[23:0]age[0:1],agp[0:1];reg[1:0]actp;
- reg[151:0]cw[0:1];reg[5:0]ck[0:1],ck1[0:1],ck2[0:1];reg[1:0]hh;
+ reg[151:0]cw[0:1],nwr[0:1],w0;reg[5:0]ck[0:1],ck2[0:1],ck3[0:1];reg[1:0]hh;
  reg[NENG-1:0]dv_q;reg[NENG*8-1:0]dt_q;
  assign busy=|active;assign job_rdy=!active[next_slot];
  assign fault=cfg_fault|run_fault;assign phase=phase_q;
  integer i,s,e,r,end_count,kit_count,n,max_done;
  reg bad;reg[23:0]end_cycle,kit_cycle;
  reg[3:0]eng;
- reg sc_v,sc_last,sc_in,sc_fin;reg[2:0]sc_ld;
+ reg sc_v,sc_last,sc_in,sc_fin,sc_r,sc_in0,sc_last0,sc_i1;reg[2:0]sc_ld,sc_ld0;
  reg[NOPS-1:0]sc_oh;reg[2:0]rd_ld;
  reg[4:0]rf_q;reg f6,f7,f9,f10;
- reg sc_half;
- wire[75:0]sc_row=sc_half?cal_rd0[151:76]:cal_rd0[75:0];   // S1 row = the copy-0 pair read latched at the S0 edge
+ reg sc_half;reg[75:0]sc_row;                  // S1 row: the copy-0 pair read (S0), registered (S0b), then checked (S1)
  // seal scan: per-engine done order against the earlier rows (scan_seen / scan_ld)
  wire ord_bad=sc_row[27:24]<NENG&&scan_seen[sc_row[27:24]]&&sc_row[75:52]<=scan_ld[sc_row[27:24]];
  // ---- the walker: A = the next row, B = the row after it; hitA / hitB = they issue on this edge
- wire[151:0]nw[0:1];assign nw[0]=cal_rd0;assign nw[1]=cal_rd1;
+ wire[151:0]nw[0:1];assign nw[0]=cal_rd0;assign nw[1]=cal_rd1;   // SRAM out -> nwr only
  wire[75:0]ra[0:1],rb[0:1];wire[1:0]hit,hitb;wire[3:0]heng[0:1],beng[0:1];wire[6:0]opa[0:1],opb[0:1];wire[1:0]adv;
  genvar gs;
  generate for(gs=0;gs<2;gs=gs+1)begin:g_hit
   assign ra[gs]=hh[gs]?cw[gs][151:76]:cw[gs][75:0];
-  assign rb[gs]=hh[gs]?nw[gs][75:0]:cw[gs][151:76];
+  assign rb[gs]=hh[gs]?nwr[gs][75:0]:cw[gs][151:76];
   assign heng[gs]=ra[gs][27:24];assign beng[gs]=rb[gs][27:24];
   assign hit[gs]=active[gs]&&age[gs]==ra[gs][51:28];
   assign hitb[gs]=hit[gs]&&heng[gs]!=4'd15&&rb[gs][51:28]==ra[gs][51:28];
@@ -93,8 +93,8 @@ module ot_dsdv_walk_issue #(
  wire[1:0]acc={do_accept&&next_slot,do_accept&&!next_slot};
  wire[1:0]ends={hit[1]&&heng[1]==4'd15,hit[0]&&heng[0]==4'd15};
  // next read address (pair word): active next edge -> k_next + 1, idle -> 0 (word 0 ready for an accept); scan owns copy 0
- wire[5:0]rw0=acc[0]?6'd1:(active[0]&&!ends[0])?(adv[0]?ck2[0]:ck1[0]):6'd0;
- wire[5:0]rw1=acc[1]?6'd1:(active[1]&&!ends[1])?(adv[1]?ck2[1]:ck1[1]):6'd0;
+ wire[5:0]rw0=acc[0]?6'd2:(active[0]&&!ends[0])?(adv[0]?ck3[0]:ck2[0]):6'd1;
+ wire[5:0]rw1=acc[1]?6'd2:(active[1]&&!ends[1])?(adv[1]?ck3[1]:ck2[1]):6'd1;
  assign cal_r_addr0=validating?{1'b0,scan_index[6:1]}:{1'b0,rw0};
  assign cal_r_addr1={1'b0,rw1};
  // ---- completion FIFOs {done 24, op 7}, one per context and present engine (QD deep, flat ring buffers)
@@ -137,12 +137,12 @@ module ot_dsdv_walk_issue #(
    validating<=0;scan_index<=0;scan_native<=0;scan_bad<=0;scan_ends<=0;scan_kits<=0;scan_max_done<=0;scan_end_cycle<=0;scan_kit_cycle<=0;
    active<=0;next_slot<=0;has_kit<=0;job_done<=0;job_kdone<=0;done_slot<=0;kit_tok<=0;
    fault_code<=0;st_jobs<=0;st_cmds<=0;dv_q<=0;dt_q<=0;actp<=0;
-   sc_v<=0;sc_last<=0;sc_in<=0;sc_fin<=0;rf_q<=0;
+   sc_v<=0;sc_last<=0;sc_in<=0;sc_fin<=0;rf_q<=0;sc_r<=0;sc_in0<=0;sc_last0<=0;
   end else begin
    phase_q<=phase_q+1'b1;dv_q<=dn_v;dt_q<=dn_tag;actp<=active;
    job_done<=0;job_kdone<=0;
    if(pw_v)begin
-    if(busy||validating||sc_v||sc_fin)begin cfg_fault<=1;if(fault_code==0)fault_code<=1;end
+    if(busy||validating||sc_r||sc_v||sc_fin)begin cfg_fault<=1;if(fault_code==0)fault_code<=1;end
     else if(pw_d[27:26]==3)begin
      if(pw_a!=0||pw_d[24:17]!=0||pw_d[6:0]!=7'(STAGE)||pw_d[16:9]==0||pw_d[16:9]>NOPS)begin
       cfg_fault<=1;sealed<=0;if(fault_code==0)fault_code<=2;
@@ -160,9 +160,9 @@ module ot_dsdv_walk_issue #(
     end
    end
    // S0: the copy-0 read of row scan_index (address = scan_index while validating)
-   sc_v<=validating;sc_fin<=sc_v&&sc_last;
+   sc_r<=validating;sc_v<=sc_r;sc_fin<=sc_v&&sc_last;sc_in<=sc_in0;sc_last<=sc_last0;
    if(validating)begin
-    sc_in<=scan_index<length_q;sc_last<=scan_index==NOPS-1;
+    sc_in0<=scan_index<length_q;sc_last0<=scan_index==NOPS-1;
     if(scan_index==NOPS-1)validating<=0;else scan_index<=scan_index+1'b1;
    end
    // S1: the row's checks (original + walker order: issue non-decreasing, <= 2 rows an edge on different engines,
@@ -221,7 +221,7 @@ module ot_dsdv_walk_issue #(
   end
  end
  // ---- datapath state without reset (written before read, as in ot_dsdv_fixed_issue)
- wire pw_busy=busy||validating||sc_v||sc_fin;
+ wire pw_busy=busy||validating||sc_r||sc_v||sc_fin;
  wire pw_hdr_bad=pw_a!=0||pw_d[24:17]!=0||pw_d[6:0]!=7'(STAGE)||pw_d[16:9]==0||pw_d[16:9]>NOPS;
  wire do_begin=pw_v&&!pw_busy&&pw_d[27:26]==3&&!pw_hdr_bad&&!pw_d[25];
  wire do_write=pw_v&&!pw_busy&&pw_d[27:26]!=3&&begun&&pw_a<NOPS;
@@ -237,7 +237,9 @@ module ot_dsdv_walk_issue #(
   if(do_begin)for(i2=0;i2<NOPS;i2=i2+1)loaded[i2]<=0;
   if(do_write)loaded[pw_a][pw_d[27:26]]<=1'b1;
   if(do_seal)sc_oh<={{(NOPS-1){1'b0}},1'b1};else if(validating)sc_oh<=sc_oh<<1;
-  if(validating)begin sc_ld<=rd_ld;sc_half<=scan_index[0];end
+  if(validating)begin sc_ld0<=rd_ld;sc_half<=scan_index[0];sc_i1<=scan_index==8'd1;end
+  sc_ld<=sc_ld0;sc_row<=sc_half?cal_rd0[151:76]:cal_rd0[75:0];
+  if(sc_r&&sc_i1)w0<=cal_rd0;                    // word 0 (rows 0 / 1): an accept loads it into CW
   if(do_seal)scan_first<=1'b1;
   if(sc_v&&sc_in)begin
    scan_first<=1'b0;scan_pi<=sc_row[51:28];scan_pe<=sc_row[27:24];scan_eq<=!scan_first&&sc_row[51:28]==scan_pi;
@@ -247,11 +249,11 @@ module ot_dsdv_walk_issue #(
   for(s2=0;s2<2;s2=s2+1)begin
    agp[s2]<=age[s2];
    if(acc[s2])begin
-    age[s2]<=0;cw[s2]<=nw[s2];ck[s2]<=6'd0;ck1[s2]<=6'd1;ck2[s2]<=6'd2;hh[s2]<=1'b0;
+    age[s2]<=0;cw[s2]<=w0;nwr[s2]<=nw[s2];ck[s2]<=6'd0;ck2[s2]<=6'd2;ck3[s2]<=6'd3;hh[s2]<=1'b0;
     users[s2]<=job_user;positions[s2]<=job_pos;tokens[s2]<=job_tok;
    end else if(active[s2])begin
     age[s2]<=age[s2]+1'b1;
-    if(adv[s2])begin cw[s2]<=nw[s2];ck[s2]<=ck1[s2];ck1[s2]<=ck2[s2];ck2[s2]<=ck2[s2]+6'd1;end
+    if(adv[s2])begin cw[s2]<=nwr[s2];nwr[s2]<=nw[s2];ck[s2]<=ck[s2]+6'd1;ck2[s2]<=ck3[s2];ck3[s2]<=ck3[s2]+6'd1;end
     if(hit[s2]&&!hitb[s2])hh[s2]<=~hh[s2];
    end
   end
