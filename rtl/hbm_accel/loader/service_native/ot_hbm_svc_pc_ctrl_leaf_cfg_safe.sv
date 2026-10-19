@@ -100,8 +100,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         {1'b0,incoming[1:0]}+length<=4 && incoming_pc==pc_id_q && {1'b0,incoming}+length<=31'd703125000;
     wire wr,cv_cfg,cwe,caq;wire[1:0]cv_regions;
     assign cv_cfg=cv_regions[1];wire[4:0]cb,cc;
-    wire[1:0]pc_fault_regions;
-    (* keep="true",dont_touch="true" *) reg[1:0]sticky_regions;
+    wire[2:0]pc_fault_regions;
+    (* keep="true",dont_touch="true" *) reg[2:0]sticky_regions;
     wire[319:0]head={queue_head,head_wdata},push={queue_post,256'b0};
     wire push_read=!push[319];
     wire enqueue=unposted!=0 && (!push_read || read_reserved<RQ) && !sticky;
@@ -122,15 +122,16 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire j_v,j_rdy;
     wire head_valid_next=response_read?1'b1:response_take?1'b0:head_valid;
     wire response_take=j_v&&j_rdy;
-    function automatic credit_room(input[QW:0]n,input[3:0]len);
+    (* keep="true",dont_touch="true" *) wire[2:0]length_prefix={length==1,length<=2,length<=3};
+    function automatic credit_room(input[QW:0]n,input[2:0]prefix);
       // Legal requests have1..4 beats. Shared length-prefix predicates
       // avoid broadcasting each encoded length bit into22 carry chains.
       credit_room=(n<=(QW+1)'(QD-4))||
-        ((n==(QW+1)'(QD-3))&&(len<=3))||
-        ((n==(QW+1)'(QD-2))&&(len<=2))||
-        ((n==(QW+1)'(QD-1))&&(len==1));
+        ((n==(QW+1)'(QD-3))&&(prefix[0]))||
+        ((n==(QW+1)'(QD-2))&&(prefix[1]))||
+        ((n==(QW+1)'(QD-1))&&(prefix[2]));
     endfunction
-    assign i_rdy=!sticky&&!pc_fault&&legal&&credit_room(count,length);
+    assign i_rdy=!sticky&&!pc_fault&&legal&&credit_room(count,length_prefix);
     wire kfront_fault;
     generate if(KREG!=0)begin:g_kreg
         // Released H9b native pin contract: pure data/valid capture, then a
@@ -156,7 +157,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
           // acceptance uses independent state; shared next-count arithmetic
           // drives only23 D pins per bit, never wide pointer enables.
           (* keep="true",dont_touch="true" *) reg[QW:0]count_q;
-          wire ready_local=!sticky_regions[r/11]&&!pc_fault_regions[r/11]&&legal&&credit_room(count_q,length);
+          wire ready_local=!sticky_regions[r/8]&&!pc_fault_regions[r/8]&&legal&&credit_room(count_q,length_prefix);
           assign push_regions[r]=kv_regions[r]&&ready_seen_regions[r];
           assign pop_regions[r]=valid_regions[r]&&ready_local;
           always @(posedge clk or negedge region_rst_n[72+r])
@@ -186,7 +187,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
           always @(posedge clk or negedge lrst_n)
             if(!lrst_n)head_valid_regions[r]<=0;
             else head_valid_regions[r]<=head_valid_next;
-          assign admission_regions[r]=head_valid_regions[r]&&!sticky_regions[r/9]&&!pc_fault_regions[r/9];
+          assign admission_regions[r]=head_valid_regions[r]&&!sticky_regions[r/6]&&!pc_fault_regions[r/6];
         end
         always @(posedge clk)if(!region_rst_n[3])ready_q<=0;else ready_q<={18{kr_rdy}};
         ot_hbm_svc_pin_skid2_bw_safe #(.WIDTH(277),.REGIONAL(1)) u_skid(
@@ -354,9 +355,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       (response_take&&(read_reserved==0||response_count==0))||
       read_reserved>RQ||pending_count>RQ||response_count>RQ;
     always @(posedge clk or negedge lrst_n)
-      if(!lrst_n)sticky_regions<=0;else sticky_regions<={2{sticky_next}};
+      if(!lrst_n)sticky_regions<=0;else sticky_regions<={3{sticky_next}};
 `ifndef SYNTHESIS
-    always @(negedge clk)if(lrst_n&&sticky_regions!=={2{sticky}})
+    always @(negedge clk)if(lrst_n&&sticky_regions!=={3{sticky}})
       $fatal(1,"BW_CFG_FAULT_REGION_MISMATCH");
 `endif
     always @(posedge clk or negedge lrst_n)begin

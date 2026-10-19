@@ -36,7 +36,7 @@ module ot_hbm_r14_aq_pc_safe #(
   input  wire        slot_parity, input wire [7:0] refresh_reload,
   output wire        row_v, output wire [2:0] row_op, output wire [4:0] row_bank, output wire [RW_ROW-1:0] row_row,
   output wire[1:0]col_v_regions, output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
-  output wire        ref_fault, output wire[1:0]ref_fault_regions,
+  output wire        ref_fault, output wire[2:0]ref_fault_regions,
   input  wire        wr_v, input wire [4:0] wr_bank, input wire [4:0] wr_col, input wire [RW_ROW-1:0] wr_row,
   input wire [8*RW_ROW-1:0] wr_row_regions,
   input  wire        wr_rd, output wire wr_r, output wire col_we, output wire col_aq,
@@ -220,7 +220,7 @@ module ot_hbm_r14_aq_pc_safe #(
         command_bank_regions[g]<=0;command_valid_regions[g]<=0;
         blk_bank_regions[g]<=0;blk_valid_regions[g]<=0;
       end else begin
-        command_bank_regions[g]<=r_bank;command_valid_regions[g]<=slot_next&&r_v;
+        command_bank_regions[g]<=r_bank;command_valid_regions[g]<=row_grant;
         blk_bank_regions[g]<=blk_set?bsel:blk_bank;
         blk_valid_regions[g]<=blk_clear?1'b0:(blk_set?1'b1:blk_valid);
       end
@@ -243,15 +243,15 @@ module ot_hbm_r14_aq_pc_safe #(
     for(genvar k=0;k<3;k=k+1)begin:WORD_ACT
       always @(posedge clk or negedge reset_regions[32+g])
         if(!reset_regions[32+g])row_word_act_local[k][g]<=0;
-        else row_word_act_local[k][g]<=slot_next&&r_v&&r_op==ACT;
+        else row_word_act_local[k][g]<=row_grant&&r_op==ACT;
     end
     // Only validity/opcode flags reset. The row word is consumed only by ACT.
     always @(posedge clk)row_local[g][18:0]<=r_row;
     always @(posedge clk or negedge reset_regions[32+g])
       if(!reset_regions[32+g])row_local[g][21:19]<=0;
-      else row_local[g][21:19]<={slot_next&&r_v&&r_op==ACT,
-                                slot_next&&r_v&&r_op==PRE,
-                                slot_next&&r_v&&r_op==REFPB};
+      else row_local[g][21:19]<={row_grant&&r_op==ACT,
+                                row_grant&&r_op==PRE,
+                                row_grant&&r_op==REFPB};
   end
   wire row_fire = c_v;
   wire [WQW:0] q_n_next=q_n+((qpush&&!wr_ok)?(WQW+1)'(1):
@@ -302,9 +302,20 @@ module ot_hbm_r14_aq_pc_safe #(
         // eliminate a wide conditional hold-enable without another edge.
         ac_b[g]<=0;ac_row[g]<=0;
         for(integer k=0;k<5;k=k+1)ac_v_local[k][g]<=0;
-        for(integer j=0;j<8;j=j+1)if(!found&&bank_n_word_local[0][g*8+j]!=0&&!open[g*8+j]&&!blk[g*8+j])begin
+        for(integer j=0;j<8;j=j+1)if(!found&&bank_n[g*8+j]!=0&&!open[g*8+j]&&!blk[g*8+j])begin
           found=1;ac_v[g]<=1;
-          for(integer k=0;k<5;k=k+1)ac_v_local[k][g]<=1;ac_b[g]<=5'(g*8+j);ac_row[g]<=look_row[g*8+j];
+          for(integer k=0;k<5;k=k+1)ac_v_local[k][g]<=1;ac_b[g]<=5'(g*8+j);
+        end
+        for(integer w=0;w<3;w=w+1)begin:ACT_ROW_WORD
+          reg found_word;found_word=0;
+          for(integer j=0;j<8;j=j+1)
+            if(!found_word&&(w==0?bank_n_word_local[0][g*8+j]:
+                w==1?bank_n_word_local[1][g*8+j]:bank_n[g*8+j])!=0&&
+                !open[g*8+j]&&!blk[g*8+j])begin
+              found_word=1;
+              for(integer k=0;k<8;k=k+1)if(w*8+k<RW_ROW)
+                ac_row[g][w*8+k]<=look_row[g*8+j][w*8+k];
+            end
         end
       end
           for(integer k=0;k<2;k=k+1)begin
@@ -503,6 +514,7 @@ module ot_hbm_r14_aq_pc_safe #(
   wire act_ok = act_cand && (|(act_cand_oh & aok_z)) && rrdl_z[act_b[1:0]] && rrds_c == 0 && faw_ok && !act_block &&
                 noact_c == 0 && !((ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1) || ep_start) && act_b == bsel);
   reg r_v; reg [2:0] r_op; reg [4:0] r_bank; reg [31:0] r_oh; reg [RW_ROW-1:0] r_row;
+  (* keep="true",dont_touch="true" *) wire row_grant=slot_next&&r_v;
   always @* begin
     r_v = 0; r_op = PRE; r_bank = 0; r_oh = 0; r_row = 0;
     if (ref_due_n && ref_pend) begin r_v = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
@@ -512,22 +524,40 @@ module ot_hbm_r14_aq_pc_safe #(
     else if (|pre_cand) begin r_v = 1; r_op = PRE; r_bank = pre_sel; r_oh = 32'b1 << pre_sel; end
   end
   assign row_v = c_v; assign row_op = c_op; assign row_bank = c_bank; assign row_row = c_row;
+  (* keep="true",dont_touch="true" *) reg[3:0]refresh_update_regions;
+  wire[31:0]refresh_marked=refreshed|(32'b1<<rb);
+  wire refresh_round_complete=&refresh_marked;
+  for(genvar g=0;g<4;g=g+1)begin:REFRESH_BYTE
+    always @(posedge clk or negedge reset_regions[32+g])
+      if(!reset_regions[32+g])refresh_update_regions[g]<=0;
+      else refresh_update_regions[g]<=row_grant&&r_op==REFPB;
+    (* keep="true",dont_touch="true" *) wire clear_byte=
+      refresh_update_regions[g]&&refresh_round_complete;
+    always @(posedge clk or negedge rst_n)
+      if(!rst_n)refreshed[g*8+:8]<=0;
+      else if(clear_byte)refreshed[g*8+:8]<=0;
+      else if(refresh_update_regions[g])refreshed[g*8+:8]<=refresh_marked[g*8+:8];
+  end
+`ifndef SYNTHESIS
+  always @(negedge clk)if(rst_n&&refresh_update_regions!=={4{row_fire&&c_op==REFPB}})
+    $fatal(1,"BW_AQ_REFRESH_UPDATE_MISMATCH");
+`endif
   assign ref_fault = fault_r;
   wire fault_next=fault_r||(ref_due&&!skip&&
     (!row_fire||c_op!=REFPB|||(blk&open)|||(blk&~aok_z)));
-  (* keep="true",dont_touch="true" *) reg[1:0]fault_regions_q;
+  (* keep="true",dont_touch="true" *) reg[2:0]fault_regions_q;
   always @(posedge clk or negedge rst_n)
-    if(!rst_n)fault_regions_q<=0;else fault_regions_q<={2{fault_next}};
+    if(!rst_n)fault_regions_q<=0;else fault_regions_q<={3{fault_next}};
   assign ref_fault_regions=fault_regions_q;
 `ifndef SYNTHESIS
-  always @(negedge clk)if(rst_n&&fault_regions_q!=={2{fault_r}})
+  always @(negedge clk)if(rst_n&&fault_regions_q!=={3{fault_r}})
     $fatal(1,"BW_AQ_FAULT_REGION_MISMATCH");
 `endif
 
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       q_n <= 0; q_rp <= 0;q_rp_plus1<=1;q_rp_plus2<=2;
-      refreshed <= 0; blk_valid <= 0;blk_bank<=0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
+      blk_valid <= 0;blk_bank<=0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
       rtw_c <= 0; wtr_c <= 0; phase <= 0; rkey <= 127; pin <= 0; ep <= 0; skip <= 0; sact <= 0; c_v <= 0; c_op <= PRE; c_bank <= 0; command_bank_local<=0;command_bank_valid<=0; c_row <= 0;
       for (integer f = 0; f < 4; f = f + 1) fawq[f] <= 0;
 
@@ -543,7 +573,7 @@ module ot_hbm_r14_aq_pc_safe #(
       if (noact_c != 0) noact_c <= noact_c - 1'b1;
       for (integer f = 0; f < 4; f = f + 1) if (fawq[f] != 0) fawq[f] <= fawq[f] - 1'b1;
       phase <= ~phase;
-      c_v <= slot_next && r_v; c_op <= r_op; c_bank <= r_bank; command_bank_local<=r_bank;command_bank_valid<=slot_next&&r_v; c_row <= r_row;
+      c_v <= row_grant; c_op <= r_op; c_bank <= r_bank; command_bank_local<=r_bank;command_bank_valid<=row_grant; c_row <= r_row;
       if (row_fire && (c_op == ACT || c_op == REFPB)) sact <= 0; else if (sact != 4'hf) sact <= sact + 1'b1;
       if (ref_c == RW'(LEAD)) begin
         if (ep) begin ref_pend <= 1; ep <= 0; end                               // a pending pull-in becomes this slot
@@ -565,7 +595,7 @@ module ot_hbm_r14_aq_pc_safe #(
         REFPB: begin
           noact_c <= 4'(T_RREFD - 1); ref_pend <= 0; blk_valid<=0;
           if (ep && !ref_pend) begin ep <= 0; pin <= pin + 1'b1; end
-          refreshed <= (&(refreshed | (32'b1 << rb))) ? 32'b0 : (refreshed | (32'b1 << rb));
+
         end
         default: ;
       endcase

@@ -18,7 +18,8 @@ module ot_hbm_svc_kr_ready_bridge #(parameter integer WIDTH=277,MUT=0,REGIONAL_V
  assign in_rdy=rst_n&&(occupancy<3'd2);
  wire push=rst_n&&in_v&&((MUT==1)?in_rdy:ready_prev);
  wire[2:0]next_count;
- wire[N-1:0]push_regions,pop_regions,valid_regions;
+ wire[N-1:0]push_regions,valid_regions;
+ (* keep="true",dont_touch="true" *) wire[N-1:0]pop_regions;
  for(genvar r=0;r<N;r=r+1)begin:g_control
   assign push_regions[r]=rst_n&&((REGIONAL_VALID!=0)?in_v_regions[r]:in_v)&&((MUT==1)?in_rdy:ready_prev_regions[r]);
   // Pop is internal: all ring count/RP consumers reset with priority.

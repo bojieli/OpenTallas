@@ -152,5 +152,22 @@
     "data_edges_added": 0,
     "critical_target": "partition36globalenqueue consumers acrossCFG andAQ, actualmappedfanout required",
     "status": "modelbeforeRTL"
+  },
+  "map5_predicate_successor": {
+    "base": "0fdb742d0",
+    "actual_map5": "53roots43staticreset10nonreset max45, noFFroots; failure preserved",
+    "changes": {
+      "localpop": "Keep true nonempty-state ANDconsumerready functionaldecision,9gates(each32bgroup), nofakebuffer/alias. ROOTexplicitpermission2026-10-19 11:06. Expected<=16localpointermuxloads, rawready<=32;actualtruth/nonconstantpins+allupstreamaudit mandatory.",
+      "faultstop": "Three real sticky/ref_faultstate groups instead2, +2FF; <=8K+6KRregions pergroup.",
+      "ACTrow": "Three <=8b rowword selections use existing bankwordcount0/1/canonicalcount independently; bank+valid usecanonical count,0FF.",
+      "credit": "Keep actual shared lengthprefix predicates<=3/<=2/==1, SAT actualfunctiondecoder/harness allcountslegallen+mutant.",
+      "refresh": "Four existing-command-edge REFpb byteupdateFF +4FF; each8bitbitmapword uses genuine byteclear=updateFF ANDfullround. Fullrounddrives4actualANDgates instead32muxes.",
+      "rowgrant": "Keep genuine slot_next ANDr_v admission decision usedbyexistingopcode/validcaptures."
+    },
+    "extra_ff": 6,
+    "data_edges_added": 0,
+    "macro_ports_added": 0,
+    "kept_boolean_area": "Unknown untilactualmappedcellinventory; nozeroarea claim. CountactualAND/decoderarea,pins,inputs independentlylive,allrootcensus.",
+    "status": "modelbeforeRTL;sourceproof+actualtransparentmappingrequired"
   }
 }
