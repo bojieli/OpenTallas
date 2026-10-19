@@ -40,6 +40,12 @@ endmodule\n'''
                           ('regions',['core','lane0','lane1'])]:
             q=copy.deepcopy(spec);q['regional_child_clocks'][0][field]=val;bads.append(q)
         q=copy.deepcopy(spec);q['regional_child_resets'][0]['regions'].reverse();bads.append(q)
+        q=copy.deepcopy(spec);q.pop('regional_child_resets');bads.append(q)
+        q=copy.deepcopy(spec);q['regional_child_resets']=[];bads.append(q)
+        q=copy.deepcopy(spec);q.pop('regional_child_clocks');bads.append(q)
+        # Partial matching: a second clock vector cannot borrow the first
+        # vector's reset epochs on different roots.
+        q=copy.deepcopy(spec);q['regional_child_resets'][0]['regions']=['core','lane1'];bads.append(q)
         q=copy.deepcopy(spec);q['regions'].append(dict(name='unused',insts=[],centre=[0,216]));bads.append(q)
         for q in bads:
             try:lp.Parent(q)

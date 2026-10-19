@@ -417,6 +417,9 @@ def regional_bindings(spec, insts, csrc):
             if b['role']=='resets' and not any(j==inst and q['role']=='clocks' and q['regions']==b['regions']
                                                for (j,p),q in result.items()):
                 raise SystemExit(f'regional_child_resets: {inst}.{pin} has no matching clock-bit epochs')
+            if b['role']=='clocks' and not any(j==inst and q['role']=='resets' and q['regions']==b['regions']
+                                               for (j,p),q in result.items()):
+                raise SystemExit(f'regional_child_clocks: {inst}.{pin} needs explicit matching reset-bit epochs; reset-free exceptions unsupported')
     return result
 
 
