@@ -257,13 +257,14 @@ def compile_record(fmt, w, x, ops, mut=""):
 
 # ------------------------------------------------------------------------------------------------ fixture
 def load_record(fix: Path, smw: Path, k: int):
-    rec = [q for q in json.loads((fix / "records.json").read_text())["records"]["0"] if q["k"] == k]
+    # k = the layer-local dispatch index (weights.json k = fixture k_layer; the fixture's own k is the operand key)
+    rec = [q for q in json.loads((fix / "records.json").read_text())["records"]["0"] if q.get("k_layer", q["k"]) == k]
     assert len(rec) == 1, k
     rec = rec[0]
     assert rec["op"] == "SM.MATVEC", rec["op"]
     z = np.load(fix / "operands.npz")
-    x = z[f"r0.k{k}.A"].view(F)
-    o = z[f"r0.k{k}.O"]
+    x = z[f"r0.k{rec['k']}.A"].view(F)
+    o = z[f"r0.k{rec['k']}.O"]
     wj = json.loads((smw / "weights.json").read_text())
     ent = [e for e in wj["records"] if e["rank"] == 0 and e["k"] == k]
     assert len(ent) == 1 and ent[0]["tag"] == rec["tag"] and ent[0]["occ"] == rec["occ"], (k, ent)
