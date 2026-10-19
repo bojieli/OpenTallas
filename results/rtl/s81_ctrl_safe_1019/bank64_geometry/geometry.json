@@ -1,0 +1,264 @@
+{
+  "status": "DIAGNOSTIC_ONLY_NO_PHYSICAL_APPROVAL",
+  "source": "de58d09a7",
+  "outline_um": [
+    531.25,
+    216
+  ],
+  "old_phy_reservation_um": [
+    531.25,
+    250
+  ],
+  "macros": [
+    {
+      "inst": "g_pc[0].u_pc.u_q.g_bank[0].u_mem",
+      "pc": 0,
+      "queue": "q",
+      "bank": 0,
+      "x": 43.2,
+      "y": 129.6,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[0].u_pc.u_q.g_bank[1].u_mem",
+      "pc": 0,
+      "queue": "q",
+      "bank": 1,
+      "x": 129.6,
+      "y": 129.6,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[0].u_pc.u_q.g_bank[2].u_mem",
+      "pc": 0,
+      "queue": "q",
+      "bank": 2,
+      "x": 216.0,
+      "y": 129.6,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[0].u_pc.u_q.g_bank[3].u_mem",
+      "pc": 0,
+      "queue": "q",
+      "bank": 3,
+      "x": 43.2,
+      "y": 172.8,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[0].u_pc.u_q.g_bank[4].u_mem",
+      "pc": 0,
+      "queue": "q",
+      "bank": 4,
+      "x": 129.6,
+      "y": 172.8,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[0].u_pc.u_q.g_bank[5].u_mem",
+      "pc": 0,
+      "queue": "q",
+      "bank": 5,
+      "x": 216.0,
+      "y": 172.8,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[0].u_pc.u_r.g_bank[0].u_mem",
+      "pc": 0,
+      "queue": "r",
+      "bank": 0,
+      "x": 43.2,
+      "y": 43.2,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[0].u_pc.u_r.g_bank[1].u_mem",
+      "pc": 0,
+      "queue": "r",
+      "bank": 1,
+      "x": 129.6,
+      "y": 43.2,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[0].u_pc.u_r.g_bank[2].u_mem",
+      "pc": 0,
+      "queue": "r",
+      "bank": 2,
+      "x": 216.0,
+      "y": 43.2,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[0].u_pc.u_r.g_bank[3].u_mem",
+      "pc": 0,
+      "queue": "r",
+      "bank": 3,
+      "x": 43.2,
+      "y": 86.4,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[0].u_pc.u_r.g_bank[4].u_mem",
+      "pc": 0,
+      "queue": "r",
+      "bank": 4,
+      "x": 129.6,
+      "y": 86.4,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[1].u_pc.u_q.g_bank[0].u_mem",
+      "pc": 1,
+      "queue": "q",
+      "bank": 0,
+      "x": 302.4,
+      "y": 129.6,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[1].u_pc.u_q.g_bank[1].u_mem",
+      "pc": 1,
+      "queue": "q",
+      "bank": 1,
+      "x": 388.79999999999995,
+      "y": 129.6,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[1].u_pc.u_q.g_bank[2].u_mem",
+      "pc": 1,
+      "queue": "q",
+      "bank": 2,
+      "x": 475.2,
+      "y": 129.6,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[1].u_pc.u_q.g_bank[3].u_mem",
+      "pc": 1,
+      "queue": "q",
+      "bank": 3,
+      "x": 302.4,
+      "y": 172.8,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[1].u_pc.u_q.g_bank[4].u_mem",
+      "pc": 1,
+      "queue": "q",
+      "bank": 4,
+      "x": 388.79999999999995,
+      "y": 172.8,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[1].u_pc.u_q.g_bank[5].u_mem",
+      "pc": 1,
+      "queue": "q",
+      "bank": 5,
+      "x": 475.2,
+      "y": 172.8,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[1].u_pc.u_r.g_bank[0].u_mem",
+      "pc": 1,
+      "queue": "r",
+      "bank": 0,
+      "x": 302.4,
+      "y": 43.2,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[1].u_pc.u_r.g_bank[1].u_mem",
+      "pc": 1,
+      "queue": "r",
+      "bank": 1,
+      "x": 388.79999999999995,
+      "y": 43.2,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[1].u_pc.u_r.g_bank[2].u_mem",
+      "pc": 1,
+      "queue": "r",
+      "bank": 2,
+      "x": 475.2,
+      "y": 43.2,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[1].u_pc.u_r.g_bank[3].u_mem",
+      "pc": 1,
+      "queue": "r",
+      "bank": 3,
+      "x": 302.4,
+      "y": 86.4,
+      "w": 31.992,
+      "h": 17.304
+    },
+    {
+      "inst": "g_pc[1].u_pc.u_r.g_bank[4].u_mem",
+      "pc": 1,
+      "queue": "r",
+      "bank": 4,
+      "x": 388.79999999999995,
+      "y": 86.4,
+      "w": 31.992,
+      "h": 17.304
+    }
+  ],
+  "proposed_std_bands": [
+    {
+      "x": 2.16,
+      "y": 2.16,
+      "w": 526.93,
+      "h": 2.16
+    },
+    {
+      "x": 2.16,
+      "y": 211.68,
+      "w": 526.93,
+      "h": 2.16
+    }
+  ],
+  "measured_synth_std_um2": 1132.71,
+  "estimated_band_fill": 0.4976019374279106,
+  "actual_placed_cell_mass_verified": false,
+  "physical_bits": 45056,
+  "logical_bits": 9872,
+  "macro_area_um2": 12178.970496,
+  "minimum_macro_channel_um": 25.896,
+  "macro_to_north_band_gap_um": 21.576,
+  "qualified": false,
+  "open": [
+    "actual row/band mass and placement",
+    "source-clock/control fanout/<=405 reach",
+    "native per-root TT/FF and CDC calendar",
+    "PG signal escape via and route DRC",
+    "parent slot and timing acceptance"
+  ]
+}
