@@ -1,0 +1,60 @@
+{
+  "source_revision": "10e6d5a53",
+  "leaf_RTL_revision": "b7043ae12",
+  "model_before_RTL": "63cdbc115",
+  "host": "ot-epyc6",
+  "tool": "Verilator 5.050",
+  "actual_leaf_macros": 4,
+  "reference_landing_macros": 2,
+  "pass_J": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "per_J": {
+    "payload_groups": 3264,
+    "masked_warm_groups": 24,
+    "accepted_packets": 825,
+    "old_master_miter_errors": [
+      0,
+      0
+    ],
+    "blocks": 4,
+    "reset_episodes": 3,
+    "completion_per_bank": 12,
+    "independent_group_valid_cases": 1032,
+    "min_latency_edges": 7,
+    "max_latency_edges": 7,
+    "first_valid_after_each_reset": [
+      9,
+      9,
+      9
+    ],
+    "sustained_windows": 12,
+    "groups_per_window": 64,
+    "edges_per_window": 64,
+    "bytes_per_edge": 32
+  },
+  "mutants": [
+    {
+      "id": 1,
+      "J": 1,
+      "fail_regex": "PAIR_SELECT_DATA_FAIL",
+      "witness": "J1_mutant1.log"
+    },
+    {
+      "id": 2,
+      "J": 1,
+      "fail_regex": "PAIR_META_ALIGN_FAIL",
+      "witness": "J1_mutant2.log"
+    },
+    {
+      "id": 3,
+      "J": 1,
+      "fail_regex": "PAIR_RING_PHASE_FAIL",
+      "witness": "J1_mutant3.log"
+    }
+  ],
+  "physical_qualification": false
+}

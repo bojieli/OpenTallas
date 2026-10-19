@@ -71,10 +71,12 @@ beside their register mass, use local centre-fed trees, and measure TT/FF
 neighbour pin-flop spread <=80ps. Native resets assert/release together, with
 separate two-stage landing per root. Payload registers do not get a reset mass.
 
-Per pair, the conservative external budget keeps native bank control copies:
-572 HBM data/valid inputs,82 reserve/stop/read inputs,4 ordinal/valid inputs,
-6 clock/reset inputs =664 inputs. Four HBM ready/overflow,8 completion/bank/fault,
-and261 registered return signals =273 outputs; total937pins. The two internal
+The actual `ot_hbm_svg_landing_pair_native` leaf shares reserve/stop pins:
+572 HBM data/valid inputs,32 shared reserve/stop,18 separate read controls,
+4 ordinal/valid and6 clock/reset =632inputs. Four HBM ready/overflow,
+8 completion/bank/fault and261 registered return =273outputs; total905pins.
+The earlier conservative664input count duplicated32 shared reserve/stop pins;
+the real source-bound budget supersedes it. The two internal
 256-bit landing read buses are not counted as external pins. The return bus
 needs261 tracks,12.528um at0.048um pitch on a single layer, or43.5um face length
 at6pins/um. Put return Q/select mass at the cache-facing edge; split HBM inputs

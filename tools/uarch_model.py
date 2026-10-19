@@ -17437,3 +17437,9 @@ def hbm_svg_element_sizing_model():
     """Source-bound landing/local-pair and separate cache element outline proposal."""
     from hbm_layer_vehicle.svg_element_sizing_model import model
     return model()
+
+
+def hbm_svg_landing_pair_native_model():
+    """Source-bound four-macro native landing/local-return leaf."""
+    from hbm_layer_vehicle.svg_landing_pair_model import model
+    return model()

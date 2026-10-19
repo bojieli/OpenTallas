@@ -1,0 +1,22 @@
+SOURCE_REVISION=10e6d5a53
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+SVG_NATIVE_PAIR PASS mut=0 J=1 errors=0 payload_groups=3264 masked_warm_groups=24 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0 packets=413/412
+- rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:182: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.036 s; speed 107.340 us/s
+- Verilator: cpu 0.036 s on 1 threads; allocated 7 MB

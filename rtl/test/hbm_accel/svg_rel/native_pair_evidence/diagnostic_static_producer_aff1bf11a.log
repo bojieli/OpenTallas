@@ -1,0 +1,213 @@
+ot-run: ot-epyc4       admits   923 GB (avail 760, growth 113, headroom 0, waiters 0/0 GB) load 94/128 running 38 disk 412 GB 
+ot-run: ot-epyc5       admits   836 GB (avail 698, growth 113, headroom 0, waiters 0/0 GB) load 84/128 running 14 disk 564 GB 
+ot-run: ot-epyc6       admits   398 GB (avail 378, growth 100, headroom 0, waiters 0/0 GB) load 44/128 running 17 disk 563 GB 
+ot-run: ot-epyc7       admits   731 GB (avail 612, growth 101, headroom 0, waiters 0/0 GB) load 60/96 running 18 disk 502 GB 
+ot-run: ot-epyc8       admits  1163 GB (avail 911, growth 96, headroom 0, waiters 0/0 GB) load 39/128 running 26 disk 565 GB 
+ot-run: ot-pve1        admits   115 GB (avail 93, growth 13, headroom 0, waiters 0/0 GB) load 55/28 running 6 disk 1198 GB 
+ot-run: ot-agidock128  admits    92 GB (avail 77, growth 13, headroom 0, waiters 0/0 GB) load 14/64 running 7 disk 46 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1157577-1792426435 after 0 s
+RESULT_ROOT=/srv/opentallas-scratch/claude/hbm-svg-native-pair-1019
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SELECT_DATA_FAIL ordinal=2 full=2
+PAIR_SELECT_DATA_FAIL ordinal=4 full=4
+PAIR_SELECT_DATA_FAIL ordinal=5 full=5
+PAIR_SELECT_DATA_FAIL ordinal=6 full=6
+PAIR_SELECT_DATA_FAIL ordinal=7 full=7
+PAIR_SELECT_DATA_FAIL ordinal=0 full=8
+PAIR_SELECT_DATA_FAIL ordinal=4 full=12
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_COUNTS_FAIL data=3264 warm=24 windows=12 reset=3 latency=7/7 completes=0/0
+SVG_NATIVE_PAIR FAIL mut=0 J=0 errors=2448 payload_groups=3264 masked_warm_groups=24 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0
+[3709632] %Fatal: tb_svg_landing_pair_native.sv:182: Assertion failed in tb_svg_landing_pair_native: native landing pair mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:182: Verilog $stop
+Aborting...
+CASE J=0 MUT=0 RC=1
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SELECT_DATA_FAIL ordinal=1 full=1
+PAIR_SELECT_DATA_FAIL ordinal=2 full=2
+PAIR_SELECT_DATA_FAIL ordinal=4 full=4
+PAIR_SELECT_DATA_FAIL ordinal=5 full=5
+PAIR_SELECT_DATA_FAIL ordinal=6 full=6
+PAIR_SELECT_DATA_FAIL ordinal=7 full=7
+PAIR_SELECT_DATA_FAIL ordinal=0 full=8
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_COUNTS_FAIL data=3264 warm=24 windows=12 reset=3 latency=7/7 completes=0/0
+SVG_NATIVE_PAIR FAIL mut=0 J=1 errors=2448 payload_groups=3264 masked_warm_groups=24 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0
+[3709632] %Fatal: tb_svg_landing_pair_native.sv:182: Assertion failed in tb_svg_landing_pair_native: native landing pair mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:182: Verilog $stop
+Aborting...
+CASE J=1 MUT=0 RC=1
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SELECT_DATA_FAIL ordinal=1 full=1
+PAIR_SELECT_DATA_FAIL ordinal=2 full=2
+PAIR_SELECT_DATA_FAIL ordinal=4 full=4
+PAIR_SELECT_DATA_FAIL ordinal=5 full=5
+PAIR_SELECT_DATA_FAIL ordinal=6 full=6
+PAIR_SELECT_DATA_FAIL ordinal=7 full=7
+PAIR_SELECT_DATA_FAIL ordinal=0 full=8
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_COUNTS_FAIL data=3264 warm=24 windows=12 reset=3 latency=7/7 completes=0/0
+SVG_NATIVE_PAIR FAIL mut=0 J=2 errors=2448 payload_groups=3264 masked_warm_groups=24 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0
+[3709632] %Fatal: tb_svg_landing_pair_native.sv:182: Assertion failed in tb_svg_landing_pair_native: native landing pair mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:182: Verilog $stop
+Aborting...
+CASE J=2 MUT=0 RC=1
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SELECT_DATA_FAIL ordinal=1 full=1
+PAIR_SELECT_DATA_FAIL ordinal=2 full=2
+PAIR_SELECT_DATA_FAIL ordinal=3 full=3
+PAIR_SELECT_DATA_FAIL ordinal=4 full=4
+PAIR_SELECT_DATA_FAIL ordinal=5 full=5
+PAIR_SELECT_DATA_FAIL ordinal=6 full=6
+PAIR_SELECT_DATA_FAIL ordinal=7 full=7
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_COUNTS_FAIL data=3264 warm=24 windows=12 reset=3 latency=7/7 completes=0/0
+SVG_NATIVE_PAIR FAIL mut=0 J=3 errors=2448 payload_groups=3264 masked_warm_groups=24 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0
+[3709632] %Fatal: tb_svg_landing_pair_native.sv:182: Assertion failed in tb_svg_landing_pair_native: native landing pair mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:182: Verilog $stop
+Aborting...
+CASE J=3 MUT=0 RC=1
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SELECT_DATA_FAIL ordinal=1 full=1
+PAIR_SELECT_DATA_FAIL ordinal=2 full=2
+PAIR_SELECT_DATA_FAIL ordinal=3 full=3
+PAIR_SELECT_DATA_FAIL ordinal=4 full=4
+PAIR_SELECT_DATA_FAIL ordinal=5 full=5
+PAIR_SELECT_DATA_FAIL ordinal=6 full=6
+PAIR_SELECT_DATA_FAIL ordinal=7 full=7
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_COUNTS_FAIL data=3264 warm=24 windows=12 reset=3 latency=7/7 completes=0/0
+SVG_NATIVE_PAIR FAIL mut=1 J=1 errors=3264 payload_groups=3264 masked_warm_groups=24 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0
+[3709632] %Fatal: tb_svg_landing_pair_native.sv:182: Assertion failed in tb_svg_landing_pair_native: native landing pair mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:182: Verilog $stop
+Aborting...
+CASE J=1 MUT=1 RC=1
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_META_ALIGN_FAIL ordinal=3/2
+PAIR_META_ALIGN_FAIL ordinal=4/3
+PAIR_META_ALIGN_FAIL ordinal=5/4
+PAIR_META_ALIGN_FAIL ordinal=6/5
+PAIR_META_ALIGN_FAIL ordinal=7/6
+PAIR_META_ALIGN_FAIL ordinal=0/7
+PAIR_META_ALIGN_FAIL ordinal=1/0
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=9 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_COUNTS_FAIL data=3165 warm=120 windows=12 reset=3 latency=7/7 completes=0/0
+SVG_NATIVE_PAIR FAIL mut=2 J=1 errors=6054 payload_groups=3165 masked_warm_groups=120 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0
+[3709632] %Fatal: tb_svg_landing_pair_native.sv:182: Assertion failed in tb_svg_landing_pair_native: native landing pair mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:182: Verilog $stop
+Aborting...
+CASE J=1 MUT=2 RC=1
+Verilator 5.050 2026-07-01 rev v5.050
+PAIR_META_ALIGN_FAIL valid=0/1 tick=14
+PAIR_META_ALIGN_FAIL valid=0/1 tick=15
+PAIR_META_ALIGN_FAIL valid=0/1 tick=16
+PAIR_RESET_WARM edge=12 expected=9
+PAIR_META_ALIGN_FAIL ordinal=2/5
+PAIR_META_ALIGN_FAIL ordinal=3/6
+PAIR_RING_PHASE_FAIL
+PAIR_SUSTAIN window=1 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=2 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=3 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=4 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=12 expected=9
+PAIR_SUSTAIN window=5 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=6 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=7 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=8 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_RESET_WARM edge=12 expected=9
+PAIR_SUSTAIN window=9 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=10 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=11 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_SUSTAIN window=12 groups=64 pair_edges=64 bytes_per_edge=32
+PAIR_COUNTS_FAIL data=3159 warm=129 windows=12 reset=3 latency=7/7 completes=0/0
+SVG_NATIVE_PAIR FAIL mut=3 J=1 errors=6653 payload_groups=3159 masked_warm_groups=129 windows=12 independent_valid=1032 latency=7/7 old_miter_errors=0/0
+[3709632] %Fatal: tb_svg_landing_pair_native.sv:182: Assertion failed in tb_svg_landing_pair_native: native landing pair mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_pair_native.sv:182: Verilog $stop
+Aborting...
+CASE J=1 MUT=3 RC=1
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1157577-1792426435): exit 0
