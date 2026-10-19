@@ -330,8 +330,38 @@ def audit(a):
     res['state'] = dict(gold_regs=len(regs), paired=len(pair), gold_only=len(gold_only), gate_only=len(gate_only),
                         gold_only_sample=gold_only[:20], gate_only_sample=gate_only[:20])
     # 4. equivalence: ports + paired state only
-    L = ['read_verilog -sv cells.v'] + [f'read_verilog -sv {root / b_}' for b_ in bbs] + ['read_verilog gate.v', f'rename {spec["top"]} gate', 'hierarchy -check -top gate',
-         'proc', 'flatten gate', 'read_rtlil gold1.il', 'cd gold']
+    # --macro-model CELL=MODEL.v (KV-PARAMS2 10-19, PV slice SRAM): a hard macro with no Liberty function gets the SAME
+    # stateful SAT model on both sides instead of the blackbox; its array words and read register become paired state
+    # (shared arbitrary initial memory, never zero-filled).  MODEL must define module CELL with reg arrays `arr` and
+    # registered output `rd_out` (sram_gen behaviour); the words / read register are paired by instance name.
+    mm = dict(x.split('=', 1) for x in (a.macro_model or []))
+    mstate = []
+    if mm:
+        unknown = sorted(set(mm) - set(macros.values()))
+        if unknown:
+            raise SystemExit(f'--macro-model for cells not in the routed netlist: {unknown}')
+        bbs_r = [b_ for b_ in bbs if not any(re.search(r'module\s+' + re.escape(c) + r'\b', (root / b_).read_text())
+                                             for c in mm)]
+        res['macro_models'] = {c: dict(path=f, sha256=sha(f)) for c, f in mm.items()}
+        for inst, cell in sorted(macros.items()):
+            if cell in mm:
+                m_ = re.search(r'reg\s*\[\s*(\d+)\s*:\s*0\s*\]\s*arr\s*\[\s*0\s*:\s*(\d+)\s*\]', Path(mm[cell]).read_text())
+                wbits, words = int(m_[1]) + 1, int(m_[2]) + 1
+                tag = re.sub(r'[^A-Za-z0-9_]', '_', inst)
+                mstate += [(f'S__mm_{tag}_arr_{k}', f'{inst}.arr[{k}]', wbits) for k in range(words)]
+                mstate.append((f'S__mm_{tag}_rd_out', f'{inst}.rd_out', wbits))
+        pre = (['read_verilog -sv cells.v'] + [f'read_verilog -sv {root / b_}' for b_ in bbs_r]
+               + [f'read_verilog -sv {f}' for f in mm.values()] + ['proc', 'memory -nomap', 'memory_map', 'opt_clean'])
+        L = pre + ['read_verilog gate.v', f'rename {spec["top"]} gate', 'hierarchy -check -top gate', 'proc',
+                   'read_rtlil gold1.il', 'flatten gate gold', 'cd gold']
+        res['macro_state_pairs'] = len(mstate)
+    else:
+        L = ['read_verilog -sv cells.v'] + [f'read_verilog -sv {root / b_}' for b_ in bbs] + ['read_verilog gate.v', f'rename {spec["top"]} gate', 'hierarchy -check -top gate',
+             'proc', 'flatten gate', 'read_rtlil gold1.il', 'cd gold']
+    if mstate:
+        for side in ('gold', 'gate'):
+            L += ['cd', f'cd {side}'] + [x for s_, w_, n_ in mstate for x in (f'add -wire {s_} {n_}', f'connect -set {s_} {w_}')]
+        L += ['cd', 'cd gold']
     for s, n in sorted(pair.items()):
         L += [f'add -wire {s} 1', f'connect -set {s} {n}']
     # KV-PARAMS2 10-19 joint mode: source registers that synthesis removed as constants (e.g. the adder's unreset
@@ -375,7 +405,7 @@ def audit(a):
         res['error'] = (work / 'equiv.out').read_text()[-1500:]
     if a.reset_base and res['proven']:
         res['proven'] = False
-        res['base'] = reset_base(a, work, prelude, states, pair)
+        res['base'] = reset_base(a, work, prelude, states, pair, [s_ for s_, _w, _n in mstate])
         res['proven'] = res['base']['proven']
         res['equiv']['method'] += (f'; reset base: {a.reset_base} {a.reset_port}={a.reset_active} edges, paired initial '
                                    f'state, steps {a.reset_base + 1}..{a.reset_base + 4} (miter, sat -verify)')
@@ -405,7 +435,7 @@ def observe_ge_cells(specs, il):
     return out
 
 
-def reset_base(a, work, prelude, states, pair):
+def reset_base(a, work, prelude, states, pair, extra=()):
     """KV-PARAMS2 10-19: the reset base the induction needs (equiv_induct assumes its comparisons for 3 steps).
 
     The chip has ONE power-up state, the routed netlist's.  The RTL admits that state on the same registers, so every
@@ -416,7 +446,7 @@ def reset_base(a, work, prelude, states, pair):
     proves nothing about the netlist.  Every original comparison and observation stays a miter output; the reset port
     is held active for N target edges, all other inputs arbitrary, steps N+1..N+4 checked."""
     n = a.reset_base
-    paired = sorted(s_ for s_ in pair if not states[s_][1])
+    paired = sorted(s_ for s_ in pair if not states[s_][1]) + list(extra)   # extra: macro-model array/read state
     sets = ' '.join(f'-set-at {i} in_{a.reset_port} {a.reset_active}' for i in range(1, n + 1))
     sets += ' ' + ' '.join(f'-set-at 1 gold.{s_} gate.{s_}' for s_ in paired)
     B = prelude + ['async2sync', 'expose gold/w:S__* gate/w:S__*', 'miter -equiv -flatten -make_assert gold gate miter',
@@ -428,7 +458,7 @@ def reset_base(a, work, prelude, states, pair):
     log = (work / 'base.log').read_text() if (work / 'base.log').is_file() else ''
     ok = rc == 0 and 'no model found: SUCCESS!' in log
     return dict(rc=rc, seconds=t, proven=ok, reset_edges=n, reset_port=a.reset_port, reset_active=a.reset_active,
-                checked_steps=[n + 1, n + 4], paired_initial=len(paired), free_replicas=len(pair) - len(paired),
+                checked_steps=[n + 1, n + 4], paired_initial=len(paired), free_replicas=sum(1 for s_ in pair if states[s_][1]), macro_state=len(extra),
                 log_sha256=sha(work / 'base.log') if log else None,
                 cex=str(work / 'base_cex.json') if (work / 'base_cex.json').is_file() else None,
                 error=None if log else (work / 'base.out').read_text()[-1500:])
@@ -484,6 +514,7 @@ def main(argv=None):
     a1.add_argument('--expect', choices=('pass', 'fail'), default='pass', help='fail = parameter mutant control')
     a1.add_argument('--seq', type=int, default=2)
     a1.add_argument('--observe-zero-regex', help='gold-only registers proven ZERO jointly (see audit())')
+    a1.add_argument('--macro-model', action='append', default=[], help='CELL=MODEL.v stateful SAT model, both sides')
     a1.add_argument('--observe-ge', action='append', default=[],
                     help="WIRE:LSB:WIDTH:CONST gold range predicate proven ZERO jointly (repeatable)")
     a1.add_argument('--reset-base', type=int, default=0, help='N: paired-initial reset base after N reset edges')
