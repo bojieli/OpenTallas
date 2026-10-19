@@ -147,7 +147,13 @@ def age_fields(r, land_k, land_e=None):
                             landing_k=[land_k[name] for name in sequence], plain_relay_stages=min(plain),
                             age_basis='ordered exact GEN forwarded chains + individually walked plain relay flops')
     return dict(age_edges=None, landing_k=ks[0] if len(ks) == 1 else ks,
-                age_basis='landed path: missing lane metadata, mixed paths, or actual K differs from recorded K')
+                age_basis='landed path: missing lane metadata, mixed paths, or actual K differs from recorded K',
+                age_diagnostic=dict(stages=sorted(r['st']), land_sequences=[list(q) for q in sorted(lands)],
+                    plain_counts=sorted(r.get('plain_counts', [])),
+                    forwarded_path_sizes=sorted({len(q) for q in r.get('forwarded_paths', [])}),
+                    metadata={name: {k: row.get(k) for k in ('n', 'E', 'cal', 'K', 'post_stages')}
+                              for name in sorted({n for seq in lands for n in seq})
+                              if (row := (land_e or {}).get(name)) is not None}))
 
 
 def export_lanes(path):
