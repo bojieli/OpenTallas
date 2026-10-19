@@ -55,7 +55,7 @@ def context_model(class_source='mode197', landing_bits=2, queue_depth=4):
         pins=dict(issuer_to_feed_context_bits_added=1, external_sm_pins_added=0,
                   each_existing_svg_token_lane_bits_added=1),
         physical='OPEN: kept control copies, reset ownership, mapped fanout/reach/clock and wrapper audits',
-        compiler='mode197: write mode4/6/7 in attention descriptor even with mrel0; verify every literal magic word has the descriptor class; disallow mixed-class programme',
+        compiler='mode197: write mode4/6/7 in attention descriptor even with mrel0; verify every literal magic word has the descriptor class; expose and price every required GO split for a mixed-class programme',
         coexistence='a dense descriptor, attention descriptor and dense descriptor must retain each word class through intervening idle and retire tails')
 
 
