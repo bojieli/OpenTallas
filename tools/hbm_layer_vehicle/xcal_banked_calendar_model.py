@@ -82,7 +82,7 @@ def model(serialized_programmes=None):
       "semantic_class_opt_in":{"status":"APPROVED_SOURCE_CANDIDATE_NO_PHYSICAL_APPROVAL",
         "descriptor":"Existingmode[197:195],class=bit197; reserved200unchanged. SVGctx46 isclass, lower46legacyunchanged; XCctx5class=wctx4.",
         "default":"CLASS_ENABLE0,SVGXW46; olddata/faultbehaviorandcore/helpers unchanged.",
-        "native_envelopes":{"SVG":85,"XC":111,"order":"{context_valid,class,command_payload}; SVGpayload83,XCpayload109"},
+        "native_envelopes":{"SVG":85,"XC":175,"order":"{context_valid,class,command_payload}; SVGpayload83,XCpayload173includingKV64"},
         "R_C_equations":"R captures{word_v,ctxclass}; C capturesRpair. PREL0selectsR,PREL1selectsC. ActualformatinjectionoverridesCpairwithcurrentwordctxclassandvalid1,evenifpreviousR/Cslotempty. No inferredvalidfromnonzero83bitpayload.",
         "register_price":{"SVG47_transport_mapped_delta":26,"SVG_class_R_C_FF":4,"SVG_valid_reset_load_delta":2,"XC_class_R_C_FF":4,"XC_native_combined_fault_FF":1,"XC_reset_load_delta":3},
         "fault_equation":"XCnativefaultQ <= nextcorefault OR previousnativefault OR (actualselectedcommand.magicA2 && (!actualcontextvalid || mode3 || mode[2]!=actualclass)). ChecksPOSTmrel/PRELselection. Samplingcurrentpinsmeansfault1edgeaftercommandR/Cpinlaunch; noextraORcombineedge. Parentcache/mirror+2 mustalignclass/valid85/111envelopetofinalG11consume; currentlocalcheckisearlierthanfinalconsume, nofaulttimingcredit.",
