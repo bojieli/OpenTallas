@@ -135,7 +135,7 @@
   "branch": "claude/pl-bk-1018",
   "tag": "pl1",
   "purpose": "S81-DV dsdv_bk_col vertical-cut cluster (PL-BK, PARENTS-LANDED 10-18): single-region cluster of closed leaves.",
-  "benched_by": "run_bk_bench.sh col (exact PASS; mutant 3 FAIL witness bk_units_bk3/col_mut3.txt): the cluster's own RTL",
+  "bench_note": "run_bk_bench.sh col (exact PASS; mutant 3 FAIL witness bk_units_bk3/col_mut3.txt): the cluster's own RTL",
   "views_to": "physical/ref_tile/s81dvbk_colv/views",
   "record_to": "results/rtl/ref_tile/s81dvbk_colv",
   "benches": [
@@ -179,6 +179,8 @@
  },
  "hard_define": "OT_DSDV_BK_HARD",
  "clock_entry_note": "PL-BK 10-18: clk on the E face at y 322-325, the cluster's mid-height beside the glue (E) and merger: the gate-1 S-face entry gave a 745-ps parent trunk to the N lanes (TT 1009.7 total)",
+ "child_clock_ref": "boundary",
+ "child_clock_ref_note": "S81-BKSQ 10-18: routed colv-pl1-d863824bf child-flop spread TT 106 > 80 (u_g pin 456 vs g_l[1] 558): spine targets = each child's ROUTED boundary-register insertion R (views/*/insertion.json tt.boundary.mean: g 265.1, l 269.3, m 264.8) instead of the lib max_clock_tree_path (337 / 331.9 / 302); re-gate over the new s81dvbk_g2 view, then submit with reroute_reason native_spread",
  "inter": [],
  "recipe": 4,
  "io_flop_at_pins": {
