@@ -133,9 +133,10 @@ module ot_hbm_r14_aq_pc_safe #(
     qhead<=head_d;
     head_bank_local<=head_d[29:25];head_bank_global<=head_d[29:25];head_bank_cfg<=head_d[29:25];
   end
-  ot_sram_1r1w_128x256_m1_r2c2 u_queue(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(qread)),.rd_out(qm),
-    .w_ce_in(qpush),.w_addr_in(7'(qwp)),.wd_in({226'b0,wr_bank,wr_col,wr_row,wr_rd}),.w_mask_in({256{1'b1}}),
-    .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+  // LH-BW SAFE n64: 30-bit queue word in one 128x64 macro (3.8 pins/um faces) instead of a mostly tied 128x256 r2c2
+  wire [29:0] qm30; assign qm={226'b0,qm30};
+  ot_hbm_svc_sram128_n64 #(.W(30)) u_queue(.clk(clk),.r_ce(1'b1),.r_addr(7'(qread)),.rd(qm30),
+    .w_ce(qpush),.w_addr(7'(qwp)),.wd({wr_bank,wr_col,wr_row,wr_rd}));
   (* keep="true",dont_touch="true" *) reg [WQW:0] bank_n[0:31];
   (* keep="true",dont_touch="true" *) reg [WQW:0] bank_n_word_local[0:1][0:31];
   reg [RW_ROW-1:0] look_row[0:31];

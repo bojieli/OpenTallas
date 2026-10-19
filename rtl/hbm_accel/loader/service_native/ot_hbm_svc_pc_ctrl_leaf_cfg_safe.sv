@@ -235,10 +235,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     generate if(WPAY!=0)begin:g_wpay
         // write payload SRAM: written once per accepted write (writes are length 1), read every edge at the next head
         wire[QW-1:0]wpay_raddr=cv_cfg?rp_plus1:rp;
-        ot_sram_1r1w_128x256_m1_r2c2 u_write_payload(
-            .clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(wpay_raddr)),.rd_out(head_wdata),
-            .w_ce_in(accepted&&i_we),.w_addr_in(7'(wp)),.wd_in(i_wdata),.w_mask_in({256{1'b1}}),
-            .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+        ot_hbm_svc_sram128_n64 #(.W(256)) u_write_payload(
+            .clk(clk),.r_ce(1'b1),.r_addr(7'(wpay_raddr)),.rd(head_wdata),
+            .w_ce(accepted&&i_we),.w_addr(7'(wp)),.wd(i_wdata));
     end else begin:g_wflops
         reg[255:0]wq[0:QD-1];
         always @(posedge clk) if(accepted)for(integer b=0;b<4;b=b+1)if(b<length)wq[QW'(wp+b)]<=i_wdata;
@@ -247,10 +246,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire response_read=!sticky&&((!head_valid&&response_count!=0)||(response_take&&response_count>1));
     wire[RQW-1:0]response_read_address=response_take?response_rp+1'b1:response_rp;
     wire response_write=ret_v&&pending_count!=0&&!sticky;
-    ot_sram_1r1w_128x256_m1_r2c2 u_response_payload(
-        .clk(clk),.r_ce_in(response_read),.r_addr_in(7'(response_read_address)),.rd_out(response_data),
-        .w_ce_in(response_write),.w_addr_in(7'(response_wp)),.wd_in(ret_data),.w_mask_in({256{1'b1}}),
-        .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+    ot_hbm_svc_sram128_n64 #(.W(256)) u_response_payload(
+        .clk(clk),.r_ce(response_read),.r_addr(7'(response_read_address)),.rd(response_data),
+        .w_ce(response_write),.w_addr(7'(response_wp)),.wd(ret_data));
     // Four write banks admit a len-4 request on one edge. Two synchronous
     // read replicas serve posting and completion independently. No indexed flop
     // storage; forwarding covers same-edge SRAM read/write ambiguity.
@@ -348,21 +346,20 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       always @(posedge clk)begin row_q<=wd[78:64];bank_q<=wd[62:58];mf_low[b]<=wd[57:0];mf_writes[b]<=wd[63];end
       assign mf_fields[b]={mf_writes[b],bank_q,mf_low[b]};
       assign mf_data[b]={row_q,mf_fields[b]};
-      ot_sram_1r1w_128x256_m1_r2c2 u_head(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(next_rp>>2)),.rd_out(qh[b]),
-        .w_ce_in(we),.w_addr_in(7'(wa>>2)),.wd_in({177'b0,wd}),.w_mask_in({256{1'b1}}),
-        .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
-      ot_sram_1r1w_128x256_m1_r2c2 u_post(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(next_ep>>2)),.rd_out(qe[b]),
-        .w_ce_in(we),.w_addr_in(7'(wa>>2)),.wd_in({177'b0,wd}),.w_mask_in({256{1'b1}}),
-        .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+      wire[78:0]qh79,qe79;assign qh[b]={177'b0,qh79};assign qe[b]={177'b0,qe79};
+      ot_hbm_svc_sram128_n64 #(.W(79)) u_head(.clk(clk),.r_ce(1'b1),.r_addr(7'(next_rp>>2)),.rd(qh79),
+        .w_ce(we),.w_addr(7'(wa>>2)),.wd(wd));
+      ot_hbm_svc_sram128_n64 #(.W(79)) u_post(.clk(clk),.r_ce(1'b1),.r_addr(7'(next_ep>>2)),.rd(qe79),
+        .w_ce(we),.w_addr(7'(wa>>2)),.wd(wd));
     end
-    ot_sram_1r1w_128x256_m1_r2c2 u_pending_identity(.clk(clk),.r_ce_in(1'b1),
-      .r_addr_in(7'(ret_v?pending_rp+1'b1:pending_rp)),.rd_out(pending_meta),
-      .w_ce_in(column_read),.w_addr_in(7'(pending_wp)),.wd_in({235'b0,head[308:288]^(BW_MUT_ID_TAG!=0?21'd16:21'd0)}),.w_mask_in({256{1'b1}}),
-      .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
-    ot_sram_1r1w_128x256_m1_r2c2 u_response_identity(.clk(clk),.r_ce_in(response_read),
-      .r_addr_in(7'(response_read_address)),.rd_out(response_meta),
-      .w_ce_in(response_write),.w_addr_in(7'(response_wp)),.wd_in({235'b0,pending_meta[20:0]}),.w_mask_in({256{1'b1}}),
-      .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+    wire[20:0]pending_meta21,response_meta21;
+    assign pending_meta={235'b0,pending_meta21};assign response_meta={235'b0,response_meta21};
+    ot_hbm_svc_sram128_n64 #(.W(21)) u_pending_identity(.clk(clk),.r_ce(1'b1),
+      .r_addr(7'(ret_v?pending_rp+1'b1:pending_rp)),.rd(pending_meta21),
+      .w_ce(column_read),.w_addr(7'(pending_wp)),.wd(head[308:288]^(BW_MUT_ID_TAG!=0?21'd16:21'd0)));
+    ot_hbm_svc_sram128_n64 #(.W(21)) u_response_identity(.clk(clk),.r_ce(response_read),
+      .r_addr(7'(response_read_address)),.rd(response_meta21),
+      .w_ce(response_write),.w_addr(7'(response_wp)),.wd(pending_meta[20:0]));
     ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.BANK_REGIONS(8),.WQ(QD),.MRKEY(MRKEY)) controller(
         .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),

@@ -21,7 +21,7 @@ SOURCES = [
     'rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv',
     'rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv',
     'rtl/lib/ot_rst_relay.sv',
-    'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
+    'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v', 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv', 'physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v',
 ]
 FAIL_REGEX = r'BW_SAFE_TXN_BEAT_MISMATCH'
 

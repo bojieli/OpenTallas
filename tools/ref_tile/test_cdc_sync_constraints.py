@@ -208,10 +208,14 @@ class AsyncPair(Fixture):
             C.generate(s, self.root)
 
 
-def sta_case(root, out, name, make_spec=None, extra_tcl='', lib_delay_ps=None, mutate_module=None):
+def sta_case(root, out, name, make_spec=None, extra_tcl='', lib_delay_ps=None, mutate_module=None, graph_source=None):
     make_spec = make_spec or spec
     dst = 'hbm' if make_spec is async_spec else 'serial'
-    synth = (f'read_verilog -sv -DSYNTHESIS {root / "cdc_fix.sv"}; hierarchy -top cdc_fix; '
+    source = root / 'cdc_fix.sv'
+    if graph_source is not None:
+        source = out / f'{name}_source.sv'
+        source.write_text(graph_source)
+    synth = (f'read_verilog -sv -DSYNTHESIS {source}; hierarchy -top cdc_fix; '
              f'synth -top cdc_fix -flatten -noabc; dffunmap; abc -g simple; clean; write_json {out / "fix.json"}')
     p = subprocess.run([YOSYS, '-Q', '-T', '-p', synth], text=True, capture_output=True)
     if p.returncode:

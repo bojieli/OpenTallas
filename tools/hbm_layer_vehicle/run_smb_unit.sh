@@ -18,7 +18,7 @@ git -C "$WT" archive "$SHA" tools/hbm_layer_vehicle tools/hdc_golden_v41.py tool
   tools/rtl_hdc_v41_blockdot_campaign.py tools/hbm_svc_packed136_image.py tools/w19_payload_loader.py \
   rtl/hbm_accel/loader/service_native rtl/hbm_accel/sm/static rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv \
   rtl/test/hbm_accel/svg_rel rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv rtl/model_ready_hbm_r14 \
-  physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 \
+  physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1 physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 \
   results/rtl/hbm_ds_layer_tput_1018/fixtures/L00 results/rtl/hbm_ds_layer_tput_1018/fixtures/L02 \
   results/rtl/hbm_ds_layer_tput_1018/fixtures/L14 results/rtl/hbm_ds_layer_tput_1018/fixtures/head | ssh "$HOST" "tar -x -C $OUT/src" || exit 2
 echo "$SHA" | ssh "$HOST" "cat > $OUT/src/REV"

@@ -41,10 +41,11 @@ KIT_ROOT = 'physical/ref_tile'
 SPEC_KEYS = ('name', 'top', 'kind', 'sources', 'params', 'clock', 'clock_entry_domains', 'clock_relationship',
              'clock_data_paths', 'cdc_synchronizers', 'reviewed_gray_fifo_extensions', 'macros', 'children',
              'defines', 'hard_define', 'hard_defines', 'orfs_vars', 'sdc_extra', 'boundary_tcl', 'pre_cts_extra',
-             'forwarded_clock')
+             'forwarded_clock', 'single_clock_contract')
 ROUTE_KEYS = ('signoff_period_ps', 'period_ps')          # clock_entry_constraints.signoff_period reads both
 # every module the lints execute (cdc_sync_constraints.periods imports clock_entry_constraints)
-TOOL_FILES = ('gray_fifo_cdc_constraints.py', 'cdc_sync_constraints.py', 'clock_entry_constraints.py')
+TOOL_FILES = ('gray_fifo_cdc_constraints.py', 'cdc_sync_constraints.py', 'clock_entry_constraints.py', 'single_clock_contract.py')
+TOOL_DATA_FILES = ('physical/common_flow/clock_family.tcl',)
 DEFAULT_MEM_GB = 48
 REMOTE_PARENT = '/srv/opentallas-scratch/claude/kit_lint'
 _MEMO = {}
@@ -55,6 +56,11 @@ def projection(spec):
     if spec.get('seam_windows') is not None:
         # Mixed CDC/calendar lint must see (and fingerprint) the complete window and actual root names.
         for k in ('seam_windows', 'clock_port', 'clock_ports'):
+            if k in spec:
+                p[k] = spec[k]
+    if any(isinstance(spec.get(k), dict) and spec[k].get('enable') is True
+           for k in ('pin_regs', 'reset_landing')):
+        for k in ('pin_regs', 'reset_landing'):
             if k in spec:
                 p[k] = spec[k]
     route = {k: spec['route'][k] for k in ROUTE_KEYS if k in spec.get('route', {})}
@@ -71,6 +77,9 @@ def input_files(spec, root):
     """repo-relative lint inputs: the sources and every declared macro's Liberty views"""
     root = Path(root).resolve()
     files = list(spec.get('sources', []))
+    if spec.get('single_clock_contract'):
+        from single_clock_contract import evidence_paths
+        files += evidence_paths(spec)
     for item in spec.get('macros', []):
         if isinstance(item, dict) and isinstance(item.get('view'), str):
             view = root / item['view']
@@ -87,7 +96,8 @@ def components(policy, spec, root, yosys):
     root = Path(root).resolve()
     return {'policy': policy, 'spec': projection(spec),
             'inputs': {f: _sha(root / f) for f in input_files(spec, root)},
-            'tool': {f: _sha(HERE / f) for f in TOOL_FILES}, 'yosys': yosys_version(yosys)}
+            'tool': {f: _sha(HERE / f) for f in TOOL_FILES},
+            'tool_data': {f: _sha(HERE.parents[1] / f) for f in TOOL_DATA_FILES}, 'yosys': yosys_version(yosys)}
 
 
 def key_of(comp):
@@ -172,6 +182,8 @@ def payload(policy, spec, root, key):
         # clock_entry_constraints (imported by the lints) imports tools/hier_contract/child_lint at module load
         for p in sorted((HERE.parent / 'hier_contract').glob('*.py')):
             add(f'tools/hier_contract/{p.name}', p.read_bytes())
+        for f in TOOL_DATA_FILES:
+            add(f, (HERE.parents[1] / f).read_bytes())
         for f in input_files(spec, root):
             add(f, (root / f).read_bytes())
         add('lint_job.json', json.dumps({'policy': policy, 'spec': projection(spec), 'key': key}).encode())
