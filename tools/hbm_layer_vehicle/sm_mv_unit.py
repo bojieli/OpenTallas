@@ -12,8 +12,9 @@ Calendar (one SM, one or more ops; every cycle fixed, no ready / wait):
     against the golden csum): FP8 / FP4 block-dot lines (LA = 4 / 8 lanes of 32 codes + UE8M0 scale bytes at 1024 + 8 j),
     BF16 lines (64 lanes of 16 b); x-store words per address (13 beats of 2048 b; column n = MTP slot n, AR uses
     column 0 only, columns 1..7 hold x = 0);
-  * line order = rtl_gpu_sm_exact.issue_order(R, Gn, 8, gs=True) (group-slot waves of IL = 8 (row, group) items), one line
-    a cycle; command[25:0] = {valid, first (t = 0), last (t = 7), row12 = r, group_last (g = Gn - 1), slot3 = r mod 8
+  * line order = rtl_gpu_sm_exact.issue_order(R, Gn, 8, gs=True) (group-slot waves of IL = 8 (row, group) items): item s
+    of a wave issues on slot cycle s of each of the 8 t steps; a partial last wave keeps its empty slots idle (positional
+    IL-deep column interleave; smoke 10-19 without the padding: wrong accumulation, R=1 wq_a row 0 bd0785f9 vs bd971bbd); command[25:0] = {valid, first (t = 0), last (t = 7), row12 = r, group_last (g = Gn - 1), slot3 = r mod 8
     (ot_hbm_accel_issue_pq iss_slot = row_now[2:0]), xaddr7 = g * 8 + t}; command[29] / [39:30] = packet valid / tag
     (the feed faults a valid without its packet or a tag mismatch); packet = {1, tag10, scale64, weights1024} in the
     SAME cycle;
@@ -220,8 +221,22 @@ def compile_record(fmt, w, x, ops, mut=""):
         cal.set(c, mode=fmt, flaunch=1, ffmt=fmt)
         c += FMT_LEAD
         first = c
-        order = list(S.issue_order(len(rows), Gn, C8, True))
-        for li, (r, g, t) in enumerate(order):
+        # group-slot waves of IL issue slots: item s of a wave owns slot cycle s of every t step (the column macros'
+        # IL-deep accumulation interleave is positional); a partial last wave keeps its empty slots as idle cycles
+        # (issue_pq issues padding slots with row_ok = 0: no line, no command)
+        items = [(r, g) for r in range(len(rows)) for g in range(Gn)]
+        order = []
+        for wb in range(0, len(items), IL):
+            for t in range(C8):
+                for s_ in range(IL):
+                    order.append((items[wb + s_][0], items[wb + s_][1], t) if wb + s_ < len(items) else None)
+        li = -1
+        for slot_c, it in enumerate(order):
+            if it is None:
+                c += 1
+                continue
+            li += 1
+            r, g, t = it
             word = line(rows[r], g, t)
             if mut == "wbit" and oi == 0 and li == 0:
                 word ^= 1
@@ -231,7 +246,8 @@ def compile_record(fmt, w, x, ops, mut=""):
                 cal.pkt[c] = (1 << 1098) | (tag << 1088) | word
             tag = (tag + 1) & 1023
             c += 1
-        exp.append(dict(name=name, rows=list(map(int, rows)), first_line=first, last_line=c - 1, lines=len(order)))
+        exp.append(dict(name=name, rows=list(map(int, rows)), first_line=first, last_line=c - 1, lines=li + 1,
+                        issue_cycles=len(order)))
         c += OP_GAP
     n = c + DRAIN
     for i, e in enumerate(exp):
