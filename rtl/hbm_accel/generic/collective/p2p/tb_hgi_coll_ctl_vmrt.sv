@@ -29,8 +29,14 @@ module tb_hgi_coll_ctl_vmrt;
  wire [135:0] vm_rq; wire [7:0] vm_rv; wire [2055:0] vm_rr;
  wire [131:0] vm_meta; wire [3:0] vm_av; wire protocol_fault; wire [23:0] vm_sel_d;
  wire [1:0] inj_req; wire [31:0] inj_idx; wire [159:0] inj_addr, del_obase, rgx_addr; wire [1:0] inj_v; wire [65:0] inj_meta;
- wire [15:0] held; wire [31:0] wseq, rseq, xseq, cycles;
- ot_hgi_coll_ctl_v5r_q2 #(.VM_RT(VM_RT)) dut(.clk_control(clk), .rst_n(rst_n), .inst(inst), .tap_iteration(32'd0),
+ wire [23:0] held; wire [47:0] wseq, rseq, xseq; wire [31:0] cycles;
+ // HBM-ARGMAX 10-19: +define+CTL_Q3 benches the q3 leaf (kit hcoll_v5r_ctl3_v74); default = the q2 leaf
+`ifdef CTL_Q3
+ ot_hgi_coll_ctl_v5r_q3
+`else
+ ot_hgi_coll_ctl_v5r_q2
+`endif
+  #(.VM_RT(VM_RT)) dut(.clk_control(clk), .rst_n(rst_n), .inst(inst), .tap_iteration(32'd0),
   .tap_steps(88'd0), .hgi_start(1'b0), .hgi_busy(1'b0), .issue_done(1'b0), .tkm_done(1'b0), .tkm_busy(1'b0),
   .dest_v(15'd0), .rc_v(1'b0), .rc_tag(3'd0), .vm_rv(vm_rv), .vm_req_pin(vm_rq), .inj_req_pin(inj_req),
   .inj_idx_pin(inj_idx), .inj_addr_pin(inj_addr), .delivery_obase_pin(del_obase), .rgx_addr_pin(rgx_addr),
