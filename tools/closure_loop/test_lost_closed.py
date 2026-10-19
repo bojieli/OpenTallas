@@ -69,6 +69,20 @@ class LostClosedTests(unittest.TestCase):
         self.assertIn("lost closed result", j["reason"])
         self.assertIn(f"ot-epyc5:{RUN}", j["reason"])
 
+    def test_identical_export_lint_fail_stops_at_first_repeat(self):
+        lint = ("REF_TILE export blk: views rc=0 child_lint FAIL child_lint FAIL: (i) pin access: 4 signal pins have a "
+                "same-layer OBS rect closer than the wide-metal spacing")
+        j = job(events=["2026-10-19T02:03:40-07:00 launched collect (attempt 1) on ot-epyc5"])
+        with patch.object(cl, "routed_state", return_value=dict(present=True, base="b", eco_installed=False)), \
+                patch.object(cl, "stage_tail", lambda j, st: lint):
+            cl.crash(j, self.collect(), Mock(), "rc=1")
+            self.assertEqual(j["status"], "READY")                        # first failure: one retry
+            j.update(status="RUNNING", stage_tag="collect.a2")
+            cl.crash(j, self.collect(), Mock(), "rc=1")
+        self.assertEqual(j["status"], "LOST_CLOSED")
+        self.assertIn("deterministic", j["reason"])
+        self.assertIn("(i) pin access", j["reason"])
+
     # (2) routed state gone: re-route with the recorded ECO re-applied
     def test_postroute_crash_with_state_gone_reroutes_and_reapplies_the_eco(self):
         lst = Path(self.tmp.name) / "vt.txt"

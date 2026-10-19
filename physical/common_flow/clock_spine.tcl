@@ -636,6 +636,13 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
   set prev ""; set padded [dict create]; set mode coarse
   set safe [expr {[ot_sp_env OT_SPINE_SAFE_BALANCE 0] eq "1"}]
   unset -nocomplain ::ot_sp_best_spread ::ot_sp_best_state
+  # RC-CAL (ROOT-RST 2026-10-19): measure leaf arrivals on the RCX-calibrated clock wire RC (tools/orfs_hold_mm.tcl
+  # ot_rc_cal_apply, sourced in every stage), not on setRC.tcl's: the BUFx24 trunk is wire-dominated and the pads are
+  # cells, so balancing on the platform clock RC (C 0.145 fF/um vs RCX 0.10) padded the short-trunk leaves for ~130 ps
+  # of trunk delay that the routed spine does not have (kp4_dec: placement estimate 564 vs routed 415 ps at FF on the
+  # p_d pin flops; calibrated 417).  OT_SPINE_RC_CAL=0 (or OT_RC_CAL=0) keeps the platform RC.
+  set ot_rcc 0
+  if {[ot_sp_env OT_SPINE_RC_CAL 1] ne "0" && [llength [info commands ot_rc_cal_apply]]} { set ot_rcc [ot_rc_cal_apply spine] }
   for {set it 0} {$it <= $iters} {incr it} {
     set a [ot_sp_leaf_arrivals]
     set vals [dict values $a]
@@ -677,6 +684,7 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     }
     if {[dict size $padded] == 0} break
   }
+  if {$ot_rcc} { ot_rc_cal_restore; estimate_parasitics -placement }
   foreach b $::ot_sp_insts { $b setDoNotTouch 1 }
   foreach n [concat [list $net0] [lmap b $::ot_sp_insts {[$b findITerm $::ot_sp_out] getNet}]] { $n setDoNotTouch 1 }
   ot_sp_check_legal
