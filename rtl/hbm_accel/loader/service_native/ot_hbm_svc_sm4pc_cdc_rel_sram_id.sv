@@ -40,6 +40,8 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
  input wire [3:0] kr_v,output reg [3:0] kr_rdy,input wire [67:0] kr_tag,
  input wire [15:0] kr_beat,input wire [1023:0] kr_data
 );
+ initial if(NATIVE_RETURN!=0&&(NATIVE_LANDING==0||LBANKS!=4||RESPONSE_DEPTH!=8))
+  $fatal(1,"native pair composition requires NATIVE_LANDING, four blocks and depth8");
  // Native leaf read data is two stream edges later; labels follow exactly.
  reg out_v0,out_last0;reg[3:0]out_mask0;reg[10:0]out_ordinal0;
  reg[LB-1:0]out_bank0;reg[15:0]out_epoch0;
@@ -186,7 +188,27 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
  reg draining;reg [LB-1:0] drain_bank;reg [10:0] drain_ordinal;reg [10:0] read_ordinal_q;reg [2:0] drain_phase;
  wire [2:0] drain_count=drain_phase==4?3'd1:3'd4;
  wire [255:0] macro_data[0:7];
- generate for(g=0;g<8;g=g+1)begin:ordinal_bank
+ wire[1023:0] pair_words;wire[11:0]pair_ordinals;wire[3:0]pair_valid,pair_phase_fault;
+ generate if(NATIVE_RETURN!=0)begin:g_pair_leaves
+  for(genvar j=0;j<4;j=j+1)begin:g_pair
+   wire[11:0] lo_candidate={3'b0,drain_ordinal[8:3],3'(j)}+((j<drain_ordinal[2:0])?12'd8:12'd0);
+   wire[11:0] hi_candidate={3'b0,drain_ordinal[8:3],3'(j+4)}+((j+4<drain_ordinal[2:0])?12'd8:12'd0);
+   ot_hbm_svg_landing_pair_native #(.J(j),.MUT(RETURN_MUT),.FIFOMUT(FIFOMUT)) u_leaf(
+    .pair_hbm_clk(return_pair_hbm_clk[j]),.pair_hbm_rst_n(hrst),.pair_clk(return_pair_clk[j]),.pair_rst_n(srst),
+    .return_clk(return_local_clk[j]),.return_rst_n(srst),
+    .in_v({fifo_wr_valid[j+4],fifo_wr_valid[j]}),.in_data({fifo_wr_data[j+4],fifo_wr_data[j]}),
+    .in_ready({fifo_wr_ready[j+4],fifo_wr_ready[j]}),.overflow({fifo_ov[j+4],fifo_ov[j]}),
+    .reserve_v(reserve_fire),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_total(reserve_total),.stop(fault),
+    .read_v({draining&&hi_candidate<drain_ordinal+drain_count&&hi_candidate<bank_total[drain_bank],
+             draining&&lo_candidate<drain_ordinal+drain_count&&lo_candidate<bank_total[drain_bank]}),
+    .read_bank({drain_bank,drain_bank}),.read_row({hi_candidate[8:3],lo_candidate[8:3]}),
+    .ordinal(drain_ordinal[2:0]),.group_valid(draining),
+    .complete_v({bank_complete[j+4],bank_complete[j]}),.complete_bank({bank_complete_bank[j+4],bank_complete_bank[j]}),
+    .bank_fault({bank_fault[j+4],bank_fault[j]}),.out_data(pair_words[j*256+:256]),
+    .out_ordinal(pair_ordinals[j*3+:3]),.out_valid(pair_valid[j]),.phase_fault(pair_phase_fault[j]));
+  end
+ end else begin:g_unpaired_banks
+ for(g=0;g<8;g=g+1)begin:ordinal_bank
   wire [11:0] candidate={3'b0,drain_ordinal[8:3],3'(g)}+((g<drain_ordinal[2:0])?12'd8:12'd0);
   if(NATIVE_LANDING!=0)begin:g_native
   ot_hbm_svc_sm8_landing_boundary #(.FMUT(FIFOMUT),.BANK(g),.RESPONSE_DEPTH(RESPONSE_DEPTH),.LBANKS(LBANKS)) u_bank(
@@ -203,6 +225,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
    .complete_v(bank_complete[g]),.complete_bank(bank_complete_bank[g]),.fault(bank_fault[g]),
    .read_v(draining&&candidate<drain_ordinal+drain_count&&candidate<bank_total[drain_bank]),.read_bank(drain_bank),.read_row(candidate[8:3]),.read_data(macro_data[g]));
   end
+ end
  end endgenerate
  integer ci;
  always @*begin
@@ -210,21 +233,19 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
   for(ci=0;ci<8;ci=ci+1)if(bank_complete[ci])complete_event[bank_complete_bank[ci]][ci]=1;
  end
  generate if(NATIVE_RETURN!=0)begin:g_regional
-  wire[2047:0] banks;wire[2:0] return_ordinal;wire return_valid,tree_fault;reg alignment_fault;
-  assign return_fault=tree_fault||alignment_fault;
+  wire[2:0] return_ordinal;wire return_valid,cache_phase_fault;reg alignment_fault;
+  assign return_fault=cache_phase_fault||(|pair_phase_fault)||alignment_fault;
   always @(posedge stream_clk or negedge srst)
    if(!srst)alignment_fault<=0;
    else if(out_v!=return_valid||(out_v&&out_ordinal[2:0]!=return_ordinal))alignment_fault<=1;
   wire[MW-1:0] delayed_labels;
-  for(genvar mb=0;mb<8;mb=mb+1)begin:g_bank
-   assign banks[mb*256+:256]=macro_data[mb];
-  end
   ot_hbm_svg_meta_delay7 #(.W(MW)) u_labels(.clk(stream_clk),.rst_n(srst),
    .data_in({pre_v,pre_mask,pre_ordinal,pre_bank,pre_epoch,pre_last}),.data_out(delayed_labels));
-  ot_hbm_svg_return_regional #(.MUT(RETURN_MUT)) u_return(
-   .pair_clk(return_pair_clk),.pair_rst_n({4{srst}}),.return_clk(return_local_clk),.return_rst_n({4{srst}}),.cache_clk(stream_clk),.cache_rst_n(srst),
-   .bank_data(banks),.in_ordinal({4{read_ordinal_pick[2:0]}}),.in_valid({4{pre_v}}),
-   .out_data(out_data),.out_ordinal(return_ordinal),.out_valid(return_valid),.fault(tree_fault));
+  wire cache_rst;
+  ot_hbm_svg_return_reset u_cache_reset(.clk(stream_clk),.rst_n(srst),.landed_n(cache_rst));
+  ot_hbm_svg_return_cache u_cache(.clk(stream_clk),.rst_n(cache_rst),
+   .data_in(pair_words),.ordinal_in(pair_ordinals),.valid_in(pair_valid),.phase_fault_in(pair_phase_fault),
+   .data_out(out_data),.ordinal_out(return_ordinal),.valid_out(return_valid),.fault(cache_phase_fault));
   assign {out_v,out_mask,out_ordinal,out_bank,out_epoch,out_last}=delayed_labels;
  end else begin:g_flat
   assign return_fault=0;
