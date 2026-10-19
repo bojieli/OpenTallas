@@ -11,6 +11,16 @@ H=$(cd "$(dirname "$0")" && pwd)
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 TOP=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['top'])" $SL/slice.json)
 for f in kva_grp_map.svh kva_ports.svh; do [ -f $SL/$f ] || { echo "KVA_BUILD_FAIL missing $SL/$f"; exit 2; }; done
+# MU-TOK-KV3: the bench never reaches inside a hier block: pvw_<p>.fault is read from the parent net on its port
+python3 - "$SL/$TOP.sv" > $SL/kva_hier_refs.svh <<'PY' || exit 2
+import re, sys
+t = open(sys.argv[1]).read()
+for p in (0, 1):
+    m = re.search(r'\bpvw_%d\s*\((.*?)\);' % p, t, re.S)
+    f = re.search(r'\.fault\(([^()]*)\)', m.group(1)) if m else None
+    net = ('dut.' + f.group(1).strip()) if f and f.group(1).strip() else "1'b0"
+    print('`define KVA_PW%d_F %s' % (p, net))
+PY
 python3 $H/slice_smoke.py $SL/slice.json --out $W/tb_$TOP.sv --src 'i_n_clk_hbm_.*=hck' || exit 2
 MAC=$KSRC/physical/qkd_astk_strip/macros
 verilator --version > $W/verilator.version

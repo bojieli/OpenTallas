@@ -32,6 +32,7 @@
 //   the stack's own ECTLs / V ports / strip.
 `include "kva_grp_map.svh"
 `include "kva_ports.svh"
+`include "kva_hier_refs.svh"   // MU-TOK-KV3: port nets of hier-block instances (no refs into a hier block)
     localparam integer KMAX = 8, KV_ROWS = 16384;
     reg [1023:0] kva_kv [0:KMAX*KV_ROWS-1];
     reg [31:0] kva_q [0:KMAX*512-1], kva_gold [0:KMAX*512-1];
@@ -274,7 +275,7 @@
     wire kva_f_prog = dut.kvs_attn.w_attn__fault, kva_f_face = dut.kvs_attn.w_attn_face__result_fault,
          kva_f_svc = dut.kvs_attn.w_attn_face__service_fault, kva_f_rl = dut.kvs_attn.w_attn_root__local_fault,
          kva_f_ri = dut.kvs_attn.w_attn_root__io_fault, kva_f_cal = dut.kvs_attn.w_attn_cal__fault,
-         kva_f_fin = dut.pvfin.fault, kva_f_pw0 = dut.pvw_0.fault, kva_f_pw1 = dut.pvw_1.fault, kva_f_hub = dut.ahub.hf;
+         kva_f_fin = dut.pvfin.fault, kva_f_pw0 = `KVA_PW0_F, kva_f_pw1 = `KVA_PW1_F, kva_f_hub = dut.ahub.hf;
     wire [KVA_NSTK-1:0] kva_f_stk = `KVA_STK_F;
     wire [9:0] kva_f_unit = dut.kvs_attn.w_afr__unit_fault;
     wire [5:0] kva_ev = {dut.kvs_attn.w_attn_face__result_valid === 1'b1, dut.kvs_attn.fin[0] === 1'b1,
