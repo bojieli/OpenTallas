@@ -1,0 +1,31 @@
+{
+ "op": "attn.idx.topk_final",
+ "t_issue": 12818,
+ "t_first_in": 12818,
+ "t_last_in": 18643,
+ "ingress_beats": 5826,
+ "window": [
+  19283,
+  19356
+ ],
+ "drain": {
+  "vi_n_edge": 19273,
+  "vo_edge": 19275,
+  "payload": 676187,
+  "n": 74,
+  "d": 1
+ },
+ "calendar_issue": 19258,
+ "words": 35,
+ "sel_per_quarter": [
+  151,
+  123,
+  121,
+  117
+ ],
+ "golden_ok": true,
+ "golden": "attn.idx.topk_final (sorted)",
+ "tail_budget": 640,
+ "span_edges": 6535,
+ "price_cycles": 178.0
+}

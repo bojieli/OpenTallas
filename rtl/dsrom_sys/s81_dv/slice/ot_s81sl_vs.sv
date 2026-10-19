@@ -13,6 +13,9 @@
 //   imm[9:0] ob (result row base)   imm[10] wb (write results)   imm[11] uq (stream to vq)   imm[12] / [13] um_q / um_b
 //   imm[21:14] um_i (the vector's global beat index for vq)  imm[24:22] j0 (first vq sub-beat)
 //   imm[63:32] lim   imm[95:64] w0 (groups 0..7)   imm[127:96] w1 (groups 8..15)            (SW only)
+//   imm[25] wr, imm[28:26] wsel (SW only; TOK-S81-GAPS 10-18): w0 = w1 = FP32 word wsel of the leaf-store row pair a1
+//           (the gunit router's weights rows R+1 / R+2, CTL target 5).  The weight row pair is read at step 0, the groups
+//           follow 4 edges later on the same SW cadence (fixed timeline, +4 edges; no handshake).  wr = 0: imm w0 / w1.
 // ONE op runs at a time, from its command to its last result: a command while busy, op 14 / 15, or a malformed count is
 // a sticky fault (the compiler schedules every op on its measured fixed timeline; nothing waits or arbitrates).
 // Operand layouts are compiler-fixed: a read is the row pair (a0 + 2 s, a0 + 2 s + 1) = x_qd[127:0], x_qd[255:128].
@@ -57,7 +60,8 @@
 module ot_s81sl_vs #(
     parameter integer XL = 6,          // qmul / qadd latency (ot_hdc_qmul_lat 6 as rxqr, ot_dsrom_qadd 6 = f12_l6)
     parameter integer MUT = 0          // bench negative controls: 1 SW drops w, 2 RB drops bias, 3 QR inverse rotation,
-                                       // 4 MOE rounds every partial to BF16, 5 QB swaps the sub-beat halves, 6 RA returns rows shifted
+                                       // 4 MOE rounds every partial to BF16, 5 QB swaps the sub-beat halves, 6 RA returns rows shifted,
+                                       // 9 SW wr takes w1 from word wsel ^ 1 of the weight row
                                        // 7 ENG ADD takes the gate of copy j ^ 1, 8 ENG REDUCE feeds K as W
 ) (
     input  wire          clk,
@@ -161,7 +165,8 @@ module ot_s81sl_vs #(
                  (c_op == OP_ENG && (c_ph ? (c_n != 8'd32 || gmask != 4'hF) : c_n != 8'd64)) ||
                  (c_n == 8'd0) || (c_op == OP_SW && c_n > 8'd16) || (c_op == OP_MOE && c_n != 8'd8) ||
                  (c_uq && (c_op == OP_SW || c_op == OP_QB) && ((c_op == OP_SW && c_n[0]) || ({5'd0, c_j0} + c_nsb) > 8'd8));
-    reg busy, done; reg [3:0] op; reg [9:0] a0, a1, ob; reg [7:0] n; reg wb, uq, ph; reg [2:0] j0; reg [31:0] lim, w0, w1;
+    reg busy, done; reg [3:0] op; reg [9:0] a0, a1, ob; reg [7:0] n; reg wb, uq, ph, wr; reg [2:0] j0, wsel; reg [31:0] lim, w0, w1;
+    wire c_wr = c_op == OP_SW && c_imm[25];
     wire acc_cmd = sv_c && !busy && !c_bad;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin busy <= 1'b0; op <= 4'd0; end
@@ -170,7 +175,14 @@ module ot_s81sl_vs #(
     always @(posedge clk)
         if (acc_cmd) begin
             a0 <= c_a0; a1 <= c_a1; ph <= c_ph; n <= c_n; ob <= c_imm[9:0]; wb <= c_imm[10]; uq <= c_uq; j0 <= c_j0;
-            lim <= c_imm[63:32]; w0 <= c_imm[95:64]; w1 <= c_imm[127:96];
+            lim <= c_imm[63:32]; wr <= c_wr; wsel <= c_imm[28:26];
+        end
+    // SW weights: from the immediate, or (wr) from word wsel of the row pair a1 = the op's first arrival
+    wire w_arr;
+    always @(posedge clk)
+        if (acc_cmd) begin w0 <= c_imm[95:64]; w1 <= c_imm[127:96]; end
+        else if (w_arr) begin
+            w0 <= xq_c[32 * wsel +: 32]; w1 <= (MUT == 9) ? xq_c[32 * (wsel ^ 3'd1) +: 32] : xq_c[32 * wsel +: 32];
         end
 
     // ---------------------------------------------------------------- read issue (fixed cadence per op)
@@ -186,7 +198,7 @@ module ot_s81sl_vs #(
                 rrun <= 1'b1; rs <= 9'd0;
                 cad <= (c_op == OP_RA) ? 3'd7 : (c_op == OP_SW) ? 3'd3 : (c_op == OP_QR) ? 3'd1 : 3'd0;
                 rn  <= (c_op == OP_ENG) ? (c_ph ? 9'd31 : 9'd79) : (c_op == OP_MOE) ? 9'd55 : (c_op == OP_RA) ? {c_nr[5:0], 3'd0} - 9'd8 :
-                       (c_op == OP_SW) ? {c_nr[6:0], 2'd0} - 9'd4 : (c_op == OP_QR) ? {c_nr[7:0], 1'b0} - 9'd2 : c_nr - 9'd1;
+                       (c_op == OP_SW) ? {c_nr[6:0], 2'd0} - (c_wr ? 9'd0 : 9'd4) : (c_op == OP_QR) ? {c_nr[7:0], 1'b0} - 9'd2 : c_nr - 9'd1;
             end else if (rrun) begin
                 rs <= rs + 9'd1;
                 if (rs == rn) rrun <= 1'b0;
@@ -198,7 +210,7 @@ module ot_s81sl_vs #(
         case (op)
             OP_MOE: x_ra <= a0 + {3'd0, rs[5:3], 4'd0} + {6'd0, rs[2:0], 1'b0};
             OP_RA:  x_ra <= a0 + {2'd0, rs[8:3], 1'b0};
-            OP_SW:  x_ra <= a0 + {1'b0, rs[8:2], 1'b0};
+            OP_SW:  x_ra <= (wr && rs == 9'd0) ? a1 : a0 + {1'b0, rs[8:2] - {6'd0, wr}, 1'b0};
             OP_QR:  x_ra <= a0 + {rs[8:1], 1'b0};
             OP_ENG: x_ra <= ph ? a0 + 10'd128 + {6'd0, rs[2:0], 1'b0} :
                            (rs < 9'd16) ? a0 + {rs[8:0], 1'b0} :
@@ -231,10 +243,12 @@ module ot_s81sl_vs #(
             if (acc_cmd) ka_q[rq] <= 8'd0; else if (arr) ka_q[rq] <= ka_q[rq] + 8'd1;
 
     // ================================================================ SW: groups to the lane sub-leaf
-    always @(posedge clk or negedge rs_r) if (!rs_r) sw_v <= 1'b0; else sw_v <= arr && op == OP_SW;
+    assign w_arr = arr && op == OP_SW && wr && ka == 8'd0;
+    wire [7:0] kg = ka - {7'd0, wr};                 // SW group index of this arrival (wr: arrival 0 = the weight row)
+    always @(posedge clk or negedge rs_r) if (!rs_r) sw_v <= 1'b0; else sw_v <= arr && op == OP_SW && !w_arr;
     always @(posedge clk) begin
         sw_d <= xq_c; sw_lim <= lim;
-        sw_w <= (MUT == 1) ? 32'h3F800000 : (ka >= 8'd8 ? w1 : w0);
+        sw_w <= (MUT == 1) ? 32'h3F800000 : (kg >= 8'd8 ? w1 : w0);
     end
 
     // ================================================================ X lanes: 8 x ot_dsrom_qadd, 4 x ot_hdc_qmul_lat

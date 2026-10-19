@@ -252,9 +252,12 @@ def main(argv=None):
         return sorted(srcs)
 
     ports, decl, body = {}, [], []
+    # a 1-bit net the die declares as [0:0] and the instance lines bit-select (dv_bind nc fillers `u_x_p_nc3[0:0]`) keeps
+    # its range (LB2-S81 L0 10-18: cut_svc failed Verilator "Illegal bit or array select" x8 on scalar re-declarations)
+    selected = set(re.findall(r'([A-Za-z_]\w*)\s*\[', text))
     for n in sorted(snets):
         w, lo = nets[n]
-        rng = f'[{lo + w - 1}:{lo}] ' if (w > 1 or lo) else ''
+        rng = f'[{lo + w - 1}:{lo}] ' if (w > 1 or lo or n in selected) else ''
         if n in in_bits:
             pn = f'i__{n}'
             kind = 'clock' if clk_bits.get(n) else ('die_input' if peers_in[n] == {'<die_in>'} else 'boundary')
@@ -275,6 +278,9 @@ def main(argv=None):
     # instance lines verbatim from die.v (statement text, comments dropped)
     lines = {}
     for ln in text.split('\n'):
+        # die.v declares a few nets on the instance's line ('wire u_rsv_00_rst; INVx2_ASAP7_75t_R rinv_rsv_00 (...)');
+        # the cut declares every net itself, so the leading declaration is dropped
+        ln = re.sub(r'^(\s*)wire\b[^;(]*;\s*', r'\1', ln)
         m = re.match(r'\s*([\w\\]\S*)\s+(?:#\s*\(.*?\)\s*)?([\w\\]\S*)\s*\(', ln)
         if m and m.group(2) in S:
             lines[m.group(2)] = ln.split(');')[0].rstrip() + ');'

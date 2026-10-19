@@ -1,0 +1,26 @@
+{
+ "ncyc": 33782,
+ "mutant": null,
+ "t_first_in": 100,
+ "t_last_in": 32871,
+ "window": [
+  33511,
+  33586
+ ],
+ "drain": {
+  "vi_n_edge": 33501,
+  "vo_edge": 33503,
+  "payload": 680283,
+  "n": 76,
+  "d": 1
+ },
+ "words": 36,
+ "sel_per_quarter": [
+  141,
+  115,
+  134,
+  122
+ ],
+ "golden_ok": true,
+ "golden": "attn.idx.topk_local rank 0 (sorted)"
+}

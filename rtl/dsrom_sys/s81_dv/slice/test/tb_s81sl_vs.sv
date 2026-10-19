@@ -6,7 +6,7 @@
 // the row-pair write port, each SU op as a vp command (ops 8..13 -> vs), every result read back with vp RDOUT and
 // compared word for word; the vq XQ beats (SW -> quant2, QB z_quant) are compared with the golden act-quant.
 // Prints VSOP (per op: vp command pin -> last vs result output, in cycles) and SLVS (per-op mismatch counts) + PASS/FAIL.
-// Negative controls: -GMUT=1..6 (ot_s81sl_vs MUT) must FAIL.
+// Negative controls: -GMUT=1..6, 9 (ot_s81sl_vs MUT; 9 = SW wr takes w1 from the wrong word) must FAIL.
 module tb_s81sl_vs #(parameter integer MUT = 0, parameter integer BEAT = 37);
     reg clk = 1'b0;
     always #0.5 clk = ~clk;
@@ -102,7 +102,7 @@ module tb_s81sl_vs #(parameter integer MUT = 0, parameter integer BEAT = 37);
                        $display("SLVS mut=%0d err SW=%0d QB=%0d RA=%0d RB=%0d QR=%0d MOE=%0d checked_pairs SW=%0d RA=%0d RB=%0d QR=%0d MOE=%0d xq=%0d fault=vp%b/vs%b/vq%b",
                                 MUT, err[8], err[9], err[10], err[11], err[12], err[13], nck[8], nck[10], nck[11], nck[12], nck[13],
                                 nxq, fp, fs, fq);
-                       if (err[8] + err[9] + err[10] + err[11] + err[12] + err[13] == 0 && nxq == 2 && !fp && !fs && !fq &&
+                       if (err[8] + err[9] + err[10] + err[11] + err[12] + err[13] == 0 && nxq == 3 && !fp && !fs && !fq &&
                            nck[8] > 0 && nck[10] > 0 && nck[11] > 0 && nck[12] > 0 && nck[13] > 0) $display("PASS"); else $display("FAIL");
                        $finish;
                    end
@@ -112,7 +112,7 @@ module tb_s81sl_vs #(parameter integer MUT = 0, parameter integer BEAT = 37);
         if (st == 0 && cyc == 0) wt = 0;
         // vq XQ beats: SW (quant2) first, then QB (z_quant)
         if (xo_v) begin
-            k = (nxq == 0) ? 8 : 9;
+            k = (nxq <= 1) ? 8 : 9;      // xq beats: SW quant2, SW wr (TOK-S81-GAPS), then QB
             if (xo[3:1] !== 3'd1 || xo[21 +: 532] !== xqe[nxq] || xo[20:13] !== xqi[nxq]) begin
                 err[k] = err[k] + 1;
                 $display("XQ MISMATCH beat %0d kind %0d idx %h/%h e0 %h/%h e1 %h/%h", nxq, xo[3:1], xo[20:13], xqi[nxq],

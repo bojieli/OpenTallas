@@ -1,0 +1,17 @@
+RET 343 07a40cf981000888b
+RET 344 07938ee6a1000c88b
+RET 345 177f8d7881000088b
+RET 346 175faee001000488b
+RET 355 179c34e901000004b
+RET 356 177053fb81000404b
+RET 361 07bc4b1f41000044b
+RET 362 17a33eae41000444b
+RET 365 17b4efb341000808b
+RET 366 17b3076001000c08b
+END edges=1029 ret_words=10 xo_checked=1027 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:123: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 3.987 s; speed 259.488 ns/s
+- Verilator: cpu 3.986 s on 1 threads; allocated 46 MB
+CHECK PLAN_MISMATCH predicted 10 words, got 10; first diff ((355, 0, (0, 1, 5), 3168905032, 0), (343, 2, (4, 2, 5), 1025533900, 0))
+XS_PLACE_CHECK FAIL p45

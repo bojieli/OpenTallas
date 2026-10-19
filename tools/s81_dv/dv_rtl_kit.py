@@ -239,7 +239,8 @@ def main(argv=None):
         (`begin : g_x  ot_v41_segtree6 #(...) u (...)`; the bind's child closure missed ot_v41_segtree6 / ot_s81sl_xr3 /
         ...), so also take every known module name followed by a parameter list or an instance name"""
         out = set()
-        for m in re.finditer(r'\b([A-Za-z_]\w*)\s*(?=#\s*\(|[A-Za-z_\\][\w\\]*\s*(?:\[[^\]]*\]\s*)?\()', body):
+        # (also `MASTER `MACRO inst (...)`: a parameter macro between master and instance, e.g. dsdv_gunit `DSDV_GU_MUT)
+        for m in re.finditer(r'\b([A-Za-z_]\w*)\s*(?=(?:`\w+\s*)?(?:#\s*\(|[A-Za-z_\\][\w\\]*\s*(?:\[[^\]]*\]\s*)?\())', body):
             if m.group(1) in defs:
                 out.add(m.group(1))
         return out
@@ -378,10 +379,38 @@ def main(argv=None):
         dst.write_bytes(texts[f])
         rec_files.append(dict(path=f, sha256=hashlib.sha256(texts[f]).hexdigest(),
                               origin=(extra[f] if f in extra else ('library-function' if f == 'cells_used.v' else sha))))
+    # `include files (LB2-S81 L0 10-18: dsdv_svc_rs.sv / dsdv_svc_sx_hrow.sv include *_roles.svh from their own
+    # directory; the kit copied only module files -> "Cannot find include file").  Written next to the includer (its
+    # directory is already an +incdir), never listed as a compile unit; a missing include is a kit problem.
+    includes = []
+    tree_names = None
+    for f in list(files):
+        if f not in texts:
+            continue
+        for inc in re.findall(r'`include\s+"([^"]+)"', texts[f].decode(errors='ignore')):
+            cand = str(Path(f).parent / inc)
+            if cand not in texts:
+                r_ = subprocess.run(['git', '-C', str(repo), 'show', f'{sha}:{cand}'], capture_output=True)
+                if r_.returncode:      # not beside the includer: the one file of that name in the tree (an +incdir)
+                    if tree_names is None:
+                        tree_names = git(repo, 'ls-tree', '-r', '--name-only', sha).split('\n')
+                    hits = [t for t in tree_names if t.endswith('/' + inc) and '/test/' not in t]
+                    if len(hits) != 1:
+                        problems.append(f'INCLUDE_MISSING {inc} (included by {f}; tree matches {hits[:4]})')
+                        continue
+                    cand = hits[0]
+                    r_ = subprocess.run(['git', '-C', str(repo), 'show', f'{sha}:{cand}'], capture_output=True)
+                texts[cand] = r_.stdout
+            if cand not in includes and cand not in files:
+                includes.append(cand)
+                d_ = src / cand
+                d_.parent.mkdir(parents=True, exist_ok=True)
+                d_.write_bytes(texts[cand])
+                rec_files.append(dict(path=cand, sha256=hashlib.sha256(texts[cand]).hexdigest(), origin=sha, include=True))
     tdst = src / 'top' / Path(a.top_v).name.replace('.gz', '')
     tdst.parent.mkdir(parents=True, exist_ok=True)
     tdst.write_text(top_text)
-    incs = sorted({str((Path('src') / f).parent) for f in files})
+    incs = sorted({str((Path('src') / f).parent) for f in list(files) + includes})
     fl = [f'+incdir+{d}' for d in incs] + [f'+define+{d}' for d in defines] + [f'src/{f}' for f in files] + \
          [str(tdst.relative_to(out))]
     (out / 'kit.f').write_text('\n'.join(fl) + '\n')

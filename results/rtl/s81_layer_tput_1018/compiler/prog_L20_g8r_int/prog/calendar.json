@@ -1,0 +1,2545 @@
+{
+ "schema": "opentallas.s81_dv.calendar.v2",
+ "jobs": 2,
+ "stage": 0,
+ "rows_total": 132,
+ "note": "one ot_dsdv_fixed_issue job holds NOPS = 128 rows incl. KIT / END; more rows = consecutive jobs, each re-booted over the host lane after the previous END (reload_edges = host words x HOST_SLOT)",
+ "nops": 128,
+ "end_age": 25659,
+ "rows": [
+  {
+   "i": 0,
+   "issue": 0,
+   "done": 5,
+   "engine": 1,
+   "arg": 118,
+   "row76": "0000050000001000076",
+   "what": "attn HLOAD u_s_0S"
+  },
+  {
+   "i": 1,
+   "issue": 40,
+   "done": 45,
+   "engine": 1,
+   "arg": 119,
+   "row76": "00002d0000281000077",
+   "what": "attn GAIN u_s_0S"
+  },
+  {
+   "i": 2,
+   "issue": 60,
+   "done": 65,
+   "engine": 1,
+   "arg": 120,
+   "row76": "00004100003c1000078",
+   "what": "attn NORMR leaf 0 u_s_0S (hc_pre = leaf row 1008)"
+  },
+  {
+   "i": 3,
+   "issue": 61,
+   "done": 66,
+   "engine": 1,
+   "arg": 121,
+   "row76": "00004200003d1000079",
+   "what": "attn NORMR leaf 1 u_s_0S (hc_pre = leaf row 1008)"
+  },
+  {
+   "i": 4,
+   "issue": 62,
+   "done": 67,
+   "engine": 1,
+   "arg": 122,
+   "row76": "00004300003e100007a",
+   "what": "attn NORMR leaf 2 u_s_0S (hc_pre = leaf row 1008)"
+  },
+  {
+   "i": 5,
+   "issue": 63,
+   "done": 68,
+   "engine": 1,
+   "arg": 123,
+   "row76": "00004400003f100007b",
+   "what": "attn NORMR leaf 3 u_s_0S (hc_pre = leaf row 1008)"
+  },
+  {
+   "i": 6,
+   "issue": 64,
+   "done": 69,
+   "engine": 1,
+   "arg": 124,
+   "row76": "000045000040100007c",
+   "what": "attn NORMR leaf 4 u_s_0S (hc_pre = leaf row 1008)"
+  },
+  {
+   "i": 7,
+   "issue": 65,
+   "done": 70,
+   "engine": 1,
+   "arg": 125,
+   "row76": "000046000041100007d",
+   "what": "attn XFIN_GO u_s_0S"
+  },
+  {
+   "i": 8,
+   "issue": 196,
+   "done": 201,
+   "engine": 2,
+   "arg": 128,
+   "row76": "0000c90000c42000080",
+   "what": "L20.attn.hc.fn: gunit HC job which 0 set 0 row 1000"
+  },
+  {
+   "i": 9,
+   "issue": 2438,
+   "done": 2443,
+   "engine": 0,
+   "arg": 57,
+   "row76": "00098b0009860000039",
+   "what": "L20.attn.a_allgather: u_s_7N rdout0"
+  },
+  {
+   "i": 10,
+   "issue": 2438,
+   "done": 2443,
+   "engine": 1,
+   "arg": 1,
+   "row76": "00098b0009861000001",
+   "what": "L20.attn.a_allgather: u_s_0S rdout0"
+  },
+  {
+   "i": 11,
+   "issue": 2440,
+   "done": 2445,
+   "engine": 1,
+   "arg": 29,
+   "row76": "00098d000988100001d",
+   "what": "L20.attn.a_allgather: u_s_7S rdout0"
+  },
+  {
+   "i": 12,
+   "issue": 2443,
+   "done": 2448,
+   "engine": 0,
+   "arg": 58,
+   "row76": "00099000098b000003a",
+   "what": "L20.attn.a_allgather: u_s_7N rdout1"
+  },
+  {
+   "i": 13,
+   "issue": 2443,
+   "done": 2448,
+   "engine": 1,
+   "arg": 2,
+   "row76": "00099000098b1000002",
+   "what": "L20.attn.a_allgather: u_s_0S rdout1"
+  },
+  {
+   "i": 14,
+   "issue": 2445,
+   "done": 2450,
+   "engine": 1,
+   "arg": 30,
+   "row76": "00099200098d100001e",
+   "what": "L20.attn.a_allgather: u_s_7S rdout1"
+  },
+  {
+   "i": 15,
+   "issue": 2448,
+   "done": 2453,
+   "engine": 0,
+   "arg": 59,
+   "row76": "000995000990000003b",
+   "what": "L20.attn.a_allgather: u_s_7N rdout2"
+  },
+  {
+   "i": 16,
+   "issue": 2448,
+   "done": 2453,
+   "engine": 1,
+   "arg": 3,
+   "row76": "0009950009901000003",
+   "what": "L20.attn.a_allgather: u_s_0S rdout2"
+  },
+  {
+   "i": 17,
+   "issue": 2450,
+   "done": 2455,
+   "engine": 1,
+   "arg": 31,
+   "row76": "000997000992100001f",
+   "what": "L20.attn.a_allgather: u_s_7S rdout2"
+  },
+  {
+   "i": 18,
+   "issue": 2452,
+   "done": 2457,
+   "engine": 0,
+   "arg": 60,
+   "row76": "000999000994000003c",
+   "what": "L20.attn.a_allgather: u_s_7N cfg0"
+  },
+  {
+   "i": 19,
+   "issue": 2452,
+   "done": 2457,
+   "engine": 1,
+   "arg": 4,
+   "row76": "0009990009941000004",
+   "what": "L20.attn.a_allgather: u_s_0S cfg0"
+  },
+  {
+   "i": 20,
+   "issue": 2453,
+   "done": 2458,
+   "engine": 0,
+   "arg": 61,
+   "row76": "00099a000995000003d",
+   "what": "L20.attn.a_allgather: u_s_7N rdout3"
+  },
+  {
+   "i": 21,
+   "issue": 2453,
+   "done": 2458,
+   "engine": 1,
+   "arg": 5,
+   "row76": "00099a0009951000005",
+   "what": "L20.attn.a_allgather: u_s_0S rdout3"
+  },
+  {
+   "i": 22,
+   "issue": 2454,
+   "done": 2459,
+   "engine": 1,
+   "arg": 32,
+   "row76": "00099b0009961000020",
+   "what": "L20.attn.a_allgather: u_s_7S cfg0"
+  },
+  {
+   "i": 23,
+   "issue": 2455,
+   "done": 2460,
+   "engine": 1,
+   "arg": 33,
+   "row76": "00099c0009971000021",
+   "what": "L20.attn.a_allgather: u_s_7S rdout3"
+  },
+  {
+   "i": 24,
+   "issue": 2457,
+   "done": 2462,
+   "engine": 0,
+   "arg": 62,
+   "row76": "00099e000999000003e",
+   "what": "L20.attn.a_allgather: u_s_7N cfg1"
+  },
+  {
+   "i": 25,
+   "issue": 2457,
+   "done": 2462,
+   "engine": 1,
+   "arg": 6,
+   "row76": "00099e0009991000006",
+   "what": "L20.attn.a_allgather: u_s_0S cfg1"
+  },
+  {
+   "i": 26,
+   "issue": 2458,
+   "done": 2463,
+   "engine": 0,
+   "arg": 63,
+   "row76": "00099f00099a000003f",
+   "what": "L20.attn.a_allgather: u_s_7N rdout4"
+  },
+  {
+   "i": 27,
+   "issue": 2458,
+   "done": 2463,
+   "engine": 1,
+   "arg": 7,
+   "row76": "00099f00099a1000007",
+   "what": "L20.attn.a_allgather: u_s_0S rdout4"
+  },
+  {
+   "i": 28,
+   "issue": 2459,
+   "done": 2464,
+   "engine": 1,
+   "arg": 34,
+   "row76": "0009a000099b1000022",
+   "what": "L20.attn.a_allgather: u_s_7S cfg1"
+  },
+  {
+   "i": 29,
+   "issue": 2460,
+   "done": 2465,
+   "engine": 1,
+   "arg": 35,
+   "row76": "0009a100099c1000023",
+   "what": "L20.attn.a_allgather: u_s_7S rdout4"
+  },
+  {
+   "i": 30,
+   "issue": 2462,
+   "done": 2467,
+   "engine": 0,
+   "arg": 64,
+   "row76": "0009a300099e0000040",
+   "what": "L20.attn.a_allgather: u_s_7N cfg2"
+  },
+  {
+   "i": 31,
+   "issue": 2462,
+   "done": 2467,
+   "engine": 1,
+   "arg": 8,
+   "row76": "0009a300099e1000008",
+   "what": "L20.attn.a_allgather: u_s_0S cfg2"
+  },
+  {
+   "i": 32,
+   "issue": 2463,
+   "done": 2468,
+   "engine": 0,
+   "arg": 65,
+   "row76": "0009a400099f0000041",
+   "what": "L20.attn.a_allgather: u_s_7N rdout5"
+  },
+  {
+   "i": 33,
+   "issue": 2463,
+   "done": 2468,
+   "engine": 1,
+   "arg": 9,
+   "row76": "0009a400099f1000009",
+   "what": "L20.attn.a_allgather: u_s_0S rdout5"
+  },
+  {
+   "i": 34,
+   "issue": 2464,
+   "done": 2469,
+   "engine": 1,
+   "arg": 36,
+   "row76": "0009a50009a01000024",
+   "what": "L20.attn.a_allgather: u_s_7S cfg2"
+  },
+  {
+   "i": 35,
+   "issue": 2465,
+   "done": 2470,
+   "engine": 1,
+   "arg": 37,
+   "row76": "0009a60009a11000025",
+   "what": "L20.attn.a_allgather: u_s_7S rdout5"
+  },
+  {
+   "i": 36,
+   "issue": 2467,
+   "done": 2472,
+   "engine": 0,
+   "arg": 66,
+   "row76": "0009a80009a30000042",
+   "what": "L20.attn.a_allgather: u_s_7N cfg3"
+  },
+  {
+   "i": 37,
+   "issue": 2467,
+   "done": 2472,
+   "engine": 1,
+   "arg": 10,
+   "row76": "0009a80009a3100000a",
+   "what": "L20.attn.a_allgather: u_s_0S cfg3"
+  },
+  {
+   "i": 38,
+   "issue": 2468,
+   "done": 2473,
+   "engine": 0,
+   "arg": 67,
+   "row76": "0009a90009a40000043",
+   "what": "L20.attn.a_allgather: u_s_7N rdout6"
+  },
+  {
+   "i": 39,
+   "issue": 2468,
+   "done": 2473,
+   "engine": 1,
+   "arg": 11,
+   "row76": "0009a90009a4100000b",
+   "what": "L20.attn.a_allgather: u_s_0S rdout6"
+  },
+  {
+   "i": 40,
+   "issue": 2469,
+   "done": 2474,
+   "engine": 1,
+   "arg": 38,
+   "row76": "0009aa0009a51000026",
+   "what": "L20.attn.a_allgather: u_s_7S cfg3"
+  },
+  {
+   "i": 41,
+   "issue": 2470,
+   "done": 2475,
+   "engine": 1,
+   "arg": 39,
+   "row76": "0009ab0009a61000027",
+   "what": "L20.attn.a_allgather: u_s_7S rdout6"
+  },
+  {
+   "i": 42,
+   "issue": 2472,
+   "done": 2477,
+   "engine": 0,
+   "arg": 68,
+   "row76": "0009ad0009a80000044",
+   "what": "L20.attn.a_allgather: u_s_7N cfg4"
+  },
+  {
+   "i": 43,
+   "issue": 2472,
+   "done": 2477,
+   "engine": 1,
+   "arg": 12,
+   "row76": "0009ad0009a8100000c",
+   "what": "L20.attn.a_allgather: u_s_0S cfg4"
+  },
+  {
+   "i": 44,
+   "issue": 2473,
+   "done": 2478,
+   "engine": 0,
+   "arg": 69,
+   "row76": "0009ae0009a90000045",
+   "what": "L20.attn.a_allgather: u_s_7N rdout7"
+  },
+  {
+   "i": 45,
+   "issue": 2473,
+   "done": 2478,
+   "engine": 1,
+   "arg": 13,
+   "row76": "0009ae0009a9100000d",
+   "what": "L20.attn.a_allgather: u_s_0S rdout7"
+  },
+  {
+   "i": 46,
+   "issue": 2474,
+   "done": 2479,
+   "engine": 1,
+   "arg": 40,
+   "row76": "0009af0009aa1000028",
+   "what": "L20.attn.a_allgather: u_s_7S cfg4"
+  },
+  {
+   "i": 47,
+   "issue": 2475,
+   "done": 2480,
+   "engine": 1,
+   "arg": 41,
+   "row76": "0009b00009ab1000029",
+   "what": "L20.attn.a_allgather: u_s_7S rdout7"
+  },
+  {
+   "i": 48,
+   "issue": 2477,
+   "done": 2482,
+   "engine": 0,
+   "arg": 70,
+   "row76": "0009b20009ad0000046",
+   "what": "L20.attn.a_allgather: u_s_7N cfg5"
+  },
+  {
+   "i": 49,
+   "issue": 2477,
+   "done": 2482,
+   "engine": 1,
+   "arg": 14,
+   "row76": "0009b20009ad100000e",
+   "what": "L20.attn.a_allgather: u_s_0S cfg5"
+  },
+  {
+   "i": 50,
+   "issue": 2478,
+   "done": 2483,
+   "engine": 0,
+   "arg": 71,
+   "row76": "0009b30009ae0000047",
+   "what": "L20.attn.a_allgather: u_s_7N rdout8"
+  },
+  {
+   "i": 51,
+   "issue": 2478,
+   "done": 2483,
+   "engine": 1,
+   "arg": 15,
+   "row76": "0009b30009ae100000f",
+   "what": "L20.attn.a_allgather: u_s_0S rdout8"
+  },
+  {
+   "i": 52,
+   "issue": 2479,
+   "done": 2484,
+   "engine": 1,
+   "arg": 42,
+   "row76": "0009b40009af100002a",
+   "what": "L20.attn.a_allgather: u_s_7S cfg5"
+  },
+  {
+   "i": 53,
+   "issue": 2480,
+   "done": 2485,
+   "engine": 1,
+   "arg": 43,
+   "row76": "0009b50009b0100002b",
+   "what": "L20.attn.a_allgather: u_s_7S rdout8"
+  },
+  {
+   "i": 54,
+   "issue": 2482,
+   "done": 2487,
+   "engine": 0,
+   "arg": 72,
+   "row76": "0009b70009b20000048",
+   "what": "L20.attn.a_allgather: u_s_7N cfg6"
+  },
+  {
+   "i": 55,
+   "issue": 2482,
+   "done": 2487,
+   "engine": 1,
+   "arg": 16,
+   "row76": "0009b70009b21000010",
+   "what": "L20.attn.a_allgather: u_s_0S cfg6"
+  },
+  {
+   "i": 56,
+   "issue": 2483,
+   "done": 2488,
+   "engine": 0,
+   "arg": 73,
+   "row76": "0009b80009b30000049",
+   "what": "L20.attn.a_allgather: u_s_7N rdout9"
+  },
+  {
+   "i": 57,
+   "issue": 2483,
+   "done": 2488,
+   "engine": 1,
+   "arg": 17,
+   "row76": "0009b80009b31000011",
+   "what": "L20.attn.a_allgather: u_s_0S rdout9"
+  },
+  {
+   "i": 58,
+   "issue": 2484,
+   "done": 2489,
+   "engine": 1,
+   "arg": 44,
+   "row76": "0009b90009b4100002c",
+   "what": "L20.attn.a_allgather: u_s_7S cfg6"
+  },
+  {
+   "i": 59,
+   "issue": 2485,
+   "done": 2490,
+   "engine": 1,
+   "arg": 45,
+   "row76": "0009ba0009b5100002d",
+   "what": "L20.attn.a_allgather: u_s_7S rdout9"
+  },
+  {
+   "i": 60,
+   "issue": 2487,
+   "done": 2492,
+   "engine": 0,
+   "arg": 74,
+   "row76": "0009bc0009b7000004a",
+   "what": "L20.attn.a_allgather: u_s_7N cfg7"
+  },
+  {
+   "i": 61,
+   "issue": 2487,
+   "done": 2492,
+   "engine": 1,
+   "arg": 18,
+   "row76": "0009bc0009b71000012",
+   "what": "L20.attn.a_allgather: u_s_0S cfg7"
+  },
+  {
+   "i": 62,
+   "issue": 2488,
+   "done": 2493,
+   "engine": 0,
+   "arg": 75,
+   "row76": "0009bd0009b8000004b",
+   "what": "L20.attn.a_allgather: u_s_7N rdout10"
+  },
+  {
+   "i": 63,
+   "issue": 2488,
+   "done": 2493,
+   "engine": 1,
+   "arg": 19,
+   "row76": "0009bd0009b81000013",
+   "what": "L20.attn.a_allgather: u_s_0S rdout10"
+  },
+  {
+   "i": 64,
+   "issue": 2489,
+   "done": 2494,
+   "engine": 1,
+   "arg": 46,
+   "row76": "0009be0009b9100002e",
+   "what": "L20.attn.a_allgather: u_s_7S cfg7"
+  },
+  {
+   "i": 65,
+   "issue": 2490,
+   "done": 2495,
+   "engine": 1,
+   "arg": 47,
+   "row76": "0009bf0009ba100002f",
+   "what": "L20.attn.a_allgather: u_s_7S rdout10"
+  },
+  {
+   "i": 66,
+   "issue": 2492,
+   "done": 2497,
+   "engine": 0,
+   "arg": 76,
+   "row76": "0009c10009bc000004c",
+   "what": "L20.attn.a_allgather: u_s_7N cfg8"
+  },
+  {
+   "i": 67,
+   "issue": 2492,
+   "done": 2497,
+   "engine": 1,
+   "arg": 20,
+   "row76": "0009c10009bc1000014",
+   "what": "L20.attn.a_allgather: u_s_0S cfg8"
+  },
+  {
+   "i": 68,
+   "issue": 2493,
+   "done": 2498,
+   "engine": 0,
+   "arg": 77,
+   "row76": "0009c20009bd000004d",
+   "what": "L20.attn.a_allgather: u_s_7N rdout11"
+  },
+  {
+   "i": 69,
+   "issue": 2493,
+   "done": 2498,
+   "engine": 1,
+   "arg": 21,
+   "row76": "0009c20009bd1000015",
+   "what": "L20.attn.a_allgather: u_s_0S rdout11"
+  },
+  {
+   "i": 70,
+   "issue": 2494,
+   "done": 2499,
+   "engine": 1,
+   "arg": 48,
+   "row76": "0009c30009be1000030",
+   "what": "L20.attn.a_allgather: u_s_7S cfg8"
+  },
+  {
+   "i": 71,
+   "issue": 2495,
+   "done": 2500,
+   "engine": 1,
+   "arg": 49,
+   "row76": "0009c40009bf1000031",
+   "what": "L20.attn.a_allgather: u_s_7S rdout11"
+  },
+  {
+   "i": 72,
+   "issue": 2497,
+   "done": 2502,
+   "engine": 0,
+   "arg": 78,
+   "row76": "0009c60009c1000004e",
+   "what": "L20.attn.a_allgather: u_s_7N cfg9"
+  },
+  {
+   "i": 73,
+   "issue": 2497,
+   "done": 2502,
+   "engine": 1,
+   "arg": 22,
+   "row76": "0009c60009c11000016",
+   "what": "L20.attn.a_allgather: u_s_0S cfg9"
+  },
+  {
+   "i": 74,
+   "issue": 2498,
+   "done": 2503,
+   "engine": 0,
+   "arg": 79,
+   "row76": "0009c70009c2000004f",
+   "what": "L20.attn.a_allgather: u_s_7N rdout12"
+  },
+  {
+   "i": 75,
+   "issue": 2498,
+   "done": 2503,
+   "engine": 1,
+   "arg": 23,
+   "row76": "0009c70009c21000017",
+   "what": "L20.attn.a_allgather: u_s_0S rdout12"
+  },
+  {
+   "i": 76,
+   "issue": 2499,
+   "done": 2504,
+   "engine": 1,
+   "arg": 50,
+   "row76": "0009c80009c31000032",
+   "what": "L20.attn.a_allgather: u_s_7S cfg9"
+  },
+  {
+   "i": 77,
+   "issue": 2500,
+   "done": 2505,
+   "engine": 1,
+   "arg": 51,
+   "row76": "0009c90009c41000033",
+   "what": "L20.attn.a_allgather: u_s_7S rdout12"
+  },
+  {
+   "i": 78,
+   "issue": 2502,
+   "done": 2507,
+   "engine": 0,
+   "arg": 80,
+   "row76": "0009cb0009c60000050",
+   "what": "L20.attn.a_allgather: u_s_7N cfg10"
+  },
+  {
+   "i": 79,
+   "issue": 2502,
+   "done": 2507,
+   "engine": 1,
+   "arg": 24,
+   "row76": "0009cb0009c61000018",
+   "what": "L20.attn.a_allgather: u_s_0S cfg10"
+  },
+  {
+   "i": 80,
+   "issue": 2503,
+   "done": 2508,
+   "engine": 0,
+   "arg": 81,
+   "row76": "0009cc0009c70000051",
+   "what": "L20.attn.a_allgather: u_s_7N rdout13"
+  },
+  {
+   "i": 81,
+   "issue": 2503,
+   "done": 2508,
+   "engine": 1,
+   "arg": 25,
+   "row76": "0009cc0009c71000019",
+   "what": "L20.attn.a_allgather: u_s_0S rdout13"
+  },
+  {
+   "i": 82,
+   "issue": 2504,
+   "done": 2509,
+   "engine": 1,
+   "arg": 52,
+   "row76": "0009cd0009c81000034",
+   "what": "L20.attn.a_allgather: u_s_7S cfg10"
+  },
+  {
+   "i": 83,
+   "issue": 2505,
+   "done": 2510,
+   "engine": 1,
+   "arg": 53,
+   "row76": "0009ce0009c91000035",
+   "what": "L20.attn.a_allgather: u_s_7S rdout13"
+  },
+  {
+   "i": 84,
+   "issue": 2507,
+   "done": 2512,
+   "engine": 0,
+   "arg": 82,
+   "row76": "0009d00009cb0000052",
+   "what": "L20.attn.a_allgather: u_s_7N cfg11"
+  },
+  {
+   "i": 85,
+   "issue": 2507,
+   "done": 2512,
+   "engine": 1,
+   "arg": 26,
+   "row76": "0009d00009cb100001a",
+   "what": "L20.attn.a_allgather: u_s_0S cfg11"
+  },
+  {
+   "i": 86,
+   "issue": 2509,
+   "done": 2514,
+   "engine": 1,
+   "arg": 54,
+   "row76": "0009d20009cd1000036",
+   "what": "L20.attn.a_allgather: u_s_7S cfg11"
+  },
+  {
+   "i": 87,
+   "issue": 2512,
+   "done": 2517,
+   "engine": 0,
+   "arg": 83,
+   "row76": "0009d50009d00000053",
+   "what": "L20.attn.a_allgather: u_s_7N cfg12"
+  },
+  {
+   "i": 88,
+   "issue": 2512,
+   "done": 2517,
+   "engine": 1,
+   "arg": 27,
+   "row76": "0009d50009d0100001b",
+   "what": "L20.attn.a_allgather: u_s_0S cfg12"
+  },
+  {
+   "i": 89,
+   "issue": 2514,
+   "done": 2519,
+   "engine": 1,
+   "arg": 55,
+   "row76": "0009d70009d21000037",
+   "what": "L20.attn.a_allgather: u_s_7S cfg12"
+  },
+  {
+   "i": 90,
+   "issue": 2517,
+   "done": 2522,
+   "engine": 0,
+   "arg": 84,
+   "row76": "0009da0009d50000054",
+   "what": "L20.attn.a_allgather: u_s_7N cfg13"
+  },
+  {
+   "i": 91,
+   "issue": 2517,
+   "done": 2522,
+   "engine": 1,
+   "arg": 28,
+   "row76": "0009da0009d5100001c",
+   "what": "L20.attn.a_allgather: u_s_0S cfg13"
+  },
+  {
+   "i": 92,
+   "issue": 2519,
+   "done": 2524,
+   "engine": 1,
+   "arg": 56,
+   "row76": "0009dc0009d71000038",
+   "what": "L20.attn.a_allgather: u_s_7S cfg13"
+  },
+  {
+   "i": 93,
+   "issue": 4751,
+   "done": 4756,
+   "engine": 1,
+   "arg": 85,
+   "row76": "00129400128f1000055",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 94,
+   "issue": 4752,
+   "done": 4757,
+   "engine": 1,
+   "arg": 86,
+   "row76": "0012950012901000056",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 95,
+   "issue": 4753,
+   "done": 4758,
+   "engine": 1,
+   "arg": 87,
+   "row76": "0012960012911000057",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 96,
+   "issue": 4754,
+   "done": 4759,
+   "engine": 1,
+   "arg": 88,
+   "row76": "0012970012921000058",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 97,
+   "issue": 4755,
+   "done": 4760,
+   "engine": 1,
+   "arg": 89,
+   "row76": "0012980012931000059",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 98,
+   "issue": 4756,
+   "done": 4761,
+   "engine": 1,
+   "arg": 90,
+   "row76": "001299001294100005a",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 99,
+   "issue": 4757,
+   "done": 4762,
+   "engine": 1,
+   "arg": 91,
+   "row76": "00129a001295100005b",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 100,
+   "issue": 4758,
+   "done": 4763,
+   "engine": 1,
+   "arg": 92,
+   "row76": "00129b001296100005c",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 101,
+   "issue": 4759,
+   "done": 4764,
+   "engine": 1,
+   "arg": 93,
+   "row76": "00129c001297100005d",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 102,
+   "issue": 4760,
+   "done": 4765,
+   "engine": 1,
+   "arg": 94,
+   "row76": "00129d001298100005e",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 103,
+   "issue": 4761,
+   "done": 4766,
+   "engine": 1,
+   "arg": 95,
+   "row76": "00129e001299100005f",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 104,
+   "issue": 4762,
+   "done": 4767,
+   "engine": 1,
+   "arg": 96,
+   "row76": "00129f00129a1000060",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 105,
+   "issue": 4763,
+   "done": 4768,
+   "engine": 1,
+   "arg": 97,
+   "row76": "0012a000129b1000061",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 106,
+   "issue": 4764,
+   "done": 4769,
+   "engine": 1,
+   "arg": 98,
+   "row76": "0012a100129c1000062",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 107,
+   "issue": 4765,
+   "done": 4770,
+   "engine": 1,
+   "arg": 99,
+   "row76": "0012a200129d1000063",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 108,
+   "issue": 4766,
+   "done": 4771,
+   "engine": 1,
+   "arg": 100,
+   "row76": "0012a300129e1000064",
+   "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+  },
+  {
+   "i": 109,
+   "issue": 4767,
+   "done": 4772,
+   "engine": 1,
+   "arg": 101,
+   "row76": "0012a400129f1000065",
+   "what": "L20.attn.q_rope: vs attn.q_rope QR n=16 leaves 11111"
+  },
+  {
+   "i": 110,
+   "issue": 20932,
+   "done": 20937,
+   "engine": 1,
+   "arg": 103,
+   "row76": "0051c90051c41000067",
+   "what": "L20.attn.z_quant: vs attn.z_quant QB n=8 leaves 00001"
+  },
+  {
+   "i": 111,
+   "issue": 20933,
+   "done": 20938,
+   "engine": 1,
+   "arg": 104,
+   "row76": "0051ca0051c51000068",
+   "what": "L20.attn.z_quant: vs attn.z_quant QB n=8 leaves 00010"
+  },
+  {
+   "i": 112,
+   "issue": 20934,
+   "done": 20939,
+   "engine": 1,
+   "arg": 105,
+   "row76": "0051cb0051c61000069",
+   "what": "L20.attn.z_quant: vs attn.z_quant QB n=8 leaves 00100"
+  },
+  {
+   "i": 113,
+   "issue": 20935,
+   "done": 20940,
+   "engine": 1,
+   "arg": 106,
+   "row76": "0051cc0051c7100006a",
+   "what": "L20.attn.z_quant: vs attn.z_quant QB n=8 leaves 01000"
+  },
+  {
+   "i": 114,
+   "issue": 20936,
+   "done": 20941,
+   "engine": 1,
+   "arg": 107,
+   "row76": "0051cd0051c8100006b",
+   "what": "L20.attn.z_quant: vs attn.z_quant QB n=8 leaves 10000"
+  },
+  {
+   "i": 115,
+   "issue": 22170,
+   "done": 22175,
+   "engine": 1,
+   "arg": 102,
+   "row76": "00569f00569a1000066",
+   "what": "L20.attn.idx.topk_final: attn.idx.topk_final: bk_sel drain CTL n 74 d 1"
+  },
+  {
+   "i": 116,
+   "issue": 23757,
+   "done": 23762,
+   "engine": 2,
+   "arg": 236,
+   "row76": "005cd2005ccd20000ec",
+   "what": "L20.ffn.hc.fn: gunit HC job which 1 set 0 row 1008"
+  },
+  {
+   "i": 117,
+   "issue": 25042,
+   "done": 25047,
+   "engine": 1,
+   "arg": 109,
+   "row76": "0061d70061d2100006d",
+   "what": "L20.ffn.softplus_sqrt: vs ffn.softplus_sqrt RA n=6 leaves 00001"
+  },
+  {
+   "i": 118,
+   "issue": 25615,
+   "done": 25620,
+   "engine": 2,
+   "arg": 117,
+   "row76": "00641400640f2000075",
+   "what": "L20.ffn.top6: gunit router job set 0 ne 384 row 1016"
+  },
+  {
+   "i": 119,
+   "issue": 25644,
+   "done": 25649,
+   "engine": 1,
+   "arg": 110,
+   "row76": "00643100642c100006e",
+   "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 0 leaves 00001"
+  },
+  {
+   "i": 120,
+   "issue": 25645,
+   "done": 25650,
+   "engine": 1,
+   "arg": 111,
+   "row76": "00643200642d100006f",
+   "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 1 leaves 00001"
+  },
+  {
+   "i": 121,
+   "issue": 25646,
+   "done": 25651,
+   "engine": 1,
+   "arg": 112,
+   "row76": "00643300642e1000070",
+   "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 2 leaves 00001"
+  },
+  {
+   "i": 122,
+   "issue": 25647,
+   "done": 25652,
+   "engine": 1,
+   "arg": 113,
+   "row76": "00643400642f1000071",
+   "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 3 leaves 00001"
+  },
+  {
+   "i": 123,
+   "issue": 25648,
+   "done": 25653,
+   "engine": 1,
+   "arg": 114,
+   "row76": "0064350064301000072",
+   "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 4 leaves 00001"
+  },
+  {
+   "i": 124,
+   "issue": 25649,
+   "done": 25654,
+   "engine": 1,
+   "arg": 115,
+   "row76": "0064360064311000073",
+   "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 5 leaves 00001"
+  },
+  {
+   "i": 125,
+   "issue": 25650,
+   "done": 25655,
+   "engine": 1,
+   "arg": 116,
+   "row76": "0064370064321000074",
+   "what": "L20.ffn.bias: vs ffn.bias RB n=6 leaves 00001"
+  },
+  {
+   "i": 126,
+   "issue": 25639,
+   "done": 0,
+   "engine": 14,
+   "arg": 0,
+   "row76": "000000006427e000000",
+   "what": "KIT"
+  },
+  {
+   "i": 127,
+   "issue": 25659,
+   "done": 0,
+   "engine": 15,
+   "arg": 0,
+   "row76": "00000000643bf000000",
+   "what": "END"
+  }
+ ],
+ "job": [
+  {
+   "job": 0,
+   "layer_issue0": 5,
+   "nops": 128,
+   "end_age": 25659,
+   "host_words": 576,
+   "templates": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131
+   ],
+   "reload_edges": 2880,
+   "rows": [
+    {
+     "i": 0,
+     "issue": 0,
+     "done": 5,
+     "engine": 1,
+     "arg": 118,
+     "row76": "0000050000001000076",
+     "what": "attn HLOAD u_s_0S"
+    },
+    {
+     "i": 1,
+     "issue": 40,
+     "done": 45,
+     "engine": 1,
+     "arg": 119,
+     "row76": "00002d0000281000077",
+     "what": "attn GAIN u_s_0S"
+    },
+    {
+     "i": 2,
+     "issue": 60,
+     "done": 65,
+     "engine": 1,
+     "arg": 120,
+     "row76": "00004100003c1000078",
+     "what": "attn NORMR leaf 0 u_s_0S (hc_pre = leaf row 1008)"
+    },
+    {
+     "i": 3,
+     "issue": 61,
+     "done": 66,
+     "engine": 1,
+     "arg": 121,
+     "row76": "00004200003d1000079",
+     "what": "attn NORMR leaf 1 u_s_0S (hc_pre = leaf row 1008)"
+    },
+    {
+     "i": 4,
+     "issue": 62,
+     "done": 67,
+     "engine": 1,
+     "arg": 122,
+     "row76": "00004300003e100007a",
+     "what": "attn NORMR leaf 2 u_s_0S (hc_pre = leaf row 1008)"
+    },
+    {
+     "i": 5,
+     "issue": 63,
+     "done": 68,
+     "engine": 1,
+     "arg": 123,
+     "row76": "00004400003f100007b",
+     "what": "attn NORMR leaf 3 u_s_0S (hc_pre = leaf row 1008)"
+    },
+    {
+     "i": 6,
+     "issue": 64,
+     "done": 69,
+     "engine": 1,
+     "arg": 124,
+     "row76": "000045000040100007c",
+     "what": "attn NORMR leaf 4 u_s_0S (hc_pre = leaf row 1008)"
+    },
+    {
+     "i": 7,
+     "issue": 65,
+     "done": 70,
+     "engine": 1,
+     "arg": 125,
+     "row76": "000046000041100007d",
+     "what": "attn XFIN_GO u_s_0S"
+    },
+    {
+     "i": 8,
+     "issue": 196,
+     "done": 201,
+     "engine": 2,
+     "arg": 128,
+     "row76": "0000c90000c42000080",
+     "what": "L20.attn.hc.fn: gunit HC job which 0 set 0 row 1000"
+    },
+    {
+     "i": 9,
+     "issue": 2438,
+     "done": 2443,
+     "engine": 0,
+     "arg": 57,
+     "row76": "00098b0009860000039",
+     "what": "L20.attn.a_allgather: u_s_7N rdout0"
+    },
+    {
+     "i": 10,
+     "issue": 2438,
+     "done": 2443,
+     "engine": 1,
+     "arg": 1,
+     "row76": "00098b0009861000001",
+     "what": "L20.attn.a_allgather: u_s_0S rdout0"
+    },
+    {
+     "i": 11,
+     "issue": 2440,
+     "done": 2445,
+     "engine": 1,
+     "arg": 29,
+     "row76": "00098d000988100001d",
+     "what": "L20.attn.a_allgather: u_s_7S rdout0"
+    },
+    {
+     "i": 12,
+     "issue": 2443,
+     "done": 2448,
+     "engine": 0,
+     "arg": 58,
+     "row76": "00099000098b000003a",
+     "what": "L20.attn.a_allgather: u_s_7N rdout1"
+    },
+    {
+     "i": 13,
+     "issue": 2443,
+     "done": 2448,
+     "engine": 1,
+     "arg": 2,
+     "row76": "00099000098b1000002",
+     "what": "L20.attn.a_allgather: u_s_0S rdout1"
+    },
+    {
+     "i": 14,
+     "issue": 2445,
+     "done": 2450,
+     "engine": 1,
+     "arg": 30,
+     "row76": "00099200098d100001e",
+     "what": "L20.attn.a_allgather: u_s_7S rdout1"
+    },
+    {
+     "i": 15,
+     "issue": 2448,
+     "done": 2453,
+     "engine": 0,
+     "arg": 59,
+     "row76": "000995000990000003b",
+     "what": "L20.attn.a_allgather: u_s_7N rdout2"
+    },
+    {
+     "i": 16,
+     "issue": 2448,
+     "done": 2453,
+     "engine": 1,
+     "arg": 3,
+     "row76": "0009950009901000003",
+     "what": "L20.attn.a_allgather: u_s_0S rdout2"
+    },
+    {
+     "i": 17,
+     "issue": 2450,
+     "done": 2455,
+     "engine": 1,
+     "arg": 31,
+     "row76": "000997000992100001f",
+     "what": "L20.attn.a_allgather: u_s_7S rdout2"
+    },
+    {
+     "i": 18,
+     "issue": 2452,
+     "done": 2457,
+     "engine": 0,
+     "arg": 60,
+     "row76": "000999000994000003c",
+     "what": "L20.attn.a_allgather: u_s_7N cfg0"
+    },
+    {
+     "i": 19,
+     "issue": 2452,
+     "done": 2457,
+     "engine": 1,
+     "arg": 4,
+     "row76": "0009990009941000004",
+     "what": "L20.attn.a_allgather: u_s_0S cfg0"
+    },
+    {
+     "i": 20,
+     "issue": 2453,
+     "done": 2458,
+     "engine": 0,
+     "arg": 61,
+     "row76": "00099a000995000003d",
+     "what": "L20.attn.a_allgather: u_s_7N rdout3"
+    },
+    {
+     "i": 21,
+     "issue": 2453,
+     "done": 2458,
+     "engine": 1,
+     "arg": 5,
+     "row76": "00099a0009951000005",
+     "what": "L20.attn.a_allgather: u_s_0S rdout3"
+    },
+    {
+     "i": 22,
+     "issue": 2454,
+     "done": 2459,
+     "engine": 1,
+     "arg": 32,
+     "row76": "00099b0009961000020",
+     "what": "L20.attn.a_allgather: u_s_7S cfg0"
+    },
+    {
+     "i": 23,
+     "issue": 2455,
+     "done": 2460,
+     "engine": 1,
+     "arg": 33,
+     "row76": "00099c0009971000021",
+     "what": "L20.attn.a_allgather: u_s_7S rdout3"
+    },
+    {
+     "i": 24,
+     "issue": 2457,
+     "done": 2462,
+     "engine": 0,
+     "arg": 62,
+     "row76": "00099e000999000003e",
+     "what": "L20.attn.a_allgather: u_s_7N cfg1"
+    },
+    {
+     "i": 25,
+     "issue": 2457,
+     "done": 2462,
+     "engine": 1,
+     "arg": 6,
+     "row76": "00099e0009991000006",
+     "what": "L20.attn.a_allgather: u_s_0S cfg1"
+    },
+    {
+     "i": 26,
+     "issue": 2458,
+     "done": 2463,
+     "engine": 0,
+     "arg": 63,
+     "row76": "00099f00099a000003f",
+     "what": "L20.attn.a_allgather: u_s_7N rdout4"
+    },
+    {
+     "i": 27,
+     "issue": 2458,
+     "done": 2463,
+     "engine": 1,
+     "arg": 7,
+     "row76": "00099f00099a1000007",
+     "what": "L20.attn.a_allgather: u_s_0S rdout4"
+    },
+    {
+     "i": 28,
+     "issue": 2459,
+     "done": 2464,
+     "engine": 1,
+     "arg": 34,
+     "row76": "0009a000099b1000022",
+     "what": "L20.attn.a_allgather: u_s_7S cfg1"
+    },
+    {
+     "i": 29,
+     "issue": 2460,
+     "done": 2465,
+     "engine": 1,
+     "arg": 35,
+     "row76": "0009a100099c1000023",
+     "what": "L20.attn.a_allgather: u_s_7S rdout4"
+    },
+    {
+     "i": 30,
+     "issue": 2462,
+     "done": 2467,
+     "engine": 0,
+     "arg": 64,
+     "row76": "0009a300099e0000040",
+     "what": "L20.attn.a_allgather: u_s_7N cfg2"
+    },
+    {
+     "i": 31,
+     "issue": 2462,
+     "done": 2467,
+     "engine": 1,
+     "arg": 8,
+     "row76": "0009a300099e1000008",
+     "what": "L20.attn.a_allgather: u_s_0S cfg2"
+    },
+    {
+     "i": 32,
+     "issue": 2463,
+     "done": 2468,
+     "engine": 0,
+     "arg": 65,
+     "row76": "0009a400099f0000041",
+     "what": "L20.attn.a_allgather: u_s_7N rdout5"
+    },
+    {
+     "i": 33,
+     "issue": 2463,
+     "done": 2468,
+     "engine": 1,
+     "arg": 9,
+     "row76": "0009a400099f1000009",
+     "what": "L20.attn.a_allgather: u_s_0S rdout5"
+    },
+    {
+     "i": 34,
+     "issue": 2464,
+     "done": 2469,
+     "engine": 1,
+     "arg": 36,
+     "row76": "0009a50009a01000024",
+     "what": "L20.attn.a_allgather: u_s_7S cfg2"
+    },
+    {
+     "i": 35,
+     "issue": 2465,
+     "done": 2470,
+     "engine": 1,
+     "arg": 37,
+     "row76": "0009a60009a11000025",
+     "what": "L20.attn.a_allgather: u_s_7S rdout5"
+    },
+    {
+     "i": 36,
+     "issue": 2467,
+     "done": 2472,
+     "engine": 0,
+     "arg": 66,
+     "row76": "0009a80009a30000042",
+     "what": "L20.attn.a_allgather: u_s_7N cfg3"
+    },
+    {
+     "i": 37,
+     "issue": 2467,
+     "done": 2472,
+     "engine": 1,
+     "arg": 10,
+     "row76": "0009a80009a3100000a",
+     "what": "L20.attn.a_allgather: u_s_0S cfg3"
+    },
+    {
+     "i": 38,
+     "issue": 2468,
+     "done": 2473,
+     "engine": 0,
+     "arg": 67,
+     "row76": "0009a90009a40000043",
+     "what": "L20.attn.a_allgather: u_s_7N rdout6"
+    },
+    {
+     "i": 39,
+     "issue": 2468,
+     "done": 2473,
+     "engine": 1,
+     "arg": 11,
+     "row76": "0009a90009a4100000b",
+     "what": "L20.attn.a_allgather: u_s_0S rdout6"
+    },
+    {
+     "i": 40,
+     "issue": 2469,
+     "done": 2474,
+     "engine": 1,
+     "arg": 38,
+     "row76": "0009aa0009a51000026",
+     "what": "L20.attn.a_allgather: u_s_7S cfg3"
+    },
+    {
+     "i": 41,
+     "issue": 2470,
+     "done": 2475,
+     "engine": 1,
+     "arg": 39,
+     "row76": "0009ab0009a61000027",
+     "what": "L20.attn.a_allgather: u_s_7S rdout6"
+    },
+    {
+     "i": 42,
+     "issue": 2472,
+     "done": 2477,
+     "engine": 0,
+     "arg": 68,
+     "row76": "0009ad0009a80000044",
+     "what": "L20.attn.a_allgather: u_s_7N cfg4"
+    },
+    {
+     "i": 43,
+     "issue": 2472,
+     "done": 2477,
+     "engine": 1,
+     "arg": 12,
+     "row76": "0009ad0009a8100000c",
+     "what": "L20.attn.a_allgather: u_s_0S cfg4"
+    },
+    {
+     "i": 44,
+     "issue": 2473,
+     "done": 2478,
+     "engine": 0,
+     "arg": 69,
+     "row76": "0009ae0009a90000045",
+     "what": "L20.attn.a_allgather: u_s_7N rdout7"
+    },
+    {
+     "i": 45,
+     "issue": 2473,
+     "done": 2478,
+     "engine": 1,
+     "arg": 13,
+     "row76": "0009ae0009a9100000d",
+     "what": "L20.attn.a_allgather: u_s_0S rdout7"
+    },
+    {
+     "i": 46,
+     "issue": 2474,
+     "done": 2479,
+     "engine": 1,
+     "arg": 40,
+     "row76": "0009af0009aa1000028",
+     "what": "L20.attn.a_allgather: u_s_7S cfg4"
+    },
+    {
+     "i": 47,
+     "issue": 2475,
+     "done": 2480,
+     "engine": 1,
+     "arg": 41,
+     "row76": "0009b00009ab1000029",
+     "what": "L20.attn.a_allgather: u_s_7S rdout7"
+    },
+    {
+     "i": 48,
+     "issue": 2477,
+     "done": 2482,
+     "engine": 0,
+     "arg": 70,
+     "row76": "0009b20009ad0000046",
+     "what": "L20.attn.a_allgather: u_s_7N cfg5"
+    },
+    {
+     "i": 49,
+     "issue": 2477,
+     "done": 2482,
+     "engine": 1,
+     "arg": 14,
+     "row76": "0009b20009ad100000e",
+     "what": "L20.attn.a_allgather: u_s_0S cfg5"
+    },
+    {
+     "i": 50,
+     "issue": 2478,
+     "done": 2483,
+     "engine": 0,
+     "arg": 71,
+     "row76": "0009b30009ae0000047",
+     "what": "L20.attn.a_allgather: u_s_7N rdout8"
+    },
+    {
+     "i": 51,
+     "issue": 2478,
+     "done": 2483,
+     "engine": 1,
+     "arg": 15,
+     "row76": "0009b30009ae100000f",
+     "what": "L20.attn.a_allgather: u_s_0S rdout8"
+    },
+    {
+     "i": 52,
+     "issue": 2479,
+     "done": 2484,
+     "engine": 1,
+     "arg": 42,
+     "row76": "0009b40009af100002a",
+     "what": "L20.attn.a_allgather: u_s_7S cfg5"
+    },
+    {
+     "i": 53,
+     "issue": 2480,
+     "done": 2485,
+     "engine": 1,
+     "arg": 43,
+     "row76": "0009b50009b0100002b",
+     "what": "L20.attn.a_allgather: u_s_7S rdout8"
+    },
+    {
+     "i": 54,
+     "issue": 2482,
+     "done": 2487,
+     "engine": 0,
+     "arg": 72,
+     "row76": "0009b70009b20000048",
+     "what": "L20.attn.a_allgather: u_s_7N cfg6"
+    },
+    {
+     "i": 55,
+     "issue": 2482,
+     "done": 2487,
+     "engine": 1,
+     "arg": 16,
+     "row76": "0009b70009b21000010",
+     "what": "L20.attn.a_allgather: u_s_0S cfg6"
+    },
+    {
+     "i": 56,
+     "issue": 2483,
+     "done": 2488,
+     "engine": 0,
+     "arg": 73,
+     "row76": "0009b80009b30000049",
+     "what": "L20.attn.a_allgather: u_s_7N rdout9"
+    },
+    {
+     "i": 57,
+     "issue": 2483,
+     "done": 2488,
+     "engine": 1,
+     "arg": 17,
+     "row76": "0009b80009b31000011",
+     "what": "L20.attn.a_allgather: u_s_0S rdout9"
+    },
+    {
+     "i": 58,
+     "issue": 2484,
+     "done": 2489,
+     "engine": 1,
+     "arg": 44,
+     "row76": "0009b90009b4100002c",
+     "what": "L20.attn.a_allgather: u_s_7S cfg6"
+    },
+    {
+     "i": 59,
+     "issue": 2485,
+     "done": 2490,
+     "engine": 1,
+     "arg": 45,
+     "row76": "0009ba0009b5100002d",
+     "what": "L20.attn.a_allgather: u_s_7S rdout9"
+    },
+    {
+     "i": 60,
+     "issue": 2487,
+     "done": 2492,
+     "engine": 0,
+     "arg": 74,
+     "row76": "0009bc0009b7000004a",
+     "what": "L20.attn.a_allgather: u_s_7N cfg7"
+    },
+    {
+     "i": 61,
+     "issue": 2487,
+     "done": 2492,
+     "engine": 1,
+     "arg": 18,
+     "row76": "0009bc0009b71000012",
+     "what": "L20.attn.a_allgather: u_s_0S cfg7"
+    },
+    {
+     "i": 62,
+     "issue": 2488,
+     "done": 2493,
+     "engine": 0,
+     "arg": 75,
+     "row76": "0009bd0009b8000004b",
+     "what": "L20.attn.a_allgather: u_s_7N rdout10"
+    },
+    {
+     "i": 63,
+     "issue": 2488,
+     "done": 2493,
+     "engine": 1,
+     "arg": 19,
+     "row76": "0009bd0009b81000013",
+     "what": "L20.attn.a_allgather: u_s_0S rdout10"
+    },
+    {
+     "i": 64,
+     "issue": 2489,
+     "done": 2494,
+     "engine": 1,
+     "arg": 46,
+     "row76": "0009be0009b9100002e",
+     "what": "L20.attn.a_allgather: u_s_7S cfg7"
+    },
+    {
+     "i": 65,
+     "issue": 2490,
+     "done": 2495,
+     "engine": 1,
+     "arg": 47,
+     "row76": "0009bf0009ba100002f",
+     "what": "L20.attn.a_allgather: u_s_7S rdout10"
+    },
+    {
+     "i": 66,
+     "issue": 2492,
+     "done": 2497,
+     "engine": 0,
+     "arg": 76,
+     "row76": "0009c10009bc000004c",
+     "what": "L20.attn.a_allgather: u_s_7N cfg8"
+    },
+    {
+     "i": 67,
+     "issue": 2492,
+     "done": 2497,
+     "engine": 1,
+     "arg": 20,
+     "row76": "0009c10009bc1000014",
+     "what": "L20.attn.a_allgather: u_s_0S cfg8"
+    },
+    {
+     "i": 68,
+     "issue": 2493,
+     "done": 2498,
+     "engine": 0,
+     "arg": 77,
+     "row76": "0009c20009bd000004d",
+     "what": "L20.attn.a_allgather: u_s_7N rdout11"
+    },
+    {
+     "i": 69,
+     "issue": 2493,
+     "done": 2498,
+     "engine": 1,
+     "arg": 21,
+     "row76": "0009c20009bd1000015",
+     "what": "L20.attn.a_allgather: u_s_0S rdout11"
+    },
+    {
+     "i": 70,
+     "issue": 2494,
+     "done": 2499,
+     "engine": 1,
+     "arg": 48,
+     "row76": "0009c30009be1000030",
+     "what": "L20.attn.a_allgather: u_s_7S cfg8"
+    },
+    {
+     "i": 71,
+     "issue": 2495,
+     "done": 2500,
+     "engine": 1,
+     "arg": 49,
+     "row76": "0009c40009bf1000031",
+     "what": "L20.attn.a_allgather: u_s_7S rdout11"
+    },
+    {
+     "i": 72,
+     "issue": 2497,
+     "done": 2502,
+     "engine": 0,
+     "arg": 78,
+     "row76": "0009c60009c1000004e",
+     "what": "L20.attn.a_allgather: u_s_7N cfg9"
+    },
+    {
+     "i": 73,
+     "issue": 2497,
+     "done": 2502,
+     "engine": 1,
+     "arg": 22,
+     "row76": "0009c60009c11000016",
+     "what": "L20.attn.a_allgather: u_s_0S cfg9"
+    },
+    {
+     "i": 74,
+     "issue": 2498,
+     "done": 2503,
+     "engine": 0,
+     "arg": 79,
+     "row76": "0009c70009c2000004f",
+     "what": "L20.attn.a_allgather: u_s_7N rdout12"
+    },
+    {
+     "i": 75,
+     "issue": 2498,
+     "done": 2503,
+     "engine": 1,
+     "arg": 23,
+     "row76": "0009c70009c21000017",
+     "what": "L20.attn.a_allgather: u_s_0S rdout12"
+    },
+    {
+     "i": 76,
+     "issue": 2499,
+     "done": 2504,
+     "engine": 1,
+     "arg": 50,
+     "row76": "0009c80009c31000032",
+     "what": "L20.attn.a_allgather: u_s_7S cfg9"
+    },
+    {
+     "i": 77,
+     "issue": 2500,
+     "done": 2505,
+     "engine": 1,
+     "arg": 51,
+     "row76": "0009c90009c41000033",
+     "what": "L20.attn.a_allgather: u_s_7S rdout12"
+    },
+    {
+     "i": 78,
+     "issue": 2502,
+     "done": 2507,
+     "engine": 0,
+     "arg": 80,
+     "row76": "0009cb0009c60000050",
+     "what": "L20.attn.a_allgather: u_s_7N cfg10"
+    },
+    {
+     "i": 79,
+     "issue": 2502,
+     "done": 2507,
+     "engine": 1,
+     "arg": 24,
+     "row76": "0009cb0009c61000018",
+     "what": "L20.attn.a_allgather: u_s_0S cfg10"
+    },
+    {
+     "i": 80,
+     "issue": 2503,
+     "done": 2508,
+     "engine": 0,
+     "arg": 81,
+     "row76": "0009cc0009c70000051",
+     "what": "L20.attn.a_allgather: u_s_7N rdout13"
+    },
+    {
+     "i": 81,
+     "issue": 2503,
+     "done": 2508,
+     "engine": 1,
+     "arg": 25,
+     "row76": "0009cc0009c71000019",
+     "what": "L20.attn.a_allgather: u_s_0S rdout13"
+    },
+    {
+     "i": 82,
+     "issue": 2504,
+     "done": 2509,
+     "engine": 1,
+     "arg": 52,
+     "row76": "0009cd0009c81000034",
+     "what": "L20.attn.a_allgather: u_s_7S cfg10"
+    },
+    {
+     "i": 83,
+     "issue": 2505,
+     "done": 2510,
+     "engine": 1,
+     "arg": 53,
+     "row76": "0009ce0009c91000035",
+     "what": "L20.attn.a_allgather: u_s_7S rdout13"
+    },
+    {
+     "i": 84,
+     "issue": 2507,
+     "done": 2512,
+     "engine": 0,
+     "arg": 82,
+     "row76": "0009d00009cb0000052",
+     "what": "L20.attn.a_allgather: u_s_7N cfg11"
+    },
+    {
+     "i": 85,
+     "issue": 2507,
+     "done": 2512,
+     "engine": 1,
+     "arg": 26,
+     "row76": "0009d00009cb100001a",
+     "what": "L20.attn.a_allgather: u_s_0S cfg11"
+    },
+    {
+     "i": 86,
+     "issue": 2509,
+     "done": 2514,
+     "engine": 1,
+     "arg": 54,
+     "row76": "0009d20009cd1000036",
+     "what": "L20.attn.a_allgather: u_s_7S cfg11"
+    },
+    {
+     "i": 87,
+     "issue": 2512,
+     "done": 2517,
+     "engine": 0,
+     "arg": 83,
+     "row76": "0009d50009d00000053",
+     "what": "L20.attn.a_allgather: u_s_7N cfg12"
+    },
+    {
+     "i": 88,
+     "issue": 2512,
+     "done": 2517,
+     "engine": 1,
+     "arg": 27,
+     "row76": "0009d50009d0100001b",
+     "what": "L20.attn.a_allgather: u_s_0S cfg12"
+    },
+    {
+     "i": 89,
+     "issue": 2514,
+     "done": 2519,
+     "engine": 1,
+     "arg": 55,
+     "row76": "0009d70009d21000037",
+     "what": "L20.attn.a_allgather: u_s_7S cfg12"
+    },
+    {
+     "i": 90,
+     "issue": 2517,
+     "done": 2522,
+     "engine": 0,
+     "arg": 84,
+     "row76": "0009da0009d50000054",
+     "what": "L20.attn.a_allgather: u_s_7N cfg13"
+    },
+    {
+     "i": 91,
+     "issue": 2517,
+     "done": 2522,
+     "engine": 1,
+     "arg": 28,
+     "row76": "0009da0009d5100001c",
+     "what": "L20.attn.a_allgather: u_s_0S cfg13"
+    },
+    {
+     "i": 92,
+     "issue": 2519,
+     "done": 2524,
+     "engine": 1,
+     "arg": 56,
+     "row76": "0009dc0009d71000038",
+     "what": "L20.attn.a_allgather: u_s_7S cfg13"
+    },
+    {
+     "i": 93,
+     "issue": 4751,
+     "done": 4756,
+     "engine": 1,
+     "arg": 85,
+     "row76": "00129400128f1000055",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 94,
+     "issue": 4752,
+     "done": 4757,
+     "engine": 1,
+     "arg": 86,
+     "row76": "0012950012901000056",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 95,
+     "issue": 4753,
+     "done": 4758,
+     "engine": 1,
+     "arg": 87,
+     "row76": "0012960012911000057",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 96,
+     "issue": 4754,
+     "done": 4759,
+     "engine": 1,
+     "arg": 88,
+     "row76": "0012970012921000058",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 97,
+     "issue": 4755,
+     "done": 4760,
+     "engine": 1,
+     "arg": 89,
+     "row76": "0012980012931000059",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 98,
+     "issue": 4756,
+     "done": 4761,
+     "engine": 1,
+     "arg": 90,
+     "row76": "001299001294100005a",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 99,
+     "issue": 4757,
+     "done": 4762,
+     "engine": 1,
+     "arg": 91,
+     "row76": "00129a001295100005b",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 100,
+     "issue": 4758,
+     "done": 4763,
+     "engine": 1,
+     "arg": 92,
+     "row76": "00129b001296100005c",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 101,
+     "issue": 4759,
+     "done": 4764,
+     "engine": 1,
+     "arg": 93,
+     "row76": "00129c001297100005d",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 102,
+     "issue": 4760,
+     "done": 4765,
+     "engine": 1,
+     "arg": 94,
+     "row76": "00129d001298100005e",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 103,
+     "issue": 4761,
+     "done": 4766,
+     "engine": 1,
+     "arg": 95,
+     "row76": "00129e001299100005f",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 104,
+     "issue": 4762,
+     "done": 4767,
+     "engine": 1,
+     "arg": 96,
+     "row76": "00129f00129a1000060",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 105,
+     "issue": 4763,
+     "done": 4768,
+     "engine": 1,
+     "arg": 97,
+     "row76": "0012a000129b1000061",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 106,
+     "issue": 4764,
+     "done": 4769,
+     "engine": 1,
+     "arg": 98,
+     "row76": "0012a100129c1000062",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 107,
+     "issue": 4765,
+     "done": 4770,
+     "engine": 1,
+     "arg": 99,
+     "row76": "0012a200129d1000063",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 108,
+     "issue": 4766,
+     "done": 4771,
+     "engine": 1,
+     "arg": 100,
+     "row76": "0012a300129e1000064",
+     "what": "L20.attn.q_rope: vs attn.q_rope target-5 cs leaves 11111"
+    },
+    {
+     "i": 109,
+     "issue": 4767,
+     "done": 4772,
+     "engine": 1,
+     "arg": 101,
+     "row76": "0012a400129f1000065",
+     "what": "L20.attn.q_rope: vs attn.q_rope QR n=16 leaves 11111"
+    },
+    {
+     "i": 110,
+     "issue": 20932,
+     "done": 20937,
+     "engine": 1,
+     "arg": 103,
+     "row76": "0051c90051c41000067",
+     "what": "L20.attn.z_quant: vs attn.z_quant QB n=8 leaves 00001"
+    },
+    {
+     "i": 111,
+     "issue": 20933,
+     "done": 20938,
+     "engine": 1,
+     "arg": 104,
+     "row76": "0051ca0051c51000068",
+     "what": "L20.attn.z_quant: vs attn.z_quant QB n=8 leaves 00010"
+    },
+    {
+     "i": 112,
+     "issue": 20934,
+     "done": 20939,
+     "engine": 1,
+     "arg": 105,
+     "row76": "0051cb0051c61000069",
+     "what": "L20.attn.z_quant: vs attn.z_quant QB n=8 leaves 00100"
+    },
+    {
+     "i": 113,
+     "issue": 20935,
+     "done": 20940,
+     "engine": 1,
+     "arg": 106,
+     "row76": "0051cc0051c7100006a",
+     "what": "L20.attn.z_quant: vs attn.z_quant QB n=8 leaves 01000"
+    },
+    {
+     "i": 114,
+     "issue": 20936,
+     "done": 20941,
+     "engine": 1,
+     "arg": 107,
+     "row76": "0051cd0051c8100006b",
+     "what": "L20.attn.z_quant: vs attn.z_quant QB n=8 leaves 10000"
+    },
+    {
+     "i": 115,
+     "issue": 22170,
+     "done": 22175,
+     "engine": 1,
+     "arg": 102,
+     "row76": "00569f00569a1000066",
+     "what": "L20.attn.idx.topk_final: attn.idx.topk_final: bk_sel drain CTL n 74 d 1"
+    },
+    {
+     "i": 116,
+     "issue": 23757,
+     "done": 23762,
+     "engine": 2,
+     "arg": 236,
+     "row76": "005cd2005ccd20000ec",
+     "what": "L20.ffn.hc.fn: gunit HC job which 1 set 0 row 1008"
+    },
+    {
+     "i": 117,
+     "issue": 25042,
+     "done": 25047,
+     "engine": 1,
+     "arg": 109,
+     "row76": "0061d70061d2100006d",
+     "what": "L20.ffn.softplus_sqrt: vs ffn.softplus_sqrt RA n=6 leaves 00001"
+    },
+    {
+     "i": 118,
+     "issue": 25615,
+     "done": 25620,
+     "engine": 2,
+     "arg": 117,
+     "row76": "00641400640f2000075",
+     "what": "L20.ffn.top6: gunit router job set 0 ne 384 row 1016"
+    },
+    {
+     "i": 119,
+     "issue": 25644,
+     "done": 25649,
+     "engine": 1,
+     "arg": 110,
+     "row76": "00643100642c100006e",
+     "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 0 leaves 00001"
+    },
+    {
+     "i": 120,
+     "issue": 25645,
+     "done": 25650,
+     "engine": 1,
+     "arg": 111,
+     "row76": "00643200642d100006f",
+     "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 1 leaves 00001"
+    },
+    {
+     "i": 121,
+     "issue": 25646,
+     "done": 25651,
+     "engine": 1,
+     "arg": 112,
+     "row76": "00643300642e1000070",
+     "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 2 leaves 00001"
+    },
+    {
+     "i": 122,
+     "issue": 25647,
+     "done": 25652,
+     "engine": 1,
+     "arg": 113,
+     "row76": "00643400642f1000071",
+     "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 3 leaves 00001"
+    },
+    {
+     "i": 123,
+     "issue": 25648,
+     "done": 25653,
+     "engine": 1,
+     "arg": 114,
+     "row76": "0064350064301000072",
+     "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 4 leaves 00001"
+    },
+    {
+     "i": 124,
+     "issue": 25649,
+     "done": 25654,
+     "engine": 1,
+     "arg": 115,
+     "row76": "0064360064311000073",
+     "what": "L20.ffn.bias: vs ffn.bias target-5 bias row 5 leaves 00001"
+    },
+    {
+     "i": 125,
+     "issue": 25650,
+     "done": 25655,
+     "engine": 1,
+     "arg": 116,
+     "row76": "0064370064321000074",
+     "what": "L20.ffn.bias: vs ffn.bias RB n=6 leaves 00001"
+    },
+    {
+     "i": 126,
+     "issue": 25639,
+     "done": 0,
+     "engine": 14,
+     "arg": 0,
+     "row76": "000000006427e000000",
+     "what": "KIT"
+    },
+    {
+     "i": 127,
+     "issue": 25659,
+     "done": 0,
+     "engine": 15,
+     "arg": 0,
+     "row76": "00000000643bf000000",
+     "what": "END"
+    }
+   ]
+  },
+  {
+   "job": 1,
+   "layer_issue0": 27842,
+   "nops": 8,
+   "end_age": 16355,
+   "host_words": 33,
+   "templates": [
+    102,
+    119,
+    120,
+    121,
+    122,
+    123
+   ],
+   "reload_edges": 165,
+   "rows": [
+    {
+     "i": 0,
+     "issue": 0,
+     "done": 5,
+     "engine": 1,
+     "arg": 1,
+     "row76": "0000050000001000001",
+     "what": "L20.ffn.swiglu: vs ffn.swiglu SWR n=16 leaves 00001"
+    },
+    {
+     "i": 1,
+     "issue": 1,
+     "done": 6,
+     "engine": 1,
+     "arg": 2,
+     "row76": "0000060000011000002",
+     "what": "L20.ffn.swiglu: vs ffn.swiglu SWR n=16 leaves 00010"
+    },
+    {
+     "i": 2,
+     "issue": 2,
+     "done": 7,
+     "engine": 1,
+     "arg": 3,
+     "row76": "0000070000021000003",
+     "what": "L20.ffn.swiglu: vs ffn.swiglu SWR n=16 leaves 00100"
+    },
+    {
+     "i": 3,
+     "issue": 3,
+     "done": 8,
+     "engine": 1,
+     "arg": 4,
+     "row76": "0000080000031000004",
+     "what": "L20.ffn.swiglu: vs ffn.swiglu SWR n=16 leaves 01000"
+    },
+    {
+     "i": 4,
+     "issue": 4,
+     "done": 9,
+     "engine": 1,
+     "arg": 5,
+     "row76": "0000090000041000005",
+     "what": "L20.ffn.swiglu: vs ffn.swiglu SWR n=16 leaves 10000"
+    },
+    {
+     "i": 5,
+     "issue": 16346,
+     "done": 16351,
+     "engine": 1,
+     "arg": 0,
+     "row76": "003fdf003fda1000000",
+     "what": "L20.attn.idx.topk_local: attn.idx.topk_local: bk_sel drain CTL n 76 d 1"
+    },
+    {
+     "i": 6,
+     "issue": 16335,
+     "done": 0,
+     "engine": 14,
+     "arg": 0,
+     "row76": "000000003fcfe000000",
+     "what": "KIT"
+    },
+    {
+     "i": 7,
+     "issue": 16355,
+     "done": 0,
+     "engine": 15,
+     "arg": 0,
+     "row76": "000000003fe3f000000",
+     "what": "END"
+    }
+   ]
+  }
+ ]
+}

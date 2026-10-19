@@ -66,7 +66,11 @@ def main(argv=None):
         nb_port = 'ro_w' if side == 'ri_e' else 'ro_e'
         L_in = lanes(nb, nb_port, sl)
         age_in = max(links[k]['age_edges'] for k in L_in)
-        t_inj = int(round(e['cycle'] - RSTOP_HOP - age_in)) + a.t0
+        # bench convention (dv_slice_tb, = the lane bench mk_io): a word driven on <lane>_src at bench cycle k is the
+        # neighbour register launched at edge k - 1, and lands at k - 1 + age.  The beat leaves the neighbour's line
+        # register at edge e - RSTOP_HOP - age_in, so it is driven one cycle later (S81-LBGAP 10-18 18:10: without the +1
+        # every replayed beat was launched one edge early; measured on cut_3S bind9_g1: 118 -> 2S land 138 = 127 + 2 + 9)
+        t_inj = int(round(e['cycle'] - RSTOP_HOP - age_in)) + 1 + a.t0
         ti = int(e['payload'].split()[1].rstrip(';'))
         beat = int(T[ti]['beat'], 16)
         hops = (nb_col if nb_port == 'ro_w' else 7 - nb_col)

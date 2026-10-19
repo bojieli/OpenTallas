@@ -1,0 +1,25 @@
+PV 259 tb_s81dv_frame.dut.u_f.u_e1.u_pvt 11 rows 16386 16387 seg 2 2 n 3
+PV 259 tb_s81dv_frame.dut.u_f.u_e0.u_pvt 11 rows 16388 16389 seg 2 2 n 3
+PV 270 tb_s81dv_frame.dut.u_f.u_e2.u_pvt 11 rows 16386 16387 seg 0 0 n 3
+PV 271 tb_s81dv_frame.dut.u_f.u_e10.u_pvt 11 rows 16384 16385 seg 2 2 n 3
+PV 272 tb_s81dv_frame.dut.u_f.u_e3.u_pvt 11 rows 16386 16387 seg 1 1 n 3
+PV 274 tb_s81dv_frame.dut.u_f.u_e5.u_pvt 11 rows 16388 16389 seg 0 0 n 3
+PV 276 tb_s81dv_frame.dut.u_f.u_e7.u_pvt 11 rows 16384 16385 seg 0 0 n 3
+PV 276 tb_s81dv_frame.dut.u_f.u_e6.u_pvt 11 rows 16388 16389 seg 1 1 n 3
+PV 278 tb_s81dv_frame.dut.u_f.u_e9.u_pvt 11 rows 16384 16385 seg 1 1 n 3
+RET 342 178ccdc8010008447
+RET 343 07d0ce7041000c447
+RET 345 17d70f9a010010447
+RET 346 07b4d44e010014447
+RET 355 07d56770410008047
+RET 356 17f3b85901000c047
+RET 358 17b5c7ba010000447
+RET 359 17f078e7210010047
+RET 360 17e11892010014047
+FAULT edge 360 status 11 lx 0
+RET 361 0790e1f4010000047
+FAULT edge 361 status 11 lx 0
+RET 362 07eaf283810004047
+FAULT edge 362 status 11 lx 0
+FAULT edge 363 status 11 lx 0
+END edges=1036 ret_words=11 xo_checked=1034 fault=4 spine_fault=0

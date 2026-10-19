@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.s81_dv.layer_prog_manifest.v1",
+ "layer": "L0",
+ "die_ref": "origin/main",
+ "die_ref_sha": null,
+ "die_v_sha256": "86ee2921ea1587bfcc31487995d0bbf2a616ae6a62a1c801b8dd899aa15595b5",
+ "land_plan_sha256": "047baea92df63f85bb2a5afa5a0042490badf76580e7a33abbce3070468a25e1",
+ "plan_sha256": "6c1d6d930c6b9d44850946e08862476f8cc9bd3c8dd0d24f3e216d375d75fd2f",
+ "compiler_sha256": "ab0a14aaf4bda04fb8bbbd03136e3cdb6d8de4fe2cf2ab51eed20669ca60b327",
+ "files": {
+  "lowering.json": "b7d01c4d65ef1f8736b01cdaee2c11665039593b619efae956d4efe2852f0342",
+  "prog/calendar.json": "e24d97121a5970a706687b549ce3627e01b01e412f3c2cc98a5b71968685aec4",
+  "prog/ctl_templates.json": "228788850c5411598051439610b3a77e43fad549b3a7db6aaedea1cab8a33a8c",
+  "prog/frame_cfg7/u_f_0L00.json": "56290ee29244b60524ed16766e167f2dd4f3276c0a289f515826a03d4898f1fe",
+  "prog/frame_cfg7/u_f_0L01.json": "c6583d93f3cf22b6881f6cd3e3fa14d233541b117dbe7b2a09dc345d08b6dade",
+  "prog/frame_cfg7/u_f_0L02.json": "8f93225632bb19bd40cb23bc8d5c7a0d9a20dc620007d2e1106354cfcf6f486f",
+  "prog/frame_cfg7/u_f_0L03.json": "e1fcb3ae0dab697810f38514cab5d698cd4ad0705ac10b0f799fbccd3f0471b0",
+  "prog/frame_cfg7/u_f_0R00.json": "9b5ba1e01c73b894bb4f84a7ebd508ea794ab9fcf46376a5f21b06b1ace576ac",
+  "prog/frame_cfg7/u_f_0R01.json": "d0874225b14b81921c2bab01c0b76826131490e4b5bc10cac4e08c438d472bb5",
+  "prog/frame_cfg7/u_f_0R02.json": "d138ae88466c5a578fd85160971f5172b03fbe4e459b34358ecba6b6c67d47d4",
+  "prog/frame_cfg7/u_f_0R03.json": "df43d70eed64647550721ff0ba5dbc79b062ba8761b82ee5e0467c3b52ab3203",
+  "prog/gu/attn.hc.plan.json": "3b0500b729008f62f5bb181c5bbd5b2fe721bc3b589e62a9826277957860d1c8",
+  "prog/gu/ffn.hc.plan.json": "18eb88c46f818250235ff8ddf33b7517908212ee60027393b136641b06fc9004",
+  "prog/gu/ffn.router.plan.json": "5b62bc1c05d51a399e3c0e4323fbb090ec373d8cc1b26ac99e33ab7cd4f95739",
+  "prog/gunit_rows.json": "15e931d3815529029f200325ee4db3778dc7942ba23083fa64530033a5c44f09",
+  "prog/host_boot.memh": "3e735be7bc23bd237577bc3be97fe65bf48f33429b0d616d18d04f5ffff13a46",
+  "prog/svc/L0/hbm_window.hex": "b8ae32ea4272eea9a1b453ebec99a09777d01e5750225501433b631470459f35",
+  "prog/svc/L0/qwd.hex": "8d79bd104a92e437d545bf5d62280da548d5fd9fb29b927c07e84a51106b75bc",
+  "prog/svc_jobs.json": "b4a0e6ed45c6d16e52020f5de38cc1efb7860ac4da46c846906bad70d3bfe4ba",
+  "prog/xs/L0.attn.a_proj.json": "6042915d4eb13cee12487c751a5a1b63b97bd382c575c981ae814e85abe47050",
+  "schedule.json": "8e9d89ef5f33aab3717eacc86ae6710069a8485a019d7262bb701c96091027ea"
+ }
+}
