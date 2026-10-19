@@ -4,7 +4,7 @@ import argparse,json,random,math,collections,time,hashlib
 from pathlib import Path
 from qc_safe_graph import extract,ROOT
 p=argparse.ArgumentParser();p.add_argument('witness');p.add_argument('--plan',required=True);p.add_argument('--out',required=True);p.add_argument('--seed',type=int,default=1);p.add_argument('--stale',type=int,default=100000);a=p.parse_args()
-raw=Path(a.witness).read_bytes();d=json.loads(raw);plan=json.loads(Path(a.plan).read_text());g=extract();c=g['contract'];assert abs(d['outline_um']['w']-3153.6)<1e-6
+raw=Path(a.witness).read_bytes();d=json.loads(raw);assert not d.get('unknown_endpoint_rectangle_relaxation'),'center-based swap cost cannot consume relaxed endpoint witnesses';plan=json.loads(Path(a.plan).read_text());g=extract();c=g['contract'];assert abs(d['outline_um']['w']-3153.6)<1e-6
 cols=[172.8+i*777.6 for i in range(4)];knots=sorted([(0,0),(c['outline_um']['w'],3153.6)]+[(x+t,y+t)for x,y in zip(sorted(set(v['at'][0]for v in c['tiles'])),cols)for t in [0,457.92]])
 def mx(x):
  for(oa,na),(ob,nb)in zip(knots,knots[1:]):
