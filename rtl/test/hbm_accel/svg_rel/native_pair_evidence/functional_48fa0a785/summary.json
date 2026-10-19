@@ -1,0 +1,255 @@
+{
+  "max_nonclock_load": 26,
+  "source_sha256": {
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram285.sv": "a5184e6126930a80e4a451821b20d6f788e8c161ca16ae4cd45df052b9591f26",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_sram285.sv": "f137c3572b667597680eb3ce58a01cbcc2c4815f6c28e0fa8d4e1ac357a95241",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_boundary.sv": "c15693365963d3133f6e64645a397a5a411445022072bcddc9dd1ba44c474165",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_regional.sv": "9a03551c35a4dfc4ca455a2150e0c5e26807a986940babb740f10113be7d003d",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_landing_pair_native.sv": "1e90d7cf97e5ae31153f138ae11a9c30dbe400e70de8ef9e46ad54a2b64c58df",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_bb.v": "ffe1be696bc082dd4b0d9492fc37b08ab4dcb131a8a12063cc183a78ceb04947",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v": "35e0905c083a17f1c222512a3093a059cec5b128f5f017fda999653084c9e75f",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_sram285_safe.sv": "cf3a9be3bddd0c6d8a1c3763d02e06b32f0f280afa1735edda7fc225afc532c1",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_boundary_safe.sv": "08ade3c67997e2086d8963f2ea7e73bfd8e2b00923dd86b40791918fe3151bc5",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_safe.sv": "8bf4bf7db2d680c4932ef5bf194e2904f0a3fc761804426922f011ba233c9a8e"
+  },
+  "mapped_json_sha256": "bec75c9037045a948dc15886aa86202d3a194072941655c6e2d47e3fa30bead7",
+  "physical_claim": false,
+  "std_area_um2": 3502.3055400000003,
+  "macro_counts": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 2,
+    "ot_sram_1r1w2c_8x285_m1": 2
+  },
+  "unmapped_or_unknown": {},
+  "FF_cells_total": 7695,
+  "FF_cell_types": {
+    "DFFHQNx1_ASAP7_75t_R": 6845,
+    "DFFASRHQNx1_ASAP7_75t_R": 850
+  },
+  "FF_hierarchy_groups": {
+    "other_native_control": 2588,
+    "ingress_slices": 2712,
+    "pair_slices": 816,
+    "return_slices": 1579
+  },
+  "output_boundary": {
+    "in_ready": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "overflow": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "complete_v": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "complete_bank": {
+      "FF_Q_through_polarity_buffer": 4
+    },
+    "bank_fault": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "out_data": {
+      "FF_Q_through_polarity_buffer": 256
+    },
+    "out_ordinal": {
+      "FF_Q_through_polarity_buffer": 3
+    },
+    "out_valid": {
+      "FF_Q_through_polarity_buffer": 1
+    },
+    "phase_fault": {
+      "FF_Q_through_polarity_buffer": 1
+    }
+  },
+  "input_boundary": {
+    "in_v": {
+      "bits": 2,
+      "direct_seq_D_loads": 0,
+      "comb_or_macro_loads": 20,
+      "pin_fanout_max": 10
+    },
+    "in_data": {
+      "bits": 570,
+      "direct_seq_D_loads": 570,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "reserve_v": {
+      "bits": 1,
+      "direct_seq_D_loads": 2,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "reserve_bank": {
+      "bits": 2,
+      "direct_seq_D_loads": 4,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "reserve_epoch": {
+      "bits": 16,
+      "direct_seq_D_loads": 32,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "reserve_total": {
+      "bits": 12,
+      "direct_seq_D_loads": 18,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "stop": {
+      "bits": 1,
+      "direct_seq_D_loads": 2,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "read_v": {
+      "bits": 2,
+      "direct_seq_D_loads": 2,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "read_bank": {
+      "bits": 4,
+      "direct_seq_D_loads": 4,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "read_row": {
+      "bits": 12,
+      "direct_seq_D_loads": 12,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "ordinal": {
+      "bits": 3,
+      "direct_seq_D_loads": 0,
+      "comb_or_macro_loads": 12,
+      "pin_fanout_max": 4
+    },
+    "group_valid": {
+      "bits": 1,
+      "direct_seq_D_loads": 0,
+      "comb_or_macro_loads": 4,
+      "pin_fanout_max": 4
+    }
+  },
+  "over32_counts": {
+    "clock": 3
+  },
+  "kept_instance_paths_remaining": [],
+  "qualification": "functional and recursive all-driver fanout PASS; canonicaltool/resetgraph acceptance, physical timing/depth/reach/clock/reset-slew/macro access and whole integration OPEN; no gate",
+  "source_commit": "48fa0a785",
+  "pre_RTL_model": "bf543d3fb",
+  "recursive_driver_max": {
+    "FF_Q": 28,
+    "port": 11,
+    "clock": 4522,
+    "SRAM_Q": 21,
+    "reset": 24,
+    "combinational": 25
+  },
+  "recursive_max_nonclock": 28,
+  "recursive_over32_nonclock": [],
+  "baseline_recursive_driver_max": {
+    "port": 11,
+    "clock": 3411,
+    "reset": 19,
+    "FF_Q": 91,
+    "SRAM_Q": 329,
+    "combinational": 26
+  },
+  "baseline_unique_over32": {
+    "clock": 3,
+    "SRAM_Q": 16,
+    "FF_Q": 38
+  },
+  "native_reset_profiles": {
+    "pair_hbm_rst_n": {
+      "raw_async_ff_count": 4,
+      "max_first_async_ff_count": 19,
+      "max_second_async_ff_count": 6,
+      "first_and_second_clocks_match_root": true,
+      "first_and_second_D_constant_one": true,
+      "strict_native_profile_pass": true
+    },
+    "pair_rst_n": {
+      "raw_async_ff_count": 2,
+      "max_first_async_ff_count": 24,
+      "max_second_async_ff_count": 13,
+      "first_and_second_clocks_match_root": true,
+      "first_and_second_D_constant_one": true,
+      "strict_native_profile_pass": true
+    },
+    "return_rst_n": {
+      "raw_async_ff_count": 2,
+      "max_first_async_ff_count": 23,
+      "max_second_async_ff_count": 9,
+      "first_and_second_clocks_match_root": true,
+      "first_and_second_D_constant_one": true,
+      "strict_native_profile_pass": true
+    }
+  },
+  "bench": {
+    "all_J_pass": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "payload_groups": 3264,
+    "masked_groups": 24,
+    "packets": 829,
+    "completions_per_bank": 12,
+    "II1windows": 12,
+    "independent_valid": 1032,
+    "latency_edges": [
+      8,
+      8
+    ],
+    "first_valid": 10,
+    "oldmaster_miter": [
+      0,
+      0
+    ],
+    "reset_graph_errors": [
+      0,
+      0,
+      0
+    ],
+    "branches": [
+      74,
+      47,
+      45
+    ],
+    "mutant_errors": {
+      "select": 3263,
+      "metadata_early": 4276,
+      "ring_epoch": 6653,
+      "metadata_late": 4264
+    }
+  },
+  "latency_receipt": {
+    "HBM_extra": 2,
+    "reserve_stream_extra": 2,
+    "completion_consumer_extra": 2,
+    "read_stream_extra": 3,
+    "component_request_return": 8,
+    "component_request_final_cache": 11,
+    "regional_return": 7,
+    "conservative_native_prefetch": 11,
+    "conservative_whole_prefetch": 18,
+    "price": "ceilHBM4+reserve2+complete2+read3+regional7=18; shared compiler priceonce",
+    "superseded": "native9/whole16 withdrawn; path grows1 but independent event costs require conservative price"
+  },
+  "placement_band": {
+    "width_um": 380.16,
+    "y_um": [
+      99.9,
+      116.1
+    ],
+    "height_um": 16.2,
+    "density": 0.5686860795454546
+  }
+}

@@ -1,96 +1,30 @@
 {
-  "status": "FUNCTIONAL AND MAPPED FANOUT PASS at8792c55c3; physical qualification OPEN",
-  "baseline": {
-    "std_area_um2": 2977.87752,
-    "ff": 6058,
-    "macro_inventory": {
-      "landing256x256": 2,
-      "fifo8x285": 2
-    },
-    "critical_fanout": "FAIL"
+  "status": "PASS only under corrected recursive BUF/INV functional load rule; old direct-only qualification withdrawn",
+  "model_before_RTL": "bf543d3fb",
+  "source": "48fa0a785",
+  "recursive_max_nonclock": 28,
+  "all_driver_class_max": {
+    "SRAM_Q": 21,
+    "FF_Q": 28,
+    "combinational": 25,
+    "port": 11,
+    "reset": 24
   },
-  "latency_change_edges": 0,
-  "ingress": {
-    "slots": 3,
-    "bits_per_bank": 1140,
-    "slice_bits": 8,
-    "group_bits": 32,
-    "groups_per_bank": 9,
-    "local_predicates": "push and pop recomputed per preserved group",
-    "reset": "raw-root two-stage branch per slice; unconditional data capture; reset pointers/valid only"
+  "real_field_copies_per_bank": 20,
+  "bits_per_copy": 11,
+  "processing_packet_bits": 285,
+  "latency_edges": 8,
+  "first_valid": 10,
+  "native_prefetch": 11,
+  "whole_prefetch": 18,
+  "price_rule": "conservative ceilHBM4+reserve2+complete2+read3+regional7=18; sharedpriceonce; old9/16superseded",
+  "std_area_um2": 3502.30554,
+  "FF_total": 7695,
+  "historical_direct_only": {
+    "max_nonclock": 27,
+    "source": "327ef3481",
+    "recursive_audit": "FAIL SRAM329,FF91,returnpointer34; noqualification"
   },
-  "core": {
-    "ownership": "only valid/sticky reset; reserve initializes epoch/count/received/seen before valid allows identity",
-    "metadata_groups": 4,
-    "seen_groups": 16,
-    "seen_bits_per_group": 16,
-    "local_field_encoding": "preserved inverse copies bound packet LB/row and reserve LB loads",
-    "checks": [
-      "ownership",
-      "epoch",
-      "ordinal bank",
-      "count",
-      "duplicate"
-    ],
-    "same_edge_reserve_packet": "original nonblocking precedence preserved"
-  },
-  "return": {
-    "slice_bits": 8,
-    "slots": 4,
-    "reset": "raw-root two-stage local pointer branches",
-    "latency_edges": 7
-  },
-  "proof_required": [
-    "all J actual-SRAM original-master miter",
-    "invalid ownership/epoch/count/ordinal/duplicate cases",
-    "three discriminating mutants",
-    "post-ABC flattened no-merge real load census",
-    "registered output polarity tracing",
-    "final measured area band"
-  ],
-  "physical": {
-    "outline_um": [
-      380.16,
-      198.72
-    ],
-    "row_gap_um": 43.176,
-    "baseline_band_um": 16.2,
-    "baseline_band_density": 0.4835,
-    "qualification": "Mapped fanout PASS only; ordinary TT/FF timing, roots, reach and native pin access OPEN"
-  },
-  "measured": {
-    "source_commit": "8792c55c3",
-    "std_area_um2": 3177.81306,
-    "FF_cells": 6687,
-    "resettable_FF_cells": 914,
-    "unreset_FF_cells": 5773,
-    "unknown_cells": 0,
-    "over32_nonclock_nets": 0,
-    "registered_output_bits": 273,
-    "band_height_um": 16.2,
-    "band_y_um": [
-      99.9,
-      116.1
-    ],
-    "local_density": 0.5159966856060606,
-    "latency_edges": 7,
-    "all_J_pass": true,
-    "old_master_miter_errors": [
-      0,
-      0
-    ],
-    "mutant_errors": [
-      3263,
-      4276,
-      6653
-    ],
-    "guard_cases": [
-      "duplicate correct epoch",
-      "unowned",
-      "wrong epoch",
-      "out of count",
-      "wrong ordinal"
-    ]
-  },
-  "reset_followup": "Prior raw-root graph failed collapsed native audit despite ordinary fanout PASS. Superseded by svg_pair_reset_model.json: strict-reset RTL327ef3481, bench e8ee1565f, HBM4/19/6 pair2/19/12 return2/18/9; full FIFO internal qualification separately disclosed. Latest area3107.20212um2/6551FF/maxnonclock27."
+  "proof": "allJ3264groups,829packets,12II1windows,oldmiter0/0,fourmutantsFAIL",
+  "physical": "OPEN timing/depth/reach/clock/reset-slew/native pin access; no gate"
 }

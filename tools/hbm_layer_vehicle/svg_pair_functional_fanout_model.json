@@ -1,5 +1,5 @@
 {
-  "status": "PROPOSED BEFORE RTL; sourcefanout qualification withdrawn",
+  "status": "FUNCTIONAL all-J/miter AND RECURSIVE FUNCTIONAL LOAD PASS at48fa0a785; physical qualification OPEN",
   "baseline_source": "327ef3481",
   "baseline_rule": "455fc9ff4 recursive BUF/INV unique terminal(cell,type,inputpin), sequential-only clock C exemption",
   "baseline_max": {
@@ -98,5 +98,48 @@
     "strict native reset shape plus internalFIFO graph",
     "updated measured area/band and parentprefetch16 integration",
     "early metadata MUT2 (rp2) and late metadata MUT4 (rp0), default4edge rp1, causal mismatch witnesses"
-  ]
+  ],
+  "current_measured": {
+    "max_collapsed_nonclock": 28,
+    "driver_maxima": {
+      "SRAM_Q": 21,
+      "FF_Q": 28,
+      "combinational": 25,
+      "port": 11,
+      "reset": 24
+    },
+    "std_area_um2": 3502.30554,
+    "FF_total": 7695,
+    "unreset_FF": 6845,
+    "resettable_FF": 850,
+    "band_density": 0.5686860795454545,
+    "native_reset_profiles": {
+      "HBM": [
+        4,
+        19,
+        6
+      ],
+      "pair": [
+        2,
+        24,
+        13
+      ],
+      "return": [
+        2,
+        23,
+        9
+      ]
+    },
+    "latency_edges": [
+      8,
+      8
+    ],
+    "first_valid": 10,
+    "mutant_errors": {
+      "select": 3263,
+      "metadata_early": 4276,
+      "ring_epoch": 6653,
+      "metadata_late": 4264
+    }
+  }
 }

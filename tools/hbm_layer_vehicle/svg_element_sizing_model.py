@@ -31,7 +31,7 @@ def macro(name):
             status='PROPOSAL ONLY: regenerate real pin/periphery routing and macro abstracts/timing; preserve canonical views'))
 
 
-def model(pair_stdcell_area_um2=3107.202120,rotator_stdcell_area_um2=None):
+def model(pair_stdcell_area_um2=3502.305540,rotator_stdcell_area_um2=None):
     m={k:macro(v) for k,v in MACROS.items()}
     pair_area=2*(m['landing']['area_um2']+m['fifo']['area_um2'])
     inventory=dict(landing=8,fifo=8,cache=5,program=2,descriptor=2)
@@ -48,7 +48,7 @@ def model(pair_stdcell_area_um2=3107.202120,rotator_stdcell_area_um2=None):
         outline_proposal_um=[width,height],aspect=width/height,macro_only_fill=pair_area/(width*height),
         macro_placements=placements,all_macro_origins_on_43p2_lattice=True,
         full_width_cell_band_y_um=band,band_area_um2=band_area,macro_row_gap_y_um=gap,
-        measured_source_commit="327ef3481",
+        measured_source_commit="48fa0a785",
         measured_local_cell_band_density=pair_stdcell_area_um2/band_area if pair_stdcell_area_um2 is not None else None,
         placement_util_target=[.4,.6],measured_stdcell_area_um2=pair_stdcell_area_um2,
         outline_status='reduced source-legal GEOMETRY CANDIDATE, not smallest SAFE until measured cell area and native access/reach audits',
@@ -56,7 +56,7 @@ def model(pair_stdcell_area_um2=3107.202120,rotator_stdcell_area_um2=None):
         band_diagonal_um=(width**2+(band[1]-band[0])**2)**.5,
         stdcell_area_range_for_full_band_40_60pct_um2=[.4*band_area,.6*band_area],
         stdcell_band_height_at_50pct_um=None if pair_stdcell_area_um2 is None else pair_stdcell_area_um2/(.5*width),
-        stdcell_band_rule='60 rows of0.27um fullwidth at50.45% measured density; remaining26.976um of macro gap reserved for real routing/clock/PG access; placement/reach OPEN',
+        stdcell_band_rule='60 rows of0.27um fullwidth at56.87% measured density; remaining26.976um of macro gap reserved for real routing/clock/PG access; placement/reach OPEN',
         access_channels_um=dict(left=43.2,between_macro_columns=259.2-(43.2+m['landing']['width_um']),
           right=width-(259.2+m['fifo']['width_um']),top=height-(129.6+m['fifo']['height_um']),central_read_face_channel=gap[1]-gap[0]),
         proposed_fullface_orientation='bottom row R0 North-read faces band; upper row MX South-read faces band; write/mask face outward; canonical WE faces retain generous side channels',
@@ -93,7 +93,7 @@ def model(pair_stdcell_area_um2=3107.202120,rotator_stdcell_area_um2=None):
         macro_origins_um=[[43.2,43.2],[172.8,43.2],[302.4,43.2],[43.2,172.8],[302.4,172.8]],
         full_width_cell_band_y_um=[84.264,172.8],orientation_bottom='R0',orientation_top='MX',
         utilization='OPEN: derive placement band from synthesis after assembler storage redesign',
-        OPEN_STORAGE_BLOCKER=dict(source='rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv',
+        legacy_source_storage_audit=dict(applicability="legacy packed136 only; opt-in native cache assembly qualified separately by cache owner; not a native-pair blocker",source='rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv',
           object='words[0:15][255:0]',runtime_bits=4096,writes_per_edge_max=4,gather_reads_per_edge=5,
           head_advance=[4,4,4,5],input_pulses=[4,4,4,4,1],
           requirement='must become actual SRAM/banked prefetch storage, or a <=2kb ring only AFTER live-window proof + full burst bench; no speculative reduction'))
@@ -103,11 +103,11 @@ def model(pair_stdcell_area_um2=3107.202120,rotator_stdcell_area_um2=None):
           descriptor=dict(count=2,macro=m['cache']['name'],area_um2=2*m['cache']['area_um2'],source='ot_hbm_svc_sm_issuer_rel DD=256'),
           program=dict(count=2,macro=m['program']['name'],area_um2=2*m['program']['area_um2'],source='ot_smh_calendar_static_x AW=11')),
         whole_SM_current_inventory=inventory,current_macro_count=25,current_macro_area_um2=total,
-        macro_inventory_warning='25 describes CURRENT source; resolving4096bit assembler may add macros. Not production-qualified.',
+        macro_inventory_warning='25 describes source-bound parent composition; opt-in cache owner owns its native assembly audit. Native pair inventory remains four macros. Not production-qualified.',
         canonical_pin_access_audit='OPEN: actual canonical LEFs are~10pins/um on WE M4 faces; 6/um applicability to macro versus external faces awaits owner interpretation. No cosmetic LEF edit or SAFE claim.',
         fullface_proposal='real compiler variant: all rd_out North, wd_in+w_mask_in South, controls/repair West; all counted faces<=6/um for these four macros except verify generated periphery timing',
         regional_clock_trees=dict(stream=9,HBM=4,total=13,source_domains='four pair HBM, four pair stream, four local forwarded cache-phase, one cache core',scope='landing/return minimum only; payload/program/issuer physical roots remain OPEN'),
-        timing='return pipeline remains7edges; compiler prefetch15=8native landing+7return. Actual root/source mapping and ordinary nearest-edge timing OPEN before gate',
+        timing='regional return remains7edges; native pair request-to-return8edges and conservative compiler prefetch18=11native landing+7regional return; earlier9/16 superseded. Actual root/source mapping and ordinary nearest-edge timing OPEN before gate',
         qualification='MODEL/OUTLINE PROPOSAL ONLY; source macro inventory measured, pair mapped area/fanout measured; face placement/reach/clock and other elements synthesis evidence missing; NO gate/submit')
 
 
