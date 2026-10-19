@@ -51,4 +51,4 @@ Every PASS line reports 0 for each of: unbound, stub, port_not_in_rtl, width_mis
   - A bad RX tag raises a fault.
   - RTL mutants 3 and 4 FAIL, as required.
 - `host_regr`: MU_HOST_GATE PASS. The NEV 0 slot table is unchanged, and the user-0 trace matches single-user.
-- Lep LEP_MU_GATE (base, mutants, regression) is on the fleet; see `pending_results`.
+- `lep`: LEP_MU_GATE PASS on ot-epyc5 at 36ebf5d02 (MU seeds 1 and 5; TAGDROP, WRONGCOPY and OVR FAIL; single-user regressions lep s1/s7, nh, host PASS; SWAP FAIL).
