@@ -35,7 +35,10 @@ if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
     python3 "$R/tools/qwen_kv_die/kv_pvw_residual_roles.py" --die "$O/die_bound.v" --root "$R" \
       --existing "$O/output_pads.zt.json" --out "$O/output_pads.pvwres.json" > "$O/output_pads.pvwres.log" 2>&1 \
       || { tail -3 "$O/output_pads.pvwres.log"; exit 3; }
-    PADS="$O/output_pads.pvwres.json"
+    python3 "$R/tools/qwen_kv_die/kv_open_tail_roles.py" "$O/die_bound.v" --root "$R" \
+      --existing "$O/output_pads.pvwres.json" --out "$O/output_pads.open.json" > "$O/output_pads.open.log" 2>&1 \
+      || { tail -3 "$O/output_pads.open.log"; exit 3; }
+    PADS="$O/output_pads.open.json"
   fi
 fi
 F+=(--pad-file "$PADS")
