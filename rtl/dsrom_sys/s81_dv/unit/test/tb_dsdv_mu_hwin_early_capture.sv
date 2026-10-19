@@ -80,14 +80,14 @@ ROUNDS=4, T0=1000+32*NS;
     integer miter_edges=0,mi;
     always @(negedge ck) begin
 `ifdef FOUR_STATE_GUARDS
-       if(rst_n && $isunknown({mu_c,mu_rc,wf,anchor_c,anchor_rc,anchor_wf})) begin
+       if(rst_n && ($isunknown(mu_c) || $isunknown(mu_rc) || $isunknown(wf) || $isunknown(anchor_c) || $isunknown(anchor_rc) || $isunknown(anchor_wf))) begin
           $display("EARLY_X_TELEMETRY c%0d rst%0b dutrn%0b anchorrn%0b dutrr%h anchorrr%h",cyc,rst_n,dut.rn,anchor.rn,dut.rr,anchor.rr);
           $display("EARLY_X_TELEMETRY candidate c=%h rc=%h wf=%b unknown=%b%b%b xor=%b%b%b",mu_c,mu_rc,wf,$isunknown(mu_c),$isunknown(mu_rc),$isunknown(wf),^mu_c,^mu_rc,^wf);
           $display("EARLY_X_TELEMETRY anchor c=%h rc=%h wf=%b unknown=%b%b%b xor=%b%b%b",anchor_c,anchor_rc,anchor_wf,$isunknown(anchor_c),$isunknown(anchor_rc),$isunknown(anchor_wf),^anchor_c,^anchor_rc,^anchor_wf);
           $display("EARLY_X_TELEMETRY count candidate valid=%h evld=%h rec=%b recq=%b armed=%b anchor valid=%h evld=%h rec=%b recq=%b armed=%b",dut.vld,dut.evld,dut.rec,dut.rec_q,dut.armed,anchor.vld,anchor.evld,anchor.rec,anchor.rec_q,anchor.armed);
           $fatal(1,"EARLY_X observable output/fault after external reset release c%0d",cyc);
        end
-       if(rst_n && dut.rn && $isunknown({dut.vld,dut.evld,dut.ok,dut.fire,dut.adv,dut.due,dut.radv,dut.armed}))
+       if(rst_n && dut.rn && ($isunknown(dut.vld) || $isunknown(dut.evld) || $isunknown(dut.ok) || $isunknown(dut.fire) || $isunknown(dut.adv) || $isunknown(dut.due) || $isunknown(dut.radv) || $isunknown(dut.armed)))
           $fatal(1,"EARLY_X source-qualified control c%0d",cyc);
 `endif
        if({mu_c,mu_rc,wf} !== {anchor_c,anchor_rc,anchor_wf})
@@ -98,7 +98,7 @@ ROUNDS=4, T0=1000+32*NS;
              $fatal(1,"EARLY_MITER CONTROL c%0d",cyc);
           for(mi=0;mi<NEV;mi=mi+1) begin
 `ifdef FOUR_STATE_GUARDS
-             if(anchor.ok[mi] && anchor.h_fr[mi] && $isunknown({dut.h_ts[mi],dut.h_ep[mi],dut.h_eu[mi],dut.h_at[mi]}))
+             if(anchor.ok[mi] && anchor.h_fr[mi] && ($isunknown(dut.h_ts[mi]) || $isunknown(dut.h_ep[mi]) || $isunknown(dut.h_eu[mi]) || $isunknown(dut.h_at[mi])))
                 $fatal(1,"EARLY_X qualified head c%0d e%0d",cyc,mi);
              if(anchor.rok && anchor.h_rfr && $isunknown(dut.h_rts))
                 $fatal(1,"EARLY_X qualified retirement c%0d",cyc);
@@ -181,6 +181,24 @@ ROUNDS=4, T0=1000+32*NS;
        force anchor.g_event_broadcast[0].g_boot_local.count_r = (SI+1)'(1);
     end
 `endif
+`endif
+`ifdef FOUR_STATE_INJECT_PAYLOAD
+    initial begin
+       wait(dut.ok[0] && dut.h_fr[0]);
+       @(posedge ck);#0.49;
+       while(!(dut.ok[0] && dut.h_fr[0] && !dut.adv[0])) begin @(posedge ck);#0.49;end
+       $display("EARLY_X_CAUSAL payload force c%0d valid%b fresh%b",cyc,dut.ok[0],dut.h_fr[0]);
+       force dut.g_event_mem[0].g_early.u_payload.g_select[0].capture = 8'hxx;
+    end
+`endif
+`ifdef FOUR_STATE_INJECT_CONTROL
+    initial begin
+       wait(dut.ok[0] && dut.h_fr[0]);
+       @(posedge ck);#0.49;
+       while(!(dut.ok[0] && dut.h_fr[0] && !dut.adv[0])) begin @(posedge ck);#0.49;end
+       $display("EARLY_X_CAUSAL control force c%0d valid%b fresh%b",cyc,dut.ok[0],dut.h_fr[0]);
+       force dut.fire[0] = 1'bx;
+    end
 `endif
     // slot attributes: land = slot[0], ab = slot[1]
     function automatic [1:0] att(input integer sl); att = {sl[0] ? 1'b1 : 1'b0, sl[1] ? 1'b1 : 1'b0}; endfunction

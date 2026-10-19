@@ -98,6 +98,34 @@ PYPROJECT
    *) projected_files+=("$file");;
   esac
  done
+ cat > "$O/four_state/primitive_probe.sv" <<'SVPROBE'
+module primitive_probe;
+ reg [135:0] a=0,d=0;reg[43:0] b=0,e=0;reg[1:0] c=0,f=0;integer i,j,n=0;
+ task check(input bit want);
+ begin
+  #1;
+  if(($isunknown(a)||$isunknown(b)||$isunknown(c)||$isunknown(d)||$isunknown(e)||$isunknown(f))!==want)
+   $fatal(1,"PRIMITIVE_PROBE incorrectpervector unknown result");
+  n=n+1;
+ end endtask
+ initial begin
+  check(0);
+  $display("PRIMITIVE_PROBE knownconcat%b pervector%b%b%b%b%b%b",$isunknown({a,b,c,d,e,f}),$isunknown(a),$isunknown(b),$isunknown(c),$isunknown(d),$isunknown(e),$isunknown(f));
+  for(j=0;j<2;j=j+1)for(i=0;i<6;i=i+1)begin
+   a=0;b=0;c=0;d=0;e=0;f=0;
+   case(i)
+    0:a[0]=j?1'bz:1'bx;1:b[0]=j?1'bz:1'bx;2:c[0]=j?1'bz:1'bx;
+    3:d[0]=j?1'bz:1'bx;4:e[0]=j?1'bz:1'bx;5:f[0]=j?1'bz:1'bx;
+   endcase
+   check(1);
+  end
+  $display("PRIMITIVE_PROBE PASS cases%0d",n);$finish;
+ end
+endmodule
+SVPROBE
+ iverilog -g2012 -s primitive_probe -o "$O/four_state/primitive_probe.vvp" "$O/four_state/primitive_probe.sv" > "$O/four_state/primitive_probe_build.log" 2>&1
+ vvp "$O/four_state/primitive_probe.vvp" > "$O/four_state/primitive_probe.log" 2>&1
+ grep -q 'PRIMITIVE_PROBE PASS cases13' "$O/four_state/primitive_probe.log"
  iverilog -g2012 -s tb_dsdv_mu_hwin_early_capture -DOT_MEM_NO_INIT -DFOUR_STATE_GUARDS \
   -DNSLOT_TEST=2 -DNEV=1 -DMIN_D -DOCCUPIED_RESET_STRESS -o "$O/four_state/tb.vvp" "${projected_files[@]}" \
   > "$O/four_state/build.log" 2>&1
@@ -105,6 +133,14 @@ PYPROJECT
   log="$O/four_state/run_phase${phase}.log"
   vvp "$O/four_state/tb.vvp" +reset_phase=$phase > "$log" 2>&1
   grep -q '^MUWIN PASS' "$log"
+ done
+ for mutant in PAYLOAD CONTROL; do
+  iverilog -g2012 -s tb_dsdv_mu_hwin_early_capture -DOT_MEM_NO_INIT -DFOUR_STATE_GUARDS \
+   -DNSLOT_TEST=2 -DNEV=1 -DMIN_D -DFOUR_STATE_INJECT_$mutant -o "$O/four_state/mutant_$mutant.vvp" "${projected_files[@]}" \
+   > "$O/four_state/build_mutant_$mutant.log" 2>&1
+  rc=0;vvp "$O/four_state/mutant_$mutant.vvp" > "$O/four_state/run_mutant_$mutant.log" 2>&1 || rc=$?
+  [[ $rc -ne 0 ]]; grep -q "EARLY_X_CAUSAL" "$O/four_state/run_mutant_$mutant.log"
+  grep -q "EARLY_X" "$O/four_state/run_mutant_$mutant.log"
  done
  ;;
 *) echo 'unknown phase' >&2; exit 64;;
