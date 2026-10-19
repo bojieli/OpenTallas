@@ -1,0 +1,10 @@
+read_liberty -lib /data/guard_actual_TT.lib
+read_verilog -sv -DSYNTHESIS /data/qw_por_root_guard_proposal.sv
+hierarchy -top qw_por_root_guard_proposal
+synth -top qw_por_root_guard_proposal -noabc
+dfflibmap -liberty /data/guard_actual_TT.lib
+abc -liberty /data/guard_actual_TT.lib
+clean
+stat -liberty /data/guard_actual_TT.lib
+write_json /data/guard_mapped31.json
+write_verilog -noattr /data/guard_mapped31.v

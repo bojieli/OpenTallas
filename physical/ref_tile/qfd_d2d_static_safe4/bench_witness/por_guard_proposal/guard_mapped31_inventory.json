@@ -1,0 +1,60 @@
+{
+  "adoption": false,
+  "FLUSH31_is_diagnostic_not_production_choice": true,
+  "mapped_inventory": {
+    "INVx1_ASAP7_75t_R": {
+      "count": 2,
+      "LEF_area_each_um2": 0.04374
+    },
+    "OR3x1_ASAP7_75t_R": {
+      "count": 1,
+      "LEF_area_each_um2": 0.08748
+    },
+    "OAI31xp33_ASAP7_75t_R": {
+      "count": 1,
+      "LEF_area_each_um2": 0.08748
+    },
+    "NOR3xp33_ASAP7_75t_R": {
+      "count": 1,
+      "LEF_area_each_um2": 0.0729
+    },
+    "NOR4xp25_ASAP7_75t_R": {
+      "count": 1,
+      "LEF_area_each_um2": 0.08748
+    },
+    "NOR5xp2_ASAP7_75t_R": {
+      "count": 1,
+      "LEF_area_each_um2": 0.10206000000000001
+    },
+    "XNOR2xp5_ASAP7_75t_R": {
+      "count": 4,
+      "LEF_area_each_um2": 0.13122
+    },
+    "OA21x2_ASAP7_75t_R": {
+      "count": 1,
+      "LEF_area_each_um2": 0.10206000000000001
+    },
+    "NOR2xp33_ASAP7_75t_R": {
+      "count": 1,
+      "LEF_area_each_um2": 0.058320000000000004
+    },
+    "AND2x2_ASAP7_75t_R": {
+      "count": 1,
+      "LEF_area_each_um2": 0.08748
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "count": 6,
+      "LEF_area_each_um2": 0.37908000000000003
+    }
+  },
+  "actual_LEF_area_um2": 3.5721,
+  "sequential_FF_count": 6,
+  "comb_count": 14,
+  "native_clock_loads": 6,
+  "POR_loads": 7,
+  "max_actual_driver_terminal_load": 7,
+  "drivers_over16": {},
+  "source_LEF_sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+  "scope": "Mapped source proposal only; no placement/RC/nativephase/route/producerobserver joins. Actual-driver count excludes constants.",
+  "all_six_FFs_same_root_clock_POR_async_clear_preset_inactive": true
+}

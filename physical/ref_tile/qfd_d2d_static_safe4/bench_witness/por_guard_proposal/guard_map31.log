@@ -1,0 +1,591 @@
+GUARD_LIBRARY actual_nonfake_cells 202
+
+-- Executing script file `/data/map_guard.ys' --
+
+1. Executing Liberty frontend: /data/guard_actual_TT.lib
+Imported 202 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /data/qw_por_root_guard_proposal.sv
+Parsing SystemVerilog input from `/data/qw_por_root_guard_proposal.sv' to AST representation.
+Generating RTLIL representation for module `\qw_por_root_guard_proposal'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \qw_por_root_guard_proposal
+
+3.2. Analyzing design hierarchy..
+Top module:  \qw_por_root_guard_proposal
+Removed 0 unused modules.
+
+4. Executing SYNTH pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \qw_por_root_guard_proposal
+
+4.1.2. Analyzing design hierarchy..
+Top module:  \qw_por_root_guard_proposal
+Removed 0 unused modules.
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$/data/qw_por_root_guard_proposal.sv:9$1 in module qw_por_root_guard_proposal.
+Removed a total of 0 dead cases.
+
+4.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+4.2.4. Executing PROC_INIT pass (extract init attributes).
+
+4.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \por_n in `\qw_por_root_guard_proposal.$proc$/data/qw_por_root_guard_proposal.sv:9$1'.
+
+4.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~2 debug messages>
+
+4.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qw_por_root_guard_proposal.$proc$/data/qw_por_root_guard_proposal.sv:9$1'.
+     1/2: $0\count[4:0]
+     2/2: $0\armed[0:0]
+
+4.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qw_por_root_guard_proposal.\armed' using process `\qw_por_root_guard_proposal.$proc$/data/qw_por_root_guard_proposal.sv:9$1'.
+  created $adff cell `$procdff$21' with positive edge clock and positive level reset.
+Creating register for signal `\qw_por_root_guard_proposal.\count' using process `\qw_por_root_guard_proposal.$proc$/data/qw_por_root_guard_proposal.sv:9$1'.
+  created $adff cell `$procdff$26' with positive edge clock and positive level reset.
+
+4.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\qw_por_root_guard_proposal.$proc$/data/qw_por_root_guard_proposal.sv:9$1'.
+Removing empty process `qw_por_root_guard_proposal.$proc$/data/qw_por_root_guard_proposal.sv:9$1'.
+Cleaned up 2 empty switches.
+
+4.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+<suppressed ~6 debug messages>
+
+4.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+
+4.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+Removed 4 unused cells and 13 unused wires.
+<suppressed ~5 debug messages>
+
+4.5. Executing CHECK pass (checking for obvious problems).
+Checking module qw_por_root_guard_proposal...
+Found and reported 0 problems.
+
+4.6. Executing OPT pass (performing simple optimizations).
+
+4.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+
+4.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qw_por_root_guard_proposal'.
+Computing hashes of 9 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+Removed a total of 0 cells.
+
+4.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qw_por_root_guard_proposal..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port B of cell $procmux$15: \armed -> 1'1
+      Replacing known input bits on port A of cell $procmux$13: \armed -> 1'0
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+4.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qw_por_root_guard_proposal.
+Performed a total of 0 changes.
+
+4.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qw_por_root_guard_proposal'.
+Computing hashes of 9 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+Removed a total of 0 cells.
+
+4.6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+
+4.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+
+4.6.9. Finished fast OPT passes. (There is nothing left to do.)
+
+4.7. Executing FSM pass (extract and optimize FSM).
+
+4.7.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+4.7.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+4.7.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+
+4.7.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+4.7.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+4.7.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+4.7.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+4.8. Executing OPT pass (performing simple optimizations).
+
+4.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+
+4.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qw_por_root_guard_proposal'.
+Computing hashes of 9 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+Removed a total of 0 cells.
+
+4.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qw_por_root_guard_proposal..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+4.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qw_por_root_guard_proposal.
+Performed a total of 0 changes.
+
+4.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qw_por_root_guard_proposal'.
+Computing hashes of 9 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+Removed a total of 0 cells.
+
+4.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$26 ($adff) from module qw_por_root_guard_proposal (D = $add$/data/qw_por_root_guard_proposal.sv:13$5_Y, Q = \count).
+
+4.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+Removed 2 unused cells and 2 unused wires.
+<suppressed ~3 debug messages>
+
+4.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+
+4.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qw_por_root_guard_proposal..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~3 debug messages>
+
+4.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qw_por_root_guard_proposal.
+Performed a total of 0 changes.
+
+4.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qw_por_root_guard_proposal'.
+Computing hashes of 10 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+Removed a total of 0 cells.
+
+4.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+
+4.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+
+4.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+4.9. Executing WREDUCE pass (reducing word size of cells).
+
+4.10. Executing PEEPOPT pass (run peephole optimizers).
+
+4.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+
+4.12. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module qw_por_root_guard_proposal:
+  creating $macc model for $add$/data/qw_por_root_guard_proposal.sv:13$5 ($add).
+  creating $alu model for $macc $add$/data/qw_por_root_guard_proposal.sv:13$5.
+  creating $alu cell for $add$/data/qw_por_root_guard_proposal.sv:13$5: $auto$alumacc.cc:512:replace_alu$34
+  created 1 $alu and 0 $macc cells.
+
+4.13. Executing SHARE pass (SAT-based resource sharing).
+
+4.14. Executing OPT pass (performing simple optimizations).
+
+4.14.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+
+4.14.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qw_por_root_guard_proposal'.
+Computing hashes of 10 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+Removed a total of 0 cells.
+
+4.14.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qw_por_root_guard_proposal..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~3 debug messages>
+
+4.14.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qw_por_root_guard_proposal.
+Performed a total of 0 changes.
+
+4.14.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qw_por_root_guard_proposal'.
+Computing hashes of 10 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+Removed a total of 0 cells.
+
+4.14.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+
+4.14.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+
+4.14.9. Finished fast OPT passes. (There is nothing left to do.)
+
+4.15. Executing MEMORY pass.
+
+4.15.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+4.15.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+4.15.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+4.15.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+4.15.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+4.15.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+
+4.15.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+4.15.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+4.15.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+
+4.15.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+
+4.17. Executing OPT pass (performing simple optimizations).
+
+4.17.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+<suppressed ~2 debug messages>
+
+4.17.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qw_por_root_guard_proposal'.
+Computing hashes of 9 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+Removed a total of 0 cells.
+
+4.17.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.17.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+4.17.5. Finished fast OPT passes.
+
+4.18. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+4.19. Executing OPT pass (performing simple optimizations).
+
+4.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+
+4.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qw_por_root_guard_proposal'.
+Computing hashes of 9 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+Removed a total of 0 cells.
+
+4.19.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qw_por_root_guard_proposal..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+4.19.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qw_por_root_guard_proposal.
+Performed a total of 0 changes.
+
+4.19.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qw_por_root_guard_proposal'.
+Computing hashes of 9 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+Removed a total of 0 cells.
+
+4.19.6. Executing OPT_SHARE pass.
+
+4.19.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.19.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+
+4.19.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+
+4.19.10. Finished fast OPT passes. (There is nothing left to do.)
+
+4.20. Executing TECHMAP pass (map to technology primitives).
+
+4.20.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+4.20.2. Continuing TECHMAP pass.
+Using template $paramod$672a140277c71df8314410f22acc08d55222c3c7\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+Using extmapper simplemap for cells of type $pos.
+Using extmapper simplemap for cells of type $mux.
+No more expansions possible.
+<suppressed ~253 debug messages>
+
+4.21. Executing OPT pass (performing simple optimizations).
+
+4.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qw_por_root_guard_proposal.
+<suppressed ~46 debug messages>
+
+4.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qw_por_root_guard_proposal'.
+Computing hashes of 34 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+Computing hashes of 29 cells of `\qw_por_root_guard_proposal'.
+Finding duplicate cells in `\qw_por_root_guard_proposal'.
+<suppressed ~15 debug messages>
+Removed a total of 5 cells.
+
+4.21.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.21.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qw_por_root_guard_proposal..
+Removed 1 unused cells and 51 unused wires.
+<suppressed ~2 debug messages>
+
+4.21.5. Finished fast OPT passes.
+
+4.22. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `qw_por_root_guard_proposal'. Setting top module to qw_por_root_guard_proposal.
+
+4.22.1. Analyzing design hierarchy..
+Top module:  \qw_por_root_guard_proposal
+
+4.22.2. Analyzing design hierarchy..
+Top module:  \qw_por_root_guard_proposal
+Removed 0 unused modules.
+
+4.23. Printing statistics.
+
+=== qw_por_root_guard_proposal ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       20 wires
+       37 wire bits
+        5 public wires
+        9 public wire bits
+        4 ports
+        4 port bits
+       28 cells
+        6   $_AND_
+        5   $_DFFE_PN0P_
+        1   $_DFF_PN0_
+        7   $_NOT_
+        5   $_OR_
+        4   $_XOR_
+
+4.24. Executing CHECK pass (checking for obvious problems).
+Checking module qw_por_root_guard_proposal...
+Found and reported 0 problems.
+
+5. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+5.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\qw_por_root_guard_proposal':
+  mapped 6 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+
+6. Executing ABC pass (technology mapping using ABC).
+
+6.1. Extracting gate netlist of module `\qw_por_root_guard_proposal' to `<abc-temp-dir>/input.blif'..
+
+6.1.1. Executed ABC.
+Extracted 33 gates and 40 wires to a netlist network with 7 inputs and 8 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_5c7d9464.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+6.1.2. Re-integrating ABC results.
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:        2
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:        1
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:        4
+ABC RESULTS:        internal signals:       25
+ABC RESULTS:           input signals:        7
+ABC RESULTS:          output signals:        8
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 30 unused wires.
+
+7. Printing statistics.
+
+=== qw_por_root_guard_proposal ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       22        - wires
+       22        - wire bits
+        4        - public wires
+        4        - public wire bits
+        4        - ports
+        4        - port bits
+       20    3.572 cells
+        1    0.087   AND2x2_ASAP7_75t_R
+        6    2.274   DFFASRHQNx1_ASAP7_75t_R
+        2    0.087   INVx1_ASAP7_75t_R
+        1    0.058   NOR2xp33_ASAP7_75t_R
+        1    0.073   NOR3xp33_ASAP7_75t_R
+        1    0.087   NOR4xp25_ASAP7_75t_R
+        1    0.102   NOR5xp2_ASAP7_75t_R
+        1    0.102   OA21x2_ASAP7_75t_R
+        1    0.087   OAI31xp33_ASAP7_75t_R
+        1    0.087   OR3x1_ASAP7_75t_R
+        4    0.525   XNOR2xp5_ASAP7_75t_R
+
+   Chip area for module '\qw_por_root_guard_proposal': 3.572100
+     of which used for sequential elements: 2.274480 (63.67%)
+
+8. Executing JSON backend.
+
+9. Executing Verilog backend.
+
+9.1. Executing BMUXMAP pass.
+
+9.2. Executing DEMUXMAP pass.
+Dumping module `\qw_por_root_guard_proposal'.
