@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.kv_token_collection.v1",
+  "collected_at": "2026-10-19T13:34:48.279291-07:00",
+  "scope": "read-only existing component jobs",
+  "source_die_sha256": "18464a8b31042bea03b3fc5779d42803ab7b05bebbaab733a4d83d4a714c1ea6",
+  "g7_WSQK": {
+    "state": "three original simulations running",
+    "pids": {
+      "u1": 2188541,
+      "u4cal": 2188542,
+      "u4pack": 2188543
+    },
+    "build_elapsed_seconds": 4418.64,
+    "build_peak_rss_kb": 121565724,
+    "verilator": "5.050",
+    "fixture": "original diagnostic GEN7, not ae997 corrected successor",
+    "numerical_pass": null,
+    "cycles": null,
+    "occupancy": null,
+    "rate": null,
+    "causal_mutant": null,
+    "native_clock_reset_qualification": null
+  },
+  "g7_P0_P1": {
+    "state": "original frontends progressing",
+    "pids": [
+      2024838,
+      2026172
+    ]
+  },
+  "old_qk": {
+    "state": "u1 running, original u4cal/u4pack follow sequentially",
+    "pid": 1887177,
+    "scope": "old kvs14p QK component only"
+  },
+  "old3_allri": {
+    "state": "frontend progressing",
+    "pid": 1439809
+  },
+  "old3_WSri": {
+    "state": "terminal compiler failure",
+    "return_code": 2,
+    "reason": "GCC 15 cc1plus segmentation fault on Vtb_qwk_stk_WS__Syms__Slow.o",
+    "elapsed_seconds": 20206.99,
+    "peak_rss_kb": 255500592,
+    "build_log_sha256": "d6ec5a7ed6d32d92c73a9cfba5bc418dd539035e2024f4b2c8eb474bac980399",
+    "objects_preserved": true,
+    "rerun_launched": false,
+    "coordinator_decision": "Do not rerun duplicate old-die diagnostic; preserve objects.",
+    "preserved_object_count": 1965
+  },
+  "gen8_v3": {
+    "source": "5f2ce19bc",
+    "state": "remote prep/lint live; exact local waiter live",
+    "remote_pids": [
+      758542,
+      1455125,
+      1493373
+    ],
+    "local_waiter": 2264729,
+    "vehicles_launched": false,
+    "fixture_successor": "ae997fbd2"
+  },
+  "full_token_qualified": false
+}

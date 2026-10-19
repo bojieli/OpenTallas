@@ -1,0 +1,149 @@
+{
+ "schema": "opentallas.qwk_slice_attn.grp_facts.v1",
+ "die_v": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-4db097403-codexmub/port_bind_v2/die_bound.v",
+ "stacks": [
+  "WS"
+ ],
+ "relay_stages": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-4db097403-codexmub/case_kv/relay_stages.json",
+ "landing_seg_latency": 8,
+ "groups": [
+  {
+   "g": 0,
+   "inst": "slg_WS_0",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 1,
+   "inst": "slg_WS_1",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 2,
+   "inst": "slg_WS_2",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 3,
+   "inst": "slg_WS_3",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 4,
+   "inst": "slg_WS_4",
+   "master": "qkd_kvs_grp_h"
+  },
+  {
+   "g": 5,
+   "inst": "slg_WS_5",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 6,
+   "inst": "slg_WS_6",
+   "master": "qkd_kvs_grp"
+  },
+  {
+   "g": 7,
+   "inst": "slg_WS_7",
+   "master": "qkd_kvs_grp"
+  }
+ ],
+ "ectl": [
+  {
+   "ectl": "ectl_WS_0",
+   "RESPONSE_LAT": 80,
+   "req_stages": 69,
+   "rsp_stages": 3,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_1",
+   "RESPONSE_LAT": 80,
+   "req_stages": 69,
+   "rsp_stages": 3,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_2",
+   "RESPONSE_LAT": 80,
+   "req_stages": 67,
+   "rsp_stages": 5,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_3",
+   "RESPONSE_LAT": 80,
+   "req_stages": 63,
+   "rsp_stages": 9,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_4",
+   "RESPONSE_LAT": 80,
+   "req_stages": 56,
+   "rsp_stages": 16,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_5",
+   "RESPONSE_LAT": 80,
+   "req_stages": 47,
+   "rsp_stages": 25,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_6",
+   "RESPONSE_LAT": 80,
+   "req_stages": 34,
+   "rsp_stages": 38,
+   "needed": 80,
+   "ok": true
+  },
+  {
+   "ectl": "ectl_WS_7",
+   "RESPONSE_LAT": 80,
+   "req_stages": 51,
+   "rsp_stages": 21,
+   "needed": 80,
+   "ok": true
+  }
+ ],
+ "ectl_ok": 8,
+ "vport": [
+  {
+   "vport": "vport_WS_0",
+   "RT": 31,
+   "rt_i0": 15,
+   "rt_i1": 15,
+   "ok": false
+  },
+  {
+   "vport": "vport_WS_1",
+   "RT": 31,
+   "rt_i0": 15,
+   "rt_i1": 15,
+   "ok": false
+  },
+  {
+   "vport": "vport_WS_2",
+   "RT": 31,
+   "rt_i0": 15,
+   "rt_i1": 15,
+   "ok": false
+  },
+  {
+   "vport": "vport_WS_3",
+   "RT": 31,
+   "rt_i0": 15,
+   "rt_i1": 15,
+   "ok": false
+  }
+ ],
+ "vport_ok": 0
+}

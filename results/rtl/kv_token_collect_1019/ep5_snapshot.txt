@@ -1,0 +1,20 @@
+    PID    PPID     ELAPSED     TIME %CPU   RSS COMMAND
+1439809 1439806    05:30:17 05:29:23 99.7 305821116 /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vtb_qwk_slice_attn__hierMkArgs.f
+1887177 1887176    02:19:49 02:19:07 99.4 936896 /srv/opentallas-scratch/claude/codex-mu-tok-kv/old_qk_WS_r2/run/obj/Vtb_qwk_stk_WS +NSTEP=1 +VEC0=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L0_d0_g0 +U0=0 +L0=0 +REL0=0
+2024838 2024831    01:39:21 01:38:29 99.1 154577252 /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin -f /srv/opentallas-scratch/claude/kv-tok/veh/g7/P0/run/obj/Vtb_qwk_pv_P0__hierMkArgs.f
+2026172 2026169    01:39:19 01:38:42 99.3 154565244 /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin -f /srv/opentallas-scratch/claude/kv-tok/veh/g7/P1/run/obj/Vtb_qwk_pv_P1__hierMkArgs.f
+2188541 2188537       26:15 00:26:15 99.9 1325964 /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run/obj/Vtb_qwk_stk_WS +verilator+rand+reset+2 +verilator+seed+1 +verilator+error+limit+1000000 +NSTEP=1 +VEC0=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L0_d0_g0 +U0=0 +L0=0 +REL0=0
+2188542 2188539       26:15 00:26:15 99.9 1326440 /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run/obj/Vtb_qwk_stk_WS +verilator+rand+reset+2 +verilator+seed+1 +verilator+error+limit+1000000 +NSTEP=8 +VEC0=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L0_d0_g0 +U0=0 +L0=0 +REL0=0 +VEC1=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L0_d1_g0 +U1=1 +L1=0 +REL1=3283 +VEC2=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L1_d0_g0 +U2=0 +L2=1 +REL2=6886 +VEC3=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L0_d2_g0 +U3=2 +L3=0 +REL3=10169 +VEC4=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L0_d0_g1 +U4=0 +L4=2 +REL4=13772 +VEC5=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L0_d3_g0 +U5=3 +L5=0 +REL5=17055 +VEC6=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L1_d0_g1 +U6=0 +L6=3 +REL6=20658 +VEC7=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L1_d1_g0 +U7=1 +L7=1 +REL7=23941
+2188543 2188540       26:15 00:26:15 99.9 1325956 /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run/obj/Vtb_qwk_stk_WS +verilator+rand+reset+2 +verilator+seed+1 +verilator+error+limit+1000000 +NSTEP=4 +VEC0=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L0_d0_g0 +U0=0 +L0=0 +REL0=0 +VEC1=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L0_d1_g0 +U1=1 +L1=0 +REL1=1816 +VEC2=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L0_d2_g0 +U2=2 +L2=0 +REL2=3632 +VEC3=/srv/opentallas-scratch/claude/mu-tok-kv/vec/L0_d3_g0 +U3=3 +L3=0 +REL3=5448
+83123a31d206b42d86b89a3ef7145ce701b76ba3f9210b2a1494b66a12957259  /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run/tb_qwk_stk_WS.sv
+d6caec64fcd32013398212158b34a37d81b05522fa5b60ba3c015dc9481daa28  /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run/cases.txt
+c08614337bdca0b4ad709466efe05f53ae496c3c12666c9f06b6f5764849ad13  /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run/hier.vlt
+46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d  /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run/verilator.version
+257d6c588f33a85660f6079372a9c81aff36b78489e71ca79a507d6308739938  /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/cut/slice.json
+3e781aad7e19316b666f78ff0defb19111a13984504be370231a77406d191e20  /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/cut/kva_grp_map.svh
+8894a8e1d3522dfe46b00343c3d082b5a09eea6ee77cb6ad17726dae81d69f88  /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/cut/kva_grp_facts.json
+18464a8b31042bea03b3fc5779d42803ab7b05bebbaab733a4d83d4a714c1ea6  /srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-4db097403-codexmub/port_bind_v2/die_bound.v
+Verilator 5.050 2026-07-01 rev v5.050
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv/old3/WSri/run/obj'
+make: *** [Vtb_qwk_stk_WS_hier.mk:41: hier_build] Error 2
+make: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv/old3/WSri/run/obj'

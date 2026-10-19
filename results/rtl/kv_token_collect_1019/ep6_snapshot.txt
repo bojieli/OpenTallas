@@ -1,0 +1,6 @@
+2026-10-19T13:34:01-07:00
+2026-10-19 13:07:24 PDT kvs14r 5f2ce19bc: lane views 16 committed (lane_views.tsv); prep start 5f2ce19bc57cc98c941aad2362d4c7a855498171
+    PID    PPID     ELAPSED     TIME %CPU   RSS COMMAND
+ 758542  758401       29:18 00:00:00  0.0  4416 bash /srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-5f2ce19bc-gen8v3mub.sh 5f2ce19bc
+1455125  758542       26:36 00:00:00  0.0  3924 bash tools/qwen_kv_die/chain/kvsys_prep.sh /srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-5f2ce19bc-gen8v3mub
+1493373 1455125       10:43 00:10:43  100 358348 python3 tools/die_top_lint.py lint --die qwen_kv --variant kv_wq_mirror,split,host_v14,host_north,host_trees,v143,reserve_native_astk --out /srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-5f2ce19bc-gen8v3mub/lint
