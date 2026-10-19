@@ -166,7 +166,8 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0)(input wire clk
   if(op_u[ko]==0&&ro>0)begin
    if(tv4!==tv1||(tv4&&td4!==td1))err("user-0 tx record != NU 1");
    if(dr4!==dr1)err("user-0 dr word != NU 1");
-   if(x34!==x31||(x34[523]&&{xg4,xid4}!=={xg1,xid1}))err("user-0 x3 != NU 1");
+   // x3[522:0] / identity hold the last popped word between pops (qfd_kvn_static_transport): compared on valid edges
+   if(x34[523]!==x31[523]||(x34[523]&&{xg4,xid4,x34}!=={xg1,xid1,x31}))err("user-0 x3 != NU 1");
    if(dn4!==dn1)err("user-0 completion != NU 1");
    nid=nid+1;
   end

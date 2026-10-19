@@ -142,6 +142,7 @@ module qfd_native59_dv_service #(
  // 8 x 16384-b runtime $shift writes + the 512-b $shiftx read).  Same function as the per-lane loop it replaces: each
  // lane l decodes its element qe_l once; seat e takes the data of the HIGHEST hitting lane (the old loop's last write
  // wins); q_in_bad = a hit on a seat already seen this epoch, or two lanes of one word on the same seat.
+ reg[16383:0]qbuf;reg[511:0]qseen;reg qctx,qlock;   // MU-DQ-D2DUSER: restored (lost in the e28fa950f merge: the file did not elaborate)
  wire[16383:0]qbuf_n;wire[511:0]qseen_n,qdup;
  wire[71:0]qe_all;wire[7:0]qhit_any,qhi_bad;
  genvar gl,ge;
