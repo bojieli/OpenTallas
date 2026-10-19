@@ -78,3 +78,42 @@ Safe-design checklist for the successor kit:
 7 Clock: parent regional root/landing, spread and hold-margin gate owed.
 8 Schedule: explicit cyclic entries; no extra read/command edge from banking.
    The SAFE scalar capture adds one priced stage0 edge (legacy default remains0).
+
+Combined real GI/calendar/INIT validation (Verilator5.050, fleet):
+- OPSEG_EXPANDED1/OPSEG_PINREG1, actual public PW/DW and allthree ROM banks,
+  actual qfd_host_native_context_rx + qfd_sys_face_accepted_mu_ctx (72bf7edeb),
+  real GI and SRAM-backed calendar. PASS9140490 edges, coldprefix1,
+  headstarts5112; each filler has two accepted loads and two first embeddings.
+  Observed AMemit/result counts36/32/16/12 match, including ordinary user0.
+- Actual offered valid fullidentity context reaches GI token-bank load after
+  three edges. The receiver immediately accepts a user0 restore on the next edge;
+  the registered observer preserves the filler record. This qualifies the digital
+  receiver→bank edge contract; the physical D2D launch/slot phase is still owed.
+- Raw GI DH INIT pin P=1666: calendar accepts/headstarts P+1=1667;
+  LOCAL_EMB is consumed and registered emb_start asserts P+63=1729, token777.
+  Compiled entry61 therefore requires two GI pin/output edges in FACE composition.
+  Raw firstL0 DH pin2000 is P+334. No absolute forwarded epoch is bound here.
+- Wrongstage INIT fails2001; forbidden ordinary AMemit restored into the appended
+  INIT fails1675; result write while fresh context pending fails253432. Count1024
+  INIT parameter fails elaboration-time simulation guard before any stimulus.
+- External root results are scripted from actual observed AMemit, not computed
+  arithmetic. This proves token-bank/status behavior and does not establish full
+  programme, full-token, Q-ready, physical phase or arbitrary reload support.
+
+The first combined run exposed an invalid plain-zero boot context in the public
+DW image. Admission compiler now emits the canonical tag4D43/mask0 empty record
+in DW5/6. It loads no filler bank; explicit runtime slots still admit all users.
+New DW SHA256 is5cd6fb2fc743bd6c5b2773233077254c03b5a278d8ce679b3e7de7c7e6c80928;
+PW and allthree leaf ROM hashes are unchanged. This supersedes the earlier
+byte-identical DW regeneration statement for the pre-GI source packet.
+
+Reproduce combined validation on fleet:
+
+    bash rtl/test/mu_qwen_seq/run_mu_gi_init.sh WORK \
+      /absolute/repo/results/rtl/mu_qwen_1018/admission/F16_P2
+
+Default runs the full positive and all negative tests. GI_MUTANTS='1 2 3' skips
+repeating the positive when collecting the cold-edge trace/count guard witness.
+The committed pass log precedes only diagnostic display additions; functional
+stimulus/checking and compiled image match the final bench. Source identities
+and fleet job IDs are recorded in gi_init/source_receipt.json.

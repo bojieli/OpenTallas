@@ -72,6 +72,10 @@ def compile_expanded(cal, link_images, *, head_ref, context_binding, phases=2,
 
     pb = O.playback(cal)
     image = O.initial_context_image(cal["segs"])
+    # GI enables CTX_DW for OPSEG: seal must carry a valid empty record.
+    # Actual filler admission remains in explicit runtime context slots.
+    image["dw"] = O.with_ctx(image["dw"], {}, mask=set())
+    image["boot_context"] = dict(tag=O.CTX_TAG, mask=0, users=[], admission="runtime_slots")
     initial = image["initial_range"]
     leaf = []
     for phase in range(phases):
