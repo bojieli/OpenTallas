@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_rootctl_am_1018-r4-49a5acb8f
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_rootctl_am_1018-r4-49a5acb8f
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_rootctl_am_1018-r4-49a5acb8f
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_rootctl_am_1018-r4-49a5acb8f
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_rootctl_am_1018-r4-49a5acb8f
+ot-run: ot-pve1        admits   136 GB (avail 107, growth 2, headroom 0, waiters 0/0 GB) load 8/28 running 1 disk 1214 GB 
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_rootctl_am_1018-r4-49a5acb8f
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-1230124-1792442275 after 1 s
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1230124-1792442275): exit 2

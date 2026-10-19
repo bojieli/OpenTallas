@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: ot-epyc6       admits  1127 GB (avail 899, growth 110, headroom 0, waiters 0/0 GB) load 36/128 running 28 disk 5761 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1545329-1792442156 after 0 s
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1545329-1792442156): exit 1

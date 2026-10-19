@@ -1,0 +1,1014 @@
+{
+  "dbu_per_um": 1000,
+  "scope": "one actual unbound representative per failed master; no conductor extraction",
+  "samples": [
+    {
+      "master": "BUFx24_ASAP7_75t_R",
+      "instance": "clkbuf_sp_L1227",
+      "origin": [
+        145692,
+        8100
+      ],
+      "orientation": "R0",
+      "bbox": [
+        145692,
+        8100,
+        147312,
+        8370
+      ],
+      "covering_rows": [
+        "ROW_22"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                145692,
+                8361,
+                147312,
+                8379
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  8361,
+                  473040,
+                  8379
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                145692,
+                8091,
+                147312,
+                8109
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  8091,
+                  473040,
+                  8109
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "BUFx3_ASAP7_75t_R",
+      "instance": "place20872",
+      "origin": [
+        338202,
+        15120
+      ],
+      "orientation": "MX",
+      "bbox": [
+        338202,
+        14850,
+        338526,
+        15120
+      ],
+      "covering_rows": [
+        "ROW_47"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                338202,
+                14841,
+                338526,
+                14859
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  14841,
+                  473040,
+                  14859
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                338202,
+                15111,
+                338526,
+                15129
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  15111,
+                  473040,
+                  15129
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "instance": "place20559",
+      "origin": [
+        244296,
+        110700
+      ],
+      "orientation": "R0",
+      "bbox": [
+        244296,
+        110700,
+        244836,
+        110970
+      ],
+      "covering_rows": [
+        "ROW_402_2"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                244296,
+                110961,
+                244836,
+                110979
+              ],
+              "same_role_M1_overlap": [
+                [
+                  218052,
+                  110961,
+                  473040,
+                  110979
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                244296,
+                110691,
+                244836,
+                110709
+              ],
+              "same_role_M1_overlap": [
+                [
+                  218052,
+                  110691,
+                  473040,
+                  110709
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "BUFx10_ASAP7_75t_R",
+      "instance": "place19674",
+      "origin": [
+        287496,
+        156600
+      ],
+      "orientation": "MX",
+      "bbox": [
+        287496,
+        156330,
+        288252,
+        156600
+      ],
+      "covering_rows": [
+        "ROW_571"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                287496,
+                156321,
+                288252,
+                156339
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  156321,
+                  473040,
+                  156339
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                287496,
+                156591,
+                288252,
+                156609
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  156591,
+                  473040,
+                  156609
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "BUFx12_ASAP7_75t_R",
+      "instance": "wire7384",
+      "origin": [
+        236304,
+        211140
+      ],
+      "orientation": "MX",
+      "bbox": [
+        236304,
+        210870,
+        237168,
+        211140
+      ],
+      "covering_rows": [
+        "ROW_773"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                236304,
+                210861,
+                237168,
+                210879
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  210861,
+                  473040,
+                  210879
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                236304,
+                211131,
+                237168,
+                211149
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  211131,
+                  473040,
+                  211149
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "instance": "wire7382",
+      "origin": [
+        221778,
+        196020
+      ],
+      "orientation": "MX",
+      "bbox": [
+        221778,
+        195750,
+        222750,
+        196020
+      ],
+      "covering_rows": [
+        "ROW_717"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                221778,
+                195741,
+                222750,
+                195759
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  195741,
+                  473040,
+                  195759
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                221778,
+                196011,
+                222750,
+                196029
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  196011,
+                  473040,
+                  196029
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "BUFx4f_ASAP7_75t_R",
+      "instance": "place18545",
+      "origin": [
+        190026,
+        90180
+      ],
+      "orientation": "R0",
+      "bbox": [
+        190026,
+        90180,
+        190458,
+        90450
+      ],
+      "covering_rows": [
+        "ROW_326"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                190026,
+                90441,
+                190458,
+                90459
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  90441,
+                  473040,
+                  90459
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                190026,
+                90171,
+                190458,
+                90189
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  90171,
+                  473040,
+                  90189
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "BUFx2_ASAP7_75t_R",
+      "instance": "output6892",
+      "origin": [
+        183006,
+        91800
+      ],
+      "orientation": "MX",
+      "bbox": [
+        183006,
+        91530,
+        183276,
+        91800
+      ],
+      "covering_rows": [
+        "ROW_331"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                183006,
+                91521,
+                183276,
+                91539
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  91521,
+                  473040,
+                  91539
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                183006,
+                91791,
+                183276,
+                91809
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  91791,
+                  473040,
+                  91809
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "BUFx8_ASAP7_75t_R",
+      "instance": "wire17304",
+      "origin": [
+        137808,
+        185760
+      ],
+      "orientation": "MX",
+      "bbox": [
+        137808,
+        185490,
+        138456,
+        185760
+      ],
+      "covering_rows": [
+        "ROW_679"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                137808,
+                185481,
+                138456,
+                185499
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  185481,
+                  473040,
+                  185499
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                137808,
+                185751,
+                138456,
+                185769
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  185751,
+                  473040,
+                  185769
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "instance": "wire23469",
+      "origin": [
+        50814,
+        78840
+      ],
+      "orientation": "R0",
+      "bbox": [
+        50814,
+        78840,
+        52002,
+        79110
+      ],
+      "covering_rows": [
+        "ROW_284"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                50814,
+                79101,
+                52002,
+                79119
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  79101,
+                  473040,
+                  79119
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                50814,
+                78831,
+                52002,
+                78849
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  78831,
+                  473040,
+                  78849
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "HB4xp67_ASAP7_75t_R",
+      "instance": "clkbuf_sp_L5_p1",
+      "origin": [
+        8208,
+        74520
+      ],
+      "orientation": "MX",
+      "bbox": [
+        8208,
+        74250,
+        8586,
+        74520
+      ],
+      "covering_rows": [
+        "ROW_267"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                8208,
+                74241,
+                8586,
+                74259
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  74241,
+                  473040,
+                  74259
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                8208,
+                74511,
+                8586,
+                74529
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  74511,
+                  473040,
+                  74529
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "HB2xp67_ASAP7_75t_R",
+      "instance": "hold33587",
+      "origin": [
+        186840,
+        85320
+      ],
+      "orientation": "R0",
+      "bbox": [
+        186840,
+        85320,
+        187110,
+        85590
+      ],
+      "covering_rows": [
+        "ROW_308"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                186840,
+                85581,
+                187110,
+                85599
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  85581,
+                  473040,
+                  85599
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                186840,
+                85311,
+                187110,
+                85329
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  85311,
+                  473040,
+                  85329
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "FILLER_ASAP7_75t_R",
+      "instance": "FILLER_0_2",
+      "origin": [
+        2268,
+        2160
+      ],
+      "orientation": "R0",
+      "bbox": [
+        2268,
+        2160,
+        2376,
+        2430
+      ],
+      "covering_rows": [
+        "ROW_0"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                2268,
+                2421,
+                2376,
+                2439
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  2421,
+                  473040,
+                  2439
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                2268,
+                2151,
+                2376,
+                2169
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  2151,
+                  473040,
+                  2169
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "master": "FILLERxp5_ASAP7_75t_R",
+      "instance": "FILLER_0_2230",
+      "origin": [
+        122580,
+        2160
+      ],
+      "orientation": "R0",
+      "bbox": [
+        122580,
+        2160,
+        122634,
+        2430
+      ],
+      "covering_rows": [
+        "ROW_0"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                122580,
+                2421,
+                122634,
+                2439
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  2421,
+                  473040,
+                  2439
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                122580,
+                2151,
+                122634,
+                2169
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  2151,
+                  473040,
+                  2169
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

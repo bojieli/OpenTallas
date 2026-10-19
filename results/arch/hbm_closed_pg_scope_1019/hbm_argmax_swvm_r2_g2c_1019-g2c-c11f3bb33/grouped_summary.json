@@ -1,0 +1,67 @@
+{
+  "status": "FAIL",
+  "checked": 191464,
+  "failure_count": 780,
+  "roles": {
+    "POWER": "95732",
+    "GROUND": "95732"
+  },
+  "groups": [
+    {
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 390
+    },
+    {
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 390
+    }
+  ],
+  "rules": [
+    {
+      "inst_pattern": ".*",
+      "pin_pattern": "^VDD$",
+      "net": "VDD",
+      "role": "POWER",
+      "region": ""
+    },
+    {
+      "inst_pattern": ".*",
+      "pin_pattern": "^VDDPE$",
+      "net": "VDD",
+      "role": "POWER",
+      "region": ""
+    },
+    {
+      "inst_pattern": ".*",
+      "pin_pattern": "^VDDCE$",
+      "net": "VDD",
+      "role": "POWER",
+      "region": ""
+    },
+    {
+      "inst_pattern": ".*",
+      "pin_pattern": "^VSS$",
+      "net": "VSS",
+      "role": "GROUND",
+      "region": ""
+    },
+    {
+      "inst_pattern": ".*",
+      "pin_pattern": "^VSSE$",
+      "net": "VSS",
+      "role": "GROUND",
+      "region": ""
+    }
+  ],
+  "affected_instances": 390
+}

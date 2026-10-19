@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: ot-epyc6       admits  1117 GB (avail 874, growth 92, headroom 0, waiters 0/0 GB) load 33/128 running 26 disk 5761 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1571842-1792442474 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+PG_SAMPLES 6
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1571842-1792442474): exit 0

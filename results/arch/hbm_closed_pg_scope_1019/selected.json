@@ -1,0 +1,66 @@
+[
+  {
+    "name": "hidx_op_n12_g2c_1019-g2c-c11f3bb33",
+    "host": "ot-epyc6",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/hidx_op_n12_g2c_1019-g2c-c11f3bb33",
+    "commit_full": "c11f3bb338d049d74c5b2af0d69de2519b96614f",
+    "reason": "CLOSED TT +17.71 / FF +14.34 ps DRC 0; SS sensitivity -343.54 ps | record claude/hbm-banklat-idx-1019 92642dc36 (26 files) | AUTO-MERGE CONFLICT (1 files: tools/hbm_die_v16/test_d4g_bank_latency.py)",
+    "publish": {
+      "record_branch": "codex/closure-record-hidx_op_n12_g2c_1019-g2c-c11f3bb33",
+      "branch_commit": "92642dc3657be4e6f5e1de21eb82164e95a89c25",
+      "files": 26,
+      "merge": "AUTO-MERGE CONFLICT (1 files: tools/hbm_die_v16/test_d4g_bank_latency.py)"
+    },
+    "freeze_helper_overlay": true,
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/hidx_op_n12_g2c_1019-g2c-c11f3bb33/routes/hidx_op_n12_g2c_1019_g2c_c11f3bb33/work/orfs/results/asap7/opentallas_ot_hbm_idx_vm_query_static_n12_asap7_ref_hidx_op_n12_g2c_1019_g2c_c11f3bb33/base/6_final.odb",
+    "audit_dir": "/srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_op_n12_g2c_1019-g2c-c11f3bb33"
+  },
+  {
+    "name": "hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33",
+    "host": "ot-epyc6",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33",
+    "commit_full": "c11f3bb338d049d74c5b2af0d69de2519b96614f",
+    "reason": "CLOSED TT +26.86 / FF +23.22 ps DRC 0; SS sensitivity -341.99 ps | record claude/hbm-banklat-idx-1019 46e6db203 (25 files) | AUTO-MERGE CONFLICT (1 files: tools/hbm_die_v16/test_d4g_bank_latency.py)",
+    "publish": {
+      "record_branch": "codex/closure-record-hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33",
+      "branch_commit": "46e6db20335f76e040eb1e9f69dde62559b3f1b2",
+      "files": 25,
+      "merge": "AUTO-MERGE CONFLICT (1 files: tools/hbm_die_v16/test_d4g_bank_latency.py)"
+    },
+    "freeze_helper_overlay": true,
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33/routes/hbm_argmax_swvm_r2_g2c_1019_g2c_c11f3bb33/work/orfs/results/asap7/opentallas_ot_hbm_argmax_static_sw_vm_r2_asap7_ref_hbm_argmax_swvm_r2_g2c_1019_g2c_c11f3bb33/base/6_final.odb",
+    "audit_dir": "/srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33"
+  },
+  {
+    "name": "hidx_rootctl_am_1018-r4-49a5acb8f",
+    "host": "ot-pve1",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/hidx_rootctl_am_1018-r4-49a5acb8f",
+    "commit_full": "49a5acb8fa2f9ee246a764ae3021199ae8f34306",
+    "reason": "CLOSED TT +23.17 / FF +20.15 ps DRC 0; SS sensitivity -275.36 ps | record claude/hbm-idxam2-1018 5187b22f9 (30 files) | AUTO-MERGE CONFLICT (3 files: tools/closure_loop/closure_loop.py, tools/ref_tile/clock_entry_constraints.py, tools/ref_tile/ref_tile.py)",
+    "publish": {
+      "record_branch": "codex/closure-record-hidx_rootctl_am_1018-r4-49a5acb8f",
+      "branch_commit": "5187b22f9e3a11d86ba5015fa6d9f32b0456a7e9",
+      "files": 30,
+      "merge": "AUTO-MERGE CONFLICT (3 files: tools/closure_loop/closure_loop.py, tools/ref_tile/clock_entry_constraints.py, tools/ref_tile/ref_tile.py)"
+    },
+    "freeze_helper_overlay": true,
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/hidx_rootctl_am_1018-r4-49a5acb8f/routes/hidx_rootctl_am_1018_r4_49a5acb8f/work/orfs/results/asap7/opentallas_ot_hbm_idx_rootctl_static_am_asap7_ref_hidx_rootctl_am_1018_r4_49a5acb8f/base/6_final.odb",
+    "audit_dir": "/srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hidx_rootctl_am_1018-r4-49a5acb8f"
+  },
+  {
+    "name": "hbm_su_pretree_s_1018-p3-1dad69123",
+    "host": "ot-epyc7",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_pretree_s_1018-p3-1dad69123",
+    "commit_full": "1dad69123b4996c8b0010d39430063c86eccb5aa",
+    "reason": "CLOSED TT +93.20 / FF +18.72 ps DRC 0; SS sensitivity -233.51 ps | record claude/hh6-sured-1018 7746ccca2 (27 files) | AUTO-MERGE CONFLICT (13 files: physical/common_flow/clock_entries.tcl, physical/common_flow/ot_pin_regs.tcl, tools/closure_loop/closure_loop.py, tools/closure_loop/test_helper_overlay.py, tools/hgi_sim/d4g_su_red_1018.py, tools/ref_tile/clock_entry_constraints.py)",
+    "publish": {
+      "record_branch": "codex/closure-record-hbm_su_pretree_s_1018-p3-1dad69123",
+      "branch_commit": "7746ccca28261f67c4c98f640b6f53e6ef2df0a5",
+      "files": 27,
+      "merge": "AUTO-MERGE CONFLICT (13 files: physical/common_flow/clock_entries.tcl, physical/common_flow/ot_pin_regs.tcl, tools/closure_loop/closure_loop.py, tools/closure_loop/test_helper_overlay.py, tools/hgi_sim/d4g_su_red_1018.py, tools/ref_tile/clock_entry_constraints.py)"
+    },
+    "freeze_helper_overlay": true,
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_pretree_s_1018-p3-1dad69123/routes/hbm_su_pretree_s_1018_p3_1dad69123/work/orfs/results/asap7/opentallas_ot_hbm_su_red_pretree_s_asap7_ref_hbm_su_pretree_s_1018_p3_1dad69123/base/6_final.odb",
+    "audit_dir": "/srv/opentallas-scratch/claude/hbm-closed-pg-scope-1019/hbm_su_pretree_s_1018-p3-1dad69123"
+  }
+]

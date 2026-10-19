@@ -1,0 +1,78 @@
+{
+  "dbu_per_um": 1000,
+  "scope": "one actual unbound representative per failed master; no conductor extraction",
+  "samples": [
+    {
+      "master": "BUFx24_ASAP7_75t_R",
+      "instance": "clkbuf_leaf_6_clk",
+      "origin": [
+        6804,
+        29700
+      ],
+      "orientation": "R0",
+      "bbox": [
+        6804,
+        29700,
+        8424,
+        29970
+      ],
+      "covering_rows": [
+        "ROW_102"
+      ],
+      "native_pins": [
+        {
+          "pin": "VDD",
+          "role": "POWER",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VDD",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                6804,
+                29961,
+                8424,
+                29979
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  29961,
+                  116640,
+                  29979
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        },
+        {
+          "pin": "VSS",
+          "role": "GROUND",
+          "actual_net": null,
+          "expected_net_from_native_rules": "VSS",
+          "boxes": [
+            {
+              "layer": "M1",
+              "box": [
+                6804,
+                29691,
+                8424,
+                29709
+              ],
+              "same_role_M1_overlap": [
+                [
+                  2160,
+                  29691,
+                  116640,
+                  29709
+                ]
+              ],
+              "overlap_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

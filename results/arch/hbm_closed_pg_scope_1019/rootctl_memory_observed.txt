@@ -1,0 +1,4 @@
+2026-10-19 audit native OpenROAD PID1230245; actual finalDEF COMPONENTS3539053; finalODB975MB.
+At elapsed05:17 RSS23328820KiB; Docker cgroup memory.current23880101888 bytes; memory.max34359738368; memory.events max0/oom0/oom_kill0.
+At elapsed05:36 Docker cgroup memory.current27915808768 bytes. This is a sample, not measured peak.
+Supplementary32GB reservation admitted after original process/container had already ended. docker update returned no such container, so no resource change occurred. Supplementary wrapper exit0 only means its reservation ended; it is not a successful update or audit result. Original native audit actual final exit2/reportFAIL is separately recorded.

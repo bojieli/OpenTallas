@@ -1,0 +1,329 @@
+{
+  "status": "FAIL",
+  "checked": "7078106",
+  "failure_count": "6931852",
+  "roles": {
+    "POWER": "3539053",
+    "GROUND": "3539053"
+  },
+  "groups": [
+    {
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 2910
+    },
+    {
+      "master": "BUFx24_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 2910
+    },
+    {
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 5062
+    },
+    {
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 5062
+    },
+    {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 424
+    },
+    {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 424
+    },
+    {
+      "master": "BUFx10_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 72
+    },
+    {
+      "master": "BUFx10_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 72
+    },
+    {
+      "master": "BUFx12_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 22
+    },
+    {
+      "master": "BUFx12_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 22
+    },
+    {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 229
+    },
+    {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 229
+    },
+    {
+      "master": "BUFx4f_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 160
+    },
+    {
+      "master": "BUFx4f_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 160
+    },
+    {
+      "master": "BUFx2_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 24208
+    },
+    {
+      "master": "BUFx2_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 24208
+    },
+    {
+      "master": "BUFx8_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 1
+    },
+    {
+      "master": "BUFx8_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 1
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 318
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 318
+    },
+    {
+      "master": "HB4xp67_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 1538
+    },
+    {
+      "master": "HB4xp67_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 1538
+    },
+    {
+      "master": "HB2xp67_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 1700
+    },
+    {
+      "master": "HB2xp67_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 1700
+    },
+    {
+      "master": "FILLER_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 3387997
+    },
+    {
+      "master": "FILLER_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 3387997
+    },
+    {
+      "master": "FILLERxp5_ASAP7_75t_R",
+      "pin": "VDD",
+      "role": "POWER",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VDD",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 41285
+    },
+    {
+      "master": "FILLERxp5_ASAP7_75t_R",
+      "pin": "VSS",
+      "role": "GROUND",
+      "actual_net": "",
+      "actual_role": "",
+      "expected_net": "VSS",
+      "reason": "OT_PG_FINAL_BINDING",
+      "count": 41285
+    }
+  ],
+  "affected_instances": "3465926",
+  "rules": [
+    {
+      "inst_pattern": ".*",
+      "pin_pattern": "^VDD$",
+      "net": "VDD",
+      "role": "POWER",
+      "region": ""
+    },
+    {
+      "inst_pattern": ".*",
+      "pin_pattern": "^VDDPE$",
+      "net": "VDD",
+      "role": "POWER",
+      "region": ""
+    },
+    {
+      "inst_pattern": ".*",
+      "pin_pattern": "^VDDCE$",
+      "net": "VDD",
+      "role": "POWER",
+      "region": ""
+    },
+    {
+      "inst_pattern": ".*",
+      "pin_pattern": "^VSS$",
+      "net": "VSS",
+      "role": "GROUND",
+      "region": ""
+    },
+    {
+      "inst_pattern": ".*",
+      "pin_pattern": "^VSSE$",
+      "net": "VSS",
+      "role": "GROUND",
+      "region": ""
+    }
+  ]
+}
