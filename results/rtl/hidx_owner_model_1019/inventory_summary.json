@@ -1,0 +1,361 @@
+{
+  "scope": "explicit-bus diagnostic only; native scalar REFUSED remains",
+  "source_commit": "5af00a1ab",
+  "mapped_sha256": "6aafe33bacb8ca1464ee6c9bd1ad3fb2b622e52cd6336600b1adea413cbf8684",
+  "all_nontransparent_roles": {
+    "comb": 83804,
+    "ff": 23532,
+    "macro": 4096,
+    "static": 2,
+    "input": 2402
+  },
+  "max_by_role": {
+    "comb": 257,
+    "ff": 1757,
+    "macro": 1,
+    "static": 5896,
+    "input": 25
+  },
+  "violation_roles": {
+    "comb": 39,
+    "ff": 1221,
+    "static": 2
+  },
+  "family_counts": [
+    {
+      "family": "compact",
+      "role": "comb",
+      "count": 8598
+    },
+    {
+      "family": "compact",
+      "role": "ff",
+      "count": 1536
+    },
+    {
+      "family": "control_ring",
+      "role": "comb",
+      "count": 348
+    },
+    {
+      "family": "control_ring",
+      "role": "ff",
+      "count": 145
+    },
+    {
+      "family": "emit_output",
+      "role": "comb",
+      "count": 2
+    },
+    {
+      "family": "emit_output",
+      "role": "ff",
+      "count": 257
+    },
+    {
+      "family": "half_count",
+      "role": "comb",
+      "count": 12
+    },
+    {
+      "family": "half_count",
+      "role": "ff",
+      "count": 843
+    },
+    {
+      "family": "mask_count",
+      "role": "ff",
+      "count": 8
+    },
+    {
+      "family": "other_explicit",
+      "role": "comb",
+      "count": 66887
+    },
+    {
+      "family": "other_explicit",
+      "role": "ff",
+      "count": 14237
+    },
+    {
+      "family": "other_explicit",
+      "role": "input",
+      "count": 2401
+    },
+    {
+      "family": "other_explicit",
+      "role": "static",
+      "count": 2
+    },
+    {
+      "family": "pair_count",
+      "role": "comb",
+      "count": 16
+    },
+    {
+      "family": "pair_count",
+      "role": "ff",
+      "count": 612
+    },
+    {
+      "family": "partial_carry",
+      "role": "comb",
+      "count": 3489
+    },
+    {
+      "family": "partial_carry",
+      "role": "ff",
+      "count": 2738
+    },
+    {
+      "family": "quad_count",
+      "role": "comb",
+      "count": 10
+    },
+    {
+      "family": "quad_count",
+      "role": "ff",
+      "count": 732
+    },
+    {
+      "family": "reset",
+      "role": "ff",
+      "count": 2
+    },
+    {
+      "family": "reset",
+      "role": "input",
+      "count": 1
+    },
+    {
+      "family": "rotate_total",
+      "role": "comb",
+      "count": 6
+    },
+    {
+      "family": "rotate_total",
+      "role": "ff",
+      "count": 1504
+    },
+    {
+      "family": "sram",
+      "role": "comb",
+      "count": 2
+    },
+    {
+      "family": "sram",
+      "role": "macro",
+      "count": 4096
+    },
+    {
+      "family": "write_formation",
+      "role": "comb",
+      "count": 4434
+    },
+    {
+      "family": "write_formation",
+      "role": "ff",
+      "count": 918
+    }
+  ],
+  "sink_roles": [
+    {
+      "driver_role": "comb",
+      "sink_owner_role": "comb",
+      "sink_pin_role": "data",
+      "pins": 131229
+    },
+    {
+      "driver_role": "comb",
+      "sink_owner_role": "ff",
+      "sink_pin_role": "data",
+      "pins": 17083
+    },
+    {
+      "driver_role": "comb",
+      "sink_owner_role": "macro",
+      "sink_pin_role": "data",
+      "pins": 32
+    },
+    {
+      "driver_role": "ff",
+      "sink_owner_role": "None",
+      "sink_pin_role": "output",
+      "pins": 1255
+    },
+    {
+      "driver_role": "ff",
+      "sink_owner_role": "comb",
+      "sink_pin_role": "data",
+      "pins": 140349
+    },
+    {
+      "driver_role": "ff",
+      "sink_owner_role": "ff",
+      "sink_pin_role": "data",
+      "pins": 2520
+    },
+    {
+      "driver_role": "ff",
+      "sink_owner_role": "ff",
+      "sink_pin_role": "reset",
+      "pins": 1757
+    },
+    {
+      "driver_role": "ff",
+      "sink_owner_role": "macro",
+      "sink_pin_role": "data",
+      "pins": 2351
+    },
+    {
+      "driver_role": "input",
+      "sink_owner_role": "ff",
+      "sink_pin_role": "data",
+      "pins": 3928
+    },
+    {
+      "driver_role": "input",
+      "sink_owner_role": "ff",
+      "sink_pin_role": "reset",
+      "pins": 2
+    },
+    {
+      "driver_role": "macro",
+      "sink_owner_role": "comb",
+      "sink_pin_role": "data",
+      "pins": 2304
+    },
+    {
+      "driver_role": "static",
+      "sink_owner_role": "None",
+      "sink_pin_role": "output",
+      "pins": 940
+    },
+    {
+      "driver_role": "static",
+      "sink_owner_role": "ff",
+      "sink_pin_role": "data",
+      "pins": 1
+    },
+    {
+      "driver_role": "static",
+      "sink_owner_role": "ff",
+      "sink_pin_role": "reset",
+      "pins": 1759
+    },
+    {
+      "driver_role": "static",
+      "sink_owner_role": "macro",
+      "sink_pin_role": "data",
+      "pins": 6193
+    }
+  ],
+  "violating_families": [
+    {
+      "family": "emit_output",
+      "role": "comb",
+      "roots": 2
+    },
+    {
+      "family": "half_count",
+      "role": "comb",
+      "roots": 6
+    },
+    {
+      "family": "half_count",
+      "role": "ff",
+      "roots": 59
+    },
+    {
+      "family": "mask_count",
+      "role": "ff",
+      "roots": 8
+    },
+    {
+      "family": "other_explicit",
+      "role": "static",
+      "roots": 2
+    },
+    {
+      "family": "pair_count",
+      "role": "comb",
+      "roots": 12
+    },
+    {
+      "family": "pair_count",
+      "role": "ff",
+      "roots": 95
+    },
+    {
+      "family": "partial_carry",
+      "role": "comb",
+      "roots": 3
+    },
+    {
+      "family": "partial_carry",
+      "role": "ff",
+      "roots": 42
+    },
+    {
+      "family": "quad_count",
+      "role": "comb",
+      "roots": 10
+    },
+    {
+      "family": "quad_count",
+      "role": "ff",
+      "roots": 50
+    },
+    {
+      "family": "reset",
+      "role": "ff",
+      "roots": 1
+    },
+    {
+      "family": "rotate_total",
+      "role": "comb",
+      "roots": 6
+    },
+    {
+      "family": "rotate_total",
+      "role": "ff",
+      "roots": 960
+    },
+    {
+      "family": "write_formation",
+      "role": "ff",
+      "roots": 6
+    }
+  ],
+  "unclassified_unsafe": [
+    {
+      "driver": "literal:0",
+      "names": [
+        "c_tx",
+        "core.cm",
+        "core.qm",
+        "core.wa_c",
+        "core.wa_r",
+        "tx"
+      ],
+      "loads": 2997,
+      "endpoint_roles": {
+        "data": 2097,
+        "output": 900
+      }
+    },
+    {
+      "driver": "literal:1",
+      "names": [
+        "c_tx",
+        "tx"
+      ],
+      "loads": 5896,
+      "endpoint_roles": {
+        "reset": 1759,
+        "data": 4097,
+        "output": 40
+      }
+    }
+  ]
+}

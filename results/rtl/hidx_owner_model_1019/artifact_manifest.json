@@ -1,0 +1,34 @@
+{
+  "rows": 113836,
+  "clock_unit": "fF",
+  "area_unit": "um2",
+  "ff_masters": {
+    "DFFHQNx1_ASAP7_75t_R": {
+      "count": 21773,
+      "area": 0.2916,
+      "clock_cap": 0.474736
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "count": 1759,
+      "area": 0.37908,
+      "clock_cap": 0.462899
+    }
+  },
+  "ff_area": 7015.8085200000005,
+  "ff_clock_cap": 11150.666269,
+  "seq_library_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+  "artifacts": {
+    "owner_index.jsonl.gz": {
+      "bytes": 1636457,
+      "sha256": "2dc8794e7d6331845f21091dd4e8a93f0ede99dadd9ee32827fb2d7aa733f6bb"
+    },
+    "all_owner_sink_records.jsonl.gz": {
+      "bytes": 19702244,
+      "sha256": "3953fd38f79a08ad2809a4c639e8d7cbad071f32648adb3a325d3fec3a2705d6"
+    },
+    "unsafe_owner_equations.jsonl.gz": {
+      "bytes": 4902983,
+      "sha256": "9ffd88dd20119911c52c882edccfbd37716d32e71fc6f16ea2982e06df8026bb"
+    }
+  }
+}
