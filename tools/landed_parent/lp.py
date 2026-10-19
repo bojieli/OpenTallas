@@ -87,6 +87,10 @@ KW = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic",
 LIB_PORTS = {"ot_pl_land_w": {"ck": "in", "rsi": "in", "i": "in", "bank": "out", "epo": "out", "vld": "out"},
              "ot_pl_land_r": {"ck": "in", "rsi": "in", "bank": "in", "epo": "in", "vld": "in", "o": "out"},
              "ot_pl_pad": {"ck": "in", "d": "in", "q": "out"}}
+# Chunked primitives preserve the same top-level source/read contract.
+LIB_PORTS['ot_pl_land_chunk_w'] = dict(LIB_PORTS['ot_pl_land_w'])
+LIB_PORTS['ot_pl_land_chunk_r'] = dict(LIB_PORTS['ot_pl_land_r'])
+
 
 
 # ----------------------------------------------------------------------------------------------------- verilog parsing
@@ -336,6 +340,12 @@ class Parent:
             self.region[ins["inst"]] = hit[0]
         self.D, self.E = int(spec.get("D", 4)), int(spec.get("E", 2))
         self.K = self.E
+        self.direct_timing = bool(spec.get("landing_direct_timing", False))
+        self.chunk_bits = int(spec.get("landing_chunk_bits", 0))
+        if self.chunk_bits and not 1 <= self.chunk_bits <= 24:
+            raise SystemExit("landing_chunk_bits must be 1..24 (kept local selector fanout)")
+        if self.direct_timing and (self.D != 4 or self.E != 2):
+            raise SystemExit("landing_direct_timing requires the proven D4/E2 phase envelope")
         self.A = self.E + 1
         self.lag = set()
         for g in spec.get("lag_pins") or []:
@@ -594,6 +604,8 @@ class Parent:
             n, net, s, r = Ld["name"], Ld["net"], Ld["src_region"], Ld["dst_region"]
             rng = self.rng(net)
             wt = width_text(rng)
+            primitive = "ot_pl_land_chunk" if self.chunk_bits else "ot_pl_land"
+            cp = f", .CHUNK_BITS({self.chunk_bits})" if self.chunk_bits else ""
             decl = rng or ""
             out = f"{net}__l_{r}" if "dst_inst" not in Ld else f"{net}__l_{Ld['dst_inst']}"
             g = Ld.get("ring_of", n)
@@ -602,12 +614,12 @@ class Parent:
             if g == n:
                 w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{D - 1}:0] lpl_{n}_vld;"
                   f"  wire {decl} {out}, lpl_{n}_o;")
-                w(f"    ot_pl_land_w #(.W({wt}), .D({D})) u_lpl_{n}_w (.ck(ck_{s}), .rsi(lpr_{s}), .i({net}), "
+                w(f"    {primitive}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi(lpr_{s}), .i({net}), "
                   f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
             else:
                 w(f"    wire {decl} {out}, lpl_{n}_o;")
             kk = f"(MUT == 2) ? {K + 1} : {K}" if n == "0" and mut else f"{K}"
-            w(f"    ot_pl_land_r #(.W({wt}), .D({D}), .K({kk})) u_lpl_{n}_r (.ck(ck_{r}), .rsi(lpr_{r}), "
+            w(f"    {primitive}_r #(.W({wt}), .D({D}), .K({kk}){cp}) u_lpl_{n}_r (.ck(ck_{r}), .rsi(lpr_{r}), "
               f".bank(lpl_{g}_bank), .epo(lpl_{g}_epo), .vld(lpl_{g}_vld), .o(lpl_{n}_o));")
             if Ld.get("unlanded_mutant"):
                 w(f"    assign {out} = {net};   // --mut-unland: the region audit must FAIL on this crossing")
@@ -685,7 +697,7 @@ class Parent:
                 for f_, t_ in ((rr, r), (r, rr)):
                     o.append(f"set_clock_uncertainty -setup {60 + res} -from [get_clocks {clk[f_]}] -to [get_clocks {clk[t_]}]")
                     o.append(f"set_clock_uncertainty -hold {25 + res} -from [get_clocks {clk[f_]}] -to [get_clocks {clk[t_]}]")
-        if P["lands"]:
+        if P["lands"] and not self.direct_timing:
             o.append(f"# {len(P['lands'])} landings (LANDING-CONTRACT L5): ring -> read multicycle -setup {E} -hold {D - 1}, "
                      f"window ({E} - {D}) T + t_hold < dL < {E} T - t_cq - t_setup")
             shared = any(L.get("ring_of", L["name"]) != L["name"] for L in P["lands"])
@@ -710,6 +722,17 @@ class Parent:
                   f"  set_multicycle_path -setup {E} -from $ot_lf -to $ot_lt",
                   f"  set_multicycle_path -hold {D - 1} -from $ot_lf -to $ot_lt", "}",
                   'puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"']
+        if P["lands"] and self.direct_timing:
+            o.append("# D4/E2 directly timed landing: supported compensated phase +/-0.75T; "
+                     "sample age1.25..2.75T, overwrite gap>=1.25T.")
+            o.append("# Conservative quarter-T setup envelope; ordinary60ps/25ps remains charged. No data exceptions.")
+            pairs = sorted({(L["src_region"], L["dst_region"]) for L in P["lands"]})
+            for a, b in pairs:
+                for f_, t_ in ((a, b), (b, a)):
+                    o.append(f"set_clock_uncertainty -setup -from [get_clocks {clk[f_]}] "
+                             f"-to [get_clocks {clk[t_]}] [expr {{60.0 + 0.75 * $ot_lp_per}}]")
+                    o.append(f"set_clock_uncertainty -hold -from [get_clocks {clk[f_]}] "
+                             f"-to [get_clocks {clk[t_]}] 25.0")
         for p in self.mod["ports"]:
             n = p["name"]
             if n in self.ck or n in self.static or n == self.rst:
@@ -731,6 +754,12 @@ class Parent:
         t = P["t"]
         flops_land = sum((self.D * L["width"] + self.D + (self.AW + 1) + 1 if L.get("ring_of", L["name"]) == L["name"] else 0)
                          + L["width"] + (self.AW + 1) + 2 for L in P["lands"])
+        if self.chunk_bits:
+            # Every extra kept chunk owns writer/read counters. Vld and assertion
+            # epoch outputs are shared from chunk0; data storage is unchanged.
+            flops_land += sum((math.ceil(L["width"] / self.chunk_bits) - 1) *
+                              ((self.AW + 2 if L.get("ring_of", L["name"]) == L["name"] else 0) + self.AW + 3)
+                              for L in P["lands"])
         flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items())
         flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) + self.rx for i in self.insts if any(
             pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in i["conns"].items()))
@@ -748,11 +777,13 @@ class Parent:
             regions={r: dict(clock_port=f"ck_{r}", children=sorted(i for i, rg in self.region.items() if rg == r))
                      for r in self.regions},
             D=self.D, E=self.E, K=self.K, added_edges_per_landing=self.A,
-            window=f"({self.E} - {self.D}) T + t_hold < dL < {self.E} T - t_cq - t_setup at TT and FF",
+            window=("direct quarter-T setup envelope; D4/E2 sample age1.25..2.75T at compensated phase +/-0.75T; "
+                    "overwrite gap>=1.25T at TT/FF" if self.direct_timing else
+                    f"({self.E} - {self.D}) T + t_hold < dL < {self.E} T - t_cq - t_setup at TT and FF"),
             landings=[dict(L, ring=f"u_lpl_{L.get('ring_of', L['name'])}_w (ck_{L['src_region']})",
                            read=f"u_lpl_{L['name']}_r (ck_{L['dst_region']})", added_edges=self.A,
-                           sdc=f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L.get('ring_of', L['name'])}_w.* "
-                               f"-to u_lpl_{L['name']}_r.*")
+                           sdc=("direct related-root quarter-T setup envelope, hold25ps" if self.direct_timing else f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L.get('ring_of', L['name'])}_w.* "
+                               f"-to u_lpl_{L['name']}_r.*"))
                       for L in P["lands"]],
             pads=[dict(net=n, reader=i, stages=k) for (n, i), k in sorted(P["pads"].items())],
             reset=dict(port=self.rst, root_region=rt["reset_region"], depth=rt["RB"], hops=rt["hops"],
@@ -779,6 +810,10 @@ class Parent:
             **({} if not (S.get("bench") or {}).get("mut_waivers") else dict(mutant_waivers=S["bench"]["mut_waivers"])),
             warnings=[f"child {i} runs t = {t[i]} edges late but has no reset pin on {self.rst}: its free-running state "
                       "is NOT re-aligned (check it in the bench)" for i in no_rst],
+            **({} if not (self.chunk_bits or self.direct_timing) else dict(
+                landing_implementation=dict(chunk_bits=self.chunk_bits, direct_quarter_period_timing=self.direct_timing,
+                                            compensated_phase_T=[-0.75, 0.75], sample_age_T=[1.25, 2.75],
+                                            overwrite_gap_min_T=1.25))),
             die_obligations=[
                 "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
                 "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
@@ -970,7 +1005,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
                         continue
                     di = next(x for x in insts if x["inst"] == d)
-                    if di["module"] == "ot_pl_land_w" and i["module"] == "ot_pl_land_r" and \
+                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r") and \
                             (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):
