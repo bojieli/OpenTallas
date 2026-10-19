@@ -33,9 +33,9 @@ for ci,c in enumerate(coupon['cases']):
  for a in c['shapes']:bynet.setdefault(a['net'],{'shapes':[],'vias':[]})['shapes'].append(a)
  for v in c['vias']:bynet.setdefault(v['net'],{'shapes':[],'vias':[]})['vias'].append(v)
  for ni,(name,shapes) in enumerate(bynet.items()):
-  net=odb.dbNet.create(block,f'case{ci}_net{ni}'); net.setSigType(odb.dbSigType('SIGNAL'))
+  net=odb.dbNet.create(block,f'case{ci}_net{ni}'); net.setSigType('SIGNAL')
   wire=odb.dbWire.create(net);enc=odb.dbWireEncoder();enc.begin(wire)
-  typ=odb.dbWireType(c['wire_status'])
+  typ=c['wire_status']
   for a in shapes['shapes']:
    x0,y0,x1,y1=a['rect_nm'];l=t.findLayer(a['layer']);enc.newPath(l,typ)
    if a['layer']=='M4' and y1-y0==24 and x1-x0>24:
