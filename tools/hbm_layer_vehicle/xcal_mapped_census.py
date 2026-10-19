@@ -46,8 +46,30 @@ for job in jobs:
         clock=any(n in clock_names for n in names) or all(c[2].upper() in ['CLK','CK','CLOCK'] or (c[2].upper()=='C' and c[1].upper().startswith(('DFF','SDFF','ADFF','LATCH'))) for c in sinks)
         nets.append(dict(bit=bit,fanout=len(sinks),names=names,drivers=drivers[bit],reset=reset,clock=clock,sinks=sinks))
     nets.sort(key=lambda x:x['fanout'],reverse=True)
+    # Collapse buffers/inverters recursively, including QN->INV->Q, without
+    # crossing any logical or sequential cell. Count unique physical input pins.
+    def collapse(bit,seen=None):
+        seen=set() if seen is None else seen
+        if bit in seen:return set(),set()
+        seen=seen|{bit};terminal=set();visited={bit}
+        for cn,ct,pt in loads[bit]:
+            if re.match(r'^(INV|BUF)',ct):
+                for op,bs in mod['cells'][cn]['connections'].items():
+                    if mod['cells'][cn]['port_directions'][op]=='output':
+                        for ob in bs:
+                            ts,vs=collapse(ob,seen);terminal.update(ts);visited.update(vs)
+            else:terminal.add((cn,ct,pt))
+        return terminal,visited
+    collapsed=[]
+    for n in nets:
+        pins,visited=collapse(n['bit']);names=list(dict.fromkeys(x for b in visited for x in aliases[b]))
+        reset=n['reset'] or any('rst' in x or 'reset_' in x for x in names)
+        collapsed.append(dict(bit=n['bit'],names=names,fanout=len(pins),drivers=n['drivers'],reset=reset,clock=n['clock'],sinks=sorted(pins)))
+    collapsed.sort(key=lambda x:x['fanout'],reverse=True)
     counts=collections.Counter(c['type'] for c in mod['cells'].values());unknown={k:v for k,v in counts.items() if k not in areas and not k.startswith('ot_sram_')}
     report=dict(top=top,analyzer_sha256=hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(),reused_mapped=args.reuse_mapped,tool='ORFS docker Yosys + ABC, RVT TT,833.333ps target',physical_claim=False,std_area_um2=sum(areas.get(k,0)*v for k,v in counts.items()),source_sha256={p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in sources},macro_counts={k:v for k,v in counts.items() if k.startswith('ot_sram_')},unmapped_or_unknown=unknown,cell_counts=counts,over32_data_control=[n for n in nets if n['fanout']>32 and not n['reset'] and not n['clock']],clock_networks=[n for n in nets if n['clock']],reset_networks=[n for n in nets if n['reset']],top50=nets[:50])
+    report.update(buffer_collapsed_over32_data_control=[n for n in collapsed if n['fanout']>32 and not n['reset'] and not n['clock']],buffer_collapsed_reset_networks=[n for n in collapsed if n['reset']])
     (dst/'census.json').write_text(json.dumps(report,indent=2)+'\n')
-    print(json.dumps({k:v for k,v in report.items() if k not in ['top50','over32_data_control','cell_counts','clock_networks','reset_networks']},indent=2),flush=True)
+    print(json.dumps({k:v for k,v in report.items() if k not in ['top50','over32_data_control','cell_counts','clock_networks','reset_networks','buffer_collapsed_over32_data_control','buffer_collapsed_reset_networks']},indent=2),flush=True)
     print('OVER32',[(n['names'],n['fanout']) for n in report['over32_data_control']],flush=True)
+    print('COLLAPSED_OVER32',[(n['names'],n['fanout']) for n in report['buffer_collapsed_over32_data_control']],flush=True)
