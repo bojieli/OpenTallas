@@ -120,8 +120,8 @@
  "job": {
   "owner": "Claude:HBM-NEXT-UNITS-COLL",
   "branch": "claude/hbm-next-units-coll-1019",
-  "tag": "n1",
-  "purpose": "HBM-NEXT P=4 COLL gather master ISSUE leaf (hnx fork of hcoll_gq_issue_1018): N-row message train (row offsets soff/roff, rs_A/rs_O, train index t = rK + k; ld_desc 53->69 b, ld_ev_k 10->17 b); same outline and faces",
+  "tag": "n2",
+  "purpose": "HBM-NEXT P=4 COLL gather master ISSUE leaf (hnx fork of hcoll_gq_issue_1018): N-row message train (row offsets soff/roff, rs_A/rs_O, train index t = rK + k; ld_desc 53->69 b, ld_ev_k 10->17 b); same outline and faces; n2: n1 NEEDS_RTL TT -111.78 (soff -> row base add -> + i -> 8:1 payload select fanout) fixed by registering the row source base rsrc[r] = g_src + r rs_A and the payload / capture bank selects one stage early (0 cycles)",
   "benches": [
    {
     "name": "hnx_gq_exact",

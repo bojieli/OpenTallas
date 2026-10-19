@@ -165,6 +165,15 @@ The d4g COLL ISA already runs an N-row record as **one issuer loop**. The loop i
 - **Watch:** the landing pre-stage adder (+13-b roff).
 - Neither is on a critical list, and ctl_v5 is unchanged.
 
+### Closure verdicts n1 (collected 10-19 06:20, UNITS lead)
+
+- `hnx_gq_land_1019-n1-be0562a05`: **CLOSED** TT +10.38 / FF +26.08 ps, DRC 0 (SS sensitivity -337). The daemon recorded it on `codex/closure-record-hnx_gq_land_1019-n1-be0562a05` (2d4230d39); its auto-merge to main hit a conflict in 5 tools files (daemon side, not this lane).
+- `hnx_gq_issue_1019-n1-be0562a05`: **NEEDS_RTL** TT -111.78 / FF -14.47 ps, DRC 0 (TT i2r +414, out +214: internal reg->reg).
+  - Worst path `soff[13][1]` -> `sec_add(g_src, soff[row])` -> `+ i` -> 8:1 `rdw` bank select fanned to the 512 `p_d` bits (`ld_p_d[38]`): the hnx row-offset adder chain in front of a high-fanout select. Not the d4g leaf (it has no row offset).
+  - **n2 fix (9042294f5, 0 cycles):** the row source base `rsrc[r] = g_src + r rs_A` is registered directly (same edge and same source registers as the old `soff`, so row 1's first read at fire + 2 is unchanged), and the payload and quantiser-capture bank selects are registered one stage early (`psel` from `ev_k[S_P-2]`, `asel` from `ev_k[S_QCAP-1]`). Only the low 3 sector bits feed the select, and `sec_add` never carries into bit 13.
+  - Bench at 9042294f5 (Verilator 5.050, fleet): main = schedule checks, s0 (d4g rows, N = 1) / s1 (N 1..6 trains) / s2 PASS, faults f1..f5 PASS; m6 FAIL (errors 10,872, same as n1), m7 FAIL (20,909), m8 FAIL (22,037). The witnesses in `witness/m6..m8.log` are refreshed.
+  - FF -14.47 was reg->reg hold, which the route's hold repair should absorb. Re-gate + submit `hnx_gq_issue_1019-n2` through `submit_exact --regate`.
+
 ## Next
 
 1. **Collect the two closure jobs** (pending_results). On a timing fail of gq_land, check the roff adder path first.

@@ -131,8 +131,10 @@ def landed_record(spec, root):
     if spec.get("clock_data_paths") != "related_same_frequency":
         raise ValueError('landed cluster: landings and reset runs cross region roots; requires clock_data_paths '
                          '"related_same_frequency" (same_pll_fixed_phase ratio1/1 phase0)')
-    if spec.get("soft_root_macro_masters") or spec.get("soft_root_macro_bindings") or spec.get("cdc_synchronizers") is not None:
-        raise ValueError("landed cluster: raw-memory sinks / CDC synchronizers are leaf-tile features")
+    # TW2-QCTLM 10-19: raw-memory sinks of a region root are allowed (raw_macro_clocks.contract: exact instance / master /
+    # clock pin / region root); CDC synchronizers stay a leaf-tile feature (regions are related same-frequency roots)
+    if spec.get("cdc_synchronizers") is not None:
+        raise ValueError("landed cluster: CDC synchronizers are leaf-tile features")
     rec = json.loads((Path(root) / path).read_text())
     if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") != spec.get("top"):
         raise ValueError(f'{path}: not the lp.py record of {spec.get("top")}')
@@ -174,13 +176,35 @@ def landed_raw_pins(view, root):
     Returns {raw pin: {"ref": cts-root pin, "tol": ps, "refs": {corner: [lo, mean, hi]}, "record": sign-off SDC,
     "verdict": verdict.json}} with refs = the leaf's measured port -> SRAM clk wire (insertion.json clock_measurements[pin][corner].all, n = 1), so the parent
     judges  wire(raw) + refs.mean  ==  wire(ref) + R(ref).boundary.mean  within tol at TT and FF.  {} when the child has
-    no raw entry.  Fail closed on any record mismatch."""
+    no raw entry.  Fail closed on any record mismatch.
+    ROOT-INF21 10-19 (coordinator, INF.21.1): also MULTI-ROOT sign-off records (landed_record_pins)."""
+    return landed_record_pins(view, root)['raw']
+
+
+def landed_record_pins(view, root):
+    """ROOT-INF21 10-19 (coordinator INF.21.1, pgslice_lg children): the closed-record clock reference of a hard child
+    with raw clock pins (no routed boundary flops), for BOTH record models:
+      'hybrid'     one CTS root + direct raw SRAM entries (HF-4d, h16c): unchanged.
+      'multi_root' a multiple_cts_roots leaf sign-off (KIND0 kind0_l4_leaf1: 7 CTS roots; bank6_clock7: 3 CTS roots +
+                   6 direct SRAM entries).  The record measures EVERY CTS root per root (OT_HYBRID CTS_MEASURE: its
+                   boundary flops, or all its internal sinks when it has none: reference_scope=all_internal_only) and
+                   compensates every entry to ONE phase phi (latency = phi - wire - R).  So every clock pin p of the
+                   child is co-timed: wire(p) + R(p) equal for all p within the record's die-skew tolerance, R(p) =
+                   routed boundary mean | routed all-internal mean (CTS root without boundary flops) | leaf pin -> SRAM
+                   wire (direct entry).  R is the child's ROUTED-view STA (views/<child>/insertion.json
+                   clock_measurements: 6_final.odb + SPEF, every root, TT/FF/SS), never invented.
+    Returns {"model", "raw": {pin: as landed_raw_pins}, "cotimed": {boundary pin != ref: {ref, tol, record, verdict}},
+    "anchor": pin with the largest R (None for 'hybrid'), "R": {pin: {corner: mean}}}.  "raw" pins are judged against
+    "ref" = the boundary CTS root with the largest TT boundary mean; "cotimed" boundary pins likewise (post-CTS SDC and
+    pre-route gate); the post-CTS tap delays every pin except "anchor" by R(anchor) - R(p) (landed_tap_targets).
+    Children whose pins all have routed boundary flops read no record (empty result, kits byte-identical)."""
     view = Path(view)
+    empty = dict(model=None, raw={}, cotimed={}, anchor=None, R={})
     ins = json.loads((view / 'insertion.json').read_text())
     cm = ins.get('clock_measurements') or {}
     raw_like = sorted(p for p, r in cm.items() if any(not (r.get(c) or {}).get('boundary') for c in CORNERS))
     if not raw_like:
-        return {}
+        return empty
     where = f'{view}: raw child clock pins {raw_like}'
     try:
         pl = json.loads((view / 'port_latency.json').read_text())
@@ -209,36 +233,85 @@ def landed_raw_pins(view, root):
     raw = {m[3]: m[4] for m in re.finditer(r'\{\{([^{}\s]+)\} \{([^{}\s]+)\} \{([^{}\s]+)\} \{([^{}\s]+)\} ',
                                             direct[1])} if direct else {}
     hold = re.findall(r'^\s*set_clock_uncertainty -hold ([\d.]+) -from \$a -to \$b\s*$', sdc, re.M)
-    model = ('set latency [expr {$ref - $wire - $mean}]' in sdc
-             and 'lappend rows [list [lindex $sources 0] $pin $wire 0 0 0 $clock 0 $domain]' in sdc)
-    if not ports or not roots or len(roots) != 1 or not raw or len(hold) != 1 or not model:
-        raise ValueError(f'{where}: {sdc_path} is not a hybrid-entries sign-off with one CTS root, direct raw SRAM '
-                         'entries (R 0), entry compensation and one per-pair hold uncertainty')
-    ref = roots[0]
-    if sorted(ports) != sorted(clocks) or sorted(ports) != sorted(cm) or sorted(ports) != sorted([ref, *raw]):
+    comp = 'set latency [expr {$ref - $wire - $mean}]' in sdc
+    direct_row = 'lappend rows [list [lindex $sources 0] $pin $wire 0 0 0 $clock 0 $domain]' in sdc
+    multi = bool(roots) and len(roots) > 1
+    if not multi:
+        if not ports or not roots or len(roots) != 1 or not raw or len(hold) != 1 or not (comp and direct_row):
+            raise ValueError(f'{where}: {sdc_path} is not a hybrid-entries sign-off with one CTS root, direct raw SRAM '
+                             'entries (R 0), entry compensation and one per-pair hold uncertainty')
+    else:
+        root_row = 'lappend rows [list [get_ports $name] [lindex $pins 0] 0 $lo $mean $hi $clock $mean $domain]' in sdc
+        internal = 'set scope all_internal_only' in sdc and 'if {![llength $boundary]} { set boundary $pins;' in sdc
+        if (not ports or len(hold) != 1 or not comp or not root_row or (raw and not direct_row)
+                or len(set(roots)) != len(roots) or set(roots) & set(raw)):
+            raise ValueError(f'{where}: {sdc_path} is not a multi-root sign-off (one measured row per CTS root, entry '
+                             'compensation to one phase, direct entries R 0, one per-pair hold uncertainty)')
+    if sorted(ports) != sorted(clocks) or sorted(ports) != sorted(cm) or sorted(ports) != sorted([*roots, *raw]):
         raise ValueError(f'{where}: bound clock pins differ: record SDC {ports}, port_latency {clocks}, insertion '
-                         f'{sorted(cm)}, CTS root {ref} + raw {sorted(raw)}')
-    if sorted(raw) != raw_like:
-        raise ValueError(f'{where}: pins without a routed boundary differ from the record raw SRAM entries {sorted(raw)}')
+                         f'{sorted(cm)}, CTS roots {roots} + raw {sorted(raw)}')
+    bounded = [p for p in roots if p not in raw_like]
+    internal_roots = sorted(p for p in roots if p in raw_like)
+    if sorted([*raw, *internal_roots]) != raw_like or not bounded:
+        raise ValueError(f'{where}: pins without a routed boundary differ from the record raw entries {sorted(raw)}'
+                         + (f' + internal-only CTS roots {internal_roots}' if multi else '')
+                         + ('' if bounded else '; no CTS root with routed boundary flops to co-time them with'))
+    if internal_roots and not internal:
+        raise ValueError(f'{where}: {sdc_path} has CTS roots without boundary flops {internal_roots} but no '
+                         'all-internal-sink reference scope')
     tol = float(hold[0]) - H1_HOLD_MARGIN_PS
     if not tol > 0:
         raise ValueError(f'{where}: record hold uncertainty {hold[0]} leaves no die-skew tolerance')
-    out = {}
-    for pin in sorted(raw):
+
+    def bmean(p, c):
+        b = (cm[p].get(c) or {}).get('boundary') or {}
+        if not b.get('n') or (cm[p].get(c) or {}).get('errors'):
+            raise ValueError(f'{where}: {p}/{c}: no routed boundary reference')
+        v = float(b['mean'])
+        if not math.isfinite(v) or v < 0:
+            raise ValueError(f'{where}: {p}/{c}: invalid routed boundary reference')
+        return v
+    ref = max(bounded, key=lambda p: (bmean(p, 'tt'), -bounded.index(p))) if multi else roots[0]
+    record = f'{routes[0]}/signoff.sdc'
+    vrel = f'results/closure_loop/{job}/verdict.json'
+    out, R = {}, {}
+    for pin in sorted([*raw, *internal_roots]):
         refs = {}
         for c in CORNERS:
             rc, bc = cm[pin].get(c) or {}, (cm[ref].get(c) or {}).get('boundary') or {}
             a = rc.get('all') or {}
             mac = rc.get('macros') or {}
-            if rc.get('errors') or a.get('n') != 1 or mac.get('n') != 1 or not bc.get('n'):
-                raise ValueError(f'{where}: {pin}/{c}: not one measured SRAM clock wire, or {ref} has no boundary')
+            if pin in raw:
+                bad = rc.get('errors') or a.get('n') != 1 or mac.get('n') != 1 or not bc.get('n')
+                what = 'not one measured SRAM clock wire'
+            else:
+                bad = rc.get('errors') or not isinstance(a.get('n'), int) or a['n'] < 1 or mac or not bc.get('n')
+                what = 'not a measured routed all-internal-sink reference of a CTS root'
+            if bad:
+                raise ValueError(f'{where}: {pin}/{c}: {what}, or {ref} has no boundary')
             v = [float(a[k]) for k in ('min', 'mean', 'max')]
             if not all(math.isfinite(x) and x >= 0 for x in v) or not v[0] <= v[1] <= v[2]:
                 raise ValueError(f'{where}: {pin}/{c}: invalid leaf wire reference')
             refs[c] = v
-        out[pin] = dict(ref=ref, tol=tol, refs=refs, record=f'{routes[0]}/signoff.sdc',
-                        verdict=f'results/closure_loop/{job}/verdict.json')
-    return out
+        out[pin] = dict(ref=ref, tol=tol, refs=refs, record=record, verdict=vrel)
+        R[pin] = {c: refs[c][1] for c in CORNERS}
+    if not multi:
+        return dict(model='hybrid', raw=out, cotimed={}, anchor=None, R=R)
+    for p in bounded:
+        R[p] = {c: bmean(p, c) for c in CORNERS}
+    meas = pl.get('clock_reference')
+    if meas is not None:
+        # a generated (no pin registers) port_latency.json carries the routed-view references it was made from: they
+        # must be the view's own measurements (fail closed on any drift between the record files)
+        for p in ports:
+            for c in CORNERS:
+                got = ((meas.get(p) or {}).get(c) or {}).get('mean')
+                if got is None or abs(float(got) - R[p][c]) > 1e-6:
+                    raise ValueError(f'{where}: port_latency.json clock_reference {p}/{c} {got} differs from the routed '
+                                     f'view reference {R[p][c]}')
+    cotimed = {p: dict(ref=ref, tol=tol, record=record, verdict=vrel) for p in bounded if p != ref}
+    anchor = max(ports, key=lambda p: (R[p]['tt'], -ports.index(p)))
+    return dict(model='multi_root', raw=out, cotimed=cotimed, anchor=anchor, R=R)
 
 
 def landed_raw_targets(spec, root):
@@ -259,6 +332,51 @@ def landed_raw_targets(spec, root):
             for c in CORNERS:
                 row[c] = round(float(cm[info['ref']][c]['boundary']['mean']) - info['refs'][c][1], 3)
             out[f'{view.name}/{pin}'] = row
+    return out
+
+
+def landed_tap_targets(spec, root):
+    """ROOT-INF21 10-19: the post-CTS tap targets (landed_raw_tap.tcl ::ot_lrt_targets).  'hybrid' children: the raw-pin
+    targets (landed_raw_targets, unchanged).  'multi_root' children: the record co-times EVERY clock pin to one phase,
+    and TritonCTS gives every clock pin of a hard child the same pin arrival (macro tree), so every pin p except the
+    anchor (largest R) is delayed by R(anchor) - R(p) (>= 0 at TT) measured against the anchor pin: raw pins, internal-
+    only roots AND boundary roots (bank6_clock7: clk 60.8 / clk_rd 84.9 boundary vs clk_ws 151.1 internal at TT -- the
+    raw pin needs to arrive EARLIER than a boundary ref, which a delay-only tap on the raw pin cannot give)."""
+    out = {}
+    if not landed_cluster(spec):
+        return out
+    for child in spec.get('children', []):
+        view = Path(root) / child['view']
+        rec = landed_record_pins(view, root)
+        if rec['model'] == 'hybrid':
+            cm = json.loads((view / 'insertion.json').read_text())['clock_measurements']
+            for pin, info in rec['raw'].items():
+                row = dict(ref=info['ref'], record=info['record'], verdict=info['verdict'])
+                for c in CORNERS:
+                    row[c] = round(float(cm[info['ref']][c]['boundary']['mean']) - info['refs'][c][1], 3)
+                out[f'{view.name}/{pin}'] = row
+        elif rec['model'] == 'multi_root':
+            a = rec['anchor']
+            info = next(iter(rec['raw'].values()))
+            for pin in sorted(rec['R']):
+                if pin == a:
+                    continue
+                row = dict(ref=a, record=info['record'], verdict=info['verdict'])
+                for c in CORNERS:
+                    row[c] = round(rec['R'][a][c] - rec['R'][pin][c], 3)
+                out[f'{view.name}/{pin}'] = row
+    return out
+
+
+def landed_cotimed_pins(spec, root):
+    """ROOT-INF21 10-19: {"<master>/<boundary pin>": {ref, tol, record}} of multi-root children (co-timed with ref)"""
+    out = {}
+    if not landed_cluster(spec):
+        return out
+    for child in spec.get('children', []):
+        view = Path(root) / child['view']
+        for pin, info in landed_record_pins(view, root)['cotimed'].items():
+            out[f'{view.name}/{pin}'] = info
     return out
 
 
@@ -303,7 +421,7 @@ def landed_pre_cts_tcl(spec, root):
 
 def landed_raw_tcl(spec, root):
     """pre_cts.tcl lines that arm landed_raw_tap.tcl ([] without raw child clock pins: kits byte-identical)"""
-    targets = landed_raw_targets(spec, root)
+    targets = landed_tap_targets(spec, root)
     if not targets:
         return []
     rows = ' '.join(f'{{{k}}} {{ref {v["ref"]} tt {v["tt"]:g} ff {v["ff"]:g} ss {v["ss"]:g}}}' for k, v in sorted(targets.items()))
@@ -318,8 +436,25 @@ def landed_sdc(spec, root):
         return ""
     D, E = rec["D"], rec["E"]
     names = [L["name"] for L in rec.get("landings") or []]
+    # TW2-PSLICE2 10-19 (lp.py share_rings): a landing may read ANOTHER landing's ring ("ring": "u_lpl_<g>_w (ck_<r>)")
+    ring = {L["name"]: (str(L.get("ring") or "").split() or [""])[0] for L in rec.get("landings") or []}
+    ring = {n: (g[6:-2] if g.startswith("u_lpl_") and g.endswith("_w") else n) for n, g in ring.items()}
+    shared = any(g != n for n, g in ring.items())
     o = [f"# ---- PL-KIT landed cluster ({spec['landed_record']}): {len(names)} landings, multicycle -setup {E} -hold {D - 1}"]
-    if names:
+    if names and shared:
+        o += ["set ot_lp_pairs {" + " ".join(f"{ring[n]} {n}" for n in names) + "}",
+              "set ot_lp_lands {}; foreach {ot_lw ot_ln} $ot_lp_pairs { lappend ot_lp_lands $ot_ln; set ot_lp_ring($ot_ln) $ot_lw }",
+              "set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {",
+              "  set ot_lw $ot_lp_ring($ot_ln)",
+              "  set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w.*]",
+              "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
+              "  if {[llength $ot_lf] == 0} { set ot_lf [get_cells -quiet u_lpl_${ot_lw}_w/*] }",
+              "  if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }",
+              "  if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }",
+              f"  set_multicycle_path -setup {E} -from $ot_lf -to $ot_lt",
+              f"  set_multicycle_path -hold {D - 1} -from $ot_lf -to $ot_lt", "}",
+              'puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"']
+    elif names:
         o += ["set ot_lp_lands {" + " ".join(names) + "}", "set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {",
               "  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]",
               "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
@@ -481,7 +616,7 @@ def _generate(spec, root):
     if spec.get('clock') == 'hybrid_entries' and (not isinstance(roots, list) or not roots or
             not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(spec['clock_ports'])):
         raise ValueError('hybrid_entries requires a nonempty proper subset of distinct clock_cts_roots')
-    refs, counts, raw, check_only = {}, {}, {}, {}
+    refs, counts, raw, check_only, cotimed = {}, {}, {}, {}, {}
     landed = landed_cluster(spec)
     for child in spec.get('children', []):
         view = Path(root) / child['view']
@@ -506,7 +641,10 @@ def _generate(spec, root):
         refs[master] = {}
         # HF-4d 10-19: a landed cluster's hard child may carry raw SRAM clock entries (no ETM arcs, no routed boundary);
         # their reference and tolerance come from the leaf's CLOSED RECORD (landed_raw_pins), never from the ETM
-        child_raw = landed_raw_pins(view, root) if landed else {}
+        child_rec = landed_record_pins(view, root) if landed else dict(raw={}, cotimed={})
+        child_raw = child_rec['raw']
+        for pin, info in child_rec['cotimed'].items():
+            cotimed[f'{master}/{pin}'] = info
         if landed:
             # ROOT-LANDEDHC 10-19: the child clock pins that carry Liberty TIMING CHECKS (setup/hold/recovery/removal
             # related_pin) may be reached by net trace as check-only sinks (TW-HBM-COLLP); a pin with no check arc (a raw
@@ -559,7 +697,7 @@ def _generate(spec, root):
         out_row = '' if fout == 0.2 else " io_budget_out_ps " + str(round(period * fout, 3))
         domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(period * fin, 3)) + out_row + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
-    body = (landed_raw_body(LANDED_BODY) if raw else LANDED_BODY) if landed else LEAF_BODY if native_leaf(spec) else BODY
+    body = (landed_raw_body(LANDED_BODY, bool(cotimed)) if raw else LANDED_BODY) if landed else LEAF_BODY if native_leaf(spec) else BODY
     if spec.get('clock_data_paths') == 'async_gray_fifo':
         body = async_gray_fifo_constraints.extend(body, spec, root)
     if spec.get('cdc_synchronizers') is not None and spec.get('clock_data_paths') != gray_fifo_cdc_constraints.POLICY:
@@ -575,6 +713,9 @@ def _generate(spec, root):
             + ('set ::ot_ce_landed_raw [dict create ' + ' '.join(
                 f'{{{k}}} {{ref {v["ref"]} tol {v["tol"]:g} record {v["record"]}}}' for k, v in sorted(raw.items())) + ']\n'
                if raw else '')
+            + ('set ::ot_ce_landed_cotimed [dict create ' + ' '.join(
+                f'{{{k}}} {{ref {v["ref"]} tol {v["tol"]:g} record {v["record"]}}}' for k, v in sorted(cotimed.items())) + ']\n'
+               if cotimed else '')
             + ('set ::ot_ce_check_only [dict create ' + ' '.join(f'{{{k}}} 1' for k in sorted(check_only)) + ']\n'
                if check_only else '') +
             'set ::ot_ce_refs [dict create ' + ' '.join(rows) + ']\n'
@@ -1330,7 +1471,7 @@ LANDED_ROOT_PROC = r"""proc ot_ce_net_root_port {pin} {
 LANDED_BODY = LANDED_ROOT_PROC + landed_body()
 
 
-def landed_raw_body(body):
+def landed_raw_body(body, cotimed=False):
     """HF-4d 10-19 (coordinator option A): LANDED_BODY for a cluster whose hard child carries raw SRAM clock entries
     (::ot_ce_landed_raw from landed_raw_pins: the leaf's closed record).  all_registers never reaches such a pin (no ETM
     arcs), so after every region root is measured each bound raw pin is visited on the root of its co-timed CTS-root pin
@@ -1338,7 +1479,11 @@ def landed_raw_body(body):
     against the co-timed pin's effective arrival (wire + routed R boundary mean) = the leaf sign-off phase.  Post-CTS
     (propagated, measured) |skew| > the leaf's sign-off tolerance is an ERROR (fail closed); pre-CTS it is only reported.
     A raw pin reached as a register, an unreached co-timed pin or a raw pin not on that root (no propagated arrival)
-    fails.  Landed kits without raw entries keep LANDED_BODY byte-identical."""
+    fails.  Landed kits without raw entries keep LANDED_BODY byte-identical.
+    ROOT-INF21 10-19, cotimed (multi-root child records only; hybrid kits byte-identical): every OTHER boundary CTS-root
+    pin of such a child (::ot_ce_landed_cotimed) is judged the same way against the same ref -- both effective arrivals
+    (pin wire + routed boundary mean) from the region-root sink loop -- because the leaf record co-timed every root to
+    one phase within the same tolerance."""
     raw_visit = (
         '  # HF-4d raw SRAM clock entries of hard children: co-timed with their CTS-root pin per the leaf closed record\n'
         '  set ot_ce_raw_fail {}\n'
@@ -1369,9 +1514,29 @@ def landed_raw_body(body):
         '      incr ot_ce_landed_hits\n'
         '    }\n'
         '  }\n'
+        + (
+        '  # ROOT-INF21 multi-root child records: the other boundary CTS-root pins are co-timed with the same ref\n'
+        '  if {[info exists ::ot_ce_landed_cotimed]} {\n'
+        '    dict for {ckey cinfo} $::ot_ce_landed_cotimed {\n'
+        '      lassign [split $ckey /] cmaster cpin\n'
+        '      set crefpin [dict get $cinfo ref]; set ctol [dict get $cinfo tol]\n'
+        '      foreach cell [get_cells -quiet -hierarchical *] {\n'
+        '        if {[get_property $cell ref_name] ne $cmaster} continue\n'
+        '        set cname [get_full_name $cell]\n'
+        '        if {![dict exists $ot_ce_landed_eff "$cname/$cpin"] || ![dict exists $ot_ce_landed_eff "$cname/$crefpin"]} {\n'
+        '          error "OT_LANDED: co-timed child clock pin $cname/$cpin or its ref $cname/$crefpin was not reached from a region root"\n'
+        '        }\n'
+        '        set ceff [lindex [dict get $ot_ce_landed_eff "$cname/$cpin"] 2]; set creff [lindex [dict get $ot_ce_landed_eff "$cname/$crefpin"] 2]\n'
+        '        set skew [expr {$ceff - $creff}]\n'
+        '        set verdict [expr {$ot_ce_raw_diag ? "PRE_CTS" : (abs($skew) <= $ctol ? "PASS" : "FAIL")}]\n'
+        '        puts "OT_LANDED COTIMED_PIN $corner $cname/$cpin eff=$ceff co_timed=$cname/$crefpin eff_ref=$creff skew=[format %.1f $skew] tol=$ctol $verdict"\n'
+        '        if {$verdict eq "FAIL"} { lappend ot_ce_raw_fail "$cname/$cpin [format %.1f $skew] ps" }\n'
+        '      }\n'
+        '    }\n'
+        '  }\n' if cotimed else '') + (
         '  if {[llength $ot_ce_raw_fail]} {\n'
         '    error "OT_LANDED: raw child clock pin arrival vs its co-timed CTS-root pin beyond the leaf sign-off tolerance at $corner: [join $ot_ce_raw_fail {, }]"\n'
-        '  }\n')
+        '  }\n'))
     substitutions = [
         # a raw SRAM pin is visited on its co-timed pin's root below, never as a check-only pin
         ('        if {![info exists ::ot_ce_check_only] || ![dict exists $::ot_ce_check_only $key]} continue\n',

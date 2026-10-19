@@ -1,9 +1,9 @@
 {
- "name": "hnx_gq_issue_1019-n1-COMMIT",
+ "name": "hnx_gq_issue_1019-n2-COMMIT",
  "block": "ot_hnx_coll_gq_issue",
  "ref_tile": true,
  "owner": "Claude:HBM-NEXT-UNITS-COLL",
- "purpose": "HBM-NEXT P=4 COLL gather master ISSUE leaf (hnx fork of hcoll_gq_issue_1018): N-row message train (row offsets soff/roff, rs_A/rs_O, train index t = rK + k; ld_desc 53->69 b, ld_ev_k 10->17 b); same outline and faces",
+ "purpose": "HBM-NEXT P=4 COLL gather master ISSUE leaf (hnx fork of hcoll_gq_issue_1018): N-row message train (row offsets soff/roff, rs_A/rs_O, train index t = rK + k; ld_desc 53->69 b, ld_ev_k 10->17 b); same outline and faces; n2: n1 NEEDS_RTL TT -111.78 (soff -> row base add -> + i -> 8:1 payload select fanout) fixed by registering the row source base rsrc[r] = g_src + r rs_A and the payload / capture bank selects one stage early (0 cycles)",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
@@ -151,7 +151,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hbm_next_1019/units/coll/route_hnx_gq_issue_1019/hnx_gq_issue_1019-n1-COMMIT"
+   "to": "results/arch/hbm_next_1019/units/coll/route_hnx_gq_issue_1019/hnx_gq_issue_1019-n2-COMMIT"
   }
  ],
  "cycles_added": 0,
