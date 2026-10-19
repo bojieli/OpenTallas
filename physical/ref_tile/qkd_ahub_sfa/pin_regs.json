@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_ahub_static_dw_safe_native",
+ "enable": false,
+ "reason": "the native face-copy source registers every pin itself (4b05445f7 face ledger: 627 signal ports, 645 distinct boundary FFs, every output owns a dedicated kept same-edge FF, every input lands in a FF first); a recipe pin register would add an unpriced edge to AP_OFS / FR_OFS (GEN7 binding AP[-40,-40,-38,-39], FR -7)."
+}

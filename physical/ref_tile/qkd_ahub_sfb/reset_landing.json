@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_ahub_static_dw_safe_native",
+ "enable": false,
+ "reason": "the source lands it: the native face-copy netlist (4b05445f7) keeps the RTL's ot_rst_pipe u_rr landing -- the rst_n port drives exactly 2 sinks (the two kept synchroniser stages, uncapped census 5c1b25ec6: reset input loads max 2), then the regional relay pipes fan out with every load <= 24.  A kit landing would add 2 unpriced reset-release edges."
+}

@@ -1,0 +1,9 @@
+ot-run: ot-epyc6       admits   799 GB (avail 673, growth 113, headroom 0, waiters 0/0 GB) load 35/128 running 14 disk 5981 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2562278-1792434841 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+AHUB_DW FAIL mut=0 first error cycle 11 pass -1: die hub fault hf
+AHUB_DW FAIL mut=0 errors=254
+AHUB_DW FAIL mut=0 first error cycle 17 pass -1: native fault != actual RTL source, including reset/fault edges
+AHUB_DW FAIL mut=0 errors=307
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2562278-1792434841): exit 1
