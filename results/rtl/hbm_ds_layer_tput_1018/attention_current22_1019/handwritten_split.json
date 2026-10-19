@@ -1,0 +1,206 @@
+{
+  "source_words": [
+    "a20000000000000000000000000000000000000000000000",
+    "a28000000000000000000000000000000000000000000000",
+    "a20000000000000000000000000000000000000000000000"
+  ],
+  "literal_sha256": "43b568fcbbea304908995f3810332381bebe35f8da059ab71343419d1f2d2e84",
+  "meaning": "dense mode0 -> attention mode4 -> dense mode0; no configure, packet, consume or outstanding converter state",
+  "actual_frontend_proof": "tb_actual_front_modes: contiguous frontend accepts, constant descriptor guard rejects; split with idle8/10 accepts with matching class",
+  "single": {
+    "programme_words": 3,
+    "svg": {
+      "0": "0000000000000000000000000000000000",
+      "1": "0000000000000000000000000000000000",
+      "2": "0000200000000000000000000000000000"
+    },
+    "xc": {
+      "0": "00000000000000001440000000000000000000000000",
+      "1": "00000000000000001450000000000000000000000000",
+      "2": "00000000000000001440000000000000000000000000"
+    },
+    "ranges": [
+      [
+        0,
+        3
+      ]
+    ]
+  },
+  "split": {
+    "programme_words": 2,
+    "executed_words": 3,
+    "svg": {
+      "0": "0000200000000000000000000000000000",
+      "1": "0000200000000000000000000000000000"
+    },
+    "xc": {
+      "0": "00000000000000001440000000000000000000000000",
+      "1": "00000000000000001450000000000000000000000000"
+    },
+    "ranges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  },
+  "profile": [
+    {
+      "banked_calendar": false,
+      "block_lines": 1,
+      "native_padding": 22,
+      "read_admission": 7,
+      "read_pin_latency": 6,
+      "command_latency": 9,
+      "programme_done_extra": 0,
+      "residual_tail": 2,
+      "single_descriptor": "5d1500000000000000000000000000010f000080300000020002000000000000",
+      "split_descriptors": [
+        "5d1500000000000000000000000000010f000080100000020002000000000000",
+        "5d1501000000002000000000000000011e000080200400020004800100000000",
+        "5d1502000000000000000000000000012d000080100000020007000200000000"
+      ],
+      "single_go": [
+        542
+      ],
+      "split_go": [
+        542,
+        572,
+        602
+      ],
+      "go_spacing_lower_bound": 9,
+      "go_spacing_selected": 30,
+      "selected_spacing_basis": "max(one-word body+BUSY6+calendar extra+cache residual, ceil(200*block_lines/64)+PACE_ADD4+padding22)",
+      "extra_go_count": 2,
+      "extra_descriptors": 2,
+      "extra_idle_lower_bound": 16,
+      "extra_idle_selected": 58,
+      "hbm_bytes_before": 256,
+      "hbm_bytes_after": 768,
+      "extra_hbm_bytes": 512,
+      "single_install_ingress_edges": 8,
+      "split_install_ingress_edges": 10,
+      "status": "source-bound conservative schedule recipe; not a whole-service timing receipt"
+    },
+    {
+      "banked_calendar": false,
+      "block_lines": 64,
+      "native_padding": 22,
+      "read_admission": 7,
+      "read_pin_latency": 6,
+      "command_latency": 9,
+      "programme_done_extra": 0,
+      "residual_tail": 2,
+      "single_descriptor": "5d1500000000000000000000000000010f000080300000800002000000000000",
+      "split_descriptors": [
+        "5d1500000000000000000000000000010f000080100000800002000000000000",
+        "5d15010000000020000000000000000180000080200400800004800100000000",
+        "5d150200000000000000000000000001f1000080100000800007000200000000"
+      ],
+      "single_go": [
+        542
+      ],
+      "split_go": [
+        542,
+        768,
+        994
+      ],
+      "go_spacing_lower_bound": 9,
+      "go_spacing_selected": 226,
+      "selected_spacing_basis": "max(one-word body+BUSY6+calendar extra+cache residual, ceil(200*block_lines/64)+PACE_ADD4+padding22)",
+      "extra_go_count": 2,
+      "extra_descriptors": 2,
+      "extra_idle_lower_bound": 16,
+      "extra_idle_selected": 450,
+      "hbm_bytes_before": 8704,
+      "hbm_bytes_after": 26112,
+      "extra_hbm_bytes": 17408,
+      "single_install_ingress_edges": 8,
+      "split_install_ingress_edges": 10,
+      "status": "source-bound conservative schedule recipe; not a whole-service timing receipt"
+    },
+    {
+      "banked_calendar": true,
+      "block_lines": 1,
+      "native_padding": 22,
+      "read_admission": 7,
+      "read_pin_latency": 8,
+      "command_latency": 11,
+      "programme_done_extra": 2,
+      "residual_tail": 2,
+      "single_descriptor": "5d1500000000000000000000000000010f000080300000020002000000000000",
+      "split_descriptors": [
+        "5d1500000000000000000000000000010f000080100000020002000000000000",
+        "5d1501000000002000000000000000011e000080200400020004800100000000",
+        "5d1502000000000000000000000000012d000080100000020007000200000000"
+      ],
+      "single_go": [
+        542
+      ],
+      "split_go": [
+        542,
+        572,
+        602
+      ],
+      "go_spacing_lower_bound": 11,
+      "go_spacing_selected": 30,
+      "selected_spacing_basis": "max(one-word body+BUSY6+calendar extra+cache residual, ceil(200*block_lines/64)+PACE_ADD4+padding22)",
+      "extra_go_count": 2,
+      "extra_descriptors": 2,
+      "extra_idle_lower_bound": 20,
+      "extra_idle_selected": 58,
+      "hbm_bytes_before": 256,
+      "hbm_bytes_after": 768,
+      "extra_hbm_bytes": 512,
+      "single_install_ingress_edges": 8,
+      "split_install_ingress_edges": 10,
+      "status": "source-bound conservative schedule recipe; not a whole-service timing receipt"
+    },
+    {
+      "banked_calendar": true,
+      "block_lines": 64,
+      "native_padding": 22,
+      "read_admission": 7,
+      "read_pin_latency": 8,
+      "command_latency": 11,
+      "programme_done_extra": 2,
+      "residual_tail": 2,
+      "single_descriptor": "5d1500000000000000000000000000010f000080300000800002000000000000",
+      "split_descriptors": [
+        "5d1500000000000000000000000000010f000080100000800002000000000000",
+        "5d15010000000020000000000000000180000080200400800004800100000000",
+        "5d150200000000000000000000000001f1000080100000800007000200000000"
+      ],
+      "single_go": [
+        542
+      ],
+      "split_go": [
+        542,
+        768,
+        994
+      ],
+      "go_spacing_lower_bound": 11,
+      "go_spacing_selected": 226,
+      "selected_spacing_basis": "max(one-word body+BUSY6+calendar extra+cache residual, ceil(200*block_lines/64)+PACE_ADD4+padding22)",
+      "extra_go_count": 2,
+      "extra_descriptors": 2,
+      "extra_idle_lower_bound": 20,
+      "extra_idle_selected": 450,
+      "hbm_bytes_before": 8704,
+      "hbm_bytes_after": 26112,
+      "extra_hbm_bytes": 17408,
+      "single_install_ingress_edges": 8,
+      "split_install_ingress_edges": 10,
+      "status": "source-bound conservative schedule recipe; not a whole-service timing receipt"
+    }
+  ],
+  "qualification": "component decoder and explicit ABI/cost recipe only; parent owns actual issuer/banked/cache/HBM composition and throughput proof"
+}
