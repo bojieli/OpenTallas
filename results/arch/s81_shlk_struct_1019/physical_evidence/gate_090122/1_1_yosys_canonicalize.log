@@ -1,0 +1,129 @@
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/clock_period.txt
+Setting clock period to 770.0
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+6. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_tt.lib
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+12. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_tt.lib
+13. Executing Verilog-2005 frontend: /src/rtl/lib/ot_rst_relay.sv
+14. Executing Verilog-2005 frontend: /src/rtl/lib/ot_async_fifo.sv
+15. Executing Verilog-2005 frontend: /src/rtl/lib/ot_reset_sync.sv
+16. Executing Verilog-2005 frontend: /src/rtl/link/ot_link_afifo.sv
+17. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv
+18. Executing Verilog-2005 frontend: /src/rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv
+19. Executing Verilog-2005 frontend: /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv
+20. Executing Verilog-2005 frontend: /src/rtl/hdc/ingest/ot_rom_host_ingest.sv
+21. Executing Verilog-2005 frontend: /src/physical/rom_host_ingest/rtl/dsfd_host.sv
+22. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv
+23. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv
+24. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv
+25. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv
+26. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv
+27. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv
+28. Executing Verilog-2005 frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_bb.v
+29. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+30. Executing HIERARCHY pass (managing design hierarchy).
+31. Executing AST frontend in derive mode using pre-parsed AST for module `\dsdv_sh_lk'.
+31.1. Analyzing design hierarchy..
+31.2. Executing AST frontend in derive mode using pre-parsed AST for module `\dsdv_sh_sd'.
+Warning: Replacing memory \cr with list of registers. See /src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:153
+31.3. Executing AST frontend in derive mode using pre-parsed AST for module `\dsfd_host_native'.
+31.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /src/rtl/lib/ot_rst_relay.sv:42
+31.5. Analyzing design hierarchy..
+31.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_ingest_visibility_fence'.
+Warning: Replacing memory \g_on.q with list of registers. See /src/rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv:114
+31.7. Executing AST frontend in derive mode using pre-parsed AST for module `\dsfd_host'.
+31.8. Analyzing design hierarchy..
+31.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rom_host_ingest'.
+31.10. Analyzing design hierarchy..
+31.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsdv_host_afifo_sram'.
+Warning: Replacing memory \wgray_s with list of registers. See /src/rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv:42
+Warning: Replacing memory \rgray_s with list of registers. See /src/rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv:27
+31.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsdv_host_afifo_sram'.
+31.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_link_afifo'.
+Warning: Replacing memory \wgray_s with list of registers. See /src/rtl/link/ot_link_afifo.sv:138
+Warning: Replacing memory \rgray_s with list of registers. See /src/rtl/link/ot_link_afifo.sv:84
+31.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_link_afifo'.
+31.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_kv_ingest'.
+Warning: Replacing memory \sc_acc with list of registers. See /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:636
+Warning: Replacing memory \ra with list of registers. See /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:600
+Warning: Replacing memory \bv with list of registers. See /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:522
+Warning: Replacing memory \bk with list of registers. See /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:521
+Warning: Replacing memory \sd with list of registers. See /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:498
+Warning: Replacing memory \dq with list of registers. See /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:493
+Warning: Replacing memory \gw_end with list of registers. See /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:218, /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:215
+Warning: Replacing memory \gw_v with list of registers. See /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:218, /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:215
+Warning: Replacing memory \gw_d with list of registers. See /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:217, /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:215
+Warning: Replacing memory \gw_g with list of registers. See /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:217, /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:215
+Warning: Replacing memory \gw_t with list of registers. See /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:217, /src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:215
+31.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_reset_sync'.
+31.17. Analyzing design hierarchy..
+31.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ingest_fp8q'.
+31.19. Analyzing design hierarchy..
+31.20. Analyzing design hierarchy..
+Warning: Selection "ot_sram_1r1w2c_16x546_m1" did not match any module.
+32. Executing HIERARCHY pass (managing design hierarchy).
+32.1. Analyzing design hierarchy..
+32.2. Analyzing design hierarchy..
+source /src/physical/common_flow/ot_keep_regs.tcl
+33. Executing Verilog-2005 frontend: /work/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/ot_rst_land_wrapper.v
+34. Executing HIERARCHY pass (managing design hierarchy).
+34.1. Analyzing design hierarchy..
+34.2. Analyzing design hierarchy..
+OT_RST_LAND dsdv_sh_lk: 1 reset port(s) landed in 2 registered stage(s) (clock ck); table /work/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/ot_rst_land.tsv
+35. Executing PROC pass (convert processes to netlists).
+35.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+35.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+35.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+35.4. Executing PROC_INIT pass (extract init attributes).
+35.5. Executing PROC_ARST pass (detect async resets in processes).
+35.6. Executing PROC_ROM pass (convert switches to ROMs).
+35.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+35.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+Warning: Latch inferred for signal `$paramod$6a71a1ec3e07bba2087ac95968273db3427534e9\dsdv_sh_sd.\kk' from process `$paramod$6a71a1ec3e07bba2087ac95968273db3427534e9\dsdv_sh_sd.$proc$/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:102$4377': $auto$proc_dlatch.cc:547:proc_dlatch$38789
+Warning: Latch inferred for signal `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.\ob [3:0]' from process `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.$proc$/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:265$5261': $auto$proc_dlatch.cc:543:proc_dlatch$38800
+Warning: Latch inferred for signal `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.\ob [4]' from process `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.$proc$/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:265$5261': $auto$proc_dlatch.cc:545:proc_dlatch$38803
+Warning: Latch inferred for signal `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.\ob [31:5]' from process `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.$proc$/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:265$5261': $auto$proc_dlatch.cc:543:proc_dlatch$38806
+Warning: Latch inferred for signal `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.\oh [0]' from process `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.$proc$/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:265$5261': $auto$proc_dlatch.cc:543:proc_dlatch$38817
+Warning: Latch inferred for signal `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.\oh [1]' from process `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.$proc$/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:265$5261': $auto$proc_dlatch.cc:545:proc_dlatch$38820
+Warning: Latch inferred for signal `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.\oh [31:2]' from process `$paramod$74489287dfd927f381582201cd823662f9a0e90f\ot_hdc_kv_ingest.$proc$/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:265$5261': $auto$proc_dlatch.cc:543:proc_dlatch$38823
+35.9. Executing PROC_DFF pass (convert process syncs to FFs).
+35.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+35.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+35.12. Executing OPT_EXPR pass (perform const folding).
+36. Executing OPT_CLEAN pass (remove unused cells and wires).
+37. Executing TECHMAP pass (map to technology primitives).
+37.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+37.2. Continuing TECHMAP pass.
+OT_KEEP_PIN_REGS: 0 top-level pin register cells kept
+OT_KEEP_REGS: keep set on 382 register cells driving keep wires
+38. Executing FLATTEN pass (flatten design).
+39. Executing OPT_CLEAN pass (remove unused cells and wires).
+40. Executing JSON backend.
+OT_RST_COPIES: 101 multi-bit registers on relay copies mapped to per-bit flops
+41. Executing TECHMAP pass (map to technology primitives).
+41.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+41.2. Continuing TECHMAP pass.
+42. Executing OPT_CLEAN pass (remove unused cells and wires).
+43. Executing JSON backend.
+OT_RST_COPIES rst_n__ot_rlv: 8 copies, 10 loads -> [2,2,2,2,2,0,0,0] (8 ports moved) OK
+OT_RST_COPIES u_ot_pr_core.rr__ot_rlv: 8 copies, 266 loads -> [34,34,34,34,34,34,34,28] (229 ports moved) OK
+OT_RST_COPIES u_ot_pr_core.u_h.host.u_hi.u_rsc.g_regions.reset_regions__ot_rlv: 8 copies, 372 loads -> [47,47,47,47,47,47,47,43] (325 ports moved) OK
+OT_RST_COPIES u_ot_pr_core.u_h.host.u_hi.u_rsh.g_regions.reset_regions__ot_rlv: 8 copies, 117 loads -> [15,15,15,15,15,15,15,12] (102 ports moved) OK
+OT_RST_COPIES u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv: 8 copies, 958 loads -> [120,120,120,120,120,120,120,118] (838 ports moved) OK
+OT_RST_COPIES u_ot_pr_core.u_sd.reset_regions__ot_rlv: 8 copies, 57 loads -> [8,8,8,8,8,8,8,1] (49 ports moved) OK
+OT_RST_COPIES 6 relay copy families (max 256 loads a copy); table /work/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/ot_rst_copies.tsv
+Warning: Selection "}" did not match any object.
+ERROR: Failed to parse port expression `{'.
+ERROR: TCL interpreter returned an error: Yosys command produced an error
+Elapsed time: 0:14.80[h:]min:sec. CPU time: user 14.45 sys 2.15 (112%). Peak memory: 387732KB.

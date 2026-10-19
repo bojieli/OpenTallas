@@ -29,7 +29,7 @@ foreach net [$shb getNets] {
 }
 if {$shbits!=291} {error "SH hop requires291 kept net bits, found $shbits"}
 if {[dict size $shcells]!=291} {error "SH hop requires exactly291 mapped payload flops, found [dict size $shcells]"}
-lassign {237.6 129.6 324.0 164.16} x0 y0 x1 y1
+lassign {272.16 141.48 289.44 152.28} x0 y0 x1 y1
 set reg [odb::dbRegion_create $shb sh_sd_hop]
 $reg setRegionType EXCLUSIVE
 odb::dbBox_create $reg [expr {round($x0*$shdbu)}] [expr {round($y0*$shdbu)}] [expr {round($x1*$shdbu)}] [expr {round($y1*$shdbu)}]
@@ -49,4 +49,4 @@ foreach row [$shb getRows] {
  set capacity [expr {$capacity+max(0.0,min($x1,$rx1)-max($x0,$rx0))*max(0.0,min($y1,$ry1)-max($y0,$ry0))}]
 }
 if {$capacity<=0 || $area/$capacity>.60} {error "SH hop cannot fit actual rows: $area / $capacity"}
-puts "SH_SD_HOP_REGION cells291 area$area actual_row_capacity$capacity fill[expr {$area/$capacity}] bbox237.6,129.6,324,164.16"
+puts "SH_SD_HOP_REGION cells291 area$area actual_row_capacity$capacity fill[expr {$area/$capacity}] bbox272.16,141.48,289.44,152.28"

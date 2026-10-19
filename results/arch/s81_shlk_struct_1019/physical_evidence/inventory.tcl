@@ -67,13 +67,11 @@ foreach net [$b getNets] {
  puts $f "NETSPAN\t$nm\t[llength $xs]\t$unknown\t$xmin\t$ymin\t$xmax\t$ymax\t[expr {$xmax-$xmin+$ymax-$ymin}]"
 }
 set hopcells [dict create]
-foreach net [$b getNets] {
- set nm [string map [list "\\" ""] [$net getName]]
- if {![regexp {u_sd[./]sd_hop_payload\[[0-9]+\]$} $nm]} {continue}
- foreach it [$net getITerms] {
-  if {[$it getIoType] ne "OUTPUT"} {continue}
-  set i [$it getInst];dict set hopcells [$i getName] $i
- }
+foreach i [$b getInsts] {
+ set nm [string map [list "\\" ""] [$i getName]]
+ if {![regexp {u_sd[./]sd_hop_payload\[[0-9]+\]} $nm]} {continue}
+ if {![regexp {^DFF} [[$i getMaster] getName]]} {continue}
+ dict set hopcells [$i getName] $i
 }
 foreach i [dict values $hopcells] {
  set bb [$i getBBox]
