@@ -1,0 +1,80 @@
+
+19. Printing statistics.
+
+=== qkd_ahub_static_dw_safe ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     9957        - wires
+    23494        - wire bits
+      310        - public wires
+    13845        - public wire bits
+       20        - ports
+      629        - port bits
+    11025 1.53E+03 cells
+       17        -   $scopeinfo
+       56    4.899   A2O1A1Ixp33_ASAP7_75t_R
+       31    4.068   A2O1A1O1Ixp25_ASAP7_75t_R
+       82    7.173   AND2x2_ASAP7_75t_R
+       56    4.899   AND3x1_ASAP7_75t_R
+       33    3.368   AND4x1_ASAP7_75t_R
+        5    0.583   AND5x1_ASAP7_75t_R
+        4    0.933   AO211x2_ASAP7_75t_R
+       93    8.136   AO21x1_ASAP7_75t_R
+        1    0.146   AO221x1_ASAP7_75t_R
+        1    0.175   AO222x2_ASAP7_75t_R
+        5    0.656   AO22x1_ASAP7_75t_R
+        2    0.233   AO32x1_ASAP7_75t_R
+       54    4.724   AOI211xp5_ASAP7_75t_R
+      470   34.263   AOI21xp33_ASAP7_75t_R
+       41    4.184   AOI221xp5_ASAP7_75t_R
+        2    0.292   AOI222xp33_ASAP7_75t_R
+       59    5.161   AOI22xp33_ASAP7_75t_R
+        5     0.51   AOI311xp33_ASAP7_75t_R
+       26    2.274   AOI31xp33_ASAP7_75t_R
+        8    0.816   AOI32xp33_ASAP7_75t_R
+      415  157.318   DFFASRHQNx1_ASAP7_75t_R
+     2797  815.605   DFFHQNx1_ASAP7_75t_R
+     1705   74.577   INVx1_ASAP7_75t_R
+       28    2.858   MAJIxp5_ASAP7_75t_R
+        7    0.919   MAJx2_ASAP7_75t_R
+      929   54.179   NAND2xp33_ASAP7_75t_R
+      140   10.206   NAND3xp33_ASAP7_75t_R
+      100    8.748   NAND4xp25_ASAP7_75t_R
+       30    3.062   NAND5xp2_ASAP7_75t_R
+      827   48.231   NOR2xp33_ASAP7_75t_R
+      192   13.997   NOR3xp33_ASAP7_75t_R
+       56    4.899   NOR4xp25_ASAP7_75t_R
+       37    3.776   NOR5xp2_ASAP7_75t_R
+      202   17.671   O2A1O1Ixp33_ASAP7_75t_R
+       13    1.516   OA211x2_ASAP7_75t_R
+       95    9.696   OA21x2_ASAP7_75t_R
+       11    1.925   OA222x2_ASAP7_75t_R
+        3    0.437   OA22x2_ASAP7_75t_R
+        2    0.437   OA31x2_ASAP7_75t_R
+       51    4.461   OAI211xp5_ASAP7_75t_R
+     1088   79.315   OAI21xp33_ASAP7_75t_R
+      148   15.105   OAI221xp5_ASAP7_75t_R
+        5    0.729   OAI222xp33_ASAP7_75t_R
+      257   22.482   OAI22xp33_ASAP7_75t_R
+        8    0.816   OAI311xp33_ASAP7_75t_R
+       35    3.062   OAI31xp33_ASAP7_75t_R
+        1    0.117   OAI321xp33_ASAP7_75t_R
+        1    0.102   OAI32xp33_ASAP7_75t_R
+      242    21.17   OR2x2_ASAP7_75t_R
+       40    3.499   OR3x1_ASAP7_75t_R
+       18    1.837   OR4x1_ASAP7_75t_R
+        8    0.933   OR5x1_ASAP7_75t_R
+      335   43.959   XNOR2xp5_ASAP7_75t_R
+      143   18.764   XOR2xp5_ASAP7_75t_R
+        4        -   ot_nhb_zh
+        1        -   ot_qkh_recip_leaf
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_qkh_recip_leaf is unknown!
+   Area for cell type \ot_nhb_zh is unknown!
+
+   Chip area for module '\qkd_ahub_static_dw_safe': 1533.903480
+     of which used for sequential elements: 972.923400 (63.43%)
+
