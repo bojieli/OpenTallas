@@ -1,3 +1,17 @@
-{"schema":"opentallas.tile_visual_review.v1","tile":"qfd_tt_head_static_h16c","reviewer":"coordinator (2026-10-18 ~03:15)","verdict":"APPROVED","time":"2026-10-18T03:15:00-07:00","gate_commit":"2026-10-18T02:14:01-0700","geometry_sha256":"9634bd27f97c8beac08904cbd98b73e314fb4bc3be84bd83b4f92b9010533832",
- "checklist":{"lattice":"ACCEPT: both 64x512 SRAMs stacked NW at x=22.464 (pinless-face gap rule), read edge E","std_cell_band":"PASS: one even L band (E+S); 10.8-um read-edge channel clear","pin_spread":"PASS: E ~5/um (partial face), S x 98-192","clock_entry":"PASS: S face at the L corner; pin-flop spread 74.2 TT / 67.5 FF","shape":"PASS 259.2x222.5 (unchanged)"},
- "notes":"h16c = h16b + a wider SRAM read-edge channel (5.4 -> 10.8 um) + an inner-corner blockage, fixing the h16b GRT hotspot (109 overflow, M4). reg->reg +63.8, macro->reg +83.6, reg->macro +114.8, hold +51.1."}
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qfd_tt_head_static_h16c",
+ "reviewer": "coordinator (2026-10-18 ~22:35)",
+ "verdict": "APPROVED",
+ "time": "2026-10-18T22:35:00-07:00",
+ "gate_commit": "72f0abd47",
+ "checklist": {
+  "lattice": "PASS: two stacked 64x512 1R1W SRAMs, aligned, abutted, on lattice, W-centred with halo",
+  "std_cell_band": "PASS: L-shaped std-cell band E (beside the pin face) and S (under the macros); fill 0.548, no hot bins (max ~0.7 at S band)",
+  "pin_spread": "ACCEPT: data pins span the full E face, S face carries the SRAM-side bus segment; no partial-face cluster",
+  "clock_entry": "PASS: ck on E/S faces; ck_head 9,405 sinks, pin-flop spread TT 58.0 / FF 51.4 (<=80)",
+  "shape": "PASS: 259.2x222.5 compact; trial GRT overflow 0; gate WARN 0 fail (TT r2r +72.5, hold +51)"
+ },
+ "notes": "h17 = STAGE_ME stage port + MEG 6.0 guard (Q-H16C kit 0b9133c0f), the variant the die binds (HARD_HR 1 + STAGE_ME 1). Empty W/N strip is the macro halo, not a link path.",
+ "geometry_sha256": "173b9249afe97c1d4e1509522d843c6d63f665e0c9fd60b6d539a6f446e9dfad"
+}
