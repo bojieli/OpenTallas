@@ -81,7 +81,16 @@ wr(5,32'h00058800);
 wr(6,32'h0005801f);
 wr(7,32'h0007841f);
 wr(NE,4);end
- if(NE==32)begin for(i=0;i<NE;i++)wr(i,word(1,i==15 || i==31,i%8,i%16,i%24,i%3));wr(NE,16);end
+ if(NE==32)begin
+wr(0,32'h004c801f);
+wr(1,32'h0024c000);
+wr(2,32'h0004c020);
+wr(3,32'h0004c040);
+wr(4,32'h0004c060);
+wr(5,32'h001d0000);
+wr(6,32'h00290020);
+wr(7,32'h002a4040);
+wr(NE,0);end
  repeat(4)tick();run(1,400000);run(0,400000);run(1,400000);
  // Stop/restart during a real frame; restart must use cached SEG1 heads.
  start=1;start_seg=0;tick();start=0;repeat(7)tick();halt=1;tick();halt=0;repeat(4)tick();run(1,400000);
@@ -90,6 +99,14 @@ wr(NE,4);end
  repeat(4)tick();run(0,1000);run(1,1000);
  // Reload with changed segment base; exactly four stopped edges suffice.
  wr(NE,NE-2);repeat(4)tick();run(1,1000);
+ // Runtime config/start overlap faults, with unchanged event stream.
+ reset();wr(0,word(10,1,1,2,3,0));wr(1,word(1,1,2,3,4,0));wr(NE,1);
+ repeat(4)tick();compare=1;start=1;start_seg=0;tick();start=0;
+ cfg_we=1;cfg_addr=0;cfg_data=0;tick();cfg_we=0;repeat(15)tick();compare=0;
+ if(!f0 || !f1)begin $display("RUNNING_CFG_FAULT_MISSING");errs++;end
+ // Reset while running clears both calendars; caches re-prefetch after reload.
+ rst_n=0;tick();rst_n=1;repeat(3)tick();
+ if(r1 || f1 || v1)begin $display("RESET_NOT_CLEAR");errs++;end
  // Invalid early start never stalls or gets silently accepted.
  for(j=0;j<4;j++)begin reset();wr(0,word(1,1,0,0,0,0));wr(1,word(1,1,1,1,1,0));wr(NE,0);
  repeat(j)tick();start=1;tick();start=0;
