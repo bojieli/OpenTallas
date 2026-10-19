@@ -19,6 +19,24 @@ SOURCES={
  'tools/qwen_kv_die/pv_trunk_gen.py':'85e6bb225c010e1758b0dbcf8e24ebb20e1ab562b304c3f159ade8c787ba9458',
  O.RTL:O.RTL_SHA,
 }
+BOOTAGE_SOURCES={
+ 'tools/qwen_kv_die/kv_bootage.py':'bc8a613dadec056a89d72a50082c3d03c3b440093f0780cae4a667615d101d46',
+ 'rtl/qwen_sys/split_20261014/qkd_pvw_die_t_ba.sv':'b15daa62c06da889ee7e0db600b08079e45862397208329b9d2e886b26ba5dad',
+}
+
+
+def qualify_frame(module, root):
+    if module=='qkd_pvw_die_t':return {}
+    if module!='qkd_pvw_die_tb':raise ValueError('PV frame is not pinned generated trunk')
+    # This exact boot-age successor changes only the control cfg interface/age;
+    # its standard-replica station rows are identical to the original trunk.
+    for name,sha in BOOTAGE_SOURCES.items():
+        p=root/name
+        if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest()!=sha:
+            raise ValueError('PV boot-age source changed; re-prove '+name)
+    return dict(BOOTAGE_SOURCES)
+
+
 PARENTS={'qkd_pvw_s','qkd_pvw_n'}
 BAD_LITERAL=re.compile(r"(?<![A-Za-z0-9_])'[01xXzZ]|\d+'[sS]?[bBhHdDoO][0-9a-fA-F_]*[xXzZ?]")
 
@@ -144,10 +162,10 @@ def derive(run,die,root=ROOT,existing=None):
         if hashlib.sha256((root/name).read_bytes()).hexdigest()!=sha:raise ValueError('PV padding source changed; re-prove '+name)
     frames=json.loads((run/'expand.json').read_text())['frames'];_,_,_,pre=P.parse_die(str(run/'case_kv/die.v.preexp'))
     params=json.loads((run/'case_kv/die.v.params.json').read_text()) if (run/'case_kv/die.v.params.json').exists() else {}
-    parents={};counts=Counter()
+    parents={};counts=Counter();variant_sources={}
     for master,inst,prm,cm in pre:
         if master not in PARENTS:continue
-        if frames.get(master,{}).get('module')!='qkd_pvw_die_t':raise ValueError('PV frame is not pinned generated trunk')
+        variant_sources.update(qualify_frame(frames.get(master,{}).get('module'),root))
         merged=dict(params.get(inst,{}),**prm)
         for key in ('MUT','TRUNK_MUT','FLAG_D_ADJ','RS_MUT'):
             if key in merged and P.ev(str(merged[key]),{})!=0:raise ValueError('PV mutant cannot receive padding contract')
@@ -155,7 +173,7 @@ def derive(run,die,root=ROOT,existing=None):
     if not parents:raise ValueError('no source-qualified PV parents')
     if any(frames[m]['instances']!=n for m,n in counts.items()):raise ValueError('PV parent count mismatch')
     doc,contract=apply_roles(die,source_rows(root/'rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv'),parents,existing or dict(pads={},instances={}))
-    contract.update(source_sha256=SOURCES,parents=parents,expand_sha256=hashlib.sha256((run/'expand.json').read_bytes()).hexdigest(),
+    contract.update(source_sha256=dict(SOURCES,**variant_sources),parents=parents,expand_sha256=hashlib.sha256((run/'expand.json').read_bytes()).hexdigest(),
                     preexpand_sha256=hashlib.sha256((run/'case_kv/die.v.preexp').read_bytes()).hexdigest())
     doc['pvw_padding_contract']=contract;return doc
 
