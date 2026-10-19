@@ -60,5 +60,16 @@
     "floorplan": "same432x475.2 candidate outline; area/access/timing OPEN",
     "evidence": "transaction/bridge/AQ/cadence/mutants+mappedfanout+TT/FF pending"
   },
-  "internal_K_ring_payload_bits": 341
+  "internal_K_ring_payload_bits": 341,
+  "metadata_four_bit_followup": {
+    "source_reason": "Actual3ee one8-bit ep_sel[0] maps33loads, no32waiver",
+    "regions": 20,
+    "bits_max": 4,
+    "delta_ff_bits_vs_fa4": 320,
+    "controller_delta_ff_bits_vs18bd_excludingAQandKregional": 735,
+    "reset": "20same-edge metadata regions stripe across existingreset4,5,6, preventing320valid/selectorresetpins sharingone source. Same3edge relayrelease and no extra dataedge.",
+    "boundary_macro_latency": "unchanged340externalK,341internalring,277KR,13macros,zeroedges",
+    "estimated_additional_std_area_um2": 224,
+    "qualification": "Model only until componentexact+mapped32 census."
+  }
 }

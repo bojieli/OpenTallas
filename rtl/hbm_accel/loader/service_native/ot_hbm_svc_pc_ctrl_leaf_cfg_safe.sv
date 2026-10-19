@@ -199,24 +199,25 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire[3:0]meta_we;wire[QW-3:0]meta_wa[0:3];
     wire[QW-1:0]next_rp=cv?rp_plus1:rp,next_ep=posted?ep_plus1:ep;
     wire[78:0]mh,me;
-    // Ten retained eight-bit regions. Each owns pointer selectors and
+    // Twenty retained four-bit regions. Each owns pointer selectors and
     // forwarding-address/valid captures on the original metadata edge.
     // Data and SRAM schedules are unchanged; actual mapped fanout is audited.
-    for(genvar s=0;s<10;s=s+1)begin:META_SELECT
-      localparam integer LO=8*s;
-      localparam integer BITS=(79-LO<8)?79-LO:8;
+    for(genvar s=0;s<20;s=s+1)begin:META_SELECT
+      localparam integer LO=4*s;
+      localparam integer BITS=(79-LO<4)?79-LO:4;
+      wire meta_rst_n=region_rst_n[4+(s%3)];
       (* keep="true",dont_touch="true" *) reg[1:0]rp_sel,ep_sel;
       (* keep="true",dont_touch="true" *) reg[QW-3:0]rp_hi,ep_hi;
-      always @(posedge clk or negedge region_rst_n[4])
-        if(!region_rst_n[4])begin rp_sel<=0;ep_sel<=0;rp_hi<=0;ep_hi<=0;end
+      always @(posedge clk or negedge meta_rst_n)
+        if(!meta_rst_n)begin rp_sel<=0;ep_sel<=0;rp_hi<=0;ep_hi<=0;end
         else begin rp_sel<=next_rp[1:0];ep_sel<=next_ep[1:0];
           rp_hi<=next_rp[QW-1:2];ep_hi<=next_ep[QW-1:2];end
       wire[BITS-1:0]hbank[0:3],ebank[0:3];
       for(genvar b=0;b<4;b=b+1)begin:FORWARD
         (* keep="true",dont_touch="true" *) reg mf_valid;
         (* keep="true",dont_touch="true" *) reg[QW-3:0]mf_address;
-        always @(posedge clk or negedge region_rst_n[4])
-          if(!region_rst_n[4])mf_valid<=0;else mf_valid<=meta_we[b];
+        always @(posedge clk or negedge meta_rst_n)
+          if(!meta_rst_n)mf_valid<=0;else mf_valid<=meta_we[b];
         always @(posedge clk)mf_address<=meta_wa[b];
         assign hbank[b]=(mf_valid&&mf_address==rp_hi)?
           mf_data[b][LO+:BITS]:qh[b][LO+:BITS];
