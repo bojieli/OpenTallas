@@ -10,5 +10,11 @@
   "cost_partial_ff": 1072,
   "cost_partial_um2": 904.1787,
   "native_graph_costs": "unpriced; no synth/route permitted",
-  "simulation": "not run yet"
+  "simulation": {
+    "wrapper": "actual63/2/32 PASS; firstOLDmutantcoveragehole preserved then explicitcausalcollision rejectsall4",
+    "dated": "NS2/1 andNS47/16 +2originaldates PASS3seeds; extendedqualifiedinternalmiter PASS",
+    "occupied_async_reset": "NS2 phases0..8,90,93 andNS47 phase0 three-seedPASS",
+    "four_state": "FAIL externalreleasec4 observableunknown; no fullqualification; preserve exactwitness",
+    "original_case_matrix": "already admitted still running; no further test launches pending ROOT disposition"
+  }
 }
