@@ -306,10 +306,32 @@ def events(tmp):
        'mutant expect-shift:PV:1 moves the PV checks one cycle: the real trace FAILS it')
 
 
+def seqhost_reset(tmp):
+    """5 (TOK-S81-GAPS/CTL): u_seqhost live = idle t_host alive landed cycle - lane age - 1; --host-boot before it is refused"""
+    class D:
+        links = {'ht_7N': dict(age=59, out_net='w_ht_7N_lnd', src_bits=[('w_ht_7N_src', i) for i in range(131)])}
+        def port_bits(self, inst, port):
+            return [('w_ht_7N_src', i) for i in range(77)]
+    class C:
+        out_by_net = {'w_ht_7N_lnd': dict(index=210, port='o__w_ht_7N_lnd', lo=0)}
+    (tmp / 'trace.txt').write_text('12 17 0\n140 210 %x\n224 210 %x\n' % (1 << 76, 0x185 << 68))
+    (tmp / 'prog').mkdir()
+    (tmp / 'prog/host_boot.memh').write_text('23\n')
+    lv = R.seqhost_live(D(), C(), tmp)
+    ok(lv['live'] == 80 and lv['alive_landed'] == 140, 'seqhost_live: alive landed 140 on age 59 -> live 80')
+    class A:
+        idle_run = str(tmp); host_boot = 64; ks = None; ks_word = '1'; t0 = 0
+    try:
+        R.host_boot_words(A(), D(), tmp, {}, [], C())
+        ok(False, '--host-boot 64 before live 80 must be refused')
+    except SystemExit as e:
+        ok('lands before u_seqhost leaves reset' in str(e), '--host-boot 64 before live 80 is refused')
+
+
 def main():
     with tempfile.TemporaryDirectory() as t:
         tmp = Path(t)
-        for f in (real_die, witnesses, synthetic, events):
+        for f in (real_die, witnesses, synthetic, events, seqhost_reset):
             d = tmp / f.__name__
             d.mkdir()
             f(d)

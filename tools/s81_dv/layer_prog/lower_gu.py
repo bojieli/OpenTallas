@@ -67,7 +67,9 @@ NE, NEMAX, K = 384, 448, 6
 HC_LAT_N, HC_LAT_S = 759, 757   # -> first coefficient row on vo_n / vo_s (rows i = 1..5 follow one an edge)
 RT_LAT_N, RT_LAT_S = 67, 65     # -> ids row on vo_n / vo_s
 RW_GAP = 121                    # ids row -> first weights row on the same port (L3 ot_s81_su_rw, measured)
-GU_ROWS = dict(attn=1000, ffn=1008, router=1016)   # leaf-store rows (default row map; ctx['gu_rows'] overrides)
+import sys as _sys                                  # noqa: E402
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from leaf_rows import GU_ROWS                       # noqa: E402  (TOK-S81-GAPS/GU: the allocated leaf-store rows)
 SMASK, LMASK = 0xFFFF, 0x1F                        # every slice / every leaf takes the rows
 
 
@@ -194,6 +196,71 @@ def _load_tables(fx, set_):
     return table_rows(set_, bias, base, scale, _f32(cfg['norm_eps']), _f32(cfg['route_scale']))
 
 
+W276 = (1 << 276) - 1
+W267 = (1 << 267) - 1
+_VALS = {}
+
+
+def _vals(fx_dir):
+    """fixture values of every gunit boundary word of the layer (cached per fixture dir); None when the dir lacks them"""
+    key = str(fx_dir)
+    if key not in _VALS:
+        try:
+            _sys.path.insert(0, str(Path(__file__).resolve().parent / 'gu'))
+            import gu_values as V
+            fx = V.Fx(fx_dir)
+            _VALS[key] = dict(roots={w: V.hc_roots(fx, w) for w in ('attn', 'ffn')},
+                              coef={w: V.hc_coef(fx, w) for w in ('attn', 'ffn')}, router=V.router_vals(fx), read=fx.read)
+        except (FileNotFoundError, AssertionError) as x:
+            _VALS[key] = dict(error=f'{type(x).__name__}: {x}')
+    return _VALS[key]
+
+
+def cw_word(kind, jw):
+    """ports cw_v, cw_a[9:0], cw_d[255:0] LSB-first; a = {1 job, 8'b0, kind} = 0x200 | kind (dsdv_seq_host.sv:328-329)"""
+    return 1 | (0x200 | kind) << 1 | jw << 11
+
+
+def encode(res, fx_dir, sid, row, which=None):
+    """TOK-S81-GAPS/GU: attach `words` / `ports` (the dv_cut_replay word convention) to every gunit boundary event of one
+    job, from the fixture values: CW in at the gunit cw pins, HP / SC in at vi_n / vi_s (landed edge), CTL rows out on
+    vo_n / vo_s (the gunit output register edge).  Returns an error string when the fixtures lack a value."""
+    if fx_dir is None:
+        return 'no fixtures'
+    v = _vals(fx_dir)
+    if 'error' in v:
+        return v['error']
+    sc, rv = v['router']
+    for e in res['events']:
+        k = e['kind']
+        if k == 'CW':
+            jw = int(e['payload'], 16)
+            e.update(ports=['cw_v', 'cw_a', 'cw_d'], valid_bit=0,
+                     words=[[e['cycle'], f'{cw_word(1 if which is not None else 0, jw):x}', f'{W267:x}']])
+        elif k == 'HP':
+            m = re.search(r'acc(\d+)\.g(\d+)\.h(\d+)$', e['tag'])
+            acc, gs, h = map(int, m.groups())
+            b = hp_beat(acc, gs, h, v['roots'][which](acc, gs, h), gs)
+            e.update(ports=[e['port']], valid_bit=0, words=[[e['cycle'], f'{b:x}', f'{W276:x}']],
+                     payload='slice partial roots (fixture slice model: golden chunk-8 tree)')
+        elif k == 'SC':
+            r = int(e['tag'].rsplit('sc', 1)[1])
+            b = sc_beat(r, sc[7 * r:7 * r + 7], r % 16)
+            e.update(ports=[e['port']], valid_bit=0, words=[[e['cycle'], f'{b:x}', f'{W276:x}']],
+                     payload='allgathered sqrt(softplus) scores (fixture)')
+        elif k == 'CTL' and e['dir'] == 'out':
+            t = e['tag']
+            if which is not None:
+                i = int(t[-1])
+                c = v['coef'][which]
+                b = ctl_row_beat(row + i, 0xF, sum(c[4 * i + j] << (32 * j) for j in range(4)), SMASK, LMASK, sid)
+            else:
+                dr, mm, d = rv[t.rsplit('.', 1)[1]]
+                b = ctl_row_beat(row + dr, mm, d, SMASK, LMASK, sid)
+            e.update(ports=[e['port']], valid_bit=0, words=[[e['cycle'], f'{b:x}', f'{W276:x}']])
+    return None
+
+
 def lower(die, op, ctx):
     sched, layer = ctx['sched'], ctx['layer']
     name = op['op']
@@ -237,6 +304,9 @@ def lower(die, op, ctx):
             res['files'][f'prog/gu/{pre}hc.plan.json'] = json.dumps(dict(
                 t_issue=issue, t_hp0=t0, t_last_hp=tl, which=w, set=set_, row=row, sid_gunit=sid_gu,
                 cw_age=cw_age, beats=plan), indent=0) + '\n'
+            err = encode(res, ctx.get('fixtures'), sid_gu, row, which=m.group(1))
+            if err:
+                res['encode_gap'] = err
         if m.group(2) in ('sumsq', 'fn'):
             res['status'] = 'PARTIAL'
             res['gap'] = dict(module='ot_s81sl_xr / frames cfg7 / ot_s81sl_vn',
@@ -270,6 +340,9 @@ def lower(die, op, ctx):
         res['files']['prog/gu/ffn.router.plan.json'] = json.dumps(dict(
             t_issue=issue, t_sc0=t0, t_last_sc=tl, set=set_, row=row, ne=NE, sid_gunit=sid_gu, cw_age=cw_age,
             rw_gap=RW_GAP, beats=plan), indent=0) + '\n'
+        err = encode(res, ctx.get('fixtures'), sid_gu, row)
+        if err:
+            res['encode_gap'] = err
     if name == 'ffn.top6':
         res['note'] = 'the gunit emits the 6 ids in id order (top6_order); the rank order is not materialised (consumers use id order)'
     res['deps'].append('allgathered sqrt(softplus) scores as SC beats (vs RA + xr SC relay) at the sc_plan edges')

@@ -408,8 +408,8 @@ def gen(a):
         return 2
     words, unenc, offdie, internal_ev = landed_words(S, T, die)
     host = None
-    if a.host_boot is not None:
-        words, host = host_boot_words(a, die, prog, S, words)
+    if a.host_boot is not None or a.idle_run:
+        words, host = host_boot_words(a, die, prog, S, words, cut)
     traces = {}
     for spec in a.trace:
         pdir, run = spec.split('=', 1)
@@ -459,6 +459,10 @@ def gen(a):
                 if src_ports_of(cut, L) & set(tsrc):
                     continue                            # the lane is fed from the producer cut's trace
                 k = w['cycle_land'] - bage + 1 + a.t0
+                if any(lk.startswith(x) for x in a.equalize):
+                    # TOK-S81-GAPS/GU: --equalize models a die-gap fix (the bundle's lanes land together, as an equal
+                    # station count / per-lane K would make them): the lane is launched at its own age -> DIAGNOSTIC
+                    k = w['cycle_land'] - L['age'] + 1 + a.t0
                 hit = set()
                 for bit, v in lb.items():
                     sb = L['src_bits'][bit] if bit < len(L['src_bits']) else None
@@ -592,12 +596,12 @@ def gen(a):
     for x, n in ((unenc_here, 'unencoded'), (offdie_here, 'offdie'), (internal_here, 'internal')):
         for e in x:
             by_kind[e['kind']][n] += 1
-    kind = 'MUTANT' if mut else ('DIAGNOSTIC' if (a.lane_age or st['stale']) else 'SCHEDULE')
+    kind = 'MUTANT' if mut else ('DIAGNOSTIC' if (a.lane_age or st['stale'] or a.equalize) else 'SCHEDULE')
     ncyc = int(max([c for c, *_ in outs] + [c for c, *_ in ins] + [a.t0]) + 50)
     doc = dict(schema=SCHEMA, tool='tools/s81_dv/dv_cut_replay.py', die_v=str(a.die_v), die_v_sha256=die.sha256,
                prog=str(prog), prog_manifest_sha256=hashlib.sha256((prog / 'manifest.json').read_bytes()).hexdigest()
                if (prog / 'manifest.json').exists() else None, cut=cut.dir, layer=S.get('layer'), t0=a.t0,
-               mutant=a.mutant or None, lane_age=a.lane_age, host_boot=host, verdict_kind=kind, stale=st,
+               mutant=a.mutant or None, lane_age=a.lane_age, equalize=a.equalize, host_boot=host, verdict_kind=kind, stale=st,
                traces=traces, boundary=bnd, in_words=rec_in, out_checks=rec_out, internal_words=internal,
                unencoded=unenc_here, unencoded_total=len(unenc), partial=bool(unenc_here),
                offdie=offdie_here, internal_events=internal_here, by_kind={k: dict(v) for k, v in sorted(by_kind.items())},
@@ -624,17 +628,51 @@ def word_at(die, inst, port, val, cycle_land, kind, tag, hold=None):
     return w
 
 
-def host_boot_words(a, die, prog, S, words):
+def seqhost_live(die, cut, idle_run):
+    """TOK-S81-GAPS/CTL: the bench cycle from which u_seqhost captures host words.  dsdv_sh_lk gates the host valid with
+    its relayed reset (fi[0] <= rn & f_host[0]) and t_host <= rn ? {alive 1, ...} : 0, so the first edge t_host's alive bit
+    (bit 76) leaves the unit = rn release + 1.  Read from an idle run of THIS build (trace.txt of the cut's landed
+    t_host lane): live = alive landed cycle - lane age - 1.  A boot word landing before that is silently dropped
+    (10-18 G8 cut_3S_ctl L0: header words at 64/69 dropped, rn up at ~80 -> issuer fault code 4, no job)."""
+    pb = die.port_bits('u_seqhost', 't_host')
+    nb = pb[76] if len(pb) > 76 else None
+    lk = next((k for k, L in die.links.items() if nb and nb in L['src_bits']), None)
+    if lk is None:
+        raise SystemExit('--idle-run: u_seqhost.t_host alive bit has no lane in this build')
+    L = die.links[lk]
+    port = cut.out_by_net.get(L['out_net'])
+    if port is None:
+        raise SystemExit(f'--idle-run: the cut does not observe {L["out_net"]} (t_host lane {lk})')
+    bit = L['src_bits'].index(nb) - port.get('lo', 0)
+    tr = Path(idle_run) / 'trace.txt'
+    for line in tr.read_text().split('\n'):
+        f = line.split()
+        if len(f) == 3 and int(f[1]) == port['index'] and (int(f[2], 16) >> bit) & 1:
+            return dict(lane=lk, age=L['age'], alive_landed=int(f[0]), live=int(f[0]) - L['age'] - 1, trace=str(tr))
+    raise SystemExit(f'--idle-run: t_host alive never seen on {port["port"]} in {tr}')
+
+
+def host_boot_words(a, die, prog, S, words, cut=None):
     """--host-boot B: the compiled host boot stream (prog/host_boot.memh, 515-b host words, the dsdv_seq_host L0
     format) delivered on u_seqhost.f_host one word every 5th edge from bench cycle B (tb_dv_prog_seqhost's host slots),
     the lane-live flags f_lf = 4'b0101 held from cycle 0, and ONE job start on f_ks at bench cycle --ks (word
     --ks-word, default the seqhost bench's {v, user 37, pos 1000, tok 5000}).  The calendar accepts the start only on its
     start phase (ot_dsdv_fixed_issue), a reset-tree artefact of the cut: give --ks, and sweep its residue mod 4 once per
-    build if the first run misses (record the accepted residue).  Layer cycle 0 = KS + 4 (the compiled V command leaves
-    vo at KS + issue + 11 = issue + 7 in layer cycles: dsdv_seq_host header, check_seqhost.py), so --t0 is set to KS + 4."""
+    build if the first run misses (record the accepted residue).  Layer cycle 0 = KS + 5: KS is the f_ks LANDED edge (the
+    lane's last flop), u_seqhost's pin flop captures it one edge later (t = KS + 1), and the compiled V command leaves vo
+    at t + issue + 11 = issue + 7 in layer cycles (dsdv_seq_host header, check_seqhost.py).  TOK-S81-GAPS/CTL 10-19,
+    measured on G8 cut_3S_ctl (ks 2547): vo_n of row 8 (issue 1141) at 3700 = KS + 12 + issue; SVCJ on jw_E / jw_W one
+    edge after a KS + 4 anchor."""
     hs = [int(x, 16) for x in (prog / 'prog/host_boot.memh').read_text().split()]
+    live = seqhost_live(die, cut, a.idle_run) if getattr(a, 'idle_run', None) else None
+    if live is not None:
+        if a.host_boot is None:
+            a.host_boot = live['live'] + 8
+        if a.host_boot < live['live'] + 2:
+            raise SystemExit(f'--host-boot {a.host_boot} lands before u_seqhost leaves reset (live at {live["live"]}, '
+                             f'idle run {a.idle_run}): the boot header would be dropped; use >= {live["live"] + 2}')
     ks = a.ks if a.ks is not None else a.host_boot + 5 * len(hs) + 64
-    a.t0 = ks + 4
+    a.t0 = ks + 5
     ksw = int(a.ks_word, 16)
     end = int(max([w['cycle_land'] for w in words] + [0]) + a.t0 + 64)
     out = list(words)
@@ -645,7 +683,7 @@ def host_boot_words(a, die, prog, S, words):
     c0 = math.ceil(lf_age - 1)                        # the first landed cycle the producer can reach from bench 0
     out += [word_at(die, 'u_seqhost', 'f_lf', 0b0101, c - a.t0, 'LF', 'lane live', hold=c0 - a.t0)
             for c in range(c0, end)]
-    return out, dict(boot_start=a.host_boot, words=len(hs), last_word=a.host_boot + 5 * (len(hs) - 1), ks=ks,
+    return out, dict(boot_start=a.host_boot, seqhost_live=live, words=len(hs), last_word=a.host_boot + 5 * (len(hs) - 1), ks=ks,
                      ks_word=f'{ksw:x}', t0=a.t0, f_lf=f'0101 held from landed bench cycle {c0}',
                      memh_sha256=hashlib.sha256((prog / 'prog/host_boot.memh').read_bytes()).hexdigest())
 
@@ -830,7 +868,11 @@ def main(argv=None):
     g.add_argument('--mutant', default='')
     g.add_argument('--lane-age', action='store_true')
     g.add_argument('--allow-stale', action='store_true')
+    g.add_argument('--equalize', action='append', default=[], help='LANE_PREFIX: drive each lane of the bundle at its '
+                   'own age (models a die-gap fix, e.g. G8 residual hf_7N); the verdict becomes DIAGNOSTIC')
     g.add_argument('--host-boot', type=int, default=None, help='bench cycle of the first host boot word (cuts with u_seqhost)')
+    g.add_argument('--idle-run', default=None, help='idle run dir of this cut build (trace.txt): derives u_seqhost reset '
+                   'release; --host-boot defaults to it + 8 and is refused below it + 2')
     g.add_argument('--ks', type=int, default=None)
     g.add_argument('--ks-word', default=f'{(1 << 52) | (37 << 42) | (1000 << 21) | 5000:x}')
     g = sp.add_parser('check')
