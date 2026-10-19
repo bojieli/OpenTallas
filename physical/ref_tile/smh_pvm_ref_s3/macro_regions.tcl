@@ -129,5 +129,90 @@ foreach it [$pm getITerms] {
  incr nw
 }
 if {$nw!=546} {error "PVM_REGION W constant inventory drift: $nw"}
-pvm_make_region pvm_macro_W_constants {86.4 229.23 172.8 229.77} [dict values $pties]
+# The 546 constant drivers stay in the same two rows (86.4..172.8 x 229.23..229.77) beside the macro W face, but are
+# packed onto legal sites and FIRM before global placement: a 2-row EXCLUSIVE Nesterov region diverged (GPL-0305,
+# overflow stuck at 0.98 for 2000 iterations, run place3 097724257). Constants carry no timing; position is the intent.
+proc pvm_fix_constants {box cells} {
+ set pb $::pvm_pb
+ set pdu $::pvm_pdu
+ lassign $box x0 y0 x1 y1
+ set X0 [expr {round($x0*$pdu)}]; set X1 [expr {round($x1*$pdu)}]
+ set Y0 [expr {round($y0*$pdu)}]; set Y1 [expr {round($y1*$pdu)}]
+ set rows {}
+ foreach r [$pb getRows] {
+  set ry [lindex [$r getOrigin] 1]
+  set rh [[$r getSite] getHeight]
+  if {$ry>=$Y0 && $ry+$rh<=$Y1} {lappend rows [list $ry $r]}
+ }
+ set rows [lsort -integer -index 0 $rows]
+ # occupied x intervals per row: already-fixed cells (welltaps, macros) and placement blockages
+ set occ [dict create]
+ foreach rr $rows {dict set occ [lindex $rr 0] {}}
+ set cellset [dict create]
+ foreach ci $cells {dict set cellset [$ci getName] 1}
+ foreach oi [$pb getInsts] {
+  if {[dict exists $cellset [$oi getName]]} continue
+  if {[$oi getPlacementStatus] ni {FIRM FIXED LOCKED COVER}} continue
+  set bb [$oi getBBox]
+  foreach rr $rows {
+   set ry [lindex $rr 0]
+   if {[$bb yMin] < $ry+1 && [$bb yMax] > $ry+1 && [$bb xMax] > $X0 && [$bb xMin] < $X1} {
+    dict lappend occ $ry [list [$bb xMin] [$bb xMax]]
+   }
+  }
+ }
+ foreach bk [$pb getBlockages] {
+  set bb [$bk getBBox]
+  foreach rr $rows {
+   set ry [lindex $rr 0]
+   if {[$bb yMin] < $ry+1 && [$bb yMax] > $ry+1 && [$bb xMax] > $X0 && [$bb xMin] < $X1} {
+    dict lappend occ $ry [list [$bb xMin] [$bb xMax]]
+   }
+  }
+ }
+ if {[llength $rows]!=2} {error "PVM_CONST expected 2 rows in $box, found [llength $rows]"}
+ # order constants by their current spot (repair_tie_fanout -separation 1 put each beside its single macro load pin)
+ set keyed {}
+ foreach ci $cells {
+  lassign [$ci getLocation] lx ly
+  lappend keyed [list $ly $lx $ci]
+ }
+ set keyed [lsort -integer -index 0 [lsort -integer -index 1 $keyed]]
+ set ri 0
+ set row [lindex $rows $ri 1]
+ set sw [[$row getSite] getWidth]
+ set ox [lindex [$row getOrigin] 0]
+ set cx [expr {max($X0, $ox + int(ceil(double($X0-$ox)/$sw))*$sw)}]
+ set n 0
+ foreach k $keyed {
+  set ci [lindex $k 2]
+  set w [[$ci getMaster] getWidth]
+  set wsites [expr {int(ceil(double($w)/$sw))*$sw}]
+  set placed 0
+  while {!$placed} {
+   set moved 1
+   while {$moved} {
+    set moved 0
+    foreach iv [dict get $occ [lindex [$row getOrigin] 1]] {
+     lassign $iv a b
+     if {$cx < $b && $cx+$wsites > $a} {set cx [expr {$ox + int(ceil(double($b-$ox)/$sw))*$sw}]; set moved 1}
+    }
+   }
+   if {$cx+$wsites<=$X1} {set placed 1; break}
+   incr ri
+   if {$ri>=[llength $rows]} {error "PVM_CONST box full after $n constants"}
+   set row [lindex $rows $ri 1]
+   set ox [lindex [$row getOrigin] 0]
+   set cx [expr {max($X0, $ox + int(ceil(double($X0-$ox)/$sw))*$sw)}]
+  }
+  set ry [lindex [$row getOrigin] 1]
+  $ci setOrient [$row getOrient]
+  $ci setLocation $cx $ry
+  $ci setPlacementStatus FIRM
+  set cx [expr {$cx+$wsites}]
+  incr n
+ }
+ puts "PVM_CONST fixed=$n rows=[llength $rows] box=$box last_row=$ri"
+}
+pvm_fix_constants {86.4 229.23 172.8 229.77} [dict values $pties]
 puts "PVM_REGION source-bound area=$pa, local density=[expr {$pa/(172.8*$ph)}], boundaryregs=[dict size $pio], fullband unchanged"
