@@ -1,0 +1,53 @@
+{
+  "delta": {
+    "ar_pct": -0.59,
+    "layer_dies": 20,
+    "mtp_pct": -0.42,
+    "mu_agg_ar_pct": -0.59,
+    "mu_dies": 28,
+    "mu_dies_pct": 5.38,
+    "mu_users": 47,
+    "record_ar_tok_s": 1210.0,
+    "record_mtp_tok_s": 3606.9,
+    "stages": 5,
+    "static_energy_per_token_pct": 6.01,
+    "su_dies": 20
+  },
+  "grade": "modelled (slot law + dv_price); no fit/route claim",
+  "notes": [
+    "MU users held at 47: the calendar II is the worst group occupancy; +1 die a duplicated layer copy lowers per-die field load, the 5 added stage hops lengthen T (users = floor(T/II) cannot drop).",
+    "static energy/token scales with dies / rate; dynamic energy per token unchanged (same bits, same ops)",
+    "accepted-cost rule: ar/mtp loss well inside 5%/unit; silicon +mu_dies_pct is the owner-accepted 5.3% capacity loss"
+  ],
+  "rows": [
+    {
+      "dies_per_layer": 9.7,
+      "dv_ar_tok_s": 1358.9,
+      "dv_mtp_tok_s": 3893.5,
+      "layer_dies": 388,
+      "mu_dies": 520,
+      "mu_dies_nonlayer_scaled": 520,
+      "mu_dup_dies": 80,
+      "ranks": 4,
+      "rom_slots": 1130,
+      "stages": 97,
+      "su_dies": 440,
+      "tp": 4
+    },
+    {
+      "dies_per_layer": 10.2,
+      "dv_ar_tok_s": 1350.9,
+      "dv_mtp_tok_s": 3877.1,
+      "layer_dies": 408,
+      "mu_dies": 548,
+      "mu_dies_nonlayer_scaled": 552,
+      "mu_dup_dies": 88,
+      "ranks": 4,
+      "rom_slots": 1070,
+      "stages": 102,
+      "su_dies": 460,
+      "tp": 4
+    }
+  ],
+  "schema": "opentallas.s81.l20.idxrd2_recompose.v1"
+}
