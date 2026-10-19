@@ -256,6 +256,17 @@ NPAIRS = LX.NPAIRS          # q pairs per phase (a_proj's choice; every phase of
 # element-work term per (fmt, units / segment, rows / element): MEASURED on the frame bench only (lower_xs.ELEM_EXTRA is
 # the fp8 a_proj measurement); a class missing here is placed and imaged with calendar_unmeasured
 ELEM_EXTRA = {('fp8',) + k: v for k, v in LX.ELEM_EXTRA.items()}
+# The class-only term is FALSIFIED by bench_xsp (ot-epyc4 10-18 23:5x, run with the spine ROMs present): wo_b
+# (fp8, 2 units, 2 rows, K 2048 nseg 2) returned every word exactly 20 edges before the class term (+13, not +33), values
+# exact; experts_gu fp4 K 5120 nseg 5: +18; down fp4 K 2304 nseg 5: -14 (all words, constant).  So the term is keyed by
+# the phase SHAPE (fmt, units / segment, rows / element, K, nseg); a shape measured on one phase is a prediction for
+# every other phase of that shape (validated by bench_xsp2 on different phases / rows).  wq_b (fp8 K 1280 nseg 3: the
+# last segment is a half unit) faulted in the return tree under the unmeasured calendar: per-segment work differs
+# inside the phase, which the one-term rule cannot express -- it stays calendar_unmeasured.
+ELEM_SHAPE = {('fp8', 2, 2, 5120, 5): 33,      # a_proj bench_xs + shared_gu bench_xsp sgu (exact)
+              ('fp8', 2, 2, 2048, 2): 13,      # wo_b bench_xsp wob (phase 12)
+              ('fp4', 2, 2, 5120, 5): 18,      # experts_gu bench_xsp egu (phase 20)
+              ('fp4', 1, 2, 2304, 5): -14}     # down bench_xsp down (phase 47)
 
 
 def frame_slot(die, frame):
@@ -274,7 +285,7 @@ def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters):
     plan['assign_slots'] = [(i + off, R, sg) for i, R, sg in plan['assign_slots']]
     units = {S.unit_range(mat.fmt, a0, el)[1] - S.unit_range(mat.fmt, a0, el)[0] for a0, el in S.segments(mat.K, nseg)}
     cls = (mat.fmt, units.pop(), 2)
-    x_ = ELEM_EXTRA.get(cls)
+    x_ = ELEM_SHAPE.get(cls + (mat.K, nseg))
     plan['elem_class'] = list(cls)
     plan['calendar'] = 'measured_class' if x_ is not None else 'calendar_unmeasured'
     if x_ is not None:
@@ -389,6 +400,9 @@ def write_images(field, qa, q, bf, inst, out):
         for jb in range(7):
             (out / f'{inst}_c{k}_{jb}.viamap.hex').write_text(''.join(f'{w:0144x}\n' for w in encode_bank(banked[jb])))
             names.append(f'{inst}_c{k}_{jb}.viamap.hex')
+    # the bench's spine reads its phase / stream ROMs from OT_ROM_DIR (missing -> no go, no returns: XS 10-18 bench)
+    for f in ('spine_phase.hex', 'spine_stream.hex'):
+        (out / f).write_text((tmp / f).read_text())
     return names, tmp
 
 
@@ -415,12 +429,25 @@ def cmd_gen(a):
     out.mkdir(parents=True, exist_ok=True)
     die = C.Die(C.die_tree(a.die_ref, a.die_src))
     rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or XS_OPS['L0'], iters=a.iters)
+    if a.phase:
+        rc = 0
+        for k_ in a.phase:
+            ph = next(p for p in rec['phases'] if p['phase'] == k_)
+            rc |= gen_one(a, rec, field, ph, Path(a.out) / f'p{k_}')
+        return rc
     cand = [p for p in rec['phases'] if p['op'] == a.op and p['rows'] > 0]
-    ph = cand[a.nth]
+    return gen_one(a, rec, field, cand[a.nth], out)
+
+
+def gen_one(a, rec, field, ph, out):
+    import hdc_golden_v41 as G
+    import v41_die_images_w17w10 as I
+    out.mkdir(parents=True, exist_ok=True)
+    op = ph['op']
     k = ph['phase']
     fx = Fix(a.fixtures)
-    grp = op_groups(fx, a.op)[ph['gi']]
-    mat = make_mat(fx, grp, ph['sel'], a.op)
+    grp = op_groups(fx, op)[ph['gi']]
+    mat = make_mat(fx, grp, ph['sel'], op)
     names, tmp = write_images(field, rec['pairs'], rec['q_pairs'], rec['bf_pairs'], a.frame, out)
     xsn = LX.xs_roms(tmp, out)
     plan = ph['plan']
@@ -445,17 +472,17 @@ def cmd_gen(a):
     if a.mutant == 'shift':
         plan['ret'] = [[e + 1] + list(rest) for e, *rest in plan['ret']]
     T = max(w_[0] for w_ in plan['ret']) + 600
-    meta = dict(op=a.op, field_phase=k, nphases=rec['nphases'], chunk=ph['chunk'], mat=ph['mat'], fmt=mat.fmt,
+    meta = dict(op=op, field_phase=k, nphases=rec['nphases'], chunk=ph['chunk'], mat=ph['mat'], fmt=mat.fmt,
                 calendar=ph['calendar'], elem_class=ph['elem_class'], master=LX.base_master(rec['master']),
                 die_frame=a.frame, die_master=rec['master'], lk=rec['lk'], land_e=LX.land_e(rec['lk']),
                 slice=rec['slice'], slice_index=rec['slice_index'], frame_index=rec['frame_index'], K=mat.K,
                 nseg=ph['nseg'], pairs=rec['pairs'], nrows=mat.rows, rows={str(r): v for r, v in rows.items()},
                 cycles=T, plan=plan, mutant=a.mutant, fill=rec['fill'],
                 fixture=dict(dir=str(a.fixtures), meta_sha256=sha((Path(a.fixtures) / 'meta.json').read_bytes())),
-                images={n: sha((out / n).read_bytes()) for n in names + xsn})
+                images={n: sha((out / n).read_bytes()) for n in names + xsn + ['spine_phase.hex', 'spine_stream.hex']})
     (out / 'meta.json').write_text(json.dumps(meta, indent=1) + '\n')
     (out / 'ARGS').write_text(f'+OT_ROM_DIR={out.resolve()} +T={T} +K={mat.K} +OPS={mat.rows} +PH={k}\n')
-    print(f'XS_PLACE_GEN {a.frame} op {a.op} phase {k}/{rec["nphases"]} mat {ph["mat"]} rows {mat.rows} nseg {ph["nseg"]} '
+    print(f'XS_PLACE_GEN {a.frame} op {op} phase {k}/{rec["nphases"]} mat {ph["mat"]} rows {mat.rows} nseg {ph["nseg"]} '
           f'faults {plan["faults"]} ret_words {plan["ret_words"]} calendar {ph["calendar"]} T {T} mutant {a.mutant}')
     return 0
 
@@ -566,7 +593,7 @@ def lower_placed(die, op, ctx):
         nseg, units = nseg_for(f, K, NPAIRS)
         mats.append(dict(mat=grp['mat'], fmt=f, K=K, nseg=nseg, rows_per_phase=2 * (NPAIRS // nseg),
                          phases=sum(1 for x in seq if x[1] == gi), rows_per_frame=[len(fr) for fr in grp['groups'][g]],
-                         calendar='measured_class' if (f, units, 2) in ELEM_EXTRA else 'calendar_unmeasured',
+                         calendar='measured_class' if (f, units, 2, K, nseg) in ELEM_SHAPE else 'calendar_unmeasured',
                          tie='fixture' if grp['tie'] else 'golden', note=grp.get('note')))
     bench = None
     bp = ROOT / BENCHP / 'check.json'
@@ -605,8 +632,9 @@ def main(argv=None):
     f.add_argument('--only', type=int, nargs='*', default=None)
     g = sp.add_parser('gen')
     g.add_argument('--frame', default='u_f_0L00')
-    g.add_argument('--op', required=True)
+    g.add_argument('--op', default=None)
     g.add_argument('--nth', type=int, default=0, help='the nth non-empty phase of the op on this frame')
+    g.add_argument('--phase', type=int, nargs='*', default=None, help='field phase indices: one vector dir OUT/p<k> each')
     g.add_argument('--out', required=True)
     g.add_argument('--fixtures', default=str(LX.FIX))
     g.add_argument('--die-ref', default=C.DIE_REF)
