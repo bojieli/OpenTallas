@@ -85,7 +85,19 @@ module cb16_model_r #(parameter W=516,D=4,K=2)(input ck,rsi,input[4*W-1:0]bank,i
 endmodule
 '''
 (out/'model_helpers.sv').write_text(helper)
+# Price reset initialization in the generated compiler fixture. All normal data
+# latencies stay byte-for-byte unchanged. The conservative boot guard allows
+# the latest local reset state, a complete D4 fill, and the longest fabric path.
+lat=(ROOT/'rtl/test/qcluster_lat.svh').read_text()
+longest=max(int(v)for v in re.findall(r'LAT_(?:TAP\d|BCO|RS_FABRIC) = (\d+)',lat))
+warm=plan['latest_landing_epoch']+4+longest
+lat=re.sub(r'Q3H_RST_DEPTH = \d+',f"Q3H_RST_DEPTH = {plan['A0_xstn_reset_pin_depth']}",lat)
+lat=re.sub(r'QC_LAT_WARM = \d+',f'QC_LAT_WARM = {warm}',lat)
+(out/'qcluster_lat.svh').write_text(lat)
+tb=(ROOT/'rtl/test/tb_qcluster_fabric.sv').read_text()
+tb=tb.replace('`include "qcluster_lat.svh"', '`include "qcluster_lat.svh"\n'+f'    initial begin if(QC_LAT_WARM!={warm} || Q3H_RST_DEPTH!={plan["A0_xstn_reset_pin_depth"]}) $fatal(1,"SAFE_COMPILER_WRONG_INCLUDE"); $display("SAFE_COMPILER warm%0d reset%0d",QC_LAT_WARM,Q3H_RST_DEPTH); end')
+(out/'tb_safe_fabric_model.sv').write_text(tb)
 inputs=[ROOT/'rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv',ROOT/'rtl/physical/qcluster/qfd_c_land_safe.sv',Path(a.plan)]
-receipt=dict(schema='opentallas.cb16.safe_fabric_model.v1',model_only=True,inputs={str(p):hashlib.sha256(p.read_bytes()).hexdigest()for p in inputs},generated={p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in out.glob('*.sv')},reset_forward_hops=plan['mapped_forward_hops'],reset_padding_hops=plan['equal_depth_padding_hops'],reset_ff_total=2*plan['total_two_stage_relay_hops'],compiler_reset_core_edge=plan['A0_xstn_reset_pin_depth'],compiler_latest_landing_epoch=plan['latest_landing_epoch'],normal_data_calendar_unchanged=True,physical_adoption=False)
+receipt=dict(schema='opentallas.cb16.safe_fabric_model.v1',model_only=True,inputs={str(p):hashlib.sha256(p.read_bytes()).hexdigest()for p in inputs},generated={p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in out.glob('*')if p.suffix in ['.sv','.svh']},reset_forward_hops=plan['mapped_forward_hops'],reset_padding_hops=plan['equal_depth_padding_hops'],reset_ff_total=2*plan['total_two_stage_relay_hops'],compiler_reset_core_edge=plan['A0_xstn_reset_pin_depth'],compiler_latest_landing_reset_state=plan['latest_landing_epoch'],compiler_first_active_landing=plan['latest_landing_epoch']+1,compiler_warm_guard_edges=warm,warm_guard_formula='latest landing reset state +D4fill +max normal fabric latency',normal_data_calendar_unchanged=True,physical_adoption=False)
 (out/'model_sources.json').write_text(json.dumps(receipt,indent=1)+'\n')
 print('SAFE_FABRIC_MODEL',len(bydst),'reset nodes',len(padding),'consumer pads')
