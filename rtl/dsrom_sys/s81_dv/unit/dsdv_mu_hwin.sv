@@ -109,7 +109,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         rot[0] = (|(o & l)) | o[NSLOT-1];
     endfunction
     // ---- start table: the same record rule / slot timer / due edge as dsdv_mu_hslot
-    reg [23:0] cs, crl, crm; reg [31:0] tm, tm1, tm2, tmr; reg armed; reg [23:0] ph; reg [SI-1:0] lw;
+    reg [23:0] cs, crl, crm; reg [31:0] tm, tm1, tm2, tmr; reg armed; wire [23:0] ph; reg [SI-1:0] lw;
     reg [SI-1:0] slb, rpb, gxb, ssqb; wire [NSLOT-1:0] sl, rp, gx;                           // one-hot: slot, retire pointer, gap-table walker
     // MU-S81-2/SEQ (10-19): slot gap table, the same as dsdv_mu_hslot's (same f_mc words, same walk).  The record calendar (dv_mu_calendar --phase-q 4) has NON-uniform slots
     // (AR 46: shift_k = 4 floor(k (P/4) / 46) -> gaps 21,312 / 21,316; MTP 10 + filler: 10 x 124,524 then 58,160), so
@@ -130,7 +130,15 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     always @* begin udup = 1'b0; for (i = 0; i < NSLOT; i = i + 1) if (vld[i] && eu[i] == cmp_user[i/24]) udup = 1'b1; end
     wire col = |(vld & ss);
     wire [23:0] nw = {{(23-SI){1'b0}}, lw} + 24'd1;     // slot entries in use (= calendar slots per period)
-    wire hcfg_bad = gn == 0 || cs < nw || crl <= nw;                     // hslot's own arming rule
+    wire hcfg_bad = gn == 0 || cs < nw || crl <= nw;
+    localparam integer BAD_GROUPS=(NEV+3)/4;
+    wire [BAD_GROUPS-1:0] bad_group;
+    generate for(genvar bg=0;bg<BAD_GROUPS;bg=bg+1) begin:g_config_check_region
+        if(LOCAL_BOOT!=0) begin:g_local
+            (* keep=1 *) dsdv_mu_cfg_bad u_bad(.count(7'(gn)),.min_gap(cs),.return_gap(crl),.last_slot(6'(lw)),.bad(bad_group[bg]));
+        end else begin:g_direct assign bad_group[bg]=hcfg_bad;end
+    end endgenerate
+                     // hslot's own arming rule
     wire rec = st && on_cal && !col && !udup && !(!armed && hcfg_bad);
     // staged record: written one edge after the start edge, with the start edge's tm
     reg rec_q; reg [NSLOT-1:0] ssq; reg [9:0] suq; reg [20:0] spq; reg [31:0] tsq;
@@ -151,11 +159,11 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         for(genvar pc=0;pc<PTR_CTL;pc=pc+1) begin:g_pointer
             (* keep=1 *) dsdv_mu_retire_advance u_retire(.valid(rok),.fresh(h_rfr),.hold_head(rhold),.retire(h_rts),.now_time(tmr),.due(pointer_due[pc]),.advance(pointer_adv[pc]));
-            (* keep=1 *) dsdv_mu_slot_step u_step(.phase(ph),.gap(cg),.armed(armed_event[pc%NEV]),.start(start_event[pc%NEV]),.bad(hcfg_bad),.slot(slot_step[pc]),.gap_step(gap_step[pc]));
+            (* keep=1 *) dsdv_mu_slot_step u_step(.phase(ph),.gap(cg),.armed(armed_event[pc%NEV]),.start(start_event[pc%NEV]),.bad(bad_group[(pc/2)%BAD_GROUPS]),.slot(slot_step[pc]),.gap_step(gap_step[pc]));
         end
         for(genvar cc=0;cc<3;cc=cc+1) begin:g_config
             wire unused_slot;
-            (* keep=1 *) dsdv_mu_slot_step u_cg(.phase(ph),.gap(cg),.armed(armed_event[(cc+PTR_CTL)%NEV]),.start(start_event[(cc+PTR_CTL)%NEV]),.bad(hcfg_bad),.slot(unused_slot),.gap_step(cg_step[cc]));
+            (* keep=1 *) dsdv_mu_slot_step u_cg(.phase(ph),.gap(cg),.armed(armed_event[(cc+PTR_CTL)%NEV]),.start(start_event[(cc+PTR_CTL)%NEV]),.bad(bad_group[cc%BAD_GROUPS]),.slot(unused_slot),.gap_step(cg_step[cc]));
             (* keep=1 *) dsdv_mu_boot_enable u_crl(.count(global_count),.armed(armed),.valid(mc_q[25]),.match(mc_q[24]),.en(crl_write[cc]));
             (* keep=1 *) dsdv_mu_boot_enable u_crm(.count(global_count),.armed(armed),.valid(mc_q[25]),.match(mc_q[24]),.en(crm_write[cc]));
         end
@@ -362,7 +370,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     wire [PTR_CTL-1:0] record_group;
     generate for(genvar rg=0;rg<PTR_CTL;rg=rg+1) begin:g_record_control
         if(LOCAL_BOOT!=0) begin:g_local
-            (* keep=1 *) dsdv_mu_record u_record(.start(start_event[rg%NEV]),.on_calendar(on_cal),.collision(col),.duplicate(udup),.armed(armed_event[rg%NEV]),.bad(hcfg_bad),.record(record_group[rg]));
+            (* keep=1 *) dsdv_mu_record u_record(.start(start_event[rg%NEV]),.on_calendar(on_cal),.collision(col),.duplicate(udup),.armed(armed_event[rg%NEV]),.bad(bad_group[(rg/2)%BAD_GROUPS]),.record(record_group[rg]));
         end else begin:g_direct assign record_group[rg]=rec;end
     end endgenerate
     genvar ws, wc;
@@ -483,7 +491,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         (* keep *) reg [1:0] cfg_attr_r;
         assign cfg_addr[ce]=cfg_addr_r; assign cfg_attr[ce]=cfg_attr_r;
-        assign rec_local[ce]=start_r && on_cal && !col && !udup && !(!armed && hcfg_bad);
+        assign rec_local[ce]=start_r && on_cal && !col && !udup && !(!arm_r && bad_group[ce/4]);
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
             if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_w0_r<=0;cfg_w1_r<=0;cfg_w2_r<=0;cfg_sel_r<=0;cfg_addr_r<=0;cfg_attr_r<=0;end
             else begin cfg_sel_r<=((wv && idle && mw_q[22:21]==2'd0)?mw_q[EI-1:0]:esel)==EI'(ce);cfg_w0_r<=f_mw[25] && f_mw[22:21]==2'd0;cfg_w1_r<=f_mw[25] && f_mw[22:21]==2'd1;cfg_w2_r<=f_mw[25] && f_mw[22:21]==2'd2;cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_attr_r<=f_mw[11:10];end
@@ -567,7 +575,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+5])
             if(!rr[COPY_RBASE+7*ce+5]) arm_r<=1'b0;
-            else if(start_r && !arm_r && !hcfg_bad) arm_r<=1'b1;
+            else if(start_r && !arm_r && !bad_group[ce/4]) arm_r<=1'b1;
         for(genvar db=0;db<21;db=db+1) begin:g_d_storage
             always @(posedge ck) if(d_write[db/8]) eD[ce][db]<=boot_data[ce/4][db];
         end
@@ -631,10 +639,25 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
                 gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1;
             if(radv) rpb<=((|(rp&lm)) || rp[NSLOT-1])?SI'(0):rpb+1'b1;
         end
-    always @(posedge ck or negedge rr[RCTRL_BASE])
-        if(!rr[RCTRL_BASE]) ph<=0;
-        else if(st && !armed && !hcfg_bad) ph<=1;
-        else if(armed) ph<=(ph==cg)?24'd0:ph+24'd1;
+    wire [23:0] phase_increment=ph+24'd1;
+    wire [2:0] phase_set,phase_clear,phase_step;
+    generate for(genvar pg=0;pg<3;pg=pg+1) begin:g_phase_control
+        if(LOCAL_BOOT!=0) begin:g_local
+            (* keep=1 *) dsdv_mu_phase_action u_action(.phase(ph),.gap(cg),.armed(armed_event[pg%NEV]),.start(start_event[pg%NEV]),.bad(bad_group[pg%BAD_GROUPS]),
+                .set_one(phase_set[pg]),.clear(phase_clear[pg]),.increment(phase_step[pg]));
+        end else begin:g_direct
+            assign phase_set[pg]=st && !armed && !hcfg_bad;
+            assign phase_clear[pg]=armed && ph==cg;assign phase_step[pg]=armed && ph!=cg;
+        end
+    end
+    for(genvar pb=0;pb<24;pb=pb+1) begin:g_phase_state
+        reg bit_r;assign ph[pb]=bit_r;
+        always @(posedge ck or negedge rr[RCTRL_BASE])
+            if(!rr[RCTRL_BASE]) bit_r<=0;
+            else if(phase_set[pb/8]) bit_r<=(pb==0);
+            else if(phase_clear[pb/8]) bit_r<=0;
+            else if(phase_step[pb/8]) bit_r<=phase_increment[pb];
+    end endgenerate
     always @(posedge ck or negedge rr[RCTRL_BASE+1])
         if(!rr[RCTRL_BASE+1]) cs<=0;
         else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT) && (gn==0 || mc_q[23:0]<cs)) cs<=mc_q[23:0];
@@ -754,4 +777,13 @@ endmodule
 
 (* keep_hierarchy=1 *) module dsdv_mu_fire_flag(input wire fresh,ok,equal_time,output wire fire);
  assign fire=fresh && ok && equal_time;
+endmodule
+
+(* keep_hierarchy=1 *) module dsdv_mu_cfg_bad(input wire [6:0] count,input wire [23:0] min_gap,return_gap,input wire [5:0] last_slot,output wire bad);
+ wire [23:0] n={18'd0,last_slot}+24'd1;
+ assign bad=count==0 || min_gap<n || return_gap<=n;
+endmodule
+(* keep_hierarchy=1 *) module dsdv_mu_phase_action(input wire [23:0] phase,gap,input wire armed,start,bad,output wire set_one,clear,increment);
+ assign set_one=start && !armed && !bad;
+ assign clear=armed && phase==gap;assign increment=armed && phase!=gap;
 endmodule
