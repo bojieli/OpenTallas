@@ -65,6 +65,11 @@
 //   requires them to be 0.  Outputs ctx_dw = {DW6, DW5} (the existing dwr[5] / dwr[6] registers, no new storage) and
 //   ctx_load = one edge on the accepted seal (sealed rises without an image fault) -- the consumer (qfd_tt_ctlm_dv OPSEG)
 //   checks the record and loads it.  CTX_DW 0: ctx_load is 0, ctx_dw is still {dwr[6], dwr[5]} (= 0 on every sealed image).
+//   RUNTIME context (MU-DQ-BOOTCTX 10-19, coordinator 0kg (1), CTX_DW 1 only): a DW write with dw_addr 5 while the image
+//   is SEALED and not loading (no PW on the edge) is the face's runtime context word (qfd_sys_face_fill_ctx, from the
+//   KV die's kind12 HOST context record) -- not an image write and not a fault (it was an image-order fault before):
+//   dwr[5] takes the word (the same register, no new storage) and ctx_rt pulses on the next edge with ctx_dw[63:0] =
+//   the word.  The segment store, the seal and every playhead are untouched.  CTX_DW 0: unchanged (a fault).
 // =====================================================================================================================
 module qfd_dv_cmd_cal_mu #(
     parameter integer MUT = 0,
@@ -111,7 +116,8 @@ module qfd_dv_cmd_cal_mu #(
     output reg           fault,
     output reg  [5:0]    fault_code,
     output wire [127:0]  ctx_dw,                    // {DW6, DW5} of the sealed image (CTX_DW)
-    output wire          ctx_load                   // one edge: the image (with its context record) was sealed (CTX_DW)
+    output wire          ctx_load,                  // one edge: the image (with its context record) was sealed (CTX_DW)
+    output reg           ctx_rt                     // one edge: a runtime context word is in ctx_dw[63:0] (CTX_DW)
 );
     // ================================================================ image load (as qfd_dv_cmd_cal)
     reg         loading, sealed, sealed_d;
@@ -320,6 +326,7 @@ module qfd_dv_cmd_cal_mu #(
         if (!rst_n) begin
             loading <= 1'b0; sealed <= 1'b0; sealed_d <= 1'b0; pw_cnt <= 11'd0; dw_cnt <= 4'd0; meta_rows <= 10'd0;
             for (s = 0; s < 7; s = s + 1) dwr[s] <= 64'd0;
+            ctx_rt <= 1'b0;
             run_q <= {NU{1'b0}}; done <= 1'b0; done_user <= {UB{1'b0}}; fault <= 1'b0; fault_code <= 6'd0;
             for (k = 0; k < NU; k = k + 1) begin
                 f_idx[k] <= 10'd0; f_rem[k] <= 10'd0; i_rem[k] <= 10'd0; fifo_n[k] <= 4'd0; infl[k] <= 4'd0;
@@ -346,7 +353,10 @@ module qfd_dv_cmd_cal_mu #(
                     if (pw_addr == 10'd1017) meta_rows <= pw_data[27:18];
                 end
             end
-            if (dw_v) begin
+            ctx_rt <= 1'b0;
+            if (dw_v && CTX_DW != 0 && sealed && !loading && !pw_v && dw_addr == 3'd5) begin
+                dwr[5] <= dw_data; ctx_rt <= 1'b1;                 // runtime context word (see the header)
+            end else if (dw_v) begin
                 if (running || !loading || pw_cnt != 11'd1024 || {1'b0, dw_addr} != dw_cnt || pw_v) begin
                     fault <= 1'b1; fault_code[4] <= 1'b1;
                 end

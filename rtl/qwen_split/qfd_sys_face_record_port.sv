@@ -6,7 +6,9 @@
 //   rst_rn[0] auth RX + TT descriptor-obs delay + slot fault   rst_rn[1] TT receipt (sink 0)   rst_rn[2] SU receipt (sink 1)
 //   rst_rn[3] commit join                                       rst_rn[4] host context RX      rst_rn[5] witness TX
 // All six are released on the same edge (qfd_sys_face ot_rst_relay), so the reset release is bit-identical.
-module qfd_sys_face_record_port(
+// FILL (MU-DQ-BOOTCTX 10-19, opt-in, 0 = unchanged): the host context receiver admits the kind12 filler-context field
+// (qfd_host_native_context_rx FILL); qfd_sys_face_fill_ctx below turns it into the ctlm runtime context word.
+module qfd_sys_face_record_port #(parameter integer FILL = 0)(
  input wire ck,input wire[5:0]rst_rn,input wire auth_slot,context_slot,witness_slot,
  input wire rx_v,input wire[547:0]rx_record,
  input wire execution_active,
@@ -56,7 +58,7 @@ module qfd_sys_face_record_port(
  .sink_fusedcap(sink_fusedcap),.sink_epoch(sink_epoch),.sink_digest(sink_digest),
  .commit_v(commit_v),.ready(program_ready),.fault(jf),.installed_fusedcap(installed_fusedcap),
  .commit_epoch(program_epoch),.commit_digest(program_digest));
- qfd_host_native_context_rx u_context(.ck(ck),.rst_n(rst_rn[4]),.receive_slot(context_slot),.rx_v(rx_v&&context_slot),.rx_record(rx_record),
+ qfd_host_native_context_rx #(.FILL(FILL)) u_context(.ck(ck),.rst_n(rst_rn[4]),.receive_slot(context_slot),.rx_v(rx_v&&context_slot),.rx_record(rx_record),
  .program_begin_v(begin_v),.program_ready(program_ready),.installed_fusedcap(installed_fusedcap),.program_epoch(program_epoch),.program_digest(program_digest),
  .head_context_v(head_context_v),.head_stage(head_stage),.head_token(head_token),.head_position(head_position),.native_active(execution_active),
  .host_epoch_valid(host_epoch_valid),.host_epoch(host_epoch),.host_tag(host_tag),.host_gen(host_gen),
@@ -65,4 +67,48 @@ module qfd_sys_face_record_port(
  .program_ready(program_ready),.installed_fusedcap(installed_fusedcap),.program_fault(jf|af|slot_fault),
  .program_epoch(program_epoch),.program_digest(program_digest),.tx_v(tx_v),.tx_observed_v(tx_observed_v),.tx_record(tx_record),.fault(wf));
  assign fault=af|jf|cf|wf|slot_fault;
+endmodule
+
+// =====================================================================================================================
+// qfd_sys_face_fill_ctx (MU-DQ-BOOTCTX 2026-10-19, coordinator 0kg (1)): the RUNTIME multi-user filler initial context.
+// Source = the KV/system die host plane; transport = the EXISTING KV->compute D2D HOST context record (kind 12, the
+// program port's compiled context_slot, one per token run of the latency user); no new D2D lane, slot or die port.
+// The kind12 DATA[188:142] field (qfd_host_native_context_rx FILL 1) carries at most one filler context per record:
+//   FC = {pos18 [188:171], tok18 [170:153], seq8 [152:145], user2 [144:143], v [142]}
+// seq = the index (since the user's boot context load) of the filler RESULT whose bank write this context replaces:
+// the context is applied on that result's edge instead of {argmax token, pos + 1} (a new request for user `user`
+// starts at token `tok`, position `pos`).  The record arrives on its compiled slot edge s (static schedule: no credit,
+// no ready); the receiver validates it on s (host_epoch_valid); this block registers FC on s and, when the record was
+// accepted and v = 1, puts the ctlm runtime context word on the dh DW lane on edge s + 1 for one edge:
+//   dw_v 1, dw_addr 5, dw_data = {16'h4346 'CF' [63:48], 2'b00 [47:46], seq8 [45:38], user2 [37:36], tok18 [35:18],
+//   pos18 [17:0]}
+// (qfd_dv_cmd_cal_mu CTX_DW: a DW5 word while the image is sealed and not loading = runtime context, ctx_rt; qfd_tt_ctlm_dv
+// OPSEG checks tag / user / seq / ranges and arms the user's pending context; a bad or LATE record is a sticky op_fault).
+// The face's own DW replay (program install) never overlaps: the host context is invalid between BEGIN and the
+// commit; an overlap anyway (prog_dw_busy on the emit edge) is a sticky fault.  Cost: 47 + 1 + 68 + 1 flops, 0 edges on
+// any existing path (+1 edge from the record slot to the dh word; the ctlm adds its pin + calendar + arm edges).
+// =====================================================================================================================
+module qfd_sys_face_fill_ctx (
+    input  wire         ck,
+    input  wire         rst_n,
+    input  wire         context_slot,
+    input  wire         rx_v,
+    input  wire [46:0]  rx_fill,          // rx_record[188:142]
+    input  wire         host_epoch_valid, // the receiver's verdict on the slot edge (registered by it)
+    input  wire         prog_dw_busy,     // the face's DW replay drives the lane on this edge
+    output reg  [67:0]  dw,               // {dw_v, dw_addr3, dw_data64}, OR-ed onto seq_dh's DW field
+    output reg          fault
+);
+    reg        slot_q;
+    reg [46:0] fq;
+    wire       emit = slot_q && host_epoch_valid && fq[0];
+    always @(posedge ck or negedge rst_n) begin
+        if (!rst_n) begin slot_q <= 1'b0; fq <= 47'd0; dw <= 68'd0; fault <= 1'b0; end
+        else begin
+            slot_q <= context_slot && rx_v;
+            if (context_slot) fq <= rx_fill;
+            dw <= emit ? {1'b1, 3'd5, 16'h4346, 2'b00, fq[10:3], fq[2:1], fq[28:11], fq[46:29]} : 68'd0;
+            if (emit && prog_dw_busy) fault <= 1'b1;
+        end
+    end
 endmodule

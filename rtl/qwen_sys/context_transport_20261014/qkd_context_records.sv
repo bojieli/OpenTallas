@@ -31,7 +31,11 @@ module qkd_host_native_context_tx(
  end
 endmodule
 
-module qfd_host_native_context_rx(
+// FILL (MU-DQ-BOOTCTX 2026-10-19, coordinator 0kg; opt-in, 0 = unchanged): kind12 DATA[188:142] may carry ONE
+// multi-user filler context FC = {pos18 [188:171], tok18 [170:153], seq8 [152:145], user2 [144:143], v [142]} (all 0
+// when v = 0); DATA[511:189] stays 0.  The receiver only admits the field (structure); qfd_sys_face_fill_ctx decodes
+// it into the ctlm runtime context word and qfd_tt_ctlm_dv checks user / seq / ranges.  FILL 0: DATA[511:142] must be 0.
+module qfd_host_native_context_rx #(parameter integer FILL = 0)(
  input wire ck,rst_n,receive_slot,rx_v,input wire[547:0]rx_record,
  input wire program_begin_v,program_ready,installed_fusedcap,
  input wire[15:0]program_epoch,input wire[63:0]program_digest,
@@ -43,7 +47,7 @@ module qfd_host_native_context_rx(
  output reg fault
 );
  wire[58:0]tag=rx_record[58:0];
- wire structure_ok=rx_record[547:543]==0&&rx_record[542:539]==12&&rx_record[538:533]==63&&rx_record[516:512]==0&&rx_record[511:142]==0&&tag[42:37]==0&&tag[5:0]==0&&tag[36:19]<151936&&rx_record[532:517]==tag[58:43];
+ wire structure_ok=rx_record[547:543]==0&&rx_record[542:539]==12&&rx_record[538:533]==63&&rx_record[516:512]==0&&(FILL!=0?(rx_record[511:189]==0&&(rx_record[142]||rx_record[188:143]==0)):rx_record[511:142]==0)&&tag[42:37]==0&&tag[5:0]==0&&tag[36:19]<151936&&rx_record[532:517]==tag[58:43];
  wire image_ok=program_ready&&rx_record[77:62]==program_epoch&&rx_record[141:78]==program_digest&&rx_record[61]==installed_fusedcap;
  assign host_epoch=host_tag[58:43];
  always @(posedge ck or negedge rst_n)begin

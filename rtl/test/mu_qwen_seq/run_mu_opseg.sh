@@ -2,9 +2,10 @@
 # MU-QW-B1 benches (2026-10-19; FLEET only, Verilator 5.050 = the closure daemon's): op-granular 4-user playback through
 # qfd_tt_ctlm_dv NU 4 OPSEG 1 (leaf qfd_sys_face_mu_dhuser OPSEG + qfd_dv_cmd_cal_mu explicit range), mu_opcal frames.
 #   usage: run_mu_opseg.sh WORK [part ...]     parts (default all): pass mut old
-#   pass  mu_opseg_bench.py mut 0, cases red (F16 x 2 layers, 3 frames) ctx_part neg_drift neg_coll neg_ctx full (F16 x 36 layers, 1 frame
+#   pass  mu_opseg_bench.py mut 0, cases red (F16 x 2 layers, 3 frames) ctx_part d2d_ctx neg_drift neg_coll neg_ctx neg_late full (F16 x 36 layers, 1 frame
 #         + 30k edges of frame 1): MU_OPSEG_PASS
-#   mut   21 .. 29 each MU_OPSEG_FAIL (21 / 23 / 24 / 25 / 27 / 28 on red, 22 on neg_coll, 26 on neg_drift, 29 on neg_ctx)
+#   mut   21 .. 29 each MU_OPSEG_FAIL (21 / 23 / 24 / 25 / 27 / 28 on red, 22 on neg_coll, 26 on neg_drift, 29 on neg_ctx),
+#         32 on d2d_ctx (runtime record armed into the wrong user), 33 on neg_late (seq / late check dropped) (MU-DQ-BOOTCTX)
 #   emb   MU-OPCAL-EMB (10-19) C7 witnesses on red, mut 0 RTL: --emb-t 16 (pre-fix image) and --res-skew 1 (result one
 #         edge late) each MU_OPSEG_FAIL on C7
 #   full2 the steady-state rate run: full, frames 0-1 + 30k edges of frame 2 (measured frame-1 rate): MU_OPSEG_PASS
@@ -25,7 +26,7 @@ if want pass; then
     chk opseg_m0 MU_OPSEG_PASS "$(grep -m1 '^MU_OPSEG_' "$W/opseg_m0.out")"
 fi
 if want mut; then
-    for mc in "21 red" "22 neg_coll" "23 red" "24 red" "25 red" "26 neg_drift" "27 red" "28 red" "29 neg_ctx"; do
+    for mc in "21 red" "22 neg_coll" "23 red" "24 red" "25 red" "26 neg_drift" "27 red" "28 red" "29 neg_ctx" "32 d2d_ctx" "33 neg_late"; do
         set -- $mc
         python3 -I "$D/mu_opseg_bench.py" --work "$W/opseg" --mut $1 --cases $2 --verilator "$VL" --jobs 8 > "$W/opseg_m$1.out" 2>&1
         chk opseg_m$1 MU_OPSEG_FAIL "$(grep -m1 '^MU_OPSEG_' "$W/opseg_m$1.out")"

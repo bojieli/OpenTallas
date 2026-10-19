@@ -8,10 +8,15 @@
 //   2 RUN {user 2 [44:43], h_start [42], stage 6, tok 18, pos 18} -> dh run levels (h_start one edge) + dh_user
 //   3 RES {user 2 [43:42], val 24 [41:18], tok 18 [17:0]} -> ss5 for one edge: tok_v, tok_idx = tok, ss5[27:26] = user
 //         (the MU-QW-AMIX contract), tok_val = val (the root result as qfd_dv_scalar2 returns it)
+//   4 CTX {seq 8 [45:38], user 2 [37:36], tok 18 [35:18], pos 18 [17:0]} (MU-DQ-BOOTCTX 10-19): the KV die's D2D HOST
+//         context record (opaque548 kind 12, the latency user's HOST tag + this filler-context field DATA[188:142]) on
+//         the face's context slot for one edge, into the REAL receiver qfd_host_native_context_rx #(FILL 1) and the
+//         face's qfd_sys_face_fill_ctx; its dw output is OR-ed onto dh's DW lane exactly as qfd_sys_face FILL_CTX 1 does.
 // Log (+LOG), label = the posedge just taken:
 //   "c CMD u hex", "c EMB u tok", "c SEG u base tok pos", "c MES tok pos", "c SUA n", "c HD hex", "c CST stage",
 //   "c DC hex" (dc on change), "c STA user stage rng first cnt" (u_cal start consumed at the next posedge),
-//   "c FAULT code" (calendar fault rise), "c OPF lcode coll" (op_fault rise / leaf code change), "c END f code sf opf lcode".
+//   "c FAULT code" (calendar fault rise), "c OPF lcode coll" (op_fault rise / leaf code change), "c END f code sf opf lcode",
+//   "c RTA user tok pos" (runtime context armed), "c RXF rx fill" (receiver / face-fill fault rise).
 module tb_mu_opseg_dv;
     parameter integer NU = 1, MUT = 0, OPSEG = 0;
     reg ck = 1'b0;
@@ -20,8 +25,22 @@ module tb_mu_opseg_dv;
     reg [74:0] pw = 0; reg [186:0] dh = 0; reg [1:0] dh_user = 0; reg [106:0] ss5 = 0;
     wire [452:0] hr; wire [115:0] cmd; wire emb_start; wire [17:0] emb_token; wire [55:0] dc; wire cf;
     wire [75:0] pobs, cobs; wire [68:0] dobs; wire csr, cir, lcv; wire [17:0] ntk, nps; wire [5:0] cst; wire [379:0] ncmd;
+    // ---- D2D HOST context record path (MU-DQ-BOOTCTX): real receiver + face fill decoder
+    localparam [15:0] PEP = 16'h0042, HEP = 16'h0007; localparam [63:0] PDG = 64'h5eed_0bad_c0de_0001;
+    reg ctx_slot = 1'b0; reg [547:0] rx_rec = 548'd0;
+    wire hev, rx_cf, fl_f; wire [15:0] hep; wire [58:0] htag; wire [1:0] hgen; wire hcap; wire [15:0] hiep; wire [63:0] hidg;
+    wire [67:0] fdw;
+    qfd_host_native_context_rx #(.FILL(1)) u_rx (.ck(ck), .rst_n(rst_n), .receive_slot(ctx_slot), .rx_v(ctx_slot),
+        .rx_record(rx_rec), .program_begin_v(1'b0), .program_ready(1'b1), .installed_fusedcap(1'b1), .program_epoch(PEP),
+        .program_digest(PDG), .head_context_v(1'b0), .head_stage(6'd0), .head_token(18'd0), .head_position(18'd0),
+        .native_active(1'b0), .host_epoch_valid(hev), .host_epoch(hep), .host_tag(htag), .host_gen(hgen),
+        .host_fusedcap(hcap), .host_image_epoch(hiep), .host_image_digest(hidg), .fault(rx_cf));
+    qfd_sys_face_fill_ctx u_fill (.ck(ck), .rst_n(rst_n), .context_slot(ctx_slot), .rx_v(ctx_slot), .rx_fill(rx_rec[188:142]),
+        .host_epoch_valid(hev), .prog_dw_busy(dh[186]), .dw(fdw), .fault(fl_f));
+    wire [186:0] dh_in = {dh[186:119] | fdw, dh[118:0]};
+    reg rxf_l = 0; integer kn = 0;
     qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(1), .MUT(MUT), .NU(NU), .STAGE_ME(1), .OPSEG(OPSEG)) dut (.ck(ck), .rst_n(rst_n),
-        .pw(pw), .dh(dh), .dh_user(dh_user), .kok(1'b0), .kwd(1'b1), .fab(1'b0), .program_obs(pobs),
+        .pw(pw), .dh(dh_in), .dh_user(dh_user), .kok(1'b0), .kwd(1'b1), .fab(1'b0), .program_obs(pobs),
         .control_stores_ready(csr), .layer_context_v(lcv), .native_tok(ntk), .native_pos(nps), .command_stage(cst),
         .cal_program_obs(cobs), .cal_descriptor_obs(dobs), .cal_image_ready(cir), .dc(dc), .native_cmd(ncmd),
         .native_ret(95'd0), .hr(hr), .cmd(cmd), .ss5(ss5), .ag5(10'd0), .emb_start(emb_start), .emb_token(emb_token),
@@ -53,6 +72,9 @@ module tb_mu_opseg_dv;
                                        dut.l_first, dut.l_cnt);
             if (dut.u_cal.fault && !flt_l) $fdisplay(lg, "%0d FAULT %b", cyc, dut.u_cal.fault_code);
             if ((dut.op_fault && !opf_l) || dut.l_fcode != lfc_l) $fdisplay(lg, "%0d OPF %b %0d", cyc, dut.l_fcode, dut.op_coll);
+            if (dut.rt_arm) $fdisplay(lg, "%0d RTA %0d %h %h", cyc, dut.rt_wu, dut.rt_tok, dut.rt_pos);
+            if ((rx_cf | fl_f) && !rxf_l) $fdisplay(lg, "%0d RXF %0d %0d", cyc, rx_cf, fl_f);
+            rxf_l = rx_cf | fl_f;
             cst_l = cst; dc_l = dc; opf_l = dut.op_fault; lfc_l = dut.l_fcode;
             flt_l = dut.u_cal.fault; sua_l = dut.su_acc; hd_l = hd;
             // the user of a LOCAL EMB / SEG entry: the calendar's cmd_user on the edge it issued (c_emb / c_seg), one edge
@@ -60,13 +82,18 @@ module tb_mu_opseg_dv;
             if (dut.c_emb) eu_l = dut.c_user;
             if (dut.c_seg) su_l = dut.c_user;
             // inputs for the next posedge (cyc + 1)
-            pw[74] = 1'b0; dh[118] = 1'b0; dh[186] = 1'b0; dh[42] = 1'b0; ss5 = 107'd0;
+            pw[74] = 1'b0; dh[118] = 1'b0; dh[186] = 1'b0; dh[42] = 1'b0; ss5 = 107'd0; ctx_slot = 1'b0;
             while (have && ec == cyc + 1) begin
                 case (ek)
                     0: begin pw = {1'b1, ev[73:0]}; dh[118:44] = {1'b1, ev[73:0]}; end
                     1: dh[186:119] = {1'b1, ev[66:0]};
                     2: begin dh[42:0] = ev[42:0]; dh_user = ev[44:43]; end
                     3: begin ss5[24] = 1'b1; ss5[17:0] = ev[17:0]; ss5[27:26] = ev[43:42]; ss5[97:74] = ev[41:18]; end
+                    4: begin   // kind12: tag = {HOST epoch16, 6'd0, token18, position13, 6'd0} (latency user's context)
+                        ctx_slot = 1'b1; kn = kn + 1;
+                        rx_rec = {5'd0, 4'd12, 6'd63, HEP, 5'd0, 323'd0, ev[17:0], ev[35:18], ev[45:38], ev[37:36], 1'b1,
+                                  PDG, PEP, 1'b1, 2'd1, HEP, 6'd0, 18'(18'h1100 + kn), 13'(8100 + kn), 6'd0};
+                    end
                     default: $fatal(1, "bad kind %0d", ek);
                 endcase
                 r = $fscanf(fd, "%d %d %h\n", ec, ek, ev); have = (r == 3);

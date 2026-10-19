@@ -77,13 +77,20 @@
 // ROM output register (2026-10-16): boot replay and program replay decode one edge later (+1 edge each, initialisation
 // only; the admission replay stays inside the compiled ADM_REPLAY window); no token-path edge.
 // MUT (bench only): 1 = T events one edge late, 2 = embedding word index off by one, 3 = PW replay skips row 7.
+// FILL_CTX (MU-DQ-BOOTCTX 2026-10-19, coordinator 0kg (1); opt-in, 0 = unchanged on every edge): the multi-user fillers'
+// runtime initial context comes from the KV/system die host plane over the EXISTING D2D HOST context record (kind 12,
+// context_slot): its DATA[188:142] field FC = {pos18, tok18, seq8, user2, v} (qfd_host_native_context_rx FILL 1) is
+// decoded by qfd_sys_face_fill_ctx (qfd_sys_face_record_port.sv) into one runtime context word on seq_dh's DW lane
+// (dw_addr 5, tag 'CF') on the edge after the slot; qfd_tt_ctlm_dv OPSEG (qfd_dv_cmd_cal_mu CTX_DW) applies it to
+// that user's token / position bank.  No new port, no new D2D slot; +116 flops; 0 edges on every existing path.
 // =====================================================================================================================
 module qfd_sys_face #(
     parameter integer MUT = 0,
     parameter integer GO_OFS = 3,              // qfd_d2d_cal_seq go-path edges = the T image's token-run cycle (sys_face_image.GO_OFS)
     parameter [20*36-1:0] START_ADJ = '0,
     parameter ROM_VIAMAP = "",
-    parameter ROM_INSTANCE = "sys_face_cfg"
+    parameter ROM_INSTANCE = "sys_face_cfg",
+    parameter integer FILL_CTX = 0             // 1: kind12 filler-context field -> seq_dh runtime context word
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -229,7 +236,8 @@ module qfd_sys_face #(
     reg  [31:0] first_ofs;                     // compiled edges from the epoch strobe to the first token start
     reg  [142:0] dh_prog;                      // {dw_v, dw_addr3, dw_data64, pw_v, pw_addr10, pw_data64}
     reg  [43:0]  dh_run;                       // {kv_write_drained, h_start, stage6, tp_token18, tp_pos18}
-    always @* seq_dh = {dh_prog, dh_run};
+    wire [67:0]  fc_dw;                        // FILL_CTX runtime context word (0 when FILL_CTX = 0)
+    always @* seq_dh = {dh_prog[142:75] | fc_dw, dh_prog[74:0], dh_run};
     wire        any_running;
     wire        boot_row = dq_boot && st == S_BOOT;
     always @(posedge ck or negedge rst_boot) begin
@@ -322,7 +330,7 @@ module qfd_sys_face #(
     wire [10:0] rp_expected_pw; wire [3:0] rp_expected_dw; wire [63:0] rp_auth_digest, rp_program_digest;
     wire        rp_tx_v;
     reg         t_running_q;
-    qfd_sys_face_record_port u_record (
+    qfd_sys_face_record_port #(.FILL(FILL_CTX)) u_record (
         .ck(ck), .rst_rn(rst_rec), .auth_slot(prog_auth_slot), .context_slot(prog_context_slot), .witness_slot(prog_witness_slot),
         .rx_v(prog_rx_v), .rx_record(rx_payload), .execution_active(l_run),
         .program_obs2({seq_program_obs, tt_program_obs}), .descriptor_obs(seq_descriptor_obs),
@@ -335,6 +343,14 @@ module qfd_sys_face #(
         .host_epoch_valid(host_epoch_valid), .host_epoch(host_epoch), .host_tag(host_tag), .host_gen(host_generation),
         .tx_v(rp_tx_v), .tx_observed_v(prog_tx_observed_v), .tx_record(prog_tx_record), .fault(rp_fault));
     assign host_fused_capability = rp_cap;
+    wire        fc_fault;
+    generate if (FILL_CTX != 0) begin : g_fill
+        qfd_sys_face_fill_ctx u_fill (.ck(ck), .rst_n(rst_rec[4]), .context_slot(prog_context_slot), .rx_v(prog_rx_v),
+            .rx_fill(rx_payload[188:142]), .host_epoch_valid(host_epoch_valid), .prog_dw_busy(dq_prog), .dw(fc_dw),
+            .fault(fc_fault));
+    end else begin : g_no_fill
+        assign fc_dw = 68'd0; assign fc_fault = 1'b0;
+    end endgenerate
 
     // ================================================================ calendars
     wire halt = d2d_epoch_abort;
@@ -532,6 +548,6 @@ module qfd_sys_face #(
     always @(posedge ck or negedge rst_emb)
         if (!rst_emb) prov_fault_q <= 1'b0;
         else if (emb_prov_fault) prov_fault_q <= 1'b1;
-    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault;
+    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault | fc_fault;
     assign fault = face_fault;
 endmodule

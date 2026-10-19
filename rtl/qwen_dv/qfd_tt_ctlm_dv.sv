@@ -101,7 +101,23 @@
 //     CTX[111], or a mask bit of a user >= NU) is a sticky op_fault and loads nothing.  The image reaches the cluster
 //     only as dh PW / DW rows: on this die the closed qfd_sys_face replays its config image under the host's BEGIN /
 //     AUTH, so the record is part of the boot image (fixed in operation, no handshake); no port change.
-//   - op_fault (sticky) = leaf fault | start collision, into core_fault (dc, cf).
+//   - filler RUNTIME context (MU-DQ-BOOTCTX 10-19, coordinator 0kg (1): the production path; the DW5 / DW6 boot record
+//     above is only the boot default).  Source: the KV/system die host plane; transport: the EXISTING KV->compute D2D
+//     HOST context record (kind 12, compiled context_slot) whose DATA[188:142] field carries one filler context;
+//     qfd_sys_face (FILL_CTX 1, qfd_sys_face_fill_ctx) turns it into a runtime context word on the dh DW lane (dw_addr 5,
+//     image sealed: u_cal ctx_rt, ctx_dw[63:0] = {16'h4346, 2'b00, seq8, user2, tok18, pos18}).  No new port.
+//     BOOT-CONTEXT LOADER (this block): on ctx_rt the word is checked and ARMS user u's pending context {tok, pos};
+//     user u's next filler result (r_fill, the result numbered seq since u's last boot-context load) writes the
+//     pending {tok, pos} into tok_b / pos_b INSTEAD of {argmax token, pos + 1} and disarms (the new request's first
+//     token / position; the token-start EMB then sends it).  Per-user result counter nres[u] (8 b, cleared with the
+//     pending context by a boot-context load of u).  Static schedule: the record's arrival edge is compiled (the
+//     face's context slot); the hardware only checks, never waits.  Sticky op_fault and nothing armed if: tag !=
+//     'CF', [47:46] != 0, user 0 or >= NU, tok >= 151,936, pos >= 8,192, user u already armed (a second record before
+//     the first applied), or LATE / EARLY: seq != nres[u] or u's result lands on the arming edge (the result the
+//     record names has already been written, or is being written).  Cost: NU-1 x (36 + 8 + 1) flops; 0 edges on every
+//     existing path; record slot -> armed = 4 edges (face fill register, dh pin, u_cal ctx_rt, arm).
+//     MUT (bench only): 32 the record arms user (u mod (NU-1)) + 1 (wrong user); 33 the seq / late check dropped.
+//   - op_fault (sticky) = leaf fault | start collision | bad context record (boot or runtime), into core_fault (dc, cf).
 //   No port change.  New macro in the cluster: 1 x ot_rom_4096x72_m8 (leaf image).  Bench rtl/test/mu_qwen_seq/
 //   mu_opseg_bench.py.  MUT (bench only): 21 u_cal range ignored; 22 collision not flagged; 23 filler result written to
 //   the next filler's bank; 24 / 25 / 26 -> leaf MUT 4 (entry one edge late) / 5 (re-anchor every L0) / 6 (no drift check);
@@ -197,18 +213,35 @@ module qfd_tt_ctlm_dv #(
     end endgenerate
     wire [UB-1:0] l_user = l_u2[UB-1:0];
     // filler initial context record (CTX_DW, see the header): checked and loaded on the accepted seal edge
-    wire [127:0] c_ctx; wire c_ctxld;                                // from u_cal (below)
+    wire [127:0] c_ctx; wire c_ctxld, c_ctxrt;                       // from u_cal (below)
     localparam integer NF = (NU > 1) ? NU - 1 : 1;                   // fillers
     wire [2:0]  ctx_mask = c_ctx[110:108];
     wire        ctx_ok = (MUT == 29) || (c_ctx[127:112] == 16'h4D43 && !c_ctx[111] && (({1'b0, ctx_mask} >> (NU - 1)) == 4'd0));
     wire        ctx_ld = (OPS != 0) && c_ctxld && ctx_ok && (MUT != 27);
     wire        ctx_bad = (OPS != 0) && c_ctxld && !ctx_ok;
+    // runtime context word (MU-DQ-BOOTCTX, see the header): check + arm
+    wire [1:0]  rt_u2 = c_ctx[37:36];
+    wire [7:0]  rt_seq = c_ctx[45:38];
+    wire [17:0] rt_tok = c_ctx[35:18], rt_pos = c_ctx[17:0];
+    reg  [NU-1:0] rt_pend;
+    reg  [17:0] rt_ptok [0:NU-1], rt_ppos [0:NU-1];
+    reg  [7:0]  nres [0:NU-1];
+    wire        r_fill;                                              // filler result write (below)
+    wire [1:0]  r_u2;
+    wire        rt_uok = rt_u2 != 2'd0 && {1'b0, rt_u2} < 3'(NU);
+    wire [UB-1:0] rt_u = rt_u2[UB-1:0];
+    wire [UB-1:0] rt_wu = (MUT == 32) ? 2'((rt_u2 % 2'(NF)) + 2'd1) : rt_u;
+    wire        rt_late = rt_uok && (rt_seq != nres[rt_u] || (r_fill && r_u2 == rt_u2));
+    wire        rt_ok = c_ctx[63:48] == 16'h4346 && c_ctx[47:46] == 2'd0 && rt_uok && !rt_pend[rt_u] &&
+                        rt_tok < 18'd151936 && rt_pos < 18'd8192 && (!rt_late || MUT == 33);
+    wire        rt_arm = (OPS != 0) && c_ctxrt && rt_ok;
+    wire        rt_bad = (OPS != 0) && c_ctxrt && !rt_ok;
     wire        l_start = (OPS != 0) && l_v && !(s_start);          // the face start wins a collision
     wire        op_coll = (OPS != 0) && l_v && s_start;
     reg         op_fault;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) op_fault <= 1'b0;
-        else if (l_fault || (op_coll && MUT != 22) || ctx_bad) op_fault <= 1'b1;
+        else if (l_fault || (op_coll && MUT != 22) || ctx_bad || rt_bad) op_fault <= 1'b1;
     wire        u_start = s_start || l_start;
     wire [5:0]  u_stage = l_start ? l_stage : s_stage;
     wire [UB-1:0] u_user = l_start ? l_user : s_user;
@@ -228,7 +261,7 @@ module qfd_tt_ctlm_dv #(
         .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
         .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),
-        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode), .ctx_dw(c_ctx), .ctx_load(c_ctxld));
+        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode), .ctx_dw(c_ctx), .ctx_load(c_ctxld), .ctx_rt(c_ctxrt));
     // user-0 gates (NU > 1): the head / XPF see the latency user's SU stream only (MUT 17: every user's)
     wire        c_u0 = (NU == 1) || (c_user == {UB{1'b0}}) || (MUT == 17);
     wire        s_u0 = (NU == 1) || (s_user == {UB{1'b0}}) || (MUT == 19);
@@ -258,8 +291,8 @@ module qfd_tt_ctlm_dv #(
     reg         start_fault;
     wire [UB-1:0] b_wr = (MUT == 18) ? {UB{1'b0}} : s_user, b_rd = (MUT == 18) ? {UB{1'b0}} : c_user;
     // OPSEG filler result: tok_b / pos_b of the result's user (MUT 23: the next filler's bank)
-    wire        r_fill = (OPS != 0) && ss_tokv && ss_tu != 2'd0 && {1'b0, ss_tu} < 3'(NU);
-    wire [1:0]  r_u2 = (MUT == 23) ? ((ss_tu == 2'(NU - 1)) ? 2'd1 : ss_tu + 2'd1) : ss_tu;
+    assign      r_fill = (OPS != 0) && ss_tokv && ss_tu != 2'd0 && {1'b0, ss_tu} < 3'(NU);
+    assign      r_u2 = (MUT == 23) ? ((ss_tu == 2'(NU - 1)) ? 2'd1 : ss_tu + 2'd1) : ss_tu;
     wire [UB-1:0] r_wr = r_u2[UB-1:0];
     integer     ub_i;
     always @(posedge ck or negedge rst_n)
@@ -277,7 +310,10 @@ module qfd_tt_ctlm_dv #(
                         pos_b[ub_i] <= c_ctx[36 * (((MUT == 28) ? (ub_i % NF) + 1 : ub_i) - 1) +: 18];
                     end
             if (s_start) begin tok_b[b_wr] <= s_tok; pos_b[b_wr] <= s_pos; end
-            if (r_fill) begin tok_b[r_wr] <= ss_tok[17:0]; pos_b[r_wr] <= pos_b[r_wr] + 18'd1; end
+            if (r_fill) begin
+                if (rt_pend[r_wr]) begin tok_b[r_wr] <= rt_ptok[r_wr]; pos_b[r_wr] <= rt_ppos[r_wr]; end   // new request
+                else begin tok_b[r_wr] <= ss_tok[17:0]; pos_b[r_wr] <= pos_b[r_wr] + 18'd1; end
+            end
             st_h <= s_me | c_seg;
             if (s_me) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end
             else if (c_seg) begin st_tok <= tok_b[b_rd]; st_pos <= pos_b[b_rd]; st_base <= c_base; end
@@ -285,6 +321,19 @@ module qfd_tt_ctlm_dv #(
             emb_start <= c_emb; emb_token <= tok_b[b_rd];
         end
     wire [48:0] st = {st_h, st_tok, st_pos, st_base};
+    // runtime context: pending registers + per-user result counters (MU-DQ-BOOTCTX)
+    integer     rt_i;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin
+            rt_pend <= {NU{1'b0}};
+            for (rt_i = 0; rt_i < NU; rt_i = rt_i + 1) begin rt_ptok[rt_i] <= 18'd0; rt_ppos[rt_i] <= 18'd0; nres[rt_i] <= 8'd0; end
+        end else begin
+            if (r_fill) begin nres[r_wr] <= nres[r_wr] + 8'd1; rt_pend[r_wr] <= 1'b0; end
+            if (ctx_ld)
+                for (rt_i = 1; rt_i < NU; rt_i = rt_i + 1)
+                    if (ctx_mask[rt_i - 1]) begin nres[rt_i] <= 8'd0; rt_pend[rt_i] <= 1'b0; end
+            if (rt_arm) begin rt_pend[rt_wu] <= 1'b1; rt_ptok[rt_wu] <= rt_tok; rt_ppos[rt_wu] <= rt_pos; end
+        end
 
     // ------------------------------------------------------------------ SU observation (was seq_su's xs / su_observe)
     reg  [23:0] su_acc;                       // SU commands issued (the head's other-unit accepted count)
