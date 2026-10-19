@@ -82,7 +82,7 @@
   "artifacts": [
     {
       "file": "integrated_NOTES.md",
-      "sha256": "f6e50b52747afa826c40a81b3dbf69519ea7f44029b726e820bcc6be173a58ac"
+      "sha256": "1dcfed2f7c97db9ab8949d474ff8ed225de41077b3763461ef4c95af19144955"
     },
     {
       "file": "integrated_bench.sv",
@@ -155,5 +155,8 @@
     "threads": 8,
     "host_pinned": false,
     "terminal_exit": 0
-  }
+  },
+  "scheduler_added_state_fixture_bits": 1549,
+  "scheduler_age_register_bits": 7,
+  "event_table_indexed_bits": 2848
 }
