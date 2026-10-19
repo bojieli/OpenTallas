@@ -17407,3 +17407,9 @@ QWEN_VM_RO6_PIN_E3_COMPOSITION_1016 = dict(
     parent_clock_ff_before=55382, parent_clock_ff_after=12198,
     unmapped_memory_bits=80, all_leaf_clocks=2571, additional_edges=0,
     SU_VL=20, row_RL=18, compiler_adopted=False, physical_qualified=False)
+
+
+def hbm_svg_landing_macro_model():
+    """HBM-SMB-KITS native landing/FIFO sizing, before new RTL or gate."""
+    from hbm_layer_vehicle.svg_landing_model import model
+    return model()
