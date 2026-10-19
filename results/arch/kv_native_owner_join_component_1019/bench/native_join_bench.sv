@@ -177,13 +177,22 @@ reg allow_aw=1,allow_w=1;
   .program_consensus(),.program_epoch(),.program_digest(),.certificate_valid(),.certificate(),.certificate_prefix(),.wrap_locked(),.identity_fault(),.recovery_complete(),.post_pending(post_pending),.fault(coordinator_fault));
  wire[17:0]bound_pos;wire[1:0]pending_descgen;wire[17:0]pending_input;
  wire binding_certified;
+ wire[86:0]certificate_key_actual={native_certificate_client,native_certificate_slot,native_certificate_descgen,native_certificate_tag,native_certificate_gen};
+ reg[86:0]certificate_key_to_join;
+ always @*begin
+  certificate_key_to_join=certificate_key_actual;
+  if(case_id==10)certificate_key_to_join[45]=!certificate_key_actual[45];
+  if(case_id==11)certificate_key_to_join[0]=!certificate_key_actual[0];
+  if(case_id==12)certificate_key_to_join[44:39]=0;
+  if(case_id==13)certificate_key_to_join[38:21]=gold_next(health_step);
+ end
  qkd_host_native_owner_join_rc #(.ENABLE_NATIVE_OWNER_JOIN(1)) join_owner(
   .clk(clk),.raw_por_n(raw_por_n),.issue_fire(issue_fire_v),.issue_client(issue_client),.issue_slot(issue_slot),.issue_desc_gen(issue_descgen),.issue_position(issue_pos),.issue_input_token(issue_token),
   .package_accept_v(package_start_v),.package_position(package_pos),.package_input_token(package_token),.package_gen(package_gen),.hc_accept_v(hc_accept_v),.hc_position(hc_pos),.hc_input_token(hc_token),.hc_gen(hc_gen),
   .request_v(token_request_v[0]),.request_position(token_request_pos[0]),.request_input_token(token_request_token[0]),.request_gen(token_request_gen[0]),.allocation_fire(alloc_fire),.allocation_tag(alloc_tag),.allocation_gen(alloc_gen),
   .terminal_v(terminal_accepted),.terminal_tag(terminal_accept_tag),.terminal_gen(terminal_accept_gen),
   .raw_done_v(raw_done_v),.raw_client(raw_done_client),.raw_slot(raw_done_slot),.raw_desc_gen(raw_done_descgen),.raw_position(raw_done_pos),.raw_unready(raw_done_v&&ctl_res[86]),.raw_report_needed(raw_done_report_needed),
-  .certificate_v(native_certificate_v),.certificate_health_bound(health_native_valid),.certificate_key({native_certificate_client,native_certificate_slot,native_certificate_descgen,native_certificate_tag,native_certificate_gen}),
+  .certificate_v(native_certificate_v),.certificate_health_bound(health_native_valid),.certificate_key(certificate_key_to_join),
   .event_copy_v(event_insert_v&&event_native_valid),.event_key({event_client,event_slot,event_descgen,event_native_tag,event_native_gen}),
   .prompt_retired_v(report_drained_v&&!report_drained_cq&&report_drained_native_valid),.prompt_key({report_drained_client,report_drained_slot,report_drained_descgen,report_drained_tag,report_drained_gen}),
   .cq_offer_native_valid(native_cq_prospective_native_valid),.cq_offer_key(native_cq_prospective_key),.cq_offer_ok(native_cq_offer_ok),
@@ -240,8 +249,10 @@ reg allow_aw=1,allow_w=1;
    expected_missing_binding_fault<=raw_done_v&&!raw_done_native_valid&&!ctl_res[86];
   end
  end
+ reg expected_metadata_fault=0;
+ integer native_cq_retirements=0;
  integer edges=0,issues=0,allocations=0,dispatches=0,raw_completions=0,post_completions=0,certificates=0,event_copies=0,cq_offers=0,terminal_accepts=0;
- integer request_counts[8],request_returns[8],result_returns[8],releases[8];
+ integer request_counts[8],request_returns[8],result_returns[8],releases[8],raw_cleanup_due[8];
  integer response_due=-1,response_step=-1,first_issue_edge=0,max_response=0;
  integer case_id=0;
  reg[63:0]stalled_awaddr,stalled_wdata;reg stalled_aw=0,stalled_w=0;
@@ -250,6 +261,9 @@ reg allow_aw=1,allow_w=1;
  always @(posedge clk)begin
   if(raw_por_n)begin
    edges=edges+1;
+   if(expected_metadata_fault&&!join_fault)$fatal(1,"CORRUPT_CERTIFICATE_WAS_ACCEPTED case=%0d",case_id);
+   expected_metadata_fault<=native_certificate_v&&case_id>=10&&case_id<=13;
+   if(binding_valid&&case_id<=3&&bound_request_tag!=={16'(allocations-1),6'd0,gold_input(allocations-1),13'(allocations-1),6'd0})$fatal(1,"BOUND_KEY_IS_NATIVE_TAG59");
    if(issue_fire_v)begin
     if(issue_token!=gold_input(issues)||issue_pos!=18'(issues)||issue_client!=16'h91e3||issue_slot!=0)$fatal(1,"ACTUAL_ISSUE_GOLD n=%0d tok=%0d pos=%0d",issues,issue_token,issue_pos);
     first_issue_edge=edges;
@@ -263,6 +277,11 @@ reg allow_aw=1,allow_w=1;
     $display("ALLOC e=%0d tag=%h gen=%0d",edges,alloc_tag,alloc_gen);
    end
    for(integer r=0;r<8;r=r+1)begin
+    if(case_id==4&&ep_result_v[r]&&ep_result_done[r]&&fixture_drains[r])raw_cleanup_due[r]=edges+6;
+    if(case_id==4&&raw_cleanup_due[r]>=0&&edges>=raw_cleanup_due[r])begin
+     if(ep_owned[r])$fatal(1,"RAW_CLEANUP_HEALTH_VETO rank=%0d",r);
+     raw_cleanup_due[r]=-1;
+    end
     if(ep_request_v[r])begin
      if(ep_request_tag[r]!=={16'(request_counts[r]),6'd0,gold_input(request_counts[r]),13'(request_counts[r]),6'd0}||ep_request_gen[r]!=2'(request_counts[r]+1))$fatal(1,"RANK_REQUEST_ID rank=%0d n=%0d",r,request_counts[r]);
      request_counts[r]=request_counts[r]+1;
@@ -273,6 +292,9 @@ reg allow_aw=1,allow_w=1;
      if(terminal_accepts==0)$fatal(1,"RELEASE_BEFORE_REAL_TERMINAL rank=%0d",r);
      releases[r]=releases[r]+1;
     end
+   end
+   if(engine_result_cr)begin
+    for(integer r=0;r<8;r=r+1)if(result_returns[r]<dispatches)$fatal(1,"ENGINE_CREDIT_BEFORE_ALL_RESULT_RETURNS rank=%0d",r);
    end
    if(terminal_accepted)terminal_accepts=terminal_accepts+1;
    if(dispatch_valid)begin
@@ -300,9 +322,11 @@ reg allow_aw=1,allow_w=1;
    end
    if(report_drained_v&&report_drained_cq&&report_drained_native_valid)begin
     if(!saved_cq_key_valid||{report_drained_client,report_drained_slot,report_drained_descgen,report_drained_tag,report_drained_gen}!==saved_cq_key)$fatal(1,"CQB_SAVED_KEY");
-    saved_cq_key_valid=0;
+    saved_cq_key_valid=0;native_cq_retirements=native_cq_retirements+1;
    end
-   if(post_retired)begin post_completions=post_completions+1;$display("POST e=%0d tag=%h",edges,post_tag);end
+   if(post_retired)begin
+    if(post_completions>=1&&case_id<=3&&native_cq_retirements<post_completions)$fatal(1,"POST_BEFORE_REAL_CQB");
+    post_completions=post_completions+1;$display("POST e=%0d tag=%h",edges,post_tag);end
    if(stalled_aw&&(!m_awvalid||m_awaddr!==stalled_awaddr))$fatal(1,"OFFERED_AW_CHANGED");
    if(stalled_w&&(!m_wvalid||m_wdata!==stalled_wdata))$fatal(1,"OFFERED_W_CHANGED");
    stalled_aw=m_awvalid&&!m_awready;stalled_w=m_wvalid&&!m_wready;stalled_awaddr=m_awaddr;stalled_wdata=m_wdata;
@@ -319,12 +343,12 @@ reg allow_aw=1,allow_w=1;
  task automatic tick(input integer n);repeat(n)@(negedge clk);#1;endtask
  initial begin
   if(!$value$plusargs("CASE=%d",case_id))case_id=0;
-  if(case_id<0||case_id>8)$fatal(1,"CASE_NOT_IMPLEMENTED id=%0d",case_id);
+  if(case_id<0||case_id==9||case_id>13)$fatal(1,"CASE_NOT_IMPLEMENTED id=%0d",case_id);
   if((case_id==6||case_id==8)&&FIXTURE_WDOG!=512)$fatal(1,"CANCELLATION_REQUIRES_SEPARATE_TYPED_WDOG512_BUILD");
   if(case_id==1)allow_aw=0;
   if(case_id==2)allow_w=0;
   if(case_id==5)fixture_package_ready=0;
-  for(integer r=0;r<8;r=r+1)begin request_counts[r]=0;request_returns[r]=0;result_returns[r]=0;releases[r]=0;end
+  for(integer r=0;r<8;r=r+1)begin request_counts[r]=0;request_returns[r]=0;result_returns[r]=0;releases[r]=0;raw_cleanup_due[r]=-1;end
   memory.descriptor(0,16'h91e3,8'd1,8'd1,8'd0,16'd2,16'd3,64'h3000);
   memory.prompt_word(0,18'd70001,18'd70003);
   if(case_id==7)begin
@@ -349,12 +373,13 @@ reg allow_aw=1,allow_w=1;
    if(terminal_accepted||!ep_owned[7])$fatal(1,"CANCEL_POSTGRANT_DRAIN_BYPASS");
    fixture_drains[7]=1;
   end
+  if(case_id>=10&&case_id<=13)wait(join_fault);
   if(case_id==4||case_id==7)begin
    if(case_id==7)wait(cq_errors==2);
    else wait(request_counts[0]==1&&request_counts[1]==1&&request_counts[2]==1&&request_counts[3]==1&&request_counts[4]==1&&request_counts[5]==1&&request_counts[6]==1&&request_counts[7]==1);
    @(negedge clk);health_bad_i=1;tick(1);health_bad_i=0;
   end
-  if(case_id==4||case_id==5||case_id==6||case_id==7||case_id==8)begin
+  if(case_id==4||case_id==5||case_id==6||case_id==7||case_id==8||(case_id>=10&&case_id<=13))begin
    wait(cq_errors>=(case_id==7?3:1)&&raw_completions!=0);tick(200);
    if(cq_successes!=0||!rc_bad||!bridge_bad||raw_completions==0)$fatal(1,"FAIL_STOP_REPORT_OR_RAWCLEANUP errors=%0d success=%0d raw=%0d rc=%b bridge=%b",cq_errors,cq_successes,raw_completions,rc_bad,bridge_bad);
    if(case_id==5)begin
