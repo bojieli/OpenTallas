@@ -31,7 +31,7 @@ def macro(name):
             status='PROPOSAL ONLY: regenerate real pin/periphery routing and macro abstracts/timing; preserve canonical views'))
 
 
-def model(pair_stdcell_area_um2=None,rotator_stdcell_area_um2=None):
+def model(pair_stdcell_area_um2=3177.813060,rotator_stdcell_area_um2=None):
     m={k:macro(v) for k,v in MACROS.items()}
     pair_area=2*(m['landing']['area_um2']+m['fifo']['area_um2'])
     inventory=dict(landing=8,fifo=8,cache=5,program=2,descriptor=2)
@@ -40,23 +40,25 @@ def model(pair_stdcell_area_um2=None,rotator_stdcell_area_um2=None):
         dict(kind='fifo',bank='j',origin_um=[259.2,43.2],orientation='R0'),
         dict(kind='landing',bank='j+4',origin_um=[43.2,129.6],orientation='MX'),
         dict(kind='fifo',bank='j+4',origin_um=[259.2,129.6],orientation='MX')]
-    band=[86.424,129.6];width=380.16;height=198.72
+    gap=[86.424,129.6];band=[99.9,116.1];width=380.16;height=198.72
     band_area=width*(band[1]-band[0])
     pair=dict(replica_count=4,banks=['j','j+4'],actual_macros=4,macro_area_um2=pair_area,
         landing_capacity='two 256x256 macros, each packs FOUR 64-row landing blocks; never four macros/bank',
         fifo_capacity='two actual 8x285 dual-clock SRAMs',
         outline_proposal_um=[width,height],aspect=width/height,macro_only_fill=pair_area/(width*height),
         macro_placements=placements,all_macro_origins_on_43p2_lattice=True,
-        full_width_cell_band_y_um=band,band_area_um2=band_area,
+        full_width_cell_band_y_um=band,band_area_um2=band_area,macro_row_gap_y_um=gap,
+        measured_source_commit="8792c55c3",
+        measured_local_cell_band_density=pair_stdcell_area_um2/band_area if pair_stdcell_area_um2 is not None else None,
         placement_util_target=[.4,.6],measured_stdcell_area_um2=pair_stdcell_area_um2,
         outline_status='reduced source-legal GEOMETRY CANDIDATE, not smallest SAFE until measured cell area and native access/reach audits',
         earlier_generous_outline_um=[432.,259.2],no_measured_need_for_earlier_padding=True,
         band_diagonal_um=(width**2+(band[1]-band[0])**2)**.5,
         stdcell_area_range_for_full_band_40_60pct_um2=[.4*band_area,.6*band_area],
         stdcell_band_height_at_50pct_um=None if pair_stdcell_area_um2 is None else pair_stdcell_area_um2/(.5*width),
-        stdcell_band_rule='select a single connected full-width placement band from measured area; unused access channels are routing reservations; final dimensions OPEN until synthesis',
+        stdcell_band_rule='60 rows of0.27um fullwidth at51.60% measured density; remaining26.976um of macro gap reserved for real routing/clock/PG access; placement/reach OPEN',
         access_channels_um=dict(left=43.2,between_macro_columns=259.2-(43.2+m['landing']['width_um']),
-          right=width-(259.2+m['fifo']['width_um']),top=height-(129.6+m['fifo']['height_um']),central_read_face_channel=band[1]-band[0]),
+          right=width-(259.2+m['fifo']['width_um']),top=height-(129.6+m['fifo']['height_um']),central_read_face_channel=gap[1]-gap[0]),
         proposed_fullface_orientation='bottom row R0 North-read faces band; upper row MX South-read faces band; write/mask face outward; canonical WE faces retain generous side channels',
         clocks=['pair_hbm_clk[j]','pair_clk[j]','return_clk[j]'],reset='separate two-stage release per root; balanced raw reset of HBM/stream FIFO and all return/cache roots',
         REQUIRED_source_remap='old bank g/4 stream_bank_clk/hbm_fifo_clk mapping spans BOTH roots for {j,j+4}; map BOTH banks to pair_clk[j] and explicit pair_hbm_clk[j]',
@@ -106,7 +108,7 @@ def model(pair_stdcell_area_um2=None,rotator_stdcell_area_um2=None):
         fullface_proposal='real compiler variant: all rd_out North, wd_in+w_mask_in South, controls/repair West; all counted faces<=6/um for these four macros except verify generated periphery timing',
         regional_clock_trees=dict(stream=9,HBM=4,total=13,source_domains='four pair HBM, four pair stream, four local forwarded cache-phase, one cache core',scope='landing/return minimum only; payload/program/issuer physical roots remain OPEN'),
         timing='return pipeline remains7edges; compiler prefetch15=8native landing+7return. Actual root/source mapping and ordinary nearest-edge timing OPEN before gate',
-        qualification='MODEL/OUTLINE PROPOSAL ONLY; source macro inventory measured, synthesis area/face placement/reach/fanout/clock evidence missing; NO gate/submit')
+        qualification='MODEL/OUTLINE PROPOSAL ONLY; source macro inventory measured, pair mapped area/fanout measured; face placement/reach/clock and other elements synthesis evidence missing; NO gate/submit')
 
 
 if __name__=='__main__':

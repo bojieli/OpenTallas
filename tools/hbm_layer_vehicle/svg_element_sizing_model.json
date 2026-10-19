@@ -178,28 +178,34 @@
     ],
     "all_macro_origins_on_43p2_lattice": true,
     "full_width_cell_band_y_um": [
+      99.9,
+      116.1
+    ],
+    "band_area_um2": 6158.591999999996,
+    "macro_row_gap_y_um": [
       86.424,
       129.6
     ],
-    "band_area_um2": 16413.788159999996,
+    "measured_source_commit": "8792c55c3",
+    "measured_local_cell_band_density": 0.5159966856060609,
     "placement_util_target": [
       0.4,
       0.6
     ],
-    "measured_stdcell_area_um2": null,
+    "measured_stdcell_area_um2": 3177.81306,
     "outline_status": "reduced source-legal GEOMETRY CANDIDATE, not smallest SAFE until measured cell area and native access/reach audits",
     "earlier_generous_outline_um": [
       432.0,
       259.2
     ],
     "no_measured_need_for_earlier_padding": true,
-    "band_diagonal_um": 382.60396309499987,
+    "band_diagonal_um": 380.5050138960064,
     "stdcell_area_range_for_full_band_40_60pct_um2": [
-      6565.515263999999,
-      9848.272895999997
+      2463.4367999999986,
+      3695.1551999999974
     ],
-    "stdcell_band_height_at_50pct_um": null,
-    "stdcell_band_rule": "select a single connected full-width placement band from measured area; unused access channels are routing reservations; final dimensions OPEN until synthesis",
+    "stdcell_band_height_at_50pct_um": 16.71829261363636,
+    "stdcell_band_rule": "60 rows of0.27um fullwidth at51.60% measured density; remaining26.976um of macro gap reserved for real routing/clock/PG access; placement/reach OPEN",
     "access_channels_um": {
       "left": 43.2,
       "between_macro_columns": 43.17599999999999,
@@ -376,5 +382,5 @@
     "scope": "landing/return minimum only; payload/program/issuer physical roots remain OPEN"
   },
   "timing": "return pipeline remains7edges; compiler prefetch15=8native landing+7return. Actual root/source mapping and ordinary nearest-edge timing OPEN before gate",
-  "qualification": "MODEL/OUTLINE PROPOSAL ONLY; source macro inventory measured, synthesis area/face placement/reach/fanout/clock evidence missing; NO gate/submit"
+  "qualification": "MODEL/OUTLINE PROPOSAL ONLY; source macro inventory measured, pair mapped area/fanout measured; face placement/reach/clock and other elements synthesis evidence missing; NO gate/submit"
 }

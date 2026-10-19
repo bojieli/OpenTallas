@@ -1,0 +1,194 @@
+{
+  "max_nonclock_load": 27,
+  "source_sha256": {
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram285.sv": "a5184e6126930a80e4a451821b20d6f788e8c161ca16ae4cd45df052b9591f26",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_sram285.sv": "f137c3572b667597680eb3ce58a01cbcc2c4815f6c28e0fa8d4e1ac357a95241",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_boundary.sv": "c15693365963d3133f6e64645a397a5a411445022072bcddc9dd1ba44c474165",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_regional.sv": "9a03551c35a4dfc4ca455a2150e0c5e26807a986940babb740f10113be7d003d",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_landing_pair_native.sv": "264db6256f201af07269f555faf063881c151b60e40f5bf793c6d3948b7a6e20",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_bb.v": "ffe1be696bc082dd4b0d9492fc37b08ab4dcb131a8a12063cc183a78ceb04947",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v": "35e0905c083a17f1c222512a3093a059cec5b128f5f017fda999653084c9e75f",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_sram285_safe.sv": "67852f4606aac2d5421b93a33ad28891b1d64766850994146b3936daa7faf7d4",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_boundary_safe.sv": "16efa886be9b48c43d5a34b256eb499ed31c48ede25f02152533d4143ff898fd",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_safe.sv": "48d84d8187eeb80cd1204762b4b8198eb369973d02fc3f7f89f25ce50a490e04"
+  },
+  "mapped_json_sha256": "8125503a314dd71e581dd48da0009bd93108e721552c61959d5b7088e0df6b8c",
+  "physical_claim": false,
+  "std_area_um2": 3177.813060000001,
+  "macro_counts": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 2,
+    "ot_sram_1r1w2c_8x285_m1": 2
+  },
+  "unmapped_or_unknown": {},
+  "FF_cells_total": 6687,
+  "FF_cell_types": {
+    "DFFHQNx1_ASAP7_75t_R": 5773,
+    "DFFASRHQNx1_ASAP7_75t_R": 914
+  },
+  "FF_hierarchy_groups": {
+    "other_native_control": 1508,
+    "ingress_slices": 2784,
+    "pair_slices": 816,
+    "return_slices": 1579
+  },
+  "output_boundary": {
+    "in_ready": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "overflow": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "complete_v": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "complete_bank": {
+      "FF_Q_through_polarity_buffer": 4
+    },
+    "bank_fault": {
+      "FF_Q_through_polarity_buffer": 2
+    },
+    "out_data": {
+      "FF_Q_through_polarity_buffer": 256
+    },
+    "out_ordinal": {
+      "FF_Q_through_polarity_buffer": 3
+    },
+    "out_valid": {
+      "FF_Q_through_polarity_buffer": 1
+    },
+    "phase_fault": {
+      "FF_Q_through_polarity_buffer": 1
+    }
+  },
+  "input_boundary": {
+    "in_v": {
+      "bits": 2,
+      "direct_seq_D_loads": 0,
+      "comb_or_macro_loads": 20,
+      "pin_fanout_max": 10
+    },
+    "in_data": {
+      "bits": 570,
+      "direct_seq_D_loads": 570,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "reserve_v": {
+      "bits": 1,
+      "direct_seq_D_loads": 2,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "reserve_bank": {
+      "bits": 2,
+      "direct_seq_D_loads": 4,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "reserve_epoch": {
+      "bits": 16,
+      "direct_seq_D_loads": 32,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "reserve_total": {
+      "bits": 12,
+      "direct_seq_D_loads": 18,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "stop": {
+      "bits": 1,
+      "direct_seq_D_loads": 2,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 2
+    },
+    "read_v": {
+      "bits": 2,
+      "direct_seq_D_loads": 2,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "read_bank": {
+      "bits": 4,
+      "direct_seq_D_loads": 4,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "read_row": {
+      "bits": 12,
+      "direct_seq_D_loads": 12,
+      "comb_or_macro_loads": 0,
+      "pin_fanout_max": 1
+    },
+    "ordinal": {
+      "bits": 3,
+      "direct_seq_D_loads": 0,
+      "comb_or_macro_loads": 12,
+      "pin_fanout_max": 4
+    },
+    "group_valid": {
+      "bits": 1,
+      "direct_seq_D_loads": 0,
+      "comb_or_macro_loads": 4,
+      "pin_fanout_max": 4
+    }
+  },
+  "over32_counts": {
+    "clock": 3
+  },
+  "kept_instance_paths_remaining": [],
+  "qualification": "mapped area/fanout only; physical reach, clock roots, native pin access and ordinary TT/FF timing remain OPEN",
+  "source_commit": "8792c55c3",
+  "outline_um": [
+    380.16,
+    198.72
+  ],
+  "band_y_um": [
+    99.9,
+    116.1
+  ],
+  "local_band_density": 0.5159966856060607,
+  "bench_final": {
+    "host": "ot-epyc6",
+    "source_commit": "8792c55c3",
+    "all_J": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "baseline_errors": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "mutant_errors": [
+      3263,
+      4276,
+      6653
+    ],
+    "old_master_miter_errors": [
+      0,
+      0
+    ],
+    "latency_edges": [
+      7,
+      7
+    ],
+    "first_valid_after_reset": 9,
+    "payload_groups": 3264,
+    "warm_groups": 24,
+    "windows_64groups_64edges": 12,
+    "independent_group_valid_cases": 1032,
+    "guard_cases": [
+      "duplicate correct epoch",
+      "unowned",
+      "epoch",
+      "count",
+      "ordinal"
+    ]
+  }
+}
