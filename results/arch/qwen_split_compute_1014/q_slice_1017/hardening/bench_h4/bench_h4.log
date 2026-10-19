@@ -1,0 +1,53 @@
+ot-run: ot-epyc4       admits   206 GB (avail 393, growth 248, headroom 0, waiters 0/0 GB) load 87/128 running 25 disk 43 GB 
+ot-run: ot-epyc5       admits   748 GB (avail 746, growth 223, headroom 0, waiters 0/0 GB) load 172/128 running 32 disk 1914 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qh16c-heads/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qh16c-heads/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2767349-1792374199 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+== heads_pos
+PASS heads SID=5 ops=4 tile-edges=397440 tile gos=256 slice-minus-fabric offset=4 edges
+INFO heads held-ib differences on non-go edges (not compared): 192
+== heads_pos0
+PASS heads SID=5 ops=4 tile-edges=397696 tile gos=256 slice-minus-fabric offset=0 edges
+INFO heads held-ib differences on non-go edges (not compared): 0
+== heads_m8
+FAIL tile 0 ref cyc 111: go 0/0 xl ref be9e0000bf440000c00f0000bebf0000 slice 3ea80000be44000040a80000be240000
+FAIL tile 1 ref cyc 111: go 0/0 xl ref 3f570000be3e0000beff00003ff30000 slice be9e0000bf440000c00f0000bebf0000
+FAIL tile 2 ref cyc 111: go 0/0 xl ref 3e8e0000406700003ef90000be040000 slice 3f570000be3e0000beff00003ff30000
+FAIL tile 3 ref cyc 111: go 0/0 xl ref 3e590000bf440000bf480000be8e0000 slice 3e8e0000406700003ef90000be040000
+FAIL tile 4 ref cyc 111: go 0/0 xl ref bfa60000beb20000bebb0000bef70000 slice 3e590000bf440000bf480000be8e0000
+FAIL tile 5 ref cyc 111: go 0/0 xl ref be390000be1f0000bfd4000040070000 slice bfa60000beb20000bebb0000bef70000
+FAIL tile 6 ref cyc 111: go 0/0 xl ref 3f7900003e800000c05600003e920000 slice be390000be1f0000bfd4000040070000
+FAIL tile 7 ref cyc 111: go 0/0 xl ref 3ea80000be44000040a80000be240000 slice 3f7900003e800000c05600003e920000
+FAIL tile 8 ref cyc 111: go 0/0 xl ref 3e0f00003e6700003feb0000bea50000 slice 3eb40000c0fa00003f3d00003f4b0000
+FAIL tile 9 ref cyc 111: go 0/0 xl ref 3fa70000beca0000c0d60000be2d0000 slice 3e0f00003e6700003feb0000bea50000
+FAIL heads errors=397248 faults=0 gos=256 checks=397440
+INFO heads held-ib differences on non-go edges (not compared): 192
+== heads_m9
+FAIL tile 0 ref cyc 111: go 0/0 xl ref be9e0000bf440000c00f0000bebf0000 slice be9f0000bf450000c00e0000bebe0000
+FAIL tile 1 ref cyc 111: go 0/0 xl ref 3f570000be3e0000beff00003ff30000 slice 3f560000be3f0000befe00003ff20000
+FAIL tile 2 ref cyc 111: go 0/0 xl ref 3e8e0000406700003ef90000be040000 slice 3e8f0000406600003ef80000be050000
+FAIL tile 3 ref cyc 111: go 0/0 xl ref 3e590000bf440000bf480000be8e0000 slice 3e580000bf450000bf490000be8f0000
+FAIL tile 4 ref cyc 111: go 0/0 xl ref bfa60000beb20000bebb0000bef70000 slice bfa70000beb30000beba0000bef60000
+FAIL tile 5 ref cyc 111: go 0/0 xl ref be390000be1f0000bfd4000040070000 slice be380000be1e0000bfd5000040060000
+FAIL tile 6 ref cyc 111: go 0/0 xl ref 3f7900003e800000c05600003e920000 slice 3f7800003e810000c05700003e930000
+FAIL tile 7 ref cyc 111: go 0/0 xl ref 3ea80000be44000040a80000be240000 slice 3ea90000be45000040a90000be250000
+FAIL tile 8 ref cyc 111: go 0/0 xl ref 3e0f00003e6700003feb0000bea50000 slice 3e0e00003e6600003fea0000bea40000
+FAIL tile 9 ref cyc 111: go 0/0 xl ref 3fa70000beca0000c0d60000be2d0000 slice 3fa60000becb0000c0d70000be2c0000
+FAIL heads errors=397248 faults=0 gos=256 checks=397440
+INFO heads held-ib differences on non-go edges (not compared): 192
+== heads_ibmut
+FAIL tile 0 ref cyc 108: go 1/1 xl ref 00000000000000000000000000000000 slice 00000000000000000000000000000000
+FAIL tile 1 ref cyc 108: go 1/1 xl ref 00000000000000000000000000000000 slice 00000000000000000000000000000000
+FAIL tile 2 ref cyc 108: go 1/1 xl ref 00000000000000000000000000000000 slice 00000000000000000000000000000000
+FAIL tile 3 ref cyc 108: go 1/1 xl ref 00000000000000000000000000000000 slice 00000000000000000000000000000000
+FAIL tile 4 ref cyc 108: go 1/1 xl ref 00000000000000000000000000000000 slice 00000000000000000000000000000000
+FAIL tile 5 ref cyc 108: go 1/1 xl ref 00000000000000000000000000000000 slice 00000000000000000000000000000000
+FAIL tile 6 ref cyc 108: go 1/1 xl ref 00000000000000000000000000000000 slice 00000000000000000000000000000000
+FAIL tile 7 ref cyc 108: go 1/1 xl ref 00000000000000000000000000000000 slice 00000000000000000000000000000000
+FAIL tile 8 ref cyc 108: go 1/1 xl ref 00000000000000000000000000000000 slice 00000000000000000000000000000000
+FAIL tile 9 ref cyc 108: go 1/1 xl ref 00000000000000000000000000000000 slice 00000000000000000000000000000000
+FAIL heads errors=256 faults=0 gos=256 checks=397440
+INFO heads held-ib differences on non-go edges (not compared): 192
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2767349-1792374199): exit 0

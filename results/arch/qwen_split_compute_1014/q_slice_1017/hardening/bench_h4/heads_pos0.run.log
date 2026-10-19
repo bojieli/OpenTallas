@@ -1,0 +1,6 @@
+INFO heads held-ib differences on non-go edges (not compared): 0
+PASS heads SID=5 ops=4 tile-edges=397696 tile gos=256 slice-minus-fabric offset=0 edges
+- rtl/test/qwen_dv/tb_qfd_dv_heads.sv:184: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 13us; walltime 47.480 s; speed 266.448 ns/s
+- Verilator: cpu 47.478 s on 1 threads; allocated 132 MB
