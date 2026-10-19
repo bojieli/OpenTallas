@@ -685,7 +685,7 @@ module qkd_hr_core_peer(ck_core, program_epoch, program_digest, package_abort, a
   assign u_rank__u_control__por_n = por_n && pll_locked;
   assign u_rank__u_control__u_packet__local_boot[0] = & slice_boot_done;
   assign u_rank__u_control__u_packet__local_boot[1] = & slice_boot_ok;
-  qkd_host_tp8_coordinator root__u_coordinator  (
+  qkd_host_tp8_coordinator_rr root__u_coordinator  (
     .accepted_ranks(accepted_ranks),
     .allocated_delivered(u_rank__u_control__u_packet__allocated_delivered),
     .allocated_valid(allocated_valid),
@@ -741,7 +741,7 @@ module qkd_hr_core_peer(ck_core, program_epoch, program_digest, package_abort, a
     .token_request_valid(u_rank__u_control__u_packet__token_request_valid),
     .wrap_locked(coordinator_wrap_locked)
   );
-  qkd_host_peer_rank_codec #(.RANK(0))  root__u_peer_codec  (
+  qkd_host_peer_rank_codec_rr #(.RANK(0))  root__u_peer_codec  (
     .allocated_delivered(codec_allocated_delivered),
     .allocated_epoch(codec_allocated_epoch),
     .allocated_gen(codec_allocated_gen),
@@ -819,7 +819,7 @@ module qkd_hr_core_peer(ck_core, program_epoch, program_digest, package_abort, a
     .tx_ready(local_tx_ready),
     .tx_valid(local_tx_valid)
   );
-  qkd_host_ctrl_token_service_packet_collected #(.MUT(0), .STRAPPED(1), .ENABLE_SERVICE(1), .ENABLE_TOKEN(1))  u_rank__u_control__u_packet__u_ctrl  (
+  qkd_host_ctrl_token_service_packet_collected_rr #(.MUT(0), .STRAPPED(1), .ENABLE_SERVICE(1), .ENABLE_TOKEN(1))  u_rank__u_control__u_packet__u_ctrl  (
     .abort_drained(abort_drained),
     .allocated_delivered(u_rank__u_control__u_packet__allocated_delivered),
     .allocated_epoch(u_rank__u_control__u_packet__token_grant_epoch),
@@ -892,7 +892,7 @@ module qkd_hr_core_peer(ck_core, program_epoch, program_digest, package_abort, a
     .tx_d(u_rank__u_control__u_packet__ctd),
     .tx_v(u_rank__u_control__u_packet__ct)
   );
-  qkd_host_peer_link u_rank__u_peer  (
+  qkd_host_peer_link_rr u_rank__u_peer  (
     .ck(ck_core),
     .drained(u_rank__peer_link_drained),
     .fault(u_rank__peer_link_fault),
@@ -916,7 +916,7 @@ module qkd_hr_core_peer(ck_core, program_epoch, program_digest, package_abort, a
     .tx_d(u_rank__physical_tx_d),
     .tx_v(u_rank__physical_tx_v)
   );
-  qkd_host_peer_root_mux root__u_root_mux  (
+  qkd_host_peer_root_mux_pl_rr root__u_root_mux  (
     .ck(ck_core),
     .coordinator_rx_data(coordinator_rx_data),
     .coordinator_rx_ready(coordinator_rx_ready),

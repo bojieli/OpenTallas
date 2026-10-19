@@ -8,7 +8,13 @@
   "qkd_host_axi_packet": "qkd_host_axi_packet_rr",
   "qkd_host_program_loader_target": "qkd_host_program_loader_target_rr",
   "qkd_host_program_rx_target": "qkd_host_program_rx_target_rr",
-  "qkd_host_record_port": "qkd_host_record_port_rr"
+  "qkd_host_record_port": "qkd_host_record_port_rr",
+  "qkd_host_tp8_coordinator": "qkd_host_tp8_coordinator_rr",
+  "qkd_host_peer_rank_codec": "qkd_host_peer_rank_codec_rr",
+  "qkd_host_ctrl_token_service_packet_collected": "qkd_host_ctrl_token_service_packet_collected_rr",
+  "qkd_host_peer_link": "qkd_host_peer_link_rr",
+  "qkd_host_peer_root_mux": "qkd_host_peer_root_mux_pl_rr"
  },
- "why_prompt_rr": "KV-PROMPT4 10-18: qkd_hr_core_prompt local reset relays (coordinator decision 4; tools/qwen_kv_die/host_cluster/gen_prompt_rr.py): every host_rst_n consumer of the child behind ot_rst_relay at its rst_n pin (direct members here; u_pkg/u_csr/u_host/u_prompt through the renamed copies qkd_host_control_prompt_observed_rr -> qkd_host_fullcontrol_observed_rr). Release +3 ck edges uniformly for the child; assert immediate."
+ "why_prompt_rr": "KV-PROMPT4 10-18: qkd_hr_core_prompt local reset relays (coordinator decision 4; tools/qwen_kv_die/host_cluster/gen_prompt_rr.py): every host_rst_n consumer of the child behind ot_rst_relay at its rst_n pin (direct members here; u_pkg/u_csr/u_host/u_prompt through the renamed copies qkd_host_control_prompt_observed_rr -> qkd_host_fullcontrol_observed_rr). Release +3 ck edges uniformly for the child; assert immediate.",
+ "why_peer_rr": "KV-HROOT-PEER 10-18: qkd_hr_core_peer local reset relays (tools/qwen_kv_die/host_cluster/gen_peer_rr.py): every reset pin (por_n, host_rst_n) of the child's 5 members behind ot_rst_relay; release +3 ck edges uniformly for the child; assert immediate. The root mux wrapper wraps qkd_host_peer_root_mux_pl (peer_rr/): cycle-exact one-hot TX round robin + ONE added cycle on the local rank-0 RX path (register slice; same rank-side ready; own bench rtl/test/qwen_host/hr_peer_pl_1018)."
 }
