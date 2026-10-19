@@ -164,6 +164,12 @@ end
 end
 ''')
 
+     for valid,data,age,label in [('v1','P',15,'M1'),('v2','P2',19,'M2'),('v3','R',22,'AD'),('v4','S',22,'SFU_NONE'),('v5','T',26,'E1'),('v6','U',30,'E2'),('ro_v','ro_x',31,'OUT')]:
+      s.append(f'''always @(posedge clk)if(runrq&&cycle>=32&&cycle<480&&(cycle-32)%112=={age})begin
+ if(!{inner}.{valid}||{inner}.{data}!==squares[{ix}])$fatal(1,"{label}_SOURCE_AGE_DATA q={q} lane={L} cycle=%0d",cycle);
+end
+''')
+
    for h in range(2):
     p=2*g+h
     if q in (1,3)and p>=4:
