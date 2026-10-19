@@ -1,0 +1,97 @@
+{
+  "status": "BLOCKED_NO_REVIEW_SUBMIT_ADOPTION",
+  "source_commit": "1e607068c15893e05be8070a77592981e8e4d875",
+  "gate_verdict": "WARN0fail5warn",
+  "gate_sha256": "b7dea5a095ec87e1866f0979aa21fefcd79c542ce6340d4e44294e8c278f910b",
+  "native": {
+    "schema": "opentallas.ref-tile.cts-native-probe.v1",
+    "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+    "kit": "physical/ref_tile/dsdv_gunit_l5",
+    "remote_host": "ot-epyc8",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_gunit_l5-20261019-094110",
+    "gate_source_commit": "1e607068c15893e05be8070a77592981e8e4d875",
+    "gate_result_sha256": "b7dea5a095ec87e1866f0979aa21fefcd79c542ce6340d4e44294e8c278f910b",
+    "library_sha256": "868b9fbe8b69289fb44da0e30e5a560b369e9309d18556a16e7dc8d5fea60e54",
+    "insertion_sha256": "98e850f40efdbd9523042e9176f657997cbe3e22306d4160e22ed3ff6acbe225",
+    "probe_tcl_sha256": "a90154d4e66d5178f9293f502c77ac36cd722e90a8d57dd0b55a9bfaed6d5108",
+    "launch": {
+      "ps": 207.66122000000007,
+      "pin": "fault"
+    },
+    "capture": {
+      "ps": 89.50021999999996,
+      "pin": "vi_n[0]"
+    },
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": [],
+    "clock_refs": {
+      "clk": {
+        "rise": 346.9,
+        "fall": 370.932135,
+        "min": 313.51813,
+        "max": 367.24261,
+        "src": "insertion.json boundary mean",
+        "bmin": 331.5,
+        "bmax": 367.2,
+        "n": 1746
+      }
+    },
+    "spread_ps": {
+      "clk": 35.69999999999999
+    },
+    "measured_reference_coverage": true,
+    "ff_spread_ps": 33.3,
+    "diagnostic_pass": true
+  },
+  "TT_placement_setup_ps": -4.327760372291323,
+  "TT_placement_hold_ps": 34.31532835662665,
+  "SS_same_CTS_setup_ps": -385.32310675520876,
+  "SS_same_CTS_hold_ps": 37.89435432111077,
+  "FF_same_CTS_setup_ps": 201.557825985077,
+  "FF_same_CTS_hold_ps": 27.582408579363005,
+  "GRT_overflow": 0,
+  "GRT_worst_layer_util_percent": 48.02,
+  "actual_signal_clock_pins": 1861,
+  "actual_invalid_pin_rectangles": 0,
+  "outline_um": [
+    259.2,
+    259.2
+  ],
+  "macros": 0,
+  "std_area_LIB_um2": 32415.36408,
+  "std_area_ODB_um2": 29007,
+  "core_area_um2": 64963.8144,
+  "kept_fixed32_modules": 2,
+  "structural_blocker_packet_commit": "559443beb",
+  "critical_driver_loads": [
+    1852,
+    1537,
+    1095,
+    1060
+  ],
+  "estimated_depth_ps": 653.5,
+  "estimated_depth_levels": 17,
+  "PNG_review": {
+    "viewed": true,
+    "floorplan": "physical/ref_tile/dsdv_gunit_l5/gate_layout/floorplan.png",
+    "density": "physical/ref_tile/dsdv_gunit_l5/gate_layout/density.png"
+  },
+  "calendar": {
+    "origin": "common lastHP_N at exact lower_gu issue boundary",
+    "HC_LAT_N": 975,
+    "HC_LAT_S": 973,
+    "compiler_legacy_constants_unchanged": [
+      759,
+      757
+    ],
+    "admission": false
+  },
+  "limitations": [
+    "TT setup negative despite coarse WARN; SS setup negative",
+    "Critical control/address fanout and depth fail SAFE",
+    "Native result uses own measured CTS boundary reference, no routed/parent qualification",
+    "Existing3456bit static configuration waiver retained, not new runtime waiver",
+    "No REVIEW/submission/adoption"
+  ]
+}
