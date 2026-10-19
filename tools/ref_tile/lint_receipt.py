@@ -41,10 +41,10 @@ KIT_ROOT = 'physical/ref_tile'
 SPEC_KEYS = ('name', 'top', 'kind', 'sources', 'params', 'clock', 'clock_entry_domains', 'clock_relationship',
              'clock_data_paths', 'cdc_synchronizers', 'reviewed_gray_fifo_extensions', 'macros', 'children',
              'defines', 'hard_define', 'hard_defines', 'orfs_vars', 'sdc_extra', 'boundary_tcl', 'pre_cts_extra',
-             'forwarded_clock')
+             'forwarded_clock', 'single_clock_contract')
 ROUTE_KEYS = ('signoff_period_ps', 'period_ps')          # clock_entry_constraints.signoff_period reads both
 # every module the lints execute (cdc_sync_constraints.periods imports clock_entry_constraints)
-TOOL_FILES = ('gray_fifo_cdc_constraints.py', 'cdc_sync_constraints.py', 'clock_entry_constraints.py')
+TOOL_FILES = ('gray_fifo_cdc_constraints.py', 'cdc_sync_constraints.py', 'clock_entry_constraints.py', 'single_clock_contract.py')
 DEFAULT_MEM_GB = 48
 REMOTE_PARENT = '/srv/opentallas-scratch/claude/kit_lint'
 _MEMO = {}
@@ -76,6 +76,9 @@ def input_files(spec, root):
     """repo-relative lint inputs: the sources and every declared macro's Liberty views"""
     root = Path(root).resolve()
     files = list(spec.get('sources', []))
+    if spec.get('single_clock_contract'):
+        from single_clock_contract import evidence_paths
+        files += evidence_paths(spec)
     for item in spec.get('macros', []):
         if isinstance(item, dict) and isinstance(item.get('view'), str):
             view = root / item['view']

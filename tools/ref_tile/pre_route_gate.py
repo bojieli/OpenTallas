@@ -2483,7 +2483,8 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
         candidate_job = json.loads((dst / kit / "job.json").read_text())
         arch(candidate_job.get("source", {}).get("extra_paths", []))
     # sdc_extra too: without it RT.gen raised FileNotFoundError and the whole gate went SKIP for every kit that has one
-    arch(list(sp.get("sources", [])) + list(sp.get("sdc_extra", []))
+    arch(RT.clock_entry_constraints.single_clock_contract.evidence_paths(sp)
+         + list(sp.get("sources", [])) + list(sp.get("sdc_extra", []))
          + [it["view"] for it in sp.get("macros", []) + sp.get("children", [])]
          + ([sp["contract"]["file"]] if sp.get("contract") else [])
          # job.benches_from too (flowfix 10-13): gen_job reads the shared bench template, and without it the whole gate

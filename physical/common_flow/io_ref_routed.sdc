@@ -467,3 +467,6 @@ if {[info exists ::env(OT_IOREF_INPUT_PF)] && $::env(OT_IOREF_INPUT_PF) eq "1" &
     } else { puts "OT_IOREF_PF no input pin flops: input reference unchanged" }
   } ot_pf_err]} { puts "OT_IOREF_PF WARNING: $ot_pf_err -- input reference unchanged"; if {[info exists ::env(OT_IOREF_PF_DEBUG)]} { puts $::errorInfo } }
 }
+
+# Source-pinned ordinary single-root kits fail closed on stale real/virtual periods.
+if {[llength [info commands ot_single_clock_check]]} { ot_single_clock_check }

@@ -1650,7 +1650,7 @@ def spec_io_budget(s: dict) -> tuple:
 def io_budget_env(s: dict) -> dict:
     """OT_IO_*_BUDGET_PS for a tightened single-clock boundary ({} = nominal 0.2 T, kits unchanged)"""
     fin, fout = spec_io_budget(s)
-    if (fin, fout) == (0.2, 0.2):
+    if (fin, fout) == (0.2, 0.2) and not s.get('single_clock_contract'):
         return {}
     signoff = clock_entry_constraints.signoff_period(s)
     return {"OT_IO_IN_BUDGET_PS": round(signoff * fin, 3), "OT_IO_OUT_BUDGET_PS": round(signoff * fout, 3)}
@@ -1672,7 +1672,8 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             # Extra SDC may declare secondary clocks. Data slew must exclude
             # their sources; explicit source-clock transitions in extra SDC stand.
             + "set_input_transition 150 [all_inputs -no_clocks]\n"
-            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT))
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
+            + clock_entry_constraints.single_clock_contract.guard(s))
 
 
 def sdc_extra(s: dict) -> str:
@@ -1705,7 +1706,8 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + io + sdc_extra(s)
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
             + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
-            + "\nset_propagated_clock [all_clocks]\n")
+            + "\nset_propagated_clock [all_clocks]\n"
+            + clock_entry_constraints.single_clock_contract.guard(s))
 
 
 def io_hold_relief_ps(s: dict) -> int:
@@ -2245,6 +2247,7 @@ def referenced_paths(s: dict, kd: str) -> list:
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
+    out += clock_entry_constraints.single_clock_contract.evidence_paths(s)
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
     if ((s["kind"] == "tile" and s.get("signal_max_layer")) or
@@ -2354,6 +2357,8 @@ def route_hold_context(s: dict, kd: str) -> dict:
 
 def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     r, j = s["route"], dict(s.get("job", {}))
+    if s.get("single_clock_contract"):
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(clock_entry_constraints.single_clock_contract.evidence_paths(s)))
     if s.get("registered_cluster_candidate"):
         from registered_cluster_budget import evidence_paths
         j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
