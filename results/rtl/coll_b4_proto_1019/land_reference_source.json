@@ -1,0 +1,15 @@
+{
+  "reference_commit": "ff0368257",
+  "source_path": "rtl/qwen_split/qfd_fwd_lane.sv",
+  "source_sha256": "271bbf832f28a5bb9d9d0562c46b185c94ebd0c2b8ec61303f6537d3534e79cf",
+  "reference_block_sha256": "8d9e9150b003804fbe4800a556be0c669c221e810cd51e48907bf2377da70c80",
+  "namespace_only_renames": {
+    "ot_qfd_bank_gate": "ot_coll_b4_bank_gate",
+    "ot_qfd_gated_region": "ot_coll_b4_gated_region",
+    "ot_qfd_land_gated": "ot_coll_b4_land_gated"
+  },
+  "local_path": "rtl/rom/ot_coll_b4_land_reference.sv",
+  "local_sha256": "6d0451d6cfda0f60860418e3eec3431b2f1aeb9fb4bd6d898530dbd4dba411f2",
+  "fwd0_dependency_byte_identical": true,
+  "qualification": "behavioral prototype pending; no physical or whole-parent qualification"
+}
