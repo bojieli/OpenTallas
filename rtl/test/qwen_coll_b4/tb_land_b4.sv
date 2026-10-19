@@ -51,17 +51,17 @@ module b4_land_case #(parameter integer W=150, ORDER=0, PH=0)(
 endmodule
 module tb_land_b4;
  reg cs=0;reg[31:0]es=0;always #5 cs=~cs;always @(posedge cs)es<=es+1;
- integer e[0:15],n[0:15];wire[15:0]f;
- for(genvar i=0;i<16;i=i+1)begin:g
-  localparam integer W=(i%4==0)?150:(i%4==1)?152:(i%4==2)?154:139;
-  b4_land_case #(.W(W),.ORDER((i/4)%2),.PH(2*(i/8))) u(cs,es,e[i],n[i],f[i]);
+ integer e[0:23],n[0:23];wire[23:0]f;
+ for(genvar i=0;i<24;i=i+1)begin:g
+  localparam integer W=(i%6==0)?150:(i%6==1)?152:(i%6==2)?154:(i%6==3)?153:(i%6==4)?139:138;
+  b4_land_case #(.W(W),.ORDER((i/6)%2),.PH(2*(i/12))) u(cs,es,e[i],n[i],f[i]);
  end
  initial begin
   #5999;
   begin integer err,chk;err=0;chk=0;
-   for(integer j=0;j<16;j=j+1)begin err+=e[j];chk+=n[j];end
-   if(err || |f || chk<9000)$fatal(1,"B4_LAND FAIL errors%0d checks%0d faults%h",err,chk,f);
-   $display("B4_LAND PASS cases16 twoBootOrders repeatReset widths150/152/154/139 phases0/0.2T totalreceiverage4 addedcapture3 checks%0d",chk);
+   for(integer j=0;j<24;j=j+1)begin err+=e[j];chk+=n[j];end
+   if(err || |f || chk<13000)$fatal(1,"B4_LAND FAIL errors%0d checks%0d faults%h",err,chk,f);
+   $display("B4_LAND PASS cases24 twoBootOrders repeatReset widths150/152/154/153/139/138 phases0/0.2T totalreceiverage4 addedcapture3 checks%0d",chk);
   end
   $finish;
  end
