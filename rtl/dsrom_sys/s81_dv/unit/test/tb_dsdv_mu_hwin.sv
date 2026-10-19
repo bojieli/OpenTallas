@@ -41,6 +41,12 @@ module tb_dsdv_mu_hwin;
 `ifdef MIN_D
       for(cfg_e=0;cfg_e<NE;cfg_e=cfg_e+1) DK[cfg_e]=NS+2+13*cfg_e;
 `endif
+`ifdef BAD_D
+      DK[0]=NS+1;
+`endif
+`ifdef BAD_D_HIGH
+      DK[0]=RL-1;
+`endif
 `ifdef COLLIDE_EVENTS
       DK[1]=DK[0]; KD[1]=0; EP[1]=EP[0];
 `endif
@@ -54,12 +60,12 @@ module tb_dsdv_mu_hwin;
     wire [3:0] mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};      // the die master's t_mf fold
     dsdv_mu_hslot #(.NSLOT(NS), .MUT(0)) u_hs (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
         .f_kd({ku[31], 53'd0}), .f_mc(f_mc), .t_ku(ku), .t_mf(hmf));
-    dsdv_mu_hwin #(.NSLOT(NS), .NEV(NEV), .NEP(4), .NRT(2), .MUT(WMUT), .HEAD_STAGE(1), .COMPACT_PTR(1)) dut (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
+    dsdv_mu_hwin #(.NSLOT(NS), .NEV(NEV), .NEP(4), .NRT(2), .MUT(WMUT), .HEAD_STAGE(1), .COMPACT_PTR(1), .CHECK_STAGE(1)) dut (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
         .f_mc(f_mc), .f_mw(f_mw), .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(mu_rt), .t_wf(wf));
 `ifdef HEAD_COMPARE
     wire [4*34-1:0] ref_c; wire [4*11-1:0] ref_rc; wire [1:0] ref_wf;
     integer head_compares=0;
-    dsdv_mu_hwin #(.NSLOT(NS),.NEV(NEV),.NEP(4),.NRT(2),.MUT(WMUT),.HEAD_STAGE(0),.COMPACT_PTR(0)) ref_direct
+    dsdv_mu_hwin #(.NSLOT(NS),.NEV(NEV),.NEP(4),.NRT(2),.MUT(WMUT),.HEAD_STAGE(0),.COMPACT_PTR(0),.CHECK_STAGE(0)) ref_direct
         (.ck(ck),.rst_n(rst_n),.f_ks(f_ks),.f_mc(f_mc),.f_mw(f_mw),.mu_c(ref_c),.mu_rc(ref_rc),.mu_rt(mu_rt),.t_wf(ref_wf));
     always @(negedge ck) if(rst_n) begin
         if({mu_c,mu_rc,wf} !== {ref_c,ref_rc,ref_wf})
@@ -125,7 +131,11 @@ module tb_dsdv_mu_hwin;
         nexp=nexp-nst; // two TX rows target one output at the same edge
 `endif
         $display("MUWIN starts %0d fires %0d expected %0d K %0d t_mf %b hslot %b hwin %b", nst, nfire, nexp, kconst, mf, hmf, wf);
-`ifdef COLLIDE_EVENTS
+`ifdef BAD_D
+        if(wf[1] && hmf==0) $display("MUWIN BADD PASS"); else $display("MUWIN BADD FAIL");
+`elsif BAD_D_HIGH
+        if(wf[1] && hmf==0) $display("MUWIN BADD_HIGH PASS"); else $display("MUWIN BADD_HIGH FAIL");
+`elsif COLLIDE_EVENTS
         $display("MUWIN COLLISION first %0d expected %0d",first_cfg_fault,stc[0]+DK[0]+3);
         if(errs==0 && nfire==nexp && hmf==0 && wf==2'b10 && first_cfg_fault==stc[0]+DK[0]+3)
             $display("MUWIN COLLISION PASS");

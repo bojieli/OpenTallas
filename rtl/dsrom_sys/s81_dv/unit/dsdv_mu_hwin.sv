@@ -39,7 +39,7 @@
 // do not fire or participate in offset-validity checks. Fault meanings and CSR encoding are unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
-                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0) (
+                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0) (
     input  wire              ck,
     input  wire              rst_n,
     input  wire [52:0]       f_ks,            // tap of the unit start pin {start, user 10, tok 21, pos 21}
@@ -142,6 +142,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     wire [23:0] rl_event[0:NEV-1]; wire [NEV-1:0] idle_event, rec_local;
     wire [SI-1:0] cfg_addr[0:NEV-1];
     wire [1:0] cfg_attr[0:NEV-1];
+    wire [NEV-1:0] invalid_event;
     wire [SI-1:0] lw_event[0:NEV-1]; wire [NSLOT-1:0] lm_event[0:NEV-1];
     wire [30:0] rt_compare[0:NRT*NC_REC-1];
     reg [NEV-1:0] evld; reg [NEV-1:0] ek; reg [PI-1:0] eep [0:NEV-1]; reg [20:0] eD [0:NEV-1]; reg [EI-1:0] esel;
@@ -158,7 +159,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     always @* begin
         bad_d = cs <= nw + 24'd1;
         for (e = 0; e < NEV; e = e + 1)
-            if (evld[e] && ({3'd0, eD[e]} < (24'(lw_event[e])+24'd1) + 24'd2 || {3'd0, eD[e]} + 24'd2 > rl_event[e])) bad_d = 1'b1;
+            if (invalid_event[e]) bad_d = 1'b1;
         for (e = 0; e < NEV; e = e + 1) begin
             ok[e] = evld[e] && |(pe[e] & vld & ~fd[e]);
             hold[e] = (st && |(pe[e] & ss)) || (|(pe[e] & rec_slot));
@@ -309,7 +310,14 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         if(COMPACT_PTR!=0) begin:g_binary_head
             // pb_r was the exact same-edge shadow of the original one-hot pe_r.
             // Decode its current state; the SRAM read and event edges stay fixed.
-            assign pe_r=OH0 << pb_r;
+            localparam integer SPLIT=(NSLOT+1)/2;
+            (* keep *) reg [SI-1:0] upper_pointer_r;
+            wire [NSLOT-1:0] lower_decode=OH0 << pb_r;
+            wire [NSLOT-1:0] upper_decode=OH0 << upper_pointer_r;
+            assign pe_r={upper_decode[NSLOT-1:SPLIT],lower_decode[SPLIT-1:0]};
+            always @(posedge ck or negedge rr[COPY_RBASE+7*se+6])
+                if(!rr[COPY_RBASE+7*se+6]) upper_pointer_r<=SI'(0);
+                else if(adv[se]) upper_pointer_r<=((|(pe_r&lm_event[se])) || pe_r[NSLOT-1])?SI'(0):upper_pointer_r+1'b1;
         end else begin:g_onehot_head
             reg [NSLOT-1:0] pointer_r;
             assign pe_r=pointer_r;
@@ -356,6 +364,23 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
             if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_addr_r<=0;cfg_attr_r<=0;end
             else begin cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_attr_r<=f_mw[11:10];end
+        if(CHECK_STAGE!=0) begin:g_check_lookahead
+            wire set_d=wv && idle_event[ce] && mw_q[22:21]==2'd1 && esel==EI'(ce);
+            wire [20:0] next_d=set_d?mw_q[20:0]:eD[ce];
+            wire [SI-1:0] next_lw=(cfg_gap_r && idle_event[ce] && gn!=SJ'(NSLOT))?
+                ((gn==0)?SI'(NSLOT-1):gn[SI-1:0]):lw_r;
+            wire [23:0] next_rl=(cfg_rl_r && idle_event[ce])?mc_q[23:0]:rl_r;
+            wire next_enabled=evld[ce] || (wv && idle && mw_q[22:21]==2'd1 && esel==EI'(ce));
+            reg invalid_r;
+            // The next-state values above are exactly the values the direct
+            // checker observes after this edge. Fault remains on first start.
+            always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
+                if(!rr[COPY_RBASE+7*ce+6]) invalid_r<=1'b0;
+                else invalid_r<=next_enabled && ({3'd0,next_d} < (24'(next_lw)+24'd3) || {3'd0,next_d}+24'd2 > next_rl);
+            assign invalid_event[ce]=invalid_r;
+        end else begin:g_check_direct
+            assign invalid_event[ce]=evld[ce] && ({3'd0,eD[ce]} < (24'(lw_r)+24'd3) || {3'd0,eD[ce]}+24'd2 > rl_r);
+        end
         assign ts_event[ce]=ts_r; assign tm_event[ce]=time_r;
         assign rl_event[ce]=rl_r; assign lw_event[ce]=lw_r;
         assign lm_event[ce]=lm_r; assign idle_event[ce]=!arm_r && !(|vld);
@@ -495,7 +520,7 @@ module dsdv_seq_host_mux (
         .t_kd(t_kd), .f_mc(mc), .t_mf(hmf), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w),
         .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v),
         .cw_a(cw_a), .cw_d(cw_d));
-    dsdv_mu_hwin #(.NSLOT(47), .NEV(16), .NEP(4), .NRT(2), .HEAD_STAGE(1), .COMPACT_PTR(1)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),
+    dsdv_mu_hwin #(.NSLOT(47), .NEV(16), .NEP(4), .NRT(2), .HEAD_STAGE(1), .COMPACT_PTR(1), .CHECK_STAGE(1)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),
         .mu_c({mu_c_0s, mu_c_0n, mu_c_7s, mu_c_7n}), .mu_rc({mu_rc_0s, mu_rc_0n, mu_rc_7s, mu_rc_7n}),
         .mu_rt({mu_rt_0n, mu_rt_7n}), .t_wf(wf));
     assign t_mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};

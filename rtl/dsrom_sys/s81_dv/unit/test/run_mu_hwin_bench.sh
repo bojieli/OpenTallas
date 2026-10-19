@@ -15,6 +15,8 @@ run() { n=$1; shift
   "$O/obj_$n/tb" > "$O/run_$n.log" 2>&1; grep -E '^MUWIN' "$O/run_$n.log" | sed "s/^/[$n] /"; }
 run slots47 +define+NSLOT_TEST=47 +define+MIN_D=1; grep -q '^MUWIN PASS' "$O/run_slots47.log" || bad=1
 run min_d +define+MIN_D=1; grep -q '^MUWIN PASS' "$O/run_min_d.log" || bad=1
+run badd +define+BAD_D=1; grep -q '^MUWIN BADD PASS' "$O/run_badd.log" || bad=1
+run badd_high +define+BAD_D_HIGH=1; grep -q '^MUWIN BADD_HIGH PASS' "$O/run_badd_high.log" || bad=1
 run base;  grep -q '^MUWIN PASS' "$O/run_base.log" || bad=1
 run collision +define+COLLIDE_EVENTS=1; grep -q '^MUWIN COLLISION PASS' "$O/run_collision.log" || bad=1
 run badrt +define+BADRT=1; grep -q 'BADRT PASS (fault raised)' "$O/run_badrt.log" || bad=1
