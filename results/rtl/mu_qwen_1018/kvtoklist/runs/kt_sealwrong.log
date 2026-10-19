@@ -1,0 +1,8 @@
+FAIL MU_KV_TOKLIST: layer programme not configured by the boot path (configured 0, lprg fault 04, dispatcher fault 80)
+- rtl/test/mu_qwen_1018/tb_mu_kv_toklist.sv:86: Verilog $finish
+FAIL MU_KV_TOKLIST: targets 2 / 3 not configured (writer 0, ownership 0)
+- rtl/test/mu_qwen_1018/tb_mu_kv_toklist.sv:89: Verilog $finish
+boot: 327 words through qkd_static_kv_boot_dispatch_mu TOKLIST, layer programme configured, header 514b564c59523336
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.022 s; speed 62.092 us/s
+- Verilator: cpu 0.021 s on 1 threads; allocated 8 MB

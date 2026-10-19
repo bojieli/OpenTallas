@@ -18,7 +18,15 @@
 //         programme faults on its non-zero upper half (and the original's end-of-image count fails).
 //   Static boot path only: no ready / credit; the GAP block adds 144 boot words, no runtime cycle.
 //   WMUT (bench mutants, 0 = off): 1 GAP words not forwarded to the layer bus; 2 seal accepted before the GAP block.
-module qkd_static_kv_boot_dispatch_mu #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer MU=1,parameter integer WMUT=0)(
+//   TOKLIST 1 (MU-KV-TOKLIST 10-19, opt-in, MU 1; for qkd_static_kv_layer_programme_mu TOKLIST 1): target 1 is
+//         0..325 as above, 326 the list header {ntok3, ntok2, ntok1, ntok0} (8 bits each), 327 .. 326 + NW the list words
+//         (NW = 12 (ntok1 + ntok2 + ntok3), mu_calendar.kv_layer_image_toklist), 327 + NW the seal (<= 1,023: the
+//         10-bit boot address).  The wrapper takes every target-1 word from 326 on, in order: the header goes out on the
+//         layer bus at 326, every list word at 327 (the programme counts them), the seal reaches the original as its
+//         word 326 and the layer bus at 470 (as the GAP mode).  NW comes from the header (the programme checks the
+//         header itself and faults on a bad one).  Order / early / extra / wrong-epoch words: the GAP mode's faults.
+//         WMUT 1: list words not forwarded; 2: seal accepted before the list ends.
+module qkd_static_kv_boot_dispatch_mu #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer MU=1,parameter integer WMUT=0,parameter integer TOKLIST=0)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[3:0]boot_image_target,
  input wire boot_image_ready,boot_image_fault,input wire[15:0]boot_image_epoch,
  input wire[63:0]boot_image_digest,input wire execution_active,
@@ -56,6 +64,45 @@ module qkd_static_kv_boot_dispatch_mu #(parameter integer MUT=0,parameter intege
  generate if(MU==0)begin:g_plain
   assign pr_o=boot_pr;assign setup_ready=o_setup;
   always @*begin layer_we=o_lw;layer_addr=o_la;layer_data=o_ld;fault=o_fault;fault_code=o_fc;x_fault=0;x_fc=0;end
+ end else if(TOKLIST!=0)begin:g_tl
+  wire[9:0]addr=boot_pr[73:64];wire[63:0]data=boot_pr[63:0];
+  wire w1=boot_pr[74]&&boot_image_target==1;
+  wire ext_w=w1&&addr>=10'd326;
+  reg open_q,hdr_q;reg[9:0]gcnt,nw_q;reg g_we;reg[8:0]g_a;reg[63:0]g_d;
+  wire open=open_q||(o_lw&&o_la==9'd325);
+  wire[9:0]idx=addr-10'd326;
+  wire[13:0]nw_d=14'd12*({6'd0,data[15:8]}+{6'd0,data[23:16]}+{6'd0,data[31:24]});
+  wire is_hdr=ext_w&&idx==0&&gcnt==0;
+  wire is_seal=ext_w&&hdr_q&&idx==gcnt&&((WMUT==2)?(gcnt>=10'd1):(gcnt==nw_q+10'd1));
+  wire is_list=ext_w&&hdr_q&&idx==gcnt&&!is_seal&&gcnt<=nw_q;
+  wire ok_w=open&&!o_fault&&!x_fault&&!execution_active;
+  wire bad_epoch=ext_w&&boot_image_epoch!=installed_epoch;
+  wire ok_seal=is_seal&&ok_w&&!bad_epoch;
+  assign pr_o=!ext_w?boot_pr:(ok_seal?{boot_pr[142:74],10'd326,boot_pr[63:0]}:{boot_pr[142:75],1'b0,boot_pr[73:0]});
+  always @(posedge ck or negedge rst_n)
+  if(!rst_n)begin open_q<=0;hdr_q<=0;gcnt<=0;nw_q<=0;g_we<=0;g_a<=0;g_d<=0;x_fault<=0;x_fc<=0;end
+  else begin
+   g_we<=0;
+   if(o_lw&&o_la==9'd325)open_q<=1;
+   if(ext_w)begin
+    if(execution_active)begin x_fault<=1;x_fc[1]<=1;end
+    else if(bad_epoch&&!o_fault&&!x_fault)begin x_fault<=1;x_fc[4]<=1;end
+    else if(!(is_hdr||is_list||is_seal)||!ok_w)begin if(!o_fault)begin x_fault<=1;x_fc[3]<=1;end end
+    else if(is_seal)begin open_q<=0;hdr_q<=0;gcnt<=0;end
+    else begin
+     gcnt<=gcnt+1'b1;g_we<=is_hdr||(WMUT!=1);g_a<=is_hdr?9'd326:9'd327;g_d<=data;
+     if(is_hdr)begin hdr_q<=1;nw_q<=(nw_d>14'd697)?10'd697:10'(nw_d);end   // 327 + NW <= 1,023 (10-bit boot address)
+    end
+   end
+   if(boot_image_target!=1)begin open_q<=0;hdr_q<=0;gcnt<=0;end
+  end
+  assign setup_ready=o_setup&&!x_fault;
+  always @*begin
+   layer_we=o_lw||g_we;
+   layer_addr=g_we?g_a:((o_lw&&o_la==9'd326)?9'd470:o_la);
+   layer_data=g_we?g_d:o_ld;
+   fault=o_fault||x_fault;fault_code=o_fc|x_fc;
+  end
  end else begin:g_mu
   wire[9:0]addr=boot_pr[73:64];wire[63:0]data=boot_pr[63:0];
   wire w1=boot_pr[74]&&boot_image_target==1;

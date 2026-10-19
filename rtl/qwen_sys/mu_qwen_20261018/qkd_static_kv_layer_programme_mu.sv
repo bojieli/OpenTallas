@@ -16,7 +16,19 @@
 //         the context that fired the latest event, so every consumer that latches them at its event pulse sees that
 //         user's stage (the user rides in epoch[1:0] downstream, MU-ADOPT-KV).  Single shared table read port: only one
 //         context can load a stage row per edge (a second is a stage_start collision, already a fault).
-module qkd_static_kv_layer_programme_mu #(parameter integer MUT=0,parameter integer MU=1)(
+//   TOKLIST 1 (MU-KV-TOKLIST 10-19, opt-in; MU 1 only; TOKLIST 0 = the GAP mode above, unchanged): every filler user
+//         (1..3) plays a frame-periodic LIST of per-token 36-gap tables instead of one table (the op-granular frame
+//         gives each filler token its own KV stage pattern; tools/qwen_static_schedule/mu_calendar.kv_token_lists).
+//         User 0 (the latency user) is hard-wired to gap 0 (no entries).  Store: 2 x ot_sram_1rw_256x64_m4_r2c2 (512
+//         words, 3 20-bit entries a word, bits [63:60] 0: a token table = 12 words).  Each context holds its NEXT gap in a
+//         prefetch register (ng, valid ngv); consuming it (a start, or a stage end before stage 36) requests the next
+//         entry; one shared read port serves the requests (2 edges each, lowest user first), the pointer walks the user's
+//         words [wbase, wend) and wraps at wend (frame-periodic).  Consuming an entry that has not arrived is a sticky
+//         fault (fault_code[5]); the compiler's stages are thousands of edges, the refill takes <= 6.
+//         Boot (layer bus): 326 header {ntok3, ntok2, ntok1, ntok0 = 0} [31:0] (upper 32 = 0, 12 (n1 + n2 + n3) <= 512),
+//         327 the list words (a counted stream: NW = 12 (n1 + n2 + n3) writes at address 327), 470 the seal.
+//   TLMUT (bench mutants, 0 = off): 1 the pointer does not wrap at the user's list end; 2 the lane select is off by one.
+module qkd_static_kv_layer_programme_mu #(parameter integer MUT=0,parameter integer MU=1,parameter integer TOKLIST=0,parameter integer TLMUT=0)(
  input wire ck,rst_n,
  input wire cfg_we,input wire[8:0]cfg_addr,input wire[63:0]cfg_data,
  input wire start,authority_valid,programme_authorized,
@@ -91,12 +103,39 @@ end else begin:g_mu
    if(wq_word[8])t_end[g]<=wq_data;
   end
  end
- always @(posedge ck)if(accept_cfg&&addr_q>=326&&addr_q<470)t_gap[addr_q-9'd326]<=data_q[31:0];
+ always @(posedge ck)if(TOKLIST==0&&accept_cfg&&addr_q>=326&&addr_q<470)t_gap[addr_q-9'd326]<=data_q[31:0];
+ // ---- TOKLIST state + the list SRAM (2 x 256 x 64, 1RW: boot writes, then prefetch reads) ----
+ reg tl_hdr;reg[9:0]tl_nw,tl_cnt;reg[7:0]tl_n[1:3];reg[8:0]tl_wb[1:3];reg[9:0]tl_we[1:3];
+ reg[8:0]tl_pw[1:3];reg[1:0]tl_pl[1:3];reg[19:0]ng[0:3];reg[3:0]ngv,ngr;
+ reg f_v;reg[1:0]f_u,f_l;reg f_b;
+ wire[13:0]tl_nw_d=14'd12*({6'd0,data_q[15:8]}+{6'd0,data_q[23:16]}+{6'd0,data_q[31:24]});
+ wire tl_wr=TOKLIST!=0&&accept_cfg&&addr_q==327;
+ reg rd_go;reg[1:0]rd_u;
+ always @*begin rd_go=0;rd_u=0;if(TOKLIST!=0&&!f_v&&!fault)for(integer k=3;k>=1;k=k-1)if(ngr[k])begin rd_go=1;rd_u=2'(k);end end
+ wire[8:0]m_addr=tl_wr?tl_cnt[8:0]:tl_pw[rd_u==0?1:rd_u];
+ wire[63:0]m_rd0,m_rd1;
+ if(TOKLIST!=0)begin:g_tl
+  ot_sram_1rw_256x64_m4_r2c2 u_tl0(.clk(ck),.ce_in((tl_wr||rd_go)&&!m_addr[8]),.we_in(tl_wr),.addr_in(m_addr[7:0]),.wd_in(data_q),
+   .w_mask_in({64{1'b1}}),.rd_out(m_rd0),.rr_en(2'b0),.rr_addr(12'd0),.cr_en(2'b0),.cr_sel(12'd0));
+  ot_sram_1rw_256x64_m4_r2c2 u_tl1(.clk(ck),.ce_in((tl_wr||rd_go)&&m_addr[8]),.we_in(tl_wr),.addr_in(m_addr[7:0]),.wd_in(data_q),
+   .w_mask_in({64{1'b1}}),.rd_out(m_rd1),.rr_en(2'b0),.rr_addr(12'd0),.cr_en(2'b0),.cr_sel(12'd0));
+ end else begin:g_notl
+  assign m_rd0=0;assign m_rd1=0;
+ end
+ wire[63:0]m_rd=f_b?m_rd1:m_rd0;
+ wire[1:0]f_ls=(TLMUT==2)?((f_l==2)?2'd0:f_l+2'd1):f_l;
+ wire[19:0]m_ent=(f_ls==0)?m_rd[19:0]:(f_ls==1)?m_rd[39:20]:m_rd[59:40];
  reg[1:0]owner;reg[5:0]stage_o;
  assign stage=(MUT==2)?(stage_o^6'd1):stage_o;
  assign layer=stage-6'd1;
  wire[1:0]us=epoch_q[1:0];
  wire start_ok=configured&&!c_act[us]&&!we_q&&av_q&&authorized_q&&pos_q<=8191&&pepoch_q==bound_epoch&&pdigest_q==bound_digest;
+ // the gap before a context's next stage begin: GAP mode the table, TOKLIST the prefetched entry (user 0: 0)
+ reg[31:0]gv_next[0:3];reg[31:0]gv_start;
+ always @*begin
+  for(integer k=0;k<4;k=k+1)gv_next[k]=(TOKLIST!=0)?((k==0)?32'd0:{12'd0,ng[k]}):t_gap[8'(36*k)+8'(c_stage[k])];
+  gv_start=(TOKLIST!=0)?((us==0)?32'd0:{12'd0,ng[us]}):t_gap[8'(36*us)];
+ end
  // per-context next events (combinational from registered state)
  reg[3:0]e_ctrl,e_k,e_v,e_issue,e_run,e_writer,e_link,e_quiet,e_end,e_begin,e_any;
  integer u;
@@ -115,11 +154,21 @@ end else begin:g_mu
    e_begin[u]=c_act[u]&&c_wait[u]&&c_cnt[u]==1;
   end
   // a stage end begins the next stage on the same edge when its gap is 0 (the original's stage boundary)
-  for(u=0;u<4;u=u+1)if(e_end[u]&&c_stage[u]!=36&&t_gap[8'(36*u)+8'(c_stage[u])]==0)e_begin[u]=1;
+  for(u=0;u<4;u=u+1)if(e_end[u]&&c_stage[u]!=36&&gv_next[u]==0)e_begin[u]=1;
   // a start begins stage 1 at once when its gap is 0
-  if(start_q&&start_ok&&!fault&&t_gap[8'(36*us)]==0)e_begin[us]=1;
+  if(start_q&&start_ok&&!fault&&gv_start==0)e_begin[us]=1;
   e_any=e_ctrl|e_k|e_v|e_issue|e_run|e_writer|e_link|e_quiet|e_end|e_begin;
  end
+ // TOKLIST: entries consumed this edge (a start; a stage end before stage 36), and a consumption before its entry arrived
+ reg[3:0]tl_use;
+ always @*begin
+  tl_use=0;
+  if(TOKLIST!=0)begin
+   for(integer k=1;k<4;k=k+1)if(e_end[k]&&c_stage[k]!=36&&c_act[k]&&!(start_q&&start_ok&&us==k))tl_use[k]=1;
+   if(start_q&&start_ok&&us!=0)tl_use[us]=1;
+  end
+ end
+ wire tl_miss=|(tl_use&~ngv);
  wire collide=(e_any&(e_any-4'd1))!=0;                  // two or more contexts fire on this edge
  reg[1:0]fire_u;always @*begin fire_u=owner;for(integer k=3;k>=0;k=k-1)if(e_any[k])fire_u=2'(k);end
  // single table read port: the context that begins a stage (or the one after its end)
@@ -133,6 +182,9 @@ end else begin:g_mu
    configured<=0;active<=0;done<=0;fault<=0;fault_code<=0;age<=0;token_cycles<=0;
    next_cfg<=0;cfg_stage<=0;cfg_word<=0;cfg_gap<=0;bound_digest<=0;bound_epoch<=0;duration_sum<=0;
    c_act<=0;c_wait<=0;c_load<=0;c_quiet<=0;owner<=0;stage_o<=0;
+   tl_hdr<=0;tl_nw<=0;tl_cnt<=0;ngv<=0;ngr<=0;f_v<=0;f_u<=0;f_l<=0;f_b<=0;
+   for(integer k=1;k<4;k=k+1)begin tl_n[k]<=0;tl_wb[k]<=0;tl_we[k]<=0;tl_pw[k]<=0;tl_pl[k]<=0;end
+   for(integer k=0;k<4;k=k+1)ng[k]<=0;
    for(integer k=0;k<4;k=k+1)begin c_cnt[k]<=0;c_age[k]<=0;c_tc[k]<=0;c_stage[k]<=0;c_epoch[k]<=0;c_token[k]<=0;c_pos[k]<=0;c_ctx[k]<=0;c_gen[k]<=0;end
   end else begin
    ctrl_go<=0;kgo<=0;vgo<=0;attention_issue<=0;attention_run<=0;writer_start<=0;link_start<=0;
@@ -152,23 +204,50 @@ end else begin:g_mu
      else if(addr_q==325)begin
       if(data_q[63:16]!=0)begin fault<=1;fault_code[2]<=1;end
       bound_epoch<=data_q[15:0];next_cfg<=326;
-     end else if(addr_q<470)begin
+     end else if(TOKLIST!=0&&addr_q==326)begin
+      if(data_q[63:32]!=0||data_q[7:0]!=0||tl_nw_d>14'd512)begin fault<=1;fault_code[2]<=1;end
+      tl_hdr<=1;tl_nw<=10'(tl_nw_d);tl_cnt<=0;next_cfg<=(tl_nw_d==0)?9'd470:9'd327;
+      tl_wb[1]<=0;tl_wb[2]<=9'(12*data_q[15:8]);tl_wb[3]<=9'(12*(data_q[15:8]+data_q[23:16]));
+      tl_we[1]<=10'(12*data_q[15:8]);tl_we[2]<=10'(12*(data_q[15:8]+data_q[23:16]));tl_we[3]<=10'(tl_nw_d);
+      tl_n[1]<=data_q[15:8];tl_n[2]<=data_q[23:16];tl_n[3]<=data_q[31:24];
+     end else if(TOKLIST!=0&&addr_q==327)begin
+      if(data_q[63:60]!=0)begin fault<=1;fault_code[2]<=1;end
+      tl_cnt<=tl_cnt+1'b1;if(tl_cnt+10'd1==tl_nw)next_cfg<=470;
+     end else if(TOKLIST==0&&addr_q<470)begin
       if(data_q[63:32]!=0)begin fault<=1;fault_code[2]<=1;end
       next_cfg<=next_cfg+1'b1;cfg_gap<=cfg_gap+1'b1;
      end else if(addr_q==470)begin
-      if(data_q!=64'h514b564c59523336||cfg_stage!=36||cfg_gap!=144||duration_sum==0)begin fault<=1;fault_code[2]<=1;end
-      else configured<=1;
+      if(data_q!=64'h514b564c59523336||cfg_stage!=36||duration_sum==0||
+         (TOKLIST==0&&cfg_gap!=144)||(TOKLIST!=0&&(!tl_hdr||tl_cnt!=tl_nw)))begin fault<=1;fault_code[2]<=1;end
+      else begin
+       configured<=1;
+       // TOKLIST: every filler with a list fetches its first entry (token 0, stage 1)
+       for(integer k=1;k<4;k=k+1)begin tl_pw[k]<=tl_wb[k];tl_pl[k]<=0;ngr[k]<=(TOKLIST!=0)&&tl_n[k]!=0;ngv[k]<=0;end
+      end
      end else begin fault<=1;fault_code[0]<=1;end
     end
     if(collide)begin fault<=1;fault_code[4]<=1;end
+    // ---- TOKLIST prefetch: consume -> request; one read in flight; the entry lands 2 edges after the request ----
+    if(TOKLIST!=0)begin
+     if(tl_miss)begin fault<=1;fault_code[5]<=1;end
+     if(f_v)begin ng[f_u]<=m_ent;ngv[f_u]<=1;f_v<=0;end
+     if(rd_go)begin
+      f_v<=1;f_u<=rd_u;f_l<=tl_pl[rd_u];f_b<=tl_pw[rd_u][8];ngr[rd_u]<=0;
+      if(tl_pl[rd_u]==2)begin
+       tl_pl[rd_u]<=0;
+       tl_pw[rd_u]<=(TLMUT!=1&&{1'b0,tl_pw[rd_u]}+10'd1==tl_we[rd_u])?tl_wb[rd_u]:tl_pw[rd_u]+1'b1;
+      end else tl_pl[rd_u]<=tl_pl[rd_u]+1'b1;
+     end
+     for(integer k=1;k<4;k=k+1)if(tl_use[k])begin ngv[k]<=0;ngr[k]<=1;end
+    end
     // start: user = authority epoch[1:0]
     if(start_q)begin
      if(!start_ok)begin fault<=1;fault_code[3]<=1;end
      else begin
       c_act[us]<=1;c_epoch[us]<=epoch_q;c_token[us]<=token_q;c_pos[us]<=pos_q;c_ctx[us]<=14'(pos_q+1);c_gen[us]<=gen_q;
       c_stage[us]<=1;c_tc[us]<=0;c_age[us]<=0;c_quiet[us]<=0;
-      if(t_gap[8'(36*us)]==0)begin c_wait[us]<=0;c_load[us]<=1;end
-      else begin c_wait[us]<=1;c_load[us]<=0;c_cnt[us]<=t_gap[8'(36*us)];end
+      if(gv_start==0)begin c_wait[us]<=0;c_load[us]<=1;end
+      else begin c_wait[us]<=1;c_load[us]<=0;c_cnt[us]<=gv_start;end
      end
     end
     for(integer k=0;k<4;k=k+1)if(c_act[k]&&!(start_q&&start_ok&&us==k))begin
@@ -184,8 +263,8 @@ end else begin:g_mu
        if(c_stage[k]==36)begin c_act[k]<=0;end
        else begin
         c_stage[k]<=c_stage[k]+1'b1;c_age[k]<=0;c_quiet[k]<=0;
-        if(t_gap[8'(36*k)+8'(c_stage[k])]==0)c_load[k]<=1;
-        else begin c_wait[k]<=1;c_cnt[k]<=t_gap[8'(36*k)+8'(c_stage[k])];end
+        if(gv_next[k]==0)c_load[k]<=1;
+        else begin c_wait[k]<=1;c_cnt[k]<=gv_next[k];end
        end
       end
      end

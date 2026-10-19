@@ -1,0 +1,188 @@
+{
+ "schema": "opentallas.qwen.mu_kv_toklist.v1",
+ "grade": "compiled (KV image rows of record + mu_opcal frame)",
+ "epoch_convention": "user = authority_epoch[1:0] = epoch[1:0] of every lprg event (allocator_mu epoch {seq14, user2}); the writer / PC calendars take the stage user from that epoch (row 64 + l + 256 u, kv_user_rows)",
+ "image_source": "results/arch/qwen_kv_static_programme_1017/die/target1.hex",
+ "image_layout": {
+  "rows": [
+   0,
+   323
+  ],
+  "digest64": 324,
+  "epoch16": 325,
+  "header": 326,
+  "list": [
+   327,
+   674
+  ],
+  "seal": 675,
+  "words": 676,
+  "entry_bits": 20,
+  "entries_per_word": 3,
+  "sram_words": 512,
+  "layer_bus": "header 326, list words streamed at 327, seal 470"
+ },
+ "frame": {
+  "F": 16,
+  "H": 4005888,
+  "T": 250368,
+  "filler_first_starts": [
+   4409,
+   4066,
+   4308
+  ],
+  "tokens_per_frame": {
+   "0": 16,
+   "1": 15,
+   "2": 8,
+   "3": 6
+  },
+  "aggregate_tok_s": 13480.2,
+  "users": [
+   {
+    "user": 0,
+    "tok_s": 4792.9
+   },
+   {
+    "user": 1,
+    "tok_s": 4493.4
+   },
+   {
+    "user": 2,
+    "tok_s": 2396.5
+   },
+   {
+    "user": 3,
+    "tok_s": 1797.4
+   }
+  ]
+ },
+ "entries": 1044,
+ "list_words": 348,
+ "max_gap": 208521,
+ "patterns_per_user": {
+  "0": 1,
+  "1": 15,
+  "2": 8,
+  "3": 6
+ },
+ "token_starts": {
+  "0": [
+   0,
+   250368,
+   500736,
+   751104,
+   1001472,
+   1251840,
+   1502208,
+   1752576,
+   2002944,
+   2253312,
+   2503680,
+   2754048,
+   3004416,
+   3254784,
+   3505152,
+   3755520
+  ],
+  "1": [
+   4921,
+   266778,
+   523982,
+   781186,
+   1038390,
+   1295594,
+   1552798,
+   1810002,
+   2067206,
+   2324410,
+   2581614,
+   2838818,
+   3096022,
+   3353226,
+   3610430
+  ],
+  "2": [
+   5322,
+   515730,
+   1034934,
+   1549342,
+   2063750,
+   2578158,
+   3092566,
+   3606974
+  ],
+  "3": [
+   5723,
+   536519,
+   1280787,
+   1827155,
+   2559975,
+   3111877
+  ]
+ },
+ "checks": {
+  "events": 16200,
+  "event_cycles": 13629,
+  "service_windows": 1620,
+  "collisions": 0
+ },
+ "ownership_mu": {
+  "words": [
+   3,
+   540021,
+   544459,
+   1363891789
+  ],
+  "per_user": {
+   "leave_per_user": [
+    241891,
+    250683,
+    499767,
+    540021
+   ],
+   "deadline_per_user": [
+    246329,
+    255121,
+    504205,
+    544459
+   ]
+  }
+ },
+ "user0_gaps_all_zero": true,
+ "sources": {
+  "layer_image_sha256": "fd7a248d130c7c8118602a8cbf603483da8db0e0dd39d2c52e13eddcecc94911",
+  "compiler": [
+   {
+    "path": "tools/qwen_static_schedule/mu_calendar.py",
+    "sha256": "d766258db674fd21c1f3edb46b99d634a2b462d4c1916fef3ef905039819ca7a"
+   },
+   {
+    "path": "tools/qwen_static_schedule/mu_opcal.py",
+    "sha256": "9cd479d6ff4af645e457e7e7824f0057c180f656037232790173721f784c2014"
+   },
+   {
+    "path": "tools/qwen_kv_die/kv_static_programme.py",
+    "sha256": "01ee08c7acbcfcf76923fc93311f95eece09536197e4e63b7c9e9cec7a3328a6"
+   }
+  ]
+ },
+ "bench": {
+  "frames": 2,
+  "starts": 90,
+  "event_cycles": 27258,
+  "last_event": 8007737,
+  "mutants": {
+   "mut_collide": "user 1 token 0 stage-1 gap + 2146: begins on user 0 event cycle 7070",
+   "mut_u0hdr": "header ntok0 = 1",
+   "mut_short": "last list word dropped",
+   "mut_sealwrong": "the 327-word single-user image"
+  }
+ },
+ "ownership_target3": [
+  3,
+  540021,
+  544459,
+  1363891789
+ ]
+}

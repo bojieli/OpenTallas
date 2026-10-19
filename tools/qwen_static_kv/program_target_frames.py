@@ -11,6 +11,11 @@ TARGET_WORDS={1:327,2:181,3:4,4:192,5:192,6:1024,7:1024,8:1024,9:1024,
 # MU-KV-BOOT 10-19: qkd_static_kv_boot_dispatch_mu MU 1 + qkd_static_kv_layer_programme_mu: target 1 in the MU form
 # (rows, digest, epoch, GAP[4][36] at 326..469, seal at 470)
 TARGET_WORDS_MU={**TARGET_WORDS,1:471}
+# MU-KV-TOKLIST 10-19 (mu='toklist'): target 1 = rows, digest, epoch, header at 326 {ntok3,ntok2,ntok1,ntok0}, 12 (ntok1 +
+# ntok2 + ntok3) list words, seal: its count follows from the header (328 + NW <= 1,024)
+def target1_words_toklist(program:list[int])->int:
+ h=program[326] if len(program)>326 else 0
+ return 328+12*(((h>>8)&255)+((h>>16)&255)+((h>>24)&255))
 MAX_TARGET=13
 PREBOOT=(10,)            # pass 1 (POR, unaligned release): loaded alone, then the HOST re-asserts the functional resets
 OPTIONAL=(10,11,12,13)
@@ -18,6 +23,7 @@ MASK64=(1<<64)-1
 
 def encode_image(target:int,epoch:int,program:list[int],descriptors:list[int],mu:bool=False)->dict:
  words=TARGET_WORDS_MU if mu else TARGET_WORDS
+ if mu=='toklist':words={**TARGET_WORDS_MU,1:target1_words_toklist(program) if target==1 else 0}
  for label,value,limit in [('target',target,MAX_TARGET),('epoch',epoch,65535)]:
   if type(value) is not int or not 0<=value<=limit:raise ValueError(f'{label} out of range')
  if not 1<=len(program)<=1024:raise ValueError('program word count must be 1..1024')

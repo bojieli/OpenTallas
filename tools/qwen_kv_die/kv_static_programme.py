@@ -782,6 +782,56 @@ def write_mu(layer_words, own_words, out, root=ROOT):
     return rec
 
 
+def write_toklist(layer_words, own_words, out, root=ROOT, F=None):
+    """--mu-from --toklist (MU-KV-TOKLIST 10-19, option b): the TOKLIST target 1 (header + per-token lists, mu_calendar
+    kv_layer_image_toklist on the F 16 KV-consistent frame), the MU target 3 from the lists, the receipt, the bench's
+    start / event lists (two frames) and the bench negative controls"""
+    from tools.qwen_static_schedule import mu_calendar as MC
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    rows = MC.kv_rows_from_image(list(layer_words))
+    F = F or MC.KV_TL_F
+    rec = MC.kv_toklist_receipt(list(layer_words), F)
+    cal, lists, st, chk = MC.kv_toklist_frame(rows, F)
+    own, per = MC.kv_ownership_roots_mu(rows, lists)
+    if list(own_words) != [3, per['leave_per_user'][0], per['deadline_per_user'][0], MC.KV_OWN_SEAL]:
+        raise ValueError(f'single-user ownership roots {own_words} differ from the layer rows')
+    img = MC.kv_layer_image_toklist(list(layer_words), lists)
+    PTF.encode_image(1, 0x0b0b, img, [], mu='toklist')                 # the HOST class-8 encoder accepts the form
+    hx = lambda ws: ''.join(f'{w:016x}\n' for w in ws)
+    (out / 'target1.hex').write_text(hx(img))
+    (out / 'target3.hex').write_text(hx(own))
+    H = cal['H']
+    st2 = {u: [s + k * H for k in range(2) for s in ss] for u, ss in st.items()}            # two frames
+    MC.check_kv_programme(rows, lists, st2)                                                  # the bench window, unwrapped
+    starts = sorted((s, u, i) for u, ss in st2.items() for i, s in enumerate(ss))
+    (out / 'bench_starts.txt').write_text(''.join(f'{s} {u} {i}\n' for s, u, i in starts))
+    ev = MC.kv_event_list(rows, lists, st2)
+    (out / 'bench_events.txt').write_text(''.join(f'{c} {u} {s} {mask}\n' for c, u, s, mask in ev))
+    # bench negative controls (NOT compiler output: hand-made violations of the compiler's assertions)
+    lc = [[list(t) for t in L] for L in lists]
+    b1 = st2[1][0] + lc[1][0][0]                                      # user 1 token 0 stage 1 onto a user-0 event edge
+    cyc0 = [c for c, u, s, mk in ev if u == 0 and c > b1][0]
+    lc[1][0][0] += cyc0 - b1
+    (out / 'mut_collide.hex').write_text(hx(list(layer_words[:MC.KV_LP_GAP0]) + MC.kv_toklist_words(lc) + [MC.KV_LP_SEAL]))
+    hdr_u0 = list(img)
+    hdr_u0[MC.KV_TL_HDR] |= 1                                         # header ntok0 = 1 (user 0 must have no list)
+    (out / 'mut_u0hdr.hex').write_text(hx(hdr_u0))
+    (out / 'mut_short.hex').write_text(hx(img[:-2] + img[-1:]))      # one list word missing: the seal arrives early
+    (out / 'mut_sealwrong.hex').write_text(hx(layer_words))           # single-user form (seal at 326)
+    rec = dict(rec, sources=dict(layer_image_sha256=hashlib.sha256(bytes(json.dumps(list(layer_words)), 'ascii')).hexdigest(),
+                                 compiler=[dict(path=p, sha256=sha(root / p)) for p in (
+                                     'tools/qwen_static_schedule/mu_calendar.py', 'tools/qwen_static_schedule/mu_opcal.py',
+                                     'tools/qwen_kv_die/kv_static_programme.py')]),
+               bench=dict(frames=2, starts=len(starts), event_cycles=len(ev), last_event=ev[-1][0],
+                          mutants=dict(mut_collide=f'user 1 token 0 stage-1 gap + {cyc0 - b1}: begins on user 0 event cycle '
+                                       f'{cyc0}', mut_u0hdr='header ntok0 = 1', mut_short='last list word dropped',
+                                       mut_sealwrong='the 327-word single-user image')),
+               ownership_target3=own)
+    (out / 'kv_toklist_receipt.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
+    return rec
+
+
 # ---- operations on actual template ports (opentallas.qwen_kv_static.programme.v1) -------------------------------------
 ROOT_PORTS = {
     'ctrl_go': ('hbm_command', [('phase_{st}_{g}', 'ctrl_go')]),
@@ -913,7 +963,15 @@ def main():
     ap.add_argument('--program', type=Path, help='installed HOST programme image (PW1024 + DW8 64-b hex words)')
     ap.add_argument('--mu-from', type=Path, help='MU-KV-BOOT: write the 4-user target 1 / 3 images, receipt and bench '
                                                  'lists to --out from a compiled die directory (its target1.hex / target3.hex)')
+    ap.add_argument('--toklist', action='store_true', help='MU-KV-TOKLIST: with --mu-from, the per-token list form')
+    ap.add_argument('--tl-frame', type=int, default=None, help='MU-KV-TOKLIST frame F (default mu_calendar.KV_TL_F 16)')
     a = ap.parse_args()
+    if a.mu_from and a.toklist:
+        rd = lambda n: [int(x, 16) for x in (a.mu_from / n).read_text().split()]
+        rec = write_toklist(rd('target1.hex'), rd('target3.hex'), a.out, F=a.tl_frame)
+        print(json.dumps(dict(frame=rec['frame'], checks=rec['checks'], entries=rec['entries'], words=rec['image_layout']['words'],
+                              ownership=rec['ownership_target3'], bench=rec['bench'])))
+        return
     if a.mu_from:
         rd = lambda n: [int(x, 16) for x in (a.mu_from / n).read_text().split()]
         rec = write_mu(rd('target1.hex'), rd('target3.hex'), a.out)

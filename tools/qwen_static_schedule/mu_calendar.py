@@ -678,6 +678,23 @@ def kv_gap_table(cal):
     return gaps, per_user
 
 
+def _kv_tables(gaps, u):
+    """MU-KV-TOKLIST: a user's GAP entry is either ONE 36-gap table (played every token, MU-KV-BOOT) or a list of per-token
+    36-gap tables (token k of the user plays table k mod len: frame-periodic, kv_token_lists)"""
+    g = gaps[u]
+    return [list(t) for t in g] if g and isinstance(g[0], (list, tuple)) else [list(g)]
+
+
+def _kv_tok_gaps(gaps, u, k):
+    t = _kv_tables(gaps, u)
+    return t[k % len(t)]
+
+
+def _kv_u0_check(gaps):
+    if any(any(t) for t in _kv_tables(gaps, 0)):
+        raise ScheduleError(f"KV GAP: latency user gaps not all 0: {[t for t in _kv_tables(gaps, 0) if any(t)][0]}")
+
+
 def kv_programme_events(rows, gaps, starts, period=None, detail=False):
     """the KV layer programme's own event set: {cycle: [(user, token, stage, kind)]} for every (user, token start) in
     `starts` ({user: [start cycles]}) played with `rows` and `gaps`; cycles mod `period` for a periodic frame.  Also the
@@ -686,10 +703,11 @@ def kv_programme_events(rows, gaps, starts, period=None, detail=False):
     ev, win, ends, gos, begins = {}, [], [], [], []
     for u, ss in starts.items():
         for k, s0 in enumerate(ss):
-            b = s0 + gaps[u][0]
+            gk = _kv_tok_gaps(gaps, u, k)
+            b = s0 + gk[0]
             for s in range(KV_STAGES):
                 if s:
-                    b += gaps[u][s]
+                    b += gk[s]
                 r = rows[s]
                 for kind, o in [("stage_start", 0)] + [(n, r[n]) for n in KV_LP_ROOTS[:8]] + [("stage_done", r["stage_end"])]:
                     c = b + o
@@ -710,9 +728,9 @@ def check_kv_programme(rows, gaps, starts, period=None):
     no cycle carries two users' events; the attention busy windows [issue, run + 1784] of different users are disjoint
     (cyclic when `period`); two users' go roots are > META_HOLD_CORE edges apart; every stage begins on user 0's
     launch (ctrl_go / kgo / vgo) inside the phase launch's SAFE window at its frame cycle (kv_launch_legal); a user's next start comes after its previous token's last stage_done (a start while active
-    faults); user 0 gaps 0.  Returns counts; raises ScheduleError naming the first violation."""
-    if any(gaps[0]):
-        raise ScheduleError(f"KV GAP: latency user gaps not all 0: {gaps[0]}")
+    faults); user 0 gaps 0.  Returns counts; raises ScheduleError naming the first violation.  `gaps[u]` is one table or
+    a per-token list of tables (MU-KV-TOKLIST)."""
+    _kv_u0_check(gaps)
     ev, win, ends, gos, begins = kv_programme_events(rows, gaps, starts, period, detail=True)
     for c in sorted(ev):
         us = {e[0] for e in ev[c]}
@@ -747,10 +765,10 @@ def kv_ownership_roots_mu(rows, gaps):
     the window, so leave / deadline are the maximum over users of go -> stage-36 expected_quiet + 1 and go -> token end
     (stage 36 done), GAP bubbles included; user 0 alone = the single-user roots.  [enter 3, leave, deadline, seal]"""
     lv, dl = [], []
-    for g in gaps:
-        b36 = sum(rows[s]["stage_end"] + g[s + 1] for s in range(KV_STAGES - 1))
-        lv.append(b36 + rows[-1]["expected_quiet"] + 1)
-        dl.append(b36 + rows[-1]["stage_end"])
+    for u in range(len(gaps)):                       # per user: the max over its token tables (MU-KV-TOKLIST lists)
+        b36s = [sum(rows[s]["stage_end"] + g[s + 1] for s in range(KV_STAGES - 1)) for g in _kv_tables(gaps, u)]
+        lv.append(max(b36s) + rows[-1]["expected_quiet"] + 1)
+        dl.append(max(b36s) + rows[-1]["stage_end"])
     own = [3, max(lv), max(dl), KV_OWN_SEAL]
     if not 3 < own[1] < own[2] < 2 ** 32:
         raise ScheduleError(f"KV ownership roots out of order: {own}")
@@ -882,6 +900,103 @@ def kv_event_list(rows, gaps, starts, period=None):
         st = max(e[2] for e in ev[c] if e[3] != "stage_done") if any(e[3] != "stage_done" for e in ev[c]) else ev[c][0][2]
         out.append((c, ev[c][0][0], st, m))
     return out
+
+
+# ---- MU-KV-TOKLIST 10-19 (option b): per-token KV stage-start gap lists -------------------------------------------------
+# The op-granular frame (mu_opcal.compile_frame F 16) gives fillers 15 / 8 / 5 tokens a frame on the KV image's stage
+# frame, each token with its own KV stage pattern.  qkd_static_kv_layer_programme_mu #(.TOKLIST(1)) plays, per filler
+# user, a frame-periodic list of per-token 36-gap tables from a boot-loaded SRAM (2 x ot_sram_1rw_256x64_m4_r2c2 = 512
+# words; 3 20-bit entries a word, bits [63:60] 0, so a token table is exactly 12 words; 42 filler tokens a frame max).
+# Gaps reach 239,095 cycles (a filler waiting most of a token: 18 bits), hence 20-bit entries.  User 0 (the latency user)
+# is hard-wired to gap 0 (no list entries; its tables must be 0).
+# Boot image of target 1 (TOKLIST): 0..323 rows, 324 digest, 325 epoch, 326 header {ntok3, ntok2, ntok1, ntok0 = 0}
+# (8 bits each, [31:0]; upper 32 = 0), 327 .. 327 + NW - 1 the list words (NW = 12 (ntok1 + ntok2 + ntok3) <= 512; table
+# k of user u at word wbase_u + 12 k, wbase_1 = 0, wbase_2 = 12 ntok1, wbase_3 = 12 (ntok1 + ntok2); stage s (0-based) in
+# word + s / 3, bits 20 (s % 3) +: 20), 327 + NW the seal.  The layer bus carries the header at 326, every list word at 327 (a counted stream) and the seal at 470.
+KV_TL_W, KV_TL_PACK, KV_TL_WORDS = 20, 3, 512     # entry bits, entries a 64-bit word, SRAM words (2 x 256 x 64)
+KV_TL_HDR, KV_TL_LIST0 = 326, 327
+KV_TL_F = 16
+KV_TL_STARTS = KV_FRAME_STARTS     # 48 seeded tries (MU-KV-TOKLIST): 15 / 8 / 6 best (13,480.2 tok/s); default starts 15 / 8 / 5
+
+
+def kv_token_lists(cal):
+    """per user the per-token GAP tables of the frame (token order from the user's first start; token k of a later frame
+    plays table k mod ntok): the same spacing rule as kv_gap_table, one table a token.  User 0 must be all 0 (refused
+    otherwise); a user may have any number of patterns."""
+    toks = kv_stage_tokens(cal)
+    if not toks.get(0):
+        raise ScheduleError("KV TOKLIST: the latency user has no whole token in the calendar")
+
+    def spacing(t):
+        return [t["kvs"][0] - t["start"]] + [t["kvs"][j] - t["kvs"][j - 1] for j in range(1, KV_STAGES)]
+    ref = spacing(toks[0][0])
+    lists = []
+    for u in range(KV_USERS):
+        lists.append([[a - b for a, b in zip(spacing(t), ref)] for t in toks.get(u, [])])
+    for u, L in enumerate(lists):
+        for t in L:
+            if min(t) < 0 or max(t) >= 2 ** KV_TL_W:
+                raise ScheduleError(f"KV TOKLIST: user {u} gap out of the {KV_TL_W}-bit entry range {min(t)}..{max(t)}")
+    _kv_u0_check(lists)
+    return lists
+
+
+def kv_toklist_words(lists):
+    """header + packed list words (the boot words 326 .. 327 + NW - 1) of per-token lists (user 0 not stored)"""
+    _kv_u0_check(lists)
+    n = [0] + [len(lists[u]) for u in range(1, KV_USERS)]
+    if any(x > 255 for x in n):
+        raise ScheduleError(f"KV TOKLIST: ntok {n} over 8 bits")
+    ent = [g for u in range(1, KV_USERS) for t in lists[u] for g in t]
+    nw = len(ent) // KV_TL_PACK
+    assert len(ent) == KV_STAGES * sum(n) and len(ent) % KV_TL_PACK == 0
+    if nw > KV_TL_WORDS:
+        raise ScheduleError(f"KV TOKLIST: {len(ent)} entries need {nw} words > the {KV_TL_WORDS}-word SRAM")
+    hdr = sum(x << (8 * u) for u, x in enumerate(n))
+    words = [sum(ent[KV_TL_PACK * w + j] << (KV_TL_W * j) for j in range(KV_TL_PACK)) for w in range(nw)]
+    return [hdr] + words
+
+
+def kv_layer_image_toklist(words, lists):
+    """the TOKLIST boot image of target 1 (328 + NW words) from the single-user image (327 words) and the lists"""
+    kv_rows_from_image(words)
+    tl = kv_toklist_words(lists)
+    img = list(words[:KV_LP_GAP0]) + tl + [KV_LP_SEAL]
+    if len(img) > 1024:
+        raise ScheduleError(f"KV TOKLIST image {len(img)} words > the 1,024-word boot target")
+    return img
+
+
+def kv_toklist_frame(rows, F=KV_TL_F, starts=KV_TL_STARTS):
+    """the op-granular frame F on the KV image's stage frame (kv_frame_params: kv.lp edges, attention busy span, launch
+    phase, token pad), its per-token lists and check_kv_programme on the periodic frame"""
+    from . import mu_opcal as O
+    cal = O.compile_frame(F, p=kv_frame_params(rows), starts=list(starts) if starts else None)
+    lists = kv_token_lists(cal)
+    st = kv_frame_starts(cal)
+    chk = check_kv_programme(rows, lists, st, cal["H"])
+    return cal, lists, st, chk
+
+
+def kv_toklist_receipt(words, F=KV_TL_F, starts=KV_TL_STARTS, image_source=KV_SRC_IMAGE):
+    rows = kv_rows_from_image(words)
+    cal, lists, st, chk = kv_toklist_frame(rows, F, starts)
+    img = kv_layer_image_toklist(words, lists)
+    pats = {u: len({tuple(t) for t in L}) for u, L in enumerate(lists)}
+    flat = [g for L in lists[1:] for t in L for g in t]
+    return dict(schema="opentallas.qwen.mu_kv_toklist.v1", grade="compiled (KV image rows of record + mu_opcal frame)",
+                epoch_convention=KV_EPOCH_CONVENTION, image_source=image_source,
+                image_layout=dict(rows=[0, 323], digest64=KV_LP_DIGEST, epoch16=KV_LP_EPOCH, header=KV_TL_HDR,
+                                  list=[KV_TL_LIST0, len(img) - 2], seal=len(img) - 1, words=len(img),
+                                  entry_bits=KV_TL_W, entries_per_word=KV_TL_PACK, sram_words=KV_TL_WORDS,
+                                  layer_bus="header 326, list words streamed at 327, seal 470"),
+                frame=dict(F=F, H=cal["H"], T=cal["T"], filler_first_starts=list(starts) if starts else None,
+                           tokens_per_frame=cal["tokens_per_frame"], aggregate_tok_s=round(cal["aggregate_tok_s"], 1),
+                           users=[dict(user=x["user"], tok_s=round(x["tok_s"], 1)) for x in cal["users"]]),
+                entries=len(flat), list_words=len(img) - 1 - KV_TL_LIST0, max_gap=max(flat) if flat else 0,
+                patterns_per_user=pats, token_starts=st, checks=chk,
+                ownership_mu=dict(zip(("words", "per_user"), kv_ownership_roots_mu(rows, lists))),
+                user0_gaps_all_zero=True)
 
 
 def summary(cal):

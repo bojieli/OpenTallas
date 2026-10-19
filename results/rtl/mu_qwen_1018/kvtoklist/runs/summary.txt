@@ -1,0 +1,14 @@
+MU_KV_BOOT kb_collide rc=0: FAIL MU_KV_BOOT: layer programme / dispatcher fault cyc 8087 (rel 7071) mu mask 201 ref mask 201 epoch 0000 lprg fault 10 boot fault 00
+MU_KV_BOOT kb_gapnot rc=0: FAIL MU_KV_BOOT: layer programme not configured by the boot path (configured 0, lprg fault 01, dispatcher fault 00)
+MU_KV_BOOT kb_sealwrong rc=0: FAIL MU_KV_BOOT: layer programme not configured by the boot path (configured 0, lprg fault 04, dispatcher fault 80)
+MU_KV_BOOT kb_u0gap rc=0: FAIL MU_KV_BOOT: user 0 differs from MU 0 (pulses) cyc 35431 (rel 34415) mu mask 200 ref mask 201 epoch 0000 lprg fault 00 boot fault 00
+MU_KV_BOOT tb_mu_kv_boot rc=0: PASS MU_KV_BOOT: 471-word MU image through the boot dispatcher; 10 starts (4 users, 2 frames), 2660 event edges equal the compiled list, 10 tokens done, user 0 == MU 0 on 1012 edges, no fault
+MU_KV_TOKLIST kt_collide rc=0: FAIL MU_KV_TOKLIST: layer programme / dispatcher fault cyc 8292 (rel 7071) mu mask 201 ref mask 201 epoch 0000 lprg fault 10 boot fault 00
+MU_KV_TOKLIST kt_lane rc=0: FAIL MU_KV_TOKLIST: event kinds differ from the compiled list cyc 6146 (rel 4925) mu mask 000 ref mask 000 epoch 0000 lprg fault 00 boot fault 00
+MU_KV_TOKLIST kt_listnot rc=0: FAIL MU_KV_TOKLIST: layer programme not configured by the boot path (configured 0, lprg fault 01, dispatcher fault 00)
+MU_KV_TOKLIST kt_nowrap rc=0: FAIL MU_KV_TOKLIST: event kinds differ from the compiled list cyc 4012034 (rel 4010813) mu mask 000 ref mask 000 epoch 0040 lprg fault 00 boot fault 00
+MU_KV_TOKLIST kt_sealwrong rc=0: FAIL MU_KV_TOKLIST: layer programme not configured by the boot path (configured 0, lprg fault 04, dispatcher fault 80)
+MU_KV_TOKLIST kt_short rc=0: FAIL MU_KV_TOKLIST: layer programme not configured by the boot path (configured 0, lprg fault 04, dispatcher fault 80)
+MU_KV_TOKLIST kt_u0hdr rc=0: FAIL MU_KV_TOKLIST: layer programme not configured by the boot path (configured 0, lprg fault 04, dispatcher fault 00)
+MU_KV_TOKLIST tb_mu_kv_toklist rc=0: PASS MU_KV_TOKLIST: 628-word TOKLIST image through the boot dispatcher; 78 starts (4 users, 2 frames), 20796 event edges equal the compiled list, 78 tokens done, user 0 == MU 0 on 7084 edges, no fault
+MU_KV_TOKLIST tb_mu_kv_toklist rc=0: PASS MU_KV_TOKLIST: 676-word TOKLIST image through the boot dispatcher; 90 starts (4 users, 2 frames), 24018 event edges equal the compiled list, 90 tokens done, user 0 == MU 0 on 8096 edges, no fault

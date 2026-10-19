@@ -1,0 +1,11 @@
+boot: 676 words through qkd_static_kv_boot_dispatch_mu TOKLIST, layer programme configured, header 0000000006080f00
+measured user 0: 16 tokens done in frame 2 (4005888 cycles) = 4792.9 tok/s
+measured user 1: 15 tokens done in frame 2 (4005888 cycles) = 4493.4 tok/s
+measured user 2: 8 tokens done in frame 2 (4005888 cycles) = 2396.5 tok/s
+measured user 3: 6 tokens done in frame 2 (4005888 cycles) = 1797.4 tok/s
+measured aggregate: 13480.2 tok/s
+PASS MU_KV_TOKLIST: 676-word TOKLIST image through the boot dispatcher; 90 starts (4 users, 2 frames), 24018 event edges equal the compiled list, 90 tokens done, user 0 == MU 0 on 8096 edges, no fault
+- rtl/test/mu_qwen_1018/tb_mu_kv_toklist.sv:135: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16ms; walltime 13.233 s; speed 1.210 ms/s
+- Verilator: cpu 13.214 s on 1 threads; allocated 8 MB
