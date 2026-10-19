@@ -69,7 +69,8 @@ module dsdv_idx_rg #(
     parameter integer LG = 8,           // landing slots a PC (16 key cells each)
     parameter integer IQD = 128,        // key items in flight (item queue)
     parameter integer SQD = 32,         // scores between the engine and the word assembler
-    parameter integer LFD = 256         // candidate-list words held (gather; 256 with SRAM_MACRO = 2 macros)
+    parameter integer LFD = 256,        // candidate-list words held (gather; 256 with SRAM_MACRO = 2 macros)
+    parameter integer RQD = 16          // read jobs queued a PC (scan: a 16-key group; gather: one key)
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -87,7 +88,7 @@ module dsdv_idx_rg #(
     localparam integer SLW = 3;            // slot field of the read tag (LG = 8)
     initial if (LG != 8) $fatal(1, "dsdv_idx_rg: LG must be 8 (3-bit tag slot field)");
     initial if (SRAM_MACRO && LFD != 256) $fatal(1, "dsdv_idx_rg: SRAM_MACRO list memory is 256 words");
-    localparam integer IQW = $clog2(IQD), SQW = $clog2(SQD), LFW = $clog2(LFD);
+    localparam integer IQW = $clog2(IQD), SQW = $clog2(SQD), LFW = $clog2(LFD), RQW = $clog2(RQD);
 
     // ------------------------------------------------------------------ reset
     reg [1:0] rs;
@@ -332,26 +333,26 @@ module dsdv_idx_rg #(
     reg [IW-1:0] ipd;
     wire         ipop;
     // walker state
-    reg [2:0]   ws;                          // 0 idle, 1 scan group setup, 2 scan issue, 3 gather word, 4 gather req, 5 done
+    reg [2:0]   ws;                          // 0 idle, 1 scan group, 2 scan items, 3 gather list word, 6 gather key, 5 done
     reg [15:0]  wg;                          // scan: local group (16 words)
     reg [15:0]  wvm;                         // scan: valid cells of the group
     reg [4:0]   wc;                          // scan: next item cell
-    reg [3:0]   wk;                          // scan: next request (0 scales, 1..8 codes)
     reg         wpc;
     reg [SLW-1:0] wsl;
-    reg [29:0]  wa;                          // block sector base
     reg [15:0]  gw;                          // gather: list word index
     reg [15:0]  gm;                          // gather: remaining owned entries of the head word
     reg [511:0] lh;                          // gather: head list word
     reg         ln_v;                        // gather: prefetched next list word
     reg [511:0] ln_d;
     reg         lfd1, lfd2;                  // list read in flight (memory read, then data)
-    reg         gq;                          // gather: second request (scale) pending
-    reg [3:0]   gcell;
-    reg [3:0]   gkc;
-    reg         gpc;
-    reg [SLW-1:0] gsl;
-    reg [14:0]  gblk;
+    // per-PC READ JOB queues: the walker queues {gather, slot, landing cell, block base, key cell}; each PC's issuer sends
+    // the job's requests (scan group: scales + 8 code reads; gather key: code + scale read) as fast as the controller
+    // takes them, both PCs at once (the walker never waits on a request)
+    localparam integer JW = 1 + SLW + 4 + 30 + 4;
+    reg [JW-1:0] rjq [0:1][0:RQD-1];
+    reg [RQW:0]  rj_n [0:1];
+    reg [RQW-1:0] rj_w [0:1], rj_r [0:1];
+    reg [3:0]    rj_k [0:1];                 // next request of the head job
     // scan helpers
     wire        s_pc = wg[0];
     wire [14:0] s_n = wg[15:1];
@@ -405,8 +406,9 @@ module dsdv_idx_rg #(
     integer q, e;
     always @(posedge ck or negedge rn)
         if (!rn) begin
-            ws <= 3'd0; wg <= 0; wvm <= 0; wc <= 0; wk <= 0; wpc <= 0; wsl <= 0; wa <= 0; gw <= 0; gm <= 0; gblk <= 0; fc <= 8'd0;
-            gq <= 1'b0; gcell <= 0; gkc <= 0; gpc <= 0; gsl <= 0; ln_v <= 1'b0; lfd1 <= 1'b0; lfd2 <= 1'b0; lfr_e <= 1'b0;
+            ws <= 3'd0; wg <= 0; wvm <= 0; wc <= 0; wpc <= 0; wsl <= 0; gw <= 0; gm <= 0; fc <= 8'd0;
+            ln_v <= 1'b0; lfd1 <= 1'b0; lfd2 <= 1'b0; lfr_e <= 1'b0;
+            for (q = 0; q < 2; q = q + 1) begin rj_n[q] <= 0; rj_w[q] <= 0; rj_r[q] <= 0; rj_k[q] <= 0; end
             lf_rn <= 0;
             i_v <= 2'b00; ipush <= 1'b0;
             for (q = 0; q < 2; q = q + 1) begin
@@ -418,50 +420,60 @@ module dsdv_idx_rg #(
             lw_v <= 2'b00; iq_n <= 0; iq_w <= 0; lf_wn <= 0;
         end else begin : g_walk
             reg [7:0] fw;
-            fw = 8'd0;
+            reg [1:0] rjpu, rjpo;                // read job queued / retired this cycle, per PC
+            fw = 8'd0; rjpu = 2'b00; rjpo = 2'b00;
             ipush <= 1'b0;
-            // requests leave when the PC can take them
-            for (q = 0; q < 2; q = q + 1) if (iss[q]) i_v[q] <= 1'b0;
+            // ---------------- per-PC issuers: the head read job's next request whenever the request register is free
+            for (q = 0; q < 2; q = q + 1) begin : g_iss
+                reg jg; reg [SLW-1:0] js; reg [3:0] jc, jk; reg [29:0] jb_;
+                {jg, js, jc, jb_, jk} = rjq[q][rj_r[q]];
+                if (iss[q]) i_v[q] <= 1'b0;
+                if (rj_n[q] != 0 && (!i_v[q] || iss[q])) begin
+                    i_v[q] <= 1'b1;
+                    if (!jg) begin                                        // scan group: scales, then 8 x 4 code sectors
+                        if (rj_k[q] == 4'd0) begin i_a[q] <= jb_ + 30'd32; i_l[q] <= 4'd2;
+                                                   i_t[q] <= {2'b11, 1'b0, 3'(js), 4'd0, 1'b1, 3'd0, 3'd0}; end
+                        else begin i_a[q] <= jb_ + 30'(4 * (rj_k[q] - 4'd1)); i_l[q] <= 4'd4;
+                                   i_t[q] <= {2'b11, 1'b0, 3'(js), 4'(2 * (rj_k[q] - 4'd1)), 1'b0, 3'd0, 3'd0}; end
+                    end else begin                                        // gather key: 2 code sectors, then its scale
+                        if (rj_k[q] == 4'd0) begin i_a[q] <= jb_ + 30'(2 * jk); i_l[q] <= 4'd2;
+                                                   i_t[q] <= {2'b11, 1'b1, 3'(js), jc, 1'b0, 3'd0, 3'd0}; end
+                        else begin i_a[q] <= jb_ + 30'd32 + 30'(jk[3]); i_l[q] <= 4'd1;
+                                   i_t[q] <= {2'b11, 1'b1, 3'(js), jc, 1'b1, jk[2:0], 3'd0}; end
+                    end
+                    if (rj_k[q] == (jg ? 4'd1 : 4'd8)) begin rj_k[q] <= 4'd0; rj_r[q] <= rj_r[q] + 1'b1; rjpo[q] = 1'b1; end
+                    else rj_k[q] <= rj_k[q] + 4'd1;
+                end
+            end
             // ---------------- walker
             if (hdr_job && !act) begin
                 if (q_d[511]) begin ws <= 3'd3; gw <= 0; gm <= 0; end
                 else begin ws <= 3'd1; wg <= {4'd0, q_d[19:8]}; end
             end else case (ws)
-                3'd1: begin                                      // scan: next group
+                3'd1: begin                                      // scan: next group = one landing slot + one read job
                     if (wg > {4'd0, j1[15:4]}) ws <= 3'd5;
                     else if (s_vm == 16'd0) wg <= wg + 16'd1;
-                    else if (sfree[s_pc] && iq_n <= (IQW+1)'(IQD - 16)) begin
-                        wpc <= s_pc; wsl <= sa[s_pc]; wvm <= s_vm; wc <= 0; wk <= 0;
-                        wa <= kb + 30'(s_n) * 30'd34;
+                    else if (sfree[s_pc] && iq_n <= (IQW+1)'(IQD - 16) && rj_n[s_pc] < (RQW+1)'(RQD - 1)) begin
+                        wpc <= s_pc; wsl <= sa[s_pc]; wvm <= s_vm; wc <= 0;
                         sb[s_pc][sa[s_pc]] <= 1'b1; scl_d[s_pc][sa[s_pc]] <= 1'b1;
                         sni[s_pc][sa[s_pc]] <= 5'(s_vm[0] + s_vm[1] + s_vm[2] + s_vm[3] + s_vm[4] + s_vm[5] + s_vm[6] + s_vm[7] +
                                                  s_vm[8] + s_vm[9] + s_vm[10] + s_vm[11] + s_vm[12] + s_vm[13] + s_vm[14] + s_vm[15]);
                         snc[s_pc][sa[s_pc]] <= 0; sne[s_pc][sa[s_pc]] <= 6'd34; snr[s_pc][sa[s_pc]] <= 0;
                         for (e = 0; e < 16; e = e + 1) begin cdv[s_pc][{sa[s_pc], 4'(e)}] <= 2'b00; scv[s_pc][{sa[s_pc], 4'(e)}] <= 1'b0; end
                         sa[s_pc] <= sa[s_pc] + 1'b1;
+                        rjq[s_pc][rj_w[s_pc]] <= {1'b0, 3'(sa[s_pc]), 4'd0, kb + 30'(s_n) * 30'd34, 4'd0};
+                        rj_w[s_pc] <= rj_w[s_pc] + 1'b1; rjpu[s_pc] = 1'b1;
                         ws <= 3'd2;
                     end
                 end
-                3'd2: begin                                      // scan: 9 requests + 16 item slots
-                    if (wc < 5'd16) begin
-                        if (wvm[wc[3:0]]) begin
-                            ipush <= 1'b1;
-                            ipd <= {wpc, wsl, wc[3:0], 16'({wg[11:0], wc[3:0]} - j0),
-                                    (MUT == 1) ? (me ^ hj({wg[11:0], wc[3:0]}) ^ 4'd1) : (me ^ hj({wg[11:0], wc[3:0]})), 1'b1};
-                        end
-                        wc <= wc + 5'd1;
+                3'd2: begin                                      // scan: the group's items, one a cycle
+                    if (wvm[wc[3:0]]) begin
+                        ipush <= 1'b1;
+                        ipd <= {wpc, wsl, wc[3:0], 16'({wg[11:0], wc[3:0]} - j0),
+                                (MUT == 1) ? (me ^ hj({wg[11:0], wc[3:0]}) ^ 4'd1) : (me ^ hj({wg[11:0], wc[3:0]})), 1'b1};
                     end
-                    if (wk < 4'd9 && !(i_v[wpc] && !iss[wpc])) begin
-                        i_v[wpc] <= 1'b1;
-                        if (wk == 4'd0) begin i_a[wpc] <= wa + 30'd32; i_l[wpc] <= 4'd2;
-                                              i_t[wpc] <= {2'b11, 1'b0, 3'(wsl), 4'd0, 1'b1, 3'd0, 3'd0}; end
-                        else begin i_a[wpc] <= wa + 30'(4 * (wk - 4'd1)); i_l[wpc] <= 4'd4;
-                                   i_t[wpc] <= {2'b11, 1'b0, 3'(wsl), 4'(2 * (wk - 4'd1)), 1'b0, 3'd0, 3'd0}; end
-                        wk <= wk + 4'd1;
-                    end
-                    if (wc >= 5'd15 && (wk == 4'd9 || (wk == 4'd8 && !(i_v[wpc] && !iss[wpc])))) begin
-                        wg <= wg + 16'd1; ws <= 3'd1;
-                    end
+                    wc <= wc + 5'd1;
+                    if (wc == 5'd15) begin wg <= wg + 16'd1; ws <= 3'd1; end
                 end
                 3'd3: begin                                      // gather: take the next list word
                     if (gw >= nlw) begin
@@ -469,10 +481,10 @@ module dsdv_idx_rg #(
                         ws <= 3'd5;
                     end else if (ln_v) begin lh <= ln_d; gm <= n_om; ws <= 3'd6; end
                 end
-                3'd6: begin                                      // gather: one owned key = cell, code request, item
+                3'd6: begin                                      // gather: one owned key a cycle = landing cell + read job + item
                     if (gm == 16'd0) begin gw <= gw + 16'd1; ws <= 3'd3; end
                     else if (((!sopen[g_j[4]] || sni[g_j[4]][so_[g_j[4]]] == 5'd16) ? sfree[g_j[4]] : 1'b1) &&
-                             iq_n < (IQW+1)'(IQD - 1) && !(i_v[g_j[4]] && !iss[g_j[4]])) begin : g_take
+                             iq_n < (IQW+1)'(IQD - 1) && rj_n[g_j[4]] < (RQW+1)'(RQD - 1)) begin : g_take
                         reg [SLW-1:0] s_; reg [3:0] cl;
                         if (!sopen[g_j[4]] || sni[g_j[4]][so_[g_j[4]]] == 5'd16) begin
                             if (sopen[g_j[4]]) scl_d[g_j[4]][so_[g_j[4]]] <= 1'b1;
@@ -485,27 +497,17 @@ module dsdv_idx_rg #(
                             sni[g_j[4]][s_] <= sni[g_j[4]][s_] + 5'd1; sne[g_j[4]][s_] <= sne[g_j[4]][s_] + 6'd3;
                         end
                         cdv[g_j[4]][{s_, cl}] <= 2'b00; scv[g_j[4]][{s_, cl}] <= 1'b0;
-                        i_v[g_j[4]] <= 1'b1;
-                        i_a[g_j[4]] <= kb + 30'(g_j[15:5]) * 30'd34 + 30'(2 * g_j[3:0]);
-                        i_l[g_j[4]] <= 4'd2;
-                        i_t[g_j[4]] <= {2'b11, 1'b1, 3'(s_), cl, 1'b0, 3'd0, 3'd0};
-                        gpc <= g_j[4]; gsl <= s_; gcell <= cl; gkc <= g_j[3:0]; gblk <= g_j[15:5]; gq <= 1'b1;
+                        rjq[g_j[4]][rj_w[g_j[4]]] <= {1'b1, s_, cl, kb + 30'(g_j[15:5]) * 30'd34, g_j[3:0]};
+                        rj_w[g_j[4]] <= rj_w[g_j[4]] + 1'b1; rjpu[g_j[4]] = 1'b1;
                         ipush <= 1'b1;
                         ipd <= {g_j[4], s_, cl, g_w, g_ln, g_lw};
                         gm <= gm & ~(16'd1 << g_lo);
-                        ws <= 3'd4;
                     end
-                end
-                3'd4: if (!(i_v[gpc] && !iss[gpc])) begin       // gather: the scale request
-                    i_v[gpc] <= 1'b1;
-                    i_a[gpc] <= kb + 30'(gblk) * 30'd34 + 30'd32 + 30'(gkc[3]);
-                    i_l[gpc] <= 4'd1;
-                    i_t[gpc] <= {2'b11, 1'b1, 3'(gsl), gcell, 1'b1, gkc[2:0], 3'd0};
-                    gq <= 1'b0; ws <= 3'd6;
                 end
                 default: ;
             endcase
             if (wdone_p) ws <= 3'd0;
+            for (q = 0; q < 2; q = q + 1) rj_n[q] <= rj_n[q] + (rjpu[q] ? 1'b1 : 1'b0) - (rjpo[q] ? 1'b1 : 1'b0);
             // ---------------- list memory: writes as the list arrives; one prefetched word ahead of the walker
             if (lf_push) begin
                 lf_wn <= lf_wn + 1'b1;

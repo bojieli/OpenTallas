@@ -29,7 +29,9 @@ module tb_dsdv_idx_rg;
     integer K = 512;
     integer SEED = 1;
     integer SLICE = 1;
+    integer TRW = 0, TRN = 0;
     initial begin
+        void'($value$plusargs("TRW=%d", TRW)); void'($value$plusargs("TRN=%d", TRN));
         void'($value$plusargs("N=%d", N)); void'($value$plusargs("GATHER=%d", GATHER)); void'($value$plusargs("B=%d", B));
         void'($value$plusargs("PMAX=%d", PMAX)); void'($value$plusargs("KB=%d", KB)); void'($value$plusargs("T0=%d", T0));
         void'($value$plusargs("P=%d", P)); void'($value$plusargs("K=%d", K)); void'($value$plusargs("SEED=%d", SEED));
@@ -122,6 +124,15 @@ module tb_dsdv_idx_rg;
             .ck(ck), .rst(rst), .sid(4'(r)), .qi(qch[r]), .qo(qch[r + 1]), .si(sch[r]), .so(sch[r + 1]),
             .rqi(rq_tb[r]), .rqo(rq_c[r]), .rdi(rd_c[r]), .rdo(rd_s[r]), .st(st[r]));
         wire ck_o_unused;
+        // optional event trace of selector words [TRW, TRW + TRN) (+TRW= +TRN=): item pushed / popped / scored / ready / slot
+        always @(posedge ck) if (TRN > 0) begin
+            if (u.ipush && u.ipd[20:5] >= TRW && u.ipd[20:5] < TRW + TRN)
+                $display("TRC %0d r%0d push w %0d lane %0d pc %0d slot %0d cell %0d lw %0d", cyc, r, u.ipd[20:5], u.ipd[4:1], u.ipd[28], u.ipd[27:25], u.ipd[24:21], u.ipd[0]);
+            if (u.ipop && u.ih[20:5] >= TRW && u.ih[20:5] < TRW + TRN) $display("TRC %0d r%0d pop w %0d", cyc, r, u.ih[20:5]);
+            if (u.slot && u.ew >= TRW && u.ew < TRW + TRN)
+                $display("TRC %0d r%0d slot w %0d r_v %0d r_w %0d a_v %0d a_w %0d iq_n %0d infl %0d ws %0d gw %0d head_w %0d head_ready %0d",
+                         cyc, r, u.ew, u.r_v, u.r_w, u.a_v, u.a_w, u.iq_n, u.infl, u.ws, u.gw, u.ih[20:5], u.h_ready);
+        end
         dsfd_ctrl_rg2 u_c (.clk(ck), .ckh(ckh), .rst_n(rst), .rq(rq_c[r]), .rd(rd_c[r]), .ck_o(ck_o_unused),
             .k_v(k_v[2 * r +: 2]), .k_rdy(k_rdy[2 * r +: 2]), .k_addr(k_addr[60 * r +: 60]), .k_len(k_len[8 * r +: 8]),
             .k_tag(k_tag[34 * r +: 34]), .k_we(k_we[2 * r +: 2]), .k_wdata(k_wdata[512 * r +: 512]),
