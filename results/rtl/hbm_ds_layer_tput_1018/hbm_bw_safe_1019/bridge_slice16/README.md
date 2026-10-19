@@ -1,0 +1,1 @@
+Sourcee77b7fb6b16-bit pointer regions componentpositive256 II1/max3/occupiedreset/+1HBM and priorready mutantPASS. Functional proof only: mappedselector33..38 actualloads prompted8bit successor. State908bits/PC obsolete for new976bit8slice variant.

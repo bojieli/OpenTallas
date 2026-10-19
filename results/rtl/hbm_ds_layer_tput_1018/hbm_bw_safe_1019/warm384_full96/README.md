@@ -1,0 +1,1 @@
+Source32477647e immutable compiledmodel, diagnostic driver smb_unit.OP_GAP384 beforemain, PNUM88/PADD8/FETCH96. Full66/66,154exactGO,4runs,301results PASSEND47428. OlderJSON no explicit source/static fields; current57c5 replica with source/static fields is qualified57_full96. No release/default cadence adoption.

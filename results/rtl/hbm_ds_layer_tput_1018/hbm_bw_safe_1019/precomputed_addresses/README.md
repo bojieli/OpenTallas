@@ -1,0 +1,1 @@
+Source4461ed960 no-live-guard precomputed pointers: controller function exact, strict mixed rate test remainsFAIL. Registered successor addresses remove latecv conditionalcarry without adding edge. This is not physical closure or rate waiver.

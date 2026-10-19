@@ -1,0 +1,1 @@
+Source32477647e fullproduction defaultOP_GAP256 both88 and96cadences fail24/66,37or38of154GO. issuer_diag.cpp/log use unchanged compiled96model with extra observation only: history exposes strictlegal bank11REF whilequeuefull/tailset2 causes196HBMcycle stall. It diagnoses finite warmup deficit; no hidden stall/controllerforce. Subsequent384warmup positive is separately priced.

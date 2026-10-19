@@ -1,0 +1,1 @@
+Source193f50334 transaction harness distinguishes data_equivalence_pass true from strict overallFAIL;6000req12944beats759writes exact, safe166919vsH9b88783cycles. IDmutant fails actualBEAT_MISMATCH. Rate gate not waived.

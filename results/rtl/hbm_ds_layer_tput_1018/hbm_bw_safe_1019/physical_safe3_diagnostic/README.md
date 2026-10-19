@@ -1,0 +1,1 @@
+Frozen55bafafca diagnostic predecessors: std4198.29512um2, macro50620.0864, total54818.38152; TTideal1024 placement criticalpath -199.57ps leads to registered address successor fix. Source55 and macrofacefanout notadopted. Clockexcerpt preserves virtual833vsactual1024 tooldefect; not signoff.

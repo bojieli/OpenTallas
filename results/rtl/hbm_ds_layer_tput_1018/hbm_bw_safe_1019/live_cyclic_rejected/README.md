@@ -1,0 +1,1 @@
+Sourceabd9c080e additional livecyclicrefresh protection rejected: full96 stillfails same24/66 fourthL02block miss; mixedtransaction stalls. Reverted4461ed960, retained proven stale-refresh candidate validation only.
