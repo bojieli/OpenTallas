@@ -1,0 +1,59 @@
+{
+  "test_source": "6b29c6c03",
+  "dut_origin": "fbb39bb59",
+  "tool": "Verilator 5.050",
+  "host": "ot-epyc5",
+  "remote_root": "/srv/opentallas-scratch2/claude/codex-banked-app-miter-1019-r2",
+  "application_profiles": [
+    "SVG PREL0",
+    "SVG PREL1",
+    "XC PREL0",
+    "XC PREL1"
+  ],
+  "application_edges_per_profile": 4235,
+  "application_completed_runs_per_profile": 5,
+  "generic_profiles": [
+    "W135/XW46",
+    "W173/XW5",
+    "W135/XW47 opaque"
+  ],
+  "generic_valid_words_per_profile": 2100,
+  "generic_runs_per_profile": 6,
+  "generic_GO_gap_edges": 9,
+  "generic_protection_checks": 4,
+  "generic_reset_sequences": 6,
+  "verdict": "PASS",
+  "mutants": {
+    "1": {
+      "verdict": "FAIL",
+      "regex": "BANKED_FAIL tuple"
+    },
+    "2": {
+      "verdict": "FAIL",
+      "regex": "BANKED_FAIL tuple"
+    },
+    "3": {
+      "verdict": "FAIL",
+      "regex": "BANKED_FAIL active envelope"
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "4ab3cb995b41451d34f918c963129a58863721c71b548ea72e46507f1403c6c4",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "ef98a81348deccec5ae584bbeef00de0e572200acdc42fb219b5fad7cdeb6b85",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+    "rtl/hbm_accel/sm/static/ot_smh_banked_svg_central.sv": "110ea871043cfacd189ed3752ed3de5808d0045a496034236204266876d561a2",
+    "rtl/hbm_accel/sm/static/ot_smh_banked_xc_central.sv": "8992585445611ab2ca0e308c27bbf55476ad79f8c3c1ea800515af7b909a4af1",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv": "53e9b0be9dcdd7a405a7b53a8d359df3413a305a6c24eb03118b162e577b8d40",
+    "rtl/test/hbm_accel/svg_rel/gen_banked_app_references.py": "fada299505ec212763ce3041173d34dedf4d40e998bc980b7abc32d209dd3cd6",
+    "rtl/test/hbm_accel/svg_rel/tb_banked_apps.sv": "44cb9415445149d890ec399f1c9c60963815b10d79581057d68c8a87421257aa",
+    "rtl/test/hbm_accel/svg_rel/run_banked_apps.sh": "927d37f46eb48660ef1065f76918dec6a32f59f97d13d0038fe82c2f443e5235",
+    "rtl/test/hbm_accel/svg_rel/tb_banked_calendar_opaque47.sv": "77a6a5352b04efacdadaff0ddd690de2d6f6282bb8a9f597065849f3927fe683",
+    "rtl/test/hbm_accel/svg_rel/run_banked_calendar_opaque47.sh": "80d3708a8bd4ff5feb51f5b1416ebffe168973602e34170571d532553895f362"
+  },
+  "limitations": [
+    "Application reference R/C mechanically extracted from qualified sources and driven by unchanged static_x; outer oldXC input collar is excluded.",
+    "Opaque47 is a generic transport profile; SVG application context stays46.",
+    "Component exactness only; no mapped/physical qualification claim."
+  ]
+}
