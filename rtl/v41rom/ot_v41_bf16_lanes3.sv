@@ -34,6 +34,12 @@ module ot_v41_bf16_lanes3 #(
 ) (
     input  wire              fclk,     // free-running element clock
     input  wire              rst_pin,  // element reset pin
+`ifdef OT_BF_RSTPART
+    // RSTPART (S81-C199 reset partition, 2026-10-19; requires OT_BF_TILE_FREECLK): five kept same-edge copies of rst_pin
+    // ([0..3] lanes 4g..4g+3, [4] the tree tile), each the source of <= 20 kept synchroniser copies (ot_v41_rst_copy) that
+    // replace the tile synchronisers u_tt / u_tl.u_rs, so no register drives more than ~32 asynchronous resets
+    input  wire [4:0]        rst_pv,
+`endif
     input  wire              ze_d,     // element gate-enable next state (qx QZE ze_d)
     input  wire              v,
     input  wire [255:0]      w,        // 16 BF16 weights, lane l at [16l +: 16]
@@ -55,8 +61,15 @@ module ot_v41_bf16_lanes3 #(
     // 1.2 GHz: the word, x slice and tag are registered at the lanes' boundary (the element's capture mux and the
     // 16 lanes' fan-out are not in one cycle)
     // tree tile: the tag line, the 4-level pairwise tree and its delays
-    wire clk, rst_n;
+    wire clk, rst_n, rst_nb;   // rst_n: g_xst, u_pt, tree levels 0-1; rst_nb: tree levels 2-3
+`ifdef OT_BF_RSTPART
+    assign clk = fclk;         // OT_BF_TILE_FREECLK: the tile clock is the free clock
+    ot_v41_rst_copy u_rt0 (.clk(fclk), .rst_pin(rst_pv[4]), .rst_n(rst_n));
+    ot_v41_rst_copy u_rt1 (.clk(fclk), .rst_pin(rst_pv[4]), .rst_n(rst_nb));
+`else
     ot_v41_tile_clk u_tt (.fclk(fclk), .rst_pin(rst_pin), .ze_d(ze_d), .gclk(clk), .rst_n(rst_n));
+    assign rst_nb = rst_n;
+`endif
     // XST input relay stages (tree tile clock; only the valid is reset)
     wire          v_s;
     wire [255:0]  w_s, x_s;
@@ -105,18 +118,29 @@ module ot_v41_bf16_lanes3 #(
     generate for (l = 0; l < 16; l = l + 1) begin : g_l
         // lane tile: local gated clock lclk / reset lrst; the lane's own boundary registers (16-bit word and x slices,
         // valid copy) are the lane's local operand registers
-        wire lclk, lrst;
-`ifdef TCG_MUTANT_EN
+        wire lclk, lrst, lrst_m;   // lrst: lane body + chain; lrst_m: the multiplier (RSTPART copies, else one)
+`ifdef OT_BF_RSTPART
+        assign lclk = fclk;    // OT_BF_TILE_FREECLK: the tile clock is the free clock
+`ifdef OT_BF_RSTPART_MUT_STUCK
+        ot_v41_rst_copy u_rl (.clk(fclk), .rst_pin(l == 5 ? 1'b0 : rst_pv[l / 4]), .rst_n(lrst));   // negative control: lane 5's body copy never releases
+`else
+        ot_v41_rst_copy u_rl (.clk(fclk), .rst_pin(rst_pv[l / 4]), .rst_n(lrst));
+`endif
+        ot_v41_rst_copy u_rm (.clk(fclk), .rst_pin(rst_pv[l / 4]), .rst_n(lrst_m));
+`elsif TCG_MUTANT_EN
         // negative control: lane 3's tile enable copy loads the wrong function (go-only), so lane 3 misses edges
         ot_v41_tile_clk u_tl (.fclk(fclk), .rst_pin(rst_pin), .ze_d(l == 3 ? 1'b0 : ze_d), .gclk(lclk), .rst_n(lrst));
 `else
         ot_v41_tile_clk u_tl (.fclk(fclk), .rst_pin(rst_pin), .ze_d(ze_d), .gclk(lclk), .rst_n(lrst));
 `endif
+`ifndef OT_BF_RSTPART
+        assign lrst_m = lrst;
+`endif
         reg [15:0] w_r, x_r;
         reg        v_r;
         always @(posedge lclk or negedge lrst) if (!lrst) v_r <= 1'b0; else v_r <= v_s;
         always @(posedge lclk) begin w_r <= w_s[16*l +: 16]; x_r <= x_s[16*l +: 16]; end
-        ot_v41_bmul2_rne_prepare #(.GRADUAL_RNE(GRADUAL_RNE), .XS(RC != 0 ? 1 : 0)) u_m (.clk(lclk), .rst_n(lrst), .v(v_r), .a({w_r, 16'd0}), .b({x_r, 16'd0}),
+        ot_v41_bmul2_rne_prepare #(.GRADUAL_RNE(GRADUAL_RNE), .XS(RC != 0 ? 1 : 0)) u_m (.clk(lclk), .rst_n(lrst_m), .v(v_r), .a({w_r, 16'd0}), .b({x_r, 16'd0}),
                          .y(prod[l]), .fault(pf[l]));
         reg [PL-1:0] vp;
         always @(posedge lclk or negedge lrst) if (!lrst) vp <= '0; else vp <= {vp[PL-2:0], v_r};
@@ -137,7 +161,11 @@ module ot_v41_bf16_lanes3 #(
             .slot(t_l[TW-1 -: HW]), .first(t_l[TRW+2]), .last(t_l[TRW+1]), .term(prod[l]), .term_f(pf[l]),
             .tag(t_l[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end else if (RC != 0) begin : g_c4
+`ifdef OT_BF_RSTPART
+        ot_v41_chain4_rp #(.PD(1), .ND(4), .NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_pin(rst_pv[l / 4]), .v(pv[l]),
+`else
         ot_v41_chain4 #(.PD(1), .ND(4), .NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
+`endif
             .slot(t_l[TW-1 -: HW]), .first(t_l[TRW+2]), .last(t_l[TRW+1]), .term(prod[l]), .term_f(pf[l]),
             .tag(t_l[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end else begin : g_c2
@@ -163,7 +191,13 @@ module ot_v41_bf16_lanes3 #(
         for (k = 0; k < NN; k = k + 1) begin : g_n
             wire [1:0] e;
             wire vo;
-            ot_v41_fadd #(.CUT(CUTT)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(lvvld[lv]), .a(lvv[lv][2*k]),
+            wire rst_a;        // this adder's synchroniser copy (RSTPART), else the tree tile's
+`ifdef OT_BF_RSTPART
+            ot_v41_rst_copy u_ra (.clk(fclk), .rst_pin(rst_pv[4]), .rst_n(rst_a));
+`else
+            assign rst_a = rst_n;
+`endif
+            ot_v41_fadd #(.CUT(CUTT)) u_a (.clk(clk), .rst_n(rst_a), .valid_in(lvvld[lv]), .a(lvv[lv][2*k]),
                                           .b(lvv[lv][2*k+1]), .y(lvv[lv+1][k]), .err(e), .valid_out(vo));
             reg [LATT-1:0] ep;
             always @(posedge clk) ep <= {ep[LATT-2:0], lve[lv][2*k] | lve[lv][2*k+1]};
@@ -174,9 +208,10 @@ module ot_v41_bf16_lanes3 #(
             assign lve[lv+1][k] = 1'b0;
         end
         reg [LATT-1:0] vp;
-        always @(posedge clk or negedge rst_n) if (!rst_n) vp <= '0; else vp <= {vp[LATT-2:0], lvvld[lv]};
+        wire rst_lv = (lv < 2) ? rst_n : rst_nb;
+        always @(posedge clk or negedge rst_lv) if (!rst_lv) vp <= '0; else vp <= {vp[LATT-2:0], lvvld[lv]};
         assign lvvld[lv+1] = vp[LATT-1];
-        ot_hdc_delay #(.W(TRW + 1), .D(LATT)) u_t (.clk(clk), .rst_n(rst_n), .d(lvt[lv]), .q(lvt[lv+1]));
+        ot_hdc_delay #(.W(TRW + 1), .D(LATT)) u_t (.clk(clk), .rst_n(rst_lv), .d(lvt[lv]), .q(lvt[lv+1]));
     end endgenerate
     assign ov = lvvld[4];
     assign oval = lvv[4][0];

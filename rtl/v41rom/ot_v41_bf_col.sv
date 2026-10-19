@@ -121,6 +121,17 @@ module ot_v41_bf_col #(
     wire bk_fault;
     // ---- registered boundary (free clock): the column runs one cycle behind the front end
     wire b_rst;                                     // reset synchroniser copy: the column's reset pin (+1 release)
+`ifdef OT_BF_RSTPART
+    // RSTPART (S81-C199 reset partition, 2026-10-19, opt-in; requires OT_BF_TILE_FREECLK): six kept copies of r_rst
+    // (same register function: d = 1, async clear from rst_n_pin, same clock -> same release edge), each the source of
+    // one region's kept synchroniser copies (ot_v41_rst_copy, <= 32 per source): [0..3] BF lanes 4l..4l+3, [4] BF
+    // lane tree, [5] the macro half (q lanes, chains, pair adder, segment tree, outputs).  The reset tree is
+    // rst_n_pin -> (kit reset_landing L0 -> L1) -> b_rst_v[6] -> region copies -> <= ~32 flops each, all registered.
+`ifndef OT_BF_TILE_FREECLK
+    ot_v41_rstpart_requires_ot_bf_tile_freeclk u_cfg_error ();   // the copies are exact only on the free clock
+`endif
+    wire [5:0] b_rst_v;
+`endif
     wire b_ze;                                      // = the element's ze, so the column tiles' enables are ze delayed
     wire b_issue, b_i1_v, b_i1_bk, b_i1_bf;
     wire [13:0] b_a_ctr;
@@ -132,6 +143,11 @@ module ot_v41_bf_col #(
     wire [4:0]   b_so_n [0:NSEG-1];
     if (1) begin : g_pin
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) r_rst (.clk(clk), .arst_n(rst_n_pin), .d(1'b1), .q(b_rst));
+`ifdef OT_BF_RSTPART
+        for (genvar j = 0; j < 6; j = j + 1) begin : g_rr
+            ot_v41_rst_copy u_r (.clk(clk), .rst_pin(rst_n_pin), .rst_n(b_rst_v[j]));
+        end
+`endif
         // HDLY: a dont_touch hold-delay stage on every abutted input (ot_bf_hdly; identity in function)
         wire d_ze, d_issue, d_i1_v, d_i1_bk, d_i1_bf; wire [13:0] d_a_ctr; wire [TW-1:0] d_i1_t;
         wire [255:0] d_i2x_q0, d_i2x_q1; wire [9:0] d_i2x_e0, d_i2x_e1; wire [16*NSEG-1:0] d_so_row; wire [5*NSEG-1:0] d_so_idx, d_so_n;
@@ -187,6 +203,11 @@ module ot_v41_bf_col #(
 `endif
     // TCG: this macro column's clock tile (local enable copy + gate); else the element clock
     wire gclk_c;
+`ifdef OT_BF_RSTPART
+    if (1) begin : g_tcg
+        assign gclk_c = clk;                        // OT_BF_TILE_FREECLK: the tile clock is the free clock
+    end else
+`endif
     if (TCG != 0) begin : g_tcg
         wire rst_tile_unused;
         ot_v41_tile_clk u_tc (.fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .gclk(gclk_c), .rst_n(rst_tile_unused));
@@ -200,6 +221,7 @@ module ot_v41_bf_col #(
     // QZ: this macro's reset synchroniser copy, select / enable copies and x slices (kept registers, see the header)
     wire              rst_m;            // lanes, b_issue control, capture, BF16 paths
     wire              rst_mc, rst_mp, rst_mt;   // chains; pair adder and its delays; segment tree and outputs
+    wire              rst_ml, rst_mpv;          // q lanes (g_l3 u_l0 / u_l1); pair valid pipe (RSTPART copies, else = rst_m / rst_mp)
     wire [QZ_NS-1:0]  mz_bk, mz_fp4;
     wire [QZ_NE-1:0]  mz_c0, mz_c1;
     wire [255:0]      mz_q0, mz_q1;
@@ -207,14 +229,27 @@ module ot_v41_bf_col #(
     if (QZ != 0) begin : g_mz
         // four copies of the reset synchroniser (each = g_qb.rst_q), one per unit group, so no single register
         // drives every asynchronous reset of the macro half (R_cap0: rst_q -> fadd y recovery -52 ps at SS)
+`ifdef OT_BF_RSTPART
+        // RSTPART: the same synchronisers from b_rst_v[5], split further (u_rsl: q lanes, u_rspv: pair valid pipe);
+        // the chains (ot_v41_chain4_rp) and the segment tree (ot_v41_segtree5_rp) hold their own copies of b_rst_v[5]
+        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rs (.clk(clk), .arst_n(b_rst_v[5]), .d(1'b1), .q(rst_m));
+        ot_v41_rst_copy u_rsl (.clk(clk), .rst_pin(b_rst_v[5]), .rst_n(rst_ml));
+        assign rst_mc = 1'b1;   // unused: the chains take b_rst_v[5]
+        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rsp (.clk(clk), .arst_n(b_rst_v[5]), .d(1'b1), .q(rst_mp));
+        ot_v41_rst_copy u_rspv (.clk(clk), .rst_pin(b_rst_v[5]), .rst_n(rst_mpv));
+        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rst (.clk(clk), .arst_n(b_rst_v[5]), .d(1'b1), .q(rst_mt));
+`else
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rs (.clk(clk), .arst_n(b_rst), .d(1'b1), .q(rst_m));
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rsc (.clk(clk), .arst_n(b_rst), .d(1'b1), .q(rst_mc));
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rsp (.clk(clk), .arst_n(b_rst), .d(1'b1), .q(rst_mp));
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rst (.clk(clk), .arst_n(b_rst), .d(1'b1), .q(rst_mt));
+        assign rst_ml = rst_m; assign rst_mpv = rst_mp;
+`endif
         ot_v41_kreg #(.W(532)) u_x (.clk(gclk_c), .arst_n(1'b1), .d({b_i2x_q0, b_i2x_e0, b_i2x_q1, b_i2x_e1}),
                                     .q({mz_q0, mz_e0, mz_q1, mz_e1}));
     end else begin : g_nmz
         assign rst_m = rst_n; assign rst_mc = rst_n; assign rst_mp = rst_n; assign rst_mt = rst_n;
+        assign rst_ml = rst_n; assign rst_mpv = rst_n;
         assign mz_q0 = i2_q0; assign mz_e0 = i2_e0; assign mz_q1 = i2_q1; assign mz_e1 = i2_e1;
     end
     if (QPIPE != 0 && QZ != 0) begin : g_mi
@@ -391,9 +426,9 @@ module ot_v41_bf_col #(
         wire f_v0, f_v1; wire [TW-1:0] f_t; wire [255:0] f_xq0, f_w0q, f_xq1, f_w1q; wire [9:0] f_xe0, f_xe1;
         wire signed [9:0] f_we0, f_we1;
         assign {f_v0, f_v1, f_t, f_xq0, f_xe0, f_w0q, f_we0, f_xq1, f_xe1, f_w1q, f_we1} = fl_o;
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l0 (.clk(gclk_c), .rst_n(rst_m), .v(f_v0), .fp4(f_t[0]),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l0 (.clk(gclk_c), .rst_n(rst_ml), .v(f_v0), .fp4(f_t[0]),
             .xq(f_xq0), .xe(f_xe0), .wq(f_w0q), .we(f_we0), .tag(f_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l1 (.clk(gclk_c), .rst_n(rst_m), .v(f_v1), .fp4(1'b1),
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l1 (.clk(gclk_c), .rst_n(rst_ml), .v(f_v1), .fp4(1'b1),
             .xq(f_xq1), .xe(f_xe1), .wq(f_w1q), .we(f_we1), .tag(f_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0) begin : g_l2
         ot_v41_bterm2_w10 #(.TW(TW)) u_l0 (.clk(gclk_c), .rst_n(rst_m), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),
@@ -478,10 +513,18 @@ module ot_v41_bf_col #(
     wire          ci1_last = (BP != 0 && fam) ? m_last : l1_t[4];
     wire [TG:0]   ci1_tag = (BP != 0 && fam) ? m_tag : {l1_t[TW-HW-1 -: TG], l1_t[3]};
     if (FAST != 0 && QZ != 0) begin : g_ch3
+`ifdef OT_BF_RSTPART
+    ot_v41_chain4_rp #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk_c), .rst_pin(b_rst_v[5]), .v(ci0_v),
+`else
     ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk_c), .rst_n(rst_mc), .v(ci0_v),
+`endif
         .slot(ci_slot), .first(ci_first), .last(ci_last), .term(ci0_y), .term_f(ci0_f),
         .tag(ci_tag), .ov(c0_v), .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
+`ifdef OT_BF_RSTPART
+    ot_v41_chain4_rp #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk_c), .rst_pin(b_rst_v[5]), .v(ci1_v),
+`else
     ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk_c), .rst_n(rst_mc), .v(ci1_v),
+`endif
         .slot(ci1_slot), .first(ci1_first), .last(ci1_last), .term(ci1_y), .term_f(ci1_f),
         .tag(ci1_tag), .ov(c1_v), .osum(c1_s), .of(c1_f), .otag(c1_t), .fault(c1_fault));
     end else if (FAST != 0) begin : g_ch2
@@ -539,8 +582,8 @@ module ot_v41_bf_col #(
     ot_hdc_delay #(.W(TG + 3), .D(LAT)) u_pt (.clk(gclk_c), .rst_n(rst_mp),
         .d({ct, both, both ? (c0_f | c1_f) : one_f}), .q(pr_t));
     reg [LAT-1:0] pr_vp;
-    always @(posedge gclk_c or negedge rst_mp)
-        if (!rst_mp) pr_vp <= '0; else pr_vp <= {pr_vp[LAT-2:0], any};
+    always @(posedge gclk_c or negedge rst_mpv)
+        if (!rst_mpv) pr_vp <= '0; else pr_vp <= {pr_vp[LAT-2:0], any};
     wire        q_v = pr_vp[LAT-1];
     wire [31:0] q_val = pr_t[1] ? pr_sum : pr_pass;
     wire        q_err = pr_t[0] | (pr_t[1] && pr_err != 2'd0);
@@ -573,7 +616,11 @@ module ot_v41_bf_col #(
         if (FAST != 0 && QBF != 0 && TCG != 0) begin : g_fqt
         // TCG: the BF lanes as per-lane clock / reset tiles (+ BXST pipelined input stages)
         ot_v41_bf16_lanes3 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 3 ? 2 : QBF >= 2 ? 1 : 0), .XST(BXST)) u_bf (
-            .fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .v(mi2_v && mi2_bf),
+            .fclk(clk), .rst_pin(b_rst),
+`ifdef OT_BF_RSTPART
+            .rst_pv(b_rst_v[4:0]),
+`endif
+            .ze_d(b_ze), .v(mi2_v && mi2_bf),
             .w(cap[255:0]), .x(mz_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),
             .tree(mi2_t[TW-HW-1 -: TG]), .final_i(mi2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
             .ofinal(bf_final), .oerr(bf_err), .fault(b_fault));
@@ -618,7 +665,11 @@ module ot_v41_bf_col #(
     wire [31:0] t_val;
     if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5
     // QX = 9: the decide stage split in two (one more cycle per tree level; see ot_v41_segtree5.sv)
+`ifdef OT_BF_RSTPART
+    ot_v41_segtree5_rp #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_c), .rst_pin(b_rst_v[5]), .in_v(b_v),
+`else
     ot_v41_segtree5 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_c), .rst_n(rst_mt), .in_v(b_v),
+`endif
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
     end else if (FAST != 0 && QPIPE != 0) begin : g_tr3
