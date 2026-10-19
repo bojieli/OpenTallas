@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Model-only structural replacement after ab29e6c2b GPL0305; no RTL adoption."""
+"""Opt-in source partition model after ab29e6c2b GPL0305; physical adoption OPEN."""
 import json,math
 
 def model(serialized_programmes=None):
@@ -29,7 +29,14 @@ def model(serialized_programmes=None):
           "configuration_note":"Two native bank configuration data captures cost512bits; do not reuse only one prior256bit capture in the inventory.",
           "std_area_after_split_um2":None,
           "area_status":"Unreconciled pre-RTL inventory; no upper/lower or std-area claim. HQ-only cell arithmetic excludes async-cell premium, duplicated decode, buffers and actual mapping. Old-state subtraction and all allowances need source/mapped census."}
-    return {"schema":"hbm.generic.banked_calendar.model.v1","status":"MODEL_ONLY_PARENT_ROOT_REVIEW_REQUIRED",
+    measured={"SVG":{"bank_std_um2":437.58954,"core_std_um2":914.06394,"application_std_um2":1017.69858,"bank_DFF":1026,"core_DFF":2165,"application_DFF":2370},
+      "SVG47":{"bank_std_um2":441.20538,"core_std_um2":919.76472,"application_std_um2":None,"bank_DFF":1033,"core_DFF":2177,"application_DFF":None},
+      "XC":{"bank_std_um2":341.72604,"core_std_um2":763.1172,"application_std_um2":871.884,"bank_DFF":841,"core_DFF":1855,"application_DFF":2183}}
+    for n,m in measured.items():
+        profiles[n]["mapped_R6"]=m
+        profiles[n]["area_status"]="Actual RVT/TT mapped standard-cell area, source52f37d335; does not price placement repair/CTS/routing. Central application contains core; never add core area twice. SVG47 application semantic integration OPEN."
+        profiles[n]["std_area_after_split_um2"]=None if m["application_std_um2"] is None else 2*m["bank_std_um2"]+m["application_std_um2"]
+    return {"schema":"hbm.generic.banked_calendar.model.v1","status":"MODEL_SOURCE_PARTITION_APPROVED_COMPONENT_MAPPED_PROVEN_PHYSICAL_REVIEW_OPEN",
       "pinned_failure":{"gate_commit":"ab29e6c2b","qualified_RTL_unchanged":"84f67a381",
         "host":"ot-agidock128","root":"/srv/opentallas-scratch/claude/ref_gate/hsm_xcal_prog_native_1019-20261019-092853",
         "stage":"GPL before CTS","elapsed_seconds":586.96,"error":"GPL-0305",
@@ -46,7 +53,7 @@ def model(serialized_programmes=None):
         "pins_per_um_W_E":[417/70.47,414/70.47],
         "obligation":"Read outputs are W, not E. East wd120 remain live installation signals; wmask256 and repair38 are local constants. Keep these ties/local captures on their true faces."},
       "redesign":{"shared_provider":"new generic native banked calendar for SVG W135/XW46 and XC W173/XW5, AW11",
-        "sources_not_yet_written":["generic one-SRAM native bank leaf","central fixed-schedule select/calendar leaf","opt-in SVG and XC provider bindings"],
+        "new_opt_in_sources":["generic one-SRAM native bank leaf","central fixed-schedule select/calendar leaf","opt-in SVG and XC provider bindings"],
         "hard_regions_per_provider":3,"hard_regions_per_SM":6,"providers_per_SM":2,"SM_per_die":16,
         "bank_leaf_outline_um":leaf,"bank_macro_origin_um":[43.2,43.2],
         "bank_leaf_full_width_std_band_y_um":[2.16,37.8],
@@ -69,7 +76,7 @@ def model(serialized_programmes=None):
         "XC_provisional_bbox_delta_um2":math.prod(envelope)-241.92*267.84,
         "candidate_32_provider_bbox_mm2":32*math.prod(envelope)/1e6,
         "slot_status":"Provisional access/lattice envelopes, not granted physical area. Measured per-leaf synthesis area and actual face/channel capacity required before kit generation/gate.",
-        "clock_ports":["clk_bank0","clk_bank1","clk_calendar"],
+        "clock_ports":["clk_bank0","clk_bank1","clk_core"],
         "clock_contract":"Same-frequency regional actual roots; nominal phase0, native adjacent outputQ->inputQ crossings, normal1edge TT/FF STA, pair-relative spread<=80ps. No multicycle/false data paths or changed period."},
       "profiles":profiles,
       "functional_stages":{"convention":"GO sampled at edgeG; calendar/READ/command pins are distinguished from their consumer capture edges",
@@ -85,7 +92,7 @@ def model(serialized_programmes=None):
         "sharing_credit":0,"default_opt_in":"off; old qualified source stays unchanged",
         "fixed_GO_policy":"Do not advance GO or change absolute compiler calendar without a separate exact compiler result.",
         "conservative_minimum_GO_gap_added_edges":2,
-        "why_gap":"Until frontend/tail overlap is explicitly proved, extending calendar data/valid/done by2 extends legal busy/tail by2; existing9-gap witness becomes11. Cache-only alignment adds no further provider busy tail unless source requires it.",
+        "why_gap":"Until frontend/tail overlap is explicitly proved, extending calendar data/valid/done by2 extends legal busy/tail by2; legal minimum becomes N+5 instead of N+3 (4word continuous witness uses9). Cache-only alignment adds no further provider busy tail unless source requires it.",
         "serialised_boundary_count_input":serialized_programmes,
         "token_price_status":"No blanket4edge/token claim. Actual critical-path programme boundaries must be enumerated/recomposed; overlapping SVG/XC mirrors are not counted twice.",
         "configuration_install_settle_added_edges":2,
@@ -106,6 +113,6 @@ def model(serialized_programmes=None):
         "generic_obligation":"Repartition every resettable group to<=24 planned bits before mapping. Never reuse old issued16+ctxXW group for SVG:16+46=62 exceeds the bound. New three-root branch graphs require their own raw/first/final load census and exact2edge proof.",
         "status":"Baseline source matches proposed balanced profile bounds; canonical a9a97ee00/54ceeb3f0/63d26d83c tool/profile review and source-bound proof still required. Old raw2 gate REFUSE is preserved, no bypass or present PASS claim."},
       "review_gates":["parent/root accepts generic source partition and independent+2/+2 pricing","actual per-leaf synthesis/fanout including collapsed reset loads and source-bound balanced reset profile","native macro PG/via/pin access at true faces and track-cut capacity","TT setup/FF hold, SS sensitivity and pair-relative actual clock roots","source-bound exact+mutant production throughput witnesses","physical slot grant and compiler/calendar recomposition"],
-      "no_actions":"No qualified RTL/spec modifications and no new gate or submission from this model."}
+      "no_actions":"No qualified RTL/spec modifications and no physical gate or submission. Opt-in generic/application RTL, exact/mutant proof and mapped/reset/native register reachability proof exist. Mode47 semantics and cache/mirror integration are separate."}
 
 if __name__=='__main__':print(json.dumps(model(),indent=2))

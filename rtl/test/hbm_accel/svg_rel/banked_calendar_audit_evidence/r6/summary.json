@@ -1,0 +1,233 @@
+{
+  "status": "SOURCE_COMPONENT_MAPPED_PASS_NO_PHYSICAL_GATE_OR_SLOT_APPROVAL",
+  "source_snapshot": "52f37d33576f92dbecfa714ff10fbf7e92e3cd03",
+  "qualified_source_unchanged_since": "4f94576af",
+  "fleet_host": "ot-epyc8",
+  "fleet_root": "/srv/opentallas-scratch/claude/banked-cal-map-52f37d33-1019",
+  "synthesis_recipe": "tools/hbm_layer_vehicle/xcal_mapped_census.py with the8 banked_calendar_audit_specs, ORFS openroad/orfs:latest RVT/TT libs,833.333ps ABC target; postmap unset module and instance keep_hierarchy; flatten; no opt_merge",
+  "clock_classifier": "declaredclk OR sequential/macro clock pin; combinational C is data",
+  "profiles": {
+    "svg_bank": {
+      "std_area_um2": 437.58954,
+      "DFF_count": 1026,
+      "macro_counts": {
+        "ot_sram_1r1w_1024x256_m2_r2c2": 1
+      },
+      "unmapped_or_unknown": {},
+      "data_control_over32_direct": 0,
+      "data_control_over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        8,
+        7,
+        15
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q_pass": true,
+      "max_input_comb_depth_before_first_FF": 2,
+      "mapped_sha256": "3d987f950ec8e43004efe2d0638ecfdafc0920ca6276fd2b9739f9d69116838a",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a"
+      }
+    },
+    "svg_central": {
+      "std_area_um2": 914.0639400000002,
+      "DFF_count": 2165,
+      "macro_counts": {},
+      "unmapped_or_unknown": {},
+      "data_control_over32_direct": 0,
+      "data_control_over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        10,
+        9,
+        25
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q_pass": true,
+      "max_input_comb_depth_before_first_FF": 0,
+      "mapped_sha256": "202ff1b3540c07ee78e4b0488ea8ca0115b6eed6e0c6f066f6afd49985ccbc84",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a"
+      }
+    },
+    "xc_bank": {
+      "std_area_um2": 341.72604,
+      "DFF_count": 841,
+      "macro_counts": {
+        "ot_sram_1r1w_1024x256_m2_r2c2": 1
+      },
+      "unmapped_or_unknown": {},
+      "data_control_over32_direct": 0,
+      "data_control_over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        8,
+        7,
+        11
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q_pass": true,
+      "max_input_comb_depth_before_first_FF": 2,
+      "mapped_sha256": "3cbc3720b3e2fe56b525e683201b1cd238c4d45d368390e116bed55f852d2017",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a"
+      }
+    },
+    "xc_central": {
+      "std_area_um2": 763.1172,
+      "DFF_count": 1855,
+      "macro_counts": {},
+      "unmapped_or_unknown": {},
+      "data_control_over32_direct": 0,
+      "data_control_over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        10,
+        9,
+        25
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q_pass": true,
+      "max_input_comb_depth_before_first_FF": 0,
+      "mapped_sha256": "d380a90778d910095f2b5a9701cb83eb30ee1b8eb600bfa13ca0416acd81c515",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a"
+      }
+    },
+    "svg_application": {
+      "std_area_um2": 1017.6985800000001,
+      "DFF_count": 2370,
+      "macro_counts": {},
+      "unmapped_or_unknown": {},
+      "data_control_over32_direct": 0,
+      "data_control_over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        10,
+        9,
+        26
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q_pass": true,
+      "max_input_comb_depth_before_first_FF": 0,
+      "mapped_sha256": "6f073a1b0880462d86824d5aa969c2bee0fe24c2a16ca30ba9189b577af5dd93",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+        "rtl/hbm_accel/sm/static/ot_smh_banked_svg_central.sv": "c0bc0848064805ead00b580324e4bef77f6fd5f871e2ec06601a77784ac52a67"
+      }
+    },
+    "xc_application": {
+      "std_area_um2": 871.8840000000001,
+      "DFF_count": 2183,
+      "macro_counts": {},
+      "unmapped_or_unknown": {},
+      "data_control_over32_direct": 0,
+      "data_control_over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        10,
+        9,
+        24
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q_pass": true,
+      "max_input_comb_depth_before_first_FF": 0,
+      "mapped_sha256": "035d20b407c481d5ccbe77d0944362e2abe38175ca099e798f0e69ef705dd505",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+        "rtl/hbm_accel/sm/static/ot_smh_banked_xc_central.sv": "8992585445611ab2ca0e308c27bbf55476ad79f8c3c1ea800515af7b909a4af1"
+      }
+    },
+    "svg47_bank": {
+      "std_area_um2": 441.2053800000001,
+      "DFF_count": 1033,
+      "macro_counts": {
+        "ot_sram_1r1w_1024x256_m2_r2c2": 1
+      },
+      "unmapped_or_unknown": {},
+      "data_control_over32_direct": 0,
+      "data_control_over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        8,
+        7,
+        15
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q_pass": true,
+      "max_input_comb_depth_before_first_FF": 2,
+      "mapped_sha256": "751772f2ec8c09cab471c73ef93a6fb67575c27c891cade13bebde861b6645b3",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a"
+      }
+    },
+    "svg47_central": {
+      "std_area_um2": 919.76472,
+      "DFF_count": 2177,
+      "macro_counts": {},
+      "unmapped_or_unknown": {},
+      "data_control_over32_direct": 0,
+      "data_control_over32_buffer_collapsed": 0,
+      "reset_raw_first_final": [
+        10,
+        9,
+        25
+      ],
+      "reset_release_edges": 2,
+      "native_output_Q_pass": true,
+      "max_input_comb_depth_before_first_FF": 0,
+      "mapped_sha256": "efecad43a32c5db06b6ef9a32ffd4aab7ee512733dc7ff079f6b16f7624afab7",
+      "source_sha256": {
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv": "0a5a09bce4a6db01fa42ac5a89caf65ae73daf2df2ef5fdc688e2925e9c6b7db",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv": "894253c8d41d7002b10c9d5ebb8edf32644ae146d54e07a2a565e4adfb5a7c5e",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv": "517a3aac9d8c289995af447e3f50398f9f3b8e8f5fc2486bc3939ad74da5ec71",
+        "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv": "62da4315dd2841d30221a64bb0c69cc3d4300dacce117a7bb733cb89c1457502",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a"
+      }
+    }
+  },
+  "composed_SVG46": {
+    "std_area_um2": 1892.87766,
+    "DFF_count": 4422,
+    "SRAM_macros": 2
+  },
+  "composed_XC": {
+    "std_area_um2": 1555.33608,
+    "DFF_count": 3865,
+    "SRAM_macros": 2
+  },
+  "opaque_SVG47_delta_vs46_core_composition": {
+    "DFF_count": 26,
+    "std_area_um2": 12.932459999999992,
+    "application47_status": "Opaque transport proven; new mode/R/C consumer integration outside this source revision"
+  },
+  "remaining": [
+    "Root physical geometry/slot approval",
+    "Native macro true-face PG/vias/track-cut capacity",
+    "Actual pin FF placement and TT/FF setup/hold/spread",
+    "Application cache-command+2/mirror+2 composition with compiler READ8/command11 and busy+2",
+    "Mode197/context47 semantic integration and hardware mismatch policy"
+  ]
+}
