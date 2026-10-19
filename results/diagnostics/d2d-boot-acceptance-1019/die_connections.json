@@ -1,0 +1,29 @@
+{
+  "preexp_sha256": "00a3de7cd445198b147af744e5dd3c00f824a3222767b3fb4c8274392dd8b36e",
+  "statements": [
+    {
+      "line": 25772,
+      "text": "  qkd_d2ds d2d_kv (.ck0(n_clk_core_c), .fdi(n_d2d_fdi), .phy_rst_n(n_rst_phyd2d), .svc(n_hsvc), .lup(n_hlup), .rec_tx(n_hrec_tx), .rec_rx(n_hrec_rx), .lrc(n_hlrc), .status_epoch16(n_hsep), .host_drained_local(n_hhdl), .lpf(n_hlpf), .fwd_epoch(n_hfwd_epoch), .fwd_link_rst_n(n_hfwd_link_rst_n), .cal(n_dcal_cfg), .dcfg(n_dcal_dcfg), .eab(n_dcal_hlt), .skw(n_seqst_kw), .kvi(n_ks_kvs_ctl__kvi__r2), .kv_drained_local(n_ks_kvs_ctl__oobs__kv_drained_local__r2), .kv_flush_local(n_ks_kvs_ctl__oobs__kv_flush_local__r2), .kv_active_local(n_ks_kvs_ctl__oobs__kv_active_local__r2), .att_tx_payload(n_ks_kvs_attn__attn__tx_payload__r8__pinfix1), .emb_tx_v(n_ks_kvs_emb__rowtx__emb_tx_v), .emb_tx_payload(n_ks_kvs_emb__rowtx__emb_tx_payload), .srx(n_seqst_rx), .kvn_word_identity(n_ks_d2d_kv__kvn_word_identity), .kvn_word_generation(n_ks_d2d_kv__kvn_word_generation), .rx_payload(n_ks_d2d_kv__rx_payload), .att_tx_slot(n_ks_d2d_kv__att_tx_slot), .att_tx_kind(n_ks_d2d_kv__att_tx_kind), .att_tx_beat(n_ks_d2d_kv__att_tx_beat), .emb_tx_slot(n_ks_d2d_kv__emb_tx_slot), .rst_n(n_rst_link_t0__m), .host_boot_begin(n_hboot_t0), .att_tx_v(n_ks_kvs_attn__attn__tx_valid__r6__beq3), .serdes_up(n_host_fdi[0]));"
+    },
+    {
+      "line": 25779,
+      "text": "  qkd_host_rt host (.fdi(n_host_fdi), .ck_axi(n_clk_core_c), .ck_bootbarrier(n_clk_core_c), .ck_coordinator_codec(n_clk_core_c), .ck_coordinator_lifecycle(n_clk_core_c), .ck_coordinator_post(n_clk_core_c), .ck_csr(n_clk_core_c), .ck_ctl(n_clk_core_c), .ck_ctrl(n_clk_core_c), .ck_dispatch(n_clk_core_c), .ck_fence_core(n_clk_core_c), .ck_guard(n_clk_core_c), .ck_hc(n_clk_core_c), .ck_host(n_clk_core_c), .ck_map(n_clk_core_c), .ck_native(n_clk_core_c), .ck_order(n_clk_core_c), .ck_peer(n_clk_core_c), .ck_phy_rx_r(n_clk_core_c), .ck_phy_tx_w(n_clk_core_c), .ck_program_loader(n_clk_core_c), .ck_program_rx(n_clk_core_c), .ck_prompt(n_clk_core_c), .ck_qm_core(n_clk_core_c), .ck_qm_done_r(n_clk_core_c), .ck_qm_ing_w(n_clk_core_c), .ck_qm_queue(n_clk_core_c), .ck_records(n_clk_core_c), .ck_retire(n_clk_core_c), .ck_root_mux(n_clk_core_c), .ck_rst(n_clk_core_c), .ck_rx(n_clk_core_c), .ck_sum(n_clk_core_c), .ck_tx(n_clk_core_c), .kst(n_kst__r2__pinfix1), .hb(n_hb), .est(n_est__r4__pinfix1), .tk(n_tk__r2__pinfix2), .svc(n_hsvc), .lup(n_hlup), .rec_tx(n_hrec_tx), .rec_rx(n_hrec_rx), .lrc(n_hlrc), .token_epoch(n_hsep), .host_drained_local(n_hhdl), .link_physical_fault(n_hlpf), .program_begin_v(n_dcal_rld), .pll_locked(n_pll_lock__r2__pinfix2), .ck_fence_host(n_clk_host), .ck_qm_credit(n_clk_host), .ck_qm_done_w(n_clk_host), .ck_qm_host(n_clk_host), .ck_qm_ing_r(n_clk_host), .ck_qm_bank0(n_clk_ingest), .ck_qm_bank1(n_clk_ingest), .ck_qm_ingest(n_clk_ingest), .ck_qm_out(n_clk_ingest), .ck_pad(n_clk_phy), .ck_phy0(n_clk_phy), .ck_phy1(n_clk_phy), .ck_phy2(n_clk_phy), .ck_phy3(n_clk_phy), .ck_phy4(n_clk_phy), .ck_phy5(n_clk_phy), .ck_phy6(n_clk_phy), .ck_phy7(n_clk_phy), .ck_phy_rx_w(n_clk_phy), .ck_phy_tx_r(n_clk_phy), .chf0(n_hchf_WS), .chc0(n_hchc_WS__r83), .cha0(n_hcha_WS__r83), .chx0(n_hchx_WS__r83__pinfix1), .sak0(n_hsak_WS__r83__pinfix1), .sbd0(n_hsbd_WS__r83__pinfix1), .sbo0(n_hsbo_WS__r85__pinfix1), .sbf0(n_hsbf_WS__r84__pinfix1), .chf1(n_hchf_WN), .chc1(n_hchc_WN__r16), .cha1(n_hcha_WN__r16), .chx1(n_hchx_WN__r16), .sak1(n_hsak_WN__r16__pinfix1), .sbd1(n_hsbd_WN__r16__pinfix1), .sbo1(n_hsbo_WN__r16__pinfix1), .sbf1(n_hsbf_WN__r16__pinfix1), .chf2(n_hchf_ES), .chc2(n_hchc_ES__r88), .cha2(n_hcha_ES__r86), .chx2(n_hchx_ES__r87), .sak2(n_hsak_ES__r86__pinfix1), .sbd2(n_hsbd_ES__r86__pinfix1), .sbo2(n_hsbo_ES__r86__pinfix1), .sbf2(n_hsbf_ES__r87__pinfix1), .chf3(n_hchf_EN), .chc3(n_hchc_EN__r18), .cha3(n_hcha_EN__r18), .chx3(n_hchx_EN__r18), .sak3(n_hsak_EN__r17__pinfix2), .sbd3(n_hsbd_EN__r18__pinfix1), .sbo3(n_hsbo_EN__r18__pinfix1), .sbf3(n_hsbf_EN__r18__pinfix1), .auth_lp(n_ks_lprg_auth), .cohort_tag(n_ks_lprg_cht), .cohort_gen(n_ks_lprg_chg), .boot_pr(n_ks_host_boot_pr), .boot_image_target(n_ks_host_boot_image_target), .boot_image_ready(n_ks_host_boot_image_ready), .boot_image_fault(n_ks_host_boot_image_fault), .boot_image_epoch(n_ks_host_boot_image_epoch), .boot_image_digest(n_ks_host_boot_image_digest), .static_setup_ready(n_ks_host_static_setup_ready__pinfix2), .native_reserved(n_ks_host_native_reserved), .ownership_valid(n_ks_host_ownership_valid), .host_launch_quiet(n_ks_host_host_launch_quiet), .host_upstream_quiet(n_ks_host_host_upstream_quiet), .ctrl_completion_fault(n_ks_host_ctrl_completion_fault__pinfix2), .die_rst_n(n_rst_die_t0), .hbm_rst_n(n_rst_hbm_t0), .link_rst_n(n_rst_link_t0), .host_rst_n(n_rst_host_t0), .boot_go(n_hboot_t0));"
+    },
+    {
+      "line": 26040,
+      "text": "  qkd_dcal dcal (.ck(n_clk_core_c), .cal(n_dcal_cfg), .dcfg(n_dcal_dcfg), .hlt(n_dcal_hlt), .rld(n_dcal_rld__pinfix3), .btx(n_ks_kvs_ctl__boot__link_cfg_tx_we__r2), .brx(n_ks_kvs_ctl__boot__link_cfg_rx_we__r2), .bad(n_ks_kvs_ctl__boot__link_cfg_addr__r2), .bdt(n_ks_kvs_ctl__boot__link_cfg_data__r2), .tks(n_ks_lprg_st), .rst_n(n_rst_link_t0__m), .ego(n_hfwd_epoch));"
+    },
+    {
+      "line": 40883,
+      "text": "  qkd_rst_region rly_rst_link_t0_0 (.ck(n_clk_core_c), .a(n_rst_link_t0__pinfix2), .b(n_rst_link_t0__m), .dly(n_rdly_rly_rst_link_t0_0));"
+    },
+    {
+      "line": 43883,
+      "text": "  qkd_rly_1 rly_pinfix_rst_link_t0_0 (.ck(n_clk_core_c), .a(n_rst_link_t0), .b(n_rst_link_t0__pinfix1));"
+    },
+    {
+      "line": 43884,
+      "text": "  qkd_rly_1 rly_pinfix_rst_link_t0_1 (.ck(n_clk_core_c), .a(n_rst_link_t0__pinfix1), .b(n_rst_link_t0__pinfix2));"
+    }
+  ]
+}
