@@ -19,7 +19,7 @@ module ot_hbm_xcal_prog_native #(parameter integer MUT=0, PAW=11, PREL=1)(
   if(!rst_q)begin cw<=0;sv<=0;end else begin cw<=cfg_we;sv<=start_v;end
  wire [172:0] word0;wire [4:0] wctx;wire [31:0] word_ord;wire cal_v;
  ot_hbm_xcal_calendar_native #(.W(173),.AW(PAW),.XW(5)) u_cal(
-  .clk(clk),.rst_n(rst_q),.cfg_we(cw),.cfg_addr(ca),.cfg_data(cd),
+  .clk(clk),.rst_n(rst_q),.rst_raw_n(rst_n),.reset_phase0(reset_landing[0]),.cfg_we(cw),.cfg_addr(ca),.cfg_data(cd),
   .start_v(sv),.start_base(sb),.start_limit(sl),.start_loops(sn),.start_ctx(sx),
   .calendar(word0),.calendar_ctx(wctx),.calendar_iter(),.calendar_lastit(),
   .calendar_v(cal_v),.ordinal(word_ord),.active(active),.done(done),.fault(fault));

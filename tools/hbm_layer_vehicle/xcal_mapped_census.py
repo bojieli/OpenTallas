@@ -23,7 +23,7 @@ for job in jobs:
     la=''.join(' -liberty '+str(p) for p in libs)
     script=['read_liberty -lib '+str(p) for p in libs]
     script+=['read_verilog -sv '+p for p in sources]
-    script+=['hierarchy -check -top '+top+''.join(' -chparam '+k+' '+str(v) for k,v in params.items()),'synth -top '+top+' -flatten','dfflibmap -liberty '+str(libs[-1]),'abc'+la+' -D 833.333','setundef -zero','setattr -mod -unset keep_hierarchy','flatten','opt_clean -purge','tee -o '+str(dst/'stat.txt')+' stat'+la,'write_json '+str(dst/'mapped.json'),'write_verilog '+str(dst/'mapped.v')]
+    script+=['hierarchy -check -top '+top+''.join(' -chparam '+k+' '+str(v) for k,v in params.items()),'synth -top '+top+' -flatten','dfflibmap -liberty '+str(libs[-1]),'abc'+la+' -D 833.333','setundef -zero','setattr -mod -unset keep_hierarchy','setattr -unset keep_hierarchy','flatten','opt_clean -purge','tee -o '+str(dst/'stat.txt')+' stat'+la,'write_json '+str(dst/'mapped.json'),'write_verilog '+str(dst/'mapped.v')]
     (dst/'synth.ys').write_text('\n'.join(script)+'\n')
     with (dst/'yosys.log').open('w') as log:subprocess.run([yosys,'-s',str(dst/'synth.ys')],stdout=log,stderr=subprocess.STDOUT,check=True)
     design=json.loads((dst/'mapped.json').read_text());mod=design['modules'][top]

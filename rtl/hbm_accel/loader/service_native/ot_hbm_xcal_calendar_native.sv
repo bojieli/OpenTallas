@@ -17,7 +17,7 @@ module ot_hbm_xcal_calendar_native #(
     parameter integer XW=1,
     parameter integer MUT=0 // 1 wrong wrap PC, 2 extra cycle at loop boundary, 3 context not captured (stale)
 )(
-    input wire clk,rst_n,
+    input wire clk,rst_n,rst_raw_n,reset_phase0,
     input wire cfg_we,
     input wire [AW-1:0] cfg_addr,
     input wire [255:0] cfg_data,
@@ -38,6 +38,10 @@ module ot_hbm_xcal_calendar_native #(
         if(W<1 || W>223)$fatal(1,"SM calendar width must fit protected programme payload");
         if(AW!=10 && AW!=11)$fatal(1,"programme store: 1,024 or 2,048 words");
     end
+    wire [5:0] reset_branch;
+    for(genvar g=0;g<6;g=g+1)begin:g_reset_branch
+      (* keep = 1 *) ot_hbm_xcal_reset_branch u_reset(.clk(clk),.rst_n(rst_raw_n),.phase0(reset_phase0),.q(reset_branch[g]));
+    end
     reg cfg_we_q,start_v_q;
     reg [AW-1:0] cfg_addr_q,start_base_q;
     reg [255:0] cfg_data_q;
@@ -48,8 +52,8 @@ module ot_hbm_xcal_calendar_native #(
         cfg_addr_q<=cfg_addr;cfg_data_q<=cfg_data;
         start_base_q<=start_base;start_limit_q<=start_limit;start_loops_q<=start_loops;start_ctx_q<=start_ctx;
     end
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n)begin cfg_we_q<=0;start_v_q<=0;end
+    always @(posedge clk or negedge reset_branch[0])
+        if(!reset_branch[0])begin cfg_we_q<=0;start_v_q<=0;end
         else begin cfg_we_q<=cfg_we;start_v_q<=start_v;end
     reg running;
     reg [AW-1:0] pc,base;
@@ -110,13 +114,13 @@ module ot_hbm_xcal_calendar_native #(
       localparam integer BW=(W-16*slice<16)?W-16*slice:16;
       wire word_ok_q,valid_q;
       (* keep = 1 *) ot_hbm_xcal_kept_bit u_ok(.clk(clk),.d(incoming_ok),.q(word_ok_q));
-      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_valid(.clk(clk),.rst_n(rst_n),.d(valid0),.q(valid_q));
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_valid(.clk(clk),.rst_n(reset_branch[5]),.d(valid0),.q(valid_q));
       always @(posedge clk)calendar[16*slice+:BW]<=valid_q&&word_ok_q?captured[16*slice+:BW]:{BW{1'b0}};
     end
     wire [4:0] start_copy;
     wire [4:0] accept_start;
     for(genvar g=0;g<5;g=g+1)begin:g_start_copy
-      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_start(.clk(clk),.rst_n(rst_n),.d(start_v),.q(start_copy[g]));
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_start(.clk(clk),.rst_n(reset_branch[5]),.d(start_v),.q(start_copy[g]));
       assign accept_start[g]=start_copy[g]&&!busy&&!cfg_we_q&&legal_start;
     end
     wire end_word=({1'b0,pc}+1'b1==limit);
@@ -124,10 +128,10 @@ module ot_hbm_xcal_calendar_native #(
     wire [1:0] running_copy;
     wire next_running=(running&&!(end_word&&(loops_left==1||MUT==2)))||accept_start[0];
     for(genvar g=0;g<2;g=g+1)begin:g_running_copy
-      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_running(.clk(clk),.rst_n(rst_n),.d(next_running),.q(running_copy[g]));
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_running(.clk(clk),.rst_n(reset_branch[5]),.d(next_running),.q(running_copy[g]));
     end
-    always @(posedge clk or negedge rst_n)
-      if(!rst_n)begin running<=0;pc<=0;base<=0;end
+    always @(posedge clk or negedge reset_branch[1])
+      if(!reset_branch[1])begin running<=0;pc<=0;base<=0;end
       else begin
         if(accept_start[0])begin running<=1;pc<=start_base_q;base<=start_base_q;end
         if(running)begin
@@ -137,27 +141,27 @@ module ot_hbm_xcal_calendar_native #(
           end else pc<=pc+1'b1;
         end
       end
-    always @(posedge clk or negedge rst_n)
-      if(!rst_n)begin limit<=0;loops_left<=0;end
+    always @(posedge clk or negedge reset_branch[2])
+      if(!reset_branch[2])begin limit<=0;loops_left<=0;end
       else begin
         if(accept_start[1])limit<=start_limit_q;
         if(accept_start[4])loops_left<=start_loops_q;
         if(running&&end_word&&loops_left!=1)loops_left<=loops_left-1'b1;
       end
-    always @(posedge clk or negedge rst_n)
-      if(!rst_n)begin issued[15:0]<=0;iter_r<=0;end
+    always @(posedge clk or negedge reset_branch[3])
+      if(!reset_branch[3])begin issued[15:0]<=0;iter_r<=0;end
       else begin
         if(accept_start[2])begin issued[15:0]<=0;iter_r<=0;end
         if(running_copy[0])begin issued[15:0]<=issued_inc[15:0];if(end_word&&loops_left!=1)iter_r<=iter_r+1'b1;end
       end
-    always @(posedge clk or negedge rst_n)
-      if(!rst_n)begin issued[31:16]<=0;ctx_r<=0;end
+    always @(posedge clk or negedge reset_branch[4])
+      if(!reset_branch[4])begin issued[31:16]<=0;ctx_r<=0;end
       else begin
         if(accept_start[3])begin issued[31:16]<=0;if(MUT!=3)ctx_r<=start_ctx_q;end
         if(running_copy[1])issued[31:16]<=issued_inc[31:16];
       end
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n)begin
+    always @(posedge clk or negedge reset_branch[5])
+        if(!reset_branch[5])begin
             valid0<=0;valid1<=0;last0<=0;last1<=0;calendar_v<=0;
             active<=0;done<=0;fault<=0;
         end else begin

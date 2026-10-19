@@ -33,7 +33,7 @@ module ot_hbm_xcal_desc_host_native #(parameter integer MUT = 0, parameter integ
     wire [DAW-1:0] run_base; wire [DAW:0] run_count; wire [7:0] run_arg;
     ot_hbm_xcal_target_native #(.TARGET(8'hff), .AWA(PAW), .AWB(DAW), .RBW(DAW), .RCW(DAW + 1), .NA(1), .NF(1),
         .MUT((MUT == 5) ? 2 : 0), .TGT_PIN(1)) u_tgt (
-        .clk(clk_desc), .rst_n(rst_q), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
+        .clk(clk_desc), .rst_n(rst_q), .rst_raw_n(rst_n), .reset_phase0(reset_landing[0]), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
         .launch_v(launch_v), .tgt_active(x_active), .tgt_fault(x_fault),
         .a_we(a_we), .a_addr(a_addr), .a_data(a_data), .b_we(b_we), .b_addr(b_addr), .b_data(b_data),
