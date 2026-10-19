@@ -8,7 +8,7 @@ echo "STEP S3 case_$TAG $(date -Is) W=$W HEAD=$(git -C $W rev-parse --short HEAD
 # add-only sync of the tag's grant/plan inputs into the fleet case src (hardlinked GEN2 copy: never edit files in place)
 for d in physical/hbm_next/die/$TAG results/arch/hbm_next_1019/die/plan/$TAG; do
   ssh $H "test ! -e $B/src/$d" || { echo "S3_SRC_EXISTS $d (refusing to overwrite)"; exit 9; }
-  ssh $H "mkdir -p $B/src/$d" && scp -q -r $W/$d/. $H:$B/src/$d/ || exit 9
+  ssh $H "mkdir -p $B/src/$d" && rsync -a $W/$d/ $H:$B/src/$d/ || exit 9
 done
 scp -q $W/physical/hbm_next/die/hnx_case.sh $H:$B/ || exit 9
 /home/ubuntu/bin/ot-run --priority die --mem 64 --threads 2 --dir $B -- bash $B/hnx_case.sh $TAG > $A/case_$TAG.otrun 2>&1
