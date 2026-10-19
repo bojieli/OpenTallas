@@ -1,0 +1,52 @@
+{
+  "source": "9d7897923",
+  "production_wq": 64,
+  "clock": "clk, positive edge, no new domain",
+  "families": {
+    "head_local": 160,
+    "row_local": 88,
+    "q_n_local": 28,
+    "ac_v_local": 20,
+    "row_word_act_local": 4,
+    "fresh_addr_local": 12,
+    "successor_local": 12,
+    "fresh_local": 2,
+    "blk_bank": 5,
+    "blk_valid": 1,
+    "head_bank_local": 5,
+    "command_bank_local": 5,
+    "command_bank_valid": 1,
+    "head_read_global": 1,
+    "tail_set_local": 3
+  },
+  "forbidden_families": [
+    "c_oh",
+    "hb_oh"
+  ],
+  "acceptance": "All named kept state survives with listed bit counts; each real D/CLK and reset class must be recorded from mapped pins. No FF or combinational non-buffer driver above32 loads; exact replay and66op154GO integration before gate.",
+  "reset_classes": {
+    "unreset": [
+      "head_local",
+      "fresh_addr_local",
+      "head_bank_local",
+      "head_read_global",
+      "row_local[18:0]"
+    ],
+    "main_aq_async": [
+      "q_n_local",
+      "successor_local",
+      "fresh_local",
+      "blk_bank",
+      "blk_valid",
+      "command_bank_local",
+      "command_bank_valid",
+      "tail_set_local"
+    ],
+    "regional_async": [
+      "row_local[21:19]",
+      "row_word_act_local",
+      "ac_v_local"
+    ]
+  },
+  "known_model_limits": "Extra input logic and post-state decode delay unmeasured; standard area and clock resource admission from mapped candidate, not nominal FF estimate."
+}

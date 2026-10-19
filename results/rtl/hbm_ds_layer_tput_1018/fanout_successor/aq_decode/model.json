@@ -1,0 +1,98 @@
+{
+  "base": "3eea95a41",
+  "scope": "AQ only; CFG and K/KR owned separately",
+  "latency_hbm_edges_added": 0,
+  "sram_delta": 0,
+  "head_regions": {
+    "before": 4,
+    "after": 8,
+    "bits_each": 20,
+    "delta_ff": 80
+  },
+  "row_regions": {
+    "before": 2,
+    "after": 4,
+    "bits_each": 22,
+    "delta_ff": 44
+  },
+  "delta_ff": {
+    "WQ32": 549,
+    "WQ64": 625
+  },
+  "architecture": "Canonical next-state muxes feed unconditional same-edge kept local captures. ACT summary row captures use independent existing ac_v_local state, outside global selected-group enable. One-hot ACT bits capture from two additional retained valid regions; invalid one-hot clears while ac2_v=0.",
+  "cost": "124 clock sinks; nominal DFF area subject to mapped census. Original slot not approved; actual standard-cell mass/clock/native reach admission remains required.",
+  "boundary_bits_delta": 0,
+  "memory_bytes_per_cycle_delta": 0,
+  "macs_per_cycle_delta": 0,
+  "routing": "head row each bit <= four banks; command flags each serve eight banks; mapped non-buffer fanout must be <=32 before CTS",
+  "qualification": "23,968-edge exact replay plus HEAD/ACT/REFRESH mutants; full66op154GO parent integration before gate",
+  "queue_count_local_copies": 4,
+  "queue_count_delta_ff": "4*($clog2(WQ)+1):24 at32,28 at64",
+  "act_valid_local_delta_ff": 8,
+  "timer_successor": {
+    "delta_ff": 0,
+    "delta_edges": 0,
+    "architecture": "Unconditional width-preserving saturating decrement datapaths with priority reload mux; remove duplicated reload and DFFE enable dependence on local bank commands.",
+    "qualification": "Exact trace and three mutants, then actual mapped all-driver loads; no source-level fanout claim."
+  },
+  "delta_ff_default_wq32": 549,
+  "delta_ff_production_wq64": 625,
+  "production_wq": 64,
+  "head_followup": {
+    "prefetch_identity_ff_added": "2*(2*$clog2(WQ)+1):26 at64",
+    "onehot_bank_ff_delta": -27,
+    "tail_ff_delta": 3,
+    "net_ff_delta_at64": 2,
+    "latency_delta": 0,
+    "architecture": "Separate row/read and bank/column head domains have independent existing-edge prefetch identity and occupancy state. Replace32 head bank one-hot flops with5 registered bank identity bits and local decode. Bank-count enqueues derive from retained regional queue count."
+  },
+  "refresh_block_encoding": {
+    "before_ff": 32,
+    "after_ff": 6,
+    "delta_ff": -26,
+    "latency_delta": 0,
+    "architecture": "Replace held 32-bit one-hot refresh block with retained5-bit bank identity and valid, decoded locally. Original refresh reservation/clear priorities retained. Decode logic moves after state; physical delay requires mapping/native proof."
+  },
+  "row_word_act_delta_ff": 4,
+  "row_word_act_architecture": "Four retained existing-edge ACT word-capture flags separate19 row-word D loads from19 timer loads per bank.",
+  "command_bank_encoding": {
+    "delta_ff": -26,
+    "latency_delta": 0,
+    "before": "32 c_oh held flops",
+    "after": "kept5-bit command bank plus valid; local decode consumed only with matching registered command flags",
+    "invariant": "For valid production source r_oh equals onehot(r_bank). Existing off-slot c_oh values were masked by row_local command flags. Functional exactness and causal ACT mutant must pass."
+  },
+  "global_read_identity_ff_delta": 1,
+  "global_read_identity_architecture": "Dedicated same-edge retained read identity separates global direction outputs from local four-bank timer flags; look-row capture uses existing retained regional queue counts.",
+  "word_capture_partition": {
+    "delta_ff_wq64": 466,
+    "delta_ff_wq32": 402,
+    "components": {
+      "act_word_flags_delta": 8,
+      "look_head_identity_delta": 10,
+      "local_bank_counts": "2*32*($clog2(WQ)+1)"
+    },
+    "added_edges": 0,
+    "architecture": "Each19-bit row word uses3 independent <=8-bit capture regions. Existing-edge bank-count and head-bank state replicas distinguish local capture cones; canonical next-count logic shared.",
+    "reset_cost": "14 extra reset sinks/bank atWQ64; parent reset tree must rebalance before gate.",
+    "remaining_external_dependency": "Incoming wr_row bits35 loads need CFG producer existing-edge data replicas; no aliases inside AQ."
+  },
+  "head_capture_byte_partition": {
+    "delta_ff_wq64": 26,
+    "delta_ff_wq32": 22,
+    "architecture": "Four retained head capture identities: three row/read chunks <=8 bits and one bank/column10-bit chunk."
+  },
+  "tail_partition": {
+    "delta_ff": 18,
+    "architecture": "Eight retained3-bit tail-set states, each owns four-bank refresh key region; capture admission uses existing local occupancy state."
+  },
+  "row_regions_interface": {
+    "parameter": "ROW_REGIONS default0;8 selects eight independent producer-owned row regions",
+    "input": "wr_row_regions[8*RW_ROW-1:0]",
+    "added_internal_wire_bits": 152,
+    "aq_ff_delta": 0,
+    "producer_ff_cost": "BW parent models64 existing-edge selector FF plus actual mux/state census",
+    "latency_delta": 0,
+    "scalar_consumers": "canonical head/queue/fresh only; look_row writes use region bank/4"
+  }
+}
