@@ -149,7 +149,7 @@ module ot_hbm_r14_aq_pc_safe #(
           if((q_n_local[b/8]!=0)&&
              (k==0?head_bank_local:look_head_bank_local[k-1])==5'(b))
             look_row[b][k*8+bit_]<=head_local[b/4][k*8+bit_+1];
-          else if(qpush&&wr_bank==b&&
+          else if(wr_v&&(q_n_local[b/8]!=(WQW+1)'(WQ))&&wr_bank==b&&
               (k==0?bank_n[b]:bank_n_word_local[k-1][b])==0)
             look_row[b][k*8+bit_]<=
 `ifdef BW_AQ_MUT_WRROW
