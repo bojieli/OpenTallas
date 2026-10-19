@@ -7,16 +7,16 @@ set ::lpf_dbu [$::lpf_blk getDbUnitsPerMicron]
 array set ::lpf_g {}
 array set ::lpf_n {}
 set ::lpf_r [odb::dbRegion_create $::lpf_blk "lp_fence_h"]
-odb::dbBox_create $::lpf_r [expr {round(129.6*$::lpf_dbu)}] [expr {round(545.4*$::lpf_dbu)}] [expr {round(518.4*$::lpf_dbu)}] [expr {round(577.8*$::lpf_dbu)}]
+odb::dbBox_create $::lpf_r [expr {round(136.08*$::lpf_dbu)}] [expr {round(545.4*$::lpf_dbu)}] [expr {round(518.4*$::lpf_dbu)}] [expr {round(577.8*$::lpf_dbu)}]
 set ::lpf_g(h) [odb::dbGroup_create $::lpf_r "lp_fence_grp_h"]
 set ::lpf_r [odb::dbRegion_create $::lpf_blk "lp_fence_l"]
-odb::dbBox_create $::lpf_r [expr {round(43.2*$::lpf_dbu)}] [expr {round(496.8*$::lpf_dbu)}] [expr {round(1166.4*$::lpf_dbu)}] [expr {round(518.4*$::lpf_dbu)}]
+odb::dbBox_create $::lpf_r [expr {round(136.08*$::lpf_dbu)}] [expr {round(503.28*$::lpf_dbu)}] [expr {round(1166.4*$::lpf_dbu)}] [expr {round(524.88*$::lpf_dbu)}]
 set ::lpf_g(l) [odb::dbGroup_create $::lpf_r "lp_fence_grp_l"]
 set ::lpf_r [odb::dbRegion_create $::lpf_blk "lp_fence_t"]
-odb::dbBox_create $::lpf_r [expr {round(129.6*$::lpf_dbu)}] [expr {round(626.4*$::lpf_dbu)}] [expr {round(1900.8*$::lpf_dbu)}] [expr {round(648.0*$::lpf_dbu)}]
+odb::dbBox_create $::lpf_r [expr {round(136.08*$::lpf_dbu)}] [expr {round(619.92*$::lpf_dbu)}] [expr {round(1894.32*$::lpf_dbu)}] [expr {round(641.52*$::lpf_dbu)}]
 set ::lpf_g(t) [odb::dbGroup_create $::lpf_r "lp_fence_grp_t"]
 set ::lpf_r [odb::dbRegion_create $::lpf_blk "lp_fence_b"]
-odb::dbBox_create $::lpf_r [expr {round(1166.4*$::lpf_dbu)}] [expr {round(302.4*$::lpf_dbu)}] [expr {round(1900.8*$::lpf_dbu)}] [expr {round(345.6*$::lpf_dbu)}]
+odb::dbBox_create $::lpf_r [expr {round(1172.88*$::lpf_dbu)}] [expr {round(308.88*$::lpf_dbu)}] [expr {round(1894.32*$::lpf_dbu)}] [expr {round(352.08*$::lpf_dbu)}]
 set ::lpf_g(b) [odb::dbGroup_create $::lpf_r "lp_fence_grp_b"]
 array set ::lpf_own {u_lpl_0_r b u_lpl_0_w h u_lpl_10_r l u_lpl_10_w h u_lpl_11_r l u_lpl_11_w h u_lpl_12_r l u_lpl_12_w h u_lpl_13_r l u_lpl_13_w h u_lpl_14_r t u_lpl_14_w h u_lpl_15_r t u_lpl_15_w h u_lpl_16_r t u_lpl_16_w h u_lpl_17_r t u_lpl_17_w h u_lpl_18_r t u_lpl_18_w h u_lpl_19_r t u_lpl_19_w h u_lpl_1_r b u_lpl_1_w h u_lpl_20_r t u_lpl_20_w h u_lpl_21_r h u_lpl_21_w b u_lpl_22_r h u_lpl_22_w t u_lpl_23_r h u_lpl_23_w t u_lpl_24_r h u_lpl_24_w l u_lpl_25_r h u_lpl_25_w l u_lpl_26_r h u_lpl_26_w l u_lpl_27_r h u_lpl_27_w t u_lpl_28_r h u_lpl_28_w t u_lpl_29_r h u_lpl_29_w t u_lpl_2_r b u_lpl_2_w h u_lpl_30_r h u_lpl_30_w b u_lpl_31_r h u_lpl_31_w b u_lpl_32_r h u_lpl_32_w t u_lpl_33_r h u_lpl_33_w t u_lpl_34_r h u_lpl_34_w t u_lpl_35_r h u_lpl_35_w t u_lpl_36_r h u_lpl_36_w b u_lpl_37_r h u_lpl_37_w t u_lpl_38_r h u_lpl_38_w l u_lpl_39_r h u_lpl_39_w l u_lpl_3_r b u_lpl_3_w h u_lpl_40_r h u_lpl_40_w l u_lpl_4_r b u_lpl_4_w h u_lpl_5_r b u_lpl_5_w h u_lpl_6_r b u_lpl_6_w h u_lpl_7_r l u_lpl_7_w h u_lpl_8_r l u_lpl_8_w h u_lpl_9_r l u_lpl_9_w h}
 foreach i [$::lpf_blk getInsts] {

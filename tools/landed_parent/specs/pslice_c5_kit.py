@@ -67,10 +67,14 @@ FENCES = {
     # members) landed at the sink centroid INSIDE the 64.8-um fence; DPL may move a cell only +/-100 rows (27 um), so from
     # mid-fence (32.4 um from either edge) no legal site was reachable.  Every fence is now <= 43.2 tall (half < 27 um);
     # h density 1,916 / 12,597 um^2 = 15%.
-    "h": [(129.6, 545.4, 518.4, 577.8)],      # beside the head's E (output) face, mid-channel (head centre y 561.6)
-    "l": [(43.2, 496.8, 1166.4, 518.4)],      # 21.6-um band on the L row's cfg (N) face
-    "t": [(129.6, 626.4, 1900.8, 648.0)],     # 21.6-um band under the top row's cfg (S) face
-    "b": [(1166.4, 302.4, 1900.8, 345.6)],    # 43.2-um band on c0/c4's cfg (N) face (y 302.4)
+    # TW2-PSLICE2 10-19: every fence starts OUTSIDE the 5.4-um macro halo (+1.08 um = 6.48 um from the macro edge).  real5
+    # 3_5 DPL failed (488 illegal, 'bad optional access'): 390 In_rows + 256 overlap failures sat at y 302.4 = c0/c4 top
+    # edge, where the old b fence (and l at 496.8, t to 648.0, h from x 129.6 = u_h E edge) began INSIDE the halo whose
+    # rows tapcell cuts; GPL parked fenced cells on the row-less fence edge and DPL had no row to move them to.
+    "h": [(136.08, 545.4, 518.4, 577.8)],     # beside the head's E (output) face (u_h x1 129.6 + 6.48), mid-channel
+    "l": [(136.08, 503.28, 1166.4, 524.88)],  # 21.6-um band above the L row's cfg (N) face (496.8 + 6.48), E of u_h's halo
+    "t": [(136.08, 619.92, 1894.32, 641.52)], # 21.6-um band under the top row's cfg (S) face (648.0 - 6.48)
+    "b": [(1172.88, 308.88, 1894.32, 352.08)],# 43.2-um band above c0/c4's cfg (N) face (302.4 + 6.48), E of c3's halo
 }
 
 
