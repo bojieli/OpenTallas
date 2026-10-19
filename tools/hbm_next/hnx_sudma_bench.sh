@@ -7,6 +7,9 @@
 #  d   DMA.KVWB_DS N rows into the 256-slot window ring on the d4g die master ot_hgi_dma_back_static_vp4_banks (unchanged)
 #      (tb_hnx_dma_kvwb_ring): MUT 0 PASS (R1..R6 + slots >= 128 + wraps split into two moves), MUT 1 (7-b ring index)
 #      / 2 (no wrap split) / 3 (VM row stride dropped) -> KVWB_RING FAIL (witnesses)
+#  a   ARGMAX.LOCAL N rows (ot_hnx_argmax_static_rows on the actual SW VM slice, closed argmax18 engine): vectors
+#      seeds 0..2 (hnx_argmax_rows_vectors.py), MUT 0 PASS, MUT 1 (A row stride) / 2 (O row stride) / 3 (id offset from
+#      row 0) -> ARGMAX_ROWS FAIL (witnesses)
 #  s0  un-indexed SU.VOP on the WHOLE static SU (d4g ot_hbm_su_static_top unchanged) behind ot_hnx_su_rowx, MUT 0:
 #      AB  N = 1,2,3,4,6 row-relative; AB N = 4 --absolute (the unrolled d4g image, row codes 0 = d4g bit for bit);
 #      ABC N = 1,4,6; AB N = 4 --guard 0 (fill / lane-result store writes back to back) -> SU_ROWS PASS + SU_ROWS_EDGES
@@ -41,6 +44,28 @@ if [ "$ST" = d ]; then
       "${VMB[@]}" physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > $O/build_d$m.log 2>&1
     ( cd $O && $d/Vd$m > $O/d_m$m.log 2>&1; echo RUN_RC=$? >> $O/d_m$m.log )
     V "d_m$m: $(grep -h 'KVWB_RING\|RUN_RC' $O/d_m$m.log | head -2 | tr '\n' ' ')"; rm -rf $d ) &
+  done
+  wait; V "done"; exit 0
+fi
+if [ "$ST" = a ]; then
+  AS=(rtl/hbm_next/argmax/ot_hnx_argmax_static_rows.sv physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv
+   physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv
+   rtl/gpu/ot_gpu_fadd.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv
+   rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv
+   rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv
+   rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv
+   rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv
+   rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv
+   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+   rtl/hbm_next/argmax/tb/tb_hnx_argmax_rows.sv)
+  for sd in 0 1 2; do python3 tools/hbm_next/hnx_argmax_rows_vectors.py $O/avec$sd $sd > $O/avec$sd.log 2>&1 || V "argmax vectors seed $sd FAILED"; done
+  for m in 0 1 2 3; do (
+    d=$O/obj_a$m; rm -rf $d
+    verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hnx_argmax_rows -GMUT=$m -Mdir $d -o Va$m \
+      "${AS[@]}" > $O/build_a$m.log 2>&1
+    for sd in 0 1 2; do ( cd $O/avec$sd && $d/Va$m > $O/a_m${m}_s$sd.log 2>&1; echo RUN_RC=$? >> $O/a_m${m}_s$sd.log )
+      V "a_m$m seed$sd: $(grep -h 'ARGMAX_ROWS\|RUN_RC' $O/a_m${m}_s$sd.log | head -2 | tr '\n' ' ')"; done
+    rm -rf $d ) &
   done
   wait; V "done"; exit 0
 fi
