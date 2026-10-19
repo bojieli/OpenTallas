@@ -315,6 +315,52 @@ def check_pin_fit(g: Gate, spec: dict, ports: dict | None, outline, lc: dict | N
     return st, regs
 
 
+# PIN ORDER (ROOT-PINORDER 2026-10-19, HBM-HCRING finding): an ABUTTED bus needs a defined bit order across its face.
+# The route's PPL placement chunks a region into ordered groups of 32 (OT_PIN_GROUP_MAX) and places the groups
+# independently (closed hbfd_rly_1136_WE: 13 descents in its 1,136-b bus), so two abutted tiles meet chunk-scrambled
+# even when both are R0, and an R180 / MX / MY neighbour meets them fully reversed.  A port is ABUTTED when the kit
+# places it at a planned position facing its neighbour (a "pin_ranges" entry) or lists it in "abutted_ports".  Wider
+# than 32 bits, it must be placed in bit order: route.pin_balance (place_pin, bit k at lo + (hi-lo)(k+.5)/n; for a face
+# against a mirrored neighbour also mirror the range and list the port in pin_order_desc) or an exact io_tcl.  A port
+# that really is channel-routed (not abutted) may be named in "pin_order_waiver" {port: reason}.
+PIN_ORDER_MAX_UNORDERED = 32
+PIN_ORDER_FIX = ("add route.pin_balance {group_max 1, h, v} (disjoint per-port pin_ranges on the face); for a face that "
+                 "abuts an R180 / MX / MY neighbour mirror the range and list the port in pin_order_desc; check the die "
+                 "joint with tools/hier_contract/abutted_joint_audit.py; or name a channel-routed port in "
+                 "pin_order_waiver {port: reason}")
+
+
+def check_pin_order(g: Gate, spec: dict, plan):
+    """FAIL when an abutted bus wider than 32 bits has no defined bit order in the route (see PIN ORDER above)."""
+    if not plan:
+        return
+    st, regs = plan
+    if st["exact"] or st["balance"]:
+        return
+    abut = set(spec.get("pin_ranges") or {}) | set(spec.get("abutted_ports") or [])
+    waive = spec.get("pin_order_waiver") or {}
+    if not isinstance(waive, dict) or any(not isinstance(v, str) or len(v.strip()) < 8 for v in waive.values()):
+        g.add("FAIL", "pin_order", "pin_order_waiver must be {port: reason} with a real reason", PIN_ORDER_FIX)
+        return
+    bad, unknown = [], []
+    for r in regs:
+        for n in r["names"]:
+            if n not in abut or n in waive:
+                continue
+            w = r["n"] if len(r["names"]) == 1 else None
+            if w is None:
+                unknown.append(n)
+            elif w > PIN_ORDER_MAX_UNORDERED:
+                bad.append(f"{n} ({w} b, {r['face']} face)")
+    if bad:
+        g.add("FAIL", "pin_order", f"{len(bad)} abutted bus(es) wider than {PIN_ORDER_MAX_UNORDERED} b without a defined "
+              f"bit order (route OT_PIN_GROUP_MAX {st['group_max']} scatters chunks of 32): {', '.join(bad[:6])}"
+              + (", ..." if len(bad) > 6 else ""), PIN_ORDER_FIX)
+    if unknown:
+        g.add("WARN", "pin_order", f"bit order not judged for {len(unknown)} abutted port(s) with an unresolved width "
+              f"({', '.join(unknown[:4])}); the route places them in chunks of {st['group_max']}", PIN_ORDER_FIX)
+
+
 OFLOP_TCL = "physical/qwen_die_masters/io_flop_at_pins.tcl"
 
 
@@ -826,6 +872,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     check_pins(g, spec, ports)
     # pin plan vs the ROUTE's pin placement (same settings as the route: one source of truth), recipe-2 pin-flop spread
     plan = check_pin_fit(g, spec, strict_widths(spec["sources"], spec["top"], spec.get("params")), fresh["outline"])
+    check_pin_order(g, spec, plan)
     tcl = ROOT / OFLOP_TCL
     check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True, defines=spec.get("defines")), fresh["outline"],
                 tcl.read_text(errors="replace") if tcl.is_file() else None)
