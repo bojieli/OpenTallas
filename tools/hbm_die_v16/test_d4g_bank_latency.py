@@ -119,7 +119,51 @@ def test():
     assert status(dma(12, extra=1))[:2] == ('FAIL', 12)                                       # unequal: pad bank 0
     assert status(dma([11, 12], extra=1))[0] == 'FAIL'                                         # no vector form (VECTOR_OK)
     assert L.dma_min_drain_lag(7) == 10 and L.dma_min_drain_lag() == L.DMA_RR_RT_BUDGET + 3
+    test_chain()
     print('test_d4g_bank_latency PASS')
+
+
+def chain(su, sfu, hc, lq=4, lr=3, fq=1, fr=1, hq=2, hr=2, pad1=0):
+    """HBM-BANKLAT-SU: bank pair <- su (pgslice_lg) <- sfu tap_leaf <- hc tap_leaf_term, relays per hop."""
+    I = {'su': dict(master='ot_hbm_su_static_pgslice_lg', params={'READ_RETURN': su[0], 'WRITE_RETURN': su[1]},
+                    ports={p: {} for p in ('lg_rq', 'lg_wq', 'lg_rr', 'lg_w_done', 'far_rq', 'far_wq', 'far_rr', 'far_w_done')}),
+         'sfu': dict(master='ot_hgi_sfu_lg_pair_tap_leaf', params={'READ_RETURN': sfu[0], 'WRITE_RETURN': sfu[1]},
+                     ports={p: {} for p in ('near_rq', 'near_wq', 'near_rr', 'near_w_done', 'far_rq', 'far_wq', 'far_rr', 'far_w_done')}),
+         'hc': dict(master='ot_hgi_sfu_lg_pair_tap_leaf_term', params={'READ_RETURN': hc[0], 'WRITE_RETURN': hc[1]},
+                    ports={p: {} for p in ('near_rq', 'near_wq', 'near_rr', 'near_w_done')})}
+    E = []; n = [0]
+
+    def hop(src, sink, w, k):
+        prev = src
+        for _ in range(k):
+            r = f'r{n[0]}'; n[0] += 1
+            I[r] = dict(master='hbfd_rly_48_WE', params={}, ports={'i': {}, 'o': {}})
+            E.append(dict(source=[prev[0], prev[1], prev[2], prev[2] + w], sink=[r, 'i', 0, w])); prev = (r, 'o', 0)
+        E.append(dict(source=[prev[0], prev[1], prev[2], prev[2] + w], sink=[sink[0], sink[1], sink[2], sink[2] + w]))
+    for b in range(2):
+        bk = f'vmb{b}'
+        I[bk] = dict(master='hfd_vms_bank_native_q0_faces', params={}, ports={p: {} for p in ('rq0', 'rr0', 'wq0', 'wq_done0')})
+        x = pad1 if b == 1 else 0
+        hop(('su', 'lg_rq', 17 * b), (bk, 'rq0', 0), 17, lq + x); hop((bk, 'rr0', 0), ('su', 'lg_rr', 257 * b), 257, lr)
+        hop(('su', 'lg_wq', 281 * b), (bk, 'wq0', 0), 281, lq + x); hop((bk, 'wq_done0', 0), ('su', 'lg_w_done', b), 1, lr)
+        hop(('sfu', 'near_rq', 17 * b), ('su', 'far_rq', 17 * b), 17, fq); hop(('su', 'far_rr', 257 * b), ('sfu', 'near_rr', 257 * b), 257, fr)
+        hop(('sfu', 'near_wq', 281 * b), ('su', 'far_wq', 281 * b), 281, fq); hop(('su', 'far_w_done', b), ('sfu', 'near_w_done', b), 1, fr)
+        hop(('hc', 'near_rq', 17 * b), ('sfu', 'far_rq', 17 * b), 17, hq); hop(('sfu', 'far_rr', 257 * b), ('hc', 'near_rr', 257 * b), 257, hr)
+        hop(('hc', 'near_wq', 281 * b), ('sfu', 'far_wq', 281 * b), 281, hq); hop(('sfu', 'far_w_done', b), ('hc', 'near_w_done', b), 1, hr)
+    rows, s = L.check(dict(instances=I, edges=E))
+    return {(r['client'], r['kind']): (r['status'], r.get('want')) for r in rows if r['client'] in ('su', 'sfu', 'hc')}
+
+
+def test_chain():
+    # bench tb_hbm_su_lg_chain_banklat (Verilator 5.050): budget PIN 1, lanes 4/3, 1/1, 2/2 -> 18/15, 24/21, 32/29 PASS
+    v = chain((18, 15), (24, 21), (32, 29))
+    assert all(st == 'PASS' for st, _ in v.values()), v
+    assert v[('sfu', 'rd')] == ('PASS', 24) and v[('hc', 'wr')] == ('PASS', 29)
+    v = chain((10, 7), (14, 11), (18, 15), 0, 0, 0, 0, 0, 0)                    # faces pin only: +1 on every tap
+    assert v[('su', 'rd')] == ('FAIL', 11) and v[('sfu', 'rd')] == ('FAIL', 15) and v[('hc', 'wr')] == ('FAIL', 16), v
+    v = chain((18, 15), (24, 21), (32, 29), pad1=1)                             # bank 1 one stage longer: SU unequal,
+    assert v[('su', 'rd')] == ('FAIL', 19) and v[('sfu', 'rd')] == ('FAIL', 25), v   # SFU/HC follow the padded SU
+
 
 
 if __name__ == '__main__':
