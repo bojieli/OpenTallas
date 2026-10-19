@@ -19,7 +19,7 @@ def main():
    mutant+=olds!=(sh>k+1)
  assert mutant==48
 
- files=['rtl/qwen_dv/qfd_dv_redstn2_csafe.sv','rtl/hdc/ot_hdc_fp32_mul_lat.sv','rtl/hdc/ot_hdc_fp32_add_lat.sv','rtl/hdc/ot_hdc_fastfp.sv','rtl/hdc/ot_hdc_prefix.sv','tools/qwen_dv/bound_math_netlist.py','tools/qwen_dv/gen_station_math_input.py','tools/qwen_dv/run_station_math_generate.sh']
+ files=['rtl/qwen_dv/qfd_dv_ring_delay.sv','rtl/qwen_dv/qfd_dv_reset_tree.sv','rtl/common/landed_parent/ot_pl_land.sv','rtl/hdc/ot_hdc_fp32_mul_lat.sv','rtl/hdc/ot_hdc_fp32_add_lat.sv','rtl/hdc/ot_hdc_fastfp.sv','rtl/hdc/ot_hdc_prefix.sv','tools/qwen_dv/bound_math_netlist.py','tools/qwen_dv/gen_station_math_input.py','tools/qwen_dv/run_station_math_generate.sh']
  data={'shape':{'add_LAT':7,'mul_LAT':6,'DRST':0},'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in files},'prepared_mul_sha256':hashlib.sha256(s.encode()).hexdigest(),'mask_identity_cases':3072,'shc0_mutant_mismatches':48,'tool_version':'record actual yosys --version in tool_version.txt','scope':'source construction; exact simulation, native load retention and mapped area/timing required'}
  (a.work/'manifest.json').write_text(json.dumps(data,indent=2)+'\n')
 if __name__=='__main__':main()

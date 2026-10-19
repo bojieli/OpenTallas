@@ -16,7 +16,7 @@ GATES={'$_AND_':'A & B','$_OR_':'A | B','$_XOR_':'A ^ B','$_XNOR_':'~(A ^ B)',
 FFS={'$_DFF_P_','$_DFF_PN0_','$_DFF_PP0_','$_DFF_PN1_','$_DFF_PP1_',
      '$_SDFF_PN0_','$_SDFF_PP0_','$_SDFF_PN1_','$_SDFF_PP1_'}
 
-def build(raw,top,new,drop=()):
+def build(raw,top,new,drop=(),collapse=False):
  design=json.loads(raw);m=copy.deepcopy(design['modules'][top]);cells=m['cells'];ports=m['ports']
  nextbit=max(b for c in cells.values() for bs in c['connections'].values() for b in bs if isinstance(b,int))+1
  # Retained output-copy boundaries are real logic, not black-box stand-ins.
@@ -57,6 +57,46 @@ def build(raw,top,new,drop=()):
  removed=len(cells)-len(live);cells={n:c for n,c in cells.items() if n in live}
  unused_inputs=[n for n,p in ports.items() if p['direction']=='input' and not any(b in seen for b in p['bits'])]
  for n in unused_inputs:del ports[n]
+ delay_chains=[];ring_groups=[]
+ if collapse:
+  users=defaultdict(list)
+  for n,c in cells.items():
+   for p,bs in c['connections'].items():
+    if c['port_directions'][p]=='input':
+     for i,b in enumerate(bs):users[b].append((n,p,i))
+  for n,p in ports.items():
+   if p['direction']=='output':
+    for b in p['bits']:users[b].append((None,'output',0))
+  plain={n:c for n,c in cells.items() if c['type']=='$_DFF_P_'};following={};pred={}
+  for n,c in plain.items():
+   q=c['connections']['Q'][0];u=users[q]
+   if len(u)==1 and u[0][1]=='D' and u[0][0] in plain:
+    dst=u[0][0]
+    if c['connections']['C']==plain[dst]['connections']['C']:following[n]=dst;pred[dst]=n
+  groups=defaultdict(list)
+  for n in plain:
+   if n in pred:continue
+   chain=[n]
+   while chain[-1] in following:
+    nxt=following[chain[-1]]
+    if nxt in chain:raise ValueError('holding-delay feedback cycle')
+    chain.append(nxt)
+   if len(chain)<3:continue
+   if len(chain)>12:raise ValueError('holding chain exceeds finite ring shape')
+   first,last=plain[chain[0]],plain[chain[-1]]
+   row=dict(cells=chain,d=first['connections']['D'][0],q=last['connections']['Q'][0],clock=first['connections']['C'][0],depth=len(chain))
+   delay_chains.append(row);groups[(row['depth'],row['clock'],len(users[row['q']])>32)].append(row)
+  if delay_chains:
+   if 'rst_n' not in ports:ports['rst_n']={'direction':'input','bits':[nextbit]};nextbit+=1
+   rst=ports['rst_n']['bits'][0]
+   for (depth,clock,high),rows in groups.items():
+    size=1 if high else 32
+    for start in range(0,len(rows),size):
+     part=rows[start:start+size];name=f'$holding_ring_{len(ring_groups)}'
+     for row in part:
+      for n in row['cells']:del cells[n]
+     cells[name]={'type':'$_QFD_RING_','width':len(part),'depth':depth,'connections':{'C':[clock],'R':[rst],'D':[r['d'] for r in part],'Q':[r['q'] for r in part]},'port_directions':{'C':'input','R':'input','D':'input','Q':'output'}}
+     ring_groups.append({'W':len(part),'D':depth,'removed_flops':sum(len(r['cells']) for r in part)})
  original=len(cells);original_types=dict(Counter(c['type'] for c in cells.values()));added=defaultdict(int)
  for iteration in range(100):
   sinks=defaultdict(list);drivers={}
@@ -66,7 +106,7 @@ def build(raw,top,new,drop=()):
      if not isinstance(b,int):continue
      if c['port_directions'][p]=='output':
       assert b not in drivers,(b,n,drivers.get(b));drivers[b]=(n,p,i)
-     elif p!='C':sinks[b].append((1,'cell',n,p,i))
+     elif p!='C':sinks[b].append((4 if c['type']=='$_QFD_RING_' and p=='D' and c['depth']%3==0 else 1,'cell',n,p,i))
   for n,p in ports.items():
    if p['direction']=='output':
     for i,b in enumerate(p['bits']):
@@ -76,7 +116,7 @@ def build(raw,top,new,drop=()):
   # Reverse cell order helps process a downstream copy before its parents.
   for b,x in reversed(overloaded):
    if b not in drivers:raise ValueError(f'input bit{b} exceeds32 loads; source producer replicas required')
-   n,p,i=drivers[b];c=cells[n];assert sum(len(bs) for pn,bs in c['connections'].items() if c['port_directions'][pn]=='output')==1
+   n,p,i=drivers[b];c=cells[n];assert c['type']=='$_QFD_RING_' or sum(len(bs) for pn,bs in c['connections'].items() if c['port_directions'][pn]=='output')==1
    chunks=[];part=[];cost=0
    for sink in x:
     if part and cost+sink[0]>32:chunks.append(part);part=[];cost=0
@@ -84,7 +124,10 @@ def build(raw,top,new,drop=()):
    chunks.append(part)
    for j,chunk in enumerate(chunks[1:],1):
     cn=f'{n}__bounded_{iteration}_{j}';assert cn not in cells
-    cc=copy.deepcopy(c);cc['connections'][p][i]=nextbit;cells[cn]=cc;added[c['type']]+=1
+    cc=copy.deepcopy(c)
+    if c['type']=='$_QFD_RING_':cc['width']=1;cc['connections']['D']=[c['connections']['D'][i]];cc['connections']['Q']=[nextbit]
+    else:cc['connections'][p][i]=nextbit
+    cells[cn]=cc;added[c['type']]+=1
     for _,kind,sn,sp,si in chunk:
      if kind=='cell':cells[sn]['connections'][sp][si]=nextbit
      else:ports[sn]['bits'][si]=nextbit
@@ -100,7 +143,15 @@ def build(raw,top,new,drop=()):
  for n,p in ports.items():lines.append(f'assign '+(bus(p['bits'])+' = '+n if p['direction']=='input' else n+' = '+bus(p['bits']))+';')
  used=set()
  for idx,(n,c) in enumerate(cells.items()):
-  typ=c['type'];used.add(typ);mod='qfd_bmath_'+typ.strip('$_').lower()
+  typ=c['type']
+  if typ=='$_QFD_RING_':
+   x=c['connections'];lines.append(f"qfd_dv_ring_delay #(.W({c['width']}),.D({c['depth']})) u_{idx}(.clk({bus(x['C'])}),.rst_n({bus(x['R'])}),.d({bus(x['D'])}),.q({bus(x['Q'])}));");continue
+  if typ in GATES and '__bounded_' not in n:
+   expr=GATES[typ]
+   for p in ('A','B','S'):
+    if p in c['connections']:expr=expr.replace(p,'('+bus(c['connections'][p])+')')
+   lines.append('assign '+bus(c['connections']['Y'])+' = '+expr+';');continue
+  used.add(typ);mod='qfd_bmath_'+typ.strip('$_').lower()
   con=','.join('.'+p+'('+bus(bs)+')' for p,bs in c['connections'].items())
   lines.append(f'(* keep_hierarchy="yes" *) {mod} #(.ID({idx})) u_{idx}({con});')
  lines.append('endmodule')
@@ -117,9 +168,9 @@ def build(raw,top,new,drop=()):
    event='posedge C' if typ.startswith('$_SDFF') else f'posedge C or {edge} R'
    h.append(f"always @({event}) if({test}) Q<=1'b{val};else Q<=D;")
   h.append('endmodule');helpers.append('\n'.join(h))
- return '\n'.join(lines)+'\n',helpers,dict(original_cells=original,original_by_type=original_types,final_by_type=dict(Counter(c['type'] for c in cells.values())),unconsumed_cells_removed=removed,dropped_outputs=list(drop),unused_inputs_removed=unused_inputs,final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
+ return '\n'.join(lines)+'\n',helpers,dict(original_cells=original,original_by_type=original_types,final_by_type=dict(Counter(c['type'] for c in cells.values())),unconsumed_cells_removed=removed,dropped_outputs=list(drop),unused_inputs_removed=unused_inputs,holding_chain_count=len(delay_chains),holding_ring_groups=ring_groups,actual_final_rings=[{'W':c['width'],'D':c['depth']} for c in cells.values() if c['type']=='$_QFD_RING_'],ring_input_load_contract='D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch',retention='FF cells and added combinational cone copies retain distinct hierarchy identities; ordinary logic stays available for native technology mapping',final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);a=p.parse_args()
- s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output);Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
+ p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);p.add_argument('--collapse-delays',action='store_true');a=p.parse_args()
+ s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays);Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
 if __name__=='__main__':main()

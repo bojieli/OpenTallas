@@ -15,7 +15,7 @@ module tb_station_cfg #(parameter integer MUT=0);
    if({u.mode,u.wsrc,u.nwords,u.sbase,u.kcm1}!==expect_q[cycle])
     $fatal(1,"STATION_CFG_LOSS cycle%0d",cycle);
    for(integer j=0;j<32;j=j+1)
-    if((u.local_mode[j] & (j%2?4'b1101:4'b1111)) !== ((4'b0001<<expect_q[cycle][27:26]) & (j%2?4'b1101:4'b1111))) $fatal(1,"STATION_MODE_COPY_ALIGNMENT");
+    if((u.local_mode[j] & (j!=0?4'b1101:4'b1111)) !== ((4'b0001<<expect_q[cycle][27:26]) & (j!=0?4'b1101:4'b1111))) $fatal(1,"STATION_MODE_COPY_ALIGNMENT");
    seen=seen+1;
   end
   cycle=cycle+1;

@@ -74,7 +74,7 @@ for(genvar z=0;z<2;z=z+1) begin:g_mode_mid
 end
 for(genvar z=0;z<32;z=z+1) begin:g_mode_payload
  (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.W(2),.ID(100+z)) u_p(.ck(ck),.d(mode_mid[z/16]),.q(mode_payload[z]));
- (* keep_hierarchy="yes" *) qfd_dv_station_mode #(.ID(z),.USE2(z%2==0)) u_m(.ck(ck),.rst_n(sr_reset[22+z]),.cfg_v(cfg_final[z]),.mode(mode_payload[z]),.q(local_mode[z]));
+ (* keep_hierarchy="yes" *) qfd_dv_station_mode #(.ID(z),.USE2(z==0)) u_m(.ck(ck),.rst_n(sr_reset[22+z]),.cfg_v(cfg_final[z]),.mode(mode_payload[z]),.q(local_mode[z]));
 end
 wire[15:0] ws_rep;
 for(genvar z=0;z<16;z=z+1) begin:g_ws
@@ -243,7 +243,7 @@ always @(posedge ck or negedge sr_reset[10])
     generate for (l = 0; l < 16; l = l + 1) begin : g_l7
         qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0)) u_lo (.clk(ck), .rst_n(math_reset[l]), .valid_in(vlo_in),
             .a(fs[32*l +: 32]), .b(ns[32*l +: 32]), .y(ylo[32*l +: 32]), .err(elo[2*l +: 2]), .valid_rep(vlo_rep[2*l+:2]), .valid_out(vlol[l]));
-        qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.REPS(0)) u_hi (.clk(ck), .rst_n(l==0?math_reset[16]:1'b1), .valid_in(vhi_in),
+        qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.REPS(0)) u_hi (.clk(ck), .rst_n(math_reset[16+l]), .valid_in(vhi_in),
             .a(fn[32*l +: 32]), .b(nn[32*l +: 32]), .y(yhi[32*l +: 32]), .err(ehi[2*l +: 2]), .valid_rep(vhi_rep[2*l+:2]), .valid_out(vhil[l]));
     end endgenerate
     wire vlo = vlol[0], vhi = vhil[0];
@@ -301,7 +301,7 @@ end
     wire [15:0] v8l; wire[31:0] v8_rep;
     wire [31:0] e8;
     generate for (l = 0; l < 16; l = l + 1) begin : g_l8
-        qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0)) u_add (.clk(ck), .rst_n(math_reset[17+l]), .valid_in(v8_in),
+        qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0)) u_add (.clk(ck), .rst_n(math_reset[32+l]), .valid_in(v8_in),
             .a(ylo[32*l +: 32]), .b(yhi[32*l +: 32]), .y(y8[32*l +: 32]), .err(e8[2*l +: 2]), .valid_rep(v8_rep[2*l+:2]), .valid_out(v8l[l]));
     end endgenerate
     wire v8 = v8l[0];
@@ -351,7 +351,7 @@ always @(posedge ck or negedge sr_reset[16])
     wire [15:0] v9l; wire[31:0] v9_rep;
     wire [31:0] e9;
     generate for (l = 0; l < 16; l = l + 1) begin : g_l9
-        qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.REPS(0)) u_add (.clk(ck), .rst_n(l==0?math_reset[33]:1'b1), .valid_in(nbv && local_mode[2*l][2]),
+        qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.REPS(0)) u_add (.clk(ck), .rst_n(math_reset[48+l]), .valid_in(nbv && local_mode[2*l][2]),
             .a(h9_q[32*l +: 32]), .b(nb_i[32*l +: 32]), .y(y9[32*l +: 32]), .err(e9[2*l +: 2]), .valid_rep(v9_rep[2*l+:2]), .valid_out(v9l[l]));
     end endgenerate
     wire v9 = v9l[0];
@@ -389,7 +389,7 @@ qfd_dv_ring_delay #(.W(10),.D(3)) u_meta(.clk(ck),.rst_n(sr_reset[122]),.d({fv,j
     wire [15:0]  vs;
     wire [31:0]  es;
     generate for (l = 0; l < 16; l = l + 1) begin : g_sc
-        qfd_dv_station_mul_bounded #(.LAT(SCALE_LAT), .DRST(SCALE_DRST),.CV(l==0)) u_mul (.clk(ck), .rst_n(l==0?math_reset[34]:1'b1), .valid_in(fv3),
+        qfd_dv_station_mul_bounded #(.LAT(SCALE_LAT), .DRST(SCALE_DRST),.CV(l==0)) u_mul (.clk(ck), .rst_n(math_reset[64+l]), .valid_in(fv3),
             .a(fd3[32*l +: 32]), .b({ws_rep[l] ? 16'h3F80 : bt_q[16*l +: 16], 16'd0}),
             .y(y[32*l +: 32]), .err(es[2*l +: 2]), .valid_out(vs[l]));
     end endgenerate
@@ -411,8 +411,8 @@ qfd_dv_ring_delay #(.W(10),.D(3)) u_meta(.clk(ck),.rst_n(sr_reset[122]),.d({fv,j
 
 wire [123:0] sr_reset;
 qfd_dv_reset_tree #(.N(124)) u_safe_reset (.ck(ck),.rst_n(rst_n),.q(sr_reset));
-wire[34:0] math_reset;
-qfd_dv_reset_tree #(.N(35)) u_math_reset(.ck(ck),.rst_n(rst_n),.q(math_reset));
+wire[79:0] math_reset;
+qfd_dv_reset_tree #(.N(80)) u_math_reset(.ck(ck),.rst_n(rst_n),.q(math_reset));
 endmodule
 
                                                                             
@@ -531,14 +531,16 @@ endmodule
 
 module qfd_dv_station_add_bounded #(parameter integer LAT=7,DRST=0,CV=1,REPS=1)(input wire clk,rst_n,valid_in,input wire[31:0] a,b,output wire[31:0] y,output wire[1:0] err,output wire valid_out,output wire[1:0] valid_rep);
 generate if(LAT==7 && DRST==0) begin:g_exact
-if(REPS) begin:g_rep if(CV) begin:g_v qfd_dv_station_add_g u_g(.*);end else begin:g_nv qfd_dv_station_add_nov_g u_g(.clk(clk),.rst_n(rst_n),.valid_in(valid_in),.a(a),.b(b),.y(y),.err(err),.valid_rep(valid_rep));assign valid_out=0;end end else begin:g_base if(CV) begin:g_v qfd_dv_station_add_base_g u_g(.clk(clk),.rst_n(rst_n),.valid_in(valid_in),.a(a),.b(b),.y(y),.err(err),.valid_out(valid_out));end else begin:g_nv qfd_dv_station_add_base_nov_g u_g(.clk(clk),.a(a),.b(b),.y(y),.err(err));assign valid_out=0;end assign valid_rep=0;end
+qfd_dv_station_add_data_g u_d(.clk(clk),.rst_n(rst_n),.a(a),.b(b),.y(y),.err(err));
+if(REPS) begin:g_rep if(CV) begin:g_v wire[2:0] v;qfd_dv_ring_replicated #(.W(1),.D(7),.COPIES(3)) u_v(.clk(clk),.rst_n(rst_n),.d(valid_in),.q(v));assign {valid_rep,valid_out}=v;end else begin:g_nv qfd_dv_ring_replicated #(.W(1),.D(7),.COPIES(2)) u_v(.clk(clk),.rst_n(rst_n),.d(valid_in),.q(valid_rep));assign valid_out=0;end end else begin:g_base if(CV) begin:g_v qfd_dv_ring_delay #(.W(1),.D(7)) u_v(.clk(clk),.rst_n(rst_n),.d(valid_in),.q(valid_out));end else begin:g_nv assign valid_out=0;end assign valid_rep=0;end
 end else begin:g_bad
 qfd_station_math_requires_fixed_ADD7_SCALE6_DRST0 u_fail();
 end endgenerate
 endmodule
 module qfd_dv_station_mul_bounded #(parameter integer LAT=6,DRST=0,CV=1)(input wire clk,rst_n,valid_in,input wire[31:0] a,b,output wire[31:0] y,output wire[1:0] err,output wire valid_out);
 generate if(LAT==6 && DRST==0) begin:g_exact
-if(CV) begin:g_v qfd_dv_station_mul_g u_g(.*);end else begin:g_nv qfd_dv_station_mul_nov_g u_g(.clk(clk),.a(a),.b(b),.y(y),.err(err));assign valid_out=0;end
+qfd_dv_station_mul_data_g u_d(.clk(clk),.rst_n(rst_n),.a(a),.b(b),.y(y),.err(err));
+if(CV) begin:g_v qfd_dv_ring_delay #(.W(1),.D(6)) u_v(.clk(clk),.rst_n(rst_n),.d(valid_in),.q(valid_out));end else begin:g_nv assign valid_out=0;end
 end else begin:g_bad
 qfd_station_math_requires_fixed_ADD7_SCALE6_DRST0 u_fail();
 end endgenerate
