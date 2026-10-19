@@ -1,15 +1,16 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch/claude/closure-loop/qkd_landsh0_528-f1-20cef08c0/routes/qkd_landsh0_528_f1_20cef08c0/work/orfs/results/asap7/opentallas_qkd_landsh0_528_asap7_ref_qkd_landsh0_528_f1_20cef08c0/base",
+ "base": "/srv/opentallas-scratch/claude/hkv-chain-1019/restored/qkd_landsh0_528",
  "db": "6_final.odb",
  "sdc": "6_final.sdc",
  "clock": "core_clk",
+ "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
  "parasitics": "spef",
  "raw_source": true,
  "ss": {
   "boundary": {
-   "n": 533,
-   "mean": 128.5,
+   "n": 530,
+   "mean": 128.4,
    "min": 120.5,
    "max": 139.9
   },
@@ -25,8 +26,8 @@
  },
  "tt": {
   "boundary": {
-   "n": 533,
-   "mean": 96.5,
+   "n": 530,
+   "mean": 96.4,
    "min": 88.9,
    "max": 106.5
   },
@@ -42,8 +43,8 @@
  },
  "ff": {
   "boundary": {
-   "n": 533,
-   "mean": 78.6,
+   "n": 530,
+   "mean": 78.5,
    "min": 71.1,
    "max": 87.8
   },
@@ -78,7 +79,7 @@
   "CK_TT_ALL_MIN": 89,
   "CK_TT_MAX": 106,
   "CK_TT_ALL_MAX": 106,
-  "CK_FF_MEAN": 79,
+  "CK_FF_MEAN": 78,
   "CK_FF_ALL_MEAN": 79,
   "CK_FF_MIN": 71,
   "CK_FF_ALL_MIN": 71,
@@ -91,16 +92,17 @@
  "clock_measurements": {
   "ck": {
    "schema": "opentallas.closure_loop.ck_insertion.v1",
-   "base": "/srv/opentallas-scratch/claude/closure-loop/qkd_landsh0_528-f1-20cef08c0/routes/qkd_landsh0_528_f1_20cef08c0/work/orfs/results/asap7/opentallas_qkd_landsh0_528_asap7_ref_qkd_landsh0_528_f1_20cef08c0/base",
+   "base": "/srv/opentallas-scratch/claude/hkv-chain-1019/restored/qkd_landsh0_528",
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "core_clk",
+   "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
    "parasitics": "spef",
    "raw_source": true,
    "ss": {
     "boundary": {
-     "n": 533,
-     "mean": 128.5,
+     "n": 530,
+     "mean": 128.4,
      "min": 120.5,
      "max": 139.9
     },
@@ -116,8 +118,8 @@
    },
    "tt": {
     "boundary": {
-     "n": 533,
-     "mean": 96.5,
+     "n": 530,
+     "mean": 96.4,
      "min": 88.9,
      "max": 106.5
     },
@@ -133,8 +135,8 @@
    },
    "ff": {
     "boundary": {
-     "n": 533,
-     "mean": 78.6,
+     "n": 530,
+     "mean": 78.5,
      "min": 71.1,
      "max": 87.8
     },
@@ -169,7 +171,7 @@
     "CK_TT_ALL_MIN": 89,
     "CK_TT_MAX": 106,
     "CK_TT_ALL_MAX": 106,
-    "CK_FF_MEAN": 79,
+    "CK_FF_MEAN": 78,
     "CK_FF_ALL_MEAN": 79,
     "CK_FF_MIN": 71,
     "CK_FF_ALL_MIN": 71,
@@ -182,14 +184,20 @@
   },
   "ck_s": {
    "schema": "opentallas.closure_loop.ck_insertion.v1",
-   "base": "/srv/opentallas-scratch/claude/closure-loop/qkd_landsh0_528-f1-20cef08c0/routes/qkd_landsh0_528_f1_20cef08c0/work/orfs/results/asap7/opentallas_qkd_landsh0_528_asap7_ref_qkd_landsh0_528_f1_20cef08c0/base",
+   "base": "/srv/opentallas-scratch/claude/hkv-chain-1019/restored/qkd_landsh0_528",
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "lane_ckf",
+   "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
    "parasitics": "spef",
    "raw_source": true,
    "ss": {
-    "boundary": null,
+    "boundary": {
+     "n": 2112,
+     "mean": 199.3,
+     "min": 193.5,
+     "max": 206.1
+    },
     "all": {
      "n": 2131,
      "mean": 199.4,
@@ -201,7 +209,12 @@
     "macro_libs": 0
    },
    "tt": {
-    "boundary": null,
+    "boundary": {
+     "n": 2112,
+     "mean": 143.9,
+     "min": 138.8,
+     "max": 149.9
+    },
     "all": {
      "n": 2131,
      "mean": 143.9,
@@ -213,7 +226,12 @@
     "macro_libs": 0
    },
    "ff": {
-    "boundary": null,
+    "boundary": {
+     "n": 2112,
+     "mean": 113.2,
+     "min": 108.4,
+     "max": 118.9
+    },
     "all": {
      "n": 2131,
      "mean": 113.2,
