@@ -196,7 +196,7 @@ def ranges(ports, centre):
     return out
 
 
-def kit_spec(ram_gb=24):
+def kit_spec(ram_gb=56):  # 10-19: 24 GB was SIGTERMed (24.5 GB RSS, 2 instances)
     sc = 43.2 + 2 * REG_H + S_H / 2
     pr = ranges(W_PORTS, sc)
     pr.update(ranges(E_PORTS, sc))

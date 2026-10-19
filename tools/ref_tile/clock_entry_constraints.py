@@ -1540,61 +1540,6 @@ def landed_raw_body(body, cotimed=False):
     return body
 
 
-def landed_raw_body(body):
-    """HF-4d 10-19 (coordinator option A): LANDED_BODY for a cluster whose hard child carries raw SRAM clock entries
-    (::ot_ce_landed_raw from landed_raw_pins: the leaf's closed record).  all_registers never reaches such a pin (no ETM
-    arcs), so after every region root is measured each bound raw pin is visited on the root of its co-timed CTS-root pin
-    (h16c ck_pm0/ck_pm1 -> the root of ck_head): effective = entry-wire arrival + the leaf's own pin -> SRAM wire, judged
-    against the co-timed pin's effective arrival (wire + routed R boundary mean) = the leaf sign-off phase.  Post-CTS
-    (propagated, measured) |skew| > the leaf's sign-off tolerance is an ERROR (fail closed); pre-CTS it is only reported.
-    A raw pin reached as a register, an unreached co-timed pin or a raw pin not on that root (no propagated arrival)
-    fails.  Landed kits without raw entries keep LANDED_BODY byte-identical."""
-    raw_visit = (
-        '  # HF-4d raw SRAM clock entries of hard children: co-timed with their CTS-root pin per the leaf closed record\n'
-        '  set ot_ce_raw_fail {}\n'
-        '  set ot_ce_raw_diag [expr {[info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts && (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)}]\n'
-        '  foreach cell [get_cells -quiet -hierarchical *] {\n'
-        '    set master [get_property $cell ref_name]\n'
-        '    if {![dict exists $::ot_ce_counts $master]} continue\n'
-        '    set cname [get_full_name $cell]\n'
-        '    foreach pin [get_pins -quiet -of_objects $cell] {\n'
-        '      set key "$master/[get_property $pin lib_pin_name]"\n'
-        '      if {![dict exists $::ot_ce_landed_raw $key]} continue\n'
-        '      set refpin [dict get $::ot_ce_landed_raw $key ref]; set tol [dict get $::ot_ce_landed_raw $key tol]\n'
-        '      if {![dict exists $ot_ce_landed_eff "$cname/$refpin"]} {\n'
-        '        error "OT_LANDED: raw child clock pin [get_full_name $pin]: its co-timed pin $cname/$refpin was not reached from a region root"\n'
-        '      }\n'
-        '      lassign [dict get $ot_ce_landed_eff "$cname/$refpin"] rclock rname reff\n'
-        '      set wire [ot_ce_clock_wire $pin [get_clocks $rclock]]\n'
-        '      lassign [dict get $::ot_ce_refs $key $corner] rlo rmean rhi\n'
-        '      set eff [expr {$wire + $rmean}]; set skew [expr {$eff - $reff}]\n'
-        '      set verdict [expr {$ot_ce_raw_diag ? "PRE_CTS" : (abs($skew) <= $tol ? "PASS" : "FAIL")}]\n'
-        '      puts "OT_LANDED RAW_PIN $corner $rname [get_full_name $pin] wire=$wire R=$rmean eff=$eff co_timed=$cname/$refpin eff_ref=$reff skew=[format %.1f $skew] tol=$tol $verdict"\n'
-        '      if {$verdict eq "FAIL"} { lappend ot_ce_raw_fail "[get_full_name $pin] [format %.1f $skew] ps" }\n'
-        '      incr ot_ce_landed_hits\n'
-        '    }\n'
-        '  }\n'
-        '  if {[llength $ot_ce_raw_fail]} {\n'
-        '    error "OT_LANDED: raw child clock pin arrival vs its co-timed CTS-root pin beyond the leaf sign-off tolerance at $corner: [join $ot_ce_raw_fail {, }]"\n'
-        '  }\n')
-    substitutions = [
-        ('  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]\n',
-         '  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]; set ot_ce_landed_eff [dict create]\n'),
-        ('        if {![dict exists $::ot_ce_refs $key]} { error "OT_LANDED: CTS root $name reaches unbound hard-child pin [get_full_name $pin]" }\n',
-         '        if {![dict exists $::ot_ce_refs $key]} { error "OT_LANDED: CTS root $name reaches unbound hard-child pin [get_full_name $pin]" }\n'
-         '        if {[dict exists $::ot_ce_landed_raw $key]} { error "OT_LANDED: raw child clock pin [get_full_name $pin] reached as a register (record says no ETM arcs)" }\n'),
-        ('        set arrival [expr {$arrival + $cmean}]\n        incr ot_ce_landed_hits\n',
-         '        set arrival [expr {$arrival + $cmean}]\n        incr ot_ce_landed_hits\n'
-         '        dict set ot_ce_landed_eff "$cname/[get_property $pin lib_pin_name]" [list [get_full_name $clock] $name $arrival]\n'),
-        ('  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins}', raw_visit + '  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins}'),
-    ]
-    for old, new in substitutions:
-        if body.count(old) != 1:
-            raise ValueError("landed body changed; revalidate the raw child clock pin extension")
-        body = body.replace(old, new)
-    return body
-
-
 def direct_body(body, direct):
     """Add explicitly bound raw-memory pin references without changing ETM semantics."""
     marker = '  # Each glue root owns a real CTS tree.'

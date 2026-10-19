@@ -992,7 +992,7 @@
     "pass_regex": "PGSLICE_RG PASS checks=",
     "pass_witness": "results/rtl/tw_hbm_pglg_1019/m0/bench.log",
     "threads": 8,
-    "peak_ram_gb": 24,
+    "peak_ram_gb": 56,
     "needs": [
      "verilator"
     ]
@@ -1004,7 +1004,7 @@
     "fail_regex": "PGSLICE_RG FAIL errors=",
     "fail_witness": "results/rtl/tw_hbm_pglg_1019/m1/bench.log",
     "threads": 8,
-    "peak_ram_gb": 24,
+    "peak_ram_gb": 56,
     "needs": [
      "verilator"
     ],
@@ -1017,7 +1017,7 @@
     "fail_regex": "PGSLICE_RG FAIL errors=",
     "fail_witness": "results/rtl/tw_hbm_pglg_1019/m2/bench.log",
     "threads": 8,
-    "peak_ram_gb": 24,
+    "peak_ram_gb": 56,
     "needs": [
      "verilator"
     ],
@@ -1030,7 +1030,7 @@
     "fail_regex": "PGSLICE_RG FAIL errors=",
     "fail_witness": "results/rtl/tw_hbm_pglg_1019/m20/bench.log",
     "threads": 8,
-    "peak_ram_gb": 24,
+    "peak_ram_gb": 56,
     "needs": [
      "verilator"
     ],
@@ -1043,7 +1043,7 @@
     "fail_regex": "PGSLICE_RG FAIL errors=",
     "fail_witness": "results/rtl/tw_hbm_pglg_1019/m21/bench.log",
     "threads": 8,
-    "peak_ram_gb": 24,
+    "peak_ram_gb": 56,
     "needs": [
      "verilator"
     ],
@@ -1056,7 +1056,7 @@
     "fail_regex": "PGSLICE_RG FAIL errors=",
     "fail_witness": "results/rtl/tw_hbm_pglg_1019/m101/bench.log",
     "threads": 8,
-    "peak_ram_gb": 24,
+    "peak_ram_gb": 56,
     "needs": [
      "verilator"
     ],
@@ -1069,7 +1069,7 @@
     "fail_regex": "PGSLICE_RG FAIL errors=",
     "fail_witness": "results/rtl/tw_hbm_pglg_1019/m103/bench.log",
     "threads": 8,
-    "peak_ram_gb": 24,
+    "peak_ram_gb": 56,
     "needs": [
      "verilator"
     ],

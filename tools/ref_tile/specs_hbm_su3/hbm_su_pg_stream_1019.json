@@ -295,6 +295,7 @@
     "pg_clk"
    ],
    "inputs": [
+    "pos",
     "lg_rr",
     "lg_w_done",
     "lg_read",
@@ -309,7 +310,11 @@
     "lg_wq",
     "lg_fault",
     "far_rr",
-    "far_w_done"
+    "far_w_done",
+    "ij_v",
+    "ij_row",
+    "ij_bad",
+    "pg_fault"
    ]
   },
   "serial": {
@@ -323,16 +328,11 @@
    "inputs": [
     "vmr_cmd",
     "su_wq",
-    "pos",
     "rst_n",
     "bridge_rst_n"
    ],
    "outputs": [
-    "su_rr",
-    "ij_v",
-    "ij_row",
-    "ij_bad",
-    "pg_fault"
+    "su_rr"
    ]
   }
  }

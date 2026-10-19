@@ -45,10 +45,10 @@ pr.update(ranges(pins['N'], 4.0, W - 4.0))
 pr.update({'far_rr': [4.0, 103.0]})
 pr.update({p: [round(104.0 + 2.0 * i, 3), round(105.333 + 2.0 * i, 3)] for i, p in enumerate(ctl)})
 pr.update({'far_w_done': [113.0, 116.0]})
-serial_in = ['vmr_cmd', 'su_wq', 'pos', 'rst_n', 'bridge_rst_n']
-serial_out = ['su_rr', 'ij_v', 'ij_row', 'ij_bad', 'pg_fault']
-core_in = ['lg_rr', 'lg_w_done', 'lg_read', 'lg_write', 'far_rq', 'far_wq', 'inj_rd', 'inj_addr']
-core_out = ['lg_rq', 'lg_wq', 'lg_fault', 'far_rr', 'far_w_done']
+serial_in = ['vmr_cmd', 'su_wq', 'rst_n', 'bridge_rst_n']
+serial_out = ['su_rr']
+core_in = ['pos', 'lg_rr', 'lg_w_done', 'lg_read', 'lg_write', 'far_rq', 'far_wq', 'inj_rd', 'inj_addr']
+core_out = ['lg_rq', 'lg_wq', 'lg_fault', 'far_rr', 'far_w_done', 'ij_v', 'ij_row', 'ij_bad', 'pg_fault']
 benches = [dict(name='rg_lockstep', cmd=f'bash {BENCH} {{RUN}}/bench/m0 0 1200', expect='pass',
                 pass_regex='PGSLICE_RG PASS checks=', pass_witness=f'{WIT}/m0/bench.log', threads=8, peak_ram_gb=56,
                 needs=['verilator']),

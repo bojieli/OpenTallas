@@ -13,7 +13,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_pg_stream #(
  parameter integer QID=1,G=2,READ_RETURN=10,WRITE_RETURN=7,MUT=0,MULTIRATE=1,COLLPORT=1,B39_NOOP=(QID==0),
- parameter integer RSYNC=1,RSYNC_MUT=0,STRAP=1
+ parameter integer RSYNC=1,RSYNC_MUT=0,STRAP=1,IJ_REG=1
 )(
  input wire clk_ctl,
  input wire pg_clk,
@@ -105,7 +105,12 @@ module ot_hbm_su_static_pg_stream #(
   reg [161:0] slot [0:3];
   always @(posedge pg_clk) slot[sp] <= {inj_rd, inj_addr};
   wire [1:0] rsl = ((sq==2'd1)?2'd0:(sq==2'd2)?2'd1:2'd3) + ((MUT==8)?2'd1:2'd0);
-  wire [161:0] ij = slot[rsl];
+  // IJ_REG 1 (TW-HBM-PGLG 10-19, kit gate OT_MULTI_ROOT: a tile output must come from registers of ONE declared domain):
+  // the decode is registered on pg_clk. Every serial cycle [t, t+T_s) holds exactly one pg_clk edge e strictly inside it
+  // (3:4 common epoch: serial 0/1111/2222, stream 833/1667/2500), and no pg_clk edge lies between e and the slice's
+  // capture at t+T_s, so registering decode(slot[rsl(sq_t)]) at e -- with the slot written at e itself bypassed --
+  // gives the slice exactly the value the comb form (IJ_REG 0) presented at t+T_s. 0 added edges.
+  wire [161:0] ij = (IJ_REG!=0 && rsl==sp) ? {inj_rd, inj_addr} : slot[rsl];
   reg [3:0] v; reg [35:0] row; reg bad; integer k;
   always @* begin
    v=0; row=0; bad=0;
@@ -120,7 +125,13 @@ module ot_hbm_su_static_pg_stream #(
     end
    end
   end
-  assign ij_v=v; assign ij_row=row; assign ij_bad=bad;
+  if(IJ_REG!=0)begin:g_ij_reg
+   reg [3:0] v_q; reg [35:0] row_q; reg bad_q;
+   always @(posedge pg_clk) begin v_q<=v; row_q<=row; bad_q<=bad; end
+   assign ij_v=v_q; assign ij_row=row_q; assign ij_bad=bad_q;
+  end else begin:g_ij_comb
+   assign ij_v=v; assign ij_row=row; assign ij_bad=bad;
+  end
  end else begin:g_no_inj
   assign ij_v=4'd0; assign ij_row=36'd0; assign ij_bad=1'b0;
  end
