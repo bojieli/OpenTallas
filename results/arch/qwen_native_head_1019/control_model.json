@@ -1,0 +1,93 @@
+{
+  "status": "SOURCE_MODEL_NOT_ADMISSION",
+  "base": "c275f1cc7 / pickup8bfee2bc1",
+  "selection": "CONTROL_SAFE=0 default; isolated production fixture macro opts in",
+  "added_steady_data_edges": 0,
+  "regional_SU_edges_separate": 6,
+  "II": 1,
+  "macros": {
+    "existing_32x64": 13,
+    "existing_TLS_128x64": 2,
+    "added": 0,
+    "hard_area_um2": 9041.01696
+  },
+  "packed_valid": [
+    {
+      "instance": "ml_tag",
+      "old_width": 140,
+      "new_width": 141,
+      "delay": 11
+    },
+    {
+      "instance": "d38",
+      "old_width": 133,
+      "new_width": 134,
+      "delay": 5
+    },
+    {
+      "instance": "d914",
+      "old_width": 35,
+      "new_width": 36,
+      "delay": 4
+    },
+    {
+      "instance": "tap0",
+      "old_width": 126,
+      "new_width": 127,
+      "delay": 10
+    },
+    {
+      "instance": "TLS",
+      "old_width": 126,
+      "new_width": 127,
+      "delay": 126
+    },
+    {
+      "instance": "dmc",
+      "old_width": 126,
+      "new_width": 127,
+      "delay": 5
+    },
+    {
+      "instance": "dmd",
+      "old_width": 94,
+      "new_width": 95,
+      "delay": 5
+    }
+  ],
+  "valid_state": {
+    "old_external_holding_FF": 171,
+    "new_spare_macro_bits_per_word": 7,
+    "new_captured_valid_FF": 7,
+    "new_d38_extra_useful_FF": 1,
+    "new_ve1_finite_ring_FF": 7,
+    "new_reset_boot_counter_FF": 8,
+    "new_reset_class_counter_FF": 8
+  },
+  "clear_semantics": "Synchronous class switch drops that edge valid; tap output suppressed until exact selected age since last clear. Asynchronous reset suppresses all packed valid paths using boot-age guard. Counter reset is async; no memory reset. Counters saturate, no phase selection.",
+  "ports": "Existing native bank read/write widths unchanged64, useful masks gain1 bit, all clocks unchanged native clk. ve1 uses finite4slot W1 ring + output FF, effectiveD4.",
+  "upstream_load_model": "Each existing source valid gains at most one SRAM D input per data ring; classclear drives one count and one valid injection only. Actual ultimate fanout, prefix/data source, reset distribution, FPU and selector roots remain unqualified.",
+  "area": "No new macro. Standard FF and Boolean area requires actual census/mapping; 96-head multiplication only after mapped receipt.",
+  "boot": "Existing rt relay preserved. Counters start on original inner reset release; masks preserve exact original reset output until D incoming edges, no added admitted work edge. Full reset/warm/class switching test required.",
+  "open": [
+    "native area and all ultimate source/reset load census",
+    "FPU internal pure holding chains",
+    "bounded kept selector/FPU control copies",
+    "clock-owned reset tree/release ledger",
+    "native geometry/escape/reach/TTFF"
+  ],
+  "native_clock_correspondence": {
+    "source_valid_clock": "posedge clk in qfd_dv_native_lane_b64",
+    "data_rings": "All13 ot_sram_1r1w_32x64_m1 clk(clk); macro read/output capture both posedge clk",
+    "TLS": "Both ot_sram_1r1w2c_128x64_m1 wclk(clk),rclk(clk); original TLS source already ties these actual pins to SAME clk, not a bench-selected phase",
+    "crossing_change": "NONE within head; no parent phase qualification implied",
+    "original_reset": "native head rt async-assert relay retained, inner rst_n=rt",
+    "class_guard": "8 FF async assert/synchronous clear and saturating increment; selected predicate consumes guard epoch on original native clk age"
+  },
+  "guard_fanout_model": {
+    "boot_counter": "7 small age predicate cones; actual flattened all-load census pending",
+    "class_counter": "one selected-threshold predicate",
+    "class_clear": "one counter clear and packed tap0 valid injection",
+    "stale_history": "Focused unit firstfillsnonzero then two dirty resets/all5classes; production source tests pending"
+  }
+}

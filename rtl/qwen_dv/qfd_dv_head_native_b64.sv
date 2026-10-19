@@ -1,5 +1,5 @@
 // Isolated opt-in ML5 head TLS banking candidate. Not physical-admitted.
-module qfd_dv_lane_h_native_b64 (
+module qfd_dv_lane_h_native_b64 #(parameter integer CONTROL_SAFE=0) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire              emit0,
@@ -59,7 +59,7 @@ module qfd_dv_lane_h_native_b64 (
     input  wire [31:0]       sy_rsq_y,
     input  wire              sy_rsq_f
 );
-    qfd_dv_native_head_b64 #(.WR(16), .AW(24), .NW(18), .KV_FP8(1), .ML(5), .RD(2), .QLA(4), .QLM(5)) u_h (
+    qfd_dv_native_head_b64 #(.CONTROL_SAFE(CONTROL_SAFE),.WR(16), .AW(24), .NW(18), .KV_FP8(1), .ML(5), .RD(2), .QLA(4), .QLM(5)) u_h (
         .clk(clk), .rst_n(rst_n), .emit0(emit0), .live(live), .i(i), .fin_th(fin_th), .i_last_r(i_last_r),
         .cura0(cura0), .curb0(curb0), .curc0(curc0), .curd0(curd0), .rrow(rrow), .asi(asi), .bsi(bsi), .csi(csi),
         .dsi(dsi), .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq), .ma(ma), .mb(mb),
@@ -74,6 +74,7 @@ module qfd_dv_lane_h_native_b64 (
         .sx_rsq_v(sx_rsq_v), .sx_rsq_x(sx_rsq_x), .sy_rsq_y(sy_rsq_y), .sy_rsq_f(sy_rsq_f));
 endmodule
 module qfd_dv_native_head_b64 #(
+    parameter integer CONTROL_SAFE=0,
     // defaults = the HARDENED configuration (Qwen3-8B ROM TP8 SU: a hard child carries no parameter overrides)
     parameter integer WR   = 16,
     parameter integer AW   = 24,
@@ -180,7 +181,7 @@ module qfd_dv_native_head_b64 #(
     wire [31:0]   n_out;
     wire [1:0]    n_red;
     wire [AW-1:0] n_raddr;
-    qfd_dv_native_lane_b64 #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .ML(ML + 2 + 2 * RD), .QLA(QLA), .QLM(QLM),
+    qfd_dv_native_lane_b64 #(.CONTROL_SAFE(CONTROL_SAFE),.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .ML(ML + 2 + 2 * RD), .QLA(QLA), .QLM(QLM),
                           .SFH(1), .TLS(1)) u_lane (
         .clk(clk), .rst_n(rt), .emit0(q_emit0), .live(q_live), .i(q_i), .fin_th(q_fin_th), .i_last_r(q_ilast),
         .cura0(q_cura), .curb0(q_curb), .curc0(q_curc), .curd0(q_curd), .rrow(q_rrow),
@@ -223,6 +224,7 @@ endmodule
 // stream unit's element datapath, its addresses offset by LANE x the inner
 // stride, emitting only when its element exists.
 module qfd_dv_native_lane_b64 #(
+    parameter integer CONTROL_SAFE=0,
     parameter integer WR   = 64,
     parameter integer AW   = 24,
     parameter integer NW   = 16,
@@ -364,11 +366,21 @@ module qfd_dv_native_lane_b64 #(
         end
     endfunction
 
+    // Packed validity is unreset SRAM data. Exact-age guards prevent stale
+    // words from becoming observable after reset or synchronous class clear.
+    localparam integer BOOTW=$clog2(TAPMAX+2);
+    wire [BOOTW-1:0] valid_boot_age,valid_class_age;
+    wire valid_class_clear=accept && i_sfu!=cls;
+    qfd_dv_head_valid_guards #(.LIMIT(TAPMAX)) u_valid_guards(
+      .clk(clk),.rst_n(rst_n),.clear(valid_class_clear),.boot(valid_boot_age),.epoch(valid_class_age));
     // -- address cycle (c') -----------------------------------------------------
     // Tag fields of one element.
     reg          e_v;
     wire         e_v_m;
-    ot_hdc_delay #(.W(1), .D(ML), .RESET(1)) u_ml_v (.clk(clk), .rst_n(rst_n), .d(e_v), .q(e_v_m));
+    wire packed_ml_v;
+    generate if(CONTROL_SAFE==0)begin:g_old_mlv
+      ot_hdc_delay #(.W(1), .D(ML), .RESET(1)) u_ml_v (.clk(clk), .rst_n(rst_n), .d(e_v), .q(e_v_m));
+    end else begin:g_packed_mlv assign e_v_m=packed_ml_v && valid_boot_age>=ML;end endgenerate
     reg          e_asrc, e_bsrc, e_csrc, e_mc, e_md, e_redsq;
     reg [1:0]    e_ma, e_mb, e_dst, e_red;
     reg [2:0]    e_ad;
@@ -417,7 +429,11 @@ module qfd_dv_native_lane_b64 #(
     wire [2:0]    t_p;
     wire [AW-1:0] t_daddr, t_raddr;
     wire [FT-1:0] e_tag_m;
-    qfd_dv_head_sram_delay #(.W(FT), .D(ML)) u_ml_tag (.clk(clk), .rst_n(rst_n), .d(e_tag), .q(e_tag_m));
+    generate if(CONTROL_SAFE==0)begin:g_original_ml_tag
+qfd_dv_head_sram_delay #(.W(FT), .D(ML)) u_ml_tag (.clk(clk), .rst_n(rst_n), .d(e_tag), .q(e_tag_m));
+end else begin:g_packed_ml_tag
+qfd_dv_head_sram_delay #(.W(FT+1), .D(ML)) u_ml_tag (.clk(clk), .rst_n(rst_n), .d({e_v,e_tag}), .q({packed_ml_v,e_tag_m}));
+end endgenerate
     always @(posedge clk) s1_tag <= e_tag_m;
     assign {t_asrc, t_bsrc, t_csrc, t_mc, t_md, t_redsq, t_ma, t_mb, t_dst, t_red, t_ad, t_imm1, t_imm2,
             t_lane, t_ifirst, t_first8, t_final, t_last, t_p, t_daddr, t_raddr} = s1_tag;
@@ -457,10 +473,21 @@ module qfd_dv_native_lane_b64 #(
     wire [31:0] a8, blo8, c8, imm2_8;
     wire [1:0]  ma8;
     wire [2:0]  ad8;
-    qfd_dv_head_sram_delay #(.W(32*4 + 2 + 3), .D(LM)) u_d38 (.clk(clk), .rst_n(rst_n),
+    generate if(CONTROL_SAFE==0)begin:g_original_d38
+qfd_dv_head_sram_delay #(.W(32*4 + 2 + 3), .D(LM)) u_d38 (.clk(clk), .rst_n(rst_n),
         .d({s3_a, s3_blo, s3_c, s3_imm2, s3_ma, s3_ad}), .q({a8, blo8, c8, imm2_8, ma8, ad8}));
+end else begin:g_packed_d38
+qfd_dv_head_sram_delay #(.W(32*4 + 2 + 3+1), .D(LM)) u_d38 (.clk(clk), .rst_n(rst_n),
+        .d({s3_v,s3_a, s3_blo, s3_c, s3_imm2, s3_ma, s3_ad}), .q({packed_v3,a8, blo8, c8, imm2_8, ma8, ad8}));
+end endgenerate
+    wire packed_v3;
     wire [LM+1:0] v3;
-    ot_hdc_vline #(.D(LM+1)) u_v3 (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(v3));   // v3[k] = S3+k
+    generate if(CONTROL_SAFE==0)begin:g_old_v3
+    ot_hdc_vline #(.D(LM+1)) u_v3 (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(v3));
+    end else begin:g_new_v3
+      reg final_v;always @(posedge clk or negedge rst_n)if(!rst_n)final_v<=0;else final_v<=packed_v3 && valid_boot_age>=LM;
+      assign v3={final_v,{LM{1'b0}},s3_v};
+    end endgenerate   // v3[k] = S3+k
 
     // -- S3+LM -> operand select -> adder (LA) -> R ------------------------------
     reg [31:0] ad_x, ad_y;
@@ -478,10 +505,17 @@ module qfd_dv_native_lane_b64 #(
     wire [31:0] r_add, px14;
     wire fad;
     ot_hdc_qadd #(.L(LA)) u_ad (clk, rst_n, v3[LM+1] && ad9 != AD_BYP, ad_x, ad_y, r_add, fad);
+    wire packed_v9;
     wire [2:0] ad14;
-    qfd_dv_head_sram_delay #(.W(35), .D(LA)) u_d914 (.clk(clk), .rst_n(rst_n), .d({ad_x, ad9}), .q({px14, ad14}));
+    generate if(CONTROL_SAFE==0)begin:g_original_d914
+qfd_dv_head_sram_delay #(.W(35), .D(LA)) u_d914 (.clk(clk), .rst_n(rst_n), .d({ad_x, ad9}), .q({px14, ad14}));
+end else begin:g_packed_d914
+qfd_dv_head_sram_delay #(.W(36), .D(LA)) u_d914 (.clk(clk), .rst_n(rst_n), .d({v3[LM+1],ad_x, ad9}), .q({packed_v9,px14, ad14}));
+end endgenerate
     wire [LA:0] v9;
-    ot_hdc_vline #(.D(LA)) u_v9 (.clk(clk), .rst_n(rst_n), .v(v3[LM+1]), .vd(v9));    // v9[LA] = R
+    generate if(CONTROL_SAFE==0)begin:g_old_v9
+    ot_hdc_vline #(.D(LA)) u_v9 (.clk(clk), .rst_n(rst_n), .v(v3[LM+1]), .vd(v9));
+    end else begin:g_new_v9 assign v9={(packed_v9 && valid_boot_age>=LA),{LA{1'b0}}};end endgenerate    // v9[LA] = R
     wire [31:0] r14 = (ad14 == AD_BYP) ? px14 : r_add;
     wire        v14 = v9[LA];
 
@@ -495,7 +529,12 @@ module qfd_dv_native_lane_b64 #(
     wire f_e1;
     wire [LA:0] ve1;
     ot_hdc_qadd #(.L(LA)) u_e1 (clk, rst_n, vo_exp && cls == SFU_SIGM, y_exp, 32'h3F800000, e1, f_e1);
+    generate if(CONTROL_SAFE==0)begin:g_old_ve1
     ot_hdc_vline #(.D(LA)) u_ve1 (.clk(clk), .rst_n(rst_n), .v(vo_exp && cls == SFU_SIGM), .vd(ve1));
+    end else begin:g_new_ve1
+      wire delayed_v;qfd_dv_head_small_valid_ring #(.D(LA)) u_v(.clk(clk),.rst_n(rst_n),.d(vo_exp && cls==SFU_SIGM),.q(delayed_v));
+      assign ve1={(delayed_v && valid_boot_age>=LA),{LA{1'b0}}};
+    end endgenerate
     wire        rcp_v = (cls == SFU_SIGM) ? ve1[LA] : (v14 && cls == SFU_RECIP);
     wire [31:0] rcp_x = (cls == SFU_SIGM) ? e1 : r14;
     generate if (SFH == 0) begin : g_sfi
@@ -533,6 +572,7 @@ module qfd_dv_native_lane_b64 #(
     // B, C and the tail tag ride a tapped line from S3; the tap is the class depth.
     localparam integer LT = 32 + 32 + TT;
     reg [TAPMAX:1] tlv;
+    generate if(CONTROL_SAFE==0)begin:g_old_tlv
     always @(posedge clk or negedge rst_n) begin
         //: A class switch happens only with nothing in flight, but the line
         //: still holds the valid bits of retired elements beyond the old tap;
@@ -541,6 +581,8 @@ module qfd_dv_native_lane_b64 #(
         else if (accept && i_sfu != cls) tlv <= 0;
         else tlv <= {tlv[TAPMAX-1:1], s3_v};
     end
+    end else begin:g_no_old_tlv always @* tlv=0;end endgenerate
+    wire packed_tap0_v,packed_tls_v;
     reg [LT-1:0] tap;
     reg          tapv;
     reg [31:0]   s_val;
@@ -563,8 +605,13 @@ module qfd_dv_native_lane_b64 #(
         //: flight (a class switch waits for the unit to drain), so rp has followed the class for >= D_RECIP - 3
         //: cycles before the first valid tap.  D in [3, 129] (128 words, rp != wp).
         wire [LT-1:0] t0;
-        qfd_dv_head_sram_delay #(.W(LT),.D(TAP0)) u_tap0_ring (
+        if(CONTROL_SAFE==0)begin:g_original_tap0_ring
+qfd_dv_head_sram_delay #(.W(LT),.D(TAP0)) u_tap0_ring (
           .clk(clk),.rst_n(rst_n),.d({s3_blo,s3_c,s3_tail}),.q(t0));
+end else begin:g_packed_tap0_ring
+qfd_dv_head_sram_delay #(.W(LT+1),.D(TAP0)) u_tap0_ring (
+          .clk(clk),.rst_n(rst_n),.d({(s3_v && !valid_class_clear),s3_blo,s3_c,s3_tail}),.q({packed_tap0_v,t0}));
+end
         reg [7:0] dsel;
         always @(*) begin
             case (cls)
@@ -588,13 +635,15 @@ module qfd_dv_native_lane_b64 #(
         always @(posedge clk) cq <= rq[LT-1:0];
         // Only LT low bits of the old256-bit SRAM were ever observed. At
         // production WR16/AW24 LT=126: two real128x64 native banks suffice.
-        wire[127:0] tls_in={{(128-LT){1'b0}},t0};
+        wire[127:0] tls_in=CONTROL_SAFE?{{(127-LT){1'b0}},packed_tap0_v,t0}:{{(128-LT){1'b0}},t0};
         wire[127:0] tls_q;
         assign rq={128'b0,tls_q};
+        reg cq_valid;always @(posedge clk)cq_valid<=tls_q[LT];
+        assign packed_tls_v=cq_valid;
         for(genvar bank=0;bank<2;bank=bank+1) begin:g_native_bank
           wire[63:0] mask;
           for(genvar bit_i=0;bit_i<64;bit_i=bit_i+1) begin:g_mask
-            assign mask[bit_i]=(bank*64+bit_i<LT);
+            assign mask[bit_i]=(bank*64+bit_i<LT+CONTROL_SAFE);
           end
           ot_sram_1r1w2c_128x64_m1 u_tlm(.wclk(clk),.rclk(clk),
             .r_ce_in(ring_on),.r_addr_in(rp),
@@ -622,13 +671,15 @@ module qfd_dv_native_lane_b64 #(
         endcase
     end
 
+    wire safe_tapv=(valid_class_age >= (cls==SFU_EXP?TAP0+D_EXP:cls==SFU_RECIP?TAP0+D_RECIP:cls==SFU_RSQRT?TAP0+D_RSQRT:cls==SFU_SIGM?TAP0+D_SIGM:TAP0)) &&
+      ((cls>=SFU_EXP && cls<=SFU_SIGM)?packed_tls_v:packed_tap0_v);
     // -- MC select (+1) -> multiplier (+LM) -> MD select (+1) -> multiplier (+LM) -> write
     reg [31:0] mc_x, mc_y, mc_b;
     reg        mc_v;
     reg [TT-1:0] mc_tail;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) mc_v <= 1'b0;
-        else mc_v <= tapv;
+        else mc_v <= CONTROL_SAFE?safe_tapv:tapv;
     end
     always @(posedge clk) begin
         mc_x <= s_val; mc_b <= tap[LT-1 -: 32]; mc_y <= tap[LT-33 -: 32]; mc_tail <= tap[TT-1:0];
@@ -637,10 +688,18 @@ module qfd_dv_native_lane_b64 #(
     wire fmc;
     ot_hdc_qmul #(.L(LM)) u_mc (clk, rst_n, mc_v && mc_tail[TT-1], mc_x, mc_y, mc_out, fmc);
     wire [TT-1:0] c_tail;
+    wire packed_vmc;
     wire [LM:0] vmc;
+    generate if(CONTROL_SAFE==0)begin:g_old_vmc
     ot_hdc_vline #(.D(LM)) u_vmc (.clk(clk), .rst_n(rst_n), .v(mc_v), .vd(vmc));
-    qfd_dv_head_sram_delay #(.W(64 + TT), .D(LM)) u_dmc (.clk(clk), .rst_n(rst_n), .d({mc_x, mc_b, mc_tail}),
+    end else begin:g_new_vmc assign vmc={(packed_vmc && valid_boot_age>=LM),{LM{1'b0}}};end endgenerate
+    generate if(CONTROL_SAFE==0)begin:g_original_dmc
+qfd_dv_head_sram_delay #(.W(64 + TT), .D(LM)) u_dmc (.clk(clk), .rst_n(rst_n), .d({mc_x, mc_b, mc_tail}),
                                              .q({byp5, b5, c_tail}));
+end else begin:g_packed_dmc
+qfd_dv_head_sram_delay #(.W(64 + TT+1), .D(LM)) u_dmc (.clk(clk), .rst_n(rst_n), .d({mc_v,mc_x, mc_b, mc_tail}),
+                                             .q({packed_vmc,byp5, b5, c_tail}));
+end endgenerate
     reg [31:0] md_x, md_y;
     reg        md_v;
     reg [TT-1:0] md_tail;
@@ -655,9 +714,16 @@ module qfd_dv_native_lane_b64 #(
     wire fmd;
     ot_hdc_qmul #(.L(LM)) u_md (clk, rst_n, md_v && md_tail[TT-2], md_x, md_y, md_out, fmd);
     wire [TT-1:0] o_tail;
+    wire packed_vmd;
     wire [LM:0] vmd;
+    generate if(CONTROL_SAFE==0)begin:g_old_vmd
     ot_hdc_vline #(.D(LM)) u_vmd (.clk(clk), .rst_n(rst_n), .v(md_v), .vd(vmd));
-    qfd_dv_head_sram_delay #(.W(32 + TT), .D(LM)) u_dmd (.clk(clk), .rst_n(rst_n), .d({md_x, md_tail}), .q({dbyp5, o_tail}));
+    end else begin:g_new_vmd assign vmd={(packed_vmd && valid_boot_age>=LM),{LM{1'b0}}};end endgenerate
+    generate if(CONTROL_SAFE==0)begin:g_original_dmd
+qfd_dv_head_sram_delay #(.W(32 + TT), .D(LM)) u_dmd (.clk(clk), .rst_n(rst_n), .d({md_x, md_tail}), .q({dbyp5, o_tail}));
+end else begin:g_packed_dmd
+qfd_dv_head_sram_delay #(.W(32 + TT+1), .D(LM)) u_dmd (.clk(clk), .rst_n(rst_n), .d({md_v,md_x, md_tail}), .q({packed_vmd,dbyp5, o_tail}));
+end endgenerate
     wire          o_mc, o_md;
     wire [1:0]    o_dst, o_red;
     wire          o_redsq;
@@ -732,4 +798,33 @@ module qfd_dv_head_sram_delay_bank #(parameter integer D=3,BANK_ID=0,USED_BITS=6
   .r_ce_in(1'b1),.r_addr_in(rp),.rd_out(rq),
   .w_ce_in(1'b1),.w_addr_in(wp),.wd_in(d),.w_mask_in(64'hffffffffffffffff >> (64-USED_BITS)));
  always @(posedge clk) q<=rq;
+endmodule
+
+// Finite narrow ring, no data reset or holding chain. D1/2 intentionally short.
+module qfd_dv_head_small_valid_ring #(parameter integer D=4)(input wire clk,rst_n,d,output wire q);
+ generate if(D<3)begin:g_short
+   reg[D-1:0] p;always @(posedge clk)p<=(p<<1)|d;assign q=p[D-1];
+ end else begin:g_ring
+   localparam integer N=D-1,PW=$clog2(N);
+   reg[N-1:0] bank;reg[PW-1:0] wp;reg result;
+   always @(posedge clk or negedge rst_n)if(!rst_n)wp<=0;else wp<=(wp==N-1)?0:wp+1'b1;
+   always @(posedge clk)begin bank[wp]<=d;result<=bank[wp];end
+   assign q=result;
+ end endgenerate
+endmodule
+
+module qfd_dv_head_valid_guards #(parameter integer LIMIT=136,W=$clog2(LIMIT+2))(
+ input wire clk,rst_n,clear,output reg[W-1:0] boot,epoch);
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin boot<=0;epoch<=0;end
+  else begin
+   if(boot<LIMIT)boot<=boot+1'b1;
+`ifdef OT_HEAD_VALID_CLEAR_MUT
+   if(1'b0)epoch<=0;
+`else
+   if(clear)epoch<=0;
+`endif
+   else if(epoch<LIMIT)epoch<=epoch+1'b1;
+  end
+ end
 endmodule

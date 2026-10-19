@@ -122,7 +122,13 @@ module qfd_dv_su_lane_landed (
             l_red} = od;
     wire        e_v, e_vo, e_f, r_v, r_vo, r_f, q_v, q_vo, q_f;
     wire [31:0] e_x, e_y, r_x, r_y, q_x, q_y;
-    qfd_dv_lane_h_native_b64 u_head (
+    qfd_dv_lane_h_native_b64 #(.CONTROL_SAFE(
+`ifdef OT_HEAD_CONTROL_SAFE
+    1
+`else
+    0
+`endif
+    )) u_head (
         .clk(clk), .rst_n(rst_c), .emit0(c_emit0), .live(c_live), .i(c_i), .fin_th(c_fin_th), .i_last_r(c_ilast),
         .cura0(c_cura), .curb0(c_curb), .curc0(c_curc), .curd0(c_curd), .rrow(c_rrow), .asi(c_asi), .bsi(c_bsi),
         .csi(c_csi), .dsi(c_dsi), .asrc(c_asrc), .bsrc(c_bsrc), .csrc(c_csrc), .mc(c_mc), .md(c_md), .redsq(c_redsq),
