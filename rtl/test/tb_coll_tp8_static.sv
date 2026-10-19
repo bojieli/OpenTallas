@@ -32,6 +32,7 @@ module tb_static_delay #(parameter integer W = 1, parameter integer L = 1) (
 endmodule
 
 module tb_coll_tp8_static #(
+    parameter integer PR_B4 = 0,
     parameter integer LATU = 19,
     parameter integer LATS = 344,
     parameter integer XU   = 0,      // extra UCIe link cycles vs the compiled LATU (negative control)
@@ -75,9 +76,10 @@ module tb_coll_tp8_static #(
         for (g = 0; g < ND; g = g + 1) begin : g_die
             localparam integer P = g / 2, D = g % 2;
 `ifdef OT_TP8S_QFD
-            qfd_io_collective_static u_die (       // the die-name master (LU / LS by +define, = LATU / LATS)
+            qfd_io_collective_static #(.PR_B4(PR_B4)) u_die (       // the die-name master (LU / LS by +define, = LATU / LATS)
                 .clk(clk), .clk_pfold0(clk), .clk_pfold1(clk), .clk_pfold2(clk), .clk_pfold3(clk),
                 .clk_xfold0(clk), .clk_xfold1(clk), .clk_xfold2(clk), .clk_xfold3(clk),
+                .clk_pring2(clk),.clk_pring3(clk),.clk_rring2(clk),.clk_rring3(clk),
                 .clk_pring0(clk),.clk_pring1(clk),.clk_sring0(clk),.clk_sring1(clk),.clk_sring2(clk),.clk_sring3(clk),.clk_sring4(clk),.clk_rring0(clk),.clk_rring1(clk),
                 .rst_n(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
                 .cmd_v(cmd_v), .cmd_mode(cmd_mode), .cmd_words(cmd_words), .cmd_tag(cmd_tag),
@@ -92,8 +94,8 @@ module tb_coll_tp8_static #(
                 .out_err(oe[g]), .fault(flt[g]), .fault_code(fc[g*5 +: 5]),
                 .up_slot(), .ur_peer_slot(), .sx0_peer_slot(), .sx1_peer_slot(), .sx2_peer_slot(), .cmd_free());
 `else
-            ot_coll_tp8_static #(.LU(LATU), .LS(LATS)) u_die (
-                .clk_mem({9{clk}}),.clk(clk), .clk_pfold({4{clk}}), .clk_xfold({4{clk}}),
+            ot_coll_tp8_static #(.LU(LATU), .LS(LATS),.PR_B4(PR_B4),.CCLK(PR_B4?1:0)) u_die (
+                .clk_mem({(PR_B4?13:9){clk}}),.clk(clk), .clk_pfold({4{clk}}), .clk_xfold({4{clk}}),
                 .rst_n(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
                 .cmd_v(cmd_v), .cmd_mode(cmd_mode), .cmd_words(cmd_words), .cmd_tag(cmd_tag),
                 .in_valid(iv[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]), .in_tag(it[g*TAGW +: TAGW]),

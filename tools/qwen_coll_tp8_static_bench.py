@@ -140,8 +140,8 @@ def vectors(path: Path, nwords, prog, seed, big=False):
     (path / "cmd.hex").write_text("".join(lines))
 
 
-def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None, qfd: bool = False) -> Path:
-    obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}{'_qfd' if qfd else ''}{('_' + define) if define else ''}"
+def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None, qfd: bool = False, pr_b4: bool = False) -> Path:
+    obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}{'_qfd' if qfd else ''}{('_' + define) if define else ''}{'_b4' if pr_b4 else ''}"
     h = out / "harness.cpp"
     h.write_text('#include "Vtb_coll_tp8_static.h"\n#include "verilated.h"\n'
                  "int main(int argc, char** argv) { Verilated::commandArgs(argc, argv);\n"
@@ -150,7 +150,7 @@ def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None, qfd
                  "  t->final(); delete t; return 0; }\n")
     cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
            "-Wno-TIMESCALEMOD", "--top-module", "tb_coll_tp8_static", f"-GLATU={lu}", f"-GLATS={ls}", f"-GXU={xu}",
-           f"-GXS={xs}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
+           f"-GXS={xs}", f"-GPR_B4={int(pr_b4)}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
           [str(h), "-CFLAGS", "-O1", "-j", "16"]
     if qfd:
         cmd += ["+define+OT_TP8S_QFD", f"+define+OT_QFDS_LU={lu}", f"+define+OT_QFDS_LS={ls}"]
@@ -171,7 +171,10 @@ def main():
     ap.add_argument("--mutant-define", default=None)
     ap.add_argument("--only", default=None)
     ap.add_argument("--qfd", action="store_true", help="bench the die-name master qfd_io_collective_static")
+    ap.add_argument("--pr-b4", action="store_true", help="opt-in four P/R logical groups with useful-width native64 storage")
     a = ap.parse_args()
+    if a.pr_b4:
+        SRC.extend(ROOT / p for p in ("rtl/rom/ot_coll_sram_bank64.sv", "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v"))
     a.out = a.out.resolve()
     a.out.mkdir(parents=True, exist_ok=True)
     cases = PRODUCTION_CASES if a.production else UNIT_CASES
@@ -179,7 +182,7 @@ def main():
         cases = [c for c in cases if re.search(a.only, c[0])]
     if a.xu or a.xs:   # link-latency negative control: one positive shape, every die must flag the link schedule
         cases = [("link_longer_than_compiled", 4, 8, "m", "link", {})]
-    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.mutant_define, a.qfd)
+    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.mutant_define, a.qfd, a.pr_b4)
     bad, records = [], []
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
@@ -210,7 +213,7 @@ def main():
             bad.append(name)
     (a.out / "record.json").write_text(json.dumps(dict(
         schema="opentallas.qwen.tp8.collective.static.v1", ranks=ND, lanes=LANES, latu=a.latu, lats=a.lats,
-        xu=a.xu, xs=a.xs, die_name_master=a.qfd, slice_latency=SL, gather_cadence=GC, mutant=a.mutant_define, production=a.production,
+        xu=a.xu, xs=a.xs, die_name_master=a.qfd, pr_b4=a.pr_b4, slice_latency=SL, gather_cadence=GC, mutant=a.mutant_define, production=a.production,
         cycle_span="first compiled input slot to last compiled output slot (inclusive); every output checked at its exact "
                    "compiled cycle",
         mechanism="no credits/ready/backpressure: compiled command + fixed-offset rings; checks are fault-only",

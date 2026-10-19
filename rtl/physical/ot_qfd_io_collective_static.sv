@@ -19,10 +19,11 @@
 `ifndef OT_QFDS_LS
 `define OT_QFDS_LS 376
 `endif
-module qfd_io_collective_static #(parameter integer LU = `OT_QFDS_LU, parameter integer LS = `OT_QFDS_LS) (
+module qfd_io_collective_static #(parameter integer LU = `OT_QFDS_LU, parameter integer LS = `OT_QFDS_LS, parameter integer PR_B4=0) (
     input  wire          clk,                   // parent root
     input  wire          clk_pfold0, clk_pfold1, clk_pfold2, clk_pfold3,
     input  wire          clk_xfold0, clk_xfold1, clk_xfold2, clk_xfold3,
+    input wire clk_pring2,clk_pring3,clk_rring2,clk_rring3, // used only by opt-in PR_B4
     input wire clk_pring0,clk_pring1,clk_sring0,clk_sring1,clk_sring2,clk_sring3,clk_sring4,clk_rring0,clk_rring1,
     input  wire          rst_n,
     input  wire [1:0]    pkg_s,
@@ -61,7 +62,8 @@ module qfd_io_collective_static #(parameter integer LU = `OT_QFDS_LU, parameter 
     output wire          sx0_peer_slot, sx1_peer_slot, sx2_peer_slot,
     output wire          cmd_free               // -> collective command issuer (fault check only)
 );
-    initial if (LU + 2 > 64) $error("collective direct SRAM entries require a four-bank physical profile for LU>62");
+    initial if (PR_B4 && (LU+2<=64 || LU+2>128)) $error("COLL_B4_PROFILE_REQUIRES_65_TO_128_WORDS");
+    initial if (!PR_B4 && LU + 2 > 64) $error("collective direct SRAM entries require a four-bank physical profile for LU>62");
     // Command pin boundary: the compiler issues one core cycle earlier than
     // the internal collective command calendar. Payload/link calendars retain
     // their original cycles. This extra command lead is paid explicitly.
@@ -70,8 +72,14 @@ module qfd_io_collective_static #(parameter integer LU = `OT_QFDS_LU, parameter 
     (* keep *) reg [31:0] ct_pin;
     always @(posedge clk)begin cm_pin<=cmd_mode;cw_pin<=cmd_words;ct_pin<=cmd_tag;end
     always @(posedge clk or negedge rst_n)if(!rst_n)cv_pin<=0;else cv_pin<=cmd_v;
-    ot_coll_tp8_static #(.LANES(16), .TAGW(32), .ADD_LAT(7), .LU(LU), .LS(LS), .GC(8), .CCLK(1)) u_coll (
-        .clk_mem({clk_rring1,clk_rring0,clk_sring4,clk_sring3,clk_sring2,clk_sring1,clk_sring0,clk_pring1,clk_pring0}),
+    wire[(PR_B4 ? 13 : 9)-1:0] mem_clocks;
+    generate if(PR_B4) begin:g_b4_clocks
+        assign mem_clocks={clk_rring3,clk_rring2,clk_rring1,clk_rring0,clk_sring4,clk_sring3,clk_sring2,clk_sring1,clk_sring0,clk_pring3,clk_pring2,clk_pring1,clk_pring0};
+    end else begin:g_old_clocks
+        assign mem_clocks={clk_rring1,clk_rring0,clk_sring4,clk_sring3,clk_sring2,clk_sring1,clk_sring0,clk_pring1,clk_pring0};
+    end endgenerate
+    ot_coll_tp8_static #(.LANES(16), .TAGW(32), .ADD_LAT(7), .LU(LU), .LS(LS), .GC(8), .CCLK(1), .PR_B4(PR_B4)) u_coll (
+        .clk_mem(mem_clocks),
         .clk(clk), .clk_pfold({clk_pfold3, clk_pfold2, clk_pfold1, clk_pfold0}),
         .clk_xfold({clk_xfold3, clk_xfold2, clk_xfold1, clk_xfold0}),
         .rst_n(rst_n), .pkg_s(pkg_s), .die_ps(die_ps),

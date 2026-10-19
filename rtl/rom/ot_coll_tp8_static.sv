@@ -44,6 +44,7 @@ module ot_coll_tp8_static #(
     parameter integer LU      = 19,     // UCIe: up/ur output-register cycle -> peer dp/dr pin cycle (implemented)
     parameter integer LS      = 344,    // SerDes: sx output-register cycle -> peer sr pin cycle (implemented)
     parameter integer GC      = 8,      // gather input cadence: 8 output words per input word on a 1-word output
+    parameter integer PR_B4   = 0,      // opt-in: four P/R groups, native64 useful-width banks
     parameter integer CCLK    = 0,      // 1: each hardened fold slice on its own clock entry (clk_pfold / clk_xfold)
     parameter integer FW      = 32 * LANES,
     parameter integer PW      = FW + 2 + TAGW,
@@ -52,7 +53,7 @@ module ot_coll_tp8_static #(
     input  wire              clk,
     input  wire [3:0]        clk_pfold,     // CCLK 1: package-fold slice clock entries (same edge as clk)
     input  wire [3:0]        clk_xfold,     // CCLK 1: cross-fold slice clock entries
-    input wire [8:0] clk_mem, // CCLK1: P0/P1,S0..S4,R0/R1 direct macro entries
+    input wire [(PR_B4 ? 13 : 9)-1:0] clk_mem, // B4: P0..3,S0..4,R0..3; default old9
     input  wire              rst_n,
     input  wire [1:0]        pkg_s,
     input  wire              die_ps,
@@ -156,7 +157,7 @@ module ot_coll_tp8_static #(
     assign up_valid = upv_q;
     assign up_rec   = uprec_q;
     wire [PW-1:0] pr_rd;
-    ot_coll_static_ring #(.OFF(LU + 2)) u_pring (.clk(clk), .mem_ck(CCLK ? {clk_mem[1:0],clk_mem[1:0]} : {4{clk}}), .rs_n(rs_p), .wd(ir_q), .rd(pr_rd));
+    ot_coll_static_ring #(.OFF(LU + 2),.NATIVE64(PR_B4),.USEFUL_W(PW)) u_pring (.clk(clk), .mem_ck(CCLK ? (PR_B4 ? clk_mem[3:0] : {clk_mem[1:0],clk_mem[1:0]}) : {4{clk}}), .rs_n(rs_p), .wd(ir_q), .rd(pr_rd));
     // schedule token A -> B (LU + 2 edges): {v, mode, last, parity}
     localparam integer DAB = LU + 2;
     reg [4*DAB-1:0] tab;
@@ -272,7 +273,7 @@ module ot_coll_tp8_static #(
     wire [SEW-1:0] s_rd;
     genvar gm;
     generate for (gm = 0; gm < SEW / 128; gm = gm + 1) begin : g_sring
-        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(CCLK ? clk_mem[2+gm] : clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS + 1)),
+        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(CCLK ? clk_mem[(PR_B4 ? 4 : 2)+gm] : clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS + 1)),
             .rd_out(s_rd[gm*128 +: 128]), .w_ce_in(1'b1), .w_addr_in(cc), .wd_in(s_wd[gm*128 +: 128]),
             .w_mask_in({128{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(14'b0));
     end endgenerate
@@ -359,7 +360,7 @@ module ot_coll_tp8_static #(
 `else
     localparam integer ROFF = LU + 2;
 `endif
-    ot_coll_static_ring #(.OFF(ROFF)) u_rring (.clk(clk), .mem_ck(CCLK ? {clk_mem[8:7],clk_mem[8:7]} : {4{clk}}), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));
+    ot_coll_static_ring #(.OFF(ROFF),.NATIVE64(PR_B4),.USEFUL_W(RW)) u_rring (.clk(clk), .mem_ck(CCLK ? (PR_B4 ? clk_mem[(PR_B4?12:8)-:4] : {clk_mem[8:7],clk_mem[8:7]}) : {4{clk}}), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));
     // token E -> F (LU + 2 edges): {v, own, last}
     localparam integer DEF = LU + 2;
     reg [3*DEF-1:0] tef;
@@ -409,7 +410,7 @@ endmodule
 // Fixed-offset delay ring: written unconditionally every cycle at the free-running index, read OFF cycles later
 // (rd valid OFF cycles after wd).  Depth = 32 * B >= OFF, B banks of the 32 x 546 1R1W macro; the read bank
 // select is registered with the macro's registered read.
-module ot_coll_static_ring #(parameter integer OFF = 20) (
+module ot_coll_static_ring #(parameter integer OFF = 20, NATIVE64=0, USEFUL_W=546) (
     input  wire         clk,
     input wire [3:0] mem_ck,
     input  wire         rs_n,
@@ -418,6 +419,7 @@ module ot_coll_static_ring #(parameter integer OFF = 20) (
 );
     localparam integer B  = (OFF <= 32) ? 1 : (OFF <= 64) ? 2 : 4;
     localparam integer AW = 5 + $clog2(B);
+    initial if(NATIVE64 && (B!=4 || (USEFUL_W!=514 && USEFUL_W!=546))) $error("COLL_B4_CAPACITY_WIDTH");
     initial if (OFF < 2 || OFF > 128) $error("ot_coll_static_ring: 2 <= OFF <= 128");
     reg [AW-1:0] wa;
     always @(posedge clk or negedge rs_n) if (!rs_n) wa <= 0; else wa <= wa + 1'b1;
@@ -425,8 +427,15 @@ module ot_coll_static_ring #(parameter integer OFF = 20) (
     wire [546*B-1:0] rdb;
     genvar b;
     generate for (b = 0; b < B; b = b + 1) begin : g_b
+        if(NATIVE64) begin:g_native64
+            ot_coll_sram_bank64 #(.W(USEFUL_W)) u_group (.clk(mem_ck[b]),.r_ce_in(1'b1),.r_addr_in(ra[4:0]),
+                .rd_out(rdb[b*546+:USEFUL_W]),.w_ce_in((B==1)?1'b1:(wa[AW-1:5]==b)),
+                .w_addr_in(wa[4:0]),.wd_in(wd[USEFUL_W-1:0]),.w_mask_in({USEFUL_W{1'b1}}));
+            if(USEFUL_W<546) assign rdb[b*546+USEFUL_W+:(546-USEFUL_W)]=0;
+        end else begin:g_wide
         ot_sram_1r1w_32x546_m1 u_m (.clk(mem_ck[b]), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
             .w_ce_in((B == 1) ? 1'b1 : (wa[AW-1:5] == b)), .w_addr_in(wa[4:0]), .wd_in(wd), .w_mask_in({546{1'b1}}));
+        end
     end endgenerate
     generate if (B == 1) begin : g_one
         assign rd = rdb;
@@ -440,7 +449,11 @@ module ot_coll_static_ring #(parameter integer OFF = 20) (
         for (gg = 0; gg < NG; gg = gg + 1) begin : g_g
             wire [B-1:0] oh_d;
             for (genvar kd = 0; kd < B; kd = kd + 1) begin : g_d
+                `ifdef OT_COLL_B4_MUT_BANKSEL
+                assign oh_d[kd] = (ra[AW-1:5] == ((kd+1)%B));
+`else
                 assign oh_d[kd] = (ra[AW-1:5] == kd);
+`endif
             end
             ot_coll_rep_reg #(.W(B), .ID(64 + OFF*8 + gg), .RST(0)) u_oh (.clk(clk), .rst_n(1'b1), .d(oh_d), .q(boh[gg*B +: B]));
         end
