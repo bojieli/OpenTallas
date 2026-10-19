@@ -1,0 +1,305 @@
+== run_u4cal.log size 69632 (block-buffered, live)
+KVA_CFG nstep 8 T 8192 LG 8 KGO 200 AGE0 1 KVN 34 MUT 0 HCKC 0
+SMOKE_ERR @1 unexpected record kind at the d2d face
+KVA_REC kind 14
+SMOKE_ERR @2 unexpected record kind at the d2d face
+KVA_REC kind 6
+SMOKE_ERR @4 unexpected record kind at the d2d face
+KVA_REC kind 2
+SMOKE_ERR @5 unexpected record kind at the d2d face
+KVA_REC kind 2
+SMOKE_ERR @6 STATUS word != {done 1, ready 1}
+SMOKE_ERR @7 unexpected record kind at the d2d face
+KVA_REC kind 14
+SMOKE_ERR @9 landing group: K and V response in one edge
+SMOKE_ERR @9 landing group: K and V response in one edge
+SMOKE_ERR @10 landing group: K and V response in one edge
+SMOKE_ERR @11 landing group: K and V response in one edge
+SMOKE_ERR @11 landing group: K and V response in one edge
+SMOKE_ERR @11 landing group: K and V response in one edge
+SMOKE_ERR @11 landing group: K and V response in one edge
+SMOKE_ERR @12 landing group: K and V response in one edge
+SMOKE_ERR @12 landing group: K and V response in one edge
+SMOKE_ERR @14 landing group: K and V response in one edge
+SMOKE_ERR @14 landing group: K and V response in one edge
+== run_u4pack.log size 69632 (block-buffered, live)
+KVA_CFG nstep 4 T 8192 LG 8 KGO 200 AGE0 1 KVN 34 MUT 0 HCKC 0
+SMOKE_ERR @1 unexpected record kind at the d2d face
+KVA_REC kind 14
+SMOKE_ERR @2 unexpected record kind at the d2d face
+KVA_REC kind 6
+SMOKE_ERR @4 unexpected record kind at the d2d face
+KVA_REC kind 2
+SMOKE_ERR @5 unexpected record kind at the d2d face
+KVA_REC kind 2
+SMOKE_ERR @6 STATUS word != {done 1, ready 1}
+SMOKE_ERR @7 unexpected record kind at the d2d face
+KVA_REC kind 14
+SMOKE_ERR @9 landing group: K and V response in one edge
+SMOKE_ERR @9 landing group: K and V response in one edge
+SMOKE_ERR @10 landing group: K and V response in one edge
+SMOKE_ERR @11 landing group: K and V response in one edge
+SMOKE_ERR @11 landing group: K and V response in one edge
+SMOKE_ERR @11 landing group: K and V response in one edge
+SMOKE_ERR @11 landing group: K and V response in one edge
+SMOKE_ERR @12 landing group: K and V response in one edge
+SMOKE_ERR @12 landing group: K and V response in one edge
+SMOKE_ERR @14 landing group: K and V response in one edge
+SMOKE_ERR @14 landing group: K and V response in one edge
+== oldQK u4cal (live)
+KVA_CFG nstep 8 T 8192 LG 8 KGO 200 AGE0 1 KVN 34 MUT 0 HCKC 0
+SMOKE_FOLD idle 78f718e7688b75e9
+SMOKE_OFOLD o_n_am_EN__r7 fffffffffffffc03 act 1 last 4
+SMOKE_OFOLD o_n_am_ES__r7__pinfix1 fffffffffffffc03 act 1 last 4
+SMOKE_OFOLD o_n_am_WN__r7__pinfix1 fffffffffffffc03 act 1 last 4
+SMOKE_OFOLD o_n_aq_EN__r15 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_aq_ES__r55 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_aq_WN__r18 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_kc_EN__r23 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_kc_ES__r80 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_kc_WN__r25 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_kc_WS__r83 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_krq_WS_0__r2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_krq_WS_1__r4 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_krq_WS_2__r7 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_krq_WS_3__r9 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_krq_WS_4__r15__pinfix3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_krq_WS_5__r21 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_krq_WS_6__r30 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_krq_WS_7__r17 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_acal_EN__r17 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_acal_ES__r51 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_acal_WN__r10__pinfix1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afk_WS_0__r4 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afk_WS_1__r5 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afk_WS_2__r5 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afk_WS_3__r8 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afk_WS_4__r13__pinfix2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afk_WS_5__r21 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afk_WS_6__r25 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afk_WS_7__r16 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afv_WS_0__f0__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afv_WS_0__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afv_WS_1__f0__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afv_WS_1__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afv_WS_2__f0__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afv_WS_2__r1__pinfix2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afv_WS_3__f0__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_afv_WS_3__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_kvs_attn__attn__tx_payload__r9__pinfix1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_kvs_attn__attn__tx_valid__r6__beq5 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_pvst 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_pvst__r37 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_kst__r2__pinfix1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_0_0__r7 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_0_1__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_0_2__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_0_3__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_0_4__r9 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_0_5__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_0_6__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_0_7__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_1_0__r7 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_1_1__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_1_2__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_1_3__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_1_4__r9 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_1_5__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_1_6__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_1_7__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_2_0__r6 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_2_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_2_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_2_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_2_4__r10 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_2_5__r4 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_2_6__r4 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_2_7__r4 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_3_0__r6 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_3_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_3_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_3_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_3_4__r8 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_3_5__r2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_3_6__r2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvc_WS_3_7__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pve_WS__r10 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvh_WS_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvh_WS_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvh_WS_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvh_WS_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvvq_WS_0_0__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvvq_WS_0_1__r4 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvvq_WS_1_0__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvvq_WS_1_1__r4 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvvq_WS_2_0__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvvq_WS_2_1__r4 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvvq_WS_3_0__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_pvvq_WS_3_1__r4 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0_0__g0_s3 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0_0__g1_s3 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0_0__g2_s0 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0_0__g4_s10 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0_0__g4_s5 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0_0__g4_s6 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s10 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s12 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s13 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s14 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s19 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s34 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s36 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s38 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s40 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s42 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s44 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s6 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s7 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g0_s9 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0__m_0__g1_s7 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t12__m_0__g0_s0 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t12__m_0__g0_s16 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t12__m_0__g0_s23 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t12__m_0__g0_s31 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t12__m_0__g0_s34 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t12__m_0__g0_s36 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t12__m_0__g0_s38 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t12__m_0__g0_s40 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t12__m_0__g0_s5 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t12__m_0__g0_s6 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t13__m_0__g0_s1 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t13__m_0__g0_s18 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t13__m_0__g0_s29 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t14__m_0__g2_s0 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t14__m_0__g2_s2 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t14__m_0__g2_s5 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t15__m_0__g0_s0 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t15__m_0__g0_s11 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t15__m_0__g0_s37 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t17__m_0__g0_s0 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t17__m_0__g0_s2 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t17__m_0__g0_s6 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t2__m_0__g2_s10 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t2__m_0__g4_s7 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t3__m_0__g0_s0 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t3__m_0__g0_s20 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t3__m_0__g0_s31 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t3__m_0__g0_s4 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t5__m_0__g0_s0 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t5__m_0__g0_s2 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t5__m_0__g0_s5 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t8__m_0__g3_s8 ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rst_die_t12__m ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rst_die_t13__m ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rst_die_t14__m ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rst_die_t15__m ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rst_die_t17__m ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rst_die_t1__m ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rst_die_t2__m ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rst_die_t3__m ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rst_die_t5__m ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_rst_die_t8__m ffffffffffffff00 act 1 last 1
+SMOKE_OFOLD o_n_te_WS_0_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_0_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_0_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_0_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_1_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_1_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_1_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_1_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_2_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_2_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_2_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_2_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_3_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_3_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_3_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_3_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_4_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_4_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_4_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_4_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_5_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_5_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_5_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_5_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_6_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_6_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_6_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_6_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_7_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_7_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_7_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_te_WS_7_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tk__r2__pinfix2 fffffffe01ffffff act 1 last 20000000000000000000000
+SMOKE_OFOLD o_n_tp_WS_0_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_0_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_1_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_1_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_2_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_2_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_3_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_3_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_4_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_4_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_5_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_5_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_6_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_6_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_7_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tp_WS_7_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_0_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_0_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_0_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_0_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_1_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_1_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_1_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_1_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_2_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_2_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_2_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_2_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_3_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_3_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_3_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_3_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_4_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_4_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_4_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_4_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_5_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_5_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_5_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_5_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_6_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_6_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_6_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_6_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_7_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_7_1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_7_2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ts_WS_7_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_0_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_0_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_1_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_1_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_2_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_2_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_3_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_3_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_4_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_4_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_5_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_5_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_6_0 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_6_3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_tt_WS_7_0 0000000000000000 act 0 last 0
+SMOKE_OFO
+== liveness 2026-10-19T16:31:13-07:00
+    PID     ELAPSED %CPU   RSS COMMAND
+2022334    04:37:06  0.0  4040 make -C /srv/opentallas-scratch/claude/kv-tok/veh/g7/P0/run/obj -f Vtb_qwk_pv_P0_hier.mk -j 16 hier_build
+2022634    04:37:02  0.0  4044 make -C /srv/opentallas-scratch/claude/kv-tok/veh/g7/P1/run/obj -f Vtb_qwk_pv_P1_hier.mk -j 16 hier_build
+2188542    03:23:29 99.9 1264096 /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run/obj/Vtb_qwk_stk_WS +verilator+rand+reset+2 +verilator+seed+1 +verilator+e
+2188543    03:23:29 99.9 1263740 /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run/obj/Vtb_qwk_stk_WS +verilator+rand+reset+2 +verilator+seed+1 +verilator+e
+2221872    02:49:31 99.9 928612 /srv/opentallas-scratch/claude/codex-mu-tok-kv/old_qk_WS_r2/run/obj/Vtb_qwk_stk_WS +NSTEP=8 +VEC0=/srv/opentallas-scratch/claude
