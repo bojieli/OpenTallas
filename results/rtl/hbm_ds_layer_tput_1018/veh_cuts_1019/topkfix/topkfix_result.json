@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.hbm_vehicle_finding.v1",
+ "lane": "VEH-TOPKFIX",
+ "date": "2026-10-19",
+ "defect": "../topk_finding.json (VEH-CUTS): GEN2b binds hfd_vms_bank_native_q0_faces in all 32 VM banks (literal input pin flops on rq/rslot/wq/wslot/pq/dq/kq/xq): bank answer and hub echo +1 edge; ot_hbm_idx_topk_static captured n+8 / ACK 12 and ot_hbm_idx_vm_share_static steered at n+7 (timed on the non-face slice)",
+ "fix": {
+  "rtl": ["ot_hbm_idx_topk_static PIN_IN (capture n+8+PIN_IN, read drain +PIN_IN, ACK default 12+PIN_IN; MUT6 = ack early)",
+          "ot_hbm_idx_vm_share_static / _leaf PIN_IN (owner tap own[6+PIN_IN])",
+          "ot_hbm_idx_rootctl_static PIN_IN pass-through (default 0 = unchanged)",
+          "NEW die master ot_hbm_idx_rootctl_static_pin = rootctl #(.PIN_IN(1)), ports identical: drop-in rebind of hb_idx__ctl"],
+  "compiler": "tools/hbm_idx_topk_static_vectors.schedule(pin_in): F +1, hub response W+1+RESP+1, ACK 13; R/H/P unchanged (rslot/wslot ride the same bank pin flop). idx_images --pin-in (default 1)",
+  "static": "fixed edges only; no handshake/credit added"
+ },
+ "unit_bench": {
+  "runner": "rtl/test/hbm_idx_static/run_topk_static.sh (Verilator 5.050, fleet)",
+  "pin0": "GATE PASS: MUT0 26 done/3 fault, 147 sectors, 0 errors; MUT1-6 FAIL (historical timing bit-identical; MUT6 new)",
+  "pin1": "GATE PASS on strapped native physical banks BANK_PIN_IN 1 + share PIN_IN 1: MUT0 0 errors; MUT1-6 + S1 (share owner one edge short) FAIL; MUT4 = stale n+8 capture, MUT6 = stale ACK 12",
+  "evidence": "rtl/test/hbm_idx_static/evidence/topk_pin_in_1019/pin{0,1}"
+ },
+ "die_cut_replay": {
+  "vehicle": "idxtk cut (GEN2b die.v verbatim, hb_idx__ctl rebound to ot_hbm_idx_rootctl_static_pin), rebuilt Verilator 5.050 ot-epyc5 /srv/opentallas-scratch/claude/veh-topkfix/idxtk",
+  "record": "DS L2 r086 route.top6 IDX.TOPK n 384 k 6 ascending",
+  "positive": "SLICE_PASS drives 777 checks 7 fails 0; O = [33,36,59,182,279,352] (golden); check_slice_run passed=true (out_pos_acceptance.json)",
+  "mutant_sign": "SLICE_FAIL O check rec 86 (out_mut_acceptance.json passed=false) = witness",
+  "measured_busy_edges": 153,
+  "engine_documented_edges": 153,
+  "priced_cycles": 231.5,
+  "scope": "component_probe on die RTL; not a layer/token qualification"
+ }
+}

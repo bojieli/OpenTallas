@@ -1,0 +1,526 @@
+{
+ "schema": "opentallas.hbm_vehicle_att_kv_image.v1",
+ "lane": "VEH-ATT2",
+ "source": {
+  "att_kv_json": "/home/ubuntu/wt/veh-att-1019/results/rtl/hbm_ds_layer_tput_1018/veh_att_1019/kv/L02/att_kv.json",
+  "npz_sha256": "5a5427bb429666291f063415816f89003518c54152d5244865357b4f42af3035",
+  "layer": 2,
+  "rank": 0,
+  "qk_priced": [
+   {
+    "i": 63,
+    "start": 10427.06,
+    "end": 11032.36,
+    "base_cost": 547
+   }
+  ],
+  "pv_priced": [
+   {
+    "i": 67,
+    "start": 11577.74,
+    "end": 12547.17,
+    "base_cost": 808
+   }
+  ],
+  "ring": {
+   "n": 128,
+   "m": 128,
+   "on": true,
+   "first": 0
+  },
+  "c_rows": 512
+ },
+ "nrun": 8,
+ "file": "phy_SW.hex (+HBM_IMG_DIR: ot_hbm3e_phy_rc_e8p5 DRAM model, lines '<sector30 hex> <256-b hex>')",
+ "phy_hex_sha256": "3100423ef77ebee8eb7d720eb0e5dc6abd6f588307cf3d82676fc34b723d17e6",
+ "sectors": 5600,
+ "allocation": {
+  "row0": 16384,
+  "block_lines": 64,
+  "law": "svg_SW<k> (id_sm k) PCs 4k..4k+3; block b at DRAM row KV_ROW0+b; hbm_svc_packed136_image.sector_address == overlap_owner_id k_addr"
+ },
+ "readback": "every in-slice SM's image decodes to exactly the 136-B line stream of the unit pre-check (op_lines), whose rows decode bit-exact to the fixture K rows (kv8/kv4_encode)",
+ "blocks": [
+  {
+   "sm": "sm_SW0",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row_base": 16384,
+   "first_sector": 536870912,
+   "last_sector": 536873039,
+   "bytes_sha256": "3ca8918c5eecb1a54fa851ff86b54b3718e7222c691fc2d17c7067804a2fbdb5"
+  },
+  {
+   "sm": "sm_SW0",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row_base": 16385,
+   "first_sector": 536903713,
+   "last_sector": 536905838,
+   "bytes_sha256": "e76f7d67781d6054d2ba6ff03895e6207f7bf152c965e93e1c5aa51bb2a30ef8"
+  },
+  {
+   "sm": "sm_SW0",
+   "in_slice": true,
+   "block": 2,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row_base": 16386,
+   "first_sector": 536936514,
+   "last_sector": 536938509,
+   "bytes_sha256": "1e00c46db91c3c1e636d694b148fcca149011ac2cc2d6c51c8e030fb59563ede"
+  },
+  {
+   "sm": "sm_SW0",
+   "in_slice": true,
+   "block": 3,
+   "lines": 57,
+   "rows_field": 57,
+   "total_sectors": 244,
+   "pcs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row_base": 16387,
+   "first_sector": 536969315,
+   "last_sector": 536971219,
+   "bytes_sha256": "9480601305903977bd4d314592a27178077cf49026681b28fe7d1ba4861773e9"
+  },
+  {
+   "sm": "sm_SW1",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "row_base": 16384,
+   "first_sector": 536870928,
+   "last_sector": 536873055,
+   "bytes_sha256": "73c2a02279c0b963752b77ede0675ef4581cc421c2c20b160b184979bf44c474"
+  },
+  {
+   "sm": "sm_SW1",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "row_base": 16385,
+   "first_sector": 536903729,
+   "last_sector": 536905854,
+   "bytes_sha256": "9b2055389a7002cdf3bb7d67e44115d629089c666a96186b12f56c1ea35bd8a4"
+  },
+  {
+   "sm": "sm_SW1",
+   "in_slice": true,
+   "block": 2,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "row_base": 16386,
+   "first_sector": 536936530,
+   "last_sector": 536938525,
+   "bytes_sha256": "68fb3e598a9460b98303650fb3c36c89df9670e4e8a601a388c0a78ac29eb81b"
+  },
+  {
+   "sm": "sm_SW1",
+   "in_slice": true,
+   "block": 3,
+   "lines": 57,
+   "rows_field": 57,
+   "total_sectors": 244,
+   "pcs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "row_base": 16387,
+   "first_sector": 536969331,
+   "last_sector": 536971203,
+   "bytes_sha256": "ee77d55546c5aa40535642eec34e96676fc1ef4ac09dd7a305d0e1bc25eb368d"
+  },
+  {
+   "sm": "sm_SW2",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "row_base": 16384,
+   "first_sector": 536870944,
+   "last_sector": 536873071,
+   "bytes_sha256": "1d4abf31e4ce880d4e43c9161ee8802bfccf36e26492984155c578b1da23e3bd"
+  },
+  {
+   "sm": "sm_SW2",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "row_base": 16385,
+   "first_sector": 536903681,
+   "last_sector": 536905806,
+   "bytes_sha256": "bae505cf5ba7e59aaf167481c904452c85714e1747b44f263b6aaa6bb37ad859"
+  },
+  {
+   "sm": "sm_SW2",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "row_base": 16386,
+   "first_sector": 536936546,
+   "last_sector": 536936806,
+   "bytes_sha256": "0e77de8d860ded2185eace5c16c399264d27115895fb4a8f34a8b5069f8ee267"
+  },
+  {
+   "sm": "sm_SW3",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    12,
+    13,
+    14,
+    15
+   ],
+   "row_base": 16384,
+   "first_sector": 536870960,
+   "last_sector": 536873087,
+   "bytes_sha256": "fca6df5c3ffe01b7bd6558627bfd4b6dbeb63944e4bde4e1af6b0d64413749bf"
+  },
+  {
+   "sm": "sm_SW3",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    12,
+    13,
+    14,
+    15
+   ],
+   "row_base": 16385,
+   "first_sector": 536903697,
+   "last_sector": 536905822,
+   "bytes_sha256": "c44dc7566ba601af97b08db3c2fe3caebaeaa1954594c91f77e586b3cc6f2a78"
+  },
+  {
+   "sm": "sm_SW3",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    12,
+    13,
+    14,
+    15
+   ],
+   "row_base": 16386,
+   "first_sector": 536936562,
+   "last_sector": 536936822,
+   "bytes_sha256": "10e2726a3201999dbae24978446e59daf4ebd72a09c0291f20a1c590bf83a9fe"
+  },
+  {
+   "sm": "sm_SW4",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    16,
+    17,
+    18,
+    19
+   ],
+   "row_base": 16384,
+   "first_sector": 536870976,
+   "last_sector": 536872975,
+   "bytes_sha256": "38c828a8d332f3ece7c33679c5aefdad77cfc495c09c0ec76740ca616d8b0d51"
+  },
+  {
+   "sm": "sm_SW4",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    16,
+    17,
+    18,
+    19
+   ],
+   "row_base": 16385,
+   "first_sector": 536903777,
+   "last_sector": 536905774,
+   "bytes_sha256": "0f11612a0d0f3d6c825a4869a21dc55763d57a25ff1ad25f28a88494790c267e"
+  },
+  {
+   "sm": "sm_SW4",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    16,
+    17,
+    18,
+    19
+   ],
+   "row_base": 16386,
+   "first_sector": 536936450,
+   "last_sector": 536936710,
+   "bytes_sha256": "bd8861c0db787e653ff5c8522b2ad09f248a8e57359a8941acfbc3a1c0a457a3"
+  },
+  {
+   "sm": "sm_SW5",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "row_base": 16384,
+   "first_sector": 536870992,
+   "last_sector": 536872991,
+   "bytes_sha256": "9d929def8d3ffb5f6d33fd18eebd5617f1008fe9916ea242589385b609459863"
+  },
+  {
+   "sm": "sm_SW5",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "row_base": 16385,
+   "first_sector": 536903793,
+   "last_sector": 536905790,
+   "bytes_sha256": "fb47c483edf0c0251c1e670b2616ab78ebe96e5e2e7a04762776980c028f6a25"
+  },
+  {
+   "sm": "sm_SW5",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "row_base": 16386,
+   "first_sector": 536936466,
+   "last_sector": 536936726,
+   "bytes_sha256": "a8fb5a7da0ab16bc5385d30696afd89bee86d34cbdf1155a13c2e32c2e7ffeb7"
+  },
+  {
+   "sm": "sm_SW6",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    24,
+    25,
+    26,
+    27
+   ],
+   "row_base": 16384,
+   "first_sector": 536871008,
+   "last_sector": 536873007,
+   "bytes_sha256": "1c249d91b5e8d15bf20d51fed0ec92ef0ae3733e62ddfe01f74132aca7993e88"
+  },
+  {
+   "sm": "sm_SW6",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    24,
+    25,
+    26,
+    27
+   ],
+   "row_base": 16385,
+   "first_sector": 536903745,
+   "last_sector": 536905742,
+   "bytes_sha256": "ebf70a6cd85b9b884d9f9ac4ed1bb58c920e749aec209109801048bab4cd1003"
+  },
+  {
+   "sm": "sm_SW6",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    24,
+    25,
+    26,
+    27
+   ],
+   "row_base": 16386,
+   "first_sector": 536936482,
+   "last_sector": 536936742,
+   "bytes_sha256": "27e6f4f171bcfa6db8cd6cbcb98683663bd25822dcbb7b51db63fcd9d688d6e0"
+  },
+  {
+   "sm": "sm_SW7",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    28,
+    29,
+    30,
+    31
+   ],
+   "row_base": 16384,
+   "first_sector": 536871024,
+   "last_sector": 536873023,
+   "bytes_sha256": "10138888ad7dc276742af5176fc1ea91a8f14f43b916e3c949a7cdf266c0f6d5"
+  },
+  {
+   "sm": "sm_SW7",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    28,
+    29,
+    30,
+    31
+   ],
+   "row_base": 16385,
+   "first_sector": 536903761,
+   "last_sector": 536905758,
+   "bytes_sha256": "1819e598115c0ca209f186f6d72d5cc4d39bdc0c0abf8ae4efe61bd50d8a8175"
+  },
+  {
+   "sm": "sm_SW7",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    28,
+    29,
+    30,
+    31
+   ],
+   "row_base": 16386,
+   "first_sector": 536936498,
+   "last_sector": 536936758,
+   "bytes_sha256": "0baf920ad97a1817843ec9566ba0ecbb73edee4c1677e395e9e06ec0923fe31b"
+  },
+  {
+   "sm": "sm_NW0",
+   "in_slice": false,
+   "rows": 64,
+   "note": "sm_NW* is outside the SW slice: its QK scores / PV node are replayed at the boundary"
+  },
+  {
+   "sm": "sm_NW1",
+   "in_slice": false,
+   "rows": 64,
+   "note": "sm_NW* is outside the SW slice: its QK scores / PV node are replayed at the boundary"
+  }
+ ],
+ "descriptor_note": "issuer descriptor per block: rows = lines, row_base = KV_ROW0 + b, pcs = the SM's own four PCs, total = ceil(rows*136/128)*4 (sm_images.py / VEH-FMT-SM2 owns the row ABI)"
+}

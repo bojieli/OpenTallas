@@ -1963,6 +1963,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         if (s.get("outhold") or s.get("inhold")) and not wrap:
             raise SpecError("spec: io_flop_at_pins and outhold/inhold both use PRE_GLOBAL_PLACE (kit recipe 1); "
                             'set "recipe": 2 to combine them through the kit-local pre_gpl.tcl / pre_dpl.tcl')
+        if wrap and s["io_flop_at_pins"].get("through_frac") is not None:
+            raise SpecError("spec: io_flop_at_pins.through_frac is not supported with the recipe-2 pin-hook wrapper")
         if wrap:
             extra.append(f"--step-tcl PRE_GLOBAL_PLACE={kd}/pre_gpl.tcl")
             extra.append(f"--step-tcl PRE_DETAIL_PLACE={kd}/pre_dpl.tcl")
@@ -1970,6 +1972,17 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             # the <= 3 synthesis INV / BUF (default 4 hops stops inside the stage)
             if pin_hook_wrapper(s):
                 extra.append("--orfs-var OT_OFLOP_HOPS=8")
+        elif s["io_flop_at_pins"].get("through_frac") is not None:
+            # "through_frac": f (RLYH0-FIN 2026-10-19): a pass-through pin flop (input port -> FF -> output port, a lane
+            # station) goes to fraction f of its a -> b L path instead of the input face (physical/qwen_fwd_lane/
+            # lane_flop_thru.tcl sources io_flop_at_pins.tcl first).  600-b lane frames with perpendicular faces: native
+            # launch 231-262 ps > 220 with capture at 74-77 of 190.
+            f = s["io_flop_at_pins"]["through_frac"]
+            if isinstance(f, bool) or not isinstance(f, (int, float)) or not 0.0 <= float(f) <= 1.0:
+                raise SpecError("spec: io_flop_at_pins.through_frac must be a number in 0..1")
+            extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/qwen_fwd_lane/lane_flop_thru.tcl")
+            extra.append("--step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl")
+            extra.append(f"--orfs-var OT_IOFLOP_THRU_FRAC={float(f)}")
         else:
             extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl")
             extra.append("--step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl")
@@ -2037,6 +2050,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         *([f"CLOCK_RLAYERS={shq(' '.join(clock_rlayers(lc)))}"] if clock_rlayers(lc) else []),
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({shell_array(extra)})", *pin_balance_env(r, lc),
         *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
+        *pin_order_desc_env(s),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 
 
@@ -2106,6 +2120,24 @@ def cts_sink_env(r: dict) -> list:
     return [f"CTSA={shq(base + sz + (' ' + extra if extra else ''))}"]
 
 
+def pin_order_desc_env(s: dict) -> list:
+    """optional "pin_order_desc": [port, ...] (HCRING 10-19): these ranged bus ports are laid out high bit first from the
+    range's low end (run_abi3_physical OT_PIN_ORDER_DESC).  For a face that abuts a neighbour placed R180 (or MX / MY
+    across that face): mirror the port's range AND list it here, so bit i meets bit i (HC ring e0 S -> b5, b7 -> b0 S).
+    Needs route.pin_balance: PPL chunked groups (route default OT_PIN_GROUP_MAX 32) do not keep chunk order, so no
+    bit order across a face is defined without it."""
+    d = s.get("pin_order_desc") or []
+    if not d:
+        return []
+    rng = s.get("pin_ranges") or {}
+    bad = [n for n in d if n not in rng or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", n)]
+    if bad:
+        raise SpecError(f"spec: pin_order_desc {bad}: each entry must be a port with its own pin_ranges entry")
+    if not s.get("route", {}).get("pin_balance"):
+        raise SpecError("spec: pin_order_desc needs route.pin_balance (an ordered bit layout across the face)")
+    return [f"export OT_PIN_ORDER_DESC={shq(' '.join(d))}"]
+
+
 def pin_balance_env(r: dict, lc: dict | None = None) -> list:
     """optional route.pin_balance {group_max, h, v}: run_abi3_physical's balanced pin placer (place_pin, uniform over each
     port's range, layer alternating every group_max pins) instead of PPL ordered groups, which put a whole port on ONE
@@ -2141,6 +2173,8 @@ def referenced_paths(s: dict, kd: str) -> list:
     out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and (ROOT / str(v)).is_file())
     if s.get("io_flop_at_pins"):
         out += ["physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"]
+        if s["io_flop_at_pins"].get("through_frac") is not None:
+            out.append("physical/qwen_fwd_lane/lane_flop_thru.tcl")
     if s.get("outhold"):
         out += ["physical/dsrom_window_source/leaf_iohold.tcl", "physical/dsrom_window_source/leaf_inhold_release.tcl"]
     if s.get("inhold"):

@@ -91,12 +91,16 @@ T_PS = 833.333
 # epoch is source edge G + 1, so its strap is K = (E + G + 1 - R0) mod 8.  The data age E (and lane_cycles) is unchanged:
 # every word is still written on the same physical edge.  Added ONCE here (the land plan's K / calendar exclude it) and in
 # reset_calendar_audit.py (finalize_model / audit), which owns the post-reset-tree strap.
+# RLYH0-EN 10-19: the multi-frame lanes' hop-0 station (qfd_rlyh0, ot_qfd_lane_st FIRST=1) registers en on its source root
+# the same way (closed rlyh0 views: en -> ICG native capture 194-278 ps > 190), so EVERY forwarded data lane (n >= 1)
+# carries the +1: K = (E + G + 1 - R0) mod 8.
 HOP0_EN_REG = 1
 
 
 def hop0_en_reg(row):
-    """release edges the landing adds to its write epoch: 1 for a one-frame lane (landh0, en registered), else 0"""
-    return HOP0_EN_REG if int(row.get('n') or 0) == 1 else 0
+    """release edges the hop-0 en register adds to the lane's write epoch: 1 for every forwarded data lane (n >= 1:
+    landh0 or rlyh0 registers en on the source root before its clock gate), else 0"""
+    return HOP0_EN_REG if int(row.get('n') or 0) >= 1 else 0
 
 
 def equalize(rows, D=4, cal=None, h0=None):
@@ -138,7 +142,7 @@ def equalize(rows, D=4, cal=None, h0=None):
         r['cal'] = (int(cal.get(r['bid'], 0)) + hop0_en_reg(r)) % 8
         r['K'] = (int(r['E']) + r['cal']) % 8
         r['K_basis'] = ('Q-COLLCAL: K = (total E + G - R0) mod 8' + (' (land plan calendar)' if r['bid'] in cal else ' (G = R0)')
-                        + (' + 1 (landh0 en registered on ck_s, QK-LANDEN)' if hop0_en_reg(r) else ''))
+                        + (' + 1 (hop-0 en registered on the source root: QK-LANDEN landh0 / RLYH0-EN rlyh0)' if hop0_en_reg(r) else ''))
     if bad:
         raise ValueError('bus groups: ' + '; '.join(bad))
     return rec
