@@ -540,7 +540,8 @@ def cmd_run(a):
     exe = build(work, Path(a.bundle).resolve(), defines)
     a.out_dir = work / f"run_{a.name}"
     c = compile_all(Path(a.fix), Path(a.smw), parse_layers(a.layers), a.mut,
-                    native_padding=(8 if "SMB_NATIVE_LANDING" in defines else 0) + (7 if "SMB_NATIVE_RETURN" in defines else 0) + (4 if "SMB_NATIVE_CACHE_SAFE" in defines else 0),
+                    # Conservative independent path sum: HBM ingress/bridge4 + reserve2 + completion2 + read3.
+                    native_padding=(11 if "SMB_NATIVE_LANDING" in defines else 0) + (7 if "SMB_NATIVE_RETURN" in defines else 0) + (4 if "SMB_NATIVE_CACHE_SAFE" in defines else 0),
                     command_extra=2 if "SMB_NATIVE_CACHE_SAFE" in defines else 0)
     d = a.out_dir
     n = write_events(c, d)

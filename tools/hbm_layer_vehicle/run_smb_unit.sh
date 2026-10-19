@@ -29,6 +29,8 @@ FIX=$OUT/src/results/rtl/hbm_ds_layer_tput_1018/fixtures
 T="cd $OUT/src && $VL HDC_V41_ARITH=chunk8 python3 tools/hbm_layer_vehicle/smb_unit.py run --fix $FIX --smw $SMW --bundle $BUNDLE --work $OUT/work"
 case "$JOB" in
   cache_safe_smoke) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE --name cache_safe_smoke --out $OUT/out/cache_safe_smoke.json" ;;
+  processing_early) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_RETURN_MUT=2 --name processing_early --out $OUT/out/processing_early.json" ;;
+  processing_late) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_RETURN_MUT=4 --name processing_late --out $OUT/out/processing_late.json" ;;
   cache_safe_xmut6) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,XMUT=6 --name cache_safe_xmut6 --out $OUT/out/cache_safe_xmut6.json" ;;
   regional_smoke) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN --name regional_smoke --out $OUT/out/regional_smoke.json" ;;
   regional_mut2) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_RETURN_MUT=2 --name regional_mut2 --out $OUT/out/regional_mut2.json" ;;

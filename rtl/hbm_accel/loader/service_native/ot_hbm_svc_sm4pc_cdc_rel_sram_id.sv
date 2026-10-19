@@ -239,7 +239,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
    if(!srst)alignment_fault<=0;
    else if(out_v!=return_valid||(out_v&&out_ordinal[2:0]!=return_ordinal))alignment_fault<=1;
   wire[MW-1:0] delayed_labels;
-  ot_hbm_svg_meta_delay7 #(.W(MW)) u_labels(.clk(stream_clk),.rst_n(srst),
+  ot_hbm_svg_meta_delay7 #(.W(MW),.DELAY(8)) u_labels(.clk(stream_clk),.rst_n(srst),
    .data_in({pre_v,pre_mask,pre_ordinal,pre_bank,pre_epoch,pre_last}),.data_out(delayed_labels));
   wire cache_rst;
   ot_hbm_svg_return_reset u_cache_reset(.clk(stream_clk),.rst_n(srst),.landed_n(cache_rst));

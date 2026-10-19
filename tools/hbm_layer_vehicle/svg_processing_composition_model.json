@@ -1,12 +1,18 @@
 {
   "schema": "opentallas.svg-processing-stage-composition.v1",
-  "status": "ROOT-approved bounded stage; model before integration RTL",
+  "status": "Integrated leaf8 and metadata8; exact whole-group positive/early/late verification pending",
   "baseline_whole_source": "a7da66a75",
   "baseline_whole_receipt": "c4ee7b497",
   "baseline_command_latency": 9,
   "physical_added_stage": "One STREAM packet-processing capture after native FIFO read; HBM ingress unchanged",
-  "leaf_request_to_return_edges": {"old": 7, "new": 8},
-  "landing_read_to_final_cache_copy_captures": {"old": 10, "new": 11},
+  "leaf_request_to_return_edges": {
+    "old": 7,
+    "new": 8
+  },
+  "landing_read_to_final_cache_copy_captures": {
+    "old": 10,
+    "new": 11
+  },
   "per_path_extra_vs_original": {
     "reserve_stream_edges": 2,
     "completion_consumer_stream_edges": 2,
@@ -26,7 +32,10 @@
   },
   "metadata": {
     "OPEN_and_drain_labels_extra_edges": 1,
-    "indexed_ring_delay": {"old": 7, "new": 8},
+    "indexed_ring_delay": {
+      "old": 7,
+      "new": 8
+    },
     "slots": 8,
     "payload_bits_each_ring": 280,
     "output_bits_each_ring": 35,
@@ -36,6 +45,13 @@
     "reset_and_clock_scope": "Existing frontend reset/clock integration remains OPEN; helper equivalence does not qualify the whole native frontend."
   },
   "SM_cache_read_command_timing": "UNCHANGED by this landing-to-rowcache-copy stage. Cache-only command latency remains9/read-admission7; future banked programme adds2 separately for READ8/command11.",
-  "required_proof": ["8capture metadata ring positive and wrongslot mutant", "exact latest leaf allJ/mutants and buffer-transparent loads", "whole L00 exact fixed GO and actual result timing", "whole early and late metadata mutants"],
-  "physical_claim": "NONE"
+  "required_proof": [
+    "8capture metadata ring positive and wrongslot mutant",
+    "exact latest leaf allJ/mutants and buffer-transparent loads",
+    "whole L00 exact fixed GO and actual result timing",
+    "whole early and late metadata mutants"
+  ],
+  "physical_claim": "NONE",
+  "leaf_source": "48fa0a785",
+  "metadata_source_sha256": "d8e207d2f8e66b2b3c765315220f3e54e312f0e3df2f879b466dea2fb6dbf17a"
 }
