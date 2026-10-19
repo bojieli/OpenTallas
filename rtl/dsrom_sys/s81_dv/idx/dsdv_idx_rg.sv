@@ -47,6 +47,7 @@
 // P = 2 is the 276-b rung's maximum (two V beats a word: 8 scores a cycle); the reader alone sustains P >= 1.41 (the
 // stack's measured 11.35 keys a cycle).  A score not ready at its slot is a sticky fault (late) and sets the word's
 // in-band fault flag: the selector fails closed.
+// LANDING: 2 x ot_sram_1r1w_256x256 a PC (code sector 0 / 1 halves), read together: 1 key a cycle into the engine.
 // HBM BOUNDARY (elastic, owner 10-15): reads go through the region's controller; landing is slot-addressed
 // (LG slots x 16 key cells a PC, no overflow possible), keys wait in landing / the engine until their slot.
 //
@@ -280,21 +281,24 @@ module dsdv_idx_rg #(
     reg [SLW-1:0] so_ [0:1];                 // open gather slot
     reg         sopen [0:1];
     // response decode -> landing writes
-    reg  [1:0]  lw_v;
-    reg  [SLW+4:0] lw_a [0:1];
-    reg  [255:0] lw_d [0:1];
-    wire [255:0] lr_d [0:1];
-    reg  [1:0]  lr_e;
-    reg  [SLW+4:0] lr_a [0:1];
+    // TWO landing memories a PC (index 2 pc + half): half 0 holds code sector 0 ([255:0]) of every cell, half 1 sector 1,
+    // so the consumer reads a whole key in ONE cycle (1 key a cycle = 2x the P = 2 slot rate: the scorer runs ahead of
+    // the window and recovers HBM refresh / latency bubbles instead of losing them for good).
+    reg  [3:0]  lw_v;
+    reg  [SLW+3:0] lw_a [0:3];
+    reg  [255:0] lw_d [0:3];
+    wire [255:0] lr_d [0:3];
+    reg  [3:0]  lr_e;
+    reg  [SLW+3:0] lr_a [0:3];
     genvar gp;
-    generate for (gp = 0; gp < 2; gp = gp + 1) begin : g_land
+    generate for (gp = 0; gp < 4; gp = gp + 1) begin : g_land
         if (SRAM_MACRO) begin : g_m
             ot_sram_1r1w_256x256_m2_r2c2 u_mem (
                 .clk(ck), .r_ce_in(lr_e[gp]), .r_addr_in(8'(lr_a[gp])), .rd_out(lr_d[gp]),
                 .w_ce_in(lw_v[gp]), .w_addr_in(8'(lw_a[gp])), .wd_in(lw_d[gp]), .w_mask_in({256{1'b1}}),
                 .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
         end else begin : g_b
-            reg [255:0] mem [0:LG*32-1];
+            reg [255:0] mem [0:LG*16-1];
             reg [255:0] q;
             always @(posedge ck) begin
                 if (lw_v[gp]) mem[lw_a[gp]] <= lw_d[gp];
@@ -417,7 +421,7 @@ module dsdv_idx_rg #(
                                                      sne[q][e] <= 0; snr[q][e] <= 0; end
                 for (e = 0; e < LG * 16; e = e + 1) begin cdv[q][e] <= 2'b00; scv[q][e] <= 1'b0; end
             end
-            lw_v <= 2'b00; iq_n <= 0; iq_w <= 0; lf_wn <= 0;
+            lw_v <= 4'b0000; iq_n <= 0; iq_w <= 0; lf_wn <= 0;
         end else begin : g_walk
             reg [7:0] fw;
             reg [1:0] rjpu, rjpo;                // read job queued / retired this cycle, per PC
@@ -525,7 +529,7 @@ module dsdv_idx_rg #(
             if (ipop) iq_r <= iq_r + 1'b1;
             iq_n <= iq_n + (ipush ? 1'b1 : 1'b0) - (ipop ? 1'b1 : 1'b0);
             // ---------------- responses -> landing
-            lw_v <= 2'b00;
+            lw_v <= 4'b0000;
             for (q = 0; q < 2; q = q + 1) if (mine_rv[q]) begin : g_rsp
                 reg g; reg [SLW-1:0] s_; reg [3:0] cl; reg sc; reg [2:0] by; reg [3:0] bt;
                 g = rt[q][14]; s_ = rt[q][11 +: SLW]; cl = rt[q][10:7]; sc = rt[q][6]; by = rt[q][5:3]; bt = rb[q];
@@ -534,7 +538,7 @@ module dsdv_idx_rg #(
                 if (!sc) begin
                     reg [3:0] cc;
                     cc = g ? cl : cl + {3'd0, bt[1]};
-                    lw_v[q] <= 1'b1; lw_a[q] <= {s_, cc, bt[0]}; lw_d[q] <= rdd[q];
+                    lw_v[2 * q + bt[0]] <= 1'b1; lw_a[2 * q + bt[0]] <= {s_, cc}; lw_d[2 * q + bt[0]] <= rdd[q];
                     cdv[q][{s_, cc}] <= cdv[q][{s_, cc}] | (bt[0] ? 2'b10 : 2'b01);
                 end else if (!g) begin
                     for (e = 0; e < 8; e = e + 1) begin
@@ -557,58 +561,45 @@ module dsdv_idx_rg #(
             fc <= fc | fc_set | fw;
         end
 
-    // ------------------------------------------------------------------ consumer: landing -> engine (one key / 2 cycles)
+    // ------------------------------------------------------------------ consumer: landing -> engine (one key a cycle)
     wire [IW-1:0] ih = iq[iq_r];
     wire          h_pc = ih[IW-1];
     wire [SLW-1:0] h_sl = ih[IW-2 -: SLW];
     wire [3:0]    h_cl = ih[IW-2-SLW -: 4];
     wire [SLW+3:0] h_ci = {h_sl, h_cl};
     wire          h_ready = (iq_n != 0) && cdv[h_pc][h_ci] == 2'b11 && scv[h_pc][h_ci];
-    reg  [1:0]    cs;                        // 0 idle / read s0, 1 read s1, 2 fire
-    reg           c_pc;
-    reg  [SLW+3:0] c_ci;
-    reg  [15:0]   c_w; reg [3:0] c_ln; reg c_lw;
-    reg  [255:0]  d0;
-    reg  [31:0]   c_sc;
     reg  [SQW:0]  infl;                      // keys in the engine + scores waiting for the assembler
     wire          room = infl < (SQW+1)'(SQD - 2);
-    assign ipop = (cs != 2'd1) && h_ready && q_done && room && act;
+    assign ipop = h_ready && q_done && room && act;
     wire          k_ready;
     reg           k_v;
     reg  [543:0]  k_key;
+    // stage 1: both halves of the key's cell read (lr_e), scale + metadata held; stage 2: SRAM data -> engine register
+    reg           c_v; reg c_pc; reg [31:0] c_sc; reg [15:0] c_w; reg [3:0] c_ln; reg c_lw;
+    reg           f1;  reg f_pc; reg [31:0] f_sc; reg [15:0] f_w; reg [3:0] f_ln; reg f_lw;
     always @(posedge ck or negedge rn)
-        if (!rn) begin cs <= 2'd0; lr_e <= 2'b00; rel_v <= 2'b00; rel0 <= 2'b00; rel1 <= 2'b00; end
+        if (!rn) begin lr_e <= 4'b0000; rel_v <= 2'b00; rel0 <= 2'b00; rel1 <= 2'b00; c_v <= 1'b0; f1 <= 1'b0; end
         else begin
-            lr_e <= 2'b00; rel0 <= 2'b00; rel1 <= rel0; rel_v <= rel1;
+            lr_e <= 4'b0000; rel0 <= 2'b00; rel1 <= rel0; rel_v <= rel1;
             rs1[0] <= rs0[0]; rs1[1] <= rs0[1]; rel_s[0] <= rs1[0]; rel_s[1] <= rs1[1];
-            if (cs == 2'd1) begin
-                lr_e[c_pc] <= 1'b1; lr_a[c_pc] <= {c_ci, 1'b1}; cs <= 2'd2;
-            end else begin
-                if (cs == 2'd2) d0 <= lr_d[c_pc];
-                if (ipop) begin
-                    c_pc <= h_pc; c_ci <= h_ci; c_w <= ih[20:5]; c_ln <= ih[4:1]; c_lw <= ih[0];
-                    c_sc <= scl[h_pc][h_ci];
-                    lr_e[h_pc] <= 1'b1; lr_a[h_pc] <= {h_ci, 1'b0};
-                    rel0[h_pc] <= 1'b1; rs0[h_pc] <= h_sl;
-                    cs <= 2'd1;
-                end else if (cs == 2'd2) cs <= 2'd0;
+            c_v <= ipop;
+            if (ipop) begin
+                c_pc <= h_pc; c_w <= ih[20:5]; c_ln <= ih[4:1]; c_lw <= ih[0];
+                c_sc <= scl[h_pc][h_ci];
+                lr_e[2 * h_pc] <= 1'b1; lr_e[2 * h_pc + 1] <= 1'b1;
+                lr_a[2 * h_pc] <= h_ci; lr_a[2 * h_pc + 1] <= h_ci;
+                rel0[h_pc] <= 1'b1; rs0[h_pc] <= h_sl;
             end
+            f1 <= c_v;
+            if (c_v) begin f_pc <= c_pc; f_sc <= c_sc; f_w <= c_w; f_ln <= c_ln; f_lw <= c_lw; end
         end
-    // fire: s0 captured in d0 at cs 2 -> key = {scale, s1 (lr_d one cycle after cs 2), d0}
-    reg f1; reg f_pc; reg [31:0] f_sc; reg [15:0] f_w; reg [3:0] f_ln; reg f_lw;
-    always @(posedge ck or negedge rn)
-        if (!rn) f1 <= 1'b0;
-        else begin
-            f1 <= (cs == 2'd2);
-            if (cs == 2'd2) begin f_pc <= c_pc; f_sc <= c_sc; f_w <= c_w; f_ln <= c_ln; f_lw <= c_lw; end
-        end
-    // engine input register
+    // engine input register: the SRAM data is valid the cycle after the read (f1)
     reg [20:0] k_m;
     always @(posedge ck or negedge rn)
         if (!rn) k_v <= 1'b0;
         else begin
             k_v <= f1;
-            if (f1) begin k_key <= {f_sc, lr_d[f_pc], d0}; k_m <= {f_w, f_ln, f_lw}; end
+            if (f1) begin k_key <= {f_sc, lr_d[2 * f_pc + 1], lr_d[2 * f_pc]}; k_m <= {f_w, f_ln, f_lw}; end
         end
     wire        o_v;
     wire [0:0]  o_kv, o_f;
