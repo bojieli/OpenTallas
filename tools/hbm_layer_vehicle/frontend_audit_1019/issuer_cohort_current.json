@@ -1,0 +1,22 @@
+{
+  "top": "ot_hbm_svc_sm_issuer_rel",
+  "params": {
+    "LBANKS": 4,
+    "NID": 6,
+    "IDW": 9,
+    "PAW": 11,
+    "DD": 256,
+    "DAW": 8,
+    "MUT": 0,
+    "ID_COHORT": 1
+  },
+  "sources": [
+    "tools/hbm_layer_vehicle/frontend_audit_1019/snapshots/ot_hbm_svc_sm_issuer_rel_825607a54.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "source_revision": "825607a54 (adopted main944bbb859; original file verified SHA6acb3e9d...)",
+  "audit_scope": "Read-only structural census; no engine RTL modified; no gate",
+  "source_original_path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+  "no_rtl_edits": "snapshot is byte-identical, not a divergent engine source"
+}

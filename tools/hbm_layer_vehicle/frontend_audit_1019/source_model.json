@@ -82,5 +82,17 @@
       "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svg_landing_pair_native.sv",
       "source_sha256": "264db6256f201af07269f555faf063881c151b60e40f5bf793c6d3948b7a6e20"
     }
+  },
+  "adopted_source": {
+    "commit": "825607a54",
+    "main": "944bbb859",
+    "issuer_sha256": "6acb3e9d66d70ceb211c86a317868e10bb15716787fdf9b3815a08b57d407d07",
+    "collector_sha256": "897e7d4151242059210a545f9a7b4ba62f10485c2563502699f6c6f53988ed26",
+    "issuer_param_ID_COHORT": 1,
+    "cohort_input_bits": 16,
+    "run_cohort_state_bits": 16,
+    "run_accept": "invalidate IDs, increment cohort; same-edge IDs forbidden",
+    "ids_accept": "running, no run_v, IDs not yet accepted, matching layer and cohort",
+    "native_composition": "a7da66a75 still old issuer/no cohort port; no silent mix; current issuer standalone census separate"
   }
 }
