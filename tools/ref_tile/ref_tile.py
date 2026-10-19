@@ -186,8 +186,14 @@ def check_hold_budget(s: dict) -> None:
     pr = s.get("pin_regs") or {}
     # Q-CLUSTER 2026-10-17 (coordinator): a two-level cluster (cluster_level 2) whose own RTL registers every boundary pin
     # (pin_regs off with that reason) qualifies under the same rule and the same native audit
-    if s.get("kind") != "tile" and not (s.get("kind") == "cluster" and s.get("cluster_level") == 2):
-        raise SpecError('spec: hold_budget "die" applies to leaf tiles (kind "tile") and two-level clusters only')
+    if s.get("kind") == "cluster" and s.get("cluster_level", 1) == 1 and s.get("registered_cluster_candidate"):
+        from registered_cluster_budget import check as check_registered_cluster
+        try:
+            check_registered_cluster(s, ROOT)
+        except (ValueError, KeyError, TypeError, OSError) as exc:
+            raise SpecError(str(exc)) from exc
+    elif s.get("kind") != "tile" and not (s.get("kind") == "cluster" and s.get("cluster_level") == 2):
+        raise SpecError('spec: hold_budget "die" applies to leaf tiles, two-level clusters, or evidence-guarded level 1 candidates')
     if not isinstance(pr, dict) or pr.get("exclude") or not (pr.get("enable") or str(pr.get("reason") or "").strip()):
         raise SpecError('spec: hold_budget "die" needs every data pin registered (pin_regs enabled without exclude, '
                         'or disabled with the reason the RTL registers them)')
@@ -2347,7 +2353,10 @@ def route_hold_context(s: dict, kd: str) -> dict:
 
 
 def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
-    r, j = s["route"], s.get("job", {})
+    r, j = s["route"], dict(s.get("job", {}))
+    if s.get("registered_cluster_candidate"):
+        from registered_cluster_budget import evidence_paths
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
     hold = route_hold_context(s, kd)
     hm = float(hold["HM"])
     tag = j.get("tag", "ref")
