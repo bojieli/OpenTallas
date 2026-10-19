@@ -1,0 +1,235 @@
+{
+  "time": "2026-10-19T23:02:11.461235+00:00",
+  "top": [
+    {
+      "name": "cts.log",
+      "size": 601915,
+      "mtime": 1792450769.2942605
+    },
+    {
+      "name": "layout_floorplan.log",
+      "size": 351,
+      "mtime": 1792436595.9879239
+    },
+    {
+      "name": "iop.log",
+      "size": 14558,
+      "mtime": 1792436580.5186143
+    },
+    {
+      "name": "pin_geometry.log",
+      "size": 198,
+      "mtime": 1792436584.402163
+    },
+    {
+      "name": "pin_geometry.json",
+      "size": 563,
+      "mtime": 1792436584.402163,
+      "json": {
+        "schema": "opentallas.fp_pin_geometry.v1",
+        "verdict": "PASS",
+        "fails": [],
+        "metrics": {
+          "signal_clock_pins": 842,
+          "pin_rectangles": 842,
+          "pin_track_checked": 842,
+          "pin_track_inaccessible": 0,
+          "pin_rectangles_outside": 0,
+          "missing_geometry": 0
+        },
+        "dump": "/srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199rq-20261019-114903/routes/gate/work/orfs/gate_dump.json",
+        "dump_sha256": "93fc03b02fd4c4c0bc0aa7b08adde73a07c6a5f063c66233058e3e38502a085b",
+        "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+      }
+    },
+    {
+      "name": "ck.log",
+      "size": 0,
+      "mtime": 1792450769.6922674
+    },
+    {
+      "name": "textbook.json",
+      "size": 4489,
+      "mtime": 1792436614.448346,
+      "json": {
+        "cells": 295880,
+        "flops": 52472,
+        "icgs": 0,
+        "macros": 2,
+        "findings": {
+          "clock_domain": [
+            "clock root port clk: 52,472 flops > 15,000 on one root (+0 ICGs, 2 macro clock pins; e.g. rst_n_pin__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine"
+          ],
+          "clock_guidance": [
+            "clock root port:clk: 52,474 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 52,474 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+          ]
+        },
+        "refuse": {},
+        "metrics": {
+          "core_um": [
+            427.7,
+            211.7
+          ],
+          "clock_roots": [
+            {
+              "root": "port:clk",
+              "ff": 52472,
+              "icg": 0,
+              "macro_pins": 2,
+              "example": "rst_n_pin__ot_rl0$_DFF_P_"
+            }
+          ],
+          "hier_subblocks": 0,
+          "clock_max_root_sinks": 52474,
+          "clock_max_root": "port:clk",
+          "high_fanout_top": [
+            {
+              "net": "u_ot_pr_core.g_l3.u_l0.u_tag.genblk1.g_line.line[200]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+              "loads": 1060,
+              "flops": 1
+            },
+            {
+              "net": "u_ot_pr_core.g_l3.u_l0.u_tag.genblk1.g_line.line[201]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+              "loads": 532,
+              "flops": 1
+            },
+            {
+              "net": "u_ot_pr_core.g_l3.u_l0.p0_fp4$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+              "loads": 440,
+              "flops": 0
+            },
+            {
+              "net": "_288028_/Y (XNOR2x2_ASAP7_75t_R)",
+              "loads": 330,
+              "flops": 1
+            },
+            {
+              "net": "u_ot_pr_core.g_ch3.u_c0.first_r$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+              "loads": 310,
+              "flops": 0
+            },
+            {
+              "net": "u_ot_pr_core.g_l3.u_l0.u_tag.genblk1.g_line.line[202]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+              "loads": 268,
+              "flops": 1
+            },
+            {
+              "net": "u_ot_pr_core.g_bf.g_fqt.u_bf.g_l[15].t_lr[11]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+              "loads": 267,
+              "flops": 1
+            },
+            {
+              "net": "u_ot_pr_core.g_bf.g_fqt.u_bf.g_l[14].t_lr[11]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+              "loads": 267,
+              "flops": 1
+            }
+          ],
+          "hf_max_port": 0,
+          "hf_max_reset": 0,
+          "hf_max_net": 1060,
+          "reset_landing": [
+            {
+              "port": "rst_n_pin",
+              "sinks": 1,
+              "flops": 1,
+              "macros": 0
+            }
+          ],
+          "in_to_out_bits": 0,
+          "in_to_reg_levels": 0,
+          "reg_to_out_levels": 0,
+          "icg_enable_from_port": 0,
+          "depth_ps": 506.8,
+          "depth_path": [
+            "u_ot_pr_core.g_bf.g_fqt.u_bf.g_l[12].genblk1.g_c4.u_c.u_add.u_c6.g_r.r[1]$_SDFF_PN0_",
+            "u_ot_pr_core.g_bf.g_fqt.u_bf.g_l[12].genblk1.g_c4.u_c.u_add.u_c8.g_r.r[23]$_DFF_P_/D"
+          ],
+          "depth_levels": 13,
+          "reach_worst_um": 0.0,
+          "reach_violations": 0,
+          "util": 0.5423,
+          "std_density": 0.4558,
+          "total_fill": 0.5423,
+          "narrow_channels": 0,
+          "narrow_channel_min_um": null
+        },
+        "top": "ot_v41_bf_col",
+        "netlist": "/srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199rq-20261019-114903/routes/gate/work/orfs/results/asap7/opentallas_ot_v41_bf_col_asap7_ref_gate/base/1_2_yosys.v",
+        "seconds": 13.8,
+        "thresholds": {
+          "clk_sinks_max": 15000,
+          "clk_span_um": 600.0,
+          "clk_span_sinks": 8000,
+          "clk_sinks_refuse": 110000,
+          "hf_report": 256,
+          "hf_max": 3000,
+          "hf_port_refuse": 2048,
+          "hf_reset_refuse": 8000,
+          "hf_refuse": 50000,
+          "rst_land_max": 2,
+          "bnd_levels": 3,
+          "bnd_in_levels_refuse": 9,
+          "bnd_out_levels_refuse": 3,
+          "bnd_in_to_out_refuse": 1,
+          "bnd_icg_port_refuse": 1,
+          "depth_scale": 1.667,
+          "depth_ps_warn": 600.0,
+          "depth_ps_max": 700.0,
+          "reach_um": 500.0,
+          "reach_min_count": 1,
+          "util_min": 0.45,
+          "util_max": 0.65,
+          "fill_max": 0.9,
+          "macro_halo_um": 2.16,
+          "channel_um": 20.0,
+          "reset_ports": "rst_n_pin"
+        },
+        "clock_rule": {
+          "max_root_sinks": 52474,
+          "root": "port:clk",
+          "ok": true,
+          "text": "52,474 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 52,474 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+          "enforce": false,
+          "closed_stands": false,
+          "limits": {
+            "sinks": 15000,
+            "insertion_ps": 300.0,
+            "spread_ps": 80.0
+          }
+        },
+        "would_refuse": [],
+        "waived": [],
+        "verdict": "WARN",
+        "refusing_checks": [],
+        "summary": "clock_domain: clock root port clk: 52,472 flops > 15,000 on one root (+0 ICGs, 2 macro clock pins; e.g. rst_n_pin__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine | clock_guidance: clock root port:clk: 52,474 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 52,474 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+      }
+    },
+    {
+      "name": "execution.log",
+      "size": 5995033,
+      "mtime": 1792450769.6912673
+    },
+    {
+      "name": "dump.log",
+      "size": 266,
+      "mtime": 1792436581.1716275
+    }
+  ],
+  "processes": [
+    "   8939    8928    03:04:57  0.0 11564 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_qfd_native59_dv_service_r1_asap7_ref_gate/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qfd_native59_dv_service_r1_asap7_ref_gate/base/4_1_cts.json",
+    "   8940    8939    03:04:57  108 4248272 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qfd_native59_dv_service_r1_asap7_ref_gate/base/4_1_cts.json",
+    "  33021   33010    02:51:41  0.0 11636 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_qfd_native59_dv_service_r1_asap7_ref_gate/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qfd_native59_dv_service_r1_asap7_ref_gate/base/4_1_cts.json",
+    "  33022   33021    02:51:41  107 4367504 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_qfd_native59_dv_service_r1_asap7_ref_gate/base/4_1_cts.json",
+    "  35104   35082    02:50:36  0.0 11636 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_coll_split_q_asap7_ref_gate/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_coll_split_q_asap7_ref_gate/base/4_1_cts.json",
+    "  35106   35104    02:50:36  100 1893624 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_coll_split_q_asap7_ref_gate/base/4_1_cts.json",
+    "  55049   54892    02:31:59  0.0 11548 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_v41_bf_col_asap7_ref_gate/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_v41_bf_col_asap7_ref_gate/base/4_1_cts.json",
+    "  55115   55049    02:31:59  103 3651780 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_v41_bf_col_asap7_ref_gate/base/4_1_cts.json",
+    "  96776   96757    01:55:58  0.0 11680 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_hnx_hc_qhub_asap7_ref_gate/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_hnx_hc_qhub_asap7_ref_gate/base/4_1_cts.json",
+    "  96777   96776    01:55:58  120 5520520 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_ot_hnx_hc_qhub_asap7_ref_gate/base/4_1_cts.json",
+    " 163175  163164       30:35  0.0 11708 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_hnx_fused_hub_asap7_ref_gate/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hnx_fused_hub_asap7_ref_gate/base/5_1_grt.json",
+    " 163176  163175       30:35  291 5025480 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hnx_fused_hub_asap7_ref_gate/base/5_1_grt.json",
+    " 236040   11045       00:00 75.0 13380 python3 -c import pathlib,json,subprocess,datetime r=pathlib.Path('/srv/opentallas-scratch/claude/ref_gate/s81sf_bfcol_c199rq-20261019-114903') o={'time':datetime.datetime.now(datetime.timezone.utc).isoformat(),'top':[],'processes':[]} for p in r.iterdir():  if p.is_file():   row={'name':p.name,'size':p.stat().st_size,'mtime':p.stat().st_mtime}   if p.suffix=='.json':    try:row['json']=json.loads(p.read_text())    except Exception as e:row['error']=str(e)   o['top'].append(row) ps=subprocess.run(['ps','-eo','pid,ppid,etime,pcpu,rss,args'],capture_output=True,text=True).stdout for l in ps.splitlines():  if 'openroad ' in l and ('-metrics /work/' in l or '/work/ck_' in l):o['processes'].append(l) print(json.dumps(o,indent=2)) ",
+    "3933573 3933562    03:51:26  0.0 11616 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_hnx_idxn_keybuf_asap7_ref_gate/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hnx_idxn_keybuf_asap7_ref_gate/base/5_1_grt.json",
+    "3933574 3933573    03:51:26  109 2923160 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hnx_idxn_keybuf_asap7_ref_gate/base/5_1_grt.json"
+  ]
+}

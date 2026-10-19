@@ -1,0 +1,58 @@
+{
+  "time": "2026-10-19T23:02:01.030825+00:00",
+  "files": [
+    {
+      "path": "/srv/opentallas-scratch/claude/mu-die-s81/case_mab/out/run.log",
+      "size": 26695,
+      "mtime_utc": "2026-10-19T22:59:45.484340+00:00",
+      "sha256": "1ffc846b8660a9ab79ddba5830daa06a62a4fecd84eb3f306bcc675ef0d29dcf",
+      "selected_lines": [
+        "[INFO GRT-0102] Start extra iteration 4/30",
+        "[INFO GRT-0102] Start extra iteration 5/30",
+        "[INFO GRT-0102] Start extra iteration 6/30",
+        "[INFO GRT-0102] Start extra iteration 7/30",
+        "[INFO GRT-0102] Start extra iteration 8/30",
+        "[INFO GRT-0102] Start extra iteration 9/30",
+        "[INFO GRT-0102] Start extra iteration 10/30",
+        "[INFO GRT-0102] Start extra iteration 11/30",
+        "[INFO GRT-0102] Start extra iteration 12/30",
+        "[INFO GRT-0102] Start extra iteration 13/30",
+        "[INFO GRT-0102] Start extra iteration 14/30",
+        "[INFO GRT-0102] Start extra iteration 15/30",
+        "[INFO GRT-0102] Start extra iteration 16/30",
+        "[INFO GRT-0102] Start extra iteration 17/30",
+        "[INFO GRT-0102] Start extra iteration 18/30",
+        "[INFO GRT-0102] Start extra iteration 19/30",
+        "[INFO GRT-0102] Start extra iteration 20/30",
+        "[INFO GRT-0102] Start extra iteration 21/30"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/mu-die-s81/case_mu1/out/run.log",
+      "size": 26669,
+      "mtime_utc": "2026-10-19T22:36:44.055756+00:00",
+      "sha256": "c15956a2969b42a76625ae95b83cf24f72be0178394ffe8d89e91611462f6641",
+      "selected_lines": [
+        "[INFO GRT-0102] Start extra iteration 7/30",
+        "[INFO GRT-0102] Start extra iteration 8/30",
+        "[INFO GRT-0102] Start extra iteration 9/30",
+        "[INFO GRT-0102] Start extra iteration 10/30",
+        "[INFO GRT-0102] Start extra iteration 11/30",
+        "[INFO GRT-0102] Start extra iteration 12/30",
+        "[INFO GRT-0102] Start extra iteration 13/30",
+        "[INFO GRT-0102] Start extra iteration 14/30",
+        "[INFO GRT-0102] Start extra iteration 15/30",
+        "[INFO GRT-0102] Start extra iteration 16/30",
+        "[INFO GRT-0102] Start extra iteration 17/30",
+        "[INFO GRT-0102] Start extra iteration 18/30",
+        "[INFO GRT-0102] Start extra iteration 19/30",
+        "[INFO GRT-0102] Start extra iteration 20/30",
+        "[INFO GRT-0102] Start extra iteration 21/30",
+        "[INFO GRT-0102] Start extra iteration 22/30",
+        "[INFO GRT-0102] Start extra iteration 23/30",
+        "[INFO GRT-0102] Start extra iteration 24/30"
+      ]
+    }
+  ],
+  "ps": "    PID    PPID     ELAPSED %CPU   RSS COMMAND\n 724195  724194    11:24:11  111 48094360 openroad -threads 16 -no_init -exit /work/run.tcl\n1174997 1174996    09:47:26  110 49851580 openroad -threads 16 -no_init -exit /work/run.tcl\n"
+}
