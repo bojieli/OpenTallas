@@ -4,6 +4,9 @@
 #  g   indexed SU.VOP (route gather A[I] -> O): d4g single-row engine bench (tb_indexed_scalar, fixed_cycles) and the hnx
 #      R-row engine (tb_hnx_su_indexed_rows, rows 1..8 on the real static VM banks): MUT 0 PASS (R1..R8 cycles),
 #      MUT 1 (I row stride dropped) / 2 (O row stride dropped) / 3 (value pipe short) -> GATHER_ROWS FAIL (witnesses)
+#  d   DMA.KVWB_DS N rows into the 256-slot window ring on the d4g die master ot_hgi_dma_back_static_vp4_banks (unchanged)
+#      (tb_hnx_dma_kvwb_ring): MUT 0 PASS (R1..R6 + slots >= 128 + wraps split into two moves), MUT 1 (7-b ring index)
+#      / 2 (no wrap split) / 3 (VM row stride dropped) -> KVWB_RING FAIL (witnesses)
 #  s0  un-indexed SU.VOP on the WHOLE static SU (d4g ot_hbm_su_static_top unchanged) behind ot_hnx_su_rowx, MUT 0:
 #      AB  N = 1,2,3,4,6 row-relative; AB N = 4 --absolute (the unrolled d4g image, row codes 0 = d4g bit for bit);
 #      ABC N = 1,4,6; AB N = 4 --guard 0 (fill / lane-result store writes back to back) -> SU_ROWS PASS + SU_ROWS_EDGES
@@ -27,6 +30,18 @@ if [ "$ST" = g ]; then
   }
   gb g_d4g tb_indexed_scalar 0 $GA/ot_hbm_su_indexed_scalar.sv $GA/tb_indexed_scalar.sv &
   for m in 0 1 2 3; do gb g_m$m tb_hnx_su_indexed_rows $m rtl/hbm_next/su/ot_hnx_su_indexed_scalar_rows.sv rtl/hbm_next/su/tb/tb_hnx_su_indexed_rows.sv & done
+  wait; V "done"; exit 0
+fi
+if [ "$ST" = d ]; then
+  PS=rtl/hbm_accel/generic/peers/static
+  for m in 0 1 2 3; do (
+    d=$O/obj_d$m; rm -rf $d
+    verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hnx_dma_kvwb_ring -GMUT=$m -Mdir $d -o Vd$m \
+      rtl/hbm_next/dma/tb/tb_hnx_dma_kvwb_ring.sv $PS/ot_hgi_dma_back_static_vp4_banks.sv $PS/ot_hgi_dma_back_static_vp_banks.sv \
+      "${VMB[@]}" physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > $O/build_d$m.log 2>&1
+    ( cd $O && $d/Vd$m > $O/d_m$m.log 2>&1; echo RUN_RC=$? >> $O/d_m$m.log )
+    V "d_m$m: $(grep -h 'KVWB_RING\|RUN_RC' $O/d_m$m.log | head -2 | tr '\n' ' ')"; rm -rf $d ) &
+  done
   wait; V "done"; exit 0
 fi
 S=rtl/hbm_accel/generic/adapters/static_su
