@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.kv_order_s2_body_prompt_model.v1",
+  "source": "436d6e726",
+  "macro_family_source": "bb61ae67c",
+  "candidate_outline_um": [
+    302.4,
+    267.84
+  ],
+  "slot_granted": false,
+  "logic_std_um2": 12199.21722,
+  "hard_um2": 12325.58208,
+  "mapped_FF": 18229,
+  "register_load_max": 32,
+  "reset_registered_edges": 2,
+  "reset_max_loads": {
+    "root": 12,
+    "first": 24,
+    "final": 30
+  },
+  "actual_row_capacity_um2": 26115.696,
+  "actual_body_capacity_um2": 22534.848,
+  "std_over_sites": 0.46712204109,
+  "placed_occupancy": null,
+  "memory_bytes_per_edge_max": {
+    "read": 96,
+    "write": 96
+  },
+  "II": 1,
+  "new_external_data_edges": 0,
+  "MAC_per_edge": 0,
+  "boundary_bits_actual": 2280,
+  "clock_sinks_expected": 18235,
+  "native_TT_FF": null,
+  "parent_per_user_rate_delta": null,
+  "can_build_CTS": false,
+  "blocked_by": [
+    "ROOT geometry and canonical reset-tool/daemon review",
+    "fresh calibrated-family synthesis and placement occupancy/reach",
+    "macro external patch/via/PG/DRC",
+    "native clock/slew/TT setup/FF hold",
+    "actual new GEN parent slot regrant"
+  ]
+}

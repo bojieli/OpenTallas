@@ -1,17 +1,32 @@
 `timescale 1ns/1ps
+`ifndef OT_HOST_BOOT_FIFO_DEFAULT
+`define OT_HOST_BOOT_FIFO_DEFAULT 0
+`endif
+`ifndef OT_HOST_BOOT_FIFO_MUT
+`define OT_HOST_BOOT_FIFO_MUT 0
+`endif
 // Credit-delimited, ordered split of real native QM output: KV goes to static
 // host stations, embedding to gateway hb. Real completion owners, not hb_cr,
 // advance the shared per-PC retirement ledger. BOOT_END waits for that prefix.
-module qkd_host_boot_dispatch #(parameter integer MUT=0)(
+module qkd_host_boot_dispatch #(parameter integer MUT=0,SRAM_FIFO=`OT_HOST_BOOT_FIFO_DEFAULT,SRAM_MUT=`OT_HOST_BOOT_FIFO_MUT)(
  input wire ck,ck_order,rst_n,boot_release,input wire[289:0]ing,output reg ing_cr,
  output reg[289:0]kv,input wire kv_cr,
  output reg[282:0]hb,input wire hb_cr,output reg image_check,
  input wire[127:0]acks,output wire prefix_v,output wire[31:0]landed,
  output reg[31:0]issued,output wire fault);
- reg[289:0]q[0:7];reg[2:0]wp,rp;reg[3:0]count;
+ reg[2:0]wp,rp;reg[3:0]count;
  reg[3:0]kc;reg[2:0]hc;reg[8:0]oc;
  reg iv_q,kcr_q,hcr_q,boot_hold,image_dirty;reg[289:0]id_q;reg ff;
- wire[289:0]head=q[rp];wire[31:0]addr=head[33:2];wire marker=addr==32'hffffffff;
+ wire[289:0]head;
+ generate if(SRAM_FIFO)begin:g_sram_fifo
+  qkd_host_boot_fifo8_sram #(.W(290),.MUT(SRAM_MUT))u_payload(.ck(ck),.wr(iv_q&&count<8),.wp(wp),
+   .wd(id_q),.rp(rp),.next_rp(send?rp+3'd1:rp),.head(head));
+ end else begin:g_flop_fifo
+  reg[289:0]q[0:7];
+  always @(posedge ck)if(iv_q&&count<8)q[wp]<=id_q;
+  assign head=q[rp];
+ end endgenerate
+ wire[31:0]addr=head[33:2];wire marker=addr==32'hffffffff;
  wire embed=addr[31]&&!marker;wire we=head[1];
  wire[24:0]logical_e=addr[24:0];wire[24:0]scale_e=logical_e-25'd19447808;
  wire[1:0]stack=(logical_e<25'd19447808)?logical_e[6:5]:scale_e[6:5];
@@ -21,7 +36,7 @@ module qkd_host_boot_dispatch #(parameter integer MUT=0)(
  reg issue_v;reg[6:0]issue_pc;wire order_fault;
  qkd_host_commit_order #(.MUT(MUT))u_order(.ck(ck_order),.rst_n(rst_n),.issue_v(issue_v),.issue_pc(issue_pc),.acks(acks),.prefix_v(prefix_v),.prefix_count(landed),.fault(order_fault));
  assign fault=ff|order_fault;
- always @(posedge ck)begin id_q<=ing;if(iv_q&&count<8)q[wp]<=id_q;end
+ always @(posedge ck)begin id_q<=ing;end
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin wp<=0;rp<=0;count<=0;kc<=8;hc<=4;oc<=256;iv_q<=0;kcr_q<=0;hcr_q<=0;ff<=0;boot_hold<=0;image_dirty<=0;image_check<=0;ing_cr<=0;kv<=0;hb<=0;issued<=0;issue_v<=0;issue_pc<=0;end
   else begin

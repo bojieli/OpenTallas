@@ -1,0 +1,35 @@
+{
+  "macro_source_commit": "bb61ae67c",
+  "source_semantic_change": "distinct calibrated abstract only; optional define, no data edge or interface change",
+  "checks": {
+    ".lef": {
+      "old_sha256": "08aec98805392ad7d3a7af71f0a1f0d3173c43d2237bb7ead943c4872cba5a8a",
+      "new_sha256": "382d89f3b087fbf3a10552a3363c7346228bdfcc9d923245ac1093c0551db9fe",
+      "byte_equal_after_master_rename": true
+    },
+    ".v": {
+      "old_sha256": "e8d4ae480612bbc610bafa5c4c0a30b7240257589ca085f4b3811e56b4fad2b1",
+      "new_sha256": "677905209f60681d770b887b4295d72a518d2ea1f9ed8f717792be3ac457fe70",
+      "byte_equal_after_master_rename": true
+    },
+    "_bb.v": {
+      "old_sha256": "4c25dfce15d1796a1a79352e9ed7a41d9653b4eb9404552267bce8ec7ec474f9",
+      "new_sha256": "abcda04ef59dc8c8056b48e3d1b1aab255d4d3713d658644e57a6638974799ba",
+      "byte_equal_after_master_rename": true
+    },
+    "tt": {
+      "lib_sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9",
+      "coherent_family": "ot_sram_1r1w_32x128_m1_p192_rc"
+    },
+    "ff": {
+      "lib_sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b",
+      "coherent_family": "ot_sram_1r1w_32x128_m1_p192_rc"
+    },
+    "ss": {
+      "lib_sha256": "58be955664209402cd4dfe27e6295a2630d6fc491ff17f0bab3d2d5d83393746",
+      "coherent_family": "ot_sram_1r1w_32x128_m1_p192_rc"
+    }
+  },
+  "old_family_immutable": true,
+  "all_abstract_geometry_behavior_equal": true
+}

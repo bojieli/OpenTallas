@@ -20,8 +20,14 @@ REF = [HERE / 'ref' / f.replace('.sv', '_ref.sv') for f in DUT]
 TB = HERE / 'tb_hrorder_equiv.sv'
 # mutant name -> (file, old text, new text): each drops one write-bypass / advance term of a new head register
 MUTANTS = {
-    'map_hold_bypass': ('qkd_host_ingest_map.sv', 'else hd<=(wr&&wp==rp)?iq_dec[8:0]:q[rp][8:0];', 'else hd<=q[rp][8:0];'),
-    'map_adv_bypass': ('qkd_host_ingest_map.sv', 'if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q[rp1][8:0];', 'if(adv)hd<=q[rp1][8:0];'),
+    'local_issue_wrong': ('qkd_host_commit_order.sv', 'pc_q<=issue_pc;', "pc_q<=issue_pc^7'd1;"),
+    'front_rotate_wrong': ('qkd_host_commit_order.sv', "fr_oh<={fr_oh[6:0],fr_oh[7]};", "fr_oh<={fr_oh[0],fr_oh[7:1]};"),
+    'map_local_select_wrong': ('qkd_host_ingest_map.sv', "pc_oh<=128'b1<<{next_hd[3:2],next_hd[8:4]};", "pc_oh<=128'b1<<({next_hd[3:2],next_hd[8:4]}^7'd1);"),
+    'map_capacity7': ('qkd_host_ingest_map.sv', 'wire wr=iq[0]&&count<8;', 'wire wr=iq[0]&&count<7;'),
+    'disp_capacity7': ('qkd_host_boot_dispatch_debt.sv', '.wr(iv_q&&count<8)', '.wr(iv_q&&count<7)'),
+    'order_s2_select': ('qkd_host_commit_order.sv', "stage2_oh<=8'b1<<rp[5:3];", "stage2_oh<=8'b1<<(rp[5:3]+3'd1);"),
+    'map_hold_bypass': ('qkd_host_ingest_map.sv', 'else hd<=(wr&&wp==rp)?iq_dec[8:0]:q_ctl[rp];', 'else hd<=q_ctl[rp];'),
+    'map_adv_bypass': ('qkd_host_ingest_map.sv', 'if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q_ctl[rp1];', 'if(adv)hd<=q_ctl[rp1];'),
     'order_hold_bypass': ('qkd_host_commit_order.sv', 'head_hold=(v3&&fw==fr)?s3:front[fr];', 'head_hold=front[fr];'),
     'order_adv_bypass': ('qkd_host_commit_order.sv', 'head_adv=(v3&&fw==fr1)?s3:front[fr1]', 'head_adv=front[fr1]'),
     'disp_hold_bypass': ('qkd_host_boot_dispatch_debt.sv', 'else hd<=(wr&&wp==rp)?id_dec:qd[rp];', 'else hd<=qd[rp];'),
@@ -34,6 +40,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('mode', choices=['exact', 'mutant'])
     ap.add_argument('--out', required=True)
+    ap.add_argument('--s2',action='store_true')
+    ap.add_argument('--sram', action='store_true')
+    ap.add_argument('--sram-mut',type=int,default=0)
     ap.add_argument('--m', choices=sorted(MUTANTS))
     ap.add_argument('--cycles', type=int, default=200000)
     ap.add_argument('--verilator', default=str(Path.home() / '.local/opentallas-tools/verilator-5.050/bin/verilator'))
@@ -51,10 +60,12 @@ def main():
         (out / 'src' / f).write_text(t)
         srcs.append(str(out / 'src' / f))
     srcs += [str(p) for p in REF] + [str(TB)]
+    if a.sram:
+        srcs += [str(ROOT/'rtl/qwen_sys/host_20261013/qkd_host_boot_fifo8_sram.sv'),str(ROOT/'physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192.v')]
     ver = subprocess.run([a.verilator, '--version'], capture_output=True, text=True).stdout.strip()
     print('HRORDER_EQUIV verilator', ver, flush=True)
     cmd = [a.verilator, '--binary', '--timing', '-O2', '--x-assign', '0', '--x-initial', '0', '-Wno-fatal', '-Wno-lint',
-           '-Wno-style', '-j', '0', '--top-module', 'tb_hrorder_equiv', '-Mdir', str(out / 'obj'), '-o', 'tb'] + srcs
+           '-Wno-style', '-j', '4', '--top-module', 'tb_hrorder_equiv', '-Mdir', str(out / 'obj'), '-o', 'tb'] + (['-DOT_HOST_BOOT_FIFO_DEFAULT=1',f'-DOT_HOST_BOOT_FIFO_MUT={a.sram_mut}'] if a.sram else []) + (['-DOT_HOST_ORDER_S2_DEFAULT=1'] if a.s2 else []) + srcs
     with open(out / 'vl.log', 'w') as f:
         r = subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT)
     if r.returncode:

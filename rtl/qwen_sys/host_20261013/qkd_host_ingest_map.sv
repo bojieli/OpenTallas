@@ -1,11 +1,20 @@
 `timescale 1ns/1ps
+`ifndef OT_HOST_BOOT_FIFO_DEFAULT
+`define OT_HOST_BOOT_FIFO_DEFAULT 0
+`endif
+`ifndef OT_HOST_BOOT_FIFO_MUT
+`define OT_HOST_BOOT_FIFO_MUT 0
+`endif
 // Production KV and embedding sector map. See original qkd_ctrl_pc wj/wrow
 // and ot_qfd_emb_pkg.emb_loc; logical PC is preserved for local lpc strap.
 // Eight input word credits initially; returns after registered decode is emitted.
 // Output per stack is {data256,row19,col5,bank5,lpc5,v}291, four initial
 // downstream credits per logical PC. End marker66 is held until real commit count reaches
 // all previously emitted sectors. Host QPIPE is write-only; RMW faults.
-module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=0)(
+`ifndef OT_HOST_ORDER_S2_DEFAULT
+`define OT_HOST_ORDER_S2_DEFAULT 0
+`endif
+module qkd_host_ingest_map #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST_ORDER_S2_DEFAULT,SRAM_FIFO=`OT_HOST_BOOT_FIFO_DEFAULT,SRAM_MUT=`OT_HOST_BOOT_FIFO_MUT,ORDERED=0,BOOT_SCRATCH_ROW=0)(
  input wire ck,rst_n,
  input wire[289:0]ing,output reg ing_cr,
  output reg[1163:0]out,input wire[127:0]out_cr,
@@ -21,9 +30,19 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
  // previous form (bench tools/qwen_kv_die/host_cluster/bench/hrorder_equiv); no added latency.
  reg[3:0]count;reg[2:0]wp,rp;
  wire pending=count!=0;
- reg[293:0]q[0:7];       // {data256,row19,col5,bank5,pc5,stack2,good,mark}
+ reg[8:0]q_ctl[0:7];       // {data256,row19,col5,bank5,pc5,stack2,good,mark}
  reg[8:0]hd;             // {pc5,stack2,good,mark} of q[rp]
- wire[293:0]word=q[rp];
+ wire[293:0]word;
+ generate if(SRAM_FIFO)begin:g_sram_fifo
+  wire[284:0]payload;
+  qkd_host_boot_fifo8_sram #(.W(285),.MUT(SRAM_MUT))u_payload(.ck(ck),.wr(wr),.wp(wp),
+   .wd(iq_dec[293:9]),.rp(rp),.next_rp(adv?rp1:rp),.head(payload));
+  assign word={payload,hd};
+ end else begin:g_flop_fifo
+  reg[293:0]q[0:7];
+  always @(posedge ck)if(wr)q[wp]<=iq_dec;
+  assign word=q[rp];
+ end endgenerate
  wire[255:0]data=word[293:38];wire[18:0]row=word[37:19];wire[4:0]col=word[18:14],bank=word[13:9];
  wire[4:0]pc=hd[8:4];wire[1:0]stack=hd[3:2];wire good=hd[1],hmark=hd[0];
  reg[2:0]credits[0:127];reg marker_credit;
@@ -52,7 +71,11 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
  end
  wire[293:0]iq_dec={iq[289:34],d_row,d_col,d_bank,d_pc,d_stack,d_good,we&&addr==32'hffffffff};
  wire mark=pending&&hmark;
- wire emit=pending&&good&&!fault&&credits[{stack,pc}]!=0&&(!ORDERED||ord_credit!=0);
+ wire[127:0]head_pc_oh;
+ wire[75:0]head_stack_oh;
+ wire[127:0]credit_ready;
+ for(genvar k=0;k<128;k++)assign credit_ready[k]=head_pc_oh[k]&&(credits[k]!=0);
+ wire emit=pending&&good&&!fault&&(|credit_ready)&&(!ORDERED||ord_credit!=0);
  wire emit_marker=mark&&!fault&&issued==landed&&marker_credit;
  wire[32:0]sum={1'b0,landed}+33'(aq);
  // Credit-overflow fault, restructured (HRORDER 10-18 gate: hd -> 128:1 credit mux -> emit -> per-k spend -> 128-input OR
@@ -60,10 +83,10 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
  // OR_{k!=sel}(cfull[k]) | (cfull[sel]&&!emit). The 128-wide OR now runs in parallel with emit; same cycle, exact.
  wire[6:0]sel={stack,pc};
  wire[127:0]cfull;
- wire ovf_other=|(cfull&~(128'd1<<sel));
- wire ovf_sel=cfull[sel]&&!emit;
+ wire ovf_other=|(cfull&~head_pc_oh);
+ wire ovf_sel=(|(cfull&head_pc_oh))&&!emit;
  for(genvar k=0;k<128;k++)begin:g_credit
-  wire spend=emit&&sel==7'(k);
+  wire spend=emit&&head_pc_oh[k];
   assign cfull[k]=crq[k]&&credits[k]==4;
   always @(posedge ck or negedge rst_n)begin
    if(!rst_n)credits[k]<=4;
@@ -73,14 +96,43 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
    endcase
   end
  end
+ wire[290:0]word_out={data,row,col,bank,pc,1'b1};
  wire wr=iq[0]&&count<8;
  wire adv=emit||emit_marker;
  wire[2:0]rp1=rp+3'd1;
- always @(posedge ck)begin
-  if(wr)q[wp]<=iq_dec;
-  if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q[rp1][8:0];
-  else hd<=(wr&&wp==rp)?iq_dec[8:0]:q[rp][8:0];
- end
+ always @(posedge ck)if(wr)q_ctl[wp]<=iq_dec[8:0];
+ generate if(KEPT_SELECT)begin:g_control_head
+  (* keep=1 *)reg[7:0]rp_oh;
+  always @(posedge ck or negedge rst_n)
+   if(!rst_n)rp_oh<=8'b1;
+   else if(adv)rp_oh<={rp_oh[6:0],rp_oh[7]};
+  (* keep=1 *)wire[7:0]adv_oh={rp_oh[6:0],rp_oh[7]};
+  (* keep=1 *)reg[8:0]hold_ctl,adv_ctl;
+  always @*begin
+   hold_ctl=0;adv_ctl=0;
+   for(integer j=0;j<8;j++)begin
+    hold_ctl=hold_ctl|(q_ctl[j]&{9{rp_oh[j]}});
+    adv_ctl=adv_ctl|(q_ctl[j]&{9{adv_oh[j]}});
+   end
+  end
+  (* keep=1 *)wire[8:0]hold_value=(wr&&wp==rp)?iq_dec[8:0]:hold_ctl;
+  (* keep=1 *)wire[8:0]adv_value=(wr&&wp==rp1)?iq_dec[8:0]:adv_ctl;
+  wire[8:0]next_hd=adv?adv_value:hold_value;
+  (* keep=1 *)reg[127:0]pc_oh;
+  (* keep=1 *)reg[75:0]stack_oh;
+  always @(posedge ck)begin
+   hd<=next_hd;
+   pc_oh<=128'b1<<{next_hd[3:2],next_hd[8:4]};
+   for(integer c=0;c<19;c++)stack_oh[c*4+:4]<=4'b1<<next_hd[3:2];
+  end
+  assign head_pc_oh=pc_oh;assign head_stack_oh=stack_oh;
+ end else begin:g_control_legacy
+  assign head_pc_oh=128'b1<<sel;for(genvar c=0;c<19;c++)assign head_stack_oh[c*4+:4]=4'b1<<stack;
+  always @(posedge ck)begin
+   if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q_ctl[rp1];
+   else hd<=(wr&&wp==rp)?iq_dec[8:0]:q_ctl[rp];
+  end
+ end endgenerate
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin
    iq<=0;crq<=0;aq<=0;mcq<=0;wp<=0;rp<=0;count<=0;out<=0;ing_cr<=0;marker_v<=0;marker<=0;
@@ -99,7 +151,10 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
     2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:;endcase
    if(pending&&!good&&!mark)fault<=1;
    if(emit)begin
-    for(integer k=0;k<4;k++)if(stack==2'(k))out[k*291+:291]<={data,row,col,bank,pc,1'b1};   // constant slices (no wide $shift)
+    for(integer k=0;k<4;k++)for(integer c=0;c<19;c++)begin
+     if(c<18)begin if(head_stack_oh[c*4+k])out[k*291+c*16+:16]<=word_out[c*16+:16];end
+     else if(head_stack_oh[c*4+k])out[k*291+288+:3]<=word_out[288+:3];
+    end   // constant slices (no wide $shift)
     issued<=issued+1'b1;if(issued==32'hffffffff)fault<=1;ing_cr<=1;
    end
    if(mcq)begin if(marker_credit)fault<=1;else marker_credit<=1;end

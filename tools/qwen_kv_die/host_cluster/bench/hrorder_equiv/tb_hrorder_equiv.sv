@@ -10,6 +10,11 @@ module tb_hrorder_equiv;
  always #1 ck=~ck;
  integer seed,cycles,cyc=0,errs=0,emits=0,pops=0,sends=0,dpops=0,faults_seen=0,fm=0,fo=0,fd=0,resets=0,i,k;
  reg d_hold;
+ integer map_max_count=0, dispatch_max_count=0;
+ always @(negedge ck)begin
+  if(ma.count>map_max_count)map_max_count=ma.count;
+  if(da.count>dispatch_max_count)dispatch_max_count=da.count;
+ end
  // ---------------- map ----------------
  reg[289:0]m_ing;reg[127:0]m_out_cr;reg[7:0]m_ack_n;reg m_marker_cr,m_ord_cr;
  wire m_ing_cr_a,m_ing_cr_b,m_mv_a,m_mv_b,m_f_a,m_f_b,m_iv_a,m_iv_b;
@@ -120,6 +125,7 @@ module tb_hrorder_equiv;
    d_br=(d_hold&&($urandom%20)==0)||(($urandom%50000)==0);if(d_br)d_hold=0;
    d_acks=0;for(i=0;i<128;i++)if(d_out[i]>0&&($urandom%4)==0)begin d_acks[i]=1;d_out[i]--;end
   end
+  $display("HRORDER_FIFO_CAPACITY map_max=%0d dispatch_max=%0d logical_depth=8",map_max_count,dispatch_max_count);
   $display("HRORDER_EQUIV %s seed=%0d cycles=%0d mismatches=%0d map_emits=%0d order_pops=%0d disp_sends=%0d disp_pops=%0d fault_cycles=%0d (map %0d order %0d disp %0d) resets=%0d",
    (errs==0)?"PASS":"FAIL",seed,cyc,errs,emits,pops,sends,dpops,faults_seen,fm,fo,fd,resets);
   $finish;

@@ -1,0 +1,30 @@
+{
+  "floorplan_initial": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-3972558-1792429045",
+    "exit": 0,
+    "scope": "six native master swaps and real row pruning"
+  },
+  "floorplan_center_clock": {
+    "host": "ot-epyc7",
+    "unit": "oth-ubuntu-3114184-1792429116",
+    "exit": 0,
+    "scope": "same row/macro proof plus actual centred clock pin"
+  },
+  "plot_staging_failure": {
+    "host": "ot-epyc6",
+    "unit": "oth-ubuntu-189880-1792429167",
+    "exit": 2,
+    "cause": "plot script absent on selected host before staging complete; no DB modification"
+  },
+  "plot_final": {
+    "host": "ot-epyc7",
+    "unit": "oth-ubuntu-3122999-1792429199",
+    "exit": 0
+  },
+  "live_jobs": [],
+  "no_CTS": true,
+  "no_REVIEW": true,
+  "no_submit": true,
+  "no_adoption": true
+}

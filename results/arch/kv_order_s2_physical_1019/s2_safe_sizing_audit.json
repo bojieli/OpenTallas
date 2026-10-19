@@ -1,0 +1,66 @@
+{
+  "scope": "Measured precursor sizing; rejected for SAFE CTS. No route, gate, closure, or parent adoption.",
+  "source_commit": "93ba50d3f",
+  "remote": "ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/qkd_hr_core_order_s2-20261019-090817",
+  "fleet_census_unit": "oth-ubuntu-1307331-1792426461",
+  "mapped_sha256": "f763cfdaa3515105cbe73d2204a5ecfd3428369b5e8af6de8d79520ed9e29fba",
+  "source_hashes": {
+    "rtl/qwen_sys/host_20261013/qkd_host_boot_fifo8_sram.sv": {
+      "sha256": "2be0dc2a4bedc60985195934e00d7316ea8da042d1d2ef4689d2428483169142",
+      "remote_match": true
+    },
+    "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv": {
+      "sha256": "2f276a63f327ea404075a9f97ce0901fb367e08e2998745e22df0ef9ac5ea4ae",
+      "remote_match": true
+    }
+  },
+  "std_area_um2": 11967.97842,
+  "macro_count": 6,
+  "macro_area_um2": 12325.58208,
+  "std_band_current": {
+    "bbox_um": [
+      0,
+      194.4,
+      302.4,
+      259.2
+    ],
+    "forecast_util": 0.6107507440476191,
+    "pass40_to60": false
+  },
+  "candidate_geometry_not_implemented": {
+    "outline_um": [
+      302.4,
+      267.84
+    ],
+    "macro_origins_unchanged": true,
+    "std_band_um": [
+      0,
+      194.4,
+      302.4,
+      267.84
+    ],
+    "synth_util": 0.5388977153361345,
+    "util_with_1000um2_headroom": 0.5839260147217323,
+    "diagonal_um": 403.96042578450675,
+    "area_growth_vs_precursor": 0.033333333333333215
+  },
+  "placement_qualification": {
+    "stage": "1_synth.odb",
+    "rows": 0,
+    "regions": 0,
+    "status": "UNPLACED; no actual placed band/occupancy proof. Original floorplan remains remote-live; source frozen."
+  },
+  "critical_register_over32_count": 64,
+  "critical_max_register_fanout": 580,
+  "structural_required": [
+    "KEPT replicated RAW flags per <=16 data bits (same source clock edge)",
+    "KEPT iqpc per-bank copies, same issue capture edge, to break 263-268-load index roots",
+    "map hd field regional copies / registered decode, must preserve output edges",
+    "front index regional copies / registered one-hot, must preserve prefix edges",
+    "two-stage balanced reset copies: existing last-stage-only max64 API cannot achieve ~32 on both levels",
+    "map S2 proof and schedule, rerun exact positives and causal fanout/selector mutants",
+    "post-fix synthesis then truthful full-width band placement, all rows/regions/cells occupancy and clock native evidence",
+    "parent measured slot regrant before CTS"
+  ],
+  "timing_note": "Original floorplan repair repeated WNS -17.431ps, TNS -210.2ps; no final timing result."
+}

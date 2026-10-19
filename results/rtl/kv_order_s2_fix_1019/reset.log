@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits  1045 GB (avail 823, growth 91, headroom 0, waiters 0/0 GB) load 74/128 running 30 disk 308 GB 
+ot-run: ot-epyc5       admits   879 GB (avail 729, growth 113, headroom 0, waiters 0/0 GB) load 61/128 running 12 disk 1051 GB 
+ot-run: ot-epyc6       admits   330 GB (avail 332, growth 101, headroom 0, waiters 0/0 GB) load 29/128 running 15 disk 6057 GB 
+ot-run: ot-epyc7       admits   556 GB (avail 490, growth 101, headroom 0, waiters 0/0 GB) load 59/96 running 17 disk 6477 GB 
+ot-run: ot-epyc8       admits  1207 GB (avail 931, growth 86, headroom 0, waiters 0/0 GB) load 39/128 running 25 disk 358 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-order-s2-fix-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-order-s2-fix-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-68382-1792427067 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+RESET_PHASE_PASS checks=1498 two_edges=1
+- results/rtl/kv_order_s2_fix_1019/reset/tb_reset.sv:21: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.002 s; speed 1.561 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-68382-1792427067): exit 0

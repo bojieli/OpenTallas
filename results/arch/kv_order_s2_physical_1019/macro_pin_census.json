@@ -1,0 +1,31 @@
+{
+  "scope": "source-pinned signal pin census; not access-GRT or tile closure",
+  "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192.lef",
+  "sha256": "08aec98805392ad7d3a7af71f0a1f0d3173c43d2237bb7ead943c4872cba5a8a",
+  "size_um": [
+    51.408,
+    39.96
+  ],
+  "faces": {
+    "W": {
+      "signal_pins": 199,
+      "full_face_density_per_um": 4.97997997997998,
+      "actual_span_um": [
+        0.768,
+        38.808
+      ],
+      "active_span_density_per_um": 5.231335436382755,
+      "max6_pass": true
+    },
+    "E": {
+      "signal_pins": 198,
+      "full_face_density_per_um": 4.954954954954955,
+      "actual_span_um": [
+        0.768,
+        38.616
+      ],
+      "active_span_density_per_um": 5.23145212428662,
+      "max6_pass": true
+    }
+  }
+}
