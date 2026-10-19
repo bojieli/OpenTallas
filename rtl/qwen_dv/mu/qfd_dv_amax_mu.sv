@@ -21,6 +21,8 @@
 //   2 results merge into the user of the CURRENT STN register instead of the user carried down the tree;
 //   3 an AMAX clear clears every user;  4 emit selects the current STN user instead of the AMAX command's user;
 //   5 the STN-overlap fault (below) is dropped.
+// am_u (MU-QW-AMIX 10-19): the user of the emitted candidate (the AMAX emit's cmd[9:8]); qfd_dv_scalar2 carries it to
+//   the root in the AMI / AMV tag and faults a merge that holds two users' candidates.  NU = 1: constant 0.
 // STN overlap (MU-ADOPT-SLICE 10-19, F-TOK-1 / blocker B2 of MU-ADOPT-TOK): results are gated and attributed by the
 //   CURRENT STN register (amax bit, user), as in today's slice; an STN of ANY user issued while the previous op's
 //   station results are still pending (stn_pend) would silently drop or misattribute them (and the slice's r_addr
@@ -47,6 +49,7 @@ module qfd_dv_amax_mu #(
     output wire          am_v,
     output wire [23:0]   am_idx,
     output wire [31:0]   am_val,
+    output wire [1:0]    am_u,          // user of the emitted candidate (MU-QW-AMIX: carried to the root; 0 for NU = 1)
     output wire          emit_empty,    // today's port_fault term (am_emit && !am_run[56])
     output wire          mu_fault       // sticky schedule fault (NU > 1); 0 for NU = 1
 );
@@ -90,6 +93,7 @@ module qfd_dv_amax_mu #(
         assign am_val = am_run[31:0];
         assign emit_empty = am_emit && !am_run[56];
         assign mu_fault = 1'b0;
+        assign am_u = 2'd0;
     end else begin : g_mu
         // ---------------------------------------------------------------- per-user running best (opt-in)
         reg [1:0] stn_u, au0, au1, au2, au3, au4, am_eu;
@@ -133,6 +137,7 @@ module qfd_dv_amax_mu #(
         assign am_val = sel[31:0];
         assign emit_empty = am_emit && !sel[56];
         assign mu_fault = fault_q;
+        assign am_u = am_eu;
     end endgenerate
     initial if (NU < 1 || NU > 4) $fatal(1, "qfd_dv_amax_mu: NU %0d outside 1..4", NU);
     initial if (MUT < 0 || MUT > 5) $fatal(1, "qfd_dv_amax_mu: MUT %0d undefined", MUT);
