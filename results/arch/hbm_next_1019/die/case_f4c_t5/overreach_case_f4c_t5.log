@@ -1,0 +1,26 @@
+{"hop_um": 405.0, "nets_over": 682640, "by_class": {"RELAY": 680432, "STATUS": 1850, "RESET": 23, "CONFIG": 335}, "worst": {"RELAY": [27097.9, "n5855"], "STATUS": [26645.2, "n140878"], "RESET": [29681.2, "ckg_por_stream"], "CONFIG": [11389.7, "n383221"]}}
+{'cls': 'RELAY', 'driver': 'hbfd_rly_624_WE.o', 'loads': 'hbfd_rly_624_WE', 'nets': 44464}
+{'cls': 'RELAY', 'driver': 'hbfd_rly_624_EW.o', 'loads': 'hbfd_rly_624_EW', 'nets': 43760}
+{'cls': 'RELAY', 'driver': 'ot_hbm_svc_sm_group_id.sm_packet', 'loads': 'ot_hbm_accel_smh_attn,ot_hbm_idx_score_quarter_static', 'nets': 17584}
+{'cls': 'RELAY', 'driver': 'ot_hbm_hc_bankq_static.sum_out', 'loads': 'ot_hbm_hc_bankq_static', 'nets': 16384}
+{'cls': 'RELAY', 'driver': 'ot_hgi_sm_xload_xq_pegress.xw_data', 'loads': 'ot_hbm_accel_smh_attn', 'nets': 16384}
+{'cls': 'RELAY', 'driver': 'ot_hbm_svc_vm_kshare_splitstrap.fill_data', 'loads': 'ot_hbm_svc_vmdel_lane_n', 'nets': 16384}
+{'cls': 'RELAY', 'driver': 'ot_hbm_svc_wb_kport_q.w_k_wdata', 'loads': 'ot_hbm_svc_vm_kshare_splitstrap', 'nets': 16384}
+{'cls': 'RELAY', 'driver': 'ot_hbm_hc_bankq_static.sum_out', 'loads': 'ot_hbm_hc_bankq_ft_static', 'nets': 15511}
+{'cls': 'RELAY', 'driver': 'ot_hbm_hc_bankq_ft_static.sum_out', 'loads': 'ot_hbm_hc_bankq_static', 'nets': 12811}
+{'cls': 'RELAY', 'driver': 'ot_hbm_svc_vm_kshare_splitstrap.c_k_wdata', 'loads': 'ot_hbm_svc_pc_ctrl_leaf_cfg_h9b', 'nets': 9515}
+{'cls': 'RELAY', 'driver': 'ot_hgi_dma_back_static_vp4_banks_cp.wd', 'loads': 'ot_hbm_svc_wb_kport_q', 'nets': 9248}
+{'cls': 'RELAY', 'driver': 'ot_hbm_hc_qhub_static.lg_wq', 'loads': 'ot_hgi_sfu_lg_pair_tap_leaf_term', 'nets': 8992}
+{'cls': 'RELAY', 'driver': 'ot_hgi_coll_kq_share2.vm_kq', 'loads': 'hfd_vms_bank_native_q0_faces', 'nets': 8992}
+{'cls': 'RELAY', 'driver': 'ot_hbm_svc_vmdel_lane_n.dq', 'loads': 'hfd_vms_bank_native_q0_faces', 'nets': 8992}
+{'cls': 'RELAY', 'driver': 'ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.kr_data', 'loads': 'ot_hbm_svc_vm_kshare_splitstrap', 'nets': 8990}
+{'cls': 'RELAY', 'driver': 'hfd_vms_bank_native_q0_faces.rr1', 'loads': 'ot_hgi_dma_back_static_vp4_banks_cp', 'nets': 8224}
+{'cls': 'RELAY', 'driver': 'hfd_vms_bank_native_q0_faces.rr3', 'loads': 'ot_hbm_idx_vm_share2_static', 'nets': 8224}
+{'cls': 'RELAY', 'driver': 'ot_hgi_sfu_lg_pair_tap_leaf_term.c_rr', 'loads': 'ot_hbm_hc_qhub_static', 'nets': 8224}
+{'cls': 'RELAY', 'driver': 'ot_hbm_idx_vm_share2_static.b_rr', 'loads': 'ot_hgi_coll_gq_issue', 'nets': 8224}
+{'cls': 'RELAY', 'driver': 'hfd_vms_bank_native_q0_faces.rr2', 'loads': 'ot_hgi_sm_xload_cl2_ctlx', 'nets': 8224}
+{'cls': 'RELAY', 'driver': 'ot_hbm_hc_bankq0_static.s_o', 'loads': 'ot_hbm_hc_qhub_static', 'nets': 8196}
+{'cls': 'RELAY', 'driver': 'hbfd_rly_624_SN.o', 'loads': 'hbfd_rly_624_SN', 'nets': 8112}
+{'cls': 'RELAY', 'driver': 'ot_hgi_sm_xload_cl2_bfqg.rwq', 'loads': 'ot_hgi_sm_xload_xq_pegress', 'nets': 7930}
+{'cls': 'RELAY', 'driver': 'ot_hgi_sm_xload_cl2_bdring.bq_d', 'loads': 'ot_hgi_sm_xload_xq_pegress', 'nets': 7619}
+{'cls': 'RELAY', 'driver': 'ot_hgi_sm_xload_cl2_ctlx.l_d_o', 'loads': 'ot_hbm_xp_aq_tree13_fmt', 'nets': 7048}

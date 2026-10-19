@@ -1930,8 +1930,14 @@ def parent_link_graph(spec: dict | None) -> dict | None:
             continue
         # top-level names: the pattern without its hierarchy '*' (else "*u0" would claim reset run u_lprc_u0)
         kid = next((ch["inst"] for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))), None)
-        if kid:
-            seen.add(kid)
+        # QO-RP4LP 10-18: a hard child below a top-level soft instance (smh_tile_rp4lp: u_lf0.u_lh.u_xs inside leaf u_lf0)
+        # belongs to that instance: same region root (its clock connection), and every top-level net of the instance
+        # touches all of its hard children (conservative: more pairs, never fewer).  Before, such parents read as
+        # "the parent RTL cannot be read" because only top-level names were matched.
+        held = [kid] if kid else [ch["inst"] for ch in kids
+                                  if re.split(r"[./]", ch["inst"].lstrip("*"), 1)[0] != ch["inst"].lstrip("*")
+                                  and fnmatch.fnmatchcase(inst, re.split(r"[./]", ch["inst"].lstrip("*"), 1)[0])]
+        seen.update(held)
         conns, exprs, j = st[k + 1:e - 1], [], 0
         while True:
             pm = re.compile(r"\.\s*\w+\s*\(").search(conns, j)
@@ -1943,7 +1949,7 @@ def parent_link_graph(spec: dict | None) -> dict | None:
             exprs.append(conns[pm.end():q - 1])
             j = q
         root = sorted({x.strip() for x in exprs if x.strip() in cks})
-        insts[inst] = dict(kid=kid, root=root[0] if len(root) == 1 else None, module=mod)
+        insts[inst] = dict(kid=kid, kids=held, root=root[0] if len(root) == 1 else None, module=mod)
         for expr in exprs:
             for n in set(ident.findall(expr)) - ports - VLOG_KEYWORDS:
                 nets.setdefault(find(n), set()).add(inst)
@@ -1974,10 +1980,10 @@ def cross_region_links(graph: dict) -> tuple:
     for net, members in nets.items():
         for i in members:
             m = LANDING_HALF_RE.fullmatch(i)
-            if m and not insts[i]["kid"]:
+            if m and not insts[i].get("kids", [insts[i]["kid"]] if insts[i]["kid"] else []):
                 for j in members:
-                    if insts[j]["kid"]:
-                        halves.setdefault((m[1], m[2]), set()).add(insts[j]["kid"])
+                    for k in insts[j].get("kids", [insts[j]["kid"]] if insts[j]["kid"] else []):
+                        halves.setdefault((m[1], m[2]), set()).add(k)
     landed = sorted({(a, b, base) for (base, side), ks in halves.items() if side == "w"
                      for a in ks for b in halves.get((base, "r"), ()) if a != b})
     return issues, landed
@@ -2055,7 +2061,8 @@ def root_child_flops(domain: dict, spec: dict | None, graph: dict | None) -> dic
         if graph is not None and (soft is not None or not (al.get("n") and int(al["n"]) > len(pins))):
             insts = graph["insts"]
             for members in graph["nets"].values():
-                here = {(insts[i]["kid"] or "soft") for i in members if insts[i]["root"] == src}
+                here = {k for i in members if insts[i]["root"] == src
+                        for k in (insts[i].get("kids") or [insts[i]["kid"] or "soft"])}
                 here &= set(nodes)
                 links |= {tuple(sorted((a, b))) for a in here for b in here if a < b}
         lo, hi = min(v[0] for v in whole), max(v[1] for v in whole)

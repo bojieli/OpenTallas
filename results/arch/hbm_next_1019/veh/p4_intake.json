@@ -1,0 +1,73 @@
+{
+ "schema": "opentallas.hbm_next_1019.veh.p4_intake.v1",
+ "rule": "HBM-NEXT-VEH (10-19): intake check for the P = 4 layer benches (MTP verify layer, 4-user layer).\n\nThe vehicle plugs sibling-lane drops in as they land; this tool says, fail-closed, which layer bench is buildable now\nand what each one still waits for.  Minimum-component form (AGENTS.md): the P = 4 layer is NOT a die slice until DIE\nhas a bound P = 4 die netlist; it is the per-unit P = 4 benches (SM4 tile hnx_rp4lp4, ATT4 lane hnx_rp4a4, UNITS N-row\nengines) driven by the CMTP P-lane records of one layer, with the layer cycles composed on the static schedule\n(collision = fault) and bit-exactness checked against the CMTP goldens (AR, MTP accept + reject, 4-user).\nSingle-user AR needs none of this: it is the d4g path (ar_repro.py).\n\n    python3 tools/hbm_next/vehicle/p4_intake.py [--out results/arch/hbm_next_1019/veh/p4_intake.json]\n",
+ "inputs": {
+  "CMTP.isa_rows": [
+   "results/arch/hbm_next_1019/cmtp/isa_rows.md",
+   "tools/hbm_next/isa_rows.py"
+  ],
+  "CMTP.records_mtp": [],
+  "CMTP.records_mu4": [],
+  "CMTP.goldens_mtp": [],
+  "CMTP.goldens_mu4": [],
+  "CMTP.static_schedule_checker": [],
+  "SM4.rtl": [],
+  "SM4.bench_pass": [],
+  "ATT4.rtl": [],
+  "ATT4.bench_pass": [],
+  "UNITS.hc_rows": [],
+  "UNITS.fused_rows": [],
+  "UNITS.coll_rows": [],
+  "UNITS.idx_rows": [],
+  "DIE.p4_netlist": []
+ },
+ "benches": {
+  "AR layer (P = 1 records on the P = 4 die)": {
+   "ready": true,
+   "missing": [],
+   "via": "ar_repro.py + d4g SW-slice binary (sw5/sw5e)"
+  },
+  "MTP verify layer (6 positions on 4 lanes, accept + reject)": {
+   "ready": false,
+   "missing": [
+    "CMTP.records_mtp",
+    "CMTP.goldens_mtp",
+    "CMTP.static_schedule_checker",
+    "SM4.rtl",
+    "SM4.bench_pass",
+    "ATT4.rtl",
+    "ATT4.bench_pass",
+    "UNITS.hc_rows",
+    "UNITS.fused_rows",
+    "UNITS.coll_rows",
+    "UNITS.idx_rows"
+   ],
+   "via": "per-unit P = 4 benches driven by one layer's records"
+  },
+  "4-user layer": {
+   "ready": false,
+   "missing": [
+    "CMTP.records_mu4",
+    "CMTP.goldens_mu4",
+    "CMTP.static_schedule_checker",
+    "SM4.rtl",
+    "SM4.bench_pass",
+    "ATT4.rtl",
+    "ATT4.bench_pass",
+    "UNITS.hc_rows",
+    "UNITS.fused_rows",
+    "UNITS.coll_rows",
+    "UNITS.idx_rows"
+   ],
+   "via": "per-unit P = 4 benches driven by one layer's records"
+  },
+  "P = 4 quadrant slice (integration smoke, optional)": {
+   "ready": false,
+   "missing": [
+    "DIE.p4_netlist",
+    "CMTP.records_mtp"
+   ],
+   "via": "cut_slice.py on the P = 4 die.v"
+  }
+ }
+}

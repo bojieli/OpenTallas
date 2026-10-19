@@ -2,7 +2,7 @@
 
 Lane HBM-NEXT-CMTP, 2026-10-19. This is next-release work, not a release gate. **Single source:** `tools/hbm_next/isa_rows.py`. The tables in §2 are generated from it, and `python3 tools/hbm_next/isa_rows.py --selftest` fails if they differ.
 
-Implementers: HBM-NEXT-UNITS (FUSED, HC, COLL, IDX, SU, DMA, ARGMAX and the CP decode), HBM-NEXT-SM4 (SM.MATVEC lanes, K-split), HBM-NEXT-ATT4 (ATT rows). Consumers: the CMTP compiler and HBM-NEXT-VEH.
+Implementers: HBM-NEXT-UNITS (FUSED, HC, COLL, IDX, SU, DMA, ARGMAX and the CP decode), HBM-NEXT-SM4 (SM.MATVEC lanes, the remainder pass: K-split or row-split), HBM-NEXT-ATT4 (ATT rows). Consumers: the CMTP compiler and HBM-NEXT-VEH.
 
 ## 1. What changes, and what does not
 
@@ -30,7 +30,7 @@ The two terms are separate:
 | 3:0 | `nm1` | no | N - 1: row count N = 1 .. 16 (with rsel: the upper bound of the table count) |
 | 7:4 | `slot0` | no | first row's DYN bank / slot (0 .. 15); row r uses bank slot0 + rho(r); UOP slot must equal slot0[2:0]; slot0 + N - 1 <= 15 |
 | 15:8 | `rgap` | no | extra cycles between row starts beyond the unit's row II (static-schedule spacing; 0 = back to back) |
-| 17:16 | `ksp` | no | SM.MATVEC only: K-split of the last lane pass, 2^ksp lanes a row (0 none; see sm_pass_plan); other units 0 |
+| 17:16 | `rpl` | no | SM.MATVEC only: remainder-pass layout (r = N mod P rows, g = P / r lanes a row, a power of two): 0 idle lanes, 1 K-split (lane q of a row group takes K part q), 2 row-split (lane q takes output-row part q), 3 reserved; other units 0 (see sm_pass_plan) |
 | 18:18 | `rsel` | no | rows from the VM row table at rtab + 32 L: N = U32(word 0) <= nm1 + 1, row r takes entry word 1 + r |
 | 19:19 | `rsv19` | no | reserved, 0 |
 | 37:20 | `rtab` | no | rsel: VM word address of row-table row 0 (32-word aligned, < 2^18); else 0 |
@@ -105,22 +105,26 @@ Record layout: `UOP (16 B) | SUT (32 B, if tmpl) | ROWX (32 B, if op[5]) | MDESC
 - the COLL message train: endpoint, crossing and tail once, then the payloads in row order;
 - the ATT KV union stream. E1 PASS (`att4/E1.md`): the union is streamed in ascending line order with per-lane masks.
 
-**R5. SM lanes and the K-split** (the P = 4 SM).
+**R5. SM lanes and the remainder pass** (the P = 4 SM).
 - **Line hold.** One HBM read of each weight line is issued to the lanes once per pass.
-- **Full passes.** Rows 4p … 4p + 3 go to lanes 0 … 3 and use the whole K.
-- **The last pass** (r = N mod 4 rows):
-  - With `ksp` = 0, r lanes run and 4 − r lanes idle.
-  - With `ksp` = s and r · 2^s = 4, remainder row j runs on lanes j·2^s … j·2^s + 2^s − 1, and lane q of that group takes **K part q**.
-- **K parts.** A K part is one of the 2^s aligned power-of-two runs of leaves of the golden's padded pairwise tree over the csum chunk sums (R-ARITH chunk8: 8 block-dot terms a chunk for FP8/FP4, 8 elements for BF16). The tree combines the parts by its own top s levels. So the K-split is **exact by construction**: it computes the same additions in the same tree.
-  - The self-test checks this bit for bit with `hdc_golden_v41.csum`: 1,280 trials over every DS K shape, s = 1 and 2, including random, wide-exponent, cancelling and −0 terms.
-  - An empty part is the tree's own +0 padding.
+- **Full passes.** Rows 4p … 4p + 3 go to lanes 0 … 3, with the whole K and every output row.
+- **The last pass** (r = N mod 4 rows, g = 4 / r lanes per row, which must be a power of two). `rpl` selects its layout:
+  - **`rpl` = 0, idle.** r lanes run and the other 4 − r lanes idle.
+  - **`rpl` = 1, K-split.** Remainder row j runs on lanes j·g … j·g + g − 1, and lane q of that group takes **K part q**. A K part is one of the g aligned power-of-two runs of leaves of the golden's padded pairwise tree over the csum chunk sums (R-ARITH chunk8: 8 block-dot terms a chunk for FP8/FP4, 8 elements for BF16). The tree's own top log2 g levels combine the parts.
+  - **`rpl` = 2, row-split.** Lane q of the group takes **output-row part q** of the record's rows on that SM. No combine is needed.
+- **Exactness.** Both split forms are exact by construction:
+  - the K-split performs the same additions in the same tree;
+  - the row-split partitions independent dot products.
+
+  The self-test checks the K-split bit for bit with `hdc_golden_v41.csum`: 1,280 trials over the DS K shapes, 2- and 4-way, including random, wide-exponent, cancelling and −0 terms. An empty K part is the tree's own +0 padding.
+- **What it costs.** A K-split pass costs its largest part's share of the lines. That share is 0.5 only when the chunk count is a power of two; at K = 5,120 (20 chunks, tree split 16 | 4) it is 0.8. A row-split pass costs ⌈rows / g⌉ / rows of the lines, which is no gain when an SM holds a single output row (for example `wq_a`: 13 rows a die). The compiler picks the cheapest layout per record (`best_rpl(N, P, nc, rows)`).
 - **Hardware needs (SM4):**
-  - 2^s partial binary-counter accumulator sets for each lane row;
-  - a lane-group broadcast with two (s = 1) or four (s = 2) line sources in the K-split pass;
-  - a weight read order that interleaves the K parts. This is the compiler's per-SM weight layout, so no hardware is needed for it.
+  - a g-source lane-group broadcast in the remainder pass (two or four held lines at once);
+  - for the K-split, g partial binary-counter accumulator sets for each remainder row;
+  - a weight read order that interleaves the parts. That is the compiler's per-SM weight layout, not hardware.
 - **Pass plans:**
-  - DS MTP verify (N = 6): pass 1 runs positions 0–3 on lanes 0–3. Pass 2 runs position 4 on lanes 0–1 and position 5 on lanes 2–3, each lane pair split into K halves. That is 1.5 line issues per line against 2.0 without the split, so the SM time is max(1, 1.5 / 1.374) = 1.092× AR instead of 1.456× (§5).
-  - The draft block (N = 5): pass 2 is one row split into K quarters, 1.25 issues, which hides fully under the HBM share (1.0× AR).
+  - DS MTP verify (N = 6): pass 1 runs positions 0–3 on lanes 0–3; pass 2 runs position 4 on lanes 0–1 and position 5 on lanes 2–3, each pair split by K or by rows. That is 1.5 to 1.8 line issues per line against 2.0, so the SM time is max(1, issues / 1.374) = 1.09–1.31× AR against 1.456×.
+  - The draft block (N = 5, g = 4): 1.25 to 1.4 issues, at most 1.02× AR.
 
 **R6. Expert union (gate E2).** The golden's `moe` sums a position's routed experts in **ascending expert id** order, sequentially from +0, with each route weight applied inside the expert before w2. It then adds the shared expert and rounds once to BF16 (`hdc_golden_v41.Model.moe`, read 2026-10-19).
 
@@ -160,15 +164,17 @@ Every row of every record has a compile-time start cycle:
 
 The hardware never stalls a row for flow control: no credit, no ready and no backpressure on the die (owner 10-14). A row that would need a resource at a cycle another record holds is a **compile-time collision**. The static checker (`tools/hbm_next/static_check.py`) faults on it, and on any buffer over- or underflow. Off-die boundaries (HBM, SerDes, host) keep their existing elastic interfaces.
 
-## 5. What the K-split buys (DS MTP verify, N = 6 on P = 4)
+## 5. What the remainder-pass layouts buy (DS MTP verify, N = 6 on P = 4)
 
 | SM pass plan | line issues per weight line | SM time vs AR record | note |
 |---|---:|---:|---|
 | D1 price (no split): 4 + 2 rows | 2.0 | 1.456 | lanes 2–3 idle in pass 2 |
-| **K-split (ksp = 1)**: 4 rows, then 2 rows × 2 K halves | **1.5** | **1.092** | exact (R5); needs SM4's 2 accumulator sets per lane row |
-| draft block N = 5, ksp = 2 | 1.25 | 1.0 | hidden under the HBM share |
+| **K-split (`rpl` = 1)**: 4 rows, then 2 rows × 2 K halves, power-of-two chunk count | **1.5** | **1.092** | exact (R5); needs SM4's 2 accumulator sets per remainder row |
+| K-split at K = 5,120 (20 chunks, tree split 16 \| 4) | 1.8 | 1.310 | |
+| **row-split (`rpl` = 2)**: 2 rows × 2 output-row halves, an even row count per SM | **1.5** | **1.092** | exact; no extra accumulator |
+| draft block N = 5 (g = 4), K-split or row-split | 1.25–1.4 | 1.0–1.02 | mostly hidden under the HBM share |
 
-For K = 5,120 (20 chunks, an unequal tree split 16 | 4) the K-split pass costs 0.8 of the lines (s = 1) or 0.4 (s = 2), not 0.5 or 0.25. The compiler prices each record with its own K (`sm_pass_plan(..., nc)`), and uses `ksp` only where it is cheaper (`best_ksp`). The re-timed tok/s are in `results/arch/hbm_next_1019/cmtp/retime.md`.
+The compiler prices each SM record with its own K (chunk count nc) and its own rows per SM, and takes the cheapest layout (`best_rpl`). Rows per SM come from the SM layout rule (rows split over the die's SMs). The re-timed tok/s are in `results/arch/hbm_next_1019/cmtp/retime.md`.
 
 ## 6. Change process
 
