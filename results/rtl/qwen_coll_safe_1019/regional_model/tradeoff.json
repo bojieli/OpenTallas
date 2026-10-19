@@ -79,5 +79,55 @@
   "B_added_P_R_macros": 4,
   "B_added_P_R_storage_bits": 69888,
   "B_added_P_R_macro_area_um2": 57596.832,
-  "note": "A targets four crossings x2 added edges; B models x3 final-capture increments. Neither is an observed integrated calendar; root phase, startup, first operation and steady workloads require proof."
+  "note": "A targets four crossings x2 added edges; B models x3 final-capture increments. Neither is an observed integrated calendar; root phase, startup, first operation and steady workloads require proof.",
+  "shared_32x64_option": {
+    "status": "UNQUALIFIED_COMPOSITION_OPTION_ONLY",
+    "macro_source": "b65718325",
+    "geometry_source": "7549fae73",
+    "wrapper_source": "e0d4d194a",
+    "macro_path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+    "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02",
+    "model_sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+    "native_macro_shape_um": [
+      31.968,
+      17.28
+    ],
+    "native_macro_area_um2": 552.40704,
+    "native_pins_W": 103,
+    "native_pins_E": 102,
+    "native_pins_per_um_W": 5.960648148148148,
+    "native_pins_per_um_E": 5.902777777777778,
+    "banks_per_logical_546": 9,
+    "upper_padding_zero_mask_bits": 30,
+    "raw_area_per_logical_546_um2": 4971.6633600000005,
+    "B_logical_banks": 8,
+    "B_native_banks": 72,
+    "B_total_raw_macro_area_um2": 39773.306880000004,
+    "group_reservation_shape_um": [
+      302.4,
+      172.8
+    ],
+    "B_gross_group_reservation_um2": 418037.76,
+    "current4groups_raw_area_um2": 19886.653440000002,
+    "B_added4groups_raw_area_um2": 19886.653440000002,
+    "B_added4groups_SRAM_bits": 73728,
+    "native_latency": "1 synchronous edge, true1R1W, read-before-write",
+    "composition_added_edges_analytical": 0,
+    "integrated_calendar_status": "LU65/LS390 unchanged by composition alone ONLY IF exact native latency/collision/phase witnesses pass",
+    "source_clock_contract": "Current wrapper scalar clk fans9 actual g_bank[0..8].u_m.clk sinks; no9clock vector override or proven regional interception",
+    "B_P_R_macro_clock_pin_references": 72,
+    "B_all_core_clock_pin_references": 86,
+    "B_logical_top_clock_ports_if_scalar_groups": 22,
+    "B_top_ports_if_independent_native_roots": 86,
+    "qualification": "Wrapper unit/fullwidth goldens, native72bank production, per-pin TT/FF clock arrivals, reset, PG/viaescape and GRT/DRC pin access all pending; old5widebank proof is unrelated",
+    "old_wide_shape_um": [
+      177.768,
+      81
+    ],
+    "old_wide_W_pins": 826,
+    "old_wide_E_pins": 825,
+    "old_wide_W_pins_per_um": 10.197530864197532,
+    "old_wide_E_pins_per_um": 10.185185185185185,
+    "old_wide_escape_status": "10.2pins/um raw-face density; independent escape proof pending"
+  }
 }
