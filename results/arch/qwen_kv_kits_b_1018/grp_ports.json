@@ -1,6 +1,6 @@
 {
  "top": "qkd_kvs_grp",
- "registers": 619,
+ "registers": 643,
  "clock_ports": [
   "?const",
   "ck",
@@ -16,11 +16,11 @@
    "dir": "input",
    "width": 1,
    "domains": [
-    "ck"
+    "none"
    ],
    "feedthrough": [],
    "depth": 0,
-   "reg_sinks": 12,
+   "reg_sinks": 0,
    "async_reset": true
   },
   "afk": {
@@ -65,11 +65,11 @@
    "dir": "input",
    "width": 1,
    "domains": [
-    "hck"
+    "none"
    ],
    "feedthrough": [],
    "depth": 0,
-   "reg_sinks": 2,
+   "reg_sinks": 0,
    "async_reset": true
   },
   "slg__cfg_stack": {
@@ -227,11 +227,9 @@
    "domains": [
     "ck"
    ],
-   "feedthrough": [
-    "o_dn"
-   ],
+   "feedthrough": [],
    "depth": 6,
-   "reg_sinks": 432383,
+   "reg_sinks": 432654,
    "async_reset": false
   },
   "i_pc0": {
@@ -241,7 +239,7 @@
     "ck"
    ],
    "feedthrough": [],
-   "depth": 1,
+   "depth": 0,
    "reg_sinks": 306,
    "async_reset": false
   },
@@ -252,7 +250,7 @@
     "ck"
    ],
    "feedthrough": [],
-   "depth": 1,
+   "depth": 0,
    "reg_sinks": 306,
    "async_reset": false
   },
@@ -263,7 +261,7 @@
     "ck"
    ],
    "feedthrough": [],
-   "depth": 1,
+   "depth": 0,
    "reg_sinks": 306,
    "async_reset": false
   },
@@ -274,7 +272,7 @@
     "ck"
    ],
    "feedthrough": [],
-   "depth": 1,
+   "depth": 0,
    "reg_sinks": 306,
    "async_reset": false
   },
@@ -287,7 +285,30 @@
    ],
    "from_inputs": [],
    "depth": 0,
-   "reg_sources": 128
+   "reg_sources": 128,
+   "bit_domains": [
+    [
+     71,
+     0,
+     [
+      "hck"
+     ]
+    ],
+    [
+     104,
+     72,
+     [
+      "ck"
+     ]
+    ],
+    [
+     127,
+     105,
+     [
+      "hck"
+     ]
+    ]
+   ]
   },
   "o_pc1": {
    "dir": "output",
@@ -298,7 +319,30 @@
    ],
    "from_inputs": [],
    "depth": 0,
-   "reg_sources": 128
+   "reg_sources": 128,
+   "bit_domains": [
+    [
+     71,
+     0,
+     [
+      "hck"
+     ]
+    ],
+    [
+     104,
+     72,
+     [
+      "ck"
+     ]
+    ],
+    [
+     127,
+     105,
+     [
+      "hck"
+     ]
+    ]
+   ]
   },
   "o_pc2": {
    "dir": "output",
@@ -309,7 +353,30 @@
    ],
    "from_inputs": [],
    "depth": 0,
-   "reg_sources": 128
+   "reg_sources": 128,
+   "bit_domains": [
+    [
+     71,
+     0,
+     [
+      "hck"
+     ]
+    ],
+    [
+     104,
+     72,
+     [
+      "ck"
+     ]
+    ],
+    [
+     127,
+     105,
+     [
+      "hck"
+     ]
+    ]
+   ]
   },
   "o_pc3": {
    "dir": "output",
@@ -320,32 +387,67 @@
    ],
    "from_inputs": [],
    "depth": 0,
-   "reg_sources": 128
+   "reg_sources": 128,
+   "bit_domains": [
+    [
+     71,
+     0,
+     [
+      "hck"
+     ]
+    ],
+    [
+     104,
+     72,
+     [
+      "ck"
+     ]
+    ],
+    [
+     127,
+     105,
+     [
+      "hck"
+     ]
+    ]
+   ]
   },
   "o_dn": {
    "dir": "output",
    "width": 271,
    "domains": [
-    "none"
+    "ck"
    ],
-   "from_inputs": [
-    "i_ctl"
-   ],
+   "from_inputs": [],
    "depth": 0,
-   "reg_sources": 0
+   "reg_sources": 271
   },
   "i_up": {
    "dir": "input",
    "width": 144,
    "domains": [
-    "none"
+    "ck"
    ],
-   "feedthrough": [
-    "o_ctl"
-   ],
+   "feedthrough": [],
    "depth": 0,
-   "reg_sinks": 0,
-   "async_reset": false
+   "reg_sinks": 126,
+   "async_reset": false,
+   "bit_domains": [
+    [
+     125,
+     0,
+     [
+      "ck"
+     ]
+    ],
+    [
+     143,
+     126,
+     [
+      "none"
+     ]
+    ]
+   ]
   },
   "o_ctl": {
    "dir": "output",
@@ -354,11 +456,95 @@
     "ck",
     "hck"
    ],
-   "from_inputs": [
-    "i_up"
-   ],
+   "from_inputs": [],
    "depth": 0,
-   "reg_sources": 18
+   "reg_sources": 144,
+   "bit_domains": [
+    [
+     0,
+     0,
+     [
+      "hck"
+     ]
+    ],
+    [
+     1,
+     1,
+     [
+      "ck"
+     ]
+    ],
+    [
+     3,
+     2,
+     [
+      "hck"
+     ]
+    ],
+    [
+     4,
+     4,
+     [
+      "ck"
+     ]
+    ],
+    [
+     6,
+     5,
+     [
+      "hck"
+     ]
+    ],
+    [
+     7,
+     7,
+     [
+      "ck"
+     ]
+    ],
+    [
+     9,
+     8,
+     [
+      "hck"
+     ]
+    ],
+    [
+     10,
+     10,
+     [
+      "ck"
+     ]
+    ],
+    [
+     12,
+     11,
+     [
+      "hck"
+     ]
+    ],
+    [
+     13,
+     13,
+     [
+      "ck"
+     ]
+    ],
+    [
+     14,
+     14,
+     [
+      "hck"
+     ]
+    ],
+    [
+     143,
+     15,
+     [
+      "ck"
+     ]
+    ]
+   ]
   }
  }
 }

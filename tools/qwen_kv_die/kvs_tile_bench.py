@@ -13,7 +13,7 @@ random value in both tiles each edge (sparse for the writer's es / expected_vali
 child -> tile-output wire carries random data.
 --mut (applied to the KIT TOP only; must FAIL): 1 = one child-output slice in a tile-output assign replaced by zeros
 (dropped wire); 2 = two equal-width input connections of one child swapped; 3 = the first child whose outputs reach a
-tile output removed (missing child).
+tile output removed (missing child); grp kinds: 4 / 5 (KV-GRPREACH relays), 6 = the core reset relay bypassed.
     python3 tools/qwen_kv_die/kvs_tile_bench.py --tile ctl|attn|emb [--mut N] [--edges 2000] --out DIR
 Needs (as kv_static_die): OT_KV_STATIC_DIE=1 + the design-point env (kvj-g2-env.sh, OT_KV_HROOT=1 OT_KV_FANFOLD=1).
 One line 'KVS_TILE PASS|FAIL tile=<t> ...'; exit 0 only on PASS.
@@ -95,6 +95,10 @@ def mutate(txt, mut):
             if m:
                 lines[i] = ln.replace(m.group(0), '.fault_in(w_cfl__a)')
                 return '\n'.join(lines), None, 'u_cf1 leg registers bypassed'
+    if mut == 6:                       # TW2-KVGRP: the core reset relay bypassed (every child reads the rst_n port)
+        new = re.sub(r'\(w_rrc\[\d+\]\)', '(rst_n)', txt)
+        if new != txt:
+            return new, None, 'core reset relay bypassed'
     if mut == 3:
         assigns = '\n'.join(ln for ln in lines if ln.strip().startswith('assign '))
         for i, ln in enumerate(lines):
@@ -152,8 +156,15 @@ def main():
     for hn, ex, hw, D in hist:
         L.append(f'  reg [{hw - 1}:0] {hn} [0:{D - 1}];')
     dmax = max([0] + [h[3] for h in hist])
+    # TW2-KVGRP: the kit tile's registered reset relays release its children dl['rst'][port] edges after the port; the
+    # die-bound tile gets that reset port released the same number of edges later (assert together), so the children of
+    # both tiles leave reset on the same edge and every compare below stays exact
+    drst = {p: D for p, D in (dl.get('rst') or {}).items() if D}
+    for p in drst:
+        L.append(f'  reg od__{p};')
     L.append('  old_tile u_old (' + ', '.join(
-        f'.{p}({"ck" if c == "clock" else (p if d == "input" else "o__" + p)})' for p, d, w, c in po) + ');')
+        f'.{p}({"ck" if c == "clock" else ("od__" + p if p in drst else (p if d == "input" else "o__" + p))})'
+        for p, d, w, c in po) + ');')
     L.append('  new_tile u_new (' + ', '.join(
         f'.{p}({"ck" if c == "clock" else (p if d == "input" else "n__" + p)})' for p, d, w, c in pn) + ');')
     rnd = lambda w: '{' + ', '.join(['$random'] * ((w + 31) // 32)) + '}'     # noqa: E731
@@ -167,10 +178,14 @@ def main():
     L.append('    bad = 0; chk = 0; act = 0; phb = 0;')
     for p, w, c in ins:
         L.append(f'    {p} = 0;')
+    for p in drst:
+        L.append(f'    od__{p} = 0;')
     L.append('    repeat (6) @(negedge ck);')
     L.append('    ' + ' '.join(f"{p} = 1;" for p, w, c in ins if c in ('reset', 'pad')))
     L.append(f'    for (t = 0; t < {2 * a.edges}; t = t + 1) begin')
     L.append('      @(negedge ck);')
+    for p, D in drst.items():
+        L.append(f'      if (t == {D - 1}) od__{p} = 1;')
     L.append(f'      if (t == {a.edges}) begin phb = 1;')
     for n in frc:
         L.append(f'        force u_old.{n} = f_{n}; force u_new.{n} = f_{n};')

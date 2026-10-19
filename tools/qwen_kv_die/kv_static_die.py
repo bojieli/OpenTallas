@@ -81,6 +81,19 @@ KIT_KINDS = ('grp', 'grp_h', 'pc', 'pc_h', 'hroot')
 # The added edges are compiler-priced: record()['grp_chain'] (per chain slot) + kit_delays() (the lockstep bench).
 GRP_FT = int(os.environ.get('OT_KV_GRP_FT_RELAY', '4')) if KITS else 0
 GRP_CF1_LEG = int(os.environ.get('OT_KV_GRP_CF1_LEG', '2')) if KITS else 0
+# TW2-KVGRP 10-19 (the --cts gates of qkd_kvs_grp_k1 / grp_h_k1 @de94cee48, killed after 2.7 h of GRT repair): the worst
+# setup endpoints (-642 ps grp / -640 grp_h, ~4,200 endpoints) were RESETN / reset-D pins fed straight from the rst_n /
+# hrst_n PORTS: one unregistered reset net to ~14 k flops (incl. the flow's cloned output launch flops ot_prs_*) over the
+# 1,186-um tile, timed against the 0.2 T port budget.  Under the kit design point the group tile now LANDS both resets
+# in-tile, each in its own clock domain (qkd_kv_rst_land: ROOT-RST 10-19 landing = an async-assert synchroniser, the port's
+# only 2 loads, + the 10-10 regional relay: one kept register copy per child and per relay hop), so each child's reset is
+# a full-cycle reg -> pin net.  Release is GRP_RST_RELEASE (= 3) edges after the port on every child of the tile, assert 1
+# edge (die reset window, kv_rst_window: the host holds reset far longer; no calendar counts from release).
+# kit_delays()['rst'].  The flow's own reset landing (ref_tile "reset_landing", one clock) is opted out: the RTL lands it.
+GRP_RST = KITS and os.environ.get('OT_KV_GRP_RST_RELAY', '1') == '1'
+GRP_RST_SYNC, GRP_RST_TREE = 2, 1
+GRP_RST_RELEASE = GRP_RST_SYNC + GRP_RST_TREE if GRP_RST else 0
+RST_RELAY_RTL = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_rst_land.sv'
 RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') + '.sv')
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
@@ -816,7 +829,7 @@ def module_text(t, name):
         L.append(f'    wire [{w - 1}:0] {pn} = {bname}[{off + w - 1}:{off}];')
     xw, xb, xe = _kit_relays(t)
     L += t['wires'] + xw
-    L += [_cf1_leg_sub(t, x) for x in t['body']] + xb
+    L += _rst_relay(t, [_cf1_leg_sub(t, x) for x in t['body']] + xb)
     for pn, v in t['ports'].items():
         if v['dir'] == 'output':
             L.append(f'    assign {pn} = {xe.get(pn, v["expr"])};')
@@ -836,6 +849,34 @@ def _hops(pre, a, w, n):
 
 
 _CF1 = re.compile(r'(\bu_cf1 \(.*?\.fault_in\()(\{[^()]*\})(\))')
+_RST_CONN = {'rst_n': 'w_rrc', 'hrst_n': 'w_rrh'}
+
+
+def _rst_relay(t, body):
+    """TW2-KVGRP: the group tile's reset landing + relays (GRP_RST): every child connection .x(rst_n) / .x(hrst_n) takes
+    its own kept copy of qkd_kv_rst_land (ck / hck); returns the new body (relay wires + instances first)"""
+    if not (GRP_RST and t['kind'] in ('grp', 'grp_h')):
+        return body
+    n = {k: 0 for k in _RST_CONN}
+    out = []
+    for x in body:
+        def sub(m_):
+            k = m_.group(2)
+            i = n[k]
+            n[k] += 1
+            return f'{m_.group(1)}({_RST_CONN[k]}[{i}])'
+        out.append(re.sub(r'(\.\w+)\((rst_n|hrst_n)\)', sub, x))
+    head = []
+    for k, ck in (('rst_n', 'ck'), ('hrst_n', 'hck')):
+        if not n[k]:
+            continue
+        if k not in t['ports'] or ck not in t['ports']:
+            raise ValueError(f'kv_static_die GRP_RST: {t["inst"]} uses {k} without the {k} / {ck} ports')
+        w = _RST_CONN[k]
+        head += [f'    wire [{n[k] - 1}:0] {w};',
+                 f'    qkd_kv_rst_land #(.N({n[k]})) u_{w[2:]} (.ck({ck}), .rst_n_in({k}), .rst_n({w}));']
+    return head + out
+
 
 
 def _cf1_leg_sub(t, line):
@@ -879,6 +920,7 @@ def kit_delays(t):
     out, child = {}, {}
     if t['kind'] not in ('grp', 'grp_h'):
         return dict(out=out, child=child)
+    rst = {k: GRP_RST_RELEASE for k in _RST_CONN if GRP_RST and k in t['ports']}
     P = t['ports']
     wd = {pn: v['width'] for pn, v in P.items()}
     for x in t['wires']:
@@ -906,7 +948,7 @@ def kit_delays(t):
             out[pn] = segs
     if GRP_CF1_LEG:
         child['cf1.fault_in'] = GRP_CF1_LEG
-    return dict(out=out, child=child)
+    return dict(out=out, child=child, rst=rst)
 
 
 def _expr_bits(e, wd):
@@ -958,6 +1000,10 @@ def grp_chain():
                 added_up_edges_by_chain_pos={j: GRP_FT * j for j in range(8)},
                 chain_pos_to_slot=pos, rtl='rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv',
                 flops_per_grp=GRP_FT * (271 + 126) + 4 * GRP_CF1_LEG,
+                rst_relay=dict(rtl=RST_RELAY_RTL, release_edges=GRP_RST_RELEASE, sync=GRP_RST_SYNC, tree=GRP_RST_TREE,
+                               note='TW2-KVGRP: rst_n / hrst_n landed in-tile (2-flop async-assert synchroniser in '
+                                    'the own domain + one kept copy per child); assert +1 edge, release +3 edges on '
+                                    'every group child') if GRP_RST else None,
                 note='down chain: kvs_hroot_<st>.o_ch0 -> slot 7 -> ... -> slot 0 (grp_h); compiler: the programme_to_groups '
                      'age of a group at chain position j is the die relay stages + GRP_FT * j (the chain is no longer one '
                      'edge for all 32 groups); per-group calendars (lcal / fcal cfg) must take the per-position lead')
@@ -1307,6 +1353,8 @@ def sources():
     if BOOT:
         s.update(BOOT_PC_DEPS)
     s.update(K.EMB_SOURCES)
+    if GRP_RST:
+        s.add(RST_RELAY_RTL)
     return sorted(s)
 
 

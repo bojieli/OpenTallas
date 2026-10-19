@@ -14,7 +14,7 @@
    "tools/qwen_kv_die",
    "results/arch",
    "results/arch/qwen_kv_kits_b_1018",
-   "results/rtl/qwen_kv_die/kvs_kits_grpreach_1018",
+   "results/rtl/qwen_kv_die/kvs_kits_grp_1019",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
   ]
  },
@@ -22,7 +22,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_grp u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_grp u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_rst_land.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -41,7 +41,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp .* errors=0 mut=0",
     "min_count_regex": "checks=(\\d+)",
-    "pass_witness": "results/rtl/qwen_kv_die/kvs_kits_grpreach_1018/grp_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_m0.log"
    },
    {
     "name": "grp_mut1",
@@ -54,7 +54,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=1 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grpreach_1018/grp_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_m1.log"
    },
    {
     "name": "grp_mut2",
@@ -67,7 +67,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=2 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grpreach_1018/grp_m2.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_m2.log"
    },
    {
     "name": "grp_mut3",
@@ -80,7 +80,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=3 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grpreach_1018/grp_m3.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_m3.log"
    },
    {
     "name": "grp_mut4",
@@ -93,7 +93,7 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=4 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grpreach_1018/grp_m4.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_m4.log"
    },
    {
     "name": "grp_mut5",
@@ -106,7 +106,20 @@
     ],
     "pass_regex": "^KVS_TILE PASS tile=grp ",
     "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=5 ",
-    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grpreach_1018/grp_m5.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_m5.log"
+   },
+   {
+    "name": "grp_mut6",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_m6 grp 6",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=grp ",
+    "fail_regex": "^KVS_TILE FAIL tile=grp .* mut=6 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_grp_1019/grp_m6.log"
    }
   ],
   "calibrate": {

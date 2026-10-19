@@ -1,0 +1,6 @@
+MISMATCH t=3 out o_pc0
+MISMATCH t=3 out o_pc1
+MISMATCH t=3 out o_pc2
+MISMATCH t=3 out o_pc3
+MISMATCH t=3 out o_ctl
+KVS_TILE FAIL tile=grp edges=4000 checks=519585 errors=745 mut=6 (core reset relay bypassed)
