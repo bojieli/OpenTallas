@@ -39,7 +39,7 @@
 // do not fire or participate in offset-validity checks. Fault meanings and CSR encoding are unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
-                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0) (
+                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0) (
     input  wire              ck,
     input  wire              rst_n,
     input  wire [52:0]       f_ks,            // tap of the unit start pin {start, user 10, tok 21, pos 21}
@@ -71,7 +71,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     localparam integer RTIME_BASE=RESET_EXTRA, ROUT_BASE=RTIME_BASE+3;
     localparam integer RPTR_BASE=ROUT_BASE+C_RG+R_RG, RCTRL_BASE=RPTR_BASE+6*SLOT_RG+1;
     localparam integer RWRITE_BASE=RCTRL_BASE+6, RLM_BASE=RWRITE_BASE+4*SLOT_RG;
-    localparam integer RESET_REGIONS=RLM_BASE+NEV*SLOT_RG;
+    localparam integer RBOOT_BASE=RLM_BASE+NEV*SLOT_RG;
+    localparam integer RESET_REGIONS=RBOOT_BASE+((LOCAL_BOOT!=0)?NEV:0);
     wire [RESET_REGIONS-1:0] rr; dsdv_mu_reset_tree #(.REGIONS(RESET_REGIONS)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // Payload pin flops sample every edge; valid pins are asynchronously held by their
     // landed reset, so the reset does not enter a synchronous data cone.
@@ -212,6 +213,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     wire [NEV-1:0] c_state[0:NEP*3-1], r_state[0:NEP-1];
     wire [NEV-1:0] collision_c[0:NEP-1],collision_r[0:NEP-1];
     wire [NEV-1:0] next_fire;
+    wire [NEV-1:0] attr_boot;
     reg [NEP-1:0] next_collision;
     wire [NEP-1:0] collision_q; assign col_w=|collision_q;
     genvar oe,op,og;
@@ -285,9 +287,10 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     end endgenerate
     wire wv = mw_q[25];
     wire table_empty;
+    wire [6:0] global_count;
     generate if(LIVE_COUNT!=0) begin:g_live_count
         reg [SJ-1:0] count_r;
-        assign table_empty=(count_r==0);
+        assign table_empty=(count_r==0); assign global_count=7'(count_r);
         always @(posedge ck or negedge rr[COPY_END])
             if(!rr[COPY_END]) count_r<=0;
             else count_r<=count_r+SJ'(|rec_slot)-SJ'(due);
@@ -296,7 +299,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             if(count_r!==SJ'($countones(vld))) $fatal(1,"live-count differs from valid table");
 `endif
     end else begin:g_live_direct
-        assign table_empty=~(|vld);
+        assign table_empty=~(|vld); assign global_count=(|vld)?7'd1:7'd0;
     end endgenerate
     wire idle = !armed && table_empty;
     always @(posedge ck or negedge rr[RCTRL_BASE+5])
@@ -382,7 +385,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         dsdv_mu_mem #(.W(63),.AW(SI)) u_payload(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se +: 8]),.we(rec_event[se][0]),
             .wa(ssqb),.wd({due_at_start,spq,suq}),.ra(pbi[se]),.q(head));
         dsdv_mu_mem #(.W(2),.AW(SI)) u_attr(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se+8]),
-            .we(wv && idle_event[se] && mw_q[22:21]==2'd2 && esel==EI'(se)),
+            .we(attr_boot[se]),
             .wa(cfg_addr[se]),.wd(cfg_attr[se]),.ra(pbi[se]),.q(h_at[se]));
         assign h_ts[se]=head[62:31]; assign h_ep[se]=head[30:10]; assign h_eu[se]=head[9:0];
     end endgenerate
@@ -405,13 +408,42 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
             if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_addr_r<=0;cfg_attr_r<=0;end
             else begin cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_attr_r<=f_mw[11:10];end
+        wire [6:0] boot_count;
+        wire d_write,d_check,attr_write,kind_write,rl_write,rl_check,gap_write;
+        if(LOCAL_BOOT!=0) begin:g_boot_local
+            (* keep *) reg [SJ-1:0] count_r;
+            always @(posedge ck or negedge rr[RBOOT_BASE+ce])
+                if(!rr[RBOOT_BASE+ce]) count_r<=0;
+                else count_r<=count_r+SJ'(rec_event[ce][NC_REC-1])-SJ'(due);
+            assign boot_count=7'(count_r);
+`ifdef DSDV_MU_POINTER_ASSERT
+            always @(posedge ck) if(rr[RBOOT_BASE+ce])
+                if(count_r!==SJ'($countones(vld))) $fatal(1,"event boot count differs event%0d",ce);
+`endif
+            dsdv_mu_boot_enable u_dwrite(.count(boot_count),.armed(arm_r),.valid(wv),.match(mw_q[22:21]==2'd1 && esel==EI'(ce)),.en(d_write));
+            dsdv_mu_boot_enable u_dcheck(.count(boot_count),.armed(arm_r),.valid(wv),.match(mw_q[22:21]==2'd1 && esel==EI'(ce)),.en(d_check));
+            dsdv_mu_boot_enable u_attr(.count(boot_count),.armed(arm_r),.valid(wv),.match(mw_q[22:21]==2'd2 && esel==EI'(ce)),.en(attr_write));
+            dsdv_mu_boot_enable u_kind(.count(boot_count),.armed(arm_r),.valid(wv),.match(mw_q[22:21]==2'd0 && mw_q[EI-1:0]==EI'(ce)),.en(kind_write));
+            dsdv_mu_boot_enable u_rlwrite(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(rl_write));
+            dsdv_mu_boot_enable u_rlcheck(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(rl_check));
+            dsdv_mu_boot_enable u_gap(.count(boot_count),.armed(arm_r),.valid(cfg_gap_r),.match(gn!=SJ'(NSLOT)),.en(gap_write));
+        end else begin:g_boot_direct
+            assign boot_count=global_count;
+            assign d_write=wv && idle_event[ce] && mw_q[22:21]==2'd1 && esel==EI'(ce);
+            assign d_check=d_write;
+            assign attr_write=wv && idle_event[ce] && mw_q[22:21]==2'd2 && esel==EI'(ce);
+            assign kind_write=wv && idle_event[ce] && mw_q[22:21]==2'd0 && mw_q[EI-1:0]==EI'(ce);
+            assign rl_write=cfg_rl_r && idle_event[ce];assign rl_check=rl_write;
+            assign gap_write=cfg_gap_r && idle_event[ce] && gn!=SJ'(NSLOT);
+        end
+        assign attr_boot[ce]=attr_write;
         if(CHECK_STAGE!=0) begin:g_check_lookahead
-            wire set_d=wv && idle_event[ce] && mw_q[22:21]==2'd1 && esel==EI'(ce);
+            wire set_d=d_check;
             wire [20:0] next_d=set_d?mw_q[20:0]:eD[ce];
-            wire [SI-1:0] next_lw=(cfg_gap_r && idle_event[ce] && gn!=SJ'(NSLOT))?
+            wire [SI-1:0] next_lw=(gap_write)?
                 ((gn==0)?SI'(NSLOT-1):gn[SI-1:0]):lw_r;
-            wire [23:0] next_rl=(cfg_rl_r && idle_event[ce])?mc_q[23:0]:rl_r;
-            wire next_enabled=evld[ce] || (wv && idle && mw_q[22:21]==2'd1 && esel==EI'(ce));
+            wire [23:0] next_rl=(rl_check)?mc_q[23:0]:rl_r;
+            wire next_enabled=evld[ce] || d_check;
             reg invalid_r;
             // The next-state values above are exactly the values the direct
             // checker observes after this edge. Fault remains on first start.
@@ -431,10 +463,10 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             if(!rr[COPY_RBASE+7*ce+1]) time_r<=32'd1; else time_r<=tm2;
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+2])
             if(!rr[COPY_RBASE+7*ce+2]) rl_r<=24'd0;
-            else if(cfg_rl_r && idle_event[ce]) rl_r<=mc_q[23:0];
+            else if(rl_write) rl_r<=mc_q[23:0];
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+3])
             if(!rr[COPY_RBASE+7*ce+3]) lw_r<=SI'(NSLOT-1);
-            else if(cfg_gap_r && idle_event[ce] && gn!=SJ'(NSLOT))
+            else if(gap_write)
                 lw_r<=(gn==0)?SI'(NSLOT-1):gn[SI-1:0];
         for(genvar lb=0;lb<NSLOT;lb=lb+1) begin:g_limit_reset
             always @(posedge ck or negedge rr[RLM_BASE+ce*SLOT_RG+lb/24])
@@ -444,11 +476,11 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+5])
             if(!rr[COPY_RBASE+7*ce+5]) arm_r<=1'b0;
             else if(st && !arm_r && !hcfg_bad) arm_r<=1'b1;
-        always @(posedge ck) if(wv && idle_event[ce]) begin
-            if(mw_q[22:21]==2'd0 && mw_q[EI-1:0]==EI'(ce)) begin
+        always @(posedge ck) begin
+            if(kind_write) begin
                 ek[ce]<=mw_q[8]; eep[ce]<=mw_q[9+:PI];
             end
-            if(mw_q[22:21]==2'd1 && esel==EI'(ce)) eD[ce]<=mw_q[20:0];
+            if(d_write) eD[ce]<=mw_q[20:0];
         end
     end endgenerate
     generate for(rcg=0;rcg<NRT*NC_REC;rcg=rcg+1) begin:g_rx_compare_copy
@@ -583,8 +615,14 @@ module dsdv_seq_host_mux (
         .t_kd(t_kd), .f_mc(mc), .t_mf(hmf), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w),
         .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v),
         .cw_a(cw_a), .cw_d(cw_d));
-    dsdv_mu_hwin #(.NSLOT(47), .NEV(16), .NEP(4), .NRT(2), .HEAD_STAGE(1), .COMPACT_PTR(1), .CHECK_STAGE(1), .LIVE_COUNT(1), .RAW_SELECT(1)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),
+    dsdv_mu_hwin #(.NSLOT(47), .NEV(16), .NEP(4), .NRT(2), .HEAD_STAGE(1), .COMPACT_PTR(1), .CHECK_STAGE(1), .LIVE_COUNT(1), .RAW_SELECT(1), .LOCAL_BOOT(1)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),
         .mu_c({mu_c_0s, mu_c_0n, mu_c_7s, mu_c_7n}), .mu_rc({mu_rc_0s, mu_rc_0n, mu_rc_7s, mu_rc_7n}),
         .mu_rt({mu_rt_0n, mu_rt_7n}), .t_wf(wf));
     assign t_mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};
+endmodule
+
+// Fixed combinational boundary retained per <=24-bit consumer group. No state
+// or edge: prevents equivalent boot controls merging into one broad enable.
+(* keep_hierarchy="yes" *) module dsdv_mu_boot_enable(input wire [6:0] count,input wire armed,valid,match,output wire en);
+ assign en=(count==0) && !armed && valid && match;
 endmodule
