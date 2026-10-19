@@ -244,8 +244,13 @@ module ot_hbm_r14_aq_pc_safe #(
   // Tournament keys are pipelined. A completed early REF updates the live
   // bank state several edges before its key emerges. Never reserve that stale
   // candidate again: use its already-earned refresh credit for this slot.
-  wire ref_choice_fresh=!refreshed[bsel]&&!need[bsel]&&!open[bsel]&&!aok_busy[bsel];
-  wire ref_choice_protected=refreshed[bsel]||need[bsel]||open[bsel]||aok_busy[bsel];
+  wire[2:0]ref_choice_distance=bsel[4:2]-tail_set;
+  wire ref_choice_cyclic_protected=(ref_choice_distance>=3'd6)||(ref_choice_distance<=3'd3);
+  // A new tail can enter the protected window before all four banks in that
+  // set have queued metadata. Revalidate the live cyclic distance as well as
+  // bank state; a pipelined key alone can admit a mid-block refresh.
+  wire ref_choice_fresh=!refreshed[bsel]&&!need[bsel]&&!open[bsel]&&!aok_busy[bsel]&&!ref_choice_cyclic_protected;
+  wire ref_choice_protected=refreshed[bsel]||need[bsel]||open[bsel]||aok_busy[bsel]||ref_choice_cyclic_protected;
 `endif
   wire ep_start = ref_choice_fresh && (PULLIN > 0) && !ep && !ref_pend && 32'(pin) < PULLIN && ref_c > RW'(LEAD + 12) && bkey < 7'd16 &&
                   sact >= 4'd6;
