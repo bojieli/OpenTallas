@@ -20,11 +20,11 @@
    ]
   }
  },
- "D": 4,
- "E": 2,
- "K": 2,
- "added_edges_per_landing": 3,
- "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "D": 2,
+ "E": 1,
+ "K": 1,
+ "added_edges_per_landing": 2,
+ "window": "(1 - 2) T + t_hold < dL < 1 T - t_cq - t_setup at TT and FF",
  "landings": [
   {
    "name": "0",
@@ -40,8 +40,8 @@
    ],
    "ring": "u_lpl_0_w (ck_hr)",
    "read": "u_lpl_0_r (ck_core)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "1",
@@ -57,8 +57,8 @@
    ],
    "ring": "u_lpl_1_w (ck_hr)",
    "read": "u_lpl_1_r (ck_core)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "2",
@@ -74,8 +74,8 @@
    ],
    "ring": "u_lpl_2_w (ck_hr)",
    "read": "u_lpl_2_r (ck_core)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "3",
@@ -91,8 +91,8 @@
    ],
    "ring": "u_lpl_3_w (ck_hr)",
    "read": "u_lpl_3_r (ck_core)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "4",
@@ -108,8 +108,8 @@
    ],
    "ring": "u_lpl_4_w (ck_hr)",
    "read": "u_lpl_4_r (ck_core)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "5",
@@ -125,8 +125,8 @@
    ],
    "ring": "u_lpl_5_w (ck_hr)",
    "read": "u_lpl_5_r (ck_core)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "6",
@@ -142,8 +142,8 @@
    ],
    "ring": "u_lpl_6_w (ck_hr)",
    "read": "u_lpl_6_r (ck_core)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "7",
@@ -159,8 +159,8 @@
    ],
    "ring": "u_lpl_7_w (ck_hr)",
    "read": "u_lpl_7_r (ck_core)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "8",
@@ -176,8 +176,8 @@
    ],
    "ring": "u_lpl_8_w (ck_core)",
    "read": "u_lpl_8_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_8_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "9",
@@ -193,8 +193,8 @@
    ],
    "ring": "u_lpl_9_w (ck_core)",
    "read": "u_lpl_9_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_9_w.* -to u_lpl_9_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "10",
@@ -210,8 +210,8 @@
    ],
    "ring": "u_lpl_10_w (ck_core)",
    "read": "u_lpl_10_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_10_w.* -to u_lpl_10_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "11",
@@ -231,8 +231,8 @@
    ],
    "ring": "u_lpl_11_w (ck_core)",
    "read": "u_lpl_11_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_11_w.* -to u_lpl_11_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "12",
@@ -248,8 +248,8 @@
    ],
    "ring": "u_lpl_12_w (ck_core)",
    "read": "u_lpl_12_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_12_w.* -to u_lpl_12_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "13",
@@ -265,8 +265,8 @@
    ],
    "ring": "u_lpl_13_w (ck_core)",
    "read": "u_lpl_13_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_13_w.* -to u_lpl_13_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "14",
@@ -282,8 +282,8 @@
    ],
    "ring": "u_lpl_14_w (ck_core)",
    "read": "u_lpl_14_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_14_w.* -to u_lpl_14_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "15",
@@ -299,8 +299,8 @@
    ],
    "ring": "u_lpl_15_w (ck_core)",
    "read": "u_lpl_15_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_15_w.* -to u_lpl_15_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "16",
@@ -316,8 +316,8 @@
    ],
    "ring": "u_lpl_16_w (ck_core)",
    "read": "u_lpl_16_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_16_w.* -to u_lpl_16_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "17",
@@ -333,8 +333,8 @@
    ],
    "ring": "u_lpl_17_w (ck_core)",
    "read": "u_lpl_17_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_17_w.* -to u_lpl_17_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "18",
@@ -350,8 +350,8 @@
    ],
    "ring": "u_lpl_18_w (ck_core)",
    "read": "u_lpl_18_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_18_w.* -to u_lpl_18_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "19",
@@ -367,8 +367,8 @@
    ],
    "ring": "u_lpl_19_w (ck_core)",
    "read": "u_lpl_19_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "20",
@@ -384,8 +384,8 @@
    ],
    "ring": "u_lpl_20_w (ck_core)",
    "read": "u_lpl_20_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_20_w.* -to u_lpl_20_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "21",
@@ -401,8 +401,8 @@
    ],
    "ring": "u_lpl_21_w (ck_core)",
    "read": "u_lpl_21_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_21_w.* -to u_lpl_21_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "22",
@@ -418,8 +418,8 @@
    ],
    "ring": "u_lpl_22_w (ck_core)",
    "read": "u_lpl_22_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_22_w.* -to u_lpl_22_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "23",
@@ -435,8 +435,8 @@
    ],
    "ring": "u_lpl_23_w (ck_core)",
    "read": "u_lpl_23_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_23_w.* -to u_lpl_23_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "24",
@@ -452,8 +452,8 @@
    ],
    "ring": "u_lpl_24_w (ck_core)",
    "read": "u_lpl_24_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_24_w.* -to u_lpl_24_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   },
   {
    "name": "25",
@@ -469,11 +469,17 @@
    ],
    "ring": "u_lpl_25_w (ck_core)",
    "read": "u_lpl_25_r (ck_hr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_25_w.* -to u_lpl_25_r.*"
+   "added_edges": 2,
+   "sdc": "none: single-cycle full STA (landing_mcp false)"
   }
  ],
  "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
  "reset": {
   "port": "rst_n",
   "root_region": "core",
@@ -485,9 +491,9 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 5936,
+  "landing": 3584,
   "pads": 0,
-  "reset": 26
+  "reset": 19
  },
  "communicating_region_pairs": {
   "landed": [
@@ -500,53 +506,56 @@
  "compiler": {
   "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
   "child_offset_edges": {
-   "u_gi": 3,
-   "u_hr": 6,
-   "u_go": 6,
-   "u_thru": 6
+   "u_gi": 2,
+   "u_hr": 4,
+   "u_go": 4,
+   "u_thru": 4
   },
   "input_port_offset_edges": {
-   "pw": 6,
+   "pw": 4,
    "dh": 0,
    "init_u0": 0,
    "ctx_x": 0,
    "mu_fault": 0,
    "dh_user": 0,
-   "kok": 6,
-   "kwd": 6,
+   "kok": 4,
+   "kwd": 4,
    "fab": 0,
-   "native_ret": 6,
+   "native_ret": 4,
    "ss5": 0,
    "ag5": 0
   },
   "output_port_offset_edges": {
-   "program_obs": 6,
-   "control_stores_ready": 6,
-   "layer_context_v": 6,
-   "native_tok": 6,
-   "native_pos": 6,
-   "command_stage": 6,
-   "cal_program_obs": 6,
-   "cal_descriptor_obs": 6,
-   "cal_image_ready": 6,
-   "dc": 6,
-   "native_cmd": 6,
-   "hr": 6,
-   "cmd": 6,
-   "tl": 3,
-   "emb_start": 6,
-   "emb_token": 6,
-   "cf": 6
+   "program_obs": 4,
+   "control_stores_ready": 4,
+   "layer_context_v": 4,
+   "native_tok": 4,
+   "native_pos": 4,
+   "command_stage": 4,
+   "cal_program_obs": 4,
+   "cal_descriptor_obs": 4,
+   "cal_image_ready": 4,
+   "dc": 4,
+   "native_cmd": 4,
+   "hr": 4,
+   "cmd": 4,
+   "tl": 2,
+   "emb_start": 4,
+   "emb_token": 4,
+   "cf": 4
   },
   "reset_release_added_edges": 3,
+  "status_flag_lag_edges": {},
   "schedule": "offsets",
   "ref_params": null,
-  "max_added_edges": 6
+  "max_added_edges": 4
  },
  "warnings": [],
  "landing_implementation": {
   "chunk_bits": 24,
   "direct_quarter_period_timing": false,
+  "no_data_multicycle": true,
+  "reset_lead": true,
   "compensated_phase_T": [
    -0.75,
    0.75

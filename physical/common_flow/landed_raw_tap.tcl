@@ -1,3 +1,10 @@
+if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {
+  set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
+  if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
+  source $ot_pg_helper
+  ot_pg_install_final_write_guard
+  ot_pg_install_rc_observers
+}
 # landed_raw_tap.tcl (HF-4d 2026-10-19, coordinator option A for qfd_tt_ctlm_dv / h16c): post-CTS delay tap for the RAW
 # SRAM clock pins of a hard child in a LANDED cluster (tools/ref_tile clock_entry_constraints.landed_raw_pins).
 #
@@ -47,6 +54,7 @@ proc ot_lrt_corner {cell} {
 }
 proc ot_lrt_tap {} {
   if {![info exists ::ot_lrt_targets] || ![dict size $::ot_lrt_targets]} return
+  if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {ot_pg_require_cts_placement_or_empty_context}
   set block [ord::get_db_block]
   set bufname [expr {[info exists ::env(OT_LRT_BUF)] ? $::env(OT_LRT_BUF) : "BUFx4_ASAP7_75t_R"}]
   set lim [expr {[info exists ::env(OT_LRT_MAX)] ? $::env(OT_LRT_MAX) : 64}]
@@ -106,6 +114,8 @@ proc ot_lrt_tap {} {
         [$b findITerm $ain] connect $old
         [$b findITerm $aout] connect $nn
         $it connect $nn
+        # Bind before the next placement estimate and raw/ref arrival measurement.
+        if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {ot_pg_bind_before_protect [ot_pg_prepare_targets $block [list $b]] $b}
         set last [list $b $nn $old]
         lappend made $b $nn
         incr n
@@ -124,6 +134,12 @@ proc ot_lrt_tap {} {
         set d [expr {[ot_lrt_wire $rpin] - [ot_lrt_wire $fpin]}]
       }
       # the chain is final: keep it out of later resizing / buffering / net repair
+      if {[expr {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"}]} {
+        set pg_instances {}
+        foreach o $made {if {[$o getObjectType] eq "dbInst"} {lappend pg_instances $o}}
+        set pg_mapping [ot_pg_prepare_targets [ord::get_db_block] $pg_instances]
+        foreach o $pg_instances {ot_pg_bind_before_protect $pg_mapping $o}
+      }
       foreach o $made { $o setDoNotTouch 1 }
       puts [format "OT_LRT DONE %s %s/%s buffers=%d raw-ref=%.1f target=%.1f residual=%.1f" $corner $iname [[$it getMTerm] getName] $n $d $want [expr {$d - $want}]]
       incr done
@@ -135,49 +151,10 @@ proc ot_lrt_tap {} {
   if {[llength $ideal]} { unset_propagated_clock $ideal }
   puts "OT_LRT tapped $done raw child clock pins"
 }
-# MU-DQ-CTLMCLK 10-19 (COORD 0ke option a, opt-in ::ot_lrt_detach 1 from spec landed_raw_detach): TritonCTS puts every
-# clock pin of a hard child into the root's macro tree and balances the root's registers against that tree; with the raw
-# SRAM pins (ETM insertion ~15 ps) in it beside ck_head (~303 ps) the registers were NOT lifted to ck_head (qfd_tt_ctlm_dv
-# gate f: soft-vs-h16c pair 416/356).  Detach every tapped raw pin before CTS (the tree sees ck_head only), reconnect it
-# to the CTS-built net of its co-timed ref pin after CTS; ot_lrt_tap then delays it to the record offset from that net.
-proc ot_lrt_detach {} {
-  set out {}
-  if {![info exists ::ot_lrt_detach] || !$::ot_lrt_detach || ![info exists ::ot_lrt_targets]} { return $out }
-  foreach inst [[ord::get_db_block] getInsts] {
-    set master [[$inst getMaster] getName]
-    foreach it [$inst getITerms] {
-      set key "$master/[[$it getMTerm] getName]"
-      if {![dict exists $::ot_lrt_targets $key]} continue
-      set refit [$inst findITerm [dict get $::ot_lrt_targets $key ref]]
-      if {$refit eq "NULL" || [$it getNet] eq "NULL" || [$refit getNet] eq "NULL"} {
-        error "OT_LRT: detach [$inst getName]/[[$it getMTerm] getName]: raw or ref pin unconnected"
-      }
-      if {[[$it getNet] getName] ne [[$refit getNet] getName]} {
-        error "OT_LRT: detach [$inst getName]/[[$it getMTerm] getName]: not on the ref pin's net (nothing to re-drive from)"
-      }
-      lappend out [list $it $refit [[$it getNet] getName]]
-      $it disconnect
-      puts "OT_LRT DETACH [$inst getName]/[[$it getMTerm] getName] from [lindex $out end 2] for CTS (ref [dict get $::ot_lrt_targets $key ref])"
-    }
-  }
-  if {![llength $out]} { error "OT_LRT: ::ot_lrt_detach set but no raw child clock pin found" }
-  return $out
-}
-proc ot_lrt_reattach {det} {
-  foreach d $det {
-    lassign $d it refit oldname
-    set rn [$refit getNet]
-    if {$rn eq "NULL"} { error "OT_LRT: reattach: ref pin lost its net after CTS" }
-    $it connect $rn
-    puts "OT_LRT REATTACH [[$it getInst] getName]/[[$it getMTerm] getName] -> [$rn getName] (ref net after CTS; was $oldname)"
-  }
-}
 if {[info procs clock_tree_synthesis] ne "" && [info procs ot_lrt_cts_orig] eq ""} {
   rename clock_tree_synthesis ot_lrt_cts_orig
   proc clock_tree_synthesis {args} {
-    set det [ot_lrt_detach]
     ot_lrt_cts_orig {*}$args
-    ot_lrt_reattach $det
     ot_lrt_tap
   }
 }

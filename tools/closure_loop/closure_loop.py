@@ -350,6 +350,8 @@ def validate(spec: dict) -> list[str]:
         e.append("host_require must be a nonempty list of host names, not a boolean")
     elif required and any(x not in {h["name"] for h in hosts_table()} for x in required):
         e.append("host_require contains an unknown host")
+    if "pg_strict" in spec and type(spec["pg_strict"]) is not bool:
+        e.append("pg_strict must be an explicit boolean")
     src = spec["source"]
     if not isinstance(src, dict) or not src.get("branch") or not re.match(r"^[0-9a-f]{7,40}$", str(src.get("commit", ""))):
         e.append("source needs branch and a hex commit")
@@ -2065,21 +2067,133 @@ def job_tools(spec):
 # stage's measured peak; stage_peaks.json re-admits repeats of the same block + stage at it, learned_ram()), (b) when
 # that RSS passes the stage's declared GB (<tag>.decl) raises the build processes in it (cc1plus / verilator_bin /
 # yosys / ld ...) to oom_score_adj 900, so earlyoom takes the over-declared build, not a 9 MiB vvp of another job, and
-# (c) after the stage exits writes every earlyoom / kernel OOM kill of one of its pids (sampled into <tag>.pids) or of a
-# process whose command line names this run dir into <tag>.oomkill -- the daemon then retries the stage as a FLOW
+# (c) after exit attributes structured OOM events using sampled process incarnations and exclusive cgroups or an
+# actual run-path witness. Unsupported PID-only claims remain in <tag>.oom_unattributed; owned kills are a FLOW
 # failure (crash(), never NEEDS_RTL).  Before, earlyoom SIGTERMed tiny oom_score_adj-500 benches first and the bench
 # verdict read the truncated log as an RTL result (34 kills on 10-18, lanes/FLEET-OOM.md).
+# Kept inside the shipped runner: no mutable remote helper dependency.
+OOM_IDENTITY_SCRIPT = r"""import json, os, re, sys, time
+from pathlib import Path
+
+def capture(pids):
+    boot = Path('/proc/sys/kernel/random/boot_id').read_text().strip().replace('-', '')
+    hz = os.sysconf('SC_CLK_TCK')
+    observed = time.time_ns() // 1000
+    boot_us = int(time.clock_gettime(time.CLOCK_BOOTTIME) * 1000000)
+    for pid in pids:
+        try:
+            stat = Path('/proc/' + pid + '/stat').read_text().rsplit(')', 1)[1].split()
+            ticks = int(stat[19])
+            cg = Path('/proc/' + pid + '/cgroup').read_text().splitlines()
+            exclusive = []
+            for line in cg:
+                # Unified cgroups only: controller-specific mount mapping is not guessed.
+                if not line.startswith('0::'):
+                    continue
+                path = line.split(':', 2)[2]
+                try:
+                    members = Path('/sys/fs/cgroup' + path + '/cgroup.procs').read_text().split()
+                    if members and all(os.getpgid(int(p)) == os.getpgrp() for p in members):
+                        exclusive.append(path)
+                except (OSError, ValueError):
+                    pass
+            # Re-read stat: reject a process that disappeared/reused during capture.
+            again = Path('/proc/' + pid + '/stat').read_text().rsplit(')', 1)[1].split()
+            if int(again[19]) != ticks:
+                continue
+            yield dict(pid=int(pid), boot_id=boot, start_ticks=ticks,
+                       birth_us=observed-boot_us+ticks*1000000//hz,
+                       observed_us=observed, cgroups=[x.split(':', 2)[2] for x in cg],
+                       exclusive_cgroups=exclusive)
+        except (OSError, ValueError, IndexError):
+            continue
+
+def attribute(events, samples, run, stage_tag):
+    # Kernel companion records carry the killed task's cgroup, unlike journald's
+    # own _SYSTEMD_CGROUP for an earlyoom service message.
+    context = {}
+    for e in events:
+        m = re.search(r'task_memcg=([^, ]+).*?pid=(\d+)', str(e.get('MESSAGE', '')))
+        if m:
+            context.setdefault((e.get('_BOOT_ID'), int(m[2])), []).append((int(e.get('__REALTIME_TIMESTAMP', 0)), m[1]))
+    owned, unknown, consumed = [], [], set()
+    def event_time(e):
+        try: return int(e.get('__REALTIME_TIMESTAMP', 0))
+        except (ValueError, TypeError): return 0
+    for e in sorted(events, key=event_time):
+        msg = str(e.get('MESSAGE', ''))
+        m = re.search(r'(?:to process|Killed process) (\d+)', msg)
+        if not m or not (re.search(r'sending SIG(?:TERM|KILL) to process', msg) or 'Killed process ' in msg):
+            continue
+        try:
+            pid, when = int(m[1]), int(e['__REALTIME_TIMESTAMP'])
+        except (ValueError, KeyError):
+            unknown.append(dict(event=e, reason='missing event identity/time')); continue
+        identities = [s for s in samples if s['pid'] == pid and s['boot_id'] == e.get('_BOOT_ID')
+                      and s['birth_us'] <= when and s['observed_us'] <= when]
+        # A later captured incarnation existing before this event supersedes old
+        # records. Do not combine bare PIDs across process lifetimes.
+        if identities:
+            latest = max(s['start_ticks'] for s in identities)
+            identities = [s for s in identities if s['start_ticks'] == latest]
+        key = (e.get('_BOOT_ID'), pid)
+        prior = [x for x in context.get(key, []) if x[0] <= when and (key, x) not in consumed]
+        # A kernel companion is consumed by its next kernel kill, never by an
+        # earlyoom PID-only message or a later reuse of this PID.
+        chosen = max(prior) if prior and 'Killed process ' in msg else None
+        cg = chosen[1] if chosen else None
+        if chosen:
+            consumed.add((key, chosen))
+        stage_path = run.rstrip('/') + '/cl/' + stage_tag + '.sh'
+        path_owned = bool(stage_tag and re.search(r"(?:^|[\s'\"])" + re.escape(stage_path) +
+                                                r"(?=$|[\s'\";,()\[\]])", msg))
+        # A root/user/session shared cgroup is not stage ownership evidence.
+        def private(c):
+            return c not in ('/', '/user.slice') and ('.scope' in c or '/docker/' in c or 'docker-' in c)
+        # Missing journal kill records must not carry a previous incarnation's
+        # companion into a later PID reuse, even when the cgroup text matches.
+        context_identities = [s for s in identities if chosen and chosen[0] >= s['birth_us']]
+        cg_owned = bool(cg and private(cg) and any(cg in s.get('exclusive_cgroups', []) for s in context_identities))
+        mismatch = bool(cg and context_identities and not any(cg in s['cgroups'] for s in context_identities))
+        if (path_owned or cg_owned) and not mismatch:
+            owned.append(msg)
+        else:
+            unknown.append(dict(event=e, reason='target cgroup mismatch' if mismatch else
+                                'no independently proven process incarnation ownership'))
+    return owned, unknown
+
+if __name__ == '__main__':
+    if sys.argv[1] == 'capture':
+        for s in capture(sys.argv[2:]): print(json.dumps(s, sort_keys=True))
+    else:
+        def records(path):
+            out = []
+            try:
+                for line in Path(path).read_text().splitlines():
+                    try: out.append(json.loads(line))
+                    except ValueError: pass
+            except OSError: pass
+            return out
+        owned, unknown = attribute(records(sys.argv[2]), records(sys.argv[3]), sys.argv[4], sys.argv[7])
+        Path(sys.argv[5]).write_text(''.join(x + '\n' for x in owned))
+        Path(sys.argv[6]).write_text(''.join(json.dumps(x, sort_keys=True) + '\n' for x in unknown))
+"""
+
 RUNNER = r"""#!/bin/bash
 # closure-loop stage runner: <stage tag>.  pid/start/log/rc (+ peak_kb/pids/oomkill) files next to this script.
 st=$1; d=$(cd "$(dirname "$0")" && pwd)
 echo $$ > $d/$st.pid; date +%s > $d/$st.start
-rm -f $d/$st.oomkill $d/$st.peak_kb $d/$st.pids $d/$st.oomprefer
+rm -f $d/$st.oomkill $d/$st.peak_kb $d/$st.pids $d/$st.oomprefer $d/$st.identities $d/$st.oom_unattributed
+cat > $d/$st.oom_identity.py <<'OT_OOM_IDENTITY'
+__OOM_IDENTITY_SCRIPT__
+OT_OOM_IDENTITY
 cd "$(cat $d/SRC_DIR)"
 ( decl=$(cat $d/$st.decl 2>/dev/null); case "$decl" in ''|*[!0-9]*) decl=0;; esac; pk=0; g=$(ps -o pgid= -p $$ | tr -d ' ')
   while kill -0 $$ 2>/dev/null; do
     snap=$(ps -eo pid=,pgid=,rss=,comm= 2>/dev/null | awk -v g=$g '$2==g')
     s=$(echo "$snap" | awk '{s+=$3} END{print s+0}')
     [ "$s" -gt "$pk" ] && { pk=$s; echo $pk > $d/$st.peak_kb; }
+    python3 $d/$st.oom_identity.py capture $(echo "$snap" | awk '{print $1}') >> $d/$st.identities
     echo "$snap" | awk '{print $1}' >> $d/$st.pids; sort -u -o $d/$st.pids $d/$st.pids 2>/dev/null
     if [ "$decl" -gt 0 ] && [ "$s" -gt $((decl * 1048576)) ]; then
       for p in $(echo "$snap" | awk '$4 ~ /^(cc1plus|cc1|verilator_bin|verilator_bin_dbg|yosys|yosys-abc|ld|g\+\+|c\+\+|clang\+\+|openroad)$/ {print $1}'); do
@@ -2092,15 +2206,12 @@ cd "$(cat $d/SRC_DIR)"
 bash $d/$st.sh > $d/$st.log 2>&1
 rc=$?
 t0=$(cat $d/$st.start); run=$(dirname "$d")
-{ sudo -n journalctl -u earlyoom --since @$t0 --no-pager -q 2>/dev/null | grep -E 'sending SIG(TERM|KILL) to process'
-  sudo -n journalctl -k --since @$t0 --no-pager -q 2>/dev/null | grep -E 'Killed process [0-9]+'; } | while IFS= read -r ln; do
-  p=$(echo "$ln" | sed -nE 's/.*(to process|Killed process) ([0-9]+).*/\2/p')
-  { [ -n "$p" ] && grep -qx "$p" $d/$st.pids 2>/dev/null; } || case "$ln" in *"$run/"*) ;; *) continue;; esac
-  echo "$ln"
-done > $d/$st.oomkill.tmp 2>/dev/null
+{ sudo -n journalctl -u earlyoom --since @$t0 --no-pager -q -o json 2>/dev/null
+  sudo -n journalctl -k --since @$t0 --no-pager -q -o json 2>/dev/null; } > $d/$st.oom_journal
+python3 $d/$st.oom_identity.py attribute $d/$st.oom_journal $d/$st.identities "$run" $d/$st.oomkill.tmp $d/$st.oom_unattributed "$st"
 [ -s $d/$st.oomkill.tmp ] && mv $d/$st.oomkill.tmp $d/$st.oomkill || rm -f $d/$st.oomkill.tmp
 echo $rc > $d/$st.rc.tmp && mv $d/$st.rc.tmp $d/$st.rc
-"""
+""".replace("__OOM_IDENTITY_SCRIPT__", OOM_IDENTITY_SCRIPT)
 
 
 def label(name):
@@ -2966,7 +3077,8 @@ def _publish_refresh(frozen):
     child_lint FAIL) although the exact-window exporter fix ff7aa2deb was on main.  Refreshed rows carry resolution
     "publish_refresh": their bytes come from the content store on a later reinstall (not the plan's origin tree)."""
     try:
-        current, cur_payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
+        current, cur_payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"],
+                                               pg_strict=bool(frozen.get("pg_strict", False)))
         if HO.compare_plans(frozen, current)[0]:
             return None
         frows = {f["path"]: f for f in frozen["files"]}
@@ -3039,6 +3151,26 @@ def checkpoint(j, why=""):
     return True
 
 
+def frozen_helper_transport_rows(plan, payloads, modes):
+    """Transport precisely the recorded helper membership, including old sets.
+
+    A newer daemon can add or remove helper names. An existing route keeps its
+    verified bytes and modes; only the already-sanctioned publish rows may differ.
+    """
+    rows = HO.frozen_rows(plan)
+    expected = {row['path'] for row in rows}
+    if set(payloads) != expected or modes is None or set(modes) != expected:
+        raise ValueError('FROZEN_HELPER_OVERLAY: transport membership differs from frozen plan')
+    result = []
+    for row in rows:
+        rel = row['path']; data = payloads[rel]
+        if (hashlib.sha256(data).hexdigest() != row['sha256'] or HO.blob_id(data) != row['git_blob']
+                or modes[rel] != row['mode']):
+            raise ValueError('FROZEN_HELPER_OVERLAY: transport bytes/mode differ from frozen plan: ' + rel)
+        result.append((Path(rel).name, data, row['mode']))
+    return result
+
+
 def ship_helpers(host, run, job=None):
     """Install new helpers, or verify and reuse an already executed frozen set."""
     # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
@@ -3046,6 +3178,12 @@ def ship_helpers(host, run, job=None):
     payloads = None
     modes = None
     frozen = None
+    if job is not None:
+        existing = job.get("route_overlay_plan")
+        if pg_strict(job) and (not job.get("freeze_helper_overlay") or existing is None):
+            raise ValueError("PG_STRICT: source-bound frozen strict helper plan required; no old-job fallback")
+        if existing is not None:
+            HO.validate_pg_policy(existing, pg_strict=pg_strict(job))
     if job is not None and job.get("freeze_helper_overlay"):
         frozen = job.get("route_overlay_plan")
         if frozen is None and (job.get("source_synced") or job.get("helper_overlay_installed")
@@ -3122,7 +3260,8 @@ def ship_helpers(host, run, job=None):
             event(job, f"FROZEN-REPLAY: shipping the gate-frozen helper set {str(frozen.get('content_sha256'))[:12]} "
                        f"(origin {str(frozen.get('origin_main'))[:9]}, {src_}) by human request")
         if payloads is None:
-            current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
+            current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"],
+                                                pg_strict=pg_strict(job))
             modes = {f["path"]: f["mode"] for f in current["files"]}
             frozen = job.setdefault("route_overlay_plan", current)
             ok, why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
@@ -3177,12 +3316,14 @@ def ship_helpers(host, run, job=None):
                                f"{str(r['origin_main'])[:9]}); the route runs the fleet copy")
                 job["route_overlay_plan"] = frozen = current
             HO.store_payloads(HELPER_STORE, frozen, payloads)
+    # Frozen recovery/publish refresh may contain fewer (or older) helpers than
+    # today's HELPERS. Never append a new dependency to an already executed set.
+    outgoing = (frozen_helper_transport_rows(frozen, payloads, modes) if payloads is not None else
+                [(Path(h).name, overlay_helper_bytes(h), (HERE / h).stat().st_mode & 0o777) for h in HELPERS])
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
-        for helper in HELPERS:
-            rel = os.path.normpath(f"tools/closure_loop/{helper}")
-            data = payloads[rel] if payloads is not None else overlay_helper_bytes(helper)
-            ti = tarfile.TarInfo(Path(helper).name); ti.size = len(data); ti.mode = modes[rel] if modes is not None else (HERE / helper).stat().st_mode & 0o777
+        for name, data, mode in outgoing:
+            ti = tarfile.TarInfo(name); ti.size = len(data); ti.mode = mode
             ti.mtime = int(time.time()); tf.addfile(ti, io.BytesIO(data))
         if frozen is not None:
             data = (json.dumps(frozen, indent=1) + "\n").encode()
@@ -3580,18 +3721,30 @@ def launch_stage(j, st, cmd):
     if st["kind"] in ("route", "calibrate"):
         j["route_attempt"] = j["attempt"]
     t = tag(st, j)
+    rebound = None
     if st["kind"] == "bench":
         # Mutation benches must never write the route's source tree. One private
         # tree per job attempt retains generated inputs shared by bench stages.
         j["stage_source"] = f"{j['run']}/bench_src_a{str(j['attempt']).split('b')[0]}"
+        if j.get("bench_rebind"):
+            from bench_rebind import source_for_stage
+            rebound = source_for_stage(j, st["key"])
+            if rebound:
+                j["stage_source"] = rebound["source_path"]
     else:
         j.pop("stage_source", None)
     env = "".join(f"export {k}={shlex.quote(v)}\n" for k, v in dict(
         RUN=j["run"], SRC=j.get("stage_source", f"{j['run']}/src"), CL=f"{j['run']}/cl", HOST=j["host"], NAME=label(j["name"]),
         LABEL=label(j["name"]), RAW_NAME=j["name"],
-        BLOCK=j["spec"]["block"], COMMIT=j["commit_full"], THREADS=str(st.get("threads", 4)),
+        BLOCK=j["spec"]["block"], COMMIT=rebound["source_commit"] if rebound else j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
+    env += f"export OT_PG_JOB_STRICT={int(pg_strict(j))}\n"
+    if not pg_strict(j):
+        env += "export OT_PG_STRICT=0\n"
+    if pg_strict(j):
+        env += ("export OT_PG_STRICT=1\nexport OT_PG_HELPER={CL}/native_pg_binding.tcl\n"
+                "export OT_PG_RUNNER={CL}/pg_receipt.py\nexport OT_PG_COLLECTOR={CL}/audit_native_pg.tcl\n")
     # OOM-FIRST (drive-0849 2026-10-09): synth runs NATIVELY (host yosys, outside any container cgroup) -- the 208 GB
     # yosys that took the EPYC1 die GRT was one.  Every loop stage raises its own oom_score_adj (inherited by its
     # children; non-root may raise it) so a host OOM picks a loop stage, never a die run (-900) or an interactive job.
@@ -3796,6 +3949,9 @@ def launch_stage(j, st, cmd):
         # refusing on an existing .tmp.  A copy that died (ENOSPC on AGIdock, hfd_lk_ep-b46a972cd-cc 10-11) left a
         # stale .tmp that made every retry exit 9 (NEEDS_RTL with no bench run); under the lock a leftover .tmp is
         # always stale, so it is removed and the copy redone.
+        if rebound:
+            from bench_rebind import launch_guard
+            env += launch_guard(rebound)
         env += bench_copy_script(original, private)
         # A few legacy recipes spell {RUN}/src instead of using {SRC}.
         cmd = cmd.replace("{RUN}/src", "{SRC}")
@@ -3879,13 +4035,17 @@ def record_stage_peak(j, st, kb):
 
 
 def stage_oom_kills(j, st):
-    """FLEET-OOM (2): the runner's <tag>.oomkill (earlyoom / kernel OOM kills of the stage's pids); records the peak"""
+    """Read independently attributed stage OOM kills; PID-only diagnostics stay remote. Also record the RSS peak."""
     t, run = j.get("stage_tag"), j.get("run")
     if not t or not run or not j.get("host"):
         return ""
     r = ssh(j["host"], f"head -c 1500 {run}/cl/{t}.oomkill 2>/dev/null; echo; echo OT_PEAK_KB $(cat {run}/cl/{t}.peak_kb "
-                       f"2>/dev/null)", timeout=40)
+                       f"2>/dev/null); echo OT_OOM_UNATTRIBUTED $(wc -l < {run}/cl/{t}.oom_unattributed 2>/dev/null)", timeout=40)
     out = r.stdout if not r.returncode else ""
+    unknown = re.search(r"OT_OOM_UNATTRIBUTED (\d+)", out)
+    if unknown and int(unknown.group(1)):
+        log(f"[{j['name']}] {t}: {unknown.group(1)} unattributed OOM event(s); ownership NOT established, "
+            f"retained at {j['host']}:{run}/cl/{t}.oom_unattributed (raw journal .oom_journal)")
     m = re.search(r"OT_PEAK_KB (\d+)", out)
     if m:
         try:
@@ -4348,6 +4508,14 @@ def auto_merge_closure(j, out, record_paths, dry=False):
         p = sh(["git", "-C", str(mwt), "push", "-q", "origin", "HEAD:refs/heads/main"], timeout=900)
         if p.returncode == 0:
             status = f"AUTO-MERGED into main {head[:9]}"
+            break
+        # ROOT-GUARDMSG: deterministic policy refusals cannot recover by retrying
+        # the same push. Preserve the physical record, but route this verdict to ROOT.
+        refusal = re.findall(r"gate_rule_guard: REFUSE ([0-9a-f]{7,40})\b", p.stderr or "")
+        if refusal or "root_pre_push: push to main REFUSED by gate_rule_guard" in (p.stderr or ""):
+            commits = ",".join(dict.fromkeys(refusal)) or head[:9]
+            status = f"GATE_RULE_GUARD {j['name']} {commits}: unclassified helper commit; ROOT classification required"
+            log(status)
             break
         log(f"[{j['name']}] auto-merge push rejected (attempt {attempt}): {p.stderr[-300:]}")
     else:
@@ -5429,7 +5597,12 @@ def launch_ready(j, fleet, spec, stl, st):
 def launch_now(j, fleet, st):
     """launch a reserved stage (no FLEET_LOCK held: the ssh calls of one launch no longer stall every other job)"""
     try:
-        launch_stage(j, st, st["cmd"])
+        cmd = st["cmd"]
+        if pg_strict(j) and st["kind"] in ("collect", "export", "record"):
+            ship_helpers(j["host"], j["run"], j)
+            cmd = ("export OT_PG_STRICT=1\nexport OT_PG_RUNNER={CL}/pg_receipt.py\n"
+                   "export OT_PG_COLLECTOR={CL}/audit_native_pg.tcl\n" + active_pg_cmd(j)) + " || exit $?\n" + cmd
+        launch_stage(j, st, cmd)
     finally:
         fleet.launch_complete(j["host"], st["admission_launch_token"])
     j["status"] = "RUNNING"
@@ -5590,6 +5763,11 @@ def memory_offload_bench(j, fleet, st, stl, location, why):
     return off
 
 
+def _bench_source_fields(j, key):
+    row = (j.get("bench_rebind") or {}).get(key)
+    return dict(source_commit=row["source_commit"], bench_rebind_id=row["id"]) if row else {}
+
+
 def bench_track(j, fleet, stl):
     """advance the bench track; returns False if the job ended (bench failure)"""
     if not j.get("bench_par") or j["status"] in TERMINAL or j["status"] in ("QUEUED", "SYNC", "MIGRATING"):
@@ -5608,7 +5786,9 @@ def bench_track(j, fleet, stl):
         if e is None or e.get("state") == "retry":
             if any(x.get("state") == "running" for x in tr.values()):
                 return True                  # one bench at a time
-            location = bench_location(j, stl)
+            recovery = (j.get("bench_rebind") or {}).get(k)
+            location = (dict(host=j["host"], run=j["run"], attempt=j.get("route_attempt", j["attempt"]))
+                        if recovery else bench_location(j, stl))
             if location["run"] != j.get("run") and vanished_bench_location(j, location):
                 location = bench_location(j, stl)
             caps = next((x.get("caps", []) for x in hosts_table() if x["name"] == location["host"]), None)
@@ -5631,7 +5811,7 @@ def bench_track(j, fleet, stl):
                 if ok:
                     launch_token = fleet._launched(host, st["threads"], st["ram"], actual=True)
             if not ok:
-                off = memory_offload_bench(j, fleet, st, stl, location, why)
+                off = None if recovery else memory_offload_bench(j, fleet, st, stl, location, why)
                 if off is None:
                     if j.get("bwait") != why:
                         j["bwait"] = why
@@ -5657,7 +5837,8 @@ def bench_track(j, fleet, stl):
             finally:
                 fleet.launch_complete(host, launch_token)
             j["bench_location"] = location
-            tr[k] = dict(state="running", tag=v["stage_tag"], host=host, run=location["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
+            tr[k] = dict(state="running", tag=v["stage_tag"], host=host, run=location["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"),
+                         **_bench_source_fields(j, k))
             j["bwait"] = None
             j.pop("bwait_since", None)
             event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
@@ -5705,7 +5886,8 @@ def bench_track(j, fleet, stl):
             finish(j, "NEEDS_HUMAN", f"{k} tool race twice in the bench track (rc={rc})",
                    f"NEEDS_HUMAN: bench {k} hit a build tool race twice (rc={rc}): {race}; route stopped")
             return False
-        j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
+        j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel",
+                               **_bench_source_fields(j, k))
         if not passed:
             stop_main_for_bench(j)
             finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
@@ -6533,6 +6715,51 @@ def hm_auto_events(j):
 RECORD_DIR = "{RUN}/record"
 
 
+def pg_strict(job_or_spec):
+    """The source-bound job/spec policy is authoritative, never daemon env."""
+    return HO.pg_strict(job_or_spec.get("spec", job_or_spec))
+
+
+def native_pg_cmd(odb):
+    """Execute the frozen native collector afresh, never accept a supplied PASS JSON."""
+    return ("python3 {CL}/pg_receipt.py verify " + odb
+            + " --collector {CL}/audit_native_pg.tcl"
+              " --receipt-dir {CL}/pg_receipts")
+
+
+def active_pg_cmd(j):
+    """Resolve the exact installed route database; ambiguous or unsupported layouts refuse."""
+    e = j.get("eco") or {}
+    base = e.get("rb") if e.get("installed") else route_bases_glob(j, j["run"])
+    if not base:
+        return "echo 'PG_HOLD: exact active final ODB cannot be resolved' >&2; exit 86"
+    # Route base may be a glob from the frozen verdict spec. Require one actual
+    # database instead of selecting whichever directory happens to sort first.
+    cmd = (f"set -- {base}/6_final.odb\n"
+           "[ \"$#\" -eq 1 ] && [ -f \"$1\" ] || "
+           "{ echo 'PG_HOLD: missing or ambiguous active final ODB' >&2; exit 86; }\n"
+           + native_pg_cmd('"$1"') + " || exit $?")
+    if e.get("installed") and e.get("ob") and e["ob"] != base:
+        installed = shlex.quote(e["ob"] + "/6_final.odb")
+        installed_spef = shlex.quote(e["ob"] + "/6_final.spef")
+        cmd += (f'\ncmp -- "$1" {installed} || exit $?\n'
+                f'cmp -- "${{1%.odb}}.spef" {installed_spef} || exit $?\n'
+                + native_pg_cmd(installed) + " || exit $?")
+    return cmd
+
+
+def require_job_pg(j):
+    if not pg_strict(j):
+        return True
+    ship_helpers(j["host"], j["run"], j)
+    ok, out = remote_ok(j, active_pg_cmd(j), timeout=1800)
+    j["pg_status"] = dict(status="PASS" if ok else "PG_HOLD", at=now_iso(), output=out)
+    if not ok:
+        finish(j, "NEEDS_HUMAN", "PG_HOLD: native final ODB terminal audit refused publication",
+               f"PG_HOLD: fresh audit of the active final ODB failed; timing remains independent: {out}")
+    return ok
+
+
 def precollect_cmd(spec):
     """drive-0212 2026-10-09: the collect stage runs AFTER the verdict, but a verdict check may read what collect writes
     (s81-dsfd-hstnh-515-pe-4a12f4d5d-tc-cl: lef_check_MATCH on {RUN}/record/check.json, written only by collect's
@@ -6584,6 +6811,8 @@ def route_corner_check_cmd(c):
 def do_verdict(j, fleet, stl):
     if adoption_held(j):
         return
+    if not require_job_pg(j):
+        return
     v = j["spec"].get("verdict", {})
     m = get_metrics(j)
     if re.search(r"kex_exchange|Connection (reset|refused|closed|timed out)|ssh:", str(m.get("error", ""))):
@@ -6595,6 +6824,9 @@ def do_verdict(j, fleet, stl):
     checks, failed = {}, []
     pre = precollect_cmd(j["spec"])
     if pre:
+        if pg_strict(j):
+            pre = ("export OT_PG_STRICT=1\nexport OT_PG_RUNNER={CL}/pg_receipt.py\n"
+                   "export OT_PG_COLLECTOR={CL}/audit_native_pg.tcl\n" + pre)
         ok, out = remote_ok(j, pre, timeout=3600)
         if not ok and TRANSIENT_RE.search(out):
             raise RuntimeError(f"verdict pre-collect: ssh/network failure: {out.strip()[-200:]}")
@@ -7140,6 +7372,15 @@ def eco_install_cmd(j):
     if j.get("eco_overlay_recovery"):
         lines.append(f"python3 {{CL}}/eco_recovery.py verify {shlex.quote(j['eco_overlay_recovery']['guard'])}")
     lines.append(f"EB=$(ls -d {out}/orfs/results/asap7/*/base)")
+    if pg_strict(j):
+        lines += ["export OT_PG_STRICT=1", "export OT_PG_RUNNER={CL}/pg_receipt.py",
+                  "export OT_PG_COLLECTOR={CL}/audit_native_pg.tcl",
+                  'EB_PG_SHA=$(sha256sum "$EB/6_final.odb" | cut -d " " -f 1)',
+                  'EB_PG_SPEF_SHA=$(sha256sum "$EB/6_final.spef" | cut -d " " -f 1)',
+                  native_pg_cmd('"$EB/6_final.odb"'),
+                  '[ "$EB_PG_SHA" = "$(sha256sum "$EB/6_final.odb" | cut -d " " -f 1)" ]',
+                  '[ "$EB_PG_SPEF_SHA" = "$(sha256sum "$EB/6_final.spef" | cut -d " " -f 1)" ]']
+
     # ECO-DEF (ROOT 2026-10-16, qkd_static_kv_landing_seg ls5 / qkd_ctrl_pc_core s4): f181bfa99 made install copy
     # 6_final.def, but a job whose FROZEN hold_eco.tcl predates it writes no DEF -> 'cp: cannot stat 6_final.def', rc=1
     # after a PASSING ECO.  Write the DEF from the ECO's own 6_final.odb (same database, so the same geometry) first.
@@ -7148,8 +7389,20 @@ def eco_install_cmd(j):
                  f'/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /tmp/ot_wdef.tcl" '
                  f'> $EB/install_write_def.log 2>&1')
     for b in sorted({rb, ob}):
+        if pg_strict(j):
+            lines += ['[ "$EB_PG_SHA" = "$(sha256sum "$EB/6_final.odb" | cut -d " " -f 1)" ]',
+                      '[ "$EB_PG_SPEF_SHA" = "$(sha256sum "$EB/6_final.spef" | cut -d " " -f 1)" ]']
         for f in ("6_final.odb", "6_final.spef", "6_final.v", "6_final.def"):
             lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
+    if pg_strict(j):
+        for b in sorted({rb, ob}):
+            # Verify the installed bytes against the audited candidate before
+            # any custom or default re-export. Each destination is audited too.
+            lines += [f'[ "$EB_PG_SHA" = "$(sha256sum {shlex.quote(b + "/6_final.odb")} | cut -d " " -f 1)" ]',
+                      f'cmp -- "$EB/6_final.odb" {shlex.quote(b + "/6_final.odb")}',
+                      f'[ "$EB_PG_SPEF_SHA" = "$(sha256sum {shlex.quote(b + "/6_final.spef")} | cut -d " " -f 1)" ]',
+                      f'cmp -- "$EB/6_final.spef" {shlex.quote(b + "/6_final.spef")}',
+                      native_pg_cmd(shlex.quote(b + "/6_final.odb"))]
     lines.append(f"for c in {cs}; do [ -f $c.pre_eco ] || cp $c $c.pre_eco; cp {out}/corner_sta.json $c; done")
     if e.get("kind") in ("combo", "combo_hold") or e.get("combo_vtswap"):
         # drive-0849 2026-10-09: a combo db carries LVT masters, but its VT-swap stage alone never scored >= 0, so
@@ -7295,6 +7548,8 @@ def child_lint_gate(j):
 def do_commit(j):
     if adoption_held(j):
         return
+    if not require_job_pg(j):
+        return
     m = j["metrics"]
     if not j.get("spec", {}).get("smoke") and (j.get("spec", {}).get("m6_pin_grant") is not None
             or (j.get("child_lint") or {}).get("fails") != []):
@@ -7319,7 +7574,11 @@ def do_commit(j):
     detail = (f"CLOSED {setup_corner_label(m)} {m['ss_ps']:+.2f} / FF {m['ff_ps']:+.2f} ps DRC {m['drc']}" + setup_sensitivity_text(m) + (f" under IO budget {rbn} (re-derived die-link "
               f"budget, no re-route)" if rbn else "") + " | record "
               f"{j['spec']['source']['branch']} {out.get('branch_commit', '')[:9]} ({out.get('files')} files) | {merge}")
-    if merge.startswith(("CONFLICT", "PUSH-RACE")):
+    if merge.startswith("GATE_RULE_GUARD "):
+        # First ledger field is consumed by the verdict watcher. Do not disguise a
+        # guard refusal as CLOSED or PUSH-RACE; the immutable physical record stays.
+        finish(j, "NEEDS_HUMAN", merge, f"{merge} | {detail}")
+    elif merge.startswith(("CONFLICT", "PUSH-RACE")):
         finish(j, "NEEDS_HUMAN", f"closed and recorded, merge failed: {merge}", detail)
     else:
         finish(j, "CLOSED", detail, detail)
@@ -9844,6 +10103,16 @@ def cmd_retry(a):
 
 
 @locked_job_command
+def cmd_bench_rebind(a):
+    """Recover the reviewed path-string bench bug without re-syncing or re-routing."""
+    from bench_rebind import command
+    try:
+        command(sys.modules[__name__], a)
+    except (ValueError, OSError, subprocess.SubprocessError) as exc:
+        sys.exit(str(exc))
+
+
+@locked_job_command
 def cmd_ioref_rejudge(a):
     """human (FLOW-IOREF): re-judge a NEEDS_RTL job at its ROUTED insertion (routed_ioref re-STA, no re-route).  Closes
     -> back to the verdict stage (READY; the cached re-STA is the verdict).  Hold-only at the routed reference with no
@@ -10398,6 +10667,10 @@ def main():
     r.add_argument("--force", action="store_true", help="FLOORPLAN_MARGIN job whose lint dump is gone: requeue anyway")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
+    r = sub.add_parser("bench-rebind", help="reviewed path-string bench recovery; preserve the completed route")
+    r.add_argument("name"); r.add_argument("--commit", required=True)
+    r.add_argument("--bench", action="append", required=True, help="affected benchmark stage key; repeat as needed")
+    r.add_argument("--why", required=True); r.add_argument("--apply", action="store_true", help="prepare a private source and requeue only benchmarks; default is read-only")
     r = sub.add_parser("ioref-rejudge"); r.add_argument("name")
     r = sub.add_parser("rebudget-rejudge"); r.add_argument("name"); r.add_argument("--rb", required=True)
     r.add_argument("--sdc", required=True); r.add_argument("--dry", action="store_true")
@@ -10439,6 +10712,8 @@ def main():
         cmd_retry(a)
     elif a.cmd == "retry-eco":
         cmd_retry_eco(a)
+    elif a.cmd == "bench-rebind":
+        cmd_bench_rebind(a)
     elif a.cmd == "reverdict":
         cmd_reverdict(a)
     elif a.cmd == "ioref-rejudge":
