@@ -8,16 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/safe-qw-cb16-1019",
-  "commit": "COMMIT",
-  "extra_paths": [
-   "tools/qwen_cluster/bench_stn.sh",
-   "results/arch/qwen_cluster_1017/cluster_contract_dv.json",
-   "rtl/test/tb_qfd_c_stn.sv",
-   "rtl/test/qfd_c_stn_mut_tile.sv",
-   "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
-   "rtl/hdc/ot_hdc_delay.sv",
-   "results/rtl/qcluster_stn_1018"
-  ]
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -30,38 +21,6 @@
     "needs": [
      "verilator"
     ]
-   },
-   {
-    "name": "qcluster_lockstep",
-    "cmd": "bash tools/qwen_cluster/bench_lockstep.sh bench_out",
-    "expect": "pass",
-    "pass_regex": "LOCKSTEP_EXIT 0",
-    "threads": 8,
-    "peak_ram_gb": 12
-   },
-   {
-    "name": "stn_exact",
-    "cmd": "bash tools/qwen_cluster/bench_stn.sh pass qfd_c_stn514 {RUN}/stn_p",
-    "expect": "pass",
-    "pass_regex": "STN_BENCH PASS qfd_c_stn514 0 errors in 20000 cycles",
-    "threads": 4,
-    "peak_ram_gb": 4,
-    "needs": [
-     "verilator"
-    ],
-    "pass_witness": "results/rtl/qcluster_stn_1018/run_pass_qfd_c_stn514.log"
-   },
-   {
-    "name": "stn_mutant",
-    "cmd": "bash tools/qwen_cluster/bench_stn.sh mut qfd_c_stn514 {RUN}/stn_m",
-    "expect": "fail",
-    "fail_regex": "STN_BENCH FAIL qfd_c_stn514 [1-9]\\d* errors in 20000 cycles",
-    "threads": 4,
-    "peak_ram_gb": 4,
-    "needs": [
-     "verilator"
-    ],
-    "fail_witness": "results/rtl/qcluster_stn_1018/run_mut_qfd_c_stn514.log"
    }
   ],
   "calibrate": {

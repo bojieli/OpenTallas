@@ -6,4 +6,4 @@ SAFE-QW-CB16 one-edge plain516station checklist (UNBOUND).
 5 516bits includingallstate<2kb, independent one-edgehop; no serialdelayarray.
 6 No macros; onecontinuous standardcellregion; aspect1.4; pinboundlowutil explicitwaiver pendingactualgate. Parentorigins43.2/channel20 required.
 7 Ownhardchildclock, io_hold0.03; nativeTTFF pending.
-8 Staticoneword/edge, no stalls/credits/backpressure. Existingstandaloneprimary+mutant benches reused; finalparentmodel/fullMUT8 required.
+8 Staticoneword/edge, no stalls/credits/backpressure. Production plainstation RTL unchanged; original CB16 fabric receipts preserved, standalone admission bench still owed; finalparentmodel/fullMUT8 required.
