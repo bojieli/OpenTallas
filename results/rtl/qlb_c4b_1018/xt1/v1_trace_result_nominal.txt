@@ -1,0 +1,13 @@
+RESULT XT1 FAIL mode=nominal lead=8 gap=4 exact 0/64 {"qkv": {"d_head": 16, "d_clu": 126, "first_rs": 142, "round_period": null, "exact": "0/8"}, "o": {"d_head": 16, "d_clu": 126, "first_rs": 142, "round_period": [8, 8], "exact": "0/24"}, "gu": {"d_head": 16, "d_clu": 126, "first_rs": 142, "round_period": null, "exact": "0/8"}, "down": {"d_head": 16, "d_clu": 126, "first_rs": 142, "round_period": [8, 8], "exact": "0/24"}}
+  ERR qkv word 0 (round 0 block 0 j 0) at 277: fault 0 data mismatch
+  ERR qkv word 1 (round 0 block 0 j 1) at 278: fault 0 data mismatch
+  ERR qkv word 2 (round 0 block 0 j 2) at 279: fault 0 data mismatch
+  ERR qkv word 3 (round 0 block 0 j 3) at 280: fault 0 data mismatch
+  ERR qkv word 4 (round 0 block 0 j 4) at 281: fault 0 data mismatch
+  ERR qkv word 5 (round 0 block 0 j 5) at 282: fault 0 data mismatch
+  ERR qkv word 6 (round 0 block 0 j 6) at 283: fault 0 data mismatch
+  ERR qkv word 7 (round 0 block 0 j 7) at 284: fault 0 data mismatch
+  ERR qkv: 64 rs words, expected 8
+  ERR o word 0 (round 0 block 0 j 0) at 1822: fault 0 data mismatch
+  ERR o word 1 (round 0 block 0 j 1) at 1823: fault 0 data mismatch
+  ERR o word 2 (round 0 block 0 j 2) at 1824: fault 0 data mismatch

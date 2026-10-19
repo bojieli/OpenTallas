@@ -116,7 +116,15 @@ def check(a, gold):
         s = sch[name]
         lo, hi = s['go'], s['go'] + SPACING - 200
         exp = gold[name]['words']
-        got = [r for r in rs if lo <= r[0] < hi]
+        allw = [r for r in rs if lo <= r[0] < hi]
+        # the tiles' lanes emit the running accumulator every issue edge (t_vout each (r, k, j); XT1 trace 10-19: tile 16
+        # t_out == the in-order lane sums 64/64); the op's level-6 result is the k = kc - 1 word of each (r, j): the
+        # consumer selects it by the static schedule.  Count check on all words, value check on the final ones.
+        kc = gold[name]['op']['k']
+        nr = len(exp) // 8
+        if len(allw) != nr * kc * 8:
+            errs.append(f'{name}: {len(allw)} rs words, expected {nr * kc * 8} (= rounds x k x 8)')
+        got = [allw[r * kc * 8 + (kc - 1) * 8 + j] for r in range(nr) for j in range(8) if r * kc * 8 + (kc - 1) * 8 + j < len(allw)]
         cws = [c for c in cw if lo <= c[0] < lo + 100]
         d = dict(hr_go=s['go'], cw_go=[c for c, _ in cws][:1], rs_edges=[r[0] for r in got])
         if not cws:
@@ -125,8 +133,10 @@ def check(a, gold):
             d['d_head'] = cws[0][0] - s['go']
             d['cw_go_columns'] = cws[0][1]
         if got:
-            d['d_clu'] = got[0][0] - (cws[0][0] if cws else s['go'])
-            d['first_rs'] = got[0][0] - s['go']
+            d['d_clu'] = allw[0][0] - (cws[0][0] if cws else s['go'])
+            d['first_rs'] = allw[0][0] - s['go']
+            d['first_final'] = got[0][0] - s['go']
+            d['last_final'] = got[-1][0] - s['go']
             rounds = []
             for r in range(len(exp) // 8):
                 ed = [g[0] for g in got[8 * r:8 * r + 8]]
@@ -154,7 +164,7 @@ def check(a, gold):
     v = 'PASS' if not errs and nok == ntot and ntot else 'FAIL'
     res = dict(verdict=v, mode=a.mode, lead=a.lead, gap=a.gap, exact=f'{nok}/{ntot}', per_op=per, errors=errs, end=end)
     print(f'RESULT XT1 {v} mode={a.mode} lead={a.lead} gap={a.gap} exact {nok}/{ntot} ' + json.dumps(
-        {k: {kk: per[k].get(kk) for kk in ('d_head', 'd_clu', 'first_rs', 'round_period', 'exact')} for k in per}))
+        {k: {kk: per[k].get(kk) for kk in ('d_head', 'd_clu', 'first_rs', 'first_final', 'last_final', 'round_period', 'exact')} for k in per}))
     for e in errs[:12]:
         print('  ERR', e)
     Path(a.log + '.result.json').write_text(json.dumps(res, indent=1))

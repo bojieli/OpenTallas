@@ -1,0 +1,10 @@
+RESULT XT1 FAIL mode=asbuilt lead=8 gap=4 exact 0/64 {"qkv": {"d_head": null, "d_clu": null, "first_rs": null, "round_period": null, "exact": "0/8"}, "o": {"d_head": null, "d_clu": null, "first_rs": null, "round_period": null, "exact": "0/24"}, "gu": {"d_head": null, "d_clu": null, "first_rs": null, "round_period": null, "exact": "0/8"}, "down": {"d_head": null, "d_clu": null, "first_rs": null, "round_period": null, "exact": "0/24"}}
+  ERR qkv: no column go on cw_s* after the hr go
+  ERR qkv: 0 rs words, expected 8
+  ERR o: no column go on cw_s* after the hr go
+  ERR o: 0 rs words, expected 24
+  ERR gu: no column go on cw_s* after the hr go
+  ERR gu: 0 rs words, expected 8
+  ERR down: no column go on cw_s* after the hr go
+  ERR down: 0 rs words, expected 24
+  ERR faults [(3267, 'heads')]
