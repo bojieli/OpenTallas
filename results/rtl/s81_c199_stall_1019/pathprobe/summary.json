@@ -1,0 +1,15 @@
+{
+  "source": "d6d1730cb",
+  "original_snapshot": "s81sf_bfcol_c199r-20261019-072007",
+  "checkpoint_copy": "ot-epyc7:/srv/opentallas-scratch/claude/codex-s81-c199-pathprobe/work",
+  "saved_odb": "c199_before_hold.odb",
+  "saved_sdc": "c199_before_hold.sdc",
+  "status": "INTENTIONAL_DIAGNOSTIC_STOP_BEFORE_HOLD_REPAIR",
+  "initial_ss_setup_ps": 22.89,
+  "initial_ff_hold_ps": -70.687,
+  "launch_clock_ps": 383.1077,
+  "capture_clock_ps": 467.1994,
+  "direct_data_path_ps": 40.1123,
+  "structural_cause": "Originally common logical lane clock is split into pushed-down ICG cgpd15/cgpd18 with84.0917ps native FF skew across adjacent carry pipeline registers. Reset removal also fails.",
+  "qualified": false
+}
