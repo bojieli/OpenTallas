@@ -1,0 +1,32 @@
+[
+  {
+    "master": "qfd_c_xstn_safe",
+    "job": "qfd_c_xstn_safe-safe1-ac5cc8826",
+    "final_lef_sha256": "3d0406f87a5b1526c3defa0a1b27541dfc543d7c7996d63bad09510059ab4a0f",
+    "earlier_pin_snapshot_path": "results/arch/qwen_cluster_1017/q_cluster16/xstn_child_attempt1/native_pins_qfd_c_xstn_safe.json",
+    "earlier_snapshot_sha256": "91084ac1eefec87d5293f4a0783aaabf79a836b76c8cf67ee2d5ad425066ffad",
+    "signal_clock_pins": 1545,
+    "changed_pin_rectangles_or_directions": [
+      "ck",
+      "rst_n",
+      "sidx[1]"
+    ],
+    "exact_match": false,
+    "scope": "Exact final exported LEF rectangles/directions vs prior gate pin snapshot; no parent timing or A0 qualification"
+  },
+  {
+    "master": "qfd_c_xstnw_safe",
+    "job": "qfd_c_xstnw_safe-safe1-ac5cc8826",
+    "final_lef_sha256": "358be5e210c3c341647b627fe03acfe0ba6e51421b8bc0bfaddc402f9c01e2ee",
+    "earlier_pin_snapshot_path": "results/arch/qwen_cluster_1017/q_cluster16/xstn_child_attempt1/native_pins_qfd_c_xstnw_safe.json",
+    "earlier_snapshot_sha256": "df4e8a3a450f24ce6804953b54a8d7b49b674125eace7eb6fdbb91febf08a7e7",
+    "signal_clock_pins": 1545,
+    "changed_pin_rectangles_or_directions": [
+      "ck",
+      "rst_n",
+      "sidx[1]"
+    ],
+    "exact_match": false,
+    "scope": "Exact final exported LEF rectangles/directions vs prior gate pin snapshot; no parent timing or A0 qualification"
+  }
+]
