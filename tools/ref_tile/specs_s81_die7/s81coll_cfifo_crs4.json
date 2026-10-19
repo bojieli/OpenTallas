@@ -1,0 +1,258 @@
+{
+ "name": "s81coll_cfifo_crs4",
+ "top": "dsfd_cfifo_crs4",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv",
+  "rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "cr",
+ "clock_ports": [
+  "cr",
+  "cr_s",
+  "xk[0]",
+  "xk[1]",
+  "xk[2]",
+  "xk[3]"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cr"
+   ],
+   "inputs": [
+    "ri",
+    "st",
+    "rst",
+    "lk"
+   ],
+   "outputs": [
+    "xa",
+    "xb",
+    "cc",
+    "x2",
+    "rs"
+   ]
+  },
+  "lane0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[0]"
+   ],
+   "inputs": [
+    "xl0"
+   ],
+   "outputs": []
+  },
+  "lane1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[1]"
+   ],
+   "inputs": [
+    "xl1"
+   ],
+   "outputs": []
+  },
+  "lane2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[2]"
+   ],
+   "inputs": [
+    "xl2"
+   ],
+   "outputs": []
+  },
+  "lane3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[3]"
+   ],
+   "inputs": [
+    "xl3"
+   ],
+   "outputs": []
+  },
+  "core_s": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cr_s"
+   ],
+   "inputs": [],
+   "outputs": [
+    "rd"
+   ]
+  }
+ },
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 280.8,
+  "h": 69.12,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "xa",
+   "xb",
+   "x2",
+   "cr",
+   "cc",
+   "st",
+   "ri",
+   "rs"
+  ],
+  "S": [
+   "xl0",
+   "xl1",
+   "xl2",
+   "xl3",
+   "xk",
+   "rd",
+   "cr_s"
+  ],
+  "W": [
+   "rst",
+   "lk"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/cfifo_crs4/dsfd_cfifo_crs4.tcl",
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out: the RTL registers every data pin -- xl<k> lands directly in the ot_s81_land ring slots on xk[k] (the slots ARE the capture flops, flop-first, LANDING-CONTRACT L1), ri/st on cr (ri_q/sti); every output from a flop (xa/xb/cc/x2 *_r, rd = rr/rsync_s, rs = rsync); lk is an identity strap tied by the die binder (no register: a static value). A flow pin register would add an edge the die calendar does not price."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "S81-DIE7/CRS4 10-18: NEW top dsfd_cfifo_crs4 (S81-LAND2 successor of the closed dsfd_cfifo_crs, member of every _l4 frame col_h9_l4 / col_h10_l4 / col_h9_MX_l4). Structural change vs s81coll_cfifo_crs: (1) the two column ingress blocks (ot_s81_static_column_ingress_hr + lane_cross_hr: xd on xf = xk[1], xd2 on xf2 = xk[2], 2-flop marker-sampled read epoch on cr_s, half-cycle h stage) are replaced by FOUR ot_s81_land rings (W 276, D 4), one per lane, each written on ITS OWN forwarded clock xk[k] and read on cr from the frame reset release (contract L1-L7, K = lk[3k+:3] identity strap); (2) ports: xd[565:0] / xd2[537:0] / xf / xf2 -> xl0..xl3[275:0] (same bits, same S positions) + xk[3:0] + lk[11:0] (W face); (3) CTS roots cr, cr_s, xk[0..3] (6; crs: cr, cr_s, xf, xf2). xa/xb/cc/x2 on cr and ri -> rr -> rd on cr_s are crs's. Same frame slot 280.8 x 69.12, same N face, same S data order (io_tcl derived from dsfd_cfifo_crs_nspread.tcl by physical/s81_die_pins/cfifo_crs4/mk_pins.py). The crs epoch-Gray hold hook (gray_hold.tcl) does not apply (no u_cross). No closed view of this top exists: first route.",
+ "job": {
+  "owner": "Claude:S81-DIE7/CRS4",
+  "branch": "claude/s81-die7-crs4-1018",
+  "tag": "c4a",
+  "purpose": "hardened view of the _l4 frame column FIFO dsfd_cfifo_crs4 (per-lane landings, reset read epoch)",
+  "views_to": "physical/ref_tile/s81coll_cfifo_crs4/views",
+  "record_to": "results/rtl/ref_tile/s81coll_cfifo_crs4",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/land",
+   "tools/s81_dv/crs4_gate.sh",
+   "tools/s81_dv/crs4_bench.py",
+   "physical/s81_die_pins/cfifo_crs4",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/hdc",
+   "results/arch/s81_dv_1016/landing/witness_crs4"
+  ],
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_cfifo_crs4 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-PINMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact_lanes_vs_crs",
+    "cmd": "bash tools/s81_dv/crs4_gate.sh pass {RUN}/bench_pass",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CRS4_BENCH PASS base sweep 20/20 slip-fault 8/8",
+    "min_count_regex": "CRS4_BENCH PASS base sweep (\\d+)/20"
+   },
+   {
+    "name": "neighbour_lane_clock_mutant",
+    "cmd": "bash tools/s81_dv/crs4_gate.sh mut_nbr {RUN}/bench_mut_nbr",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CRS4_BENCH FAIL mut_nbr",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_crs4/crs4_mut_nbr.log"
+   },
+   {
+    "name": "read_slot_late_mutant",
+    "cmd": "bash tools/s81_dv/crs4_gate.sh mut_sel {RUN}/bench_mut_sel",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CRS4_BENCH FAIL mut_sel",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_crs4/crs4_mut_sel.log"
+   },
+   {
+    "name": "naive_retime_mutant",
+    "cmd": "bash tools/s81_dv/crs4_gate.sh mut_naive {RUN}/bench_mut_naive",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CRS4_BENCH FAIL mut_naive",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_crs4/crs4_mut_naive.log"
+   }
+  ]
+ }
+}

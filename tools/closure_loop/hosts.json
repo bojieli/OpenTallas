@@ -1,5 +1,5 @@
 {
- "comment": "Closure-loop host table, in preference order (OWNER 2026-10-06: EPYC3 > EPYC1 > EPYC2 > PVE1 > AGIdock). cap = 1.2 x cores (OWNER_RULE_LOAD_CAP_20261006.txt): launch only if load1 + pending + job threads <= cap and MemAvailable >= peak + 32 GB. base = run root (NVMe on the EPYCs; EPYC2 /srv/opentallas-scratch is the root disk, so scratch2). max_job_threads / max_job_ram_gb restrict what a single job may take on a host (EPYC3 is the die-top host: 64 thr / 400 GB while no die-top runs; AGIdock has little RAM: jobs <= 20 GB). caps = tools a stage may need on that host (coordinator 2026-10-06: PVE1 is ORFS/docker only; AGIdock has Verilator 5.032 like the EPYCs). A stage's needs (default bench: verilator+iverilog+yosys; calibrate/route/signoff/summary: orfs) must be a subset of its host's caps. LOAD REBALANCE 2 (2026-10-06 21:15): EPYC3 is the die-top host -- spillover_only (chosen only when no other host fits) and reserve_ram_gb 500 kept free for the Qwen die-top run; the loop migrates its pre-CTS (bench/calibrate) jobs off any host above cap. Host choice scores free cores AND free RAM; a job's hosts list is a preference. OWNER 2026-10-06 21:35 (supersedes the 1.2x cap and LOAD REBALANCE 2): MEMORY is the limit -- admit while measured load1 + own launches of the last 10 min (declared threads) <= cap = 3 x cores, AND MemAvailable - own launches' peaks of the last 10 min >= job peak + max(10% host RAM, 32 GB). EPYC3 reserve lifted. LOCALHOST (OWNER 2026-10-07 05:00): added with max_loop_threads 24 and min_free_ram_gb 40. FILL THE FLEET (OWNER 2026-10-07 19:00, integrate agent): per-job max_job_threads / max_job_ram_gb raised to the host (cores; 0.95 x ram_gb) so admission is bound only by measured MemAvailable minus own pending peaks >= job peak + max(5% ram, 32 GB, min_free_ram_gb), the 3 x cores load cap and the disk floor. localhost unchanged (owner cap: 24 loop threads, 60 GB/job). DISK GUARD (2026-10-07 integrate): disk_roots = {path: min free GB} for every other filesystem a host's jobs write (docker /, second scratch); admission refuses while any is below its floor, as for the run root. NO OVERSUBSCRIPTION (OWNER 2026-10-07 19:31): cap = round(1.1 x cores); admit while max(load1, own running declared threads) + own launches of the last 10 min + job threads <= cap (was 3 x cores). RAM headroom = max(5% ram_gb, min_free_ram_gb, default 32 GB): AGIdock 8 GB / PVE1 16 GB so the small hosts take 40 GB jobs. LOCALHOST ROUTES (OWNER 2026-10-07 19:40): localhost bench_offload=true -- a job whose route/calibrate stages need only ORFS may be placed on localhost although its spec hosts list omits it (that list is a preference); its benches run on a fleet host with the bench tools (source synced to <base>/<name>-bench). Guard unchanged: <= 24 loop threads, MemAvailable >= peak + 40 GB. ADMISSION FIX (coordinator 20:05): load term = measured load1 + declared threads of own launches of the last 10 min only; declared threads of long-running stages are no longer counted (they starved the fleet at 38-58 % idle). MEMORY ONLY (OWNER 2026-10-07 20:10, supersedes the 19:31 cap and the 20:05 eff fix): no CPU/load admission check on remote hosts; 'cap' is informational. localhost keeps max_loop_threads 24 / min_free_ram_gb 40. GIT MIRROR (GITMIRROR sub-agent, drive-1010 2026-10-10): git_mirror = a seeded bare repo on the host (marker CL_READY); sync_source fetches the job branch from git_mirror_upstream (public, host -> GitHub), pushes the pinned commit to refs/cl/<sha> only when still missing (bulk direct ssh, delta only), archives on the host and falls back to the tar stream on any failure (tools/closure_loop/git_mirror.py). PVE1 BENCH OFFLOAD (OWNER 2026-10-13 fleet sizing: every machine fully available): ot-pve1 bench_offload=true, as localhost -- it has caps [orfs] only, so every job with a bench stage failed its caps check and PVE1 got 0 of 121 launches in 2 h; routes/calibrates now land there and the benches run on a fleet host with the bench tools.",
+ "comment": "Closure-loop host table, in preference order (OWNER 2026-10-06: EPYC3 > EPYC1 > EPYC2 > PVE1 > AGIdock). cap = 1.2 x cores (OWNER_RULE_LOAD_CAP_20261006.txt): launch only if load1 + pending + job threads <= cap and MemAvailable >= peak + 32 GB. base = run root (NVMe on the EPYCs; EPYC2 /srv/opentallas-scratch is the root disk, so scratch2). max_job_threads / max_job_ram_gb restrict what a single job may take on a host (EPYC3 is the die-top host: 64 thr / 400 GB while no die-top runs; AGIdock has little RAM: jobs <= 20 GB). caps = tools a stage may need on that host (coordinator 2026-10-06: PVE1 is ORFS/docker only; AGIdock has Verilator 5.032 like the EPYCs). A stage's needs (default bench: verilator+iverilog+yosys; calibrate/route/signoff/summary: orfs) must be a subset of its host's caps. LOAD REBALANCE 2 (2026-10-06 21:15): EPYC3 is the die-top host -- spillover_only (chosen only when no other host fits) and reserve_ram_gb 500 kept free for the Qwen die-top run; the loop migrates its pre-CTS (bench/calibrate) jobs off any host above cap. Host choice scores free cores AND free RAM; a job's hosts list is a preference. OWNER 2026-10-06 21:35 (supersedes the 1.2x cap and LOAD REBALANCE 2): MEMORY is the limit -- admit while measured load1 + own launches of the last 10 min (declared threads) <= cap = 3 x cores, AND MemAvailable - own launches' peaks of the last 10 min >= job peak + max(10% host RAM, 32 GB). EPYC3 reserve lifted. LOCALHOST (OWNER 2026-10-07 05:00): added with max_loop_threads 24 and min_free_ram_gb 40. FILL THE FLEET (OWNER 2026-10-07 19:00, integrate agent): per-job max_job_threads / max_job_ram_gb raised to the host (cores; 0.95 x ram_gb) so admission is bound only by measured MemAvailable minus own pending peaks >= job peak + max(5% ram, 32 GB, min_free_ram_gb), the 3 x cores load cap and the disk floor. localhost unchanged (owner cap: 24 loop threads, 60 GB/job). DISK GUARD (2026-10-07 integrate): disk_roots = {path: min free GB} for every other filesystem a host's jobs write (docker /, second scratch); admission refuses while any is below its floor, as for the run root. NO OVERSUBSCRIPTION (OWNER 2026-10-07 19:31): cap = round(1.1 x cores); admit while max(load1, own running declared threads) + own launches of the last 10 min + job threads <= cap (was 3 x cores). RAM headroom = max(5% ram_gb, min_free_ram_gb, default 32 GB): AGIdock 8 GB / PVE1 16 GB so the small hosts take 40 GB jobs. LOCALHOST ROUTES (OWNER 2026-10-07 19:40): localhost bench_offload=true -- a job whose route/calibrate stages need only ORFS may be placed on localhost although its spec hosts list omits it (that list is a preference); its benches run on a fleet host with the bench tools (source synced to <base>/<name>-bench). Guard unchanged: <= 24 loop threads, MemAvailable >= peak + 40 GB. ADMISSION FIX (coordinator 20:05): load term = measured load1 + declared threads of own launches of the last 10 min only; declared threads of long-running stages are no longer counted (they starved the fleet at 38-58 % idle). MEMORY ONLY (OWNER 2026-10-07 20:10, supersedes the 19:31 cap and the 20:05 eff fix): no CPU/load admission check on remote hosts; 'cap' is informational. localhost keeps max_loop_threads 24 / min_free_ram_gb 40. GIT MIRROR (GITMIRROR sub-agent, drive-1010 2026-10-10): git_mirror = a seeded bare repo on the host (marker CL_READY); sync_source fetches the job branch from git_mirror_upstream (public, host -> GitHub), pushes the pinned commit to refs/cl/<sha> only when still missing (bulk direct ssh, delta only), archives on the host and falls back to the tar stream on any failure (tools/closure_loop/git_mirror.py). PVE1 BENCH OFFLOAD (OWNER 2026-10-13 fleet sizing: every machine fully available): ot-pve1 bench_offload=true, as localhost -- it has caps [orfs] only, so every job with a bench stage failed its caps check and PVE1 got 0 of 121 launches in 2 h; routes/calibrates now land there and the benches run on a fleet host with the bench tools. HOST ROLE (FLEET-NEW 2026-10-19): role 'throughput' (ot-epyc7, Zen 3) = tile gates/routes/benches rank it first while its projected load <= 1.0 x cores; die-level jobs (DIE_SPEC_RE name or priority die) rank it after every other host. ALT BASES (FLEET-NEW2 2026-10-19, coordinator): alt_bases = further run roots on other volumes; a job's NEW run dir goes to the base/alt base with the most free disk in the latest probe, and the run-root disk admission uses that best root. A job keeps the dir it was given (live dirs never move).",
  "hosts": [
   {
    "name": "ot-epyc4",
@@ -21,10 +21,119 @@
     "/": 100,
     "/srv/opentallas-scratch": 30
    },
-   "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path). | drive-0849 2026-10-09 12:5x (coordinator fleet fix): run root moved scratch2 (2.9 TB, 220 GB free, the 200 GB floor kept EPYC4 idle at 250 GB free RAM) -> /srv/opentallas-scratch (2.9 TB, 2.8 TB free). Existing runs keep their scratch2 paths; scratch2 stays guarded at 30 GB. | drive-0849 15:5x: cap 384 (3 x cores, onboarding leftover) -> 141 = 1.1 x cores like the other EPYCs. cap only RANKS hosts (free-CPU term 0.5 x (cap - load - threads)/cap); at 384 EPYC4 out-ranked EPYC1 with ~10x more free RAM, herded routes onto it (load 191/128, 22 GB free) while EPYC1 sat at 233 GB free. | 2026-10-10 12:1x drive-1010: DOWN (ssh port 22 timeout) after MemAvailable fell to 7 GB at 11:50-11:55 -> smoke_only until it answers. | 2026-10-10 16:3x drive-1010: hard-rebooted 16:22 (Cherry API); earlyoom + ot-heavy + per-disk admit_disk installed -> smoke_only lifted. | 2026-10-12 04:00 PT: base moved to /srv/opentallas-scratch2 (scratch 96% full); old root kept as disk_root floor 30 GB for running jobs.",
+   "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path). | drive-0849 2026-10-09 12:5x (coordinator fleet fix): run root moved scratch2 (2.9 TB, 220 GB free, the 200 GB floor kept EPYC4 idle at 250 GB free RAM) -> /srv/opentallas-scratch (2.9 TB, 2.8 TB free). Existing runs keep their scratch2 paths; scratch2 stays guarded at 30 GB. | drive-0849 15:5x: cap 384 (3 x cores, onboarding leftover) -> 141 = 1.1 x cores like the other EPYCs. cap only RANKS hosts (free-CPU term 0.5 x (cap - load - threads)/cap); at 384 EPYC4 out-ranked EPYC1 with ~10x more free RAM, herded routes onto it (load 191/128, 22 GB free) while EPYC1 sat at 233 GB free. | 2026-10-10 12:1x drive-1010: DOWN (ssh port 22 timeout) after MemAvailable fell to 7 GB at 11:50-11:55 -> smoke_only until it answers. | 2026-10-10 16:3x drive-1010: hard-rebooted 16:22 (Cherry API); earlyoom + ot-heavy + per-disk admit_disk installed -> smoke_only lifted. | 2026-10-12 04:00 PT: base moved to /srv/opentallas-scratch2 (scratch 96% full); old root kept as disk_root floor 30 GB for running jobs. | FLEET-NEW2 2026-10-19: alt_bases = the host's other scratch NVMe volume; NEW job dirs go to whichever run root has more free disk (run_base); existing runs keep their paths.",
    "external_jobs": [],
    "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
-   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas"
+   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
+   "alt_bases": [
+    "/srv/opentallas-scratch/claude/closure-loop"
+   ]
+  },
+  {
+   "name": "ot-epyc5",
+   "label": "EPYC5",
+   "cores": 128,
+   "cap": 141,
+   "base": "/srv/opentallas-scratch/claude/closure-loop",
+   "max_job_threads": 64,
+   "max_job_ram_gb": 900,
+   "min_free_disk_gb": 200,
+   "caps": [
+    "verilator",
+    "yosys",
+    "iverilog",
+    "orfs"
+   ],
+   "ram_gb": 1133,
+   "disk_roots": {
+    "/": 100,
+    "/srv/opentallas-scratch2": 30
+   },
+   "note": "Onboarded 2026-10-18 (FLEET-EPYC5): Cherry 1035773, 5.199.165.105 Singapore, 128T / 1133 GB, NVMe scratch + scratch2 (2.9 TB each), docker data-root on scratch2, toolchain/ot-heavy/earlyoom copied from ot-epyc4. Configured identical to ot-epyc4. | 04:40-05:00 held (smoke_only + ot-run held_hosts): ~/.local/opentallas-pdk-asap7 was missing, 27 ref gates failed at floorplan; PDK + ~/.local copied (md5 identical to EPYC4), a re-run gate passed floorplan; released. | FLEET-NEW2 2026-10-19: alt_bases = the host's other scratch NVMe volume; NEW job dirs go to whichever run root has more free disk (run_base); existing runs keep their paths.",
+   "external_jobs": [],
+   "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
+   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
+   "alt_bases": [
+    "/srv/opentallas-scratch2/claude/closure-loop"
+   ]
+  },
+  {
+   "name": "ot-epyc6",
+   "label": "EPYC6",
+   "cores": 128,
+   "cap": 141,
+   "base": "/srv/opentallas-scratch/claude/closure-loop",
+   "max_job_threads": 64,
+   "max_job_ram_gb": 900,
+   "min_free_disk_gb": 200,
+   "caps": [
+    "verilator",
+    "yosys",
+    "iverilog",
+    "orfs"
+   ],
+   "ram_gb": 1133,
+   "disk_roots": {
+    "/": 100,
+    "/srv/opentallas-scratch2": 30
+   },
+   "note": "Onboarded 2026-10-19 (FLEET-NEW): Cherry 1036642 'sacred-porpoise', 185.189.44.151 SE-Stockholm, AMD EPYC 9554P 64C/128T 3.1-3.75 GHz (Zen 4), 1152 GB DDR5 (1133 GB MemTotal), NVMe: 894 GB OS + /srv/opentallas-scratch = md RAID0 2x3.5 TB (7.0 TB) + /srv/opentallas-scratch2 3.5 TB (docker data-root). EUR 2.68/h. Configured as ot-epyc5 (toolchain/PDK md5 identical, ot-heavy, earlyoom, ORFS image 16470cea1d34). | FLEET-NEW2 2026-10-19: alt_bases = the host's other scratch NVMe volume; NEW job dirs go to whichever run root has more free disk (run_base); existing runs keep their paths.",
+   "external_jobs": [],
+   "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
+   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
+   "alt_bases": [
+    "/srv/opentallas-scratch2/claude/closure-loop"
+   ]
+  },
+  {
+   "name": "ot-epyc8",
+   "label": "EPYC8",
+   "cores": 128,
+   "cap": 141,
+   "base": "/srv/opentallas-scratch/claude/closure-loop",
+   "max_job_threads": 64,
+   "max_job_ram_gb": 900,
+   "min_free_disk_gb": 120,
+   "caps": [
+    "verilator",
+    "yosys",
+    "iverilog",
+    "orfs"
+   ],
+   "ram_gb": 1133,
+   "disk_roots": {
+    "/": 100
+   },
+   "note": "Onboarded 2026-10-19 (FLEET-NEW2): Cherry 1036671 'gorgeous-bird', 84.32.186.185 NL-Amsterdam, AMD EPYC 9554P 64C/128T (Zen 4), 1152 GB DDR5 (MemTotal 1133 GB), ONLY 2x 894 GB NVMe in the OS RAID1 (~820 GB free): scratch = dir on root, min_free_disk_gb 120, role smalldisk (die-level jobs rank it last: no huge die-chain scratch); max_die_jobs 1 = tile work plus at most ONE die chain (counts daemon die jobs + ot-run die units/waiters there; ot-run HOST_MAX_DIE enforces the same).",
+   "external_jobs": [],
+   "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
+   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
+   "role": "smalldisk"
+  },
+  {
+   "name": "ot-epyc7",
+   "label": "EPYC7",
+   "cores": 96,
+   "cap": 106,
+   "base": "/srv/opentallas-scratch/claude/closure-loop",
+   "max_job_threads": 48,
+   "max_job_ram_gb": 800,
+   "min_free_disk_gb": 200,
+   "caps": [
+    "verilator",
+    "yosys",
+    "iverilog",
+    "orfs"
+   ],
+   "ram_gb": 1008,
+   "disk_roots": {
+    "/": 100
+   },
+   "note": "Onboarded 2026-10-19 (FLEET-NEW): Cherry 1036643 'eternal-dove', 185.8.106.109 US-Chicago, 2x AMD EPYC 7443 (Zen 3) 48C/96T 2.85-4.0 GHz, 2 NUMA nodes, 1024 GB DDR4-3200 (1008 GB MemTotal), 2x 7.68 TB NVMe in OS RAID1 (run root /srv/opentallas-scratch on / , 6.9 TB). EUR 1.74/h. role throughput (owner 10-19): slower per thread -> tile gates/routes/benches rank it FIRST while load <= 1.0 x cores; die-level jobs rank it last.",
+   "external_jobs": [],
+   "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
+   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
+   "role": "throughput"
   },
   {
    "name": "ot-pve1",

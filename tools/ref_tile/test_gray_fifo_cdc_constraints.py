@@ -548,5 +548,275 @@ class ExtActualGraph(ExtFixture):
         self.assertNotEqual(rc, 0, log)
         self.assertIn('OT_GF:', log)
 
+# KV-HOSTCL-CDC2 design, ported onto main by KV-HROOT-CDC 2026-10-18: (d) event synchronisers (toggle/ack handshake with
+# held payload, as qkd_host_visibility_fence) in a reviewed_gray_fifos leaf, alone and with an extension-mode SRAM macro.
+EV_FIXTURE = r"""
+module ev_fix #(parameter integer MUT = 0, parameter integer MAC = 1) (
+  input ck_core, input ck_host, input rst_core_n, input rst_host_n,
+  input [7:0] c_inc, input c_go, output reg c_busy,
+  output reg [7:0] h_landed, output reg h_fault,
+  input h_wr, input [3:0] h_wd, output h_full, output reg [3:0] c_q,
+  input [4:0] h_addr, input h_we, input [127:0] h_wd2, output reg [127:0] h_rd, output reg [127:0] c_rd);
+  // core: commit counter, held snapshot published with a toggle request, acknowledge synchronised back
+  reg [7:0] commits, snapshot; reg req, ac1, ac2, fc;
+  reg rc1, rc2, ack_host, fc1, fc2;
+  always @(posedge ck_core or negedge rst_core_n)
+    if (!rst_core_n) begin commits <= 0; snapshot <= 0; req <= 0; ac1 <= 0; ac2 <= 0; fc <= 0; c_busy <= 0; end
+    else begin
+      ac1 <= ack_host; ac2 <= ac1; commits <= commits + c_inc; c_busy <= req ^ ac2;
+      if (c_go) fc <= 1'b1;
+      if (req == ac2 && commits != snapshot) begin snapshot <= commits; req <= ~req; end
+    end
+  // host: MUT 1 cuts the request chain to one stage (rc1 consumed); MUT 2 also loads the payload with no event in
+  // flight; MUT 6 captures it with no gating at all
+  wire rq = (MUT == 1) ? rc1 : rc2;
+  always @(posedge ck_host or negedge rst_host_n)
+    if (!rst_host_n) begin rc1 <= 0; rc2 <= 0; ack_host <= 0; fc1 <= 0; fc2 <= 0; h_landed <= 0; h_fault <= 0; end
+    else begin
+      rc1 <= req; rc2 <= rc1; fc1 <= fc; fc2 <= fc1; h_fault <= fc2 | (MUT == 1 && rc2);
+      if (rq != ack_host || MUT == 6) begin h_landed <= snapshot; ack_host <= rq; end
+      else if (MUT == 2) h_landed <= snapshot ^ 8'h01;
+    end
+  // host -> core reviewed FIFO
+  wire empty; wire [3:0] rdata; wire pop = !empty;
+  ot_link_afifo #(.W(4), .AW(2), .SYNC(2)) u_hc (
+    .wclk(ck_host), .wrst_n(rst_host_n), .wr(h_wr), .wdata(h_wd), .wfull(h_full), .wfreed(), .ovf(),
+    .rclk(ck_core), .rrst_n(rst_core_n), .rd(pop), .rempty(empty), .rdata(rdata), .rcount());
+  always @(posedge ck_core) if (pop) c_q <= rdata;
+  // host SRAM: MUT 3 clocks it from core (host data pins then cross), MUT 4 from a gated host clock,
+  // MUT 5 lets a core register read its output
+  reg [4:0] a_q; reg we_q; reg [127:0] wd_q;
+  always @(posedge ck_host) begin a_q <= h_addr; we_q <= h_we; wd_q <= h_wd2; end
+  wire mclk = (MUT == 3) ? ck_core : (MUT == 4) ? (ck_host & h_we) : ck_host;
+  wire [127:0] rd;
+  generate if (MAC) begin : g_m
+    ot_sram_1r1w_32x128_m1 u_m (.clk(mclk), .r_ce_in(1'b1), .r_addr_in(a_q), .rd_out(rd), .w_ce_in(we_q),
+      .w_addr_in(a_q), .wd_in(wd_q), .w_mask_in({128{1'b1}}));
+  end else begin : g_nm
+    assign rd = wd_q;
+  end endgenerate
+  always @(posedge ck_host) h_rd <= rd;
+  always @(posedge ck_core) c_rd <= (MUT == 5) ? rd : {32{c_q}};
+endmodule
+"""
+EV_MACRO = 'physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1'
+EV_INS = dict(core=['rst_core_n', 'c_inc', 'c_go'], host=['rst_host_n', 'h_wr', 'h_wd', 'h_addr', 'h_we', 'h_wd2'])
+EV_OUTS = dict(core=['c_busy', 'c_q', 'c_rd'], host=['h_landed', 'h_fault', 'h_full', 'h_rd'])
+LINK = 'rtl/link/ot_link_afifo.sv'
+
+
+def ev_spec(mut=0, chain=('rc1', 'rc2'), seen='ack_host', macros=0, groups=True):
+    g = [dict(name='req', src_domain='core', dst_domain='host', source='req', chain=list(chain), payload=['snapshot'],
+              sync_max_delay_ps=773.333, payload_max_delay_ps=940.0),
+         dict(name='ack', src_domain='host', dst_domain='core', source='ack_host', chain=['ac1', 'ac2'],
+              sync_max_delay_ps=773.333),
+         dict(name='fault', src_domain='core', dst_domain='host', source='fc', chain=['fc1', 'fc2'],
+              sync_max_delay_ps=773.333)]
+    if seen:
+        g[0]['seen'] = seen
+    ports = dict(core='ck_core', host='ck_host')
+    s = dict(name='ev_fix', top='ev_fix', kind='tile', params=dict(MUT=mut, MAC=int(bool(macros))),
+             sources=[LINK] + ([f'{EV_MACRO}/ot_sram_1r1w_32x128_m1_bb.v'] if macros else []) + ['ev_fix.sv'],
+             clock='multiple_cts_roots', clock_port='ck_core', clock_ports=['ck_core', 'ck_host'],
+             clock_data_paths='reviewed_gray_fifos',
+             clock_relationship=dict(kind='independent_clock_families', periods_ps=dict(core=833.333, host=1000.0)),
+             clock_entry_domains={n: dict(ratio=G.family_ratio(n), ports=[ports[n]], inputs=EV_INS[n],
+                                          outputs=EV_OUTS[n]) for n in ('core', 'host')})
+    if groups:
+        s['cdc_synchronizers'] = g
+    if macros:
+        s['macros'] = [dict(view=EV_MACRO, count=macros, inst='g_m.u_m')]
+        s['reviewed_gray_fifo_extensions'] = dict(why='host SRAM (extension mode macros)')
+    return s
+
+
+class EvFixture(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        for f in [LINK] + [str(x.relative_to(ROOT)) for x in (ROOT / EV_MACRO).glob('*') if x.suffix in ('.v', '.lib')]:
+            (self.root / f).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(ROOT / f, self.root / f)
+        (self.root / 'ev_fix.sv').write_text(EV_FIXTURE)
+        (self.root / 'dd_fix.sv').write_text(DEAD_FIXTURE)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+
+# A FIFO whose write side a parameter ties off (as qkd_host_native_qm_debt RMW_EN 0): no synchroniser flop survives.
+DEAD_FIXTURE = r"""
+module dd_fix (input ck_core, input ck_host, input rst_core_n, input rst_host_n,
+  input h_wr, input [3:0] h_wd, output h_full, output reg [3:0] c_q, input c_go, output reg h_f);
+  wire empty; wire [3:0] rdata; wire pop = !empty;
+  ot_link_afifo #(.W(4), .AW(2), .SYNC(2)) u_hc (
+    .wclk(ck_host), .wrst_n(rst_host_n), .wr(h_wr), .wdata(h_wd), .wfull(h_full), .wfreed(), .ovf(),
+    .rclk(ck_core), .rrst_n(rst_core_n), .rd(pop), .rempty(empty), .rdata(rdata), .rcount());
+  always @(posedge ck_core) if (pop) c_q <= rdata;
+  ot_link_afifo #(.W(4), .AW(2), .SYNC(2)) u_dead (
+    .wclk(ck_host), .wrst_n(rst_host_n), .wr(1'b0), .wdata(4'd0), .wfull(), .wfreed(), .ovf(),
+    .rclk(ck_core), .rrst_n(rst_core_n), .rd(1'b0), .rempty(), .rdata(), .rcount());
+  reg fc, f1, f2;
+  always @(posedge ck_core or negedge rst_core_n) if (!rst_core_n) fc <= 1'b0; else if (c_go) fc <= 1'b1;
+  always @(posedge ck_host or negedge rst_host_n) if (!rst_host_n) begin f1 <= 0; f2 <= 0; h_f <= 0; end
+                                                 else begin f1 <= fc; f2 <= f1; h_f <= f2; end
+endmodule
+"""
+
+
+def dd_spec(groups=True):
+    ports = dict(core='ck_core', host='ck_host')
+    ins = dict(core=['rst_core_n', 'c_go'], host=['rst_host_n', 'h_wr', 'h_wd'])
+    outs = dict(core=['c_q'], host=['h_full', 'h_f'])
+    s = dict(name='dd_fix', top='dd_fix', kind='tile', sources=[LINK, 'dd_fix.sv'],
+             clock='multiple_cts_roots', clock_port='ck_core', clock_ports=['ck_core', 'ck_host'],
+             clock_data_paths='reviewed_gray_fifos',
+             clock_relationship=dict(kind='independent_clock_families', periods_ps=dict(core=833.333, host=1000.0)),
+             clock_entry_domains={n: dict(ratio=G.family_ratio(n), ports=[ports[n]], inputs=ins[n], outputs=outs[n])
+                                  for n in ('core', 'host')})
+    if groups:
+        s['cdc_synchronizers'] = [dict(name='fault', src_domain='core', dst_domain='host', source='fc',
+                                       chain=['f1', 'f2'], sync_max_delay_ps=773.333)]
+    return s
+
+
+@unittest.skipUnless(Path(YOSYS).exists() and Path(YOSYS).with_name('yosys-abc').exists(), 'Yosys 0.68 + yosys-abc required')
+class EventLint(EvFixture):
+    def test_admitted(self):
+        for macros in (0, 1):
+            with self.subTest(macros=macros):
+                record = G.lint(ev_spec(macros=macros), self.root)
+                self.assertEqual(record['events']['req'], dict(
+                    src_domain='core', dst_domain='host', width=1, payload_bits=8, seen=1, sync_max_delay_ps=773.333,
+                    payload_max_delay_ps=940.0))
+                self.assertEqual(record['counts']['ecap'], 8)               # h_landed, gated by rc2 != ack_host
+                self.assertEqual(record['roles']['ack_host'], ['esrc', 'ack', 'ev', 0])   # seen of req, source of ack
+                if macros:
+                    self.assertEqual(record['macros'], {'g_m.u_m': 'host'})
+                text = C.generate(ev_spec(macros=macros), self.root)
+                self.assertIn('ot_gf_event_crossing $start $pin', text)
+                self.assertIn('set ::ot_gf_events [dict create {ack} {src host dst core width 1 payload 0 sync 773.333',
+                              text)
+                for banned in ('set_false_path', 'set_clock_groups', 'set_multicycle_path', 'set_disable_timing'):
+                    self.assertNotIn(banned, text)
+
+    def test_mutants_refused(self):
+        for kw, why in [
+            (dict(mut=1), 'req: stage-1 flop rc1.* drives more than stage 2'),            # fence chain cut to 1 stage
+            (dict(mut=1, chain=('rc1',)), 'chain needs >= 2 destination-clock stages'),
+            (dict(mut=2), 'req: capture h_landed.* loads payload snapshot.* no event'),   # payload captured ungated
+            (dict(mut=6), 'req: capture h_landed.* not gated by the synchronised count'),
+            (dict(seen=None), 'req: capture h_landed.* loads payload snapshot.* no event'),  # no seen: rc2 alone ungated
+            (dict(seen='rc1'), 'seen rc1 is not on|named twice|already|seen rc1'),
+            (dict(groups=False), 'unapproved crossing snapshot.* -> h_landed'),                                   # main without (d)
+            (dict(mut=5, macros=1), 'macro output g_m.u_m \\(host\\) drives c_rd.* leaf of its own clock family'),
+            (dict(mut=3, macros=1), 'macro g_m.u_m \\(core\\) input .* reads .* \\(host\\); a macro must sit in one clock family'),
+            (dict(macros=2), 'elaborated macros .* differ from the declared macros'),
+        ]:
+            with self.subTest(kw=kw), self.assertRaisesRegex(G.GrayFifoError, why):
+                G.lint(ev_spec(**kw), self.root)
+
+    def test_event_schema_refused(self):
+        for mutate, why in [
+            (lambda s: s['cdc_synchronizers'][0].update(sync_max_delay_ps=800.0), 'sync_max_delay_ps must be in'),
+            (lambda s: s['cdc_synchronizers'][0].update(payload_max_delay_ps=950.0), 'payload_max_delay_ps must be in'),
+            (lambda s: s['cdc_synchronizers'][0].update(dst_domain='core'), 'same-family'),
+            (lambda s: s['cdc_synchronizers'][0].update(false_path=1), 'keys'),
+        ]:
+            s = ev_spec()
+            mutate(s)
+            with self.subTest(why=why), self.assertRaisesRegex(ValueError, why):
+                C.generate(s, self.root)
+
+    def test_constant_chains_only_with_events(self):
+        record = G.lint(dd_spec(), self.root)
+        self.assertEqual(record['constant_chains'], ['u_dead.wptr', 'u_dead.rptr'])
+        self.assertNotIn('u_dead', {f['scope'] for f in record['fifos'].values()})
+        with self.assertRaisesRegex(G.GrayFifoError, 'u_dead'):                          # main's FIFO-only mode
+            G.lint(dd_spec(groups=False), self.root)
+
+    def test_without_events_sdc_unchanged(self):
+        text = C.generate(spec(), FixtureRoot.root(self))
+        for proc in ('ot_gf_event_crossing', 'ot_gf_events', 'ot_gf_event_complete'):
+            self.assertNotIn(proc, text)
+
+
+class FixtureRoot:
+    @staticmethod
+    def root(case):
+        for f in REVIEWED:
+            (case.root / f).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(ROOT / f, case.root / f)
+        (case.root / 'gf_fix.sv').write_text(FIXTURE)
+        return case.root
+
+
+def ev_sta_case(root, out, name, s):
+    top = s['top']
+    paths = ' '.join(str(root / f) for f in s['sources'])
+    params = ''.join(f' -chparam {k} {v}' for k, v in sorted(s.get('params', {}).items()))
+    synth = (f'read_verilog -sv -DSYNTHESIS {paths}; hierarchy -check -top {top}{params}; '
+             f'synth -top {top} -flatten -noabc; dffunmap; abc -g simple; clean; write_json {out / "fix.json"}')
+    p = subprocess.run([YOSYS, '-Q', '-T', '-p', synth], text=True, capture_output=True)
+    if p.returncode:
+        raise AssertionError(p.stdout + p.stderr)
+    data = json.loads((out / 'fix.json').read_text())
+    m = data['modules'][top]
+    (out / 'probe.lib').write_text(fixture_lib(m))
+
+    def flop(net, i):
+        q = m['netnames'][net]['bits'][i]
+        cells = [c for c in m['cells'].values() if c['type'].startswith('$_DFF') and c['connections']['Q'] == [q]]
+        assert len(cells) == 1, (net, cells)
+        return cells[0]
+    if name == 'event_bypass':             # host takes the core toggle straight into stage 2
+        flop('rc2', 0)['connections']['D'] = [m['netnames']['req']['bits'][0]]
+    if name == 'event_payload_into_sync':  # a payload bit wired into the request synchroniser
+        flop('rc1', 0)['connections']['D'] = [m['netnames']['snapshot']['bits'][3]]
+    jp, vp = out / f'{name}.json', out / f'{name}.v'
+    jp.write_text(json.dumps(data))
+    p = subprocess.run([YOSYS, '-Q', '-T', '-p', f'read_json {jp}; write_verilog -noattr -noexpr {vp}'],
+                       capture_output=True, text=True)
+    if p.returncode:
+        raise AssertionError(p.stdout + p.stderr)
+    generated = C.generate(s, root).rsplit('\not_ce_apply\n', 1)[0]
+    ins, outs = [], []
+    for d, key in ((ins, 'inputs'), (outs, 'outputs')):
+        for domain, e in s['clock_entry_domains'].items():
+            for n in e[key]:
+                w = len(m['ports'][n]['bits'])
+                d += [f'{{{n}}} {domain}'] if w == 1 else [f'{{{n}[{i}]}} {domain}' for i in range(w)]
+    body = (f'read_liberty {{{out}/probe.lib}}\nread_verilog {{{vp}}}\nlink_design {top}\n'
+            + C.clocks(s, 833.333) + generated
+            + f'\nset ins [dict create {" ".join(ins)}]\nset outs [dict create {" ".join(outs)}]\n'
+            + 'if {[catch {ot_ce_leaf_ownership $ins $outs} message]} {puts stderr $message; exit 1}\n'
+            + 'puts ACTUAL_GF_GRAPH_PASS\nexit 0\n')
+    tp = out / f'{name}.tcl'
+    tp.write_text(body)
+    p = subprocess.run([STA, '-exit', str(tp)], text=True, capture_output=True)
+    return p.returncode, p.stdout + p.stderr
+
+
+@unittest.skipUnless(Path(YOSYS).exists() and Path(STA).exists(), 'Yosys 0.68 and OpenSTA fixture tools required')
+class EventActualGraph(EvFixture):
+    def test_actual_graph_events(self):
+        out = self.root / 'sta'
+        out.mkdir()
+        s = ev_spec()
+        rc, log = ev_sta_case(self.root, out, 'normal', s)
+        self.assertEqual(rc, 0, log)
+        self.assertIn('ACTUAL_GF_GRAPH_PASS', log)
+        self.assertIn('OT_GF STRUCTURAL_PASS', log)
+        for g in ('req', 'ack', 'fault'):
+            self.assertEqual(log.count(f'OT_GF BOUNDED {g} esrc ev -> esync1'), 1, log)
+        self.assertGreaterEqual(log.count('OT_GF BOUNDED req epay ev -> ecap'), 8, log)
+        for name in ('event_bypass', 'event_payload_into_sync'):
+            with self.subTest(case=name):
+                rc, log = ev_sta_case(self.root, out, name, s)
+                self.assertNotEqual(rc, 0, log)
+                self.assertNotIn('ACTUAL_GF_GRAPH_PASS', log)
+                self.assertIn('OT_GF:', log)
+
+
 if __name__ == '__main__':
     unittest.main()

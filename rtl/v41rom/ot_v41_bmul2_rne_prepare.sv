@@ -24,6 +24,20 @@ module ot_v41_bmul2_rne_prepare #(
     output reg  [31:0] y,
     output reg         fault
 );
+    // RSPLIT (S81-SAFE-FIX/C199 2026-10-19, opt-in by the define OT_BMUL_RSPLIT, default off = the circuit above
+    // byte-for-byte in function): the subnormal RNE encode (s3_be -> shift -> guard/sticky -> 24-bit increment -> zero
+    // test -> r_gy, ~627 ps / 15 levels, the column's deepest stage) is RETIMED across the existing XS stage-4 register:
+    // stage 3 also registers the shift amount and its range (from j_e, in parallel with the bias add), stage 4a registers
+    // {retained, increment, zero} instead of the 32-bit encoded result, and the increment + zero select move in front of
+    // the stage-4 result select.  Zero added cycles; same registers per stage boundary; exact by construction
+    // (rounded == 0 <=> retained == 0 && !increment, because retained = sig24 >> shift with shift >= 1 is < 2^23).
+    // Only with XS != 0 and GRADUAL_RNE != 0 (the S81 BF lanes); elsewhere the define changes nothing.
+`ifdef OT_BMUL_RSPLIT
+    localparam integer RSPLIT = 1;
+`else
+    localparam integer RSPLIT = 0;
+`endif
+    localparam integer RS = (RSPLIT != 0 && XS != 0 && GRADUAL_RNE != 0) ? 1 : 0;
     // stage 1: decode; a subnormal significand is normalised by its top bit
     function automatic [17:0] dec;   // {sig[7:0], E[9:0] signed}
         input [7:0] e;
@@ -113,6 +127,18 @@ module ot_v41_bmul2_rne_prepare #(
         if (pq[15]) begin s3_f <= {pq[14:0], 8'd0}; s3_be <= j_e + 11'sd128; end
         else          begin s3_f <= {pq[13:0], 9'd0}; s3_be <= j_e + 11'sd127; end
     end
+    // RSPLIT stage 3: the encode's shift amount 1 - s3_be (same 11-bit modular arithmetic) and its range, registered
+    wire [4:0] rs_sh;
+    wire       rs_inr;
+    if (RS != 0) begin : g_rs3
+        wire signed [10:0] sh = pq[15] ? (-11'sd127 - j_e) : (-11'sd126 - j_e);   // = 1 - (j_e + 128 | 127)
+        wire inr = sh >= 11'sd1 && sh <= 11'sd24;
+        reg [4:0] r_sh; reg r_inr;
+        always @(posedge clk) begin r_inr <= inr; r_sh <= inr ? sh[4:0] : 5'd1; end
+        assign rs_sh = r_sh; assign rs_inr = r_inr;
+    end else begin : g_nrs3
+        assign rs_sh = 5'd1; assign rs_inr = 1'b0;
+    end
     // stage 4: encode; a subnormal result shifts right by 1 - biased (<= 7)
     reg        s4_v, s4_bad;
     reg [31:0] s4_y;
@@ -130,7 +156,41 @@ module ot_v41_bmul2_rne_prepare #(
     wire signed [10:0] k_be;
     wire [22:0] k_f, k_sub;
     wire [31:0] k_gy;
-    if (XS != 0) begin : g_x4
+    if (RS != 0) begin : g_x4s
+        // stage 4a (RSPLIT): shift, guard, sticky, round-up decision and zero test; the increment follows the register
+        wire [4:0]  gi  = rs_sh - 5'd1;
+        wire [23:0] ret = rs_inr ? (sig24 >> rs_sh) : 24'd0;
+        wire        grd = rs_inr && sig24[gi];
+        wire [23:0] stk_t;
+        genvar k;
+        for (k = 0; k < 24; k = k + 1) begin : g_stk
+            assign stk_t[k] = rs_inr && (k < gi) && sig24[k];
+        end
+        wire inc  = grd && ((|stk_t) || ret[0]);
+        wire zero = !rs_inr || (ret == 24'd0 && !inc);
+        reg r_v, r_s, r_z, r_nf; reg signed [10:0] r_be; reg [22:0] r_f, r_sub; reg [23:0] r_ret; reg r_inc, r_zero;
+        always @(posedge clk or negedge rst_n) if (!rst_n) r_v <= 1'b0; else r_v <= s3_v;
+        always @(posedge clk) begin
+            r_s <= s3_s; r_z <= s3_z; r_nf <= s3_nf; r_be <= s3_be; r_sub <= sub_v[22:0];
+            r_ret <= ret; r_zero <= zero;
+`ifdef RSPLIT_MUTANT_INC
+            r_inc <= !inc;          // negative control: round-up decision inverted across the retimed register
+`else
+            r_inc <= inc;
+`endif
+`ifdef W10_MUTANT_RECUT
+            r_f <= s3_f ^ 23'd1;    // negative control: product significand LSB flipped in the added stage
+`else
+            r_f <= s3_f;
+`endif
+        end
+        // stage 4 (RSPLIT): the round increment, then the encoded subnormal (canonical +0 on exact / underflow zero)
+        wire [23:0] rnd;
+        wire        rnd_co;
+        ot_v41_inc #(.W(24)) u_round_b (.a(r_ret), .inc(r_inc), .y(rnd), .co(rnd_co));
+        assign k_v = r_v; assign k_s = r_s; assign k_z = r_z; assign k_nf = r_nf; assign k_be = r_be; assign k_f = r_f;
+        assign k_sub = r_sub; assign k_gy = r_zero ? 32'd0 : {r_s, 7'd0, rnd};
+    end else if (XS != 0) begin : g_x4
         reg r_v, r_s, r_z, r_nf; reg signed [10:0] r_be; reg [22:0] r_f, r_sub; reg [31:0] r_gy;
         always @(posedge clk or negedge rst_n) if (!rst_n) r_v <= 1'b0; else r_v <= s3_v;
         always @(posedge clk) begin
