@@ -536,7 +536,7 @@ module ot_hbm_svc_static_sm_packed136_native_safe #(parameter integer PACKED136=
  wire [2047:0] ring_data;
  genvar sl,seg;for(sl=0;sl<8;sl=sl+1)begin:g_slot
  wire [3:0] select_d;
- for(l=0;l<4;l=l+1)begin:g_sel assign select_d[l]=lane_ok[l]&&((received_d+l)%8)==sl;end
+ for(l=0;l<4;l=l+1)begin:g_sel assign select_d[l]=lane_ok[l]&&((received_d+l+(MUT==2?1:0))%8)==sl;end
  for(seg=0;seg<16;seg=seg+1)begin:g_word
  ot_cache_safe_write16 u_word(.clk(clk),.rst_n(reset_q[35+sl*16+seg]),.select_d(select_d),
  .data0(sector_data_q2[0*256+seg*16+:16]),.data1(sector_data_q2[1*256+seg*16+:16]),.data2(sector_data_q2[2*256+seg*16+:16]),.data3(sector_data_q2[3*256+seg*16+:16]),.q(ring_data[sl*256+seg*16+:16]));
