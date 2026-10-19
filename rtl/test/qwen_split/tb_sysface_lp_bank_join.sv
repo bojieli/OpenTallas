@@ -2,10 +2,10 @@
 // Component path cut: actual accepted RX/observer -> actual LP primitives -> actual GI.
 // Uses exact D4/K2 input and output landings from current generated CTLM LP.
 // Head/ME/arithmetic are outside this probe; no full-token or physical-clock claim.
-module sf_probe_land #(parameter W=1,K=2)(input ck,rsi,input[W-1:0]i,output[W-1:0]o);
+module sf_probe_land #(parameter W=1,K=2)(input ck,rsi_w,rsi_r,input[W-1:0]i,output[W-1:0]o);
  wire[4*W-1:0]bank;wire[11:0]epo;wire[3:0]vld;
- ot_pl_land_w #(.W(W),.D(4)) w(.ck(ck),.rsi(rsi),.i(i),.bank(bank),.epo(epo),.vld(vld));
- ot_pl_land_r #(.W(W),.D(4),.K(K)) r(.ck(ck),.rsi(rsi),.bank(bank),.epo(epo),.vld(vld),.o(o));
+ ot_pl_land_w #(.W(W),.D(4)) w(.ck(ck),.rsi(rsi_w),.i(i),.bank(bank),.epo(epo),.vld(vld));
+ ot_pl_land_r #(.W(W),.D(4),.K(K)) r(.ck(ck),.rsi(rsi_r),.bank(bank),.epo(epo),.vld(vld),.o(o));
 endmodule
 module tb_sysface_lp_bank_join #(parameter MUT=0);
  reg ck=0;always #5 ck=~ck;reg rst_n=0;
@@ -15,19 +15,19 @@ module tb_sysface_lp_bank_join #(parameter MUT=0);
  ot_pl_pad #(.W(1),.N(2)) core(.ck(ck),.d(rr),.q(rcore));
  ot_pl_pad #(.W(1),.N(3)) gi_reset(.ck(ck),.d(rcore),.q(rgi));
  reg[186:0]dh=0;reg init_u0=0;wire[186:0]dh_l;wire init_l;
- sf_probe_land #(.W(187)) ld(.ck(ck),.rsi(rhr),.i(dh),.o(dh_l));
- sf_probe_land li(.ck(ck),.rsi(rhr),.i(init_u0),.o(init_l));
+ sf_probe_land #(.W(187)) ld(.ck(ck),.rsi_w(rhr),.rsi_r(rcore),.i(dh),.o(dh_l));
+ sf_probe_land li(.ck(ck),.rsi_w(rhr),.rsi_r(rcore),.i(init_u0),.o(init_l));
  reg offer=0,role=0;reg[1:0]role_user=0;reg[547:0]record=0;
  wire av,hv,rxf,obf,mv;wire[15:0]he,me;wire[58:0]ht;wire[1:0]hg,mu,mg;wire[17:0]mt;wire[128:0]ctx,ctx_l;
  qfd_host_native_context_rx rx(.ck(ck),.rst_n(rst_n),.receive_slot(offer),.rx_v(offer),.rx_record(record),.program_begin_v(1'b0),.program_ready(1'b1),.installed_fusedcap(1'b1),.program_epoch(16'hbeef),.program_digest(64'h123456789abcdef0),.head_context_v(1'b0),.head_stage(6'd0),.head_token(18'd0),.head_position(18'd0),.native_active(1'b0),.accepted_v(av),.host_epoch_valid(hv),.host_epoch(he),.host_tag(ht),.host_gen(hg),.host_fusedcap(),.host_image_epoch(),.host_image_digest(),.fault(rxf));
  qfd_sys_face_accepted_mu_identity #(.EPOCH_EXPORT(1)) obs(.ck(ck),.rst_n(rst_n),.offer_slot(offer),.offer_v(offer),.offer_record(record),.host_accept_v(av),.host_epoch_valid(hv),.host_epoch(he),.host_tag(ht),.host_gen(hg),.program_ready(1'b1),.program_cap(1'b1),.program_fault(rxf),.program_epoch(16'hbeef),.program_digest(64'h123456789abcdef0),.epoch_slot(role),.epoch_user(role_user),.accepted_epoch_v(mv),.accepted_epoch_user(mu),.accepted_epoch(me),.accepted_token(mt),.accepted_generation(mg),.ctx_x(ctx),.fault(obf));
- sf_probe_land #(.W(129)) lc(.ck(ck),.rsi(rhr),.i(ctx),.o(ctx_l));
+ sf_probe_land #(.W(129)) lc(.ck(ck),.rsi_w(rhr),.rsi_r(rcore),.i(ctx),.o(ctx_l));
  wire es_raw;wire[17:0]et_raw;wire[1:0]eu_raw;wire[61:0]dcs;
  qfd_tt_ctlm_dv_gi #(.NU(4),.STAGE_ME(1),.OPSEG(1),.OPSEG_EXPANDED(1),.OPSEG_PINREG(1),.CTX_SRC(1),.FCTX(1),.EMB_ID(1),.INIT_U0(1),.INIT_FIRST(52),.INIT_CNT(3)) dut(.ck(ck),.rst_n(rgi),.dh(dh_l),.dh_user(2'd0),.init_u0((MUT==3)?init_u0:init_l),.ctx_x((MUT==1)?ctx:ctx_l),.mu_fault(1'b0),.ss5(107'd0),.ag5(10'd0),.fab(1'b0),.cmd(),.dcs(dcs),.emb_start(es_raw),.emb_token(et_raw),.emb_user(eu_raw),.s_start(),.s_stage(),.st(),.tl(),.cal_program_obs(),.cal_descriptor_obs(),.cal_image_ready(),.fctx(),.hu(),.su_obs_o(),.su_acc_o(),.x_oprog(),.x_orows(),.x_oidle(),.rom_ret_v());
  wire es;wire[17:0]et;wire[1:0]eu;
- sf_probe_land #(.K(MUT==2?1:2)) los(.ck(ck),.rsi(rcore),.i(es_raw),.o(es));
- sf_probe_land #(.W(18)) lot(.ck(ck),.rsi(rcore),.i(et_raw),.o(et));
- sf_probe_land #(.W(2)) lou(.ck(ck),.rsi(rcore),.i(eu_raw),.o(eu));
+ sf_probe_land #(.K(MUT==2?1:2)) los(.ck(ck),.rsi_w(rcore),.rsi_r(rhr),.i(es_raw),.o(es));
+ sf_probe_land #(.W(18)) lot(.ck(ck),.rsi_w(rcore),.rsi_r(rhr),.i(et_raw),.o(et));
+ sf_probe_land #(.W(2)) lou(.ck(ck),.rsi_w(rcore),.rsi_r(rhr),.i(eu_raw),.o(eu));
  wire actual_init=dut.init_u0_q&&dut.d_start&&dut.d_stage==0&&dut.s_user==0;
  wire pub=actual_init||(dut.ctx_ld&&dut.ctx_mask!=0);
  wire[3:0]pubmask=(MUT==4)?4'd0:((actual_init?4'b0001:0)|{dut.ctx_mask,1'b0});
