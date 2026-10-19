@@ -56,10 +56,9 @@ mac = {m: json.loads((S / f'physical/asap7_memory_macros/{m}/{m}.json').read_tex
 res = {}
 for st in sorted(O.glob('*.stat')):
     t = st.read_text()
-    a = re.search(r'Chip area for (?:top )?module.*?:\s*([0-9.]+)', t)
-    ff = sum(int(n) for n, c in re.findall(r'^\s+(\d+)\s+(DFF\S+|SDF\S+|DHL\S+)', t, re.M))
-    ff += sum(int(n) for c, n in re.findall(r'^\s+(DFF\S+|SDF\S+|DHL\S+)\s+(\d+)', t, re.M))
-    mc = {m: sum(int(n) for n in re.findall(rf'^\s+(\d+)\s+{m}\b', t, re.M) + re.findall(rf'^\s+{m}\s+(\d+)', t, re.M)) for m in mac}
+    a = re.search(r'^\s+\d+\s+([0-9.E+]+) cells', t, re.M)
+    ff = sum(int(n) for n in re.findall(r'^\s+(\d+)\s+\S+\s+(?:DFF|SDF|DHL)\S*', t, re.M))
+    mc = {m: sum(int(n) for n in re.findall(rf'^\s+(\d+)\s+-\s+{m}\b', t, re.M)) for m in mac}
     res[st.stem] = dict(cell_area_um2=float(a.group(1)) if a else None, flops=ff, macros={m: n for m, n in mc.items() if n},
                         macro_area_um2=round(sum(mac[m] * n for m, n in mc.items()), 1))
 (O / 'area.json').write_text(json.dumps(dict(macro_area_um2=mac, units=res), indent=1) + '\n')
