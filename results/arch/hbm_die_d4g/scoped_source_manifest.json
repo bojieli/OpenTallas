@@ -163,7 +163,9 @@
    "rtl/hdc/ot_hdc_sfu.sv",
    "rtl/lib/ot_rst_relay.sv",
    "rtl/hdc/v41/ot_hdc_fsqrt.sv",
-   "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv"
+   "rtl/hdc/v41/ot_hdc_fsqrt_c12.sv",
+   "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+   "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv"
   ],
   "basis_meta": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2/vplan_a0/synth/ot_hgi_qdq_host_split/meta.json",
   "basis_note": "Implementation source list from prior synthesis; current hashes recorded by generation, fresh synthesis required."
