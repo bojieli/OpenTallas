@@ -6,7 +6,7 @@
 // MUT (bench only; 0 in every kit): 1 = landing 0 bypassed, 2 = landing 0 read K+1, 3 = pad 0 one stage short,
 //     4 = child reset run of 'u_e0' 400 stage(s) long
 module col_h9_l4_lp #(
-    parameter string INSTANCE = "col_h9",
+    parameter INSTANCE = "col_h9",
     parameter integer MUT = 0
 ) (
     input wire rst_n,
