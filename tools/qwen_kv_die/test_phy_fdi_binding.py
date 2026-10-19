@@ -23,7 +23,7 @@ endmodule
             for entry in B.PHY_BINDINGS.values():
                 dst=p/entry['file'];dst.parent.mkdir(parents=True,exist_ok=True)
                 shutil.copyfile(B.K.ROOT/entry['file'],dst)
-            with patch.object(B,'ROOT',p):
+            with patch.object(B,'ROOT',p), patch.object(B.PB,'ROOT',p):
                 self.assertEqual(B.main([str(die),'--out-dir',str(out)]),0)
             nets,_,_,insts=B.PB.parse_die(str(out/'die_bound.v'))
             by={i:(m,c) for m,i,_,c in insts if m!='__assign__'}
