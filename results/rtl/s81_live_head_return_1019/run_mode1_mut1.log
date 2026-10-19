@@ -1,0 +1,8 @@
+RETURN case=0 owner=012345670000 seq=123456789abc0000 row=21888 bits=00000000 age=8416
+RETURN case=1 owner=012345670001 seq=123456789abc0100 row=21888 bits=00000000 age=8416
+RETURN case=2 owner=012345670002 seq=123456789abc0200 row=21888 bits=00000000 age=8416
+LIVE_HEAD_RETURN FAIL mode=1 mut=1 cases=3 returns=3 bad=387 fault=0
+- /srv/opentallas-scratch/claude/s81-live-head-return-1019/src/rtl/dsrom_sys/s81_native_head_connect/test/tb_s81_bundle_token_return.sv:48: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 27us; walltime 2.355 s; speed 11.468 us/s
+- Verilator: cpu 2.355 s on 1 threads; allocated 16 MB
