@@ -1,0 +1,328 @@
+{
+ "name": "qkd_kvs_pc_sr1-sr1-COMMIT",
+ "block": "qkd_kvs_pc",
+ "ref_tile": true,
+ "owner": "Claude:KV-PC",
+ "purpose": "KV-PC SAFE 10-19 (one failed route = structural redesign; terminal gate 1248d0585 PC WARN / PC_H FAIL): the five runtime-indexed flop arrays (front 32x297 = 9216 FF on 4 storage roots, tag queue 64x34, return ring 8x288, embedding CDC FIFOs 8x349 / 8x258) are 23 native 32x64 dual-clock SRAM banks (kv_pc_sram_gen / qkd_kvpc_sram_1019.sv; 0 added edges); the 2405 / 2051 / 854-load pointer roots are gone; scheduler hr_q / hgo are kept copy families split <= 32 loads (ot_rst_copies); storage roots are hclk-family clocks of the bank write ports.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/kv-pc-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch",
+   "results/arch/qwen_kv_domsplit_1019/ports",
+   "results/arch/qwen_kv_kits_b_1018",
+   "results/arch/qwen_kv_static_programme_1017/die/target6.hex",
+   "results/rtl/qwen_kv_die/kvpc_sram_1019",
+   "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018",
+   "rtl",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+   "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+   "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_result_face_s.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_service_root.sv",
+   "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_emb.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds.sv",
+   "rtl/test/mu_qwen_1018/lists/lint_mu_kv_tiles.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_kv_pc_path_rows.f",
+   "rtl/test/mu_qwen_1018/run_mu_kv.sh",
+   "rtl/test/mu_qwen_1018/tb_mu_kv_pc_path_rows.sv",
+   "rtl/test/qwen_static_kv/kvpc_rland",
+   "tools/qwen_kv_die",
+   "tools/qwen_kv_die/kvs_pc_rland_bench.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_pc u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds_rl_sr.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_children.sv rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "kvpc_front",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit front --mut 0 --threads 4 --out {RUN}/bench/kvpc_front_m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_FRONT PASS .* errors=0 .*mut=0",
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/front_m0.log"
+   },
+   {
+    "name": "kvpc_front_mut1",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit front --mut 1 --threads 4 --out {RUN}/bench/kvpc_front_m1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_FRONT PASS ",
+    "fail_regex": "^KVPC_FRONT FAIL .* mut=1",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/front_m1.log"
+   },
+   {
+    "name": "kvpc_front_mut4",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit front --mut 4 --threads 4 --out {RUN}/bench/kvpc_front_m4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_FRONT PASS ",
+    "fail_regex": "^KVPC_FRONT FAIL .* mut=4",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/front_m4.log"
+   },
+   {
+    "name": "kvpc_front_mut5",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit front --mut 5 --threads 4 --out {RUN}/bench/kvpc_front_m5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_FRONT PASS ",
+    "fail_regex": "^KVPC_FRONT FAIL .* mut=5",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/front_m5.log"
+   },
+   {
+    "name": "kvpc_return",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit return --mut 0 --threads 4 --out {RUN}/bench/kvpc_return_m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_RETURN PASS .* errors=0 .*mut=0",
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/return_m0.log"
+   },
+   {
+    "name": "kvpc_return_mut1",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit return --mut 1 --threads 4 --out {RUN}/bench/kvpc_return_m1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_RETURN PASS ",
+    "fail_regex": "^KVPC_RETURN FAIL .* mut=1",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/return_m1.log"
+   },
+   {
+    "name": "kvpc_return_mut2",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit return --mut 2 --threads 4 --out {RUN}/bench/kvpc_return_m2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_RETURN PASS ",
+    "fail_regex": "^KVPC_RETURN FAIL .* mut=2",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/return_m2.log"
+   },
+   {
+    "name": "kvpc_cdc",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit cdc --mut 0 --threads 4 --out {RUN}/bench/kvpc_cdc_m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_CDC PASS .* errors=0 .*mut=0",
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/cdc_m0.log"
+   },
+   {
+    "name": "kvpc_cdc_mut1",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit cdc --mut 1 --threads 4 --out {RUN}/bench/kvpc_cdc_m1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_CDC PASS ",
+    "fail_regex": "^KVPC_CDC FAIL .* mut=1",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/cdc_m1.log"
+   },
+   {
+    "name": "kvpc_cdc_mut2",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit cdc --mut 2 --threads 4 --out {RUN}/bench/kvpc_cdc_m2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_CDC PASS ",
+    "fail_regex": "^KVPC_CDC FAIL .* mut=2",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/cdc_m2.log"
+   },
+   {
+    "name": "kvpc_tq",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tq --mut 0 --threads 4 --out {RUN}/bench/kvpc_tq_m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_TQ PASS .* errors=0 .*mut=0",
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/tq_m0.log"
+   },
+   {
+    "name": "kvpc_tq_mut1",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tq --mut 1 --threads 4 --out {RUN}/bench/kvpc_tq_m1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_TQ PASS ",
+    "fail_regex": "^KVPC_TQ FAIL .* mut=1",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/tq_m1.log"
+   },
+   {
+    "name": "kvpc_sched",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit sched --mut 0 --threads 4 --out {RUN}/bench/kvpc_sched_m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_SCHED PASS .* errors=0 .*mut=0",
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/sched_m0.log"
+   },
+   {
+    "name": "kvpc_sched_mut1",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit sched --mut 1 --threads 4 --out {RUN}/bench/kvpc_sched_m1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_SCHED PASS ",
+    "fail_regex": "^KVPC_SCHED FAIL .* mut=1",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/sched_m1.log"
+   },
+   {
+    "name": "kvpc_tile_pc",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 0 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_TILE PASS .* errors=0 mut=0",
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/tile_pc_m0.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_pc_sr1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_pc_sr1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_pc_sr1 --out {RUN}/record/views/qkd_kvs_pc --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvs_pc_sr1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvs_pc_sr1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvs_pc_sr1/qkd_kvs_pc_sr1-sr1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KV-PC SAFE 10-19 (one failed route = structural redesign; terminal gate 1248d0585 PC WARN / PC_H FAIL): the five runtime-indexed flop arrays (front 32x297 = 9216 FF on 4 storage roots, tag queue 64x34, return ring 8x288, embedding CDC FIFOs 8x349 / 8x258) are 23 native 32x64 dual-clock SRAM banks (kv_pc_sram_gen / qkd_kvpc_sram_1019.sv; 0 added edges); the 2405 / 2051 / 854-load pointer roots are gone; scheduler hr_q / hgo are kept copy families split <= 32 loads (ot_rst_copies); storage roots are hclk-family clocks of the bank write ports."
+}

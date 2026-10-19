@@ -95,11 +95,19 @@ LVL_LAND_RTL = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_lvl_land.sv'
 PC_RLAND = os.environ.get('OT_KV_PC_RLAND', '0') == '1'
 PC_RLAND_KINDS = ('pc', 'pc_h')
 RESET_SYNC_RTL = 'rtl/lib/ot_reset_sync.sv'
+# KV-PC 10-19 SAFE (OT_KV_PC_SRAM=1, needs OT_KV_PC_RLAND=1; default off; suffix '_sr'): the PC kit tiles take the clone
+# chain qkd_kvpc_s_fan_nc_b (tools/qwen_kv_die/kv_pc_sram_gen.py) whose five runtime-indexed flop arrays (elastic front
+# 32x297, tag queue 64x34, return ring 8x288, embedding CDC FIFOs 8x349 / 8x258) are native 32x64 dual-clock banks and
+# whose scheduler hr_q / hgo roots are kept copy families (safe-design items 5 and 3).  Same ports, 0 added edges.
+PC_SRAM = os.environ.get('OT_KV_PC_SRAM', '0') == '1'
+PC_SRAM_RTL = ('rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv',
+               'rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv')
 RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
             ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +
             ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
-            ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + '.sv')   # KV-DOMSPLIT; KV-PC
+            ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + ('_sr' if PC_SRAM else '') +
+            '.sv')   # KV-DOMSPLIT; KV-PC
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -992,7 +1000,19 @@ def module_text(t, name):
     txt = '\n'.join(L) + '\n'
     if PC_RLAND and KITS and t['kind'] in PC_RLAND_KINDS:
         txt = pc_rland_text(txt)
+    if PC_SRAM and KITS and t['kind'] in PC_RLAND_KINDS:
+        txt = pc_sram_text(txt)
     return txt
+
+
+def pc_sram_text(txt):
+    """OT_KV_PC_SRAM: the PC kit module's u_pc takes the SRAM-backed clone chain (same ports, same parameters)."""
+    if not PC_RLAND:
+        raise ValueError('kv_static_die PC_SRAM: needs OT_KV_PC_RLAND=1 (the safe PC tile lands its resets)')
+    old, new = 'qkd_static_kv_pc_path_fan_nc_b #(.MU(1)) u_pc (', 'qkd_kvpc_s_fan_nc_b #(.MU(1)) u_pc ('
+    if txt.count(old) != 1:
+        raise ValueError('kv_static_die PC_SRAM: PC kit module has no single MU fan_nc_b u_pc instance')
+    return txt.replace(old, new)
 
 
 def pc_rland_text(txt):
@@ -1478,6 +1498,8 @@ def sources():
         s.add(LVL_LAND_RTL)
     if PC_RLAND:
         s.add(RESET_SYNC_RTL)
+    if PC_SRAM:
+        s.update(PC_SRAM_RTL)
     return sorted(s)
 
 
