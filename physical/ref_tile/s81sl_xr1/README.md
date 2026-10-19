@@ -36,4 +36,4 @@ Generated kit (`tools/ref_tile/ref_tile.py gen spec.json`). History of the struc
 Benches (Verilator 5.050, ot-epyc6, `results/rtl/s81_slice_1019/xr5`):
 - `xr_bench` base: PASS for hb 0/1 x seeds 1-4.
 - Mutants hops / row / porder / nocol: all FAIL, as expected. Their witnesses are committed.
-- `slice_eng` / `slice_lep` compositions: see `results/rtl/s81_slice_1019/xr5/slice_*`.
+- `slice_eng` / `slice_lep` compositions (bench source lists fixed for the cap_tr/cap_rt split and ot_hdc_delay_rf): receipts in `results/rtl/s81_slice_1019/xr5_slice` (outside the gate-consumed paths).
