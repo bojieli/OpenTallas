@@ -146,7 +146,27 @@
             5807
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        0,
+        16
+      ],
+      "aligned_binary_fragments": [
+        [
+          0,
+          16
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
     },
     {
       "group": 0,
@@ -166,7 +186,23 @@
             5811
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        16,
+        20
+      ],
+      "aligned_binary_fragments": [
+        [
+          16,
+          20
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3
+      ]
     },
     {
       "group": 0,
@@ -198,7 +234,35 @@
             5827
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        20,
+        36
+      ],
+      "aligned_binary_fragments": [
+        [
+          20,
+          24
+        ],
+        [
+          24,
+          32
+        ],
+        [
+          32,
+          36
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
     },
     {
       "group": 0,
@@ -218,7 +282,23 @@
             5831
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        36,
+        40
+      ],
+      "aligned_binary_fragments": [
+        [
+          36,
+          40
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3
+      ]
     },
     {
       "group": 1,
@@ -250,7 +330,31 @@
             5847
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        40,
+        56
+      ],
+      "aligned_binary_fragments": [
+        [
+          40,
+          48
+        ],
+        [
+          48,
+          56
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
     },
     {
       "group": 1,
@@ -270,7 +374,23 @@
             5851
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        56,
+        60
+      ],
+      "aligned_binary_fragments": [
+        [
+          56,
+          60
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3
+      ]
     },
     {
       "group": 1,
@@ -302,7 +422,35 @@
             5867
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        60,
+        76
+      ],
+      "aligned_binary_fragments": [
+        [
+          60,
+          64
+        ],
+        [
+          64,
+          72
+        ],
+        [
+          72,
+          76
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
     },
     {
       "group": 1,
@@ -322,7 +470,23 @@
             5871
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        76,
+        80
+      ],
+      "aligned_binary_fragments": [
+        [
+          76,
+          80
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3
+      ]
     },
     {
       "group": 2,
@@ -354,7 +518,27 @@
             5887
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        80,
+        96
+      ],
+      "aligned_binary_fragments": [
+        [
+          80,
+          96
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
     },
     {
       "group": 2,
@@ -374,7 +558,23 @@
             5891
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        96,
+        100
+      ],
+      "aligned_binary_fragments": [
+        [
+          96,
+          100
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3
+      ]
     },
     {
       "group": 2,
@@ -406,7 +606,35 @@
             5907
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        100,
+        116
+      ],
+      "aligned_binary_fragments": [
+        [
+          100,
+          104
+        ],
+        [
+          104,
+          112
+        ],
+        [
+          112,
+          116
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
     },
     {
       "group": 2,
@@ -426,7 +654,23 @@
             5911
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        116,
+        120
+      ],
+      "aligned_binary_fragments": [
+        [
+          116,
+          120
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3
+      ]
     },
     {
       "group": 3,
@@ -458,7 +702,31 @@
             5927
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        120,
+        136
+      ],
+      "aligned_binary_fragments": [
+        [
+          120,
+          128
+        ],
+        [
+          128,
+          136
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
     },
     {
       "group": 3,
@@ -478,7 +746,23 @@
             5931
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        136,
+        140
+      ],
+      "aligned_binary_fragments": [
+        [
+          136,
+          140
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3
+      ]
     },
     {
       "group": 3,
@@ -510,7 +794,35 @@
             5947
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        140,
+        156
+      ],
+      "aligned_binary_fragments": [
+        [
+          140,
+          144
+        ],
+        [
+          144,
+          152
+        ],
+        [
+          152,
+          156
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
     },
     {
       "group": 3,
@@ -530,7 +842,23 @@
             5951
           ]
         }
-      }
+      },
+      "global_chunk_interval": [
+        156,
+        160
+      ],
+      "aligned_binary_fragments": [
+        [
+          156,
+          160
+        ]
+      ],
+      "required_vm_ports": [
+        0,
+        1,
+        2,
+        3
+      ]
     }
   ],
   "legacy_calendar": {
@@ -1199,7 +1527,7 @@
   },
   "physical_outputs": [],
   "programme_rows": 26,
-  "programme_capacity": 128,
+  "programme_capacity": 7111,
   "fixture_hashes": {
     "records.json": "03f4fca3102a6a6c224041ff33ef5797e76c15a30f65be307d4102b3a14f4dd9",
     "operands.npz": "b81077d2749ff81fbe56cb391af9898b781e09a6255514283e764e12c102aeb9",
@@ -1494,5 +1822,22 @@
         "indexed": 0
       }
     }
+  },
+  "programme_capacity_basis": {
+    "sram_rows_per_bank": 128,
+    "packed_indices_per_row": 16,
+    "index_banks": 4,
+    "physical_index_slots": 8192,
+    "enforced_edges": 7111,
+    "source_sha256": "de834bcd0dc4e267bad87ea0a5283ee873f30e0ae94ae6fa34a8588965eeb255"
+  },
+  "reduction_model": {
+    "original_words": 1280,
+    "original_chunks8": 160,
+    "padded_tree_leaves": 256,
+    "aligned_fragments": 26,
+    "single_128_word_pretree_safe": false,
+    "full_token": false,
+    "numerical_rtl": false
   }
 }

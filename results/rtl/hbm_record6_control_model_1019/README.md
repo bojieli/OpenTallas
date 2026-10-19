@@ -43,3 +43,10 @@ and tree_cmd tied0, and no reducer/core/global R commit; it cannot replay this
 record. A new numerical build needs coordinator review of a complete reducer,
 all-quarter/bank coverage, square path, exact reduction order, static programme
 capacity and host/descriptor/restart schedule before authorization.
+
+`CONTROL_MODEL.md` records the source consumers and two schedule alternatives.
+The serialized one-operand path already exceeds the unchanged price window.
+The exact-tree alternative needs26 aligned fragments and actual source/export
+support. Neither is a numerical build authorization. The capacity audit also
+corrects the preceding128-command assumption: exact c5 supports7111 logical
+edges using four128-row packed-index SRAMs,16 indices per row.
