@@ -1,0 +1,575 @@
+{
+  "schema": "native_odb_pin_transparent_census.v1",
+  "source_sha256": "ccf09fa9b507a0a1b86f5d8095ad86b27a1bb8ffe00b0b4c494d2041343ca9a1",
+  "cells": 326664,
+  "cell_roles": {
+    "transparent": 70342,
+    "comb": 220401,
+    "tie": 137,
+    "ff": 35772,
+    "macro": 12
+  },
+  "area_by_role": {
+    "macro": 6643.074816,
+    "ff": 10458.05904,
+    "comb": 25187.70816,
+    "transparent": 4363.40034,
+    "tie": 5.99238
+  },
+  "logical_signal_pins": 1075434,
+  "clock_pins": 35797,
+  "clock_pin_by_master": {
+    "DFFHQNx1_ASAP7_75t_R": 35464,
+    "DFFASRHQNx1_ASAP7_75t_R": 308,
+    "ot_sram_1r1w2c_32x64_m1": 24,
+    "PORT": 1
+  },
+  "clock_net_loads": {
+    "clk": 35797
+  },
+  "driver_roots": 258042,
+  "max_by_role": {
+    "macro": 1,
+    "ff": 101,
+    "comb": 62,
+    "input": 12,
+    "tie": 3249
+  },
+  "root_roles": {
+    "tie": 137,
+    "ff": 35772,
+    "comb": 220401,
+    "input": 964,
+    "macro": 768
+  },
+  "over32_count": 579,
+  "over32_by_role": {
+    "tie": 2,
+    "ff": 153,
+    "comb": 424
+  },
+  "reset_named_over32": 2,
+  "unconnected_pins": [],
+  "ambiguous_pins": [],
+  "multidriven": [],
+  "undriven_signal_nets": [],
+  "macro_instances": {
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[0\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    },
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[10\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    },
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[11\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    },
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[1\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    },
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[2\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    },
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[3\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    },
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[4\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    },
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[5\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    },
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[6\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    },
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[7\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    },
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[8\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    },
+    "u_ot_pr_core.g_tbl_safe.g_bank\\[9\\].u_m": {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "macro": true,
+      "area": 553.589568
+    }
+  },
+  "largest_ff_groups": [
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_stc[N].u_st/q[N]$_DFF_P_",
+      3904
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_z[N].u_eps.g_b[N].u_q/q[N]$_DFF_P_",
+      2544
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].g_q[N].u_q.g_ms[N].u_m/q[N]$_DFF_P_",
+      2368
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_z[N].g_zc[N].u_zq/q[N]$_DFF_P_",
+      1904
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_x[N].g_xm[N].u_xm/q[N]$_DFF_P_",
+      1344
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].g_q[N].g_tc[N].u_t/q[N]$_DFF_P_",
+      992
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].g_r3[N].u_r/q[N]$_DFF_P_",
+      880
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].u_seed.g_r[N].u_r/q[N]$_DFF_P_",
+      784
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.bb[N][N]$_DFFE_PP_",
+      768
+    ],
+    [
+      "u_ot_pr_core.mx[N]$_DFFE_PP_",
+      768
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].g_q[N].u_q.g_shc[N].u_s/q[N]$_DFF_P_",
+      640
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].u_ae.g_b[N].u_q/q[N]$_DFF_P_",
+      636
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].u_s1.g_b[N].u_q/q[N]$_DFF_P_",
+      636
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].u_s2.g_b[N].u_q/q[N]$_DFF_P_",
+      636
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].u_s3.g_b[N].u_q/q[N]$_DFF_P_",
+      636
+    ],
+    [
+      "u_ot_pr_core.u_dn.s[N][N]$_DFF_P_",
+      550
+    ],
+    [
+      "u_ot_pr_core.u_up.s[N][N]$_DFF_P_",
+      550
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.result[N]$_SDFFCE_PP0P_",
+      512
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.se[N]$_DFFE_PP_",
+      512
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].g_r1[N].u_r/q[N]$_DFF_P_",
+      496
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].g_r2[N].u_r/q[N]$_DFF_P_",
+      496
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].g_q[N].u_q.pc_q[N]$_DFF_P_",
+      448
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].g_q[N].u_q.ps_q[N]$_DFF_P_",
+      448
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].g_q[N].u_q.ts_q[N]$_DFF_P_",
+      432
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.g_rc[N].u_r/q[N]$_DFF_P_",
+      384
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].g_q[N].u_q.tc_q[N]$_DFF_P_",
+      384
+    ],
+    [
+      "u_ot_pr_core.g_tbl_safe.scl_t[N][N]$_DFFE_PP_",
+      384
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row[N].g_q[N].u_q.g_e[N].u_e/q[N]$_DFF_P_",
+      304
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.mp[N][N]$_DFFE_PP_",
+      256
+    ],
+    [
+      "u_ot_pr_core.g_tail_safe.u_tail.result[N]$_DFFE_PP_",
+      256
+    ]
+  ],
+  "reset_offenders": [
+    {
+      "net": "u_ot_pr_core.g_rst16.u_rst/_07_",
+      "driver": "u_ot_pr_core.g_rst16.u_rst/g_region\\[9\\].q$_DFF_PN0_",
+      "pin": "QN",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "reset_named": true,
+      "count": 39,
+      "endpoints": [
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.err\\[0\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.err\\[1\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.u_k1.g_r.v$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.u_k3.g_r.v$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.u_k5.g_r.v$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.u_k6.g_r.v$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.valid_out$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[0\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[10\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[11\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[12\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[13\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[14\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[15\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[16\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[17\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[18\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[19\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[1\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[20\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[21\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[22\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[23\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[24\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[25\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[26\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[27\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[28\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[29\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[2\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[30\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[31\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[3\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[4\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[5\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[6\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[7\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[8\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.y\\[9\\]$_DFF_PN0_",
+          "RESETN"
+        ]
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.g_rst16.u_rst/_04_",
+      "driver": "u_ot_pr_core.g_rst16.u_rst/g_region\\[12\\].q$_DFF_PN0_",
+      "pin": "QN",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "reset_named": true,
+      "count": 38,
+      "endpoints": [
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.err\\[0\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.err\\[1\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_k1.g_r.v$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.v$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_k5.g_r.v$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.valid_out$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[0\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[10\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[11\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[12\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[13\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[14\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[15\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[16\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[17\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[18\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[19\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[1\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[20\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[21\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[22\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[23\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[24\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[25\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[26\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[27\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[28\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[29\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[2\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[30\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[31\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[3\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[4\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[5\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[6\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[7\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[8\\]$_DFF_PN0_",
+          "RESETN"
+        ],
+        [
+          "u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.y\\[9\\]$_DFF_PN0_",
+          "RESETN"
+        ]
+      ]
+    }
+  ],
+  "functional_unsafe_roots": 577,
+  "modeled_ff_reference": 23096,
+  "native_ff_delta_to_reference": 12676
+}

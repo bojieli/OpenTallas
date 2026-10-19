@@ -1,0 +1,104 @@
+{
+  "schema": "native_odb_pin_transparent_census.v1",
+  "source_sha256": "ccf09fa9b507a0a1b86f5d8095ad86b27a1bb8ffe00b0b4c494d2041343ca9a1",
+  "cells": 326664,
+  "cell_roles": {
+    "transparent": 70342,
+    "comb": 220401,
+    "tie": 137,
+    "ff": 35772,
+    "macro": 12
+  },
+  "area_by_role": {
+    "macro": 6643.074816,
+    "ff": 10458.05904,
+    "comb": 25187.70816,
+    "transparent": 4363.40034,
+    "tie": 5.99238
+  },
+  "logical_signal_pins": 1075434,
+  "clock_pins": 35797,
+  "clock_pin_by_master": {
+    "DFFHQNx1_ASAP7_75t_R": 35464,
+    "DFFASRHQNx1_ASAP7_75t_R": 308,
+    "ot_sram_1r1w2c_32x64_m1": 24,
+    "PORT": 1
+  },
+  "clock_net_loads": {
+    "clk": 35797
+  },
+  "driver_roots": 258042,
+  "max_by_role": {
+    "macro": 1,
+    "ff": 101,
+    "comb": 62,
+    "input": 12,
+    "tie": 3249
+  },
+  "root_roles": {
+    "tie": 137,
+    "ff": 35772,
+    "comb": 220401,
+    "input": 964,
+    "macro": 768
+  },
+  "over32_count": 579,
+  "over32_by_role": {
+    "tie": 2,
+    "ff": 153,
+    "comb": 424
+  },
+  "reset_named_over32": 2,
+  "ambiguous_pins": []
+}
+unconnected 0 undriven 0 multidriver 0
+tie _424067_ H _186571_ 3249
+tie _424068_ L _186572_ 1722
+ff u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.u_k5.g_r.r\[96\]$_DFF_P_ QN _006294_ 101
+ff u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.u_k5.g_r.r\[97\]$_DFF_P_ QN _006293_ 96
+ff u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.u_k5.g_r.r\[98\]$_DFF_P_ QN _006292_ 94
+ff u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.u_k5.g_r.r\[99\]$_DFF_P_ QN _006291_ 78
+ff u_ot_pr_core.g_tail_safe.u_tail.u_mul.genblk1.genblk1.g_l5.u.u.u_k5.g_r.r\[175\]$_DFF_P_ QN _006227_ 77
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[2\].u_q.g_shc\[5\].u_s/q\[1\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[2\].u_q.g_shc\[5\].u_s/_2_ 72
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[1\].u_q.g_shc\[5\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[1\].u_q.g_shc\[5\].u_s/_3_ 68
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[2\].u_q.g_shc\[5\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[2\].u_q.g_shc\[5\].u_s/_3_ 67
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].u_s3.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].u_s3.g_a\[1\].ab1\[8\] 62
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[3\].u_q.g_shc\[5\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[3\].u_q.g_shc\[5\].u_s/_3_ 62
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].u_s1.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].u_s1.g_a\[1\].ab1\[8\] 61
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].u_s2.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].u_s2.g_a\[1\].ab1\[8\] 61
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].u_s1.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].u_s1.g_a\[1\].ab1\[8\] 61
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].u_s3.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].u_s3.g_a\[1\].ab1\[8\] 61
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[3\].u_q.g_shc\[5\].u_s/q\[1\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[3\].u_q.g_shc\[5\].u_s/_2_ 61
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].u_s1.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].u_s1.g_a\[1\].ab1\[8\] 61
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].u_s3.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].u_s3.g_a\[1\].ab1\[8\] 61
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].u_s1.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].u_s1.g_a\[1\].ab1\[8\] 61
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].u_s2.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].u_s2.g_a\[1\].ab1\[8\] 61
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].u_s3.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].u_s3.g_a\[1\].ab1\[8\] 61
+ff u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r\[2\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_esub.b\[1\] 60
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].g_q\[1\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].g_q\[1\].u_q.g_shc\[0\].u_s/_3_ 60
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].u_s2.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].u_s2.g_a\[1\].ab1\[8\] 60
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].g_q\[0\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].g_q\[0\].u_q.g_shc\[0\].u_s/_3_ 60
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[3\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[3\].u_q.g_shc\[0\].u_s/_3_ 59
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].u_s2.g_a\[0\].u_es/_211_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].u_s2.g_a\[0\].ba1\[0\] 59
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].g_q\[2\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].g_q\[2\].u_q.g_shc\[0\].u_s/_3_ 59
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].u_ae.g_a\[0\].u_es/_211_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].u_ae.g_a\[0\].ba1\[0\] 59
+ff u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r\[105\]$_DFF_P_ QN _006062_ 58
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].g_q\[3\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].g_q\[3\].u_q.g_shc\[0\].u_s/_3_ 58
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].g_q\[0\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].g_q\[0\].u_q.g_shc\[0\].u_s/_3_ 58
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[1\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[1\].u_q.g_shc\[0\].u_s/_3_ 58
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].g_q\[1\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].g_q\[1\].u_q.g_shc\[0\].u_s/_3_ 58
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].g_q\[3\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].g_q\[3\].u_q.g_shc\[0\].u_s/_3_ 58
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_z\[4\].u_eps.g_a\[0\].u_es/_211_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_z\[4\].u_eps.g_a\[0\].ba1\[0\] 58
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_z\[9\].u_eps.g_a\[0\].u_es/_211_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_z\[9\].u_eps.g_a\[0\].ba1\[0\] 58
+comb _267828_ Y _068245_ 57
+ff u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r\[1\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_esub.b\[0\] 57
+ff u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r\[3\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_esub.b\[2\] 57
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].g_q\[0\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].g_q\[0\].u_q.g_shc\[0\].u_s/_3_ 57
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].g_q\[2\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[0\].g_q\[2\].u_q.g_shc\[0\].u_s/_3_ 57
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].g_q\[2\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].g_q\[2\].u_q.g_shc\[0\].u_s/_3_ 57
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].g_q\[3\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[1\].g_q\[3\].u_q.g_shc\[0\].u_s/_3_ 57
+ff u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[0\].u_q.g_shc\[0\].u_s/q\[0\]$_DFF_P_ QN u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].g_q\[0\].u_q.g_shc\[0\].u_s/_3_ 57
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].u_s2.g_a\[1\].u_es/_185_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[2\].u_s2.g_a\[1\].ab1\[8\] 57
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].u_s2.g_a\[0\].u_es/_147_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_row\[3\].u_s2.g_a\[0\].ba1\[1\] 57
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_z\[10\].u_eps.g_a\[0\].u_es/_211_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_z\[10\].u_eps.g_a\[0\].ba1\[0\] 57
+comb u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_z\[12\].u_eps.g_a\[0\].u_es/_211_ Y u_ot_pr_core.g_tail_safe.u_tail.u_sinkh.g_z\[12\].u_eps.g_a\[0\].ba1\[0\] 57
