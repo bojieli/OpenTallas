@@ -60,6 +60,8 @@ P4K = False                       # p4k (10-18, S81-DIE5, coordinator 0dt): the 
                                   # job (2 x 276 per entry), entry -> seqhost jd / hc 276; lane margins (COL_EXW / COL_EXE)
                                   # beside the column-3 E and column-4 W slices open the enclosed unit voids to the streets
 P4L = False                       # p4l (10-18, S81-DIE6): p4k + --no-mix4 + the built end-slice link endpoint masters
+MU = 0                            # MU-S81/DIE (10-19): 0 single-user p4l (default, byte-identical); 1 multi-user (MU_EN);
+                                  # 2 multi-user copy-A/B rank-die variant (MU_EN + AB_EN on s_0N, +2 SerDes lanes)
                                   # dsdv_slice_lepw (column 0) / dsdv_slice_lepe (column 7; rtl ot_s81sl_slice_lep{w,e}):
                                   # rx lanes 514 b {st 2, rx 512} on the 562 relay master; the HOST PLANE of the cross-die link
                                   # (f_host 515 + f_lf 4 + f_ks 53 = 572 b -> seqhost on 3 x 276 lanes hf_7N_l*; t_host 77 + t_kd 54
@@ -562,6 +564,91 @@ def host_lanes(P, facts, colx, streets):
                                'host ports, no tied pads; the compiler addresses the host-side die only through s_7N)')
 
 
+def mu_lanes(P, facts, colx, streets):
+    """MU-S81/DIE (10-19): the multi-user die variants of p4l (MU 1: MU_EN; MU 2: + copy-A/B lane pair on s_0N).
+    Masters: seqhost -> dsdv_seq_host_mux (slot table + end-slice windows), end slices -> the _mu / _mus / _mab masters
+    (ot_s81sl_slice_lep.sv).  Per end slice the seqhost sends mu {mu_c 34, mu_rc 11} (45 b) and the N-tier end slices
+    return rt {mu_rt 32}:
+      s_7N  0 new lanes: mu rides ht_7N bits 131..175, rt rides hf_7N_l2 bits 20..51 (spare bits of the host lanes)
+      s_0N  mu_0N / rt_0N: seqhost W face -> column-4 W lane margin (free tracks k = 0 / -1 above the seqhost) -> top
+            strip below the host lanes -> column-0 slice channel -> s_0N N face (mirror of ht_7N)
+      s_0S / s_7S  mu_0S / mu_7S: seqhost W face -> column-4 margin tracks k = -1 / -2 below the seqhost -> the 30-um band
+            between the rsv tops and the row-1 frames -> the rsv_09 | rsv_11 gap -> the strip between the rsv bottoms and
+            the regional controllers -> under the frames (y < 1.7 mm) -> column-0 / column-7 slice channel -> S face
+    The S-tier RX tags are not returned (the column-4 margin has 2 free tracks below the seqhost; the S-tier slices
+    receive the same {user, pos} as the N tier).  f_mc boot config = host-stream CSR 0x15 decoded from f_host (0 wires).
+    MU 2 adds lk_WN2 (W edge above lk_WN1) and lk_WN3 (W edge below lk_WN0) and their tx2 / rx2 / tx3 / rx3 lanes along
+    the N street and the PHY faces: vertical 512 / 562 legs need relay masters dsfd_dvrlyh_512_SN / _NS and
+    562_NS that have NO closed view yet (stand-ins; edge-strip gap 40 um between frame and PHY -- COORD slot decision
+    shared with AD-S81-LINK's landed serdes column)."""
+    Q = P.blocks[P.idx['seqhost']]
+    B = lambda n: P.blocks[P.idx[n]]
+    xm4 = lambda k: colx(4) - 30.0 - 16.0 * k
+    ftop = max(b['y'] + b['h'] for b in P.blocks if b['kind'] == 'frame')
+    qw = Q['x']
+    # ---- masters
+    sm = {'s_0N': 'dsdv_slice_lepw_mab' if MU == 2 else 'dsdv_slice_lepw_mu', 's_0S': 'dsdv_slice_lepw_mus',
+          's_7N': 'dsdv_slice_lepe_mu', 's_7S': 'dsdv_slice_lepe_nh_mus', 'seqhost': 'dsdv_seq_host_mux'}
+    for n, m in sm.items():
+        B(n)['master'] = m
+    # ---- s_0N: mirror of ht_7N through the top strip (y below the host lanes' ftop + 90 .. 240)
+    S0 = B('s_0N')
+    for k, (nm, d) in enumerate((('mu_0N', 'out'), ('rt_0N', 'in'))):
+        yq = Q['y'] + Q['h'] - 460.0 - 40.0 * k
+        xm = xm4(-k)                                   # tracks 17519.8 / 17535.8: free above the seqhost
+        yt = ftop + 40.0 + 25.0 * k                    # ftop + 40 / + 65 (host lanes turn at + 90 .. + 240)
+        xs = S0['x'] + S0['w'] - 120.0 - 60.0 * k
+        pts = [(qw, yq), (xm, yq), (xm, yt), (xs, yt), (xs, S0['y'] + S0['h'])]
+        if d == 'out':
+            P._link(nm, 'unit', 276, ('seqhost', 'mu0N', pts[0]), ('s_0N', 'mu', pts[-1]), pts,
+                    'MU: seqhost {mu_c, mu_rc} -> end slice s_0N (top strip)')
+        else:
+            P._link(nm, 'unit', 276, ('s_0N', 'rt', pts[-1]), ('seqhost', 'rt0N', pts[0]), pts[::-1],
+                    'MU: end slice s_0N RX tag mu_rt -> seqhost (top strip)')
+    # ---- s_0S / s_7S from below
+    r09, r11 = B('rsv_09'), B('rsv_11')
+    rtop = max(B(f'rsv_{i:02d}')['y'] + B(f'rsv_{i:02d}')['h'] for i in range(16))
+    rbot = min(B(f'rsv_{i:02d}')['y'] for i in range(16))
+    fbot1 = min(b['y'] for b in P.blocks if b['kind'] == 'frame' and b['y'] > rtop - 1)      # row-1 frames over the rsv
+    assert fbot1 - rtop >= 20.0, (fbot1, rtop)
+    gx0, gx1 = r09['x'] + r09['w'], r11['x']
+    assert gx1 - gx0 >= 100.0, (gx0, gx1)
+    for k, (nm, sn) in enumerate((('mu_0S', 's_0S'), ('mu_7S', 's_7S'))):
+        S = B(sn)
+        yq = Q['y'] + 40.0 + 40.0 * k
+        xm = xm4(-1 - k)                               # tracks 17535.8 / 17551.8 below the seqhost
+        yb = rtop + (fbot1 - rtop) * (1 + k) / 3.0     # inside the rsv-top / frame-bottom band
+        xg = gx0 + (gx1 - gx0) * (1 + k) / 3.0         # inside the rsv_09 | rsv_11 gap
+        yl = rbot - 60.0 + 30.0 * k                    # between the rsv bottoms and the controller tops
+        xs = S['x'] + S['w'] / 2.0 + (120.0 if sn == 's_0S' else -120.0)
+        pts = [(qw, yq), (xm, yq), (xm, yb), (xg, yb), (xg, yl), (xs, yl), (xs, S['y'])]
+        P._link(nm, 'unit', 276, ('seqhost', 'mu' + sn[2:], pts[0]), (sn, 'mu', pts[-1]), pts,
+                f'MU: seqhost {{mu_c, mu_rc}} -> end slice {sn} (rsv gap, under the frames)')
+    L = {l['i']: l for l in P.links}
+    facts['mu_lanes'] = {n: dict(bits=L[n]['b'], stations=L[n]['s'], um=L[n]['L'])
+                         for n in ('mu_0N', 'rt_0N', 'mu_0S', 'mu_7S')}
+    facts['mu'] = dict(variant={1: 'MU_EN (multi-user)', 2: 'MU_EN + AB_EN on s_0N (copy-A/B rank die)'}[MU],
+                       masters=sm, packed=dict(s_7N='mu in ht_7N bits 131..175, rt in hf_7N_l2 bits 20..51'),
+                       f_mc='host-stream CSR 0x15 decoded from f_host in dsdv_seq_host_mux (0 wires)')
+    if MU == 2:
+        # copy-B lane pair of s_0N: two more SerDes PHYs on the W edge (above lk_WN1 / below lk_WN0)
+        WN0, WN1 = B('lk_WN0'), B('lk_WN1')
+        P.block('lk_WN2', 'ot_pdie_serdes', 'link', 'edge', 0.0, WN1['y'] + WN1['h'] + 100.0, 260, 2250)
+        P.block('lk_WN3', 'ot_pdie_serdes', 'link', 'edge', 0.0, WN0['y'] - 100.0 - 2250.0, 260, 2250)
+        sxf = S0['x']
+        yc = S0['y'] + SLICE_H / 2
+        for k, sgn in (('2', 1), ('3', -1)):
+            lk = f'lk_WN{k}'; LK = B(lk)
+            yst = yc + sgn * 165.0
+            lx = LK['x'] + LK['w']
+            ly = LK['y'] + 20.0 if sgn > 0 else LK['y'] + LK['h'] - 20.0
+            P.link(f'lt_{lk}', 'coll', COLL_LANE, ('s_0N', 'tx' + k, (sxf, yst)), (lk, 'tx', (lx, ly)),
+                   [(sxf, yst), (lx, yst), (lx, ly)], 'MU copy-B link lane tx (street + PHY face)')
+            P.link(f'lr_{lk}', 'coll', COLL_LANE + 50, (lk, 'rx', (lx, ly + 10 * sgn)), ('s_0N', 'rx' + k, (sxf, yst + 10 * sgn)),
+                   [(lx, ly + 10 * sgn), (lx, yst + 10 * sgn), (sxf, yst + 10 * sgn)], 'MU copy-B link lane rx (PHY face + street)')
+        facts['mu']['ab'] = dict(endpoint='s_0N', phys=['lk_WN2', 'lk_WN3'], owed='512/562 vertical relay views + edge slot (COORD)')
+
+
 def build():
     P = Plan()
     pitch, scol_w = PITCH, SCOL_W
@@ -934,6 +1021,8 @@ def build():
         unit_lanes(P, facts, colx, streets)
     if P4L:
         host_lanes(P, facts, colx, streets)
+    if P4L and MU:
+        mu_lanes(P, facts, colx, streets)
     return P, facts
 
 
@@ -1161,6 +1250,7 @@ def main():
     ap.add_argument('--p4j', action='store_true', help='p4j: p4i + RET 70 (frame/slice RTL return width) + q/P.V entry under the slice-column voids (0 um of lane over a block)')
     ap.add_argument('--p4k', action='store_true', help='p4k: p4j + svc_rs RTL faces, q / P.V format lanes, unit lanes, column-3 E / column-4 W lane margins')
     ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
+    ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0N (+2 SerDes)')
     ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
     ap.add_argument('--lane-margin', type=float, default=120.0, help='p4k: extra column width beside the column-3 E / column-4 W slices (um)')
     ap.add_argument('--p4h-drop', type=int, default=4, choices=(4, 6), help='p4h: row-0 S-tier frames given to the service region (4: 3L-4R; 6: 2R-5L)')
@@ -1172,8 +1262,10 @@ def main():
     P4F = a.p4f or a.p4g or a.p4h
     global P4G, P4H, P4H_DROP, P4I, P4J, RET, NO_MIX4
     NO_MIX4 = a.no_mix4
-    global P4K, P4L
+    global P4K, P4L, MU
     P4L = a.p4l
+    MU = a.mu
+    assert not MU or P4L, '--mu needs --p4l'
     NO_MIX4 = NO_MIX4 or P4L
     P4K = a.p4k or P4L
     P4J = a.p4j or P4K
