@@ -5,7 +5,12 @@
 // PHY frame boundary is external. Normal operation is fixed-cycle; abort is
 // exceptional and requires explicit reset/drain before reuse.
 module qfd_collective_static_io #(
- parameter integer PU=14,PS=339,LU=47,LS=376,RU=5,RS0=0,RS1=0,RS2=5,SHARED_UCIE=0,SIX_FIVE=0
+ parameter integer PU=14,PS=339,LU=47,LS=376,RU=5,RS0=0,RS1=0,RS2=5,SHARED_UCIE=0,SIX_FIVE=0,
+ // TOKEN-XDIE-QTP8 10-18 (opt-in, defaults 0 = unchanged behaviour): TOK_REG = the hardened face form (qfd_coll_face_*
+ // kits use TOK_REG=1; latency-neutral by construction); LX0..2 = die-level PHY-side lane cycles on SerDes face j that
+ // the rx calendar must absorb (forwarded lanes + landing between io_collective and io_serdes_j: E_tx(peer port) +
+ // E_rx(own port) from the die GEN fwd_lanes.json); the face then expects the peer frame at PHY = PS + LXj.
+ parameter integer TOK_REG=0,LX0=0,LX1=0,LX2=0
 )(
  input wire  clk,
  input wire  clk_pfold0,
@@ -81,7 +86,7 @@ module qfd_collective_static_io #(
  wire  sx0_peer_slot;
  wire  sx1_peer_slot;
  wire  sx2_peer_slot;
- qfd_io_collective_static u_collective(
+ qfd_io_collective_static #(.LU(LU),.LS(LS)) u_collective(
  .clk(clk),
  .clk_pfold0(clk_pfold0),
  .clk_pfold1(clk_pfold1),
@@ -206,7 +211,7 @@ module qfd_collective_static_io #(
  end else assign pr=phy_rx[f*597+:PW];
  assign phy_tx[f*597+:PW]=pt;
  if(PW<597)assign phy_tx[f*597+PW+:(597-PW)]=0; // declared frame padding only
- qfd_coll_static_face #(.FW(W),.PHY(f<2?PU:PS),.L(f<2?LU:LS),.R(R),.PEER_R(PR))u_face(
+ qfd_coll_static_face #(.FW(W),.PHY(f<2?PU:PS+(f==2?LX0:f==3?LX1:LX2)),.L(f<2?LU:LS),.R(R),.PEER_R(PR),.TOK_REG(TOK_REG))u_face(
  .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
  .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
  .codec_ck(face_ck[f*11+6+:5]),.rst_n(rst_n),.tx_slot(fts),.peer_slot(fps),.tx_valid(ftv),.tx_data(ftd),
@@ -216,7 +221,8 @@ module qfd_collective_static_io #(
  end endgenerate
  // The fixed die-name collective LU/LS defines and this parent must agree.
  initial if(SIX_FIVE && (PU!=20 || !SHARED_UCIE))$error("six_five (r10 200MHz block stage) requires the actual 20-core-edge registered-pin PHY calendar and the single 1043 boundary");
- initial if(LU!=`OT_QFDS_LU || LS!=`OT_QFDS_LS)$error("collective/link calendar latency profile mismatch");
+ // Q-COLLCAL3 10-18: the die-name collective takes LU / LS from this parent (one calendar profile by construction;
+ // was a compare against the OT_QFDS_* defines, which a GEN-compiled LS in die.v.params.json could not satisfy).
 endmodule
 
 // Source-visible paid relay stages. Every row advances unconditionally.

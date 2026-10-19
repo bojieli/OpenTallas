@@ -74,8 +74,10 @@ def cmd_su(pidx):
     return pack([(1, 1), (1, 3), (pidx, 9)])
 
 
-def cmd_stn(mode, wsrc, nwords, sbase, dst, dbase, amax=0):
-    return pack([(1, 1), (2, 3), (mode, 2), (wsrc, 1), (nwords, 8), (sbase, 9), (dst, 2), (dbase, 24), (amax, 1)])
+def cmd_stn(mode, wsrc, nwords, sbase, dst, dbase, amax=0, kcm1=0):
+    # kcm1 [58:51] = kc - 1 (slice2 redstn2 last-k selection, QW-DIEFIX 10-19; the step-1 slice ignores it)
+    return pack([(1, 1), (2, 3), (mode, 2), (wsrc, 1), (nwords, 8), (sbase, 9), (dst, 2), (dbase, 24), (amax, 1),
+                 (kcm1, 8)])
 
 
 def cmd_root(root, nb, ss, fuse=0, rx=0, eps=0.0, k=0, amnb=0):

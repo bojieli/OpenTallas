@@ -1,0 +1,218 @@
+{
+ "name": "qkd_astk_er_tap_st",
+ "top": "qkd_astk_er_tap_st",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_astk_er_tap_st.sv"
+ ],
+ "params": {
+  "N": 4,
+  "ERL": 3
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 47.52
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "ck",
+   "rst_n",
+   "read_v",
+   "read_addr",
+   "response_v",
+   "response_addr",
+   "fault"
+  ],
+  "E": [
+   "response_data"
+  ],
+  "S": [
+   "eso_v_lo",
+   "aso_lo",
+   "com_lo",
+   "esi_lo"
+  ],
+  "N": [
+   "eso_v_hi",
+   "aso_hi",
+   "com_hi",
+   "esi_hi"
+  ]
+ },
+ "pin_ranges": {
+  "ck": [
+   22.6,
+   23.6
+  ],
+  "rst_n": [
+   24.0,
+   24.8
+  ],
+  "read_v": [
+   1.5,
+   3.0
+  ],
+  "read_addr": [
+   3.2,
+   22.0
+  ],
+  "response_v": [
+   25.2,
+   26.6
+  ],
+  "response_addr": [
+   26.8,
+   45.4
+  ],
+  "fault": [
+   45.7,
+   46.2
+  ],
+  "response_data": [
+   1.0,
+   46.5
+  ],
+  "eso_v_lo": [
+   1.5,
+   2.5
+  ],
+  "aso_lo": [
+   3.0,
+   14.0
+  ],
+  "com_lo": [
+   14.5,
+   27.5
+  ],
+  "esi_lo": [
+   28.0,
+   84.9
+  ],
+  "eso_v_hi": [
+   1.5,
+   2.5
+  ],
+  "aso_hi": [
+   3.0,
+   14.0
+  ],
+  "com_hi": [
+   14.5,
+   27.5
+  ],
+  "esi_hi": [
+   28.0,
+   84.9
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.025
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every data input and output at the face itself (KV-ERTAP 2026-10-18): input flops ri_v/ri_a/eso_q/com_q/esi_q, output flops aso/response_v/response_addr/response_data/fault; the flow's extra pin registers would add another edge on each side against the KV static schedule (astk_eread erl 7)."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "children": [],
+ "inter": [],
+ "purpose": "KV-ERTAP 2026-10-18: route qkd_astk_er_tap_st-v1-b18fa696b NEEDS_RTL (FF hold -6.7, route hold repair stalled: I2O 13 @-2.8, I2R 3 @-5.4 / 1 @-5.7, 'pin register miss'; textbook lint: 340 input->output combinational bits read_addr->aso, esi->response_data, 6-level com->fault cone).  RTL now registers EVERY data pin at the face (read_v/read_addr/eso_v/com/esi input flops; aso/response_*/fault output flops), no input->output path.  +4 edges read pin -> response pin (ERL 3 -> 7; EP read 2 edges after the read pin); kv_static_die astk_eread erl 7.  || RTL-BUILD-KV/ASTK 2026-10-18 (lanes/RTL-BUILD-KV.md P4, stub_audit K-8): successor of the CLOSED qkd_astk_er_tap with the e-read VISIBILITY check folded in (KVE-2 note for KVJ-D): qkd_astk_native_stack_w4_cal kept it as wrapper glue (a read of e group addr[6:3] before any EP committed it = sticky fault); the static strip qkd_astk_strip_er_st has no glue, so the leaf takes each owner's exp_done[15:0] (si[633e+537 +: 16], +128 pins S/N) and ORs it.  Same ERL-3 edges and fault law as service + glue; lockstep vs the current composition (tb_qkd_astk_strip_er_st).  Outline 86.4 x 47.52 (was 64.8 x 43.2) for the 128 extra owner pins (<= 6/um on every face).",
+ "structural_change": "KV-ERTAP 2026-10-18: route qkd_astk_er_tap_st-v1-b18fa696b NEEDS_RTL (FF hold -6.7, route hold repair stalled: I2O 13 @-2.8, I2R 3 @-5.4 / 1 @-5.7, 'pin register miss'; textbook lint: 340 input->output combinational bits read_addr->aso, esi->response_data, 6-level com->fault cone).  RTL now registers EVERY data pin at the face (read_v/read_addr/eso_v/com/esi input flops; aso/response_*/fault output flops), no input->output path.  +4 edges read pin -> response pin (ERL 3 -> 7; EP read 2 edges after the read pin); kv_static_die astk_eread erl 7.",
+ "slot_change_request": "RTL-BUILD-KV/ASTK 2026-10-18: the inline e-read leaf of qkd_astk_strip_er_st (one per ASTK strip), 86.4 x 47.52, at the strip's row-1/row-2 boundary (owners 0..3 S face, 4..7 N face); W = the V-return read ports + response tags + ck, E = response_data toward the pvw pair (pvw_<p>.ie).  KV-PLAN3 assigns the in-strip site with the re-cut ASTK_W (no tree columns).",
+ "job": {
+  "owner": "claude:RTL-BUILD-KV/ASTK",
+  "branch": "claude/kv-ertap-1018",
+  "tag": "v2",
+  "purpose": "KV-ERTAP 2026-10-18: route qkd_astk_er_tap_st-v1-b18fa696b NEEDS_RTL (FF hold -6.7, route hold repair stalled: I2O 13 @-2.8, I2R 3 @-5.4 / 1 @-5.7, 'pin register miss'; textbook lint: 340 input->output combinational bits read_addr->aso, esi->response_data, 6-level com->fault cone).  RTL now registers EVERY data pin at the face (read_v/read_addr/eso_v/com/esi input flops; aso/response_*/fault output flops), no input->output path.  +4 edges read pin -> response pin (ERL 3 -> 7; EP read 2 edges after the read pin); kv_static_die astk_eread erl 7.  || RTL-BUILD-KV/ASTK 2026-10-18 (lanes/RTL-BUILD-KV.md P4, stub_audit K-8): successor of the CLOSED qkd_astk_er_tap with the e-read VISIBILITY check folded in (KVE-2 note for KVJ-D): qkd_astk_native_stack_w4_cal kept it as wrapper glue (a read of e group addr[6:3] before any EP committed it = sticky fault); the static strip qkd_astk_strip_er_st has no glue, so the leaf takes each owner's exp_done[15:0] (si[633e+537 +: 16], +128 pins S/N) and ORs it.  Same ERL-3 edges and fault law as service + glue; lockstep vs the current composition (tb_qkd_astk_strip_er_st).  Outline 86.4 x 47.52 (was 64.8 x 43.2) for the 128 extra owner pins (<= 6/um on every face).",
+  "structural_change": "KV-ERTAP 2026-10-18: route qkd_astk_er_tap_st-v1-b18fa696b NEEDS_RTL (FF hold -6.7, route hold repair stalled: I2O 13 @-2.8, I2R 3 @-5.4 / 1 @-5.7, 'pin register miss'; textbook lint: 340 input->output combinational bits read_addr->aso, esi->response_data, 6-level com->fault cone).  RTL now registers EVERY data pin at the face (read_v/read_addr/eso_v/com/esi input flops; aso/response_*/fault output flops), no input->output path.  +4 edges read pin -> response pin (ERL 3 -> 7; EP read 2 edges after the read pin); kv_static_die astk_eread erl 7.",
+  "benches": [
+   {
+    "name": "astk_strip_er_st_lockstep",
+    "cmd": "bash tools/qwen_kv_die/astk_er_static_bench.sh {RUN}/bench/pos 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_astk_strip_er_st lockstep",
+    "note": "every edge of qkd_astk_strip_er_st (strip_st + this leaf) equals qkd_astk_native_stack_w4_cal (native_stack_cal + er_service_w N4 + visibility glue)",
+    "pass_witness": "results/rtl/ref_tile/qkd_astk_er_tap_st/bench_witness_v2/mut0.log"
+   },
+   {
+    "name": "er_tap_st_visibility_mutant",
+    "cmd": "bash tools/qwen_kv_die/astk_er_static_bench.sh {RUN}/bench/neg4 4",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_astk_strip_er_st",
+    "note": "MUT 4: visibility check removed",
+    "fail_witness": "results/rtl/ref_tile/qkd_astk_er_tap_st/bench_witness_v2/mut4.log"
+   },
+   {
+    "name": "er_tap_st_owner_mutant",
+    "cmd": "bash tools/qwen_kv_die/astk_er_static_bench.sh {RUN}/bench/neg5 5",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_astk_strip_er_st",
+    "note": "MUT 5: response owner one tag stage early",
+    "fail_witness": "results/rtl/ref_tile/qkd_astk_er_tap_st/bench_witness_v2/mut5.log"
+   },
+   {
+    "name": "er_tap_st_esi_pinreg_mutant",
+    "cmd": "bash tools/qwen_kv_die/astk_er_static_bench.sh {RUN}/bench/neg6 6",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_astk_strip_er_st",
+    "note": "MUT 6: e quad bypasses the esi pin registers (one edge early)",
+    "fail_witness": "results/rtl/ref_tile/qkd_astk_er_tap_st/bench_witness_v2/mut6.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_kv_die",
+   "rtl/qwen_sys",
+   "rtl/hdc",
+   "physical/qkd_astk_strip",
+   "tools/qwen_kv_die",
+   "results/rtl/ref_tile/qkd_astk_er_tap_st/bench_witness_v2/"
+  ],
+  "views_to": "physical/ref_tile/qkd_astk_er_tap_st/views",
+  "record_to": "results/rtl/ref_tile/qkd_astk_er_tap_st"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "KV-ERTAP 2026-10-18: route qkd_astk_er_tap_st-v1-b18fa696b NEEDS_RTL (FF hold -6.7, route hold repair stalled: I2O 13 @-2.8, I2R 3 @-5.4 / 1 @-5.7, 'pin register miss'; textbook lint: 340 input->output combinational bits read_addr->aso, esi->response_data, 6-level com->fault cone).  RTL now registers EVERY data pin at the face (read_v/read_addr/eso_v/com/esi input flops; aso/response_*/fault output flops), no input->output path.  +4 edges read pin -> response pin (ERL 3 -> 7; EP read 2 edges after the read pin); kv_static_die astk_eread erl 7."
+ }
+}

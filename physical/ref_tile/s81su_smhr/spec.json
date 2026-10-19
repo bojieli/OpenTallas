@@ -1,0 +1,144 @@
+{
+ "name": "s81su_smhr",
+ "top": "dsfd_su_t_smhr",
+ "kind": "cluster",
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_in"
+ ],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smhr.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 213.84
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/s81su_smc_ref/views/dsfd_su_t_smc",
+   "count": 1,
+   "inst": "*u_smc",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_smr_ref/views/dsfd_su_t_smr",
+   "count": 1,
+   "inst": "*u_smr",
+   "at": [
+    216.0,
+    43.2
+   ]
+  }
+ ],
+ "pins": {
+  "S": [
+   "clk",
+   "rst_in",
+   "c_v",
+   "c_lt",
+   "q_mxv",
+   "q_ev",
+   "q_el",
+   "q_skv",
+   "q_e",
+   "m_v",
+   "m_nmb",
+   "dn_v",
+   "dn",
+   "den_v"
+  ],
+  "N": [
+   "q_mx"
+  ]
+ },
+ "structural_change": "S81U-SMH2 (10-17): root regional cluster (x1 per head) of the split per-head SM subtree (see s81su_smhq): row sum smc + max/den root smr with their SRL link, own clock pin + registered reset relay; quad links arrive registered (station 1 in the quad), max/den broadcast leaves registered. SMHKP4 10-18: closed 1ced40b32 view native FAIL: (1) capture 236 > 190 on 125 inputs = same GRT io_ref fallback as smhq (reference rr0 reset relay instead of the input pin flops; 252 GRT hold buffers) -> refglob u_ld* (1,024 q_mx/q_e input pin flops); (2) routed TT pin-flop spread 87 (575..662) vs 30.5 at CTS: neighbouring N-face flops on different count-bisection trunk branches (clkbuf_sp_N150 vs N75 paths) diverge under routed RC because the leaf pads were equalised at placement parasitics -> symmetric insertion-aware spine (OT_SPINE_SYM + tree-shared pads, as qfd_slab_pg_cl) so every branch carries matched trunk wire.",
+ "why_floorplan": "smc + smr side by side on the 43.2 lattice between a 43-um S band (q_e + control stations, clk) and a 43-um N band (q_mx stations); pin-bound: ~590 pins S (1.7/um) + 512 q_mx pins N (1.5/um), the quads sit on both sides of the root in the slice; 346 x 216 um. g1 (one face, 346 x 251) failed fill 31% (pin demand S 78%).",
+ "job": {
+  "owner": "Claude:OWNERS-S81/SMH",
+  "branch": "claude/smhkp4-1018",
+  "tag": "s81su_smhr",
+  "purpose": "S81U-SMH2: root regional cluster (x1 per head) of the S81-DV per-head SM subtree (bench: tools/s81_su_sm/sms_bench.sh SMT=1).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/su_sm",
+   "physical/ref_tile/s81su_smc_ref/views",
+   "physical/ref_tile/s81su_smr_ref/views",
+   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+   "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+   "rtl/hdc",
+   "tools/s81_su_sm",
+   "results/rtl/s81_dv_1016/su_sm"
+  ],
+  "views_to": "physical/ref_tile/s81su_smhr/views",
+  "record_to": "results/rtl/ref_tile/s81su_smhr",
+  "benches": [
+   {
+    "name": "sms_smt_exact",
+    "cmd": "SMT=1 bash tools/s81_su_sm/sms_bench.sh {RUN}/sms_smt_exact 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "pass_regex": "^SMS PASS MUT=0 "
+   },
+   {
+    "name": "sms_smt_mut_split",
+    "cmd": "SMT=1 bash tools/s81_su_sm/sms_bench.sh {RUN}/sms_smt_mut_split 6",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "fail_regex": "^SMS FAIL MUT=6 errors=[1-9]",
+    "fail_witness": "results/rtl/s81_dv_1016/su_sm/smh1018_smt_m6/run.log"
+   },
+   {
+    "name": "sms_smt_mut_staleden",
+    "cmd": "SMT=1 bash tools/s81_su_sm/sms_bench.sh {RUN}/sms_smt_mut_staleden 5",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "fail_regex": "^SMS FAIL MUT=5 errors=[1-9]",
+    "fail_witness": "results/rtl/s81_dv_1016/su_sm/smh1018_smt_m5/run.log"
+   }
+  ],
+  "reroute_reason": {
+   "kind": "native_capture",
+   "source": "results/arch/smhkp4_1018/native_closed_views.json",
+   "cell": "dsfd_su_t_smhr",
+   "vs": "s81su_smhr-s81su_smhr-1ced40b32",
+   "why": "SMHKP4 10-18 (lanes/S81-SMHKP4.md): native capture 235.7 > 190 on 125 inputs (GRT io_ref fallback to reset relay rr0, 252 GRT hold buffers) + routed TT pin-flop spread 87.0 > 80 (CTS 30.5: count-bisection trunk branches equalised at placement parasitics diverge under routed RC)",
+   "fix": "refglob u_ld* (1,024 input pin flops) + symmetric insertion-aware spine with tree-shared pads (OT_SPINE_SYM/TREE_PAD/SAFE_BALANCE): gate insertion 501.8 TT, spread 28.7/21.5, GRT 0"
+  }
+ },
+ "child_clock_ref": "boundary",
+ "why_clock": "SMH 10-18: clock = balanced spine with child-insertion leaf targets from each child's ROUTED boundary-register insertion (child_clock_ref boundary), so the glue pin flops and the children's pin flops tick together. The 10-17 g3 TritonCTS trial (insertion-cap driven) gave pin-flop spread 144 ps; the g2 spine gave 24.8 ps (insertion > 300 ps is guidance under 0dq).",
+ "macros": [],
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "refglob": "u_ld*",
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_SAFE_BALANCE": "1"
+ }
+}

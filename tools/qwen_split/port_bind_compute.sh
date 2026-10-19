@@ -22,4 +22,36 @@ python3 $R/tools/die_port_bind.py $D $T45 --rtl-file $O/die_glue.sv --rtl-file $
   --define OT_QFD_UP4_CK_ENTRIES --strap-file ${OT_PORT_BIND_STRAPS:-$R/results/arch/qwen_split_compute_1014/straps.json} --out $O/port_bind.json > $O/port_bind.txt 2>&1
 rc=$?
 tail -1 $O/port_bind.txt
+# Q-COLLCAL 10-18: lane audit (one stage count per bus group; landing K straps = the GEN's total E; io_collective LX0..2
+# = the SerDes lane cycles TX(peer) + RX(own)).  Part of the strict bind: a die whose bus bits disagree, or whose collective
+# calendar misses its lanes, faults its static schedule.  OT_LANE_AUDIT=0 skips it (diagnosis only).
+if [ "${OT_LANE_AUDIT:-1}" = 1 ]; then
+  python3 $R/tools/qwen_split/lane_latency_audit.py $D --out $O/lane_latency_audit.json > $O/lane_latency_audit.txt 2>&1; la=$?
+  tail -1 $O/lane_latency_audit.txt
+  [ $la -ne 0 ] && [ $rc -eq 0 ] && rc=4
+  # QXF-SEAMC 10-18: record-bundle audit (TOKEN-XDIE-QWEN F5 / LAYERBENCH G-C2): every record bundle of the d2d_rom /
+  # native59 / sys_face seams (valid + all fields of one record, selected by endpoint pins) arrives on ONE edge --
+  # direct wires included (the lane audit above only sees relay chains, so a direct rx_v beside a landed rx_payload
+  # passed it).  tools/qwen_split/record_bundles.py audit.
+  python3 $R/tools/qwen_split/record_bundles.py audit $D --out $O/record_bundle_audit.json > $O/record_bundle_audit.txt 2>&1; ra=$?
+  tail -1 $O/record_bundle_audit.txt
+  [ $ra -ne 0 ] && [ $rc -eq 0 ] && rc=5
+fi
+# QLB-GEN 10-18 (LAYERBENCH G-C1): fail-closed parameter audit -- every die master whose RTL traps a sentinel-default
+# parameter (qfd_tt_ctlm_dv XPF_TRANSPORT_EDGES -1, qfd_d2d_static TXDP 0) must get it from DIE_V.params.json, and the
+# values must equal the ones re-derived from this die.v (1 hr reg + hr lane cycles; the production image's D2D_TXDP_C).
+# tools/qwen_split/die_params.py audit.  OT_PARAM_AUDIT=0 skips it (diagnosis only).
+if [ "${OT_PARAM_AUDIT:-1}" = 1 ]; then
+  python3 $R/tools/qwen_split/die_params.py audit $D --port-bind $O/port_bind.json --src $R --out $O/die_param_audit.json > $O/die_param_audit.txt 2>&1; pa=$?
+  tail -1 $O/die_param_audit.txt
+  [ $pa -ne 0 ] && [ $rc -eq 0 ] && rc=6
+fi
+# QW-DIEFIX 10-19: hr bus field contract (tt_ctlm ROM command -> slice gi decode, QW-XHEAD XT1: as built go sat on
+# hr[73] and no matvec started on the die).  Source layout of producer / pack / consumers + the die's hr chain (one whole
+# 453-b net per hop, relays a -> b, slices hr_wi -> hr_eo).  tools/qwen_split/hr_contract.py.  OT_HR_CONTRACT=0 skips.
+if [ "${OT_HR_CONTRACT:-1}" = 1 ]; then
+  python3 $R/tools/qwen_split/hr_contract.py check --root $R --die-v $D --json $O/hr_contract.json > $O/hr_contract.txt 2>&1; hc=$?
+  head -1 $O/hr_contract.txt
+  [ $hc -ne 0 ] && [ $rc -eq 0 ] && rc=7
+fi
 exit $rc

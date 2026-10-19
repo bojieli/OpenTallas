@@ -1,0 +1,11 @@
+MISMATCH cycle=3722 si=1 ap=1 apPV0=1 lt=1 er=111 ctlf=0/0 erf=0/1 af=0/1
+MISMATCH cycle=3723 si=1 ap=1 apPV0=1 lt=1 er=111 ctlf=0/0 erf=0/1 af=0/1
+MISMATCH cycle=3724 si=1 ap=1 apPV0=1 lt=1 er=111 ctlf=0/0 erf=0/1 af=0/1
+MISMATCH cycle=3725 si=1 ap=1 apPV0=1 lt=1 er=111 ctlf=0/0 erf=0/1 af=0/1
+MISMATCH cycle=3726 si=1 ap=1 apPV0=1 lt=1 er=111 ctlf=0/0 erf=0/1 af=0/1
+FAIL lockstep mismatches=29
+FAIL qkd_astk_strip_er_st errors=1 mismatches=29 mut 4
+- /srv/opentallas-scratch/claude/kv-ertap/src/rtl/test/qwen_kv_die/tb_qkd_astk_strip_er_st.sv:151: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 27.392 s; speed 439.697 ns/s
+- Verilator: cpu 27.139 s on 1 threads; allocated 51 MB

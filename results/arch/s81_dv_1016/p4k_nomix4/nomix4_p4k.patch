@@ -1,0 +1,43 @@
+--- a/tools/s81_dv/dv_plan.py	2026-10-18 00:46:41.292602364 -0700
++++ b/tools/s81_dv/dv_plan.py	2026-10-18 00:46:49.742756419 -0700
+@@ -47,6 +47,7 @@
+ P4I = False                       # p4i (10-17, coordinator 0cj ~15:00): coll_edge deleted (end-column rung = relays only; the end
+                                   # slices carry the cross-die link endpoints), regional service slices dsdv_svc_rs chained
+                                   # neighbour-only toward the centre (fixed order, centre fold), HP beat kind, host/job paths
++NO_MIX4 = False                   # --no-mix4 (0dv 10-18): delete the mix4_w / mix4_e void units (Engram mix = slice op ENG)
+ P4J = False                       # p4j (10-17, S81-DIE3): p4i + frame return lanes at the RTL width (RET 70: frame ret /
+                                   # slice rt / cfifo_crs rd are 70 b) + q / P.V enter at the slice under the slice-column void
+                                   # (rsv_05 / rsv_11, as p4h) and reach the centre chain root (rsv_07 / rsv_09) by one
+@@ -612,6 +613,14 @@
+           units.pop(1); units.pop(6)
+           units[2] = [('bk_sel', 'dsfd_bk_selector', 2000), ('mix4_w', 'dsfd_engram_mix4_half', 2600)]
+           units[5] = [('bk_col', 'dsfd_bk_collector', 2900), ('mix4_e', 'dsfd_engram_mix4_half', 2600)]
++      if NO_MIX4:
++          # owner 0dv 10-18 (RTL-BUILD-S81): mix4_half DELETED -- the Engram mix is the in-slice op ENG (ve / xfin ENG /
++          # ot_s81sl_eg; p4j/engram_mix_verdict.json): its 276-b V-rung units needed >= 2,090 cycles a layer vs 871
++          # priced.  The column-2 / column-5 tier rungs then join s_cS <-> s_cN directly (fewer chain stops).
++          facts['mix4_deleted'] = dict(units=[nm for us in units.values() for nm, _, _ in us if nm.startswith('mix4')],
++                                       reason='HANDOFF 0dv (owner 10-18) + results/arch/s81_dv_1016/p4j/engram_mix_verdict.json')
++          units = {c: [u for u in us if not u[0].startswith('mix4')] for c, us in units.items()}
++          units = {c: us for c, us in units.items() if us}
+       facts['void_free_um'] = {}
+       for c, us in units.items():
+           lo_, hi_ = chain_top_S(c), chain_bot_N(c)
+@@ -1089,6 +1098,7 @@
+     ap.add_argument('--p4i', action='store_true', help='p4i: p4h - coll_edge + end-slice link endpoints + svc_rs centre chain + HP kind + host/job paths')
+     ap.add_argument('--p4j', action='store_true', help='p4j: p4i + RET 70 (frame/slice RTL return width) + q/P.V entry under the slice-column voids (0 um of lane over a block)')
+     ap.add_argument('--p4k', action='store_true', help='p4k: p4j + svc_rs RTL faces, q / P.V format lanes, unit lanes, column-3 E / column-4 W lane margins')
++    ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
+     ap.add_argument('--lane-margin', type=float, default=120.0, help='p4k: extra column width beside the column-3 E / column-4 W slices (um)')
+     ap.add_argument('--p4h-drop', type=int, default=4, choices=(4, 6), help='p4h: row-0 S-tier frames given to the service region (4: 3L-4R; 6: 2R-5L)')
+     ap.add_argument('--frame-w', type=float, default=None, help='p4: frame width override (S-ELEM bf_col 604.8 -> 1,436.832)')
+@@ -1097,7 +1107,8 @@
+     global ROW0_MX, TIER_W, LANES, P4F
+     ROW0_MX = a.row0_mx
+     P4F = a.p4f or a.p4g or a.p4h
+-    global P4G, P4H, P4H_DROP, P4I, P4J, RET
++    global P4G, P4H, P4H_DROP, P4I, P4J, RET, NO_MIX4
++    NO_MIX4 = a.no_mix4
+     global P4K
+     P4K = a.p4k
+     P4J = a.p4j or P4K

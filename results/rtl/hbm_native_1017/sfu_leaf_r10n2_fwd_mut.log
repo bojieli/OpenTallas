@@ -1,0 +1,7 @@
+SFU_LEAF_FWD_MISMATCH edge=1 addr 7cb/7cb data[31:0] 2a064154/2a064154 v x/x flt x/x
+SFU_LEAF_FWD_MISMATCH edge=2 addr 0e5/0e5 data[31:0] f61ba4ec/f61ba4ec v 0/0 flt 0/0
+SFU_LEAF_FWD_MISMATCH edge=3 addr 08e/08e data[31:0] f73950ee/f73950ee v 0/0 flt 0/0
+SFU_LEAF_FWD_MISMATCH edge=4 addr 33a/33a data[31:0] 3c6cd578/3c6cd578 v 0/0 flt 0/0
+SFU_LEAF_FWD_MISMATCH edge=5 addr 71f/71f data[31:0] c5867a8b/c5867a8b v 0/0 flt 0/0
+SFU_LEAF_FWD_LOCKSTEP FAIL errs=60203 edges=60204 out_v=18315 writes=16697 starts=1799 chain_edges=60203
+SFU_LEAF_FWD_GATE MUTANT fwd REJECTED (expected)

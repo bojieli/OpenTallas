@@ -1,0 +1,3427 @@
+{
+ "schema": "opentallas.qwen.dv-lowering.v1",
+ "tool": "tools/qwen_layerbench/dv_lower.py",
+ "mutant": null,
+ "slice_map": {
+  "names": [
+   "dvs_W5",
+   "dvs_W4",
+   "dvs_W3",
+   "dvs_W2",
+   "dvs_W1",
+   "dvs_W0",
+   "dvs_E0",
+   "dvs_E1",
+   "dvs_E2",
+   "dvs_E3",
+   "dvs_E4",
+   "dvs_E5"
+  ],
+  "ids": {
+   "dvs_W5": 0,
+   "dvs_W4": 1,
+   "dvs_W3": 2,
+   "dvs_W2": 3,
+   "dvs_W1": 4,
+   "dvs_W0": 5,
+   "dvs_E0": 6,
+   "dvs_E1": 7,
+   "dvs_E2": 8,
+   "dvs_E3": 9,
+   "dvs_E4": 10,
+   "dvs_E5": 11
+  },
+  "hops": [
+   {
+    "frm": "dvs_W5",
+    "to": "dvs_W4",
+    "cmd_bus": "dvs_W5.cmd_eo -> dvs_W4.cmd_wi",
+    "cmd_extra": 0,
+    "sc_bus": "dvs_W4.sc_wo -> dvs_W5.sc_ei",
+    "sc_extra": 0
+   },
+   {
+    "frm": "dvs_W4",
+    "to": "dvs_W3",
+    "cmd_bus": "dvs_W4.cmd_eo -> dvs_W3.cmd_wi",
+    "cmd_extra": 0,
+    "sc_bus": "dvs_W3.sc_wo -> dvs_W4.sc_ei",
+    "sc_extra": 0
+   },
+   {
+    "frm": "dvs_W3",
+    "to": "dvs_W2",
+    "cmd_bus": "dvs_W3.cmd_eo -> dvs_W2.cmd_wi",
+    "cmd_extra": 0,
+    "sc_bus": "dvs_W2.sc_wo -> dvs_W3.sc_ei",
+    "sc_extra": 0
+   },
+   {
+    "frm": "dvs_W2",
+    "to": "dvs_W1",
+    "cmd_bus": "dvs_W2.cmd_eo -> dvs_W1.cmd_wi",
+    "cmd_extra": 0,
+    "sc_bus": "dvs_W1.sc_wo -> dvs_W2.sc_ei",
+    "sc_extra": 0
+   },
+   {
+    "frm": "dvs_W1",
+    "to": "dvs_W0",
+    "cmd_bus": "dvs_W1.cmd_eo -> dvs_W0.cmd_wi",
+    "cmd_extra": 0,
+    "sc_bus": "dvs_W0.sc_wo -> dvs_W1.sc_ei",
+    "sc_extra": 0
+   },
+   {
+    "frm": "dvs_W0",
+    "to": "dvs_E0",
+    "cmd_bus": "dvs_W0.cmd_eo -> dvs_E0.cmd_ei",
+    "cmd_extra": 0,
+    "sc_bus": "dvs_E0.sc_eo -> dvs_W0.sc_ei",
+    "sc_extra": 0
+   },
+   {
+    "frm": "dvs_E0",
+    "to": "dvs_E1",
+    "cmd_bus": "dvs_E0.cmd_wo -> dvs_E1.cmd_ei",
+    "cmd_extra": 0,
+    "sc_bus": "dvs_E1.sc_eo -> dvs_E0.sc_wi",
+    "sc_extra": 0
+   },
+   {
+    "frm": "dvs_E1",
+    "to": "dvs_E2",
+    "cmd_bus": "dvs_E1.cmd_wo -> dvs_E2.cmd_ei",
+    "cmd_extra": 0,
+    "sc_bus": "dvs_E2.sc_eo -> dvs_E1.sc_wi",
+    "sc_extra": 0
+   },
+   {
+    "frm": "dvs_E2",
+    "to": "dvs_E3",
+    "cmd_bus": "dvs_E2.cmd_wo -> dvs_E3.cmd_ei",
+    "cmd_extra": 0,
+    "sc_bus": "dvs_E3.sc_eo -> dvs_E2.sc_wi",
+    "sc_extra": 0
+   },
+   {
+    "frm": "dvs_E3",
+    "to": "dvs_E4",
+    "cmd_bus": "dvs_E3.cmd_wo -> dvs_E4.cmd_ei",
+    "cmd_extra": 0,
+    "sc_bus": "dvs_E4.sc_eo -> dvs_E3.sc_wi",
+    "sc_extra": 0
+   },
+   {
+    "frm": "dvs_E4",
+    "to": "dvs_E5",
+    "cmd_bus": "dvs_E4.cmd_wo -> dvs_E5.cmd_ei",
+    "cmd_extra": 0,
+    "sc_bus": "dvs_E5.sc_eo -> dvs_E4.sc_wi",
+    "sc_extra": 0
+   }
+  ],
+  "cmd_arrival": [
+   0,
+   2,
+   4,
+   6,
+   8,
+   10,
+   12,
+   14,
+   16,
+   18,
+   20,
+   22
+  ],
+  "sources": {
+   "results/arch/qwen_split_compute_1014/dieplan2_1016/dv2r8f7r_qdv_p2462.json": "8c5de31ac3a8e9e47b4007fa827b74bc6f007f0ce9cbfc5a14524db0560bac45",
+   "results/rtl/qlb_gen_1018/dv2f14bq/relay_stages_compute.json": "af7a2b6784c2b6665a85c57e94efa0e3b551eebf3cc1a6ae19a669dbe26eb910"
+  },
+  "rule": "SETID 0 enters at dvs_W5; slice k latches id k (qfd_dv_slice2 SETID: id, forward id + 1)"
+ },
+ "ownership": {
+  "qkv": {
+   "split": 512,
+   "level": 9,
+   "tiles_per_round": 6,
+   "rounds": 1,
+   "blocks": [
+    {
+     "block": 0,
+     "rows": [
+      0,
+      128
+     ],
+     "slice": 0,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 1,
+     "rows": [
+      128,
+      256
+     ],
+     "slice": 2,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 2,
+     "rows": [
+      256,
+      384
+     ],
+     "slice": 4,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 3,
+     "rows": [
+      384,
+      512
+     ],
+     "slice": 6,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 4,
+     "rows": [
+      512,
+      640
+     ],
+     "slice": 8,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 5,
+     "rows": [
+      640,
+      768
+     ],
+     "slice": 10,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    }
+   ]
+  },
+  "o": {
+   "split": 256,
+   "level": 8,
+   "tiles_per_round": 12,
+   "rounds": 3,
+   "blocks": [
+    {
+     "block": 0,
+     "rows": [
+      0,
+      128
+     ],
+     "slice": 0,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 1,
+     "rows": [
+      128,
+      256
+     ],
+     "slice": 1,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 2,
+     "rows": [
+      256,
+      384
+     ],
+     "slice": 2,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 3,
+     "rows": [
+      384,
+      512
+     ],
+     "slice": 3,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 4,
+     "rows": [
+      512,
+      640
+     ],
+     "slice": 4,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 5,
+     "rows": [
+      640,
+      768
+     ],
+     "slice": 5,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 6,
+     "rows": [
+      768,
+      896
+     ],
+     "slice": 6,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 7,
+     "rows": [
+      896,
+      1024
+     ],
+     "slice": 7,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 8,
+     "rows": [
+      1024,
+      1152
+     ],
+     "slice": 8,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 9,
+     "rows": [
+      1152,
+      1280
+     ],
+     "slice": 9,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 10,
+     "rows": [
+      1280,
+      1408
+     ],
+     "slice": 10,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 11,
+     "rows": [
+      1408,
+      1536
+     ],
+     "slice": 11,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 12,
+     "rows": [
+      1536,
+      1664
+     ],
+     "slice": 0,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 13,
+     "rows": [
+      1664,
+      1792
+     ],
+     "slice": 1,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 14,
+     "rows": [
+      1792,
+      1920
+     ],
+     "slice": 2,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 15,
+     "rows": [
+      1920,
+      2048
+     ],
+     "slice": 3,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 16,
+     "rows": [
+      2048,
+      2176
+     ],
+     "slice": 4,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 17,
+     "rows": [
+      2176,
+      2304
+     ],
+     "slice": 5,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 18,
+     "rows": [
+      2304,
+      2432
+     ],
+     "slice": 6,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 19,
+     "rows": [
+      2432,
+      2560
+     ],
+     "slice": 7,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 20,
+     "rows": [
+      2560,
+      2688
+     ],
+     "slice": 8,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 21,
+     "rows": [
+      2688,
+      2816
+     ],
+     "slice": 9,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 22,
+     "rows": [
+      2816,
+      2944
+     ],
+     "slice": 10,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 23,
+     "rows": [
+      2944,
+      3072
+     ],
+     "slice": 11,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 24,
+     "rows": [
+      3072,
+      3200
+     ],
+     "slice": 0,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 25,
+     "rows": [
+      3200,
+      3328
+     ],
+     "slice": 1,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 26,
+     "rows": [
+      3328,
+      3456
+     ],
+     "slice": 2,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 27,
+     "rows": [
+      3456,
+      3584
+     ],
+     "slice": 3,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 28,
+     "rows": [
+      3584,
+      3712
+     ],
+     "slice": 4,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 29,
+     "rows": [
+      3712,
+      3840
+     ],
+     "slice": 5,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 30,
+     "rows": [
+      3840,
+      3968
+     ],
+     "slice": 6,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 31,
+     "rows": [
+      3968,
+      4096
+     ],
+     "slice": 7,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    }
+   ]
+  },
+  "gu": {
+   "split": 128,
+   "level": 7,
+   "tiles_per_round": 24,
+   "rounds": 1,
+   "blocks": [
+    {
+     "block": 0,
+     "rows": [
+      0,
+      128
+     ],
+     "slice": 0,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 1,
+     "rows": [
+      128,
+      256
+     ],
+     "slice": 0,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    },
+    {
+     "block": 2,
+     "rows": [
+      256,
+      384
+     ],
+     "slice": 1,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 3,
+     "rows": [
+      384,
+      512
+     ],
+     "slice": 1,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    },
+    {
+     "block": 4,
+     "rows": [
+      512,
+      640
+     ],
+     "slice": 2,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 5,
+     "rows": [
+      640,
+      768
+     ],
+     "slice": 2,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    },
+    {
+     "block": 6,
+     "rows": [
+      768,
+      896
+     ],
+     "slice": 3,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 7,
+     "rows": [
+      896,
+      1024
+     ],
+     "slice": 3,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    },
+    {
+     "block": 8,
+     "rows": [
+      1024,
+      1152
+     ],
+     "slice": 4,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 9,
+     "rows": [
+      1152,
+      1280
+     ],
+     "slice": 4,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    },
+    {
+     "block": 10,
+     "rows": [
+      1280,
+      1408
+     ],
+     "slice": 5,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 11,
+     "rows": [
+      1408,
+      1536
+     ],
+     "slice": 5,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    },
+    {
+     "block": 12,
+     "rows": [
+      1536,
+      1664
+     ],
+     "slice": 6,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 13,
+     "rows": [
+      1664,
+      1792
+     ],
+     "slice": 6,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    },
+    {
+     "block": 14,
+     "rows": [
+      1792,
+      1920
+     ],
+     "slice": 7,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 15,
+     "rows": [
+      1920,
+      2048
+     ],
+     "slice": 7,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    },
+    {
+     "block": 16,
+     "rows": [
+      2048,
+      2176
+     ],
+     "slice": 8,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 17,
+     "rows": [
+      2176,
+      2304
+     ],
+     "slice": 8,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    },
+    {
+     "block": 18,
+     "rows": [
+      2304,
+      2432
+     ],
+     "slice": 9,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 19,
+     "rows": [
+      2432,
+      2560
+     ],
+     "slice": 9,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    },
+    {
+     "block": 20,
+     "rows": [
+      2560,
+      2688
+     ],
+     "slice": 10,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 21,
+     "rows": [
+      2688,
+      2816
+     ],
+     "slice": 10,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    },
+    {
+     "block": 22,
+     "rows": [
+      2816,
+      2944
+     ],
+     "slice": 11,
+     "round": 0,
+     "pair": 0,
+     "mode": "L7"
+    },
+    {
+     "block": 23,
+     "rows": [
+      2944,
+      3072
+     ],
+     "slice": 11,
+     "round": 0,
+     "pair": 1,
+     "mode": "L7"
+    }
+   ]
+  },
+  "down": {
+   "split": 256,
+   "level": 8,
+   "tiles_per_round": 12,
+   "rounds": 3,
+   "blocks": [
+    {
+     "block": 0,
+     "rows": [
+      0,
+      128
+     ],
+     "slice": 0,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 1,
+     "rows": [
+      128,
+      256
+     ],
+     "slice": 1,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 2,
+     "rows": [
+      256,
+      384
+     ],
+     "slice": 2,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 3,
+     "rows": [
+      384,
+      512
+     ],
+     "slice": 3,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 4,
+     "rows": [
+      512,
+      640
+     ],
+     "slice": 4,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 5,
+     "rows": [
+      640,
+      768
+     ],
+     "slice": 5,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 6,
+     "rows": [
+      768,
+      896
+     ],
+     "slice": 6,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 7,
+     "rows": [
+      896,
+      1024
+     ],
+     "slice": 7,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 8,
+     "rows": [
+      1024,
+      1152
+     ],
+     "slice": 8,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 9,
+     "rows": [
+      1152,
+      1280
+     ],
+     "slice": 9,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 10,
+     "rows": [
+      1280,
+      1408
+     ],
+     "slice": 10,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 11,
+     "rows": [
+      1408,
+      1536
+     ],
+     "slice": 11,
+     "round": 0,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 12,
+     "rows": [
+      1536,
+      1664
+     ],
+     "slice": 0,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 13,
+     "rows": [
+      1664,
+      1792
+     ],
+     "slice": 1,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 14,
+     "rows": [
+      1792,
+      1920
+     ],
+     "slice": 2,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 15,
+     "rows": [
+      1920,
+      2048
+     ],
+     "slice": 3,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 16,
+     "rows": [
+      2048,
+      2176
+     ],
+     "slice": 4,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 17,
+     "rows": [
+      2176,
+      2304
+     ],
+     "slice": 5,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 18,
+     "rows": [
+      2304,
+      2432
+     ],
+     "slice": 6,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 19,
+     "rows": [
+      2432,
+      2560
+     ],
+     "slice": 7,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 20,
+     "rows": [
+      2560,
+      2688
+     ],
+     "slice": 8,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 21,
+     "rows": [
+      2688,
+      2816
+     ],
+     "slice": 9,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 22,
+     "rows": [
+      2816,
+      2944
+     ],
+     "slice": 10,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 23,
+     "rows": [
+      2944,
+      3072
+     ],
+     "slice": 11,
+     "round": 1,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 24,
+     "rows": [
+      3072,
+      3200
+     ],
+     "slice": 0,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 25,
+     "rows": [
+      3200,
+      3328
+     ],
+     "slice": 1,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 26,
+     "rows": [
+      3328,
+      3456
+     ],
+     "slice": 2,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 27,
+     "rows": [
+      3456,
+      3584
+     ],
+     "slice": 3,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 28,
+     "rows": [
+      3584,
+      3712
+     ],
+     "slice": 4,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 29,
+     "rows": [
+      3712,
+      3840
+     ],
+     "slice": 5,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 30,
+     "rows": [
+      3840,
+      3968
+     ],
+     "slice": 6,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    },
+    {
+     "block": 31,
+     "rows": [
+      3968,
+      4096
+     ],
+     "slice": 7,
+     "round": 2,
+     "pair": null,
+     "mode": "L8"
+    }
+   ]
+  },
+  "lm_head": {
+   "split": 512,
+   "level": 9,
+   "tiles_per_round": 6,
+   "rounds": 25,
+   "blocks": [
+    {
+     "block": 0,
+     "rows": [
+      0,
+      128
+     ],
+     "slice": 0,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 1,
+     "rows": [
+      128,
+      256
+     ],
+     "slice": 2,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 2,
+     "rows": [
+      256,
+      384
+     ],
+     "slice": 4,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 3,
+     "rows": [
+      384,
+      512
+     ],
+     "slice": 6,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 4,
+     "rows": [
+      512,
+      640
+     ],
+     "slice": 8,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 5,
+     "rows": [
+      640,
+      768
+     ],
+     "slice": 10,
+     "round": 0,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 6,
+     "rows": [
+      768,
+      896
+     ],
+     "slice": 0,
+     "round": 1,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 7,
+     "rows": [
+      896,
+      1024
+     ],
+     "slice": 2,
+     "round": 1,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 8,
+     "rows": [
+      1024,
+      1152
+     ],
+     "slice": 4,
+     "round": 1,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 9,
+     "rows": [
+      1152,
+      1280
+     ],
+     "slice": 6,
+     "round": 1,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 10,
+     "rows": [
+      1280,
+      1408
+     ],
+     "slice": 8,
+     "round": 1,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 11,
+     "rows": [
+      1408,
+      1536
+     ],
+     "slice": 10,
+     "round": 1,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 12,
+     "rows": [
+      1536,
+      1664
+     ],
+     "slice": 0,
+     "round": 2,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 13,
+     "rows": [
+      1664,
+      1792
+     ],
+     "slice": 2,
+     "round": 2,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 14,
+     "rows": [
+      1792,
+      1920
+     ],
+     "slice": 4,
+     "round": 2,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 15,
+     "rows": [
+      1920,
+      2048
+     ],
+     "slice": 6,
+     "round": 2,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 16,
+     "rows": [
+      2048,
+      2176
+     ],
+     "slice": 8,
+     "round": 2,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 17,
+     "rows": [
+      2176,
+      2304
+     ],
+     "slice": 10,
+     "round": 2,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 18,
+     "rows": [
+      2304,
+      2432
+     ],
+     "slice": 0,
+     "round": 3,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 19,
+     "rows": [
+      2432,
+      2560
+     ],
+     "slice": 2,
+     "round": 3,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 20,
+     "rows": [
+      2560,
+      2688
+     ],
+     "slice": 4,
+     "round": 3,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 21,
+     "rows": [
+      2688,
+      2816
+     ],
+     "slice": 6,
+     "round": 3,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 22,
+     "rows": [
+      2816,
+      2944
+     ],
+     "slice": 8,
+     "round": 3,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 23,
+     "rows": [
+      2944,
+      3072
+     ],
+     "slice": 10,
+     "round": 3,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 24,
+     "rows": [
+      3072,
+      3200
+     ],
+     "slice": 0,
+     "round": 4,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 25,
+     "rows": [
+      3200,
+      3328
+     ],
+     "slice": 2,
+     "round": 4,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 26,
+     "rows": [
+      3328,
+      3456
+     ],
+     "slice": 4,
+     "round": 4,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 27,
+     "rows": [
+      3456,
+      3584
+     ],
+     "slice": 6,
+     "round": 4,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 28,
+     "rows": [
+      3584,
+      3712
+     ],
+     "slice": 8,
+     "round": 4,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 29,
+     "rows": [
+      3712,
+      3840
+     ],
+     "slice": 10,
+     "round": 4,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 30,
+     "rows": [
+      3840,
+      3968
+     ],
+     "slice": 0,
+     "round": 5,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 31,
+     "rows": [
+      3968,
+      4096
+     ],
+     "slice": 2,
+     "round": 5,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 32,
+     "rows": [
+      4096,
+      4224
+     ],
+     "slice": 4,
+     "round": 5,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 33,
+     "rows": [
+      4224,
+      4352
+     ],
+     "slice": 6,
+     "round": 5,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 34,
+     "rows": [
+      4352,
+      4480
+     ],
+     "slice": 8,
+     "round": 5,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 35,
+     "rows": [
+      4480,
+      4608
+     ],
+     "slice": 10,
+     "round": 5,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 36,
+     "rows": [
+      4608,
+      4736
+     ],
+     "slice": 0,
+     "round": 6,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 37,
+     "rows": [
+      4736,
+      4864
+     ],
+     "slice": 2,
+     "round": 6,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 38,
+     "rows": [
+      4864,
+      4992
+     ],
+     "slice": 4,
+     "round": 6,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 39,
+     "rows": [
+      4992,
+      5120
+     ],
+     "slice": 6,
+     "round": 6,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 40,
+     "rows": [
+      5120,
+      5248
+     ],
+     "slice": 8,
+     "round": 6,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 41,
+     "rows": [
+      5248,
+      5376
+     ],
+     "slice": 10,
+     "round": 6,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 42,
+     "rows": [
+      5376,
+      5504
+     ],
+     "slice": 0,
+     "round": 7,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 43,
+     "rows": [
+      5504,
+      5632
+     ],
+     "slice": 2,
+     "round": 7,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 44,
+     "rows": [
+      5632,
+      5760
+     ],
+     "slice": 4,
+     "round": 7,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 45,
+     "rows": [
+      5760,
+      5888
+     ],
+     "slice": 6,
+     "round": 7,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 46,
+     "rows": [
+      5888,
+      6016
+     ],
+     "slice": 8,
+     "round": 7,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 47,
+     "rows": [
+      6016,
+      6144
+     ],
+     "slice": 10,
+     "round": 7,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 48,
+     "rows": [
+      6144,
+      6272
+     ],
+     "slice": 0,
+     "round": 8,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 49,
+     "rows": [
+      6272,
+      6400
+     ],
+     "slice": 2,
+     "round": 8,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 50,
+     "rows": [
+      6400,
+      6528
+     ],
+     "slice": 4,
+     "round": 8,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 51,
+     "rows": [
+      6528,
+      6656
+     ],
+     "slice": 6,
+     "round": 8,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 52,
+     "rows": [
+      6656,
+      6784
+     ],
+     "slice": 8,
+     "round": 8,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 53,
+     "rows": [
+      6784,
+      6912
+     ],
+     "slice": 10,
+     "round": 8,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 54,
+     "rows": [
+      6912,
+      7040
+     ],
+     "slice": 0,
+     "round": 9,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 55,
+     "rows": [
+      7040,
+      7168
+     ],
+     "slice": 2,
+     "round": 9,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 56,
+     "rows": [
+      7168,
+      7296
+     ],
+     "slice": 4,
+     "round": 9,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 57,
+     "rows": [
+      7296,
+      7424
+     ],
+     "slice": 6,
+     "round": 9,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 58,
+     "rows": [
+      7424,
+      7552
+     ],
+     "slice": 8,
+     "round": 9,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 59,
+     "rows": [
+      7552,
+      7680
+     ],
+     "slice": 10,
+     "round": 9,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 60,
+     "rows": [
+      7680,
+      7808
+     ],
+     "slice": 0,
+     "round": 10,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 61,
+     "rows": [
+      7808,
+      7936
+     ],
+     "slice": 2,
+     "round": 10,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 62,
+     "rows": [
+      7936,
+      8064
+     ],
+     "slice": 4,
+     "round": 10,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 63,
+     "rows": [
+      8064,
+      8192
+     ],
+     "slice": 6,
+     "round": 10,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 64,
+     "rows": [
+      8192,
+      8320
+     ],
+     "slice": 8,
+     "round": 10,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 65,
+     "rows": [
+      8320,
+      8448
+     ],
+     "slice": 10,
+     "round": 10,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 66,
+     "rows": [
+      8448,
+      8576
+     ],
+     "slice": 0,
+     "round": 11,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 67,
+     "rows": [
+      8576,
+      8704
+     ],
+     "slice": 2,
+     "round": 11,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 68,
+     "rows": [
+      8704,
+      8832
+     ],
+     "slice": 4,
+     "round": 11,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 69,
+     "rows": [
+      8832,
+      8960
+     ],
+     "slice": 6,
+     "round": 11,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 70,
+     "rows": [
+      8960,
+      9088
+     ],
+     "slice": 8,
+     "round": 11,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 71,
+     "rows": [
+      9088,
+      9216
+     ],
+     "slice": 10,
+     "round": 11,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 72,
+     "rows": [
+      9216,
+      9344
+     ],
+     "slice": 0,
+     "round": 12,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 73,
+     "rows": [
+      9344,
+      9472
+     ],
+     "slice": 2,
+     "round": 12,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 74,
+     "rows": [
+      9472,
+      9600
+     ],
+     "slice": 4,
+     "round": 12,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 75,
+     "rows": [
+      9600,
+      9728
+     ],
+     "slice": 6,
+     "round": 12,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 76,
+     "rows": [
+      9728,
+      9856
+     ],
+     "slice": 8,
+     "round": 12,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 77,
+     "rows": [
+      9856,
+      9984
+     ],
+     "slice": 10,
+     "round": 12,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 78,
+     "rows": [
+      9984,
+      10112
+     ],
+     "slice": 0,
+     "round": 13,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 79,
+     "rows": [
+      10112,
+      10240
+     ],
+     "slice": 2,
+     "round": 13,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 80,
+     "rows": [
+      10240,
+      10368
+     ],
+     "slice": 4,
+     "round": 13,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 81,
+     "rows": [
+      10368,
+      10496
+     ],
+     "slice": 6,
+     "round": 13,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 82,
+     "rows": [
+      10496,
+      10624
+     ],
+     "slice": 8,
+     "round": 13,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 83,
+     "rows": [
+      10624,
+      10752
+     ],
+     "slice": 10,
+     "round": 13,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 84,
+     "rows": [
+      10752,
+      10880
+     ],
+     "slice": 0,
+     "round": 14,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 85,
+     "rows": [
+      10880,
+      11008
+     ],
+     "slice": 2,
+     "round": 14,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 86,
+     "rows": [
+      11008,
+      11136
+     ],
+     "slice": 4,
+     "round": 14,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 87,
+     "rows": [
+      11136,
+      11264
+     ],
+     "slice": 6,
+     "round": 14,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 88,
+     "rows": [
+      11264,
+      11392
+     ],
+     "slice": 8,
+     "round": 14,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 89,
+     "rows": [
+      11392,
+      11520
+     ],
+     "slice": 10,
+     "round": 14,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 90,
+     "rows": [
+      11520,
+      11648
+     ],
+     "slice": 0,
+     "round": 15,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 91,
+     "rows": [
+      11648,
+      11776
+     ],
+     "slice": 2,
+     "round": 15,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 92,
+     "rows": [
+      11776,
+      11904
+     ],
+     "slice": 4,
+     "round": 15,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 93,
+     "rows": [
+      11904,
+      12032
+     ],
+     "slice": 6,
+     "round": 15,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 94,
+     "rows": [
+      12032,
+      12160
+     ],
+     "slice": 8,
+     "round": 15,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 95,
+     "rows": [
+      12160,
+      12288
+     ],
+     "slice": 10,
+     "round": 15,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 96,
+     "rows": [
+      12288,
+      12416
+     ],
+     "slice": 0,
+     "round": 16,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 97,
+     "rows": [
+      12416,
+      12544
+     ],
+     "slice": 2,
+     "round": 16,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 98,
+     "rows": [
+      12544,
+      12672
+     ],
+     "slice": 4,
+     "round": 16,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 99,
+     "rows": [
+      12672,
+      12800
+     ],
+     "slice": 6,
+     "round": 16,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 100,
+     "rows": [
+      12800,
+      12928
+     ],
+     "slice": 8,
+     "round": 16,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 101,
+     "rows": [
+      12928,
+      13056
+     ],
+     "slice": 10,
+     "round": 16,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 102,
+     "rows": [
+      13056,
+      13184
+     ],
+     "slice": 0,
+     "round": 17,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 103,
+     "rows": [
+      13184,
+      13312
+     ],
+     "slice": 2,
+     "round": 17,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 104,
+     "rows": [
+      13312,
+      13440
+     ],
+     "slice": 4,
+     "round": 17,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 105,
+     "rows": [
+      13440,
+      13568
+     ],
+     "slice": 6,
+     "round": 17,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 106,
+     "rows": [
+      13568,
+      13696
+     ],
+     "slice": 8,
+     "round": 17,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 107,
+     "rows": [
+      13696,
+      13824
+     ],
+     "slice": 10,
+     "round": 17,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 108,
+     "rows": [
+      13824,
+      13952
+     ],
+     "slice": 0,
+     "round": 18,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 109,
+     "rows": [
+      13952,
+      14080
+     ],
+     "slice": 2,
+     "round": 18,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 110,
+     "rows": [
+      14080,
+      14208
+     ],
+     "slice": 4,
+     "round": 18,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 111,
+     "rows": [
+      14208,
+      14336
+     ],
+     "slice": 6,
+     "round": 18,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 112,
+     "rows": [
+      14336,
+      14464
+     ],
+     "slice": 8,
+     "round": 18,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 113,
+     "rows": [
+      14464,
+      14592
+     ],
+     "slice": 10,
+     "round": 18,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 114,
+     "rows": [
+      14592,
+      14720
+     ],
+     "slice": 0,
+     "round": 19,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 115,
+     "rows": [
+      14720,
+      14848
+     ],
+     "slice": 2,
+     "round": 19,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 116,
+     "rows": [
+      14848,
+      14976
+     ],
+     "slice": 4,
+     "round": 19,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 117,
+     "rows": [
+      14976,
+      15104
+     ],
+     "slice": 6,
+     "round": 19,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 118,
+     "rows": [
+      15104,
+      15232
+     ],
+     "slice": 8,
+     "round": 19,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 119,
+     "rows": [
+      15232,
+      15360
+     ],
+     "slice": 10,
+     "round": 19,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 120,
+     "rows": [
+      15360,
+      15488
+     ],
+     "slice": 0,
+     "round": 20,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 121,
+     "rows": [
+      15488,
+      15616
+     ],
+     "slice": 2,
+     "round": 20,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 122,
+     "rows": [
+      15616,
+      15744
+     ],
+     "slice": 4,
+     "round": 20,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 123,
+     "rows": [
+      15744,
+      15872
+     ],
+     "slice": 6,
+     "round": 20,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 124,
+     "rows": [
+      15872,
+      16000
+     ],
+     "slice": 8,
+     "round": 20,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 125,
+     "rows": [
+      16000,
+      16128
+     ],
+     "slice": 10,
+     "round": 20,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 126,
+     "rows": [
+      16128,
+      16256
+     ],
+     "slice": 0,
+     "round": 21,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 127,
+     "rows": [
+      16256,
+      16384
+     ],
+     "slice": 2,
+     "round": 21,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 128,
+     "rows": [
+      16384,
+      16512
+     ],
+     "slice": 4,
+     "round": 21,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 129,
+     "rows": [
+      16512,
+      16640
+     ],
+     "slice": 6,
+     "round": 21,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 130,
+     "rows": [
+      16640,
+      16768
+     ],
+     "slice": 8,
+     "round": 21,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 131,
+     "rows": [
+      16768,
+      16896
+     ],
+     "slice": 10,
+     "round": 21,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 132,
+     "rows": [
+      16896,
+      17024
+     ],
+     "slice": 0,
+     "round": 22,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 133,
+     "rows": [
+      17024,
+      17152
+     ],
+     "slice": 2,
+     "round": 22,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 134,
+     "rows": [
+      17152,
+      17280
+     ],
+     "slice": 4,
+     "round": 22,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 135,
+     "rows": [
+      17280,
+      17408
+     ],
+     "slice": 6,
+     "round": 22,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 136,
+     "rows": [
+      17408,
+      17536
+     ],
+     "slice": 8,
+     "round": 22,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 137,
+     "rows": [
+      17536,
+      17664
+     ],
+     "slice": 10,
+     "round": 22,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 138,
+     "rows": [
+      17664,
+      17792
+     ],
+     "slice": 0,
+     "round": 23,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 139,
+     "rows": [
+      17792,
+      17920
+     ],
+     "slice": 2,
+     "round": 23,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 140,
+     "rows": [
+      17920,
+      18048
+     ],
+     "slice": 4,
+     "round": 23,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 141,
+     "rows": [
+      18048,
+      18176
+     ],
+     "slice": 6,
+     "round": 23,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 142,
+     "rows": [
+      18176,
+      18304
+     ],
+     "slice": 8,
+     "round": 23,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 143,
+     "rows": [
+      18304,
+      18432
+     ],
+     "slice": 10,
+     "round": 23,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 144,
+     "rows": [
+      18432,
+      18560
+     ],
+     "slice": 0,
+     "round": 24,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 145,
+     "rows": [
+      18560,
+      18688
+     ],
+     "slice": 2,
+     "round": 24,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 146,
+     "rows": [
+      18688,
+      18816
+     ],
+     "slice": 4,
+     "round": 24,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 147,
+     "rows": [
+      18816,
+      18944
+     ],
+     "slice": 6,
+     "round": 24,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    },
+    {
+     "block": 148,
+     "rows": [
+      18944,
+      18992
+     ],
+     "slice": 8,
+     "round": 24,
+     "pair": null,
+     "mode": "L9 receiver (sender 2t+1)"
+    }
+   ]
+  },
+  "residual": {
+   "blocks_per_slice": [
+    [
+     0,
+     12,
+     24
+    ],
+    [
+     1,
+     13,
+     25
+    ],
+    [
+     2,
+     14,
+     26
+    ],
+    [
+     3,
+     15,
+     27
+    ],
+    [
+     4,
+     16,
+     28
+    ],
+    [
+     5,
+     17,
+     29
+    ],
+    [
+     6,
+     18,
+     30
+    ],
+    [
+     7,
+     19,
+     31
+    ],
+    [
+     8,
+     20
+    ],
+    [
+     9,
+     21
+    ],
+    [
+     10,
+     22
+    ],
+    [
+     11,
+     23
+    ]
+   ],
+   "rule": "= o / down ownership (residual add slice-local)"
+  },
+  "sources": {
+   "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/token_source_plan.json": "fd2668d9a4fb869fe702c88e63e9b0877a100ee0165757f315aab23f9dba3d45"
+  }
+ },
+ "vm": {
+  "X": {
+   "base": 0,
+   "size": 384,
+   "what": "residual x rows (owned o / down blocks, ascending global block)"
+  },
+  "SSX": {
+   "base": 384,
+   "size": 16,
+   "what": "root: the 32-slot total spill (ROOT ss; unused with fuse 1)"
+  },
+  "RX": {
+   "base": 400,
+   "size": 16,
+   "what": "rb landing: r = rsqrt(sum / 4096 + eps) (ROOT rx, every slice)"
+  }
+ },
+ "ages": {
+  "schema": "opentallas.qwen.dv-slice-ages.v1",
+  "ssq_psum_out": [
+   83,
+   99,
+   115
+  ],
+  "root_cfg_lead": 4,
+  "sc_hop_measured": 2,
+  "per_slice": {
+   "11": [
+    83,
+    99
+   ],
+   "1": [
+    83,
+    99,
+    115
+   ]
+  },
+  "source": "rtl/test/qwen_dv/dv_lower_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050); offsets = edge the PSUM j word leaves the slice dn_o (S<k>SD log) - (chain entry edge + cmd arrival)",
+  "root_cfg_lead_note": "structural: the root slots clear on the ROOT cfg edge; PSUMs land >= 4 edges later"
+ },
+ "isa": {
+  "ssq_pcs": [
+   0,
+   15,
+   23
+  ],
+  "rsqrt": [
+   {
+    "pc": 2,
+    "k": 12,
+    "eps": 897988541,
+    "src": 14240
+   },
+   {
+    "pc": 17,
+    "k": 12,
+    "eps": 897988541,
+    "src": 14240
+   }
+  ],
+  "sums": [
+   14240
+  ]
+ },
+ "prog": {
+  "0": [
+   "0000000000000000000001980000140000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  ],
+  "1": [
+   "0000000000000000000001980000340000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  ],
+  "2": [
+   "0000000000000000000001980000540000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  ],
+  "3": [
+   "0000000000000000000001980000740000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  ],
+  "4": [
+   "0000000000000000000001980000940000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  ],
+  "5": [
+   "0000000000000000000001980000b40000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  ],
+  "6": [
+   "0000000000000000000001980000d40000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  ],
+  "7": [
+   "0000000000000000000001980000f40000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  ],
+  "8": [
+   "0000000000000000000001980001140000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+  ],
+  "9": [
+   "0000000000000000000001980001340000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+  ],
+  "10": [
+   "0000000000000000000001980001540000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+  ],
+  "11": [
+   "0000000000000000000001980001740000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+  ]
+ },
+ "prog_stream": {
+  "0": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980000140000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+   }
+  ],
+  "1": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980000340000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+   }
+  ],
+  "2": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980000540000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+   }
+  ],
+  "3": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980000740000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+   }
+  ],
+  "4": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980000940000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+   }
+  ],
+  "5": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980000b40000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+   }
+  ],
+  "6": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980000d40000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+   }
+  ],
+  "7": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980000f40000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+   }
+  ],
+  "8": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980001140000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+   }
+  ],
+  "9": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980001340000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+   }
+  ],
+  "10": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980001540000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+   }
+  ],
+  "11": [
+   {
+    "eaddr": 0,
+    "payload": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001980001740000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+   }
+  ]
+ },
+ "ssq": {
+  "0": {
+   "pidx": 0,
+   "blocks": [
+    0,
+    12,
+    24
+   ],
+   "tags": [
+    0,
+    12,
+    24
+   ],
+   "word": "0000000000000000000001980000140000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  },
+  "1": {
+   "pidx": 0,
+   "blocks": [
+    1,
+    13,
+    25
+   ],
+   "tags": [
+    1,
+    13,
+    25
+   ],
+   "word": "0000000000000000000001980000340000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  },
+  "2": {
+   "pidx": 0,
+   "blocks": [
+    2,
+    14,
+    26
+   ],
+   "tags": [
+    2,
+    14,
+    26
+   ],
+   "word": "0000000000000000000001980000540000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  },
+  "3": {
+   "pidx": 0,
+   "blocks": [
+    3,
+    15,
+    27
+   ],
+   "tags": [
+    3,
+    15,
+    27
+   ],
+   "word": "0000000000000000000001980000740000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  },
+  "4": {
+   "pidx": 0,
+   "blocks": [
+    4,
+    16,
+    28
+   ],
+   "tags": [
+    4,
+    16,
+    28
+   ],
+   "word": "0000000000000000000001980000940000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  },
+  "5": {
+   "pidx": 0,
+   "blocks": [
+    5,
+    17,
+    29
+   ],
+   "tags": [
+    5,
+    17,
+    29
+   ],
+   "word": "0000000000000000000001980000b40000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  },
+  "6": {
+   "pidx": 0,
+   "blocks": [
+    6,
+    18,
+    30
+   ],
+   "tags": [
+    6,
+    18,
+    30
+   ],
+   "word": "0000000000000000000001980000d40000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  },
+  "7": {
+   "pidx": 0,
+   "blocks": [
+    7,
+    19,
+    31
+   ],
+   "tags": [
+    7,
+    19,
+    31
+   ],
+   "word": "0000000000000000000001980000f40000000000000000000000000000000000000000000000000000000000000004000200000000004000006"
+  },
+  "8": {
+   "pidx": 0,
+   "blocks": [
+    8,
+    20
+   ],
+   "tags": [
+    8,
+    20
+   ],
+   "word": "0000000000000000000001980001140000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+  },
+  "9": {
+   "pidx": 0,
+   "blocks": [
+    9,
+    21
+   ],
+   "tags": [
+    9,
+    21
+   ],
+   "word": "0000000000000000000001980001340000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+  },
+  "10": {
+   "pidx": 0,
+   "blocks": [
+    10,
+    22
+   ],
+   "tags": [
+    10,
+    22
+   ],
+   "word": "0000000000000000000001980001540000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+  },
+  "11": {
+   "pidx": 0,
+   "blocks": [
+    11,
+    23
+   ],
+   "tags": [
+    11,
+    23
+   ],
+   "word": "0000000000000000000001980001740000000000000000000000000000000000000000000000000000000000000004000200000000004000004"
+  }
+ },
+ "ssq_entry": {
+  "11": 42,
+  "10": 43,
+  "9": 44,
+  "8": 45,
+  "7": 46,
+  "6": 47,
+  "5": 48,
+  "4": 49,
+  "3": 50,
+  "2": 51,
+  "1": 52,
+  "0": 53
+ },
+ "root": {
+  "slice": 0,
+  "nb": 32,
+  "k": 12,
+  "eps": 897988541,
+  "rx": 400,
+  "ss": 384
+ },
+ "commands": [
+  {
+   "edge": 0,
+   "cmd": "0000000000000000000000000000f",
+   "label": "SETID 0"
+  },
+  {
+   "edge": 26,
+   "cmd": "00000c358637bd0001908000c0417",
+   "label": "ROOT s0 (root, fused r)"
+  },
+  {
+   "edge": 27,
+   "cmd": "100000000000000001900000c0407",
+   "label": "ROOT s1"
+  },
+  {
+   "edge": 28,
+   "cmd": "200000000000000001900000c0407",
+   "label": "ROOT s2"
+  },
+  {
+   "edge": 29,
+   "cmd": "300000000000000001900000c0407",
+   "label": "ROOT s3"
+  },
+  {
+   "edge": 30,
+   "cmd": "400000000000000001900000c0407",
+   "label": "ROOT s4"
+  },
+  {
+   "edge": 31,
+   "cmd": "500000000000000001900000c0407",
+   "label": "ROOT s5"
+  },
+  {
+   "edge": 32,
+   "cmd": "600000000000000001900000c0407",
+   "label": "ROOT s6"
+  },
+  {
+   "edge": 33,
+   "cmd": "700000000000000001900000c0407",
+   "label": "ROOT s7"
+  },
+  {
+   "edge": 34,
+   "cmd": "800000000000000001900000c0407",
+   "label": "ROOT s8"
+  },
+  {
+   "edge": 35,
+   "cmd": "900000000000000001900000c0407",
+   "label": "ROOT s9"
+  },
+  {
+   "edge": 36,
+   "cmd": "a00000000000000001900000c0407",
+   "label": "ROOT s10"
+  },
+  {
+   "edge": 37,
+   "cmd": "b00000000000000001900000c0407",
+   "label": "ROOT s11"
+  },
+  {
+   "edge": 42,
+   "cmd": "b0000000000000000000000000003",
+   "label": "SSQ s11 blocks [11, 23]"
+  },
+  {
+   "edge": 43,
+   "cmd": "a0000000000000000000000000003",
+   "label": "SSQ s10 blocks [10, 22]"
+  },
+  {
+   "edge": 44,
+   "cmd": "90000000000000000000000000003",
+   "label": "SSQ s9 blocks [9, 21]"
+  },
+  {
+   "edge": 45,
+   "cmd": "80000000000000000000000000003",
+   "label": "SSQ s8 blocks [8, 20]"
+  },
+  {
+   "edge": 46,
+   "cmd": "70000000000000000000000000003",
+   "label": "SSQ s7 blocks [7, 19, 31]"
+  },
+  {
+   "edge": 47,
+   "cmd": "60000000000000000000000000003",
+   "label": "SSQ s6 blocks [6, 18, 30]"
+  },
+  {
+   "edge": 48,
+   "cmd": "50000000000000000000000000003",
+   "label": "SSQ s5 blocks [5, 17, 29]"
+  },
+  {
+   "edge": 49,
+   "cmd": "40000000000000000000000000003",
+   "label": "SSQ s4 blocks [4, 16, 28]"
+  },
+  {
+   "edge": 50,
+   "cmd": "30000000000000000000000000003",
+   "label": "SSQ s3 blocks [3, 15, 27]"
+  },
+  {
+   "edge": 51,
+   "cmd": "20000000000000000000000000003",
+   "label": "SSQ s2 blocks [2, 14, 26]"
+  },
+  {
+   "edge": 52,
+   "cmd": "10000000000000000000000000003",
+   "label": "SSQ s1 blocks [1, 13, 25]"
+  },
+  {
+   "edge": 53,
+   "cmd": "00000000000000000000000000003",
+   "label": "SSQ s0 blocks [0, 12, 24]"
+  }
+ ],
+ "expected": {
+  "last_psum_leaves_root_dn": 189,
+  "collisions": []
+ },
+ "not_lowered": [
+  "norm apply h = (x r) g + BF16 stream (CROM gains, window 01 x packer)",
+  "residual adds (AR landings, PORTS)",
+  "QK-norm / RoPE on the qkv receiver slices",
+  "STN commands of qkv / o / gate-up / down / LM head",
+  "XC collectives",
+  "SiLU x up",
+  "LM-head AMAX",
+  "stage-0 slice commands (embedding landing em_base)"
+ ],
+ "die_gaps": [
+  "dvs_W5.st_wi is tied 1088'h0 on the die (dv_case chain-end idle rule) and no master emits stream table words (kinds 1..3): the slice PROG / CROM / BTAB stores have NO load path on the die; this image reaches them only in a bench that drives W5.st_wi"
+ ]
+}

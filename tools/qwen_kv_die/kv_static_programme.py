@@ -62,9 +62,15 @@ from tools.qwen_kv_die import static_kv_calendar as SKC    # noqa: E402
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = SKC.GROUP_ORDER                                     # landing group order inside a stack strip
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
-LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--txd-c', '1,1,1,2', '--txd-k', '1,2,1,1',
+# ROOT-QLINE 10-18: the SAME compile as the committed production image rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh
+# (tools/qwen_split/d2d_cal_image_production.sh, QXF-LINK 6ef1a097f): die seam stages + the LAYERBENCH compiled token path,
+# so target 11 (KV sequencer init) loads exactly the calendar the RTL image / D2D_TXDP_K were compiled from.  The old
+# '--txd-c 1,1,1,2 --txd-k 1,2,1,1' args predate the compiled TXDP and no longer match the image.
+LINK_DIE_STAGES = '2,2,2,2,2,2/11,11,9,9,9,11,11'   # QLB-C4 10-18: SC_TX 2 (dv2f14bq SEAMC tx_record age 2)
+LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
+LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES,
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
-             '--pinreg']                                    # tools/qwen_kv_die/chain/kvsys_prep.sh OT_KV_SEQ_STATIC
+             '--pinreg']                                    # + --token-path (decompressed in link_calendar)
 T_MAX = 8192
 CORE_U, HBM_U = 625, 768
 XU_STRICT = CORE_U + 1          # phase launch: toggle 1 core edge after capture; first HBM edge strictly after it
@@ -96,8 +102,12 @@ def _sfi():
 
 
 def link_calendar(workdir):
+    import gzip
     out = Path(workdir) / 'cal'
-    p = subprocess.run([sys.executable, str(ROOT / 'tools/qwen_split/d2d_link_calendar.py'), '--out', str(out)] + LINK_ARGS,
+    tp = Path(workdir) / 'token_path_compiled.json'
+    tp.write_bytes(gzip.decompress((ROOT / LINK_TOKEN_PATH).read_bytes()))
+    p = subprocess.run([sys.executable, str(ROOT / 'tools/qwen_split/d2d_link_calendar.py'), '--out', str(out)] + LINK_ARGS
+                       + ['--token-path', str(tp)],
                        cwd=ROOT, capture_output=True, text=True)
     if p.returncode:
         raise SystemExit('link calendar compile failed: ' + p.stderr[-2000:])
@@ -480,7 +490,9 @@ def pacing_of(put):
 
 
 # ---- the compile -------------------------------------------------------------------------------------------------------
-def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
+def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_words=None):
+    # die_cfg_words: the pre-boot target-10 image (kv_static_kvjf_join.die_cfg_image from a die plan's ECTL cfg + reset
+    # delays); without it the bundle carries targets 0..9, 11..13 and the die plan supplies target 10
     sfi = _sfi()
     prog = program_words or sfi.bench_program()
     if len(prog) != sfi.PW + sfi.DW:
@@ -680,6 +692,10 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
               dict(target=3, program=own, descriptors=[]), dict(target=4, program=landing_words, descriptors=[]),
               dict(target=5, program=front_words, descriptors=[])] + \
              [dict(target=t_, program=ctrl_targets[t_], descriptors=[]) for t_ in (6, 7, 8, 9)] + \
+             [dict(target=LINK_CFG_TARGET, program=link_words, descriptors=[]),        # KVJ-G2b: the HOST loader +
+              dict(target=ES_CFG_TARGETS[0], program=es_pc, descriptors=[]),          # bundle encoder accept 10..13
+              dict(target=ES_CFG_TARGETS[1], program=es_beat, descriptors=[])] + \
+             ([dict(target=10, program=list(die_cfg_words), descriptors=[])] if die_cfg_words else []) + \
              [dict(target=0, program=prog[:sfi_pw], descriptors=prog[sfi_pw:])]
     bundle = PTF.encode_boot_bundle(epoch, images)
     if int(bundle['images'][-1]['digest'], 16) != digest:
@@ -693,8 +709,8 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
                 writer=dict(slots=t, stop=stop, words=writer_words), ownership=dict(words=own, go='token start (assumed)'),
                 groups=group, landing_words=landing_words, front_words=front_words, controller=ctrl, controller_targets=ctrl_targets,
                 attention=att, phase=phase, images=images, bundle=bundle,
-                # dispatcher target 11 (LINKCFG=1, order 1..9, 11, 0); not in the HOST class-8 bundle yet: the HOST
-                # loader / program_target_frames accept targets 0..9 only (same as the DIECFG target 10)
+                # dispatcher target 11 (LINKCFG=1, order 1..9, 11, 0); in the HOST class-8 bundle (KVJ-G2b: the HOST
+                # loader / program_target_frames accept targets 0..13; target 10 = pass 1 from the die plan)
                 link_cfg=dict(target=LINK_CFG_TARGET, program=link_words),
                 # dispatcher targets 12 / 13 (ESCFG=1, order 1..9, 11, 12, 13, 0): the KVJ-C3 PC chain root + join4_cal
                 # calendar constants (kvjc3_pc_chain.boot_words at ctrl_lat ES_CFG_CTRL_LAT, relays 0); same HOST note

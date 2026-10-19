@@ -1,0 +1,35 @@
+COLLQ missing write q0 b0 cyc169
+COLLQ missing write q0 b0 cyc175
+COLLQ missing write q0 b0 cyc181
+COLLQ missing write q0 b0 cyc187
+COLLQ missing write q0 b0 cyc193
+COLLQ missing write q0 b0 cyc199
+COLLQ missing write q0 b0 cyc205
+COLLQ missing write q0 b0 cyc211
+COLLQ missing write q0 b0 cyc217
+COLLQ missing write q0 b0 cyc469
+COLLQ missing write q0 b0 cyc475
+COLLQ missing write q0 b0 cyc481
+COLLQ missing write q0 b0 cyc619
+COLLQ missing write q0 b0 cyc631
+COLLQ missing write q0 b0 cyc769
+COLLQ missing write q0 b0 cyc775
+COLLQ missing write q0 b0 cyc781
+COLLQ missing write q0 b0 cyc787
+COLLQ missing write q0 b0 cyc793
+COLLQ missing write q0 b0 cyc799
+COLLQ missing write q0 b0 cyc805
+COLLQ missing write q0 b0 cyc949
+COLLQ missing write q0 b0 cyc1069
+COLLQ missing write q0 b0 cyc1075
+COLLQ missing write q0 b0 cyc1081
+COLLQ missing write q0 b0 cyc1087
+COLLQ missing write q0 b0 cyc1093
+COLLQ missing write q0 b0 cyc1099
+COLLQ missing write q0 b0 cyc1105
+COLLQ missing write q0 b0 cyc1111
+COLLQ FAIL errors=1784
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:278: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 0.140 s; speed 14.497 us/s
+- Verilator: cpu 0.141 s on 1 threads; alloced 1023 MB

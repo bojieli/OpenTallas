@@ -94,19 +94,13 @@
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 28% outside 45%-60% (std 1269 + macro 11682 in core 46614 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/ref_tile/dsdv_sh_vc/bnd_branch.tcl",
   "physical/ref_tile/dsdv_sh_vc/kit.env",
   "physical/ref_tile/dsdv_sh_vc/clock.sdc",
   "physical/ref_tile/dsdv_sh_vc/signoff.sdc",

@@ -12,6 +12,66 @@
     "verdict": "AR_MODE",
     "source": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
     "reason": "AR only by the owner's decision (2026-10-05, results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json verdict AR_MODE): the Qwen3-8B ROM is compute-balanced (weight read rate = MAC rate), so a multi-position verify costs about as much per position as an AR layer and DSpark measured below AR (best np3: 0.691-0.744x AR). DSpark stays built and exact but off; speculation pays only where the dominant per-token cost is shared across positions (the DS ROM and the HBM accelerator)."
+   },
+   "composition_1018": {
+    "ar": {
+     "available": true,
+     "banner": "0.8% of token cycles measured on current RTL (98.4% on older RTL, 0.1% modelled PHY, 0.7% priced)",
+     "pct_measured_current_rtl": 0.8,
+     "tok_s": 4766.5,
+     "T_token_cycles": 251759.0,
+     "per_accepted_cycles": 251759.0,
+     "tau": null,
+     "by_grade": {
+      "measured-current-RTL": 2016.0,
+      "measured-old-RTL": 247743.0,
+      "modelled-PHY": 360.0,
+      "priced": 1640.0
+     },
+     "by_kind": {
+      "layer": 170487.0,
+      "xdie": 81272.0,
+      "adjust": 0
+     },
+     "price_of_record": {
+      "tok_s": 4810.9,
+      "cycles": 249431.0,
+      "source": "results/rtl/qwen_layer_tput_1013/record.json end_to_end.base_cycles (6,835-cycle production layer)"
+     },
+     "vs_price_pct": -0.92,
+     "o_rule": "O from the 10-13 die run op-fetch window partition (TP4 reference vehicle); no dv2f14+kvs14c co-sim yet",
+     "title": "Qwen3-8B ROM (compute dies + KV die + D2D), 8K context, AR",
+     "xdie_top": [
+      {
+       "x": "tp_allreduce",
+       "exposed": 78624.0,
+       "by_grade": {
+        "measured-old-RTL": 78624.0
+       }
+      },
+      {
+       "x": "d2d_attention",
+       "exposed": 2376.0,
+       "by_grade": {
+        "measured-current-RTL": 2016.0,
+        "modelled-PHY": 360.0
+       }
+      },
+      {
+       "x": "kv_embedding",
+       "exposed": 272.0,
+       "by_grade": {
+        "priced": 272.0
+       }
+      }
+     ],
+     "record": "results/arch/token_path_1018/qwen_rom.json",
+     "tool": "tools/token_compose_xdie.py"
+    },
+    "mtp": {
+     "available": false,
+     "reason": "AR only (owner 2026-10-05 AR_MODE: DSpark measured below AR on the compute-balanced ROM)"
+    }
    }
   },
   {
@@ -28,6 +88,218 @@
     "step_cycles": 1146896.4,
     "per_accepted_cycles": 275762.5,
     "reason": null
+   },
+   "composition_1018": {
+    "ar": {
+     "available": true,
+     "banner": "10.2% of token cycles measured on current RTL (60.9% on older RTL, 17.6% modelled PHY, 11.3% priced)",
+     "pct_measured_current_rtl": 10.18,
+     "tok_s": 1224.1,
+     "T_token_cycles": 980312.6,
+     "per_accepted_cycles": 980312.6,
+     "tau": null,
+     "by_grade": {
+      "measured-current-RTL": 99813.0,
+      "measured-old-RTL": 596814.7,
+      "modelled-PHY": 172975.0,
+      "priced": 110709.9
+     },
+     "by_kind": {
+      "layer": 630459.0,
+      "xdie": 323306.0,
+      "adjust": 26547.6
+     },
+     "price_of_record": {
+      "tok_s": 1342.9,
+      "cycles": 893604.3,
+      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+      "uncorrected_tok_s": 1365.7,
+      "scan_stacks_correction_cycles": 14934.0
+     },
+     "vs_price_pct": -8.85,
+     "o_rule": "O from the token-path DAG solve (critical / slack); no S81 die-run compiler schedule exists yet (TOKEN-PASS-S81 BLOCKED)",
+     "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, AR",
+     "xdie_top": [
+      {
+       "x": "unplaced_hops",
+       "exposed": 69130.0,
+       "by_grade": {
+        "measured-current-RTL": 32736.0,
+        "modelled-PHY": 28086.0,
+        "priced": 8308.0
+       }
+      },
+      {
+       "x": "attn.out_allreduce",
+       "exposed": 59200.0,
+       "by_grade": {
+        "measured-current-RTL": 12240.0,
+        "modelled-PHY": 36240.0,
+        "priced": 10720.0
+       }
+      },
+      {
+       "x": "ffn.combine_allreduce",
+       "exposed": 59200.0,
+       "by_grade": {
+        "measured-current-RTL": 12240.0,
+        "modelled-PHY": 36240.0,
+        "priced": 10720.0
+       }
+      },
+      {
+       "x": "substage_hop0",
+       "exposed": 44600.0,
+       "by_grade": {
+        "measured-current-RTL": 21120.0,
+        "modelled-PHY": 18120.0,
+        "priced": 5360.0
+       }
+      },
+      {
+       "x": "attn.a_allgather",
+       "exposed": 27880.0,
+       "by_grade": {
+        "measured-current-RTL": 4400.0,
+        "modelled-PHY": 18120.0,
+        "priced": 5360.0
+       }
+      },
+      {
+       "x": "ffn.router_allgather",
+       "exposed": 27600.0,
+       "by_grade": {
+        "measured-current-RTL": 4120.0,
+        "modelled-PHY": 18120.0,
+        "priced": 5360.0
+       }
+      },
+      {
+       "x": "substage_hop1",
+       "exposed": 18955.0,
+       "by_grade": {
+        "measured-current-RTL": 8976.0,
+        "modelled-PHY": 7701.0,
+        "priced": 2278.0
+       }
+      },
+      {
+       "x": "attn.rows_allgather",
+       "exposed": 6904.0,
+       "by_grade": {
+        "measured-current-RTL": 2208.0,
+        "modelled-PHY": 3624.0,
+        "priced": 1072.0
+       }
+      }
+     ],
+     "record": "results/arch/token_path_1018/ds_rom.json",
+     "tool": "tools/token_compose_xdie.py"
+    },
+    "mtp": {
+     "available": true,
+     "banner": "7.9% of token cycles measured on current RTL (67.4% on older RTL, 14.0% modelled PHY, 10.7% priced)",
+     "pct_measured_current_rtl": 7.92,
+     "tok_s": 3711.7,
+     "T_token_cycles": 1344614.8,
+     "per_accepted_cycles": 323302.4,
+     "tau": 4.159,
+     "by_grade": {
+      "measured-current-RTL": 106512.0,
+      "measured-old-RTL": 906844.8,
+      "modelled-PHY": 187823.6,
+      "priced": 143434.4
+     },
+     "by_kind": {
+      "layer": 963352.1,
+      "xdie": 348337.6,
+      "adjust": 32925.1
+     },
+     "price_of_record": {
+      "tok_s": 3938.8,
+      "cycles": 1267096.5,
+      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+      "uncorrected_tok_s": 4045.4,
+      "scan_stacks_correction_cycles": 33399.0
+     },
+     "vs_price_pct": -5.77,
+     "o_rule": "O from the token-path DAG solve (critical / slack); no S81 die-run compiler schedule exists yet (TOKEN-PASS-S81 BLOCKED)",
+     "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, MTP (DSpark, tau 4.159)",
+     "xdie_top": [
+      {
+       "x": "V.unplaced_hops",
+       "exposed": 69130.0,
+       "by_grade": {
+        "measured-current-RTL": 32736.0,
+        "modelled-PHY": 28086.0,
+        "priced": 8308.0
+       }
+      },
+      {
+       "x": "V.token.return",
+       "exposed": 2194.0,
+       "by_grade": {
+        "modelled-PHY": 2194.0
+       }
+      },
+      {
+       "x": "mtp.0.attn.out_allreduce",
+       "exposed": 1480.0,
+       "by_grade": {
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
+       }
+      },
+      {
+       "x": "mtp.0.ffn.combine_allreduce",
+       "exposed": 1480.0,
+       "by_grade": {
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
+       }
+      },
+      {
+       "x": "mtp.1.attn.out_allreduce",
+       "exposed": 1480.0,
+       "by_grade": {
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
+       }
+      },
+      {
+       "x": "mtp.1.ffn.combine_allreduce",
+       "exposed": 1480.0,
+       "by_grade": {
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
+       }
+      },
+      {
+       "x": "mtp.2.attn.out_allreduce",
+       "exposed": 1480.0,
+       "by_grade": {
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
+       }
+      },
+      {
+       "x": "mtp.2.ffn.combine_allreduce",
+       "exposed": 1480.0,
+       "by_grade": {
+        "measured-current-RTL": 306.0,
+        "modelled-PHY": 906.0,
+        "priced": 268.0
+       }
+      }
+     ],
+     "record": "results/arch/token_path_1018/ds_rom.json",
+     "tool": "tools/token_compose_xdie.py"
+    }
    }
   },
   {
@@ -44,6 +316,62 @@
     "step_cycles": 5382584.1,
     "per_accepted_cycles": 671983.0,
     "reason": null
+   },
+   "composition_1018": {
+    "ar": {
+     "available": true,
+     "banner": "6.9% of token cycles measured on current RTL (0.0% on older RTL, 0.1% modelled PHY, 93.0% priced)",
+     "pct_measured_current_rtl": 6.85,
+     "tok_s": 930.9,
+     "T_token_cycles": 1289007.9,
+     "per_accepted_cycles": 1289007.9,
+     "tau": null,
+     "by_grade": {
+      "measured-current-RTL": 88327.1,
+      "measured-old-RTL": 0,
+      "modelled-PHY": 1562.1,
+      "priced": 1199118.7
+     },
+     "by_kind": {
+      "layer": 1179176.5,
+      "xdie": 109831.4,
+      "adjust": 0
+     },
+     "price_of_record": {
+      "tok_s": 946.2,
+      "cycles": 1268221.8,
+      "source": "results/arch/token_path_1018/inputs/hbm_qwen_price_per_layer.json base.record"
+     },
+     "vs_price_pct": -1.61,
+     "o_rule": "O from the S2 compiler schedule (static_schedule.json base.record); AR = realisable hypercube form (5 die links)",
+     "title": "HBM d4g GEN2 die, Qwen3-8B (TP8, 8 dies in package), 8K context, AR",
+     "xdie_top": [
+      {
+       "x": "Q_AR",
+       "exposed": 109584.0,
+       "by_grade": {
+        "measured-current-RTL": 88178.4,
+        "modelled-PHY": 1555.2,
+        "priced": 19850.4
+       }
+      },
+      {
+       "x": "argmax / LM head",
+       "exposed": 247.4,
+       "by_grade": {
+        "measured-current-RTL": 150.9,
+        "modelled-PHY": 4.0,
+        "priced": 92.5
+       }
+      }
+     ],
+     "record": "results/arch/token_path_1018/hbm_gen_qwen.json",
+     "tool": "tools/token_compose_xdie.py"
+    },
+    "mtp": {
+     "available": false,
+     "reason": "not priced on d4g: owner 10-16/18 HBM MTP parked (recorded, not blocking)"
+    }
    }
   },
   {
@@ -55,6 +383,139 @@
    "mtp": {
     "available": false,
     "reason": "AR only: the HGI compiler emits no DeepSeek DSpark (MTP) program yet. On the generic die the DSpark step runs as KERNEL doorbells (spec 6.11, entry 3) issued by the CP's backend operation translator, which is still open, so there is no compiled MTP record stream to show."
+   },
+   "composition_1018": {
+    "ar": {
+     "available": true,
+     "banner": "9.6% of token cycles measured on current RTL (0.0% on older RTL, 8.2% modelled PHY, 82.2% priced)",
+     "pct_measured_current_rtl": 9.59,
+     "tok_s": 1993.8,
+     "T_token_cycles": 601855.9,
+     "per_accepted_cycles": 601855.9,
+     "tau": null,
+     "by_grade": {
+      "measured-current-RTL": 57738.4,
+      "measured-old-RTL": 0,
+      "modelled-PHY": 49446.7,
+      "priced": 494670.8
+     },
+     "by_kind": {
+      "layer": 458493.3,
+      "xdie": 143362.6,
+      "adjust": 0
+     },
+     "price_of_record": {
+      "tok_s": 1905.4,
+      "cycles": 629775.1,
+      "source": "results/arch/token_path_1018/inputs/hbm_ds_priced_layers_all.json"
+     },
+     "vs_price_pct": 4.64,
+     "o_rule": "O from the S2 compiler schedule of record (priced_layers.py: the HBMDS vehicle's schedule contract)",
+     "title": "HBM d4g GEN2 die, DeepSeek-V4.1 (TP96 x quadrants), 1M context, AR",
+     "xdie_top": [
+      {
+       "x": "attn_out y / ffn_out yf",
+       "exposed": 39558.1,
+       "by_grade": {
+        "measured-current-RTL": 14888.0,
+        "modelled-PHY": 19792.0,
+        "priced": 4878.4
+       }
+      },
+      {
+       "x": "o-group reduce-mcast (8 contributors)",
+       "exposed": 26103.8,
+       "by_grade": {
+        "measured-current-RTL": 12973.2,
+        "modelled-PHY": 11078.4,
+        "priced": 2052.0
+       }
+      },
+      {
+       "x": "priced:selected compressed-KV rows to the head dies",
+       "exposed": 21547.0,
+       "by_grade": {
+        "priced": 21546.8
+       }
+      },
+      {
+       "x": "router gsc",
+       "exposed": 18621.0,
+       "by_grade": {
+        "measured-current-RTL": 6776.5,
+        "modelled-PHY": 9008.2,
+        "priced": 2838.5
+       }
+      },
+      {
+       "x": "96x512 index TOPK_MERGE",
+       "exposed": 18408.4,
+       "by_grade": {
+        "measured-current-RTL": 15572.6,
+        "modelled-PHY": 2219.4,
+        "priced": 616.6
+       }
+      },
+      {
+       "x": "MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
+       "exposed": 11884.9,
+       "by_grade": {
+        "measured-current-RTL": 5596.9,
+        "modelled-PHY": 4782.0,
+        "priced": 1505.6
+       }
+      },
+      {
+       "x": "x_proj qa+kvraw 2-record train",
+       "exposed": 3599.4,
+       "by_grade": {
+        "measured-current-RTL": 1308.8,
+        "modelled-PHY": 1740.8,
+        "priced": 547.2
+       }
+      },
+      {
+       "x": "priced:candidate merge",
+       "exposed": 1902.2,
+       "by_grade": {
+        "priced": 1902.2
+       }
+      }
+     ],
+     "record": "results/arch/token_path_1018/hbm_gen_ds.json",
+     "tool": "tools/token_compose_xdie.py"
+    },
+    "mtp": {
+     "available": true,
+     "banner": "0.0% of token cycles measured on current RTL (0.0% on older RTL, 0.0% modelled PHY, 100.0% priced)",
+     "pct_measured_current_rtl": 0.0,
+     "tok_s": 3258.7,
+     "T_token_cycles": 368245.0,
+     "per_accepted_cycles": 368245.0,
+     "tau": null,
+     "by_grade": {
+      "measured-current-RTL": 0,
+      "measured-old-RTL": 0,
+      "modelled-PHY": 0,
+      "priced": 368245.0
+     },
+     "by_kind": {
+      "layer": 0,
+      "xdie": 0,
+      "adjust": 368245.0
+     },
+     "price_of_record": {
+      "tok_s": 3258.7,
+      "cycles": 368245.0,
+      "source": "results/arch/hbm_d4g_price_1017/price5/summary.json"
+     },
+     "vs_price_pct": -0.0,
+     "o_rule": "n/a (priced only)",
+     "title": "HBM d4g GEN2 die, DeepSeek-V4.1, 1M context, MTP (priced only)",
+     "xdie_top": [],
+     "record": "results/arch/token_path_1018/hbm_gen_ds.json",
+     "tool": "tools/token_compose_xdie.py"
+    }
    }
   }
  ]

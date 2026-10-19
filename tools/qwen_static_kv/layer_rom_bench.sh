@@ -6,10 +6,13 @@ set -u
 O=$1; M=${2:-0}; NT=${3:-2}
 mkdir -p "$O"
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-python3 tools/qwen_split/d2d_link_calendar.py --out "$O/cal" --txl 6 --phy 5 --profile program --txd-c 1,1,1,2 --txd-k 1,2,1,1 \
-  --host-stages 0 --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg \
-  > "$O/calendar.log" 2>&1 || { echo "LAYER_ROM FAIL calendar compile"; exit 1; }
-python3 tools/qwen_split/d2d_cal_seq_image.py "$O/cal" "$O/cal/img.svh" && cmp -s "$O/cal/img.svh" rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh \
+# QLB-C4 10-18: the PRODUCTION calendar (tools/qwen_split/d2d_cal_image_production.sh: die seam stages + the compiled token
+# path), the one the committed die-sequencer image and layer image are compiled from (the old '--txd-c 1,1,1,2 --txd-k 1,2,1,1'
+# bench args predate the compiled TXDP and no longer match either image)
+rm -rf "$O/prod"
+bash tools/qwen_split/d2d_cal_image_production.sh "$O/prod" > "$O/calendar.log" 2>&1 || { echo "LAYER_ROM FAIL calendar compile"; exit 1; }
+rm -rf "$O/cal"; cp -r "$O/prod/program" "$O/cal"
+cmp -s "$O/prod/d2d_cal_image.svh" rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh \
   || { echo "LAYER_ROM FAIL committed link sequencer image differs from the compiler"; exit 1; }
 rm -rf "$O/lp"
 python3 tools/qwen_static_kv/layer_roots_from_link.py "$O/cal" "$O/lp" > "$O/roots.log" 2>&1 || { echo "LAYER_ROM FAIL roots compile"; tail -2 "$O/roots.log"; exit 1; }

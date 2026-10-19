@@ -50,7 +50,11 @@ W5_COLL = [('arv_wo', 'in_valid'), ('ard_wo', 'in_data'), ('arl_wo', 'in_last'),
            ('rr_wi', 'out_rank'), ('re_wi', 'out_err'), ('ccv_wo', 'cmd_v'), ('ccm_wo', 'cmd_mode'),
            ('ccw_wo', 'cmd_words'), ('cct_wo', 'cmd_tag')]
 W5_PEERS = [('dd_wo', 'native59', 'dd_i'), ('dr_wi', 'native59', 'dr_o'), ('hr_wi', 'tt_ctlm', 'hr'),
-            ('cmd_wi', 'tt_ctlm', 'cmd'), ('ss_wo', 'tt_ctlm', 'ss5'), ('ag_wo', 'tt_ctlm', 'ag5')]
+            ('cmd_wi', 'tt_ctlm', 'cmd'), ('ss_wo', 'tt_ctlm', 'ss5'), ('ag_wo', 'tt_ctlm', 'ag5'),
+            # QLB-C4b 10-18: the slice stream TABLE words (PROG / CROM / BTAB, stream kinds 1..3) -- tt_ctlm's calendar
+            # TLOAD entries play them from the installed image onto the up-travelling stream at W5 (was a tie: no load
+            # path for the slice tables on the die)
+            ('st_wi', 'tt_ctlm', 'tl')]
 CDV = 'qfd_c_b16_dv'
 WCOL = ('io_collective', 'native59', 'tt_ctlm', 'embed_prov', 'sys_face')
 # Q-DIEPLAN6 10-17 (face mode, OT_SPLIT_DV_WCOL_RTL != 0): the W-column masters re-ported to the DV slices, bound on
@@ -237,6 +241,20 @@ def apply_dv(v, m):
             sh = max(0.0, uk['x'] + uk['w'] + 21.6 - min(d['x'] for d in bumps))
             for d in bumps:
                 d['x'] = round(d['x'] + sh, 3)
+    # Q-DIE13 10-18 landing channels (dv2f14bg LAND_CROSS GEN: 10 native59 <-> d2d_rom / sys_face landing hops 411-470 um
+    # > 405: the blocks abut native59 across 108-um gaps that the bulk relays fill, no free station site in reach).
+    # OT_SPLIT_DV_D2D_DY (um) moves d2d_rom, ucie_kv and the N bump row up (the die top grows with them: H is the max
+    # instance top below); OT_SPLIT_DV_SYSFACE_DX (um) moves sys_face E. Both widen the native59 N / E gaps into a
+    # landing channel for the OT_SPLIT_LAND_CROSS stations. Keep both on the 43.2-um lattice (129.6 = one 548-b
+    # landing frame 60 um + its hop room).
+    d2d_dy = float(os.environ.get('OT_SPLIT_DV_D2D_DY', '0') or 0)
+    if d2d_dy:
+        for n_ in ('d2d_rom', 'ucie_kv', 'ckb_rom', 'rs_bump', 'bump_fwd_epoch', 'bump_fwd_lrst'):
+            if n_ in DI:
+                DI[n_]['y'] = round(DI[n_]['y'] + d2d_dy, 3)
+    sf_dx = float(os.environ.get('OT_SPLIT_DV_SYSFACE_DX', '0') or 0)
+    if sf_dx and 'sys_face' in DI:
+        DI['sys_face']['x'] = round(DI['sys_face']['x'] + sf_dx, 3)
     by = {i.name: i for i in m['insts']}
     # retained instances take the dv model's places BEFORE the masters are drawn (the collective / PHY frames follow
     # their instance outline: OT_SPLIT_PHY_TALL edge variants, collective re-kitted tall; PHYs above it are MX)
@@ -261,6 +279,7 @@ def apply_dv(v, m):
     # ranges incl. rs_i / rs_o and the four quadrant clock entries); without it the CB contract scaled + rs_i / rs_o
     CD = _load('OT_SPLIT_DV_CONTRACT')
     ck_pins = ['ck']
+    rst_pins = []
     if CD:
         CWN, ch = CD['outline_um']['w'], CD['outline_um']['h']
         dirs = {'bco': 'output', 'rs_o': 'output', 'rs': 'output', 'tie_hi': 'output', 'tie_lo': 'output'}
@@ -270,6 +289,9 @@ def apply_dv(v, m):
             d_ = dirs.get(n_) or ('output' if n_.startswith('bco') else 'input')
             ports[n_] = dict(dir=d_, bits=p_['bits'], face=p_['face'], layer=p_['layer'], range=list(p_['range_um']))
         ck_pins = [p for p in ports if p.startswith('ck')]
+        # Q-CB16RST 10-19 (claude/q-cb16rst-1019 ac8e4c483): a contract with regional resets rst_c<c>r<r> (beside each
+        # ck_c<c>r<r>, registered on that region's clock at entry) replaces the cluster's single rst_n
+        rst_pins = sorted(p for p in ports if re.fullmatch(r'rst_c\d+r\d+', p))
         if os.environ.get('OT_SPLIT_DV_RSI_AT_RS') == '1':
             # the far cluster's rs (S face, 488.9-660.2) feeds the near cluster's rs_i (N face) across the 130-um band
             # gap; the contract's rs_i sits under rs_o (1093.7-1265.0): a 605-um jog per bit (735 um each, one relay
@@ -306,12 +328,21 @@ def apply_dv(v, m):
         stray = sorted(p_ for p_ in ports if p_.startswith('ck') and p_ not in centre_pins)
         if stray:
             raise ValueError(f'centre clocks: contract clock ports {stray} have no centre pin')
+        # OT_SPLIT_DV_CLUSTER_CLOCK_AT=face (Q-DIE11b 10-18, dv2f14bn case PLACE 'qfd_c_b16_dv MX y: site grid (0 + k*270)
+        # never meets the legal residues mod 80'): an interior M6-M9 pin cannot be on track in both R0 and MX / MY with
+        # this outline (H = 5227.176: H mod 10 = 6 vs the 270 row grid on M8; W, H mod 64 = 40 vs M5 / M4 on M6 / M7),
+        # so the drops stay at the contract's per-region FACE entries (M4 / M5) until the cluster outline / pin layer is
+        # chosen for centre pins; the related pins (port -> region clock) apply either way.
+        at_face = os.environ.get('OT_SPLIT_DV_CLUSTER_CLOCK_AT', 'centre') == 'face'
+        clk_ports = {pn: dict(ports[pn]) for pn in centre_pins}
         for pn in centre_pins:
             ports.pop(pn)
-    M[CDV] = Q._master(v, CWN - Q.SHAVE, ch - Q.SHAVE, ports)
+    M[CDV] = Q._master(v, CWN - Q.SHAVE, ch - Q.SHAVE, dict(ports, **(clk_ports if centre and at_face else {})))
     M[CDV].name = CDV
     if centre_pins:
         for pn, (x_, y_) in sorted(centre_pins.items()):
+            if at_face:
+                continue
             M[CDV].ports[pn] = ('area', 1, x_, y_, 1)
             M[CDV].order.append(pn)
         dom = dict(centre.get('port_domains') or {})
@@ -324,7 +355,8 @@ def apply_dv(v, m):
         rel = {p_: [dom.get(p_, dflt)] * d_['bits'] for p_, d_ in ports.items()}
         m['dv_cluster_clocks'] = dict(master=CDV, source=os.environ['OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS'],
                                       clocks={pn: list(xy) for pn, xy in sorted(centre_pins.items())},
-                                      layer='M8 area pin (die drop; the hardened cluster keeps the chimney free)',
+                                      layer=('contract face entry (M4/M5): centre pins blocked by MX/MY track legality'
+                                             if at_face else 'M8 area pin (die drop; the hardened cluster keeps the chimney free)'),
                                       default_domain=dflt, port_domains=dom, related_pins=rel)
     # Q-DIEPLAN8 10-17: dv2f10 PDN-0006 (die VDD M8 blocked by the abstract's M9 OBS on c16_E0_0).  The two-level
     # cluster contract (cluster_level 2: PG M8, signals M2-M7) leaves M9 to the die; the synthetic cluster and slice
@@ -481,13 +513,16 @@ def apply_dv(v, m):
     if ovl:
         raise ValueError(f'dv: {len(ovl)} overlapping instances {ovl[:8]}')
     # ---- buses
-    out, dropped = [], {}
+    out, dropped, partial = [], {}, []
     slices = sorted(n for n in names if n.startswith('dvs_'))
     for bid, cl, bits, eps in m['buses']:
         if cl in ('clock_trunk', 'reset'):
             e2 = [e for e in eps if e[0] in names]
             if cl == 'clock_trunk':           # a cluster's die clock entries (Q-CLUSTER: four quadrant pins)
                 e2 = [x for e in e2 for x in ([(e[0], p) for p in ck_pins] if e[0].startswith('c16_') and e[1] == 'ck'
+                                              else [e])]
+            if cl == 'reset' and rst_pins:   # Q-CB16RST: a cluster's reset = 16 regional drops (one per clock region)
+                e2 = [x for e in e2 for x in ([(e[0], p) for p in rst_pins] if e[0].startswith('c16_') and e[1] == 'rst_n'
                                               else [e])]
             if cl == 'clock_trunk' and any(e[0].startswith('c16_') for e in e2):
                 e2 += [(s, 'ck') for s in slices if not any(x == s for x, _ in e2)]
@@ -500,6 +535,15 @@ def apply_dv(v, m):
             continue                       # replaced by the dv reduce / column words below
         if all(e[0] in names for e in eps):
             out.append((bid, cl, bits, eps))
+            continue
+        kept = [e for e in eps if e[0] in names]
+        if eps[0][0] in names and any(e[0] == 'sys_face' for e in kept[1:]):
+            # Q-DIE11b 10-18 (dv2f14bn strict bind: qfd_sys_face.emb_prov_fault input_unconnected): sys_face_bind appends
+            # its inputs to the producer's existing net (ng_embed_fault_0 = embed_prov.fault -> sp_su64_sfu, sys_face);
+            # the DV case removes sp_su64_sfu, which dropped the whole net.  Keep the net on its surviving endpoints when
+            # the driver stays and a sys_face input is among them (every sys_face input is mandatory).
+            # added at the end only for sys_face inputs no other net feeds (the dv face rebinds some, e.g. io_cmd_free)
+            partial.append((bid, cl, bits, kept, [list(e) for e in eps if e[0] not in names]))
             continue
         dropped[cl] = dropped.get(cl, 0) + 1
     for bid, cl, bits, eps in rehome:
@@ -625,8 +669,10 @@ def apply_dv(v, m):
         m.setdefault('q3h', {}).setdefault('dv_face_missing', miss)
         if wrtl:
             _wcol_rebind(v, m, M, keep, out, wrtl)
-        # chain-end idle inputs (rule c): W5 st/sc up-travelling inputs from the W column side, E5 up-face inputs,
-        # the l9_wi of an unpaired slice -- only where no bus lands
+        # chain-end idle inputs (rule c): W5 sc up-travelling input from the W column side (no scalar producer west of
+        # W5: the scalar chain is slice-to-slice, its ROOT is on W5), E5 up-face inputs, the l9_wi of an unpaired slice --
+        # only where no bus lands.  QLB-C4b 10-18: W5 st_wi is NOT a chain-end idle input any more (tt_ctlm.tl drives
+        # it, W5_PEERS); without that bus it stays unconnected and the strict bind fails (never tied).
         conn = {e for b in out for e in b[3]}
         east = max((n for n in names if n.startswith('dvs_E')), key=lambda n: x_of[n], default=None)
         for n in sorted(names):
@@ -638,7 +684,7 @@ def apply_dv(v, m):
                     continue
                 up_in = n == east and p_.endswith('_wi') and not p_.startswith(('l9', 'cmd', 'hr', 'rv', 're', 'rr',
                                                                                 'rl', 'rd', 'dr'))
-                if (n == 'dvs_W5' and p_ in ('st_wi', 'sc_wi')) or up_in or p_ == 'l9_wi':
+                if (n == 'dvs_W5' and p_ == 'sc_wi') or up_in or p_ == 'l9_wi':
                     m['ties'].append((n, p_, pv[1], 0))
     # far-band clusters: rs_i tied low (Q-CLUSTER: the far bands tie the feedthrough input)
     fed = {e[0] for b in out for e in b[3] if e[1] == 'rs_i'}
@@ -646,6 +692,21 @@ def apply_dv(v, m):
         if n.startswith('c16_') and n not in fed:
             m['ties'].append((n, 'rs_i', 514, 0))
     m['ties'][:] = [t for t in m['ties'] if t[0] in names]
+    conn = {tuple(e) for b in out for e in b[3]}
+    for bid, cl, bits, kept, gone in partial:
+        sf_ = [e for e in kept[1:] if e[0] == 'sys_face' and tuple(e) not in conn]
+        if not sf_:
+            dropped[cl] = dropped.get(cl, 0) + 1
+            continue
+        kept2 = [kept[0]] + [e for e in kept[1:] if tuple(e) not in conn]
+        j_ = next((j for j, b in enumerate(out) if tuple(b[3][0]) == tuple(kept[0])), None)
+        if j_ is not None:       # the driver already drives a net: the sys_face inputs join it (one net per port)
+            b0, c0, n0, e0 = out[j_]
+            out[j_] = (b0, c0, n0, e0 + kept2[1:])
+        else:
+            out.append((bid, cl, bits, kept2))
+        conn.update(tuple(e) for e in kept2)
+        m.setdefault('dv_partial_buses', []).append(dict(bus=bid, endpoints=[list(e) for e in kept2], removed=gone))
     m['buses'] = out
     # relay routing on the dv array (b3r2 _poly0): field-to-field links stay in their band gap / the W|E seam
     m['dv_gap_route'] = True

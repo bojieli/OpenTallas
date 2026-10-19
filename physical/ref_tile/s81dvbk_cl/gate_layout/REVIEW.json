@@ -1,0 +1,15 @@
+{
+ "reviewer": "coordinator sub-lane S81-TILES8/bk (Claude)",
+ "time": "2026-10-18T03:05-07:00",
+ "gate_commit": "368403ff4",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "2 SRAM 256x256 at (23.76, 23.76) / (23.76, 86.4) on the 2.16 lattice",
+  "std_cell_band": "N band under the pin face + W column + inter-macro channel (22 um); util 18% std",
+  "pin_spread": "all 1,035 pins on the N face, 212 um (~4.9/um)",
+  "clock_entry": "N face centre (106-109 um) beside the N register band",
+  "shape": "220.32 x 151.2 (1.46:1)",
+  "trial_grt": "OT_GATE_TRIAL=1 trial GRT overflow 0 on every layer (M2 18.5% .. M5 11.1%, total 15.4%)"
+ },
+ "note": "CLOCK RE-JUDGEMENT under OWNER 10-17 rule: pin-flop (boundary, n 1,035) spread TT 52.9 ps (253.5..306.4), FF 50.3 ps (209.6..259.9) -> PASS (<= 80). The 96.1 TT / 93.1 FF figure is the all-flop (interior) spread incl. the W-column FIFO flops; interior skew is covered by STA (gate reg->reg TT slack +252 ps, macro->reg +229 ps, hold +9.6 ps). Insertion 306.4 TT is guidance; the colv parent compensates the boundary."
+}

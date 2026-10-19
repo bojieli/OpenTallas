@@ -69,9 +69,13 @@ class Programme(unittest.TestCase):
         for keys, n in re.findall(r'([\d,]+):word_count=(\d+);', body):
             for k in keys.split(','):
                 want[int(k)] = int(n)
+        # KVJ-G2b: the DIECFG / LINKCFG / ESCFG targets (conditional word counts in the dispatcher)
+        want.update({10: 32 + 43 + 2, 11: 66, 12: 1024, 13: 8})
+        import program_target_frames as PTF
+        self.assertEqual({t: PTF.TARGET_WORDS[t] for t in range(10, 14)}, {t: want[t] for t in range(10, 14)})
         for r in (self.comp, self.die):
             b = r['bundle']
-            self.assertEqual(b['target_order'], list(range(1, 10)) + [0])
+            self.assertEqual(b['target_order'], list(range(1, 10)) + [11, 12, 13, 0])
             for im in b['images'][:-1]:
                 self.assertEqual(im['program_words'], want[im['target']])
             self.assertEqual(int(b['images'][-1]['digest'], 16), r['layer']['digest'])
@@ -129,7 +133,11 @@ class Programme(unittest.TestCase):
     def test_token_period_is_padded_and_every_launch_is_legal(self):
         ph = self.die['phase']
         self.assertEqual(ph['token_period_core'] % 768, 0)
-        self.assertEqual(ph['token_period_core'] - self.die['link']['token_period_unpadded'], 169)
+        # ROOT-QLINE 10-18: production calendar (die stages + LAYERBENCH compiled token path) = unpadded 249,389 -> 249,600;
+        # QLB-C4 10-18: SC_TX 2 (dv2f14bq) -> attn_kv X 5 -> 7 on L1..L35 + L0 -215 (was -217): +72 -> 249,461 -> 249,600
+        self.assertEqual(ph['token_period_core'], 249600)
+        self.assertEqual(self.die['link']['token_period_unpadded'], 249461)
+        self.assertEqual(ph['token_period_core'] - self.die['link']['token_period_unpadded'], 139)
         self.assertEqual((ph['token_phases'], ph['launches'], ph['outside_window'], ph['hold_conflicts']), (1, 108, [], []))
         # the unpadded period visits all 768 phases: no compiled launch holds at every one of them
         self.assertEqual(ph['unpadded_counterfactual']['token_phases'], 768)

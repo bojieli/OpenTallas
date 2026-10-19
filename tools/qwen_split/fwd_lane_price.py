@@ -67,7 +67,7 @@ def main():
     ap.add_argument('--out', type=Path)
     a = ap.parse_args()
     fl = json.loads(a.lanes.read_text())
-    lanes = {r['bid']: r for r in fl['lanes']}
+    lanes = {r['bid']: r for r in fl['lanes'] if r.get('lane') != 'reset'}   # reset lanes: reset-time only, no token-path cost
     groups = dict(GROUPS, **(CONSERVATIVE if a.scope == 'conservative' else {}))
     doc = AC.load_path('qwen_rom')
     base, _ = AC.solve(doc['nodes'], doc['edges'])

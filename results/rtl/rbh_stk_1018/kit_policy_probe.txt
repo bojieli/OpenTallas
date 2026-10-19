@@ -1,0 +1,13 @@
+RBH-STK 2026-10-18: kit generation probe (tools/ref_tile/ref_tile.py gen) for the NPC 16 refresh producer.
+spec: top ot_hbm_pc_refresh_cfg NPC 16, clock multiple_cts_roots clk/clk_hbm, clock_data_paths async_gray_fifo,
+clock_relationship hbm_phy_async_gray_fifo (stream 833.333 / HBM 1024): the only ref_tile policy that admits the
+stream<->HBM asynchronous pair.  Result:
+ValueError: async_gray_fifo source-domain audit REFUSE: [{"consumer": "$auto$ff.cc:337:slice$1045:D", "kind": "extra_crossing",
+ "source_domain": "core", "target_domain": "hbm"}, {"consumer": "$auto$ff.cc:337:slice$1050:D", "kind": "extra_crossing",
+ "source_domain": "hbm", "target_domain": "core"}]
+The 2-flop level synchronisers (loaded -> ls -> prst, prst -> rel_seen) are not the reviewed ot_hbm_svc_async_fifo.
+cdc_synchronizers (1-bit Gray source + >= 2-flop chain, the structure these leaves use) admits only related
+clock_entry_domains ratios (1:1, 4:3, divided VCO): clock_entry_constraints.py refuses the HBM ratio [3072000, 2499999].
+The same refusal applies to ot_hbm_svc_stack_fault (hbm sticky -> h1/h2) and to ot_hbm_svc_wb_kport_q
+(ot_hbm_accel_cdc_fifo + reset syncs + 32 SRAM macros; async_gray_fifo admits soft leaves only, with no macros).
+GEN0 binds all these masters as SYNTH ETMs (vb.json kind SYNTH); this work does not change that.

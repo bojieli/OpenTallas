@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/hbfd_rly_136_NS_fc_f2.lef",
-    "sha256": "e27634df47775e851587789db23943604128c5446a62f9a98ea2e1e8dd461dd9"
+    "sha256": "aa3d6cf751ef8943f9ccb003f0ef812c508a73f1e3621c4b24dbaff00bb5b73c"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_136_ns_fc_f2-ff1-02fc2ee56/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_136_ns_fc_f2-rr1-38533e489/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_136_ns_fc_f2-ff1-02fc2ee56/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_136_ns_fc_f2-ff1-02fc2ee56/record/views/hbfd_rly_136_NS_fc_f2/provenance/raw/hbfd_rly_136_NS_fc_f2.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_136_ns_fc_f2-ff1-02fc2ee56/record/views/hbfd_rly_136_NS_fc_f2/provenance/hbfd_rly_136_NS_fc_f2.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_136_ns_fc_f2-rr1-38533e489/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_136_ns_fc_f2-rr1-38533e489/record/views/hbfd_rly_136_NS_fc_f2/provenance/raw/hbfd_rly_136_NS_fc_f2.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_136_ns_fc_f2-rr1-38533e489/record/views/hbfd_rly_136_NS_fc_f2/provenance/hbfd_rly_136_NS_fc_f2.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 1 OBS rects moved into 1 pins: rs; pockets: 43 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 1 OBS rects moved into 1 pins: rs; pockets: 49 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_136_ns_fc_f2-ff1-02fc2ee56/record/views/hbfd_rly_136_NS_fc_f2/provenance/hbfd_rly_136_NS_fc_f2.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_136_ns_fc_f2-rr1-38533e489/record/views/hbfd_rly_136_NS_fc_f2/provenance/hbfd_rly_136_NS_fc_f2.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "hbfd_rly_136_NS_fc_f2 56.16 x 21.6: PG M5 VDD 20 stripes (91% spread, 100% cov) / VSS 20 stripes (91% spread, 100% cov); strap M6; face pins 412 blocked-above 0 blocked-same 0; clock clk_in insertion 72 ps; pockets M5 0 (closed)",
+    "summary": "hbfd_rly_136_NS_fc_f2 56.16 x 21.6: PG M5 VDD 20 stripes (91% spread, 100% cov) / VSS 20 stripes (91% spread, 100% cov); strap M6; face pins 412 blocked-above 0 blocked-same 0; clock clk_in insertion 81 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "hbfd_rly_136_NS_fc_f2",
       "W": 56.16,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 412,
         "blocked_above": 0,
-        "covered_below": 106,
+        "covered_below": 166,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk_in": {
-          "max_ps": 72.2,
-          "min_ps": 54.78
+          "max_ps": 80.86,
+          "min_ps": 67.69
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 43
+          "added": 49
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "hbfd_rly_136_NS_fc_f2.lef",
-    "sha256": "7884237492da95a6d0d9d10938a6d9dd0288b1c03fb76489f98af6f3080c2506"
+    "sha256": "ac76c3f20256533b3d4c7f7ccd6dadb5e1031e78edcd605afe21a42eee85485b"
   }
 }

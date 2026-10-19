@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  941.76,
+  1080.0,
   950.4
  ],
  "core": [
   2.16,
   2.16,
-  939.6,
+  1077.84,
   948.24
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
@@ -68,7 +68,7 @@
    "master": "ot_hgi_sfu_store_stripe_leaf_r10",
    "inst": "*g_leaf?0?.u_leaf",
    "idx": 0,
-   "x": 633.312,
+   "x": 734.4,
    "y": 43.2,
    "w": 285.12,
    "h": 194.4,
@@ -81,7 +81,7 @@
    "master": "ot_hgi_sfu_store_stripe_leaf_r10",
    "inst": "*g_leaf?1?.u_leaf",
    "idx": 0,
-   "x": 327.888,
+   "x": 388.8,
    "y": 43.2,
    "w": 285.12,
    "h": 194.4,
@@ -94,7 +94,7 @@
    "master": "ot_hgi_sfu_store_stripe_leaf_r10",
    "inst": "*g_leaf?2?.u_leaf",
    "idx": 0,
-   "x": 22.464,
+   "x": 43.2,
    "y": 43.2,
    "w": 285.12,
    "h": 194.4,
@@ -107,7 +107,7 @@
    "master": "ot_hgi_sfu_store_stripe_leaf_r10",
    "inst": "*g_leaf?3?.u_leaf",
    "idx": 0,
-   "x": 633.312,
+   "x": 734.4,
    "y": 691.2,
    "w": 285.12,
    "h": 194.4,
@@ -120,7 +120,7 @@
    "master": "ot_hgi_sfu_store_stripe_leaf_r10",
    "inst": "*g_leaf?4?.u_leaf",
    "idx": 0,
-   "x": 327.888,
+   "x": 388.8,
    "y": 691.2,
    "w": 285.12,
    "h": 194.4,
@@ -133,7 +133,7 @@
    "master": "ot_hgi_sfu_store_stripe_leaf_r10",
    "inst": "*g_leaf?5?.u_leaf",
    "idx": 0,
-   "x": 22.464,
+   "x": 43.2,
    "y": 691.2,
    "w": 285.12,
    "h": 194.4,
@@ -146,7 +146,7 @@
    "master": "ot_hgi_sfu_store_stripe_leaf_r10",
    "inst": "*g_leaf?6?.u_leaf",
    "idx": 0,
-   "x": 22.464,
+   "x": 43.2,
    "y": 259.2,
    "w": 285.12,
    "h": 194.4,
@@ -159,7 +159,7 @@
    "master": "ot_hgi_sfu_store_stripe_leaf_r10",
    "inst": "*g_leaf?7?.u_leaf",
    "idx": 0,
-   "x": 22.464,
+   "x": 43.2,
    "y": 475.2,
    "w": 285.12,
    "h": 194.4,
@@ -172,7 +172,7 @@
    "master": "ot_hgi_sfu_store_stripe_leaf_r10",
    "inst": "*g_leaf?8?.u_leaf",
    "idx": 0,
-   "x": 633.312,
+   "x": 734.4,
    "y": 259.2,
    "w": 285.12,
    "h": 194.4,
@@ -185,7 +185,7 @@
    "master": "ot_hgi_sfu_store_stripe_leaf_r10",
    "inst": "*g_leaf?9?.u_leaf",
    "idx": 0,
-   "x": 633.312,
+   "x": 734.4,
    "y": 475.2,
    "w": 285.12,
    "h": 194.4,
@@ -198,7 +198,7 @@
    "master": "ot_hgi_sfu_store_stripe_leaf_r10",
    "inst": "*g_leaf?10?.u_leaf",
    "idx": 0,
-   "x": 327.888,
+   "x": 388.8,
    "y": 475.2,
    "w": 285.12,
    "h": 194.4,
@@ -207,72 +207,6 @@
   }
  ],
  "findings": [
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_sfu_store_stripe_leaf_r10#0: origin (633.312, 43.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_sfu_store_stripe_leaf_r10#0: origin (327.888, 43.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_sfu_store_stripe_leaf_r10#0: origin (22.464, 43.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_sfu_store_stripe_leaf_r10#0: origin (633.312, 691.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_sfu_store_stripe_leaf_r10#0: origin (327.888, 691.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_sfu_store_stripe_leaf_r10#0: origin (22.464, 691.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_sfu_store_stripe_leaf_r10#0: origin (22.464, 259.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_sfu_store_stripe_leaf_r10#0: origin (22.464, 475.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_sfu_store_stripe_leaf_r10#0: origin (633.312, 259.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_sfu_store_stripe_leaf_r10#0: origin (633.312, 475.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "macro_grid",
-   "ot_hgi_sfu_store_stripe_leaf_r10#0: origin (327.888, 475.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
-   "build the child on the common lattice"
-  ],
   [
    "WARN",
    "fill",
@@ -312,8 +246,6 @@
   "physical/ref_tile/hbm_sfu_programme_store_r10_cl/pre_gpl.tcl",
   "physical/ref_tile/hbm_sfu_programme_store_r10_cl/pre_dpl.tcl",
   "physical/common_flow/pin_reg_split.tcl",
-  "physical/common_flow/clock_spine.tcl",
-  "physical/ref_tile/hbm_sfu_programme_store_r10_cl/spine_ins.tcl",
   "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10.lef",
   "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10_ss.lib",
   "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10_ff.lib",

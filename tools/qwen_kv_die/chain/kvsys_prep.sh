@@ -23,7 +23,7 @@ if [ "${OT_KV_TREES:-0}" = 1 ]; then H14="$H14 --host-trees"; V14=$V14,host_tree
 # v1.4.3 (OT_KV_V143=1, needs OT_KV_TREES=1): G3S2 staged head ingress on the closed gather / sstage views, near-head
 # feed-through frames, grown groups, regional reset roots (kv_die.py --v143)
 BV=
-if [ "${OT_KV_RST_PIN_REG:-0}" = 1 ]; then
+if [ "${OT_KV_RST_PIN_REG:-1}" = 1 ]; then   # default ON (KV-KITS/NATIVE 10-18, = kv_die.py RST_PIN_REG)
   RPV=physical/ref_tile/qkd_rst_region_pr/views/qkd_rst_region_pr
   python3 tools/qwen_kv_die/check_rst_pin_view.py --view "$RPV" > "$O/rst_pin_view_audit.json" || {
     cat "$O/rst_pin_view_audit.json"; echo 'OT_KV_RST_PIN_REG: selected view is not native PASS'; exit 6;
@@ -46,8 +46,8 @@ if [ "${OT_KV_SEQ_STATIC:-0}" = 1 ]; then LPV=physical/ref_tile/${OT_KV_LPRG_KIT
   # OT_KV_LPRG_PROGRAM (PW1024 + DW8 hex; default the sys_face bench program) / OT_KV_LPRG_EPOCH (default 0x0b0b) on the
   # link compiler's calendar and refuse a committed image (= the hardened view's constants) that differs
   mkdir -p $O/lprg_image
-  python3 tools/qwen_split/d2d_link_calendar.py --out $O/lprg_image/cal --txl 6 --phy 5 --profile program --txd-c 1,1,1,2 --txd-k 1,2,1,1 \
-    --host-stages 0 --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg > $O/lprg_image/cal.log
+  # QLB-C4 10-18: the PRODUCTION link calendar (d2d_cal_image_production.sh), not the pre-TXDP bench args
+  bash tools/qwen_split/d2d_cal_image_production.sh $O/lprg_image/prod > $O/lprg_image/cal.log 2>&1 && rm -rf $O/lprg_image/cal && cp -r $O/lprg_image/prod/program $O/lprg_image/cal
   python3 tools/qwen_static_kv/layer_roots_from_link.py $O/lprg_image/cal $O/lprg_image/lp ${OT_KV_LPRG_PROGRAM:+--program $OT_KV_LPRG_PROGRAM} \
     --epoch ${OT_KV_LPRG_EPOCH:-0x0b0b} > $O/lprg_image/roots.log
   if cmp -s $O/lprg_image/lp/layer_programme_image.svh rtl/qwen_sys/static_kv_20261014/layer_programme_image.svh; then echo MATCH > $O/lprg_image/verdict
@@ -101,6 +101,13 @@ if [ "${OT_KV_RLY_STD:-0}" = 1 ]; then
   python3 tools/qwen_kv_die/kv_rly_std.py --run $O ${OT_KV_RLY_STD_NETLIST_ONLY:+--netlist-only} > $O/rly_std.log
   EXP="--expanded $O/expand.json"
 fi
+# KV-CLOCK 10-18 (OT_KV_FWD=1, landed-regions standard): every relay run that crosses core clock trees -> a forwarded
+# half-cycle lane (hop-0 station on the source root, half-cycle stations, LANDING read on the receiving root);
+# RUN/fwd_lanes.json.  OT_KV_FWD_NETLIST_ONLY=1: before the lane kits close (bind checks only, never a physical run)
+if [ "${OT_KV_FWD:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_fwd_lanes.py --run $O ${OT_KV_FWD_NETLIST_ONLY:+--netlist-only} > $O/fwd_lanes.log 2>&1 || { tail -5 $O/fwd_lanes.log; exit 7; }
+  EXP="--expanded $O/expand.json"
+fi
 # v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)
 [ -n "$H14" ] && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv > $O/native_phy.log \
   && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv --libs $O/libs >> $O/native_phy.log
@@ -108,6 +115,10 @@ python3 tools/qwen_kv_die/kvsys_clocks.py --case $O/case_kv --views $O/libs/view
 python3 tools/qwen_kv_die/die_port_bind_kv.py $O/case_kv/die.v --split --relay-rtl $O/case_kv/qkd_kv_relays.sv $EXP --out $O/port_bind.json > $O/port_bind.log
 # Q-KVSYS-NETLIST 2026-10-16: the STRICT bit-level bind (die_port_bind v2 on the BINDINGS-bound netlist), recorded
 bash tools/qwen_kv_die/kv_port_bind_v2.sh $O/case_kv/die.v $O/port_bind_v2 $O/case_kv/qkd_kv_relays.sv $O/expand.json > $O/port_bind_v2.log 2>&1 || true
+# KV-CASE2 10-18: the stub / tie / open-input audit of the strict bind (0da classes, owner lane per gap) lands in the run
+# dir every prep (stub_audit.json; the die_top_lint stub lint is $O/lint).  Recorded, never a prep failure.
+[ -f $O/port_bind_v2/port_bind_v2.json ] && { python3 tools/qwen_kv_die/kvjg_gap_list.py --bind $O/port_bind_v2/port_bind_v2.json \
+  --out $O/stub_audit.json > $O/stub_audit.log 2>&1 || echo "stub audit FAILED (stub_audit.log)" >> $O/stub_audit.log; }
 # Q-KV 10-16: over-block capacity from each block's real top layer (post-expand elements.lef) -- the old die-layer-only
 # capacity over-counted crossings over M5 tiles (kvs13i fine max 2.26 -> 1.48)
 python3 tools/qwen_kv_die/kvsys_window.py --split $H14 --lef $O/case_kv/elements.lef $( [ -f $O/expand.json ] && echo --expand $O/expand.json ) --out $O/window.json > $O/window.log

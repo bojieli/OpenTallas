@@ -1134,8 +1134,15 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
             v.CORR = _corr0
         if getattr(v, 'RELAY_REACH_GATE', False):   # tp8b (die timing by construction)
             _reset_tree(v, m)     # after the relays: legalised against the FINAL placement
+            if m.get('fwd_lanes'):
+                # Final reset taps, rather than the pre-tree G=R0 estimate, own the K straps.
+                from qwen_split.reset_calendar_audit import finalize_model
+                _reset_release_path = os.environ.get('OT_SPLIT_RESET_RELEASE')
+                _reset_release = json.loads(Path(_reset_release_path).read_text()) if _reset_release_path else {}
+                finalize_model(m, _reset_release)
         if before_relays is not None:
             _regions_from_placement(m)   # the relays joined region clocks: re-file + split to the measured cap again
+            _gen16_fwd_ck_names(m)       # DIE-QWEN-GEN16: lane src_ck / dst_ck = the nets the pins are on now
     m['b3r2']['r21_relay_pitch_um'] = relay_pitch
     if su_vm_abut:
         # outermost: after the relays (an abutted bus takes no relay); r21m: the banked memory's descriptor ports
@@ -1944,6 +1951,18 @@ RELAY_NEVER = ('clock_trunk', 'reset')
 FWD_RST_PORTS = ('rst_n', 'rs', 'rs_n', 'rst', 'por_n')
 FWD_RST_RX = r'(^|_)(a?rst|rs|por)(_n)?$|rst_n$'
 FWD_NO_ROOT_SRC = ('qfd_sigbump',)
+# LANDFIX-SQ 10-18 (coordinator 0gh: the 87 plain relays of dv2f14bn onto forwarded lanes; default off):
+#   OT_SPLIT_FWD_LANES_RST=1   reset lanes become FORWARDED RESET LANES: hop-0 station on the source root (qfd_rlyr0_*,
+#                              no gate: the reset level must propagate while the source itself is in reset), half-cycle
+#                              stations (qfd_rlyr_*, ck_o = ~ckf), and a RESET-RELEASE LANDING (qfd_rlyrl_*: the level
+#                              re-registered on the receiving block's root, one STA-timed edge).  No data ring: a ring's
+#                              read epoch is the receiver's released reset, which is the very signal the lane carries.
+#   OT_SPLIT_FWD_LANES_BUMP=1  lanes from pad bumps (no clock at the source): hop 0 on the bump-side regional root (the
+#                              root the plain hop-0 relay used), gate enable / lane epoch = the RECEIVER's released reset.
+#   landing.sdc: the MCP is E_sta (the landing's residual edges after the last station's launch, as the die STA counts
+#                them; default 2, or the land plan's E); E (total, for K and the price) = fwd_e_est(n) + E_sta - 2.
+#                dv2f14bn used the total E as the MCP: E 12-14 lanes failed FF hold by up to -7.7 ns (hold edge E - D).
+FWD_LANE_E_STA = 2
 
 
 def fwd_e_est(n):
@@ -2859,6 +2878,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def region_of(cx, cy):
         return region_at(regs, cx, cy)
     ck_add = {}
+    # DIE-QWEN-GEN16 (Q-CLK GAP, 5,538 b): (lane cell, clock pin) -> the block whose ROOT that pin must share (landing ->
+    # receiver, hop 0 -> sender); _regions_from_placement re-files these with their owner, never by the cell's own centre
+    _ckf = m.setdefault('ck_follow', {})
     stats, B, fck_drop, fck_new, insts, worst, spill = {}, [], set(), [], [], [], []
     stage_of = {}
     # it24: the KV host link (d2d_fdi) places first: its spine lane + IO sub-lane relay sites never depend on the
@@ -3954,6 +3976,82 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         tpads=equal_age_pads(S_,m.get('relay_equal_groups',{}),tpads)
         m['tp8_inline_pads'] = dict(irep, pads=len(tpads), pad_relays=sum(tpads.values()),
                                   equal_age_groups=len(m.get('relay_equal_groups',{})))
+    # Q-DIE12 10-18 (landed-regions standard): OT_SPLIT_LAND_CROSS=inst[,inst...] -- every zero-stage 2-endpoint data
+    # bus between a named instance (a hard tile with a deep internal clock tree: d2d_rom 343 / sys_face 220 ps FF) and a
+    # block on a DIFFERENT regional clock root gets one station at its sink end; with OT_SPLIT_FWD_LANES it is a
+    # one-frame forwarded lane = a LANDING (landh0: ring written on the source root, read on the sink root at E), so the
+    # two roots need no phase relation (no die-level re-balancing).  Same-root neighbours stay direct (region-local).
+    _lc = {s_ for s_ in _os.environ.get('OT_SPLIT_LAND_CROSS', '').split(',') if s_}
+    if _lc:
+        _ck_of = {}
+        for _b in m['buses']:
+            if _b[1] == 'clock_trunk':
+                for _e in _b[3][1:]:
+                    _ck_of.setdefault(_e[0], _b[0])
+        _lcx = []
+        for idx, (bid, cl, bits, eps) in buses:
+            if len(eps) != 2 or cl in ('clock_trunk', 'constant', 'reset', 'link_spine', 'link_channel') or bid.endswith('_rdy'):
+                continue
+            (s_, _), (d_, _) = eps
+            if not ({s_, d_} & _lc) or (idx in plans and plans[idx]['frames']) or bid in tpads:
+                continue
+            if _ck_of.get(s_) is None or _ck_of.get(d_) is None or _ck_of.get(s_) == _ck_of.get(d_):
+                continue
+            tpads[bid] = 1
+            _lcx.append(dict(bid=bid, cl=cl, bits=bits, src=s_, dst=d_, src_ck=_ck_of[s_], dst_ck=_ck_of[d_]))
+        m['land_cross'] = dict(insts=sorted(_lc), buses=len(_lcx), bits=sum(r_['bits'] for r_ in _lcx), rows=_lcx)
+        print(f'LAND_CROSS {sorted(_lc)}: {len(_lcx)} cross-root buses / {sum(r_["bits"] for r_ in _lcx)} bits get a landing station', flush=True)
+    # QXF-SEAMC 10-18 (TOKEN-XDIE-QWEN F5 + LAYERBENCH-QWEN G-C2): LAND_CROSS and the lane pass worked BUS by bus, so a
+    # record crossed the seam torn: dv2f14bn d2d_rom -> native59 rx_payload a 1-frame landing (K 2, +3 edges) beside
+    # direct native_rx_v / slot / kind / beat (+0) -> rx_record fault at the first RESULT; d2d_rom -> sys_face
+    # prog_auth_slot +5 / prog_witness_slot +4 vs rx_payload / prog_rx_v / prog_context_slot +3 -> slot_fault at HOST
+    # BEGIN.  A RECORD BUNDLE (tools/qwen_split/record_bundles.py: valid + every field of one static record, selected by
+    # endpoint pins as the compiler's OT_RELAY_SCHEDULE does) lands WHOLE: every zero-stage member of a bundle whose other
+    # members carry frames (relays, pads, LAND_CROSS) gets the one-frame landing too (forwarded lanes), or plain relay
+    # pads to the bundle's frame count (no forwarded lanes); the lane pass below then gives the bundle ONE E
+    # (lane_groups.equalize, group = the bundle) and the GEN fails closed if a built bundle still arrives on two edges.
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+    import record_bundles as _RB
+    _rbm, _rbp = _RB.bundle_map([(bid, eps) for idx, (bid, cl, bits, eps) in buses])
+    if _rbp:
+        raise ValueError('record bundles: ' + '; '.join(_rbp))
+    if _rbm:
+        _bix = {bid: idx for idx, (bid, cl, bits, eps) in buses}
+        _nfr = {b_: (len(plans[_bix[b_]]['frames']) if _bix[b_] in plans else 0) + int(tpads.get(b_, 0)) for b_ in _rbm}
+        if _os.environ.get('OT_SPLIT_FWD_LANES', '0') == '1':
+            _rbadd = _RB.close_zero_stage(_rbm, _nfr)
+            if _rbadd:
+                _lcr = m.setdefault('land_cross', dict(insts=[], buses=0, bits=0, rows=[]))
+                _ckb = {}
+                for _b in m['buses']:
+                    if _b[1] == 'clock_trunk':
+                        for _e in _b[3][1:]:
+                            _ckb.setdefault(_e[0], _b[0])
+                for b_ in _rbadd:
+                    _, cl_, bits_, eps_ = m['buses'][_bix[b_]]
+                    tpads[b_] = 1
+                    _lcr['rows'].append(dict(bid=b_, cl=cl_, bits=bits_, src=eps_[0][0], dst=eps_[1][0],
+                                             src_ck=_ckb.get(eps_[0][0]), dst_ck=_ckb.get(eps_[1][0]),
+                                             why=f'record bundle {_rbm[b_]} (QXF-SEAMC)'))
+                _lcr['buses'] = len(_lcr['rows'])
+                _lcr['bits'] = sum(r_['bits'] for r_ in _lcr['rows'])
+            # members too far behind their bundle's E for the ring wait (E_sta <= D - 1) get extra frames now (sink-end
+            # stations, placed with the pads below); the lane pass takes the rest by ring wait
+            _nfr.update({b_: 1 for b_ in _rbadd})
+            _lpq = json.loads(Path(_os.environ['OT_SPLIT_LAND_PLAN']).read_text()) if _os.environ.get('OT_SPLIT_LAND_PLAN') else {}
+            _esq = {r_['bid']: int(r_['E']) for r_ in _lpq.get('links', []) if r_.get('E') is not None}
+            _rbfp = _RB.frame_pads(_rbm, _nfr, _esq, 4)
+            for b_, p_ in _rbfp.items():
+                tpads[b_] = int(tpads.get(b_, 0)) + p_
+            _rbadd = list(_rbadd) + [f'{b_}+{p_}' for b_, p_ in sorted(_rbfp.items())]
+        else:
+            _rbadd = _RB.plain_pads(_rbm, _nfr)
+            for b_, p_ in _rbadd.items():
+                tpads[b_] = int(tpads.get(b_, 0)) + p_
+        m['record_bundles'] = dict(bundles=sorted(set(_rbm.values())), members=_rbm,
+                                   landed_with_bundle=sorted(_rbadd) if isinstance(_rbadd, list) else _rbadd)
+        print(f'RECORD_BUNDLES {len(set(_rbm.values()))} bundles / {len(_rbm)} members: '
+              f'{len(_rbadd)} members padded or landed with their bundle', flush=True)
     # Reconcile the allocator's mutable occupancy with the exact frames that
     # will be emitted after repair/rip-up/jog/pre-pad trimming. Every inline
     # arrival pad must see ALL surviving frames, not a stale search grid.
@@ -3976,6 +4074,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         print(f'relay collision diagnostic failed: {diagnostic_error}', file=sys.stderr)
                 raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
             add_rect(rr)
+    _lc_bids = {r_['bid'] for r_ in (m.get('land_cross') or {}).get('rows', ())}
     pad_done = {}
     pad_hop_centre = {}
     if tpads:
@@ -4013,7 +4112,30 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 # previous pad to Q (consecutive pads stay together; the walk ends next to Q)
                 fr = 1.0 / (npad - j + 1)
                 qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
-                sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None else None
+                sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None and bid not in _lc_bids else None
+                if sp is None and bid in _lc_bids:
+                    # Q-DIE12 LAND_CROSS: the landing station takes the free site that minimises its LONGER hop
+                    # (source -> station, station -> sink), not the site nearest the midpoint (first try: 17 hops > 405)
+                    best_ = None
+                    W_, H_ = w + v.SHAVE, h + v.SHAVE
+                    for ring in range(0, int(_os.environ.get('OT_SPLIT_LAND_CROSS_RINGS', '150'))):
+                        st = ring * 4 * v.GY
+                        if best_ is not None and st > best_[0]:
+                            break
+                        cands = [(0, 0)] if ring == 0 else \
+                            [(dx, dy) for dx in (-st, st) for dy in [i * 4 * v.GY for i in range(-ring, ring + 1)]] + \
+                            [(dx, dy) for dy in (-st, st) for dx in [i * 4 * v.GY for i in range(-ring + 1, ring)]]
+                        for dx, dy in cands:
+                            x0, y0 = v.dn(qx - W_ / 2 + dx, v.GX), v.dn(qy - H_ / 2 + dy, v.GY)
+                            cx_, cy_ = x0 + W_ / 2, y0 + H_ / 2
+                            sc_ = max(abs(cx_ - Q[0]) + abs(cy_ - Q[1]), abs(cx_ - x1) + abs(cy_ - y1))
+                            if best_ is not None and sc_ >= best_[0]:
+                                continue
+                            if in_field(cx_, cy_) and corr_of(cx_) is None and not contains_frame(legal_row_gaps, y0, H_):
+                                continue
+                            if y0 >= g['y0'] and y0 + H_ <= die_top and free((x0, y0, x0 + W_, y0 + H_)):
+                                best_ = (sc_, (x0, y0))
+                    sp = best_[1] if best_ else None
                 if sp is None and cc is None and not sink_in_field:
                     sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, None)
                 if sp is None and cc is None and sink_in_field:
@@ -4088,6 +4210,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     if p_.lstrip('*') in FWD_RST_PORTS:
                         _rstof.setdefault(i_, {})[p_.lstrip('*')] = bid_
         _fdi = _os_r.environ.get('OT_SPLIT_FWD_LANES_FDI', '0') == '1'
+        _frst = _os_r.environ.get('OT_SPLIT_FWD_LANES_RST', '0') == '1'
+        _fbump = _os_r.environ.get('OT_SPLIT_FWD_LANES_BUMP', '0') == '1'
         _lp = json.loads(Path(_os_r.environ['OT_SPLIT_LAND_PLAN']).read_text()) if _os_r.environ.get('OT_SPLIT_LAND_PLAN') else {}
         _lpE = {r_['bid']: r_ for r_ in _lp.get('links', [])}
 
@@ -4112,31 +4236,81 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 return f'{len(eps_)} endpoints'
             (si_, sp_), (di_, dp_) = eps_
             if re.search(FWD_RST_RX, dp_.lstrip('*')) or re.match(r'(a?rst|rs_)', bid_) or '_rst' in bid_ or 'lrst' in bid_:
-                return 'reset lane (stays a reset relay chain; the reset tree / calendar owns it)'
+                if not _frst:
+                    return 'reset lane (stays a reset relay chain; the reset tree / calendar owns it; OT_SPLIT_FWD_LANES_RST=1 converts)'
+                if _fwd_clock(di_) is None:
+                    return 'reset lane: sink without a clock trunk (no root for the reset-release landing)'
+                return 'RST'
             if by[si_].master in FWD_NO_ROOT_SRC:
-                return f'source {by[si_].master} has no clock (pad bump): no source root to forward'
+                if not _fbump:
+                    return f'source {by[si_].master} has no clock (pad bump): no source root to forward (OT_SPLIT_FWD_LANES_BUMP=1 converts)'
+                if _fwd_clock(di_) is None or _fwd_rst(di_) is None:
+                    return f'pad-bump lane: sink without clock / reset pin (dst {_fwd_rst(di_)})'
+                return 'BUMP'
             if _fwd_clock(si_) is None or _fwd_clock(di_) is None:
                 return 'source or sink without a clock trunk'
             if _fwd_rst(si_) is None or _fwd_rst(di_) is None:
                 return f'source / sink reset pin not found (src {_fwd_rst(si_)}, dst {_fwd_rst(di_)})'
             return None
+    fwd_eq = {}
+    if FWDL:
+        # Q-COLLCAL 10-18 (TP8 co-sim bug 2: serdes2_txv E 6 vs serdes2_tx E 5): ONE E per bus group (a valid bus and its
+        # data buses, tools/qwen_split/lane_groups.py; LANDING-CONTRACT L5), the earlier members wait in their ring
+        # (landing MCP E_sta + dE, hold window checked against the land plan's STA when present), and K = (TOTAL E +
+        # G - R0) mod 8 -- the land plan's K is E_sta + calendar (the residual), so only its calendar offset is kept.
+        sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+        import lane_groups as _LG
+        _pre, _cal, _h0 = [], {}, {}
+        for idx, pl in sorted(plans.items()):
+            if not pl['frames'] or _fwd_ok(pl) not in (None, 'BUMP'):
+                continue
+            n_ = len(pl['frames'])
+            lp_ = _lpE.get(pl['bid'], {})
+            es_ = int(lp_.get('E') or FWD_LANE_E_STA)
+            _pre.append(dict(bid=pl['bid'], src=pl['eps'][0][0], dst=pl['eps'][1][0], n=n_, E_sta=es_,
+                             E=fwd_e_est(n_) + es_ - FWD_LANE_E_STA))
+            if pl['bid'] in _rbm:          # QXF-SEAMC: a record bundle is one group whatever its bus names
+                _pre[-1]['bundle'] = _rbm[pl['bid']]
+            if lp_.get('K') is not None and lp_.get('E') is not None:
+                _cal[pl['bid']] = (int(lp_['K']) - int(lp_['E'])) % 8
+            if lp_.get('h0'):
+                _h0[pl['bid']] = lp_['h0']
+        fwd_groups = _LG.equalize(_pre, 4, _cal, _h0)
+        fwd_eq = {r_['bid']: r_ for r_ in _pre}
     for idx, pl in sorted(plans.items()):
         bid, cl, bits, eps = pl['bid'], pl['cl'], pl['bits'], pl['eps']
         link = cl in ('link_spine', 'link_channel')
         fwd = None
         if FWDL and pl['frames']:
             why_ = _fwd_ok(pl)
-            if why_ is None:
+            if why_ in (None, 'RST', 'BUMP'):
                 n_ = len(pl['frames'])
                 (si_, _), (di_, _) = eps
-                e_ = _lpE.get(bid, {}).get('E') or fwd_e_est(n_)
+                es_ = int(_lpE.get(bid, {}).get('E') or FWD_LANE_E_STA)
+                e_ = fwd_e_est(n_) + es_ - FWD_LANE_E_STA
                 k_ = _lpE.get(bid, {}).get('K')
-                k_ = (e_ % 8) if k_ is None else int(k_)
+                k_ = ((e_ + 1) % 8) if k_ is None else int(k_)   # QK-LANDEN / RLYH0-EN: hop-0 en registered (+1, every lane)
+                if bid in fwd_eq:          # Q-COLLCAL: the bus group's E / landing MCP / total-E K
+                    es_, e_, k_ = fwd_eq[bid]['E_sta'], fwd_eq[bid]['E'], fwd_eq[bid]['K']
                 fwd = dict(bid=bid, cl=cl, bits=bits, n=n_, src=si_, dst=di_, src_ck=_fwd_clock(si_), dst_ck=_fwd_clock(di_),
-                           src_rst=[si_, _fwd_rst(si_)], dst_rst=[di_, _fwd_rst(di_)], E=e_, K=k_,
+                           src_rst=[si_, _fwd_rst(si_)], dst_rst=[di_, _fwd_rst(di_)], E=e_, E_sta=es_, K=k_,
+                           lane={'RST': 'reset', 'BUMP': 'bump'}.get(why_, 'data'),
                            E_basis='land plan (die STA)' if bid in _lpE else 'estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA',
                            K_basis='land plan' if _lpE.get(bid, {}).get('K') is not None else 'E mod 8 (assumes G = R0); re-derive with the reset calendar',
                            stations=[], landing=None)
+                if bid in fwd_eq:
+                    fwd.update({k__: fwd_eq[bid][k__] for k__ in ('K_basis', 'cal', 'group', 'E_own', 'hold_E_group', 'bundle') if k__ in fwd_eq[bid]})
+                    if 'E_own' in fwd_eq[bid]:
+                        fwd['E_basis'] += fwd_eq[bid]['E_basis']
+                if why_ == 'BUMP':
+                    # pad bump: no source root / reset -> hop 0 on the bump-side root (set at frame 0), epoch = receiver reset
+                    fwd['src_ck'], fwd['src_rst'] = None, [di_, _fwd_rst(di_)]
+                    fwd['src_basis'] = 'pad bump: hop 0 on the bump-side regional root; gate enable = the receiver released reset'
+                if why_ == 'RST':
+                    if fwd['src_ck'] is None:
+                        fwd['src_basis'] = 'reset source without a clock: hop 0 on the source-side regional root'
+                    fwd.update(E=None, E_sta=None, K=None, E_basis='reset lane: no ring; n-1 half-cycle hops + one STA-timed edge on the block root',
+                               K_basis='n/a (no ring)', src_rst=None, dst_rst=None)
                 fwd_rows.append(fwd)
             else:
                 fwd_skip.append(dict(bid=bid, cl=cl, bits=bits, n=len(pl['frames']), reason=why_))
@@ -4154,7 +4328,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             mn = f'qfd_rly{"f" if link else ("p" if pr_ else "")}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
             if fwd is not None:
                 n_ = fwd['n']
-                kind_ = ('landh0' if n_ == 1 else 'rlyh0') if k == 0 else ('landh' if k == n_ - 1 else 'rlyh')
+                if fwd['lane'] == 'reset':
+                    kind_ = 'rlyrl' if k == n_ - 1 else ('rlyr0' if k == 0 else 'rlyr')
+                else:
+                    kind_ = ('landh0' if n_ == 1 else 'rlyh0') if k == 0 else ('landh' if k == n_ - 1 else 'rlyh')
+                if k == 0 and fwd['src_ck'] is None:
+                    # pad bump / clockless reset source: the root the plain hop-0 relay of this frame would take
+                    fwd['src_ck'] = assigned_ck if assigned_ck is not None else (
+                        f'clk_r{region_of(x0 + w / 2, y0 + h / 2)}' if dom == 'stream_1p2' else
+                        {'serial_0p9': 'clk_serial', 'link_serdes': 'clk_serdes', 'link_ucie': 'clk_ucie'}.get(dom, f'clk_{dom}'))
                 mn = f'qfd_{kind_}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
                 fwd_kind[mn] = kind_
             masters_needed[mn] = (bits, fi, fo, w, h, link, pr_)
@@ -4171,12 +4353,28 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 rhop = pair[bid] if k == 0 else f'{pair[bid]}__r{k}'
                 rprev = (prev[0], prev[1][:-2] + '_r') if prev[1].endswith('_d') else (prev[0], prev[1] + '_r')
                 rhops.append((rhop, cl, 1, [(nm, 'a_r'), rprev]))
-            if fwd is not None:
+            if fwd is not None and fwd['lane'] == 'reset':
+                kind_ = fwd_kind[mn]
+                # forwarded RESET lane: hop 0 on the source root, half-cycle stations on the lane clock, the last frame
+                # re-registers the level on the receiving block's root (no epoch bit, no ring, no straps)
+                if kind_ == 'rlyrl':
+                    ck_add.setdefault(fwd['dst_ck'], []).append((nm, 'ck'))
+                    _ckf[(nm, 'ck')] = fwd['dst']        # DIE-QWEN-GEN16: re-filed with the RECEIVER's root
+                    fwd['landing'] = nm
+                else:
+                    if k == 0:
+                        ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck'))
+                        _ckf[(nm, 'ck')] = fwd['src']    # DIE-QWEN-GEN16: hop 0 stays on the SENDER's root
+                    else:
+                        fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
+                    fwd['stations'].append(nm)
+            elif fwd is not None:
                 kind_ = fwd_kind[mn]
                 if k == 0:
                     # hop 0: the source block's own root at the hop-0 gate; the gate enable / lane epoch = the source's
                     # released reset (attached to the source's reset net after the plan: the reset tree reaches it)
                     ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck' if kind_ == 'rlyh0' else 'ck_s'))
+                    _ckf[(nm, 'ck' if kind_ == 'rlyh0' else 'ck_s')] = fwd['src']   # DIE-QWEN-GEN16: sender's root
                     fwd_attach.append((nm, 'en', *fwd['src_rst']))
                 else:
                     fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
@@ -4184,6 +4382,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 if kind_ in ('landh', 'landh0'):
                     # the landing reads on the RECEIVING block's root, from its regional reset; K strap from own ties
                     ck_add.setdefault(fwd['dst_ck'], []).append((nm, 'ck'))
+                    _ckf[(nm, 'ck')] = fwd['dst']        # DIE-QWEN-GEN16: the landing reads on the RECEIVER's root
                     fwd_attach.append((nm, 'rs', *fwd['dst_rst']))
                     hi_ = [(nm, f'k{b_}') for b_ in range(3) if (fwd['K'] >> b_) & 1]
                     lo_ = [(nm, f'k{b_}') for b_ in range(3) if not (fwd['K'] >> b_) & 1]
@@ -4258,12 +4457,55 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 fwd_reclass.add(b_)
     m['buses'] = B + fck_new
     m['r21_stage_of'] = stage_of
+    # QLB-GEN 10-18 (LAYERBENCH G-C1): the compiler-assigned elaboration parameters the die masters trap on --
+    # qfd_tt_ctlm_dv.XPF_TRANSPORT_EDGES = 1 hr pin register + the tt_ctlm.hr lane cycles AS BUILT (forwarded E + 1,
+    # plain n, direct 0) and qfd_d2d_static.TXDP = D2D_TXDP_C of the production image -> die.v.params.json (strict
+    # bind + tools/qwen_split/die_params.py audit re-derive both from die.v and fail closed)
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+    import die_params as _DP
+    _frow = {r_['bid']: r_ for r_ in fwd_rows if r_.get('E') is not None}
+    _hr = []
+    for pl in plans.values():
+        if (pl['eps'][0][0], pl['eps'][0][1].lstrip('*')) == ('tt_ctlm', _DP.TT_PORT) and \
+                any(by[i_].master == _DP.TT_MASTER for i_, _ in pl['eps'][:1]):
+            _hr.append((pl['bid'], _frow.get(pl['bid']) or (dict(bid=pl['bid'], n=len(pl['frames'])) if pl['frames'] else None)))
+    if not _hr:
+        _hr = [(b_, None) for b_, c_, n_, e_ in m['buses'] if e_ and e_[0][0] == 'tt_ctlm' and e_[0][1].lstrip('*') == _DP.TT_PORT]
+    _dmp, _dpr = _DP.gen_params([(i_.name, i_.master) for i_ in m['insts']], _hr)
+    for mst_, prm_ in _dmp.items():
+        m.setdefault('die_master_params', {})[mst_] = prm_
+    m['die_param_assign'] = _dpr
+    print('DIE_PARAMS ' + ' '.join(f'{k_}.{p_}={v_}' for k_, d_ in _dmp.items() for p_, v_ in d_.items() if not p_.startswith('_')))
     if FWDL:
         m['fwd_lanes'] = dict(schema='opentallas.qwen_split.fwd_lanes.v1', contract='lanes/LANDING-CONTRACT.md (Q-DIE11-RLY 10-18)',
                               D=4, lanes=fwd_rows, skipped=fwd_skip, reclassed_reset_hops=sorted(fwd_reclass),
                               masters=dict(collections.Counter(fwd_kind.values())),
                               stations=sum(len(r_['stations']) for r_ in fwd_rows), landings=len(fwd_rows),
                               plain_relays_left=sum(r_['n'] for r_ in fwd_skip))
+        m['fwd_lanes']['bus_groups'] = fwd_groups
+        # QXF-SEAMC 10-18: fail closed on a torn record bundle as BUILT (a member left a plain relay chain or a direct
+        # wire beside landed members, or two Ks): the compiler's static calendar has one seam age per bundle
+        if _rbm:
+            _rows = {r_['bid']: r_ for r_ in fwd_rows if r_.get('E') is not None}
+            _rows.update({s_['bid']: dict(bid=s_['bid'], n=s_['n'], E=None) for s_ in fwd_skip if s_['bid'] in _rbm})
+            _rba = _RB.audit_rows(_rows, _rbm, source='GEN _relays (OT_SPLIT_FWD_LANES=1)')
+            m['fwd_lanes']['record_bundles'] = _rba
+            if _rba['verdict'] != 'PASS':
+                raise ValueError(f"record bundles torn: {_rba['fails']}")
+        # Q-COLLCAL 10-18 (TP8 co-sim bug 1: the dv2f14 SerDes lanes were not in the collective calendar): the GEN emits
+        # the per-port lane cycles and the io_collective master is elaborated with LX0..2 = TX(peer port) + RX(own)
+        # (die.v.params.json, read by the strict bind; case/coll_lane_latency.json); tools/qwen_split/lane_latency_audit.py
+        # re-derives both from die.v and fails the strict bind on any drift
+        _plain = [dict(bid=pl['bid'], src=pl['eps'][0][0], dst=pl['eps'][-1][0], n=len(pl['frames']))
+                  for pl in plans.values() if pl['bid'] not in fwd_eq]
+        cll = _LG.coll_lane_latency([r_ for r_ in fwd_rows if r_.get('E') is not None], _plain,
+                                    source='GEN tools/qwen_rom_fulldie_b3r2.py _relays_fanout (OT_SPLIT_FWD_LANES=1)')
+        m['coll_lane_latency'] = cll
+        if cll['verdict'] != 'PASS':
+            raise ValueError(f"collective lane latency: {cll['fails']}")
+        if any(i_.name == _LG.COLL_INST and i_.master == _LG.COLL_MASTER for i_ in m['insts']):
+            m.setdefault('die_master_params', {})[_LG.COLL_MASTER] = dict(
+                cll['params'], _source='Q-COLLCAL: GEN lane cycles (case/coll_lane_latency.json), LX_j = TX(peer) + RX(j); Q-COLLCAL3: LS = compiled calendar lane_groups.collective_calendar')
     # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
@@ -4291,6 +4533,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     if (ep_ == 'ea' and kind_ in ('rlyh', 'landh')) or (ep_ == 'eb' and kind_ in ('rlyh0', 'rlyh')):
                         M.face(ep_, 1, f, 'M5' if f in 'NS' else 'M4', along / 2 + (bits / 2 + 2) * 0.048 * pitch_tr, pitch_tr)
                 area_ = {'rlyh0': ('ck', 'en', 'ck_o'), 'rlyh': ('ckf', 'ck_o'),
+                         'rlyr0': ('ck', 'ck_o'), 'rlyr': ('ckf', 'ck_o'), 'rlyrl': ('ck',),
                          'landh': ('ckf', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault'),
                          'landh0': ('ck_s', 'en', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault')}[kind_]
                 for j_, p_ in enumerate(area_):
@@ -4400,6 +4643,11 @@ RST_REP = 'qfd_rst_rep'          # ot_qwen_rst_rep PAD=0: 1 input flop + 2 regis
 RST_PAD = 'qfd_rst_rep_p8'       # ot_qwen_rst_rep PAD=8: 8 pad flops between the input and the output rank = 10 cycles
 RST_PAD_LV = 5                   # one pad cell = 5 repeater levels (10 cycles)
 RST_W, RST_H = 5.184, 2.16       # 12 GX x 1 GY (<= 5.4 x 2.16: 96 sites x 8 rows), M1-M3
+# Q-DIE13 10-18: OT_RST_REP_VIEW=closed plans the CLOSED qfd_rst_rep / _p8 frames (physical/ref_tile/qfd_rst_rep*,
+# 12.96 x 6.48, clk/d W M4 at y 3.132/3.228, q0 E M4 y 3.228, q1 N M5 x 6.972) so bind_real binds them by name
+RST_CLOSED = os.environ.get('OT_RST_REP_VIEW', '') == 'closed'
+if RST_CLOSED:
+    RST_W, RST_H = 12.96, 6.48
 RST_PITCH_UM = 220.0             # trunk lattice
 RST_LEAF_UM = 200.0              # sinks of one lattice cell share a leaf repeater
 RST_NET_UM = 450.0               # build limit per net (cell centres); the emitted pins are re-checked at RST_OK_UM
@@ -4856,6 +5104,17 @@ def _reset_tree(v, m):
     for nm, mst, x, y, bid, _ in cells:
         m['insts'].append(v.Inst(nm, mst, x, y, RST_W, RST_H, kind='reset_rep', region='reset_tree', domain=dom_inst[bid]))
         ck_add.setdefault(ck_of_bus[bid], []).append((nm, 'clk'))
+    # DIE-QWEN-GEN16 (Q-CB16RST 10-19): a repeater whose output drops on a cluster's regional reset pin (qfd_c_b16_dv
+    # rst_c<c>r<r>) is the LAST hop of that drop: it is clocked from the cluster's own root (re-filed with the cluster),
+    # so the 16 drops of an instance leave the die tree on the cluster's clock, all at the tree's equal depth (same edge)
+    _rn = {c[0] for c in cells}
+    _ckf = m.setdefault('ck_follow', {})
+    for w_ in wires:
+        eps_ = w_[-1]
+        drv = next((i for i, p in eps_ if i in _rn and p in ('q0', 'q1')), None)
+        tgt = next((i for i, p in eps_ if re.fullmatch(r'rst_c\d+r\d+', p.lstrip('*'))), None)
+        if drv and tgt:
+            _ckf.setdefault((drv, 'clk'), tgt)
     drop = set(idx_of.values())
     B = [b for j, b in enumerate(m['buses']) if j not in drop]
     B = [(bid, cl, bits, eps + ck_add.pop(bid)) if bid in ck_add else (bid, cl, bits, eps) for bid, cl, bits, eps in B]
@@ -4868,10 +5127,16 @@ def _reset_tree(v, m):
         for mn, pad in ((RST_REP, 0), (RST_PAD, 8)):
             M = v.Master(mn, RST_W, RST_H, 3, f'reset tree repeater (ot_qwen_rst_rep PAD={pad}): 1 input flop + {pad} pad '
                          f'flops + 2 registered outputs, standard cells M1-M3, clk + d on W, q0 on E, q1 on N')
-            M.face('clk', 1, 'W', 'M4', RST_H * 0.3)
-            M.face('d', 1, 'W', 'M4', RST_H * 0.7)
-            M.face('q0', 1, 'E', 'M4', RST_H / 2)
-            M.face('q1', 1, 'N', 'M5', RST_W / 2)
+            if RST_CLOSED:              # the closed view's own pin centres (bind_real swaps in its LEF)
+                M.face('clk', 1, 'W', 'M4', 3.132)
+                M.face('d', 1, 'W', 'M4', 3.228)
+                M.face('q0', 1, 'E', 'M4', 3.228)
+                M.face('q1', 1, 'N', 'M5', 6.972)
+            else:
+                M.face('clk', 1, 'W', 'M4', RST_H * 0.3)
+                M.face('d', 1, 'W', 'M4', RST_H * 0.7)
+                M.face('q0', 1, 'E', 'M4', RST_H / 2)
+                M.face('q1', 1, 'N', 'M5', RST_W / 2)
             o[mn] = M
         return o
     v.masters = masters
@@ -6408,11 +6673,142 @@ def _regions_from_placement(m):
             ext = round(max(max(xs_) - min(xs_), max(ys_) - min(ys_)) / 1000, 4)
             regs[kk]['extent_mm'], regs[kk]['within_5p25'] = ext, ext <= REGION_MAX_MM + 1e-9
         work += [k, nk]
+    _gen16_clock_refile(m, regs, by, per)
     moved = sum(1 for bus in m['buses'] if re.fullmatch(r'clk_r\d+', bus[0])
                 for i, p in bus[3] if not p.startswith('pll_r')
                 and f'clk_r{region_at(regs, by[i].x + by[i].w / 2, by[i].y + by[i].h / 2)}' != bus[0])
     m['buses'] = keep + [(f'clk_r{k}', 'clock_trunk', 1, [(root, f'pll_r{k}')] + per[k]) for k in sorted(per)]
     m['b3r2']['regions_from_placement'] = dict(sinks=len(sinks), duplicate_sinks_removed=duplicates, refiled=moved, region_nets=len(per), split=split)
+
+
+REP_SEG_MM = float(os.environ.get('OT_SPLIT_REP_SEG_MM', '1.3'))
+REP_COL_UM = 20.0
+REP_COL_MIN = 4
+
+
+def _gen16_clock_refile(m, regs, by, per):
+    """DIE-QWEN-GEN16 10-19 (Q-CLK verdict FAIL on dv2f14bi, items 2 + 4), after the placement re-file + span split:
+    (a) every forwarded-lane clock pin recorded in m['ck_follow'] (landing ck -> RECEIVER, hop-0 ck / ck_s -> SENDER) joins
+        the region of its owner block, not the region its own cell centre falls in (dv2f14bi: 5,538 b on the wrong root:
+        dvw_dd_wo landing r54 vs native59 r55, dv_x0_dr/rt r93 vs dvs_E0 r92, ...);
+    (b) reset repeaters (qfd_rst_rep*) whose region's repeater set spans more than REP_SEG_MM leave that region and form
+        their own local regions, one per repeater column and per <= REP_SEG_MM segment of it (dv2f14bi r12/13/14/28/29/30:
+        the field columns in the 6.48 um reset slot arrive 700-870 ps early beside the c_b16 roots and no pad fits in the
+        slot; split, each column segment is a small tree of its own).  Reset hops between segments stay registered reset
+        hops (RESET_ROOT: release window), never data crossings."""
+    rec = m['b3r2'].setdefault('gen16_clock_refile', dict(follow_moved=0, follow_missing_owner=[], rep_regions_split=0,
+                                                            rep_segments=0))
+    # (c) OT_SPLIT_CK_COROOT='a,b,c;d,e': abutting W-column blocks with direct (unlanded) buses share ONE local region
+    #     (dv2f14bi: tt_ctlm <-> native59 423 + 95 b direct, embed_prov <-> native59 / tt_ctlm on r54 vs r55)
+    for grp in [g.split(',') for g in os.environ.get('OT_SPLIT_CK_COROOT', '').split(';') if g.strip()]:
+        loc = {}
+        for k, l in per.items():
+            for i, p in l:
+                if i in grp:
+                    loc.setdefault(i, []).append((k, p))
+        if grp[0] not in loc:
+            continue
+        k1 = next((k for k, p in loc[grp[0]] if p == 'ck'), loc[grp[0]][0][0])
+        n_ = 0
+        for i in grp[1:]:
+            for k, p in loc.get(i, []):
+                if k != k1:
+                    per[k].remove((i, p)); per[k1].append((i, p)); n_ += 1
+        rec.setdefault('coroot', []).append(dict(group=grp, region=k1, moved=n_))
+        for k in [k for k, l in per.items() if not l]:
+            del per[k]
+    follow = m.get('ck_follow') or {}
+    if follow:
+        where = {}
+        for k, l in per.items():
+            for i, p in l:
+                where[(i, p)] = k
+        own = {}
+        for k, l in sorted(per.items()):
+            for i, p in l:
+                pr = 0 if p == 'ck' else 1 if p == 'clk' else 2
+                if (i, p) not in follow and (i not in own or pr < own[i][0]):
+                    own[i] = (pr, k)
+        for (i, p), o in sorted(follow.items()):
+            k0 = where.get((i, p))
+            if k0 is None:
+                continue
+            if o not in own:
+                rec['follow_missing_owner'].append(f'{i}.{p}->{o}')
+                continue
+            k1 = own[o][1]
+            if k1 != k0:
+                per[k0].remove((i, p))
+                per[k1].append((i, p))
+                rec['follow_moved'] += 1
+        for k in [k for k, l in per.items() if not l]:
+            del per[k]
+    cap = REP_SEG_MM * 1000
+    for k in sorted(per):
+        reps = [(i, p) for i, p in per[k] if by[i].master.startswith('qfd_rst_rep')]
+        if len(reps) < 2:
+            continue
+        cx = lambda i: by[i].x + by[i].w / 2
+        cy = lambda i: by[i].y + by[i].h / 2
+        xs, ys = [cx(i) for i, _ in reps], [cy(i) for i, _ in reps]
+        if max(max(xs) - min(xs), max(ys) - min(ys)) <= cap:
+            continue
+        # columns: repeaters stacked in one reset slot (same x within REP_COL_UM, >= REP_COL_MIN of them); scattered
+        # repeaters along lanes stay in the block region (dv2f16 first GEN: x single linkage made 1,340 one-repeater roots)
+        grp, cur = [], []
+        for i, p in sorted(reps, key=lambda e: cx(e[0])):
+            if cur and cx(i) - cx(cur[-1][0]) > REP_COL_UM:
+                grp.append(cur); cur = []
+            cur.append((i, p))
+        grp.append(cur)
+        cols = [c for c in grp if len(c) >= REP_COL_MIN]
+        if not cols:
+            continue
+        reps = [e for c in cols for e in c]
+        segs = []
+        for col in cols:
+            col = sorted(col, key=lambda e: cy(e[0]))
+            seg = [col[0]]
+            for e in col[1:]:
+                if cy(e[0]) - cy(seg[0][0]) > cap:
+                    segs.append(seg); seg = []
+                seg.append(e)
+            segs.append(seg)
+        rs_ = set(reps)
+        rest = [e for e in per[k] if e not in rs_]
+        r0 = regs[k]
+        first = True
+        for j, seg in enumerate(segs):
+            if first and not rest:
+                per[k] = seg; first = False
+                continue
+            nk = len(regs)
+            regs.append(dict(name=f"{r0['name']}_rep{j}", kind='reset_column', rect=list(r0['rect']), split_of=r0['name']))
+            per[nk] = seg
+        if rest:
+            per[k] = rest
+        rec['rep_regions_split'] += 1
+        rec['rep_segments'] += len(segs)
+
+
+def _gen16_fwd_ck_names(m):
+    """fwd_lanes.json src_ck / dst_ck = the region nets the lane's hop-0 / landing clock pins are ACTUALLY on (Q-CLK: the
+    names recorded at plan time were stale after the placement re-file)."""
+    lanes = (m.get('fwd_lanes') or {}).get('lanes') or []
+    if not lanes:
+        return
+    net = {}
+    for bid, cl, bits, eps in m['buses']:
+        if cl == 'clock_trunk':
+            for i, p in eps:
+                net[(i, p)] = bid
+    for ln in lanes:
+        st = ln.get('stations') or []
+        h0 = st[0] if st else ln.get('landing')
+        if h0:
+            ln['src_ck'] = net.get((h0, 'ck'), net.get((h0, 'ck_s'), ln.get('src_ck')))
+        if ln.get('landing'):
+            ln['dst_ck'] = net.get((ln['landing'], 'ck'), ln.get('dst_ck'))
 
 
 def region_spans(m):
@@ -6990,6 +7386,51 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
     man = v.case_real(m, work)
     M = v.masters(m, 1)
     pw = v.port_widths(m, 1)
+    # DIE-QWEN-LEAD 10-19 (Q-CLK finding on dv2f14bi / dv2f15next): the clock receiver master took its pll_r<k> pins
+    # from the bus list seen when the masters were first built, so the late region trunks (pll_r55, pll_r89..r106) were
+    # in die.v but NOT in the LEF (STA-0201 x19; ~960 clock entry pins undriven physically). Give qfd_clkrx every root
+    # the final netlist connects, at the GEN's stable slot (rom_r22k.py: 3.2 um grid, pll_r<k> -> slot k).
+    cxm = M.get('qfd_clkrx')
+    if cxm is not None:
+        want = set()
+        for _bid, _cl, _bits, eps in m['buses']:
+            for inst, port in eps:
+                if inst == 'clk_rx':
+                    want.add(port.lstrip('*'))
+        added = []
+        for p in sorted(want - set(cxm.ports)):
+            mk_ = re.fullmatch(r'pll_r(\d+)', p)
+            if not mk_:
+                raise SystemExit(f'qfd_clkrx: die.v connects clk_rx.{p} but the master has no such pin (not a pll_r root)')
+            j = int(mk_.group(1))
+            cxm.area(p, 1, min(cxm.w - 1.0, max(1.0, cxm.w / 2 + ((j % 16) - 8) * 3.2)),
+                     min(cxm.h - 1.0, max(1.0, cxm.h / 2 + (j // 16 - 8) * 3.2)), 1)
+            pw.setdefault(('qfd_clkrx', p), 1)
+            added.append(p)
+        # GEN16 10-19 (dv2f16 first GEN: PIN_OVERLAP FAIL qfd_clkrx 8 pairs): rom_r22k puts the non-pll ports at slots
+        # 200+, which collide with pll_r200.. once the die has > 200 region roots (48 c_b16 x 16 regional clocks); move
+        # every non-pll area pin that sits on a pll_r slot to the first free slot past the highest pll_r index
+        def _slot_xy(j):
+            return (min(cxm.w - 1.0, max(1.0, cxm.w / 2 + ((j % 16) - 8) * 3.2)),
+                    min(cxm.h - 1.0, max(1.0, cxm.h / 2 + (j // 16 - 8) * 3.2)))
+        pll_k = [int(q.group(1)) for q in (re.fullmatch(r'pll_r(\d+)', p) for p in cxm.ports) if q]
+        taken = {tuple(round(c, 3) for c in _slot_xy(j)) for j in pll_k}
+        nxt, relocated = max(pll_k, default=199) + 1, []
+        for p in list(cxm.order):
+            sp_ = cxm.ports[p]
+            if sp_[0] != 'area' or re.fullmatch(r'pll_r\d+', p):
+                continue
+            if (round(sp_[2], 3), round(sp_[3], 3)) not in taken:
+                continue
+            while tuple(round(c, 3) for c in _slot_xy(nxt)) in taken:
+                nxt += 1
+            x_, y_ = _slot_xy(nxt)
+            cxm.ports[p] = ('area', sp_[1], x_, y_, sp_[4])
+            taken.add((round(x_, 3), round(y_, 3)))
+            relocated.append(f'{p}->slot{nxt}')
+            nxt += 1
+        print(f'CLKRX_PORTS netlist {len(want)} master {len(cxm.ports)} added {len(added)} {added} '
+              f'relocated {len(relocated)} {relocated}', flush=True)
     parts = []
     # r5: the power abstracts take the selected module's pin geometry (tree-column / edge-entry pin_rects live on v,
     # PG.powered_lef reads F, which raised on the b3r7+ 6-field pin specs); r4 keeps its F geometry byte-identical

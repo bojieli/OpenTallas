@@ -11,7 +11,7 @@ $VL --binary --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno
  tools/qwen_attention_native/rate_1015/pv_pair_bench.vlt rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_t.sv \
  rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv \
  rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fpu.sv \
- physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv \
+ physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv \
  rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv rtl/test/nearhbm/tb_qkd_pvw_die_t.sv \
  > "$O/build_m${TM}_f${FA}.log" 2>&1 || { echo "PV_PAIR_T FAIL build"; tail -5 "$O/build_m${TM}_f${FA}.log"; exit 1; }
 rc=0

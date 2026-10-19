@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_c_b16_dv",
+ "enable": false,
+ "reason": "qc_gen.py RTL registers every data pin in the S / N strip (bc / rs_i entry flops, bco / rs / rs_o exit flops, rst_n pin register); cid / far are static straps from the instance's own tie cells"
+}

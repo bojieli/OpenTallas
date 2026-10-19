@@ -11,6 +11,8 @@ one E per link, the same at TT and FF, from the die STA of a GEN that already ca
       E = max over corners of 1 + ceil(-S1 / T) (>= 1); window check hold_E = H0 + (D - E) T >= 0 at TT and FF (a hold
       miss raises D, never E); K = E mod 8 (the reset calendar G = R0; --calendar JSON {bid: G - R0} overrides).
       The next GEN takes it with OT_SPLIT_LAND_PLAN=land_plan.json (E -> landing.sdc MCP, K -> the landing's k straps).
+      QK-LANDEN 10-19 / RLYH0-EN 10-19: this K excludes the hop-0 en register edge (every lane: landh0 n = 1 and rlyh0
+      n >= 2); the GEN adds it once (lane_groups.HOP0_EN_REG).
 """
 import argparse, json, math, re
 from pathlib import Path
@@ -39,7 +41,9 @@ def main():
              '  if {[llength $p] == 0} { return NA }',
              '  return [get_property [lindex $p 0] slack]', '}']
         for r in fl['lanes']:
-            L.append(f"puts \"OT_LAND {r['bid']} {a.corner} {r['E']} setup [ot_land_worst {{{pins(r)}}} max] "
+            if r.get('lane') == 'reset':
+                continue
+            L.append(f"puts \"OT_LAND {r['bid']} {a.corner} {r.get('E_sta', r['E'])} setup [ot_land_worst {{{pins(r)}}} max] "
                      f"hold [ot_land_worst {{{pins(r)}}} min]\"")
         a.out.write_text('\n'.join(L) + '\n')
         print(f'{a.out}: {len(fl["lanes"])} lanes')
@@ -51,6 +55,8 @@ def main():
             meas.setdefault(m.group(1), {})[m.group(2)] = (int(m.group(3)), m.group(4), m.group(5))
     rows, fails = [], []
     for r in fl['lanes']:
+        if r.get('lane') == 'reset':
+            continue
         mm = meas.get(r['bid'], {})
         s1, h0 = {}, {}
         for c, (e0, s, h) in mm.items():
