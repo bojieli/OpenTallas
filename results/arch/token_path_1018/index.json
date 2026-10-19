@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.token_compose_xdie.v1.index",
- "generated_from": "ef4ed3044",
+ "generated_from": "c3d7079dc",
  "tool": "tools/token_compose_xdie.py",
  "clock_hz": 1200000000.0,
  "formula": "T_token = sum_l n_l C_die(l) + sum_l n_l sum_x max(0, E_meas(x) - O_meas(l,x)); tok/s = f_clk / T (MTP: per accepted token = step / tau)",
@@ -148,7 +148,7 @@
    "why": "no token_compose block (record not yet in the override format)"
   },
   {
-   "record": "results/rtl/xdie_qwen_1018/pair_r1/record.json",
+   "record": "results/rtl/xdie_qwen_1018/pair_r2/record.json",
    "family": "xdie",
    "used": true,
    "n_terms": 2,
@@ -217,14 +217,14 @@
   "qwen_rom": {
    "ar": {
     "title": "Qwen3-8B ROM (compute dies + KV die + D2D), 8K context, AR",
-    "tok_s": 4769.2,
-    "T_token_cycles": 251615.0,
-    "per_accepted_cycles": 251615.0,
+    "tok_s": 4766.5,
+    "T_token_cycles": 251759.0,
+    "per_accepted_cycles": 251759.0,
     "tau": null,
-    "pct_measured_current_rtl": 0.74,
-    "banner": "0.7% of token cycles measured on current RTL (98.5% on older RTL, 0.1% modelled PHY, 0.7% priced)",
+    "pct_measured_current_rtl": 0.8,
+    "banner": "0.8% of token cycles measured on current RTL (98.4% on older RTL, 0.1% modelled PHY, 0.7% priced)",
     "by_grade": {
-     "measured-current-RTL": 1872.0,
+     "measured-current-RTL": 2016.0,
      "measured-old-RTL": 247743.0,
      "modelled-PHY": 360.0,
      "priced": 1640.0
@@ -234,7 +234,7 @@
      "cycles": 249431.0,
      "source": "results/rtl/qwen_layer_tput_1013/record.json end_to_end.base_cycles (6,835-cycle production layer)"
     },
-    "vs_price_pct": -0.87
+    "vs_price_pct": -0.92
    },
    "mtp": {
     "available": false,
