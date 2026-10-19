@@ -6075,7 +6075,8 @@
     "out_delay_frac": 0.2
    },
    "rtl_owner": "HC owner: HC engine",
-   "version": 5
+   "version": 5,
+   "instance": "hc_eng"
   },
   {
    "name": "lk_N0",
@@ -15038,7 +15039,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 1
+   "version": 1,
+   "instance": "host_cp_ingress"
   },
   {
    "name": "hb_ckgen",
@@ -19231,7 +19233,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: write-back K port SW in the SM pair gap sm_SW2/sm_SW3 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_SW (2,405 b); old slot sat E of the PHY beside nothing it talks to"
+   "notes": "TW5-GEN2E 10-19: write-back K port SW in the SM pair gap sm_SW2/sm_SW3 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_SW (2,405 b); old slot sat E of the PHY beside nothing it talks to",
+   "instance": "wbk_SW"
   },
   {
    "name": "wbk_NW",
@@ -19254,7 +19257,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: write-back K port NW in the SM pair gap sm_NW2/sm_NW3 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_NW (2,405 b); old slot sat E of the PHY beside nothing it talks to"
+   "notes": "TW5-GEN2E 10-19: write-back K port NW in the SM pair gap sm_NW2/sm_NW3 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_NW (2,405 b); old slot sat E of the PHY beside nothing it talks to",
+   "instance": "wbk_NW"
   },
   {
    "name": "sfup_SW",
@@ -22045,7 +22049,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX quarter scorer SW in plan idxs_SW, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner"
+   "notes": "TW5-GEN2E 10-19: IDX quarter scorer SW in plan idxs_SW, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner",
+   "instance": "hb_idx__s_SW"
   },
   {
    "name": "hb_idx__q_SW",
@@ -22068,7 +22073,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX query core SW beside its scorer hb_idx__s_SW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+   "notes": "TW5-GEN2E 10-19: IDX query core SW beside its scorer hb_idx__s_SW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)",
+   "instance": "hb_idx__q_SW"
   },
   {
    "name": "hb_idx__op_SW",
@@ -22091,7 +22097,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX VM operand reader SW beside its scorer hb_idx__s_SW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+   "notes": "TW5-GEN2E 10-19: IDX VM operand reader SW beside its scorer hb_idx__s_SW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)",
+   "instance": "hb_idx__op_SW"
   },
   {
    "name": "hb_idx__s_SE",
@@ -22114,7 +22121,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX quarter scorer SE in plan idxs_SE, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner"
+   "notes": "TW5-GEN2E 10-19: IDX quarter scorer SE in plan idxs_SE, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner",
+   "instance": "hb_idx__s_SE"
   },
   {
    "name": "hb_idx__q_SE",
@@ -22137,7 +22145,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX query core SE beside its scorer hb_idx__s_SE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+   "notes": "TW5-GEN2E 10-19: IDX query core SE beside its scorer hb_idx__s_SE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)",
+   "instance": "hb_idx__q_SE"
   },
   {
    "name": "hb_idx__op_SE",
@@ -22160,7 +22169,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX VM operand reader SE beside its scorer hb_idx__s_SE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+   "notes": "TW5-GEN2E 10-19: IDX VM operand reader SE beside its scorer hb_idx__s_SE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)",
+   "instance": "hb_idx__op_SE"
   },
   {
    "name": "hb_idx__s_NW",
@@ -22183,7 +22193,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX quarter scorer NW in plan idxs_NW, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner"
+   "notes": "TW5-GEN2E 10-19: IDX quarter scorer NW in plan idxs_NW, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner",
+   "instance": "hb_idx__s_NW"
   },
   {
    "name": "hb_idx__q_NW",
@@ -22206,7 +22217,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX query core NW beside its scorer hb_idx__s_NW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+   "notes": "TW5-GEN2E 10-19: IDX query core NW beside its scorer hb_idx__s_NW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)",
+   "instance": "hb_idx__q_NW"
   },
   {
    "name": "hb_idx__op_NW",
@@ -22229,7 +22241,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX VM operand reader NW beside its scorer hb_idx__s_NW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+   "notes": "TW5-GEN2E 10-19: IDX VM operand reader NW beside its scorer hb_idx__s_NW (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)",
+   "instance": "hb_idx__op_NW"
   },
   {
    "name": "hb_idx__s_NE",
@@ -22252,7 +22265,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX quarter scorer NE in plan idxs_NE, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner"
+   "notes": "TW5-GEN2E 10-19: IDX quarter scorer NE in plan idxs_NE, on its PHY-side edge (PHY / PC band at >= 60 um): nearest legal site to its 4 svg peers (4 x 1,099 b on the PC band); was a peer-centroid home in a die corner",
+   "instance": "hb_idx__s_NE"
   },
   {
    "name": "hb_idx__q_NE",
@@ -22275,7 +22289,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX query core NE beside its scorer hb_idx__s_NE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+   "notes": "TW5-GEN2E 10-19: IDX query core NE beside its scorer hb_idx__s_NE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)",
+   "instance": "hb_idx__q_NE"
   },
   {
    "name": "hb_idx__op_NE",
@@ -22298,7 +22313,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: IDX VM operand reader NE beside its scorer hb_idx__s_NE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)"
+   "notes": "TW5-GEN2E 10-19: IDX VM operand reader NE beside its scorer hb_idx__s_NE (GEN2c topology; the op-beside-VM-banks lever needs an IDX re-budget)",
+   "instance": "hb_idx__op_NE"
   },
   {
    "name": "wbk_SE",
@@ -22321,7 +22337,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: write-back K port SE in the SM pair gap sm_SW4/sm_SW5 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_SE (2,405 b); old slot sat E of the PHY beside nothing it talks to"
+   "notes": "TW5-GEN2E 10-19: write-back K port SE in the SM pair gap sm_SW4/sm_SW5 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_SE (2,405 b); old slot sat E of the PHY beside nothing it talks to",
+   "instance": "wbk_SE"
   },
   {
    "name": "wbk_NE",
@@ -22344,7 +22361,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: write-back K port NE in the SM pair gap sm_NW4/sm_NW5 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_NE (2,405 b); old slot sat E of the PHY beside nothing it talks to"
+   "notes": "TW5-GEN2E 10-19: write-back K port NE in the SM pair gap sm_NW4/sm_NW5 on the PC band edge, beside its vmks consumers (4 x 1,156 b) on the way to hb_dbk_NE (2,405 b); old slot sat E of the PHY beside nothing it talks to",
+   "instance": "wbk_NE"
   },
   {
    "name": "xl_SW_ctl",
@@ -22367,7 +22385,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 20 placed peers (11004 b, bits^2 weighted) (>= 0): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (4928, 7947), 2518 um off it; 32 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 20 placed peers (11004 b, bits^2 weighted) (>= 0): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (4928, 7947), 2518 um off it; 32 um from its GEN2a site",
+   "instance": "xl_SW_ctl"
   },
   {
    "name": "xl_NW_ctl",
@@ -22390,7 +22409,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 20 placed peers (11004 b, bits^2 weighted) (>= 0): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (4932, 23826), 2523 um off it; 32 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 20 placed peers (11004 b, bits^2 weighted) (>= 0): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (4932, 23826), 2523 um off it; 32 um from its GEN2a site",
+   "instance": "xl_NW_ctl"
   },
   {
    "name": "xl_SE_ctl",
@@ -22413,7 +22433,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 11 placed peers (2599 b, bits^2 weighted) (>= 0.): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (15679, 8328), 2488 um off it; 4331 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 11 placed peers (2599 b, bits^2 weighted) (>= 0.): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (15679, 8328), 2488 um off it; 4331 um from its GEN2a site",
+   "instance": "xl_SE_ctl"
   },
   {
    "name": "xl_NE_ctl",
@@ -22436,7 +22457,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 11 placed peers (2599 b, bits^2 weighted) (>= 0.): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (15675, 23442), 2496 um off it; 4331 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 11 placed peers (2599 b, bits^2 weighted) (>= 0.): nearest clear site to the bits^2 centroid of 23 peers at their GEN2e positions (15675, 23442), 2496 um off it; 4331 um from its GEN2a site",
+   "instance": "xl_NE_ctl"
   },
   {
    "name": "hb_dbk_SE",
@@ -22459,7 +22481,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 10 placed peers (4598 b, bits^2 weighted) -> out): nearest clear site to the bits^2 centroid of 11 peers at their GEN2e positions (13040, 3014), 415 um off it; 81 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 10 placed peers (4598 b, bits^2 weighted) -> out): nearest clear site to the bits^2 centroid of 11 peers at their GEN2e positions (13040, 3014), 415 um off it; 81 um from its GEN2a site",
+   "instance": "hb_dbk_SE"
   },
   {
    "name": "hb_dbk_NE",
@@ -22482,7 +22505,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 10 placed peers (4598 b, bits^2 weighted) -> out): nearest clear site to the bits^2 centroid of 11 peers at their GEN2e positions (13033, 28753), 409 um off it; 81 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 10 placed peers (4598 b, bits^2 weighted) -> out): nearest clear site to the bits^2 centroid of 11 peers at their GEN2e positions (13033, 28753), 409 um off it; 81 um from its GEN2a site",
+   "instance": "hb_dbk_NE"
   },
   {
    "name": "hb_quant_NW",
@@ -22505,7 +22529,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 9 placed peers (2571 b, bits^2 weighted) OWNER-B): nearest clear site to the bits^2 centroid of 10 peers at their GEN2e positions (3217, 20885), 71 um off it; 173 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 9 placed peers (2571 b, bits^2 weighted) OWNER-B): nearest clear site to the bits^2 centroid of 10 peers at their GEN2e positions (3217, 20885), 71 um off it; 173 um from its GEN2a site",
+   "instance": "hb_quant_NW"
   },
   {
    "name": "hb_idx__qctl_SW",
@@ -22528,7 +22553,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (9984, 13652), 857 um off it; 896 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (9984, 13652), 857 um off it; 896 um from its GEN2a site",
+   "instance": "hb_idx__qctl_SW"
   },
   {
    "name": "hb_idx__qctl_SE",
@@ -22551,7 +22577,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (10067, 13652), 1178 um off it; 821 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (10067, 13652), 1178 um off it; 821 um from its GEN2a site",
+   "instance": "hb_idx__qctl_SE"
   },
   {
    "name": "hb_idx__qctl_NW",
@@ -22574,7 +22601,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (9984, 13871), 1113 um off it; 1199 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (9984, 13871), 1113 um off it; 1199 um from its GEN2a site",
+   "instance": "hb_idx__qctl_NW"
   },
   {
    "name": "hb_idx__qctl_NE",
@@ -22597,7 +22625,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (10067, 13871), 1197 um off it; 1604 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (333 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 5 peers at their GEN2e positions (10067, 13871), 1197 um off it; 1604 um from its GEN2a site",
+   "instance": "hb_idx__qctl_NE"
   },
   {
    "name": "epcal_SW",
@@ -22620,7 +22649,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (362 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (7757, 7096), 58 um off it; 0 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (362 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (7757, 7096), 58 um off it; 0 um from its GEN2a site",
+   "instance": "epcal_SW"
   },
   {
    "name": "epcal_NW",
@@ -22643,7 +22673,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 2 placed peers (343 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 2 peers at their GEN2e positions (7897, 24525), 177 um off it; 254 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 2 placed peers (343 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 2 peers at their GEN2e positions (7897, 24525), 177 um off it; 254 um from its GEN2a site",
+   "instance": "epcal_NW"
   },
   {
    "name": "epcal_SE",
@@ -22666,7 +22697,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 2 placed peers (343 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 2 peers at their GEN2e positions (12611, 6108), 6 um off it; 65 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 2 placed peers (343 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 2 peers at their GEN2e positions (12611, 6108), 6 um off it; 65 um from its GEN2a site",
+   "instance": "epcal_SE"
   },
   {
    "name": "epcal_NE",
@@ -22689,7 +22721,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 2 placed peers (343 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 2 peers at their GEN2e positions (12284, 25147), 107 um off it; 76 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 2 placed peers (343 b, bits^2 weighted) -> outsi): nearest clear site to the bits^2 centroid of 2 peers at their GEN2e positions (12284, 25147), 107 um off it; 76 um from its GEN2a site",
+   "instance": "epcal_NE"
   },
   {
    "name": "xl_SW_aqlo",
@@ -22712,7 +22745,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 7338), 616 um off it; 43 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 7338), 616 um off it; 43 um from its GEN2a site",
+   "instance": "xl_SW_aqlo"
   },
   {
    "name": "xl_SW_aqhi",
@@ -22735,7 +22769,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 7338), 756 um off it; 356 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 7338), 756 um off it; 356 um from its GEN2a site",
+   "instance": "xl_SW_aqhi"
   },
   {
    "name": "xl_NW_aqlo",
@@ -22758,7 +22793,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 24435), 605 um off it; 32 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 24435), 605 um off it; 32 um from its GEN2a site",
+   "instance": "xl_NW_aqlo"
   },
   {
    "name": "xl_NW_aqhi",
@@ -22781,7 +22817,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 24435), 734 um off it; 335 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (3457, 24435), 734 um off it; 335 um from its GEN2a site",
+   "instance": "xl_NW_aqhi"
   },
   {
    "name": "xl_SE_aqlo",
@@ -22804,7 +22841,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 7338), 661 um off it; 4234 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 7338), 661 um off it; 4234 um from its GEN2a site",
+   "instance": "xl_SE_aqlo"
   },
   {
    "name": "xl_SE_aqhi",
@@ -22827,7 +22865,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 7338), 802 um off it; 4169 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 7338), 802 um off it; 4169 um from its GEN2a site",
+   "instance": "xl_SE_aqhi"
   },
   {
    "name": "xl_NE_aqlo",
@@ -22850,7 +22889,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 24435), 651 um off it; 4223 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 24435), 651 um off it; 4223 um from its GEN2a site",
+   "instance": "xl_NE_aqlo"
   },
   {
    "name": "xl_NE_aqhi",
@@ -22873,7 +22913,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 24435), 780 um off it; 4147 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 3 placed peers (1560 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 3 peers at their GEN2e positions (16694, 24435), 780 um off it; 4147 um from its GEN2a site",
+   "instance": "xl_NE_aqhi"
   },
   {
    "name": "hb_idx__nwsh",
@@ -22896,7 +22937,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 9 placed peers (4384 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 14 peers at their GEN2e positions (2606, 21831), 830 um off it; 2435 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 9 placed peers (4384 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 14 peers at their GEN2e positions (2606, 21831), 830 um off it; 2435 um from its GEN2a site",
+   "instance": "hb_idx__nwsh"
   },
   {
    "name": "cxij_SW",
@@ -22919,7 +22961,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (4609, 11928), 190 um off it; 902 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (4609, 11928), 190 um off it; 902 um from its GEN2a site",
+   "instance": "cxij_SW"
   },
   {
    "name": "cxij_SE",
@@ -22942,7 +22985,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (15711, 11900), 219 um off it; 799 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (15711, 11900), 219 um off it; 799 um from its GEN2a site",
+   "instance": "cxij_SE"
   },
   {
    "name": "cxij_NW",
@@ -22965,7 +23009,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (4650, 19870), 219 um off it; 940 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (4650, 19870), 219 um off it; 940 um from its GEN2a site",
+   "instance": "cxij_NW"
   },
   {
    "name": "cxij_NE",
@@ -22988,7 +23033,8 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (15711, 19874), 221 um off it; 805 um from its GEN2a site"
+   "notes": "TW5-GEN2E 10-19: grant slot for a GEN2a generated home (centroid of 5 placed peers (5120 b, bits^2 weighted) -> outs): nearest clear site to the bits^2 centroid of 8 peers at their GEN2e positions (15711, 19874), 221 um off it; 805 um from its GEN2a site",
+   "instance": "cxij_NE"
   }
  ],
  "sub_layouts": {

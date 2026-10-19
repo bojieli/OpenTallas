@@ -92,7 +92,7 @@ class Occ:
 
 
 def mkslot(name, cell, x, y, w, h, notes, extra=None):
-    s = dict(name=name, cell=cell, kind='tile', parent='die', outline=dict(w=w, h=h), origin=dict(x=x, y=y, orient='R0'),
+    s = dict(name=name, instance=name, cell=cell, kind='tile', parent='die', outline=dict(w=w, h=h), origin=dict(x=x, y=y, orient='R0'),
              pins=[], pin_status='FACES_ONLY', grant=GRANT, layer_cap='M5', signal_max_layer='M5', pg_layer='M5',
              strap_layer='M6', notes=notes)
     s.update(extra or {})
