@@ -399,3 +399,4 @@ Command: `plan_p4.py --plans f4c --grp-side 259.2 --coll-d 4500 --coll-l5 --hc q
 - It still stops if any master stays missing (no stubs).
 
 **Chain relaunched on the P3 case:** `TAG=f4c_t9p3 bash physical/hbm_next/die/hnx_case_run.sh` (replaces hnx_t8_run.sh). It runs S3 (relay-free GEN), then S4..S8. Log: `/home/ubuntu/artifacts/hnx/die_p4/chain.log`. The t8 logs are in `t8_dead_s6_1019/`, and t8 is not rerun.
+- S3 relay-free case f4c_t9p3: **GEN_OK**, 1,214 insts, 0 placement problems, overreach 696,308 nets (t8 669,586; the die is 2.8 mm taller), `case_f4c_t9p3/layout.png` (LOOKED: SM = P=1 stand-ins in the P3 slots, IDX quarters in corners). S4..S8 running.
