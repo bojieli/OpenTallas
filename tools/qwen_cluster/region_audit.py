@@ -7,12 +7,22 @@ Reads the generated RTL (fabric + cluster) and the contract, and checks:
   R2  every net that crosses a region seam goes straight from one register to the next register (a single registered
       hop: fixed one-edge latency, no logic, no flow control);
   R3  every crossing joins NEIGHBOURING regions (|dc| <= 1 and |dr| <= 1), so the die's neighbour-skew check covers it;
-  R4  every crossing hop is within reach (<= 405 um, planned sites / tile faces).
-Writes the crossing list (for the compiler: added edges per link = 0; for the die: the communicating region pairs whose
-regional clocks must be neighbour-matched).
+  R4  every crossing hop is within reach (<= 405 um, planned sites / tile faces);
+  R5  (Q-CL16-LAND) every LANDED crossing of the contract (cluster_contract_dv.json "landings") is a ring
+      (qfd_c_land_w on the source region root, fed flop-first by a source-region register) and a read half
+      (qfd_c_land_r on the destination root, o consumed only by destination-region registers), and it is the ONLY path of
+      that ordered region pair (the kit SDC's set_multicycle_path -from ck_<src> -to ck_<dst> covers exactly its
+      bank -> o paths).
+Writes the crossing list (for the compiler: added edges per link, 0 for a plain hop, E + 1 for a landed one; for the
+die: the communicating region pairs).
 
-  region_audit.py [--fabric F] [--cluster C] [--out JSON] [--mutate station|tile]   (fail-witness self-test:
-      'station' rebinds one c0r0 station to ck_c3r3, 'tile' rebinds tile (0,0)'s ck entry to ck_c2r0)
+  region_audit.py [--fabric F] [--cluster C] [--out JSON] [--mutate station|tile|landclk]   (fail-witness self-test:
+      'station' rebinds one c0r0 station to ck_c3r3, 'tile' rebinds tile (0,0)'s ck entry to ck_c2r0, 'landclk' reads
+      the first landing's ring on its WRITE clock, 'unland' bypasses the first landing)
+  R6  (Q-CLUSTER-LANDALL) with the contract's landings mode 'all', every multi-bit crossing is landed; only the 1-bit
+      reset-tree hops cross a seam as plain registered hops.
+  R7  (Q-CB16RST 10-19) with landings resets 'region' (16 die-delivered regional resets), NO plain crossing remains:
+      every seam crossing is landed.  Mutant 'rsthop' feeds c1r2's reset pin register from c1r1's (R7 FAIL).
 Prints REGION_AUDIT_PASS / REGION_AUDIT_FAIL <n>.
 """
 from __future__ import annotations
@@ -38,7 +48,7 @@ def main():
     ap.add_argument("--fabric", default=str(RTL / "qfd_c_b16_dv_fabric.sv"))
     ap.add_argument("--cluster", default=str(RTL / "qfd_c_b16_dv.sv"))
     ap.add_argument("--out")
-    ap.add_argument("--mutate", choices=["station", "tile"])
+    ap.add_argument("--mutate", choices=["station", "tile", "landclk", "unland", "rsthop"])
     a = ap.parse_args()
     fab = Path(a.fabric).read_text()
     clu = Path(a.cluster).read_text()
@@ -48,6 +58,24 @@ def main():
         fab = re.sub(r"(u_dn0_rly1 \(\.ck\()ck_c0r\d", r"\1ck_c3r3", fab, count=1)
     if a.mutate == "tile":
         clu = re.sub(r"(u_t_0_0 \(\n\s+\.ck\()ck_c0r0", r"\1ck_c2r0", clu, count=1)
+    lands = {L["name"]: L for L in C.get("landings", {}).get("list", [])}
+    if a.mutate == "landclk":
+        if not lands:
+            raise SystemExit("--mutate landclk: the contract lists no landing")
+        L0 = next(iter(lands.values()))
+        fab = re.sub(rf"(u_land_{L0['name']}_r \(\.ck\()ck_\w+?\)", rf"\1ck_{L0['src_region']})", fab, count=1)
+    if a.mutate == "unland":
+        # bypass the first landing: its consumer takes the ring's input (an unlanded multi-bit crossing again)
+        if not lands:
+            raise SystemExit("--mutate unland: the contract lists no landing")
+        L0 = next(iter(lands.values()))
+        i0 = re.search(rf"u_land_{L0['name']}_w \(.*?\.i\((\w+)\)", fab).group(1)
+        fab = fab.replace(f".o(land_{L0['name']}))", f".o(land_{L0['name']}_dead))") + f"\n    assign land_{L0['name']} = {i0};\n"
+    if a.mutate == "rsthop":
+        # Q-CB16RST fail witness: region c1r2's reset pin register fed from c1r1's (a plain 1-bit reset hop across a seam)
+        fab, n_ = re.subn(r"(u_rpin_c1r2 \(\.ck\(ck_c1r2\), \.d\()\w+\)", r"\1rpin_c1r1_q)", fab, count=1)
+        if not n_:
+            raise SystemExit("--mutate rsthop: no u_rpin_c1r2 (regional resets not generated)")
     xs, ys = C["region_seams"]["x"], C["region_seams"]["y"]
 
     def region_at(x, y):
@@ -60,6 +88,16 @@ def main():
         regs[m.group(2)] = dict(region=m.group(3), d=[m.group(4)], q=[m.group(5)], kind=m.group(1).split(" ")[0])
     for m in re.finditer(r"(qfd_c_xstnw?) (\w+) \(\.ck\(ck_(\w+)\), \.rst_n\((\w+)\), \.sidx\([^)]*\), \.b_d\((\w+)\), \.a_d\((\w+)\), \.tap_d\((\w+)\)\)", fab):
         regs[m.group(2)] = dict(region=m.group(3), d=[m.group(5), m.group(4)], q=[m.group(6), m.group(7)], kind=m.group(1))
+    PAR = r"#\((?:[^()]|\([^()]*\))*\)"
+    for m in re.finditer(rf"qfd_c_land_w {PAR} (\w+) \(\.ck\(ck_(\w+)\), \.rsi\((\w+)\), \.i\((\w+)\), \.bank\((\w+)\), "
+                         r"\.epo\((\w+)\), \.vld\((\w+)\)\)", fab):
+        regs[m.group(1)] = dict(region=m.group(2), d=[m.group(3), m.group(4)], q=[m.group(5), m.group(6), m.group(7)],
+                                kind="qfd_c_land_w", i=m.group(4))
+    for m in re.finditer(rf"qfd_c_land_r {PAR} (\w+) \(\.ck\(ck_(\w+)\), \.rsi\((\w+)\), \.bank\((\w+)\), \.epo\((\w+)\), "
+                         r"\.vld\((\w+)\), \.o\((\w+)\)\)", fab):
+        # the ring -> read crossing is ONE landed link: bank is its data; epo / vld travel with it (checked in R5)
+        regs[m.group(1)] = dict(region=m.group(2), d=[m.group(3), m.group(4)], q=[m.group(7)], kind="qfd_c_land_r",
+                                side=[m.group(5), m.group(6)])
     n_sv = len(re.findall(r"\.ck\(ck_", fab))
     if n_sv != len(regs):
         fails.append(f"R1 parse: {n_sv} clocked instances in the fabric, {len(regs)} parsed")
@@ -86,6 +124,9 @@ def main():
     # ---- nets: alias resolution (assign a = b;  and the MUT=0 qfd_q3h_run D=0 pass-through is a register only if D=1)
     alias = dict((m.group(1), m.group(2)) for m in re.finditer(r"(?:assign|wire) (\w+) = (\w+);", fab))
     alias.update((m.group(1), m.group(2)) for m in re.finditer(r"wire \[\d+:0\] (\w+) = \(MUT == \d\) \? \{[^}]*\} : (\w+);", fab))
+    # Q-CL16-LAND audit gap (Q-CL16-EARLY): a bench-mutant select 'assign x = (MUT == n ? y : z);' is z at MUT 0
+    # (missed before: u_t_0_0.t_out -> u_t_1_0.n_a, c0r0 -> c1r0, 514 b)
+    alias.update((m.group(1), m.group(2)) for m in re.finditer(r"assign (\w+) = \(MUT == \d+ \? \w+ : (\w+)\);", fab))
 
     def res(n):
         while n in alias:
@@ -107,13 +148,15 @@ def main():
     for inst, r in regs.items():
         for d in r["d"]:
             cons.append((res(d), inst, r["region"]))
-    for m in re.finditer(r"assign ((tap|trst|n_a|n_b)_(\d)_(\d)) = (\w+);", fab):
-        cons.append((res(m.group(5)), f"u_t_{m.group(3)}_{m.group(4)}.{m.group(2)}", f"c{m.group(3)}r{m.group(4)}"))
+    for m in re.finditer(r"assign ((tap|trst|n_a|n_b)_(\d)_(\d)) = (\w+|\(MUT == \d+ \? \w+ : \w+\));", fab):
+        # the fabric's trst_<c>_<r> drives the A0 tile's rst_n pin (Q-CL16-EARLY audit gap: was named 'trst')
+        pin = "rst_n" if m.group(2) == "trst" else m.group(2)
+        cons.append((res(m.group(1)), f"u_t_{m.group(3)}_{m.group(4)}.{pin}", f"c{m.group(3)}r{m.group(4)}"))
     for m in re.finditer(r"\.tap_d\((tap_(\d)_(\d))\)", fab):
         cons.append((m.group(1), f"u_t_{m.group(2)}_{m.group(3)}.tap", f"c{m.group(2)}r{m.group(3)}"))
     crossings, nreg = [], 0
     for net, dst, dreg in cons:
-        if net in ("rst_n", "far", "far_n") or net.startswith(("bc", "rs_i")):
+        if net in ("rst_n", "far", "far_n") or net.startswith(("bc", "rs_i")) or re.fullmatch(r"rst_c\dr\d", net):
             continue        # die ports: pin register in its own region (boundary matched by the die)
         if net not in prod:
             fails.append(f"R2 {dst} input {net} is not driven by a register / tile output (comb path across a seam?)")
@@ -129,12 +172,56 @@ def main():
         bits = int(re.search(rf"wire \[(\d+):0\] {re.escape(net)}\b", fab).group(1)) + 1 if re.search(
             rf"wire \[(\d+):0\] {re.escape(net)}\b", fab) else None
         x = dict(net=net, src=src, src_region=sreg, dst=dst, dst_region=dreg, bits=bits, hop_um=hop,
-                 diagonal=(c0 != c1 and r0 != r1), added_edges=0)
+                 diagonal=(c0 != c1 and r0 != r1), added_edges=0, landed=False)
+        if regs.get(dst, {}).get("kind") == "qfd_c_land_r":
+            nm = re.fullmatch(r"u_land_(\w+)_r", dst).group(1)
+            L = lands.get(nm)
+            if L is None:
+                fails.append(f"R5 {dst}: landing not in the contract")
+            else:
+                x.update(landed=True, landing=nm, bits=L["bits"], ring_wires=bits, D=L["D"], E=L["E"], K=L["K"],
+                         added_edges=L["added_edges"], crossing=L["crossing"])
         crossings.append(x)
         if abs(c0 - c1) > 1 or abs(r0 - r1) > 1:
             fails.append(f"R3 {src} ({sreg}) -> {dst} ({dreg}): not neighbouring regions")
         if hop is not None and hop > LIMIT:
             fails.append(f"R4 {src} -> {dst}: hop {hop} um > {LIMIT}")
+    # R5 landings
+    for nm, L in lands.items():
+        w_, r_ = f"u_land_{nm}_w", f"u_land_{nm}_r"
+        if w_ not in regs or r_ not in regs:
+            fails.append(f"R5 landing {nm}: ring / read instance missing")
+            continue
+        if regs[w_]["region"] != L["src_region"] or regs[r_]["region"] != L["dst_region"]:
+            fails.append(f"R5 landing {nm}: ring on ck_{regs[w_]['region']} / read on ck_{regs[r_]['region']}, contract "
+                         f"{L['src_region']} -> {L['dst_region']}")
+        src_i = prod.get(res(regs[w_]["i"]))
+        if src_i is None or src_i[1] != L["src_region"]:
+            fails.append(f"R5 landing {nm}: ring input {regs[w_]['i']} not from a {L['src_region']} register ({src_i})")
+        if res(regs[r_]["d"][1]) != regs[w_]["q"][0] or [res(v) for v in regs[r_]["side"]] != regs[w_]["q"][1:]:
+            fails.append(f"R5 landing {nm}: read half not fed by its own ring")
+        oc = [(d_, dr) for n_, d_, dr in cons if n_ == regs[r_]["q"][0]]
+        if not oc or any(dr != L["dst_region"] for _, dr in oc):
+            fails.append(f"R5 landing {nm}: o consumers {oc} not all in {L['dst_region']}")
+        # Q-CLUSTER-LANDALL: the kit SDC's multicycle is CELL-based (-from the ring's cells -to the read half's cells),
+        # so other crossings of the same region pair stay single-cycle; they must be 1-bit reset-tree hops (R6)
+        other = [x for x in crossings if x["src_region"] == L["src_region"] and x["dst_region"] == L["dst_region"]
+                 and not x["landed"] and (x["bits"] or 0) > 1]
+        if other:
+            fails.append(f"R5 landing {nm}: {len(other)} other multi-bit {L['src_region']} -> {L['dst_region']} "
+                         f"crossings, unlanded: {[o_['net'] for o_ in other][:4]}")
+    # R6 (Q-CLUSTER-LANDALL): with landings 'all', EVERY multi-bit crossing is landed; only 1-bit reset hops cross plain
+    # R7 (Q-CB16RST): with regional resets, NO crossing is plain: every seam crossing is landed (1-bit reset hops included)
+    if C.get("landings", {}).get("resets") == "region":
+        for x in crossings:
+            if not x["landed"] and (x["bits"] or 0) <= 1:
+                fails.append(f"R7 unlanded 1-bit crossing {x['src']} ({x['src_region']}) -> {x['dst']} ({x['dst_region']}) "
+                             f"net {x['net']} (regional resets: no reset hop may cross a seam)")
+    if C.get("landings", {}).get("mode") == "all":
+        for x in crossings:
+            if not x["landed"] and (x["bits"] or 0) > 1:
+                fails.append(f"R6 unlanded {x['bits']}-b crossing {x['src']} ({x['src_region']}) -> {x['dst']} "
+                             f"({x['dst_region']}) net {x['net']}")
     pairs = {}
     for x in crossings:
         k = "-".join(sorted((x["src_region"], x["dst_region"])))
@@ -142,10 +229,12 @@ def main():
         p["links"] += 1
         p["bits"] += x["bits"] or 0
     out = dict(schema="opentallas.qcluster.region_audit.v1", master="qfd_c_b16_dv", regions=16,
-               rule="single registered hop per seam crossing, neighbouring regions only; fixed one-edge latency "
-                    "(added edges 0 vs the 8-region fabric); no landing inside the cluster: every crossing is a "
-                    "zero-station root->root hop (LANDING-CONTRACT s2: zero-stage links need none) between regional "
-                    "clocks that the die delivers neighbour-matched (<= 80 ps at the child flops, TT and FF)",
+               rule="Q-CLUSTER-LANDALL: every multi-bit seam crossing LANDED (R6), 1-bit reset hops plain; was: single registered hop per seam crossing, neighbouring regions only; fixed one-edge latency "
+                    "(added edges 0 vs the 8-region fabric) between regional clocks the die delivers phase-aligned "
+                    "(+/-60 ps, contract obligation 2); Q-CL16-LAND: a crossing whose in-cluster skew does not fit one "
+                    "edge is LANDED (ring on the source root, read slot (rc - K) mod D on the destination root, "
+                    "added E + 1 edges, multicycle -setup E -hold D-1; R5)",
+               landed=sum(1 for x in crossings if x["landed"]),
                register_edges_checked=nreg, crossings=len(crossings), crossing_bits=sum(x["bits"] or 0 for x in crossings),
                communicating_pairs=dict(sorted(pairs.items())), fails=fails, crossing_list=crossings,
                mutate=a.mutate)
