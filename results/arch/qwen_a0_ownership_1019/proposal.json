@@ -1,0 +1,343 @@
+{
+  "schema": "opentallas.a0.structural_lower_bound.v1",
+  "verdict": "ROOT_MODEL_REVIEW_REQUIRED_NO_RTL_NO_GATE",
+  "basis": "Exact r6 full composed source, canonical native pin inputs, native cell areas; not a physical ownership assignment",
+  "copy_cells_lower_bound": {
+    "DFFHQNx1_ASAP7_75t_R": 55,
+    "DFFASRHQNx1_ASAP7_75t_R": 4,
+    "NOR2x1_ASAP7_75t_R": 6,
+    "OR2x2_ASAP7_75t_R": 3,
+    "AND3x1_ASAP7_75t_R": 1,
+    "TIELOx1_ASAP7_75t_R": 42,
+    "TIEHIx1_ASAP7_75t_R": 5
+  },
+  "added_ff_lower_bound": 59,
+  "added_clock_pins_lower_bound": 59,
+  "added_std_area_lower_bound_um2": 20.4849,
+  "new_total_std_area_lower_bound_um2": 6313.621139997924,
+  "inverter_wiring_placement_CTS_cost_included": false,
+  "copies": [
+    {
+      "driver": "u_g.u_tile.u_tile.u_logic.u_me.split_r\\[1\\]$_DFFE_PP_/QN",
+      "existing_loads": 415,
+      "additional_copies_lower_bound": 17,
+      "canonical_inputs": {
+        "CLK": {
+          "net": "ck",
+          "driver": "PORT/ck",
+          "master": "INPUT_PORT",
+          "clock": true
+        },
+        "D": {
+          "net": "_11136_",
+          "driver": "_31915_/Y",
+          "master": "OA21x2_ASAP7_75t_R",
+          "clock": false
+        }
+      },
+      "actual_destination_assignment": null
+    },
+    {
+      "driver": "u_g.u_tile.u_tile.u_logic.u_me.split_r\\[0\\]$_DFFE_PP_/QN",
+      "existing_loads": 335,
+      "additional_copies_lower_bound": 13,
+      "canonical_inputs": {
+        "CLK": {
+          "net": "ck",
+          "driver": "PORT/ck",
+          "master": "INPUT_PORT",
+          "clock": true
+        },
+        "D": {
+          "net": "_11137_",
+          "driver": "_31920_/Y",
+          "master": "OA21x2_ASAP7_75t_R",
+          "clock": false
+        }
+      },
+      "actual_destination_assignment": null
+    },
+    {
+      "driver": "u_g.u_tile.u_tile.u_logic.u_me.split_r\\[2\\]$_DFFE_PP_/QN",
+      "existing_loads": 281,
+      "additional_copies_lower_bound": 11,
+      "canonical_inputs": {
+        "CLK": {
+          "net": "ck",
+          "driver": "PORT/ck",
+          "master": "INPUT_PORT",
+          "clock": true
+        },
+        "D": {
+          "net": "_11135_",
+          "driver": "_31910_/Y",
+          "master": "OA21x2_ASAP7_75t_R",
+          "clock": false
+        }
+      },
+      "actual_destination_assignment": null
+    },
+    {
+      "driver": "u_g.u_tile.u_tile.u_logic.u_me.split_r\\[3\\]$_DFFE_PP_/QN",
+      "existing_loads": 235,
+      "additional_copies_lower_bound": 9,
+      "canonical_inputs": {
+        "CLK": {
+          "net": "ck",
+          "driver": "PORT/ck",
+          "master": "INPUT_PORT",
+          "clock": true
+        },
+        "D": {
+          "net": "_12764_",
+          "driver": "_51562_/Y",
+          "master": "OA21x2_ASAP7_75t_R",
+          "clock": false
+        }
+      },
+      "actual_destination_assignment": null
+    },
+    {
+      "driver": "u_g.u_tile.u_tile.u_logic.u_me.wsrc_r$_DFFE_PP_/QN",
+      "existing_loads": 89,
+      "additional_copies_lower_bound": 3,
+      "canonical_inputs": {
+        "CLK": {
+          "net": "ck",
+          "driver": "PORT/ck",
+          "master": "INPUT_PORT",
+          "clock": true
+        },
+        "D": {
+          "net": "_12761_",
+          "driver": "_51544_/Y",
+          "master": "OA21x2_ASAP7_75t_R",
+          "clock": false
+        }
+      },
+      "actual_destination_assignment": null
+    },
+    {
+      "driver": "u_g.u_tile.u_tile.u_logic.u_me.active_o$_DFFE_PN0P_/QN",
+      "existing_loads": 82,
+      "additional_copies_lower_bound": 3,
+      "canonical_inputs": {
+        "CLK": {
+          "net": "ck",
+          "driver": "PORT/ck",
+          "master": "INPUT_PORT",
+          "clock": true
+        },
+        "D": {
+          "net": "_12759_",
+          "driver": "_51540_/Y",
+          "master": "OA21x2_ASAP7_75t_R",
+          "clock": false
+        },
+        "RESETN": {
+          "net": "a0_reset_leaf_03_q",
+          "driver": "a0_reset_leaf_03/QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "clock": false
+        },
+        "SETN": {
+          "net": "_21602_",
+          "driver": "_52460_/H",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "clock": false
+        }
+      },
+      "actual_destination_assignment": null
+    },
+    {
+      "driver": "u_g.u_tile.u_tile.u_logic.u_me.k_last$_DFFE_PP_/QN",
+      "existing_loads": 62,
+      "additional_copies_lower_bound": 2,
+      "canonical_inputs": {
+        "CLK": {
+          "net": "ck",
+          "driver": "PORT/ck",
+          "master": "INPUT_PORT",
+          "clock": true
+        },
+        "D": {
+          "net": "_12816_",
+          "driver": "_52449_/Y",
+          "master": "OA22x2_ASAP7_75t_R",
+          "clock": false
+        }
+      },
+      "actual_destination_assignment": null
+    },
+    {
+      "driver": "_31855_/Y",
+      "existing_loads": 156,
+      "additional_copies_lower_bound": 6,
+      "canonical_inputs": {
+        "A": {
+          "net": "a0_reset_leaf_00_qn",
+          "driver": "a0_reset_leaf_00/QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "clock": false
+        },
+        "B": {
+          "net": "_14821_",
+          "driver": "_31849_/Y",
+          "master": "OR3x1_ASAP7_75t_R",
+          "clock": false
+        }
+      },
+      "actual_destination_assignment": null
+    },
+    {
+      "driver": "_31850_/Y",
+      "existing_loads": 84,
+      "additional_copies_lower_bound": 3,
+      "canonical_inputs": {
+        "A": {
+          "net": "a0_reset_leaf_00_qn",
+          "driver": "a0_reset_leaf_00/QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "clock": false
+        },
+        "B": {
+          "net": "_14821_",
+          "driver": "_31849_/Y",
+          "master": "OR3x1_ASAP7_75t_R",
+          "clock": false
+        }
+      },
+      "actual_destination_assignment": null
+    },
+    {
+      "driver": "_31808_/Y",
+      "existing_loads": 34,
+      "additional_copies_lower_bound": 1,
+      "canonical_inputs": {
+        "A": {
+          "net": "_12924_",
+          "driver": "u_g.u_tile.u_tile.u_logic.u_me.active_o$_DFFE_PN0P_/QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "clock": false
+        },
+        "B": {
+          "net": "_14780_",
+          "driver": "u_g.u_tile.u_tile.u_logic.u_me.pend$_DFF_PN0_/QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "clock": false
+        },
+        "C": {
+          "net": "a0_reset_leaf_03_q",
+          "driver": "a0_reset_leaf_03/QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "clock": false
+        }
+      },
+      "actual_destination_assignment": null
+    },
+    {
+      "driver": "_52461_/L",
+      "existing_loads": 1025,
+      "additional_copies_lower_bound": 42,
+      "canonical_inputs": {},
+      "actual_destination_assignment": null
+    },
+    {
+      "driver": "_52460_/H",
+      "existing_loads": 110,
+      "additional_copies_lower_bound": 4,
+      "canonical_inputs": {},
+      "actual_destination_assignment": null
+    }
+  ],
+  "same_D_proof": {
+    "definition": "Every copy samples the exact canonical original next-D net and original CLK; preserve RESETN/SETN/master/polarity. Do not synthesize independent local feedback muxes.",
+    "arbitrary_initial_state": "For any original state q, arbitrary clone c, CE and input d: common_D=(CE?d:q); q_next=common_D=c_next. Independent enabled FF copying gives c_next=(CE?d:c) and fails when CE=0 and c!=q.",
+    "limitation": "First-edge convergence alone does not prove downstream retained-state equivalence. A consumer can sample the old arbitrary clone on that first edge. Prove actual reset/config/valid ownership and first-use before adoption, including stopped clock/restart/GO."
+  },
+  "upstream_budget": {
+    "shared_D_current_load": 1,
+    "shared_D_max_after_FF_copies": 18,
+    "reset_leaf00_current": 24,
+    "blind_predicate_copy_leaf00": 33,
+    "required_new_same_stage_leaf": "9 predicate-copy inputs on one additional ck leaf sharing exact original branch reset and constant D; original leaf00 stays24. New branch reset load19->20. No extra release stage.",
+    "shared_OR3_current": 20,
+    "shared_OR3_after_NOR_OR_copies": 29,
+    "reset_leaf03_after_AND_and_active_copies": 27,
+    "full_fixed_point_native_recount_required": true
+  },
+  "inherited_geometry": {
+    "outline_um": [
+      1209.6,
+      648.0
+    ],
+    "claimed_full_width_band_um": [
+      0,
+      345.6,
+      1209.6,
+      358.56
+    ],
+    "hard_macro_intersections": [
+      {
+        "child": "node",
+        "intersection_um2": 615.859199999999,
+        "child_bbox_um": [
+          43.2,
+          129.6,
+          90.72,
+          561.6
+        ]
+      }
+    ],
+    "full_width_band_legal": false,
+    "source_ownership_regions_assigned": false,
+    "common_D_wire_reach_qualified": false,
+    "reset_clock_native_phase_qualified": false,
+    "parent_fit_qualified": false
+  },
+  "before_RTL": [
+    "Resolve real node/band geometry using actual child pin shapes and source-region ownership; preserve failures, no outline-density knob retry",
+    "Assign every exact terminal and canonical-D/reset driver to actual region coordinates; all segments<=405um",
+    "Prove cold/warm config-before-use and downstream retained-state safety from arbitrary clone state",
+    "Price every new relay/config/reset edge into source compiler ages; current zero-edge figure is only an algebraic mechanism",
+    "Emit opt-in complete source from pinned composed r6 and rerun original numerical, effective mutants, all-role transparent native census"
+  ],
+  "topology_candidate": {
+    "status": "GEOMETRIC_CANDIDATE_ONLY_ROOT_POLICY_REVIEW_REQUIRED",
+    "outline_um": [
+      1209.6,
+      648.0
+    ],
+    "outline_area_delta_um2": 0,
+    "macro_moves": 0,
+    "macro_orientations": "All inherited R0; no rotation qualification presumed",
+    "connected_std_region_um": [
+      129.6,
+      349.92,
+      1166.4,
+      393.12
+    ],
+    "height_um": 43.2,
+    "area_um2": 44789.76,
+    "source_std_area_plus_copy_lower_bound_um2": 6313.621139997924,
+    "whole_region_fill_lower_bound": 0.140961263020787,
+    "fill_qualification": false,
+    "margin_to_node_bbox_um": 38.88,
+    "margin_to_upper_ROM_bbox_um": 23.76,
+    "margin_to_lower_LSL_bbox_um": 38.88,
+    "20um_macro_bbox_halo_intersections": 0,
+    "OBS_and_PG_geometry": "All actual R0 master OBS/PG/signal rectangles captured in native_abstracts.json.gz; all fit their master bbox. This is not a via/contact escape proof.",
+    "policy_exception_required": "Region is a connected macro-free band east of hard node; it does not span full parent width. No exception granted.",
+    "common_D_layout": null,
+    "clock_crossing_edges_priced": null,
+    "full_token_delta": null,
+    "unresolved_inputs": [
+      "Actual hard macro halo/PDN contact and via-access requirement; 20um bbox margin is an explicit model assumption, not qualification",
+      "Source-to-soft-cell-to-native-macro-pin cone ownership and routed coordinates; anonymous cells cannot be centroid-assigned",
+      "Locations of shared canonical D drivers and each control copy with <=405um segments",
+      "Actual per-clock source epoch/native insertion/launch and capture pairs; ck-only logical identity is insufficient",
+      "Source configuration and first-use ledger through every retained destination under asynchronous/stopped-clock reset",
+      "Priced relay ages or proof none needed; source source-ring storage obligations and parent CB16 face/regrant"
+    ]
+  }
+}
