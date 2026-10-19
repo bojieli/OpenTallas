@@ -1,0 +1,43 @@
+SMOKE_FOLD idle 60a43ffd5708567a
+SMOKE_OFOLD o_n_dv_ch_W4_dr_dr 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dv_ch_W4_rt_rd 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dv_ch_W4_rt_re 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dv_ch_W4_rt_rl 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dv_ch_W4_rt_rr 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dv_ch_W4_rt_rv 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dv_l9_W4 1fe0acc71f10b554 act 1501 last 7ecb7beefe9c881470110341ff5bb97ef89b9b787e13b9817aaeeef27ba866e9feb1c1a67e95755a7f313e5bf5212c15fde42e48ec5b4294f04172c4fdd28034
+SMOKE_OFOLD o_n_dv_st_W4_cmd_cmd 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dv_st_W4_hr_hr 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dv_st_W4_sc_u_sc 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dv_st_W4_st_u_st 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_ag_wo__r22 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_ard_wo__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_arl_wo__r2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_arm_wo__r2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_art_wo__r2 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_arv_wo__r3 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_ccm_wo__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_cct_wo__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_ccv_wo__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_ccw_wo__r1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_dd_wo__r26 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_dvw_ss_wo__r22 1fffffffffffffe0 act 1 last 4000000000000000
+SMOKE_OFOLD o_n_rst_field__t344 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_field__t641 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_io__t107 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_io__t151 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_io__t152 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_io__t77 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_seq__t2 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_seq__t27 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_seq__t28 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_seq__t29 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_seq__t43 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_seq_ctlm__t2 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rst_seq_ctlm__t20 00ffffffffffffff act 1 last 1
+SMOKE_PASS qwc_slice_colW5 MUT=0 edges 5048
+- /srv/opentallas-scratch/claude/lb2qc-1018/smoke_mut/tb_qwc_slice_colW5.sv:481: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 259.551 s; speed 16.220 ns/s
+- Verilator: cpu 259.546 s on 1 threads; allocated 610 MB
+exit 0

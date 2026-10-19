@@ -1,0 +1,8 @@
+2026-10-18 12:08:22 [A] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L3
+2026-10-18 12:08:22 [C] start src 8a01e4a5aa968d509dbdf0b2a86e7df6fd0438e1 host ot-epyc5 mode L0
+2026-10-18 12:47:09 [A] build rc=0 wall_s=2327
+2026-10-18 12:49:23 [C] build rc=0 wall_s=2461
+2026-10-18 13:32:27 [C] runL0 rc=1 wall_s=2584 {"mode": "L0", "exact": false, "cycles": null, "next_token": null, "winning_logit_bits": null, "layer_x_mismatches": 16384, "kv_mismatches": 0}
+2026-10-18 17:59:34 [A] runL3 rc=1 wall_s=18745 {"mode": "L3", "exact": false, "cycles": null, "next_token": null, "winning_logit_bits": null, "layer_x_mismatches": 49152, "kv_mismatches": 6144}
+2026-10-18 18:00:54 [B2] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.050 2026-07-01 rev v5.050 unroll=0
+2026-10-18 18:00:54 [B1] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.050 2026-07-01 rev v5.050 unroll=0

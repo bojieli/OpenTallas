@@ -27,7 +27,7 @@
    "price": 6797,
    "ratio": null,
    "exact": null,
-   "status": "10-18 rebuild (8a01e4a5a) HANGS in L0 (pc_base 0, killed at 24,577 cycles); bisect A (10-13 source, same fixtures) + C (op trace) running on ot-epyc5 lb2qc-ref-1018 -- see reference_rebuild_verdict",
+   "status": "10-13 cycle NOT reproduced: 10-13 source (bisect A) and 10-18 source (C) both hang at L0 op prog_a=20 (cyc 3,094) under Verilator 5.050 + unroll 4096 + restored fixtures; B1/B2 (5.032 / 5.050, no unroll) running -- see reference_rebuild_verdict",
    "grade": "measured-on-reference-RTL (regression) -- NOT current die RTL"
   },
   {
@@ -44,7 +44,7 @@
    "price": 6835,
    "ratio": null,
    "exact": null,
-   "status": "10-18 rebuild (8a01e4a5a) HANGS in L0 (pc_base 0, killed at 24,577 cycles); bisect A (10-13 source, same fixtures) + C (op trace) running on ot-epyc5 lb2qc-ref-1018 -- see reference_rebuild_verdict",
+   "status": "10-13 cycle NOT reproduced: 10-13 source (bisect A) and 10-18 source (C) both hang at L0 op prog_a=20 (cyc 3,094) under Verilator 5.050 + unroll 4096 + restored fixtures; B1/B2 (5.032 / 5.050, no unroll) running -- see reference_rebuild_verdict",
    "grade": "measured-on-reference-RTL + priced"
   },
   {
@@ -56,7 +56,7 @@
    "price": 3101,
    "ratio": null,
    "exact": null,
-   "status": "10-18 rebuild (8a01e4a5a) HANGS in L0 (pc_base 0, killed at 24,577 cycles); bisect A (10-13 source, same fixtures) + C (op trace) running on ot-epyc5 lb2qc-ref-1018 -- see reference_rebuild_verdict",
+   "status": "10-13 cycle NOT reproduced: 10-13 source (bisect A) and 10-18 source (C) both hang at L0 op prog_a=20 (cyc 3,094) under Verilator 5.050 + unroll 4096 + restored fixtures; B1/B2 (5.032 / 5.050, no unroll) running -- see reference_rebuild_verdict",
    "grade": "measured-on-reference-RTL"
   }
  ],
@@ -190,7 +190,12 @@
    "face_component_reference": "run_sys_face_bench.sh (compute src) on the same image: SYS_FACE_PASS MUT 0 (boot 54, PW 1024 DW 8, 1512 events exact), MUT 1 FAIL -> the face itself loads the programme when its pins are driven aligned; the die landing breaks it"
   },
   "composition_rule": "A layer = the slowest (critical) slice under the FIXED compiled schedule: every slice runs against the same compiled calendar, its boundary traffic replayed at the scheduled cycles; because nothing stalls (static schedule, no backpressure), the layer cycle count is the compiled layer period, and a slice that misses a scheduled cycle is a FAIL, not a longer layer. Measured slice latencies replace the priced segment ages; the critical slice path (compute column -> D2D -> KV attention -> D2D -> compute) sets the layer.",
-  "smoke_verdict": "KV slices reset/idle PASS; compute control slice reset/idle PASS only with the XPF parameter supplied; programme load FAILS on the compute die as netlisted (G-C2) and on the missing deployment programme (G-C3); KV programme load not yet run (G-K1)."
+  "smoke_verdict": "KV slices reset/idle PASS; compute control slice reset/idle PASS only with the XPF parameter supplied; programme load FAILS on the compute die as netlisted (G-C2) and on the missing deployment programme (G-C3); KV programme load not yet run (G-K1).",
+  "c_colW5": {
+   "regression_h_mut10": "bench2 (h) MUT=0 PASS 12/12; MUT=10 FAIL 1/12 (slice_smoke/runs/qdv_slice2_l9idle_benches/pos_h.out, mut10.out) -> slice2 regression on the l9 idle fix complete: a..j PASS, MUT 10/11/12 FAIL",
+   "fixed_mut": "OT_QFD_L9_IDLE_MUT smoke FAIL as required: SMOKE_PASS edges 5048, RESET_DET undeclared_nondet 1 'UNDECLARED o_n_dv_l9_W4', SMOKE_RESULT FAIL (Verilator 5.050, build 2,747 s / 124 GB; slice_smoke/runs/c_colW5_l9fix_mut)",
+   "fixed": "PENDING: first fix smoke build died (Verilator signal 15 during verilation, 12:44); rerun 10-18 18:01 ot-epyc4 lb2qc-1018/smoke_fix.out (must SMOKE_RESULT PASS)"
+  }
  },
  "die_gaps_found_by_smoke": [
   {
@@ -230,14 +235,18 @@
   "note": "LAYERBENCH-QWEN 10-18: no term is measured on CURRENT die RTL yet (the die slices only reached reset/idle/programme-load smoke, which fails at die gaps G-C1/G-C2/G-C3); base terms keep their grades."
  },
  "reference_rebuild_verdict": {
-  "status": "NOT REPRODUCED on the 10-18 rebuild; 10-13 numbers neither confirmed nor withdrawn yet (bisect running)",
+  "status": "NOT REPRODUCED; RTL drift ruled out: the 10-13 source (A) hangs exactly like the 10-18 source. 10-13 cycles 6,151/5,480/5,480 neither confirmed nor withdrawn -- bisect B1/B2 (Verilator 5.032 vs 5.050, no unroll flag) running",
   "rebuild": "ot-epyc5 /srv/opentallas-scratch/claude/tokpass-qwen-1018: src 8a01e4a5a (10-18), guard-clean --unroll-count 4096, restored fixtures (img_p1 sha-matched, history_l3 = realmem L0..L2 + zero L3+)",
   "runL3_pos": "HANG: pc_base 0/0 (layer 0 never retires; 10-13 L0 retired at 6,151), me_busy every cycle, killed SIGTERM at cycle 24,577 / 8,763 s wall; result.json exact false, 49,152 X + 6,144 KV mismatches (nothing written)",
   "runL3_neg": "HANG at pc_base 19/19 (10-13 neg finished L0..L2 at 4,517 / 4,507 / 4,507 cycles and mismatched), killed at cycle 24,577",
   "source_drift": "between 10-13 (bd6e82288+30b6440b5) and 8a01e4a5a the reference core RTL changed: rtl/hdc/ot_qwen_rom_tile_w12.sv (+234: NODE 0 tiles c50f5f1e4, TOREG/RQR q14 node), ot_qwen_w12_matvec.sv (+131, ROM leaves e11579a83 / ba6ef8ae1), ot_hdc_vstream(_lane).sv (r6/r7 SU OREG/IREG 504164883 / a378d41c9), ot_qwen_me_array_w12.sv (NODE 0 on non-host tiles); harness/emitter identical",
   "bisect": {
    "A": "10-13 source 30b6440b5 + only the 10-18 harness env hooks, --unroll-count 4096, same restored fixtures, L3 (ot-epyc5 /srv/opentallas-scratch/claude/lb2qc-ref-1018/runA, STATUS.log [A]): exact 6,151/5,480/5,480 => 10-13 numbers STAND (unroll + restored fixtures clean) and the hang is the RTL drift; hang/mismatch => fixtures or unroll",
-   "C": "10-18 source 8a01e4a5a with the observation-only op-fetch trace (QROM_OPTRACE / RT_OPTRACE), L0 mode (9,000-cycle guard): names the op the core stops at (runC/runtime.log OPTRACE prog_a)"
+   "C": "10-18 source 8a01e4a5a with the observation-only op-fetch trace (QROM_OPTRACE / RT_OPTRACE), L0 mode (9,000-cycle guard): names the op the core stops at (runC/runtime.log OPTRACE prog_a)",
+   "A_result": "HANG (10-18 17:59): 10-13 source 30b6440b5, Verilator 5.050, --unroll-count 4096, restored fixtures, L3: pc_base 0/0 to cycle 65,537 (L0 retires at 6,151 on 10-13), me_busy every cycle; sim SIGTERM by Q-LBGAP2 after 18,745 s. Evidence reference_rebuild_1018/bisect/runA",
+   "C_result": "HANG at op prog_a=20 (L0 guard timeout cyc 9,001, rc 3): the op trace is IDENTICAL to the 10-13 pos_runtime.log through prog_a=20 at cyc 3,094 (me_busy 2,684, stall_kv 713, stall_bridge 348); on 10-13 prog_a=21 issues at cyc 3,142, on 10-18 op 20 never completes (ME busy forever). Evidence reference_rebuild_1018/bisect/runC",
+   "conclusion_so_far": "A == C trace => the hang is NOT the 10-13..10-18 reference-core RTL drift. Remaining differences vs the 10-13 run: Verilator 5.050 (10-13 built with system 5.032), the 10-18 --unroll-count 4096 flag, the restored fixtures (img_p1 sha-equal; history_l3 real L0..L2).",
+   "B": "lb2qc_ref2.sh (ot-epyc5 lb2qc-ref-1018, STATUS.log [B1]/[B2]): B1 = srcA + Verilator 5.032 + no unroll flag (the exact 10-13 recipe, L0, op trace); B2 = srcA + 5.050 + no unroll. B1 exact 6,151 -> fixtures clean, 10-13 L0 number stands, hang = Verilator 5.050 or unroll (B2 separates them); B1 hangs at op 20 -> restored fixtures differ from 10-13 (op 20 inputs)."
   },
   "grade": "measured-old-RTL either way (reference core, not the die)"
  }
