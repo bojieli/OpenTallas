@@ -68,6 +68,13 @@ MU = 0                            # MU-S81/DIE (10-19): 0 single-user p4l (defau
                                   # = 131 b <- seqhost on a 276 lane ht_7N) served by s_7N (the end slice nearest the seqhost)
                                   # over the top die strip; seqhost per-half jd_W (13 b, 276 lane) beside jd_E (13 b); svc up
                                   # faces 16 b (st_rg producer folded up the tree)
+PATHFIX = False                   # --pathfix (MU-DIE-S81/PATH 10-19, p4l only): every street lane keeps its REALIZED band
+                                  # (bus pin span bits x PIN 0.096 um, or the relay body across the lane) clear of block bodies
+                                  # and of the neighbour lanes' relays: case_p4l3_rv2 put 305,046 die repeaters on macro /
+                                  # relay bodies -- lr/lt_lk lanes 25 um from the end-column frame faces (562 relay 62.6 um
+                                  # across), jd_W 10 um under the row-2 frames, 276 xring / unit lanes 15-30 um apart (relay
+                                  # 32.4 um across), HBM rq / rd jogs 30 um over the controllers (682 relay 75.6 um across)
+STREET_PITCH = 34.0               # PATHFIX: 276 street lanes 34 um apart (relay 32.4 across + 1.6 um); 11 slots -170..+170
 COL_EXW, COL_EXE = {}, {}         # p4k: extra slice-column width W / E of the slice, per column (um)
 SVC_CH = 512                      # p4i: svc_rs chain lane per direction (S81U-1 sp_w / sp_e partial-score lane, 512 b)
 SVC_MM2, SM_MM2 = 13.43, 8 * 1.231 * 1.058   # service halves (estimate, no RTL) + 8 ot_s81_su_sm tiles: shared out 1/16 each
@@ -290,7 +297,8 @@ def rsv_links(P, facts, colx):
         rn = f'rsv_{k:02d}'; R = P.blocks[P.idx[rn]]
         ctop = C['y'] + C['h']; xc = C['x'] + cw / 2
         col = k // 2
-        for cls_, bits, dx, yj in (('rq', 2 * PC_RQ, -30, 30), ('rd', 2 * PC_RD + 2, 30, 70)):
+        for cls_, bits, dx, yj in ((('rq', 2 * PC_RQ, -30, 44), ('rd', 2 * PC_RD + 2, 30, 116)) if PATHFIX else
+                                   (('rq', 2 * PC_RQ, -30, 30), ('rd', 2 * PC_RD + 2, 30, 70))):
             xk = xc + dx
             if k % 2 == 0:     # lower slice: up through the channel into its S face
                 xs_ = min(max(xk, R['x'] + 40), R['x'] + R['w'] - 40)
@@ -302,7 +310,10 @@ def rsv_links(P, facts, colx):
                 n, i = len(users), users.index(col)
                 gxx = a + (b - a) * ((i + (0.35 if cls_ == 'rq' else 0.65)) / n)
                 ys = R['y'] + 60
-                pts = [(R['x'] if gxx < R['x'] else R['x'] + R['w'], ys), (gxx, ys), (gxx, ctop + yj + 100), (xk, ctop + yj + 100), (xk, ctop)]
+                yo = ctop + yj + 100
+                if PATHFIX:     # upper-slice jogs: rd 2.7 um under the rsv bottoms (562 relay half 31.3), rq one relay pitch below
+                    yo = ctop + (166.0 if cls_ == 'rd' else 96.0)
+                pts = [(R['x'] if gxx < R['x'] else R['x'] + R['w'], ys), (gxx, ys), (gxx, yo), (xk, yo), (xk, ctop)]
             if cls_ == 'rq':
                 P.link(f'hrq_{k:02d}', 'hbm', bits, (rn, 'rq', pts[0]), (cn, 'rq', pts[-1]), pts, 'HBM requests of 2 PCs (regional svc slice -> its controller)')
             else:
@@ -499,6 +510,8 @@ def unit_lanes(P, facts, colx, streets):
     for k in range(2):
         yj = Q['y'] + 300.0 + 30.0 * k
         ys = streets[0] + 310.0 + 30.0 * k
+        if PATHFIX:
+            ys = streets[0] + STREET / 2 - 170.0 + STREET_PITCH * (8 + k)     # street slots 8 / 9
         yb = S3S['y'] - 150.0 - 30.0 * k
         xw = clamp(colx(3) + 250.0 + 30.0 * k, R5)
         P._link(f'jw_W_l{k}', 'unit', 276, ('seqhost', 'jw', (qw, yj)), ('rsv_05', 'jw', (xw, t5)),
@@ -552,6 +565,8 @@ def host_lanes(P, facts, colx, streets):
     t5 = R5['y'] + R5['h']
     yj = Q['y'] + 360.0
     ys = streets[0] + 370.0
+    if PATHFIX:
+        ys = streets[0] + STREET / 2 + 170.0                                 # street slot 10 (was 10 um under the row-2 frames)
     yb = S3S['y'] - 240.0
     xw = min(max(colx(3) + 340.0, R5['x'] + 60.0), R5['x'] + R5['w'] - 60.0)
     pts = [(xw, t5), (xw, yb), (xm3(3), yb), (xm3(3), ys), (xm4(1), ys), (xm4(1), yj), (qw, yj)]   # xm4(1): cw uses it above the seqhost only
@@ -809,6 +824,14 @@ def build():
             a, b = f's_{c}{t}', f's_{c + 1}{t}'
             for d, (u, v, off) in (('E', (a, b, -60 if P4F else -80)), ('W', (b, a, 60 if P4F else 80))):
                 p0, p1 = pin(u, 'E' if d == 'E' else 'W'), pin(v, 'W' if d == 'E' else 'E')
+                if PATHFIX and LANES == 4:
+                    # street slots -170 + 34 k: xrE k 0..3, xrW k 4..7, unit lanes k 8..10 (columns 3-4 S street)
+                    base = -170.0 + STREET_PITCH * (0 if d == 'E' else 4)
+                    for k in range(LANES):
+                        yy = p0[1] + base + STREET_PITCH * k
+                        P._link(f'xr{d}_{c}{t}_l{k}', 'xring', XB // LANES, (u, 'xr' + d, (p0[0], yy)), (v, 'xr' + d, (p1[0], yy)),
+                                [(p0[0], yy), (p1[0], yy)], 'x all-gather / collective / scalar exchange (TDM)')
+                    continue
                 P.link(f'xr{d}_{c}{t}', 'xring', XB, (u, 'xr' + d, (p0[0], p0[1] + off)), (v, 'xr' + d, (p1[0], p1[1] + off)),
                        [(p0[0], p0[1] + off), (p1[0], p1[1] + off)], 'x all-gather / collective / scalar exchange (TDM)')
     for c in ((0, NCOL - 1) if LAYOUT != 'p4' else ()):
@@ -1015,6 +1038,13 @@ def build():
                     yst = S['y'] + SLICE_H / 2 + (-135 if k == '0' else 135); ry = -30 if k == '0' else 30
                 lx = LK['x'] + LK['w'] if side == 'W' else LK['x']
                 ly = min(max(yst, LK['y'] + 20), LK['y'] + LK['h'] - 20)
+                if PATHFIX:
+                    # tx (512, relay 58.3 across) at +-80, rx (562, relay 62.6 across) at +-145 from the street centre:
+                    # 13.7 um clear of the frame faces (+-190), 4.5 um between the tx / rx relays, both pin bands
+                    # (49 / 54 um) on the PHY face beyond its +-50-um street notch -> straight lanes, no PHY-face leg
+                    sg = -1 if k == '0' else 1
+                    yst = S['y'] + SLICE_H / 2 + 80.0 * sg; ry = 65.0 * sg
+                    ly = yst
                 P.link(f'lt_{lk}', 'coll', COLL_LANE, (sn, 'tx' + k, (sxf, yst)), (lk, 'tx', (lx, ly)), [(sxf, yst), (lx, yst), (lx, ly)], 'link lane tx (street)')
                 P.link(f'lr_{lk}', 'coll', COLL_LANE + (50 if P4L else 0), (lk, 'rx', (lx, ly + ry)), (sn, 'rx' + k, (sxf, yst + ry)), [(lx, ly + ry), (lx, yst + ry), (sxf, yst + ry)], 'link lane rx (street)')
     if P4K:
@@ -1155,6 +1185,55 @@ def lane_over_block(P, step=5.0, m=1.0):
     return out
 
 
+def lane_band_over_block(P, pin_pitch=0.096, eps=0.5):
+    """MU-DIE-S81/PATH (10-19): the REALIZED-width form of lane_over_block.  Each hop is a band of the bus pin span
+    (bits x pin_pitch + 3 um) or of the relay body across the lane, whichever is wider; each station is its closed relay
+    body (dsfd_dvrlyh_<w>_{EW,NS}).  Returns (bit-um of band inside block bodies per link, relay-relay overlaps between
+    different links).  case_p4l3_rv2: the centre-line check read 0 while 305,046 die repeaters landed on bodies."""
+    ew = {70: (17.28, 12.96), 276: (32.4, 17.28), 512: (58.32, 17.28), 562: (62.64, 17.28), 682: (75.6, 17.28)}
+    ns = {70: (12.96, 17.28), 276: (25.92, 17.28), 512: (58.32, 17.28), 562: (58.32, 17.28), 682: (71.28, 17.28)}
+    def rel(bits, horiz):
+        t = ew if horiz else ns
+        return t[min(t, key=lambda b: (b < bits, abs(b - bits)))]
+    rects = [(b['x'] + eps, b['y'] + eps, b['x'] + b['w'] - eps, b['y'] + b['h'] - eps, b['name']) for b in P.blocks]
+    over = collections.Counter(); st = []
+    for l in P.links:
+        ends = {P.blocks[l['e'][0][0]]['name'], P.blocks[l['e'][1][0]]['name']}
+        for x0, y0, x1, y1, bits in l['h']:
+            horiz = abs(y1 - y0) < 1e-6
+            if horiz and abs(x1 - x0) < 1e-6:
+                continue
+            hw = max(bits * pin_pitch / 2 + 1.5, rel(bits, horiz)[0] / 2)
+            r = (min(x0, x1), y0 - hw, max(x0, x1), y0 + hw) if horiz else (x0 - hw, min(y0, y1), x0 + hw, max(y0, y1))
+            for q in rects:
+                dx = min(r[2], q[2]) - max(r[0], q[0]); dy = min(r[3], q[3]) - max(r[1], q[1])
+                if dx > 0 and dy > 0:
+                    v = dx if horiz else dy
+                    if q[4] in ends and v < 2.0:
+                        continue
+                    over[l['i']] += v * l['b']
+        for sx, sy in l['sp']:
+            horiz = any(abs(h[1] - h[3]) < 1e-6 and abs(h[1] - sy) < 1e-6 and min(h[0], h[2]) - 1e-6 <= sx <= max(h[0], h[2]) + 1e-6
+                        for h in l['h'])
+            acr, alg = rel(l['b'], horiz)
+            w_, h_ = (alg, acr) if horiz else (acr, alg)
+            st.append((sx - w_ / 2, sy - h_ / 2, sx + w_ / 2, sy + h_ / 2, l['i']))
+    grid = collections.defaultdict(list)
+    for k, r in enumerate(st):
+        for gx in range(int(r[0] // 100), int(r[2] // 100) + 1):
+            for gy in range(int(r[1] // 100), int(r[3] // 100) + 1):
+                grid[gx, gy].append(k)
+    rr = set()
+    for cell in grid.values():
+        for i in cell:
+            for j in cell:
+                a, b = st[i], st[j]
+                if i < j and a[4] != b[4] and min(a[2], b[2]) - max(a[0], b[0]) > 0.5 and min(a[3], b[3]) - max(a[1], b[1]) > 0.5:
+                    rr.add((i, j))
+    pairs = collections.Counter(tuple(sorted((st[i][4], st[j][4]))) for i, j in rr)
+    return over, pairs
+
+
 def fill(P, facts, ws):
     """Fill every over-channel empty rectangle inside a slice column with a designated fill block (PDN decap for
     the slices' SU/HC lanes + relay / repeater site bank for the column and street die nets + ECO spares).  The
@@ -1251,6 +1330,7 @@ def main():
     ap.add_argument('--p4k', action='store_true', help='p4k: p4j + svc_rs RTL faces, q / P.V format lanes, unit lanes, column-3 E / column-4 W lane margins')
     ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
     ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0N (+2 SerDes)')
+    ap.add_argument('--pathfix', action='store_true', help='MU-DIE-S81/PATH (p4l): street lanes keep their realized band (pin span / relay body) clear of blocks and neighbour relays')
     ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
     ap.add_argument('--lane-margin', type=float, default=120.0, help='p4k: extra column width beside the column-3 E / column-4 W slices (um)')
     ap.add_argument('--p4h-drop', type=int, default=4, choices=(4, 6), help='p4h: row-0 S-tier frames given to the service region (4: 3L-4R; 6: 2R-5L)')
@@ -1262,8 +1342,10 @@ def main():
     P4F = a.p4f or a.p4g or a.p4h
     global P4G, P4H, P4H_DROP, P4I, P4J, RET, NO_MIX4
     NO_MIX4 = a.no_mix4
-    global P4K, P4L, MU
+    global P4K, P4L, MU, PATHFIX
     P4L = a.p4l
+    PATHFIX = a.pathfix
+    assert not PATHFIX or P4L, '--pathfix needs --p4l'
     MU = a.mu
     assert not MU or P4L, '--mu needs --p4l'
     NO_MIX4 = NO_MIX4 or P4L
@@ -1308,6 +1390,13 @@ def main():
     if P4J:   # (earlier revisions stay byte-identical: the fact is p4j-only)
         ob = lane_over_block(P)
         facts['lane_over_block_um'] = dict(total=round(sum(ob.values())), top={f'{k[0]}@{k[1]}': round(v) for k, v in ob.most_common(8)})
+    if PATHFIX:
+        bo, rr = lane_band_over_block(P)
+        facts['lane_band_over_block'] = dict(
+            bit_mm=round(sum(bo.values()) / 1000, 1), est_on_body_repeaters=round(sum(bo.values()) / 160.0),
+            top={k: round(v / 1000, 1) for k, v in bo.most_common(8)}, relay_overlaps=sum(rr.values()),
+            relay_overlap_pairs={f'{a}|{b}': n for (a, b), n in rr.most_common(10)},
+            rule='MU-DIE-S81/PATH: hop band = max(bits x 0.096 + 3, relay across) um, station = relay body; 160-um repeater pitch')
     if P4J and ob:
         raise SystemExit(f'p4j: die lanes over block bodies (repeaters cannot sit there; GRT slew): {facts["lane_over_block_um"]}')
     import whitespace as ws
