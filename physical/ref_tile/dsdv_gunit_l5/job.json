@@ -1,5 +1,5 @@
 {
- "name": "dsdv_gunit_l5-wm-COMMIT",
+ "name": "dsdv_gunit_l5-sg-COMMIT",
  "block": "dsdv_gunit_l5",
  "ref_tile": true,
  "owner": "Claude:S81-GUNIT",
@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/s81-gunit-wm-1019",
+  "branch": "claude/s81-svcgu-gunit-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
