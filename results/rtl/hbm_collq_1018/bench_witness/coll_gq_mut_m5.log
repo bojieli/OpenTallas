@@ -29,7 +29,7 @@ COLLQ DATA row0 q0 seg1 word53 got a48b14416659c20c3b14b03bfca36fe6be71ddad730c8
 COLLQ DATA row0 q0 seg1 word55 got 3e3ac89afce81ed7a1a56ce06612b33d24c00176e9bd5783ae6aa5dc6cd80be9 exp 12faf3a4d02825e98d6557de4ad2880308003a48c57d6cbd82aa9ee2401830d7
 COLLQ DATA row0 q0 seg1 word57 got 9c243eed5ef6e8a003bb9a97c40c454a86def7014ba3a1f40c7453abcec6fd9e exp 06d29e8ac40048c7994d3af05efae52d1c285766d15501939682f3cc54305df9
 COLLQ FAIL errors=841
-- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:278: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 2us; walltime 0.267 s; speed 7.606 us/s
-- Verilator: cpu 0.269 s on 1 threads; alloced 1023 MB
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:285: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.059 s; speed 34.357 us/s
+- Verilator: cpu 0.059 s on 1 threads; allocated 13 MB

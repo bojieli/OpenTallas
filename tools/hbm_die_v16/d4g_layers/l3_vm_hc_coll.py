@@ -53,6 +53,8 @@ STACK = dict(SW='SW', SE='SW', NW='NW', NE='NW')
 WR_TGT = dict(SW=160, SE=161, NW=162, NE=163)
 CK = ['hb_ckgen', 'pll_stream']; RST = ['hb_ckgen', 'por_stream']
 UDRLY = 2                                      # HBM-RTL5 10-18 (0fi): HC hub DRLY / root QDRLY with the U-ring b7->b0 die relay
+HC_CHX = 11                                    # HH-9 10-19: bank chain pin registers (CPI/CPO) = +11 chain edges per pass:
+                                               # hub CHX / root QCHX 11; RAW0 + 11 (HCRING 10-19 binds them)
 URLY_CLASSES = (1136, 624, 304)               # one b7->b0 relay stage: closed hbfd_rly classes side by side (2,064 >= 2,049 b)
 
 
@@ -176,7 +178,7 @@ class L3:
         B = 'HBM-B-RTL2b split HC (ot_hbm_hc_qeng_static soft composition lifted to die; lockstep a143d1f5e)'
         # x_wave link is internal to the hub now
         self.drop_edges(lambda e: e['sink'][0] == 'hc_eng' and e['sink'][1].startswith('x_wave'))
-        self.remaster('hc_eng', 'ot_hbm_hc_root_static', {'QDRLY': UDRLY}, 'centre HC root: programme/table/core TPRE 6/mix/tails; XRD=XRU=0 '
+        self.remaster('hc_eng', 'ot_hbm_hc_root_static', {'QDRLY': UDRLY, 'QCHX': HC_CHX}, 'centre HC root: programme/table/core TPRE 6/mix/tails; XRD=XRU=0 '
                       '(set to the root<->hub relay stage counts when the relay layer stations those links); QDRLY 2 = '
                       'the U-ring b7->b0 die relay (HBM-RTL5, coordinator 0fi)')
         try:                                               # U mouth per quadrant -> flow of the b7->b0 relay
@@ -187,7 +189,7 @@ class L3:
         for qi, q in enumerate(Q4):
             h = f'hc_{q}'
             assert I[h]['master'] == 'ot_hbm_hc_q_static', I[h]['master']
-            self.remaster(h, 'ot_hbm_hc_qhub_static', {'DRLY': UDRLY}, f'quarter {qi} hub = hc_q + qcen (x_wave internal, 0dx U mouth = '
+            self.remaster(h, 'ot_hbm_hc_qhub_static', {'DRLY': UDRLY, 'CHX': HC_CHX}, f'quarter {qi} hub = hc_q + qcen (x_wave internal, 0dx U mouth = '
                           'VM face); DRLY 2: descriptor relay 2 + exit budget 2 = bank 0 register + the b7->b0 die relay')
             for e in self.E:
                 if e['source'][:2] == [h, 'fault']:
@@ -204,7 +206,8 @@ class L3:
             bk = {k: f'hcb_{q}{k}' for k in range(8)}
             for k in range(8):
                 m = M.get(k, 'ot_hbm_hc_bankq_static')
-                self.inst(bk[k], m, {'DRLY': 1} if k == 0 else {}, f'hcb_{q}{k}',
+                # HH-9 chain pin registers: b0 CPO 1, banks 1/3/4/5/7 CPI = CPO = 1, edge banks 2/6 none (their kits' params)
+                self.inst(bk[k], m, {'DRLY': 1, 'CPO': 1} if k == 0 else ({} if k in (2, 6) else {'CPI': 1, 'CPO': 1}), f'hcb_{q}{k}',
                           f'HC quarter {qi} ({q}) bank tile {k} (term k of every 8-term chunk; ring form 0015a8769, U 0dx)', 'HBM-B-RTL2/H-D4G')
                 self.clock(bk[k], 'clk')
             # chain 0 -> 7
@@ -272,15 +275,17 @@ class L3:
                         self.edge([t, f'{side}_rst_n_o', 0, 1], [c, 'rst_n', 0, 1], B + f': corner {kc} reset')
                         self.edge([c, 'wfault', 0, 1], [t, f'{side}_wfault', 0, 1], B + f': corner {kc} fault -> edge tile')
                         self.edge([t, f'{side}_wfault_o', 0, 1], [h, wfp, rbit, rbit + 1], B + f': corner {kc} fault registered back')
-        rep['hc'] = dict(root='hc_eng = ot_hbm_hc_root_static (XRD 0 / XRU 0, QDRLY 2)',
+        rep['hc'] = dict(root='hc_eng = ot_hbm_hc_root_static (XRD 0 / XRU 0, QDRLY 2, QCHX 11)', chain_pin_registers=dict(
+                             hub_CHX=HC_CHX, root_QCHX=HC_CHX, banks='b0 CPO 1; b1/b3/b4/b5/b7 CPI=CPO=1; b2/b6 none',
+                             compiler='HH-9: HC chain +11 edges -> RAW0 + 11, root SYS_LAT + 11, pops / tail launches / emits + 11'),
                          u_ring_relay=dict(per_quadrant=urly, hub_DRLY=UDRLY, root_QDRLY=UDRLY, bank0_DRLY=1,
                                            edge='bank 7 chain exit (sum_out 2,048 + f_out 1) -> 1 die relay stage -> bank 0 s_i',
                                            compiler='HC exit path +1 edge (die relay) and descriptor relay +1 edge (hub DRLY 2): '
-                                                    'chain/subtree/root timing = the DRLY 2 form; RAW0 165 -> 167 + XRD + XRU '
+                                                    'chain/subtree/root timing = the DRLY 2 form; RAW0 165 -> 167 + 11 (HH-9 CHX) + XRD + XRU '
                                                     '(pops / tail launches / emits +2); the bench measures it',
                                            bench='results/rtl/hbm_rtl5_hc_uring_1018 (ring lockstep XRLY 1)'), hubs={q: f'hc_{q}' for q in Q4},
                          banks=sum(8 for _ in Q4), quarter_index={q: i for i, q in enumerate(Q4)},
-                         compiler='RAW0 165 + XRD + XRU (was 137 single block); corner banks 1/3/5/7 wave landing +1 edge (feed register); '
+                         compiler='RAW0 165 + 2 (U relay) + 11 (HH-9 chain pin registers) + XRD + XRU (was 137 single block); corner banks 1/3/5/7 wave landing +1 edge (feed register); '
                                   'residual fault +2..+3 edges (sticky only)',
                          u_placement=self.hc_u(rep))
 

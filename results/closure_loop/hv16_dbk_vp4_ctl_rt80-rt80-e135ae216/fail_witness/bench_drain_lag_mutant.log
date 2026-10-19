@@ -1,0 +1,16 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hv16_dbk_vp4_ctl_rt80-rt80-e135ae216 bench bench_drain_lag_mutant host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hv16_dbk_vp4_ctl_rt80-rt80-e135ae216 log cl/bench_drain_lag_mutant.a1b1.log captured 2026-10-19T02:51:16-07:00
+# fail_regex 'BANKLAT FAIL mv_fault .* lag_ok 0'
+Verilator 5.050 2026-07-01 rev v5.050
+BANKLAT die bank0: rq lane 21 + pad 31, bank 8, rr lane 20 -> round trip 80
+BANKLAT die bank1: rq lane 21 + pad 30, bank 8, rr lane 21 -> round trip 80
+BANKLAT die bank2: rq lane 17 + pad 39, bank 8, rr lane 16 -> round trip 80
+BANKLAT die bank3: rq lane 17 + pad 38, bank 8, rr lane 17 -> round trip 80
+BANKLAT die bank4: rq lane 25 + pad 23, bank 8, rr lane 24 -> round trip 80
+BANKLAT die bank5: rq lane 25 + pad 22, bank 8, rr lane 25 -> round trip 80
+BANKLAT die bank6: rq lane 21 + pad 31, bank 8, rr lane 20 -> round trip 80
+BANKLAT die bank7: rq lane 21 + pad 31, bank 8, rr lane 20 -> round trip 80
+BANKLAT FAIL mv_fault at cycle 19 move 0 (landing/response latency or drain lag) lag_ok 0 resp 00000000/00000000
+[190000] %Fatal: tb_dma_vp4_banklat.sv:86: Assertion failed in tb_dma_vp4_banklat
+%Error: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat.sv:86: Verilog $stop
+Aborting...

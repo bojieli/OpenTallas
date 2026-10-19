@@ -32,7 +32,9 @@
   "S": [
    "w_d",
    "rst_n",
-   "clk",
+   "clk"
+  ],
+  "N": [
    "r_d"
   ]
  },
@@ -59,7 +61,6 @@
   "physical/ref_tile/s81lk_kp4_ddly/kit.env",
   "physical/ref_tile/s81lk_kp4_ddly/clock.sdc",
   "physical/ref_tile/s81lk_kp4_ddly/signoff.sdc",
-  "physical/ref_tile/s81lk_kp4_ddly/signoff_ffrepair.sdc",
   "physical/ref_tile/s81lk_kp4_ddly/pdn.tcl",
   "physical/ref_tile/s81lk_kp4_ddly/pre_cts.tcl",
   "physical/ref_tile/s81lk_kp4_ddly/post_cts.tcl",

@@ -80,6 +80,13 @@ def main():
         assert refs['ck']['rise'] == 103 and refs['ck']['bmin'] == 98 and refs['ck']['n'] == 4
         assert refs['hk']['rise'] == 207 and refs['hk']['bmin'] == 199 and refs['hk']['n'] == 8
         assert all(r['src'] == 'insertion.json boundary mean' for r in refs.values())
+        # NATIVE-REF 2026-10-18: a parent with hard-child clock pins at its boundary (ck_insertion child_flop record)
+        # is referenced at the child flops, not the raw child pins (kp4_dec: launch 388 raw-pin vs 174 child-flop basis)
+        cf = P.clock_refs(P.parse_lib(v / 't_tt.lib'), {'clock': 'ck', 'tt': {
+            'boundary': {'n': 4, 'mean': 104.0, 'min': 20.0, 'max': 110.0},
+            'child_flop': {'boundary': {'n': 4, 'mean': 380.0, 'min': 360.0, 'max': 400.0}}}}, 'tt')
+        assert cf['ck']['rise'] == 380.0 and cf['ck']['bmin'] == 360.0 and cf['ck']['bmax'] == 400.0, cf
+        assert cf['ck']['src'] == 'insertion.json child_flop boundary mean'
         (v / 'insertion.json').unlink()
         # a tile over the reach against its own kind but with pin registers is NOT a tile defect; C > available is 'abut'
         a.q_pin = a.p_pin = 1000.0

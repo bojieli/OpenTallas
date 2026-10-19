@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hv15_dbk_vp4_ctl-h7-5d0290cd1 bench bench_mutant2 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hv15_dbk_vp4_ctl-h7-5d0290cd1 log cl/bench_mutant2.a1b1.log captured 2026-10-19T00:41:19-07:00
+# fail_regex 'control mismatch'
+FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_back_vp4_banks_equiv.sv:39: control mismatch cycle1924
+       Time: 19240000  Scope: tb_dma_back_vp4_banks_equiv

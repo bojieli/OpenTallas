@@ -1,0 +1,10 @@
+LP_MISMATCH child=u_lf0.c_d cycle=41 flat=8cc35069cbaf1874818159816987e6c44f234854 landed=abb209a417e689bdbcafa7276cd434433a8e48e8
+LP_MISMATCH child=u_lf0.c_d cycle=42 flat=fb9164de762a1e9b681eb0d72f37bdd9bf5f922d landed=8cc35069cbaf1874818159816987e6c44f234854
+LP_MISMATCH child=u_lf0.c_d cycle=43 flat=35c6f8436e6174249a0c23bb8970d4783be0bc90 landed=fb9164de762a1e9b681eb0d72f37bdd9bf5f922d
+LP_MISMATCH child=u_lf0.c_d cycle=44 flat=d70f6a0923c66383be447bb3092792a0e320c091 landed=35c6f8436e6174249a0c23bb8970d4783be0bc90
+LP_MISMATCH child=u_lf0.c_d cycle=45 flat=896622318261df44ae13a45a586d4c4c7055f795 landed=d70f6a0923c66383be447bb3092792a0e320c091
+LP_LOCKSTEP FAIL MUT=2 mismatches=3699 of 443970
+- rtl/dsrom_sys/s81_dv/slice/landed/c1x/tb_ot_s81sl_slice_c1x_lp.sv:221: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 93.546 s; speed 32.070 ns/s
+- Verilator: cpu 75.595 s on 1 threads; allocated 228 MB

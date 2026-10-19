@@ -93,7 +93,7 @@ def calendar_words(ev, E0):
     return words
 
 
-def topk_record(A, O, i_rec, k, order, cal_delta=CAL_DELTA, t_frames=16, mutant=False, shift=None):
+def topk_record(A, O, i_rec, k, order, cal_delta=CAL_DELTA, t_frames=16, mutant=False, shift=None, pin_in=1):
     """one IDX.TOPK record (m = 1 row).  Returns dict(events, checks, numbers)."""
     import hbm_vm_static_calendar as C
     from hbm_idx_topk_static_vectors import schedule, ACK
@@ -106,7 +106,9 @@ def topk_record(A, O, i_rec, k, order, cal_delta=CAL_DELTA, t_frames=16, mutant=
     if not np.array_equal(gold, O):
         return dict(status="golden_mismatch", reasons=[f"topk_ids {gold.tolist()} != fixture O {O.tolist()}"])
     rec = dict(k=k, order=order, n=n, m=1, am=0, a=A_SEC * 8, a_str=n, o=O_SEC * 8, o_str=k, has_r=0, r=0, r_str=0)
-    ev0, end0, legal = schedule(rec, 0)
+    # pin_in 1 (VEH-TOPKFIX 10-19): every d4g quadrant binds hfd_vms_bank_native_q0_faces (literal bank input pin
+    # flops): engine capture n+9, hub echo +1, ACK 13 -- needs hb_idx__ctl = ot_hbm_idx_rootctl_static_pin.
+    ev0, end0, legal = schedule(rec, 0, pin_in)
     assert legal
     # calendar: the events are relative to G; word 0 is sampled at E0 = G - G_AFTER_E0
     # shift (probe only, never evidence): per calendar event kind R/H/P/A edge offset, to localise a die timing
@@ -158,7 +160,7 @@ def topk_record(A, O, i_rec, k, order, cal_delta=CAL_DELTA, t_frames=16, mutant=
            dict(k="C", dom="stream", cyc=T, port="hb_vms_SW__vmstat", val="0", src="check:vm_status", rec=i_rec)]
     chk += [dict(k="C", dom="stream", cyc=T, port=p, val="0", src="check:no_fault", rec=i_rec) for p in FAULT_OUTS]
     return dict(status="emitted", n=n, k=k, order=order, launch_cyc=cL, cal_delta=cal_delta, E0=E0, G=G,
-                engine_end_rel_G=end0, end=end, check_cyc=T, ack=ACK, calendar_words=len(words),
+                engine_end_rel_G=end0, end=end, check_cyc=T, ack=ACK + pin_in, pin_in=pin_in, calendar_words=len(words),
                 calendar_configuration_writes=len(cal["configuration_writes"]), rec_word=hex(rw),
                 expected_O=O.tolist(), events=ev, checks=chk, mutant=bool(mutant))
 
@@ -171,6 +173,8 @@ def main():
     ap.add_argument("--cal-delta", type=int, default=CAL_DELTA)
     ap.add_argument("--rank", default="0")
     ap.add_argument("--name-prefix", default=None)
+    ap.add_argument("--pin-in", type=int, default=1, help="1 = pin-registered VM banks (GEN2b faces; engine "
+                    "ot_hbm_idx_rootctl_static_pin), 0 = historical non-face timing (capture n+8, ACK 12)")
     ap.add_argument("--mutant", action="store_true", help="also emit the sign-flip witness replay")
     ap.add_argument("--probe-shift", default="", help="PROBE ONLY: e.g. R=1,A=1 shifts calendar event kinds (name suffix _s<..>)")
     a = ap.parse_args()
@@ -201,7 +205,7 @@ def main():
         order = 1 if np.all(np.diff(O.astype(np.int64)) > 0) else 0      # route.top6: ascending ids (TOPK_ASC)
         parts = []
         for mut in ([False, True] if a.mutant else [False]):
-            g = topk_record(A, O, i_rec, k, order, cal_delta=a.cal_delta, mutant=mut, shift=shift)
+            g = topk_record(A, O, i_rec, k, order, cal_delta=a.cal_delta, mutant=mut, shift=shift, pin_in=a.pin_in)
             if g["status"] != "emitted":
                 ent.update(g)
                 break
@@ -214,11 +218,11 @@ def main():
             name = f"{prefix}_idx_r{i_rec:03d}" + ("_mut_sign" if mut else "") + \
                 ("_probe_" + "".join(f"{k_}{v_:+d}" for k_, v_ in sorted(shift.items())) if shift else "")
             rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top"), design="ds", layer=str(L),
-                       record=i_rec, tag=x["tag"], lane="VEH-CUTS", scope="component_probe",
+                       record=i_rec, tag=x["tag"], lane="VEH-TOPKFIX" if a.pin_in else "VEH-CUTS", scope="component_probe",
                        state_seed_provenance=["fixture:ds_native A operand (VM preload)", "image:O sector zeroed"],
                        assumptions=[f"calendar word 0 sampled at launch + {a.cal_delta} (calx cut measurement)",
-                                    "bank-face pin registers keep the engine's documented relative timeline "
-                                    "(read capture n+8, ACK 12): the run checks it",
+                                    f"engine timeline PIN_IN {a.pin_in} (read capture n+{8 + a.pin_in}, "
+                                    f"ACK {12 + a.pin_in}): the run checks it",
                                     "calendar_SW = IDX-only programme (sole VM owner in this replay)"] +
                                    ([f"PROBE calendar shift {shift} (not evidence)"] if shift else []),
                        events=sorted(evs, key=lambda e: (e["dom"], e["cyc"], e["k"])))
