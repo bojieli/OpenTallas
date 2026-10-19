@@ -1,0 +1,14 @@
+{
+  "root_authorized": true,
+  "stage": "INT8_CTS_ONLY",
+  "candidate": "smh_int8_safe_tie_t1_cts1",
+  "manifest_sha256": "18d09b9ff84ebe8ff6259b0bd156f1a27dda1306c79aecae0e9004160461ff21",
+  "pg_tests_pass": true,
+  "pg_helper_sha256": "86ecd58dcc68419006b65d773c832ac6feeaf7ecdcf39dbf9f8f442f868bb5c4",
+  "neighbor_timing_status": "DIAGNOSTIC_ONLY",
+  "source_commit": "da40a2a46037798be54f7a3bc70a52dc430798af",
+  "placement_commit": "121b7ec9a243affe1bcaa04ae87aa5899f5c53c7",
+  "kit_commit": "ae2b36fac",
+  "scope": "One fresh isolated admitted CTS-only run plus read-only TT/FF/native/PG/conductor/identity/PNG collection. No synthesis, data repair, GRT, DRT, submit, production activation or parent adoption. All remote input/platform/image hashes must pass pinned preflight. Preserve all original inputs/failures; no retry after a genuine source/timing failure without new structural model.",
+  "review": "ROOT personally reviewed placement PNG/checklist13:19 and exact PG a92 master-MTerm source, CTS/FF scripts, input manifest, signal-identity and readonly renderer contract. New output requires personal PNG/native timing review before any further physical stage."
+}

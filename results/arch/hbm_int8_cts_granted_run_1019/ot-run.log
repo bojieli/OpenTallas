@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-int8-cts-granted-run-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-int8-cts-granted-run-1019
+ot-run: ot-epyc6       admits  1142 GB (avail 880, growth 80, headroom 0, waiters 0/0 GB) load 35/128 running 25 disk 5760 GB 
+ot-run: ot-epyc7       admits  1005 GB (avail 776, growth 73, headroom 0, waiters 0/0 GB) load 31/96 running 28 disk 6277 GB 
+ot-run: ot-epyc8       admits  1322 GB (avail 982, growth 33, headroom 0, waiters 0/0 GB) load 16/128 running 11 disk 112 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-int8-cts-granted-run-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-int8-cts-granted-run-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1813104-1792442962 after 1 s
+EXACT_INPUTS_PASS; fleet launch remains separate
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1813104-1792442962): exit 1
