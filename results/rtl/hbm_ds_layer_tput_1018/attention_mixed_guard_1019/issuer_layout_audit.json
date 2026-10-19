@@ -1,0 +1,170 @@
+{
+  "canonical_commit": "825607a54",
+  "main_same_source_commit": "944bbb859",
+  "canonical_sha256": "6acb3e9d66d70ceb211c86a317868e10bb15716787fdf9b3815a08b57d407d07",
+  "clone_sha256": "33e042c922bcf3a9cef389ef2031c9ef012325b4232a96ac23f3cd1199cfbce3",
+  "normalised_clone_sha256": "6acb3e9d66d70ceb211c86a317868e10bb15716787fdf9b3815a08b57d407d07",
+  "exact_outside_declared_changes": true,
+  "canonical_context": {
+    "range": "45:0",
+    "width": 46,
+    "bit46_exists": false
+  },
+  "clone_context": {
+    "range": "46:0",
+    "width": 47,
+    "new_bit": 46,
+    "bit47_exists": false,
+    "fields": [
+      [
+        "mode",
+        0,
+        1
+      ],
+      [
+        "fl",
+        2,
+        2
+      ],
+      [
+        "lstep",
+        3,
+        6
+      ],
+      [
+        "bank",
+        7,
+        7
+      ],
+      [
+        "epoch",
+        8,
+        23
+      ],
+      [
+        "tag",
+        24,
+        33
+      ],
+      [
+        "row_off",
+        34,
+        45
+      ],
+      [
+        "attention",
+        46,
+        46
+      ]
+    ]
+  },
+  "queue": {
+    "LB": 2,
+    "canonical_width": 110,
+    "clone_width": 111,
+    "range": "110:0",
+    "slots_each": 4,
+    "fields": [
+      [
+        "landing",
+        0,
+        1
+      ],
+      [
+        "epoch",
+        2,
+        17
+      ],
+      [
+        "base",
+        18,
+        28
+      ],
+      [
+        "limit",
+        29,
+        40
+      ],
+      [
+        "loops",
+        41,
+        56
+      ],
+      [
+        "go_at",
+        57,
+        80
+      ],
+      [
+        "tag",
+        81,
+        90
+      ],
+      [
+        "row_off",
+        91,
+        102
+      ],
+      [
+        "lstep",
+        103,
+        106
+      ],
+      [
+        "mode",
+        107,
+        108
+      ],
+      [
+        "fl",
+        109,
+        109
+      ],
+      [
+        "attention",
+        110,
+        110
+      ]
+    ],
+    "new_class_source": "p[197] -> s_ent[110] -> sq/gq[110] -> ctx[46]"
+  },
+  "a_p_bits": 200,
+  "reserved_zero": "231:200",
+  "added_runtime_source_bits": 9,
+  "retained": [
+    "all original lower46 context bits",
+    "all original handshakes/status/payloads",
+    "entire ID_COHORT and16bit ids_cohort/run_cohort_q source",
+    "all original delays"
+  ],
+  "source_lines": {
+    "canonical": {
+      "40": " input wire[15:0]ids_cohort,",
+      "49": " output wire[45:0]program_start_ctx,   // {row_off12, tag_base10, epoch16, bank1, lstep4, fl1, mode2}",
+      "75": " reg[15:0]run_cohort_q;",
+      "77": " reg[DAW:0]n_rd,n_go;reg a_v,p_v,st_v;reg[199:0]a,p;reg[142:0]st;reg[23:0]p_lay,p_id;reg[23:0]rc;",
+      "91": " localparam integer QW=7+12+10+24+16+12+11+16+LB;",
+      "103": " assign program_start_ctx={gh_roff,gh[LB+79+:10],gh[LB+:16],gh_land[0],gh[LB+101+:4],gh[LB+107],gh[LB+105+:2]};",
+      "109": "   sq_n<=0;gq_n<=0;sq_r<=0;sq_w<=0;gq_r<=0;gq_w<=0;go_busy<=0;layer_q<=0;ids_layer_q<=0;ids_ok_q<=0;run_cohort_q<=0;",
+      "116": "     if(ID_COHORT!=0)begin ids_ok_q<=0;run_cohort_q<=run_cohort_q+16'd1;end",
+      "120": "    if(ID_COHORT!=0&&(!running||run_v||ids_ok_q||ids_layer!=layer_q||ids_cohort!=run_cohort_q))fault<=1;",
+      "128": "    if(rd[255:240]!=16'h5d15||rd_id!=rp_q||(DAW==7&&rd[239])||rd[231:200]!=0||rd[176:173]>NID)fault<=1;",
+      "140": "    s_ent<={p[199],p[196:195],p[194:191],p[188:177],p[81:72],p[142:119],p[118:103],p[190],p[102:92],p[189],p[91:82],p[64:49],p[47+:LB]};"
+    },
+    "clone": {
+      "43": " input wire[15:0]ids_cohort,",
+      "52": " output wire[46:0]program_start_ctx,   // {attention1, original lower46 context}",
+      "78": " reg[15:0]run_cohort_q;",
+      "80": " reg[DAW:0]n_rd,n_go;reg a_v,p_v,st_v;reg[199:0]a,p;reg[142:0]st;reg[23:0]p_lay,p_id;reg[23:0]rc;",
+      "94": " localparam integer QW=8+12+10+24+16+12+11+16+LB;",
+      "106": " wire command_class=(CLASS_MUT==1)?1'b0:(CLASS_MUT==2)?a[197]:gh[LB+108];",
+      "107": " assign program_start_ctx={command_class,gh_roff,gh[LB+79+:10],gh[LB+:16],gh_land[0],gh[LB+101+:4],gh[LB+107],gh[LB+105+:2]};",
+      "113": "   sq_n<=0;gq_n<=0;sq_r<=0;sq_w<=0;gq_r<=0;gq_w<=0;go_busy<=0;layer_q<=0;ids_layer_q<=0;ids_ok_q<=0;run_cohort_q<=0;",
+      "120": "     if(ID_COHORT!=0)begin ids_ok_q<=0;run_cohort_q<=run_cohort_q+16'd1;end",
+      "124": "    if(ID_COHORT!=0&&(!running||run_v||ids_ok_q||ids_layer!=layer_q||ids_cohort!=run_cohort_q))fault<=1;",
+      "132": "    if(rd[255:240]!=16'h5d15||rd_id!=rp_q||(DAW==7&&rd[239])||rd[231:200]!=0||rd[176:173]>NID)fault<=1;",
+      "144": "    s_ent<={p[197],p[199],p[196:195],p[194:191],p[188:177],p[81:72],p[142:119],p[118:103],p[190],p[102:92],p[189],p[91:82],p[64:49],p[47+:LB]};"
+    }
+  },
+  "qualification": "source/layout audit only; physical candidate unqualified, component miter pending"
+}
