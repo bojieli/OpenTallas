@@ -36,21 +36,21 @@ The per-record rules (`rp` knob on the d4g knob; applied after d4g_quadrant_1017
   e86_tkm      e86 TKM tile input register (HH-4 tile_rg PRE=1, tkm_static TLAT 4): +2 NT = +64 edges a TKM op at TP192:
                +64 on a COLL.TOPK_MERGE record.
   qcore_r6     qcore r6 write-conflict fault flag +1 edge: status only (coordinator ACCEPTED, HBM-HCBANK 02:40): 0 cycles.
-  att_meas     MEASURED d4g SM attention spans (VEH-ATT 07a99bc0a, GEN2b die SM master, DS L2 real rows, 20/20 bit-exact):
-               busiest SM QK 684 (KV8) / 660 (KV4), PV 839 / 815 vs the priced component spans of b_measured_model
-               (results/hbm_sm_attention_1015: T640 qk 288 / pv 386; fa 259, publish 64, merge 99 kept as priced).
-               DS T640 records: + (684 - 288) QK, + (839 - 386) PV (measured); T128 records: component x the same
-               ratio (modelled).  Qwen (no d4g measurement): the attention stream at the measured per-SM line rate
-               (QK 33,864 B / 684 cyc = 49.5 B/cyc/SM, PV 40.4) on 16 SMs instead of the die HBM rate (modelled).
-  att_prog     HBM-ATTGAP programme memory (QK+PV 1,483-1,531 words > 1,024-word svg/xc SRAM): programme loops
-               (descriptor loops field) assumed -> 0 cycles; a per-token reinstall (~61k ingress edges/SM/op) is not a
-               schedulable design.  modelled, pending HBM-ATTGAP.
-  att_desc     HBM-ATTGAP issuer-descriptor rewrites of the window ring (~640 ingress edges per SM per layer, the 10 SMs in
-               parallel): +640 on the first ATT.QK of every layer (exposed, conservative); 0 if the base is relocated in
-               hardware.  modelled, pending HBM-ATTGAP.
-  att_merge    HBM-ATTGAP cross-SM PV merge (no on-die owner yet): priced merge 99 (T640) / 79 (T128) kept; the
-               10-node pairwise tree padded to 16 = 4 levels x (1 XQ crossing + reducer DEP 10 + LAT 9) - priced merge,
-               added on the PV record (modelled, pending HBM-ATTGAP).
+  att_s32      (HBM-REPRICE2) HBM-ATTGAP choice S32: 32-row sub-runs keep the QK+PV programme resident (1,019 / 971 words);
+               busiest-SM span QK 861 / PV 1,171 (2 sub-runs + go bubble, GEN2b die SM master, 40/40 bit-exact) replaces
+               the SM COMPONENT of the priced record (b_measured_model T640 qk 288 / pv 386); first access / dispatch
+               (fa 259) and publish 64 stay at price because the span excludes them (LB2-HBM VEH-ATT note).  T128 records:
+               component x the one-op ratio 684/288, 839/386 (modelled).  Variant `bigprog` (2,048-word programme store,
+               COORD 0jx, HBM-SMBUDGET): one op a SM at 684 / 839.
+  att_merge    DS: HBM-ATTGAP on-die SU PV merge model 400.8 (T640; one-op 335.5) / 335.5 (T128) minus the priced merge
+               99 / 79 already inside the PV record (modelled; SU RTL bench pending).  Qwen: 16-SM pairwise tree
+               4 x (1 XQ + DEP 10 + LAT 9) (modelled).
+  att_qwen     VEH-ATT3 MEASURED Qwen spans (D4G8 L0 + chained L1, 80/80 bit-exact, P 8192, 512 rows/SM): the attention
+               stream at the per-SM line rate QK 65,536 B / 1,195 = 54.84, PV 65,536 / 2,364 = 27.72 B/cyc/SM on 16 SMs
+               instead of the die HBM rate.
+  att_prog     0: S32 resident programmes (measured).   att_desc  0: window staging (modelled check PASS; Qwen: no ring).
+  pt_p2        HBM-PRETREE p2 (registered operand select): pre-tree PT 70 -> 81 edges, applied on the su_red pre-tree
+               (attribution = su_red+pt_p2 minus su_red).
   idx_link     idx_link pipelined successor ot_hbm_idx_topk_link_static_p (HBM-IDXPIPE, AD-HBM-IDXK): +5 edges on every
                link output (frame 1397 -> 1402): +5 on IDX.INDEX / IDX.TOPK.
   idx_pin      rootctl_am_pin pair (VEH-TOPKFIX2 05b86e194, HBM-IDXAM2 r3): INDEX round trip +2 (r3) +1 (am_pin, op_SW
@@ -61,7 +61,9 @@ The per-record rules (`rp` knob on the d4g knob; applied after d4g_quadrant_1017
                applied as the recorded factor (priced; the land plan is not in this bundle).
 
 Info variants (not composed): info_gen2c_xload (x-load VM round trip at the GEN2c measured 51 edges: SM_X 25.5 stages),
-info_att_lower (att_meas against the priced TOTAL 547 / 808 instead of the component, the lane's own comparison).
+info_attgap_total[_bigprog] (HBM-ATTGAP's own accounting: span vs the exposed record total, whole merge added; reproduces
+its 1,787.3 / 1,847.4 as a check), info_bl_coll / info_bl_dma / info_bl_idx / info_banklat_all (HBM-BANKLAT GEN2c relay-lane
+budgets, INFO_TERMS; info_banklat_all is on top of `all`).
 
     PYTHONPATH=tools python3 -m hgi_sim.d4g_reprice_1019 --jobs 40 --out results/arch/hbm_reprice_1019/price.json
 """
@@ -108,15 +110,29 @@ TERMS = {
                 "HH-4 claude/hh4-e86-1018 a5f17ebc7 tkm_static TLAT 4, calendar mutant MUT 3"),
     "qcore_r6": (0, "measured", "write-conflict fault flag +1 edge: status only, 0 token cycles",
                  "HH-11 c663070f1; coordinator ACCEPTED (HBM-HCBANK 10-19 02:40)"),
-    "att_meas": (dict(qk=684, pv=839, qk_bytes_rate=33864 / 684, pv_bytes_rate=33864 / 839, nsm=16), "measured",
-                 "DS T640 comp qk 288 -> 684, pv 386 -> 839 (T128 ratio-scaled, modelled); Qwen at the measured per-SM "
-                 "line rate on 16 SMs (modelled)",
-                 "VEH-ATT claude/veh-att-1019 07a99bc0a (results/rtl/hbm_ds_layer_tput_1018/veh_att_1019/unit/L2_pos.json)"),
-    "att_prog": (0, "modelled", "programme loops assumed (no per-token reinstall)", "VEH-ATT finding (1); HBM-ATTGAP pending"),
-    "att_desc": (640, "modelled", "+640 on the first ATT.QK of a layer (window-ring descriptor rewrites, exposed)",
-                 "VEH-ATT finding (2); HBM-ATTGAP pending"),
-    "att_merge": (dict(levels=4, dep=10, lat=9), "modelled",
-                  "PV + max(0, 4 x (1 XQ + DEP 10 + LAT 9) - priced merge)", "VEH-ATT finding (3); HBM-ATTGAP pending"),
+    "att_s32": (dict(qk=861, pv=1171, qk1=684, pv1=839), "measured",
+                "DS T640 SM component qk 288 -> 861, pv 386 -> 1,171 (HBM-ATTGAP S32: busiest SM, 2 x 32-row sub-runs + 5 "
+                "go bubble; fa 259 / publish 64 kept at price -- the span excludes HBM first access, x-load, publish, "
+                "merge); T128 at the one-op ratio 684/288, 839/386 (modelled); BIGPROG variant: one op 684 / 839",
+                "HBM-ATTGAP main 7f35a3e4b results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019/unit/L2_s32_pos.json "
+                "(40/40 bit-exact, resident 1,019 / 971 words); one-op VEH-ATT 07a99bc0a"),
+    "att_merge": (dict(ds640=400.8, ds128=335.5, ds640_one=335.5, levels=4, dep=10, lat=9), "modelled",
+                  "DS PV + (HBM-ATTGAP SU merge 400.8 T640 / 335.5 T128 [one-op 335.5] - priced merge 99 / 79); "
+                  "Qwen PV + 4 x (1 XQ + DEP 10 + LAT 9) (16-SM pairwise tree, no priced merge)",
+                  "HBM-ATTGAP att_gap_price.py merge model (SU quadrant programme + ring AG + top levels in norm; "
+                  "SU RTL bench pending); Qwen VEH-ATT finding (3)"),
+    "att_qwen": (dict(qk_bytes_rate=65536 / 1195, pv_bytes_rate=65536 / 2364, nsm=16), "measured",
+                 "Qwen ATT at the measured per-SM line rate (QK 54.84 / PV 27.72 B/cyc/SM, P 8192, 512 rows/SM) on 16 "
+                 "SMs instead of the die HBM rate (spans measured; exposure from the S2 schedule)",
+                 "VEH-ATT3 claude/veh-att3-1019 fb8fd695b results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/unit/"
+                 "{L0_L0_pos,chain_L1_pos}.json (80/80 bit-exact; QK 1,195 / PV 4 x 591 = 2,364)"),
+    "att_prog": (0, "measured", "0: S32 sub-runs keep QK+PV resident (1,019 KV8 / 971 KV4 words <= 1,024)",
+                 "HBM-ATTGAP L2_s32_pos.json calendars word-identical"),
+    "att_desc": (0, "modelled", "0: window staging (fixed descriptors, DMA refresh i+1 -> i off-path; Qwen has no "
+                 "window ring)", "HBM-ATTGAP window_staging_check.json PASS (260 tokens); DMA ~134 KB/layer/token"),
+    "pt_p2": (81, "measured", "SU pre-tree PT 70 -> 81 edges (p2 registered operand select, PT_RED 69 -> 80); "
+              "only with su_red", "HBM-PRETREE claude/hh6-sured-1018 0d52a4877 (bench MUT 0 PASS / MUT 512 FAIL); "
+              "COORD 0kb"),
     "idx_link": (5, "measured", "+5 an IDX.INDEX / IDX.TOPK record (link outputs +5)",
                  "HBM-IDXPIPE b4717e464 / AD-HBM-IDXK c94204038 (frame 1397 -> 1402)"),
     "idx_pin": (dict(index=3, topk_fixed=4, argmax=8), "measured",
@@ -126,6 +142,16 @@ TERMS = {
              "HBM-LANDING/DCC hland-dcc 447dfe960 (HANDOFF 10-18 07:35)"),
 }
 COMPOSED = [k for k in TERMS]                     # every term enters `all`
+# INFO terms (priced, NOT composed): GEN2c bank-client relay-lane budgets (HBM-BANKLAT) -- closures still running and the
+# GEN2d floorplan is meant to shorten them; one-way stage = round trip / 2 (the x-load convention of the previous lane).
+INFO_TERMS = {
+    "gen2c_xload": (dict(SM_X=51 / 2), "x-load VM round trip 51 edges (GEN2c measured) -> SM_X 25.5", "GEN2c / HBM-BANKLAT-XL"),
+    "bl_coll": (dict(COLL_VM=74 / 2), "COLL VM_RT 74 (BANK_RT 72) -> COLL_VM 37", "HBM-BANKLAT-COLL budget"),
+    "bl_dma": (dict(VM_HBM=83 / 2), "DMA RR_RT 80 -> issue->drain lag >= 83 -> VM_HBM 41.5", "HBM-BANKLAT-DMA budget"),
+    "bl_idx": (dict(idx=171, argmax=65), "+171 an IDX.INDEX / IDX.TOPK (op readers VM_RT_EXTRA), +65 an ARGMAX "
+               "(rootctl VM_RT) -- upper bound (whole budget exposed)", "HBM-BANKLAT-IDX budgets (n12 / rootctl_am g2c routes)"),
+}
+PT_BASE = SR.PT_EDGES                             # 70: the HH-6 pre-tree bench as priced before p2
 BASE_HC_TREE = 28                                 # the price-of-record ledger value (hc_tree knob before HCRING)
 BM = S.BM                                         # results/hbm_sm_attention_1015/b_measured_model.json
 PER_RUN = {}                                      # per-term added cycles (sum over records) of one job
@@ -169,7 +195,7 @@ def rp_added(r, c, kn):
             _add(f"suexec:{op}", 1 if Q.su_exec(r) else 0)
             _add(f"kind:{op}:{getattr(r, 'mtp_kind', '')}", 1)
             _add(f"cost:{op}", c)
-    if not rp:
+    if not rp and not kn.get("bl_idx"):
         return 0.0
     sut = getattr(r, "sut", None)
     red = isinstance(sut, dict) and sut.get("red")
@@ -207,34 +233,41 @@ def rp_added(r, c, kn):
                 A = r.desc.get("A") if getattr(r, "desc", None) else None
                 m = max(1, int(getattr(A, "m", 1) or 1)) if A is not None else 1
                 a("idx_pin", m + p["topk_fixed"])
+    if kn.get("bl_idx"):
+        if op in ("IDX.INDEX", "IDX.TOPK"):
+            a("bl_idx", INFO_TERMS["bl_idx"][0]["idx"])
+        elif r.unit == "ARGMAX":
+            a("bl_idx", INFO_TERMS["bl_idx"][0]["argmax"])
     if "idx_pin" in rp and r.unit == "ARGMAX":
         a("idx_pin", TERMS["idx_pin"][0]["argmax"])
     if op in ("ATT.QK", "ATT.PV"):
         w = op.split(".")[1].lower()
         Tn = _att_T(r)
-        if "att_meas" in rp:
-            m = TERMS["att_meas"][0]
-            if Tn is not None:                                   # DS (option B records)
-                comp = BM["measured_comp"][Tn][w]
-                ratio = m[w] / BM["measured_comp"]["640"][w]
-                ref = BM["exposed"]["per_record"]["640"][w] if kn.get("att_lower") else None
-                if ref is not None and Tn == "640":
-                    a("att_meas", max(0.0, m[w] - ref))
-                else:
-                    a("att_meas", comp * (ratio - 1.0) if not kn.get("att_lower") else
-                      max(0.0, comp * ratio - BM["exposed"]["per_record"][Tn][w]))
-            else:                                                # Qwen ATT (timing.cost: fa + bytes / bw + fixed)
-                b = r.desc["B"]
-                dyn = T.Dyn(kn.get("_qpos", 8191))
-                try:
-                    _, P, _, _, _ = T.eff(b, dyn, r.layer if isinstance(r.layer, int) else 0)
-                except Exception:
-                    P = 8192
-                nbytes = P * 128 * T.ESZ[b.fmt]
-                rate = m[f"{w}_bytes_rate"] * m["nsm"]
-                cur = nbytes / T.cv("hbm", "bytes_per_cycle") + T.cv("units", "ATT.fixed")
-                a("att_meas", max(0.0, nbytes / rate - cur))
-        if "att_desc" in rp and w == "qk":
+        one = bool(kn.get("bigprog"))                            # BIGPROG: one op a SM (2,048-word programme store)
+        if Tn is not None and "att_s32" in rp:                   # DS (option B records): SM component -> measured span
+            m = TERMS["att_s32"][0]
+            comp = BM["measured_comp"][Tn][w]
+            if kn.get("attgap_total"):                           # info: HBM-ATTGAP's own comparison (vs exposed total)
+                span = m[w + "1"] if one else m[w]
+                ref = BM["exposed"]["per_record"][Tn][w]
+                a("att_s32", max(0.0, span - ref) if Tn == "640" else 0.0)
+            elif Tn == "640":
+                a("att_s32", (m[w + "1"] if one else m[w]) - comp)
+            else:                                                # T128: one-op ratio (modelled; S32 not needed at T128)
+                a("att_s32", comp * (m[w + "1"] / BM["measured_comp"]["640"][w] - 1.0))
+        if Tn is None and "att_qwen" in rp:                      # Qwen ATT (timing.cost: fa + bytes / bw + fixed)
+            m = TERMS["att_qwen"][0]
+            b = r.desc["B"]
+            dyn = T.Dyn(kn.get("_qpos", 8191))
+            try:
+                _, P, _, _, _ = T.eff(b, dyn, r.layer if isinstance(r.layer, int) else 0)
+            except Exception:
+                P = 8192
+            nbytes = P * 128 * T.ESZ[b.fmt]
+            rate = m[f"{w}_bytes_rate"] * m["nsm"]
+            cur = nbytes / T.cv("hbm", "bytes_per_cycle") + T.cv("units", "ATT.fixed")
+            a("att_qwen", max(0.0, nbytes / rate - cur))
+        if "att_desc" in rp and w == "qk" and TERMS["att_desc"][0]:
             L = getattr(r, "layer", None)
             seen = kn.setdefault("_desc_layers", set())
             if L not in seen:
@@ -242,9 +275,15 @@ def rp_added(r, c, kn):
                 a("att_desc", TERMS["att_desc"][0])
         if "att_merge" in rp and w == "pv":
             mm = TERMS["att_merge"][0]
-            tree = mm["levels"] * (1 + kn["xq"] + mm["dep"] + mm["lat"])
-            priced = BM["model_terms"]["merge"].get(Tn or "640", 99) if Tn else 0.0
-            a("att_merge", max(0.0, tree - priced))
+            if Tn is not None:
+                if kn.get("attgap_total"):
+                    tree = mm["ds640_one"] if (one and Tn == "640") else mm["ds" + Tn]
+                    a("att_merge", tree)                         # HBM-ATTGAP adds the whole merge on the 808 total
+                else:
+                    tree = mm["ds640_one"] if (one and Tn == "640") else mm["ds" + Tn]
+                    a("att_merge", max(0.0, tree - BM["model_terms"]["merge"][Tn]))
+            else:
+                a("att_merge", mm["levels"] * (1 + kn["xq"] + mm["dep"] + mm["lat"]))
     return add
 
 
@@ -264,6 +303,7 @@ def _job(job):
     if kn:
         kn.pop("_desc_layers", None)
         kn.pop("_uniq", None)
+    SR.PT_EDGES = (kn or {}).get("pt_edges", PT_BASE)
     name, res = SR._any(job)
     res = dict(res, rp_added={k: round(v, 1) for k, v in PER_RUN.items()})
     return name, res
@@ -283,6 +323,8 @@ def with_terms(base, terms, **extra):
             k.update(ag_collq=True, ra_extra=Q.COLLQ_RA_EXTRA)
         elif t == "su_red":
             k["su_red"] = TERMS["su_red"][0]
+        elif t == "pt_p2":
+            k["pt_edges"] = TERMS["pt_p2"][0]
         elif t in ("land", "pg_reset", "qcore_r6", "att_prog"):
             pass                                          # post-hoc / zero terms (table)
         else:
@@ -319,21 +361,31 @@ def main():
     vb = PS.VARIANTS["b"]
     base = base_knob(st, led)
     variants = {"base": (vb, with_terms(base, []))}
-    sched_terms = [t for t in COMPOSED if t not in ("land", "pg_reset", "qcore_r6", "att_prog")]
+    sched_terms = [t for t in COMPOSED if t not in ("land", "pg_reset", "qcore_r6", "att_prog", "att_desc", "pt_p2")]
     for t in sched_terms:
         variants[f"only_{t}"] = (vb, with_terms(base, [t]))
     variants["all"] = (vb, with_terms(base, COMPOSED))
     variants["all_no_collq"] = (vb, with_terms(base, [t for t in COMPOSED if t != "collq"]))
-    variants["all_att_desc_hw"] = (vb, with_terms(base, [t for t in COMPOSED if t != "att_desc"]))
-    ATT_T = ["att_meas", "att_prog", "att_desc", "att_merge"]
+    variants["all_bigprog"] = (vb, with_terms(base, COMPOSED, bigprog=True))    # expected post-HBM-SMBUDGET row
+    ATT_T = ["att_s32", "att_merge", "att_qwen", "att_prog", "att_desc"]
     LAT_T = [t for t in COMPOSED if t not in ATT_T and t != "collq"]
     variants["rec"] = (vb, with_terms(base, ["collq"]))                     # accepted price of record (1849.2)
     variants["rec_lat"] = (vb, with_terms(base, ["collq"] + LAT_T))          # ledger row HBM.D4G_GEN2_LATENCY
     variants["rec_att"] = (vb, with_terms(base, ["collq"] + ATT_T))          # ledger row HBM.D4G_SM_ATTENTION
-    variants["info_att_lower"] = (vb, with_terms(base, ["att_meas"], att_lower=True))
+    variants["rec_att_bigprog"] = (vb, with_terms(base, ["collq"] + ATT_T, bigprog=True))
+    variants["only_su_red_p2"] = (vb, with_terms(base, ["su_red", "pt_p2"]))  # pt_p2 attribution = this - only_su_red
+    variants["only_att_s32_bigprog"] = (vb, with_terms(base, ["att_s32"], bigprog=True))
+    variants["only_att_merge_bigprog"] = (vb, with_terms(base, ["att_merge"], bigprog=True))
+    # check: HBM-ATTGAP's own accounting (span vs exposed record total, whole merge added) -> its 1,787.3 / 1,847.4
+    variants["info_attgap_total"] = (vb, with_terms(base, ["att_s32", "att_merge"], attgap_total=True))
+    variants["info_attgap_total_bigprog"] = (vb, with_terms(base, ["att_s32", "att_merge"], attgap_total=True, bigprog=True))
     stx = dict(st)
-    stx["plan_b_x51"] = dict(st["plan_b"], SM_X=25.5)
-    variants["info_gen2c_xload"] = (dict(vb, stages="plan_b_x51"), with_terms(base, []))
+    for nm, sk in (("gen2c_xload", "plan_b_x51"), ("bl_coll", "plan_b_blcoll"), ("bl_dma", "plan_b_bldma")):
+        stx[sk] = dict(st["plan_b"], **INFO_TERMS[nm][0])
+        variants[f"info_{nm}"] = (dict(vb, stages=sk), with_terms(base, []))
+    variants["info_bl_idx"] = (vb, with_terms(base, [], bl_idx=True))
+    stx["plan_b_blall"] = dict(st["plan_b"], **INFO_TERMS["gen2c_xload"][0], **INFO_TERMS["bl_coll"][0], **INFO_TERMS["bl_dma"][0])
+    variants["info_banklat_all"] = (dict(vb, stages="plan_b_blall"), with_terms(base, COMPOSED, bl_idx=True))
     if a.census:
         variants = {"base": (vb, dict(with_terms(base, []), census=True))}
     if a.only:
@@ -341,7 +393,7 @@ def main():
         variants = {k: v for k, v in variants.items() if k in keep}
     jobs = []
     for k, (v, kn) in variants.items():
-        s_ = stx if v.get("stages") == "plan_b_x51" else st
+        s_ = stx if str(v.get("stages", "")).startswith("plan_b_") else st
         jobs.append(("ds", f"{k}|AR", "AR", v, s_, kn))
         jobs.append(("qwen", f"{k}|qwen", v, s_, kn))
     with mp.Pool(min(a.jobs, len(jobs))) as pool:
@@ -372,7 +424,11 @@ def main():
     # per-term attribution (alone on BASE) + post-hoc terms + interaction
     attr = {}
     for t in COMPOSED:
-        if f"only_{t}" in table:
+        if t == "pt_p2" and "only_su_red_p2" in table:          # p2 on top of the pre-tree it modifies
+            r, r0 = table["only_su_red_p2"], table["only_su_red"]
+            dc = round(r["d_ds_ar_cycles"] - r0["d_ds_ar_cycles"], 1)
+            qc = round(r["d_qwen_cycles"] - r0["d_qwen_cycles"], 1)
+        elif f"only_{t}" in table:
             r = table[f"only_{t}"]
             dc, qc = r["d_ds_ar_cycles"], r["d_qwen_cycles"]
         else:
@@ -393,10 +449,11 @@ def main():
         g = by_grade.setdefault(x["grade"], dict(ds_ar_cycles=0.0, qwen_cycles=0.0))
         g["ds_ar_cycles"] = round(g["ds_ar_cycles"] + x["ds_ar_cycles"], 1)
         g["qwen_cycles"] = round(g["qwen_cycles"] + x["qwen_cycles"], 1)
-    out = dict(schema="opentallas.hbm_d4g_reprice_1019.v1", lane="HBM-REPRICE",
+    out = dict(schema="opentallas.hbm_d4g_reprice_1019.v1", lane="HBM-REPRICE2",
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                rule=__doc__, base_knob={k: (sorted(v) if isinstance(v, set) else v) for k, v in base.items()},
                terms={k: dict(value=v[0], grade=v[1], applies=v[2], source=v[3]) for k, v in TERMS.items()},
+               info_terms={k: dict(value=v[0], applies=v[1], source=v[2]) for k, v in INFO_TERMS.items()},
                table=table, attribution=attr, interaction=inter, by_grade=by_grade,
                composed=dict(ds_ar_tok_s=al["ds_ar_tok_s"], qwen_tok_s=al["qwen_tok_s"],
                              ds_ar_pct_vs_base=al["d_ds_ar_pct"], qwen_pct_vs_base=al["d_qwen_pct"],
@@ -404,7 +461,7 @@ def main():
                              groups={g: dict(ds_ar_tok_s=table[g]["ds_ar_tok_s"], qwen_tok_s=table[g]["qwen_tok_s"],
                                              ds_ar_pct_vs_record=round(100 * (table[g]["ds_ar_tok_s"] / table["rec"]["ds_ar_tok_s"] - 1), 2),
                                              qwen_pct_vs_record=round(100 * (table[g]["qwen_tok_s"] / table["rec"]["qwen_tok_s"] - 1), 2))
-                                     for g in ("rec_lat", "rec_att")}))
+                                     for g in ("rec_lat", "rec_att", "rec_att_bigprog", "all_bigprog")}))
     print(json.dumps(dict(table={k: {x: v[x] for x in ("ds_ar_tok_s", "qwen_tok_s", "d_ds_ar_pct", "d_qwen_pct")}
                                  for k, v in table.items()}, attribution=attr, interaction=inter), indent=1, default=str))
     if a.out:
