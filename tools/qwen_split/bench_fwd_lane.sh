@@ -21,12 +21,12 @@ set -u
 mode=$1; O=$2; W=${3:-16}
 cd "$(dirname "$0")/../.."; mkdir -p "$O"
 export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH
-DEF=
+DEF=+define+OT_QFD_LAND_SAFE_REG
 case $mode in
-  pass) ;; wsel) DEF=+define+OT_QFD_LAND_MUT_WSEL ;; rsel) DEF=+define+OT_QFD_LAND_MUT_RSEL ;; sel) DEF=+define+OT_QFD_LAND_MUT_SEL ;; naive) DEF=+define+OT_QFD_LAND_MUT_NAIVE ;;
-  vld) DEF=+define+OT_QFD_LAND_MUT_VLD ;; full) DEF=+define+OT_QFD_LANE_MUT_FULL ;; hop0inv) DEF=+define+OT_QFD_LANE_MUT_HOP0INV ;;
-  encomb) DEF="+define+OT_QFD_LAND_MUT_ENCOMB +define+OT_QFD_LANE_MUT_ENCOMB" ;;
-  rlyencomb) DEF=+define+OT_QFD_LANE_MUT_ENCOMB ;;
+  pass) ;; wsel) DEF="$DEF +define+OT_QFD_LAND_MUT_WSEL" ;; rsel) DEF="$DEF +define+OT_QFD_LAND_MUT_RSEL" ;; sel) DEF="$DEF +define+OT_QFD_LAND_MUT_SEL" ;; naive) DEF="$DEF +define+OT_QFD_LAND_MUT_NAIVE" ;;
+  vld) DEF="$DEF +define+OT_QFD_LAND_MUT_VLD" ;; full) DEF="$DEF +define+OT_QFD_LANE_MUT_FULL" ;; hop0inv) DEF="$DEF +define+OT_QFD_LANE_MUT_HOP0INV" ;;
+  encomb) DEF="$DEF +define+OT_QFD_LAND_MUT_ENCOMB +define+OT_QFD_LANE_MUT_ENCOMB" ;;
+  rlyencomb) DEF="$DEF +define+OT_QFD_LANE_MUT_ENCOMB" ;;
   *) echo "bad mode $mode"; exit 2 ;;
 esac
 # the die wrappers exactly as the die generator names / ports them (gen_relay_rtl.py on a mini die.v)

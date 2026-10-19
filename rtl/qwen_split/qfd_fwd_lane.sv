@@ -146,6 +146,7 @@ module ot_qfd_land_region #(parameter integer W = 24) (
            | ({W{use_slot[2]}} & b2) | ({W{use_slot[3]}} & b3);
 endmodule
 
+`ifdef OT_QFD_LAND_SAFE_REG
 // landing (contract L1-L7, in-band write epoch): ring of D slots written on the lane clock, read on the block root.
 module ot_qfd_land #(
     parameter integer W     = 16,
@@ -247,6 +248,93 @@ module ot_qfd_land #(
     initial if (D != 4) $fatal(1, "ot_qfd_land: D must be a power of two >= 2");
 `endif
 endmodule
+`else
+// landing (contract L1-L7, in-band write epoch): ring of D slots written on the lane clock, read on the block root.
+module ot_qfd_land #(
+    parameter integer W     = 16,
+    parameter integer D     = 4,                       // ring depth, power of two >= 2 (window D x T)
+    parameter integer FIRST = 0,                       // 1: n = 1 lane, the landing carries the hop-0 gate (ck_s, en)
+    parameter integer AW    = (D <= 2) ? 1 : $clog2(D)
+) (
+    input  wire         ckf,      // FIRST 0: lane forwarded clock (last station ck_o); FIRST 1: source block root
+    input  wire         ea,       // FIRST 0: lane epoch (last station eb); FIRST 1: source released reset
+    input  wire [W-1:0] i,
+    input  wire         ck,       // receiving block root
+    input  wire         rs,       // receiving block regional reset, active low (async assert, release on ck)
+    input  wire [AW:0]  k,        // K strap (identity strap from the instance's own tie cells)
+    output reg  [W-1:0] o,
+    output reg          fault
+);
+    wire wck, we;                 // ring write clock / write-side epoch
+    generate if (FIRST != 0) begin : g_hop0
+        // QK-LANDEN 10-19 (coordinator, Q.STA.LAND600.3 option (b); the ROOT-RST rule: reset-derived inputs are registered
+        // at the face, never timed as exceptions): en (the source's released reset) is registered on ck_s (= ckf here)
+        // BEFORE the clock gate.  One face flop: asynchronous clear by en (assert immediate, also with every clock
+        // stopped), release on the next ck_s edge.  The ICG enable and the ring's write epoch are this flop, never the
+        // input port (closed views: en -> ICG combinational, native capture 351-429 ps > 190).
+        // Calendar: the write epoch moves from source edge G to G + 1 (first gated edge G + 2; the source word launched
+        // at G, still its reset value, is not written).  Every later word is written on the SAME physical edge as before
+        // (same ring age E); only its slot index is one lower, so the die strap is K = (E + (G + 1) - R0) mod 8
+        // (tools/qwen_split/lane_groups.py HOP0_EN_REG, reset_calendar_audit.py finalize_model).
+        (* keep = "true", dont_touch = "true" *) reg en_q;
+`ifdef OT_QFD_LAND_MUT_ENCOMB
+        always @(*) en_q = ea;                                     // bench mutant: en unregistered (the closed-view form)
+`else
+        always @(posedge ckf or negedge ea)
+            if (!ea) en_q <= 1'b0; else en_q <= 1'b1;
+`endif
+        ot_qfd_fwd0 u_fwd0 (.ck(ckf), .en(en_q), .cko(wck));
+        assign we = en_q;         // en_q rises after source edge G + 1, half a period before the first gated edge G + 2
+    end else begin : g_lane
+        assign wck = ckf;
+        assign we = ea;
+    end endgenerate
+    reg [W-1:0] bank [0:D-1];
+    reg [AW:0]  epo  [0:D-1];
+    wire [D-1:0] vld;
+    reg [AW:0]  wc, rc;
+    reg         warm;
+    // ------------------------------------------------------------------ write side (wck), cleared by the lane epoch
+    always @(posedge wck or negedge we)
+        if (!we) wc <= {(AW + 1){1'b0}};
+        else     wc <= wc + 1'b1;
+    genvar s;
+    generate for (s = 0; s < D; s = s + 1) begin : g_slot
+        always @(posedge wck) if (wc[AW-1:0] == s) begin bank[s] <= i; epo[s] <= wc; end
+        reg v;                                                     // slot written since the lane epoch began
+        always @(posedge wck or negedge we)
+            if (!we) v <= 1'b0;
+`ifdef OT_QFD_LAND_MUT_VLD
+            else v <= 1'b1;                                        // bench mutant: every slot valid at once
+`else
+            else if (wc[AW-1:0] == s) v <= 1'b1;
+`endif
+        assign vld[s] = v;
+    end endgenerate
+    // ------------------------------------------------------------------ read side (ck)
+`ifdef OT_QFD_LAND_MUT_SEL
+    wire [AW:0] exp_ = rc - k + 1'b1;                              // bench mutant: read slot one late
+`else
+    wire [AW:0] exp_ = rc - k;
+`endif
+    wire [AW-1:0] rs_ = exp_[AW-1:0];
+    always @(posedge ck or negedge rs)
+        if (!rs) begin rc <= {(AW + 1){1'b0}}; warm <= 1'b0; fault <= 1'b0; end
+        else begin
+            rc <= rc + 1'b1;
+            if (rc == k - 1'b1) warm <= 1'b1;
+            if (warm && vld[rs_] && epo[rs_] != exp_) fault <= 1'b1;
+        end
+`ifdef OT_QFD_LAND_MUT_NAIVE
+    always @(posedge ck) o <= warm ? i : {W{1'b0}};                // bench mutant: retime register only, no ring
+`else
+    always @(posedge ck) o <= (warm && vld[rs_]) ? bank[rs_] : {W{1'b0}};
+`endif
+`ifndef SYNTHESIS
+    initial if (D < 2 || (D & (D - 1)) != 0) $fatal(1, "ot_qfd_land: D must be a power of two >= 2");
+`endif
+endmodule
+`endif
 `default_nettype wire
 
 // LANDFIX-SQ (2026-10-18, coordinator 0gh: no plain relays left on the Qwen compute die): FORWARDED RESET LANES.
