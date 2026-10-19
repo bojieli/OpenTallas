@@ -1,0 +1,89 @@
+{
+ "kind": "tile",
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.55,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.025,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "macro_halo_um": 5.4
+ },
+ "io_flop_at_pins": {
+  "cols": 2,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_budget": "die",
+ "job": {
+  "owner": "Claude OWN-IDXSCORE 1018",
+  "purpose": "IDX quarter scorer glue tile (wires-only quarter ot_hbm_idx_score_quarter_wo, x4 per die)",
+  "branch": "claude/own-idxscore-1018"
+ },
+ "name": "hidx_score_qw_1018",
+ "top": "ot_hbm_idx_score_qw_static",
+ "sources": [
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_split.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "clock_port": "clk_ctl",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {
+  "TP": 192
+ },
+ "outline": {
+  "w": 86.4,
+  "h": 1123.2,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "half",
+   "rank",
+   "first_ord",
+   "nkeys",
+   "keep_en",
+   "keep_bitmap",
+   "ql_v",
+   "ql_head",
+   "ql_codes",
+   "ql_sc",
+   "ql_w",
+   "beat_v",
+   "beat_index",
+   "key_lines"
+  ],
+  "E": [
+   "o_kkv1",
+   "o_key1",
+   "o_aux1",
+   "o_qv",
+   "o_q",
+   "o_kv",
+   "rst_c",
+   "o_bus0",
+   "o_kkv0",
+   "o_key0",
+   "o_aux0"
+  ],
+  "N": [
+   "clk_ctl",
+   "rst_n"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every pin: input pin flops *_r (flop-first, no reset), every output o_* from the registered output stage; rst_c from the ot_rst_relay flop; o_bus0 is the constant zero sum-bus head word"
+ },
+ "structural_change": "OWN-IDXSCORE 2026-10-18: W glue column of the wires-only IDX quarter scorer (landed-regions standard: the 1.12 x 2.25 mm quarter is dissolved into the die, not hardened with one tree). Input pin flops + W glue (key line split, valid/keep lanes, meta input, W fault cause) + registered output stage (+1 edge on every leaf input) + reset relay. Height = the two leaf rows (2 x 561.6); E face feeds leaf (0,0) and (1,0) W faces."
+}

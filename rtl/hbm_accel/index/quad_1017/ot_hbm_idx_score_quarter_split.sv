@@ -10,7 +10,8 @@
 //   * 8 leaves ot_hbm_idx_score_leaf (closed-leaf kit hidx_score_leaf_1017), 2 rows x 4, W->E register chain.
 //   * u_e  = ot_hbm_idx_score_qe_static (E glue tile): both rows' E glue verbatim (keep delay, settle/online fault,
 //            ot_hbm_idx_tail_native, d123 meta delay), own reset relay (same release edge as rst_c), registered score
-//            and fault (clk_ctl), as the flat quarter.
+//            and fault, as the flat quarter. ONE clock port (the die's E-region clock): the flat quarter's clk_engine /
+//            clk_meta / clk_tail / clk_ctl are the same PLL phase; the wires-only parent leaves those ports unused.
 // LATENCY vs ot_hbm_idx_score_quarter_static: +1 edge on every leaf input (query, key beats and aux alike: the leaves'
 // relative timeline is unchanged), so score and fault leave +1 edge later (compiler: --score-chain +1). Reset release
 // unchanged. Bench rtl/test/hbm_idx_static/run_quarter_split_lockstep.sh (old vs new, every edge, +1).
@@ -78,14 +79,14 @@ module ot_hbm_idx_score_qw_static #(parameter integer TP=96,RANK_W=(TP<=1?1:$clo
 endmodule
 
 module ot_hbm_idx_score_qe_static(
- input wire clk_ctl,input wire[1:0]clk_engine,clk_meta,clk_tail,input wire rst_n,
+ input wire clk,input wire rst_n,
  input wire r0_qv,input wire r0_kv,input wire[29:0]r0_aux,input wire[551:0]r0_bus,
  input wire r1_qv,input wire r1_kv,input wire[29:0]r1_aux,input wire[551:0]r1_bus,
  output reg[305:0]score,output reg fault
 );
  localparam integer SW = 1 + 1 + 4 + 128 + 4, AUXW = 30, NK = 4, NCH = 4;
  wire rst_c;
- ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk_ctl),.rst_n_in(rst_n),.rst_n(rst_c));
+ ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_c));
  wire[1:0]ev,efault,wf_d;wire[7:0]kv,fl;wire[127:0]val;wire[159:0]idx;wire[1:0]last;
  wire rq[0:1],rk[0:1];wire[AUXW-1:0]ra[0:1];wire[4*SW-1:0]rb[0:1];
  assign rq[0]=r0_qv;assign rk[0]=r0_kv;assign ra[0]=r0_aux;
@@ -97,7 +98,7 @@ module ot_hbm_idx_score_qe_static(
 `endif
  genvar e,c,l;
  for(e=0;e<2;e=e+1)begin:ge
-  wire eclk=clk_engine[e];
+  wire eclk=clk;
   wire qv_e=rq[e], kv_e=rk[e]; wire [AUXW-1:0] aux_e=ra[e]; wire [4*SW-1:0] bus_e=rb[e];
   wire [3:0] keep_d;
   ot_hdc_delay #(.W(4),.D(106)) keep_pipe(.clk(eclk),.rst_n(rst_c),.d(aux_e[3:0]),.q(keep_d));
@@ -123,14 +124,14 @@ module ot_hbm_idx_score_qe_static(
    end
   end
   wire tv; wire [NK-1:0] tkv, tf; wire [NK*16-1:0] ts;
-  ot_hbm_idx_tail_native u_t (.clk(clk_tail[e]), .rst_n(rst_c), .i_v(sv[0]), .i_kv(skv[0]),
+  ot_hbm_idx_tail_native u_t (.clk(clk), .rst_n(rst_c), .i_v(sv[0]), .i_kv(skv[0]),
    .i_keep(keep_d), .i_sum(tsum), .i_fault(tfl), .o_v(tv), .o_kv(tkv), .o_score(ts), .o_fault(tf));
   reg ov; reg [3:0] ok, ofl; reg [63:0] os;
   always @(posedge eclk or negedge rst_c) if(!rst_c) ov<=0; else ov<=tv;
   always @(posedge eclk) begin ok<=tkv; os<=ts; ofl<=tf; end
   assign ev[e]=ov; assign kv[e*4+:4]=ok; assign val[e*64+:64]=os;
   wire[24:0]meta;
-  hidx_meta_w25_d123_r0 md(.clk(clk_meta[e]),.rst_n(rst_c),.d(aux_e[28:4]),.q(meta));
+  hidx_meta_w25_d123_r0 md(.clk(clk),.rst_n(rst_c),.d(aux_e[28:4]),.q(meta));
   for(l=0;l<4;l=l+1)begin:go
    assign idx[(e*4+l)*20+:20]=meta[23:4]+20'(l);
   end
@@ -138,10 +139,10 @@ module ot_hbm_idx_score_qe_static(
   assign fl[e*4+:4]=ofl|meta[3:0];
   assign wf_d[e]=aux_e[29];
  end
- always @(posedge clk_ctl or negedge rst_c)
+ always @(posedge clk or negedge rst_c)
   if(!rst_c)score[0]<=1'b0; else score[0]<=ev[0];
- always @(posedge clk_ctl)score[305:1]<={idx,val,kv,fl,last[0]};
- always @(posedge clk_ctl or negedge rst_c)begin
+ always @(posedge clk)score[305:1]<={idx,val,kv,fl,last[0]};
+ always @(posedge clk or negedge rst_c)begin
   if(!rst_c)fault<=0;
   else if((|efault)||(ev[1]!=ev[0])||wf_d[0])fault<=1;
  end
@@ -185,7 +186,7 @@ module ot_hbm_idx_score_quarter_wo #(parameter integer TP=96,RANK_W=(TP<=1?1:$cl
   end
   assign r_qv[e]=qv_c[NCH]; assign r_kv[e]=kv_c[NCH]; assign r_aux[e]=aux_c[NCH]; assign r_bus[e]=bus_c[NCH];
  end
- ot_hbm_idx_score_qe_static u_e(.clk_ctl(clk_ctl),.clk_engine(clk_engine),.clk_meta(clk_meta),.clk_tail(clk_tail),.rst_n(rst_n),
+ ot_hbm_idx_score_qe_static u_e(.clk(clk_ctl),.rst_n(rst_n),
   .r0_qv(r_qv[0]),.r0_kv(r_kv[0]),.r0_aux(r_aux[0]),.r0_bus(r_bus[0]),
   .r1_qv(r_qv[1]),.r1_kv(r_kv[1]),.r1_aux(r_aux[1]),.r1_bus(r_bus[1]),.score(score),.fault(fault));
 endmodule
