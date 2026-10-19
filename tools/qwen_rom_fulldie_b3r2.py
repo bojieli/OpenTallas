@@ -7407,7 +7407,30 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
                      min(cxm.h - 1.0, max(1.0, cxm.h / 2 + (j // 16 - 8) * 3.2)), 1)
             pw.setdefault(('qfd_clkrx', p), 1)
             added.append(p)
-        print(f'CLKRX_PORTS netlist {len(want)} master {len(cxm.ports)} added {len(added)} {added}', flush=True)
+        # GEN16 10-19 (dv2f16 first GEN: PIN_OVERLAP FAIL qfd_clkrx 8 pairs): rom_r22k puts the non-pll ports at slots
+        # 200+, which collide with pll_r200.. once the die has > 200 region roots (48 c_b16 x 16 regional clocks); move
+        # every non-pll area pin that sits on a pll_r slot to the first free slot past the highest pll_r index
+        def _slot_xy(j):
+            return (min(cxm.w - 1.0, max(1.0, cxm.w / 2 + ((j % 16) - 8) * 3.2)),
+                    min(cxm.h - 1.0, max(1.0, cxm.h / 2 + (j // 16 - 8) * 3.2)))
+        pll_k = [int(q.group(1)) for q in (re.fullmatch(r'pll_r(\d+)', p) for p in cxm.ports) if q]
+        taken = {tuple(round(c, 3) for c in _slot_xy(j)) for j in pll_k}
+        nxt, relocated = max(pll_k, default=199) + 1, []
+        for p in list(cxm.order):
+            sp_ = cxm.ports[p]
+            if sp_[0] != 'area' or re.fullmatch(r'pll_r\d+', p):
+                continue
+            if (round(sp_[2], 3), round(sp_[3], 3)) not in taken:
+                continue
+            while tuple(round(c, 3) for c in _slot_xy(nxt)) in taken:
+                nxt += 1
+            x_, y_ = _slot_xy(nxt)
+            cxm.ports[p] = ('area', sp_[1], x_, y_, sp_[4])
+            taken.add((round(x_, 3), round(y_, 3)))
+            relocated.append(f'{p}->slot{nxt}')
+            nxt += 1
+        print(f'CLKRX_PORTS netlist {len(want)} master {len(cxm.ports)} added {len(added)} {added} '
+              f'relocated {len(relocated)} {relocated}', flush=True)
     parts = []
     # r5: the power abstracts take the selected module's pin geometry (tree-column / edge-entry pin_rects live on v,
     # PG.powered_lef reads F, which raised on the b3r7+ 6-field pin specs); r4 keeps its F geometry byte-identical
