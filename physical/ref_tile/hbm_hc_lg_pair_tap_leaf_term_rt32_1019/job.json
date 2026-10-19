@@ -1,5 +1,5 @@
 {
- "name": "hbm_hc_lg_pair_tap_leaf_term_rt32_1019-b1-COMMIT",
+ "name": "hbm_hc_lg_pair_tap_leaf_term_rt32_1019-b1-56a614ca4",
  "block": "ot_hgi_sfu_lg_pair_tap_leaf_term",
  "ref_tile": true,
  "owner": "Claude:HBM-BANKLAT-SU",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 6,
  "source": {
   "branch": "claude/hbm-banklat-su-1019",
-  "commit": "COMMIT",
+  "commit": "56a614ca4",
   "extra_paths": [
    "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
    "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
@@ -140,7 +140,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_hc_lg_pair_tap_leaf_term_rt32_1019/hbm_hc_lg_pair_tap_leaf_term_rt32_1019-b1-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_hc_lg_pair_tap_leaf_term_rt32_1019/hbm_hc_lg_pair_tap_leaf_term_rt32_1019-b1-56a614ca4"
   }
  ],
  "cycles_added": 0,
