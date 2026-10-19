@@ -1,0 +1,23 @@
+GATE WARN fill: fill 19% = (macros/children 32063 + std 6535) / outline 205286 um2 (lattice/channel-bound gate-rule exception: ROOT sizing/schema approval 10-19 08:20: measured diagnostic gate iop area38598 minus32063macro =6535um2 std. Full-width band y2.16..34.56 gives~42.8% std utilization.84tiny true1R1W SRAM banks on43.2um lattice have vertical/horizontal22.41/24.84umchannels >=20; rawoverallfill18.8% is lattice/channel cost. Final corrected-pointer RTL gate, actualPNG, wire reach<=405, fanout and nativeclock checks required beforefinalreview/submit.)
+GATE INFO pin_regs: pin registers opted out: Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf).
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc8 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsdv_mu_hwin_20261019-090845.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsdv_mu_hwin_20261019-090845.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin-20261019-090845
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc8 in 142 s (gate total 3817 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 353, 'pin_rectangles': 353, 'pin_track_checked': 353, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 f47a27ca380e877d0b14fb78d31ef18f362d11a5ee6e4beafc3c051c15eea893
+GATE INFO util: synthesized std area 7081 um2 + macros 32063 in core 201386: util 12% (std-cell density 12.0% of placeable 59098 um2; total fill 19.4%)
+GATE INFO textbook: PASS dsdv_mu_hwin cells 48,196 flops 9,394 depth 560.1 ps util 0.1956 reach 0.0 um (2.7 s)
+GATE INFO cts_calibration: ss insertion all 555.2..718.3 ps (spread 163.1), boundary mean 621.9; tt insertion all 419.9..565.1 ps (spread 145.2), boundary mean 478.0; ff insertion all 339.0..469.9 ps (spread 130.9), boundary mean 390.2; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.550 vs spec PD 0.55
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/dsdv_mu_hwin/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: macro->reg    268 paths, worst slack -237.2 ps (e.g. u_ot_pr_core.g_collision_region[3].collision_r$_DFF_PN0_/D)
+GATE INFO path_classes: reg->reg      332 paths, worst slack -138.9 ps (e.g. u_ot_pr_core.crm[23]$_DFFE_PN1P_/D)
+GATE INFO path_classes: setup WNS -2.372210206047498e-10 hold WNS 3.769407008746839e-11
+GATE FAIL clock_rule: 9,478 sinks on the largest root; measured TT insertion 565.1 ps, FF insertion 469.9 ps, TT pin-flop spread 96.6 ps, FF pin-flop spread 88.7 ps; TT pin-flop spread 96.6 ps > 80 and FF pin-flop spread 88.7 ps > 80 (declared clock 'cts' does not waive it)  -> FIX: pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-mu-hwin-regions-1019/physical/ref_tile/dsdv_mu_hwin/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-mu-hwin-regions-1019/physical/ref_tile/dsdv_mu_hwin/gate_layout/density.png
+GATE FAIL fill: fill 19% = (hard macros 32063.2 + synthesized std cells 7337.7) / outline 205286.4 um2; pin demand per face: S 18 pins over 38.6/475.2 um (8%), N 0 pins over 0.0/475.2 um (0%), W 377 pins over 85.9/432.0 um (20%), E 134 pins over 72.9/432.0 um (17%) (< 35%)  -> FIX: shrink the outline / regroup the macros, or record "fill_reason": {"pin_bound": "<why the perimeter, not the area, sets the outline>"} if the pin demand above shows the edges are full
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 8.96% used; GRT 1460 s
+PRE_ROUTE_GATE: FAIL (2 fail, 1 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/codex-mu-hwin-regions-1019/physical/ref_tile/dsdv_mu_hwin/source_binding_history/41201ff04edbf8edb48b8d6ba71892955386d6b7bcdf1c185cf3c2748411878e.json
+GATE: dsdv_mu_hwin/gate_result.json written (exact staged source binding; commit it with the kit)
