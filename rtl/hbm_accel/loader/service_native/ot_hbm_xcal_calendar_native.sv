@@ -113,14 +113,19 @@ module ot_hbm_xcal_calendar_native #(
       (* keep = 1 *) ot_hbm_xcal_kept_rbit u_valid(.clk(clk),.rst_n(rst_n),.d(valid0),.q(valid_q));
       always @(posedge clk)calendar[16*slice+:BW]<=valid_q&&word_ok_q?captured[16*slice+:BW]:{BW{1'b0}};
     end
-    wire [3:0] start_copy;
-    wire [3:0] accept_start;
-    for(genvar g=0;g<4;g=g+1)begin:g_start_copy
+    wire [4:0] start_copy;
+    wire [4:0] accept_start;
+    for(genvar g=0;g<5;g=g+1)begin:g_start_copy
       (* keep = 1 *) ot_hbm_xcal_kept_rbit u_start(.clk(clk),.rst_n(rst_n),.d(start_v),.q(start_copy[g]));
       assign accept_start[g]=start_copy[g]&&!busy&&!cfg_we_q&&legal_start;
     end
     wire end_word=({1'b0,pc}+1'b1==limit);
     wire [31:0] issued_inc=issued+1;
+    wire [1:0] running_copy;
+    wire next_running=(running&&!(end_word&&(loops_left==1||MUT==2)))||accept_start[0];
+    for(genvar g=0;g<2;g=g+1)begin:g_running_copy
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_running(.clk(clk),.rst_n(rst_n),.d(next_running),.q(running_copy[g]));
+    end
     always @(posedge clk or negedge rst_n)
       if(!rst_n)begin running<=0;pc<=0;base<=0;end
       else begin
@@ -135,20 +140,21 @@ module ot_hbm_xcal_calendar_native #(
     always @(posedge clk or negedge rst_n)
       if(!rst_n)begin limit<=0;loops_left<=0;end
       else begin
-        if(accept_start[1])begin limit<=start_limit_q;loops_left<=start_loops_q;end
+        if(accept_start[1])limit<=start_limit_q;
+        if(accept_start[4])loops_left<=start_loops_q;
         if(running&&end_word&&loops_left!=1)loops_left<=loops_left-1'b1;
       end
     always @(posedge clk or negedge rst_n)
       if(!rst_n)begin issued[15:0]<=0;iter_r<=0;end
       else begin
         if(accept_start[2])begin issued[15:0]<=0;iter_r<=0;end
-        if(running)begin issued[15:0]<=issued_inc[15:0];if(end_word&&loops_left!=1)iter_r<=iter_r+1'b1;end
+        if(running_copy[0])begin issued[15:0]<=issued_inc[15:0];if(end_word&&loops_left!=1)iter_r<=iter_r+1'b1;end
       end
     always @(posedge clk or negedge rst_n)
       if(!rst_n)begin issued[31:16]<=0;ctx_r<=0;end
       else begin
         if(accept_start[3])begin issued[31:16]<=0;if(MUT!=3)ctx_r<=start_ctx_q;end
-        if(running)issued[31:16]<=issued_inc[31:16];
+        if(running_copy[1])issued[31:16]<=issued_inc[31:16];
       end
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin
