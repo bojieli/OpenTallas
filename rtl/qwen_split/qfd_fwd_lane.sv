@@ -254,12 +254,24 @@ module ot_qfd_land #(
     wire [AW:0] exp_ = rc - k_q;
 `endif
     wire [AW-1:0] rs_ = exp_[AW-1:0];
+    // Assertion metadata crosses into receiver flops without a read mux/compare
+    // in the quarter-period crossing cone. Check the captured epoch one cycle later.
+    reg [AW:0] epo_check [0:D-1];
+    reg [D-1:0] vld_check;
+    reg [AW:0] exp_check;
+    reg warm_check;
+    generate for (s = 0; s < D; s = s + 1) begin : g_epoch_check
+        always @(posedge ck) epo_check[s] <= epo[s];
+    end endgenerate
+    always @(posedge ck) begin vld_check <= vld; exp_check <= exp_; end
+    always @(posedge ck or negedge rs1)
+        if (!rs1) warm_check <= 1'b0; else warm_check <= warm;
     always @(posedge ck or negedge rs1)
         if (!rs1) begin rc <= {(AW + 1){1'b0}}; warm <= 1'b0; fault <= 1'b0; end
         else begin
             rc <= rc + 1'b1;
             if (rc == k_q - 1'b1) warm <= 1'b1;
-            if (warm && vld[rs_] && epo[rs_] != exp_) fault <= 1'b1;
+            if (warm_check && vld_check[exp_check[AW-1:0]] && epo_check[exp_check[AW-1:0]] != exp_check) fault <= 1'b1;
         end
 `ifdef OT_QFD_LAND_MUT_NAIVE
     always @(posedge ck) o <= warm ? i : {W{1'b0}};                // bench mutant: retime register only, no ring
