@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc8       admits  1082 GB (avail 860, growth 102, headroom 0, waiters 0/0 GB) load 52/128 running 26 disk 401 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3144988-1792424575 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+CREDIT_EQ_ERR cycle7 WFREE1 valid1/1 credit0/0 fault0/0
+CREDIT_EQ_ERR cycle7 WFREE2 valid1/1 credit0/0 fault0/0
+CREDIT_EQ_ERR cycle211 WFREE1 valid1/1 credit0/0 fault1/1
+CREDIT_EQ_ERR cycle211 WFREE2 valid1/1 credit0/0 fault1/1
+CREDIT_EQ_ERR cycle212 WFREE1 valid1/1 credit1/1 fault1/1
+CREDIT_EQ_ERR cycle212 WFREE2 valid1/1 credit1/1 fault1/1
+CREDIT_EQ_ERR cycle213 WFREE1 valid1/1 credit1/1 fault1/1
+CREDIT_SRAM_EQ FAIL errors=1766 takes=7113 MUT=1
+- /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src/rtl/common/test/sram_head/tb_credit_sram.sv:38: Verilog $finish
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3144988-1792424575): exit 1

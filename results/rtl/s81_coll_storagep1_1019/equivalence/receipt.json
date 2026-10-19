@@ -1,0 +1,36 @@
+{
+  "simulator": "Verilator 5.050",
+  "shape": {
+    "W": 553,
+    "DEPTH": 8,
+    "WREG": 1
+  },
+  "cycle_equivalence": {
+    "status": "PASS",
+    "checks": 19994,
+    "takes": 7113,
+    "WFREE": [
+      1,
+      2
+    ],
+    "reset": "initial and mid-run",
+    "cases": "fill, overflow, drain, randomized"
+  },
+  "mutants": [
+    {
+      "MUT": 1,
+      "effect": "disable current write forward",
+      "status": "FAIL",
+      "errors": 1766,
+      "fail_regex": "CREDIT_SRAM_EQ FAIL"
+    },
+    {
+      "MUT": 2,
+      "effect": "disable previous write forward",
+      "status": "FAIL",
+      "errors": 1862,
+      "fail_regex": "CREDIT_SRAM_EQ FAIL"
+    }
+  ],
+  "limits": "WREG0 and WFREE0 are not qualified by this bench; production WREG1/WFREE1 only. No external latency or reset-release stage added."
+}
