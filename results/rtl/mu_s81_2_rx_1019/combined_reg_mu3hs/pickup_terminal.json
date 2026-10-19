@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.s81.mu.regression.pickup.v1",
+  "original_evidence_ref": "b14d4cf879103030fe58b426064b0ea7dc62513f",
+  "source_base": "3158fce1e",
+  "overlay": "1e057b7bf",
+  "verilator": "5.050",
+  "terminal_legs": 8,
+  "total_legs": 9,
+  "scope": "Functional host-plane regression; no native/physical/fulltoken/adoption claim",
+  "live": {
+    "host": "ot-epyc7",
+    "unit": "oth-ubuntu-4120668-1792438136",
+    "shell_pid": 4120668,
+    "script_pid": 4121621,
+    "path": "/srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs/out/seqhost",
+    "phase": "nested reg_host then reg_hwin after own positives/faults/mutants/lint passed"
+  },
+  "sha256": {
+    "lep_mut2.log": "9f03389e0a45b0603154fa7f9dbbc595001a0a170a15b4e71e542b43e782a508",
+    "TABLE.md": "f5faaffc0c1a00b78f7ecba69846ee7ba011fcf9c1ba32a225f711a34a9e141c",
+    "prog.log": "161dacf60a8b1d4e55aa5f0308f4c7845886fc944b87b88bfc1c7a9a52b1fdec",
+    "seqhost_partial.log": "a399568cb9c7db07a973011208d69ee18f3b7c4faa47ba61d998feb5cd676ce5",
+    "lep_nh.log": "a754dec8f1a8a8cff9f5df249f2e244c9d289158a8defaed29539e4896a02092",
+    "seqhost_sources.sha256": "2edccf644d7596f119c2517f5167e86c88fb3d01e0d40b4a41bb3f756745e6d6",
+    "lep_base.log": "53080d50a3c3cb97b7a13d8d1527ed86278109f3c5b2c1445e542439746c3c5b",
+    "selected_sources.sha256": "6c0d746b1a3b805d09d57e5b266ecbaddcb8f07cceb75805dd18f789d5122e12",
+    "hwin.log": "12c97d90c6bd26ba6114419c6934af5a2ad3cfe2c7134bd1ff02a7572b5876bd",
+    "lep_regr.log": "5408b5d6041ea0bdb76db497e03c76d268fbf490855913361d17f3ac9afa38a6",
+    "leg.sh": "8f43f6bfa0c700655be884b853909edc40c28056614170fc73ba252a4a632c9b",
+    "lep_mut3.log": "89167dab9607717b29e1bcd9f1eaf7e599cbe0489195b66744585a60e81537c1",
+    "host.log": "ae2a979782d1567522c3d6a8ee9fa7fb987cfd251d11de7c1b690c9157a9a067"
+  }
+}
