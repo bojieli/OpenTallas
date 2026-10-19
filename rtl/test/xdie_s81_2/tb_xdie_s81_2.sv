@@ -29,7 +29,7 @@ module tb_xdie_s81_2 #(
     parameter integer QD = 4096,
     parameter integer MAXCYC = 400000
 );
-    localparam integer ND = 4, NP = 4, NE = ND * NP, NL = (MU != 0) ? 4 : 2;
+    localparam integer ND = 4, NP = 4, NE = ND * NP, NL = (MU == 1) ? 4 : 2;     // MU 2 = MU die (pair A only)
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst_n = 0;
     integer cyc = 0;
@@ -80,7 +80,7 @@ module tb_xdie_s81_2 #(
         localparam integer DB = (P == 0) ? (((ge / NP) + 1) % ND) * NP + 1 :
                                 (P == 1) ? (((ge / NP) + ND - 1) % ND) * NP + 0 :
                                 (P == 2) ? (((ge / NP) + 1) % ND) * NP + 3 : (((ge / NP) + ND - 1) % ND) * NP + 2;
-        xdie_s81_2_ep #(.SIDE(P % 2), .HOST((P == 3 && MU == 0) ? 1 : 0), .MU(MU), .LEG(LEG), .DMUT(DMUT)) u_ep (
+        xdie_s81_2_ep #(.SIDE(P % 2), .HOST((P == 3 && MU != 1) ? 1 : 0), .MU(MU), .LEG(LEG), .DMUT(DMUT)) u_ep (
             .clk(clk), .rst_n(rst_n), .sid(4'((P % 2 ? 14 : 0) + (P >= 2 ? 1 : 0))), .ch_b(chb[0]),
             .ri_n(ri[ge]), .ro_n(ro[ge]), .pma_tx(ptx[ge]), .pma_rx(prx[ge]), .mu_c(muc[ge]), .mu_rt(mrt[ge]),
             .lep_ri(lri[ge]), .fault(flt[ge]), .live(lv[4*ge +: 4]));
@@ -141,7 +141,7 @@ module tb_xdie_s81_2 #(
         while (si < ns && stim[si][1143:1112] == cyc + 1) begin
             w = stim[si];
             e3 = w[1111:1104];
-            pr = (MU != 0 && w[45]) ? 1 : 0;
+            pr = (MU == 1 && w[45]) ? 1 : 0;
             if (ri[e3][0]) begin bad = bad + 1; $display("FAIL xdie_s81_2: calendar issues two beats on dp %0d at cycle %0d", e3, cyc + 1); end
             ri[e3] = w[1103:0];
             if (nsent[e3][pr] >= QD) begin bad = bad + 1; $display("FAIL xdie_s81_2: queue depth"); end
@@ -173,7 +173,7 @@ module tb_xdie_s81_2 #(
             end
             if (ro[e][0]) begin
                 s = ro[e][12:9];
-                p2 = (s == peer_a(e)) ? 0 : (MU != 0 && s == peer_b(e)) ? 1 : -1;
+                p2 = (s == peer_a(e)) ? 0 : (MU == 1 && s == peer_b(e)) ? 1 : -1;
                 if (p2 < 0) begin
                     extra = extra + 1;
                     if (extra < 6) $display("FAIL xdie_s81_2: beat from dp %0d is not on a circuit of dp %0d (cycle %0d)", s, e, cyc);

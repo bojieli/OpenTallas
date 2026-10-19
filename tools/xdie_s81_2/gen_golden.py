@@ -40,8 +40,22 @@ Deadlines (static-schedule check): deadline(k) = max(start + LAT[class] + ceil(k
 beat deadline + ceil(PER)) (a port drains in order at PER: a burst issued before the previous one drained queues) with class S (s_0S / s_7S
 ports: UCIe lane 0 + SerDes lane 1) or N (s_0N / s_7N: 2 x SerDes); 0 = no deadline (calibration run).  The AR
 all-gather phase starts at the RS phase's last deadline + 1 + FOLD (static: issued whatever the link did).
+
+--dl-model fluid (XDIE-S81-MU 10-19, the PHASE-FREE compiler crossing model; default linear = the old goldens, byte-identical):
+the lane slot server is modelled as a fluid queue per sender (port, pair) at the lane slot rate R = 4096/3069 cycles a
+beat (FMT1 gearbox 3 slots / 4 beats, 1 idle beat / 1024): q_k = max(issue_k, q_(k-1) + R), deadline_k = FLAT +
+ceil(q_k) + GUARD (FLAT 563 = the measured fixed crossing incl. the die lane legs, 553 at LEG 0; GUARD 1).  On the
+committed m2 / c runs every landing lies in [deadline - 2, deadline] (land - (FLAT + ceil q) in [-1, +1] for every
+beat of every user: the 1-2-cycle per-user differences are the lane slot PHASE, which this model bounds without
+knowing it).  The deadline depends only on issue cycles relative to the user's start, so every user (and the single
+user) gets the same compiled crossing cycles; tools/xdie_s81_2/win_check.py checks the two-sided window.
+--mu-copy-a-only: the MU-die vehicle (copy-A-only endpoints ot_s81sl_lep_mu_a / lep_mu HOST_EN 1, tb MU 2): every h
+window opens with ab 0; with --mu-mode real, --mu-users-of A keeps only the calendar's copy-A users (the users an
+MU (copy-A) die group serves; the copy-B users run on the MAB dies' pair B).
 """
 from __future__ import annotations
+
+from fractions import Fraction
 
 import argparse
 import hashlib
@@ -116,16 +130,28 @@ def main():
     ap.add_argument("--mu-cal", default="", help="MU-S81 calendar json (slots[u].shift) for --mu-mode real")
     ap.add_argument("--dense-gap", type=int, default=150)
     ap.add_argument("--nb", type=int, default=80, help="h beats per endpoint (lep NB)")
+    ap.add_argument("--dl-model", default="linear", choices=("linear", "fluid"))
+    ap.add_argument("--fluid-lat", type=int, default=563, help="fixed crossing latency (563 LEG 1, 553 LEG 0)")
+    ap.add_argument("--fluid-guard", type=int, default=1)
+    ap.add_argument("--mu-copy-a-only", action="store_true")
+    ap.add_argument("--mu-users-of", default="", help="real mode: keep only the calendar users of this copy (A / B)")
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     lat = parse_cls(a.lat, {}); per = parse_cls(a.per, {})
-    gate = bool(lat) and bool(per)
+    gate = (bool(lat) and bool(per)) or a.dl_model == "fluid"
     only = set(a.only.split(",")) if a.only else None
 
     port_busy = {}   # sender port -> last compiled landing deadline (the port drains its queue in order at PER)
+    fq = {}          # fluid model: sender (port, pair) -> q of its previous beat (Fraction)
+    RF = Fraction(4096, 3069)
 
-    def deadline(start, k, cls, dp=None, pair=0):
+    def deadline(start, k, cls, dp=None, pair=0, issue=None):
         dp = None if dp is None else (dp if pair == 0 else (dp, pair))
+        if a.dl_model == "fluid":
+            assert dp is not None and issue is not None
+            q = Fraction(issue) if dp not in fq else max(Fraction(issue), fq[dp] + RF)
+            fq[dp] = q
+            return a.fluid_lat + math.ceil(q) + a.fluid_guard
         if not gate:
             return 0
         d = start + int(lat[cls]) + math.ceil(k * per[cls])
@@ -147,7 +173,11 @@ def main():
     if U and a.mu_mode == "real":
         cal = json.loads(Path(a.mu_cal).read_text())
         shifts = {sl["user"]: int(sl["shift"]) for sl in cal["slots"]}
-    plan = [(0, None, None)] if not U else [(u, u, None) for u in range(U)]
+    users = list(range(U))
+    if U and a.mu_users_of and shifts is not None:
+        cop = {sl["user"]: sl["copy"]["S002"] for sl in cal["slots"]}
+        users = [u for u in range(U) if cop[u] == a.mu_users_of]
+    plan = [(0, None, None)] if not U else [(u, u, None) for u in users]
     for rep_or_user, user, _ in plan:
       if user is not None:
         if shifts is not None:
@@ -172,7 +202,7 @@ def main():
                     rec["src_sha"][d] = hashlib.sha256(data).hexdigest()
                     for p in PORT_TO:
                         for k, c in enumerate(chunks(data)):
-                            lines.append((t + k, d * NP + p, beat_word(c, inst, k, d * NP + p), deadline(t, k, CLASS[p], d * NP + p)))
+                            lines.append((t + k, d * NP + p, beat_word(c, inst, k, d * NP + p), deadline(t, k, CLASS[p], d * NP + p, issue=t + k)))
                 end = t + rec["beats_per_peer"]
             elif kind == "AR":
                 n = pb // 4
@@ -191,7 +221,7 @@ def main():
                         data = parts[d][o * q:(o + 1) * q].tobytes()
                         cs = chunks(data)
                         for k, c in enumerate(cs):
-                            dl = deadline(t, k, CLASS[p], d * NP + p)
+                            dl = deadline(t, k, CLASS[p], d * NP + p, issue=t + k)
                             rs_dead = max(rs_dead, dl)
                             lines.append((t + k, d * NP + p, beat_word(c, inst, k, d * NP + p), dl))
                 # phase 2 all-gather of the folded quarter (owner o = d) at its compiled cycle
@@ -201,7 +231,7 @@ def main():
                     data = fold[d * q:(d + 1) * q].tobytes()
                     for p in PORT_TO:
                         for k, c in enumerate(chunks(data)):
-                            lines.append((t2 + k, d * NP + p, beat_word(c, inst + 1, k, d * NP + p), deadline(t2, k, CLASS[p], d * NP + p)))
+                            lines.append((t2 + k, d * NP + p, beat_word(c, inst + 1, k, d * NP + p), deadline(t2, k, CLASS[p], d * NP + p, issue=t2 + k)))
                 rec["inst_ag"] = inst + 1
                 inst += 1
                 end = t2 + rec["beats_per_peer"]
@@ -211,14 +241,14 @@ def main():
                     data = rng.integers(0, 256, pb, dtype=np.uint8).tobytes()
                     rec["src_sha"][d] = hashlib.sha256(data).hexdigest()
                     for k, c in enumerate(chunks(data)):
-                        lines.append((t + k, d * NP + 1, beat_word(c, inst, k, d * NP + 1), deadline(t, k, "S", d * NP + 1)))
+                        lines.append((t + k, d * NP + 1, beat_word(c, inst, k, d * NP + 1), deadline(t, k, "S", d * NP + 1, issue=t + k)))
                 end = t + rec["beats"]
             insts.append(rec)
             inst += 1
             t = end + a.gap
       if user is not None:
         # the user's stage-hop h message: NB tagged XB beats from every endpoint, on the user's copy
-        ab = 1 if user % 2 else 0
+        ab = 0 if a.mu_copy_a_only else (1 if user % 2 else 0)
         pos = 4096 + 17 * user
         th = t
         rec = dict(inst=inst, name="mu_hop", kind="MUH", payload_B=a.nb * BEAT_B * ND * NP, rep=0, start=th, src_sha={},
@@ -238,7 +268,7 @@ def main():
                     w |= pl << 64                                                         # [1044:64]
                     w |= (inst & 0xFF) << 1088
                     w |= (k & 0xFF) << 1096
-                    lines.append((th + k, dp, w, deadline(th, k, CLASS[p], dp, ab)))
+                    lines.append((th + k, dp, w, deadline(th, k, CLASS[p], dp, ab, issue=th + k)))
         insts.append(rec)
         inst += 1
         t = th + a.nb + (a.dense_gap if a.mu_mode == "dense" else a.gap)
@@ -260,8 +290,10 @@ def main():
     g = dict(schema="opentallas.xdie_s81.golden.v1", beats=len(lines), beat_B=BEAT_B, warm=WARM, gap=a.gap, reps=a.reps,
              gate=gate, lat=lat, per=per, fold=a.fold, instances=insts, port_to=PORT_TO, cls=CLASS,
              last_issue=max(x[0] for x in lines), mu=dict(users=U, mode=a.mu_mode if U else None, cal=a.mu_cal or None,
-             shifts={u: shifts[u] for u in range(U)} if shifts else None, dense_gap=a.dense_gap if U else None, nb=a.nb,
-             commands=len(mucmds)))
+             shifts={u: shifts[u] for u in users} if shifts else None, dense_gap=a.dense_gap if U else None, nb=a.nb,
+             commands=len(mucmds), users_run=users, copy_a_only=a.mu_copy_a_only),
+             dl_model=dict(model=a.dl_model, R="4096/3069", flat=a.fluid_lat, guard=a.fluid_guard, window=2)
+             if a.dl_model == "fluid" else dict(model="linear"))
     (out / "golden.json").write_text(json.dumps(g, indent=1))
     print(f"beats {len(lines)} instances {len(insts)} last issue {g['last_issue']} gate {gate}")
 
