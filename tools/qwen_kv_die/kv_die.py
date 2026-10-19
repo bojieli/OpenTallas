@@ -1119,7 +1119,14 @@ if KSD.ASTK_ST:
 if KSD.ON:
     SPLIT_BINDINGS.update(KSD.bindings())
     if V144_R6:
-        SPLIT_BINDINGS['qkd_pv16_vport']['parameters'] = dict(SPLIT_BINDINGS['qkd_pv16_vport']['parameters'], RT=9)
+        # KVR-DERIVE 10-19 (coordinator): bind exactly the closed kit's RT (the die-derived 9 + relays is checked against
+        # it by kv_static_params VPORT_RT, never bound in its place)
+        SPLIT_BINDINGS['qkd_pv16_vport']['parameters'] = dict(SPLIT_BINDINGS['qkd_pv16_vport']['parameters'],
+                                                               RT=KSD.tile_ages()['VPORT_RT'], DQ=KSD.tile_ages()['VPORT_DQ'])
+        if PV_T and KSD.tile_ages()['PV_FIRST_INPUT_AGE'] is not None:     # the pair ctl kit's age (not OT_KV_PV_AGE)
+            for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):
+                SPLIT_BINDINGS[_mn]['parameters'] = dict(SPLIT_BINDINGS[_mn]['parameters'],
+                                                         FIRST_INPUT_AGE=KSD.tile_ages()['PV_FIRST_INPUT_AGE'])
     for _p in ('att_tx_v', 'att_tx_payload', 'emb_tx_v', 'emb_tx_payload', 'kv_drained_local', 'kv_flush_local',
                'kv_active_local', 'rx_payload', 'att_tx_slot', 'att_tx_kind', 'att_tx_beat', 'emb_tx_slot',
                'kvn_word_identity', 'kvn_word_generation'):
@@ -1602,6 +1609,11 @@ def build(*args, **kwargs):
         r_ = m['k_rt_eq']
         print(f"kv die K_RT_EQ: target {r_['target']} (QK_ISSUE_AGE {r_['qk_issue_age']}), natural "
               f"{r_['natural_min']}..{r_['natural_max']}, {len(r_['added'])} pad relays", file=sys.stderr)
+    if KSD.ON and kv_k_rt_eq.vport_side_eq_on() and kwargs.get('split', len(args) > 7 and args[7]):
+        m = kv_k_rt_eq.equalize_vport_sides(sys.modules[__name__], m)      # KVR-DERIVE: one RT per V port
+        r_ = m['vport_side_eq']
+        print(f"kv die VPORT_SIDE_EQ: RT {sorted(set(r_['RT'].values()))} (tile {KSD.tile_ages()['VPORT_RT']}), "
+              f"{len(r_['added'])} pad relays", file=sys.stderr)
     if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
         if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
             raise ValueError('OT_KV_LANDSLOT=1 needs OT_KV_RLY_STD=1 and OT_KV_SEAM=1 (landing slots are relay-standard rows '
@@ -4403,12 +4415,26 @@ def port_widths(m, k=1):
     return widths
 
 
+def static_instance_params(m):
+    """KVR-DERIVE 10-19: per-instance parameters the die binds (strict bind sidecar die.v.params.json): exactly the closed
+    tiles' ages (kv_static_die.tile_ages) -- ECTL kiss RESPONSE_LAT / QK_ISSUE_AGE, V port RT / DQ; the plan's derived
+    ages are checked against them (kv_static_params), never bound in their place"""
+    t = KSD.tile_ages()
+    out = {i.name: dict(RESPONSE_LAT=t['ECTL_RESPONSE_LAT'], QK_ISSUE_AGE=t['ECTL_QK_ISSUE_AGE'])
+           for i in m['insts'] if i.master == 'qkd_ectlk'}
+    out.update({i.name: dict(RT=t['VPORT_RT'], DQ=t['VPORT_DQ']) for i in m['insts'] if i.master == 'qkd_pv16_vport'})
+    m['static_bindings'] = dict(ectl={k_: v for k_, v in out.items() if k_.startswith('ectl_')},
+                                vport={k_: v for k_, v in out.items() if k_.startswith('vport_')},
+                                pv_ctl_age=t['PV_FIRST_INPUT_AGE'])
+    return out
+
+
 def write_netlist(m, k, path, top='qkd_die'):
     F.write_netlist(m, k, path, top=top)
     if m['geo'].get('static_die'):
         # KVJ-G2: per-instance parameters (ECTL kiss RESPONSE_LAT from this plan's K request / response relays) as a
         # sidecar the strict bind reads (kv_bound_netlist); die.v stays a parameter-free structural netlist
-        Path(str(path) + '.params.json').write_text(json.dumps(KSD.response_lat(m), indent=1) + '\n')
+        Path(str(path) + '.params.json').write_text(json.dumps(static_instance_params(m), indent=1) + '\n')
     if m.get('extra_conns'):
         # v1.4: a port tapping one bit of an existing bundle (the SerDes tx_up of the host FDI word into the D2D end)
         p_ = Path(path)
@@ -4680,6 +4706,10 @@ def case(m, work):
     finally:
         F.masters, F.port_widths = saved
     _case_ties(m, work / 'die.v')
+    if KSD.ON and m['geo'].get('static_die'):
+        # KVR-DERIVE 10-19: the case's die.v gets the per-instance parameter sidecar too (F.case_real writes die.v with the
+        # base writer, which never wrote it: the strict bind fell back to the master defaults)
+        (work / 'die.v.params.json').write_text(json.dumps(static_instance_params(m), indent=1) + '\n')
     run = (work / 'run.tcl').read_text()
     # KV uses the base generator's run_pa vehicle, independently of the
     # compute-die run_pdn generator. Preserve its real PG/pin checks and enable
@@ -4915,7 +4945,22 @@ def main(argv=None):
             (a.out / 'land_slots.json').write_text(json.dumps(m['land_slots'], indent=1, default=str) + '\n')
         if KSD.ON and m['geo'].get('static_die'):   # HKV-DIE2 10-19: stage-derived params are recomputed post-station
             import kv_static_params as KSP            # (kv_static_params.py on the die netlist table; plan values = record)
-            (a.out / 'static_model.json').write_text(json.dumps(KSP.model_lite(m), indent=1, default=str) + '\n')
+            static_instance_params(m)
+            ml = KSP.model_lite(m)
+            (a.out / 'static_model.json').write_text(json.dumps(ml, indent=1, default=str) + '\n')
+            # KVR-DERIVE 10-19 (coordinator): the plan's static-schedule ages vs the closed tiles' hard ages and the
+            # generator's own bindings -- any mismatch fails the GEN (OT_KV_STATIC_SCHED_STRICT=1, default); =0 records it
+            # (STATIC_SCHEDULE FAIL in case.log + static_model.json) and lets a placement-only run continue
+            sf = KSP.schedule_check(ml['static_schedule']['schedule'], ml['tile_ages'],
+                                    dict(ectl=ml['bindings']['ectl'], vport=ml['bindings']['vport'],
+                                         pv_ctl_age=ml['bindings']['pv_ctl_age'], attn=KSD.attn_tile_params()))
+            ml['static_schedule']['fails'] = sf
+            (a.out / 'static_model.json').write_text(json.dumps(ml, indent=1, default=str) + '\n')
+            print('kv die STATIC_SCHEDULE ' + ('FAIL: ' + '; '.join(f"{f_['id']} {f_['what'][:160]}" for f_ in sf) if sf
+                                               else 'PASS'), file=sys.stderr)
+            if sf and os.environ.get('OT_KV_STATIC_SCHED_STRICT', '1') == '1':
+                raise SystemExit('kv die: STATIC_SCHEDULE FAIL (plan ages vs the closed tiles; static_model.json '
+                                 'static_schedule.fails; OT_KV_STATIC_SCHED_STRICT=0 records and continues)')
         return 0
     rec = record(m)
     rec['legality'] = check(m)

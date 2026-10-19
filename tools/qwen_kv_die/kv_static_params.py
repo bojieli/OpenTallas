@@ -83,8 +83,22 @@ def model_lite(m):
             for e in b[3][1:]:
                 if not str(e[0]).startswith('rly_'):
                     dsts.setdefault(base, []).append(list(e))
+    # KVR-DERIVE 10-19: the plan's attention-path schedule, the tile ages, what the generator binds per instance, and the
+    # chain sources / masters for the relay-domain audit
+    pp = plan_paths(m)
+    fl_fin = (KSD.FACE_LAND_TILES.get('kvs_attn') or {}).get('fin', 0) if 'kvs_attn' in KSD.FACE_LAND_SEL else 0
+    bus_src = {}
+    for b in m['buses']:
+        if b is not None and b[1] not in ('clock_trunk', 'reset', 'constant') and len(b[3]) >= 2:
+            base = re.sub(r'(__(r\d+|pinfix\d+|beq\d+))+$', '', b[0])
+            if base == b[0]:
+                bus_src[base] = [b[3][0][0], b[3][0][1].lstrip('*'), b[3][1][0], b[3][1][1].lstrip('*')]
     return dict(schema=SCHEMA_MODEL, relay_stages=rs, fork_stages=fs, forks=forks, seq_kvn=seq, hub=hub, plan=plan, dsts=dsts,
-                face_land=dict(enabled=KSD.FACE_LAND, selected=sorted(KSD.FACE_LAND_SEL), tiles=KSD.FACE_LAND_TILES),
+                static_schedule=dict(paths=pp, schedule=schedule(pp, face_land_fin=fl_fin)), tile_ages=KSD.tile_ages(),
+                bindings=m.get('static_bindings') or {}, bus_src=bus_src,
+                masters={i.name: i.master for i in m['insts']},
+                face_land=dict(enabled=KSD.FACE_LAND, selected=sorted(KSD.FACE_LAND_SEL), tiles=KSD.FACE_LAND_TILES,
+                               fin_edges=fl_fin),
                 flags=dict(attn_land=KSD.ATTN_LAND, astk_expand=KSD.ASTK_EXPAND, astk_rl=KSD.ASTK_RL,
                            astk_erl=KSD.ASTK_ERL, afault=KSD.AFAULT, ahub_static=KSD.AHUB_STATIC))
 
@@ -324,10 +338,297 @@ def attn_calendar_check(actual, rs, Ts=range(1, 8193)):
     return KP.attention_checks(pr, KP.service_end_of(pr), fr, pair_delta=delta, Ts=Ts)
 
 
-def run(model, doc, fwd=None, die_v=None, attn=False):
+# ------------------------------------------------------------------------------------------------ KVR-DERIVE 10-19
+# The static-schedule ages of the attention path, derived from the relay plan (generator: plan_paths) or the post-station
+# netlist table (table_paths) with ONE formula (schedule), checked against the ages the closed tiles hard-code
+# (kv_static_die.tile_ages) and against what the die BINDS (die_bound.v / sidecar / generated tile text).  Every
+# mismatch FAILS (coordinator 10-19: pad the faster side up to the tile value where legal, bind exactly the tile value,
+# fail what cannot be padded; the later re-harden makes these ages boot-programmable registers).
+def path_keys():
+    KSD = _ksd()
+    out = {}
+    for st in KSD.STACKS:
+        for g in range(8):
+            e = f'ectl_{st}_{KSD.ectl_frame(g)}'
+            out[f'krq_{st}_{g}'] = (f'krq_{st}_{g}', f'slg_{st}_{g}', None)
+            out[f'krs_{st}_{g}'] = (f'krs_{st}_{g}', e, None)
+        for k in range(4):
+            for g in (0, 1):
+                out[f'pvvq_{st}_{k}_{g}'] = (f'pvvq_{st}_{k}_{g}', f'slg_{st}_{2 * k + g}', None)
+                out[f'pvrs_{st}_{k}_{g}'] = (f'pvrs_{st}_{k}_{g}', f'vport_{st}_{k}', None)
+            out[f'pvrq_{st}_{k}'] = (f'pvrq_{st}_{k}', f'vport_{st}_{k}', None)
+            out[f'O_{st}_{k}'] = (f'pvin_{st}_{k}', 'pvw_', '__u_ctl')        # V header vport.vo -> pair ctl (via the fork)
+    for p in (0, 1):
+        out[f'pvst_{p}'] = ('ks_pvst', f'pvw_{p}', None)
+        out[f'pvp_{p}'] = (f'ks_pvp{p}', 'pvfin', None)
+    out['pvfst'] = ('ks_pvfst', 'pvfin', None)
+    out['fin'] = ('ks_pvfin', 'kvs_attn', None)
+    return out
+
+
+def table_paths(doc, fwd=None):
+    """{path key: age} on the die netlist table (age_edges, landed lanes from fwd_lanes.json) + problems (unresolved / torn)"""
+    by = {}
+    for b in doc['buses']:
+        for n in b.get('src_nets') or ():
+            by.setdefault(_bid_of(n), []).append(b)
+    la = lane_ages(fwd)
+    out, probs = {}, []
+    for key, (bid, dst, must) in path_keys().items():
+        recs = [r for r in by.get(bid, []) if _inst_is(r['dst']['inst'], dst) or (dst.endswith('_') and
+                                                                                  r['dst']['inst'].startswith(dst))]
+        if must:
+            recs = [r for r in recs if must in r['dst']['inst']]
+        if bid == 'ks_pvfin':
+            recs = [r for r in recs if r['dst']['port'].startswith('fin')]
+        ages = set()
+        for r in recs:
+            a = r.get('age_edges', r['stages'])
+            ages.add(la.get(bid) if a is None else a)
+        if not ages or None in ages:
+            probs.append(dict(id='UNRESOLVED_PATH', path=key, bid=bid, dst=dst))
+            out[key] = None
+        elif len(ages) > 1:
+            probs.append(dict(id='TORN_PATH', path=key, bid=bid, dst=dst, ages=sorted(ages)))
+            out[key] = max(ages)
+        else:
+            out[key] = ages.pop()
+    return out, probs
+
+
+def plan_paths(m):
+    """the same path ages on the generator's relay plan (relay_stages / fork_stages after every generator pass)"""
+    rs, fs, fk = m.get('relay_stages') or {}, m.get('fork_stages') or {}, m.get('forks') or {}
+    out = {}
+    for key, (bid, dst, _m) in path_keys().items():
+        if key.startswith('O_'):
+            sk = key[2:]
+            out[key] = rs.get(f'pvin_{sk}', 0) + 1 + rs.get(f'pvh_{sk}', 0)
+        elif key == 'pvst_1' and ('pvw_1', 'st') in [tuple(x) for x in fk.get('ks_pvst', [])]:
+            out[key] = fs.get(f'ks_pvst__f{[tuple(x) for x in fk["ks_pvst"]].index(("pvw_1", "st"))}', 0)
+        else:
+            out[key] = rs.get(bid, 0)
+    return out
+
+
+def schedule(paths, face_land_fin=0):
+    """paths -> the static ages each element needs (None where a path is unresolved)"""
+    KSD = _ksd()
+    P = paths
+
+    def s(*ks):
+        return None if any(P.get(k) is None for k in ks) else sum(P[k] for k in ks)
+    ectl, vport = {}, {}
+    for st in KSD.STACKS:
+        for g in range(8):
+            r = s(f'krq_{st}_{g}', f'krs_{st}_{g}')
+            ectl[f'ectl_{st}_{KSD.ectl_frame(g)}'] = dict(group=g, krq=P.get(f'krq_{st}_{g}'), krs=P.get(f'krs_{st}_{g}'),
+                                                          RESPONSE_LAT=None if r is None else KSD.LANDING_SEG + r)
+        for k in range(4):
+            sides = [s(f'pvvq_{st}_{k}_{g}', f'pvrs_{st}_{k}_{g}') for g in (0, 1)]
+            rt = None if None in sides else KSD.VPORT_RT_SEG + max(sides)
+            w = s(f'pvrq_{st}_{k}', f'O_{st}_{k}')
+            vport[f'vport_{st}_{k}'] = dict(sides=sides, sides_equal=None if None in sides else sides[0] == sides[1],
+                                            RT=rt, WP=P.get(f'pvrq_{st}_{k}'), O=P.get(f'O_{st}_{k}'), W=w,
+                                            RL0=None if None in (w, rt) else 4 + w + rt)
+    rl0 = [v['RL0'] for v in vport.values()]
+    RL = None if None in rl0 else max(rl0)
+    for v in vport.values():
+        v['DQ'] = None if RL is None else RL - v['RL0']
+    lead = [P.get('pvst_0'), P.get('pvst_1')]
+    PL = None if None in lead else max(lead)
+    fd = None if None in (PL, P.get('pvfst'), P.get('fin')) else 1 + (P['pvfst'] - PL) + P['fin'] + face_land_fin
+    return dict(ectl=ectl, vport=vport,
+                pv=dict(RL=RL, FIRST_INPUT_AGE=None if RL is None else RL + 1, W=sorted({v['W'] for v in vport.values()
+                                                                                         if v['W'] is not None})),
+                attn=dict(PV_LEAD_by_pair=lead, PV_LEAD=PL, pvfst=P.get('pvfst'), pvp=[P.get('pvp_0'), P.get('pvp_1')],
+                          pvfin_start_align=[None if None in (P.get('pvfst'), PL, P.get(f'pvp_{p}')) else
+                                             P['pvfst'] - PL - P[f'pvp_{p}'] for p in (0, 1)],
+                          fin=P.get('fin'), face_land_fin=face_land_fin, F_DLY=fd),
+                rule='RESPONSE_LAT = 8 + krq + krs; vport RT = 9 + pvvq_g + pvrs_g (both sides equal); RL = 4 + W + DQ + RT '
+                     'with W = pvrq + O equal on all 16 ports, pair FIRST_INPUT_AGE = RL + 1; PV_LEAD = D(ks_pvst) to both '
+                     'pairs; pvfin start aligned: D(ks_pvfst) - PV_LEAD == D(ks_pvp_p); F_DLY = 1 + (D(ks_pvfst) - PV_LEAD) + '
+                     'D(ks_pvfin) [+ face land]')
+
+
+def bound_ages(die_v=None, sidecar=None, model=None):
+    """what the die binds: per instance from die_bound.v #(...) (else the die.v.params.json sidecar, else the generator
+    binding recorded in the model), the pair ctl kit age, the attention tile text"""
+    KSD = _ksd()
+    gb = (model or {}).get('bindings') or {}
+    out = dict(ectl={}, vport={}, pv_ctl_age=gb.get('pv_ctl_age'), attn=KSD.attn_tile_params(), source={})
+    txt = Path(die_v).read_text(errors='replace') if die_v and Path(die_v).exists() else ''
+    sc = json.loads(Path(sidecar).read_text()) if sidecar and Path(sidecar).exists() else {}
+    for kind, mod, keys in (('ectl', 'qkd_ectl3_kiss_st', ('RESPONSE_LAT', 'QK_ISSUE_AGE')), ('vport', 'qkd_pv16_vport', ('RT', 'DQ'))):
+        for prm, inst in re.findall(mod + r'\s*#\s*\(([^;]*?)\)\s*(\w+)\s*\(', txt):
+            pr = dict(re.findall(r'\.(\w+)\(\s*(\d+)\s*\)', prm))
+            out[kind][inst] = {k: int(pr[k]) for k in keys if k in pr}
+        for inst, pr in sc.items():
+            if inst.startswith(kind + '_') and inst not in out[kind]:
+                out[kind][inst] = {k: int(v) for k, v in pr.items() if k in keys}
+        for inst, pr in (gb.get(kind) or {}).items():
+            out[kind].setdefault(inst, {k: int(v) for k, v in pr.items() if k in keys})
+        out['source'][kind] = 'die_bound.v' if txt else ('sidecar' if sc else 'generator binding')
+    m = re.search(r'ot_qwen_tp8_pv_wide_ctl_t\s*#\s*\(([^;]*?)\)\s*pvw_\d__u_ctl\s*\(', txt)
+    if m and re.search(r'\.FIRST_INPUT_AGE\((\d+)\)', m.group(1)):
+        out['pv_ctl_age'] = int(re.search(r'\.FIRST_INPUT_AGE\((\d+)\)', m.group(1)).group(1))
+        out['source']['pv_ctl_age'] = 'die_bound.v'
+    return out
+
+
+def schedule_check(sched, tile, bound=None, plan_paths_=None, table_paths_=None):
+    """FAIL ids (each with the numbers): every derived age must equal the hard tile age, and the die must bind the tile age"""
+    fails = []
+
+    def F(id_, what, rows, fix):
+        if rows:
+            fails.append(dict(id=id_, what=f'{len(rows)} {what}', rows=rows[:64], fix=fix))
+    E = sched['ectl']
+    F('ECTL_RESPONSE_LAT', f'ECTL frames: 8 + krq + krs != the hardened RESPONSE_LAT {tile["ECTL_RESPONSE_LAT"]}',
+      [dict(inst=i, **v) for i, v in E.items() if v['RESPONSE_LAT'] != tile['ECTL_RESPONSE_LAT']],
+      'kv_k_rt_eq pads krq up to the budget; a longer frame (or a post-station stage) needs the re-harden / re-place')
+    V = sched['vport']
+    F('VPORT_SIDES', 'V ports: vq0/i0 and vq1/i1 round trips differ (one RT per port)',
+      [dict(inst=i, sides=v['sides']) for i, v in V.items() if v['sides_equal'] is not True],
+      'kv_die vport side pads (pvvq, 15 b) at generation; a post-station change needs re-equalising')
+    F('VPORT_RT', f'V ports: die round trip 9 + relays != the hardened RT {tile["VPORT_RT"]}',
+      [dict(inst=i, RT=v['RT'], sides=v['sides']) for i, v in V.items() if v['RT'] != tile['VPORT_RT']],
+      'unpaddable (the landing seg alone is 9): boot-programmable RT at the next re-harden (lanes/KVR-DERIVE.md)')
+    want_rl = None if tile.get('PV_FIRST_INPUT_AGE') is None else tile['PV_FIRST_INPUT_AGE'] - 1
+    F('PV_FIRST_INPUT_AGE', f'V ports: 4 + W + DQ + RT_die + 1 != the pair ctl FIRST_INPUT_AGE {tile.get("PV_FIRST_INPUT_AGE")} '
+      f'(derived {sched["pv"]["FIRST_INPUT_AGE"]}, W {sched["pv"]["W"]})',
+      [dict(inst=i, W=v['W'], RT=v['RT'], RL=v['RL0']) for i, v in V.items()
+       if want_rl is None or v['RL0'] is None or v['RL0'] + tile['VPORT_DQ'] != want_rl],
+      'W padding cannot shorten a path: re-harden the ctl leaf (boot-programmable age) or re-place the ports')
+    A = sched['attn']
+    F('PV_LEAD', f'PV pairs: D(ks_pvst) {A["PV_LEAD_by_pair"]} != the attention tile PV_LEAD {tile["PV_LEAD"]}',
+      [dict(pair=p, edges=v) for p, v in enumerate(A['PV_LEAD_by_pair']) if v != tile['PV_LEAD']],
+      'a path longer than the tile value cannot be padded to it: boot-programmable PV_LEAD (+ equal pair starts)')
+    F('PVFIN_START_ALIGN', 'pvfin start vs pair result trunks: D(ks_pvfst) - PV_LEAD - D(ks_pvp_p) != 0',
+      [dict(pair=p, skew=v, pvfst=A['pvfst'], pvp=A['pvp'][p], PV_LEAD=A['PV_LEAD'])
+       for p, v in enumerate(A['pvfin_start_align']) if v != 0],
+      'pad the shorter side (pvfst 65 b or the 534-b pvp trunk) once PV_LEAD is met; moot while PV_LEAD fails')
+    F('F_DLY', f'attention face: 1 + (D(ks_pvfst) - PV_LEAD) + D(ks_pvfin) = {A["F_DLY"]} != the tile F_DLY {tile["F_DLY"]}',
+      [dict(F_DLY=A['F_DLY'], fin=A['fin'], pvfst=A['pvfst'], PV_LEAD=A['PV_LEAD'])] if A['F_DLY'] != tile['F_DLY'] else [],
+      'unpaddable (path longer than the tile value): boot-programmable F_DLY at the re-harden')
+    if bound is not None:
+        F('ECTL_BOUND', f'ECTL instances bind RESPONSE_LAT != {tile["ECTL_RESPONSE_LAT"]} (or not bound)',
+          [dict(inst=i, bound=bound['ectl'].get(i)) for i in E if (bound['ectl'].get(i) or {}).get('RESPONSE_LAT')
+           != tile['ECTL_RESPONSE_LAT']], 'bind the tile value per instance (kv_die case: die.v.params.json)')
+        F('VPORT_BOUND', f'V ports bind RT/DQ != the kit {tile["VPORT_RT"]}/{tile["VPORT_DQ"]}',
+          [dict(inst=i, bound=bound['vport'].get(i)) for i in V
+           if (bound['vport'].get(i) or {}).get('RT') != tile['VPORT_RT'] or (bound['vport'].get(i) or {}).get('DQ', 0) != tile['VPORT_DQ']],
+          'bind the kit RT (never a die-derived value the kit does not implement)')
+        if bound.get('pv_ctl_age') is not None and bound['pv_ctl_age'] != tile.get('PV_FIRST_INPUT_AGE'):
+            F('PV_AGE_BOUND', f'pair ctl binds FIRST_INPUT_AGE {bound["pv_ctl_age"]} != kit {tile.get("PV_FIRST_INPUT_AGE")}',
+              [dict(bound=bound['pv_ctl_age'], kit=tile.get('PV_FIRST_INPUT_AGE'))], 'bind the kit value')
+        for k in ('PV_LEAD', 'F_DLY'):
+            if bound['attn'].get(k) != tile.get(k):
+                F(f'{k}_BOUND', f'attention tile text {k} {bound["attn"].get(k)} != {tile.get(k)}', [dict(bound=bound['attn'].get(k))],
+                  'regenerate the tile (kv_static_die --rtl)')
+    if plan_paths_ is not None and table_paths_ is not None:
+        F('PATH_STALE', 'path ages the generator planned differ on the post-station netlist',
+          [dict(path=k, plan=plan_paths_.get(k), netlist=v) for k, v in table_paths_.items() if plan_paths_.get(k) != v],
+          'the schedule is taken from the netlist table (this record); re-pad / re-GEN the changed paths')
+    return fails
+
+
+def slg_identity(die_v):
+    """slg_<st>_<g> landing identity straps (kvsid_*__cfg_stack / cfg_group die-top constants) -> FAILs: each must be
+    (stack index, g) -- the VMAP / K-row checks in qkd_static_kv_landing_pc compare t[8:7] / group against them -- and no
+    two groups may share an identity"""
+    KSD = _ksd()
+    txt = Path(die_v).read_text(errors='replace')
+    bits = {}
+    for n, i, b in re.findall(r"assign\s+n_(kvsid_slg_\w+?)\[(\d+)\]\s*=\s*1'b([01])\s*;", txt):
+        bits.setdefault(n, {})[int(i)] = int(b)
+    val = {n: sum(b << i for i, b in d.items()) for n, d in bits.items()}
+    # the strict-bind netlist (die_bound.v) folds the straps into the connection: .slg__cfg_stack({1'b0, 1'b1})
+    for inst, body in re.findall(r'^\s*\w+\s+(?:#\s*\(.*?\)\s*)?(slg_\w+?)\s*\((.*?)\);', txt if not val else '', re.M | re.S):
+        for f in ('cfg_stack', 'cfg_group'):
+            mm = re.search(r'\.slg__' + f + r"\(\s*\{?([^)]*?)\}?\s*\)", body)
+            if mm:
+                bs = re.findall(r"1'b([01])", mm.group(1))
+                if bs:
+                    val[f'kvsid_{inst}__slg__{f}'] = int(''.join(bs), 2)
+    rows, seen, fails = {}, {}, []
+    for st in KSD.STACKS:
+        for g in range(8):
+            d = f'slg_{st}_{g}'
+            got = tuple(next((v for n, v in val.items() if n.startswith(f'kvsid_{d}__') and n.endswith(f)), None)
+                        for f in ('cfg_stack', 'cfg_group'))
+            want = (KSD.STACKS.index(st), g)
+            rows[d] = dict(bound=list(got), want=list(want))
+            if None in got or got != want:
+                fails.append(dict(inst=d, bound=list(got), want=list(want)))
+            seen.setdefault(got, []).append(d)
+    dup = {str(k): v for k, v in seen.items() if len(v) > 1}
+    out = []
+    if fails:
+        out.append(dict(id='SLG_IDENTITY', what=f'{len(fails)} landing groups strap a wrong / missing (cfg_stack, cfg_group)',
+                        rows=fails[:32], fix='kv_static_die strap emission (kvsid_*): tie (STACKS index, g)'))
+    if dup:
+        out.append(dict(id='SLG_IDENTITY_DUP', what=f'{len(dup)} identities shared by several landing groups', rows=dup,
+                        fix='every group needs its own identity'))
+    return out, rows
+
+
+def relay_domains(die_v, model):
+    """every relay instance on die.v whose clock trunk domain differs from the launching pin domain of its chain (the
+    chain's generator bid -> source pin from the model).  Mixed bundles are listed, not failed (open: split by domain)."""
+    import kv_pin_repair as KPR
+    src = model.get('bus_src') or {}
+    masters = model.get('masters') or {}
+    txt = Path(die_v).read_text(errors='replace')
+    bad, mixed, n = [], {}, 0
+    for mst, inst, body in re.findall(r'^\s*(qkd_rly\w*|qkd_rlys_\d+)\s+(\w+)\s*\((.*?)\);', txt, re.M | re.S):
+        ck = re.search(r'\.ck\(\s*n_(clk_(?:core|hbm)\w*)', body)
+        a = re.search(r'\.a\(\s*(?:\{[^}]*?)?n_(\w+?)(?:\[|\s|\))', body)
+        if not ck or not a:
+            continue
+        bid = a.group(1)
+        while re.search(r'__(r\d+|pinfix\d+|beq\d+|s\d+\w*|f\d+)$', bid):
+            bid = re.sub(r'__(r\d+|pinfix\d+|beq\d+|s\d+\w*|f\d+)$', '', bid)
+        sp = src.get(bid)
+        if not sp:
+            continue
+        n += 1
+        dom = KPR.port_domain(masters.get(sp[0]), sp[1]) or (KPR.port_domain(masters.get(sp[2]), sp[3]) if len(sp) > 2 else None) or 'core'
+        cd = KPR.trunk_domain(ck.group(1))
+        if dom == 'mixed':
+            mixed.setdefault(bid, set()).add(cd)
+        elif cd != dom:
+            bad.append(dict(relay=inst, bus=bid, clock=ck.group(1), launch=dom, src=sp[:2]))
+    fails = [dict(id='RELAY_DOMAIN', what=f'{len(bad)} relays clocked off their launching pin domain', rows=bad[:64],
+                  fix='kv_pin_repair.relay_trunk (pin repair + bundle / K_RT_EQ pads)')] if bad else []
+    return fails, dict(relays_checked=n, mixed_domain_buses={k: sorted(v) for k, v in sorted(mixed.items())})
+
+
+def run(model, doc, fwd=None, die_v=None, attn=False, case_die_v=None, sidecar=None):
     rs, fs, unresolved, src = post_stages(model, doc, fwd)
     actual = params(model, rs, fs)
     fails, info = check(model, rs, fs, unresolved, actual, die_v)
+    # KVR-DERIVE 10-19: the attention-path static schedule on THIS table vs the tile ages and the die's bindings
+    tp, probs = table_paths(doc, fwd)
+    KSD = _ksd()
+    tile = model.get('tile_ages') or KSD.tile_ages()
+    flf = ((model.get('face_land') or {}).get('fin_edges') or 0)
+    sched = schedule(tp, face_land_fin=flf)
+    actual['static_schedule'] = dict(paths=tp, schedule=sched, tile_ages=tile)
+    for p_ in probs:
+        fails.append(dict(id=p_['id'], what=json.dumps(p_)))
+    bound = bound_ages(die_v, sidecar or (str(case_die_v) + '.params.json' if case_die_v else None), model)
+    actual['static_schedule']['bound'] = bound
+    fails += schedule_check(sched, tile, bound, (model.get('static_schedule') or {}).get('paths'), tp)
+    dv = case_die_v or die_v
+    if dv and Path(dv).exists():
+        f_, rows = slg_identity(dv)
+        fails += f_
+        actual['slg_identity'] = rows
+        if model.get('bus_src'):
+            f_, inf = relay_domains(dv, model)
+            fails += f_
+            info.append(dict(id='RELAY_DOMAIN', **inf))
     if attn:
         ac = attn_calendar_check(actual, rs)
         actual['attention_checks'] = ac
@@ -362,6 +663,7 @@ def main(argv=None):
     ap.add_argument('--table', type=Path, required=True, help='die netlist relay table (netlist_relay_stages.py)')
     ap.add_argument('--fwd-lanes', type=Path)
     ap.add_argument('--die-v', type=Path)
+    ap.add_argument('--case-die-v', type=Path, help='the case die.v (kvsid straps, relay clocks, die.v.params.json sidecar)')
     ap.add_argument('--no-attn', action='store_true', help='skip the ATTN_CALENDAR sweep (unit use only)')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args(argv)
@@ -370,7 +672,7 @@ def main(argv=None):
     if model.get('schema') != SCHEMA_MODEL:
         raise SystemExit(f'kv_static_params: {a.model} is not {SCHEMA_MODEL}')
     rec = run(model, DRS.load(a.table), json.loads(a.fwd_lanes.read_text()) if a.fwd_lanes else None, a.die_v,
-              attn=not a.no_attn)
+              attn=not a.no_attn, case_die_v=a.case_die_v)
     a.out.write_text(json.dumps(rec, indent=1, default=str) + '\n')
     print(f"KV_STATIC_PARAMS {rec['status']}: " + '; '.join(f"{f['id']}: {f['what'][:200]}" for f in rec['fails'])
           + (f" | AP_OFS {rec['params']['ahub_ages']['AP_OFS']} FR_OFS {rec['params']['ahub_ages']['FR_OFS']}"
