@@ -331,5 +331,15 @@
         "ot_sram_1r1w_32x64_m1_tt.lib": "89e8a678c954a540f86a2c2571edfa312f8ff1ac3171a08556a7eeaa23670672"
       }
     }
+  },
+  "rtl/qwen_dv/qfd_dv_redstn2.sv": {
+    "source_commit": "b99c1cb10",
+    "sha256": "a45d24a0f21e7de1c11898e0542358105f770450d1b9531a11d8edbae165fc96",
+    "scope": "Generic W512/514/546 native width unit evidence; not B72-sink integrated physical proof"
+  },
+  "results/rtl/safe_qw_slice_1019/storage/bank64_native_widths.pass.log": {
+    "source_commit": "c317daff3",
+    "sha256": "0b3fb92f7ca88742528f0e14420d71c7c9e791d7f6f88c763beba193d03af579",
+    "scope": "Generic W512/514/546 native width unit evidence; not B72-sink integrated physical proof"
   }
 }
