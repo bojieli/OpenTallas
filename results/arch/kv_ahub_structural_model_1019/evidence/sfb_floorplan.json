@@ -1,0 +1,198 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qkd_ahub_sfb",
+ "top": "qkd_ahub_static_dw_safe_native",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  734.4,
+  540.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  732.24,
+  537.84
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": 1700.0,
+ "layer_contract": {
+  "children": {
+   "ot_nhb_zh": "M5",
+   "ot_qkh_recip_leaf": "M6"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M6"
+  ],
+  "strap_layer": "M8",
+  "signal_max_layer": "M6"
+ },
+ "pins": {
+  "N": [
+   "hs_start",
+   "hs_ep",
+   "hs_layer",
+   "hs_ctx",
+   "hs_cal_lo",
+   "hs_cal_r",
+   "hf",
+   "ck",
+   "rst_n"
+  ],
+  "S": [],
+  "W": [
+   "ap0",
+   "am0",
+   "fr_valid",
+   "fr_epoch",
+   "fr_rz",
+   "ap1",
+   "am1"
+  ],
+  "E": [
+   "ap2",
+   "am2",
+   "ap3",
+   "am3"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "master": "ot_nhb_zh",
+   "inst": "safe_c9572",
+   "idx": 0,
+   "x": 43.2,
+   "y": 43.2,
+   "w": 151.2,
+   "h": 151.2,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "master": "ot_nhb_zh",
+   "inst": "safe_c9573",
+   "idx": 0,
+   "x": 259.2,
+   "y": 43.2,
+   "w": 151.2,
+   "h": 151.2,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "master": "ot_nhb_zh",
+   "inst": "safe_c9574",
+   "idx": 0,
+   "x": 43.2,
+   "y": 345.6,
+   "w": 151.2,
+   "h": 151.2,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "master": "ot_nhb_zh",
+   "inst": "safe_c9575",
+   "idx": 0,
+   "x": 259.2,
+   "y": 345.6,
+   "w": 151.2,
+   "h": 151.2,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf",
+   "master": "ot_qkh_recip_leaf",
+   "inst": "safe_c9576",
+   "idx": 0,
+   "x": 475.2,
+   "y": 259.2,
+   "w": 216.0,
+   "h": 216.0,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "fill",
+   "fill 35% = (macros/children 138102 + std 1700) / outline 396576 um2 < 50%",
+   ""
+  ]
+ ],
+ "referenced": [
+  "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native_kit.v",
+  "rtl/hdc/nearhbm/ot_nhb_tiles_bb.v",
+  "rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v",
+  "physical/ref_tile/qkd_ahub_sfb/kit.env",
+  "physical/ref_tile/qkd_ahub_sfb/clock.sdc",
+  "physical/ref_tile/qkd_ahub_sfb/signoff.sdc",
+  "physical/ref_tile/qkd_ahub_sfb/pdn.tcl",
+  "physical/ref_tile/qkd_ahub_sfb/pre_cts.tcl",
+  "physical/ref_tile/qkd_ahub_sfb/post_cts.tcl",
+  "physical/ref_tile/qkd_ahub_sfb/post_grt.tcl",
+  "physical/ref_tile/qkd_ahub_sfb/pre_drt.tcl",
+  "physical/ref_tile/qkd_ahub_sfb/pre_fill.tcl",
+  "physical/ref_tile/qkd_ahub_sfb/post_fill.tcl",
+  "physical/ref_tile/qkd_ahub_sfb/pre_grt.tcl",
+  "physical/ref_tile/qkd_ahub_sfb/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "tools/ref_tile/signal_layer_audit.tcl",
+  "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native_kit.v",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qkd_ahub_sfb/pre_gpl.tcl",
+  "physical/ref_tile/qkd_ahub_sfb/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/ref_tile/qkd_ahub_sfb/spine_ins.tcl",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh.lef",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_ss.lib",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_ff.lib",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_tt.lib",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh.lef",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_ss.lib",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_ff.lib",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_tt.lib",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh.lef",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_ss.lib",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_ff.lib",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_tt.lib",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh.lef",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_ss.lib",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_ff.lib",
+  "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_tt.lib",
+  "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf.lef",
+  "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf_ss.lib",
+  "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf_ff.lib",
+  "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf_tt.lib",
+  "physical/ref_tile/qkd_ahub_sfb/place.tcl"
+ ]
+}

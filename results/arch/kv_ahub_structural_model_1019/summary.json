@@ -1,0 +1,129 @@
+{
+  "depth": 16,
+  "stages_over20": 0,
+  "bits": 2034,
+  "banks": 80,
+  "added_ff": 11290,
+  "area": 5001.28992,
+  "contacts": {
+    "ot_nhb_zh": {
+      "W": {
+        "signal_count": 2,
+        "face_length_um": 151.2,
+        "full_face_density": 0.013227513227513229,
+        "minimum_same_layer_contact_pitch_um": 0.096,
+        "local_inverse_pitch_per_um": 10.416666666666666
+      },
+      "N": {
+        "signal_count": 68,
+        "face_length_um": 151.2,
+        "full_face_density": 0.44973544973544977,
+        "minimum_same_layer_contact_pitch_um": 0.096,
+        "local_inverse_pitch_per_um": 10.416666666666666
+      },
+      "S": {
+        "signal_count": 268,
+        "face_length_um": 151.2,
+        "full_face_density": 1.7724867724867726,
+        "minimum_same_layer_contact_pitch_um": 0.096,
+        "local_inverse_pitch_per_um": 10.416666666666666
+      },
+      "E": {
+        "signal_count": 0,
+        "face_length_um": 151.2,
+        "full_face_density": 0.0,
+        "minimum_same_layer_contact_pitch_um": null,
+        "local_inverse_pitch_per_um": null
+      }
+    },
+    "ot_qkh_recip_leaf": {
+      "W": {
+        "signal_count": 2,
+        "face_length_um": 216.0,
+        "full_face_density": 0.009259259259259259,
+        "minimum_same_layer_contact_pitch_um": 0.096,
+        "local_inverse_pitch_per_um": 10.416666666666666
+      },
+      "S": {
+        "signal_count": 34,
+        "face_length_um": 216.0,
+        "full_face_density": 0.1574074074074074,
+        "minimum_same_layer_contact_pitch_um": 0.096,
+        "local_inverse_pitch_per_um": 10.416666666666666
+      },
+      "N": {
+        "signal_count": 34,
+        "face_length_um": 216.0,
+        "full_face_density": 0.1574074074074074,
+        "minimum_same_layer_contact_pitch_um": 0.096,
+        "local_inverse_pitch_per_um": 10.416666666666666
+      }
+    }
+  },
+  "clock": {
+    "ot_nhb_zh": {
+      "tt": {
+        "min_clock_tree_path": [
+          225.81313,
+          243.14081
+        ],
+        "max_clock_tree_path": [
+          267.56247,
+          286.48932
+        ]
+      },
+      "ff": {
+        "min_clock_tree_path": [
+          184.39217,
+          194.74435
+        ],
+        "max_clock_tree_path": [
+          223.35616,
+          235.9953
+        ]
+      },
+      "ss": {
+        "min_clock_tree_path": [
+          292.1413,
+          327.04221
+        ],
+        "max_clock_tree_path": [
+          338.9805,
+          372.91379
+        ]
+      }
+    },
+    "ot_qkh_recip_leaf": {
+      "tt": {
+        "min_clock_tree_path": [
+          201.60768,
+          218.94179
+        ],
+        "max_clock_tree_path": [
+          246.99535,
+          264.82568
+        ]
+      },
+      "ff": {
+        "min_clock_tree_path": [
+          161.38185,
+          169.13362
+        ],
+        "max_clock_tree_path": [
+          202.65877,
+          212.23193
+        ]
+      },
+      "ss": {
+        "min_clock_tree_path": [
+          268.92188,
+          310.87741
+        ],
+        "max_clock_tree_path": [
+          322.31577,
+          361.73627
+        ]
+      }
+    }
+  }
+}

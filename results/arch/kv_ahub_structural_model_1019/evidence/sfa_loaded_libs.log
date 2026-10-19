@@ -1,0 +1,35 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_tt.lib
+read_liberty /src/physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_ff.lib
+read_liberty /src/physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf_ff.lib
+read_db /work/results/asap7/opentallas_qkd_ahub_static_dw_safe_native_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qkd_ahub_static_dw_safe_native_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qkd_ahub_static_dw_safe_native_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qkd_ahub_static_dw_safe_native_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+REF_TILE spine: child insertion targets ot_nhb_zh 246.5 ot_qkh_recip_leaf 238.7
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_SPINE sym: 445 flop leaves, 5 insertion leaves (0 on their earliest tap), 99 tree nodes, estimated latest flop leaf 858 ps
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 450 sinks 3425 cells 575 leaf arrival 371.3..676.7 ps (spread 305.5) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 450 sinks 3425 cells 1674 leaf arrival 554.6..676.8 ps (spread 122.2) pad 60.2 / 14.0 ps
+OT_SPINE iter 2 (coarse) leaves 450 sinks 3425 cells 1713 leaf arrival 600.6..676.8 ps (spread 76.2) pad 56.6 / 14.0 ps
+OT_SPINE iter 3 (fine) leaves 450 sinks 3425 cells 2044 leaf arrival 603.1..676.4 ps (spread 73.3) pad 56.6 / 3.0 ps
