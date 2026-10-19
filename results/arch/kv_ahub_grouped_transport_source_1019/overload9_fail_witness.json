@@ -1,0 +1,77 @@
+{
+  "classification": "PREOPT_SOURCE_TEMPLATE_CENSUS_NOT_NATIVE",
+  "source_sha256": "5e77fec39eeeb7d034e734be3e0ddf34069056ef752976112bb8c5bf7c03e902",
+  "checks": {
+    "shared_valid_actual_slot_D": true,
+    "actual_indexed_write": true,
+    "shared_onehot": true,
+    "read_rotation": true,
+    "raw_authority": true,
+    "distinct_generated_rootpairs": true,
+    "bank_legal": true,
+    "group_legal": false,
+    "group_valid_fanout": false,
+    "group_reset_fanout": true,
+    "raw_fanout": true
+  },
+  "rows": [
+    {
+      "W": 268,
+      "first_bank": 0,
+      "banks": 9,
+      "group_valid_D_mux_loads": 36,
+      "rx_group_reset_loads": 20,
+      "max_write_enable_loads": 9,
+      "max_phase_decode_loads": 10,
+      "max_active_loads": 19
+    },
+    {
+      "W": 268,
+      "first_bank": 9,
+      "banks": 9,
+      "group_valid_D_mux_loads": 36,
+      "rx_group_reset_loads": 20,
+      "max_write_enable_loads": 9,
+      "max_phase_decode_loads": 10,
+      "max_active_loads": 19
+    },
+    {
+      "W": 268,
+      "first_bank": 18,
+      "banks": 9,
+      "group_valid_D_mux_loads": 36,
+      "rx_group_reset_loads": 20,
+      "max_write_enable_loads": 9,
+      "max_phase_decode_loads": 10,
+      "max_active_loads": 19
+    },
+    {
+      "W": 268,
+      "first_bank": 27,
+      "banks": 7,
+      "group_valid_D_mux_loads": 28,
+      "rx_group_reset_loads": 16,
+      "max_write_enable_loads": 9,
+      "max_phase_decode_loads": 10,
+      "max_active_loads": 19
+    },
+    {
+      "W": 68,
+      "first_bank": 0,
+      "banks": 9,
+      "group_valid_D_mux_loads": 36,
+      "rx_group_reset_loads": 20,
+      "max_write_enable_loads": 9,
+      "max_phase_decode_loads": 10,
+      "max_active_loads": 19
+    }
+  ],
+  "raw_loads_per_face": 15,
+  "state_bits": {
+    "payload": 1344,
+    "other": 1721,
+    "total": 3065
+  },
+  "unbound": "constants/tie cells, merging, macro implementation, clock/PG not audited",
+  "verdict": "REFUSE_SOURCE_TEMPLATE"
+}

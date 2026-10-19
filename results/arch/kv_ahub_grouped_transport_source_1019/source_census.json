@@ -1,0 +1,97 @@
+{
+  "classification": "PREOPT_SOURCE_TEMPLATE_CENSUS_NOT_NATIVE",
+  "source_sha256": "f8211325ebd982bccb90083f2c58af6ef2d24c6d1e2d6a5ea6c015a9d5b61b25",
+  "checks": {
+    "shared_valid_actual_slot_D": true,
+    "actual_indexed_write": true,
+    "shared_onehot": true,
+    "read_rotation": true,
+    "raw_authority": true,
+    "distinct_generated_rootpairs": true,
+    "bank_legal": true,
+    "group_legal": true,
+    "group_valid_fanout": true,
+    "group_reset_fanout": true,
+    "raw_fanout": true
+  },
+  "rows": [
+    {
+      "W": 268,
+      "first_bank": 0,
+      "banks": 8,
+      "group_valid_D_mux_loads": 32,
+      "rx_group_reset_loads": 18,
+      "max_write_enable_loads": 9,
+      "max_phase_decode_loads": 10,
+      "max_active_loads": 19
+    },
+    {
+      "W": 268,
+      "first_bank": 8,
+      "banks": 8,
+      "group_valid_D_mux_loads": 32,
+      "rx_group_reset_loads": 18,
+      "max_write_enable_loads": 9,
+      "max_phase_decode_loads": 10,
+      "max_active_loads": 19
+    },
+    {
+      "W": 268,
+      "first_bank": 16,
+      "banks": 8,
+      "group_valid_D_mux_loads": 32,
+      "rx_group_reset_loads": 18,
+      "max_write_enable_loads": 9,
+      "max_phase_decode_loads": 10,
+      "max_active_loads": 19
+    },
+    {
+      "W": 268,
+      "first_bank": 24,
+      "banks": 8,
+      "group_valid_D_mux_loads": 32,
+      "rx_group_reset_loads": 18,
+      "max_write_enable_loads": 9,
+      "max_phase_decode_loads": 10,
+      "max_active_loads": 19
+    },
+    {
+      "W": 268,
+      "first_bank": 32,
+      "banks": 2,
+      "group_valid_D_mux_loads": 8,
+      "rx_group_reset_loads": 6,
+      "max_write_enable_loads": 9,
+      "max_phase_decode_loads": 10,
+      "max_active_loads": 19
+    },
+    {
+      "W": 68,
+      "first_bank": 0,
+      "banks": 8,
+      "group_valid_D_mux_loads": 32,
+      "rx_group_reset_loads": 18,
+      "max_write_enable_loads": 9,
+      "max_phase_decode_loads": 10,
+      "max_active_loads": 19
+    },
+    {
+      "W": 68,
+      "first_bank": 8,
+      "banks": 1,
+      "group_valid_D_mux_loads": 4,
+      "rx_group_reset_loads": 4,
+      "max_write_enable_loads": 5,
+      "max_phase_decode_loads": 6,
+      "max_active_loads": 15
+    }
+  ],
+  "raw_loads_per_face": 21,
+  "state_bits": {
+    "payload": 1344,
+    "other": 1731,
+    "total": 3075
+  },
+  "unbound": "constants/tie cells, merging, macro implementation, clock/PG not audited",
+  "verdict": "PASS_SOURCE_TEMPLATE"
+}
