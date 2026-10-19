@@ -3,6 +3,7 @@
 This is a candidate, with no REVIEW.json or submit authorization. Default SAFE=0 behavior is retained. SAFE=1 replaces delay chains of depth >=3 with exact stationary rings, lands core/link tokens, partitions reset copies, removes unobserved metadata resets, and captures PHY-up. PHY-up fault observation adds one diagnostic edge. No throughput/data calendar stages are added in the recorded phase-0 production test: LU=53, LS=378. The generated physical wrapper adds two startup reset guard edges. A separate real 0.2T core/link phase production test FAILED (phase1/): AR2048/argmax48 mismatches, all8 faulted; SAFE0 comparator completed with identical failure (phase_baseline/); inherited integration phase contract remains a release blocker. Candidate is not mesochronous qualified; the previous duty50 harness ignored phi and has been corrected.
 
 Evidence:
+
 - ring/: sixteen depths (0..378), 4096 edges and repeated reset, golden shift equivalence; early-ring mutant caught.
 - r3/: SAFE S1 L378, phase0/1, 240 words per face; six behavioral mutants caught (early RX, CDC, PHY, bank, ring, unlanded).
 - phy_up/: normal legacy fault edge28 versus captured SAFE fault edge29, reset/epoch recovery; missing-fault mutant caught.
@@ -19,14 +20,14 @@ ROOT explicitly accepted only the RX MY child origin X129.600 ->129.624um, Y302.
 
 ## Critical physical checklist before release
 
-1. Calendar exactness: RTL witnesses above; extra phase production test pending.
-2. Input/pin capture: TOK_REG=1, PHY-up captured; actual pin-to-flop reach must pass gate.
-3. Storage: long chains replaced with <=16-bit bank stationary rings; physical feedback/hold must pass gate.
-4. Reset: kept same-depth copies, reset-free unobserved metadata, generated two-edge boundary guard; synthesized census pending.
-5. Clock: scalar regional roots and explicit core/link landings; native TT/FF spread/insertion pending.
-6. Geometry:950.4x561.6um, six children, full-width standard-cell band y475.2..561.6; actual density/pins/reach/layout pending. Narrow RX waiver above.
-7. Timing: hold constraints0.03ns for IO/internal, no delay masks; TT setup and FF hold must be>=0.
-8. Integration: production RTL passes; source-bound production physical parent rekit and final visual acceptance remain open. Only S1 kit is gate-ready. Other profile specs are explicitly DRAFT with no independent wrapper bench.
+1. Calendar: S1 component and phase0 production/steady witnesses PASS; real0.2T production FAIL identically with SAFE0/1. Independent root-phase contract is a release blocker.
+2. Input/pin capture: TOK_REG=1 and captured PHY-up (+1 diagnostic edge); actual calibrated pin-to-flop reach and DRC remain open after CTS failure.
+3. Storage: N>=3 delay chains become stationary rings with<=16-bit select banks; repeated-reset equivalence and early/unlanded mutants PASS. Physical hold remains open.
+4. Reset: local same-depth copies, reset-free metadata, boundary guard+2. Synthesized raw rst_n has1 sink; no extra normal calendar edge. Post-route/native reset reach remains owed.
+5. Clock: real FAIL. TT cal_ck38.9ps/cal_lck0.6ps pin spread pass; codec0 spread450.8ps fails80ps. No FF verdict. New TX/RX/control ownership model in regional_model/ awaits ROOT contract choice; no placement/CTS knob retry.
+6. Geometry:950.4x561.6um, aspect1.692, six children, full-width std band y475.2..561.6. Floorplan PNG inspected. Fill42%; W1157/E1261 pins over513.6um (92% face span), S76/N2. Scoped RX24nm track waiver is geometric only; actual PG/OBS pin access/DRC still owed.
+7. Timing: IO/internal hold0.03ns, no delay masks. CTS failed before calibrated TT setup/FF hold and GRT could complete; no signoff claim.
+8. Integration: all five fixed wrapper profiles pass four phase0 production workloads; physical production parent is not built/qualified. S1 gate_result/PNG preserve FAIL. Other four profile specs remain DRAFT. No next S1 gate before ROOT selects and qualifies the crossing contract; no REVIEW.json/submit.
 
 qfd_coll_bank137 view dependency was restored unchanged from commit3dbaaf169 because absent at the adopted branch base. Clock-tool main synchronization is commit7a820e1ee, separable from this RTL candidate.
 
