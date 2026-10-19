@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: ot-epyc8       admits  1169 GB (avail 912, growth 94, headroom 0, waiters 0/0 GB) load 37/128 running 26 disk 360 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1812257-1792426923 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+LEP_MU_STATS A recv 280/280 B recv 240/240 mismatches 0 | latency user identity 1 (A 120 beats, ref 120) | main faults 0000000 | F1 full-slot 1 F2 empty-replay 1 F3 ab-user0 1 | return P ri 240/240 landed 160/160
+PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted; return to the A/B master over pairs A and B: 240 cut-through and 160 landed beats exact
+BENCH_PASS lepmu MUT=none seed 1
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1812257-1792426923): exit 0
