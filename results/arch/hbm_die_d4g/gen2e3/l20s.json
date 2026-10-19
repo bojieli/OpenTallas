@@ -1,0 +1,25 @@
+{
+ "layer": "l20s_idx_selector_sel",
+ "instance": "hb_idx__selector",
+ "old_master": "ot_hbm_idx_selector_static",
+ "master": "ot_hbm_idx_selector_static_sel",
+ "source": "rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv",
+ "source_sha256": "6798864c30e069930756e352009310362d095f96087a9f9e033ad60ed5c88504",
+ "removed_ports": {
+  "out_v": 4,
+  "out_line": 2368,
+  "threshold_observe": 16,
+  "selected_observe": 56
+ },
+ "removed_bits": 2444,
+ "open_outputs_dropped": 4,
+ "straps_remastered": 1,
+ "retained_outputs": [
+  "fault",
+  "selected_line",
+  "selected_v"
+ ],
+ "added_edges": 0,
+ "cycles_changed": 0,
+ "qualification": "SOURCE_ONLY_NEEDS_SYNTH (no view admitted)"
+}

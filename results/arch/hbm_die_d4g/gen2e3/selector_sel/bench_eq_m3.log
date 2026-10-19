@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: ot-epyc7       admits   851 GB (avail 697, growth 101, headroom 0, waiters 0/0 GB) load 35/96 running 19 disk 6229 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-353884-1792452966 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+Q0 t=2461000 rop=0 raddr=0 sel=67 wp=4 fill=3 last_id=2735
+REF_FAULT_RISE t=2465000 op=0 pass=0 addr=0 k=324 qfault=1111
+PHASE_A cycles 8080 selected_beats 1019 mismatches 0
+PHASE_B precondition fault ref 0 new 0
+PHASE_B op8: ref fault 0 new fault 0
+TB_SEL_EQ FAIL
+[16205000] %Fatal: tb_hbm_idx_selector_sel_eq.sv:63: Assertion failed in tb_hbm_idx_selector_sel_eq: selector sel equivalence failed
+%Error: rtl/hbm_accel/index/tb/tb_hbm_idx_selector_sel_eq.sv:63: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-353884-1792452966): exit 1
+rc=1

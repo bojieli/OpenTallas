@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: ot-epyc7       admits   851 GB (avail 697, growth 101, headroom 0, waiters 0/0 GB) load 35/96 running 19 disk 6229 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-gen2e3-sel
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-353888-1792452966 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+IDX_SELECTOR_SEL_LINK_STATIC SMUT0 MUT0 frame0 records512 errors0 fault0 edges963 firstemit833 threshold0000 selected00000000000000
+IDX_SELECTOR_SEL_LINK_STATIC SMUT0 MUT0 frame1 records512 errors0 fault0 edges963 firstemit833 threshold0000 selected00000000000000
+IDX_SELECTOR_SEL_LINK_STATIC SMUT0 MUT0 frame2 records512 errors0 fault0 edges963 firstemit833 threshold0000 selected00000000000000
+- rtl/test/hbm_idx_static/tb_selector_sel_link_static.sv:86: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 29us; walltime 0.090 s; speed 320.171 us/s
+- Verilator: cpu 0.090 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-353888-1792452966): exit 0
+rc=0
