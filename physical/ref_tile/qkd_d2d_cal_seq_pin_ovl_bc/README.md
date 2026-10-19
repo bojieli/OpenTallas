@@ -6,7 +6,7 @@ The tile has exactly one cfg producer: registered boot writes have priority and 
 
 Each of two lists uses one hard4096x72 mask ROM (low32bits used) and one32bit plain capture register. Physical storage589824bits, logical1703x32x2bits; no runtime-indexed flop memory. Player address registers directly drive synchronous ROM addresses; ROM readE1, captureE2, player nextE3, consume no earlier thanE4. Input control capture1+innerEP1+output capture1=KV boundaryEP3, preserving FIRST_OFS1176. Model is results/rtl/kv_dcal_ovl_codex_1019/model.json.
 
-Verilator5.050 fleet exact bench PASS: full F16 period+wrap (1705TX/1706RX starts through the extra partial frame),66 boot words exact, independent rawEP3 sequencer cycle-equal TX/RX starts/segment/user, runtime SEG1 bases selected. Five mutants all FAIL with committed witnesses: dropped runtime cfg, stale admission base, reanchor while lists run, boot during admission, missingRX boot base. The shared link end's payload/ownership proof belongs to the overlap link vehicle; this bench qualifies the new sequencer boundary/boot integration.
+Verilator5.050 fleet exact bench PASS: full F16 period+wrap (1708TX/1710RX starts through the extra partial frame),66 boot words exact, independent rawEP3 sequencer cycle-equal TX/RX starts/segment/user, runtime SEG1 bases selected. Six mutants all FAIL with committed witnesses: dropped runtime cfg, stale admission base, reanchor while lists run, boot during admission, missingRX boot base, and the old mid-list halt/restart pointer. The shared link end's payload/ownership proof belongs to the overlap link vehicle; this bench qualifies the new sequencer boundary/boot integration.
 
 ## Safe design before gate
 
@@ -24,3 +24,7 @@ No datapath masks, multicycles, false paths, or credit/backpressure are added. G
 ## Die obligations
 
 Bind this distinct master and its two exactROM instances on the shared codec2 OVL variant; provide boot target11 from the same image compile (OVL admission at16). Drive new six OVL ports, including separate starts/users; adopt216x129.6um OVL_DCAL slot. Preserve ordinary bootcfg runtime switch and keep nonOVL branch independent. Epoch/reset/halt exceptional release is before the static frame; no extra runtime cycle is charged. Parent d2d_overlap and KV coordinator own full-die binding and strict seam recheck.
+
+Mandatory recovery successor imports shared510c0cd51: halt or idle reload rewinds both list players to word0 and clears prefetch/current/count (stickyfault reset-only). Positive abort/new-epoch restart checks the first TX/RX event's epoch-relative edge/segment/user against the first epoch, then compares exact starts to the rawEP3 reference. Old unchanged source fails this test; MUT_HALT_REWIND1 reproduces that failure in shipping source. Driver caches by SHA256 source/image/ROM identity.
+
+Diagnostic gate2 (pre-rewind) PASS: standard-cell+macro area5299um2, total20% coreutil, GRT0, setup+223.3ps/hold+51.1ps atTT placementRC; pin-flop spread16.4/15.0ps. The old auto pin plan clustered pins; successor exact io_pins.tcl spreads all97 functional pins over full W/E/S faces with ascending bus bits and S-centre clock. Gate2 is preserved under results/rtl/kv_dcal_ovl_codex_1019/gate2_pre_rewind_* and does not qualify this successor. New gate required before critical review/submission.

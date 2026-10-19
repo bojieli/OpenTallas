@@ -6,7 +6,7 @@
 // Lists are external hard ROMs, never runtime-indexed flop arrays. Reset release uses two registered stages.
 module qkd_d2d_cal_seq_ovl_bc_core #(parameter integer AW = 11, parameter integer FIRST_OFS = 1176,
                                 parameter integer ADM_OFS = 72, parameter integer ADM_LEN = 1100,
-                                parameter integer EP_SKEW = 3, parameter integer MUT = 0) (
+                                parameter integer EP_SKEW = 3, parameter integer MUT = 0, parameter integer MUT_HALT_REWIND=0) (
     input  wire        ck, rst_n, reload, epoch_go, halt,
     input  wire        bcfg_tx_we, bcfg_rx_we,
     input  wire [5:0]  bcfg_addr,
@@ -46,7 +46,7 @@ module qkd_d2d_cal_seq_ovl_bc_core #(parameter integer AW = 11, parameter intege
     wire [5:0] s_addr;
     wire [1:0] s_ut, s_ur;
     wire [31:0] s_data;
-    ot_qwen_d2d_ovl_seq #(.AW(AW), .TX_IMG(OVL_K_TX_IMG), .RX_IMG(OVL_K_RX_IMG),
+    ot_qwen_d2d_ovl_seq #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND), .TX_IMG(OVL_K_TX_IMG), .RX_IMG(OVL_K_RX_IMG),
         .TX_SEG1(OVL_K_TX_SEG1), .RX_SEG1(OVL_K_RX_SEG1), .TX_SEG2(32'd16), .RX_SEG2(32'd16),
         .ADM(1), .ADM_OFS(ADM_OFS), .ADM_LEN(ADM_LEN), .FIRST_OFS(FIRST_OFS), .EP_SKEW(EP_SKEW - 2)) u_seq (
         .ck(ck), .rst_n(rl), .reload(reload_q), .epoch_go(epoch_go_q), .halt(halt_q),
@@ -101,7 +101,7 @@ module qkd_d2d_cal_seq_ovl_bc_core #(parameter integer AW = 11, parameter intege
 endmodule
 
 // Hardened top owns both list ROM macros.  No extra address stage: player's register drives ROM addr.
-module qkd_d2d_cal_seq_pin_ovl_bc #(parameter ROM_DIR = "", parameter integer MUT=0) (
+module qkd_d2d_cal_seq_pin_ovl_bc #(parameter ROM_DIR = "", parameter integer MUT=0, parameter integer MUT_HALT_REWIND=0) (
     input wire ck, rst_n, reload, epoch_go, halt,
     input wire bcfg_tx_we, bcfg_rx_we,
     input wire [5:0] bcfg_addr, input wire [31:0] bcfg_data,
@@ -121,7 +121,7 @@ module qkd_d2d_cal_seq_pin_ovl_bc #(parameter ROM_DIR = "", parameter integer MU
     ot_rom_4096x72_m8 #(.VIAMAP({ROM_DIR,"/ovl_k_rx.viamap.hex"}),.INSTANCE("ovl_k_rx")) u_rx_rom
         (.clk(ck),.ce_in(1'b1),.addr_in({1'b0,ra}),.rd_out(rq));
 `endif
-    qkd_d2d_cal_seq_ovl_bc_core #(.MUT(MUT)) u_core (
+    qkd_d2d_cal_seq_ovl_bc_core #(.MUT(MUT),.MUT_HALT_REWIND(MUT_HALT_REWIND)) u_core (
         .ck(ck),.rst_n(rst_n),.reload(reload),.epoch_go(epoch_go),.halt(halt),
         .bcfg_tx_we(bcfg_tx_we),.bcfg_rx_we(bcfg_rx_we),.bcfg_addr(bcfg_addr),.bcfg_data(bcfg_data),
         .cfg_tx_we(cfg_tx_we),.cfg_rx_we(cfg_rx_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),

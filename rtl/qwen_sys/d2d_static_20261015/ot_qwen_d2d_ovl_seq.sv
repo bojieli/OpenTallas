@@ -17,7 +17,7 @@
 //     collision = fault).  halt (the end's epoch_abort) stops both players; the next epoch strobe re-anchors.
 // ROM ports: synchronous read (q = mem[addr] one edge after addr); the die GEN binds one ROM macro per list.
 // =====================================================================================================================
-module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer MIN_DT = 4) (
+module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer MIN_DT = 4, parameter integer MUT_HALT_REWIND = 0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          go,            // anchor: entry 0's dt counts from this edge
@@ -49,7 +49,15 @@ module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer MIN_
                 if (age == 2'd2) begin nxt <= rom_q; nv <= 1'b1; end
                 else age <= age + 2'd1;
             end
-            if (halt) running <= 1'b0;
+            if (halt) begin
+                running <= 1'b0;
+                // Epoch recovery restarts the compiled frame at word0. A prefetched mid-frame word must not
+                // survive an abort; prefetch begins again after halt/reload is released, before the next anchor.
+                if (!MUT_HALT_REWIND) begin
+                    addr <= '0; nxt <= 32'd0; nv <= 1'b0; age <= 2'd0;
+                    cnt <= 20'd0; cur <= 32'd0; seg <= 1'b0; user <= 2'd0;
+                end
+            end
             else if (go || (running && cnt == 20'd1)) begin
                 if (go && running) fault <= 1'b1;
                 if (!go && cur[11]) begin start <= 1'b1; seg <= cur[10]; user <= cur[9:8]; end
@@ -63,6 +71,7 @@ module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer MIN_
 endmodule
 
 module ot_qwen_d2d_ovl_seq #(
+    parameter integer MUT_HALT_REWIND = 0, // bench-only old mid-list restart behavior
     parameter integer NE = 32,
     parameter integer AW = 11,           // list ROM address width (2,048 words: one 4-user frame is 1,703 a list)
     parameter [32*NE-1:0] TX_IMG = '0,
@@ -124,9 +133,9 @@ module ot_qwen_d2d_ovl_seq #(
             else if (act) begin e <= e + 32'd1; if (go) act <= 1'b0; end
         end
     wire t_start, t_seg, r_start, r_seg, t_run, r_run, t_f, r_f; wire [1:0] t_u, r_u;
-    ot_qwen_d2d_list_play #(.AW(AW)) u_tx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt), .rom_addr(tx_rom_addr),
+    ot_qwen_d2d_list_play #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND)) u_tx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload), .rom_addr(tx_rom_addr),
         .rom_q(tx_rom_q), .start(t_start), .seg(t_seg), .user(t_u), .running(t_run), .fault(t_f));
-    ot_qwen_d2d_list_play #(.AW(AW)) u_rx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt), .rom_addr(rx_rom_addr),
+    ot_qwen_d2d_list_play #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND)) u_rx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload), .rom_addr(rx_rom_addr),
         .rom_q(rx_rom_q), .start(r_start), .seg(r_seg), .user(r_u), .running(r_run), .fault(r_f));
     assign cal_start    = s_start | t_start;
     assign cal_seg      = s_start ? s_seg : t_seg;

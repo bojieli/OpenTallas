@@ -1,13 +1,14 @@
 `timescale 1ns/1ps
 module tb_kv_dcal_ovl_bc;
     parameter integer DMUT=0;
+    parameter integer HMUT=0;
     parameter ROM_DIR="rtl/qwen_sys/d2d_static_20261015/ovl_release";
     `include "ovl_release/ovl_release_img.svh"
     reg ck=0; always #0.4167 ck=~ck;
     reg rst_n=0, epoch_go=0, halt=0;
     reg bt=0,br=0; reg [5:0] ba=0; reg [31:0] bd=0;
     wire tw,rw,cs,cg,rs,rg,ready,adm,run,fault; wire[5:0] ca; wire[31:0] cd; wire[1:0] ut,ur;
-    qkd_d2d_cal_seq_pin_ovl_bc #(.ROM_DIR(ROM_DIR),.MUT(DMUT)) dut (
+    qkd_d2d_cal_seq_pin_ovl_bc #(.ROM_DIR(ROM_DIR),.MUT(DMUT),.MUT_HALT_REWIND(HMUT)) dut (
         .ck(ck),.rst_n(rst_n),.reload(1'b0),.epoch_go(epoch_go),.halt(halt),
         .bcfg_tx_we(bt),.bcfg_rx_we(br),.bcfg_addr(ba),.bcfg_data(bd),
         .cfg_tx_we(tw),.cfg_rx_we(rw),.cfg_addr(ca),.cfg_data(cd),
@@ -31,7 +32,9 @@ module tb_kv_dcal_ovl_bc;
         .cal_ready(),.adm_done(xadm),.running(xrun),.fault(xf));
     integer mode=0,cyc=0,ep=-1,txcount=0,rxcount=0,bootcount=0;
     integer txbase=-1,rxbase=-1;
-    reg failed=0,first=1;
+    reg failed=0,first=1,checking=1;
+    integer phase=0,first_tx=-1,first_rx=-1,re_tx=0,re_rx=0;
+    reg [2:0] first_tx_tag,first_rx_tag;
     task automatic err(input string s);
         begin if(!failed) $display("KDCALOVL_ERR cyc%0d mode%0d %s",cyc,mode,s); failed=1; end
     endtask
@@ -45,7 +48,7 @@ module tb_kv_dcal_ovl_bc;
                 if(ca<32 && rw && cd!=OVL_K_RX_IMG[32*ca+:32]) err("boot RX table payload");
             end
         end
-        if(ep>=0) begin
+        if(ep>=0 && checking) begin
             if(failed && mode>0) begin $display("KDCALOVL_FAIL mode%0d",mode);$fatal(1); end
             if(fault||xf) err($sformatf("fault dut%0d ref%0d col%0d run%0d stale%0d early%0d",fault,xf,
                 dut.u_core.f_col,dut.u_core.f_run,dut.u_core.f_stale,dut.u_core.f_early));
@@ -54,8 +57,22 @@ module tb_kv_dcal_ovl_bc;
             if(rs && {rg,ur}!={xrg,xur}) err("RX segment/user mismatch");
             if(cs&&adm&&txbase!=OVL_K_TX_SEG1) err("runtime TX SEG1 switch missing");
             if(rs&&adm&&rxbase!=OVL_K_RX_SEG1) err("runtime RX SEG1 switch missing");
-            if(cs&&adm) txcount++;
-            if(rs&&adm) rxcount++;
+            if(cs&&adm) begin
+                txcount++;
+                if(phase==0 && first_tx<0) begin first_tx=cyc-ep;first_tx_tag={cg,ut};end
+                if(phase==1 && re_tx==0) begin
+                    if(cyc-ep!=first_tx || {cg,ut}!=first_tx_tag) err("abort/restart TX failed to rewind list");
+                    re_tx=1;
+                end
+            end
+            if(rs&&adm) begin
+                rxcount++;
+                if(phase==0 && first_rx<0) begin first_rx=cyc-ep;first_rx_tag={rg,ur};end
+                if(phase==1 && re_rx==0) begin
+                    if(cyc-ep!=first_rx || {rg,ur}!=first_rx_tag) err("abort/restart RX failed to rewind list");
+                    re_rx=1;
+                end
+            end
         end
     end
     task automatic put(input bit tx,input integer addr,input reg[31:0] data);
@@ -82,6 +99,14 @@ module tb_kv_dcal_ovl_bc;
             if(mode==3 && cyc==ep+2001) epoch_go=0;
         end
         if(txcount<1700 || rxcount<1700) err("production frame starts missing");
+        if(mode==0 || mode==6) begin
+            // Exceptional halt is allowed before a new epoch, never a ready-dependent stall.
+            checking=0;halt=1;repeat(6) @(negedge ck);halt=0;
+            repeat(16) @(negedge ck);
+            phase=1;checking=1;epoch_go=1;ep=cyc;@(negedge ck);epoch_go=0;
+            repeat(10000) @(negedge ck);
+            if(!re_tx || !re_rx) err("abort/restart no first list start");
+        end
         if(failed) begin $display("KDCALOVL_FAIL mode%0d",mode);$fatal(1);end
         $display("KDCALOVL_PASS mode%0d tx%0d rx%0d boot%0d",mode,txcount,rxcount,bootcount);$finish;
     end

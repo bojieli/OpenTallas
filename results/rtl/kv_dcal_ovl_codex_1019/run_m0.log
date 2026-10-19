@@ -1,5 +1,5 @@
-KDCALOVL_PASS mode0 tx1705 rx1706 boot66
-- rtl/test/qwen_split/tb_kv_dcal_ovl_bc.sv:86: Verilog $finish
+KDCALOVL_PASS mode0 tx1708 rx1710 boot66
+- rtl/test/qwen_split/tb_kv_dcal_ovl_bc.sv:111: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 3ms; walltime 3.098 s; speed 1.087 ms/s
-- Verilator: cpu 3.098 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 3ms; walltime 3.511 s; speed 961.219 us/s
+- Verilator: cpu 3.511 s on 1 threads; allocated 7 MB
