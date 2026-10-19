@@ -1,0 +1,156 @@
+{
+ "name": "qfd_dv_lane_h-dl2-COMMIT",
+ "block": "qfd_dv_lane_h",
+ "ref_tile": true,
+ "owner": "Claude:S-QSLICE",
+ "purpose": "S-QSLICE 10-18: Q-DV slice SU lane head = ot_hdc_vstream_lane_h at the SLICE configuration (WR16 AW24 NW18 KV_FP8 ML 1 RD 2 QLA4 QLM5, TLS ring in one 128x256 SRAM) as the no-parameter wrapper qfd_dv_lane_h; leaf of the slice lane tile qfd_dv_su_lane (x8 per slice, x96 per die). The closed qfd_su_lane_h view is ML 15 (14 edges deeper alignment) and is not this lane. M5 cap, local CTS, recipe 2, pin flops in and out, own reset register. Benches run on the assembled slice (dv_bench2 a..j, slice2 SU_LT=1 HD_W130=1: 8 lane tiles) + 4 mutants.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/qslice2-hard-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_dv",
+   "rtl/test/qwen_dv",
+   "rtl/qwen_sys/dvm_20261014",
+   "rtl/test/full_sm_service",
+   "rtl/test/hbm_rf_visibility",
+   "rtl/lib",
+   "rtl/physical",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_dv_lane_h u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_dv/qfd_dv_su_lane.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "slice2_su_lt",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g i j --work {RUN}/slice2_su_lt --vflags \"-GSU_LT=1 -GHD_W130=1\"",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^bench2 \\(j\\) MUT=0: PASS",
+    "pass_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_pos.out"
+   },
+   {
+    "name": "slice2_su_lt_loff_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_loff_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_loff_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_LOFF_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_loff_mut.out"
+   },
+   {
+    "name": "slice2_su_lt_tls_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_tls_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_tls_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_TLS_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_tls_mut.out"
+   },
+   {
+    "name": "slice2_su_lt_loreg_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_loreg_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_loreg_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_LOREG_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_loreg_mut.out"
+   },
+   {
+    "name": "slice2_su_lt_ireg_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_ireg_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_ireg_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_IREG_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_ireg_mut.out"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_dv_lane_h/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_dv_lane_h/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_dv_lane_h --out {RUN}/record/views/qfd_dv_lane_h --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_dv_lane_h/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_dv_lane_h/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_dv_lane_h/qfd_dv_lane_h-dl2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "New leaf: the slice SU lane head at ML 1 (the slice VM answers in 1 + ML = 2 edges; inner lane ML 7 = 1 + 2 + 2 RD). Same structure as the closed qfd_su_lane_h (ML 15)."
+}

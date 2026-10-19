@@ -1,0 +1,46 @@
+# case eq3 host ot-epyc5 2026-10-19T03:25:37-07:00 commit d3cf669e3a78eb68520be5d61e78d6968d89e0c6 Verilator 5.050 2026-07-01 rev v5.050
+Verilator 5.050 2026-07-01 rev v5.050
+/srv/opentallas-scratch2/claude/mu-slice-gate/work/eq3/eq3.log:LPF_MISMATCH port=ag_eo cycle=20 ref=091 lpf=092
+/srv/opentallas-scratch2/claude/mu-slice-gate/work/eq3/eq3.log:LPF_MISMATCH port=ag_eo cycle=23 ref=3f9 lpf=3fa
+/srv/opentallas-scratch2/claude/mu-slice-gate/work/eq3/eq3.log:LPF_MISMATCH port=ag_eo cycle=25 ref=12a lpf=129
+LPF_NZ ag_eo 2980
+LPF_NZ ss_eo 2981
+LPF_NZ cw_n0 2969
+LPF_NZ cw_n1 2969
+LPF_NZ cw_n2 2969
+LPF_NZ cw_n3 2969
+LPF_NZ cw_s0 2969
+LPF_NZ cw_s1 2969
+LPF_NZ cw_s2 2969
+LPF_NZ cw_s3 2969
+LPF_FAULT_CYCLES heads=2974 any=2979
+LPF_EQ FAIL quiet=0 hronly=0 mismatches=1447 of 98373
+LPF_NZ ag_eo 2978
+LPF_NZ ss_eo 2981
+LPF_NZ cw_n0 2969
+LPF_NZ cw_n1 2969
+LPF_NZ cw_n2 2969
+LPF_NZ cw_n3 2969
+LPF_NZ cw_s0 2969
+LPF_NZ cw_s1 2969
+LPF_NZ cw_s2 2969
+LPF_NZ cw_s3 2969
+LPF_FAULT_CYCLES heads=2968 any=2978
+LPF_EQ PASS quiet=1 hronly=0 compared=98373 nonzero=37505 cycles=3000
+LPF_NZ ag_eo 2968
+LPF_NZ ss_eo 2981
+LPF_NZ cw_n0 2969
+LPF_NZ cw_n1 2969
+LPF_NZ cw_n2 2969
+LPF_NZ cw_n3 2969
+LPF_NZ cw_s0 2969
+LPF_NZ cw_s1 2969
+LPF_NZ cw_s2 2969
+LPF_NZ cw_s3 2969
+LPF_FAULT_CYCLES heads=2968 any=2968
+LPF_EQ PASS quiet=0 hronly=1 compared=98373 nonzero=32682 cycles=3000
+EQ MUT=3: LPF_EQ FAIL
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 6.086 MB sources in 97 modules, into 572.766 MB in 519 C++ files needing 0.151 MB
+- Verilator: Walltime 341.624 s (elab=1.800, cvt=148.389, bld=185.323); cpu 165.293 s on 16 threads; allocated 11129.395 MB
+# exit 0
