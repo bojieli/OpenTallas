@@ -154,11 +154,19 @@ proc ot_ck_macro_owned {p selected} {
 # STA paths at a legitimate forwarded-clock input; they cannot remove a pin
 # register from the measured physical boundary. Stop at sequential endpoints
 # and intersect real data pins, so an asynchronous reset cannot select every
-# internal register sharing its reset tree.
+# internal register sharing its reset tree. OpenSTA's `all_registers -data_pins`
+# also returns asynchronous set/clear pins (they are timing-check endpoints), so
+# the async and clock pins are subtracted explicitly (review 10-19).
 BOUNDARY_TCL = r"""
 set bnd {}
 set data_pins {}
-foreach p [all_registers -data_pins] { dict set data_pins [get_full_name $p] 1 }
+set ot_ck_nondata {}
+foreach p [all_registers -async_pins] { dict set ot_ck_nondata [get_full_name $p] 1 }
+foreach p [all_registers -clock_pins] { dict set ot_ck_nondata [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $ot_ck_nondata $n]} { dict set data_pins $n 1 }
+}
 set din [all_inputs -no_clocks]
 if {[llength $din]} {
   foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
