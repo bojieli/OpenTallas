@@ -1,0 +1,299 @@
+{
+ "top": "qfd_dv_slice2_w_regional",
+ "why": "EXPERIMENTAL explicit eight lane roots/resets, width-aware42 native storage banks, scalar CFG+2 setup edges, new ML5 head and landed read loops. Stream/station reset fixes, exact composed production, native nested crossing audit and physical qualification still required.",
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_slice2_w_regional.sv"
+ ],
+ "child_sources": [
+  "rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv",
+  "rtl/qwen_dv/qfd_dv_redstn2_rsafe.sv",
+  "rtl/qwen_dv/qfd_dv_scalar2_csafe.sv",
+  "rtl/qwen_dv/qfd_dv_vm.sv",
+  "rtl/qwen_dv/qfd_dv_stream.sv",
+  "rtl/qwen_dv/qfd_dv_su8_regional.sv",
+  "rtl/qwen_dv/qfd_dv_heads.sv",
+  "rtl/hdc/ot_hdc_vstream_lane.sv",
+  "rtl/hdc/ot_hdc_vreduce.sv",
+  "rtl/physical/ot_hdc_vred_pending_guard.sv",
+  "rtl/hdc/ot_hdc_sfu_q.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/lib/ot_rst_pipe.sv",
+  "rtl/qwen_dv/qfd_dv_su_lane_landed.sv",
+  "rtl/test/full_sm_service/sram_models.sv",
+  "rtl/test/hbm_rf_visibility/scale_sram_model.sv",
+  "rtl/hdc/ot_hdc_vstream_lane_t.sv",
+  "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv",
+  "rtl/qwen_dv/qfd_dv_slice2_w_lpf_thru.sv",
+  "rtl/qwen_dv/qfd_dv_slice2_regional_parts.sv",
+  "rtl/qwen_dv/qfd_dv_reset_tree.sv",
+  "rtl/qwen_dv/qfd_dv_reset_bank.sv",
+  "rtl/qwen_dv/qfd_dv_ring_delay.sv",
+  "rtl/common/landed_parent/ot_pl_stream_land.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v"
+ ],
+ "defines": [
+  "OT_QFD_DV_SAFE_STORAGE"
+ ],
+ "params": {
+  "SU_TLS": 1,
+  "SU_LT": 1,
+  "MU_NU": 4
+ },
+ "out_dir": "rtl/qwen_dv/lp",
+ "record_dir": "results/arch/safe_qw_slice_w_1019/w_regional",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck",
+  "ck_lane"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_lane",
+  "rst_n"
+ ],
+ "regions": [
+  {
+   "name": "core",
+   "insts": [
+    "u_c",
+    "u_s"
+   ],
+   "centre": [
+    1242.0,
+    540.0
+   ]
+  },
+  {
+   "name": "hd",
+   "insts": [
+    "u_hd"
+   ],
+   "centre": [
+    1231.2,
+    1728.0
+   ]
+  },
+  {
+   "name": "ef",
+   "insts": [
+    "u_tw"
+   ],
+   "centre": [
+    2410.0,
+    640.0
+   ]
+  },
+  {
+   "name": "wf",
+   "insts": [
+    "u_te",
+    "u_tes"
+   ],
+   "centre": [
+    52.0,
+    640.0
+   ]
+  },
+  {
+   "name": "nw",
+   "insts": [
+    "u_tnw"
+   ],
+   "centre": [
+    350.0,
+    2550.0
+   ]
+  },
+  {
+   "name": "nc",
+   "insts": [
+    "u_tnc"
+   ],
+   "centre": [
+    1222.0,
+    2550.0
+   ]
+  },
+  {
+   "name": "ne",
+   "insts": [
+    "u_tne"
+   ],
+   "centre": [
+    2354.0,
+    2550.0
+   ]
+  },
+  {
+   "name": "sw",
+   "insts": [
+    "u_tsw"
+   ],
+   "centre": [
+    350.0,
+    40.0
+   ]
+  },
+  {
+   "name": "sc",
+   "insts": [
+    "u_tsc"
+   ],
+   "centre": [
+    1222.0,
+    40.0
+   ]
+  },
+  {
+   "name": "se",
+   "insts": [
+    "u_tse"
+   ],
+   "centre": [
+    2354.0,
+    40.0
+   ]
+  },
+  {
+   "name": "su0",
+   "insts": [],
+   "centre": [
+    540,
+    172.8
+   ]
+  },
+  {
+   "name": "su1",
+   "insts": [],
+   "centre": [
+    972,
+    172.8
+   ]
+  },
+  {
+   "name": "su2",
+   "insts": [],
+   "centre": [
+    1404,
+    172.8
+   ]
+  },
+  {
+   "name": "su3",
+   "insts": [],
+   "centre": [
+    1836,
+    172.8
+   ]
+  },
+  {
+   "name": "su4",
+   "insts": [],
+   "centre": [
+    540,
+    777.5999999999999
+   ]
+  },
+  {
+   "name": "su5",
+   "insts": [],
+   "centre": [
+    972,
+    777.5999999999999
+   ]
+  },
+  {
+   "name": "su6",
+   "insts": [],
+   "centre": [
+    1404,
+    777.5999999999999
+   ]
+  },
+  {
+   "name": "su7",
+   "insts": [],
+   "centre": [
+    1836,
+    777.5999999999999
+   ]
+  }
+ ],
+ "port_regions": {
+  "cmd_wi": "wf",
+  "hr_wi": "wf",
+  "st_wi": "wf",
+  "sc_wi": "wf",
+  "rv_wi": "wf",
+  "re_wi": "wf",
+  "rr_wi": "wf",
+  "rl_wi": "wf",
+  "rd_wi": "wf",
+  "dr_wi": "wf",
+  "st_ei": "ef",
+  "sc_ei": "ef",
+  "arv_ei": "ef",
+  "art_ei": "ef",
+  "arm_ei": "ef",
+  "arl_ei": "ef",
+  "ard_ei": "ef",
+  "dd_ei": "ef",
+  "ag_ei": "ef",
+  "l9_wi": "wf",
+  "rs_n0": "nw",
+  "rs_n1": "nc",
+  "rs_s0": "sw",
+  "rs_s1": "sc"
+ },
+ "bench": {
+  "cycles": 1500,
+  "reset_cycles": 16,
+  "sim": "verilator"
+ },
+ "mut_child": "u_hd",
+ "landing_chunk_bits": 24,
+ "landing_direct_timing": true,
+ "regional_child_clocks": [
+  {
+   "inst": "u_c",
+   "pin": "ck_lane",
+   "regions": [
+    "su0",
+    "su1",
+    "su2",
+    "su3",
+    "su4",
+    "su5",
+    "su6",
+    "su7"
+   ]
+  }
+ ],
+ "regional_child_resets": [
+  {
+   "inst": "u_c",
+   "pin": "rst_lane",
+   "regions": [
+    "su0",
+    "su1",
+    "su2",
+    "su3",
+    "su4",
+    "su5",
+    "su6",
+    "su7"
+   ]
+  }
+ ]
+}
