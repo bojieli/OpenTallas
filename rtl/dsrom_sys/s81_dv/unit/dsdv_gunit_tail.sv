@@ -13,35 +13,33 @@
 //      ot_dsrom_exp_f12 #(LM 5, LA 4) DEPTH 76; ot_dsrom_fdiv_f12 DEPTH 21), bit-identical to the originals by their
 //      own qualification; every operand is REGISTERED in front of its unit (the age decode + 24:1 operand mux never
 //      shares a stage with a unit's first stage), so each unit costs its latency + 1 on the fixed calendar below.
-//   2. Sinkhorn clock: no derived clock.  ot_hdc_sinkhorn (unchanged, one normalisation per unit edge, 6.58 ns routed
-//      TT) is clocked through an integrated clock gate (ot_hdc_cg, ICGx1) of the stream clock, enabled one edge in
-//      SK (SK 9: 7.50 ns per step); its registers are the endpoints of a multicycle path SK / SK - 1
-//      (physical/ref_tile_specs/s81dv/gunit_sinkh_mcp.sdc).  One clock root, no generated clock.
+//   2. Sinkhorn: S81-SAFE-FIX/GUNIT (10-19) replaced the gated-clock ot_hdc_sinkhorn (one 5.3-ns normalisation per
+//      unit edge, a 9-cycle multicycle path behind an ICG -- masked depth, SAFE-DESIGN item 4) by ot_hdc_sinkhorn_p:
+//      the same function bit for bit, pipelined on the core clock (11 registered stages a normalisation, step 0 in
+//      12), no clock gate, no multicycle exception.  Result latency SLAT = 441 edges after the accepting edge.
 // Calendar (ages from launch; Le = unit latency + 1 for the operand register):
 //   P1      24 mul   t[i] * scale                     P2 = P1 + 24 + LMe   24 add  t[i] + base[i]
 //   MAX     row max of t[8..23] (2 stages)            P3 = MAX + 2         16 add  t[i] - max[row]
 //   P4      24 exp (pre/post negated)                 P5 = P4 + 24 + LEe   8 add   t[i] + 1
 //   P6      8 fdiv 1 / t[i]                           P7 = P6 + 8 + LDe    4 add + eps (pre), 4 mul x 2 (post)
 //   EREADY  = P7 + 8 + max(LMe, LAe): the Sinkhorn input is stable.
-// Sinkhorn schedule: sink_launch is set on the first gate-enable edge W0 with age >= EREADY + 1 and held one sink
-// period (the gated edge W0 + SK accepts it); out_valid rises at W0 + 42 SK and holds SK edges; the result is captured
-// at core edge W0 + CAP + 1 (CAP = 42 SK); result_v / result at launch + L, L = EREADY + 1 + SK + CAP + 2, independent
-// of the divider phase.  No ready / busy / response signal moves any event; a capture without out_valid, a launch while
-// active, an arithmetic exception or a Sinkhorn fault is a sticky fault.
-// MUT_PRE (bench only): the pre path skips + eps.
+// Sinkhorn schedule: sink_launch (sl) is a one-edge pulse set at age EREADY + 1, the unit accepts on the next edge
+// (a0); out_valid pulses at a0 + SLAT; the result is captured at a0 + SLAT + 1 (capture_q, CAP = SLAT + 1 from sl);
+// result_v / result at launch + L, L = EREADY + CAP + 3 (= old L + 55: the old unit took 9 x 42 edges + the divider
+// wrap wait).  No ready / busy / response signal moves any event; a capture without out_valid, a launch while active,
+// an arithmetic exception or a Sinkhorn fault is a sticky fault.
+// MUT_PRE (bench only): the pre path skips + eps.  MUT_SK (bench only): the Sinkhorn steady step lands one stage early.
 // S81U-GUNIT3 (10-17): the exp and fdiv units (11.5k flops) live in the side leaf dsdv_gunit_l5f; this module drives
 // their registered operands out (x_* ports) and takes their results back XS = 3 edges later than in place (L5f input
 // flop, L5f output flop, L5's input flop): LE / LD below include XS, so the calendar stays exact.  MAX is a two-stage
 // tree (pairs, then the pair winners; first maximum wins ties exactly as the sequential scan: `greater` is a total
-// preorder): the one-cycle 3-deep scan was TT -970 ps.  P3 = MAX + 2.  The Sinkhorn gate's enable is a flop
-// (en_q = next edge is a wrap; set during reset), never the rst_n port: the gate then sees one extra edge at the first
-// edge after reset release, while the Sinkhorn is idle.
+// preorder): the one-cycle 3-deep scan was TT -970 ps.  P3 = MAX + 2.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_tail #(
-    parameter integer SK = 9,
     parameter integer ITERS = 20,
     parameter [31:0] HC_EPS = 32'h358637bd,
-    parameter integer MUT_PRE = 0
+    parameter integer MUT_PRE = 0,
+    parameter integer MUT_SK = 0
 ) (
     input  wire          clk, rst_n,
     input  wire          launch,
@@ -60,9 +58,9 @@ module dsdv_gunit_tail #(
     localparam integer P1 = 1, P2 = P1 + 24 + LMe, MAX = P2 + 24 + LAe, P3 = MAX + 2, P4 = P3 + 16 + LAe;
     localparam integer P5 = P4 + 24 + LEe, P6 = P5 + 8 + LAe, P7 = P6 + 8 + LDe;
     localparam integer EREADY = P7 + 8 + ((LMe > LAe) ? LMe : LAe);
-    localparam integer CAP = 42 * SK;
-    localparam integer L = EREADY + 1 + SK + CAP + 2;
-    localparam integer CW = $clog2(SK);
+    localparam integer SLAT = 12 + (2 * ITERS - 1) * 11;   // ot_hdc_sinkhorn_p LAT (D0 12, DS 11): 441 for ITERS 20
+    localparam integer CAP = SLAT + 1;
+    localparam integer L = EREADY + CAP + 3;
     // ---------------------------------------------------------------- calendar
     reg active; reg [9:0] age;
     reg [31:0] t [0:23], b [0:23], s [0:2], mx [0:3], mp [0:7];
@@ -110,21 +108,12 @@ module dsdv_gunit_tail #(
         else if (a[31] != c[31]) greater = !a[31];
         else greater = a[31] ? (a[30:0] < c[30:0]) : (a[30:0] > c[30:0]);
     endfunction
-    // ---------------------------------------------------------------- Sinkhorn on the gated stream clock
-    reg [CW-1:0] cnt;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) cnt <= {CW{1'b0}};
-        else cnt <= (cnt == CW'(SK - 1)) ? {CW{1'b0}} : cnt + 1'b1;
-    wire wrap = (cnt == CW'(SK - 1));                 // the gated clock's edge is the core edge ending this cycle
-    reg en_q;                                         // == wrap after every edge out of reset (cnt counts mod SK)
-    always @(posedge clk or negedge rst_n) if (!rst_n) en_q <= 1'b1; else en_q <= (cnt == CW'(SK - 2));
-    wire gclk;
-    ot_hdc_cg u_gate (.clk(clk), .en(en_q), .gclk(gclk));
+    // ---------------------------------------------------------------- Sinkhorn, pipelined on the core clock
     wire [511:0] se, sy; wire sr, sv, sf, sbusy;
     genvar gj;
     generate for (gj = 0; gj < 16; gj = gj + 1) begin : g_se assign se[32 * gj +: 32] = t[gj + 8]; end endgenerate
     reg sl;
-    ot_hdc_sinkhorn #(.ITERS(ITERS), .EPS(HC_EPS)) u_sinkh (.clk(gclk), .rst_n(rst_n), .in_valid(sl), .in_ready(sr),
+    ot_hdc_sinkhorn_p #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK)) u_sinkh (.clk(clk), .rst_n(rst_n), .in_valid(sl), .in_ready(sr),
         .in_e(se), .out_valid(sv), .y(sy), .fault(sf), .busy(sbusy));
     // ---------------------------------------------------------------- control, fixed latency
     reg armed, captured, capture_q, flt; reg [9:0] sage;
@@ -141,9 +130,9 @@ module dsdv_gunit_tail #(
                 active <= 1'b1; age <= 10'd1; armed <= 1'b0; captured <= 1'b0;
             end
             if ((mo && mf) || (ao && af) || (eo && ef) || (do_ && df)) flt <= 1'b1;
-            if (wrap && sl) begin if (!sr) flt <= 1'b1; end
-            if (active && !armed && age >= 10'(EREADY + 1) && wrap) begin sl <= 1'b1; armed <= 1'b1; sage <= 10'd1; end
-            else if (sl && wrap) sl <= 1'b0;
+            if (sl && !sr) flt <= 1'b1;
+            if (active && !armed && age == 10'(EREADY + 1)) begin sl <= 1'b1; armed <= 1'b1; sage <= 10'd1; end
+            else sl <= 1'b0;
             if (armed && !captured) begin
                 sage <= sage + 1'b1;
                 if (sage == 10'(CAP)) begin capture_q <= 1'b1; captured <= 1'b1; end

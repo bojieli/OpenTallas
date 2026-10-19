@@ -16,6 +16,9 @@
 // S81U-GUNIT6 (10-17, native pin rules, NATIVE-2 lessons): rst_n drives only ot_rst_relay (4 kept region copies:
 // feedthroughs, input flops, the tail, the CTL rows); release +3 edges after the port (transaction-level exact; the
 // tail's Sinkhorn gate counter is phase-free: result latency is independent of the divider phase).  0 data edges.
+// S81-SAFE-FIX/GUNIT (10-19, SAFE-DESIGN review after the first route): the tail's Sinkhorn is pipelined on the core
+// clock (ot_hdc_sinkhorn_p; the ICG + 9-cycle multicycle SDC are gone; HC result +55 edges), the table select is
+// replicated (kept, 108 copies), reset lands in 2 + 1 registered stages (ot_rst_relay) as before.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l5 #(
     parameter integer MUT = 0
@@ -60,18 +63,34 @@ module dsdv_gunit_l5 #(
             for (j = 0; j < 8; j = j + 1) base_t[48 * wa[8] + 8 * (wa[5:0] - 6'd56) + j] <= wd[32 * j +: 32];
         if (wa[5:0] == 6'd62) begin scl_t[2 * wa[8]] <= wd[95:0]; scl_t[2 * wa[8] + 1] <= wd[191:96]; end
     end
+    // S81-SAFE-FIX/GUNIT (10-19): the job's table select {tj_set, tj_w} drove the whole 4:1 table read (3,456 loads on one
+    // flop).  It is stable from L4's mix_go (>= 29 edges before launch), so it is replicated in two KEPT ranks (8 copies
+    // -> 108 copies, one per 8-bit read group, <= ~32 mux loads each) that settle long before the tail takes the bases /
+    // scales at launch: 0 edges.
     reg [767:0] bases; reg [95:0] scales;
-    always @(posedge clk) begin
-        for (j = 0; j < 24; j = j + 1) bases[32 * j +: 32] <= base_t[48 * tj_set + 24 * tj_w + j];
-        scales <= scl_t[2 * tj_set + tj_w];
-    end
+    genvar g;
+    generate
+        for (g = 0; g < 8; g = g + 1) begin : g_tj1
+            (* keep = "true" *) reg s, w;
+            always @(posedge clk) begin s <= tj_set; w <= tj_w; end
+        end
+        for (g = 0; g < 108; g = g + 1) begin : g_tj2
+            (* keep = "true" *) reg s, w;
+            always @(posedge clk) begin s <= g_tj1[g % 8].s; w <= g_tj1[g % 8].w; end
+            if (g < 96) begin : g_b                     // base word g / 4, byte g % 4
+                always @(posedge clk) bases[32 * (g / 4) + 8 * (g % 4) +: 8] <= base_t[48 * s + 24 * w + g / 4][8 * (g % 4) +: 8];
+            end else begin : g_s                        // scale byte g - 96
+                always @(posedge clk) scales[8 * (g - 96) +: 8] <= scl_t[2 * s + w][8 * (g - 96) +: 8];
+            end
+        end
+    endgenerate
     // ---------------------------------------------------------------- the tail
     wire tl_v, tl_f; wire [767:0] coef;
     reg qe_v, qe_f, qd_v, qd_f; reg [31:0] qe_y, qd_y;   // L5f results: input flops
     always @(posedge clk or negedge rq[1])
         if (!rq[1]) begin qe_v <= 1'b0; qd_v <= 1'b0; end else begin qe_v <= ye_v; qd_v <= yd_v; end
     always @(posedge clk) begin qe_y <= ye_y; qe_f <= ye_f; qd_y <= yd_y; qd_f <= yd_f; end
-    dsdv_gunit_tail #(.MUT_PRE(MUT == 8 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rq[2]), .launch(ln), .mixes(mx), .bases(bases), .scales(scales),
+    dsdv_gunit_tail #(.MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rq[2]), .launch(ln), .mixes(mx), .bases(bases), .scales(scales),
         .result_v(tl_v), .result(coef), .fault(tl_f),
         .xe_v(xe_v), .xe_x(xe_x), .xe_vo(qe_v), .xe_y(qe_y), .xe_f(qe_f),
         .xd_v(xd_v), .xd_b(xd_b), .xd_vo(qd_v), .xd_y(qd_y), .xd_f(qd_f));
