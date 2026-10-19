@@ -1,0 +1,30 @@
+2026-10-19T15:09:06-07:00
+ot-epyc6
+44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50  /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys
+1605936   16409    01:16:32 00:00:00  3892 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/kv-native-joint-proof-1019/lane8 || { echo OT_RUN_NOCD otrun-ubuntu-2457768-443153831 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 32 --tag otrun-ubuntu-2457768-443153831 --max-wait 120 -- bash -lc 'set +e; /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_induct.log -q -s joint_induct.ys > joint_induct.stdout 2> joint_induct.stderr; rc=$?; echo "$rc" > joint_induct.rc; /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_base.log -q -s joint_base.ys > joint_base.stdout 2> joint_base.stderr; base_rc=$?; echo "$base_rc" > joint_base.rc; echo "INDUCT_RC=$rc BASE_RC=$base_rc"; exit "$base_rc"'; rc=$?; echo "OT_RUN_EXIT otrun-ubuntu-2457768-443153831 $rc" >&2; exit $rc
+1605982   16409    01:16:32 00:00:00  3876 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/kv-native-joint-proof-1019/ktree || { echo OT_RUN_NOCD otrun-ubuntu-2457769-443153841 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 32 --tag otrun-ubuntu-2457769-443153841 --max-wait 120 -- bash -lc 'set +e; /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_induct.log -q -s joint_induct.ys > joint_induct.stdout 2> joint_induct.stderr; rc=$?; echo "$rc" > joint_induct.rc; /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_base.log -q -s joint_base.ys > joint_base.stdout 2> joint_base.stderr; base_rc=$?; echo "$base_rc" > joint_base.rc; echo "INDUCT_RC=$rc BASE_RC=$base_rc"; exit "$base_rc"'; rc=$?; echo "OT_RUN_EXIT otrun-ubuntu-2457769-443153841 $rc" >&2; exit $rc
+1606152 1605936    01:16:32 00:00:00  3980 /usr/bin/bash -lc set +e; /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_induct.log -q -s joint_induct.ys > joint_induct.stdout 2> joint_induct.stderr; rc=$?; echo "$rc" > joint_induct.rc; /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_base.log -q -s joint_base.ys > joint_base.stdout 2> joint_base.stderr; base_rc=$?; echo "$base_rc" > joint_base.rc; echo "INDUCT_RC=$rc BASE_RC=$base_rc"; exit "$base_rc"
+1606221 1605982    01:16:32 00:00:00  4032 /usr/bin/bash -lc set +e; /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_induct.log -q -s joint_induct.ys > joint_induct.stdout 2> joint_induct.stderr; rc=$?; echo "$rc" > joint_induct.rc; /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_base.log -q -s joint_base.ys > joint_base.stdout 2> joint_base.stderr; base_rc=$?; echo "$base_rc" > joint_base.rc; echo "INDUCT_RC=$rc BASE_RC=$base_rc"; exit "$base_rc"
+1606259 1606152    01:16:31 00:00:00  1704 /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_induct.log -q -s joint_induct.ys
+1606260 1606259    01:16:31 03:51:24 4381876 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_induct.log -q -s joint_induct.ys
+3675083 1606221       16:43 00:00:00  1704 /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_base.log -q -s joint_base.ys
+3675084 3675083       16:43 02:10:22 2736504 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_base.log -q -s joint_base.ys
+ktree
+-rw-rw-r-- 1 ubuntu ubuntu 5821589 2026-10-19 15:08:57.863312132 -0700 joint_base.log
+-rw-rw-r-- 1 ubuntu ubuntu      45 2026-10-19 14:52:27.478571555 -0700 joint_base.stderr
+-rw-rw-r-- 1 ubuntu ubuntu       0 2026-10-19 14:52:23.125598690 -0700 joint_base.stdout
+-rw-rw-r-- 1 ubuntu ubuntu 1119961 2026-10-19 13:52:15.962998567 -0700 joint_base.ys
+-rw-rw-r-- 1 ubuntu ubuntu 5367124 2026-10-19 14:52:21.866606538 -0700 joint_induct.log
+-rw-rw-r-- 1 ubuntu ubuntu       2 2026-10-19 14:52:23.124598696 -0700 joint_induct.rc
+-rw-rw-r-- 1 ubuntu ubuntu     887 2026-10-19 14:52:23.124598696 -0700 joint_induct.stderr
+-rw-rw-r-- 1 ubuntu ubuntu       0 2026-10-19 13:52:34.412618746 -0700 joint_induct.stdout
+-rw-rw-r-- 1 ubuntu ubuntu 1119732 2026-10-19 13:52:15.960730899 -0700 joint_induct.ys
+-rw-rw-r-- 1 ubuntu ubuntu 1119665 2026-10-19 13:52:15.960608516 -0700 joint_prelude.ys
+0
+lane8
+-rw-rw-r-- 1 ubuntu ubuntu 1296978 2026-10-19 13:52:16.023586471 -0700 joint_base.ys
+-rw-rw-r-- 1 ubuntu ubuntu 6322391 2026-10-19 14:25:56.672260776 -0700 joint_induct.log
+-rw-rw-r-- 1 ubuntu ubuntu      45 2026-10-19 13:52:39.582587322 -0700 joint_induct.stderr
+-rw-rw-r-- 1 ubuntu ubuntu       0 2026-10-19 13:52:34.302619415 -0700 joint_induct.stdout
+-rw-rw-r-- 1 ubuntu ubuntu 1296749 2026-10-19 13:52:16.023042638 -0700 joint_induct.ys
+-rw-rw-r-- 1 ubuntu ubuntu 1296682 2026-10-19 13:52:16.022608349 -0700 joint_prelude.ys
