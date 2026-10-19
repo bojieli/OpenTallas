@@ -65,17 +65,23 @@ module ot_hbm_r14_aq_pc_safe #(
   reg [RW_ROW-1:0] look_row[0:31];
   always @(posedge clk or negedge rst_n)begin
     if(!rst_n)begin qfresh<=0;qfresh_addr<=0;qfresh_data<=0;
-      for(integer b=0;b<32;b=b+1)begin bank_n[b]<=0;look_row[b]<=0;end
+      for(integer b=0;b<32;b=b+1)begin bank_n[b]<=0;end
     end else begin
       qfresh<=qpush;qfresh_addr<=qwp;qfresh_data<={wr_bank,wr_col,wr_row,wr_rd};
       for(integer b=0;b<32;b=b+1)begin
         bank_n[b]<=bank_n[b]+((qpush&&wr_bank==b)?1'b1:1'b0)-((wr_ok&&hb==b)?1'b1:1'b0);
         // The globally oldest head is authoritative across row conflicts. Incoming
         // traffic establishes lookahead while a bank has no outstanding sectors.
-        if(q_ne&&hb==b)look_row[b]<=hrow;
-        else if(qpush&&wr_bank==b&&bank_n[b]==0)look_row[b]<=wr_row;
+
       end
     end
+  end
+  always @(posedge clk)begin
+    for(integer b=0;b<32;b=b+1)begin
+      if(q_ne&&hb==b)look_row[b]<=hrow;
+      else if(qpush&&wr_bank==b&&bank_n[b]==0)look_row[b]<=wr_row;
+    end
+    if(row_fire&&c_op==ACT)orow[c_bank]<=c_row;
   end
   reg [WQW:0] q_n; reg [WQW-1:0] q_rp;
   wire [4:0] hb=qhead[29:25], hc=qhead[24:20]; wire [RW_ROW-1:0] hrow=qhead[19:1]; wire hr=qhead[0];   // registered head (valid when q_n != 0)
@@ -228,7 +234,7 @@ module ot_hbm_r14_aq_pc_safe #(
       open <= 0; refreshed <= 0; blk <= 0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
       rtw_c <= 0; wtr_c <= 0; phase <= 0; rkey <= 127; pin <= 0; ep <= 0; skip <= 0; sact <= 0; c_v <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0; c_row <= 0;
       for (integer f = 0; f < 4; f = f + 1) fawq[f] <= 0;
-      for (integer o = 0; o < 32; o = o + 1) orow[o] <= 0;
+
     end else begin
       // queue
       if(qpush)tail_set<=wr_bank[4:2];
@@ -252,7 +258,7 @@ module ot_hbm_r14_aq_pc_safe #(
       if (ref_due && !skip && (!row_fire || c_op != REFPB || |(blk & open) || |(blk & ~aok_z))) fault_r <= 1;
       if (row_fire) case (c_op)
         ACT: begin
-          open <= open | c_oh; orow[c_bank] <= c_row; rrds_c <= 2'(T_RRDS - 1);
+          open <= open | c_oh; rrds_c <= 2'(T_RRDS - 1);
           begin : fawt
             reg tk; tk = 0;
             for (integer f = 0; f < 4; f = f + 1) if (!tk && fawq[f] == 0) begin fawq[f] <= 4'(T_FAW - 1); tk = 1; end

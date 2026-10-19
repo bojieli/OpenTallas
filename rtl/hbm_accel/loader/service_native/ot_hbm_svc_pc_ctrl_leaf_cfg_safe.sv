@@ -159,8 +159,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       wire[1:0]j=2'(b)-wp[1:0];wire we=accepted&&{1'b0,j}<length;
       wire[QW-1:0]wa=wp+QW'(j);
       wire[78:0]wd={incoming[29:15],i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+j)^incoming[16:15]),incoming[11:7],i_tag,4'(j),i_wstrb};
-      always @(posedge clk or negedge lrst_n)if(!lrst_n)begin mf_v[b]<=0;mf_addr[b]<=0;mf_data[b]<=0;end
-      else begin mf_v[b]<=we;mf_addr[b]<=wa[QW-1:2];mf_data[b]<=wd;end
+      always @(posedge clk or negedge lrst_n)if(!lrst_n)mf_v[b]<=0;else mf_v[b]<=we;
+      always @(posedge clk)begin mf_addr[b]<=wa[QW-1:2];mf_data[b]<=wd;end
       ot_sram_1r1w_128x256_m1_r2c2 u_head(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(next_rp>>2)),.rd_out(qh[b]),
         .w_ce_in(we),.w_addr_in(7'(wa>>2)),.wd_in({177'b0,wd}),.w_mask_in({256{1'b1}}),
         .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
