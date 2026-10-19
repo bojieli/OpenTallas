@@ -1,0 +1,165 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "results/arch/s81_l20_1019/die/sec/dsdv_idx_die_sec.v",
+ "top": "dsdv_idx_die_sec",
+ "verdict": "PASS",
+ "failing": [],
+ "summary": {
+  "masters": 4,
+  "instances": 19,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 0,
+  "output_open_ports": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 1,
+  "pad_bits": 276,
+  "spare_out_bits": 513,
+  "unresolved_children": 0,
+  "ambiguous_children": 0,
+  "variant_children": 0
+ },
+ "masters": {
+  "dsdv_idx_qf": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_iqf"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_idx_rg": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_irg_00",
+    "u_irg_01",
+    "u_irg_02"
+   ],
+   "param_sets": {
+    "{\"SRAM_MACRO\": \"1\"}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {
+    "si": 276
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_idx_tx": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_itx"
+   ],
+   "param_sets": {
+    "{\"SRAM_MACRO\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_idx_vmux": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_ivm"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  }
+ },
+ "undriven_nets": {},
+ "unread_nets": {},
+ "unread_classes": {},
+ "undriven_classes": {},
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "child_closure": {
+  "modules": 17,
+  "unresolved_children": {},
+  "model_children": {},
+  "variant_children": {},
+  "ambiguous_children": {},
+  "elab_traps": {},
+  "prefer_lists": [],
+  "ref_tile_specs_used": []
+ },
+ "pads_declared": [
+  "dsdv_idx_rg:qo:u_irg_15",
+  "dsdv_idx_rg:si:u_irg_00"
+ ],
+ "die_sha256": "cdc21ba8615335ac926ed09a15b274d991641e70951b663f54531beab367e7d9",
+ "straps_declared": [
+  "dsdv_idx_rg:sid"
+ ],
+ "params_file": null,
+ "rtl_roots": [
+  "rtl",
+  "physical/asap7_memory_macros"
+ ],
+ "rtl_files": [],
+ "defines": []
+}
