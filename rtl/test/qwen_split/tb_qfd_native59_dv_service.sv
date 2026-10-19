@@ -129,7 +129,7 @@ module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_
  .layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd[0]?cmd:380'd0),
  .native_issue(issue),.kv_we(we),.kv_waddr(wa),.kv_wdata(wd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),
  .x3(o_x3),.x3_identity(o_xid),.x3_generation(o_xg),.vm_q_epoch(o_qe),.vm_q_start(o_qs),.q_committed(q_committed),.q_fault(1'b0),.q(q),
- .q_slot(safe_qslot),.q_slot_beat(safe_qbeat),.tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(o_tv),.native_tx_payload(o_td),
+ .q_slot(qslot),.q_slot_beat(qb),.tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(o_tv),.native_tx_payload(o_td),
  .native_rx_v(rxv),.native_rx_payload(rxdata),.rx_slot(rxslot),.rx_slot_kind(rk),.rx_slot_beat(rb),.vm_ar(vm_ar),
  .write_commit_v(raw_v),.write_commit_line(raw_line),.write_commit_mask(raw_mask),.visibility_slot(visibility_slot),
  .complete_slot(complete_slot),.completed(o_done),.native_ret(o_ret),.fault(o_fault));
@@ -144,7 +144,7 @@ module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_
  .layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd),
  .dd_i(dd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),
  .x3(n_x3),.x3_identity(n_xid),.x3_generation(n_xg),
- .q_slot(qslot),.q_slot_beat(qb),.tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(n_tv),.native_tx_payload(n_td),
+ .q_slot(safe_qslot),.q_slot_beat(safe_qbeat),.tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(n_tv),.native_tx_payload(n_td),
  .native_rx_v(rxv),.native_rx_payload(rxdata),.rx_slot(rxslot),.rx_slot_kind(rk),.rx_slot_beat(rb),.dr_o(dr),
  .emb_code_re(e_cre),.emb_code_addr(e_caddr),.emb_scale_re(e_sre),.emb_scale_addr(e_saddr),.emb_code_q(e_cq),.emb_scale_q(e_sq),
  .visibility_slot(visibility_slot),.complete_slot(complete_slot),.completed(n_done),.native_ret(n_ret),.fault(n_fault));
