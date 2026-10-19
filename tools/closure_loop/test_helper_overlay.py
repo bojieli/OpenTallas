@@ -470,6 +470,47 @@ class HelperOverlay(unittest.TestCase):
             rows = {f['path']: f for f in job['route_overlay_plan']['files']}
             self.assertEqual(rows[pub]['resolution'], 'publish_refresh')
             self.assertEqual(rows[self.rel]['git_blob'], HO.blob_id(self.new))
+
+    def test_interrupted_publish_refresh_is_adopted(self):
+        # QXPQ-UNSTICK 10-19: the publish refresh rewrote cl/ (exporter + sidecar) on the host, then the daemon restarted
+        # before the job state was saved; the stored job kept the old plan and every step failed 'sidecar differs'
+        # (dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb NEEDS_HUMAN).  The run must be re-entered with the installed plan.
+        import copy
+        pub = 'tools/view_export_x.py'
+        (self.root / pub).write_bytes(b'# exporter v1\n'); self.git('add', pub); self.git('commit', '-m', 'exporter v1')
+        self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+        (self.daemon / pub).write_bytes(b'# exporter v1\n')
+        with patch.object(CL, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'PUBLISH_ONLY', (pub,)), patch.object(CL, 'event'):
+            plan, _ = HO.capture_plan(self.daemon, self.root)
+            job = {'freeze_helper_overlay': True, 'route_overlay_plan': plan}
+            run = Path(self.tmp.name) / 'interrupted'
+            CL.ship_helpers('local', str(run), job)
+            saved = copy.deepcopy(job)                       # the state on disk before the refresh
+            fixed = b'# exporter fix on main\n'
+            (self.root / pub).write_bytes(fixed); self.git('add', pub); self.git('commit', '-m', 'exporter fix')
+            self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+            (self.daemon / pub).write_bytes(fixed)
+            CL.ship_helpers('local', str(run), job)          # refresh shipped; this job dict is then lost (restart)
+            self.assertEqual((run / 'cl/view_export_x.py').read_bytes(), fixed)
+            with self.assertRaisesRegex(ValueError, 'sidecar differs'):
+                HO.verify_installed_plan(run / 'cl', saved['route_overlay_plan'])
+            CL.ship_helpers('local', str(run), saved)        # old code: FROZEN_HELPER_OVERLAY sidecar differs
+            self.assertEqual(saved['route_overlay_plan'], job['route_overlay_plan'])
+            self.assertEqual(saved['route_overlay_plan_gate'], plan)
+            self.assertEqual(len(saved['helper_overlay_publish_adoptions']), 1)
+            self.assertEqual((run / 'cl/view_export_x.py').read_bytes(), fixed)
+            self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), self.new)
+            # a non-publish difference in the sidecar still refuses
+            bad = copy.deepcopy(saved)
+            rows = bad['route_overlay_plan']['files']
+            for r in rows:
+                if r['path'] != pub:
+                    r['sha256'] = '0' * 64
+            bad['route_overlay_plan']['content_sha256'] = HO.digest(rows)
+            with self.assertRaisesRegex(ValueError, 'FROZEN_HELPER_OVERLAY'):
+                CL.ship_helpers('local', str(run), bad)
             CL.ship_helpers('local', str(run), job)                                     # verifies, no mutation
             self.assertFalse(job['helper_overlay_verification']['mutation'])
             payloads, _src = HO.recover_frozen_payloads(self.root, CL.HELPER_STORE, job['route_overlay_plan'])

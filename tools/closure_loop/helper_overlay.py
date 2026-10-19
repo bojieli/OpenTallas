@@ -698,6 +698,43 @@ def verify_installed_plan(directory, plan):
             "content_sha256": plan["content_sha256"], "files": len(rows)}
 
 
+def publish_only_pair(a, b):
+    """True when plans a and b (both self-consistent) differ ONLY in PUBLISH_ONLY rows of the same mode: one is a
+    publish refresh of the other (closure_loop._publish_refresh)."""
+    try:
+        ra = {r["path"]: r for r in frozen_rows(a)}
+        rb = {r["path"]: r for r in frozen_rows(b)}
+    except ValueError:
+        return False
+    if set(ra) != set(rb) or a.get("origin_main") != b.get("origin_main"):
+        return False
+    diff = [p for p in ra if ra[p] != rb[p]]
+    return bool(diff) and all(p in PUBLISH_ONLY and ra[p]["mode"] == rb[p]["mode"] for p in diff)
+
+
+def installed_plan_receipt(directory, plan):
+    """verify_installed_plan, except that an installed sidecar which is a PUBLISH_ONLY refresh of the job's plan (or the
+    reverse) is verified on its own rows and returned as receipt["installed_plan"] for the caller to sanction and adopt.
+
+    QXPQ-UNSTICK 2026-10-19: a publish refresh rewrites cl/ (view_export.py + sidecar) on the host BEFORE the daemon saves
+    the job; the daemon restarted at 06:25 between the two, so dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb kept the old plan
+    while its routed run held the refreshed one, and every later step failed 'sidecar differs' -> NEEDS_HUMAN."""
+    try:
+        return verify_installed_plan(directory, plan)
+    except ValueError as ex:
+        if "sidecar differs" not in str(ex):
+            raise
+        sidecar = Path(directory) / "helper_overlay_plan.json"
+        try:
+            installed = json.loads(sidecar.read_text())
+        except (OSError, ValueError):
+            raise ex
+        if not publish_only_pair(plan, installed):
+            raise
+        receipt = verify_installed_plan(directory, installed)
+        return dict(receipt, installed_plan=installed, sidecar_mismatch="publish_only")
+
+
 def verify_staged_helpers(directory, plan, paths):
     """Verify the helpers actually shipped into an immutable gate source tree."""
     rows = {row["path"]: row for row in frozen_rows(plan)}

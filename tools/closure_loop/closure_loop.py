@@ -2936,12 +2936,14 @@ if "abstract_pin_stub" not in t and t.count(a) == 1:
 """
 
 
-def installed_helper_receipt(host, run, frozen):
-    """Inspect the executed helper directory without changing a running snapshot."""
+def installed_helper_receipt(host, run, frozen, allow_publish=False):
+    """Inspect the executed helper directory without changing a running snapshot.  allow_publish: an installed sidecar
+    that differs from `frozen` only in PUBLISH_ONLY rows verifies on its own rows (receipt["installed_plan"])."""
+    fn = "installed_plan_receipt" if allow_publish else "verify_installed_plan"
     if is_local(host):
-        return HO.verify_installed_plan(Path(run) / "cl", frozen)
+        return getattr(HO, fn)(Path(run) / "cl", frozen)
     code = ("exec(" + repr(Path(HO.__file__).read_text()) + ")\n"
-            "print(json.dumps(verify_installed_plan(" + repr(run + "/cl") + ","
+            "print(json.dumps(" + fn + "(" + repr(run + "/cl") + ","
             + repr(frozen) + ")))\n")
     result = ssh(host, "python3 -", input=code, timeout=120)
     if result.returncode:
@@ -2984,6 +2986,31 @@ def _publish_refresh(frozen):
     return refreshed, payloads, {f["path"]: f["mode"] for f in files}, sanctioned
 
 
+def _adopt_installed_publish_plan(job, frozen, installed, host, run):
+    """INTERRUPTED PUBLISH REFRESH (QXPQ-UNSTICK 2026-10-19): the run's verified cl/ holds a plan that differs from the
+    job's only in PUBLISH_ONLY rows (a publish refresh shipped to the host, then the daemon restarted before the job state
+    was saved -- or the reverse).  Adopt the installed plan when every differing row is a main revision of that publish
+    helper and its bytes are recoverable, so the job follows what its run dir really holds; _publish_refresh then brings
+    the exporter to origin/main again if needed.  Anything else still refuses (sidecar differs)."""
+    head = _ovl_head() or HO.main_head(REPO)
+    fr = {r["path"]: r for r in HO.frozen_rows(frozen)}
+    ir = {r["path"]: r for r in HO.frozen_rows(installed)}
+    for rel in (p for p in ir if ir[p] != fr.get(p)):
+        hist = HO._main_blobs(REPO, head, rel)
+        if rel not in HO.PUBLISH_ONLY or ir[rel]["git_blob"] not in hist or fr[rel]["git_blob"] not in hist:
+            raise ValueError(f"original helper sidecar differs from job frozen plan ({rel} is not a main revision of a "
+                             f"publish helper)")
+    payloads, _src = HO.recover_frozen_payloads(REPO, HELPER_STORE, installed)
+    HO.store_payloads(HELPER_STORE, installed, payloads)
+    job.setdefault("route_overlay_plan_gate", frozen)
+    job.setdefault("helper_overlay_publish_adoptions", []).append(dict(
+        at=now_iso(), host=host, run=run, job_plan=frozen.get("content_sha256"), installed=installed.get("content_sha256")))
+    event(job, f"PUBLISH-ADOPT: run cl/ holds plan {str(installed.get('content_sha256'))[:12]} (publish rows only differ "
+               f"from job plan {str(frozen.get('content_sha256'))[:12]}; interrupted publish refresh) -> adopted")
+    job["route_overlay_plan"] = installed
+    return installed
+
+
 def ship_helpers(host, run, job=None):
     """Install new helpers, or verify and reuse an already executed frozen set."""
     # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
@@ -2998,7 +3025,10 @@ def ship_helpers(host, run, job=None):
             raise ValueError("FROZEN_HELPER_OVERLAY: original job helper plan is missing; preserve original execution")
         if frozen is not None:
             try:
-                receipt = installed_helper_receipt(host, run, frozen)
+                receipt = installed_helper_receipt(host, run, frozen, allow_publish=True)
+                installed = receipt.pop("installed_plan", None)
+                if installed is not None and receipt["status"] == "verified_original":
+                    frozen = _adopt_installed_publish_plan(job, frozen, installed, host, run)
                 if receipt["status"] == "verified_original":
                     HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
                     job["helper_overlay_verification"] = dict(receipt, verified_at=now_iso(),
