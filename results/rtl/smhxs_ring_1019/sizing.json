@@ -1,0 +1,29 @@
+{
+  "prior": "788-bit x3 E3 delay line",
+  "width": 788,
+  "ring_slots": 4,
+  "macros": 4,
+  "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+  "allocated_bits": 131072,
+  "active_bits": 3152,
+  "read_bits_per_cycle": 788,
+  "write_bits_per_cycle": 788,
+  "replicas": 1,
+  "mux": "four direct 256-bit SRAM output slices, no wide runtime mux",
+  "hard_area_um2": 15566.30784,
+  "new_total_hard_area_um2": 31132.61568,
+  "outline_um": [
+    432,
+    345.6
+  ],
+  "hard_fill": 0.208525,
+  "cycle_delta": 0,
+  "throughput_words_per_cycle": 1,
+  "latency": "r0w -> negedge macro lockup -> write -> read(previous slot) -> iw; replaces w3/w3b without changing output edge",
+  "routing": "N outputs 1639/432=3.80 pins/um; S bk1 2069/432=4.79; W rl1+ohl1 831/345.6=3.21; max direct-stage reach checked by gate",
+  "schedule": "existing m3 latency unchanged; two reset landing cycles already required by hxh",
+  "area": "synthesis will determine final fill; 31,133 hard + predecessor 8,809 std = 35.7% conservative pre-gate estimate",
+  "outline_growth_um2": 101616.76800000001,
+  "total_fill_estimate": 0.26752732553155006,
+  "fill_waiver": "HBM coordinator08:00: proceed fully safe432x345.6; ~27%fill waived because lattice+macro-face channels constrain size"
+}

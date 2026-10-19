@@ -2532,21 +2532,61 @@ module ot_hbm_accel_smh_leaf #(
     // ---- E3: line and control (sm_pq leaf) ----
     reg  [1:0]     c3v;
     reg  [CW-3:0]  c3d;
+`ifndef OT_SMH_XSRING
     reg  [WSW-1:0] w3;
+`endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) c3v <= 2'b00;
         else c3v <= r0v;
-    always @(posedge clk) begin c3d <= r0d; w3 <= r0w; end
+    always @(posedge clk) c3d <= r0d;
+`ifndef OT_SMH_XSRING
+    always @(posedge clk) w3 <= r0w;
+`endif
     // (margin m3) E3b: the row pipeline one register deeper, in step with the x-store read address registered once
     // more at the macro pins (r1x / r1a below): +1 cycle on every row read; the x write gets the same +1 at the macro
     // inputs (wce2 / wa2 / wd2 / wm2), so the write-before-read margin is unchanged
     reg  [1:0]     c3bv;
     reg  [CW-3:0]  c3bd;
-    reg  [WSW-1:0] w3b;
+`ifdef OT_SMH_XSRING
+    // Four-slot fixed-latency SRAM ring: r0w is the existing input stage;
+    // write at E3 and read the prior slot at E3b. No same-address collision,
+    // stalls, runtime wide mux, or added data edge. Half-cycle macro launches
+    // keep the SRAM hold window independent of its clock-pin skew.
+    reg [1:0] wr_slot;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) wr_slot <= 2'd0;
+        else wr_slot <= wr_slot + 2'd1;
+    wire [NXL*256-1:0] ring_wd = {{(NXL*256-WSW){1'b0}}, r0w};
+    wire [NXL*256-1:0] ring_rd;
+    genvar rw;
+    generate for (rw=0; rw<NXL; rw=rw+1) begin : g_wr_ring
+        reg [1:0] wa_n, ra_n;
+        reg [255:0] wd_n;
+        always @(negedge clk) begin
+            wa_n <= wr_slot;
+`ifdef OT_SMH_MUT_XSRING
+            ra_n <= wr_slot - 2'd2;
+`else
+            ra_n <= wr_slot - 2'd1;
+`endif
+            wd_n <= ring_wd[256*rw +: 256];
+        end
+        ot_sram_1r1w_128x256_m1_r2c2 u_w (
+            .clk(clk), .r_ce_in(1'b1), .r_addr_in({5'd0,ra_n}), .rd_out(ring_rd[256*rw +: 256]),
+            .w_ce_in(1'b1), .w_addr_in({5'd0,wa_n}), .wd_in(wd_n), .w_mask_in(256'hffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    end endgenerate
+    wire [WSW-1:0] w3b = ring_rd[WSW-1:0];
+`else
+    reg [WSW-1:0] w3b;
+`endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) c3bv <= 2'b00;
         else c3bv <= c3v;
-    always @(posedge clk) begin c3bd <= c3d; w3b <= w3; end
+    always @(posedge clk) c3bd <= c3d;
+`ifndef OT_SMH_XSRING
+    always @(posedge clk) w3b <= w3;
+`endif
     // ---- x write: the slice by strap rotation, masks by strap thermometer; two registered stages ----
     // W1: rotate by the offset's high bits (a[10:6]), latch the beat's one-hot at g / g + 1 per mask group;
     // W2 (= E3 level): rotate by the low bits, per-bit masks, per-macro write enables.  The rotation is a shifter
@@ -2973,11 +3013,19 @@ module ot_hbm_accel_smh_xs #(parameter integer TAGW = 16, parameter integer NBEA
 `ifndef OT_SMH_XSE
     assign o_ifirst_e = o_ifirst; assign o_ilast_e = o_ilast; assign o_itag_e = o_itag;
 `endif
+`ifdef OT_SMH_XSRST
+    // Face reset landing: only the data pin of rst_l0 sees the raw port.
+    (* keep = "true" *) reg rst_l0, rst_l1;
+    always @(posedge clk) begin rst_l0 <= rst_a; rst_l1 <= rst_l0; end
+    wire rst_face = rst_l1;
+`else
+    wire rst_face = rst_a;
+`endif
     wire rl_n;
 `ifdef OT_SMH_RSTRELAY
-    ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rl_n));
+    ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_face), .rst_n(rl_n));
 `else
-    assign rl_n = rst_a;
+    assign rl_n = rst_face;
 `endif
     // input lockups (el1011-hbm-smh, xs -cal route: -72 ps hold at the u_bkd2 landing, TNS -54 ns): the 2,900 landing bits
     // hop 21.6 um from pt_w's posedge launch flops on a DIFFERENT clock tree; a NEGEDGE stage at the pins gives every bit a
@@ -3005,7 +3053,7 @@ module ot_hbm_accel_smh_xs #(parameter integer TAGW = 16, parameter integer NBEA
         ot_hbm_accel_smh_kreg #(.W(NBEAT)) u (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(ohl), .q(ohr[gi*NBEAT +: NBEAT]));
     end endgenerate
     ot_hbm_accel_smh_leaf #(.TAGW(TAGW), .NBEAT(NBEAT)) u_leaf (
-        .clk(clk), .rst_a(rst_a), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2),
+        .clk(clk), .rst_a(rst_face), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2),
         .c_l(rl[RBW-1 -: CW]), .w_l(rl[XW+1 +: WSW]), .x_ce(rl[XW]), .x_a(rl[XW-1:0]),
         .b_en(bk[BBW-1]), .b_a(bk[BBW-2 -: XW]), .b_d(bk[2047:0]), .ohr(ohr),
         .o_iv_b(o_iv_b), .o_iv_f(o_iv_f), .o_ifirst(o_ifirst), .o_ilast(o_ilast), .o_ifp4(o_ifp4), .o_itag(o_itag),
