@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
  "name": "qkd_kvs_attn",
- "top": "qkd_kvs_attn",
+ "top": "qkd_kvs_attn_fl",
  "kind": "tile",
  "die": [
   0,
@@ -83,6 +83,9 @@
   "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",
   "rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv",
   "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_pin_land.sv",
+  "rtl/lib/face_land/qkd_kvs_attn_fl.sv",
   "physical/ref_tile/qkd_kvs_attn/kit.env",
   "physical/ref_tile/qkd_kvs_attn/clock.sdc",
   "physical/ref_tile/qkd_kvs_attn/signoff.sdc",

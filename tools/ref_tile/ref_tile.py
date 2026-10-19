@@ -2221,6 +2221,13 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
 def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None, out_root: Path = ROOT,
         write: bool = True) -> dict:
     s = load_spec(spec_path)
+    if s.get("face_land"):     # HKV-RSTCAP 10-19: shared reset / late-pin face landing (tools/ref_tile/face_land.py)
+        sys.path.insert(0, str(HERE))
+        import face_land
+        try:
+            face_land.apply(s, write=write, root=ROOT)
+        except face_land.FaceLandError as e:
+            raise SpecError(str(e))
     apply_recipe(s, kit_recipe(s, out_root, spec_path))
     check_hold_budget(s)
     slot = contract_slot(s)
