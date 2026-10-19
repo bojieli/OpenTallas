@@ -9,6 +9,7 @@ LEF = 'physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef'
 
 def model():
     from qwen_layerbench.programme_store import STRIDE, read_rows
+    from qwen_layerbench.table_load_contract import contract
     data = (ROOT / LEF).read_bytes()
     w, h = map(float, re.search(rb'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', data).groups())
     return dict(schema='opentallas.qwen.release-programme-store-model.v1', default_off=True,
@@ -39,10 +40,12 @@ def model():
                 'calpipe confirmed productionUVM4096/PIDX128; old16384/64 were bench-only. '
                 'Complete live VM remapping and final GEN parameter binding remain OPEN'),
         calendar=dict(macros=2, entry_bits=128, entries_per_read=4,read_bits=512,physical_read_bits=532,
-            proposed_depth_rows=4096,needed_old_entries=411,actual_final_entries=None,address_bits=12,
-            actual_body_command_counts=dict(decode=390,head=320,embedding=64,total=774),
+            proposed_depth_rows=4096,needed_old_entries=411,actual_final_entries=1009,spare_entries=14,address_bits=12,
+            actual_body_command_counts=dict(decode=406,head=320,embedding=64,total=790),
+            token_start_prefix=3,initial_range=dict(first=800,count=67),
+            body_with_init_boot_padding_entries=867,explicit_preload_ranges=36,fetch_capture_extra_edges=1,
             count_width_required_minimum=10,legacy_count_bits=9,
-            contract='Dedicated immutable512bit calendar port; preserve existing MU playhead fetch latency; '
+            contract='Actual immutable512bit port; additional capture fetch edge, exact external issue offset0; '
                      'new descriptor ABI must state exact base/count and validate every range'),
         f16_admission=dict(qualification='Source-pinned expanded shape; production_bound false',
             source_commit='0877475d8',artifact='results/rtl/mu_qwen_1018/admission/F16_P2/admission.json',
@@ -79,16 +82,32 @@ def model():
             mutable_target_sha256='bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30',
             shared_head_sentinel_words=200,
             scope='Actual ROM and mutable SRAM payload/address retention; synthetic head guard, no numerical layer/token claim'),
-        latency=dict(fixed_read_slots=88,provisional_pipeline_edges=5,reserved_edges_per_layer=93,
-            extra_edges_per_36layer_token=3348,reference_layer_period=5569,
-            estimated_su_layer_ratio=(5569+93)/5569,
-            measured=False,mu_write_windows_proved=False,
+        latency=dict(fixed_read_slots=88,loader_port_reserved_edges=93,
+            caller_range_reserved_edges=103,shared_timing=contract(),
+            aggregate_144_loader_port_edges=13392,aggregate_144_caller_reservation_edges=14832,
+            origin_expansion_edges=1440,actual_table_port_occupancy_delta=0,
+            per_user_36_load_occupancy_edges=3348,per_user_origin_expansion_edges=360,
+            token_critical_path_delta=None,production_event_composition_bound=False,
+            measured=True,mu_write_windows_proved=True,
+            actual_calendar_to_table_native_reads=149640,
+            window_artifact='results/arch/qwen_calendar_integration_1019/witness/fixed_load_pricing.json',
             rule='No wait/ready/credit. Reserve non-overlapping88-read windows per user; '
                  'measure macro/loader/VM visibility and recompile all dependent events.'),
-        admission=dict(physical_build_admitted=False,loader_rtl_complete=True,calendar_rtl_complete=False,
-            missing=['Fresh checkpoint comparison for all36 prepared payloads; source-chain currently prepared NPZ receipts',
-                'Global ME/head bridge, ROOT configuration and stream user identity joins',
-                'Actual MU calendar image and all exclusive loader windows',
-                'Dedicated calendar read ABI + loader + real-macro RTL execution',
+        programme_join_model=dict(
+            current_metadata_pw=400,four_template_pw=1600,current_data_pw_ceiling=976,
+            four_template_fit=False,current_fixed_ME_rows=8,current_XPF_records=4,
+            current_user_Xbase_relocation=False,
+            source_options='results/arch/qwen_calendar_integration_1019/witness/programme_integration_model.json',
+            clone_candidate_local_index=24,head_model_reserved_indices=[12,23],
+            clone_candidate_prog_records=7,clone_candidate_stage_rows=110,
+            clone_candidate_36stage_rows=3960,clone_candidate_load_reads=89,
+            clone_candidate_loader_port_edges=94,clone_candidate_caller_range_edges=104,
+            clone_candidate_RTL_implemented=False,actual_head_payload_bound=False),
+        admission=dict(physical_build_admitted=False,loader_rtl_complete=True,calendar_rtl_complete=True,production_body_bound=False,
+            local_calendar_copy_cap1_receiver=True,all_physical_programme_copies_bound=False,
+            checkpoint_comparison='all36 PASS, no outstanding checkpoint subtask',
+            missing=['Global ME/head bridge, ROOT configuration and stream user identity joins',
+                'Full production F16 body/ranges and event composition; local1009image/144windows passed',
+                'Head/finalnorm payload and all ME/XPF receiver copies; local calendar/loader/SRAM passed',
                 'Exact die slot rectangles, registered interface and SAFE checklist',
                 'Setup TT, hold FF, native clock spread and area/cycle pricing']))

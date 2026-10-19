@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.qwen.programme-join-receipt.v1",
+  "production_bound": false,
+  "source_commit_for_head": "9ca1bc85c",
+  "fleet_host": "ot-epyc5",
+  "terminal_jobs": [
+    "oth-ubuntu-1751539",
+    "oth-ubuntu-1758054",
+    "oth-ubuntu-1765969",
+    "oth-ubuntu-1775560-1792431463",
+    "oth-ubuntu-1775877-1792431473"
+  ],
+  "native_cases": 576,
+  "native_BF16_words": 23040,
+  "native_mutants_rejected": 4,
+  "XPF_seal": {
+    "original": "PASS",
+    "compact_duplicate": "REJECT",
+    "clone24": "PASS"
+  },
+  "binaries": {
+    "namespace": "bfc0915625ca84348c69c72b31ba2ed2c42b37bfb18d488da3c9ddd4d5eb66d6",
+    "xpf_identity": "5d67d2446a67f83652760ebf838d457240ce1dbc989150fd845ae82a4d954b29"
+  },
+  "sha256": {
+    "tools/qwen_layerbench/programme_namespace_join.py": "7e925ccea2795b3d5559dc3f30f8fe1777d4f7e8eb15c08084d329493c1ee5ab",
+    "tools/qwen_layerbench/model_programme_integration.py": "b84d6da7789e42c1f500c125d6eeffca45d85c6272767fbd900e05f35f358654",
+    "rtl/test/mu_qwen_seq/tb_programme_namespace_join.sv": "4281c67cd8262bf09d232f68f350fd8f64a58e42f55acc22498a2819e20121fc",
+    "rtl/test/qwen_dv/tb_xpf_compact_producer_ids.sv": "e472e0c22b491344d93ba120910692344e48b6517a115f73580fa653cf6e9192",
+    "results/arch/qwen_calendar_integration_1019/witness/namespace_m1.log": "1f73a699504982399ddd1a5dc7b8bdf220bbd1e4f4533ea0b0092a0b2a72408b",
+    "results/arch/qwen_calendar_integration_1019/witness/namespace_m3.log": "3eff5f72c15ddaa992bb42be53e6afb1af9ca22c5e10643c39693b96476f83e7",
+    "results/arch/qwen_calendar_integration_1019/witness/namespace_build.log": "bd86de574d2326b85c753309a8bfa80a8a26c929d6f99851380b847afa46bfcb",
+    "results/arch/qwen_calendar_integration_1019/witness/namespace_m0.log": "318e71d6025f3a692fc591ff7de6723c756bad3a066ebe028937a260ca1a4298",
+    "results/arch/qwen_calendar_integration_1019/witness/namespace_m4.log": "8990a8db7aba8498fa5d4b3356c599a4dcedb3de62e59c26dcd2541779e817f2",
+    "results/arch/qwen_calendar_integration_1019/witness/namespace_m2.log": "6943bfe9692a79f4f9010116b6060efec6a899f7a114a2b830ad992da6f69fef",
+    "results/arch/qwen_calendar_integration_1019/witness/xpf_id_compact_duplicate.log": "8f6a32b2784774a4bc9b7f05cc0f54effc2731dae09490333c37b7037db179ba",
+    "results/arch/qwen_calendar_integration_1019/witness/xpf_id_clone24.log": "fb1dc60e6146fecf47e909eb40c8bb8ef00aa5813ad2602f8bdd45db3d89f56e",
+    "results/arch/qwen_calendar_integration_1019/witness/xpf_id_original.log": "3e444ac2b426c152665b84f47b7682201c07ece56b6a18e135ac5e46e5ca6cf0",
+    "results/arch/qwen_calendar_integration_1019/witness/xpf_id_build.log": "8ad035ec29a67656c2860369e5a91d719d4fe85033dfac1ea8da13d57400766d",
+    "results/arch/qwen_calendar_integration_1019/witness/programme_join/certificate.json": "5b3c211bd64c98774d3d605d88d9a6216434a6dda5986a7059d9876329b01d4b",
+    "results/arch/qwen_calendar_integration_1019/witness/programme_join/x_events.txt": "c449e086b17fde84262e1e4dffe6b5104c8ebfb0eb688d3359d85e64d83223d4",
+    "results/arch/qwen_calendar_integration_1019/witness/programme_integration_model.json": "270568f9b4bad064a9f170ce955850e06325fdef518c5811891b21042bb9529d"
+  },
+  "scope": "Actual affine address and BF16 publication join; source XPF seal only. No Qwen arithmetic, full token, production physical phase, or enabled programme ABI."
+}

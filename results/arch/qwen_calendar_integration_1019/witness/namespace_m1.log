@@ -1,0 +1,4 @@
+PROGRAMME_NAMESPACE_JOIN cases=576 got=0 expected=23040 errors=1 fault=0 mut=1
+[1935400000] %Fatal: tb_programme_namespace_join.sv:52: Assertion failed in tb_programme_namespace_join: PROGRAMME_NAMESPACE_JOIN_FAIL
+%Error: ../src/rtl/test/mu_qwen_seq/tb_programme_namespace_join.sv:52: Verilog $stop
+Aborting...

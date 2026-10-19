@@ -1,0 +1,6 @@
+PROGRAMME_NAMESPACE_JOIN cases=576 got=23040 expected=23040 errors=0 fault=0 mut=0
+PROGRAMME_NAMESPACE_JOIN_PASS
+- ../src/rtl/test/mu_qwen_seq/tb_programme_namespace_join.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 0.089 s; speed 21.682 ms/s
+- Verilator: cpu 0.089 s on 1 threads; allocated 7 MB

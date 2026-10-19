@@ -1,0 +1,82 @@
+{
+  "schema": "opentallas.qwen.programme-head-source-facts.v1",
+  "sources": {
+    "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv": {
+      "sha256": "754c9b8c0cf2cfb5ae36e9d3d12f8d19c933d99076c0393cc7e02afa58ca5364",
+      "source_commit": "9ca1bc85c"
+    },
+    "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf.sv": {
+      "sha256": "e8a3ad1614054f6a69480697c2ed461d29bd83df59aa9e3e396fa63014e505cf",
+      "source_commit": "9ca1bc85c"
+    },
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv": {
+      "sha256": "007ba0fb1d7e7e8b05868d19c047a19edd76f611ba8912051756735af271b70f",
+      "source_commit": "9ca1bc85c"
+    },
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv": {
+      "sha256": "48304aa32d98b40342c932b9a982a989744a0d9099ad6f131919c422d892a66e",
+      "source_commit": "9ca1bc85c"
+    },
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv": {
+      "sha256": "f80e89df6a77c3081ec13e312e540a49f77b6ab2f27fb24a13ca3cab739e256d",
+      "source_commit": "9ca1bc85c"
+    },
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv": {
+      "sha256": "d225835c9ab77af587de321762bf4ee373a52f5d85bf7f2332fedbc3abde3899",
+      "source_commit": "9ca1bc85c"
+    },
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv": {
+      "sha256": "14eb670fc2b3791439b13837765e91b3a37f5be5773f207058fa5fc0250a1b29",
+      "source_commit": "9ca1bc85c"
+    }
+  },
+  "facts": [
+    {
+      "file": "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+      "fact": "hu captures c_user only at LOCAL SEG/head start and is forwarded through existing user context",
+      "qualified": true
+    },
+    {
+      "file": "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+      "fact": "filler OPSEG starts do not directly start the head; actual first filler ME needs compiled LOCAL SEG",
+      "qualified": true
+    },
+    {
+      "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv",
+      "fact": "dense program has two64x512 SRAMs and single read address q_prog_base+prog_addr",
+      "qualified": true
+    },
+    {
+      "file": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv",
+      "fact": "fixed issue arms only q_h_start && q_prog_base==0 and compares absolute candidate PC",
+      "qualified": true
+    },
+    {
+      "file": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv",
+      "fact": "ROM relocation changes weight/scale fields; Xbase passes in_cmd[254:80]",
+      "qualified": true
+    },
+    {
+      "file": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+      "fact": "same producer {stage,unit,pc} duplicated in XPF records is rejected at seal and runtime",
+      "qualified": true
+    },
+    {
+      "file": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
+      "fact": "dense XPF loader has four188b records transported in PW1004..1015",
+      "qualified": true
+    },
+    {
+      "file": "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+      "fact": "su_obs line237 qualifies both valid bits with c_su&&c_u0; filler users are not observed",
+      "qualified": true
+    },
+    {
+      "file": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+      "fact": "Every matching producer PC at another cycle, or after issued, faults; repeated slice-targeted XS commands cannot use one issue record unchanged",
+      "qualified": true
+    }
+  ],
+  "physical_user_lifetime_bound": false,
+  "new_RTL_API_implemented": false
+}

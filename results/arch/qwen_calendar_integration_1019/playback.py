@@ -46,6 +46,16 @@ for mut in (0,1,11):
     if mismatch:print('FIRST',[(a,b) for a,b in zip(sorted(actual),sorted(expected)) if a!=b][:4],flush=True)
     if good != (mut==0):raise RuntimeError('wrong positive/mutant outcome')
     if mut==0:
+        # Exercise all four live ROM playheads, with exact disjoint issue edges.
+        boot=rec['ranges']['boot'];arb=load();want=[]
+        for u in range(4):
+            edge=1200+u
+            arb.append((edge,3,1|(u<<6)|(boot['first']<<8)|(1<<18)))
+            want+=B.expected_user_events(segments['boot'],u,edge,0)
+        actual_arb=B.run(Path('.').resolve(),exe,'arb4',arb,1300)
+        got=[x for x in actual_arb['ev'] if x[0]>=1200]
+        if actual_arb['end'][0] or sorted(got)!=sorted(want):raise RuntimeError('four-live-playhead ROM arbitration mismatch')
+        print('ROM_FOUR_LIVE_PLAYHEADS_PASS',len(got),flush=True)
         guards=[]
         bad=rec['descriptor'].copy();bad[0]|=1<<10
         guards.append(('count1024',load(bad),1200))
