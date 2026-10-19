@@ -67,13 +67,16 @@
   "peak_ram_gb": 32,
   "io_hold_margin_ns": 0.03,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 40 -no_obstruction_aware"
+  }
  },
  "job": {
   "owner": "Claude:HH-2",
   "branch": "claude/hh2-pvm-1019",
-  "tag": "r2",
-  "purpose": "HF-5 rp4a blocker: ot_hbm_sm_pv_merge (PUBLISH 1, LV 4, TAGW 16: real 64x512 1R1W stack macro + 16 LAT-7 RNE FP32 adders + publication / fold) gets its own hard view (smh_pvm) for the attn leaf band of rp4a. New element, no prior view. Recipe 4 (pin registers at every data pin, +1 cycle per input and per output, absorbed by the static calendar; die hold budget). Macro W-face pins (rd_out / wd) face the logic band; inputs from sum_capture on N, merged node on S, publication / fold control on W. HH-12 10-19: gate r1 @becbf4946 (CTS) setup -341 ps @770 ps TT: bp -> 8:1 entry-state mux (e_busy/e_fl/e_k/e_c/e_n[r]) -> operand select -> 1,024-bit operand mux -> g_madd u_ca (adder decode); repair stuck at -290. Fix TURNREG 1 = the turn entry's state registered at nb one cycle ahead (entry nb is written only at its own turn, so the copy equals e_*[r]; cycle-identical, no calendar change; sim assertion checks the copy every cycle). io_hold_margin_ns 0.0 -> 0.03 (KITS rule), reset_landing default (rst_n, 2 stages).",
+  "tag": "r3",
+  "purpose": "HF-5 rp4a blocker: ot_hbm_sm_pv_merge (PUBLISH 1, LV 4, TAGW 16: real 64x512 1R1W stack macro + 16 LAT-7 RNE FP32 adders + publication / fold) gets its own hard view (smh_pvm) for the attn leaf band of rp4a. New element, no prior view. Recipe 4 (pin registers at every data pin, +1 cycle per input and per output, absorbed by the static calendar; die hold budget). Macro W-face pins (rd_out / wd) face the logic band; inputs from sum_capture on N, merged node on S, publication / fold control on W. TW2-PVM 10-19: gate r2 @7fb89bb34 FAIL (a) reset_landing: the worktree's physical/common_flow predated OT_RST_LAND (ot_pin_regs.tcl), so the kit's 2-stage landing was never inserted -> common_flow/tools from origin/main; (b) clock_rule TT/FF pin-flop spread 109.7/100.0 (pin flops 333.8..443.5 TT) from the obstruction-aware H-tree detouring around the centred 171x78 um SRAM (logic ring) -> route.cts_sink extra '-sink_clustering_levels 2 -distance_between_buffers 40 -no_obstruction_aware' (qkd_astk_ep_s precedent: 118.5/106 -> 61.1/56.6).",
   "benches": [
    {
     "name": "pvm_exact",
@@ -132,9 +135,9 @@
  "pin_regs": {
   "enable": true
  },
- "keep_pin_regs": true,
  "reset_landing": {
   "enable": true,
   "stages": 2
- }
+ },
+ "keep_pin_regs": true
 }
