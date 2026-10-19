@@ -1,0 +1,345 @@
+{
+  "schema": "opentallas.kv_param_error_diagnosis.v1",
+  "original_audit_commit": "dd27f95b8",
+  "leaves": {
+    "ot_qkh_ktree": {
+      "audit": {
+        "archive_run": "/srv/opentallas-scratch/claude/kv-params-1019/arch/ot_qkh_ktree/ot_qkh_ktree_m5-m5-e5e8e058b",
+        "closed": {
+          "commit": "e5e8e058b534e441a2aa25958b507070edb06193",
+          "final_v_sha256": "a2d80e8529efc49a156e12e60fd3f09cf1aa70f22d76385f98e0341f762bc5d2",
+          "job": "ot_qkh_ktree_m5-m5-e5e8e058b",
+          "lef_sha256": "a2a3dd4b53d162a79640fa8b659a94fefe46064e7772dff3aa2b94ef03094e43",
+          "physical_json_sha256": "3c295ae8132f9733fde2173c4db894900badcfb646537725e665de4e6dc426ef",
+          "spec_params": {},
+          "synth_sources": {
+            "physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+            "rtl/hdc/nearhbm/ot_qkh_subtiles.sv": "22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8",
+            "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+            "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+            "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+            "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+            "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+            "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+            "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+          },
+          "top": "ot_qkh_ktree",
+          "view_tie": "view LEF bytes == closed final LEF (libraries re-exported); abstract.json orfs_dir = closed job route"
+        },
+        "closed_spec_diff": {},
+        "equiv": {
+          "cells": 10898,
+          "log_sha256": "482a093a0eb0e76162943e3284c85c84311f6e97dc0fca60208268113f0d2ed1",
+          "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+          "proven_cells": 10882,
+          "rc": 1,
+          "seconds": [
+            4.1,
+            3063.1
+          ],
+          "unproven_cells": 16,
+          "unproven_sample": [
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$387208: \\S__g_n_0__u_a_err_1__gold \\S__g_n_0__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$386574: \\S__g_n_10__u_a_err_1__gold \\S__g_n_10__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$385941: \\S__g_n_11__u_a_err_1__gold \\S__g_n_11__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$385308: \\S__g_n_12__u_a_err_1__gold \\S__g_n_12__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$384675: \\S__g_n_13__u_a_err_1__gold \\S__g_n_13__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$384042: \\S__g_n_14__u_a_err_1__gold \\S__g_n_14__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$383409: \\S__g_n_1__u_a_err_1__gold \\S__g_n_1__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$382776: \\S__g_n_2__u_a_err_1__gold \\S__g_n_2__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$382143: \\S__g_n_3__u_a_err_1__gold \\S__g_n_3__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$381510: \\S__g_n_4__u_a_err_1__gold \\S__g_n_4__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$380877: \\S__g_n_5__u_a_err_1__gold \\S__g_n_5__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$380244: \\S__g_n_6__u_a_err_1__gold \\S__g_n_6__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$379611: \\S__g_n_7__u_a_err_1__gold \\S__g_n_7__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$378978: \\S__g_n_8__u_a_err_1__gold \\S__g_n_8__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$378345: \\S__g_n_9__u_a_err_1__gold \\S__g_n_9__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$377131: \\S__u_scale_err_1__gold \\S__u_scale_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$387208: \\S__g_n_0__u_a_err_1__gold \\S__g_n_0__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$386574: \\S__g_n_10__u_a_err_1__gold \\S__g_n_10__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$385941: \\S__g_n_11__u_a_err_1__gold \\S__g_n_11__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$385308: \\S__g_n_12__u_a_err_1__gold \\S__g_n_12__u_a_err_1__gate"
+          ]
+        },
+        "expect": "pass",
+        "gate": {
+          "flops": 10864,
+          "macros": {},
+          "replicas": 0
+        },
+        "identity": {
+          "artifacts": {
+            "abstract.json": "1d610befba2c500bcd58112acd90a8142a92f9592d6a8825901bf7ea0c60d4ea",
+            "child_lint.json": "c37982f2bfb793d4dfab0ff4ced404aba69661ff959dcd331ba51eec31474272",
+            "export_ff.log": "d5f2f4fa54304133a070bfb8cf5d7fbaf586fa63405ffd7ada78b7424f4e493d",
+            "export_ff.tcl": "d2eccf08ffb1e39b3e89c82810f8268281a844f0d83df2435700c7829f14f7ee",
+            "export_ss.log": "5e639730fbaa04245bc996849740b4a7ea41a0757a8d82a711c2dfc255009f06",
+            "export_ss.tcl": "738c7e588ee1e05fda9dc7d221d1186991f3d4c605eefd49fb7d182c0fd7645c",
+            "export_tt.log": "812380a99dca35e235bfbfb5913955851763fa1aca0bd2c50b9c259c837a3b7a",
+            "export_tt.tcl": "9e2bfe3ea4db6261a658d33f40b11bf6238ec42dd35957d520d4f7d18037b137",
+            "insertion.json": "7b0e9e3f34758bb00391499149d10d62b866dd12b0f95527e46fa3cde12b27a5",
+            "ot_qkh_ktree.lef": "a2a3dd4b53d162a79640fa8b659a94fefe46064e7772dff3aa2b94ef03094e43",
+            "ot_qkh_ktree_ff.lib": "00c15a4f003c7aca35943cd0bb56c1bf945ee08f62429279f82f3c8a1786ed57",
+            "ot_qkh_ktree_ss.lib": "17a3fd1d71aa253edb8df37e6a64183da5b054b489e2af258890b4fc41a6456a",
+            "ot_qkh_ktree_tt.lib": "251227e5ef98e31488b8bd30a8d751c7c0b32ce8fa98a2b14057dc54ff7aa6ac"
+          },
+          "rtl": {
+            "path": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+            "sha256": "22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8"
+          },
+          "view": "physical/ref_tile/ot_qkh_ktree_m5/views/ot_qkh_ktree"
+        },
+        "module": "ot_qkh_ktree",
+        "parameters": {
+          "ADD_LAT": 7,
+          "MUL_LAT": 6,
+          "SCALE": 1035273459
+        },
+        "proven": false,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+        "schema": "opentallas.kv_param_native_audit.v1",
+        "sources": {
+          "physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+          "rtl/hdc/nearhbm/ot_qkh_subtiles.sv": "22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8",
+          "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+          "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+          "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+          "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+          "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+          "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+          "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+        },
+        "sources_changed_since_closure": [
+          "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+        ],
+        "state": {
+          "gate_only": 0,
+          "gate_only_sample": [],
+          "gold_only": 390,
+          "gold_only_sample": [
+            "g_n[0].u_a.a2_in[116]",
+            "g_n[0].u_a.b2_in[0]",
+            "g_n[0].u_a.b2_in[27]",
+            "g_n[0].u_a.b2_in[97]",
+            "g_n[0].u_a.c2_in[66]",
+            "g_n[0].u_a.d2_in[103]",
+            "g_n[0].u_a.d2_in[6]",
+            "g_n[0].u_a.s1_err[1]",
+            "g_n[0].u_a.s1_small[27]",
+            "g_n[0].u_a.s2_err[1]",
+            "g_n[0].u_a.u_ca.g_r.r[118]",
+            "g_n[0].u_a.u_cb.g_r.r[101]",
+            "g_n[0].u_a.u_cc.g_r.r[70]",
+            "g_n[0].u_a.u_cd.g_r.r[107]",
+            "g_n[10].u_a.a2_in[116]",
+            "g_n[10].u_a.b2_in[0]",
+            "g_n[10].u_a.b2_in[27]",
+            "g_n[10].u_a.b2_in[97]",
+            "g_n[10].u_a.c2_in[66]",
+            "g_n[10].u_a.d2_in[103]"
+          ],
+          "gold_regs": 11254,
+          "paired": 10864
+        },
+        "view": "physical/ref_tile/ot_qkh_ktree_m5/views/ot_qkh_ktree"
+      },
+      "exact_inputs": {
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_ktree/gold1.il": "6a5d3c4194a277802de5892808afef07c10e00d496d1a3e2f0b25261018b8782",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_ktree/gold1.json": "8ed6cb66a07014e5a525320d5991da8e08035f3ad7ca7ec599b8f4956d2db986",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_ktree/gold1.ys": "698602464f9ad13f896a8235e425c4772e71f7a9fe01f15c89eba6610f126489",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_ktree/gate.v": "65c257cab0c9bf533c8855cccac0d41a2365c1eecc7fc96ee18f2fca748bc464",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_ktree/cells.v": "fdcee3ffb791aa6d20951b1321e3ccd94c81aecb2e7ab8c024cc561d2e8d86b4",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_ktree/equiv.ys": "d1e89da4b7aacd8eebd0a955c0a20fef31a9775a6dda75a35063d3d2b9ec4ef7",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_ktree/equiv.log": "482a093a0eb0e76162943e3284c85c84311f6e97dc0fca60208268113f0d2ed1"
+      },
+      "native_output_err1_flops": [
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[0].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_0__u_a_err_1_), .CLK(clknet_leaf_262_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[10].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_10__u_a_err_1_), .CLK(clknet_leaf_414_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[11].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_11__u_a_err_1_), .CLK(clknet_leaf_59_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[12].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_12__u_a_err_1_), .CLK(clknet_leaf_346_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[13].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_13__u_a_err_1_), .CLK(clknet_leaf_388_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[14].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_14__u_a_err_1_), .CLK(clknet_leaf_397_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[1].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_1__u_a_err_1_), .CLK(clknet_leaf_204_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[2].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_2__u_a_err_1_), .CLK(clknet_leaf_53_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[3].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_3__u_a_err_1_), .CLK(clknet_leaf_39_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[4].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_4__u_a_err_1_), .CLK(clknet_leaf_57_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[5].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_5__u_a_err_1_), .CLK(clknet_leaf_56_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[6].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_6__u_a_err_1_), .CLK(clknet_leaf_304_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[7].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_7__u_a_err_1_), .CLK(clknet_leaf_61_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[8].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_8__u_a_err_1_), .CLK(clknet_leaf_281_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_n[9].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_n_9__u_a_err_1_), .CLK(clknet_leaf_421_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\u_scale/err[1]$_DFF_PN0_  (.OT_S(S__u_scale_err_1_), .CLK(clknet_leaf_372_clk),"
+      ],
+      "native_output_err1_count": 16
+    },
+    "ot_qkh_lane8": {
+      "audit": {
+        "archive_run": "/srv/opentallas-scratch/claude/kv-params-1019/arch/ot_qkh_lane8/ot_qkh_lane8_m5-m5-e5e8e058b",
+        "closed": {
+          "commit": "e5e8e058b534e441a2aa25958b507070edb06193",
+          "final_v_sha256": "681b9070a31dd5f885dcc2ef03af7862be4fb8b9e296ab7d360c3a0dc0d6527e",
+          "job": "ot_qkh_lane8_m5-m5-e5e8e058b",
+          "lef_sha256": "2cd38b6f4ffba2b51429d7c9290ba81573d84c2ca21153eb06fafbbbd592982f",
+          "physical_json_sha256": "ec0f9d1330a10513d893dfb9d76421fb60abfb655e18b5f1030a7e6ce7648159",
+          "spec_params": {},
+          "synth_sources": {
+            "physical/ref_tile/ot_qkh_lane8_m5/src/rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+            "rtl/hdc/nearhbm/ot_qkh_subtiles.sv": "22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8",
+            "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+            "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+            "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+            "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+            "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+            "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+            "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+          },
+          "top": "ot_qkh_lane8",
+          "view_tie": "view LEF bytes == closed final LEF (libraries re-exported); abstract.json orfs_dir = closed job route"
+        },
+        "closed_spec_diff": {},
+        "equiv": {
+          "cells": 13155,
+          "log_sha256": "d02c685be26c3c003be47ff65ea3d58b625bb78e863c33e439b1e6d1328921c8",
+          "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+          "proven_cells": 13139,
+          "rc": 1,
+          "seconds": [
+            3.8,
+            4044.6
+          ],
+          "unproven_cells": 16,
+          "unproven_sample": [
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$461989: \\S__g_d_0__u_a_err_1__gold \\S__g_d_0__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$461356: \\S__g_d_0__u_b_err_1__gold \\S__g_d_0__u_b_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$460438: \\S__g_d_1__u_a_err_1__gold \\S__g_d_1__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$459805: \\S__g_d_1__u_b_err_1__gold \\S__g_d_1__u_b_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$458887: \\S__g_d_2__u_a_err_1__gold \\S__g_d_2__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$458254: \\S__g_d_2__u_b_err_1__gold \\S__g_d_2__u_b_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$457336: \\S__g_d_3__u_a_err_1__gold \\S__g_d_3__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$456703: \\S__g_d_3__u_b_err_1__gold \\S__g_d_3__u_b_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$455817: \\S__g_d_4__u_a_err_1__gold \\S__g_d_4__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$455184: \\S__g_d_4__u_b_err_1__gold \\S__g_d_4__u_b_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$454266: \\S__g_d_5__u_a_err_1__gold \\S__g_d_5__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$453633: \\S__g_d_5__u_b_err_1__gold \\S__g_d_5__u_b_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$452715: \\S__g_d_6__u_a_err_1__gold \\S__g_d_6__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$452082: \\S__g_d_6__u_b_err_1__gold \\S__g_d_6__u_b_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$451164: \\S__g_d_7__u_a_err_1__gold \\S__g_d_7__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$450531: \\S__g_d_7__u_b_err_1__gold \\S__g_d_7__u_b_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$461989: \\S__g_d_0__u_a_err_1__gold \\S__g_d_0__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$461356: \\S__g_d_0__u_b_err_1__gold \\S__g_d_0__u_b_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$460438: \\S__g_d_1__u_a_err_1__gold \\S__g_d_1__u_a_err_1__gate",
+            "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$459805: \\S__g_d_1__u_b_err_1__gold \\S__g_d_1__u_b_err_1__gate"
+          ]
+        },
+        "expect": "pass",
+        "gate": {
+          "flops": 13057,
+          "macros": {},
+          "replicas": 0
+        },
+        "identity": {
+          "artifacts": {
+            "abstract.json": "ea1253596cb46af392bec3b576bdc239ece8395559fee1b43361ec4490f75aba",
+            "child_lint.json": "25b391facec9a9522fd42707d5a8e3e56ff8afbfd065daf8becca55a5b4c8f5a",
+            "export_ff.log": "c41f6fc146b4f36ebdc15a4562d64257ec1bc0cefb885236224d6c24810f3748",
+            "export_ff.tcl": "8dc07b1bae2895a928e0899ac46552e0e1bf75b7cf8128ae905797631bc5497a",
+            "export_ss.log": "f586bddb05320c3d562b3cf63f0ad2268e66346531427fd54ff61a49ae11baa7",
+            "export_ss.tcl": "66972954e1de7b0405451e2bd4c64e08a7b066f8bfb79d4a72d4f386382f10ce",
+            "export_tt.log": "bf833bbcb3d7300c5355ea1096afc4918015892034145cd53542c5579c595736",
+            "export_tt.tcl": "8a4a647917e07882e77798330b19d86f4bb3a80901a12b01575ffc8b91d2058a",
+            "insertion.json": "862065f55887c02a72a3f61a89f4cce519ac768371ca133143f382c406d5dbf7",
+            "ot_qkh_lane8.lef": "2cd38b6f4ffba2b51429d7c9290ba81573d84c2ca21153eb06fafbbbd592982f",
+            "ot_qkh_lane8_ff.lib": "6ea939864b71a4e7650a5ded58f78ad2523e2f6afd4a321c70d00da5c028ef49",
+            "ot_qkh_lane8_ss.lib": "402f622386ab0288934ad9f7d31a5be0a4946a1a91dfd08a37a8f1e73aff115d",
+            "ot_qkh_lane8_tt.lib": "82ae393134bcac5cfc113668ff472e3fe376da832a4400ef5bf5d8f17b406e02"
+          },
+          "rtl": {
+            "path": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+            "sha256": "22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8"
+          },
+          "view": "physical/ref_tile/ot_qkh_lane8_m5/views/ot_qkh_lane8"
+        },
+        "module": "ot_qkh_lane8",
+        "parameters": {
+          "ADD_LAT": 7,
+          "LTW": 12
+        },
+        "proven": false,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+        "schema": "opentallas.kv_param_native_audit.v1",
+        "sources": {
+          "physical/ref_tile/ot_qkh_lane8_m5/src/rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+          "rtl/hdc/nearhbm/ot_qkh_subtiles.sv": "22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8",
+          "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+          "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+          "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+          "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+          "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+          "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+          "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+        },
+        "sources_changed_since_closure": [
+          "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+        ],
+        "state": {
+          "gate_only": 0,
+          "gate_only_sample": [],
+          "gold_only": 264,
+          "gold_only_sample": [
+            "fb[100]",
+            "fb[101]",
+            "fb[102]",
+            "fb[103]",
+            "fb[104]",
+            "fb[105]",
+            "fb[106]",
+            "fb[107]",
+            "fb[108]",
+            "fb[109]",
+            "fb[110]",
+            "fb[111]",
+            "fb[112]",
+            "fb[113]",
+            "fb[114]",
+            "fb[115]",
+            "fb[116]",
+            "fb[117]",
+            "fb[118]",
+            "fb[119]"
+          ],
+          "gold_regs": 13321,
+          "paired": 13057
+        },
+        "view": "physical/ref_tile/ot_qkh_lane8_m5/views/ot_qkh_lane8"
+      },
+      "exact_inputs": {
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_lane8/gold1.il": "3a50800f4335f06b7aa52d19053b2ba52d987a5058a647aa68548557533e0a32",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_lane8/gold1.json": "fe24788d59628a5db3b3b16e63ce80acbd1f86d0fd64fa4b7afd1e74e2cf390c",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_lane8/gold1.ys": "a19ce54ef05aa66086471fa8a149206de63be3673a162bc7ff3be5d79003f8c7",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_lane8/gate.v": "5ad3635ca0b800bc6f5dcc315cb71a8b7d8981f135d6becd2a38121ae215ab0d",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_lane8/cells.v": "f2586c32aadefdf452cea8740b055a3c2e8b297e3fc54b2b09a9dc9a9ac3437e",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_lane8/equiv.ys": "e1a16c6af571096d72aa1a0455864a521473931f6892d640c8c5352a5e1e122f",
+        "/srv/opentallas-scratch/claude/kv-params-1019/runs/ot_qkh_lane8/equiv.log": "d02c685be26c3c003be47ff65ea3d58b625bb78e863c33e439b1e6d1328921c8"
+      },
+      "native_output_err1_flops": [
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[0].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_d_0__u_a_err_1_), .CLK(clknet_leaf_510_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[0].u_b/err[1]$_DFF_PN0_  (.OT_S(S__g_d_0__u_b_err_1_), .CLK(clknet_leaf_449_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[1].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_d_1__u_a_err_1_), .CLK(clknet_leaf_397_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[1].u_b/err[1]$_DFF_PN0_  (.OT_S(S__g_d_1__u_b_err_1_), .CLK(clknet_leaf_358_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[2].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_d_2__u_a_err_1_), .CLK(clknet_leaf_548_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[2].u_b/err[1]$_DFF_PN0_  (.OT_S(S__g_d_2__u_b_err_1_), .CLK(clknet_leaf_413_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[3].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_d_3__u_a_err_1_), .CLK(clknet_leaf_360_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[3].u_b/err[1]$_DFF_PN0_  (.OT_S(S__g_d_3__u_b_err_1_), .CLK(clknet_leaf_332_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[4].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_d_4__u_a_err_1_), .CLK(clknet_leaf_71_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[4].u_b/err[1]$_DFF_PN0_  (.OT_S(S__g_d_4__u_b_err_1_), .CLK(clknet_leaf_77_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[5].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_d_5__u_a_err_1_), .CLK(clknet_leaf_542_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[5].u_b/err[1]$_DFF_PN0_  (.OT_S(S__g_d_5__u_b_err_1_), .CLK(clknet_leaf_257_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[6].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_d_6__u_a_err_1_), .CLK(clknet_leaf_43_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[6].u_b/err[1]$_DFF_PN0_  (.OT_S(S__g_d_6__u_b_err_1_), .CLK(clknet_leaf_96_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[7].u_a/err[1]$_DFF_PN0_  (.OT_S(S__g_d_7__u_a_err_1_), .CLK(clknet_leaf_135_clk),",
+        "DFFASRHQNx1_ASAP7_75t_R \\g_d[7].u_b/err[1]$_DFF_PN0_  (.OT_S(S__g_d_7__u_b_err_1_), .CLK(clknet_leaf_227_clk),"
+      ],
+      "native_output_err1_count": 16
+    }
+  }
+}
