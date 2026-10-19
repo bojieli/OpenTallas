@@ -42,6 +42,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
 
+from xr_timing import source_contract
+
 DIE_REF = 'origin/main'   # p4l bind9 / plan / land plan / unit RTL of record (main 711fb3da3+ = die7 77083deda; byte-identical to die6 3923ae6de)
 DIE_PATHS = ['results/arch/s81_dv_1016/bind9', 'results/arch/s81_dv_1016/p4l', 'results/arch/s81_dv_1016/landing/p4l',
              'tools/s81_dv', 'rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv', 'rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv', 'rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv',
@@ -58,10 +60,7 @@ SEQ = dict(fks_to_job=3, job_to_age0=4, v_cmd_to_vo=7, svc_to_sj=2, gunit_to_cw=
 # a V SOUTH command leaves vo_s at v_cmd_to_vo + vo_s_land (V north on vo_n unchanged).
 # ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop.
 RSTOP_HOP = 2
-# TOK-S81-GAPS/CTL (10-19, measured on the G8 cut_3S_ctl L0 replay: every S-line CTL word +5 vs this model, vo_n on time):
-# a CTL beat on a slice's V pin reaches its tier line out pins 6 edges later, not RSTOP_HOP: rstop iv (1) -> dl_vb (2) ->
-# xr vb (3) -> xr ci_r (4, v_ctl re-inject) -> rstop ci_q (5) -> ro_e / ro_w (6) (ot_s81sl_rstop + ot_s81sl_xr).
-V_CTL_INJECT = 6
+# V CTL injection is source-qualified by xr_timing.source_contract (XR2: seven edges).
 # dsdv_bk_sel rung transit vi -> vo: 3 edges since S81-TILES8/bk (10-18: one 276-b relay per input direction inside the
 # cluster, u_rn on vi_n; was ot_dsdv_vstop's 2).
 BKSEL_TRANSIT = 3
@@ -108,6 +107,7 @@ class Die:
 
     def __init__(self, tree):
         self.tree = Path(tree)
+        self.timing_contract = source_contract(tree, ROOT)
         b = self.tree / 'results/arch/s81_dv_1016/bind9'
         raw = gzip.decompress((b / 'die.v.gz').read_bytes()).decode()
         self.die_sha = hashlib.sha256(raw.encode()).hexdigest()
@@ -568,7 +568,7 @@ def ctl_path(die, sl):
     # the column-4 slice: V pin -> control plane -> line out (V_CTL_INJECT edges), then one stop per column.  An event edge
     # is the slice's landed CTL pin + RSTOP_HOP (dv_cut_replay PIN_OFFSET), so the column-4 slice's own event is vi + 2.
     t_vi = t
-    t += V_CTL_INJECT
+    t += die.timing_contract["v_ctl_inject"]
     path.append(dict(at=f'{entry} line inject', edge=t))
     if col == 4:
         t = t_vi + RSTOP_HOP
@@ -908,6 +908,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
              or k.startswith(('tvS_seqhost', 'tvN_seqhost', 'tvS_bk_sel'))}
     (out / 'schedule.json').write_text(json.dumps(dict(
         schema='opentallas.s81_dv.layer_schedule.v1', layer=layer, workload=wl, slice=sl,
+        timing_contract=die.timing_contract,
         composition='the layer = the slowest (critical) slice under the fixed schedule: every slice runs the same '
                     'calendar shifted by its CTL arrival; the layer span is max over slices and units of the last '
                     'scheduled event (op schedule span below = the priced critical slice)',
@@ -929,6 +930,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         schema='opentallas.s81_dv.lowering.v1', layer=layer, status_counts=stat, die_gaps=die_gaps, ops=low,
         gaps=sorted({(x['gap']['module'], x['gap']['port'], x['gap']['missing']) for x in low if x['gap']})), indent=1) + '\n')
     man = dict(schema='opentallas.s81_dv.layer_prog_manifest.v1', layer=layer, die_ref=DIE_REF,
+               timing_contract=die.timing_contract,
                die_ref_sha=(tree / '.done').read_text().strip() if (tree / '.done').exists() else None,
                die_v_sha256=die.die_sha,
                land_plan_sha256=sha256(tree / 'results/arch/s81_dv_1016/landing/p4l/land_plan.json'),
