@@ -11,6 +11,7 @@ checks={'shared_valid_actual_slot_D':'else if(we[s]) slot_valid[s]<=(MUT==4)?1\'
  'read_rotation':'assign read_dec[s]=dec[(s+2+' in s,
  'raw_authority':'raw_rst_n & ((MUT==2)?a0:a1)' in s,
  'distinct_generated_rootpairs':'begin:g_group' in s and 'u_tx_root' in s and 'u_rx_root' in s}
+checks['normalized_exact_reviewed_source_identity']=hashlib.sha256(re.sub(r'GROUP_BANKS=\d+', 'GROUP_BANKS=8',s,count=1).encode()).hexdigest()=='f8211325ebd982bccb90083f2c58af6ef2d24c6d1e2d6a5ea6c015a9d5b61b25'
 rows=[];totalbanks=groups=payload=0
 for w in (268,68):
  widths=[min(bank,w-i) for i in range(0,w,bank)];totalbanks+=len(widths);payload+=4*w
