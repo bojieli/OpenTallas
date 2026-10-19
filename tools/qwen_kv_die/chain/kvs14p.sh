@@ -41,7 +41,12 @@ export OT_KV_PV_CTL_KIT=qkd_pv_ctl_rstpin_a72 OT_KV_HOST_V14=1 OT_KV_HOST_NORTH=
 export OT_KV_HROOT=1 OT_KV_FANFOLD=1 OT_KV_V144_DW=2462.4 OT_KV_SN_LIFT=432 OT_KV_CTL_BAND=302.4 OT_KV_PVT_HUB_CLEAR=172.8 OT_KV_KV_CHAN_EXTRA=86.4 OT_KV_V144_RLY_FIRST=pvin_,krs_,kvn_,ap_,aq_,am_,ks_acal_,pve_
 export OT_KV_STATIC_DIE_STRICT=1 OT_KV_TILE_KITS=1 OT_KV_PVFORK_GAP=64.8 ${KVS14P_EXTRA:-}
 export OT_KV_EXPAND=qkd_rhead,qkd_rhead_ft,qkd_ectl,qkd_ctrl,qkd_ctrl_n,qkd_pvfork,qkd_pvtap2,qkd_pvtap3,qkd_pvtap4
-export OT_KV_RST_PER_TREE=1 OT_KV_FWD=1 OT_KV_LANDSLOT=1 OT_KV_RST_PIN_REG=1 OT_KV_BUNDLE_EQ=1 OT_KV_D2DS_VIEW=1 OT_KV_D2D_NTX=3
+export OT_KV_RST_PER_TREE=1 OT_KV_FWD=1 OT_KV_LANDSLOT=1 OT_KV_RST_PIN_REG=1 OT_KV_BUNDLE_EQ=1 OT_KV_D2D_NTX=3
+# OT_KV_D2DS_VIEW (closed r7t view on d2d_kv): OFF by default -- kvs14p-22ba3a708 PREP FAIL 'qkd_d2ds: die port cfg_addr not
+# bound': the d2ds frame carries the link cfg twice (dcal 'cal' bundle cfg_*+cal_start/seg AND kvs_ctl boot link_cfg_* die
+# ports, kv_static_boot_join LINK_CFG); the netlist binder binds dcal's and drops boot's (lanes/KV-PLAN5.md).  Fix the double
+# producer, then KVS14P_D2DS_VIEW=1.
+export OT_KV_D2DS_VIEW=${KVS14P_D2DS_VIEW:-0}
 unset OT_KV_FWD_NETLIST_ONLY OT_KV_STATIC_DIE_DIAGNOSTIC
 bash tools/qwen_kv_die/chain/kvsys_prep.sh $R > $R/prep.log 2>&1 || { say "PREP FAIL (prep.log): $(tail -3 $R/prep.log | tr '\n' ' ' | cut -c1-400)"; exit 1; }
 say "D2DS VIEW: $(grep -m1 'OT_KV_D2DS_VIEW' $R/prep.log | head -c 300)"
