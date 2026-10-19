@@ -92,29 +92,31 @@
    "composition_1018": {
     "ar": {
      "available": true,
-     "banner": "10.3% of token cycles measured on current RTL (61.4% on older RTL, 17.9% modelled PHY, 10.4% priced)",
-     "pct_measured_current_rtl": 10.34,
-     "tok_s": 1243.0,
-     "T_token_cycles": 965378.6,
-     "per_accepted_cycles": 965378.6,
+     "banner": "9.9% of token cycles measured on current RTL (58.6% on older RTL, 17.1% modelled PHY, 14.5% priced)",
+     "pct_measured_current_rtl": 9.87,
+     "tok_s": 1186.4,
+     "T_token_cycles": 1011488.6,
+     "per_accepted_cycles": 1011488.6,
      "tau": null,
      "by_grade": {
       "measured-current-RTL": 99813.0,
       "measured-old-RTL": 592268.7,
       "modelled-PHY": 172975.0,
-      "priced": 100321.9
+      "priced": 146431.9
      },
      "by_kind": {
-      "layer": 615525.0,
+      "layer": 661635.0,
       "xdie": 323306.0,
       "adjust": 26547.6
      },
      "price_of_record": {
-      "tok_s": 1365.7,
-      "cycles": 878670.3,
-      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar"
+      "tok_s": 1297.6,
+      "cycles": 924780.3,
+      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + MU.S81.SCANCHK 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+      "uncorrected_tok_s": 1365.7,
+      "scan_stacks_correction_cycles": 46110.0
      },
-     "vs_price_pct": -8.98,
+     "vs_price_pct": -8.57,
      "o_rule": "O from the token-path DAG solve (critical / slack); no S81 die-run compiler schedule exists yet (TOKEN-PASS-S81 BLOCKED)",
      "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, AR",
      "xdie_top": [
@@ -196,29 +198,31 @@
     },
     "mtp": {
      "available": true,
-     "banner": "8.1% of token cycles measured on current RTL (68.8% on older RTL, 14.3% modelled PHY, 8.7% priced)",
-     "pct_measured_current_rtl": 8.12,
-     "tok_s": 3806.2,
-     "T_token_cycles": 1311215.8,
-     "per_accepted_cycles": 315271.9,
+     "banner": "7.4% of token cycles measured on current RTL (62.5% on older RTL, 13.0% modelled PHY, 17.2% priced)",
+     "pct_measured_current_rtl": 7.37,
+     "tok_s": 3454.7,
+     "T_token_cycles": 1444640.8,
+     "per_accepted_cycles": 347352.9,
      "tau": 4.159,
      "by_grade": {
       "measured-current-RTL": 106512.0,
       "measured-old-RTL": 902298.8,
       "modelled-PHY": 187823.6,
-      "priced": 114581.4
+      "priced": 248006.4
      },
      "by_kind": {
-      "layer": 929953.1,
+      "layer": 1063378.1,
       "xdie": 348337.6,
       "adjust": 32925.1
      },
      "price_of_record": {
-      "tok_s": 4045.4,
-      "cycles": 1233697.5,
-      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp"
+      "tok_s": 3650.6,
+      "cycles": 1367122.5,
+      "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + MU.S81.SCANCHK 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+      "uncorrected_tok_s": 4045.4,
+      "scan_stacks_correction_cycles": 133425.0
      },
-     "vs_price_pct": -5.91,
+     "vs_price_pct": -5.37,
      "o_rule": "O from the token-path DAG solve (critical / slack); no S81 die-run compiler schedule exists yet (TOKEN-PASS-S81 BLOCKED)",
      "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, MTP (DSpark, tau 4.159)",
      "xdie_top": [
