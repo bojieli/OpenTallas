@@ -145,8 +145,8 @@ The timeline is the S2 CP schedule. With fixed unit costs the dispatch times are
 | golden | content | state |
 |---|---|---|
 | `goldens/ar_mtp_g5/` | prompt [0]: AR positions 0–6, MTP verify N = 6 (draft 1 **accepted**, draft 2 **rejected**), DSpark draft rows, seeds; npz + json byte-identical to the committed `hbm_mtp_1015/sim_gamma5` SHA256SUMS; `manifest.json` has 630 per-array sha256 | **DONE** |
-| `mu4` | 4 users, 2-token prompts. User 0 = [0, 5] is the control: it must reproduce `ar_mtp_g5` h / pre of positions 0–1 bit for bit. | RUNNING on ot-epyc5 (fetch-on-demand, `serve2`) |
-| `mtp_all5` | forced drafter, all 5 accepted + bonus, plus the layer-major identity check | RUNNING on ot-epyc5 (`serve2`) |
+| `goldens/mu4/` | 4 users, 2-token prompts ([0,5], [2,12366], [3,4521], [4,17808]; argmax 5/223, 17/28, 29/201, 5/16); position 1 of every user = the users N = 4 step. User 0 is the control: reproduces `ar_mtp_g5` h / pre of positions 0–1 bit for bit (160 arrays compared, 0 mismatches, CONTROL PASS). `mu4.npz` sha256 fc19651c… = `mu4.json` npz_sha256; manifest PASS 640 arrays | **DONE** (10-19 06:10) |
+| `goldens/mtp_all5/` | forced drafter, all 5 accepted + bonus, plus the layer-major identity check | **DONE** (sec. 16) |
 
 **The checkpoint problem.** The full 476 GB snapshot exists only on the workstation. So `tools/hbm_next/goldens.py` runs the golden **on the fleet**, over its 14 GB sparse subset, and a light local daemon ships exactly the missing expert tensors and the embedding and Engram rows on demand. Every fetched range is logged with its sha256 in `fetch/ledger.jsonl`.
 
@@ -279,11 +279,31 @@ What is new in the images:
 
 **Limits (for VEH):** per-layer images, not yet a whole-token assembly (the head / TOKX / ACCEPT segment and cross-segment aux relocation are next). The images' VM map is per segment (aux above each segment's high-water mark). The union loop and KV-union plan spans are data-dependent: the calendar reserves the bounds (U ≤ 6N iterations; 128 lines a SM).
 
-## 10. Pending / next (updated step 4, 10-19 03:05)
+## 16. Step 5 (10-19 03:40): re-time with the REDESIGNED units' measured IIs (OWNER-decision input), whole-token images, `mtp_all5` golden
 
-1. **Goldens:** `mu4` / `mtp_all5` still running on ot-epyc5 (ETA ~05:00): collect, package, commit (lane file pending item 1).
-2. **Whole-token images:** assemble the per-layer images + the head segment (ARGMAX, TOKX / ACCEPT) with one VM map; then VEH runs them.
-3. **Re-time the redesigns as they land:** IDXN (IDX.INDEX, −3.1% MTP), SUDMA2 (SU.VOP, −2.1%), SM4 publish (skew, −2.0%) — `plane_compiler.py meas` with the new IIs.
+**Re-time** (`retime/meas5_retime.json`, `plane_compiler.py meas --step5`; ot-epyc7 tree of record opt5, 8 fleet jobs; priced rows reproduce 3,500.1 / 4,423.1, P3a 3,389.9 / 4,220.2, rpl0 3,393.0). New MEAS keys: `idxn` (IDX.INDEX further row c1 × 232 / 658.9, @5bf6d2d50), `su_vop2` (SU.VOP 2k ⌈e / 512⌉, @a42351330), `argmax2` (22), `fused` (FUSED.HC_PRE_NORM 81 / HC_POST 103, @e70d3285a); "ALL measured v2" = those + idx_topk, idx_union, kvwb, coll_rg, coll_am, att4, sm4skew. Frame sensitivities (they move AR): `idx_frame` (IDX.INDEX first row × 1,297 / 658.9: the release AR model prices the d4g frame at 658.9 although d4g measures 1,397) and `fused_frame` (FUSED c1 404 / 196 MEASURED on the new hnx FUSED engine, below the d4g price). DS, 1.2 GHz, 1M ctx, VM 2^19 (VM-resident columns), L5 COLL, HC II 250.
+
+| option (die mm², DIE f4c_t7) | AR | MTP (target 3,364) | 4 users agg / per user (floor 1,000) |
+|---|---|---|---|
+| P4 (a) + remainder split, ALL measured v2 (811.8) | 1,949.7 | **3,483.7** (+3.6%) | **4,462.0 / 1,115.5** |
+| P4 (a) rpl 0 (what SM4 builds first), ALL measured v2 (811.8) | 1,949.7 | **3,377.9** (+0.4%) | **4,462.0 / 1,115.5** |
+| P3+(a), 4 users on 3 lanes, ALL measured v2 (767.4) | 1,949.7 | **3,390.1** (+0.8%) | **4,251.2 / 1,062.8** |
+| P3+(a), 3 users | 1,949.7 | 3,390.1 | 3,855.8 / 1,285.3 |
+| same + measured frames: P4 (a) / rpl 0 / P3+(a) u4 | 1,997.5 | 3,523.1 / 3,415.0 / 3,427.5 | 4,432.7 / 4,432.7 / 4,224.7 |
+
+Per unit (P4 (a), vs priced): IDXN −0.32% MTP / 0 users (was −3.10% at 953); SU.VOP v2 −1.09% / −0.74% (was −2.07% / −1.44%); ARGMAX 22: 0 (off the critical path); FUSED rows +0.07% / −0.07%; frames: IDX −1.17% AR / −0.51% MTP / −2.61% users, FUSED +3.71% / +1.67% / +2.07%. With the redesigns every option meets every target; step 4's "0.3% under" is gone.
+
+**Reading for the OWNER decision.** At rpl 0 (the SM4 build order) P4 (a) and P3+(a) give the same MTP (3,378 vs 3,390); P4 (a) buys +5.0% 4-user aggregate (4,462 vs 4,251) for +44.4 mm² (811.8 vs 767.4; (a)'s packing is still unproven), and the remainder split adds +3.1% MTP on P4 only. Per mm²: MTP 4.16 (P4 rpl 0) / 4.29 (P4 split) vs 4.42 (P3+(a)); 4-user 5.50 vs 5.54. CMTP view: P3+(a) stays the better rate per mm² and clears every target with margin; P4 (a) is worth it only if the 4-user aggregate is the priority AND SM4 builds the split.
+
+**Whole-token images** (`emitter.py --whole`, `emitter/whole/<mode>_N<n>/`): all 40 layer segments + the head in one image, one VM map (pinned h / PRE at 0, every segment's aux at one base = the largest high-water mark), head tail per R9: the head's COLL.ARGMAX_MERGE O re-pointed into the TOKX table (rs_O = 1: ids contiguous, R2 + contiguity checked), then MTP `CTL.ACCEPT` (A = accept.a, written by the DSpark accept compare, d4g `ot_dshbm_dspark_ctl` accept_a0, CP side, priced in mh_ctl) → `CTL.TOKX` (k = a + 1) → `CTL.END`; users `CTL.TOKX` (param 1, N beats) → END; AR TOKX k = 1. MTP N = 6: 3,715 records, 516,304 B, VM need 484.6k ≤ 2^19; users N = 1 / 2 / 3 / 4 and AR images likewise (0 failed records, whole-image decode round trip, exactly one END, last). **Open:** layer 20 reads 1,366 + 32 words a position before its in-segment writer (IDX.INDEX index frame, SU.VOP index_q.rope): a live-in whose producer placement is not yet tied to the consumer (`token.liveins`); The AR and users N = 1 images keep the AR map (identity, no relocation), so they are unaffected; the N > 1 images (MTP, users N = 2..4) must treat segment 20 as not yet one-map until that value is pinned.
+
+**Goldens:** `goldens/mtp_all5/` DONE (forced drafter: drafts [223, 939, 23, 695, 22] all accepted + bonus 1266; layer-major argmax equal, L0 bit-equal; manifest PASS 21 arrays). `mu4` still running (user 2 of 4 at 03:33; ETA ~04:40, pending_results).
+
+## 10. Pending / next (updated step 5, 10-19 03:55)
+
+1. **Goldens:** DONE (`ar_mtp_g5`, `mtp_all5`, `mu4` CONTROL PASS, 10-19 06:10).
+2. **Whole-token images:** DONE except the layer-20 live-in (IDX.INDEX index frame + index_q.rope, 1,398 words a position): pin it across segments; then VEH runs the images.
+3. **Re-time as redesigns land:** SM4 parallel publish (skew −2.0% in ALL v2), M1 measured; `plane_compiler.py meas --step5`.
 4. Static calendar for the data-dependent spans (union loop U ≤ 6N, KV plan 128 lines a SM): extend `static_check` to the image form.
 5. Engram sub-block groups (optional; the 2^19 VM fits every layer).
 6. M1 priced → SM4 measured x-store / publish; remainder split re-time if SM4 builds it.

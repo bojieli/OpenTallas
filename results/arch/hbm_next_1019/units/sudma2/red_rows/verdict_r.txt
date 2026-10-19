@@ -1,0 +1,15 @@
+2026-10-19T03:47:10-07:00 start host=regular-crane bundle=1ec36302d
+2026-10-19T03:47:25-07:00 r_m1 n4: [7540000] %Fatal: tb_hnx_su_red_rows.sv:111: Assertion failed in tb_hnx_su_red_rows.unnamedblk2: SU_RED_ROWS FAIL errors=75 scalars=20 MUT=1 RUN_RC=1 
+2026-10-19T03:47:25-07:00 r_m2 n4: [7540000] %Fatal: tb_hnx_su_red_rows.sv:111: Assertion failed in tb_hnx_su_red_rows.unnamedblk2: SU_RED_ROWS FAIL errors=75 scalars=20 MUT=2 RUN_RC=1 
+2026-10-19T03:47:25-07:00 r_m0 n1: SU_RED_ROWS_EDGES first_cmd=8 last_event=274 span=266 SU_RED_ROWS PASS quarters=4 scalars=5 bcast=4 drains=16 edges=270 MUT=0 RUN_RC=0 
+2026-10-19T03:47:25-07:00 r_m0 n2: SU_RED_ROWS_EDGES first_cmd=8 last_event=417 span=409 SU_RED_ROWS PASS quarters=4 scalars=10 bcast=8 drains=32 edges=413 MUT=0 RUN_RC=0 
+2026-10-19T03:47:25-07:00 r_m0 n3: SU_RED_ROWS_EDGES first_cmd=8 last_event=560 span=552 SU_RED_ROWS PASS quarters=4 scalars=15 bcast=12 drains=48 edges=556 MUT=0 RUN_RC=0 
+2026-10-19T03:47:25-07:00 r_m0 n4: SU_RED_ROWS_EDGES first_cmd=8 last_event=703 span=695 SU_RED_ROWS PASS quarters=4 scalars=20 bcast=16 drains=64 edges=699 MUT=0 RUN_RC=0 
+2026-10-19T03:47:25-07:00 r_m0 n6: SU_RED_ROWS_EDGES first_cmd=8 last_event=989 span=981 SU_RED_ROWS PASS quarters=4 scalars=30 bcast=24 drains=96 edges=985 MUT=0 RUN_RC=0 
+2026-10-19T03:47:25-07:00 r_m0 m64_n4: SU_RED_ROWS_EDGES first_cmd=8 last_event=443 span=435 SU_RED_ROWS PASS quarters=4 scalars=20 bcast=16 drains=64 edges=439 MUT=0 RUN_RC=0 
+2026-10-19T03:47:25-07:00 r_m0 abs_n4: SU_RED_ROWS_EDGES first_cmd=8 last_event=703 span=695 SU_RED_ROWS PASS quarters=4 scalars=20 bcast=16 drains=64 edges=699 MUT=0 RUN_RC=0 
+2026-10-19T03:47:25-07:00 r_m0 s1_n4: SU_RED_ROWS_EDGES first_cmd=8 last_event=703 span=695 SU_RED_ROWS PASS quarters=4 scalars=20 bcast=16 drains=64 edges=699 MUT=0 RUN_RC=0 
+2026-10-19T03:47:25-07:00 r_m0 ovf_n4: [7540000] %Fatal: tb_hnx_su_red_rows.sv:111: Assertion failed in tb_hnx_su_red_rows.unnamedblk2: SU_RED_ROWS FAIL errors=335 scalars=20 MUT=0 RUN_RC=1 
+2026-10-19T03:47:25-07:00 r_m4 n4: [7540000] %Fatal: tb_hnx_su_red_rows.sv:111: Assertion failed in tb_hnx_su_red_rows.unnamedblk2: SU_RED_ROWS FAIL errors=75 scalars=20 MUT=4 RUN_RC=1 
+2026-10-19T03:47:25-07:00 r_m3 n4: [7540000] %Fatal: tb_hnx_su_red_rows.sv:111: Assertion failed in tb_hnx_su_red_rows.unnamedblk2: SU_RED_ROWS FAIL errors=63 scalars=20 MUT=3 RUN_RC=1 
+2026-10-19T03:47:25-07:00 done

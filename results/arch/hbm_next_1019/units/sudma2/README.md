@@ -102,3 +102,108 @@ and the synth script `tools/hbm_next/hnx_sudma2_synth.sh` (Yosys + ASAP7, area i
 | SU.VOP | 2·k·nv512 (`wsplit`) |
 | ARGMAX.LOCAL | max(ceil(ns / 8), 6) = 22 for DS |
 | DMA.KVWB_DS | 8, plus 28 per wrap (unchanged) |
+
+
+## Step 2 (SUDMA2 restart, 10-19 03:40+): reducer row class, SFU chain row step, FUSED.QDQ rows
+
+Branch `claude/hbm-next-units-sudma3-1019`. All on the fleet with Verilator 5.050, stages `r`, `f`, `q` of
+`tools/hbm_next/hnx_sudma_bench.sh` from `git archive` bundles (`1ec36302d` r, `6ed5f2031` f, `77ad24fe7` q). Evidence:
+`red_rows/`, `sfu_rows/`, `qdq_rows/` (verdict file, every run log, fail witnesses, `programme.json` / `meta.json`).
+
+| Record | Mechanism | cycles(N) | Measured row II | Price | Verdict |
+|---|---|---|---:|---:|---|
+| SU norm-style row reduction (m = 128 lane partials a quarter, 10 chains + tree + export, cross-quarter sum on reducer 0, RF broadcast + 4 RF sector drains a row) | NEW `ot_hnx_su_rowr` (reducer / RF row class) in front of the 4 d4g qcores | N1 266, N2 409, N3 552, N4 695, N6 981 | **143** = m + 15 (reducer 0's command slot: 128 + 9 tree + 1 export + 4 cross + 1 export) | (inside SU.VOP) | EXACT, abs = rel |
+| SFU chain rows (IO calendar looped N x) | NEW `ot_hnx_sfu_rowstep` after the d4g store r10 (unchanged) | row arith starts exactly P apart | **P** (IO words a row; 0 bubble at the loop wrap) with P >= Pc + 3 | (FUSED / SU chain) | EXACT vs the unrolled image, 3 seeds |
+| FUSED.QDQ_FP8 / FP4_E4M3 rows, e = 512 | compiler only: one programme range, row-strided src / dst, d4g `ot_hgi_qdq_program_static` | LG0: 59 / 75 / 91 / 107 / 139 (N 1/2/3/4/6); die split form (IO_REGS 1 LG 1 TSPLIT 1): 64 / 80 / 96 / 112 / 144 | **16** = e / 32 | n / 32 = 16 | EXACT; II = price; c1 59 / 64 vs priced ceil(n/32) + 8 = 24 |
+
+### Reducer / RF row class (`rtl/hbm_next/su/ot_hnx_su_rowr.sv`)
+
+- Steps the two command classes rowx leaves alone: `red_cmd` (a / b / dst scratch by the op's use, the EXPORT's RF word
+  tag[7:0] when tag[8]) and the six `rf_rd_cmd` classes (RF word; class 5 must stay sector aligned). Row code extension
+  rc2 = {RF row 4, reducer row 4} (8 b; column 9 spare bits: 2442 -> 2450 b a quarter line, still 10 columns);
+  strides s_red (10 b scratch words), s_rf (8 b RF words). Row 0 = the d4g words; REG 1 like rowx (stays aligned).
+  Faults: scratch carry out of 1,024, RF word carry out of 256, class 5 not sector aligned.
+- Why it matters: rows OVERLAP (row r + 1's lane chains fill the command slots while row r's 10-edge-dependent tree,
+  export and cross-quarter sum finish), which needs disjoint scratch / RF words a row. Dictionary words a quarter
+  image: red 144 / rf 9 row-relative at every N vs 576 / 36 unrolled at N 4 (grows N x).
+- Vehicle (`rtl/hbm_next/su/tb/tb_hnx_su_red_rows.sv`): the 4 d4g `ot_hbm_su_static_qcore` (RF replica + reducer,
+  unchanged) behind 4 rowr, with the top's RF relay routes (RF_RELAY 8, same always blocks as `ot_hnx_su_top`); the
+  slices are represented by their registered lane outputs `slice_x` and the drain bit on the compiler's edges.
+  Checks every scalar (edge, quarter, tag, value), every class-1 broadcast word at `rf_bword`, every class-5 sector at
+  `rf_dsec`, zero qcore / rowr faults. Compiler + golden: `tools/hbm_next/su_red_rows_compile.py` (hdc_golden add).
+- PASS: N 1, 2, 3, 4, 6 (m 128), m 64 N 4 (435), seed 1 N 4, `--absolute` N 4 (rc2 = 0, strides 0: identical
+  expectations and edges = the d4g qcore bit for bit). FAIL witnesses (all committed): MUT 1 dst stride (75 errors),
+  MUT 2 export tag stride (75), MUT 3 RF read stride (63), MUT 4 a / b stride (75), `ovf` (s_red 400 -> rowr FAULT).
+- II = m + 15 is the reducer-0 command slot (one command an edge). Rotating the cross-quarter sum over the four
+  reducers by row (compiler only) would give m + 11.25; not done (< 3 %).
+
+### SFU chain row step (`rtl/hbm_next/su/ot_hnx_sfu_rowstep.sv`)
+
+- The d4g SFU programme store already loops [base, limit) N times with no bubble; this stage adds row x stride to the
+  VM fields of the 471-b `io_word` (8 prefetch sectors by s_rd, 2 drain sectors by s_wr; local / scalar / lane fields
+  and `compiler_control` untouched). Row index from the store's `io_ordinal`, incremental (one adder a stride).
+  **Measured: the r10 store's io_ordinal LEADS io_word by one edge** (first run, bundle 1ec36302d, OLAG 0: exactly the
+  last word of every row took the next row's offset) -> OLAG 1 delays it (fixed RTL above).
+- Broadcast operands go in a prologue launch (P0 <= P words, ordinal restarts at 0 = unstepped); per-row operands share
+  one sector stride a direction (rs_A = rs_B; otherwise the compiler unrolls). Programme (arithmetic) calendar started
+  once a row by the body's arith-start bit; **measured minimum row period P = Pc + 3** (DP 0 / 1 / 2 fault the store's
+  start-while-busy check, DP 3 passes; `f_m0_dp*.log`, outcome lines only).
+- Vehicle (`tb_hnx_sfu_rows`): two d4g r10 stores in lockstep: A = row-0 image looped N x + rowstep, B = the unrolled
+  absolute image + a pass-through rowstep; every edge A's (io_word, compiler_control) == B's, no fault, row arith
+  starts exactly P apart, two rounds (reload, new N / P) prove the ordinal-0 restart. The SFU core consumes only these
+  two buses, so equality is the core's behaviour bit for bit.
+- PASS seeds 1, 2, 3. FAIL witnesses: MUT 1 drain stride (279 mismatching edges), MUT 2 prefetch stride (581), MUT 3
+  early wrap (11), MUT 4 no ordinal-0 clear (581), BADSTRIDE s_rd[2:0] != 0 (row-step FAULT). Note: Verilator ends a
+  `$finish` at the end of the time step, so the DP-sweep logs print a FAIL line after their RESTART line (classification
+  runs only; the RESTART line is the result).
+
+### FUSED.QDQ_* rows (compiler only; `tools/hbm_next/hnx_qdq_rows_vectors.py`, `rtl/hbm_next/qdq/tb/tb_hnx_qdq_rows.sv`)
+
+- The d4g static QDQ issues one 32-element beat a cycle from a fixed programme; an N-row record is the N rows' beats in
+  one range with row-strided src / dst (COMPACT record calendar: one word a row). Bench = the d4g `tb_hgi_qdq_static`
+  (decoder + 8 real VM bank pipelines) with its beat-a-cycle issue assert, per-row golden (hdc_golden_v41 qdq_fp8 /
+  qdq_fp4_e4m3), SRAM readback; the programme / record cross-check and the whole-run price bound are reported.
+- **II 16 = n / 32 = price** (rows back to back, every beat on its edge). **c1 59 (LG 0) / 64 (die split form) vs
+  priced 24**: the fixed pipeline (issue +5, RL, decode DL 25, write commit) is ~43 / 48 edges, not 8. CMTP: c1 + 35 / +40
+  a QDQ record (once a record, not a row).
+- FAIL witnesses: programme without the row stride (`mstride_n4`, gold mismatch) on both forms; d4g MUT 1 sector map.
+- DMA.LOAD position-addressed rows: NOT measured (no die-bound static load-record engine; the load path is the HBM
+  service VM delivery) -> next list.
+
+### CMTP re-price (this step)
+
+| Family | Row II | c1 |
+|---|---|---|
+| SU.VOP with a per-row reduction (norm-style) | add max(m + 15, the VOP II) a row on reducer 0 (m = lane partials a quarter) | measured 266 at m 128 |
+| SFU chain rows | P (IO words a row), P >= Pc + 3 | unchanged |
+| FUSED.QDQ_* | n / 32 (= price) | 59 (die form 64), price 24 |
+
+### Area and physical integration (synth `synth_step2/area.txt`, yosys 0.68 + ASAP7 RVT TT, `tools/hbm_next/hnx_sudma3_synth.sh`)
+
+| Block | um² | cells | Count a die | Where it goes |
+|---|---:|---:|---:|---|
+| `ot_hnx_su_rowx` (REG 1: the whole 2,422-b line registered) | 1,517 | 8,608 | 4 (one a quarter) | the SU programme parent between the 10 column leaves and the slices (critical parent: report only) |
+| `ot_hnx_su_rowr` | 123 | 1,044 | 4 | same place as rowx (red / rf fields, column 0) |
+| `ot_hnx_sfu_rowstep` (REG 1: io_word + compiler_control registered) | 928 | 4,016 | 4 (one an SFU core) | the SFU core cluster's input pin stage (`io_r` / `ctl_r` of split2 absorb the register: then only the adders remain) |
+| `ot_hnx_su_wsplit` + write mux | 18 | 87 | 512 | folded into the bank tile: `ot_hnx_su_bank6_ws` (kit `hnx_su_bank6_ws_1019`, gate below) |
+
+Total < 0.02 mm² a die. None of the row stages is worth a standalone hard tile (pin-dominated, util < 30 %): they fold
+into the neighbour that already registers the same bus.
+
+### Gate (running at hand-off)
+
+`hnx_su_bank6_ws_1019` (kit spec `physical/hbm_next/kits/hnx_su_bank6_ws_1019.json`; the gate tool hard-codes
+`physical/ref_tile/`, so the generated kit sits at `physical/ref_tile/hnx_su_bank6_ws_1019/`): the d4g closed bank tile
+outline 369.36 x 151.2 um and its 6 SRAM macros, W face +45 pins. `pre_route_gate --remote auto --cts` running on
+ot-epyc7 (`ref_gate/hnx_su_bank6_ws_1019-20261019-040018`). Not on a critical prefix, but NOT submitted: a tile-level
+wsplit bench (fork of `tools/hbm_static/su_bank_run.sh` with the wrapper + WMUT witnesses) is still to write; the
+SU slice parent that instantiates it (`su_<Q><g>`, 1,797 x 2,825 um) is a critical parent: report only.
+
+## Next (SUDMA2)
+
+1. Collect the bank gate; report PNG + checklist to COORD-REVIEW-QUEUE [HBM-NEXT]; tile bench + witnesses, then submit.
+2. DMA.LOAD position-addressed rows: the load path is the off-die HBM service (elastic boundary: `ot_hbm_svc_async_fifo`,
+   loader service); a row record is a descriptor with a per-row HBM address (position x row bytes), no on-die row engine
+   change. Measuring needs the HBM service bench (VEH / HBM lane), PRICED stays.
+3. Fold rowx + rowr into the SU programme parent and rowstep into the SFU core pin stage (critical parents: report).
+4. Optional: rotate the cross-quarter reduction over the 4 reducers by row (compiler only, II m + 15 -> m + 11.25).

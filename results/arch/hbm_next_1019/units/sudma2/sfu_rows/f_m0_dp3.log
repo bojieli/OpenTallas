@@ -1,0 +1,12 @@
+SFU_ROWS round n=6 P=68 Pc=65 DP=3 P0=9 s_rd=72 s_wr=424 arith_starts=6
+SFU_ROWS round n=4 P=71 Pc=68 DP=3 P0=4 s_rd=504 s_wr=352 arith_starts=10
+SFU_ROWS_II row_arith_start_spacing min=68 max=71 (= P of each round; off-P spacings 0) starts=10
+SFU_ROWS edges=4554 mismatching=0 active_io=705 active_ctl=662 fault_edges=0 MUT=0 DP=3
+SFU_ROWS RESTART DP=3 faulted=0
+- rtl/hbm_next/su/tb/tb_hnx_sfu_rows.sv:149: Verilog $finish
+SFU_ROWS PASS MUT=0
+- rtl/hbm_next/su/tb/tb_hnx_sfu_rows.sv:153: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.019 s; speed 241.954 us/s
+- Verilator: cpu 0.019 s on 1 threads; allocated 9 MB
+RUN_RC=0

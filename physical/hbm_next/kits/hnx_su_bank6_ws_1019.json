@@ -1,0 +1,366 @@
+{
+ "name": "hnx_su_bank6_ws_1019",
+ "top": "ot_hnx_su_bank6_ws",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_bank6_clock_physical.sv",
+  "rtl/hbm_next/su/ot_hnx_su_wsplit.sv",
+  "rtl/hbm_next/su/ot_hnx_su_bank6_ws.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk_macro3",
+   "clk_macro4",
+   "clk_macro5"
+  ],
+  "W": [
+   "read_v",
+   "read_addr",
+   "clk",
+   "clk_ws",
+   "rst_n",
+   "ow_v",
+   "ow_addr",
+   "ow_data",
+   "lane_v",
+   "lane_a",
+   "lane_d",
+   "wsplit",
+   "defer",
+   "conflict",
+   "clash"
+  ],
+  "E": [
+   "read_data",
+   "clk_rd",
+   "read_return"
+  ],
+  "S": [
+   "clk_macro0",
+   "clk_macro1",
+   "clk_macro2"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_read?0?.u_m",
+   "clock_entry": {
+    "port": "clk_macro0",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_read?1?.u_m",
+   "clock_entry": {
+    "port": "clk_macro1",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_read?2?.u_m",
+   "clock_entry": {
+    "port": "clk_macro2",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_read?3?.u_m",
+   "clock_entry": {
+    "port": "clk_macro3",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_read?4?.u_m",
+   "clock_entry": {
+    "port": "clk_macro4",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_read?5?.u_m",
+   "clock_entry": {
+    "port": "clk_macro5",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "outline": {
+  "w": 369.36,
+  "h": 151.2
+ },
+ "layer_cap": "M5",
+ "signal_max_layer": "M5",
+ "pg_layer": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 24,
+  "period_ps": 1111.111111,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "signoff_period_ps": 1111.111111,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:HBM-NEXT-UNITS-SUDMA2",
+  "branch": "claude/hbm-next-units-sudma3-1019",
+  "tag": "r1",
+  "purpose": "HBM-NEXT (next-release study, NOT a release element): the d4g CLOSED pinned SU store bank tile (hbm_su_static_bank6_clock7_1015, unchanged RTL) + the split write phase ot_hnx_su_wsplit + the bank write mux folded in (SU.VOP row II 44/72 -> 28/56 measured, units/sudma2). Same outline 369.36x151.2 and macros; W face +45 pins (lane write port, wsplit, defer strap, conflict/clash). GATE ONLY for review: no submit until a tile-level wsplit bench lands.",
+  "views_to": "physical/ref_tile/hnx_su_bank6_ws_1019/views",
+  "record_to": "results/arch/hbm_next_1019/units/sudma2/gate_bank6_ws",
+  "benches": [],
+  "auto_merge": false,
+  "extra_paths": [
+   "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/r10c_diagnostic"
+  ],
+  "no_bench_reason": "gate only (review); slice-level wsplit benches in results/arch/hbm_next_1019/units/sudma2/wsplit"
+ },
+ "recipe": 3,
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": "60.0",
+  "OT_OFLOP_GAP": "4.5"
+ },
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_rd",
+  "clk_ws",
+  "clk_macro0",
+  "clk_macro1",
+  "clk_macro2",
+  "clk_macro3",
+  "clk_macro4",
+  "clk_macro5"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "macro0": {
+   "ports": [
+    "clk_macro0"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "macro1": {
+   "ports": [
+    "clk_macro1"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "macro2": {
+   "ports": [
+    "clk_macro2"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "macro3": {
+   "ports": [
+    "clk_macro3"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "macro4": {
+   "ports": [
+    "clk_macro4"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "macro5": {
+   "ports": [
+    "clk_macro5"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "core": {
+   "ports": [
+    "clk"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [
+    "rst_n",
+    "read_v",
+    "read_addr",
+    "ow_v",
+    "ow_addr",
+    "ow_data",
+    "lane_v",
+    "lane_a",
+    "lane_d",
+    "wsplit",
+    "defer"
+   ],
+   "outputs": [
+    "conflict",
+    "clash"
+   ]
+  },
+  "rd": {
+   "ports": [
+    "clk_rd"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": [
+    "read_data",
+    "read_return"
+   ]
+  },
+  "ws": {
+   "ports": [
+    "clk_ws"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_cts_roots": [
+  "clk",
+  "clk_rd",
+  "clk_ws"
+ ],
+ "pin_ranges": {
+  "clk_macro0": [
+   59.88,
+   79.88
+  ],
+  "clk_macro1": [
+   174.79,
+   194.79
+  ],
+  "clk_macro2": [
+   289.7,
+   309.7
+  ],
+  "clk_macro3": [
+   59.88,
+   79.88
+  ],
+  "clk_macro4": [
+   174.79,
+   194.79
+  ],
+  "clk_macro5": [
+   289.7,
+   309.7
+  ],
+  "clk": [
+   64.0,
+   73.0
+  ],
+  "clk_rd": [
+   65.0,
+   85.0
+  ],
+  "rst_n": [
+   86.0,
+   90.0
+  ],
+  "clk_ws": [
+   75.0,
+   84.0
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "HBM-NEXT next-release study: d4g closed bank6 tile + ot_hnx_su_wsplit (deferral register + bank write mux) folded in; same outline/macros; W face +45 pins",
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL (ot_hbm_su_static_pinned_bank) already registers every input (a_pin/r_pin/wa_pin/wd_pin/w_pin) and every output (read_data, r_return) at the boundary; a kit-level flop stage would add a redundant read edge"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "new hnx_ kit (next-release study): write port split into ow_* (fill/dw) + lane_* (lane result, deferred one edge on defer banks when wsplit)"
+ },
+ "reset_landing": {
+  "enable": false,
+  "max_sinks": 4,
+  "reason": "the RTL lands rst_n: the closed d4g bank registers it at its W-face pin (ot_hbm_su_static_pinned_bank PIN_RST 1) and the wsplit wrapper's single boundary register rst_q feeds only the deferral valid + the two fault flops"
+ }
+}
