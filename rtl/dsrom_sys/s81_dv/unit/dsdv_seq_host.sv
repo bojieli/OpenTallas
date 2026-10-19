@@ -92,7 +92,7 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
     input  wire          vf_i             // L2 fault (via L1)
 );
 `ifdef OT_S81_SH_APIPE9
-    wire [7:0] rr; ot_rst_relay #(.REGIONS(8)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
+    wire [7:0] rr__ot_rlv; ot_rst_relay #(.REGIONS(8)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr__ot_rlv)); wire rn = rr__ot_rlv[0];
 `else
     wire [0:0] rr; ot_rst_relay #(.REGIONS(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
 `endif
