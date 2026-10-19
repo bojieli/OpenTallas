@@ -1,0 +1,28 @@
+ERR cyc 558 token service fault
+  die 0
+ERR cyc 559 token service fault
+  die 0
+ERR cyc 560 token service fault
+  die 0
+ERR cyc 561 token service fault
+  die 0
+ERR cyc 562 token service fault
+  die 0
+ERR cyc 563 token service fault
+  die 0
+ERR cyc 564 token service fault
+  die 0
+ERR cyc 565 token service fault
+  die 0
+ERR cyc 566 token service fault
+  die 0
+ERR cyc 567 token service fault
+  die 0
+ERR cyc 568 token service fault
+  die 0
+  die 0
+FAIL MU_PEER_E2E fails=12 (stopped)
+- rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv:225: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 569ns; walltime 0.003 s; speed 176.999 us/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 8 MB
