@@ -69,7 +69,11 @@ module ot_hbm_r14_aq_pc_safe #(
     end else begin
       qfresh<=qpush;qfresh_addr<=qwp;qfresh_data<={wr_bank,wr_col,wr_row,wr_rd};
       for(integer b=0;b<32;b=b+1)begin
-        bank_n[b]<=bank_n[b]+((qpush&&wr_bank==b)?1'b1:1'b0)-((wr_ok&&hb==b)?1'b1:1'b0);
+        case({qpush&&wr_bank==b,wr_ok&&hb==b})
+          2'b10:bank_n[b]<=bank_n[b]+1'b1;
+          2'b01:bank_n[b]<=bank_n[b]-1'b1;
+          default:bank_n[b]<=bank_n[b];
+        endcase
         // The globally oldest head is authoritative across row conflicts. Incoming
         // traffic establishes lookahead while a bank has no outstanding sectors.
 
@@ -244,7 +248,9 @@ module ot_hbm_r14_aq_pc_safe #(
     end else begin
       // queue
       if(qpush)tail_set<=wr_bank[4:2];
-      q_n <= q_n + (qpush ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      case({qpush,wr_ok})
+        2'b10:q_n<=q_n+1'b1;2'b01:q_n<=q_n-1'b1;default:q_n<=q_n;
+      endcase
       if (wr_ok) q_rp <= WQW'(q_rp + 1'b1);
       if (col_aq) rtw_c <= 4'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
       if (col_we) wtr_c <= 4'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
