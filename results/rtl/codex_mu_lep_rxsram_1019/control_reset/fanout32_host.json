@@ -1,0 +1,186 @@
+{
+ "cells": 52772,
+ "flops": 18023,
+ "icgs": 0,
+ "macros": 20,
+ "findings": {
+  "clock_domain": [
+   "clock root port clk: 18,023 flops > 15,000 on one root (+0 ICGs, 20 macro clock pins; e.g. u.f_host[100]$_DFFE_PP_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine"
+  ],
+  "high_fanout": [
+   "net _38255_/Y (AND3x1_ASAP7_75t_R): 154 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _63726_/Y (NOR2x1_ASAP7_75t_R): 151 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "port ro[0]: 140 loads (140 flops, e.g. u.g_frame_local.g_slice[0].rov_r$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "port t_kd[53]: 139 loads (139 flops, e.g. u.g_frame_local.g_slice[0].kevent_r$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _38170_/Y (NAND3x2_ASAP7_75t_R): 107 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _64999_/Y (AND3x1_ASAP7_75t_R): 66 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _63482_/Y (OR3x1_ASAP7_75t_R): 65 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _63791_/Y (NOR2x1_ASAP7_75t_R): 64 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _63583_/Y (OA211x2_ASAP7_75t_R): 64 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _63581_/Y (NAND2x2_ASAP7_75t_R): 64 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _63893_/Y (NOR2x1_ASAP7_75t_R): 53 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "net _63890_/Y (OR2x2_ASAP7_75t_R): 53 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "reset u.g_reset_balanced.u_rstr.g_local[3].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 40 loads (22 flops, e.g. u.fault$_DFFE_PN0P_) > 32: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "net _66035_/Y (OA21x2_ASAP7_75t_R): 33 loads (33 flops, e.g. u.g_hrx.g_host_local.g_slice[0].enable_r$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast"
+  ],
+  "clock_guidance": [
+   "clock root port:clk: 18,043 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,043 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+  ]
+ },
+ "refuse": {},
+ "metrics": {
+  "clock_roots": [
+   {
+    "root": "port:clk",
+    "ff": 18023,
+    "icg": 0,
+    "macro_pins": 20,
+    "example": "u.f_host[100]$_DFFE_PP_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 18043,
+  "clock_max_root": "port:clk",
+  "high_fanout_top": [
+   {
+    "net": "_38255_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 154,
+    "flops": 0
+   },
+   {
+    "net": "_63726_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 151,
+    "flops": 0
+   },
+   {
+    "net": "port ro[0]",
+    "loads": 140,
+    "flops": 140
+   },
+   {
+    "net": "port t_kd[53]",
+    "loads": 139,
+    "flops": 139
+   },
+   {
+    "net": "_38170_/Y (NAND3x2_ASAP7_75t_R)",
+    "loads": 107,
+    "flops": 0
+   },
+   {
+    "net": "_64999_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 66,
+    "flops": 0
+   },
+   {
+    "net": "_63482_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 65,
+    "flops": 0
+   },
+   {
+    "net": "_63791_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 64,
+    "flops": 0
+   },
+   {
+    "net": "_63583_/Y (OA211x2_ASAP7_75t_R)",
+    "loads": 64,
+    "flops": 0
+   },
+   {
+    "net": "_63581_/Y (NAND2x2_ASAP7_75t_R)",
+    "loads": 64,
+    "flops": 0
+   },
+   {
+    "net": "_63893_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 53,
+    "flops": 0
+   },
+   {
+    "net": "_63890_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 53,
+    "flops": 0
+   },
+   {
+    "net": "u.g_reset_balanced.u_rstr.g_local[3].local_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 22
+   },
+   {
+    "net": "_66035_/Y (OA21x2_ASAP7_75t_R)",
+    "loads": 33,
+    "flops": 33
+   }
+  ],
+  "hf_max_port": 140,
+  "hf_max_reset": 40,
+  "hf_max_net": 154,
+  "reset_landing": [
+   {
+    "port": "rst_n",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 2,
+  "reg_to_out_levels": 1,
+  "icg_enable_from_port": 0,
+  "depth_ps": 311.7,
+  "depth_path": [
+   "u.g_rx[1].nz$_DFF_PN0_",
+   "u.g_rxm.g_o[0].g_on.g_registered_select.sa_r$_DFF_PN0_/D"
+  ],
+  "depth_levels": 8
+ },
+ "top": "ot_s81sl_lep_mu_h",
+ "netlist": "synth_host/work/orfs/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_lep_txscope_host_sizing/base/1_2_yosys.v",
+ "seconds": 1.3,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 32,
+  "hf_max": 32,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0
+ },
+ "clock_rule": {
+  "max_root_sinks": 18043,
+  "root": "port:clk",
+  "ok": true,
+  "text": "18,043 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,043 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "clock_domain: clock root port clk: 18,023 flops > 15,000 on one root (+0 ICGs, 20 macro clock pins; e.g. u.f_host[100]$_DFFE_PP_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine | high_fanout: net _38255_/Y (AND3x1_ASAP7_75t_R): 154 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast | clock_guidance: clock root port:clk: 18,043 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,043 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+}

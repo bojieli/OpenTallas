@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev6-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev6-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev6-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev6-1019
+ot-run: ot-epyc8       admits  1192 GB (avail 948, growth 113, headroom 0, waiters 0/0 GB) load 67/128 running 45 disk 239 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev6-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev6-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1646318-1792432071 after 1 s
+textbook_lint: WARN ot_s81sl_lep_mu_h cells 52,772 flops 18,023 depth 311.7 ps util None reach None um (1.3 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=18043 root=port:clk rule=PASS: 18,043 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,043 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+textbook_lint: WARN clock_domain: clock root port clk: 18,023 flops > 15,000 on one root (+0 ICGs, 20 macro clock pins; e.g. u.f_host[100]$_DFFE_PP_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine
+textbook_lint: WARN high_fanout: net _38255_/Y (AND3x1_ASAP7_75t_R): 154 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net _63726_/Y (NOR2x1_ASAP7_75t_R): 151 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: port ro[0]: 140 loads (140 flops, e.g. u.g_frame_local.g_slice[0].rov_r$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: port t_kd[53]: 139 loads (139 flops, e.g. u.g_frame_local.g_slice[0].kevent_r$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN clock_guidance: clock root port:clk: 18,043 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,043 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1646318-1792432071): exit 0
