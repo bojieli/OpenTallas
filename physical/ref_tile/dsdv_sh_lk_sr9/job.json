@@ -1,5 +1,5 @@
 {
- "name": "dsdv_sh_lk_sr9-dsdv_sh_lk_sr9-COMMIT",
+ "name": "dsdv_sh_lk_sr9-dsdv_sh_lk_sr9-9ed69f202",
  "block": "dsdv_sh_lk",
  "ref_tile": true,
  "owner": "Codex:S81-SHLK-STRUCT",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/s81-sh-lk-struct-1019",
-  "commit": "COMMIT",
+  "commit": "9ed69f202",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/dsdv_seq_host_pins",
@@ -177,7 +177,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/s81_shlk_struct_1019/physical/dsdv_sh_lk_sr9-dsdv_sh_lk_sr9-COMMIT"
+   "to": "results/arch/s81_shlk_struct_1019/physical/dsdv_sh_lk_sr9-dsdv_sh_lk_sr9-9ed69f202"
   }
  ],
  "cycles_added": 0,
