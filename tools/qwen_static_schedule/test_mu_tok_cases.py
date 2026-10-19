@@ -35,3 +35,14 @@ def test_cmd_windows_hook_off_by_default():
     assert not any(r.startswith("cp.") for r in a["windows"])
     b = M.layer_block(dict(M.SOURCED, seg_windows=T.seg_windows(T.segments())))
     assert "cp.cmd" in b["windows"] and "cp.stn" in b["windows"]
+
+
+def test_record_op_playable():
+    """MU-QW-B1: the op-granular periodic frame (mu_opcal) is the RTL-playable case table of record"""
+    cs = T.cases("record_op")
+    assert cs["playability"]["rtl_playable"] and cs["granularity"] == "op_leaf"
+    assert abs(cs["aggregate_tok_s_modelled"] - 13711.4) < 0.1
+    assert [u["tokens_per_frame"] for u in cs["users"]] == [16, 15, 8, 7]
+    assert all(s["src"] == "face" for s in cs["users"][0]["starts"])
+    assert all(s["src"] == "leaf" for u in cs["users"][1:] for s in u["starts"])
+    assert cs["leaf"]["entries"] + 1 <= 4096 and cs["relocation"]["UVM_STRIDE"] == M.DV_UVM_STRIDE

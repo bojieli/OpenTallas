@@ -53,6 +53,10 @@ CLK = 1.2e9
 ROM_WORDS = 4096
 LEAF_MAGIC = 0x4F50                     # "OP"
 TB, UB_, SB, FB, CB = 22, 2, 6, 10, 10  # entry fields: t, user, stage, first, cnt  (+ flag FIRST)
+# leaf spacing rule (qfd_sys_face_mu_dhuser OPSEG): the leaf consumes an entry on edge e and issues the ROM read of the
+# next entry on that same edge (1-edge read, captured into the prefetch register on e + 1), so the next entry can be
+# consumed on e + 2 at the earliest: consecutive t_rom (and the frame wrap, last -> first + H) >= LEAF_MIN_GAP
+LEAF_MIN_GAP = 2
 
 
 # ---------------------------------------------------------------------------------------------------- image
@@ -330,7 +334,7 @@ def compile_frame(F=16, p=None, layers=36, starts=None):
            for i in range(F) for j, (n, b) in enumerate(u0)]
     if [(n, t0) for n, t0, _ in sched[0]] != ref:
         raise ScheduleError("latency user timeline differs from the single-user timeline")
-    cal = dict(schema="opentallas.qwen.mu_opcal.v1", frame_tokens=F, H=H, T=T, inputs=p, segs=segs, grp=grp,
+    cal = dict(schema="opentallas.qwen.mu_opcal.v1", frame_tokens=F, layers=layers, H=H, T=T, inputs=p, segs=segs, grp=grp,
                schedule=sched, tokens_per_frame=ntok,
                users=[dict(user=u, tokens_per_frame=ntok[u], tok_s=ntok[u] * CLK / H,
                            first_start=sched[u][0][1]) for u in range(NU)])
@@ -414,18 +418,25 @@ def leaf_list(cal, pb=None):
     ts = [x[0] for x in L]
     if len(set(ts)) != len(ts):
         raise ScheduleError("two leaf starts on one edge")
+    gaps = [b - a for a, b in zip(ts, ts[1:])] + ([ts[0] + H - ts[-1]] if ts else [])
+    if ts and min(gaps) < LEAF_MIN_GAP:
+        raise ScheduleError(f"leaf entries {min(gaps)} edges apart (< LEAF_MIN_GAP {LEAF_MIN_GAP}: ROM prefetch)")
+    if any(f % 4 for _, _, _, f, _, _ in L):
+        raise ScheduleError("a leaf range does not start on a 4-entry store row (qfd_dv_cmd_cal_mu fetch alignment)")
     if len(L) + 1 > ROM_WORDS:
         raise ScheduleError(f"{len(L)} leaf entries do not fit the {ROM_WORDS}-word ROM")
     if H >= (1 << TB):
         raise ScheduleError(f"frame {H} needs more than {TB} counter bits")
+    if any(u == 0 or not 1 <= cnt < (1 << CB) or f + cnt >= (1 << FB) for _, u, _, f, cnt, _ in L):
+        raise ScheduleError("leaf entry user 0 / empty / out-of-field range")
     return L
 
 
 def rom_words(cal, L=None):
-    """ROM word 0 = {magic 16 [71:56], H 22 [55:34], nent 12 [33:22], 22'd0}; entry word = {FIRST [71], 2'd0, cnt 10
+    """ROM word 0 = {magic 16 [71:56], H 22 [55:34], nent 12 [33:22], T 22 [21:0]}; entry word = {FIRST [71], 2'd0, cnt 10
     [68:59], first 10 [58:49], stage 6 [48:43], user 2 [42:41], t_rom 22 [40:19], 19'd0}"""
     L = L if L is not None else leaf_list(cal)
-    w = [(LEAF_MAGIC << 56) | (cal["H"] << 34) | (len(L) << 22)]
+    w = [(LEAF_MAGIC << 56) | (cal["H"] << 34) | (len(L) << 22) | cal["T"]]
     for t, u, stg, f, cnt, fl in L:
         w.append((int(bool(fl)) << 71) | (cnt << 59) | (f << 49) | (stg << 43) | (u << 41) | (t << 19))
     return w
@@ -445,6 +456,11 @@ def via_map(words, rows=512, mux=8):
     return out
 
 
+def viamap_hex(words):
+    """the $readmemh text of ot_rom_4096x72_m8's via array (512 rows x 576 columns, one 144-digit row a line)"""
+    return "".join(f"{r:0144x}\n" for r in via_map(words))
+
+
 def face_stage_list(cal):
     """the latency user's stage starts of one token (the leaf's STG_SEQ alignment list): stages in order"""
     T = cal["T"]
@@ -455,28 +471,29 @@ def receipt(cal, pb=None):
     pb = pb or playback(cal)
     L = leaf_list(cal, pb)
     per = {u: sum(1 for x in pb["starts"] if x[1] == u) for u in range(NU)}
-    return dict(schema=cal["schema"], frame_tokens=cal["frame_tokens"], H=cal["H"], T=cal["T"],
+    return dict(schema=cal["schema"], frame_tokens=cal["frame_tokens"], layers=cal["layers"], H=cal["H"], T=cal["T"],
                 aggregate_tok_s=cal["aggregate_tok_s"], users=cal["users"], leaf_entries=len(L),
                 starts_per_frame=per, fires_per_frame=len(pb["fires"]), op_groups=op_groups(cal["inputs"]),
                 group_layout={g: {k: v for k, v in x.items() if k != "ops"} for g, x in cal["grp"].items()},
                 descriptors={str(k): v for k, v in pb["desc"].items()},
                 am_root=dict(span=AM_ROOT_SPAN, emits_per_frame=check_root_merge(cal)),
-                rules=dict(T0_MIN=T0_MIN, MIN_OP_CYC=MIN_OP_CYC, OP_ENTRY_OFS=OP_ENTRY_OFS))
+                rules=dict(T0_MIN=T0_MIN, MIN_OP_CYC=MIN_OP_CYC, OP_ENTRY_OFS=OP_ENTRY_OFS, LEAF_MIN_GAP=LEAF_MIN_GAP))
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--frames", type=int, nargs="+", default=[16])
+    ap.add_argument("--layers", type=int, default=36)
     ap.add_argument("--out", type=Path)
     a = ap.parse_args()
     for F in a.frames:
-        cal = compile_frame(F)
+        cal = compile_frame(F, layers=a.layers)
         r = receipt(cal)
         print(F, round(r["aggregate_tok_s"], 1), [(u["user"], u["tokens_per_frame"], round(u["tok_s"], 1))
                                                   for u in r["users"]], "leaf", r["leaf_entries"], r["starts_per_frame"])
         if a.out:
             a.out.mkdir(parents=True, exist_ok=True)
-            (a.out / f"receipt_F{F}.json").write_text(json.dumps(r, indent=1) + "\n")
+            (a.out / f"receipt_F{F}{'' if a.layers == 36 else f'_L{a.layers}'}.json").write_text(json.dumps(r, indent=1) + "\n")
 
 
 if __name__ == "__main__":

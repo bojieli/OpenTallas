@@ -45,6 +45,13 @@
 //   fields the R4 per-user LM-head argmax (rtl/qwen_dv/mu/qfd_dv_amax_mu.sv) reads: STN (kind 2) cmd[52:51] and AMAX
 //   (kind 6) cmd[9:8] := user (zero-extended to 2 bits).  The image leaves them 0 (non-zero = fault_code[3], as the XC
 //   tag user bits).  Same register, same edge: 0 added latency; user 0's words are the image's words.
+// EXPLICIT RANGE (MU-QW-B1 2026-10-19, B1 option 2: the op-start leaf qfd_sys_face_mu_dhuser OPSEG): a start with
+//   start_rng = 1 plays the image entries [start_first, start_first + start_cnt) instead of the stage class's descriptor
+//   (stage still names the running stage: LAST_STAGE check, and the caller's per-user stage bank).  Same playhead start,
+//   fetch, T_k (the first entry's delta counts from the start edge, as a descriptor's first entry) and faults.  Range
+//   check: start_cnt 0, start_first not 4-aligned (one store row = 4 entries), or start_first + start_cnt > nent ->
+//   fault_code[0] and the start is refused (as any bad start).  start_rng = 0 (tie it so where unused): identical.
+//   MUT 21 (bench only): the range is ignored (the stage class's descriptor plays).
 // =====================================================================================================================
 module qfd_dv_cmd_cal_mu #(
     parameter integer MUT = 0,
@@ -68,6 +75,9 @@ module qfd_dv_cmd_cal_mu #(
     input  wire          start,
     input  wire [5:0]    stage,
     input  wire [UB-1:0] start_user,                // NU > 1: the user this start runs (ignored at NU = 1)
+    input  wire          start_rng,                 // 1: explicit entry range (start_first / start_cnt); tie 0 if unused
+    input  wire [9:0]    start_first,
+    input  wire [9:0]    start_cnt,
     output reg  [115:0]  cmd,
     output reg  [UB-1:0] cmd_user,                  // the user of cmd / loc_* / su_issue / xc_issue (0 at NU = 1)
     output reg           loc_emb,
@@ -170,7 +180,11 @@ module qfd_dv_cmd_cal_mu #(
     wire       go = start || boot_go;
     wire [1:0] gseg = boot_go ? 2'd3 : sseg;
     wire [63:0] gd = dwr[{1'b0, gseg} + 3'd1];
-    wire [15:0] g_first = gd[31:16], g_cnt = gd[15:0];
+    wire        g_rng = start && start_rng && !boot_go;
+    wire [15:0] g_first = (g_rng && MUT != 21) ? {6'd0, start_first} : gd[31:16];
+    wire [15:0] g_cnt = (g_rng && MUT != 21) ? {6'd0, start_cnt} : gd[15:0];
+    wire        rng_bad = g_rng && (start_cnt == 10'd0 || start_first[1:0] != 2'd0 ||
+                                    {1'b0, start_first} + {1'b0, start_cnt} > {2'd0, nent});
     wire [UB-1:0] go_user = (NU > 1 && !boot_go) ? start_user : {UB{1'b0}};
     // a start reaches only its own playhead (MUT 15: every playhead, the single calendar's gating)
     reg  [NU-1:0] go_u, frz_u;
@@ -183,7 +197,7 @@ module qfd_dv_cmd_cal_mu #(
     end
     // start refusal: own playhead playing (MUT 13: any playhead; MUT 14: never)
     wire busy_sel = (MUT == 13) ? (|run_q) : (MUT == 14) ? 1'b0 : run_q[go_user];
-    wire start_bad = !sealed || busy_sel || (start && boot_go) || (start && stage > LAST_STAGE[5:0]);
+    wire start_bad = !sealed || busy_sel || (start && boot_go) || (start && stage > LAST_STAGE[5:0]) || rng_bad;
 
     // ================================================================ fetch / issue, per playhead (combinational)
     reg  [NU-1:0]  can_read, gnt, hv, fire, late, hgo;

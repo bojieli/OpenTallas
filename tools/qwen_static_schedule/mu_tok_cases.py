@@ -25,6 +25,12 @@ Variants:
   rtl_layer       layer granularity, of-record resources + command-plane edges -> what qfd_dv_cmd_cal_mu can play today
                   (2 users get placed: users 2, 3 never fit -- the 9,291 row of the record)
   rtl_layer_nocmd the same without the command-plane edges (negative control)
+  record_op       MU-QW-B1 (2026-10-19): the op-granular PERIODIC calendar of mu_opcal (F = 16 latency tokens a frame,
+                  13,711.4 tok/s, command plane + am.root scheduled) as the RTL plays it: the latency user's stage starts
+                  from the face, the fillers' op starts from the leaf ROM (qfd_sys_face_mu_dhuser OPSEG inside
+                  qfd_tt_ctlm_dv OPSEG 1) with explicit entry ranges; every start {cycle, user, stage, first, cnt, src}
+                  and the DV strides (UVM 4096 / PIDX 128, mu_calendar.DV_*).  RTL-playable (bench
+                  rtl/test/mu_qwen_seq/mu_opseg_bench.py).  This is the MU.TOK.QW case table of record.
   cmdplane4       layer granularity, command-plane resources ONLY (me/su/kv/coll dropped): 4 users on the MU RTL
                   command plane at once; a STRESS case of the composition, NOT a production calendar (its rates mean
                   nothing; it is labelled so in every output)
@@ -181,6 +187,7 @@ VARIANTS = {
     "record_cp": dict(granularity="op", p={}, cmd=True),
     "rtl_layer": dict(granularity="layer", p={}, cmd=True),
     "rtl_layer_nocmd": dict(granularity="layer", p={}),
+    "record_op": dict(granularity="op_leaf", p={}),
     "cmdplane4": dict(granularity="layer", p=dict(drop_resources=("me", "su", "kvs", "d2d", "coll", "host")), cmd=True),
 }
 
@@ -225,7 +232,44 @@ def playability(cal):
                         "layer / head / boot); a filler op that waits inside a layer has no stage to start it") if op else "")
 
 
+def cases_record_op(frame_tokens=16, layers=36, pos0=(8186, 8180, 8174, 8168)):
+    """record_op: mu_opcal's periodic op-granular frame as played by the face (user 0) + the op-start leaf (fillers)"""
+    from . import mu_opcal as O
+    cal = O.compile_frame(frame_tokens, layers=layers)
+    pb = O.playback(cal)
+    L = O.leaf_list(cal, pb)
+    H = cal["H"]
+    users = []
+    for x in cal["users"]:
+        k = x["user"]
+        st = [dict(cycle=S, stage=stg, first=f, cnt=n, src=src, first_of_frame=bool(fl))
+              for S, u, stg, f, n, src, fl in pb["starts"] if u == k]
+        users.append(dict(user=k, tokens_completed=x["tokens_per_frame"], tokens_per_frame=x["tokens_per_frame"],
+                          token_period=H / x["tokens_per_frame"], tok_s=x["tok_s"], first_start=x["first_start"],
+                          pos=[pos0[k] + i for i in range(x["tokens_per_frame"])],
+                          fields=dict(vm_ar_dd_em_base_add=k * M.DV_UVM_STRIDE, su_pidx_add=k * M.DV_PIDX_STRIDE,
+                                      xc_tag_bits=f"[{M.DV_UTAG_LSB + 1}:{M.DV_UTAG_LSB}]={k}", stn_user_cmd_52_51=k,
+                                      amax_user_cmd_9_8=k, hc_pos_17_16=k, root_result_user_ss5_27_26=k),
+                          kv_rows={f"L{l}": M.kv_user_rows(4)[(k, l)] for l in range(layers)},
+                          starts=st))
+    return dict(schema="opentallas.qwen.mu_tok_cases.v1", variant="record_op", granularity="op_leaf",
+                production_calendar=True, aggregate_tok_s_modelled=cal["aggregate_tok_s"],
+                single_user_token_cycles=cal["T"], horizon_cycles=H, frame_tokens=frame_tokens, layers=layers,
+                users=users, leaf=dict(entries=len(L), rom="ot_rom_4096x72_m8", min_gap=O.LEAF_MIN_GAP,
+                                       header_word=hex(O.rom_words(cal, L)[0])),
+                playability=dict(granularity="op_leaf", rtl_playable=True, per_user={},
+                                 reason="B1 option 2: face = latency user's stage starts, op-start leaf = fillers' "
+                                        "op starts with explicit ranges (qfd_dv_cmd_cal_mu start_rng)"),
+                command_plane_clashes=dict(start=0, cmd=0, done=0, note="scheduled in mu_opcal (cp.*, am.root)"),
+                inputs={k: v for k, v in cal["inputs"].items() if k != "seg_windows"},
+                relocation=dict(UVM_STRIDE=M.DV_UVM_STRIDE, PIDX_STRIDE=M.DV_PIDX_STRIDE, UTAG_LSB=M.DV_UTAG_LSB),
+                image_descriptors={str(k): v for k, v in pb["desc"].items()},
+                image_segments={str(k): [[t, hex(c)] for t, c in v] for k, v in cal["segs"].items()})
+
+
 def cases(name, tokens=None, pos0=(8186, 8180, 8174, 8168)):
+    if name == "record_op":
+        return cases_record_op(pos0=pos0)
     tokens = tokens or (6 if name.startswith("record") else 4)                 # record: the receipt's 6-token horizon
     cal, segs = compile_variant(name, tokens)
     users = []

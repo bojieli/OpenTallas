@@ -114,7 +114,8 @@ plays stages 1..36 from one layer segment.
 **Case table.** Run `launch_mu_tok.sh cases OUT`, or `python3 -m qwen_static_schedule.mu_tok_cases --out OUT` from
 `tools/`. Summary: `cases_summary.json`. The RTL-playable table is `cases_rtl_layer.json`. For every user it gives:
 - every unit's start cycle and stage (layer l -> stage l+1, head chunk -> 37, head / next token -> 0);
-- the user fields: VM / AR / DD / EM base + u x 0x4000, SU pidx + u x 64, XC tag[7:6] = u, STN cmd[52:51] = u,
+- the user fields: VM / AR / DD / EM base + u x 4,096 (`mu_calendar.DV_UVM_STRIDE`; the smoke's 0x4000 is outside the
+  16k-word slice VM), SU pidx + u x 128 (`DV_PIDX_STRIDE`; the smoke used 64), XC tag[7:6] = u, STN cmd[52:51] = u,
   AMAX cmd[9:8] = u, hc pos[17:16] = u;
 - the KV rows 64 + l + 256 u;
 - the positions. Every user sits in the T8192 bucket: user 0 starts at 8186, user 1 at 8180, user 2 at 8174 and user 3
@@ -124,40 +125,55 @@ plays stages 1..36 from one layer segment.
 **Calendars.**
 - The record: `compile_calendar(users=4, occupancy=measured, head_chunks=8, tokens=6, policy=priority)`.
 - `record_cp` is the record plus the command plane.
-- Use the record once B1 is closed. Until then, use `rtl_layer` (2 users).
+- **`record_op` is the case table of record (MU-QW-B1, 10-19).** It is the op-granular PERIODIC frame of
+  `mu_opcal.compile_frame(16)`: 16 latency tokens a frame (H = 4,025,840 edges), the command plane and the argmax root
+  scheduled, **13,711.4 tok/s** (4,769.2 / 4,471.1 / 2,384.6 / 2,086.5). The face plays user 0's stage starts and the
+  op-start leaf plays the fillers' op starts with explicit entry ranges. It is RTL-playable: see
+  `results/rtl/mu_qwen_1018/b1/README.md`. Run `launch_mu_tok.sh cases OUT` (variant `record_op`).
+- `record` (14,054, finite horizon, no command plane) and `rtl_layer` (2 users, 9,291) are superseded as case tables;
+  they stay as references.
 
 **Cases.** Each extends a single-user TOK.QW bench and runs on the fleet with Verilator 5.050.
 
 | case | extends | DUT / netlist | per-user operands | PASS |
 |---|---|---|---|---|
-| T1 compute layer x 4 | QW-CLAYER2 stage benches (`tb_qfd_dv2` N12 reg_vec/reg_mat, dv_layer composition; claude/qw-clayer2-1018 ca089ac2d) + QW-REALSTG real operands | colW5 column slice cut (`slice_cut.py`) from the compute GEN that carries `qfd_dv_cmd_cal_mu` NU 4 in `qfd_tt_ctlm_dv` and the `qfd_dv_slice2` _e/_w MU faces (Q-DIE15 successor of dv2f14bi) | user u: its own x_u (hidden in), position pos_u, RoPE row, VM region base + u x 0x4000 | each user's stage outputs bit-exact vs its golden; user 0's issue log and stage spans cycle-identical to the single-user T1 run; 0 faults |
+| T1 compute layer x 4 | QW-CLAYER2 stage benches (`tb_qfd_dv2` N12 reg_vec/reg_mat, dv_layer composition; claude/qw-clayer2-1018 ca089ac2d) + QW-REALSTG real operands | colW5 column slice cut (`slice_cut.py`) from the compute GEN that carries `qfd_dv_cmd_cal_mu` NU 4 in `qfd_tt_ctlm_dv` OPSEG 1 (the op-start leaf + its ROM image from `mu_opcal.rom_words`) and the `qfd_dv_slice2` _e/_w MU faces (Q-DIE15 successor of dv2f14bi) | user u: its own x_u (hidden in), position pos_u, RoPE row, VM region base + u x 4,096; the user's op starts from `record_op` | each user's stage outputs bit-exact vs its golden; user 0's issue log and stage spans cycle-identical to the single-user T1 run; 0 faults |
 | T2 KV attention x 4 | QW-KVATTN (0e509e763: service on real L0/L1, 1,561 cycles at T8192) + QW-KVATTN2 (die-netlist step) | `kvs_attn` + `kvs_ctl` slices of the KV GEN with `qkd_kv_mu_wrow` in `qkd_kvs_ctl` and `qkd_kv_mu_rrow` in `qkd_static_kv_pc_path_nc` (MU-ADOPT-KV), host MU1 | user u: its own KV (rows 64+l+256u filled from its prompt), q_u, pos_u | every user's attention output exact; each user's HBM PC stream inside its own kvs window; user 0's service cycles = single-user |
 | T3 D2D pair x 4 | Q-XDIE pair_r2 (results/rtl/xdie_qwen_1018) | both D2D endpoints of the MU GENs | per-user q / o records at the calendar's cycles, user tag as a check field | every record lands at its compiled cycle for its user; exposed cycles a layer per user |
 | T4 TP8 collective | MU-QWEN mu_bi (c82d57f7c, PASS: 30 ARs, 4 users, 61,440 words exact) | production wrapper, dv2f14bi lanes, LS 378 | from `mu_calendar.bench_cases` | rerun only if the MU GEN changes the collective calendar (LS) |
-| T5 LM head chunks | MU-QWEN-HEAD `tb_amax_mu` (600/600 single-shot) | slice of the MU GEN; F-TOK-1 fix or the `cp.stn` rule | each filler's head in 8 row chunks interleaved per the calendar | per-user argmax = single-shot over 151,936 rows; latency user's head as single-user |
+| T5 LM head chunks | MU-QWEN-HEAD `tb_amax_mu` (600/600 single-shot) | slice of the MU GEN; F-TOK-1 = the SLICE2 `stn_pend` sticky fault + the `cp.stn` rule (B2 closed) | each filler's head in 8 row chunks interleaved per the calendar | per-user argmax = single-shot over 151,936 rows; latency user's head as single-user |
 | T6 host | MU-QWEN-HOST `tb_qkd_host_mu_out` | KV GEN host plane MU_OUT NSLOT 4 | 4 outstanding users | per-user CQ exact, in order |
-| T7 composition | TOKEN-PASS `token_compose` | measured T1-T6 spans placed on the calendar | - | per-user token cycles and aggregate tok/s from MEASURED spans; latency user = single-user TOK.QW |
+| T7 composition | TOKEN-PASS `token_compose` | measured T1-T6 spans placed on the `record_op` frame (the leaf's playback, `mu_opseg_bench` C3/C4) | - | per-user token cycles and aggregate tok/s from MEASURED spans; latency user = single-user TOK.QW |
 
 **Goldens.**
 - User 0 uses the single-user TP4 realmem P8191 gold for L0..L2. The last layer and the head wait for the 36-layer gold.
 - Users 1..3 need per-user fixtures (`tools/qwen_layerbench/gen_fixtures.py`) at their own position / prompt (B5).
 - The numerics flag on TP8 P·V order vs the TP4 gold (QW-KVATTN) applies to every user.
 
-**Launch.** `launch_mu_tok.sh gate COMPUTE_DIE_V KV_DIE_V` refuses until the die netlists carry the MU RTL (B3) and the
-calendar of record is playable (B1). It then prints the T1-T7 steps.
+**Launch.** `launch_mu_tok.sh gate COMPUTE_DIE_V KV_DIE_V TOKQW_RECORD GOLD_DIR` refuses only on B3 (the die
+netlists lack the MU RTL, including the OPSEG leaf), B4 (no single-user TOK.QW PASS record) and B5 (no per-user goldens).
+It no longer refuses on B1 or B2. When open it prints the T1-T7 steps.
 
 ## 4. Blockers of the real run
 
-- **B1 (MU-ADOPT-CTLM, R1). Op-granular playback.**
+- **B1 CLOSED (MU-QW-B1 10-19, `results/rtl/mu_qwen_1018/b1/README.md`).** Coordinator option 2: the closed
+  `qfd_sys_face` is unchanged, and an op-start leaf (ROM) in `qfd_tt_ctlm_dv` OPSEG 1 plays the fillers' op starts with
+  explicit ranges. The fleet bench plays the `mu_opcal` frame. What follows is the original spec, kept as history.
+- **B1 (MU-ADOPT-CTLM, R1). Op-granular playback.** (history)
   - `qfd_dv_cmd_cal_mu` needs per-op segments: about 12 op descriptors, plus L0 (F-TOK-5) and the head chunk
     first/last (F-TOK-4).
   - Today it has 4 descriptors (`dwr[1..4]`; `dwr[5..6]` must be 0).
   - Until then the RTL plays 2 users (9,291 modelled), not the record's 4 (14,054).
   - The image store's capacity (976 PW, against the 13,910 PW single-user need) is the same Q-DIE15 item.
-- **B2 (MU-ADOPT-SLICE / R4). F-TOK-1:** carry the result's user and amax with the result, or fault.
+- **B2 CLOSED (MU-ADOPT-SLICE2 a540f1f9f).** F-TOK-1 is now a sticky fault (`stn_pend`), and the calendar keeps the
+  station exclusive (`cp.stn` in `mu_opcal`). Original text: carry the result's user and amax with the result, or
+  fault.
 - **B3 (MU-ADOPT-CTLM / -SLICE / -KV). Die GENs carrying the MU RTL.**
   - Compute die: `qfd_tt_ctlm_dv` binds `qfd_dv_cmd_cal_mu` NU 4, with start_user on the start face and `cmd_user`
     forwarded into STN `cmd[52:51]` and AMAX `cmd[9:8]` (the glue the smoke proves; glue2 shows its absence).
+  - Compute die, MU-QW-B1: `qfd_tt_ctlm_dv` OPSEG 1 with its leaf ROM (`ot_rom_4096x72_m8`, the `record_op` image),
+    and `ss5[27:26]` = the result's user from the slice root (the MU-QW-AMIX contract). The HF-4 kit regeneration must
+    take the OPSEG RTL (lanes/HF-4.md).
   - KV die: the rowoff leaves get the issuing stage's user (glue1 shows what a "last start user" wiring breaks), and the
     host runs MU1 with NSLOT 4.
 - **B4. Single-user TOK.QW gaps (inherited):**
