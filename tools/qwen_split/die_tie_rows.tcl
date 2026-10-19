@@ -285,6 +285,108 @@ proc ot_clock_rows_prepare {block dbu obstacles names HALF CLR P8 w8 site} {
   return [list $preserved $segs $occupied]
 }
 
+# Explicit post-clock candidate entry: preserve EVERY existing cell coordinate
+# and existing row coverage. This adds rows/bindings only; no rails or PASS.
+# It is not invoked by the default constant-row flow.
+proc ot_clock_rows_candidate {names} {
+  if {![llength $names]} {error "OT_CLOCK_ROWS: explicit clock manifest required"}
+  set block [ord::get_db_block]; set dbu [$block getDbUnitsPerMicron]
+  if {![llength [$block getRows]]} {error "OT_CLOCK_ROWS: physical site template missing"}
+  set site [[lindex [$block getRows] 0] getSite]; set obstacles {}; set old_segs {}
+  foreach inst [$block getInsts] {
+    set m [$inst getMaster]
+    if {[$m isBlock] || [$m isPad]} {
+      set q [$inst getBBox]
+      lappend obstacles [list [expr {[$q xMin]-1080}] [expr {[$q yMin]-1080}] [expr {[$q xMax]+1080}] [expr {[$q yMax]+1080}]]
+    }
+  }
+  lassign [ot_clock_rows_prepare $block $dbu $obstacles $names 12000 600 8640 .48 $site] preserved segs occupied
+  foreach row [$block getRows] {
+    set q [$row getBBox]
+    if {[$row getDirection] ne "HORIZONTAL" || [$row getSpacing] != 54} {error "OT_CLOCK_ROWS: unsupported existing row"}
+    lappend old_segs [list [$q yMin] [$row getOrient] [$q xMin] [$q xMax] 54]
+  }
+  set merged {}; set orientations {}
+  foreach s [lsort -integer -index 2 [concat $old_segs $segs]] {
+    lassign $s y orient a b pitch
+    if {[dict exists $orientations $y] && [dict get $orientations $y] ne $orient} {error "OT_CLOCK_ROWS: conflicting existing row orientation"}
+    dict set orientations $y $orient
+    set key "$y/$orient"
+    if {[dict exists $merged $key]} {
+      set intervals [dict get $merged $key]; lassign [lindex $intervals end] pa pb
+      if {$a <= $pb} {lset intervals end [list $pa [expr {max($pb,$b)}]]} else {lappend intervals [list $a $b]}
+      dict set merged $key $intervals
+    } else {dict set merged $key [list [list $a $b]]}
+  }
+  # All rejecting preflight above precedes physical changes.
+  foreach row [$block getRows] {odb::dbRow_destroy $row}
+  set count 0
+  dict for {key intervals} $merged {
+    lassign [split $key /] y orient
+    foreach iv $intervals {
+      lassign $iv a b
+      odb::dbRow_create $block "CLOCK_PG_ROW_$count" $site $a $y $orient HORIZONTAL [expr {($b-$a)/54}] 54
+      incr count
+    }
+  }
+  dict for {name original} $preserved {
+    set inst [$block findInst $name]
+    if {[list [$inst getLocation] [$inst getOrient]] ne $original} {error "OT_CLOCK_ROWS: fixed clock changed: $name"}
+    foreach net {VDD VSS} {[$inst findITerm $net] connect [$block findNet $net]}
+    $inst setPlacementStatus FIRM
+  }
+  puts "OT_CLOCK_ROWS_CANDIDATE fixed_clocks=[dict size $preserved] rows=$count rails_created=0 power_qualified=0 timing_qualified=0"
+}
+
+# A logical PG binding is insufficient. The explicit clock set must contact
+# same-net actual M1 rail polygons; complete check_power_grid and stack-short
+# checks are additionally required. The old constant-only check excludes clocks.
+proc ot_clock_pg_contact_check {names} {
+  if {![llength $names]} {error "OT_CLOCK_PG: explicit clock manifest required"}
+  set block [ord::get_db_block]; set rails {}; set checked 0
+  foreach netname {VDD VSS} {
+    set net [$block findNet $netname]
+    if {$net eq "NULL"} {error "OT_CLOCK_PG: supply missing $netname"}
+    foreach sw [$net getSWires] {
+      foreach r [$sw getWires] {
+        if {[$r isVia]} continue
+        set layer [$r getTechLayer]
+        if {$layer eq "NULL" || [$layer getName] ne "M1"} continue
+        for {set bin [expr {int(floor(double([$r yMin])/1000))}]} {$bin <= int(floor(double([$r yMax])/1000))} {incr bin} {
+          dict lappend rails "$netname/$bin" [list [$r xMin] [$r yMin] [$r xMax] [$r yMax]]
+        }
+      }
+    }
+  }
+  foreach name $names {
+    set inst [$block findInst $name]
+    if {$inst eq "NULL"} {error "OT_CLOCK_PG: clock missing $name"}
+    foreach netname {VDD VSS} {
+      set pin [$inst findITerm $netname]
+      if {$pin eq "NULL" || [$pin getNet] eq "NULL" || [[$pin getNet] getName] ne $netname} {error "OT_CLOCK_PG: missing actual PG binding $name/$netname"}
+      set geometries 0
+      foreach mp [[$pin getMTerm] getMPins] {
+        foreach g [$mp getGeometry] {
+          if {[[$g getTechLayer] getName] ne "M1"} {error "OT_CLOCK_PG: unsupported clock PG pin layer"}
+          incr geometries
+        }
+      }
+      if {$geometries != 1} {error "OT_CLOCK_PG: unsupported clock PG pin geometry"}
+      set q [$pin getBBox]; set contact 0
+      for {set bin [expr {int(floor(double([$q yMin])/1000))}]} {$bin <= int(floor(double([$q yMax])/1000)) && !$contact} {incr bin} {
+        if {![dict exists $rails "$netname/$bin"]} continue
+        foreach r [dict get $rails "$netname/$bin"] {
+          lassign $r a b c d
+          if {[$q xMin] < $c && [$q xMax] > $a && [$q yMin] < $d && [$q yMax] > $b} {set contact 1; break}
+        }
+      }
+      if {!$contact} {error "OT_CLOCK_PG: no literal M1 contact $name/$netname"}
+      incr checked
+    }
+  }
+  puts "OT_CLOCK_PG_CONTACT checked_pins=$checked continuity_qualified=0"
+}
+
 # after pdngen (fail closed): no M7-M8 / M8-M9 via of a die-top-cell rail stack may overlap an opposite-net M8 wire
 # (core stripe OR macro-grid stripe).  Connectivity is check_power_grid's job; this is the short check of the stacks.
 proc ot_tie_rows_verify {p8 w8} {

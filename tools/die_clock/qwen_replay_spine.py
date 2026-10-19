@@ -30,7 +30,16 @@ def main(a):
     for obj in block.getInsts():
         if obj.getMaster().isBlock() or obj.isPlaced():
             q=obj.getBBox();rows.append((obj.getName(),(q.xMin()/u,q.yMin()/u,q.xMax()/u,q.yMax()/u)))
-    die=block.getDieArea();g=ExactBayGrid(die.xMax()/u,die.yMax()/u,rows)
+    power_sites=None
+    if rec['spec'].get('pg_safe_clock_bays',False):
+        from qwen_clock_power_sites import ClockPowerSites
+        power_sites=ClockPowerSites.from_block(block,odb,[design.getDb().findMaster(n) for n in (rt.BUF,rt.PAD)])
+        # A PG-constrained spine cannot repair an already unsafe regional tree.
+        bad=[n for n,_,x,y in rec['cells'] if not power_sites(x,y)]
+        if bad:raise ValueError('regional clock sites violate actual PG model: '+str(bad[:20]))
+        rows=power_sites.occupied_rows(block)
+        rec['clock_power_site_model']=power_sites.identity()
+    die=block.getDieArea();g=ExactBayGrid(die.xMax()/u,die.yMax()/u,rows,site_validator=power_sites)
     members=rt.spine_members(rec['spec']['trees'],set(rec['trees']),rec['root_buffer'],sp)
     cell_xy={c[0]:(c[2],c[3]) for c in rec['cells']};sbn='dc_spine_src'
     source_box=source_pin.getBBox();sxy=((source_box.xMin()+source_box.xMax())/2/u,(source_box.yMin()+source_box.yMax())/2/u)
