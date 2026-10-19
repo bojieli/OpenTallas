@@ -22,8 +22,13 @@ module tb_xq_node;
  assign y = (MUT==2) ? y_x : (MUT==3) ? (y_dut & ~({{(2*WI-1){1'b0}},1'b1} << (WI/2))) : y_dut;
  reg [2*WI-1:0] h1=0, h2=0;
  integer cyc=0, errors=0, checks=0, k;
- function [WI-1:0] rnd; input integer dummy; integer j; begin
-   for (j=0;j<WI;j=j+32) rnd[j +: 32] = $random; end endfunction
+ // 10-18 fix: fill a 32-bit-padded word then truncate; the old rnd[j +: 32] wrote past bit WI-1 of the function
+ // return (WI 594: bits 576..607), which aborts Icarus 12 vvp (of_RET_VEC4 width assertion, rc 134) on the daemon hosts.
+ localparam integer WP=((WI+31)/32)*32;
+ function [WI-1:0] rnd; input integer dummy; integer j; reg [WP-1:0] w; begin
+   w = {WP{1'b0}};
+   for (j=0;j<WP;j=j+32) w[j +: 32] = $random;
+   rnd = w[WI-1:0]; end endfunction
  initial begin
    repeat(8) @(posedge clk);
    #0.2 rst_n=1;
