@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.native-sweep2.diag.v1",
+ "note": "CTS placement diagnostic only (NOT routed qualification); gate of claude/ns-vn-1018 59ad87f18, submitted s81sl_vn-s81sl_vn-b384d72cb",
+ "probe": {
+  "schema": "opentallas.ref-tile.cts-native-probe.v1",
+  "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+  "kit": "physical/ref_tile/s81sl_vn",
+  "remote_host": "ot-epyc5",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81sl_vn-20261018-190155",
+  "gate_source_commit": "59ad87f18a3ff154af4ce2b89de9d9c835105e13",
+  "gate_result_sha256": "32d080862d5b700fcb7a8e04c5fca59420d4e6fca980d696b74c709e1a61fb1a",
+  "library_sha256": "342d395ae0e550794d4c3aedcbd147614ff9989c0c444df77834bf608b6d9d08",
+  "insertion_sha256": "c3603e405d7cf50e15b46df215a020f7342e8979c4dfbc5a76fe001e525608c0",
+  "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+  "launch": {
+   "ps": 229.71954000000005,
+   "pin": "fault"
+  },
+  "capture": {
+   "ps": 183.63269000000003,
+   "pin": "rst_n"
+  },
+  "launch_over": 1,
+  "capture_over": 0,
+  "comb_pins": [],
+  "clock_refs": {
+   "clk": {
+    "rise": 473.0,
+    "fall": 513.9701550000001,
+    "min": 408.20581,
+    "max": 529.02496,
+    "src": "insertion.json boundary mean",
+    "bmin": 452.2,
+    "bmax": 491.7,
+    "n": 1117
+   }
+  },
+  "spread_ps": {
+   "clk": 39.5
+  },
+  "measured_reference_coverage": true,
+  "ff_spread_ps": 37.6,
+  "diagnostic_pass": false
+ }
+}
