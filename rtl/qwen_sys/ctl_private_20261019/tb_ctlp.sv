@@ -111,18 +111,29 @@ task boot_p;begin
  for(integer u=0;u<4;u=u+1)for(integer j=0;j<36;j=j+1)pc(326+u*36+j,(j+u)%3);
  pc(470,64'h514b564c59523336);idle(4);if(!p_configured[0]||p_fault[0])$fatal(1,"PROGRAMME_BOOT_FAIL");
 end endtask
-task start_w(input integer s,input integer tok);begin
+integer wd=0,ws=0,we=0,pd=0,ps=0,pb=0;
+always @(negedge ck) begin if(w_done[0])wd=wd+1; if(w_compiled_word_slot[0])ws=ws+1; if(|w_expected_valid[0])we=we+1; if(p_done[0])pd=pd+1; if(p_stage_done[0])ps=ps+1; if(p_stage_start[0])pb=pb+1; end
+task start_w(input integer s,input integer tok);integer d0,s0,e0;begin
+ d0=wd;s0=ws;e0=we;
  w_stage=s;w_epoch=16'h20;w_token=tok;w_position=tok*17;w_generation=tok%4;w_start=1;tick();w_start=0;idle(40);
- if(w_fault[0]||w_active[0])$fatal(1,"WRITER_RUNTIME_FAIL");end endtask
-task start_p(input integer tok);begin
+ if(w_fault[0]||w_active[0]||wd-d0!=1||ws-s0!=4||we-e0!=2)$fatal(1,"WRITER_RUNTIME_FAIL done=%0d slots=%0d descriptors=%0d",wd-d0,ws-s0,we-e0);end endtask
+task start_p(input integer tok);integer d0,s0,b0;begin
+ d0=pd;s0=ps;b0=pb;
  p_authority_epoch=16'h20;p_authority_token=tok;p_authority_position=tok*19;p_authority_generation=tok%4;
  p_authority_valid=1;p_programme_authorized=1;p_programme_epoch=16'h20;p_programme_digest=64'hc15aee1097de2341;
- idle(3);p_start=1;tick();p_start=0;idle(1000);if(p_fault[0]||p_active[0])$fatal(1,"PROGRAMME_RUNTIME_FAIL");end endtask
+ idle(3);p_start=1;tick();p_start=0;idle(1000);if(p_fault[0]||p_active[0]||pd-d0!=1||ps-s0!=36||pb-b0!=36)$fatal(1,"PROGRAMME_RUNTIME_FAIL done=%0d ends=%0d begins=%0d",pd-d0,ps-s0,pb-b0);end endtask
 initial begin
  reset_all(); scenario=1;boot_w();boot_p();
  for(integer t=0;t<2;t=t+1)begin for(integer s=1;s<=36;s=s+1)start_w(s,t+1);start_p(t+1);end
  // Rejected start during pending boot write: memory Q remains arbitrary, never consumed.
  scenario=2;reset_all();w_cfg_we=1;w_cfg_addr=0;w_cfg_data=4;tick();w_cfg_we=0;w_start=1;w_stage=1;tick();w_start=0;idle(5);if(!w_fault[0])$fatal(1,"INVALID_START_NOT_REJECTED");
+ // Exact final pending boot write overlaps rejected start; seal is absent.
+ scenario=14;reset_all();
+ for(integer s=0;s<36;s=s+1)for(integer f=0;f<5;f=f+1)if(s*5+f<179)wc(s*5+f,wr(s,f));
+ w_cfg_we=1;w_cfg_addr=179;w_cfg_data=wr(35,4);tick();w_cfg_we=0;w_start=1;w_stage=36;tick();w_start=0;
+ if(!w0.wq_v||!w0.start_p)$fatal(1,"FINAL_WRITE_WITNESS_MISSING");
+ $display("CTLP_FINAL_PENDING_WRITE edge=%0d row=%0d raw_read=%b write=%b",edges,w0.cfg_stage,w0.start_p,w0.wq_v);
+ idle(5);if(!w_fault[0])$fatal(1,"FINAL_PENDING_START_NOT_REJECTED");
  // Reset interrupts an accepted write before its delayed memory commit.
  scenario=12;reset_all();w_cfg_we=1;w_cfg_addr=0;w_cfg_data=4;tick();w_cfg_we=0;rst_n=0;idle(4);rst_n=1;idle(5);boot_w();start_w(2,3);
  // Reset independently interrupts first read and row landing.
@@ -134,6 +145,6 @@ initial begin
  scenario=9;reset_all();boot_p();p_programme_digest=0;p_programme_epoch=16'h20;p_authority_epoch=16'h20;p_authority_valid=1;p_programme_authorized=1;idle(3);p_start=1;tick();p_start=0;idle(4);if(!p_fault[0])$fatal(1,"BAD_DIGEST_NOT_REJECTED");
  scenario=10;reset_all();boot_p();p_programme_digest=64'hc15aee1097de2341;p_programme_epoch=16'h21;idle(3);p_start=1;tick();p_start=0;idle(4);if(!p_fault[0])$fatal(1,"BAD_EPOCH_NOT_REJECTED");
  scenario=11;reset_all();boot_w();w_cfg_we=1;w_cfg_addr=180;w_start=1;w_stage=1;tick();w_cfg_we=0;w_start=0;idle(5);if(!w_fault[0])$fatal(1,"CFG_START_NOT_REJECTED");
- $display("CTLP_PASS checked_edges=%0d scenarios=13 original_enable0_enable1_all_outputs",checked);$finish;
+ $display("CTLP_PASS checked_edges=%0d scenarios=14 original_enable0_enable1_all_outputs",checked);$finish;
 end
 endmodule

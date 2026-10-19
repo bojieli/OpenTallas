@@ -3,15 +3,18 @@
 # Dependencies: git, python3, Icarus (four-state); optional Verilator exactly 5.050.
 set -euo pipefail
 here=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-repo=$(git -C "$here" rev-parse --show-toplevel)
+repo=$(git -C "$here" rev-parse --show-toplevel 2>/dev/null || true)
 out=${CTLP_OUT:-"$PWD/ctlp-results"}
 engine=${CTLP_ENGINE:-iverilog}
 mkdir -p "$out"
 out=$(cd "$out" && pwd)
 # Pin original references and primitive, never a handwritten macro substitute.
-git -C "$repo" show c5fbbded9:rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv > "$out/writer_original.sv"
-git -C "$repo" show c5fbbded9:rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mus.sv > "$out/programme_original.sv"
-git -C "$repo" show c5fbbded9:physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > "$out/sram_original.v"
+if [[ -n ${CTLP_REFERENCE_DIR:-} ]]; then cp "$CTLP_REFERENCE_DIR/writer_original.sv" "$out/writer_original.sv"; else git -C "$repo" show c5fbbded9:rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv > "$out/writer_original.sv"; fi
+printf '5107a0163d4488ef1d0f635f513bc925fb384135dbfffdee04773be5ff3e458f  %s\n' "$out/writer_original.sv" | sha256sum -c -
+if [[ -n ${CTLP_REFERENCE_DIR:-} ]]; then cp "$CTLP_REFERENCE_DIR/programme_original.sv" "$out/programme_original.sv"; else git -C "$repo" show c5fbbded9:rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mus.sv > "$out/programme_original.sv"; fi
+printf '6446686e653284868036a53648bfaca05be9ad810671cfeb13e1c006853ca164  %s\n' "$out/programme_original.sv" | sha256sum -c -
+if [[ -n ${CTLP_REFERENCE_DIR:-} ]]; then cp "$CTLP_REFERENCE_DIR/sram_original.v" "$out/sram_original.v"; else git -C "$repo" show c5fbbded9:physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > "$out/sram_original.v"; fi
+printf 'd9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d  %s\n' "$out/sram_original.v" | sha256sum -c -
 sha256sum "$out/"*original* "$here/qkd_kv_native_programme_ctlp.sv" "$here/qkd_static_kv_layer_programme_ctlp.sv" "$here/tb_ctlp.sv" > "$out/sources.sha256"
 if [[ $engine == verilator ]]; then
  verilator --version | tee "$out/tool.txt"

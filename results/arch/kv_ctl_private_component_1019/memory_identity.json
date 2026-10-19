@@ -1,0 +1,8 @@
+{
+  "revision": "c5fbbded9",
+  "source": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "build_define": "OT_MEM_NO_INIT",
+  "behavior": "single clock, bit mask, registered read old Q before write",
+  "qualification": "behavior only; physical same-address write integrity HOLD"
+}
