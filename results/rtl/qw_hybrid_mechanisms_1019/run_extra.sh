@@ -11,5 +11,5 @@ set +e
 status=$?
 set -e
 if [ "$status" = 0 ]; then echo 'HOLLOW K mutant'; exit 1; fi
-grep -E 'FF_IDENTITY|SRAM_IDENTITY' fail_K.log
+grep -E 'FAULT_IDENTITY|FF_IDENTITY|SRAM_IDENTITY' fail_K.log
 echo "EXPECTED_FAIL K status=$status"

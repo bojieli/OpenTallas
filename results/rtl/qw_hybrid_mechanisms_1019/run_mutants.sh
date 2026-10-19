@@ -8,7 +8,7 @@ for kind in slot epoch written enable metadata pending_reset; do
  status=$?
  set -e
  if [ "$status" = 0 ]; then echo "HOLLOW mutant $kind"; exit 1; fi
- grep -E 'FF_IDENTITY|SRAM_IDENTITY|HOLLOW|ASYNC_RESET' fail_$kind.log
+ grep -E 'FAULT_IDENTITY|FF_IDENTITY|SRAM_IDENTITY|HOLLOW|ASYNC_RESET' fail_$kind.log
  echo "EXPECTED_FAIL $kind status=$status"
 done
 for kind in ALIAS COLLISION; do
