@@ -20,7 +20,7 @@ EXCLUDED = {"gate_result.json", "source_snapshot.json"}
 CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
-              "tools/ref_tile/path_classes.tcl")
+              "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py")
 # Non-Python source read by an imported generator and embedded in its kit.
 PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",)}
 PY_DIRS = ("tools", "tools/ref_tile", "tools/closure_loop", "tools/w18")
@@ -355,7 +355,7 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                                                and (r["kind"] == "relaxing" or r.get("applies"))})))
             if rows:
                 needs = sorted({n for r in rows for n in r.pop("needs")})
-                req_ok, req = relaxed_rule_requirement(needs, clock, gate)
+                req_ok, req = relaxed_rule_requirement(needs, clock, gate, root=root)
                 if req_ok:
                     relaxed = rows
                     binding["relaxing_rule_allowlist"] = dict(
@@ -437,7 +437,27 @@ def gate_pin_spreads(clock):
     return out
 
 
-def relaxed_rule_requirement(needs, clock, gate=None):
+def child_flop_reference_macros(root, kit):
+    """ROOT-0615 10-18 (dcd8111e5): the kit's macro views that give ck_insertion a CHILD-FLOP reference R (a views
+    insertion.json beside the lib, or a lib with max_clock_tree_path).  None when the kit.env cannot be read."""
+    import shlex
+    env = Path(root) / "physical" / "ref_tile" / str(kit) / "kit.env"
+    try:
+        text = env.read_text()
+    except OSError:
+        return None
+    m = re.search(r"^MACROS=\((.*)\)\s*$", text, re.M)
+    out = []
+    for stem in shlex.split(m.group(1)) if m else []:
+        p = Path(root) / stem
+        libs = [p.parent / f"{p.name}_{c}.lib" for c in ("tt", "ff")]
+        if (p.parent / "insertion.json").is_file() or any(
+                lib.is_file() and "max_clock_tree_path" in lib.read_text(errors="replace") for lib in libs):
+            out.append(stem)
+    return out
+
+
+def relaxed_rule_requirement(needs, clock, gate=None, root=None):
     """(ok, [{"requires", "ok", "text", ...}]): the relaxed rules' own conditions, judged from the existing gate report.
     clock_pin_spread (0dq): pin-flop spread <= 80 ps at TT (required); FF too when reported, else left to the routed
     native audit.
@@ -458,14 +478,59 @@ def relaxed_rule_requirement(needs, clock, gate=None):
                 rows.append(dict(requires=n, ok=ovf == 0, overflow=ovf,
                                  text=f"trial_grt: gate trial GRT overflow {ovf}" + ("" if ovf == 0 else " (FAIL)")))
             continue
+        if n == "child_flop_basis":
+            bases = [(clock or {}).get(f"{c}_pin_spread_basis") for c in ("tt", "ff")] if isinstance(clock, dict) else []
+            if bases and all(b in ("child_flop", "child_pair") for b in bases):
+                rows.append(dict(requires=n, ok=True, text="child_flop_basis: wires-only parent judged on with_child_flops "
+                                                         f"({'/'.join(bases)}): dcd8111e5 does not change it"))
+                continue
+            refs = child_flop_reference_macros(root or Path(__file__).resolve().parents[2],
+                                               (gate or {}).get("kit") if isinstance(gate, dict) else None)
+            if refs is None:
+                rows.append(dict(requires=n, ok=False, text="child_flop_basis: kit.env unreadable (re-gate)"))
+            else:
+                rows.append(dict(requires=n, ok=not refs, macros=refs,
+                                 text="child_flop_basis: " + ("no macro with an insertion reference: R = 0, verdict "
+                                                              "unchanged" if not refs else
+                                                              f"{len(refs)} referenced macro(s) {refs[:3]}: re-gate")))
+            continue
+        if n == "landed_cluster_roots":
+            # PL-GATE 10-18: per-root child-flop judgement + the unlanded cross-region FAIL apply only to a cluster kit
+            # with children and clock "multiple_cts_roots"; every other gate is unchanged by that commit
+            ck = clock if isinstance(clock, dict) else {}
+            if ck.get("declared_clock") != "multiple_cts_roots" or "landed_child_links" in ck:
+                rows.append(dict(requires=n, ok=True, text="landed_cluster_roots: not a multi-root cluster gate, or "
+                                                          "already judged per root: unchanged"))
+                continue
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            try:
+                sp = json.loads((Path(root or Path(__file__).resolve().parents[2]) / "physical" / "ref_tile" / str(kit)
+                                 / "spec.json").read_text())
+                ok = not (sp.get("kind") == "cluster" and sp.get("children"))
+            except (OSError, ValueError, AttributeError):
+                ok = False
+            rows.append(dict(requires=n, ok=ok, text="landed_cluster_roots: " + (
+                "multi-root kit without hard children: unchanged" if ok else
+                "multi-root cluster gated before the per-root child-flop rule (or spec unreadable): re-gate")))
+            continue
         if n == "clock_pin_spread":
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})
             tt, ff = sp.get("tt"), sp.get("ff")
             ok = tt is not None and tt[0] <= CLOCK_PIN_SPREAD_MAX_PS and (ff is None or ff[0] <= CLOCK_PIN_SPREAD_MAX_PS)
+            waived = ""
+            w = clock.get("clock_rule_waiver") if isinstance(clock, dict) else None
+            if not ok and tt is not None and isinstance(w, dict):
+                # S81-DEC5 10-18: the kit job's recorded per-pair waiver (HANDOFF 0ga), the same rule as the gate's
+                import sys
+                sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+                import textbook_lint as TL
+                ok, note, _ = TL.clock_waiver_eval(clock, w)
+                waived = f" -- WAIVED: {note}" if ok else ""
             text = ("0dq: no TT spread in the gate report" if tt is None else
                     f"0dq: TT {tt[1]} spread {tt[0]:.1f} ps" + (f", FF {ff[1]} spread {ff[0]:.1f} ps" if ff else
                                                                ", FF not reported (left to the routed audit)")
-                    + (f" <= {CLOCK_PIN_SPREAD_MAX_PS:.0f}" if ok else f" (limit {CLOCK_PIN_SPREAD_MAX_PS:.0f}: FAIL)"))
+                    + (waived if waived else f" <= {CLOCK_PIN_SPREAD_MAX_PS:.0f}" if ok
+                       else f" (limit {CLOCK_PIN_SPREAD_MAX_PS:.0f}: FAIL)"))
             rows.append(dict(requires=n, ok=ok, text=text, tt=tt and list(tt), ff=ff and list(ff),
                              ff_left_to_routed_audit=ff is None))
         else:
