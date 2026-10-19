@@ -41,6 +41,6 @@ module ot_sram_oldread_wreg #(parameter integer W=553, AW=9, SB=16, GA=16, NS=(W
    assign q[LO+:SW]=select_r?forwarded:raw[LO+:SW];
  end endgenerate
 `ifndef SYNTHESIS
- initial if(AW>9 || W<1 || (SB!=8 && SB!=16) || GA<1 || (128%(GA*SB))!=0) $fatal(1,"oldread memory requires1..512rows");
+ initial if(AW>9 || W<1 || (SB!=8 && SB!=16) || GA<1 || ((128%(GA*SB))!=0 && ((GA*SB)%128)!=0)) $fatal(1,"oldread memory requires1..512rows");
 `endif
 endmodule
