@@ -1,0 +1,19 @@
+{
+  "top": "ot_smh_calendar_banked_central",
+  "params": {
+    "W": 135,
+    "XW": 46
+  },
+  "sources": [
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "purpose": "Mapped census only; no physical gate or slot approval"
+}
