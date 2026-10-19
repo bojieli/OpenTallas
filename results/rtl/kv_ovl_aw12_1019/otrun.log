@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       admits   993 GB (avail 796, growth 101, headroom 0, waiters 0/0 GB) load 69/128 running 32 disk 292 GB 
+ot-run: ot-epyc5       admits   784 GB (avail 660, growth 111, headroom 0, waiters 0/0 GB) load 60/128 running 13 disk 1158 GB 
+ot-run: ot-epyc6       admits   748 GB (avail 637, growth 113, headroom 0, waiters 0/0 GB) load 49/128 running 20 disk 6082 GB 
+ot-run: ot-epyc7       admits   858 GB (avail 701, growth 101, headroom 0, waiters 0/0 GB) load 50/96 running 21 disk 6442 GB 
+ot-run: ot-epyc8       admits  1026 GB (avail 832, growth 113, headroom 0, waiters 0/0 GB) load 52/128 running 27 disk 398 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-ovl-aw12-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-ovl-aw12-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4124993-1792424869 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+KDCALAW12_PASS mode0 tx3261 rx3263 boot66
+- rtl/test/qwen_split/tb_kv_dcal_ovl_aw12.sv:116: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7ms; walltime 9.310 s; speed 723.277 us/s
+- Verilator: cpu 9.308 s on 1 threads; allocated 7 MB
+KDCALAW12_ERR cyc5167314 mode7 static TX/RX start edge mismatch
+KDCALAW12_FAIL mode7
+[4309541000] %Fatal: tb_kv_dcal_ovl_aw12.sv:55: Assertion failed in tb_kv_dcal_ovl_aw12
+%Error: rtl/test/qwen_split/tb_kv_dcal_ovl_aw12.sv:55: Verilog $stop
+Aborting...
+AW12_MATRIX_PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4124993-1792424869): exit 0
