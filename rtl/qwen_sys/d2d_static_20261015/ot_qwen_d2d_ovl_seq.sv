@@ -11,6 +11,7 @@
 //     the frame repeats), [6:0] 0.  Both players start on the anchor edge = FIRST_OFS edges after the epoch strobe
 //     (EP_SKEW aligns the two dies on one absolute edge, as ot_qwen_d2d_cal_seq AUTO), so every start of both dies is
 //     a compiled absolute edge.  No valid / ready / credit selects a cycle.
+// Reload follows the base sequencer's idle-only contract; an active reload is never a normal epoch restart.
 //   FAULTS (sticky): an entry with dt < 4 or nonzero reserved bits, a list word not prefetched in time, the anchor
 //     before cal_ready / adm_done or while the players run, an admission start and a list start on one edge, a list
 //     start while the end's playhead of that direction runs (that one is the calendar's own fault in the end:

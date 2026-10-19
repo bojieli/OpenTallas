@@ -1,0 +1,5 @@
+SYSFACE_OVL_FAIL MUT=2 cycle=100103 df=0 gf=0
+- rtl/test/qwen_split/tb_sysface_ovl_rom.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.050 s; speed 3.988 ms/s
+- Verilator: cpu 0.050 s on 1 threads; allocated 7 MB

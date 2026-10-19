@@ -22,6 +22,24 @@ class SysFaceImage(unittest.TestCase):
         with self.assertRaises(ValueError):
             S.compile_cal('E', [(10, 7, 0), (10, 6, 1)])          # two events on one edge
 
+    def test_safe2_prefetch_requires_producer_proof(self):
+        ev = dict(L=[(20+b, 2, b) for b in range(32)], T=[(80,1,4)])
+        proof = dict(advance=1, request_edges=2, producer_ready=[21+b for b in range(32)],
+                     ready_reference='native59_qdd_pin', source_identity='fixture:Qdd-pins')
+        moved, record = S.q_prefetch_events(dict(ev, q_prefetch=proof))
+        self.assertEqual(moved['L'][0], (19,2,0))
+        self.assertEqual(moved['L'][-1], (50,2,31))
+        self.assertEqual(moved['T'], ev['T'])
+        self.assertEqual([e['slack'] for e in record['checked']], [0]*32)
+        with self.assertRaisesRegex(ValueError, 'source-pinned'):
+            S.q_prefetch_events(dict(ev,q_prefetch=dict(advance=1)))
+        late = dict(proof, producer_ready=[22+b for b in range(32)])
+        with self.assertRaisesRegex(ValueError, 'before producer_ready'):
+            S.q_prefetch_events(dict(ev,q_prefetch=late))
+        missing = dict(ev,L=ev['L'][:-1],q_prefetch=proof)
+        with self.assertRaisesRegex(ValueError, 'all32'):
+            S.q_prefetch_events(missing)
+
     def test_viamap_roundtrip(self):
         rows = {0: 0x123456789abcdef, 7: (1 << 71) | 5, 2048: (15 << 68)}
         text = S.viamap(rows).split()

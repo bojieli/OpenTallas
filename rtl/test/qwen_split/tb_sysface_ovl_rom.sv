@@ -6,7 +6,7 @@ module tb_sysface_ovl_rom;
     parameter integer RECOVER=0;
     `include "ovl_release/ovl_release_img.svh"
     reg ck=0; always #1 ck=~ck;
-    reg rst_n=0, epoch=0, halt=0, restart_count=0;
+    reg rst_n=0, epoch=0, halt=0, restart_count=0, did_restart=0;
     wire [31:0] gd, dd; wire [5:0] ga, da;
     wire gw,gr,gs,gg,grs,grg,drdy,dadm,df,ds,dg,drs,drg,dw,dr;
     wire [1:0] gu,gv,du,dv;
@@ -33,7 +33,7 @@ module tb_sysface_ovl_rom;
         end
         if(ds) begin nt=nt+1; users[du]=1; end
         if(drs) nr=nr+1;
-        if(c==OVL_H+3200) begin
+        if(c==OVL_H+3200 && (!RECOVER || did_restart)) begin
             if(nt<1600 || nr<1600 || users!==4'b1111 || !drdy || !dadm) $display("SYSFACE_OVL_FAIL counts TX=%0d RX=%0d users=%b",nt,nr,users);
             else $display("SYSFACE_OVL_PASS MUT=%0d RECOVER=%0d TX=%0d RX=%0d users=%b admission1 frame4026800",MUT,RECOVER,nt,nr,users);
             $finish;
@@ -42,8 +42,18 @@ module tb_sysface_ovl_rom;
     initial begin
         repeat(5) @(negedge ck); rst_n=1; repeat(100) @(negedge ck); epoch=1; @(negedge ck); epoch=0;
         if(RECOVER) begin
-            repeat(100000) @(posedge ck); #0.2; halt=1;
-            repeat(100) @(posedge ck); #0.2; halt=0; epoch=1; restart_count=1;
+            if(RECOVER==1) repeat(100000) @(posedge ck);
+            else if(RECOVER<=4) begin
+                // Halt with an outstanding ROM prefetch at each of its three age values.
+                wait(ta != 0 && gold.u_tx.running && !gold.u_tx.nv && gold.u_tx.age==RECOVER-2);
+                @(negedge ck);
+            end else begin
+                // Halt immediately before the wrap entry reloads word0.
+                wait(gold.u_tx.running && gold.u_tx.cur[7] && gold.u_tx.cnt==1);
+                @(negedge ck);
+            end
+            #0.2; halt=1;
+            repeat(100) @(posedge ck); #0.2; halt=0; epoch=1; restart_count=1; did_restart=1;
             @(posedge ck); #0.2; epoch=0; restart_count=0;
         end
     end

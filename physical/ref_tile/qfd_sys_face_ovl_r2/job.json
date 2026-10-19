@@ -1,0 +1,226 @@
+{
+ "name": "qfd_sys_face_ovl_r2-ovl2-COMMIT",
+ "block": "qfd_sys_face",
+ "ref_tile": true,
+ "owner": "Codex:SYSFACE-OVL",
+ "purpose": "Compute system face OVL control producer with codec2 seam; no data-path edges added (two mask list ROMs with capture registers).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/sysface-ovl-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "rtl/qwen_split",
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "tools/qwen_split",
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/test/mu_qwen_1018",
+   "rtl/test/mu_qwen_seq",
+   "rtl/test/qwen_dv",
+   "rtl/qwen_dv",
+   "rtl/hdc",
+   "rtl/physical",
+   "rtl/lib",
+   "rtl/qwen_sys",
+   "tools/qwen_static_schedule",
+   "tools/hdc_isa.py",
+   "tools/hdc_golden.py",
+   "tools/qwen_coll_tp8_bench.py",
+   "tools/qwen_coll_tp8_static_bench.py",
+   "results/arch/qwen_kv_static_programme_1017/die/report.json",
+   "results/rtl/qwen_layer_tput_1018/compiled_L1/d2d",
+   "results/arch/qwen_split_compute_1014/res_train_decision_1015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/qwen_sys/d2d_static_20261015/ovl_release",
+   "results/rtl/mu_qwen_1018/sysface_ovl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sys_face #(.MU(1), .OVL(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/qwen_sys/d2d_static_20261015 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_sys_face.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv rtl/qwen_split/qfd_sys_face_record_port.sv rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sys_face_mu_events_exact",
+    "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_events_exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^SYS_FACE_PASS MUT=0 MU=1 head contexts 4, .*1512 events exact",
+    "min_count_regex": "^SYS_FACE_PASS MUT=0 MU=1 .* (\\d+) events exact",
+    "pass_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m0.log"
+   },
+   {
+    "name": "sys_face_mu_t_late_mutant",
+    "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_t_late_mutant 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^SYS_FACE_FAIL MUT=1",
+    "fail_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m1.log"
+   },
+   {
+    "name": "sys_face_mu_emb_index_mutant",
+    "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_emb_index_mutant 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^SYS_FACE_FAIL MUT=2",
+    "fail_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m2.log"
+   },
+   {
+    "name": "sys_face_mu_filler_ctx_hosttag_mutant",
+    "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_filler_ctx_hosttag_mutant 6",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^SYS_FACE_FAIL MUT=6",
+    "fail_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m6.log",
+    "note": "MU 1 face checking filler head contexts against the HOST tag (the closed MU 0 behaviour)"
+   },
+   {
+    "name": "sys_face_mu_filler_ctx_pos_mutant",
+    "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_filler_ctx_pos_mutant 7",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^SYS_FACE_FAIL MUT=7",
+    "fail_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m7.log",
+    "note": "filler head context at position >= 8192 must fault"
+   },
+   {
+    "name": "ovl_rom_admission_frame",
+    "cmd": "bash rtl/test/qwen_split/run_sysface_ovl_rom.sh {RUN}/bench/ovl_rom_admission_frame 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SYSFACE_OVL_PASS",
+    "pass_witness": "results/rtl/mu_qwen_1018/sysface_ovl/rom_pass.log"
+   },
+   {
+    "name": "ovl_rxstart_tied",
+    "cmd": "bash rtl/test/qwen_split/run_sysface_ovl_rom.sh {RUN}/bench/ovl_rxstart_tied 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^SYSFACE_OVL_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/sysface_ovl/rom_rxstart_tied.log"
+   },
+   {
+    "name": "ovl_epoch_recover",
+    "cmd": "bash rtl/test/qwen_split/run_sysface_ovl_rom.sh {RUN}/bench/ovl_epoch_recover 0 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SYSFACE_OVL_PASS",
+    "pass_witness": "results/rtl/mu_qwen_1018/sysface_ovl/recover_pass.log"
+   },
+   {
+    "name": "ovl_old_restart_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_sysface_ovl_rom.sh {RUN}/bench/ovl_old_restart_mutant 2 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^SYSFACE_OVL_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/sysface_ovl/recover_old_fail.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_sys_face_ovl_r2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_sys_face_ovl_r2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_sys_face_ovl_r2 --out {RUN}/record/views/qfd_sys_face --macro-view physical/asap7_memory_macros/ot_rom_4096x72_m8 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_sys_face_ovl_r2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_sys_face_ovl_r2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_sys_face_ovl_r2/qfd_sys_face_ovl_r2-ovl2-COMMIT"
+  }
+ ],
+ "cycles_added": 2,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "OVL=1: independent compiled TX/RX starts and users from ot_qwen_d2d_ovl_seq; 2 x mask list ROM + capture register. Admission retained at image entry16 on codec2 seam. Four new N ports, 6 bits. Outline +17.28um width/+43.2um height accommodates ROMs on 43.2 grid. All pins remain flop-first, reset landing2 and hold margin .03. R2 mandatory epoch recovery: rewind addr/nxt/nv/age/cnt/cur on halt/reload so the next epoch starts at word0, with no stale prefetch."
+}

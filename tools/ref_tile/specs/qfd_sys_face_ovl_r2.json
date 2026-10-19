@@ -1,0 +1,349 @@
+{
+  "name": "qfd_sys_face_ovl_r2",
+  "top": "qfd_sys_face",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_split/qfd_sys_face.sv",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv",
+    "rtl/qwen_split/qfd_sys_face_record_port.sv",
+    "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv",
+    "rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl.sv"
+  ],
+  "params": {
+    "MU": 1,
+    "OVL": 1
+  },
+  "orfs_vars": {
+    "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/d2d_static_20261015"
+  },
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 276.48,
+    "h": 172.8,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+      "count": 1,
+      "at": [
+        43.2,
+        86.4
+      ],
+      "orient": "R0",
+      "inst": "u_rom"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+      "count": 1,
+      "at": [
+        129.6,
+        86.4
+      ],
+      "orient": "R0",
+      "inst": "g_ovl.u_cseq.u_tx_rom"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+      "count": 1,
+      "at": [
+        216,
+        86.4
+      ],
+      "orient": "R0",
+      "inst": "g_ovl.u_cseq.u_rx_rom"
+    }
+  ],
+  "pins": {
+    "N": [
+      "fwd_epoch",
+      "d2d_fault",
+      "d2d_epoch_abort",
+      "cfg_tx_we",
+      "cfg_rx_we",
+      "cfg_addr",
+      "cfg_data",
+      "cal_start",
+      "cal_seg",
+      "prog_rx_v",
+      "prog_witness_slot",
+      "prog_auth_slot",
+      "prog_context_slot",
+      "prog_tx_observed_v",
+      "prog_tx_record",
+      "ck",
+      "rst_n",
+      "rx_payload",
+      "emb_rx_v",
+      "emb_rx_slot",
+      "status_epoch16",
+      "vm_drained",
+      "collective_drained",
+      "collective_busy",
+      "crom_fault",
+      "execution_active",
+      "admit_ready",
+      "result_v",
+      "result_done",
+      "result_fault",
+      "result_cause",
+      "result_tag",
+      "result_gen",
+      "result_token",
+      "result_value",
+      "result_cycles",
+      "cal_start_rx",
+      "cal_seg_rx",
+      "cal_user_tx",
+      "cal_user_rx"
+    ],
+    "W": [
+      "tt_pw",
+      "tt_program_obs",
+      "tt_control_stores_ready",
+      "tt_kok",
+      "tt_kwd",
+      "tt_fab",
+      "tt_layer_context_v",
+      "tt_command_stage",
+      "tt_native_tok",
+      "tt_native_pos",
+      "native_fault",
+      "q_slot",
+      "q_slot_beat",
+      "kv_word_slot",
+      "kv_word_index",
+      "visibility_slot",
+      "complete_slot",
+      "host_epoch_valid",
+      "host_fused_capability",
+      "host_epoch",
+      "host_tag",
+      "host_generation"
+    ],
+    "S": [
+      "emb_word_v",
+      "emb_word_data",
+      "emb_word_token",
+      "emb_word_index",
+      "emb_word_scale",
+      "emb_word_epoch",
+      "emb_expected_slot",
+      "emb_expected_token",
+      "emb_expected_word",
+      "emb_expected_scale",
+      "emb_expected_epoch",
+      "emb_fill_begin",
+      "emb_fill_token",
+      "emb_fill_epoch",
+      "emb_core_epoch",
+      "emb_prov_fault",
+      "io_cmd_free",
+      "io_fault",
+      "io_shared_fault",
+      "fault"
+    ],
+    "E": [
+      "seq_cfg_image_ready",
+      "seq_dc",
+      "seq_program_obs",
+      "seq_descriptor_obs",
+      "seq_dh"
+    ]
+  },
+  "recipe": 4,
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M5"
+    },
+    "cts_sink": {
+      "sink_clustering": false
+    },
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4,
+    "io_hold_margin_ns": 0.03
+  },
+  "structural_change": "OVL=1: independent compiled TX/RX starts and users from ot_qwen_d2d_ovl_seq; 2 x mask list ROM + capture register. Admission retained at image entry16 on codec2 seam. Four new N ports, 6 bits. Outline +17.28um width/+43.2um height accommodates ROMs on 43.2 grid. All pins remain flop-first, reset landing2 and hold margin .03. R2 mandatory epoch recovery: rewind addr/nxt/nv/age/cnt/cur on halt/reload so the next epoch starts at word0, with no stale prefetch.",
+  "slot_change_request": "sys_face OVL outline276.48x172.8 (was259.2x129.6), same faces +six N control pins; three ROMs in N row at y86.4, contiguous full-width std band below.",
+  "job": {
+    "owner": "Codex:SYSFACE-OVL",
+    "branch": "codex/sysface-ovl-1019",
+    "tag": "ovl2",
+    "cycles_added": 2,
+    "purpose": "Compute system face OVL control producer with codec2 seam; no data-path edges added (two mask list ROMs with capture registers).",
+    "extra_paths": [
+      "rtl/test/qwen_split",
+      "rtl/qwen_split",
+      "rtl/qwen_sys/d2d_static_20261015",
+      "rtl/qwen_sys/static_embedding_20261014",
+      "tools/qwen_split",
+      "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+      "rtl/test/mu_qwen_1018",
+      "rtl/test/mu_qwen_seq",
+      "rtl/test/qwen_dv",
+      "rtl/qwen_dv",
+      "rtl/hdc",
+      "rtl/physical",
+      "rtl/lib",
+      "rtl/qwen_sys",
+      "tools/qwen_static_schedule",
+      "tools/hdc_isa.py",
+      "tools/hdc_golden.py",
+      "tools/qwen_coll_tp8_bench.py",
+      "tools/qwen_coll_tp8_static_bench.py",
+      "results/arch/qwen_kv_static_programme_1017/die/report.json",
+      "results/rtl/qwen_layer_tput_1018/compiled_L1/d2d",
+      "results/arch/qwen_split_compute_1014/res_train_decision_1015",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "rtl/qwen_sys/d2d_static_20261015/ovl_release",
+      "results/rtl/mu_qwen_1018/sysface_ovl"
+    ],
+    "benches": [
+      {
+        "name": "sys_face_mu_events_exact",
+        "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_events_exact 0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "^SYS_FACE_PASS MUT=0 MU=1 head contexts 4, .*1512 events exact",
+        "min_count_regex": "^SYS_FACE_PASS MUT=0 MU=1 .* (\\d+) events exact",
+        "pass_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m0.log"
+      },
+      {
+        "name": "sys_face_mu_t_late_mutant",
+        "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_t_late_mutant 1",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^SYS_FACE_FAIL MUT=1",
+        "fail_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m1.log"
+      },
+      {
+        "name": "sys_face_mu_emb_index_mutant",
+        "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_emb_index_mutant 2",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^SYS_FACE_FAIL MUT=2",
+        "fail_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m2.log"
+      },
+      {
+        "name": "sys_face_mu_filler_ctx_hosttag_mutant",
+        "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_filler_ctx_hosttag_mutant 6",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^SYS_FACE_FAIL MUT=6",
+        "fail_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m6.log",
+        "note": "MU 1 face checking filler head contexts against the HOST tag (the closed MU 0 behaviour)"
+      },
+      {
+        "name": "sys_face_mu_filler_ctx_pos_mutant",
+        "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_filler_ctx_pos_mutant 7",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^SYS_FACE_FAIL MUT=7",
+        "fail_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m7.log",
+        "note": "filler head context at position >= 8192 must fault"
+      },
+      {
+        "name": "ovl_rom_admission_frame",
+        "cmd": "bash rtl/test/qwen_split/run_sysface_ovl_rom.sh {RUN}/bench/ovl_rom_admission_frame 0",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^SYSFACE_OVL_PASS",
+        "pass_witness": "results/rtl/mu_qwen_1018/sysface_ovl/rom_pass.log"
+      },
+      {
+        "name": "ovl_rxstart_tied",
+        "cmd": "bash rtl/test/qwen_split/run_sysface_ovl_rom.sh {RUN}/bench/ovl_rxstart_tied 1",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^SYSFACE_OVL_FAIL",
+        "fail_witness": "results/rtl/mu_qwen_1018/sysface_ovl/rom_rxstart_tied.log"
+      },
+      {
+        "name": "ovl_epoch_recover",
+        "cmd": "bash rtl/test/qwen_split/run_sysface_ovl_rom.sh {RUN}/bench/ovl_epoch_recover 0 1",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^SYSFACE_OVL_PASS",
+        "pass_witness": "results/rtl/mu_qwen_1018/sysface_ovl/recover_pass.log"
+      },
+      {
+        "name": "ovl_old_restart_mutant",
+        "cmd": "bash rtl/test/qwen_split/run_sysface_ovl_rom.sh {RUN}/bench/ovl_old_restart_mutant 2 1",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^SYSFACE_OVL_FAIL",
+        "fail_witness": "results/rtl/mu_qwen_1018/sysface_ovl/recover_old_fail.log"
+      }
+    ]
+  },
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": false,
+  "outhold": false,
+  "pin_regs": {
+    "enable": true
+  },
+  "keep_pin_regs": true,
+  "pin_reg_split": false,
+  "hold_budget": "die",
+  "reset_landing": {
+    "enable": true,
+    "stages": 2
+  }
+}

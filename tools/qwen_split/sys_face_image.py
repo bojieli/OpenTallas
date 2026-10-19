@@ -101,9 +101,45 @@ def bench_program():
     return w
 
 
+def q_prefetch_events(events):
+    """SAFE2: move Q SRAM prefetch only, with a source-pinned producer-ready bound at native59 input pins.
+
+    q_prefetch={advance:1, request_edges:<GEN face-to-native59 age>, producer_ready:[32 raw-Qdd-ready
+    edges relative to L start], ready_reference:"native59_qdd_pin", source_identity:<committed evidence>}.
+    SAFE2 lands Qdd/prefetch equally and forwards same-edge SRAM write/read, so equality is legal.
+    CMD/Q output slots are carried by the D2D images and are deliberately not changed here.
+    """
+    proof = events.get('q_prefetch')
+    if proof is None:
+        return events, None
+    if (proof.get('advance') != 1 or proof.get('ready_reference') != 'native59_qdd_pin'
+            or not isinstance(proof.get('source_identity'), str) or not proof['source_identity'].strip()):
+        raise ValueError('Q prefetch requires advance1 and source-pinned native59_qdd_pin ready evidence')
+    ready, age = proof.get('producer_ready'), proof.get('request_edges')
+    if (not isinstance(ready, list) or len(ready) != 32 or any(type(x) is not int for x in ready)
+            or type(age) is not int or age < 0):
+        raise ValueError('Q prefetch requires 32 per-beat producer_ready edges and measured request_edges')
+    layer, evidence, seen = [], [], set()
+    for c, k, b in events.get('L', []):
+        if k == 2:
+            if b not in range(32) or b in seen:
+                raise ValueError('Q prefetch requires exactly one slot per beat0..31')
+            seen.add(b)
+            arrival = c - 1 + age
+            if arrival < ready[b]:
+                raise ValueError(f'Q prefetch beat{b} arrives{arrival} before producer_ready{ready[b]}')
+            evidence.append(dict(beat=b, slot=c-1, native_arrival=arrival, producer_ready=ready[b], slack=arrival-ready[b]))
+            c -= 1
+        layer.append((c, k, b))
+    if seen != set(range(32)):
+        raise ValueError('Q prefetch requires all32 Q beats')
+    return dict(events, L=layer), dict(proof, checked=evidence)
+
+
 def build(events, program, d2d_image=None):
     if len(program) != PW + DW:
         raise ValueError('program image must be PW1024 + DW8 words')
+    events, prefetch = q_prefetch_events(events)
     rows = {i: w for i, w in enumerate(program)}
     recs, writes = [], []
     # the D2D link calendars are qfd_d2d_cal_seq constants (d2d_cal_image.svh), not ROM records
@@ -137,7 +173,7 @@ def build(events, program, d2d_image=None):
     return rows, dict(schema='opentallas.qwen.sys-face-image.v1', boot_records=len(recs), cfg_writes=writes,
                       calendars={n: [f'{v:08x}' for v in img] for n, img in cal.items()},
                       program_digest=f'{image_digest(program):016x}', program_footer=f'{program[PW - 1]:016x}',
-                      cal_out_edges=CAL_OUT_EDGES)
+                      cal_out_edges=CAL_OUT_EDGES, q_prefetch=prefetch)
 
 
 def main():
