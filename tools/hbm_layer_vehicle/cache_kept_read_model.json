@@ -1,0 +1,41 @@
+{
+  "module": "ot_hbm_cache_kept_read64",
+  "status": "pre-RTL analytical; mapped fanout and physical qualification OPEN",
+  "replicas": 17,
+  "ring_bits": 2048,
+  "ring_quarters": 32,
+  "quarter_bits": 64,
+  "record_quarters": 17,
+  "input_bits_per_cycle_per_replica": 2048,
+  "output_bits_per_cycle_per_replica": 64,
+  "control_bits_per_replica": 162,
+  "control_bits_17_replicas": 2754,
+  "runtime_payload_storage_added": 0,
+  "selector_FF_per_replica": 160,
+  "onehot_mux_AND_terms_per_replica": 2048,
+  "onehot_mux_OR_inputs_per_replica": 2048,
+  "intended_max_fanout": {
+    "ring_data_bit_17_replicas": 17,
+    "root_next_selector_bit": 5,
+    "leaf_selector_bit": 16,
+    "local_open": 32,
+    "local_advance": 32,
+    "root_reset": 2
+  },
+  "latency": {
+    "advance_next_to_local_advance_edges": 1,
+    "local_advance_to_pointer_edges": 1,
+    "pointer_to_comb_output_edges": 0,
+    "requires_predictive_advance_next": true,
+    "open_next_to_initialized_selector_edges": 2
+  },
+  "routing": "17 outputs of64bits; 2048-bit distributed ring input. Region placement and channel track budget remain parent-composed OPEN; no physical claim.",
+  "port_bytes_per_cycle": {
+    "ring_read_logical_per_row": 136,
+    "macro_ports_added": 0
+  },
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "token_latency": "No extra row data edge if caller predicts advance one cycle before pointer update. Caller must price native ingress/output separately.",
+  "area": "2754 control FFs across17 roots plus34816 onehot AND terms before ABC; no synthesized area or slot claim. Model explicitly prices duplicated controls; no uncounted merge/buffering."
+}
