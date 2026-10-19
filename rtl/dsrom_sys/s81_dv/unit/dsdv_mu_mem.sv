@@ -28,3 +28,36 @@ module dsdv_mu_mem #(parameter integer W=64, parameter integer AW=6, parameter i
  initial if(AW>6) $fatal(1,"dsdv_mu_mem requires depth <=64");
 `endif
 endmodule
+
+// Balanced synchronous-release reset tree. The root, group and local flops
+// release on edges1/2/3, exactly the existing SYNC_STAGES2+TREE_STAGES1 contract.
+// Async assertion cascades through reset pins; constant D=1 means each group
+// drives only <=32 reset pins, without a matching wide D broadcast.
+module dsdv_mu_reset_tree #(parameter integer REGIONS=32, parameter integer LEAVES=32,
+                           parameter integer GROUPS=(REGIONS+LEAVES-1)/LEAVES)(
+ input wire clk, rst_n_in, output wire [REGIONS-1:0] rst_n);
+ (* keep="true",dont_touch="true",async_reg="true" *) reg root_r;
+ (* keep="true",dont_touch="true",async_reg="true" *) reg [GROUPS-1:0] group_r;
+ (* keep="true",dont_touch="true" *) reg [REGIONS-1:0] local_r;
+ always @(posedge clk or negedge rst_n_in)
+     if(!rst_n_in) root_r<=1'b0; else root_r<=1'b1;
+ genvar g,l;
+ generate for(g=0;g<GROUPS;g=g+1) begin:g_group
+     always @(posedge clk or negedge root_r)
+         if(!root_r) group_r[g]<=1'b0; else group_r[g]<=1'b1;
+ end
+ for(l=0;l<REGIONS;l=l+1) begin:g_local
+     always @(posedge clk or negedge group_r[l/LEAVES])
+         if(!group_r[l/LEAVES]) local_r[l]<=1'b0; else local_r[l]<=1'b1;
+ end endgenerate
+ assign rst_n=local_r;
+`ifndef SYNTHESIS
+ reg [2:0] release_reference;
+ always @(posedge clk or negedge rst_n_in)
+     if(!rst_n_in) release_reference<=3'b000;
+     else release_reference<={release_reference[1:0],1'b1};
+ always @(posedge clk) if(rst_n !== {REGIONS{release_reference[2]}})
+     $fatal(1,"balanced reset tree changed three-edge release contract");
+ initial if(GROUPS>32 || LEAVES>32) $fatal(1,"reset fanout requires another explicitly priced tree shape");
+`endif
+endmodule

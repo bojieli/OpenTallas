@@ -64,7 +64,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     localparam integer COPY_RBASE=MEM_RBASE+NEV*5+4;
     localparam integer SEL_RBASE=COPY_RBASE+NEV*7+NRT*NC_REC;
     localparam integer COPY_END=SEL_RBASE+NEP*NEV*4+NEP;
-    wire [COPY_END-1:0] rr; ot_rst_relay #(.REGIONS(COPY_END)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
+    wire [COPY_END-1:0] rr; dsdv_mu_reset_tree #(.REGIONS(COPY_END)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // Payload pin flops sample every edge; valid pins are asynchronously held by their
     // landed reset, so the reset does not enter a synchronous data cone.
     reg [51:0] ks_payload; reg [24:0] mc_payload, mw_payload;
