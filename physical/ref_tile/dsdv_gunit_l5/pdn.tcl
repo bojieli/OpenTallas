@@ -21,3 +21,8 @@ proc ot_ref_has_master {pats} {
   return 0
 }
 proc ot_ref_present {cells} { set out {}; foreach c $cells { if {[ot_ref_has_master $c]} { lappend out $c } }; return $out }
+set ot_s [ot_ref_present {ot_sram_1r1w2c_32x64_m1}]
+if {[llength $ot_s]} {
+  define_pdn_grid -name {sram} -voltage_domains {CORE} -macro -cells $ot_s -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0}
+  add_pdn_connect -grid {sram} -layers {M4 M5}
+}

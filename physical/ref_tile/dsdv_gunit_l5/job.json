@@ -1,13 +1,13 @@
 {
- "name": "dsdv_gunit_l5-sf3-COMMIT",
+ "name": "dsdv_gunit_l5-wm-COMMIT",
  "block": "dsdv_gunit_l5",
  "ref_tile": true,
- "owner": "Codex:S81-SAFE-FIX/GUNIT",
- "purpose": "Same-edge dedicated kept exp/div operand boundary copies; no extra HC edges, native-safe isolation from arithmetic consumers. Pending measured admission.",
+ "owner": "Claude:S81-GUNIT",
+ "purpose": "GUNIT whole-model source: SRAM base table, kept-copy fanout <=32, regional reset, Q4 fault stage.",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "codex/s81-gunit-safe3-boundary-1019",
+  "branch": "claude/s81-gunit-wm-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
@@ -15,14 +15,16 @@
    "rtl/dsrom_sys/s81_suhc",
    "tools/hdc_golden_v41.py",
    "tools/hdc_golden.py",
-   "physical/ref_tile_specs/s81dv"
+   "physical/ref_tile_specs/s81dv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "rtl/lib"
   ]
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_gunit_l5 #(.PIN_COPY(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_sinkhorn_p.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_gunit_l5 #(.PIN_COPY(1), .CONTROL_SAFE(1), .Q4(1), .FANOUT_SAFE(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_region16.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_sinkhorn_p.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v rtl/hdc/v41/ot_hdc_skp_predecode.sv rtl/hdc/v41/ot_hdc_skf_predecode.sv rtl/hdc/v41/ot_hdc_sinkhorn_fs.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail_fs.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -32,30 +34,27 @@
    },
    {
     "name": "gunit_exact",
-    "cmd": "GUNIT_PIN_COPY=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/bench 8 0",
+    "cmd": "GUNIT_PIN_COPY=1 GUNIT_CONTROL_SAFE=1 GUNIT_Q4=1 GUNIT_FANOUT_SAFE=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/bench 8 0",
     "expect": "pass",
     "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
     "threads": 6,
-    "peak_ram_gb": 24,
-    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe3/exact.log"
+    "peak_ram_gb": 24
    },
    {
     "name": "gunit_mut8",
-    "cmd": "GUNIT_PIN_COPY=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 8",
+    "cmd": "GUNIT_PIN_COPY=1 GUNIT_CONTROL_SAFE=1 GUNIT_Q4=1 GUNIT_FANOUT_SAFE=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 8",
     "expect": "fail",
     "fail_regex": "^MUT=8: GUNIT FAIL ",
     "threads": 6,
-    "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe3/mut8.log"
+    "peak_ram_gb": 24
    },
    {
     "name": "gunit_mut10",
-    "cmd": "GUNIT_PIN_COPY=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut10 4 10",
+    "cmd": "GUNIT_PIN_COPY=1 GUNIT_CONTROL_SAFE=1 GUNIT_Q4=1 GUNIT_FANOUT_SAFE=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut10 4 10",
     "expect": "fail",
     "fail_regex": "^MUT=10: GUNIT FAIL ",
     "threads": 6,
-    "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe3/mut10.log"
+    "peak_ram_gb": 24
    },
    {
     "name": "sinkhorn_p_eq",
@@ -63,8 +62,7 @@
     "expect": "pass",
     "pass_regex": "^MUT=0: SKP PASS cases=300 ",
     "threads": 4,
-    "peak_ram_gb": 8,
-    "pass_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/skeq.log"
+    "peak_ram_gb": 8
    },
    {
     "name": "sinkhorn_p_mut1",
@@ -72,8 +70,7 @@
     "expect": "fail",
     "fail_regex": "^MUT=1: SKP FAIL ",
     "threads": 4,
-    "peak_ram_gb": 8,
-    "fail_witness": "results/rtl/s81_safe_fix_1019/gunit_l5/safe2/skmut1.log"
+    "peak_ram_gb": 8
    }
   ],
   "calibrate": {
@@ -90,7 +87,7 @@
    "peak_ram_gb": 48
   },
   "collect": {
-   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsdv_gunit_l5 --out {RUN}/record/views/dsdv_gunit_l5  > {RUN}/record/route/export.log 2>&1"
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsdv_gunit_l5 --out {RUN}/record/views/dsdv_gunit_l5 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1 > {RUN}/record/route/export.log 2>&1"
   }
  },
  "verdict": {
@@ -106,7 +103,9 @@
    "physical/ref_tile/dsdv_gunit_l5/signoff.sdc",
    "physical/common_flow/link_budget_consistent.sdc"
   ],
-  "macros": []
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1"
+  ]
  },
  "hold_eco": {
   "enabled": true,
@@ -124,7 +123,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsdv_gunit_l5/dsdv_gunit_l5-sf3-COMMIT"
+   "to": "results/rtl/ref_tile/dsdv_gunit_l5/dsdv_gunit_l5-wm-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -133,5 +132,5 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "S81-SAFE-FIX/GUNIT (10-19, SAFE-DESIGN review after the first route dsdv_gunit_l5-g3-37cf95cf2): the tail's Sinkhorn is ot_hdc_sinkhorn_p -- bit-identical, PIPELINED on the core clock (11 registered stages a normalisation, <= ~20 levels each; step 0 in 12) -- replacing ot_hdc_sinkhorn behind an ICG with a 9-cycle multicycle SDC (gunit_sinkh_mcp.sdc, 138 levels / ~5.3 ns in one reg->reg stage: masked depth); the ICG and the multicycle exception are gone; HC result +55 edges (handed to MU-DIE-S81). The table select tj_set/tj_w (3,456 loads) is replicated in two kept ranks (8 -> 108 copies, <= ~32 loads, 0 edges: stable from mix_go). reset_landing 2, io_hold_margin 0.03. S81U-GUNIT6 (10-17): native pin rules -- rst_n drives only ot_rst_relay (0 data edges). S81U-GUNIT3 (10-17): dsdv_gunit_l5 successor: the tail's exp / fdiv units (11.5k flops) moved to the E-side leaf dsdv_gunit_l5f (GUNIT2 L5: 23,268 sinks, TT insertion 563 ps / spread 109 ps, clock-rule FAIL); the row max is a 2-stage tree (one-cycle 3-deep scan was TT -970 ps); the Sinkhorn ICG enable is a flop, not the rst_n port (in->ICG -345 ps). Tail calendar re-derived (XS 3, MAX +1): bit-exact bench. The mixes arrive one a cycle and are assembled here (launch +1 edge)."
+ "structural_change": "S81-GUNIT whole model (10-19, FANOUT_SAFE 1 + CONTROL_SAFE 1 + Q4 1, LEAD-S81 approved): base table 3,072 b -> 12 native ot_sram_1r1w2c_32x64_m1 banks (registered read = old bases capture, 0 edges; selected-word write-before-launch = sticky fault); kept same-edge copies for every >32-load driver (mapped census 3ca0d8055); regional reset ot_rst_region16 (raw port -> 2 sync flops, 16 kept roots, release edge 3); Q4 fault/range stage (+40 HC edges, priced to the compiler: HC offsets remeasured with run_gu_bench.sh). Outline 388.8 x 432 (was 259.2^2). S81-SAFE-FIX/GUNIT (10-19, SAFE-DESIGN review after the first route dsdv_gunit_l5-g3-37cf95cf2): the tail's Sinkhorn is ot_hdc_sinkhorn_p -- bit-identical, PIPELINED on the core clock (11 registered stages a normalisation, <= ~20 levels each; step 0 in 12) -- replacing ot_hdc_sinkhorn behind an ICG with a 9-cycle multicycle SDC (gunit_sinkh_mcp.sdc, 138 levels / ~5.3 ns in one reg->reg stage: masked depth); the ICG and the multicycle exception are gone; HC result +55 edges (handed to MU-DIE-S81). The table select tj_set/tj_w (3,456 loads) is replicated in two kept ranks (8 -> 108 copies, <= ~32 loads, 0 edges: stable from mix_go). reset_landing 2, io_hold_margin 0.03. S81U-GUNIT6 (10-17): native pin rules -- rst_n drives only ot_rst_relay (0 data edges). S81U-GUNIT3 (10-17): dsdv_gunit_l5 successor: the tail's exp / fdiv units (11.5k flops) moved to the E-side leaf dsdv_gunit_l5f (GUNIT2 L5: 23,268 sinks, TT insertion 563 ps / spread 109 ps, clock-rule FAIL); the row max is a 2-stage tree (one-cycle 3-deep scan was TT -970 ps); the Sinkhorn ICG enable is a flop, not the rst_n port (in->ICG -345 ps). Tail calendar re-derived (XS 3, MAX +1): bit-exact bench. The mixes arrive one a cycle and are assembled here (launch +1 edge)."
 }

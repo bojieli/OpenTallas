@@ -7,14 +7,14 @@
 set -u
 U=$(cd "$(dirname "$0")/.." && pwd); R=$(cd "$U/../../../.." && pwd)
 T=${1:-$(mktemp -d)}; N=${2:-8}; mkdir -p "$T"
-SRC="rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv
+SRC="rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_region16.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv
  rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv
  rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv
  rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_divc.sv rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv
  rtl/hdc/v41/ot_hdc_select_tree.sv rtl/hdc/v41x/ot_dsrom_su_bias_select.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
- rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_sinkhorn_p.sv rtl/hdc/v41/ot_hdc_skp_predecode.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv
+ rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_sinkhorn_p.sv rtl/hdc/v41/ot_hdc_skp_predecode.sv rtl/hdc/v41/ot_hdc_sinkhorn_fs.sv rtl/hdc/v41/ot_hdc_skf_predecode.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv
  rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv
- rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0.sv
+ rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail_fs.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l3.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0r.sv
@@ -23,7 +23,7 @@ SRC="rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_del
 python3 -I "$U/test/gunit_vectors.py" "$T/gv.hex" "$N" 1017 || { echo "GUNIT_GATE FAIL vectors"; exit 1; }
 MUTS=${3:-"0 1 4 5 6 7 8 9 10"}; ONLY=${3:+1}
 for m in $MUTS; do
-  ( cd "$T" && verilator --cc --exe --build -j 6 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DMUT=$m -DOT_S81_GUNIT_PIN_COPY=${GUNIT_PIN_COPY:-0} -DOT_S81_GUNIT_CONTROL_SAFE=${GUNIT_CONTROL_SAFE:-0} \
+  ( cd "$T" && verilator --cc --exe --build -j 6 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DMUT=$m -DOT_S81_GUNIT_PIN_COPY=${GUNIT_PIN_COPY:-0} -DOT_S81_GUNIT_CONTROL_SAFE=${GUNIT_CONTROL_SAFE:-0} -DOT_S81_GUNIT_Q4=${GUNIT_Q4:-0} -DOT_S81_GUNIT_FANOUT_SAFE=${GUNIT_FANOUT_SAFE:-0} \
       --top-module tb_dsdv_gunit -Mdir "obj$m" $(for f in $SRC; do echo "$R/$f"; done) "$U/test/tb_dsdv_gunit.cpp" \
       -CFLAGS -O1 > "build$m.log" 2>&1; echo $? > "build$m.rc" ) &
 done

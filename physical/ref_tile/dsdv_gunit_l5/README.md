@@ -1,3 +1,38 @@
+# dsdv_gunit_l5 whole-model successor (S81-GUNIT, 10-19; FANOUT_SAFE 1 + CONTROL_SAFE 1 + Q4 1)
+
+LEAD-S81 approved the whole-model direction (e6269d903): 3,072-bit base table in 12 native SRAM banks, kept-copy
+controls for every > 32-load driver, regional reset ownership, Q4 fault/range stage (+40 HC edges, priced to the
+compiler: lower_gu.py HC offsets remeasured with run_gu_bench.sh on this source).  Outline 388.8 x 432 (starting
+outline, re-sized from measured synthesis); parent-slot change is S81-DIEPLACE's (lanes/MU-DIE-S81.md INBOX).
+
+## SAFE-DESIGN checklist (owner 10-19)
+1. Pins: PASS (source) -- every input lands in a flop, every output leaves a flop (pin_regs recipe opted out: source-
+   registered); rst_n lands in 2 registered sync stages (ot_rst_region16 sync_q, reset_landing 2), then 16 kept region
+   roots, release edge 3 (= old ot_rst_relay).  The mix write enables / scale write enables are kept copies of the
+   cw / mx pin landing (small decode in front of the landing flop, same edge as wv / qm_v).
+2. Reach: PENDING gate (tile 388.8 x 432; every pin-to-landing-flop and macro-to-band path << 405 um by construction).
+3. Fanout: PENDING mapped census (target <= 24 logical loads, admission <= 32).  L5-level copies: ln -> 3 kept copies
+   (tail launch | rj_row/lm | rj_sm); CTL row select -> 6 x 6 kept one-hot copies (22 data bits each) + 2 c_on copies
+   (21 header bits each); mix writes -> 8 kept {qm_v, qm_i} copies (16-bit half-word enables); job select -> 8 rank-1 +
+   25 rank-2 kept copies (12 bank addresses, 12 scale bytes, 1 lifetime check); scale writes -> 16 kept enables (24
+   bits each).  Tail / Sinkhorn copies: see the parent's section.
+4. Depth: PENDING mapped census / gate (<= 600 ps).
+5. Storage: fixed -- base table 3,072 b -> 12 x ot_sram_1r1w2c_32x64_m1 (rows {set, which}, bank b = base words 2b,
+   2b + 1; 24,576 physical bits).  Each bank reads continuously at its own kept rank-2 select copy; the macro's read
+   register is the old `bases` capture (select a, rank1 a + 1, rank2 a + 2, rd_out a + 3): 0 edges.  Compiler
+   contract: the selected {set, which} word is never written between job select and launch, config settles before the
+   first read; a write to the selected word within 4 edges before the tail takes the bases is a sticky `fault`
+   (same-edge 1R1W ordering never relied on).  Scales 384 b stay flops (< 2 kb).  No runtime-indexed flop array > 2 kb.
+6. Floorplan: 388.8 x 432, one full-width std band y 129.6..302.4 (~54% at the 36k um2 model mass); 12 macros on the
+   43.2 lattice outside the band at x 43.2/172.8/302.4, y 43.2 (R0, pins S -> S-edge channel 43.2), 86.4 (MX, pins N
+   -> band), 345.6 (R0, pins S -> band), 388.8 (MX, pins N -> N-edge channel 25.9); >= 25.9 um channels, halo 5.4.
+   Tile pins: S ~1,174 on 388.8 um (~3.0/um), N 552 (1.4/um), E ~132, W clk/rst_n: all <= 6/um.  NOTE: the macro's
+   own S-face pin row is 206 pins on 32 um (6.4/um, intrinsic; escape qualified only by the sram_escape64_1019
+   coupon, not for 12 banks).  fill_reason.lattice_channel_bound (overall fill 25%) recorded with LEAD-S81 approval.
+7. Clock: PENDING --cts gate (one clk root; 12 x 2 macro clock pins wclk = rclk = clk; pin-flop spread <= 80 TT+FF);
+   io_hold_margin 0.03.
+8. Schedule: static; 0 edges from the SRAM / reset / L5 copies (pins cycle-exact); Q4 +40 HC edges per job (parent).
+
 # dsdv_gunit_l5 safe2 review candidate
 
 The forbidden old MCP gate used a nine-cycle data exception. Safe1 removed that mask and pipelined Sinkhorn, but failed actual TT setup -54.7ps. Safe2 adds a registered alignment/sticky cut before each positive-add sum/round, including step-zero epsilon, with matched bypass timing. D0=17, DS=15, LAT602; HC adds161edges versus safe1 and216 versus old MCP. No ICG/data timing masks are used.
