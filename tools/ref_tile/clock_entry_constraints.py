@@ -1806,6 +1806,8 @@ def _clock_family_body(body):
             raise ValueError("clock-entry body changed; revalidate generated-clock family extension")
     body = body.replace("  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }",
                         "  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }\n  ot_cf_refresh")
+    body = body.replace("proc ot_ce_leaf_ownership {inputs outputs} {",
+                        "proc ot_ce_leaf_ownership {inputs outputs} {\n  ot_cf_refresh")
     body = body.replace("set pins [all_registers -clock [get_full_name $clock] -clock_pins]",
                         "lassign [ot_cf_pins $clock] pins ot_ce_family_owners")
     body = body.replace("foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {",

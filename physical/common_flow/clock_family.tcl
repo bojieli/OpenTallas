@@ -59,6 +59,14 @@ proc ot_cf_root {name} {
 proc ot_cf_pins {root} {
   set name [get_full_name $root]
   if {[ot_cf_root $name] ne $name} {error "OT_CLOCK_FAMILY: requested root $name is generated"}
+  # Ordinary roots retain the existing all_registers ownership query. In
+  # pre-CTS ideal sessions get_property(pin, clocks) can be empty on check-only
+  # macro entries; all_registers -clock still proves actual graph membership.
+  if {![dict size $::ot_cf_master]} {
+    set pins [all_registers -clock_pins -clock $root]; set owners {}
+    foreach p $pins {dict set owners [get_full_name $p] $root}
+    return [list $pins $owners]
+  }
   set pins {}; set owners {}
   foreach c [all_clocks] {
     if {[ot_cf_root [get_full_name $c]] ne $name} continue

@@ -125,7 +125,9 @@ proc ot_ck_macro_owned {p selected} {
     error "CK_INSERTION: macro clock pin '[get_full_name $p]' requires one timing clock, found $owners"
   }
   puts "OT_MC_SOURCE [get_full_name $p] [lindex $owners 0]"
-  return [expr {[ot_cf_root [lindex $owners 0]] eq [get_full_name $selected]}]
+  set owner [lindex $owners 0]
+  if {[info exists ::ot_cf_master] && [dict size $::ot_cf_master]} {set owner [ot_cf_root $owner]}
+  return [expr {$owner eq [get_full_name $selected]}]
 }
 """
 
