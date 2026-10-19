@@ -19,7 +19,7 @@ module qfd_sys_face_record_port(
  output wire[10:0]expected_pw,output wire[3:0]expected_dw,output wire[63:0]auth_digest,
  output wire program_ready,installed_fusedcap,commit_v,
  output wire[15:0]program_epoch,output wire[63:0]program_digest,
- output wire host_epoch_valid,output wire[15:0]host_epoch,
+ output wire host_accept_v,output wire host_epoch_valid,output wire[15:0]host_epoch,
  output wire[58:0]host_tag,output wire[1:0]host_gen,
  output wire tx_v,tx_observed_v,output wire[547:0]tx_record,
  output wire fault
@@ -59,7 +59,7 @@ module qfd_sys_face_record_port(
  qfd_host_native_context_rx u_context(.ck(ck),.rst_n(rst_rn[4]),.receive_slot(context_slot),.rx_v(rx_v&&context_slot),.rx_record(rx_record),
  .program_begin_v(begin_v),.program_ready(program_ready),.installed_fusedcap(installed_fusedcap),.program_epoch(program_epoch),.program_digest(program_digest),
  .head_context_v(head_context_v),.head_stage(head_stage),.head_token(head_token),.head_position(head_position),.native_active(execution_active),
- .host_epoch_valid(host_epoch_valid),.host_epoch(host_epoch),.host_tag(host_tag),.host_gen(host_gen),
+ .accepted_v(host_accept_v),.host_epoch_valid(host_epoch_valid),.host_epoch(host_epoch),.host_tag(host_tag),.host_gen(host_gen),
  .host_fusedcap(context_cap),.host_image_epoch(context_image_epoch),.host_image_digest(context_image_digest),.fault(cf));
  qfd_program_witness_tx u_witness(.ck(ck),.rst_n(rst_rn[5]),.send_slot(witness_slot),.commit_v(commit_v),
  .program_ready(program_ready),.installed_fusedcap(installed_fusedcap),.program_fault(jf|af|slot_fault),

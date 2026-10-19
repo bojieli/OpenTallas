@@ -80,6 +80,9 @@
 // =====================================================================================================================
 module qfd_sys_face #(
     parameter integer MUT = 0,
+    parameter integer CTX_ACCEPTED = 0,        // opt-in actual accepted MU observer, +1 output edge
+    parameter integer OVL = 0,                 // separate TX/RX compiled start lists (MU-D2D-OVL)
+    parameter OVL_ROM_DIR = "",
     parameter integer MU = 0,                  // MU-DQ-SYSFACE 10-19: 1 = Qwen ROM 4-user release (filler head contexts, see below)
     parameter integer GO_OFS = 3,              // qfd_d2d_cal_seq go-path edges = the T image's token-run cycle (sys_face_image.GO_OFS)
     parameter [20*36-1:0] START_ADJ = '0,
@@ -95,6 +98,10 @@ module qfd_sys_face #(
     output wire [31:0]   cfg_data,
     output wire          cal_start,
     output wire          cal_seg,
+    output wire          cal_start_rx,
+    output wire          cal_seg_rx,
+    output wire [1:0]    cal_user_tx,
+    output wire [1:0]    cal_user_rx,
     input  wire          fwd_epoch,            // forwarded epoch strobe (package bump from the KV die): the run anchor
     input  wire [547:0]  rx_payload,
     input  wire          prog_rx_v,
@@ -141,6 +148,7 @@ module qfd_sys_face #(
     output reg           tt_kwd,
     output reg           tt_fab,
     // ---------------- native59 service ----------------
+    output wire [128:0]  ctx_x,
     output wire          host_epoch_valid,
     output wire          host_fused_capability,
     output wire [15:0]   host_epoch,
@@ -329,7 +337,7 @@ module qfd_sys_face #(
     wire hc_user0 = (MU == 0) || (MUT == 6) || tt_native_pos[17:16] == 2'd0;
     wire hc_v_u0 = tt_layer_context_v && hc_user0;
     // ================================================================ program record port (existing RTL)
-    wire        rp_program_ready, rp_fault;
+    wire        rp_program_ready, rp_fault, host_accept_v;
     wire        rp_commit_v, rp_cap;
     wire [15:0] rp_begin_epoch, rp_auth_epoch, rp_program_epoch;
     wire [10:0] rp_expected_pw; wire [3:0] rp_expected_dw; wire [63:0] rp_auth_digest, rp_program_digest;
@@ -345,9 +353,20 @@ module qfd_sys_face #(
         .expected_pw(rp_expected_pw), .expected_dw(rp_expected_dw), .auth_digest(rp_auth_digest),
         .program_ready(rp_program_ready), .installed_fusedcap(rp_cap), .commit_v(rp_commit_v),
         .program_epoch(rp_program_epoch), .program_digest(rp_program_digest),
-        .host_epoch_valid(host_epoch_valid), .host_epoch(host_epoch), .host_tag(host_tag), .host_gen(host_generation),
+        .host_accept_v(host_accept_v), .host_epoch_valid(host_epoch_valid), .host_epoch(host_epoch), .host_tag(host_tag), .host_gen(host_generation),
         .tx_v(rp_tx_v), .tx_observed_v(prog_tx_observed_v), .tx_record(prog_tx_record), .fault(rp_fault));
     assign host_fused_capability = rp_cap;
+    wire accepted_ctx_fault;
+    generate if (MU && CTX_ACCEPTED) begin : g_accepted_ctx
+      qfd_sys_face_accepted_mu_ctx u_observer(
+        .ck(ck),.rst_n(rst_rec[4]),.offer_slot(prog_context_slot),.offer_v(prog_rx_v),.offer_record(rx_payload),
+        .host_accept_v(host_accept_v),.host_epoch_valid(host_epoch_valid),.host_epoch(host_epoch),.host_tag(host_tag),.host_gen(host_generation),
+        .program_ready(rp_program_ready),.program_cap(rp_cap),.program_fault(rp_fault),
+        .program_epoch(rp_program_epoch),.program_digest(rp_program_digest),.ctx_x(ctx_x),.fault(accepted_ctx_fault));
+    end else begin : g_no_accepted_ctx
+      assign ctx_x=129'd0;assign accepted_ctx_fault=1'b0;
+    end endgenerate
+
     // MU filler head-context check (see "MU head contexts" above)
     wire mu_hc_fault;
     if (MU != 0) begin : g_mu_hc
@@ -378,10 +397,26 @@ module qfd_sys_face #(
     // cfg_* / cal_start / cal_seg; its token start is this face's t_go; reload = the first epoch strobe after an epoch
     // abort (the HOST's recovery: the images are re-written before the new epoch's first token, first_ofs > 2 NE + 2).
     wire cal_ready, cs_running, cs_fault, cs_adm_done; wire [5:0] cs_layer;   // r2: admission run once per epoch (D2D_ADM_OFS after fwd_epoch)
+    generate if (OVL) begin : g_ovl
+        qfd_d2d_cal_seq_ovl #(.ROM_DIR(OVL_ROM_DIR)) u_cseq (
+            .ck(ck), .rst_n(rst_loop), .reload(fwd_epoch && !fe_q && aborted),
+            .epoch_go(fwd_epoch), .halt(halt), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we),
+            .cfg_addr(cfg_addr), .cfg_data(cfg_data), .cal_start(cal_start), .cal_seg(cal_seg),
+            .cal_start_rx(cal_start_rx), .cal_seg_rx(cal_seg_rx), .cal_user_tx(cal_user_tx), .cal_user_rx(cal_user_rx),
+            .cal_ready(cal_ready), .running(cs_running), .adm_done(cs_adm_done), .fault(cs_fault));
+        // Admission is the only pre-adm_done start. The OVL start lists carry users and segments independently
+        // of the T-calendar layer marker; their cycle checks are in the compiled-list/end bench.
+        assign cs_layer = cs_adm_done ? 6'd0 : 6'h3f;
+    end else begin : g_serial
     qfd_d2d_cal_seq #(.GO_OFS(GO_OFS), .START_ADJ(START_ADJ)) u_cseq (.ck(ck), .rst_n(rst_loop),
         .reload(fwd_epoch && !fe_q && aborted), .tok_go(t_go), .epoch_go(fwd_epoch), .halt(halt),
         .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .cal_start(cal_start), .cal_seg(cal_seg), .cal_ready(cal_ready), .running(cs_running), .layer(cs_layer), .adm_done(cs_adm_done), .tok_start(), .fault(cs_fault));
+        assign cal_start_rx = cal_start;
+        assign cal_seg_rx = cal_seg;
+        assign cal_user_tx = 2'd0;
+        assign cal_user_rx = 2'd0;
+    end endgenerate
     // bench mutant 1: T events one edge late
     reg t_ev_d; reg [2:0] t_p_d; reg [3:0] t_k_d; reg [4:0] t_b_d;
     always @(posedge ck) begin t_ev_d <= t_ev; t_p_d <= t_p; t_k_d <= t_k; t_b_d <= t_b; end
@@ -547,7 +582,7 @@ module qfd_sys_face #(
             end
             if (t_bad || l_bad || e_bad || lev_clash || (ev_res && !seq_dc[50]) || t_cf || l_cf || e_cf ||
                 (ev_lay && l_run) || (ev_tok && e_run) || (t_go && !boot_done) || cs_fault ||
-                cal_tok !== cal_exp || (cal_tok && cal_seg !== seg_exp) || (cal_adm && t_running_q))
+                (!OVL && (cal_tok !== cal_exp || (cal_tok && cal_seg !== seg_exp))) || (cal_adm && t_running_q))
                 cal_fault <= 1'b1;
             tt_fab <= io_fault | io_shared_fault | d2d_fault | native_fault | face_fault;
         end
@@ -558,6 +593,6 @@ module qfd_sys_face #(
     always @(posedge ck or negedge rst_emb)
         if (!rst_emb) prov_fault_q <= 1'b0;
         else if (emb_prov_fault) prov_fault_q <= 1'b1;
-    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault | mu_hc_fault;
+    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault | mu_hc_fault | accepted_ctx_fault;
     assign fault = face_fault;
 endmodule
