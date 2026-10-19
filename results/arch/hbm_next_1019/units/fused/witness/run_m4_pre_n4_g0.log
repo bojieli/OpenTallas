@@ -1,0 +1,12 @@
+MISMATCH word 168192: got 3f900000 exp 3f920000
+MISMATCH word 168193: got 3f220000 exp 3f240000
+MISMATCH word 168194: got bf5f0000 exp bf610000
+MISMATCH word 168195: got bcef0000 exp bcf20000
+MISMATCH word 168196: got bede0000 exp bee10000
+HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=4 cycles=471 done=0 fault=1 reads=10884 writes=4160
+HNX_FUSED FAIL op=pre N=4 mism=15816 fault=1 done=0 bankerr=0 writes=4160 expect_sectors=2560
+- rtl/hbm_next/fused/tb/tb_hnx_fused.sv:78: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 16.249 s; speed 65.911 ns/s
+- Verilator: cpu 16.249 s on 1 threads; allocated 313 MB
+RUN_RC=0

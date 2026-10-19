@@ -1,0 +1,182 @@
+{
+ "schema": "opentallas.hbm_next_1019.cmtp.golden_manifest.v1",
+ "src": "/srv/opentallas-scratch/claude/hnx-cmtp-1019/golden_mtp_all5",
+ "files": {
+  "golden.json": {
+   "sha256": "d2916a2150dc5219f10fa02b68fb08b50fedca40243bfb488cab502c53f72a0b",
+   "bytes": 4151,
+   "committed_sha256": null,
+   "matches_committed": null
+  },
+  "golden_l0.npz": {
+   "sha256": "11c301fd28e74627e687190fee055584ae861c496e509008fd6272c3dc4973db",
+   "bytes": 357722,
+   "committed_sha256": null,
+   "matches_committed": null
+  }
+ },
+ "arrays": {
+  "golden_l0.npz:h00": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "f35b783d6f63786fea076d97a797f0f00f24e9e695b0be37c6224cf5ed0437fc"
+  },
+  "golden_l0.npz:h01": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "d7542f5e95b51c9ab454cf445974003fb7e91c08024b8f0e6a1b2db690786c46"
+  },
+  "golden_l0.npz:h02": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "3473f472390715302a0bf86145d0370486a072323d53012cd93e93363db18635"
+  },
+  "golden_l0.npz:h03": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "143dff00d7bff1a582310e99886ec789bea9a8fd1419cfba0397948ed375e617"
+  },
+  "golden_l0.npz:h04": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "96c68d16f3ac09bc369ed2f9f20384f27f85dcac33edd911033162ebea56908e"
+  },
+  "golden_l0.npz:h05": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "d430431f51735a90e1bede22206c9f6bbb05db21465d31e886a5d7b266cfcc20"
+  },
+  "golden_l0.npz:h06": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "96968d79d8c2805d751b08b72e71cf912ee37d0f944c302142a0052ca60c9ad9"
+  },
+  "golden_l0.npz:h_in0": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "833cabf2b55e7c3b366b4cba332627380b2316bdeedab54bd9feac5d9d794a63"
+  },
+  "golden_l0.npz:h_in1": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "eae1e8e1a0a10d4b1ed8e3eb769b1100add5c3540f7fd4db278caaf307237887"
+  },
+  "golden_l0.npz:h_in2": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "aae9108eda24b019f5b0d7e54f8d4772b03a5f4eb273067096ebc401f329f4da"
+  },
+  "golden_l0.npz:h_in3": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "9318c4fad677ff58798c51385336913ecdede3095ef4c7c37dd5d118bfa73b5f"
+  },
+  "golden_l0.npz:h_in4": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "507c2fe53e8b4a6b678b24cbe5881d1265510a9c0436ba33959965d0a16026fa"
+  },
+  "golden_l0.npz:h_in5": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "69cc88d0ac235ecaf81b4f7357f3a4aea46ee52ef943dfdecf1fe14d0fb60dfa"
+  },
+  "golden_l0.npz:h_in6": {
+   "shape": [
+    4,
+    5120
+   ],
+   "dtype": "float32",
+   "sha256": "f0f4c874e601e7febd1ec19c6abcbb6edaef779a12efbc94978377a6ffde3207"
+  },
+  "golden_l0.npz:pre00": {
+   "shape": [
+    4
+   ],
+   "dtype": "float32",
+   "sha256": "6ada5729adb5ae297bbdc84abd364e9c915ec2eb17bce5431db395326f1907c5"
+  },
+  "golden_l0.npz:pre01": {
+   "shape": [
+    4
+   ],
+   "dtype": "float32",
+   "sha256": "15dc4eff491acec5e36ec37fc49204444d046e8ad4e7547261ad8317c5401529"
+  },
+  "golden_l0.npz:pre02": {
+   "shape": [
+    4
+   ],
+   "dtype": "float32",
+   "sha256": "9169b1a2fc2b5eb33f95d2bffaf57835227656547134e8de245684611acdbefd"
+  },
+  "golden_l0.npz:pre03": {
+   "shape": [
+    4
+   ],
+   "dtype": "float32",
+   "sha256": "3ba4ca5af2376a63f03e6445015244edd534223cd28004904739afa31aa2f6ae"
+  },
+  "golden_l0.npz:pre04": {
+   "shape": [
+    4
+   ],
+   "dtype": "float32",
+   "sha256": "222bbb9c5dba0237a0debd5ccacd11747f0d788d8f923178e08e54ecff1d0521"
+  },
+  "golden_l0.npz:pre05": {
+   "shape": [
+    4
+   ],
+   "dtype": "float32",
+   "sha256": "ec120f9166eaf1708219e2beba213f7ce723f4c02dcdf2dfcd1f71b896a944c1"
+  },
+  "golden_l0.npz:pre06": {
+   "shape": [
+    4
+   ],
+   "dtype": "float32",
+   "sha256": "50244f46790117986590a76ddf90661d8722a7ef23d352b1900e95119ac82e12"
+  }
+ },
+ "verdict": "PASS"
+}

@@ -1,0 +1,13 @@
+STREAM MISMATCH cyc 6804 dut 37ecbd6800000 model 3000000000000
+STREAM MISMATCH cyc 6805 dut 3d52100a00011 model 3000000000011
+STREAM MISMATCH cyc 6806 dut 38409a9b00022 model 3000000000022
+STREAM MISMATCH cyc 6807 dut 396bbb9c60033 model 3000000000033
+STREAM MISMATCH cyc 6808 dut 3fd6edea00044 model 3580a98a00044
+HNX_RP4LP4 P=4 MUT=3 LSKEW=8 chunks=66 words=1526 sel_beats=141 lane_bad=0 stream_bad=960 coll_model=0 coll_dut=0
+  lane 0 words 512 bf16_words 304 bf16_nonzero 304 bd_nonzero 152
+  lane 1 words 502 bf16_words 304 bf16_nonzero 304 bd_nonzero 142
+  lane 2 words 0 bf16_words 304 bf16_nonzero 304 bd_nonzero 142
+  lane 3 words 486 bf16_words 304 bf16_nonzero 304 bd_nonzero 131
+STREAM MISMATCH count=960
+FAIL HNX-RP4LP4 P=4 MUT=3
+MUTANT CAUGHT p4_m3_t0

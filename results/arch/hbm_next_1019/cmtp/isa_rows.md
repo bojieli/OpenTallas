@@ -72,8 +72,8 @@ The two terms are separate:
 |---|---|---|---|
 | SM.MATVEC | pass plan | PRICED | sm_pass_plan: line issues / max(1, issues per line / 1.374) of the AR record; SM4 lane-major publish skew +8 a further lane a pass (hnx_rp4lp4 LSKEW, MEASURED) |
 | ATT.QK/PV | union stream | MEASURED | ATT4 bench: span = fixed 113-127 + 7.8 a union row (= fixed + comp x U(N)/U(1)), passes = ceil(N / P); shared 4-lane merge PV span 16-40 shorter (a1); E1 PASS; plan mode R10 |
-| FUSED.HC_PRE_NORM | 197.0 | MEASURED | P6 RTL 8fe5d18bd: (1,451 - 466) / 5 |
-| FUSED.HC_POST | 100.0 | PRICED | SU chain 25,600 words / 256 |
+| FUSED.HC_PRE_NORM | 81.0 | MEASURED | UNITS-FUSED hnx FUSED engine (@e70d3285a): 404 + 81 (N - 1), KX = 4 x slots, rgap 0 (KX = 2 needs rgap >= 64); price 160; old P6 RTL 197 |
+| FUSED.HC_POST | 103.0 | MEASURED | UNITS-FUSED hnx FUSED engine: 196 + 103 (N - 1) (price 100) |
 | FUSED.QDQ_* | n / 32 | PRICED | quantiser 32 elements a cycle |
 | HC.HC_MIX* | 250.0 | MEASURED | UNITS tb_hnx_hc_eng4 (hnx root + 4 ring quarters): HC_MIX 998 + 250 (N - 1), bit-exact N = 1..8 |
 | COLL.ALL_GATHER / ALL_REDUCE | 3K/2 | MEASURED | UNITS-COLL ot_hnx_coll_gq: one fire + 40-edge drain, 3K/2 edges a further row (K ring indices) = the price c1 - 741.7 |
@@ -81,13 +81,13 @@ The two terms are separate:
 | COLL.ARGMAX_MERGE | 32.0 | MEASURED | UNITS-COLL rows: 53 + 32 (N - 1) (price 12.7-23.7) |
 | COLL.TOPK_MERGE | c1 - 741.7 | PRICED | one message train: endpoint + crossing + tail once, payload x N |
 | IDX.TOPK | 49.2 | MEASURED | UNITS-IDX ot_hnx_idx_topk_rows_static (price 47.0) |
-| IDX.INDEX | 953.0 | MEASURED | UNITS-IDX: 1,397 + 953 (N - 1) (selector top-512 a row, key stream re-read a row; price 152 of the 658.9 frame); IDXN redesign (N selectors, one key pass) running |
+| IDX.INDEX | 232.0 | MEASURED | UNITS-IDXN (@5bf6d2d50): 1,297 + 232 (N - 1), keys read once a record (replay buffer), 8 row streams, 4 time-shared selectors (price 152 of the 658.9 frame) |
 | IDX.UNION | 48/67/90/101/142 (N 1/2/3/4/6) | MEASURED | UNITS-IDX ot_hnx_idx_union_static (idx packet client, ~18.6 a row; price N x 6 / 8 + 24) |
 | IDX.KVUNION | (W + N k) / 8 + 320 | PRICED | merge of N ascending lists at 8 ids a cycle + 32 plan blocks x 320 words at 32 words a cycle; runs on IDX beside the ROW_GATHER the ATT record waits for anyway (off the critical path) |
-| SU.VOP | (2k + 1) ceil(e / 512) + 2 | MEASURED | UNITS-SUDMA ot_hnx_su_rowx: AB 44 / ABC 72 at e = 7,168 (one store write port: k per-row VM operands fill, 1 result); indexed gather 1 (= price) |
+| SU.VOP | 2k ceil(e / 512) | MEASURED | UNITS-SUDMA2 write-port split (@a42351330): AB 28 / ABC 56 at e = 7,168 (k per-row VM operands; VM fill bandwidth binds); indexed gather 1 (= price) |
 | DMA.KVWB_DS | 8.0 | MEASURED | UNITS-SUDMA kvwb: 36 + 8 (N - 1), +28 a 256-slot ring wrap (price 2) |
 | DMA.* | c1 - first access | PRICED | first access once, rows at full bandwidth |
-| ARGMAX.LOCAL | 169.0 | MEASURED | UNITS-SUDMA argmax: 211 + 169 (N - 1) (VM read one sector an edge; price 6) |
+| ARGMAX.LOCAL | 22.0 | MEASURED | UNITS-SUDMA2 ot_hnx_argmax_wide_rows: II 22 (1,347 words / 8 a beat on one slice; price 6 needs a ~4-slice row spread) |
 | CTL.* | 0.0 | n/a | CTL rows are not issued (USERS / TOKX take N from the record) |
 
 <!-- END isa_rows.py tables -->
@@ -197,6 +197,11 @@ A rejected position's writes are therefore rewritten by the next step before any
 - **Measured / priced:** the self-test plans at T = 640 × 4 lanes give 24 (full overlap) / 58 (0.6) / 72 (disjoint) lines on the busiest SM, the ATT4 balanced numbers (24 / 72). The calendar reserves 128 lines (`ATT_BUDGET`, above the model's upper bound 109 at disjoint). `IDX.KVUNION` itself is PRICED (row II table).
 
 **R11. Users-mode HBM regions (`hsh`).** In users mode (`CTL.USERS`) every per-user HBM operand steps by its rs per row, with `hsh` = 12, so rs counts 4 KiB units and the 24-bit field reaches ±32 GiB. Per-user HBM = the HBM state some record of the layer writes, the HBM operands of `DMA.KVWB_DS`, `COLL.ROW_GATHER` (compressed-row source and list store), ATT and IDX, and every read overlapping them. **`IDX.INDEX`'s index keys are implicit** (no descriptor), so in users mode its ROWX carries `rs_I` (I itself absent) = the key-store step per row, shifted by `hsh` (the one exception to "no stride on an absent operand"; UNITS-IDX to implement). The emitter picks the smallest power-of-two user stride whose shifted regions collide with no other HBM interval of the segments (`emitter/mu/emitter.json` `users_hbm`). Weights, scales and tables keep rs = 0 (shared by all users).
+
+**R12. ATT4 production front: lane masks, the KVWB window ring, the 32-SM spread** (CMTP step 5, answer to ATT4 10-19 03:05; no new field, all of it already in R8 / R10 / R11).
+- **Lane-mask record = the plan block, not a separate record.** `IDX.KVUNION` writes, per SM s, the plan block at R.base + 320 s: line words 32 … 287 and the lane masks 288 … 319 in the `mw_data` layout of `ot_hnx_att4_issue` (line i, lane l = bit 4 (i mod 8) + l of word 288 + 2 ⌊i / 16⌋ + ⌊(i mod 16) / 8⌋). The ATT plan-mode record (`rsel` = 1, `emask` = 0, `rtab` = R.base) makes SM s load its block's 32 mask words and ≤ 256 line words before its first line beat; that load is inside the record's fixed span (the calendar reserves `ATT_BUDGET` = 128 lines a SM; a block over param [24:16] faults E_RANGE). ATT4's issue-side loader reads exactly these words; `isa_rows.plan_words` / `plan_lane_lists` are the reference (self-test decodes them as the engine does).
+- **KVWB window ring record.** `DMA.KVWB_DS` with ROWX n = N (MTP: the N verify positions; users: N users) is ONE row record; row r writes position POS_SLOT(slot0 + r) to ring slot POS_SLOT(slot0 + r) mod 256 of O (O.m = 256 rows, 2,048 B a row; the ring address comes from the bank's POS_SLOT, never from ρ · rs). MTP: rs_O = 0, one ring shared by every lane (plan ring lane 0). Users: rs_O << `hsh` = the user's region, one ring a user (plan ring lane = the user's lane). A record that crosses slot 255 is two moves on the static calendar (the second at first_drain + chunks + 2, 16-edge lead; UNITS-SUDMA `tb_hnx_dma_kvwb_ring`): cost 36 + 8 (N − 1), +28 on a wrap. C5: the KVWB record precedes `IDX.KVUNION` and every ATT record of the segment (the emitter orders it; `static_check` C2 RAW).
+- **32-SM spread.** The (lane, run) jobs go onto all 32 SMs by `kv_union_plan` step 4 (run k of all lanes one job when its union ≤ 0.75 × the lanes' sum, else one job a lane; LPT, lowest SM on ties, ≤ 16 nodes a SM). Busiest SM at T = 640 × 4 lanes: 24 / 58 / 72 lines at full / 0.6 / disjoint overlap (ATT4 balanced 24 / 72; the 20-SM aligned grouping's 128 at disjoint is not used). The cross-SM merge order is the lane map D[16 + 128 l + k] (run k ascending, the P = 1 pairwise merge per lane).
 
 **HGI-1R 1.1 changes (CMTP step 4).** `rtab` grows to 19 bits (the 2^19-word VM, PROG 10-19); `emask` moves to [45:39]; new `hsh` [50:46]; reserved [87:51]. IDX op 6 = KVUNION; ATT plan mode. No implemented RTL decodes `rtab` / `emask` yet (SM4 builds `rpl` = 0 first; UNITS-COLL takes nm1 / rs_A / rs_O only), so nothing built changes.
 

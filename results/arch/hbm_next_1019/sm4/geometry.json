@@ -238,7 +238,7 @@
   ]
  },
  "lever_table": {
-  "basis": "DIE f4c_t5 frame 693.0 mm2 at tile 630.72 x 1814.4 (1.1444 mm2); die = 693.0 + 256 x (tile - 1.1444); reticle 858, Phase-1 budget 752; tile = tile hard / 0.441 (hard fill of the gated base outline) except base (gated outline). ESTIMATES until gates measure; tok/s requested from HBM-NEXT-CMTP (lane file).",
+  "basis": "DIE f4c_t5 frame 693.0 mm2 at tile 630.72 x 1814.4 (1.1444 mm2); die = 693.0 + 256 x (tile - 1.1444); reticle 858, Phase-1 budget 752; tile = tile hard / 0.441 (hard fill of the gated base outline) except base (gated outline). ESTIMATES until gates measure; tok/s requested from HBM-NEXT-CMTP (lane file). Row (a) updated 10-19 02:30 from the floorplanned hnx_rp4lp4x outline.",
   "rows": [
    {
     "option": "base: P=4, 8 separate closed x stores",
@@ -254,11 +254,11 @@
     "option": "(a) P=4, shared 4-lane x store hnx_xs4",
     "leaf_hard_um2": 348128,
     "tile_hard_um2": 757493,
-    "tile_mm2": 1.718,
-    "die_mm2": 839.8,
+    "tile_mm2": 1.446,
+    "die_mm2": 770.3,
     "fits_reticle_858": true,
     "within_phase1_752": false,
-    "note": "PROG-adopted base; xs4 outline 501.12 x 289.44 (kit gated), tile from base hard fill 0.441 (estimate until the xs4 view closes)"
+    "note": "PROG-adopted base; FLOORPLANNED tile hnx_rp4lp4x 1080.0 x 1339.2 (hard fill 0.523; leaf re-packed around the face-split xs4), not yet gated (needs the closed xs4 view); was 1.718 / 839.8 by the base-fill estimate"
    },
    {
     "option": "(a)+(b) P=4 lanes on the block-dot column only, BF16 column 1 lane",
@@ -280,6 +280,199 @@
     "within_phase1_752": true,
     "note": "owner decision; xs3 ~0.78 x xs4 (12 macros)"
    }
+  ]
+ },
+ "lever_a_tile": {
+  "tile": "hnx_rp4lp4x",
+  "top": "hnx_rp4lp4x_flat_lp",
+  "kit": "spec physical/hbm_next/sm4/hnx_rp4lp4x_spec.json (generator tools/hbm_next/sm4/hnx_rp4lp4x_kit.py); ref_tile gen + gate need the CLOSED hnx_xs4 view (physical/ref_tile/hnx_rp4lp4_xs4, gate --cts running; critical prefix -> coordinator review, then route)",
+  "status": "FLOORPLANNED (generator, 0 overlaps, 10.8-um halos), NOT gated: blocked on the closed xs4 view",
+  "outline_um": {
+   "w": 1080.0,
+   "h": 1339.2,
+   "area_mm2": 1.4463,
+   "aspect": 1.24
+  },
+  "leaf": {
+   "bbox_um": [
+    985.0,
+    457.92
+   ],
+   "layout": "hnx_xs4 501.12x289.44 (N: block-dot operands, W/E: BF16 operands, S: landing inputs) + 4 bdc in one row on its N face (+25.92 XREL band) + 4 BF16 lane stacks (tct + 2 tcl, d4g arrangement, 198.72 x 216) beside it: lanes 0-1 W, 2-3 E; 43.2-um operand channels"
+  },
+  "middle_band_um": 259.2,
+  "hard_children": 42,
+  "hard_area_um2": 757096,
+  "hard_fill": 0.523,
+  "die_mm2_on_f4c_t5": 770.3,
+  "frame_note": "wider than the DIE f4c_t5 slot (630.72 x 1814.4): aspect 1.24 vs 2.88. DIE must re-shape the SM slot (or SM4 re-packs the band to a narrower outline) -- input for DIE step 2",
+  "pins": {
+   "E": {
+    "bout": {
+     "bits": 2069,
+     "span_um": [
+      371.436,
+      950.508
+     ],
+     "pins_per_um": 3.57
+    },
+    "rout_n": {
+     "bits": 818,
+     "span_um": [
+      950.796,
+      1176.972
+     ],
+     "pins_per_um": 3.62
+    },
+    "rout_s": {
+     "bits": 818,
+     "span_um": [
+      144.972,
+      371.148
+     ],
+     "pins_per_um": 3.62
+    }
+   },
+   "N": {
+    "ck_n": {
+     "bits": 1,
+     "span_um": [
+      540.0,
+      540.0
+     ],
+     "pins_per_um": null
+    },
+    "gin": {
+     "bits": 100,
+     "span_um": [
+      180.972,
+      228.492
+     ],
+     "pins_per_um": 2.1
+    },
+    "rst_n": {
+     "bits": 1,
+     "span_um": [
+      263.532,
+      263.532
+     ],
+     "pins_per_um": null
+    },
+    "xs_a1": {
+     "bits": 9,
+     "span_um": [
+      228.972,
+      232.812
+     ],
+     "pins_per_um": 2.34
+    },
+    "xs_a2": {
+     "bits": 7,
+     "span_um": [
+      242.412,
+      245.292
+     ],
+     "pins_per_um": 2.43
+    },
+    "xs_g1": {
+     "bits": 5,
+     "span_um": [
+      237.612,
+      239.532
+     ],
+     "pins_per_um": 2.6
+    },
+    "xs_g2": {
+     "bits": 5,
+     "span_um": [
+      249.132,
+      251.052
+     ],
+     "pins_per_um": 2.6
+    }
+   },
+   "S": {
+    "ck_s": {
+     "bits": 1,
+     "span_um": [
+      540.0,
+      540.0
+     ],
+     "pins_per_um": null
+    },
+    "gout": {
+     "bits": 200,
+     "span_um": [
+      180.972,
+      276.492
+     ],
+     "pins_per_um": 2.09
+    },
+    "xss_a1": {
+     "bits": 9,
+     "span_um": [
+      166.908,
+      170.748
+     ],
+     "pins_per_um": 2.34
+    },
+    "xss_a2": {
+     "bits": 7,
+     "span_um": [
+      171.228,
+      174.108
+     ],
+     "pins_per_um": 2.43
+    },
+    "xss_g1": {
+     "bits": 5,
+     "span_um": [
+      174.588,
+      176.508
+     ],
+     "pins_per_um": 2.6
+    },
+    "xss_g2": {
+     "bits": 5,
+     "span_um": [
+      176.988,
+      178.908
+     ],
+     "pins_per_um": 2.6
+    }
+   },
+   "W": {
+    "bin": {
+     "bits": 2069,
+     "span_um": [
+      371.436,
+      950.508
+     ],
+     "pins_per_um": 3.57
+    },
+    "rin_n": {
+     "bits": 818,
+     "span_um": [
+      950.796,
+      1176.972
+     ],
+     "pins_per_um": 3.62
+    },
+    "rin_s": {
+     "bits": 818,
+     "span_um": [
+      144.972,
+      371.148
+     ],
+     "pins_per_um": 3.62
+    }
+   }
+  },
+  "bits": "identical to hnx_rp4lp4 / d4g rp4lp (rin/rout 1,636, bin/bout 2,069, gin 100, gout 200, xs/xss 26)",
+  "latency": "identical to hnx_rp4lp4 (lfx = lf cycle timing; lp offsets as hnx_rp4lp4_flat_lp)",
+  "risks": [
+   "hard fill 52% (base gate 44%, d4g rp4lp 35%): GRT overflow at the 43.2-um operand channels and the bdc row is the gate question",
+   "upper BF16 lane stacks take their x operands (512 b each) up the 43.2-um channel to the tcl N faces (as the d4g unit: tcl inputs on the far face)"
   ]
  }
 }

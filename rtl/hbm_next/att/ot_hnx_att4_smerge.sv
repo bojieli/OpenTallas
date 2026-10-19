@@ -49,6 +49,11 @@
 // registered as (* keep *) copies, one set per 32-b word (= per adder, fanout 32); the reset lands in kept per-region
 // copies (one a adder + control).  Function = the step-2 merge with its inputs one cycle later: bit-identical nodes,
 // pv_* and pub_* one edge later.  MUT 5 = the publication reads lane pub_lane ^ 1 (publish-path negative control).
+// STEP 4 (2026-10-19, timing): LANDED DECODE INPUTS.  The step-3 --cts gate missed SS setup by -167..-211 ps @770 on
+// g_madd ka_hw/kb_hw; the worst path started at the wrapper's N-face pin register (ev_q of ot_hnx_att4_spvm) with ~250 ps
+// of buffered wire in front of the ~500 ps decode.  Every input now passes one more register (ev_q / tag_q land beside
+// the decode; sum / pub_* take the same stage): pure uniform retiming, bit-identical nodes, pv_* and pub_* one more edge
+// later (the compiler counts it, as the pin registers).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hnx_att4_smerge #(
     parameter integer NL      = 4,
@@ -92,16 +97,25 @@ module ot_hnx_att4_smerge #(
     (* keep *) reg rst_e;
     always @(posedge clk) begin rst_c <= rst_n; rst_e <= rst_n; end
 
-    // ---------------- input register (+1 edge): the decode below sees the raw inputs one cycle ahead ----------------
+    // ---------------- input registers (STEP 4: +2 edges, uniform) -------------------------------------------------------
+    // Stage 1 = LANDING registers: the decode reads ev / tag only from ev_q / tag_q, which the placer puts beside the
+    // decode (their D is the tile pin register across the outline, a wire-only cycle), so no pin wire sits in front of
+    // the decode logic.  The data / publication inputs take the same stage (sum_l, *_l) so every input is delayed
+    // uniformly: it only rotates which residue a slot owns (as the pin registers do); stage 2 (sum_q, ps_q, ...) is the
+    // step-3 input register the head stage reads one cycle after the decode.
     reg [NL-1:0]      ev_q;
-    reg [NL*W-1:0]    sum_q;
-    reg               ps_q;
-    reg [1:0]         pl_q;
-    reg [2:0]         pslot_q;
+    reg [NL*TAGW-1:0] tag_q;
+    reg [NL*W-1:0]    sum_l, sum_q;
+    reg               ps_l, ps_q;
+    reg [1:0]         pl_l, pl_q;
+    reg [2:0]         pslot_l, pslot_q;
     always @(posedge clk or negedge rst_c)
-        if (!rst_c) begin ev_q <= {NL{1'b0}}; ps_q <= 1'b0; end
-        else begin ev_q <= ev; ps_q <= pub_start; end
-    always @(posedge clk) begin sum_q <= sum; pl_q <= pub_lane; pslot_q <= pub_slot; end
+        if (!rst_c) begin ev_q <= {NL{1'b0}}; ps_l <= 1'b0; ps_q <= 1'b0; end
+        else begin ev_q <= ev; ps_l <= pub_start; ps_q <= ps_l; end
+    always @(posedge clk) begin
+        tag_q <= tag_d; sum_l <= sum; sum_q <= sum_l;
+        pl_l <= pub_lane; pl_q <= pl_l; pslot_l <= pub_slot; pslot_q <= pslot_l;
+    end
 
     reg [2:0] ph;                                        // residue whose entries are at the ring heads (head stage)
     always @(posedge clk or negedge rst_c) if (!rst_c) ph <= 3'd0; else ph <= ph + 3'd1;
@@ -188,11 +202,11 @@ module ot_hnx_att4_smerge #(
     always @(*) begin
         for (l = 0; l < NL; l = l + 1) begin
             ix = {l[1:0], phn};
-            first = tag_d[l*TAGW + TAGW-2]; lastc = tag_d[l*TAGW + TAGW-3];
+            first = tag_q[l*TAGW + TAGW-2]; lastc = tag_q[l*TAGW + TAGW-3];
             cc[l] = first ? {(LV+1){1'b0}} : e_n[ix];
             ew[l] = cc[l][0] ? tones(cc[l]) : 3'd0;
-            if (ev[l]) begin
-                d_n[l] = cc[l] + 1'b1; d_tag[l] = tag_d[l*TAGW +: TAGW];
+            if (ev_q[l]) begin
+                d_n[l] = cc[l] + 1'b1; d_tag[l] = tag_q[l*TAGW +: TAGW];
                 d_rk[l] = 3'd0; d_rj[l] = ew[l]; d_fin[l] = lastc; d_ff[l] = 1'b1;
                 d_fb[l] = d_n[l][LV-1:0];
                 d_md[l] = cc[l][0] ? RIP : (lastc ? FL : IDLE);
@@ -201,9 +215,9 @@ module ot_hnx_att4_smerge #(
                 d_fin[l] = e_fin[ix]; d_ff[l] = e_ff[ix]; d_fb[l] = e_fb[ix]; d_md[l] = e_md[ix];
             end
             // collisions of an arriving event (sticky fault at the head turn)
-            d_flt[l] = ev[l] && ((e_md[ix] != IDLE) || (nret_v && nret_l == l[1:0] && nret_t == ew[l]) ||
+            d_flt[l] = ev_q[l] && ((e_md[ix] != IDLE) || (nret_v && nret_l == l[1:0] && nret_t == ew[l]) ||
                                  (cc[l] >= (1 << (LV - 1))));
-            d_nvc[l] = ev[l] && first;
+            d_nvc[l] = ev_q[l] && first;
             cand[l] = (d_md[l] != IDLE);
             // step
             s_a[l] = 3'd0; s_b[l] = 3'd0; s_t[l] = TOP; s_bz[l] = 1'b0; s_fin[l] = 1'b0;
@@ -243,17 +257,17 @@ module ot_hnx_att4_smerge #(
         if (nret_v && cand[nret_l]) sel = nret_l;
         // operand selects with the step-2 priority: event word > returning result > ring head word; B = +0 if s_bz
         da_hw = {NW{1'b0}}; db_hw = {NW{1'b0}}; da_my = 1'b0; db_my = 1'b0; da_ev = {NL{1'b0}}; db_ev = {NL{1'b0}};
-        if (ev[sel] && ew[sel] == s_a[sel]) da_ev[sel] = 1'b1;
+        if (ev_q[sel] && ew[sel] == s_a[sel]) da_ev[sel] = 1'b1;
         else if (nret_v && nret_l == sel && nret_t == s_a[sel]) da_my = 1'b1;
         else for (m = 0; m < NW; m = m + 1) if (m == sel * LV + s_a[sel]) da_hw[m] = 1'b1;
         if (s_bz[sel]) begin end
-        else if (MUT != 1 && ev[sel] && ew[sel] == s_b[sel]) db_ev[sel] = 1'b1;
+        else if (MUT != 1 && ev_q[sel] && ew[sel] == s_b[sel]) db_ev[sel] = 1'b1;
         else if (nret_v && nret_l == sel && nret_t == s_b[sel]) db_my = 1'b1;
         else for (m = 0; m < NW; m = m + 1) if (m == sel * LV + s_b[sel]) db_hw[m] = 1'b1;
         // head writes: the event's word, else the returning result's word, else the head word circulates
         for (l = 0; l < NL; l = l + 1)
             for (q = 0; q < LV; q = q + 1) begin
-                dw_ev[l*LV+q] = ev[l] && ew[l] == q[2:0];
+                dw_ev[l*LV+q] = ev_q[l] && ew[l] == q[2:0];
                 dw_rt[l*LV+q] = !dw_ev[l*LV+q] && nret_v && (((MUT == 2) ? (nret_l ^ 2'd1) : nret_l) == l[1:0]) &&
                                 nret_t == q[2:0];
             end

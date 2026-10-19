@@ -49,5 +49,32 @@
   ],
   "logs": "bench/thr_k4, bench/thr_k16, bench/xs4_thr16"
  },
- "latency": "vs the d4g rp4lp leaf: +1 (lane front register) on rows and x writes, +1 publish merge, lane p results +8p; schedule rule: interleaved row chunks >= 32 cycles apart (K >= 4)"
+ "latency": "vs the d4g rp4lp leaf: +1 (lane front register) on rows and x writes, +1 publish merge, lane p results +8p; schedule rule: interleaved row chunks >= 32 cycles apart (K >= 4)",
+ "v2_10_19": {
+  "why": "BENCH FLAW found 10-19 (SM4 restart agent): the leaf tb drew the static straps st at random, so the BF16 x field group xs_g2 (and possibly xs_g1) was >= NBEAT=13 at the default seed and the field was NEVER written; the x preload also wrote only 2 of 13 beats per address. Every BF16 x element was 0, every BF16 product +-0 (signed zero canonicalises) -> BF16-column results were all 0 and a sign-inverted BF16 weight copy (new MUT 4) PASSED. The v1 'bit-exact' verdicts above therefore covered the block-dot column only. Fix (tb): valid straps (groups < 12), ALL 13 beats preloaded per address and lane, BF16 weight exponents 100..110 (finite products), per-lane coverage counters (non-zero BF16 and block-dot results required, BF16 skipped in THR).",
+  "rtl_change": "hnx_xs4 FACE SPLIT (gen_xs4.py): N = block-dot operands (o_iwb, o_ixb), W/E = BF16 operands (o_iwf_w/o_ixf_w lanes 0-1 from KEPT duplicate i-stage registers, o_iwf_e/o_ixf_e lanes 2-3); lfx rewired; cycle timing unchanged",
+  "shared x store (hnx_rp4lp4_lfx + hnx_xs4, -DHNX_XS4)": {
+   "P1": "PASS",
+   "P4": "PASS (2,020 words; per lane 304 BF16 words all non-zero, 131-152 non-zero block-dot words; 0 lane/stream mismatches)",
+   "MUT1 x-store lane alias": "FAIL as required",
+   "MUT2 lane-select ignored": "FAIL as required",
+   "MUT3 publish slot": "FAIL as required",
+   "MUT4 W-face BF16 weight copy sign-inverted": "FAIL as required (LANE MISMATCH)",
+   "THR K=16": "PASS, publish span 8,262 (= v1, 1.003x the P1 c_AR span 8,238) at 4x results",
+   "logs": "bench/v2/xs4, bench/v2/xs4_thr16"
+  },
+  "separate x stores (hnx_rp4lp4_lf)": {
+   "P1": "PASS",
+   "P2": "PASS",
+   "P3": "PASS",
+   "P4": "PASS",
+   "MUT1-3": "FAIL as required",
+   "logs": "bench/v2/lf"
+  },
+  "landed parent (a) hnx_rp4lp4x_flat_lp": {
+   "lockstep vs hnx_rp4lp4x_flat": "MUT0 PASS (12,796 compared), MUT1-3 FAIL, audit PASS, unland audit FAIL (expected)",
+   "logs": "bench/lpx"
+  },
+  "sim": "Verilator 5.050 on ot-epyc5 (closure daemon version)"
+ }
 }

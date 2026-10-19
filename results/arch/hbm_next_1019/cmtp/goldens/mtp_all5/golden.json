@@ -1,0 +1,192 @@
+{
+ "schema": "opentallas.hgi_sim.ds_mtp_golden.v1",
+ "model": "DeepSeek-V4.1-Flash (released checkpoint, hdc_golden_v41 HDC_V41_ARITH=chunk8 via rtl_v41_fullshape_layer_campaign.build_model)",
+ "p0": 0,
+ "gamma": 5,
+ "corrupt": 5,
+ "noise": 128799,
+ "prompt": [
+  0
+ ],
+ "y": 5,
+ "verify_tokens": [
+  5,
+  223,
+  939,
+  23,
+  695,
+  22
+ ],
+ "drafts": [
+  223,
+  939,
+  23,
+  695,
+  22
+ ],
+ "targets": [
+  223,
+  939,
+  23,
+  695,
+  22,
+  1266
+ ],
+ "accepted": 5,
+ "emitted": [
+  5,
+  223,
+  939,
+  23,
+  695,
+  22,
+  1266
+ ],
+ "positions": [
+  {
+   "experts0": [
+    49,
+    250,
+    275,
+    304,
+    317,
+    355
+   ],
+   "pos": 0,
+   "token": 0,
+   "argmax": 5,
+   "margin": 0.7980127334594727,
+   "logits_sha256": "a1133b7b09d602c20ac12ecf97fb0e14275384a4fdaeb429fb8911275f6ee231",
+   "h0_sha256": "f35b783d6f63786fea076d97a797f0f00f24e9e695b0be37c6224cf5ed0437fc",
+   "pre0_sha256": "6ada5729adb5ae297bbdc84abd364e9c915ec2eb17bce5431db395326f1907c5"
+  },
+  {
+   "experts0": [
+    73,
+    105,
+    206,
+    230,
+    236,
+    250
+   ],
+   "pos": 1,
+   "token": 5,
+   "argmax": 223,
+   "margin": 2.7852535247802734,
+   "logits_sha256": "1c1195513bc8ed7865a7f87b8875d09e5a3b3f6ef600dc6baa68d0e519d5d4e9",
+   "h0_sha256": "d7542f5e95b51c9ab454cf445974003fb7e91c08024b8f0e6a1b2db690786c46",
+   "pre0_sha256": "15dc4eff491acec5e36ec37fc49204444d046e8ad4e7547261ad8317c5401529"
+  },
+  {
+   "experts0": [
+    73,
+    174,
+    206,
+    216,
+    250,
+    330
+   ],
+   "pos": 2,
+   "token": 223,
+   "argmax": 939,
+   "margin": 0.2578554153442383,
+   "logits_sha256": "32a87b9a16653bfe526929fc7b61a6a4d38452279bdfec50fbabe45e3b23bec4",
+   "h0_sha256": "3473f472390715302a0bf86145d0370486a072323d53012cd93e93363db18635",
+   "pre0_sha256": "9169b1a2fc2b5eb33f95d2bffaf57835227656547134e8de245684611acdbefd"
+  },
+  {
+   "experts0": [
+    15,
+    73,
+    165,
+    172,
+    206,
+    382
+   ],
+   "pos": 3,
+   "token": 939,
+   "argmax": 23,
+   "margin": 0.033962249755859375,
+   "logits_sha256": "e38fe8ac1f1032852c7e34ea4df4bf59c2fedfa07bad04aab759f25201c865b2",
+   "h0_sha256": "143dff00d7bff1a582310e99886ec789bea9a8fd1419cfba0397948ed375e617",
+   "pre0_sha256": "3ba4ca5af2376a63f03e6445015244edd534223cd28004904739afa31aa2f6ae"
+  },
+  {
+   "experts0": [
+    8,
+    123,
+    129,
+    206,
+    231,
+    289
+   ],
+   "pos": 4,
+   "token": 23,
+   "argmax": 695,
+   "margin": 3.047098159790039,
+   "logits_sha256": "b1fb419a051b68e265fdd7aa12bde047a8be1b56564c22118106f450eb717edc",
+   "h0_sha256": "96c68d16f3ac09bc369ed2f9f20384f27f85dcac33edd911033162ebea56908e",
+   "pre0_sha256": "222bbb9c5dba0237a0debd5ccacd11747f0d788d8f923178e08e54ecff1d0521"
+  },
+  {
+   "experts0": [
+    37,
+    75,
+    199,
+    206,
+    296,
+    354
+   ],
+   "pos": 5,
+   "token": 695,
+   "argmax": 22,
+   "margin": 0.112335205078125,
+   "logits_sha256": "50c4ac79e79c4922c04cc332cc7a7e592f33ceae2e513df7bacdee5059db3620",
+   "h0_sha256": "d430431f51735a90e1bede22206c9f6bbb05db21465d31e886a5d7b266cfcc20",
+   "pre0_sha256": "ec120f9166eaf1708219e2beba213f7ce723f4c02dcdf2dfcd1f71b896a944c1"
+  },
+  {
+   "experts0": [
+    77,
+    123,
+    144,
+    206,
+    232,
+    257
+   ],
+   "pos": 6,
+   "token": 22,
+   "argmax": 1266,
+   "margin": 3.9060745239257812,
+   "logits_sha256": "17aafbd2753c258bb594b24821c4cd0216a4a4f70f4f14706c75058e2d6eee09",
+   "h0_sha256": "96968d79d8c2805d751b08b72e71cf912ee37d0f944c302142a0052ca60c9ad9",
+   "pre0_sha256": "50244f46790117986590a76ddf90661d8722a7ef23d352b1900e95119ac82e12"
+  }
+ ],
+ "order": "AR (one position at a time)",
+ "init_sha": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
+ "golden": {
+  "tools/hdc_golden_v41.py": {
+   "git_blob": "12c83c5a517e92ce081e2e71b2bc8d519fa90f75",
+   "sha256": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4"
+  },
+  "tools/hdc_golden.py": {
+   "git_blob": "ddc237fa2db72730eb5884100ff47a77faf8d83f",
+   "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  }
+ },
+ "wall_s": 9165.7,
+ "layer_major": {
+  "argmax": [
+   223,
+   939,
+   23,
+   695,
+   22,
+   1266
+  ],
+  "argmax_equal_ar": true,
+  "l0_bit_equal_ar": true,
+  "wall_s": 9571.6
+ }
+}

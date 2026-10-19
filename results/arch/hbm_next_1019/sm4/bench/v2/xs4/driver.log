@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   440 GB (avail 530, growth 222, headroom 0, waiters 0/0 GB) load 85/128 running 22 disk 1560 GB 
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-248506-1792404374 after 0 s
+XS4 P1 MUT0 exit 0: BENCH PASS p1_m0_t0
+XS4 P4 MUT0 exit 0: BENCH PASS p4_m0_t0
+XS4 P4 MUT1 exit 0: MUTANT CAUGHT p4_m1_t0
+XS4 P4 MUT2 exit 0: MUTANT CAUGHT p4_m2_t0
+XS4 P4 MUT3 exit 0: MUTANT CAUGHT p4_m3_t0
+XS4 P4 MUT4 exit 0: MUTANT CAUGHT p4_m4_t0
+XS4 THR16 exit 1: THROUGHPUT P=4 chunks=64 K=16 rows=512 issue_span=8192 first_issue=6678 last_pub=14939 publish_span=8262 words=2048 words_per_issue_cycle=0.250
+FIN_XS4_DONE rc=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-248506-1792404374): exit 0

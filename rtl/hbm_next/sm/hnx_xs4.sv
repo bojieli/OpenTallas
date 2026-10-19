@@ -49,7 +49,13 @@ module hnx_xs4_leaf #(
     output wire                     o_ifp4,
     output wire [TAGW-1:0]          o_itag,
     output wire [LBS*266+LSB*16-1:0] o_iw,
-    output wire [P*(LBS*266+LSB*16)-1:0] o_ix      // HNX: one x word per lane
+    output wire [P*(LBS*266+LSB*16)-1:0] o_ix,     // HNX: one x word per lane
+    // HNX-XS4 (face split 10-19): W-face copies of the BF16 column operand control + shared BF16 weight (kept registers)
+    output wire                     o_iv_fw,
+    output wire                     o_ifirst_w,
+    output wire                     o_ilast_w,
+    output wire [TAGW-1:0]          o_itag_w,
+    output wire [LSB*16-1:0]        o_iwf_w
 `else
     output wire                     gv,
     output wire                     gf,
@@ -331,6 +337,22 @@ module hnx_xs4_leaf #(
     // front's registered output (its j stage became the column input pin flops: 0 cycles)
     assign o_iv_b = iv_b; assign o_iv_f = iv_f; assign o_ifirst = ifirst; assign o_ilast = ilast; assign o_ifp4 = ifp4;
     assign o_itag = itag; assign o_iw = iw; assign o_ix = ix;
+    // HNX-XS4 face split: the BF16 lanes on the W face take their own copy of the i stage (same D, same cycle; kept
+    // so synthesis cannot merge them back: one register set per face, no 500-um fan-out).  MUT 4 (bench only):
+    // W-face weight sign bits inverted.
+    (* keep *) reg iv_fw;
+    (* keep *) reg ifirst_w, ilast_w;
+    (* keep *) reg [TAGW-1:0] itag_w;
+    (* keep *) reg [LSB*16-1:0] iwf_w;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) iv_fw <= 1'b0;
+        else iv_fw <= c3bv[0];
+    always @(posedge clk) begin
+        ifirst_w <= c3bd[CW-3]; ilast_w <= c3bd[CW-4]; itag_w <= c3bd[TAGW-1:0];
+        iwf_w <= w3b[LBS*266 +: LSB*16] ^ ((MUT == 4) ? {LSB{16'h8000}} : {(LSB*16){1'b0}});
+    end
+    assign o_iv_fw = iv_fw; assign o_ifirst_w = ifirst_w; assign o_ilast_w = ilast_w; assign o_itag_w = itag_w;
+    assign o_iwf_w = iwf_w;
 `else
     reg              jv_b, jv_f, jfirst, jlast, jfp4;
     reg [TAGW-1:0]   jtag;
@@ -414,7 +436,12 @@ module hnx_xs4 #(parameter integer TAGW = 16, parameter integer NBEAT = 13, para
     input  wire [6+TAGW+788+1+7-1:0] rl1, input wire [7+NBEAT+2048:0] bk1, input wire [NBEAT-1:0] ohl1,
     input  wire [P-1:0] wl,                       // HNX: lane write mask of this x-write beat
     output wire o_iv_b, output wire o_iv_f, output wire o_ifirst, output wire o_ilast, output wire o_ifp4,
-    output wire [TAGW-1:0] o_itag, output wire [787:0] o_iw, output wire [P*788-1:0] o_ix,
+    output wire [TAGW-1:0] o_itag, // HNX-XS4 face split (10-19): N = block-dot operands (o_iwb shared, o_ixb per lane), W / E = BF16 operands
+    // (o_iwf_* shared weight copy per face, o_ixf_w lanes 0..PW-1, o_ixf_e lanes PW..P-1, PW = (P+1)/2)
+    output wire [531:0] o_iwb, output wire [P*532-1:0] o_ixb,
+    output wire [255:0] o_iwf_e, output wire [((P-(P+1)/2) > 0 ? (P-(P+1)/2) : 1)*256-1:0] o_ixf_e,
+    output wire [255:0] o_iwf_w, output wire [((P+1)/2)*256-1:0] o_ixf_w,
+    output wire o_iv_fw, output wire o_ifirst_w, output wire o_ilast_w, output wire [TAGW-1:0] o_itag_w,
     // the BF16 column's copies of the shared control (E face; the block-dot column takes the W-face copies)
     output wire o_ifirst_e, output wire o_ilast_e, output wire [TAGW-1:0] o_itag_e
 );
@@ -454,10 +481,23 @@ module hnx_xs4 #(parameter integer TAGW = 16, parameter integer NBEAT = 13, para
     generate for (gi = 0; gi < NG; gi = gi + 1) begin : g_ohr
         ot_hbm_accel_smh_kreg #(.W(NBEAT)) u (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(ohl), .q(ohr[gi*NBEAT +: NBEAT]));
     end endgenerate
+    wire [787:0] iw_a; wire [P*788-1:0] ix_a;
     hnx_xs4_leaf #(.TAGW(TAGW), .NBEAT(NBEAT), .P(P), .MUT(MUT)) u_leaf (
         .clk(clk), .rst_a(rst_a), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2),
         .c_l(rl[RBW-1 -: CW]), .w_l(rl[XW+1 +: WSW]), .x_ce(rl[XW]), .x_a(rl[XW-1:0]),
         .b_en(bk[BBW-1]), .b_a(bk[BBW-2 -: XW]), .b_d(bk[2047:0]), .b_wl(wlq), .ohr(ohr),
         .o_iv_b(o_iv_b), .o_iv_f(o_iv_f), .o_ifirst(o_ifirst), .o_ilast(o_ilast), .o_ifp4(o_ifp4), .o_itag(o_itag),
-        .o_iw(o_iw), .o_ix(o_ix));
+        .o_iw(iw_a), .o_ix(ix_a), .o_iv_fw(o_iv_fw), .o_ifirst_w(o_ifirst_w), .o_ilast_w(o_ilast_w),
+        .o_itag_w(o_itag_w), .o_iwf_w(o_iwf_w));
+    // face split of the leaf's i stage (wires only)
+    localparam integer PW = (P + 1) / 2;
+    assign o_iwb = iw_a[531:0]; assign o_iwf_e = iw_a[787:532];
+    genvar lq;
+    generate for (lq = 0; lq < P; lq = lq + 1) begin : g_fs
+        assign o_ixb[lq*532 +: 532] = ix_a[lq*788 +: 532];
+        if (lq < PW) begin : g_w assign o_ixf_w[lq*256 +: 256] = ix_a[lq*788+532 +: 256]; end
+        else begin : g_e assign o_ixf_e[(lq-PW)*256 +: 256] = ix_a[lq*788+532 +: 256]; end
+    end
+    if (P == 1) begin : g_e0 assign o_ixf_e = 256'd0; end
+    endgenerate
 endmodule

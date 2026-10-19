@@ -1,0 +1,4 @@
+`verilator_config
+// HBM-NEXT-UNITS-FUSED: build the 32 identical lanes ONCE (hierarchical block).  Flattened, every lane costs ~1.5 GB
+// of Verilator memory (8 element pipelines of gate-level FP units): 32 lanes OOM at 24 GB in V3Width (measured 10-19).
+hier_block -module "ot_hnx_fused_lane"

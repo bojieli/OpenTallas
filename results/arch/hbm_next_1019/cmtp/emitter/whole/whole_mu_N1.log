@@ -1,0 +1,52 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-epyc7       admits  1060 GB (avail 837, growth 95, headroom 0, waiters 0/0 GB) load 89/96 running 26 disk 6530 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx-cmtp4/opt5
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-961905-1792407175 after 0 s
+mu 0 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 1 {"emit": {"plain_records": 154, "ok": 154}, "errors": [], "need": 95616, "hw": 93200}
+mu 2 {"emit": {"plain_records": 130, "ok": 130}, "errors": [], "need": 95616, "hw": 58792}
+mu 3 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 4 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 5 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 6 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 7 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 8 {"emit": {"plain_records": 130, "ok": 130}, "errors": [], "need": 95616, "hw": 58792}
+mu 9 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 10 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 11 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 12 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 13 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 14 {"emit": {"plain_records": 193, "ok": 193}, "errors": [], "need": 95616, "hw": 95568}
+mu 15 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 16 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 17 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 18 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 19 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 20 {"emit": {"plain_records": 120, "ok": 120}, "errors": [], "need": 95616, "hw": 58792}
+mu 21 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 22 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 23 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 24 {"emit": {"plain_records": 100, "ok": 100}, "errors": [], "need": 95616, "hw": 58792}
+mu 25 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 26 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 27 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 28 {"emit": {"plain_records": 100, "ok": 100}, "errors": [], "need": 95616, "hw": 58792}
+mu 29 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 30 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 31 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 32 {"emit": {"plain_records": 100, "ok": 100}, "errors": [], "need": 95616, "hw": 58792}
+mu 33 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 34 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 35 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 36 {"emit": {"plain_records": 100, "ok": 100}, "errors": [], "need": 95616, "hw": 58792}
+mu 37 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 38 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu 39 {"emit": {"plain_records": 91, "ok": 91}, "errors": [], "need": 95616, "hw": 58400}
+mu head {"emit": {"plain_records": 4, "ok": 4, "tail": {"ok": 6, "plain_records": 6, "tokx_base": 95616, "accept_base": null}}, "errors": [], "need": 95648, "hw": 25616}
+token {"image": "mu_N1_token.hgi1r", "bytes": 471056, "records": 3955, "sha256": "d0c195acc31e41575e97e7fae55b25ba328412e060f99d512a895b96820b4945", "liveins": {"20": {"words": 1398, "top": [["0|IDX.INDEX|index frame (G18)", 0, 1366, 15050.4, 1], ["0|SU.VOP|index_q.rope", 0, 32, 2907.2, 1]]}}, "one_vm_map": false, "end_at": [3954], "end_ok": true, "ctl_ops": {"USERS": 1, "NOP": 109, "TOKX": 1, "END": 1}, "segments": [{"segment": "users_prologue", "offset": 0, "bytes": 80}, {"segment": "0", "offset": 80, "bytes": 11088, "sha256": "00be433e8981cd056ba3a6c67e8c321f604aa54633ce137a4f2f303fe6c0852a"}, {"segment": "1", "offset": 11168, "bytes": 18240, "sha256": "d7893e887626c1fd1a4b3724b89f7b00bc490dcb41bb653df6f17e84cb043eb7"}, {"segment": "2", "offset": 29408, "bytes": 12736, "sha256": "5e156bb70ac94f09a6a231d4cf64451c1e19df1a605e034aa764fe5d1c6e281f"}, {"segment": "3", "offset": 42144, "bytes": 11152, "sha256": "4bc38a72b47b289800176d8d79309dd217ad4d17431cc2b288c08846fed5da91"}, {"segment": "4", "offset": 53296, "bytes": 11152, "sha256": "86321d3156b3973d1f0be1a8344364cd29e2fd2ece5ebb4faffc1976a0c2cb01"}, {"segment": "5", "offset": 64448, "bytes": 11152, "sha256": "6fcb02b11a5ced49c68def3939792365e0d0fb11222ca1d8198ed781f071ffde"}, {"segment": "6", "offset": 75600, "bytes": 11152, "sha256": "96ce2bd335cf358eb565e1fcd042b7f515b25d6861bbb70004224249e9705ad3"}, {"segment": "7", "offset": 86752, "bytes": 11152, "sha256": "27a92c4afb9c352eb3a6140ae2502400d58c7eb006048f010a0dba6aecfb5f4a"},
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-961905-1792407175): exit 0

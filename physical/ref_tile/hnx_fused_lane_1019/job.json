@@ -1,0 +1,211 @@
+{
+ "name": "hnx_fused_lane_1019-n3-COMMIT",
+ "block": "ot_hnx_fused_lane",
+ "ref_tile": true,
+ "owner": "Claude:HBM-NEXT-UNITS-FUSED-SRAM",
+ "purpose": "HBM-NEXT P=4 FUSED HC_PRE_NORM/HC_POST N-row lane (new static engine, one per VM bank, x32 replicated, hardened once): static calendar, fixed-edge VM returns, KX=4 x slots, 2 row-tagged coefficient slots; measured row II PRE 81 / POST 103 (m0 bench); n2: x store 80x256 + gain store 20x256 moved from runtime-indexed flop arrays into 1R1W SRAM macros (n1 gate yosys stall)",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/hbm-next-units-fusedsram-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_next/fused/tb/tb_hnx_fused.sv",
+   "tools/hbm_next/hnx_fused_bench.sh",
+   "tools/hbm_next/hnx_fused_vec.py",
+   "tools/hbm_next/hnx_fused.vlt",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "results/arch/hbm_next_1019/units/fused/witness",
+   "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/v41x/ot_dsrom_divc.sv",
+   "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hnx_fused_lane u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_next/fused/ot_hnx_fused_eng.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/v41x/ot_dsrom_divc.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/v41x/ot_dsrom_aq12.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hnx_fused_exact",
+    "cmd": "bash tools/hbm_next/hnx_fused_bench.sh {RUN}/bench/m0 m0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "m0 SUMMARY pass=10 fail=0 noresult=0"
+   },
+   {
+    "name": "hnx_fused_mut_m1",
+    "cmd": "bash tools/hbm_next/hnx_fused_bench.sh {RUN}/bench/m1 m1",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "m1 SUMMARY pass=[1-9]",
+    "fail_regex": "HNX_FUSED FAIL op=pre N=4 mism=[1-9]",
+    "note": "every row uses coefficient slot 0 (no per-row scalar set; tag check off)",
+    "fail_witness": "results/arch/hbm_next_1019/units/fused/witness/m1.log"
+   },
+   {
+    "name": "hnx_fused_mut_m2",
+    "cmd": "bash tools/hbm_next/hnx_fused_bench.sh {RUN}/bench/m2 m2",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "m2 SUMMARY pass=[1-9]",
+    "fail_regex": "HNX_FUSED FAIL op=pre N=4 mism=[1-9]",
+    "note": "A row stride ignored (every row reads row 0's A)",
+    "fail_witness": "results/arch/hbm_next_1019/units/fused/witness/m2.log"
+   },
+   {
+    "name": "hnx_fused_mut_m3",
+    "cmd": "bash tools/hbm_next/hnx_fused_bench.sh {RUN}/bench/m3 m3",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "m3 SUMMARY pass=[1-9]",
+    "fail_regex": "HNX_FUSED FAIL op=pre N=4 mism=[1-9]",
+    "note": "every row uses x slot 0 (slot check off)",
+    "fail_witness": "results/arch/hbm_next_1019/units/fused/witness/m3.log"
+   },
+   {
+    "name": "hnx_fused_mut_m4",
+    "cmd": "bash tools/hbm_next/hnx_fused_bench.sh {RUN}/bench/m4 m4",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "m4 SUMMARY pass=[1-9]",
+    "fail_regex": "HNX_FUSED FAIL op=pre N=4 mism=[1-9]",
+    "note": "csum heap not cleared on consume (collision check off)",
+    "fail_witness": "results/arch/hbm_next_1019/units/fused/witness/m4.log"
+   },
+   {
+    "name": "hnx_fused_mut_m5",
+    "cmd": "bash tools/hbm_next/hnx_fused_bench.sh {RUN}/bench/m5 m5",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "m5 SUMMARY pass=[1-9]",
+    "fail_regex": "HNX_FUSED FAIL op=pre N=4 mism=[1-9]",
+    "note": "gain not held across rows (gain buffer cleared at row 1)",
+    "fail_witness": "results/arch/hbm_next_1019/units/fused/witness/m5.log"
+   },
+   {
+    "name": "hnx_fused_mut_m6",
+    "cmd": "bash tools/hbm_next/hnx_fused_bench.sh {RUN}/bench/m6 m6",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "m6 SUMMARY pass=[1-9]",
+    "fail_regex": "HNX_FUSED FAIL op=pre N=4 mism=[1-9]",
+    "note": "row 0's r used for every row",
+    "fail_witness": "results/arch/hbm_next_1019/units/fused/witness/m6.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hnx_fused_lane_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hnx_fused_lane_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hnx_fused_lane_1019 --out {RUN}/record/views/ot_hnx_fused_lane --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hnx_fused_lane_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hnx_fused_lane_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/arch/hbm_next_1019/units/fused/route_hnx_fused_lane_1019/hnx_fused_lane_1019-n3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HBM-NEXT-UNITS-FUSED-SRAM: n1 gate FAILED synth_smoke (yosys OPT stall > 2,700 s on the 80x256 runtime-indexed x-store flop array); n2 moves xb and gb into ot_sram_1r1w_128x256_m1_r2c2 macros (registered read = the same 1-edge read, calendar and row II unchanged); n3: element columns kept as ot_hnx_fused_el (synthesised once), -noshare, outline 259.2 -> 475.2 from the measured n2 synthesis (852,881 cells)"
+}

@@ -9,7 +9,7 @@ This lane redesigns IDX.INDEX so that the keys are read once per record and the 
 - The selectors are time-shared.
 - Collisions and hazards raise a fault. There is no ready, credit or backpressure anywhere.
 
-All benches ran on the fleet (Verilator 5.050, ot-epyc5, bundle 58daf6366). The logs are committed in `index/`.
+All benches ran on the fleet (Verilator 5.050, ot-epyc5, bundle 58daf6366). The logs are committed in `index/`. An independent replicate of the whole index bench (same bundle, ot-epyc7, 10-19 03:11) reproduced every result: N = 1..6 PASS with the same edges, all 7 mutants FAIL, and both d4g equivalences IDENTICAL (`index/verdict_index_r2_epyc7.txt`).
 
 ## Verdict
 
