@@ -154,9 +154,9 @@
    "v": "M3 M5"
   },
   "macro_halo_um": 10.8,
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.025
  },
- "structural_change": "S81-LEPV (owner 10-18 \"remove ties where cheap\"): HOST_EN 0 variant of the end-slice link-port leaf s81sl_lep for the three endpoints without the host plane (s_0S / s_0N via dsdv_slice_lepw, s_7S via dsdv_slice_lepe_nh). Same macros, placement, outline and E / W / S faces as s81sl_lep; NO N face: t_host / t_kd / f_host / f_lf / f_ks and l0_st / l1_st are not ports, the THOST / TKD pending registers, host pin flops and f_host / f_ks / f_lf registers are generated out; a HOST / KS frame arriving here is a protocol fault. Replaces 3 x 131 b of tied die pads.",
+ "structural_change": "S81-LEPV (owner 10-18 \"remove ties where cheap\"): HOST_EN 0 variant of the end-slice link-port leaf s81sl_lep for the three endpoints without the host plane (s_0S / s_0N via dsdv_slice_lepw, s_7S via dsdv_slice_lepe_nh). Same macros, placement, outline and E / W / S faces as s81sl_lep; NO N face: t_host / t_kd / f_host / f_lf / f_ks and l0_st / l1_st are not ports, the THOST / TKD pending registers, host pin flops and f_host / f_ks / f_lf registers are generated out; a HOST / KS frame arriving here is a protocol fault. Replaces 3 x 131 b of tied die pads. HOURLY-S81/LEP 10-19 (after --cts gate 20261018-175853 FAIL clock_rule pin-flop spread TT 128.8 / FF 115.9, GRT 0, timing met): 16 per-region clock roots by 2-D k-means (physical/common_flow/clock_split_km.tcl, OT_CKKM_K 16, proven on s81sl_xr1 128/113 -> 48.6/46.4); io_hold_margin 0.025 (KITS rule 10-18); bench min_count_regex gains its capture group. Same RTL, ports, cycles, SDC.",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered (RTL-BUILD-S81): ro lands in pin flops (rov/roq), ri / lo_v / lo_d / li_r / rxv / fault leave flops, li handshake + data land in hq / dq flops, sl_f / l*_f land in slq / lfq; recipe pin_regs would add an unpriced stage."
@@ -185,7 +185,7 @@
     "threads": 2,
     "peak_ram_gb": 6,
     "pass_regex": "^BENCH_PASS lep_nhr MUT=none seed 1$",
-    "min_count_regex": "^PASS lep: 1000 \\+ 1000 beats"
+    "min_count_regex": "^PASS lep: (\\d+) \\+ \\d+ beats"
    },
    {
     "name": "lepnh_ring_s7",
@@ -253,5 +253,11 @@
  "std_area_um2": 7336.5,
  "fill_reason": {
   "pin_bound": "Pin-bound: 4,600 signal pins (W 2,300 lane lo/li, E 2,280 ring ro/ri, S 20; no host face); the W/E faces set the outline as in s81sl_lep (475.2 um faces 4.85/um); fill ~26% is the price of the pin faces."
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "16"
  }
 }
