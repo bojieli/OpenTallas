@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.token_compose_xdie.v1.index",
- "generated_from": "33bd1e1cf",
+ "generated_from": "8baa05533",
  "tool": "tools/token_compose_xdie.py",
  "clock_hz": 1200000000.0,
  "formula": "T_token = sum_l n_l C_die(l) + sum_l n_l sum_x max(0, E_meas(x) - O_meas(l,x)); tok/s = f_clk / T (MTP: per accepted token = step / tau)",
@@ -20,8 +20,8 @@
   "s81_p4l_layers": {
    "path": "results/arch/token_path_1018/inputs/s81_layer_price_p4l.json",
    "origin": "snapshot of claude/tokpass-s81-1018 36e5c2683:results/rtl/s81_layer_tput_1018/layer_price_p4l.json",
-   "sha256": "e0f42eb04ffd0f57",
-   "commit": "1e4c81449"
+   "sha256": "4685a70d0f0218b0",
+   "commit": "335ae3d28"
   },
   "s81_p4l_price": {
    "path": "results/arch/s81_dv_1016/p4l/price_land.json",
@@ -40,6 +40,12 @@
    "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)",
    "sha256": "7a836e5b56593544",
    "commit": "29c341723"
+  },
+  "s81_l20split": {
+   "path": "results/arch/s81_l20_1019/split/split.json",
+   "origin": "claude/s81-l20split-1019 (S81-L20SPLIT, coordinator 0li: L20 keys over k = 6 TP4 stages, compiled rank tree on the measured reader + RTL bk_sel jobs)",
+   "sha256": "759dc7a6f8cc76b4",
+   "commit": "uncommitted"
   },
   "ds_dag_mtp": {
    "path": "results/arch/token_path_20261009/ds_rom_mtp.json",
@@ -193,49 +199,49 @@
   "ds_rom": {
    "ar": {
     "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, AR",
-    "tok_s": 1224.1,
-    "T_token_cycles": 980312.6,
-    "per_accepted_cycles": 980312.6,
+    "tok_s": 1217.2,
+    "T_token_cycles": 985848.6,
+    "per_accepted_cycles": 985848.6,
     "tau": null,
-    "pct_measured_current_rtl": 10.18,
-    "banner": "10.2% of token cycles measured on current RTL (60.9% on older RTL, 17.6% modelled PHY, 11.3% priced)",
+    "pct_measured_current_rtl": 10.69,
+    "banner": "10.7% of token cycles measured on current RTL (60.5% on older RTL, 17.5% modelled PHY, 11.2% priced)",
     "by_grade": {
-     "measured-current-RTL": 99813.0,
+     "measured-current-RTL": 105349.0,
      "measured-old-RTL": 596814.7,
      "modelled-PHY": 172975.0,
      "priced": 110709.9
     },
     "price_of_record": {
-     "tok_s": 1342.9,
-     "cycles": 893604.3,
-     "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+     "tok_s": 1334.6,
+     "cycles": 899140.3,
+     "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
      "uncorrected_tok_s": 1365.7,
-     "scan_stacks_correction_cycles": 14934.0
+     "scan_stacks_correction_cycles": 20470.0
     },
-    "vs_price_pct": -8.85
+    "vs_price_pct": -8.79
    },
    "mtp": {
     "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, MTP (DSpark, tau 4.159)",
-    "tok_s": 3711.7,
-    "T_token_cycles": 1344614.8,
-    "per_accepted_cycles": 323302.4,
+    "tok_s": 3622.2,
+    "T_token_cycles": 1377830.8,
+    "per_accepted_cycles": 331289.0,
     "tau": 4.159,
-    "pct_measured_current_rtl": 7.92,
-    "banner": "7.9% of token cycles measured on current RTL (67.4% on older RTL, 14.0% modelled PHY, 10.7% priced)",
+    "pct_measured_current_rtl": 8.13,
+    "banner": "8.1% of token cycles measured on current RTL (65.8% on older RTL, 13.6% modelled PHY, 12.4% priced)",
     "by_grade": {
-     "measured-current-RTL": 106512.0,
+     "measured-current-RTL": 112048.0,
      "measured-old-RTL": 906844.8,
      "modelled-PHY": 187823.6,
-     "priced": 143434.4
+     "priced": 171114.4
     },
     "price_of_record": {
-     "tok_s": 3938.8,
-     "cycles": 1267096.5,
-     "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+     "tok_s": 3838.2,
+     "cycles": 1300312.5,
+     "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
      "uncorrected_tok_s": 4045.4,
-     "scan_stacks_correction_cycles": 33399.0
+     "scan_stacks_correction_cycles": 66615.0
     },
-    "vs_price_pct": -5.77
+    "vs_price_pct": -5.63
    }
   },
   "qwen_rom": {
@@ -343,8 +349,8 @@
     "available": true,
     "users": 46,
     "fillers": 0,
-    "per_user_tok_s": 1224.1,
-    "aggregate_tok_s": 56309,
+    "per_user_tok_s": 1217.2,
+    "aggregate_tok_s": 55991,
     "slot_cycles": 21313.7,
     "period_cycles": 980428,
     "dies": 520,
@@ -359,8 +365,8 @@
     "available": true,
     "users": 10,
     "fillers": 1,
-    "per_user_tok_s": 3711.7,
-    "aggregate_tok_s": 38009,
+    "per_user_tok_s": 3622.2,
+    "aggregate_tok_s": 37093,
     "slot_cycles": 124524,
     "period_cycles": 1303400,
     "dies": 520,
