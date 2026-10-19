@@ -60,12 +60,15 @@ def inventory(run,source_tree=None,die_relative='port_bind_v2/die_bound.v'):
         if bits is None or len(bits)!=1 or bits[0][0]=='CONST':
             raise ValueError('expected exact scalar signal: '+str(expr))
         return list(bits[0])
+    def scalar(expr):
+        name,bit=ref(expr)
+        return f'{name}[{bit}]'
     def role(i,port,clock,reset,sticky):
         m,p,c=cells[i]
         if p: raise ValueError('unexpected parametrized source '+i)
         return dict(id=i+'.'+port,instance=i,master=m,port=port,
                     signal=ref(c[port]) if port in c else None,
-                    clock=c[clock],reset=c[reset],sticky=sticky,
+                    clock=scalar(c[clock]),reset=scalar(c[reset]),sticky=sticky,
                     requires_sticky_latch=not sticky,placement=places[i],pin_xy=point(i,port))
     sources=[]
     for i,(m,p,c) in sorted(cells.items()):
@@ -100,7 +103,7 @@ def inventory(run,source_tree=None,die_relative='port_bind_v2/die_bound.v'):
     if sinkm!='qkd_kvs_attn' or sinkp: raise ValueError('unexpected final consumer')
     # Preserve all old hub-fault fanout. The existing final ufh net becomes one real tree leaf.
     sources.append(dict(id='existing_ufh',instance='kvs_attn',port='ufh',signal=ref(sinkc['ufh']),
-                        clock=sinkc['ck'],reset=sinkc['rst_n'],sticky=False,
+                        clock=scalar(sinkc['ck']),reset=scalar(sinkc['rst_n']),sticky=False,
                         requires_sticky_latch=False,placement=places['kvs_attn'],
                         pin_xy=point('kvs_attn','ufh'),
                         note='Existing hub path remains on core c; final sticky collector must retain any pulse. No new crossing allowed'))
@@ -154,8 +157,8 @@ def inventory(run,source_tree=None,die_relative='port_bind_v2/die_bound.v'):
         if free:
             lanes.append(dict(id='lane_'+str(number),src_tree=lane['src_tree'],dst_tree=lane['dst_tree'],
                               stations=chain,free_bits=free,first=places[chain[0]],last=places[chain[-1]],
-                              source_clock=cells[chain[0]][2]['ck'],
-                              destination_clock=cells[chain[-1]][2]['ck'],
+                              source_clock=scalar(cells[chain[0]][2]['ck_s' if cells[chain[0]][0].startswith('qkd_landsh0_') else 'ck']),
+                              destination_clock=scalar(cells[chain[-1]][2]['ck']),
                               source_enable=lane['en'],destination_reset=lane['rs'],K=lane['K'],
                               input_pin_xy={str(b):point(chain[0],f'a[{b}]') for b in free},
                               output_pin_xy={str(b):point(chain[-1],f'b[{b}]') for b in free},
@@ -169,7 +172,7 @@ def inventory(run,source_tree=None,die_relative='port_bind_v2/die_bound.v'):
                 source_counts_by_clock=dict(Counter(s['clock'] for s in sources)),
                 physical_obstacles=obstacles,
                 physical_blockers=[dict(source=s['id'],reason='Generated case omits physical output pin; regenerate real consumer bus and native binding, canonical closed view must expose pin') for s in sources if s['pin_xy'] is None],
-                consumer=dict(pin_xy=point('kvs_attn','ufh'),instance='kvs_attn',port='ufh',clock=sinkc['ck'],reset=sinkc['rst_n'],placement=places['kvs_attn']),
+                consumer=dict(pin_xy=point('kvs_attn','ufh'),instance='kvs_attn',port='ufh',clock=scalar(sinkc['ck']),reset=scalar(sinkc['rst_n']),placement=places['kvs_attn']),
                 spare_transport_candidates=lanes,
                 spare_capacity_by_region=dict(Counter({r:sum(len(l['free_bits']) for l in lanes if l['src_tree']==r) for r in ('WS','WN','ES','EN')})),
                 requirements=['No prior padding declaration may survive on a newly functional a/b bit',

@@ -35,6 +35,13 @@ qkd_kvs_attn kvs_attn(.ck(ckc),.rst_n(rst),.ufh(hf));
             self.assertEqual(v['spare_capacity_by_region']['WS'],36)
             self.assertTrue(all(s['requires_sticky_latch'] for s in v['sources'] if s.get('master')=='qkd_ctrl_kc'))
 
+    def test_scalar_clock_names_are_canonical_bit_identities(self):
+        with tempfile.TemporaryDirectory() as d:
+            r=Path(d);self.fixture(r)
+            v=F.inventory(r)
+            self.assertEqual(set(v['source_counts_by_clock']),{'ckWS[0]','ckWN[0]','ckES[0]','ckEN[0]','ckc[0]'})
+            self.assertEqual(v['spare_transport_candidates'][0]['source_clock'],'ckWS[0]')
+
     def test_live_consumer_is_not_spare(self):
         with tempfile.TemporaryDirectory() as d:
             r=Path(d);self.fixture(r,extra='some_consumer real(.a(n_spare[35]));')
