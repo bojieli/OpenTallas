@@ -47,6 +47,37 @@ class ReplicaPads(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'dynamic/nonzero'):
                 O.derive(path,existing=old)
 
+    def test_instance_declared_pad_follows_actual_repair_bit_graph(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)/'die.v'
+            text = DIE.replace('spare0','n_r0__spare').replace('spare1','n_r1__spare')
+            text = text.replace('wire [18:0] n_r0__spare;', 'wire [18:0] n_r0__spare;\nwire [35:0] mid;')
+            text = text.replace("qkd_rlys_36 r0(.ck(ck),.a({19'b0,a})", "qkd_rlysh0_36 repair(.ck(ck),.a({19'b0,a}),.b(mid));\nqkd_landsh_36 r0(.ck(ck),.a(mid)")
+            old = dict(pads={}, instances={'r0':dict(master='qkd_landsh_36',reason='actual original replica',ports={'a':[[17,35]]})})
+            path.write_text(text)
+            doc = O.derive(path, existing=old)
+            self.assertEqual(doc['source_contract']['relocated_declared_input_bits'],19)
+            self.assertEqual(P.pad_bits(doc['instances']['repair']['ports']['a'],36),set(range(17,36)))
+            self.assertNotIn('b',doc['instances']['repair']['ports'])
+            self.assertNotIn('a',doc['instances']['r0']['ports'])
+            # A functional zero on the very same upstream replica stays undeclared.
+            path.write_text(text.replace("19'b0,a", "19'b0,1'b0,a[15:0]"))
+            doc = O.derive(path, existing=old)
+            self.assertNotIn(16,P.pad_bits(doc['instances']['repair']['ports']['a'],36))
+            # Losing instance or master identity must not recover a permission.
+            for bad in ({'pads':{},'instances':{}},
+                        {'pads':{},'instances':{'r0':dict(master='qkd_rlys_36',reason='wrong master',ports={'a':[[17,35]]})}}):
+                doc = O.derive(path, existing=bad)
+                self.assertNotIn('repair',doc['instances'])
+            # Follow actual bit identity, not positional or name guesses.
+            path.write_text(text.replace('.a(mid)', '.a({mid[16:0],mid[35:17]})').replace('n_r0__spare','unproved_output'))
+            doc = O.derive(path, existing=old)
+            self.assertEqual(P.pad_bits(doc['instances']['repair']['ports']['a'],36),{34,35})
+            # A declared bit whose source becomes nonzero gains no permission.
+            path.write_text(text.replace("19'b0,a", "19'b1,a"))
+            with self.assertRaisesRegex(ValueError, 'dynamic/nonzero'):
+                O.derive(path, existing=old)
+
     def test_recovery_derives_only_paired_private_bits(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp)/'die.v'

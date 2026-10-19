@@ -40,10 +40,23 @@ grep -qE "qkd_(rlysh0?|landsh0?)_" "$D" && F+=(--rtl-file "$R/rtl/qwen_sys/kv_fw
 if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
   KT=$(cd $R/tools/qwen_kv_die && python3 -c 'import kv_static_die as S; print(S.RTL_FILE)' 2>/dev/null | tail -1)
   [ -n "$KT" ] && [ -f "$R/$KT" ] && F+=(--rtl-file "$R/$KT")
+  # KV-FACELAND-WIRE 10-19: face-landed top tiles bind their kit's wrapper (<master>_fl; two files define qkd_kvs_attn_fl)
+  for FLW in $(cd $R/tools/qwen_kv_die && python3 -c 'import kv_static_die as S; print(" ".join(sorted({b["file"] for b in S.bindings().values() if b["module"].endswith("_fl")})))' 2>/dev/null | tail -1); do
+    [ -f "$R/$FLW" ] && F+=(--rtl-file "$R/$FLW" --rtl-file "$R/rtl/lib/ot_rst_relay.sv" --rtl-file "$R/rtl/lib/ot_pin_land.sv")
+  done
 fi
-python3 $R/tools/die_port_bind.py $O/die_bound.v "${F[@]}" --rtl-file $O/kv_hard_models.sv --rtl-file $O/kv_relays_dir.sv \
+# Index the design RTL, not historical physical/**/rtl snapshots. Explicit
+# canonical arithmetic files resolve duplicate combined-model definitions.
+python3 $R/tools/die_port_bind.py $O/die_bound.v --rtl-root rtl \
+  --prefer rtl/hdc/ot_hdc_fp32_add_lat.sv --prefer rtl/hdc/ot_hdc_fp32_mul_lat.sv \
+  --prefer physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v \
+  --prefer physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v \
+  --lib-root physical/qkd_astk_strip/macros \
+  --rtl-file $R/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v \
+  "${F[@]}" --rtl-file $O/kv_hard_models.sv --rtl-file $O/kv_relays_dir.sv \
   --rtl-file $R/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v \
   --allow-model qkd_hbm3e_phy_pc --allow-model qkd_ckbump --allow-model qkd_fwdbump --allow-model ot_qkvd_ucie_x64_phy \
+  --allow-model ot_qkvd_ucie_x64_phy_model \
   --allow-model ot_qfd_serdes_112g_x12_phy --allow-model qkd_pll_analog_model \
   --strap-file $O/straps.json --out $O/port_bind_v2.json > $O/port_bind_v2.txt 2>&1
 rc=$?

@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_kvs_emb",
+ "reviewer": "coordinator (2026-10-19 ~03:30)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T03:30:00-07:00",
+ "gate_commit": "ce9024956",
+ "checklist": {
+  "lattice": "ACCEPT: embedding_row_tx macro at y 86.4 / x 129.624 (0.024 um off the 43.2 lattice in x: DBU rounding, no PDN/abutment effect; snap at next re-kit)",
+  "std_cell_band": "PASS: std cells around the macro, fill 0.294 (pin-limited)",
+  "pin_spread": "ACCEPT: E face most of span, W partial mid, S partial left; no single-point cluster",
+  "clock_entry": "PASS: S-face left; spread TT 28.7 / FF 55.6 (<=80), insertion 920/752 guidance",
+  "shape": "PASS: 388.8x302.4, GRT ovf 0"
+ },
+ "notes": "FF-hold fix: child_clock_ref boundary + io_hold_margin 0.03.",
+ "geometry_sha256": "738f6bbb7d6ce8326661a065bb2aa9be9def8caea3ee0b3a8b1f20a9eff507c5"
+}

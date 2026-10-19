@@ -350,7 +350,8 @@ def main(argv=None):
     ap.add_argument('--parameter-profiles', type=Path,
                     default=__import__('os').environ.get('OT_KV_PARAMETER_PROFILES'),
                     help='Exact selected child profiles (or OT_KV_PARAMETER_PROFILES)')
-    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Source-only preservation; never native qualification')
+    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Source-only preservation; never native qualification',
+                    default=__import__('os').environ.get('OT_KV_PARAM_DIAG', '0') == '1')
     a = ap.parse_args(argv)
     if __import__('os').environ.get('OT_KV_STATIC', '0') == '1' or (a.run / 'static_bind.json').exists():
         ap.error('static source graph cannot inherit legacy frame/leaf views; actual static physical bindings/clock homes remain required')
