@@ -1,0 +1,216 @@
+{
+  "status": "RTL_INVENTORY_NOT_NATIVE_TIMING_SIGNOFF",
+  "top": "qfd_dv_stream",
+  "cells": 71203,
+  "cell_types": {
+    "$_DFFE_PP_": 2080,
+    "$_DFFE_PN0P_": 95,
+    "$_DFF_PN0_": 2181,
+    "$_DFF_P_": 2098,
+    "$_NOT_": 1227,
+    "$_OR_": 9164,
+    "$_XOR_": 314,
+    "$_AND_": 9267,
+    "$_MUX_": 44777
+  },
+  "reset_nets": [
+    {
+      "bit": 3,
+      "names": [
+        "rst_n"
+      ],
+      "reset_pin_loads": 2276,
+      "all_input_pin_loads": 2276,
+      "reset_load_blocks": {
+        "other_soft_or_unclassified": 2276
+      },
+      "reset_load_examples": [
+        {
+          "cell": "$auto$ff.cc:337:slice$27655",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28712",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28713",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28714",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28715",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28716",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28717",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28718",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28719",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28720",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28721",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28722",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28723",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28724",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28725",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28726",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28727",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28728",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28729",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28730",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28731",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28732",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28733",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28734",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28735",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28736",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28737",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28738",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28739",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28740",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28741",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28742",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28743",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28744",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28745",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28746",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28747",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28748",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28749",
+          "pin": "R"
+        },
+        {
+          "cell": "$auto$ff.cc:337:slice$28750",
+          "pin": "R"
+        }
+      ],
+      "all_load_blocks": {
+        "other_soft_or_unclassified": 2276
+      }
+    }
+  ],
+  "note": "Targeted unchanged soft-module RTL inventory with native SRAM blackboxes; generic cells, not mapped area or native physical qualification.",
+  "named_reset_total_load_excess": [
+    {
+      "bit": 3,
+      "names": [
+        "rst_n"
+      ],
+      "loads": 2276
+    }
+  ],
+  "source_provenance": {
+    "file": "rtl/qwen_dv/qfd_dv_stream.sv",
+    "source_sha256": "83e07fccde5ac05d290c5e9c49190ce3c64a00b01dfafa153f01c3340af51e69",
+    "parameters": {
+      "MUT": 0
+    },
+    "netlist_sha256": "7e93892b49aeac0e3125094079ea296847979513523ccd10a3326255a253e461",
+    "command": "read_verilog -sv -DSYNTHESIS -DOT_QFD_DV_SAFE_STORAGE <sources>; hierarchy -check -top qfd_dv_stream; synth -top qfd_dv_stream -flatten -noabc -nofsm -noshare; write_json",
+    "host": "ot-epyc8",
+    "unit": "oth-ubuntu-3923466-1792427567",
+    "raw_remote": "/srv/opentallas-scratch/claude/safe-qw-vm-stream-inventory/out_targets/qfd_dv_stream.json"
+  }
+}

@@ -85,7 +85,7 @@
       "gross_group_allocation_total_um2": 261273.6,
       "native_group_layout": "3x3 origins at43.2+86.4*x and43.2+43.2*y inside allocated302.4x172.8; pinface20um halo after all bodies, group entry reach<=405um; PG/via/pin-access and actual clock proof owed",
       "source_commit": "b65718325",
-      "wrapper_status": "width-aware helper source pending seam_source; no padding-only banks retained",
+      "wrapper_status": "Width-aware helper unit receipt c317daff3; final E/W production and native clocks pending",
       "physical_clock_sinks": 42,
       "exposed_clock_roots": 0,
       "previous_generic_546_port_bank_count": 45,
@@ -128,7 +128,7 @@
         "masked_padding_bits": 30,
         "area_per_port_um2": 4971.6633600000005
       },
-      "native_count_evidence": "seam_source confirms e0 targetedYosys lookaheadW512=8/delayW514=9; explicit width-aware source receipt pending"
+      "native_count_evidence": "seam_source e0 targeted Yosys: W512=8/W514=9 actual native survivors; explicit helper proof c317daff3"
     }
   },
   "regional_cut": {
@@ -168,7 +168,6 @@
       "synthesis area for remaining glue determines band utilization",
       "full stream phase/reset test and complete SU production prove predicted +6",
       "new ML5/RD2 hard head native view closed or flatten real RTL",
-      "MU VM address capacity resolved with source programme owner",
       "forwarded clock inverter/hop entry retention and native compensated phase proof"
     ],
     "existing_hard_head_ML_inner": 7,
@@ -210,5 +209,25 @@
     ],
     "32x546_raw_pin_density_per_um": 10.198
   },
-  "geometry_method": "Preserve native child pins; 43.2 lattice origins, >=20um macro pin-face channels, std-cell bands within each landed region. Use actual synth area, no guessed compact outline."
+  "geometry_method": "Preserve native child pins; 43.2 lattice origins, >=20um macro pin-face channels, std-cell bands within each landed region. Use actual synth area, no guessed compact outline.",
+  "vm_capacity_contract": {
+    "UVM_STRIDE": 4096,
+    "PIDX_STRIDE": 128,
+    "NU": 4,
+    "canonical_source_commit": "0d4c9808fe7d2370185a4313e831b6f59f7a2f75",
+    "rtl_parameter_receipt": {
+      "commit": "da9350e88",
+      "path": "results/rtl/qwen_layer_tput_1018/q_ready_programme/capacity.json",
+      "scope": "RTL header/store seal; not execution/high-water measurement"
+    },
+    "compiler_footprint_receipt": {
+      "commit": "ee1ffdf7a",
+      "path": "results/arch/qwen_programme_store_1019/user_relocation_certificate.json.gz",
+      "source_commit": "4e718c0107e99f869c95db0ecedcca8711577dff",
+      "local_DV_words": 1472,
+      "scope": "source-derived operand-loop footprint/bounds; separate from table retention/native execution"
+    },
+    "stale_rejected_stride": 16384,
+    "global_X_namespace_stride_not_VM": 65536
+  }
 }

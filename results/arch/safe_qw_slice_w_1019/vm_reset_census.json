@@ -1,0 +1,53 @@
+{
+  "status": "RTL_INVENTORY_NOT_NATIVE_TIMING_SIGNOFF",
+  "top": "qfd_dv_vm",
+  "cells": 47796,
+  "cell_types": {
+    "$_DFF_PN0_": 1,
+    "$_DFF_P_": 5732,
+    "$_NOT_": 150,
+    "$_OR_": 5336,
+    "$_XOR_": 752,
+    "$_AND_": 4363,
+    "$_MUX_": 31440,
+    "ot_sram_1r1w_128x256_m1_r2c2": 8,
+    "ot_sram_1r1w_1024x256_m2_r2c2": 10,
+    "ot_sram_1r1w_256x256_m2_r2c2": 4
+  },
+  "reset_nets": [
+    {
+      "bit": 3,
+      "names": [
+        "rst_n"
+      ],
+      "reset_pin_loads": 1,
+      "all_input_pin_loads": 1,
+      "reset_load_blocks": {
+        "other_soft_or_unclassified": 1
+      },
+      "reset_load_examples": [
+        {
+          "cell": "$auto$ff.cc:337:slice$84329",
+          "pin": "R"
+        }
+      ],
+      "all_load_blocks": {
+        "other_soft_or_unclassified": 1
+      }
+    }
+  ],
+  "note": "Targeted unchanged soft-module RTL inventory with native SRAM blackboxes; generic cells, not mapped area or native physical qualification.",
+  "named_reset_total_load_excess": [],
+  "source_provenance": {
+    "file": "rtl/qwen_dv/qfd_dv_vm.sv",
+    "source_sha256": "bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30",
+    "parameters": {
+      "MUT": 0
+    },
+    "netlist_sha256": "be90e90059b2f247cb6afc96fbd27860207628b84aea273a1d2cc4835867518f",
+    "command": "read_verilog -sv -DSYNTHESIS -DOT_QFD_DV_SAFE_STORAGE <sources>; hierarchy -check -top qfd_dv_vm; synth -top qfd_dv_vm -flatten -noabc -nofsm -noshare; write_json",
+    "host": "ot-epyc8",
+    "unit": "oth-ubuntu-3923466-1792427567",
+    "raw_remote": "/srv/opentallas-scratch/claude/safe-qw-vm-stream-inventory/out_targets/qfd_dv_vm.json"
+  }
+}
