@@ -62,6 +62,13 @@
     "synth_std_area": null,
     "physical_qualification": false
   },
-  "reset": "control only; cache payload validity from four reads; reset fanout/mapped census pending",
+  "reset": {
+    "copies_per_player": 3,
+    "max_expected_loads": 32,
+    "async_assert": true,
+    "extra_initialization_release_edges": 1,
+    "normal_event_delta": 0,
+    "mapped_census": "pending"
+  },
   "ownership": "SRAM tables module only; FACE/prefix/ABI/kit owned by KV-OVL-CLOSURE"
 }
