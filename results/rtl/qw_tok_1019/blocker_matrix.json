@@ -31,10 +31,10 @@
   },
   {
    "stage": "S3 TP8 stage cuts L0/L1 (resid/SiLU/GU/QKV/QK)",
-   "1u": "PASS (Codex d47ceb7b1 + 416cd1a11, 11 cuts)",
-   "4u": "OPEN",
-   "missing": "full-layer joins (embedding/head/context), L1 resid2 needs next-layer norm",
-   "owner": "CODEX-QW-STAGES (handed back) -> LEAD-QW"
+   "1u": "PASS on dv2f18dh2 binaries: vector cuts 28ebdeac7 (14 pos, 33,798 ISA words) + matrix final-cluster a7adc3f43 (QKV/GU L0/L1, 15,360 words, kc=1 private snapshot)",
+   "4u": "PASS MU_NU 4 config-invariance (NU1/NU4 traces byte-identical, user 0 only) 28ebdeac7 + a7adc3f43; independent 4-request numerics wait gold4",
+   "missing": "matrix: native kc8/kc32 streams + public dv_lower_mat STN kc port; independent 4-user gold (gold4 trigger armed, QW-TOK3)",
+   "owner": "LEAD-QW / QW-TOK3"
   },
   {
    "stage": "S4 Q-ready -> native59 -> D2D CMD/Q",
@@ -46,8 +46,8 @@
   {
    "stage": "S5 compute<->KV D2D exchange (netlisted seam, image TXDP C[8,3,1,10] K[21,4,3,3])",
    "1u": "PASS 10-19 QW-TOK xdie_dh2: pair/t8192/phy9/l0/l0_phy9/gen_txdp PASS 35 layers bit-exact, every landing on compiled cycle; 6 pair mutants + old C/K GEN TXDP FAIL",
-   "4u": "BLOCKED",
-   "missing": "4u: d2d_cal_image_mu.svh in dv2f18dh2 src stale (C[8,3,1,9] CS_X3S 2, K[23]) vs bound C[8,3,1,10]/K21; MU.D2D.OVL halt-rewind/Q-ready bound owed",
+   "4u": "IMAGE FIXED 10-19 QW-TOK3 975074bdd: d2d_cal_image_mu.svh recompiled (C[8,3,1,10] K[21,4,3,3]); SYSFACE MU=1 bench MUT0 PASS 1512 events / MUT1-7 FAIL on it; mu_kvctx CAL rerun live",
+   "missing": "4u pair co-sim with MU users (no pair TB carries D2D_MU); MU.D2D.OVL halt-rewind; qfd_sys_face (critical) re-close on new image = SYSFACE",
    "owner": "MU-DIE-QW2 / MU-D2D-OVL",
    "measured_cycles": {
     "C2K_q_first_issue_to_last_land": 63,
@@ -76,10 +76,10 @@
   },
   {
    "stage": "S7 TP8 all-reduce (AR tag framer)",
-   "1u": "BLOCKED",
-   "4u": "BLOCKED",
-   "missing": "AR tag framer / coll_mu_bi unexpected in MU regression",
-   "owner": "QW-COLL / QW-MUREG"
+   "1u": "component PASS: coll_mu_bi on current SAFE/dv2f18dh2 fixture 61,440 words, user0 22,528 (e6b9c55f2; old dv2f14bi fixture FAIL = stale recipe)",
+   "4u": "component PASS same (rank/rlat/overlap causal FAIL, 5f5080c86)",
+   "missing": "AR inside a full layer run; tag framer in native token path",
+   "owner": "QW-COLL"
   },
   {
    "stage": "S8 LM head + argmax (MU_NU 4)",
@@ -102,5 +102,6 @@
    "missing": "per-user golds L0-L2 users 1-3 only (B5); TP4 vs TP8 P.V split numerics",
    "owner": "LEAD-QW (COORD numerics)"
   }
- ]
+ ],
+ "mureg_715e": "45/45 terminal (266020a1a); NSL12 MUT3 FAIL 61/74 = INTENDED causal mutant fail (QCTLM BENCHES PASS; nominal 74/74) - not a bug, classified QW-TOK3 10-19"
 }
