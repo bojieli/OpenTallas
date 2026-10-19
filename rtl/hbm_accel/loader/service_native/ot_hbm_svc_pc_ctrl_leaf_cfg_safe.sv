@@ -131,12 +131,15 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
 
     assign j_v=head_valid&&!sticky&&!pc_fault;
     generate if(KRREG!=0)begin:g_krreg
-        reg ready_q;
-        always @(posedge clk)if(!region_rst_n[3])ready_q<=0;else ready_q<=kr_rdy;
+        // Same-edge ready captures feed two adjacent eight-bit slices each.
+        // Raw ready sees18 FF D pins; each retained copy feeds only local
+        // valid/update logic, preserving the released previous-edge ABI.
+        (* keep="true",dont_touch="true" *) reg[17:0]ready_q;
+        always @(posedge clk)if(!region_rst_n[3])ready_q<=0;else ready_q<={18{kr_rdy}};
         ot_hbm_svc_pin_skid2_bw_safe #(.WIDTH(277)) u_skid(
             .clk(clk),.rst_n(region_rst_n[3]),.in_v(j_v),.in_r(j_rdy),
             .in_data({head_identity[20:4],head_identity[3:0],response_data}),
-            .out_v(kr_v),.out_r(ready_q),.out_data({kr_tag,kr_beat,kr_data}));
+            .out_v(kr_v),.out_r_regions(ready_q),.out_data({kr_tag,kr_beat,kr_data}));
     end else begin:g_raw_kr
         assign kr_v=j_v;assign j_rdy=kr_rdy;
         assign kr_tag=head_identity[20:4];assign kr_beat=head_identity[3:0];assign kr_data=response_data;
@@ -192,25 +195,32 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // read replicas serve posting and completion independently. No indexed flop
     // storage; forwarding covers same-edge SRAM read/write ambiguity.
     wire[255:0]qh[0:3],qe[0:3];
-    reg[3:0]mf_v;reg[QW-3:0]mf_addr[0:3];reg[78:0]mf_data[0:3];
+    reg[78:0]mf_data[0:3];
+    wire[3:0]meta_we;wire[QW-3:0]meta_wa[0:3];
     wire[QW-1:0]next_rp=cv?rp_plus1:rp,next_ep=posted?ep_plus1:ep;
     wire[78:0]mh,me;
-    // Select each bank's forwarding source first. Then a local two-bit
-    // selector sees only one <=16-bit four-way mux: <=32 mux inputs per bit.
-    // Five independently KEPT copies track the real pointers on the same edge;
-    // canonicalisation preserves the flop cells even though values coincide.
-    for(genvar s=0;s<5;s=s+1)begin:META_SELECT
-      localparam integer LO=16*s;
-      localparam integer BITS=(79-LO<16)?79-LO:16;
-      (* keep = "true", dont_touch = "true" *) reg[1:0]rp_sel,ep_sel;
+    // Ten retained eight-bit regions. Each owns pointer selectors and
+    // forwarding-address/valid captures on the original metadata edge.
+    // Data and SRAM schedules are unchanged; actual mapped fanout is audited.
+    for(genvar s=0;s<10;s=s+1)begin:META_SELECT
+      localparam integer LO=8*s;
+      localparam integer BITS=(79-LO<8)?79-LO:8;
+      (* keep="true",dont_touch="true" *) reg[1:0]rp_sel,ep_sel;
+      (* keep="true",dont_touch="true" *) reg[QW-3:0]rp_hi,ep_hi;
       always @(posedge clk or negedge region_rst_n[4])
-        if(!region_rst_n[4])begin rp_sel<=0;ep_sel<=0;end
-        else begin rp_sel<=next_rp[1:0];ep_sel<=next_ep[1:0];end
+        if(!region_rst_n[4])begin rp_sel<=0;ep_sel<=0;rp_hi<=0;ep_hi<=0;end
+        else begin rp_sel<=next_rp[1:0];ep_sel<=next_ep[1:0];
+          rp_hi<=next_rp[QW-1:2];ep_hi<=next_ep[QW-1:2];end
       wire[BITS-1:0]hbank[0:3],ebank[0:3];
       for(genvar b=0;b<4;b=b+1)begin:FORWARD
-        assign hbank[b]=(mf_v[b]&&mf_addr[b]==rp[QW-1:2])?
+        (* keep="true",dont_touch="true" *) reg mf_valid;
+        (* keep="true",dont_touch="true" *) reg[QW-3:0]mf_address;
+        always @(posedge clk or negedge region_rst_n[4])
+          if(!region_rst_n[4])mf_valid<=0;else mf_valid<=meta_we[b];
+        always @(posedge clk)mf_address<=meta_wa[b];
+        assign hbank[b]=(mf_valid&&mf_address==rp_hi)?
           mf_data[b][LO+:BITS]:qh[b][LO+:BITS];
-        assign ebank[b]=(mf_v[b]&&mf_addr[b]==ep[QW-1:2])?
+        assign ebank[b]=(mf_valid&&mf_address==ep_hi)?
           mf_data[b][LO+:BITS]:qe[b][LO+:BITS];
       end
       assign mh[LO+:BITS]=hbank[rp_sel];
@@ -221,8 +231,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       wire[1:0]j=2'(b)-wp[1:0];wire we=accepted&&{1'b0,j}<length;
       wire[QW-1:0]wa=wp+QW'(j);
       wire[78:0]wd={incoming[29:15],i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+j)^incoming[16:15]),incoming[11:7],i_tag,4'(j),i_wstrb};
-      always @(posedge clk or negedge region_rst_n[4])if(!region_rst_n[4])mf_v[b]<=0;else mf_v[b]<=we;
-      always @(posedge clk)begin mf_addr[b]<=wa[QW-1:2];mf_data[b]<=wd;end
+      assign meta_we[b]=we;assign meta_wa[b]=wa[QW-1:2];
+      always @(posedge clk)mf_data[b]<=wd;
       ot_sram_1r1w_128x256_m1_r2c2 u_head(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(next_rp>>2)),.rd_out(qh[b]),
         .w_ce_in(we),.w_addr_in(7'(wa>>2)),.wd_in({177'b0,wd}),.w_mask_in({256{1'b1}}),
         .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));

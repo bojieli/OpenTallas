@@ -1,0 +1,63 @@
+{
+  "schema": "opentallas.hbm_bw_fanout_successor_model.v1",
+  "parent_source": "18bd3c0ef",
+  "status": "MODELED_NOT_QUALIFIED",
+  "domain_period_ps": 1024,
+  "pc_per_die": 64,
+  "unchanged_macros": 13,
+  "changed_pipeline_edges": 0,
+  "sram_port_bytes_per_edge": 32,
+  "external_K_payload_bits": 341,
+  "external_KR_payload_bits": 277,
+  "critical_fanout_target": 32,
+  "cfg": {
+    "metadata_regions": 10,
+    "region_bits_max": 8,
+    "retained_metadata_select_bits": 40,
+    "retained_pointer_hi_bits": 80,
+    "retained_forward_valid_address_bits": 200,
+    "prior_metadata_control_bits": 40,
+    "delta_ff_bits": 280
+  },
+  "native_K_ring": {
+    "payload_bits": 1023,
+    "regions": 43,
+    "pointer_ff_bits": 172,
+    "prior_pointer_ff_bits": 88,
+    "delta_ff_bits": 84
+  },
+  "native_KR_skid": {
+    "payload_bits": 554,
+    "regions": 35,
+    "valid_ff_bits": 70,
+    "ready_capture_bits": 18,
+    "prior_valid_ready_bits": 37,
+    "delta_ff_bits": 51
+  },
+  "external_KR_bridge": {
+    "payload_bits": 831,
+    "regions": 35,
+    "pointer_ff_bits": 140,
+    "other_ff_bits": 5,
+    "total_state_bits": 976,
+    "delta_ff_bits": 68,
+    "latency_hbm_edges": 1
+  },
+  "controller_delta_ff_bits": 415,
+  "controller_plus_bridge_delta_ff_bits": 483,
+  "estimated_ff_area_um2_per_bit": 0.7,
+  "estimated_delta_area_um2_per_pc": 338.1,
+  "estimated_delta_area_mm2_64pc": 0.0216384,
+  "routing": "No new macro, boundary port or inter-PC connection. Retained local control adds local clock/D routes; outline432x475.2 unchanged until mapped area/actual face coupon and placement prove fit. Model estimate is not measured area.",
+  "latency_price": "Zero added data/control edges relative18bd; OP_GAP384 vs256 remains required observed full-production warmup, +3832 stream endpoint edges on full96 witness. Primary released rate45.03 unchanged.",
+  "all_eight_checklist": {
+    "sizing": "13stockSRAM,415controllerFF+68bridgeFF delta",
+    "ports": "same external341K/277KR and 32B SRAM ports",
+    "fanout": "8bit local copies; mapped32 census mandatory",
+    "reset": "same72 relay regions and3-edge release; data FF unreset, local control reset unchanged edge",
+    "schedule": "same static cadence, no backpressure/calendar change",
+    "latency": "zero added successor edges; existing warmup explicitlypriced",
+    "floorplan": "same432x475.2 candidate outline; area/access/timing OPEN",
+    "evidence": "transaction/bridge/AQ/cadence/mutants+mappedfanout+TT/FF pending"
+  }
+}

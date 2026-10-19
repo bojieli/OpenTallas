@@ -1,20 +1,20 @@
-// Opt-in SAFE variant: same H9b skid edges, sixteen-bit kept select regions.
+// Opt-in SAFE variant: same H9b skid edges, eight-bit kept select regions.
 `timescale 1ns/1ps
-// Each 16-bit region owns its registered valid/select state. Data flops
+// Each eight-bit region owns its registered valid/select state. Data flops
 // have no reset; valid bits synchronously mask uninitialized words.
 module ot_hbm_svc_pin_skid2_bw_safe #(parameter integer WIDTH=1)(
  input wire clk,rst_n,input wire in_v,output wire in_r,
- input wire [WIDTH-1:0]in_data,output wire out_v,input wire out_r,
+ input wire [WIDTH-1:0]in_data,output wire out_v,input wire [(WIDTH+15)/16-1:0]out_r_regions,
  output wire [WIDTH-1:0]out_data
 );
- localparam N=(WIDTH+15)/16;
+ localparam N=(WIDTH+7)/8;
  (* keep="true",dont_touch="true" *) reg [N-1:0] hv,tv;
  assign in_r=!tv[0]; assign out_v=hv[0];
  for(genvar s=0;s<N;s=s+1)begin:g_slice
-   localparam B=(WIDTH-s*16<16)?WIDTH-s*16:16;
+   localparam B=(WIDTH-s*8<8)?WIDTH-s*8:8;
    reg[B-1:0] h,t;
-   wire push=in_v&&!tv[s],pop=hv[s]&&out_r;
-   assign out_data[s*16+:B]=h;
+   wire push=in_v&&!tv[s],pop=hv[s]&&out_r_regions[s/2];
+   assign out_data[s*8+:B]=h;
    always @(posedge clk)begin
      if(!rst_n)begin hv[s]<=0;tv[s]<=0;end
      else case({push,pop})
@@ -25,9 +25,9 @@ module ot_hbm_svc_pin_skid2_bw_safe #(parameter integer WIDTH=1)(
      endcase
    end
    always @(posedge clk)begin
-     if(push && (!hv[s] || pop))h<=in_data[s*16+:B];
+     if(push && (!hv[s] || pop))h<=in_data[s*8+:B];
      else if(pop && tv[s])h<=t;
-     if(push && hv[s] && !pop)t<=in_data[s*16+:B];
+     if(push && hv[s] && !pop)t<=in_data[s*8+:B];
    end
  end
 endmodule
