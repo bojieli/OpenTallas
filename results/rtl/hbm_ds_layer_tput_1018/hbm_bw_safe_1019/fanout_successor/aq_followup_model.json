@@ -1,0 +1,13 @@
+{
+  "schema": "opentallas.hbm_bw_aq_fanout_followup_model.v1",
+  "parent_source": "80d7987a4",
+  "added_ff_bits": 60,
+  "change": "16same-edge finalrefresh selector copies, each selecting8banks; distribute existing32openFF into bank-local decodedACT/PRE consumption. ExistingopenFF count unchanged.",
+  "latency_edges": 0,
+  "SRAM_ports_and_macros": "unchanged13x32B/edge",
+  "boundary_bits": "unchanged",
+  "reset": "open bits move mainreset to each bank existingrelay copy, same release edge, adds1load/bank and removes32mainloads; new60selectorFF share finaltournament reset62 (staticrelease census reported)",
+  "physical": "No macro/wireboundary change; candidateoutline432x475.2 remains unqualified until mappedfanout32,area,actualaccess andTT/FF.",
+  "proof_required": "exact23968edge equivalence against18bd including8occupied resets +3mechanism mutants; combined census andproduction.",
+  "budget": "AQtotal188+60=248FF vs18bd; final reset flag distribution may lowerloads, does not claim SAFE from source."
+}

@@ -270,8 +270,8 @@ module ot_hbm_r14_aq_pc_safe #(
   end
   assign bkey=rk[5][0];assign bsel=rs[5][0];
   // Separate retained final selector captures for each live 32-bank lookup.
-  (* keep="true",dont_touch="true" *) reg [4:0] refresh_sel_local[0:3];
-  for(genvar k=0;k<4;k=k+1)begin:REFRESH_LOCAL
+  (* keep="true",dont_touch="true" *) reg [4:0] refresh_sel_local[0:15];
+  for(genvar k=0;k<16;k=k+1)begin:REFRESH_LOCAL
     always @(posedge clk or negedge reset_regions[62])
       if(!reset_regions[62])refresh_sel_local[k]<=0;
       else refresh_sel_local[k]<=(rk[4][0]<=rk[4][1]?rs[4][0]:rs[4][1])
@@ -281,7 +281,14 @@ module ot_hbm_r14_aq_pc_safe #(
         ;
   end
   // ---- column: the head entry, strictly in order --------------------------------------------------------------------
-  wire [31:0] pre_fl = (c_v && c_op == PRE) ? c_oh : 32'b0;
+  wire [31:0] pre_fl;
+  for(genvar b=0;b<32;b=b+1)begin:OPEN_LOCAL
+    assign pre_fl[b]=row_local[b/16][20]&&c_oh[b];
+    always @(posedge clk or negedge reset_regions[b])
+      if(!reset_regions[b])open[b]<=0;
+      else if(row_local[b/16][21]&&c_oh[b])open[b]<=1;
+      else if(row_local[b/16][20]&&c_oh[b])open[b]<=0;
+  end
   // Compare rows locally in parallel instead of selecting a 19-bit word
   // through a 32:1 mux before comparing it. Each head-row bit has 32 loads.
   wire [31:0] head_row_match;
@@ -316,8 +323,19 @@ module ot_hbm_r14_aq_pc_safe #(
   // Current bank state must be fresh. A stronger live cyclic-distance guard
   // was measured separately: it did not fix the full L02 static miss and
   // starved the legal mixed transaction trace. Keep the proven state check.
-  wire ref_choice_fresh=!refreshed[refresh_sel_local[0]]&&!need[refresh_sel_local[1]]&&!open[refresh_sel_local[2]]&&!aok_busy[refresh_sel_local[3]];
-  wire ref_choice_protected=refreshed[refresh_sel_local[0]]||need[refresh_sel_local[1]]||open[refresh_sel_local[2]]||aok_busy[refresh_sel_local[3]];
+  wire[3:0] refresh_live_lookup;
+  for(genvar f=0;f<4;f=f+1)begin:REFRESH_FIELD
+    wire[3:0] selected;
+    wire[31:0] states=(f==0)?refreshed:(f==1)?need:(f==2)?open:aok_busy;
+    for(genvar g=0;g<4;g=g+1)begin:GROUP
+      wire[4:0]sel=refresh_sel_local[f*4+g];
+      wire[7:0]local_states=states[g*8+:8];
+      assign selected[g]=(sel[4:3]==2'(g))&&local_states[sel[2:0]];
+    end
+    assign refresh_live_lookup[f]=|selected;
+  end
+  wire ref_choice_fresh=!(|refresh_live_lookup);
+  wire ref_choice_protected=|refresh_live_lookup;
 `endif
   wire ep_start = ref_choice_fresh && (PULLIN > 0) && !ep && !ref_pend && 32'(pin) < PULLIN && ref_c > RW'(LEAD + 12) && bkey < 7'd16 &&
                   sact >= 4'd6;
@@ -338,7 +356,7 @@ module ot_hbm_r14_aq_pc_safe #(
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       q_n <= 0; q_rp <= 0;q_rp_plus1<=1;q_rp_plus2<=2; tail_set <= 0;
-      open <= 0; refreshed <= 0; blk <= 0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
+      refreshed <= 0; blk <= 0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
       rtw_c <= 0; wtr_c <= 0; phase <= 0; rkey <= 127; pin <= 0; ep <= 0; skip <= 0; sact <= 0; c_v <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0; c_row <= 0;
       for (integer f = 0; f < 4; f = f + 1) fawq[f] <= 0;
 
@@ -367,13 +385,13 @@ module ot_hbm_r14_aq_pc_safe #(
       if (ref_due && !skip && (!row_fire || c_op != REFPB || |(blk & open) || |(blk & ~aok_z))) fault_r <= 1;
       if (row_fire) case (c_op)
         ACT: begin
-          open <= open | c_oh; rrds_c <= 2'(T_RRDS - 1);
+          rrds_c <= 2'(T_RRDS - 1);
           begin : fawt
             reg tk; tk = 0;
             for (integer f = 0; f < 4; f = f + 1) if (!tk && fawq[f] == 0) begin fawq[f] <= 4'(T_FAW - 1); tk = 1; end
           end
         end
-        PRE: open <= open & ~c_oh;
+        PRE: begin end
         REFPB: begin
           noact_c <= 4'(T_RREFD - 1); ref_pend <= 0; blk <= 0;
           if (ep && !ref_pend) begin ep <= 0; pin <= pin + 1'b1; end
