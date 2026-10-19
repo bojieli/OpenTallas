@@ -232,6 +232,7 @@ module ot_host_if_pb2_observed_rc #(
     input  wire [NW-1:0]      tok_id,
     input  wire [7:0]         users_done,
     input  wire               arr_fault,
+ output reg step_retire_native_valid,cq_native_valid_observed,
  output reg cq_commit_v,output reg[15:0]cq_client_tag,output reg[7:0]cq_slot,
  output reg[17:0]cq_pos,cq_token,output reg[1:0]cq_kind,output reg[3:0]cq_status,
  output reg step_issue_v,output reg[15:0]step_client_tag,output reg[7:0]step_slot,output reg[17:0]step_pos,
@@ -1038,8 +1039,11 @@ module ot_host_if_pb2_observed_rc #(
  // Registered observations of actual architectural issue and CQ DMA retirement.
  // The CQ event is sampled only at the original D_CQ0_B && m_bvalid edge.
  always @(posedge clk or negedge retained_reset_n)begin
-  if(!retained_reset_n)begin cq_commit_v<=0;cq_client_tag<=0;cq_slot<=0;cq_pos<=0;cq_token<=0;cq_kind<=0;cq_status<=0;step_issue_v<=0;step_client_tag<=0;step_slot<=0;step_pos<=0;host_idle<=0;host_observer_fault<=0;step_retire_v<=0;step_retire_cq<=0;step_retire_client_tag<=0;step_retire_slot<=0;step_retire_pos<=0;step_retire_token<=0;end
+  if(!retained_reset_n)begin step_retire_native_valid<=0;cq_native_valid_observed<=0;cq_commit_v<=0;cq_client_tag<=0;cq_slot<=0;cq_pos<=0;cq_token<=0;cq_kind<=0;cq_status<=0;step_issue_v<=0;step_client_tag<=0;step_slot<=0;step_pos<=0;host_idle<=0;host_observer_fault<=0;step_retire_v<=0;step_retire_cq<=0;step_retire_client_tag<=0;step_retire_slot<=0;step_retire_pos<=0;step_retire_token<=0;end
   else begin
+   // Marker and observer tuple sample identical pre-edge source ownership.
+   cq_native_valid_observed<=ENABLE_NATIVE_OWNER_JOIN && cq_saved_native_valid;
+   step_retire_native_valid<=ENABLE_NATIVE_OWNER_JOIN && pending_native_valid;
    cq_commit_v<=ev_pop&&m_bresp==0;host_observer_fault<=sticky_dma||sticky_fault||ev_ovf;cq_client_tag<=eh_tag;cq_slot<=eh_slot8;cq_pos<=18'(eh_pos);cq_token<=18'(eh_tok);cq_kind<=ENABLE_RETAINED_COMMIT?offered_kind_q:eh_kind;cq_status<=ENABLE_RETAINED_COMMIT?offered_status_q:eh_st;
    step_retire_v<=step_done&&(MU_OUT!=0||i_st==I_RUN);step_retire_cq<=d_gen||eng_fault;step_retire_client_tag<=sl_tag[d_slot];step_retire_slot<=8'(d_slot);step_retire_pos<=18'(d_pos);step_retire_token<=eng_next_token;
    step_issue_v<=eng_start;step_client_tag<=sl_tag[eng_slot];step_slot<=8'(eng_slot);step_pos<=18'(eng_pos);
