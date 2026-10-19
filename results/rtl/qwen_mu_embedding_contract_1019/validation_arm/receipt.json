@@ -1,0 +1,240 @@
+{
+ "source_commit": "b492da501",
+ "production_bound": false,
+ "ABI_enabled": false,
+ "model_state_bits": 23,
+ "model_GI_or_engine_data_edges_added": 0,
+ "provider_validation_edges_added": 1,
+ "diagnostic_edges_added": 1,
+ "physical_cost_qualified": false,
+ "edge_axis": "provider/native command input sample E",
+ "validation": "E+1",
+ "first_code_read": "E+3",
+ "dr_outputs": "E+6 through E+70 inclusive",
+ "release_slot": "compiled static slot base+170 (component only)",
+ "positives": [
+  {
+   "token": 0,
+   "rounds": 8,
+   "validation": [
+    91,
+    291,
+    491,
+    691,
+    891,
+    1091,
+    1291,
+    1491
+   ],
+   "first_code_reads": [
+    93,
+    293,
+    493,
+    693,
+    893,
+    1093,
+    1293,
+    1493
+   ],
+   "read_count_each_round": 64,
+   "output_count_each_round": 65
+  },
+  {
+   "token": 65536,
+   "rounds": 8,
+   "validation": [
+    91,
+    291,
+    491,
+    691,
+    891,
+    1091,
+    1291,
+    1491
+   ],
+   "first_code_reads": [
+    93,
+    293,
+    493,
+    693,
+    893,
+    1093,
+    1293,
+    1493
+   ],
+   "read_count_each_round": 64,
+   "output_count_each_round": 65
+  },
+  {
+   "token": 151935,
+   "rounds": 8,
+   "validation": [
+    91,
+    291,
+    491,
+    691,
+    891,
+    1091,
+    1291,
+    1491
+   ],
+   "first_code_reads": [
+    93,
+    293,
+    493,
+    693,
+    893,
+    1093,
+    1293,
+    1493
+   ],
+   "read_count_each_round": 64,
+   "output_count_each_round": 65
+  }
+ ],
+ "negative": [
+  {
+   "mutant": 1,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=23 provider=1 arm=0 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0"
+  },
+  {
+   "mutant": 2,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=23 provider=1 arm=0 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0"
+  },
+  {
+   "mutant": 3,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=92 provider=1 arm=0 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0"
+  },
+  {
+   "mutant": 4,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=87 provider=1 arm=0 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL payload"
+  },
+  {
+   "mutant": 5,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=88 provider=1 arm=0 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0"
+  },
+  {
+   "mutant": 6,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=92 provider=1 arm=1 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=1"
+  },
+  {
+   "mutant": 7,
+   "first_fault_samples": [],
+   "failure": "JOIN_FAIL read token/index cycle=93"
+  },
+  {
+   "mutant": 8,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=92 provider=1 arm=0 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0"
+  },
+  {
+   "mutant": 9,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=23 provider=1 arm=0 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=1 epoch_publication=1 arm=0"
+  },
+  {
+   "mutant": 10,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=101 provider=0 arm=0 ledger=1 epoch=1"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=1 epoch_publication=1 arm=0"
+  },
+  {
+   "mutant": 11,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=23 provider=1 arm=0 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=1 epoch_publication=1 arm=0"
+  },
+  {
+   "mutant": 12,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=91 provider=0 arm=0 ledger=1 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=0 native=0 ledger=1 epoch_publication=0 arm=0"
+  },
+  {
+   "mutant": 13,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=891 provider=0 arm=0 ledger=1 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=0 native=0 ledger=1 epoch_publication=0 arm=0"
+  },
+  {
+   "mutant": 14,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=92 provider=1 arm=0 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0"
+  },
+  {
+   "mutant": 15,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=41 provider=0 arm=0 ledger=0 epoch=1"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=1 arm=0"
+  },
+  {
+   "mutant": 16,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=41 provider=0 arm=0 ledger=0 epoch=1"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=0 native=0 ledger=0 epoch_publication=1 arm=0"
+  },
+  {
+   "mutant": 17,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=292 provider=1 arm=1 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=1"
+  },
+  {
+   "mutant": 18,
+   "first_fault_samples": [
+    "FIRST_FAULT_SAMPLE cycle=92 provider=0 arm=1 ledger=0 epoch=0"
+   ],
+   "failure": "JOIN_FAIL identity/residency provider=0 native=0 ledger=0 epoch_publication=0 arm=1"
+  }
+ ],
+ "source_sha256": {
+  "rtl/qwen_sys/mu_embedding_20261019/qfd_embedding_validation_arm.sv": "ea1f80ac787740bd980f5e81728e7a12bf984290d19e9c22f15b211c8ad32cc2",
+  "rtl/test/qwen_split/tb_mu_embedding_validation_arm.sv": "b162633a15e21f35f306284f246c3dbc3b4edda489c3e087856b77206bf4962c",
+  "rtl/test/qwen_split/run_mu_embedding_validation_arm.sh": "5f9775e37d2489a2c708a1ef92ce47a6c53c11bbd44cc3eede96283d2cdb3b2e"
+ },
+ "released_vectors": {
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token151935/codes.hex": "9b75021c7c0322fbdd9c877fc85bd701cda2d047ca186add4ee550548809e9fe",
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token151935/scale.hex": "e90c1c158417f0c5b6bccd589a1f5faf318c00b486f600f5fb5ba8c5ca684561",
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token151935/expected_SSX.hex": "ec1a3bc9d2e09f6f532d1e9ae05e23925c9470f3a3f03214f84b92a9905ee165",
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token151935/expected_X.hex": "2a9936c344be4e36310a9c3924d88d8fca77c670d753611e33ed5d29f3af72ee",
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token65536/codes.hex": "d45ef9dddf923b4f7013f9193a5603aac6bf03aa436adfaf950df09672889f2b",
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token65536/scale.hex": "9c77fc8f564e14e18db1bbc911e380b18de4adc447834896f4f1bd7d7e0af573",
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token65536/expected_SSX.hex": "fb20af39ad05fde8b12108a12a56cc9319e538e74cd6f6be58ff8bd4072cac62",
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token65536/expected_X.hex": "d0b50d47480eaf8db3a7d96891d37bf3f246abf8948dd90be8eeeb6188e478ed",
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token0/codes.hex": "a99ce52c428cb1374de2b982936cec3df023113b164ae7ce4b8babf29755024e",
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token0/scale.hex": "2563d97320b8f96e614a7d9df644ac4672463619d5dbae312291b79a384bd717",
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token0/expected_SSX.hex": "f55f4da47c63229ceff1b0da6e5017f9233d5a50c63454172a435dd4b7069e93",
+  "results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token0/expected_X.hex": "dfd9c77b863c36dc32e8941e42eedce866ff1604ce2d34537872fad44a27ff57"
+ }
+}

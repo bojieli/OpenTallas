@@ -1,0 +1,6 @@
+VALIDATION_SAMPLE cycle=91 token=65536 epoch=0 command_sample=90
+FIRST_CODE_RE cycle=93 token=65536 epoch=0 resident=65536/0 complete=1
+FIRST_FAULT_SAMPLE cycle=101 provider=0 arm=0 ledger=1 epoch=1
+[151000] %Fatal: tb_mu_embedding_validation_arm.sv:94: Assertion failed in tb_mu_embedding_validation_arm: JOIN_FAIL identity/residency provider=1 native=0 ledger=1 epoch_publication=1 arm=0
+%Error: rtl/test/qwen_split/tb_mu_embedding_validation_arm.sv:94: Verilog $stop
+Aborting...

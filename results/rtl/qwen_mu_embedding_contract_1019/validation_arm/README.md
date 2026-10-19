@@ -1,0 +1,9 @@
+# Fixed one-edge embedding validation arm
+
+Actual native59 embedding reader, production word provider, real64x512 SRAM and released tokens0/65536/151935 pass eight rounds each, fourusers/epochs0..7 including repeated-user reload. Each round returns64code reads/65exported code+scale words, unchanged native command→firstread3 and output6..70edges. FACEepoch is explicitly registered at command sampleE; provider validates atE+1, before firstreadE+3 bytwoedges. This matches external CTLM publicationS→sampleE=S+1→validationS+2→firstreadS+4 convention.
+
+All18 effective mutants fail, preserving prior16identity/epoch/slot/residency/publication failures plus staleFACEregister and read-on-validation-edge. With staleFACEepoch for user1, validation sample291 triggers provider+arm fault observable292 before firstcode293. Synthetic read on validation91 produces arm fault observable92 before nativefirstcode93. Diagnostics do not stall, suppress commands or shift reads. The wrong-token mutant fails actual native read identity.
+
+The new module is defaultoff and standalone: no production provider/FACE/CTLM wiring changed. It has23useful statebits and a compiled release_slot input, with +1provider-validation/diagnostic edge. Upstream start distribution, release metadata/wire, native area/reset/fanout/clock/phase and retirement composition remain unqualified. Existing token+epoch ledgers preserve the single row through full lastcode ANDscale read. Production compiler must bind actual CTLM bank mask/u0INIT publication, FACEepoch roles and nativehead command timing; FIRST remainsnull.
+
+Evidence sourceb492da501; witness/source.sha256 pins all actual native/provider/ledger/SRAM inputs, receipt.json pins released vectors and eight per-round validation/read edges. Fleetunit1744580 terminalexit0 on Verilator5.050. The initial equivalent run is preserved as initial_client.log; added final edge instrumentation did not change RTL or operation timing.

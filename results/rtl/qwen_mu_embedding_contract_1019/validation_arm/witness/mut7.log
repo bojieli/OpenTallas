@@ -1,0 +1,4 @@
+VALIDATION_SAMPLE cycle=91 token=65536 epoch=0 command_sample=90
+[78000] %Fatal: tb_mu_embedding_validation_arm.sv:82: Assertion failed in tb_mu_embedding_validation_arm: JOIN_FAIL read token/index cycle=93
+%Error: rtl/test/qwen_split/tb_mu_embedding_validation_arm.sv:82: Verilog $stop
+Aborting...
