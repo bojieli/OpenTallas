@@ -26,6 +26,7 @@ module qkd_host_tp8_coordinator_rc #(parameter integer ENABLE_NATIVE_OWNER_JOIN=
  wire[127:0]service_epochs,certificate_epochs;wire[127:0]epochs;wire[511:0]digests;wire[7:0]terminal_released;
  wire codec_fault,post_fault,lifecycle_fault,result_transport_idle;
  wire step_issue_v,step_retire_v,step_retire_cq,cq_commit_v;
+ wire step_retire_native_valid,cq_native_valid_observed;
  wire[15:0]step_client_tag,step_retire_client_tag,cq_client_tag;wire[7:0]step_slot,step_retire_slot,cq_slot;
  wire[17:0]step_pos,step_retire_pos,step_retire_token,cq_pos,cq_token;
  wire link_reset_request,retraining_request;
@@ -53,7 +54,7 @@ module qkd_host_tp8_coordinator_rc #(parameter integer ENABLE_NATIVE_OWNER_JOIN=
    if(recovery_complete)begin recovery_active<=0;recovery_required<=0;end
   end
  end
- qkd_host_peer_coordinator_codec u_peer(
+ qkd_host_peer_coordinator_codec_rc #(.ENABLE_NATIVE_OWNER_JOIN(ENABLE_NATIVE_OWNER_JOIN)) u_peer(
  .ck(ck_codec),.por_n(por_n),.rx_valid(peer_rx_valid),.rx_data(peer_rx_data),.rx_ready(peer_rx_ready),.tx_valid(peer_tx_valid),.tx_data(peer_tx_data),.tx_ready(peer_tx_ready),
  .allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_tag(token_grant_tag),.allocated_gen(token_grant_gen),.allocated_position(token_grant_position),
  .participant_valid(participant_valid),.participant_tag(participant_tag),.participant_gen(participant_gen),.participant_trace(participant_trace),.participant_token(participant_token),.participant_pos(participant_pos),.participant_accepted(participant_accepted),
@@ -62,7 +63,7 @@ module qkd_host_tp8_coordinator_rc #(parameter integer ENABLE_NATIVE_OWNER_JOIN=
  .service_epoch(service_epochs),.certificate_epoch(certificate_epochs),.program_ready(program_ready),.program_epoch(epochs),.program_digest(digests),
  .result_v(engine_result_v),.result_tag(engine_result_tag),.result_gen(engine_result_gen),.result_done(engine_result_done),.result_fault(engine_result_fault),.result_cause(engine_result_cause),.result_token(engine_result_token),.result_value(engine_result_value),.result_cycles(engine_result_cycles),.result_cr(engine_result_cr),
  .terminal_accepted(terminal_accepted),.terminal_tag(terminal_tag),.terminal_gen(token_grant_gen),.post_retired(post_retired),.terminal_released(terminal_released),.result_transport_idle(result_transport_idle),.link_reset_request(link_reset_request),.retraining_request(retraining_request),
- .step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
+ .step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.step_retire_native_valid(step_retire_native_valid),.cq_native_valid_observed(cq_native_valid_observed),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.certificate_valid(certificate_valid),.certificate(certificate),.certificate_prefix(certificate_prefix),.fault(codec_fault));
  qkd_host_coordinator_services_rc #(.ENABLE_NATIVE_OWNER_JOIN(ENABLE_NATIVE_OWNER_JOIN)) u_lifecycle(
  .alloc_fire(alloc_fire),.alloc_tag(alloc_tag),.alloc_gen(alloc_gen),.join_client(join_client),.join_slot(join_slot),.join_pos(join_pos),
@@ -75,6 +76,6 @@ module qkd_host_tp8_coordinator_rc #(parameter integer ENABLE_NATIVE_OWNER_JOIN=
  .kv_drained(kv_drained),.vm_drained(vm_drained),.collective_drained(collective_drained),.host_drained(host_drained),
  .post_retired(post_retired),.post_tag(post_tag),.post_generation(post_gen),.post_pending(post_pending),.acknowledged_tag(acknowledged_tag),.acknowledged_generation(acknowledged_gen),
  .recovery_start(recovery_start),.links_drained(links_drained),.link_reset_seen(link_reset_seen),.retraining_done(retrained),.link_reset_request(link_reset_request),.retraining_request(retraining_request),.recovery_complete(recovery_complete),.wrap_locked(wrap_locked),.identity_fault(identity_fault),.terminal_accepted(terminal_accepted),.lifecycle_fault(lifecycle_fault),
- .step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
+ .step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.step_retire_native_valid(step_retire_native_valid),.cq_native_valid_observed(cq_native_valid_observed),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cancel_released(terminal_released),.cancel_release_required(8'hff),.result_transport_idle(result_transport_idle),.host_observer_fault(codec_fault),.post_fault(post_fault));
 endmodule
