@@ -4,6 +4,8 @@
 //   DUT  qkd_kvs_ctl from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv (u_boot =
 //        qkd_static_kv_boot_dispatch_mu MU 1, u_lprg = qkd_static_kv_layer_programme_mu MU 1).  The image goes in as
 //        the HOST loader replay does (boot_pr word stream, target 1, then boot_image_ready); no bench-side preload.
+//   +IMG2 / +IMG3            targets 2 (die writer programme) and 3 (MU ownership roots, kvboot/target3.hex), loaded
+//                            after target 1 in the dispatcher's order (configured is checked; their run-time is MU-KV-PROG's)
 //   +IMG=<hex> +NW=<words>  the boot image (results/rtl/mu_qwen_1018/kvboot/target1.hex, 471 words; mutants below)
 //   +STARTS=<txt>            "cycle user token" (kv_static_programme --mu-from: mu_calendar frame, two frames)
 //   +EVENTS=<txt>            "cycle user stage mask" the compiler's expected KV programme events (mu_calendar
@@ -35,19 +37,23 @@ module tb_mu_kv_boot;
  wire[9:0]m_mu={dut.w_lprg__stage_done,1'b0,dut.w_lprg__link_start,dut.w_lprg__writer_start,dut.w_lprg__attention_run,
   dut.w_lprg__attention_issue,dut.w_lprg__vgo,dut.w_lprg__kgo,dut.w_lprg__ctrl_go,dut.w_lprg__stage_start};
  wire[9:0]m_ref={r_sd,1'b0,r_ls,r_ws,r_ar,r_ai,r_vg,r_kg,r_cg,r_ss};
- reg[63:0]img[0:511];integer nw;
+ reg[63:0]img[0:511],img2[0:255],img3[0:3];integer nw;
  integer NS,NE;reg[31:0]s_c[0:63];reg[1:0]s_u[0:63];reg[7:0]s_k[0:63];
  reg[31:0]e_c[0:8191];reg[1:0]e_u[0:8191];reg[5:0]e_s[0:8191];reg[9:0]e_m[0:8191];
+ integer nolist=0;
  integer cyc=0,base,i,a,ei=0,si=0,nev=0,ndone=0,nlock=0,fd,r,c,u,s,k,m;
  reg[1023:0]fn;
  task tick;begin @(posedge ck);#0.1;end endtask
  task fail(input [8*96-1:0]why);begin
   $display("FAIL MU_KV_BOOT: %0s cyc %0d (rel %0d) mu mask %03h ref mask %03h epoch %h lprg fault %02h boot fault %02h",
-   why,cyc,cyc-base,m_mu,m_ref,dut.w_lprg__epoch,dut.w_lprg__fault_code,dut.w_boot__fault_code);$finish;end endtask
+   why,cyc,cyc-base,m_mu,m_ref,dut.w_lprg__epoch,dut.w_lprg__fault_code,dut.w_boot__fault_code);$finish;#1000000000;end endtask
  always @(posedge ck)cyc<=cyc+1;
  initial begin
   if(!$value$plusargs("IMG=%s",fn))$fatal(1,"+IMG");$readmemh(fn,img);
   if(!$value$plusargs("NW=%d",nw))nw=471;
+  if($test$plusargs("NOLIST"))nolist=1;
+  if(!$value$plusargs("IMG2=%s",fn))$fatal(1,"+IMG2");$readmemh(fn,img2);
+  if(!$value$plusargs("IMG3=%s",fn))$fatal(1,"+IMG3");$readmemh(fn,img3);
   if(!$value$plusargs("STARTS=%s",fn))$fatal(1,"+STARTS");
   fd=$fopen(fn,"r");NS=0;while($fscanf(fd,"%d %d %d\n",c,u,k)==3)begin s_c[NS]=c;s_u[NS]=u[1:0];s_k[NS]=k[7:0];NS=NS+1;end $fclose(fd);
   if(!$value$plusargs("EVENTS=%s",fn))$fatal(1,"+EVENTS");
@@ -59,12 +65,22 @@ module tb_mu_kv_boot;
   target=1;
   for(a=0;a<nw;a=a+1)begin pr=0;pr[74]=1;pr[73:64]=10'(a);pr[63:0]=img[a];tick();end
   pr=0;tick();ready=1;tick();tick();
+  // targets 2 (writer programme, die image) and 3 (ownership, MU roots) in the dispatcher's order
+  if(!dut.w_boot__fault)begin
+   ready=0;target=2;tick();
+   for(a=0;a<181;a=a+1)begin pr=0;pr[74]=1;pr[73:64]=10'(a);pr[63:0]=img2[a];tick();end
+   pr=0;tick();ready=1;tick();tick();ready=0;target=3;tick();
+   for(a=0;a<4;a=a+1)begin pr=0;pr[74]=1;pr[73:64]=10'(a);pr[63:0]=img3[a];tick();end
+   pr=0;tick();ready=1;tick();tick();
+  end
   for(a=0;a<327;a=a+1)begin rwe=1;ra=9'(a);rd=(a==326)?64'h514b564c59523336:img[a];tick();end
   rwe=0;repeat(4)tick();
   if(dut.w_boot__fault||dut.w_lprg__fault||!dut.w_lprg__configured)begin
    $display("FAIL MU_KV_BOOT: layer programme not configured by the boot path (configured %0d, lprg fault %02h, dispatcher fault %02h)",
     dut.w_lprg__configured,dut.w_lprg__fault_code,dut.w_boot__fault_code);$finish;end
   if(!r_cf)$fatal(1,"reference not configured");
+  if(!dut.w_own__configured||!dut.w_wprg__configured)begin
+   $display("FAIL MU_KV_BOOT: targets 2 / 3 not configured (writer %0d, ownership %0d)",dut.w_wprg__configured,dut.w_own__configured);$finish;end
   $display("boot: %0d words through qkd_static_kv_boot_dispatch_mu, layer programme configured, GAP[1][1] %0d",nw,img[326+36+1]);
   auth={img[324],img[325][15:0],1'b1,1'b1};
   base=cyc+10;
@@ -82,19 +98,26 @@ module tb_mu_kv_boot;
    // user 0 == the single-user original
    if(m_ref!=((m_mu!=0&&dut.w_lprg__epoch[1:0]==0)?m_mu:10'd0))fail("user 0 differs from MU 0 (pulses)");
    if(m_ref!=0)begin
-    if({dut.w_lprg__epoch,dut.w_lprg__token,dut.w_lprg__position,dut.w_lprg__stage,dut.w_lprg__layer,dut.w_lprg__completed_stage,
-        dut.w_lprg__ctx_t,dut.w_lprg__generation}!=={r_ep,r_tk,r_ps,r_st,r_ly,r_cs,r_ct,r_gn})fail("user 0 differs from MU 0 (metadata)");
+    // completed_stage is written only at a stage_done (MU: by whichever user's done was last), so it is compared there
+    if({dut.w_lprg__epoch,dut.w_lprg__token,dut.w_lprg__position,dut.w_lprg__stage,dut.w_lprg__layer,
+        dut.w_lprg__ctx_t,dut.w_lprg__generation}!=={r_ep,r_tk,r_ps,r_st,r_ly,r_ct,r_gn}||(r_sd&&dut.w_lprg__completed_stage!=r_cs))begin
+     $display("  mu  ep %h tk %0d ps %0d st %0d ly %0d cs %0d ct %0d gn %0d",dut.w_lprg__epoch,dut.w_lprg__token,dut.w_lprg__position,
+      dut.w_lprg__stage,dut.w_lprg__layer,dut.w_lprg__completed_stage,dut.w_lprg__ctx_t,dut.w_lprg__generation);
+     $display("  ref ep %h tk %0d ps %0d st %0d ly %0d cs %0d ct %0d gn %0d",r_ep,r_tk,r_ps,r_st,r_ly,r_cs,r_ct,r_gn);
+     fail("user 0 differs from MU 0 (metadata)");
+    end
     nlock=nlock+1;
    end
-   // the compiler's event list
-   if(ei<NE&&cyc-base==e_c[ei]+1)begin
+   // the compiler's event list (+NOLIST: a mutant table, only the RTL's own checks and the user-0 lockstep)
+   if(nolist)begin if(dut.w_lprg__done)ndone=ndone+1;if(ei<NE&&cyc-base>e_c[ei]+1)ei=ei+1;end
+   else if(ei<NE&&cyc-base==e_c[ei]+1)begin
     if(m_mu!=e_m[ei])fail("event kinds differ from the compiled list");
     if(dut.w_lprg__epoch[1:0]!=e_u[ei])fail("event user (epoch[1:0]) differs from the compiled list");
     if(e_m[ei][8:0]!=0&&dut.w_lprg__stage!=e_s[ei])fail("event stage differs from the compiled list");
     if(e_m[ei][8:0]==0&&dut.w_lprg__completed_stage!=e_s[ei])fail("completed stage differs from the compiled list");
     if(dut.w_lprg__done)ndone=ndone+1;
     ei=ei+1;nev=nev+1;
-   end else if(m_mu!=0)fail("pulse not in the compiled list");
+   end else if(m_mu!=0&&!nolist)fail("pulse not in the compiled list");
   end
   if(ndone!=NS)fail("not every token completed 36 stages");
   $display("PASS MU_KV_BOOT: %0d-word MU image through the boot dispatcher; %0d starts (4 users, 2 frames), %0d event edges equal the compiled list, %0d tokens done, user 0 == MU 0 on %0d edges, no fault",
