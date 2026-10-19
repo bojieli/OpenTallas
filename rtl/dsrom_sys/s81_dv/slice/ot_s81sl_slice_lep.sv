@@ -200,6 +200,7 @@ module ot_s81sl_lep_core #(
     // beats (which never wait) take the lanes; a status-only change merges into a pending t_v frame; a second t_v / done
     // event while one is still pending is a sticky fault (the compiler's host slots respect the lane rate).
     wire h_event,k_event;
+    wire [11:0] h_status_now,h_status_old; wire h_status_valid;
     wire hp_go, kp_go, herr; wire [76:0] ph_d; wire [53:0] pk_d;
     generate if (HOST_EN != 0) begin : g_htx
     reg [76:0] thq; reg [53:0] tkq;
@@ -210,6 +211,7 @@ module ot_s81sl_lep_core #(
     always @(posedge clk or negedge status_reset)
         if(!status_reset) st_l<=0; else if(ev_h) st_l<=thq[76:65];
     assign h_event=ev_h;assign k_event=ev_k;
+    assign h_status_now=thq[76:65];assign h_status_old=st_l;assign h_status_valid=thq[64];
     assign hp_go = !rov && ph_v; assign kp_go = !rov && !ph_v && pk_v;
     assign herr = he; assign ph_d = pd; assign pk_d = kd;
     always @(posedge clk or negedge rn)
@@ -230,6 +232,7 @@ module ot_s81sl_lep_core #(
         end
     end else begin : g_nhtx                            // HOST_EN 0: ring beats only (t_host / t_kd unread)
     assign h_event=1'b0;assign k_event=1'b0;
+    assign h_status_now=0;assign h_status_old=0;assign h_status_valid=0;
     assign hp_go = 1'b0; assign kp_go = 1'b0; assign herr = 1'b0; assign ph_d = 77'd0; assign pk_d = 54'd0;
     end endgenerate
     wire push = rov || hp_go || kp_go;
@@ -268,6 +271,11 @@ module ot_s81sl_lep_core #(
     reg [2*H-1:0] fr;
     genvar fc,fb;
     generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_frame_local
+      localparam integer HG=(FRAME_NS+7)/8;
+      wire [HG-1:0] host_event;
+      for(genvar hg=0;hg<HG;hg=hg+1) begin:g_host_event
+        (* keep=1 *) ot_s81sl_lep_host_event u_event(.now_status(h_status_now),.old_status(h_status_old),.valid(h_status_valid),.event_o(host_event[hg]));
+      end
       for(fc=0;fc<FRAME_NS;fc=fc+1) begin:g_slice
         (* keep="true" *) reg rov_r,ph_r,pk_r,kevent_r;
         wire hp=!rov_r && ph_r, kp=!rov_r && !ph_r && pk_r;
@@ -276,7 +284,7 @@ module ot_s81sl_lep_core #(
           else begin
             rov_r<=ro[0];kevent_r<=t_kd[53];
             if(HOST_EN!=0) begin
-              if(hp) ph_r<=0;if(h_event) ph_r<=1;
+              if(hp) ph_r<=0;if(host_event[fc/8]) ph_r<=1;
               if(kp) pk_r<=0;if(kevent_r) pk_r<=1;
             end
           end
@@ -317,6 +325,17 @@ module ot_s81sl_lep_core #(
     end
     end endgenerate
     wire [1:0] pp = {push && bsel, push && !bsel};     // push per pair
+    localparam integer PUSH_GROUPS=(TX_NA+1)/2;
+    wire [2*PUSH_GROUPS-1:0] push_group;
+    wire [2*NL-1:0] push_lane;
+    generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_push_groups
+      for(genvar pg=0;pg<PUSH_GROUPS;pg=pg+1) begin:g_group
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(rov),.host_go(hp_go),.key_go(kp_go),.open(wopen),.pair_b(wab),.pp(push_group[2*pg+:2]));
+      end
+      for(genvar pl=0;pl<NL;pl=pl+1) begin:g_lane
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(rov),.host_go(hp_go),.key_go(kp_go),.open(wopen),.pair_b(wab),.pp(push_lane[2*pl+:2]));
+      end
+    end endgenerate
     reg [1:0] sq;                                      // frame-sequence parity (TX), per pair
     always @(posedge clk or negedge rn) if (!rn) sq <= 2'b00; else sq <= sq ^ pp;
 `ifdef OT_S81SL_LEP_MUT_SWAP
@@ -344,7 +363,7 @@ module ot_s81sl_lep_core #(
         (* keep = "true" *) reg cr_q;                  // lo_r pin flop
         wire [H:0] q;
         wire iss = n != 0 && cnt != 0;
-        wire psh = pp[t / 2];
+        wire psh = (MU_EN!=0 && RX_SRAM!=0)?push_lane[2*t+t/2]:pp[t / 2];
         wire wr = psh && (n != DT || iss);
         if(MU_EN!=0 && RX_SRAM!=0 && SRAM!=0) begin:g_safe_write
             localparam integer GA=4, NA=(TX_NS+GA-1)/GA;
@@ -356,7 +375,7 @@ module ot_s81sl_lep_core #(
                 (* keep="true" *) reg [CW-1:0] credit_r;
                 (* keep="true" *) reg credit_pin_r;
                 assign rd_group[c]=(count_r!=0 && credit_r!=0);
-                assign wr_group[c]=psh && (count_r!=(AT+1)'(DT) || rd_group[c]);
+                assign wr_group[c]=push_group[2*(c/2)+t/2] && (count_r!=(AT+1)'(DT) || rd_group[c]);
                 wire pointer_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c];
                 wire state_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c+1];
                 always @(posedge clk or negedge state_reset)
@@ -1235,4 +1254,13 @@ endmodule
  wire rt=mt[0] && (mt[3:1]==3'd1 || mt[3:1]==3'd2) && mt[4];
 `endif
  assign sel={rt,bt,at,(mv && !ac && !bc),bc,ac};
+endmodule
+
+(* keep_hierarchy=1 *) module ot_s81sl_lep_host_event(input wire [11:0] now_status,old_status,input wire valid,output wire event_o);
+ assign event_o=valid || now_status!=old_status;
+endmodule
+(* keep_hierarchy=1 *) module ot_s81sl_lep_tx_push(input wire ring,host_go,key_go,open,pair_b,output wire [1:0] pp);
+ wire push=ring || host_go || key_go;
+ wire bsel=ring && open && pair_b;
+ assign pp={push && bsel,push && !bsel};
 endmodule
