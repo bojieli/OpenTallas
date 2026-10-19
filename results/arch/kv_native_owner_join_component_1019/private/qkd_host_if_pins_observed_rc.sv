@@ -28,6 +28,8 @@ module qkd_host_if_pins_observed_rc #(
     parameter integer MU_OUT  = 0
 ) (
     // Private common-clock functional join. Descriptor and native namespaces differ.
+    input wire eng_start_unready,
+    output wire raw_done_unready,
     output wire cq_dma_retired_v,
     output wire mon_aw_ack,mon_w_ack,mon_aw_source_valid,mon_w_source_valid,
     input wire native_issue_ready,
@@ -306,6 +308,9 @@ assign eng_token=eng_token_i;
 assign eng_pos=eng_pos_i;
 assign eng_slot=eng_slot_i;
 assign kv_base=kv_base_i;
+reg pin_eng_unready;
+always @(posedge clk or negedge rst_n)if(!rst_n)pin_eng_unready<=0;else pin_eng_unready<=eng_start_unready;
+assign raw_done_unready=ENABLE_NATIVE_OWNER_JOIN && raw_done_v && pin_eng_unready;
 reg  pin_eng_done;
 always @(posedge clk or negedge rst_n)if(!rst_n)pin_eng_done<=0;else pin_eng_done<=eng_done;
 reg completion_armed;
