@@ -31,13 +31,13 @@
 // edges after start_v. XSER=1 adds the synchronised 3:4 crossing (stream pin + hold + 3 serial edges), a fixed value
 // for every launch issued on a stream phase >= 555 ps before the next serial edge (the compiler issues F30 there).
 module ot_hbm_static_cfg_collar_idx256 #(
-    parameter integer PAGE_W=12,   // page bits per programme space (AW = PAGE_W+11)
-    parameter integer NS=2,        // programme spaces (1..4)
-    parameter integer NPR=1,       // operand rows of 256 b (>=1)
-    parameter integer NREC=0,      // record rows (0..512)
-    parameter integer NGO=1,       // record go outputs (1..2)
+    parameter integer PAGE_W=1,   // page bits per programme space (AW = PAGE_W+11)
+    parameter integer NS=1,        // programme spaces (1..4)
+    parameter integer NPR=6,       // operand rows of 256 b (>=1)
+    parameter integer NREC=8,      // record rows (0..512)
+    parameter integer NGO=2,       // record go outputs (1..2)
     parameter integer NB=2,        // client busy inputs
-    parameter integer NF=1,        // client fault inputs
+    parameter integer NF=5,        // client fault inputs
     parameter integer TAIL=4,
     parameter integer XSER=0,      // 1: core clk is the 3:4 serial domain, broadcast pins on clk_in (stream)
     parameter integer MUT=0,       // bench: 1 skip sequential check, 2 ready ignores need, 3 go one edge early, 4 no event seq check,

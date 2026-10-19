@@ -12,7 +12,7 @@ module tb_idx256;
  ot_hbm_static_cfg_collar_idx256 #(.PAGE_W(1),.NS(1),.NPR(6),.NREC(8),.NGO(2),.NB(2),.NF(5),.MUT(MUT)) guarded(
  .clk(clk),.clk_in(clk),.rst_n(rst_n),.tgt(8'd120),.cfg_v(cfg_v),.cfg_target(8'd120),.cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.launch_v(launch_v),.c_busy(2'b0),.c_done(1'b0),.c_fault(5'b0),.pw_we(we1),.pw_addr(a1),.pw_data(d1),.prm(p1),.start_v(s1),.go(g1),.rec(r1),.ready(rd1),.active(ac1),.fault(f1));
  bit compare=0,operands_ready=0,forbid_write=0,forbid_start=0;
- integer checks=0,writes=0,launches=0,cases=0;
+ integer checks=0,writes=0,launches=0,cases=0,legacy_aliases=0;
  always @(posedge clk) begin
   #1;
   if(compare)begin
@@ -22,6 +22,7 @@ module tb_idx256;
    if(operands_ready && p0!==p1)$fatal(1,"IDX256_FAIL operand identity");
    if(|g1 && r0!==r1)$fatal(1,"IDX256_FAIL record identity");
   end
+  if(we0 && a0>=256)legacy_aliases++;
   if(we1)begin writes++;if(a1>=256)$fatal(1,"IDX256_FAIL aliased write addr%0d MUT%0d",a1,MUT);end
   if(s1)launches++;
   if(forbid_write && we1)$fatal(1,"IDX256_FAIL bad install wrote");
@@ -58,15 +59,18 @@ module tb_idx256;
    frame(12'd0,256'habc);frame(12'he01,256'd1);arm();launch();edges(12);cases++;
   end
   reset_case();install256();forbid_write=1;frame(12'd256,256'hbad);
-  if(!f1)$fatal(1,"IDX256_FAIL missing row256 rejection MUT%0d",MUT);cases++;
+  if(!f1)$fatal(1,"IDX256_FAIL missing row256 rejection MUT%0d",MUT);
+  if(legacy_aliases!=1||f0)$fatal(1,"IDX256_FAIL original alias counterexample missing");cases++;
   reset_case();frame(12'he00,256'd256);
-  if(!f1)$fatal(1,"IDX256_FAIL missing page rejection MUT%0d",MUT);cases++;
+  if(!f1)$fatal(1,"IDX256_FAIL missing page rejection MUT%0d",MUT);
+  if(f0)$fatal(1,"IDX256_FAIL original page counterexample missing");cases++;
   for(integer k=0;k<4;k++)begin
    reset_case();case(k)
    0:frame(12'he01,256'd257);1:frame(12'he01,256'd4096);
    2:frame(12'he01,256'd65536);3:frame(12'he01,256'hffffffff);
    endcase
-   if(!f1)$fatal(1,"IDX256_FAIL missing need rejection MUT%0d k%0d",MUT,k);cases++;
+   if(!f1)$fatal(1,"IDX256_FAIL missing need rejection MUT%0d k%0d",MUT,k);
+   if(f0)$fatal(1,"IDX256_FAIL original need counterexample missing");cases++;
   end
   // An invalid update concurrent with launch must not exploit the old armed state.
   reset_case();for(integer j=0;j<6;j++)frame(12'h800+12'(j),256'd0);
@@ -74,6 +78,6 @@ module tb_idx256;
   @(negedge clk);cfg_addr=12'd256;cfg_data=256'hbad;cfg_v=1;launch_v=1;
   @(negedge clk);cfg_v=0;launch_v=0;edges(5);
   if(!f1)$fatal(1,"IDX256_FAIL concurrent update rejection");cases++;
-  $display("IDX256_PASS cases=%0d identity_edges=%0d writes=%0d launches=%0d MUT=%0d",cases,checks,writes,launches,MUT);$finish;
+  $display("IDX256_PASS cases=%0d identity_edges=%0d writes=%0d launches=%0d legacy_aliases=%0d MUT=%0d",cases,checks,writes,launches,legacy_aliases,MUT);$finish;
  end
 endmodule
