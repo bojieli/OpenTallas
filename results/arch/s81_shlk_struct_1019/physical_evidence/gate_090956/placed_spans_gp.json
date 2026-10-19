@@ -1,0 +1,771 @@
+{
+  "source": "routes/gate/work/orfs/escape_inventory.tsv",
+  "source_sha256": "5a0077b84f209a204bb4f02dff27c9b5f4a148f572a6875367e6cebdf46ec96a",
+  "odb": "/work/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/3_3_place_gp.odb",
+  "placement_stage_present": true,
+  "hop_mapped_flops": 291,
+  "hop_claimed_region_um": [
+    272.16,
+    141.48,
+    289.44,
+    152.28
+  ],
+  "hop_cells_outside_region": [],
+  "hop_region_qualified": true,
+  "net_groups": {
+    "hop_payload": {
+      "count": 291,
+      "max_hpwl_um": 68.725,
+      "over405": 0,
+      "top20": [
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[52]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            272.345,
+            72.87,
+            272.353,
+            141.587
+          ],
+          "hpwl_um": 68.725
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[86]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            264.376,
+            83.147,
+            264.378,
+            145.032
+          ],
+          "hpwl_um": 61.887
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[96]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            261.59,
+            81.184,
+            261.688,
+            142.476
+          ],
+          "hpwl_um": 61.39
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[64]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            263.477,
+            100.807,
+            263.638,
+            141.909
+          ],
+          "hpwl_um": 41.263
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[108]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            266.394,
+            114.85,
+            266.481,
+            145.347
+          ],
+          "hpwl_um": 30.584
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[97]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            262.395,
+            117.244,
+            262.633,
+            144.194
+          ],
+          "hpwl_um": 27.188
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[56]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            269.373,
+            122.942,
+            269.373,
+            150.098
+          ],
+          "hpwl_um": 27.156
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[233]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            268.119,
+            123.136,
+            268.245,
+            146.095
+          ],
+          "hpwl_um": 23.085
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[213]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            266.366,
+            133.022,
+            266.436,
+            146.851
+          ],
+          "hpwl_um": 13.899
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[271]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            284.807,
+            140.849,
+            284.824,
+            152.731
+          ],
+          "hpwl_um": 11.899
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[176]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            289.907,
+            138.254,
+            289.964,
+            150.051
+          ],
+          "hpwl_um": 11.854
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[191]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            261.436,
+            130.99,
+            261.728,
+            142.115
+          ],
+          "hpwl_um": 11.417
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[192]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            279.43,
+            140.809,
+            279.499,
+            148.963
+          ],
+          "hpwl_um": 8.223
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[258]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            290.077,
+            141.936,
+            290.084,
+            148.697
+          ],
+          "hpwl_um": 6.768
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[115]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            263.772,
+            141.551,
+            264.031,
+            147.658
+          ],
+          "hpwl_um": 6.366
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[188]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            271.126,
+            141.897,
+            271.226,
+            146.922
+          ],
+          "hpwl_um": 5.125
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[212]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            289.322,
+            140.911,
+            289.399,
+            144.248
+          ],
+          "hpwl_um": 3.414
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[234]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            289.81,
+            141.362,
+            289.996,
+            144.517
+          ],
+          "hpwl_um": 3.341
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[80]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            270.39,
+            149.42,
+            273.23,
+            149.752
+          ],
+          "hpwl_um": 3.172
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.sd_hop_payload[223]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            290.724,
+            141.383,
+            291.055,
+            144.012
+          ],
+          "hpwl_um": 2.96
+        }
+      ]
+    },
+    "address_apx": {
+      "count": 0,
+      "max_hpwl_um": null,
+      "over405": 0,
+      "top20": []
+    },
+    "address_apb": {
+      "count": 0,
+      "max_hpwl_um": null,
+      "over405": 0,
+      "top20": []
+    },
+    "sd_other": {
+      "count": 887,
+      "max_hpwl_um": 282.047,
+      "over405": 0,
+      "top20": [
+        {
+          "name": "u_ot_pr_core.u_sd.u_rr.relay_q[0][6]",
+          "terminals": 5,
+          "unknown_term_positions": 0,
+          "box_um": [
+            236.961,
+            31.531,
+            376.555,
+            173.984
+          ],
+          "hpwl_um": 282.047
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[63]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            169.537,
+            202.579,
+            355.209,
+            232.756
+          ],
+          "hpwl_um": 215.849
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[119]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            163.235,
+            169.881,
+            310.279,
+            238.175
+          ],
+          "hpwl_um": 215.338
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[83]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            172.812,
+            234.743,
+            386.066,
+            235.116
+          ],
+          "hpwl_um": 213.627
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[39]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            172.812,
+            230.526,
+            379.706,
+            230.892
+          ],
+          "hpwl_um": 207.26
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[26]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            171.384,
+            168.951,
+            315.672,
+            229.419
+          ],
+          "hpwl_um": 204.756
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[60]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            153.182,
+            233.109,
+            355.662,
+            233.249
+          ],
+          "hpwl_um": 202.62
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[96]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            153.674,
+            236.232,
+            355.628,
+            236.334
+          ],
+          "hpwl_um": 202.056
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[130]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            167.296,
+            239.208,
+            368.886,
+            239.375
+          ],
+          "hpwl_um": 201.757
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[72]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            158.848,
+            234.032,
+            354.959,
+            234.071
+          ],
+          "hpwl_um": 196.15
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[25]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            172.812,
+            229.371,
+            364.71,
+            229.548
+          ],
+          "hpwl_um": 192.075
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[234]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            173.795,
+            166.416,
+            276.661,
+            249.288
+          ],
+          "hpwl_um": 185.738
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[81]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            172.812,
+            234.68,
+            353.852,
+            234.924
+          ],
+          "hpwl_um": 181.284
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[66]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            173.963,
+            232.813,
+            354.596,
+            233.407
+          ],
+          "hpwl_um": 181.227
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[6]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            169.324,
+            168.021,
+            282.15,
+            227.346
+          ],
+          "hpwl_um": 172.151
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.mem_q[251]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            172.812,
+            148.607,
+            293.862,
+            198.348
+          ],
+          "hpwl_um": 170.791
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.mem_q[219]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            172.812,
+            146.081,
+            293.607,
+            195.276
+          ],
+          "hpwl_um": 169.99
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.id[144]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            172.812,
+            240.972,
+            323.199,
+            256.342
+          ],
+          "hpwl_um": 165.757
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.mem_q[193]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            172.812,
+            149.635,
+            293.894,
+            192.78
+          ],
+          "hpwl_um": 164.227
+        },
+        {
+          "name": "u_ot_pr_core.u_sd.mem_q[225]",
+          "terminals": 2,
+          "unknown_term_positions": 0,
+          "box_um": [
+            172.812,
+            151.689,
+            291.454,
+            195.852
+          ],
+          "hpwl_um": 162.805
+        }
+      ]
+    },
+    "reset": {
+      "count": 23,
+      "max_hpwl_um": 167.298,
+      "over405": 0,
+      "top20": [
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[4]",
+          "terminals": 5,
+          "unknown_term_positions": 0,
+          "box_um": [
+            105.055,
+            38.269,
+            243.049,
+            67.573
+          ],
+          "hpwl_um": 167.298
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsc.g_regions.reset_regions__ot_rlv[4]",
+          "terminals": 6,
+          "unknown_term_positions": 0,
+          "box_um": [
+            302.718,
+            166.937,
+            318.637,
+            256.55
+          ],
+          "hpwl_um": 105.532
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsc.g_regions.reset_regions__ot_rlv[6]",
+          "terminals": 6,
+          "unknown_term_positions": 0,
+          "box_um": [
+            267.672,
+            70.61,
+            294.622,
+            148.558
+          ],
+          "hpwl_um": 104.898
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsc.g_regions.reset_regions__ot_rlv[7]",
+          "terminals": 25,
+          "unknown_term_positions": 0,
+          "box_um": [
+            227.562,
+            54.875,
+            296.799,
+            76.766
+          ],
+          "hpwl_um": 91.128
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[7]",
+          "terminals": 6,
+          "unknown_term_positions": 0,
+          "box_um": [
+            158.188,
+            37.551,
+            230.609,
+            44.06
+          ],
+          "hpwl_um": 78.93
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsh.g_regions.reset_regions__ot_rlv[6]",
+          "terminals": 14,
+          "unknown_term_positions": 0,
+          "box_um": [
+            11.358,
+            56.697,
+            24.408,
+            99.041
+          ],
+          "hpwl_um": 55.394
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsc.g_regions.reset_regions__ot_rlv[2]",
+          "terminals": 25,
+          "unknown_term_positions": 0,
+          "box_um": [
+            295.827,
+            153.52,
+            328.63,
+            169.028
+          ],
+          "hpwl_um": 48.311
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsc.g_regions.reset_regions__ot_rlv[3]",
+          "terminals": 26,
+          "unknown_term_positions": 0,
+          "box_um": [
+            296.81,
+            149.735,
+            321.428,
+            166.486
+          ],
+          "hpwl_um": 41.369
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsh.g_regions.reset_regions__ot_rlv[4]",
+          "terminals": 13,
+          "unknown_term_positions": 0,
+          "box_um": [
+            38.787,
+            31.695,
+            77.613,
+            33.93
+          ],
+          "hpwl_um": 41.061
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsh.g_regions.reset_regions__ot_rlv[7]",
+          "terminals": 12,
+          "unknown_term_positions": 0,
+          "box_um": [
+            9.27,
+            70.12,
+            23.581,
+            95.294
+          ],
+          "hpwl_um": 39.485
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsc.g_regions.reset_regions__ot_rlv[5]",
+          "terminals": 17,
+          "unknown_term_positions": 0,
+          "box_um": [
+            287.705,
+            159.842,
+            318.633,
+            166.53
+          ],
+          "hpwl_um": 37.616
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[2]",
+          "terminals": 15,
+          "unknown_term_positions": 0,
+          "box_um": [
+            258.979,
+            69.901,
+            287.778,
+            72.588
+          ],
+          "hpwl_um": 31.486
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsh.g_regions.reset_regions__ot_rlv[5]",
+          "terminals": 15,
+          "unknown_term_positions": 0,
+          "box_um": [
+            76.507,
+            25.855,
+            90.203,
+            33.332
+          ],
+          "hpwl_um": 21.173
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[0]",
+          "terminals": 11,
+          "unknown_term_positions": 0,
+          "box_um": [
+            78.001,
+            29.695,
+            94.441,
+            33.678
+          ],
+          "hpwl_um": 20.423
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsh.g_regions.reset_regions__ot_rlv[0]",
+          "terminals": 16,
+          "unknown_term_positions": 0,
+          "box_um": [
+            31.997,
+            22.501,
+            37.984,
+            33.009
+          ],
+          "hpwl_um": 16.495
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsh.g_regions.reset_regions__ot_rlv[1]",
+          "terminals": 16,
+          "unknown_term_positions": 0,
+          "box_um": [
+            33.724,
+            23.377,
+            37.609,
+            33.248
+          ],
+          "hpwl_um": 13.756
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsh.g_regions.reset_regions__ot_rlv[2]",
+          "terminals": 8,
+          "unknown_term_positions": 0,
+          "box_um": [
+            34.902,
+            33.413,
+            41.602,
+            35.61
+          ],
+          "hpwl_um": 8.897
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsc.g_regions.reset_regions__ot_rlv[0]",
+          "terminals": 3,
+          "unknown_term_positions": 0,
+          "box_um": [
+            321.652,
+            152.063,
+            328.257,
+            152.088
+          ],
+          "hpwl_um": 6.63
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsh.g_regions.reset_regions__ot_rlv[3]",
+          "terminals": 6,
+          "unknown_term_positions": 0,
+          "box_um": [
+            36.768,
+            32.487,
+            39.291,
+            35.438
+          ],
+          "hpwl_um": 5.474
+        },
+        {
+          "name": "u_ot_pr_core.u_h.host.u_hi.u_rsc.g_regions.reset_regions__ot_rlv[1]",
+          "terminals": 3,
+          "unknown_term_positions": 0,
+          "box_um": [
+            305.257,
+            152.664,
+            306.119,
+            152.749
+          ],
+          "hpwl_um": 0.947
+        }
+      ]
+    }
+  },
+  "qualification": "Actual HPWL only; not timing or routing/pin-access DRC proof. Reset and address controls are reported separately."
+}
