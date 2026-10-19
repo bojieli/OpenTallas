@@ -42,5 +42,17 @@ for a in sorted(mac,key=lambda m:(m['box'][1],m['box'][0])):
   row['capacity_count_sufficient']=(sum(v['free_tracks_lower_bound'] for v in row['track_capacity']['left_half'].values())>=409 and sum(v['free_tracks_lower_bound'] for v in row['track_capacity']['right_half'].values())>=410 and row['track_capacity']['horizontal_M4']['free_tracks_lower_bound']>=819)
   row['fanout_plan']='Assign face pins monotonically to distinct free M3/M5 tracks in the corresponding half-channel; M4 stubs at native pin y, vertical turns to distinct M4 tracks in86.4um row allocation. Max nominal rowspread22.668um +halfchannel17.388um. Explicit obstacle-aware assignments and actual trialroute/DRC still required.'
   report['rows'].append(row)
+report['all_faces']=[]
+for m in mac:
+ x0,y0,x1,y1=m['box']
+ left=max(5.4,x0-37.8);right=min(297,x1+37.8)
+ for n in mac:
+  if abs(n['box'][1]-y0)>.001:continue
+  if n['box'][2]<x0:left=max(left,(n['box'][2]+x0)/2)
+  if n['box'][0]>x1:right=min(right,(x1+n['box'][0])/2)
+ for side,count,a,b in [('W',410,left,x0),('E',409,x1,right)]:
+  box=[a,y0-22.668,b,y1+22.668]
+  cap={L:capacity(L,box,'X') for L in ('M3','M5')};cap['M4']=capacity('M4',box,'Y')
+  report['all_faces'].append({'macro':m['name'],'face':side,'pins':count,'corridor_um':box,'capacity':cap,'count_sufficient':sum(cap[L]['free_tracks_lower_bound'] for L in ('M3','M5'))>=count and cap['M4']['free_tracks_lower_bound']>=count,'qualification':'Count only, native-pin stubs/obstacle-aware via assignment and actual trialroute/DRC remain required.'})
 Path(sys.argv[2]).write_text(json.dumps(report,indent=1)+'\n')
 print('ESCAPE_TRACK_INVENTORY rows',len(report['rows']),'sufficient_counts',[r['capacity_count_sufficient'] for r in report['rows']],'unknown_via_spans',report['unknown_via_spans'])
