@@ -1,0 +1,2422 @@
+{
+  "schema": "opentallas.qwen.native_memory_entry_proposal.v1",
+  "status": "SOURCE_BOUND_GEOMETRY_PROPOSAL_NOT_CTS_OR_GATE",
+  "geometry_sha256": "54011073e300df05400ec452accee2e7e163376e3a9d357c55ea307ec880a161",
+  "parent_source_checkpoint": "f543b8717",
+  "storage_source_checkpoint": "b99c1cb10",
+  "source_sha256": {
+    "rtl/qwen_dv/qfd_dv_vm_safe.sv": "bd9edd6321af07eb11d994de13403ead3daef23b3012c21847b170b5f87e16a8",
+    "rtl/qwen_dv/qfd_dv_redstn2_rsafe.sv": "50dfa4f8bba4e23f552f6b4824e47dc93ec34779b6a6e62289a02e5448df45d0",
+    "rtl/qwen_dv/qfd_dv_slice2_regional_parts.sv": "d49de3010e1f542f4b3639be5c35fec2df839e833438d0ee6fe075f043bf5923",
+    "rtl/qwen_dv/lp/qfd_dv_slice2_w_regional_lp.sv": "83322308c0cc86899f2fd14fdd51bc5335753c5a49f8b0e3e3498da86a423afd"
+  },
+  "actual_native_memory_clock_sinks": 64,
+  "source_clock_roots": [
+    "ck_core"
+  ],
+  "entries": [
+    {
+      "instance": "u_c.u_vm.g_rep[0].g_bank[0].u_m",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_rep[0].g_bank[0].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        129.6,
+        475.2
+      ],
+      "pin_global_centre_um": [
+        129.612,
+        475.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "lef_sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9"
+      },
+      "distribution_anchor_group": "vm1024_pair0",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_rep[0].g_bank[1].u_m",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_rep[0].g_bank[1].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        345.6,
+        475.2
+      ],
+      "pin_global_centre_um": [
+        345.612,
+        475.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "lef_sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9"
+      },
+      "distribution_anchor_group": "vm1024_pair0",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_rep[1].g_bank[0].u_m",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_rep[1].g_bank[0].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        561.6,
+        475.2
+      ],
+      "pin_global_centre_um": [
+        561.612,
+        475.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "lef_sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9"
+      },
+      "distribution_anchor_group": "vm1024_pair1",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_rep[1].g_bank[1].u_m",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_rep[1].g_bank[1].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        777.6,
+        475.2
+      ],
+      "pin_global_centre_um": [
+        777.612,
+        475.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "lef_sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9"
+      },
+      "distribution_anchor_group": "vm1024_pair1",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_rep[2].g_bank[0].u_m",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_rep[2].g_bank[0].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        993.6,
+        475.2
+      ],
+      "pin_global_centre_um": [
+        993.612,
+        475.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "lef_sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9"
+      },
+      "distribution_anchor_group": "vm1024_pair2",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_rep[2].g_bank[1].u_m",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_rep[2].g_bank[1].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        1209.6,
+        475.2
+      ],
+      "pin_global_centre_um": [
+        1209.612,
+        475.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "lef_sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9"
+      },
+      "distribution_anchor_group": "vm1024_pair2",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_crom[0].u_lo",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_crom[0].u_lo.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        1425.6,
+        475.2
+      ],
+      "pin_global_centre_um": [
+        1425.612,
+        475.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "lef_sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9"
+      },
+      "distribution_anchor_group": "vm1024_pair3",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_crom[0].u_hi",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_crom[0].u_hi.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        1641.6,
+        475.2
+      ],
+      "pin_global_centre_um": [
+        1641.612,
+        475.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "lef_sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9"
+      },
+      "distribution_anchor_group": "vm1024_pair3",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_crom[1].u_lo",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_crom[1].u_lo.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        1857.6,
+        475.2
+      ],
+      "pin_global_centre_um": [
+        1857.612,
+        475.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "lef_sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9"
+      },
+      "distribution_anchor_group": "vm1024_pair4",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_crom[1].u_hi",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_crom[1].u_hi.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        2073.6,
+        475.2
+      ],
+      "pin_global_centre_um": [
+        2073.612,
+        475.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "lef_sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9"
+      },
+      "distribution_anchor_group": "vm1024_pair4",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[0].g_btb[0].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_btc[0].g_btb[0].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        129.6,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        129.612,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+        "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+      },
+      "distribution_anchor_group": "vm_small_triple0",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[0].g_btb[1].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_btc[0].g_btb[1].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        259.2,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        259.212,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+        "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+      },
+      "distribution_anchor_group": "vm_small_triple0",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[0].g_btb[2].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_btc[0].g_btb[2].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        388.8,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        388.812,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+        "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+      },
+      "distribution_anchor_group": "vm_small_triple0",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[0].g_btb[3].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_btc[0].g_btb[3].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        518.4,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        518.412,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+        "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+      },
+      "distribution_anchor_group": "vm_small_triple1",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[1].g_btb[0].u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[0].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        648,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        648.012,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
+        "lef_sha256": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131"
+      },
+      "distribution_anchor_group": "vm_small_triple1",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[1].g_btb[1].u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[1].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        864,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        864.012,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
+        "lef_sha256": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131"
+      },
+      "distribution_anchor_group": "vm_small_triple1",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[1].g_btb[2].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[2].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        1080,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        1080.012,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+        "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+      },
+      "distribution_anchor_group": "vm_small_triple2",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_btc[1].g_btb[3].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[3].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        1209.6,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        1209.612,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+        "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+      },
+      "distribution_anchor_group": "vm_small_triple2",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_prog[0].u_lo",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_prog[0].u_lo.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        1339.2,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        1339.212,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+        "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+      },
+      "distribution_anchor_group": "vm_small_triple2",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_prog[0].u_hi",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_prog[0].u_hi.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        1468.8,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        1468.812,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+        "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+      },
+      "distribution_anchor_group": "vm_small_triple3",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_prog[1].u_lo",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_prog[1].u_lo.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        1598.4,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        1598.412,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
+        "lef_sha256": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131"
+      },
+      "distribution_anchor_group": "vm_small_triple3",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_prog[1].u_hi",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_prog[1].u_hi.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        1814.4,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        1814.412,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
+        "lef_sha256": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131"
+      },
+      "distribution_anchor_group": "vm_small_triple3",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[0].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_sks.u_m.g_bank[0].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        86.4,
+        1123.2
+      ],
+      "pin_global_centre_um": [
+        86.412,
+        1123.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_sks",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[1].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_sks.u_m.g_bank[1].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        172.8,
+        1123.2
+      ],
+      "pin_global_centre_um": [
+        172.812,
+        1123.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_sks",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[2].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_sks.u_m.g_bank[2].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        259.20000000000005,
+        1123.2
+      ],
+      "pin_global_centre_um": [
+        259.212,
+        1123.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_sks",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[3].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_sks.u_m.g_bank[3].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        86.4,
+        1166.4
+      ],
+      "pin_global_centre_um": [
+        86.412,
+        1167.18
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_sks",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[4].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_sks.u_m.g_bank[4].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        172.8,
+        1166.4
+      ],
+      "pin_global_centre_um": [
+        172.812,
+        1167.18
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_sks",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[5].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_sks.u_m.g_bank[5].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        259.20000000000005,
+        1166.4
+      ],
+      "pin_global_centre_um": [
+        259.212,
+        1167.18
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_sks",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[6].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_sks.u_m.g_bank[6].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        86.4,
+        1209.6000000000001
+      ],
+      "pin_global_centre_um": [
+        86.412,
+        1210.38
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_sks",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[7].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_sks.u_m.g_bank[7].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        172.8,
+        1209.6000000000001
+      ],
+      "pin_global_centre_um": [
+        172.812,
+        1210.38
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_sks",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_sks.u_m.g_bank[8].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_sks.u_m.g_bank[8].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        259.20000000000005,
+        1209.6000000000001
+      ],
+      "pin_global_centre_um": [
+        259.212,
+        1210.38
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_sks",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[0].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_skn.u_m.g_bank[0].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        388.8,
+        1123.2
+      ],
+      "pin_global_centre_um": [
+        388.812,
+        1123.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_skn",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[1].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_skn.u_m.g_bank[1].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        475.20000000000005,
+        1123.2
+      ],
+      "pin_global_centre_um": [
+        475.212,
+        1123.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_skn",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[2].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_skn.u_m.g_bank[2].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        561.6,
+        1123.2
+      ],
+      "pin_global_centre_um": [
+        561.612,
+        1123.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_skn",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[3].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_skn.u_m.g_bank[3].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        388.8,
+        1166.4
+      ],
+      "pin_global_centre_um": [
+        388.812,
+        1167.18
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_skn",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[4].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_skn.u_m.g_bank[4].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        475.20000000000005,
+        1166.4
+      ],
+      "pin_global_centre_um": [
+        475.212,
+        1167.18
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_skn",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[5].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_skn.u_m.g_bank[5].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        561.6,
+        1166.4
+      ],
+      "pin_global_centre_um": [
+        561.612,
+        1167.18
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_skn",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[6].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_skn.u_m.g_bank[6].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        388.8,
+        1209.6000000000001
+      ],
+      "pin_global_centre_um": [
+        388.812,
+        1210.38
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_skn",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[7].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_skn.u_m.g_bank[7].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        475.20000000000005,
+        1209.6000000000001
+      ],
+      "pin_global_centre_um": [
+        475.212,
+        1210.38
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_skn",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_skn.u_m.g_bank[8].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_skn.u_m.g_bank[8].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        561.6,
+        1209.6000000000001
+      ],
+      "pin_global_centre_um": [
+        561.612,
+        1210.38
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_skn",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[0].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_hb.u_m.g_bank[0].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        86.4,
+        1296.0
+      ],
+      "pin_global_centre_um": [
+        86.412,
+        1296.78
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_hb",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[1].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_hb.u_m.g_bank[1].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        172.8,
+        1296.0
+      ],
+      "pin_global_centre_um": [
+        172.812,
+        1296.78
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_hb",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[2].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_hb.u_m.g_bank[2].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        259.20000000000005,
+        1296.0
+      ],
+      "pin_global_centre_um": [
+        259.212,
+        1296.78
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_hb",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[3].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_hb.u_m.g_bank[3].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        86.4,
+        1339.2
+      ],
+      "pin_global_centre_um": [
+        86.412,
+        1339.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_hb",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[4].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_hb.u_m.g_bank[4].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        172.8,
+        1339.2
+      ],
+      "pin_global_centre_um": [
+        172.812,
+        1339.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_hb",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[5].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_hb.u_m.g_bank[5].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        259.20000000000005,
+        1339.2
+      ],
+      "pin_global_centre_um": [
+        259.212,
+        1339.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_hb",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[6].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_hb.u_m.g_bank[6].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        86.4,
+        1382.4
+      ],
+      "pin_global_centre_um": [
+        86.412,
+        1383.18
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_hb",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_hb.u_m.g_bank[7].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_hb.u_m.g_bank[7].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        172.8,
+        1382.4
+      ],
+      "pin_global_centre_um": [
+        172.812,
+        1383.18
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_hb",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[0].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_h9.u_m.g_bank[0].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        388.8,
+        1296.0
+      ],
+      "pin_global_centre_um": [
+        388.812,
+        1296.78
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_h9",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[1].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_h9.u_m.g_bank[1].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        475.20000000000005,
+        1296.0
+      ],
+      "pin_global_centre_um": [
+        475.212,
+        1296.78
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_h9",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[2].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_h9.u_m.g_bank[2].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        561.6,
+        1296.0
+      ],
+      "pin_global_centre_um": [
+        561.612,
+        1296.78
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_h9",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[3].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_h9.u_m.g_bank[3].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        388.8,
+        1339.2
+      ],
+      "pin_global_centre_um": [
+        388.812,
+        1339.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_h9",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[4].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_h9.u_m.g_bank[4].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        475.20000000000005,
+        1339.2
+      ],
+      "pin_global_centre_um": [
+        475.212,
+        1339.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_h9",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[5].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_h9.u_m.g_bank[5].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        561.6,
+        1339.2
+      ],
+      "pin_global_centre_um": [
+        561.612,
+        1339.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_h9",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[6].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_h9.u_m.g_bank[6].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        388.8,
+        1382.4
+      ],
+      "pin_global_centre_um": [
+        388.812,
+        1383.18
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_h9",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_h9.u_m.g_bank[7].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_h9.u_m.g_bank[7].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        475.20000000000005,
+        1382.4
+      ],
+      "pin_global_centre_um": [
+        475.212,
+        1383.18
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_h9",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[0].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_scale_wait.u_m.g_bank[0].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        86.4,
+        1468.8
+      ],
+      "pin_global_centre_um": [
+        86.412,
+        1469.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_scale_wait",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[1].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_scale_wait.u_m.g_bank[1].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        172.8,
+        1468.8
+      ],
+      "pin_global_centre_um": [
+        172.812,
+        1469.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_scale_wait",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[2].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_scale_wait.u_m.g_bank[2].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        259.20000000000005,
+        1468.8
+      ],
+      "pin_global_centre_um": [
+        259.212,
+        1469.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_scale_wait",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[3].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_scale_wait.u_m.g_bank[3].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        86.4,
+        1512.0
+      ],
+      "pin_global_centre_um": [
+        86.412,
+        1512.78
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_scale_wait",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[4].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_scale_wait.u_m.g_bank[4].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        172.8,
+        1512.0
+      ],
+      "pin_global_centre_um": [
+        172.812,
+        1512.78
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_scale_wait",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[5].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_scale_wait.u_m.g_bank[5].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        259.20000000000005,
+        1512.0
+      ],
+      "pin_global_centre_um": [
+        259.212,
+        1512.78
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_scale_wait",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[6].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_scale_wait.u_m.g_bank[6].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        86.4,
+        1555.2
+      ],
+      "pin_global_centre_um": [
+        86.412,
+        1555.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_scale_wait",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_stn.u_scale_wait.u_m.g_bank[7].u_m",
+      "master": "ot_sram_1r1w_32x64_m1",
+      "clock_pin_path": "u_c.u_stn.u_scale_wait.u_m.g_bank[7].u_m.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        172.8,
+        1555.2
+      ],
+      "pin_global_centre_um": [
+        172.812,
+        1555.98
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+        "lef_sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02"
+      },
+      "distribution_anchor_group": "storage_u_scale_wait",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    }
+  ],
+  "distribution_anchor_groups": [
+    {
+      "name": "vm1024_pair0",
+      "sinks": 2,
+      "candidate_clock_distribution_anchor_um": [
+        237.612,
+        475.98
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 108.0,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "vm1024_pair1",
+      "sinks": 2,
+      "candidate_clock_distribution_anchor_um": [
+        669.612,
+        475.98
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 108.0,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "vm1024_pair2",
+      "sinks": 2,
+      "candidate_clock_distribution_anchor_um": [
+        1101.612,
+        475.98
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 108.0,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "vm1024_pair3",
+      "sinks": 2,
+      "candidate_clock_distribution_anchor_um": [
+        1533.612,
+        475.98
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 108.0,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "vm1024_pair4",
+      "sinks": 2,
+      "candidate_clock_distribution_anchor_um": [
+        1965.612,
+        475.98
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 108.0,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "vm_small_triple0",
+      "sinks": 3,
+      "candidate_clock_distribution_anchor_um": [
+        259.212,
+        605.58
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 129.6,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "vm_small_triple1",
+      "sinks": 3,
+      "candidate_clock_distribution_anchor_um": [
+        676.812,
+        605.58
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 187.2,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "vm_small_triple2",
+      "sinks": 3,
+      "candidate_clock_distribution_anchor_um": [
+        1209.612,
+        605.58
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 129.6,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "vm_small_triple3",
+      "sinks": 3,
+      "candidate_clock_distribution_anchor_um": [
+        1627.212,
+        605.58
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 187.2,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "storage_u_sks",
+      "sinks": 9,
+      "candidate_clock_distribution_anchor_um": [
+        172.812,
+        1167.18
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 129.6,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "storage_u_skn",
+      "sinks": 9,
+      "candidate_clock_distribution_anchor_um": [
+        475.212,
+        1167.18
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 129.6,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "storage_u_hb",
+      "sinks": 8,
+      "candidate_clock_distribution_anchor_um": [
+        162.012,
+        1334.58
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 135.0,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "storage_u_h9",
+      "sinks": 8,
+      "candidate_clock_distribution_anchor_um": [
+        464.412,
+        1334.58
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 135.0,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    },
+    {
+      "name": "storage_u_scale_wait",
+      "sinks": 8,
+      "candidate_clock_distribution_anchor_um": [
+        162.012,
+        1507.38
+      ],
+      "max_unrouted_manhattan_sink_distance_um": 135.0,
+      "under405_geometric_lower_bound": true,
+      "interpretation": "Same ck_core family; anchor is not an extra root, CTS buffer, closure proof, or routed path."
+    }
+  ],
+  "obligations": [
+    "Match every exact instance/master/pin against elaborated current-final RTL and actual post-synth clock-object ownership.",
+    "Prove actual CTS arrival/skew/hold/setup at all64 entries, including root-to-anchor routes and real PG/via pin access.",
+    "Anchor-to-pin Manhattan geometry is a route lower bound, not a routed <=405um guarantee.",
+    "All soft clocks, forwarded halfcycle transports, regional roots, reset forests and hard head/SFU/xs native entries require their own complete audits.",
+    "Legacy128x256/256x256 raw face density still fails; allocated channels do not supply the missing PG/GRT/DRC escape proof."
+  ]
+}
