@@ -11,7 +11,7 @@ json.dump(dict(straps=sorted({(s['master'], s['port']) for s in c['straps']})), 
 EXTRA=$(python3 -c "
 import json,gzip; p='$C'; c=json.load(gzip.open(p,'rt') if p.endswith('.gz') else open(p))
 print(' '.join(sorted({'--rtl-file '+f for i in c['instances'].values() for f in [i['source']]+(i.get('rtl_deps') or [])
-      if not (f.startswith('rtl/') or '/rtl/' in f)})))")
+      if f.startswith('rtl/hbm_accel/die_glue/scoped_d4g/') or not (f.startswith('rtl/') or '/rtl/' in f)})))")
 python3 tools/die_port_bind.py $O/die.v --top hbm_v16_die $EXTRA --allow-model ot_hbm3e_phy_rc_e8p5 --allow-model ot_hbm_pll_bb \
   --rtl-root rtl --rtl-root physical/hbm_mtp/rtl --rtl-root physical/hbm_accel_die_views/common --rtl-root physical/hbm_accel_die_views/quant/rtl \
   --rtl-root physical/hbm_generic/argmax18/rtl --rtl-root physical/hbm_xp_aq_tree13_1014 --lib-root physical/asap7_memory_macros --lib-root physical/asap7_memory_macros_v2 \

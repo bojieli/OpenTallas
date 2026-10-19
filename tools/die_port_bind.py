@@ -13,17 +13,19 @@ macro behavioural models etc.).  For every instance of the die top:
              (--allow-model MODULE: e.g. an analog PHY or a ROM bit array) -- the die master itself must be real;
   * PORTS    every port the die connects exists in the RTL (DIE_PORT_NOT_IN_RTL), every RTL input is connected
              (INPUT_UNCONNECTED), no input bit is tied to a constant / 'z by the die (INPUT_TIED), outputs left open are
-             listed (OUTPUT_OPEN, informational);
+             listed and fail (OUTPUT_OPEN);
   * WIDTHS   die connection width == RTL port width evaluated with the INSTANCE's parameter overrides (#(...)) over the
              module's defaults (WIDTH_MISMATCH);
   * PADS     DEDUPE (owner rule 19:50 10-15, fewer distinct tiles): a standard master used below its width may tie its
              DECLARED spare input bits low (--pad-file / DIE_V.pads.json, per master with a reason and per-port bit ranges
-             or a logical width); undeclared ties, ties high and 'z stay INPUT_TIED; spare outputs are OUTPUT_OPEN
-             (informational) as before;
+             or a logical width); undeclared ties, ties high and 'z stay INPUT_TIED.  A declaration on an OUTPUT port
+             (TOK-S81-GAPS/SVCP 10-19) names spare output bits by the same rule: those bits may stay open / unread
+             (a role-unused face of a hardened-once master, lane padding), counted as spare_out_bits; an undeclared
+             open output port is OUTPUT_OPEN and an undeclared driven bit nothing reads is unread_net_bits (fail);
   * NETS     bit-level: every die-net bit read by an input has exactly one driver (an output port of a bound instance or a
              top input) -- UNDRIVEN / MULTI_DRIVEN.
 
-Exit 0 only when every count is zero (OUTPUT_OPEN excepted).  JSON record with --out.
+Exit 0 only when every error count is zero. Outputs must reach a die input or a top output.  JSON record with --out.
 
     python3 tools/die_port_bind.py DIE_V [--top dsfd_die] [--rtl-root rtl ...] [--rtl-file F ...] [-f FILELIST ...]
                                    [--define NAME ...] [--allow-model MODULE ...] [--prefer FILE ...] --out JSON
@@ -254,7 +256,9 @@ class Module:
 
     def children(self, idx):
         out = set()
-        for m in re.finditer(r'(?:^|;|\bbegin\b|\bend\b|\)|:)\s*(\w+)', self.body, re.M):
+        # `begin : g_x  child ...` (S81-LBGAP G6 10-18): the generate label is skipped, else its name was taken and the
+        # child after it lost (ot_v41_segtree6 / ot_s81sl_xr3 / ot_s81sl_aq12x missing from the elab closure)
+        for m in re.finditer(r'(?:^|;|\bbegin\b|\bend\b|\)|:)\s*(\w+)', _unlabel(self.body), re.M):
             if m.group(1) in idx and m.group(1) != self.name:
                 out.add(m.group(1))
         return out
@@ -361,7 +365,7 @@ def parse_modules(text: str, path: str):
         # Declaration keywords inside strings must not resolve non-ANSI ports.
         body_masked = _lexical_mask(body, strings=True)
         # localparams / body parameters (non-ANSI parameter declarations)
-        for pm in re.finditer(r'\b(?:parameter|localparam)\s+(?:integer\s+|int\s+|\[[^\]]*\]\s*)?([^;]+);', body_masked):
+        for pm in re.finditer(r'\b(?:parameter|localparam)\s+(?:(?:integer|int|string|logic|bit|real|signed|unsigned)\s+|\[[^\]]*\]\s*)*([^;]+);', body_masked):
             for item in _split_commas(body[pm.start(1):pm.end(1)]):          # a declaration list: localparam A = .., B = .., C = ..;
                 im = re.match(r'\s*(\w+)\s*=\s*(.+)$', item, re.S)
                 if im:
@@ -395,7 +399,7 @@ def _split_commas(s):
     return out
 
 
-def rtl_index(roots, files, defines, prefer):
+def rtl_index(roots, files, defines, prefer, variants=None):
     idx = defaultdict(list)
     paths = []
     for r in roots:
@@ -417,17 +421,64 @@ def rtl_index(roots, files, defines, prefer):
         t = preprocess(strip_comments(t), dict(defines))
         for mod in parse_modules(t, str(p)):
             idx[mod.name].append(mod)
-    pref = {str(Path(f).resolve()) for f in prefer}
+    pref = {}                          # path -> rank: a LATER prefer entry wins (as before: pd[-1])
+    for i, f in enumerate(prefer):
+        pref[str(Path(f).resolve())] = i
     out, amb = {}, {}
     for name, defs in idx.items():
         pd = [d for d in defs if str(Path(d.path).resolve()) in pref]
         if pd:
-            out[name] = pd[-1]; continue
+            out[name] = max(pd, key=lambda d: pref[str(Path(d.path).resolve())])
+            _record_variants(variants, name, out[name], defs, 'prefer')
+            continue
+        # S81-LBGAP G6 (10-18): a hard-macro behavioural model resolves to the macro library (MACRO_DIRS order, the r2c2
+        # _v2 generation first), never to a pinned / simulation copy under rtl/ or physical/**/rtl that happened to sort
+        # first
+        mm = sorted((d for d in defs if _macro_rank(d.path) is not None), key=lambda d: _macro_rank(d.path))
+        if mm:
+            out[name] = mm[0]
+            _record_variants(variants, name, out[name], defs, 'macro_dir')
+            continue
         sigs = {tuple(sorted((k, v[0]) for k, v in d.ports.items())) for d in defs}
         out[name] = defs[0]
         if len(sigs) > 1:
             amb[name] = sorted({d.path for d in defs})
+        _record_variants(variants, name, out[name], defs, 'first')
     return out, amb
+
+
+MACRO_DIRS = ('physical/asap7_memory_macros_v2', 'physical/asap7_memory_macros')
+
+
+def _macro_rank(path):
+    s = str(path)
+    for i, d in enumerate(MACRO_DIRS):
+        if f'/{d}/' in s or s.startswith(d + '/'):
+            return i
+    return None
+
+
+def _body_key(mod):
+    return re.sub(r'\s+', ' ', mod.body).strip()
+
+
+def _record_variants(variants, name, chosen, defs, by):
+    """variants[name] = the choice + every OTHER definition whose text differs from the chosen one (S81-LBGAP G6/G7:
+    a duplicated module name used to resolve silently to the first file -- base ot_v41_rom_elem_w10.sv instead of the
+    _rne_wake_prepare variant the frames are built from)"""
+    if variants is None or len(defs) < 2:
+        return
+    ck = _body_key(chosen)
+    others = [d for d in defs if d is not chosen and _body_key(d) != ck]
+    if others:
+        variants[name] = dict(chosen=chosen.path, by=by, differ=sorted({d.path for d in others}),
+                              iface_differ=sorted({d.path for d in others if _iface(d) != _iface(chosen)}))
+
+
+def _iface(mod):
+    """the elaboration interface: port names + directions and parameter names (a parameter override naming a parameter
+    only one variant has = Verilator PINNOTFOUND, e.g. GRADUAL_RNE on ot_v41_rom_elem_w10)"""
+    return (tuple(sorted((k, v[0]) for k, v in mod.ports.items())), tuple(sorted(mod.params)))
 
 
 # ------------------------------------------------------------------------------------------------ die netlist
@@ -613,6 +664,17 @@ def load_pads(obj):
     return pads
 
 
+def _spare_port(pads, mst, pn, inst, width, spare_out):
+    """an open output port is spare when a pad declaration (instance entry first, then master) covers ALL its bits"""
+    key = (mst, pn, inst) if (mst, pn, inst) in pads else (mst, pn)
+    if key not in pads or width is None:
+        return False
+    if pad_bits(pads[key], width) >= set(range(width)):
+        spare_out[mst] += width
+        return True
+    return False
+
+
 def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=frozenset(), pads=None):
     """straps: {(master, port)} declared STRAP inputs (die constants by contract: tile ids, station indexes, group
     numbers); a constant on one of them is recorded as a strap, not as INPUT_TIED.  pads: {(master, port[, instance]): bit spec}
@@ -620,6 +682,8 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
     on any undeclared bit, still fails.  Every other tied input fails."""
     pads = pads or {}
     nets, tin, tout, insts = parse_die(die_v, top)
+    spare_drv = set()            # (net, bit) driven by a DECLARED spare output bit (pad declaration on an output port)
+    spare_out = defaultdict(int)  # (master) -> declared spare output bits seen
     mparams = mparams or {}
     drv = defaultdict(int)       # (net) -> bitmask of driven bits (by count via lists below)
     drv_cnt = defaultdict(lambda: defaultdict(int))
@@ -650,9 +714,13 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
         rec['kind'] = 'model' if mst in allow_model else mod.kind(idx)
         if not params and mst in mparams:     # sidecar: the master's hardened elaboration parameters
             params = {k: v for k, v in mparams[mst].items() if not k.startswith('_')}
-            unk = sorted(k for k in params if k not in mod.params)
-            if unk:
-                findings['PARAM_NOT_IN_RTL'].append(f'{mst}: {unk}')
+        # inline #(...) overrides AND sidecar parameters must name a parameter of the RTL module (S81-LBGAP/G5 10-18:
+        # only the sidecar was checked, so die.v's #(.HB(0)) on parameter-free masters reported params_not_in_rtl 0)
+        unk = sorted(k for k in params if k not in mod.params)
+        if unk:
+            f_ = f'{mst}: {unk}'
+            if f_ not in findings['PARAM_NOT_IN_RTL']:
+                findings['PARAM_NOT_IN_RTL'].append(f_)
         pkey = json.dumps(params, sort_keys=True)
         if pkey not in rec['param_sets']:
             rec['param_sets'][pkey] = 0
@@ -671,7 +739,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             if not bits:
                 if d == 'input':
                     rec['input_unconnected'].add(pn)
-                elif d == 'output':
+                elif d == 'output' and not _spare_port(pads, mst, pn, inst, mod.width(pn, env), spare_out):
                     rec['output_open'].add(pn)
                 continue
             w = mod.width(pn, env)
@@ -692,6 +760,9 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                     rec['unparsed_conn'].add(pn)
                 elif d == 'output':
                     drv_cnt[b[0]][b[1]] += 1
+                    if (len(bits) - 1 - k_msb) in pset:
+                        spare_drv.add((b[0], b[1]))
+                        spare_out[mst] += 1
                 elif d == 'input':
                     rd[b[0]].add(b[1])
                 else:                                   # inout (a bundled pass-through face, e.g. a PHY DFI bundle):
@@ -701,7 +772,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             if pn not in cm:
                 if d == 'input':
                     rec['input_unconnected'].add(pn)
-                elif d == 'output':
+                elif d == 'output' and not _spare_port(pads, mst, pn, inst, mod.width(pn, env), spare_out):
                     rec['output_open'].add(pn)
     for n in tout:
         w, lo = nets[n]
@@ -710,7 +781,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
         for i, c in dc.items():
             if drv_cnt[n].get(i, 0) == 0:
                 drv_cnt[n][i] += c
-    undriven, multi = defaultdict(int), defaultdict(int)
+    undriven, multi, unread = defaultdict(int), defaultdict(int), defaultdict(int)
     for n, bs in rd.items():
         dc = drv_cnt.get(n, {})
         for i in bs:
@@ -721,16 +792,19 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                 multi[n] += 1
     for n, dc in drv_cnt.items():
         for i, c in dc.items():
+            if i not in rd.get(n, ()) and n not in tin and (n, i) not in spare_drv:
+                unread[n] += 1
             if c > 1 and i not in rd.get(n, ()):
                 multi[n] += 1
     # ---------------- summary
     S = dict(masters=len(masters), instances=sum(r['instances'] for r in masters.values()),
              unbound_masters=0, stub_masters=0, ambiguous_masters=0, port_not_in_rtl=0, width_mismatch=0,
              input_unconnected=0, input_tied=0, unparsed_connections=0, duplicate_port_connections=0, undriven_net_bits=sum(undriven.values()),
-             multi_driven_net_bits=sum(multi.values()), top_assigns=len(findings['TOP_ASSIGN']),
+             multi_driven_net_bits=sum(multi.values()), unread_net_bits=sum(unread.values()), output_open_ports=0, top_assigns=len(findings['TOP_ASSIGN']),
              params_not_in_rtl=len(findings['PARAM_NOT_IN_RTL']),
              strap_ports=sum(len(r['straps']) for r in masters.values()),
-             pad_bits=sum(sum(r['pad_bits'].values()) for r in masters.values()))
+             pad_bits=sum(sum(r['pad_bits'].values()) for r in masters.values()),
+             spare_out_bits=sum(spare_out.values()))
     out_m = {}
     for mst, r in sorted(masters.items()):
         bad = []
@@ -742,12 +816,12 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             if mst in amb:
                 S['ambiguous_masters'] += 1; bad.append('AMBIGUOUS')
         for key, tag in (('die_port_not_in_rtl', 'PORT_NOT_IN_RTL'), ('width_mismatch', 'WIDTH_MISMATCH'),
-                         ('input_unconnected', 'INPUT_UNCONNECTED'), ('input_tied', 'INPUT_TIED'),
+                         ('input_unconnected', 'INPUT_UNCONNECTED'), ('output_open', 'OUTPUT_OPEN'), ('input_tied', 'INPUT_TIED'),
                          ('unparsed_conn', 'UNPARSED'), ('duplicate_port', 'DUPLICATE_PORT')):
             if r[key]:
                 bad.append(tag)
                 S[{'die_port_not_in_rtl': 'port_not_in_rtl', 'unparsed_conn': 'unparsed_connections',
-                   'duplicate_port': 'duplicate_port_connections'}.get(key, key)] += len(r[key])
+                   'duplicate_port': 'duplicate_port_connections', 'output_open': 'output_open_ports'}.get(key, key)] += len(r[key])
         out_m[mst] = dict(verdict='PASS' if not bad else 'FAIL', fails=bad, instances=r['instances'], rtl=r['rtl'],
                           kind=r['kind'], ambiguous_defs=amb.get(mst), examples=r['examples'],
                           param_sets=dict(list(r['param_sets'].items())[:8]),
@@ -760,11 +834,12 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                           width_mismatch={p: sorted(v) for p, v in sorted(r['width_mismatch'].items())[:max_list]},
                           unparsed_conn=sorted(r['unparsed_conn'])[:max_list],
                           duplicate_port=sorted(r['duplicate_port'])[:max_list])
-    fail_keys = [k for k in S if k not in ('masters', 'instances', 'strap_ports', 'pad_bits') and S[k]]
+    fail_keys = [k for k in S if k not in ('masters', 'instances', 'strap_ports', 'pad_bits', 'spare_out_bits') and S[k]]
     return dict(schema=SCHEMA, die_v=str(die_v), top=top, verdict='PASS' if not fail_keys else 'FAIL',
                 failing=fail_keys, summary=S, masters=out_m,
                 undriven_nets=dict(sorted(undriven.items(), key=lambda kv: -kv[1])[:200]),
-                undriven_classes=_classes(undriven), multi_driven_classes=_classes(multi),
+                unread_nets=dict(sorted(unread.items(), key=lambda kv: -kv[1])[:200]),
+                unread_classes=_classes(unread), undriven_classes=_classes(undriven), multi_driven_classes=_classes(multi),
                 multi_driven_nets=dict(sorted(multi.items(), key=lambda kv: -kv[1])[:200]),
                 top_assigns=findings['TOP_ASSIGN'][:20], params_not_in_rtl=findings['PARAM_NOT_IN_RTL'][:40])
 
@@ -777,12 +852,20 @@ wire wor xnor xor priority final import export bind class virtual static const s
 """.split())
 
 
+def _unlabel(body: str) -> str:
+    """block labels removed: `begin : g_x` -> `begin ;`, `end : g_x` -> `end ;` (a statement boundary, so the instance
+    after a generate label is seen at a boundary instead of being consumed with the label)"""
+    return re.sub(r'\b(begin|end)\s*:\s*[A-Za-z_]\w*', r'\1 ;', body)
+
+
 def instantiated(body: str):
     """module names instantiated in a (comment-stripped, preprocessed) module body: 'NAME [#(...)] INST [range] ('
     at a statement boundary; keywords are not module names.  Used to resolve the FULL child closure (Q-STUB 10-17:
     die_port_bind checked only the die-top masters, so 768 ROM-leaf children with no RTL in the run's source tree
     passed)."""
-    masked = _lexical_mask(body, strings=True)
+    # a generate-block label (`begin : g_x  child #(...) u (...)`) is dropped first (S81-LBGAP G6 10-18: the label was
+    # read as the module name and the child after it was never seen -> missing from the child closure)
+    masked = _unlabel(_lexical_mask(body, strings=True))
     out = set()
     for m in re.finditer(r'(?:^|;|\bbegin\b|\bend\b|\bendgenerate\b|\belse\b|\)|:)\s*([A-Za-z_]\w*)\s*', masked, re.M):
         name = m.group(1)
@@ -804,9 +887,21 @@ def instantiated(body: str):
     return out
 
 
-def child_closure(idx, tops, allow_model):
-    """walk every die master's RTL hierarchy: (unresolved {child: [parents]}, models {child: [parents]}, modules seen)"""
+def _is_trap(body, name):
+    """`NAME u_trap ();` -- an elaboration trap: an undefined, port-less module instantiated inside a generate-if that
+    only elaborates on an illegal parameter combination (ot_hdc_fp32_add_lat_CUTS_must_match_LAT); every instance of
+    NAME in the body must have an empty port list"""
+    insts = re.findall(r'\b' + re.escape(name) + r'\s+(?:#\s*\([^;]*?\)\s*)?[A-Za-z_]\w*\s*\(([^;]*?)\)\s*;', body)
+    return bool(insts) and all(not x.strip() for x in insts)
+
+
+def child_closure(idx, tops, allow_model, seen_out=None, traps_out=None):
+    """walk every die master's RTL hierarchy: (unresolved {child: [parents]}, models {child: [parents]}, modules seen);
+    seen_out (a set) receives the module names of the closure, traps_out (a dict) the elaboration traps {name: [parents]}
+    (port-less undefined instances, _is_trap), which are not unresolved children"""
     unres, models, seen, todo = defaultdict(set), defaultdict(set), set(), sorted(t for t in tops if t in idx)
+    if seen_out is not None:
+        seen = seen_out
     while todo:
         n = todo.pop()
         if n in seen:
@@ -815,6 +910,10 @@ def child_closure(idx, tops, allow_model):
         mod = idx[n]
         for c in sorted(instantiated(mod.body) - {n}):
             if c not in idx:
+                if _is_trap(mod.body, c):
+                    if traps_out is not None:
+                        traps_out.setdefault(c, set()).add(n)
+                    continue
                 unres[c].add(n)
                 continue
             if c in allow_model or Path(idx[c].path).name.endswith('_bb.v'):
@@ -872,6 +971,51 @@ def elab_kit(die_v, top, idx, mparams, out_dir, defines):
                 file_list=str(out_dir / 'die_top.f'))
 
 
+def list_rtl_files(fl):
+    """RTL files named by a file list or bench script: every token that is an existing *.sv / *.v path (relative to the
+    repo root or to the list's directory); +define+ / +incdir+ / shell syntax ignored"""
+    base, out = Path(fl).parent, []
+    for tok in re.findall(r'[\w./+-]+\.s?v\b', strip_comments(Path(fl).read_text(errors='replace'))):
+        if tok.startswith('+'):
+            continue
+        if tok.endswith('_bb.v'):
+            continue
+        for c in ((Path(tok),) if Path(tok).is_absolute() else (ROOT / tok, base / tok)):
+            if c.is_file():
+                s = str(c.resolve())
+                if s not in out:
+                    out.append(s)
+                break
+    return out
+
+
+def ref_tile_sources(modules):
+    """(source files, [spec paths]) of every hardened tile spec (physical/ref_tile/*/spec.json) whose top is in
+    `modules` (sorted by spec path; a later spec wins a name conflict, recorded by rtl_index variants)"""
+    out, used = [], []
+    for sp in sorted((ROOT / 'physical/ref_tile').glob('*/spec.json')):
+        try:
+            sj = json.loads(sp.read_text())
+        except Exception:
+            continue
+        if sj.get('top') not in modules:
+            continue
+        srcs = [str((ROOT / x).resolve()) for x in sj.get('sources', [])
+                if isinstance(x, str) and (ROOT / x).is_file() and not x.endswith('_bb.v')]   # never a black box
+        if srcs:
+            used.append(str(sp.relative_to(ROOT)))
+            out += [s for s in srcs if s not in out]
+    return out, used
+
+
+def _die_masters(die_v, top):
+    try:
+        _n, _ti, _to, insts = parse_die(die_v, top)
+    except Exception:
+        return set()
+    return {i[0] for i in insts} - {'__assign__'}
+
+
 def load_manifest(fl):
     """a file list / die RTL manifest -> (files, defines, libdirs): '+define+A+B' build defines, '+libdir+DIR' hard-macro
     model libraries (indexed, not preferred), other non-comment lines = RTL files (preferred over other definitions)"""
@@ -915,6 +1059,13 @@ def main(argv=None):
     ap.add_argument('--lib-root', action='append', default=[], help='hard-macro behavioural model tree indexed for the '
                     'child closure (e.g. physical/asap7_memory_macros)')
     ap.add_argument('--no-child-closure', action='store_true', help='check the die-top masters only (pre-Q-STUB behaviour)')
+    ap.add_argument('--prefer-list', action='append', default=[], help='file list (or bench script) whose RTL files win '
+                    'over other definitions of the same module (e.g. tools/s81_dv/frame_bench.f: the frames are built '
+                    'from the _rne_* variants); its defines are NOT applied.  An earlier list wins; all below --prefer / -f / --rtl-file')
+    ap.add_argument('--ref-tile-prefer', action='store_true', help='a hardened tile whose top is in the child closure '
+                    'resolves its modules from its spec sources (physical/ref_tile/*/spec.json: the RTL of record of the '
+                    'closed view); conflicting tiles are recorded (prefer_conflicts).  Below --prefer-list')
+    ap.add_argument('--no-macro-dirs', action='store_true', help=f'do not index the memory macro libraries {MACRO_DIRS}')
     ap.add_argument('--out')
     a = ap.parse_args(argv)
     a.pad_file = a.pad_file or (a.die_v + '.pads.json' if Path(a.die_v + '.pads.json').exists() else None)
@@ -934,8 +1085,24 @@ def main(argv=None):
         defines[k] = v
     roots = a.rtl_root if a.rtl_root is not None else (['rtl'] + sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'physical').glob('**/rtl')
                                                                   if p.is_dir()))
-    roots = roots + libdirs + a.lib_root
-    idx, amb = rtl_index(roots, files, defines, a.prefer + files)
+    # S81-LBGAP G6 (10-18): memory macro models outside rtl/ (ot_sram_1r1w_256x256_m2_r2c2 ...) were not indexed unless
+    # a caller listed each file; the macro libraries are indexed by default (macro-dir order wins for a macro name)
+    roots = roots + libdirs + a.lib_root + ([d for d in MACRO_DIRS if (ROOT / d).is_dir()] if not a.no_macro_dirs else [])
+    plist = []
+    for L in reversed(a.prefer_list):           # rank: a later entry wins, so the FIRST --prefer-list is highest
+        plist += [f for f in list_rtl_files(L) if f not in plist]
+    files += [f for f in plist if f not in files]
+    variants = {}
+    idx, amb = rtl_index(roots, files, defines, plist + a.prefer + files, variants)
+    spec_used, prefer_conflicts = [], []
+    if a.ref_tile_prefer and not a.closure:
+        tops = _die_masters(a.die_v, a.top)
+        seen0 = set()
+        child_closure(idx, tops, set(a.allow_model), seen0)
+        ssrc, spec_used = ref_tile_sources(seen0 | tops)
+        files += [f for f in ssrc if f not in files]
+        variants = {}
+        idx, amb = rtl_index(roots, files, defines, ssrc + plist + a.prefer + files, variants)
     if a.closure:
         seen, todo, files_ = set(), list(a.closure), []
         while todo:
@@ -953,9 +1120,26 @@ def main(argv=None):
     rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams, straps=frozenset(straps), pads=pads)
     if not a.no_child_closure:
         # full RTL child closure (Q-STUB 10-17): every module instantiated anywhere under a die master must resolve
-        unres, models, nmods = child_closure(idx, set(rec['masters']), set(a.allow_model))
-        rec['child_closure'] = dict(modules=nmods, unresolved_children=unres, model_children=models)
+        cseen, traps = set(), {}
+        unres, models, nmods = child_closure(idx, set(rec['masters']), set(a.allow_model), cseen, traps)
+        # S81-LBGAP G6/G7 (10-18): a module of the closure defined more than once resolves by rule (--prefer / -f /
+        # --rtl-file > --prefer-list > --ref-tile-prefer specs > macro dir > first); differing definitions are recorded,
+        # and a FIRST pick among definitions with different PORTS or PARAMETERS (no rule names one) fails: it binds
+        # whichever file sorted first (the 10-18 whole-die probe took base ot_v41_rom_elem_w10 -> PINNOTFOUND)
+        var = {n: v for n, v in sorted(variants.items()) if n in cseen}
+        amb_c = {n: v for n, v in var.items() if v['by'] == 'first' and v['iface_differ']}
+        rec['child_closure'] = dict(modules=nmods, unresolved_children=unres, model_children=models,
+                                    variant_children=var, ambiguous_children=amb_c,
+                                    elab_traps={k: sorted(v) for k, v in sorted(traps.items())},
+                                    prefer_lists=a.prefer_list, ref_tile_specs_used=spec_used)
         rec['summary']['unresolved_children'] = len(unres)
+        rec['summary']['ambiguous_children'] = len(amb_c)
+        rec['summary']['variant_children'] = len(var)
+        if amb_c:
+            rec['verdict'] = 'FAIL'
+            rec['failing'].append('ambiguous_children')
+            for c, v in amb_c.items():
+                print(f"FAIL child {c} AMBIGUOUS: took {v['chosen']}, ports/parameters differ in {','.join(v['iface_differ'][:4])}")
         if unres:
             rec['verdict'] = 'FAIL'
             rec['failing'].append('unresolved_children')

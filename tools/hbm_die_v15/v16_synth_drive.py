@@ -49,6 +49,13 @@ def run(cell, row, a, idx, lock, summary):
     drive = Path(a.views) / 'drive'
     rec = dict(cell=cell, rounds=[])
     prefs = list(PREFER.get(m, []))
+    view = json.loads((Path(a.views) / 'views.json').read_text())[cell]
+    scoped = view.get('source', '')
+    if scoped.startswith('rtl/hbm_accel/die_glue/scoped_d4g/'):
+        # This contract names a private, alpha-renamed child closure; never resolve its top through the global
+        # canonical-path heuristic, which would silently synthesize the unscoped implementation instead.
+        prefs.insert(0, scoped)
+        extra.append(scoped)
 
     def push_prefer():
         if not prefs:
