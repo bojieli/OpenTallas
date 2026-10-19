@@ -11,7 +11,7 @@
 //   "c ISSUE pc unit" (head fixed issue / END), "c ROM go" (ib go), "c NAT go" (native_cmd go), "c XPF hex" (arm word),
 //   "c CSR" (control stores ready), "c CF bits" on a fault rise, "c STAGE s" (command_stage change).
 module tb_qfd_tt_ctlm_prog (input wire ck);
-    // HARD_HR 0 (S-QWCOL 10-18): STAGE_ME (b) needs the running-stage latch, which the hard h16c leaf does not have yet
+    // HARD_HR 0 = inline head; 1 = the h16c h17 hard leaf with the running-stage port (Q-H16C 10-18; bench --hard 1)
     parameter integer MUT = 0, XPF_EDGES = 26, STAGE_ME = 1, HARD_HR = 0;
     reg rst_n = 1'b0;
     reg [74:0] pw = 0; reg [186:0] dh = 0; reg [106:0] ss5 = 0; reg [9:0] ag5 = 0; reg [94:0] nret = 95'd1;

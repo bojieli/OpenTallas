@@ -45,7 +45,7 @@
 //   0 extra edges on the issue path (the stage latch loads on the same edge as tok_r / pos_r).
 // MUT (bench only): 1..3 -> qfd_dv_cmd_cal MUT; 4 = x_oprog / x_orows swapped; 5 = dc rom_fault from ag any (not vm);
 //   6 = nval from the old (pre-widening) ss bits [73:42] instead of tok_val; 7 = ME idle ignores ag stn_busy;
-//   8 = coll_busy clears on the ar_last rise only (the pre-widening rule).
+//   8 = coll_busy clears on the ar_last rise only (the pre-widening rule); 9 = HARD_HR leaf stage from the CALS word.
 // HARD_HR (S-QWCOL 10-18, default 1): the head side is the hardened TT head leaf ot_qfd_tt_ctlm_static_hr (kit
 //   qfd_tt_head_static_h16c, claude/q-tth16: head_static_rk H15 + native route + resident relocation + loaded stage +
 //   the registered relocated ROM command, CMDREG 1) instead of the same three blocks inline.  Edges unchanged: the
@@ -171,11 +171,11 @@ module qfd_tt_ctlm_dv #(
     assign rom_ret = {ag_stn, 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, !ag_stn_busy, 1'b1};
     wire unused_me = &{1'b0, actual_me_observe[14:0]};
     generate if (HARD_HR != 0) begin : g_hard_hr
-        // STAGE_ME (b) lives INSIDE the hard head leaf (ot_qfd_tt_ctlm_static_hr latches loaded_stage from the image CALS
-        // word and relocates rom_cmd with it): the running-stage latch needs a stage/start port on that leaf, i.e. new
-        // h16c RTL + a re-route (S-QWCOL 10-18).  Part (a) (ME start only in decode stages) is here in the parent.
-        if (STAGE_ME != 0) initial $error("qfd_tt_ctlm_dv: STAGE_ME=1 with HARD_HR=1 needs the h16c leaf with a running-stage port");
-        ot_qfd_tt_ctlm_static_hr u_hr (
+        // STAGE_ME (b) lives INSIDE the hard head leaf: the h17 leaf (Q-H16C 10-18) latches loaded_stage from its
+        // stage_start / stage ports when STAGE_ME = 1, else from the image CALS word.  Part (a) is here in the parent.
+        // MUT 9 (bench only) = the as-built leaf (stage from the CALS word) under STAGE_ME = 1.
+        ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0 && MUT != 9) ? 1 : 0)) u_hr (
+            .stage_start(s_start), .stage(s_stage),
             .rom_ret_i(rom_ret), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs),
             .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos), .rom_cmd(ib_q),
             .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(actual_me_observe),

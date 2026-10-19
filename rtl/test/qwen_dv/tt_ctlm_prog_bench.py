@@ -126,14 +126,14 @@ def run(a):
     with open(evf, 'w') as f:
         for cy, k, v in sorted(ev, key=lambda e: (e[0], e[1])):
             f.write(f'{cy} {k} {v:x}\n')
-    obj = work / f'obj_m{a.mut}'
+    obj = work / f'obj_m{a.mut}_h{a.hard}'
     srcs = [str(ROOT / l.strip()) for l in open(HERE / 'tt_ctlm_dv_sources.f') if l.strip()]
     srcs.append(str(HERE / 'tb_qfd_tt_ctlm_prog.sv'))
     if not (obj / 'Vtb').exists():
         cmd = ['verilator', '--cc', '--exe', '--build', '-O2', '-j', '8', '-Wno-fatal', '-Wno-lint', '-Wno-style',
                '-Wno-TIMESCALEMOD', '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0',
                '--top-module', 'tb_qfd_tt_ctlm_prog', '--prefix', 'Vtb', f'-GMUT={a.mut}',
-               f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
+               f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', f'-GHARD_HR={a.hard}', '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
         p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
         (work / f'build_m{a.mut}.log').write_text(p.stdout + p.stderr)
         if p.returncode:
@@ -203,11 +203,13 @@ def main():
     ap.add_argument('--mut', type=int, default=0)
     ap.add_argument('--bmut', type=int, default=0)
     ap.add_argument('--decode', type=int, default=2)
+    # Q-H16C 10-18: 1 = the hard head leaf ot_qfd_tt_ctlm_static_hr (h16c h17, running-stage port), 0 = inline head
+    ap.add_argument('--hard', type=int, default=0)
     ap.add_argument('--work', default='/tmp/qlbprog_bench')
     a = ap.parse_args()
     ok, n, errs, info = run(a)
     v = 'PASS' if ok == n and not errs else 'FAIL'
-    print(f'CTLM_PROG MUT={a.mut} BMUT={a.bmut} DECODE={a.decode}: {v} {ok}/{n}  rom_go-issue {info.get("rom_go_minus_issue")} '
+    print(f'CTLM_PROG MUT={a.mut} BMUT={a.bmut} HARD_HR={a.hard} DECODE={a.decode}: {v} {ok}/{n}  rom_go-issue {info.get("rom_go_minus_issue")} '
           f'nat_go-issue {info.get("nat_go_minus_issue")} csr@{info.get("csr")}')
     for e in errs[:12]:
         print('   ', e)
