@@ -1,5 +1,5 @@
 // Opt-in four-actual-SRAM leaf. Entire selected return ring and output Q are local.
-// Native read E1/SRAM E2/readQ E3/pair pins E4/select E5/ring E6/returnQ E7.
+// Native read E1/process E2/SRAM E3/readQ E4/pair E5/select E6/ring E7/returnQ E8.
 `default_nettype none
 module ot_hbm_svg_group_read_meta #(parameter integer MUT=0)(
  input wire clk,rst_n,input wire [2:0] ordinal,input wire group_valid,
@@ -7,10 +7,10 @@ module ot_hbm_svg_group_read_meta #(parameter integer MUT=0)(
  reg [3:0] slots[0:3];reg [2:0] ord_out;
  reg [1:0] wp,rp,warm;
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin wp<=0;rp<=MUT!=0?3:2;warm<=0;valid_out<=0;end
+  if(!rst_n)begin wp<=0;rp<=MUT!=0?2:1;warm<=0;valid_out<=0;end
   else begin
    wp<=wp+1'b1;rp<=rp+1'b1;if(warm!=3)warm<=warm+1'b1;
-   valid_out<=(warm>=2)&&slots[rp][0];
+   valid_out<=(warm>=3)&&slots[rp][0];
   end
  end
  // Unconditional group metadata: read_v and partial masks never gate this ring.

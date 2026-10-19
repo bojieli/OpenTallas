@@ -1,8 +1,8 @@
 // Ownership-gated metadata and local bitmap predicates. Production LBANKS4 only.
 `default_nettype none
-(* keep_hierarchy="yes" *) module ot_hbm_landing_field_inverse #(parameter integer W=10)(
- input wire [W-1:0] field,output wire [W-1:0] inverse);
- assign inverse=~field;
+(* keep_hierarchy="yes" *) module ot_hbm_landing_field_register #(parameter integer W=10)(
+ input wire clk,input wire [W-1:0] field,output reg [W-1:0] inverse);
+ always @(posedge clk)inverse<=~field;
 endmodule
 (* keep_hierarchy="yes" *) module ot_hbm_landing_safe_epoch #(parameter integer INDEX=0)(
  input wire clk,reserve_v,input wire [1:0] negative_bank,input wire [15:0] reserve_epoch,output reg [15:0] epoch_q);
@@ -15,7 +15,7 @@ endmodule
  input wire [1:0] packet_bank,input wire [5:0] row,input wire [15:0] epoch,
  input wire landing_write,output wire identity,last_packet);
  wire [10:0] n;
- ot_hbm_landing_field_inverse #(.W(11)) u_fields(.field({reserve_v,reserve_bank,packet_bank,row}),.inverse(n));
+ ot_hbm_landing_field_register #(.W(11)) u_fields(.clk(clk),.field({reserve_v,reserve_bank,packet_bank,row}),.inverse(n));
  wire mine=n[7:6]==(~2'(INDEX));wire reserve_mine=n[9:8]==(~2'(INDEX));
  wire [15:0] epoch_q;reg valid_q;reg [6:0] count_q,received_q;
  always @(posedge clk or negedge rst_n)
@@ -52,7 +52,7 @@ endmodule
  input wire landing_write,output wire seen);
  localparam integer LBINDEX=INDEX/4,ROWGROUP=INDEX%4;
  wire [10:0] n;
- ot_hbm_landing_field_inverse #(.W(11)) u_fields(.field({reserve_v,reserve_bank,packet_bank,row}),.inverse(n));
+ ot_hbm_landing_field_register #(.W(11)) u_fields(.clk(clk),.field({reserve_v,reserve_bank,packet_bank,row}),.inverse(n));
  wire reserve_clear=!n[10]&&n[9:8]==(~2'(LBINDEX));
  wire write_enable=landing_write&&n[7:6]==(~2'(LBINDEX));
  wire [1:0] byte_seen;
@@ -79,40 +79,59 @@ module ot_hbm_svc_sm8_landing_bank_sram285_safe #(
  ot_hbm_svc_async_fifo_sram285 #(.WIDTH(IW),.DEPTH(RESPONSE_DEPTH),.MUT(FMUT)) u_response(
   .wr_clk(hbm_clk),.wr_rst_n(hbm_rst_n),.wr_valid(in_v),.wr_ready(in_ready),.wr_data(in_data),.wr_overflow(overflow),
   .rd_clk(stream_clk),.rd_rst_n(stream_rst_n),.rd_valid(packet_v),.rd_ready(packet_take),.rd_data(packet),.rd_underflow(underflow));
- wire [10:0] ordinal=packet[IW-1:IW-11];
- wire [LB-1:0] bank=packet[271+LB:272];wire [15:0] epoch=packet[271:256];
+ // Fixed one-edge processing stage. Real per-consumer field copies below
+ // capture on this same edge; all semantic controls align with this packet.
+ reg [IW-1:0] packet_q;
+ reg accepted_q,read_q,stop_q;
+ reg [LB-1:0] read_bank_q;
+ reg [5:0] read_row_q;
+ reg [15:0] reserve_epoch_q;
+ reg [11:0] reserve_total_q;
+ always @(posedge stream_clk)begin
+  packet_q<=packet;read_bank_q<=read_bank;read_row_q<=read_row;
+  reserve_epoch_q<=reserve_epoch;reserve_total_q<=reserve_total;
+ end
+ always @(posedge stream_clk or negedge stream_rst_n)begin
+  if(!stream_rst_n)begin accepted_q<=0;read_q<=0;stop_q<=1;end
+  else begin accepted_q<=packet_take;read_q<=read_v;stop_q<=stop;end
+ end
+ wire [10:0] ordinal=packet_q[IW-1:IW-11];
+ wire [LB-1:0] bank=packet_q[271+LB:272];wire [15:0] epoch=packet_q[271:256];
  wire [5:0] row=ordinal[8:3];
  wire [3:0] meta_identity,last_here;
  wire [15:0] seen_here;
  reg sticky;
  wire identity_ok=(|meta_identity)&&ordinal[2:0]==BANK&&!(|seen_here);
- wire landing_write=packet_v&&!stop&&!sticky&&identity_ok;
- assign packet_take=packet_v&&!stop&&!sticky;
+ wire stage_bad=accepted_q&&!identity_ok;
+ wire landing_write=accepted_q&&!sticky&&identity_ok;
+ // The pending bad stage inhibits a further FIFO pop before sticky updates.
+ // Thus a fatal packet does not create a new extra admission window.
+ assign packet_take=packet_v&&!stop&&!sticky&&!stage_bad;
  assign complete_v=landing_write&&(|last_here);
  assign complete_bank=bank;assign fault=sticky||underflow;
  always @(posedge stream_clk or negedge stream_rst_n)
-  if(!stream_rst_n)sticky<=0;else if(packet_take&&!identity_ok)sticky<=1;
+  if(!stream_rst_n)sticky<=0;else if(stage_bad)sticky<=1;
  genvar m;
  generate for(m=0;m<4;m=m+1)begin:g_metadata
   ot_hbm_landing_safe_metadata #(.INDEX(m),.BANK(BANK)) u_meta(
    .clk(stream_clk),.rst_n(stream_rst_n),.reserve_v(reserve_v),.reserve_bank(reserve_bank),
-   .reserve_epoch(reserve_epoch),.reserve_total(reserve_total),.packet_bank(bank),.row(row),.epoch(epoch),
+   .reserve_epoch(reserve_epoch_q),.reserve_total(reserve_total_q),.packet_bank(packet[271+LB:272]),.row(packet[282:277]),.epoch(epoch),
    .landing_write(landing_write),.identity(meta_identity[m]),.last_packet(last_here[m]));
  end
  for(m=0;m<16;m=m+1)begin:g_seen
   ot_hbm_landing_safe_seen_group #(.INDEX(m)) u_seen(
-   .clk(stream_clk),.reserve_v(reserve_v),.reserve_bank(reserve_bank),.packet_bank(bank),.row(row),
+   .clk(stream_clk),.reserve_v(reserve_v),.reserve_bank(reserve_bank),.packet_bank(packet[271+LB:272]),.row(packet[282:277]),
    .landing_write(landing_write),.seen(seen_here[m]));
  end endgenerate
  generate if(LBANKS<=2)begin:g_two
  ot_sram_1r1w_128x256_m1_r2c2 u_payload(
-  .clk(stream_clk),.r_ce_in(read_v&&!stop&&!sticky),.r_addr_in({read_bank[0],read_row}),.rd_out(read_data),
-  .w_ce_in(landing_write),.w_addr_in({bank[0],row}),.wd_in(packet[255:0]),.w_mask_in({256{1'b1}}),
+  .clk(stream_clk),.r_ce_in(read_q&&!stop_q&&!sticky),.r_addr_in({read_bank_q[0],read_row_q}),.rd_out(read_data),
+  .w_ce_in(landing_write),.w_addr_in({bank[0],row}),.wd_in(packet_q[255:0]),.w_mask_in({256{1'b1}}),
   .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
  end else begin:g_four
  ot_sram_1r1w_256x256_m2_r2c2 u_payload(
-  .clk(stream_clk),.r_ce_in(read_v&&!stop&&!sticky),.r_addr_in({read_bank,read_row}),.rd_out(read_data),
-  .w_ce_in(landing_write),.w_addr_in({bank,row}),.wd_in(packet[255:0]),.w_mask_in({256{1'b1}}),
+  .clk(stream_clk),.r_ce_in(read_q&&!stop_q&&!sticky),.r_addr_in({read_bank_q,read_row_q}),.rd_out(read_data),
+  .w_ce_in(landing_write),.w_addr_in({bank,row}),.wd_in(packet_q[255:0]),.w_mask_in({256{1'b1}}),
   .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
  end endgenerate
 endmodule

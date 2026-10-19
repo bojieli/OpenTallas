@@ -28,7 +28,7 @@ endmodule
 
 // Each slice is an ACTUAL four-slot ring, never a four-flop shift chain.
 (* keep_hierarchy="yes" *) module ot_hbm_svg_return_safe_ring_slice #(
- parameter integer W=16,MUT=0,HASVALID=0
+ parameter integer W=6,MUT=0,HASVALID=0,VBIT=3
 )(input wire src_clk,src_rst_n,dst_clk,dst_rst_n,input wire [W-1:0] data_in,
  input wire valid_allow,output reg [W-1:0] data_out);
  wire sr,dr;
@@ -40,12 +40,13 @@ endmodule
  always @(posedge src_clk or negedge sr)if(!sr)wp<=0;else wp<=wp+1'b1;
  always @(posedge dst_clk or negedge dr)if(!dr)rp<=3;else rp<=rp+1'b1;
  always @(posedge src_clk)slots[wp]<=data_in;
- generate if(HASVALID)begin:g_valid
-  always @(posedge dst_clk)begin data_out[W-1:4]<=slots[ra][W-1:4];data_out[2:0]<=slots[ra][2:0];end
-  always @(posedge dst_clk or negedge dr)
-   if(!dr)data_out[3]<=0;else data_out[3]<=valid_allow&&slots[ra][3];
- end else begin:g_data
-  always @(posedge dst_clk)data_out<=slots[ra];
+ genvar k;generate for(k=0;k<W;k=k+1)begin:g_output_bit
+  if(HASVALID&&k==VBIT)begin:g_valid
+   always @(posedge dst_clk or negedge dr)
+    if(!dr)data_out[k]<=0;else data_out[k]<=valid_allow&&slots[ra][k];
+  end else begin:g_data
+   always @(posedge dst_clk)data_out[k]<=slots[ra][k];
+  end
  end endgenerate
 endmodule
 
@@ -68,11 +69,11 @@ module ot_hbm_svg_return_safe_ring4 #(parameter integer MUT=0)(
    if(warm[1]&&landed[259]&&landed[262:260]!=expected_q)phase_fault<=1;
   end
  end
- genvar g;generate for(g=0;g<33;g=g+1)begin:g_slice
-  localparam integer W=g==32?7:8;
-  (* keep_hierarchy="yes" *) ot_hbm_svg_return_safe_ring_slice #(.W(W),.MUT(MUT),.HASVALID(g==32)) u_slice(
+ genvar g;generate for(g=0;g<44;g=g+1)begin:g_slice
+  localparam integer W=g==43?5:6;
+  (* keep_hierarchy="yes" *) ot_hbm_svg_return_safe_ring_slice #(.W(W),.MUT(MUT),.HASVALID(g==43),.VBIT(1)) u_slice(
    .src_clk(src_clk),.src_rst_n(src_phase0[g%2]),.dst_clk(dst_clk),.dst_rst_n(dst_phase0[g%2]),
-   .data_in(payload[g*8+:W]),.valid_allow(warm[0]),.data_out(landed[g*8+:W]));
+   .data_in(payload[g*6+:W]),.valid_allow(warm[0]),.data_out(landed[g*6+:W]));
  end endgenerate
  assign data_out=landed[255:0];assign ordinal_out=landed[258:256];
  assign valid_out=landed[259];
