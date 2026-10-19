@@ -19,10 +19,10 @@ COLLQ VM q1 b0 unreserved read cyc170 sector 3108 (exp 1 3010)
 COLLQ VM q2 b0 unreserved read cyc170 sector 5108 (exp 1 5010)
 COLLQ VM q3 b0 unreserved read cyc170 sector 7108 (exp 1 7010)
 COLLQ FAULT PASS scenario=2 gq1111 ra1111 rb0000 ks0000
-- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:259: Verilog $finish
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:265: Verilog $finish
 COLLQ unexpected fault gq1111 ra1111 rb0000 rs0000 ks0000
 COLLQ FAIL errors=4249
-- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:278: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 2us; walltime 0.138 s; speed 14.790 us/s
-- Verilator: cpu 0.138 s on 1 threads; alloced 1023 MB
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:284: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.084 s; speed 24.320 us/s
+- Verilator: cpu 0.084 s on 1 threads; allocated 14 MB
