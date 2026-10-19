@@ -825,6 +825,8 @@ def main():
     ap.add_argument('--me-observe-edges', type=int, default=1, help='head fixed issue -> actual_me_observe edges')
     ap.add_argument('--su-first-write', type=int, default=12, help='SU command at the W5 pin -> its first VM write')
     ap.add_argument('--dv-lower', action='store_true', help='attach the DV slice lowering (dv_lower.py, G-C4)')
+    ap.add_argument('--tload', action='store_true',
+                    help='compile BOOT table-load entries and payload blocks for tt_ctlm.tl -> dvs_W5.st_wi')
     a = ap.parse_args()
     try:
         image, rec = compile_image(a)
