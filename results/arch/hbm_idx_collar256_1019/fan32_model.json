@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.hbm.idx256.fan32.model.v1",
+ "baseline": "590d04e49 floorplan preflight: rptr807/739/690, writeenable523/442, std2639um2, depth451.8ps",
+ "optin": "FAN32=1 in separate IDX256 master; default0 preserves previous guard behavior",
+ "mechanism": [
+  "split held record and operand storage into28-bit constant-index banks with private same-edge cfg valid/address/target landing copies",
+  "registered onehot read selection copies per record bank derive from exact existing next readpointer; each bit drivesatmost28 data gates",
+  "private same-edge counter copies per payload bank compare with actual currentoffset; local event drivesatmost28 emitted-record flops",
+  "privatecfgcopy AND validated global programme-write acceptance drives <=28data/12address outputflops"
+ ],
+ "budgets": {
+  "record_banks": 10,
+  "bank_bits_max": 28,
+  "cfg_landing_copies": 11,
+  "cfg_state_bits_added": 231,
+  "onehot_selection_bits_added": 80,
+  "counter_bits_added": 288,
+  "total_estimated_added_state_bits": 599,
+  "held_record_bits": 2048,
+  "held_operand_bits": 1536,
+  "successful_install_added_edges": 0,
+  "successful_data_added_edges": 0,
+  "output_hold_semantics": "preserved even outside valid pulses",
+  "critical_fanout_target": 32
+ },
+ "retention": "canonical physical/common_flow/ot_keep_regs.tcl marks FF drivers of keep wires beforeopt_merge and per-bit techmap; actual mapped copies/fanout must be counted",
+ "qualification": "modelbeforebuild; no CTS until full differentialrecord/operand/programme proof and actualfanout/depth/area/IOcensus"
+}
