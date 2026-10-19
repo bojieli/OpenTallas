@@ -333,9 +333,15 @@ def layer_schedule(tree, layer, workload='ar'):
     deps = [dict(src=e[0] if isinstance(e, list) else e.get('src'), dst=e[1] if isinstance(e, list) else e.get('dst'))
             for e in doc['edges']]
     deps = [d for d in deps if d['src'] in ids and d['dst'] in ids]
-    span = max(o['end'] for o in ops) - min(0.0, min(o['start'] for o in ops))
+    # S81-L20 10-19: the layer span runs from the layer entry (t0 = 0) to the layer exit.  Off-path prefetches that
+    # start before the entry (the Engram E<L>.* chain, which the token runs during EARLIER layers) are NOT part of the
+    # layer: they were counted here before (span = max end - min start), which priced AR L14 at 318,272.6 cycles
+    # (Engram lead_flit -290,190.7) instead of 28,081.9.  The prefetch lead is reported separately.
+    span = max(o['end'] for o in ops)
+    prefetch_lead = -min(0.0, min(o['start'] for o in ops))
     crit = sum(o['cycles'] for o in ops if o['critical'])
-    return dict(layer=layer, workload=workload, span=round(span, 1), crit=round(crit, 1), ops=ops, deps=deps,
+    return dict(layer=layer, workload=workload, span=round(span, 1), crit=round(crit, 1),
+                prefetch_lead=round(prefetch_lead, 1), ops=ops, deps=deps,
                 price_source='tools/s81_dv/dv_layer_price.py facts + dv_price.dv_deltas dv_base + accepted_cost.solve')
 
 
