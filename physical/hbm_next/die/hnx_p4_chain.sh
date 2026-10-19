@@ -7,11 +7,12 @@
 #   local driver:  nohup bash hnx_p4_chain.sh > $A/chain.log 2>&1 &
 set -o pipefail
 TAG=${TAG:-f4c_t5}; B=/srv/opentallas-scratch/claude/hnx/die_p4; S=$B/src; CA=$B/case_$TAG; PRE=$B/views/contract.json
-A=/home/ubuntu/artifacts/hnx/die_p4; W=/home/ubuntu/wt/hnx-die-1019; OTRUN=/home/ubuntu/bin/ot-run; H=ot-epyc4
+A=${A:-/home/ubuntu/artifacts/hnx/die_p4}; W=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd); OTRUN=/home/ubuntu/bin/ot-run; H=ot-epyc4
+export A W OT_RUN_PRIO_ENV="" # HBM-NEXT always normal priority, including auto-detected die commands
 RM=physical/hbm_next/die/$TAG/region_map_hnx_$TAG.json; LP=results/arch/hbm_die_d4g/landing/land_plan_d4g.json
 G2V=/srv/opentallas-scratch/claude/hd4g/gen2/views/synth      # GEN2 synth views (incl. hbfd_lh0_* / hbfd_land0_* masters)
 step() { echo "STEP $* $(date -Is)"; }
-otr() { local m=$1 t=$2; shift 2; $OTRUN --mem $m --threads $t --hosts $H --dir $S -- env PYTHONDONTWRITEBYTECODE=1 MPLBACKEND=Agg "$@"; }
+otr() { local m=$1 t=$2; shift 2; $OTRUN --mem $m --threads $t --dir $S -- env PYTHONDONTWRITEBYTECODE=1 MPLBACKEND=Agg "$@"; }
 mkdir -p $A; ssh $H "mkdir -p $B/net" || exit 9
 scp -q $W/physical/hbm_next/die/hnx_case_relay.sh $H:$B/ || exit 9
 if [ "${FROM:-S4}" = S4 ]; then
@@ -63,17 +64,16 @@ if ! grep -q "SYNTH_MISSING 0" $A/views_check.txt; then
   step S6S auto_synth $MISS
   V=$A/vplan_s6; mkdir -p $V
   rsync -a $H:$B/hnx_vplan/jobs.tsv $H:$B/hnx_vplan/views.json $V/ && rsync -a $H:$B/hnx_vplan/wrap/ $V/wrap/ && scp -q $H:$B/net/hnx_contract.json $V/hnx_contract.json || { echo S6S_PULL_FAIL; exit 16; }
-  ssh $H "mkdir -p $B/src/v16w && cp -n $B/hnx_vplan/wrap/v16w_*.sv $B/src/v16w/" || { echo S6S_WRAP_FAIL; exit 16; }
   NOCHAIN=1 bash $W/tools/hbm_next/die/hnx_s6_synth.sh $MISS || { echo S6S_FAIL; exit 16; }
   views_merge
 fi
 grep -q "SYNTH_MISSING 0" $A/views_check.txt || { echo S6_SYNTH_MISSING; exit 16; }
 step S7 gen
-$OTRUN --mem 64 --threads 2 --hosts $H --dir $B -- bash $B/hnx_case_relay.sh $TAG $B/views_land hnx_case_${TAG}_land > $A/gen.otrun 2>&1; echo "GEN rc=$? $(date -Is)"; tail -22 $A/gen.otrun
+$OTRUN --mem 64 --threads 2 --dir $B -- bash $B/hnx_case_relay.sh $TAG $B/views_land hnx_case_${TAG}_land > $A/gen.otrun 2>&1; echo "GEN rc=$? $(date -Is)"; tail -22 $A/gen.otrun
 grep -q GEN_OK $A/gen.otrun || exit 17
 scp -q $H:$B/hnx_case_${TAG}_land/layout.png $A/hnx_case_${TAG}_land_layout.png
 step S8 grt
-$OTRUN --mem 160 --threads 16 --hosts $H --dir $B/hnx_case_${TAG}_land -- env OT_ABS_PIN_WINDOW_UM=3 CPUS=16 MEMG=160 bash $B/hnx_case_${TAG}_land/run.sh > $A/grt.otrun 2>&1; echo "GRT rc=$? $(date -Is)"
+$OTRUN --mem 160 --threads 16 --dir $B/hnx_case_${TAG}_land -- env OT_ABS_PIN_WINDOW_UM=3 CPUS=16 MEMG=160 bash $B/hnx_case_${TAG}_land/run.sh > $A/grt.otrun 2>&1; echo "GRT rc=$? $(date -Is)"
 ssh $H "cd $B/hnx_case_${TAG}_land/out; cat run.exit; grep -E 'OT_DIE_REP|overflow|Total wire|tns|wns' run.log | tail -15; cat neighbour_skew_gate.log; tail -5 hold_budget.log" > $A/grt_summary.txt 2>&1
 cat $A/grt_summary.txt
 echo HNX_P4_CHAIN_DONE TAG=$TAG
