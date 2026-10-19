@@ -1,17 +1,17 @@
 {
  "schema": "opentallas.tile_visual_review.v1",
  "tile": "hcoll_v7_tkm_tile_e86",
- "reviewer": "coordinator (2026-10-18 ~15:05)",
+ "reviewer": "coordinator",
  "verdict": "APPROVED",
- "time": "2026-10-18T15:05:00-07:00",
- "gate_commit": "6366ce707",
+ "time": "2026-10-19T11:39:00-07:00",
+ "gate_commit": "fbfa9bfa8",
  "checklist": {
-  "lattice": "PASS: no macros",
-  "std_cell_band": "PASS: one even std-cell field, fill 0.41; one hot strip under the N-left pin bus",
-  "pin_spread": "PASS: N and S faces nearly full width; 1,434 pins",
-  "clock_entry": "PASS: N face centre; pin-flop spread 58.4 TT / 52.9 FF (<=80)",
-  "shape": "PASS: 259.2 square"
+  "lattice": "n/a: no macros",
+  "std_cell_band": "PASS: rows full width, util 42.7%",
+  "pin_spread": "PASS: N/S full faces; small W control group",
+  "clock_entry": "PASS: N centre; spread 28.1/26.7",
+  "shape": "PASS: 259.2 square; GRT 0"
  },
- "notes": "Bench regex fix only (TKM_STATIC PASS words=N); the RTL/geometry are those of the d4f2 gate. Hot N-left strip: if the route misses there, spread the N bus or add a pin-register stage; never mask it.",
- "geometry_sha256": "ecc1357139d7e21f2aff7765aa2b76b74998876a600edce68087d3066c2546b8"
+ "notes": "e86; route evidence decides PRE=1 follow-up",
+ "geometry_sha256": "736bd3eb8b7a1c8e936963c7416e42294458588d933accd95b158c82788db0ca"
 }
