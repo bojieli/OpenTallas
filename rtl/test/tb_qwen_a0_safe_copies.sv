@@ -14,6 +14,7 @@ initial begin #0.2; if (MUT==26) force dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.
 // MUT28/29 (Q-A0FIX2 10-19, REGROOT 3 landed select): hold the W (ck_dw) / E (ck_de) regional copy of the S1B group
 // select at 0 -- that half's weight operands are zeroed, so the parent must miss its lanes' products.
  if (MUT==28) force dut.u_g.u_tile.u_tile.u_logic.u_me.g_operand_rr.g_csel.gm_q[15:0] = '0;
+ if (MUT==30) force dut.u_g.u_tile.u_tile.u_logic.u_me.g_roundc.round_q = '0;
  if (MUT==29) force dut.u_g.u_tile.u_tile.u_logic.u_me.g_operand_rr.g_csel.gm_q[31:16] = '0; end
 reg ck=0,rs=0; always #0.5 ck=~ck;
 reg [507:0] tap=0;
@@ -37,7 +38,7 @@ generate for(p=0;p<2;p=p+1)begin: cols
 end endgenerate
 function automatic [378:0] command(input integer bank);
  command={18'd4096,18'd2,18'd32,1'b0,24'(bank*4096),24'd64,24'd8,24'd1,
-          24'd0,24'd1,24'd1,24'd1,3'd0,4'd7,24'd1,1'b0,24'd0,24'd1,24'd1,
+          24'd0,24'd1,24'd1,24'd1,3'd0,4'd7,24'd1,1'(bank%2),24'd0,24'd1,24'd1,
           1'b0,1'b1,1'b0,1'b0,24'd0};
 endfunction
 integer cyc,errors=0,checks=0,valids=0,nonzero=0;
@@ -55,7 +56,7 @@ initial begin
   if(cyc>=200 && (cyc-200)%1200==0 && cyc<6200)begin
    tap[379:1]=command((cyc-200)/1200);tap[0]=1;
   end
-  for(integer g=0;g<4;g=g+1)tap[380+g*32+:32]=32'h3f800000+((cyc%8+g)<<18);
+  for(integer g=0;g<4;g=g+1)tap[380+g*32+:32]=32'h3f80c123+((cyc%8+g)<<18);
   for(integer lane=0;lane<16;lane=lane+1)begin
    na[lane*32+:32]=32'h3f000000+((cyc%16+lane)<<17);
    nb[lane*32+:32]=32'h3f800000+((cyc%8+lane)<<17);

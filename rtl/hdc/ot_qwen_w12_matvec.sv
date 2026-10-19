@@ -875,9 +875,20 @@ end endgenerate
         end
     end endgenerate
     genvar xg;
+    wire [2*GL-1:0] round_local;
+    generate if (REGROOT >= 4 && LANES) begin : g_roundc
+        // Same S1B->S2 edge; one select owner per sixteen output bits.
+        (* keep *) reg [2*GL-1:0] round_q;
+        always @(posedge clk) round_q <= {2*GL{s1b_round}};
+        assign round_local=round_q;
+    end else begin : g_round_legacy
+        assign round_local={2*GL{s2_round}};
+    end endgenerate
     generate for (xg = 0; xg < GL; xg = xg + 1) begin : g_s3xd
-        assign s3x_d[32*xg +: 32] = !s2_gm[xg] ? 32'd0 :
-                                    s2_round ? (x_rnd[32*xg +: 32] & 32'hFFFF0000) : s2_x[32*xg +: 32];
+        assign s3x_d[32*xg +: 16] = !s2_gm[xg] ? 16'd0 :
+                                    round_local[2*xg] ? 16'd0 : s2_x[32*xg +: 16];
+        assign s3x_d[32*xg+16 +: 16] = !s2_gm[xg] ? 16'd0 :
+                                    round_local[2*xg+1] ? x_rnd[32*xg+16 +: 16] : s2_x[32*xg+16 +: 16];
     end endgenerate
     wire [TW-1:0] a_tag;
     generate if (PORTS) begin : g_atag
