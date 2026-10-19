@@ -197,7 +197,7 @@
  },
  "reset_landing": {
   "enable": false,
-  "reason": "the RTL lands it: same-structure ot_coll_rst_leaf copies (two stages, async assert, sync release): Q u_rs/u_rs_t0/u_rs_t1, each fold u_rs + one leaf per fold stage; every leaf <= 32 sinks; rst_n drives only leaf inputs"
+  "reason": "the RTL lands it: one ot_coll_rst_leaf u_rs at the face (two stages, async assert, sync release; rst_n has 2 sinks); rs feeds only registered relay copies (u_rsg/u_rst0/u_rst1/u_rsx) and the folds' own 2-flop leaves; every relay/leaf <= 32 sinks"
  },
  "keep_pin_regs": true,
  "inhold": false,
@@ -218,7 +218,7 @@
  },
  "children": [],
  "inter": [],
- "structural_change": "QW-CLUSTER3 safe3 redesign of the Q slice after q2 gate OT_HOLD_STALL NEEDS_RTL (46 R2R FF hold -7.8 ps after 3 h repair; classes: fold skew delay-line dl flop->flop chains, adder data-reset pipeline) and reset fanout 5,138 on one fold leaf: (1) every fold skew delay line (u_xf D=7/14 x 128b, 2,688 flops) moved to fixed-offset SRAM rings (ot_coll_nring, 4 x 128x64 dual-clock natives, same D-edge age); (2) package-fold constant-zero sources g>=2 tied to 0 (their delay lines only ever held 0; adders kept, latency unchanged); (3) adder data reset off (DRST 0: valid bits only; consumers qualify by valid); (4) reset leaves split: Q 3 leaves, each fold seam leaf + one per stage, all <= 32 sinks, same release edge; zero added cycles. Outline 302.4x259.2 (aspect 1.17) from q2 synth std 25.7k um2 minus removed flops (~23.5k) at ~0.5 util; third macro stack at x=216 on the 43.2 lattice. Fallback q3w: 345.6x259.2, stacks at x=43.2/151.2/259.2.",
+ "structural_change": "QW-CLUSTER3 safe3 redesign of the Q slice after q2 gate OT_HOLD_STALL NEEDS_RTL (46 R2R FF hold -7.8 ps after 3 h repair; classes: fold skew delay-line dl flop->flop chains, adder data-reset pipeline) and reset fanout 5,138 on one fold leaf: (1) every fold skew delay line (u_xf D=7/14 x 128b, 2,688 flops) moved to fixed-offset SRAM rings (ot_coll_nring, 4 x 128x64 dual-clock natives, same D-edge age); (2) package-fold constant-zero sources g>=2 tied to 0 (their delay lines only ever held 0; adders kept, latency unchanged); (3) adder data reset off (DRST 0: valid bits only; consumers qualify by valid); (4. reset: one 2-flop face leaf (rst_n 2 sinks) + registered relay copies rs_g/rs_t0/rs_t1/rs_x (release 1 edge after the leaf, as in C) and own leaf per fold stage, all <= 32 sinks; zero added cycles. Outline 302.4x259.2 (aspect 1.17) from q2 synth std 25.7k um2 minus removed flops (~23.5k) at ~0.5 util; third macro stack at x=216 on the 43.2 lattice. Fallback q3w: 345.6x259.2, stacks at x=43.2/151.2/259.2.",
  "job": {
   "owner": "Claude:QW-CLUSTER3",
   "branch": "claude/qw-cluster3-coll-1019",

@@ -177,14 +177,18 @@ module ot_coll_split_q #(
 `else
     localparam integer ROFF = LU + 2;
 `endif
-    // safe3 (QW-CLUSTER3 2026-10-19): three same-structure reset leaves (each a 2-flop async-assert/sync-release copy of
-    // rst_n, released on the same edge): rs (rings, counters, error outs), rs_t0/rs_t1 (the two halves of the token
-    // landing register), so no leaf drives more than ~32 flops. Folds: skew lines in SRAM rings, constant-zero package
-    // sources tied, adder data reset off, own leaf per fold stage (ot_coll_fold_slice DLRING/NLIVE/ADRST/RSTSPLIT).
-    wire rs, rs_t0, rs_t1;
+    // safe3 (QW-CLUSTER3 2026-10-19): rst_n lands at the face in ONE 2-flop leaf (u_rs: 2 sinks on the port); rs then
+    // feeds only reset-leaf / relay inputs: three registered relay copies (ot_csp_rep_reg, async assert with rs, release
+    // one edge after rs, exactly like C's u_rsq/u_rsp/u_rss/u_rsr): rs_g (rings, counters, error outs), rs_t0/rs_t1 (the
+    // two halves of the token landing register), and the folds' own leaves. No relay drives more than ~32 flops.
+    // Folds: skew lines in SRAM rings, constant-zero package sources tied, adder data reset off, own leaf per fold
+    // stage (ot_coll_fold_slice DLRING/NLIVE/ADRST/RSTSPLIT).
+    wire rs, rs_g, rs_t0, rs_t1, rs_x;
     (* keep_hierarchy *) ot_coll_rst_leaf u_rs (.clk(clk), .arst_n(rst_n), .q(rs));
-    (* keep_hierarchy *) ot_coll_rst_leaf u_rs_t0 (.clk(clk), .arst_n(rst_n), .q(rs_t0));
-    (* keep_hierarchy *) ot_coll_rst_leaf u_rs_t1 (.clk(clk), .arst_n(rst_n), .q(rs_t1));
+    ot_csp_rep_reg #(.W(1), .ID(QI*256 + 200), .RST(1)) u_rsg (.clk(clk), .rst_n(rs), .d(1'b1), .q(rs_g));
+    ot_csp_rep_reg #(.W(1), .ID(QI*256 + 201), .RST(1)) u_rst0 (.clk(clk), .rst_n(rs), .d(1'b1), .q(rs_t0));
+    ot_csp_rep_reg #(.W(1), .ID(QI*256 + 202), .RST(1)) u_rst1 (.clk(clk), .rst_n(rs), .d(1'b1), .q(rs_t1));
+    ot_csp_rep_reg #(.W(1), .ID(QI*256 + 203), .RST(1)) u_rsx (.clk(clk), .rst_n(rs), .d(1'b1), .q(rs_x));   // u_xr pointers
     genvar k, j, gq;
     initial if (CQW != 42) $error("ot_coll_split_q: CQW 42");
     // ---- input pin registers: every token pin lands in exactly one flop (each copy <= 32 loads) ----
@@ -221,7 +225,7 @@ module ot_coll_split_q #(
     always @(posedge clk) begin ir_q <= in_data; upd_q <= ir_q; end
     assign up_data = upd_q;
     wire [127:0] pr_rd;
-    ot_coll_nring #(.OFF(LU + 2), .W(128), .ID(QI*4 + 0)) u_pring (.clk(clk), .rs_n(rs), .wd(ir_q), .rd(pr_rd));
+    ot_coll_nring #(.OFF(LU + 2), .W(128), .ID(QI*4 + 0)) u_pring (.clk(clk), .rs_n(rs_g), .wd(ir_q), .rd(pr_rd));
 
     // ---- B: peer partial pins, owner order, package fold ----
     reg [127:0] dpr_q;
@@ -241,7 +245,7 @@ module ot_coll_split_q #(
     // ---- C / W: package word, S ring data write, SerDes data send ----
     reg [127:0] pf_q;
     always @(posedge clk) pf_q <= ps_e ? {4{32'h7fc00000}} : ps_sum;
-    always @(posedge clk or negedge rs) if (!rs) q_pe <= 1'b0; else q_pe <= ps_e & ps_v;
+    always @(posedge clk or negedge rs_g) if (!rs_g) q_pe <= 1'b0; else q_pe <= ps_e & ps_v;
     wire [127:0] w_d;
     generate for (k = 0; k < 4; k = k + 1) begin : g_wd
         assign w_d[k*32 +: 32] = tcv_r[k] ? pf_q[k*32 +: 32] : (gd_r[k] ? hi_q[k*32 +: 32] : lo_q[k*32 +: 32]);
@@ -253,7 +257,7 @@ module ot_coll_split_q #(
             .qdata(sx_q[j]));
     end endgenerate
     reg [8:0] cc;
-    always @(posedge clk or negedge rs) if (!rs) cc <= 9'd0; else cc <= cc + 9'd1;
+    always @(posedge clk or negedge rs_g) if (!rs_g) cc <= 9'd0; else cc <= cc + 9'd1;
     wire [127:0] td_d;
     ot_coll_sring512 #(.W(128), .ID(QI*4 + 2)) u_sd (.clk(clk), .wa(cc), .ra(cc - 9'(LS + 1)), .wd(w_d), .rd(td_d));
 
@@ -293,15 +297,15 @@ module ot_coll_split_q #(
     always @(posedge clk) begin xr_m1 <= xs_sum; xr_m2 <= xr_m1; end
     assign xr_q = xr_m2; assign xr_unused = 128'd0;
 `else
-    ot_coll_tok_ring_w #(.W(128), .D(1 + EX), .RST(0), .ID(QI)) u_xr (.clk(clk), .rs_n(rs), .d(xs_sum), .q(xr_q),
+    ot_coll_tok_ring_w #(.W(128), .D(1 + EX), .RST(0), .ID(QI)) u_xr (.clk(clk), .rs_n(rs_x), .d(xs_sum), .q(xr_q),
         .qe(xr_unused));
 `endif
-    always @(posedge clk or negedge rs) if (!rs) q_xe <= 1'b0; else q_xe <= xs_e & xs_v;
+    always @(posedge clk or negedge rs_g) if (!rs_g) q_xe <= 1'b0; else q_xe <= xs_e & xs_v;
     reg [127:0] urd_q;
     always @(posedge clk) urd_q <= xr_q;
     assign ur_data = urd_q;
     wire [127:0] rr_rd;
-    ot_coll_nring #(.OFF(ROFF), .W(128), .ID(QI*4 + 1)) u_rring (.clk(clk), .rs_n(rs), .wd(xr_q), .rd(rr_rd));
+    ot_coll_nring #(.OFF(ROFF), .W(128), .ID(QI*4 + 1)) u_rring (.clk(clk), .rs_n(rs_g), .wd(xr_q), .rd(rr_rd));
 
     // ---- F: peer result data pins, merge, output data ----
     reg [127:0] drr_q, od_q;

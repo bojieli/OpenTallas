@@ -79,9 +79,12 @@ flops on one root (SS boundary spread 59 ps, placement RC). One failed gate = st
 
 1. Pins: unchanged (every pin lands in one flop / leaves a flop). PASS.
 2. Reach: tile 302.4x259.2, local; no single-cycle wire beyond ~300 um. PASS.
-3. Fanout: reset split into same-structure 2-flop leaves (Q u_rs/u_rs_t0/u_rs_t1; per fold seam leaf + one leaf per
-   fold stage), each <= 32 sinks (adder data reset off, so each stage leaf drives 4 adders' valid bits + 7-bit error
-   line + ring counter). Fixed.
+3. Fanout: rst_n lands in ONE 2-flop face leaf (u_rs; port 2 sinks); rs feeds only registered relay copies
+   u_rsg (rings' address counters, cc, q_pe/q_xe), u_rst0/u_rst1 (21-bit halves of the token landing), u_rsx (u_xr
+   pointers) -- release one edge after the leaf, the same pattern as C's u_rsq/u_rsp/u_rss/u_rsr -- and each fold's own
+   2-flop leaves (seam+rings, one per fold stage: 4 adders' valid bits + 7-bit error line, adder data reset off).
+   Every relay/leaf <= ~32 sinks (first q3 attempt with 3 port-fed leaves was refused by textbook reset_landing: rst_n
+   6 sinks; gate stopped). Fixed.
 4. Depth: unchanged datapath (q2 setup SS +103 ps after CTS). PASS.
 5. Storage: the u_xf skew delay lines (D = 7 and 14 edges x 128 b = 2,688 flops) are SRAM rings (ot_coll_nring,
    4 x ot_sram_1r1w2c_128x64_m1, rd valid exactly D edges after wd, same as the shift line); u_pf's constant-zero

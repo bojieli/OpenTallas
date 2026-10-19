@@ -59,7 +59,7 @@ module ot_coll_fold_slice #(parameter integer N = 4, parameter integer ADD_LAT =
 `else
             localparam integer DOFF = (g - 1) * ADD_LAT;
 `endif
-            ot_coll_nring #(.OFF(DOFF), .W(128), .ID(900 + g)) u_dr (.clk(clk), .rs_n(rsg[g]),
+            ot_coll_nring #(.OFF(DOFF), .W(128), .ID(900 + g)) u_dr (.clk(clk), .rs_n(rs),
                 .wd(di[g*128 +: 128]), .rd(pg));
         end else begin : g_d
             localparam integer D = (g - 1) * ADD_LAT;
