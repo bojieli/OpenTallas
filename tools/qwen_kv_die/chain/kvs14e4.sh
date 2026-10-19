@@ -9,7 +9,7 @@ set -euo pipefail
 C=$1
 B=/srv/opentallas-scratch/claude/qwen-kvsys
 W=$B/wt-kvs14e4-$C
-R=$B/kvs14e4-$C
+R=$B/kvs14e4-$C${KVS14E4_SUFFIX:-}
 M=/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git
 GH=https://github.com/bojieli/OpenTallas
 mkdir -p $R
@@ -34,6 +34,6 @@ say "ECTL params bound: $(head -3 $R/ectl_params.txt | tr '\n' ' ')"
 python3 tools/qwen_kv_die/case_png.py $R/case_kv --slots $R/rly_std.json --out $R/plan.png --title "kvs14e4 $C (netlist-only, ECTL 725.76x261.36, K RT 80)" > $R/plan_png.log 2>&1 || true
 bash tools/qwen_kv_die/kv_relay_check.sh $R $W > $R/relay_check.log 2>&1 || true
 say "$(tail -1 $R/relay_check.log | head -c 600)"
-python3 -m pytest -q tools/qwen_kv_die/test_kv_static_ages.py tools/qwen_kv_die/test_kv_static_programme.py tools/qwen_kv_die/test_kv_static_attn_join.py tools/qwen_kv_die/test_kv_static_ectl_pair.py tools/qwen_kv_die/test_kv_bundle_eq.py > $R/pytest.log 2>&1 || true
+(cd tools/qwen_kv_die && python3 -m unittest test_kv_static_ages test_kv_static_programme test_kv_static_attn_join test_kv_static_ectl_pair test_kv_bundle_eq) > $R/pytest.log 2>&1 || true
 say "PYTEST: $(tail -1 $R/pytest.log)"
 say DONE
