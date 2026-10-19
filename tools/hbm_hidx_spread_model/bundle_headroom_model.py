@@ -169,13 +169,13 @@ for root,ffs in sorted(root_ff.items()):
  gs={co[f] for f in ffs};assert len(gs)==1
  # Four columns by three native rows retains all twelve independent copies.
  ffs=sorted(ffs,key=lambda f:(xy[f][0],xy[f][1],f));column_width=max(atoms[f]['w'] for f in ffs)+4
- members=[]
+ members=[];columns=3 if next(iter(gs)).startswith('pair[') else 4;height=12//columns
  for k,f in enumerate(ffs):
-  col=k%4;rr=k//4
+  col=k%columns;rr=k//columns
   for n,dx in atoms[f]['members']:members.append((n,col*column_width+dx,rr))
   bundled.add(f)
- item=dict(id='capture:'+root[0]+':'+root[1],members=members,w=4*column_width-4,h=3,cohort=next(iter(gs)),root=root)
- items.append(item);bundle_facts.append(dict(root=list(root),FF=ffs,width_sites=item['w'],rows=3))
+ item=dict(id='capture:'+root[0]+':'+root[1],members=members,w=columns*column_width-4,h=height,cohort=next(iter(gs)),root=root)
+ items.append(item);bundle_facts.append(dict(root=list(root),FF=ffs,width_sites=item['w'],rows=height))
 for f,a in atoms.items():
  if f not in bundled:items.append(dict(id=f,members=[(n,x,0) for n,x in a['members']],w=a['w'],h=1,cohort=a['cohort']))
 for n in sorted(set(co)-claimed):items.append(dict(id=n,members=[(n,(math.ceil(width(n)/.60)-width(n))//2,0)],w=math.ceil(width(n)/.60),h=1,cohort=co[n]))
@@ -191,15 +191,15 @@ def insert(it,x,y):
   oc=cells[byname[n]];plan[byname[n]]=dict(canonical_cell=n,cohort=co[n],master=oc['master'],orient=oc['orient'],location_dbu=[corelo+cursor*site,bandlo+row*rowh],bbox_dbu=[corelo+cursor*site,bandlo+row*rowh,corelo+(cursor+w)*site,bandlo+(row+1)*rowh])
  packing.append(dict(id=it['id'],xsite=x,row=y,width_sites=it['w'],height_rows=it['h'],members=len(it['members'])))
 for g,r in regions.items():
- its=[it for it in items if it['cohort']==g];bs=[it for it in its if it['h']==3];bs.sort(key=lambda it:(xy[it['root'][0]][1],xy[it['root'][0]][0],it['id']))
+ its=[it for it in items if it['cohort']==g];bs=[it for it in its if it['h']>1];bs.sort(key=lambda it:(xy[it['root'][0]][1],xy[it['root'][0]][0],it['id']))
  if bs:
-  nc=2;nr=math.ceil(len(bs)/nc);assert nr*3<=r['rows']
+  nc=2;nr=math.ceil(len(bs)/nc);height=max(it['h'] for it in bs);assert nr*height<=r['rows']
   for k,it in enumerate(bs):
    col=k%nc;rr=k//nc
    # Real physical row/site space charged for every gap and chain.
    x=r['x0']+round((col+.5)*(r['x1']-r['x0'])/nc-it['w']/2)
-   y=r['row0']+round((rr+.5)*r['rows']/nr-1.5)
-   assert x>=r['x0'] and x+it['w']<=r['x1'] and y>=r['row0'] and y+3<=r['row0']+r['rows'],(g,it['w'],r)
+   y=r['row0']+round((rr+.5)*r['rows']/nr-it['h']/2)
+   assert x>=r['x0'] and x+it['w']<=r['x1'] and y>=r['row0'] and y+it['h']<=r['row0']+r['rows'],(g,it['w'],r)
    insert(it,x,y)
  # Remaining real atoms and gates use nearest available native intervals to
  # their actual hyperedge centroid; gaps in multirow bundles stay reserved.
@@ -209,7 +209,7 @@ for g,r in regions.items():
   ns=[n for n,dx,dy in it['members']];target=(sum(xy[n][0] for n in ns)/len(ns),sum(xy[n][1] for n in ns)/len(ns))
   # A real count-driver belongs near its own twelve-copy capture unit.
   roots=[p for p in packing if p['id'].startswith('capture:'+it['id']+':')]
-  if roots:target=(2.16+(roots[0]['xsite']+roots[0]['width_sites']/2)*.054,56.16+(roots[0]['row']+1.5)*.270)
+  if roots:target=(2.16+(roots[0]['xsite']+roots[0]['width_sites']/2)*.054,56.16+(roots[0]['row']+roots[0]['height_rows']/2)*.270)
   best=None
   for y in range(r['row0'],r['row0']+r['rows']):
    row=reserved[y];start=r['x0']
