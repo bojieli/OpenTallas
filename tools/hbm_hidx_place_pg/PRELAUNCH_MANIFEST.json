@@ -1,0 +1,79 @@
+{
+  "source_tip": "1fd525df3",
+  "root_authorization": "14:52 PT Oct19 exact placement+PG diagnostic only",
+  "immutable_inputs": {
+    "input/canonical/all.lib": "7110a7a75b4d2802053266c170bed511640a53d1c85ba9e43939fd4cb8dfe817",
+    "input/canonical/cells.lef": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+    "input/canonical/invbuf_FF.lib": "806848fed619856aa96f4965a2e6cc3d5a3b9bb39494bbdad5abd0cc6219ea26",
+    "input/canonical/netlist.json": "48cb92d9a3178cce0bf365de823ed770ac33da738f389c35f7fd6b5d201c4e28",
+    "input/canonical/netlist.v": "e8130c828bf5748d8a13ff62fa97f3d500b3d3ca6651b8abd7dedf08c1e3bd8b",
+    "input/canonical/ports.csv": "638b5d34faaf42f810071ea2360a74e69c3dd6760ed177f9d70992209e7debff",
+    "input/canonical/seq_FF.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+    "input/canonical/tech.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+    "input/coupon.sdc": "43a27139a95be5642cb487a08acbf0d4165d889bbb6dbb6136d5414bcf3e0482",
+    "input/identifier_escape_map.json.gz": "f61c56cab56501a9d3b541ef554a42ccd66ec207fa7e5d6fc1336b7b19bf50bc",
+    "input/netlist.json.gz": "76b4d612392f049c6627c3edff73752fd1d5b1e1412bded2fa59671e3604be6c",
+    "input/netlist.v.gz": "2cb7b5f981779fb24023e6e6c87e3a817b5b2fcaf45ef01a0a060573f4f6c8e8",
+    "input/pin_geometry_model.json": "2a382e7901c150c2e2f4fb485451cd58c4d9538c852bd082e46a7354a7cdf0a6",
+    "kit/export_metal.py": "ce9a675284f3c08863ad63ff8a2512857f43d1fa3f713143ccdc6437acb990e8",
+    "kit/export_raw.py": "31b5bb6e2a2781bf9649bce8c88f938b7af3bb838b7571a7a09f16c0113417f3",
+    "kit/lib_SHA256SUMS": "6e5afb1a8e1246588bd38d36e70424766b754c5f5c670dfa9a17794db03398d4",
+    "kit/libs_FF.tcl": "ec1dfb0ab701e360b30065307ed7227ef3bc6b02976c975e5bc851ef5a467eab",
+    "kit/libs_TT.tcl": "831ef51009c4a93e24d19de90d453d3c0782ed20ddcb05e4cbeedb1f5feb173f",
+    "kit/place.py": "c9a140279c88867bd275f5a1625a6d46b54aa1681ee11e046df29bcd2f3b5c4e",
+    "kit/platform_SHA256SUMS": "7a6a0b430afebfb8796df0b0707b96d9754c1ce93a02322f3b5db4c9cced3944",
+    "kit/prove_metal_readonly.py": "416b0d80e9726dde3dabd51c471f466488578395891929df333661f6fa577f34",
+    "kit/run.sh": "b1b4865deb5f8fcbfb4f54c28bbdc3b61f8935bd29bf887e92e0db3113e883ac",
+    "kit/vendor/native_pg_binding.tcl": "86ecd58dcc68419006b65d773c832ac6feeaf7ecdcf39dbf9f8f442f868bb5c4",
+    "kit/vendor/strict_contract.py": "893a3f5566752a5ee38b7dd3495b43d8d84258cbbd49b975b3e01a38707bb9dd",
+    "kit/vendor/strict_replay.py": "d67651724a210d492c97fdba355b7e1d1de0e36427f9b20a1cbef627a5bb83f6"
+  },
+  "native_pg_source": "a92a40171",
+  "native_pg_sha256": "86ecd58dcc68419006b65d773c832ac6feeaf7ecdcf39dbf9f8f442f868bb5c4",
+  "cells": 11145,
+  "ff": 2904,
+  "outline_um": [
+    140.4,
+    140.4
+  ],
+  "legal_rows": 504,
+  "central_band_rows": [
+    200,
+    303
+  ],
+  "central_y_um": [
+    56.16,
+    84.24
+  ],
+  "mechanism": "native initialize_floorplan all504rows;16 deterministic nonclock connectivity barycentric iterations; native-width-quantile seed into104centralrows;ONE detailed_placement call;check_placement;native PG birth binding;pdngen;checkpoint before optional reports",
+  "forbidden": [
+    "CTS",
+    "route",
+    "optimization",
+    "FENCE",
+    "row deletion",
+    "fake filler",
+    "parent budget changes"
+  ],
+  "resource_inventory": {
+    "inputs_bytes": 60038499,
+    "cells": 11145,
+    "pg_terminals": 22290,
+    "threads": 2,
+    "reservation_gb": 16,
+    "basis": "Exact current source-native kit same11145cells ran16GB/2threads; INT8 comparable10370sourcecells CTS+conductor253addedclockcells successfully producedcheckpoint under16GB/8threads. This job has no CTS or repair. All hosts currently admit590GB or more; no CPU holds."
+  },
+  "invocation": [
+    "ot-run",
+    "--mem",
+    "16",
+    "--threads",
+    "2",
+    "--dir",
+    "/srv/opentallas-scratch/claude/hidx-place-pg-1019",
+    "--",
+    "bash",
+    "kit/run.sh"
+  ],
+  "created_utc": "2026-10-19T21:54:56.773849+00:00"
+}
