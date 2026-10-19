@@ -31,7 +31,7 @@
   "configuration_setup_edges_added": 2,
   "configuration_ii": 1,
   "reset_release_edges_added": 2,
-  "control_reset_leaves": 94,
+  "control_reset_leaves": 124,
   "parallel_math_reset_leaves": 35,
   "parallel_reset_trees_same_depth": true,
   "clock_root": "existing station ck; no new clock root or phase claimed",
@@ -42,5 +42,25 @@
   "TT_setup_FF_hold": "PENDING physical placement/clock/route",
   "source_sha256": "b5299be4446040607508593a63b1b537d6f25776e77fbe998e78fe8b1bf70648",
   "consumer_specialization": "Only lo/L8 use local valid mirrors; only lane0 of each group emits global valid; hi/L9 other lanes and scale other lanes contain no unused valid/reset pipelines; oddmode groups implement only3consumedmodebits",
-  "scope": "source construction certificate only; no gate or release adoption"
+  "scope": "source construction certificate only; no gate or release adoption",
+  "metadata_delays": {
+    "result_tag": {
+      "W": 9,
+      "D": 6,
+      "storage": "finite4slotringsegments"
+    },
+    "fv_idx_last": {
+      "W": 10,
+      "D": 3,
+      "storage": "finite4slotring"
+    },
+    "scale_source": {
+      "instances": 16,
+      "W": 1,
+      "D": 3,
+      "storage": "finite4slotring per kept same-edge CFG state"
+    }
+  },
+  "metadata_added_edges": 0,
+  "valid_shadow_pipeline_rule": "technical lead classification pending; no physical qualification"
 }

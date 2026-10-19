@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// Local finite ring for the scalar rsqrt's 1,632 useful delay bits.
+// Local finite ring for small scalar and station metadata delays (W<=32).
 // Every three-edge segment is the shared, independently kept 24-bit chunk
 // primitive: four slots, registered onehot write/read, no wide binary mux.
 // A D=12 chain has four segments, D=9 has three. No flow control.
@@ -30,7 +30,7 @@ module qfd_dv_ring_delay #(parameter integer W=32,D=1,RESET=0)(
   assign q=stage[N];
  end endgenerate
 `ifndef SYNTHESIS
- initial if(RESET!=0||W!=32||D<0||(D>1&&(D%3!=0||D>12)))
+ initial if(RESET!=0||(W<1||W>32)||D<0||(D>1&&(D%3!=0||D>12)))
   $fatal(1,"SAFE_RING_DELAY unsupported shape W=%0d D=%0d RESET=%0d",W,D,RESET);
 `endif
 endmodule

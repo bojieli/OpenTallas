@@ -53,6 +53,15 @@ for(genvar z=0;z<16;z=z+1) begin:g_ws
  (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.ID(200+z)) u_c(.ck(ck),.d(ws2),.q(ws_rep[z]));
 end
 '''
+if BOUNDED:
+ local=local.replace('(* keep_hierarchy="yes" *) qfd_dv_station_copy #(.ID(200+z)) u_c(.ck(ck),.d(ws2),.q(ws_rep[z]));', '''wire ws_source;
++ (* keep_hierarchy="yes" *) qfd_dv_station_cfgbit #(.ID(z)) u_c(.ck(ck),.rst_n(rst_n),.cfg_v(CFG_LOCAL[2*z]),.d(cfg_wsrc),.q(ws_source));
++ qfd_dv_ring_delay #(.W(1),.D(3)) u_d(.clk(ck),.rst_n(rst_n),.d(ws_source),.q(ws_rep[z]));'''.replace('\n+','\n'))
+ a=s.index('    reg         fv1, fv2, fv3,');b=s.index('    wire [511:0] y;',a)
+ s=s[:a]+'''wire fv3,ls3;wire[7:0] j3;
++qfd_dv_ring_delay #(.W(10),.D(3)) u_meta(.clk(ck),.rst_n(rst_n),.d({fv,j,j+8'd1==nwords}),.q({fv3,j3,ls3}));
++'''.replace('\n+','\n')+s[b:]
+ s=s.replace('ot_hdc_delay #(.W(9), .D(SCALE_LAT))','qfd_dv_ring_delay #(.W(9), .D(SCALE_LAT))')
 s=s[:header]+local+s[header:]
 if BOUNDED:
  # Only actual reset consumers get leaves: 16lo+1hi+16L8+1L9+1scale.
@@ -61,7 +70,6 @@ if BOUNDED:
  for label,nxt,reset_expr in [('g_l8','g_l9','math_reset[17+l]'),('g_l9','g_sc',"l==0?math_reset[33]:1'b1"),('g_sc',None,"l==0?math_reset[34]:1'b1")]:
   a=s.index('begin : '+label);b=s.index('end endgenerate',a)
   s=s[:a]+s[a:b].replace('.rst_n(rst_n)',f'.rst_n({reset_expr})')+s[b:]
- s=s.replace('.valid_out(vhil[l])','.valid_out(vhil[l])')
 s,record=partition(s,'qfd_dv_redstn2',reset='rst_n')
 if BOUNDED:
  s=s.replace('endmodule','wire[34:0] math_reset;\nqfd_dv_reset_tree #(.N(35)) u_math_reset(.ck(ck),.rst_n(rst_n),.q(math_reset));\nendmodule',1)
@@ -80,7 +88,7 @@ def leaf(_):
  global count
  out=f'cfg_final[{count}]';count+=1;return out
 body=re.sub(r'\bcfg_v\b(?!\s*\()',leaf,body)
-body=body.replace('CFG_LOCAL[z]','cfg_final[z]')
+body=body.replace('CFG_LOCAL[z]','cfg_final[z]').replace('CFG_LOCAL[2*z]','cfg_final[2*z]')
 mid=(count+23)//24
 decl='\nreg[27:0] cfg_payload0,cfg_payload1;\n'
 decl+='\n'.join(f'wire[{w-1}:0] safe_{n};' for n,w in fields)+'\n'
@@ -98,6 +106,9 @@ always @(posedge ck) q<=d;
 endmodule
 (* keep_hierarchy="yes" *) module qfd_dv_station_out #(parameter integer W=16,ID=0)(input wire ck,rst_n,input wire[W-1:0] d,output reg[W-1:0] q);
 always @(posedge ck or negedge rst_n) if(!rst_n) q<=0;else q<=d;
+endmodule
+(* keep_hierarchy="yes" *) module qfd_dv_station_cfgbit #(parameter integer ID=0)(input wire ck,rst_n,cfg_v,d,output reg q);
+always @(posedge ck or negedge rst_n) if(!rst_n)q<=0;else if(cfg_v)q<=d;
 endmodule
 (* keep_hierarchy="yes" *) module qfd_dv_station_mode #(parameter integer ID=0,USE2=1)(input wire ck,rst_n,cfg_v,input wire[1:0] mode,output wire[3:0] q);
 reg[2:0] used_q;
