@@ -81,7 +81,10 @@ PVS0, KPV, PV_LAT = 150, 55, 56
 PPATH = True                 # TOK-S81-GAPS/SVCP: P is produced on-die (GO PIO != 0); False = legacy host PV frame
 # on-die P path constants (share cycles; measured by tb_svc_lower, results/rtl/s81_layer_tput_1018/compiler/bench_svc_p):
 #   PIO = PIO0 + 5 ceil(T / 4) / 4 ... see p_sched(); PO = PIO + P_ARR + ceil(n / 2) + P_PO_M; PVO = PO + 8 ceil(T / 32) + KPV
-PIO0, P_ARR, P_PO_M, PIO_EARLY = 600, 200, 8, 450
+# measured 10-19 (bench_svc_p sweep, out_p1 build src 85340f61a, T 128, GO 1555): SM e rows land GO+283..GO+305; the
+# P beats read pbuf from PIO+75 (2 edges/beat) -> PIO0 270 FAIL (P read before the first e row), 285 PASS; the PV frame
+# reaches the owners PIO+90 (W) / +85 (E) -> P_ARR 60 FAIL (PO before the frame: fault 00104000), 70 PASS.  Tight = 285 / 70.
+PIO0, P_ARR, P_PO_M, PIO_EARLY = 285, 70, 8, 150
 W_SLACK = 560                # WIN_LOAD -> GO: 64 code + 2 scale reads a PC at DQ 8 credits x <= 56-edge latency + margin
 Q_ARM = 4                    # j pin -> first q header (job pin flop + table push, ot_s81_svc_job.sv:31-32, 91-92)
 JD_LAT = 1                   # last P.V word at the pv pin -> jd done pulse (SVC-PV3 logs: end = pv_last + 1)
