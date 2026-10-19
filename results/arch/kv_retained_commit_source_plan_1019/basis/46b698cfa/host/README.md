@@ -1,0 +1,13 @@
+# Selected HOST landing fault source DAG
+
+All 128 selected `hsl_*` instances are traced using die SHA `18464a8b31042bea03b3fc5779d42803ab7b05bebbaab733a4d83d4a714c1ea6` and exact revision `4db097403` source snapshots. `selected_instances.json` retains each actual clock and host/HBM reset face; `source_manifest.json` records hashes. No RTL, gate, native view or simulation was changed.
+
+`land_er[260]` is a registered alias `land_fault <= er[260] | fault`. The local sticky detector is `u_slice.u_static.fault`: landing or HOST queue overflow, invalid HOST write/header, excess credit without a launch, and a completion without matching ownership/write direction. Incoming `er[260]` also sets that sticky state but is propagation, not an additional detector. Thus there are 128 local static detector states, with multiple set predicates; alias registers must not inflate the count.
+
+The upstream controller error passes through **three qualifications**: ES merge `her[260] <= own && er[260]` (`own` is registered `!emb_boot_ready`); boot arbiter return selection `normal_er <= normal ? ctrl_er : 0`; and completion wrapper `qualified ? raw_normal_er : 0`. Wrapper pin capture and static `er` add registers, and are recorded exactly in the JSON. Boot fault detectors affect these qualifications and have a separate `boot_fault`/`sfo` route; they are not automatically OR-exported into `land_er[260]`. ES merge `m_fault | emb_fault` likewise is not part of `her[260]`.
+
+Controller return detectors are expanded by sibling `pc_return_leaf` in `../pc/primitive_inventory.json`; its `er_f` pin register is a propagation alias of CDC rejection and native-intake sticky state. This HOST packet deliberately does not duplicate those leaves or treat aliases as primitives.
+
+The source pin-capture registers `ctrl_er_q`, host_rn and hbm_rn have no reset of their own. Host and HBM inner resets are separate sampled faces; their actual reset release ordering and legal first-use timing remain unqualified. Regional calendars, complete health retirement/STATUS timing, and native preservation are outside this read-only packet.
+
+**Qualification, not demonstrated loss:** this packet proves no legal lost-fault witness. Ownership routes runtime controller returns to the embedding endpoint, and boot qualifiers intentionally suppress invalid normal traffic. A fault-loss claim requires a legal detector event under the selected schedule/reset contract and a missing required STATUS/retirement/admission observation. Sticky controller error may survive qualification and become visible later. No qualifier bypass or raw `er` capture is proposed.

@@ -1,0 +1,76 @@
+{
+  "status": "MODEL_SOURCE_SCOPE_PROPOSAL_ONLY",
+  "selected": {
+    "revision": "5f2ce19bc",
+    "HOST_MU": 0,
+    "NSLOT": 1,
+    "NW": 18,
+    "ENG_CTX": 1,
+    "PLB": 13
+  },
+  "binding_dependency": "164138243",
+  "minimum_new_modules": [
+    "ot_host_if_pb2_observed_rc",
+    "qkd_host_axi_packet_rc",
+    "qkd_host_native_token_endpoint_cancel_rc"
+  ],
+  "default_parameter": {
+    "ENABLE_RETAINED_COMMIT": 0,
+    "HEALTH_CUTOFF_EDGES": 0,
+    "STEP_RESPONSE_DEADLINE_EDGES": 0
+  },
+  "reset": {
+    "retained": "raw_por_n",
+    "warm": "poison and stop new admission; retain full accepted transaction ownership",
+    "recovery": "raw POR only in first variant",
+    "missed_stopped_clock_PLL_pulse": "UNOBSERVABLE; external source contract decision required",
+    "actual_analog_model": "core toggles while por_n; locked rises after8ref edges, never runtime falls; runtime PLL fault contract absent",
+    "postboot_host_rst_fall_while_rawpor_high_in_actual_model": false,
+    "real_events": "CSR soft_rst / peer reset / role_fault restart execution domains while host survives"
+  },
+  "equations": {
+    "bad_next": "bad_q || ((ever_armed || retained_owned) && (!warm_rst_n || !pll_locked_i)) || health_bad_i || protocol_bad || deadline_bad || dma_bad || ((ever_armed || retained_owned) && (execution_restart_i || role_fault_i))",
+    "step_certify": "pending.valid && age==H && !bad_next && armed && raw_seen_including_this_edge && health_identity_match && health_cutoff_i",
+    "generated_mirror_commit": "actual success CQ word0 VALID offer from immutable certified head",
+    "prompt_mirror_commit": "step_certify && !generated",
+    "rawdone": "original cleanup/response credit remains unconditional",
+    "next_pick": "original pick && !pending[slot] && !poison[slot] && armed && !bad_next",
+    "failure_pending": "one retained owner report until actual fault word0 offer",
+    "poison_clear": "raw POR only"
+  },
+  "schedule": {
+    "H": null,
+    "response_deadline": null,
+    "added_slot_wait": "max(0,H-R)",
+    "absolute_SU_MU_latency": null,
+    "external_DMA_bound": null
+  },
+  "cost": {
+    "old59_bits_per_user_is_complete": false,
+    "pending_snapshot_bits": null,
+    "retained_full_source_state_bits": null,
+    "copy_fixedpoint_FF": null,
+    "area_um2": null,
+    "pending_snapshot_bits_SU_excluding_age": 139,
+    "age_counter_bits": "ceil(log2(H+1))",
+    "immutable_event_lineage_bits": 992,
+    "combined_event_table_indexed_bits": 2848,
+    "event_table_requires_SRAM_before_physical": true,
+    "ever_armed_bits": 1
+  },
+  "qualification": {
+    "RTL_changed": false,
+    "simulated": false,
+    "EDA_run": false,
+    "native": false,
+    "fulltoken": false
+  },
+  "blockers": [
+    "runtime PLL protection ONLY: actual analog loss model/source contract absent; not required for actual-semantics numerical component",
+    "full immutable accepted transport path",
+    "complete source-health coverage and phase cutoff",
+    "actual cache poison endpoints and drain ownership",
+    "full state and clock/reset sizing",
+    "coherent MU slot UID/calendar if MU selected"
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "status": "MODEL_HOLD_NOT_BUILD_READY",
+  "sources": {
+    "guard_candidate": "a5201f50f",
+    "warm_wrapper": "efb7381b1",
+    "retained_request_export": [
+      "499931ce2",
+      "ac4657a74"
+    ],
+    "health_model": "1f4241db0",
+    "primitive_inventory": "46b698cfa",
+    "selected_GEN8_frozen_source": "5f2ce19bc"
+  },
+  "selection": {
+    "actual_HOST_MU": 0,
+    "actual_NSLOT": 1,
+    "actual_NW": 18,
+    "separate_gate_endpoint": "qkd_host_native_token_endpoint_cancel_mu",
+    "gate_SRAM_FIFO_default_define": 1,
+    "actual_FIFO_default": 0,
+    "selected_service_guard_sha256": "4cf2002bf0feb8f315598827eab527799289c9ae5f68fc52e91e9e188a6f7045",
+    "gate_fifo_sha256": "7cb23a9d0e2772d3eaae504ec329ea2fd876748beb56ca2d084ff498eac49c37",
+    "selected_fifo_sha256": "c92557210430437e1ed00033dabaf0be4b912e58a4357c2aa18c23e165003e70",
+    "qualification": "Gate native census applies only to separate MU hardtop, not selected full SU tile. Shared service guard body matches; selected marker storage remains unqualified.",
+    "actual_FIFO_has_SRAM_parameter": false
+  },
+  "copy_graph": {
+    "algorithm": "N(cell)=max(1,ceil(sum N(endpoint_cell)/32)) across every output after BUF/INV/HB-transparent endpoint traversal; iterate through input/reset/tie ancestry. Preserve original D/CLK/reset/set and state identity. Inputs and macro outputs are not freely replicated.",
+    "final_extra_ff": 185,
+    "final_extra_comb": 174,
+    "of_ff_copies_driving_reset_set_endpoints": 75,
+    "extra_sourceplace_area_um2": 78.93612,
+    "extra_clock_loads": 185,
+    "added_logical_edges": 0,
+    "physical_status": "Lower bound only: load partition, kept source, reset release, active data corner/power/capacitance and native remap receipt still required."
+  },
+  "storage_bits": {
+    "selected_legacy_indexed_marker_memory": 8192,
+    "selected_fenced_memory": 1024,
+    "selected_legacy_marker_bank_half_last_front": 1728,
+    "candidate_SRAM_marker_stage2_last_front": 640,
+    "candidate_marker_SRAM_physical_bits": 8192,
+    "candidate_marker_SRAM_macro_count": 1,
+    "completion_ring_8x40": 320,
+    "barrier_ring_8x32": 256,
+    "candidate_edges_delta": 0,
+    "collision_obligation": "Original component equivalence is historical, not selected die proof. Confirm same-edge read-before-write, full replacement, empty push and four-edge prefetch against actual macro/selected clock/reset before adoption."
+  },
+  "warm_boundary": {
+    "existing_wrapper_POR_ff": 4,
+    "existing_wrapper_postoutput_comb_bits": [
+      "abort",
+      "service_ready",
+      "guarded_tk[88]",
+      "status[2]",
+      "status[1]"
+    ],
+    "preferred_model": "Keep all original guard internal states/feedback. Add5 POR-output FF computed from original pre-edge D predicates, plus4 POR history FF; do not capture existing output Q (which would add an edge). Use next_warm_lost at the first reset edge.",
+    "additional_ff_to_unwrapped_guard": 9,
+    "additional_ASR_footprint_floor_um2": 3.41172,
+    "copy_plus_warm_ff_lower_bound": 194,
+    "copy_plus_warm_area_floor_um2": 82.34784,
+    "combin_area_extra": null,
+    "clock_capacitance_TT_FF": null,
+    "recovery_priority": "Health assertion wins on the same edge. Clearing requires actual certified global drains, no retained context and matched committed/poison/CQ lifecycle; raw host_recovery_clear alone is not certification.",
+    "next_state": "Wnext = !host_reset_n ? (W|hist|pm|ps|retained_ctx) : (certified_recovery&&!retained_ctx ? 0 : W). All five external D predicates use Wnext; internal guard retains original equations.",
+    "NBA_detail": "status[1] uses old internal service_ready, whereas service_ready output uses newly evaluated clean/activity/bad/quiet predicate. These are distinct D functions.",
+    "internal_fault_capture": "Existing hist samples g_diag/g_abort one edge later. Direct sticky capture must include exact same-edge validated internal_bad or prove no reset can erase its observation; no legal selected-event witness or full calendar is claimed.",
+    "first_warm_fault_edge_delta": 0,
+    "edge_delta_qualification": "Conditional sampled-edge model only. Async host-reset output clearing/ready window, landed reset phases, PLL-loss clock absence and legal recovery need source/native proof before RTL. No assertion of exact continuous-time equivalence.",
+    "alternative_output_Q_register_delta": 1,
+    "alternative_status": "Rejected as same-age repair: adds1 fault edge and can miss first warm priority unless additional real veto/consumer protocol is priced."
+  },
+  "health_lifetime": {
+    "raw_POR": "pad_por_n, independent of pll_locked and host_rst_n",
+    "current_native_POR": "por_n && pll_locked",
+    "retained_request_binding": "Actual nonconstant export499931ce2 is source candidate, not selected binding. Need real owned/request/FIFO/CQ/tag/generation state lifetime.",
+    "raw_faults": "{service_faults_o, service_faults}",
+    "protocol_fault": "u_rank__begin_fault",
+    "source_valid": "Only valid/owned causal producer events; no invented independent reset pulses, raw invalid er capture, blanket CQ observer mask or retained_ctx tie0.",
+    "health_consumer_obligations": [
+      "STATUS emission",
+      "actual retirement/CQ word0 VALID offer and committed state",
+      "prompt commit",
+      "future admission",
+      "PLL/warm-reset retained context recovery"
+    ],
+    "source_calendar_STATUS_deadline": null
+  },
+  "physical": {
+    "current_die_um": [
+      108,
+      140.4
+    ],
+    "sourceplace_std_area_um2": 3866.58684,
+    "macro_area_um2": 927.98784,
+    "modeled_std_lower_bound_um2": 3948.93468,
+    "outline_area_um2": 15163.2,
+    "total_occupied_lower_bound_fraction": 0.3216288461538461,
+    "macro_origin_um": [
+      43.2,
+      43.2
+    ],
+    "individual_wire_max_sourceplace_um": 246.783,
+    "individual_wire_max_final_um": 185.41,
+    "reach_405": "PASS exact candidate ODB, no new-copy-placement receipt",
+    "pin_flop_spread": "Historical gate PASS only; new194 FF and reset/clock changes unmeasured",
+    "one_full_width_std_band": "Unqualified for successor; derive connected band/macro-access plan from source area/pins before gate.",
+    "PG_and_contacts": "Logical gate PG HOLD; macro signal face density<=6, geometric power access/via/OBS proof still open"
+  },
+  "latency_rate": {
+    "SU_actual_selected_added_edges": null,
+    "MU4_adopted_added_edges": null,
+    "copy_only_edges_delta": 0,
+    "conditional_integrated_boundary_edges_delta": 0,
+    "post_Q_boundary_edges_delta": 1,
+    "per_layer_STATUS_and_token_price": null,
+    "reason": "Complete actual source/reset/phase/deadline and first-use graph not qualified. Old357/1982 inventory not extended, and extra194FF on distinct MU gate is not multiplied into actual selected NSLOT1 or four users."
+  }
+}

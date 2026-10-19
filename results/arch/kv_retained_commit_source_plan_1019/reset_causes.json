@@ -1,0 +1,41 @@
+{
+  "revision": "5f2ce19bc",
+  "postboot_host_rst_fall_with_rawpor_high": false,
+  "proof": [
+    "role_valid only0 on POR then1, never clears",
+    "role_q assigned only before role_valid, peer stable thereafter",
+    "hr global/local host outputs each same reset-sync of qualified POR",
+    "role_fault does not gate host reset",
+    "soft_rst does not gate host reset",
+    "qualified POR=rawPOR&&locked; analog locked never falls except rawPOR"
+  ],
+  "actual_restart_causes": [
+    {
+      "source": "qkd_host_sys_csr_service",
+      "predicate": "c_wr_go && s_awaddr[11:2]==10h002 && s_wdata[0]",
+      "effect": "soft_rst restarts link/HBM/die/ready; host remains up",
+      "ownership_gate": false
+    },
+    {
+      "source": "qkd_host_peer_rank_codec",
+      "predicate": "accepted ordered valid opcode84, rx_data[30]",
+      "effect": "peer reset edge into sequencer; host remains up"
+    },
+    {
+      "source": "qkd_host_rst_role_pins",
+      "predicate": "role_valid && die_q!=role_q",
+      "effect": "sticky role_fault gates link/HBM/die/ready, not host"
+    }
+  ],
+  "conditional_only": [
+    "postboot external host_rst pulse",
+    "runtime PLL-loss/stopped-clock event"
+  ],
+  "actual_numerical_component_blocked_on_analog_contract": false,
+  "owner_overlap_reachability": "NOT_PROVEN; real ingress/calendar and recovery guards must appear in pre-change witness",
+  "issuance_guards": {
+    "HOST_ingress": "!reserved_q && valid_q && !fault && hn!=0 && hcredits!=0",
+    "coordinator_recovery_start": "!allocated_valid && !post_pending && result_transport_idle && all8 KV/VM/collective/host drains",
+    "lifecycle_link_reset": "recovery_active && all links_drained"
+  }
+}

@@ -1,0 +1,176 @@
+[
+  {
+    "path": "tools/qwen_kv_die/kv_die.py",
+    "revision": "5f2ce19bc",
+    "sha256": "517ada21587fdb68d87f55530a0b80402f3888d4d46f617e60f7949f23f73903",
+    "current_checkout_same": false
+  },
+  {
+    "path": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "84cdc01c1382edbca0b7c9e26e60a487401ec31dbcd9004e8f2e4d91f77ef38f",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/physical/ot_qwen_host_ctl.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "122c568729729d8c5ddcca8c5092cf985200c850cc9000962a2ad159674fb436",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "9dc960a01a40d7a4a873599bce8eeb11c12c16d454332e27dcc2533caad9b962",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "c43934f9a6f4f13f9872475e9edf36a5b90e1b7a31787c31c0bd4c1b3e258cc8",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "6413323907a589970013f744dca1f7f3af5859c4739264cd9864b35371801031",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_admission.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "8216a88b0850a74747cc2402775e9189414182aa0178895caa930b79c7b766c8",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_prompt_observed.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "38b86a259ae631f56318587a13cdf235b4908ba925ab4ef599c9ea6dac49599d",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "dae8b9d0b549478d54953c22a819e5ead96fc84d34552be303b18f8749b1e574",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "c7f8a0a8d88f43c4b122b405c32f34ca8bcb81c8bc63e080f24adfa5dc86d270",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "21e79b85eeb1d9c31fe7f89d928453e44e8516d8295c12299785767e2831a45d",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "bc26e6313215b8ae9f65163a7bfc1268b05078cd80b5f6988944f7b15b1072c7",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "3ef013ca6db4c5358c7eff2a1f6a9c41d6c16995af1386889368197149dab657",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "a11922a003e5302b39ba4fbc1089dd92b02194c44d071a7ead253983acb5b16f",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "544639e6add23a4f106f6ff67960c7f02496d8835f06d860b4bdde1f1dc7c470",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_coordinator_services.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "cf4d1222f56a5ef0852062980adbf3ba81efa81ccc0394416f2bcbfde4caacdb",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "705ad5a15bf138d5f62effd958fc5e15371178d8062da154cfa649dc64b1f0df",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "1d8e481b09e822cb0b02bf57c9d2906b0c9aa210f102a3908213f32c5dde5cdc",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "3a7d297b3492b1a3eb3d0ce2a067d3962e034328e8614956cd63f08e005180fd",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "56396c2a8ff6ed64760c38e5fd4b798866d11aedb88d08496be930f99647e919",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "ddedc0776e0fe742b236871a525f62efe2e88c9cdc1515afceae4b306c76a0bb",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_tp8_coordinator_mu.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "e0b275156af2b577533b38fe4e20f5417c7b836e1b0de8d6752a24cdcad45f5c",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "00117c17aa338fff5524d2a675af4b2910d8a45749a477c1789c274d707ae7bf",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "7b35c728e8c0a719ae01ea50db5c185b0c6141b77620e5b934b799fb7d333637",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_coordinator_services_mu.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "d9998f7cb7935b04cd12785915e517f8678f7ce55bf3508f27149db7c4e48b9d",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "50364e9878c640c9e8f50ed8391d48f729e2598665f24c549b407bba6be6be06",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "e7fa0c9e9708f8b96fff57b84ab015d49f226242df9ca702bf1555c720dbcc0a",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "681968a50a2e54661bac7979bf41240725a2786ed59f9c35855a71e13164b7a2",
+    "current_checkout_same": true
+  },
+  {
+    "path": "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+    "revision": "5f2ce19bc",
+    "sha256": "a3cf3ff073ffb95176b406002bcf50d49305e4f238d75f9ade3235e42beb0fb6",
+    "current_checkout_same": true
+  }
+]
