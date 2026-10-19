@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Materialize ONE source mutant from a frozen manifest; never runs a build."""
 import argparse,hashlib,json,pathlib,re
-p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--out',required=True);p.add_argument('--mutant',required=True,choices=['epoch','generation','stage','input_next','client_substitution','latest_pending','rank_masks','early_post','raw_cleanup','pin_aw_before','pin_w_before','bridge_duplicate']);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--out',required=True);p.add_argument('--mutant',required=True,choices=['epoch','generation','stage','input_next','client_substitution','latest_pending','rank_masks','early_post','raw_cleanup','pin_aw_before','pin_w_before','bridge_duplicate','false_retire_marker','false_cq_marker']);a=p.parse_args()
 src=pathlib.Path(a.source).resolve();out=pathlib.Path(a.out).resolve()
 if out.exists():raise SystemExit('refuse existing output')
 m=json.loads((src/'source_manifest.json').read_text());out.mkdir(parents=True)
@@ -29,8 +29,12 @@ elif a.mutant=='pin_aw_before':
  path='private/qkd_host_if_pins_observed_rc.sv';old='.out_d({m_awaddr,m_awlen,m_awsize})';new='.out_d({mut_aw_raw,m_awlen,m_awsize})';case=1;fail='OFFERED_AW_CHANGED_BEFORE_ACCEPTANCE'
 elif a.mutant=='pin_w_before':
  path='private/qkd_host_if_pins_observed_rc.sv';old='.out_d({m_wdata,m_wstrb,m_wlast})';new='.out_d({mut_w_raw,m_wstrb,m_wlast})';case=2;fail='OFFERED_W_CHANGED_BEFORE_ACCEPTANCE'
-else:
+elif a.mutant=='bridge_duplicate':
  path='private/qkd_host_axi_packet_rc.sv';old='wire capture_aw=!dw&&!ba&&!m_awready&&m_awvalid_q;';new='wire capture_aw=!dw&&!m_awready&&m_awvalid_q;';case=2;fail='EXTRA_BRIDGE_AW_CAPTURE_ACK'
+elif a.mutant=='false_retire_marker':
+ path='private/ot_host_if_pb2_observed_rc.sv';old='step_retire_native_valid<=ENABLE_NATIVE_OWNER_JOIN && pending_native_valid;';new="step_retire_native_valid<=1'b0;";case=0;fail='RETIRE_MARKER_ALIGNMENT'
+else:
+ path='private/ot_host_if_pb2_observed_rc.sv';old='cq_native_valid_observed<=ENABLE_NATIVE_OWNER_JOIN && cq_saved_native_valid;';new="cq_native_valid_observed<=1'b0;";case=0;fail='CQ_MARKER_ALIGNMENT'
 f=out/path;s=f.read_text()
 if s.count(old)!=1:raise SystemExit(f'exact mutation anchor count {s.count(old)} for {path}: {old}')
 oldsha=hashlib.sha256(f.read_bytes()).hexdigest();s=s.replace(old,new,1)
