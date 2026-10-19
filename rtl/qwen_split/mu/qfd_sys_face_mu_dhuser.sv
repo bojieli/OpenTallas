@@ -51,6 +51,17 @@
 //         after the previous entry.
 //   MUT (bench only): 4 entry consumed one edge late (fc == t_rom + 1); 5 the counters re-anchor on EVERY stage-1 h_start
 //   (fc restarts each latency token: anchor drift into the wrong frame entries); 6 drift / missing check dropped.
+//
+// PINREG (MU-LEAF-KIT 2026-10-19, opt-in, OPSEG only; 0 = unchanged): the hardened-leaf form, every used pin registered.
+//   dh_run[42:36] (h_start, stage) land in a pin flop dh_q7, so the leaf sees each h_start one edge after the parent
+//   launched it.  The counters compensate exactly: the anchor edge (one edge after calendar time 0) loads fc = tc = 1
+//   and the drift check expects the (delayed) stage-1 h_start on tc == 1, so every entry still fires on calendar edge
+//   t_rom and op_v / op_* are cycle-identical to PINREG 0 (lockstep bench tb_dhuser_pinreg.sv).  Compiler rule: t_rom
+//   >= 1 (an entry on calendar edge 0 of the first frame is reported missed, op_fcode[2]); F16 minimum 1,721.
+//   Faults: op_fcode[1] (drift, from dh_run) is raised one edge later than at PINREG 0; [0] / [2] / [3] on the same edge;
+//   mu_fault becomes a flop (|op_fcode one edge later; sticky, observability only).  dh_user / res_user are constant 0.
+//   dh_run[43] and [35:0] stay unused (the parent may leave them unconnected).
+//   MUT 7 (bench only): PINREG without the anchor compensation (fc anchors at 0): every op start one edge late.
 // =====================================================================================================================
 module qfd_sys_face_mu_dhuser #(
     parameter integer NU = 1,
@@ -61,8 +72,9 @@ module qfd_sys_face_mu_dhuser #(
     parameter integer MUT = 0,
     parameter integer OPSEG = 0,                   // 1: the op-start leaf (NU 2..4), see the header
     parameter integer LAST_STAGE = 37,
-    parameter string  VIAMAP = "",                 // OPSEG: ot_rom_4096x72_m8 via-mask image ($readmemh)
-    parameter string  INSTANCE = ""                // OPSEG: ROM instance name (+OT_ROM_DIR=<dir>/<INSTANCE>.viamap.hex)
+    parameter         VIAMAP = "",                 // OPSEG: ot_rom_4096x72_m8 via-mask image ($readmemh)
+    parameter         INSTANCE = "",               // OPSEG: ROM instance name (+OT_ROM_DIR=<dir>/<INSTANCE>.viamap.hex)
+    parameter integer PINREG = 0                   // OPSEG: 1 = pin flop on dh_run[42:36], compensated (see the header)
 ) (
     input  wire        ck,
     input  wire        rst_n,
@@ -82,8 +94,17 @@ module qfd_sys_face_mu_dhuser #(
     generate if (OPSEG != 0) begin : g_op
         // ------------------------------------------------------------ ROM + header / prefetch
         reg         rom_ce; reg [11:0] rom_a; wire [71:0] rom_q;
+`ifdef SYNTHESIS
+        // OpenROAD's netlist reader rejects instance parameters; the hard macro is content-independent
+        ot_rom_4096x72_m8 u_rom (.clk(ck), .ce_in(rom_ce), .addr_in(rom_a), .rd_out(rom_q));
+`else
         ot_rom_4096x72_m8 #(.VIAMAP(VIAMAP), .INSTANCE(INSTANCE)) u_rom (.clk(ck), .ce_in(rom_ce), .addr_in(rom_a),
             .rd_out(rom_q));
+`endif
+        localparam integer PR = (PINREG != 0) ? 1 : 0;
+        localparam [21:0] A0 = (PINREG != 0 && MUT != 7) ? 22'd1 : 22'd0;   // counter value on the anchor edge
+        reg  [6:0]  dh_q7;                         // PINREG: {h_start, stage} pin flop
+        reg         mu_q;                          // PINREG: registered mu_fault
         reg  [1:0]  bst;                           // 0 read header, 1 header in flight, 2 running, 3 bad header (idle)
         reg  [21:0] hm1, tm1;                      // H - 1, T - 1
         reg  [11:0] nent, ptr;                     // ptr = index of the entry in flight / in the prefetch register
@@ -94,9 +115,12 @@ module qfd_sys_face_mu_dhuser #(
         reg         anch;
         reg  [21:0] fc, tc;
         reg  [3:0]  seen;
-        wire        hs = dh_run[42];
-        wire [5:0]  stg = dh_run[41:36];
+        wire        hs = PR ? dh_q7[6] : dh_run[42];
+        wire [5:0]  stg = PR ? dh_q7[5:0] : dh_run[41:36];
         wire        l0 = hs && stg == 6'd1;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) begin dh_q7 <= 7'd0; mu_q <= 1'b0; end
+            else begin dh_q7 <= dh_run[42:36]; mu_q <= |op_fcode; end
         wire [15:0] h_magic = rom_q[71:56];
         wire [21:0] h_H = rom_q[55:34], h_T = rom_q[21:0];
         wire [11:0] h_n = rom_q[33:22];
@@ -106,7 +130,7 @@ module qfd_sys_face_mu_dhuser #(
         wire [5:0]  e_s = rom_q[48:43]; wire [1:0] e_u = rom_q[42:41]; wire [21:0] e_t = rom_q[40:19];
         wire        anchor_now = bst == 2'd2 && !anch && l0;
         wire        act = anch || anchor_now;
-        wire [21:0] fc_now = anch ? fc : 22'd0, tc_now = anch ? tc : 22'd0;
+        wire [21:0] fc_now = anch ? fc : A0, tc_now = anch ? tc : A0;
         wire        wrap = act && fc_now == hm1;
         wire [21:0] t_hit = (MUT == 4) ? nx_t + 22'd1 : nx_t;
         wire        fire = act && nx_v && fc_now == t_hit;
@@ -139,9 +163,9 @@ module qfd_sys_face_mu_dhuser #(
                     anch <= 1'b1;
                     fc <= wrap ? 22'd0 : fc_now + 22'd1;
                     tc <= (tc_now == tm1) ? 22'd0 : tc_now + 22'd1;
-                    if (MUT == 5 && l0) begin fc <= 22'd1; tc <= 22'd1; end
+                    if (MUT == 5 && l0) begin fc <= A0 + 22'd1; tc <= A0 + 22'd1; end
                     if (MUT != 6) begin
-                        if (l0 != (tc_now == 22'd0)) op_fcode[1] <= 1'b1;            // drift / missing L0 start
+                        if (l0 != (tc_now == A0)) op_fcode[1] <= 1'b1;               // drift / missing L0 start
                         if (wrap && tc_now != tm1) op_fcode[1] <= 1'b1;               // H not a multiple of T
                     end
                 end
@@ -174,7 +198,7 @@ module qfd_sys_face_mu_dhuser #(
             end
         assign dh_user = 2'd0;
         assign res_user = 2'd0;
-        assign mu_fault = |op_fcode;
+        assign mu_fault = PR ? mu_q : |op_fcode;
     end else if (NU == 1) begin : g_one
         assign dh_user = 2'd0;
         assign res_user = 2'd0;
@@ -211,7 +235,8 @@ module qfd_sys_face_mu_dhuser #(
     initial begin
         if (NU < 1 || NU > 4) $fatal(1, "qfd_sys_face_mu_dhuser: NU %0d outside 1..4", NU);
         if (NS < 1 || NS > 64) $fatal(1, "qfd_sys_face_mu_dhuser: NS %0d outside 1..64", NS);
-        if (MUT < 0 || MUT > 6) $fatal(1, "qfd_sys_face_mu_dhuser: MUT %0d undefined", MUT);
+        if (MUT < 0 || MUT > 7) $fatal(1, "qfd_sys_face_mu_dhuser: MUT %0d undefined", MUT);
+        if (PINREG != 0 && OPSEG == 0) $fatal(1, "qfd_sys_face_mu_dhuser: PINREG needs OPSEG 1");
         if (OPSEG != 0 && (NU < 2 || NU > 4)) $fatal(1, "qfd_sys_face_mu_dhuser: OPSEG needs NU 2..4");
         for (q = 0; q < NS; q = q + 1)
             if (NU > 1 && USER_SEQ[2*q +: 2] >= NU) $fatal(1, "qfd_sys_face_mu_dhuser: entry %0d user >= NU", q);
