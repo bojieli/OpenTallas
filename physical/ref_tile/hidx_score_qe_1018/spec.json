@@ -1,0 +1,81 @@
+{
+ "kind": "tile",
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.55,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.025,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "macro_halo_um": 5.4
+ },
+ "io_flop_at_pins": {
+  "cols": 2,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_budget": "die",
+ "job": {
+  "owner": "Claude OWN-IDXSCORE 1018",
+  "purpose": "IDX quarter scorer glue tile (wires-only quarter ot_hbm_idx_score_quarter_wo, x4 per die)",
+  "branch": "claude/own-idxscore-1018"
+ },
+ "name": "hidx_score_qe_1018",
+ "top": "ot_hbm_idx_score_qe_static",
+ "sources": [
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_split.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {},
+ "outline": {
+  "w": 86.4,
+  "h": 1123.2,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "r1_qv",
+   "r1_kv",
+   "r1_aux",
+   "r1_bus",
+   "r0_qv",
+   "r0_kv",
+   "r0_aux",
+   "r0_bus"
+  ],
+  "E": [
+   "score",
+   "fault"
+  ],
+  "N": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "outputs score/fault are registers (as the flat quarter); inputs land in the keep delay / tail / meta input stages and the settle/online/fault registers (E glue verbatim)"
+ },
+ "structural_change": "OWN-IDXSCORE 2026-10-18: E glue column of the wires-only IDX quarter scorer: both rows' E glue verbatim (keep delay D106, settle/online fault, ot_hbm_idx_tail_native, d123 meta RF), own reset relay, registered score (306 b) + fault; one clock (the E region clock)."
+}
