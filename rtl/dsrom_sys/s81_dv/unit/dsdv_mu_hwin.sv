@@ -175,7 +175,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     always @(posedge ck) tmr <= tm1 - {8'd0,crm};
     // ---- event rows
     wire [31:0] ts_event[0:NEV-1], tm_event[0:NEV-1];
-    wire [23:0] rl_event[0:NEV-1]; wire [NEV-1:0] idle_event, rec_local;
+    wire [23:0] rl_event[0:NEV-1]; wire [NEV-1:0] idle_event, rec_local, armed_event;
     wire [SI-1:0] cfg_addr[0:NEV-1];
     wire [1:0] cfg_attr[0:NEV-1];
     wire [NEV-1:0] invalid_event;
@@ -350,6 +350,12 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
                 default: ;
             endcase
     end
+    wire [PTR_CTL-1:0] record_group;
+    generate for(genvar rg=0;rg<PTR_CTL;rg=rg+1) begin:g_record_control
+        if(LOCAL_BOOT!=0) begin:g_local
+            (* keep=1 *) dsdv_mu_record u_record(.start(st),.on_calendar(on_cal),.collision(col),.duplicate(udup),.armed(armed_event[rg%NEV]),.bad(hcfg_bad),.record(record_group[rg]));
+        end else begin:g_direct assign record_group[rg]=rec;end
+    end endgenerate
     genvar ws, wc;
     generate for(wc=0;wc<NC_REC;wc=wc+1) begin:g_compare_copy
         (* keep *) reg [9:0] cmp_r; assign cmp_user[wc]=cmp_r;
@@ -361,7 +367,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         for(wc=0;wc<4;wc=wc+1) begin:g_copy
             (* keep *) reg we_r; assign id_we[ws][wc]=we_r;
             always @(posedge ck or negedge rr[RWRITE_BASE+wc*SLOT_RG+ws/24])
-                if(!rr[RWRITE_BASE+wc*SLOT_RG+ws/24]) we_r<=1'b0; else we_r<=rec && ss[ws];
+                if(!rr[RWRITE_BASE+wc*SLOT_RG+ws/24]) we_r<=1'b0; else we_r<=record_group[ws/8] && ss[ws];
         end
     end endgenerate
     // Parallel RX identity fields have one reset-distinct payload copy per <=16 entries.
@@ -469,8 +475,10 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             end
             (* keep=1 *) dsdv_mu_boot_enable u_attr(.count(boot_count),.armed(arm_r),.valid(cfg_w2_r),.match(esel==EI'(ce)),.en(attr_write));
             (* keep=1 *) dsdv_mu_boot_enable u_kind(.count(boot_count),.armed(arm_r),.valid(cfg_w0_r),.match(cfg_kind_r==EI'(ce)),.en(kind_write));
-            (* keep=1 *) dsdv_mu_boot_enable u_rlwrite(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(rl_write));
-            (* keep=1 *) dsdv_mu_boot_enable u_rlcheck(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(rl_check));
+            if(CHECK_STAGE==0) begin:g_reference_rl
+                (* keep=1 *) dsdv_mu_boot_enable u_rlwrite(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(rl_write));
+            end else begin:g_unused_rl assign rl_write=1'b0;end
+            assign rl_check=rl_write;
             (* keep=1 *) dsdv_mu_boot_enable u_gap(.count(boot_count),.armed(arm_r),.valid(cfg_gap_r),.match(gn!=SJ'(NSLOT)),.en(gap_write));
         end else begin:g_boot_direct
             assign boot_count=global_count;
@@ -534,6 +542,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         assign ts_event[ce]=ts_r; assign tm_event[ce]=time_r;
         assign rl_event[ce]=rl_r; assign lw_event[ce]=lw_r;
+        assign armed_event[ce]=arm_r;
         assign lm_event[ce]=lm_r; assign idle_event[ce]=!arm_r && table_empty;
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce])
             if(!rr[COPY_RBASE+7*ce]) ts_r<=32'd0; else ts_r<=tm;
@@ -723,4 +732,8 @@ endmodule
 (* keep_hierarchy=1 *) module dsdv_mu_slot_step(input wire [23:0] phase,gap,input wire armed,start,bad,output wire slot,gap_step);
  assign slot=armed && phase==gap;
  assign gap_step=slot || (start && !armed && !bad);
+endmodule
+
+(* keep_hierarchy=1 *) module dsdv_mu_record(input wire start,on_calendar,collision,duplicate,armed,bad,output wire record);
+ assign record=start && on_calendar && !collision && !duplicate && !(!armed && bad);
 endmodule
