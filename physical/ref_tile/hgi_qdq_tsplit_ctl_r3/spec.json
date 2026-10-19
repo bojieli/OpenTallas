@@ -136,5 +136,9 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "ctl r3: ctl_r2 (cmd pin registers + reset relay, native PASS) with the read round trip / write commit as registered STRAPS instead of parameters (strap-selected taps on the command and commit pipelines, NPMAX 48 / WCMAX 32, out-of-range strap = sticky fault). Closed once for every die relay count XR and VM latency RL (7, or 9 with share2); the v1/r2 views are closed only at RL9/WC5, which the split r2 (LG r2 +2/dir, XR relays) never uses."
+ "structural_change": "ctl r3: ctl_r2 (cmd pin registers + reset relay, native PASS) with the read round trip / write commit as registered STRAPS instead of parameters (strap-selected taps on the command and commit pipelines, NPMAX 48 / WCMAX 32, out-of-range strap = sticky fault). Closed once for every die relay count XR and VM latency RL (7, or 9 with share2); the v1/r2 views are closed only at RL9/WC5, which the split r2 (LG r2 +2/dir, XR relays) never uses.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin already (ctl_r3 captures every cmd_* and strap bit at its pin, rr_v/vo/qfault/decode_fault enter flops, every output is a register, rst_n drives only the 3-flop relay): ctl_r2 with the same boundary is native PASS (launch 181.2, capture 138.1, 0 comb). Extra tool pin registers would add edges the split r2 lockstep does not price."
+ }
 }

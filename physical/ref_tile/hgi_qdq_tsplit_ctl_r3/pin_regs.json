@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_qdq_transport_ctl_r3",
+ "enable": false,
+ "reason": "RTL registers every pin already (ctl_r3 captures every cmd_* and strap bit at its pin, rr_v/vo/qfault/decode_fault enter flops, every output is a register, rst_n drives only the 3-flop relay): ctl_r2 with the same boundary is native PASS (launch 181.2, capture 138.1, 0 comb). Extra tool pin registers would add edges the split r2 lockstep does not price."
+}

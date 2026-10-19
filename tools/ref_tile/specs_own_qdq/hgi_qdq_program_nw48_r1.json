@@ -211,5 +211,9 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "NW target48 programme leaf for the d4g split: the closed SW leaf (sw125_r6, PIN_BOUNDARY=1: reset collar, sticky fault flop, no producer-side output hold trio) with target id 48; the monolith leaf ot_hgi_qdq_native_program_leaf has no closed view and no collar."
+ "structural_change": "NW target48 programme leaf for the d4g split: the closed SW leaf (sw125_r6, PIN_BOUNDARY=1: reset collar, sticky fault flop, no producer-side output hold trio) with target id 48; the monolith leaf ot_hgi_qdq_native_program_leaf has no closed view and no collar.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin already (cfg/desc/launch enter the target's capture flops, command/status leave registers, rst_n only the reset collar, fault the sticky flop): the identical SW twin sw125_r6 (recipe 2) is native PASS (launch 199.0, capture 123.1, 0 comb, spread 69.0/60.9). Extra tool pin registers would add edges the split r2 lockstep does not price."
+ }
 }
