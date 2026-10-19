@@ -3,7 +3,7 @@
  "top": "qkd_ahub_static_dw_safe_native",
  "kind": "cluster",
  "sources": [
-  "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v",
+  "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native_kit.v",
   "rtl/hdc/nearhbm/ot_nhb_tiles_bb.v",
   "rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v"
  ],
@@ -290,9 +290,10 @@
  },
  "orfs_vars": {
   "OT_SPINE_SYM": "1",
-  "OT_SPINE_SAFE_BALANCE": "1"
+  "OT_SPINE_SAFE_BALANCE": "1",
+  "SYNTH_NETLIST_FILES": "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native_kit.v"
  },
  "floorplan_note": "KV-AHUB 10-19 SAFE ahub from the face-copy source (4b05445f7+5c1b25ec6). Outline 734.4 x 540 = the die slot (unchanged); pins = the a7 die windows (unchanged faces/ranges). Children = the reviewed a7 geometry: zh0/zh1 MX (268-bit S input faces turned UP to the logic band y 194.4-345.6), zh2/zh3 R0 (input faces DOWN to the band), recip R0 at 475.2,259.2; the generator snaps the MX rows to their on-track origin y 43.224 (24 nm off the 43.2 lattice: the closed ot_nhb_zh view's clk/rst_n M4 pins are 24 nm off-track under MX at every lattice y) -- checklist item 6 lattice WAIVED for these two with that reason; the lattice-strict twin is qkd_ahub_sfb. Clock: ONE entry ck (N centre x 358-360) -> centre-fed SYMMETRIC insertion-aware spine (clock_spine.tcl OT_SPINE_SYM=1, RC-calibrated balancing, safe-balance rollback): flop leaves on a bounding-box-centred bisection tree, the 5 hard children tap the tree at the node whose arrival + own insertion (ot_nhb_zh 246.5 / recip 238.7 ps) meets the latest flop leaf, instead of padding all 3,420 flops up to child-pin + insertion (a7: 1,035 ps TT insertion, routed boundary 914.5..1003.4 = 88.9 ps).",
- "structural_change": "NEW kit (KV-AHUB 10-19, lead brief: SAFE ahub a7 from the face-copy source). (1) Source = the GEN7-fixed native face-copy netlist qkd_ahub_static_dw_safe_face_native (Codex 4b05445f7: 105 collapsed AM face identities restored as kept same-edge per-output FFs, 3,420 FF, every functional/reset load <= 24, 645 distinct boundary FFs; AP_OFS ffd9ffdaffd8ffd8 / FR_OFS -7 / Z_IN_STRIDE 4 = the actual GEN7 die binding, so no die offset change). (2) Clock (cures a7 native FAIL 2c8705059, routed boundary spread 88.9 TT): symmetric insertion-aware spine instead of the count-bisection spine whose pads chained every flop to the deepest child tap. (3) sfa",
+ "structural_change": "NEW kit (KV-AHUB 10-19, lead brief: SAFE ahub a7 from the face-copy source). (1) Source = the GEN7-fixed native face-copy netlist qkd_ahub_static_dw_safe_face_native (Codex 4b05445f7: 105 collapsed AM face identities restored as kept same-edge per-output FFs, 3,420 FF, every functional/reset load <= 24, 645 distinct boundary FFs; AP_OFS ffd9ffdaffd8ffd8 / FR_OFS -7 / Z_IN_STRIDE 4 = the actual GEN7 die binding, so no die offset change). (2) Clock (cures a7 native FAIL 2c8705059, routed boundary spread 88.9 TT): symmetric insertion-aware spine instead of the count-bisection spine whose pads chained every flop to the deepest child tap. (3) sfa Synthesis = NONE: ORFS SYNTH_NETLIST_FILES takes the face netlist as mapped (tools/qwen_kv_die/ahub_safe/kit_netlist.sh: per-load TIEHI/TIELO, port insbuf, attributes dropped; 3,420 FF / 5 children unchanged; m0 bench PASS on it), so no opt_merge can fold the kept face copies.",
  "cycle_cost": "0 edges vs the face-copy source (same-edge copies, no relay/calendar change); vs the closed a7 view the die binding changes only to the GEN7 AP/FR the die already carries (AP[-40,-40,-38,-39], FR -7) and the hub publication law stays recip+75 (structural source 483ac4ba8)."
 }

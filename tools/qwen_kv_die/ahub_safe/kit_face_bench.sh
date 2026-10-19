@@ -3,7 +3,7 @@
 # synthesis source is the fixed-GEN7 face-copy native netlist rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v
 # (4b05445f7, AP_OFS ffd9ffdaffd8ffd8 / FR_OFS -7 / Z_IN_STRIDE 4).  Lockstep vs the actual RTL source on the 7 production
 # calendars (tools/qwen_kv_die/ahub_safe/native_bench.sh, Verilator 5.050).  Fleet only.
-#   MODE m0      the kit source                                  -> expect PASS
+#   MODE m0      the kit netlist (kit_netlist.sh of the face source: +TIEHI/TIELO per load, port insbuf, attrs dropped)                                 -> expect PASS
 #   MODE face_d  committed AM face-copy D-inversion netlist      -> expect FAIL (witness negative_witnesses/face_D_invert.log)
 #   MODE sticky  committed sticky-RESETN netlist, reset phase 1350 -> expect FAIL (witness negative_witnesses/sticky_RESETN.log)
 set -u
@@ -11,14 +11,14 @@ O=$(realpath -m "$1"); MODE=${2:-m0}
 mkdir -p "$O"
 NW=results/arch/kv_ahub_face_copy_1019/negative_witnesses
 case "$MODE" in
-  m0) export AHUB_NATIVE_SOURCE=rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v ;;
+  m0) export AHUB_NATIVE_SOURCE=rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native_kit.v ;;
   face_d) zcat "$NW/face_D.v.gz" > "$O/face_D.v"; export AHUB_NATIVE_SOURCE="$O/face_D.v" ;;
   sticky) zcat "$NW/sticky_RESETN.v.gz" > "$O/sticky_RESETN.v"; export AHUB_NATIVE_SOURCE="$O/sticky_RESETN.v" ;;
   *) echo "AHUB_DW FAIL unknown mode $MODE"; exit 2 ;;
 esac
 if [ "$MODE" = m0 ]; then
   echo "$(sha256sum "$AHUB_NATIVE_SOURCE")"
-  echo "57a9e0f37cb7a6ac77eb1c9714500030e4736f6cfa0c9c22a28b5d790c3976e1  rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v" | sha256sum -c - \
+  echo "e50a4c26c1e6530c125baa572ffea08d6a2f6ba61abe9eed3a5e487f7cc7279b  rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native_kit.v" | sha256sum -c - \
     || { echo "AHUB_DW FAIL kit source hash"; exit 1; }
 fi
 bash tools/qwen_kv_die/ahub_safe/native_bench.sh "$O" 0

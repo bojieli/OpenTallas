@@ -1,0 +1,438 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command `
+read_liberty -lib /tmp/asap7sc7p5t_*.lib;
+read_verilog -sv /src/rtl/hdc/nearhbm/ot_nhb_tiles_bb.v /src/rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v;
+read_verilog /src/rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v;
+hierarchy -check -top qkd_ahub_static_dw_safe_native;
+hilomap -hicell TIEHIx1_ASAP7_75t_R H -locell TIELOx1_ASAP7_75t_R L;
+insbuf -buf BUFx2_ASAP7_75t_R A Y;
+setattr -unset keep; setattr -unset dont_touch;
+check -assert;
+stat;
+write_verilog -noattr -noexpr -nohex -nodec /out/qkd_ahub_static_dw_safe_face_native_kit.v' --
+
+1. Executing Liberty frontend: /tmp/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+Imported 42 cell types from liberty file.
+
+2. Executing Liberty frontend: /tmp/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+Imported 37 cell types from liberty file.
+
+3. Executing Liberty frontend: /tmp/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: /tmp/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Imported 33 cell types from liberty file.
+
+5. Executing Liberty frontend: /tmp/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+Imported 56 cell types from liberty file.
+
+6. Executing Verilog-2005 frontend: /src/rtl/hdc/nearhbm/ot_nhb_tiles_bb.v
+Parsing SystemVerilog input from `/src/rtl/hdc/nearhbm/ot_nhb_tiles_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_nhb_pbst'.
+Generating RTLIL representation for module `\ot_nhb_pvlg'.
+Generating RTLIL representation for module `\ot_nhb_zh'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /src/rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v
+Parsing SystemVerilog input from `/src/rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_qkh_recip_leaf'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: /src/rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v
+Parsing Verilog input from `/src/rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v' to AST representation.
+Generating RTLIL representation for module `\qkd_ahub_static_dw_safe_native'.
+Successfully finished Verilog frontend.
+
+9. Executing HIERARCHY pass (managing design hierarchy).
+
+9.1. Analyzing design hierarchy..
+Top module:  \qkd_ahub_static_dw_safe_native
+
+9.2. Analyzing design hierarchy..
+Top module:  \qkd_ahub_static_dw_safe_native
+Removed 0 unused modules.
+
+10. Executing HILOMAP pass (mapping to constant drivers).
+
+11. Executing INSBUF pass (insert buffer cells for connected wires).
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1487: \w11006 -> \am0 [0]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1488: $auto$hilomap.cc:47:hilomap_worker$1479 -> \am0 [1]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1489: \w10331 -> \am0 [2]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1490: \w10335 -> \am0 [3]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1491: \w10203 -> \am0 [4]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1492: \w10207 -> \am0 [5]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1493: \w10211 -> \am0 [6]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1494: \w10215 -> \am0 [7]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1495: \w10219 -> \am0 [8]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1496: \w10223 -> \am0 [9]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1497: \w10227 -> \am0 [10]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1498: \w10231 -> \am0 [11]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1499: \w10235 -> \am0 [12]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1500: \w10239 -> \am0 [13]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1501: \w10243 -> \am0 [14]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1502: \w10247 -> \am0 [15]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1503: \w10251 -> \am0 [16]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1504: \w10255 -> \am0 [17]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1505: \w10259 -> \am0 [18]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1506: \w10263 -> \am0 [19]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1507: \w10267 -> \am0 [20]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1508: \w10271 -> \am0 [21]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1509: \w10275 -> \am0 [22]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1510: \w10279 -> \am0 [23]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1511: \w10283 -> \am0 [24]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1512: \w10287 -> \am0 [25]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1513: \w10291 -> \am0 [26]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1514: \w10295 -> \am0 [27]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1515: \w10299 -> \am0 [28]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1516: \w10303 -> \am0 [29]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1517: \w10307 -> \am0 [30]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1518: \w10311 -> \am0 [31]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1519: \w10315 -> \am0 [32]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1520: \w10319 -> \am0 [33]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1521: \w10323 -> \am0 [34]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1522: \w10327 -> \am0 [35]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1523: \w11007 -> \am1 [0]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1524: $auto$hilomap.cc:47:hilomap_worker$1481 -> \am1 [1]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1525: \w10332 -> \am1 [2]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1526: \w10336 -> \am1 [3]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1527: \w10204 -> \am1 [4]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1528: \w10208 -> \am1 [5]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1529: \w10212 -> \am1 [6]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1530: \w10216 -> \am1 [7]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1531: \w10220 -> \am1 [8]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1532: \w10224 -> \am1 [9]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1533: \w10228 -> \am1 [10]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1534: \w10232 -> \am1 [11]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1535: \w10236 -> \am1 [12]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1536: \w10240 -> \am1 [13]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1537: \w10244 -> \am1 [14]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1538: \w10248 -> \am1 [15]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1539: \w10252 -> \am1 [16]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1540: \w10256 -> \am1 [17]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1541: \w10260 -> \am1 [18]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1542: \w10264 -> \am1 [19]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1543: \w10268 -> \am1 [20]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1544: \w10272 -> \am1 [21]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1545: \w10276 -> \am1 [22]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1546: \w10280 -> \am1 [23]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1547: \w10284 -> \am1 [24]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1548: \w10288 -> \am1 [25]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1549: \w10292 -> \am1 [26]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1550: \w10296 -> \am1 [27]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1551: \w10300 -> \am1 [28]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1552: \w10304 -> \am1 [29]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1553: \w10308 -> \am1 [30]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1554: \w10312 -> \am1 [31]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1555: \w10316 -> \am1 [32]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1556: \w10320 -> \am1 [33]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1557: \w10324 -> \am1 [34]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1558: \w10328 -> \am1 [35]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1559: \w11008 -> \am2 [0]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1560: $auto$hilomap.cc:47:hilomap_worker$1483 -> \am2 [1]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1561: \w10333 -> \am2 [2]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1562: \w10337 -> \am2 [3]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1563: \w10205 -> \am2 [4]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1564: \w10209 -> \am2 [5]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1565: \w10213 -> \am2 [6]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1566: \w10217 -> \am2 [7]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1567: \w10221 -> \am2 [8]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1568: \w10225 -> \am2 [9]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1569: \w10229 -> \am2 [10]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1570: \w10233 -> \am2 [11]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1571: \w10237 -> \am2 [12]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1572: \w10241 -> \am2 [13]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1573: \w10245 -> \am2 [14]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1574: \w10249 -> \am2 [15]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1575: \w10253 -> \am2 [16]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1576: \w10257 -> \am2 [17]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1577: \w10261 -> \am2 [18]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1578: \w10265 -> \am2 [19]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1579: \w10269 -> \am2 [20]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1580: \w10273 -> \am2 [21]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1581: \w10277 -> \am2 [22]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1582: \w10281 -> \am2 [23]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1583: \w10285 -> \am2 [24]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1584: \w10289 -> \am2 [25]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1585: \w10293 -> \am2 [26]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1586: \w10297 -> \am2 [27]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1587: \w10301 -> \am2 [28]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1588: \w10305 -> \am2 [29]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1589: \w10309 -> \am2 [30]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1590: \w10313 -> \am2 [31]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1591: \w10317 -> \am2 [32]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1592: \w10321 -> \am2 [33]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1593: \w10325 -> \am2 [34]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1594: \w10329 -> \am2 [35]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1595: \w11009 -> \am3 [0]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1596: $auto$hilomap.cc:47:hilomap_worker$1485 -> \am3 [1]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1597: \w10334 -> \am3 [2]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1598: \w10338 -> \am3 [3]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1599: \w10206 -> \am3 [4]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1600: \w10210 -> \am3 [5]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1601: \w10214 -> \am3 [6]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1602: \w10218 -> \am3 [7]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1603: \w10222 -> \am3 [8]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1604: \w10226 -> \am3 [9]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1605: \w10230 -> \am3 [10]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1606: \w10234 -> \am3 [11]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1607: \w10238 -> \am3 [12]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1608: \w10242 -> \am3 [13]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1609: \w10246 -> \am3 [14]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1610: \w10250 -> \am3 [15]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1611: \w10254 -> \am3 [16]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1612: \w10258 -> \am3 [17]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1613: \w10262 -> \am3 [18]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1614: \w10266 -> \am3 [19]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1615: \w10270 -> \am3 [20]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1616: \w10274 -> \am3 [21]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1617: \w10278 -> \am3 [22]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1618: \w10282 -> \am3 [23]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1619: \w10286 -> \am3 [24]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1620: \w10290 -> \am3 [25]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1621: \w10294 -> \am3 [26]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1622: \w10298 -> \am3 [27]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1623: \w10302 -> \am3 [28]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1624: \w10306 -> \am3 [29]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1625: \w10310 -> \am3 [30]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1626: \w10314 -> \am3 [31]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1627: \w10318 -> \am3 [32]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1628: \w10322 -> \am3 [33]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1629: \w10326 -> \am3 [34]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1630: \w10330 -> \am3 [35]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1631: \w10482 -> \fr_valid
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1632: \w10483 -> \fr_epoch [0]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1633: \w10484 -> \fr_epoch [1]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1634: \w10485 -> \fr_epoch [2]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1635: \w10486 -> \fr_epoch [3]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1636: \w10487 -> \fr_epoch [4]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1637: \w10488 -> \fr_epoch [5]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1638: \w10489 -> \fr_epoch [6]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1639: \w10490 -> \fr_epoch [7]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1640: \w10491 -> \fr_epoch [8]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1641: \w10492 -> \fr_epoch [9]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1642: \w10493 -> \fr_epoch [10]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1643: \w10494 -> \fr_epoch [11]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1644: \w10495 -> \fr_epoch [12]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1645: \w10496 -> \fr_epoch [13]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1646: \w10497 -> \fr_epoch [14]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1647: \w10498 -> \fr_epoch [15]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1648: \w10499 -> \fr_rz [0]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1649: \w10500 -> \fr_rz [1]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1650: \w10501 -> \fr_rz [2]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1651: \w10502 -> \fr_rz [3]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1652: \w10503 -> \fr_rz [4]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1653: \w10504 -> \fr_rz [5]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1654: \w10505 -> \fr_rz [6]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1655: \w10506 -> \fr_rz [7]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1656: \w10507 -> \fr_rz [8]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1657: \w10508 -> \fr_rz [9]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1658: \w10509 -> \fr_rz [10]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1659: \w10510 -> \fr_rz [11]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1660: \w10511 -> \fr_rz [12]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1661: \w10512 -> \fr_rz [13]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1662: \w10513 -> \fr_rz [14]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1663: \w10514 -> \fr_rz [15]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1664: \w10515 -> \fr_rz [16]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1665: \w10516 -> \fr_rz [17]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1666: \w10517 -> \fr_rz [18]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1667: \w10518 -> \fr_rz [19]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1668: \w10519 -> \fr_rz [20]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1669: \w10520 -> \fr_rz [21]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1670: \w10521 -> \fr_rz [22]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1671: \w10522 -> \fr_rz [23]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1672: \w10523 -> \fr_rz [24]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1673: \w10524 -> \fr_rz [25]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1674: \w10525 -> \fr_rz [26]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1675: \w10526 -> \fr_rz [27]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1676: \w10527 -> \fr_rz [28]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1677: \w10528 -> \fr_rz [29]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1678: \w10529 -> \fr_rz [30]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1679: \w10530 -> \fr_rz [31]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1680: \w10531 -> \fr_rz [32]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1681: \w10532 -> \fr_rz [33]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1682: \w10533 -> \fr_rz [34]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1683: \w10534 -> \fr_rz [35]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1684: \w10535 -> \fr_rz [36]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1685: \w10536 -> \fr_rz [37]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1686: \w10537 -> \fr_rz [38]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1687: \w10538 -> \fr_rz [39]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1688: \w10539 -> \fr_rz [40]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1689: \w10540 -> \fr_rz [41]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1690: \w10541 -> \fr_rz [42]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1691: \w10542 -> \fr_rz [43]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1692: \w10543 -> \fr_rz [44]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1693: \w10544 -> \fr_rz [45]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1694: \w10545 -> \fr_rz [46]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1695: \w10546 -> \fr_rz [47]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1696: \w10547 -> \fr_rz [48]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1697: \w10548 -> \fr_rz [49]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1698: \w10549 -> \fr_rz [50]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1699: \w10550 -> \fr_rz [51]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1700: \w10551 -> \fr_rz [52]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1701: \w10552 -> \fr_rz [53]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1702: \w10553 -> \fr_rz [54]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1703: \w10554 -> \fr_rz [55]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1704: \w10555 -> \fr_rz [56]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1705: \w10556 -> \fr_rz [57]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1706: \w10557 -> \fr_rz [58]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1707: \w10558 -> \fr_rz [59]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1708: \w10559 -> \fr_rz [60]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1709: \w10560 -> \fr_rz [61]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1710: \w10561 -> \fr_rz [62]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1711: \w10562 -> \fr_rz [63]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1712: \w10563 -> \fr_rz [64]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1713: \w10564 -> \fr_rz [65]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1714: \w10565 -> \fr_rz [66]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1715: \w10566 -> \fr_rz [67]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1716: \w10567 -> \fr_rz [68]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1717: \w10568 -> \fr_rz [69]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1718: \w10569 -> \fr_rz [70]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1719: \w10570 -> \fr_rz [71]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1720: \w10571 -> \fr_rz [72]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1721: \w10572 -> \fr_rz [73]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1722: \w10573 -> \fr_rz [74]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1723: \w10574 -> \fr_rz [75]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1724: \w10575 -> \fr_rz [76]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1725: \w10576 -> \fr_rz [77]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1726: \w10577 -> \fr_rz [78]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1727: \w10578 -> \fr_rz [79]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1728: \w10579 -> \fr_rz [80]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1729: \w10580 -> \fr_rz [81]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1730: \w10581 -> \fr_rz [82]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1731: \w10582 -> \fr_rz [83]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1732: \w10583 -> \fr_rz [84]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1733: \w10584 -> \fr_rz [85]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1734: \w10585 -> \fr_rz [86]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1735: \w10586 -> \fr_rz [87]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1736: \w10587 -> \fr_rz [88]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1737: \w10588 -> \fr_rz [89]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1738: \w10589 -> \fr_rz [90]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1739: \w10590 -> \fr_rz [91]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1740: \w10591 -> \fr_rz [92]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1741: \w10592 -> \fr_rz [93]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1742: \w10593 -> \fr_rz [94]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1743: \w10594 -> \fr_rz [95]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1744: \w10595 -> \fr_rz [96]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1745: \w10596 -> \fr_rz [97]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1746: \w10597 -> \fr_rz [98]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1747: \w10598 -> \fr_rz [99]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1748: \w10599 -> \fr_rz [100]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1749: \w10600 -> \fr_rz [101]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1750: \w10601 -> \fr_rz [102]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1751: \w10602 -> \fr_rz [103]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1752: \w10603 -> \fr_rz [104]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1753: \w10604 -> \fr_rz [105]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1754: \w10605 -> \fr_rz [106]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1755: \w10606 -> \fr_rz [107]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1756: \w10607 -> \fr_rz [108]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1757: \w10608 -> \fr_rz [109]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1758: \w10609 -> \fr_rz [110]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1759: \w10610 -> \fr_rz [111]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1760: \w10611 -> \fr_rz [112]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1761: \w10612 -> \fr_rz [113]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1762: \w10613 -> \fr_rz [114]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1763: \w10614 -> \fr_rz [115]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1764: \w10615 -> \fr_rz [116]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1765: \w10616 -> \fr_rz [117]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1766: \w10617 -> \fr_rz [118]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1767: \w10618 -> \fr_rz [119]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1768: \w10619 -> \fr_rz [120]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1769: \w10620 -> \fr_rz [121]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1770: \w10621 -> \fr_rz [122]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1771: \w10622 -> \fr_rz [123]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1772: \w10623 -> \fr_rz [124]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1773: \w10624 -> \fr_rz [125]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1774: \w10625 -> \fr_rz [126]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1775: \w10626 -> \fr_rz [127]
+Add qkd_ahub_static_dw_safe_native/$auto$insbuf.cc:97:execute$1776: \w10670 -> \hf
+
+12. Executing CHECK pass (checking for obvious problems).
+Checking module qkd_ahub_static_dw_safe_native...
+Found and reported 0 problems.
+
+13. Printing statistics.
+
+=== qkd_ahub_static_dw_safe_native ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    12507 wires
+    13116 wire bits
+    11764 public wires
+    12373 public wire bits
+       20 ports
+      629 port bits
+    12476 cells
+       60   A2O1A1Ixp33_ASAP7_75t_R
+       31   A2O1A1O1Ixp25_ASAP7_75t_R
+       83   AND2x2_ASAP7_75t_R
+       56   AND3x1_ASAP7_75t_R
+       33   AND4x1_ASAP7_75t_R
+        5   AND5x1_ASAP7_75t_R
+        4   AO211x2_ASAP7_75t_R
+       95   AO21x1_ASAP7_75t_R
+        1   AO221x1_ASAP7_75t_R
+        1   AO222x2_ASAP7_75t_R
+        5   AO22x1_ASAP7_75t_R
+        2   AO32x1_ASAP7_75t_R
+       54   AOI211xp5_ASAP7_75t_R
+      471   AOI21xp33_ASAP7_75t_R
+       41   AOI221xp5_ASAP7_75t_R
+        2   AOI222xp33_ASAP7_75t_R
+       59   AOI22xp33_ASAP7_75t_R
+        5   AOI311xp33_ASAP7_75t_R
+       26   AOI31xp33_ASAP7_75t_R
+        8   AOI32xp33_ASAP7_75t_R
+      290   BUFx2_ASAP7_75t_R
+      468   DFFASRHQNx1_ASAP7_75t_R
+     2952   DFFHQNx1_ASAP7_75t_R
+     1866   INVx1_ASAP7_75t_R
+       28   MAJIxp5_ASAP7_75t_R
+        7   MAJx2_ASAP7_75t_R
+      948   NAND2xp33_ASAP7_75t_R
+      144   NAND3xp33_ASAP7_75t_R
+      100   NAND4xp25_ASAP7_75t_R
+       30   NAND5xp2_ASAP7_75t_R
+      835   NOR2xp33_ASAP7_75t_R
+      210   NOR3xp33_ASAP7_75t_R
+       56   NOR4xp25_ASAP7_75t_R
+       37   NOR5xp2_ASAP7_75t_R
+      202   O2A1O1Ixp33_ASAP7_75t_R
+       13   OA211x2_ASAP7_75t_R
+       96   OA21x2_ASAP7_75t_R
+       11   OA222x2_ASAP7_75t_R
+        3   OA22x2_ASAP7_75t_R
+        2   OA31x2_ASAP7_75t_R
+       51   OAI211xp5_ASAP7_75t_R
+     1089   OAI21xp33_ASAP7_75t_R
+      148   OAI221xp5_ASAP7_75t_R
+        5   OAI222xp33_ASAP7_75t_R
+      257   OAI22xp33_ASAP7_75t_R
+        8   OAI311xp33_ASAP7_75t_R
+       35   OAI31xp33_ASAP7_75t_R
+        1   OAI321xp33_ASAP7_75t_R
+        1   OAI32xp33_ASAP7_75t_R
+      243   OR2x2_ASAP7_75t_R
+       40   OR3x1_ASAP7_75t_R
+       18   OR4x1_ASAP7_75t_R
+        8   OR5x1_ASAP7_75t_R
+      470   TIEHIx1_ASAP7_75t_R
+      273   TIELOx1_ASAP7_75t_R
+      340   XNOR2xp5_ASAP7_75t_R
+      144   XOR2xp5_ASAP7_75t_R
+        4   ot_nhb_zh
+        1   ot_qkh_recip_leaf
+
+14. Executing Verilog backend.
+Dumping module `\qkd_ahub_static_dw_safe_native'.
+
+End of script. Logfile hash: 28bf9e64b1, time: 1.17s, user: 1.11s, system: 0.11s, MEM: 134.56 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 66% 5x read_verilog (0 sec), 26% 6x read_liberty (0 sec), ...

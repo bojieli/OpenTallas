@@ -1,8 +1,14 @@
-ot-run: ot-epyc6       admits   799 GB (avail 673, growth 113, headroom 0, waiters 0/0 GB) load 35/128 running 14 disk 5981 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-ahub-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-ahub-1019/src
+ot-run: ot-epyc6       admits   604 GB (avail 536, growth 113, headroom 0, waiters 0/0 GB) load 93/128 running 17 disk 5928 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-ahub-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-ahub-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-ahub-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-ahub-1019/src
 ot-run: -> ot-epyc6
-ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2562282-1792434841 after 0 s
-57a9e0f37cb7a6ac77eb1c9714500030e4736f6cfa0c9c22a28b5d790c3976e1  rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v
-rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v: OK
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2631012-1792435320 after 0 s
+e50a4c26c1e6530c125baa572ffea08d6a2f6ba61abe9eed3a5e487f7cc7279b  rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native_kit.v
+rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native_kit.v: OK
 Verilator 5.050 2026-07-01 rev v5.050
 AHUB_DW PASS mut=0 passes=7 Z_IN_STRIDE=4 zwords=680 fr=1/1/1/1/1/1/1 beats=32/32/32/32/32/32/32 am=28 FR_OFS=-7 AP_OFS=ffd9ffdaffd8ffd8
-ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2562282-1792434841): exit 0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2631012-1792435320): exit 0

@@ -16,7 +16,7 @@
   537.84
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 1643.65,
+ "std_area_um2": 1700.0,
  "layer_contract": {
   "children": {
    "ot_nhb_zh": "M5",
@@ -143,12 +143,12 @@
   [
    "WARN",
    "fill",
-   "fill 35% = (macros/children 138102 + std 1644) / outline 396576 um2 < 50%",
+   "fill 35% = (macros/children 138102 + std 1700) / outline 396576 um2 < 50%",
    ""
   ]
  ],
  "referenced": [
-  "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native.v",
+  "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native_kit.v",
   "rtl/hdc/nearhbm/ot_nhb_tiles_bb.v",
   "rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v",
   "physical/ref_tile/qkd_ahub_sfa/kit.env",
@@ -173,6 +173,7 @@
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
   "tools/ref_tile/signal_layer_audit.tcl",
+  "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_face_native_kit.v",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
