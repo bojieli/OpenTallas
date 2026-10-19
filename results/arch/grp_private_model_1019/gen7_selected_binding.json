@@ -1,0 +1,31 @@
+{
+  "qkd_kvs_grp": {
+    "n_instances": 28,
+    "die_ports": 30,
+    "cls": "REAL",
+    "module": "qkd_kvs_grp",
+    "file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+    "width_or_missing": [],
+    "die_ports_not_bound": [],
+    "rtl_inputs_unconnected": [],
+    "rtl_outputs_unread": [
+      "y__tep",
+      "y__tok"
+    ]
+  },
+  "qkd_kvs_grp_h": {
+    "n_instances": 4,
+    "die_ports": 27,
+    "cls": "REAL",
+    "module": "qkd_kvs_grp_h",
+    "file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+    "width_or_missing": [],
+    "die_ports_not_bound": [],
+    "rtl_inputs_unconnected": [],
+    "rtl_outputs_unread": [
+      "o_dn",
+      "y__tep",
+      "y__tok"
+    ]
+  }
+}
