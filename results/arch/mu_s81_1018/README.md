@@ -1,3 +1,5 @@
+> Codex recovery: the owner target remains **47 AR users on 520 dies**. The 46-user calendar below is a diagnostic result on the checkpoint's model, not target completion or release qualification. `target47_bound.json` gives the fixed-copy necessary bound (993676 cycles versus 980428) and a hypothetical 47-user opportunity within 520 dies: twelve nonduplicated stage occupancies must fall from 20754 to at most 20468 cycles. No RTL speedup is measured. Current main's S81-SCAND pricing corrections remain authoritative; the historical composition figures below are not regenerated into main's price records by this recovery.
+
 # MU-S81 2026-10-18: the S81 multi-user static calendar, chain plan and pricing
 
 Owner decision MU.DECIDE option A (HANDOFF 0is). The coordinator's S81 configuration is:
@@ -27,13 +29,13 @@ reproduction. Regenerate the records with `dv_mu_calendar.py`, then `dv_mu_chain
 | AR | **46** (model said 47) | 1,224.0 (calendar model) / 1,243.0 (composition) | **56.3k** / **57.2k** | 21,313.7 (P/46 on the 4-edge issuer grid) | 980,428 | PASS, 5,474 windows, 0 collisions |
 | MTP | 10 + 1 AR filler | 3,829.1 / 3,806.2; filler 920.7 | 39.2k / 39.0k | 124,524 | 1,303,400 | PASS, 1,309 windows, 0 collisions |
 
-**Finding: 47 AR users do not fit; the exact calendar gives 46 (−2.1% aggregate against the model).**
+**Diagnostic finding: existing model windows and fixed-copy assignments do not fit 47 AR users at the target period. The owner target remains 47; the current proven model calendar has 46.**
 - The study's `floor(T / II)` treats a duplicated group as one stage with half the occupancy. A real copy holds one
   position for its full window: S029 38,900, S020 35,325, S011 34,394, S002 31,144 cycles.
 - Users must alternate copies, so that on each copy the gap between consecutive users is at least the window. With an
   odd N the alternation breaks once around the circle (an odd cycle cannot be 2-coloured). That puts two users on the
   same copy one slot apart.
-- At N = 47 that gap is at most 20,754 + 5,987 slack = 26,741 cycles. That is below all four full-scan windows.
+- At N = 47 that gap is at most 25,652 cycles on the four-edge issuer grid (980,428 minus 46 x 20,756). That is below all four full-scan windows.
 - The 4 reindex groups (23,190) would tolerate it; the full-scan groups would not.
 - 47 users would need a 3rd copy of S002/S011/S020/S029: about +40 dies for +1 user (+1,224 tok/s). **That is not
   recommended.**
