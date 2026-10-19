@@ -55,6 +55,7 @@ def main():
         f = ln.split('\t'); master[f[0]] = f[1]
     cnt, ex = collections.Counter(), collections.defaultdict(list)
     gap_rp, gap_bus = collections.Counter(), collections.Counter()
+    owed = {}
     for ln in open(a.geom / 'pairs.tsv'):
         f = ln.rstrip('\n').split('\t')
         if f[0] != 'P':
@@ -83,6 +84,12 @@ def main():
                 for rb in RB:
                     gap_rp[(ra, rb)] += 1
             gap_bus[(mA, mB, net.split('[')[0])] += 1
+            # QW-DIECLK 10-19: per instance link, the landing the GEN owes (qfd_landh0 at B: ring written on A's root
+            # = ck_s, read on B's root = ck; fixed latency, no backpressure)
+            k_ = (A, B, net.split('[')[0])
+            o_ = owed.setdefault(k_, dict(cls=c, src=A, src_master=mA, src_root=sorted(RA), dst=B, dst_master=mB,
+                                          dst_root=sorted(RB), bus=k_[2], bits=0))
+            o_['bits'] += 1
         if len(ex[c]) < 40:
             ex[c].append([A, mA, sorted(RA), B, mB, sorted(RB), net])
     lanes = json.load(open(a.lanes))['lanes']
@@ -118,7 +125,8 @@ def main():
     json.dump(dict(schema='opentallas.qwen_compute.landed_pairs.v1', summary=summ, examples=ex, lanes=lag,
                    gap_root_pairs=sorted(gap_rp), gap_root_pair_bits={f'{x}|{y}': n for (x, y), n in gap_rp.most_common()},
                    gap_buses=[[*k, n] for k, n in gap_bus.most_common()],
-                   worst_drift=worst), open(a.out, 'w'), indent=1)
+                   worst_drift=worst,
+                   land_owed=sorted(owed.values(), key=lambda o: (o['src'], o['dst'], o['bus']))), open(a.out, 'w'), indent=1)
     print('QWEN LANDED PAIRS', json.dumps(summ))
 
 

@@ -42,6 +42,21 @@ def test_spine_drives_every_entry_once_and_compensates():
     assert rec['leaves'] == 8 and rec['model_insertion_ps'] > 400.0
 
 
+def test_forwarded_spine_has_no_pads():
+    # QW-DIECLK 10-19: balance false = forwarded regional spine: no pads even with a 4 ns region-insertion spread
+    g = rt.dct.Grid(6000.0, 6000.0, [(2000.0, 2000.0, 4000.0, 4000.0)])
+    xy = {f'dc_root_r{i}': (300.0 + 1300.0 * (i % 4), 300.0 + 1700.0 * (i // 4)) for i in range(8)}
+    members = [(dict(name=f'r{i}'), f'dc_root_r{i}') for i in range(8)]
+    bal = rt.Builder(g, 'dc_spine', r_of=lambda k: 4000.0 if k == 'r0' else 0.0)
+    bal.build('g/p0', (100.0, 5900.0), rt.spine_leaves(members, xy))
+    fwd = rt.Builder(g, 'dc_spine', pads=False)
+    rec = fwd.build('g/p0', (100.0, 5900.0), rt.spine_leaves(members, xy))
+    assert sum(1 for b in bal.bufs if b[1] == rt.PAD) > 50
+    assert rec['pads'] == 0 and not any(b[1] == rt.PAD for b in fwd.bufs)
+    pins = [l[1] for _, _, ls in fwd.nets for l in ls if l[0] == 'pin']
+    assert sorted(pins) == sorted(f'{rb}/A' for _, rb in members)
+
+
 if __name__ == '__main__':
     for k, f in list(globals().items()):
         if k.startswith('test_'):

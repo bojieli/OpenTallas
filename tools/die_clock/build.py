@@ -431,7 +431,11 @@ def build(a):
                 raise ValueError(f'spine source {src} also drives non-member {x.getInst().getName()}/{x.getMTerm().getName()}')
             x.disconnect()
         rmodel = {t['name']: rec['trees'][t['name']]['model'].get('model_insertion_ps', 0.0) for t, _ in members}
-        sb = rt.Builder(g, 'dc_spine', r_of=lambda key: rmodel.get(key, 0.0))
+        # QW-DIECLK 10-19: spine "balance": false = FORWARDED regional spine (landed-regions standard): the member regions
+        # are mesochronous (every cross-region crossing LANDED), so the spine neither compensates region insertion nor
+        # pads: geometric merge, repeaters <= SPAN, fixed latency; only the landed-lane clock drift is judged downstream
+        bal = sp_.get('balance', True)
+        sb = rt.Builder(g, 'dc_spine', r_of=(lambda key: rmodel.get(key, 0.0)) if bal else None, pads=bool(bal))
         sxy = ((src_it.getBBox().xMin() + src_it.getBBox().xMax()) / 2 / u,
                (src_it.getBBox().yMin() + src_it.getBBox().yMax()) / 2 / u)
         smodel = sb.build(src, sxy, rt.spine_leaves(members, cell_xy))
@@ -481,7 +485,8 @@ def build(a):
             while sb.parent.get(x_) not in (None, src):
                 x_ = sb.parent[x_]; d_ += 1
             lv[c_] = d_ + 1      # + the spine source buffer
-        rec['spine'] = dict(source=src, period=float(sp_.get('period', 833.333333)), members=[t['name'] for t, _ in members],
+        rec['spine'] = dict(source=src, period=float(sp_.get('period', 833.333333)), balance=bool(bal),
+                            members=[t['name'] for t, _ in members],
                             cells=len(sb.bufs) + 1, levels=max(lv.values(), default=0), model=smodel,
                             generator_pins_without_loads=orphan)
         log('SPINE', src, 'members', len(members), 'cells', len(sb.bufs) + 1, 'levels', rec['spine']['levels'],

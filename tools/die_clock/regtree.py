@@ -58,8 +58,11 @@ def cluster(sinks, leaf_um=LEAF_UM, leaf_max=LEAF_MAX):
 
 
 class Builder:
-    def __init__(self, grid, prefix, r_of=None):
+    def __init__(self, grid, prefix, r_of=None, pads=True):
         self.g, self.prefix = grid, prefix
+        # pads=False (QW-DIECLK 10-19 forwarded regional spine): geometric merge only, never a pad buffer; the
+        # regions it feeds are mesochronous (every crossing landed), so no arrival is balanced across them
+        self.pads = pads
         # r_of(key) -> the leaf's in-arc insertion R (TT): the merge balances FLOP arrival (pin + R), so the tree
         # delivers each pin at phi - R by construction instead of leaving the whole R spread to measured trim pads
         self.r_of = r_of or (lambda k: 0.0)
@@ -132,7 +135,7 @@ class Builder:
         m = self.newbuf('B', c)
         out = dict(buf=m, cell=c, n=A['n'] + B['n'])
         for child, sub, dd in ((A, path[k::-1], da), (B, path[k:], db)):
-            npad = int(round((max(da, db) - dd) / PAD_PS))
+            npad = int(round((max(da, db) - dd) / PAD_PS)) if self.pads else 0
             if len(sub) > 1:
                 drv, _ = self.chain(('buf', m), sub, 'R')
             else:
