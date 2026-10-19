@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.s81.head_replay.mechanism.v1",
+  "gate": "PASS",
+  "verilator": "5.050",
+  "full_token_qualified": false,
+  "production_producer_qualified": false,
+  "physical_qualified": false,
+  "scope": "Isolated SRAM consumer address/order/owner lifetime mechanism; deterministic bench inputs are not a production norm producer",
+  "stream_words_checked": 16538,
+  "owners": 2,
+  "head_first_sample": "G+5",
+  "valid_stream_cycles_per_go": 8269,
+  "mutants": {
+    "1": "out-of-order/missing input index -> sticky fault",
+    "2": "non-BF16 normalized input -> sticky fault",
+    "3": "go sequence differs from resident sequence -> sticky fault",
+    "4": "forced read-bank select0 -> checker mismatch; not RTL fault-detection claim"
+  },
+  "source_hashes": {
+    "rtl/dsrom_sys/s81_native_head_connect/ot_s81_head_input_replay.sv": "51f4f71686267b4e80992964c1143ab086d82a023b3875f7307edc52021a2462",
+    "rtl/dsrom_sys/s81_native_head_connect/ot_s81_head_xb_replay.sv": "8c20ce39fe0049cd194028e919bd20c48223a5f84424cd1e9046db4dcd1b9b00",
+    "rtl/dsrom_sys/s81_native_head_connect/test/tb_s81_head_input_replay.sv": "2ab8dfdf5805893dd986043970f21990959db941dee6091d306f71159147a97c",
+    "tools/s81_ftok/head_input_replay_bench.sh": "2cca61c90f8fdd34ced73097f905c8af4d5f14b0998746bc01bc6993d5385d68",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "fleet": "ot-agidock128",
+  "unit": "oth-ubuntu-1464996-1792430035",
+  "remote": "/srv/opentallas-scratch/claude/s81-head-producer-1019",
+  "source_trace": {
+    "tools/s81_dv/layer_prog/lower_vpx.py": "0cf486d028198abccee2fa6b013a47667cbdd6bc7a738919446442eebec44dbe",
+    "tools/s81_dv/layer_prog/lower_gu.py": "977cdf798a9068f0022c96a8e51be8de1d44b1e3bdb21215c648af7db1dcf9c3",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv": "d7073948db44727894d838f37b47056749e07890a2ada02ee6fb0f2bd9dc9b15",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv": "5a6683229d62201c9da5b1a0e0d132c75906d31afd07b5c3633018048932a69d",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv": "448b90246e07844f1ed061b767ba5e72abbec6b1fe5a8afdc8a352121422f14a",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv": "0ab696264db80f719031bc62d432c993d3aa1eb84f44461471302d280abca812",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv": "a28184aaa598273f80828d9c7d4be5f986b24511e93aee8e14444f944b65843d"
+  },
+  "xb_wrapper": "Verilator5.050 actual native macro elaboration PASS, unit oth-ubuntu-1468908-1792430198; not a production VQ connection"
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.s81.head_producer.model.v1",
+  "built_after_model": true,
+  "production_bound": false,
+  "source": "35da76c33",
+  "actual_producer_chain": [
+    "final down/wo_b return row placement (absent)",
+    "slice VP POST a0=R+1 -> actual VN four-copy h SRAM",
+    "previous final FFN pre row1008 transfer/lifetime (absent)",
+    "NORMR -> VN G8 partials -> 16-slice NX/XQ composition (not lowered)",
+    "actual normalized BF16 output -> head input SRAM replay (new consumer seam)",
+    "existing native ROM head G+5+m -> public logits -> argmax -> registered return"
+  ],
+  "functional_replay": {
+    "input": "64 FP32 words containing exact BF16 normalized values, 80 ordered beats, explicit owner47/sequence64",
+    "input_bits_per_valid": 2048,
+    "input_payload_bits": 163840,
+    "stored_useful_bits": 81920,
+    "banking": "4 A + 4 B native128x256 SRAMs; A rows0..63, B rows0..15; no flop array",
+    "macro_capacity_bits": 262144,
+    "read_bits_per_cycle": 512,
+    "words_a": 256,
+    "words_b": 64,
+    "schedule": "Fixed go; SRAM read begins at G+3 and output register supplies native head G+5+m; exactly8269 replay words (8192+7*11)",
+    "ownership": "One resident user; no load during active replay; compiler chooses fixed go after 80 complete beats; collision/missing/identity mismatch is sticky fault, never a wait",
+    "clocks": "same core clock for bounded mechanism; actual regional transport not bound",
+    "reset": "two capture stages for controls; macro data not reset; complete count/owner lifetime required",
+    "added_head_datapath_cycles": 0,
+    "added_cold_fill_edges_minimum": 80,
+    "mac_per_cycle": 0,
+    "raw_macro_area_um2": 31150.824,
+    "functional_macro_dimensions_um": [
+      94.824,
+      41.064
+    ],
+    "source_native_input": "Existing rstop gather selected port g_v,g_fam,g_idx,g_d; expansion BF16->FP32 is wiring, no G64 substitute",
+    "bandwidth_bytes_per_cycle": {
+      "normalized_producer": 256,
+      "stored_bf16_payload": 128,
+      "head_read": 64
+    }
+  },
+  "physical_qualification": {
+    "qualified": false,
+    "reason": "Legacy dense128x256 access, reset/fanout, regional roots/reach, synthesis area and real parent slot require structural safe physical replacement before gate; no route launched",
+    "track_budget": "Unqualified: 819 contacts/macro and active face density about10/um. No legal channel/slot or utilization claimed. Functional build only."
+  },
+  "next_production_test": "Connect actual current G8 VN/XFIN outputs and real final POST row placement. Consumer seam tests cannot prove these absent producer paths."
+}
