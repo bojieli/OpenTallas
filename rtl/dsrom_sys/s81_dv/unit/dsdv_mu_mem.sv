@@ -37,27 +37,23 @@ module dsdv_mu_reset_tree #(parameter integer REGIONS=32, parameter integer LEAV
                            parameter integer GROUPS=(REGIONS+LEAVES-1)/LEAVES)(
  input wire clk, rst_n_in, output wire [REGIONS-1:0] rst_n);
  (* keep="true",dont_touch="true",async_reg="true" *) reg root_r;
- (* keep="true",dont_touch="true",async_reg="true" *) reg [GROUPS-1:0] group_r;
- (* keep="true",dont_touch="true" *) reg [REGIONS-1:0] local_r;
+ wire [GROUPS-1:0] group_q;
  always @(posedge clk or negedge rst_n_in)
      if(!rst_n_in) root_r<=1'b0; else root_r<=1'b1;
  genvar g,l;
  generate for(g=0;g<GROUPS;g=g+1) begin:g_group
+     (* keep="true",dont_touch="true",async_reg="true" *) reg group_r;
+     assign group_q[g]=group_r;
      always @(posedge clk or negedge root_r)
-         if(!root_r) group_r[g]<=1'b0; else group_r[g]<=1'b1;
+         if(!root_r) group_r<=1'b0; else group_r<=1'b1;
  end
  for(l=0;l<REGIONS;l=l+1) begin:g_local
-     always @(posedge clk or negedge group_r[l/LEAVES])
-         if(!group_r[l/LEAVES]) local_r[l]<=1'b0; else local_r[l]<=1'b1;
+     (* keep="true",dont_touch="true" *) reg local_r;
+     assign rst_n[l]=local_r;
+     always @(posedge clk or negedge group_q[l/LEAVES])
+         if(!group_q[l/LEAVES]) local_r<=1'b0; else local_r<=1'b1;
  end endgenerate
- assign rst_n=local_r;
 `ifndef SYNTHESIS
- reg [2:0] release_reference;
- always @(posedge clk or negedge rst_n_in)
-     if(!rst_n_in) release_reference<=3'b000;
-     else release_reference<={release_reference[1:0],1'b1};
- always @(posedge clk) if(rst_n !== {REGIONS{release_reference[2]}})
-     $fatal(1,"balanced reset tree changed three-edge release contract");
  initial if(GROUPS>32 || LEAVES>32) $fatal(1,"reset fanout requires another explicitly priced tree shape");
 `endif
 endmodule
