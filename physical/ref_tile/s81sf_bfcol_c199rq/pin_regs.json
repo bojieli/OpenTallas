@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_v41_bf_col",
+ "enable": false,
+ "reason": "the RTL registers every pin at the face: every input in g_pin.r_* (ot_v41_kreg, incl. ze_d -> r_ze and the reset synchroniser r_rst), every output from the column's own output registers (gate2 band: 839/840 ports register-at-pin, a_ctr[13] unused; native probe 0 combinational pins). A second pin-register layer would add +1 input / +1 output edge for no structural gain; io_flop_at_pins anchors the RTL pin flops."
+}
