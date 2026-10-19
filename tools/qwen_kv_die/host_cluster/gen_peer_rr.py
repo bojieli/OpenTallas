@@ -42,6 +42,8 @@ WRAP = {
     'qkd_host_peer_link': (HI + 'qkd_host_peer_link.sv', 'ck', ['rst_n']),
     'qkd_host_peer_root_mux_pl': ('rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl.sv', 'ck', ['por_n']),
 }
+# HKV-PROMPT6 (10-19): the relay wrapper's inner member is the bit/cycle-exact timing fork of gen_peer_pd.py
+INNER = {'qkd_host_ctrl_token_service_packet_collected': 'qkd_host_ctrl_token_service_packet_collected_pd'}
 # flat member type -> wrapper type (gen_cluster --wrap-only + bench/flat_wraps.json)
 WRAPS = {
     'qkd_host_tp8_coordinator': 'qkd_host_tp8_coordinator_rr',
@@ -97,6 +99,9 @@ def wrapper(mod, src, ck, rsts):
         if re.search(r'\b' + nm + r'\b', rng) or any(re.search(r'\b' + nm + r'\b', e) for _, e in used):
             used.append((nm, ex))
     lp = ''.join(f' localparam integer {nm}={" ".join(ex.split())};\n' for nm, ex in used)
+    inner = INNER.get(mod, mod)
+    inner_note = (f'\n// HKV-PROMPT6: inner member {inner} (tools/qwen_kv_die/host_cluster/gen_peer_pd.py, same function).'
+                  if inner != mod else '')
     rel = ''.join(f' wire {r}_q;\n' for r in rsts)
     mut = ''.join(f' assign {r}_q = {r};\n' for r in rsts)
     rly = ''.join(f' ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_{r}(.clk({ck}),.rst_n_in({r}),'
@@ -107,14 +112,14 @@ def wrapper(mod, src, ck, rsts):
 // ca25bcce7 por_n drove 5,341 and host_rst_n 3,419 async-reset flops from the ports).  Each pin drives only an
 // ot_rst_relay (2 sync flops + 1 kept relay flop) placed with this member; the relay output is the member's reset.
 // Assert asynchronous and immediate, RELEASE 3 {ck} edges after the pin, as every reset consumer of the child.
-// {src} is unchanged.  QKD_HR_PE_RR_MUTANT (bench only): relays bypassed.
+// {src} is unchanged.  QKD_HR_PE_RR_MUTANT (bench only): relays bypassed.{inner_note}
 module {mod}_rr{ptxt}(
  {decl}
 );
 {lp}{rel}`ifdef QKD_HR_PE_RR_MUTANT
 {mut}`else
 {rly}`endif
- {mod} {pass_p} u_m(
+ {inner} {pass_p} u_m(
   {conns});
 endmodule
 """

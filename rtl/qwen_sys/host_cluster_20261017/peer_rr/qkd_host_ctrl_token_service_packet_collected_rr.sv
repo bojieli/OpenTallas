@@ -5,6 +5,7 @@
 // ot_rst_relay (2 sync flops + 1 kept relay flop) placed with this member; the relay output is the member's reset.
 // Assert asynchronous and immediate, RELEASE 3 ck edges after the pin, as every reset consumer of the child.
 // rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv is unchanged.  QKD_HR_PE_RR_MUTANT (bench only): relays bypassed.
+// HKV-PROMPT6: inner member qkd_host_ctrl_token_service_packet_collected_pd (tools/qwen_kv_die/host_cluster/gen_peer_pd.py, same function).
 module qkd_host_ctrl_token_service_packet_collected_rr #(
   parameter integer DIE=0,
   MUT=0,
@@ -93,7 +94,7 @@ module qkd_host_ctrl_token_service_packet_collected_rr #(
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_por_n(.clk(ck),.rst_n_in(por_n),.rst_n(por_n_q));
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_rst_n(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_n_q));
 `endif
- qkd_host_ctrl_token_service_packet_collected #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN)) u_m(
+ qkd_host_ctrl_token_service_packet_collected_pd #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN)) u_m(
   .ck(ck),
   .rst_n(rst_n_q),
   .die_id(die_id),
