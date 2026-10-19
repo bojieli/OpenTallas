@@ -25,10 +25,17 @@
 // registered one-hot FIFO write enables + prog_q capture-enable slice copies, OINC o_cnt <= o_cnt1 with a KS incrementer,
 // DTIL me_tiles DPRE/DSEL, SLATE fixed-issue sched_q late start select, AMWC am_wins kept copies, RRH 4 more reset copies
 // for the head-fill slices.  All exact, 0 edges (+~560 flops).  Kit qfd_tt_head_static_h15: mirrored (MY) macros, E home band.
+// h17 (Q-H16C 2026-10-18, STAGE_ME, default 0 = as built): QLB-PROG G-C3 one-image-per-epoch.  STAGE_ME = 1: the ROM
+// relocation stage (loaded_stage / command_stage) is the RUNNING stage, latched from the new stage_start / stage ports
+// (the parent's registered dh stage start + stage, qfd_tt_ctlm_dv s_start / s_stage) instead of the image CALS word
+// (PW1017 [17:12]; as built every one of the 36 layers would read the weights of the one layer the image names).
+// Edges: stage_start / stage and h_start enter through the same pin registers, so loaded_stage is valid on the edge
+// h_start reaches u_head, exactly as the soft parent (HARD_HR 0) latch.  STAGE_ME = 0: the stage ports are ignored.
 module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter integer RSTN = 1, parameter integer SREG = 1, parameter integer DPRE = 1,
     parameter integer RSTREP = 1, parameter integer DSEL = 1,
     // h15 (Q-TTH15 10-17): PWCP / FQWE / OINC / DTIL / SLATE / AMWC / RRH, see qfd_tt_ctlm_head_static_rk (all exact, 0 edges)
-    parameter integer H15 = 1) (
+    parameter integer H15 = 1,
+    parameter integer STAGE_ME = 0) (
     input wire [94:0] rom_ret_i,
     input wire cp_active,output wire [55:0] cp,
     output wire me_image_ready,output wire [75:0] program_obs,
@@ -42,6 +49,8 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter intege
     input wire ck_pm0, ck_pm1,   // r14: raw program-SRAM clock entries (same PLL phase as ck_head)
     input wire  rst_n,
     input wire  h_start,
+    input wire  stage_start,      // h17 STAGE_ME: running-stage start (unused when STAGE_ME = 0)
+    input wire [5:0] stage,       // h17 STAGE_ME: running stage
     input wire [18-1:0] token,
     input wire [18-1:0] pos,
     input wire [11:0] prog_base,
@@ -97,7 +106,8 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter intege
     always @(posedge ck_head or negedge rsl)
       if(!rsl)begin loaded_stage<=0;relocation_sticky<=0;end
       else begin
-        if(pw_v && pw_addr==1017 && pw_data[63:32]==32'h43414c53)
+        if (STAGE_ME != 0) begin if (stage_start) loaded_stage<=stage; end
+        else if(pw_v && pw_addr==1017 && pw_data[63:32]==32'h43414c53)
           loaded_stage<=pw_data[17:12];
         if(relocation_fault)relocation_sticky<=1;
       end

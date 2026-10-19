@@ -73,6 +73,7 @@ module ot_qfd_tt_ctlm_static_parent (
 );
     wire [94:0] rom_ret;
     ot_qfd_tt_ctlm_static_hr u_hr (
+        .stage_start(1'b0), .stage(6'd0),   // h17 stage ports: STAGE_ME 0 here (CALS-word stage)
         .rom_ret_i(rom_ret),
         .cp_active(cp_active),
         .cp(cp),
