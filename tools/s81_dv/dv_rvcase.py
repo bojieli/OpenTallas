@@ -276,7 +276,7 @@ def main():
         elif mst.startswith('dsfd_dvland_'):
             cps = ['ck_f', 'ck']
         elif mst.endswith('_ASAP7_75t_R') and nm.startswith('fwd_'):
-            cps = ['A', 'Y']
+            cps = ['A', 'Y', 'CLK', 'GCLK']     # BUFx8 forward / ICGx4 hop-0 lane clock gate (S81-LBGAP/G1)
         else:
             tm = T['masters'].get(mod2master.get(mst, ''), {})
             cps = [tm.get('clk')] + [cp['port'] for cp in tm.get('clk_peer', [])]
@@ -708,7 +708,7 @@ def klass(ep):
     inst = ep.split('/')[0]
     if inst.startswith('ld_'):
         return ('landing', cls.get(inst[3:], '?'))
-    if re.match(r'st_rs(l)?_|rst_root', inst):
+    if re.match(r'st_rs(l|g)?_|rst_root', inst):     # rsg_: hop-0 gate calendar stations (S81-LBGAP/G1)
         return ('reset', 'station')
     m = re.match(r'st_(.+)_(\d+)$', inst)
     if m:
