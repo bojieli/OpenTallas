@@ -1,0 +1,42 @@
+{
+  "source_commit": "b5c03d49e",
+  "opt_in": "RXSRAM=1",
+  "simulator": "Verilator5.050",
+  "positive": {
+    "status": "PASS",
+    "beats": 1380,
+    "landed": 1380,
+    "mismatches": 0,
+    "late": 0,
+    "maxlate": -2,
+    "faults": 0,
+    "timeouts": 0
+  },
+  "mutants": [
+    {
+      "name": "board400",
+      "status": "FAIL",
+      "beats": 12096,
+      "landed": 12096,
+      "mismatches": 0,
+      "late": 1212,
+      "timeouts": 24,
+      "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
+      "witness": "board400.log"
+    },
+    {
+      "name": "chb0",
+      "status": "FAIL",
+      "beats": 1380,
+      "landed": 1380,
+      "mismatches": 0,
+      "late": 444,
+      "timeouts": 120,
+      "fail_regex": "^FAIL xdie_s81: landed \\d+/\\d+ mismatches \\d+ late [1-9]",
+      "witness": "chb0.log"
+    }
+  ],
+  "latency": "identical positive and mutant timing to SAFE flop receiver; zero additional data/reset edges",
+  "precheck": "first board400 pre-sim assertion counted coredefault400; application check narrowed to two SAFE top defaults, rerun real mutant FAIL above. Initial assertion is not a behavioral failure witness.",
+  "physical": "sizing placement FAIL preserved; no closure/adoption inferred"
+}

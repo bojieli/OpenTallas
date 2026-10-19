@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc8       admits  1035 GB (avail 838, growth 113, headroom 0, waiters 0/0 GB) load 53/128 running 27 disk 398 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3160189-1792424820 after 0 s
+LATE dst 0 src 13 k 256 land 13775 deadline 13511
+LATE dst 1 src 4 k 256 land 13775 deadline 13511
+LATE dst 2 src 11 k 256 land 13775 deadline 13511
+LATE dst 4 src 1 k 256 land 13775 deadline 13511
+LATE dst 5 src 8 k 256 land 13775 deadline 13511
+XDIE_STATS beats 12096 landed 12096 mismatches 0 late 1212 maxlate 264 extra 0 faults 0000000000000000 live 32/32 last_cycle 19108
+FAIL xdie_s81: landed 12096/12096 mismatches 0 late 1212 extra 0 faults 0000000000000000 live 32/32
+BENCH_FAIL board400
+XDIE_LINK timeouts 24 retx_flits 6144 (all 32 lanes; go-back-N ACK timeouts and replayed flits)
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3160189-1792424820): exit 1
