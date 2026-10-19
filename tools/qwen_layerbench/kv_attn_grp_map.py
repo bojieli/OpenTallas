@@ -72,10 +72,24 @@ def main():
          f'    reg [1061:0] kva_krsp [0:{NG - 1}]; reg [1055:0] kva_rsp [0:{NG - 1}];']
     if len(stk) < 4:
         L.insert(2, '`define KVA_PARTIAL')
-    L.append('`define KVA_STK_F {' + ', '.join(f'dut.astk_{x}.af' for x in reversed(stk)) + '}')
+    # KV-TOK 10-19: the MU KV dies (kvs14r GEN2+) flatten the strip (astk_<s>__u_strip_u_strip_u_ctl qkd_astk_ctl_s, ...):
+    # af / ap are then die nets at that control instance (kept by slice_cut), not ports of one astk_<s> instance
+    def astk_ref(x, port):
+        if re.search(r'^\s*\S+(?:\s+#\(.*?\))?\s+astk_%s\s*\(' % x, V, re.M):
+            return f'dut.astk_{x}.{port}'
+        m = re.search(r'^\s*\S+\s+astk_%s__u_strip_u_strip_u_ctl\s*\((.*)$' % x, V, re.M)
+        n = re.search(r'\.' + port + r'\(([^()]*)\)', m.group(1)) if m else None
+        if not n:
+            raise SystemExit(f'kv_attn_grp_map: no astk_{x} instance and no astk_{x}__u_strip_u_strip_u_ctl .{port}')
+        return 'dut.' + n.group(1).strip()
+    L.append('`define KVA_STK_F {' + ', '.join(astk_ref(x, 'af') for x in reversed(stk)) + '}')
     L.append(f'    wire [42:0] kva_ap [0:{len(stk) - 1}];')
     for i, x in enumerate(stk):
-        L.append(f'    assign kva_ap[{i}] = dut.astk_{x}.ap;')
+        L.append(f'    assign kva_ap[{i}] = {astk_ref(x, "ap")};')
+    # sequencer programme request: dut.seq.prg_req_v (kvs14p) or the net on the flattened core seq__u_core (MU dies)
+    m = re.search(r'^\s*qkd_seq_core_static_s\s+seq__u_core\s*\((.*)$', V, re.M)
+    n = re.search(r'\.prg_req_v\(([^()]*)\)', m.group(1)) if m else None
+    L.insert(2, '`define KVA_SEQ_PRG_REQ_V ' + (('dut.' + n.group(1).strip()) if n else 'dut.seq.prg_req_v'))
     L.append('    function automatic string kva_sname(input integer s); case (s)')
     for i, x in enumerate(stk):
         L.append(f'        {i}: kva_sname = "{x}";')
@@ -125,7 +139,7 @@ def main():
     R = json.loads(Path(a.relay_stages).read_text())
     st = {(b['src']['inst'], b['src']['port'], b['dst']['inst'], b['dst']['port']): b['stages'] for b in R['buses']}
     rl = {m.group(2): int(m.group(1)) for m in re.finditer(r'qkd_ectl3_kiss_st #\(\.RESPONSE_LAT\((\d+)\).*?\) (ectl_\w+) \(', V)}
-    rt = {m.group(2): int(m.group(1)) for m in re.finditer(r'qkd_pv16_vport #\(\.MUT\(\d+\), \.DQ\(\d+\), \.RT\((\d+)\)\) (vport_\w+) \(', V)}
+    rt = {m.group(2): int(m.group(1)) for m in re.finditer(r'qkd_pv16_vport(?:_b)? #\(\.MUT\(\d+\), \.DQ\(\d+\), \.RT\((\d+)\)\) (vport_\w+) \(', V)}
     ectl = []
     rl = {e: v for e, v in rl.items() if e.split('_')[1] in stk}
     rt = {v: x for v, x in rt.items() if v.split('_')[1] in stk}

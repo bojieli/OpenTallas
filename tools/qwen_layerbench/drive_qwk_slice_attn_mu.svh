@@ -140,8 +140,8 @@
     integer kva_seqreq [0:KMAX-1]; integer kva_nsr = 0; reg kva_sr_q = 0;
     initial for (int k = 0; k < KMAX; k++) kva_seqreq[k] = -1;
     always @(negedge ck) begin
-        if (dut.seq.prg_req_v === 1'b1 && !kva_sr_q && kva_nsr < KMAX) begin kva_seqreq[kva_nsr] = cyc; kva_nsr = kva_nsr + 1; end
-        kva_sr_q <= (dut.seq.prg_req_v === 1'b1);
+        if (`KVA_SEQ_PRG_REQ_V === 1'b1 && !kva_sr_q && kva_nsr < KMAX) begin kva_seqreq[kva_nsr] = cyc; kva_nsr = kva_nsr + 1; end
+        kva_sr_q <= (`KVA_SEQ_PRG_REQ_V === 1'b1);
     end
     function automatic [11:0] kva_skw(input integer p);
         integer k, j; begin kva_skw = 12'd0;

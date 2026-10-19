@@ -17,6 +17,8 @@ import re, sys
 t = open(sys.argv[1]).read()
 for p in (0, 1):
     m = re.search(r'\bpvw_%d\s*\((.*?)\);' % p, t, re.S)
+    # KV-TOK 10-19: MU dies flatten the pair; its fault leaves the pair's wide control pvw_<p>__u_ctl
+    m = m or re.search(r'\bpvw_%d__u_ctl\s*\((.*?)\);' % p, t, re.S)
     f = re.search(r'\.fault\(([^()]*)\)', m.group(1)) if m else None
     net = ('dut.' + f.group(1).strip()) if f and f.group(1).strip() else "1'b0"
     print('`define KVA_PW%d_F %s' % (p, net))
