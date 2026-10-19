@@ -92,13 +92,20 @@ module ot_s81sl_rstop #(
             if (ofv) on_n <= ofs ? 2'd1 : on_n + 2'd1;
         end
     always @(posedge clk) begin
-        if (ofv && ofs) on_b[V-1:0] <= of;
-        else if (ofv && on_n != 2'd3) on_b[on_n * V +: V] <= of;
+        // decoded constant-index slot writes (S81-XG 10-19; was on_b[on_n * V +: V], a runtime part-select): same function
+        if (ofv && (ofs || on_n == 2'd0)) on_b[V-1:0] <= of;
+        if (ofv && !ofs && on_n == 2'd1) on_b[V +: V] <= of;
+        if (ofv && !ofs && on_n == 2'd2) on_b[2 * V +: V] <= of;
+`ifdef OT_S81SL_RSTOP_MUT_FRAG
+        // NEGATIVE CONTROL (S81-XG bench): own beat assembled with fragments 1 and 2 swapped
+        if (ofv && !ofs && on_n == 2'd3) own <= {of, on_b[V +: V], on_b[2 * V +: V], on_b[V-1:0]};
+`else
         if (ofv && !ofs && on_n == 2'd3) own <= {of, on_b};
+`endif
     end
     // ---------------------------------------------------------------- V receive: single beats and fragment assembly
     wire iv_v = iv[0]; wire [2:0] iv_k = iv[3:1];
-    reg [1:0] fr_n; reg fr_on; reg [W-1:0] fr_b; reg asm_v; reg [W-1:0] asm_b;
+    reg [1:0] fr_n; reg fr_on; reg [3 * V - 1:0] fr_b; reg asm_v; reg [W-1:0] asm_b;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin fr_on <= 1'b0; fr_n <= 2'd0; asm_v <= 1'b0; end
         else begin
@@ -109,8 +116,17 @@ module ot_s81sl_rstop #(
             end else if (iv_v && (iv_k == K_XQ || iv_k == K_XB)) begin fr_on <= 1'b1; fr_n <= 2'd1; end
         end
     always @(posedge clk) begin
-        if (!fr_on) fr_b[V-1:0] <= iv; else fr_b[fr_n * V +: V] <= iv;
+        // decoded constant-index slot writes (S81-XG 10-19; was fr_b[fr_n * V +: V]); slot 3 is never read (asm_b takes the
+        // 4th fragment from iv), so it is not stored
+        if (!fr_on || fr_n == 2'd0) fr_b[V-1:0] <= iv;
+        if (fr_on && fr_n == 2'd1) fr_b[V +: V] <= iv;
+        if (fr_on && fr_n == 2'd2) fr_b[2 * V +: V] <= iv;
+`ifdef OT_S81SL_RSTOP_MUT_VASM
+        // NEGATIVE CONTROL (S81-XG bench): V-assembled beat with fragments 1 and 2 swapped
+        if (fr_on && fr_n == 2'd3) asm_b <= {iv, fr_b[V +: V], fr_b[2 * V +: V], fr_b[V-1:0]};
+`else
         if (fr_on && fr_n == 2'd3) asm_b <= {iv, fr_b[3 * V - 1:0]};
+`endif
     end
     wire v_nx = iv_v && iv_k == K_NX && !fr_on, v_cs = iv_v && iv_k != K_XQ && iv_k != K_XB && iv_k != K_NX && !fr_on;
     // ---------------------------------------------------------------- V send: own fragments, V-mapped NX, control plane
@@ -171,7 +187,12 @@ module ot_s81sl_rstop #(
     always @(posedge clk) begin
         g_fam <= {ie_k == K_XB, iw_k == K_XB, g0[3:1] == K_XB};
         g_idx <= {ie[19:13], iw[19:13], g0[19:13]};
+`ifdef OT_S81SL_RSTOP_MUT_GSWAP
+        // NEGATIVE CONTROL (S81-XG bench): W / E gather payloads swapped (valids / index / family kept)
+        g_d <= {iw[21 +: 1024], ie[21 +: 1024], g0[21 +: 1024]};
+`else
         g_d <= {ie[21 +: 1024], iw[21 +: 1024], g0[21 +: 1024]};
+`endif
         dl_e <= iw; dl_w <= ie; dl_vb <= iv;
         nxw_d <= map_w ? {iv[7:4], iv[20:13], iv[21 +: 160]} : {xwb[7:4], xwb[20:13], xwb[21 +: 160]};
         nxe_d <= map_e ? {iv[7:4], iv[20:13], iv[21 +: 160]} : {xeb[7:4], xeb[20:13], xeb[21 +: 160]};
