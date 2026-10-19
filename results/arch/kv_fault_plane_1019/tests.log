@@ -1,0 +1,23 @@
+test_dynamic_source_is_not_spare (test_kv_fault_plane.InventoryTests) ... ok
+test_exact_inventory_and_missing_physical_source_refused (test_kv_fault_plane.InventoryTests) ... ok
+test_live_consumer_is_not_spare (test_kv_fault_plane.InventoryTests) ... ok
+test_reties_at_intermediate_hop_admitted_only_as_unused (test_kv_fault_plane.InventoryTests) ... ok
+test_scalar_clock_names_are_canonical_bit_identities (test_kv_fault_plane.InventoryTests) ... ok
+test_single_landing_uses_ck_s_launch_root (test_kv_fault_plane.InventoryTests) ... ok
+test_unknown_expression_is_not_spare (test_kv_fault_plane.InventoryTests) ... ok
+test_unsized_or_unknown_literal_cannot_authorize_spare_capacity (test_kv_fault_plane.InventoryTests) ... ok
+test_double_allocation_is_rejected (test_kv_fault_rewire.RewriteTests) ... ok
+test_existing_source_connection_cannot_be_silently_replaced (test_kv_fault_rewire.RewriteTests) ... ok
+test_functional_bit_is_renamed_and_carried_across_every_retied_hop (test_kv_fault_rewire.RewriteTests) ... ok
+test_nonduplicate_pipe_input_is_rejected (test_kv_fault_rewire.RewriteTests) ... ok
+test_complete_graph_and_geometry (test_kv_fault_validate.ValidateTests) ... ok
+test_insufficient_quiet_is_rejected (test_kv_fault_validate.ValidateTests) ... ok
+test_long_edge_is_rejected (test_kv_fault_validate.ValidateTests) ... ok
+test_missing_source_is_rejected (test_kv_fault_validate.ValidateTests) ... ok
+test_overlap_is_rejected (test_kv_fault_validate.ValidateTests) ... ok
+test_undeclared_crossing_is_rejected (test_kv_fault_validate.ValidateTests) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.020s
+
+OK

@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "verdict": "FAIL",
+ "summary": {
+  "masters": 68,
+  "instances": 45310,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 4,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 293590,
+  "output_open_ports": 72,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 36,
+  "pad_bits": 193654,
+  "spare_out_bits": 304459,
+  "unresolved_children": 0,
+  "ambiguous_children": 0,
+  "variant_children": 11
+ },
+ "die_sha256": "cbaea1b2cdea6d80c25e0167be32b816151addf5855a718f5ffc501bdf4c78d0",
+ "receipt_sha256": "87edbf07662d318702f164bb52a5d903608569c6278994cbc4c4cc0a871b9b4a"
+}

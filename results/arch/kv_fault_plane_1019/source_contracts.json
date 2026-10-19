@@ -1,0 +1,22 @@
+{
+ "source_commit": "219049242d",
+ "files": {
+  "rtl/qwen_split/qfd_fwd_lane.sv": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+  "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv": "a40160aeeb388dd333b6495f9ce01175bd2117d4086822db1ccd9f46d68af849",
+  "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv": "22669d7ebf45d72f3a3b47e487b3a8e9e737eac041c80fa644f7a9259728c366",
+  "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de",
+  "rtl/qwen_sys/split_20261014/qkd_attn_result_face_s.sv": "d449f74db50b7eeb18e57387f2919e50e906fee93286bd418a0483ced71de12f",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv": "cdbf22798ae606880ecfcba24ab56220d3c253b3e4148f21ebdd2559ab35113a",
+  "rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv": "4cf2002bf0feb8f315598827eab527799289c9ae5f68fc52e91e9e188a6f7045",
+  "physical/ref_tile/qkd_astk_fault_join/views/qkd_astk_fault_join/qkd_astk_fault_join.lef": "a415605eed880ac3fe38e13d5ffcfa594345448b89f39ff6db30c8282c4deb2a",
+  "physical/ref_tile/qkd_astk_fault_join/views/qkd_astk_fault_join/abstract.json": "928a9dadbad8b0401ed97cfa37e2c7a5dc12e425993bee24b9c4ccdbfede10d9",
+  "physical/ref_tile/qkd_astk_fault_join/views/qkd_astk_fault_join/insertion.json": "5d373bb839f1d58ba8a33aa6046dd20ea60f4798388820163c2f4358697a62ca"
+ },
+ "semantics": {
+  "landing_fault": "sticky receiving ck; checks every warm && vld[selected] edge until reset; no token/run qualifier",
+  "KC_kf": "registered f2 | sticky overflow; immediate feedback latch required before new crossing",
+  "join": "registered q <= a | b with asynchronous reset; no inherent stickiness",
+  "final_consumer": "unit_fault OR enters live service_fault; final plane collector must explicitly hold faults",
+  "retirement": "STATUS fixed TX_FIRST+33; SETTLE4 host admission guard is not fault-plane retirement admission"
+ }
+}
