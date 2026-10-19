@@ -20,9 +20,12 @@ EXCLUDED = {"gate_result.json", "source_snapshot.json"}
 CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
-              "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py")
+              "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py",
+              "tools/ref_tile/measured_band_fill.py")
 # Non-Python source read by an imported generator and embedded in its kit.
-PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",)}
+PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",),
+           "tools/ref_tile/clock_entry_constraints.py": ("physical/common_flow/clock_family.tcl",),
+           "tools/closure_loop/ck_insertion.py": ("physical/common_flow/clock_family.tcl",)}
 PY_DIRS = ("tools", "tools/ref_tile", "tools/closure_loop", "tools/w18")
 SCAN = (".tcl", ".sdc", ".sh", ".env", ".mk", ".cfg", ".f")    # flow scripts: every repo path they name is consumed
 HDL = (".v", ".sv", ".svh", ".vh")
@@ -530,6 +533,35 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
             rows.append(dict(requires=n, ok=ok, text="landed_cluster_roots: " + (
                 "multi-root kit without hard children: unchanged" if ok else
                 "multi-root cluster gated before the per-root child-flop rule (or spec unreadable): re-gate")))
+            continue
+        if n in ("rc_cal_spine_hold", "balanced_reset_profile", "single_clock_contract"):
+            # ROOT-UNBLOCK 10-19: 96f1d6e0d changes the gate only for a spine cluster (CTS hold RC applies only with a
+            # spine); a6d33cc98 only for a kit whose spec sets reset_landing.first_copies.  Judged from the kit spec.
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            try:
+                sp = json.loads((Path(root or Path(__file__).resolve().parents[2]) / "physical" / "ref_tile" / str(kit)
+                                 / "spec.json").read_text())
+                if not isinstance(sp, dict):
+                    raise ValueError("spec is not an object")
+            except (OSError, ValueError, TypeError):
+                rows.append(dict(requires=n, ok=False, text=f"{n}: kit spec unreadable (re-gate)"))
+                continue
+            if n == "rc_cal_spine_hold":
+                hit = sp.get("kind") == "cluster" and sp.get("clock", "spine") == "spine"
+                rows.append(dict(requires=n, ok=not hit, text="rc_cal_spine_hold: " + (
+                    "spine cluster: gate CTS hold repair ran with the calibrated RC, re-gate" if hit else
+                    "no spine: gate CTS never applied the calibrated hold RC, verdict unchanged")))
+            elif n == "single_clock_contract":
+                hit = bool(sp.get("single_clock_contract"))
+                rows.append(dict(requires=n, ok=not hit, text="single_clock_contract: " + (
+                    "kit carries single_clock_contract: ot_single_clock_check now runs in MM sync, re-gate" if hit else
+                    "no single_clock_contract: ot_single_clock_check is never defined, verdict unchanged")))
+            else:
+                hit = bool((sp.get("reset_landing") or {}).get("first_copies")) if isinstance(sp.get("reset_landing"),
+                                                                                             dict) else False
+                rows.append(dict(requires=n, ok=not hit, text="balanced_reset_profile: " + (
+                    "kit declares reset_landing.first_copies: the balanced proof applies, re-gate" if hit else
+                    "no reset_landing.first_copies: textbook_lint checks unchanged")))
             continue
         if n == "clock_pin_spread":
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})

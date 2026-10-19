@@ -26,6 +26,17 @@
 //      themselves are proven at the end level by tb_d2d_ovl_mu (same ot_qwen_d2d_static_end RTL).
 //      OMUT 1: cal_user_rx pin driven with another user (rx tag path)  2: cal_start_rx one edge late (RX calendar start
 //      pin path)  -> must FAIL.
+// KSF (KV-D2D 10-19, compile with -DKSF): every KV end is the SAFE FAN-OUT master qkd_d2d_static_sf / qkd_d2d_static_ovl_sf
+// (ot_qwen_d2d_safe_fo.sv; NTX 3, the KV tile's lane count); the LOCK shadow then runs the safe master in lockstep.
+`ifdef KSF
+`define QKD_M qkd_d2d_static_sf
+`define QKD_OVL_M qkd_d2d_static_ovl_sf
+`define QKD_NTX .NTX(3),
+`else
+`define QKD_M qkd_d2d_static
+`define QKD_OVL_M qkd_d2d_static_ovl
+`define QKD_NTX
+`endif
 module tb_qwen_d2d_dies;
     `include "txdp.svh"   // QXF-LINK F4: the masters' TXDP from the same compile (d2d_link_calendar.py)
     parameter integer MUT = 0, PR = 1, TXL = 6, PHY = 5, P = 110, NLAY = 6, BAD_LAYER = 4, LOCK = 0, LMUT = 0, KDLY = 0, OMUT = 0, KRC = 0;
@@ -106,12 +117,12 @@ module tb_qwen_d2d_dies;
     reg cstart_d = 0, cseg_d = 0; always @(posedge ck) begin cstart_d <= cstart; cseg_d <= cseg; end
     wire cstart_rx = (OMUT == 2) ? cstart_d : cstart, cseg_rx = (OMUT == 2) ? cseg_d : cseg;
     wire [1:0] k_tu, k_ru;
-    qkd_d2d_static_ovl #(.SAFE_RC(KRC), .MUT(MUT == 2 ? 2 : 0), .NTX(3), .PR(PR), .TXDP(QKD_D2D_TXDP)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    `QKD_OVL_M #(.SAFE_RC(KRC), .MUT(MUT == 2 ? 2 : 0), .NTX(3), .PR(PR), .TXDP(QKD_D2D_TXDP)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({cfg_hi, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(cseg),
         .cal_start_rx(cstart_rx), .cal_seg_rx(cseg_rx), .cal_user_tx(seg_user), .cal_user_rx((OMUT == 1) ? seg_user ^ 2'd1 : seg_user),
         .tx_user(k_tu), .rx_user(k_ru),
 `else
-    qkd_d2d_static #(.SAFE_RC(KRC), .MUT(MUT == 2 ? 2 : 0), .PR(PR), .TXDP(QKD_D2D_TXDP)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    `QKD_M #(.SAFE_RC(KRC), `QKD_NTX .MUT(MUT == 2 ? 2 : 0), .PR(PR), .TXDP(QKD_D2D_TXDP)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({cfg_hi, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(cseg),
 `endif
         .host_link_reset_req(host_reset_req), .host_recovery_clear(host_clear), .host_boot_begin(host_boot),
@@ -147,7 +158,7 @@ module tb_qwen_d2d_dies;
         wire [3:0] o_atk, o_ark, o_rc, o_ad; wire [4:0] o_atb, o_arb; wire [547:0] o_rxp, o_rrx; wire [1:0] o_rsk, o_kg, o_ki, o_lu, o_rg;
         wire [10:0] o_kt; wire [511:0] o_kdat; wire [58:0] o_kid, o_rtag; wire [7:0] o_tf; wire [17:0] o_rtok;
         wire [31:0] o_rval, o_rcyc, o_recc; wire [PW-1:0] o_txf;
-        qkd_d2d_static #(.SAFE_RC(KRC), .MUT(LMUT == 1 ? 1 : 0), .NTX(3), .PR(PR), .TXDP(QKD_D2D_TXDP)) u_k3 (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+        `QKD_M #(.SAFE_RC(KRC), .MUT(LMUT == 1 ? 1 : 0), .NTX(3), .PR(PR), .TXDP(QKD_D2D_TXDP)) u_k3 (.ck(ck), .por_n(por_n), .rst_n(rst_n),
             .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({cfg_hi, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(cseg),
             .host_link_reset_req(host_reset_req), .host_recovery_clear(host_clear), .host_boot_begin(host_boot),
             .fwd_epoch(o_fe), .fwd_link_rst_n(o_fl),
