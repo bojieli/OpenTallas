@@ -319,3 +319,23 @@ Chain `physical/hbm_next/die/hnx_p4_chain.sh` (the GEN2 S4..S8 form, forked by c
 - The `fus_*` and `idx_nsel` blocks have no GEN2 slot or contract instance yet. In the case they appear as plan or region blocks only, until UNITS publishes those tiles.
 - `cxdl_<q>4` (L=5) also still needs the UNITS-COLL contract entry.
 - The next case runs `bash hnx_case.sh f4c_t8` on the fleet, then `TAG=f4c_t8 bash hnx_p4_chain.sh`. It starts once the t5 chain ends, because the chain's `$B/hnx_*` intermediates and `$A` logs are not tag-keyed.
+
+## STEP 5 (10-19 ~06:10-06:30, fresh DIE agent): DIE-P4-1 GEN fix, case on f4c_t8, SM4 tile check
+
+**DIE-P4-1 on f4c_t5 ENDED at S7 GEN** (exit 3 after 1 h 55 min): `no free area for hb_idx__s_SW (1508.976x1509.84)`. Lane rows 40,936 (63,311 tiles); 16,660 rows went to "row nearest free area".
+- Cause: the contract slots `idx_s<k>_h<j>` match no grant slot. GEN therefore placed the four 1.5-mm IDX score quarters LAST, in free area outside plan blocks. In the relay-free case they found it (W/E PHY corners). In the relayed case the lane rows had already taken it.
+- Structural fix (`hnx_case_inputs.py`, @694ce60c9): one die slot per quadrant, `idxs_<q>`, at the plan's IDX corner block, with the stand-in view outline. The GEN2 W-corner pair slots `idx_s0`/`idx_s1` are dropped. The S-E plan corner holds the single stand-in `hc_eng`, so `idxs_SE` goes to the free S-E corner E of it (x 21,905; this is where the relay-free GEN had put it). The case scripts slot-map `hb_idx__s_<q>` to `idxs_<q>` (tags with those slots), so GEN places them as grant slots BEFORE the lane rows.
+- t5 relay outputs were deleted (a failed run). t5 logs are in `/home/ubuntu/artifacts/hnx/die_p4/t5_failed_1019/`.
+
+**Relay-free case f4c_t8: GEN_OK.** 1,214 insts, **0 placement problems**, 11.6 min, 7.2 GB. IDX quarters sit in their slots (`case_f4c_t8/layout.png`). Relay-free overreach is 669,586 nets, vs 682,640 on t5 (-1.9 %) and 710,093 on GEN2a. The chain then runs S4..S8 on t8 (`hnx_t8_run.sh`).
+
+**SM4 lever (a) tile `hnx_rp4lp4x` 1,080 x 1,339.2 on the f4c_t8 lattice (COORD 04:30 request; evaluator `plan_p4.py`, t8 arguments):**
+
+| arrangement | SM column (um) | die (mm) | mm² | cut v / h | reticle (26 x 33, 0.5 margin) |
+|---|---|---|---:|---|---|
+| 4 x 4, as drawn (`f4c_t8_Lx`) | 4,428 x 5,918.4 | 38.27 x 25.21 | 964.68 | 0.522 / 0.44 | FAIL (38.27 mm side) |
+| 4 x 4 + A1 row (`f4c_t8_LxA`) | 4,428 x 6,091.2 | 38.27 x 25.55 | 977.91 | 0.521 / 0.53 | FAIL |
+| 4 x 4 transposed (`f4c_t8_LxT`) | 5,464.8 x 4,881.6 | 46.56 x 23.13 | 1,077.21 | 0.508 / 0.594 | FAIL |
+| 2 x 8 column | 2,268 x 11,275.2 | band-bound W, H ~35.9 | - | - | FAIL: the plan builder rejects it (quadrant core overruns the centre channel); at the t8 band H = 13.37 + 2 x 11.28 = 35.9 mm > 33 |
+
+**No lattice arrangement of the 1,080-wide tile fits the reticle.** As the 04:30 request said, SM4 should re-pack the leaf 673.92 wide (BF16 stacks N/S of the xs4). The (a) price stays at **811.81 mm²** (t8_LaA, cut 0.585), unproven until that re-pack is done.
