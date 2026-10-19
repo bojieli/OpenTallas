@@ -43,7 +43,7 @@
    },
    {
     "name": "hcxr_m0",
-    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_m0 0 11 11 32'h060b060b 32'h050a070b 32'h060b060b 32'h050a070b",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_m0 0 11 11 060b060b 050a070b 060b060b 050a070b",
     "expect": "pass",
     "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
     "threads": 16,
@@ -55,7 +55,7 @@
    },
    {
     "name": "hcxr_unl",
-    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_unl 0 0 0 32'hffffffff 32'hffffffff 32'h060b060b 32'h050a070b",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_unl 0 0 0 ffffffff ffffffff 060b060b 050a070b",
     "expect": "fail",
     "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
     "threads": 16,
@@ -69,7 +69,7 @@
    },
    {
     "name": "hcxr_xruse",
-    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_xruse 0 11 11 32'h060b060b 32'h050a060b 32'h060b060b 32'h050a070b",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_xruse 0 11 11 060b060b 050a060b 060b060b 050a070b",
     "expect": "fail",
     "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
     "threads": 16,
@@ -83,7 +83,7 @@
    },
    {
     "name": "hcxr_xrdne",
-    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_xrdne 0 11 11 32'h070b060b 32'h050a070b 32'h060b060b 32'h050a070b",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_xrdne 0 11 11 070b060b 050a070b 060b060b 050a070b",
     "expect": "fail",
     "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
     "threads": 16,
@@ -97,7 +97,7 @@
    },
    {
     "name": "hcxr_mut2",
-    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_mut2 2 11 11 32'h060b060b 32'h050a070b 32'h060b060b 32'h050a070b",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_mut2 2 11 11 060b060b 050a070b 060b060b 050a070b",
     "expect": "fail",
     "pass_regex": "^HC_ROOT_LANDED MUT=2 .* rc=0",
     "threads": 16,
