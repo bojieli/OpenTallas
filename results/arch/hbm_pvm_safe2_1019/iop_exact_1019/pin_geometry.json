@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "PASS",
+ "fails": [],
+ "metrics": {
+  "signal_clock_pins": 1128,
+  "pin_rectangles": 1128,
+  "pin_track_checked": 1128,
+  "pin_track_inaccessible": 0,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "/srv/opentallas-scratch/claude/hbm-pvm-iop-exact-1019/pin_dump.json",
+ "dump_sha256": "6534793e1737c21fb78d2f41f7bc70c87593f133668bc029678586c499f511f0",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}
