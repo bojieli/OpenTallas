@@ -1,0 +1,443 @@
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+make: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vot_qkh_head_frontq_native_e__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vot_qkh_head_stin_native_f__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vot_qkh_head_stk_native_6__hierMkArgs.f
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vot_qkh_lane8_c__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vot_qkh_head_score4_native_7__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkh_head_gather_stage_a__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vot_qkh_ktree_9__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkh_head_sstage__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_528__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlysh0_528__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlysh_528__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlysh0_36__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_landsh_528__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlysh_36__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_landsh_36__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlysh0_296__hierMkArgs.f
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.059 MB in 17 C++ files needing 0.000 MB
+- Verilator: Walltime 3.425 s (elab=1.507, cvt=0.004, bld=0.000); cpu 3.425 s on 1 threads; allocated 1135.289 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.042 MB in 10 C++ files needing 0.000 MB
+- Verilator: Walltime 3.487 s (elab=1.583, cvt=0.002, bld=0.000); cpu 3.487 s on 1 threads; allocated 1135.293 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.061 MB in 17 C++ files needing 0.000 MB
+- Verilator: Walltime 3.561 s (elab=1.489, cvt=0.004, bld=0.000); cpu 3.561 s on 1 threads; allocated 1135.289 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.062 MB in 17 C++ files needing 0.000 MB
+- Verilator: Walltime 3.633 s (elab=1.512, cvt=0.003, bld=0.000); cpu 3.628 s on 1 threads; allocated 1135.293 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.047 MB in 12 C++ files needing 0.000 MB
+- Verilator: Walltime 3.777 s (elab=1.618, cvt=0.003, bld=0.000); cpu 3.777 s on 1 threads; allocated 1135.289 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlysh_296__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.164 MB in 17 C++ files needing 0.000 MB
+- Verilator: Walltime 3.828 s (elab=1.625, cvt=0.011, bld=0.000); cpu 3.827 s on 1 threads; allocated 1135.289 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_landsh_296__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.033 MB in 8 C++ files needing 0.000 MB
+- Verilator: Walltime 3.947 s (elab=1.696, cvt=0.003, bld=0.000); cpu 3.947 s on 1 threads; allocated 1135.293 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.061 MB in 17 C++ files needing 0.000 MB
+- Verilator: Walltime 3.958 s (elab=1.723, cvt=0.005, bld=0.000); cpu 3.958 s on 1 threads; allocated 1135.293 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlysh0_1__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.068 MB in 11 C++ files needing 0.000 MB
+- Verilator: Walltime 3.970 s (elab=1.715, cvt=0.005, bld=0.000); cpu 3.964 s on 1 threads; allocated 1135.289 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.065 MB in 17 C++ files needing 0.000 MB
+- Verilator: Walltime 4.025 s (elab=1.748, cvt=0.004, bld=0.000); cpu 4.025 s on 1 threads; allocated 1135.297 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.087 MB in 12 C++ files needing 0.000 MB
+- Verilator: Walltime 4.014 s (elab=1.752, cvt=0.006, bld=0.000); cpu 4.014 s on 1 threads; allocated 1135.293 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.056 MB in 17 C++ files needing 0.000 MB
+- Verilator: Walltime 4.016 s (elab=1.758, cvt=0.003, bld=0.000); cpu 4.016 s on 1 threads; allocated 1135.285 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.038 MB in 10 C++ files needing 0.000 MB
+- Verilator: Walltime 4.042 s (elab=1.732, cvt=0.003, bld=0.000); cpu 4.041 s on 1 threads; allocated 1135.289 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.057 MB in 12 C++ files needing 0.000 MB
+- Verilator: Walltime 4.049 s (elab=1.760, cvt=0.003, bld=0.000); cpu 4.049 s on 1 threads; allocated 1135.293 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlysh_1__hierMkArgs.f
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_landsh_1__hierMkArgs.f
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_296__hierMkArgs.f
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36__hierMkArgs.f
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_1__hierMkArgs.f
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'ot_qkh_lane8_c.g_d[0].u_a.u_dab.g'
+                                                                                                                                                     : ... note: In instance 'ot_qkh_lane8_c.g_d[0].u_a.u_dab'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27:      Example path: ot_qkh_lane8_c.g_d[0].u_a.u_dab.g
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27:      Example path: ot_qkh_lane8_c.g_d[0].u_a.u_dab.g
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'ot_qkh_lane8_c.g_d[0].u_a.u_sum.p'
+                                                                                                                                                     : ... note: In instance 'ot_qkh_lane8_c.g_d[0].u_a.u_sum'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27:      Example path: ot_qkh_lane8_c.g_d[0].u_a.u_sum.p
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27:      Example path: ot_qkh_lane8_c.g_d[0].u_a.u_sum.p
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'ot_qkh_ktree_9.g_n[0].u_a.u_dab.g'
+                                                                                                                                                     : ... note: In instance 'ot_qkh_ktree_9.g_n[0].u_a.u_dab'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27:      Example path: ot_qkh_ktree_9.g_n[0].u_a.u_dab.g
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27:      Example path: ot_qkh_ktree_9.g_n[0].u_a.u_dab.g
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'ot_qkh_ktree_9.g_n[0].u_a.u_sum.p'
+                                                                                                                                                     : ... note: In instance 'ot_qkh_ktree_9.g_n[0].u_a.u_sum'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27:      Example path: ot_qkh_ktree_9.g_n[0].u_a.u_sum.p
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27:      Example path: ot_qkh_ktree_9.g_n[0].u_a.u_sum.p
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 3.133 MB in 60 C++ files needing 0.004 MB
+- Verilator: Walltime 6.532 s (elab=1.831, cvt=2.491, bld=0.000); cpu 6.531 s on 1 threads; allocated 1135.293 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 3.586 MB in 75 C++ files needing 0.007 MB
+- Verilator: Walltime 6.680 s (elab=1.897, cvt=2.603, bld=0.000); cpu 6.668 s on 1 threads; allocated 1135.297 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.037 MB in 10 C++ files needing 0.000 MB
+- Verilator: Walltime 2.615 s (elab=0.845, cvt=0.002, bld=0.000); cpu 2.615 s on 1 threads; allocated 1112.875 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.055 MB in 17 C++ files needing 0.000 MB
+- Verilator: Walltime 3.178 s (elab=1.428, cvt=0.003, bld=0.000); cpu 3.178 s on 1 threads; allocated 1135.293 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.053 MB in 12 C++ files needing 0.000 MB
+- Verilator: Walltime 3.368 s (elab=1.575, cvt=0.003, bld=0.000); cpu 3.368 s on 1 threads; allocated 1135.289 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.047 MB in 12 C++ files needing 0.000 MB
+- Verilator: Walltime 3.160 s (elab=1.437, cvt=0.003, bld=0.000); cpu 3.159 s on 1 threads; allocated 1135.293 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.079 MB in 12 C++ files needing 0.000 MB
+- Verilator: Walltime 3.532 s (elab=1.549, cvt=0.005, bld=0.000); cpu 3.532 s on 1 threads; allocated 1135.289 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.035 MB in 10 C++ files needing 0.000 MB
+- Verilator: Walltime 3.198 s (elab=1.429, cvt=0.002, bld=0.000); cpu 3.198 s on 1 threads; allocated 1135.293 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.035 MB in 10 C++ files needing 0.000 MB
+- Verilator: Walltime 3.404 s (elab=1.386, cvt=0.002, bld=0.000); cpu 3.403 s on 1 threads; allocated 1135.293 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 492.395 MB sources in 242 modules, into 0.067 MB in 11 C++ files needing 0.000 MB
+- Verilator: Walltime 3.639 s (elab=1.505, cvt=0.005, bld=0.000); cpu 3.639 s on 1 threads; allocated 1135.297 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_pvw_die_t_6__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_pvw_die_t_2__hierMkArgs.f
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:8:31: Signal unoptimizable: Circular combinational logic: 'qkd_pvw_die_t_2.__Vcellinp__u_DL16_r0__a'
+                                                                                                                : ... note: In instance 'qkd_pvw_die_t_2'
+    8 |         , input logic [35:0]  a
+      |                               ^
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:8:31:      Example path: qkd_pvw_die_t_2.__Vcellinp__u_DL16_r0__a
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:64:5:      Example path: ALWAYS
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:51:19:      Example path: qkd_pvw_die_t_2.u_DL16_r0.b_combo__V
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:87:5:      Example path: ALWAYS
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:9:32:      Example path: qkd_pvw_die_t_2.u_DL16_r0.b
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv:4355:44:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:8:31:      Example path: qkd_pvw_die_t_2.__Vcellinp__u_DL16_r0__a
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'qkd_pvw_die_t_2.u_s0_b0.u_slice.g_lane[0].u_add.u_dab.g'
+                                                                                                                                                     : ... note: In instance 'qkd_pvw_die_t_2.u_s0_b0.u_slice.g_lane[0].u_add.u_dab'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27:      Example path: qkd_pvw_die_t_2.u_s0_b0.u_slice.g_lane[0].u_add.u_dab.g
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27:      Example path: qkd_pvw_die_t_2.u_s0_b0.u_slice.g_lane[0].u_add.u_dab.g
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'qkd_pvw_die_t_2.u_s0_b0.u_slice.g_lane[0].u_add.u_sum.p'
+                                                                                                                                                     : ... note: In instance 'qkd_pvw_die_t_2.u_s0_b0.u_slice.g_lane[0].u_add.u_sum'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27:      Example path: qkd_pvw_die_t_2.u_s0_b0.u_slice.g_lane[0].u_add.u_sum.p
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27:      Example path: qkd_pvw_die_t_2.u_s0_b0.u_slice.g_lane[0].u_add.u_sum.p
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:8:31: Signal unoptimizable: Circular combinational logic: 'qkd_pvw_die_t_6.__Vcellinp__u_DL16_r0__a'
+                                                                                                                : ... note: In instance 'qkd_pvw_die_t_6'
+    8 |         , input logic [35:0]  a
+      |                               ^
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:8:31:      Example path: qkd_pvw_die_t_6.__Vcellinp__u_DL16_r0__a
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:64:5:      Example path: ALWAYS
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:51:19:      Example path: qkd_pvw_die_t_6.u_DL16_r0.b_combo__V
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:87:5:      Example path: ALWAYS
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:9:32:      Example path: qkd_pvw_die_t_6.u_DL16_r0.b
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv:4355:44:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vqkd_rlys_36/qkd_rlys_36.sv:8:31:      Example path: qkd_pvw_die_t_6.__Vcellinp__u_DL16_r0__a
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'qkd_pvw_die_t_6.u_s0_b0.u_slice.g_lane[0].u_add.u_dab.g'
+                                                                                                                                                     : ... note: In instance 'qkd_pvw_die_t_6.u_s0_b0.u_slice.g_lane[0].u_add.u_dab'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27:      Example path: qkd_pvw_die_t_6.u_s0_b0.u_slice.g_lane[0].u_add.u_dab.g
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:24:27:      Example path: qkd_pvw_die_t_6.u_s0_b0.u_slice.g_lane[0].u_add.u_dab.g
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'qkd_pvw_die_t_6.u_s0_b0.u_slice.g_lane[0].u_add.u_sum.p'
+                                                                                                                                                     : ... note: In instance 'qkd_pvw_die_t_6.u_s0_b0.u_slice.g_lane[0].u_add.u_sum'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27:      Example path: qkd_pvw_die_t_6.u_s0_b0.u_slice.g_lane[0].u_add.u_sum.p
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv:25:27:      Example path: qkd_pvw_die_t_6.u_s0_b0.u_slice.g_lane[0].u_add.u_sum.p
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 493.099 MB sources in 242 modules, into 1000.739 MB in 1595 C++ files needing 7.681 MB
+- Verilator: Walltime 1046.157 s (elab=9.960, cvt=1005.961, bld=0.000); cpu 1046.007 s on 1 threads; allocated 63333.859 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 493.099 MB sources in 242 modules, into 1000.739 MB in 1595 C++ files needing 7.681 MB
+- Verilator: Walltime 1063.919 s (elab=10.941, cvt=1019.551, bld=0.000); cpu 1063.772 s on 1 threads; allocated 63324.863 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/mu-tok-kv'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vtb_qwk_slice_attn__hierMkArgs.f
+%Warning-MODDUP: /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv:49:8: Duplicate declaration of module: 'qkd_static_kv_boot_observe'
+   49 | module qkd_static_kv_boot_observe(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:1114:1: ... note: In file included from 'qkd_kvs_tiles_hroot_ff_k.sv'
+                 /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14p-fa7fe4ff9/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv:754:32: ... Location of original declaration
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+make: *** [Vtb_qwk_slice_attn_hier.mk:126: Vtb_qwk_slice_attn.mk] Terminated
+make[1]: *** [/srv/opentallas-scratch/claude/mu-tok-kv/old3/allri/run/obj/Vtb_qwk_slice_attn_hier.mk:122: hier_launch_verilator] Terminated

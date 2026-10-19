@@ -1,0 +1,22 @@
+{
+  "source_commit": "7512369a3",
+  "source_files": {
+    "audit_reuse.py": "794f2b60f918be4a8344b3fdb6ef8eac362f632accbfde82b5f37a87d990468d",
+    "authority.svh": "2d5459e77aa481eee9e79087612de4b0ca3054b0b05a21f9e25849edab0819a0",
+    "g7_fault_bind.svh": "cf47abd1ff10b00b2d112bfc49154d07cc1b55bb4fc3e948eb65bc9e7e7851fd",
+    "g7_identity_bind.svh": "29b0a099954aa0670222107412f35ab06f46f594e7404f36c897eae267a6e487",
+    "identity_verdict.py": "160f7d2e4ef7553da4ec1fd63059343e238fe89cd81bdb7a0c3742f3f27a6734",
+    "kva_authority_path.sv": "8abfa1e7cf439662122a03b1c87d40481a95ad5d96e2aeeae5bf45bff70763c0",
+    "kva_identity_scoreboard.sv": "95cf026e8966b69ec3e747884b0fd5bf7c5e0327fd348ae457fd522a10cd5908",
+    "original_g7_manifest.json": "bfa6ba9d2bbf788413b9c65daeb0f77a9a3ada72f0478f36092a23ec6bb1aa38",
+    "repair_g7_fixture.py": "962c14dff194897b5faa3618fae5e130a40efb92c06174dd085ae603011037d2",
+    "run_g7_controlled.py": "a93416234d386559a0828ad3c9e3a2dd6c7b5255c7ef798888973ef3ac2fc2e4"
+  },
+  "recorded_utc": "2026-10-19T21:53:56.396415+00:00",
+  "unit": "oth-ubuntu-2272781-1792446734",
+  "reservation_gb": 160,
+  "threads": 4,
+  "disk_gb": 20,
+  "scope": "exact original G7u1 partial QK verification continuation; no MU/GEN8/native/full-gold claim",
+  "processes": "2272640 1104564       01:41  0.0  3912 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/kv-token-authority-monitor-1019 || { echo OT_RUN_NOCD otrun-ubuntu-2719524-446734525 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 160 --tag otrun-ubuntu-2719524-446734525 --max-wait 120 -- python3 run_g7_controlled.py; rc=$?; echo \"OT_RUN_EXIT otrun-ubuntu-2719524-446734525 $rc\" >&2; exit $rc\n2272781 2272640       01:41  0.3 33088 /usr/bin/python3 run_g7_controlled.py\n2272798 2272781       01:40  0.0 13308 python3 -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/ot_nba_guard/verilator_guarded.py -f /srv/opentallas-scratch/claude/kv-token-authority-monitor-1019/controlled_u1/top_args.f\n2272799 2272798       01:40  0.0 13488 perl /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator.real -f /srv/opentallas-scratch/claude/kv-token-authority-monitor-1019/controlled_u1/top_args.f\n2272802 2272799       01:40  100 38519512 /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin -f /srv/opentallas-scratch/claude/kv-token-authority-monitor-1019/controlled_u1/top_args.f\n2274043 1104564       00:00  0.0  3884 bash -c python3 - <<'PY' import pathlib,json,hashlib,datetime,subprocess p=pathlib.Path(\"/srv/opentallas-scratch/claude/kv-token-authority-monitor-1019\") r={\"source_commit\":\"7512369a3\",\"source_files\":{},\"recorded_utc\":datetime.datetime.now(datetime.timezone.utc).isoformat(),\"unit\":\"oth-ubuntu-2272781-1792446734\",\"reservation_gb\":160,\"threads\":4,\"disk_gb\":20,\"scope\":\"exact original G7u1 partial QK verification continuation; no MU/GEN8/native/full-gold claim\"} for q in sorted(p.iterdir()):  if q.is_file():r[\"source_files\"][q.name]=hashlib.sha256(q.read_bytes()).hexdigest() r[\"processes\"]=subprocess.run([\"ps\",\"-eo\",\"pid,ppid,etime,pcpu,rss,args\"],capture_output=True,text=True).stdout r[\"processes\"]=\"\\n\".join(l for l in r[\"processes\"].splitlines() if \"kv-token-authority-monitor-1019\" in l or \"run_g7_controlled.py\" in l) (p/\"launch_receipt.json\").write_text(json.dumps(r,indent=2)+\"\\n\") PY"
+}
