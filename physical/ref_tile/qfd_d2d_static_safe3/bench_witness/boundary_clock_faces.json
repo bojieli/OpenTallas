@@ -1,0 +1,90 @@
+{
+  "W": {
+    "count": 721,
+    "min_ps": 413.492035,
+    "max_ps": 453.66922,
+    "mean_ps": 429.87132258391125,
+    "earliest": {
+      "cell": "c_x3[150]$_DFF_P_",
+      "clock_pin": "c_x3[150]$_DFF_P_/CLK",
+      "rise_max_ps": "413.492035",
+      "rise_min_ps": "398.593201",
+      "x_um": "8.694",
+      "y_um": "118.125"
+    },
+    "latest": {
+      "cell": "c_x3[309]$_DFF_P_",
+      "clock_pin": "c_x3[309]$_DFF_P_/CLK",
+      "rise_max_ps": "453.669220",
+      "rise_min_ps": "436.316467",
+      "x_um": "7.83",
+      "y_um": "177.255"
+    }
+  },
+  "E": {
+    "count": 64,
+    "min_ps": 487.708557,
+    "max_ps": 494.895844,
+    "mean_ps": 491.73716878125003,
+    "earliest": {
+      "cell": "c_cfg_data[28]$_DFF_P_",
+      "clock_pin": "c_cfg_data[28]$_DFF_P_/CLK",
+      "rise_max_ps": "487.708557",
+      "rise_min_ps": "467.256195",
+      "x_um": "470.205",
+      "y_um": "134.595"
+    },
+    "latest": {
+      "cell": "c_cfg_data[15]$_DFF_P_",
+      "clock_pin": "c_cfg_data[15]$_DFF_P_/CLK",
+      "rise_max_ps": "494.895844",
+      "rise_min_ps": "474.729218",
+      "x_um": "466.479",
+      "y_um": "144.585"
+    }
+  },
+  "S": {
+    "count": 1165,
+    "min_ps": 412.432312,
+    "max_ps": 433.601685,
+    "mean_ps": 419.4475483210303,
+    "earliest": {
+      "cell": "fdi_tx_flit[551]$_DFF_P_",
+      "clock_pin": "fdi_tx_flit[551]$_DFF_P_/CLK",
+      "rise_max_ps": "412.432312",
+      "rise_min_ps": "397.332825",
+      "x_um": "233.442",
+      "y_um": "6.345"
+    },
+    "latest": {
+      "cell": "fdi_tx_flit[500]$_DFF_P_",
+      "clock_pin": "fdi_tx_flit[500]$_DFF_P_/CLK",
+      "rise_max_ps": "433.601685",
+      "rise_min_ps": "416.558319",
+      "x_um": "186.516",
+      "y_um": "2.295"
+    }
+  },
+  "N": {
+    "count": 1673,
+    "min_ps": 411.253876,
+    "max_ps": 481.344635,
+    "mean_ps": 433.51743207411846,
+    "earliest": {
+      "cell": "rx_payload[87]$_DFF_P_",
+      "clock_pin": "rx_payload[87]$_DFF_P_/CLK",
+      "rise_max_ps": "411.253876",
+      "rise_min_ps": "395.949341",
+      "x_um": "250.722",
+      "y_um": "277.425"
+    },
+    "latest": {
+      "cell": "c_prog_tx_record[469]$_DFF_P_",
+      "clock_pin": "c_prog_tx_record[469]$_DFF_P_/CLK",
+      "rise_max_ps": "481.344635",
+      "rise_min_ps": "461.787567",
+      "x_um": "322.002",
+      "y_um": "275.265"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+ot-run: ot-epyc8       admits  1168 GB (avail 914, growth 96, headroom 0, waiters 0/0 GB) load 38/128 running 25 disk 363 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1764247-1792426588 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+CLOCK_TRACE BEGIN target=rx_payload[87]$_DFF_P_
+CLOCK_TRACE level=0 cell=clkbuf_leaf_226_ck_regs master=BUFx24_ASAP7_75t_R x=249.696 y=277.965 net=clknet_leaf_226_ck_regs terminals=22
+CLOCK_TRACE level=1 cell=clkbuf_leaf2_44_ck_regs master=BUFx24_ASAP7_75t_R x=248.724 y=275.535 net=clknet_leaf2_44_ck_regs terminals=6
+CLOCK_TRACE level=2 cell=clkbuf_6_55__f_ck_regs master=BUFx24_ASAP7_75t_R x=250.344 y=222.075 net=clknet_6_55__leaf_ck_regs terminals=4
+CLOCK_TRACE level=3 cell=clkbuf_5_27_0_ck_regs master=BUFx24_ASAP7_75t_R x=250.668 y=195.075 net=clknet_5_27_0_ck_regs terminals=3
+CLOCK_TRACE level=4 cell=clkbuf_4_13_0_ck_regs master=BUFx24_ASAP7_75t_R x=237.708 y=172.125 net=clknet_4_13_0_ck_regs terminals=3
+CLOCK_TRACE level=5 cell=clkbuf_3_6_0_ck_regs master=BUFx24_ASAP7_75t_R x=256.068 y=175.365 net=clknet_3_6_0_ck_regs terminals=3
+CLOCK_TRACE level=6 cell=clkbuf_2_3_1_ck_regs master=BUFx24_ASAP7_75t_R x=280.476 y=148.635 net=clknet_2_3_1_ck_regs terminals=3
+CLOCK_TRACE level=7 cell=clkbuf_2_3_0_ck_regs master=BUFx24_ASAP7_75t_R x=280.476 y=123.255 net=clknet_2_3_0_ck_regs terminals=2
+CLOCK_TRACE level=8 cell=clkbuf_1_1_1_ck_regs master=BUFx24_ASAP7_75t_R x=284.31 y=134.325 net=clknet_1_1_1_ck_regs terminals=3
+CLOCK_TRACE level=9 cell=clkbuf_1_1_0_ck_regs master=BUFx24_ASAP7_75t_R x=243.702 y=141.075 net=clknet_1_1_0_ck_regs terminals=2
+CLOCK_TRACE level=10 cell=clkbuf_0_ck_regs master=BUFx24_ASAP7_75t_R x=209.682 y=139.725 net=clknet_0_ck_regs terminals=3
+CLOCK_TRACE level=11 cell=clkbuf_regs_0_core_clk master=BUFx24_ASAP7_75t_R x=238.086 y=141.615 net=ck_regs terminals=2
+CLOCK_TRACE level=12 cell=wire22490 master=BUFx16f_ASAP7_75t_R x=237.978 y=174.015 net=net22489 terminals=3
+CLOCK_TRACE ROOT net=ck ports=1
+CLOCK_TRACE END levels=13
+CLOCK_TRACE BEGIN target=c_cfg_data[15]$_DFF_P_
+CLOCK_TRACE level=0 cell=clkbuf_leaf_276_ck_regs master=BUFx24_ASAP7_75t_R x=469.152 y=145.125 net=clknet_leaf_276_ck_regs terminals=21
+CLOCK_TRACE level=1 cell=clkbuf_leaf2_55_ck_regs master=BUFx24_ASAP7_75t_R x=376.002 y=142.965 net=clknet_leaf2_55_ck_regs terminals=6
+CLOCK_TRACE level=2 cell=clkbuf_6_58__f_ck_regs master=BUFx24_ASAP7_75t_R x=354.186 y=148.905 net=clknet_6_58__leaf_ck_regs terminals=3
+CLOCK_TRACE level=3 cell=clkbuf_5_29_0_ck_regs master=BUFx24_ASAP7_75t_R x=335.772 y=148.905 net=clknet_5_29_0_ck_regs terminals=3
+CLOCK_TRACE level=4 cell=clkbuf_4_14_0_ck_regs master=BUFx24_ASAP7_75t_R x=319.41 y=231.255 net=clknet_4_14_0_ck_regs terminals=3
+CLOCK_TRACE level=5 cell=clkbuf_3_7_0_ck_regs master=BUFx24_ASAP7_75t_R x=304.776 y=148.905 net=clknet_3_7_0_ck_regs terminals=3
+CLOCK_TRACE level=6 cell=clkbuf_2_3_1_ck_regs master=BUFx24_ASAP7_75t_R x=280.476 y=148.635 net=clknet_2_3_1_ck_regs terminals=3
+CLOCK_TRACE level=7 cell=clkbuf_2_3_0_ck_regs master=BUFx24_ASAP7_75t_R x=280.476 y=123.255 net=clknet_2_3_0_ck_regs terminals=2
+CLOCK_TRACE level=8 cell=clkbuf_1_1_1_ck_regs master=BUFx24_ASAP7_75t_R x=284.31 y=134.325 net=clknet_1_1_1_ck_regs terminals=3
+CLOCK_TRACE level=9 cell=clkbuf_1_1_0_ck_regs master=BUFx24_ASAP7_75t_R x=243.702 y=141.075 net=clknet_1_1_0_ck_regs terminals=2
+CLOCK_TRACE level=10 cell=clkbuf_0_ck_regs master=BUFx24_ASAP7_75t_R x=209.682 y=139.725 net=clknet_0_ck_regs terminals=3
+CLOCK_TRACE level=11 cell=clkbuf_regs_0_core_clk master=BUFx24_ASAP7_75t_R x=238.086 y=141.615 net=ck_regs terminals=2
+CLOCK_TRACE level=12 cell=wire22490 master=BUFx16f_ASAP7_75t_R x=237.978 y=174.015 net=net22489 terminals=3
+CLOCK_TRACE ROOT net=ck ports=1
+CLOCK_TRACE END levels=13
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1764247-1792426588): exit 0
