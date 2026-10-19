@@ -73,6 +73,9 @@ ROUNDS=4, T0=1000+32*NS;
 `ifdef LONG_D
       DK[0]=RL-2;
 `endif
+`ifdef LATE_D
+      DK[0]=0;
+`endif
 `ifdef BAD_D
       DK[0]=NS+1;
 `endif
@@ -83,7 +86,7 @@ ROUNDS=4, T0=1000+32*NS;
       DK[1]=DK[0]; KD[1]=0; EP[1]=EP[0];
 `endif
     end
-    integer first_cfg_fault=-1, first_rx_fault=-1;
+    integer first_cfg_fault=-1, first_rx_fault=-1, injected_cfg_cycle=-1, release_word_stage=1,release_i;
     reg ck = 0, rst_n = 0;
     always #0.5 ck = ~ck;
     integer cyc = 0, errs = 0, i, e, nfire = 0, nexp = 0;
@@ -241,6 +244,16 @@ ROUNDS=4, T0=1000+32*NS;
 `ifdef RESET_VALID_MUTANT
     reg [NS-1:0] old_vld_snapshot;
 `endif
+`ifdef ARMED_RECONFIG
+    initial begin
+       wait(nst>0);
+       while(cyc<stc[0]+5) begin @(posedge ck);#0.1;end
+       injected_cfg_cycle=cyc;
+       f_mw={1'b1,1'b0,1'b0,2'd1,21'(RL-1)};
+       $display("ARMED_RECONFIG input%0d attemptedD%0d",cyc,RL-1);
+       @(posedge ck);#0.1;f_mw=0;
+    end
+`endif
     // slot attributes: land = slot[0], ab = slot[1]
     function automatic [1:0] att(input integer sl); att = {sl[0] ? 1'b1 : 1'b0, sl[1] ? 1'b1 : 1'b0}; endfunction
     integer stc [0:NU*ROUNDS-1]; integer stu [0:NU*ROUNDS-1]; integer stp [0:NU*ROUNDS-1]; integer nst = 0;
@@ -304,7 +317,19 @@ ROUNDS=4, T0=1000+32*NS;
     end
     integer r, u, q, j, traffic_t0=T0, reset_phase=0;
     initial begin
-        repeat (4) @(posedge ck); #0.1; rst_n = 1; repeat (4) @(posedge ck); #0.1;
+        repeat (4) @(posedge ck); #0.1; rst_n = 1;
+`ifdef RELEASE_WORD
+        if($value$plusargs("release_word_stage=%d",release_word_stage)) begin end
+        for(release_i=1;release_i<=4;release_i=release_i+1) begin
+           if(release_i==release_word_stage) begin
+              injected_cfg_cycle=cyc; f_mw={1'b1,1'b0,1'b0,2'd3,21'd0};
+              $display("RELEASE_WORD stage%0d input%0d",release_word_stage,cyc);
+           end
+           @(posedge ck);#0.1;f_mw=0;
+        end
+`else
+        repeat (4) @(posedge ck); #0.1;
+`endif
 `ifdef NONUNIFORM_GAPS
         for(q=0;q<NS;q=q+1) cfg({1'b1,1'b0,24'(calendar_gap(q))});
 `else
@@ -316,6 +341,11 @@ ROUNDS=4, T0=1000+32*NS;
             wcfg({1'b1, 1'b0, 1'b0, 2'd1, 21'(DK[q])});
             for (j = 0; j < NS; j = j + 1) wcfg({1'b1, 1'b0, 1'b0, 2'd2, 9'd0, att(j), 10'(j)});
         end
+`ifdef IDLE_RECONFIG
+        DK[NE-1]=DK[NE-1]+7;
+        $display("IDLE_RECONFIG programmedevent%0d D%0d input%0d",NE-1,DK[NE-1],cyc);
+        wcfg({1'b1,1'b0,1'b0,2'd1,21'(DK[NE-1])});
+`endif
 `ifdef OCCUPIED_RESET_STRESS
         // Distinct restart scenario: old outstanding generation is canceled by actual async reset.
         // Existing fixed-date checker observes its outputs until reset; no extra warmup is added.
@@ -381,6 +411,19 @@ ROUNDS=4, T0=1000+32*NS;
             $display("MUWIN COLLISION PASS");
         else $display("MUWIN COLLISION FAIL");
 `else
+`ifdef LATE_D
+        $display("LATE_MODEL cfgfirst%0d expected%0d latefirst%0d expected%0d",first_cfg_fault,stc[0]+2,first_rx_fault,stc[0]+7);
+        if(errs==nexp && nfire==0 && hmf==0 && wf==2'b11 && first_cfg_fault==stc[0]+2 && first_rx_fault==stc[0]+7)
+           $display("MUWIN LATE_SOURCEFAULT PASS"); else $display("MUWIN LATE_SOURCEFAULT FAIL");
+`elsif ARMED_RECONFIG
+        if(errs==0 && nfire==nexp && hmf==0 && wf==2'b10 && first_cfg_fault==injected_cfg_cycle+2)
+           $display("MUWIN ARMED_RECONFIG PASS");else $display("MUWIN ARMED_RECONFIG FAIL");
+`elsif RELEASE_WORD
+        if(release_word_stage==4) begin
+           if(errs==0 && nfire==nexp && hmf==0 && wf==2'b10 && first_cfg_fault==injected_cfg_cycle+2)
+              $display("MUWIN RELEASE_FAULT PASS");else $display("MUWIN RELEASE_FAULT FAIL");
+        end else if(errs==0 && nfire==nexp && mf==0) $display("MUWIN PASS");else $display("MUWIN FAIL");
+`else
 `ifdef SHORT_RL
         if(rx_sent!=2*nst)$fatal(1,"RX_MODEL lost return tags actual%0d expected%0d",rx_sent,2*nst);
         if(rx_shift>=0) begin
@@ -394,6 +437,7 @@ ROUNDS=4, T0=1000+32*NS;
             if (wf[0] && mf[2] && hmf == 4'd0) $display("MUWIN BADRT PASS (fault raised)"); else $display("MUWIN BADRT FAIL (no fault)");
         end else if (errs == 0 && nfire == nexp && mf == 4'd0) $display("MUWIN PASS");
         else $display("MUWIN FAIL errs %0d", errs);
+`endif
  `endif
         $finish;
     end

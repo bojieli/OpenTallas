@@ -24,7 +24,7 @@ run() {
   --Mdir "$case_dir/obj" -o tb > "$case_dir/build.log" 2>&1
  for seed in ${RUN_SEEDS:-1 19 313}; do
   local rc=0
-  "$case_dir/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed +reset_phase=${SIM_RESET_PHASE:-0} +rx_shift=${SIM_RX_SHIFT:--1} > "$case_dir/run_seed$seed.log" 2>&1 || rc=$?
+  "$case_dir/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed +reset_phase=${SIM_RESET_PHASE:-0} +rx_shift=${SIM_RX_SHIFT:--1} +release_word_stage=${SIM_RELEASE_STAGE:-1} > "$case_dir/run_seed$seed.log" 2>&1 || rc=$?
   if [[ "$expected" == FAIL:* ]]; then
     [[ $rc -ne 0 ]]; grep -q "${expected#FAIL:}" "$case_dir/run_seed$seed.log"
   elif [[ "$expected" == REJECT:* ]]; then
@@ -203,6 +203,17 @@ short_fixture)
   "$O/nonuniform_short_ns$ns/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed +rx_shift=$shift > "$log" 2>&1
   grep -q '^MUWIN RX_EXPIRED PASS' "$log"
  done;done
+ ;;
+boot_faults)
+ run release_stage1 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+RELEASE_WORD
+ for stage in 2 3 4; do for seed in 1 19 313; do
+  log="$O/release_stage1/run_seed${seed}_stage${stage}.log"
+  "$O/release_stage1/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed +release_word_stage=$stage > "$log" 2>&1
+  if [[ $stage -eq 4 ]]; then grep -q '^MUWIN RELEASE_FAULT PASS' "$log";else grep -q '^MUWIN PASS' "$log";fi
+ done;done
+ run idle_reconfig tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+IDLE_RECONFIG
+ run armed_reconfig tb_dsdv_mu_hwin_early_capture '^MUWIN ARMED_RECONFIG PASS' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+ARMED_RECONFIG
+ run already_late tb_dsdv_mu_hwin_early_capture '^MUWIN LATE_SOURCEFAULT PASS' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+LATE_D
  ;;
 *) echo 'unknown phase' >&2; exit 64;;
 esac
