@@ -5,6 +5,18 @@ import kv_pvw_padding as V
 
 
 class PVPaddingTests(unittest.TestCase):
+    def test_bootage_frame_requires_every_exact_source(self):
+        from unittest.mock import patch
+        import hashlib
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);(root/'variant').write_text('exact replica rows')
+            pins={'variant':hashlib.sha256((root/'variant').read_bytes()).hexdigest()}
+            with patch.object(V,'BOOTAGE_SOURCES',pins):
+                self.assertEqual(V.qualify_frame('qkd_pvw_die_tb',root),pins)
+                (root/'variant').write_text('modified replica rows')
+                with self.assertRaisesRegex(ValueError,'boot-age source changed'):V.qualify_frame('qkd_pvw_die_tb',root)
+            with self.assertRaisesRegex(ValueError,'not pinned'):V.qualify_frame('qkd_pvw_die_tb_forged',root)
+            self.assertEqual(V.qualify_frame('qkd_pvw_die_t',root),{})
     def fixture(self,root,expr="{35'b0,live}",extra=''):
         p=root/'die.v';p.write_text("module die();\nwire live,other;\nwire [35:0] n_pvw_0__w_X;\nqkd_rlys_36 pvw_0__u_X_r0(.a("+expr+"),.b(n_pvw_0__w_X));\n"+extra+'\nendmodule\n')
         rows=[dict(master='qkd_rlys_36',instance='u_X_r0',width=36,pad=set(range(1,36)),output=[('w_X',b)for b in reversed(range(36))])]
