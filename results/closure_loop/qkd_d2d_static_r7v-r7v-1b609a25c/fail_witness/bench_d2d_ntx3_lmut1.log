@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_d2d_static_r7v-r7v-1b609a25c bench bench_d2d_ntx3_lmut1 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_d2d_static_r7v-r7v-1b609a25c log cl/bench_d2d_ntx3_lmut1.a1b1.log captured 2026-10-19T03:59:15-07:00
+# fail_regex 'D2D_LOCK edges \\d+ mismatches [1-9]'
+D2D_LOCK_MISMATCH cyc 16 lay -1 rel 16
+D2D_LOCK_MISMATCH cyc 17 lay -1 rel 17
+D2D_LOCK_MISMATCH cyc 18 lay -1 rel 18
+RECOVERY abort->epoch_begin KV 147 cycles, compute 0 cycles; HOST-visible 55 cycles
+frames C->S 198 S->C 198 kvn 24 results 6 host-checks 6 normal-epoch faults 0 errors 0
+D2D_LOCK edges 1208 mismatches 1198 ntx3 tx slots p0 198 p1 0 p2 64; ntx4 port-3 slots 0
+D2D_DIES_FAIL
+localparam [31:0] QKD_D2D_TXDP = 32'h03030418;   // KV [24, 4, 3, 3]
