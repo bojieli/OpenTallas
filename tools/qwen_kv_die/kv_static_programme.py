@@ -40,6 +40,7 @@ import hashlib
 import importlib.util
 import json
 import math
+import os
 import subprocess
 import sys
 import tempfile
@@ -62,6 +63,27 @@ from tools.qwen_kv_die import static_kv_calendar as SKC    # noqa: E402
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = SKC.GROUP_ORDER                                     # landing group order inside a stack strip
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
+# HKV-ASTK 2026-10-18: the expanded ASTK strip (OT_KV_ASTK_EXPAND=1, as kv_static_die: RL 3 die-relayed chain hops, closed
+# ctl Z stride 4, distributed e-read qkd_astk_er_chain_st ERL 42) moves the attention calendar by MEASURED shifts relative to
+# the RL 1 / ERL 7 strip the attn_calendar laws were measured on (astk_calendar_sweep.sh on the actual strip + mapped SRAM,
+# Verilator 5.050): LMAX / EXP / Z (+ the hub ages that follow them), the P.V e-read issue gap and the e-read latency.
+ASTK_EXPAND = os.environ.get('OT_KV_ASTK_EXPAND', '0') == '1'
+ASTK_LAW = 'results/arch/qwen_kv_die/hkv_astk_calendar_1018/astk_calendar_law.json'
+
+
+def astk_law():
+    law = json.loads((ROOT / ASTK_LAW).read_text())
+    if law.get('schema') != 'opentallas.qwen_kv.astk_calendar_law.v1':
+        raise ValueError('kv_static_programme: unknown ASTK calendar law schema')
+    return law
+
+
+def astk_pv_gap_shift(T, law):
+    """P.V e-read issue gap shift at T: the larger of the measured neighbours (clamped at the measured range)"""
+    pts = sorted((int(t), v) for t, v in law['d_pv_gap'].items())
+    lo = [v for t, v in pts if t <= T] or [pts[0][1]]
+    hi = [v for t, v in pts if t >= T] or [pts[-1][1]]
+    return max(lo[-1], hi[0])
 # ROOT-QLINE 10-18: the SAME compile as the committed production image rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh
 # (tools/qwen_split/d2d_cal_image_production.sh, QXF-LINK 6ef1a097f): die seam stages + the LAYERBENCH compiled token path,
 # so target 11 (KV sequencer init) loads exactly the calendar the RTL image / D2D_TXDP_K were compiled from.  The old
@@ -175,7 +197,7 @@ def profile(kind, ages=None):
                 qk_age=ages['qk']['QK_ISSUE_AGE'], qk_row_latency=ages['qk']['row_latency_for_calendar'],
                 v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19, d_qk=ages['qk']['QK_ISSUE_AGE'] - AC.QK_CONSUME,
                 phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
-                rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V))
+                rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None)
 
 
 def kv_params(pr):
@@ -192,8 +214,15 @@ def attention_calendar(T, pr, service_end=None):
     c = AC.calendar(T, lmax=lmax, pv='w1')
     for f in ('LMAX', 'EXP', 'Z', 'HUB_LMAX', 'HUB_Z', 'HUB_RECIP', 'HUB_PUB'):
         c[f] += AC.HEAD_G3S2_SHIFT
-    po = [AC.w16_pair_out(T, 0) + pr['d_rl'], AC.w16_pair_out(T, 1) + pr['d_rl']]
-    pv = max(c['EXP'] + AC.pv_after_exp_w16(T), c['HUB_PUB'] + AC.RZ_MARGIN - max(po))
+    law = pr.get('astk_law')
+    d_gap = d_erl = 0
+    if law:
+        for f, k in (('LMAX', 'dLMAX'), ('HUB_LMAX', 'dLMAX'), ('EXP', 'dEXP'), ('Z', 'dZ'), ('HUB_Z', 'dZ'),
+                     ('HUB_RECIP', 'dZ'), ('HUB_PUB', 'dZ')):
+            c[f] += law[k]
+        d_gap, d_erl = astk_pv_gap_shift(T, law), law['dERL']
+    po = [AC.w16_pair_out(T, 0) + pr['d_rl'] + d_erl, AC.w16_pair_out(T, 1) + pr['d_rl'] + d_erl]
+    pv = max(c['EXP'] + AC.pv_after_exp_w16(T) + d_gap, c['HUB_PUB'] + AC.RZ_MARGIN - max(po))
     r = max(max(po), c['HUB_PUB'] + AC.RZ_MARGIN - pv)
     if service_end is not None:
         r_link = service_end - 49 - pv                      # service_cycles = PV_START + max(P, R) + 16 + 33
