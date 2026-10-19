@@ -11045,5 +11045,40 @@
     }
   },
   "architecture": "N>=3 finite ring; >2048b actual SRAM. Registered input and macro-local output capture, lookahead read; counters mask stale data after every reset. No enable port, every rising edge advances. N=0 wire remains combinational compatibility.",
-  "physical_status": "NOT QUALIFIED: mapped fanout, timing, native boundary, reach, density, actual outline pending; model only. SRAM floorplan lower bound 43.2 lattice plus >=20um pin channels; no legacy slot-fit claim."
+  "physical_status": "NOT QUALIFIED: mapped fanout, timing, native boundary, reach, density, actual outline pending; model only. SRAM floorplan lower bound 43.2 lattice plus >=20um pin channels; no legacy slot-fit claim.",
+  "physical_candidates_unqualified": {
+    "single_macro": {
+      "outline_um": [
+        172.8,
+        129.6
+      ],
+      "origins_um": [
+        [
+          43.2,
+          43.2
+        ]
+      ],
+      "area_um2": 22394.88
+    },
+    "dual_macro": {
+      "outline_um": [
+        302.4,
+        172.8
+      ],
+      "origins_um": [
+        [
+          43.2,
+          43.2
+        ],
+        [
+          172.8,
+          43.2
+        ]
+      ],
+      "area_um2": 52254.72
+    },
+    "seven_macro_pad_outline_um2": 216483.84,
+    "nine_macro_hard_area_um2": 35024.19264,
+    "warning": "Candidates only. Need actual synthesis std area, full band sizing, physical pins and native clocks; no density waiver granted."
+  }
 }
