@@ -1,0 +1,13 @@
+{
+  "source_commit": "a37e3c0db",
+  "gate_source": "/home/ubuntu/wt/kv-relaygen-guard-1019",
+  "kind": "guard",
+  "reset_copies": 18,
+  "total_loads": 4062,
+  "max_per_copy": 226,
+  "limit": 256,
+  "copy_check": "PASS",
+  "geometry_review": "CHANGES_REQUIRED_BY_ROOT",
+  "reason": "order N6.742pins/um>6; guard util61%>60 and W6.003pins/um>6; structural successor required",
+  "no_approval": true
+}
