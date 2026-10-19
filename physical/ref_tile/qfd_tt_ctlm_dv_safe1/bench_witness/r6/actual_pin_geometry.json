@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "PASS",
+ "fails": [],
+ "metrics": {
+  "signal_clock_pins": 2992,
+  "pin_rectangles": 2992,
+  "pin_track_checked": 2992,
+  "pin_track_inaccessible": 0,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "/srv/opentallas-scratch/claude/ref_gate/qfd_tt_ctlm_dv_safe1-20261019-093608/routes/gate/work/orfs/gate_dump.json",
+ "dump_sha256": "cbab3e1525d800dc4690645629197477d62148a12a78609332d065a58afbf217",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}
