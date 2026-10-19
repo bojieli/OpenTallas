@@ -1,4 +1,4 @@
-module selected_input_cone(input wire clk,rst_n,input wire[1100:0]source_word,output wire[6605:0]observed,output wire[5:0]faults);
+module selected_input_cone(input wire clk,rst_n,input wire[1100:0]source_word,output wire[6605:0]observed,output wire[6599:0]observed_pins,output wire[5:0]pins_valid,output wire[5:0]faults);
 wire ck_cl3S=clk;wire[15:0]u_s_3S_ck_xc={16{clk}};wire[4415:0]xc;reg[1:0]mkq;
 always @(posedge clk or negedge rst_n)if(!rst_n)mkq<=0;else mkq<={mkq[0],1'b1};
 wire[1103:0]xw4={source_word[1100:565],source_word[0],mkq[1],source_word[564:0],mkq[1]};
@@ -107,50 +107,62 @@ assign w_x_f_3R02_l3_src=xc[4140+:276];
   dsfd_dvrlyh_276_SN st_x_f_3R03_l2_1 (.i(r_x_f_3R03_l2_0), .o(w_x_f_3R03_l2_dst), .ck(nx_f_3R03_l2_fck[1]), .ck_o(nx_f_3R03_l2_fck[2]), .rs(rs_35_26));
   dsfd_dvrlyh_276_SN st_x_f_3R03_l3_0 (.i(w_x_f_3R03_l3_src), .o(r_x_f_3R03_l3_0), .ck(u_f_3R02_xok[3]), .ck_o(nx_f_3R03_l3_fck[1]), .rs(rs_35_26));
   dsfd_dvrlyh_276_SN st_x_f_3R03_l3_1 (.i(r_x_f_3R03_l3_0), .o(w_x_f_3R03_l3_dst), .ck(nx_f_3R03_l3_fck[1]), .ck_o(nx_f_3R03_l3_fck[2]), .rs(rs_35_26));
+wire[282:0]a_0;wire[265:0]b_0;wire[14:0]c_0;wire[535:0]d_0;
 dsfd_cfifo_crs4 ingress_u_f_3L01(.cr(ck_cl3S),.cr_s(ck_cl3S),.rst(rs_31_10_2),.xk({nx_f_3L01_l3_fck[1], nx_f_3L01_l2_fck[1], nx_f_3L01_l1_fck[1], nx_f_3L01_l0_fck[1]}),.lk(12'h492),
 .xl0(w_x_f_3L01_l0_dst[275:0]),
 .xl1(w_x_f_3L01_l1_dst[275:0]),
 .xl2(w_x_f_3L01_l2_dst[275:0]),
 .xl3(w_x_f_3L01_l3_dst[275:0]),
-.ri(66'd0),.st(2'd0),.cc(),.rd(),.rs(),.xa(),.xb(),.x2());
-assign observed[0+:1101]=ingress_u_f_3L01.xw_;assign faults[0]=|ingress_u_f_3L01.lf;
+.ri(66'd0),.st(2'd0),.cc(c_0),.rd(),.rs(),.xa(a_0),.xb(b_0),.x2(d_0));
+assign observed_pins[0+:1100]={a_0,b_0,c_0,d_0};assign pins_valid[0]=a_0[282]|c_0[1]|c_0[0];
+assign observed[0+:1101]=ingress_u_f_3L01.xw_;assign faults[0]=|ingress_u_f_3L01.flt;
+wire[282:0]a_1;wire[265:0]b_1;wire[14:0]c_1;wire[535:0]d_1;
 dsfd_cfifo_crs4 ingress_u_f_3L02(.cr(ck_cl3S),.cr_s(ck_cl3S),.rst(rs_31_19_2),.xk({u_s_3S_ck_xc[11], u_s_3S_ck_xc[10], u_s_3S_ck_xc[9], u_s_3S_ck_xc[8]}),.lk(12'h249),
 .xl0(w_x_f_3L02_l0_src[275:0]),
 .xl1(w_x_f_3L02_l1_src[275:0]),
 .xl2(w_x_f_3L02_l2_src[275:0]),
 .xl3(w_x_f_3L02_l3_src[275:0]),
-.ri(66'd0),.st(2'd0),.cc(),.rd(),.rs(),.xa(),.xb(),.x2());
-assign observed[1101+:1101]=ingress_u_f_3L02.xw_;assign faults[1]=|ingress_u_f_3L02.lf;
+.ri(66'd0),.st(2'd0),.cc(c_1),.rd(),.rs(),.xa(a_1),.xb(b_1),.x2(d_1));
+assign observed_pins[1100+:1100]={a_1,b_1,c_1,d_1};assign pins_valid[1]=a_1[282]|c_1[1]|c_1[0];
+assign observed[1101+:1101]=ingress_u_f_3L02.xw_;assign faults[1]=|ingress_u_f_3L02.flt;
 selected_mx_forwarder forward_u_f_3L02(.rst_n(rs_31_19_2),.xk({u_s_3S_ck_xc[11], u_s_3S_ck_xc[10], u_s_3S_ck_xc[9], u_s_3S_ck_xc[8]}),.x({w_x_f_3L02_l3_src[275:0], w_x_f_3L02_l2_src[275:0], w_x_f_3L02_l1_src[275:0], w_x_f_3L02_l0_src[275:0]}),.xo({w_x_f_3L03_l3_src[275:0], w_x_f_3L03_l2_src[275:0], w_x_f_3L03_l1_src[275:0], w_x_f_3L03_l0_src[275:0]}),.xok(u_f_3L02_xok));
+wire[282:0]a_2;wire[265:0]b_2;wire[14:0]c_2;wire[535:0]d_2;
 dsfd_cfifo_crs4 ingress_u_f_3L03(.cr(ck_cl3S),.cr_s(ck_cl3S),.rst(rs_33_30_3),.xk({nx_f_3L03_l3_fck[2], nx_f_3L03_l2_fck[2], nx_f_3L03_l1_fck[2], nx_f_3L03_l0_fck[1]}),.lk(12'h492),
 .xl0(w_x_f_3L03_l0_dst[275:0]),
 .xl1(w_x_f_3L03_l1_dst[275:0]),
 .xl2(w_x_f_3L03_l2_dst[275:0]),
 .xl3(w_x_f_3L03_l3_dst[275:0]),
-.ri(66'd0),.st(2'd0),.cc(),.rd(),.rs(),.xa(),.xb(),.x2());
-assign observed[2202+:1101]=ingress_u_f_3L03.xw_;assign faults[2]=|ingress_u_f_3L03.lf;
+.ri(66'd0),.st(2'd0),.cc(c_2),.rd(),.rs(),.xa(a_2),.xb(b_2),.x2(d_2));
+assign observed_pins[2200+:1100]={a_2,b_2,c_2,d_2};assign pins_valid[2]=a_2[282]|c_2[1]|c_2[0];
+assign observed[2202+:1101]=ingress_u_f_3L03.xw_;assign faults[2]=|ingress_u_f_3L03.flt;
+wire[282:0]a_3;wire[265:0]b_3;wire[14:0]c_3;wire[535:0]d_3;
 dsfd_cfifo_crs4 ingress_u_f_3R01(.cr(ck_cl3S),.cr_s(ck_cl3S),.rst(rs_38_10_1),.xk({nx_f_3R01_l3_fck[1], nx_f_3R01_l2_fck[1], nx_f_3R01_l1_fck[1], nx_f_3R01_l0_fck[1]}),.lk(12'h492),
 .xl0(w_x_f_3R01_l0_dst[275:0]),
 .xl1(w_x_f_3R01_l1_dst[275:0]),
 .xl2(w_x_f_3R01_l2_dst[275:0]),
 .xl3(w_x_f_3R01_l3_dst[275:0]),
-.ri(66'd0),.st(2'd0),.cc(),.rd(),.rs(),.xa(),.xb(),.x2());
-assign observed[3303+:1101]=ingress_u_f_3R01.xw_;assign faults[3]=|ingress_u_f_3R01.lf;
+.ri(66'd0),.st(2'd0),.cc(c_3),.rd(),.rs(),.xa(a_3),.xb(b_3),.x2(d_3));
+assign observed_pins[3300+:1100]={a_3,b_3,c_3,d_3};assign pins_valid[3]=a_3[282]|c_3[1]|c_3[0];
+assign observed[3303+:1101]=ingress_u_f_3R01.xw_;assign faults[3]=|ingress_u_f_3R01.flt;
+wire[282:0]a_4;wire[265:0]b_4;wire[14:0]c_4;wire[535:0]d_4;
 dsfd_cfifo_crs4 ingress_u_f_3R02(.cr(ck_cl3S),.cr_s(ck_cl3S),.rst(rs_38_19_1),.xk({u_s_3S_ck_xc[15], u_s_3S_ck_xc[14], u_s_3S_ck_xc[13], u_s_3S_ck_xc[12]}),.lk(12'h249),
 .xl0(w_x_f_3R02_l0_src[275:0]),
 .xl1(w_x_f_3R02_l1_src[275:0]),
 .xl2(w_x_f_3R02_l2_src[275:0]),
 .xl3(w_x_f_3R02_l3_src[275:0]),
-.ri(66'd0),.st(2'd0),.cc(),.rd(),.rs(),.xa(),.xb(),.x2());
-assign observed[4404+:1101]=ingress_u_f_3R02.xw_;assign faults[4]=|ingress_u_f_3R02.lf;
+.ri(66'd0),.st(2'd0),.cc(c_4),.rd(),.rs(),.xa(a_4),.xb(b_4),.x2(d_4));
+assign observed_pins[4400+:1100]={a_4,b_4,c_4,d_4};assign pins_valid[4]=a_4[282]|c_4[1]|c_4[0];
+assign observed[4404+:1101]=ingress_u_f_3R02.xw_;assign faults[4]=|ingress_u_f_3R02.flt;
 selected_mx_forwarder forward_u_f_3R02(.rst_n(rs_38_19_1),.xk({u_s_3S_ck_xc[15], u_s_3S_ck_xc[14], u_s_3S_ck_xc[13], u_s_3S_ck_xc[12]}),.x({w_x_f_3R02_l3_src[275:0], w_x_f_3R02_l2_src[275:0], w_x_f_3R02_l1_src[275:0], w_x_f_3R02_l0_src[275:0]}),.xo({w_x_f_3R03_l3_src[275:0], w_x_f_3R03_l2_src[275:0], w_x_f_3R03_l1_src[275:0], w_x_f_3R03_l0_src[275:0]}),.xok(u_f_3R02_xok));
+wire[282:0]a_5;wire[265:0]b_5;wire[14:0]c_5;wire[535:0]d_5;
 dsfd_cfifo_crs4 ingress_u_f_3R03(.cr(ck_cl3S),.cr_s(ck_cl3S),.rst(rs_36_30_2),.xk({nx_f_3R03_l3_fck[2], nx_f_3R03_l2_fck[2], nx_f_3R03_l1_fck[2], nx_f_3R03_l0_fck[2]}),.lk(12'h492),
 .xl0(w_x_f_3R03_l0_dst[275:0]),
 .xl1(w_x_f_3R03_l1_dst[275:0]),
 .xl2(w_x_f_3R03_l2_dst[275:0]),
 .xl3(w_x_f_3R03_l3_dst[275:0]),
-.ri(66'd0),.st(2'd0),.cc(),.rd(),.rs(),.xa(),.xb(),.x2());
-assign observed[5505+:1101]=ingress_u_f_3R03.xw_;assign faults[5]=|ingress_u_f_3R03.lf;
+.ri(66'd0),.st(2'd0),.cc(c_5),.rd(),.rs(),.xa(a_5),.xb(b_5),.x2(d_5));
+assign observed_pins[5500+:1100]={a_5,b_5,c_5,d_5};assign pins_valid[5]=a_5[282]|c_5[1]|c_5[0];
+assign observed[5505+:1101]=ingress_u_f_3R03.xw_;assign faults[5]=|ingress_u_f_3R03.flt;
 endmodule
 module selected_mx_forwarder(input wire rst_n,input wire[3:0]xk,input wire[1103:0]x,output wire[1103:0]xo,output wire[3:0]xok);
     dsfd_dvrly_276_NS u_xo0 (.ck(xk[0]), .rs(rst_n), .i({x[275], x[274], x[273], x[272], x[271], x[270], x[269], x[268], x[267], x[266], x[265], x[264], x[263], x[262], x[261], x[260], x[259], x[258], x[257], x[256], x[255], x[254], x[253], x[252], x[251], x[250], x[249], x[248], x[247], x[246], x[245], x[244], x[243], x[242], x[241], x[240], x[239], x[238], x[237], x[236], x[235], x[234], x[233], x[232], x[231], x[230], x[229], x[228], x[227], x[226], x[225], x[224], x[223], x[222], x[221], x[220], x[219], x[218], x[217], x[216], x[215], x[214], x[213], x[212], x[211], x[210], x[209], x[208], x[207], x[206], x[205], x[204], x[203], x[202], x[201], x[200], x[199], x[198], x[197], x[196], x[195], x[194], x[193], x[192], x[191], x[190], x[189], x[188], x[187], x[186], x[185], x[184], x[183], x[182], x[181], x[180], x[179], x[178], x[177], x[176], x[175], x[174], x[173], x[172], x[171], x[170], x[169], x[168], x[167], x[166], x[165], x[164], x[163], x[162], x[161], x[160], x[159], x[158], x[157], x[156], x[155], x[154], x[153], x[152], x[151], x[150], x[149], x[148], x[147], x[146], x[145], x[144], x[143], x[142], x[141], x[140], x[139], x[138], x[137], x[136], x[135], x[134], x[133], x[132], x[131], x[130], x[129], x[128], x[127], x[126], x[125], x[124], x[123], x[122], x[121], x[120], x[119], x[118], x[117], x[116], x[115], x[114], x[113], x[112], x[111], x[110], x[109], x[108], x[107], x[106], x[105], x[104], x[103], x[102], x[101], x[100], x[99], x[98], x[97], x[96], x[95], x[94], x[93], x[92], x[91], x[90], x[89], x[88], x[87], x[86], x[85], x[84], x[83], x[82], x[81], x[80], x[79], x[78], x[77], x[76], x[75], x[74], x[73], x[72], x[71], x[70], x[69], x[68], x[67], x[66], x[65], x[64], x[63], x[62], x[61], x[60], x[59], x[58], x[57], x[56], x[55], x[54], x[53], x[52], x[51], x[50], x[49], x[48], x[47], x[46], x[45], x[44], x[43], x[42], x[41], x[40], x[39], x[38], x[37], x[36], x[35], x[34], x[33], x[32], x[31], x[30], x[29], x[28], x[27], x[26], x[25], x[24], x[23], x[22], x[21], x[20], x[19], x[18], x[17], x[16], x[15], x[14], x[13], x[12], x[11], x[10], x[9], x[8], x[7], x[6], x[5], x[4], x[3], x[2], x[1], x[0]}), .o({xo[275], xo[274], xo[273], xo[272], xo[271], xo[270], xo[269], xo[268], xo[267], xo[266], xo[265], xo[264], xo[263], xo[262], xo[261], xo[260], xo[259], xo[258], xo[257], xo[256], xo[255], xo[254], xo[253], xo[252], xo[251], xo[250], xo[249], xo[248], xo[247], xo[246], xo[245], xo[244], xo[243], xo[242], xo[241], xo[240], xo[239], xo[238], xo[237], xo[236], xo[235], xo[234], xo[233], xo[232], xo[231], xo[230], xo[229], xo[228], xo[227], xo[226], xo[225], xo[224], xo[223], xo[222], xo[221], xo[220], xo[219], xo[218], xo[217], xo[216], xo[215], xo[214], xo[213], xo[212], xo[211], xo[210], xo[209], xo[208], xo[207], xo[206], xo[205], xo[204], xo[203], xo[202], xo[201], xo[200], xo[199], xo[198], xo[197], xo[196], xo[195], xo[194], xo[193], xo[192], xo[191], xo[190], xo[189], xo[188], xo[187], xo[186], xo[185], xo[184], xo[183], xo[182], xo[181], xo[180], xo[179], xo[178], xo[177], xo[176], xo[175], xo[174], xo[173], xo[172], xo[171], xo[170], xo[169], xo[168], xo[167], xo[166], xo[165], xo[164], xo[163], xo[162], xo[161], xo[160], xo[159], xo[158], xo[157], xo[156], xo[155], xo[154], xo[153], xo[152], xo[151], xo[150], xo[149], xo[148], xo[147], xo[146], xo[145], xo[144], xo[143], xo[142], xo[141], xo[140], xo[139], xo[138], xo[137], xo[136], xo[135], xo[134], xo[133], xo[132], xo[131], xo[130], xo[129], xo[128], xo[127], xo[126], xo[125], xo[124], xo[123], xo[122], xo[121], xo[120], xo[119], xo[118], xo[117], xo[116], xo[115], xo[114], xo[113], xo[112], xo[111], xo[110], xo[109], xo[108], xo[107], xo[106], xo[105], xo[104], xo[103], xo[102], xo[101], xo[100], xo[99], xo[98], xo[97], xo[96], xo[95], xo[94], xo[93], xo[92], xo[91], xo[90], xo[89], xo[88], xo[87], xo[86], xo[85], xo[84], xo[83], xo[82], xo[81], xo[80], xo[79], xo[78], xo[77], xo[76], xo[75], xo[74], xo[73], xo[72], xo[71], xo[70], xo[69], xo[68], xo[67], xo[66], xo[65], xo[64], xo[63], xo[62], xo[61], xo[60], xo[59], xo[58], xo[57], xo[56], xo[55], xo[54], xo[53], xo[52], xo[51], xo[50], xo[49], xo[48], xo[47], xo[46], xo[45], xo[44], xo[43], xo[42], xo[41], xo[40], xo[39], xo[38], xo[37], xo[36], xo[35], xo[34], xo[33], xo[32], xo[31], xo[30], xo[29], xo[28], xo[27], xo[26], xo[25], xo[24], xo[23], xo[22], xo[21], xo[20], xo[19], xo[18], xo[17], xo[16], xo[15], xo[14], xo[13], xo[12], xo[11], xo[10], xo[9], xo[8], xo[7], xo[6], xo[5], xo[4], xo[3], xo[2], xo[1], xo[0]}), .ck_o(xok[0]));

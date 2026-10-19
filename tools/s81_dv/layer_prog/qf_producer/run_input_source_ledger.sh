@@ -28,4 +28,12 @@ set +e
 rc=$?
 set -e
 tail -12 "$out/baseline.log"
-exit "$rc"
+if [ "$rc" != 0 ];then exit "$rc";fi
+for mut in 7 8 9 10 11;do
+ set +e
+ "$out/obj/Vtb_input_source_ledger" +DIR="$out" +OT_ROM_DIR="$out" +MUT="$mut" > "$out/mut_${mut}.log" 2>&1
+ mrc=$?
+ set -e
+ if [ "$mrc" = 0 ] || ! grep -q INPUT_SOURCE_LEDGER_FAIL "$out/mut_${mut}.log";then echo "INPUT_MUTANT_SURVIVED $mut";exit 1;fi
+ echo "INPUT_CAUSAL_MUTANT_REJECTED $mut"
+done

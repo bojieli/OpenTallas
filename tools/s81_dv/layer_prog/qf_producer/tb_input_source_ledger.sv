@@ -162,8 +162,9 @@ generate for(genvar m=0;m<8;m++)begin:mon_macro
 end endgenerate
 
 
-wire[6605:0]input_words;wire[5:0]input_faults;
-selected_input_cone input_cone(.clk(clk),.rst_n(rst_n),.source_word(actual_source_word),.observed(input_words),.faults(input_faults));
+wire[6605:0]input_words;wire[6599:0]actual_input_pins;wire[5:0]actual_pins_valid;wire[5:0]input_faults;
+reg[1100:0]late_actual_source;always @(posedge clk)late_actual_source<=actual_source_word;
+selected_input_cone input_cone(.clk(clk),.rst_n(rst_n),.source_word(mut==10?late_actual_source:actual_source_word),.observed(input_words),.observed_pins(actual_input_pins),.pins_valid(actual_pins_valid),.faults(input_faults));
 reg[1100:0]source_history[0:12000];integer nsources=0;integer nsamples[0:5];reg[31:0]age_mask[0:5];integer probe_errors=0;
 initial for(integer f=0;f<6;f++)begin nsamples[f]=0;age_mask[f]=32'hffffffff;end
 always @(posedge clk)begin:source_stamp
@@ -189,11 +190,29 @@ always @(posedge clk)begin:observe_input
   end
  end
 end
+function automatic[1099:0]pin_shape(input[1100:0]w);
+ pin_shape={w[283]&w[0],w[282:1],w[549:284],w[564:552],w[551]&w[0],w[550]&w[0],w[1100:570],w[569]&w[0],w[568:566],w[565]&w[0]};
+endfunction
+integer pin_samples[0:5];reg[31:0]pin_age_mask[0:5];
+initial for(integer f=0;f<6;f++)begin pin_samples[f]=0;pin_age_mask[f]=32'hffffffff;end
+always @(posedge clk)begin:observe_pins
+ integer t;reg[31:0]pin_candidates;
+ t=($time/834)-ORIGIN;#3;
+ if(t>=1300 && t<11800)for(integer f=0;f<6;f++)if(actual_pins_valid[f])begin
+  pin_candidates=0;
+  for(integer age=0;age<32;age++)if(t>=age && pin_shape(source_history[t-age])===actual_input_pins[1100*f+:1100])pin_candidates[age]=1;
+  pin_samples[f]++;pin_age_mask[f]&=pin_candidates;
+  $display("CFIFO_REGISTERED_PINS t=%0d frame=%0d candidates=%h",t,f,pin_candidates);
+  if(pin_candidates==0)probe_errors++;
+ end
+end
 task probe_finish;
  begin
   for(integer f=0;f<6;f++)begin
+   $display("REGISTERED_PIN_RESULT frame=%0d samples=%0d age_mask=%h",f,pin_samples[f],pin_age_mask[f]);
+   if(pin_samples[f]!=nsources||pin_age_mask[f]!=(f%3==0?32'h800:f%3==1?32'h200:32'h1000))probe_errors++;
    $display("INPUT_BOUNDARY_RESULT frame=%0d source_events=%0d samples=%0d ages=%h faults=%b",f,nsources,nsamples[f],age_mask[f],input_faults[f]);
-   if(nsamples[f]!=nsources||nsources==0||age_mask[f]==0||input_faults[f])probe_errors++;
+   if(nsamples[f]!=nsources||nsources==0||age_mask[f]!=(f%3==0?32'h400:f%3==1?32'h100:32'h800)||input_faults[f])probe_errors++;
   end
   if(probe_errors)begin err+=probe_errors;$display("INPUT_BOUNDARY_OBSERVATION_FAIL errors=%0d",probe_errors);end
   else $display("INPUT_BOUNDARY_OBSERVATION_PASS no_numericframe_or_nativephase_claim");
@@ -368,4 +387,17 @@ always @(posedge input_cone.ingress_u_f_3R03.xk[3])begin:clock_3R03_3
  if(edge_t<40 || input_cone.ingress_u_f_3R03.xw_[0])
  $display("INPUT_CLOCK_TUPLE frame=3R03 lane=3 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rs_pre=%b rs_post=%b wc_pre=%0d wc_post=%0d rc_pre=%0d rc_post=%0d warm=%b",edge_ps,edge_ps%834,edge_t,input_cone.ingress_u_f_3R03.lk[9+:3],rs_pre,input_cone.ingress_u_f_3R03.rsync,wc_pre,input_cone.ingress_u_f_3R03.g_lane[3].u_l.wc,rc_pre,input_cone.ingress_u_f_3R03.g_lane[3].u_l.rc,input_cone.ingress_u_f_3R03.g_lane[3].u_l.warm);
 end
+
+// Diagnostic faults operate on actual source/route wires only; baseline is exact.
+initial begin
+ wait(n==ORIGIN+1590);#10;
+ if(mut==7)begin
+  force input_cone.nx_f_3L03_l0_fck[1]=1'b0;
+  @(posedge clk);#10;release input_cone.nx_f_3L03_l0_fck[1];
+ end
+ if(mut==8)force input_cone.w_x_f_3L03_l0_dst[100]=1'b0;
+ if(mut==9)force input_cone.w_x_f_3L03_l0_dst=input_cone.w_x_f_3L03_l1_dst;
+ if(mut==11)force input_cone.nx_f_3L03_l0_fck[1]=clk;
+end
+
 endmodule

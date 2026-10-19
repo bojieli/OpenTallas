@@ -26,7 +26,7 @@ for l in lines:
  if names:decls.append(l);found|=names
 assert found==used,(used-found)
 resets=sorted(set(re.findall(r'\b(?:rs_|rsg_)[A-Za-z0-9_]+','\n'.join(stations+frames))))
-body=['module selected_input_cone(input wire clk,rst_n,input wire[1100:0]source_word,output wire[6605:0]observed,output wire[5:0]faults);',
+body=['module selected_input_cone(input wire clk,rst_n,input wire[1100:0]source_word,output wire[6605:0]observed,output wire[6599:0]observed_pins,output wire[5:0]pins_valid,output wire[5:0]faults);',
  'wire ck_cl3S=clk;wire[15:0]u_s_3S_ck_xc={16{clk}};wire[4415:0]xc;reg[1:0]mkq;',
  'always @(posedge clk or negedge rst_n)if(!rst_n)mkq<=0;else mkq<={mkq[0],1\'b1};',
  'wire[1103:0]xw4={source_word[1100:565],source_word[0],mkq[1],source_word[564:0],mkq[1]};',
@@ -40,11 +40,13 @@ for i,line in enumerate(frames):
  name=re.search(r'\) (u_f_\w+) ',line).group(1)
  # Obtain exact real frame consumer bindings, then stop at its actual cfifo input boundary.
  port=lambda n:re.search(r'\.'+n+r'\(([^()]*)\)',line).group(1)
+ body.append(f'wire[282:0]a_{i};wire[265:0]b_{i};wire[14:0]c_{i};wire[535:0]d_{i};')
  body.append(f'dsfd_cfifo_crs4 ingress_{name}(.cr(ck_cl3S),.cr_s(ck_cl3S),.rst({port("rst_n")}),.xk({port("xk")}),.lk({port("lk")}),')
  xparts=re.search(r'\.x\(\{([^}]+)\}\)',line).group(1).split(', ')
  for k in range(4):body.append(f'.xl{k}({xparts[3-k]}),')
- body.append('.ri(66\'d0),.st(2\'d0),.cc(),.rd(),.rs(),.xa(),.xb(),.x2());')
- body.append(f'assign observed[{1101*i}+:1101]=ingress_{name}.xw_;assign faults[{i}]=|ingress_{name}.lf;')
+ body.append(f'.ri(66\'d0),.st(2\'d0),.cc(c_{i}),.rd(),.rs(),.xa(a_{i}),.xb(b_{i}),.x2(d_{i}));')
+ body.append(f'assign observed_pins[{1100*i}+:1100]={{a_{i},b_{i},c_{i},d_{i}}};assign pins_valid[{i}]=a_{i}[282]|c_{i}[1]|c_{i}[0];')
+ body.append(f'assign observed[{1101*i}+:1101]=ingress_{name}.xw_;assign faults[{i}]=|ingress_{name}.flt;')
  if '_MX_' in line:
   out=re.search(r'\.xo\(\{([^}]+)\}\)',line).group(1)
   body.append(f'selected_mx_forwarder forward_{name}(.rst_n({port("rst_n")}),.xk({port("xk")}),.x({{{", ".join(xparts)}}}),.xo({{{out}}}),.xok({port("xok")}));')
