@@ -1,0 +1,16 @@
+{
+ "reviewer": "codex coordinator",
+ "time": "2026-10-19T15:46:13.628763+00:00",
+ "gate_commit": "03428da8bb13e69aae8e7bc2e138a88e8d6dc809",
+ "geometry_sha256": "3a91920474342b72b17c2702ae537ca862ad5ea99bd7271bb9824b773f1f7ba9",
+ "verdict": "APPROVED",
+ "approval": "Root coordinator source+PNG review08:09; HBM coordinator actual grant condition satisfied08:49 via codex/hbm-smb-l15-1019@dddedcec9 cp_grant_report.json.",
+ "checklist": {
+  "lattice": "No macros; square51.84.",
+  "std_cell_band": "Connected perimeter standard-cell placement band; measured446um2/19.8% truthful895pin-bound exception.",
+  "pin_spread": "N/S/E256,W127; actual16die homes51.84square, max4.938pins/um,min22.896um clearance, zero violations.",
+  "clock_entry": "West clock, two-stage reset release; TT/FF spreads6.5/6.6ps; insertion99.7/80.1ps.",
+  "shape": "Square51.84; each bus fullface; registered outputs,<=405um stage reach; no data masks."
+ },
+ "limitations": "Approval permits route submission only. Routed TTsetup/FFhold and parent-relative native audit remain adoption gates."
+}
