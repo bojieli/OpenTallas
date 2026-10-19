@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       admits  1036 GB (avail 819, growth 94, headroom 0, waiters 0/0 GB) load 85/128 running 30 disk 307 GB 
+ot-run: ot-epyc5       admits   834 GB (avail 688, growth 104, headroom 0, waiters 0/0 GB) load 52/128 running 10 disk 1051 GB 
+ot-run: ot-epyc6       admits   319 GB (avail 325, growth 102, headroom 0, waiters 0/0 GB) load 30/128 running 16 disk 6055 GB 
+ot-run: ot-epyc7       admits   541 GB (avail 479, growth 101, headroom 0, waiters 0/0 GB) load 61/96 running 17 disk 6477 GB 
+ot-run: ot-epyc8       admits  1214 GB (avail 930, growth 80, headroom 0, waiters 0/0 GB) load 41/128 running 24 disk 354 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-order-s2-fix-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-order-s2-fix-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-74842-1792427238 after 0 s
+[7000] %Fatal: tb_reset.sv:10: Assertion failed in tb_reset: RESET_EDGE_MISMATCH
+%Error: results/rtl/kv_order_s2_fix_1019/reset/tb_reset.sv:10: Verilog $stop
+Aborting...
+RESET_MUTANT_CAUGHT edge
+[9000] %Fatal: tb_reset.sv:12: Assertion failed in tb_reset.unnamedblk2: LAST_COPY
+%Error: results/rtl/kv_order_s2_fix_1019/reset/tb_reset.sv:12: Verilog $stop
+Aborting...
+RESET_MUTANT_CAUGHT copy
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-74842-1792427238): exit 0

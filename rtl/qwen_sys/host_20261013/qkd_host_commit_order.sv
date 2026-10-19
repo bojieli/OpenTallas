@@ -57,8 +57,14 @@ module qkd_host_commit_order #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST_ORDE
  end
  for(genvar b=0;b<32;b++)begin:g_bank
   reg[6:0]words[0:7];
-  (* keep=1 *)reg[6:0]local_pc;
-  always @(posedge ck)if(KEPT_SELECT)local_pc<=issue_pc;
+  wire[6:0]local_pc;
+  if(b%2==0)begin:g_pc_copy
+   (* keep=1 *)reg[6:0]pc_q;
+   always @(posedge ck)if(KEPT_SELECT)pc_q<=issue_pc;
+   assign local_pc=pc_q;
+  end else begin:g_pc_share
+   assign local_pc=g_bank[b-1].local_pc;
+  end
   wire[6:0]write_pc=KEPT_SELECT?local_pc:iqpc;
   always @(posedge ck)begin
    if(take&&wp[7:3]==5'(b))words[wp[2:0]]<=write_pc;
@@ -90,7 +96,7 @@ module qkd_host_commit_order #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST_ORDE
   end
  end endgenerate
  for(genvar k=0;k<128;k++)begin:g_pc
-  wire[6:0]pc_local=KEPT_SELECT?g_bank[k/4].local_pc:iqpc;
+  wire[6:0]pc_local=KEPT_SELECT?g_bank[(k/8)*2].local_pc:iqpc;
   wire add=take&&pc_local==7'(k),physical=aq[k],consume=pop&&head_oh[k];
   always @(posedge ck or negedge rst_n)begin
    if(!rst_n)begin outstanding[k]<=0;pending[k]<=0;end
@@ -102,7 +108,7 @@ module qkd_host_commit_order #(parameter integer MUT=0,KEPT_SELECT=`OT_HOST_ORDE
  end
  wire[127:0]bad_ack;
  for(genvar k=0;k<128;k++)begin:g_guard
-  wire[6:0]pc_local=KEPT_SELECT?g_bank[k/4].local_pc:iqpc;
+  wire[6:0]pc_local=KEPT_SELECT?g_bank[(k/8)*2].local_pc:iqpc;
   assign bad_ack[k]=aq[k]&&outstanding[k]==0&&!(take&&pc_local==7'(k));
  end
  always @(posedge ck or negedge rst_n)begin
