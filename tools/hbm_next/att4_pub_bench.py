@@ -37,7 +37,7 @@ _sp.loader.exec_module(S)
 
 F = np.float32
 NL, LV = 3, 3        # NL = query lanes = SM lanes P (P3 default, owner 10-19; --nl 3..4); stim keeps 4 lane fields
-SRC = ["physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v", "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v", "rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+SRC = ["physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43/hnx_sram_1r1w_128x256_r43.v", "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v", "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v", "rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_fastfp.sv",
        "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
        "rtl/hbm_next/att/ot_hnx_att4_smerge.sv", "rtl/hbm_next/att/ot_hnx_att4_spvm.sv",
        "rtl/hbm_next/att/tb_hnx_att4_pub.sv"]
