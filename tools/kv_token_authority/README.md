@@ -53,3 +53,8 @@ retires a wrong identity. Their witness lines are in `controls.log`.
 Run on the fleet: `python3 -m unittest -v test_identity_verdict.py` from this
 directory. Original vehicle failure evidence remains untouched. No schedule,
 deadline, RTL or full vehicle was changed or rerun.
+
+The exact module and bench also pass 11 two-state cases and all three real
+mutants on fleet Verilator 5.050. Cases 7 and 12 require X and remain covered
+by four-state Icarus. See `receipt.json`, `verilator_controls.log` and
+`verilator_*.fail.log`. No unknown-state claim derives from Verilator.

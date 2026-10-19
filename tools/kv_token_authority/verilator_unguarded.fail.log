@@ -1,0 +1,6 @@
+KVA_RAW_STATUS known=0 valid=1 id=deadbeef
+KVA_IDENTITY_ERROR STATUS identity has no fallback
+[20] %Fatal: tb_identity_scoreboard.sv:27: Assertion failed in tb: STARTUP_AUTHORITY_ORACLE
+%Error: tb_identity_scoreboard.sv:27: Verilog $stop
+Aborting...
+RETURN_CODE 1

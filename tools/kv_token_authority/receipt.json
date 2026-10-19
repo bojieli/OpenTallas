@@ -1,0 +1,67 @@
+{
+  "scope": "verification component only; no G7 full integration or DUT startup safety claim",
+  "source_commit": "5077ec890 (module and bench unchanged)",
+  "sha256": {
+    "kva_identity_scoreboard.sv": "95cf026e8966b69ec3e747884b0fd5bf7c5e0327fd348ae457fd522a10cd5908",
+    "tb_identity_scoreboard.sv": "662c77d6040e4ebe520f18ef7e72a3fa9dd79fa14be4d908e1ac2086a8244055",
+    "identity_verdict.py": "160f7d2e4ef7553da4ec1fd63059343e238fe89cd81bdb7a0c3742f3f27a6734",
+    "test_identity_verdict.py": "305094f60aaccb7d400c7015187010bd1ca209a8a40afbe2a23429342e1910b1",
+    "run_controls.py": "544bc411b0edf0d3f1f38f755e8b73056bb55e6ab85392aa8e9bcb09b0ae9dfa"
+  },
+  "verilator": {
+    "version": "5.050",
+    "unit": "oth-ubuntu-2035864-1792446318",
+    "host": "ot-epyc8",
+    "base_cases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10,
+      11
+    ],
+    "mutants_caught": [
+      "unguarded",
+      "trace_mask",
+      "fallback"
+    ],
+    "exit": 0
+  },
+  "icarus": {
+    "version": "12.0",
+    "unit": "oth-ubuntu-129740-1792446262",
+    "host": "ot-epyc7",
+    "base_cases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "mutants_caught": [
+      "unguarded",
+      "trace_mask",
+      "fallback"
+    ],
+    "exit": 0
+  },
+  "python_controls": 10,
+  "four_state_only_cases": [
+    7,
+    12
+  ],
+  "note": "Cases7/12 exercise explicit X valid; Icarus receipt covers them. Verilator cannot represent X."
+}
