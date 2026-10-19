@@ -1,0 +1,26 @@
+{
+  "scope": "oldr2 diagnostic recovery only, latestcensus/sourcebinding not regenerated",
+  "source": "844953bfc",
+  "remote": "ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/qfd_sys_face_ovl_r2-20261019-081434",
+  "remote_exit": 0,
+  "setup_ps": 64.6,
+  "hold_ps": 32.7,
+  "grt_overflow": 0,
+  "unsafe_loads": {
+    "rst_loop": 400,
+    "Tptr": 2038,
+    "Lptr": 1024
+  },
+  "TTboundary": {
+    "n": 2189,
+    "mean": 338.7,
+    "min": 315.7,
+    "max": 380.1
+  },
+  "FFboundary": {
+    "n": 2189,
+    "mean": 279.0,
+    "min": 256.4,
+    "max": 320.5
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "schema": "opentallas.qwen.cyclic-face-storage-proposal.v1",
+  "production_bound": false,
+  "reason": "actual oldr2 Ttableptr2038/Ltableptr1024loads andrst400 violate safe checklist; SRAMreadlookahead structuralredesign required",
+  "old_outline": [
+    276.48,
+    172.8
+  ],
+  "proposed_outline": [
+    302.4,
+    172.8
+  ],
+  "area_growth_fraction": 0.09374999999999978,
+  "expected_external_cycle_delta": 0,
+  "cycle_delta_qualified": false,
+  "storage": "T/L/E eachtwo64x16 realSRAM, independentreadports and prefetch queues/headcache for bothsegmentbases",
+  "SRAMs": [
+    {
+      "inst": "calT_0",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "x": 43.2,
+      "y": 43.2,
+      "w": 18.36,
+      "h": 20.79
+    },
+    {
+      "inst": "calT_1",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "x": 86.4,
+      "y": 43.2,
+      "w": 18.36,
+      "h": 20.79
+    },
+    {
+      "inst": "calL_0",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "x": 129.60000000000002,
+      "y": 43.2,
+      "w": 18.36,
+      "h": 20.79
+    },
+    {
+      "inst": "calL_1",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "x": 172.8,
+      "y": 43.2,
+      "w": 18.36,
+      "h": 20.79
+    },
+    {
+      "inst": "calE_0",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "x": 216.0,
+      "y": 43.2,
+      "w": 18.36,
+      "h": 20.79
+    },
+    {
+      "inst": "calE_1",
+      "master": "ot_sram_1r1w_64x16_m1",
+      "x": 259.20000000000005,
+      "y": 43.2,
+      "w": 18.36,
+      "h": 20.79
+    }
+  ],
+  "ROMs": [
+    {
+      "inst": "cfg",
+      "master": "ot_rom_4096x72_m8",
+      "x": 43.2,
+      "y": 86.4,
+      "w": 38.016,
+      "h": 62.91
+    },
+    {
+      "inst": "C_TX",
+      "master": "ot_rom_4096x72_m8",
+      "x": 129.6,
+      "y": 86.4,
+      "w": 38.016,
+      "h": 62.91
+    },
+    {
+      "inst": "C_RX",
+      "master": "ot_rom_4096x72_m8",
+      "x": 216,
+      "y": 86.4,
+      "w": 38.016,
+      "h": 62.91
+    }
+  ],
+  "extra_raw_sram_um2": 2290.2264,
+  "min_sram_hchannel": 24.84,
+  "min_vertical_channel": 22.41,
+  "min_macro_edge": 23.49,
+  "standard_band": [
+    2.16,
+    2.16,
+    300.24,
+    32.4
+  ],
+  "standard_band_um2": 9013.939199999999,
+  "reset_split_maxloads": 32,
+  "remaining": [
+    "sourceboundsharedprefixandordinaryconsumer ledger",
+    "SRAMcalendarimplementation/exactdt1burst/wrap/reloadmutants",
+    "actualsynthesisareaandfullstd-bandutil",
+    "finaldiegrant/new9macroPNGreview",
+    "nativeTTFF/parentclockboundary"
+  ]
+}
