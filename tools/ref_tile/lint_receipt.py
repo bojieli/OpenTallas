@@ -45,6 +45,7 @@ SPEC_KEYS = ('name', 'top', 'kind', 'sources', 'params', 'clock', 'clock_entry_d
 ROUTE_KEYS = ('signoff_period_ps', 'period_ps')          # clock_entry_constraints.signoff_period reads both
 # every module the lints execute (cdc_sync_constraints.periods imports clock_entry_constraints)
 TOOL_FILES = ('gray_fifo_cdc_constraints.py', 'cdc_sync_constraints.py', 'clock_entry_constraints.py', 'single_clock_contract.py')
+TOOL_DATA_FILES = ('physical/common_flow/clock_family.tcl',)
 DEFAULT_MEM_GB = 48
 REMOTE_PARENT = '/srv/opentallas-scratch/claude/kit_lint'
 _MEMO = {}
@@ -95,7 +96,8 @@ def components(policy, spec, root, yosys):
     root = Path(root).resolve()
     return {'policy': policy, 'spec': projection(spec),
             'inputs': {f: _sha(root / f) for f in input_files(spec, root)},
-            'tool': {f: _sha(HERE / f) for f in TOOL_FILES}, 'yosys': yosys_version(yosys)}
+            'tool': {f: _sha(HERE / f) for f in TOOL_FILES},
+            'tool_data': {f: _sha(HERE.parents[1] / f) for f in TOOL_DATA_FILES}, 'yosys': yosys_version(yosys)}
 
 
 def key_of(comp):
@@ -180,6 +182,8 @@ def payload(policy, spec, root, key):
         # clock_entry_constraints (imported by the lints) imports tools/hier_contract/child_lint at module load
         for p in sorted((HERE.parent / 'hier_contract').glob('*.py')):
             add(f'tools/hier_contract/{p.name}', p.read_bytes())
+        for f in TOOL_DATA_FILES:
+            add(f, (HERE.parents[1] / f).read_bytes())
         for f in input_files(spec, root):
             add(f, (root / f).read_bytes())
         add('lint_job.json', json.dumps({'policy': policy, 'spec': projection(spec), 'key': key}).encode())
