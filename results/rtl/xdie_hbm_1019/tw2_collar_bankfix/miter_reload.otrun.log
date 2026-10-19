@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/tw2-collar-1019
+ot-run: ot-epyc5       admits   513 GB (avail 564, growth 205, headroom 0, waiters 0/0 GB) load 81/128 running 22 disk 1555 GB 
+ot-run: ot-epyc6       admits   472 GB (avail 443, growth 113, headroom 0, waiters 0/0 GB) load 48/128 running 16 disk 6439 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/tw2-collar-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/tw2-collar-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/tw2-collar-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/tw2-collar-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1577309-1792406544 after 1 s
+MISMATCH t=23100000 busy 0/1 done 1/0 fault 1/1 uop_v 1/1 it 0/0 pc 10/8 uop_eq 0
+MISMATCH t=23110000 busy 0/1 done 0/0 fault 1/1 uop_v 0/1 it 0/1 pc 10/3 uop_eq 0
+MISMATCH t=23120000 busy 0/0 done 0/1 fault 1/1 uop_v 0/1 it 0/0 pc 10/10 uop_eq 1
+MISMATCH t=34080000 busy 0/1 done 1/0 fault 1/1 uop_v 1/1 it 0/0 pc 10/8 uop_eq 0
+MISMATCH t=34090000 busy 0/1 done 0/0 fault 1/1 uop_v 0/1 it 0/1 pc 10/3 uop_eq 0
+ISSUER_V6_MITER FAIL mismatches86651 checks481122
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1577309-1792406544): exit 1
