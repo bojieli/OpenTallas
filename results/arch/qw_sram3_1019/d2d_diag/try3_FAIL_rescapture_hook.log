@@ -1,0 +1,20 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: RTL is already pin-registered: d2d_pinreg_gen.py PR=1 wraps qfd_d2d_static_core with exactly one flop per functional port (FIRM at the pin via io_flop_at_pins); the link calendar is compiled --pinreg; a second synthesized pin register would add +1 cycle per port with no timing purpose
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc4 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_d2d_static_r9c_p192_20261019-164125.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_d2d_static_r9c_p192_20261019-164125.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_d2d_static_r9c_p192-20261019-164125
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 78 s (gate total 139 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 3658, 'pin_rectangles': 3658, 'pin_track_checked': 3658, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 d5fa693849856c0d605c0f05b80d4a53d43b9a3037e2fe7dac976967eb0a7db8
+GATE INFO util: synthesized std area 5946 um2 + macros 105453 in core 181044: util 10% (std-cell density 9.7% of placeable 61076 um2; total fill 61.5%)
+GATE INFO textbook: WARN qfd_d2d_static cells 40,170 flops 10,922 depth 483.4 ps util 0.6164 reach 0.0 um (0.9 s)
+GATE WARN textbook.high_fanout: reset u_ot_pr_core.u_core.u_st.rst_n: 325 loads (325 flops, e.g. u_ot_pr_core.u_core.u_st.fault$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.high_fanout: reset u_ot_pr_core.u_core.u_reset_regions.rst_n[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 295 loads (295 flops, e.g. u_ot_pr_core.u_core.u_end.ecnt[0]$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.util_channel: 2 macro channel(s) narrower than 20 um with placement rows (e.g. u_ot_pr_core.u_core.u_end.u_link.g_bank\[0\].u_store.u_sram.u_p192|u_ot_pr_core.u_core.u_end.u_link.g_bank\[2\].u_store.u_sram.u_p192 0.0 um, u_ot_pr_core.u_core.u_end.u_link.g_bank\[1\].u_store.u_sram.u_p192|u_ot_pr_core.u_core.u_end.u_link.g_bank\[3\].u_store.u_sram.u_p192 0.0 um): widen to >= 20 um or block the channel  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO clock_rule: root port:ck: 10,926 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-sram3-1019/physical/ref_tile/qfd_d2d_static_r9c_p192/gate_layout/floorplan.png
+GATE INFO fill: fill 60% = (hard macros 105453.1 + synthesized std cells 6136.0) / outline 184757.8 um2; pin demand per face: S 1202 pins over 263.5/475.2 um (56%), N 1673 pins over 294.0/475.2 um (62%), W 830 pins over 316.3/388.8 um (81%), E 129 pins over 86.7/388.8 um (22%)
+PRE_ROUTE_GATE: FAIL (1 fail, 5 warn)
+GATE: qfd_d2d_static_r9c_p192/gate_result.json written (exact staged source binding; commit it with the kit)
