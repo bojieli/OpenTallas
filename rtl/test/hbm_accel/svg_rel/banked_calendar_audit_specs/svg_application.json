@@ -1,0 +1,18 @@
+{
+  "top": "ot_smh_banked_svg_central",
+  "params": {},
+  "sources": [
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_central.sv",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_native.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+    "rtl/hbm_accel/sm/static/ot_smh_banked_svg_central.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "purpose": "Mapped census only; no physical gate or slot approval",
+  "name": "svg_application"
+}
