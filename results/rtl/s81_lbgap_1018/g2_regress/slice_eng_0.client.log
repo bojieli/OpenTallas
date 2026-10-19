@@ -1,0 +1,7 @@
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1776595-1792351120 after 0 s
+SLICEENG vs_mut=0 sums=4 gates=4 half_rows=80 mismatches=0 fault=0 reduce_cmd_to_last_gate=700 add_cmd_to_last_write=81
+PASS
+PASS slice_eng VS_MUT=0 seed=3
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1776595-1792351120): exit 0
+EXIT 0

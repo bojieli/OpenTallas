@@ -1,0 +1,114 @@
+{
+ "schema": "opentallas.s81_dv.gu_cut_record.v1",
+ "lane": "TOK-S81-GAPS/GU",
+ "date": "2026-10-19",
+ "vehicle": "cut_gu of the G8 die.v (bind_p4l3_g8, die.v sha256 86ee2921ea1587bfcc31487995d0bbf2a616ae6a62a1c801b8dd899aa15595b5): REAL u_seqhost + u_gunit + the real cw_seqhost relay chain/landing and every lane relay/landing of both (1,776 instances, set sets/set_cut_gu.txt); Verilator 5.050 on ot-epyc4 (build 2.4 GB, 2:41)",
+ "programme": "dv_layer_compile L0 on G8 (tree_g8) with L0 fixtures, compiler/prog_L0_g8_gu (lower_gu encodes every G-unit boundary word from the fixtures); host boot = the compiled prog/host_boot.memh on hf_7N from bench 200 (after u_seqhost reset release 80, --idle-run), KS 2919 (start-phase residue; 2920-2922 miss)",
+ "results": {
+  "gu_L0_eq": "DIAGNOSTIC (--equalize hf_7N models the G8R residual fix): tvN_gunit 15/15 + tvS_gunit 15/15 G-unit CTL rows bit-exact at the compiled layer edges, strict (no extra words): attn HC 6 rows x 2 sides, ffn HC 6 x 2, router ids + w0 + w1 x 2. Sim FAIL only on 2 SVCJ checks (svc job tag: RTL s_j op = calendar row index 93, lower_svc encodes tag 0x00 -> SVC lane) and unscheduled tvS_seqhost V beats (CTL lane)",
+  "gu_L0_base": "SCHEDULE: 20/30 G-unit rows wrong data (hf_7N lanes l0/l1 land at ages 58/59: torn 515-b host words corrupt the 0x14 table rows) = die gap G8 residual hf_7N (G8R lane)",
+  "gu_L0_eq_mut_hp_shift1": "MUTANT (every HP beat 1 cycle late): FAIL, 12+12 rows missed (fail witness)",
+  "gu_L0_eq_mut_ctl_expect_shift1": "MUTANT (every CTL check 1 cycle late): FAIL, 15+15 missed (fail witness)"
+ },
+ "checks": {
+  "gu_L0_eq": {
+   "o__w_tvN_gunit_lnd": {
+    "expected": 15,
+    "missed": 0,
+    "extra": 0,
+    "ok": true
+   },
+   "o__w_tvS_gunit_lnd": {
+    "expected": 15,
+    "missed": 0,
+    "extra": 0,
+    "ok": true
+   }
+  },
+  "gu_L0_base": {
+   "o__w_tvN_gunit_lnd": {
+    "expected": 15,
+    "missed": 10,
+    "extra": 0,
+    "ok": false
+   },
+   "o__w_tvS_gunit_lnd": {
+    "expected": 15,
+    "missed": 10,
+    "extra": 0,
+    "ok": false
+   }
+  },
+  "gu_L0_eq_mut_hp_shift1": {
+   "o__w_tvN_gunit_lnd": {
+    "expected": 15,
+    "missed": 12,
+    "extra": 2,
+    "ok": false
+   },
+   "o__w_tvS_gunit_lnd": {
+    "expected": 15,
+    "missed": 12,
+    "extra": 2,
+    "ok": false
+   }
+  },
+  "gu_L0_eq_mut_ctl_expect_shift1": {
+   "o__w_tvN_gunit_lnd": {
+    "expected": 15,
+    "missed": 15,
+    "extra": 4,
+    "ok": false
+   },
+   "o__w_tvS_gunit_lnd": {
+    "expected": 15,
+    "missed": 15,
+    "extra": 4,
+    "ok": false
+   }
+  }
+ },
+ "measured_vs_price": {
+  "attn.hc": {
+   "calendar_issue": 193,
+   "first_in_beat": 229,
+   "last_in_beat": 724,
+   "rows_landed_first": 1487,
+   "rows_landed_last": 1494,
+   "price_window": [
+    0.0,
+    1383.4
+   ],
+   "landed_last_minus_price_end": 110.6
+  },
+  "ffn.hc": {
+   "calendar_issue": 9377,
+   "first_in_beat": 9413,
+   "last_in_beat": 9908,
+   "rows_landed_first": 10671,
+   "rows_landed_last": 10678,
+   "price_window": [
+    9183.3,
+    10566.7
+   ],
+   "landed_last_minus_price_end": 111.3
+  },
+  "ffn.router": {
+   "calendar_issue": 11235,
+   "first_in_beat": 11271,
+   "last_in_beat": 11298,
+   "rows_landed_first": 11369,
+   "rows_landed_last": 11493,
+   "price_window": [
+    11355.0,
+    11700.3
+   ],
+   "landed_last_minus_price_end": -207.3
+  }
+ },
+ "notes": [
+  "layer cycles; rows_landed = the coefficient / router row at the slice landing of tvN_gunit (age 4) / tvS_gunit (age 8)",
+  "HC tail measured: last HP beat -> first row out 757 (vo_s) / 759 (vo_n) edges = the compiler HC_LAT model, asserted cycle-exact here on the relay path",
+  "the gunit rows are cycle-exact against the COMPILED schedule; the compiled schedule is ~+104..+111 cycles behind the p4l price for each HC job (price sinkhorn end 1383.4 / 10566.7; rows land 1487-1494 / 10671-10678); router ids +5..+7 vs top6 end, weights 207 cycles EARLY vs the priced weights end"
+ ]
+}

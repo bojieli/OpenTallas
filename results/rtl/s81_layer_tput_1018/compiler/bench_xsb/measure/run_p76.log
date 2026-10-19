@@ -1,0 +1,11 @@
+BFG tb_s81dv_frame.dut.u_f.u_e4.u_view.g_hc.u_front.u_bft 150 156 1
+BFG tb_s81dv_frame.dut.u_f.u_e8.u_view.g_hc.u_front.u_bft 156 162 1
+BFPV 324 tb_s81dv_frame.dut.u_f.u_e4w.u_view.u_bfpv rows 0 seg 3 n 4
+BFPV 324 tb_s81dv_frame.dut.u_f.u_e4e.u_view.u_bfpv rows 1 seg 3 n 4
+BFPV 330 tb_s81dv_frame.dut.u_f.u_e8w.u_view.u_bfpv rows 2 seg 3 n 4
+BFPV 330 tb_s81dv_frame.dut.u_f.u_e8e.u_view.u_bfpv rows 3 seg 3 n 4
+RET 405 1799514e000004609
+RET 408 06b6ae00000000609
+RET 413 1786e86e00000c609
+RET 415 077fd8c0c00008609
+END edges=3063 ret_words=4 xo_checked=3061 fault=0 spine_fault=0

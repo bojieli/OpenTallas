@@ -1,0 +1,28 @@
+SVCLOW_IMG dir=/srv/opentallas-scratch/claude/lb2-s81-cc/svc/img/slot nq=346 T=128 jW=94 jE=84 go=1555 pv_frame=2056 exp_pv0=2236 exp_done=2396 hbm=2096 seed=1
+SC MISMATCH row 126 head 0 got 420c9260 f0 exp bf8a8d9c f0
+SC MISMATCH row 126 head 1 got 41637168 f0 exp c0ccb16a f0
+SC MISMATCH row 126 head 2 got 41be1ce6 f0 exp bf9ae7a6 f0
+SC MISMATCH row 126 head 3 got 41ff5248 f0 exp c0738f66 f0
+SC MISMATCH row 126 head 4 got 404745d4 f0 exp c00ff700 f0
+SC MISMATCH row 126 head 5 got c2707450 f0 exp c1a41505 f0
+SC MISMATCH row 126 head 6 got 422e4a00 f0 exp 3ff8c92a f0
+SE MISMATCH slice 8 row 126 got 41be1ce6 exp bf9ae7a6
+SE MISMATCH slice 8 row 127 got 00000000 exp 41be1ce6
+SE MISMATCH slice 12 row 126 got 41637168 exp c0ccb16a
+SE MISMATCH slice 12 row 127 got 00000000 exp 41637168
+SE MISMATCH slice 1 row 126 got c2cca19e exp c094559f
+SE MISMATCH slice 1 row 127 got 00000000 exp c2cca19e
+SE MISMATCH slice 2 row 126 got c1f9bf1c exp 404b2c60
+PV MISMATCH entry 11 tile 0 dim 0 head 0 got bf50f388 f0 exp bf7f5288 f0
+PV MISMATCH entry 11 tile 0 dim 0 head 1 got bf9cb8e0 f0 exp bfa675e0 f0
+PV MISMATCH entry 11 tile 0 dim 0 head 2 got c011a4fc f0 exp c01da7fc f0
+PV MISMATCH entry 11 tile 0 dim 0 head 3 got bf91cac8 f0 exp bfac1548 f0
+PV MISMATCH entry 11 tile 0 dim 0 head 4 got bfad9e66 f0 exp bfb16766 f0
+PV MISMATCH entry 11 tile 0 dim 0 head 5 got bfcc009c f0 exp bfcae534 f0
+PV MISMATCH entry 11 tile 0 dim 0 head 6 got bf5d1138 f0 exp bf89ab1c f0
+SVCLOW_SCHED go=1555 pv_frame=2056 first_score=1685 last_score=1716 pv_first=2236 exp_pv_first=2236 pv_last=2395 done_W=2230 exp_done_W=2230 done_E=2396 exp_done_E=2396 n_done=1/1 q_sent=346/346 late_q=0 pv_early=0 hbm_wr=32 hbm_rd=2112 sched_bad=0
+SVCLOW die=0 st=0 T=128 root_beats=32 sc_checked=2048 sc_errors=32 order_errors=0 se_checked=2048 se_errors=32 se_bad_slices=0 sm_rows_bad=0 pv_checked=2048 pv_errors=2048 pv_words=160 pv_gaps=0 pv_other_entry=0 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 sched_bad=0 cycles=2697 verdict=FAIL
+- tools/s81_dv/layer_prog/svc/tb_svc_lower.sv:271: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 577.007 s; speed 4.675 ns/s
+- Verilator: cpu 576.992 s on 17 threads; allocated 3294 MB

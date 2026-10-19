@@ -457,6 +457,10 @@ def rsv_faces(P, facts, tree):
             face_link('dn', a, b, f'svc stream tree dn (q + hw) parent -> child ({h})')
             face_link('up', b, a, f'svc up tree (done, fault, credits, acks) child -> parent ({h})')
             face_link('pr', b, a, f'svc P.V return tree child -> parent ({h})')
+    # TOK-S81-GAPS/SVCP (10-19): the on-die P path -- the fold root rsv_09 sends the packed PV frame across the centre
+    # to the W chain root rsv_07 on one more return-tree face lane (ro W -> ri E, svc_rs_tree.py rs_pface), which forwards
+    # it to the W entry rsv_05 on tr_07_05; the E entry gets it on tr_09_11 (dsdv_svc_rs.sv P PATH)
+    face_link('pr', 9, 7, 'svc P path: fold root PV frame across the centre (rs_pface pout W -> pin E)')
     hops = sorted({(s_, F) for pth in emb['paths'] for s_, F in pth['hops']})
     for s_, F in hops:
         face_link('sg', s_, nb(s_, F), 'svc score exchange gather hop (embed.json)')
