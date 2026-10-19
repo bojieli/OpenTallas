@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-ahub-face-copy-1019/tools/qwen_kv_die/ahub_safe/verify_faces.py", line 54, in <module>
+    for ob,nb in zip(bs,b['connections'][po]):assert ro(ob)==rn(nb),('input/state/reset/clock relation',name,po,ro(ob),rn(nb));input_checks+=1
+                                                     ^^^^^^^^^^^^^^
+AssertionError: ('input/state/reset/clock relation', 'safe_c6559', 'D', (('cell', '$abc$152144$auto$blifparse.cc:397:parse_blif$157542', 'Y', 0), 0), (('constant', '0'), 0))

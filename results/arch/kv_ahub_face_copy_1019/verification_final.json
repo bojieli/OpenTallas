@@ -1,0 +1,2389 @@
+{
+  "schema": "opentallas.ahub.independent_native_correspondence.v1",
+  "status": "PASS",
+  "native_state_cells": 3420,
+  "native_input_relations_checked": 26442,
+  "original_cells": 11025,
+  "emitted_cells": 11443,
+  "original_port_bits": 629,
+  "clock_sinks": 3425,
+  "reset_input_sinks": 2,
+  "nonclock_buffer_transparent_max": 24,
+  "violations": [],
+  "cell_counts": {
+    "NOR2xp33_ASAP7_75t_R": 835,
+    "AOI21xp33_ASAP7_75t_R": 471,
+    "OR2x2_ASAP7_75t_R": 243,
+    "NAND2xp33_ASAP7_75t_R": 948,
+    "OAI21xp33_ASAP7_75t_R": 1089,
+    "OA21x2_ASAP7_75t_R": 96,
+    "AOI211xp5_ASAP7_75t_R": 54,
+    "O2A1O1Ixp33_ASAP7_75t_R": 202,
+    "NOR3xp33_ASAP7_75t_R": 210,
+    "OR3x1_ASAP7_75t_R": 40,
+    "NAND3xp33_ASAP7_75t_R": 144,
+    "AO21x1_ASAP7_75t_R": 95,
+    "NOR4xp25_ASAP7_75t_R": 56,
+    "NOR5xp2_ASAP7_75t_R": 37,
+    "AND2x2_ASAP7_75t_R": 83,
+    "NAND4xp25_ASAP7_75t_R": 100,
+    "XNOR2xp5_ASAP7_75t_R": 340,
+    "XOR2xp5_ASAP7_75t_R": 144,
+    "OAI31xp33_ASAP7_75t_R": 35,
+    "A2O1A1Ixp33_ASAP7_75t_R": 60,
+    "MAJIxp5_ASAP7_75t_R": 28,
+    "MAJx2_ASAP7_75t_R": 7,
+    "AOI22xp33_ASAP7_75t_R": 59,
+    "AO22x1_ASAP7_75t_R": 5,
+    "OAI211xp5_ASAP7_75t_R": 51,
+    "OAI311xp33_ASAP7_75t_R": 8,
+    "OR4x1_ASAP7_75t_R": 18,
+    "A2O1A1O1Ixp25_ASAP7_75t_R": 31,
+    "AO211x2_ASAP7_75t_R": 4,
+    "OA211x2_ASAP7_75t_R": 13,
+    "AND4x1_ASAP7_75t_R": 33,
+    "AO32x1_ASAP7_75t_R": 2,
+    "AOI221xp5_ASAP7_75t_R": 41,
+    "OAI22xp33_ASAP7_75t_R": 257,
+    "OR5x1_ASAP7_75t_R": 8,
+    "AOI31xp33_ASAP7_75t_R": 26,
+    "AND3x1_ASAP7_75t_R": 56,
+    "NAND5xp2_ASAP7_75t_R": 30,
+    "AOI311xp33_ASAP7_75t_R": 5,
+    "OAI221xp5_ASAP7_75t_R": 148,
+    "AND5x1_ASAP7_75t_R": 5,
+    "AO222x2_ASAP7_75t_R": 1,
+    "OAI222xp33_ASAP7_75t_R": 5,
+    "AOI32xp33_ASAP7_75t_R": 8,
+    "AOI222xp33_ASAP7_75t_R": 2,
+    "OA31x2_ASAP7_75t_R": 2,
+    "OA222x2_ASAP7_75t_R": 11,
+    "AO221x1_ASAP7_75t_R": 1,
+    "OA22x2_ASAP7_75t_R": 3,
+    "OAI32xp33_ASAP7_75t_R": 1,
+    "OAI321xp33_ASAP7_75t_R": 1,
+    "DFFHQNx1_ASAP7_75t_R": 2952,
+    "DFFASRHQNx1_ASAP7_75t_R": 468,
+    "ot_nhb_zh": 4,
+    "ot_qkh_recip_leaf": 1,
+    "INVx1_ASAP7_75t_R": 1866
+  },
+  "source_sha256": "57a9e0f37cb7a6ac77eb1c9714500030e4736f6cfa0c9c22a28b5d790c3976e1",
+  "init_scope": "all mapped state has no explicit initialization; copied state relation established on common first capture or asynchronous reset; invalid startup payload is not qualified",
+  "physical_qualified": false,
+  "output_boundary_ledger": [
+    {
+      "port": "am0",
+      "bit": 0,
+      "ff": "safe_c8887",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$17641"
+    },
+    {
+      "port": "am0",
+      "bit": 1,
+      "constant": "0",
+      "polarity": 0
+    },
+    {
+      "port": "am0",
+      "bit": 2,
+      "ff": "safe_c7948",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14858"
+    },
+    {
+      "port": "am0",
+      "bit": 3,
+      "ff": "safe_c7952",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14859"
+    },
+    {
+      "port": "am0",
+      "bit": 4,
+      "ff": "safe_c7820",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14826"
+    },
+    {
+      "port": "am0",
+      "bit": 5,
+      "ff": "safe_c7824",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14827"
+    },
+    {
+      "port": "am0",
+      "bit": 6,
+      "ff": "safe_c7828",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14828"
+    },
+    {
+      "port": "am0",
+      "bit": 7,
+      "ff": "safe_c7832",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14829"
+    },
+    {
+      "port": "am0",
+      "bit": 8,
+      "ff": "safe_c7836",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14830"
+    },
+    {
+      "port": "am0",
+      "bit": 9,
+      "ff": "safe_c7840",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14831"
+    },
+    {
+      "port": "am0",
+      "bit": 10,
+      "ff": "safe_c7844",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14832"
+    },
+    {
+      "port": "am0",
+      "bit": 11,
+      "ff": "safe_c7848",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14833"
+    },
+    {
+      "port": "am0",
+      "bit": 12,
+      "ff": "safe_c7852",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14834"
+    },
+    {
+      "port": "am0",
+      "bit": 13,
+      "ff": "safe_c7856",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14835"
+    },
+    {
+      "port": "am0",
+      "bit": 14,
+      "ff": "safe_c7860",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14836"
+    },
+    {
+      "port": "am0",
+      "bit": 15,
+      "ff": "safe_c7864",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14837"
+    },
+    {
+      "port": "am0",
+      "bit": 16,
+      "ff": "safe_c7868",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14838"
+    },
+    {
+      "port": "am0",
+      "bit": 17,
+      "ff": "safe_c7872",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14839"
+    },
+    {
+      "port": "am0",
+      "bit": 18,
+      "ff": "safe_c7876",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14840"
+    },
+    {
+      "port": "am0",
+      "bit": 19,
+      "ff": "safe_c7880",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14841"
+    },
+    {
+      "port": "am0",
+      "bit": 20,
+      "ff": "safe_c7884",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14842"
+    },
+    {
+      "port": "am0",
+      "bit": 21,
+      "ff": "safe_c7888",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14843"
+    },
+    {
+      "port": "am0",
+      "bit": 22,
+      "ff": "safe_c7892",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14844"
+    },
+    {
+      "port": "am0",
+      "bit": 23,
+      "ff": "safe_c7896",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14845"
+    },
+    {
+      "port": "am0",
+      "bit": 24,
+      "ff": "safe_c7900",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14846"
+    },
+    {
+      "port": "am0",
+      "bit": 25,
+      "ff": "safe_c7904",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14847"
+    },
+    {
+      "port": "am0",
+      "bit": 26,
+      "ff": "safe_c7908",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14848"
+    },
+    {
+      "port": "am0",
+      "bit": 27,
+      "ff": "safe_c7912",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14849"
+    },
+    {
+      "port": "am0",
+      "bit": 28,
+      "ff": "safe_c7916",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14850"
+    },
+    {
+      "port": "am0",
+      "bit": 29,
+      "ff": "safe_c7920",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14851"
+    },
+    {
+      "port": "am0",
+      "bit": 30,
+      "ff": "safe_c7924",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14852"
+    },
+    {
+      "port": "am0",
+      "bit": 31,
+      "ff": "safe_c7928",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14853"
+    },
+    {
+      "port": "am0",
+      "bit": 32,
+      "ff": "safe_c7932",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14854"
+    },
+    {
+      "port": "am0",
+      "bit": 33,
+      "ff": "safe_c7936",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14855"
+    },
+    {
+      "port": "am0",
+      "bit": 34,
+      "ff": "safe_c7940",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14856"
+    },
+    {
+      "port": "am0",
+      "bit": 35,
+      "ff": "safe_c7944",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14857"
+    },
+    {
+      "port": "am1",
+      "bit": 0,
+      "ff": "safe_c8888",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$17641"
+    },
+    {
+      "port": "am1",
+      "bit": 1,
+      "constant": "0",
+      "polarity": 0
+    },
+    {
+      "port": "am1",
+      "bit": 2,
+      "ff": "safe_c7949",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14858"
+    },
+    {
+      "port": "am1",
+      "bit": 3,
+      "ff": "safe_c7953",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14859"
+    },
+    {
+      "port": "am1",
+      "bit": 4,
+      "ff": "safe_c7821",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14826"
+    },
+    {
+      "port": "am1",
+      "bit": 5,
+      "ff": "safe_c7825",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14827"
+    },
+    {
+      "port": "am1",
+      "bit": 6,
+      "ff": "safe_c7829",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14828"
+    },
+    {
+      "port": "am1",
+      "bit": 7,
+      "ff": "safe_c7833",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14829"
+    },
+    {
+      "port": "am1",
+      "bit": 8,
+      "ff": "safe_c7837",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14830"
+    },
+    {
+      "port": "am1",
+      "bit": 9,
+      "ff": "safe_c7841",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14831"
+    },
+    {
+      "port": "am1",
+      "bit": 10,
+      "ff": "safe_c7845",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14832"
+    },
+    {
+      "port": "am1",
+      "bit": 11,
+      "ff": "safe_c7849",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14833"
+    },
+    {
+      "port": "am1",
+      "bit": 12,
+      "ff": "safe_c7853",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14834"
+    },
+    {
+      "port": "am1",
+      "bit": 13,
+      "ff": "safe_c7857",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14835"
+    },
+    {
+      "port": "am1",
+      "bit": 14,
+      "ff": "safe_c7861",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14836"
+    },
+    {
+      "port": "am1",
+      "bit": 15,
+      "ff": "safe_c7865",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14837"
+    },
+    {
+      "port": "am1",
+      "bit": 16,
+      "ff": "safe_c7869",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14838"
+    },
+    {
+      "port": "am1",
+      "bit": 17,
+      "ff": "safe_c7873",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14839"
+    },
+    {
+      "port": "am1",
+      "bit": 18,
+      "ff": "safe_c7877",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14840"
+    },
+    {
+      "port": "am1",
+      "bit": 19,
+      "ff": "safe_c7881",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14841"
+    },
+    {
+      "port": "am1",
+      "bit": 20,
+      "ff": "safe_c7885",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14842"
+    },
+    {
+      "port": "am1",
+      "bit": 21,
+      "ff": "safe_c7889",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14843"
+    },
+    {
+      "port": "am1",
+      "bit": 22,
+      "ff": "safe_c7893",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14844"
+    },
+    {
+      "port": "am1",
+      "bit": 23,
+      "ff": "safe_c7897",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14845"
+    },
+    {
+      "port": "am1",
+      "bit": 24,
+      "ff": "safe_c7901",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14846"
+    },
+    {
+      "port": "am1",
+      "bit": 25,
+      "ff": "safe_c7905",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14847"
+    },
+    {
+      "port": "am1",
+      "bit": 26,
+      "ff": "safe_c7909",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14848"
+    },
+    {
+      "port": "am1",
+      "bit": 27,
+      "ff": "safe_c7913",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14849"
+    },
+    {
+      "port": "am1",
+      "bit": 28,
+      "ff": "safe_c7917",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14850"
+    },
+    {
+      "port": "am1",
+      "bit": 29,
+      "ff": "safe_c7921",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14851"
+    },
+    {
+      "port": "am1",
+      "bit": 30,
+      "ff": "safe_c7925",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14852"
+    },
+    {
+      "port": "am1",
+      "bit": 31,
+      "ff": "safe_c7929",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14853"
+    },
+    {
+      "port": "am1",
+      "bit": 32,
+      "ff": "safe_c7933",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14854"
+    },
+    {
+      "port": "am1",
+      "bit": 33,
+      "ff": "safe_c7937",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14855"
+    },
+    {
+      "port": "am1",
+      "bit": 34,
+      "ff": "safe_c7941",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14856"
+    },
+    {
+      "port": "am1",
+      "bit": 35,
+      "ff": "safe_c7945",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14857"
+    },
+    {
+      "port": "am2",
+      "bit": 0,
+      "ff": "safe_c8889",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$17641"
+    },
+    {
+      "port": "am2",
+      "bit": 1,
+      "constant": "0",
+      "polarity": 0
+    },
+    {
+      "port": "am2",
+      "bit": 2,
+      "ff": "safe_c7950",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14858"
+    },
+    {
+      "port": "am2",
+      "bit": 3,
+      "ff": "safe_c7954",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14859"
+    },
+    {
+      "port": "am2",
+      "bit": 4,
+      "ff": "safe_c7822",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14826"
+    },
+    {
+      "port": "am2",
+      "bit": 5,
+      "ff": "safe_c7826",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14827"
+    },
+    {
+      "port": "am2",
+      "bit": 6,
+      "ff": "safe_c7830",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14828"
+    },
+    {
+      "port": "am2",
+      "bit": 7,
+      "ff": "safe_c7834",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14829"
+    },
+    {
+      "port": "am2",
+      "bit": 8,
+      "ff": "safe_c7838",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14830"
+    },
+    {
+      "port": "am2",
+      "bit": 9,
+      "ff": "safe_c7842",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14831"
+    },
+    {
+      "port": "am2",
+      "bit": 10,
+      "ff": "safe_c7846",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14832"
+    },
+    {
+      "port": "am2",
+      "bit": 11,
+      "ff": "safe_c7850",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14833"
+    },
+    {
+      "port": "am2",
+      "bit": 12,
+      "ff": "safe_c7854",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14834"
+    },
+    {
+      "port": "am2",
+      "bit": 13,
+      "ff": "safe_c7858",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14835"
+    },
+    {
+      "port": "am2",
+      "bit": 14,
+      "ff": "safe_c7862",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14836"
+    },
+    {
+      "port": "am2",
+      "bit": 15,
+      "ff": "safe_c7866",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14837"
+    },
+    {
+      "port": "am2",
+      "bit": 16,
+      "ff": "safe_c7870",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14838"
+    },
+    {
+      "port": "am2",
+      "bit": 17,
+      "ff": "safe_c7874",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14839"
+    },
+    {
+      "port": "am2",
+      "bit": 18,
+      "ff": "safe_c7878",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14840"
+    },
+    {
+      "port": "am2",
+      "bit": 19,
+      "ff": "safe_c7882",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14841"
+    },
+    {
+      "port": "am2",
+      "bit": 20,
+      "ff": "safe_c7886",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14842"
+    },
+    {
+      "port": "am2",
+      "bit": 21,
+      "ff": "safe_c7890",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14843"
+    },
+    {
+      "port": "am2",
+      "bit": 22,
+      "ff": "safe_c7894",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14844"
+    },
+    {
+      "port": "am2",
+      "bit": 23,
+      "ff": "safe_c7898",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14845"
+    },
+    {
+      "port": "am2",
+      "bit": 24,
+      "ff": "safe_c7902",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14846"
+    },
+    {
+      "port": "am2",
+      "bit": 25,
+      "ff": "safe_c7906",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14847"
+    },
+    {
+      "port": "am2",
+      "bit": 26,
+      "ff": "safe_c7910",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14848"
+    },
+    {
+      "port": "am2",
+      "bit": 27,
+      "ff": "safe_c7914",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14849"
+    },
+    {
+      "port": "am2",
+      "bit": 28,
+      "ff": "safe_c7918",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14850"
+    },
+    {
+      "port": "am2",
+      "bit": 29,
+      "ff": "safe_c7922",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14851"
+    },
+    {
+      "port": "am2",
+      "bit": 30,
+      "ff": "safe_c7926",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14852"
+    },
+    {
+      "port": "am2",
+      "bit": 31,
+      "ff": "safe_c7930",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14853"
+    },
+    {
+      "port": "am2",
+      "bit": 32,
+      "ff": "safe_c7934",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14854"
+    },
+    {
+      "port": "am2",
+      "bit": 33,
+      "ff": "safe_c7938",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14855"
+    },
+    {
+      "port": "am2",
+      "bit": 34,
+      "ff": "safe_c7942",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14856"
+    },
+    {
+      "port": "am2",
+      "bit": 35,
+      "ff": "safe_c7946",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14857"
+    },
+    {
+      "port": "am3",
+      "bit": 0,
+      "ff": "safe_c8890",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$17641"
+    },
+    {
+      "port": "am3",
+      "bit": 1,
+      "constant": "0",
+      "polarity": 0
+    },
+    {
+      "port": "am3",
+      "bit": 2,
+      "ff": "safe_c7951",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14858"
+    },
+    {
+      "port": "am3",
+      "bit": 3,
+      "ff": "safe_c7955",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14859"
+    },
+    {
+      "port": "am3",
+      "bit": 4,
+      "ff": "safe_c7823",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14826"
+    },
+    {
+      "port": "am3",
+      "bit": 5,
+      "ff": "safe_c7827",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14827"
+    },
+    {
+      "port": "am3",
+      "bit": 6,
+      "ff": "safe_c7831",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14828"
+    },
+    {
+      "port": "am3",
+      "bit": 7,
+      "ff": "safe_c7835",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14829"
+    },
+    {
+      "port": "am3",
+      "bit": 8,
+      "ff": "safe_c7839",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14830"
+    },
+    {
+      "port": "am3",
+      "bit": 9,
+      "ff": "safe_c7843",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14831"
+    },
+    {
+      "port": "am3",
+      "bit": 10,
+      "ff": "safe_c7847",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14832"
+    },
+    {
+      "port": "am3",
+      "bit": 11,
+      "ff": "safe_c7851",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14833"
+    },
+    {
+      "port": "am3",
+      "bit": 12,
+      "ff": "safe_c7855",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14834"
+    },
+    {
+      "port": "am3",
+      "bit": 13,
+      "ff": "safe_c7859",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14835"
+    },
+    {
+      "port": "am3",
+      "bit": 14,
+      "ff": "safe_c7863",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14836"
+    },
+    {
+      "port": "am3",
+      "bit": 15,
+      "ff": "safe_c7867",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14837"
+    },
+    {
+      "port": "am3",
+      "bit": 16,
+      "ff": "safe_c7871",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14838"
+    },
+    {
+      "port": "am3",
+      "bit": 17,
+      "ff": "safe_c7875",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14839"
+    },
+    {
+      "port": "am3",
+      "bit": 18,
+      "ff": "safe_c7879",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14840"
+    },
+    {
+      "port": "am3",
+      "bit": 19,
+      "ff": "safe_c7883",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14841"
+    },
+    {
+      "port": "am3",
+      "bit": 20,
+      "ff": "safe_c7887",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14842"
+    },
+    {
+      "port": "am3",
+      "bit": 21,
+      "ff": "safe_c7891",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14843"
+    },
+    {
+      "port": "am3",
+      "bit": 22,
+      "ff": "safe_c7895",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14844"
+    },
+    {
+      "port": "am3",
+      "bit": 23,
+      "ff": "safe_c7899",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14845"
+    },
+    {
+      "port": "am3",
+      "bit": 24,
+      "ff": "safe_c7903",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14846"
+    },
+    {
+      "port": "am3",
+      "bit": 25,
+      "ff": "safe_c7907",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14847"
+    },
+    {
+      "port": "am3",
+      "bit": 26,
+      "ff": "safe_c7911",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14848"
+    },
+    {
+      "port": "am3",
+      "bit": 27,
+      "ff": "safe_c7915",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14849"
+    },
+    {
+      "port": "am3",
+      "bit": 28,
+      "ff": "safe_c7919",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14850"
+    },
+    {
+      "port": "am3",
+      "bit": 29,
+      "ff": "safe_c7923",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14851"
+    },
+    {
+      "port": "am3",
+      "bit": 30,
+      "ff": "safe_c7927",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14852"
+    },
+    {
+      "port": "am3",
+      "bit": 31,
+      "ff": "safe_c7931",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14853"
+    },
+    {
+      "port": "am3",
+      "bit": 32,
+      "ff": "safe_c7935",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14854"
+    },
+    {
+      "port": "am3",
+      "bit": 33,
+      "ff": "safe_c7939",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14855"
+    },
+    {
+      "port": "am3",
+      "bit": 34,
+      "ff": "safe_c7943",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14856"
+    },
+    {
+      "port": "am3",
+      "bit": 35,
+      "ff": "safe_c7947",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$14857"
+    },
+    {
+      "port": "fr_valid",
+      "bit": 0,
+      "ff": "safe_c8150",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15052"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 0,
+      "ff": "safe_c8151",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15053"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 1,
+      "ff": "safe_c8152",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15054"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 2,
+      "ff": "safe_c8153",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15055"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 3,
+      "ff": "safe_c8154",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15056"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 4,
+      "ff": "safe_c8155",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15057"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 5,
+      "ff": "safe_c8156",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15058"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 6,
+      "ff": "safe_c8157",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15059"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 7,
+      "ff": "safe_c8158",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15060"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 8,
+      "ff": "safe_c8159",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15061"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 9,
+      "ff": "safe_c8160",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15062"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 10,
+      "ff": "safe_c8161",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15063"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 11,
+      "ff": "safe_c8162",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15064"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 12,
+      "ff": "safe_c8163",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15065"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 13,
+      "ff": "safe_c8164",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15066"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 14,
+      "ff": "safe_c8165",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15067"
+    },
+    {
+      "port": "fr_epoch",
+      "bit": 15,
+      "ff": "safe_c8166",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15068"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 0,
+      "ff": "safe_c8167",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15069"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 1,
+      "ff": "safe_c8168",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15070"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 2,
+      "ff": "safe_c8169",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15071"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 3,
+      "ff": "safe_c8170",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15072"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 4,
+      "ff": "safe_c8171",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15073"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 5,
+      "ff": "safe_c8172",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15074"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 6,
+      "ff": "safe_c8173",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15075"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 7,
+      "ff": "safe_c8174",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15076"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 8,
+      "ff": "safe_c8175",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15077"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 9,
+      "ff": "safe_c8176",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15078"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 10,
+      "ff": "safe_c8177",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15079"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 11,
+      "ff": "safe_c8178",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15080"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 12,
+      "ff": "safe_c8179",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15081"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 13,
+      "ff": "safe_c8180",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15082"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 14,
+      "ff": "safe_c8181",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15083"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 15,
+      "ff": "safe_c8182",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15084"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 16,
+      "ff": "safe_c8183",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15085"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 17,
+      "ff": "safe_c8184",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15086"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 18,
+      "ff": "safe_c8185",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15087"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 19,
+      "ff": "safe_c8186",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15088"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 20,
+      "ff": "safe_c8187",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15089"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 21,
+      "ff": "safe_c8188",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15090"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 22,
+      "ff": "safe_c8189",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15091"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 23,
+      "ff": "safe_c8190",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15092"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 24,
+      "ff": "safe_c8191",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15093"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 25,
+      "ff": "safe_c8192",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15094"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 26,
+      "ff": "safe_c8193",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15095"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 27,
+      "ff": "safe_c8194",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15096"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 28,
+      "ff": "safe_c8195",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15097"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 29,
+      "ff": "safe_c8196",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15098"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 30,
+      "ff": "safe_c8197",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15099"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 31,
+      "ff": "safe_c8198",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15100"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 32,
+      "ff": "safe_c8199",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15101"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 33,
+      "ff": "safe_c8200",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15102"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 34,
+      "ff": "safe_c8201",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15103"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 35,
+      "ff": "safe_c8202",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15104"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 36,
+      "ff": "safe_c8203",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15105"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 37,
+      "ff": "safe_c8204",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15106"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 38,
+      "ff": "safe_c8205",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15107"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 39,
+      "ff": "safe_c8206",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15108"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 40,
+      "ff": "safe_c8207",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15109"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 41,
+      "ff": "safe_c8208",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15110"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 42,
+      "ff": "safe_c8209",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15111"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 43,
+      "ff": "safe_c8210",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15112"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 44,
+      "ff": "safe_c8211",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15113"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 45,
+      "ff": "safe_c8212",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15114"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 46,
+      "ff": "safe_c8213",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15115"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 47,
+      "ff": "safe_c8214",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15116"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 48,
+      "ff": "safe_c8215",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15117"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 49,
+      "ff": "safe_c8216",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15118"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 50,
+      "ff": "safe_c8217",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15119"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 51,
+      "ff": "safe_c8218",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15120"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 52,
+      "ff": "safe_c8219",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15121"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 53,
+      "ff": "safe_c8220",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15122"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 54,
+      "ff": "safe_c8221",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15123"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 55,
+      "ff": "safe_c8222",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15124"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 56,
+      "ff": "safe_c8223",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15125"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 57,
+      "ff": "safe_c8224",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15126"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 58,
+      "ff": "safe_c8225",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15127"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 59,
+      "ff": "safe_c8226",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15128"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 60,
+      "ff": "safe_c8227",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15129"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 61,
+      "ff": "safe_c8228",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15130"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 62,
+      "ff": "safe_c8229",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15131"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 63,
+      "ff": "safe_c8230",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15132"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 64,
+      "ff": "safe_c8231",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15133"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 65,
+      "ff": "safe_c8232",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15134"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 66,
+      "ff": "safe_c8233",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15135"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 67,
+      "ff": "safe_c8234",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15136"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 68,
+      "ff": "safe_c8235",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15137"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 69,
+      "ff": "safe_c8236",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15138"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 70,
+      "ff": "safe_c8237",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15139"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 71,
+      "ff": "safe_c8238",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15140"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 72,
+      "ff": "safe_c8239",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15141"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 73,
+      "ff": "safe_c8240",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15142"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 74,
+      "ff": "safe_c8241",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15143"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 75,
+      "ff": "safe_c8242",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15144"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 76,
+      "ff": "safe_c8243",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15145"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 77,
+      "ff": "safe_c8244",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15146"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 78,
+      "ff": "safe_c8245",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15147"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 79,
+      "ff": "safe_c8246",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15148"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 80,
+      "ff": "safe_c8247",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15149"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 81,
+      "ff": "safe_c8248",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15150"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 82,
+      "ff": "safe_c8249",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15151"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 83,
+      "ff": "safe_c8250",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15152"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 84,
+      "ff": "safe_c8251",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15153"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 85,
+      "ff": "safe_c8252",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15154"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 86,
+      "ff": "safe_c8253",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15155"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 87,
+      "ff": "safe_c8254",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15156"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 88,
+      "ff": "safe_c8255",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15157"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 89,
+      "ff": "safe_c8256",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15158"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 90,
+      "ff": "safe_c8257",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15159"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 91,
+      "ff": "safe_c8258",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15160"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 92,
+      "ff": "safe_c8259",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15161"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 93,
+      "ff": "safe_c8260",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15162"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 94,
+      "ff": "safe_c8261",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15163"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 95,
+      "ff": "safe_c8262",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15164"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 96,
+      "ff": "safe_c8263",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15165"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 97,
+      "ff": "safe_c8264",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15166"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 98,
+      "ff": "safe_c8265",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15167"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 99,
+      "ff": "safe_c8266",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15168"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 100,
+      "ff": "safe_c8267",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15169"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 101,
+      "ff": "safe_c8268",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15170"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 102,
+      "ff": "safe_c8269",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15171"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 103,
+      "ff": "safe_c8270",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15172"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 104,
+      "ff": "safe_c8271",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15173"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 105,
+      "ff": "safe_c8272",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15174"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 106,
+      "ff": "safe_c8273",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15175"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 107,
+      "ff": "safe_c8274",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15176"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 108,
+      "ff": "safe_c8275",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15177"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 109,
+      "ff": "safe_c8276",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15178"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 110,
+      "ff": "safe_c8277",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15179"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 111,
+      "ff": "safe_c8278",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15180"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 112,
+      "ff": "safe_c8279",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15181"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 113,
+      "ff": "safe_c8280",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15182"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 114,
+      "ff": "safe_c8281",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15183"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 115,
+      "ff": "safe_c8282",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15184"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 116,
+      "ff": "safe_c8283",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15185"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 117,
+      "ff": "safe_c8284",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15186"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 118,
+      "ff": "safe_c8285",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15187"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 119,
+      "ff": "safe_c8286",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15188"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 120,
+      "ff": "safe_c8287",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15189"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 121,
+      "ff": "safe_c8288",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15190"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 122,
+      "ff": "safe_c8289",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15191"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 123,
+      "ff": "safe_c8290",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15192"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 124,
+      "ff": "safe_c8291",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15193"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 125,
+      "ff": "safe_c8292",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15194"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 126,
+      "ff": "safe_c8293",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15195"
+    },
+    {
+      "port": "fr_rz",
+      "bit": 127,
+      "ff": "safe_c8294",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15196"
+    },
+    {
+      "port": "hf",
+      "bit": 0,
+      "ff": "safe_c8494",
+      "pin": "QN",
+      "polarity": 1,
+      "origin": "$auto$ff.cc:337:slice$15362"
+    }
+  ],
+  "distinct_registered_output_identities": 286
+}

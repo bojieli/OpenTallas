@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-ahub-face-copy-1019/tools/qwen_kv_die/ahub_safe/distribute_faces.py", line 146, in <module>
+    emit(args.input,args.output)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-ahub-face-copy-1019/tools/qwen_kv_die/ahub_safe/distribute_faces.py", line 16, in emit
+    if sha(inp)!=SUPPORTED_MAPPED_SHA256:raise ValueError('unsupported AHUB mapped source/profile hash')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: unsupported AHUB mapped source/profile hash
