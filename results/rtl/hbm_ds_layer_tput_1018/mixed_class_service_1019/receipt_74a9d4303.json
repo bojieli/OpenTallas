@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.mixed-service-transport.v1",
+  "hardware_source": "f2a07fb05",
+  "compiler_source": "74a9d4303",
+  "positive": "positive_74a9d4303.json",
+  "mutation": "descriptor_class_74a9d4303.json",
+  "ingress_event_delta": [
+    {
+      "event_index": 6,
+      "xor": "0x400000000000000000000000000000000000000000000000000000000000",
+      "hamming": 1
+    }
+  ],
+  "unchanged_mem_xw_ids": true,
+  "mutation_scope": "Only SVG descriptor197 of middle programme; XC metadata, literal commands, programme memories, data and schedule unchanged. Reserved descriptor200 untouched.",
+  "class_fault_source_proof": "Exact group source f2a07fb05 assigns fault=feed_fault||issuer_fault||command_class_fault. First observed fault1146 has issuer0/feed0, hence command_class_fault1, with no SM results or arithmetic failure.",
+  "positive_expected": "three exact fixedGO, one complete run,24DRAMsectors, no results and no faults",
+  "functional_scope": "mode-only drained three-programme explicit class split, no live arithmetic state; not a general stateful rescheduler",
+  "physical_claim": "NONE"
+}

@@ -1,0 +1,29 @@
+%Warning: /srv/opentallas-scratch/claude/codex-svg-mixed-service-1019/positive/xw.hex:0: $readmem file ended before specified final address (IEEE 1800-2023 21.4)
+MEM sectors=24
+V 38 0
+V 41 1
+V 44 2
+S 123 0
+B 123 0001
+B 124 0000
+C 140 01
+S 194 1
+B 194 0010
+B 195 0000
+C 211 11
+B 266 0100
+G 1034 0 1000
+S 1046 2
+C 1046 10
+B 1047 0000
+C 1063 11
+G 1134 1 1100
+C 1146 01
+G 1234 0 1200
+D 1244
+C 1246 00
+DONE cycles=1489 results=0 gos=3 runs=1 ing=13/13 xw=0/0 ids=0/0 dram_reads=24
+- /srv/opentallas-scratch/claude/codex-svg-banked-class-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_svg_rel_sm.sv:160: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 16.899 s; speed 73.794 ns/s
+- Verilator: cpu 16.779 s on 1 threads; allocated 89 MB

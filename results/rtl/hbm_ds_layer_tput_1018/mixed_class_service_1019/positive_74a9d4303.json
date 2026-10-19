@@ -1,0 +1,52 @@
+{
+  "mutation": "",
+  "budget": {
+    "literal_modes": [
+      0,
+      4,
+      0
+    ],
+    "distinct_programmes": 2,
+    "resident_words": 2,
+    "descriptors": 3,
+    "sectors": 24,
+    "launch": 30,
+    "run_origin": 33,
+    "mutation_target": null
+  },
+  "expected_go": [
+    [
+      0,
+      1000
+    ],
+    [
+      1,
+      1100
+    ],
+    [
+      0,
+      1200
+    ]
+  ],
+  "event_sha256": {
+    "xw.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mem.hex": "96ada2019700a1e8112b8c1faa9d48c6d15eb2ed6acb7989e29b3ac7a21f2e7e",
+    "ids.hex": "d3d6ae864989a061a6627f8f0d6f4d95516bf758e684091242e84d9559004f26",
+    "ing.hex": "3e4e1bdd35a0f928a5ebb27d167d9d2748ac922c466828e66534bbb206903359"
+  },
+  "service_build_revision": "f2a07fb050b8dbc253bfd60e48dd853b92c41436",
+  "compiler_sha256": "52a52836d44df446bf40bf121d577a8f2fbe66181dde7ef773bdd748d763a716",
+  "scope": "three mode-only drained programmes; actual transport qualification only, no arithmetic or general stateful splitting proof",
+  "first_fault": null,
+  "assembled_class_causal": false,
+  "pass_": true,
+  "rc": 0,
+  "go_exact": true,
+  "go_count": 3,
+  "done": "DONE cycles=1489 results=0 gos=3 runs=1 ing=13/13 xw=0/0 ids=0/0 dram_reads=24",
+  "fault": null,
+  "run_count": 1,
+  "sm_results": 0,
+  "executable_sha256": "e0ba3ad2cb06567aa591c09be3841604c79cf15266c6544dbf5db87c028a879f",
+  "negative_causal_review_required": false
+}
