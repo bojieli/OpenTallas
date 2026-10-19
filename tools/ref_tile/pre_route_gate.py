@@ -1535,7 +1535,7 @@ def check_textbook_execution(g: Gate, out: str):
     """
     codes=re.findall(r'^GATE_TB_RC=(\S+)$',out,re.M)
     verdicts=re.findall(r'^GATE_TB textbook_lint: (PASS|WARN|REFUSE) \S+ cells ',out,re.M)
-    if len(verdicts)!=1 or (codes and (len(codes)!=1 or codes[0] not in ('0','3'))):
+    if len(verdicts)!=1 or (codes and (len(codes)!=1 or codes[0] != ('3' if verdicts[0] == 'REFUSE' else '0'))):
         g.add('FAIL','textbook_execution','missing unique actual textbook verdict or failed lint execution; RC='+str(codes),
               'inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate')
         return False

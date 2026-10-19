@@ -21,3 +21,9 @@ def test_historical_log_still_requires_actual_unique_verdict():
 def test_script_preserves_process_exit_and_reset_args():
  assert 'GATE_TB_RC=${{PIPESTATUS[0]}}' in P.REMOTE_SH
  assert '--refuse-checks {RC}{TBX}{BRP} |' in P.REMOTE_SH
+
+
+def test_process_exit_must_agree_with_actual_verdict():
+ for rc,v in [('3','PASS'),('3','WARN'),('0','REFUSE')]:
+  ok,g=check(f'GATE_TB_RC={rc}\nGATE_TB textbook_lint: {v} tile cells 1 flops 1\n')
+  assert not ok and any(i['check']=='textbook_execution' for i in g.items)
