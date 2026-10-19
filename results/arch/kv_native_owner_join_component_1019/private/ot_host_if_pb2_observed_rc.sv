@@ -103,6 +103,7 @@ module ot_host_if_pb2_observed_rc #(
     parameter integer MU_OUT  = 0
 ) (
     // Private common-clock functional join. Descriptor and native namespaces differ.
+    output wire cq_dma_retired_v,
     input wire native_issue_ready,
     input wire native_cq_offer_ok,
     output wire native_cq_prospective_v, native_cq_prospective_native_valid,
@@ -1036,6 +1037,7 @@ module ot_host_if_pb2_observed_rc #(
         end
     end
 
+ assign cq_dma_retired_v=ENABLE_NATIVE_OWNER_JOIN && ev_pop && m_bresp==0;
  // Registered observations of actual architectural issue and CQ DMA retirement.
  // The CQ event is sampled only at the original D_CQ0_B && m_bvalid edge.
  always @(posedge clk or negedge retained_reset_n)begin
