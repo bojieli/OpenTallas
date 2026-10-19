@@ -1,0 +1,13 @@
+MISMATCH check=252338 ref=1/1/0/aa5 got=1/1/0/884
+MISMATCH check=252339 ref=1/1/0/aa6 got=1/1/0/885
+MISMATCH check=252340 ref=1/1/0/aa7 got=1/1/0/cc6
+MISMATCH check=252341 ref=1/1/0/cc6 got=1/1/0/ee7
+MISMATCH check=252342 ref=1/1/0/ee7 got=1/1/0/ee8
+MISMATCH check=252343 ref=1/1/0/ee8 got=1/1/0/ee7
+MISMATCH check=252344 ref=1/1/0/108 got=1/1/0/ee8
+MISMATCH check=252345 ref=1/1/0/109 got=1/1/0/329
+SYSFACE_SRAM FAIL errors=116 checks=252493 events=193 NE=64 MUT=4
+- rtl/test/qwen_split/tb_sysface_sram_players.sv:116: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3ms; walltime 0.137 s; speed 18.469 ms/s
+- Verilator: cpu 0.137 s on 1 threads; allocated 7 MB
