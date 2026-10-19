@@ -259,8 +259,14 @@ EXACT_LEF_SUFFIX = ".lef.exact"
 
 
 def pin_access_violations(text):
-    """abstract_pin_stub.pin_spacing_violations (the child_lint (i) detector) on a LEF text, or None when the detector
-    is not next to this copy (tools/hier_contract of the same tree)"""
+    """abstract_pin_stub.pin_spacing_violations (the child_lint (i) detector) on a LEF text, raw AND as published (after
+    the finalize step abstract_pin_stub.process: stub move + 1b band carve + pocket closing), or None when the detector
+    is not next to this copy (tools/hier_contract of the same tree); a pin counts once if either the raw or the
+    processed text blocks it.
+    TW3-LGTAP 2026-10-19 (hbm_sfu_lg_pair_tap_leaf_rt24_1019-b1-72af5d8b1 LOST_CLOSED): the raw default abstract had 0
+    violations (its 189-um M5 edge band OVERLAPS the top-face pins, which the detector does not count), but the 1b band
+    carve left 0.036-um slivers between the pins, 0.048 from the next pin -> child_lint (i) FAIL on the published LEF and
+    the exact-shape fallback never ran.  Judging the processed text runs the fallback whenever the published LEF fails."""
     import importlib.util
     p = Path(__file__).resolve().parents[2] / "tools/hier_contract/abstract_pin_stub.py"
     try:
@@ -269,7 +275,11 @@ def pin_access_violations(text):
         spec = importlib.util.spec_from_file_location("ot_aps_view_export", p)
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
-        return mod.pin_spacing_violations(text)
+        bad = mod.pin_spacing_violations(text)
+        if hasattr(mod, "process") and re.search(r"\n[ \t]*OBS[ \t]*(?=\n)", text):
+            seen = {(b[0], b[1]) for b in bad}   # raw OR published: either one failing is a blocked pin
+            bad += [b for b in mod.pin_spacing_violations(mod.process(text)[0]) if (b[0], b[1]) not in seen]
+        return bad
     except Exception:  # noqa: BLE001 - no detector: keep the default abstract
         return None
 

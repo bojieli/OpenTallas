@@ -243,6 +243,50 @@ class ExactAbstract(unittest.TestCase):
         self.assertIn("12.792", lef)
 
 
+# TW3-LGTAP 2026-10-19: hbm_sfu_lg_pair_tap_leaf top face -- the default abstract's M5 edge band OVERLAPS the pins (0
+# raw violations), the finalize band carve leaves 0.6 x 0.036 slivers 0.048 from the next pin (child_lint (i) FAIL)
+BAND_HEAD = """VERSION 5.8 ;
+MACRO t
+  SIZE 10 BY 10 ;
+""" + "".join(f"""  PIN p{i}
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  {x:.3f} 9.916 {x + 0.024:.3f} 10 ;
+    END
+  END p{i}
+""" for i, x in enumerate((1.0, 1.048, 1.672))) + """  OBS
+    LAYER M5 ;
+"""
+BAND_OBS = "     RECT  0.5 9 3 9.952 ;\n  END\nEND t\n"
+BAND_EXACT_OBS = "     RECT  1 9 1.024 9.916 ;\n     RECT  1.048 9 1.072 9.916 ;\n     RECT  1.672 9 1.696 9.916 ;\n  END\nEND t\n"
+
+
+class ExactAbstractAfterFinalize(unittest.TestCase):
+    def test_band_carve_slivers_take_exact_abstract(self):
+        aps = ve.pin_access_violations
+        self.assertEqual(len(aps(BAND_HEAD + BAND_EXACT_OBS)), 0)
+        bad = aps(BAND_HEAD + BAND_OBS)
+        self.assertTrue(bad and bad[0][2] == 0.048, bad)
+        calls = []
+        with tempfile.TemporaryDirectory() as d:
+            out = Path(d)
+            (out / "t.lef").write_text(BAND_HEAD + BAND_OBS)
+
+            def fake_run(cmd, **kw):
+                calls.append(cmd)
+                (out / f"t{ve.EXACT_LEF_SUFFIX}").write_text(BAND_HEAD + BAND_EXACT_OBS)
+                return subprocess.CompletedProcess(cmd, 0, "", "")
+            real, ve.subprocess.run = ve.subprocess.run, fake_run
+            try:
+                rec = ve.choose_abstract(out, "t", out, "img")
+            finally:
+                ve.subprocess.run = real
+            self.assertEqual((rec["mode"], rec["exact_pin_access_violations"], len(calls)), ("exact", 0, 1))
+            self.assertNotIn("0.5 9 3 9.952", (out / "t.lef").read_text())
+
+
 @unittest.skipUnless(os.environ.get("OT_VIEW_EXPORT_ORFS") and shutil.which("docker"),
                      "set OT_VIEW_EXPORT_ORFS / OT_VIEW_EXPORT_NAME to a closed loop route on this host")
 class ReexportMatchesVerdict(unittest.TestCase):
